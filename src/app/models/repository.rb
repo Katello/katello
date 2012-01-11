@@ -25,11 +25,12 @@ class Repository < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
   include IndexedModel
-  
+
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:except=>[:pulp_repo_facts, :groupid, :environment_product_id]}
 
-
+  after_save :update_related_index
+  
   belongs_to :environment_product, :inverse_of => :repositories
   has_and_belongs_to_many :changesets
   validates :pulp_id, :presence => true, :uniqueness => true
@@ -79,7 +80,7 @@ class Repository < ActiveRecord::Base
      :product=>self.product.name, :product_id=> self.product.id}
   end
 
-  after_save do
+  def update_related_index 
     self.product.provider.update_index if self.product.provider.respond_to? :update_index
   end
 
@@ -87,7 +88,7 @@ class Repository < ActiveRecord::Base
     pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
     Tire.index Glue::Pulp::Package.index do
       create :mappings => Glue::Pulp::Package.index_mapping
-      import pkgs               
+      import pkgs
     end if !pkgs.empty?
   end
 

@@ -65,6 +65,13 @@ Src::Application.routes.draw do
   end
 
   resources :systems do
+    resources :events, :only => [:index, :show], :controller => "system_events" do
+      collection do
+        get :status
+        get :more_events
+        get :items
+      end
+    end
     resources :system_packages, :only => {} do
       collection do
         put :add
@@ -380,6 +387,7 @@ Src::Application.routes.draw do
         get :repositories, :on => :member
         resources :changesets, :only => [:index, :create]
       end
+      resources :sync_plans
       resources :tasks, :only => [:index]
       resources :providers, :only => [:index]
       resources :systems, :only => [:index] do
@@ -400,6 +408,7 @@ Src::Application.routes.draw do
 
     resources :changesets, :only => [:show, :destroy] do
       post :promote, :on => :member, :action => :promote
+      get :dependencies, :on => :member, :action => :dependencies
       resources :products, :controller => :changesets_content do
         post   :index, :on => :collection, :action => :add_product
         delete :destroy, :on => :member, :action => :remove_product

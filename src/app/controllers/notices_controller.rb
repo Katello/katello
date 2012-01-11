@@ -35,7 +35,7 @@ class NoticesController < ApplicationController
       @notices = current_user.notices.search_for(params[:search]).order(sort_column + " " + sort_direction)
       retain_search_history
     rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
+      notice error.to_s, {:level => :error, :persist => false}
       @notices = current_user.notices.search_for ''
     end
   end
@@ -66,7 +66,7 @@ class NoticesController < ApplicationController
       end
 
     rescue Exception => e
-      errors e.to_s
+      notice e.to_s, {:level => :error}
 
       respond_to do |format|
         format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -95,7 +95,7 @@ class NoticesController < ApplicationController
       end    
 
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
     end
 
     redirect_to :action => "show"

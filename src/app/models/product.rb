@@ -61,6 +61,8 @@ class Product < ActiveRecord::Base
         with_repos(env, true)
   }
 
+  after_save :update_related_index
+
   def initialize(attrs = nil)
 
     unless attrs.nil?
@@ -149,7 +151,7 @@ class Product < ActiveRecord::Base
     Product.editable(self.organization).where(:id => id).count > 0
   end
 
-  after_save do
+  def update_related_index
       self.provider.update_index if self.provider.respond_to? :update_index
   end
 

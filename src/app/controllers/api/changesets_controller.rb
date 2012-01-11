@@ -12,7 +12,7 @@
 
 class Api::ChangesetsController < Api::ApiController
 
-  before_filter :find_changeset, :only => [:show, :destroy, :promote]
+  before_filter :find_changeset, :only => [:show, :destroy, :promote, :dependencies]
   before_filter :find_environment
   before_filter :authorize
 
@@ -23,6 +23,7 @@ class Api::ChangesetsController < Api::ApiController
     {
       :index => read_perm,
       :show => read_perm,
+      :dependencies => read_perm,
       :create => manage_perm,
       :promote => promote_perm,
       :destroy =>manage_perm,
@@ -35,11 +36,13 @@ class Api::ChangesetsController < Api::ApiController
     render :json => Changeset.select("changesets.*, environments.name AS environment_name").joins(:environment).where(params.slice(:name, :environment_id))
   end
 
-
   def show
     render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos, :system_templates, :distributions])
   end
 
+  def dependencies
+    render :json => @changeset.calc_dependencies.to_json
+  end
 
   def create
     @changeset = Changeset.new(params[:changeset])
@@ -75,10 +78,6 @@ class Api::ChangesetsController < Api::ApiController
       @environment = KTEnvironment.find(params[:environment_id])
       raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
       @environment
-    else
-      #didnt' find an environment, just do the first the user has access to
-      list = KTEnvironment.changesets_readable(current_organization).where(:locker=>false)
-      @environment ||= list.first || current_organization.locker
     end
   end
 

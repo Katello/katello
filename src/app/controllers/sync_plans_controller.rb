@@ -38,7 +38,9 @@ class SyncPlansController < ApplicationController
   end
   
   def items
-    render_panel_items(SyncPlan.where(:organization_id => current_organization.id), @panel_options, params[:search], params[:offset])
+    render_panel_direct(SyncPlan, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
+                        { :filter=>{:organization_id=>[current_organization.id]}})
+    
   end
   
   def setup_options
@@ -82,7 +84,7 @@ class SyncPlansController < ApplicationController
       updated_plan.save!
       notice N_("Sync Plan '#{updated_plan.name}' was updated.")
 
-      if not SyncPlan.where(:id => updated_plan.id).search_for(params[:search]).include?(updated_plan)
+      if not search_validate(SyncPlan, updated_plan.id, params[:search])
         notice _("'#{updated_plan["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
       end
 
@@ -91,7 +93,7 @@ class SyncPlansController < ApplicationController
       end
 
       rescue Exception => e
-        errors e.to_s
+        notice e.to_s, {:level => :error}
 
         respond_to do |format|
           format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -107,7 +109,7 @@ class SyncPlansController < ApplicationController
       @plan.destroy
       notice N_("Sync plan '#{@plan[:name]}' was deleted.")
     rescue Exception => e
-      errors e.to_s
+      notice e.to_s, {:level => :error}
     end
     render :partial => "common/list_remove", :locals => {:id=>@id, :name=>controller_display_name}
   end
@@ -136,7 +138,7 @@ class SyncPlansController < ApplicationController
       @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
       notice N_("Sync Plan '#{@plan['name']}' was created.")
       
-      if SyncPlan.where(:id => @plan.id).search_for(params[:search]).include?(@plan) 
+      if search_validate(SyncPlan, @plan.id, params[:search])
         render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
       else
         notice _("'#{@plan["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
@@ -144,7 +146,7 @@ class SyncPlansController < ApplicationController
       end
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error
+      notice error, {:level => :error}
       render :text => error, :status => :bad_request
     end
   end
@@ -155,7 +157,7 @@ class SyncPlansController < ApplicationController
     begin
       @plan = SyncPlan.find(params[:id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end

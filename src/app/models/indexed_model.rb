@@ -2,14 +2,20 @@ module IndexedModel
 
   def self.included(base)
     base.class_eval do
-
       if !Rails.env.test?
         include Tire::Model::Search
         include Tire::Model::Callbacks
         index_name AppConfig.elastic_index + '_' +  self.base_class.name.downcase
+
+        def self.index_import list
+          self.index.import(list)
+        end
+
       else
         #stub mapping
         def self.mapping
+        end
+        def self.index_import list
         end
       end
       cattr_accessor :class_index_options
@@ -19,6 +25,13 @@ module IndexedModel
           self.class_index_options = options
       end
 
+
+      def self.use_index_of(model)
+        if !Rails.env.test?
+          index_name model.index_name
+          document_type model.document_type
+        end
+      end
     end
   end
 
@@ -26,6 +39,7 @@ module IndexedModel
   if Rails.env.test?
     def update_index
     end
+
   end
 
 

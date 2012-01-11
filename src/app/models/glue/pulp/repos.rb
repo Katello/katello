@@ -366,18 +366,18 @@ module Glue::Pulp::Repos
       end
     end
 
-    def substituted_paths url
+
+    def set_repos
+      content_urls = self.productContent.map { |pc| pc.content.contentUrl }
       cdn_var_substitutor = CDN::CdnVarSubstitutor.new(self.provider[:repository_url],
                                                        :ssl_client_cert => OpenSSL::X509::Certificate.new(self.certificate),
                                                        :ssl_client_key => OpenSSL::PKey::RSA.new(self.key))
-      cdn_var_substitutor.substitute_vars(url)
-    end
+      cdn_var_substitutor.precalculate(content_urls)
 
-    def set_repos
       self.productContent.collect do |pc|
         ca = File.read(CDN::CdnResource.ca_file)
 
-        substituted_paths(pc.content.contentUrl).each do |(substitutions, path)|
+        cdn_var_substitutor.substitute_vars(pc.content.contentUrl).each do |(substitutions, path)|
           feed_url = repo_url(path)
           arch = substitutions["basearch"] || "noarch"
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")

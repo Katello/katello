@@ -48,7 +48,8 @@ class GpgKeysController < ApplicationController
   end
 
   def items
-    render_panel_items(GpgKey.readable(current_organization), @panel_options, params[:search], params[:offset])
+    render_panel_direct(GpgKey, @panel_options, params[:search], params[:offset], [:name, :asc],
+      :filter=>{:organization_id=>[current_organization.id]})
   end
 
   def show
@@ -82,8 +83,8 @@ class GpgKeysController < ApplicationController
     @gpg_key = GpgKey.create!( gpg_key_params.merge({ :organization => current_organization }) )
 
     notice _("GPG Key '#{@gpg_key['name']}' was created.")
-    
-    if GpgKey.where(:id => @gpg_key.id).search_for(params[:search]).include?(@gpg_key)
+
+    if search_validate(GpgKey, @gpg_key.id, params[:search])
       render :partial=>"common/list_item", :locals=>{:item=>@gpg_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
     else
       notice _("'#{@gpg_key["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
@@ -91,7 +92,7 @@ class GpgKeysController < ApplicationController
     end
   rescue Exception => error
     Rails.logger.error error.to_s
-    return_error = errors(error)
+    return_error = notice(error, {:level => :error})
     render :json => return_error.to_json, :status => :bad_request
   end
 
@@ -107,14 +108,14 @@ class GpgKeysController < ApplicationController
 
     notice _("GPG Key '#{@gpg_key["name"]}' was updated.")
     
-    if not GpgKey.where(:id => @gpg_key.id).search_for(params[:search]).include?(@gpg_key)
+    if not search_validate(GpgKey, @gpg_key.id, params[:search])
       notice _("'#{@gpg_key["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
     end
     
     render :text => escape_html(gpg_key_params.values.first)
 
   rescue Exception => error
-    errors error
+    notice error, {:level => :error}
 
     respond_to do |format|
       format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -131,7 +132,7 @@ class GpgKeysController < ApplicationController
         raise
       end
     rescue Exception => e
-      errors e
+      notice e, {:level => :error}
     end
   end
 
@@ -141,7 +142,7 @@ class GpgKeysController < ApplicationController
     begin
       @gpg_key = GpgKey.find(params[:id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
 
       # flash_to_headers is an after_filter executed on the application controller;
       # however, a render from within a before_filter will halt the filter chain.

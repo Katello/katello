@@ -59,7 +59,7 @@ describe SystemTemplatesController, :katello => true do
 
       describe "with invalid template id" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           get :download, :id => -1, :environment_id => -1
           response.should_not be_success
         end
@@ -77,7 +77,7 @@ describe SystemTemplatesController, :katello => true do
 
       describe "with invalid template id" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           get :show, :id => 9999
           response.should_not be_success
         end
@@ -104,7 +104,7 @@ describe SystemTemplatesController, :katello => true do
 
       describe "with invalid template id" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           get :edit, :id => 9999
           response.should_not be_success
         end
@@ -127,7 +127,7 @@ describe SystemTemplatesController, :katello => true do
 
       describe "with invalid params" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           post :create, :template => {}
           response.should_not be_success
         end
@@ -192,7 +192,7 @@ describe SystemTemplatesController, :katello => true do
 
         describe "with invalid params" do
           it "should generate an error notice" do
-            controller.should_receive(:errors)
+            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
             put :update, :id => @system_template_1.id, :system_template=>{:name=>""}
             response.should_not be_success
           end
@@ -201,7 +201,7 @@ describe SystemTemplatesController, :katello => true do
 
       describe "with invalid template  id" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           put :update, :id => 9999,  :system_template=>{:description=>"bar"}
           response.should_not be_success
         end
@@ -214,7 +214,7 @@ describe SystemTemplatesController, :katello => true do
 
         end
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           put :update, :id => @system_template_3.id,  :system_template=>{:description=>"bar"}
           response.should_not be_success
         end
@@ -238,7 +238,7 @@ describe SystemTemplatesController, :katello => true do
 
       describe "with invalid template id" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           delete :destroy, :id => 9999
           response.should_not be_success
         end

@@ -61,13 +61,11 @@ describe ActivationKeysController do
   describe "GET index" do
 
     it "attempts to retain request in search history" do
-      controller.should_receive(:retain_search_history)
+      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+        controller.stub(:render)
+        search_options[:filter][:organization_id].first.should == @organization.id
+      }
       get :items
-    end
-
-    it "returns activation keys" do
-      get :items
-      assigns[:items].should include ActivationKey.find(@a_key.id)
     end
 
     it "renders the index for 2 pane" do
@@ -96,7 +94,7 @@ describe ActivationKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :show, :id => 9999
       end
 
@@ -139,7 +137,7 @@ describe ActivationKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :edit, :id => 9999
       end
 
@@ -178,7 +176,7 @@ describe ActivationKeysController do
 
     describe "with invalid params" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         post :create, AKeyControllerTest::AKEY_INVALID
       end
 
@@ -269,7 +267,7 @@ describe ActivationKeysController do
 
       describe "with invalid params" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_NAME_INVALID
         end
 
@@ -282,7 +280,7 @@ describe ActivationKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         put :update, :id => 9999, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
       end
 
@@ -292,13 +290,13 @@ describe ActivationKeysController do
       end
 
       it "should be unsuccessful at adding a subscription" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         put :add_subscriptions, { :id => 999, :subscription_id => { "abc123" => "false"}}
         response.should_not be_success
       end
 
       it "should be unsuccessful at removing a subscription" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         put :remove_subscriptions, { :id => 999, :subscription_id => { "abc123" => "false"}}
         response.should_not be_success
       end
@@ -330,7 +328,7 @@ describe ActivationKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         delete :destroy, :id => 9999
       end
 

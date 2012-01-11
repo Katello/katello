@@ -9,7 +9,7 @@ class pulp::config {
     "/etc/pulp/repo_auth.conf":
       content => template("pulp/etc/pulp/repo_auth.conf.erb"),
       before => [Class["apache2::service"]];
-    "/etc/pki/content/pulp-global-repo.ca":
+    "/etc/pki/pulp/content/pulp-global-repo.ca":
       ensure => link,
       target => $pulp::params::ssl_certificate_ca_file;
   }

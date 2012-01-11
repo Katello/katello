@@ -187,8 +187,7 @@ module Glue::Candlepin::Consumer
     end
 
     def arch=(arch)
-      @facts ||= {}
-      facts["uname.machine"] = arch
+      facts["uname.machine"] = arch if @facts
     end
 
     def sockets
@@ -196,8 +195,7 @@ module Glue::Candlepin::Consumer
     end
 
     def sockets=(sock)
-      @facts ||= {}
-      facts["cpu.cpu_socket(s)"] = sock
+      facts["cpu.cpu_socket(s)"] = sock if @facts
     end
 
     def guest
@@ -205,15 +203,12 @@ module Glue::Candlepin::Consumer
     end
 
     def guest=(val)
-      @facts ||= {}
-      facts["virt.is_guest"] = val
-
+      facts["virt.is_guest"] = val if @facts
     end
 
     def name=(val)
       super(val)
-      @facts ||= {}
-      facts["network.hostname"] = val
+      facts["network.hostname"] = val if @facts
     end
 
     def distribution_name
@@ -323,7 +318,7 @@ module Glue::Candlepin::Consumer
 
     def compliant_until
       if self.compliance['compliantUntil']
-        convert_time(self.compliance['compliantUntil'])
+        Date.parse(self.compliance['compliantUntil'])
       end
     end
 

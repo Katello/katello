@@ -29,7 +29,7 @@ class PulpSyncProgress
 end
 
 class PulpSyncStatus < PulpTaskStatus
-
+  use_index_of TaskStatus
   FINISHED = "finished"
   ERROR = "error"
   RUNNING = "running"
