@@ -308,7 +308,6 @@ class ApplicationController < ActionController::Base
         filters = [filters] if !filters.is_a? Array
         filters.each{|i|
           filter  :terms, i
-          
         } if !filters.empty?
 
         size page_size if page_size > 0
@@ -316,22 +315,35 @@ class ApplicationController < ActionController::Base
       end
       @items = results
 
+      #get total count
+      total = obj_class.search do
+        query do
+          all
+        end
+        filters.each{|i|
+          filter  :terms, i
+        } if !filters.empty?
+        size 1
+        from 0
+      end
+      total_count = total.total
+
     rescue Tire::Search::SearchRequestFailed => e
       Rails.logger.error(e.class)
 
-      panel_options[:total_count] = 0
+      total_count = 0
       panel_options[:total_results] = 0
 
     end
 
-    render_panel_results(@items, panel_options) if !skip_render
+    render_panel_results(@items, total_count, panel_options) if !skip_render
     return @items
   end
 
-  def render_panel_results(results, options)
+  def render_panel_results(results, total, options)
     
     options[:total_count] = results.empty? ? 0 : results.total
-    options[:total_results] = results.empty? ? 0 : results.total
+    options[:total_results] = total
     options[:collection] = results
     
     @items = results
