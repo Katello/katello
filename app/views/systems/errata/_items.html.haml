@@ -7,8 +7,8 @@
       %div{:class=>errata_type_class(e)}
     %td.one-line-ellipsis
       = e.id
-    %td.one-line-ellipsis
-      %span
+    %td
+      %span.one-line-ellipsis.grid_4{ "title" => e.title }
         = e.title
       %span.errata_status.fr.hidden
         = image_tag('spinner.gif', :alt => _('Loading'))
