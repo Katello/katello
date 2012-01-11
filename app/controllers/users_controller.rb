@@ -273,7 +273,8 @@ class UsersController < ApplicationController
                  :name => controller_display_name,
                  :ajax_load  => true,
                  :ajax_scroll => items_users_path(),
-                 :enable_create => User.creatable? }
+                 :enable_create => User.creatable?,
+                 :search_class=>User}
   end
 
   def controller_display_name

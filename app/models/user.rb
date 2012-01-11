@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
   acts_as_reportable
 
   index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:username, :email],
                 :json=>{:except=>[:password, :password_reset_token,
                                   :password_reset_sent_at, :helptips_enabled,
                                   :disabled, :own_role_id, :login]}
