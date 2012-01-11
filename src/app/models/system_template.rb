@@ -361,10 +361,15 @@ class SystemTemplate < ActiveRecord::Base
   #### Permissions
   def self.list_verbs global = false
     {
-      :manage_all => N_("Manage All System Templates"),
-      :read_all => N_("Read All System Templates")
+      :manage_all => _("Administer System Templates"),
+      :read_all => _("Read System Templates")
    }.with_indifferent_access
   end
+
+  def self.read_verbs
+    [:read_all]
+  end
+
 
   def self.no_tag_verbs
     SystemTemplate.list_verbs.keys
@@ -432,9 +437,9 @@ class SystemTemplate < ActiveRecord::Base
         p = p.with_indifferent_access
 
         #check if there's where to promote them
-        repo = Repository.find_by_pulp_id(p[:repo_id])
+        repo = Repository.find(p[:repo_id])
         if repo.is_cloned_in? to_env
-          #remember the packages in a hash, we add them all together in one time
+          #remember the packages in a hash, we add them all one time
           clone = repo.get_clone to_env
           pkgs_promote[clone] ||= []
           pkgs_promote[clone] << p[:id]

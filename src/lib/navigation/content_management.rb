@@ -261,13 +261,13 @@ module Navigation
         { :key => :products_repositories,
           :name =>N_("Products and Repositories"),
           :url => lambda{products_repos_gpg_key_path(@gpg_key.id)},
-          :if =>lambda{gpg_key},
+          :if =>lambda{@gpg_key},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,
           :name =>N_("Details"),
           :url => lambda{edit_gpg_key_path(@gpg_key.id)},
-          :if => lambda{gpg_key},
+          :if => lambda{@gpg_key},
           :options => {:class=>"navigation_element"}
         }
       ]

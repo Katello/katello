@@ -21,7 +21,7 @@ from optparse import OptionValueError
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit, format_task_errors
+from katello.client.core.utils import is_valid_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit, format_task_errors, Printer
 from katello.client.api.utils import get_organization, get_environment, get_changeset, get_template, get_repo, get_product
 
 try:
@@ -85,22 +85,28 @@ class Info(ChangesetAction):
     description = _('detailed information about a changeset')
 
     def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
-                               help=_("environment name (required)"))
-        self.parser.add_option('--name', dest='name',
-                               help=_("changeset name (required)"))
+        self.parser.add_option('--org', dest='org', help=_("name of organization (required)"))
+        self.parser.add_option('--environment', dest='env', help=_("environment name (required)"))
+        self.parser.add_option('--name', dest='name', help=_("changeset name (required)"))
+        self.parser.add_option('--dependencies', dest='deps', action='store_true', help=_("will display dependent packages"))
 
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
         self.require_option('env')
 
+    def format_item_list(self, key, items):
+        return "\n".join([i[key] for i in items])
+
+    def get_dependencies(self, cset_id):
+        deps = self.api.dependencies(cset_id)        
+        return self.format_item_list('display_name', deps)
+
     def run(self):
         orgName = self.get_option('org')
         envName = self.get_option('env')
         csName = self.get_option('name')
+        displayDeps = self.has_option('deps')
 
         cset = get_changeset(orgName, envName, csName)
         if cset == None:
@@ -109,12 +115,14 @@ class Info(ChangesetAction):
         cset['updated_at'] = format_date(cset['updated_at'])
         cset['environment_name'] = envName
 
-        cset["errata"]   = "\n".join([e["display_name"] for e in cset["errata"]])
-        cset["products"] = "\n".join([p["name"] for p in cset["products"]])
-        cset["packages"] = "\n".join([p["display_name"] for p in cset["packages"]])
-        cset["repositories"] = "\n".join([r["name"] for r in cset["repos"]])
-        cset["system_templates"] = "\n".join([t["name"] for t in cset["system_templates"]])
-        cset["distributions"] = "\n".join([t["distribution_id"] for t in cset["distributions"]])
+        cset["errata"]       = self.format_item_list("display_name", cset["errata"])
+        cset["products"]     = self.format_item_list("name", cset["products"])
+        cset["packages"]     = self.format_item_list("display_name", cset["packages"])
+        cset["repositories"] = self.format_item_list("name", cset["repos"])
+        cset["system_templates"] = self.format_item_list("name", cset["system_templates"])
+        cset["distributions"]    = self.format_item_list("distribution_id", cset["distributions"])
+        if displayDeps:
+            cset["dependencies"] = self.get_dependencies(cset["id"])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -128,9 +136,12 @@ class Info(ChangesetAction):
         self.printer.addColumn('repositories', multiline=True, show_in_grep=False)
         self.printer.addColumn('system_templates', multiline=True, show_in_grep=False)
         self.printer.addColumn('distributions', multiline=True, show_in_grep=False)
+        if displayDeps:
+            self.printer.addColumn('dependencies', multiline=True, show_in_grep=False)
 
         self.printer.setHeader(_("Changeset Info"))
         self.printer.printItem(cset)
+
         return os.EX_OK
 
 

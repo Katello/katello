@@ -50,7 +50,8 @@ class RolesController < ApplicationController
    end
   
   def items
-    render_panel_direct(Role, @panel_options,  params[:search], params[:offset], [:name_sort, :asc])
+    render_panel_direct(Role, @panel_options,  params[:search], params[:offset], [:name_sort, :asc],
+                        {:filter=>[{:self_role=>[false]}]})
   end
   
   def setup_options
@@ -59,8 +60,10 @@ class RolesController < ApplicationController
                  :create => _('Role'),
                  :name => controller_display_name,
                  :ajax_load  => true,
+                 :list_partial => 'roles/list_roles',
                  :ajax_scroll => items_roles_path(),
-                 :enable_create=> Role.creatable?}
+                 :enable_create=> Role.creatable?,
+                 :search_class=>Role}
   end
   
   def new

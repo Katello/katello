@@ -67,6 +67,8 @@ class Api::PermissionsController < Api::ApiController
     render :text => _("Deleted permission '#{params[:id]}'"), :status => 200
   end
 
+  private
+
   def find_role
     @role = Role.find(params[:role_id])
     raise HttpErrors::NotFound, _("Couldn't find user role '#{params[:role_id]}'") if @role.nil?

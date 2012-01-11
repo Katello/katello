@@ -435,10 +435,12 @@ module Pulp
 
   class Task < PulpResource
     class << self
-      def find uuid
-        response = get(path  + uuid + "/", self.default_headers)
+      def find uuids
+        ids = "id=#{uuids.join('&id=')}"
+        query_url = path  + "?state=archived&state=current&#{ids}"
+        response = get(query_url, self.default_headers)
         body = response.body
-        JSON.parse(body).with_indifferent_access
+        JSON.parse(body).collect{|k| k.with_indifferent_access}
       end
 
       def path uuid=nil

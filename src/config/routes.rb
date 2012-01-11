@@ -447,10 +447,10 @@ Src::Application.routes.draw do
       end
     end
 
-    resources :puppetclasses, :only => [:index]
+    #resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
-    resources :repositories, :only => [:index, :show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+    resources :repositories, :only => [:show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end

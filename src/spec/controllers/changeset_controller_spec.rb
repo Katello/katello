@@ -71,10 +71,6 @@ describe ChangesetsController, :katello => true do
       response.should be_success
     end
 
-    it "should be able to list changesets for an environment" do
-      get :list, :env_id=>@env.id
-      response.should be_success
-    end
 
     it "should be able to show the edit partial" do
       get :edit, :id=>@changeset.id

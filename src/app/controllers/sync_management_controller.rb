@@ -142,22 +142,41 @@ private
 
 
   def format_sync_progress(sync_status, repo)
+    progress = sync_status.progress
+    error_details = progress.error_details
+    error_flag = false
+
+    if(!error_details.nil? && !error_details.empty?)
+      error_details.each{|error|
+        if (error.error_type == "error")
+          error_details.each { |d|
+            error_flag = true
+            Rails.logger.error("*** Sync error: " +  d.to_hash.to_json)
+            notice N_("There were errors with one of the syncs: #{d[:error]} in repository: #{repo.name}. See the log for more details."), {:level=>:warning}
+          }
+        end
+      }
+
+    end
+
+
     not_running_states = [PulpSyncStatus::Status::FINISHED,
                           PulpSyncStatus::Status::ERROR,
                           PulpSyncStatus::Status::CANCELED,
                           PulpSyncStatus::Status::NOT_SYNCED]
-    {   :id         => repo.id,
-        :product_id => repo.product.id,
-        :progress   => calc_progress(sync_status),
-        :sync_id    => sync_status.uuid,
-        :state      => format_state(sync_status.state),
-        :raw_state  => sync_status.state,
-        :start_time => format_date(sync_status.start_time),
-        :finish_time=> format_date(sync_status.finish_time),
-        :duration   => format_duration(sync_status.finish_time, sync_status.start_time),
-        :packages   => sync_status.progress.total_count,
-        :size       => number_to_human_size(sync_status.progress.total_size),
-        :is_running => !not_running_states.include?(sync_status.state.to_sym) && sync_status.finish_time.nil?
+    {   :id             => repo.id,
+        :product_id     => repo.product.id,
+        :progress       => calc_progress(sync_status),
+        :sync_id        => sync_status.uuid,
+        :state          => format_state(sync_status.state),
+        :raw_state      => sync_status.state,
+        :start_time     => format_date(sync_status.start_time),
+        :finish_time    => format_date(sync_status.finish_time),
+        :duration       => format_duration(sync_status.finish_time, sync_status.start_time),
+        :packages       => sync_status.progress.total_count,
+        :size           => number_to_human_size(sync_status.progress.total_size),
+        :is_running     => !not_running_states.include?(sync_status.state.to_sym) && sync_status.finish_time.nil?,
+        :error_details  => error_flag ? error_details : "No errors."
     }
   end
 
