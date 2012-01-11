@@ -75,8 +75,13 @@ class Repository < ActiveRecord::Base
     end
   }
 
-  scope :readable_in_org, lambda {|org|
-    joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org))
+  scope :readable_in_org, lambda {|org, *skip_locker|
+    if (skip_locker.empty? || skip_locker.first.nil?)
+      # 'skip locker' not included, so retrieve repos in locker in the result
+      joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org))
+    else
+      joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org).where(:locker => false))
+    end
   }
 
   def extended_index_attrs
