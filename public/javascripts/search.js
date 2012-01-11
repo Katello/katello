@@ -66,7 +66,6 @@ var favorite = (function() {
 
             search_input.val('');
             search_input.change();
-       	    $('#search_form').submit();
         	$('.qdropdown').hide();
         }
     }
