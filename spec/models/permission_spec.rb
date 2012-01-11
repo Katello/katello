@@ -14,6 +14,7 @@ require 'spec_helper'
 describe Permission do
   include OrchestrationHelper
   include AuthorizationHelperMethods
+
   def add_test_type type, verbs
     verb_hash = {}
     verbs.each{|v|
@@ -24,6 +25,18 @@ describe Permission do
     ResourceType::TYPES[type] = {:model => OpenStruct.new(:no_tag_verbs => [],
       :list_verbs => verb_hash)}
     
+  end
+
+
+  #Have to backup and restore the TYPES list, otherwise other tests will hit our fake ones
+  types_backup = nil
+  before(:all) do
+    types_backup = ResourceType::TYPES.clone
+  end
+
+  after(:all) do
+    ResourceType::TYPES.clear
+    ResourceType::TYPES.merge!(types_backup)
   end
 
 
