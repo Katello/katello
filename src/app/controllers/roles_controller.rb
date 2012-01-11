@@ -62,7 +62,8 @@ class RolesController < ApplicationController
                  :ajax_load  => true,
                  :list_partial => 'roles/list_roles',
                  :ajax_scroll => items_roles_path(),
-                 :enable_create=> Role.creatable?}
+                 :enable_create=> Role.creatable?,
+                 :search_class=>Role}
   end
   
   def new
