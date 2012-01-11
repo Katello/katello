@@ -71,6 +71,9 @@ class SingleProductAction(ProductAction):
         self.require_option('name')
 
 
+# product actions ------------------------------------------------------------
+
+
 class SetSyncPlan(SingleProductAction):
 
     description = _('set a synchronization plan')
@@ -102,7 +105,23 @@ class SetSyncPlan(SingleProductAction):
         return os.EX_OK
 
 
-# product actions ------------------------------------------------------------
+
+class RemoveSyncPlan(SingleProductAction):
+
+    description = _('unset a synchronization plan')
+    select_by_env = False
+
+    def run(self):
+        orgName  = self.get_option('org')
+        prodName = self.get_option('name')
+
+        prod = get_product(orgName, prodName)
+        if (prod == None):
+            return os.EX_DATAERR
+
+        msg = self.api.remove_sync_plan(prod['id'])
+        print msg
+        return os.EX_OK
 
 class List(ProductAction):
 

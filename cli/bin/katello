@@ -110,6 +110,7 @@ def setup_admin(admin):
     prod_cmd.add_action('add_filter', product.AddFilter())
     prod_cmd.add_action('delete_filter', product.DeleteFilter())
     prod_cmd.add_action('set_plan', product.SetSyncPlan())
+    prod_cmd.add_action('remove_plan', product.RemoveSyncPlan())
     admin.add_command('product', prod_cmd)
 
     repo_cmd = repo.Repo()

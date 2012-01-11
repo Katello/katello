@@ -67,7 +67,7 @@ class ProductAPI(KatelloAPI):
     def set_sync_plan(self, prodId, planId):
         return "Sync plan added"
 
-    def remove_sync_plan(self, prodId, planId):
+    def remove_sync_plan(self, prodId):
         return "Sync plan removed"
 
     def cancel_sync(self, prodId):
