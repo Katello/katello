@@ -7,10 +7,9 @@
   - if filter.deletable?
     = link_to _("Remove Filter"), {:action => "destroy", :controller => "filters"}, :method => :delete, :confirm => _('Are you sure you want to delete this filster?'), :class => "remove_item", :remote=>true
 
-
 = content_for :navigation do
-  = render_navigation(:items=>package_filter_navigation, :level => 1)
-  
+  = render_menu(1..2, package_filter_navigation)
+
 = content_for :content do
   #package_filter
     %input#panel_element_id{:name => @filter.id, :type => "hidden", :value => "#{name}_#{filter.id}", "data-ajax_url"=>url_for(:action=> 'update')}
