@@ -74,7 +74,8 @@ module DashboardHelper
   def products_synced num= quantity
     Product.readable(current_organization).reject{|prod|
       prod.sync_status.uuid.nil?
-    }.sort{|a,b| a.start_time <=> b.start_time}[0..num]
+    }.sort{|a,b| a.sync_status.start_time <=> b.sync_status.start_time}[0..num]
+
   end
 
 

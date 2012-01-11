@@ -44,7 +44,8 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     }
   end
 
-  def self.name_search query, repoids=nil, number=15,sort=[:nvrea_sort, "ASC"]
+  def self.name_search query, repoids=nil, number=15, sort=[:nvrea_sort, "ASC"]
+    return [] if !Tire.index(self.index).exists?
      start = 0
      query = "name:#{query}"
      search = Tire.search self.index do
@@ -67,6 +68,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
   end
 
   def self.search query, start, page_size, repoids=nil, not_repoids=nil, sort=[:nvrea_sort, "ASC"]
+    return [] if !Tire.index(self.index).exists?
     query_down = query.downcase
     query = "name:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
     search = Tire.search self.index do

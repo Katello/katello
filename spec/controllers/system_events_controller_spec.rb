@@ -31,6 +31,7 @@ describe SystemEventsController do
 
       Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Candlepin::Consumer.stub!(:update).and_return(true)
+      Candlepin::Consumer.stub!(:events).and_return([])
 
       Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Pulp::Consumer.stub!(:update).and_return(true)

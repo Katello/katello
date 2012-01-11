@@ -18,7 +18,6 @@ class NoticesController < ApplicationController
   before_filter :notices_authorize
   before_filter :readable_by, :only => [:auto_complete_search]
 
-  include AutoCompleteSearch
   helper_method :sort_column, :sort_direction
 
   def section_id
@@ -32,11 +31,13 @@ class NoticesController < ApplicationController
 
   def show
     begin
-      @notices = current_user.notices.search_for(params[:search]).order(sort_column + " " + sort_direction)
+      #currently doesn't handle pagination
+      @notices = render_panel_direct(Notice, {}, params[:search], 0, [sort_column, sort_direction],
+            {:filter=>{:user_ids=>[current_user.id]}, :skip_render=>true, :page_size=>100})
       retain_search_history
     rescue Exception => error
       notice error.to_s, {:level => :error, :persist => false}
-      @notices = current_user.notices.search_for ''
+      @notices = current_user.notices
     end
   end
 

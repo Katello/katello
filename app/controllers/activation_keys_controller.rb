@@ -182,7 +182,7 @@ class ActivationKeysController < ApplicationController
     end
     notice _("Activation key '#{@activation_key['name']}' was created.")
     
-    if ActivationKey.where(:id => @activation_key.id).search_for(params[:search]).include?(@activation_key)
+    if search_validate(ActivationKey, @activation_key.id, params[:search])     
       render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
     else
       notice _("'#{@activation_key["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
@@ -216,7 +216,7 @@ class ActivationKeysController < ApplicationController
         result = system_template.name
       end
 
-      if not ActivationKey.where(:id => @activation_key.id).search_for(params[:search]).include?(@activation_key)
+      if not search_validate(ActivationKey, @activation_key.id, params[:search])     
         notice _("'#{@activation_key["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
       end
 
@@ -275,7 +275,8 @@ class ActivationKeysController < ApplicationController
       :name => controller_display_name,
       :ajax_load  => true,
       :ajax_scroll => items_activation_keys_path(),
-      :enable_create => ActivationKey.manageable?(current_organization)}
+      :enable_create => ActivationKey.manageable?(current_organization),
+      :search_class=>ActivationKey}
   end
 
   private

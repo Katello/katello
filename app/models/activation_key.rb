@@ -14,7 +14,7 @@ class ActivationKey < ActiveRecord::Base
   include Authorization
   include IndexedModel
 
-  index_options :extended_json=>:extended_json
+  index_options :extended_json=>:extended_json, :display_attrs=>[:name, :description, :environment, :template]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -148,9 +148,13 @@ class ActivationKey < ActiveRecord::Base
 
   def self.list_verbs global = false
     {
-      :read_all => N_("Access all Activation Keys"),
-      :manage_all => N_("Manage all Activation Keys")
+      :read_all => _("Read Activation Keys"),
+      :manage_all => _("Administer Activation Keys")
     }.with_indifferent_access
+  end
+
+  def self.read_verbs
+    [:read_all]
   end
 
   def self.no_tag_verbs

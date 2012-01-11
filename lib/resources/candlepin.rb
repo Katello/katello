@@ -176,6 +176,15 @@ module Candlepin
           return nil
         end
       end
+
+      def events uuid
+        response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'events'), self.default_headers).body
+        unless response.empty?
+          JSON.parse(response).collect {|s| s.with_indifferent_access}
+        else
+          return []
+        end
+      end
     end
   end
 
