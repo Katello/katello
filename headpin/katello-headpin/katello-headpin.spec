@@ -117,6 +117,12 @@ and then run katello-configure to configure everything.
 cp -Rf %{homedir}/* %{katello_dir}
 
 %changelog
+* Wed Jan 11 2012 Jordan OMara <jomara@redhat.com> 0.1.123-2
+- Headpin 1.123-2 merge 
+  (jomara@redhat.com)
+- Automatic commit of package [katello-headpin] release [0.1.122-2].
+  (bkearney@redhat.com)
+
 * Thu Jan 05 2012 Bryan Kearney <bkearney@redhat.com> 0.1.122-2
 - Automatic commit of package [katello-headpin] release [0.1.119-2].
   (bkearney@redhat.com)
