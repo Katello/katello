@@ -48,6 +48,12 @@ $(document).ready(function() {
        });
        KT.content_actions.addSyncing(ids);
 
+    })
+    .bind("ajax:beforeSend", 
+      function(evt, data, status, xhr) { 
+        if ($("input[name='repoids[]']:checked").length === 0) {
+          return false; 
+        }
     });
 
 
