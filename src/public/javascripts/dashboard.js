@@ -102,7 +102,6 @@ KT.dashboard = (function(){
                 newDiv.attr("data-url", url);
                 parent.parent().parent().find('.dropbutton').fadeIn();
 
-
                 // Add a handler for ellipsis
                 parent.find(".one-line-ellipsis").ellipsis();
 
@@ -112,6 +111,10 @@ KT.dashboard = (function(){
                 var proc = KT.dashboard.widget_map[id];
                 if (proc) {
                     proc();
+                }
+
+                if (id == 'errata') {
+                    register_errata();
                 }
             }
         });
