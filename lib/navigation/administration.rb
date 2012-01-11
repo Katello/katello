@@ -28,13 +28,13 @@ module Navigation
         { :key => :roles,
           :name =>N_("Roles"),
           :url => lambda{edit_role_path(@user.own_role_id)},
-          :if => lambda{!@user.nil?},
+          :if => lambda{@user},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,
           :name =>N_("Details"),
           :url => lambda{edit_user_path(@user.id)},
-          :if => lambda{!@user.nil?},
+          :if => lambda{@user},
           :options => {:class=>"navigation_element"}
         }
       ]
