@@ -28,17 +28,6 @@ describe Permission do
   end
 
 
-  #Have to backup and restore the TYPES list, otherwise other tests will hit our fake ones
-  types_backup = nil
-  before(:all) do
-    types_backup = ResourceType::TYPES.clone
-  end
-
-  after(:all) do
-    ResourceType::TYPES.clear
-    ResourceType::TYPES.merge!(types_backup)
-  end
-
 
   before(:each) do
     disable_user_orchestration

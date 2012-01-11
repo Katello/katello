@@ -13,11 +13,11 @@ require 'spec_helper'
 require 'helpers/product_test_data'
 require 'helpers/repo_test_data'
 
-include OrchestrationHelper
-include ProductHelperMethods
-include AuthorizationHelperMethods
-
 describe Repository do
+
+  include OrchestrationHelper
+  include ProductHelperMethods
+  include AuthorizationHelperMethods
 
   describe "create repo"  do
     before do
