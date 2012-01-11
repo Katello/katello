@@ -91,20 +91,14 @@ class SearchController < ApplicationController
   end
 
   def is_valid? path, query
-    begin
       # the path may contain a service prefix (e.g. /katello).  if it does, remove it from the path when
       # checking for path validity.  This is required since the routes do not know of this prefix.
-      path = path.split(ENV['RAILS_RELATIVE_URL_ROOT']).last
-      path_details = Rails.application.routes.recognize_path(path)
+      #path = path.split(ENV['RAILS_RELATIVE_URL_ROOT']).last
+      #path_details = Rails.application.routes.recognize_path(path)
 
-      eval(path_details[:controller].singularize.camelize).readable(current_organization).complete_for(query,
-        {:organization_id => current_organization})
+      #eval(path_details[:controller].singularize.camelize).readable(current_organization).complete_for(query,
+      #  {:organization_id => current_organization})
 
-    rescue ScopedSearch::QueryNotSupported => error
-      Rails.logger.error error.to_s
-      notice _("Unable to save as favorite. '#{params[:favorite]}' is an invalid search."), {:level => :error}
-      return false
-    end
     return true
   end
 
