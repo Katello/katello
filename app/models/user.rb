@@ -534,15 +534,15 @@ class User < ActiveRecord::Base
 
 
   def log_roles verbs, resource_type, tags, org, any_tags = false
-    if  AppConfig.allow_roles_logging
+    if AppConfig.allow_roles_logging
       verbs_str = verbs ? verbs.join(','):"perform any verb"
       tags_str = "any tags"
       if tags
         tag_str = any_tags ? "any tag in #{tags.join(',')}" : "all the tags in #{tags.join(',')}"
       end
 
-      org_str = org ? "organization #{org.inspect}":" any organization"
-      Rails.logger.info "Checking if user #{username} is allowed to #{verbs_str} in  #{resource_type.inspect} scoped for #{tags_str} in  #{org_str}"
+      org_str = org ? "organization #{org.name} (#{org.name})":" any organization"
+      Rails.logger.info "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} scoped for #{tags_str} in #{org_str}"
     end
   end
 end
