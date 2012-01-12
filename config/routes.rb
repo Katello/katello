@@ -416,6 +416,8 @@ Src::Application.routes.draw do
       end
       resource :uebercert, :only => [:show]
       resources :filters, :only => [:index, :create, :destroy, :show, :update]
+
+      resources :gpg_keys, :only => [:index, :create]
     end
 
     resources :changesets, :only => [:show, :destroy] do
@@ -489,7 +491,7 @@ Src::Application.routes.draw do
       resources :templates, :only => [:index]
     end
 
-    resources :gpg_keys, :only => [] do
+    resources :gpg_keys, :only => [:show, :update, :destroy] do
       get :content, :on => :member
     end
 
