@@ -146,9 +146,9 @@ private
     error_details = progress.error_details
     error_flag = false
 
-    if(!error_details.nil? && !error_details.empty?)
+    if (!error_details.nil? && !error_details.empty?)
       error_details.each{|error|
-        if (error.error_type == "error")
+        if (error["error_type"] == "error")
           error_details.each { |d|
             error_flag = true
             Rails.logger.error("*** Sync error: " +  d.to_hash.to_json)
