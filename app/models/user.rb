@@ -55,8 +55,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  scoped_search :on => :username, :complete_value => true, :rename => :name
-  scoped_search :in => :roles, :on => :name, :complete_value => true, :rename => :role
 
   # validate the password length before hashing
   validates_each :password do |model, attr, value|
