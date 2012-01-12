@@ -129,17 +129,22 @@ class FiltersController < ApplicationController
     existing_readable = @filter.products.readable(current_organization)
     new_readable = Product.readable(current_organization).where(:id=>params[:products])
 
+    
     #remove unneeded ones
     (existing_readable - new_readable).each{|prod|
-      @filter.products.delete(prod)
+      prod = Product.find(prod.id) #reload readonly obj
+      prod.filters.delete(@filter)
+      prod.save!
     }
     #add new ones
     (new_readable - existing_readable).each{|prod|
-      @filter.products << prod
+      prod = Product.find(prod.id) #reload readonly obj
+      prod.filters << @filter
+      prod.save!
     }
     @filter.save!
 
-    notice N_("Sucessfully updated '#{@filter.name}' package filter.")
+    notice _("Sucessfully updated '#{@filter.name}' package filter.")
     render :text=>''
   rescue Exception => e
     notice e, {:level => :error}
