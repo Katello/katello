@@ -205,6 +205,7 @@ KT.content = (function(){
 
         },
         update_item = function(element, starttime, duration, progress, size, packages) {
+
             fadeUpdate(element.find(".start_time"), starttime);
             fadeUpdate(element.find(".duration"), duration);
             fadeUpdate(element.find(".size"), size + ' (' + packages + ')');
@@ -238,8 +239,9 @@ KT.content = (function(){
             }
         },
         fadeUpdate = function(element, text) {
-            element.fadeOut('fast').text(text);
-            element.fadeIn('fast');
+            //element.fadeOut('fast').text(text);
+            //element.fadeIn('fast');
+            element.text(text);
         },
         select_all = function(){
             $("#products_table").find("input[type=checkbox]").attr('checked',true);
