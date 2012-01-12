@@ -7,8 +7,8 @@ setup(name='katello-certs-tools',
       author_email='tlestach@redhat.com',
       url='https://fedorahosted.org/katello/',
       packages=['certs'],
-      scripts=['rhn-bootstrap', 'rhn-ssl-tool', 'rhn-sudo-ssl-tool'],
+      scripts=['katello-bootstrap', 'katello-ssl-tool', 'katello-sudo-ssl-tool'],
       data_files=[('share/katello/certs', ['sign.sh', 'gen-rpm.sh']),
                 ('/var/www/html/pub/bootstrap/', ['certs/client_config_update.py']),
-                ('share/man/man1', ['rhn-bootstrap.1', 'rhn-ssl-tool.1'])]
+                ('share/man/man1', ['katello-bootstrap.1', 'katello-ssl-tool.1'])]
 )

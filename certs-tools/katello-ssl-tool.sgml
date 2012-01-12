@@ -1,16 +1,16 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook V3.1//EN" [
-<!ENTITY RHNSSLTOOL "RHN SSL Maintenance Tool" >
+<!ENTITY KATELLOSSLTOOL "Katello SSL Maintenance Tool" >
 
 ]>
 <refentry>
 
 <RefMeta>
-<RefEntryTitle>rhn-ssl-tool</RefEntryTitle><manvolnum>1</manvolnum>
+<RefEntryTitle>katello-ssl-tool</RefEntryTitle><manvolnum>1</manvolnum>
 <RefMiscInfo>Version 1.0.0</RefMiscInfo>
 </RefMeta>
 
 <RefNameDiv>
-<RefName><command>rhn-ssl-tool</command></RefName>
+<RefName><command>katello-ssl-tool</command></RefName>
 <RefPurpose>
 Generate and maintain SSL keys, certificates and deployment RPMs.
 </RefPurpose>
@@ -19,16 +19,16 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
 <RefSynopsisDiv>
 <Synopsis>
     <cmdsynopsis>
-        <command>rhn-ssl-tool</command>
+        <command>katello-ssl-tool</command>
         <arg>options <replaceable>...</replaceable></arg>
         <command>--help</command>
     </cmdsynopsis>
     <cmdsynopsis>
-        <command>rhn-ssl-tool --gen-ca -d<replaceable>BUILD_DIR</replaceable> -p<replaceable>CA_PASSWORD</replaceable></command>
+        <command>katello-ssl-tool --gen-ca -d<replaceable>BUILD_DIR</replaceable> -p<replaceable>CA_PASSWORD</replaceable></command>
         <arg>options <replaceable>...</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis>
-        <command>rhn-ssl-tool --gen-server -d<replaceable>BUILD_DIR</replaceable> -p<replaceable>CA_PASSWORD</replaceable></command>
+        <command>katello-ssl-tool --gen-server -d<replaceable>BUILD_DIR</replaceable> -p<replaceable>CA_PASSWORD</replaceable></command>
         <arg>options <replaceable>...</replaceable></arg>
     </cmdsynopsis>
 </Synopsis>
@@ -36,24 +36,24 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
 
 <RefSect1><Title>Help</Title>
 <simplelist>
-    <member><command>rhn-ssl-tool --help</command></member>
-    <member><command>rhn-ssl-tool --gen-ca --help</command></member>
-    <member><command>rhn-ssl-tool --gen-server --help</command></member>
+    <member><command>katello-ssl-tool --help</command></member>
+    <member><command>katello-ssl-tool --gen-ca --help</command></member>
+    <member><command>katello-ssl-tool --gen-server --help</command></member>
     <member>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</member>
-    <member>(advanced) <command>rhn-ssl-tool --gen-ca --key-only --help</command></member>
-    <member>(advanced) <command>rhn-ssl-tool --gen-ca --cert-only --help</command></member>
-    <member>(advanced) <command>rhn-ssl-tool --gen-ca --rpm-only --help</command></member>
+    <member>(advanced) <command>katello-ssl-tool --gen-ca --key-only --help</command></member>
+    <member>(advanced) <command>katello-ssl-tool --gen-ca --cert-only --help</command></member>
+    <member>(advanced) <command>katello-ssl-tool --gen-ca --rpm-only --help</command></member>
     <member>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</member>
-    <member>(advanced) <command>rhn-ssl-tool --gen-server --key-only --help</command></member>
-    <member>(advanced) <command>rhn-ssl-tool --gen-server --cert-req-only --help</command></member>
-    <member>(advanced) <command>rhn-ssl-tool --gen-server --cert-only --help</command></member>
-    <member>(advanced) <command>rhn-ssl-tool --gen-server --rpm-only --help</command></member>
+    <member>(advanced) <command>katello-ssl-tool --gen-server --key-only --help</command></member>
+    <member>(advanced) <command>katello-ssl-tool --gen-server --cert-req-only --help</command></member>
+    <member>(advanced) <command>katello-ssl-tool --gen-server --cert-only --help</command></member>
+    <member>(advanced) <command>katello-ssl-tool --gen-server --rpm-only --help</command></member>
 </simplelist>
 </RefSect1>
 
 <RefSect1><Title>Description</Title>
 
-    <para>The &RHNSSLTOOL; (<command>rhn-ssl-tool</command>) is used to
+    <para>The &KATELLOSSLTOOL; (<command>katello-ssl-tool</command>) is used to
     generate and maintain RHN SSL keys and certificates. It also will generate
     RPMs for use in deploying these keys and certificates. The tool is geared
     for use in an RHN context, but can be useful outside of RHN.</para>
@@ -90,7 +90,7 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
             <listitem>
 
             <para></para>
-            <para><command>rhn-ssl-tool --gen-ca --dir
+            <para><command>katello-ssl-tool --gen-ca --dir
             <replaceable>BUILD_DIR</replaceable> [ options
             <replaceable>...</replaceable> ]</command></para>
 
@@ -124,7 +124,7 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
             <listitem>
 
             <para></para>
-            <para><command>rhn-ssl-tool --gen-server --dir
+            <para><command>katello-ssl-tool --gen-server --dir
             <replaceable>BUILD_DIR</replaceable> [ options
             <replaceable>...</replaceable> ]</command></para>
 
@@ -210,7 +210,7 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
             <para><emphasis>CA public certficate:</emphasis> In the "3rd party
             CA" case, simply copy the certificate authorities public
             certificate to the SSL build directory; renaming it to
-            <emphasis>RHN-ORG-TRUSTED-SSL-CERT</emphasis>; and then run
+            <emphasis>KATELLO-TRUSTED-SSL-CERT</emphasis>; and then run
             <command>--gen-ca --dir BUILD_DIR --rpm-only</command> to package
             that certificate in an expected manner ready for client deployment.
             NOTE: this has not been tested by RHN personnell. See further
@@ -610,13 +610,13 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
 
 <RefSect1><Title>Examples</Title>
 <simplelist>
-        <member><command>rhn-ssl-tool --help</command></member>
-        <member><command>rhn-ssl-tool --gen-ca --help</command></member>
-        <member><command>rhn-ssl-tool --gen-server --help</command></member>
-        <member><command>rhn-ssl-tool --gen-ca -pMY_CA_PASSWORD
+        <member><command>katello-ssl-tool --help</command></member>
+        <member><command>katello-ssl-tool --gen-ca --help</command></member>
+        <member><command>katello-ssl-tool --gen-server --help</command></member>
+        <member><command>katello-ssl-tool --gen-ca -pMY_CA_PASSWORD
         --set-state="North Carolina" --set-city=Raleigh --set-org="Example
         Inc." --set-org-unit="SSL CA Unit" --dir=/etc/sysconfig/rhn/ssl</command></member>
-        <member><command>rhn-ssl-tool --gen-server -pMY_CA_PASSWORD
+        <member><command>katello-ssl-tool --gen-server -pMY_CA_PASSWORD
         --set-state="North Carolina" --set-city=Raleigh --set-org="Example
         Inc." --set-org-unit="IS/IT" --email="taw@example.com"
         --set-hostname="rhnbox1.example.com" --set-cname="rhnbox1.localnet"
@@ -626,16 +626,16 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
 
 <RefSect1><Title>Files</Title>
 <simplelist>
-    <member>BUILD_DIR/rhn-ca-openssl.cnf</member>
-    <member>BUILD_DIR/RHN-ORG-PRIVATE-SSL-KEY</member>
-    <member>BUILD_DIR/RHN-ORG-TRUSTED-SSL-CERT</member>
+    <member>BUILD_DIR/katello-ca-openssl.cnf</member>
+    <member>BUILD_DIR/KATELLO-PRIVATE-SSL-KEY</member>
+    <member>BUILD_DIR/KATELLO-TRUSTED-SSL-CERT</member>
     <member>BUILD_DIR/serial</member>
     <member>BUILD_DIR/index.txt</member>
     <member>BUILD_DIR/latest.txt</member>
     <member>BUILD_DIR/rhn-org-trusted-ssl-cert-VER-REL.src.rpm</member>
     <member>BUILD_DIR/rhn-org-trusted-ssl-cert-VER-REL.noarch.rpm</member>
     <member>BUILD_DIR/MACHINE_NAME/latest.txt</member>
-    <member>BUILD_DIR/MACHINE_NAME/rhn-server-openssl.cnf</member>
+    <member>BUILD_DIR/MACHINE_NAME/katello-server-openssl.cnf</member>
     <member>BUILD_DIR/MACHINE_NAME/server.key</member>
     <member>BUILD_DIR/MACHINE_NAME/server.csr</member>
     <member>BUILD_DIR/MACHINE_NAME/server.crt</member>

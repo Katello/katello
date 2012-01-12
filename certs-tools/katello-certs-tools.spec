@@ -20,16 +20,16 @@ Katello.
 %setup -q
 
 %build
-/usr/bin/docbook2man rhn-bootstrap.sgml
-/usr/bin/docbook2man rhn-ssl-tool.sgml
+/usr/bin/docbook2man katello-bootstrap.sgml
+/usr/bin/docbook2man katello-ssl-tool.sgml
 %{__python} setup.py build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
 chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/certs/client_config_update.py
-chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/certs/rhn_bootstrap.py
-chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/certs/rhn_ssl_tool.py
+chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/certs/katello_bootstrap.py
+chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/certs/katello_ssl_tool.py
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -38,10 +38,10 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/*
 %{_datarootdir}/katello/certs
 %attr(755,root,root) %{_datarootdir}/katello/certs/*.sh
-%attr(755,root,root) %{_bindir}/rhn-sudo-ssl-tool
-%attr(755,root,root) %{_bindir}/rhn-ssl-tool
-%attr(755,root,root) %{_bindir}/rhn-bootstrap
-%doc %{_mandir}/man1/rhn-*.1*
+%attr(755,root,root) %{_bindir}/katello-sudo-ssl-tool
+%attr(755,root,root) %{_bindir}/katello-ssl-tool
+%attr(755,root,root) %{_bindir}/katello-bootstrap
+%doc %{_mandir}/man1/katello-*.1*
 %doc LICENSE PYTHON-LICENSES.txt
 %doc ssl-howto-simple.txt ssl-howto.txt
 %attr(755,root,root) %{_var}/www/html/pub/bootstrap/client_config_update.py*
