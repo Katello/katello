@@ -17,7 +17,8 @@ class Provider < ActiveRecord::Base
   include KatelloUrlHelper
   include IndexedModel
 
-  index_options :extended_json=>:extended_index_attrs, :json=>{:except=>[]}
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :product, :repo, :description]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -119,17 +120,21 @@ class Provider < ActiveRecord::Base
   def self.list_verbs  global = false
     if AppConfig.katello?
       {
-         :create => N_("Create Provider"),
-         :read => N_("Access Provider"),
-         :update => N_("Manage Provider and Products"),
-         :delete => N_("Delete Provider"),
+        :create => _("Administer Providers"),
+        :read => _("Read Providers"),
+        :update => _("Modify Providers and Administer Products"),
+        :delete => _("Delete Providers"),
       }.with_indifferent_access
     else
       {
-         :read => N_("Access Provider"),
-         :update => N_("Manage Provider and Products"),
+        :read => _("Read Providers"),
+        :update => _("Modify Providers and Administer Products"),
       }.with_indifferent_access
     end
+  end
+
+  def self.read_verbs
+    [:read]
   end
 
   def self.no_tag_verbs
@@ -174,14 +179,12 @@ class Provider < ActiveRecord::Base
   end
 
   def extended_index_attrs
-    products = []
-    #products = self.products.map{|prod|
-    #  {:provider_name=>prod.name, :repos=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
-    #}
+    products = self.products.map{|prod|
+      {:product=>prod.name, :repo=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
+    }
     {
       :products=>products,
       :name_sort=>name.downcase
-
     }
   end
 

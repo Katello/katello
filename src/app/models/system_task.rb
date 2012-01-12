@@ -98,6 +98,13 @@ class SystemTask < ActiveRecord::Base
           },
           :user_message => _('Package Group Remove scheduled by %s')
       },
+      :candlepin_event => {
+          :english_name =>N_("Candlepin Event"),
+          :type => :candlepin_event,
+          :event_messages => {
+          },
+          :user_message => nil
+      },
 
   }.with_indifferent_access
 
@@ -123,8 +130,14 @@ class SystemTask < ActiveRecord::Base
           else
             return  _("%s (%s other packages)") % [p.first, p.length - 1]
           end
+        when :package_group
+          p = task.parameters[:groups]
+          if p.length == 1
+            return p.first
+          else
+            return  _("%s (%s other package groups)") % [p.first, p.length - 1]
+          end
       end
-
     end
     def message_for task
       details = SystemTask::TYPES[task.task_type]
@@ -148,24 +161,51 @@ class SystemTask < ActiveRecord::Base
           end
           msg = details[:event_messages][task.state]
           return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
+        when :candlepin_event
+          return task.result
+        when :package_group
+          p = task.parameters[:groups]
+          msg = details[:event_messages][task.state]
+          return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
+
       end
     end
 
     def refresh(ids)
-      ids.each do |id|
-        TaskStatus.find(id).refresh_pulp
+      unless ids.nil? || ids.empty?
+        uuids = TaskStatus.select(:uuid).where(:id => ids).collect{|t| t.uuid}
+        ret = Pulp::Task.find(uuids)
+        ret.each do |pulp_task|
+          PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task["id"]))
+        end
       end
     end
 
     def refresh_for_system(sid)
       query = SystemTask.select(:task_status_id).joins(:task_status).where(:system_id => sid)
+
       ids = query.where("task_statuses.state"=>[:waiting, :running]).collect {|row| row[:task_status_id]}
       refresh(ids)
-      TaskStatus.where("task_statuses.id in (#{query.to_sql})")
+      statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
+
+      # Since Candlepin events are not recorded as tasks, fetch them for this system and add them
+      # here. The alternative to this lazy loading of Candlepin tasks would be to have each API
+      # call that Katello passes through to Candlepin record the task explicitly.
+      system = System.find(sid)
+      system.events.each {|event|
+        event_status = {:id => event[:id], :state => event[:type],
+                       :start_time => event[:timestamp], :finish_time => event[:timestamp],
+                       :progress => "100", :result => event[:messageText]}
+        # Find or create task
+        task = statuses.where("#{TaskStatus.table_name}.uuid" => event_status[:id]).first
+        task ||= SystemTask.make(system, event_status, :candlepin_event, :event => event)
+      }
+
+      statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
     end
 
     def make system, pulp_task, task_type, parameters
-      task_status = TaskStatus.new(
+      task_status = PulpTaskStatus.new(
          :organization => system.organization,
          :task_type => task_type,
          :parameters => parameters,

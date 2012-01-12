@@ -18,7 +18,8 @@ class Organization < ActiveRecord::Base
   include IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{:except=>[:debug_cert, :events]}
+                :json=>{:except=>[:debug_cert, :events]},
+                :display_attrs=>[:name, :description, :environment]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -114,33 +115,37 @@ class Organization < ActiveRecord::Base
   def self.list_verbs global = false
     if AppConfig.katello?
       org_verbs = {
-        :update => N_("Manage Organization and Environments"),
-        :read => N_("Access Organization"),
-        :read_systems => N_("Access Systems"),
-        :register_systems =>N_("Register Systems"),
-        :update_systems => N_("Manage Systems"),
-        :delete_systems => N_("Delete Systems"),
-        :sync => N_("Sync Products"),
-        :gpg => N_("Manage GPG Keys")
+        :update => _("Modify Organization and Administer Environments"),
+        :read => _("Read Organization"),
+        :read_systems => _("Read Systems"),
+        :register_systems =>_("Register Systems"),
+        :update_systems => _("Modify Systems"),
+        :delete_systems => _("Delete Systems"),
+        :sync => _("Sync Products"),
+        :gpg => _("Administer GPG Keys")
      }
     else
       org_verbs = {
-        :update => N_("Manage Organization and Environments"),
-        :read => N_("Access Organization"),
-        :read_systems => N_("Access Systems"),
-        :register_systems =>N_("Register Systems"),
-        :update_systems => N_("Manage Systems"),
-        :delete_systems => N_("Delete Systems")
+        :update => _("Modify Organization and Administer Environments"),
+        :read => _("Read Organization"),
+        :read_systems => _("Read Systems"),
+        :register_systems =>_("Register Systems"),
+        :update_systems => _("Modify Systems"),
+        :delete_systems => _("Delete Systems"),
      }
     end
     org_verbs.merge!({
-    :create => N_("Create Organization"),
-    :delete => N_("Delete Organization")
+    :create => _("Administer Organization"),
+    :delete => _("Delete Organization")
     }) if global
-
     org_verbs.with_indifferent_access
 
   end
+
+  def self.read_verbs
+    [:read, :read_systems]
+  end
+
 
   def self.no_tag_verbs
     [:create]

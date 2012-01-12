@@ -14,6 +14,7 @@ require 'spec_helper'
 describe Permission do
   include OrchestrationHelper
   include AuthorizationHelperMethods
+
   def add_test_type type, verbs
     verb_hash = {}
     verbs.each{|v|
@@ -25,6 +26,7 @@ describe Permission do
       :list_verbs => verb_hash)}
     
   end
+
 
 
   before(:each) do

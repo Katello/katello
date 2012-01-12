@@ -14,11 +14,12 @@ require 'spec_helper'
 require 'helpers/product_test_data'
 require 'helpers/repo_test_data'
 
-include OrchestrationHelper
-include AuthorizationHelperMethods
-include ProductHelperMethods
 
 describe Product, :katello => true do
+
+  include OrchestrationHelper
+  include AuthorizationHelperMethods
+  include ProductHelperMethods
 
   before(:each) do
     disable_org_orchestration

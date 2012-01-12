@@ -63,6 +63,8 @@ class Api::EnvironmentsController < Api::ApiController
     render :json => @environment.products.all_readable(@organization).collect { |p| p.repos(@environment, query_params[:include_disabled]) }.flatten
   end
 
+  protected
+
   def find_environment
     @environment = KTEnvironment.find(params[:id])
     raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:id]}'") if @environment.nil?

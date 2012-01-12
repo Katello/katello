@@ -24,6 +24,7 @@ class Permission < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates_uniqueness_of :name, :scope => [:organization_id, :role_id], :message => N_("must be unique within an organization scope")
 
+  before_destroy :check_locked
 
   before_destroy do |p|
     p.tags.destroy_all
@@ -32,6 +33,10 @@ class Permission < ActiveRecord::Base
 
   class PermissionValidator < ActiveModel::Validator
     def validate(record)
+      if record.role.locked?
+        record.errors[:base] << _("Cannot add/remove or change permissions related to a locked role.")
+      end
+
       if record.all_verbs? && !record.verbs.empty?
         record.errors[:base] << N_("Cannot specify a verb if all_verbs is selected.")
       end
@@ -148,7 +153,13 @@ class Permission < ActiveRecord::Base
       self.role.update_index
     end
   end
-  
+
+
+  def check_locked
+    if self.role.locked?
+      raise ActiveRecord::ReadOnlyRecord, _("Cannot add/remove or change permissions related to a locked role.")
+    end
+  end
 
 end
 

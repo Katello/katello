@@ -40,8 +40,7 @@ class FiltersController < ApplicationController
       :add_packages=>editable,
       :remove_packages=>editable,
       :products=>readable,
-      :update_products=>editable,
-      :auto_complete_products_repos=>index_test
+      :update_products=>editable
     }
   end
 
@@ -67,27 +66,6 @@ class FiltersController < ApplicationController
     render_panel_direct(Filter, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
       {:filter=>{:organization_id=>[current_organization.id]}})
   end
-
-  def auto_complete_products_repos
-    name = params[:term]
-    products = Product.search_for(name).readable(current_organization)
-
-    to_ret = []
-    products.each{|prod|
-      to_ret << {:label=>prod.name, :value=>prod.name, :type=>"product", :id=>prod.id}
-    }
-
-    Product.readable(current_organization).each{|prod|
-      prod.repos(current_organization.locker).each{|repo|
-        if repo.name.upcase.include? name.upcase
-          to_ret << {:label=>repo.name, :value=>repo.name, :type=>"repo", :id=>repo.id, :product_id=>prod.id}
-        end
-      }
-    }
-    
-    render :json=>to_ret
-  end
-
 
   def update
     options = params[:filter]
@@ -222,7 +200,8 @@ class FiltersController < ApplicationController
         :ajax_scroll=>items_filters_path(),
         :enable_create=> Filter.creatable?(current_organization),
         :initial_action=>:packages,
-        :ajax_load=>true
+        :ajax_load=>true,
+        :search_class=>Filter
     }
   end
 

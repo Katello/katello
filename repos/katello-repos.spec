@@ -15,6 +15,13 @@ BuildArch:      noarch
 %description
 Defines yum repositories for Katello and its subprojects, Candlepin and Pulp.
 
+%package testing
+Summary:        Definition of yum testing repositories for Katello
+
+%description testing
+Defines yum testing repositories for Katello and its subprojects,
+Candlepin and Pulp.
+
 %prep
 %setup -q
 
@@ -29,6 +36,7 @@ install -d -m 0755 %{buildroot}%{_sysconfdir}/yum.repos.d
 install -m 644 fedora-katello.repo %{buildroot}%{_sysconfdir}/yum.repos.d/katello.repo
 install -m 644 fedora-candlepin.repo %{buildroot}%{_sysconfdir}/yum.repos.d/candlepin.repo
 install -m 644 fedora-pulp.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp.repo
+install -m 644 fedora-pulp-testing.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp-testing.repo
 install -m 644 fedora-thumbslug.repo %{buildroot}%{_sysconfdir}/yum.repos.d/thumbslug.repo
 %endif
 
@@ -36,6 +44,7 @@ install -m 644 fedora-thumbslug.repo %{buildroot}%{_sysconfdir}/yum.repos.d/thum
 install -m 644 rhel-katello.repo %{buildroot}%{_sysconfdir}/yum.repos.d/katello.repo
 install -m 644 rhel-candlepin.repo %{buildroot}%{_sysconfdir}/yum.repos.d/candlepin.repo
 install -m 644 rhel-pulp.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp.repo
+install -m 644 rhel-pulp-testing.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp-testing.repo
 install -m 644 rhel-thumbslug.repo %{buildroot}%{_sysconfdir}/yum.repos.d/thumbslug.repo
 %endif
 
@@ -44,7 +53,14 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%{_sysconfdir}/yum.repos.d/*.repo
+%{_sysconfdir}/yum.repos.d/candlepin.repo
+%{_sysconfdir}/yum.repos.d/katello.repo
+%{_sysconfdir}/yum.repos.d/pulp.repo
+%{_sysconfdir}/yum.repos.d/thumbslug.repo
+
+%files testing
+%defattr(-,root,root)
+%{_sysconfdir}/yum.repos.d/pulp-testing.repo
 
 %changelog
 * Tue Nov 29 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1

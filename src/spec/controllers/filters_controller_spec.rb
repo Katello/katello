@@ -172,17 +172,8 @@ describe FiltersController, :katello => true do
       
     end
 
-    describe "Auto complete products" do
-      it "should return a valid product" do
-        get :auto_complete_products_repos, :term=>@product.name
-        response.should be_success
-      end
-    end
   end
 
-
-
-  
   describe "rules" do
     before (:each) do
       disable_user_orchestration

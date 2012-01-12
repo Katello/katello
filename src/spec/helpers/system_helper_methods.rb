@@ -23,7 +23,7 @@ module SystemHelperMethods
           :start_time => Time.now,
           :finish_time => Time.now,
           :result => "hurray"
-      }
+      }.with_indifferent_access
     end
 
     def updated_pulp_task
@@ -33,7 +33,7 @@ module SystemHelperMethods
           :start_time => Time.now,
           :finish_time => Time.now + 60,
           :result => "yippie"
-      }
+      }.with_indifferent_access
     end
 
     def pulp_task_with_error
@@ -44,14 +44,14 @@ module SystemHelperMethods
           :finish_time => Time.now,
           :exception => "exception",
           :traceback => "traceback"
-      }
+      }.with_indifferent_access
     end
 
 
   def stub_consumer_packages_install(expected_response, refresh_response = nil)
     refresh_response ||= expected_response
     Pulp::Consumer.stub!(:install_packages).and_return(expected_response)
-    Pulp::Task.stub!(:find).and_return(refresh_response)
+    Pulp::Task.stub!(:find).and_return([refresh_response])
   end
 
 end

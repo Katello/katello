@@ -64,10 +64,13 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @organization = current_organization
-    accessible_envs = current_organization.environments
-    setup_environment_selector(current_organization, accessible_envs)
-    @environment = first_env_in_path(accessible_envs)
+    accessible_envs = []
+    if current_organization
+      @organization = current_organization
+      accessible_envs = current_organization.environments
+      setup_environment_selector(current_organization, accessible_envs)
+      @environment = first_env_in_path(accessible_envs)
+    end
     render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user,
                                                                    :editable=>@user.id == current_user.id || @user.editable?,
                                                                    :name=>controller_display_name,
@@ -102,7 +105,7 @@ class UsersController < ApplicationController
       end
 
       notice @user.username + _(" created successfully.")
-      if User.where(:id => @user.id).search_for(params[:search]).include?(@user)
+      if search_validate(User, user.id, params[:search])
         render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
       else
         notice _("'#{@user["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
@@ -127,7 +130,7 @@ class UsersController < ApplicationController
       attr = params[:user].first.last if params[:user].first
       attr ||= ""
       
-      if not User.where(:id => @user.id).search_for(params[:search]).include?(@user)
+      if not search_validate(User, user.id, params[:search])
         notice _("'#{@user["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
       end
 
@@ -214,7 +217,7 @@ class UsersController < ApplicationController
     if  @user.update_attributes(params[:user])
       notice _("User updated successfully.")
       
-      if not User.where(:id => @user.id).search_for(params[:search]).include?(@user)
+      if not search_validate(User, user.id, params[:search])
         notice _("'#{@user["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
       end
       
@@ -274,7 +277,8 @@ class UsersController < ApplicationController
                  :name => controller_display_name,
                  :ajax_load  => true,
                  :ajax_scroll => items_users_path(),
-                 :enable_create => User.creatable? }
+                 :enable_create => User.creatable?,
+                 :search_class=>User}
   end
 
   def controller_display_name
