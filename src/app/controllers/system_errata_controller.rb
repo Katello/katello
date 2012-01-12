@@ -33,7 +33,9 @@ class SystemErrataController < ApplicationController
 
   def index
     chunk_size = current_user.page_size
-    errata, total_errata = get_errata(0, chunk_size)
+    #errata, total_errata = get_errata(0, chunk_size)
+    errata = []
+    total_errata = 0
     
     render :partial=>"systems/errata/index", :layout => "tupane_layout", :locals=>{:system=>@system, :errata => errata,
                                                                        :editable => @system.editable?, :offset => 25,
