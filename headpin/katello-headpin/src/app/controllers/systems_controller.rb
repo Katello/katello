@@ -99,7 +99,8 @@ class SystemsController < ApplicationController
       end
 
     rescue Exception => error
-      notice error, {:level => :error}
+      display_message = error.response.include?('displayMessage') ? JSON.parse(error.response)['displayMessage'] : error.to_s
+      notice display_message, {:level => :error}
       Rails.logger.info error.backtrace.join("\n")
       render :text => error, :status => :bad_request
     end
@@ -293,7 +294,8 @@ class SystemsController < ApplicationController
                       :list_partial => 'systems/list_systems',
                       :ajax_load  => true,
                       :ajax_scroll => items_systems_path(),
-                      :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil
+                      :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil,
+                      :search_class=>System
                       }
   end
 

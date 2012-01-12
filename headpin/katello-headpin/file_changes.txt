@@ -3,6 +3,7 @@ src/app/controllers/api/errata_controller.rb
 src/app/controllers/api/packages_controller.rb
 src/app/controllers/api/pulp_proxies_controller.rb
 src/app/controllers/api/repositories_controller.rb
+src/app/controllers/api/subscriptions_controller.rb
 src/app/controllers/api/sync_controller.rb
 src/app/controllers/api/systems_controller.rb
 src/app/controllers/sync_management_controller.rb
@@ -21,6 +22,7 @@ src/app/models/puppetclasses.rb
 src/app/models/resource_type.rb
 src/app/models/system.rb
 src/app/models/user.rb
+src/app/stylesheets/sections/dashboard.scss
 src/app/views/activation_keys/_edit.html.haml
 src/app/views/activation_keys/_new.html.haml
 src/app/views/activation_keys/index.html.haml
@@ -30,6 +32,7 @@ src/app/views/layouts/_header.haml
 src/app/views/providers/redhat/show.html.haml
 src/config/initializers/app_config.rb
 src/config/katello.yml
+src/config/routes.rb
 src/lib/navigation/content_management.rb
 src/lib/navigation/systems.rb
 src/lib/resources/candlepin.rb
@@ -57,8 +60,10 @@ src/spec/controllers/repositories_controller_spec.rb
 src/spec/controllers/sync_management_controller_spec.rb
 src/spec/controllers/sync_plans_controller_spec.rb
 src/spec/controllers/sync_schedules_controller_spec.rb
+src/spec/controllers/system_events_controller_spec.rb
 src/spec/controllers/system_packages_controller_spec.rb
 src/spec/controllers/system_templates_controller_spec.rb
+src/spec/helpers/authorization_helper_methods.rb
 src/spec/lib/package_util_spec.rb
 src/spec/models/activation_key_spec.rb
 src/spec/models/changeset_spec.rb
@@ -72,4 +77,5 @@ src/spec/models/system_spec.rb
 src/spec/models/system_template_revision_spec.rb
 src/spec/models/system_template_spec.rb
 src/spec/models/user_spec.rb
+src/spec/support/protected_action_shared_examples.rb
 src/spec/views/activation_keys/_edit.html.haml_spec.rb

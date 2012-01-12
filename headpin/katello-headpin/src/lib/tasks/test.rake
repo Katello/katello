@@ -8,7 +8,7 @@ namespace "test" do
       spec_prereq = Rails.configuration.generators.options[:rails][:orm] == :active_record ?  "db:test:prepare" : :noop
       t = RSpec::Core::RakeTask.new(spec_prereq).instance_eval do |i|
         self.pattern = ["./spec/**/*_spec.rb"]
-        self.rspec_opts = "--tag ~katello"
+        self.rspec_opts = "--tag '~katello'"
         task "#{app}_spec" do
           RakeFileUtils.send(:verbose, verbose) do
             if files_to_run.empty?

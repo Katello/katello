@@ -112,7 +112,7 @@ module Navigation
         { :key => :applied_subscriptions,
           :name =>N_("Applied Subscriptions"),
           :url => lambda{applied_subscriptions_activation_key_path(@activation_key.id)},
-          :if =>lambda{activation_key},
+          :if =>lambda{@activation_key},
           :options => {:class=>"navigation_element"}
         },
         { :key => :available_subscriptions,
@@ -124,7 +124,7 @@ module Navigation
         { :key => :details,
           :name =>N_("Details"),
           :url => lambda{edit_activation_key_path(@activation_key.id)},
-          :if => lambda{activation_key},
+          :if => lambda{@activation_key},
           :options => {:class=>"navigation_element"}
         }
       ]

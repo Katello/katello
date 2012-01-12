@@ -16,7 +16,9 @@ class Filter < ActiveRecord::Base
   include Authorization
   include IndexedModel
 
-  index_options :extended_json=>:extended_index_attrs, :json=>{:except=>[:pulp_id, :package_list]}
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :packages, :products],
+                :json=>{:except=>[:pulp_id, :package_list]}
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -57,12 +59,21 @@ class Filter < ActiveRecord::Base
 
   def self.list_verbs  global = false
     {
-       :create => N_("Create Package Filters"),
-       :read => N_("Access Package Filters"),
-       :delete => N_("Delete Package Filters"),
-       :update => N_("Edit Package Filters")
+       :create => _("Administer Package Filters"),
+       :read => _("Read Package Filters"),
+       :delete => _("Delete Package Filters"),
+       :update => _("Modify Package Filters")
     }.with_indifferent_access
   end
+
+  def self.read_verbs
+    [:read]
+  end
+
+  def self.no_tag_verbs
+    Filter.list_verbs.keys
+  end
+
 
   def self.creatable? org
     User.allowed_to?([:create], :filters, nil, org)
