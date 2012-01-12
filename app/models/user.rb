@@ -431,6 +431,7 @@ class User < ActiveRecord::Base
   rescue Exception=>e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
+    raise
   end
 
   protected
