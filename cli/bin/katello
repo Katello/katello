@@ -39,7 +39,8 @@ from katello.client.core import (
   template,
   changeset,
   client,
-  filters
+  filters,
+  gpg_key
 )
 
 def setup_admin(admin):
@@ -220,6 +221,15 @@ def setup_admin(admin):
     filter_cmd.add_action('add_package', filters.AddPackage())
     filter_cmd.add_action('remove_package', filters.RemovePackage())
     admin.add_command('filter', filter_cmd)
+
+    gpgkey_cmd = gpg_key.GpgKey()
+    gpgkey_cmd.add_action('create', gpg_key.Create())
+    gpgkey_cmd.add_action('info', gpg_key.Info())
+    gpgkey_cmd.add_action('list', gpg_key.List())
+    gpgkey_cmd.add_action('update', gpg_key.Update())
+    gpgkey_cmd.add_action('delete', gpg_key.Delete())
+    admin.add_command('gpg_key', gpgkey_cmd)
+
 
 if __name__ == "__main__":
     admin = AdminCLI()
