@@ -13,9 +13,15 @@
 require 'spec_helper'
 
 describe Api::GpgKeysController do
+  include LoginHelperMethods
 
   before(:each) do
-    @gpg_key = GpgKey.create!( :name => "Another Test Key", :content => "This is the key data string", :organization => new_test_org )
+    login_user_api
+    @request.env["HTTP_ACCEPT"] = "application/json"
+    disable_org_orchestration
+
+    @organization = new_test_org
+    @gpg_key = GpgKey.create!( :name => "Another Test Key", :content => "This is the key data string", :organization => @organization )
   end
 
   describe "GET content" do
@@ -35,5 +41,63 @@ describe Api::GpgKeysController do
     end
   end
 
+  describe "list gpg keys" do
+    let(:req_params) { {:organization_id => @organization.name, :name => @gpg_key.name}.with_indifferent_access }
+    let(:req) { get :index, req_params }
+
+    it "return list of found keys in JSON" do
+      req
+      response.body == [@gpg_key.to_json(:only => [:id, :name])]
+    end
+  end
+
+  describe "show gpg key" do
+    let(:req_params) { {:id => @gpg_key.id }.with_indifferent_access }
+    let(:req) { get :show, req_params }
+
+    it "return list of found keys in JSON" do
+      req
+      response.body == @gpg_key.to_json
+    end
+
+    it "should include assigned repos and products" do
+      req
+      JSON.parse(response.body).should include("repositories" => [], "products" => [])
+    end
+  end
+
+
+  describe "create gpg key" do
+    let(:req_params) do
+      {:organization_id => @organization.name, :gpg_key => {:name => "Gpg Key", :content => "This is the key string" }}.with_indifferent_access
+    end
+    let(:req) { post :create, req_params }
+
+    it "returns JSON with created key" do
+      req
+      JSON.parse(response.body).slice(*%w[name content]).should == req_params[:gpg_key]
+    end
+  end
+
+  describe "update gpg key" do
+    let(:req_params) { {:id => @gpg_key.id, :gpg_key => {:name => "Gpg Key", :content => "This is the key string" }}.with_indifferent_access }
+    let(:req) { put :update, req_params }
+
+    it "returns JSON with updated key" do
+      GpgKey.stub(:find).with(@gpg_key.id).and_return(@gpg_key)
+      req
+      JSON.parse(response.body).slice(*%w[name content]).should == req_params[:gpg_key]
+    end
+  end
+
+  describe "destroy gpg key" do
+    let(:req_params) { {:id => @gpg_key.id }.with_indifferent_access }
+    let(:req) { delete :destroy, req_params }
+
+    it "remove the record" do
+      req
+      GpgKey.where(:id => @gpg_key.id).should be_empty
+    end
+  end
 end
 
