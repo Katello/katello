@@ -135,7 +135,7 @@ class SystemsController < ApplicationController
       find_environment
       filters = {:environment_id=>[params[:env_id]]}
     else
-      filters = {:organization_id=>[current_organization.id]}
+      filters = {:environment_id=> KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
     end
     render_panel_direct(System, @panel_options, search, params[:offset], order,
                         {:filter=>filters, :load=>true})
