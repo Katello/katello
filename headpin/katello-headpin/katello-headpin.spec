@@ -117,6 +117,9 @@ and then run katello-configure to configure everything.
 cp -Rf %{homedir}/* %{katello_dir}
 
 %changelog
+* Thu Jan 12 2012 Jordan OMara <jomara@redhat.com> 0.1.124-2
+- katello-headpin 0.1.124 (jomara@redhat.com)
+
 * Wed Jan 11 2012 Jordan OMara <jomara@redhat.com> 0.1.123-2
 - Headpin 1.123-2 merge 
   (jomara@redhat.com)
