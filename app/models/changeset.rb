@@ -61,12 +61,6 @@ class Changeset < ActiveRecord::Base
   belongs_to :task_status
   before_save :uniquify_artifacts
 
-  scoped_search :on => :name, :complete_value => true, :rename => :'changeset.name'
-  scoped_search :on => :created_at, :complete_value => true, :rename => :'changeset.create_date'
-  scoped_search :on => :promotion_date, :complete_value => true, :rename => :'changeset.promotion_date'
-  scoped_search :in => :products, :on => :name, :complete_value => true, :rename => :'custom_product.name'
-  scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'custom_product.description'
-
   def key_for item
     "changeset_#{id}_#{item}"
   end

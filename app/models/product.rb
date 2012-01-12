@@ -50,9 +50,6 @@ class Product < ActiveRecord::Base
   validates :environments, :locker_presence => true
   validates :name, :presence => true, :katello_name_format => true
 
-  scope :completer_scope, lambda { |options| authorized_items(options[:organization_id], READ_PERM_VERBS)}
-  scoped_search :on => :name, :complete_value => true
-  scoped_search :on => :multiplier, :complete_value => true
   scope :with_repos_only, lambda { |env|
     with_repos(env, false)
   }
