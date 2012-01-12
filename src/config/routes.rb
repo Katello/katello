@@ -542,7 +542,9 @@ Src::Application.routes.draw do
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
     # development / debugging support
-    get 'status/memory'
+    if Rails.env == "development"
+      get 'status/memory'
+    end
 
   # end '/api' namespace
   end
