@@ -24,14 +24,16 @@ KT.system.errata = function() {
     	init = function(){
     		register_events();
             init_status_check();
+            show_spinner(true);
+            fetch_errata({ data : { clear_items : false }});
     	},
     	register_events = function(){
-    		$('#display_errata_type').bind('change', filter_errata);
+    		$('#display_errata_type').bind('change', { clear_items : true }, fetch_errata);
     		$('#select_all_errata').bind('change', select_all_errata);
-    		$('#errata_state_radio_applied').bind('change', filter_errata);
-    		$('#errata_state_radio_outstanding').bind('change', filter_errata);
+    		$('#errata_state_radio_applied').bind('change', fetch_errata);
+    		$('#errata_state_radio_outstanding').bind('change', fetch_errata);
             $('#run_errata_button').bind('click', add_errata);
-    		load_more.bind('click', get_errata);
+    		load_more.bind('click', { clear_items : false }, fetch_errata);
             $('.errata-info').tipsy({ gravity: 'e', live : true, html : true, title : generateInfoToolTip, 
                                     hoverable : true, delayOut : 250, opacity : 1, delayIn : 300,
                                     stickyClick : function(element, state){ 
@@ -58,19 +60,25 @@ KT.system.errata = function() {
                 maxTimeout: timeout
             }, update_status);
         },
-    	filter_errata = function(event){
+    	fetch_errata = function(event){
     		var type = get_current_filter(),
-    			state = get_current_state();
+    			state = get_current_state(),
+    		    offset,
+                clear_items = event.data ? event.data.clear_items : false;
     		
-    		insert_data({ "html" : "", "results_count" : 0, "total_count" : 0, "current_count" : 0}, false);
-    		show_spinner(true);
-    		
-			$.ajax({
+            if( clear_items ){
+        		insert_data({ "html" : "", "results_count" : 0, "total_count" : 0, "current_count" : 0}, false);
+    		    show_spinner(true);
+            }
+			
+    		offset = clear_items ? 0 : $('#loaded_summary').data('current_count');
+
+            $.ajax({
     			method	: 'get',
     			url		: KT.routes.items_system_errata_path(system_id),
-    			data	: { filter_type : type, offset : 0, errata_state : state },
+    			data	: { filter_type : type, offset : offset, errata_state : state },
     		}).success(function(data){
-    			insert_data(data, false);
+    			insert_data(data, !clear_items);
     			show_spinner(false);
     		});
     	},
@@ -88,18 +96,6 @@ KT.system.errata = function() {
     		} else {
     			checkboxes.attr('checked', false);
     		}
-    	},
-    	get_errata = function(){
-    		var offset = $('#loaded_summary').data('current_count'),
-    			value = get_current_filter();
-    		
-    		$.ajax({
-    			method	: 'get',
-    			url		: KT.routes.items_system_errata_path(system_id),
-    			data	: { filter_type : value, offset : offset },
-    		}).success(function(data){
-    			insert_data(data, true);
-    		});
     	},
         add_errata = function(){
             var selected_errata = $('#system_errata').find(':checkbox:checked'),
