@@ -30,6 +30,10 @@ module AuthorizationHelperMethods
     end
   end
 
+  # for simplified testing without authorization (makes stubbing much more easier)
+  def disable_authorization_rules
+    controller.stub(:authorize).and_return(true)
+  end
 
   def allow(*args)
     AuthorizationHelperMethods.allow(*args)
