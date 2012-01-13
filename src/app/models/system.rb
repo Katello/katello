@@ -116,6 +116,11 @@ class System < ActiveRecord::Base
     system_task = save_system_task(pulp_task, :package_group_remove, :groups, groups)
   end
 
+  def install_errata errata_ids
+    pulp_task = self.install_consumer_errata(errata_ids)
+    system_task = save_system_task(pulp_task, :errata_install, :errata_ids, errata_ids)
+  end
+
   # returns list of virtual permission tags for the current user
   def self.list_tags
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
