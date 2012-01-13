@@ -51,14 +51,14 @@ module Glue::Pulp::Repos
   end
 
   # create content for custom repo
-  def create_content(name, path, gpg_key = nil)
+  def create_content(repo)
     new_content = Glue::Candlepin::ProductContent.new({
       :content => {
-        :name => name,
-        :contentUrl => path,
-        :gpgUrl => yum_gpg_key_url(gpg_key),
+        :name => repo.name,
+        :contentUrl => Glue::Pulp::Repos.custom_content_path(self, repo.name),
+        :gpgUrl => yum_gpg_key_url(repo),
         :type => "yum",
-        :label => "#{self.id}-#{name}",
+        :label => "#{self.id}-#{repo.name}",
         :vendor => Provider::CUSTOM
       },
       :enabled => true
@@ -344,9 +344,8 @@ module Glue::Pulp::Repos
     def add_repo(name, url, repo_type, gpg = nil)
       check_for_repo_conflicts(name)
       key = EnvironmentProduct.find_or_create(self.organization.locker, self)
-      content = create_content(name, Glue::Pulp::Repos.custom_content_path(self, name), gpg)
       repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
-          :groupid => Glue::Pulp::Repos.groupid(self, self.locker, content),
+          :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
           :relative_path => Glue::Pulp::Repos.custom_repo_path(self.locker, self, name),
           :arch => arch,
           :name => name,
@@ -354,6 +353,8 @@ module Glue::Pulp::Repos
           :content_type => repo_type,
           :gpg_key => gpg
       )
+      content = create_content(repo)
+      Repository.update(repo.id, :groupid => Glue::Pulp::Repos.groupid(self, self.locker, content))
       repo
     end
 
@@ -540,14 +541,10 @@ module Glue::Pulp::Repos
 
     private
 
-    def yum_gpg_key_url(gpg_key)
+    def yum_gpg_key_url(repo)
       host = AppConfig.host
       host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
-      gpg_key.nil? ? "" : content_api_gpg_key_url(gpg_key, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
-    rescue => e
-      msg = "problem setting up yum GPG URL: #{e}"
-      errors.add :base, msg
-      Rails.logger.error msg
+      gpg_key_content_api_repository_url(repo, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
     end
 
   end
