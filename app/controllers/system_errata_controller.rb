@@ -32,14 +32,10 @@ class SystemErrataController < ApplicationController
   end
 
   def index
-    chunk_size = current_user.page_size
-    #errata, total_errata = get_errata(0, chunk_size)
-    errata = []
-    total_errata = 0
-    
-    render :partial=>"systems/errata/index", :layout => "tupane_layout", :locals=>{:system=>@system, :errata => errata,
-                                                                       :editable => @system.editable?, :offset => 25,
-                                                                       :total_errata => total_errata }
+    offset = current_user.page_size
+
+    render :partial=>"systems/errata/index", :layout => "tupane_layout", :locals=>{:system=>@system, 
+                                                                          :editable => @system.editable?, :offset => offset}
   end
 
   def items
@@ -143,15 +139,6 @@ class SystemErrataController < ApplicationController
 
   def find_system
     @system = System.find(params[:system_id])
-  end
-
-  def sort_order_limit systems
-      sort_columns(COLUMNS, systems) if params[:order]
-      offset = params[:offset].to_i if params[:offset]
-      offset ||= 0
-      last = offset + current_user.page_size
-      last = systems.length if last > systems.length
-      systems[offset...last]
   end
 
 end
