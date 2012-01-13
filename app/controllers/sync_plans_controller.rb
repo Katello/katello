@@ -165,7 +165,7 @@ class SyncPlansController < ApplicationController
   end
       
   def controller_display_name
-    return _('sync_plan')
+    return 'sync_plan'
   end
 
   def search_filter

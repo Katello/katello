@@ -185,7 +185,7 @@ class SystemPackagesController < ApplicationController
   end
 
   def controller_display_name
-    return _('system')
+    return 'system'
   end
 
   def sort_order_limit systems
