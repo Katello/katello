@@ -182,7 +182,7 @@ KT.common = (function() {
           	noCallback = noCallback || function(){};
           
           $(html).dialog({
-            closeOnEscape: false,
+            closeOnEscape: true,
             open: function (event, ui) {
                 $('.ui-dialog-titlebar-close').hide();
                 $('.confirmation').find('.ui-button')[1].focus();
@@ -190,20 +190,28 @@ KT.common = (function() {
             modal: true,
             resizable: false,
             width: 400,
-            title: "Confirmation",
+            title: i18n.confirmation,
             dialogClass: "confirmation",
             buttons: {
-                "Yes": function () {
+                "Yes": {
+                  click : function () {
                     $(this).dialog("close");
                     $(this).dialog("destroy");
                     yesCallback();
                     return confirmTrue;
+                  },
+                  'class' : 'button',
+                  'text' : i18n.yes
                 },
-                "No": function () {
+                "No": {
+                  click:function () {
                     $(this).dialog("close");
                     $(this).dialog("destroy");
                     noCallback();
                     return confirmFalse;
+                  },
+                  'class' : 'button',
+                  'text' : i18n.no
                 }
             }
           });
@@ -211,19 +219,23 @@ KT.common = (function() {
         customAlert : function(message) {
           var html = "<div style='margin:20px;'><span class='status_exclamation_icon'/><div style='margin-left: 24px; display:table;height:1%;'>" + message + "</div></div>";
           $(html).dialog({
-            closeOnEscape: false,
+            closeOnEscape: true,
             open: function (event, ui) { $('.ui-dialog-titlebar-close').hide(); },
             modal: true,
             resizable: false,
             width: 300,
-            title: "Alert",
+            title: i18n.alert,
             dialogClass: "alert",
             stack: false,
             buttons: {
-                "Ok": function () {
+                "Ok": {
+                  click : function () {
                     $(this).dialog("close");
                     $(this).dialog("destroy");
                     return false;
+                  },
+                  'class' : 'button',
+                  'text' : i18n.ok
                 }
             }
           });

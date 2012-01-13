@@ -58,6 +58,8 @@ class Api::OrganizationsController < Api::ApiController
     render :text => _("Deleted organization '#{params[:id]}'"), :status => 200
   end
 
+  private
+
   def find_organization
     @organization = Organization.first(:conditions => {:cp_key => params[:id].tr(' ', '_')})
     raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:id]}'") if @organization.nil?

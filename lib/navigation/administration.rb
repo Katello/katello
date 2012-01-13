@@ -21,20 +21,20 @@ module Navigation
       [
         { :key => :environment,
           :name =>N_("Environments"),
-          :url => (@user.nil? || @user.new_record?) ? "" : edit_environment_user_path(@user.id),
-          :if => lambda{!@user.nil?},
+          :url => lambda{edit_environment_user_path(@user.id)},
+          :if => lambda {@user},
           :options => {:class=>"navigation_element"}
         },
         { :key => :roles,
           :name =>N_("Roles"),
-          :url => (@user.nil? || @user.new_record?) ? "" : edit_role_path(@user.own_role_id),
-          :if => lambda{!@user.nil?},
+          :url => lambda{edit_role_path(@user.own_role_id)},
+          :if => lambda{@user},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,
           :name =>N_("Details"),
-          :url => (@user.nil? || @user.new_record?) ? "" : edit_user_path(@user.id),
-          :if => lambda{!@user.nil?},
+          :url => lambda{edit_user_path(@user.id)},
+          :if => lambda{@user},
           :options => {:class=>"navigation_element"}
         }
       ]

@@ -31,9 +31,6 @@ class GpgKey < ActiveRecord::Base
   validates :content, :presence => true
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
 
-  scope :completer_scope, lambda { |options| readable(options[:organization_id])}
-  scoped_search :on => :name, :complete_value => true
-
 
   #Permission items
   scope :readable, lambda { |org|

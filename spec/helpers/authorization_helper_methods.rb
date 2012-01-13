@@ -15,6 +15,26 @@ require 'models/model_spec_helper'
 module AuthorizationHelperMethods
   include OrchestrationHelper
 
+  def self.included(base)
+    #Have to backup and restore the TYPES list, otherwise other tests will hit our fake ones
+    types_backup = nil
+    base.class_eval do
+      before(:all) do
+        types_backup = ResourceType::TYPES.clone
+      end
+
+      after(:all) do
+        ResourceType::TYPES.clear
+        ResourceType::TYPES.merge!(types_backup)
+      end
+    end
+  end
+
+  # for simplified testing without authorization (makes stubbing much more easier)
+  def disable_authorization_rules
+    controller.stub(:authorize).and_return(true)
+  end
+
   def allow(*args)
     AuthorizationHelperMethods.allow(*args)
   end
