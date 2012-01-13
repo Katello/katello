@@ -19,12 +19,21 @@ class RepoAPI(KatelloAPI):
     """
     Connection class to access repositories
     """
-    def create(self, prod_id, name, url):
+    def create(self, prod_id, name, url, gpgkey, nogpgkey):
         repodata = {"product_id": prod_id,
                     "name": name,
-                    "url": url}
+                    "url": url,
+                    "gpgkey": gpgkey,
+                    "nogpgkey": nogpgkey}
         path = "/api/repositories/"
         return self.server.POST(path, repodata)[1]
+
+    def update(self, repo_id, gpgkey, nogpgkey):
+        repodata = {}
+        update_hash(repodata, "gpgkey", gpgkey)
+        update_hash(repodata, "nogpgkey", nogpgkey)
+        path = "/api/repositories/%s/" % repo_id
+        return self.server.PUT(path, repodata)[1]
 
     def repos_by_org_env(self, orgName, envId, includeDisabled=False):
         data = {

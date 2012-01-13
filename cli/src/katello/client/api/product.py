@@ -42,15 +42,27 @@ class ProductAPI(KatelloAPI):
         else:
             return None
 
-    def create(self, provId, name, description):
+    def create(self, provId, name, description, gpgkey):
         product = {
             "name": name,
-            "description": description
+            "description": description,
+            "gpgkey": gpgkey
         }
 
         path = "/api/providers/%s/product_create" % str(provId)
         result = self.server.POST(path, {"product": product})[1]
         return result
+
+    def update(self, prodId, description, gpgkey, nogpgkey):
+        product = {}
+        update_dict(product, "description", description)
+        update_dict(product, "gpgkey", gpgkey)
+        update_dict(product, "nogpgkey", nogpgkey)
+
+        path = "/api/products/%s/" % prodId
+        result = self.server.PUT(path, {"product": product})[1]
+        return result
+
 
     def show(self, prodId):
         path = "/api/products/%s/" % prodId

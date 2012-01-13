@@ -334,6 +334,8 @@ class Create(ProductAction):
                                help=_("skip repository discovery"))
         self.parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
                                help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
+        self.parser.add_option("--gpgkey", dest="gpgkey",
+                               help=_("assign a gpg key; this key will be used for every new repository unless gpgkey or nogpgkey is specified for the repo"))
 
 
     def check_options(self):
@@ -349,16 +351,17 @@ class Create(ProductAction):
         url         = self.get_option('url')
         assumeyes   = self.get_option('assumeyes')
         nodiscovery = self.get_option('nodiscovery')
+        gpgkey      = self.get_option('gpgkey')
 
-        return self.create_product_with_repos(provName, orgName, name, description, url, assumeyes, nodiscovery)
+        return self.create_product_with_repos(provName, orgName, name, description, url, assumeyes, nodiscovery, gpgkey)
 
 
-    def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes, nodiscovery):
+    def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes, nodiscovery, gpgkey):
         prov = get_provider(orgName, provName)
         if prov == None:
             return os.EX_DATAERR
 
-        prod = self.api.create(prov["id"], name, description)
+        prod = self.api.create(prov["id"], name, description, gpgkey)
         print _("Successfully created product [ %s ]") % name
 
         if url == None:
@@ -372,6 +375,41 @@ class Create(ProductAction):
 
         return os.EX_OK
 
+# ------------------------------------------------------------------------------
+class Update(SingleProductAction):
+
+    description = _('update a product\'s attributes')
+
+    def setup_parser(self):
+        self.set_product_select_options(False)
+        self.parser.add_option('--description', dest='description',
+                              help=_("change description of the product"))
+        self.parser.add_option('--gpgkey', dest='gpgkey',
+                              help=_("assign a gpgkey to the product"))
+        self.parser.add_option('--nogpgkey', dest='nogpgkey', action="store_true",
+                              help=_("assign a gpgkey to the product"))
+        self.parser.add_option('--recursive', action="store_true", dest='recursive',
+                              help=_("assign the gpgpkey also to the product's repositories"))
+
+    def check_options(self):
+        self.check_product_select_options()
+
+    def run(self):
+        orgName     = self.get_option('org')
+        prodName    = self.get_option('name')
+
+        description = self.get_option('description')
+        gpgkey = self.get_option('gpgkey')
+        nogpgkey = self.get_option('nogpgkey')
+        gpgkey_recursive = self.get_option('recursive')
+
+        prod = get_product(orgName, prodName)
+        if (prod == None):
+            return os.EX_DATAERR
+
+        prod = self.api.update(prod["id"], description, gpgkey, nogpgkey)
+        print _("Successfully updated product [ %s ]") % prodName
+        return os.EX_OK
 
 # ------------------------------------------------------------------------------
 class Delete(SingleProductAction):

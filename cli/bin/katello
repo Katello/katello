@@ -101,6 +101,7 @@ def setup_admin(admin):
 
     prod_cmd = product.Product()
     prod_cmd.add_action('create', product.Create())
+    prod_cmd.add_action('update', product.Update())
     prod_cmd.add_action('list', product.List())
     prod_cmd.add_action('delete', product.Delete())
     prod_cmd.add_action('synchronize', product.Sync())
@@ -116,6 +117,7 @@ def setup_admin(admin):
 
     repo_cmd = repo.Repo()
     repo_cmd.add_action('create', repo.Create())
+    repo_cmd.add_action('update', repo.Update())
     repo_cmd.add_action('discover', repo.Discovery())
     repo_cmd.add_action('info', repo.Info())
     repo_cmd.add_action('list', repo.List())
