@@ -476,6 +476,7 @@ Src::Application.routes.draw do
       member do
         get :package_groups
         get :package_group_categories
+        get :gpg_key_content
         post :enable
       end
     end
