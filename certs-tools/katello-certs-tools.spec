@@ -2,7 +2,7 @@ Name: katello-certs-tools
 Summary: Katello SSL Key/Cert Tool
 Group: Applications/Internet
 License: GPLv2 and Python
-Version: 1.0.1
+Version: 1.0.2
 Release: 1%{?dist}
 URL:      https://fedorahosted.org/katello
 Source0:  https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
@@ -47,6 +47,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_var}/www/html/pub/bootstrap/client_config_update.py*
 
 %changelog
+* Fri Jan 13 2012 Martin Bačovský <mbacovsk@redhat.com> 1.0.2-1
+- 760305 - Remove names and references to 'rhn' from cert-tools
+  (mbacovsk@redhat.com)
+
 * Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 1.0.1-1
 - new package built with tito
 
