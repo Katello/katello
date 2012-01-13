@@ -14,6 +14,7 @@ require 'spec_helper.rb'
 
 describe Api::TemplatesController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
 
   TEMPLATE_ID = 1
   TEMPLATE_NAME = "template"
@@ -24,8 +25,12 @@ describe Api::TemplatesController do
 
     @environment = KTEnvironment.new(:name => 'environment', :locker => false)
     @environment.id = 1
+    @environment2 = KTEnvironment.new(:name => 'environment2')
+    @environment2.id = 3
     @locker = KTEnvironment.new(:name => 'Locker', :locker => true)
     @locker.id = 2
+    KTEnvironment.stub(:find).with(@locker.id).and_return(@locker)
+    KTEnvironment.stub(:find).with(@environment2.id).and_return(@environment2)
 
     @organization.locker = @locker
     @organization.environments << @locker
@@ -45,163 +50,243 @@ describe Api::TemplatesController do
       :description => "a description"
     }
   end
+  let(:new_tpl_name) {"changed_"+TEMPLATE_NAME}
 
-  describe "index" do
-
-    before :each do
-      @environment2 = KTEnvironment.new(:name => 'environment2')
-      @environment2.id = 3
-
-      KTEnvironment.stub(:find).with(@locker.id).and_return(@locker)
-      KTEnvironment.stub(:find).with(@environment2.id).and_return(@environment2)
-
+  describe "rules" do
+    let(:user_with_read_permissions) do
+      user_with_permissions { |u| u.can(:read_all, :system_templates, nil, @organization) }
     end
-
-    it 'should get a list of templates from specified environment' do
-      tpl_selection_mock = mock('where')
-      tpl_selection_mock.stub(:where).and_return([@tpl])
-      @locker.should_receive(:system_templates).and_return(tpl_selection_mock)
-      get 'index', :environment_id => @locker.id
-      response.should be_success
+    let(:user_with_manage_permissions) do
+      user_with_permissions { |u| u.can(:manage_all, :system_templates, nil, @organization) }
     end
-
-    it 'should get a list of all templates' do
-      SystemTemplate.should_receive(:where).and_return([@tpl])
-      get 'index'
-      response.should be_success
+    let(:unauthorized_user) do
+      user_without_permissions
     end
-
-    it 'should not fail if no templates are found, but return an empty list' do
-      tpl_selection_mock = mock('where')
-      tpl_selection_mock.stub(:where).and_return([])
-      @environment2.should_receive(:system_templates).and_return(tpl_selection_mock)
-
-      get 'index', :environment_id => @environment2.id
-      response.should be_success
+    describe "index" do
+      let(:action) { :index }
+      let(:req) do
+        get 'index', :environment_id => @locker.id
+      end
+      let(:authorized_user) { user_with_read_permissions }
+      it_should_behave_like "protected action"
     end
-  end
-
-
-  describe "show" do
-    it "should call SystemTemplate.first" do
-      SystemTemplate.should_receive(:find).with(TEMPLATE_ID).and_return(@tpl)
-      get :show, :id => TEMPLATE_ID
+    describe "show" do
+      let(:action) { :show }
+      let(:req) do
+        get :show, :id => TEMPLATE_ID
+      end
+      let(:authorized_user) { user_with_read_permissions }
+      it_should_behave_like "protected action"
     end
-  end
-
-
-  describe "create" do
-
-    it "should fail when creating in non-locker environment" do
-      post 'create', :template => to_create, :environment_id => @environment.id
-      SystemTemplate.should_not_receive(:new)
-      response.should_not be_success
+    describe "create" do
+      let(:action) {:create}
+      let(:req) do
+        post 'create', :template => to_create, :environment_id => @locker.id
+      end
+      let(:authorized_user) { user_with_manage_permissions }
+      it_should_behave_like "protected action"
     end
-
-    it "should call new and save!" do
-      KTEnvironment.stub(:find).and_return(@locker)
-
-      SystemTemplate.should_receive(:new).and_return(@tpl)
-      @tpl.should_receive(:save!)
-
-      post 'create', :template => to_create, :environment_id => @locker.id
+    describe "update" do
+      let(:action) {:update}
+      let(:req) do
+        put 'update', :id => TEMPLATE_ID, :template => {:name => new_tpl_name, :description => "new_description"}
+      end
+      let(:authorized_user) { user_with_manage_permissions }
+      it_should_behave_like "protected action"
     end
-  end
-
-
-  describe "update" do
-    let(:new_tpl_name) {"changed_"+TEMPLATE_NAME}
-
-    it "should fail when updating in non-locker environment" do
-      @tpl.environment = @environment
-      @tpl.should_not_receive(:save!)
-
-      put 'update', :id => TEMPLATE_ID
-
-      response.should_not be_success
+    describe "destroy" do
+      let(:action) {:destroy}
+      let(:req) do
+        delete :destroy, :id => TEMPLATE_ID
+      end
+      let(:authorized_user) { user_with_manage_permissions }
+      it_should_behave_like "protected action"
     end
-
-    it 'should update template in the Locker' do
-      @tpl.stub(:get_clones).and_return([])
-      @tpl.should_receive(:save!).once
-
-      put 'update', :id => TEMPLATE_ID, :template => {:name => new_tpl_name, :description => "new_description"}
-
-      response.should be_success
+    describe "validate" do
+      let(:action) { :validate }
+      let(:req) do
+        get :validate, :id => TEMPLATE_ID
+      end
+      let(:authorized_user) { user_with_read_permissions }
+      it_should_behave_like "protected action"
     end
+    describe "import" do
+      before(:each) do
+        @temp_file = mock(File)
+        @temp_file.stub(:read).and_return('FILE_DATA')
+        @temp_file.stub(:close)
+        @temp_file.stub(:write)
+        @temp_file.stub(:path).and_return("/a/b/c")
 
-    it 'should change name of all template clones when updating template in the Locker' do
-      tpl_clone = SystemTemplate.new(:name => TEMPLATE_NAME, :environment => @environment)
-      tpl_clone.should_receive(:save!).once
-
-      @tpl.stub(:get_clones).and_return([tpl_clone])
-      @tpl.should_receive(:save!).once
-
-      put 'update', :id => TEMPLATE_ID, :template => {:name => new_tpl_name, :description => "new_description"}
-
-      tpl_clone.name.should == new_tpl_name
-      response.should be_success
+        File.stub(:new).and_return(@temp_file)
+        KTEnvironment.stub(:find).and_return(@locker)
+      end
+      let(:action) {:import}
+      let(:req) do
+        post :import, :template_file => @temp_file, :environment_id => @locker.id
+      end
+      let(:authorized_user) { user_with_manage_permissions }
+      it_should_behave_like "protected action"
+    end
+    describe "export" do
+      let(:action) { :export }
+      let(:req) do
+        get :export, :id => TEMPLATE_ID
+      end
+      let(:authorized_user) { user_with_read_permissions }
+      it_should_behave_like "protected action"
     end
   end
 
-  describe "destroy" do
-    it "should remove the specified template" do
-      SystemTemplate.should_receive(:find).with(TEMPLATE_ID).and_return(@tpl)
-      @tpl.should_receive(:destroy).once
+  describe "tests" do
+    describe "index" do
 
-      delete :destroy, :id => TEMPLATE_ID
+      before :each do
+        disable_authorization_rules
+      end
+
+      it 'should get a list of templates from specified environment' do
+        tpl_selection_mock = mock('where')
+        tpl_selection_mock.stub(:where).and_return([@tpl])
+        @locker.should_receive(:system_templates).and_return(tpl_selection_mock)
+        get 'index', :environment_id => @locker.id
+        response.should be_success
+      end
+
+      it 'should get a list of all templates' do
+        SystemTemplate.should_receive(:where).and_return([@tpl])
+        get 'index'
+        response.should be_success
+      end
+
+      it 'should not fail if no templates are found, but return an empty list' do
+        tpl_selection_mock = mock('where')
+        tpl_selection_mock.stub(:where).and_return([])
+        @environment2.should_receive(:system_templates).and_return(tpl_selection_mock)
+
+        get 'index', :environment_id => @environment2.id
+        response.should be_success
+      end
+    end
+
+
+    describe "show" do
+      it "should call SystemTemplate.first" do
+        SystemTemplate.should_receive(:find).with(TEMPLATE_ID).and_return(@tpl)
+        get :show, :id => TEMPLATE_ID
+      end
+    end
+
+
+    describe "create" do
+
+      it "should fail when creating in non-locker environment" do
+        post 'create', :template => to_create, :environment_id => @environment.id
+        SystemTemplate.should_not_receive(:new)
+        response.should_not be_success
+      end
+
+      it "should call new and save!" do
+        KTEnvironment.stub(:find).and_return(@locker)
+
+        SystemTemplate.should_receive(:new).and_return(@tpl)
+        @tpl.should_receive(:save!)
+
+        post 'create', :template => to_create, :environment_id => @locker.id
+      end
+    end
+
+
+    describe "update" do
+      it "should fail when updating in non-locker environment" do
+        @tpl.environment = @environment
+        @tpl.should_not_receive(:save!)
+
+        put 'update', :id => TEMPLATE_ID
+
+        response.should_not be_success
+      end
+
+      it 'should update template in the Locker' do
+        @tpl.stub(:get_clones).and_return([])
+        @tpl.should_receive(:save!).once
+
+        put 'update', :id => TEMPLATE_ID, :template => {:name => new_tpl_name, :description => "new_description"}
+
+        response.should be_success
+      end
+
+      it 'should change name of all template clones when updating template in the Locker' do
+        tpl_clone = SystemTemplate.new(:name => TEMPLATE_NAME, :environment => @environment)
+        tpl_clone.should_receive(:save!).once
+
+        @tpl.stub(:get_clones).and_return([tpl_clone])
+        @tpl.should_receive(:save!).once
+
+        put 'update', :id => TEMPLATE_ID, :template => {:name => new_tpl_name, :description => "new_description"}
+
+        tpl_clone.name.should == new_tpl_name
+        response.should be_success
+      end
+    end
+
+    describe "destroy" do
+      it "should remove the specified template" do
+        SystemTemplate.should_receive(:find).with(TEMPLATE_ID).and_return(@tpl)
+        @tpl.should_receive(:destroy).once
+
+        delete :destroy, :id => TEMPLATE_ID
+      end
+    end
+
+
+    describe "import" do
+      before(:each) do
+        @temp_file = mock(File)
+        @temp_file.stub(:read).and_return('FILE_DATA')
+        @temp_file.stub(:close)
+        @temp_file.stub(:write)
+        @temp_file.stub(:path).and_return("/a/b/c")
+
+        File.stub(:new).and_return(@temp_file)
+        KTEnvironment.stub(:find).and_return(@locker)
+      end
+
+      it "should fail when imporing into non-locker environment" do
+        post :import, :template_file => @temp_file, :environment_id => @environment.id
+        response.should_not be_success
+      end
+
+      it "should call import" do
+        SystemTemplate.should_receive(:new).and_return(@tpl)
+        @tpl.should_receive(:import).once
+
+        post :import, :template_file => @temp_file, :environment_id => @locker.id
+      end
+    end
+
+
+    describe "export" do
+      it "should call export_as_json" do
+        @tpl.environment = @environment
+        @tpl.should_receive(:export_as_json)
+
+        get :export, :id => TEMPLATE_ID
+      end
+
+      it "should call export_as_tdl" do
+        @tpl.environment = @environment
+        @tpl.should_receive(:export_as_tdl)
+
+        get :export, :id => TEMPLATE_ID, :format => 'tdl'
+      end
+
+      it "should raise an exception when exporting from a Locker" do
+
+        get :export, :id => TEMPLATE_ID
+        response.should_not be_success
+      end
+
     end
   end
-
-
-  describe "import" do
-    before(:each) do
-      @temp_file = mock(File)
-      @temp_file.stub(:read).and_return('FILE_DATA')
-      @temp_file.stub(:close)
-      @temp_file.stub(:write)
-      @temp_file.stub(:path).and_return("/a/b/c")
-
-      File.stub(:new).and_return(@temp_file)
-      KTEnvironment.stub(:find).and_return(@locker)
-    end
-
-    it "should fail when imporing into non-locker environment" do
-      post :import, :template_file => @temp_file, :environment_id => @environment.id
-      response.should_not be_success
-    end
-
-    it "should call import" do
-      SystemTemplate.should_receive(:new).and_return(@tpl)
-      @tpl.should_receive(:import).once
-
-      post :import, :template_file => @temp_file, :environment_id => @locker.id
-    end
-  end
-
-
-  describe "export" do
-    it "should call export_as_json" do
-      @tpl.environment = @environment
-      @tpl.should_receive(:export_as_json)
-
-      get :export, :id => TEMPLATE_ID
-    end
-
-    it "should call export_as_tdl" do
-      @tpl.environment = @environment
-      @tpl.should_receive(:export_as_tdl)
-
-      get :export, :id => TEMPLATE_ID, :format => 'tdl'
-    end
-
-    it "should raise an exception when exporting from a Locker" do
-
-      get :export, :id => TEMPLATE_ID
-      response.should_not be_success
-    end
-
-  end
-
-
 end
