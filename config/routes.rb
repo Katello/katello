@@ -356,7 +356,7 @@ Src::Application.routes.draw do
       end
     end
 
-    resources :templates do
+    resources :templates, :except => [:index] do
       post :import, :on => :collection
       get :export, :on => :member
       get :validate, :on => :member
@@ -454,7 +454,7 @@ Src::Application.routes.draw do
       end
     end
 
-    resources :puppetclasses, :only => [:index]
+    #resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
     resources :repositories, :only => [:show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
@@ -549,7 +549,9 @@ Src::Application.routes.draw do
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
     # development / debugging support
-    get 'status/memory'
+    if Rails.env == "development"
+      get 'status/memory'
+    end
 
   # end '/api' namespace
   end

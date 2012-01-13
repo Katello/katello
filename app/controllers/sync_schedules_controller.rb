@@ -56,7 +56,7 @@ class SyncSchedulesController < ApplicationController
   def apply
     data = JSON.parse(params[:data]).with_indifferent_access
     begin
-      raise if data[:plans].emtpy? 
+      raise if (data[:plans].empty?)
       selected_plans = data[:plans].collect{ |i| i.to_i}
       selected_products = data[:products].collect{ |i| i.to_i}
       plans = SyncPlan.where(:id => selected_plans)
@@ -74,9 +74,11 @@ class SyncSchedulesController < ApplicationController
       notice N_("Sync Plans applied successfully.")
 
     rescue Exception => error
+      # note missing product is caught in find products before filter
       notice _("There must be at least one plan selected"), {:level => :error}
-      redirect_to(:controller => :sync_schedules, :action =>:index)
     end
+
+    redirect_to(:controller => :sync_schedules, :action =>:index)
   end
 
   private

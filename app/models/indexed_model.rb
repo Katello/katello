@@ -2,6 +2,13 @@ module IndexedModel
 
   def self.included(base)
     base.class_eval do
+
+        cattr_accessor :class_index_options
+        def self.display_attributes
+          self.class_index_options[:display_attrs].sort{|a,b| a.to_s <=> b.to_s}
+        end
+
+
       if !Rails.env.test?
         include Tire::Model::Search
         include Tire::Model::Callbacks
@@ -11,12 +18,6 @@ module IndexedModel
           self.index.import(list)
         end
 
-        def self.display_attributes
-          self.class_index_options[:display_attrs].sort{|a,b| a.to_s <=> b.to_s}
-        end
-
-
-
       else
         #stub mapping
         def self.mapping
@@ -24,8 +25,6 @@ module IndexedModel
         def self.index_import list
         end
       end
-      cattr_accessor :class_index_options
-
 
       ##
       #  :json  - normal to_json options,  :only or :except allowed

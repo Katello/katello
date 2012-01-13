@@ -20,9 +20,7 @@ class Api::ProductsController < Api::ApiController
 
   def rules
     index_test = lambda { Product.any_readable?(@organization) }
-    #read_test = lambda { @product.readable? }
-    # TODO remove me - quick hack
-    read_test = lambda { true }
+    read_test = lambda { @product.readable? }
     edit_test = lambda { @product.editable? }
     repo_test = lambda { Product.any_readable?(@organization) }
     {

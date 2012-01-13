@@ -2,7 +2,8 @@
   = @package.nvrea
 
 = content_for :navigation do
-  = render_navigation(:items => promotion_packages_navigation, :expand_all => true, :level => 1)
+  = render_menu(1..2, promotion_packages_navigation)
+
 
 = content_for :content do
   -#%h2 
