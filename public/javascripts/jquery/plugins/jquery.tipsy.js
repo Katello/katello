@@ -192,6 +192,7 @@
         function sticky() {
             var tipsy = get(this),
                 activeTip;
+            
             if( options.activeTip !== undefined ){
                 activeTip = get(options.activeTip);
                 activeTip.hide();
@@ -206,8 +207,22 @@
                 tipsy.show();
                 tipsy.clickState = 'on';
                 options.activeTip = this;
+                $(this).addClass('tipsy-sticky-click');
             }
             options.stickyClick(this, tipsy.clickState);
+        }
+
+        function handleScroll(event) {
+            var target = $(event.target);
+
+            if( !(target.parents().hasClass('tipsy-inner')) ){
+                if( options.activeTip ){
+                    options.activeTip.clickState = 'off';
+                    options.stickyClick(options.activeTip, 'off');
+                    get(options.activeTip).hide();
+                    options.activeTip = undefined;
+                }
+            }
         }
 
         if (!options.live) this.each(function() { get(this); });
@@ -221,6 +236,7 @@
         
         if (options.stickyClick) {
             this['live']('click', sticky);
+            $(document).bind('scroll', handleScroll);
         }
 
         return this;
