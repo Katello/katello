@@ -752,7 +752,7 @@ KT.panel.list = (function () {
                         if (data['current_items'] === 0) {
                             list.removeClass("ajaxScroll");
                         }
-                        update_counts(data['current_items'], 0);
+                        update_counts(data['current_items'], 0, 0);
                         extended_cb();
                     },
                     error: function () {

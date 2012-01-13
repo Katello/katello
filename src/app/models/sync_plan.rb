@@ -44,8 +44,6 @@ class SyncPlan < ActiveRecord::Base
 
   scope :readable, lambda { |org| ::Provider.any_readable?(org)? where(:organization_id => org.id ) : where("0 = 1") }
 
-  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
-  scoped_search :on => :name, :complete_value => true
 
   def validate_sync_date
     errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?

@@ -34,7 +34,7 @@ describe "activation_keys/_edit.html.haml" do
 
     view.stub(:help_tip_button)
     view.stub(:help_tip)
-    view.stub(:render_navigation)
+    view.stub(:render_menu)
     view.stub(:editable).and_return(true)
 
     @system_template_labels = []
@@ -64,7 +64,7 @@ describe "activation_keys/_edit.html.haml" do
     end
 
     it "renders sub-navigation links" do
-      view.should_receive(:render_navigation).with(:items=> [],:expand_all => true, :level => 1).once
+      view.should_receive(:render_menu).with(1..2, []).once
       render :partial => "edit", :locals => {:accessible_envs => [@environment]}
     end
   end

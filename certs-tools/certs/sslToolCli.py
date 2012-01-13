@@ -13,7 +13,7 @@
 # in this software or its documentation.
 #
 #
-# rhn-ssl-tool command line option module
+# katello-ssl-tool command line option module
 #
 # $Id$
 
@@ -28,7 +28,7 @@ from optparse import Option, OptionParser, make_option
 
 ## local imports
 from sslToolLib import daysTil18Jan2038, yearsTil18Jan2038, \
-                       RhnSslToolException, errnoGeneralError
+                       KatelloSslToolException, errnoGeneralError
 from sslToolConfig import figureDEFS_dirs, figureDEFS_CA, figureDEFS_server
 from sslToolConfig import figureDEFS_distinguishing
 from sslToolConfig import DEFS, getOption, reInitDEFS
@@ -371,11 +371,11 @@ def optionParse():
     return options
 
 
-class CertExpTooShortException(RhnSslToolException):
+class CertExpTooShortException(KatelloSslToolException):
     "certificate expiration must be at least 1 day"
-class CertExpTooLongException(RhnSslToolException):
+class CertExpTooLongException(KatelloSslToolException):
     "cert expiration cannot be > 1 year before the 32-bit overflow (in days)"
-class InvalidCountryCodeException(RhnSslToolException):
+class InvalidCountryCodeException(KatelloSslToolException):
     "invalid country code. Probably != 2 characters in length."
 
 

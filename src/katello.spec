@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.175
+Version:        0.1.178
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -346,6 +346,18 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jan 13 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.178-1
+- api perms review - tasks
+- 771957 - Fixed an org deletion failure issue
+- 755522 - fixing issue where adding filters to a product in the UI did not
+  actually take effect in pulp
+- adding elasticsearch to ping api
+- disabling fade in for sync page
+- 773137 - Made the  system search stuff adhre to permissions logic
+- 746913 fix sync plan time, incorrectly using date var
+- removing obsolete strings
+- removing scoped search  from existing models
+
 * Tue Jan 10 2012 Mike McCune <mmccune@redhat.com> 0.1.174-1
 - fixing critical issue with 2pane search rendering
 * Tue Jan 10 2012 Ivan Necas <inecas@redhat.com> 0.1.173-1
