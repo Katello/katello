@@ -44,7 +44,7 @@ KT.system.errata = function() {
                                         }
                                     },
                                     afterShow : function(){
-                                        $('.tipsy-inner').addClass('scroll-pane');
+                                        $('.details_container').addClass('scroll-pane');
                                         KT.common.jscroll_init($('.scroll-pane'));
                                     }});
     	},
@@ -205,7 +205,7 @@ KT.system.errata = function() {
             return rows;
         },
         generateInfoToolTip = function(){
-            var html = '',
+            var html = '<div class="details_container">',
                 element = $(this),
                 packages_list = [],
                 generate_packages = function(){
@@ -229,6 +229,7 @@ KT.system.errata = function() {
             html += '<div class="item-container"><label class="fl ra">Reference:</label>' + '<p><a target="new" href="' +  element.data('reference_url') + '">' + element.data('reference_url') + '</a></p></div>';
             html += '<div class="item-container"><label class="fl ra">Description:</label>' + '<p><br/><pre>' + element.data('description') + '</pre></p></div>';
             html += '<div class="item-container"><label class="fl" style="text-align:left;">Packages:</label>' + '<ul style="margin:0 0 0 4px;" class="la"><br/>' + packages_list + '</ul></div>';            
+            html += '</div>';
 
             return html;
         };
