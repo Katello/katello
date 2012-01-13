@@ -349,7 +349,7 @@ Src::Application.routes.draw do
       end
     end
 
-    resources :templates do
+    resources :templates, :except => [:index] do
       post :import, :on => :collection
       get :export, :on => :member
       get :validate, :on => :member
