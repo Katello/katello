@@ -14,11 +14,12 @@ require 'resources/pulp'
 
 class Api::RepositoriesController < Api::ApiController
   respond_to :json
-  before_filter :find_repository, :only => [:show, :destroy, :package_groups, :package_group_categories, :enable]
+  before_filter :find_repository, :only => [:show, :destroy, :package_groups, :package_group_categories, :enable, :gpg_key_content]
   before_filter :find_product, :only => [:create]
   before_filter :find_organization, :only => [:discovery]
 
   before_filter :authorize
+  skip_filter   :set_locale, :require_user, :thread_locals, :authorize, :only => [:gpg_key_content]
 
   def rules
     edit_product_test = lambda{@product.editable?}
@@ -87,7 +88,17 @@ class Api::RepositoriesController < Api::ApiController
     render :json => @repository.package_group_categories(search_attrs)
   end
 
-  private
+  # returns the content of a repo gpg key, used directly by yum
+  # I've amended REST best practices(e.g. not using the show action) as we don't want to
+  # authenticate, authorize etc, trying to distinquse between a yum request and normal api request
+  # might not always be 100% bullet proof, and its more important that yum can fetch the key.
+  def gpg_key_content
+    if @repository.gpg_key && @repository.gpg_key.content.present?
+      render(:text => @gpg_key.content, :layout => false) 
+    else
+      head(404)
+    end
+  end
 
   def find_repository
     @repository = Repository.find(params[:id])
