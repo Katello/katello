@@ -320,7 +320,7 @@ class SystemsController < ApplicationController
   end
 
   def controller_display_name
-    return _('system')
+    return 'system'
   end
 
   def search_filter

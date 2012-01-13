@@ -241,7 +241,7 @@ class ProvidersController < ApplicationController
   end
 
   def controller_display_name
-    return _('provider')
+    return 'provider'
   end
 
   def search_filter
