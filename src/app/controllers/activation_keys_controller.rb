@@ -358,7 +358,7 @@ class ActivationKeysController < ApplicationController
   end
 
   def controller_display_name
-    return _('activation_key')
+    return 'activation_key'
   end
 
   def search_filter

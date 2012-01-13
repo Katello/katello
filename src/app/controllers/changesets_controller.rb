@@ -278,7 +278,7 @@ class ChangesetsController < ApplicationController
 
 
   def controller_display_name
-    return _('changeset')
+    return 'changeset'
   end
 
   private

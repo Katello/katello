@@ -211,7 +211,7 @@ class FiltersController < ApplicationController
   end
 
   def controller_display_name
-    return _('filter')
+    return 'filter'
   end
 
 end

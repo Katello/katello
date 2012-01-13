@@ -215,7 +215,7 @@ class OrganizationsController < ApplicationController
   end
 
   def controller_display_name
-    return _('organization')
+    return 'organization'
   end
 
 end
