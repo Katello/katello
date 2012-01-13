@@ -153,12 +153,6 @@ describe Api::TemplatesController do
         response.should be_success
       end
 
-      it 'should get a list of all templates' do
-        SystemTemplate.should_receive(:where).and_return([@tpl])
-        get 'index'
-        response.should be_success
-      end
-
       it 'should not fail if no templates are found, but return an empty list' do
         tpl_selection_mock = mock('where')
         tpl_selection_mock.stub(:where).and_return([])
