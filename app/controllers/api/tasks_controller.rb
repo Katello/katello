@@ -12,17 +12,32 @@
 
 class Api::TasksController < Api::ApiController
   respond_to :json
-  before_filter :find_organization, :only => [:index]
+  before_filter :find_organization
+  before_filter :find_task, :only => [:show]
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  before_filter :authorize
+
+  def rules
+    # tasks are used in: synchronization, promotion, packages updating
+    test = lambda{ Provider.any_readable?(@organization) || @organization.systems_readable? }
+    { 
+      :index => test,
+      :show => test,
+    }
+  end
 
   def index
     render :json => TaskStatus.where(:organization_id => @organization).to_json(:except => :id)
   end
 
   def show
-    task = TaskStatus.find_by_uuid(params[:id]).refresh
-    render :json => task.to_json(:except => :id)
+    render :json => @task.refresh.to_json(:except => :id)
+  end
+
+  private
+
+  def find_task
+    @task = TaskStatus.find_by_uuid(params[:id])
+    @organization = @task.organization
   end
 end

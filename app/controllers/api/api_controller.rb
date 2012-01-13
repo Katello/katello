@@ -102,7 +102,7 @@ class Api::ApiController < ActionController::Base
 
   def find_organization
     if not params[:organization_id].nil?
-      @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].tr(' ', '_')})
+      @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].to_s.tr(' ', '_')})
       raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
       @organization
     end
