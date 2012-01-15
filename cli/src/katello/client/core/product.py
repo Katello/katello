@@ -149,6 +149,7 @@ class List(ProductAction):
         self.printer.addColumn('name')
         self.printer.addColumn('provider_id')
         self.printer.addColumn('provider_name')
+        self.printer.addColumn('sync_plan_name')
 
         if prov_name:
             prov = get_provider(org_name, prov_name)
