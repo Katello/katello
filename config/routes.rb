@@ -449,6 +449,8 @@ Src::Application.routes.draw do
     end
 
     resources :products, :only => [:show, :destroy] do
+      post :sync_plan, :on => :member, :action => :set_sync_plan
+      delete :sync_plan, :on => :member, :action => :remove_sync_plan
       get :repositories, :on => :member
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
