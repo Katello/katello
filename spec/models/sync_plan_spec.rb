@@ -32,10 +32,10 @@ describe SyncPlan do
       p.name.should == new_name
     end
 
-    it "be able to delete" do 
+    it "be able to delete" do
       p = SyncPlan.find_by_name('Norman Rockwell')
       pid = p.id
-      p.destroy 
+      p.destroy
 
       lambda{SyncPlan.find(pid)}.should raise_error(ActiveRecord::RecordNotFound)
     end
@@ -49,7 +49,7 @@ describe SyncPlan do
     it "should properly handle pulp duration of none" do
       @plan.interval = 'none'
       @plan.schedule_format.should_not be_nil
-      @plan.schedule_format.should_not =~ /\//
+      @plan.schedule_format.should =~ /R1\/.*\/P1D/
     end
 
   end
