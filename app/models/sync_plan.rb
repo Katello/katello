@@ -22,7 +22,7 @@ class SyncPlan < ActiveRecord::Base
     indexes :sync_date, :type=>'date'
   end
 
-  
+
   NONE = 'none'
   HOURLY = 'hourly'
   DAILY = 'daily'
@@ -65,6 +65,8 @@ class SyncPlan < ActiveRecord::Base
     format = Time.parse(self.sync_date.to_s).iso8601
     if self.interval != NONE
       format << "/P" << DURATION[self.interval]
+    else
+      format = "R1/" << format << "/P1D"
     end
     return format
   end
