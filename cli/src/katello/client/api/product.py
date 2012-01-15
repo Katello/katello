@@ -65,10 +65,12 @@ class ProductAPI(KatelloAPI):
         return self.server.POST(path)[1]
 
     def set_sync_plan(self, prodId, planId):
-        return "Sync plan added"
+        path = "/api/products/%s/sync_plan" % str(prodId)
+        return self.server.POST(path, {"plan_id": planId})[1]
 
     def remove_sync_plan(self, prodId):
-        return "Sync plan removed"
+        path = "/api/products/%s/sync_plan" % str(prodId)
+        return self.server.DELETE(path)[1]
 
     def cancel_sync(self, prodId):
         path = "/api/products/%s/sync" % prodId
