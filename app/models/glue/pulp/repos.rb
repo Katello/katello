@@ -358,9 +358,8 @@ module Glue::Pulp::Repos
     end
 
     def setup_sync_schedule
-      return true if not self.sync_plan_id_changed?
 
-      schedule = (self.sync_plan && self.sync_plan.schedule_format) || ""
+      schedule = (self.sync_plan && self.sync_plan.schedule_format) || nil
       self.repos(self.locker).each do |repo|
         repo.set_sync_schedule(schedule)
       end

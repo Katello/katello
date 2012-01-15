@@ -261,7 +261,11 @@ module Glue::Pulp::Repo
   end
 
   def set_sync_schedule schedule
-    Pulp::Repository.update_schedule(self.pulp_id, schedule)
+    if schedule
+        Pulp::Repository.update_schedule(self.pulp_id, schedule)
+    else
+        Pulp::Repository.delete_schedule(self.pulp_id)
+    end
   end
 
   def has_package? id
