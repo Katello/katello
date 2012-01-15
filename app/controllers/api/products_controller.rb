@@ -13,7 +13,7 @@
 class Api::ProductsController < Api::ApiController
   respond_to :json
   before_filter :find_organization, :only => [:index]
-  before_filter :find_product, :only => [:repositories, :show, :destroy]
+  before_filter :find_product, :only => [:repositories, :show, :destroy, :set_sync_plan, :remove_sync_plan]
   before_filter :find_environment, :only => [:index, :repositories]
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :authorize
@@ -28,6 +28,8 @@ class Api::ProductsController < Api::ApiController
       :show => read_test,
       :destroy => edit_test,
       :repositories => repo_test,
+      :set_sync_plan => edit_test,
+      :remove_sync_plan => edit_test
     }
   end
 
@@ -56,6 +58,18 @@ class Api::ProductsController < Api::ApiController
 
   def repositories
     render :json => @product.repos(@environment, query_params[:include_disabled]).where(query_params.slice(:name))
+  end
+
+  def set_sync_plan
+    @product.sync_plan = SyncPlan.find(params[:plan_id])
+    @product.save!
+    render :text => _("Synchronization plan assigned."), :status => 200
+  end
+
+  def remove_sync_plan
+    @product.sync_plan = nil
+    @product.save!
+    render :text => _("Synchronization plan removed."), :status => 200
   end
 
   private
