@@ -16,8 +16,25 @@ class Api::TemplatesContentController < Api::ApiController
 
   before_filter :find_template
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  before_filter :authorize
+
+  def rules
+    manage_test = lambda{SystemTemplate.manageable?(@template.environment.organization)}
+    {
+      :add_product => manage_test,
+      :remove_product => manage_test,
+      :add_package => manage_test,
+      :remove_package => manage_test,
+      :add_parameter => manage_test,
+      :remove_parameter => manage_test,
+      :add_package_group => manage_test,
+      :remove_package_group => manage_test,
+      :add_package_group_category => manage_test,
+      :remove_package_group_category => manage_test,
+      :add_distribution => manage_test,
+      :remove_distribution => manage_test,
+    }
+  end
 
   def add_product
     @template.add_product_by_cpid(params[:id])

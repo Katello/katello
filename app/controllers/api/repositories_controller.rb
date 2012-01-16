@@ -18,17 +18,27 @@ class Api::RepositoriesController < Api::ApiController
   before_filter :find_product, :only => [:create]
   before_filter :find_organization, :only => [:discovery]
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  before_filter :authorize
+
+  def rules
+    edit_product_test = lambda{@product.editable?}
+    read_test = lambda{@repository.product.readable?}
+    edit_test = lambda{@repository.product.editable?}
+    org_edit = lambda{@organization.editable?}
+    {
+      :create => edit_product_test,
+      :show => read_test,
+      :destroy => edit_test,
+      :enable => edit_test,
+      :discovery => org_edit,
+      :package_groups => read_test,
+      :package_group_categories => read_test,
+    }
+  end
 
   def create
     content = @product.add_repo(params[:name], params[:url], 'yum')
     render :json => content
-  end
-
-  def index
-    render :json => Repository.where(:enabled => true) if not query_params[:include_disabled]
-    render :json => Repository.all if query_params[:include_disabled]
   end
 
   def show
@@ -76,6 +86,8 @@ class Api::RepositoriesController < Api::ApiController
 
     render :json => @repository.package_group_categories(search_attrs)
   end
+
+  private
 
   def find_repository
     @repository = Repository.find(params[:id])

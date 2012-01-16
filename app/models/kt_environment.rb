@@ -337,7 +337,7 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def delete_related_index
-    self.organization.update_index
+    self.organization.update_index if self.organization
   end
 
 end

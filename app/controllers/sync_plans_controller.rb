@@ -51,7 +51,8 @@ class SyncPlansController < ApplicationController
                  :name => controller_display_name,
                  :ajax_load => true,
                  :ajax_scroll => items_sync_plans_path(),
-                 :enable_create => current_organization.syncable? } 
+                 :enable_create => current_organization.syncable?,
+                 :search_class=>SyncPlan}
   end
 
   def edit
@@ -164,7 +165,7 @@ class SyncPlansController < ApplicationController
   end
       
   def controller_display_name
-    return _('sync_plan')
+    return 'sync_plan'
   end
 
   def search_filter

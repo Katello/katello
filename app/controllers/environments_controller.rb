@@ -15,7 +15,6 @@ class EnvironmentsController < ApplicationController
   require 'rubygems'
   require 'active_support/json'
 
-  skip_before_filter :authorize
   before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :system_templates, :products]
   before_filter :authorize
   before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates, :products]

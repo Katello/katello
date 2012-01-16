@@ -1,8 +1,8 @@
 = content_for :title do
   = @errata.id
-  
+
 = content_for :navigation do
-  = render_navigation(:items => promotion_errata_navigation, :expand_all => true, :level => 1)
+  = render_menu(1..2, promotion_errata_navigation)
 
 = content_for :content do
   .clear

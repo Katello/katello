@@ -5,6 +5,7 @@
 @import "mixins";
 @import "colors";
 @import "sprites";
+@import "icons";
 @import "look";
 
 @import "widgets/multiselect";
@@ -664,7 +665,7 @@ footer {
 #container {
   width:  100%;
   margin:0 auto;
-  min-height:500px;
+  min-height:600px;
     /* right side of 2 pane below the sliding pane */
     .right {
         float:right;
@@ -894,6 +895,10 @@ footer {
   position:absolute;
   max-width:700px;
   z-index: -1;
+  
+  .tupane_footer {
+    margin: 5px 0;
+  }
 }
 .panel {
   background-color:$panel_color;
@@ -1402,4 +1407,9 @@ footer {
     &:hover {
         color: red;
     }
+}
+
+.ui-button-text-only .ui-button-text {
+    padding-top: 0;
+    padding-bottom: 0;
 }
