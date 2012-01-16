@@ -14,6 +14,10 @@ require 'spec_helper'
 
 describe Api::GpgKeysController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
+
+  let(:authorized_user)   { user_with_permissions { |u| u.can(:gpg, :organizations, nil, @organization)} }
+  let(:unauthorized_user) { user_without_permissions }
 
   before(:each) do
     login_user_api
@@ -44,6 +48,8 @@ describe Api::GpgKeysController do
   describe "list gpg keys" do
     let(:req_params) { {:organization_id => @organization.name, :name => @gpg_key.name}.with_indifferent_access }
     let(:req) { get :index, req_params }
+    let(:action) { :index }
+    it_should_behave_like "protected action"
 
     it "return list of found keys in JSON" do
       req
@@ -54,6 +60,8 @@ describe Api::GpgKeysController do
   describe "show gpg key" do
     let(:req_params) { {:id => @gpg_key.id }.with_indifferent_access }
     let(:req) { get :show, req_params }
+    let(:action) { :show }
+    it_should_behave_like "protected action"
 
     it "return list of found keys in JSON" do
       req
@@ -72,6 +80,8 @@ describe Api::GpgKeysController do
       {:organization_id => @organization.name, :gpg_key => {:name => "Gpg Key", :content => "This is the key string" }}.with_indifferent_access
     end
     let(:req) { post :create, req_params }
+    let(:action) { :create }
+    it_should_behave_like "protected action"
 
     it "returns JSON with created key" do
       req
@@ -82,6 +92,8 @@ describe Api::GpgKeysController do
   describe "update gpg key" do
     let(:req_params) { {:id => @gpg_key.id, :gpg_key => {:name => "Gpg Key", :content => "This is the key string" }}.with_indifferent_access }
     let(:req) { put :update, req_params }
+    let(:action) { :update }
+    it_should_behave_like "protected action"
 
     it "returns JSON with updated key" do
       GpgKey.stub(:find).with(@gpg_key.id).and_return(@gpg_key)
@@ -93,6 +105,8 @@ describe Api::GpgKeysController do
   describe "destroy gpg key" do
     let(:req_params) { {:id => @gpg_key.id }.with_indifferent_access }
     let(:req) { delete :destroy, req_params }
+    let(:action) { :destroy }
+    it_should_behave_like "protected action"
 
     it "remove the record" do
       req

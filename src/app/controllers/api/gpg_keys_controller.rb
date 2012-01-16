@@ -17,15 +17,19 @@ class Api::GpgKeysController < Api::ApiController
 
   before_filter :find_gpg_key, :only => [:content, :show, :update, :destroy]
   before_filter :find_organization, :only => [:index, :create]
+  before_filter :authorize, :except => [:content]
 
   def rules
-    dummy = lambda { true }
+    read_test = lambda{@gpg_key.readable?}
+    manage_test = lambda{@gpg_key.manageable?}
+    create_test = lambda{GpgKey.createable?(@organization)}
+    index_test = lambda{GpgKey.any_readable?(@organization)}
     {
-      :index => dummy,
-      :show => dummy,
-      :create => dummy,
-      :update => dummy,
-      :destroy => dummy,
+      :index => index_test,
+      :show => read_test,
+      :create => create_test,
+      :update => manage_test,
+      :destroy => manage_test
     }
   end
 
