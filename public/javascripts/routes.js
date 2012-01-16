@@ -1024,6 +1024,10 @@
   update_roles_user_path: function(_id, options) {
   return Utils.build_path(2, ["/users/", "/update_roles"], arguments)
   },
+// update_locale_user => /users/:id/update_locale(.:format)
+  update_locale_user_path: function(_id, options) {
+  return Utils.build_path(2, ["/users/", "/update_locale"], arguments)
+  },
 // new_product => /products/new(.:format)
   new_product_path: function(options) {
   return Utils.build_path(1, ["/products/new"], arguments)
