@@ -12,8 +12,7 @@
 
 class Api::PuppetclassesController < Api::ApiController
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  skip_before_filter :authorize # ok - this controller is not used
 
   def index
     @klasses = Puppetclasses.all

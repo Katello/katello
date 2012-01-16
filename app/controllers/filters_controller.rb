@@ -14,7 +14,6 @@ class FiltersController < ApplicationController
 
   include AutoCompleteSearch
 
-  skip_before_filter :authorize
   before_filter :panel_options, :only=>[:index, :items]
   before_filter :find_filter, :only=>[:edit, :update, :destroy,
                                       :packages, :add_packages, :remove_packages,
@@ -211,7 +210,7 @@ class FiltersController < ApplicationController
   end
 
   def controller_display_name
-    return _('filter')
+    return 'filter'
   end
 
 end

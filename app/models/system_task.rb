@@ -98,6 +98,19 @@ class SystemTask < ActiveRecord::Base
           },
           :user_message => _('Package Group Remove scheduled by %s')
       },
+      :errata_install => {
+          :english_name =>N_("Errata Install"),
+          :type => :errata,
+          :event_messages => {
+              :running => [N_('installing erratum...'),N_('installing errata...')],
+              :waiting => [N_('installing erratum...'),N_('installing errata...')],
+              :finished => [N_('%s erratum install'), N_('%s (%s other errata) install.')],
+              :error=> [N_('%s erratum install failed'), N_('%s (%s other errata) install failed')],
+              :cancelled => [N_('%s erratum install cancelled'), N_('%s (%s other errata) install cancelled')],
+              :timed_out =>[N_('%s erratum install timed out'), N_('%s (%s other errata) install timed out')],
+          },
+         :user_message => _('Errata Install scheduled by %s')
+      },
       :candlepin_event => {
           :english_name =>N_("Candlepin Event"),
           :type => :candlepin_event,
@@ -105,7 +118,6 @@ class SystemTask < ActiveRecord::Base
           },
           :user_message => nil
       },
-
   }.with_indifferent_access
 
   TYPES.each_pair do |name, value|
@@ -137,6 +149,13 @@ class SystemTask < ActiveRecord::Base
           else
             return  _("%s (%s other package groups)") % [p.first, p.length - 1]
           end
+        when :errata
+          p = task.parameters[:errata_ids]
+          if p.length == 1
+            return p.first
+          else
+            return  _("%s (%s other errata)") % [p.first, p.length - 1]
+          end
       end
     end
     def message_for task
@@ -165,6 +184,10 @@ class SystemTask < ActiveRecord::Base
           return task.result
         when :package_group
           p = task.parameters[:groups]
+          msg = details[:event_messages][task.state]
+          return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
+        when :errata
+          p = task.parameters[:errata_ids]
           msg = details[:event_messages][task.state]
           return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
 
