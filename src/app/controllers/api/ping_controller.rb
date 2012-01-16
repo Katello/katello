@@ -12,8 +12,7 @@
 
 class Api::PingController < Api::ApiController
 
-  # anyone who is authenticated can ask for status
-  skip_before_filter :authorize
+  skip_before_filter :authorize # ok - anyone authenticated can ask for status
 
   def index
     render :json => Ping.ping().to_json and return
