@@ -13,7 +13,7 @@
 class Api::StatusController < Api::ApiController
 
   skip_before_filter :require_user
-  skip_before_filter :authorize
+  skip_before_filter :authorize # ok - authenticated users are able to call this
 
   def memory
     User.as :admin do
