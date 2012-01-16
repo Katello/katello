@@ -15,7 +15,6 @@ class ChangesetsController < ApplicationController
   include BreadcrumbHelper
   include ChangesetBreadcrumbs
 
-  skip_before_filter :authorize # want to load environment if we can
   before_filter :find_changeset, :except => [:index, :items, :list, :create, :new, :auto_complete_search]
   before_filter :find_environment, :except => [:auto_complete_search]
   before_filter :authorize
@@ -272,12 +271,13 @@ class ChangesetsController < ApplicationController
                  :name => controller_display_name,
                  :accessor => :id,
                  :ajax_load => true,
-                 :ajax_scroll => items_changesets_path()}
+                 :ajax_scroll => items_changesets_path(),
+                 :search_class=>Changeset}
   end
 
 
   def controller_display_name
-    return _('changeset')
+    return 'changeset'
   end
 
   private

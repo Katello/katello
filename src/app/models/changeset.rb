@@ -24,7 +24,8 @@ class Changeset < ActiveRecord::Base
   include Katello::Notices
 
   include IndexedModel
-  index_options :extended_json=>:extended_index_attrs
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :description, :package, :errata, :product, :repo, :system_template]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -59,12 +60,6 @@ class Changeset < ActiveRecord::Base
   belongs_to :environment, :class_name=>"KTEnvironment"
   belongs_to :task_status
   before_save :uniquify_artifacts
-
-  scoped_search :on => :name, :complete_value => true, :rename => :'changeset.name'
-  scoped_search :on => :created_at, :complete_value => true, :rename => :'changeset.create_date'
-  scoped_search :on => :promotion_date, :complete_value => true, :rename => :'changeset.promotion_date'
-  scoped_search :in => :products, :on => :name, :complete_value => true, :rename => :'custom_product.name'
-  scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'custom_product.description'
 
   def key_for item
     "changeset_#{id}_#{item}"
@@ -525,16 +520,29 @@ class Changeset < ActiveRecord::Base
   end
 
   def calc_dependencies_for_packages package_names, from_repos, to_repos
-    from_repos_names = from_repos.map{ |r| r.pulp_id }
 
+    all_deps = []
+    to_resolve = package_names
+    while not to_resolve.empty?
+
+      deps = get_promotable_dependencies_for_packages to_resolve, from_repos, to_repos
+      deps = Katello::PackageUtils::filter_latest_packages_by_name deps
+
+
+      all_deps += deps
+      to_resolve = deps.map{ |d| d['provides'] }.flatten.uniq - all_deps
+    end
+    all_deps
+  end
+
+  def get_promotable_dependencies_for_packages package_names, from_repos, to_repos
+    from_repo_ids = from_repos.map{ |r| r.pulp_id }
     @next_env_pkg_ids ||= package_ids(to_repos)
-    dependencies = []
 
-    resolved_deps = Pulp::Package.dep_solve(package_names, from_repos_names)['resolved']
+    resolved_deps = Pulp::Package.dep_solve(package_names, from_repo_ids)['resolved']
     resolved_deps = resolved_deps.values.flatten(1)
-
-    dependencies = resolved_deps.reject {|dep| not @next_env_pkg_ids.index(dep['id']).nil? }
-    dependencies
+    resolved_deps = resolved_deps.reject {|dep| not @next_env_pkg_ids.index(dep['id']).nil? }
+    resolved_deps
   end
 
   def package_ids repos
@@ -576,7 +584,7 @@ class Changeset < ActiveRecord::Base
       :errata=>errata,
       :product=>products,
       :repo=>repos,
-      :system_templates=>templates
+      :system_template=>templates
     }
   end
 

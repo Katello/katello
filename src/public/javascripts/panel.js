@@ -752,7 +752,7 @@ KT.panel.list = (function () {
                         if (data['current_items'] === 0) {
                             list.removeClass("ajaxScroll");
                         }
-                        update_counts(data['current_items'], 0);
+                        update_counts(data['current_items'], 0, 0);
                         extended_cb();
                     },
                     error: function () {
@@ -767,8 +767,10 @@ KT.panel.list = (function () {
             
             setupSearch(resource_type, options);
 
-            // DISABLING AUTO COMPLETE for now
-            //KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
+            if (KT.panel_search_autocomplete){
+              KT.search.enableAutoComplete({data:KT.panel_search_autocomplete});
+            }
+
             KT.panel.control_bbq = false;
             
             $(window).bind('hashchange', KT.panel.hash_change);
@@ -886,12 +888,18 @@ KT.panel.list = (function () {
                     $('#search_form').trigger('submit');
                 }
             }).live('keypress', function(event){
-                var button = $('#search_button');
+                var button = $('#search_button'),
+                    value = $(this).val();
 
                 if( event.keyCode === 13 ){
                     event.preventDefault();
                     
                     if( button.attr('disabled') !== "disabled" ){
+                        if( value === "" ){
+                            $.bbq.removeState("search");
+                        } else {
+                            $.bbq.pushState({ "search" : value });
+                        }
                         $('#search_form').trigger('submit');
                     }
                 }

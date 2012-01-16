@@ -14,6 +14,7 @@ require 'spec_helper.rb'
 
 describe Api::UebercertsController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
   OWNER_KEY = "some_org"
 
   let(:org) { Organization.new(:cp_key => OWNER_KEY) }
@@ -22,8 +23,27 @@ describe Api::UebercertsController do
     Organization.stub!(:first).and_return(org)
   end
 
+  describe "rules" do
+    let(:authorized_user) do
+      user_with_permissions { |u| u.can(:read, :organizations, nil, @organization) }
+    end
+    let(:unauthorized_user) do
+      user_without_permissions
+    end
+    describe "show" do
+      let(:action) { :show }
+      let(:req) do
+        post :show, :organization_id => OWNER_KEY
+      end
+      it_should_behave_like "protected action"
+    end
+  end
+
   context "show" do
-    before { Candlepin::Owner.stub!(:get_ueber_cert).and_return({}) }
+    before do
+      Candlepin::Owner.stub!(:get_ueber_cert).and_return({})
+      disable_authorization_rules
+    end
 
     it "should find organization" do
       Organization.should_receive(:first).once.and_return(org)

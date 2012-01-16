@@ -12,7 +12,7 @@
 
 class Api::RootController < Api::ApiController
 
-  skip_before_filter :authorize
+  skip_before_filter :authorize # ok - only shows URLs available
   skip_before_filter :require_user
 
   def resource_list

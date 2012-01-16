@@ -26,8 +26,10 @@ class System < ActiveRecord::Base
   include AsyncOrchestration
   include IndexedModel
 
+  
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=>[:name, :description, :environment_id, :id, :uuid, :created_at, :lastCheckin]}
+                :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
+                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -112,6 +114,11 @@ class System < ActiveRecord::Base
   def uninstall_package_groups groups
     pulp_task = self.uninstall_package_group(groups)
     system_task = save_system_task(pulp_task, :package_group_remove, :groups, groups)
+  end
+
+  def install_errata errata_ids
+    pulp_task = self.install_consumer_errata(errata_ids)
+    system_task = save_system_task(pulp_task, :errata_install, :errata_ids, errata_ids)
   end
 
   # returns list of virtual permission tags for the current user

@@ -275,7 +275,8 @@ class ActivationKeysController < ApplicationController
       :name => controller_display_name,
       :ajax_load  => true,
       :ajax_scroll => items_activation_keys_path(),
-      :enable_create => ActivationKey.manageable?(current_organization)}
+      :enable_create => ActivationKey.manageable?(current_organization),
+      :search_class=>ActivationKey}
   end
 
   private
@@ -357,7 +358,7 @@ class ActivationKeysController < ApplicationController
   end
 
   def controller_display_name
-    return _('activation_key')
+    return 'activation_key'
   end
 
   def search_filter

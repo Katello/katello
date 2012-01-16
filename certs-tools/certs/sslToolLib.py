@@ -13,7 +13,7 @@
 # in this software or its documentation.
 #
 #
-# rhn-ssl-tool general library
+# katello-ssl-tool general library
 #
 # $Id$
 
@@ -28,7 +28,7 @@ from timeLib import DAY, now, secs2days, secs2years, secs2str, \
                     str2secs
 from fileutils import cleanupAbsPath, rhn_popen
 
-class RhnSslToolException(Exception):
+class KatelloSslToolException(Exception):
     """ general exception class for the tool """
 
 errnoGeneralError = 1
@@ -126,7 +126,7 @@ class TempDir:
 
     _shutil = shutil # trying to hang onto shutil during garbage collection
 
-    def __init__(self, suffix='-rhn-ssl-tool'):
+    def __init__(self, suffix='-katello-ssl-tool'):
         "create a temporary directory in /tmp"
 
         if string.find(suffix, '/') != -1:

@@ -52,7 +52,7 @@ describe SystemsController do
 
           let(:before_success) do
             controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
-              search_options[:filter][:organization_id].should include(@organization.id)
+              search_options[:filter][:environment_id].should include(@environment.id)
               controller.stub(:render)
             }
           end
@@ -77,7 +77,7 @@ describe SystemsController do
           
           let(:before_success) do
             controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
-              search_options[:filter][:organization_id].should include(@organization.id)
+              search_options[:filter][:environment_id].should include(@environment.id)
               controller.stub(:render)
             }
           end
