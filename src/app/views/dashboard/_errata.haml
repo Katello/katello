@@ -7,6 +7,8 @@
         #{_("Errata")}
       .column_head.col_3
         #{_('Product')}
+      .column_head.col_4
+        #{_('Info')}
     .scroll-pane
       -for element in n_errata
         - errata = errata_hash[element[0]]
@@ -21,6 +23,8 @@
                 #{errata.id} (#{systems.length} #{_('Systems')})
             .col_3.one-line-ellipsis
               #{errata_product_names(errata, repos)}
+            .col_4
+              %span.details-icon.errata-info{ "data-title" => errata.title, "data-issued" => errata.issued, "data-description" => errata.description, "data-id" => errata.id, "data-packages" => errata.pkglist.to_json, "data-reference_url" => errata.references[0]["href"] }
           %div.system_list
             .subheader
               .col_1
