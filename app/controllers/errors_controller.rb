@@ -12,7 +12,7 @@
 
 class ErrorsController < ApplicationController
   skip_before_filter :require_user, :require_org
-  skip_before_filter :authorize
+  skip_before_filter :authorize # ok - is used by warden
   def routing
     render_404
   end

@@ -17,7 +17,6 @@ class SystemsController < ApplicationController
   before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :destroy, :new, :create]
   before_filter :find_systems, :only=>[:bulk_destroy]
 
-  skip_before_filter :authorize
   before_filter :find_environment, :only => [:environments, :env_items, :new]
   before_filter :authorize
 

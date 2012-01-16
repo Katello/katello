@@ -12,11 +12,9 @@
 
 class PackagesController < ApplicationController
 	
-  skip_before_filter :authorize, :only => [:filelist, :changelog, :dependencies]
   before_filter :package_details_auth, :only=> [:filelist, :changelog, :dependencies]
-  
   before_filter :lookup_package, :except=>[:auto_complete_locker]
-
+  before_filter :authorize
 
   def rules
     #TODO, only allow the user to see a package if they have rights to a product its in
