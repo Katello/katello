@@ -28,6 +28,7 @@ class Ping
       result = { :result => 'ok', :status => {
         :pulp => {},
         :candlepin => {},
+        :elasticsearch => {},
         :pulp_auth => {},
         :candlepin_auth => {},
       }}
@@ -42,6 +43,11 @@ class Ping
       url = AppConfig.candlepin.url
       exception_watch(result[:status][:candlepin]) do
         RestClient.get "#{url}/status"
+      end
+
+      url = AppConfig.elastic_url
+      exception_watch(result[:status][:elasticsearch]) do
+        RestClient.get "#{url}/_status"
       end
 
       # pulp - ping with oauth

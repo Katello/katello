@@ -66,30 +66,38 @@ var favorite = (function() {
 
             search_input.val('');
             search_input.change();
-       	    $('#search_form').submit();
         	$('.qdropdown').hide();
         }
     }
 })();
 
 KT.search = (function($){
-	var enableAutoComplete = function(url){
-		var request_issued = false,
-		
-			getAutoCompleteData = function(request, response){
-				if( !request_issued ){
-					request_issued = true;
-		
-					$.getJSON(url, { search	: request.term }, 
-						function(json){
-							request_issued = false;
-							response(json);
-						})
-						.error(function(){
-							request_issued = false;
-						});
-				}
-			};
+	var enableAutoComplete = function(params){
+        var url = params['url'],
+            data = params['data'],
+		    request_issued = false,
+            getAutoCompleteData;
+
+            if(url) {
+                getAutoCompleteData = function(request, response){
+                    if( !request_issued ){
+                        request_issued = true;
+
+                        $.getJSON(url, { search	: request.term },
+                            function(json){
+                                request_issued = false;
+                                response(json);
+                            })
+                            .error(function(){
+                                request_issued = false;
+                            });
+                    }
+                };
+            }
+            else {
+                getAutoCompleteData = data;
+            }
+
 		
 		$.widget( "custom.catcomplete", $.ui.autocomplete, {
 			_renderMenu: function( ul, items ) {

@@ -31,8 +31,6 @@ class SystemTemplate < ActiveRecord::Base
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :system_templates
   has_and_belongs_to_many :changesets
 
-  scoped_search :on => :name, :complete_value => true, :rename => :'system_template.name'
-
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id
   validates_length_of :name, :maximum => 255

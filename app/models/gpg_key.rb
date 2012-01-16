@@ -14,7 +14,8 @@ class GpgKey < ActiveRecord::Base
   include IndexedModel
 
 
-  index_options :extended_json=>:extended_index_attrs
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :content]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -29,9 +30,6 @@ class GpgKey < ActiveRecord::Base
   validates :name, :katello_name_format => true
   validates :content, :presence => true
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
-
-  scope :completer_scope, lambda { |options| readable(options[:organization_id])}
-  scoped_search :on => :name, :complete_value => true
 
 
   #Permission items

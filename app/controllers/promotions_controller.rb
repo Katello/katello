@@ -12,7 +12,6 @@
 
 class PromotionsController < ApplicationController
 
-  skip_before_filter :authorize #load the environment
   before_filter :find_environment
   before_filter :authorize
 

@@ -14,7 +14,7 @@ class ActivationKey < ActiveRecord::Base
   include Authorization
   include IndexedModel
 
-  index_options :extended_json=>:extended_json
+  index_options :extended_json=>:extended_json, :display_attrs=>[:name, :description, :environment, :template]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -31,10 +31,6 @@ class ActivationKey < ActiveRecord::Base
 
   scope :readable, lambda {|org| ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")}
 
-  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
-  scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'
-  scoped_search :on => :description, :complete_value => true, :rename => :'key.description'
-  scoped_search :in => :environment, :on => :name, :complete_value => true, :rename => :'environment.name'
 
   validates :name, :presence => true, :katello_name_format => true, :length => { :maximum => 255 }
   validates_uniqueness_of :name, :scope => :organization_id

@@ -14,7 +14,6 @@
 class OrganizationsController < ApplicationController
   include AutoCompleteSearch
   respond_to :html, :js
-  skip_before_filter :authorize
   before_filter :find_organization, :only => [:edit, :update, :destroy, :events]
   before_filter :find_organization_by_id, :only => [:environments_partial, :download_debug_certificate]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
@@ -86,7 +85,9 @@ class OrganizationsController < ApplicationController
     end
 
     if search_validate(Organization, @organization.id, params[:search])
-      notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
+      collected = [_("Organization '#{@organization["name"]}' was created.")]
+      collected.push(_("Click on 'Add Environment' to create the first environment")) if @new_env.nil?
+      notice collected
       render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
     else
       notice _("Organization '#{@organization["name"]}' was created.")
@@ -204,7 +205,8 @@ class OrganizationsController < ApplicationController
                :accessor => :cp_key,
                :ajax_load  => true,
                :ajax_scroll => items_organizations_path(),
-               :enable_create => Organization.creatable?}
+               :enable_create => Organization.creatable?,
+               :search_class=>Organization}
   end
 
   def search_filter
@@ -212,7 +214,7 @@ class OrganizationsController < ApplicationController
   end
 
   def controller_display_name
-    return _('organization')
+    return 'organization'
   end
 
 end

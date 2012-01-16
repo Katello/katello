@@ -64,10 +64,13 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @organization = current_organization
-    accessible_envs = current_organization.environments
-    setup_environment_selector(current_organization, accessible_envs)
-    @environment = first_env_in_path(accessible_envs)
+    accessible_envs = []
+    if current_organization
+      @organization = current_organization
+      accessible_envs = current_organization.environments
+      setup_environment_selector(current_organization, accessible_envs)
+      @environment = first_env_in_path(accessible_envs)
+    end
     render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user,
                                                                    :editable=>@user.id == current_user.id || @user.editable?,
                                                                    :name=>controller_display_name,
@@ -273,11 +276,12 @@ class UsersController < ApplicationController
                  :name => controller_display_name,
                  :ajax_load  => true,
                  :ajax_scroll => items_users_path(),
-                 :enable_create => User.creatable? }
+                 :enable_create => User.creatable?,
+                 :search_class=>User}
   end
 
   def controller_display_name
-    return _('user')
+    return 'user'
   end
 
 end

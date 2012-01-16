@@ -93,7 +93,7 @@ module DashboardHelper
         return "security_icon"
       when  Glue::Pulp::Errata::ENHANCEMENT
         return "enhancement_icon"
-      when  Glue::Pulp::Errata::BUGFIX
+      when  Glue::Pulp::Errata::BUGZILLA
         return "bugzilla_icon"
     end
   end

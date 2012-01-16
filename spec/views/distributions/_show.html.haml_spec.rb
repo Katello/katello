@@ -14,7 +14,7 @@ require 'spec_helper'
 
 describe "distributions/_show.html.haml" do
   before(:each) do
-    view.stub(:render_navigation)
+    view.stub(:render_menu)
 
     @id = "distro-id-1"
     @description = "this is distro 1"
@@ -36,7 +36,7 @@ describe "distributions/_show.html.haml" do
     end
 
     it "renders sub-navigation links" do
-      view.should_receive(:render_navigation).with(:items => [], :expand_all => true, :level => 1).once
+      view.should_receive(:render_menu).with(1..2, []).once
       render
     end
   end

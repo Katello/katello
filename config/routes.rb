@@ -82,6 +82,13 @@ Src::Application.routes.draw do
         get :status
       end
     end
+    resources :errata, :controller => "system_errata", :only => [:index, :update] do
+      collection do
+        get :items
+        post :install
+        get :status
+      end
+    end
 
     member do
       get :edit
@@ -349,7 +356,7 @@ Src::Application.routes.draw do
       end
     end
 
-    resources :templates do
+    resources :templates, :except => [:index] do
       post :import, :on => :collection
       get :export, :on => :member
       get :validate, :on => :member
@@ -447,10 +454,10 @@ Src::Application.routes.draw do
       end
     end
 
-    resources :puppetclasses, :only => [:index]
+    #resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
-    resources :repositories, :only => [:index, :show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+    resources :repositories, :only => [:show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end
@@ -542,7 +549,9 @@ Src::Application.routes.draw do
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
     # development / debugging support
-    get 'status/memory'
+    if Rails.env == "development"
+      get 'status/memory'
+    end
 
   # end '/api' namespace
   end

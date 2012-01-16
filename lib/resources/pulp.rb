@@ -420,7 +420,7 @@ module Pulp
       end
 
       def errata consumer_id
-        response = post(consumer_path(consumer_id) + "listerrata/", {:types => []}.to_json, self.default_headers)
+        response = get(consumer_path(consumer_id) + "errata/", self.default_headers)
         JSON.parse(response.body)
       end
 
@@ -437,6 +437,13 @@ module Pulp
         url = consumer_path() + "applicable_errata_in_repos/" + repoids_param
         response = get(url, self.default_headers)
         JSON.parse(response.body)
+      end
+
+      def install_errata consumer_id, errata_ids
+        url = consumer_path(consumer_id) + "installerrata/"
+        attrs = { :errataids => errata_ids }
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
       end
 
       def consumer_path id = nil

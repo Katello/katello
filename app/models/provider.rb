@@ -17,7 +17,8 @@ class Provider < ActiveRecord::Base
   include KatelloUrlHelper
   include IndexedModel
 
-  index_options :extended_json=>:extended_index_attrs, :json=>{:except=>[]}
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :product, :repo, :description]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -41,12 +42,6 @@ class Provider < ActiveRecord::Base
   before_destroy :prevent_redhat_deletion
   before_validation :sanitize_repository_url
 
-  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id]) }
-
-  scoped_search :on => :name, :complete_value => true, :rename => :'provider.name'
-  scoped_search :on => :description, :complete_value => true, :rename => :'provider.description'
-  scoped_search :in => :products, :on => :name, :complete_value => true, :rename => :'product.name'
-  scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'product.description'
 
   validate :only_one_rhn_provider
   validate :valid_url, :if => :redhat_provider?
@@ -169,14 +164,12 @@ class Provider < ActiveRecord::Base
   end
 
   def extended_index_attrs
-    products = []
-    #products = self.products.map{|prod|
-    #  {:provider_name=>prod.name, :repos=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
-    #}
+    products = self.products.map{|prod|
+      {:product=>prod.name, :repo=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
+    }
     {
       :products=>products,
       :name_sort=>name.downcase
-
     }
   end
 

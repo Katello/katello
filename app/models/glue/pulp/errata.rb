@@ -16,7 +16,7 @@ require 'set'
 class Glue::Pulp::Errata
 
   SECURITY = "security"
-  BUGFIX = "bugfix"
+  BUGZILLA = "bugfix"
   ENHANCEMENT = "enhancement"
 
   attr_accessor :id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str, :reboot_suggested, :references, :pkglist, :severity, :repoids
