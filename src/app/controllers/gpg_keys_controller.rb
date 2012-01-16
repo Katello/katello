@@ -170,7 +170,7 @@ class GpgKeysController < ApplicationController
   private
  
   def controller_display_name
-    return _('gpg_key')
+    return 'gpg_key'
   end
 
   def search_filter

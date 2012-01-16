@@ -14,19 +14,30 @@ require 'rest_client'
 
 class Api::TemplatesController < Api::ApiController
 
-  before_filter :find_environment, :only => [:create, :import]
-  before_filter :try_find_environment, :only => [:index]
+  before_filter :find_environment, :only => [:create, :import, :index]
   before_filter :find_template, :only => [:show, :update, :destroy, :promote, :export, :validate]
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  before_filter :authorize
+
+  def rules
+    read_test = lambda{ SystemTemplate.readable?(@template.environment.organization) }
+    read_env_test = lambda{ @environment && SystemTemplate.readable?(@environment.organization) }
+    manage_env_test = lambda{ @environment && SystemTemplate.manageable?(@environment.organization) }
+    manage_test = lambda{ SystemTemplate.manageable?(@template.environment.organization) }
+    {
+      :index => read_env_test,
+      :show => read_test,
+      :create => manage_env_test,
+      :update => manage_test,
+      :destroy => manage_test,
+      :validate => read_test,
+      :import => manage_env_test,
+      :export => read_test,
+    }
+  end
 
   def index
-    if @environment.nil?
-      tpls = SystemTemplate.where(params.slice(:name))
-    else
-      tpls = @environment.system_templates.where(params.slice(:name))
-    end
+    tpls = @environment.system_templates.where(params.slice(:name))
     render :json => tpls.to_json
   end
 
@@ -101,14 +112,12 @@ class Api::TemplatesController < Api::ApiController
     end
   end
 
+  private
+
   def find_environment
     @environment = KTEnvironment.find(params[:environment_id])
     raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
     @environment
-  end
-
-  def try_find_environment
-    find_environment if not params[:environment_id].nil?
   end
 
   def find_template
@@ -116,6 +125,4 @@ class Api::TemplatesController < Api::ApiController
     raise HttpErrors::NotFound, _("Couldn't find template '#{params[:id]}'") if @template.nil?
     @template
   end
-
-
 end

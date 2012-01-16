@@ -25,6 +25,23 @@
                 $tip.find('.tipsy-inner')[this.options.html ? 'html' : 'text'](title);
                 $tip[0].className = 'tipsy'; // reset classname in case of dynamic gravity
                 $tip.remove().css({top: 0, left: 0, visibility: 'hidden', display: 'block'}).prependTo(document.body);
+
+                var that = this;
+                function tipOver() {
+                    that.hoverTooltip = true;
+                }
+                function tipOut() {
+                    if (that.hoverState == 'in') return;  // If field is still focused.
+                    that.hoverTooltip = false;
+                    if (that.options.trigger != 'manual') {
+                        var eventOut = that.options.trigger == 'hover' ? 'mouseleave.tipsy' : 'blur.tipsy';
+                        that.$element.trigger(eventOut);
+                    }
+                }
+
+                if (this.options.hoverable) {
+                    $tip.hover(tipOver, tipOut);
+                }
                 
                 var pos = $.extend({}, this.$element.offset(), {
                     width: this.$element[0].offsetWidth,
@@ -134,6 +151,9 @@
         }
         
         options = $.extend({}, $.fn.tipsy.defaults, options);
+        if (options.hoverable) {
+            options.delayOut = options.delayOut || 200;
+        }
         
         function get(ele) {
             var tipsy = $.data(ele, 'tipsy');
@@ -146,34 +166,79 @@
         
         function enter() {
             var tipsy = get(this);
-            tipsy.hoverState = 'in';
-            if (options.delayIn == 0) {
-                tipsy.show();
-            } else {
-                tipsy.fixTitle();
-                setTimeout(function() { if (tipsy.hoverState == 'in') tipsy.show(); }, options.delayIn);
+            if( options.activeTip === undefined ){
+                tipsy.hoverState = 'in';
+                if (options.delayIn == 0) {
+                    tipsy.show();
+                } else {
+                    tipsy.fixTitle();
+                    setTimeout(function() { if (tipsy.hoverState == 'in') tipsy.show(); }, options.delayIn);
+                }
             }
         };
         
         function leave() {
             var tipsy = get(this);
-            tipsy.hoverState = 'out';
-            if (options.delayOut == 0) {
-                tipsy.hide();
-            } else {
-                setTimeout(function() { if (tipsy.hoverState == 'out') tipsy.hide(); }, options.delayOut);
+            if( tipsy.clickState !== 'on' ){
+                tipsy.hoverState = 'out';
+                if (options.delayOut == 0) {
+                    tipsy.hide();
+                } else {
+                    setTimeout(function() { if (tipsy.hoverState == 'out' && !tipsy.hoverTooltip) tipsy.hide(); }, options.delayOut);
+                }
             }
         };
         
+        function sticky() {
+            var tipsy = get(this),
+                activeTip;
+            
+            if( options.activeTip !== undefined ){
+                activeTip = get(options.activeTip);
+                activeTip.hide();
+                options.stickyClick(options.activeTip, 'off');
+                options.activeTip = undefined;
+            }
+            if( tipsy.clickState === 'on' ){
+                tipsy.hide();
+                tipsy.clickState = 'off';
+                options.activeTip = undefined;
+            } else {
+                tipsy.show();
+                tipsy.clickState = 'on';
+                options.activeTip = this;
+                $(this).addClass('tipsy-sticky-click');
+            }
+            options.stickyClick(this, tipsy.clickState);
+        }
+
+        function handleScroll(event) {
+            var target = $(event.target);
+
+            if( !(target.parents().hasClass('tipsy-inner')) ){
+                if( options.activeTip ){
+                    options.activeTip.clickState = 'off';
+                    options.stickyClick(options.activeTip, 'off');
+                    get(options.activeTip).hide();
+                    options.activeTip = undefined;
+                }
+            }
+        }
+
         if (!options.live) this.each(function() { get(this); });
         
         if (options.trigger != 'manual') {
             var binder   = options.live ? 'live' : 'bind',
-                eventIn  = options.trigger == 'hover' ? 'mouseenter' : 'focus',
-                eventOut = options.trigger == 'hover' ? 'mouseleave' : 'blur';
+                eventIn  = options.trigger == 'hover' ? 'mouseenter.tipsy' : 'focus.tipsy',
+                eventOut = options.trigger == 'hover' ? 'mouseleave.tipsy' : 'blur.tipsy';
             this[binder](eventIn, enter)[binder](eventOut, leave);
         }
         
+        if (options.stickyClick) {
+            this['live']('click', sticky);
+            $(document).bind('scroll', handleScroll);
+        }
+
         return this;
         
     };
@@ -187,6 +252,8 @@
         gravity: 'n',
         html: false,
         live: false,
+        hoverable: false,
+        stickyClick: false,
         offset: 0,
         opacity: 0.8,
         title: 'title',

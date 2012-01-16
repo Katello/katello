@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.16
+Version:       0.1.17
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jan 13 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.17-1
+- virt-who-vsphere - script for simulating virt-who vsphere response
+
 * Mon Dec 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.14-1
 - ak - system tests
 

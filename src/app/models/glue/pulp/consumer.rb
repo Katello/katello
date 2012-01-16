@@ -23,13 +23,11 @@ module Glue::Pulp::Consumer
       lazy_accessor :package_profile, :initializer => lambda { Pulp::Consumer.installed_packages(uuid) }
       lazy_accessor :simple_packages, :initializer => lambda { Pulp::Consumer.installed_packages(uuid).
                                                               collect{|pack| Glue::Pulp::SimplePackage.new(pack)} }
+      lazy_accessor :errata, :initializer => lambda { Pulp::Consumer.errata(uuid).
+                                                              collect{|errata| Glue::Pulp::Errata.new(errata)} }
     end
   end
   module InstanceMethods
-    def errata
-      (::Pulp::Consumer.errata self.uuid).with_indifferent_access
-    end
-
     def del_pulp_consumer
       Rails.logger.info "Deleting consumer in pulp: #{self.name}"
       Pulp::Consumer.destroy(self.uuid)
@@ -106,6 +104,14 @@ module Glue::Pulp::Consumer
       pulp_task = Pulp::Consumer.uninstall_package_groups(self.uuid, groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def install_consumer_errata errata_ids
+      Rails.logger.info "Scheduling errata install for consumer #{self.name}"
+      pulp_task = Pulp::Consumer.install_errata(self.uuid, errata_ids)
+    rescue => e
+      Rails.logger.error "Failed to schedule errata install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 

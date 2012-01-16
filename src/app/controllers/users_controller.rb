@@ -289,7 +289,7 @@ class UsersController < ApplicationController
   end
 
   def controller_display_name
-    return _('user')
+    return 'user'
   end
 
 end
