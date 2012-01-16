@@ -385,6 +385,10 @@ Src::Application.routes.draw do
         post   :index, :on => :collection, :action => :add_distribution
         delete :destroy, :on => :member, :action => :remove_distribution
       end
+      resources :repositories, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_repo
+        delete :destroy, :on => :member, :action => :remove_repo
+      end
     end
 
     resources :organizations do
