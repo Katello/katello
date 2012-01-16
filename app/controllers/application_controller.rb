@@ -160,7 +160,7 @@ class ApplicationController < ActionController::Base
   # temp code to setup i18n, might want to consider looking at a rails plugin that is more robust
   def extract_locale_from_accept_language_header
     hal = request.env['HTTP_ACCEPT_LANGUAGE']
-    hal.nil? ? 'en' : hal.scan(/^[a-z]{2}/).first
+    hal.nil? ? 'en' : hal.slice(/^[a-z]{2}(-[a-z]{2})?/)
   end
 
   # render 403 page
