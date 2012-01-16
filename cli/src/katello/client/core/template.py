@@ -23,7 +23,7 @@ from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task, system_exit
-from katello.client.api.utils import get_locker, get_environment, get_template, get_product
+from katello.client.api.utils import get_locker, get_environment, get_template, get_product, get_repo
 
 try:
     import json
@@ -305,77 +305,63 @@ class Update(TemplateAction):
 
     def __init__(self):
         self.current_parameter = None
-        self.add_parameters = {}
+        self.resetParameters()
         super(Update, self).__init__()
 
 
     def store_parameter_name(self, option, opt_str, value, parser):
         self.current_parameter = value
-        self.add_parameters[value] = None
+        self['add_parameters'][value] = None
 
     def store_parameter_value(self, option, opt_str, value, parser):
         if self.current_parameter == None:
             raise OptionValueError(_("each %s must be preceeded by %s") % (option, "--add_parameter") )
 
-        self.add_parameters[self.current_parameter] = value
+        self.items['add_parameters'][self.current_parameter] = value
         self.current_parameter = None
 
+    def store_from_product(self, option, opt_str, value, parser):
+        self.current_product = value
+        parser.values.from_product = True
+
+    def store_item_with_product(self, option, opt_str, value, parser):
+        if parser.values.from_product == None:
+            raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product") )
+        self.items[option.dest].append({"name": value, "product": self.current_product})
+
     def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                               help=_("template name (required)"))
-        self.parser.add_option('--parent', dest='parent',
-                               help=_("name of the parent template"))
-        self.parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-        self.parser.add_option('--new_name', dest='new_name',
-                               help=_("new template name"))
-        self.parser.add_option("--description", dest="description",
-                               help=_("template description"))
+        self.parser.add_option('--name', dest='name', help=_("template name (required)"))
+        self.parser.add_option('--parent', dest='parent', help=_("name of the parent template"))
+        self.parser.add_option('--org', dest='org', help=_("name of organization (required)"))
+        self.parser.add_option('--new_name', dest='new_name', help=_("new template name"))
+        self.parser.add_option("--description", dest="description", help=_("template description"))
 
-        self.parser.add_option('--add_product', dest='add_products',
-                                action="append",
-                                help=_("name of the product"))
-        self.parser.add_option('--remove_product', dest='remove_products',
-                                action="append",
-                                help=_("name of the product"))
+        self.parser.add_option('--add_product', dest='add_products', action="append", help=_("name of the product"))
+        self.parser.add_option('--remove_product', dest='remove_products', action="append", help=_("name of the product"))
 
-        self.parser.add_option('--add_package', dest='add_packages',
-                                action="append",
-                                help=_("name or nvre of the product (epoch:name-rel.eas-ver.sio.n)"))
-        self.parser.add_option('--remove_package', dest='remove_packages',
-                                action="append",
-                                help=_("name or nvre of the product (epoch:name-rel.eas-ver.sio.n)"))
+        self.parser.add_option('--add_package', dest='add_packages', action="append", help=_("name or nvre of the product (epoch:name-rel.ease-ver.sio.n)"))
+        self.parser.add_option('--remove_package', dest='remove_packages', action="append", help=_("name or nvre of the product (epoch:name-rel.ease-ver.sio.n)"))
 
-        self.parser.add_option('--add_parameter', dest='add_parameters',
-                                action="callback", callback=self.store_parameter_name, type="string",
+        self.parser.add_option('--add_parameter', dest='add_parameters', action="callback", callback=self.store_parameter_name, type="string",
                                 help=_("name of the parameter, %s must follow") % "--value")
-        self.parser.add_option('--value', dest='value',
-                                action="callback", callback=self.store_parameter_value, type="string",
-                                help=_("value of the parameter"))
-        self.parser.add_option('--remove_parameter', dest='remove_parameters',
-                                action="append",
-                                help=_("name of the parameter"))
+        self.parser.add_option('--value', dest='value', action="callback", callback=self.store_parameter_value, type="string", help=_("value of the parameter"))
+        self.parser.add_option('--remove_parameter', dest='remove_parameters', action="append", help=_("name of the parameter"))
 
-        self.parser.add_option('--add_package_group', dest='add_pgs',
-                                action="append",
-                                help=_("name of the package group"))
-        self.parser.add_option('--remove_package_group', dest='remove_pgs',
-                                action="append",
-                                help=_("name of the package group"))
+        self.parser.add_option('--add_package_group', dest='add_pgs', action="append", help=_("name of the package group"))
+        self.parser.add_option('--remove_package_group', dest='remove_pgs', action="append", help=_("name of the package group"))
 
-        self.parser.add_option('--add_package_group_category', dest='add_pg_categories',
-                                action="append",
-                                help=_("name of the package group category"))
-        self.parser.add_option('--remove_package_group_category', dest='remove_pg_categories',
-                                action="append",
-                                help=_("name of the package group category"))
+        self.parser.add_option('--add_package_group_category', dest='add_pg_categories', action="append", help=_("name of the package group category"))
+        self.parser.add_option('--remove_package_group_category', dest='remove_pg_categories', action="append", help=_("name of the package group category"))
 
-        self.parser.add_option('--add_distribution', dest='add_distributions',
-                                action="append",
-                                help=_("distribution id"))
-        self.parser.add_option('--remove_distribution', dest='remove_distributions',
-                                action="append",
-                                help=_("distribution id"))
+        self.parser.add_option('--add_distribution', dest='add_distributions', action="append", help=_("distribution id"))
+        self.parser.add_option('--remove_distribution', dest='remove_distributions', action="append", help=_("distribution id"))
+
+        self.parser.add_option('--from_product', dest='from_product', action="callback", callback=self.store_from_product, type="string",
+                                help=_("determines product from which the packages/errata/repositories are picked"))
+        self.parser.add_option('--add_repository', dest='add_repository', action="callback", callback=self.store_item_with_product, type="string",
+                                help=_("repository to add to the changeset"))
+        self.parser.add_option('--remove_repository', dest='remove_repository', action="callback", callback=self.store_item_with_product, type="string",
+                                help=_("repository to remove from the changeset"))
         self.resetParameters()
 
 
@@ -384,15 +370,20 @@ class Update(TemplateAction):
         self.require_option('org')
 
         #check for missing values
-        for k, v in self.add_parameters.iteritems():
+        for k, v in self.items['add_parameters'].iteritems():
             if v == None:
                 self.add_option_error(_("missing value for parameter '%s'") % k)
 
     def resetParameters(self):
-        self.add_parameters = {}
+        self.items = {}
+        self.items['add_parameters'] = {}
+        self.items['add_repository'] = []
+        self.items['remove_repository'] = []
 
     def getContent(self):
         orgName = self.get_option('org')
+        items = self.items.copy()
+        self.resetParameters()
 
         content = {}
         content['+products'] = self.get_option('add_products') or []
@@ -410,12 +401,18 @@ class Update(TemplateAction):
         content['+pg_categories'] = self.get_option('add_pg_categories') or []
         content['-pg_categories'] = self.get_option('remove_pg_categories') or []
 
-        content['+parameters'] = self.add_parameters.copy()
+        content['+parameters'] = items['add_parameters'].copy()
         content['-parameters'] = self.get_option('remove_parameters') or []
 
         content['+distros'] = self.get_option('add_distributions') or []
         content['-distros'] = self.get_option('remove_distributions') or []
+
+        content['+repos'] = items['add_repository']
+        content['+repos'] = self.repoNamesToIds(orgName, content['+repos'])
+        content['-repos'] = items['remove_repository']
+        content['-repos'] = self.repoNamesToIds(orgName, content['-repos'])
         return content
+
 
     def run(self):
         tplName = self.get_option('name')
@@ -423,9 +420,9 @@ class Update(TemplateAction):
         newName = self.get_option('new_name')
         desc    = self.get_option('description')
         parentName = self.get_option('parent')
-        content    = self.getContent()
+        content = self.getContent()
         #reset parameters for next call in shell mode
-        self.resetParameters()
+
 
         env = get_locker(orgName)
         if env == None:
@@ -452,6 +449,17 @@ class Update(TemplateAction):
             p = get_product(orgName, prodName)
             if p != None:
                 ids.append(p['id'])
+            else:
+                system_exit(os.EX_DATAERR)
+        return ids
+
+
+    def repoNamesToIds(self, orgName, repos):
+        ids = []
+        for rec in repos:
+            repo = get_repo(orgName, rec['product'], rec['name'])
+            if repo != None:
+                ids.append(repo['id'])
             else:
                 system_exit(os.EX_DATAERR)
         return ids
@@ -493,6 +501,10 @@ class Update(TemplateAction):
         for p in content['+distros']:
             self.api.add_content(tplId, 'distributions', {'id': p})
 
+        for p in content['-repos']:
+            self.api.remove_content(tplId, 'repositories', p)
+        for p in content['+repos']:
+            self.api.add_content(tplId, 'repositories', {'id': p})
 
 
 # ==============================================================================
