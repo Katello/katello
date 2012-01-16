@@ -370,7 +370,7 @@ class SystemTemplate < ActiveRecord::Base
     self.parent.promote(from_env, to_env) unless self.parent.nil?
 
     promote_products from_env, to_env
-    #promote_repos    from_env, to_env
+    promote_repos    from_env, to_env
     promote_packages from_env, to_env
     promote_template from_env, to_env
 
@@ -448,6 +448,22 @@ class SystemTemplate < ActiveRecord::Base
       async_tasks += (prod.promote from_env, to_env) if not prod.environments.include? to_env
     end
     PulpTaskStatus::wait_for_tasks async_tasks
+  end
+
+  def promote_repos from_env, to_env
+    async_tasks = []
+    self.repositories.each do |repo|
+      product = repo.product
+      next if (products.uniq! or []).include? product
+
+      cloned = repo.get_clone(to_env)
+      if cloned
+        async_tasks += cloned.sync
+      else
+        async_tasks += repo.promote(to_env)
+      end
+    end
+    async_tasks
   end
 
   def promote_packages from_env, to_env
