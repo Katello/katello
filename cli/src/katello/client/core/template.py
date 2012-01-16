@@ -117,11 +117,12 @@ class Info(TemplateAction):
         if template == None:
             return os.EX_DATAERR
 
-        template["products"] = "\n".join([p["name"] for p in template["products"]])
-        template["packages"] = "\n".join([self._build_nvrea(p) for p in template["packages"]])
-        template["parameters"] = "\n".join([ key+":\t"+value for key, value in template["parameters"].iteritems() ])
-        template["package_groups"] = "\n".join([p["name"] for p in template["package_groups"]])
-        template["package_group_categories"] = "\n".join([p["name"] for p in template["pg_categories"]])
+        template["products"]     = [p["name"] for p in template["products"]]
+        template["repositories"] = [r["name"] for r in template["repositories"]]
+        template["packages"]   = [self._build_nvrea(p) for p in template["packages"]]
+        template["parameters"] = [key+":\t"+value for key, value in template["parameters"].iteritems()]
+        template["package_groups"] = [p["name"] for p in template["package_groups"]]
+        template["package_group_categories"] = [p["name"] for p in template["pg_categories"]]
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -131,6 +132,7 @@ class Info(TemplateAction):
         self.printer.addColumn('parent_id')
         self.printer.addColumn('errata', multiline=True, show_in_grep=False)
         self.printer.addColumn('products', multiline=True, show_in_grep=False)
+        self.printer.addColumn('repositories', multiline=True, show_in_grep=False)
         self.printer.addColumn('packages', multiline=True, show_in_grep=False)
         self.printer.addColumn('parameters', multiline=True, show_in_grep=False)
         self.printer.addColumn('package_groups', multiline=True, show_in_grep=False)
