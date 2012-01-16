@@ -13,7 +13,7 @@
 - if flash[:success]
   :javascript
     $(document).ready(function(){
-      notices.displayNotice("success", '#{ flash[:success] }');
+      notices.displayNotice("success", '#{ escape_javascript(flash[:success]) }');
     });
 
 - if flash[:message]
