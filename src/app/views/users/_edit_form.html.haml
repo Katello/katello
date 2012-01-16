@@ -67,3 +67,11 @@
           = label :user, :email, _("Email Address:")
         .grid_5.la{'name' => 'user[email]',  :class => editable_class(editable), 'data-url' => user_path(@user)} #{@user.email}
 
+  .grid_10
+    = form_tag update_locale_user_path(@user), :id => "locale_form", :method => :put, :remote => false do
+      %fieldset
+        .grid_3.ra
+          = label :user, :locale, "%s:" % _("Preferred Locale")
+        .grid_5.la
+          = locale_select @user.default_locale
+

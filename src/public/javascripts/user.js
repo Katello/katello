@@ -69,6 +69,11 @@ $(document).ready(function() {
             }
         });
 
+        var locale_selector = $('#locale_locale');
+        locale_selector.change(function(event) {
+            $('#locale_form').trigger('submit');
+        });
+
         $('#password_field').simplePassMeter({
             'container': '#password_meter',
             'offset': 10,

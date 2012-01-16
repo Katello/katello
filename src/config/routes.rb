@@ -145,6 +145,7 @@ Src::Application.routes.draw do
     member do
       post :clear_helptips
       put :update_roles
+      put :update_locale
       get :edit_environment
       put :update_environment
     end
