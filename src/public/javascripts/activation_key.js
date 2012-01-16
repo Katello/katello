@@ -229,7 +229,9 @@ KT.activation_key = (function($) {
                 // or as part of the environment edit dialog
                 $("#activation_key_system_template_id").html(options);
 
-                highlight_system_templates(true);
+                if (response.length > 0) {
+                    highlight_system_templates(true);
+                }
                 enable_buttons();
             },
             error: function(data) {
