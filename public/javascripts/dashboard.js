@@ -133,6 +133,21 @@ KT.dashboard = (function(){
             $("#dashboard_errata").find(".jspPane").resize();
             btn.removeClass("expanded").addClass("collapsed");
         });
+
+        $('.errata-info').tipsy({ gravity: 'e', live : true, html : true, title : generateInfoToolTip,
+                                hoverable : true, delayOut : 250, opacity : 1, delayIn : 300,
+                                stickyClick : function(element, state){
+                                    if (state === 'on'){
+                                        $(element).addClass('details-icon-hover').removeClass('details-icon');
+                                    } else {
+                                        $(element).addClass('details-icon').removeClass('details-icon-hover');
+                                    }
+                                },
+                                afterShow : function(){
+                                    $('.tipsy-inner').addClass('scroll-pane');
+                                    KT.common.jscroll_init($('.scroll-pane'));
+                                }});
+
     },
     register_sync_progress = function() {
         $(".progressbar").each(function(){
@@ -146,8 +161,35 @@ KT.dashboard = (function(){
             errata: register_errata,
             sync: register_sync_progress
         }
+    },
+    generateInfoToolTip = function(){
+        var html = '',
+            element = $(this),
+            packages_list = [],
+            generate_packages = function(){
+                var packages = element.data('packages')[0]["packages"],
+                    i = 0,
+                    length = packages.length,
+                    html = "";
+
+                for(i; i < length; i += 1){
+                    html += "<li>" + packages[i]["filename"] + '</li>';
+                }
+
+                return html;
+            };
+
+        packages_list = generate_packages();
+
+        html += '<div class="item-container"><label class="fl ra">ID:</label>' + '<p>' + element.data('id') + '</p></div>';
+        html += '<div class="item-container"><label class="fl ra">Title:</label>' + '<p>' + element.data('title') + '</p></div>';
+        html += '<div class="item-container"><label class="fl ra">Issued:</label>' + '<p>' + element.data('issued') + '</p></div>';
+        html += '<div class="item-container"><label class="fl ra">Reference:</label>' + '<p><a target="new" href="' +  element.data('reference_url') + '">' + element.data('reference_url') + '</a></p></div>';
+        html += '<div class="item-container"><label class="fl ra">Description:</label>' + '<p><br/><pre>' + element.data('description') + '</pre></p></div>';
+        html += '<div class="item-container"><label class="fl" style="text-align:left;">Packages:</label>' + '<ul style="margin:0 0 0 4px;" class="la"><br/>' + packages_list + '</ul></div>';
+
+        return html;
     };
-    
     return {
         widget_map: widget_map(),
         widgetReload: widgetReload,
