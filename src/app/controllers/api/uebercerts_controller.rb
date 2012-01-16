@@ -13,8 +13,14 @@
 class Api::UebercertsController < Api::ApiController
   before_filter :find_organization, :only => [:show]
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  before_filter :authorize
+
+  def rules
+    read_test = lambda{ @organization.readable? }
+    {
+      :show => read_test,
+    }
+  end
 
   def show
     render :json => @organization.debug_cert
