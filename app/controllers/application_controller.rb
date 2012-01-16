@@ -157,10 +157,24 @@ class ApplicationController < ActionController::Base
     user
   end
 
-  # temp code to setup i18n, might want to consider looking at a rails plugin that is more robust
+  # pick highest priority locale or default to english
   def extract_locale_from_accept_language_header
-    hal = request.env['HTTP_ACCEPT_LANGUAGE']
-    hal.nil? ? 'en' : hal.slice(/^[a-z]{2}(-[a-z]{2})?/)
+    parse_locale.first || 'en'
+  end
+
+  # adapted from http_accept_lang gem, return list of browser locales 
+  def parse_locale
+    locale_lang = env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
+      l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
+      l.split(';q=')
+    end.sort do |x,y|
+      raise "incorrect locale format" unless x.first =~ /^[a-z\-]+$/i
+      y.last.to_f <=> x.last.to_f
+    end.collect do |l|
+      l.first.downcase.gsub(/-[a-z]+$/i) { |x| x.upcase }
+    end
+  rescue 
+    []
   end
 
   # render 403 page
