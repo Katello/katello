@@ -105,6 +105,7 @@ class SystemTemplate < ActiveRecord::Base
       :package_groups => self.package_groups.map(&:name),
       :package_group_categories => self.pg_categories.map(&:name),
       :distributions => self.distributions.map(&:distribution_pulp_id),
+      :repositories => self.repositories.map(&:pulp_id),
     }
     tpl[:description] = self.description if not self.description.nil?
     tpl
@@ -312,13 +313,31 @@ class SystemTemplate < ActiveRecord::Base
     self.distributions.delete(distro)
   end
 
+  def add_repo id
+    repo = Repository.find(id)
+
+    if (repo == nil) || (repo.environment != self.environment)
+      raise Errors::TemplateContentException.new(_("Repository '%s' not found in this environment.") % id)
+    elsif self.repositories.include? repo
+      raise Errors::TemplateContentException.new(_("Repository '%s' is already present in the template.") % id)
+    end
+    self.repositories << repo
+  end
+
+  def remove_repo id
+    repo = self.repositories.where(:id => id).first
+    raise Errors::TemplateContentException.new(_("Repository '%s' not found in this template.") % id) if repo.nil?
+    self.repositories.delete(repo)
+  end
+
   def to_json(options={})
      super(options.merge({
         :methods => [:products,
                      :packages,
                      :parameters,
                      :package_groups,
-                     :pg_categories]
+                     :pg_categories,
+                     :repositories]
         })
      )
   end
