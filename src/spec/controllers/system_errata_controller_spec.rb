@@ -52,7 +52,7 @@ describe SystemErrataController do
           types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
         
           to_ret = []
-          (rand(85) + 10).times{ |num|
+          40.times{ |num|
             errata = {}
             errata["id"] = "RHSA-2011-01-#{num}"
             errata["type"] = types[rand(3)]
