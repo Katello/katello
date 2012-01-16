@@ -101,13 +101,13 @@ var promotion_page = (function($){
             };
         },
         calculate_conflict = function(old_changeset, new_changeset) {
-            var myconflict = conflict();
-            var old_products = {}; //save products as hash so we dont have to loop to look them up
-            var new_products = {};
-            var all_products = {};
-            var old_templates = {}; //save products as hash so we dont have to loop to look them up
-            var new_templates= {};
-            var all_templates = {};
+            var myconflict = conflict(),
+            old_products = {}, //save products as hash so we dont have to loop to look them up
+            new_products = {},
+            all_products = {},
+            old_templates = {}, //save products as hash so we dont have to loop to look them up
+            new_templates= {},
+            all_templates = {};
 
             $.each(new_changeset.getProducts(), function(index, item) {
                 new_products[item.id] = item;
@@ -307,13 +307,15 @@ var promotion_page = (function($){
             changeset_queue.push([type, id, display, adding, product_id]);
         },
         sort_changeset = function() {
-            $(".right_tree .will_have_content").find("li").sortElements(function(a,b){
-                    var a_html = $(a).find(".sort_attr").html();
-                    var b_html = $(b).find(".sort_attr").html();
-                    if (a_html && b_html ) {
-                        return  a_html.toUpperCase() >
-                                b_html.toUpperCase() ? 1 : -1;
-                    }
+            $(".right_tree .will_have_content").find("li").each(function(index, element){
+                $(element).find('li').sortElements(function(a,b){
+                        var a_html = $(a).find(".sort_attr").html();
+                        var b_html = $(b).find(".sort_attr").html();
+                        if (a_html && b_html ) {
+                            return  a_html.toUpperCase() >
+                                    b_html.toUpperCase() ? 1 : -1;
+                        }
+                });
             });
         },
         init_changeset_list = function(){
@@ -967,12 +969,13 @@ var changesetEdit = (function(){
     var opened = false;
 
     var toggle = function(delay){
-        var edit_window = $('#changeset_edit');
-        var name_box = $('.edit_name_text');
-        var edit_button = $('#edit_changeset > span');
-        var description = $('.edit_description');
-        var changeset = promotion_page.get_changeset();
-        var animate_time = 500;
+        var edit_window = $('#changeset_edit'),
+        name_box = $('.edit_name_text'),
+        edit_button = $('#edit_changeset > span'),
+        description = $('.edit_description'),
+        changeset = promotion_page.get_changeset(),
+        animate_time = 500;
+
         if (delay != undefined){
             animate_time = delay;
         }
@@ -997,10 +1000,10 @@ var changesetEdit = (function(){
     },
     setup_edit = function() {
         
-        var changeset = promotion_page.get_changeset();
-        var url = KT.common.rootURL() + "changesets/" + changeset.id;
-        var name_box = $('.edit_name_text');
-        var description = $('.edit_description');
+        var changeset = promotion_page.get_changeset(),
+        url = KT.common.rootURL() + "changesets/" + changeset.id,
+        name_box = $('.edit_name_text'),
+        description = $('.edit_description');
         
         name_box.each(function() {
                 $(this).editable( url, {
@@ -1087,11 +1090,11 @@ var promotionsRenderer = (function(){
                 }
             }
             else {
-                var split = hash.split("_");
-                var page = split[0];
-                var changeset_id = split[1];
-                var product_id = split[2];
-                var cs = promotion_page.get_changeset();
+                var split = hash.split("_"),
+                page = split[0],
+                changeset_id = split[1],
+                product_id = split[2],
+                cs = promotion_page.get_changeset();
 
                 //if we've come to a page with a different changset than what we have, clear the current changeset
                 if (page === "changeset" && cs !== undefined && changeset_id !==  cs.id) {
@@ -1242,7 +1245,9 @@ var templateLibrary = (function(){
 
         },
         productList = function(changeset, changeset_id, showButton){
-            var html = '<ul class="filterable">',
+            var ul_start = '<ul class="filterable">',
+                ul_end = '</ul>',
+                html = ul_start,
                 all_list = '',
                 partial_list = '',
                 system_templates_list = '',
@@ -1270,19 +1275,23 @@ var templateLibrary = (function(){
                 }
             }
 
+
+
             for(key in templates) {
                if(templates.hasOwnProperty(key) ){
                   template = templates[key];
                   system_templates_list += templateItem(changeset_id, key, template.name, showButton);
                }
             }
+            html += ul_end + ul_start;
 
             html += all_list ? ('<h5>'+i18n.full_product+'</h5>' + all_list) : '';
+            html += ul_end + ul_start;
             html += partial_list ? ('<h5>'+i18n.partial_product+'</h5>' + partial_list) : '';
-
+            html += ul_end + ul_start;
             html += '<h5>'+i18n.system_template_plural+'</h5>';
             html += system_templates_list ? system_templates_list : '<div class="empty_list">' + i18n['no_system_templates'] + '</div>';
-            html += '</ul>';
+            html += ul_end;
             return html;
         },
         templateItem = function(changeset_id, id, name, showButton){
