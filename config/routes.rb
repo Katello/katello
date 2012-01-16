@@ -82,6 +82,13 @@ Src::Application.routes.draw do
         get :status
       end
     end
+    resources :errata, :controller => "system_errata", :only => [:index, :update] do
+      collection do
+        get :items
+        post :install
+        get :status
+      end
+    end
 
     member do
       get :edit
@@ -350,7 +357,7 @@ Src::Application.routes.draw do
       end
     end
 
-    resources :templates do
+    resources :templates, :except => [:index] do
       post :import, :on => :collection
       get :export, :on => :member
       get :validate, :on => :member
