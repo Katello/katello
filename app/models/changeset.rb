@@ -242,8 +242,8 @@ class Changeset < ActiveRecord::Base
   end
 
   def find_repos product
-    repos.join(:environment_product).where("environment_products.environment_id" => environment.id,
-                                                  "environment_products.product_id" =>product.id)
+    ids = product.repos(self.environment).collect{|r| r.id} & self.repo_ids
+    ids.empty? ? [] : Repository.where(:ids=>ids)
   end
 
 
