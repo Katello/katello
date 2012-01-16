@@ -33,9 +33,8 @@ module UsersHelper
   end
 
   def locale_select(locale=nil)
-    choices = FastGettext.available_locales
-    selected = locale
-    choices.unshift [_('Use Browser Locale'), choices]
+    choices = [_('Use Browser Locale')].concat(AppConfig.available_locales)
+    selected =  (locale == nil) ? _('Use Browser Locale') : locale
     select(:locale, "locale", choices,
            {:prompt => nil, :id=>"locale_field",
            :selected => selected})

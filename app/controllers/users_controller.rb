@@ -141,8 +141,13 @@ class UsersController < ApplicationController
   end
 
   def update_locale
-    @user.default_locale = params[:locale][:locale]
-    I18n.locale = @user.default_locale
+    locale = params[:locale][:locale]
+    if AppConfig.available_locales.include? locale
+      @user.default_locale = locale
+      I18n.locale = locale
+    else
+      @user.default_locale = nil
+    end
     notice _("User updated successfully.")
     redirect_to "#{users_path(:id => @user)}#panel=user_#{@user.id}"
   end
