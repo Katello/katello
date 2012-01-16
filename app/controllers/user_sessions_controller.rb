@@ -16,8 +16,7 @@ class UserSessionsController < ApplicationController
   skip_before_filter :require_org
   protect_from_forgery
 
-  # we need to skip create, destroy and all unauthenticated* methods
-  skip_before_filter :authorize
+  skip_before_filter :authorize # ok - need to skip all methods
 
   def new
     if !request.env['HTTP_X_FORWARDED_USER'].blank?
