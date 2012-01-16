@@ -25,7 +25,7 @@ class Changeset < ActiveRecord::Base
 
   include IndexedModel
   index_options :extended_json=>:extended_index_attrs,
-                :display_attrs=>[:name, :description, :package, :errata, :product, :repo, :system_template]
+                :display_attrs=>[:name, :description, :package, :errata, :product, :repo, :system_template, :user]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -584,7 +584,8 @@ class Changeset < ActiveRecord::Base
       :errata=>errata,
       :product=>products,
       :repo=>repos,
-      :system_template=>templates
+      :system_template=>templates,
+      :user=> self.task_status.nil? ? "" : self.task_status.user.username
     }
   end
 
