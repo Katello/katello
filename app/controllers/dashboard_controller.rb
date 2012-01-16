@@ -48,16 +48,19 @@ class DashboardController < ApplicationController
       end
     end
 
-    # retrieve the systems (id, name and env)
-    systems = System.readable(current_organization).where(:uuid => system_uuids.to_a)
     systems_hash = {}
-    systems.each{|system| systems_hash[system.uuid] = system}
-
-    # retrieve the errata (type/product)
     errata_hash = {}
-    errata_ids.each do |errata_id|
-      e = Glue::Pulp::Errata.find(errata_id)
-      errata_hash[e.id] = e
+
+    unless system_uuids.empty?
+      # retrieve the systems (id, name and env)
+      systems = System.readable(current_organization).where(:uuid => system_uuids.to_a)
+      systems.each{|system| systems_hash[system.uuid] = system}
+
+      # retrieve the errata (type/product)
+      errata_ids.each do |errata_id|
+        e = Glue::Pulp::Errata.find(errata_id)
+        errata_hash[e.id] = e
+      end
     end
 
     render :partial=>"errata", :locals=>{:quantity=> quantity, :repos => repos, :n_errata => n_errata,
