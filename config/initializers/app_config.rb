@@ -40,6 +40,8 @@ module ApplicationConfiguration
         end
       end
       @ostruct.katello_version = version
+
+      @ostruct.available_locales = ['en', 'ja'] unless @ostruct.respond_to?(:available_locales)
     end
 
     # helper method that converts object to open struct recursively
