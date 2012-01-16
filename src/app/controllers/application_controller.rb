@@ -157,9 +157,25 @@ class ApplicationController < ActionController::Base
     user
   end
 
-  # pick highest priority locale or default to english
+  # Look for match to list of locales specified in request. If not found, try matching just
+  # first two letters. Finally, default to english if no matches at all.
+  # eg. [en_US, en] would match en
   def extract_locale_from_accept_language_header
-    parse_locale.first || 'en'
+    locales = parse_locale
+
+    # Look for full match
+    locales.each {|locale|
+      return locale if AppConfig.available_locales.include? locale
+    }
+
+    # Look for match to first two letters
+    #
+    locales.each {|locale|
+      return locale[0..1] if AppConfig.available_locales.include? locale[0..1]
+    }
+
+    # Default to 'en'
+    return 'en'
   end
 
   # adapted from http_accept_lang gem, return list of browser locales 
