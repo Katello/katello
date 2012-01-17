@@ -211,11 +211,30 @@ describe Api::RepositoriesController do
 
   end
   describe "update a repository" do
-    it 'should update values thet migth change' do
-      repo_mock = mock(Glue::Pulp::Repo)
-      Repository.should_receive(:find).with("1").and_return(repo_mock)
-      repo_mock.should_receive(:update_attributes!).with("gpg_key_name" => "gpg_key")
-      put :update, {:id => '1', :repository => {:gpg_key_name => "gpg_key", :name => "another name"}}
+
+    before do
+      @repo = mock(Glue::Pulp::Repo)
+      Repository.should_receive(:find).with("1").and_return(@repo)
+    end
+
+    context "Custom repo" do
+      before { @repo.stub(:redhat? => false) }
+
+      it 'should update values thet migth change' do
+        @repo.should_receive(:update_attributes!).with("gpg_key_name" => "gpg_key")
+        put :update, {:id => '1', :repository => {:gpg_key_name => "gpg_key", :name => "another name"}}
+      end
+    end
+
+    context "RH repo" do
+
+      before { @repo.stub(:redhat? => true) }
+
+      it "should fail with bad request" do
+        put :update, {:id => '1', :repository => {:gpg_key_name => "gpg_key", :name => "another name"}}
+        response.code.should eq("400")
+      end
+
     end
   end
 

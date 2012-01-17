@@ -96,18 +96,34 @@ describe Api::ProductsController do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    subject { req }
+    context "custom product" do
+      subject { req }
 
-    it { should be_success }
+      it { should be_success }
 
-    it "should change allowed attributes" do
-      @product.should_receive(:update_attributes!).with("gpg_key_name" => gpg_key.name, "description" => "another description")
-      req
+      it "should change allowed attributes" do
+        @product.should_receive(:update_attributes!).with("gpg_key_name" => gpg_key.name, "description" => "another description")
+        req
+      end
+
+      it "should reset repos' GPGs, if updating recursive" do
+        @product.should_receive(:reset_repo_gpgs!)
+        put 'update', :id => @product.id, :product => {:gpg_key_name => gpg_key.name, :description => "another description", :recursive => true }
+      end
     end
 
-    it "should reset repos' GPGs, if updating recursive" do
-      @product.should_receive(:reset_repo_gpgs!)
-      put 'update', :id => @product.id, :product => {:gpg_key_name => gpg_key.name, :description => "another description", :recursive => true }
+    context "RH product" do
+      subject { req }
+
+      before do
+        @product.provider.provider_type = Provider::REDHAT
+      end
+
+      it do
+        req
+        response.code.should eq("400")
+      end
+
     end
   end
 

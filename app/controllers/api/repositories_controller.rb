@@ -52,6 +52,7 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   def update
+    raise HttpErrors::BadRequest, _("It is not allowed to update a Red Hat repository.") if @repository.redhat?
     @repository.update_attributes!(params[:repository].slice(:gpg_key_name))
     render :json => @repository.to_hash
   end
