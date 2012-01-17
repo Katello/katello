@@ -450,7 +450,7 @@ Src::Application.routes.draw do
 
     end
 
-    resources :products, :only => [:show, :destroy] do
+    resources :products, :only => [:show, :update, :destroy] do
       post :sync_plan, :on => :member, :action => :set_sync_plan
       delete :sync_plan, :on => :member, :action => :remove_sync_plan
       get :repositories, :on => :member
@@ -466,7 +466,7 @@ Src::Application.routes.draw do
     #resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
-    resources :repositories, :only => [:show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+    resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end

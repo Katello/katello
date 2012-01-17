@@ -14,7 +14,7 @@ require 'resources/pulp'
 
 class Api::RepositoriesController < Api::ApiController
   respond_to :json
-  before_filter :find_repository, :only => [:show, :destroy, :package_groups, :package_group_categories, :enable, :gpg_key_content]
+  before_filter :find_repository, :only => [:show, :update, :destroy, :package_groups, :package_group_categories, :enable, :gpg_key_content]
   before_filter :find_product, :only => [:create]
   before_filter :find_organization, :only => [:discovery]
 
@@ -38,11 +38,21 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   def create
-    content = @product.add_repo(params[:name], params[:url], 'yum')
+    if params[:gpg_key_name].present?
+      gpg = GpgKey.readable(@product.organization).find_by_name!(params[:gpg_key_name])
+    elsif params[:gpg_key_name].nil?
+      gpg = @product.gpg_key
+    end
+    content = @product.add_repo(params[:name], params[:url], 'yum', gpg)
     render :json => content
   end
 
   def show
+    render :json => @repository.to_hash
+  end
+
+  def update
+    @repository.update_attributes!(params[:repository].slice(:gpg_key_name))
     render :json => @repository.to_hash
   end
 
