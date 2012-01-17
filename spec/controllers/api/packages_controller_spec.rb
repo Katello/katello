@@ -14,26 +14,32 @@ require 'spec_helper.rb'
 
 describe Api::PackagesController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
 
+  let(:repo_id) {'f8ab5088-688e-4ce4-ade3-700aa4cbb070'}
   before(:each) do
+    disable_authorization_rules
     login_user_api
+
+    repo = OpenStruct.new(:packages => {})
+    repo.stub(:packages).and_return([])
+    Repository.stub(:find).with(repo_id).and_return(repo)
+
+    package = OpenStruct.new(:repoids => [repo_id])
+    Pulp::Package.stub(:find).once.with(1).and_return(package)
   end
 
   describe "get a listing of packages" do
     it "should call pulp find packages api" do
-      repoid = 1
-      repo = OpenStruct.new(:packages => {})
-      repo.should_receive(:packages).and_return([])
-      Repository.should_receive(:find).with(repoid).and_return(repo)
-      get 'index', :repository_id => repoid
+      Repository.should_receive(:find).with(repo_id)
+      get 'index', :repository_id => repo_id
     end
   end
 
   describe "show a package" do
     it "should call pulp find package api" do
-      Pulp::Package.should_receive(:find).once.with('f8ab5088-688e-4ce4-ade3-700aa4cbb070')
-      get 'show', :id => 'f8ab5088-688e-4ce4-ade3-700aa4cbb070'
+      Pulp::Package.should_receive(:find).once.with(1)
+      get 'show', :id => 1, :repository_id => repo_id
     end
   end
-
 end
