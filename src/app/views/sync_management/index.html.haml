@@ -3,10 +3,10 @@
 = javascript do
   :javascript
     localize({
-      "cancel": '#{_('Cancel')}',
-      "cancelled": '#{("Sync Cancelled")}',
-      "error": '#{_('Error')}',
-      "complete": '#{_('Sync complete.')}'
+      "cancel": '#{escape_javascript(_('Cancel'))}',
+      "cancelled": '#{escape_javascript(_("Sync Cancelled"))}',
+      "error": '#{escape_javascript(_('Error'))}',
+      "complete": '#{escape_javascript(_('Sync complete.'))}'
     });
 
     KT.repo_status = $.parseJSON('#{escape_javascript(status_obj.to_json)}');

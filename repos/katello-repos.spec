@@ -1,6 +1,6 @@
 
 Name:           katello-repos
-Version:        0.1.4
+Version:        0.1.5
 Release:        1%{?dist}
 Summary:        Definition of yum repositories for Katello
 
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_sysconfdir}/yum.repos.d/pulp-testing.repo
 
 %changelog
+* Fri Jan 13 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.5-1
+- adding katello-repos-testing rpm package
+
 * Tue Nov 29 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
 - Add yum repos for thumbslug
 

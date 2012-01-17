@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class SystemEventsController < ApplicationController
-  skip_before_filter :authorize
   before_filter :find_system
   before_filter :authorize
 

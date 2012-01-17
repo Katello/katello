@@ -82,6 +82,13 @@ Src::Application.routes.draw do
         get :status
       end
     end
+    resources :errata, :controller => "system_errata", :only => [:index, :update] do
+      collection do
+        get :items
+        post :install
+        get :status
+      end
+    end
 
     member do
       get :edit
@@ -145,6 +152,7 @@ Src::Application.routes.draw do
     member do
       post :clear_helptips
       put :update_roles
+      put :update_locale
       get :edit_environment
       put :update_environment
     end
@@ -349,7 +357,7 @@ Src::Application.routes.draw do
       end
     end
 
-    resources :templates do
+    resources :templates, :except => [:index] do
       post :import, :on => :collection
       get :export, :on => :member
       get :validate, :on => :member
@@ -376,6 +384,10 @@ Src::Application.routes.draw do
       resources :distributions, :controller => :templates_content do
         post   :index, :on => :collection, :action => :add_distribution
         delete :destroy, :on => :member, :action => :remove_distribution
+      end
+      resources :repositories, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_repo
+        delete :destroy, :on => :member, :action => :remove_repo
       end
     end
 
@@ -437,6 +449,8 @@ Src::Application.routes.draw do
     end
 
     resources :products, :only => [:show, :destroy] do
+      post :sync_plan, :on => :member, :action => :set_sync_plan
+      delete :sync_plan, :on => :member, :action => :remove_sync_plan
       get :repositories, :on => :member
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
@@ -542,7 +556,9 @@ Src::Application.routes.draw do
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
     # development / debugging support
-    get 'status/memory'
+    if Rails.env == "development"
+      get 'status/memory'
+    end
 
   # end '/api' namespace
   end

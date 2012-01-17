@@ -13,7 +13,7 @@
 # in this software or its documentation.
 #
 #
-# shell script function library for rhn-bootstrap
+# shell script function library for katello-bootstrap
 #
 # $Id$
 
@@ -262,7 +262,7 @@ if [ $ORG_CA_CERT_IS_RPM_YN -eq 1 ] ; then
 else
     rm -f ${ORG_CA_CERT}
     $FETCH ${HTTPS_PUB_DIRECTORY}/${ORG_CA_CERT}
-    mv ${ORG_CA_CERT} /usr/share/rhn/
+    mv ${ORG_CA_CERT} /usr/share/katello/
 
 fi
 if [ "$INSTALLER" == zypper ] ; then
@@ -272,7 +272,7 @@ if [ "$INSTALLER" == zypper ] ; then
     fi
     test -e "/etc/ssl/certs/${ORG_CA_CERT}.pem" || {
       test -d "/etc/ssl/certs" || mkdir -p "/etc/ssl/certs"
-      ln -s "/usr/share/rhn/${ORG_CA_CERT}" "/etc/ssl/certs/${ORG_CA_CERT}.pem"
+      ln -s "/usr/share/katello/${ORG_CA_CERT}" "/etc/ssl/certs/${ORG_CA_CERT}.pem"
     }
     test -x /usr/bin/c_rehash && /usr/bin/c_rehash /etc/ssl/certs/ | grep "${ORG_CA_CERT}"
 fi

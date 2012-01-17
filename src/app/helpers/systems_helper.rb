@@ -42,5 +42,16 @@ module SystemsHelper
     radio_button("system_type","virtualized", "physical", :checked=>true ) + _("Physical") +
     radio_button("system_type","virtualized", "virtual" ) + _("Virtual")
   end
+  
+  def errata_type_class errata
+    case errata.e_type
+      when  Glue::Pulp::Errata::SECURITY
+        return "security_icon"
+      when  Glue::Pulp::Errata::ENHANCEMENT
+        return "enhancement_icon"
+      when  Glue::Pulp::Errata::BUGZILLA
+        return "bugzilla_icon"
+    end
+  end
 
 end

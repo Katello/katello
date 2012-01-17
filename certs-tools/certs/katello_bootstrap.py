@@ -36,7 +36,7 @@ from optparse import Option, OptionParser
 ## local imports
 import rhn_rpm
 from client_config_update import readConfigFile
-from rhn_bootstrap_strings import \
+from katello_bootstrap_strings import \
     getHeader, getConfigFilesSh, getUp2dateScriptsSh, getGPGKeyImportSh, \
     getCorpCACertSh, getRegistrationSh, getUp2dateTheBoxSh, \
     getAllowConfigManagement, getAllowRemoteCommands
@@ -45,7 +45,7 @@ from fileutils import rotateFile, cleanupAbsPath
 from checksum  import getFileChecksum
 
 ## GLOBALS
-PRODUCT_NAME = 'RHN Server'
+PRODUCT_NAME = 'Katello'
 if os.path.exists('/usr/share/rhn/proxy') \
   or os.path.exists('/var/www/rhns/proxy'):
     PRODUCT_NAME = 'RHN Proxy Server'
@@ -53,7 +53,7 @@ elif os.path.exists('/usr/share/rhn/server') \
   or os.path.exists('/var/www/rhns/server'):
     PRODUCT_NAME = 'RHN Satellite Server'
 
-DEFAULT_CA_CERT_PATH = '/usr/share/rhn/'+CA_CRT_NAME
+DEFAULT_CA_CERT_PATH = '/usr/share/katello/'+CA_CRT_NAME
 
 DEFAULT_APACHE_PUB_DIRECTORY = '/var/www/html/pub'
 DEFAULT_OVERRIDES = 'client-config-overrides.txt'
@@ -74,7 +74,7 @@ errnoGPGNotFound = 17
 
 
 # should come out of common code when we move this code out of
-# rhns-certs-tools
+# katello-certs-tools
 def parseUrl(url):
     """ urlparse is more complicated than what we need.
 
@@ -259,11 +259,11 @@ def parseCommandline():
     _usage = """\
 %s [options]
 
-Note: for rhn-bootstrap to work, certain files are expected to be
+Note: for katello-bootstrap to work, certain files are expected to be
       in /var/www/html/pub/ (the default Apache public directory):
-        - the CA SSL public certificate (probably RHN-ORG-TRUSTED-SSL-CERT)
+        - the CA SSL public certificate (probably KATELLO-TRUSTED-SSL-CERT)
         - the CA SSL public certficate RPM
-          (probably rhn-org-trusted-ssl-cert-VER.noarch.rpm)""" % _progName
+          (probably katello-trusted-ssl-cert-VER.noarch.rpm)""" % _progName
 
     # preliminary parse (-h/--help is acted upon during final parse)
     optionList = getOptionsTable()

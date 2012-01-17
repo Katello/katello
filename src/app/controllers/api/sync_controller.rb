@@ -18,8 +18,17 @@ class Api::SyncController < Api::ApiController
   before_filter :ensure_locker, :only => [:create]
   respond_to :json
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  before_filter :authorize
+
+  def rules
+    list_test = lambda{ Provider.any_readable?(@obj.organization) }
+    sync_test = lambda { @obj.organization.syncable? }
+    
+    { :index => list_test,
+      :create => sync_test,
+      :cancel => sync_test
+    }
+  end
 
   def index
     render :json => @obj.sync_status
@@ -44,6 +53,25 @@ class Api::SyncController < Api::ApiController
       render :text => "No synchronization of the #{@sync_of} is currently running", :status => 200
     end
   end
+  
+  # used in unit tests
+  def find_object
+    if params.key?(:provider_id)
+      @obj = find_provider
+      @sync_of = 'provider'
+    elsif params.key?(:product_id)
+      @obj = find_product
+      @sync_of = 'product'
+    elsif params.key?(:repository_id)
+      @obj = find_repository
+      @sync_of = 'repository'
+    else
+      raise HttpErrors::NotFound, N_("Couldn't find subject of synchronization") if @obj.nil?
+    end
+    @obj
+  end
+
+  private
 
   def find_provider
     @provider = Provider.find(params[:provider_id])
@@ -63,27 +91,10 @@ class Api::SyncController < Api::ApiController
     @repository
   end
 
-  def find_object
-    if params.key?(:provider_id)
-      @obj = find_provider
-      @sync_of = 'provider'
-    elsif params.key?(:product_id)
-      @obj = find_product
-      @sync_of = 'product'
-    elsif params.key?(:repository_id)
-      @obj = find_repository
-      @sync_of = 'repository'
-    else
-      raise HttpErrors::NotFound, N_("Couldn't find subject of synchronization") if @obj.nil?
-    end
-    @obj
-  end
-
   def ensure_locker
     if @sync_of == 'repository'
       raise HttpErrors::NotFound, _("You can synchronize repositories only in locker environment'") if not @obj.environment.locker?
     end
   end
-
 
 end

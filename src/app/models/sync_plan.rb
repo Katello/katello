@@ -22,11 +22,11 @@ class SyncPlan < ActiveRecord::Base
     indexes :sync_date, :type=>'date'
   end
 
-  
-  NONE = 'none'
-  HOURLY = 'hourly'
-  DAILY = 'daily'
-  WEEKLY = 'weekly'
+
+  NONE = _('none')
+  HOURLY = _('hourly')
+  DAILY = _('daily')
+  WEEKLY = _('weekly')
   TYPES = [NONE, HOURLY, DAILY, WEEKLY]
   DURATION = { NONE => '', HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }
   WEEK_DAYS = (%W(Sunday Monday Tuesday Wednesday Thursday Friday)).collect{|d| N_(d)}
@@ -44,8 +44,6 @@ class SyncPlan < ActiveRecord::Base
 
   scope :readable, lambda { |org| ::Provider.any_readable?(org)? where(:organization_id => org.id ) : where("0 = 1") }
 
-  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
-  scoped_search :on => :name, :complete_value => true
 
   def validate_sync_date
     errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?
@@ -56,17 +54,19 @@ class SyncPlan < ActiveRecord::Base
   end
 
   def plan_date
-    self.sync_date.nil? ? '' : self.sync_date.strftime('%m/%d/%Y');
+    self.sync_date.nil? ? '' : self.sync_date.strftime('%m/%d/%Y')
   end
 
   def plan_time
-    self.sync_date.nil? ? '' : self.sync_date.strftime('%I:%M %p');
+    self.sync_date.nil? ? '' : self.sync_date.strftime('%I:%M %p')
   end
 
   def schedule_format
     format = Time.parse(self.sync_date.to_s).iso8601
     if self.interval != NONE
       format << "/P" << DURATION[self.interval]
+    else
+      format = "R1/" << format << "/P1D"
     end
     return format
   end

@@ -62,7 +62,7 @@ $(document).ready(function() {
                 var plan_time = $("#plan_time").text();
                 var current_plan = $("#current_plan").text();
                 if (plan_time !== current_plan) {
-                    $("#current_plan").text(plan_date);
+                    $("#current_plan").text(plan_time);
                 }
                 var id = $('#plan_id');
                 list.refresh(id.attr('value'), id.attr('data-ajax_url'));

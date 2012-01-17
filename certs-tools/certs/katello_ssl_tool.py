@@ -14,17 +14,17 @@
 # in this software or its documentation.
 #
 #
-# RHN SSL Maintenance Tool (main module)
+# Katello SSL Maintenance Tool (main module)
 #
 # *NOTE*
 # This module is intended to be imported and not run directly though it can
 # be. At the time of this note, the excutable wrapping this module was
-# /usr/bin/rhn-ssl-tool.
+# /usr/bin/katello-ssl-tool.
 #
 # Generate and maintain SSL keys & certificates. One can also build RPMs in
-# the RHN product context.
+# the Katello product context.
 #
-# NOTE: this tool is geared for RHN product usage, but can be used outside of
+# NOTE: this tool is geared for Katello product usage, but can be used outside of
 # that context to some degree.
 #
 # Author: Todd Warner <taw@redhat.com>
@@ -46,7 +46,7 @@ import getpass
 from sslToolCli import processCommandline, CertExpTooShortException, \
         CertExpTooLongException, InvalidCountryCodeException
 
-from sslToolLib import RhnSslToolException, \
+from sslToolLib import KatelloSslToolException, \
         gendir, chdir, getMachineName, fixSerial, TempDir, parseRPMFilename, \
         errnoGeneralError, errnoSuccess
 
@@ -61,21 +61,21 @@ from sslToolConfig import ConfigFile, figureSerial, getOption, CERT_PATH, \
         SERVER_RPM_SUMMARY, CA_CERT_RPM_SUMMARY, BASE_SERVER_RPM_NAME
 
 
-class GenPrivateCaKeyException(RhnSslToolException):
+class GenPrivateCaKeyException(KatelloSslToolException):
     """ private CA key generation error """
-class GenPublicCaCertException(RhnSslToolException):
+class GenPublicCaCertException(KatelloSslToolException):
     """ public CA cert generation error """
-class GenServerKeyException(RhnSslToolException):
+class GenServerKeyException(KatelloSslToolException):
     """ private server key generation error """
-class GenServerCertReqException(RhnSslToolException):
+class GenServerCertReqException(KatelloSslToolException):
     """ server cert request generation error """
-class GenServerCertException(RhnSslToolException):
+class GenServerCertException(KatelloSslToolException):
     """ server cert generation error """
-class GenCaCertRpmException(RhnSslToolException):
+class GenCaCertRpmException(KatelloSslToolException):
     """ CA public certificate RPM generation error """
-class GenServerRpmException(RhnSslToolException):
+class GenServerRpmException(KatelloSslToolException):
     """ server RPM generation error """
-class GenServerTarException(RhnSslToolException):
+class GenServerTarException(KatelloSslToolException):
     """ server tar archive generation error """
 class FailedFileDependencyException(Exception):
     """ missing a file needed for this step """
@@ -193,9 +193,9 @@ WARNING: %s
         sys.stdout.write('\nLegacy tree structured file(s) moved:\n%s'
                          % moveMessage)
 
-    # move rhn-org-httpd-ssl-MACHINENAME-VERSION.*.rpm files to the
+    # move katello-httpd-ssl-MACHINENAME-VERSION.*.rpm files to the
     # MACHINENAME directory! (an RHN 3.6.0 change)
-    rootFilename = pathJoin(topdir, 'rhn-org-httpd-ssl-key-pair-')
+    rootFilename = pathJoin(topdir, 'katello-httpd-ssl-key-pair-')
     filenames = glob.glob(rootFilename+'*')
     for filename in filenames:
         # note: assuming version-rel is of that form.
@@ -721,7 +721,7 @@ def genCaRpm(d, verbosity=0):
     # build the CA certificate RPM
     args = (os.path.join(CERT_PATH, 'gen-rpm.sh') + " "
             "--name %s --version %s --release %s --packager %s --vendor %s "
-            "--group 'RHN/Security' --summary %s --description %s "
+            "--group 'Applications/System' --summary %s --description %s "
             "/usr/share/katello/%s=%s"
             % (repr(ca_cert_rpm_name), ver, rel, repr(d['--rpm-packager']),
                repr(d['--rpm-vendor']), repr(CA_CERT_RPM_SUMMARY),
@@ -772,17 +772,16 @@ Generating CA public certificate RPM:
     if verbosity >= 0:
         print """
 Make the public CA certficate publically available:
-    (NOTE: the RHN Satellite or Proxy installers may do this step for you.)
+    (NOTE: the Katello installer may do this step for you.)
     The "noarch" RPM and raw CA certificate can be made publically accessible
-    by copying it to the /var/www/html/pub directory of your RHN Satellite or
-    Proxy server."""
+    by copying it to the /var/www/html/pub directory of your Katello server."""
 
 
     return '%s.noarch.rpm' % clientRpmName
 
 
 def genProxyServerTarball_dependencies(d):
-    """ dependency check for the step that generates the RHN Proxy Server's
+    """ dependency check for the step that generates RHN Proxy Server's
         tar archive containing its SSL key set + CA certificate.
     """
 
@@ -1041,7 +1040,7 @@ server with this hostname: %s
     ## build the server RPM
     args = (os.path.join(CERT_PATH, 'gen-rpm.sh') + " "
             "--name %s --version %s --release %s --packager %s --vendor %s "
-            "--group 'RHN/Security' --summary %s --description %s --postun %s "
+            "--group 'Applications/System' --summary %s --description %s --postun %s "
             "/etc/pki/tls/private/%s:0600=%s "
             "/etc/pki/tls/certs/%s=%s "
             "/etc/pki/tls/certs/%s=%s "
@@ -1109,7 +1108,7 @@ Generating web server's SSL key pair/set RPM:
     if verbosity >= 0:
         print """
 Deploy the server's SSL key pair/set RPM:
-    (NOTE: the RHN Satellite or Proxy installers may do this step for you.)
+    (NOTE: the Katello installer may do this step for you.)
     The "noarch" RPM needs to be deployed to the machine working as a
     web server, or RHN Satellite, or RHN Proxy.
     Presumably %s.""" % repr(d['--set-hostname'])
@@ -1269,7 +1268,7 @@ can't find a file that should have been created during an earlier step:
        %s --help""" % (e, os.path.basename(sys.argv[0]))
         writeError(msg)
         ret = 33
-    except RhnSslToolException, e:
+    except KatelloSslToolException, e:
         writeError(e)
         ret = 100
 

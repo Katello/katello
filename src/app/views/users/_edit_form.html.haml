@@ -3,13 +3,13 @@
     //what button should be disabled when passwords don't match
 
     localize({
-      "password_match": '#{_('The passwords do not match')}',
-      "very_weak": '#{_("Very Weak")}',
-      "weak": '#{_("Weak")}',
-      "good": '#{_("Good")}',
-      "strong": '#{_("Strong")}',
-      "meterText": '#{_("Password Strength")}',
-      "usernameMatch": '#{_("The password should not contain the username.")}'
+      "password_match": '#{escape_javascript(_('The passwords do not match'))}',
+      "very_weak": '#{escape_javascript(_("Very Weak"))}',
+      "weak": '#{escape_javascript(_("Weak"))}',
+      "good": '#{escape_javascript(_("Good"))}',
+      "strong": '#{escape_javascript(_("Strong"))}',
+      "meterText": '#{escape_javascript(_("Password Strength"))}',
+      "usernameMatch": '#{escape_javascript(_("The password should not contain the username."))}'
     });
 
 = javascript :edit_helpers
@@ -66,4 +66,12 @@
         .grid_3.ra
           = label :user, :email, _("Email Address:")
         .grid_5.la{'name' => 'user[email]',  :class => editable_class(editable), 'data-url' => user_path(@user)} #{@user.email}
+
+  .grid_10
+    = form_tag update_locale_user_path(@user), :id => "locale_form", :method => :put, :remote => false do
+      %fieldset
+        .grid_3.ra
+          = label :user, :locale, "%s:" % _("Preferred Locale")
+        .grid_5.la
+          = locale_select @user.default_locale
 

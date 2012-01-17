@@ -14,7 +14,6 @@
 class OrganizationsController < ApplicationController
   include AutoCompleteSearch
   respond_to :html, :js
-  skip_before_filter :authorize
   before_filter :find_organization, :only => [:edit, :update, :destroy, :events]
   before_filter :find_organization_by_id, :only => [:environments_partial, :download_debug_certificate]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
@@ -215,7 +214,7 @@ class OrganizationsController < ApplicationController
   end
 
   def controller_display_name
-    return _('organization')
+    return 'organization'
   end
 
 end

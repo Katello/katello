@@ -16,8 +16,27 @@ class Api::TemplatesContentController < Api::ApiController
 
   before_filter :find_template
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  before_filter :authorize
+
+  def rules
+    manage_test = lambda{SystemTemplate.manageable?(@template.environment.organization)}
+    {
+      :add_product => manage_test,
+      :remove_product => manage_test,
+      :add_package => manage_test,
+      :remove_package => manage_test,
+      :add_parameter => manage_test,
+      :remove_parameter => manage_test,
+      :add_package_group => manage_test,
+      :remove_package_group => manage_test,
+      :add_package_group_category => manage_test,
+      :remove_package_group_category => manage_test,
+      :add_distribution => manage_test,
+      :remove_distribution => manage_test,
+      :add_repo => manage_test,
+      :remove_repo => manage_test
+    }
+  end
 
   def add_product
     @template.add_product_by_cpid(params[:id])
@@ -89,6 +108,18 @@ class Api::TemplatesContentController < Api::ApiController
     @template.remove_distribution(params[:id])
     @template.save!
     render :text => _("Removed distribution '#{params[:id]}'")
+  end
+
+  def add_repo
+    @template.add_repo(params[:id])
+    @template.save!
+    render :text => _("Added repository '#{params[:id]}'"), :status => 200
+  end
+
+  def remove_repo
+    @template.remove_repo(params[:id])
+    @template.save!
+    render :text => _("Removed repository '#{params[:id]}'"), :status => 200
   end
 
   private
