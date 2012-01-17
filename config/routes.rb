@@ -468,7 +468,7 @@ Src::Application.routes.draw do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end
-      resources :packages, :only => [:index]
+      resources :packages
       resources :errata, :only => [:index]
       resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
       member do
@@ -499,7 +499,6 @@ Src::Application.routes.draw do
       delete "pools/:poolid", :action => :remove_pool, :on => :member
     end
 
-    resources :packages, :only => [:show]
     resources :errata, :only => [:index, :show]
 
     resources :users do
