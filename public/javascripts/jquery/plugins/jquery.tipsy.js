@@ -192,25 +192,18 @@
         
         function sticky() {
             var tipsy = get(this),
-                activeTip;
+                activeTip,
+                show = (tipsy.clickState === 'on') ? false : true;
             
-            if( options.activeTip !== undefined ){
-                activeTip = get(options.activeTip);
-                activeTip.hide();
-                options.stickyClick(options.activeTip, 'off');
-                options.activeTip = undefined;
-            }
-            if( tipsy.clickState === 'on' ){
-                tipsy.hide();
-                tipsy.clickState = 'off';
-                options.activeTip = undefined;
-            } else {
+            handleClose();
+
+            if( show ){
                 tipsy.show();
                 tipsy.clickState = 'on';
                 options.activeTip = this;
                 $(this).addClass('tipsy-sticky-click');
+                options.stickyClick(this, tipsy.clickState);
             }
-            options.stickyClick(this, tipsy.clickState);
         }
 
         function handleScroll(event) {
@@ -226,6 +219,21 @@
             }
         }
 
+        function handleClose(){
+            var elements = $('.tipsy-sticky-click'),
+                i, length, tipsy, node;
+
+            for(i=0, length = elements.length; i < length; i += 1){
+                node = elements[i];
+                $(node).removeClass('tipsy-sticky-click');
+                tipsy = get(node);
+                tipsy.clickState = 'off';
+                tipsy.hide();
+                options.stickyClick(node, tipsy.clickState);
+            }
+            options.activeTip = undefined;
+        }
+
         if (!options.live) this.each(function() { get(this); });
         
         if (options.trigger != 'manual') {
@@ -238,6 +246,7 @@
         if (options.stickyClick) {
             this['live']('click', sticky);
             $(document).bind('scroll', handleScroll);
+            $(document).bind('close.tipsy', handleClose);
         }
 
         return this;
