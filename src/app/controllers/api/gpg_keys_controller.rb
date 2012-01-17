@@ -39,7 +39,7 @@ class Api::GpgKeysController < Api::ApiController
   end
 
   def show
-    render :json => @gpg_key, :methods => [:repositories, :products]
+    render :json => @gpg_key, :details => true
   end
 
   def create
