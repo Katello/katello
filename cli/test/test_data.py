@@ -601,6 +601,32 @@ PACKAGE_GROUP_CATEGORIES = [
 TEMPLATES = [
 {
   "name": "tpl_a1",
+  "repositories": [
+    {
+      "name": "zoo",
+      "created_at": "2012-01-16T21:31:17Z",
+      "updated_at": "2012-01-16T21:31:17Z",
+      "environment_product_id": 1,
+      "major": None,
+      "id": 1,
+      "enabled": True,
+      "pulp_id": "ACME_Corporation-zoo-zoo",
+      "gpg_key_id": None,
+      "minor": None
+    },
+    {
+      "name": "up_zoo",
+      "created_at": "2012-01-16T21:31:26Z",
+      "updated_at": "2012-01-16T21:31:26Z",
+      "environment_product_id": 1,
+      "major": None,
+      "id": 2,
+      "enabled": True,
+      "pulp_id": "ACME_Corporation-zoo-up_zoo",
+      "gpg_key_id": None,
+      "minor": None
+    }
+  ],
   "products": [
     {
       "productContent": [
