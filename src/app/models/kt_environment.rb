@@ -340,7 +340,11 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def self.read_verbs
-    [:read_contents, :read_changesets, :read_systems]
+    if AppConfig.katello?
+      [:read_contents, :read_changesets, :read_systems]
+    else
+      [:read_contents, :read_systems]
+    end
   end
 
 
