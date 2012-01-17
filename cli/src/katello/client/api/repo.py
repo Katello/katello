@@ -22,18 +22,21 @@ class RepoAPI(KatelloAPI):
     def create(self, prod_id, name, url, gpgkey, nogpgkey):
         repodata = {"product_id": prod_id,
                     "name": name,
-                    "url": url,
-                    "gpgkey": gpgkey,
-                    "nogpgkey": nogpgkey}
+                    "url": url}
+        self.update_dict(repodata, "gpg_key_name", gpgkey)
+        if nogpgkey:
+            repodata["gpg_key_name"] = ""
+
         path = "/api/repositories/"
         return self.server.POST(path, repodata)[1]
 
     def update(self, repo_id, gpgkey, nogpgkey):
         repodata = {}
-        update_hash(repodata, "gpgkey", gpgkey)
-        update_hash(repodata, "nogpgkey", nogpgkey)
+        self.update_dict(repodata, "gpg_key_name", gpgkey)
+        if nogpgkey:
+            repodata["gpg_key_name"] = ""
         path = "/api/repositories/%s/" % repo_id
-        return self.server.PUT(path, repodata)[1]
+        return self.server.PUT(path, {"repository": repodata })[1]
 
     def repos_by_org_env(self, orgName, envId, includeDisabled=False):
         data = {

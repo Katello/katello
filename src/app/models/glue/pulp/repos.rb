@@ -354,7 +354,7 @@ module Glue::Pulp::Repos
           :gpg_key => gpg
       )
       content = create_content(repo)
-      Repository.update(repo.id, :groupid => Glue::Pulp::Repos.groupid(self, self.locker, content))
+      Pulp::Repository.update(repo.pulp_id, :addgrp => Glue::Pulp::Repos.content_groupid(content))
       repo
     end
 

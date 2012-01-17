@@ -97,6 +97,7 @@ EOKEY
     Pulp::Repository.stub!(:update_schedule).and_return(true)
     Pulp::Repository.stub!(:delete_schedule).and_return(true)
     Pulp::Repository.stub!(:all).and_return([])
+    Pulp::Repository.stub!(:update).and_return([])
   end
 
   def disable_org_orchestration

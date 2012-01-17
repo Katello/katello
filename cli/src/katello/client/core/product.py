@@ -150,6 +150,7 @@ class List(ProductAction):
         self.printer.addColumn('provider_id')
         self.printer.addColumn('provider_name')
         self.printer.addColumn('sync_plan_name')
+        self.printer.addColumn('gpg_key_name', name=_("GPG key"))
 
         if prov_name:
             prov = get_provider(org_name, prov_name)
@@ -407,7 +408,7 @@ class Update(SingleProductAction):
         if (prod == None):
             return os.EX_DATAERR
 
-        prod = self.api.update(prod["id"], description, gpgkey, nogpgkey)
+        prod = self.api.update(prod["id"], description, gpgkey, nogpgkey, gpgkey_recursive)
         print _("Successfully updated product [ %s ]") % prodName
         return os.EX_OK
 

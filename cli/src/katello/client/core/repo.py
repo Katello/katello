@@ -248,7 +248,7 @@ class Discovery(RepoAction):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
             repoName = self.repository_name(name, parsedUrl.path) # pylint: disable=E1101
-            repo = self.api.create(productid, repoName, repourl)
+            repo = self.api.create(productid, repoName, repourl, None, None)
 
             print _("Successfully created repository [ %s ]") % repoName
 
@@ -325,6 +325,7 @@ class Info(SingleRepoAction):
         self.printer.addColumn('url', show_in_grep=False)
         self.printer.addColumn('last_sync', show_in_grep=False)
         self.printer.addColumn('sync_state', name=_("Progress"), show_in_grep=False)
+        self.printer.addColumn('gpg_key_name', name=_("GPG key"), show_in_grep=False)
 
         self.printer.setHeader(_("Information About Repo %s") % repo['id'])
 
@@ -351,6 +352,7 @@ class Update(SingleRepoAction):
             return os.EX_DATAERR
 
         self.api.update(repo['id'], gpgkey, nogpgkey)
+        print _("Successfully updated repository [ %s ]") % repo['name']
         return os.EX_OK
 
 

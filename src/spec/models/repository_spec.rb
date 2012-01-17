@@ -19,26 +19,41 @@ describe Repository do
   include ProductHelperMethods
   include AuthorizationHelperMethods
 
-  describe "create repo"  do
+  describe "update a repo" do
     before do
       disable_org_orchestration
       suffix = rand(10**8).to_s
       @organization = Organization.create!(:name => "test_organization#{suffix}", :cp_key => "test_organization#{suffix}")
       @product = new_test_product @organization, @organization.locker
       @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
+      User.current = superadmin
     end
-    context "product has a gpg" do
+
+    let(:gpg_key) { @organization.gpg_keys.create!(:name => "Gpg key 1", :content => "key") }
+    let(:another_gpg_key) { @organization.gpg_keys.create!(:name => "Gpg key 2", :content => "another key") }
+    subject do
+      repo = Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
+                                :name=>"newname#{rand 10**6}", :url => "http://fedorahosted org", :gpg_key_name => gpg_key.name)
+    end
+
+    describe "reassigns gpg key" do
       before do
-        @gpg = GpgKey.create!(:name => "foo", :organization => @organization, :content=>"100")
-        @product.gpg_key = @gpg
-        @product.save!
+        subject.update_attributes!(:gpg_key_name => another_gpg_key.name)
       end
-      subject{Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
-                                 :name=>"newname#{rand 10**6}", :url => "http://fedorahosted org")}
-      it{should_not be_nil}
-      its(:gpg_key){should == @product.gpg_key}
+
+      its(:gpg_key) { should == another_gpg_key }
+    end
+
+    describe "removing gpg key assigment" do
+      before do
+        subject.update_attributes!(:gpg_key_name => nil)
+      end
+
+      its(:gpg_key) { should == nil }
     end
   end
+
+
 
   describe "repo permission tests" do
     before (:each) do

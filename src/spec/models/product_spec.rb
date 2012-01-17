@@ -182,6 +182,7 @@ describe Product do
       before(:each) do
         Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
         Candlepin::Content.stub!(:create).and_return({:id => "123"})
+        Pulp::Repository.stub!(:update).and_return({:id => "123"})
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
 

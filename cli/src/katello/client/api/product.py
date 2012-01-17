@@ -46,18 +46,20 @@ class ProductAPI(KatelloAPI):
         product = {
             "name": name,
             "description": description,
-            "gpgkey": gpgkey
+            "gpg_key_name": gpgkey
         }
 
         path = "/api/providers/%s/product_create" % str(provId)
         result = self.server.POST(path, {"product": product})[1]
         return result
 
-    def update(self, prodId, description, gpgkey, nogpgkey):
+    def update(self, prodId, description, gpgkey, nogpgkey, gpgkey_recursive):
         product = {}
-        update_dict(product, "description", description)
-        update_dict(product, "gpgkey", gpgkey)
-        update_dict(product, "nogpgkey", nogpgkey)
+        self.update_dict(product, "description", description)
+        self.update_dict(product, "gpg_key_name", gpgkey)
+        self.update_dict(product, "recursive", gpgkey_recursive)
+        if nogpgkey:
+            product["gpg_key_name"] = ""
 
         path = "/api/products/%s/" % prodId
         result = self.server.PUT(path, {"product": product})[1]

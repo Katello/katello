@@ -40,8 +40,5 @@ test_success "remove a product's gpg recursively"  repo update --product="$GPG_P
 test_success "gpg repo delete" repo delete --product="$GPG_PRODUCT" --org="$TEST_ORG" --name="$GPG_REPO"
 test_success "gpg product delete" product delete --org="$TEST_ORG" --name="$GPG_PRODUCT"
 
-test_success "repo delete" repo delete --product="$FEWUPS_PRODUCT" --org="$TEST_ORG" --name="$FEWUPS_REPO"
-test_success "product delete" product delete --org="$TEST_ORG" --name="$FEWUPS_PRODUCT"
-
 test_success "gpg delete" gpg_key delete --name="$GPG_KEY_NAME" --org="$TEST_ORG"
 test_success "gpg delete" gpg_key delete --name="$GPG_KEY_NAME_3" --org="$TEST_ORG"
