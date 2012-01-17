@@ -104,7 +104,7 @@ class Api::RepositoriesController < Api::ApiController
   # might not always be 100% bullet proof, and its more important that yum can fetch the key.
   def gpg_key_content
     if @repository.gpg_key && @repository.gpg_key.content.present?
-      render(:text => @gpg_key.content, :layout => false) 
+      render(:text => @repository.gpg_key.content, :layout => false) 
     else
       head(404)
     end
