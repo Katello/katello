@@ -38,7 +38,7 @@ class GpgKeyAction(Action):
             with open(get_abs_path(file), "r") as f:
                 content = f.read()
         elif use_prompt:
-            print _("Enter content of the GPG key:")
+            print _("Enter content of the GPG key (finish input with CTRL+D):")
             content = stdin.read()
         else:
             content = None
