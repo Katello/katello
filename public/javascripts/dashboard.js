@@ -133,7 +133,7 @@ KT.dashboard = (function(){
             $("#dashboard_errata").find(".jspPane").resize();
             btn.removeClass("expanded").addClass("collapsed");
         });
-    
+
         KT.tipsy.custom.errata_tooltip();
 
     },
