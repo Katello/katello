@@ -359,11 +359,11 @@ class Update(TemplateAction):
         self.parser.add_option('--remove_distribution', dest='remove_distributions', action="append", help=_("distribution id"))
 
         self.parser.add_option('--from_product', dest='from_product', action="callback", callback=self.store_from_product, type="string",
-                                help=_("determines product from which the packages/errata/repositories are picked"))
+                                help=_("determines product from which the repositories are picked"))
         self.parser.add_option('--add_repository', dest='add_repository', action="callback", callback=self.store_item_with_product, type="string",
-                                help=_("repository to add to the changeset"))
+                                help=_("repository to be added to the template"))
         self.parser.add_option('--remove_repository', dest='remove_repository', action="callback", callback=self.store_item_with_product, type="string",
-                                help=_("repository to remove from the changeset"))
+                                help=_("repository to be removed from the template"))
         self.resetParameters()
 
 
