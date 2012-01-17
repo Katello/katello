@@ -72,10 +72,13 @@ class Create(PermissionAction):
     def tag_name_to_id_map(self, org_name, scope):
         permissions = self.getAvailablePermissions(org_name, scope)
 
-        tag_map = {}
-        for t in permissions[scope]['tags']:
-            tag_map[t['display_name']] = t['name']
-        return tag_map
+        try:
+            tag_map = {}
+            for t in permissions[scope]['tags']:
+                tag_map[t['display_name']] = t['name']
+            return tag_map
+        except KeyError, e:
+            system_exit(os.EX_DATAERR, _("Invalid scope [ %s ]") % e[0])
 
     def tags_to_ids(self, tags, org_name, scope):
         tag_map = self.tag_name_to_id_map(org_name, scope)
