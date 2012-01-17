@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe SystemErrataController do
+describe SystemErrataController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include SystemHelperMethods
