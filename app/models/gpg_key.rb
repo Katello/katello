@@ -29,6 +29,7 @@ class GpgKey < ActiveRecord::Base
 
   validates :name, :katello_name_format => true
   validates :content, :presence => true
+  validates_presence_of :organization
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
 
 
