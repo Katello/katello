@@ -193,8 +193,8 @@ class System < ActiveRecord::Base
     end
 
     def fill_defaults
-      self.description = "Initial Registration Params" unless self.description
-      self.location = "None" unless self.location
+      self.description = _("Initial Registration Params") unless self.description
+      self.location = _("None") unless self.location
     end
 
 end
