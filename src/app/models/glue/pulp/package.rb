@@ -12,7 +12,7 @@
 
 require_dependency "resources/pulp"
 class Glue::Pulp::Package < Glue::Pulp::SimplePackage
-  attr_accessor :id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description, :size, :buildhost
+  attr_accessor :id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description, :size, :buildhost, :repoids
 
 
   def self.find id
