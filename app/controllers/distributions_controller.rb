@@ -12,17 +12,15 @@
 
 class DistributionsController < ApplicationController
 
-  before_filter :lookup_distribution
+  before_filter :find_repository
+  before_filter :find_distribution
   before_filter :authorize
 
   def rules
-    # TODO: change the route to /repositories/:repo_id/distributions/:id
-    # and fetch repository/product first to check permissions
-    readable = lambda{ true }
-    #readable = lambda{ @product.readable? }
+    readable = lambda{ @repo.environment.contents_readable? and @repo.product.readable? }
     {
       :show => readable,
-      :filelist => readable,
+      :filelist => readable
     }
   end
 
@@ -36,8 +34,11 @@ class DistributionsController < ApplicationController
 
   private
 
-  def lookup_distribution
-    @distribution = Glue::Pulp::Distribution.find params[:id]
+  def find_repository
+    @repo = Repository.find(params[:repository_id])
   end
 
+  def find_distribution
+    @distribution = Glue::Pulp::Distribution.find params[:id]
+  end
 end
