@@ -41,7 +41,7 @@ module ApplicationConfiguration
       end
       @ostruct.katello_version = version
 
-      available_locales = ['de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pt-BR', 'gu', 'hi', 'mr', 'or', 'ru', 'te', 'pa', 'kn', 'ko', 'bn', 'ta', 'zh-CN', 'zh-TW']
+      available_locales = ['de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pt-BR', 'gu', 'hi', 'mr', 'or', 'ru', 'te', 'pa', 'kn', 'bn', 'ta', 'zh-CN', 'zh-TW']
       @ostruct.available_locales = available_locales unless @ostruct.respond_to?(:available_locales)
     end
 
