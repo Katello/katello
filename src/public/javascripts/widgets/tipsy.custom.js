@@ -16,10 +16,14 @@ KT.tipsy.custom = (function(){
                 $('.details_container').addClass('scroll-pane');
                 KT.common.jscroll_init($('.scroll-pane'));
             }});
+    },
+    disable_details_tooltip = function(element) {
+        element.replaceWith('<span class="details-icon-nohover"></span>');
     };
 
     return {
-        errata_tooltip  :   errata_tooltip
+        errata_tooltip          : errata_tooltip,
+        disable_details_tooltip : disable_details_tooltip
     };
 })();
 
