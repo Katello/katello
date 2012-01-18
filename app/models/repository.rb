@@ -38,8 +38,6 @@ class Repository < ActiveRecord::Base
   validates :enabled, :repo_disablement => true, :on => [:update]
   belongs_to :gpg_key, :inverse_of => :repositories
 
-  before_validation :setup_repo_gpg, :on =>[:create]
-
   def product
     self.environment_product.product
   end
@@ -108,11 +106,20 @@ class Repository < ActiveRecord::Base
     end if !errata.empty?
   end
 
-  protected
-  def setup_repo_gpg
-    unless gpg_key
-      self.gpg_key = product.gpg_key
+  def gpg_key_name=(name)
+    if name.blank?
+      self.gpg_key = nil
+    else
+      self.gpg_key = GpgKey.readable(organization).find_by_name!(name)
     end
   end
+
+  def as_json(*args)
+    ret = super
+    ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
+    ret
+  end
+
+  protected
 
 end

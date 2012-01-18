@@ -14,24 +14,24 @@
     KT.distributions = $.parseJSON('#{escape_javascript(distro_map.to_json)}');
 
     localize({
-      "products": '#{_('Products')}',
-      "repos": '#{_('Repositories')}',
-      "packages": '#{_('Packages')}',
-      "package_groups": '#{_("Package Groups")}',
-      "selected_distribution": '#{_("Selected Distribution")}',
-      "edit_label": '#{_("Edit Details")}',
-      "edit_close_label": '#{_("Close Edit")}',
-      "add_label": '#{_("Add")}',
-      "add_close_label": '#{_("Cancel Add")}',
-      "templates_empty": '#{_("No System Templates are currently defined")}',
-      "need_product": '#{_("No products are currently associated with this system template.  Please associate a product that contains distributions in order to select a distribution.")}',
-      "need_distro_product": '#{_("None of the associated products contain distributions, please select a product that contains at least one distribution.")}',
-      "save" : '#{_("Save")}',
-      "repo_search_text": '#{_("Search available repository names...")}',
-      "package_search_text": '#{_("Search available package names...")}',
-      "product_search_text": '#{_("Search available product names...")}',
-      "modify_message": '#{_('The current template "$TEMPLATE" has been modified.  Would you like to save the changes?')}',
-      "leave_page": '#{_('The current template "$TEMPLATE" has been modified. If you leave, any changes will be lost."')}'
+      "products": '#{escape_javascript(_('Products'))}',
+      "repos": '#{escape_javascript(_('Repositories'))}',
+      "packages": '#{escape_javascript(_('Packages'))}',
+      "package_groups": '#{escape_javascript(_("Package Groups"))}',
+      "selected_distribution": '#{escape_javascript(_("Selected Distribution"))}',
+      "edit_label": '#{escape_javascript(_("Edit Details"))}',
+      "edit_close_label": '#{escape_javascript(_("Close Edit"))}',
+      "add_label": '#{escape_javascript(_("Add"))}',
+      "add_close_label": '#{escape_javascript(_("Cancel Add"))}',
+      "templates_empty": '#{escape_javascript(_("No System Templates are currently defined"))}',
+      "need_product": '#{escape_javascript(_("No products are currently associated with this system template.  Please associate a product that contains distributions in order to select a distribution."))}',
+      "need_distro_product": '#{escape_javascript(_("None of the associated products contain distributions, please select a product that contains at least one distribution."))}',
+      "save" : '#{escape_javascript(_("Save"))}',
+      "repo_search_text": '#{escape_javascript(_("Search available repository names..."))}',
+      "package_search_text": '#{escape_javascript(_("Search available package names..."))}',
+      "product_search_text": '#{escape_javascript(_("Search available product names..."))}',
+      "modify_message": '#{escape_javascript(_('The current template "$TEMPLATE" has been modified.  Would you like to save the changes?'))}',
+      "leave_page": '#{escape_javascript(_('The current template "$TEMPLATE" has been modified. If you leave, any changes will be lost."'))}'
       });
 
 = help_tip_button
@@ -47,7 +47,7 @@
         %h2= _("System Templates")
         .breadcrumb_filter.fl.clear.clickable
           %form#filter_form.filter.clear
-            %input{ :name => "filter", :type => "input", :placeholder => "Filter...", :id=>"filter_input"}
+            %input{ :name => "filter", :type => "input", :placeholder => _("Filter..."), :id=>"filter_input"}
             %button.action #{_("Filter")}
             %br.clear
           .filter_button.fr.clickable

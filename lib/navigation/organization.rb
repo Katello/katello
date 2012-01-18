@@ -20,7 +20,7 @@ module Navigation
 
     def menu_organization
       {:key => :organizations,
-       :name => N_("Organizations"),
+       :name => _("Organizations"),
         :url => :sub_level,
         :options => {:class=>'organizations top_level', "data-menu"=>"organizations"},
         :if => lambda{current_organization() && Organization.any_readable?},
@@ -31,7 +31,7 @@ module Navigation
 
     def menu_org_list
       {:key => :org_list,
-       :name => N_("List"),
+       :name => _("List"),
        :url => organizations_path,
        :options => {:class=>'organizations second_level', "data-menu"=>"organizations"}
       }
@@ -39,7 +39,7 @@ module Navigation
 
     def menu_org_subscriptions
       {:key => :subscriptions,
-       :name => N_("Subscriptions"),
+       :name => _("Subscriptions"),
        :url => subscriptions_path(),
        :options => {:class=>'organizations second_level', "data-menu"=>"organizations"}
       }
@@ -48,13 +48,13 @@ module Navigation
     def organization_navigation
       [
         { :key => :details,
-          :name =>N_("Details"),
+          :name =>_("Details"),
           :url => lambda{edit_organization_path(@organization.cp_key)},
           :if => lambda{@organization},
           :options => {:class=>"navigation_element"}
         },
         { :key => :history,
-          :name =>N_("History"),
+          :name =>_("History"),
           :url => lambda{events_organization_path(@organization.cp_key)},
           :if => lambda{@organization},
           :options => {:class=>"navigation_element"}

@@ -33,6 +33,8 @@ class Api::TemplatesContentController < Api::ApiController
       :remove_package_group_category => manage_test,
       :add_distribution => manage_test,
       :remove_distribution => manage_test,
+      :add_repo => manage_test,
+      :remove_repo => manage_test
     }
   end
 
@@ -106,6 +108,18 @@ class Api::TemplatesContentController < Api::ApiController
     @template.remove_distribution(params[:id])
     @template.save!
     render :text => _("Removed distribution '#{params[:id]}'")
+  end
+
+  def add_repo
+    @template.add_repo(params[:id])
+    @template.save!
+    render :text => _("Added repository '#{params[:id]}'"), :status => 200
+  end
+
+  def remove_repo
+    @template.remove_repo(params[:id])
+    @template.save!
+    render :text => _("Removed repository '#{params[:id]}'"), :status => 200
   end
 
   private

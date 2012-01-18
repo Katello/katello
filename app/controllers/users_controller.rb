@@ -19,7 +19,7 @@ class UsersController < ApplicationController
    
   before_filter :setup_options, :only => [:items, :index]
   before_filter :find_user, :only => [:items, :index, :edit, :edit_environment, :update_environment,
-                                      :update, :update_roles, :clear_helptips, :destroy]
+                                      :update, :update_roles, :update_locale, :clear_helptips, :destroy]
   before_filter :authorize
   skip_before_filter :require_org
 
@@ -45,6 +45,7 @@ class UsersController < ApplicationController
        :update_environment => read_test,
        :update => edit_details_test,
        :update_roles => edit_test,
+       :update_locale => edit_test,
        :clear_helptips => edit_details_test,
        :destroy => delete_test,
        :enable_helptip => user_helptip,
@@ -137,6 +138,18 @@ class UsersController < ApplicationController
     end
     notice "", {:level => :error, :list_items => @user.errors.to_a}
     render :text => @user.errors, :status=>:ok
+  end
+
+  def update_locale
+    locale = params[:locale][:locale]
+    if AppConfig.available_locales.include? locale
+      @user.default_locale = locale
+      I18n.locale = locale
+    else
+      @user.default_locale = nil
+    end
+    notice _("User updated successfully.")
+    redirect_to "#{users_path(:id => @user)}#panel=user_#{@user.id}"
   end
 
   def edit_environment

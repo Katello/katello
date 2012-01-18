@@ -416,6 +416,15 @@ class User < ActiveRecord::Base
     nil
   end
 
+  def default_locale
+    self.preferences[:user][:locale] rescue nil
+  end
+
+  def default_locale= locale
+    self.preferences[:user] = {} unless self.preferences.has_key? :userd
+    self.preferences[:user][:locale] = locale
+    save!
+  end
 
   #method to delete the passed in org.  Due to the way delayed job is impelemented
   #  we must attached the job to a different instance or object, so we attach it to the current_user
