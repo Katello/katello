@@ -222,7 +222,7 @@ KT.content = (function(){
             var element = $("#product-" + prod_id).find(".result");
             var oldpg = element.find('.progress');
             if(done){
-                element.html(i18n.complete);
+                element.html("");
             }
             else{
                 var progressBar = $('<div/>').attr('class', 'progress').text(" ");
