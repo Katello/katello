@@ -474,12 +474,9 @@ class Subscriptions(SystemAction):
                 help=_("organization name (required)"))
         self.parser.add_option('--name', dest='name',
                 help=_("system name (required)"))
-        self.parser.add_option('--serials', dest='serials',
-                action="store_true", default=False,
-                help=_("show certificate serial numbers"))
         self.parser.add_option('--available', dest='available',
-                action="store_const", const=1, default=0,
-                help=_("show available subscription"))
+                action="store_true", default=False,
+                help=_("show available subscriptions"))
 
     def check_options(self):
         self.require_option('org')
@@ -488,42 +485,30 @@ class Subscriptions(SystemAction):
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
-        serials = self.get_option('serials')
         available = self.get_option('available')
         systems = self.api.systems_by_org(org, {'name': name})
 
-        if serials and available == 0:
-            print _("Serial parameter cannot be used with available")
-            return os.EX_DATAERR
 
         if systems == None or len(systems) != 1:
             print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
             self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
-            if available:
-                # listing available pools
-                result = self.api.available_pools(systems[0]['uuid'])
-                if result == None or len(result) == 0:
-                    print _("No Pools found for System [ %s ] in Org [ %s ]") % (name, org)
-                    return os.EX_DATAERR
-                self.printer.setHeader(_("Available Pools for System [ %s ]") % name)
-                self.printer.addColumn('poolId')
-                self.printer.addColumn('poolName')
-                self.printer.addColumn('expires')
-                self.printer.addColumn('consumed')
-                self.printer.addColumn('quantity')
-                self.printer.addColumn('sockets')
-                self.printer.addColumn('multiEntitlement')
-                self.printer.addColumn('providedProducts')
-                self.printer.printItems(result['pools'])
-            else:
+            if not available:
                 # listing current subscriptions
                 result = self.api.subscriptions(systems[0]['uuid'])
-                if result == None or len(result) == 0:
+                if result == None or len(result['entitlements']) == 0:
                     print _("No Subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
                     return os.EX_DATAERR
-                self.printer.setHeader(_("Available Subscriptions for System [ %s ]") % name)
+
+                def entitlements():
+                    for entitlement in result['entitlements']:
+                        entitlement_ext = entitlement.copy()
+                        provided_products = ', '.join([e['name'] for e in entitlement_ext['providedProducts']])
+                        entitlement_ext['providedProductsFormatted'] = provided_products
+                        yield entitlement_ext
+
+                self.printer.setHeader(_("Current Subscriptions for System [ %s ]") % name)
                 self.printer.addColumn('entitlementId')
                 self.printer.addColumn('poolName')
                 self.printer.addColumn('expires')
@@ -531,8 +516,33 @@ class Subscriptions(SystemAction):
                 self.printer.addColumn('quantity')
                 self.printer.addColumn('sla')
                 self.printer.addColumn('contractNumber')
-                self.printer.addColumn('providedProducts')
-                self.printer.printItems(result['entitlements'])
+                self.printer.addColumn('providedProductsFormatted', name=_('Provided products'))
+                self.printer.printItems(entitlements())
+            else:
+                # listing available pools
+                result = self.api.available_pools(systems[0]['uuid'])
+
+                if result == None or len(result) == 0:
+                    print _("No Pools found for System [ %s ] in Org [ %s ]") % (name, org)
+                    return os.EX_DATAERR
+
+                def available_pools():
+                    for pool in result['pools']:
+                        pool_ext = pool.copy()
+                        provided_products = ', '.join([p['name'] for p in pool_ext['providedProducts']])
+                        pool_ext['providedProductsFormatted'] = provided_products
+                        yield pool_ext
+
+                self.printer.setHeader(_("Available Subscriptions for System [ %s ]") % name)
+                self.printer.addColumn('poolId')
+                self.printer.addColumn('poolName')
+                self.printer.addColumn('expires')
+                self.printer.addColumn('consumed')
+                self.printer.addColumn('quantity')
+                self.printer.addColumn('sockets')
+                self.printer.addColumn('multiEntitlement')
+                self.printer.addColumn('providedProductsFormatted', name=_('Provided products'))
+                self.printer.printItems(available_pools())
 
             return os.EX_OK
 
