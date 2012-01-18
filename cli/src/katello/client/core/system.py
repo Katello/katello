@@ -499,7 +499,7 @@ class Subscriptions(SystemAction):
                 result = self.api.subscriptions(systems[0]['uuid'])
                 if result == None or len(result['entitlements']) == 0:
                     print _("No Subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
-                    return os.EX_DATAERR
+                    return os.EX_OK
 
                 def entitlements():
                     for entitlement in result['entitlements']:
@@ -524,7 +524,7 @@ class Subscriptions(SystemAction):
 
                 if result == None or len(result) == 0:
                     print _("No Pools found for System [ %s ] in Org [ %s ]") % (name, org)
-                    return os.EX_DATAERR
+                    return os.EX_OK
 
                 def available_pools():
                     for pool in result['pools']:
