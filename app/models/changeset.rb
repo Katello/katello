@@ -25,7 +25,7 @@ class Changeset < ActiveRecord::Base
 
   include IndexedModel
   index_options :extended_json=>:extended_index_attrs,
-                :display_attrs=>[:name, :description, :package, :errata, :product, :repo, :system_template]
+                :display_attrs=>[:name, :description, :package, :errata, :product, :repo, :system_template, :user]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -242,8 +242,8 @@ class Changeset < ActiveRecord::Base
   end
 
   def find_repos product
-    repos.join(:environment_product).where("environment_products.environment_id" => environment.id,
-                                                  "environment_products.product_id" =>product.id)
+    ids = product.repos(self.environment).collect{|r| r.id} & self.repo_ids
+    ids.empty? ? [] : Repository.where(:ids=>ids)
   end
 
 
@@ -584,7 +584,8 @@ class Changeset < ActiveRecord::Base
       :errata=>errata,
       :product=>products,
       :repo=>repos,
-      :system_template=>templates
+      :system_template=>templates,
+      :user=> self.task_status.nil? ? "" : self.task_status.user.username
     }
   end
 

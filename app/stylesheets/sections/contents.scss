@@ -211,12 +211,15 @@
     }
   }
   #plans {
+    .left {
+        margin-left: 20px;
+
+    }
     .block {
       @extend .block;
       padding:  6px 16px 6px 17px;
-      width: 416px;
+      width: 405px;
       height: 17px;
-      
       &.active {
         background-color: $listhover_color;
         color: $white_color;
@@ -233,6 +236,10 @@
           top: -1px;
           width: 0;
           z-index: 220;
+        }
+        &:hover {
+            background-color: darken($kselected_color, 10%);
+            .arrow-right { border-right-color:darken($kselected_color, 10%); }
         }
       }
     }

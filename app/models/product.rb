@@ -97,6 +97,8 @@ class Product < ActiveRecord::Base
 
   def serializable_hash(options={})
     options = {} if options == nil
+
+
     hash = super(options.merge(:except => [:cp_id, :id]))
     hash = hash.merge(:sync_state => self.sync_state,
                       :last_sync => self.last_sync,
@@ -104,6 +106,7 @@ class Product < ActiveRecord::Base
                       :multiplier => self.multiplier,
                       :attributes => self.attrs,
                       :id => self.cp_id)
+    hash = hash.merge(:sync_plan_name => self.sync_plan ? self.sync_plan.name : nil)
     hash
   end
 
@@ -113,6 +116,14 @@ class Product < ActiveRecord::Base
 
   def custom?
     !(redhat?)
+  end
+
+  def gpg_key_name=(name)
+    if name.blank?
+      self.gpg_key = nil
+    else
+      self.gpg_key = GpgKey.readable(organization).find_by_name!(name)
+    end
   end
 
   def reset_repo_gpgs!
@@ -150,7 +161,11 @@ class Product < ActiveRecord::Base
       self.provider.update_index if self.provider.respond_to? :update_index
   end
 
-
+  def as_json(*args)
+    ret = super
+    ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
+    ret
+  end
 
 
   protected

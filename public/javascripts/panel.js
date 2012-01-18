@@ -295,7 +295,7 @@ KT.panel = (function ($) {
                 },
                 error: function (xhr, status, error) {
                     spinner.hide();
-                    panelContent.html("<h2>Error</h2><p>There was an error retrieving that row: " + error + "</p>").fadeIn();
+                    panelContent.html("<h2>" + i18n.error + "</h2><p>" + i18n.row_error + error + "</p>").fadeIn();
                 }
             });
         },

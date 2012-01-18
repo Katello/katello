@@ -182,6 +182,7 @@ describe Product do
       before(:each) do
         Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
         Candlepin::Content.stub!(:create).and_return({:id => "123"})
+        Pulp::Repository.stub!(:update).and_return({:id => "123"})
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
 
@@ -290,8 +291,8 @@ describe Product do
         describe "repository for product content" do
           it "should be created for each arch" do
             expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage"
-            Repository.should_receive(:create!).once.with(hash_including(:feed => expected_feed, :name => 'some-name33 6Server x86_64'))
-            Repository.should_receive(:create!).once.with(hash_including(:name => 'some-name33 6Server i386'))
+            Repository.should_receive(:create!).once.with(hash_including(:feed => expected_feed, :name => 'some-name33 x86_64 6Server'))
+            Repository.should_receive(:create!).once.with(hash_including(:name => 'some-name33 i386 6Server'))
           end
 
           it "should follow the format of the content url in candlepin" do

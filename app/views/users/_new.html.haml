@@ -1,7 +1,7 @@
 = javascript do
   :javascript
     localize({
-      "noDefaultEnv": '#{_("No default environment. Select an organization to choose from available environments.")}'
+      "noDefaultEnv": '#{escape_javascript(_("No default environment. Select an organization to choose from available environments."))}'
     });
 
 = content_for :title do

@@ -91,6 +91,7 @@ class SystemTemplate < ActiveRecord::Base
     json["package_group_categories"].each {|pgc| self.add_pg_category(pgc) } if json["package_group_categories"]
     json["distributions"].each {|d| self.add_distribution(d) } if json["distributions"]
     json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
+    json["repositories"].each {|r| self.add_repo_by_name(r["product"], r["name"]) } if json["repositories"]
 
     self.save_content_state
   end
@@ -105,6 +106,7 @@ class SystemTemplate < ActiveRecord::Base
       :package_groups => self.package_groups.map(&:name),
       :package_group_categories => self.pg_categories.map(&:name),
       :distributions => self.distributions.map(&:distribution_pulp_id),
+      :repositories => self.repositories.collect{ |r| {:product => r.product.name, :name => r.name} }
     }
     tpl[:description] = self.description if not self.description.nil?
     tpl
@@ -312,13 +314,39 @@ class SystemTemplate < ActiveRecord::Base
     self.distributions.delete(distro)
   end
 
+  def add_repo id
+    repo = Repository.find(id)
+
+    raise Errors::TemplateContentException.new(_("Repository '%s' not found in this environment.") % id) if (repo == nil) || (repo.environment != self.environment)
+    raise Errors::TemplateContentException.new(_("Repository '%s' is already present in the template.") % id) if self.repositories.include? repo
+    self.repositories << repo
+  end
+
+  def add_repo_by_name product_name, repo_name
+    product = Product.joins(:environment_products).where(:name => product_name, 'environment_products.environment_id' => self.environment_id).first
+    raise Errors::TemplateContentException.new(_("Product '%s' not found in this environment.") % product_name) if product == nil
+
+    repo = Repository.joins(:environment_product).where(:name => repo_name, 'environment_products.environment_id' => self.environment_id, 'environment_products.product_id' => product.id).first
+
+    raise Errors::TemplateContentException.new(_("Repository '%s' not found in this environment.") % repo_name) if repo == nil
+    raise Errors::TemplateContentException.new(_("Repository '%s' is already present in the template.") % repo_name) if self.repositories.include? repo
+    self.repositories << repo
+  end
+
+  def remove_repo id
+    repo = self.repositories.where(:id => id).first
+    raise Errors::TemplateContentException.new(_("Repository '%s' not found in this template.") % id) if repo.nil?
+    self.repositories.delete(repo)
+  end
+
   def to_json(options={})
      super(options.merge({
         :methods => [:products,
                      :packages,
                      :parameters,
                      :package_groups,
-                     :pg_categories]
+                     :pg_categories,
+                     :repositories]
         })
      )
   end
@@ -342,6 +370,7 @@ class SystemTemplate < ActiveRecord::Base
     self.parent.promote(from_env, to_env) unless self.parent.nil?
 
     promote_products from_env, to_env
+    promote_repos    from_env, to_env
     promote_packages from_env, to_env
     promote_template from_env, to_env
 
@@ -419,6 +448,22 @@ class SystemTemplate < ActiveRecord::Base
       async_tasks += (prod.promote from_env, to_env) if not prod.environments.include? to_env
     end
     PulpTaskStatus::wait_for_tasks async_tasks
+  end
+
+  def promote_repos from_env, to_env
+    async_tasks = []
+    self.repositories.each do |repo|
+      product = repo.product
+      next if (products.uniq! or []).include? product
+
+      cloned = repo.get_clone(to_env)
+      if cloned
+        async_tasks += cloned.sync
+      else
+        async_tasks += repo.promote(to_env)
+      end
+    end
+    async_tasks
   end
 
   def promote_packages from_env, to_env

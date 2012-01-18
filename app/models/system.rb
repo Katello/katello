@@ -131,6 +131,11 @@ class System < ActiveRecord::Base
     json['environment'] = environment.as_json unless environment.nil?
     json['activation_key'] = activation_keys.as_json unless activation_keys.nil?
     json['template'] = system_template.as_json unless system_template.nil?
+    if self.guest == 'true'
+      json['host'] = self.host.attributes
+    else
+      json['guests'] = self.guests.map(&:attributes)
+    end
     json
   end
 
@@ -193,8 +198,8 @@ class System < ActiveRecord::Base
     end
 
     def fill_defaults
-      self.description = "Initial Registration Params" unless self.description
-      self.location = "None" unless self.location
+      self.description = _("Initial Registration Params") unless self.description
+      self.location = _("None") unless self.location
     end
 
 end
