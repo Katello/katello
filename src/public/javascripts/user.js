@@ -74,22 +74,6 @@ $(document).ready(function() {
             $('#locale_form').trigger('submit');
         });
 
-        $('#password_field').simplePassMeter({
-            'container': '#password_meter',
-            'offset': 10,
-            'showOnFocus':false,
-            'requirements': {
-                'noUsernameMatch': {
-                    value: "#match",
-                    message: i18n.usernameMatch,
-                    callback: function(password, value) {
-                        return password.indexOf($("#username").text().trim()) === -1;
-                    }
-                }
-            },
-            'defaultText':i18n.meterText,
-            'ratings':ratings});
-
         //from user.js
         $('#helptips_enabled').bind('change', KT.user_page.checkboxChanged);
     })
