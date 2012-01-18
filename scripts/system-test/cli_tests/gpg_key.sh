@@ -33,9 +33,9 @@ test_success "update a product's gpg recursively" product update --org "$TEST_OR
 test_success "update a repo's gpg" repo update --product="$GPG_PRODUCT" --org="$TEST_ORG" --name="$GPG_REPO" --gpgkey "$GPG_KEY_NAME"
 test_success "gpg repo delete" repo delete --product="$GPG_PRODUCT" --org="$TEST_ORG" --name="$GPG_REPO_2"
 
-test_success "remove a repo's gpg" product update --org "$TEST_ORG" --name "$GPG_PRODUCT" --nogpgkey
-test_success "remove a product's gpg" product update --org "$TEST_ORG" --name "$GPG_PRODUCT" --nogpgkey --recursive
-test_success "remove a product's gpg recursively"  repo update --product="$GPG_PRODUCT" --org="$TEST_ORG" --name="$GPG_REPO" --nogpgkey
+test_success "remove a products's gpg" product update --org "$TEST_ORG" --name "$GPG_PRODUCT" --nogpgkey
+test_success "remove a product's gpg recursively" product update --org "$TEST_ORG" --name "$GPG_PRODUCT" --nogpgkey --recursive
+test_success "remove a repo's gpg"  repo update --product="$GPG_PRODUCT" --org="$TEST_ORG" --name="$GPG_REPO" --nogpgkey
 
 test_success "gpg repo delete" repo delete --product="$GPG_PRODUCT" --org="$TEST_ORG" --name="$GPG_REPO"
 test_success "gpg product delete" product delete --org="$TEST_ORG" --name="$GPG_PRODUCT"

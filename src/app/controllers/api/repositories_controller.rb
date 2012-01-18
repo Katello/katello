@@ -29,6 +29,7 @@ class Api::RepositoriesController < Api::ApiController
     {
       :create => edit_product_test,
       :show => read_test,
+      :update => edit_test,
       :destroy => edit_test,
       :enable => edit_test,
       :discovery => org_edit,
