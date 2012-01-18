@@ -101,6 +101,15 @@ class Provider < ActiveRecord::Base
     redhat_provider?
   end
 
+  def organization
+    # note i need to add 'unscoped' here
+    # to account for the fact that org might have been "scoped out"
+    # on an Org delete action.
+    # we need the organization info to be present in the provider
+    # so that we can properly phase out the orchestration and handle search indices.
+    Organization.unscoped.find(self.organization_id) if self.organization_id
+  end
+
   #permissions
   # returns list of virtual permission tags for the current user
   def self.list_tags org_id
@@ -197,8 +206,6 @@ class Provider < ActiveRecord::Base
 
   READ_PERM_VERBS = [:read, :create, :update, :delete]
   EDIT_PERM_VERBS = [:create, :update]
-
-
 
 
 end
