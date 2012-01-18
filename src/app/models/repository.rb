@@ -113,11 +113,4 @@ class Repository < ActiveRecord::Base
 
   protected
 
-  # we migh not to need this - remove!!!
-  def setup_repo_gpg
-    unless gpg_key
-      self.gpg_key = product.gpg_key
-    end
-  end
-
 end
