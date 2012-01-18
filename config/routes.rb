@@ -469,7 +469,7 @@ Src::Application.routes.draw do
         delete :index, :on => :collection, :action => :cancel
       end
       resources :packages
-      resources :errata, :only => [:index]
+      resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
       resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
       member do
         get :package_groups
@@ -499,7 +499,7 @@ Src::Application.routes.draw do
       delete "pools/:poolid", :action => :remove_pool, :on => :member
     end
 
-    resources :errata, :only => [:index, :show]
+    resources :errata, :only => [:index]
 
     resources :users do
       get :report, :on => :collection
