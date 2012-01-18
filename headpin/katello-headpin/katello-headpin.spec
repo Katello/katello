@@ -117,6 +117,38 @@ and then run katello-configure to configure everything.
 cp -Rf %{homedir}/* %{katello_dir}
 
 %changelog
+* Wed Jan 18 2012 Jordan OMara <jomara@redhat.com> 0.1.125-2
+- Merge remote-tracking branch 'katello/headpin' into BRANDING
+  (jomara@redhat.com)
+- Automatic commit of package [katello-headpin] release [0.1.124-2].
+  (jomara@redhat.com)
+- katello-headpin 0.1.124 (jomara@redhat.com)
+- Automatic commit of package [katello-headpin] release [0.1.123-2].
+  (jomara@redhat.com)
+- Headpin 1.123-2 Merge remote-tracking branch 'katello/headpin' into BRANDING
+  (jomara@redhat.com)
+- Automatic commit of package [katello-headpin] release [0.1.122-2].
+  (bkearney@redhat.com)
+- Merge in the latest from upstream (bkearney@redhat.com)
+- Automatic commit of package [katello-headpin] release [0.1.119-2].
+  (bkearney@redhat.com)
+- Pull in the latest version from upstream (bkearney@redhat.com)
+- Automatic commit of package [katello-headpin] release [0.1.118-2].
+  (bkearney@redhat.com)
+- Latest upstream code (bkearney@redhat.com)
+- Automatic commit of package [katello-headpin] release [0.1.116-2].
+  (bkearney@redhat.com)
+- Merge in the latest from upstream (bkearney@redhat.com)
+- Automatic commit of package [katello-headpin] release [0.1.115-2].
+  (bkearney@redhat.com)
+- Bring in katello-headpin version 115 (bkearney@redhat.com)
+- Change (bkearney@redhat.com)
+- Automatic commit of package [katello-headpin] release [0.1.112-2].
+  (bkearney@redhat.com)
+- Bump the release (bkearney@redhat.com)
+- Fix the README (bkearney@redhat.com)
+- Pull in the branding code from system engine (bkearney@redhat.com)
+
 * Thu Jan 12 2012 Jordan OMara <jomara@redhat.com> 0.1.124-2
 - katello-headpin 0.1.124 (jomara@redhat.com)
 
