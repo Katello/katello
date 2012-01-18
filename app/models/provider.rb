@@ -107,7 +107,7 @@ class Provider < ActiveRecord::Base
     # on an Org delete action.
     # we need the organization info to be present in the provider
     # so that we can properly phase out the orchestration and handle search indices.
-    Organization.unscoped.find(self.organization_id) if self.organization_id
+    (read_attribute(:organization) || Organization.unscoped.find(self.organization_id)) if self.organization_id
   end
 
   #permissions
