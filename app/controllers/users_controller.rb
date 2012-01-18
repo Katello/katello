@@ -148,6 +148,7 @@ class UsersController < ApplicationController
     else
       @user.default_locale = nil
     end
+    @user.save!
     notice _("User updated successfully.")
     redirect_to "#{users_path(:id => @user)}#panel=user_#{@user.id}"
   end
