@@ -29,12 +29,14 @@ class Ping
         result = { :result => 'ok', :status => {
           :pulp => {},
           :candlepin => {},
+          :elasticsearch => {},
           :pulp_auth => {},
           :candlepin_auth => {},
         }}
       else
         result = { :result => 'ok', :status => {
           :candlepin => {},
+          :elasticsearch => {},
           :candlepin_auth => {},
         }}
       end
@@ -53,6 +55,11 @@ class Ping
         RestClient.get "#{url}/status"
       end
 
+      url = AppConfig.elastic_url
+      exception_watch(result[:status][:elasticsearch]) do
+        RestClient.get "#{url}/_status"
+      end
+
       # pulp - ping with oauth
       if AppConfig.katello?
         exception_watch(result[:status][:pulp_auth]) do
@@ -64,6 +71,11 @@ class Ping
       exception_watch(result[:status][:candlepin_auth]) do
         Candlepin::CandlepinPing.ping
       end
+
+      exception_watch(result[:status][:katello_jobs]) do
+        raise _("katello-jobs service not running") if !system("/sbin/service katello-jobs status")
+      end
+
 
       # set overall status result code
       result[:status].each_value { |v| result[:result] = 'fail' if v[:result] != 'ok' }

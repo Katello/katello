@@ -16,6 +16,9 @@ include OrchestrationHelper
 describe Api::SyncController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
+  include OrganizationHelperMethods
+  include ProductHelperMethods
+  include AuthorizationHelperMethods
 
   let(:provider_id) { "123" }
   let(:product_id) { "123" }
@@ -41,130 +44,222 @@ describe Api::SyncController, :katello => true do
     disable_org_orchestration
   end
 
-  describe "find_object" do
+  describe "rules" do
+    before(:each) do
+      disable_product_orchestration
 
-    it "should find provider if :provider_id is specified" do
-      found_provider = {}
-      Provider.should_receive(:find).once.with(provider_id).and_return(found_provider)
-      controller.stub!(:params).and_return({:provider_id => provider_id })
-
-      controller.find_object.should == found_provider
+      @organization = new_test_org
+      Organization.stub!(:first).and_return(@organization)
+      @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
+      Provider.stub!(:find).and_return(@provider)
+      @product = Product.new({:name => "prod"})
+      @product.provider = @provider
+      @product.environments << @organization.locker
+      @product.stub(:arch).and_return('noarch')
+      @product.save!
+      Product.stub!(:find).and_return(@product)
+      Product.stub!(:find_by_cp_id).and_return(@product)
+      ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
+      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :pulp_id=>"1")
+      Repository.stub(:find).and_return(@repository)
     end
-
-    it "should find product if :product_id is specified" do
-      found_product = {}
-      Product.should_receive(:find_by_cp_id).once.with(product_id).and_return(found_product)
-      controller.stub!(:params).and_return({:product_id => product_id })
-
-      controller.find_object.should == found_product
+    describe "for provider index" do
+      let(:action) {:index}
+      let(:req) do
+        get :index, :provider_id => provider_id
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :providers, nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
     end
-
-    it "should find repository if :repository_id is specified" do
-      found_repository = Repository.new
-      found_repository.stub!(:environment).and_return(KTEnvironment.new(:locker => true))
-
-      Repository.should_receive(:find).once.with(repository_id).and_return(found_repository)
-      controller.stub!(:params).and_return({:repository_id => repository_id })
-
-      controller.find_object.should == found_repository
+    describe "for product index" do
+      let(:action) {:index}
+      let(:req) do
+        get :index, :product_id => product_id
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :providers, nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
     end
-
-    it "should raise an error if none were specified" do
-      lambda { controller.find_object }.should raise_error(HttpErrors::NotFound)
+    describe "for repository index" do
+      let(:action) {:index}
+      let(:req) do
+        get :index, :repository_id => repository_id
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :providers, nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+    end
+    describe "for create" do
+      let(:action) {:create}
+      let(:req) do
+        post :create, :provider_id => provider_id
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:sync, :organizations, @organization.id) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+    end
+    describe "for cancel" do
+      let(:action) {:cancel}
+      let(:req) do
+        post :cancel, :provider_id => provider_id
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:sync, :organizations, @organization.id) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
     end
   end
 
-  describe "start a sync" do
+  describe "test" do
     before(:each) do
-      @organization = Organization.create!(:name => "organization", :cp_key => "123")
-
-      @syncable = mock()
-      @syncable.stub!(:sync).and_return([async_task_1, async_task_2])
-      @syncable.stub!(:organization).and_return(@organization)
-
-      Provider.stub!(:find).and_return(@syncable)
+      disable_authorization_rules
     end
 
-    it "should find provider" do
-      Provider.should_receive(:find).once.with(provider_id).and_return(@syncable)
-      post :create, :provider_id => provider_id
+    describe "find_object" do
+
+      it "should find provider if :provider_id is specified" do
+        found_provider = {}
+        Provider.should_receive(:find).once.with(provider_id).and_return(found_provider)
+        controller.stub!(:params).and_return({:provider_id => provider_id })
+
+        controller.find_object.should == found_provider
+      end
+
+      it "should find product if :product_id is specified" do
+        found_product = {}
+        Product.should_receive(:find_by_cp_id).once.with(product_id).and_return(found_product)
+        controller.stub!(:params).and_return({:product_id => product_id })
+
+        controller.find_object.should == found_product
+      end
+
+      it "should find repository if :repository_id is specified" do
+        found_repository = Repository.new
+        found_repository.stub!(:environment).and_return(KTEnvironment.new(:locker => true))
+
+        Repository.should_receive(:find).once.with(repository_id).and_return(found_repository)
+        controller.stub!(:params).and_return({:repository_id => repository_id })
+
+        controller.find_object.should == found_repository
+      end
+
+      it "should raise an error if none were specified" do
+        lambda { controller.find_object }.should raise_error(HttpErrors::NotFound)
+      end
     end
 
-    it "should call sync on the object of synchronization" do
-       @syncable.should_receive(:sync).once.and_return([async_task_1, async_task_2])
-       post :create, :provider_id => provider_id
+    describe "start a sync" do
+      before(:each) do
+        @organization = Organization.create!(:name => "organization", :cp_key => "123")
+
+        @syncable = mock()
+        @syncable.stub!(:sync).and_return([async_task_1, async_task_2])
+        @syncable.stub!(:organization).and_return(@organization)
+
+        Provider.stub!(:find).and_return(@syncable)
+      end
+
+      it "should find provider" do
+        Provider.should_receive(:find).once.with(provider_id).and_return(@syncable)
+        post :create, :provider_id => provider_id
+      end
+
+      it "should call sync on the object of synchronization" do
+         @syncable.should_receive(:sync).once.and_return([async_task_1, async_task_2])
+         post :create, :provider_id => provider_id
+      end
+
+      it "should persist all sync objects" do
+        post :create, :provider_id => provider_id
+
+        found = PulpTaskStatus.all
+        found.size.should == 2
+        found.any? {|t| t[:uuid] == async_task_1[:id]} .should == true
+        found.any? {|t| t[:uuid] == async_task_2[:id]} .should == true
+      end
+
+      it "should return sync objects" do
+        post :create, :provider_id => provider_id
+
+        status = JSON.parse(response.body)
+        status.size.should == 2
+        status.any? {|s| s['uuid'] == async_task_1[:id]} .should == true
+        status.any? {|s| s['uuid'] == async_task_2[:id]} .should == true
+      end
     end
 
-    it "should persist all sync objects" do
-      post :create, :provider_id => provider_id
+    describe "cancel a sync" do
+      before(:each) do
+        @organization = Organization.create!(:name => "organization", :cp_key => "123")
 
-      found = PulpTaskStatus.all
-      found.size.should == 2
-      found.any? {|t| t[:uuid] == async_task_1[:id]} .should == true
-      found.any? {|t| t[:uuid] == async_task_2[:id]} .should == true
+        @syncable = mock()
+        @syncable.stub!(:id)
+        @syncable.stub!(:cance_sync)
+        @syncable.stub!(:organization).and_return(@organization)
+
+        Provider.stub!(:find).and_return(@syncable)
+      end
+
+      it "should find provider" do
+        Provider.should_receive(:find).once.with(provider_id).and_return(@syncable)
+        post :create, :provider_id => provider_id
+      end
+
+      it "should call cancel_sync on the object of synchronization" do
+         @syncable.stub(:sync_state).and_return(PulpSyncStatus::Status::RUNNING)
+         @syncable.should_receive(:cancel_sync)
+         delete :cancel, :provider_id => provider_id
+      end
+
+      it "should not call cancel_sync when the object is not being synchronized" do
+        @syncable.stub(:sync_state).and_return(PulpSyncStatus::Status::FINISHED)
+        @syncable.should_not_receive(:cancel_sync)
+         delete :cancel, :provider_id => provider_id
+      end
+
     end
 
-    it "should return sync objects" do
-      post :create, :provider_id => provider_id
 
-      status = JSON.parse(response.body)
-      status.size.should == 2
-      status.any? {|s| s['uuid'] == async_task_1[:id]} .should == true
-      status.any? {|s| s['uuid'] == async_task_2[:id]} .should == true
-    end
-  end
+    describe "get status of last sync" do
+      before(:each) do
+        @organization = Organization.create!(:name => "organization", :cp_key => "123")
 
-  describe "cancel a sync" do
-    before(:each) do
-      @organization = Organization.create!(:name => "organization", :cp_key => "123")
+        @syncable = mock()
+        @syncable.stub!(:latest_sync_statuses).once.and_return([async_task_1, async_task_2])
+        @syncable.stub!(:organization).and_return(@organization)
 
-      @syncable = mock()
-      @syncable.stub!(:id)
-      @syncable.stub!(:cance_sync)
-      @syncable.stub!(:organization).and_return(@organization)
+        Provider.stub!(:find).and_return(@syncable)
+      end
 
-      Provider.stub!(:find).and_return(@syncable)
-    end
+      it "should find provider" do
+        Provider.should_receive(:find).once.with(provider_id).and_return(@syncable)
+        post :create, :provider_id => provider_id
+      end
 
-    it "should find provider" do
-      Provider.should_receive(:find).once.with(provider_id).and_return(@syncable)
-      post :create, :provider_id => provider_id
-    end
-
-    it "should call cancel_sync on the object of synchronization" do
-       @syncable.stub(:sync_state).and_return(PulpSyncStatus::Status::RUNNING)
-       @syncable.should_receive(:cancel_sync)
-       delete :cancel, :provider_id => provider_id
-    end
-
-    it "should not call cancel_sync when the object is not being synchronized" do
-      @syncable.stub(:sync_state).and_return(PulpSyncStatus::Status::FINISHED)
-      @syncable.should_not_receive(:cancel_sync)
-       delete :cancel, :provider_id => provider_id
-    end
-
-  end
-
-
-  describe "get status of last sync" do
-    before(:each) do
-      @organization = Organization.create!(:name => "organization", :cp_key => "123")
-
-      @syncable = mock()
-      @syncable.stub!(:latest_sync_statuses).once.and_return([async_task_1, async_task_2])
-      @syncable.stub!(:organization).and_return(@organization)
-
-      Provider.stub!(:find).and_return(@syncable)
-    end
-
-    it "should find provider" do
-      Provider.should_receive(:find).once.with(provider_id).and_return(@syncable)
-      post :create, :provider_id => provider_id
-    end
-
-    it "should call latest_sync_statuses on the object of synchronization" do
-       @syncable.should_receive(:sync_status)
-       get :index, :provider_id => provider_id
+      it "should call latest_sync_statuses on the object of synchronization" do
+         @syncable.should_receive(:sync_status)
+         get :index, :provider_id => provider_id
+      end
     end
   end
 

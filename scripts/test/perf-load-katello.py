@@ -9,6 +9,10 @@ import threading
 import sys
 import os
 import random
+import httplib
+from urlparse import urlparse
+import urllib2
+import time
 from optparse import OptionParser
 
 from multiprocessing import Process
@@ -22,10 +26,33 @@ def randomString():
 
 ENVIRONMENTS = ["DEV", "TEST", "STAGE", "PROD"]
 
-def hit_url(hits, cookie, concurrency, url):
+def hit_url_ab(hits, cookie, concurrency, url):
     #  ab  -n 10 -C "_src_session=BAh7CSIQX2NzcmZfW..snip..b9c7f05ccd78027" "http://0.0.0.0:3000/dashboard"
     retval = os.system("ab -n %s -C \"%s\" -c %s %s" % (hits, cookie, concurrency, url))
+    
+def hit_url(hits, cookie, url):
+    o = urlparse(url)
+    
+    conn = httplib.HTTPSConnection(o.netloc)
+    headers = {'Cookie': cookie,
+               'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
+    
+    
+    for i in range(hits):
+        start = time.time()    
+        request = urllib2.Request(url)
+        request.add_header('User-Agent', 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)')
+        request.add_header('Cookie', cookie) 
+        response = urllib2.urlopen(request)
+        data = response.read()
+        end = time.time()
+        elapsed = end - start
+        print "  code: %s for : [%s], time: [%s]" % (response.code, url, elapsed)
+
+
         
+    
+
 if __name__ == '__main__':
  
     parser = OptionParser("usage: %prog [options]")
@@ -54,10 +81,12 @@ if __name__ == '__main__':
     lines = f.readlines()
     threads = []
     for i in range(len(lines)):
-        print "Starting thread: [%s] " % i
-        full_url = options.rooturl + lines[i]
-        p = Process(target=hit_url, args=(options.hits, options.cookie, options.concurrency, full_url,))
-        p.start()
-        threads.append(p)
+        full_url = (options.rooturl + lines[i]).rstrip('\n')
+        concurrency_per_url = int(options.concurrency)
+        for z in range(concurrency_per_url):
+            print "Starting thread# [%s] for: [%s] " % (z, full_url)
+            p = Process(target=hit_url, args=(options.hits, options.cookie, full_url))
+            p.start()
+            threads.append(p)
     for p in threads:
         p.join()

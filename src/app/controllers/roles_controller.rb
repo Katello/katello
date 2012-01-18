@@ -252,7 +252,7 @@ class RolesController < ApplicationController
   end
 
   def controller_display_name
-    return _('role')
+    return 'role'
   end
 
 end

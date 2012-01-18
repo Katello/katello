@@ -42,12 +42,6 @@ class Provider < ActiveRecord::Base
   before_destroy :prevent_redhat_deletion
   before_validation :sanitize_repository_url
 
-  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id]) }
-
-  scoped_search :on => :name, :complete_value => true, :rename => :'provider.name'
-  scoped_search :on => :description, :complete_value => true, :rename => :'provider.description'
-  scoped_search :in => :products, :on => :name, :complete_value => true, :rename => :'product.name'
-  scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'product.description'
 
   validate :only_one_rhn_provider
   validate :valid_url, :if => :redhat_provider?

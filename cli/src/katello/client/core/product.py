@@ -26,7 +26,7 @@ from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.api.utils import get_environment, get_provider, get_product
+from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan
 from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
 
@@ -71,8 +71,57 @@ class SingleProductAction(ProductAction):
         self.require_option('name')
 
 
-
 # product actions ------------------------------------------------------------
+
+
+class SetSyncPlan(SingleProductAction):
+
+    description = _('set a synchronization plan')
+    select_by_env = False
+
+    def setup_parser(self):
+        self.set_product_select_options(self.select_by_env)
+        self.parser.add_option('--plan', dest='plan', help=_("synchronization plan name (required)"))
+
+    def check_options(self):
+        self.check_product_select_options()
+        self.require_option('plan')
+
+    def run(self):
+        orgName  = self.get_option('org')
+        prodName = self.get_option('name')
+        planName = self.get_option('plan')
+
+        prod = get_product(orgName, prodName)
+        if (prod == None):
+            return os.EX_DATAERR
+
+        plan = get_sync_plan(orgName, planName)
+        if (plan == None):
+            return os.EX_DATAERR
+
+        msg = self.api.set_sync_plan(prod['id'], plan['id'])
+        print msg
+        return os.EX_OK
+
+
+
+class RemoveSyncPlan(SingleProductAction):
+
+    description = _('unset a synchronization plan')
+    select_by_env = False
+
+    def run(self):
+        orgName  = self.get_option('org')
+        prodName = self.get_option('name')
+
+        prod = get_product(orgName, prodName)
+        if (prod == None):
+            return os.EX_DATAERR
+
+        msg = self.api.remove_sync_plan(prod['id'])
+        print msg
+        return os.EX_OK
 
 class List(ProductAction):
 
@@ -100,6 +149,7 @@ class List(ProductAction):
         self.printer.addColumn('name')
         self.printer.addColumn('provider_id')
         self.printer.addColumn('provider_name')
+        self.printer.addColumn('sync_plan_name')
 
         if prov_name:
             prov = get_provider(org_name, prov_name)
@@ -253,7 +303,7 @@ class Promote(SingleProductAction):
 
         finally:
             self.csapi.delete(cset["id"])
-        
+
         return returnCode
 
     def create_cs_name(self):

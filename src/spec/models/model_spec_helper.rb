@@ -10,8 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'spec/helpers/repo_test_data'
+
 module OrchestrationHelper
-  
+
   CERT = <<EOCERT
 -----BEGIN CERTIFICATE-----
 MIIF7DCCBVWgAwIBAgIIB1AMflT0SrswDQYJKoZIhvcNAQEFBQAwRjElMCMGA1UE
@@ -92,6 +94,8 @@ EOKEY
     Candlepin::Product.stub!(:certificate).and_return("")
     Candlepin::Product.stub!(:key).and_return("")
     Pulp::Repository.stub!(:create).and_return([])
+    Pulp::Repository.stub!(:update_schedule).and_return(true)
+    Pulp::Repository.stub!(:delete_schedule).and_return(true)
     Pulp::Repository.stub!(:all).and_return([])
   end
 

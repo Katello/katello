@@ -19,7 +19,7 @@ module Navigation
     end
     def menu_systems
       {:key => :systems,
-       :name => N_("Systems"),
+       :name => _("Systems"),
         :url => :sub_level,
         :options => {:class=>'systems top_level', "data-menu"=>"systems"},
         :if => lambda{current_organization && System.any_readable?(current_organization)},
@@ -30,7 +30,7 @@ module Navigation
 
     def menu_systems_org_list
       {:key => :registered,
-       :name => N_("All"),
+       :name => _("All"),
        :url => systems_path,
        :options => {:class=>'systems second_level', "data-menu"=>"systems"}
       }
@@ -38,7 +38,7 @@ module Navigation
 
     def menu_systems_environments_list
       {:key => :env,
-       :name => N_("By Environments"),
+       :name => _("By Environments"),
        :url => environments_systems_path(),
        :options => {:class=>'systems second_level', "data-menu"=>"systems"}
       }
@@ -47,7 +47,7 @@ module Navigation
 
     def menu_activation_keys
        {:key => :activation_keys,
-        :name => N_("Activation Keys"),
+        :name => _("Activation Keys"),
         :url => activation_keys_path,
         :if => lambda {ActivationKey.readable?(current_organization())},
         :options => {:class=>'systems second_level', "data-menu"=>"systems"}
@@ -57,29 +57,36 @@ module Navigation
     def systems_navigation
       a = [
         { :key => :general,
-          :name =>N_("Details"),
+          :name =>_("Details"),
+          :url => lambda{edit_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"},
           :items => systems_subnav
         },
         { :key => :subscriptions,
-          :name =>N_("Subscriptions"),
+          :name =>_("Subscriptions"),
           :url => lambda{subscriptions_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         },
         { :key => :products,
-          :name =>N_("Software"),
+          :name =>_("Software"),
           :url => lambda{products_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         }
       ]
       a << { :key => :packages,
-          :name =>N_("Packages"),
+          :name =>_("Packages"),
           :url => lambda{packages_system_system_packages_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
+        } if AppConfig.katello?
+      a << { :key => :errata,
+          :name =>_("Errata"),
+          :url => lambda{system_errata_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"navigation_element"},
         } if AppConfig.katello?
       a
     end
@@ -87,7 +94,7 @@ module Navigation
     def systems_subnav
       [
         { :key => :system_info,
-          :name =>N_("System Info"),
+          :name =>_("System Info"),
           :url => lambda{edit_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level navigation_element"},
@@ -99,30 +106,30 @@ module Navigation
           :options => {:class=>"third_level navigation_element"},
         },
         { :key => :facts,
-          :name =>N_("Facts"),
+          :name =>_("Facts"),
           :url => lambda{facts_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"third_level navigation_element"}
-        },
+          :options => {:class=>"third_level navigation_element"},
+        }
       ]
     end
 
     def activation_keys_navigation
       [
         { :key => :applied_subscriptions,
-          :name =>N_("Applied Subscriptions"),
+          :name =>_("Applied Subscriptions"),
           :url => lambda{applied_subscriptions_activation_key_path(@activation_key.id)},
           :if =>lambda{@activation_key},
           :options => {:class=>"navigation_element"}
         },
         { :key => :available_subscriptions,
-          :name =>N_("Available Subscriptions"),
+          :name =>_("Available Subscriptions"),
           :url => lambda{available_subscriptions_activation_key_path(@activation_key.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,
-          :name =>N_("Details"),
+          :name =>_("Details"),
           :url => lambda{edit_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class=>"navigation_element"}
