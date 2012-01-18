@@ -32,9 +32,9 @@ NameVirtualHost *:443
   ProxyPass /<%= scope.lookupvar("katello::params::deployment") %>/assets !
   ProxyPass /<%= scope.lookupvar("katello::params::deployment") %>/images !
   ProxyPass /<%= scope.lookupvar("katello::params::deployment") %>/fonts !
-  ProxyPass /<%= scope.lookupvar("katello::params::deployment") %> balancer://thinservers/
+  ProxyPass /<%= scope.lookupvar("katello::params::deployment") %> balancer://thinservers
 
-  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %> balancer://thinservers/
+  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %> balancer://thinservers
   ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %>/assets !
   ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %>/images !
   ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %>/fonts !

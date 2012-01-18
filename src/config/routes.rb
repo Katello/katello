@@ -152,6 +152,7 @@ Src::Application.routes.draw do
     member do
       post :clear_helptips
       put :update_roles
+      put :update_locale
       get :edit_environment
       put :update_environment
     end
@@ -384,6 +385,10 @@ Src::Application.routes.draw do
         post   :index, :on => :collection, :action => :add_distribution
         delete :destroy, :on => :member, :action => :remove_distribution
       end
+      resources :repositories, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_repo
+        delete :destroy, :on => :member, :action => :remove_repo
+      end
     end
 
     resources :organizations do
@@ -411,6 +416,8 @@ Src::Application.routes.draw do
       end
       resource :uebercert, :only => [:show]
       resources :filters, :only => [:index, :create, :destroy, :show, :update]
+
+      resources :gpg_keys, :only => [:index, :create]
     end
 
     resources :changesets, :only => [:show, :destroy] do
@@ -443,7 +450,9 @@ Src::Application.routes.draw do
 
     end
 
-    resources :products, :only => [:show, :destroy] do
+    resources :products, :only => [:show, :update, :destroy] do
+      post :sync_plan, :on => :member, :action => :set_sync_plan
+      delete :sync_plan, :on => :member, :action => :remove_sync_plan
       get :repositories, :on => :member
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
@@ -457,7 +466,7 @@ Src::Application.routes.draw do
     #resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
-    resources :repositories, :only => [:show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+    resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end
@@ -467,6 +476,7 @@ Src::Application.routes.draw do
       member do
         get :package_groups
         get :package_group_categories
+        get :gpg_key_content
         post :enable
       end
     end
@@ -482,7 +492,7 @@ Src::Application.routes.draw do
       resources :templates, :only => [:index]
     end
 
-    resources :gpg_keys, :only => [] do
+    resources :gpg_keys, :only => [:show, :update, :destroy] do
       get :content, :on => :member
     end
 

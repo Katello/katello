@@ -29,6 +29,7 @@ class GpgKey < ActiveRecord::Base
 
   validates :name, :katello_name_format => true
   validates :content, :presence => true
+  validates_presence_of :organization
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
 
 
@@ -69,4 +70,13 @@ class GpgKey < ActiveRecord::Base
     {:name_sort=>name.downcase}
   end
 
+  def as_json(options = {})
+    options ||= {}
+    ret = super(options.except(:details))
+    if options[:details]
+      ret[:products] = products.map {|p| {:name => p.name}}
+      ret[:repositories] = repositories.map {|r| {:product => {:name => r.product.name}, :name => r.name}}
+    end
+    ret
+  end
 end

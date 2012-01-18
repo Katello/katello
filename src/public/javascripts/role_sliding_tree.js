@@ -453,7 +453,7 @@ KT.roles.permissionWidget = function(){
                 flow['resource_type'].input.hide();
                 flow['resource_type'].input.val('all');
                 $('#all_types_span').hide();
-                $('<span id="all_types_selected">' + i18n.all_types_selected + '</span>').insertBefore(all_types_button);
+                $('<span id="all_types_selected" class="grid_5">' + i18n.all_types_selected + '</span>').insertBefore(all_types_button);
                 all_types_button.html(i18n.cancel);
                 all_types_button.addClass('selected');
                 flow['verbs'].container.hide();

@@ -39,7 +39,8 @@ from katello.client.core import (
   template,
   changeset,
   client,
-  filters
+  filters,
+  gpg_key
 )
 
 def setup_admin(admin):
@@ -100,6 +101,7 @@ def setup_admin(admin):
 
     prod_cmd = product.Product()
     prod_cmd.add_action('create', product.Create())
+    prod_cmd.add_action('update', product.Update())
     prod_cmd.add_action('list', product.List())
     prod_cmd.add_action('delete', product.Delete())
     prod_cmd.add_action('synchronize', product.Sync())
@@ -109,10 +111,13 @@ def setup_admin(admin):
     prod_cmd.add_action('list_filters', product.ListFilters())
     prod_cmd.add_action('add_filter', product.AddFilter())
     prod_cmd.add_action('delete_filter', product.DeleteFilter())
+    prod_cmd.add_action('set_plan', product.SetSyncPlan())
+    prod_cmd.add_action('remove_plan', product.RemoveSyncPlan())
     admin.add_command('product', prod_cmd)
 
     repo_cmd = repo.Repo()
     repo_cmd.add_action('create', repo.Create())
+    repo_cmd.add_action('update', repo.Update())
     repo_cmd.add_action('discover', repo.Discovery())
     repo_cmd.add_action('info', repo.Info())
     repo_cmd.add_action('list', repo.List())
@@ -218,6 +223,15 @@ def setup_admin(admin):
     filter_cmd.add_action('add_package', filters.AddPackage())
     filter_cmd.add_action('remove_package', filters.RemovePackage())
     admin.add_command('filter', filter_cmd)
+
+    gpgkey_cmd = gpg_key.GpgKey()
+    gpgkey_cmd.add_action('create', gpg_key.Create())
+    gpgkey_cmd.add_action('info', gpg_key.Info())
+    gpgkey_cmd.add_action('list', gpg_key.List())
+    gpgkey_cmd.add_action('update', gpg_key.Update())
+    gpgkey_cmd.add_action('delete', gpg_key.Delete())
+    admin.add_command('gpg_key', gpgkey_cmd)
+
 
 if __name__ == "__main__":
     admin = AdminCLI()

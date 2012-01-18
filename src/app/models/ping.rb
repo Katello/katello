@@ -31,6 +31,7 @@ class Ping
         :elasticsearch => {},
         :pulp_auth => {},
         :candlepin_auth => {},
+        :katello_jobs =>{}
       }}
 
       # pulp - ping without oauth
@@ -59,6 +60,11 @@ class Ping
       exception_watch(result[:status][:candlepin_auth]) do
         Candlepin::CandlepinPing.ping
       end
+
+      exception_watch(result[:status][:katello_jobs]) do
+        raise _("katello-jobs service not running") if !system("/sbin/service katello-jobs status")
+      end
+
 
       # set overall status result code
       result[:status].each_value { |v| result[:result] = 'fail' if v[:result] != 'ok' }

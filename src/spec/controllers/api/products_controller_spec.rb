@@ -19,6 +19,9 @@ describe Api::ProductsController do
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, @provider.id, @organization) } }
   let(:user_without_read_permissions) { user_without_permissions }
 
+  let(:user_with_update_permissions) { user_with_permissions { |u| u.can([:update], :providers, @provider.id, @organization) } }
+  let(:user_without_update_permissions) { user_with_permissions { |u| u.can([:read], :providers, @provider.id, @organization) } }
+
   before (:each) do
     disable_org_orchestration
     disable_product_orchestration
@@ -29,6 +32,7 @@ describe Api::ProductsController do
     @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,
                                  :organization => @organization, :repository_url => "https://something.url/stuff")
     @product = Product.new({:name => "prod"})
+
 
     @product.provider = @provider
     @product.environments << @organization.locker
@@ -59,6 +63,68 @@ describe Api::ProductsController do
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
+  end
+
+  describe "show product" do
+    before do
+      Pulp::Repository.stub(:find).and_return(RepoTestData::REPO_PROPERTIES)
+    end
+
+    let(:action) { :show }
+    let(:req) { get 'show', :id => @product.id }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
+    subject { req }
+
+    it { should be_success }
+  end
+
+  describe "update product" do
+    let(:gpg_key) { GpgKey.create!(:name => "Gpg key", :content => "100", :organization => @organization) }
+
+    before do
+      Pulp::Repository.stub(:find).and_return(RepoTestData::REPO_PROPERTIES)
+      Product.stub(:find_by_cp_id).with(@product.cp_id).and_return(@product)
+      @product.stub(:update_attributes! => true)
+    end
+
+    let(:action) { :update }
+    let(:req) { put 'update', :id => @product.id, :product => {:gpg_key_name => gpg_key.name, :description => "another description" } }
+    let(:authorized_user) { user_with_update_permissions }
+    let(:unauthorized_user) { user_without_update_permissions }
+    it_should_behave_like "protected action"
+
+    context "custom product" do
+      subject { req }
+
+      it { should be_success }
+
+      it "should change allowed attributes" do
+        @product.should_receive(:update_attributes!).with("gpg_key_name" => gpg_key.name, "description" => "another description")
+        req
+      end
+
+      it "should reset repos' GPGs, if updating recursive" do
+        @product.should_receive(:reset_repo_gpgs!)
+        put 'update', :id => @product.id, :product => {:gpg_key_name => gpg_key.name, :description => "another description", :recursive => true }
+      end
+    end
+
+    context "RH product" do
+      subject { req }
+
+      before do
+        @product.provider.provider_type = Provider::REDHAT
+      end
+
+      it do
+        req
+        response.code.should eq("400")
+      end
+
+    end
   end
 
   context "show all @products in an environment" do

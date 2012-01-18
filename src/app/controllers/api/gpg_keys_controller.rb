@@ -14,7 +14,48 @@
 class Api::GpgKeysController < Api::ApiController
 
   skip_filter   :set_locale, :require_user, :thread_locals, :authorize, :only => [:content]
-  before_filter :find_gpg_key,                                          :only => [:content]
+
+  before_filter :find_gpg_key, :only => [:content, :show, :update, :destroy]
+  before_filter :find_organization, :only => [:index, :create]
+  before_filter :authorize, :except => [:content]
+
+  def rules
+    read_test = lambda{@gpg_key.readable?}
+    manage_test = lambda{@gpg_key.manageable?}
+    create_test = lambda{GpgKey.createable?(@organization)}
+    index_test = lambda{GpgKey.any_readable?(@organization)}
+    {
+      :index => index_test,
+      :show => read_test,
+      :create => create_test,
+      :update => manage_test,
+      :destroy => manage_test
+    }
+  end
+
+  def index
+    gpg_keys = @organization.gpg_keys.where(params.slice(:name))
+    render :json => gpg_keys, :only => [:id, :name]
+  end
+
+  def show
+    render :json => @gpg_key, :details => true
+  end
+
+  def create
+    gpg_key = @organization.gpg_keys.create!(params[:gpg_key].slice(:name, :content))
+    render :json => gpg_key
+  end
+
+  def update
+    @gpg_key.update_attributes!(params[:gpg_key].slice(:name, :content))
+    render :json => @gpg_key
+  end
+
+  def destroy
+    @gpg_key.destroy
+    render :text => _("Deleted GPG key '#{params[:id]}'"), :status => 204
+  end
 
   # returns the content of a repo gpg key, used directly by yum
   # I've amended REST best practices(e.g. not using the show action) as we don't want to
@@ -25,10 +66,11 @@ class Api::GpgKeysController < Api::ApiController
   end
 
   private
+
   def find_gpg_key
     @gpg_key = GpgKey.find(params[:id])
   rescue ActiveRecord::RecordNotFound => e
-    render_exception(404, e)
+    raise HttpErrors::NotFound, _("Couldn't find GPG key '#{params[:id]}'")
   end
 
 end

@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.178
+Version:        0.1.181
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -346,6 +346,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jan 18 2012 Ivan Necas <inecas@redhat.com> 0.1.181-1
+- gpg cli support
 * Fri Jan 13 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.178-1
 - api perms review - tasks
 - 771957 - Fixed an org deletion failure issue

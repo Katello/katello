@@ -7,20 +7,26 @@
 = content_for :content do
   .grid_10
     #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
-      .grid_2.ra
+      .grid_3.ra
         %label #{_("Name:")}
-      .grid_7.la{:name=>"name", :class=>("editable edit_textfield" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
+      .grid_6.la{:name=>"name", :class=>("editable edit_textfield" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
 
     #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
-      .grid_2.ra
+      .grid_3.ra
         %label #{_("Description:")}
-      .grid_7.la{:name=>"description", :class=>("editable edit_description" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.description}
-
+      .grid_6.la{:name=>"description", :class=>("editable edit_description" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.description}
     .fieldset
-      .grid_2.ra
+      .grid_3.ra
+        %label #{_("Promoted By:")}
+      .grid_6.la
+        #{@changeset.task_status_id.nil? ? _("Unknown") : @changeset.task_status.user.username }
+    .fieldset
+      .grid_3.ra
         %label #{_("Promotion Date:")}
-      .grid_7.la
+      .grid_6.la
         = I18n.l(@changeset.promotion_date, :format=>:long)
+
+
     #changeset_history_tabs
       .grid_10
         %h2 #{_("Contents:")}

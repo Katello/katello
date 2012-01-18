@@ -32,4 +32,12 @@ module UsersHelper
            :selected => selected})
   end
 
+  def locale_select(locale=nil)
+    choices = [_('Use Browser Locale')].concat(AppConfig.available_locales)
+    selected =  (locale == nil) ? _('Use Browser Locale') : locale
+    select(:locale, "locale", choices,
+           {:prompt => nil, :id=>"locale_field",
+           :selected => selected})
+  end
+
 end

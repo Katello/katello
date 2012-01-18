@@ -26,7 +26,7 @@ from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.api.utils import get_environment, get_provider, get_product
+from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan
 from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
 
@@ -71,8 +71,57 @@ class SingleProductAction(ProductAction):
         self.require_option('name')
 
 
-
 # product actions ------------------------------------------------------------
+
+
+class SetSyncPlan(SingleProductAction):
+
+    description = _('set a synchronization plan')
+    select_by_env = False
+
+    def setup_parser(self):
+        self.set_product_select_options(self.select_by_env)
+        self.parser.add_option('--plan', dest='plan', help=_("synchronization plan name (required)"))
+
+    def check_options(self):
+        self.check_product_select_options()
+        self.require_option('plan')
+
+    def run(self):
+        orgName  = self.get_option('org')
+        prodName = self.get_option('name')
+        planName = self.get_option('plan')
+
+        prod = get_product(orgName, prodName)
+        if (prod == None):
+            return os.EX_DATAERR
+
+        plan = get_sync_plan(orgName, planName)
+        if (plan == None):
+            return os.EX_DATAERR
+
+        msg = self.api.set_sync_plan(prod['id'], plan['id'])
+        print msg
+        return os.EX_OK
+
+
+
+class RemoveSyncPlan(SingleProductAction):
+
+    description = _('unset a synchronization plan')
+    select_by_env = False
+
+    def run(self):
+        orgName  = self.get_option('org')
+        prodName = self.get_option('name')
+
+        prod = get_product(orgName, prodName)
+        if (prod == None):
+            return os.EX_DATAERR
+
+        msg = self.api.remove_sync_plan(prod['id'])
+        print msg
+        return os.EX_OK
 
 class List(ProductAction):
 
@@ -100,6 +149,8 @@ class List(ProductAction):
         self.printer.addColumn('name')
         self.printer.addColumn('provider_id')
         self.printer.addColumn('provider_name')
+        self.printer.addColumn('sync_plan_name')
+        self.printer.addColumn('gpg_key_name', name=_("GPG key"))
 
         if prov_name:
             prov = get_provider(org_name, prov_name)
@@ -253,7 +304,7 @@ class Promote(SingleProductAction):
 
         finally:
             self.csapi.delete(cset["id"])
-        
+
         return returnCode
 
     def create_cs_name(self):
@@ -284,6 +335,8 @@ class Create(ProductAction):
                                help=_("skip repository discovery"))
         self.parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
                                help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
+        self.parser.add_option("--gpgkey", dest="gpgkey",
+                               help=_("assign a gpg key; this key will be used for every new repository unless gpgkey or nogpgkey is specified for the repo"))
 
 
     def check_options(self):
@@ -299,16 +352,17 @@ class Create(ProductAction):
         url         = self.get_option('url')
         assumeyes   = self.get_option('assumeyes')
         nodiscovery = self.get_option('nodiscovery')
+        gpgkey      = self.get_option('gpgkey')
 
-        return self.create_product_with_repos(provName, orgName, name, description, url, assumeyes, nodiscovery)
+        return self.create_product_with_repos(provName, orgName, name, description, url, assumeyes, nodiscovery, gpgkey)
 
 
-    def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes, nodiscovery):
+    def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes, nodiscovery, gpgkey):
         prov = get_provider(orgName, provName)
         if prov == None:
             return os.EX_DATAERR
 
-        prod = self.api.create(prov["id"], name, description)
+        prod = self.api.create(prov["id"], name, description, gpgkey)
         print _("Successfully created product [ %s ]") % name
 
         if url == None:
@@ -322,6 +376,41 @@ class Create(ProductAction):
 
         return os.EX_OK
 
+# ------------------------------------------------------------------------------
+class Update(SingleProductAction):
+
+    description = _('update a product\'s attributes')
+
+    def setup_parser(self):
+        self.set_product_select_options(False)
+        self.parser.add_option('--description', dest='description',
+                              help=_("change description of the product"))
+        self.parser.add_option('--gpgkey', dest='gpgkey',
+                              help=_("assign a gpgkey to the product"))
+        self.parser.add_option('--nogpgkey', dest='nogpgkey', action="store_true",
+                              help=_("assign a gpgkey to the product"))
+        self.parser.add_option('--recursive', action="store_true", dest='recursive',
+                              help=_("assign the gpgpkey also to the product's repositories"))
+
+    def check_options(self):
+        self.check_product_select_options()
+
+    def run(self):
+        orgName     = self.get_option('org')
+        prodName    = self.get_option('name')
+
+        description = self.get_option('description')
+        gpgkey = self.get_option('gpgkey')
+        nogpgkey = self.get_option('nogpgkey')
+        gpgkey_recursive = self.get_option('recursive')
+
+        prod = get_product(orgName, prodName)
+        if (prod == None):
+            return os.EX_DATAERR
+
+        prod = self.api.update(prod["id"], description, gpgkey, nogpgkey, gpgkey_recursive)
+        print _("Successfully updated product [ %s ]") % prodName
+        return os.EX_OK
 
 # ------------------------------------------------------------------------------
 class Delete(SingleProductAction):
