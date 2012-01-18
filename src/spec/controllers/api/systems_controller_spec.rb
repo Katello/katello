@@ -194,6 +194,8 @@ describe Api::SystemsController do
 
       @system_1 = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts)
       @system_2 = System.create!(:name => 'test2', :environment => @environment_2, :cp_type => 'system', :facts => facts)
+      
+      Candlepin::Consumer.stub(:get => SystemTestData.host)
     end
 
     let(:action) { :index }
@@ -229,6 +231,7 @@ describe Api::SystemsController do
     before(:each) do
       @sys = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       System.stub!(:first).and_return(@sys)
+      @sys.stub(:guests => [])
     end
 
     let(:action) { :upload_package_profile }
@@ -301,6 +304,7 @@ describe Api::SystemsController do
 
     it "should update installed products" do
       @sys.facts = nil
+      @sys.stub(:guest => 'false', :guests => [])
       Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil).and_return(true)
       post :update, :id => uuid, :installedProducts => installed_products
       response.body.should == @sys.to_json

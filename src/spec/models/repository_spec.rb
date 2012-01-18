@@ -19,21 +19,32 @@ describe Repository do
   include ProductHelperMethods
   include AuthorizationHelperMethods
 
-  describe "update a repo" do
-    before do
-      disable_org_orchestration
-      suffix = rand(10**8).to_s
-      @organization = Organization.create!(:name => "test_organization#{suffix}", :cp_key => "test_organization#{suffix}")
-      @product = new_test_product @organization, @organization.locker
-      @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
-      User.current = superadmin
-    end
+  before do
+    disable_org_orchestration
+    disable_product_orchestration
+    disable_user_orchestration
+    suffix = rand(10**8).to_s
+    @organization = Organization.create!(:name => "test_organization#{suffix}", :cp_key => "test_organization#{suffix}")
 
+    User.current = superadmin
+    @product = Product.new({:name => "prod"})
+    @product.provider = @organization.redhat_provider
+    @product.environments << @organization.locker
+    @product.stub(:arch).and_return('noarch')
+    @product.save!
+    @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
+    @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",:pulp_id=>"1010", :enabled => true)
+  end
+
+
+  describe "update a repo" do
     let(:gpg_key) { @organization.gpg_keys.create!(:name => "Gpg key 1", :content => "key") }
     let(:another_gpg_key) { @organization.gpg_keys.create!(:name => "Gpg key 2", :content => "another key") }
     subject do
       repo = Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
-                                :name=>"newname#{rand 10**6}", :url => "http://fedorahosted org", :gpg_key_name => gpg_key.name)
+                                :name=>"newname#{rand 10**6}", :url => "http://fedorahosted org")
+      repo.update_attributes!(:gpg_key_name => gpg_key.name)
+      repo
     end
 
     describe "reassigns gpg key" do
@@ -56,23 +67,6 @@ describe Repository do
 
 
   describe "repo permission tests" do
-    before (:each) do
-      disable_org_orchestration
-      disable_product_orchestration
-      disable_user_orchestration
-      suffix = rand(10**8).to_s
-      @organization = Organization.create!(:name => "test_organization#{suffix}", :cp_key => "test_organization#{suffix}")
-
-      User.current = superadmin
-      @product = Product.new({:name => "prod"})
-      @product.provider = @organization.redhat_provider
-      @product.environments << @organization.locker
-      @product.stub(:arch).and_return('noarch')
-      @product.save!
-      @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
-      @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",:pulp_id=>"1010", :enabled => true)
-
-    end
 
     context "Repo readables" do
       before do
