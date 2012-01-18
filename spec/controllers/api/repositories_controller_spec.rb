@@ -78,6 +78,17 @@ describe Api::RepositoriesController do
       end
       it_should_behave_like "protected action"
     end
+    describe "for update" do
+      let(:action) {:update}
+      let(:req) { put :update, :id => 1, :gpg_key_name => "test" }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :providers, @provider.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+    end
     describe "for enable" do
       let(:action) {:enable}
       let(:req) { get :enable, :id => 1, :enable => 1 }
