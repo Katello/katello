@@ -126,12 +126,6 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ } do
-    member do
-      get :filelist
-    end
-  end
-
   resources :products, :only => [:new, :create, :edit,:update, :destroy]
 
   resources :owners do
@@ -140,7 +134,6 @@ Src::Application.routes.draw do
       get :import_status
     end
   end
-
 
   resources :users do
     collection do
@@ -157,7 +150,6 @@ Src::Application.routes.draw do
       put :update_environment
     end
   end
-
 
   resources :filters do
     collection do
@@ -219,6 +211,12 @@ Src::Application.routes.draw do
 
   resources :repositories, :only => [:new, :create, :edit, :destroy] do
     get :auto_complete_locker, :on => :collection
+
+    resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ } do
+      member do
+        get :filelist
+      end
+    end
   end
 
   resources :promotions, :only =>[] do

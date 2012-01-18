@@ -24,13 +24,37 @@ describe DistributionsController do
   before (:each) do
     login_user
     set_default_locale
+
+    disable_org_orchestration
+    disable_product_orchestration
+    disable_user_orchestration
+    disable_repo_orchestration
+
     @organization = new_test_org
-    @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
-    @product = MemoStruct.new(:provider => @provider, :id => 1)
+    @provider = Provider.create!(:name => "provider",
+                                 :provider_type => Provider::CUSTOM,
+                                 :organization => @organization,
+                                 :repository_url => "https://localhost")
+    @product = Product.create!(:name => "prod",
+                               :provider => @provider,
+                               :environments => [@organization.locker])
+    @product.stub(:repos).and_return([@repository])
+
+    ep_locker = EnvironmentProduct.find_or_create(@organization.locker, @product)
+    @repo = Repository.create!(:environment_product => ep_locker,
+                               :name=> "repo",
+                               :relative_path => "#{@organization.name}/Locker/prod/repo",
+                               :pulp_id=> "1",
+                               :enabled => true)
+    Repository.stub(:find).and_return(@repo)
+    Glue::Pulp::Distribution.stub(:find).and_return([])
   end
 
   let(:authorized_user) do
-    user_with_permissions { |u| u.can(:read, :product, @product.id, @organization) }
+    user_with_permissions do |u|
+      u.can(:read_contents, :environments, @organization.locker.id, @organization)
+      u.can(:read, :providers, @provider.id, @organization)
+    end
   end
   let(:unauthorized_user) do
     user_without_permissions
@@ -38,9 +62,9 @@ describe DistributionsController do
 
   describe "GET show" do
     let(:action) {:show}
-    let(:req) { get :show, :id => distribution_id }
-    # TODO enable permission tests once they are implemented in the controller
-    #it_should_behave_like "protected action"
+    let(:req) { get :show, :repository_id => @repo.id, :id => distribution_id }
+
+    it_should_behave_like "protected action"
 
     it "should lookup the distribution" do
       Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
@@ -62,9 +86,9 @@ describe DistributionsController do
 
   describe "GET filelist" do
     let(:action) {:filelist}
-    let(:req) { get :filelist, :id => distribution_id }
-    # TODO enable permission tests once they are implemented in the controller
-    #it_should_behave_like "protected action"
+    let(:req) { get :filelist, :repository_id => @repo.id, :id => distribution_id }
+
+    it_should_behave_like "protected action"
 
     it "should lookup the distribution" do
       Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
