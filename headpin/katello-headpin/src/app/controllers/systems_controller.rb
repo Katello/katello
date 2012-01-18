@@ -18,7 +18,6 @@ class SystemsController < ApplicationController
   before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :destroy, :new, :create]
   before_filter :find_systems, :only=>[:bulk_destroy]
 
-  skip_before_filter :authorize
   before_filter :find_environment, :only => [:environments, :env_items, :new]
   before_filter :authorize
 
@@ -135,7 +134,7 @@ class SystemsController < ApplicationController
       find_environment
       filters = {:environment_id=>[params[:env_id]]}
     else
-      filters = {:organization_id=>[current_organization.id]}
+      filters = {:environment_id=> KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
     end
     render_panel_direct(System, @panel_options, search, params[:offset], order,
                         {:filter=>filters, :load=>true})
@@ -288,7 +287,7 @@ class SystemsController < ApplicationController
                       :col => COLUMNS.keys,
                       :custom_rows => true,
                       :enable_create => System.registerable?(@environment, current_organization),
-                      :create => "System",
+                      :create => _("System"),
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
@@ -320,7 +319,7 @@ class SystemsController < ApplicationController
   end
 
   def controller_display_name
-    return _('system')
+    return 'system'
   end
 
   def search_filter

@@ -55,8 +55,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  scoped_search :on => :username, :complete_value => true, :rename => :name
-  scoped_search :in => :roles, :on => :name, :complete_value => true, :rename => :role
 
   # validate the password length before hashing
   validates_each :password do |model, attr, value|
@@ -418,6 +416,15 @@ class User < ActiveRecord::Base
     nil
   end
 
+  def default_locale
+    self.preferences[:user][:locale] rescue nil
+  end
+
+  def default_locale= locale
+    self.preferences[:user] = {} unless self.preferences.has_key? :userd
+    self.preferences[:user][:locale] = locale
+    save!
+  end
 
   #method to delete the passed in org.  Due to the way delayed job is impelemented
   #  we must attached the job to a different instance or object, so we attach it to the current_user
@@ -433,6 +440,7 @@ class User < ActiveRecord::Base
   rescue Exception=>e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
+    raise
   end
 
   protected

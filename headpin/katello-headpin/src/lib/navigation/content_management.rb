@@ -25,14 +25,14 @@ module Navigation
     def custom_provider_navigation
       [
         { :key => :products_repos,
-          :name =>N_("Products & Repositories"),
+          :name =>_("Products & Repositories"),
           :url => (@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id),
           :if => lambda{!@provider.nil? && @provider.readable? &&
                         !@provider.new_record? && !@provider.has_subscriptions?},
           :options => {:class=>"navigation_element"}
         },
         { :key => :edit_custom_providers,
-          :name =>N_("Details"),
+          :name =>_("Details"),
           :url => (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id),
           :if => lambda{!@provider.nil? && @provider.readable? && !@provider.new_record?},
           :options => {:class=>"navigation_element"}
@@ -42,7 +42,7 @@ module Navigation
 
     def menu_contents
       {:key => :content,
-       :name => N_("Content Management"),
+       :name => _("Content Management"),
         :url => :sub_level,
         :options => {:class=>'content top_level', "data-menu"=>"content"},
         :if => lambda{current_organization},
@@ -53,7 +53,7 @@ module Navigation
     def menu_providers
 
       {:key => :providers,
-       :name =>N_("Providers"),
+       :name =>_("Providers"),
        :url => :sub_level,
        :if => :sub_level,
        :options => {:class=>'content second_level', "data-menu"=>"content"},
@@ -64,7 +64,7 @@ module Navigation
 
     def menu_redhat_providers
       {:key => :redhat_providers,
-        :name =>N_("Red Hat"),
+        :name =>_("Red Hat"),
         :url => redhat_provider_providers_path,
         :if => lambda{current_organization && current_organization.readable?},
         :options => {:class=>"third_level"}
@@ -73,7 +73,7 @@ module Navigation
 
     def menu_custom_providers
       {:key => :custom_providers,
-        :name =>N_("Custom"),
+        :name =>_("Custom"),
         :url => lambda{organization_providers_path(current_organization())},
         :if => lambda{AppConfig.katello? && current_organization && Provider.any_readable?(current_organization())},
         :options => {:class=>"third_level"}
@@ -83,7 +83,7 @@ module Navigation
 
     def menu_sync_management
       {:key => :sync_mgmt,
-       :name =>N_("Sync Management"),
+       :name =>_("Sync Management"),
        :items => lambda{[menu_sync_status, menu_sync_plan, menu_sync_schedule]},
        :if => lambda{AppConfig.katello? && current_organization.syncable?},
        :options => {:class=>'content second_level', "data-menu"=>"content"}
@@ -93,7 +93,7 @@ module Navigation
 
     def menu_sync_status
       {:key => :sync_status,
-        :name =>N_("Sync Status"),
+        :name =>_("Sync Status"),
         :url => sync_management_index_path(),
         :options => {:class=>"third_level"}
       }
@@ -102,7 +102,7 @@ module Navigation
 
     def menu_sync_plan
       {:key => :sync_plans,
-        :name =>N_("Sync Plans"),
+        :name =>_("Sync Plans"),
         :url => sync_plans_path(),
         :options => {:class=>"third_level"}
       }
@@ -110,7 +110,7 @@ module Navigation
 
     def menu_sync_schedule
       {:key => :sync_schedule,
-        :name =>N_("Sync Schedule"),
+        :name =>_("Sync Schedule"),
         :url => sync_schedules_index_path(),
         :options => {:class=>"third_level"}
       }
@@ -118,7 +118,7 @@ module Navigation
 
     def menu_system_templates
       {:key => :system_templates,
-       :name =>N_("System Templates"),
+       :name =>_("System Templates"),
         :url => system_templates_path,
         :if => lambda{AppConfig.katello? && SystemTemplate.any_readable?(current_organization())},
         :options => {:class=>'content second_level', "data-menu"=>"content"}
@@ -130,7 +130,7 @@ module Navigation
 
     def menu_promotions
        {:key => :promotions,
-        :name => N_("Promotions"),
+        :name => _("Promotions"),
         :url => promotions_path,
         :options =>{:highlights_on =>/\/promotions.*/ ,:class => 'content'},
         :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
@@ -140,7 +140,7 @@ module Navigation
 
     def menu_changeset
        {:key => :changeset,
-        :name => N_("Changeset History"),
+        :name => _("Changeset History"),
         :url => changesets_path,
         :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
         :options => {:class=>'content second_level', "data-menu"=>"content"}
@@ -150,7 +150,7 @@ module Navigation
 
     def menu_filters
        {:key => :filters,
-        :name => N_("Package Filters"),
+        :name => _("Package Filters"),
         :url => filters_path,
         :if => lambda {Filter.any_readable?(current_organization)},
         :options => {:class=>"third_level"}
@@ -160,7 +160,7 @@ module Navigation
 
     def menu_gpg
        {:key => :gpg,
-        :name => N_("GPG Keys"),
+        :name => _("GPG Keys"),
         :url => gpg_keys_path,
         :if => lambda {GpgKey.any_readable?(current_organization)},
         :options => {:class=>"third_level"}
@@ -172,25 +172,25 @@ module Navigation
     def promotion_packages_navigation
       [
         { :key => :dependencies,
-          :name =>N_("Dependencies"),
+          :name =>_("Dependencies"),
           :url => lambda{dependencies_package_path(@package.id)},
           :if => lambda{@package},
           :options => {:class=>"navigation_element"}
         },
         { :key => :changelog,
-          :name =>N_("Changelog"),
+          :name =>_("Changelog"),
           :url => lambda{changelog_package_path(@package.id)},
           :if => lambda{@package},
           :options => {:class=>"navigation_element"}
         },
         { :key => :filelist,
-          :name =>N_("Filelist"),
+          :name =>_("Filelist"),
           :url => lambda{filelist_package_path(@package.id)},
           :if => lambda{@package},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,
-          :name =>N_("Details"),
+          :name =>_("Details"),
           :url => lambda{package_path(@package.id)},
           :if => lambda{@package},
           :options => {:class=>"navigation_element"}
@@ -201,13 +201,13 @@ module Navigation
     def promotion_errata_navigation
       [
         { :key => :packages,
-          :name =>N_("Packages"),
+          :name =>_("Packages"),
           :url => lambda{packages_erratum_path(@errata.id)},
           :if => lambda{@errata},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,
-          :name =>N_("Details"),
+          :name =>_("Details"),
           :url => lambda{erratum_path(@errata.id)},
           :if => lambda{@errata},
           :options => {:class=>"navigation_element"}
@@ -218,13 +218,13 @@ module Navigation
     def promotion_distribution_navigation
       [
         { :key => :filelist,
-          :name =>N_("Filelist"),
+          :name =>_("Filelist"),
           :url => lambda{filelist_distribution_path(URI::escape(@distribution.id))},
           :if => lambda{@distribution},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,
-          :name =>N_("Details"),
+          :name =>_("Details"),
           :url => lambda{distribution_path(URI::escape(@distribution.id))},
           :if => lambda{@distribution},
           :options => {:class=>"navigation_element"}
@@ -236,19 +236,19 @@ module Navigation
     def package_filter_navigation
       [
         { :key => :packages,
-          :name =>N_("Filtered Packages"),
+          :name =>_("Filtered Packages"),
           :url => lambda{packages_filter_path(@filter.id)},
           :if => lambda{@filter},
           :options => {:class=>"navigation_element"}
         },
         { :key => :products,
-          :name =>N_("Products and Repositories"),
+          :name =>_("Products and Repositories"),
           :url => lambda{products_filter_path(@filter.id)},
           :if => lambda{@filter},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,
-          :name =>N_("Details"),
+          :name =>_("Details"),
           :url => lambda{edit_filter_path(@filter.id)},
           :if => lambda{@filter},
           :options => {:class=>"navigation_element"}
@@ -259,13 +259,13 @@ module Navigation
     def gpg_keys_navigation
       [
         { :key => :products_repositories,
-          :name =>N_("Products and Repositories"),
+          :name =>_("Products and Repositories"),
           :url => lambda{products_repos_gpg_key_path(@gpg_key.id)},
           :if =>lambda{@gpg_key},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,
-          :name =>N_("Details"),
+          :name =>_("Details"),
           :url => lambda{edit_gpg_key_path(@gpg_key.id)},
           :if => lambda{@gpg_key},
           :options => {:class=>"navigation_element"}

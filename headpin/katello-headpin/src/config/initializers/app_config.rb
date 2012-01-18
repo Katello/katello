@@ -52,6 +52,9 @@ module ApplicationConfiguration
         end
       end
       @ostruct.katello_version = version
+
+      available_locales = ['de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pt-BR', 'gu', 'hi', 'mr', 'or', 'ru', 'te', 'pa', 'kn', 'ko', 'bn', 'ta', 'zh-CN', 'zh-TW']
+      @ostruct.available_locales = available_locales unless @ostruct.respond_to?(:available_locales)
     end
 
     # helper method that converts object to open struct recursively

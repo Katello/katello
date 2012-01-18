@@ -50,9 +50,6 @@ class Product < ActiveRecord::Base
   validates :environments, :locker_presence => true
   validates :name, :presence => true, :katello_name_format => true
 
-  scope :completer_scope, lambda { |options| authorized_items(options[:organization_id], READ_PERM_VERBS)}
-  scoped_search :on => :name, :complete_value => true
-  scoped_search :on => :multiplier, :complete_value => true
   scope :with_repos_only, lambda { |env|
     with_repos(env, false)
   }
@@ -100,14 +97,15 @@ class Product < ActiveRecord::Base
 
   def serializable_hash(options={})
     options = {} if options == nil
+
+
     hash = super(options.merge(:except => [:cp_id, :id]))
     hash = hash.merge(:productContent => self.productContent,
                       :multiplier => self.multiplier,
                       :attributes => self.attrs,
                       :id => self.cp_id)
     if AppConfig.katello?
-      hash.merge(:sync_state => self.sync_state,
-                 :last_sync => self.last_sync)
+      hash = hash.merge(:sync_plan_name => self.sync_plan ? self.sync_plan.name : nil)
     end
     hash
   end
