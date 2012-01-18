@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.182
+Version:        0.1.183
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -346,6 +346,14 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jan 18 2012 Mike McCune <mmccune@redhat.com> 0.1.183-1
+- 761576 - removing CSS and jquery plugins for simplePassMeter
+  (mmccune@redhat.com)
+- 761576 - removing the password strength meter (mmccune@redhat.com)
+- Moves javascript to bottom of html page and removes redundant i18n partials
+  to the base katello layout. (ehelms@redhat.com)
+- 771957-Made the org deletion code a little better (paji@redhat.com)
+
 * Wed Jan 18 2012 Ivan Necas <inecas@redhat.com> 0.1.182-1
 - periodic build
 * Wed Jan 18 2012 Ivan Necas <inecas@redhat.com> 0.1.181-1
