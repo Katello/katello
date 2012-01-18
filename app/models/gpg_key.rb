@@ -71,6 +71,7 @@ class GpgKey < ActiveRecord::Base
   end
 
   def as_json(options = {})
+    options ||= {}
     ret = super(options.except(:details))
     if options[:details]
       ret[:products] = products.map {|p| {:name => p.name}}
