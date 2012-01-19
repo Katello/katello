@@ -17,7 +17,7 @@ class Api::PackagesController < Api::ApiController
 
   before_filter :find_repository
   before_filter :find_package, :except => [:index]
-  skip_before_filter :authorize
+  before_filter :authorize
 
   def rules
     readable = lambda{ @repo.environment.contents_readable? and @repo.product.readable? }

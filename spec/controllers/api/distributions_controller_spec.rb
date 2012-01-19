@@ -66,7 +66,7 @@ describe Api::DistributionsController do
     end
 
     describe "show a distribution" do
-      let(:action) { :index }
+      let(:action) { :show }
       let(:req) {
         get 'show', :id => 1, :repository_id => @repo.id
       }

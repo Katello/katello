@@ -18,7 +18,7 @@ class Api::ErrataController < Api::ApiController
   before_filter :find_environment, :only => [:index]
   before_filter :find_repository, :except => [:index]
   before_filter :find_erratum, :except => [:index]
-  skip_before_filter :authorize
+  before_filter :authorize
 
   def rules
     env_readable = lambda{ @environment.contents_readable? }
