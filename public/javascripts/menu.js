@@ -56,7 +56,7 @@ KT.menu = (function(){
       var hoverSettings = {
         sensitivity: 4,
         interval: 50,
-        timeout: 100,
+        timeout: 350,
         over: function(){
           $(this).trigger("open");
         },
@@ -71,7 +71,7 @@ KT.menu = (function(){
         var tabType = topLevelTab.attr('data-menu');
         var currentSubnav = subnav.find('.' + tabType + '.second_level').parent();
         var enter = function(){topLevelTab.trigger("mouseenter");};
-        var leave = function(){topLevelTab.delay("300").trigger("mouseout")};
+        var leave = function(){topLevelTab.delay("800").trigger("mouseout")};
         currentSubnav.hover(function(){enter()},function(){leave()});
         
         topLevelTab.bind("open", function(){
