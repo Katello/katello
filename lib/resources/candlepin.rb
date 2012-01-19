@@ -243,7 +243,7 @@ module Candlepin
           path << "?" << query_params.to_param
         end
 
-        self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers)
+        self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers.except('content-type'))
       end
 
       def imports organization_name
