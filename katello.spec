@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.184
+Version:        0.1.185
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -346,6 +346,15 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Jan 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.185-1
+- Bumping candlepin version to 0.5.10
+- 773686 - Fixes issue with system template package add input box becoming
+  unusable after multiple package adds.
+- perms - fixing unit tests after route rename
+- perms - moving /errata/id under /repositories API
+- perms - moving /packages/id under /repositories API
+- 761667 - JSON error message from candlepin parsed correctly
+
 * Thu Jan 19 2012 Ivan Necas <inecas@redhat.com> 0.1.184-1
 - periodic build
 
