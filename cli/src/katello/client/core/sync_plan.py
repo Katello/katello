@@ -15,13 +15,17 @@
 #
 
 import os
+import re
+import time, datetime
 from gettext import gettext as _
 
 from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, format_date
+from katello.client.core.utils import is_valid_record, format_date, system_exit
+from katello.client.core.datetime_formatter import DateTimeFormatter, DateTimeFormatException
 from katello.client.api.utils import get_sync_plan
+
 
 Config()
 
@@ -31,14 +35,20 @@ class SyncPlanAction(Action):
 
     interval_choices = ['none', 'hourly', 'daily', 'weekly']
 
+
     def __init__(self):
         super(SyncPlanAction, self).__init__()
         self.api = SyncPlanAPI()
 
-    def build_datetime(self, date, time):
-        return date.strip()+"T"+time.strip()+"Z"
+    def parse_datetime(self, date, time):
+        date = date.strip()
+        time = time.strip()
 
-
+        formatter = DateTimeFormatter()
+        try:
+            return formatter.build_datetime(date, time)
+        except DateTimeFormatException, e:
+            system_exit(os.EX_DATAERR, e.args[0])
 
 # sync_plan actions ------------------------------------------------------------
 
@@ -121,6 +131,7 @@ class Create(SyncPlanAction):
         self.require_option('org')
         self.require_option('name')
         self.require_option('date')
+        pass
 
     def run(self):
         name        = self.get_option('name')
@@ -130,7 +141,7 @@ class Create(SyncPlanAction):
         date        = self.get_option('date')
         time        = self.get_option('time')
 
-        sync_date = self.build_datetime(date, time)
+        sync_date = self.parse_datetime(date, time)
 
         plan = self.api.create(org_name, name, sync_date, interval, description)
         if is_valid_record(plan):
@@ -159,7 +170,6 @@ class Update(SyncPlanAction):
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
-        self.require_option('date')
 
     def run(self):
         name        = self.get_option('name')
@@ -174,7 +184,7 @@ class Update(SyncPlanAction):
         if plan == None:
             return os.EX_DATAERR
 
-        sync_date = self.build_datetime(date, time)
+        sync_date = self.parse_datetime(date, time)
 
         plan = self.api.update(org_name, plan["id"], new_name, sync_date, interval, description)
         print _("Successfully updated sync plan [ %s ]") % name
