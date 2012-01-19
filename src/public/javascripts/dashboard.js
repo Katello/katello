@@ -33,7 +33,6 @@ KT.dashboard = (function(){
                 }
             });
         }
-
     },
     popoutSetup = function (){
         var popout = $('.dashboard_popout');
@@ -92,6 +91,12 @@ KT.dashboard = (function(){
         var div = theWidget;
         var url = div.attr("data-url");
         var id = div.attr("data-id");
+
+        if (id === 'errata') {
+            $(document).trigger('close.tipsy');
+            KT.tipsy.custom.disable_details_tooltip($('.errata-info'));
+        }
+
         $.ajax({
             url: url+"?"+type+"="+quantity,
             success: function(data){
@@ -101,7 +106,6 @@ KT.dashboard = (function(){
                 newDiv = parent.children(":first");
                 newDiv.attr("data-url", url);
                 parent.parent().parent().find('.dropbutton').fadeIn();
-
 
                 // Add a handler for ellipsis
                 parent.find(".one-line-ellipsis").ellipsis();
@@ -144,25 +148,22 @@ KT.dashboard = (function(){
             sync: register_sync_progress
         }
     };
-    
     return {
         widget_map: widget_map(),
         widgetReload: widgetReload,
         popoutClose : popoutClose,
         popoutSetup : popoutSetup
     }
-
 })();
 
 
 $(document).ready(function() {
-
-    //run them all if we aren't requesting them via ajax
-    $.each(KT.dashboard.widget_map, function(key, value){
-        value();
-    });
+    // init the system subscription status... this one is not loaded via ajax
+    var proc = KT.dashboard.widget_map['subscriptions'];
+    if (proc) {
+        proc();
+    }
     KT.dashboard.popoutSetup();
-
 });
 
 
@@ -171,5 +172,5 @@ $(window).load(function() {
     $(".loading").each(function(){
        KT.dashboard.widgetReload($(this))
     });
-
+    KT.tipsy.custom.errata_tooltip();
 });

@@ -421,9 +421,8 @@ class User < ActiveRecord::Base
   end
 
   def default_locale= locale
-    self.preferences[:user] = {} unless self.preferences.has_key? :userd
+    self.preferences[:user] = {} unless self.preferences.has_key? :user
     self.preferences[:user][:locale] = locale
-    save!
   end
 
   #method to delete the passed in org.  Due to the way delayed job is impelemented

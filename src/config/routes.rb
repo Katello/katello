@@ -126,12 +126,6 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ } do
-    member do
-      get :filelist
-    end
-  end
-
   resources :products, :only => [:new, :create, :edit,:update, :destroy]
 
   resources :owners do
@@ -140,7 +134,6 @@ Src::Application.routes.draw do
       get :import_status
     end
   end
-
 
   resources :users do
     collection do
@@ -157,7 +150,6 @@ Src::Application.routes.draw do
       put :update_environment
     end
   end
-
 
   resources :filters do
     collection do
@@ -219,6 +211,12 @@ Src::Application.routes.draw do
 
   resources :repositories, :only => [:new, :create, :edit, :destroy] do
     get :auto_complete_locker, :on => :collection
+
+    resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ } do
+      member do
+        get :filelist
+      end
+    end
   end
 
   resources :promotions, :only =>[] do
@@ -416,6 +414,8 @@ Src::Application.routes.draw do
       end
       resource :uebercert, :only => [:show]
       resources :filters, :only => [:index, :create, :destroy, :show, :update]
+
+      resources :gpg_keys, :only => [:index, :create]
     end
 
     resources :changesets, :only => [:show, :destroy] do
@@ -448,7 +448,7 @@ Src::Application.routes.draw do
 
     end
 
-    resources :products, :only => [:show, :destroy] do
+    resources :products, :only => [:show, :update, :destroy] do
       post :sync_plan, :on => :member, :action => :set_sync_plan
       delete :sync_plan, :on => :member, :action => :remove_sync_plan
       get :repositories, :on => :member
@@ -464,16 +464,17 @@ Src::Application.routes.draw do
     #resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
-    resources :repositories, :only => [:show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+    resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end
-      resources :packages, :only => [:index]
-      resources :errata, :only => [:index]
+      resources :packages
+      resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
       resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
       member do
         get :package_groups
         get :package_group_categories
+        get :gpg_key_content
         post :enable
       end
     end
@@ -489,7 +490,7 @@ Src::Application.routes.draw do
       resources :templates, :only => [:index]
     end
 
-    resources :gpg_keys, :only => [] do
+    resources :gpg_keys, :only => [:show, :update, :destroy] do
       get :content, :on => :member
     end
 
@@ -498,8 +499,7 @@ Src::Application.routes.draw do
       delete "pools/:poolid", :action => :remove_pool, :on => :member
     end
 
-    resources :packages, :only => [:show]
-    resources :errata, :only => [:index, :show]
+    resources :errata, :only => [:index]
 
     resources :users do
       get :report, :on => :collection

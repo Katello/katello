@@ -21,11 +21,6 @@ import threading
 import calendar
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
-
 
 
 # output formatting -----------------------------------------------------------

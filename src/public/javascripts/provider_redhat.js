@@ -39,7 +39,7 @@ $(document).ready(function() {
 
 
 KT.redhat_provider_page = (function($) {
-    checkboxChanged = function(checkbox) {
+    var checkboxChanged = function(checkbox) {
         var name = checkbox.attr("name");
         var options = {};
         if (checkbox.attr("checked") !== undefined) {
@@ -48,15 +48,27 @@ KT.redhat_provider_page = (function($) {
             options[name] = "0";
         }
         var url = checkbox.attr("data-url");
+        var id = checkbox.attr("value");
+        $(checkbox).hide();
+        $('#spinner_'+id).removeClass('hidden').show();
         $.ajax({
             type: "PUT",
             url: url,
             data: options,
-            cache: false
+            cache: false,
+            success: function(data, textStatus, jqXHR){
+              KT.redhat_provider_page.checkboxHighlightRow(data);
+            }
         });
         return false;
     };
+    var checkboxHighlightRow = function(id){
+      $('#repo-'+id).effect('highlight', {'color':'#390'}, 1000);
+      $('#spinner_'+id).hide().addClass('hidden');
+      $('#input_repo_'+id).show();
+    };
     return {
-        checkboxChanged: checkboxChanged
+        checkboxChanged: checkboxChanged,
+        checkboxHighlightRow: checkboxHighlightRow
     }
 }(jQuery));

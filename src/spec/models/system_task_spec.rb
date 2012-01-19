@@ -2,8 +2,8 @@
 require 'spec_helper'
 
 describe SystemTask do
-  let(:package_groups) { ["@Editors", "FTP Server"] }
-  let(:packages) { %w[zsh bash] }
+  let(:package_groups) { ["@mammals", "FTP Server"] }
+  let(:packages) { %w[cheetah penguin] }
   let(:result) { {:errors => [] } }
   let(:task_type) { "package_install" }
   let(:state) { "running" }
@@ -29,18 +29,36 @@ describe SystemTask do
     let(:parameters) { { :packages => packages } }
     let(:state) { "finished" }
 
-    its(:description) { should == "Package Install: zsh, bash" }
+    its(:description) { should == "Package Install: cheetah, penguin" }
 
     context "No packages installed" do
-      let(:result) { { :installed => [], :reboot_scheduled => false } }
+      let(:result) { { :installed => {:deps => [], :resolved => []} } }
       its(:result_description) { should == "No new packages installed" }
     end
 
     context "Packages installed" do
-      let(:result) { { :installed => ["zsh","bash"], :reboot_scheduled => false } }
+      let(:result) do
+        {"installed" =>
+          {"deps"=>
+            [{"qname"=>"elephant-8.8-1.noarch",
+              "repoid"=>"zoo-repo-updates",
+              "name"=>"elephant",
+              "version"=>"8.8",
+              "arch"=>"noarch",
+              "epoch"=>"0",
+              "release"=>"1"}],
+           "resolved"=>
+            [{"qname"=>"cheetah-1.26.3-5.noarch",
+              "repoid"=>"zoo-repo-updates",
+              "name"=>"cheetah",
+              "version"=>"1.26.3",
+              "arch"=>"noarch",
+              "epoch"=>"0",
+              "release"=>"5"}]}}.with_indifferent_access
+      end
       its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
-zsh installed
-bash installed
+cheetah-1.26.3-5.noarch
+elephant-8.8-1.noarch
       EXPECTED_MESSAGE
     end
   end
@@ -50,39 +68,73 @@ bash installed
     let(:parameters) { { :groups => package_groups } }
     let(:state) { "finished" }
 
-    its(:description) { should == "Package Group Install: @@Editors, @FTP Server" }
+    its(:description) { should == "Package Group Install: @mammals, @FTP Server" }
 
     context "No packages installed" do
-      let(:result) { {} }
+      let(:result) { {:deps => [], :resolved => []} }
       its(:result_description) { should == "No new packages installed" }
     end
 
     context "Packages installed" do
-      let(:result) { {"FTP Server"=>["vsftpd-2.3.4-2.fc15.x86_64"]} }
-      its(:result_description) { should == <<-EXPECTED_MESSAGE }
-@FTP Server
-vsftpd-2.3.4-2.fc15.x86_64 installed
+      let(:result) do
+        {"deps"=>
+         [{"qname"=>"elephant-8.8-1.noarch",
+           "repoid"=>"zoo-repo-updates",
+           "name"=>"elephant",
+           "version"=>"8.8",
+           "arch"=>"noarch",
+           "epoch"=>"0",
+           "release"=>"1"}],
+           "resolved"=>
+         [{"qname"=>"cheetah-1.26.3-5.noarch",
+           "repoid"=>"zoo-repo-updates",
+           "name"=>"cheetah",
+           "version"=>"1.26.3",
+           "arch"=>"noarch",
+           "epoch"=>"0",
+           "release"=>"5"}]}.with_indifferent_access
+      end
+      its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
+cheetah-1.26.3-5.noarch
+elephant-8.8-1.noarch
       EXPECTED_MESSAGE
     end
   end
 
   context "Package uninstallation" do
     let(:task_type) { :package_remove }
-    let(:parameters) { { :packages => packages } }
+    let(:parameters) { { :packages => ["elephant"] } }
     let(:state) { "finished" }
 
-    its(:description) { should == "Package Remove: zsh, bash" }
+    its(:description) { should == "Package Remove: elephant" }
 
     context "No packages removed" do
-      let(:result) { [] }
+      let(:result) { {:deps => [], :resolved => []} }
       its(:result_description) { should == "No packages removed" }
     end
 
     context "Packages removed" do
-      let(:result) { ["zsh","bash"] }
+      let(:result) do
+         {"deps"=>
+           [{"qname"=>"cheetah-1.26.3-5.noarch",
+            "repoid"=>"installed",
+            "name"=>"cheetah",
+            "version"=>"1.26.3",
+            "arch"=>"noarch",
+            "epoch"=>"0",
+            "release"=>"5"}],
+         "resolved"=>
+          [{"qname"=>"elephant-8.8-1.noarch",
+            "repoid"=>"installed",
+            "name"=>"elephant",
+            "version"=>"8.8",
+            "arch"=>"noarch",
+            "epoch"=>"0",
+            "release"=>"1"}]}.with_indifferent_access
+      end
       its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
-zsh removed
-bash removed
+elephant-8.8-1.noarch
+cheetah-1.26.3-5.noarch
       EXPECTED_MESSAGE
     end
   end
@@ -92,57 +144,77 @@ bash removed
     let(:parameters) { { :groups => package_groups } }
     let(:state) { "finished" }
 
-    its(:description) { should == "Package Group Remove: @@Editors, @FTP Server" }
+    its(:description) { should == "Package Group Remove: @mammals, @FTP Server" }
 
     context "No packages removed" do
-      let(:result) { {} }
+      let(:result) { {:deps => [], :resolved => []} }
       its(:result_description) { should == "No packages removed" }
     end
 
-    context "Packages installed" do
-      let(:result) { {"FTP Server"=>["vsftpd-2.3.4-2.fc15.x86_64"]} }
-      its(:result_description) { should == <<-EXPECTED_MESSAGE }
-@FTP Server
-vsftpd-2.3.4-2.fc15.x86_64 removed
+    context "Packages removed" do
+      let(:result) do
+        {"deps"=>
+         [{"qname"=>"elephant-8.8-1.noarch",
+           "repoid"=>"zoo-repo-updates",
+           "name"=>"elephant",
+           "version"=>"8.8",
+           "arch"=>"noarch",
+           "epoch"=>"0",
+           "release"=>"1"}],
+           "resolved"=>
+         [{"qname"=>"cheetah-1.26.3-5.noarch",
+           "repoid"=>"zoo-repo-updates",
+           "name"=>"cheetah",
+           "version"=>"1.26.3",
+           "arch"=>"noarch",
+           "epoch"=>"0",
+           "release"=>"5"}]}.with_indifferent_access
+      end
+      its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
+cheetah-1.26.3-5.noarch
+elephant-8.8-1.noarch
       EXPECTED_MESSAGE
     end
   end
 
   context "Package update" do
     let(:task_type) { :package_update }
-    let(:parameters) { { :packages => packages } }
+    let(:parameters) { { :packages => ["cheetah"] } }
     let(:state) { "finished" }
 
-    its(:description) { should == "Package Update: zsh, bash" }
+    its(:description) { should == "Package Update: cheetah" }
 
     context "No packages updated" do
-      let(:result) { {"updated" => []}.with_indifferent_access }
+      let(:result) { {"updated" => {"deps" => [], "resolved" => []}}.with_indifferent_access }
       its(:result_description) { should == "No packages updated" }
     end
 
     context "Packages updated" do
       let(:result) do
-        {"reboot_scheduled"=>false,
-         "updated"=>
-        [["bash-4.2.20-1.fc16.x86_64",
-          {"updates"=>["bash-4.2.10-5.fc16.x86_64"], "obsoletes"=>[]}]]}.with_indifferent_access
+        {"updated" => 
+         {"deps"=>
+          [{"qname"=>"elephant-8.8-1.noarch",
+            "repoid"=>"zoo-repo-updates",
+            "name"=>"elephant",
+            "version"=>"8.8",
+            "arch"=>"noarch",
+            "epoch"=>"0",
+            "release"=>"1"}],
+         "resolved"=>
+          [{"qname"=>"cheetah-1.26.3-5.noarch",
+            "repoid"=>"zoo-repo-updates",
+            "name"=>"cheetah",
+            "version"=>"1.26.3",
+            "arch"=>"noarch",
+            "epoch"=>"0",
+            "release"=>"5"}]}}.with_indifferent_access
       end
       its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
-bash-4.2.20-1.fc16.x86_64 updated bash-4.2.10-5.fc16.x86_64
+cheetah-1.26.3-5.noarch
+elephant-8.8-1.noarch
       EXPECTED_MESSAGE
     end
 
-    context "Packages obsoleted" do
-      let(:result) do
-        {"reboot_scheduled"=>false,
-         "updated"=>
-        [["zsh-4.2.20-1.fc16.x86_64",
-          {"updates"=>[], "obsoletes" => ["bash-4.2.10-5.fc16.x86_64"]}]]}.with_indifferent_access
-      end
-      its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
-zsh-4.2.20-1.fc16.x86_64 obsoleted bash-4.2.10-5.fc16.x86_64
-      EXPECTED_MESSAGE
-    end
   end
 
   context "Yum error" do

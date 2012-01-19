@@ -19,11 +19,14 @@ class Glue::Pulp::Errata
   BUGZILLA = "bugfix"
   ENHANCEMENT = "enhancement"
 
-
-  attr_accessor :id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str, :reboot_suggested, :references, :pkglist, :severity
+  attr_accessor :id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str, :reboot_suggested, :references, :pkglist, :severity, :repoids
 
   def initialize(params = {})
     params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+  end
+
+  def self.errata_by_consumer(repos)
+    Pulp::Consumer.errata_by_consumer(repos)
   end
 
   def self.find(id)

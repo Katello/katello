@@ -21,13 +21,9 @@ from optparse import OptionValueError
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit, format_task_errors, Printer
+from katello.client.core.utils import is_valid_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit, format_task_errors
 from katello.client.api.utils import get_organization, get_environment, get_changeset, get_template, get_repo, get_product
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
 
 Config()
 
@@ -99,7 +95,7 @@ class Info(ChangesetAction):
         return "\n".join([i[key] for i in items])
 
     def get_dependencies(self, cset_id):
-        deps = self.api.dependencies(cset_id)        
+        deps = self.api.dependencies(cset_id)
         return self.format_item_list('display_name', deps)
 
     def run(self):

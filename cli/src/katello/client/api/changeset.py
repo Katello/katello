@@ -72,5 +72,3 @@ class ChangesetAPI(KatelloAPI):
     def remove_content(self, csId, contentType, attrs):
         path = "/api/changesets/%s/%s/%s/" % (str(csId), contentType, str(attrs['content_id']))
         return self.server.DELETE(path, attrs)[1]
-
-

@@ -15,20 +15,15 @@
 #
 
 import os
-import itertools
 from gettext import gettext as _
 from optparse import OptionValueError
 
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task, system_exit
+from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, system_exit
 from katello.client.api.utils import get_locker, get_environment, get_template, get_product, get_repo
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
 
 # set import (works for both Python 2.6+ and 2.5)
 try:
@@ -313,7 +308,7 @@ class Update(TemplateAction):
 
     def store_parameter_name(self, option, opt_str, value, parser):
         self.current_parameter = value
-        self['add_parameters'][value] = None
+        self.items['add_parameters'][value] = None
 
     def store_parameter_value(self, option, opt_str, value, parser):
         if self.current_parameter == None:
@@ -359,11 +354,11 @@ class Update(TemplateAction):
         self.parser.add_option('--remove_distribution', dest='remove_distributions', action="append", help=_("distribution id"))
 
         self.parser.add_option('--from_product', dest='from_product', action="callback", callback=self.store_from_product, type="string",
-                                help=_("determines product from which the packages/errata/repositories are picked"))
+                                help=_("determines product from which the repositories are picked"))
         self.parser.add_option('--add_repository', dest='add_repository', action="callback", callback=self.store_item_with_product, type="string",
-                                help=_("repository to add to the changeset"))
+                                help=_("repository to be added to the template"))
         self.parser.add_option('--remove_repository', dest='remove_repository', action="callback", callback=self.store_item_with_product, type="string",
-                                help=_("repository to remove from the changeset"))
+                                help=_("repository to be removed from the template"))
         self.resetParameters()
 
 

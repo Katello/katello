@@ -51,9 +51,7 @@ module Glue::Candlepin::Owner
 
     def del_providers
       Rails.logger.info _("All providers for owner #{name} in candlepin")
-      self.providers.each do |provider|
-        provider.destroy
-      end
+      self.providers.destroy_all
     rescue => e
       Rails.logger.error _("Failed to delete all providers for owner #{name} in candlepin: #{e}, #{e.backtrace.join("\n")}")
       raise e

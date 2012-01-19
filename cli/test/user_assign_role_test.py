@@ -70,7 +70,7 @@ class UserRoleDeleteTest(CLIActionTestCase):
         self.mock(self.action, 'update_role')
         self.action.run()
         self.action.update_role.assert_called_once_with(self.USER['id'], self.ROLE['id'])
-       
+
     def test_it_assigns_role(self):
         self.mock(self.action, 'assign', True)
         self.action.update_role(1, 2)

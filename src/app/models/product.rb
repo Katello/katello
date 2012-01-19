@@ -118,6 +118,14 @@ class Product < ActiveRecord::Base
     !(redhat?)
   end
 
+  def gpg_key_name=(name)
+    if name.blank?
+      self.gpg_key = nil
+    else
+      self.gpg_key = GpgKey.readable(organization).find_by_name!(name)
+    end
+  end
+
   def reset_repo_gpgs!
     self.environment_products.each do |ep|
       ep.repositories.each do |repo|
@@ -153,7 +161,11 @@ class Product < ActiveRecord::Base
       self.provider.update_index if self.provider.respond_to? :update_index
   end
 
-
+  def as_json(*args)
+    ret = super
+    ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
+    ret
+  end
 
 
   protected

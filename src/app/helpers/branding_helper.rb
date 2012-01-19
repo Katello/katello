@@ -13,10 +13,14 @@
 
 module BrandingHelper
   def project_name
-    _("Headpin")
+    AppConfig.app_name
   end
   
   def default_title
-    _("Open Source Subscription Management")
+    if AppConfig.katello?
+      _("Open Source Systems Management")
+    else
+      _("Open Source Subscription Management")
+    end
   end
 end

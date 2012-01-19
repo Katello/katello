@@ -29,7 +29,6 @@ class PackagesController < ApplicationController
     }
   end
 
-	
 	def show
 		render :partial=>"show", :layout => "tupane_layout"
 	end
@@ -48,11 +47,10 @@ class PackagesController < ApplicationController
 
   def auto_complete_locker
     name = params[:term]
-    #render :json=>Pulp::Package.name_search(name).sort.uniq[0..19]
-    render :json=>Glue::Pulp::Package.name_search(name + '*')
+    render :json=>Pulp::Package.name_search(name).sort.uniq[0..19]
+    #ender :json=>Glue::Pulp::Package.name_search(name + '*')
   end
 
-  
   private
   
   def package_details_auth
@@ -63,7 +61,5 @@ class PackagesController < ApplicationController
     @package_id = params[:id] 
     @package = Glue::Pulp::Package.find @package_id      
   end
-
-
 
 end

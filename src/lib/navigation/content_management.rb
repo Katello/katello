@@ -219,19 +219,18 @@ module Navigation
       [
         { :key => :filelist,
           :name =>_("Filelist"),
-          :url => lambda{filelist_distribution_path(URI::escape(@distribution.id))},
+          :url => lambda{filelist_repository_distribution_path(@repo.id, URI::escape(@distribution.id))},
           :if => lambda{@distribution},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,
           :name =>_("Details"),
-          :url => lambda{distribution_path(URI::escape(@distribution.id))},
+          :url => lambda{repository_distribution_path(@repo.id, URI::escape(@distribution.id))},
           :if => lambda{@distribution},
           :options => {:class=>"navigation_element"}
         }
       ]
     end
-
 
     def package_filter_navigation
       [

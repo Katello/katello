@@ -26,10 +26,6 @@ from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.core.utils import ProgressBar
 from katello.client.api.utils import get_provider
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
 
 Config()
 
