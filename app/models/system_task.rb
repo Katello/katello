@@ -252,7 +252,7 @@ class SystemTask < ActiveRecord::Base
       humanized_parameters.concat(packages)
     end
     if groups = parameters[:groups]
-      humanized_parameters.concat(groups.map {|g| "@#{g}"})
+      humanized_parameters.concat(groups.map {|g| g =~ /^@/ ? g : "@#{g}"})
     end
     humanized_parameters.join(", ")
   end
@@ -279,15 +279,7 @@ class SystemTask < ActiveRecord::Base
     result = task_status.result
     if task_type =~ /^package_group/
       action = task_type.include?("remove") ? :removed : :installed
-      if result.empty?
-        ret << packages_change_description([], action)
-      else
-        result.each do |(group, packages)|
-          ret << "@#{group}\n"
-          ret << packages_change_description(packages, action)
-          ret << "\n"
-        end
-      end
+      ret << packages_change_description(result, action)
     elsif task_status.task_type.to_s == "package_remove"
       ret << packages_change_description(result, :removed)
     else
@@ -301,8 +293,9 @@ class SystemTask < ActiveRecord::Base
     ret
   end
 
-  def packages_change_description(packages, action)
+  def packages_change_description(data, action)
     ret = ""
+    packages = (data[:resolved] + data[:deps])
     if packages.empty?
       case action
       when :updated
@@ -313,24 +306,9 @@ class SystemTask < ActiveRecord::Base
         ret << _("No new packages installed")
       end
     else
-      if action == :updated
-          ret << packages.map do |(new_version, details)|
-            detail = new_version
-            unless details[:updates].blank?
-              detail += " " + _("updated") + " " + details[:updates].join("\n")
-            end
-            unless details[:obsoletes].blank?
-              detail += " " + _("obsoleted") + " " + details[:obsoletes].join("\n")
-            end
-            detail
-          end.join(" \n")
-      else
-      verb = case action
-             when :removed then _("removed")
-             else _("installed")
-             end
-      ret << packages.map{|i| "#{i} #{verb}"}.join("\n")
-      end
+      ret << packages.map do |package_attrs|
+        package_attrs[:qname]
+      end.join("\n")
     end
     ret
   end
