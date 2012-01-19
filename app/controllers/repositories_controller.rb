@@ -89,14 +89,15 @@ class RepositoriesController < ApplicationController
   end
 
   def enable_repo
-    @repository.enabled = params[:repo] == "1"
-    @repository.save!
-    if @repository.enabled?
-      notice _("Repository '#{@repository.name}' enabled.")
-    else
-      notice _("Repository '#{@repository.name}' disabled.")
+    begin
+      @repository.enabled = params[:repo] == "1"
+      @repository.save!
+      render :json => @repository.id
+    rescue Exception => error
+      Rails.logger.error error.to_s
+      notice error, {:level => :error}
+      render :text=> error.to_s, :status=>:bad_request and return
     end
-    render :json => ""
   end
 
   def destroy
