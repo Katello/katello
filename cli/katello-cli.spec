@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.38
+Version:       0.1.39
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jan 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.39-1
+- perms - moving /errata/id under /repositories API
+- perms - moving /packages/id under /repositories API
+
 * Thu Jan 19 2012 Ivan Necas <inecas@redhat.com> 0.1.38-1
 - periodic build
 
