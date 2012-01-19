@@ -22,8 +22,7 @@ from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, Printer, convert_to_mime_type, attachment_file_name, save_report
-from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_task_errors
-import re
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask
 
 Config()
 

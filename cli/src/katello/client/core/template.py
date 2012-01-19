@@ -15,20 +15,15 @@
 #
 
 import os
-import itertools
 from gettext import gettext as _
 from optparse import OptionValueError
 
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task, system_exit
+from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, system_exit
 from katello.client.api.utils import get_locker, get_environment, get_template, get_product, get_repo
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
 
 # set import (works for both Python 2.6+ and 2.5)
 try:

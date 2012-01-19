@@ -30,10 +30,6 @@ from katello.client.api.utils import get_environment, get_provider, get_product,
 from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
 
 Config()
 

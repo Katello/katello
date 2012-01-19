@@ -15,8 +15,6 @@
 #
 
 import os
-import re
-import time, datetime
 from gettext import gettext as _
 
 from katello.client.api.sync_plan import SyncPlanAPI

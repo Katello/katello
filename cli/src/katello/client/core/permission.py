@@ -16,11 +16,10 @@
 
 import os
 from gettext import gettext as _
-import datetime
 
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI
-from katello.client.api.utils import get_role, get_organization, get_permission
+from katello.client.api.utils import get_role, get_permission
 from katello.client.core.utils import Printer, system_exit, is_valid_record
 from katello.client.config import Config
 from katello.client.core.base import Action, Command

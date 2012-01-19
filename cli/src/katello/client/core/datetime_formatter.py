@@ -14,9 +14,8 @@
 # in this software or its documentation.
 #
 
-import os
 import re
-import time, datetime
+import time
 from gettext import gettext as _
 
 
