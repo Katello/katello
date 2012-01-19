@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.183
+Version:        0.1.184
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -346,6 +346,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Jan 19 2012 Ivan Necas <inecas@redhat.com> 0.1.184-1
+- periodic build
+
 * Wed Jan 18 2012 Mike McCune <mmccune@redhat.com> 0.1.183-1
 - 761576 - removing CSS and jquery plugins for simplePassMeter
   (mmccune@redhat.com)
