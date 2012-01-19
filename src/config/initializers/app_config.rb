@@ -18,6 +18,16 @@ module ApplicationConfiguration
       config = YAML::load_file(@config_file) || {}
       @hash = config['common'] || {}
       @hash.update(config[Rails.env] || {})
+
+      # Hardcode to true to allow 'Headpin' to be added to the locale translation files
+      if true
+        @hash["app_name"] = 'Katello'
+        @hash["katello?"] = true
+      else
+        @hash["app_name"] = 'Headpin'
+        @hash["katello?"] = false
+      end
+
       @ostruct = hashes2ostruct(@hash)
 
       @ostruct.elastic_index = 'katello' unless @ostruct.respond_to?(:elastic_index)
