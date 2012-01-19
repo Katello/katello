@@ -5,7 +5,7 @@ header "Katello Agent"
 HOST="$(hostname)_$RAND"
 
 INSTALL_PACKAGE=cheetah
-INSTALL_GROUP=mammal
+INSTALL_GROUP=mammals
 INSTALL_GROUP_PACKAGE=penguin
 
 kt_agent_present() {
@@ -18,7 +18,7 @@ if kt_agent_present; then
    cat <<EOF | sudo tee /etc/yum.repos.d/zoo.repo > /dev/null
 [zoo-repo]
 name=Zoo Repo
-baseurl=http://lzap.fedorapeople.org/fakerepos/zoo4
+baseurl=http://tstrachota.fedorapeople.org/dummy_repos/zoo/
 gpgcheck=0
 EOF
 
