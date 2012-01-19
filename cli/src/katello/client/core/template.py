@@ -313,7 +313,7 @@ class Update(TemplateAction):
 
     def store_parameter_name(self, option, opt_str, value, parser):
         self.current_parameter = value
-        self['add_parameters'][value] = None
+        self.items['add_parameters'][value] = None
 
     def store_parameter_value(self, option, opt_str, value, parser):
         if self.current_parameter == None:
