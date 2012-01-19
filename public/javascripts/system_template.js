@@ -127,6 +127,7 @@ KT.templates = function() {
       if (!has_package(name)) {
         pkgs.push({name:name});
       }
+
       KT.options.current_template.modified = true;
       KT.options.template_tree.rerender_content();
     },
@@ -562,7 +563,7 @@ KT.auto_complete_box = function(params) {
         var add_btn = $("#" + settings.add_btn_id);
         
         e.preventDefault();
-        if (item.length === 0 || item === settings.default_text ||item.length === 0 ){
+        if (item.length === 0 || item === settings.default_text){
                 return;
         }
         add_btn.addClass("working");
@@ -626,7 +627,7 @@ KT.auto_complete_box = function(params) {
         source: settings.values
     });
 
-    add_btn.live('click', add_item_from_input);
+    add_btn.bind('click', add_item_from_input);
     form.submit(add_item_from_input);
 
     return {
