@@ -173,9 +173,15 @@ class Provider < ActiveRecord::Base
   end
 
   def extended_index_attrs
-    products = self.products.map{|prod|
-      {:product=>prod.name, :repo=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
-    }
+    if AppConfig.katello?
+      products = self.products.map{|prod|
+        {:product=>prod.name, :repo=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
+      }
+    else
+      products = self.products.map{|prod|
+        {:product=>prod.name}
+      }
+    end
     {
       :products=>products,
       :name_sort=>name.downcase
