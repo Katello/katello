@@ -54,7 +54,7 @@ class RepoAPI(KatelloAPI):
         }
         if name != None:
             search_params['name'] = name
-            
+
         result_list = self.server.GET(path, search_params)[1]
         return result_list
 

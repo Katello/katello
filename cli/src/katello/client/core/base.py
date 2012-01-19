@@ -239,7 +239,7 @@ class Action(object):
                 flag = opt.get_opt_string()
             else:
                 flag = '--' + opt_dest
-            
+
             self.add_option_error(_('Option %s is required; please see --help') % flag)
         return
 

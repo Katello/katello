@@ -99,7 +99,7 @@ class Info(ChangesetAction):
         return "\n".join([i[key] for i in items])
 
     def get_dependencies(self, cset_id):
-        deps = self.api.dependencies(cset_id)        
+        deps = self.api.dependencies(cset_id)
         return self.format_item_list('display_name', deps)
 
     def run(self):

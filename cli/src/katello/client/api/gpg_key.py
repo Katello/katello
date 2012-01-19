@@ -45,5 +45,3 @@ class GpgKeyAPI(KatelloAPI):
     def delete(self, keyId):
         path = "/api/gpg_keys/%s/" % keyId
         return self.server.DELETE(path)[1]
-
-

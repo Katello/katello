@@ -45,5 +45,3 @@ class ProductStatusTest(CLIActionTestCase):
 
     def test_it_returns_ok(self):
         self.assertEqual(self.action.run(), os.EX_OK)
-
-

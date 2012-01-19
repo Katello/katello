@@ -59,5 +59,3 @@ class DateTimeFormatter():
 
         shift = loc_time.tm_hour - utc_time.tm_hour
         return "%+03i:00" % shift
-
-
