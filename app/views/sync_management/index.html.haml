@@ -39,5 +39,5 @@
       %tbody
         = render :partial=>"product", :collection=>@product_map, :as=>:prod
 
-  - if @sproducts.length > 0
-    = submit_tag _('Synchronize Now'), :class => 'button fr', :id => 'sync_button'
+    - if @sproducts.length > 0
+      = submit_tag _('Synchronize Now'), :class => 'button fr', :id => 'sync_button'
