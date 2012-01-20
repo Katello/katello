@@ -130,6 +130,7 @@ class Changeset < ActiveRecord::Base
 
   def add_product cpid
     product = find_product_by_cpid(cpid)
+    raise _("Product '#{product.name}' hasn't any repositories") if product.repos(self.environment.prior).empty?
     self.products << product
     product
   end
