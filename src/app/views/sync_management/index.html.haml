@@ -11,9 +11,22 @@
 
     KT.repo_status = $.parseJSON('#{escape_javascript(status_obj.to_json)}');
 
-#main.grid_16
 
+.grid_8
   %h2 #{_("Sync Status") }
+.grid_8#list_actions
+  - if @sproducts.length > 0
+    .grid_2
+      %a#select_none.fl
+        #{_("Select None")}
+    .grid_2
+      %a#select_all.fl
+        #{_("Select All")}
+  #sync_toggle_cont.grid_3
+    %input#sync_toggle{:type=>'checkbox'}
+    %label{:for=>"sync_toggle"}
+      #{_('Only show syncing.')}
+#main.grid_16
   = form_tag("sync", :method => :post, :remote => true, :id => 'sync_product_form') do
     = hidden_field_tag 'sync_status_url', nil, 'data-url' => sync_management_sync_status_path
     %table#products_table
@@ -26,24 +39,5 @@
       %tbody
         = render :partial=>"product", :collection=>@product_map, :as=>:prod
 
-
-
-    #list_actions
-      - if @sproducts.length > 0
-        .grid_2
-          %a#select_none.fl
-            #{_("Select None")}
-        .grid_2
-          %a#select_all.fl
-            #{_("Select All")}
-      #sync_toggle_cont.grid_3
-        %input#sync_toggle{:type=>'checkbox'}
-        %label{:for=>"sync_toggle"}
-          #{_('Only show syncing.')}
-
-
-      -#.grid_3
-      -#  %a{:id=>"toggle_all", :class=>"fl" }
-      -#    #{_("Expand/Contract All")}
-      - if @sproducts.length > 0
-        = submit_tag _('Synchronize Now'), :class => 'dialogbutton fr', :id => 'sync_button'
+  - if @sproducts.length > 0
+    = submit_tag _('Synchronize Now'), :class => 'button fr', :id => 'sync_button'
