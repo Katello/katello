@@ -223,6 +223,23 @@ KT.subs = function() {
             });
           });
         });
+    },
+
+    matchsystemSetup = function(){
+        var checkboxes = $('#matchsystem');
+        checkboxes.each(function(){
+          $(this).change(function(){
+            $('#matchsystem_form').ajaxSubmit({
+              data: { value: $(this).is(":checked") },  // Checkboxes in forms aren't included when false
+              dataType: 'html',
+              success: function(data) {
+                notices.checkNotices();
+              }, error: function(e) {
+                notices.checkNotices();
+              }
+            });
+          });
+        });
     };
     
     return {
@@ -232,6 +249,7 @@ KT.subs = function() {
         save_selected_environment: save_selected_environment,
         initialize_edit: initialize_edit,
         reset_env_select: reset_env_select,
-        autohealSetup: autohealSetup
+        autohealSetup: autohealSetup,
+        matchsystemSetup: matchsystemSetup
     }
 }();
