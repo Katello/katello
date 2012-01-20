@@ -106,7 +106,7 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def name
-    return _("Locker") if locker?
+    return _("Locker") if self.locker?
     self[:name]
   end
 
@@ -180,11 +180,11 @@ class KTEnvironment < ActiveRecord::Base
 
   # returns list of virtual permission tags for the current user
   def self.list_tags org_id
-    select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+    KTEnvironment.where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
   def self.tags(ids)
-    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+    KTEnvironment.where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
 
