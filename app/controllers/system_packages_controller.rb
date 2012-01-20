@@ -164,8 +164,12 @@ class SystemPackagesController < ApplicationController
     else
       packages = []
     end
+
+    packages = packages ? packages : []
+
     render :partial=>"package_items", :locals=>{:packages => packages, :package_tasks => nil,
-                                                :group_tasks => nil, :offset=> offset, :editable => @system.editable?}
+                                                :group_tasks => nil, :offset=> offset, 
+                                                :editable => @system.editable?}
   end
 
   def status
