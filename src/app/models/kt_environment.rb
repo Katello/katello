@@ -105,6 +105,11 @@ class KTEnvironment < ActiveRecord::Base
     self.organization.promotion_paths()[0][0] if !self.organization.promotion_paths().empty?
   end
 
+  def name
+    return _("Locker") if locker?
+    self[:name]
+  end
+
   def prior
     self.priors[0]
   end
