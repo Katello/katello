@@ -29,7 +29,7 @@ module UsersHelper
     if optional
       selected = org_id
       prompt = nil
-      choices.unshift ['No Default Organization', nil]
+      choices.unshift [_('No Default Organization'), nil]
     else
       selected = org_id || current_organization.id
       prompt = _('Select Organization')
