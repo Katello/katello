@@ -45,7 +45,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d -m 755 $RPM_BUILD_ROOT%{homedir}/script/cli-tests
 pwd
 ls
-cp -Rp cli_tests/ cli-system-test helpers *zip $RPM_BUILD_ROOT%{homedir}/script/cli-tests
+cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{homedir}/script/cli-tests
 
 
 %clean
