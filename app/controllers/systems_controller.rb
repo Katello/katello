@@ -118,7 +118,7 @@ class SystemsController < ApplicationController
       @systems = []
       setup_environment_selector(current_organization, accesible_envs)
       if @environment
-        # add the environment id as a search filter.. this will be passed to the app by scoped_search as part of
+        # add the environment id as a search filter.. this will be passed to the app by search as part of
         # the auto_complete_search requests
         @panel_options[:search_env] = @environment.id
       end
