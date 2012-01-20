@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_var}/www/html/pub/bootstrap/client_config_update.py*
 
 %changelog
+* Fri Jan 20 2012 Shannon Hughes <shughes@redhat.com> 1.0.2-2
+- se build (shughes@redhat.com)
+
 * Fri Jan 13 2012 Martin Bačovský <mbacovsk@redhat.com> 1.0.2-1
 - 760305 - Remove names and references to 'rhn' from cert-tools
   (mbacovsk@redhat.com)
