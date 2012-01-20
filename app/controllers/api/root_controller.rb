@@ -18,8 +18,12 @@ class Api::RootController < Api::ApiController
   def resource_list
     all_routes = Rails.application.routes.routes
     api_root_routes = all_routes.select {|r| r.path =~ %r{^/api/[^/]+/:id\(\.:format\)$} }.collect {|r| r.path[0..-(":id(.:format)".length+1)]}.uniq
+    api_root_routes.collect! {|r| {:rel => r["/api/".size..-2], :href => r} }
 
-    render :json => api_root_routes.collect {|r| {:rel => r["/api/".size..-2], :href => r} }
+    # provide some fake paths that does not exist (but rhsm is checking it's existance)
+    api_root_routes << { :href => '/api/packages/', :rel => 'packages' }
+
+    render :json => api_root_routes
   end
 
 end
