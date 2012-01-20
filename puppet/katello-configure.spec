@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Jan 20 2012 Shannon Hughes <shughes@redhat.com> 0.1.54-2
+- se build (shughes@redhat.com)
+
 * Thu Jan 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.54-1
 - 749805 - httpd - katello.conf - update to remove unnecessary / in path
 
