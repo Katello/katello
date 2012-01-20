@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.185
+Version:        0.1.187
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -346,6 +346,22 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jan 20 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.187-1
+- fix for listing available tags of KTEnvironment
+
+* Fri Jan 20 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.186-1
+- perms - fake /api/packages/ path for rhsm
+- Fix to a previous commit related to user default env permissions
+- Minor edits to i18n some strings
+- Pushing a missed i18n string
+- 783328,783320,773603-Fixed environments : user permissions issues
+- 783323 - i18ned resource types names
+- 754616 - Attempted fix for menu hover jiggle.  - Moved up the third level nav
+  1 px.  - Tweaked the hoverIntent settings a tiny bit.
+- 782883 - Updated branding_helper.rb to include headpin strings
+- 782883 - AppConfig.katello? available, headpin strings added
+- 769619 - Fix for repo enable/disable behavior.
+
 * Thu Jan 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.185-1
 - Bumping candlepin version to 0.5.10
 - 773686 - Fixes issue with system template package add input box becoming

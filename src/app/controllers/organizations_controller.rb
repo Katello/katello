@@ -27,6 +27,11 @@ class OrganizationsController < ApplicationController
     edit_test = lambda{@organization.editable?}
     delete_test = lambda{@organization.deletable?}
 
+    environments_partial_test = lambda do
+      params[:user_id] &&
+          ((current_user.id.to_s ==  params[:user_id].to_s) || current_user.editable?)
+    end
+
     {:index =>  index_test,
       :items => index_test,
       :auto_complete_search => index_test,
@@ -35,7 +40,7 @@ class OrganizationsController < ApplicationController
       :edit => read_test,
       :update => edit_test,
       :destroy => delete_test,
-      :environments_partial => index_test,
+      :environments_partial => environments_partial_test,
       :events => read_test,
       :download_debug_certificate => edit_test
     }
@@ -144,7 +149,13 @@ class OrganizationsController < ApplicationController
 
   def environments_partial
     @organization = Organization.find(params[:id])
-    accessible_envs = KTEnvironment.systems_registerable(@organization)
+    env_user_id = params[:user_id].to_s
+    if env_user_id == current_user.id.to_s && (!current_user.editable?)
+      accessible_envs = KTEnvironment.systems_registerable(@organization)
+    else
+      accessible_envs = KTEnvironment.where(:organization_id => @organization.id)
+    end
+
     setup_environment_selector(@organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs, false, @organization)
     render :partial=>"environments", :locals=>{:accessible_envs => accessible_envs}
