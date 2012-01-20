@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jan 20 2012 Shannon Hughes <shughes@redhat.com> 0.1.40-2
+- se build (shughes@redhat.com)
+
 * Thu Jan 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.39-1
 - perms - moving /errata/id under /repositories API
 - perms - moving /packages/id under /repositories API
