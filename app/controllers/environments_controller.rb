@@ -53,7 +53,7 @@ class EnvironmentsController < ApplicationController
     # Create a hash of the available environments and convert to json to be included
     # the edit view
     prior_envs = envs_no_successors - [@environment] - @environment.path
-    env_labels = Hash[ *prior_envs.collect { |p| [ p.id, p.name ] }.flatten]
+    env_labels = Hash[ *prior_envs.collect { |p| [ p.id, p.display_name ] }.flatten]
     #env_labels[''] = _("Locker")
     @env_labels_json = ActiveSupport::JSON.encode(env_labels)
 
@@ -137,7 +137,7 @@ class EnvironmentsController < ApplicationController
   end
 
   def setup_new_edit_screen
-    @env_labels = (envs_no_successors - [@environment]).collect {|p| [ p.name, p.id ]}
+    @env_labels = (envs_no_successors - [@environment]).collect {|p| [ p.display_name, p.id ]}
     @selected = @environment.prior.nil? ? "" : @environment.prior.id
   end
   
