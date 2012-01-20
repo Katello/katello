@@ -22,6 +22,7 @@ $(document).ready(function() {
   KT.subs.subSetup();
   KT.subs.spinnerSetup();
   KT.subs.autohealSetup();
+  KT.subs.matchsystemSetup();
 
   $("#unsubscribeTable").treeTable({
     expandable: true,
