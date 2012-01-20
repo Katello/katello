@@ -16,7 +16,7 @@ KT.panel.list.registerPage('users', { create : 'new_user' });
 $(document).ready(function() {
 
     KT.user_page.registerEdits();
-
+    env_select.ajax_params ={};
     env_select.original_env_id = undefined;
     env_select.env_changed_callback = function(env_id) {
         if(env_select.original_env_id == env_id) {
@@ -56,10 +56,18 @@ $(document).ready(function() {
                 refill.html(i18n.noDefaultEnv);
                 env_select.env_changed_callback('');
             } else {
-                var url = KT.common.rootURL() + 'organizations/' + selected_org_id +  '/environments_partial';
+
+                var url = KT.routes.environments_partial_organization_path(selected_org_id),
+                    params = {};
+
+                if (env_select.ajax_params !== undefined) {
+                    params = env_select.ajax_params;
+                }
+
                 $.ajax({
                     type: "GET",
                     url: url,
+                    data: params,
                     success: function(data) {
                         refill.html(data);
                         // On successful update, update the original env id and disable save button

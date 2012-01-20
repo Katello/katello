@@ -144,7 +144,13 @@ class OrganizationsController < ApplicationController
 
   def environments_partial
     @organization = Organization.find(params[:id])
-    accessible_envs = KTEnvironment.systems_registerable(@organization)
+    user = User.find(params[:user_id])
+    if user.id == current_user.id
+      accessible_envs = KTEnvironment.systems_registerable(@organization)
+    else
+      accessible_envs = KTEnvironment.where(:organization_id => @organization.id)
+    end
+
     setup_environment_selector(@organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs, false, @organization)
     render :partial=>"environments", :locals=>{:accessible_envs => accessible_envs}
