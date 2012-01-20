@@ -18,7 +18,14 @@ module UsersHelper
   end
 
   def organization_select(org_id=nil, optional=true)
-    choices = current_user.allowed_organizations.map {|a| [a.name, a.id]}
+    if current_user.id == @user.id
+      orgs = current_user.allowed_organizations.reject do |org|
+        !org.any_systems_registerable?
+      end
+    else
+      orgs = Organization.all
+    end
+    choices = orgs.map {|a| [a.name, a.id]}
     if optional
       selected = org_id
       prompt = nil
@@ -39,5 +46,4 @@ module UsersHelper
            {:prompt => nil, :id=>"locale_field",
            :selected => selected})
   end
-
 end

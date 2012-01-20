@@ -108,6 +108,16 @@ class Organization < ActiveRecord::Base
     User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
   end
 
+  def systems_registerable?
+    User.allowed_to?([:register_systems], :organizations, nil, self)
+  end
+
+
+  def any_systems_registerable?
+    systems_registerable? || User.allowed_to?([:register_systems], :environments, environment_ids, self, true)
+  end
+
+
   def gpg_keys_manageable?
     User.allowed_to?([:gpg], :organizations, nil, self)
   end

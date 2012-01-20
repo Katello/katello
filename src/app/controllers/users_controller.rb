@@ -28,9 +28,23 @@ class UsersController < ApplicationController
     create_test = lambda{User.creatable?}
 
     read_test = lambda{@user.id == current_user.id || @user.readable?}
-    edit_test = lambda{@user.id == current_user.id || @user.editable?}
+    edit_test = lambda{can_edit_user?}
     delete_test = lambda{@user.deletable?}
-    edit_details_test = lambda{@user.id == current_user.id || @user.editable?}
+    edit_details_test = lambda{can_edit_user?}
+    update_environment_test = lambda do
+      if @user.id == current_user.id
+        env_id = params['env_id'] ? params['env_id']['env_id'].to_i : nil
+        if env_id
+          KTEnvironment.find(env_id).systems_registerable?
+        else
+          false
+        end
+      else
+        @user.editable?
+      end
+    end
+
+
     user_helptip = lambda{true} #everyone can enable disable a helptip
     
      {
@@ -42,7 +56,7 @@ class UsersController < ApplicationController
        :edit => read_test,
        :account => read_test,
        :edit_environment => read_test,
-       :update_environment => read_test,
+       :update_environment => update_environment_test,
        :update => edit_details_test,
        :update_roles => edit_test,
        :update_locale => edit_test,
@@ -73,7 +87,7 @@ class UsersController < ApplicationController
       @environment = first_env_in_path(accessible_envs)
     end
     render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user,
-                                                                   :editable=>@user.id == current_user.id || @user.editable?,
+                                                                   :editable=>can_edit_user?,
                                                                    :name=>controller_display_name,
                                                                    :accessible_envs => accessible_envs}
   end
@@ -159,7 +173,11 @@ class UsersController < ApplicationController
       @environment = @user.default_environment
       @old_env = @environment
       @organization = Organization.find(@environment.attributes['organization_id'])
-      accessible_envs = KTEnvironment.systems_registerable(@organization)
+      if current_user.id == @user.id
+        accessible_envs = KTEnvironment.systems_registerable(@organization)
+      else
+        accessible_envs = KTEnvironment.where(:organization_id => @organization.id)
+      end
       setup_environment_selector(@organization, accessible_envs)
     else
       @organization = nil
@@ -167,7 +185,7 @@ class UsersController < ApplicationController
     end
 
     render :partial=>"edit_environment", :layout => "tupane_layout", :locals=>{:user=>@user,
-                                                                   :editable=>@user.editable?,
+                                                                   :editable=>can_edit_user?,
                                                                    :name=>controller_display_name,
                                                                    :accessible_envs => accessible_envs}
   end
@@ -272,6 +290,11 @@ class UsersController < ApplicationController
     render :text => ""
   end
 
+  def can_edit_user?
+    @user && (current_user.id == @user.id || @user.editable?)
+  end
+
+
   private
 
   def find_user
@@ -296,6 +319,11 @@ class UsersController < ApplicationController
 
   def controller_display_name
     return 'user'
+  end
+
+
+  def validate_default_perms
+
   end
 
 end
