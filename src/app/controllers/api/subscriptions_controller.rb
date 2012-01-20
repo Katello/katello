@@ -45,6 +45,8 @@ class Api::SubscriptionsController < Api::ApiController
     render :json => @system.to_json
   end
 
+  private
+
   def find_system
     @system = System.first(:conditions => {:uuid => params[:system_id]})
     raise HttpErrors::NotFound, _("Couldn't find system '#{params[:system_id]}'") if @system.nil?

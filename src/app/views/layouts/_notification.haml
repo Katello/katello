@@ -7,23 +7,23 @@
 - if flash[:warning]
   :javascript
     $(document).ready(function(){
-      notices.displayNotice("warning", '#{ flash[:warning] }');
+      notices.displayNotice("warning", '#{ escape_javascript(flash[:warning]) }');
     });
 
 - if flash[:success]
   :javascript
     $(document).ready(function(){
-      notices.displayNotice("success", '#{ flash[:success] }');
+      notices.displayNotice("success", '#{ escape_javascript(flash[:success]) }');
     });
 
 - if flash[:message]
   :javascript
     $(document).ready(function(){
-      notices.displayNotice("", '#{ flash[:message] }');
+      notices.displayNotice("", '#{ escape_javascript(flash[:message]) }');
     });
 
 - if flash[:notice]
   :javascript
     $(document).ready(function(){
-      notices.displayNotice("", '#{ flash[:notice] }');
+      notices.displayNotice("", '#{ escape_javascript(flash[:notice]) }');
     });

@@ -1,4 +1,5 @@
-=javascript :scroll_pane, :dashboard
+=stylesheet :tipsy
+=javascript :scroll_pane, :dashboard, :tipsy_custom
 
 -if current_organization
   .grid_9
@@ -17,7 +18,7 @@
 
 .dashboard_popout.hidden
   .popout_row.popout
-    %label.popout Display
+    %label.popout #{_("Display")}
     %select.num_of_results.popout
       - ['5', '15', '30'].each do |i|
         %option.popout{:value => i} #{i} results

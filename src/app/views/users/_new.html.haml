@@ -1,7 +1,7 @@
 = javascript do
   :javascript
     localize({
-      "noDefaultEnv": '#{_("No default environment. Select an organization to choose from available environments.")}'
+      "noDefaultEnv": '#{escape_javascript(_("No default environment. Select an organization to choose from available environments."))}'
     });
 
 = content_for :title do
@@ -25,8 +25,6 @@
           = label :user, :username, _("Password:")
         .grid_5.la
           = text_field :user, :username, :id=>"password_field", :type=>"password", :tabindex => auto_tab_index
-      .grid_5.la.prefix_2
-        #password_meter             
 
       %fieldset.fl.clear
         .grid_2.ra

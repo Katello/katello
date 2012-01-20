@@ -164,8 +164,12 @@ class SystemPackagesController < ApplicationController
     else
       packages = []
     end
+
+    packages = packages ? packages : []
+
     render :partial=>"package_items", :locals=>{:packages => packages, :package_tasks => nil,
-                                                :group_tasks => nil, :offset=> offset, :editable => @system.editable?}
+                                                :group_tasks => nil, :offset=> offset, 
+                                                :editable => @system.editable?}
   end
 
   def status
@@ -185,7 +189,7 @@ class SystemPackagesController < ApplicationController
   end
 
   def controller_display_name
-    return _('system')
+    return 'system'
   end
 
   def sort_order_limit systems

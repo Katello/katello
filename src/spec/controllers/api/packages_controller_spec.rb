@@ -14,26 +14,89 @@ require 'spec_helper.rb'
 
 describe Api::PackagesController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
 
+  let(:repo_id) {'f8ab5088-688e-4ce4-ade3-700aa4cbb070'}
   before(:each) do
+    disable_org_orchestration
+    disable_product_orchestration
+    disable_user_orchestration
+    disable_repo_orchestration
+
+    @organization = new_test_org
+    @provider = Provider.create!(:name => "provider",
+                                 :provider_type => Provider::CUSTOM,
+                                 :organization => @organization,
+                                 :repository_url => "https://localhost")
+    @product = Product.create!(:name => "prod",
+                               :provider => @provider,
+                               :environments => [@organization.locker])
+    @product.stub(:repos).and_return([@repository])
+
+    ep_locker = EnvironmentProduct.find_or_create(@organization.locker, @product)
+    @repo = Repository.create!(:environment_product => ep_locker,
+                               :name=> "repo",
+                               :relative_path => "#{@organization.name}/Locker/prod/repo",
+                               :pulp_id=> "1",
+                               :enabled => true)
+    @repo.stub(:has_distribution?).and_return(true)
+    @repo.stub(:pulp_id).and_return(repo_id)
+    Repository.stub(:find).and_return(@repo)
+    @repo.stub(:distributions).and_return([])
+    Glue::Pulp::Distribution.stub(:find).and_return([])
+
+    @repo.stub(:packages).and_return([])
+    package = { 'repoids' => [ repo_id ] }
+    Pulp::Package.stub(:find).and_return(package)
+
+    @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
   end
 
-  describe "get a listing of packages" do
-    it "should call pulp find packages api" do
-      repoid = 1
-      repo = OpenStruct.new(:packages => {})
-      repo.should_receive(:packages).and_return([])
-      Repository.should_receive(:find).with(repoid).and_return(repo)
-      get 'index', :repository_id => repoid
+  let(:authorized_user) do
+    user_with_permissions do |u|
+      u.can(:read_contents, :environments, @organization.locker.id, @organization)
+      u.can(:read, :providers, @provider.id, @organization)
+    end
+  end
+  let(:unauthorized_user) do
+    user_without_permissions
+  end
+
+  context "rules" do
+    describe "get a listing by repo" do
+      let(:action) { :index }
+      let(:req) {
+        get 'index', :repository_id => repo_id
+      }
+      it_should_behave_like "protected action"
+    end
+
+    describe "show" do
+      let(:action) { :show }
+      let(:req) {
+        get 'show', :id => 1, :repository_id => repo_id
+      }
+      it_should_behave_like "protected action"
     end
   end
 
-  describe "show a package" do
-    it "should call pulp find package api" do
-      Pulp::Package.should_receive(:find).once.with('f8ab5088-688e-4ce4-ade3-700aa4cbb070')
-      get 'show', :id => 'f8ab5088-688e-4ce4-ade3-700aa4cbb070'
+  context "tests" do
+    before do
+      disable_authorization_rules
+    end
+    describe "get a listing of packages" do
+      it "should call pulp find packages api" do
+        Repository.should_receive(:find).with(repo_id)
+        get 'index', :repository_id => repo_id
+      end
+    end
+
+    describe "show a package" do
+      it "should call pulp find package api" do
+        Pulp::Package.should_receive(:find).once.with(1)
+        get 'show', :id => 1, :repository_id => repo_id
+      end
     end
   end
-
 end

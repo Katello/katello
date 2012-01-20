@@ -120,7 +120,7 @@ class CreateRepositoryTest(unittest.TestCase):
     def test_create_repo_in_pulp(self):
         self.create_action.create_repositories(self.PRODUCT_ID, self.NAME, [self.URL])
         parsedUrl = urlparse.urlparse(self.URL)
-        self.create_action.api.create.assert_called_once_with(self.PRODUCT_ID, self.create_action.repository_name(self.NAME, parsedUrl.path), self.URL)
+        self.create_action.api.create.assert_called_once_with(self.PRODUCT_ID, self.create_action.repository_name(self.NAME, parsedUrl.path), self.URL, None, None)
 
     def test_creates_repos_in_pulp_for_all_urls(self):
         self.create_action.create_repositories(self.PRODUCT_ID, self.NAME, [self.URL, self.URL2])

@@ -162,14 +162,15 @@ class GpgKeysController < ApplicationController
       :ajax_load  => true,
       :ajax_scroll => items_gpg_keys_path(),
       :initial_action=> :products_repos,
-      :enable_create => GpgKey.createable?(current_organization)
+      :enable_create => GpgKey.createable?(current_organization),
+      :search_class=>GpgKey
     }
   end
 
   private
  
   def controller_display_name
-    return _('gpg_key')
+    return 'gpg_key'
   end
 
   def search_filter

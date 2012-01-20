@@ -18,9 +18,9 @@
 # The script expects to find ca.key, ca.crt and server.csr in the working
 # directory
 # The signed certificate is saved in server.crt
-# server.crt and server.key are packaged as rhn-httpd-ssl-key-pair-*.rpm
-# RHN-ORG-TRUSTED-SSL-CERT (or ca.cert) is packaged as
-# rhn-org-trusted-ssl-cert-*.rpm
+# server.crt and server.key are packaged as katello-httpd-ssl-key-pair-*.rpm
+# KATELLO-TRUSTED-SSL-CERT (or ca.cert) is packaged as
+# katello-trusted-ssl-cert-*.rpm
 #
 # $Id$
 
@@ -37,9 +37,9 @@ CA_CRT=ca.crt
 SERVER_KEY=server.key
 SERVER_CSR=server.csr
 
-CLIENT_RPM_NAME="rhn-org-trusted-ssl-cert"
-SERVER_RPM_NAME="rhn-httpd-ssl-key-pair"
-SSL_BACKUP_TARBALL_NAME="rhn-org-ssl-backup"
+CLIENT_RPM_NAME="katello-trusted-ssl-cert"
+SERVER_RPM_NAME="katello-httpd-ssl-key-pair"
+SSL_BACKUP_TARBALL_NAME="katello-ssl-backup"
 
 
 usage() {
@@ -220,7 +220,7 @@ fi
 # Bump the release
 release=$[$release+1]
 
-PACKAGER="Red Hat Network <rhn-feedback@redhat.com>"
+PACKAGER="Katello <rhn-feedback@redhat.com>"
 
 # Generate a postun scriptlet
 cat > postun.scriptlet << EOSCRIPTLET
@@ -252,8 +252,8 @@ EOSCRIPTLET
 # Package the server's cert and private key
 $GENRPM --name $SERVER_RPM_NAME --version $version \
     --release $release --packager "$PACKAGER" \
-    --summary "server private SSL key and certificate for the Red Hat Network" \
-    --description "server private SSL key and certificate for the Red Hat Network" \
+    --summary "server private SSL key and certificate for Katello" \
+    --description "server private SSL key and certificate for Katello" \
     --postun postun.scriptlet \
     /etc/httpd/conf/ssl.crt/server.crt=server.crt \
     /etc/httpd/conf/ssl.key/server.key:0600=${SERVER_KEY} || exit 1
@@ -263,6 +263,6 @@ rm -f postun.scriptlet
 # Now that we have the CA cert generated, let's package it into an rpm
 $GENRPM --name ${CLIENT_RPM_NAME} --version $version \
     --release $release --packager "${PACKAGER}" \
-    --summary "CA SSL certificate for the Red Hat Network (client-side)" \
-    --description "CA SSL certificate for the Red Hat Network (client-side)" \
-    /usr/share/rhn/${CA_CRT}=${CA_CRT} || exit 1
+    --summary "CA SSL certificate for Katello (client-side)" \
+    --description "CA SSL certificate for Katello (client-side)" \
+    /usr/share/katello/${CA_CRT}=${CA_CRT} || exit 1

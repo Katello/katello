@@ -42,15 +42,29 @@ class ProductAPI(KatelloAPI):
         else:
             return None
 
-    def create(self, provId, name, description):
+    def create(self, provId, name, description, gpgkey):
         product = {
             "name": name,
-            "description": description
+            "description": description,
+            "gpg_key_name": gpgkey
         }
 
         path = "/api/providers/%s/product_create" % str(provId)
         result = self.server.POST(path, {"product": product})[1]
         return result
+
+    def update(self, prodId, description, gpgkey, nogpgkey, gpgkey_recursive):
+        product = {}
+        self.update_dict(product, "description", description)
+        self.update_dict(product, "gpg_key_name", gpgkey)
+        self.update_dict(product, "recursive", gpgkey_recursive)
+        if nogpgkey:
+            product["gpg_key_name"] = ""
+
+        path = "/api/products/%s/" % prodId
+        result = self.server.PUT(path, {"product": product})[1]
+        return result
+
 
     def show(self, prodId):
         path = "/api/products/%s/" % prodId
@@ -63,6 +77,14 @@ class ProductAPI(KatelloAPI):
     def sync(self, prodId):
         path = "/api/products/%s/sync" % prodId
         return self.server.POST(path)[1]
+
+    def set_sync_plan(self, prodId, planId):
+        path = "/api/products/%s/sync_plan" % str(prodId)
+        return self.server.POST(path, {"plan_id": planId})[1]
+
+    def remove_sync_plan(self, prodId):
+        path = "/api/products/%s/sync_plan" % str(prodId)
+        return self.server.DELETE(path)[1]
 
     def cancel_sync(self, prodId):
         path = "/api/products/%s/sync" % prodId

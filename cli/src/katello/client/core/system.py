@@ -22,8 +22,7 @@ from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, Printer, convert_to_mime_type, attachment_file_name, save_report
-from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_task_errors
-import re
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask
 
 Config()
 
@@ -112,6 +111,10 @@ class Info(SystemAction):
 
         for akey in system['activation_key']:
             system["activation_keys"] = "[ "+ ", ".join([akey["name"] for pool in akey["pools"]]) +" ]"
+        if system.has_key('host'):
+            system['host'] = system['host']['name']
+        if system.has_key('guests'):
+            system["guests"] = "[ "+ ", ".join([guest["name"] for guest in system["guests"]]) +" ]"
 
         self.printer.addColumn('name')
         self.printer.addColumn('uuid')
@@ -120,6 +123,8 @@ class Info(SystemAction):
         self.printer.addColumn('updated_at', 'Last updated', time_format=True)
         self.printer.addColumn('description', multiline=True)
         self.printer.addColumn('activation_keys', multiline=True, show_in_grep=False)
+        self.printer.addColumn('host', show_in_grep=False)
+        self.printer.addColumn('guests',  show_in_grep=False)
         if system.has_key("template"):
             t = system["template"]["name"]
             self.printer.addColumn('template', show_in_grep=False, value=t)
@@ -191,7 +196,7 @@ class InstalledPackages(SystemAction):
             task = self.api.remove_packages(system_id, remove.split(packages_separator))
         if update:
             if update == '--all':
-                 update_packages = []
+                update_packages = []
             else:
                 update_packages = update.split(packages_separator)
             task = self.api.update_packages(system_id, update_packages)

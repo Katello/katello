@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
   acts_as_reportable
 
   index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:username, :email],
                 :json=>{:except=>[:password, :password_reset_token,
                                   :password_reset_sent_at, :helptips_enabled,
                                   :disabled, :own_role_id, :login]}
@@ -54,8 +55,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  scoped_search :on => :username, :complete_value => true, :rename => :name
-  scoped_search :in => :roles, :on => :name, :complete_value => true, :rename => :role
 
   # validate the password length before hashing
   validates_each :password do |model, attr, value|
@@ -417,6 +416,14 @@ class User < ActiveRecord::Base
     nil
   end
 
+  def default_locale
+    self.preferences[:user][:locale] rescue nil
+  end
+
+  def default_locale= locale
+    self.preferences[:user] = {} unless self.preferences.has_key? :user
+    self.preferences[:user][:locale] = locale
+  end
 
   #method to delete the passed in org.  Due to the way delayed job is impelemented
   #  we must attached the job to a different instance or object, so we attach it to the current_user
@@ -432,6 +439,7 @@ class User < ActiveRecord::Base
   rescue Exception=>e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
+    raise
   end
 
   protected
@@ -533,15 +541,15 @@ class User < ActiveRecord::Base
 
 
   def log_roles verbs, resource_type, tags, org, any_tags = false
-    if  AppConfig.allow_roles_logging
+    if AppConfig.allow_roles_logging
       verbs_str = verbs ? verbs.join(','):"perform any verb"
       tags_str = "any tags"
       if tags
         tag_str = any_tags ? "any tag in #{tags.join(',')}" : "all the tags in #{tags.join(',')}"
       end
 
-      org_str = org ? "organization #{org.inspect}":" any organization"
-      Rails.logger.info "Checking if user #{username} is allowed to #{verbs_str} in  #{resource_type.inspect} scoped for #{tags_str} in  #{org_str}"
+      org_str = org ? "organization #{org.name} (#{org.name})":" any organization"
+      Rails.logger.info "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} scoped for #{tags_str} in #{org_str}"
     end
   end
 end

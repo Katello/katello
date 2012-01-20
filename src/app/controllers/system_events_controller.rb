@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class SystemEventsController < ApplicationController
-  skip_before_filter :authorize
   before_filter :find_system
   before_filter :authorize
 
@@ -43,7 +42,11 @@ class SystemEventsController < ApplicationController
     task = @system.tasks.where("#{TaskStatus.table_name}.id" => params[:id]).first
     task_template = SystemTask::TYPES[task.task_type]
     type = task_template[:name]
-    user_message = task_template[:user_message] % task.user.username
+    if task_template[:user_message]
+      user_message = task_template[:user_message] % task.user.username
+    else
+      user_message = task_template[:english_name]
+    end
     render :partial=>"details", :layout => "tupane_layout", :locals=>{:type => type, :user_message => user_message,
                                                   :system => @system, :task =>task,
                                                   :system_task => find_system_task(task, @system) }

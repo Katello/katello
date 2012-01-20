@@ -48,6 +48,11 @@ class ChangesetAPI(KatelloAPI):
         path = "/api/changesets/%s" % (csId)
         return self.server.DELETE(path)[1]
 
+    def dependencies(self, csId):
+        path = "/api/changesets/%s/dependencies" % csId
+        deps = self.server.GET(path)[1]
+        return deps
+
     def promote(self, csId):
         path = "/api/changesets/%s/promote" % (csId)
         return self.server.POST(path)[1]
@@ -67,5 +72,3 @@ class ChangesetAPI(KatelloAPI):
     def remove_content(self, csId, contentType, attrs):
         path = "/api/changesets/%s/%s/%s/" % (str(csId), contentType, str(attrs['content_id']))
         return self.server.DELETE(path, attrs)[1]
-
-

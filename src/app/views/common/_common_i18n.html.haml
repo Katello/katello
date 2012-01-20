@@ -1,12 +1,19 @@
 /common translations
 :javascript
   localize({
-    "confirm_request": '#{_('Are you sure?')}',
-    "validation_errors": '#{_('Validation Failed:')}',
-    "add": '+ #{_('Add')}',
-    "add_plus": '+ #{_('Add')}',
-    "remove": '#{_('Remove')}',
-    "items_selected": '#{_(" items selected.")}'
+    "confirm_request": '#{escape_javascript(_('Are you sure?'))}',
+    "validation_errors": '#{escape_javascript(_('Validation Failed:'))}',
+    "add": '+ #{escape_javascript(_('Add'))}',
+    "add_plus": '+ #{escape_javascript(_('Add'))}',
+    "remove": '#{escape_javascript(_('Remove'))}',
+    "items_selected": '#{escape_javascript(_(" items selected."))}',
+    "yes": '#{escape_javascript(_('Yes'))}',
+    "no": '#{escape_javascript(_('No'))}',
+    "ok": '#{escape_javascript(_('Ok'))}',
+    "alert": '#{escape_javascript(_('Alert'))}',
+    "confirmation": '#{escape_javascript(_('Confirmation'))}',
+    "error": '#{escape_javascript(_('Error'))}',
+    "row_error": '#{escape_javascript(_('There was an error retrieving that row:'))}',
   });
 
 

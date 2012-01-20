@@ -18,7 +18,8 @@ class Organization < ActiveRecord::Base
   include IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{:except=>[:debug_cert, :events]}
+                :json=>{:except=>[:debug_cert, :events]},
+                :display_attrs=>[:name, :description, :environment]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -106,6 +107,16 @@ class Organization < ActiveRecord::Base
   def systems_readable?
     User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
   end
+
+  def systems_registerable?
+    User.allowed_to?([:register_systems], :organizations, nil, self)
+  end
+
+
+  def any_systems_registerable?
+    systems_registerable? || User.allowed_to?([:register_systems], :environments, environment_ids, self, true)
+  end
+
 
   def gpg_keys_manageable?
     User.allowed_to?([:gpg], :organizations, nil, self)

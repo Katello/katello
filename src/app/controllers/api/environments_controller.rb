@@ -17,10 +17,11 @@ class Api::EnvironmentsController < Api::ApiController
   before_filter :authorize
 
   def rules
+    index_rule = lambda{@organization.readable? || @organization.any_systems_registerable?}
     manage_rule = lambda{@organization.environments_manageable?}
     view_rule = lambda{@organization.readable?}
     {
-      :index => view_rule,
+      :index => index_rule,
       :show => view_rule,
       :create => manage_rule,
       :update => manage_rule,
@@ -62,6 +63,8 @@ class Api::EnvironmentsController < Api::ApiController
   def repositories
     render :json => @environment.products.all_readable(@organization).collect { |p| p.repos(@environment, query_params[:include_disabled]) }.flatten
   end
+
+  protected
 
   def find_environment
     @environment = KTEnvironment.find(params[:id])

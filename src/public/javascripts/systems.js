@@ -20,6 +20,11 @@ KT.panel.set_expand_cb(function(){
 	KT.menu.hoverMenu('#panel .third_level:first-child', { top : '75px' });
 });
 
+
+
+
+KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:", "...Any System Fact"]);
+
 (function(){
     var options = { create : 'new_system' };
 
@@ -51,6 +56,7 @@ KT.panel.set_expand_cb(function(){
 }());
 
 $(document).ready(function() {
+
   KT.panel.set_expand_cb(function() {
     KT.subs.initialize_edit();
   });

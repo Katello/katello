@@ -19,6 +19,7 @@ mkdir $dir/packages/
 
 #batch build packages
 ./batch_create_dummy_packages.sh $dir/packagelist.txt $dir/packages
+./sign_dummy_package.sh $dir/packages/*.rpm
 pulp-admin content upload -r $repo_id --nosig -v $dir/packages/*rpm
 
 #create groups and categories

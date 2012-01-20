@@ -20,21 +20,21 @@ module Navigation
     def user_navigation
       [
         { :key => :environment,
-          :name =>N_("Environments"),
-          :url => (@user.nil? || @user.new_record?) ? "" : edit_environment_user_path(@user.id),
-          :if => lambda{!@user.nil?},
+          :name =>_("Environments"),
+          :url => lambda{edit_environment_user_path(@user.id)},
+          :if => lambda {@user},
           :options => {:class=>"navigation_element"}
         },
         { :key => :roles,
-          :name =>N_("Roles"),
-          :url => (@user.nil? || @user.new_record?) ? "" : edit_role_path(@user.own_role_id),
-          :if => lambda{!@user.nil?},
+          :name =>_("Roles"),
+          :url => lambda{edit_role_path(@user.own_role_id)},
+          :if => lambda{@user},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,
-          :name =>N_("Details"),
-          :url => (@user.nil? || @user.new_record?) ? "" : edit_user_path(@user.id),
-          :if => lambda{!@user.nil?},
+          :name =>_("Details"),
+          :url => lambda{edit_user_path(@user.id)},
+          :if => lambda{@user},
           :options => {:class=>"navigation_element"}
         }
       ]
@@ -42,7 +42,7 @@ module Navigation
 
     def menu_administration
       {:key => :admin,
-       :name => N_("Administration"),
+       :name => _("Administration"),
         :url => :sub_level,
         :options => {:class=>'operations top_level', "data-menu"=>"operations"},
         :if => :sub_level,
@@ -53,7 +53,7 @@ module Navigation
 
     def menu_users
       {:key => :users,
-       :name => N_("Users"),
+       :name => _("Users"),
        :url => users_path,
        :if =>lambda {User.any_readable?},
        :options => {:class=>'operations second_level', "data-menu"=>"operations"}
@@ -62,7 +62,7 @@ module Navigation
 
     def menu_roles
       {:key => :roles,
-       :name => N_("Roles"),
+       :name => _("Roles"),
        :url => roles_path,
        :if =>lambda {Role.any_readable?},
        :options => {:class=>'operations second_level', "data-menu"=>"operations"}

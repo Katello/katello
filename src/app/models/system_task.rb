@@ -98,7 +98,26 @@ class SystemTask < ActiveRecord::Base
           },
           :user_message => _('Package Group Remove scheduled by %s')
       },
-
+      :errata_install => {
+          :english_name =>N_("Errata Install"),
+          :type => :errata,
+          :event_messages => {
+              :running => [N_('installing erratum...'),N_('installing errata...')],
+              :waiting => [N_('installing erratum...'),N_('installing errata...')],
+              :finished => [N_('%s erratum install'), N_('%s (%s other errata) install.')],
+              :error=> [N_('%s erratum install failed'), N_('%s (%s other errata) install failed')],
+              :cancelled => [N_('%s erratum install cancelled'), N_('%s (%s other errata) install cancelled')],
+              :timed_out =>[N_('%s erratum install timed out'), N_('%s (%s other errata) install timed out')],
+          },
+         :user_message => _('Errata Install scheduled by %s')
+      },
+      :candlepin_event => {
+          :english_name =>N_("Candlepin Event"),
+          :type => :candlepin_event,
+          :event_messages => {
+          },
+          :user_message => nil
+      },
   }.with_indifferent_access
 
   TYPES.each_pair do |name, value|
@@ -123,8 +142,21 @@ class SystemTask < ActiveRecord::Base
           else
             return  _("%s (%s other packages)") % [p.first, p.length - 1]
           end
+        when :package_group
+          p = task.parameters[:groups]
+          if p.length == 1
+            return p.first
+          else
+            return  _("%s (%s other package groups)") % [p.first, p.length - 1]
+          end
+        when :errata
+          p = task.parameters[:errata_ids]
+          if p.length == 1
+            return p.first
+          else
+            return  _("%s (%s other errata)") % [p.first, p.length - 1]
+          end
       end
-
     end
     def message_for task
       details = SystemTask::TYPES[task.task_type]
@@ -148,6 +180,17 @@ class SystemTask < ActiveRecord::Base
           end
           msg = details[:event_messages][task.state]
           return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
+        when :candlepin_event
+          return task.result
+        when :package_group
+          p = task.parameters[:groups]
+          msg = details[:event_messages][task.state]
+          return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
+        when :errata
+          p = task.parameters[:errata_ids]
+          msg = details[:event_messages][task.state]
+          return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
+
       end
     end
 
@@ -163,9 +206,25 @@ class SystemTask < ActiveRecord::Base
 
     def refresh_for_system(sid)
       query = SystemTask.select(:task_status_id).joins(:task_status).where(:system_id => sid)
+
       ids = query.where("task_statuses.state"=>[:waiting, :running]).collect {|row| row[:task_status_id]}
       refresh(ids)
-      TaskStatus.where("task_statuses.id in (#{query.to_sql})")
+      statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
+
+      # Since Candlepin events are not recorded as tasks, fetch them for this system and add them
+      # here. The alternative to this lazy loading of Candlepin tasks would be to have each API
+      # call that Katello passes through to Candlepin record the task explicitly.
+      system = System.find(sid)
+      system.events.each {|event|
+        event_status = {:id => event[:id], :state => event[:type],
+                       :start_time => event[:timestamp], :finish_time => event[:timestamp],
+                       :progress => "100", :result => event[:messageText]}
+        # Find or create task
+        task = statuses.where("#{TaskStatus.table_name}.uuid" => event_status[:id]).first
+        task ||= SystemTask.make(system, event_status, :candlepin_event, :event => event)
+      }
+
+      statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
     end
 
     def make system, pulp_task, task_type, parameters
@@ -193,7 +252,7 @@ class SystemTask < ActiveRecord::Base
       humanized_parameters.concat(packages)
     end
     if groups = parameters[:groups]
-      humanized_parameters.concat(groups.map {|g| "@#{g}"})
+      humanized_parameters.concat(groups.map {|g| g =~ /^@/ ? g : "@#{g}"})
     end
     humanized_parameters.join(", ")
   end
@@ -220,15 +279,7 @@ class SystemTask < ActiveRecord::Base
     result = task_status.result
     if task_type =~ /^package_group/
       action = task_type.include?("remove") ? :removed : :installed
-      if result.empty?
-        ret << packages_change_description([], action)
-      else
-        result.each do |(group, packages)|
-          ret << "@#{group}\n"
-          ret << packages_change_description(packages, action)
-          ret << "\n"
-        end
-      end
+      ret << packages_change_description(result, action)
     elsif task_status.task_type.to_s == "package_remove"
       ret << packages_change_description(result, :removed)
     else
@@ -242,8 +293,9 @@ class SystemTask < ActiveRecord::Base
     ret
   end
 
-  def packages_change_description(packages, action)
+  def packages_change_description(data, action)
     ret = ""
+    packages = (data[:resolved] + data[:deps])
     if packages.empty?
       case action
       when :updated
@@ -254,24 +306,9 @@ class SystemTask < ActiveRecord::Base
         ret << _("No new packages installed")
       end
     else
-      if action == :updated
-          ret << packages.map do |(new_version, details)|
-            detail = new_version
-            unless details[:updates].blank?
-              detail += " " + _("updated") + " " + details[:updates].join("\n")
-            end
-            unless details[:obsoletes].blank?
-              detail += " " + _("obsoleted") + " " + details[:obsoletes].join("\n")
-            end
-            detail
-          end.join(" \n")
-      else
-      verb = case action
-             when :removed then _("removed")
-             else _("installed")
-             end
-      ret << packages.map{|i| "#{i} #{verb}"}.join("\n")
-      end
+      ret << packages.map do |package_attrs|
+        package_attrs[:qname]
+      end.join("\n")
     end
     ret
   end

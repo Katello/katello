@@ -9,9 +9,6 @@
   = two_panel(@filters, @panel_options)
 
 = javascript :edit, :form, :filters
-= include_common_i18n
-= include_editable_i18n
-
 
 = javascript do
   :javascript
@@ -19,14 +16,14 @@
     KT.products = $.parseJSON('#{escape_javascript(@product_hash.to_json)}');
     KT.editable_products = $.parseJSON('#{escape_javascript(@product_hash.reject{|key,val|!val[:editable]}.to_json)}');
     localize({
-      "package_search_text": '#{_("Search available package names...")}',
-      "product_search_text": '#{_("Search available product names...")}',
-      "no_products_repos"  : '#{_("No products or repositories are currently associated.")}',
-      "all_repos" : '#{_("All Repositories")}',
-      "select_repos" : '#{_("Select Repositories: ")}',
-      "x_of_y_repos" : function(x,y){ return '#{_("(%X of %Y repositories selected)")}'.replace("%X", x).replace("%Y", y); },
-      "entire_selected" : '#{_("(Entire product selected)")}',
-      "no_packages" : '#{_("No packages are currently filtered.")}'
+      "package_search_text": '#{escape_javascript(_("Search available package names..."))}',
+      "product_search_text": '#{escape_javascript(_("Search available product names..."))}',
+      "no_products_repos"  : '#{escape_javascript(_("No products or repositories are currently associated."))}',
+      "all_repos" : '#{escape_javascript(_("All Repositories"))}',
+      "select_repos" : '#{escape_javascript(_("Select Repositories: "))}',
+      "x_of_y_repos" : function(x,y){ return '#{escape_javascript(_("(%X of %Y repositories selected)"))}'.replace("%X", x).replace("%Y", y); },
+      "entire_selected" : '#{escape_javascript(_("(Entire product selected)"))}',
+      "no_packages" : '#{escape_javascript(_("No packages are currently filtered."))}'
 
       });
 

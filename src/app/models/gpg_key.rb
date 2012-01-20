@@ -14,7 +14,8 @@ class GpgKey < ActiveRecord::Base
   include IndexedModel
 
 
-  index_options :extended_json=>:extended_index_attrs
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :content]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -28,10 +29,8 @@ class GpgKey < ActiveRecord::Base
 
   validates :name, :katello_name_format => true
   validates :content, :presence => true
+  validates_presence_of :organization
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
-
-  scope :completer_scope, lambda { |options| readable(options[:organization_id])}
-  scoped_search :on => :name, :complete_value => true
 
 
   #Permission items
@@ -71,4 +70,13 @@ class GpgKey < ActiveRecord::Base
     {:name_sort=>name.downcase}
   end
 
+  def as_json(options = {})
+    options ||= {}
+    ret = super(options.except(:details))
+    if options[:details]
+      ret[:products] = products.map {|p| {:name => p.name}}
+      ret[:repositories] = repositories.map {|r| {:product => {:name => r.product.name}, :name => r.name}}
+    end
+    ret
+  end
 end

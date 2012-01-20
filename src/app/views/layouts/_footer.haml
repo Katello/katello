@@ -5,4 +5,4 @@
   %li
     #{_("Copyright &copy; ") + (Time.now).year.to_s + _(" Red Hat, Inc.") }
 .grid_16.ca.light_text
-  #{_("Katello Version: ") + AppConfig.katello_version}
+  #{_("%s Version: %s") % [AppConfig.app_name, AppConfig.katello_version]}

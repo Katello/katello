@@ -26,8 +26,10 @@ class System < ActiveRecord::Base
   include AsyncOrchestration
   include IndexedModel
 
+  
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=>[:name, :description, :environment_id, :id, :uuid, :created_at, :lastCheckin]}
+                :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
+                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -114,6 +116,11 @@ class System < ActiveRecord::Base
     system_task = save_system_task(pulp_task, :package_group_remove, :groups, groups)
   end
 
+  def install_errata errata_ids
+    pulp_task = self.install_consumer_errata(errata_ids)
+    system_task = save_system_task(pulp_task, :errata_install, :errata_ids, errata_ids)
+  end
+
   # returns list of virtual permission tags for the current user
   def self.list_tags
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
@@ -124,6 +131,11 @@ class System < ActiveRecord::Base
     json['environment'] = environment.as_json unless environment.nil?
     json['activation_key'] = activation_keys.as_json unless activation_keys.nil?
     json['template'] = system_template.as_json unless system_template.nil?
+    if self.guest == 'true'
+      json['host'] = self.host.attributes if self.host
+    else
+      json['guests'] = self.guests.map(&:attributes)
+    end
     json
   end
 
@@ -186,8 +198,8 @@ class System < ActiveRecord::Base
     end
 
     def fill_defaults
-      self.description = "Initial Registration Params" unless self.description
-      self.location = "None" unless self.location
+      self.description = _("Initial Registration Params") unless self.description
+      self.location = _("None") unless self.location
     end
 
 end

@@ -83,7 +83,12 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    I18n.locale = extract_locale_from_accept_language_header
+    if current_user && current_user.default_locale
+      I18n.locale = current_user.default_locale
+    else
+      I18n.locale = extract_locale_from_accept_language_header
+    end
+
     logger.debug "Setting locale: #{I18n.locale}"
   end
 
@@ -152,10 +157,40 @@ class ApplicationController < ActionController::Base
     user
   end
 
-  # temp code to setup i18n, might want to consider looking at a rails plugin that is more robust
+  # Look for match to list of locales specified in request. If not found, try matching just
+  # first two letters. Finally, default to english if no matches at all.
+  # eg. [en_US, en] would match en
   def extract_locale_from_accept_language_header
-    hal = request.env['HTTP_ACCEPT_LANGUAGE']
-    hal.nil? ? 'en' : hal.scan(/^[a-z]{2}/).first
+    locales = parse_locale
+
+    # Look for full match
+    locales.each {|locale|
+      return locale if AppConfig.available_locales.include? locale
+    }
+
+    # Look for match to first two letters
+    #
+    locales.each {|locale|
+      return locale[0..1] if AppConfig.available_locales.include? locale[0..1]
+    }
+
+    # Default to 'en'
+    return 'en'
+  end
+
+  # adapted from http_accept_lang gem, return list of browser locales 
+  def parse_locale
+    locale_lang = env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
+      l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
+      l.split(';q=')
+    end.sort do |x,y|
+      raise "incorrect locale format" unless x.first =~ /^[a-z\-]+$/i
+      y.last.to_f <=> x.last.to_f
+    end.collect do |l|
+      l.first.downcase.gsub(/-[a-z]+$/i) { |x| x.upcase }
+    end
+  rescue 
+    []
   end
 
   # render 403 page
@@ -283,7 +318,7 @@ class ApplicationController < ActionController::Base
 
     if search.nil? || search== ''
       all_rows = true
-    elsif search_options[:simple_query] && AppConfig.simple_search_tokens.any?{|s| !search.downcase.match(s)}
+    elsif search_options[:simple_query] && !AppConfig.simple_search_tokens.any?{|s| search.downcase.match(s)}
       search = search_options[:simple_query]
     end
 
@@ -308,7 +343,6 @@ class ApplicationController < ActionController::Base
         filters = [filters] if !filters.is_a? Array
         filters.each{|i|
           filter  :terms, i
-          
         } if !filters.empty?
 
         size page_size if page_size > 0
@@ -316,22 +350,35 @@ class ApplicationController < ActionController::Base
       end
       @items = results
 
+      #get total count
+      total = obj_class.search do
+        query do
+          all
+        end
+        filters.each{|i|
+          filter  :terms, i
+        } if !filters.empty?
+        size 1
+        from 0
+      end
+      total_count = total.total
+
     rescue Tire::Search::SearchRequestFailed => e
       Rails.logger.error(e.class)
 
-      panel_options[:total_count] = 0
+      total_count = 0
       panel_options[:total_results] = 0
 
     end
 
-    render_panel_results(@items, panel_options) if !skip_render
+    render_panel_results(@items, total_count, panel_options) if !skip_render
     return @items
   end
 
-  def render_panel_results(results, options)
+  def render_panel_results(results, total, options)
     
     options[:total_count] = results.empty? ? 0 : results.total
-    options[:total_results] = results.empty? ? 0 : results.total
+    options[:total_results] = total
     options[:collection] = results
     
     @items = results
@@ -459,7 +506,10 @@ class ApplicationController < ActionController::Base
   # This assumes that the input follows a syntax similar to:
   #   "{\"displayMessage\":\"Import is older than existing data\"}"
   def parse_display_message input
-    display_message = input.include?("displayMessage") ? input.split(":\"").last.split("\"").first : ""
+    if input.include? 'displayMessage'
+      return JSON.parse(input)['displayMessage']
+    end
+    input
   end
 end
 

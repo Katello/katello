@@ -105,6 +105,11 @@ class KTEnvironment < ActiveRecord::Base
     self.organization.promotion_paths()[0][0] if !self.organization.promotion_paths().empty?
   end
 
+  def name
+    return _("Locker") if self.locker?
+    self[:name]
+  end
+
   def prior
     self.priors[0]
   end
@@ -175,11 +180,11 @@ class KTEnvironment < ActiveRecord::Base
 
   # returns list of virtual permission tags for the current user
   def self.list_tags org_id
-    select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+    KTEnvironment.where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
   def self.tags(ids)
-    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+    KTEnvironment.where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
 
@@ -245,7 +250,13 @@ class KTEnvironment < ActiveRecord::Base
       authorized_items(org, SYSTEMS_READABLE)
     end
   }
-  scope :systems_registerable, lambda{|org|  authorized_items(org, [:register_systems]) }
+  scope :systems_registerable, lambda { |org|
+    if org.systems_registerable?
+      where(:organization_id => org)
+    else
+      authorized_items(org, [:register_systems])
+    end
+  }
 
   def self.any_viewable_for_promotions? org
     User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.environment_ids, org, true)
@@ -296,7 +307,7 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def systems_registerable?
-    User.allowed_to?([:register_systems], :organizations, nil, self.organization) ||
+    self.organization.systems_registerable? ||
         User.allowed_to?([:register_systems], :environments, self.id, self.organization)
   end
 
@@ -337,7 +348,7 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def delete_related_index
-    self.organization.update_index
+    self.organization.update_index if self.organization
   end
 
 end

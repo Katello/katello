@@ -38,8 +38,6 @@ class Repository < ActiveRecord::Base
   validates :enabled, :repo_disablement => true, :on => [:update]
   belongs_to :gpg_key, :inverse_of => :repositories
 
-  before_validation :setup_repo_gpg, :on =>[:create]
-
   def product
     self.environment_product.product
   end
@@ -75,6 +73,15 @@ class Repository < ActiveRecord::Base
     end
   }
 
+  scope :readable_in_org, lambda {|org, *skip_locker|
+    if (skip_locker.empty? || skip_locker.first.nil?)
+      # 'skip locker' not included, so retrieve repos in locker in the result
+      joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org))
+    else
+      joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org).where(:locker => false))
+    end
+  }
+
   def extended_index_attrs
     {:environment=>self.environment.name, :environment_id=>self.environment.id,
      :product=>self.product.name, :product_id=> self.product.id}
@@ -99,11 +106,20 @@ class Repository < ActiveRecord::Base
     end if !errata.empty?
   end
 
-  protected
-  def setup_repo_gpg
-    unless gpg_key
-      self.gpg_key = product.gpg_key
+  def gpg_key_name=(name)
+    if name.blank?
+      self.gpg_key = nil
+    else
+      self.gpg_key = GpgKey.readable(organization).find_by_name!(name)
     end
   end
+
+  def as_json(*args)
+    ret = super
+    ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
+    ret
+  end
+
+  protected
 
 end

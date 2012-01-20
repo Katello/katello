@@ -18,7 +18,9 @@ class Filter < ActiveRecord::Base
   include Authorization
   include IndexedModel
 
-  index_options :extended_json=>:extended_index_attrs, :json=>{:except=>[:pulp_id, :package_list]}
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :packages, :products],
+                :json=>{:except=>[:pulp_id, :package_list]}
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed

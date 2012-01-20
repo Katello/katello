@@ -31,6 +31,7 @@ describe SystemEventsController do
 
       Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Candlepin::Consumer.stub!(:update).and_return(true)
+      Candlepin::Consumer.stub!(:events).and_return([])
 
       Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Pulp::Consumer.stub!(:update).and_return(true)
@@ -62,7 +63,7 @@ describe SystemEventsController do
           task1 = @system.install_packages("baz")
           get :status, :system_id => @system.id, :id => [@task.task_status.id, task1.task_status.id]
           response.should be_success
-          JSON.parse(response.body).collect{|item| item['id']}.should == [@task.task_status.id, task1.task_status.id]
+          JSON.parse(response.body).collect{|item| item['id']}.sort.should == [@task.task_status.id, task1.task_status.id].sort
         end
 
       end

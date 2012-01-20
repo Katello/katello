@@ -14,24 +14,47 @@ require 'resources/pulp'
 
 class Api::RepositoriesController < Api::ApiController
   respond_to :json
-  before_filter :find_repository, :only => [:show, :destroy, :package_groups, :package_group_categories, :enable]
+  before_filter :find_repository, :only => [:show, :update, :destroy, :package_groups, :package_group_categories, :enable, :gpg_key_content]
   before_filter :find_product, :only => [:create]
   before_filter :find_organization, :only => [:discovery]
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  before_filter :authorize
+  skip_filter   :set_locale, :require_user, :thread_locals, :authorize, :only => [:gpg_key_content]
+
+  def rules
+    edit_product_test = lambda{@product.editable?}
+    read_test = lambda{@repository.product.readable?}
+    edit_test = lambda{@repository.product.editable?}
+    org_edit = lambda{@organization.editable?}
+    {
+      :create => edit_product_test,
+      :show => read_test,
+      :update => edit_test,
+      :destroy => edit_test,
+      :enable => edit_test,
+      :discovery => org_edit,
+      :package_groups => read_test,
+      :package_group_categories => read_test,
+    }
+  end
 
   def create
-    content = @product.add_repo(params[:name], params[:url], 'yum')
+    if params[:gpg_key_name].present?
+      gpg = GpgKey.readable(@product.organization).find_by_name!(params[:gpg_key_name])
+    elsif params[:gpg_key_name].nil?
+      gpg = @product.gpg_key
+    end
+    content = @product.add_repo(params[:name], params[:url], 'yum', gpg)
     render :json => content
   end
 
-  def index
-    render :json => Repository.where(:enabled => true) if not query_params[:include_disabled]
-    render :json => Repository.all if query_params[:include_disabled]
+  def show
+    render :json => @repository.to_hash
   end
 
-  def show
+  def update
+    raise HttpErrors::BadRequest, _("It is not allowed to update a Red Hat repository.") if @repository.redhat?
+    @repository.update_attributes!(params[:repository].slice(:gpg_key_name))
     render :json => @repository.to_hash
   end
 
@@ -75,6 +98,17 @@ class Api::RepositoriesController < Api::ApiController
     search_attrs[:id] = params[:category_id] if not params[:category_id].nil?
 
     render :json => @repository.package_group_categories(search_attrs)
+  end
+
+  # returns the content of a repo gpg key, used directly by yum
+  # we don't want to authenticate, authorize etc, trying to distinquse between a yum request and normal api request
+  # might not always be 100% bullet proof, and its more important that yum can fetch the key.
+  def gpg_key_content
+    if @repository.gpg_key && @repository.gpg_key.content.present?
+      render(:text => @repository.gpg_key.content, :layout => false) 
+    else
+      head(404)
+    end
   end
 
   def find_repository

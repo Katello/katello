@@ -212,9 +212,11 @@ module Pulp
 
       # specific call to just update the sync schedule for a repo
       def update_schedule(repo_id, schedule)
-        body = put(Repository.repository_path + repo_id +"/schedules/sync/",
-                   JSON.generate(:schedule => schedule), self.default_headers).body
-        find repo_id
+        body = put(Repository.repository_path + repo_id +"/schedules/sync/", JSON.generate(:schedule => schedule), self.default_headers).body
+      end
+
+      def delete_schedule(repo_id)
+        body = self.delete(Repository.repository_path + repo_id +"/schedules/sync/", self.default_headers).body
       end
 
       def add_packages repo_id, pkg_id_list
@@ -420,8 +422,30 @@ module Pulp
       end
 
       def errata consumer_id
-        response = post(consumer_path(consumer_id) + "listerrata/", {:types => []}.to_json, self.default_headers)
+        response = get(consumer_path(consumer_id) + "errata/", self.default_headers)
         JSON.parse(response.body)
+      end
+
+      def errata_by_consumer repos
+        repoids_param = nil
+        repos.each do |repo|
+          if repoids_param.nil?
+            repoids_param = "?repoids=" + repo.pulp_id
+          else
+            repoids_param += "&repoids=" + repo.pulp_id
+          end
+        end
+
+        url = consumer_path() + "applicable_errata_in_repos/" + repoids_param
+        response = get(url, self.default_headers)
+        JSON.parse(response.body)
+      end
+
+      def install_errata consumer_id, errata_ids
+        url = consumer_path(consumer_id) + "installerrata/"
+        attrs = { :errataids => errata_ids }
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
       end
 
       def consumer_path id = nil

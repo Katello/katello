@@ -98,5 +98,25 @@ module Katello
       selected_packs
     end
 
+    def self.divide_packages_by_name packages
+      pack_map = {}
+      packages.each do |p|
+          pack_map[p['name']] ||= []
+          pack_map[p['name']] << p
+      end
+      pack_map
+    end
+
+    def self.filter_latest_packages_by_name packages
+      pack_map = divide_packages_by_name packages
+
+      result = []
+      pack_map.each_pair do |name, packs|
+        result += find_latest_packages packs
+      end
+      result
+    end
+
+
   end
 end

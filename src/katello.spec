@@ -16,8 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.174
-Release:        2%{?dist}
+Version:        0.1.187
+Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -346,8 +346,58 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-* Tue Jan 10 2012 Shannon Hughes <shughes@redhat.com> 0.1.174-2
-- se build (shughes@redhat.com)
+* Fri Jan 20 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.187-1
+- fix for listing available tags of KTEnvironment
+
+* Fri Jan 20 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.186-1
+- perms - fake /api/packages/ path for rhsm
+- Fix to a previous commit related to user default env permissions
+- Minor edits to i18n some strings
+- Pushing a missed i18n string
+- 783328,783320,773603-Fixed environments : user permissions issues
+- 783323 - i18ned resource types names
+- 754616 - Attempted fix for menu hover jiggle.  - Moved up the third level nav
+  1 px.  - Tweaked the hoverIntent settings a tiny bit.
+- 782883 - Updated branding_helper.rb to include headpin strings
+- 782883 - AppConfig.katello? available, headpin strings added
+- 769619 - Fix for repo enable/disable behavior.
+
+* Thu Jan 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.185-1
+- Bumping candlepin version to 0.5.10
+- 773686 - Fixes issue with system template package add input box becoming
+  unusable after multiple package adds.
+- perms - fixing unit tests after route rename
+- perms - moving /errata/id under /repositories API
+- perms - moving /packages/id under /repositories API
+- 761667 - JSON error message from candlepin parsed correctly
+
+* Thu Jan 19 2012 Ivan Necas <inecas@redhat.com> 0.1.184-1
+- periodic build
+
+* Wed Jan 18 2012 Mike McCune <mmccune@redhat.com> 0.1.183-1
+- 761576 - removing CSS and jquery plugins for simplePassMeter
+  (mmccune@redhat.com)
+- 761576 - removing the password strength meter (mmccune@redhat.com)
+- Moves javascript to bottom of html page and removes redundant i18n partials
+  to the base katello layout. (ehelms@redhat.com)
+- 771957-Made the org deletion code a little better (paji@redhat.com)
+
+* Wed Jan 18 2012 Ivan Necas <inecas@redhat.com> 0.1.182-1
+- periodic build
+* Wed Jan 18 2012 Ivan Necas <inecas@redhat.com> 0.1.181-1
+- gpg cli support
+* Fri Jan 13 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.178-1
+- api perms review - tasks
+- 771957 - Fixed an org deletion failure issue
+- 755522 - fixing issue where adding filters to a product in the UI did not
+  actually take effect in pulp
+- adding elasticsearch to ping api
+- disabling fade in for sync page
+- 773137 - Made the  system search stuff adhre to permissions logic
+- 746913 fix sync plan time, incorrectly using date var
+- removing obsolete strings
+- removing scoped search  from existing models
+
 * Tue Jan 10 2012 Mike McCune <mmccune@redhat.com> 0.1.174-1
 - fixing critical issue with 2pane search rendering
 * Tue Jan 10 2012 Ivan Necas <inecas@redhat.com> 0.1.173-1

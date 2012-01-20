@@ -42,15 +42,40 @@ class Info(PackageAction):
         # always provide --id option for create, even on registered clients
         self.parser.add_option('--id', dest='id',
                                help=_("package id, string value (required)"))
+        self.parser.add_option('--repo_id', dest='repo_id',
+                      help=_("repository id"))
+        self.parser.add_option('--repo', dest='repo',
+                      help=_("repository name"))
+        self.parser.add_option('--org', dest='org',
+                      help=_("organization name eg: foo.example.com"))
+        self.parser.add_option('--environment', dest='env',
+                      help=_("environment name eg: production (default: locker)"))
+        self.parser.add_option('--product', dest='product',
+                      help=_("product name eg: fedora-14"))
 
 
     def check_options(self):
         self.require_option('id')
+        if not self.has_option('repo_id'):
+            self.require_option('repo')
+            self.require_option('org')
+            self.require_option('product')
 
     def run(self):
-        packId = self.get_option('id')
+        packId   = self.get_option('id')
+        repoId   = self.get_option('repo_id')
+        repoName = self.get_option('repo')
+        orgName  = self.get_option('org')
+        envName  = self.get_option('env')
+        prodName = self.get_option('product')
 
-        pack = self.api.package(packId)
+        if not repoId:
+            repo = get_repo(orgName, prodName, repoName, envName)
+            if repo == None:
+                return os.EX_DATAERR
+            repoId = repo["id"]
+
+        pack = self.api.package(packId, repoId)
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')

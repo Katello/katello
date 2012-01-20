@@ -13,20 +13,40 @@
 require 'resources/pulp'
 
 class Api::PackagesController < Api::ApiController
-
   respond_to :json
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  before_filter :find_repository
+  before_filter :find_package, :except => [:index]
+  before_filter :authorize
+
+  def rules
+    readable = lambda{ @repo.environment.contents_readable? and @repo.product.readable? }
+    {
+      :index => readable,
+      :show => readable,
+    }
+  end
 
   def index
-    packages = Repository.find(params[:repository_id]).packages
-    render :json => packages
+    render :json => @repo.packages
   end
 
   def show
-    package = Pulp::Package.find(params[:id])
-    render :json => package
+    render :json => @package
   end
 
+  private
+
+  def find_repository
+    @repo = Repository.find(params[:repository_id])
+    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repo.nil?
+    @repo
+  end
+
+  def find_package
+    @package = Pulp::Package.find(params[:id])
+    # and check ownership of it
+    raise HttpErrors::NotFound, _("Package '#{params[:id]}' not found within the repository") unless @package['repoids'].include? @repo.pulp_id
+    @package
+  end
 end

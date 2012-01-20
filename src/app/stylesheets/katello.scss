@@ -5,6 +5,7 @@
 @import "mixins";
 @import "colors";
 @import "sprites";
+@import "icons";
 @import "look";
 
 @import "widgets/multiselect";
@@ -664,7 +665,7 @@ footer {
 #container {
   width:  100%;
   margin:0 auto;
-  min-height:500px;
+  min-height:600px;
     /* right side of 2 pane below the sliding pane */
     .right {
         float:right;
@@ -750,6 +751,10 @@ footer {
                       border-top: 18px solid transparent;
                       right: -17px;
                   }
+                &:hover {
+                    background-color: darken($kselected_color, 10%);
+                    .arrow-right { border-left-color:darken($kselected_color, 10%); }
+                }
               }
               &:hover {
                 .arrow-right {
@@ -894,6 +899,10 @@ footer {
   position:absolute;
   max-width:700px;
   z-index: -1;
+  
+  .tupane_footer {
+    margin: 5px 0;
+  }
 }
 .panel {
   background-color:$panel_color;
@@ -1115,46 +1124,6 @@ footer {
 }
 /* end helptip */
 
-/* begin simple pass meter css */
-.simplePassMeter {
-  border: 1px solid #aaa;
-  background-color: #f3f3f3;
-  color: #666;
-  font-size: 0.8em;
-  padding: 1px 5px 0 5px;
-  margin: 0;
-  width: 19em;
-  margin-bottom: 10px;
-}
-  
-.meterFail { border: 1px solid #daa; background-color: #fdd; }
-.meterWarn { border: 1px solid #fd6; background-color: #feb; }
-.meterGood { border: 1px solid #ada; background-color: #dfd; }
-.meterExcel { border: 1px solid #aad; background-color: #ddf; }
-
-.simplePassMeterBar { background-color: #ddd; }
-.meterFail .simplePassMeterProgress  { background-color: #f66; }
-.meterWarn .simplePassMeterProgress  { background-color: #fd6; }
-.meterGood .simplePassMeterProgress  { background-color: #ada; }
-.meterExcel .simplePassMeterProgress { background-color: #88f; }
-
-.simplePassMeter p { margin: 0; }
-.simplePassMeterIcon { height: 16px; width: 16px; float: left; }
-.meterFail .simplePassMeterIcon,
-.meterWarn .simplePassMeterIcon,
-.meterGood .simplePassMeterIcon,
-.meterExcel .simplePassMeterIcon {
-  background-image: url('../../../images/simplePassMeterSprite.png');
-  background-repeat: no-repeat;
-}
-.meterExcel .simplePassMeterIcon { background-position: 0 0; }
-.meterFail .simplePassMeterIcon { background-position: 0 -17px; }
-.meterGood .simplePassMeterIcon { background-position: 0 -34px; }
-.meterWarn .simplePassMeterIcon { background-position: 0 -51px; }
-
-.simplePassMeterText { margin-left: 2px; }
-/* end  simple pass meter css */
-  
 .permission {
   display: inline-block;
   margin-bottom:10px;
@@ -1402,4 +1371,9 @@ footer {
     &:hover {
         color: red;
     }
+}
+
+.ui-button-text-only .ui-button-text {
+    padding-top: 0;
+    padding-bottom: 0;
 }

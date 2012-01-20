@@ -58,7 +58,6 @@ module DashboardHelper
     end        
   end
 
-
   def systems_list num=quantity
     System.readable(current_organization).limit(num)
   end
@@ -74,9 +73,9 @@ module DashboardHelper
   def products_synced num= quantity
     Product.readable(current_organization).reject{|prod|
       prod.sync_status.uuid.nil?
-    }.sort{|a,b| a.start_time <=> b.start_time}[0..num]
-  end
+    }.sort{|a,b| a.sync_status.start_time <=> b.sync_status.start_time}[0..num]
 
+  end
 
   def sync_percentage(product)
     stat =product.sync_status.progress
@@ -84,29 +83,12 @@ module DashboardHelper
     "%.0f" % ((stat.total_size - stat.size_left)*100/stat.total_size).to_s
   end
 
-
   def subscription_counts
     info = Glue::Candlepin::OwnerInfo.new(current_organization)
   end
 
-  #TODO Make this not be fake data
-  def errata_summary limit=quantity
-    types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
-
-    to_ret = []
-    (rand(limit + 1 )).times{|num|
-      errata = OpenStruct.new
-      errata.e_id = "RHSA-2011-01-#{num}"
-      errata.systems = ([1]*(rand(10) + 1)).collect{|i| "server-" + rand(10).to_s + ".example.com"}
-      errata.e_type = types[rand(3)]
-      errata.product = "Red Hat Enterprise Linux 6.0"
-      to_ret << errata
-    }
-    to_ret[0..limit-1]
-  end
-
   def errata_type_class errata
-    case errata.e_type
+    case errata.type
       when  Glue::Pulp::Errata::SECURITY
         return "security_icon"
       when  Glue::Pulp::Errata::ENHANCEMENT
@@ -114,6 +96,31 @@ module DashboardHelper
       when  Glue::Pulp::Errata::BUGZILLA
         return "bugzilla_icon"
     end
+  end
+
+  def errata_product_names errata, repos
+    # return a comma-separated list of product names that this errata is associated with
+
+    # the list will be determined by evaluating the repoids in the errata against the products
+    # associated with the list of repos provided
+    products = ""
+    errata.repoids.each do |repoid|
+      repos.each do |repo|
+        if repo.pulp_id == repoid
+          if products.length == 0
+            products = repo.environment_product.product.name
+          else
+            products += ", " + repo.environment_product.product.name
+          end
+          break
+        end
+      end
+    end
+    products
+  end
+
+  def system_path_helper system
+    systems_path + "#panel=system_" + system.id.to_s
   end
 
   def get_checkin(system)

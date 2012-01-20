@@ -13,11 +13,21 @@
 require 'resources/pulp'
 
 class Api::ErrataController < Api::ApiController
-
   respond_to :json
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  before_filter :find_environment, :only => [:index]
+  before_filter :find_repository, :except => [:index]
+  before_filter :find_erratum, :except => [:index]
+  before_filter :authorize
+
+  def rules
+    env_readable = lambda{ @environment.contents_readable? }
+    readable = lambda{ @repo.environment.contents_readable? and @repo.product.readable? }
+    {
+      :index => env_readable,
+      :show => readable,
+    }
+  end
 
   def index
     filter = params.slice(:repoid, :product_id, :environment_id, :type, :severity).symbolize_keys
@@ -25,12 +35,36 @@ class Api::ErrataController < Api::ApiController
       raise HttpErrors::BadRequest.new(_("Repo id or environment must be provided"))
     end
     render :json => Glue::Pulp::Errata.filter(filter)
-
   end
 
   def show
-    eratum = Glue::Pulp::Errata.find(params[:id])
-    render :json => eratum
+    render :json => @erratum
   end
 
+  private
+
+  def find_environment
+    if params.has_key?(:environment_id)
+      @environment = KTEnvironment.find(params[:environment_id])
+      raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
+    elsif params.has_key?(:repoid)
+      @repo = Repository.find(params[:repoid])
+      raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repoid]}'") if @repo.nil?
+      @environment = @repo.environment
+    end
+    @environment
+  end
+
+  def find_repository
+    @repo = Repository.find(params[:repository_id])
+    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repo.nil?
+    @repo
+  end
+
+  def find_erratum
+    @erratum = Glue::Pulp::Errata.find(params[:id])
+    # and check ownership of it
+    raise HttpErrors::NotFound, _("Erratum '#{params[:id]}' not found within the repository") unless @erratum.repoids.include? @repo.pulp_id
+    @erratum
+  end
 end

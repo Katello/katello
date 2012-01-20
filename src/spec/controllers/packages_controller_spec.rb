@@ -1,4 +1,4 @@
-#
+ #
 # Copyright 2011 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -28,7 +28,8 @@ describe PackagesController do
 
     describe "get auto_complete_package" do
       before (:each) do
-        Glue::Pulp::Package.should_receive(:name_search).once.and_return(["a", "aa"])
+        Pulp::Package.should_receive(:name_search).once.and_return(["a", "aa"])
+        #Glue::Pulp::Package.should_receive(:name_search).once.and_return(["a", "aa"])
       end
 
       it 'should call pulp' do

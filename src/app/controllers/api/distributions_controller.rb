@@ -17,9 +17,15 @@ class Api::DistributionsController < Api::ApiController
 
   before_filter :find_repository
   before_filter :check_distribution, :only => [:show]
+  before_filter :authorize
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  def rules
+    readable = lambda{ @repo.environment.contents_readable? and @repo.product.readable? }
+    {
+      :index => readable,
+      :show => readable,
+    }
+  end
 
   def index
     render :json => @repo.distributions
@@ -39,7 +45,7 @@ class Api::DistributionsController < Api::ApiController
   end
 
   def check_distribution
-    raise HttpErrors::NotFound, _("Distribtion '#{params[:id]}' not found within the repository") unless @repo.has_distribution? params[:id]
+    raise HttpErrors::NotFound, _("Distribution '#{params[:id]}' not found within the repository") unless @repo.has_distribution? params[:id]
   end
 
 end

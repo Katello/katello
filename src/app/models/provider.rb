@@ -17,7 +17,8 @@ class Provider < ActiveRecord::Base
   include KatelloUrlHelper
   include IndexedModel
 
-  index_options :extended_json=>:extended_index_attrs, :json=>{:except=>[]}
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :product, :repo, :description]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -41,12 +42,6 @@ class Provider < ActiveRecord::Base
   before_destroy :prevent_redhat_deletion
   before_validation :sanitize_repository_url
 
-  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id]) }
-
-  scoped_search :on => :name, :complete_value => true, :rename => :'provider.name'
-  scoped_search :on => :description, :complete_value => true, :rename => :'provider.description'
-  scoped_search :in => :products, :on => :name, :complete_value => true, :rename => :'product.name'
-  scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'product.description'
 
   validate :only_one_rhn_provider
   validate :valid_url, :if => :redhat_provider?
@@ -104,6 +99,15 @@ class Provider < ActiveRecord::Base
   # wanted to centralize the logic in one method.
   def has_subscriptions?
     redhat_provider?
+  end
+
+  def organization
+    # note i need to add 'unscoped' here
+    # to account for the fact that org might have been "scoped out"
+    # on an Org delete action.
+    # we need the organization info to be present in the provider
+    # so that we can properly phase out the orchestration and handle search indices.
+    (read_attribute(:organization) || Organization.unscoped.find(self.organization_id)) if self.organization_id
   end
 
   #permissions
@@ -169,14 +173,12 @@ class Provider < ActiveRecord::Base
   end
 
   def extended_index_attrs
-    products = []
-    #products = self.products.map{|prod|
-    #  {:provider_name=>prod.name, :repos=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
-    #}
+    products = self.products.map{|prod|
+      {:product=>prod.name, :repo=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
+    }
     {
       :products=>products,
       :name_sort=>name.downcase
-
     }
   end
 
@@ -204,8 +206,6 @@ class Provider < ActiveRecord::Base
 
   READ_PERM_VERBS = [:read, :create, :update, :delete]
   EDIT_PERM_VERBS = [:create, :update]
-
-
 
 
 end

@@ -19,8 +19,8 @@ class PackageAPI(KatelloAPI):
     """
     Connection class to access package calls
     """
-    def package(self, packageId):
-        path = "/api/packages/%s/" % packageId
+    def package(self, packageId, repoId):
+        path = "/api/repositories/%s/packages/%s" % (repoId, packageId)
         pack = self.server.GET(path)[1]
         return pack
 

@@ -23,8 +23,8 @@ shared_examples_for "protected action" do
   before(:each) do
     # it takes action from describe method
   end
-  context "I have sufficient rights" do
-    it "should let me to it" do
+  context "ALLOWING me" do
+    it "to it" do
       if !defined?(on_success) && !defined?(before_success)
 
         controller.stub(action)
@@ -52,8 +52,8 @@ shared_examples_for "protected action" do
       end
     end
   end
-  context "I have not sufficient rights" do
-    it "should not let me to it" do
+  context "NOT ALLOWING me" do
+    it "to it" do
       if !defined?(on_success) && !defined?(before_success)
         @controller.stub(action)
         @controller.stub(:render)

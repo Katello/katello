@@ -18,12 +18,22 @@ module ApplicationConfiguration
       config = YAML::load_file(@config_file) || {}
       @hash = config['common'] || {}
       @hash.update(config[Rails.env] || {})
+
+      # Hardcode to true to allow 'Headpin' to be added to the locale translation files
+      if true
+        @hash["app_name"] = 'Katello'
+        @hash["katello?"] = true
+      else
+        @hash["app_name"] = 'Headpin'
+        @hash["katello?"] = false
+      end
+
       @ostruct = hashes2ostruct(@hash)
 
       @ostruct.elastic_index = 'katello' unless @ostruct.respond_to?(:elastic_index)
       @ostruct.elastic_url = 'http://localhost:9200' unless @ostruct.respond_to?(:elastic_url)
 
-      @ostruct.simple_search_tokens = [':', ' and\b', ' or\b', ' not\b'] unless @ostruct.respond_to?(:simple_search_tokens)
+      @ostruct.simple_search_tokens = [':', ' and\\b', ' or\\b', ' not\\b'] unless @ostruct.respond_to?(:simple_search_tokens)
 
       # candlepin and pulp are turned on by default
       @ostruct.use_cp = true unless @ostruct.respond_to?(:use_cp)
@@ -40,6 +50,9 @@ module ApplicationConfiguration
         end
       end
       @ostruct.katello_version = version
+
+      available_locales = ['de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pt-BR', 'gu', 'hi', 'mr', 'or', 'ru', 'te', 'pa', 'kn', 'bn', 'ta', 'zh-CN', 'zh-TW']
+      @ostruct.available_locales = available_locales unless @ostruct.respond_to?(:available_locales)
     end
 
     # helper method that converts object to open struct recursively

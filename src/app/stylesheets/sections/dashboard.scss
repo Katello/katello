@@ -177,13 +177,16 @@
         width: 50%;
         padding-left: 2px;
       }
-      
       .col_3 {
         display: inline-block;
-        width: $big_width* .42;
+        width: $big_width* .40;
         padding-left: 2px;
       }
-
+      .col_4 {
+        display: inline-block;
+        width: $big_width * .05;
+        padding-left: 2px;
+      }
       .collapsed {
         float: left;
         width: 16px;
@@ -200,27 +203,6 @@
         margin-top: 2px;
         margin-right: 2px;
       }
-
-      .errata_icon {
-        margin-left: 6px;
-        float: left;
-        width: 16px;
-        height: 16px;
-        margin-top: 4px;
-      }
-      .security_icon {
-        background: $shield_icon_black;
-        @extend .errata_icon;
-      }
-      .enhancement_icon {
-        background: $plus_icon_black;
-        @extend .errata_icon;
-      }
-      .bugzilla_icon {
-        background: $bug_icon_black;
-        @extend .errata_icon;
-      }
-
 
     }
     #dashboard_promotions {

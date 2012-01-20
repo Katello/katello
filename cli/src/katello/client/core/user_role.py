@@ -94,8 +94,8 @@ class Info(UserRoleAction):
         self.require_option('name')
 
     def getPermissions(self, roleId):
-         permApi = PermissionAPI()
-         return permApi.permissions(roleId)
+        permApi = PermissionAPI()
+        return permApi.permissions(roleId)
 
     def formatPermission(self, p, details=True):
         if details:
