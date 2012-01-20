@@ -346,6 +346,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jan 20 2012 Shannon Hughes <shughes@redhat.com> 0.1.187-2
+- se build (shughes@redhat.com)
 * Fri Jan 20 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.187-1
 - fix for listing available tags of KTEnvironment
 
