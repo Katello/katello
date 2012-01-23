@@ -152,7 +152,7 @@ class SystemsController < ApplicationController
 
   def subscriptions
     consumed_entitlements = @system.consumed_entitlements
-    avail_pools = @system.available_pools_full
+    avail_pools = @system.available_pools_full !current_user.subscriptions_match_system_preference
     facts = @system.facts.stringify_keys
     sockets = facts['cpu.cpu_socket(s)']
     render :partial=>"subscriptions", :layout => "tupane_layout",
