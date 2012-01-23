@@ -85,13 +85,14 @@ class Api::FiltersController < Api::ApiController
   def list_repository_filters
     render :json => @repository.filters.to_json
   end
-
+  
   def update_repository_filters
     deleted_filters = @repository.filters - @filters
     added_filters = @filters - @repository.filters
   
     @repository.filters -= deleted_filters
     @repository.filters += added_filters
+    @repository.save!
 
     render :json => @repository.filters.to_json
   end

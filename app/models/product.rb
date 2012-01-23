@@ -39,6 +39,7 @@ class Product < ActiveRecord::Base
     end
   end
   has_and_belongs_to_many :changesets
+  has_and_belongs_to_many :filters, :uniq => true
 
   has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
 

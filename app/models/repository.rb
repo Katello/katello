@@ -37,6 +37,7 @@ class Repository < ActiveRecord::Base
   validates :name, :presence => true
   validates :enabled, :repo_disablement => true, :on => [:update]
   belongs_to :gpg_key, :inverse_of => :repositories
+  has_and_belongs_to_many :filters, :uniq => true
 
   def product
     self.environment_product.product
