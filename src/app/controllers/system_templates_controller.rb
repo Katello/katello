@@ -67,7 +67,6 @@ class SystemTemplatesController < ApplicationController
                              :product_hash => product_hash, :package_groups => package_groups, :distro_map=>distro_map}
   end
   
-
   def setup_options
     columns = ['name']
     @panel_options = { :title => _('System Templates'),
@@ -113,10 +112,19 @@ class SystemTemplatesController < ApplicationController
           @packages << pkg.name
         }
       }
+    
+    offset = params[:offset] || 0
+    @packages.sort!.uniq!
 
-    @packages = trim @packages
+    if offset.to_i >  0
+      render :text=>"" and return if @packages.empty?
 
-    render :partial=>"product_packages"
+      options = {:list_partial => 'product_packages_items'}
+      render_panel_items(@packages, options, nil, offset)
+    else
+      @packages = @packages[0..current_user.page_size]
+      render :partial=>"product_packages", :locals=>{:collection => @packages}
+    end
   end
 
   def product_comps
