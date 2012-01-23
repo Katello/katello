@@ -140,7 +140,8 @@ class Api::SystemsController < Api::ApiController
   end
 
   def pools
-    render :json => { :pools => @system.available_pools_full }
+    listall = (params.has_key?(:listall) ? true : false)
+    render :json => { :pools => @system.available_pools_full(listall) }
   end
 
   def package_profile

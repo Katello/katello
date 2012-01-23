@@ -187,8 +187,8 @@ s  end
         specify { @system.pools.should == pools }
       end
 
-      it "should access candlepin if available_pools is uninialized" do
-        Candlepin::Consumer.should_receive(:available_pools).once.with(uuid).and_return([])
+      it "should access candlepin if available_pools is uninitialized" do
+        Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
         @system.available_pools
       end
 
