@@ -353,6 +353,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 23 2012 Shannon Hughes <shughes@redhat.com> 0.1.193-2
+- se build (shughes@redhat.com)
 * Mon Jan 23 2012 Mike McCune <mmccune@redhat.com> 0.1.193-1
 - perodic rebuild
 * Mon Jan 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.192-1
