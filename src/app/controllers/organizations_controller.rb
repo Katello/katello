@@ -215,6 +215,7 @@ class OrganizationsController < ApplicationController
   def setup_options
     @panel_options = { :title => _('Organizations'),
                :col => ['name'],
+               :titles => [_('Name')],
                :create => _('Organization'),
                :name => controller_display_name,
                :accessor => :cp_key,

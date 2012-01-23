@@ -57,12 +57,12 @@
     #list.list.clear.expand_list{:class=>("ajaxScroll" if ajax_scroll), "data-scroll_url"=>ajax_scroll, "data-page_size"=>current_user.page_size}
       %header
         .block_head.clear
-          - for col in columns
+          - columns.each_index do |index|
             %div{:class => 'column_' + columns.length.to_s}
               -if enable_sort 
-                = sort(col.to_s.sub(/[_]/, " "))
+                = sort(columns[index], :as => titles[index])
               -else
-                = col.to_s.sub(/[_]/, " ")
+                = titles[index]
       - if ajax_load
         .spinner
           = image_tag ("spinner.gif")

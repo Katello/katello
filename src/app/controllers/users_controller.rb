@@ -332,6 +332,7 @@ class UsersController < ApplicationController
   def setup_options
     @panel_options = { :title => _('Users'),
                  :col => ['username'],
+                 :titles => [_('Username')],
                  :create => _('User'),
                  :name => controller_display_name,
                  :ajax_load  => true,
