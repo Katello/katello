@@ -60,7 +60,7 @@ class RepositoriesController < ApplicationController
       @product.save
 
     rescue Exception => error
-      Rails.logger.error error.to_s
+      log_exception error
       notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
@@ -81,7 +81,7 @@ class RepositoriesController < ApplicationController
       @repository.save!
       notice _("Repository '#{@repository.name}' updated.")
     rescue Exception => error
-      Rails.logger.error error.to_s
+      log_exception error
       notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
@@ -94,7 +94,7 @@ class RepositoriesController < ApplicationController
       @repository.save!
       render :json => @repository.id
     rescue Exception => error
-      Rails.logger.error error.to_s
+      log_exception error
       notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
@@ -121,6 +121,7 @@ class RepositoriesController < ApplicationController
     begin
       @provider = Provider.find(params[:provider_id])
     rescue Exception => error
+      log_exception error
       notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
@@ -131,6 +132,7 @@ class RepositoriesController < ApplicationController
     begin
       @product = Product.find(params[:product_id])
     rescue Exception => error
+      log_exception error
       notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
@@ -141,6 +143,7 @@ class RepositoriesController < ApplicationController
     begin
       @repository = Repository.find(params[:id])
     rescue Exception => error
+      log_exception error
       notice _("Couldn't find repository with ID=#{params[:id]}"), {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request

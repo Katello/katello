@@ -16,14 +16,21 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.187
-Release:        2%{?dist}
+Version:        0.1.193
+Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
 Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
+
+# How to create the source tarball:
+#
+# git clone git://git.fedorahosted.org/git/katello.git/
+# yum install tito
+# cd src/
+# tito build --tag katello-%{version}-%{release} --tgz
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -31,6 +38,7 @@ Requires:        %{name}-common
 Requires:        %{name}-glue-pulp
 Requires:        %{name}-glue-foreman
 Requires:        %{name}-glue-candlepin
+Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
 
 %description
@@ -60,7 +68,6 @@ Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.3.4
 Requires:       rubygem(pg)
-Requires:       rubygem(scoped_search) >= 2.3.6
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(acts_as_reportable) >= 1.1.1
 Requires:       rubygem(pdf-writer) >= 1.1.8
@@ -346,8 +353,24 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-* Fri Jan 20 2012 Shannon Hughes <shughes@redhat.com> 0.1.187-2
-- se build (shughes@redhat.com)
+* Mon Jan 23 2012 Mike McCune <mmccune@redhat.com> 0.1.193-1
+- perodic rebuild
+* Mon Jan 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.192-1
+- selinux - adding requirement for the main package
+
+* Mon Jan 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.191-1
+- adding comment to the katello spec
+- Revert "adding first cut of our SELinux policy"
+
+* Mon Jan 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.190-1
+- adding first cut of our SELinux policy
+
+* Fri Jan 20 2012 Mike McCune <mmccune@redhat.com> 0.1.189-1
+- rebuild
+
+* Fri Jan 20 2012 Mike McCune <mmccune@redhat.com> 0.1.188-1
+- Periodic rebuild
+
 * Fri Jan 20 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.187-1
 - fix for listing available tags of KTEnvironment
 

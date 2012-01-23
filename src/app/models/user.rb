@@ -425,6 +425,15 @@ class User < ActiveRecord::Base
     self.preferences[:user][:locale] = locale
   end
 
+  def subscriptions_match_system_preference
+    self.preferences[:user][:subscriptions_match_system] rescue true
+  end
+
+  def subscriptions_match_system_preference= flag
+    self.preferences[:user] = {} unless self.preferences.has_key? :user
+    self.preferences[:user][:subscriptions_match_system] = flag
+  end
+
   #method to delete the passed in org.  Due to the way delayed job is impelemented
   #  we must attached the job to a different instance or object, so we attach it to the current_user
   def destroy_organization_async org

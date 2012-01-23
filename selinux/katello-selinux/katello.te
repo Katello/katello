@@ -1,0 +1,51 @@
+policy_module(katello, 1.0.0)
+
+########################################
+#
+# Declarations
+#
+
+apache_content_template(katello)
+
+permissive httpd_katello_script_t;
+
+type httpd_katello_script_log_t;
+logging_log_file(httpd_katello_script_log_t)
+
+type httpd_katello_script_var_lib_t;
+files_type(httpd_katello_script_var_lib_t)
+
+########################################
+#
+# httpd_katello_script local policy
+#
+
+
+manage_dirs_pattern(httpd_katello_script_t, httpd_katello_script_log_t, httpd_katello_script_log_t)
+manage_files_pattern(httpd_katello_script_t, httpd_katello_script_log_t, httpd_katello_script_log_t)
+logging_log_filetrans(httpd_katello_script_t, httpd_katello_script_log_t, { dir file })
+
+manage_dirs_pattern(httpd_katello_script_t, httpd_katello_script_var_lib_t, httpd_katello_script_var_lib_t)
+manage_files_pattern(httpd_katello_script_t, httpd_katello_script_var_lib_t, httpd_katello_script_var_lib_t)
+files_var_lib_filetrans(httpd_katello_script_t, httpd_katello_script_var_lib_t, { dir file })
+
+sysnet_dns_name_resolve(httpd_katello_script_t)
+corenet_all_recvfrom_unlabeled(httpd_katello_script_t)
+
+allow httpd_katello_script_t self:tcp_socket create_stream_socket_perms;
+corenet_tcp_sendrecv_generic_if(httpd_katello_script_t)
+corenet_tcp_sendrecv_generic_node(httpd_katello_script_t)
+corenet_tcp_sendrecv_all_ports(httpd_katello_script_t)
+corenet_tcp_bind_generic_node(httpd_katello_script_t)
+corenet_tcp_bind_http_port(httpd_katello_script_t)
+corenet_tcp_connect_http_port(httpd_katello_script_t)
+
+domain_use_interactive_fds(httpd_katello_script_t)
+
+files_read_etc_files(httpd_katello_script_t)
+
+logging_send_syslog_msg(httpd_katello_script_t)
+
+miscfiles_read_localization(httpd_katello_script_t)
+
+mta_send_mail(httpd_katello_script_t)

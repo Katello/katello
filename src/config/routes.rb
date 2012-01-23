@@ -146,6 +146,7 @@ Src::Application.routes.draw do
       post :clear_helptips
       put :update_roles
       put :update_locale
+      put :update_preference
       get :edit_environment
       put :update_environment
     end
@@ -254,7 +255,6 @@ Src::Application.routes.draw do
         get :products
       end
     end
-    resources :providers
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
 

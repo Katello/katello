@@ -38,6 +38,6 @@ $(document).ready(function() {
     
     $('#panel').addClass('roles-selected-border');
     $('.arrow-right').remove();
-    $('.active').width(284);
+    $('#list .active').width(284);
 
 });

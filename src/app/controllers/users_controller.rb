@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   end
    
   before_filter :setup_options, :only => [:items, :index]
-  before_filter :find_user, :only => [:items, :index, :edit, :edit_environment, :update_environment,
+  before_filter :find_user, :only => [:items, :index, :edit, :edit_environment, :update_environment, :update_preference,
                                       :update, :update_roles, :update_locale, :clear_helptips, :destroy]
   before_filter :authorize
   skip_before_filter :require_org
@@ -60,6 +60,7 @@ class UsersController < ApplicationController
        :update => edit_details_test,
        :update_roles => edit_test,
        :update_locale => edit_test,
+       :update_preference => edit_test,
        :clear_helptips => edit_details_test,
        :destroy => delete_test,
        :enable_helptip => user_helptip,
@@ -165,6 +166,27 @@ class UsersController < ApplicationController
     @user.save!
     notice _("User updated successfully.")
     redirect_to "#{users_path(:id => @user)}#panel=user_#{@user.id}"
+  end
+
+  def update_preference
+    preference = params[:preference]
+    if preference
+      @user.preferences[:user] = {} unless @user.preferences.has_key? :user
+      if params[:value] == "true"
+        value = true
+      elsif  params[:value] == "false"
+        value = false
+      else
+        value = params[:value]
+      end
+      @user.preferences[:user][preference.to_sym] = value
+      @user.save!
+    end
+
+    respond_to do |format|
+      format.html { render :text=>params[:preference] }
+      format.js
+    end
   end
 
   def edit_environment
