@@ -427,6 +427,8 @@ class User < ActiveRecord::Base
 
   def subscriptions_match_system_preference
     self.preferences[:user][:subscriptions_match_system] rescue true
+    x = self.preferences[:user][:subscriptions_match_system]
+    foo = x
   end
 
   def subscriptions_match_system_preference= flag

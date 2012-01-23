@@ -228,7 +228,8 @@ KT.subs = function() {
     matchsystemSetup = function(){
         var checkboxes = $('#matchsystem');
         checkboxes.each(function(){
-          $(this).change(function(){
+          $(this).change(function(e){
+            e.preventDefault();
             $('#matchsystem_form').ajaxSubmit({
               data: { value: $(this).is(":checked") },  // Checkboxes in forms aren't included when false
               dataType: 'html',
