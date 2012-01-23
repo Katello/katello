@@ -328,9 +328,9 @@ $.widget("ui.multiselect", {
 
 $.extend($.ui.multiselect, {
 	locale: {
-		addAll:'Add all',
-		removeAll:'Remove all',
-		itemsCount:'items selected'
+		addAll:i18n.add_all,
+		removeAll:i18n.remove_all,
+		itemsCount:i18n.items_selected
 	}
 });
 
