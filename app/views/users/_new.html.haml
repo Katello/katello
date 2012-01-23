@@ -14,9 +14,8 @@
   / pretty
 
 = content_for :content do
-  #new_user
-    .grid_10#new_user
-
+  .grid_10
+    = form_tag roles_path, :method => "post", :id => "new_user" do
       %fieldset.fl.clear
         .grid_2.ra
           = label :user, :username, _("Username:")
@@ -27,13 +26,13 @@
         .grid_2.ra
           = label :user, :username, _("Password:")
         .grid_5.la
-          = text_field :user, :username, :id=>"password_field", :type=>"password", :tabindex => auto_tab_index
+          = text_field :user, :password, :id=>"password_field", :type=>"password", :tabindex => auto_tab_index
 
       %fieldset.fl.clear
         .grid_2.ra
           = label :user, :username, _("Confirm:")
         .grid_5.la
-          = text_field :user, :username, :id=>"confirm_field", :type=>"password", :tabindex => auto_tab_index
+          = text_field :user, :password, :id=>"confirm_field", :type=>"password", :tabindex => auto_tab_index
         .grid_2.ra
         .grid_5.la
           #password_conflict
@@ -70,6 +69,5 @@
         .clear
           &nbsp;
 
-    .grid_5.la.prefix_2
-      #save_user.verify_password.button{'data-url' => users_path, :tabindex => auto_tab_index}
-        #{_("Save User")}
+      .grid_5.la.prefix_2
+        = button_to _("Save User"), {:action => "create", :controller => "users"}, :method => :post, :id => :save_user, :tabindex => auto_tab_index

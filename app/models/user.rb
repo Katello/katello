@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
   # validate the password length before hashing
   validates_each :password do |model, attr, value|
     if model.password_changed?
-      model.errors.add(attr, _("at least 5 characters")) if value.length < 5
+      model.errors.add(attr, _("must be at least 5 characters.")) if value.length < 5
     end
   end
 

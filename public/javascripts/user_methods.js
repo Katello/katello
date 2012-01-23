@@ -61,7 +61,7 @@ KT.user_page = function() {
             $("#password_conflict").text(i18n.password_match);
             $(match_button).addClass("disabled");
             $('#save_password').die('click');
-            $('#save_user').die('click');
+            $('#save_user').addClass('disabled');
             return false;
         }
         else {
@@ -76,8 +76,7 @@ KT.user_page = function() {
                 $('#save_password').die('click');
                 $('#save_password').live('click',changePassword);
                 //reset the new user button
-                $('#save_user').die('click');
-                $('#save_user').live('click',createNewUser);
+                $('#save_user').removeClass('disabled');
                 return true;
             }
             else {
@@ -169,7 +168,6 @@ KT.user_page = function() {
     registerEdits = function() {
         $('#password_field').live('keyup.katello', verifyPassword);
         $('#confirm_field').live('keyup.katello',verifyPassword);
-        $('#save_user').live('click', createNewUser);
         $('#clear_helptips').live('click',clearHelptips);
         $('#save_password').live('click',changePassword);
         $('#update_user').live('click',updateUser);
