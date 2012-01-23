@@ -211,6 +211,7 @@ KT.subs = function() {
     autohealSetup = function(){
         var checkboxes = $('#autoheal');
         checkboxes.each(function(){
+          $(this).unbind("change");
           $(this).change(function(){
             $('#autoheal_form').ajaxSubmit({
               data: { autoheal: $(this).is(":checked") },  // Checkboxes in forms aren't included when false
@@ -226,21 +227,20 @@ KT.subs = function() {
     },
 
     matchsystemSetup = function(){
-        var checkboxes = $('#matchsystem');
-        checkboxes.each(function(){
-          $(this).change(function(e){
-            e.preventDefault();
-            $('#matchsystem_form').ajaxSubmit({
-              data: { value: $(this).is(":checked") },  // Checkboxes in forms aren't included when false
-              dataType: 'html',
-              success: function(data) {
-                notices.checkNotices();
-              }, error: function(e) {
-                notices.checkNotices();
-              }
-            });
-          });
+      $('#matchsystem').unbind("click");
+      $('#matchsystem').change(function(e){
+        $('#matchsystem_form').ajaxSubmit({
+          data: { value: $(this).is(":checked") },  // Checkboxes in forms aren't included when false
+          dataType: 'html',
+          success: function(data) {
+            notices.checkNotices();
+            $('#subscriptions > a').click();
+          }, error: function(e) {
+            notices.checkNotices();
+            $('#subscriptions > a').click();
+          }
         });
+      });
     };
     
     return {

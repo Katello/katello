@@ -172,11 +172,15 @@ class UsersController < ApplicationController
     preference = params[:preference]
     if preference
       @user.preferences[:user] = {} unless @user.preferences.has_key? :user
-      @user.preferences[:user][preference.to_sym] = (params[:value] == "true" || params[:value] == true) ? true : false
+      if params[:value] == "true"
+        value = true
+      elsif  params[:value] == "false"
+        value = false
+      else
+        value = params[:value]
+      end
+      @user.preferences[:user][preference.to_sym] = value
       @user.save!
-      foo = @user.preferences[:user][:subscriptions_match_system]
-      bar = @user.preferences[:user][preference.to_sym]
-      x = @user.preferences[:user]
     end
 
     respond_to do |format|
