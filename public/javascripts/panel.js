@@ -787,7 +787,7 @@ KT.panel.list = (function () {
                 $('#' + options['create']).live('submit', function (e) {
                     var button = $(this).find('input[type|="submit"]'),
                         data = KT.common.getSearchParams() || {},
-                        validation = options['validation'] || function(){};
+                        validation = options['validation'] || function(){ return true; };
                                            
                     e.preventDefault();
 
