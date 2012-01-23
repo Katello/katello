@@ -179,6 +179,7 @@ KT.templates = function() {
             buttons.save.addClass("disabled");
             buttons.download.addClass("disabled");
             $('.package_add_remove').hide();
+            $('.package_group_add_remove').hide();
             $('.repo_add_remove').hide();
             $('.product_add_remove').hide();
         }
