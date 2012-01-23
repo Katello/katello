@@ -4,8 +4,8 @@
       "noDefaultEnv": '#{escape_javascript(_("No default environment. Select an organization to choose from available environments."))}'
     });
     env_select.original_env_id = '#{@old_env ? @old_env.id : ''}';
+    env_select.ajax_params = {};
     env_select.ajax_params["user_id"] = '#{@user.id}';
-    env_select.ajax_params["current_user_id"] = '#{current_user.id}';
 
 = content_for :title do
   #{@user.username}
