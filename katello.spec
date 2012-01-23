@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.190
+Version:        0.1.191
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -352,6 +352,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.191-1
+- adding comment to the katello spec
+- Revert "adding first cut of our SELinux policy"
+
 * Mon Jan 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.190-1
 - adding first cut of our SELinux policy
 
