@@ -128,6 +128,9 @@ def setup_admin(admin):
     repo_cmd.add_action('enable', repo.Enable(True))
     repo_cmd.add_action('disable', repo.Enable(False))
     repo_cmd.add_action('list_filters', repo.ListFilters())
+    repo_cmd.add_action('add_filter', repo.AddRemoveFilter(True))
+    repo_cmd.add_action('delete_filter', repo.AddRemoveFilter(False))
+
     admin.add_command('repo', repo_cmd)
 
     package_group_cmd = packagegroup.PackageGroup()

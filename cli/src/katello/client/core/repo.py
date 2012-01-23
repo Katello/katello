@@ -23,7 +23,7 @@ from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.api.utils import get_environment, get_product, get_repo
+from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
 from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_progress_errors, format_task_errors
 from katello.client.core.utils import ProgressBar
 
@@ -503,6 +503,59 @@ class ListFilters(SingleRepoAction):
         self.printer.printItems(filters)
 
         return os.EX_OK
+
+
+class AddRemoveFilter(SingleRepoAction):
+
+    select_by_env = False
+    addition = True
+
+    @property
+    def description(self):
+        if self.addition:
+            return _('add a filter to a product')
+        else:
+            return _('remove a filter from a product')
+
+    def __init__(self, addition):
+        super(AddRemoveFilter, self).__init__()
+        self.addition = addition
+
+    def setup_parser(self):
+        self.set_repo_select_options(False)
+        self.parser.add_option('--filter', dest='filter', help=_("filter name (required)"))
+
+    def check_options(self):
+        self.check_repo_select_options()
+        self.require_option('filter')
+
+    def run(self):
+        filter_name  = self.get_option('filter')
+        org_name     = self.get_option('org')
+
+        repo = self.get_repo()
+        if repo == None:
+            return os.EX_DATAERR
+
+        if get_filter(org_name, filter_name) == None:
+            return os.EX_DATAERR
+
+        filters = self.api.filters(repo['id'])
+        filters = [f['name'] for f in filters] 
+        self.update_filters(repo, filters, filter_name)
+        return os.EX_OK
+
+    def update_filters(self, repo, filters, filter_name):
+        if self.addition:
+            filters.append(filter_name)
+            message = _("Added filter [ %s ] to repository [ %s ]" % (filter_name, repo["name"]))
+        else:
+            filters.remove(filter_name)
+            message = _("Removed filter [ %s ] to repository [ %s ]" % (filter_name, repo["name"]))
+
+        self.api.update_filters(repo['id'], filters)
+        print message
+       
 
 
 # command --------------------------------------------------------------------

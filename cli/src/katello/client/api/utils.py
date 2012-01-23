@@ -26,6 +26,7 @@ from katello.client.api.user import UserAPI
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.api.permission import PermissionAPI
+from katello.client.api.filter import FilterAPI
 
 def get_organization(orgName):
     organization_api = OrganizationAPI()
@@ -150,3 +151,10 @@ def get_permission(role_name, permission_name):
     if perm == None:
         print _("Cannot find permission [ %s ] for user role [ %s ]") % (role_name, permission_name)
     return perm
+
+def get_filter(org_name, name):
+    filter_api = FilterAPI()
+    filter = filter_api.info(org_name, name)
+    if filter == None:
+        print _("Cannot find filter [ %s ]") % (name)
+    return filter
