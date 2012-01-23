@@ -38,6 +38,7 @@ Requires:        %{name}-common
 Requires:        %{name}-glue-pulp
 Requires:        %{name}-glue-foreman
 Requires:        %{name}-glue-candlepin
+Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
 
 %description

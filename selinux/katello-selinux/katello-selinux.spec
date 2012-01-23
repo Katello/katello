@@ -31,7 +31,7 @@ URL:            http://www.katello.org
 #
 # git clone git://git.fedorahosted.org/git/katello.git/
 # yum install tito
-# cd selinux/%{moduletype}
+# cd selinux/%{modulename}-selinux
 # tito build --tag katello-%{version}-%{release} --tgz
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
