@@ -3,7 +3,7 @@
 %define POLICYCOREUTILSVER 1.33.12-1
 
 %define moduletype apps
-%define modulename katello-common
+%define modulename katello
 
 Name:           %{modulename}-selinux
 Version:        0.1.1
