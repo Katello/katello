@@ -3,9 +3,13 @@
 = content_for :title do
   = @organization.name
 
-- unless current_organization == @organization || !@organization.deletable?
+- if @organization.deletable?
   = content_for :remove_item do
-    = link_to _("Remove Organization"), {:controller=>"organizations", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this organization?'), :method => :delete, :class=>"remove_item", :remote=>true
+    - if current_organization != @organization
+      = link_to _("Remove Organization"), {:controller=>"organizations", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this organization?'), :method => :delete, :class=>"remove_item", :remote=>true
+    - else
+      %span{ :class => "remove_item disabled tipsify", :title => _("The current organization cannot be deleted. Please switch to a different organization before deleting.") }
+        = _("Remove Organization")
 
 = content_for :navigation do
   = render_menu(1..2, organization_navigation)
