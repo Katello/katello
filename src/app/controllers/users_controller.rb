@@ -101,7 +101,8 @@ class UsersController < ApplicationController
 
   def create
     begin
-      @user = User.new(params[:user])
+      user_params = params[:user]
+      @user = User.new(user_params)
       env_id = params[:user]['env_id']
       if env_id
         @environment = KTEnvironment.find(env_id)
