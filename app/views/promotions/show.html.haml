@@ -157,14 +157,15 @@
     = render :partial=>"common/tupane"
   
     #content_tree.left.sliding_tree
-      - if manage_changesets
-        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@next_environment.id}"}
-          #{_('+ New Changeset')}
-          .arrow-right
-      - elsif @environment.organization.environments_manageable? 
-        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}"}
-          #{_('+ New Changeset')}
-          .arrow-right
+      - if @next_environment
+        - if manage_changesets
+          %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@next_environment.id}"}
+            #{_('+ New Changeset')}
+            .arrow-right
+        - elsif @environment.organization.environments_manageable? 
+          %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}"}
+            #{_('+ New Changeset')}
+            .arrow-right
       %h2 #{@environment.name + _(" Content")}
       .breadcrumb_search.clear.clickable
         %form#search_form.search{"data-url" => search_index_path()}
