@@ -58,19 +58,6 @@ class RepoAction(Action):
         super(RepoAction, self).__init__()
         self.api = RepoAPI()
 
-    def get_repo(self, includeDisabled=False):
-        repoId   = self.get_option('id')
-        repoName = self.get_option('name')
-        orgName  = self.get_option('org')
-        prodName = self.get_option('product')
-        envName  = self.get_option('env')
-
-        if repoId:
-            repo = self.api.repo(repoId)
-        else:
-            repo = get_repo(orgName, prodName, repoName, envName, includeDisabled)
-
-        return repo
 
 class SingleRepoAction(RepoAction):
 
@@ -96,6 +83,22 @@ class SingleRepoAction(RepoAction):
             self.require_option('org')
             self.require_option('product')
 
+    def get_repo(self, includeDisabled=False):
+        repoId   = self.get_option('id')
+        repoName = self.get_option('name')
+        orgName  = self.get_option('org')
+        prodName = self.get_option('product')
+        if self.select_by_env:
+            envName = self.get_option('env')
+        else:
+            envName = None
+
+        if repoId:
+            repo = self.api.repo(repoId)
+        else:
+            repo = get_repo(orgName, prodName, repoName, envName, includeDisabled)
+
+        return repo
 
 
 
@@ -480,6 +483,25 @@ class Delete(SingleRepoAction):
 
         msg = self.api.delete(repo["id"])
         print msg
+        return os.EX_OK
+
+
+class ListFilters(SingleRepoAction):
+
+    description = _('list filters of a repository')
+    select_by_env = False
+
+    def run(self):
+        repo = self.get_repo()
+        if repo == None:
+            return os.EX_DATAERR
+
+        filters = self.api.filters(repo['id'])
+        self.printer.addColumn('name')
+        self.printer.addColumn('description')
+        self.printer.setHeader(_("Repository Filters"))
+        self.printer.printItems(filters)
+
         return os.EX_OK
 
 
