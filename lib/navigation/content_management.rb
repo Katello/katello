@@ -74,12 +74,11 @@ module Navigation
     def menu_custom_providers
       {:key => :custom_providers,
         :name =>_("Custom"),
-        :url => lambda{organization_providers_path(current_organization())},
+        :url => providers_path,
         :if => lambda{current_organization && Provider.any_readable?(current_organization())},
         :options => {:class=>"third_level"}
       }
     end
-
 
     def menu_sync_management
       {:key => :sync_mgmt,
