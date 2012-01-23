@@ -157,6 +157,7 @@ class GpgKeysController < ApplicationController
     @panel_options = { 
       :title => _('GPG Keys'),
       :col => ['name'],
+      :titles => [_('Name')],
       :create => _('GPG Key'), 
       :name => controller_display_name,
       :ajax_load  => true,

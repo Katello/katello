@@ -271,6 +271,7 @@ class ActivationKeysController < ApplicationController
     @panel_options = { 
       :title => _('Activation Keys'),
       :col => ['name'],
+      :titles => [_('Name')],
       :create => _('Key'), 
       :name => controller_display_name,
       :ajax_load  => true,

@@ -68,9 +68,9 @@ class SystemTemplatesController < ApplicationController
   end
   
   def setup_options
-    columns = ['name']
     @panel_options = { :title => _('System Templates'),
-                 :col => columns,
+                 :col => ["name"],
+                 :titles => [_('Name') ],
                  :create => _('Template'),
                  :name => _('template'),
                  :create => _('Template'),

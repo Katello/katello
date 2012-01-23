@@ -287,7 +287,8 @@ class SystemsController < ApplicationController
 
   def setup_options
     @panel_options = { :title => _('Systems'),
-                      :col => COLUMNS.keys,
+                      :col => ["name", "lastCheckin"],
+                      :titles => [_("Name"), _("Last Checked In")],
                       :custom_rows => true,
                       :enable_create => System.registerable?(@environment, current_organization),
                       :create => _("System"),
