@@ -83,11 +83,17 @@ class Api::FiltersController < Api::ApiController
   end
 
   def list_repository_filters
-    render :json => [].to_json
+    render :json => @repository.filters.to_json
   end
 
   def update_repository_filters
-    render :json => [].to_json
+    deleted_filters = @repository.filters - @filters
+    added_filters = @filters - @repository.filters
+  
+    @repository.filters -= deleted_filters
+    @repository.filters += added_filters
+
+    render :json => @repository.filters.to_json
   end
 
   def find_product
@@ -97,7 +103,7 @@ class Api::FiltersController < Api::ApiController
 
   def find_repository
     @repository = Repository.find(params[:repository_id])
-    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:id]}'") if @repository.nil?
+    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repository.nil?
     @repository
   end
 
