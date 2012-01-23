@@ -3,6 +3,9 @@
     localize({
       "noDefaultEnv": '#{escape_javascript(_("No default environment. Select an organization to choose from available environments."))}'
     });
+    env_select.original_env_id = '';
+    env_select.ajax_params={};
+    env_select.ajax_params["new"]=true;
 
 = content_for :title do
   #{_("New User")}

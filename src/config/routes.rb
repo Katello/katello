@@ -255,7 +255,6 @@ Src::Application.routes.draw do
         get :products
       end
     end
-    resources :providers
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
 
