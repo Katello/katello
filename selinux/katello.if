@@ -1,0 +1,195 @@
+
+## <summary>policy for httpd_katello_script</summary>
+
+
+########################################
+## <summary>
+##	Transition to httpd_katello_script.
+## </summary>
+## <param name="domain">
+## <summary>
+##	Domain allowed to transition.
+## </summary>
+## </param>
+#
+interface(`httpd_katello_script_domtrans',`
+	gen_require(`
+		type httpd_katello_script_t, httpd_katello_script_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, httpd_katello_script_exec_t, httpd_katello_script_t)
+')
+
+
+########################################
+## <summary>
+##	Read httpd_katello_script's log files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`httpd_katello_script_read_log',`
+	gen_require(`
+		type httpd_katello_script_log_t;
+	')
+
+	logging_search_logs($1)
+	read_files_pattern($1, httpd_katello_script_log_t, httpd_katello_script_log_t)
+')
+
+########################################
+## <summary>
+##	Append to httpd_katello_script log files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`httpd_katello_script_append_log',`
+	gen_require(`
+		type httpd_katello_script_log_t;
+	')
+
+	logging_search_logs($1)
+	append_files_pattern($1, httpd_katello_script_log_t, httpd_katello_script_log_t)
+')
+
+########################################
+## <summary>
+##	Manage httpd_katello_script log files
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`httpd_katello_script_manage_log',`
+	gen_require(`
+		type httpd_katello_script_log_t;
+	')
+
+	logging_search_logs($1)
+	manage_dirs_pattern($1, httpd_katello_script_log_t, httpd_katello_script_log_t)
+	manage_files_pattern($1, httpd_katello_script_log_t, httpd_katello_script_log_t)
+	manage_lnk_files_pattern($1, httpd_katello_script_log_t, httpd_katello_script_log_t)
+')
+
+########################################
+## <summary>
+##	Search httpd_katello_script lib directories.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`httpd_katello_script_search_lib',`
+	gen_require(`
+		type httpd_katello_script_var_lib_t;
+	')
+
+	allow $1 httpd_katello_script_var_lib_t:dir search_dir_perms;
+	files_search_var_lib($1)
+')
+
+########################################
+## <summary>
+##	Read httpd_katello_script lib files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`httpd_katello_script_read_lib_files',`
+	gen_require(`
+		type httpd_katello_script_var_lib_t;
+	')
+
+	files_search_var_lib($1)
+	read_files_pattern($1, httpd_katello_script_var_lib_t, httpd_katello_script_var_lib_t)
+')
+
+########################################
+## <summary>
+##	Manage httpd_katello_script lib files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`httpd_katello_script_manage_lib_files',`
+	gen_require(`
+		type httpd_katello_script_var_lib_t;
+	')
+
+	files_search_var_lib($1)
+	manage_files_pattern($1, httpd_katello_script_var_lib_t, httpd_katello_script_var_lib_t)
+')
+
+########################################
+## <summary>
+##	Manage httpd_katello_script lib directories.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`httpd_katello_script_manage_lib_dirs',`
+	gen_require(`
+		type httpd_katello_script_var_lib_t;
+	')
+
+	files_search_var_lib($1)
+	manage_dirs_pattern($1, httpd_katello_script_var_lib_t, httpd_katello_script_var_lib_t)
+')
+
+
+########################################
+## <summary>
+##	All of the rules required to administrate
+##	an httpd_katello_script environment
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <param name="role">
+##	<summary>
+##	Role allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`httpd_katello_script_admin',`
+	gen_require(`
+		type httpd_katello_script_t;
+	type httpd_katello_script_log_t;
+	type httpd_katello_script_var_lib_t;
+	')
+
+	allow $1 httpd_katello_script_t:process { ptrace signal_perms };
+	ps_process_pattern($1, httpd_katello_script_t)
+
+	logging_search_logs($1)
+	admin_pattern($1, httpd_katello_script_log_t)
+
+	files_search_var_lib($1)
+	admin_pattern($1, httpd_katello_script_var_lib_t)
+
+')

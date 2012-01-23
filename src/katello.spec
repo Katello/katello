@@ -14,6 +14,9 @@
 %global homedir %{_datarootdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir deploy/common
+%global selinux_variants mls strict targeted
+%global selinux_policyver %(%{__sed} -e 's,.*selinux-policy-\\([^/]*\\)/.*,\\1,' /usr/share/selinux/devel/policyhelp || echo 0.0.0)
+%global modulename katello
 
 Name:           katello
 Version:        0.1.189
@@ -143,6 +146,26 @@ Requires:        %{name}-common
 %description glue-candlepin
 Katello connection classes for the Candlepin backend
 
+%package selinux
+Summary:        SELinux policy module supporting katello
+Group:          System Environment/Base
+BuildRequires:  checkpolicy
+BuildRequires:  selinux-policy-devel
+BuildRequires:  /usr/share/selinux/devel/policyhelp
+BuildRequires:  hardlink
+
+%if "%{selinux_policyver}" != ""
+Requires:       selinux-policy >= %{selinux_policyver}
+%endif
+Requires:       %{name} = %{version}-%{release}
+Requires(post):   /usr/sbin/semodule
+Requires(post):   /sbin/restorecon
+Requires(postun): /usr/sbin/semodule
+Requires(postun): /sbin/restorecon
+
+%description selinux
+SELinux policy module supporting katello
+
 %prep
 %setup -q
 
@@ -168,6 +191,15 @@ jammit --config config/assets.yml -f
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
 echo Generating gettext files...
 ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
+
+cd selinux
+for selinuxvariant in %{selinux_variants}
+do
+  make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile
+  mv %{modulename}.pp %{modulename}.pp.${selinuxvariant}
+  make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile clean
+done
+cd -
 
 %install
 rm -rf %{buildroot}
@@ -265,6 +297,23 @@ if [ "$1" -ge "1" ] ; then
     /sbin/service %{name} condrestart >/dev/null 2>&1 || :
 fi
 
+%post selinux
+for selinuxvariant in %{selinux_variants}
+do
+  /usr/sbin/semodule -s ${selinuxvariant} -i \
+    %{_datadir}/selinux/${selinuxvariant}/%{modulename}.pp &> /dev/null || :
+done
+/sbin/restorecon %{_localstatedir}/cache/thumbslug || :
+
+%postun selinux
+if [ $1 -eq 0 ] ; then
+  for selinuxvariant in %{selinux_variants}
+  do
+     /usr/sbin/semodule -s ${selinuxvariant} -r %{modulename} &> /dev/null || :
+  done
+fi
+
+
 %files
 %attr(600, katello, katello)
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
@@ -330,6 +379,11 @@ fi
 %{homedir}/lib/resources/foreman.rb
 
 %files all
+
+%file selinux
+%defattr(-,root,root,0755)
+%doc selinux/*
+%{_datadir}/selinux/*/%{modulename}.pp
 
 %pre common
 # Add the "katello" user and group
