@@ -15,7 +15,8 @@ class Api::FiltersController < Api::ApiController
   before_filter :find_organization, :only => [:index, :create]
   before_filter :find_filter, :only => [:show, :destroy, :update]
   before_filter :find_product, :only => [:list_product_filters, :update_product_filters]
-  before_filter :find_filters, :only => [:update_product_filters]
+  before_filter :find_repository, :only => [:list_repository_filters, :update_repository_filters]
+  before_filter :find_filters, :only => [:update_product_filters, :update_repository_filters]
   before_filter :authorize
 
   def rules
@@ -32,7 +33,9 @@ class Api::FiltersController < Api::ApiController
       :update => update_filter,
       :destroy => delete_filter,
       :list_product_filters => index_filters,
-      :update_product_filters => create_filter
+      :update_product_filters => create_filter,
+      :list_repository_filters => index_filters,
+      :update_repository_filters => create_filter
     }
   end
 
@@ -72,16 +75,30 @@ class Api::FiltersController < Api::ApiController
   def update_product_filters
     deleted_filters = @product.filters - @filters
     added_filters = @filters - @product.filters
-
+  
     @product.filters -= deleted_filters
     @product.filters += added_filters
 
     render :json => @product.filters.to_json
   end
 
+  def list_repository_filters
+    render :json => [].to_json
+  end
+
+  def update_repository_filters
+    render :json => [].to_json
+  end
+
   def find_product
     @product = Product.find_by_cp_id(params[:product_id])
     raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
+  end
+
+  def find_repository
+    @repository = Repository.find(params[:repository_id])
+    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:id]}'") if @repository.nil?
+    @repository
   end
 
   def find_filter

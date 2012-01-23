@@ -472,6 +472,10 @@ Src::Application.routes.draw do
       resources :packages
       resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
       resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
+      resources :filters, :only => [] do
+        get :index, :on => :collection, :action => :list_repository_filters
+        put :index, :on => :collection, :action => :update_repository_filters
+      end
       member do
         get :package_groups
         get :package_group_categories
