@@ -249,7 +249,7 @@ class SystemTemplatesController < ApplicationController
     obj_params[:environment_id] = current_organization.locker.id
 
     @template = SystemTemplate.create!(obj_params)
-    notice _("Sync Plan '#{@template.name}' was created.")
+    notice _("System Template '#{@template.name}' was created.")
     render :json=>{:name=>@template.name, :id=>@template.id}
 
   rescue Exception => e
