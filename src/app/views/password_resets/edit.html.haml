@@ -28,6 +28,8 @@
       = label :user, :username, _("Confirm Password:")
     .grid_5.la
       = text_field :user, :username, :id=>"confirm_field", :value=>"", :type=>"password"
+  .grid_5.la.prefix_2
+    #password_conflict
 
   .grid_5.la.prefix_3
     #save_password.verify_password.button{'data-url'=>password_reset_path(@user.password_reset_token)}
