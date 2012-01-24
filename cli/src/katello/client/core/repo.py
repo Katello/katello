@@ -513,9 +513,9 @@ class AddRemoveFilter(SingleRepoAction):
     @property
     def description(self):
         if self.addition:
-            return _('add a filter to a product')
+            return _('add a filter to a repository')
         else:
-            return _('remove a filter from a product')
+            return _('remove a filter from a repository')
 
     def __init__(self, addition):
         super(AddRemoveFilter, self).__init__()

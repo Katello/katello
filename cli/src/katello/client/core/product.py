@@ -21,12 +21,11 @@ import datetime
 from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
-from katello.client.api.filter import FilterAPI
 from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan
+from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan, get_filter
 from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
 
@@ -447,81 +446,61 @@ class ListFilters(SingleProductAction):
 
         return os.EX_OK
 
-class AddFilter(SingleProductAction):
-    description = _('add a filter to a product')
-    select_by_env = False
 
-    def __init__(self):
-        super(AddFilter, self).__init__()
-        self.filterAPI = FilterAPI()
+class AddRemoveFilter(SingleProductAction):
+    
+    select_by_env = False
+    addition = True
+
+    @property
+    def description(self):
+        if self.addition:
+            return _('add a filter to a product')
+        else:
+            return _('remove a filter from a product')
+
+
+    def __init__(self, addition):
+        super(AddRemoveFilter, self).__init__()
+        self.addition = addition
 
     def setup_parser(self):
         self.set_product_select_options(False)
-        self.parser.add_option('--filter', dest='filter',
-                              help=_("filter name (required)"))
+        self.parser.add_option('--filter', dest='filter', help=_("filter name (required)"))
 
     def check_options(self):
         self.check_product_select_options()
         self.require_option('filter')
 
     def run(self):
-        orgName     = self.get_option('org')
-        prodName    = self.get_option('name')
-        filterName  = self.get_option('filter')
+        org_name     = self.get_option('org')
+        prod_name    = self.get_option('name')
+        filter_name  = self.get_option('filter')
 
-        prod = get_product(orgName, prodName)
+        prod = get_product(org_name, prod_name)
         if (prod == None):
             return os.EX_DATAERR
 
-        if self.filterAPI.info(orgName, filterName) == None:
+        if get_filter(org_name, filter_name) == None:
             return os.EX_DATAERR
 
         filters = self.api.filters(prod['id'])
-        self.api.update_filters(prod['id'], [f['name'] for f in filters] + [filterName])
-
-        print _("Added filter [ %s ] to product [ %s ]" % (filterName, prodName))
+        filters = [f['name'] for f in filters] 
+        self.update_filters(prod, filters, filter_name)
         return os.EX_OK
 
-class DeleteFilter(SingleProductAction):
-    description = _('delete a filter from a product')
-    select_by_env = False
+    def update_filters(self, product, filters, filter_name):
+        if self.addition:
+            filters.append(filter_name)
+            message = _("Added filter [ %s ] to product [ %s ]" % (filter_name, product["name"]))
+        else:
+            filters.remove(filter_name)
+            message = _("Removed filter [ %s ] to product [ %s ]" % (filter_name, product["name"]))
 
-    def __init__(self):
-        super(DeleteFilter, self).__init__()
-        self.filterAPI = FilterAPI()
+        self.api.update_filters(product['id'], filters)
+        print message
 
-    def setup_parser(self):
-        self.set_product_select_options(False)
-        self.parser.add_option('--filter', dest='filter',
-                              help=_("filter name (required)"))
 
-    def check_options(self):
-        self.check_product_select_options()
-        self.require_option('filter')
-
-    def run(self):
-        orgName     = self.get_option('org')
-        prodName    = self.get_option('name')
-        filterName  = self.get_option('filter')
-
-        prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
-
-        if self.filterAPI.info(orgName, filterName) == None:
-            return os.EX_DATAERR
-
-        filters = self.api.filters(prod['id'])
-        existingFilterNames = [f['name'] for f in filters]
-
-        if len(existingFilterNames) == 0:
-            return os.EX_OK
-
-        existingFilterNames.remove(filterName)
-        self.api.update_filters(prod['id'], existingFilterNames)
-
-        print _("Deleted filter [ %s ] from product [ %s ]" % (filterName, prodName))
-        return os.EX_OK
 
 # product command ------------------------------------------------------------
 

@@ -109,8 +109,8 @@ def setup_admin(admin):
     prod_cmd.add_action('status', product.Status())
     prod_cmd.add_action('promote', product.Promote())
     prod_cmd.add_action('list_filters', product.ListFilters())
-    prod_cmd.add_action('add_filter', product.AddFilter())
-    prod_cmd.add_action('delete_filter', product.DeleteFilter())
+    prod_cmd.add_action('add_filter', product.AddRemoveFilter(True))
+    prod_cmd.add_action('remove_filter', product.AddRemoveFilter(False))
     prod_cmd.add_action('set_plan', product.SetSyncPlan())
     prod_cmd.add_action('remove_plan', product.RemoveSyncPlan())
     admin.add_command('product', prod_cmd)
@@ -129,7 +129,7 @@ def setup_admin(admin):
     repo_cmd.add_action('disable', repo.Enable(False))
     repo_cmd.add_action('list_filters', repo.ListFilters())
     repo_cmd.add_action('add_filter', repo.AddRemoveFilter(True))
-    repo_cmd.add_action('delete_filter', repo.AddRemoveFilter(False))
+    repo_cmd.add_action('remove_filter', repo.AddRemoveFilter(False))
 
     admin.add_command('repo', repo_cmd)
 
