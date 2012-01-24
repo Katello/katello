@@ -94,7 +94,7 @@ class Repository < ActiveRecord::Base
   def index_packages
     pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
     Tire.index Glue::Pulp::Package.index do
-      create :mappings => Glue::Pulp::Package.index_mapping
+      create :settings => Glue::Pulp::Package.index_settings, :mappings => Glue::Pulp::Package.index_mapping
       import pkgs
     end if !pkgs.empty?
   end
