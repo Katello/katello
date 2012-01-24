@@ -13,7 +13,7 @@
 class Api::SubscriptionsController < Api::ApiController
   respond_to :json
 
-  before_filter :find_system, :only => [:create, :index, :destroy]
+  before_filter :find_system, :only => [:create, :index, :destroy, :destroy_all, :destroy_by_serial]
   before_filter :authorize
 
   def rules
@@ -24,6 +24,8 @@ class Api::SubscriptionsController < Api::ApiController
       :create => subscribe,
       :index => list_subscriptions,
       :destroy => subscribe,
+      :destroy_all => subscribe,
+      :destroy_by_serial => subscribe
     }
   end
 
@@ -40,8 +42,20 @@ class Api::SubscriptionsController < Api::ApiController
 
   def destroy
     expected_params = params.with_indifferent_access.slice(:id)
-    raise HttpErrors::BadRequest, _("Please provide pool id") if expected_params.count != 1
+    raise HttpErrors::BadRequest, _("Please provide entitlement id") if expected_params.count != 1
     @system.unsubscribe(expected_params[:id])
+    render :json => @system.to_json
+  end
+
+  def destroy_all
+    @system.unsubscribe_all
+    render :json => @system.to_json
+  end
+
+  def destroy_by_serial
+    expected_params = params.with_indifferent_access.slice(:serial_id)
+    raise HttpErrors::BadRequest, _("Please provide serial id") if expected_params.count != 1
+    @system.unsubscribe_by_serial(expected_params[:serial_id])
     render :json => @system.to_json
   end
 

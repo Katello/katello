@@ -150,6 +150,16 @@ module Candlepin
         self.delete(uri, self.default_headers).code.to_i
       end
 
+      def remove_entitlements uuid
+        uri = join_path(path(uuid), 'entitlements')
+        self.delete(uri, self.default_headers).code.to_i
+      end
+
+      def remove_certificate uuid, serial_id
+        uri = join_path(path(uuid), 'certificates') + "/#{serial_id}"
+        self.delete(uri, self.default_headers).code.to_i
+      end
+
       def guests uuid
         response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'guests'), self.default_headers).body
         JSON.parse(response).map { |e| e.with_indifferent_access }
