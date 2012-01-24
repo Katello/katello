@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.40
+Version:       0.1.41
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jan 24 2012 Martin Bačovský <mbacovsk@redhat.com> 0.1.41-1
+- 782775 - Unify unsubscription in RHSM and Katello CLI (mbacovsk@redhat.com)
+- 772183 - ProvidedProducts: displays too much of information for RH Pools (mbacovsk@redhat.com)
+- 773521 - Help text should include "entitlement ID" instead of "pool id" (mbacovsk@redhat.com)
+- Added require_one_of_options checker to CLI Action (mbacovsk@redhat.com)
+- Fixed exit codes in 'system subscriptions' (CLI) (mbacovsk@redhat.com)
+- 767470 - Unable to fetch subscription serial numbers from cli (mbacovsk@redhat.com)
+- dists - adding required string to the repo_id param (lzap+git@redhat.com)
+
 * Thu Jan 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.39-1
 - perms - moving /errata/id under /repositories API
 - perms - moving /packages/id under /repositories API
