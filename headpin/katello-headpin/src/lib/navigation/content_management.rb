@@ -74,12 +74,11 @@ module Navigation
     def menu_custom_providers
       {:key => :custom_providers,
         :name =>_("Custom"),
-        :url => lambda{organization_providers_path(current_organization())},
+        :url => providers_path,
         :if => lambda{AppConfig.katello? && current_organization && Provider.any_readable?(current_organization())},
         :options => {:class=>"third_level"}
       }
     end
-
 
     def menu_sync_management
       {:key => :sync_mgmt,
@@ -219,19 +218,18 @@ module Navigation
       [
         { :key => :filelist,
           :name =>_("Filelist"),
-          :url => lambda{filelist_distribution_path(URI::escape(@distribution.id))},
+          :url => lambda{filelist_repository_distribution_path(@repo.id, URI::escape(@distribution.id))},
           :if => lambda{@distribution},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,
           :name =>_("Details"),
-          :url => lambda{distribution_path(URI::escape(@distribution.id))},
+          :url => lambda{repository_distribution_path(@repo.id, URI::escape(@distribution.id))},
           :if => lambda{@distribution},
           :options => {:class=>"navigation_element"}
         }
       ]
     end
-
 
     def package_filter_navigation
       [

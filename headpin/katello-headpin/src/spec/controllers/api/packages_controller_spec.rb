@@ -12,10 +12,11 @@
 
 require 'spec_helper.rb'
 
-describe Api::ErrataController, :katello => true do
+describe Api::PackagesController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 
+  let(:repo_id) {'f8ab5088-688e-4ce4-ade3-700aa4cbb070'}
   before(:each) do
     disable_org_orchestration
     disable_product_orchestration
@@ -39,15 +40,14 @@ describe Api::ErrataController, :katello => true do
                                :pulp_id=> "1",
                                :enabled => true)
     @repo.stub(:has_distribution?).and_return(true)
+    @repo.stub(:pulp_id).and_return(repo_id)
     Repository.stub(:find).and_return(@repo)
     @repo.stub(:distributions).and_return([])
     Glue::Pulp::Distribution.stub(:find).and_return([])
 
-    KTEnvironment.stub(:find).and_return(@organization.locker)
-    @erratum = {}
-    @erratum.stub(:repoids).and_return([ @repo.pulp_id ])
-    Glue::Pulp::Errata.stub(:find => @erratum)
-    Glue::Pulp::Errata.stub(:filter => @erratum)
+    @repo.stub(:packages).and_return([])
+    package = { 'repoids' => [ repo_id ] }
+    Pulp::Package.stub(:find).and_return(package)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
@@ -67,15 +67,7 @@ describe Api::ErrataController, :katello => true do
     describe "get a listing by repo" do
       let(:action) { :index }
       let(:req) {
-        get 'index', :repoid => @repo.id, :type => 'security'
-      }
-      it_should_behave_like "protected action"
-    end
-
-    describe "get a listing by env" do
-      let(:action) { :index }
-      let(:req) {
-        get 'index', :type => 'security', :environment_id => "123"
+        get 'index', :repository_id => repo_id
       }
       it_should_behave_like "protected action"
     end
@@ -83,55 +75,28 @@ describe Api::ErrataController, :katello => true do
     describe "show" do
       let(:action) { :show }
       let(:req) {
-        get 'show', :id => 1, :repository_id => @repo.id
+        get 'show', :id => 1, :repository_id => repo_id
       }
       it_should_behave_like "protected action"
     end
   end
 
-  context "test" do
+  context "tests" do
     before do
       disable_authorization_rules
     end
-
-    describe "get a listing of erratas" do
-      before(:each) do
-        @repo = mock(Glue::Pulp::Repo)
-      end
-
-      it "should call pulp find repo api" do
-        Glue::Pulp::Errata.should_receive(:filter).once.with(:repoid => 1).and_return([])
-
-        get 'index', :repoid => 1
-      end
-
-      it "should accept type as filter attribute" do
-        Glue::Pulp::Errata.should_receive(:filter).once.with(:repoid => 1, :type => 'security').and_return([])
-        get 'index', :repoid => 1, :type => 'security'
-
-        Glue::Pulp::Errata.should_receive(:filter).once.with(:type => 'security', :environment_id => '123').and_return([])
-        get 'index', :type => 'security', :environment_id => "123"
-
-        Glue::Pulp::Errata.should_receive(:filter).once.with(:severity => 'critical', :environment_id => '123').and_return([])
-        get 'index', :severity => 'critical', :environment_id => "123"
-
-        Glue::Pulp::Errata.should_receive(:filter).once.with(:severity => 'critical', :product_id => 'product-123', :environment_id => '123').and_return([])
-        get 'index', :severity => 'critical', :product_id => 'product-123', :environment_id => "123"
-      end
-
-      it "should not accept a call without specifying envirovnemnt or repoid" do
-        get 'index', :type => 'security'
-        response.response_code.should == 400
+    describe "get a listing of packages" do
+      it "should call pulp find packages api" do
+        Repository.should_receive(:find).with(repo_id)
+        get 'index', :repository_id => repo_id
       end
     end
 
-    describe "show an erratum" do
-      it "should call pulp find errata api" do
-        Glue::Pulp::Errata.should_receive(:find).once.with(1)
-        get 'show', :id => 1, :repository_id => 1
+    describe "show a package" do
+      it "should call pulp find package api" do
+        Pulp::Package.should_receive(:find).once.with(1)
+        get 'show', :id => 1, :repository_id => repo_id
       end
     end
   end
-
 end
-

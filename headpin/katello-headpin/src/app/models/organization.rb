@@ -68,7 +68,7 @@ class Organization < ActiveRecord::Base
 
   def validate_destroy current_org
     def_error = _("Could not delete organization '%s'.")  % [self.name]
-    if (current_org == @organization)
+    if (current_org == self)
       [def_error, _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
     elsif Organization.count == 1:
       [def_error, _("At least one organization must exist.")]
@@ -107,6 +107,16 @@ class Organization < ActiveRecord::Base
   def systems_readable?
     User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
   end
+
+  def systems_registerable?
+    User.allowed_to?([:register_systems], :organizations, nil, self)
+  end
+
+
+  def any_systems_registerable?
+    systems_registerable? || User.allowed_to?([:register_systems], :environments, environment_ids, self, true)
+  end
+
 
   def gpg_keys_manageable?
     User.allowed_to?([:gpg], :organizations, nil, self)

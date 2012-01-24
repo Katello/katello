@@ -15,7 +15,6 @@
 module ApplicationHelper
 
   include LayoutHelper
-  include ScopedSearch::RailsHelper
   include BrandingHelper
 
   #require 'navigation/main'
@@ -88,7 +87,11 @@ module ApplicationHelper
     enable_create = true if enable_create.nil?
     enable_sort = options[:enable_sort] ? options[:enable_sort] : false
 
-    render :partial => "common/panel", 
+    raise ":titles option not provided" unless options[:titles]
+
+
+
+    render :partial => "common/panel",
            :locals => {
              :title => options[:title],
              :name => options[:name],
@@ -96,6 +99,7 @@ module ApplicationHelper
              :enable_create => enable_create,
              :enable_sort => enable_sort,
              :columns => options[:col],
+             :titles => options[:titles],
              :custom_rows => options[:custom_rows],
              :collection => collection,
              :accessor=>options[:accessor],
@@ -221,4 +225,63 @@ module ApplicationHelper
       products_organization_environment_path(args[:organization].cp_key, args[:environment].id)
     }
   end
+
+
+  # These 2 methods copied from scoped_search:
+  #
+  #  https://github.com/wvanbergen/scoped_search
+  #
+  # which Katello used to use but no longer uses.
+  #
+  # Creates a link that alternates between ascending and descending.
+  #
+  # Examples:
+  #
+  #   sort @search, :by => :username
+  #   sort @search, :by => :created_at, :as => "Created"
+  #
+  # This helper accepts the following options:
+  #
+  # * <tt>:by</tt> - the name of the named scope. This helper will prepend this value with "ascend_by_" and "descend_by_"
+  # * <tt>:as</tt> - the text used in the link, defaults to whatever is passed to :by
+  def sort(field, options = {}, html_options = {})
+
+    unless options[:as]
+      id           = field.to_s.downcase == "id"
+      options[:as] = id ? field.to_s.upcase : field.to_s.humanize
+    end
+
+    ascend  = "#{field} ASC"
+    descend = "#{field} DESC"
+
+    ascending = params[:order] == ascend
+    new_sort = ascending ? descend : ascend
+    selected = [ascend, descend].include?(params[:order])
+
+    if selected
+      css_classes = html_options[:class] ? html_options[:class].split(" ") : []
+      if ascending
+        options[:as] = "&#9650;&nbsp;#{options[:as]}"
+        css_classes << "ascending"
+      else
+        options[:as] = "&#9660;&nbsp;#{options[:as]}"
+        css_classes << "descending"
+      end
+      html_options[:class] = css_classes.join(" ")
+    end
+
+    url_options = params.merge(:order => new_sort)
+
+    options[:as] = raw(options[:as]) if defined?(RailsXss)
+
+    a_link(options[:as], html_escape(url_for(url_options)),html_options)
+  end
+
+  def a_link(name, href, html_options)
+    tag_options = tag_options(html_options)
+    link = "<a href=\"#{href}\"#{tag_options}>#{name}</a>"
+    return link.respond_to?(:html_safe) ? link.html_safe : link
+  end
+
+
 end

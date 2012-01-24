@@ -10,13 +10,21 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper.rb'
+require 'spec_helper'
+require 'helpers/repo_test_data'
 
-describe Api::DistributionsController, :katello => true do
+describe DistributionsController, :katello => true do
   include LoginHelperMethods
+  include LocaleHelperMethods
   include AuthorizationHelperMethods
 
-  before(:each) do
+  let(:distribution_id) { RepoTestData.repo_distributions["id"] }
+  let(:distribution) { [RepoTestData.repo_distributions] }
+
+  before (:each) do
+    login_user
+    set_default_locale
+
     disable_org_orchestration
     disable_product_orchestration
     disable_user_orchestration
@@ -38,14 +46,10 @@ describe Api::DistributionsController, :katello => true do
                                :relative_path => "#{@organization.name}/Locker/prod/repo",
                                :pulp_id=> "1",
                                :enabled => true)
-    @repo.stub(:has_distribution?).and_return(true)
     Repository.stub(:find).and_return(@repo)
-    @repo.stub(:distributions).and_return([])
     Glue::Pulp::Distribution.stub(:find).and_return([])
-
-    @request.env["HTTP_ACCEPT"] = "application/json"
-    login_user_api
   end
+
   let(:authorized_user) do
     user_with_permissions do |u|
       u.can(:read_contents, :environments, @organization.locker.id, @organization)
@@ -56,36 +60,52 @@ describe Api::DistributionsController, :katello => true do
     user_without_permissions
   end
 
-  context "rules" do
-    describe "get a listing of distributions" do
-      let(:action) { :index }
-      let(:req) {
-        get 'index', :repository_id => @repo.id
-      }
-      it_should_behave_like "protected action"
+  describe "GET show" do
+    let(:action) {:show}
+    let(:req) { get :show, :repository_id => @repo.id, :id => distribution_id }
+
+    it_should_behave_like "protected action"
+
+    it "should lookup the distribution" do
+      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      req
     end
 
-    describe "show a distribution" do
-      let(:action) { :show }
-      let(:req) {
-        get 'show', :id => 1, :repository_id => @repo.id
-      }
-      it_should_behave_like "protected action"
+    it "renders show partial" do
+      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      req
+      response.should render_template(:partial => "_show")
+    end
+
+    it "should be successful" do
+      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      req
+      response.should be_success
     end
   end
 
-  context "test" do
-    before do
-      disable_authorization_rules
+  describe "GET filelist" do
+    let(:action) {:filelist}
+    let(:req) { get :filelist, :repository_id => @repo.id, :id => distribution_id }
+
+    it_should_behave_like "protected action"
+
+    it "should lookup the distribution" do
+      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      req
     end
 
-    describe "get a listing of distributions" do
-      it "should call pulp find repo api" do
-        Repository.should_receive(:find).once.with(@repo.id).and_return(@repo)
-        @repo.should_receive(:distributions)
-        get 'index', :repository_id => @repo.id
-      end
+    it "renders the file list partial" do
+      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      req
+      response.should render_template(:partial => "_filelist")
+    end
+
+    it "should be successful" do
+      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      req
+      response.should be_success
     end
   end
+
 end
-

@@ -12,17 +12,15 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class SystemsController < ApplicationController
-  include AutoCompleteSearch
   include SystemsHelper
 
-  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :destroy, :new, :create]
+  before_filter :find_system, :except =>[:index, :items, :environments, :bulk_destroy, :destroy, :new, :create]
   before_filter :find_systems, :only=>[:bulk_destroy]
 
-  before_filter :find_environment, :only => [:environments, :env_items, :new]
+  before_filter :find_environment, :only => [:environments, :new]
   before_filter :authorize
 
-  before_filter :setup_options, :only => [:index, :items, :environments, :env_items]
-  before_filter :search_filter, :only => [:auto_complete_search]
+  before_filter :setup_options, :only => [:index, :items, :environments]
 
   # two pane columns and mapping for sortable fields
   COLUMNS = {'name' => 'name_sort', 'lastCheckin' => 'lastCheckin'}
@@ -34,15 +32,20 @@ class SystemsController < ApplicationController
     any_readable = lambda{System.any_readable?(current_organization)}
     delete_systems = lambda{true}
     register_system = lambda { System.registerable?(@environment, current_organization) }
-
+    items_test = lambda do
+      if params[:env_id]
+        @environment = KTEnvironment.find(params[:env_id])
+        @environment && @environment.systems_readable?
+      else
+        System.any_readable?(current_organization)
+      end
+    end
     {
       :index => any_readable,
       :create => register_system,
       :new => register_system,
-      :items => any_readable,
-      :auto_complete_search => any_readable,
+      :items => items_test,
       :environments => env_system,
-      :env_items => env_system,
       :subscriptions => read_system,
       :update_subscriptions => edit_system,
       :products => read_system,
@@ -115,7 +118,7 @@ class SystemsController < ApplicationController
       @systems = []
       setup_environment_selector(current_organization, accesible_envs)
       if @environment
-        # add the environment id as a search filter.. this will be passed to the app by scoped_search as part of
+        # add the environment id as a search filter.. this will be passed to the app by search as part of
         # the auto_complete_search requests
         @panel_options[:search_env] = @environment.id
       end
@@ -152,7 +155,7 @@ class SystemsController < ApplicationController
 
   def subscriptions
     consumed_entitlements = @system.consumed_entitlements
-    avail_pools = @system.available_pools_full
+    avail_pools = @system.available_pools_full !current_user.subscriptions_match_system_preference
     facts = @system.facts.stringify_keys
     sockets = facts['cpu.cpu_socket(s)']
     render :partial=>"subscriptions", :layout => "tupane_layout",
@@ -183,6 +186,13 @@ class SystemsController < ApplicationController
   end
 
   def products
+    if @system.class == Hypervisor
+      render :partial=>"hypervisor", :layout=>"tupane_layout",
+             :locals=>{:system=>@system,
+                       :message=>_("Hypervisors do not have software products")}
+      return
+    end
+
     products , offset = first_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
     render :partial=>"products", :layout => "tupane_layout", :locals=>{:system=>@system, :products => products, :offset => offset}
   end
@@ -284,10 +294,10 @@ class SystemsController < ApplicationController
 
   def setup_options
     @panel_options = { :title => _('Systems'),
-                      :col => COLUMNS.keys,
+                      :col => ["name", "lastCheckin"],
+                      :titles => [_("Name"), _("Last Checked In")],
                       :custom_rows => true,
-                      :enable_create => System.registerable?(@environment, current_organization),
-                      :create => _("System"),
+                      :enable_create => false, 
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
