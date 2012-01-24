@@ -791,6 +791,10 @@ KT.panel.list = (function () {
                                            
                     e.preventDefault();
 
+                    if( options['extra_create_data'] ){
+                        $.extend(data, options['extra_create_data']() );
+                    }
+
                     if( validation() ){
                         button.attr("disabled", "disabled");
                         
