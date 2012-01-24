@@ -54,4 +54,16 @@ module SystemsHelper
     end
   end
 
+  def system_type system
+
+    return _("Guest") if system.guest == 'true'
+
+    case system
+      when Hypervisor
+        _("Hypervisor")
+      else
+        _("Host")
+    end
+  end
+
 end
