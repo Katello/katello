@@ -68,6 +68,16 @@ describe Api::SubscriptionsController do
         Candlepin::Consumer.should_receive(:remove_entitlement).once.with(@system.uuid, "poolidXYZ")
         post :destroy, :system_id => @system.id, :id => "poolidXYZ"
       end
+
+      it "from one pool by serial" do
+        Candlepin::Consumer.should_receive(:remove_certificate).once.with(@system.uuid, "serialidXYZ")
+        post :destroy_by_serial, :system_id => @system.id, :serial_id => "serialidXYZ"
+      end
+
+      it "from all pools" do
+        Candlepin::Consumer.should_receive(:remove_entitlements).once.with(@system.uuid)
+        post :destroy_all, :system_id => @system.id
+      end
     end
 
     describe "list subscriptions" do

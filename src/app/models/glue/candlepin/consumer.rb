@@ -144,6 +144,22 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
+    def unsubscribe_by_serial serial
+      Rails.logger.info "Unsubscribing from certificate '#{serial}' for : #{name}"
+      Candlepin::Consumer.remove_certificate self.uuid, serial
+    rescue => e
+      Rails.logger.debug e.backtrace.join("\n\t")
+      raise e
+    end
+
+    def unsubscribe_all
+      Rails.logger.info "Unsubscribing from all entitlements for : #{name}"
+      Candlepin::Consumer.remove_entitlements self.uuid
+    rescue => e
+      Rails.logger.debug e.backtrace.join("\n\t")
+      raise e
+    end
+
     def to_json
       super(:methods => [:href, :facts, :idCert, :owner])
     end
@@ -282,6 +298,7 @@ module Glue::Candlepin::Consumer
 
     def consumed_entitlements
       consumed_entitlements = self.entitlements.collect { |entitlement|
+
         pool = self.get_pool entitlement["pool"]["id"]
 
         sla = ""
@@ -302,7 +319,15 @@ module Glue::Candlepin::Consumer
 
         quantity = entitlement["quantity"] != nil ? entitlement["quantity"] : pool["quantity"]
 
+        serials = []
+        entitlement['certificates'].each do |certificate|
+          if certificate.has_key?('serial')
+            serials << certificate['serial']
+          end
+        end
+
         OpenStruct.new(:entitlementId => entitlement["id"],
+                       :serials => serials,
                        :poolName => pool["productName"],
                        :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
                        :consumed => pool["consumed"],

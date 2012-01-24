@@ -506,10 +506,13 @@ class Subscriptions(SystemAction):
                         entitlement_ext = entitlement.copy()
                         provided_products = ', '.join([e['name'] for e in entitlement_ext['providedProducts']])
                         entitlement_ext['providedProductsFormatted'] = provided_products
+                        serial_ids = ', '.join([str(s['id']) for s in entitlement_ext['serials']])
+                        entitlement_ext['serialIds'] = serial_ids
                         yield entitlement_ext
 
                 self.printer.setHeader(_("Current Subscriptions for System [ %s ]") % name)
                 self.printer.addColumn('entitlementId')
+                self.printer.addColumn('serialIds', name=_('Serial Id'))
                 self.printer.addColumn('poolName')
                 self.printer.addColumn('expires')
                 self.printer.addColumn('consumed')
@@ -555,25 +558,37 @@ class Unsubscribe(SystemAction):
                        help=_("organization name (required)"))
         self.parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
-        self.parser.add_option('--pool', dest='pool',
-                               help=_("pool id to unsubscribe from (required)"))
+        self.parser.add_option('--entitlement', dest='entitlement',
+                               help=_("entitlement id to unsubscribe from (either entitlement or serial or all is required)"))
+        self.parser.add_option('--serial', dest='serial',
+                               help=_("serial id of a certificate to unsubscribe from (either entitlement or serial or all is required)"))
+        self.parser.add_option('--all', dest='all', action="store_true", default=None,
+                               help=_("unsubscribe from all currently subscribed certificates (either entitlement or serial or all is required)"))
 
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
-        self.require_option('pool')
+        self.require_one_of_options('entitlement', 'serial', 'all')
 
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
-        pool = self.get_option('pool')
+        entitlement = self.get_option('entitlement')
+        serial = self.get_option('serial')
+        all_entitlements = self.get_option('all')
         systems = self.api.systems_by_org(org, {'name': name})
         if systems == None or len(systems) != 1:
             print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
-            result = self.api.unsubscribe(systems[0]['uuid'], pool)
+            if all_entitlements: #unsubscribe from all
+                result = self.api.unsubscribe_all(systems[0]['uuid'])
+            elif serial: # unsubscribe from cert
+                result = self.api.unsubscribe_by_serial(systems[0]['uuid'], serial)
+            elif entitlement: # unsubscribe from entitlement
+                result = self.api.unsubscribe(systems[0]['uuid'], entitlement)
             print _("Successfully unsubscribed System [ %s ]") % name
+
             return os.EX_OK
 
 class Update(SystemAction):
