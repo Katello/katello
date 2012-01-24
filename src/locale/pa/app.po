@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
-"POT-Creation-Date: 2012-01-13 11:25-0500\n"
+"POT-Creation-Date: 2012-01-16 15:04-0500\n"
 "PO-Revision-Date: 2011-01-06 17:37-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,13 +32,15 @@ msgstr " Red Hat, Inc."
 msgid " Total "
 msgstr "ਕੁੱਲ"
 
-#: app/controllers/users_controller.rb:106
+#: app/controllers/users_controller.rb:107
 msgid " created successfully."
 msgstr "ਸਫਲਤਾਪੂਰਕ ਬਣ ਗਿਆ।"
 
 #: app/models/kt_environment.rb:43
 msgid " environment cannot be set to an environment already on its path"
-msgstr "ਵਾਤਾਵਰਨ ਨੂੰ ਉਸ ਵਾਤਾਵਰਨ ਨਾਲ ਸੈੱਟ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ ਜੋ ਪਹਿਲਾਂ ਹੀ ਉਸਦੇ ਮਾਰਗ ਵਿੱਚ ਹੈ"
+msgstr ""
+"ਵਾਤਾਵਰਨ ਨੂੰ ਉਸ ਵਾਤਾਵਰਨ ਨਾਲ ਸੈੱਟ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ ਜੋ ਪਹਿਲਾਂ ਹੀ ਉਸਦੇ ਮਾਰਗ "
+"ਵਿੱਚ ਹੈ"
 
 #: app/views/common/_common_i18n.html.haml:3
 msgid " items selected."
@@ -52,7 +54,32 @@ msgstr "ਦਾ"
 msgid " results "
 msgstr "ਨਤੀਜੇ"
 
-#: app/models/system_task.rb:138
+#: app/models/system_task.rb:157
+#, 
+msgid "%s (%s other errata)"
+msgstr ""
+
+#: app/models/system_task.rb:109
+#, 
+msgid "%s (%s other errata) install cancelled"
+msgstr ""
+
+#: app/models/system_task.rb:108
+#, 
+msgid "%s (%s other errata) install failed"
+msgstr ""
+
+#: app/models/system_task.rb:110
+#, 
+msgid "%s (%s other errata) install timed out"
+msgstr ""
+
+#: app/models/system_task.rb:107
+#, 
+msgid "%s (%s other errata) install."
+msgstr ""
+
+#: app/models/system_task.rb:150
 #, 
 msgid "%s (%s other package groups)"
 msgstr ""
@@ -117,7 +144,7 @@ msgstr ""
 msgid "%s (%s other package groups) update timed out"
 msgstr ""
 
-#: app/models/system_task.rb:131
+#: app/models/system_task.rb:143
 #, 
 msgid "%s (%s other packages)"
 msgstr ""
@@ -186,6 +213,26 @@ msgstr ""
 #: app/views/providers/redhat/_import_history.html.haml:14
 msgid "%s ago"
 msgstr "%s ਪਹਿਲਾਂ"
+
+#: app/models/system_task.rb:107
+#, 
+msgid "%s erratum install"
+msgstr ""
+
+#: app/models/system_task.rb:109
+#, 
+msgid "%s erratum install cancelled"
+msgstr ""
+
+#: app/models/system_task.rb:108
+#, 
+msgid "%s erratum install failed"
+msgstr ""
+
+#: app/models/system_task.rb:110
+#, 
+msgid "%s erratum install timed out"
+msgstr ""
 
 #: app/controllers/api/system_packages_controller.rb:84
 msgid "%s is not a valid package name"
@@ -311,9 +358,9 @@ msgstr ""
 msgid "%s package update timed out"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:73
+#: app/models/changeset.rb:328 app/controllers/providers_controller.rb:73
 #: app/controllers/providers_controller.rb:96
-#: app/controllers/providers_controller.rb:110 app/models/changeset.rb:328
+#: app/controllers/providers_controller.rb:110
 msgid "%{newline}Reason: %{reason}"
 msgstr "%{newline}Reason: %{reason}"
 
@@ -330,8 +377,8 @@ msgstr "(ਪੂਰਾ ਉਤਪਾਦ ਚੁਣਿਆ ਗਿਆ ਹੈ)"
 msgid "(Load %X More)"
 msgstr ""
 
-#: app/views/system_events/_events.html.haml:3
 #: app/views/system_packages/_packages.html.haml:6
+#: app/views/system_events/_events.html.haml:3
 msgid "(Loaded %X of %Y Total)"
 msgstr "(%X ਲੋਡ ਹੋਏ ਕੁੱਲ %Y ਦੇ)"
 
@@ -379,31 +426,48 @@ msgid "<< Previous"
 msgstr "<< ਪਿੱਛੇ"
 
 #: app/views/user_mailer/logins.text.haml:1
-msgid "A request has been received by Katello server '%s' to retrieve the logins for email '%s'. The following is a list of those logins:"
-msgstr "Katello ਸਰਵਰ '%s' ਦੁਆਰਾ ਈਮੇਲ '%s' ਲਈ ਲਾਗਇਨ ਲੈਣ ਬਾਰੇ ਬੇਨਤੀ ਆਈ ਹੈ। ਇਹਨਾਂ ਲਾਗਇਨਾਂ ਦੀ ਹੇਠਾਂ ਸੂਚੀ ਦਿੱਤੀ ਗਈ ਹੈ:"
+msgid ""
+"A request has been received by Katello server '%s' to retrieve the logins "
+"for email '%s'. The following is a list of those logins:"
+msgstr ""
+"Katello ਸਰਵਰ '%s' ਦੁਆਰਾ ਈਮੇਲ '%s' ਲਈ ਲਾਗਇਨ ਲੈਣ ਬਾਰੇ ਬੇਨਤੀ ਆਈ ਹੈ। ਇਹਨਾਂ "
+"ਲਾਗਇਨਾਂ ਦੀ ਹੇਠਾਂ ਸੂਚੀ ਦਿੱਤੀ ਗਈ ਹੈ:"
 
 #: app/views/user_mailer/password_reset.text.haml:1
-msgid "A request has been received to reset the Katello password for user '%s'.  In order to reset this password, click the URL below."
-msgstr "ਯੂਜ਼ਰ '%s' ਲਈ Katello ਪਾਸਵਰਡ ਤਬਦੀਲ ਕਰਨ ਬਾਰੇ ਬੇਨਤੀ ਆਈ ਹੈ। ਇਬ ਪਾਸਵਰਡ ਤਬਦੀਲ ਕਰਨ ਲਈ, ਹੇਠਲਾਂ URL ਦਬਾਓ।"
+msgid ""
+"A request has been received to reset the Katello password for user '%s'.  In"
+" order to reset this password, click the URL below."
+msgstr ""
+"ਯੂਜ਼ਰ '%s' ਲਈ Katello ਪਾਸਵਰਡ ਤਬਦੀਲ ਕਰਨ ਬਾਰੇ ਬੇਨਤੀ ਆਈ ਹੈ। ਇਬ ਪਾਸਵਰਡ ਤਬਦੀਲ ਕਰਨ "
+"ਲਈ, ਹੇਠਲਾਂ URL ਦਬਾਓ।"
 
+#: app/models/resource_type.rb:94
 #: app/controllers/activation_keys_controller.rb:272
-#: app/models/resource_type.rb:94 lib/navigation/systems.rb:50
+#: lib/navigation/systems.rb:50
 msgid "Activation Keys"
 msgstr "ਸਰਗਰਮੀ ਕੁੰਜੀਆਂ"
 
 #: app/views/activation_keys/index.html.haml:3
-msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system, system template to apply to the system...etc."
-msgstr "ਸਰਗਰਮੀ ਕੁੰਜੀ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਦਿੰਦੀ ਹੈ ਜੋ ਸਿਸਟਮ ਰਜਿਸਟਰੇਸ਼ਨ ਦੌਰਾਨ ਸਿਸਟਮ ਤੇ ਲਾਗੂ ਕੀਤੀਆਂ ਜਾ ਸਕਦੀਆਂ ਹਨ।  ਇਸ ਵਿੱਚ ਸ਼ਾਮਿਲ ਹਨ, ਜਿਵੇਂ ਸਿਸਟਮ ਨੂੰ ਨਿਰਧਾਰਤ ਕਰਨ ਲਈ ਮੂਲ ਵਾਤਾਵਰਨ, ਸਿਸਟਮ ਨੂੰ ਨਿਰਧਾਰਤ ਕਰਨ ਲਈ ਮੈਂਬਰੀ, ਸਿਸਟਮ ਤੇ ਲਾਗੂ ਕਰਨ ਵਾਲਾ ਸਿਸਟਮ ਟੈਂਪਲਿਟ...ਆਦਿ।"
+msgid ""
+"Activation Keys provide a set of characteristics that may be applied to a "
+"system during system registration.  This includes things such as, default "
+"environment to assign to the system, subscriptions to allocate to the "
+"system, system template to apply to the system...etc."
+msgstr ""
+"ਸਰਗਰਮੀ ਕੁੰਜੀ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਦਿੰਦੀ ਹੈ ਜੋ ਸਿਸਟਮ ਰਜਿਸਟਰੇਸ਼ਨ ਦੌਰਾਨ ਸਿਸਟਮ ਤੇ ਲਾਗੂ "
+"ਕੀਤੀਆਂ ਜਾ ਸਕਦੀਆਂ ਹਨ।  ਇਸ ਵਿੱਚ ਸ਼ਾਮਿਲ ਹਨ, ਜਿਵੇਂ ਸਿਸਟਮ ਨੂੰ ਨਿਰਧਾਰਤ ਕਰਨ ਲਈ ਮੂਲ "
+"ਵਾਤਾਵਰਨ, ਸਿਸਟਮ ਨੂੰ ਨਿਰਧਾਰਤ ਕਰਨ ਲਈ ਮੈਂਬਰੀ, ਸਿਸਟਮ ਤੇ ਲਾਗੂ ਕਰਨ ਵਾਲਾ ਸਿਸਟਮ "
+"ਟੈਂਪਲਿਟ...ਆਦਿ।"
 
-#: app/views/roles/index.html.haml:9 app/views/filters/_packages.html.haml:24
-#: app/views/common/_common_i18n.html.haml:3
-#: app/views/system_templates/index.html.haml:6
-#: app/views/system_templates/_product_repos.html.haml:6
+#: app/views/system_templates/_product_comps.html.haml:6
+#: app/views/system_templates/_repositories.html.haml:8
 #: app/views/system_templates/_products.html.haml:9
 #: app/views/system_templates/_product_packages.html.haml:6
-#: app/views/system_templates/_repositories.html.haml:8
-#: app/views/system_templates/_product_comps.html.haml:6
+#: app/views/system_templates/_product_repos.html.haml:6
+#: app/views/system_templates/index.html.haml:6
+#: app/views/filters/_packages.html.haml:24 app/views/roles/index.html.haml:9
 #: app/views/promotions/show.html.haml:8
+#: app/views/common/_common_i18n.html.haml:3
 msgid "Add"
 msgstr "ਜੋੜੋ"
 
@@ -447,7 +511,7 @@ msgstr "ਪੈਕੇਜ ਗਰੁੱਪ ਜੋੜਨ ਦਾ ਸਮਾਂ ਸਮ�
 msgid "Add Package Timeout"
 msgstr "ਪੈਕੇਜ ਜੋੜਨ ਦਾ ਸਮਾਂ ਸਮਾਪਤ"
 
-#: app/views/roles/index.html.haml:9 app/views/roles/_permissions.html.haml:6
+#: app/views/roles/_permissions.html.haml:6 app/views/roles/index.html.haml:9
 #: app/views/roles/_edit.html.haml:94
 msgid "Add Permission"
 msgstr "ਮਨਜੂਰੀ ਜੋੜੋ"
@@ -547,7 +611,7 @@ msgstr "ਸਲਾਹਕਾਰ"
 msgid "Alert"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:209 app/models/resource_type.rb:99
+#: app/models/resource_type.rb:99 app/helpers/breadcrumb_helper.rb:209
 #: app/views/roles/index.html.haml:9 app/views/roles/_permission.html.haml:23
 #: app/views/roles/_permission.html.haml:33
 #: app/views/roles/_closed_permission.html.haml:11
@@ -561,22 +625,34 @@ msgid "All Repositories"
 msgstr "ਸਭ ਰਿਪੋਜ਼ਟਰੀਆਂ"
 
 #: app/views/promotions/show.html.haml:154
-msgid "An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment."
-msgstr "ਸੰਖੇਪ ਦਰਾਮਦ ਕਰਨ ਲਈ ਇੱਕ ਵਾਤਾਵਰਨ ਮੌਜੂਦ ਨਹੀਂ ਹੈ। ਜੇ ਤੁਸੀਂ ਚੇਂਜਸ਼ੀਟ ਅਤੇ ਸੰਖੇਪ ਪਰਬੰਧਨ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ, ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਨਵਾਂ ਵਾਤਾਵਰਨ ਬਣਾਓ।"
+msgid ""
+"An environment does not exist to promote content to.  If you would like to "
+"manage changesets and content, please create a new environment."
+msgstr ""
+"ਸੰਖੇਪ ਦਰਾਮਦ ਕਰਨ ਲਈ ਇੱਕ ਵਾਤਾਵਰਨ ਮੌਜੂਦ ਨਹੀਂ ਹੈ। ਜੇ ਤੁਸੀਂ ਚੇਂਜਸ਼ੀਟ ਅਤੇ ਸੰਖੇਪ "
+"ਪਰਬੰਧਨ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ, ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਨਵਾਂ ਵਾਤਾਵਰਨ ਬਣਾਓ।"
 
 #: app/views/system_templates/index.html.haml:116
-msgid "An error has occured when communicating with the server, please refresh the page to retrieve the current System Template"
-msgstr "ਸਰਵਰ ਨਾਲ ਸੰਪਰਕ ਦੌਰਾਨ ਗਲਤੀ ਆਈ ਹੈ, ਕਿਰਪਾ ਕਰਕੇ ਪੇਜ਼ ਮੁੜ-ਤਾਜ਼ਾ ਕਰੋ ਤਾਂ ਤੋ ਮੌਜੂਦਾ ਸਿਸਟਮ ਟੈਂਪਲਿਟ ਵਾਪਸ ਲਿਆਂਦਾ ਜਾ ਸਕੇ"
+msgid ""
+"An error has occured when communicating with the server, please refresh the "
+"page to retrieve the current System Template"
+msgstr ""
+"ਸਰਵਰ ਨਾਲ ਸੰਪਰਕ ਦੌਰਾਨ ਗਲਤੀ ਆਈ ਹੈ, ਕਿਰਪਾ ਕਰਕੇ ਪੇਜ਼ ਮੁੜ-ਤਾਜ਼ਾ ਕਰੋ ਤਾਂ ਤੋ ਮੌਜੂਦਾ "
+"ਸਿਸਟਮ ਟੈਂਪਲਿਟ ਵਾਪਸ ਲਿਆਂਦਾ ਜਾ ਸਕੇ"
 
 #: app/views/promotions/show.html.haml:70
-msgid "An error has occured when communicating with the server, please refresh the page to retrieve the current changeset."
-msgstr "ਸਰਵਰ ਨਾਲ ਸੰਪਰਕ ਦੌਰਾਨ ਇੱਕ ਗਲਤੀ ਆਈ ਹੈ, ਕਿਰਪਾ ਕਰਕੇ ਮੌਜੂਦਾ ਚੇਂਜਸ਼ੀਟ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਪੇਜ਼ ਮੁੜ-ਤਾਜ਼ਾ ਕਰੋ।"
+msgid ""
+"An error has occured when communicating with the server, please refresh the "
+"page to retrieve the current changeset."
+msgstr ""
+"ਸਰਵਰ ਨਾਲ ਸੰਪਰਕ ਦੌਰਾਨ ਇੱਕ ਗਲਤੀ ਆਈ ਹੈ, ਕਿਰਪਾ ਕਰਕੇ ਮੌਜੂਦਾ ਚੇਂਜਸ਼ੀਟ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ"
+" ਪੇਜ਼ ਮੁੜ-ਤਾਜ਼ਾ ਕਰੋ।"
 
 #: app/views/roles/index.html.haml:9
 msgid "Applied"
 msgstr "ਲਾਗੂ ਕੀਤਾ ਗਿਆ ਹੈ"
 
-#: lib/navigation/systems.rb:112
+#: lib/navigation/systems.rb:119
 msgid "Applied Subscriptions"
 msgstr "ਲਾਗੂ ਮੈਂਬਰੀਆਂ"
 
@@ -584,9 +660,9 @@ msgstr "ਲਾਗੂ ਮੈਂਬਰੀਆਂ"
 msgid "Apply Selected Plan to Selected Products"
 msgstr "ਚੁਣੇ ਉਤਪਾਦਾਂ ਤੇ ਚੁਣਿਆਂ ਪਲਾਨ ਲਾਗੂ ਕਰੋ"
 
-#: app/views/systems/_edit.html.haml:40
-#: app/views/providers/redhat/_subscription_details.html.haml:8
 #: app/views/subscriptions/index.html.haml:17
+#: app/views/providers/redhat/_subscription_details.html.haml:8
+#: app/views/systems/_edit.html.haml:40
 msgid "Arch"
 msgstr "ਢਾਂਚਾ"
 
@@ -644,16 +720,15 @@ msgstr "ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਸ ਟੈਂਪਲਿਟ ਨ�
 msgid "Are you sure you want to remove this user?"
 msgstr "ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਸ ਯੂਜ਼ਰ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
 
-#: app/views/roles/_self_role_edit.html.haml:6
-#: app/views/sync_plans/_edit.html.haml:11
 #: app/views/environments/_edit.html.haml:10
-#: app/views/notices/show.html.haml:16
-#: app/views/common/_common_i18n.html.haml:3
+#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 #: app/views/activation_keys/_available_subscriptions.html.haml:7
 #: app/views/activation_keys/_edit.html.haml:15
-#: app/views/activation_keys/_applied_subscriptions.html.haml:7
-#: app/views/promotions/show.html.haml:129
 #: app/views/gpg_keys/_edit.html.haml:8
+#: app/views/roles/_self_role_edit.html.haml:6
+#: app/views/notices/show.html.haml:16 app/views/promotions/show.html.haml:129
+#: app/views/sync_plans/_edit.html.haml:11
+#: app/views/common/_common_i18n.html.haml:3
 msgid "Are you sure?"
 msgstr "ਪੱਕਾ?"
 
@@ -675,23 +750,24 @@ msgstr "ਘੱਟੋ-ਘੱਟ ਇੱਕ ਸੰਗਠਨ ਮੌਜੂਦ ਹੋ�
 
 #: app/models/system_template.rb:127
 msgid "At least one product or repository must be present to export a TDL"
-msgstr "ਘੱਟੋ-ਘੱਟ ਇੱਕ ਉਤਪਾਦ ਜਾਂ ਰਿਪੋਜ਼ਟਰੀ TDL ਐਕਸਪੋਰਟ ਕਰਨ ਲਈ ਮੌਜੂਦ ਹੋਣੀ ਜਰੂਰੀ ਹੈ"
+msgstr ""
+"ਘੱਟੋ-ਘੱਟ ਇੱਕ ਉਤਪਾਦ ਜਾਂ ਰਿਪੋਜ਼ਟਰੀ TDL ਐਕਸਪੋਰਟ ਕਰਨ ਲਈ ਮੌਜੂਦ ਹੋਣੀ ਜਰੂਰੀ ਹੈ"
 
 #: app/views/dashboard/index.html.haml:6
 msgid "Available Errata"
 msgstr "ਉਪਲੱਬਧ ਇਰੱਟਾ"
 
-#: app/views/systems/_subs.html.haml:59 lib/navigation/systems.rb:118
+#: app/views/systems/_subs.html.haml:59 lib/navigation/systems.rb:125
 msgid "Available Subscriptions"
 msgstr "ਉਪਲੱਬਧ ਮੈਂਬਰੀਆਂ"
 
-#: app/views/common/404.html.haml:7 app/views/common/500.html.haml:15
+#: app/views/common/500.html.haml:15 app/views/common/404.html.haml:7
 #: app/views/common/403.html.haml:8
 msgid "Back"
 msgstr "ਪਿੱਛੇ"
 
-#: app/views/providers/redhat/_subscription_details.html.haml:10
 #: app/views/subscriptions/index.html.haml:19
+#: app/views/providers/redhat/_subscription_details.html.haml:10
 msgid "Begins"
 msgstr "ਸ਼ੁਰੂ"
 
@@ -716,11 +792,11 @@ msgstr ""
 msgid "Can't update Locker environment"
 msgstr "ਲਾਕਰ ਇਨਵਾਇਰਮੈਂਟ ਨੂੰ ਅੱਪਡੇਟ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: app/views/roles/_permission.html.haml:42
-#: app/views/systems/_actions.html.haml:12
-#: app/views/common/_edit_i18n.html.haml:4
-#: app/views/activation_keys/_edit.html.haml:73
 #: app/views/sync_management/index.html.haml:5
+#: app/views/activation_keys/_edit.html.haml:73
+#: app/views/roles/_permission.html.haml:42
+#: app/views/common/_edit_i18n.html.haml:4
+#: app/views/systems/_actions.html.haml:12
 msgid "Cancel"
 msgstr "ਰੱਦ"
 
@@ -736,7 +812,7 @@ msgstr "ਦੁਹਰਾਈ ਰੱਦ"
 msgid "Canceled."
 msgstr "ਰੱਦ ਕੀਤਾ।"
 
-#: app/models/system_task.rb:102
+#: app/models/system_task.rb:115
 #, 
 msgid "Candlepin Event"
 msgstr ""
@@ -759,7 +835,7 @@ msgstr "ਲਾਕਰ ਇਨਵਾਇਰਮੈਂਟ ਵਿੱਚ ਸਰਗਰਮ
 msgid "Cannot delete currently logged user"
 msgstr "ਮੌਜੂਦਾ ਲਾਗਇਨ ਹੋਏ ਯੂਜ਼ਰ ਹਟਾ ਨਹੀਂ ਸਕਦਾ"
 
-#: app/controllers/api/templates_controller.rb:96
+#: app/controllers/api/templates_controller.rb:107
 msgid "Cannot export templates for the Locker environment."
 msgstr "ਲਾਕਰ ਇਨਵਾਇਰਮੈਂਟ ਲਈ ਟੈਂਪਲਿਟ ਐਕਸਪੋਰਟ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
@@ -783,7 +859,7 @@ msgstr "all_verbs ਚੁਣਿਆ ਹੈ ਤਾਂ ਵਰਬ ਨਹੀਂ ਨਿ
 msgid "Cannot specify all_types without all_tags and all_verbs"
 msgstr "all_types ਨੂੰ all_tags ਅਤੇ all_verbs ਤੋਂ ਬਿਨਾਂ ਨਿਰਧਾਰਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
-#: app/controllers/api/templates_controller.rb:87
+#: app/controllers/api/templates_controller.rb:98
 msgid "Cannot validate templates for the Locker environment."
 msgstr "ਲਾਕਰ ਇਨਵਾਇਰਮੈਂਟ ਲਈ ਟੈਂਪਲਿਟ ਪ੍ਰਮਾਣਿਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
 
@@ -811,9 +887,8 @@ msgstr "ਚੇਂਜਸੈੱਟ ਅਤੀਤ"
 msgid "Changeset is empty."
 msgstr "ਚੇਂਜਸੈੱਟ ਖਾਲੀ ਹੈ।"
 
-#: app/helpers/breadcrumb_helper.rb:29
-#: app/controllers/changesets_controller.rb:269
-#: app/views/promotions/show.html.haml:150
+#: app/controllers/changesets_controller.rb:268
+#: app/helpers/breadcrumb_helper.rb:29 app/views/promotions/show.html.haml:150
 #: app/views/promotions/show.html.haml:153
 msgid "Changesets"
 msgstr "ਚੇਂਜਸੈੱਟ"
@@ -848,12 +923,13 @@ msgstr "ਅਯੋਗ ਮੱਦਦ-ਟਿੱਪਣੀਆਂ ਸਾਫ ਕਰੋ:"
 msgid "Clear the Search"
 msgstr "ਖੋਜ ਸਾਫ ਕਰੋ"
 
-#: app/controllers/users_controller.rb:248
+#: app/controllers/users_controller.rb:261
 msgid "Cleared"
 msgstr "ਸਾਫ ਹੋ ਗਿਆ"
 
 #: app/views/roles/index.html.haml:9
-msgid "Click Add or Remove next to a user name to apply or remove them from role."
+msgid ""
+"Click Add or Remove next to a user name to apply or remove them from role."
 msgstr "ਰੋਲ ਜੋੜਨ ਜਾਂ ਹਟਾਉਣ ਲਈ ਯੂਜ਼ਰ ਨਾਂ ਤੋਂ ਅੱਗੇ ਜੋੜੋ ਜਾਂ ਹਟਾਓ ਦਬਾਓ।"
 
 #: app/views/roles/index.html.haml:9
@@ -861,10 +937,11 @@ msgid "Click Add permission from the bar below to add a permission."
 msgstr "ਮਨਜੂਰੀ ਜੋੜਨ ਲਈ ਹੇਠਲੀ ਪੱਟੀ ਵਿੱਚੋਂ ਮਨਜੂਰੀ ਜੋੜੋ ਦਬਾਓ।"
 
 #: app/views/roles/index.html.haml:9
-msgid "Click edit permission from the bar below to edit the current permission."
+msgid ""
+"Click edit permission from the bar below to edit the current permission."
 msgstr "ਮੌਜੂਦਾ ਮਨਜੂਰੀ ਸੋਧਣ ਲਈ ਹੇਠਲੀ ਪੱਟੀ ਵਿੱਚੋਂ ਮਨਜੂਰੀ ਸੋਧ ਦਬਾਓ।"
 
-#: app/controllers/organizations_controller.rb:90
+#: app/controllers/organizations_controller.rb:89
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr "ਪਹਿਲਾਂ ਵਾਤਾਵਰਨ ਜੋੜਨ ਲਈ 'ਵਾਤਾਵਰਨ ਜੋੜੋ' ਦਬਾਓ"
 
@@ -873,8 +950,8 @@ msgid "Click to edit"
 msgstr "ਸੋਧਣ ਲਈ ਦਬਾਓ"
 
 #: app/views/roles/_edit.html.haml:11
-#: app/views/layouts/_tupane_layout.html.haml:15
-#: app/views/layouts/_tupane_layout.html.haml:20
+#: app/views/layouts/_tupane_layout.html.haml:18
+#: app/views/layouts/_tupane_layout.html.haml:23
 #: app/views/common/_edit_i18n.html.haml:4
 msgid "Close"
 msgstr "ਬੰਦ"
@@ -907,7 +984,7 @@ msgstr "ਖਤਮ"
 msgid "Confirm Password:"
 msgstr "ਪਾਸਵਰਡ ਪੁਸ਼ਟੀ:"
 
-#: app/views/users/_edit_form.html.haml:53 app/views/users/_new.html.haml:33
+#: app/views/users/_new.html.haml:33 app/views/users/_edit_form.html.haml:53
 msgid "Confirm:"
 msgstr "ਪੁਸ਼ਟੀ:"
 
@@ -916,8 +993,8 @@ msgstr "ਪੁਸ਼ਟੀ:"
 msgid "Confirmation"
 msgstr ""
 
-#: app/views/providers/redhat/_subscription_details.html.haml:5
 #: app/views/subscriptions/index.html.haml:14
+#: app/views/providers/redhat/_subscription_details.html.haml:5
 msgid "Consumed"
 msgstr "ਵਰਤੇ"
 
@@ -933,14 +1010,14 @@ msgstr "ਸੰਖੇਪ ਡਾਊਨਲੋਡ URL: "
 msgid "Content Management"
 msgstr "ਸੰਖੇਪ ਪਰਬੰਧਨ"
 
-#: app/views/changesets/_edit.html.haml:26
 #: app/views/system_templates/_promotion_details.html.haml:13
+#: app/views/changesets/_edit.html.haml:32
 msgid "Contents:"
 msgstr "ਸੰਖੇਪ:"
 
-#: app/views/systems/_subs.html.haml:19
-#: app/views/providers/redhat/_subscription_details.html.haml:6
 #: app/views/subscriptions/index.html.haml:15
+#: app/views/providers/redhat/_subscription_details.html.haml:6
+#: app/views/systems/_subs.html.haml:19
 msgid "Contract"
 msgstr "ਕੰਟਰੈਕਟ"
 
@@ -968,9 +1045,9 @@ msgstr "ਪਰੋਵਾਈਡਰ '%s' ਨਹੀਂ ਲੱਭਿਆ"
 msgid "Couldn't find subject of synchronization"
 msgstr "ਸਮਕਾਲਤਾ ਦਾ ਵਿਸ਼ਾ ਨਹੀਂ ਲੱਭ ਸਕਿਆ"
 
-#: app/views/repositories/_new.html.haml:33
-#: app/views/environments/_new.html.haml:29
 #: app/views/products/_new.html.haml:45
+#: app/views/environments/_new.html.haml:29
+#: app/views/repositories/_new.html.haml:33
 msgid "Create"
 msgstr "ਬਣਾਓ"
 
@@ -1026,8 +1103,8 @@ msgstr "ਡੀਬੱਗ ਸਾਰਟੀਫਿਕੇਟ"
 msgid "Default Environment:"
 msgstr "ਮੂਲ ਇਨਵਾਇਰਮੈਂਟ:"
 
-#: app/views/users/_edit_environment.html.haml:17
 #: app/views/users/_new.html.haml:48
+#: app/views/users/_edit_environment.html.haml:17
 msgid "Default Organization:"
 msgstr "ਮੂਲ ਸੰਗਠਨ:"
 
@@ -1073,41 +1150,41 @@ msgstr "ਨਿਰਭਰਤਾ"
 msgid "Dependency of "
 msgstr "ਜਿਸਦੀ ਨਿਰਭਰਤਾ"
 
-#: app/views/roles/_new.html.haml:14 app/views/packages/_show.html.haml:17
+#: app/views/distributions/_show.html.haml:18
 #: app/views/organizations/_new.html.haml:17
 #: app/views/organizations/_edit.html.haml:18
-#: app/views/sync_plans/_form.html.haml:10
-#: app/views/sync_plans/_edit.html.haml:20
-#: app/views/systems/_edit.html.haml:28 app/views/changesets/_new.html.haml:15
-#: app/views/environments/_new.html.haml:19
-#: app/views/environments/_edit.html.haml:23
-#: app/views/notices/show.html.haml:29 app/views/filters/_new.html.haml:18
-#: app/views/filters/_edit.html.haml:26
+#: app/views/errata/_show.html.haml:80
 #: app/views/system_templates/_new.html.haml:15
 #: app/views/system_templates/_edit.html.haml:7
-#: app/views/products/_new.html.haml:13 app/views/products/_edit.html.haml:21
+#: app/views/changesets/_new.html.haml:15 app/views/products/_new.html.haml:13
+#: app/views/products/_edit.html.haml:21
+#: app/views/environments/_new.html.haml:19
+#: app/views/environments/_edit.html.haml:23
 #: app/views/activation_keys/_new.html.haml:15
 #: app/views/activation_keys/_edit.html.haml:42
+#: app/views/filters/_new.html.haml:18 app/views/filters/_edit.html.haml:26
+#: app/views/roles/_new.html.haml:14 app/views/notices/show.html.haml:29
+#: app/views/sync_plans/_form.html.haml:10
+#: app/views/sync_plans/_edit.html.haml:20
+#: app/views/packages/_show.html.haml:17
 #: app/views/providers/_form.html.haml:12
-#: app/views/providers/_edit.html.haml:28 app/views/errata/_show.html.haml:80
-#: app/views/distributions/_show.html.haml:18
+#: app/views/providers/_edit.html.haml:28 app/views/systems/_edit.html.haml:28
 msgid "Description"
 msgstr "ਵਰਣਨ"
 
-#: app/views/roles/_edit.html.haml:40 app/views/roles/_edit.html.haml:76
-#: app/views/changesets/_edit.html.haml:16
-#: app/views/promotions/show.html.haml:123
+#: app/views/changesets/_edit.html.haml:16 app/views/roles/_edit.html.haml:40
+#: app/views/roles/_edit.html.haml:76 app/views/promotions/show.html.haml:123
 msgid "Description:"
 msgstr "ਵਰਣਨ:"
 
-#: app/views/changesets/_edit.html.haml:5 lib/navigation/systems.rb:60
-#: lib/navigation/systems.rb:124 lib/navigation/administration.rb:35
-#: lib/navigation/organization.rb:51 lib/navigation/content_management.rb:35
+#: app/views/changesets/_edit.html.haml:5 lib/navigation/administration.rb:35
+#: lib/navigation/systems.rb:60 lib/navigation/systems.rb:131
+#: lib/navigation/content_management.rb:35
 #: lib/navigation/content_management.rb:193
 #: lib/navigation/content_management.rb:210
 #: lib/navigation/content_management.rb:227
 #: lib/navigation/content_management.rb:251
-#: lib/navigation/content_management.rb:268
+#: lib/navigation/content_management.rb:268 lib/navigation/organization.rb:51
 msgid "Details"
 msgstr "ਵੇਰਵਾ"
 
@@ -1119,9 +1196,15 @@ msgstr "ਮੌਜੂਦਾ ਚੁਣੀ ਮਨਜੂਰੀ ਲਈ ਵੇਰਵ�
 msgid "Disable/enable is not supported for custom repositories."
 msgstr "ਕਸਟਮ ਰਿਪੋਜ਼ਟਰੀਆਂ ਲਈ ਅਯੋਗ/ਯੋਗ ਨੂੰ ਸਹਿਯੋਗ ਨਹੀਂ ਹੈ।"
 
-#: app/controllers/users_controller.rb:247
+#: app/controllers/users_controller.rb:260
 msgid "Disabled help tips have been re-enabled."
 msgstr "ਅਯੋਗ ਮੱਦਦ-ਟਿੱਪਣੀ ਮੁੜ-ਯੋਗ ਕੀਤੀ ਹੈ।"
+
+#: app/views/dashboard/index.html.haml:20
+#: app/views/systems/errata/_index.html.haml:16
+#, 
+msgid "Display"
+msgstr ""
 
 #: app/views/dashboard/_systems.html.haml:17
 #: app/views/promotions/show.html.haml:8
@@ -1137,24 +1220,28 @@ msgid "Distribution '%s' was not found in Pulp."
 msgstr "Pulp ਵਿੱਚ '%s' ਨਹੀਂ ਲੱਭਿਆ।"
 
 #: app/helpers/breadcrumb_helper.rb:65 app/helpers/breadcrumb_helper.rb:170
-#: app/views/changesets/_edit.html.haml:58
+#: app/views/changesets/_edit.html.haml:64
 #: app/views/promotions/_detail.html.haml:30
 #: app/views/promotions/show.html.haml:8
 msgid "Distributions"
 msgstr "ਡਿਸਟਰੀਬਿਊਸ਼ਨਾਂ"
 
 #: app/views/providers/index.html.haml:16
-msgid "Do you want to set this GPG Key as the key for all repositories within this product?"
-msgstr "ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਸ GPG ਕੁੰਜੀ ਨੂੰ ਇਸ ਉਤਪਾਦ ਵਿੱਚ ਸਭ ਰਿਪੋਜ਼ਟਰੀਆਂ ਲਈ ਕੁੰਜੀ ਦੇ ਤੌਰ ਤੇ ਸੈੱਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?"
+msgid ""
+"Do you want to set this GPG Key as the key for all repositories within this "
+"product?"
+msgstr ""
+"ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਸ GPG ਕੁੰਜੀ ਨੂੰ ਇਸ ਉਤਪਾਦ ਵਿੱਚ ਸਭ ਰਿਪੋਜ਼ਟਰੀਆਂ ਲਈ ਕੁੰਜੀ ਦੇ ਤੌਰ "
+"ਤੇ ਸੈੱਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?"
 
 #: app/views/roles/_edit.html.haml:84
 msgid "Done"
 msgstr "ਮੁਕੰਮਲ"
 
-#: app/views/packages/_show.html.haml:82
 #: app/views/organizations/_download_debug_certificate.html.haml:11
-#: app/views/system_templates/index.html.haml:98
 #: app/views/system_templates/_download.html.haml:12
+#: app/views/system_templates/index.html.haml:98
+#: app/views/packages/_show.html.haml:82
 msgid "Download"
 msgstr "ਡਾਊਨਲੋਡ"
 
@@ -1166,6 +1253,11 @@ msgstr "ਡਾਊਨਲੋਡ ਸਿਸਟਮ ਟੈਂਪਲਿਟ"
 msgid "Duration"
 msgstr "ਅੰਤਰਾਲ"
 
+#: app/views/systems/errata/_index.html.haml:39
+#, 
+msgid "ERRATA"
+msgstr ""
+
 #: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/index.html.haml:83
 #: app/views/promotions/show.html.haml:8
@@ -1173,14 +1265,18 @@ msgstr "ਅੰਤਰਾਲ"
 msgid "Edit Details"
 msgstr "ਵੇਰਵਾ ਸੋਧ"
 
-#: app/views/systems/_new.html.haml:4
 #: app/views/activation_keys/_edit.html.haml:5
+#: app/views/systems/_new.html.haml:4
 msgid "Edit Environment"
 msgstr "ਵਾਤਾਵਰਨ ਸੋਧ"
 
 #: app/views/gpg_keys/_edit.html.haml:20
-msgid "Edit GPG Key enables you to modify the selected GPG Key.  A new key can be copied and pasted in directly."
-msgstr "GPG ਕੁੰਜੀ ਸੋਧ ਨਾਲ ਤੁਸੀਂ ਚੁਣੀ GPG ਕੁੰਜੀ ਨੂੰ ਸੋਧ ਸਕਦੇ ਹੋ। ਇੱਕ ਨਵੀਂ ਕੁੰਜੀ ਸਿੱਧੀ ਹੀ ਕਾਪੀ ਅਤੇ ਪੇਸਟ ਕੀਤੀ ਜਾ ਸਕਦੀ ਹੈ।"
+msgid ""
+"Edit GPG Key enables you to modify the selected GPG Key.  A new key can be "
+"copied and pasted in directly."
+msgstr ""
+"GPG ਕੁੰਜੀ ਸੋਧ ਨਾਲ ਤੁਸੀਂ ਚੁਣੀ GPG ਕੁੰਜੀ ਨੂੰ ਸੋਧ ਸਕਦੇ ਹੋ। ਇੱਕ ਨਵੀਂ ਕੁੰਜੀ ਸਿੱਧੀ"
+" ਹੀ ਕਾਪੀ ਅਤੇ ਪੇਸਟ ਕੀਤੀ ਜਾ ਸਕਦੀ ਹੈ।"
 
 #: app/views/roles/index.html.haml:9 app/views/roles/_edit.html.haml:99
 msgid "Edit Permission"
@@ -1225,7 +1321,7 @@ msgstr "ਸੰਖੇਪ ਸੋਧ"
 
 #: app/views/password_resets/new.html.haml:16
 #: app/views/password_resets/new.html.haml:26
-#: app/views/users/_edit_form.html.haml:67 app/views/users/_new.html.haml:42
+#: app/views/users/_new.html.haml:42 app/views/users/_edit_form.html.haml:67
 msgid "Email Address:"
 msgstr "ਈਮੇਲ ਐਡਰੈੱਸ:"
 
@@ -1239,7 +1335,8 @@ msgstr "ਯੋਗ ਲਾਗਇਨ ਯੂਜ਼ਰ ਨਾਂ ਨਾਲ '%{e}' ਨੂ
 
 #: app/controllers/system_packages_controller.rb:56
 #: app/controllers/system_packages_controller.rb:89
-msgid "Empty request received to install Packages or Package Groups System '%{s}'."
+msgid ""
+"Empty request received to install Packages or Package Groups System '%{s}'."
 msgstr "ਪੈਕੇਜ ਜਾਂ ਪੈਕੇਜ ਗਰੁੱਪ ਸਿਸਟਮ '%{s}' ਇੰਸਟਾਲ ਕਰਨ ਲਈ ਖਾਲੀ ਬੇਨਤੀ ਆਈ ਹੈ।"
 
 #: app/views/providers/redhat/show.html.haml:46
@@ -1258,9 +1355,9 @@ msgstr "ਆਖਰੀ ਮਿਤੀ"
 msgid "Enter Selected Content..."
 msgstr "ਚੁਣੇ ਸੰਖੇਪ ਦਿਓ..."
 
-#: app/views/environments/_edit.html.haml:5
-#: app/views/dashboard/_errata.haml:31
 #: app/views/system_templates/_download.html.haml:8
+#: app/views/dashboard/_errata.haml:31
+#: app/views/environments/_edit.html.haml:5
 #: app/views/activation_keys/_new.html.haml:22
 #: app/views/activation_keys/_edit.html.haml:49
 #: app/views/users/_new.html.haml:56
@@ -1293,19 +1390,34 @@ msgstr "ਇਨਵਾਇਰਮੈਂਟ"
 
 #: app/helpers/breadcrumb_helper.rb:53 app/helpers/breadcrumb_helper.rb:126
 #: app/helpers/breadcrumb_helper.rb:157
-#: app/views/changesets/_edit.html.haml:54 app/views/dashboard/_errata.haml:9
+#: app/views/changesets/_edit.html.haml:60 app/views/dashboard/_errata.haml:9
 #: app/views/promotions/_detail.html.haml:9
 #: app/views/promotions/_detail.html.haml:22
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:8 lib/navigation/systems.rb:85
 msgid "Errata"
 msgstr "ਇਰੱਟਾ"
+
+#: app/models/system_task.rb:102
+#, 
+msgid "Errata Install"
+msgstr ""
+
+#: app/models/system_task.rb:112
+#, 
+msgid "Errata Install scheduled by %s"
+msgstr ""
+
+#: app/controllers/system_errata_controller.rb:60
+#, 
+msgid "Errata scheduled for install."
+msgstr ""
 
 #: app/views/promotions/show.html.haml:8
 msgid "Erratum"
 msgstr "ਇਰੱਟਮ"
 
-#: app/views/dashboard/_sync.haml:23
 #: app/views/sync_management/index.html.haml:5
+#: app/views/dashboard/_sync.haml:23
 msgid "Error"
 msgstr "ਗਲਤੀ"
 
@@ -1322,7 +1434,7 @@ msgstr "ਪਰੋਵਾਈਡਰ [ %s ] ਨੂੰ ਹਟਾਉਣ ਵਿੱਚ �
 msgid "Event"
 msgstr ""
 
-#: lib/navigation/systems.rb:95
+#: lib/navigation/systems.rb:102
 #, 
 msgid "Events"
 msgstr ""
@@ -1333,8 +1445,8 @@ msgstr "ਇੱਕ TDL ਐਕਸਪੋਰਟ ਕਰਨ ਲਈ ਇੱਕ ਡੁਸ
 
 #: app/views/organizations/_download_debug_certificate.html.haml:6
 #: app/views/changesets/_content_type.html.haml:7
-#: app/views/common/_env_select.html.haml:9
 #: app/views/activation_keys/_subscriptions.html.haml:22
+#: app/views/common/_env_select.html.haml:9
 #: app/views/providers/_products_repos.html.haml:35
 msgid "Expand"
 msgstr "ਫੈਲਾਓ"
@@ -1343,9 +1455,9 @@ msgstr "ਫੈਲਾਓ"
 msgid "Expand/Contract All"
 msgstr "ਸਭ ਫੈਲਾਓ/ਸੰਕੁਚਿਤ"
 
-#: app/views/systems/_subs.html.haml:21 app/views/systems/_subs.html.haml:68
-#: app/views/providers/redhat/_subscription_details.html.haml:11
 #: app/views/subscriptions/index.html.haml:20
+#: app/views/providers/redhat/_subscription_details.html.haml:11
+#: app/views/systems/_subs.html.haml:21 app/views/systems/_subs.html.haml:68
 msgid "Expires"
 msgstr "ਮਿਆਦ"
 
@@ -1353,7 +1465,7 @@ msgstr "ਮਿਆਦ"
 msgid "Fact"
 msgstr "ਸਿਧਾਂਤ"
 
-#: lib/navigation/systems.rb:101
+#: lib/navigation/systems.rb:108
 msgid "Facts"
 msgstr "ਸਿਧਾਂਤ"
 
@@ -1366,14 +1478,13 @@ msgstr "ਫਾਈਲ"
 msgid "Filelist"
 msgstr "ਫਾਈਲਲਿਸਟ"
 
-#: app/controllers/filters_controller.rb:203
-#: app/views/roles/_edit.html.haml:14 app/views/roles/_edit.html.haml:18
-#: app/views/layouts/_org.haml:12
+#: app/controllers/filters_controller.rb:202
 #: app/views/system_templates/index.html.haml:51
+#: app/views/roles/_edit.html.haml:14 app/views/roles/_edit.html.haml:18
 #: app/views/promotions/show.html.haml:8
 #: app/views/promotions/show.html.haml:102
 #: app/views/promotions/show.html.haml:104
-#: app/views/promotions/show.html.haml:105
+#: app/views/promotions/show.html.haml:105 app/views/layouts/_org.haml:12
 msgid "Filter"
 msgstr "ਫਿਲਟਰ"
 
@@ -1398,6 +1509,11 @@ msgstr "ਫਿਲਟਰ ਕੀਤੇ ਪੈਕੇਜ"
 msgid "Filters"
 msgstr "ਫਿਲਟਰ"
 
+#: app/views/systems/errata/_index.html.haml:5
+#, 
+msgid "Finished"
+msgstr ""
+
 #: app/views/user_sessions/new.html.haml:17
 msgid "Forgotten username or password?"
 msgstr "ਯੂਜ਼ਰ-ਨਾਂ ਜਾਂ ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ?"
@@ -1406,15 +1522,15 @@ msgstr "ਯੂਜ਼ਰ-ਨਾਂ ਜਾਂ ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ?
 msgid "Full Access"
 msgstr "ਪੂਰੀ ਪਹੁੰਚ"
 
-#: app/views/changesets/_edit.html.haml:43
+#: app/views/changesets/_edit.html.haml:49
 #: app/views/promotions/show.html.haml:8
 msgid "Full Products"
 msgstr "ਪੂਰੇ ਉਤਪਾਦ"
 
 #: app/controllers/gpg_keys_controller.rb:160
+#: app/views/products/_new.html.haml:18 app/views/products/_edit.html.haml:26
 #: app/views/repositories/_new.html.haml:25
 #: app/views/repositories/_edit.html.haml:27
-#: app/views/products/_new.html.haml:18 app/views/products/_edit.html.haml:26
 msgid "GPG Key"
 msgstr "GPG ਕੁੰਜੀ"
 
@@ -1428,20 +1544,37 @@ msgid "GPG Keys"
 msgstr "GPG ਕੁੰਜੀਆਂ"
 
 #: app/views/gpg_keys/index.html.haml:3
-msgid "GPG Keys may be stored by uploading a key directly or copying and pasting the key in upon creation. By visiting the Providers page and selecting either a product or repository, a GPG key that has been created here can be associated with the given entity."
-msgstr "GPG Keys may be stored by uploading a key directly or copying and pasting the key in upon creation. By visiting the Providers page and selecting either a product or repository, a GPG key that has been created here can be associated with the given entity."
+msgid ""
+"GPG Keys may be stored by uploading a key directly or copying and pasting "
+"the key in upon creation. By visiting the Providers page and selecting "
+"either a product or repository, a GPG key that has been created here can be "
+"associated with the given entity."
+msgstr ""
+"GPG Keys may be stored by uploading a key directly or copying and pasting "
+"the key in upon creation. By visiting the Providers page and selecting "
+"either a product or repository, a GPG key that has been created here can be "
+"associated with the given entity."
 
 #: app/helpers/breadcrumb_helper.rb:244
 msgid "Global Permissions"
 msgstr "ਗਲੋਬਲ ਮਨਜੂਰੀ"
 
 #: app/views/roles/index.html.haml:9
-msgid "Global permissions allow you to create permissions that span all organizations, or choose a specific organization to apply permissions."
-msgstr "ਗਲੋਬਲ ਮਨਜੂਰੀ ਤੁਹਾਨੂੰ ਮਨਜੂਰੀਆਂ ਬਣਾਉਣ ਵਿੱਚ ਮੱਦਦ ਕਰਦੀ ਹੈ ਜੋ ਸਭ ਸੰਗਠਨਾਂ ਤੇ ਲਾਗੂ ਹੁੰਦੀ ਹੈ ਜਾਂ ਮਨਜੂਰੀ ਲਾਗੂ ਕਰਨ ਲਈ ਕੋਈ ਇੱਕ ਸੰਗਠਨ ਚੁਣੋ।"
+msgid ""
+"Global permissions allow you to create permissions that span all "
+"organizations, or choose a specific organization to apply permissions."
+msgstr ""
+"ਗਲੋਬਲ ਮਨਜੂਰੀ ਤੁਹਾਨੂੰ ਮਨਜੂਰੀਆਂ ਬਣਾਉਣ ਵਿੱਚ ਮੱਦਦ ਕਰਦੀ ਹੈ ਜੋ ਸਭ ਸੰਗਠਨਾਂ ਤੇ ਲਾਗੂ "
+"ਹੁੰਦੀ ਹੈ ਜਾਂ ਮਨਜੂਰੀ ਲਾਗੂ ਕਰਨ ਲਈ ਕੋਈ ਇੱਕ ਸੰਗਠਨ ਚੁਣੋ।"
 
 #: app/views/roles/index.html.haml:9
-msgid "Global permissions are permissions that span all organizations; however, organization permissions apply only to the organization they are associated with."
-msgstr "ਗਲੋਬਲ ਮਨਜੂਰੀ ਉਹ ਮਨਜੂਰੀ ਹੈ ਜੋ ਸਭ ਸੰਗਠਨਾਂ ਤੇ ਲਾਗੂ ਹੁੰਦੀ ਹੈ; ਇਸ ਤਰਾਂ, ਸੰਗਠਨ ਮਨਜੂਰੀ ਸਿਰਫ ਇਸ ਨਾਲ ਸੰਬੰਧਿਤ ਸੰਗਠਨਾਂ ਤੇ ਲਾਗੂ ਹੁੰਦੀ ਹੈ।"
+msgid ""
+"Global permissions are permissions that span all organizations; however, "
+"organization permissions apply only to the organization they are associated "
+"with."
+msgstr ""
+"ਗਲੋਬਲ ਮਨਜੂਰੀ ਉਹ ਮਨਜੂਰੀ ਹੈ ਜੋ ਸਭ ਸੰਗਠਨਾਂ ਤੇ ਲਾਗੂ ਹੁੰਦੀ ਹੈ; ਇਸ ਤਰਾਂ, ਸੰਗਠਨ "
+"ਮਨਜੂਰੀ ਸਿਰਫ ਇਸ ਨਾਲ ਸੰਬੰਧਿਤ ਸੰਗਠਨਾਂ ਤੇ ਲਾਗੂ ਹੁੰਦੀ ਹੈ।"
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
@@ -1485,6 +1618,11 @@ msgstr "ਮੈਨੂੰ ਮੇਰੇ ਲਾਗਇਨ ਕਰੀਡੈਂਸ਼ਲ �
 msgid "ID"
 msgstr "ID"
 
+#: app/views/systems/errata/_index.html.haml:43
+#, 
+msgid "INFO"
+msgstr ""
+
 #: app/views/systems/_list_system_show.html.haml:20
 msgid "IP: "
 msgstr "IP: "
@@ -1494,16 +1632,28 @@ msgid "Id / Link"
 msgstr "Id / ਲਿੰਕ"
 
 #: app/views/user_mailer/password_reset.text.haml:5
-msgid "If you did not request this password to be reset, just ignore this email and the password will continue to stay the same."
-msgstr "ਜੇ ਤੁਸੀਂ ਇਹ ਪਾਸਵਰਡ ਰੀਸੈੱਟ ਕਰਨ ਲਈ ਬੇਨਤੀ ਨਹੀਂ ਕੀਤੀ, ਤਾਂ ਇਹ ਈਮੇਲ ਅਣਡਿੱਠੀ ਕਰੋ ਅਤੇ ਪਾਸਵਰਜ ਪੁਰਾਣਾ ਹੀ ਰਹੇਗਾ।"
+msgid ""
+"If you did not request this password to be reset, just ignore this email and"
+" the password will continue to stay the same."
+msgstr ""
+"ਜੇ ਤੁਸੀਂ ਇਹ ਪਾਸਵਰਡ ਰੀਸੈੱਟ ਕਰਨ ਲਈ ਬੇਨਤੀ ਨਹੀਂ ਕੀਤੀ, ਤਾਂ ਇਹ ਈਮੇਲ ਅਣਡਿੱਠੀ ਕਰੋ "
+"ਅਤੇ ਪਾਸਵਰਜ ਪੁਰਾਣਾ ਹੀ ਰਹੇਗਾ।"
 
 #: app/views/password_resets/new.html.haml:23
-msgid "If you do not know your login, please enter your email address below and your login will be sent to you."
-msgstr "ਜੇ ਤੁਹਾਨੂੰ ਆਪਣਾ ਲਾਗਇਨ ਯਾਦ ਨਹੀਂ, ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਈਮੇਲ ਐਡਰੈੱਸ ਹੇਠਾਂ ਦਿਓ ਅਤੇ ਤੁਹਾਡਾ ਲਾਗਇਂ ਤੁਹਾਨੂੰ ਭੇਜਿਆ ਜਾਵੇਗਾ।"
+msgid ""
+"If you do not know your login, please enter your email address below and "
+"your login will be sent to you."
+msgstr ""
+"ਜੇ ਤੁਹਾਨੂੰ ਆਪਣਾ ਲਾਗਇਨ ਯਾਦ ਨਹੀਂ, ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਈਮੇਲ ਐਡਰੈੱਸ ਹੇਠਾਂ ਦਿਓ ਅਤੇ "
+"ਤੁਹਾਡਾ ਲਾਗਇਂ ਤੁਹਾਨੂੰ ਭੇਜਿਆ ਜਾਵੇਗਾ।"
 
 #: app/views/password_resets/new.html.haml:10
-msgid "If you do not know your password, enter your login and email address below and instructions on resetting your password will be sent to you."
-msgstr "ਜੇ ਤੁਸੀਂ ਆਪਣਾ ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ ਹੋ, ਆਪਣਾ ਲਾਗਇਨ ਅਤੇ ਈਮੇਲ ਐਡਰੈੱਸ ਦਿਓ ਅਤੇ ਪਾਸਵਰਡ ਰੀਸੈੱਟ ਕਰਨ ਲਈ ਹਦਾਇਤਾਂ ਤੁਹਾਨੂੰ ਭੇਜੀਆਂ ਜਾਣਗੀਆਂ।"
+msgid ""
+"If you do not know your password, enter your login and email address below "
+"and instructions on resetting your password will be sent to you."
+msgstr ""
+"ਜੇ ਤੁਸੀਂ ਆਪਣਾ ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ ਹੋ, ਆਪਣਾ ਲਾਗਇਨ ਅਤੇ ਈਮੇਲ ਐਡਰੈੱਸ ਦਿਓ ਅਤੇ ਪਾਸਵਰਡ "
+"ਰੀਸੈੱਟ ਕਰਨ ਲਈ ਹਦਾਇਤਾਂ ਤੁਹਾਨੂੰ ਭੇਜੀਆਂ ਜਾਣਗੀਆਂ।"
 
 #: app/views/providers/redhat/show.html.haml:50
 msgid "Import History"
@@ -1529,6 +1679,12 @@ msgstr "ਪੈਕੇਜ ਗਰੁੱਪ '%{g}' ਨੂੰ ਸਿਸਟਮ '%{s}' 
 msgid "Install of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "ਪੈਕੇਜ '%{p}' ਨੂੰ ਸਿਸਟਮ '%{s}' ਤੇ ਇੰਸਟਾਲ ਕਰਨ ਲਈ ਕੀਤਾ ਹੈ।"
 
+#: app/views/systems/errata/_items.html.haml:16
+#: app/views/systems/errata/_index.html.haml:5
+#, 
+msgid "Installing"
+msgstr ""
+
 #: app/views/dashboard/_subscriptions.haml:26
 msgid "Insufficient Entitlements"
 msgstr "ਨਾ-ਲੋੜੀਂਦੇ ਇੰਟਾਈਟਲਮੈਂਟ"
@@ -1547,16 +1703,24 @@ msgid "Invalid Url"
 msgstr "Invalid Url"
 
 #: app/models/resource_type.rb:41
-msgid "Invalid resource type '%{resource_type}'. Resource Types can be one of '%{possible_types}'"
-msgstr "ਗਲਤ ਸੋਰਤ ਕਿਸਮ '%{resource_type}'। ਸਰੋਤ ਕਿਸਮ '%{possible_types}' ਵਿੱਚੋਂ ਕੋਈ ਇੱਕ ਹੋ ਸਕਦੀ ਹੈ"
+msgid ""
+"Invalid resource type '%{resource_type}'. Resource Types can be one of "
+"'%{possible_types}'"
+msgstr ""
+"ਗਲਤ ਸੋਰਤ ਕਿਸਮ '%{resource_type}'। ਸਰੋਤ ਕਿਸਮ '%{possible_types}' ਵਿੱਚੋਂ ਕੋਈ "
+"ਇੱਕ ਹੋ ਸਕਦੀ ਹੈ"
 
-#: app/controllers/changesets_controller.rb:145
+#: app/controllers/changesets_controller.rb:144
 msgid "Invalid state"
 msgstr "ਗਲਤ ਸਟੇਟ"
 
 #: app/models/resource_type.rb:26
-msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
-msgstr "ਗਲਤ ਵਰਬ '%{verb}'। ਸਰੋਤ ਕਿਸਮ '%{resource_type}' ਲਈ ਵਰਬਾਂ %{possible_verbs} ਵਿੱਚ ਹੋ ਸਕਦੀਆਂ ਹਨ"
+msgid ""
+"Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be "
+"one of %{possible_verbs}"
+msgstr ""
+"ਗਲਤ ਵਰਬ '%{verb}'। ਸਰੋਤ ਕਿਸਮ '%{resource_type}' ਲਈ ਵਰਬਾਂ %{possible_verbs} "
+"ਵਿੱਚ ਹੋ ਸਕਦੀਆਂ ਹਨ"
 
 #: app/views/errata/_show.html.haml:30
 msgid "Issued"
@@ -1624,10 +1788,17 @@ msgid "List Actions"
 msgstr "ਕਾਰਵਾਈਆਂ ਵੇਖਾਓ"
 
 #: app/views/providers/redhat/show.html.haml:9
-msgid "Listed below are the subscriptions information. If you have a subscription manifest you may upload it below. This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."
-msgstr "ਹੇਠਾਂ ਮੈਂਬਰੀ ਜਾਣਕਾਰੀ ਦਿੱਤੀ ਗਈ ਹੈ। ਜੇ ਤੁਹਾਡੇ ਕੋਲ ਮੈਂਬਰੀ ਮੈਨੀਫੈਸਟ ਹੈ ਤਾਂ ਤੁਸੀਂ ਇਸਨੂੰ ਹੇਠਾਂ ਅੱਪਲੋਡ ਕਰ ਸਕਦੇ ਹੋ। ਇਹ ਮੈਨੀਫੈਸਟ Red Hat ਗਾਹਕ ਪੋਰਟਲ ਤੇ ਜਾ ਕੇ ਜਾਂ ਆਪਣੇ ਸਪੋਰਟ ਅਧਿਕਾਰੀ ਨਾਲ ਸੰਪਰਕ ਕਰਕੇ ਲਿਆ ਜਾ ਸਕਦਾ ਹੈ।"
+msgid ""
+"Listed below are the subscriptions information. If you have a subscription "
+"manifest you may upload it below. This manifest may be obtained by visiting "
+"the Red Hat Customer Portal or by contacting your support representative."
+msgstr ""
+"ਹੇਠਾਂ ਮੈਂਬਰੀ ਜਾਣਕਾਰੀ ਦਿੱਤੀ ਗਈ ਹੈ। ਜੇ ਤੁਹਾਡੇ ਕੋਲ ਮੈਂਬਰੀ ਮੈਨੀਫੈਸਟ ਹੈ ਤਾਂ ਤੁਸੀਂ"
+" ਇਸਨੂੰ ਹੇਠਾਂ ਅੱਪਲੋਡ ਕਰ ਸਕਦੇ ਹੋ। ਇਹ ਮੈਨੀਫੈਸਟ Red Hat ਗਾਹਕ ਪੋਰਟਲ ਤੇ ਜਾ ਕੇ ਜਾਂ "
+"ਆਪਣੇ ਸਪੋਰਟ ਅਧਿਕਾਰੀ ਨਾਲ ਸੰਪਰਕ ਕਰਕੇ ਲਿਆ ਜਾ ਸਕਦਾ ਹੈ।"
 
 #: app/views/layouts/_header.haml:7
+#: app/views/systems/errata/_items.html.haml:14
 msgid "Loading"
 msgstr "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ"
 
@@ -1660,7 +1831,7 @@ msgstr "ਨਿਰਭਰਤਾ ਲੋਡ ਹੀ ਰਹੀ ਹੈ।"
 msgid "Location"
 msgstr "ਟਿਕਾਣਾ"
 
-#: app/controllers/environments_controller.rb:91
+#: app/controllers/environments_controller.rb:90
 #: app/views/organizations/_edit.html.haml:32
 msgid "Locker"
 msgstr "ਲਾਕਰ"
@@ -1678,7 +1849,7 @@ msgstr "ਲਾਗ ਇਨ"
 msgid "Login Information"
 msgstr "ਲਾਗਇਨ ਜਾਣਕਾਰੀ"
 
-#: app/controllers/user_sessions_controller.rb:77
+#: app/controllers/user_sessions_controller.rb:76
 msgid "Login Successful"
 msgstr "ਲਾਗਇਨ ਸਫਲ ਹੋਇਆ"
 
@@ -1686,16 +1857,16 @@ msgstr "ਲਾਗਇਨ ਸਫਲ ਹੋਇਆ"
 msgid "Login Unknown"
 msgstr "ਲਾਗਇਨ ਅਣਜਾਣ ਹੈ"
 
-#: app/views/layouts/_footer.haml:4 app/views/layouts/_header.haml:23
+#: app/views/layouts/_header.haml:23 app/views/layouts/_footer.haml:4
 msgid "Logout"
 msgstr "ਲਾਗਆਊਟ"
 
-#: app/controllers/user_sessions_controller.rb:42
+#: app/controllers/user_sessions_controller.rb:41
 msgid "Logout Successful"
 msgstr "ਲਾਗਆਊਟ ਸਫਲ ਹੋਇਆ"
 
-#: app/views/providers/redhat/_subscription_details.html.haml:9
 #: app/views/subscriptions/index.html.haml:18
+#: app/views/providers/redhat/_subscription_details.html.haml:9
 msgid "Machine Type"
 msgstr "ਮਸ਼ੀਨ ਕਿਸਮ"
 
@@ -1759,28 +1930,27 @@ msgstr "ਹੋਰ..."
 msgid "Must be unique within an environment"
 msgstr "ਇੱਕ ਵਾਤਾਵਰਨ ਵਿੱਤ ਵੱਖਰਾ ਹੋਣਾ ਜਰੂਰੀ ਹੈ"
 
-#: app/views/roles/_new.html.haml:9 app/views/repositories/_new.html.haml:15
-#: app/views/repositories/_edit.html.haml:17
-#: app/views/packages/_show.html.haml:11
+#: app/views/distributions/_show.html.haml:12
 #: app/views/organizations/_new.html.haml:12
-#: app/views/sync_plans/_form.html.haml:5
-#: app/views/sync_plans/_edit.html.haml:17
-#: app/views/system_packages/_packages.html.haml:64
-#: app/views/systems/_edit.html.haml:24 app/views/changesets/_new.html.haml:10
-#: app/views/environments/_new.html.haml:13
-#: app/views/environments/_edit.html.haml:18
-#: app/views/filters/_new.html.haml:13 app/views/filters/_edit.html.haml:21
 #: app/views/system_templates/_new.html.haml:10
 #: app/views/system_templates/_promotion_details.html.haml:9
 #: app/views/system_templates/_edit.html.haml:4
-#: app/views/products/_new.html.haml:8 app/views/products/_edit.html.haml:16
+#: app/views/system_packages/_packages.html.haml:64
+#: app/views/changesets/_new.html.haml:10 app/views/products/_new.html.haml:8
+#: app/views/products/_edit.html.haml:16
+#: app/views/environments/_new.html.haml:13
+#: app/views/environments/_edit.html.haml:18
 #: app/views/activation_keys/_new.html.haml:9
 #: app/views/activation_keys/_edit.html.haml:37
+#: app/views/filters/_new.html.haml:13 app/views/filters/_edit.html.haml:21
 #: app/views/gpg_keys/_new.html.haml:9 app/views/gpg_keys/_edit.html.haml:25
-#: app/views/providers/_form.html.haml:6
+#: app/views/roles/_new.html.haml:9 app/views/sync_plans/_form.html.haml:5
+#: app/views/sync_plans/_edit.html.haml:17
+#: app/views/repositories/_new.html.haml:15
+#: app/views/repositories/_edit.html.haml:17
+#: app/views/packages/_show.html.haml:11 app/views/providers/_form.html.haml:6
 #: app/views/providers/redhat/_subscription_details.html.haml:4
-#: app/views/providers/_edit.html.haml:22
-#: app/views/distributions/_show.html.haml:12
+#: app/views/providers/_edit.html.haml:22 app/views/systems/_edit.html.haml:24
 msgid "Name"
 msgstr "ਨਾਂ"
 
@@ -1802,14 +1972,13 @@ msgstr ""
 msgid "Name of Your System:"
 msgstr "ਤੁਹਾਡੇ ਸਿਸਟਮ ਦਾ ਨਾਂ:"
 
-#: app/views/roles/_edit.html.haml:35 app/views/roles/_edit.html.haml:73
 #: app/views/changesets/_name.html.haml:3
-#: app/views/changesets/_edit.html.haml:11
-#: app/views/promotions/show.html.haml:120
+#: app/views/changesets/_edit.html.haml:11 app/views/roles/_edit.html.haml:35
+#: app/views/roles/_edit.html.haml:73 app/views/promotions/show.html.haml:120
 msgid "Name:"
 msgstr "ਨਾਂ:"
 
-#: app/helpers/dashboard_helper.rb:124 app/helpers/systems_helper.rb:24
+#: app/helpers/systems_helper.rb:24 app/helpers/dashboard_helper.rb:124
 msgid "Never checked in."
 msgstr "ਕਦੇ ਦਾਖਲਾ ਨਹੀਂ ਕੀਤਾ।"
 
@@ -1865,11 +2034,11 @@ msgstr "ਨਵਾਂ ਯੂਜ਼ਰ"
 msgid "New system"
 msgstr "ਨਵਾਂ ਸਿਸਟਮ"
 
-#: app/controllers/api/templates_controller.rb:38
+#: app/controllers/api/templates_controller.rb:49
 msgid "New templates can be created only in a Locker environment"
 msgstr "ਨਵਾਂ ਟੈਂਪਲਿਟ ਸਿਰਫ ਲਾਕਰ ਵਾਤਾਵਰਨ ਵਿੱਚ ਹੀ ਬਣਾਇਆ ਜਾ ਸਕਦਾ ਹੈ"
 
-#: app/controllers/api/templates_controller.rb:69
+#: app/controllers/api/templates_controller.rb:80
 msgid "New templates can be imported only into a Locker environment"
 msgstr "ਨਵਾਂ ਟੈਂਪਲਿਟ ਸਿਰਫ ਲਾਕਰ ਵਾਤਾਵਰਨ ਵਿੱਚ ਹੀ ਬਰਾਮਦ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ"
 
@@ -1902,13 +2071,16 @@ msgstr "ਕੋਈ ਟੈਂਪਲਿਟ ਨਹੀਂ"
 msgid "No changesets found."
 msgstr "ਕੋਈ ਚੇਂਜਸ਼ੀਟ ਨਹੀਂ ਲੱਭੀ।"
 
+#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:61
 #: app/views/users/_edit_environment.html.haml:3
 #: app/views/users/_edit_environment.html.haml:41
-#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:61
-msgid "No default environment. Select an organization to choose from available environments."
-msgstr "ਕੋਈ ਮੂਲ ਇਨਵਾਇਰਮੈਂਟ ਨਹੀਂ। ਉਪਲੱਬਧ ਇਨਵਾਇਰਮੈਂਟਾਂ ਵਿੱਚੋਂ ਚੁਣਨ ਲਈ ਇੱਕ ਸੰਗਠਨ ਚੁਣੋ।"
+msgid ""
+"No default environment. Select an organization to choose from available "
+"environments."
+msgstr ""
+"ਕੋਈ ਮੂਲ ਇਨਵਾਇਰਮੈਂਟ ਨਹੀਂ। ਉਪਲੱਬਧ ਇਨਵਾਇਰਮੈਂਟਾਂ ਵਿੱਚੋਂ ਚੁਣਨ ਲਈ ਇੱਕ ਸੰਗਠਨ ਚੁਣੋ।"
 
-#: app/controllers/users_controller.rb:197
+#: app/controllers/users_controller.rb:210
 #: app/views/users/_edit_environment.html.haml:19
 #: app/views/users/_edit_environment.html.haml:23
 msgid "No default set for this user."
@@ -1923,20 +2095,34 @@ msgid "No distributions exist in this changeset."
 msgstr "ਇਸ ਚੇਂਜਸ਼ੀਟ ਵਿੱਚ ਕੋਈ ਡਿਸਟਰੀਬਿਊਸ਼ਨ ਮੌਜੂਦ ਨਹੀਂ ਹੈ।"
 
 #: app/views/organizations/_edit.html.haml:41
-msgid "No environments are available in this organization. Please add some environments to be able register systems to this organization."
-msgstr "ਇਸ ਸੰਗਠਨ ਵਿੱਚ ਕੋਈ ਵਾਤਾਵਰਨ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਕੁਝ ਵਾਤਾਵਰਨ ਜੋੜੋ ਤਾਂ ਕਿ ਸਿਸਟਮ ਨੂੰ ਇਸ ਸੰਗਠਨ ਨਾਲ ਰਜਿਸਟਰ ਕੀਤਾ ਜਾ ਸਕੇ।"
+msgid ""
+"No environments are available in this organization. Please add some "
+"environments to be able register systems to this organization."
+msgstr ""
+"ਇਸ ਸੰਗਠਨ ਵਿੱਚ ਕੋਈ ਵਾਤਾਵਰਨ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਕੁਝ ਵਾਤਾਵਰਨ ਜੋੜੋ ਤਾਂ ਕਿ"
+" ਸਿਸਟਮ ਨੂੰ ਇਸ ਸੰਗਠਨ ਨਾਲ ਰਜਿਸਟਰ ਕੀਤਾ ਜਾ ਸਕੇ।"
 
 #: app/views/activation_keys/_new.html.haml:25
-msgid "No environments are currently available in this organization.  Please add some to be able to create activation keys."
-msgstr "ਇਸ ਸੰਗਠਨ ਵਿੱਚ ਹਾਲੇ ਕੋਈ ਵਾਤਾਵਰਨ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਕੁਝ ਜੋੜੋ ਤਾਂ ਜੋ ਸਰਗਰਮੀ ਕੁੰਜੀ ਬਣਾਈ ਜਾ ਸਕੇ।"
+msgid ""
+"No environments are currently available in this organization.  Please add "
+"some to be able to create activation keys."
+msgstr ""
+"ਇਸ ਸੰਗਠਨ ਵਿੱਚ ਹਾਲੇ ਕੋਈ ਵਾਤਾਵਰਨ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਕੁਝ ਜੋੜੋ ਤਾਂ ਜੋ "
+"ਸਰਗਰਮੀ ਕੁੰਜੀ ਬਣਾਈ ਜਾ ਸਕੇ।"
 
 #: app/views/common/_env_select.html.haml:2 app/views/users/_new.html.haml:63
-msgid "No environments are currently available in this organization.  Please add some to be able to set user default."
+msgid ""
+"No environments are currently available in this organization.  Please add "
+"some to be able to set user default."
 msgstr "ਇਸ ਸੰਗਠਨ ਵਿੱਚ ਹਾਲੇ ਕੋਈ ਇਨਵਾਇਰਮੈਂਟ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ।"
 
 #: app/views/users/_edit_environment.html.haml:43
-msgid "No environments are currently available in this organization. Saving will set user to no default environment."
-msgstr "ਇਸ ਸੰਗਠਨ ਵਿੱਚ ਹਾਲੇ ਕੋਈ ਇਨਵਾਇਰਮੈਂਟ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ। ਸੰਭਾਲਣ ਨਾਲ ਯੂਜ਼ਰ ਨੂੰ ਬਿਨਾਂ ਮੂਲ ਸੰਗਠਨ ਲਈ ਸੈੰਟ ਕਰ ਦੇਵੇਗਾ।"
+msgid ""
+"No environments are currently available in this organization. Saving will "
+"set user to no default environment."
+msgstr ""
+"ਇਸ ਸੰਗਠਨ ਵਿੱਚ ਹਾਲੇ ਕੋਈ ਇਨਵਾਇਰਮੈਂਟ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ। ਸੰਭਾਲਣ ਨਾਲ ਯੂਜ਼ਰ ਨੂੰ ਬਿਨਾਂ "
+"ਮੂਲ ਸੰਗਠਨ ਲਈ ਸੈੰਟ ਕਰ ਦੇਵੇਗਾ।"
 
 #: app/views/promotions/_errata.html.haml:3
 msgid "No errata available."
@@ -1954,12 +2140,12 @@ msgstr "ਕੋਈ ਗਲਤੀ ਨਹੀਂ"
 msgid "No event history found for %s"
 msgstr "%s ਲਈ ਕੋਈ ਈਵੈਂਟ ਅਤੀਤ ਨਹੀਂ ਲੱਭਿਆ"
 
-#: app/controllers/system_events_controller.rb:88
+#: app/controllers/system_events_controller.rb:87
 #, 
 msgid "No events matching your search criteria."
 msgstr ""
 
-#: app/models/system_task.rb:290
+#: app/models/system_task.rb:313
 msgid "No new packages installed"
 msgstr "ਕੋਈ ਨਵਾਂ ਪੈਕੇਜ ਇੰਸਟਾਲ ਨਹੀਂ ਕੀਤਾ"
 
@@ -1983,11 +2169,11 @@ msgstr "ਕੋਈ ਪੈਕੇਜ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ।"
 msgid "No packages exist in this changeset."
 msgstr "ਇਸ ਚੇਂਜਸ਼ੀਟ ਵਿੱਚ ਕੋਈ ਪੈਕੇਜ ਮੌਜੂਦ ਨਹੀਂ ਹੈ।"
 
-#: app/models/system_task.rb:288
+#: app/models/system_task.rb:311
 msgid "No packages removed"
 msgstr "ਕੋਈ ਪੈਕੇਜ ਨਹੀਂ ਹਟਾਇਆ"
 
-#: app/models/system_task.rb:286
+#: app/models/system_task.rb:309
 msgid "No packages updated"
 msgstr "ਕੋਈ ਪੈਕੇਜ ਅੱਪਡੇਟ ਨਹੀਂ ਕੀਤਾ"
 
@@ -1997,8 +2183,13 @@ msgid "No products"
 msgstr "ਕੋਈ ਉਤਾਪਦ"
 
 #: app/views/system_templates/index.html.haml:6
-msgid "No products are currently associated with this system template.  Please associate a product that contains distributions in order to select a distribution."
-msgstr "ਇਸ ਸਿਸਟਮ ਟੈਂਪਲਿਟ ਨਾਲ ਸੰਬੰਧਿਤ ਕੋਈ ਉਤਪਾਦ ਉਪਲੱਬਧ ਨਹੀਂ। ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਉਤਪਾਦ ਨੂੰ ਜੋੜੋ ਜਿਸ ਵਿੱਚ ਡਿਸਟਰੀਬਿਊਸ਼ਨ ਸ਼ਾਮਿਲ ਹਨ।"
+msgid ""
+"No products are currently associated with this system template.  Please "
+"associate a product that contains distributions in order to select a "
+"distribution."
+msgstr ""
+"ਇਸ ਸਿਸਟਮ ਟੈਂਪਲਿਟ ਨਾਲ ਸੰਬੰਧਿਤ ਕੋਈ ਉਤਪਾਦ ਉਪਲੱਬਧ ਨਹੀਂ। ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਉਤਪਾਦ ਨੂੰ"
+" ਜੋੜੋ ਜਿਸ ਵਿੱਚ ਡਿਸਟਰੀਬਿਊਸ਼ਨ ਸ਼ਾਮਿਲ ਹਨ।"
 
 #: app/views/promotions/show.html.haml:8
 msgid "No products exist in the changeset."
@@ -2046,16 +2237,20 @@ msgstr "ਕੋਈ ਸਿਸਟਮ ਨਹੀਂ ਲੱਭਿਆ।"
 msgid "None"
 msgstr "ਕੋਈ ਨਹੀਂ"
 
+#: app/views/products/_new.html.haml:23 app/views/products/_edit.html.haml:31
 #: app/views/repositories/_new.html.haml:30
 #: app/views/repositories/_edit.html.haml:32
-#: app/views/products/_new.html.haml:23 app/views/products/_edit.html.haml:31
 #, 
 msgid "None defined for this Organization."
 msgstr ""
 
 #: app/views/system_templates/index.html.haml:6
-msgid "None of the associated products contain distributions, please select a product that contains at least one distribution."
-msgstr "ਕੋਈ ਸੰਬੰਧਿਤ ਉਤਪਾਦ ਵਿੱਚ ਡਿਸਟਰੀਬਿਊਸ਼ਨ ਨਹੀਂ, ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਉਤਪਾਦ ਚੁਣੋ ਜਿਸ ਵਿੱਚ ਘੱਟੋ-ਘੱਟ ਇੱਕ ਡਿਸਟਰੀਬਿਊਸ਼ ਹੈ।"
+msgid ""
+"None of the associated products contain distributions, please select a "
+"product that contains at least one distribution."
+msgstr ""
+"ਕੋਈ ਸੰਬੰਧਿਤ ਉਤਪਾਦ ਵਿੱਚ ਡਿਸਟਰੀਬਿਊਸ਼ਨ ਨਹੀਂ, ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਉਤਪਾਦ ਚੁਣੋ ਜਿਸ ਵਿੱਚ "
+"ਘੱਟੋ-ਘੱਟ ਇੱਕ ਡਿਸਟਰੀਬਿਊਸ਼ ਹੈ।"
 
 #: app/views/errata/_show.html.haml:78
 msgid "None."
@@ -2099,8 +2294,18 @@ msgid "Ok"
 msgstr ""
 
 #: app/views/providers/_products_repos.html.haml:17
-msgid "On Products & Repositories you can add your own Products and Repositories to your Provider.  This allows you to synchronize content from any remote repository to this server.  Simply add a Product and then setup one or more repositories to add to this Provider.  This feature is only available for Custom Providers."
-msgstr "ਉਤਪਾਂਦਾ ਤੇ ਰਿਪੋਜ਼ਟਰੀਆਂ ਉੱਪਰ ਤੁਸੀਂ ਆਪਣੇ ਉਤਪਾਦ ਅਤੇ ਰਿਪੋਜ਼ਟਰੀਆਂ ਨੂੰ ਆਪਣਏ ਪਰੋਵਾਈਡਰ ਉੱਪਰ ਜੋੜ ਸਕਦੇ ਹੋ।  ਇਸ ਨਾਲ ਤੁਸੀਂ ਕਿਸੇ ਰਿਮੋਟ ਰਿਪੋਜ਼ਟਰੀ ਤੋਂ ਸੰਖੇਪਾਂ ਨੂੰ ਇਸ ਸਰਵਰ ਨਾਲ ਸਮਕਾਲੀ ਕਰ ਸਕਦੇ ਹੋ। ਸਧਾਰਨ ਤੌਰ ਤੇ ਇੱਕ ਉਤਪਾਦ ਨੂੰ ਜੋੜੋ ਅਤੇ ਇੱਕ ਜਾਂ ਜਿਆਦਾ ਰਿਪੋਜ਼ਟਰੀਆਂ ਨੂੰ ਇਸ ਪਰੋਵਾਈਡਰ ਤੇ ਜੋੜਨ ਲਈ ਸੈੱਟਅੱਪ ਕਰੋ।  ਇਹ ਫੀਚਰ ਸਿਰਫ ਕਸਟਮ ਪਰੋਵਆਡਰਾਂ ਲਈ ਉਪਲੱਬਧ ਹੈ।"
+msgid ""
+"On Products & Repositories you can add your own Products and Repositories to"
+" your Provider.  This allows you to synchronize content from any remote "
+"repository to this server.  Simply add a Product and then setup one or more "
+"repositories to add to this Provider.  This feature is only available for "
+"Custom Providers."
+msgstr ""
+"ਉਤਪਾਂਦਾ ਤੇ ਰਿਪੋਜ਼ਟਰੀਆਂ ਉੱਪਰ ਤੁਸੀਂ ਆਪਣੇ ਉਤਪਾਦ ਅਤੇ ਰਿਪੋਜ਼ਟਰੀਆਂ ਨੂੰ ਆਪਣਏ ਪਰੋਵਾਈਡਰ"
+" ਉੱਪਰ ਜੋੜ ਸਕਦੇ ਹੋ।  ਇਸ ਨਾਲ ਤੁਸੀਂ ਕਿਸੇ ਰਿਮੋਟ ਰਿਪੋਜ਼ਟਰੀ ਤੋਂ ਸੰਖੇਪਾਂ ਨੂੰ ਇਸ ਸਰਵਰ"
+" ਨਾਲ ਸਮਕਾਲੀ ਕਰ ਸਕਦੇ ਹੋ। ਸਧਾਰਨ ਤੌਰ ਤੇ ਇੱਕ ਉਤਪਾਦ ਨੂੰ ਜੋੜੋ ਅਤੇ ਇੱਕ ਜਾਂ ਜਿਆਦਾ "
+"ਰਿਪੋਜ਼ਟਰੀਆਂ ਨੂੰ ਇਸ ਪਰੋਵਾਈਡਰ ਤੇ ਜੋੜਨ ਲਈ ਸੈੱਟਅੱਪ ਕਰੋ।  ਇਹ ਫੀਚਰ ਸਿਰਫ ਕਸਟਮ "
+"ਪਰੋਵਆਡਰਾਂ ਲਈ ਉਪਲੱਬਧ ਹੈ।"
 
 #: app/views/roles/_edit.html.haml:66
 msgid "On:"
@@ -2135,25 +2340,31 @@ msgstr "ਸਿਰਫ ਸਮਕਾਲੀ ਵੇਖਾਓ।"
 msgid "Open Source Systems Management"
 msgstr "ਓਪਨ ਸੋਰਸ ਸਿਸਟਮ ਮੈਨੇਜਮੈਂਟ"
 
-#: app/controllers/organizations_controller.rb:204
+#: app/controllers/organizations_controller.rb:203
 msgid "Organization"
 msgstr "ਸੰਗਠਨ"
 
-#: app/controllers/organizations_controller.rb:139
+#: app/controllers/organizations_controller.rb:138
 msgid "Organization '%s' has been scheduled for background deletion."
 msgstr "ਸੰਗਠਨ '%s' ਨੂੰ ਬੈਕਗਰਾਊਂਡ ਵਿੱਚੋਂ ਹਟਾਉਣ ਲਈ ਤਹਿ ਕੀਤਾ ਗਿਆ ਹੈ।"
 
-#: app/controllers/organizations_controller.rb:202
-#: app/models/resource_type.rb:91 lib/navigation/organization.rb:23
+#: app/models/resource_type.rb:91
+#: app/controllers/organizations_controller.rb:201
+#: lib/navigation/organization.rb:23
 msgid "Organizations"
 msgstr "ਸੰਗਠਨ"
 
 #: app/views/organizations/index.html.haml:3
-msgid "Organizations allow content and systems to be separated by logical divisions.  To edit the environments within an organization, click on that organization and then click on the desired environment."
-msgstr "ਸਧਾਰਨ ਤੌਰ ਤੇ ਇੱਕ ਉਤਪਾਦ ਨੂੰ ਜੋੜੋ ਅਤੇ ਇੱਕ ਜਾਂ ਜਿਆਦਾ ਰਿਪੋਜ਼ਟਰੀਆਂ ਨੂੰ ਇਸ ਪਰੋਵਾਈਡਰ ਤੇ ਜੋੜਨ ਲਈ ਸੈੱਟਅੱਪ ਕਰੋ। ਇਹ ਫੀਚਰ ਸਿਰਫ ਕਸਟਮ ਪਰੋਵਆਡਰਾਂ ਲਈ ਉਪਲੱਬਧ ਹੈ।"
+msgid ""
+"Organizations allow content and systems to be separated by logical "
+"divisions.  To edit the environments within an organization, click on that "
+"organization and then click on the desired environment."
+msgstr ""
+"ਸਧਾਰਨ ਤੌਰ ਤੇ ਇੱਕ ਉਤਪਾਦ ਨੂੰ ਜੋੜੋ ਅਤੇ ਇੱਕ ਜਾਂ ਜਿਆਦਾ ਰਿਪੋਜ਼ਟਰੀਆਂ ਨੂੰ ਇਸ ਪਰੋਵਾਈਡਰ"
+" ਤੇ ਜੋੜਨ ਲਈ ਸੈੱਟਅੱਪ ਕਰੋ। ਇਹ ਫੀਚਰ ਸਿਰਫ ਕਸਟਮ ਪਰੋਵਆਡਰਾਂ ਲਈ ਉਪਲੱਬਧ ਹੈ।"
 
-#: app/views/promotions/show.html.haml:8
 #: app/views/errata/_packages.html.haml:17
+#: app/views/promotions/show.html.haml:8
 msgid "Package"
 msgstr "ਪੈਕੇਜ"
 
@@ -2161,14 +2372,21 @@ msgstr "ਪੈਕੇਜ"
 msgid "Package Dependencies"
 msgstr "ਪੈਕੇਜ ਨਿਰਭਰਤਾ"
 
-#: app/controllers/filters_controller.rb:201
+#: app/controllers/filters_controller.rb:200
 #: lib/navigation/content_management.rb:153
 msgid "Package Filters"
 msgstr "ਪੈਕੇਜ ਫਿਲਟਰ"
 
 #: app/views/filters/index.html.haml:4
-msgid "Package Filters allow you to blacklist packages from being promoted into subsequent environments. Simply create a filter and add either a package name or regular expression to the filter.  You can associate the filter with entire products or individual repositories within any product."
-msgstr "ਪੈਕੇਜ ਫਿਲਟਰ ਤੁਹਾਨੂੰ ਇਨਵਾਇਰਮੈਂਟ ਵਿੱਚ ਪਰਮੋਟ ਕਰਨ ਲਈ ਪੈਕੇਜਾਂ ਨੂੰ ਬਲੈਕਲਿਸਟ ਕਰਨ ਵਿੱਚ ਮੱਦਦ ਕਰਦਾ ਹੈ। ਇੱਕ ਫਿਲਟਰ ਬਣਾਓ ਅਤੇ ਪੈਕੇਜ ਨਾਂ ਜੋੜੇ। ਤੁਸੀਂ ਫਿਲਟਰ ਨੂੰ ਕਿਸੇ ਉਤਪਾਦ ਵਿੱਚ ਪੂਰੇ ਉਤਪਾਦ ਜਾਂ ਇਕੱਲੀ ਰਿਪੋਜ਼ਟਰੀ ਨਾਲ ਜੋੜ ਸਕਦੇ ਹੋ।"
+msgid ""
+"Package Filters allow you to blacklist packages from being promoted into "
+"subsequent environments. Simply create a filter and add either a package "
+"name or regular expression to the filter.  You can associate the filter with"
+" entire products or individual repositories within any product."
+msgstr ""
+"ਪੈਕੇਜ ਫਿਲਟਰ ਤੁਹਾਨੂੰ ਇਨਵਾਇਰਮੈਂਟ ਵਿੱਚ ਪਰਮੋਟ ਕਰਨ ਲਈ ਪੈਕੇਜਾਂ ਨੂੰ ਬਲੈਕਲਿਸਟ ਕਰਨ "
+"ਵਿੱਚ ਮੱਦਦ ਕਰਦਾ ਹੈ। ਇੱਕ ਫਿਲਟਰ ਬਣਾਓ ਅਤੇ ਪੈਕੇਜ ਨਾਂ ਜੋੜੇ। ਤੁਸੀਂ ਫਿਲਟਰ ਨੂੰ ਕਿਸੇ "
+"ਉਤਪਾਦ ਵਿੱਚ ਪੂਰੇ ਉਤਪਾਦ ਜਾਂ ਇਕੱਲੀ ਰਿਪੋਜ਼ਟਰੀ ਨਾਲ ਜੋੜ ਸਕਦੇ ਹੋ।"
 
 #: app/views/packages/_show.html.haml:76
 msgid "Package Group"
@@ -2202,9 +2420,9 @@ msgid "Package Group Update scheduled by %s"
 msgstr ""
 
 #: app/helpers/breadcrumb_helper.rb:382 app/helpers/breadcrumb_helper.rb:402
-#: app/views/system_packages/_packages.html.haml:75
 #: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_product_detail.html.haml:10
+#: app/views/system_packages/_packages.html.haml:75
 msgid "Package Groups"
 msgstr "ਪੈਕੇਜ ਗਰੁੱਪ"
 
@@ -2249,13 +2467,13 @@ msgstr "ਇਸ ਟੈਂਪਲਿਟ ਵਿੱਚ ਪੈਕੇਜ ਗਰੁੱ�
 
 #: app/helpers/breadcrumb_helper.rb:49 app/helpers/breadcrumb_helper.rb:153
 #: app/helpers/breadcrumb_helper.rb:378 app/helpers/breadcrumb_helper.rb:399
-#: app/views/system_packages/_packages.html.haml:73
-#: app/views/changesets/_edit.html.haml:52
+#: app/views/system_templates/_promotion_details.html.haml:29
 #: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_product_detail.html.haml:7
-#: app/views/system_templates/_promotion_details.html.haml:29
+#: app/views/system_packages/_packages.html.haml:73
+#: app/views/changesets/_edit.html.haml:58
 #: app/views/promotions/_detail.html.haml:18
-#: app/views/promotions/show.html.haml:8 lib/navigation/systems.rb:78
+#: app/views/promotions/show.html.haml:8 lib/navigation/systems.rb:79
 #: lib/navigation/content_management.rb:204
 msgid "Packages"
 msgstr "ਪੈਕੇਜ"
@@ -2324,10 +2542,10 @@ msgstr "ਮਨਜੂਰੀ"
 msgid "Permissions for this role."
 msgstr "ਇਸ ਰੋਲ ਲਈ ਮਨਜੂਰੀ।"
 
-#: app/helpers/systems_helper.rb:42
-#: app/controllers/subscriptions_controller.rb:57
+#: app/models/system.rb:68 app/controllers/activation_keys_controller.rb:342
 #: app/controllers/providers_controller.rb:282
-#: app/controllers/activation_keys_controller.rb:342 app/models/system.rb:68
+#: app/controllers/subscriptions_controller.rb:57
+#: app/helpers/systems_helper.rb:42
 msgid "Physical"
 msgstr "ਭੌਤਿਕ"
 
@@ -2335,19 +2553,19 @@ msgstr "ਭੌਤਿਕ"
 msgid "Pick your Environment to download template from:"
 msgstr "ਟੈਂਪਲਿਟ ਡਾਊਨਲੋਡ ਕਰਨ ਲਈ ਆਪਣਾ ਇਨਵਾਇਰਮੈਂਟ ਚੁਣੋ:"
 
+#: app/controllers/sync_plans_controller.rb:50
 #: app/controllers/sync_schedules_controller.rb:39
 #: app/controllers/sync_schedules_controller.rb:45
-#: app/controllers/sync_plans_controller.rb:50
 msgid "Plan"
 msgstr "ਪਲਾਨ"
 
-#: app/controllers/api/subscriptions_controller.rb:36
 #: app/controllers/api/systems_controller.rb:88
+#: app/controllers/api/subscriptions_controller.rb:36
 msgid "Please provide pool and quantity"
 msgstr "ਕਿਰਪਾ ਕਰਕੇ ਪੂਲ ਅਤੇ ਕੁਆਲਟੀ ਦਿਓ"
 
-#: app/controllers/api/subscriptions_controller.rb:43
 #: app/controllers/api/systems_controller.rb:95
+#: app/controllers/api/subscriptions_controller.rb:43
 msgid "Please provide pool id"
 msgstr "ਕਿਰਪਾ ਕਰਕੇ ਪੂਲ id"
 
@@ -2356,16 +2574,29 @@ msgid "Please request the required privileges from an administrator."
 msgstr "ਕਿਰਪਾ ਕਰਕੇ ਪ੍ਰਸ਼ਾਸ਼ਕ ਤੋਂ ਲੋੜੀਂਦੇ ਅਧਿਕਾਰ ਲਵੋ।"
 
 #: app/views/roles/index.html.haml:9
-msgid "Please select Permissions to view and add permissions for this role or Users to see current users with this role."
-msgstr "ਇਸ ਰੋਲ ਲਈ ਮੌਜੂਦਾ ਯੂਜ਼ਰ ਵੇਖਣ ਲਈ ਇਸ ਰੋਲ ਜਾਂ ਯੂਜ਼ਰ ਲਈ ਮਨਜੂਰੀ ਵੇਖਣ ਜਾਂ ਜੋੜਨ ਲਈ ਮਨਜੂਰੀ ਚੁਣੋ।"
+msgid ""
+"Please select Permissions to view and add permissions for this role or Users"
+" to see current users with this role."
+msgstr ""
+"ਇਸ ਰੋਲ ਲਈ ਮੌਜੂਦਾ ਯੂਜ਼ਰ ਵੇਖਣ ਲਈ ਇਸ ਰੋਲ ਜਾਂ ਯੂਜ਼ਰ ਲਈ ਮਨਜੂਰੀ ਵੇਖਣ ਜਾਂ ਜੋੜਨ ਲਈ "
+"ਮਨਜੂਰੀ ਚੁਣੋ।"
 
 #: app/views/roles/index.html.haml:9
-msgid "Please select Permissions to view permissions for this role or Users to see current users with this role."
-msgstr "ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਰੋਲ ਜਾਂ ਯੂਜ਼ਰ ਲਈ ਮਨਜੂਰੀ ਵੇਖਣ ਲਈ ਮਨਜੂਰੀ ਚੁਣੋ ਤਾਂ ਜੋ ਇਸ ਰੋਲ ਨਾਲ ਮੌਜੂਦਾ ਯੂਜ਼ਰ ਵੇਖਣ ਲਈ।"
+msgid ""
+"Please select Permissions to view permissions for this role or Users to see "
+"current users with this role."
+msgstr ""
+"ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਰੋਲ ਜਾਂ ਯੂਜ਼ਰ ਲਈ ਮਨਜੂਰੀ ਵੇਖਣ ਲਈ ਮਨਜੂਰੀ ਚੁਣੋ ਤਾਂ ਜੋ ਇਸ ਰੋਲ ਨਾਲ "
+"ਮੌਜੂਦਾ ਯੂਜ਼ਰ ਵੇਖਣ ਲਈ।"
 
 #: app/models/activation_key.rb:87
 msgid "Pool %s has no product associated"
 msgstr "ਪੂਲ %s ਵਿੱਚ ਕੋਈ ਸੰਬੰਧਿਤ ਉਤਪਾਦ ਨਹੀਂ"
+
+#: app/views/users/_edit_form.html.haml:74
+#, 
+msgid "Preferred Locale"
+msgstr ""
 
 #: app/views/environments/_new.html.haml:24
 #: app/views/environments/_edit.html.haml:29
@@ -2376,12 +2607,13 @@ msgstr "ਤਰਜੀਹ ਵਾਲਾ ਵਾਤਾਵਰਨ"
 msgid "Processing changeset modifications, please wait."
 msgstr "ਚੇਂਜਸ਼ੀਟ ਸੋਧ ਕਰ ਰਿਹਾ ਹੈ, ਓਡੀਕੋ ਜੀ।"
 
-#: app/views/systems/_products.html.haml:12
-#: app/views/dashboard/_errata.haml:11 app/views/promotions/show.html.haml:8
+#: app/views/sync_management/index.html.haml:21
+#: app/views/dashboard/_errata.haml:11
+#: app/views/subscriptions/index.html.haml:13
+#: app/views/promotions/show.html.haml:8
 #: app/views/providers/_products_repos.html.haml:38
 #: app/views/providers/redhat/_repo_whitelist.html.haml:3
-#: app/views/sync_management/index.html.haml:21
-#: app/views/subscriptions/index.html.haml:13
+#: app/views/systems/_products.html.haml:12
 msgid "Product"
 msgstr "ਉਤਪਾਦ"
 
@@ -2408,11 +2640,11 @@ msgstr "ਉਤਪਾਦ: "
 
 #: app/helpers/breadcrumb_helper.rb:134 app/helpers/breadcrumb_helper.rb:363
 #: app/helpers/breadcrumb_helper.rb:400
-#: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_promotion_details.html.haml:21
+#: app/views/system_templates/index.html.haml:6
+#: app/views/gpg_keys/_products_repos.html.haml:20
 #: app/views/promotions/_detail.html.haml:6
 #: app/views/promotions/show.html.haml:8
-#: app/views/gpg_keys/_products_repos.html.haml:20
 msgid "Products"
 msgstr "ਉਤਪਾਦ"
 
@@ -2446,11 +2678,16 @@ msgid "Promote to "
 msgstr "ਇਸ ਵੱਲ ਪਰਮੋਟ"
 
 #: app/views/promotions/_distributions.html.haml:11
-#: app/views/promotions/_repo_items.html.haml:5
 #: app/views/promotions/_package_items.html.haml:5
+#: app/views/promotions/_repo_items.html.haml:5
 #: app/views/promotions/show.html.haml:8
 msgid "Promoted"
 msgstr "ਪਰਮੋਟ ਹੋ ਗਿਆ ਹੈ"
+
+#: app/views/changesets/_edit.html.haml:20
+#, 
+msgid "Promoted By:"
+msgstr ""
 
 #: app/helpers/dashboard_helper.rb:55
 msgid "Promoting"
@@ -2460,7 +2697,7 @@ msgstr "ਪਰੋਮੋਟਿੰਗ"
 msgid "Promoting..."
 msgstr "ਪਰਮੋਟ ਹੋ ਰਿਹਾ ਹੈ..."
 
-#: app/views/changesets/_edit.html.haml:21
+#: app/views/changesets/_edit.html.haml:25
 msgid "Promotion Date:"
 msgstr "ਪਰਮੋਟ ਮਿਤੀ:"
 
@@ -2482,8 +2719,17 @@ msgid "Promotions Overview"
 msgstr "ਪਰਮੋਸ਼ਨ ਜਾਣਕਾਰੀ"
 
 #: app/views/promotions/show.html.haml:85
-msgid "Promotions allow you to promote content from one environment to the next along a promotion path. Once you have created a changeset, clicking \"Add\" next to  one or more products will add them to the change set. If products already exist in the next environment, you may promote other types of content. Once you have created a change set, click the \"Promote\" button to commit it to the next environment."
-msgstr "ਇਸ ਰੋਲ ਲਈ ਮੌਜੂਦਾ ਯੂਜ਼ਰ ਵੇਖਣ ਲਈ ਇਸ ਰੋਲ ਜਾਂ ਯੂਜ਼ਰ ਲਈ ਮਨਜੂਰੀ ਵੇਖਣ ਜਾਂ ਜੋੜਨ ਲਈ ਮਨਜੂਰੀ ਚੁਣੋ। ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਰੋਲ ਜਾਂ ਯੂਜ਼ਰ ਲਈ ਮਨਜੂਰੀ ਵੇਖਣ ਲਈ ਮਨਜੂਰੀ ਚੁਣੋ ਤਾਂ ਜੋ ਇਸ ਰੋਲ ਨਾਲ ਮੌਜੂਦਾ ਯੂਜ਼ਰ ਵੇਖਣ ਲਈ।"
+msgid ""
+"Promotions allow you to promote content from one environment to the next "
+"along a promotion path. Once you have created a changeset, clicking \"Add\" "
+"next to  one or more products will add them to the change set. If products "
+"already exist in the next environment, you may promote other types of "
+"content. Once you have created a change set, click the \"Promote\" button to"
+" commit it to the next environment."
+msgstr ""
+"ਇਸ ਰੋਲ ਲਈ ਮੌਜੂਦਾ ਯੂਜ਼ਰ ਵੇਖਣ ਲਈ ਇਸ ਰੋਲ ਜਾਂ ਯੂਜ਼ਰ ਲਈ ਮਨਜੂਰੀ ਵੇਖਣ ਜਾਂ ਜੋੜਨ ਲਈ "
+"ਮਨਜੂਰੀ ਚੁਣੋ। ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਰੋਲ ਜਾਂ ਯੂਜ਼ਰ ਲਈ ਮਨਜੂਰੀ ਵੇਖਣ ਲਈ ਮਨਜੂਰੀ ਚੁਣੋ ਤਾਂ ਜੋ"
+" ਇਸ ਰੋਲ ਨਾਲ ਮੌਜੂਦਾ ਯੂਜ਼ਰ ਵੇਖਣ ਲਈ।"
 
 #: app/controllers/providers_controller.rb:234
 msgid "Provider"
@@ -2493,14 +2739,22 @@ msgstr "ਪਰੋਵਾਈਡਰ"
 msgid "Provider: "
 msgstr "ਪਰੋਵਾਈਡਰ: "
 
-#: app/controllers/providers_controller.rb:232 app/models/resource_type.rb:95
+#: app/models/resource_type.rb:95 app/controllers/providers_controller.rb:232
 #: lib/navigation/content_management.rb:56
 msgid "Providers"
 msgstr "ਪਰੋਵਾਈਡਰ"
 
 #: app/views/providers/index.html.haml:3
-msgid "Providers provide many types of content such as packages, errata, kickstart trees, and installation disc images.  A provider may be delivering all of your paid content or it could simply be a local yum repository providing a few yum repos."
-msgstr "Providers provide many types of content such as packages, errata, kickstart trees, and installation disc images.  A provider may be delivering all of your paid content or it could simply be a local yum repository providing a few yum repos."
+msgid ""
+"Providers provide many types of content such as packages, errata, kickstart "
+"trees, and installation disc images.  A provider may be delivering all of "
+"your paid content or it could simply be a local yum repository providing a "
+"few yum repos."
+msgstr ""
+"Providers provide many types of content such as packages, errata, kickstart "
+"trees, and installation disc images.  A provider may be delivering all of "
+"your paid content or it could simply be a local yum repository providing a "
+"few yum repos."
 
 #: app/views/packages/_dependencies.html.haml:21
 msgid "Provides"
@@ -2597,21 +2851,20 @@ msgstr "ਰਜਿਸਟਰ ਹੋ ਗਿਆ"
 msgid "Release"
 msgstr "ਰੀਲੀਜ਼"
 
-#: app/views/roles/index.html.haml:9
-#: app/views/system_packages/_packages.html.haml:109
-#: app/views/systems/_actions.html.haml:13
-#: app/views/common/_common_i18n.html.haml:3
 #: app/views/system_templates/index.html.haml:88
+#: app/views/system_packages/_packages.html.haml:109
 #: app/views/activation_keys/_applied_subscriptions.html.haml:37
 #: app/views/activation_keys/_applied_subscriptions.html.haml:38
-#: app/views/promotions/show.html.haml:8
+#: app/views/roles/index.html.haml:9 app/views/promotions/show.html.haml:8
 #: app/views/promotions/show.html.haml:133
+#: app/views/common/_common_i18n.html.haml:3
+#: app/views/systems/_actions.html.haml:13
 msgid "Remove"
 msgstr "ਹਟਾਓ"
 
+#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 #: app/views/activation_keys/_available_subscriptions.html.haml:7
 #: app/views/activation_keys/_edit.html.haml:15
-#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 msgid "Remove Activation Key"
 msgstr "ਸਰਗਰਮੀ ਕੁੰਜੀ ਹਟਾਓ"
 
@@ -2619,9 +2872,8 @@ msgstr "ਸਰਗਰਮੀ ਕੁੰਜੀ ਹਟਾਓ"
 msgid "Remove Environment"
 msgstr "ਵਾਤਾਵਰਨ ਹਟਾਓ"
 
-#: app/views/filters/_packages.html.haml:6
 #: app/views/filters/_products.html.haml:12
-#: app/views/filters/_edit.html.haml:8
+#: app/views/filters/_packages.html.haml:6 app/views/filters/_edit.html.haml:8
 msgid "Remove Filter"
 msgstr "ਫਿਲਟਰ ਹਟਾਓ"
 
@@ -2724,11 +2976,11 @@ msgstr "ਪੈਕੇਜ ਹਟਾ ਰਿਹਾ ਹੈ..."
 msgid "Removing..."
 msgstr "ਹਟਾ ਰਿਹਾ ਹੈ..."
 
-#: app/controllers/application_controller.rb:175
+#: app/controllers/application_controller.rb:194
 msgid "Rendering 404:"
 msgstr "ਰੈਂਡਰਿੰਗ 404:"
 
-#: app/controllers/application_controller.rb:189
+#: app/controllers/application_controller.rb:208
 msgid "Rendering 500:"
 msgstr "ਰੈਂਡਰਿੰਗ 500:"
 
@@ -2746,12 +2998,12 @@ msgstr "ਰਿਪੋ"
 
 #: app/helpers/breadcrumb_helper.rb:57 app/helpers/breadcrumb_helper.rb:374
 #: app/helpers/breadcrumb_helper.rb:401
-#: app/views/changesets/_edit.html.haml:56
 #: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_product_detail.html.haml:4
+#: app/views/changesets/_edit.html.haml:62
+#: app/views/gpg_keys/_products_repos.html.haml:28
 #: app/views/promotions/_detail.html.haml:26
 #: app/views/promotions/show.html.haml:8
-#: app/views/gpg_keys/_products_repos.html.haml:28
 msgid "Repositories"
 msgstr "ਰਿਪੋਜ਼ਟਰੀਆਂ"
 
@@ -2774,7 +3026,8 @@ msgid "Request"
 msgstr ""
 
 #: app/controllers/password_resets_controller.rb:98
-msgid "Request received has either an invalid or expired token.  Token: '%{t}'"
+msgid ""
+"Request received has either an invalid or expired token.  Token: '%{t}'"
 msgstr "ਪ੍ਰਾਪਤ ਬੇਨਤੀ ਵਿੱਚ ਗਲਤ ਜਾਂ ਮਿਆਦ-ਪੁੱਗਿਆ ਟੋਕਨ ਹੈ। ਟੋਕਨ: '%{t}'"
 
 #: app/views/packages/_dependencies.html.haml:13
@@ -2785,8 +3038,8 @@ msgstr "ਲੋੜੀਂਦਾ ਹੈ"
 msgid "Reset Password"
 msgstr "ਪਾਸਵਰਡ ਰੀਸੈੱਟ"
 
-#: app/views/system_events/_details.html.haml:28
 #: app/views/sync_management/index.html.haml:25
+#: app/views/system_events/_details.html.haml:28
 msgid "Result"
 msgstr "ਨਤੀਜਾ"
 
@@ -2807,11 +3060,16 @@ msgstr "ਰੋਲ"
 msgid "Role Details"
 msgstr "ਰੋਲ ਵੇਰਵਾ"
 
-#: app/controllers/roles_controller.rb:58 app/models/resource_type.rb:98
+#: app/models/resource_type.rb:98 app/controllers/roles_controller.rb:58
 #: app/views/roles/_self_role_edit.html.haml:13
 #: lib/navigation/administration.rb:29 lib/navigation/administration.rb:65
 msgid "Roles"
 msgstr "ਰੋਲ"
+
+#: app/views/systems/errata/_index.html.haml:58
+#, 
+msgid "Run"
+msgstr ""
 
 #: app/controllers/sync_management_controller.rb:25
 msgid "Running."
@@ -2821,19 +3079,21 @@ msgstr "ਚੱਲ ਰਿਹਾ ਹੈ।"
 msgid "SLA"
 msgstr "SLA"
 
-#: app/views/roles/_new.html.haml:18 app/views/roles/_permission.html.haml:39
 #: app/views/organizations/_new.html.haml:36
-#: app/views/sync_plans/_form.html.haml:31 app/views/systems/_new.html.haml:49
-#: app/views/password_resets/edit.html.haml:36
-#: app/views/filters/_new.html.haml:23 app/views/common/_edit_i18n.html.haml:4
+#: app/views/system_templates/_new.html.haml:21
 #: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/index.html.haml:93
-#: app/views/system_templates/_new.html.haml:21
 #: app/views/activation_keys/_new.html.haml:40
 #: app/views/activation_keys/_edit.html.haml:74
-#: app/views/gpg_keys/_new.html.haml:19 app/views/providers/_form.html.haml:17
-#: app/views/users/_edit_environment.html.haml:52
+#: app/views/password_resets/edit.html.haml:36
+#: app/views/filters/_new.html.haml:23 app/views/gpg_keys/_new.html.haml:19
+#: app/views/roles/_new.html.haml:18 app/views/roles/_permission.html.haml:39
+#: app/views/sync_plans/_form.html.haml:31
+#: app/views/common/_edit_i18n.html.haml:4
+#: app/views/providers/_form.html.haml:17
 #: app/views/users/_edit_form.html.haml:61
+#: app/views/users/_edit_environment.html.haml:52
+#: app/views/systems/_new.html.haml:49
 msgid "Save"
 msgstr "ਸੰਭਾਲੋ"
 
@@ -2870,23 +3130,22 @@ msgstr "ਸੰਭਾਲ ਰਿਹਾ ਹੈ..."
 msgid "Scope"
 msgstr "ਸਕੋਪ"
 
-#: app/views/notices/show.html.haml:19 app/views/common/_panel.html.haml:51
-#: app/views/common/_panel.html.haml:55
 #: app/views/system_templates/index.html.haml:54
-#: app/views/promotions/show.html.haml:8
+#: app/views/notices/show.html.haml:19 app/views/promotions/show.html.haml:8
 #: app/views/promotions/show.html.haml:173
 #: app/views/promotions/show.html.haml:174
 #: app/views/promotions/show.html.haml:175
+#: app/views/common/_panel.html.haml:51 app/views/common/_panel.html.haml:55
 msgid "Search"
 msgstr "ਖੋਜ"
 
-#: app/views/filters/index.html.haml:18
 #: app/views/system_templates/index.html.haml:6
+#: app/views/filters/index.html.haml:18
 msgid "Search available package names..."
 msgstr "ਉਪਲੱਬਧ ਪੈਕੇਜ ਨਾਂ ਖੋਜੋ..."
 
-#: app/views/filters/index.html.haml:18
 #: app/views/system_templates/index.html.haml:6
+#: app/views/filters/index.html.haml:18
 msgid "Search available product names..."
 msgstr "ਉਪਲੱਬਧ ਉਤਪਾਦ ਨਾਂ ਖੋਜੋ..."
 
@@ -2906,9 +3165,9 @@ msgstr "ਸਭ ਚੁਣੋ"
 msgid "Select Architecture"
 msgstr "ਢਾਂਚਾ ਚੁਣੋ"
 
-#: app/views/systems/_actions.html.haml:18
-#: app/views/common/_panel.html.haml:24
 #: app/views/sync_management/index.html.haml:35
+#: app/views/common/_panel.html.haml:24
+#: app/views/systems/_actions.html.haml:18
 msgid "Select None"
 msgstr "ਨਾਂ ਚੁਣੋ"
 
@@ -2969,17 +3228,25 @@ msgstr "ਅਕਾਰ (ਪੈਕੇਜ)"
 msgid "Sockets"
 msgstr "ਸਾਕਟ"
 
-#: lib/navigation/systems.rb:72
+#: lib/navigation/systems.rb:73
 msgid "Software"
 msgstr "ਸਾਫਟਵੇਅਰ"
 
 #: app/views/promotions/show.html.haml:8
-msgid "Some changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications."
-msgstr "ਕੁਝ ਚੇਂਜਸ਼ੀਟ ਸੋਧਾਂ ਦਾ ਕਾਰਜ ਮੁਕੰਮਲ ਨਹੀਂ ਹੋਇਆ, ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਪੇਜ਼ ਛੱਡਣਾ ਚਾਹੁੰਦੇ ਹੋ?  ਛੱਡਣ ਨਾਲ ਤੁਸੀਂ ਕੁਝ ਸੋਧਾਂ ਖਰਾਬ ਕਰ ਸਕਦੇ ਹੋ।"
+msgid ""
+"Some changeset modifications have not finished processing, are you sure you "
+"want to leave the page?  By leaving you may lose some modifications."
+msgstr ""
+"ਕੁਝ ਚੇਂਜਸ਼ੀਟ ਸੋਧਾਂ ਦਾ ਕਾਰਜ ਮੁਕੰਮਲ ਨਹੀਂ ਹੋਇਆ, ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਪੇਜ਼ ਛੱਡਣਾ ਚਾਹੁੰਦੇ"
+" ਹੋ?  ਛੱਡਣ ਨਾਲ ਤੁਸੀਂ ਕੁਝ ਸੋਧਾਂ ਖਰਾਬ ਕਰ ਸਕਦੇ ਹੋ।"
 
 #: app/views/common/500.html.haml:4
-msgid "Sorry about that! It seems something went wrong.  If you continue having trouble with this, please contact an Administrator."
-msgstr "ਇਸ ਲਈ ਮਾਫ ਕਰਨਾ! ਕੁਝ ਗਲਤ ਹੋਇਆ ਲੱਗਦਾ ਹੈ। ਜੇ ਤੁਹਾਨੂੰ ਇਸਨਾਲ ਕੋਈ ਸਮੱਸਿਆ ਹੈ, ਕਿਰਪਾ ਕਰਕੇ ਪ੍ਰਸ਼ਾਸ਼ਕ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।"
+msgid ""
+"Sorry about that! It seems something went wrong.  If you continue having "
+"trouble with this, please contact an Administrator."
+msgstr ""
+"ਇਸ ਲਈ ਮਾਫ ਕਰਨਾ! ਕੁਝ ਗਲਤ ਹੋਇਆ ਲੱਗਦਾ ਹੈ। ਜੇ ਤੁਹਾਨੂੰ ਇਸਨਾਲ ਕੋਈ ਸਮੱਸਿਆ ਹੈ, ਕਿਰਪਾ"
+" ਕਰਕੇ ਪ੍ਰਸ਼ਾਸ਼ਕ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।"
 
 #: app/views/packages/_show.html.haml:88
 msgid "Source Package"
@@ -2989,9 +3256,9 @@ msgstr "ਸੋਰਸ ਪੈਕੇਜ"
 msgid "Specify Local Manifest"
 msgstr "ਲੋਕ ਮੈਨੀਫੈਸਟ ਦਿਓ"
 
+#: app/views/activation_keys/_subscriptions.html.haml:6
 #: app/views/sync_plans/_form.html.haml:20
 #: app/views/sync_plans/_edit.html.haml:26
-#: app/views/activation_keys/_subscriptions.html.haml:6
 msgid "Start Date"
 msgstr "ਸ਼ੁਰੂਆਤੀ ਮਿਤੀ"
 
@@ -3012,9 +3279,9 @@ msgstr "ਮਜਬੂਤ"
 msgid "Subscribe"
 msgstr "ਮੈਂਬਰ ਬਣੋ"
 
-#: app/views/systems/_subs.html.haml:17 app/views/systems/_subs.html.haml:63
 #: app/views/activation_keys/_subscriptions.html.haml:4
 #: app/views/providers/redhat/show.html.haml:43
+#: app/views/systems/_subs.html.haml:17 app/views/systems/_subs.html.haml:63
 msgid "Subscription"
 msgstr "ਵਰਣਨ"
 
@@ -3027,10 +3294,16 @@ msgid "Subscription manifest upload for provider '%{name}' failed."
 msgstr "ਪਰੋਵਾਈਡਰ '%{name}' ਲਈ ਮੈਂਬਰੀ ਮੈਨੀਫੇਸਟ ਅੱਪਲੋਡ ਫੇਲ ਹੋਇਆ ਹੈ।"
 
 #: app/controllers/providers_controller.rb:69
-msgid "Subscription manifest uploaded successfully for provider '%{name}'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled."
-msgstr "Subscription manifest uploaded successfully for provider '%{name}'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled."
+msgid ""
+"Subscription manifest uploaded successfully for provider '%{name}'. Please "
+"enable the repositories you want to sync by selecting 'Enable Repositories' "
+"and selecting individual repositories to be enabled."
+msgstr ""
+"Subscription manifest uploaded successfully for provider '%{name}'. Please "
+"enable the repositories you want to sync by selecting 'Enable Repositories' "
+"and selecting individual repositories to be enabled."
 
-#: lib/navigation/systems.rb:66 lib/navigation/organization.rb:42
+#: lib/navigation/systems.rb:67 lib/navigation/organization.rb:42
 msgid "Subscriptions"
 msgstr "ਮੈਂਬਰੀਆਂ"
 
@@ -3059,10 +3332,15 @@ msgstr ""
 msgid "Summary:"
 msgstr "ਸੰਖੇਪ-ਸਾਰ:"
 
-#: app/views/providers/redhat/_subscription_details.html.haml:7
 #: app/views/subscriptions/index.html.haml:16
+#: app/views/providers/redhat/_subscription_details.html.haml:7
 msgid "Support Level"
 msgstr "ਸਪੋਰਟ ਲੈਵਲ"
+
+#: app/views/sync_management/index.html.haml:5
+#, 
+msgid "Sync Cancelled"
+msgstr ""
 
 #: lib/navigation/content_management.rb:86
 msgid "Sync Management"
@@ -3115,7 +3393,7 @@ msgstr "ਸਿਸਟਮ ਮੌਜੂਦਾ ਮੈਂਬਰੀਆਂ"
 msgid "System Events"
 msgstr "ਸਿਸਟਮ ਘਟਨਾਵਾਂ"
 
-#: app/views/systems/_edit.html.haml:8 lib/navigation/systems.rb:89
+#: app/views/systems/_edit.html.haml:8 lib/navigation/systems.rb:96
 msgid "System Info"
 msgstr "ਸਿਸਟਮ ਜਾਣਕਾਰੀ"
 
@@ -3137,10 +3415,11 @@ msgstr "ਸਿਸਟਮ ਮੈਂਬਰੀ ਹਾਲਤ"
 msgid "System Template"
 msgstr "ਸਿਸਟਮ ਟੈਂਪਲਿਟ"
 
-#: app/helpers/breadcrumb_helper.rb:137
+#: app/models/resource_type.rb:92
 #: app/controllers/system_templates_controller.rb:73
-#: app/models/resource_type.rb:92 app/views/changesets/_edit.html.haml:34
+#: app/helpers/breadcrumb_helper.rb:137
 #: app/views/system_templates/index.html.haml:47
+#: app/views/changesets/_edit.html.haml:40
 #: app/views/promotions/_detail.html.haml:12
 #: app/views/promotions/show.html.haml:8
 #: lib/navigation/content_management.rb:121
@@ -3148,8 +3427,14 @@ msgid "System Templates"
 msgstr "ਸਿਸਟਮ ਟੈਂਪਲਿਟ"
 
 #: app/views/system_templates/index.html.haml:39
-msgid "System Templates allow you to create a template for what a system should look like.  This includes what products are subscribed and what packages are installed."
-msgstr "ਸਿਸਟਮ ਟੈਂਪਲਿਟ ਤੁਹਾਨੂੰ ਇੱਕ ਟੈਂਪਲਿਟ ਬਣਾਉਣ ਵਿੱਚ ਮੱਦਦ ਕਰਦੇ ਹਨ ਕਿ ਸਿਸਟਮ ਕਿਵੇਂ ਦਾ ਦਿਸਣਾ ਚਾਹੀਦਾ ਹੈ। ਇਸ ਵਿੱਚ ਮੈਂਬਰੀ ਉਤਪਾਦਾਂ ਅਤੇ ਇੰਸਟਾਲੇ ਕੀਤੇ ਪੈਕੇਜਾਂ ਬਾਰੇ ਦੱਸਿਆ ਹੁੰਦਾ ਹੈ।"
+msgid ""
+"System Templates allow you to create a template for what a system should "
+"look like.  This includes what products are subscribed and what packages are"
+" installed."
+msgstr ""
+"ਸਿਸਟਮ ਟੈਂਪਲਿਟ ਤੁਹਾਨੂੰ ਇੱਕ ਟੈਂਪਲਿਟ ਬਣਾਉਣ ਵਿੱਚ ਮੱਦਦ ਕਰਦੇ ਹਨ ਕਿ ਸਿਸਟਮ ਕਿਵੇਂ ਦਾ "
+"ਦਿਸਣਾ ਚਾਹੀਦਾ ਹੈ। ਇਸ ਵਿੱਚ ਮੈਂਬਰੀ ਉਤਪਾਦਾਂ ਅਤੇ ਇੰਸਟਾਲੇ ਕੀਤੇ ਪੈਕੇਜਾਂ ਬਾਰੇ ਦੱਸਿਆ "
+"ਹੁੰਦਾ ਹੈ।"
 
 #: app/views/systems/_edit.html.haml:71
 msgid "System Type"
@@ -3159,14 +3444,24 @@ msgstr "ਸਿਸਟਮ ਕਿਸਮ"
 msgid "System Type:"
 msgstr "ਸਿਸਟਮ ਕਿਸਮ:"
 
-#: app/controllers/systems_controller.rb:177
+#: app/controllers/systems_controller.rb:176
 msgid "System subscriptions updated."
 msgstr "ਸਿਸਟਮ ਮੈਂਬਰੀਆਂ ਅੱਪਡੇਟ ਹੋ ਗਈਆਂ ਹਨ।"
 
-#: app/controllers/systems_controller.rb:287
+#: app/controllers/systems_controller.rb:286
 #: app/views/dashboard/_errata.haml:21 lib/navigation/systems.rb:22
 msgid "Systems"
 msgstr "ਸਿਸਟਮ"
+
+#: app/views/systems/errata/_index.html.haml:41
+#, 
+msgid "TITLE"
+msgstr ""
+
+#: app/views/systems/errata/_index.html.haml:37
+#, 
+msgid "TYPE"
+msgstr ""
 
 #: app/controllers/system_templates_controller.rb:75
 #: app/controllers/system_templates_controller.rb:77
@@ -3181,7 +3476,7 @@ msgstr "ਟੈਂਪਲਿਟ ਦਾ ਸਿਰਫ ਉਸੇ ਵਾਤਾਵਰ�
 msgid "Template cannot be exported"
 msgstr "ਟੈਂਪਿਲਟ ਐਕਸਪੋਰਟ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ"
 
-#: app/controllers/api/templates_controller.rb:83
+#: app/controllers/api/templates_controller.rb:94
 msgid "Template imported"
 msgstr "ਟੈਂਪਲਿਟ ਬਰਾਮਦ ਹੋ ਗਿਆ"
 
@@ -3193,24 +3488,36 @@ msgstr "ਟੈਂਪਲਿਟ ਮੁਕੰਮਲ ਨਹੀਂ ਹੈ ਅਤੇ �
 msgid "Templates"
 msgstr "ਟੈਂਪਲਿਟ"
 
-#: app/controllers/api/templates_controller.rb:48
-#: app/controllers/api/templates_content_controller.rb:99
+#: app/controllers/api/templates_controller.rb:59
+#: app/controllers/api/templates_content_controller.rb:116
 msgid "Templates can be updated only in a Locker environment"
 msgstr "ਟੈਂਪਿਲਟ ਨੂੰ ਸਿਰਫ ਲਾਕਰ ਵਾਤਾਵਰਨ ਵਿੱਚ ਅੱਪਡੇਟ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ"
 
 #: app/models/organization.rb:72
-msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
-msgstr "ਮੌਜੂਦਾ ਸੰਗਠਨ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ। ਕਿਰਪਾ ਕਰਕੇ ਹਟਾਉਣ ਤੋਂ ਪਹਿਲਾਂ ਵੱਖਰੇ ਸੰਗਠਨ ਤੇ ਜਾਓ।"
+msgid ""
+"The current organization cannot be deleted. Please switch to a different "
+"organization before deleting."
+msgstr ""
+"ਮੌਜੂਦਾ ਸੰਗਠਨ ਹਟਾਇਆ ਨਹੀਂ ਜਾ ਸਕਦਾ। ਕਿਰਪਾ ਕਰਕੇ ਹਟਾਉਣ ਤੋਂ ਪਹਿਲਾਂ ਵੱਖਰੇ ਸੰਗਠਨ ਤੇ "
+"ਜਾਓ।"
 
 #: app/views/system_templates/index.html.haml:6
-msgid "The current template \"$TEMPLATE\" has been modified.  Would you like to save the changes?"
-msgstr "ਮੌਜੂਦਾ ਟੈਂਪਲਿਟ \"$TEMPLATE\" ਸੋਧਿਆ ਗਿਆ ਹੈ। ਕੀ ਤੁਸੀਂ ਤਬਦੀਲੀਆਂ ਸੰਭਾਲਣੀਆਂ ਚਾਹੁੰਦੇ ਹੋ?"
+msgid ""
+"The current template \"$TEMPLATE\" has been modified.  Would you like to "
+"save the changes?"
+msgstr ""
+"ਮੌਜੂਦਾ ਟੈਂਪਲਿਟ \"$TEMPLATE\" ਸੋਧਿਆ ਗਿਆ ਹੈ। ਕੀ ਤੁਸੀਂ ਤਬਦੀਲੀਆਂ ਸੰਭਾਲਣੀਆਂ "
+"ਚਾਹੁੰਦੇ ਹੋ?"
 
 #: app/views/system_templates/index.html.haml:6
-msgid "The current template \"$TEMPLATE\" has been modified. If you leave, any changes will be lost.\""
-msgstr "ਮੌਜੂਦਾ ਟੈਂਪਲਿਟ \"$TEMPLATE\" ਸੋਧਿਆ ਗਿਆ ਹੈ। ਜੇ ਤੁਸੀਂ ਛੱਡ ਦਿੱਤਾ, ਕੋਈ ਤਬਦੀਲੀ ਖਰਾਬ ਹੋ ਜਾਵੇਗੀ।\""
+msgid ""
+"The current template \"$TEMPLATE\" has been modified. If you leave, any "
+"changes will be lost.\""
+msgstr ""
+"ਮੌਜੂਦਾ ਟੈਂਪਲਿਟ \"$TEMPLATE\" ਸੋਧਿਆ ਗਿਆ ਹੈ। ਜੇ ਤੁਸੀਂ ਛੱਡ ਦਿੱਤਾ, ਕੋਈ ਤਬਦੀਲੀ "
+"ਖਰਾਬ ਹੋ ਜਾਵੇਗੀ।\""
 
-#: app/controllers/users_controller.rb:199
+#: app/controllers/users_controller.rb:212
 msgid "The default you supplied was the same as the old default."
 msgstr "ਮੂਲ ਜੋ ਤੁਸੀਂ ਦਿੱਤਾ ਹੈ ਪੁਰਾਣੇ ਮੂਲ ਵਰਗਾ ਨਹੀਂ ਹੈ।"
 
@@ -3237,25 +3544,35 @@ msgid "The template has children templates."
 msgstr "ਟੈਂਪਿਲਟ ਵਿੱਚ ਅਧੀਨ ਟੈਂਪਲਿਟ ਵੀ ਹਨ।"
 
 #: app/views/roles/index.html.haml:9
-msgid "There are currently no Global permissions for this role.  Please click Add Permission in the action bar below to add a Global permission.  A Global permission is one that cuts across all organizations."
-msgstr "ਸਿਸਟਮ ਟੈਂਪਲਿਟ ਤੁਹਾਨੂੰ ਇੱਕ ਟੈਂਪਲਿਟ ਬਣਾਉਣ ਵਿੱਚ ਮੱਦਦ ਕਰਦੇ ਹਨ ਕਿ ਸਿਸਟਮ ਕਿਵੇਂ ਦਾ ਦਿਸਣਾ ਚਾਹੀਦਾ ਹੈ। ਇਸ ਵਿੱਚ ਮੈਂਬਰੀ ਉਤਪਾਦਾਂ ਅਤੇ ਇੰਸਟਾਲੇ ਕੀਤੇ ਪੈਕੇਜਾਂ ਬਾਰੇ ਦੱਸਿਆ ਹੁੰਦਾ ਹੈ। ਟੈਂਪਲਿਟ ਦਾ ਸਿਰਫ ਉਸੇ ਵਾਤਾਵਰਨ ਤੋਂ ਅਧਾਰ ਟੈਂਪਲਿਟ ਹੋ ਸਕਦਾ ਹੈ।"
+msgid ""
+"There are currently no Global permissions for this role.  Please click Add "
+"Permission in the action bar below to add a Global permission.  A Global "
+"permission is one that cuts across all organizations."
+msgstr ""
+"ਸਿਸਟਮ ਟੈਂਪਲਿਟ ਤੁਹਾਨੂੰ ਇੱਕ ਟੈਂਪਲਿਟ ਬਣਾਉਣ ਵਿੱਚ ਮੱਦਦ ਕਰਦੇ ਹਨ ਕਿ ਸਿਸਟਮ ਕਿਵੇਂ ਦਾ "
+"ਦਿਸਣਾ ਚਾਹੀਦਾ ਹੈ। ਇਸ ਵਿੱਚ ਮੈਂਬਰੀ ਉਤਪਾਦਾਂ ਅਤੇ ਇੰਸਟਾਲੇ ਕੀਤੇ ਪੈਕੇਜਾਂ ਬਾਰੇ ਦੱਸਿਆ "
+"ਹੁੰਦਾ ਹੈ। ਟੈਂਪਲਿਟ ਦਾ ਸਿਰਫ ਉਸੇ ਵਾਤਾਵਰਨ ਤੋਂ ਅਧਾਰ ਟੈਂਪਲਿਟ ਹੋ ਸਕਦਾ ਹੈ।"
 
 #: app/views/roles/index.html.haml:9
-msgid "There are currently no permissions for this organization.  Please click Add Permission in the action bar below to add a permission to this organization."
-msgstr "ਇਸ ਸੰਗਠਨ ਲਈ ਕੋਈ ਮਨਜੂਰੀ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਸੰਗਠਨ ਲਈ ਮਨਜੂਰੀ ਜੋੜਨ ਵਾਸਤੇ ਹੇਠਾਂ ਕਾਰਵਾਈ ਪੱਟੀ ਵਿੱਚ ਮਨਜੂਰੀ ਜੋੜੋ ਦਬਾਓ।"
+msgid ""
+"There are currently no permissions for this organization.  Please click Add "
+"Permission in the action bar below to add a permission to this organization."
+msgstr ""
+"ਇਸ ਸੰਗਠਨ ਲਈ ਕੋਈ ਮਨਜੂਰੀ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਸੰਗਠਨ ਲਈ ਮਨਜੂਰੀ ਜੋੜਨ ਵਾਸਤੇ "
+"ਹੇਠਾਂ ਕਾਰਵਾਈ ਪੱਟੀ ਵਿੱਚ ਮਨਜੂਰੀ ਜੋੜੋ ਦਬਾਓ।"
 
 #: app/views/system_events/_events.html.haml:35
 #, 
 msgid "There are no events to display."
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:110
 #: app/views/activation_keys/_subscriptions.html.haml:54
+#: app/views/systems/_subs.html.haml:110
 msgid "There are no more subscriptions available."
 msgstr "ਕੋਈ ਹੋਰ ਮੈਂਬਰੀ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ।"
 
-#: app/views/system_packages/_packages.html.haml:96
 #: app/views/errata/_packages.html.haml:29
+#: app/views/system_packages/_packages.html.haml:96
 msgid "There are no packages to display."
 msgstr "ਵੇਖਾਉਣ ਲਈ ਕੋਈ ਪੈਕੇਜ ਨਹੀਂ ਹੈ।"
 
@@ -3281,7 +3598,7 @@ msgstr ""
 msgid "This action doesn't support pacakge groups"
 msgstr "ਇਹ ਕਾਰਵਾਈ ਪੈਕੇਜ ਗਰੁੱਪ ਲਈ ਸਹਿਯੋਗੀ ਨਹੀਂ ਹੈ"
 
-#: app/views/changesets/_edit.html.haml:29
+#: app/views/changesets/_edit.html.haml:35
 msgid "This changeset contains no content."
 msgstr "ਇਸ ਸ਼ੀਟ ਵਿੱਚ ਕੋਈ ਸੰਖੇਪ ਨਹੀਂ ਹੈ।"
 
@@ -3304,18 +3621,26 @@ msgid "Title"
 msgstr "ਸਿਰਲੇਖ"
 
 #: app/views/common/_panel.html.haml:14
-msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
-msgstr "ਇਕਾਈ ਬਾਰੇ ਖੱਬੇ ਪਾਸੇ ਵੇਰਵਾ ਵੇਖਣ ਲਈ, ਇੱਕ ਕਤਾਰ ਵਿੱਚ ਕਲਿੱਕ ਕਰੋ। <br/><br/>ਜਿਆਦਾ ਕਤਾਰਾਂ ਚੁਣਨ ਲਈ, Ctrl ਬਟਨ ਦਬਾ ਕੇ ਰੱਖੋ ਅਤੇ ਕਤਾਰਾਂ ਤੇ ਕਲਿੱਕ ਕਰਦੇ ਜਾਓ।<br/><br/> ਜੇ ਤੁਹੀਨੂੰ ਇਹ ਮੱਦਦ ਨਹੀਂ ਚਾਹੀਦੀ, ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਬਕਸੇ ਦੇ ਉੱਪਰ ਸੱਜੇ ਪਾਸੇ ਬੰਦ ਬਟਨ ਦਬਾਓ।"
+msgid ""
+"To view the details of an item on the left, simply click on a single "
+"row.<br/><br/>To select multiple rows, hold the Control Key and click "
+"multiple rows.<br/><br/>If you don't need this help anymore, please click "
+"the close button in the top right of this box."
+msgstr ""
+"ਇਕਾਈ ਬਾਰੇ ਖੱਬੇ ਪਾਸੇ ਵੇਰਵਾ ਵੇਖਣ ਲਈ, ਇੱਕ ਕਤਾਰ ਵਿੱਚ ਕਲਿੱਕ ਕਰੋ। <br/><br/>ਜਿਆਦਾ "
+"ਕਤਾਰਾਂ ਚੁਣਨ ਲਈ, Ctrl ਬਟਨ ਦਬਾ ਕੇ ਰੱਖੋ ਅਤੇ ਕਤਾਰਾਂ ਤੇ ਕਲਿੱਕ ਕਰਦੇ ਜਾਓ।<br/><br/>"
+" ਜੇ ਤੁਹੀਨੂੰ ਇਹ ਮੱਦਦ ਨਹੀਂ ਚਾਹੀਦੀ, ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਬਕਸੇ ਦੇ ਉੱਪਰ ਸੱਜੇ ਪਾਸੇ ਬੰਦ "
+"ਬਟਨ ਦਬਾਓ।"
 
 #: app/views/dashboard/_subscriptions.haml:41
 msgid "Total Systems"
 msgstr "ਕੁੱਲ ਸਿਸਟਮ"
 
-#: app/views/roles/_permission.html.haml:13
-#: app/views/roles/_closed_permission.html.haml:3
+#: app/views/errata/_show.html.haml:24 app/views/errata/_show.html.haml:56
 #: app/views/dashboard/_errata.haml:7
 #: app/views/activation_keys/_subscriptions.html.haml:5
-#: app/views/errata/_show.html.haml:24 app/views/errata/_show.html.haml:56
+#: app/views/roles/_permission.html.haml:13
+#: app/views/roles/_closed_permission.html.haml:3
 msgid "Type"
 msgstr "ਕਿਸਮ"
 
@@ -3361,13 +3686,14 @@ msgstr "ਪੈਕੇਜ ਗਰੁੱਪ '%{p}' ਨੂੰ ਅਨ-ਇੰਸਟਾ�
 msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "ਪੈਕੇਜ '%{p}' ਨੂੰ ਅਨ-ਇੰਸਟਾਲ ਕਰਨਾ ਸਿਸਟਮ '%{s}' ਲਈ ਤਹਿ ਹੋ ਗਿਆ ਹੈ।"
 
+#: app/views/changesets/_edit.html.haml:22
 #: app/views/systems/_edit.html.haml:79
 msgid "Unknown"
 msgstr "ਅਣਜਾਣ"
 
-#: app/views/systems/_subs.html.haml:90
-#: app/views/providers/redhat/_subscription_details.html.haml:30
 #: app/views/subscriptions/index.html.haml:39
+#: app/views/providers/redhat/_subscription_details.html.haml:30
+#: app/views/systems/_subs.html.haml:90
 msgid "Unlimited"
 msgstr "ਅਸੀਮਿਤ"
 
@@ -3415,9 +3741,9 @@ msgstr "ਅੱਪਡੇਟ ਹੋ ਗਏ"
 msgid "Updating Package..."
 msgstr "ਪੈਕੇਜ ਅੱਪਡੇਟ ਹੋ ਰਹੇ ਹਨ..."
 
-#: app/views/common/_edit_i18n.html.haml:4
 #: app/views/gpg_keys/_new.html.haml:28 app/views/gpg_keys/_new.html.haml:33
 #: app/views/gpg_keys/_edit.html.haml:30 app/views/gpg_keys/_edit.html.haml:35
+#: app/views/common/_edit_i18n.html.haml:4
 #: app/views/providers/redhat/show.html.haml:34
 msgid "Upload"
 msgstr "ਅੱਪਲੋਡ"
@@ -3430,7 +3756,12 @@ msgstr "ਮੈਂਬਰੀ ਮੈਨੀਫੇਸਟ ਅੱਪਲੋਡ"
 msgid "Uploading"
 msgstr "ਅੱਪਲੋਡ ਹੋ ਰਿਹਾ ਹੈ"
 
-#: app/controllers/users_controller.rb:275
+#: app/helpers/users_helper.rb:36 app/helpers/users_helper.rb:37
+#, 
+msgid "Use Browser Locale"
+msgstr ""
+
+#: app/controllers/users_controller.rb:288
 msgid "User"
 msgstr "ਯੂਜ਼ਰ"
 
@@ -3442,31 +3773,35 @@ msgstr "ਯੂਜ਼ਰ ਸੂਚਨਾ"
 msgid "User assignments for this role"
 msgstr "ਇਸ ਰੋਲ ਲਈ ਯੂਜ਼ਰ ਨਿਰਧਾਰਨ"
 
-#: app/controllers/application_controller.rb:115
+#: app/controllers/application_controller.rb:120
 msgid "User does not belong to an organization."
 msgstr "ਯੂਜ਼ਰ ਇੱਕ ਸੰਗਠਨ ਨਾਲ ਸੰਬੰਧਤ ਨਹੀਂ"
 
-#: app/controllers/users_controller.rb:192
+#: app/controllers/users_controller.rb:205
 msgid "User environment updated successfully."
 msgstr "ਯੂਜ਼ਰ ਇਨਵਾਇਰਮੈਂਟ ਸਫਲਤਾਪੂਰਕ ਅੱਪਡੇਟ ਹੋ ਗਿਆ ਹੈ।"
 
 #: app/views/notices/show.html.haml:9
-msgid "User notifications lists all notifications generated by a user as well as global notifications that are sent to all users."
-msgstr "ਯੂਜ਼ਰ ਸੂਚਨਾ ਸਭ ਸੂਚਨਾਵਾਂ ਵੇਖਾਉਂਦੀ ਹੈ ਜੋ ਇੱਕ ਯੂਜ਼ਰ ਦੁਆਰਾ ਬਣਦੀਆਂ ਹਨ ਅਤੇ ਗਲੋਬਲ ਸੂਚਨਾਵਾਂ ਵੇਕਾਉਂਦੀ ਹੈ ਜੋ ਸਭ ਯੂਜ਼ਰਾਂ ਨੂੰ ਭੇਜੀਆਂ ਜਾਂਦੀਆਂ ਹਨ।"
+msgid ""
+"User notifications lists all notifications generated by a user as well as "
+"global notifications that are sent to all users."
+msgstr ""
+"ਯੂਜ਼ਰ ਸੂਚਨਾ ਸਭ ਸੂਚਨਾਵਾਂ ਵੇਖਾਉਂਦੀ ਹੈ ਜੋ ਇੱਕ ਯੂਜ਼ਰ ਦੁਆਰਾ ਬਣਦੀਆਂ ਹਨ ਅਤੇ ਗਲੋਬਲ "
+"ਸੂਚਨਾਵਾਂ ਵੇਕਾਉਂਦੀ ਹੈ ਜੋ ਸਭ ਯੂਜ਼ਰਾਂ ਨੂੰ ਭੇਜੀਆਂ ਜਾਂਦੀਆਂ ਹਨ।"
 
-#: app/controllers/users_controller.rb:128
-#: app/controllers/users_controller.rb:217
+#: app/controllers/users_controller.rb:129
+#: app/controllers/users_controller.rb:151
+#: app/controllers/users_controller.rb:230
 msgid "User updated successfully."
 msgstr "ਯੂਜ਼ਰ ਸਫਲਤਾਪੂਰਕ ਅੱਪਡੇਟ ਹੋ ਗਏ ਹਨ।"
 
 #: app/views/password_resets/new.html.haml:13
-#: app/views/users/_edit_form.html.haml:22 app/views/users/_new.html.haml:19
+#: app/views/users/_new.html.haml:19 app/views/users/_edit_form.html.haml:22
 msgid "Username:"
 msgstr "ਯੂਜ਼ਰ-ਨਾਂ:"
 
-#: app/helpers/breadcrumb_helper.rb:242
-#: app/controllers/users_controller.rb:273 app/models/resource_type.rb:97
-#: lib/navigation/administration.rb:56
+#: app/models/resource_type.rb:97 app/controllers/users_controller.rb:286
+#: app/helpers/breadcrumb_helper.rb:242 lib/navigation/administration.rb:56
 msgid "Users"
 msgstr "ਯੂਜ਼ਰ"
 
@@ -3492,23 +3827,32 @@ msgstr "ਵਰਬਾਂ"
 msgid "Very Weak"
 msgstr "ਬਹੁਤ ਕਮਜੋਰ"
 
-#: app/helpers/systems_helper.rb:43
-#: app/controllers/subscriptions_controller.rb:55
+#: app/views/systems/errata/_index.html.haml:5
+#, 
+msgid "Viewing %X of %Y results (%Z Total Errata)"
+msgstr ""
+
+#: app/models/system.rb:68 app/controllers/activation_keys_controller.rb:348
 #: app/controllers/providers_controller.rb:280
-#: app/controllers/activation_keys_controller.rb:348 app/models/system.rb:68
+#: app/controllers/subscriptions_controller.rb:55
+#: app/helpers/systems_helper.rb:43
 msgid "Virtual"
 msgstr "ਵਰਚੁਅਲ"
 
 #: app/views/providers/index.html.haml:16
-msgid "WARNING: This will override any GPG keys already associated with a repository within this product"
-msgstr "ਚੇਤਾਵਨੀ: ਇਸ ਨਾਲ ਇਸ ਉਤਪਾਦ ਵਿਚਲੀ ਰਿਪੋਜ਼ਟਰੀ ਨਾਲ ਸੰਬੰਧਿਤ GPG ਕੁੰਜੀ ਮੁੜ ਤੋਂ ਲਿਖੀ ਜਾਵੇਗੀ"
+msgid ""
+"WARNING: This will override any GPG keys already associated with a "
+"repository within this product"
+msgstr ""
+"ਚੇਤਾਵਨੀ: ਇਸ ਨਾਲ ਇਸ ਉਤਪਾਦ ਵਿਚਲੀ ਰਿਪੋਜ਼ਟਰੀ ਨਾਲ ਸੰਬੰਧਿਤ GPG ਕੁੰਜੀ ਮੁੜ ਤੋਂ ਲਿਖੀ "
+"ਜਾਵੇਗੀ"
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
 msgid "Weak"
 msgstr "ਕਮਜੋਰ"
 
-#: app/controllers/application_controller.rb:144
+#: app/controllers/application_controller.rb:149
 msgid "Welcome Back!"
 msgstr "ਵਾਪਸੀ ਤੇ ਸਵਾਗਤ ਹੈ!"
 
@@ -3525,21 +3869,36 @@ msgstr "ਤੁਸੀਂ ਇਹ ਕਾਰਵਾਈ ਕਰਨ ਲਈ ਅਧਿਕ�
 msgid "You can synchronize repositories only in locker environment'"
 msgstr "ਤੁਸੀਂ ਰਿਪੋਜ਼ਟਰੀ ਨੂੰ ਸਿਰਉ ਲਾਕਰ ਇਨਵਾਇਰਮੈਂਟ ਵਿੱਚ ਸਮਕਾਲੀ ਕਰ ਸਕਦੇ ਹੈ"
 
-#: app/controllers/application_controller.rb:453
-msgid "You current organization is no longer valid. It is possible that the organization has been deleted, please log back in to continue."
-msgstr "ਤੁਹਾਡਾ ਮੌਜੂਦਾ ਸੰਗਠਨ ਜਿਆਦਾ ਸਮਾਂ ਯੋਗ ਨਹੀਂ ਰਹੇਗਾ। ਇਹ ਸੰਭਲ ਹੈ ਕਿ ਸੰਗਠਨ ਹਟਾਇਆ ਗਿਆ ਹੈ, ਕਿਰਪਾ ਕਰਕੇ ਜਾਰੀ ਕਰਨ ਲਈ ਫਿਰ ਲਾਗਇਨ ਕਰੋ।"
+#: app/controllers/application_controller.rb:472
+msgid ""
+"You current organization is no longer valid. It is possible that the "
+"organization has been deleted, please log back in to continue."
+msgstr ""
+"ਤੁਹਾਡਾ ਮੌਜੂਦਾ ਸੰਗਠਨ ਜਿਆਦਾ ਸਮਾਂ ਯੋਗ ਨਹੀਂ ਰਹੇਗਾ। ਇਹ ਸੰਭਲ ਹੈ ਕਿ ਸੰਗਠਨ ਹਟਾਇਆ ਗਿਆ"
+" ਹੈ, ਕਿਰਪਾ ਕਰਕੇ ਜਾਰੀ ਕਰਨ ਲਈ ਫਿਰ ਲਾਗਇਨ ਕਰੋ।"
 
 #: app/views/dashboard/index.html.haml:16
-msgid "You currently do not have any permissions that grant access to an organization.  Please contact your system administrator to receive access."
-msgstr "ਤੁਹਾਡੇ ਕੋਲ ਮੌਜੂਦਾ ਰੂਪ ਵਿੱਚ ਕੋਈ ਮਨਜੂਰੀ ਨਹੀਂ ਕਿ ਸੰਗਠਨ ਨੂੰ ਪਹੁੰਚ ਦੇ ਸਕੋ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਸਿਸਟਮ ਪ੍ਰਸ਼ਾਸ਼ਕ ਨਾਲ ਪਹੁੰਚ ਲੈਣ ਲਈ ਸੰਪਰਕ ਕਰੋ।"
+msgid ""
+"You currently do not have any permissions that grant access to an "
+"organization.  Please contact your system administrator to receive access."
+msgstr ""
+"ਤੁਹਾਡੇ ਕੋਲ ਮੌਜੂਦਾ ਰੂਪ ਵਿੱਚ ਕੋਈ ਮਨਜੂਰੀ ਨਹੀਂ ਕਿ ਸੰਗਠਨ ਨੂੰ ਪਹੁੰਚ ਦੇ ਸਕੋ। ਕਿਰਪਾ "
+"ਕਰਕੇ ਆਪਣੇ ਸਿਸਟਮ ਪ੍ਰਸ਼ਾਸ਼ਕ ਨਾਲ ਪਹੁੰਚ ਲੈਣ ਲਈ ਸੰਪਰਕ ਕਰੋ।"
 
 #: app/controllers/failed_authentication_controller.rb:28
-msgid "You do not have valid credentials to access this system. Please contact your administrator."
-msgstr "ਤੁਹਾਡੇ ਕੋਲ ਇਸ ਸਿਸਟਮ ਵਰਤਣ ਲਈ ਯੋਗ ਮਨਜੂਰੀ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਪ੍ਰਸ਼ਾਸ਼ਕ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।"
+msgid ""
+"You do not have valid credentials to access this system. Please contact your"
+" administrator."
+msgstr ""
+"ਤੁਹਾਡੇ ਕੋਲ ਇਸ ਸਿਸਟਮ ਵਰਤਣ ਲਈ ਯੋਗ ਮਨਜੂਰੀ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਪ੍ਰਸ਼ਾਸ਼ਕ ਨਾਲ "
+"ਸੰਪਰਕ ਕਰੋ।"
 
 #: app/views/roles/index.html.haml:9
-msgid "You have selected all resource types; this will grant full access to the organization."
-msgstr "ਤੁਸੀਂ ਸਭ ਸਰੋਤ ਕਿਸਮਾਂ ਚੁਣੀਆਂ ਹਨ; ਇਸ ਨਾਲ ਸੰਗਠਨ ਨੂੰ ਪੂਰੀ ਪਹੁੰਚ ਮਿਲ ਜਾਵੇਗੀ।"
+#, 
+msgid ""
+"You have selected all resource types; this will grant full access to the "
+"organization. Press the Cancel button to select an individual resource type."
+msgstr ""
 
 #: app/views/common/404.html.haml:4
 msgid "You may have mistyped the address or the page may have moved."
@@ -3549,8 +3908,8 @@ msgstr " ਤੁਸੀਂ ਐਡਰੈੱਸ ਗਲਤ ਦਿੱਤਾ ਹੋ ਸ
 msgid "You might want to log out and log back in again to clear your cookies."
 msgstr "ਤੁਸੀਂ ਆਪਣੀ ਕੂਕੀਜ਼ ਸਾਫ ਕਰਨ ਲਈ ਲਾਗ ਆਊਟ ਕਰਕੇ ਫਿਰ ਲਾਗ ਇਨ ਕਰ ਸਕਦੇ ਹੋ।"
 
-#: app/controllers/application_controller.rb:133
-#: app/controllers/application_controller.rb:443
+#: app/controllers/application_controller.rb:138
+#: app/controllers/application_controller.rb:462
 msgid "You must be logged in to access that page."
 msgstr "ਪੇਜ਼ ਵਰਤਣ ਲਈ ਤੁਹਾਨੂੰ ਲਾਗਇਨ ਕਰਨਾ ਜਰੂਰੀ ਹੈ।"
 
@@ -3567,32 +3926,39 @@ msgid "You must select at least one verb."
 msgstr "ਤੁਹਾਨੂੰ ਘੱਟੋ-ਘੱਟ ਇੱਕ ਵਰਬ ਚੁਣਨੀ ਪਵੇਗੀ।"
 
 #: app/views/systems/_new.html.haml:57
-msgid "You need to create an environment for this org before you can create a system."
-msgstr "ਤੁਹਾਨੂੰ ਸਿਸਟਮ ਬਣਾਉਣ ਤੋਂ ਪਹਿਲਾਂ ਇਸ ਸੰਗਠਨ ਲਈ ਇੱਕ ਇਨਵਾਇਰਮੈਂਟ ਬਣਾਉਣ ਦੀ ਲੋੜ ਹੈ।"
+msgid ""
+"You need to create an environment for this org before you can create a "
+"system."
+msgstr ""
+"ਤੁਹਾਨੂੰ ਸਿਸਟਮ ਬਣਾਉਣ ਤੋਂ ਪਹਿਲਾਂ ਇਸ ਸੰਗਠਨ ਲਈ ਇੱਕ ਇਨਵਾਇਰਮੈਂਟ ਬਣਾਉਣ ਦੀ ਲੋੜ ਹੈ।"
 
 #: app/controllers/failed_authentication_controller.rb:25
-msgid "You've entered an incorrect username, password combination or account disabled, please try again."
-msgstr "ਤੁਸੀਂ ਗਲਤ ਯੂਜ਼ਰ-ਨਾਂ, ਪਾਸਵਰਡ ਦਿੱਤਾ ਹੈ ਜਾਂ ਖਾਤਾ ਅਯੋਗ ਹੋ ਗਿਆ ਹੈ, ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜੀ।"
+msgid ""
+"You've entered an incorrect username, password combination or account "
+"disabled, please try again."
+msgstr ""
+"ਤੁਸੀਂ ਗਲਤ ਯੂਜ਼ਰ-ਨਾਂ, ਪਾਸਵਰਡ ਦਿੱਤਾ ਹੈ ਜਾਂ ਖਾਤਾ ਅਯੋਗ ਹੋ ਗਿਆ ਹੈ, ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ "
+"ਜੀ।"
 
 #: app/views/promotions/show.html.haml:185
-msgid "Your update has applied successfully, but during that time another user has also made an update."
-msgstr "ਤੁਹਾਡਾ ਅੱਪਡੇਟ ਸਫਲਤਾਪੂਰਕ ਅੱਪਡੇਟ ਹੋ ਗਿਆ ਹੈ, ਪਰ ਉਸ ਸਮੇਂ ਦੌਰਾਨ ਹੋਰ ਯੂਜ਼ਰ ਨੇ ਵੀ ਅੱਪਡੇਟ ਕੀਤਾ ਹੈ।"
+msgid ""
+"Your update has applied successfully, but during that time another user has "
+"also made an update."
+msgstr ""
+"ਤੁਹਾਡਾ ਅੱਪਡੇਟ ਸਫਲਤਾਪੂਰਕ ਅੱਪਡੇਟ ਹੋ ਗਿਆ ਹੈ, ਪਰ ਉਸ ਸਮੇਂ ਦੌਰਾਨ ਹੋਰ ਯੂਜ਼ਰ ਨੇ ਵੀ "
+"ਅੱਪਡੇਟ ਕੀਤਾ ਹੈ।"
 
-#: app/controllers/activation_keys_controller.rb:361
-msgid "activation_key"
-msgstr "activation_key"
-
-#: app/models/system_task.rb:124
+#: app/models/system_task.rb:136
 #, 
 msgid "all packages"
 msgstr ""
 
-#: app/models/system_task.rb:157
+#: app/models/system_task.rb:176
 #, 
 msgid "all packages update"
 msgstr ""
 
-#: app/models/system_task.rb:155
+#: app/models/system_task.rb:174
 #, 
 msgid "all packages update failed"
 msgstr ""
@@ -3601,8 +3967,8 @@ msgstr ""
 msgid "at least 5 characters"
 msgstr "ਘੱਟੋ-ਘੱਟ 5 ਅੱਖਰ"
 
-#: app/models/katello_name_format_validator.rb:20
 #: app/models/katello_url_format_validator.rb:50
+#: app/models/katello_name_format_validator.rb:20
 msgid "can't be blank"
 msgstr "ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ"
 
@@ -3614,13 +3980,13 @@ msgstr "ਅੱਖਰਾਂ-ਅੰਕਾਂ, ਸਪੇਸ,'_', '-' ਤੇਂ ਬ�
 msgid "cannot contain characters other than alpha numerals,'_', '-'."
 msgstr "ਅੱਖਰਾਂ-ਅੰਕਾਂ,'_', '-' ਤੋਂ ਬਿਨਾਂ ਹੋਰ ਅੱਖਰ ਨਹੀਂ ਹੋ ਸਕਦੇ।"
 
-#: app/controllers/changesets_controller.rb:281
-msgid "changeset"
-msgstr "ਚੇਂਜਸ਼ੀਟ"
-
 #: app/controllers/system_templates_controller.rb:265
-msgid "contained the selected distribution for this template.  Please select another distribution to ensure a working system template."
-msgstr "ਇਸ ਟੈਂਪਲਿਟ ਲਈ ਚੁਣੇ ਡਿਸਟਰੀਬਿਊਸ਼ਨ ਸ਼ਾਮਿਲ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਵਰਕਿੰਗ ਸਿਸਟਮ ਟੈਂਪਲਿਟ ਯਕੀਨੀ ਬਣਾਉਣ ਲਈ ਹੋਰ ਡਿਸਟਰੀਬਿਊਸ਼ਨ ਚੁਣੋ।"
+msgid ""
+"contained the selected distribution for this template.  Please select "
+"another distribution to ensure a working system template."
+msgstr ""
+"ਇਸ ਟੈਂਪਲਿਟ ਲਈ ਚੁਣੇ ਡਿਸਟਰੀਬਿਊਸ਼ਨ ਸ਼ਾਮਿਲ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਵਰਕਿੰਗ ਸਿਸਟਮ ਟੈਂਪਲਿਟ "
+"ਯਕੀਨੀ ਬਣਾਉਣ ਲਈ ਹੋਰ ਡਿਸਟਰੀਬਿਊਸ਼ਨ ਚੁਣੋ।"
 
 #: app/views/promotions/show.html.haml:8
 msgid "currently editing this changeset"
@@ -3634,17 +4000,19 @@ msgstr "ਇਨਵਾਇਰਮੈਂਟ ਵਿੱਚ ਸਿਰਫ ਇੱਕ ਅ�
 msgid "environment required"
 msgstr "ਵਾਤਾਵਰਨ ਲੋੜੀਂਦਾ ਹੈ"
 
-#: app/controllers/filters_controller.rb:214
-msgid "filter"
-msgstr "ਫਿਲਟਰ"
-
-#: app/controllers/gpg_keys_controller.rb:173
-msgid "gpg_key"
-msgstr "gpg_key"
-
-#: app/models/system_task.rb:307
+#: app/models/system_task.rb:330
 #, 
 msgid "installed"
+msgstr ""
+
+#: app/models/system_task.rb:105 app/models/system_task.rb:106
+#, 
+msgid "installing errata..."
+msgstr ""
+
+#: app/models/system_task.rb:105 app/models/system_task.rb:106
+#, 
+msgid "installing erratum..."
 msgstr ""
 
 #: app/models/system_task.rb:64 app/models/system_task.rb:65
@@ -3668,8 +4036,8 @@ msgid "installing packages..."
 msgstr ""
 
 #: app/models/system_template_pack_group.rb:26
-#: app/models/system_template_pg_category.rb:25
 #: app/models/system_template_distribution.rb:25
+#: app/models/system_template_pg_category.rb:25
 msgid "is already in the template"
 msgstr "ਪਹਿਲਾਂ ਹੀ ਟੈਂਪਲਿਟ ਵਿੱਚ ਹੈ"
 
@@ -3709,18 +4077,14 @@ msgstr "ਸ਼ੁਰੂ ਅਤੇ ਅੰਤ ਵਿੱਚ ਖਾਲੀ ਸਪੇਸ 
 msgid "none"
 msgstr "ਕੋਈ ਨਹੀਂ"
 
-#: app/models/system_task.rb:300
+#: app/models/system_task.rb:323
 msgid "obsoleted"
 msgstr "ਛੱਡੇ ਗਏ"
 
-#: app/views/roles/_edit.html.haml:55 app/views/roles/_edit.html.haml:62
-#: app/views/roles/_edit.html.haml:69 app/views/gpg_keys/_new.html.haml:24
+#: app/views/gpg_keys/_new.html.haml:24 app/views/roles/_edit.html.haml:55
+#: app/views/roles/_edit.html.haml:62 app/views/roles/_edit.html.haml:69
 msgid "or"
 msgstr "ਜਾਂ"
-
-#: app/controllers/organizations_controller.rb:218
-msgid "organization"
-msgstr "ਸੰਗਠਨ"
 
 #: app/controllers/sync_schedules_controller.rb:46
 msgid "plan"
@@ -3734,11 +4098,7 @@ msgstr "ਉਤਪਾਦ"
 msgid "promote_confirm"
 msgstr "promote_confirm"
 
-#: app/controllers/providers_controller.rb:244
-msgid "provider"
-msgstr "ਪਰੋਵਾਈਡਰ"
-
-#: app/models/system_task.rb:306
+#: app/models/system_task.rb:329
 msgid "removed"
 msgstr "ਹਟਾਏ"
 
@@ -3762,22 +4122,9 @@ msgstr ""
 msgid "removing packages..."
 msgstr ""
 
-#: app/controllers/roles_controller.rb:255
-msgid "role"
-msgstr "ਰੋਲ"
-
 #: app/controllers/sync_management_controller.rb:243
 msgid "sync did not complete successfully"
 msgstr "ਸਮਕਾਲਤਾ ਸਫਲਤਾਪੂਰਕ ਮੁਕੰਮਲ ਨਹੀਂ ਹੋਈ"
-
-#: app/controllers/sync_plans_controller.rb:168
-msgid "sync_plan"
-msgstr "sync_plan"
-
-#: app/controllers/systems_controller.rb:323
-#: app/controllers/system_packages_controller.rb:188
-msgid "system"
-msgstr "ਸਿਸਟਮ"
 
 #: app/views/promotions/show.html.haml:8
 msgid "system templates"
@@ -3788,10 +4135,11 @@ msgid "template"
 msgstr "ਟੈਂਪਲਿਟ"
 
 #: app/models/provider.rb:71
-msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
+msgid ""
+"the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Red Hat ਪਰੋਵਾਈਡਰ ਲਈ ਹੇਠਲੇ ਐਟਰੀਬਿਊਟ ਅੱਪਡੇਟ ਨਹੀਂ ਕੀਤੇ ਜਾ ਸਕਦੇ: [ %s ]"
 
-#: app/models/system_task.rb:297
+#: app/models/system_task.rb:320
 msgid "updated"
 msgstr "ਅੱਪਡੇਟ ਕੀਤੇ"
 
@@ -3814,10 +4162,6 @@ msgstr ""
 #, 
 msgid "updating packages..."
 msgstr ""
-
-#: app/controllers/users_controller.rb:284
-msgid "user"
-msgstr "ਯੂਜ਼ਰ"
 
 #: app/views/common/_panel.html.haml:36
 msgid "viewing"
