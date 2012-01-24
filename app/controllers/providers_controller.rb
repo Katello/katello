@@ -65,12 +65,15 @@ class ProvidersController < ApplicationController
         temp_file = File.new(File.join(dir, "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
         temp_file.write params[:provider][:contents].read
         temp_file.close
-        @provider.import_manifest File.expand_path(temp_file.path)
+        # force must be a string value
+        force_update = params[:force_import] == "1" ? "true" : "false"
+        @provider.import_manifest(File.expand_path(temp_file.path), { :force => force_update })
         notice _("Subscription manifest uploaded successfully for provider '%{name}'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled." % {:name => @provider.name}), {:synchronous_request => false}
       rescue Exception => error
         display_message = parse_display_message(error.response)
         error_text = _("Subscription manifest upload for provider '%{name}' failed." % {:name => @provider.name})
         error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+        error_text += _("%{newline}If you are uploading an older manifest, you can use the Force checkbox to overwrite existing data." % { :newline => "<br />"})
         notice error_text, {:level => :error}
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error
