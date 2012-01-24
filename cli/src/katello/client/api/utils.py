@@ -41,7 +41,7 @@ def get_environment(orgName, envName=None):
     environment_api = EnvironmentAPI()
 
     if envName == None:
-        env = environment_api.locker_by_org(orgName)
+        env = environment_api.library_by_org(orgName)
         envName = env['name']
     else:
         env = environment_api.environment_by_name(orgName, envName)
@@ -51,7 +51,7 @@ def get_environment(orgName, envName=None):
     return env
 
 
-def get_locker(orgName):
+def get_library(orgName):
     return get_environment(orgName, None)
 
 

@@ -47,7 +47,7 @@ class List(DistributionAction):
         self.parser.add_option('--org', dest='org',
                       help=_("organization name eg: foo.example.com"))
         self.parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: locker)"))
+                      help=_("environment name eg: production (default: Library)"))
         self.parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
 

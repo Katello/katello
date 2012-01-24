@@ -10,7 +10,7 @@ from katello.client.core.utils import convert_to_mime_type
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: organization
-    #optional: environment (defaults to Locker)
+    #optional: environment (defaults to Library)
 
     def setUp(self):
         self.set_action(Report())

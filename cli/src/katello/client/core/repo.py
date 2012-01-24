@@ -88,7 +88,7 @@ class SingleRepoAction(RepoAction):
         self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com"))
         self.parser.add_option('--product', dest='product', help=_("product name eg: fedora-14"))
         if select_by_env:
-            self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Locker)"))
+            self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
 
     def check_repo_select_options(self):
         if not self.has_option('id'):
@@ -424,7 +424,7 @@ class List(RepoAction):
         self.parser.add_option('--org', dest='org',
             help=_("organization name eg: ACME_Corporation (required)"))
         self.parser.add_option('--environment', dest='env',
-            help=_("environment name eg: production (default: locker)"))
+            help=_("environment name eg: production (default: Library)"))
         self.parser.add_option('--product', dest='product',
             help=_("product name eg: fedora-14"))
         self.parser.add_option('--include_disabled', action="store_true", dest='disabled',
