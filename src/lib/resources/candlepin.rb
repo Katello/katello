@@ -122,8 +122,8 @@ module Candlepin
         self.delete(path(uuid), User.cp_oauth_header).code.to_i
       end
 
-      def available_pools(uuid)
-        url = Pool.path() + "?consumer=#{url_encode uuid}"
+      def available_pools(uuid, listall=false)
+        url = Pool.path() + "?consumer=#{url_encode uuid}&listall=#{listall}"
         response = Candlepin::CandlepinResource.get(url,self.default_headers).body
         JSON.parse(response)
       end
@@ -147,6 +147,16 @@ module Candlepin
 
       def remove_entitlement uuid, ent_id
         uri = join_path(path(uuid), 'entitlements') + "/#{url_encode ent_id}"
+        self.delete(uri, self.default_headers).code.to_i
+      end
+
+      def remove_entitlements uuid
+        uri = join_path(path(uuid), 'entitlements')
+        self.delete(uri, self.default_headers).code.to_i
+      end
+
+      def remove_certificate uuid, serial_id
+        uri = join_path(path(uuid), 'certificates') + "/#{serial_id}"
         self.delete(uri, self.default_headers).code.to_i
       end
 
@@ -313,7 +323,7 @@ module Candlepin
         JSON.parse(pool_json).with_indifferent_access
       end
 
-      def path(id=nil)
+      def path id=nil
         "/candlepin/pools/#{url_encode id}"
       end
     end

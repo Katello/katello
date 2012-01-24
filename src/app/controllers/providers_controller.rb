@@ -234,6 +234,7 @@ class ProvidersController < ApplicationController
   def panel_options
     @panel_options = { :title => _('Providers'),
              :col => ['name'],
+             :titles => [_('Name')],
              :create => _('Provider'),
              :name => controller_display_name,
              :ajax_load => true,

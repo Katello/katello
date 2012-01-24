@@ -119,7 +119,7 @@ KT.packages = function() {
         var spinner = $('#list-spinner');
         var dataScrollURL = more_button.attr("data-scroll_url");
 
-        var offset = parseInt(more_button.attr("data-offset"), 10) + parseInt(more_button.attr("data-page_size"), 10);
+        var offset = parseInt(more_button.attr("data-offset"), 10);
         dataScrollURL = dataScrollURL + "?offset=" + offset + "&pkg_order="+ sort_button.attr("data-sort") +"&";
         //console.log(dataScrollURL + ", page_size: " + offset);
         spinner.fadeIn();
@@ -138,6 +138,7 @@ KT.packages = function() {
                 if (data.length == 0) {
                     more_button.empty().remove();
                 }else{
+                    offset = offset + parseInt(more_button.attr("data-page_size"), 10);
                     more_button.attr("data-offset", offset);
                 }
             },

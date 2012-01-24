@@ -199,6 +199,7 @@ class FiltersController < ApplicationController
     @panel_options = {
         :title => _('Package Filters'),
         :col => ['name'],
+        :titles => [_('Name')],
         :create => _('Filter'),
         :name => controller_display_name,
         :ajax_scroll=>items_filters_path(),

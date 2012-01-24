@@ -28,8 +28,12 @@ class OrganizationsController < ApplicationController
     delete_test = lambda{@organization.deletable?}
 
     environments_partial_test = lambda do
-      params[:user_id] &&
-          ((current_user.id.to_s ==  params[:user_id].to_s) || current_user.editable?)
+      if "true" == params[:new]
+        Organization.creatable?
+      else
+        params[:user_id] &&
+            ((current_user.id.to_s ==  params[:user_id].to_s) || current_user.editable?)
+      end
     end
 
     {:index =>  index_test,
@@ -149,7 +153,7 @@ class OrganizationsController < ApplicationController
 
   def environments_partial
     @organization = Organization.find(params[:id])
-    env_user_id = params[:user_id].to_s
+    env_user_id = params[:user_id]?params[:user_id].to_s : nil
     if env_user_id == current_user.id.to_s && (!current_user.editable?)
       accessible_envs = KTEnvironment.systems_registerable(@organization)
     else
@@ -211,6 +215,7 @@ class OrganizationsController < ApplicationController
   def setup_options
     @panel_options = { :title => _('Organizations'),
                :col => ['name'],
+               :titles => [_('Name')],
                :create => _('Organization'),
                :name => controller_display_name,
                :accessor => :cp_key,

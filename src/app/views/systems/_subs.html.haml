@@ -1,12 +1,12 @@
 = include_javascripts :treetable
-= javascript :system_subscriptions
+-# = javascript :system_subscriptions
 .grid_8
   %h5
     = form_tag system_path(@system), :id=>"autoheal_form", :method=>"put", :remote=>true do
       #{_("System Current Subscription(s)")}
-      &nbsp; &nbsp;
-      = check_box_tag "autoheal", value=@system.autoheal, @system.autoheal
-      #{_("Auto-heal")}
+      %span.fr{:style => "font-weight: normal; font-size: 90%;font-family: 'Overpass'', Interstate, sans-serif;"}
+        = check_box_tag "autoheal", value=@system.autoheal, @system.autoheal
+        #{_("Auto-heal")}
   = form_tag update_subscriptions_system_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
     -#= hidden_field_tag "commit", "unsubscribe"
     .tree
@@ -52,9 +52,14 @@
           %a{:class=>'dialogbutton button disabled', :id=>"fake_unsub_submit"} #{_('Unsubscribe')}
           = submit_tag _('Unsubscribe'), :class => 'update_subscriptions submit dialogbutton', :id=>"unsub_submit"
 .grid_8
+  %h5
+    = form_tag update_preference_user_path(current_user, :preference => :subscriptions_match_system), :id=>"matchsystem_form", :method=>"put", :remote=>false do
+      #{_("Available Subscriptions")}
+      %span.fr{:style => "font-weight: normal; font-size: 90%;font-family: 'Overpass'', Interstate, sans-serif;"}
+        = check_box_tag "matchsystem", value=current_user.preferences[:user][:subscriptions_match_system], current_user.preferences[:user][:subscriptions_match_system]
+        #{_("Match System")}
   = form_tag update_subscriptions_system_path, :id=>"subscribe", :method=>"post", :remote=>true do
     -#= hidden_field_tag "commit", "subscribe"
-    %h5 #{_("Available Subscriptions")}
     .tree
       %table#subscribeTable
         %thead

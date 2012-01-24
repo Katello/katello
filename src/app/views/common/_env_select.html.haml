@@ -21,7 +21,7 @@
                        "data-products_url"=>env_select_url(url_products_proc, env, @path[count+1], @organization),
                        :class=>env_select_class(env, @environment, @path, @path, accessible_envs, locker_clickable)}
                       %div
-                        #{env.name}
+                        #{env.display_name}
 
       - if @paths.length > 1
         #path-entries.path_entries{:class => path_entries_class}
@@ -36,4 +36,4 @@
                          "data-products_url"=>env_select_url(url_products_proc, env, @path[count+1], @organization),
                          :class=>env_select_class(env, @environment, @path, path, accessible_envs, locker_clickable)}
                         %div
-                          #{env.name}
+                          #{env.display_name}

@@ -116,6 +116,9 @@ class Changeset < ActiveRecord::Base
     #check for other changesets promoting
     raise _("Cannot promote the changeset '#{self.name}' while another changeset (#{self.environment.promoting.first.name}) is being promoted.") if self.environment.promoting_to?
 
+    self.state = Changeset::PROMOTING
+    self.save!
+
     if async
       task = self.async(:organization=>self.environment.organization).promote_content
       self.task_status = task
@@ -130,6 +133,7 @@ class Changeset < ActiveRecord::Base
 
   def add_product cpid
     product = find_product_by_cpid(cpid)
+    raise _("Product '#{product.name}' hasn't any repositories") if product.repos(self.environment.prior).empty?
     self.products << product
     product
   end
@@ -293,9 +297,6 @@ class Changeset < ActiveRecord::Base
 
 
   def promote_content
-    self.state = Changeset::PROMOTING
-    self.save!
-
     update_progress! '0'
     self.calc_and_save_dependencies
 

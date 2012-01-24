@@ -352,10 +352,16 @@ describe Api::SystemsController do
       get :pools, :id => @system.uuid
     end
 
-    it "should retrieve avaiable pools from Candlepin" do
+    it "should retrieve avaialble pools from Candlepin" do
       #@system.should_receive(:available_pools_full).once.and_return([])
-      Candlepin::Consumer.should_receive(:available_pools).once.with(uuid).and_return([])
+      Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
       get :pools, :id => @system.uuid
+    end
+
+    it "should retrieve available pools from Candlepin" do
+      #@system.should_receive(:available_pools_full).once.and_return([])
+      Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, true).and_return([])
+      get :pools, :id => @system.uuid, :listall => true
     end
   end
 

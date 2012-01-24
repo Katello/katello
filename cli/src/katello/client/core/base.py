@@ -226,6 +226,15 @@ class Action(object):
         """
         return self.get_option(opt) != None
 
+    def get_option_string(self, opt_dest):
+        opt = self.parser.get_option_by_dest(opt_dest)
+        if opt != None:
+            flag = opt.get_opt_string()
+        else:
+            flag = '--' + opt_dest
+
+        return flag
+
 
     def require_option(self, opt_dest):
         """
@@ -234,15 +243,32 @@ class Action(object):
         @param opt: name of option or option destination to check
         """
         if (not self.option_specified(opt_dest)):
-            opt = self.parser.get_option_by_dest(opt_dest)
-            if opt != None:
-                flag = opt.get_opt_string()
-            else:
-                flag = '--' + opt_dest
-
+            flag = self.get_option_string(opt_dest)
             self.add_option_error(_('Option %s is required; please see --help') % flag)
+
         return
 
+    def require_one_of_options(self, *opt_dests):
+        """
+        Add option error if one of the options is not present.
+        @type opt_dests: str
+        @param opt_dests: name of option or option destination to check
+        """
+
+        flags = []
+        param_count = 0
+
+        for opt_dest in opt_dests:
+            if self.option_specified(opt_dest):
+                param_count += 1
+            flag = self.get_option_string(opt_dest)
+            flags.append(flag)
+
+        if not param_count == 1:
+            self.add_option_error(_('One of %s is required; please see --help') % ', '.join(flags))
+
+        return 
+        
 
     def option_specified(self, opt):
         return self.has_option(opt) and self.get_option(opt) != ""

@@ -67,11 +67,10 @@ class SystemTemplatesController < ApplicationController
                              :product_hash => product_hash, :package_groups => package_groups, :distro_map=>distro_map}
   end
   
-
   def setup_options
-    columns = ['name']
     @panel_options = { :title => _('System Templates'),
-                 :col => columns,
+                 :col => ["name"],
+                 :titles => [_('Name') ],
                  :create => _('Template'),
                  :name => _('template'),
                  :create => _('Template'),
@@ -113,10 +112,19 @@ class SystemTemplatesController < ApplicationController
           @packages << pkg.name
         }
       }
+    
+    offset = params[:offset] || 0
+    @packages.sort!.uniq!
 
-    @packages = trim @packages
+    if offset.to_i >  0
+      render :text=>"" and return if @packages.empty?
 
-    render :partial=>"product_packages"
+      options = {:list_partial => 'product_packages_items'}
+      render_panel_items(@packages, options, nil, offset)
+    else
+      @packages = @packages[0..current_user.page_size]
+      render :partial=>"product_packages", :locals=>{:collection => @packages}
+    end
   end
 
   def product_comps
@@ -241,7 +249,7 @@ class SystemTemplatesController < ApplicationController
     obj_params[:environment_id] = current_organization.locker.id
 
     @template = SystemTemplate.create!(obj_params)
-    notice _("Sync Plan '#{@template.name}' was created.")
+    notice _("System Template '#{@template.name}' was created.")
     render :json=>{:name=>@template.name, :id=>@template.id}
 
   rescue Exception => e

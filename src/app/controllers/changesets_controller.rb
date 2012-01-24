@@ -267,6 +267,7 @@ class ChangesetsController < ApplicationController
   def setup_options
     @panel_options = { :title => _('Changesets'),
                  :col => ['name'],
+                 :titles => [_('Name')],
                  :enable_create => false,
                  :name => controller_display_name,
                  :accessor => :id,

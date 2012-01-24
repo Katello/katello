@@ -68,7 +68,7 @@ class Organization < ActiveRecord::Base
 
   def validate_destroy current_org
     def_error = _("Could not delete organization '%s'.")  % [self.name]
-    if (current_org == @organization)
+    if (current_org == self)
       [def_error, _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
     elsif Organization.count == 1:
       [def_error, _("At least one organization must exist.")]
