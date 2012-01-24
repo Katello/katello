@@ -29,15 +29,15 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.assertRaises(Exception, self.action.process_options, ['list_filters'])
 
     def test_no_error_if_required_options_provided(self):
-        self.action.process_options(['status', '--org=ACME', '--name=repo1', '--product=product1'])
+        self.action.process_options(['list_filters', '--org=ACME', '--name=repo1', '--product=product1'])
         self.assertEqual(len(self.action.optErrors), 0)
 
     def test_no_error_if_required_repo_id_provided(self):
-        self.action.process_options(['status', '--id=repo_id1'])
+        self.action.process_options(['list_filters', '--id=repo_id1'])
         self.assertEqual(len(self.action.optErrors), 0)
 
 
-class RepoStatusTest(CLIActionTestCase):
+class RepoListFiltersTest(CLIActionTestCase):
 
     ORG = test_data.ORGS[0]
     PROD = test_data.PRODUCTS[0]
