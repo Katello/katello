@@ -85,8 +85,8 @@ class RepoAddRemoveFilterTest(object):
         self.mock(self.action.api, 'filters', self.FILTERS)
         self.mock(self.action.api, 'update_filters')
 
-        self.mock(self.module, 'get_repo', self.REPO).return_value
-        self.mock(self.module, 'get_filter', self.FILTER).return_value
+        self.mock(self.module, 'get_repo', self.REPO)
+        self.mock(self.module, 'get_filter', self.FILTER)
 
 
     def test_finds_repo_by_id(self):
