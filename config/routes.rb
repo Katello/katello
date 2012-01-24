@@ -339,7 +339,12 @@ Src::Application.routes.draw do
       collection do
         match "/tasks/:id" => "systems#task_show", :via => :get
       end
-      resources :subscriptions, :only => [:create, :index, :destroy]
+      resources :subscriptions, :only => [:create, :index, :destroy] do
+        collection do
+            match '/' => 'subscriptions#destroy_all', :via => :delete
+            match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
+        end
+      end
       resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
     end
 
