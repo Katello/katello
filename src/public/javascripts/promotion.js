@@ -475,6 +475,7 @@ var promotion_page = (function($){
 
             
             if (current_changeset) {
+                console.log('test');
                 status.show();
                 $("#sliding_tree_actionbar > div").removeClass("disabled");
                 if (!permissions.manage_changesets) {
@@ -493,7 +494,16 @@ var promotion_page = (function($){
                     $('#review_changeset > span').html(i18n.review);
                     $('#promote_changeset').addClass("disabled");
                 }
-                else { //in review stage
+                else if( current_changeset.state() === "promoted" || current_changeset.state() === "promoting" ){
+                    $("#changeset_tree .tree_breadcrumb").addClass("locked_breadcrumb");
+                    $(".breadcrumb_filter").addClass("locked_breadcrumb_filter");
+                    if( $('#locked_icon').length === 0 ){
+                        $("#changeset_tree .tree_breadcrumb #changeset_" + current_changeset.id).prepend('<div id="locked_icon" class="locked_icon fl" >');
+                    }
+                    $("#cslist").addClass("locked");
+                    $(".content_add_remove").hide();
+                    $("#sliding_tree_actionbar > div").addClass("disabled");
+                } else { //in review stage
                     cancel_btn.show();
                     $("#changeset_tree .tree_breadcrumb").addClass("locked_breadcrumb");
                     $(".breadcrumb_filter").addClass("locked_breadcrumb_filter");
@@ -935,6 +945,7 @@ var registerEvents = function(){
             return false;
         }
         $(this).addClass("disabled");
+        $("#sliding_tree_actionbar > div").addClass("disabled");
         var cs = promotion_page.get_changeset();
         var after = function() {$(this).removeClass("disabled");};
         cs.promote(after, function(){});
