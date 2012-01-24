@@ -383,7 +383,7 @@ class User < ActiveRecord::Base
   end
 
   def deletable?
-    User.allowed_to?([:delete], :users, nil)
+    self.id != User.current.id && User.allowed_to?([:delete], :users, nil)
   end
 
   def send_password_reset
