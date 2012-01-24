@@ -186,6 +186,13 @@ class SystemsController < ApplicationController
   end
 
   def products
+    if @system.class == Hypervisor
+      render :partial=>"hypervisor", :layout=>"tupane_layout",
+             :locals=>{:system=>@system,
+                       :message=>_("Hypervisors do not have software products")}
+      return
+    end
+
     products , offset = first_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
     render :partial=>"products", :layout => "tupane_layout", :locals=>{:system=>@system, :products => products, :offset => offset}
   end
