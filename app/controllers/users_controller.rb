@@ -345,9 +345,4 @@ class UsersController < ApplicationController
     return 'user'
   end
 
-
-  def validate_default_perms
-
-  end
-
 end
