@@ -32,6 +32,13 @@ class SystemErrataController < ApplicationController
   end
 
   def index
+    if @system.class == Hypervisor
+      render :partial=>"systems/hypervisor", :layout=>"tupane_layout",
+             :locals=>{:system=>@system,
+                       :message=>_("Hypervisors do not have errata")}
+      return
+    end
+
     offset = current_user.page_size
 
     render :partial=>"systems/errata/index", :layout => "tupane_layout", :locals=>{:system=>@system, 

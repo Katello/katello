@@ -112,6 +112,13 @@ class SystemPackagesController < ApplicationController
   end
 
   def packages
+    if @system.class == Hypervisor
+      render :partial=>"systems/hypervisor", :layout=>"tupane_layout",
+             :locals=>{:system=>@system,
+                       :message=>_("Hypervisors do not have packages")}
+      return
+    end
+
     offset = current_user.page_size
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     total_packages = packages.length
