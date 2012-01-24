@@ -25,7 +25,6 @@ class UserMailer < ActionMailer::Base
     # TODO: temporarily hardcoding org to the first org... this will be changed to use the user's default org, once
     # that logic is merged in
     org = Organization.find(1)
-    User.current = users.first
     UserMailer.async(:organization => org).logins(users, I18n.locale)
   end
 
