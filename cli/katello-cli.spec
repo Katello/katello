@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.41
+Version:       0.1.42
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jan 24 2012 Bryan Kearney <bkearney@redhat.com> 0.1.42-1
+- 754856: Define the userdir only in the Config module (bkearney@redhat.com)
+
 * Tue Jan 24 2012 Martin Bačovský <mbacovsk@redhat.com> 0.1.41-1
 - 782775 - Unify unsubscription in RHSM and Katello CLI (mbacovsk@redhat.com)
 - 772183 - ProvidedProducts: displays too much of information for RH Pools (mbacovsk@redhat.com)
