@@ -12,7 +12,7 @@
     %tbody
       - if @grouped_subscriptions.length > 0
         - @grouped_subscriptions.each do |group_name, sub_group|
-          - cycle_class = cycle("", "alt")
+          - cycle_class = cycle("ra", "ra.alt")
           - if sub_group.length > 1
             %tr{:id => "#{group_name}", :class => cycle_class}
               %td
