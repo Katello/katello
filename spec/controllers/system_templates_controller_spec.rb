@@ -136,13 +136,13 @@ describe SystemTemplatesController do
     describe "Put update_content" do
       describe "with valid params" do
 
-        it "should return succesfully being blank" do
+        it "should return successfully being blank" do
           controller.should_receive(:notice)
           put :update_content, :id=>@system_template_1.id, :packages=>[], :products=>[], :repos=>[], :package_groups=>[]
           response.should be_success
         end
 
-        it "should return succesfully with packages and products" do
+        it "should return successfully with packages and products" do
           pkg1 = {:name=>"FOO"}
           prd1 = {:name=>"FOO", :id=>"3"}
           pkg_grp1 = {:name=>"TestGroup"}
