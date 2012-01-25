@@ -23,7 +23,7 @@
       %b
         %label.grid_2 #{_("Prior Environment")}:
       .grid_5
-        = select_tag "prior", options_for_select(@env_labels, @selected) #,{:include_blank => _("Locker"), :id => "environment_prior", :class => 'grid_5', :tabindex => auto_tab_index}
+        = select_tag "prior", options_for_select(@env_labels, @selected) #,{:include_blank => _("Library"), :id => "environment_prior", :class => 'grid_5', :tabindex => auto_tab_index}
     .grid_7
       .button.dialogbutton.environment_create{:class=>"fr", 'data-url'=>edit_organization_path(@organization.cp_key), :tabindex => auto_tab_index}
         #{_("Create")}

@@ -37,13 +37,13 @@ describe DistributionsController do
                                  :repository_url => "https://localhost")
     @product = Product.create!(:name => "prod",
                                :provider => @provider,
-                               :environments => [@organization.locker])
+                               :environments => [@organization.library])
     @product.stub(:repos).and_return([@repository])
 
-    ep_locker = EnvironmentProduct.find_or_create(@organization.locker, @product)
-    @repo = Repository.create!(:environment_product => ep_locker,
+    ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
+    @repo = Repository.create!(:environment_product => ep_library,
                                :name=> "repo",
-                               :relative_path => "#{@organization.name}/Locker/prod/repo",
+                               :relative_path => "#{@organization.name}/Library/prod/repo",
                                :pulp_id=> "1",
                                :enabled => true)
     Repository.stub(:find).and_return(@repo)
@@ -52,7 +52,7 @@ describe DistributionsController do
 
   let(:authorized_user) do
     user_with_permissions do |u|
-      u.can(:read_contents, :environments, @organization.locker.id, @organization)
+      u.can(:read_contents, :environments, @organization.library.id, @organization)
       u.can(:read, :providers, @provider.id, @organization)
     end
   end

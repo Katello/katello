@@ -2,15 +2,15 @@ module ProductHelperMethods
 
   
   
-  def new_test_product_with_locker org
+  def new_test_product_with_library org
 
-    @locker = KTEnvironment.new
-    @locker.locker = true
-    @locker.organization = org
-    @locker.name = "Locker"
-    @locker.stub!(:products).and_return([])
-    org.stub!(:locker).and_return(@locker)
-    new_test_product org, @locker
+    @library = KTEnvironment.new
+    @library.library = true
+    @library.organization = org
+    @library.name = "Library"
+    @library.stub!(:products).and_return([])
+    org.stub!(:library).and_return(@library)
+    new_test_product org, @library
   end
 
   def new_test_product org, env, suffix=""

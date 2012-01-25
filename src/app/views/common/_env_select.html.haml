@@ -19,7 +19,7 @@
                     %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, @path[count+1], @organization),
                        "data-templates_url"=>env_select_url(url_templates_proc, env, @path[count+1], @organization),
                        "data-products_url"=>env_select_url(url_products_proc, env, @path[count+1], @organization),
-                       :class=>env_select_class(env, @environment, @path, @path, accessible_envs, locker_clickable)}
+                       :class=>env_select_class(env, @environment, @path, @path, accessible_envs, library_clickable)}
                       %div
                         #{env.display_name}
 
@@ -34,6 +34,6 @@
                       %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, path[count+1], @organization),
                          "data-templates_url"=>env_select_url(url_templates_proc, env, @path[count+1], @organization),
                          "data-products_url"=>env_select_url(url_products_proc, env, @path[count+1], @organization),
-                         :class=>env_select_class(env, @environment, @path, path, accessible_envs, locker_clickable)}
+                         :class=>env_select_class(env, @environment, @path, path, accessible_envs, library_clickable)}
                         %div
                           #{env.display_name}

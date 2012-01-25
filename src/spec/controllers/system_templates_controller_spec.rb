@@ -27,8 +27,8 @@ describe SystemTemplatesController do
 
       @organization = new_test_org
 
-      @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @organization.locker)
-      @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @organization.locker)
+      @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @organization.library)
+      @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @organization.library)
     end
 
     describe "GET index" do
@@ -51,7 +51,7 @@ describe SystemTemplatesController do
         before { ::Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => "", :key => "" }) }
 
         it "sends xml export of template" do
-          get :download, :id => @system_template_1.id, :environment_id => @organization.locker.id
+          get :download, :id => @system_template_1.id, :environment_id => @organization.library.id
           response.should be_success
         end
       end
@@ -147,7 +147,7 @@ describe SystemTemplatesController do
           prd1 = {:name=>"FOO", :id=>"3"}
           pkg_grp1 = {:name=>"TestGroup"}
 
-          prod = Product.new(:environment=>Organization.first.locker, :name=>"FOO")
+          prod = Product.new(:environment=>Organization.first.library, :name=>"FOO")
           prod.stub(:save)
           prod.stub(:save!)
           Product.stub(:find).and_return(prod)
@@ -206,9 +206,9 @@ describe SystemTemplatesController do
         end
       end
 
-      describe "with template not in locker" do
+      describe "with template not in library" do
         before(:each) do
-          @other_env = KTEnvironment.create!(:name=>"devel123", :prior=> @organization.locker, :organization=>@organization)
+          @other_env = KTEnvironment.create!(:name=>"devel123", :prior=> @organization.library, :organization=>@organization)
           @system_template_3 = SystemTemplate.create!(:name => 'template1', :environment => @other_env)
 
         end
@@ -251,7 +251,7 @@ describe SystemTemplatesController do
 
       @organization = new_test_org
       @testuser = User.create!(:username=>"TestUser", :password=>"foobar", :email=>"TestUser@somewhere.com")
-      @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @organization.locker)
+      @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @organization.library)
     end
 
     describe "GET index" do
