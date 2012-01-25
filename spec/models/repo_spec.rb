@@ -37,8 +37,8 @@ describe Glue::Pulp::Repo do
       p.organization = @organization
     end
 
-    @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.locker]})
-    ep = EnvironmentProduct.find_or_create(@organization.locker, @product1)
+    @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+    ep = EnvironmentProduct.find_or_create(@organization.library, @product1)
     RepoTestData::REPO_PROPERTIES.merge!(:environment_product => ep)
 
     @repo = Repository.create!(RepoTestData::REPO_PROPERTIES)
@@ -224,7 +224,7 @@ describe Glue::Pulp::Repo do
 
   context "Get referenced objects" do
     it "should return correct environment" do
-      @repo.environment.should == @organization.locker
+      @repo.environment.should == @organization.library
     end
 
     it "should return correct organization" do
@@ -239,7 +239,7 @@ describe Glue::Pulp::Repo do
 
   describe "Cloned repo id" do
     before do
-      @to_env = KTEnvironment.create!(:name=>"Prod", :organization => @organization, :prior => @organization.locker)
+      @to_env = KTEnvironment.create!(:name=>"Prod", :organization => @organization, :prior => @organization.library)
     end
     it "should be composed from various attributes to be uniqe" do
       cloned_repo_id = @repo.clone_id(@to_env)
@@ -251,14 +251,14 @@ describe Glue::Pulp::Repo do
   context "Repo promote" do
 
     before :each do
-      @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod", :prior=>@organization.locker)
+      @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod", :prior=>@organization.library)
 
 
       ep = EnvironmentProduct.find_or_create(@to_env, @product1)
       RepoTestData::CLONED_PROPERTIES.merge!(:environment_product => ep)
       @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
       @content_path = "/content/dist/rhel/server/5/5.1/x86_64/os"
-      @repo.stub(:relative_path => "#{@organization.name}/Locker#{@content_path}")
+      @repo.stub(:relative_path => "#{@organization.name}/Library#{@content_path}")
 
     end
 

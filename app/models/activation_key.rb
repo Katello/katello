@@ -37,14 +37,14 @@ class ActivationKey < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates :environment, :presence => true
   validate :environment_exists
-  validate :environment_not_locker
+  validate :environment_not_library
 
   def environment_exists
     errors.add(:environment, _("id: #{environment_id} doesn't exist ")) if environment.nil?
   end
 
-  def environment_not_locker
-    errors.add(:base, _("Cannot create activation keys in Library environment ")) if environment and  environment.locker?
+  def environment_not_library
+    errors.add(:base, _("Cannot create activation keys in Library environment ")) if environment and  environment.library?
   end
 
   # set's up system when registering with this activation key

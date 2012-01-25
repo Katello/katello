@@ -12,7 +12,7 @@
 
 class NotInLibraryValidator < ActiveModel::Validator
   def validate(record)
-    record.errors[:environment] << _("Library environment cannot contain a changeset") if record.environment.locker?
+    record.errors[:environment] << _("Library environment cannot contain a changeset!") if record.environment.library?
   end
 end
 

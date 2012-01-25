@@ -129,7 +129,7 @@ module Glue::Provider
         })
         self.products << product
         product.provider = self
-        product.environments << self.organization.locker
+        product.environments << self.organization.library
         product.gpg_key = gpg
         product.save!
         product
@@ -169,7 +169,7 @@ module Glue::Provider
     end
 
     def import_products_from_cp
-      product_existing_in_katello_ids = self.organization.locker.products.all(:select => "cp_id").map(&:cp_id)
+      product_existing_in_katello_ids = self.organization.library.products.all(:select => "cp_id").map(&:cp_id)
       marketing_to_enginnering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
         engineering_product_ids = engineering_product_ids.uniq
         added_eng_products = (engineering_product_ids - product_existing_in_katello_ids).map do |id|
@@ -178,16 +178,16 @@ module Glue::Provider
         added_eng_products.each do |product_attrs|
           Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
             p.provider = self
-            p.environments << self.organization.locker
+            p.environments << self.organization.library
           end
         end
         product_existing_in_katello_ids.concat(added_eng_products.map{|p| p["id"]})
 
         unless product_existing_in_katello_ids.include?(marketing_product_id)
-          engineering_product_in_katello_ids = self.organization.locker.products.where(:cp_id => engineering_product_ids).map(&:id)
+          engineering_product_in_katello_ids = self.organization.library.products.where(:cp_id => engineering_product_ids).map(&:id)
           Glue::Candlepin::Product.import_marketing_from_cp(Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
             p.provider = self
-            p.environments << self.organization.locker
+            p.environments << self.organization.library
           end
           product_existing_in_katello_ids << marketing_product_id
         end
