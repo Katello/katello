@@ -12,21 +12,42 @@
 
 = content_for :content do
   #products_repos
-    -if products.length != 0 or repositories.length !=0
+
+    -if products.length == 0 and products_repos.length == 0
+      #{_("This GPG Key is not currently assigned to any products or repositories.")}
+
+    -if products.length > 0
+      %h5
+        #{_("GPG Key assigned at the Product Level for")}:
       %ul.bordered-table
-        -if products.length != 0
-          %div.block_head
-            %div.column_head.column_1
-              = _("Products")
+        %div.block_head
+          %div.column_head.column_1
+            = _("Products")
+
         -products.each do |product|
           - cssclass = cycle("", "alt")
-          %div{:class=> cssclass}
+          %div{:class => cssclass}
             &nbsp;#{product.name}
-        -if repositories.length != 0         
+
+      &nbsp;
+
+      -if products_repos.length > 0
+        %h5
+          #{_("GPG Key assigned at the Repository Level for")}:
+        %ul.bordered-table
           %div.block_head
             %div.column_head.column_1
               = _("Repositories")
-        -repositories.each do |repo|
-          - cssclass = cycle("", "alt")
-          %div{:class=> cssclass}
-            &nbsp;#{repo.name}
+
+          -products_repos.each do |element|
+            - product = element[0]
+            - repos = element[1]
+            - cssclass = cycle("", "alt")
+            %div.parent{:class => cssclass}
+              %label #{_("Product")}:
+              &nbsp;#{product}
+
+            - repos.each do |repo|
+              %div.child{:class => cssclass}
+                %label #{_("Repository")}:
+                &nbsp;#{repo.name}
