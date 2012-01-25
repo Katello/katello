@@ -83,8 +83,8 @@
                   %div#content_form
                     - help_text = _("Enter Selected Content...")
                     %input{:type=>'text', :id=>'content_input', :size=>'30', :placeholder => help_text, :title => help_text}
-                    %a#add_content{:style => 'padding-left: 10px;'} #{_('+ Add')}
-                    %a#remove_content{:style => 'padding-left: 10px;'} #{_('- Remove')}
+                    %a#add_content.disabled{:style => 'padding-left: 10px;'} #{_('+ Add')}
+                    %a#remove_content.disabled{:style => 'padding-left: 10px;'} #{_('- Remove')}
 
             = render :partial => 'package_items', :locals => {:editable => editable, :package_tasks => package_tasks,
                                                               :group_tasks => group_tasks, :packages => packages}
