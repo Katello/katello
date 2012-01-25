@@ -26,8 +26,6 @@ Src::Application.routes.draw do
     end
   end
 
-  resource :account
-
   resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy, :auto_complete_search] do
     collection do
       get :auto_complete_search
@@ -306,8 +304,6 @@ Src::Application.routes.draw do
     get 'allowed_orgs'
   end
 
-
-  resource :account
 
   root :to => "user_sessions#new"
 
