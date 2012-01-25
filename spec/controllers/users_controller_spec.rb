@@ -32,7 +32,7 @@ describe UsersController do
     before(:each) do
       controller.stub!(:notice)
       @organization = new_test_org
-      @environment = KTEnvironment.create!(:name => 'first-env', :prior => @organization.locker.id, :organization => @organization)
+      @environment = KTEnvironment.create!(:name => 'first-env', :prior => @organization.library.id, :organization => @organization)
     end
 
     it "should create a user correctly" do

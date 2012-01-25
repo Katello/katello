@@ -32,7 +32,7 @@ describe PackagesController do
       end
 
       it 'should call pulp' do
-        get :auto_complete_locker, :term => "a"
+        get :auto_complete_library, :term => "a"
         response.should be_success
       end
     end

@@ -28,23 +28,23 @@ describe Api::ProductsController do
     disable_user_orchestration
 
     @organization = new_test_org
-    @environment = KTEnvironment.create!(:name=> "foo123", :organization => @organization, :prior =>@organization.locker)
+    @environment = KTEnvironment.create!(:name=> "foo123", :organization => @organization, :prior =>@organization.library)
     @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,
                                  :organization => @organization, :repository_url => "https://something.url/stuff")
     @product = Product.new({:name => "prod"})
 
 
     @product.provider = @provider
-    @product.environments << @organization.locker
+    @product.environments << @organization.library
     @product.stub(:arch).and_return('noarch')
     @product.save!
-    ep_locker = EnvironmentProduct.find_or_create(@organization.locker, @product)
-    @repo_locker= Repository.create!(:environment_product => ep_locker,
+    ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
+    @repo_library= Repository.create!(:environment_product => ep_library,
                                      :name=> "repo",
-                                     :relative_path => "#{@organization.name}/Locker/prod/repo",
+                                     :relative_path => "#{@organization.name}/Library/prod/repo",
                                      :pulp_id=>"2",
                                      :enabled => true)
-    @repo = promote(@repo_locker, @environment)
+    @repo = promote(@repo_library, @environment)
 
 
     @products = [@product]
@@ -162,7 +162,7 @@ describe Api::ProductsController do
     end
   end
 
-  context "show all @products in locker" do
+  context "show all @products in library" do
     before do
       @dumb_prod = {:id => @product.id}
       Product.stub!(:all_readable).and_return(@products)
@@ -174,8 +174,8 @@ describe Api::ProductsController do
       get 'index', :organization_id => @organization.cp_key
     end
 
-    it "should find locker" do
-      @organization.should_receive(:locker).once.and_return(@organization.locker)
+    it "should find library" do
+      @organization.should_receive(:library).once.and_return(@organization.library)
       get 'index', :organization_id => @organization.cp_key
     end
 
@@ -193,7 +193,7 @@ describe Api::ProductsController do
   context "show repositories for a product in an environment" do
     let(:action) { :repositories }
     let(:req) {
-      get 'repositories', :organization_id => @organization.cp_key, :environment_id => @organization.locker.id, :id => @product.id
+      get 'repositories', :organization_id => @organization.cp_key, :environment_id => @organization.library.id, :id => @product.id
     }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }

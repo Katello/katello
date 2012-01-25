@@ -95,7 +95,7 @@ describe ProductsController do
       before do
         @product = Product.new({:name => "prod"})
         @product.provider = @provider
-        @product.environments << @organization.locker
+        @product.environments << @organization.library
         @product.stub(:arch).and_return('noarch')
         @product.save!
         put :update, :provider_id => @provider.id, :id => @product.id, :product => {:gpg_key => @gpg.id.to_s}

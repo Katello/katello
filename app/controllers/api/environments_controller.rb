@@ -47,7 +47,7 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   def update
-    if @environment.locker?
+    if @environment.library?
       raise HttpErrors::BadRequest, _("Can't update Library environment")
     else
       @environment.update_attributes!(params[:environment])

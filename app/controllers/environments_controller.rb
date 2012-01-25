@@ -54,7 +54,7 @@ class EnvironmentsController < ApplicationController
     # the edit view
     prior_envs = envs_no_successors - [@environment] - @environment.path
     env_labels = Hash[ *prior_envs.collect { |p| [ p.id, p.display_name ] }.flatten]
-    #env_labels[''] = _("Locker")
+    #env_labels[''] = _("Library")
     @env_labels_json = ActiveSupport::JSON.encode(env_labels)
 
     @selected = @environment.prior.nil? ? env_labels[""] : env_labels[@environment.prior.id]
@@ -142,7 +142,7 @@ class EnvironmentsController < ApplicationController
   end
   
   def envs_no_successors
-    envs = [@organization.locker]
+    envs = [@organization.library]
     envs += @organization.environments.reject {|item| !item.successor.nil?}
     envs
   end

@@ -54,12 +54,12 @@ describe Api::SyncController do
       Provider.stub!(:find).and_return(@provider)
       @product = Product.new({:name => "prod"})
       @product.provider = @provider
-      @product.environments << @organization.locker
+      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
       Product.stub!(:find).and_return(@product)
       Product.stub!(:find_by_cp_id).and_return(@product)
-      ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
+      ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :pulp_id=>"1")
       Repository.stub(:find).and_return(@repository)
     end
@@ -155,7 +155,7 @@ describe Api::SyncController do
 
       it "should find repository if :repository_id is specified" do
         found_repository = Repository.new
-        found_repository.stub!(:environment).and_return(KTEnvironment.new(:locker => true))
+        found_repository.stub!(:environment).and_return(KTEnvironment.new(:library => true))
 
         Repository.should_receive(:find).once.with(repository_id).and_return(found_repository)
         controller.stub!(:params).and_return({:repository_id => repository_id })
