@@ -742,8 +742,8 @@ fi
 * Tue Nov 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.112-1
 - fixed failing spec tests all caused by new parameter in
   Candlepin::Consumer#update
-- template export - spec tests for disabled export form a Locker
-- template export - disabled exporting templates from Locker envs
+- template export - spec tests for disabled export form a Library
+- template export - disabled exporting templates from Library envs
 - moved auto-heal down next to current subs
 - system templates - fixing issue where distributions were not browsable on a
   newly created template without refreshing
@@ -918,7 +918,7 @@ fi
 - guests of a host cleanly displayed
 - adding rootpw tag to the TDL export
 - corrected test for creating user w/o env
-- manifest import - fixes in orchestration - content remained created in locker
+- manifest import - fixes in orchestration - content remained created in library
   env - fixed infinite recursive call of set_repos
 - + both new user and modifying a user's environment now work + TODO: probably
   need to wordsmith form labels
@@ -974,7 +974,7 @@ fi
 - virt-who - support host-guests systems relationship (inecas@redhat.com)
 - virt-who - support uploading the guestIds to Candlepin (inecas@redhat.com)
 - sync api - fix for listing status of promoted repos A condition that ensures
-  synchronization of repos only in the Locker was too restrictive and affected
+  synchronization of repos only in the Library was too restrictive and affected
   also other actions. (tstrachota@redhat.com)
 - 741961 - Removed traces of the anonymous user since he is no longer needed
   (paji@redhat.com)
@@ -1145,7 +1145,7 @@ fi
 - adding/removal of packages from filters supports rollbacks now
 - added support for updating of package lists of filters
 - filters - a few package auto complete fixes
-- filters - adding auto complete for packages, and moving locker package search
+- filters - adding auto complete for packages, and moving library package search
   to central place from system templates controller
 - moving some javascript i18n to a common area for autocomplete
 - spliting out the auto complete javascript object to its own file for reuse
@@ -1653,7 +1653,7 @@ fi
 - fields residing in pulp are now present in the output of index
   (dmitri@redhat.com)
 - create/delete operations for filters are working now (dmitri@redhat.com)
-- first cut of filters used during promotion of content from Locker
+- first cut of filters used during promotion of content from Library
   (dmitri@redhat.com)
 
 * Fri Oct 07 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.90-1
@@ -2201,7 +2201,7 @@ fi
 - Added a system templates details page needed for promotion (paji@redhat.com)
 - Quick fix on promotions javascript to get the add/remove properly showing up
   (paji@redhat.com)
-- 734899 - fixing issue where changeset history would default to locker
+- 734899 - fixing issue where changeset history would default to library
   (jsherril@redhat.com)
 - changeset history - adding indentation to content items (jsherril@redhat.com)
 - Added some auth rules for changeset updating (paji@redhat.com)
@@ -2262,7 +2262,7 @@ fi
   (jsherril@redhat.com)
 - making sure sliding tree does not double render on page load
   (jsherril@redhat.com)
-- only allowing modification of a system template in locker within system
+- only allowing modification of a system template in library within system
   templates controller (jsherril@redhat.com)
 - adding spec tests for system_templates controller (jsherril@redhat.com)
 - fixing row height on system templates (jsherril@redhat.com)
@@ -2366,7 +2366,7 @@ fi
   for global and organizational permissions.
 - Merge branch 'master' into roles-ui
 - 736251 - use content name for repo id when importing manifest
-- templates - it is possible to create/edit only templates in the locker -
+- templates - it is possible to create/edit only templates in the library -
   added checks into template controller - spec tests fixed according to changes
 - Packages offset loading via "More..." now working with registered system.
 - 734026 - removing uneeded debug line that caused syncs to fail
@@ -2458,7 +2458,7 @@ fi
 - Refactor repo path generator
 - Merge branch 'repo-path'
 - Fix failing repo spec
-- Pulp repo for Locker products consistent with other envs
+- Pulp repo for Library products consistent with other envs
 - 734755 - Service katello-jobs status shows no file or directory
 - Refactor generating repo id when cloning
 - Change CP content url to product/repo
@@ -3067,7 +3067,7 @@ fi
 - 731810 Deleteing a provider renders an server side error
 - spec tests for Glue::Pulp::Repo
 - merge of repo#get_{env,product,org} functionality
-- repo sync - check for syncing only repos in locker
+- repo sync - check for syncing only repos in library
 - updated routes to support changes in rhsm related to explicit specification
   of owners
 - Activation Keys - fix API rspec tests
@@ -3222,7 +3222,7 @@ fi
 - Edits to enlarge tupane to take advantage of more screen real estate.
   Changeset package selection now highlights to match the rest of the
   promotions page highlighting.
-- General UI - disable hover on Locker when Locker not clickable
+- General UI - disable hover on Library when Library not clickable
 - api error reporting - final solution
 - Revert "introducing application error exception for API"
 - Revert "ApiError - fixing unit tests"

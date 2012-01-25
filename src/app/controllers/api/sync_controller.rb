@@ -93,7 +93,7 @@ class Api::SyncController < Api::ApiController
 
   def ensure_locker
     if @sync_of == 'repository'
-      raise HttpErrors::NotFound, _("You can synchronize repositories only in locker environment'") if not @obj.environment.locker?
+      raise HttpErrors::NotFound, _("You can synchronize repositories only in library environment'") if not @obj.environment.locker?
     end
   end
 
