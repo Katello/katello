@@ -18,14 +18,17 @@
         .grid_2
           = button_to _("Save Roles"), update_roles_user_path(@user), :method => :put, :id => :save_roles
     -else
-      .grid_3.ra
-        = _("Assigned roles:")
-      .grid_6.la
-        -if @user.defined_roles.length > 0
-          - for role in @user.defined_roles
-            = role.name
-        -else
-          No assigned roles
+      -if @user.defined_roles.length > 0
+        - for role in @user.defined_roles
+          - cycle_class = cycle("", "role-alt")
+          .grid_3.ra{:class => cycle_class}
+            %strong
+              = role.name
+          .grid_6.la
+            = role.description
+      -else
+        .grid_3.ra
+          = _("You have no assigned roles.")
 
     -# no self roles for now
     -#%h5.grid_10 #{_("Permissions")}
