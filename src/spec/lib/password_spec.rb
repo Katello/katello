@@ -35,6 +35,17 @@ describe Password do
     Password.check('admin', db).should be_true
   end
 
+  it "should not work with 'abc' vs 'cba'" do
+    db = Password.update('abc')
+    Password.check('cba', db).should be_false
+  end
+
+  it "should work with 'tclmeSRS' string with given salt" do
+    db = 'b05bae176fb8b255c56d0b94389bb146a87cf25b43cab7b5b3bd31078c0db81149d81aaf1574da8b5adeedfd06' +
+      '23eeddff6f283ea440964dd1f6b18d921541c5SB2HjUEy0mUEKo858uo8D6GLw5a6gui99PcrNOUI72pe0d3hSbKk08nx9wWBaLit'
+    Password.check('tclmeSRS', db).should be_true
+  end
+
   it "should not work when different strings are there" do
     db = Password.update('abc')
     Password.check('cba', db).should be_false
