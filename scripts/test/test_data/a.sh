@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ $1 = "-i" ]; then
     echo "test data for ACME_Corporation"
-    echo "environments: Locker > env_1 > env_2"
+    echo "environments: Library > env_1 > env_2"
     echo "providers:    prov_a1, prov_a2 (2 products each)"
     echo "products:     prod_a1, prov_a2 (2 repos each), prod_a3, prod_a4"
     echo "repos:        lzap's fake repos, tstrachota's zoo repos"
@@ -11,7 +11,7 @@ fi
 
 
 
-$CMD environment create --name="env_1" --org="ACME_Corporation" --prior="Locker"
+$CMD environment create --name="env_1" --org="ACME_Corporation" --prior="Library"
 $CMD environment create --name="env_2" --org="ACME_Corporation" --prior="env_1"
 
 $CMD provider create --name="prov_a1" --org="ACME_Corporation" --type="custom"

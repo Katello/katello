@@ -69,9 +69,9 @@ def create_data(numorgs, numsystems, numproviders, numproducts, numrepos, single
 
     for i in range(len(org_names)):
         print "[%s] Creating DEV/TEST/STAGE in org: [%s]" % (i, org_names[i])
-        lockerId = get_environment(org_names[i], "Locker")["id"]
-        print "Locker ID: %s" % lockerId
-        envids = [lockerId]
+        libraryId = get_environment(org_names[i], "Library")["id"]
+        print "Library ID: %s" % libraryId
+        envids = [libraryId]
         for x in range(len(ENVIRONMENTS)):
             existing_env = get_environment(org_names[i], ENVIRONMENTS[x])
             if not existing_env:
