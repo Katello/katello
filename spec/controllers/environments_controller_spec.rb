@@ -23,7 +23,7 @@ describe EnvironmentsController do
     NEW_ENV_NAME = "another_environment_name"
     
     ENVIRONMENT = {:id => 2, :name => ENV_NAME, :description => nil, :prior => nil, :path => []}
-    LOCKER = {:id => 1, :name => "Locker", :description => nil, :prior => nil, :path => []}
+    LIBRARY = {:id => 1, :name => "Library", :description => nil, :prior => nil, :path => []}
     UPDATED_ENVIRONMENT = {:id => 3, :name => NEW_ENV_NAME, :description => nil, :prior => nil, :path => []}
     EMPTY_ENVIRONMENT = {:name => "", :description => "", :prior => nil}
     
@@ -72,7 +72,7 @@ describe EnvironmentsController do
       @env = mock(KTEnvironment, EnvControllerTest::ENVIRONMENT)
       @env.stub!(:successor).and_return("")
 
-      @locker = mock(KTEnvironment, EnvControllerTest::LOCKER)
+      @locker = mock(KTEnvironment, EnvControllerTest::LIBRARY)
 
       @org = new_test_org
 

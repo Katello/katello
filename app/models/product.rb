@@ -12,7 +12,7 @@
 
 class LockerPresenceValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    record.errors[attribute] << N_("must contain 'Locker'") if value.select {|e| e.locker}.empty?
+    record.errors[attribute] << N_("must contain 'Library'") if value.select {|e| e.locker}.empty?
   end
 end
 

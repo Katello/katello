@@ -87,7 +87,7 @@ class EnvironmentsController < ApplicationController
     @environment.save!
 
     if priorUpdated
-      result = @environment.prior.nil? ? _("Locker") : @environment.prior.name
+      result = @environment.prior.nil? ? _("Library") : @environment.prior.name
     else
       result = params[:kt_environment].values.first
     end

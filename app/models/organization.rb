@@ -59,7 +59,7 @@ class Organization < ActiveRecord::Base
   end
 
   def create_locker
-    self.locker = KTEnvironment.new(:name => "Locker", :locker => true, :organization => self)
+    self.locker = KTEnvironment.new(:name => "Library", :locker => true, :organization => self)
   end
 
   def create_redhat_provider

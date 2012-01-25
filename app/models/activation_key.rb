@@ -44,7 +44,7 @@ class ActivationKey < ActiveRecord::Base
   end
 
   def environment_not_locker
-    errors.add(:base, _("Cannot create activation keys in Locker environment ")) if environment and  environment.locker?
+    errors.add(:base, _("Cannot create activation keys in Library environment ")) if environment and  environment.locker?
   end
 
   # set's up system when registering with this activation key
