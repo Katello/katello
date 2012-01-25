@@ -27,8 +27,8 @@ class Organization < ActiveRecord::Base
 
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
-  has_many :environments, :class_name => "KTEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
-  has_one :locker, :class_name =>"KTEnvironment", :conditions => {:locker => true}, :dependent => :destroy
+  has_many :environments, :class_name => "KTEnvironment", :conditions => {:library => false}, :dependent => :destroy, :inverse_of => :organization
+  has_one :library, :class_name =>"KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
   has_many :filters, :dependent => :destroy, :inverse_of => :organization
   has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
@@ -38,7 +38,7 @@ class Organization < ActiveRecord::Base
 
   default_scope  where(:task_id=>nil) #ignore organizations that are being deleted
 
-  before_create :create_locker
+  before_create :create_library
   before_create :create_redhat_provider
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
@@ -49,7 +49,7 @@ class Organization < ActiveRecord::Base
 
   def promotion_paths
     #I'm sure there's a better way to do this
-    self.environments.joins(:priors).where("prior_id = #{self.locker.id}").collect do |env|
+    self.environments.joins(:priors).where("prior_id = #{self.library.id}").collect do |env|
       env.path
     end
   end
@@ -58,8 +58,8 @@ class Organization < ActiveRecord::Base
     self.providers.redhat.first
   end
 
-  def create_locker
-    self.locker = KTEnvironment.new(:name => "Library", :locker => true, :organization => self)
+  def create_library
+    self.library = KTEnvironment.new(:name => "Library", :library => true, :organization => self)
   end
 
   def create_redhat_provider

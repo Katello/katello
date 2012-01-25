@@ -10,9 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class LockerPresenceValidator < ActiveModel::EachValidator
+class LibraryPresenceValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    record.errors[attribute] << N_("must contain 'Library'") if value.select {|e| e.locker}.empty?
+    record.errors[attribute] << N_("must contain 'Library'") if value.select {|e| e.library}.empty?
   end
 end
 
@@ -47,7 +47,7 @@ class Product < ActiveRecord::Base
   belongs_to :gpg_key, :inverse_of => :products
 
   validates :description, :katello_description_format => true
-  validates :environments, :locker_presence => true
+  validates :environments, :library_presence => true
   validates :name, :presence => true, :katello_name_format => true
 
   scope :with_repos_only, lambda { |env|
@@ -86,8 +86,8 @@ class Product < ActiveRecord::Base
     provider.organization
   end
 
-  def locker
-    environments.select {|e| e.locker}.first
+  def library
+    environments.select {|e| e.library}.first
   end
 
   def plan_name
@@ -136,10 +136,10 @@ class Product < ActiveRecord::Base
 
   #Permissions
   scope :all_readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
-  scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.locker)}
+  scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.library)}
   scope :all_editable, lambda {|org| ::Provider.editable(org).joins(:provider)}
-  scope :editable, lambda {|org| all_editable(org).with_enabled_repos_only(org.locker)}
-  scope :syncable, lambda {|org| sync_items(org).with_enabled_repos_only(org.locker)}
+  scope :editable, lambda {|org| all_editable(org).with_enabled_repos_only(org.library)}
+  scope :syncable, lambda {|org| sync_items(org).with_enabled_repos_only(org.library)}
 
   def self.any_readable?(org)
     ::Provider.any_readable?(org)
