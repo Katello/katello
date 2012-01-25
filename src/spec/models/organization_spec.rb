@@ -32,7 +32,7 @@ describe Organization do
 
   context "create an organization" do
     specify {@organization.name.should == 'test_organization'}
-    specify {@organization.locker.should_not be_nil}
+    specify {@organization.library.should_not be_nil}
     specify {@organization.redhat_provider.should_not be_nil}
     specify {@organization.environments.should be_empty}
     specify {Organization.where(:name => @organization.name).size.should == 1}
@@ -71,7 +71,7 @@ describe Organization do
       org_id = @organization.id
       
       env_name = "prod"      
-      @env = KTEnvironment.new(:name => env_name, :locker => false, :prior => @organization.locker)
+      @env = KTEnvironment.new(:name => env_name, :library => false, :prior => @organization.library)
       @organization.environments << @env
       @env.save!
       
@@ -88,11 +88,11 @@ describe Organization do
       
       @org2 = Organization.create!(:name => "foobar", :cp_key => 'foobar')
 
-      @env1 = KTEnvironment.new(:name => env_name, :organization => @organization, :prior => @organization.locker)
+      @env1 = KTEnvironment.new(:name => env_name, :organization => @organization, :prior => @organization.library)
       @organization.environments << @env1
       @env1.save!    
       
-      @env2 = KTEnvironment.new(:name => env_name, :organization => @org2, :prior => @organization.locker)
+      @env2 = KTEnvironment.new(:name => env_name, :organization => @org2, :prior => @organization.library)
       @org2.environments << @env2
       @env2.save!
       
