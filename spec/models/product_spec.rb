@@ -296,7 +296,7 @@ describe Product do
           end
 
           it "should follow the format of the content url in candlepin" do
-            expected_relative_path = "#{@organization.name}/Locker/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage"
+            expected_relative_path = "#{@organization.name}/Library/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage"
             Repository.should_receive(:create!).once.with(hash_including(:relative_path => expected_relative_path))
           end
         end
