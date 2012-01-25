@@ -98,6 +98,8 @@ class SingleRepoAction(RepoAction):
         else:
             repo = get_repo(orgName, prodName, repoName, envName, includeDisabled)
 
+        if repo == None:
+            system_exit(os.EX_DATAERR)
         return repo
 
 
@@ -276,8 +278,6 @@ class Status(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo()
-        if repo == None:
-            return os.EX_DATAERR
 
         task = AsyncTask(self.api.last_sync_status(repo['id']))
 
@@ -310,8 +310,6 @@ class Info(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo(True)
-        if repo == None:
-            return os.EX_DATAERR
 
         repo['url'] = repo['source']['url']
         repo['last_sync'] = format_sync_time(repo['last_sync'])
@@ -347,8 +345,6 @@ class Update(SingleRepoAction):
         repo = self.get_repo(True)
         gpgkey   = self.get_option('gpgkey')
         nogpgkey   = self.get_option('nogpgkey')
-        if repo == None:
-            return os.EX_DATAERR
 
         self.api.update(repo['id'], gpgkey, nogpgkey)
         print _("Successfully updated repository [ %s ]") % repo['name']
@@ -362,8 +358,6 @@ class Sync(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo()
-        if repo == None:
-            return os.EX_DATAERR
 
         task = AsyncTask(self.api.sync(repo['id']))
         run_async_task_with_status(task, ProgressBar())
@@ -386,8 +380,6 @@ class CancelSync(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo()
-        if repo == None:
-            return os.EX_DATAERR
 
         msg = self.api.cancel_sync(repo['id'])
         print msg
@@ -410,8 +402,6 @@ class Enable(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo(True)
-        if repo == None:
-            return os.EX_DATAERR
 
         msg = self.api.enable(repo["id"], self._enable)
         print msg
@@ -478,8 +468,6 @@ class Delete(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo()
-        if repo == None:
-            return os.EX_DATAERR
 
         msg = self.api.delete(repo["id"])
         print msg
@@ -493,8 +481,6 @@ class ListFilters(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo()
-        if repo == None:
-            return os.EX_DATAERR
 
         filters = self.api.filters(repo['id'])
         self.printer.addColumn('name')
@@ -534,8 +520,6 @@ class AddRemoveFilter(SingleRepoAction):
         org_name     = self.get_option('org')
 
         repo = self.get_repo()
-        if repo == None:
-            return os.EX_DATAERR
 
         if get_filter(org_name, filter_name) == None:
             return os.EX_DATAERR
