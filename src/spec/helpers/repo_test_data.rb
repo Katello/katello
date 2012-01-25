@@ -27,7 +27,7 @@ module RepoTestData
     :pulp_id => REPO_ID,
     :name => REPO_NAME,
     :arch => 'architecture',
-    :relative_path => "ACME_Corporation/Locker/zoo/base",
+    :relative_path => "ACME_Corporation/Library/zoo/base",
     :feed => 'url',
     "groupid" => [
       "product:"+REPO_PRODUCT_CP_ID.to_s,
@@ -257,11 +257,11 @@ module RepoTestData
 
   def self.repo_distributions
     {
-      "files" => ["/var/lib/pulp/repos/ACME_Corporation/Locker/isos/images/boot.iso",
-        "/var/lib/pulp/repos/ACME_Corporation/Locker/isos/images/efiboot.img",
-        "/var/lib/pulp/repos/ACME_Corporation/Locker/isos/images/efidisk.img",
-        "/var/lib/pulp/repos/ACME_Corporation/Locker/isos/images/pxeboot/vmlinuz",
-        "/var/lib/pulp/repos/ACME_Corporation/Locker/isos/images/pxeboot/initrd.img"],
+      "files" => ["/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/boot.iso",
+        "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/efiboot.img",
+        "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/efidisk.img",
+        "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/pxeboot/vmlinuz",
+        "/var/lib/pulp/repos/ACME_Corporation/Library/isos/images/pxeboot/initrd.img"],
         "description" => "desc",
         "family" => "Fedora",
         "relativepath" => "",
@@ -270,7 +270,7 @@ module RepoTestData
         "_ns" => "distribution",
         "_id" => "distro-id",
         "id" => "distro-id",
-        "url" => ["https://localhost/pulp/ks/ACME_Corporation/Locker/isos/xxx/", "https://localhost/pulp/ks/ACME_Corporation/Dev/isos/xxx/"]
+        "url" => ["https://localhost/pulp/ks/ACME_Corporation/Library/isos/xxx/", "https://localhost/pulp/ks/ACME_Corporation/Dev/isos/xxx/"]
     }.with_indifferent_access
   end
 
