@@ -39,7 +39,7 @@
                 &nbsp;#{product.name}
   
             %ul.fl.clear{:style => "display:none;", :class=>cssclass}
-              -product.repos(product.organization.locker).each do |repo|
+              -product.repos(product.organization.library).each do |repo|
                 %li{:class=>'repo'}
                   .grid_6.prefix_1.la.editable.subpanel_element{"data-url"=>edit_provider_product_repository_path(@provider.id, product.id, repo.id)}
                     .multiline

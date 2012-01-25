@@ -161,7 +161,7 @@ describe Api::ActivationKeysController do
   context "pools in an activation key" do
 
     before(:each) do
-      @environment = KTEnvironment.create!(:organization => @organization, :name => "Dev", :prior => @organization.locker)
+      @environment = KTEnvironment.create!(:organization => @organization, :name => "Dev", :prior => @organization.library)
       @activation_key = ActivationKey.create!(:name => 'activation key', :organization => @organization, :environment => @environment)
       @pool_in_activation_key = KTPool.create!(:cp_id => "pool-123")
       @pool_not_in_activation_key = KTPool.create!(:cp_id => "pool-456")

@@ -78,7 +78,7 @@ class OrganizationsController < ApplicationController
 
       if @new_env
         @new_env.organization = @organization
-        @new_env.prior = @organization.locker
+        @new_env.prior = @organization.library
         @new_env.save!
       end
       notice [_("Organization '#{@organization["name"]}' was created.")]
