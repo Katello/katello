@@ -682,6 +682,10 @@ KT.packages = function() {
         var total_loaded = $('tr.package').length,
             message = i18n.x_of_y_packages(total_loaded, total_packages);
         loaded_summary.html(message);
+
+        if (total_loaded >= total_packages) {
+            more_button.remove();
+        }
     },
     validate_action_requested = function(content, content_type) {
         // validate the action being requested and return a validation error, if an error is found
