@@ -57,14 +57,17 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-<<<<<<< HEAD
-* Mon Dec 19 2011 Bryan Kearney <bkearney@redhat.com> 0.1.13-2
+* Thu Jan 26 2012 Jordan OMara <jomara@redhat.com> 0.1.15-2
+- Merge remote-tracking branch 'katello/headpin' into BRANDING
+  (jomara@redhat.com)
+- Automatic commit of package [katello-cli-headpin] release [0.1.13-2].
+  (bkearney@redhat.com)
 - Missed a merge (bkearney@redhat.com)
 - Latest upstream code (bkearney@redhat.com)
 - Automatic commit of package [katello-cli-headpin] release [0.1.12-2].
   (bkearney@redhat.com)
 - Bump the version (bkearney@redhat.com)
-=======
+
 * Wed Jan 25 2012 Bryan Kearney <bkearney@redhat.com> 0.1.15-1
 - 754856: Add shell history to the local .headpin directory instead of .katello
   (bkearney@redhat.com)
@@ -72,7 +75,12 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Jan 23 2012 Bryan Kearney <bkearney@redhat.com> 0.1.14-1
 - Add in the latest command line features from katello proper
   (bkearney@redhat.com)
->>>>>>> katello/headpin
+* Mon Dec 19 2011 Bryan Kearney <bkearney@redhat.com> 0.1.13-2
+- Missed a merge (bkearney@redhat.com)
+- Latest upstream code (bkearney@redhat.com)
+- Automatic commit of package [katello-cli-headpin] release [0.1.12-2].
+  (bkearney@redhat.com)
+- Bump the version (bkearney@redhat.com)
 
 * Fri Dec 16 2011 Bryan Kearney <bkearney@redhat.com> 0.1.13-1
 - 758447: Add headpin prompt to the config file (bkearney@redhat.com)
