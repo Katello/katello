@@ -51,7 +51,7 @@ class FiltersController < ApplicationController
     @product_hash = {}
     products.each{|prod|
       repos = []
-      prod.repos(current_organization.locker).sort{|a,b| a.name <=> b.name}.each{|repo|
+      prod.repos(current_organization.library).sort{|a,b| a.name <=> b.name}.each{|repo|
         repos << {:name=>repo.name, :id=>repo.id}
       }
       @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id,

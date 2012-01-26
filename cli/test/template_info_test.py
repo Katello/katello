@@ -11,7 +11,7 @@ from katello.client.core.template import Info
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: organization, name
-    #optional: environment (defaults to Locker)
+    #optional: environment (defaults to Library)
 
     def setUp(self):
         self.set_action(Info())

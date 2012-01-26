@@ -54,7 +54,7 @@ describe SyncSchedulesController, :katello => true do
                                     :sync_date => DateTime.now, :interval => 'daily',
                                       :organization => @org)
       end
-      @p = new_test_product(@org, @org.locker)
+      @p = new_test_product(@org, @org.library)
       controller.stub!(:current_organization).and_return(@org)
     end
 

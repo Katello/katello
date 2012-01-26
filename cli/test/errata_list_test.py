@@ -104,7 +104,7 @@ class ErrataListTest(CLIActionTestCase):
         self.action.run()
         self.action.printer.printItems.assert_called_once_with(test_data.ERRATA_BY_REPO)
 
-    def test_it_uses_locker_when_no_env_is_specified(self):
+    def test_it_uses_library_when_no_env_is_specified(self):
         self.mock_options(self.OPTIONS_BY_ORG)
         self.action.run()
         self.module.get_environment.assert_called_once_with(self.OPTIONS_BY_ORG['org'], None)

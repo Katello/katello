@@ -21,7 +21,7 @@ describe SystemTemplate do
     disable_org_orchestration
 
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
-    @tpl = SystemTemplate.create!(:name => "template_1", :environment => @organization.locker)
+    @tpl = SystemTemplate.create!(:name => "template_1", :environment => @organization.library)
   end
 
   let(:package_1) {{

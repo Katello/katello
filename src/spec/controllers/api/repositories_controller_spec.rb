@@ -30,12 +30,12 @@ describe Api::RepositoriesController, :katello => true do
       @product = Product.new({:name => "prod"})
 
       @product.provider = @provider
-      @product.environments << @organization.locker
+      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
       Product.stub!(:find).and_return(@product)
       Product.stub!(:find_by_cp_id).and_return(@product)
-      ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
+      ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :pulp_id=>"1")
       Repository.stub(:find).and_return(@repository)
       Pulp::Repository.stub(:start_discovery).and_return({})
@@ -146,7 +146,7 @@ describe Api::RepositoriesController, :katello => true do
       @provider     = @organization.redhat_provider
       @product = Product.new({:name => "product for repo test"})
       @product.provider = @provider
-      @product.environments << @organization.locker
+      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
       @request.env["HTTP_ACCEPT"] = "application/json"

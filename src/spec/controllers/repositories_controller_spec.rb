@@ -19,7 +19,7 @@ describe RepositoriesController, :katello => true do
       @product = Product.new({:name => "prod"})
 
       @product.provider = @provider
-      @product.environments << @organization.locker
+      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
       Product.stub!(:find).and_return(@product)
@@ -59,9 +59,9 @@ describe RepositoriesController, :katello => true do
       set_default_locale
 
       @org = new_test_org
-      @product = new_test_product(@org, @org.locker)
+      @product = new_test_product(@org, @org.library)
       @gpg = GpgKey.create!(:name => "foo", :organization => @organization, :content => "222")
-      @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
+      @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       controller.stub!(:current_organization).and_return(@org)
       Candlepin::Content.stub(:create => {:id => "123"})
     end

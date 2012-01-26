@@ -91,8 +91,8 @@ class Api::ProductsController < Api::ApiController
 
   def find_environment
     if params[:environment_id].nil?
-      @environment = @organization.locker unless @organization.nil?
-      @environment = @product.organization.locker unless @product.nil?
+      @environment = @organization.library unless @organization.nil?
+      @environment = @product.organization.library unless @product.nil?
     else
       @environment = KTEnvironment.find_by_id(params[:environment_id])
       raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?

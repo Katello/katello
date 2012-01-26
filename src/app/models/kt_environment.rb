@@ -21,15 +21,15 @@ class PriorValidator < ActiveModel::Validator
     #need to ensure that prior
     #environment already does not have a successor
     #this is because in v1.0 we want
-    # prior to have only one child (unless its the Locker)
+    # prior to have only one child (unless its the Library)
     has_no_prior = true
     if record.organization
-      has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.locker}.empty?
+      has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.library}.empty?
     end
     record.errors[:prior] << _("environment can only have one child") unless has_no_prior
 
-    # only Locker can have prior=nil
-    record.errors[:prior] << _("environment required") unless !record.prior.nil? || record.locker?
+    # only Library can have prior=nil
+    record.errors[:prior] << _("environment required") unless !record.prior.nil? || record.library?
   end
 end
 
@@ -96,17 +96,17 @@ class KTEnvironment < ActiveRecord::Base
    ERROR_CLASS_NAME = "Environment"
 
 
-  def locker?
-    self.locker
+  def library?
+    self.library
   end
 
   def successor
-    return self.successors[0] unless self.locker?
+    return self.successors[0] unless self.library?
     self.organization.promotion_paths()[0][0] if !self.organization.promotion_paths().empty?
   end
 
   def display_name
-    return _("Locker") if self.locker?
+    return _("Library") if self.library?
     self.name
   end
 
@@ -149,16 +149,16 @@ class KTEnvironment < ActiveRecord::Base
   #  and then give me that entire path
   def full_path
     p = self
-    until p.prior.nil? or p.prior.locker
+    until p.prior.nil? or p.prior.library
       p = p.prior
     end
     p.prior.nil? ? p.path : [p.prior] + p.path
   end
 
   def available_products
-    if self.prior.locker
-      # if there is no prior, then the prior is the Locker, which has all products
-      prior_products = self.organization.locker.products
+    if self.prior.library
+      # if there is no prior, then the prior is the Library, which has all products
+      prior_products = self.organization.library.products
     else
       prior_products = self.prior.products
     end

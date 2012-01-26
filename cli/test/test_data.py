@@ -17,10 +17,10 @@ ORGS = [
 
 ENVS = [
   {
-    "name": "Locker",
+    "name": "Library",
     "prior": None,
     "created_at": "2011-08-23T08:10:53Z",
-    "locker": True,
+    "library": True,
     "updated_at": "2011-08-23T08:10:53Z",
     "id": 1,
     "organization": "ACME_Corporation",
@@ -29,9 +29,9 @@ ENVS = [
   },
   {
     "name": "Dev",
-    "prior": "Locker",
+    "prior": "Library",
     "created_at": "2011-08-24T08:25:52Z",
-    "locker": False,
+    "library": False,
     "updated_at": "2011-08-24T08:25:52Z",
     "id": 2,
     "organization": "ACME_Corporation",
@@ -42,7 +42,7 @@ ENVS = [
     "name": "Prod",
     "prior": "Dev",
     "created_at": "2011-08-24T08:26:01Z",
-    "locker": False,
+    "library": False,
     "updated_at": "2011-08-24T08:26:01Z",
     "id": 3,
     "organization": "ACME_Corporation",
@@ -51,7 +51,7 @@ ENVS = [
   }
 ]
 
-LOCKER = ENVS[0]
+LIBRARY = ENVS[0]
 
 PROVIDERS = [
   {
@@ -709,7 +709,7 @@ TEMPLATES = [
   "revision": 2,
   "parent_id": None,
   "environment_id": 1,
-  "description": "template in ACME_Corporation in a locker",
+  "description": "template in ACME_Corporation in a library",
   "parameters_json": "{\"param_1\":\"param_value\"}",
   "parameters": {
     "param_1": "param_value"
@@ -896,7 +896,7 @@ PERMISSIONS = [
         "id": 12,
         "formatted": {
           "name": 1,
-          "display_name": "Locker"
+          "display_name": "Library"
         }
       },
       {
@@ -907,7 +907,7 @@ PERMISSIONS = [
         "id": 13,
         "formatted": {
           "name": 1,
-          "display_name": "Locker"
+          "display_name": "Library"
         }
       }
     ],

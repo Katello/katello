@@ -22,7 +22,7 @@ module PromotionsHelper
   def breadcrumb_url_proc
     lambda{|args|
       promotion_path(args[:environment].name,
-            :next_env_id=>(args[:next_environment].id if args[:next_environment] and args[:environment].locker?))
+            :next_env_id=>(args[:next_environment].id if args[:next_environment] and args[:environment].library?))
     }
   end
 end

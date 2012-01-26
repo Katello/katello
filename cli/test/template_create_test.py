@@ -31,7 +31,7 @@ class TemplateCreateTest(CLIActionTestCase):
 
     ORG = test_data.ORGS[0]
     TPL = test_data.TEMPLATES[0]
-    LOCKER = test_data.LOCKER
+    LIBRARY = test_data.LIBRARY
 
     TPL_DESC = "description of the template"
     TPL_PARENT_NAME = 'parent_template'
@@ -60,31 +60,31 @@ class TemplateCreateTest(CLIActionTestCase):
         self.mock(self.action.api, 'create', self.TPL)
         self.mock(self.action, 'get_parent_id', None)
 
-        self.mock(self.module, 'get_locker', self.LOCKER)
+        self.mock(self.module, 'get_library', self.LIBRARY)
 
-    def test_it_finds_locker_environment(self):
+    def test_it_finds_library_environment(self):
         self.action.run()
-        self.module.get_locker.assert_called_once_with(self.ORG['name'])
+        self.module.get_library.assert_called_once_with(self.ORG['name'])
 
-    def test_it_returns_error_when_locker_not_found(self):
-        self.mock(self.module, 'get_locker', None)
+    def test_it_returns_error_when_library_not_found(self):
+        self.mock(self.module, 'get_library', None)
         self.assertEqual(self.action.run(), os.EX_DATAERR)
 
     def test_it_finds_parent_template(self):
         self.mock_options(self.OPTIONS_WITH_PARENT)
         self.mock(self.action, 'get_parent_id', self.TPL_PARENT_ID)
         self.action.run()
-        self.action.get_parent_id.assert_called_once_with(self.ORG['name'], self.LOCKER["name"], self.TPL_PARENT_NAME)
+        self.action.get_parent_id.assert_called_once_with(self.ORG['name'], self.LIBRARY["name"], self.TPL_PARENT_NAME)
 
     def test_it_calls_create_api(self):
         self.action.run()
-        self.action.api.create.assert_called_once_with(self.LOCKER['id'], self.TPL["name"], self.TPL_DESC, None)
+        self.action.api.create.assert_called_once_with(self.LIBRARY['id'], self.TPL["name"], self.TPL_DESC, None)
 
     def test_it_calls_create_api_with_parent_id(self):
         self.mock_options(self.OPTIONS_WITH_PARENT)
         self.mock(self.action, 'get_parent_id', self.TPL_PARENT_ID)
         self.action.run()
-        self.action.api.create.assert_called_once_with(self.LOCKER['id'], self.TPL["name"], self.TPL_DESC, self.TPL_PARENT_ID)
+        self.action.api.create.assert_called_once_with(self.LIBRARY['id'], self.TPL["name"], self.TPL_DESC, self.TPL_PARENT_ID)
 
     def test_it_returns_error_when_creation_failed(self):
         self.mock(self.action.api, 'create', {})

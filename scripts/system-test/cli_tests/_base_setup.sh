@@ -20,7 +20,7 @@ FILTER1="filter_$RAND"
 test_success "user create ($TEST_USER)" user create --username=$TEST_USER --password=password --email=$TEST_USER@somewhere.com
 test_success "org create ($TEST_ORG)" org create --name=$TEST_ORG --description="org description"
 test_success "org uebercert" org uebercert --name=$TEST_ORG
-test_success "environment create ($TEST_ENV)" environment create --org="$TEST_ORG" --name="$TEST_ENV" --prior="Locker"
+test_success "environment create ($TEST_ENV)" environment create --org="$TEST_ORG" --name="$TEST_ENV" --prior="Library"
 test_success "environment create ($TEST_ENV_3)" environment create --org="$TEST_ORG" --name="$TEST_ENV_3" --prior="$TEST_ENV"
 test_success "provider create ($YUM_PROVIDER)" provider create --name="$YUM_PROVIDER" --org="$TEST_ORG" --url="$FEWUPS_REPO_URL" --description="prov description"
 test_success "product create ($FEWUPS_PRODUCT)" product create --provider="$YUM_PROVIDER" --org="$TEST_ORG" --name="$FEWUPS_PRODUCT" --url="$FEWUPS_REPO_URL" --assumeyes

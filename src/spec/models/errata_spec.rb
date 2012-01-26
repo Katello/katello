@@ -19,11 +19,11 @@ describe Glue::Pulp::Errata, :katello => true do
     disable_errata_orchestration
     disable_org_orchestration
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
-    @locker = @organization.locker
+    @library = @organization.library
 
     @repo = Repository.new(:pulp_id => "repo-123")
     @repo2 = Repository.new(:pulp_id => "repo-456")
-    @env = KTEnvironment.create!(:name => "Dev", :prior => @organization.locker, :organization_id => @organization.id)
+    @env = KTEnvironment.create!(:name => "Dev", :prior => @organization.library, :organization_id => @organization.id)
   end
   
   context "Find errata" do

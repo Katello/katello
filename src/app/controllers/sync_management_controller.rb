@@ -60,7 +60,7 @@ class SyncManagementController < ApplicationController
 
   def index
     org = current_organization
-    @products = org.locker.products.readable(org)
+    @products = org.library.products.readable(org)
     
     redhat_products = @products.select{ |prod| prod.redhat? }
     custom_products = @products.select{ |prod| !prod.redhat? }
@@ -76,12 +76,12 @@ class SyncManagementController < ApplicationController
     @product_size = Hash.new
     @repo_status = Hash.new
 
-    @product_map = collect_repos(@products, org.locker)
+    @product_map = collect_repos(@products, org.library)
 
     for p in @products
       pstatus = p.sync_status
       @product_size[p.id] = number_to_human_size(p.sync_size)
-      for r in p.repos(p.organization.locker)
+      for r in p.repos(p.organization.library)
         @repo_status[r.id] = format_sync_progress(r.sync_status, r)
       end
     end

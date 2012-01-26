@@ -60,7 +60,7 @@ class SingleProductAction(ProductAction):
         self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com (required)"))
         self.parser.add_option('--name', dest='name', help=_("product name (required)"))
         if select_by_env:
-            self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Locker)"))
+            self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
 
     def check_product_select_options(self):
         self.require_option('org')
@@ -127,9 +127,9 @@ class List(ProductAction):
         self.parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
         self.parser.add_option('--environment', dest='env',
-                       help=_('environment name eg: production (default: Locker)'))
+                       help=_('environment name eg: production (default: Library)'))
         self.parser.add_option('--provider', dest='prov',
-                       help=_("provider name, lists provider's product in the Locker"))
+                       help=_("provider name, lists provider's product in the Library"))
 
 
     def check_options(self):

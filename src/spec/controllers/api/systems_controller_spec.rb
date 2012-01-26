@@ -55,7 +55,7 @@ describe Api::SystemsController do
     Pulp::Consumer.stub!(:update).and_return(true)
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
+    @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.library.id, :organization => @organization)
   end
 
   describe "create a system" do
