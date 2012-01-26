@@ -1,12 +1,9 @@
 /var/log/katello/*delayed_job*.log {
+  size=100M
   missingok
-  notifempty
-  create 0644 katello katello
-  sharedscripts
-  rotate 5
+  rotate 7
   compress
-  weekly
-  postrotate
-    [ -e /etc/init.d/katello-jobs ] && /etc/init.d/katello-jobs restart >/dev/null 2>&1 || true
-  endscript
+  delaycompress
+  notifempty
+  copytruncate
 }
