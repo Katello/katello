@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.43
+Version:       0.1.44
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jan 26 2012 Shannon Hughes <shughes@redhat.com> 0.1.44-1
+- 783513 - CLI BRANDING: Locker -> Library (mbacovsk@redhat.com)
+
 * Tue Jan 24 2012 Bryan Kearney <bkearney@redhat.com> 0.1.42-1
 - 754856: Define the userdir only in the Config module (bkearney@redhat.com)
 
