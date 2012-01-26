@@ -119,7 +119,8 @@ class SystemPackagesController < ApplicationController
       return
     end
 
-    offset = current_user.page_size
+    #offset = current_user.page_size
+    offset = 100
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     total_packages = packages.length
     if packages.length > 0
@@ -150,6 +151,7 @@ class SystemPackagesController < ApplicationController
     size = current_user.page_size
     #what packages are available?
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+
     if packages.length > 0
       #check for the params offset (start of array chunk)
       if params.has_key? :offset
@@ -168,6 +170,7 @@ class SystemPackagesController < ApplicationController
       else
         packages = packages[offset...offset+size]
       end
+      packages ||= [] # fence for case when offset extended beyond range, etc.
     else
       packages = []
     end
