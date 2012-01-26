@@ -20,7 +20,7 @@
 
 Name:           katello-headpin
 Version:        0.1.128
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
 License:        GPLv2
@@ -117,6 +117,9 @@ and then run katello-configure to configure everything.
 cp -Rf %{homedir}/* %{katello_dir}
 
 %changelog
+* Thu Jan 26 2012 Jordan OMara <jomara@redhat.com> 0.1.128-3
+- Fixing branded header to have the right useres link (jomara@redhat.com)
+
 * Thu Jan 26 2012 Jordan OMara <jomara@redhat.com> 0.1.128-2
 - 783301 - fixing branding h1 tag for SUBSCRIPTION ACCESS MANAGER (thanks
   tom!!) (jomara@redhat.com)
