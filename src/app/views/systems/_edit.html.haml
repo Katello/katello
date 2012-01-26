@@ -71,7 +71,7 @@
           = label :host_guest, :host_type, _("System Type")
         - if system.guest == 'true'
           .grid_5.la
-            = _("Guest")
+            = system_type system
           %fieldset
             .grid_2.ra.fieldset
               = label :host_guest, :host, _("Host")
@@ -79,7 +79,7 @@
               = system.host ? system.host.attributes['name'] : _("Unknown")
         -else
           .grid_5.la
-            = _("Host")
+            = system_type system
           %fieldset
             .grid_2.ra.fieldset
               = label :host_guest, :guest, _("Guests")

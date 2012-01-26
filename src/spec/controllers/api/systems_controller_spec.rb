@@ -42,6 +42,8 @@ describe Api::SystemsController do
   let(:user_without_update_permissions) { user_without_permissions }
   let(:user_with_destroy_permissions) { user_with_permissions { |u| u.can([:delete_systems], :organizations, nil, @organization) } }
   let(:user_without_destroy_permissions) { user_with_permissions { |u| u.can([:read_systems], :organizations, nil, @organization) } }
+  let(:user_with_register_permissions) { user_with_permissions { |u| u.can([:register_systems], :organizations, nil, @organization) } }
+  let(:user_without_register_permissions) { user_with_permissions { |u| u.can([:read_systems], :organizations, nil, @organization) } }
 
   before (:each) do
     login_user
@@ -55,7 +57,7 @@ describe Api::SystemsController do
     Pulp::Consumer.stub!(:update).and_return(true)
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
+    @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.library.id, :organization => @organization)
   end
 
   describe "create a system" do
@@ -236,14 +238,29 @@ describe Api::SystemsController do
 
     let(:action) { :upload_package_profile }
     let(:req) { put :upload_package_profile, :id => uuid, :_json => package_profile }
-    let(:authorized_user) { user_with_update_permissions }
-    let(:unauthorized_user) { user_without_update_permissions }
-    it_should_behave_like "protected action"
 
-    it "successfully" do
-      Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
-      put :upload_package_profile, :id => uuid, :_json => package_profile
-      response.body.should == @sys.to_json
+    context "update permissions" do
+      let(:authorized_user) { user_with_update_permissions }
+      let(:unauthorized_user) { user_without_update_permissions }
+      it_should_behave_like "protected action"
+
+      it "successfully with update permissions" do
+        Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
+        put :upload_package_profile, :id => uuid, :_json => package_profile
+        response.body.should == @sys.to_json
+      end
+    end
+
+    context "update permissions" do
+      let(:authorized_user) { user_with_register_permissions }
+      let(:unauthorized_user) { user_without_register_permissions }
+      it_should_behave_like "protected action"
+
+      it "successfully with register permissions" do
+        Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
+        put :upload_package_profile, :id => uuid, :_json => package_profile
+        response.body.should == @sys.to_json
+      end
     end
   end
 

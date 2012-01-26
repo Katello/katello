@@ -22,7 +22,7 @@ from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, system_exit
-from katello.client.api.utils import get_locker, get_environment, get_template, get_product, get_repo
+from katello.client.api.utils import get_library, get_environment, get_template, get_product, get_repo
 
 
 # set import (works for both Python 2.6+ and 2.5)
@@ -57,7 +57,7 @@ class List(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required if specifying environment)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (Locker by default)"))
+                               help=_("environment name eg: dev (default: Library)"))
 
     def check_options(self):
         self.require_option('org')
@@ -97,7 +97,7 @@ class Info(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (Locker by default)"))
+                               help=_("environment name eg: dev (default: Library)"))
 
     def check_options(self):
         self.require_option('name')
@@ -178,7 +178,7 @@ class Import(TemplateAction):
         orgName = self.get_option('org')
         tplPath = self.get_option('file')
 
-        env = get_locker(orgName)
+        env = get_library(orgName)
         if env == None:
             return os.EX_DATAERR
 
@@ -277,7 +277,7 @@ class Create(TemplateAction):
         orgName = self.get_option('org')
         parentName = self.get_option('parent')
 
-        env = get_locker(orgName)
+        env = get_library(orgName)
         if env != None:
             if parentName != None:
                 parentId = self.get_parent_id(orgName, env['name'], parentName)
@@ -421,7 +421,7 @@ class Update(TemplateAction):
         #reset parameters for next call in shell mode
 
 
-        env = get_locker(orgName)
+        env = get_library(orgName)
         if env == None:
             return os.EX_DATAERR
 
@@ -515,7 +515,7 @@ class Delete(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (Locker by default)"))
+                               help=_("environment name eg: foo.example.com (default: Library)"))
 
     def check_options(self):
         self.require_option('name')

@@ -3,9 +3,13 @@
 = content_for :title do
   = @organization.name
 
-- unless current_organization == @organization || !@organization.deletable?
+- if @organization.deletable?
   = content_for :remove_item do
-    = link_to _("Remove Organization"), {:controller=>"organizations", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this organization?'), :method => :delete, :class=>"remove_item", :remote=>true
+    - if current_organization != @organization
+      = link_to _("Remove Organization"), {:controller=>"organizations", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this organization?'), :method => :delete, :class=>"remove_item", :remote=>true
+    - else
+      %span{ :class => "remove_item disabled tipsify", :title => _("The current organization cannot be deleted. Please switch to a different organization before deleting.") }
+        = _("Remove Organization")
 
 = content_for :navigation do
   = render_menu(1..2, organization_navigation)
@@ -29,7 +33,7 @@
         .jbreadcrumb.grid_9
           %ul
             %li
-              =link_to _('Locker'), "#", :class => "crumb-nohover"
+              =link_to _('Library'), "#", :class => "crumb-nohover"
             - for env in path
               %li
                 %a.subpanel_element{"data-url"=>edit_organization_environment_path(@organization.cp_key, env.id)}

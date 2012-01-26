@@ -370,6 +370,7 @@ $(document).ready(function (){
 
   // Add a handler for ellipsis
   $(".one-line-ellipsis").ellipsis(true);
+  $(".tipsify").tipsy({ live : true, gravity: 's', fade: true, delayIn : 350 });
 
   KT.common.orgSwitcherSetup();
   KT.common.orgFilterSetup();

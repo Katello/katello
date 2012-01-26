@@ -26,8 +26,6 @@ Src::Application.routes.draw do
     end
   end
 
-  resource :account
-
   resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy, :auto_complete_search] do
     collection do
       get :auto_complete_search
@@ -116,7 +114,7 @@ Src::Application.routes.draw do
       get :dependencies
     end
     collection do
-      get :auto_complete_locker
+      get :auto_complete_library
     end
   end
 
@@ -211,7 +209,7 @@ Src::Application.routes.draw do
   match '/repositories/:id/enable_repo' => 'repositories#enable_repo', :via => :put, :as => :enable_repo
 
   resources :repositories, :only => [:new, :create, :edit, :destroy] do
-    get :auto_complete_locker, :on => :collection
+    get :auto_complete_library, :on => :collection
 
     resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ } do
       member do
@@ -307,8 +305,6 @@ Src::Application.routes.draw do
   end
 
 
-  resource :account
-
   root :to => "user_sessions#new"
 
   match '/login' => 'user_sessions#new'
@@ -339,7 +335,12 @@ Src::Application.routes.draw do
       collection do
         match "/tasks/:id" => "systems#task_show", :via => :get
       end
-      resources :subscriptions, :only => [:create, :index, :destroy]
+      resources :subscriptions, :only => [:create, :index, :destroy] do
+        collection do
+            match '/' => 'subscriptions#destroy_all', :via => :delete
+            match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
+        end
+      end
       resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
     end
 

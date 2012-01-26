@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ $1 = "-i" ]; then
     echo "test data for ACME_Corporation"
-    echo "environments: Locker"
+    echo "environments: Library"
     echo "providers:    prov_a1"
     echo "products:     prod_a1"
     echo "repos:        tstrachota's dummy repo"

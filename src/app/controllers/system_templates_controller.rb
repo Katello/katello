@@ -48,18 +48,18 @@ class SystemTemplatesController < ApplicationController
   end
 
   def index
-    @environment = current_organization.locker
+    @environment = current_organization.library
     @products = Product.readable(current_organization).joins(:environments).where("environments.id = #{@environment.id}")
-    @templates = SystemTemplate.where(:environment_id => current_organization.locker.id).limit(current_user.page_size)
+    @templates = SystemTemplate.where(:environment_id => current_organization.library.id).limit(current_user.page_size)
 
     product_hash = {}
     @products.each{|prd|  product_hash[prd.name] = prd.id}
 
-    package_groups = current_organization.locker.package_groups.collect{|grp| grp[:name]}.sort
+    package_groups = current_organization.library.package_groups.collect{|grp| grp[:name]}.sort
 
     distro_map = {}
     @products.each{|prod|
-      distro_map[prod.id] = prod.distributions(current_organization.locker)
+      distro_map[prod.id] = prod.distributions(current_organization.library)
     }
 
     retain_search_history
@@ -68,9 +68,9 @@ class SystemTemplatesController < ApplicationController
   end
   
   def setup_options
-    columns = ['name']
     @panel_options = { :title => _('System Templates'),
-                 :col => columns,
+                 :col => ["name"],
+                 :titles => [_('Name') ],
                  :create => _('Template'),
                  :name => _('template'),
                  :create => _('Template'),
@@ -107,7 +107,7 @@ class SystemTemplatesController < ApplicationController
   def product_packages
     @product = Product.readable(current_organization).find(params[:product_id])
       @packages = []
-      @product.repos(current_organization.locker).each{|repo|
+      @product.repos(current_organization.library).each{|repo|
         repo.packages.each{|pkg|
           @packages << pkg.name
         }
@@ -131,7 +131,7 @@ class SystemTemplatesController < ApplicationController
     @product = Product.readable(current_organization).find(params[:product_id])
     
     @groups = []
-    @product.repos(current_organization.locker).each{|repo|
+    @product.repos(current_organization.library).each{|repo|
       repo.package_groups.each{|grp|
         Rails.logger.error("\n\n\n\n\n") if grp[1].nil?
         Rails.logger.error(grp.inspect) if grp[1].nil?
@@ -147,7 +147,7 @@ class SystemTemplatesController < ApplicationController
 
   def product_repos
     @product = Product.readable(current_organization).find(params[:product_id])
-    render :partial=>"product_repos", :locals => {:current_organization => current_organization.locker}
+    render :partial=>"product_repos", :locals => {:current_organization => current_organization.library}
   end
 
   def update_content
@@ -170,7 +170,7 @@ class SystemTemplatesController < ApplicationController
 
     @template.repositories = []
     repos.each{|repo|
-      @template.repositories << Repository.readable(current_organization.locker).where(:name => repo[:name])
+      @template.repositories << Repository.readable(current_organization.library).where(:name => repo[:name])
     }
 
     @template.package_groups = []
@@ -219,7 +219,7 @@ class SystemTemplatesController < ApplicationController
   end
 
   def download
-    # Grab the locker template so we can lookup name
+    # Grab the library template so we can lookup name
     env_template = SystemTemplate.where(:name => @template.name, :environment_id => params[:environment_id]).first
     # Grab the env based on the ID passed in
     environment = KTEnvironment.where(:id=>params[:environment_id]).where(:organization_id=>current_organization.id).first
@@ -246,7 +246,7 @@ class SystemTemplatesController < ApplicationController
 
   def create
     obj_params = params[:system_template]
-    obj_params[:environment_id] = current_organization.locker.id
+    obj_params[:environment_id] = current_organization.library.id
 
     @template = SystemTemplate.create!(obj_params)
     notice _("System Template '#{@template.name}' was created.")
@@ -264,7 +264,7 @@ class SystemTemplatesController < ApplicationController
     dist = template.distributions.first
     if !dist.nil?
       template.products.each{|prod|
-        prod.distributions(current_organization.locker).each{|to_check|
+        prod.distributions(current_organization.library).each{|to_check|
           return if dist.distribution_pulp_id == to_check.id
         }
       }
@@ -282,7 +282,7 @@ class SystemTemplatesController < ApplicationController
 
   def find_template
     find_read_only_template
-    raise _("Cannot modify a template that is another environment") if !@template.environment.locker?
+    raise _("Cannot modify a template that is another environment") if !@template.environment.library?
   rescue Exception => e
     notice e, {:level => :error}
     render :text=>e, :status=>400 and return false

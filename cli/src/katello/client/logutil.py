@@ -18,8 +18,9 @@ import sys
 import logging
 from logging import root, Formatter
 from logging.handlers import RotatingFileHandler
+from katello.client.config import Config
 
-USRDIR = '~/.katello'
+USRDIR = Config.USER_DIR
 LOGDIR = '/var/log/katello'
 LOGFILE = 'client.log'
 

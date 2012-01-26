@@ -10,9 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class NotInLockerValidator < ActiveModel::Validator
+class NotInLibraryValidator < ActiveModel::Validator
   def validate(record)
-    record.errors[:environment] << _("Locker environment can have no changeset!") if record.environment.locker?
+    record.errors[:environment] << _("Library environment cannot contain a changeset!") if record.environment.library?
   end
 end
 
@@ -48,7 +48,7 @@ class Changeset < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Must be unique within an environment")
   validates :environment, :presence=>true
   validates :description, :katello_description_format => true
-  validates_with NotInLockerValidator
+  validates_with NotInLibraryValidator
   has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name=>"ChangesetPackage", :inverse_of=>:changeset
   has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
@@ -115,6 +115,9 @@ class Changeset < ActiveRecord::Base
     raise _("Cannot promote the changset '#{self.name}' because it is not in the review phase.") if self.state != Changeset::REVIEW
     #check for other changesets promoting
     raise _("Cannot promote the changeset '#{self.name}' while another changeset (#{self.environment.promoting.first.name}) is being promoted.") if self.environment.promoting_to?
+
+    self.state = Changeset::PROMOTING
+    self.save!
 
     if async
       task = self.async(:organization=>self.environment.organization).promote_content
@@ -294,9 +297,6 @@ class Changeset < ActiveRecord::Base
 
 
   def promote_content
-    self.state = Changeset::PROMOTING
-    self.save!
-
     update_progress! '0'
     self.calc_and_save_dependencies
 

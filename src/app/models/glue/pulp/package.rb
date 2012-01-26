@@ -19,12 +19,35 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     Glue::Pulp::Package.new(Pulp::Package.find(id))
   end
 
+  def self.index_settings
+    {
+        "index" => {
+            "analysis" => {
+                "filter" => {
+                    "ngram_filter"  => {
+                        "type"      => "edgeNGram",
+                        "side"      => "front",
+                        "min_gram"  => 1,
+                        "max_gram"  => 10
+                    }
+                },
+                "analyzer" => {
+                    "name_analyzer" => {
+                        "type"      => "custom",
+                        "tokenizer" => "keyword",
+                        "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
+                    }
+                }
+            }
+        }
+    }
+  end
 
   def self.index_mapping
     {
       :package => {
         :properties => {
-          :name          => { :type=> 'string', :analyzer=>'keyword'}, 
+          :name          => { :type=> 'string', :analyzer=>'name_analyzer'},
           :nvrea         => { :type=> 'string', :analyzer=>'keyword'},
           :nvrea_sort    => { :type => 'string', :index=> :not_analyzed }
         }
@@ -55,9 +78,8 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
       end
       
       if repoids
-        filter :terms, :repository_ids => repoids
+        filter :terms, :repoids => repoids
       end
-      sort { by sort[0], sort[1] }      
      end
      to_ret = []
      search.results.each{|pkg|  
@@ -81,7 +103,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
        from start
       end
       if repoids
-        filter :terms, :repository_ids => repoids
+        filter :terms, :repoids => repoids
       end
       if not_repoids
         #filter do

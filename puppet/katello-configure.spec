@@ -2,8 +2,8 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.54
-Release:        2%{?dist}
+Version:        0.1.55
+Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
 Group:          Applications/Internet
@@ -56,8 +56,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
-* Fri Jan 20 2012 Shannon Hughes <shughes@redhat.com> 0.1.54-2
-- se build (shughes@redhat.com)
+* Thu Jan 26 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.55-1
+- 784601 - sync fails if /var/lib/pulp/packages is separate mount
+- 773088 - short term bump of the REST client timeout to 120
+- 771343 - adding proxying for /javascripts in /etc/httpd/conf.d/katello.conf
 
 * Thu Jan 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.54-1
 - 749805 - httpd - katello.conf - update to remove unnecessary / in path

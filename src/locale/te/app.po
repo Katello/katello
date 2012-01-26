@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
-"POT-Creation-Date: 2012-01-13 11:25-0500\n"
+"POT-Creation-Date: 2012-01-04 15:13-0500\n"
 "PO-Revision-Date: 2011-01-06 17:37-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,11 +28,11 @@ msgstr "కాంటెంట్"
 msgid " Red Hat, Inc."
 msgstr " Red Hat, Inc."
 
-#: app/views/common/_panel.html.haml:46
+#: app/views/common/_panel.html.haml:40
 msgid " Total "
 msgstr "మొత్తము"
 
-#: app/controllers/users_controller.rb:106
+#: app/controllers/users_controller.rb:105
 msgid " created successfully."
 msgstr "విజయవంతంగా సృష్టించబడెను."
 
@@ -44,23 +44,13 @@ msgstr "దాని మార్గంలో వున్న యెన్వి
 msgid " items selected."
 msgstr "అంశము యెంపికచేయబడింది"
 
-#: app/views/common/_panel.html.haml:39
+#: app/views/common/_panel.html.haml:33
 msgid " of  "
 msgstr "యొక్క"
 
-#: app/views/common/_panel.html.haml:43
+#: app/views/common/_panel.html.haml:37
 msgid " results "
 msgstr "ఫలితాలు"
-
-#: app/models/system_task.rb:138
-#, 
-msgid "%s (%s other package groups)"
-msgstr ""
-
-#: app/models/system_task.rb:66
-#, 
-msgid "%s (%s other package groups) install"
-msgstr ""
 
 #: app/models/system_task.rb:68
 #, 
@@ -77,9 +67,9 @@ msgstr ""
 msgid "%s (%s other package groups) install timed out"
 msgstr ""
 
-#: app/models/system_task.rb:93
+#: app/models/system_task.rb:66
 #, 
-msgid "%s (%s other package groups) removal"
+msgid "%s (%s other package groups) installed."
 msgstr ""
 
 #: app/models/system_task.rb:95
@@ -97,9 +87,9 @@ msgstr ""
 msgid "%s (%s other package groups) remove timed out"
 msgstr ""
 
-#: app/models/system_task.rb:79
+#: app/models/system_task.rb:93
 #, 
-msgid "%s (%s other package groups) update"
+msgid "%s (%s other package groups) removed"
 msgstr ""
 
 #: app/models/system_task.rb:81
@@ -117,7 +107,12 @@ msgstr ""
 msgid "%s (%s other package groups) update timed out"
 msgstr ""
 
-#: app/models/system_task.rb:131
+#: app/models/system_task.rb:79
+#, 
+msgid "%s (%s other package groups) updated"
+msgstr ""
+
+#: app/models/system_task.rb:119
 #, 
 msgid "%s (%s other packages)"
 msgstr ""
@@ -139,12 +134,7 @@ msgstr ""
 
 #: app/models/system_task.rb:25
 #, 
-msgid "%s (%s other packages) install."
-msgstr ""
-
-#: app/models/system_task.rb:52
-#, 
-msgid "%s (%s other packages) removal"
+msgid "%s (%s other packages) installed."
 msgstr ""
 
 #: app/models/system_task.rb:54
@@ -162,9 +152,9 @@ msgstr ""
 msgid "%s (%s other packages) remove timed out"
 msgstr ""
 
-#: app/models/system_task.rb:39
+#: app/models/system_task.rb:52
 #, 
-msgid "%s (%s other packages) update"
+msgid "%s (%s other packages) removed"
 msgstr ""
 
 #: app/models/system_task.rb:41
@@ -182,6 +172,11 @@ msgstr ""
 msgid "%s (%s other packages) update timed out"
 msgstr ""
 
+#: app/models/system_task.rb:39
+#, 
+msgid "%s (%s other packages) updated"
+msgstr ""
+
 #: app/helpers/translation_helper.rb:15
 #: app/views/providers/redhat/_import_history.html.haml:14
 msgid "%s ago"
@@ -190,11 +185,6 @@ msgstr "%s పూర్వం"
 #: app/controllers/api/system_packages_controller.rb:84
 msgid "%s is not a valid package name"
 msgstr "%s చెల్లునటువంటి ప్యాకేజీ పేరు కాదు"
-
-#: app/models/system_task.rb:66
-#, 
-msgid "%s package group install"
-msgstr ""
 
 #: app/models/system_task.rb:68
 #, 
@@ -211,9 +201,9 @@ msgstr ""
 msgid "%s package group install timed out"
 msgstr ""
 
-#: app/models/system_task.rb:93
+#: app/models/system_task.rb:66
 #, 
-msgid "%s package group removal"
+msgid "%s package group installed"
 msgstr ""
 
 #: app/models/system_task.rb:95
@@ -231,9 +221,9 @@ msgstr ""
 msgid "%s package group remove timed out"
 msgstr ""
 
-#: app/models/system_task.rb:79
+#: app/models/system_task.rb:93
 #, 
-msgid "%s package group update"
+msgid "%s package group removed"
 msgstr ""
 
 #: app/models/system_task.rb:81
@@ -251,9 +241,9 @@ msgstr ""
 msgid "%s package group update timed out"
 msgstr ""
 
-#: app/models/system_task.rb:25
+#: app/models/system_task.rb:79
 #, 
-msgid "%s package install"
+msgid "%s package group updated"
 msgstr ""
 
 #: app/models/system_task.rb:27
@@ -271,9 +261,9 @@ msgstr ""
 msgid "%s package install timed out"
 msgstr ""
 
-#: app/models/system_task.rb:52
+#: app/models/system_task.rb:25
 #, 
-msgid "%s package removal"
+msgid "%s package installed"
 msgstr ""
 
 #: app/models/system_task.rb:54
@@ -291,9 +281,9 @@ msgstr ""
 msgid "%s package remove timed out"
 msgstr ""
 
-#: app/models/system_task.rb:39
+#: app/models/system_task.rb:52
 #, 
-msgid "%s package update"
+msgid "%s package removed"
 msgstr ""
 
 #: app/models/system_task.rb:41
@@ -311,9 +301,14 @@ msgstr ""
 msgid "%s package update timed out"
 msgstr ""
 
+#: app/models/system_task.rb:39
+#, 
+msgid "%s package updated"
+msgstr ""
+
 #: app/controllers/providers_controller.rb:73
 #: app/controllers/providers_controller.rb:96
-#: app/controllers/providers_controller.rb:110 app/models/changeset.rb:328
+#: app/controllers/providers_controller.rb:110
 msgid "%{newline}Reason: %{reason}"
 msgstr "%{newline}కారణం: %{reason}"
 
@@ -330,13 +325,13 @@ msgstr "(మొత్త వుత్పత్తి యెంపికైంద
 msgid "(Load %X More)"
 msgstr ""
 
-#: app/views/system_events/_events.html.haml:3
 #: app/views/system_packages/_packages.html.haml:6
+#: app/views/system_events/_events.html.haml:3
 msgid "(Loaded %X of %Y Total)"
 msgstr "(మొత్తం %Y లో %X లోడైంది)"
 
 #: app/views/system_packages/_packages.html.haml:86
-#: app/views/filters/_products.html.haml:33
+#: app/views/filters/_products.html.haml:34
 msgid "+ Add"
 msgstr "+ జతచేయి"
 
@@ -345,7 +340,7 @@ msgstr "+ జతచేయి"
 msgid "+ All"
 msgstr "+ అన్ని"
 
-#: app/views/common/_panel.html.haml:33
+#: app/views/common/_panel.html.haml:27
 msgid "+ New "
 msgstr "+ కొత్త"
 
@@ -379,31 +374,88 @@ msgid "<< Previous"
 msgstr "<< క్రితం"
 
 #: app/views/user_mailer/logins.text.haml:1
-msgid "A request has been received by Katello server '%s' to retrieve the logins for email '%s'. The following is a list of those logins:"
-msgstr "కేటెల్లో సేవిక '%s' చేత వొక అభ్యర్ధన స్వీకరించబడెను ఈమెయిల్ '%s' కొరకు లాగిన్స్ పొందుటకు. కిందవి ఆ లాగిన్స్ యొక్క జాబితా:"
+msgid ""
+"A request has been received by Katello server '%s' to retrieve the logins "
+"for email '%s'. The following is a list of those logins:"
+msgstr ""
+"కేటెల్లో సేవిక '%s' చేత వొక అభ్యర్ధన స్వీకరించబడెను ఈమెయిల్ '%s' కొరకు "
+"లాగిన్స్ పొందుటకు. కిందవి ఆ లాగిన్స్ యొక్క జాబితా:"
 
 #: app/views/user_mailer/password_reset.text.haml:1
-msgid "A request has been received to reset the Katello password for user '%s'.  In order to reset this password, click the URL below."
-msgstr "వాడుకరి '%s' కొరకు కాటెల్లో సంకేతపదం తిరిగిఅమర్చుటకు అభ్యర్ధన స్వీకరించబడెను. ఈ సంకేతపదంను తిరిగివుంచుటకు, కింది URL నొక్కుము."
+msgid ""
+"A request has been received to reset the Katello password for user '%s'.  In"
+" order to reset this password, click the URL below."
+msgstr ""
+"వాడుకరి '%s' కొరకు కాటెల్లో సంకేతపదం తిరిగిఅమర్చుటకు అభ్యర్ధన "
+"స్వీకరించబడెను. ఈ సంకేతపదంను తిరిగివుంచుటకు, కింది URL నొక్కుము."
 
-#: app/controllers/activation_keys_controller.rb:272
-#: app/models/resource_type.rb:94 lib/navigation/systems.rb:50
+#: app/models/kt_environment.rb:317
+msgid "Access Changesets in Environment"
+msgstr "ఎన్విరామ్మెంట్ నందు యాక్సెస్ చేంజ్‌సెట్స్"
+
+#: app/models/kt_environment.rb:312
+msgid "Access Environment Contents"
+msgstr "ఎన్విరాన్మెంట్ కాంటెట్లను యాక్సెస్ చేయి"
+
+#: app/models/organization.rb:126
+msgid "Access Organization"
+msgstr "సంస్థ యాక్సెస్ చేయి"
+
+#: app/models/filter.rb:65
+msgid "Access Package Filters"
+msgstr "ప్యాకేజీ ఫిల్టర్లను యాక్సెస్ చేయి"
+
+#: app/models/provider.rb:123
+msgid "Access Provider"
+msgstr "సమర్పకుని యాక్సెస్ చేయి"
+
+#: app/models/role.rb:107
+msgid "Access Roles"
+msgstr "పాత్రలను యాక్సెస్ చేయి"
+
+#: app/models/organization.rb:127
+msgid "Access Systems"
+msgstr "సిస్టమ్స్ యాక్సెస్ చేయి"
+
+#: app/models/kt_environment.rb:313
+msgid "Access Systems in Environment"
+msgstr "ఎన్విరాన్మెంట్ నందలి సిస్టమ్స్ యాక్సెస్ చేయి"
+
+#: app/models/user.rb:353
+msgid "Access Users"
+msgstr "వాడుకరులను యాక్సెస్ చేయి"
+
+#: app/models/activation_key.rb:143
+msgid "Access all Activation Keys"
+msgstr "అన్ని క్రియాశీలపు కీలను యాక్సెస్ చేయి"
+
+#: app/models/resource_type.rb:94
+#: app/controllers/activation_keys_controller.rb:271
+#: lib/navigation/systems.rb:50
 msgid "Activation Keys"
 msgstr "క్రియాశీలపు కీలు"
 
 #: app/views/activation_keys/index.html.haml:3
-msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system, system template to apply to the system...etc."
-msgstr "క్రియాశీలపు కీలు లక్షణాల సమితిని అందించును అది సిస్టమ్‌కు సిస్టమ్ నమోదీకరణనందు ఆపాదించవచ్చు. ఇది సిస్టమ్‌కు అప్పగించుటకు అప్రమేయ యెన్విరాన్మెంట్, సిస్టమ్‌కు కేటాయించుటకు సబ్‌స్క్రిప్షన్లు, సిస్టమ్‌కు అపాదించుటకు సిస్టమ్ టెంప్లేట్ వంటి వాటిని కలిగివుండును."
+msgid ""
+"Activation Keys provide a set of characteristics that may be applied to a "
+"system during system registration.  This includes things such as, default "
+"environment to assign to the system, subscriptions to allocate to the "
+"system, system template to apply to the system...etc."
+msgstr ""
+"క్రియాశీలపు కీలు లక్షణాల సమితిని అందించును అది సిస్టమ్‌కు సిస్టమ్ "
+"నమోదీకరణనందు ఆపాదించవచ్చు. ఇది సిస్టమ్‌కు అప్పగించుటకు అప్రమేయ "
+"యెన్విరాన్మెంట్, సిస్టమ్‌కు కేటాయించుటకు సబ్‌స్క్రిప్షన్లు, సిస్టమ్‌కు "
+"అపాదించుటకు సిస్టమ్ టెంప్లేట్ వంటి వాటిని కలిగివుండును."
 
-#: app/views/roles/index.html.haml:9 app/views/filters/_packages.html.haml:24
-#: app/views/common/_common_i18n.html.haml:3
-#: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_product_repos.html.haml:6
 #: app/views/system_templates/_products.html.haml:9
-#: app/views/system_templates/_product_packages.html.haml:6
 #: app/views/system_templates/_repositories.html.haml:8
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/_product_packages.html.haml:6
 #: app/views/system_templates/_product_comps.html.haml:6
 #: app/views/promotions/show.html.haml:8
+#: app/views/common/_common_i18n.html.haml:3
+#: app/views/filters/_packages.html.haml:25 app/views/roles/index.html.haml:9
 msgid "Add"
 msgstr "జతచేయి"
 
@@ -447,8 +499,8 @@ msgstr "ప్యాకేజీ సమూహం జతచేయుటలో స
 msgid "Add Package Timeout"
 msgstr "ప్యాకేజీ జతచేయుటలో సమయం ముగెసెను"
 
-#: app/views/roles/index.html.haml:9 app/views/roles/_permissions.html.haml:6
-#: app/views/roles/_edit.html.haml:94
+#: app/views/roles/_edit.html.haml:93 app/views/roles/_permissions.html.haml:6
+#: app/views/roles/index.html.haml:9
 msgid "Add Permission"
 msgstr "అనుమతి జతచేయి"
 
@@ -456,20 +508,20 @@ msgstr "అనుమతి జతచేయి"
 msgid "Add Permission to"
 msgstr "అనుమతి దీనికి జతచేయి"
 
-#: app/views/providers/_products_repos.html.haml:27
+#: app/views/providers/_products_repos.html.haml:28
 msgid "Add Product"
 msgstr "ఉత్పత్తి జతచేయి"
 
-#: app/views/providers/_products_repos.html.haml:51
+#: app/views/providers/_products_repos.html.haml:52
 msgid "Add Repository"
 msgstr "రిపోజిటరీ జతచేయి"
 
-#: app/views/activation_keys/_applied_subscriptions.html.haml:33
+#: app/views/activation_keys/_applied_subscriptions.html.haml:32
 msgid "Add Subscriptions ▸"
 msgstr "సబ్‌స్క్రిప్షన్స్ జతచేయి ▸"
 
+#: app/views/activation_keys/_available_subscriptions.html.haml:32
 #: app/views/activation_keys/_available_subscriptions.html.haml:33
-#: app/views/activation_keys/_available_subscriptions.html.haml:34
 msgid "Add to Key"
 msgstr "కీ జతచేయి"
 
@@ -489,51 +541,6 @@ msgstr "ప్యాకేజీ జతచేయుచున్నది..."
 msgid "Adding..."
 msgstr "జతచేయుచున్నది..."
 
-#: app/models/activation_key.rb:148
-#, 
-msgid "Administer Activation Keys"
-msgstr ""
-
-#: app/models/kt_environment.rb:321
-#, 
-msgid "Administer Changesets in Environment"
-msgstr ""
-
-#: app/models/organization.rb:124
-#, 
-msgid "Administer GPG Keys"
-msgstr ""
-
-#: app/models/organization.rb:127
-#, 
-msgid "Administer Organization"
-msgstr ""
-
-#: app/models/filter.rb:64
-#, 
-msgid "Administer Package Filters"
-msgstr ""
-
-#: app/models/provider.rb:116
-#, 
-msgid "Administer Providers"
-msgstr ""
-
-#: app/models/role.rb:146
-#, 
-msgid "Administer Roles"
-msgstr ""
-
-#: app/models/system_template.rb:362
-#, 
-msgid "Administer System Templates"
-msgstr ""
-
-#: app/models/user.rb:351
-#, 
-msgid "Administer Users"
-msgstr ""
-
 #: app/views/operations/index.html.haml:2 lib/navigation/administration.rb:45
 msgid "Administration"
 msgstr "నిర్వహణ"
@@ -542,16 +549,11 @@ msgstr "నిర్వహణ"
 msgid "Advisory"
 msgstr "సలహాదారి"
 
-#: app/views/common/_common_i18n.html.haml:3
-#, 
-msgid "Alert"
-msgstr ""
-
-#: app/helpers/breadcrumb_helper.rb:209 app/models/resource_type.rb:99
-#: app/views/roles/index.html.haml:9 app/views/roles/_permission.html.haml:23
-#: app/views/roles/_permission.html.haml:33
+#: app/models/resource_type.rb:99 app/helpers/breadcrumb_helper.rb:209
 #: app/views/roles/_closed_permission.html.haml:11
 #: app/views/roles/_closed_permission.html.haml:20
+#: app/views/roles/_permission.html.haml:23
+#: app/views/roles/_permission.html.haml:33 app/views/roles/index.html.haml:9
 #: lib/navigation/systems.rb:33
 msgid "All"
 msgstr "అన్ని"
@@ -561,16 +563,28 @@ msgid "All Repositories"
 msgstr "అన్ని రిపోజిటరీలు"
 
 #: app/views/promotions/show.html.haml:154
-msgid "An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment."
-msgstr "కాంటెంట్‌ను పంపుటకు యెన్విరాన్మెంట్ లేదు. మీరు చేంజ్‌సెట్స్ మరియు కాంటెంట్‌ను నిర్వహించుటకు యిష్టపడితే, కొత్త యెన్విరాన్మెంట్‌ను సృష్టించు."
+msgid ""
+"An environment does not exist to promote content to.  If you would like to "
+"manage changesets and content, please create a new environment."
+msgstr ""
+"కాంటెంట్‌ను పంపుటకు యెన్విరాన్మెంట్ లేదు. మీరు చేంజ్‌సెట్స్ మరియు "
+"కాంటెంట్‌ను నిర్వహించుటకు యిష్టపడితే, కొత్త యెన్విరాన్మెంట్‌ను సృష్టించు."
 
-#: app/views/system_templates/index.html.haml:116
-msgid "An error has occured when communicating with the server, please refresh the page to retrieve the current System Template"
-msgstr "సేవికతో సంప్రదించునప్పుడు వొక దోషం యెదురైంది, ప్రస్తుత సిస్టమ్ టెంప్లేట్ పొందుటకు పేజీను రీఫ్రెష్ చేయుము"
+#: app/views/system_templates/index.html.haml:115
+msgid ""
+"An error has occured when communicating with the server, please refresh the "
+"page to retrieve the current System Template"
+msgstr ""
+"సేవికతో సంప్రదించునప్పుడు వొక దోషం యెదురైంది, ప్రస్తుత సిస్టమ్ టెంప్లేట్ "
+"పొందుటకు పేజీను రీఫ్రెష్ చేయుము"
 
 #: app/views/promotions/show.html.haml:70
-msgid "An error has occured when communicating with the server, please refresh the page to retrieve the current changeset."
-msgstr "సేవికతో సంప్రదించునప్పుడు వొక దోషం యెదురైంది, ప్రస్తుత చేంజ్‌సెట్‌ను తిరిగిపొందుటకు దయచేసి పేజీను రీఫ్రెష్ చేయుము."
+msgid ""
+"An error has occured when communicating with the server, please refresh the "
+"page to retrieve the current changeset."
+msgstr ""
+"సేవికతో సంప్రదించునప్పుడు వొక దోషం యెదురైంది, ప్రస్తుత చేంజ్‌సెట్‌ను "
+"తిరిగిపొందుటకు దయచేసి పేజీను రీఫ్రెష్ చేయుము."
 
 #: app/views/roles/index.html.haml:9
 msgid "Applied"
@@ -580,13 +594,13 @@ msgstr "ఆపాదించబడెను"
 msgid "Applied Subscriptions"
 msgstr "సబ్‌స్క్రిప్షన్స్ ఆపాదించబడెను"
 
-#: app/views/sync_schedules/index.html.haml:18
+#: app/views/sync_schedules/index.html.haml:20
 msgid "Apply Selected Plan to Selected Products"
 msgstr "ఎంపికైన వుత్పత్తులకు యెంపికైన యోచనను ఆపాదించు"
 
 #: app/views/systems/_edit.html.haml:40
-#: app/views/providers/redhat/_subscription_details.html.haml:8
 #: app/views/subscriptions/index.html.haml:17
+#: app/views/providers/redhat/_subscription_details.html.haml:8
 msgid "Arch"
 msgstr "ఆకృతి"
 
@@ -602,8 +616,8 @@ msgstr "ఆకృతి:"
 msgid "Are you sure you want to delete this GPG Key?"
 msgstr "మీరు యీ GPG కీను తొలగించుదామని అనుకొనుచున్నారా?"
 
-#: app/views/filters/_products.html.haml:12
 #: app/views/filters/_edit.html.haml:8
+#: app/views/filters/_products.html.haml:12
 msgid "Are you sure you want to delete this filster?"
 msgstr "మీరు యీ ఫిల్‌స్టర్‌ను తొలగించుదామని అనుకొనుచున్నారా?"
 
@@ -611,8 +625,8 @@ msgstr "మీరు యీ ఫిల్‌స్టర్‌ను తొలగ
 msgid "Are you sure you want to delete this filter?"
 msgstr "మీరు యీ ఫిల్టర్‌ను తొలగించుదామని అనుకొనుచున్నారా?"
 
-#: app/views/providers/_products_repos.html.haml:8
 #: app/views/providers/_edit.html.haml:8
+#: app/views/providers/_products_repos.html.haml:8
 msgid "Are you sure you want to delete this provider?"
 msgstr "మీరు ఖచ్చితంగా యీ సమర్పకుని తొలగించుదామని అనుకొనుచున్నారా?"
 
@@ -628,7 +642,7 @@ msgstr "మీరు ఖచ్చితంగా యీ వత్పత్తి
 msgid "Are you sure you want to remove this repository?"
 msgstr "మీరు ఖచ్చితంగా యీ రిపోజిటరీను తీసివేద్దామని అనుకొనుచున్నారా?"
 
-#: app/views/roles/_edit.html.haml:107
+#: app/views/roles/_edit.html.haml:106
 msgid "Are you sure you want to remove this role?"
 msgstr "మీరు ఖచ్చితంగా యీ పాత్రను తీసివేద్దామని అనుకొనుచున్నారా?"
 
@@ -644,16 +658,16 @@ msgstr "మీరు ఖచ్చితంగా యీ టెంప్లేట
 msgid "Are you sure you want to remove this user?"
 msgstr "మీరు యీ వాడుకరిని తీసివేద్దామని అనుకొనుచున్నారా?"
 
-#: app/views/roles/_self_role_edit.html.haml:6
-#: app/views/sync_plans/_edit.html.haml:11
-#: app/views/environments/_edit.html.haml:10
-#: app/views/notices/show.html.haml:16
-#: app/views/common/_common_i18n.html.haml:3
-#: app/views/activation_keys/_available_subscriptions.html.haml:7
-#: app/views/activation_keys/_edit.html.haml:15
-#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 #: app/views/promotions/show.html.haml:129
 #: app/views/gpg_keys/_edit.html.haml:8
+#: app/views/common/_common_i18n.html.haml:3
+#: app/views/activation_keys/_edit.html.haml:15
+#: app/views/activation_keys/_available_subscriptions.html.haml:7
+#: app/views/activation_keys/_applied_subscriptions.html.haml:7
+#: app/views/environments/_edit.html.haml:10
+#: app/views/sync_plans/_edit.html.haml:11
+#: app/views/roles/_self_role_edit.html.haml:6
+#: app/views/notices/show.html.haml:16
 msgid "Are you sure?"
 msgstr "మీరు ఖచ్చితంగా వున్నారా?"
 
@@ -669,11 +683,11 @@ msgstr "సంభందిత బగ్స్"
 msgid "At least one activation key must be provided"
 msgstr "కనీసం వొక క్రియాశీలపు కీ తప్పక అందించాలి"
 
-#: app/models/organization.rb:74
+#: app/models/organization.rb:82
 msgid "At least one organization must exist."
 msgstr "కనీసం వొక సంస్థ తప్పక వుండాలి."
 
-#: app/models/system_template.rb:127
+#: app/models/system_template.rb:130
 msgid "At least one product or repository must be present to export a TDL"
 msgstr "TDL యెగుమతి చేయుటకు కనీసం వొక వుత్పత్తి లేదా రిపోజిటరీ తప్పక వుంచాలి"
 
@@ -681,17 +695,17 @@ msgstr "TDL యెగుమతి చేయుటకు కనీసం వొ�
 msgid "Available Errata"
 msgstr "ఆందుబాటులోని యెర్రాటా"
 
-#: app/views/systems/_subs.html.haml:59 lib/navigation/systems.rb:118
+#: app/views/systems/_subs.html.haml:57 lib/navigation/systems.rb:118
 msgid "Available Subscriptions"
 msgstr "అందుబాటులోని సబ్‌స్క్రిప్షన్స్"
 
-#: app/views/common/404.html.haml:7 app/views/common/500.html.haml:15
-#: app/views/common/403.html.haml:8
+#: app/views/common/500.html.haml:15 app/views/common/403.html.haml:8
+#: app/views/common/404.html.haml:7
 msgid "Back"
 msgstr "వెనుక"
 
-#: app/views/providers/redhat/_subscription_details.html.haml:10
 #: app/views/subscriptions/index.html.haml:19
+#: app/views/providers/redhat/_subscription_details.html.haml:10
 msgid "Begins"
 msgstr "మొదలు"
 
@@ -707,20 +721,15 @@ msgstr "బుల్డ్ హోస్ట్"
 msgid "By Environments"
 msgstr "ఎన్విరాన్మెంట్స్"
 
-#: lib/resources/cdn.rb:93
-#, 
-msgid "CDN loading error: %s not found"
-msgstr ""
-
 #: app/controllers/api/environments_controller.rb:50
 msgid "Can't update Locker environment"
 msgstr "లాకర్ యెన్విరాన్మెంట్ నవీకరించలేదు"
 
-#: app/views/roles/_permission.html.haml:42
-#: app/views/systems/_actions.html.haml:12
-#: app/views/common/_edit_i18n.html.haml:4
-#: app/views/activation_keys/_edit.html.haml:73
 #: app/views/sync_management/index.html.haml:5
+#: app/views/common/_edit_i18n.html.haml:4
+#: app/views/systems/_actions.html.haml:12
+#: app/views/activation_keys/_edit.html.haml:73
+#: app/views/roles/_permission.html.haml:42
 msgid "Cancel"
 msgstr "రద్దు"
 
@@ -736,26 +745,11 @@ msgstr "పునఃపరిశీలన రద్దు"
 msgid "Canceled."
 msgstr "రద్దైనది."
 
-#: app/models/system_task.rb:102
-#, 
-msgid "Candlepin Event"
-msgstr ""
-
-#: app/models/permission.rb:37 app/models/permission.rb:160
-#, 
-msgid "Cannot add/remove or change permissions related to a locked role."
-msgstr ""
-
-#: app/models/role.rb:18
-#, 
-msgid "Cannot change the name or description of a locked role."
-msgstr ""
-
-#: app/models/activation_key.rb:47
+#: app/models/activation_key.rb:43
 msgid "Cannot create activation keys in Locker environment "
 msgstr "లాకర్ యెన్విరాన్మెంట్ నందు యాక్టివేషన్ కీలను సృష్టించలేము"
 
-#: app/models/user.rb:105
+#: app/models/user.rb:106
 msgid "Cannot delete currently logged user"
 msgstr "ప్రస్తుతం లాగైన వాడుకరిని తొలగించలేము"
 
@@ -763,7 +757,7 @@ msgstr "ప్రస్తుతం లాగైన వాడుకరిని 
 msgid "Cannot export templates for the Locker environment."
 msgstr "లాకర్ యెన్విరాన్మెంట్ కొరకు మాదిరిలను యెగుమతి చేయలేము."
 
-#: app/controllers/system_templates_controller.rb:277
+#: app/controllers/system_templates_controller.rb:285
 msgid "Cannot modify a template that is another environment"
 msgstr "వేరే యెన్విరాన్మెంట్ అయిన టెంప్లేట్‌ను సవరించలేము"
 
@@ -771,15 +765,15 @@ msgstr "వేరే యెన్విరాన్మెంట్ అయిన 
 msgid "Cannot register a system with 'Locker' environment "
 msgstr "'లాకర్' యెన్విరాన్మెంట్‌తో సిస్టమ్‌ను నమోదు చేయలేము"
 
-#: app/models/permission.rb:45
+#: app/models/permission.rb:39
 msgid "Cannot specify a tag if all_tags is selected."
 msgstr "all_tags యెంపికైతే టాగ్‌ను తెలుపలేము."
 
-#: app/models/permission.rb:41
+#: app/models/permission.rb:35
 msgid "Cannot specify a verb if all_verbs is selected."
 msgstr "all_verbs యెంపికైతే verb తెలుపలేము."
 
-#: app/models/permission.rb:49
+#: app/models/permission.rb:43
 msgid "Cannot specify all_types without all_tags and all_verbs"
 msgstr "all_tags మరియు all_verbs లేకుండా all_types తెలుపలేము."
 
@@ -811,9 +805,8 @@ msgstr "చేంజ్‌సెట్ చరిత్ర"
 msgid "Changeset is empty."
 msgstr "చేంజ్‌సెట్ ఖాళీ."
 
-#: app/helpers/breadcrumb_helper.rb:29
-#: app/controllers/changesets_controller.rb:269
-#: app/views/promotions/show.html.haml:150
+#: app/controllers/changesets_controller.rb:283
+#: app/helpers/breadcrumb_helper.rb:29 app/views/promotions/show.html.haml:150
 #: app/views/promotions/show.html.haml:153
 msgid "Changesets"
 msgstr "చేంజ్‌సెట్స్"
@@ -826,7 +819,7 @@ msgstr "చెక్‌డ్ యిన్"
 msgid "Choose Environment:"
 msgstr "ఎన్విరాన్మెంట్ యెంపికచేయి:"
 
-#: app/views/filters/_products.html.haml:30
+#: app/views/filters/_products.html.haml:31
 msgid "Choose a product.."
 msgstr "ఒక వుత్పత్తి యెంపికచేయి.."
 
@@ -834,9 +827,9 @@ msgstr "ఒక వుత్పత్తి యెంపికచేయి.."
 msgid "Choose new defaults:"
 msgstr "కొత్త అప్రమేయాలు యెంపికచేయి:"
 
-#: app/views/gpg_keys/_new.html.haml:21 app/views/gpg_keys/_new.html.haml:35
-#: app/views/gpg_keys/_edit.html.haml:37
 #: app/views/users/_edit_form.html.haml:41
+#: app/views/gpg_keys/_edit.html.haml:37 app/views/gpg_keys/_new.html.haml:21
+#: app/views/gpg_keys/_new.html.haml:35
 msgid "Clear"
 msgstr "శుబ్రం"
 
@@ -848,34 +841,40 @@ msgstr "అచేతన సహాయచిట్కాలను శుబ్ర�
 msgid "Clear the Search"
 msgstr "అన్వేషణను శుబ్రంచేయి"
 
-#: app/controllers/users_controller.rb:248
+#: app/controllers/users_controller.rb:247
 msgid "Cleared"
 msgstr "శుబ్రంచేసెను"
 
 #: app/views/roles/index.html.haml:9
-msgid "Click Add or Remove next to a user name to apply or remove them from role."
-msgstr "పాత్రనుండి వాడుకరిని వుంచుటకు లేదా తీసివేయుటకు వాడుకరిపేరు తరువాతి జతచేయి లేదా తీసివేయి నొక్కుము."
+msgid ""
+"Click Add or Remove next to a user name to apply or remove them from role."
+msgstr ""
+"పాత్రనుండి వాడుకరిని వుంచుటకు లేదా తీసివేయుటకు వాడుకరిపేరు తరువాతి జతచేయి "
+"లేదా తీసివేయి నొక్కుము."
 
 #: app/views/roles/index.html.haml:9
 msgid "Click Add permission from the bar below to add a permission."
 msgstr "అనుమతిని జతచేయుటకు కింది బార్ నుండి అనుమతిని జతచేయి నొక్కుము."
 
 #: app/views/roles/index.html.haml:9
-msgid "Click edit permission from the bar below to edit the current permission."
-msgstr "ప్రస్తుత అనుమతిని సరికూర్చుటకు కింది బార్‌నుండి అనుమతిని సరికూర్చు నొక్కుము."
+msgid ""
+"Click edit permission from the bar below to edit the current permission."
+msgstr ""
+"ప్రస్తుత అనుమతిని సరికూర్చుటకు కింది బార్‌నుండి అనుమతిని సరికూర్చు నొక్కుము."
 
-#: app/controllers/organizations_controller.rb:90
+#: app/controllers/organizations_controller.rb:88
 msgid "Click on 'Add Environment' to create the first environment"
-msgstr "మొదటి యెన్విరాన్మెంట్‌ను సృష్టించుటకు 'ఎన్విరాన్మెంట్ జతచేయి' నొక్కుము"
+msgstr ""
+"మొదటి యెన్విరాన్మెంట్‌ను సృష్టించుటకు 'ఎన్విరాన్మెంట్ జతచేయి' నొక్కుము"
 
 #: app/views/common/_edit_i18n.html.haml:4
 msgid "Click to edit"
 msgstr "సరికూర్చు నొక్కుము"
 
-#: app/views/roles/_edit.html.haml:11
+#: app/views/common/_edit_i18n.html.haml:4
 #: app/views/layouts/_tupane_layout.html.haml:15
 #: app/views/layouts/_tupane_layout.html.haml:20
-#: app/views/common/_edit_i18n.html.haml:4
+#: app/views/roles/_edit.html.haml:11
 msgid "Close"
 msgstr "మూయి"
 
@@ -899,7 +898,7 @@ msgstr "అనుమతి సరికూర్చు మూయి"
 msgid "Close Role Details"
 msgstr "పాత్ర వివరాలను మూయి"
 
-#: app/views/common/_env_select.html.haml:11
+#: app/views/common/_env_select.html.haml:10
 msgid "Collapse"
 msgstr "కూల్చు"
 
@@ -911,13 +910,8 @@ msgstr "సంకేతపదం నిర్థారించు:"
 msgid "Confirm:"
 msgstr "నిర్థారించు:"
 
-#: app/views/common/_common_i18n.html.haml:3
-#, 
-msgid "Confirmation"
-msgstr ""
-
-#: app/views/providers/redhat/_subscription_details.html.haml:5
 #: app/views/subscriptions/index.html.haml:14
+#: app/views/providers/redhat/_subscription_details.html.haml:5
 msgid "Consumed"
 msgstr "వినియోగిత"
 
@@ -933,14 +927,14 @@ msgstr "కాంటెంట్ దిగుమతి URL:"
 msgid "Content Management"
 msgstr "కాంటెంట్ నిర్వహణ"
 
-#: app/views/changesets/_edit.html.haml:26
 #: app/views/system_templates/_promotion_details.html.haml:13
+#: app/views/changesets/_edit.html.haml:26
 msgid "Contents:"
 msgstr "కాంటెంట్స్:"
 
-#: app/views/systems/_subs.html.haml:19
-#: app/views/providers/redhat/_subscription_details.html.haml:6
+#: app/views/systems/_subs.html.haml:17
 #: app/views/subscriptions/index.html.haml:15
+#: app/views/providers/redhat/_subscription_details.html.haml:6
 msgid "Contract"
 msgstr "కాంట్రాక్ట్"
 
@@ -948,11 +942,11 @@ msgstr "కాంట్రాక్ట్"
 msgid "Copyright &copy; "
 msgstr "కాపీరైట్ &కాపీ;"
 
-#: app/models/organization.rb:70
+#: app/models/organization.rb:78
 msgid "Could not delete organization '%s'."
 msgstr "సంస్థ '%s' ను తొలగించలేక పోయింది."
 
-#: app/controllers/api/products_controller.rb:74
+#: app/controllers/api/products_controller.rb:76
 msgid "Couldn't find environment '%s'"
 msgstr "ఎన్విరాన్మెంట్ '%s' కనుగొనలేక పోయింది"
 
@@ -964,13 +958,13 @@ msgstr "పూల్ '%s' ను activation_key '%s' నందు కనుగ�
 msgid "Couldn't find provider '%s'"
 msgstr "సమర్పకులు '%s' కనుగొనలేక పోయింది"
 
-#: app/controllers/api/sync_controller.rb:69
+#: app/controllers/api/sync_controller.rb:77
 msgid "Couldn't find subject of synchronization"
 msgstr "సింక్రొనైజేషన్ సబ్జక్టును కనుగొనలేక పోయింది"
 
-#: app/views/repositories/_new.html.haml:33
+#: app/views/repositories/_new.html.haml:30
+#: app/views/products/_new.html.haml:42
 #: app/views/environments/_new.html.haml:29
-#: app/views/products/_new.html.haml:45
 msgid "Create"
 msgstr "సృష్టించు"
 
@@ -978,13 +972,33 @@ msgstr "సృష్టించు"
 msgid "Create Environment"
 msgstr "ఎన్విరాన్మెంట్ సృష్టించు"
 
+#: app/models/organization.rb:135
+msgid "Create Organization"
+msgstr "సంస్థను సృష్టించు"
+
+#: app/models/filter.rb:64
+msgid "Create Package Filters"
+msgstr "ప్యాకేజీ ఫిల్టర్లను సృష్టించు"
+
 #: app/views/products/_new.html.haml:2
 msgid "Create Product"
 msgstr "ఉత్పత్తి సృష్టించు"
 
+#: app/models/provider.rb:122
+msgid "Create Provider"
+msgstr "సమర్పకుని సృష్టించు"
+
 #: app/views/repositories/_new.html.haml:9
 msgid "Create Repository"
 msgstr "రిపోజిటరీ సృష్టించు"
+
+#: app/models/role.rb:106
+msgid "Create Roles"
+msgstr "పాత్రలు సృష్టించు"
+
+#: app/models/user.rb:352
+msgid "Create Users"
+msgstr "వాడుకరులు సృష్టించు"
 
 #: app/views/notices/show.html.haml:25
 msgid "Created (UTC)"
@@ -994,8 +1008,8 @@ msgstr "సృష్టించెను (UTC)"
 msgid "Current Organization"
 msgstr "ప్రస్తుత సంస్థ"
 
-#: app/views/dashboard/_subscriptions.haml:33
 #: app/views/subscriptions/index.html.haml:5
+#: app/views/dashboard/_subscriptions.haml:33
 msgid "Current Subscriptions"
 msgstr "ప్రస్తుత సబ్‌స్క్రిప్షన్స్"
 
@@ -1012,12 +1026,6 @@ msgstr "డాష్‌బోర్డ్"
 msgid "Date"
 msgstr ""
 
-#: app/controllers/api/sync_plans_controller.rb:44
-#: app/controllers/api/sync_plans_controller.rb:54
-#, 
-msgid "Date format is incorrect."
-msgstr ""
-
 #: app/views/organizations/_download_debug_certificate.html.haml:8
 msgid "Debug Certificate"
 msgstr "డీబగ్ ధృవీకరణపత్రం"
@@ -1026,8 +1034,8 @@ msgstr "డీబగ్ ధృవీకరణపత్రం"
 msgid "Default Environment:"
 msgstr "అప్రమేయ వాతావరణం:"
 
-#: app/views/users/_edit_environment.html.haml:17
 #: app/views/users/_new.html.haml:48
+#: app/views/users/_edit_environment.html.haml:17
 msgid "Default Organization:"
 msgstr "అప్రమేయ సంస్థ:"
 
@@ -1035,7 +1043,7 @@ msgstr "అప్రమేయ సంస్థ:"
 msgid "Delete All"
 msgstr "అన్నిటినీ తొలగించు"
 
-#: app/models/organization.rb:128
+#: app/models/organization.rb:136
 msgid "Delete Organization"
 msgstr "సంస్థ తొలగించు"
 
@@ -1043,20 +1051,19 @@ msgstr "సంస్థ తొలగించు"
 msgid "Delete Package Filters"
 msgstr "ప్యాకేజీ ఫిల్టర్లను తొలగించు"
 
-#: app/models/provider.rb:119
-#, 
-msgid "Delete Providers"
-msgstr ""
+#: app/models/provider.rb:125
+msgid "Delete Provider"
+msgstr "ప్రొవైడర్ తొలగించు"
 
-#: app/models/role.rb:149
+#: app/models/role.rb:109
 msgid "Delete Roles"
 msgstr "పాత్రలు తొలగించు"
 
-#: app/models/organization.rb:122
+#: app/models/organization.rb:130
 msgid "Delete Systems"
 msgstr "సిస్టమ్స్ తొలగించు"
 
-#: app/models/user.rb:354
+#: app/models/user.rb:355
 msgid "Delete Users"
 msgstr "వాడుకరులు తొలగించు"
 
@@ -1073,36 +1080,37 @@ msgstr "ఆధారములు"
 msgid "Dependency of "
 msgstr "దీనియొక్క ఆధారము"
 
-#: app/views/roles/_new.html.haml:14 app/views/packages/_show.html.haml:17
-#: app/views/organizations/_new.html.haml:17
-#: app/views/organizations/_edit.html.haml:18
-#: app/views/sync_plans/_form.html.haml:10
-#: app/views/sync_plans/_edit.html.haml:20
-#: app/views/systems/_edit.html.haml:28 app/views/changesets/_new.html.haml:15
-#: app/views/environments/_new.html.haml:19
-#: app/views/environments/_edit.html.haml:23
-#: app/views/notices/show.html.haml:29 app/views/filters/_new.html.haml:18
-#: app/views/filters/_edit.html.haml:26
-#: app/views/system_templates/_new.html.haml:15
 #: app/views/system_templates/_edit.html.haml:7
-#: app/views/products/_new.html.haml:13 app/views/products/_edit.html.haml:21
-#: app/views/activation_keys/_new.html.haml:15
+#: app/views/system_templates/_new.html.haml:15
+#: app/views/distributions/_show.html.haml:17
+#: app/views/products/_edit.html.haml:21 app/views/products/_new.html.haml:13
+#: app/views/systems/_edit.html.haml:28
 #: app/views/activation_keys/_edit.html.haml:42
+#: app/views/activation_keys/_new.html.haml:15
+#: app/views/environments/_edit.html.haml:23
+#: app/views/environments/_new.html.haml:19
+#: app/views/packages/_show.html.haml:17
+#: app/views/sync_plans/_edit.html.haml:20
+#: app/views/sync_plans/_form.html.haml:10
+#: app/views/filters/_edit.html.haml:27 app/views/filters/_new.html.haml:18
+#: app/views/roles/_new.html.haml:14 app/views/changesets/_new.html.haml:15
+#: app/views/notices/show.html.haml:29 app/views/providers/_edit.html.haml:28
 #: app/views/providers/_form.html.haml:12
-#: app/views/providers/_edit.html.haml:28 app/views/errata/_show.html.haml:80
-#: app/views/distributions/_show.html.haml:18
+#: app/views/organizations/_edit.html.haml:18
+#: app/views/organizations/_new.html.haml:17
+#: app/views/errata/_show.html.haml:80
 msgid "Description"
 msgstr "వివరణ"
 
-#: app/views/roles/_edit.html.haml:40 app/views/roles/_edit.html.haml:76
-#: app/views/changesets/_edit.html.haml:16
-#: app/views/promotions/show.html.haml:123
+#: app/views/promotions/show.html.haml:123 app/views/roles/_edit.html.haml:40
+#: app/views/roles/_edit.html.haml:76 app/views/changesets/_edit.html.haml:16
 msgid "Description:"
 msgstr "వివరణ:"
 
-#: app/views/changesets/_edit.html.haml:5 lib/navigation/systems.rb:60
+#: app/views/system_events/_details.html.haml:16
+#: app/views/changesets/_edit.html.haml:5 lib/navigation/organization.rb:51
 #: lib/navigation/systems.rb:124 lib/navigation/administration.rb:35
-#: lib/navigation/organization.rb:51 lib/navigation/content_management.rb:35
+#: lib/navigation/content_management.rb:35
 #: lib/navigation/content_management.rb:193
 #: lib/navigation/content_management.rb:210
 #: lib/navigation/content_management.rb:227
@@ -1115,20 +1123,20 @@ msgstr "వివరాలు"
 msgid "Details for the currently selected permission."
 msgstr "ప్రస్తుతం యెంపికచేసిన అనుమతి కొరకు వివరాలు."
 
-#: app/controllers/api/repositories_controller.rb:54
+#: app/controllers/api/repositories_controller.rb:44
 msgid "Disable/enable is not supported for custom repositories."
 msgstr "మలచుకొనిన రిపోజిటరీలకు అచేతనం/చేతనం తోడ్పాటునీయదు."
 
-#: app/controllers/users_controller.rb:247
+#: app/controllers/users_controller.rb:246
 msgid "Disabled help tips have been re-enabled."
 msgstr "అచేతనపరచిన సహాయ చిట్కాలు తిరిగి-చేతనమైను."
 
-#: app/views/dashboard/_systems.html.haml:17
 #: app/views/promotions/show.html.haml:8
+#: app/views/dashboard/_systems.html.haml:17
 msgid "Distribution"
 msgstr "పంపిణి"
 
-#: app/models/system_template.rb:311
+#: app/models/system_template.rb:314
 msgid "Distribution '%s' not found in this template."
 msgstr "ఈ మాదిరినందు పంపిణీ '%s' కనుగొనబడలేదు."
 
@@ -1137,24 +1145,28 @@ msgid "Distribution '%s' was not found in Pulp."
 msgstr "పల్ప్ నందు పంపిణీ '%s' కనుగొనబడలేదు."
 
 #: app/helpers/breadcrumb_helper.rb:65 app/helpers/breadcrumb_helper.rb:170
-#: app/views/changesets/_edit.html.haml:58
 #: app/views/promotions/_detail.html.haml:30
 #: app/views/promotions/show.html.haml:8
+#: app/views/changesets/_edit.html.haml:58
 msgid "Distributions"
 msgstr "పంపిణీలు"
 
 #: app/views/providers/index.html.haml:16
-msgid "Do you want to set this GPG Key as the key for all repositories within this product?"
-msgstr "ఈ వుత్పత్తినందు అన్ని రిపోజిటరీలకు యీ GPG కీను కీవలె అమర్చుదామని అనుకొనుచున్నారా?"
+msgid ""
+"Do you want to set this GPG Key as the key for all repositories within this "
+"product?"
+msgstr ""
+"ఈ వుత్పత్తినందు అన్ని రిపోజిటరీలకు యీ GPG కీను కీవలె అమర్చుదామని "
+"అనుకొనుచున్నారా?"
 
 #: app/views/roles/_edit.html.haml:84
 msgid "Done"
 msgstr "అయినది"
 
+#: app/views/system_templates/_download.html.haml:12
+#: app/views/system_templates/index.html.haml:98
 #: app/views/packages/_show.html.haml:82
 #: app/views/organizations/_download_debug_certificate.html.haml:11
-#: app/views/system_templates/index.html.haml:98
-#: app/views/system_templates/_download.html.haml:12
 msgid "Download"
 msgstr "డౌన్‌లోడ్"
 
@@ -1179,10 +1191,18 @@ msgid "Edit Environment"
 msgstr "ఎన్విరాన్మెంట్ సరికూర్చు"
 
 #: app/views/gpg_keys/_edit.html.haml:20
-msgid "Edit GPG Key enables you to modify the selected GPG Key.  A new key can be copied and pasted in directly."
-msgstr "GPG ను సరికూర్చు అనునది మిమ్ములను యెంపికచేసిన GPG కీను సవరించుటకు చేతనంచేయును. ఒక కొత్త కీ అనునది నేరుగా నకలుతీయబడి మరియు అంతించబడగలదు."
+msgid ""
+"Edit GPG Key enables you to modify the selected GPG Key.  A new key can be "
+"copied and pasted in directly."
+msgstr ""
+"GPG ను సరికూర్చు అనునది మిమ్ములను యెంపికచేసిన GPG కీను సవరించుటకు "
+"చేతనంచేయును. ఒక కొత్త కీ అనునది నేరుగా నకలుతీయబడి మరియు అంతించబడగలదు."
 
-#: app/views/roles/index.html.haml:9 app/views/roles/_edit.html.haml:99
+#: app/models/filter.rb:67
+msgid "Edit Package Filters"
+msgstr "ప్యాకేజీ ఫిల్టర్లను సరికూర్చు"
+
+#: app/views/roles/_edit.html.haml:98 app/views/roles/index.html.haml:9
 msgid "Edit Permission"
 msgstr "అనుమతి సరికూర్చు"
 
@@ -1198,7 +1218,7 @@ msgstr "ఉత్పత్తి సరికూర్చు"
 msgid "Edit Repository"
 msgstr "రిపోజిటరీ సరికూర్చు"
 
-#: app/views/roles/_edit.html.haml:104
+#: app/views/roles/_edit.html.haml:103
 msgid "Edit Role"
 msgstr "పాత్ర సరికూర్చు"
 
@@ -1210,7 +1230,7 @@ msgstr "పాత్ర వివరాలు సరికూర్చు"
 msgid "Edit System Template"
 msgstr "సిస్టమ్ టెంప్లేట్ సరికూర్చు"
 
-#: app/controllers/api/products_controller.rb:81
+#: app/controllers/api/products_controller.rb:83
 #: app/controllers/api/activation_keys_controller.rb:107
 msgid "Either organization id or environment id needs to be specified"
 msgstr "సంస్థ ఐడి లేదా యెన్విరాన్మెంట్ ఐడి తెలుపవలసి వుంటుంది"
@@ -1223,9 +1243,9 @@ msgstr "ప్యాకేజీలు లేదా సమూహాలు తప
 msgid "Eligible Content"
 msgstr "యొగ్యమైన కాంటెంట్"
 
+#: app/views/users/_edit_form.html.haml:67 app/views/users/_new.html.haml:42
 #: app/views/password_resets/new.html.haml:16
 #: app/views/password_resets/new.html.haml:26
-#: app/views/users/_edit_form.html.haml:67 app/views/users/_new.html.haml:42
 msgid "Email Address:"
 msgstr "ఈమెయిల్ చిరునామా:"
 
@@ -1239,10 +1259,13 @@ msgstr "చెల్లునటువంటి లాగిన్ వాడు�
 
 #: app/controllers/system_packages_controller.rb:56
 #: app/controllers/system_packages_controller.rb:89
-msgid "Empty request received to install Packages or Package Groups System '%{s}'."
-msgstr "ప్యాకేజీలు లేదా ప్యాకేజీ సమూహాల సిస్టమ్ '%{s}' సంస్థాపించుటకు ఖాళీ అభ్యర్ధన స్వీకరించబడెను."
+msgid ""
+"Empty request received to install Packages or Package Groups System '%{s}'."
+msgstr ""
+"ప్యాకేజీలు లేదా ప్యాకేజీ సమూహాల సిస్టమ్ '%{s}' సంస్థాపించుటకు ఖాళీ అభ్యర్ధన "
+"స్వీకరించబడెను."
 
-#: app/views/providers/redhat/show.html.haml:46
+#: app/views/providers/redhat/show.html.haml:42
 msgid "Enable Repositories"
 msgstr "రిపోజిటరీలను చేతనంచేయి"
 
@@ -1258,12 +1281,12 @@ msgstr "ముగింపు తేది"
 msgid "Enter Selected Content..."
 msgstr "ఎంపికచేసిన కాంటెంట్ ప్రవేశపెట్టుము..."
 
+#: app/views/system_templates/_download.html.haml:8
+#: app/views/users/_new.html.haml:56
+#: app/views/activation_keys/_edit.html.haml:49
+#: app/views/activation_keys/_new.html.haml:22
 #: app/views/environments/_edit.html.haml:5
 #: app/views/dashboard/_errata.haml:31
-#: app/views/system_templates/_download.html.haml:8
-#: app/views/activation_keys/_new.html.haml:22
-#: app/views/activation_keys/_edit.html.haml:49
-#: app/views/users/_new.html.haml:56
 msgid "Environment"
 msgstr "ఎన్విరాన్మెంట్"
 
@@ -1293,10 +1316,10 @@ msgstr "ఎన్విరాన్మెంట్స్"
 
 #: app/helpers/breadcrumb_helper.rb:53 app/helpers/breadcrumb_helper.rb:126
 #: app/helpers/breadcrumb_helper.rb:157
-#: app/views/changesets/_edit.html.haml:54 app/views/dashboard/_errata.haml:9
 #: app/views/promotions/_detail.html.haml:9
 #: app/views/promotions/_detail.html.haml:22
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:8 app/views/dashboard/_errata.haml:9
+#: app/views/changesets/_edit.html.haml:54
 msgid "Errata"
 msgstr "ఎర్రాటా"
 
@@ -1304,8 +1327,8 @@ msgstr "ఎర్రాటా"
 msgid "Erratum"
 msgstr "ఎర్రాటమ్"
 
-#: app/views/dashboard/_sync.haml:23
 #: app/views/sync_management/index.html.haml:5
+#: app/views/dashboard/_sync.haml:23
 msgid "Error"
 msgstr "దోషం"
 
@@ -1322,20 +1345,20 @@ msgstr "సమర్పకుడు [ %s ] ను తొలగించుటల
 msgid "Event"
 msgstr ""
 
-#: lib/navigation/systems.rb:95
+#: lib/navigation/systems.rb:89
 #, 
 msgid "Events"
 msgstr ""
 
-#: app/models/system_template.rb:130
+#: app/models/system_template.rb:133
 msgid "Exactly one distribution must be present to export a TDL"
 msgstr "TDL యెగుమతి చేయుటకు ఖచ్చితంగా వొక పంపిణీ తప్పక వుంచాలి"
 
-#: app/views/organizations/_download_debug_certificate.html.haml:6
-#: app/views/changesets/_content_type.html.haml:7
-#: app/views/common/_env_select.html.haml:9
+#: app/views/common/_env_select.html.haml:8
 #: app/views/activation_keys/_subscriptions.html.haml:22
-#: app/views/providers/_products_repos.html.haml:35
+#: app/views/changesets/_content_type.html.haml:7
+#: app/views/providers/_products_repos.html.haml:36
+#: app/views/organizations/_download_debug_certificate.html.haml:6
 msgid "Expand"
 msgstr "విస్తరింపు"
 
@@ -1343,9 +1366,9 @@ msgstr "విస్తరింపు"
 msgid "Expand/Contract All"
 msgstr "అన్ని విస్తరింపు/కాంట్రాక్ట్"
 
-#: app/views/systems/_subs.html.haml:21 app/views/systems/_subs.html.haml:68
-#: app/views/providers/redhat/_subscription_details.html.haml:11
+#: app/views/systems/_subs.html.haml:19 app/views/systems/_subs.html.haml:65
 #: app/views/subscriptions/index.html.haml:20
+#: app/views/providers/redhat/_subscription_details.html.haml:11
 msgid "Expires"
 msgstr "గడువుతీరెను"
 
@@ -1358,6 +1381,7 @@ msgid "Facts"
 msgstr "వాస్తవాలు"
 
 #: app/views/distributions/_filelist.html.haml:14
+#: app/views/products/_new.html.haml:37
 msgid "File"
 msgstr "ఫైల్"
 
@@ -1366,14 +1390,13 @@ msgstr "ఫైల్"
 msgid "Filelist"
 msgstr "ఫైల్‌జాబితా"
 
-#: app/controllers/filters_controller.rb:203
-#: app/views/roles/_edit.html.haml:14 app/views/roles/_edit.html.haml:18
-#: app/views/layouts/_org.haml:12
+#: app/controllers/filters_controller.rb:217
 #: app/views/system_templates/index.html.haml:51
 #: app/views/promotions/show.html.haml:8
 #: app/views/promotions/show.html.haml:102
 #: app/views/promotions/show.html.haml:104
-#: app/views/promotions/show.html.haml:105
+#: app/views/promotions/show.html.haml:105 app/views/layouts/_org.haml:12
+#: app/views/roles/_edit.html.haml:14 app/views/roles/_edit.html.haml:18
 msgid "Filter"
 msgstr "ఫిల్టర్"
 
@@ -1406,15 +1429,15 @@ msgstr "వాడుకరిపేరు లేదా సంకేతపదం 
 msgid "Full Access"
 msgstr "పూర్తి యాక్సెస్"
 
-#: app/views/changesets/_edit.html.haml:43
 #: app/views/promotions/show.html.haml:8
+#: app/views/changesets/_edit.html.haml:43
 msgid "Full Products"
 msgstr "పూర్తి వుత్పత్తులు"
 
-#: app/controllers/gpg_keys_controller.rb:160
-#: app/views/repositories/_new.html.haml:25
+#: app/controllers/gpg_keys_controller.rb:159
 #: app/views/repositories/_edit.html.haml:27
-#: app/views/products/_new.html.haml:18 app/views/products/_edit.html.haml:26
+#: app/views/repositories/_new.html.haml:25
+#: app/views/products/_edit.html.haml:26 app/views/products/_new.html.haml:18
 msgid "GPG Key"
 msgstr "GPG కీ"
 
@@ -1422,29 +1445,51 @@ msgstr "GPG కీ"
 msgid "GPG Key URL: "
 msgstr "GPG కీ URL: "
 
-#: app/controllers/gpg_keys_controller.rb:158
+#: app/controllers/gpg_keys_controller.rb:157
 #: lib/navigation/content_management.rb:163
 msgid "GPG Keys"
 msgstr "GPG కీలు"
 
 #: app/views/gpg_keys/index.html.haml:3
-msgid "GPG Keys may be stored by uploading a key directly or copying and pasting the key in upon creation. By visiting the Providers page and selecting either a product or repository, a GPG key that has been created here can be associated with the given entity."
-msgstr "GPG కీలను, నేరుగా వొక కీను అప్‌లోడ్ చేయుట ద్వారా గాని లేదా సృష్టీకరణపై కీను నకలుతీయుట లేదా అతికించుట ద్వారా గాని నిల్వవుంచవచ్చును. ఇచట సృష్టించబడిన GPG కీ, వుత్పాదకుల పేజీను దర్శించుట ద్వారా మరియు వొక వుత్పత్తిని లేదా రిపోజిటరీను యెంపికచేయుట ద్వారా యీయబడిన యెంటిటీతో కలిసివుండగలదు."
+msgid ""
+"GPG Keys may be stored by uploading a key directly or copying and pasting "
+"the key in upon creation. By visiting the Providers page and selecting "
+"either a product or repository, a GPG key that has been created here can be "
+"associated with the given entity."
+msgstr ""
+"GPG కీలను, నేరుగా వొక కీను అప్‌లోడ్ చేయుట ద్వారా గాని లేదా సృష్టీకరణపై కీను "
+"నకలుతీయుట లేదా అతికించుట ద్వారా గాని నిల్వవుంచవచ్చును. ఇచట సృష్టించబడిన GPG "
+"కీ, వుత్పాదకుల పేజీను దర్శించుట ద్వారా మరియు వొక వుత్పత్తిని లేదా "
+"రిపోజిటరీను యెంపికచేయుట ద్వారా యీయబడిన యెంటిటీతో కలిసివుండగలదు."
 
-#: app/helpers/breadcrumb_helper.rb:244
+#: lib/navigation/systems.rb:60
+msgid "General"
+msgstr "సాధారణ"
+
+#: app/helpers/breadcrumb_helper.rb:243
 msgid "Global Permissions"
 msgstr "గ్లోబల్ పరిమితులు"
 
 #: app/views/roles/index.html.haml:9
-msgid "Global permissions allow you to create permissions that span all organizations, or choose a specific organization to apply permissions."
-msgstr "గ్లోబల్ అనుమతులు అన్ని సంస్థలకు విస్తరించు అనుమతులను సృష్టించుటకు మిమ్ములను అనుమతించును, లేదా లేదా పరిమితులను ఆపాదించుటకు ఫలానా సంస్థను యెంచుటకు అనుమతించును."
+msgid ""
+"Global permissions allow you to create permissions that span all "
+"organizations, or choose a specific organization to apply permissions."
+msgstr ""
+"గ్లోబల్ అనుమతులు అన్ని సంస్థలకు విస్తరించు అనుమతులను సృష్టించుటకు మిమ్ములను "
+"అనుమతించును, లేదా లేదా పరిమితులను ఆపాదించుటకు ఫలానా సంస్థను యెంచుటకు "
+"అనుమతించును."
 
 #: app/views/roles/index.html.haml:9
-msgid "Global permissions are permissions that span all organizations; however, organization permissions apply only to the organization they are associated with."
-msgstr "గ్లోబల్ అనుమతులు అనగా అన్ని సంస్థలకు విస్తరించు అనుమతులు; ఏమైనప్పటికీ, సంస్థ పరిమితులు అవి సంభందించివున్న సంస్థకు మాత్రమే ఆపాదితమగును."
+msgid ""
+"Global permissions are permissions that span all organizations; however, "
+"organization permissions apply only to the organization they are associated "
+"with."
+msgstr ""
+"గ్లోబల్ అనుమతులు అనగా అన్ని సంస్థలకు విస్తరించు అనుమతులు; ఏమైనప్పటికీ, సంస్థ"
+" పరిమితులు అవి సంభందించివున్న సంస్థకు మాత్రమే ఆపాదితమగును."
 
-#: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
+#: app/views/password_resets/edit.html.haml:5
 msgid "Good"
 msgstr "మంచి"
 
@@ -1485,7 +1530,8 @@ msgstr "నేను నా లాగిన్ అనవాళ్ళను గ�
 msgid "ID"
 msgstr "ఐడి"
 
-#: app/views/systems/_list_system_show.html.haml:20
+#: app/views/systems/_list_system.html.haml:22
+#: app/views/systems/_list_system_show.html.haml:18
 msgid "IP: "
 msgstr "ఐపి:"
 
@@ -1494,18 +1540,30 @@ msgid "Id / Link"
 msgstr "ఐడి / లింక్"
 
 #: app/views/user_mailer/password_reset.text.haml:5
-msgid "If you did not request this password to be reset, just ignore this email and the password will continue to stay the same."
-msgstr "మీరు యీ సంకేతపదం తిరిగిఅమర్పును అభ్యర్దించకపోతే, యీ యీమెయిల్‌ను  విస్మరించండి మరియు సంకేతపదం అలానే వుంటుంది."
+msgid ""
+"If you did not request this password to be reset, just ignore this email and"
+" the password will continue to stay the same."
+msgstr ""
+"మీరు యీ సంకేతపదం తిరిగిఅమర్పును అభ్యర్దించకపోతే, యీ యీమెయిల్‌ను  "
+"విస్మరించండి మరియు సంకేతపదం అలానే వుంటుంది."
 
 #: app/views/password_resets/new.html.haml:23
-msgid "If you do not know your login, please enter your email address below and your login will be sent to you."
-msgstr "మీకు మీ లాగిన్ తెలియకపోతే, దయచేసి మీ యీమెయిల్ చిరునామాను కిందన ప్రవేశపెట్టండి మరియు మీ లాగిన్ మీకు పంపబడును."
+msgid ""
+"If you do not know your login, please enter your email address below and "
+"your login will be sent to you."
+msgstr ""
+"మీకు మీ లాగిన్ తెలియకపోతే, దయచేసి మీ యీమెయిల్ చిరునామాను కిందన "
+"ప్రవేశపెట్టండి మరియు మీ లాగిన్ మీకు పంపబడును."
 
 #: app/views/password_resets/new.html.haml:10
-msgid "If you do not know your password, enter your login and email address below and instructions on resetting your password will be sent to you."
-msgstr "మీకు మీ సంకేతపదం తెలియకపోతే, మీ లాగిన్ మరియు యీమెయిల్ చిరునామాను కిందన ప్రవేశపెట్టండి, సంకేతపదం తిరిగిఅమర్చుటకు సంభందించిన సూచనలు మీకు పంపబడును."
+msgid ""
+"If you do not know your password, enter your login and email address below "
+"and instructions on resetting your password will be sent to you."
+msgstr ""
+"మీకు మీ సంకేతపదం తెలియకపోతే, మీ లాగిన్ మరియు యీమెయిల్ చిరునామాను కిందన "
+"ప్రవేశపెట్టండి, సంకేతపదం తిరిగిఅమర్చుటకు సంభందించిన సూచనలు మీకు పంపబడును."
 
-#: app/views/providers/redhat/show.html.haml:50
+#: app/views/providers/redhat/show.html.haml:46
 msgid "Import History"
 msgstr "చరిత్రను దింపుకోలు"
 
@@ -1523,7 +1581,8 @@ msgstr "ఇన్‌లైన్ సహాయం చేతనమైను:"
 
 #: app/controllers/system_packages_controller.rb:53
 msgid "Install of Package Groups '%{g}' scheduled for System '%{s}'."
-msgstr "'%{g}' ప్యాకేజీ సమూహాల సంస్థాపన సిస్టమ్ '%{s}' కొరకు ప్రణాళిక చేయబడెను."
+msgstr ""
+"'%{g}' ప్యాకేజీ సమూహాల సంస్థాపన సిస్టమ్ '%{s}' కొరకు ప్రణాళిక చేయబడెను."
 
 #: app/controllers/system_packages_controller.rb:43
 msgid "Install of Packages '%{p}' scheduled for System '%{s}'."
@@ -1533,8 +1592,8 @@ msgstr "'%{p}' ప్యాకేజీల సంస్థాపన సిస్
 msgid "Insufficient Entitlements"
 msgstr "సరిపోని యెన్టైటిల్మెంట్స్"
 
-#: app/views/sync_plans/_form.html.haml:15
 #: app/views/sync_plans/_edit.html.haml:23
+#: app/views/sync_plans/_form.html.haml:15
 msgid "Interval"
 msgstr "విరామం"
 
@@ -1547,16 +1606,24 @@ msgid "Invalid Url"
 msgstr "చెల్లని Url"
 
 #: app/models/resource_type.rb:41
-msgid "Invalid resource type '%{resource_type}'. Resource Types can be one of '%{possible_types}'"
-msgstr "చెల్లని వనరు రకం '%{resource_type}'. వనరు రకాలు '%{possible_types}' లో వొకటి కాగలవు"
+msgid ""
+"Invalid resource type '%{resource_type}'. Resource Types can be one of "
+"'%{possible_types}'"
+msgstr ""
+"చెల్లని వనరు రకం '%{resource_type}'. వనరు రకాలు '%{possible_types}' లో వొకటి"
+" కాగలవు"
 
-#: app/controllers/changesets_controller.rb:145
+#: app/controllers/changesets_controller.rb:159
 msgid "Invalid state"
 msgstr "చెల్లని స్థితి"
 
 #: app/models/resource_type.rb:26
-msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
-msgstr "చెల్లని verb '%{verb}'. వనరు రకం '%{resource_type}' కొరకు Verbs %{possible_verbs} వీటిలో వొకటి కాగలదు"
+msgid ""
+"Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be "
+"one of %{possible_verbs}"
+msgstr ""
+"చెల్లని verb '%{verb}'. వనరు రకం '%{resource_type}' కొరకు Verbs "
+"%{possible_verbs} వీటిలో వొకటి కాగలదు"
 
 #: app/views/errata/_show.html.haml:30
 msgid "Issued"
@@ -1590,7 +1657,11 @@ msgstr "కేటెల్లో వాడుకరి '%s' సంకేతప�
 msgid "Katello Version: "
 msgstr "కేటెల్లో వర్షన్:"
 
-#: app/controllers/activation_keys_controller.rb:274
+#: app/views/systems/_list_system_show.html.haml:15
+msgid "Kernel: "
+msgstr "కెర్నల్:"
+
+#: app/controllers/activation_keys_controller.rb:273
 #: app/views/gpg_keys/_edit.html.haml:40
 msgid "Key"
 msgstr "కీ"
@@ -1624,8 +1695,15 @@ msgid "List Actions"
 msgstr "జాబితా చర్యలు"
 
 #: app/views/providers/redhat/show.html.haml:9
-msgid "Listed below are the subscriptions information. If you have a subscription manifest you may upload it below. This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."
-msgstr "కింద జాబితా చేసినవి సబ్‌స్క్రిప్షన్స్ సమాచారం. మీరు సబ్‌స్క్రిప్షన్ మేనిఫెస్ట్ కలిగివుంటే మీరు దానిని కిందన అప్‌లోడ్ చేయవచ్చు. ఈ మేనిఫెస్ట్ Red Hat వినియోగదారి పోర్టల్ దర్శించుట ద్వారా పొందవచ్చు లేదా మీ తోడ్పాటు ప్రతినిధి సంప్రదించుట ద్వారా."
+msgid ""
+"Listed below are the subscriptions information. If you have a subscription "
+"manifest you may upload it below. This manifest may be obtained by visiting "
+"the Red Hat Customer Portal or by contacting your support representative."
+msgstr ""
+"కింద జాబితా చేసినవి సబ్‌స్క్రిప్షన్స్ సమాచారం. మీరు సబ్‌స్క్రిప్షన్ "
+"మేనిఫెస్ట్ కలిగివుంటే మీరు దానిని కిందన అప్‌లోడ్ చేయవచ్చు. ఈ మేనిఫెస్ట్ Red "
+"Hat వినియోగదారి పోర్టల్ దర్శించుట ద్వారా పొందవచ్చు లేదా మీ తోడ్పాటు "
+"ప్రతినిధి సంప్రదించుట ద్వారా."
 
 #: app/views/layouts/_header.haml:7
 msgid "Loading"
@@ -1694,54 +1772,51 @@ msgstr "లాగవుట్"
 msgid "Logout Successful"
 msgstr "లాగవుట్ సఫలం"
 
-#: app/views/providers/redhat/_subscription_details.html.haml:9
 #: app/views/subscriptions/index.html.haml:18
+#: app/views/providers/redhat/_subscription_details.html.haml:9
 msgid "Machine Type"
 msgstr "మిషన్ రకం"
+
+#: app/models/system_template.rb:365
+msgid "Manage All System Templates"
+msgstr "అన్ని సిస్టమ్ మాదిరిలు నిర్వహించు"
+
+#: app/models/kt_environment.rb:318
+msgid "Manage Changesets in Environment"
+msgstr "ఎన్విరాన్మెంట్ నందు చేంజ్‌సెట్స్ నిర్వహించు"
+
+#: app/models/organization.rb:132
+msgid "Manage GPG Keys"
+msgstr "GPG కీలను నిర్వహించు"
+
+#: app/models/organization.rb:125
+msgid "Manage Organization and Environments"
+msgstr "సంస్థ మరియు యెన్విరాన్మెంట్లను నిర్వహించు"
+
+#: app/models/provider.rb:124
+msgid "Manage Provider and Products"
+msgstr "సమర్పకుని మరియు వుత్పత్తులను నిర్వహించు"
+
+#: app/models/organization.rb:129
+msgid "Manage Systems"
+msgstr "సిస్టమ్ నిర్వహించు"
+
+#: app/models/kt_environment.rb:315
+msgid "Manage Systems in Environment"
+msgstr "ఎన్విరాన్మెంట్ నందు సిస్టమ్స్ నిర్వహించు"
+
+#: app/models/activation_key.rb:144
+msgid "Manage all Activation Keys"
+msgstr "అన్ని క్రియాశీల కీలను నిర్వహించు"
 
 #: app/controllers/api/providers_controller.rb:93
 msgid "Manifest import for provider [ %s ] failed"
 msgstr "సమర్పకులు [ %s ] కొరకు మేనిఫెస్ట్ దిగుమతి విఫలం"
 
-#: app/views/organizations/_events.html.haml:16
 #: app/views/providers/redhat/_import_history.html.haml:3
+#: app/views/organizations/_events.html.haml:16
 msgid "Message"
 msgstr "సందేశం"
-
-#: app/models/organization.rb:117
-#, 
-msgid "Modify Organization and Administer Environments"
-msgstr ""
-
-#: app/models/filter.rb:67
-#, 
-msgid "Modify Package Filters"
-msgstr ""
-
-#: app/models/provider.rb:118
-#, 
-msgid "Modify Providers and Administer Products"
-msgstr ""
-
-#: app/models/role.rb:148
-#, 
-msgid "Modify Roles"
-msgstr ""
-
-#: app/models/organization.rb:121
-#, 
-msgid "Modify Systems"
-msgstr ""
-
-#: app/models/kt_environment.rb:318
-#, 
-msgid "Modify Systems in Environment"
-msgstr ""
-
-#: app/models/user.rb:353
-#, 
-msgid "Modify Users"
-msgstr ""
 
 #: app/views/dashboard/_notices.html.haml:11
 msgid "More >>"
@@ -1755,32 +1830,33 @@ msgstr "మరిన్ని వివరాలు"
 msgid "More..."
 msgstr "మరిన్ని..."
 
-#: app/models/changeset.rb:48
+#: app/models/changeset.rb:43
 msgid "Must be unique within an environment"
 msgstr "ఒక యెన్విరాన్మెంట్ నందు తప్పక విశిష్టంగా వుండాలి"
 
-#: app/views/roles/_new.html.haml:9 app/views/repositories/_new.html.haml:15
 #: app/views/repositories/_edit.html.haml:17
-#: app/views/packages/_show.html.haml:11
-#: app/views/organizations/_new.html.haml:12
-#: app/views/sync_plans/_form.html.haml:5
-#: app/views/sync_plans/_edit.html.haml:17
-#: app/views/system_packages/_packages.html.haml:64
-#: app/views/systems/_edit.html.haml:24 app/views/changesets/_new.html.haml:10
-#: app/views/environments/_new.html.haml:13
-#: app/views/environments/_edit.html.haml:18
-#: app/views/filters/_new.html.haml:13 app/views/filters/_edit.html.haml:21
-#: app/views/system_templates/_new.html.haml:10
-#: app/views/system_templates/_promotion_details.html.haml:9
+#: app/views/repositories/_new.html.haml:15
 #: app/views/system_templates/_edit.html.haml:4
-#: app/views/products/_new.html.haml:8 app/views/products/_edit.html.haml:16
-#: app/views/activation_keys/_new.html.haml:9
+#: app/views/system_templates/_promotion_details.html.haml:9
+#: app/views/system_templates/_new.html.haml:10
+#: app/views/gpg_keys/_edit.html.haml:25 app/views/gpg_keys/_new.html.haml:9
+#: app/views/distributions/_show.html.haml:11
+#: app/views/products/_edit.html.haml:16 app/views/products/_new.html.haml:8
+#: app/views/systems/_edit.html.haml:24
 #: app/views/activation_keys/_edit.html.haml:37
-#: app/views/gpg_keys/_new.html.haml:9 app/views/gpg_keys/_edit.html.haml:25
-#: app/views/providers/_form.html.haml:6
-#: app/views/providers/redhat/_subscription_details.html.haml:4
+#: app/views/activation_keys/_new.html.haml:9
+#: app/views/system_packages/_packages.html.haml:64
+#: app/views/environments/_edit.html.haml:18
+#: app/views/environments/_new.html.haml:13
+#: app/views/packages/_show.html.haml:11
+#: app/views/sync_plans/_edit.html.haml:17
+#: app/views/sync_plans/_form.html.haml:5 app/views/filters/_edit.html.haml:22
+#: app/views/filters/_new.html.haml:13 app/views/roles/_new.html.haml:9
+#: app/views/changesets/_new.html.haml:10
 #: app/views/providers/_edit.html.haml:22
-#: app/views/distributions/_show.html.haml:12
+#: app/views/providers/redhat/_subscription_details.html.haml:4
+#: app/views/providers/_form.html.haml:6
+#: app/views/organizations/_new.html.haml:12
 msgid "Name"
 msgstr "పేరు"
 
@@ -1788,28 +1864,17 @@ msgstr "పేరు"
 msgid "Name can not be blank."
 msgstr "పేరు బ్లాంక్ కాలేదు."
 
-#: app/models/filter.rb:30
-#, 
-msgid "Name cannot be blank."
-msgstr ""
-
-#: app/models/filter.rb:31
-#, 
-msgid "Name must be unique within one organization"
-msgstr ""
-
 #: app/views/systems/_new.html.haml:18
 msgid "Name of Your System:"
 msgstr "మీ సిస్టమ్ యొక్క పేరు:"
 
-#: app/views/roles/_edit.html.haml:35 app/views/roles/_edit.html.haml:73
+#: app/views/promotions/show.html.haml:120 app/views/roles/_edit.html.haml:35
+#: app/views/roles/_edit.html.haml:73 app/views/changesets/_edit.html.haml:11
 #: app/views/changesets/_name.html.haml:3
-#: app/views/changesets/_edit.html.haml:11
-#: app/views/promotions/show.html.haml:120
 msgid "Name:"
 msgstr "పేరు:"
 
-#: app/helpers/dashboard_helper.rb:124 app/helpers/systems_helper.rb:24
+#: app/helpers/systems_helper.rb:24 app/helpers/dashboard_helper.rb:123
 msgid "Never checked in."
 msgstr "ఎప్పుడు చెక్‌డ్ యిన్ కాదు."
 
@@ -1877,7 +1942,6 @@ msgstr "లాకర్ యెన్విరాన్మెంట్‌కు �
 msgid "Next >>"
 msgstr "తరువాతి >>"
 
-#: app/views/common/_common_i18n.html.haml:3
 #: app/views/users/_edit_form.html.haml:33
 msgid "No"
 msgstr "లేదు"
@@ -1902,13 +1966,17 @@ msgstr "ఏ టెంప్లేట్స్ లేవు"
 msgid "No changesets found."
 msgstr "ఏ చేంజ్‌సెట్స్ లేవు."
 
+#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:61
 #: app/views/users/_edit_environment.html.haml:3
 #: app/views/users/_edit_environment.html.haml:41
-#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:61
-msgid "No default environment. Select an organization to choose from available environments."
-msgstr "ఏ అప్రమేయ పరిసరం లేదు. అందుబాటులోని పరిసరములనుండి యెంపికచేసుకొనుటకు వొక సంస్థను యెంపికచేయి."
+msgid ""
+"No default environment. Select an organization to choose from available "
+"environments."
+msgstr ""
+"ఏ అప్రమేయ పరిసరం లేదు. అందుబాటులోని పరిసరములనుండి యెంపికచేసుకొనుటకు వొక "
+"సంస్థను యెంపికచేయి."
 
-#: app/controllers/users_controller.rb:197
+#: app/controllers/users_controller.rb:196
 #: app/views/users/_edit_environment.html.haml:19
 #: app/views/users/_edit_environment.html.haml:23
 msgid "No default set for this user."
@@ -1923,20 +1991,36 @@ msgid "No distributions exist in this changeset."
 msgstr "ఈ చేంజ్‌సెట్ నందు యే పంపిణీలు లేవు."
 
 #: app/views/organizations/_edit.html.haml:41
-msgid "No environments are available in this organization. Please add some environments to be able register systems to this organization."
-msgstr "ఈ సంస్థనందు యే యెన్విరాన్మెంట్స్ అందుబాటులోలేవు. సిస్టమ్స్ యీ సంస్థకు నమోదు అవ్వగల్గుటకు దయచేసి కొన్ని యెన్విరాన్మెంట్స్ జతచేయి."
+msgid ""
+"No environments are available in this organization. Please add some "
+"environments to be able register systems to this organization."
+msgstr ""
+"ఈ సంస్థనందు యే యెన్విరాన్మెంట్స్ అందుబాటులోలేవు. సిస్టమ్స్ యీ సంస్థకు నమోదు "
+"అవ్వగల్గుటకు దయచేసి కొన్ని యెన్విరాన్మెంట్స్ జతచేయి."
 
 #: app/views/activation_keys/_new.html.haml:25
-msgid "No environments are currently available in this organization.  Please add some to be able to create activation keys."
-msgstr "ఈ సంస్థనందు యే యెన్విరాన్మెంట్స్ అందుబాటులోలేవు. క్రియాశీలపు కీలను సృష్టించుటకు దయచేసి కొన్నిటిని జతచేయండి."
+msgid ""
+"No environments are currently available in this organization.  Please add "
+"some to be able to create activation keys."
+msgstr ""
+"ఈ సంస్థనందు యే యెన్విరాన్మెంట్స్ అందుబాటులోలేవు. క్రియాశీలపు కీలను "
+"సృష్టించుటకు దయచేసి కొన్నిటిని జతచేయండి."
 
-#: app/views/common/_env_select.html.haml:2 app/views/users/_new.html.haml:63
-msgid "No environments are currently available in this organization.  Please add some to be able to set user default."
-msgstr "ఈ సంస్థనందు యే పరిసరాలు ప్రస్తుతం అందుబాటులోలేవు. వాడుకరి అప్రమేయంను అమర్చగలుగుటకు దయచేసి కొన్నిటిని జతచేయండి."
+#: app/views/users/_new.html.haml:63 app/views/common/_env_select.html.haml:2
+msgid ""
+"No environments are currently available in this organization.  Please add "
+"some to be able to set user default."
+msgstr ""
+"ఈ సంస్థనందు యే పరిసరాలు ప్రస్తుతం అందుబాటులోలేవు. వాడుకరి అప్రమేయంను "
+"అమర్చగలుగుటకు దయచేసి కొన్నిటిని జతచేయండి."
 
 #: app/views/users/_edit_environment.html.haml:43
-msgid "No environments are currently available in this organization. Saving will set user to no default environment."
-msgstr "ఈ సంస్థనందు యే పరిసరాలు ప్రస్తుతం అందుబాటులోలేవు. భద్రపరచుట అనునది వాడుకరిని యే అప్రమేయ పరిసరంకు వుంచదు."
+msgid ""
+"No environments are currently available in this organization. Saving will "
+"set user to no default environment."
+msgstr ""
+"ఈ సంస్థనందు యే పరిసరాలు ప్రస్తుతం అందుబాటులోలేవు. భద్రపరచుట అనునది వాడుకరిని"
+" యే అప్రమేయ పరిసరంకు వుంచదు."
 
 #: app/views/promotions/_errata.html.haml:3
 msgid "No errata available."
@@ -1954,12 +2038,7 @@ msgstr "దోషాలు లేవు"
 msgid "No event history found for %s"
 msgstr "%s కొరకు యే ఘటనా చరిత్ర కనబడలేదు"
 
-#: app/controllers/system_events_controller.rb:88
-#, 
-msgid "No events matching your search criteria."
-msgstr ""
-
-#: app/models/system_task.rb:290
+#: app/models/system_task.rb:245
 msgid "No new packages installed"
 msgstr "ఏ కొత్త ప్యాకేజీలు సంస్థాపించబడిలేవు"
 
@@ -1983,11 +2062,11 @@ msgstr "ఏ ప్యాకేజీలు అందుబాటులోలే�
 msgid "No packages exist in this changeset."
 msgstr "ఈ చేంజ్‌సెట్ నందు యే ప్యాకేజీలు లేవు."
 
-#: app/models/system_task.rb:288
+#: app/models/system_task.rb:243
 msgid "No packages removed"
 msgstr "ఏ ప్యాకేజీలు తొలగించబడలేదు"
 
-#: app/models/system_task.rb:286
+#: app/models/system_task.rb:241
 msgid "No packages updated"
 msgstr "ఏ ప్యాకేజీలు నవీకరించబడలేదు"
 
@@ -1997,8 +2076,13 @@ msgid "No products"
 msgstr "ఏ వుత్పత్తులు లేవు"
 
 #: app/views/system_templates/index.html.haml:6
-msgid "No products are currently associated with this system template.  Please associate a product that contains distributions in order to select a distribution."
-msgstr "ఈ సిస్టమ్ మాదిరితో యే వుత్పత్తులు ప్రస్తుతం సంభందించి లేవు. ఒక పంపిణీలు యెంపికచేయుటకు పంపిణీలను కలిగివుండే  వుత్పత్తితో కలిపివుంచండి."
+msgid ""
+"No products are currently associated with this system template.  Please "
+"associate a product that contains distributions in order to select a "
+"distribution."
+msgstr ""
+"ఈ సిస్టమ్ మాదిరితో యే వుత్పత్తులు ప్రస్తుతం సంభందించి లేవు. ఒక పంపిణీలు "
+"యెంపికచేయుటకు పంపిణీలను కలిగివుండే  వుత్పత్తితో కలిపివుంచండి."
 
 #: app/views/promotions/show.html.haml:8
 msgid "No products exist in the changeset."
@@ -2040,22 +2124,20 @@ msgstr "ఈ చేంజ్‌సెట్ నందు యే సిస్ట�
 msgid "No systems found."
 msgstr "ఏ సిస్టమ్స్ కనుగొనబడలేదు."
 
-#: app/models/product.rb:95 app/views/roles/_closed_permission.html.haml:13
+#: app/models/product.rb:96 app/views/systems/_edit.html.haml:64
+#: app/views/systems/_edit.html.haml:88
 #: app/views/systems/_subscription_details.html.haml:7
-#: app/views/systems/_edit.html.haml:64 app/views/systems/_edit.html.haml:88
+#: app/views/roles/_closed_permission.html.haml:13
 msgid "None"
 msgstr "ఏదీకాదు"
 
-#: app/views/repositories/_new.html.haml:30
-#: app/views/repositories/_edit.html.haml:32
-#: app/views/products/_new.html.haml:23 app/views/products/_edit.html.haml:31
-#, 
-msgid "None defined for this Organization."
-msgstr ""
-
 #: app/views/system_templates/index.html.haml:6
-msgid "None of the associated products contain distributions, please select a product that contains at least one distribution."
-msgstr "కలిపివున్న యే వుత్పత్తులు పంపిణీలను కలిగిలేవు, కనీసం వొక పంపిణీను కలిగివున్న వుత్పత్తిని దయచేసి యెంపికచేయి."
+msgid ""
+"None of the associated products contain distributions, please select a "
+"product that contains at least one distribution."
+msgstr ""
+"కలిపివున్న యే వుత్పత్తులు పంపిణీలను కలిగిలేవు, కనీసం వొక పంపిణీను కలిగివున్న"
+" వుత్పత్తిని దయచేసి యెంపికచేయి."
 
 #: app/views/errata/_show.html.haml:78
 msgid "None."
@@ -2065,9 +2147,11 @@ msgstr "ఏదీకాదు."
 msgid "Not Applied"
 msgstr "ఆపాదించలేదు"
 
-#: app/models/activation_key.rb:75
+#: app/models/activation_key.rb:71
 msgid "Not enough entitlements in pools (%d), required: %d, available: %d"
-msgstr "పూల్స్ నందు సరిపోయినన్ని యెన్టైటిల్మెంట్స్ లేవు (%d), కావలసినవి:%d వున్నవి:%d"
+msgstr ""
+"పూల్స్ నందు సరిపోయినన్ని యెన్టైటిల్మెంట్స్ లేవు (%d), కావలసినవి:%d "
+"వున్నవి:%d"
 
 #: app/views/organizations/_new.html.haml:34
 msgid "Note: This will be set as your initial default environment."
@@ -2077,11 +2161,11 @@ msgstr "గమనిక: ఇది మీ ప్రాధమిక అప్ర�
 msgid "Number of Sockets or LPARs:"
 msgstr "సాకెట్ల సంఖ్య లేదా LPARలు:"
 
-#: app/models/activation_key.rb:92
+#: app/models/activation_key.rb:88
 msgid "Number of consumed entitlements exceeded quantity for %s"
 msgstr "%s కొరకు ఖర్చైన యెన్టైటిల్మెంట్ల సంఖ్య పరిమాణం దాటింది"
 
-#: app/models/activation_key.rb:99
+#: app/models/activation_key.rb:95
 msgid "Number of sockets must be higher than 0 for system %s"
 msgstr "సిస్టమ్ %s కొరకు సాకెట్ల సంఖ్య 0 కన్నా యెక్కువ వుండాలి"
 
@@ -2089,18 +2173,23 @@ msgstr "సిస్టమ్ %s కొరకు సాకెట్ల సంఖ
 msgid "OS"
 msgstr "OS"
 
-#: app/views/systems/_list_system_show.html.haml:14
+#: app/views/systems/_list_system.html.haml:16
 msgid "OS: "
 msgstr "OS:"
 
-#: app/views/common/_common_i18n.html.haml:3
-#, 
-msgid "Ok"
+#: app/views/providers/_products_repos.html.haml:18
+msgid ""
+"On Products & Repositories you can add your own Products and Repositories to"
+" your Provider.  This allows you to synchronize content from any remote "
+"repository to this server.  Simply add a Product and then setup one or more "
+"repositories to add to this Provider.  This feature is only available for "
+"Custom Providers."
 msgstr ""
-
-#: app/views/providers/_products_repos.html.haml:17
-msgid "On Products & Repositories you can add your own Products and Repositories to your Provider.  This allows you to synchronize content from any remote repository to this server.  Simply add a Product and then setup one or more repositories to add to this Provider.  This feature is only available for Custom Providers."
-msgstr "ఉత్పత్తులు & రిపోజిటరీలపై మీరు మీ సమర్పకునికి మీ స్వంత వుత్పత్తులు మరియు రిపోజిటరీలు జతచేయవచ్చు. ఏ దూరస్థ రిపోజిటరీ నుండైనా యీ సర్వర్‌కు కాంటెంట్ సింక్రొనైజ్ చేయుటకు యిది మిమ్ములను అనుమతించును. ఈ సమర్పకునికి జతచేయుటకు వొక వుత్పత్తిని జతచేసి మరియు వొకటి లేక అంతకన్నా యెక్కువ రిపోజిటరీలను జతచేయి. ఈ విశేషణం కేవలం వినియోగదారి సమర్పకులకు మాత్రమే అందుబాటులో వుంటుంది."
+"ఉత్పత్తులు & రిపోజిటరీలపై మీరు మీ సమర్పకునికి మీ స్వంత వుత్పత్తులు మరియు "
+"రిపోజిటరీలు జతచేయవచ్చు. ఏ దూరస్థ రిపోజిటరీ నుండైనా యీ సర్వర్‌కు కాంటెంట్ "
+"సింక్రొనైజ్ చేయుటకు యిది మిమ్ములను అనుమతించును. ఈ సమర్పకునికి జతచేయుటకు వొక "
+"వుత్పత్తిని జతచేసి మరియు వొకటి లేక అంతకన్నా యెక్కువ రిపోజిటరీలను జతచేయి. ఈ "
+"విశేషణం కేవలం వినియోగదారి సమర్పకులకు మాత్రమే అందుబాటులో వుంటుంది."
 
 #: app/views/roles/_edit.html.haml:66
 msgid "On:"
@@ -2123,7 +2212,7 @@ msgstr "అందిచబడిన వొకటి లేదా యెక్క
 msgid "One or more package names are invalid."
 msgstr "ఒకటి లేదా యెక్కువ ప్యాకేజీ పేర్లు చెల్లనివి."
 
-#: app/models/provider.rb:54
+#: app/models/provider.rb:60
 msgid "Only one Red Hat provider permitted for an Organization"
 msgstr "ఒక సంస్థకు వొక Red Hat సమర్పకులు మాత్రమే అనుమతించుబడును"
 
@@ -2135,25 +2224,32 @@ msgstr "సింకింగ్ మాత్రమే చూపు."
 msgid "Open Source Systems Management"
 msgstr "ఓపెన్ సోర్స్ సిస్టమ్స్ నిర్వహణ"
 
-#: app/controllers/organizations_controller.rb:204
+#: app/controllers/organizations_controller.rb:201
 msgid "Organization"
 msgstr "సంస్థ"
 
-#: app/controllers/organizations_controller.rb:139
+#: app/controllers/organizations_controller.rb:136
 msgid "Organization '%s' has been scheduled for background deletion."
 msgstr "బ్యాక్‌గ్రౌండ్ తొలగింపు కొరకు సంస్థ '%s' ప్రణాళిక వేయబడెను."
 
-#: app/controllers/organizations_controller.rb:202
-#: app/models/resource_type.rb:91 lib/navigation/organization.rb:23
+#: app/models/resource_type.rb:91
+#: app/controllers/organizations_controller.rb:199
+#: lib/navigation/organization.rb:23
 msgid "Organizations"
 msgstr "సంస్థలు"
 
 #: app/views/organizations/index.html.haml:3
-msgid "Organizations allow content and systems to be separated by logical divisions.  To edit the environments within an organization, click on that organization and then click on the desired environment."
-msgstr "కాంటెంట్ మరియు సిస్టమ్స్ స్థానిక విభాగముల చే వేరుచేయబడుటకు సంస్థలు అనుమతించును. ఒక సంస్థ నందు యెన్విరాన్మెంట్సును సరికూర్చుటకు, ఆ సంస్థపై నొక్కి మరియు అప్పుడు కావలసిన యెన్విరాన్మెంట్‌పై నొక్కుము."
+msgid ""
+"Organizations allow content and systems to be separated by logical "
+"divisions.  To edit the environments within an organization, click on that "
+"organization and then click on the desired environment."
+msgstr ""
+"కాంటెంట్ మరియు సిస్టమ్స్ స్థానిక విభాగముల చే వేరుచేయబడుటకు సంస్థలు "
+"అనుమతించును. ఒక సంస్థ నందు యెన్విరాన్మెంట్సును సరికూర్చుటకు, ఆ సంస్థపై "
+"నొక్కి మరియు అప్పుడు కావలసిన యెన్విరాన్మెంట్‌పై నొక్కుము."
 
 #: app/views/promotions/show.html.haml:8
-#: app/views/errata/_packages.html.haml:17
+#: app/views/errata/_packages.html.haml:15
 msgid "Package"
 msgstr "ప్యాకేజీ"
 
@@ -2161,14 +2257,23 @@ msgstr "ప్యాకేజీ"
 msgid "Package Dependencies"
 msgstr "ప్యాకేజీ ఆధారములు"
 
-#: app/controllers/filters_controller.rb:201
+#: app/controllers/filters_controller.rb:215
 #: lib/navigation/content_management.rb:153
 msgid "Package Filters"
 msgstr "ప్యాకేజీ ఫిల్టర్లు"
 
 #: app/views/filters/index.html.haml:4
-msgid "Package Filters allow you to blacklist packages from being promoted into subsequent environments. Simply create a filter and add either a package name or regular expression to the filter.  You can associate the filter with entire products or individual repositories within any product."
-msgstr "నిషేధిత ప్యాకేజీలు తదుపరి పరిసరాలకు వున్నతిపొందకుండా చేయుటకు ప్యాకేజీ ఫిల్టర్లు మిమ్ములను అనుమతించును. ఒక ఫిల్టర్‌ను సృష్టించి వొక ప్యాకేజీ పేరు లేదా రెగ్యులర్ యెక్సుప్రెషన్‌ను దానికి జతచేయండి. మీరు ఫిల్టర్‌ను మొత్త వుత్పత్తులతో కలిపివుంచవచ్చు లేదా యేదేని వుత్పత్తినందు స్వతంత్ర రిపోజిటరీలతో కలిపివుంచవచ్చు."
+msgid ""
+"Package Filters allow you to blacklist packages from being promoted into "
+"subsequent environments. Simply create a filter and add either a package "
+"name or regular expression to the filter.  You can associate the filter with"
+" entire products or individual repositories within any product."
+msgstr ""
+"నిషేధిత ప్యాకేజీలు తదుపరి పరిసరాలకు వున్నతిపొందకుండా చేయుటకు ప్యాకేజీ "
+"ఫిల్టర్లు మిమ్ములను అనుమతించును. ఒక ఫిల్టర్‌ను సృష్టించి వొక ప్యాకేజీ పేరు "
+"లేదా రెగ్యులర్ యెక్సుప్రెషన్‌ను దానికి జతచేయండి. మీరు ఫిల్టర్‌ను మొత్త "
+"వుత్పత్తులతో కలిపివుంచవచ్చు లేదా యేదేని వుత్పత్తినందు స్వతంత్ర రిపోజిటరీలతో "
+"కలిపివుంచవచ్చు."
 
 #: app/views/packages/_show.html.haml:76
 msgid "Package Group"
@@ -2201,10 +2306,10 @@ msgstr "ప్యాకేజీ సమూహం నవీకరణ"
 msgid "Package Group Update scheduled by %s"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:382 app/helpers/breadcrumb_helper.rb:402
-#: app/views/system_packages/_packages.html.haml:75
+#: app/helpers/breadcrumb_helper.rb:381 app/helpers/breadcrumb_helper.rb:401
 #: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_product_detail.html.haml:10
+#: app/views/system_packages/_packages.html.haml:75
 msgid "Package Groups"
 msgstr "ప్యాకేజీ సమూహాలు"
 
@@ -2239,23 +2344,23 @@ msgstr "ప్యాకేజీ నవీకరణ"
 msgid "Package Update scheduled by %s"
 msgstr ""
 
-#: app/models/system_template.rb:288
+#: app/models/system_template.rb:291
 msgid "Package group '%s' not found in this template."
 msgstr "ప్యాకేజీ సమూహం '%s' యీ టెంప్లేట్ నందు కనబడలేదు."
 
-#: app/models/system_template.rb:300
+#: app/models/system_template.rb:303
 msgid "Package group category '%s' not found in this template."
 msgstr "ప్యాకేజీ సమూహం కాటగిరీ '%s' యీ టెంప్లేట్ నందు కనుగొనలేదు."
 
 #: app/helpers/breadcrumb_helper.rb:49 app/helpers/breadcrumb_helper.rb:153
-#: app/helpers/breadcrumb_helper.rb:378 app/helpers/breadcrumb_helper.rb:399
-#: app/views/system_packages/_packages.html.haml:73
-#: app/views/changesets/_edit.html.haml:52
+#: app/helpers/breadcrumb_helper.rb:377 app/helpers/breadcrumb_helper.rb:398
+#: app/views/system_templates/_promotion_details.html.haml:29
 #: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_product_detail.html.haml:7
-#: app/views/system_templates/_promotion_details.html.haml:29
 #: app/views/promotions/_detail.html.haml:18
-#: app/views/promotions/show.html.haml:8 lib/navigation/systems.rb:78
+#: app/views/promotions/show.html.haml:8
+#: app/views/system_packages/_packages.html.haml:73
+#: app/views/changesets/_edit.html.haml:52 lib/navigation/systems.rb:78
 #: lib/navigation/content_management.rb:204
 msgid "Packages"
 msgstr "ప్యాకేజీలు"
@@ -2264,7 +2369,7 @@ msgstr "ప్యాకేజీలు"
 msgid "Packages must be provided"
 msgstr "ప్యాకేజీలు తప్పక అందించబడాలి"
 
-#: app/models/system_template.rb:276
+#: app/models/system_template.rb:279
 msgid "Parameter '%s' not found in the template."
 msgstr "మాదిరినందు పారామితి '%s' కనుగొనబడలేదు."
 
@@ -2277,8 +2382,8 @@ msgstr ""
 msgid "Partial Products"
 msgstr "పాక్షిక వుత్పత్తులు"
 
-#: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
+#: app/views/password_resets/edit.html.haml:5
 msgid "Password Strength"
 msgstr "సంకేతపదం పటిష్టత"
 
@@ -2295,8 +2400,8 @@ msgstr "వాడుకరి '%{s}' కొరకు సంకేతపదం �
 msgid "Password reset token has expired for user '%{s}'."
 msgstr "వాడుకరి '%{s}' కొరకు సంకేతపదం తిరిగివుంచు టోకెన్ గడువుతీరింది."
 
-#: app/views/password_resets/edit.html.haml:22
 #: app/views/users/_new.html.haml:25
+#: app/views/password_resets/edit.html.haml:22
 msgid "Password:"
 msgstr "సంకేతపదం:"
 
@@ -2316,7 +2421,7 @@ msgstr "అనుమతి"
 msgid "Permission For:"
 msgstr "దీని కొరకు అనుమతి:"
 
-#: app/helpers/breadcrumb_helper.rb:240
+#: app/helpers/breadcrumb_helper.rb:239
 msgid "Permissions"
 msgstr "అనుమతులు"
 
@@ -2324,10 +2429,10 @@ msgstr "అనుమతులు"
 msgid "Permissions for this role."
 msgstr "ఈ పాత్ర కొరకు అనుమతులు."
 
-#: app/helpers/systems_helper.rb:42
+#: app/models/system.rb:71 app/controllers/activation_keys_controller.rb:340
 #: app/controllers/subscriptions_controller.rb:57
-#: app/controllers/providers_controller.rb:282
-#: app/controllers/activation_keys_controller.rb:342 app/models/system.rb:68
+#: app/controllers/providers_controller.rb:281
+#: app/helpers/systems_helper.rb:42
 msgid "Physical"
 msgstr "భౌతిక"
 
@@ -2337,7 +2442,7 @@ msgstr "దీని నుండి మాదిరిని దింపుక
 
 #: app/controllers/sync_schedules_controller.rb:39
 #: app/controllers/sync_schedules_controller.rb:45
-#: app/controllers/sync_plans_controller.rb:50
+#: app/controllers/sync_plans_controller.rb:48
 msgid "Plan"
 msgstr "ప్లాన్"
 
@@ -2356,19 +2461,27 @@ msgid "Please request the required privileges from an administrator."
 msgstr "నిర్వహణాధికారి నుండి దయచేసి కావలసిన అనుమతులను అభ్యర్దించుము."
 
 #: app/views/roles/index.html.haml:9
-msgid "Please select Permissions to view and add permissions for this role or Users to see current users with this role."
-msgstr "ఈ పాత్రకు అనుమతులను జతచేయుటకు మరియు దర్శించుటకు దయచేసి అనుమతులను యెంపికచేయి లేదా ఈ పాత్రతో ప్రస్తుత వాడుకరులను చూడుటకు వాడుకరులు యెంపికచేయి."
+msgid ""
+"Please select Permissions to view and add permissions for this role or Users"
+" to see current users with this role."
+msgstr ""
+"ఈ పాత్రకు అనుమతులను జతచేయుటకు మరియు దర్శించుటకు దయచేసి అనుమతులను యెంపికచేయి "
+"లేదా ఈ పాత్రతో ప్రస్తుత వాడుకరులను చూడుటకు వాడుకరులు యెంపికచేయి."
 
 #: app/views/roles/index.html.haml:9
-msgid "Please select Permissions to view permissions for this role or Users to see current users with this role."
-msgstr "ఈ పాత్ర కొరకు అనుమతులను దర్శించుటకు దయచేసి అనుమతులను యెంపికచేయి లేదా ఈ పాత్రతో ప్రస్తుత వాడుకరులను చూడుటకు వాడుకరులు యెంపికచేయి."
+msgid ""
+"Please select Permissions to view permissions for this role or Users to see "
+"current users with this role."
+msgstr ""
+"ఈ పాత్ర కొరకు అనుమతులను దర్శించుటకు దయచేసి అనుమతులను యెంపికచేయి లేదా ఈ "
+"పాత్రతో ప్రస్తుత వాడుకరులను చూడుటకు వాడుకరులు యెంపికచేయి."
 
-#: app/models/activation_key.rb:87
+#: app/models/activation_key.rb:83
 msgid "Pool %s has no product associated"
 msgstr "పూల్ %s కు యే వుత్పత్తి కలిపిలేదు"
 
-#: app/views/environments/_new.html.haml:24
 #: app/views/environments/_edit.html.haml:29
+#: app/views/environments/_new.html.haml:24
 msgid "Prior Environment"
 msgstr "ముందస్తు యెన్విరాన్మెంట్"
 
@@ -2376,24 +2489,25 @@ msgstr "ముందస్తు యెన్విరాన్మెంట్"
 msgid "Processing changeset modifications, please wait."
 msgstr "చేంజ్‌సెట్ సవరణలను ప్రోసెస్ చేస్తోంది, దయచేసి వేచివుండండి."
 
-#: app/views/systems/_products.html.haml:12
-#: app/views/dashboard/_errata.haml:11 app/views/promotions/show.html.haml:8
-#: app/views/providers/_products_repos.html.haml:38
-#: app/views/providers/redhat/_repo_whitelist.html.haml:3
+#: app/views/promotions/show.html.haml:8
 #: app/views/sync_management/index.html.haml:21
+#: app/views/systems/_products.html.haml:12
 #: app/views/subscriptions/index.html.haml:13
+#: app/views/dashboard/_errata.haml:11
+#: app/views/providers/_products_repos.html.haml:39
+#: app/views/providers/redhat/_repo_whitelist.html.haml:3
 msgid "Product"
 msgstr "ఉత్పత్తి"
 
-#: app/models/system_template.rb:241 app/models/system_template.rb:258
+#: app/models/system_template.rb:244 app/models/system_template.rb:261
 msgid "Product '%s' is already present in the template."
 msgstr "మాదిరి నందు వుత్పత్తి '%s' యిప్పటికే వుంది."
 
-#: app/models/system_template.rb:239 app/models/system_template.rb:256
+#: app/models/system_template.rb:242 app/models/system_template.rb:259
 msgid "Product '%s' not found in this environment."
 msgstr "ఈ పరిసరం నందు వుత్పత్తి '%s' కబడలేదు."
 
-#: app/views/systems/_subs.html.haml:43 app/views/systems/_subs.html.haml:102
+#: app/views/systems/_subs.html.haml:41 app/views/systems/_subs.html.haml:99
 msgid "Product Name: "
 msgstr "ఉత్పత్తి పేరు:"
 
@@ -2401,15 +2515,15 @@ msgstr "ఉత్పత్తి పేరు:"
 msgid "Product(s) in this environment"
 msgstr "ఈ యెన్విరాన్మెంట్ నందు వుత్పత్తు(లు)"
 
-#: app/views/repositories/_new.html.haml:2
 #: app/views/repositories/_edit.html.haml:4
+#: app/views/repositories/_new.html.haml:2
 msgid "Product: "
 msgstr "ఉత్పత్తి:"
 
-#: app/helpers/breadcrumb_helper.rb:134 app/helpers/breadcrumb_helper.rb:363
-#: app/helpers/breadcrumb_helper.rb:400
-#: app/views/system_templates/index.html.haml:6
+#: app/helpers/breadcrumb_helper.rb:134 app/helpers/breadcrumb_helper.rb:362
+#: app/helpers/breadcrumb_helper.rb:399
 #: app/views/system_templates/_promotion_details.html.haml:21
+#: app/views/system_templates/index.html.haml:6
 #: app/views/promotions/_detail.html.haml:6
 #: app/views/promotions/show.html.haml:8
 #: app/views/gpg_keys/_products_repos.html.haml:20
@@ -2437,7 +2551,7 @@ msgstr "పురోగతి:"
 msgid "Promote"
 msgstr "ఉన్నతి"
 
-#: app/models/kt_environment.rb:322
+#: app/models/kt_environment.rb:319
 msgid "Promote Changesets in Environment"
 msgstr "ఎన్విరాన్మెంట్ నందు చేంజ్‌సెట్స్ ఉన్నతి"
 
@@ -2445,10 +2559,10 @@ msgstr "ఎన్విరాన్మెంట్ నందు చేంజ్�
 msgid "Promote to "
 msgstr "దీనికి ఉన్నతి"
 
-#: app/views/promotions/_distributions.html.haml:11
 #: app/views/promotions/_repo_items.html.haml:5
-#: app/views/promotions/_package_items.html.haml:5
 #: app/views/promotions/show.html.haml:8
+#: app/views/promotions/_distributions.html.haml:11
+#: app/views/promotions/_package_items.html.haml:5
 msgid "Promoted"
 msgstr "ఉన్నతిచెందెను"
 
@@ -2468,11 +2582,6 @@ msgstr "ఉన్నతి తేది:"
 msgid "Promotion Failed"
 msgstr "ఉన్నతి వైఫల్యం"
 
-#: app/models/changeset.rb:327
-#, 
-msgid "Promotion of changeset '%{name}' failed."
-msgstr ""
-
 #: lib/navigation/content_management.rb:133
 msgid "Promotions"
 msgstr "ఉన్నతులు"
@@ -2482,8 +2591,21 @@ msgid "Promotions Overview"
 msgstr "ఉన్నతుల స్థూలదృష్టి"
 
 #: app/views/promotions/show.html.haml:85
-msgid "Promotions allow you to promote content from one environment to the next along a promotion path. Once you have created a changeset, clicking \"Add\" next to  one or more products will add them to the change set. If products already exist in the next environment, you may promote other types of content. Once you have created a change set, click the \"Promote\" button to commit it to the next environment."
-msgstr "ఉన్నతులు మిమ్మలను కాంటెంట్‌ను వొక యెన్విరాన్మెంట్‌నుండి తరువాతి దానికి ఉన్నతి పాత్‌తో సహా ఉన్నతి చేయుటకు అనుమతించును. ఒకసారి మీరు చేంజ్‌సెట్ సృష్టించిన తరువాత, ఒకటి లేదా అంతకన్నా యెక్కువ వుత్పత్తుల పక్కని \"జతచేయి\" నొక్కుట వాటిని చేంజ్‌సెట్‌కు జతచేయును. ఒకవేళ వుత్పత్తులు యిప్పటికే తరువాతి యెన్విరాన్మెంట్ నందు వుంటే, మీరు వేరే రకమైన కాంటెంట్‌ను వున్నతి చేయవచ్చు. ఒకసారి మీరు చేంజ్‌సెట్‌ను సృష్టించిన తరువాత, దానిని తరువాతి యెన్విరాన్మెంట్‌కు కమిట్ చేయుటకు \"ఉన్నతి\" బటన్ నొక్కుము."
+msgid ""
+"Promotions allow you to promote content from one environment to the next "
+"along a promotion path. Once you have created a changeset, clicking \"Add\" "
+"next to  one or more products will add them to the change set. If products "
+"already exist in the next environment, you may promote other types of "
+"content. Once you have created a change set, click the \"Promote\" button to"
+" commit it to the next environment."
+msgstr ""
+"ఉన్నతులు మిమ్మలను కాంటెంట్‌ను వొక యెన్విరాన్మెంట్‌నుండి తరువాతి దానికి "
+"ఉన్నతి పాత్‌తో సహా ఉన్నతి చేయుటకు అనుమతించును. ఒకసారి మీరు చేంజ్‌సెట్ "
+"సృష్టించిన తరువాత, ఒకటి లేదా అంతకన్నా యెక్కువ వుత్పత్తుల పక్కని \"జతచేయి\" "
+"నొక్కుట వాటిని చేంజ్‌సెట్‌కు జతచేయును. ఒకవేళ వుత్పత్తులు యిప్పటికే తరువాతి "
+"యెన్విరాన్మెంట్ నందు వుంటే, మీరు వేరే రకమైన కాంటెంట్‌ను వున్నతి చేయవచ్చు. "
+"ఒకసారి మీరు చేంజ్‌సెట్‌ను సృష్టించిన తరువాత, దానిని తరువాతి "
+"యెన్విరాన్మెంట్‌కు కమిట్ చేయుటకు \"ఉన్నతి\" బటన్ నొక్కుము."
 
 #: app/controllers/providers_controller.rb:234
 msgid "Provider"
@@ -2493,20 +2615,28 @@ msgstr "సమర్పకులు"
 msgid "Provider: "
 msgstr "సమర్పకులు:"
 
-#: app/controllers/providers_controller.rb:232 app/models/resource_type.rb:95
+#: app/models/resource_type.rb:95 app/controllers/providers_controller.rb:232
 #: lib/navigation/content_management.rb:56
 msgid "Providers"
 msgstr "సమర్పకులు"
 
 #: app/views/providers/index.html.haml:3
-msgid "Providers provide many types of content such as packages, errata, kickstart trees, and installation disc images.  A provider may be delivering all of your paid content or it could simply be a local yum repository providing a few yum repos."
-msgstr "ప్యాకేజీలు, యెర్రాటా, కిక్‌స్టార్ట్ ట్రీలు, మరియు సంస్థాపనా డిస్కు చిత్రాలు వంటి అనేక రకాల కాంటెంట్‌ను వుత్పాదకులు అందించును. ఉత్పాదకులు మీ చెల్లింపుపై వచ్చు మొత్తం కాంటెంట్‌ను అందించవచ్చు లేదా అది కొన్ని రిపోజిటరీలను అందించు స్థానిక yum రిపోజిటరీ కావచ్చు. "
+msgid ""
+"Providers provide many types of content such as packages, errata, kickstart "
+"trees, and installation disc images.  A provider may be delivering all of "
+"your paid content or it could simply be a local yum repository providing a "
+"few yum repos."
+msgstr ""
+"ప్యాకేజీలు, యెర్రాటా, కిక్‌స్టార్ట్ ట్రీలు, మరియు సంస్థాపనా డిస్కు చిత్రాలు "
+"వంటి అనేక రకాల కాంటెంట్‌ను వుత్పాదకులు అందించును. ఉత్పాదకులు మీ చెల్లింపుపై "
+"వచ్చు మొత్తం కాంటెంట్‌ను అందించవచ్చు లేదా అది కొన్ని రిపోజిటరీలను అందించు "
+"స్థానిక yum రిపోజిటరీ కావచ్చు. "
 
 #: app/views/packages/_dependencies.html.haml:21
 msgid "Provides"
 msgstr "సమర్పకులు"
 
-#: app/views/systems/_subs.html.haml:20 app/views/systems/_subs.html.haml:66
+#: app/views/systems/_subs.html.haml:18 app/views/systems/_subs.html.haml:63
 msgid "Quantity"
 msgstr "పరిమాణం"
 
@@ -2514,60 +2644,9 @@ msgstr "పరిమాణం"
 msgid "Queued."
 msgstr "వరుసకట్టిన."
 
-#: app/models/activation_key.rb:147
-#, 
-msgid "Read Activation Keys"
-msgstr ""
-
-#: app/models/kt_environment.rb:320
-#, 
-msgid "Read Changesets in Environment"
-msgstr ""
-
-#: app/models/kt_environment.rb:315
-#, 
-msgid "Read Environment Contents"
-msgstr ""
-
-#: app/models/organization.rb:118
-#, 
-msgid "Read Organization"
-msgstr ""
-
-#: app/models/filter.rb:65
-#, 
-msgid "Read Package Filters"
-msgstr ""
-
-#: app/models/provider.rb:117
-#, 
-msgid "Read Providers"
-msgstr ""
-
-#: app/models/role.rb:147
-#, 
-msgid "Read Roles"
-msgstr ""
-
-#: app/models/system_template.rb:363
-#, 
-msgid "Read System Templates"
-msgstr ""
-
-#: app/models/organization.rb:119
-#, 
-msgid "Read Systems"
-msgstr ""
-
-#: app/models/kt_environment.rb:316
-#, 
-msgid "Read Systems in Environment"
-msgstr ""
-
-#: app/models/user.rb:352
-#, 
-msgid "Read Users"
-msgstr ""
+#: app/models/system_template.rb:366
+msgid "Read All System Templates"
+msgstr "అన్ని సిస్టమ్ టెంప్లేట్లను చదువు"
 
 #: lib/navigation/content_management.rb:67
 msgid "Red Hat"
@@ -2577,15 +2656,15 @@ msgstr "Red Hat"
 msgid "Red Hat Provider Details"
 msgstr "Red Hat వుత్పాదక వివరాలు"
 
-#: app/models/provider.rb:60
+#: app/models/provider.rb:66
 msgid "Red Hat provider can not be deleted"
 msgstr "Red Hat సమర్పకులు తొలగించలేరు"
 
-#: app/models/organization.rb:120
+#: app/models/organization.rb:128
 msgid "Register Systems"
 msgstr "సిస్టమ్స్ నమోదుచేయి"
 
-#: app/models/kt_environment.rb:317
+#: app/models/kt_environment.rb:314
 msgid "Register Systems in Environment"
 msgstr "ఎన్విరాన్మెంట్ నందు సిస్టమ్ నమోదుచేయి"
 
@@ -2597,20 +2676,20 @@ msgstr "నమోదైన"
 msgid "Release"
 msgstr "విడుదల"
 
-#: app/views/roles/index.html.haml:9
-#: app/views/system_packages/_packages.html.haml:109
-#: app/views/systems/_actions.html.haml:13
-#: app/views/common/_common_i18n.html.haml:3
 #: app/views/system_templates/index.html.haml:88
-#: app/views/activation_keys/_applied_subscriptions.html.haml:37
-#: app/views/activation_keys/_applied_subscriptions.html.haml:38
 #: app/views/promotions/show.html.haml:8
 #: app/views/promotions/show.html.haml:133
+#: app/views/common/_common_i18n.html.haml:3
+#: app/views/systems/_actions.html.haml:13
+#: app/views/activation_keys/_applied_subscriptions.html.haml:36
+#: app/views/activation_keys/_applied_subscriptions.html.haml:37
+#: app/views/system_packages/_packages.html.haml:109
+#: app/views/roles/index.html.haml:9
 msgid "Remove"
 msgstr "తీసివేయి"
 
-#: app/views/activation_keys/_available_subscriptions.html.haml:7
 #: app/views/activation_keys/_edit.html.haml:15
+#: app/views/activation_keys/_available_subscriptions.html.haml:7
 #: app/views/activation_keys/_applied_subscriptions.html.haml:7
 msgid "Remove Activation Key"
 msgstr "క్రియాశీల కీ తీసివేయి"
@@ -2619,14 +2698,13 @@ msgstr "క్రియాశీల కీ తీసివేయి"
 msgid "Remove Environment"
 msgstr "ఎన్విరాన్మెంట్ తీసివేయి"
 
-#: app/views/filters/_packages.html.haml:6
+#: app/views/filters/_packages.html.haml:6 app/views/filters/_edit.html.haml:8
 #: app/views/filters/_products.html.haml:12
-#: app/views/filters/_edit.html.haml:8
 msgid "Remove Filter"
 msgstr "ఫిల్టర్ తొలగించు"
 
-#: app/views/gpg_keys/_products_repos.html.haml:8
 #: app/views/gpg_keys/_edit.html.haml:8
+#: app/views/gpg_keys/_products_repos.html.haml:8
 msgid "Remove GPG Key"
 msgstr "GPG కీ తొలగించు"
 
@@ -2666,7 +2744,7 @@ msgstr "ప్యాకేజీ సమూహం తీసివేత గడు
 msgid "Remove Package Timeout"
 msgstr "ప్యాకేజీ తీసివేత గడువుదాటెను"
 
-#: app/views/filters/_packages.html.haml:38
+#: app/views/filters/_packages.html.haml:39
 msgid "Remove Packages"
 msgstr "ప్యాకేజీలు తీసివేయి"
 
@@ -2674,8 +2752,8 @@ msgstr "ప్యాకేజీలు తీసివేయి"
 msgid "Remove Product"
 msgstr "ఉత్పత్తి తీసివేయి"
 
-#: app/views/providers/_products_repos.html.haml:8
 #: app/views/providers/_edit.html.haml:8
+#: app/views/providers/_products_repos.html.haml:8
 msgid "Remove Provider"
 msgstr "సమర్పకుని తీసివేయి"
 
@@ -2683,7 +2761,7 @@ msgstr "సమర్పకుని తీసివేయి"
 msgid "Remove Repository"
 msgstr "రిపోజిటరీ తీసివేయి"
 
-#: app/views/roles/_edit.html.haml:110
+#: app/views/roles/_edit.html.haml:109
 msgid "Remove Role"
 msgstr "పాత్ర తీసివేయి"
 
@@ -2699,12 +2777,12 @@ msgstr "సిస్టమ్ తీసివేయి"
 msgid "Remove System(s)"
 msgstr "సిస్టమ్(లు) తీసివేయి"
 
-#: app/models/kt_environment.rb:319
+#: app/models/kt_environment.rb:316
 msgid "Remove Systems in Environment"
 msgstr "ఎన్విరాన్మెంట్ నందు సిస్టమ్స్ తీసివేయి"
 
-#: app/views/roles/_self_role_edit.html.haml:6
 #: app/views/users/_edit.html.haml:6
+#: app/views/roles/_self_role_edit.html.haml:6
 msgid "Remove User"
 msgstr "వాడుకరి తీసివేయి"
 
@@ -2724,11 +2802,11 @@ msgstr "ప్యాకేజీ తీసివేస్తోంది..."
 msgid "Removing..."
 msgstr "తీసివేయుచున్నది..."
 
-#: app/controllers/application_controller.rb:175
+#: app/controllers/application_controller.rb:279
 msgid "Rendering 404:"
 msgstr "రెండరింగ్ 404:"
 
-#: app/controllers/application_controller.rb:189
+#: app/controllers/application_controller.rb:293
 msgid "Rendering 500:"
 msgstr "రెండరింగ్ 500:"
 
@@ -2744,19 +2822,19 @@ msgstr "రెపో ఐడి లేదా పరిసరం తప్పక �
 msgid "Repos"
 msgstr "రెపోస్"
 
-#: app/helpers/breadcrumb_helper.rb:57 app/helpers/breadcrumb_helper.rb:374
-#: app/helpers/breadcrumb_helper.rb:401
-#: app/views/changesets/_edit.html.haml:56
+#: app/helpers/breadcrumb_helper.rb:57 app/helpers/breadcrumb_helper.rb:373
+#: app/helpers/breadcrumb_helper.rb:400
 #: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_product_detail.html.haml:4
 #: app/views/promotions/_detail.html.haml:26
 #: app/views/promotions/show.html.haml:8
 #: app/views/gpg_keys/_products_repos.html.haml:28
+#: app/views/changesets/_edit.html.haml:56
 msgid "Repositories"
 msgstr "రిపోజిటరీలు"
 
 #: app/views/promotions/show.html.haml:8
-#: app/views/providers/_products_repos.html.haml:46
+#: app/views/providers/_products_repos.html.haml:47
 msgid "Repository"
 msgstr "రిపోజిటరీ"
 
@@ -2768,14 +2846,11 @@ msgstr "రిపోజిటరీ Url"
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "రిపోజిటరీ యిప్పటికే వున్నతి చెందిన కారణంగా దానిని అచేతనం చేయలేము."
 
-#: app/views/system_events/_details.html.haml:16
-#, 
-msgid "Request"
-msgstr ""
-
 #: app/controllers/password_resets_controller.rb:98
-msgid "Request received has either an invalid or expired token.  Token: '%{t}'"
-msgstr "స్వీకరించబడిన అభ్యర్ధన చెల్లనిది లేదా గడువుతీరిన టోకెన్. టోకెన్: '%{t}'"
+msgid ""
+"Request received has either an invalid or expired token.  Token: '%{t}'"
+msgstr ""
+"స్వీకరించబడిన అభ్యర్ధన చెల్లనిది లేదా గడువుతీరిన టోకెన్. టోకెన్: '%{t}'"
 
 #: app/views/packages/_dependencies.html.haml:13
 msgid "Requires"
@@ -2785,12 +2860,12 @@ msgstr "అవసరం"
 msgid "Reset Password"
 msgstr "సంకేతపదం తిరిగివుంచు"
 
-#: app/views/system_events/_details.html.haml:28
 #: app/views/sync_management/index.html.haml:25
+#: app/views/system_events/_details.html.haml:28
 msgid "Result"
 msgstr "ఫలితం"
 
-#: app/views/filters/_products.html.haml:40
+#: app/views/filters/_products.html.haml:41
 msgid "Revert Filter"
 msgstr "ఫిల్టర్ తిరిగివుంచు"
 
@@ -2799,7 +2874,7 @@ msgstr "ఫిల్టర్ తిరిగివుంచు"
 msgid "Review"
 msgstr "పునఃపరిశీలన"
 
-#: app/controllers/roles_controller.rb:60
+#: app/controllers/roles_controller.rb:59
 msgid "Role"
 msgstr "పాత్ర"
 
@@ -2807,7 +2882,7 @@ msgstr "పాత్ర"
 msgid "Role Details"
 msgstr "పాత్ర వివరాలు"
 
-#: app/controllers/roles_controller.rb:58 app/models/resource_type.rb:98
+#: app/models/resource_type.rb:98 app/controllers/roles_controller.rb:57
 #: app/views/roles/_self_role_edit.html.haml:13
 #: lib/navigation/administration.rb:29 lib/navigation/administration.rb:65
 msgid "Roles"
@@ -2817,23 +2892,24 @@ msgstr "పాత్రలు"
 msgid "Running."
 msgstr "నడుచుచున్నది."
 
-#: app/views/systems/_subs.html.haml:18 app/views/systems/_subs.html.haml:64
+#: app/views/systems/_subs.html.haml:16 app/views/systems/_subs.html.haml:61
 msgid "SLA"
 msgstr "SLA"
 
-#: app/views/roles/_new.html.haml:18 app/views/roles/_permission.html.haml:39
-#: app/views/organizations/_new.html.haml:36
-#: app/views/sync_plans/_form.html.haml:31 app/views/systems/_new.html.haml:49
-#: app/views/password_resets/edit.html.haml:36
-#: app/views/filters/_new.html.haml:23 app/views/common/_edit_i18n.html.haml:4
+#: app/views/system_templates/_new.html.haml:21
 #: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/index.html.haml:93
-#: app/views/system_templates/_new.html.haml:21
-#: app/views/activation_keys/_new.html.haml:40
-#: app/views/activation_keys/_edit.html.haml:74
-#: app/views/gpg_keys/_new.html.haml:19 app/views/providers/_form.html.haml:17
-#: app/views/users/_edit_environment.html.haml:52
 #: app/views/users/_edit_form.html.haml:61
+#: app/views/users/_edit_environment.html.haml:52
+#: app/views/gpg_keys/_new.html.haml:19
+#: app/views/common/_edit_i18n.html.haml:4 app/views/systems/_new.html.haml:49
+#: app/views/activation_keys/_edit.html.haml:74
+#: app/views/activation_keys/_new.html.haml:40
+#: app/views/password_resets/edit.html.haml:36
+#: app/views/sync_plans/_form.html.haml:31 app/views/filters/_new.html.haml:23
+#: app/views/roles/_permission.html.haml:39 app/views/roles/_new.html.haml:18
+#: app/views/providers/_form.html.haml:17
+#: app/views/organizations/_new.html.haml:36
 msgid "Save"
 msgstr "దాయి"
 
@@ -2841,7 +2917,7 @@ msgstr "దాయి"
 msgid "Save Changeset"
 msgstr "చేంజ్‌సెట్ దాయి"
 
-#: app/views/filters/_products.html.haml:41
+#: app/views/filters/_products.html.haml:42
 msgid "Save Filter"
 msgstr "ఫిల్టర్ దాయి"
 
@@ -2865,28 +2941,28 @@ msgstr "సిస్టమ్ టెంప్లేట్ దాయుచున�
 msgid "Saving..."
 msgstr "దాయుచున్నది..."
 
-#: app/views/roles/_permission.html.haml:20
 #: app/views/roles/_closed_permission.html.haml:8
+#: app/views/roles/_permission.html.haml:20
 msgid "Scope"
 msgstr "పరిధి"
 
-#: app/views/notices/show.html.haml:19 app/views/common/_panel.html.haml:51
-#: app/views/common/_panel.html.haml:55
 #: app/views/system_templates/index.html.haml:54
 #: app/views/promotions/show.html.haml:8
 #: app/views/promotions/show.html.haml:173
 #: app/views/promotions/show.html.haml:174
 #: app/views/promotions/show.html.haml:175
+#: app/views/common/_panel.html.haml:45 app/views/common/_panel.html.haml:49
+#: app/views/notices/show.html.haml:19
 msgid "Search"
 msgstr "అన్వేషణ"
 
-#: app/views/filters/index.html.haml:18
 #: app/views/system_templates/index.html.haml:6
+#: app/views/filters/index.html.haml:18
 msgid "Search available package names..."
 msgstr "అందుబాటులోని ప్యాకేజీ పేర్లను అన్వేషించు..."
 
-#: app/views/filters/index.html.haml:18
 #: app/views/system_templates/index.html.haml:6
+#: app/views/filters/index.html.haml:18
 msgid "Search available product names..."
 msgstr "అందుబాటులోని వుత్పత్తి పేర్లను అన్వేషించు..."
 
@@ -2906,9 +2982,9 @@ msgstr "అన్నిటినీ యెంపికచేయి"
 msgid "Select Architecture"
 msgstr "అకృతి యెంపికచేయి"
 
-#: app/views/systems/_actions.html.haml:18
-#: app/views/common/_panel.html.haml:24
 #: app/views/sync_management/index.html.haml:35
+#: app/views/common/_panel.html.haml:18
+#: app/views/systems/_actions.html.haml:18
 msgid "Select None"
 msgstr "దేనిని యెంపికచేయవద్దు"
 
@@ -2932,7 +3008,7 @@ msgstr "రిపోజిటరీలు యెంపికచేయి:"
 msgid "Select a System Template"
 msgstr "ఒక సిస్టమ్ టెంప్లేట్ యెంపికచేయి"
 
-#: app/helpers/breadcrumb_helper.rb:403
+#: app/helpers/breadcrumb_helper.rb:402
 #: app/views/system_templates/index.html.haml:6
 msgid "Selected Distribution"
 msgstr "పంపిణీ యెంపికచేయబడెను"
@@ -2965,7 +3041,7 @@ msgstr "సంతకం"
 msgid "Size (Packages)"
 msgstr "పరిమాణం (ప్యాకేజీలు)"
 
-#: app/views/systems/_subs.html.haml:65
+#: app/views/systems/_subs.html.haml:62
 msgid "Sockets"
 msgstr "సాకెట్లు"
 
@@ -2974,12 +3050,20 @@ msgid "Software"
 msgstr "సాఫ్టువేర్"
 
 #: app/views/promotions/show.html.haml:8
-msgid "Some changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications."
-msgstr "కొన్ని చేంజ్‌సెట్ సవరణలు ప్రోసెసింగ్‌ను ముగించలేదు, మీరు ఖచ్చితంగా పేజీను వదిలివేయాలని అనుకొనుచున్నారా? మిమ్మలను వదిలితే కొన్ని సవరణలు కోల్పోతాయి."
+msgid ""
+"Some changeset modifications have not finished processing, are you sure you "
+"want to leave the page?  By leaving you may lose some modifications."
+msgstr ""
+"కొన్ని చేంజ్‌సెట్ సవరణలు ప్రోసెసింగ్‌ను ముగించలేదు, మీరు ఖచ్చితంగా పేజీను "
+"వదిలివేయాలని అనుకొనుచున్నారా? మిమ్మలను వదిలితే కొన్ని సవరణలు కోల్పోతాయి."
 
 #: app/views/common/500.html.haml:4
-msgid "Sorry about that! It seems something went wrong.  If you continue having trouble with this, please contact an Administrator."
-msgstr "అందుక క్షమించాలి! ఏదో తప్పు జరిగినట్లు వుంది. దీనితో మీరు సమస్యను యింకా యెదుర్కుంటూ వుంటే, నిర్వహణాధికారిని సంప్రదించండి."
+msgid ""
+"Sorry about that! It seems something went wrong.  If you continue having "
+"trouble with this, please contact an Administrator."
+msgstr ""
+"అందుక క్షమించాలి! ఏదో తప్పు జరిగినట్లు వుంది. దీనితో మీరు సమస్యను యింకా "
+"యెదుర్కుంటూ వుంటే, నిర్వహణాధికారిని సంప్రదించండి."
 
 #: app/views/packages/_show.html.haml:88
 msgid "Source Package"
@@ -2989,13 +3073,13 @@ msgstr "మూలపు ప్యాకేజీ"
 msgid "Specify Local Manifest"
 msgstr "స్థానిక మానిఫెస్ట్ తెలుపుము"
 
-#: app/views/sync_plans/_form.html.haml:20
-#: app/views/sync_plans/_edit.html.haml:26
 #: app/views/activation_keys/_subscriptions.html.haml:6
+#: app/views/sync_plans/_edit.html.haml:26
+#: app/views/sync_plans/_form.html.haml:20
 msgid "Start Date"
 msgstr "ప్రారంభ తేదీ"
 
-#: app/models/sync_plan.rb:49
+#: app/models/sync_plan.rb:41
 msgid "Start Date and Time can't be blank"
 msgstr "ప్రారంభం తేదీ మరియు సమయం ఖాళీగా వుంచలేము"
 
@@ -3003,18 +3087,18 @@ msgstr "ప్రారంభం తేదీ మరియు సమయం ఖ�
 msgid "Start Time"
 msgstr "ప్రారంభ సమయం"
 
-#: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
+#: app/views/password_resets/edit.html.haml:5
 msgid "Strong"
 msgstr "పటిష్టమైన"
 
-#: app/views/systems/_subs.html.haml:113 app/views/systems/_subs.html.haml:114
+#: app/views/systems/_subs.html.haml:110 app/views/systems/_subs.html.haml:111
 msgid "Subscribe"
 msgstr "సబ్‌స్క్రైబ్"
 
-#: app/views/systems/_subs.html.haml:17 app/views/systems/_subs.html.haml:63
+#: app/views/systems/_subs.html.haml:15 app/views/systems/_subs.html.haml:60
 #: app/views/activation_keys/_subscriptions.html.haml:4
-#: app/views/providers/redhat/show.html.haml:43
+#: app/views/providers/redhat/show.html.haml:39
 msgid "Subscription"
 msgstr "సబ్‌స్క్రిప్షన్"
 
@@ -3024,13 +3108,21 @@ msgstr "సబ్‌స్క్రిప్షన్ మేనిఫెస్�
 
 #: app/controllers/providers_controller.rb:72
 msgid "Subscription manifest upload for provider '%{name}' failed."
-msgstr "సమర్పకులు '%{name}' కొరకు సబ్‌స్క్రిప్షన్ మేనిఫెస్ట్ అప్‌లోడ్ విఫలమైను."
+msgstr ""
+"సమర్పకులు '%{name}' కొరకు సబ్‌స్క్రిప్షన్ మేనిఫెస్ట్ అప్‌లోడ్ విఫలమైను."
 
 #: app/controllers/providers_controller.rb:69
-msgid "Subscription manifest uploaded successfully for provider '%{name}'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled."
-msgstr "ఉత్పాదకుని '%{name}' కొరకు సబ్‌స్క్రిప్షన్ మేనిఫెస్ట్ అప్‌లోడ్ చేయబడెను. 'రిపోజిటరీలను చేతనంచేయి' యెంపికచేయుట ద్వారా మరియు స్వతంత్ర రిపోజిటరీలను చేతనంచేయి యెంపికచేయుట ద్వారా మీరు సింక్ చేయదలచిన రిపోజిటరీలను దయచేసి చేతనంచేయి."
+msgid ""
+"Subscription manifest uploaded successfully for provider '%{name}'. Please "
+"enable the repositories you want to sync by selecting 'Enable Repositories' "
+"and selecting individual repositories to be enabled."
+msgstr ""
+"ఉత్పాదకుని '%{name}' కొరకు సబ్‌స్క్రిప్షన్ మేనిఫెస్ట్ అప్‌లోడ్ చేయబడెను. "
+"'రిపోజిటరీలను చేతనంచేయి' యెంపికచేయుట ద్వారా మరియు స్వతంత్ర రిపోజిటరీలను "
+"చేతనంచేయి యెంపికచేయుట ద్వారా మీరు సింక్ చేయదలచిన రిపోజిటరీలను దయచేసి "
+"చేతనంచేయి."
 
-#: lib/navigation/systems.rb:66 lib/navigation/organization.rb:42
+#: lib/navigation/organization.rb:42 lib/navigation/systems.rb:66
 msgid "Subscriptions"
 msgstr "సబ్‌స్క్రిప్షన్స్"
 
@@ -3059,8 +3151,8 @@ msgstr ""
 msgid "Summary:"
 msgstr "సంగ్రహము:"
 
-#: app/views/providers/redhat/_subscription_details.html.haml:7
 #: app/views/subscriptions/index.html.haml:16
+#: app/views/providers/redhat/_subscription_details.html.haml:7
 msgid "Support Level"
 msgstr "తోడ్పాటు స్థాయి"
 
@@ -3072,16 +3164,16 @@ msgstr "సింక్ నిర్వహణ"
 msgid "Sync Overview"
 msgstr "సింక్ స్థూలదృష్టి"
 
-#: app/controllers/sync_plans_controller.rb:48
+#: app/controllers/sync_plans_controller.rb:46
 #: lib/navigation/content_management.rb:105
 msgid "Sync Plans"
 msgstr "సింక్ ప్లాన్స్"
 
-#: app/controllers/sync_schedules_controller.rb:74
+#: app/controllers/sync_schedules_controller.rb:73
 msgid "Sync Plans applied successfully."
 msgstr "సింక్ ప్లాన్స్ విజయవంతంగా ఆపాదించబడెను."
 
-#: app/models/organization.rb:123
+#: app/models/organization.rb:131
 msgid "Sync Products"
 msgstr "సింక్ వుత్పత్తులు"
 
@@ -3107,7 +3199,7 @@ msgstr "ఇప్పుడు సింక్రొనైజ్ చేయి"
 msgid "System"
 msgstr "సిస్టమ్"
 
-#: app/views/systems/_subs.html.haml:6
+#: app/views/systems/_subs.html.haml:5
 msgid "System Current Subscription(s)"
 msgstr "సిస్టమ్ ప్రస్తుత సబ్‌స్క్రిప్షన్(లు)"
 
@@ -3115,7 +3207,7 @@ msgstr "సిస్టమ్ ప్రస్తుత సబ్‌స్క్�
 msgid "System Events"
 msgstr "సిస్టమ్ ఘటనలు"
 
-#: app/views/systems/_edit.html.haml:8 lib/navigation/systems.rb:89
+#: app/views/systems/_edit.html.haml:8 lib/navigation/systems.rb:95
 msgid "System Info"
 msgstr "సిస్టమ్ సమాచారం"
 
@@ -3131,25 +3223,32 @@ msgstr "సిస్టమ్ లక్షణాలు"
 msgid "System Subscription Status"
 msgstr "సిస్టమ్ సబ్‌‌స్క్రిప్షన్ స్థితి"
 
-#: app/views/activation_keys/_new.html.haml:35
-#: app/views/activation_keys/_edit.html.haml:59
 #: app/views/promotions/show.html.haml:8
+#: app/views/activation_keys/_edit.html.haml:59
+#: app/views/activation_keys/_new.html.haml:35
 msgid "System Template"
 msgstr "సిస్టమ్ టెంప్లేట్"
 
+#: app/models/resource_type.rb:92
+#: app/controllers/system_templates_controller.rb:81
 #: app/helpers/breadcrumb_helper.rb:137
-#: app/controllers/system_templates_controller.rb:73
-#: app/models/resource_type.rb:92 app/views/changesets/_edit.html.haml:34
 #: app/views/system_templates/index.html.haml:47
 #: app/views/promotions/_detail.html.haml:12
 #: app/views/promotions/show.html.haml:8
+#: app/views/changesets/_edit.html.haml:34
 #: lib/navigation/content_management.rb:121
 msgid "System Templates"
 msgstr "సిస్టమ్ టెంప్లేట్స్"
 
 #: app/views/system_templates/index.html.haml:39
-msgid "System Templates allow you to create a template for what a system should look like.  This includes what products are subscribed and what packages are installed."
-msgstr "ఒక సిస్టమ్ యెలా కనిపించాలి అనుదాని కొరకు టెంప్లేట్‌ను సృష్టించుటకు సిస్టమ్ టెంప్లేట్స్ మిమ్మలును అనుమతించును. ఏ వుత్పత్తులు సబ్‌స్క్రైబ్ అయ్యెను మరియు యే ప్యాకేజీలు సంస్థాపించెనో యిది కలిగివుండును."
+msgid ""
+"System Templates allow you to create a template for what a system should "
+"look like.  This includes what products are subscribed and what packages are"
+" installed."
+msgstr ""
+"ఒక సిస్టమ్ యెలా కనిపించాలి అనుదాని కొరకు టెంప్లేట్‌ను సృష్టించుటకు సిస్టమ్ "
+"టెంప్లేట్స్ మిమ్మలును అనుమతించును. ఏ వుత్పత్తులు సబ్‌స్క్రైబ్ అయ్యెను మరియు "
+"యే ప్యాకేజీలు సంస్థాపించెనో యిది కలిగివుండును."
 
 #: app/views/systems/_edit.html.haml:71
 msgid "System Type"
@@ -3159,25 +3258,27 @@ msgstr "సిస్టమ్ రకం"
 msgid "System Type:"
 msgstr "సిస్టమ్ రకం:"
 
-#: app/controllers/systems_controller.rb:177
+#: app/controllers/systems_controller.rb:186
 msgid "System subscriptions updated."
 msgstr "సిస్టమ్ సబ్‌స్క్రిప్షన్లు నవీకరించెను."
 
-#: app/controllers/systems_controller.rb:287
+#: app/controllers/systems_controller.rb:296
 #: app/views/dashboard/_errata.haml:21 lib/navigation/systems.rb:22
 msgid "Systems"
 msgstr "సిస్టమ్స్"
 
-#: app/controllers/system_templates_controller.rb:75
-#: app/controllers/system_templates_controller.rb:77
+#: app/controllers/system_templates_controller.rb:83
+#: app/controllers/system_templates_controller.rb:85
 msgid "Template"
 msgstr "టెంప్లేట్"
 
 #: app/models/system_template.rb:21
 msgid "Template can have parent templates only from the same environment"
-msgstr "టెంప్లేట్ అనునది పేరెంట్ టెంప్లేట్సును అదే యెన్విరాన్మెంట్ నుండి మాత్రమే కలిగివుండగలవు"
+msgstr ""
+"టెంప్లేట్ అనునది పేరెంట్ టెంప్లేట్సును అదే యెన్విరాన్మెంట్ నుండి మాత్రమే "
+"కలిగివుండగలవు"
 
-#: app/models/system_template.rb:139
+#: app/models/system_template.rb:142
 msgid "Template cannot be exported"
 msgstr "మాదిరి యెక్సుపోర్టు కాలేదు"
 
@@ -3185,77 +3286,99 @@ msgstr "మాదిరి యెక్సుపోర్టు కాలేద�
 msgid "Template imported"
 msgstr "టెంప్లేట్ దిగుమతైంది"
 
-#: app/models/system_template.rb:156
+#: app/models/system_template.rb:159
 msgid "Template is not complete and will likely fail."
 msgstr "మాదిరి పూర్తికాలేదు మరియు విఫలం చెందవచ్చు."
 
-#: app/helpers/breadcrumb_helper.rb:391
+#: app/helpers/breadcrumb_helper.rb:390
 msgid "Templates"
 msgstr "టెంప్లేట్స్"
 
-#: app/controllers/api/templates_controller.rb:48
 #: app/controllers/api/templates_content_controller.rb:99
+#: app/controllers/api/templates_controller.rb:48
 msgid "Templates can be updated only in a Locker environment"
 msgstr "టెంప్లేట్లు అనునవి లాకర్ యెన్విరాన్మెంట్ నందు మాత్రమే  నవీకరించగలం"
 
-#: app/models/organization.rb:72
-msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
-msgstr "ప్రస్తుత సంస్థ తొలగించబడలేదు. తొలగించుటకు ముందుగా వేరే సంస్థకు దయచేసి మారండి."
+#: app/models/organization.rb:80
+msgid ""
+"The current organization cannot be deleted. Please switch to a different "
+"organization before deleting."
+msgstr ""
+"ప్రస్తుత సంస్థ తొలగించబడలేదు. తొలగించుటకు ముందుగా వేరే సంస్థకు దయచేసి "
+"మారండి."
 
 #: app/views/system_templates/index.html.haml:6
-msgid "The current template \"$TEMPLATE\" has been modified.  Would you like to save the changes?"
-msgstr "ప్రస్తుత టెంప్లేట్ \"$TEMPLATE\" సవరించబడెను. మీరు మార్పులను దాయుటకు యిష్టపడతారా?"
+msgid ""
+"The current template \"$TEMPLATE\" has been modified.  Would you like to "
+"save the changes?"
+msgstr ""
+"ప్రస్తుత టెంప్లేట్ \"$TEMPLATE\" సవరించబడెను. మీరు మార్పులను దాయుటకు "
+"యిష్టపడతారా?"
 
 #: app/views/system_templates/index.html.haml:6
-msgid "The current template \"$TEMPLATE\" has been modified. If you leave, any changes will be lost.\""
-msgstr "ప్రస్తుత టెంప్లేట్ \"$TEMPLATE\" సవరించబడెను. మీరు వదిలితే, యే మార్పులైనా కోల్పోవుదురు.\""
+msgid ""
+"The current template \"$TEMPLATE\" has been modified. If you leave, any "
+"changes will be lost.\""
+msgstr ""
+"ప్రస్తుత టెంప్లేట్ \"$TEMPLATE\" సవరించబడెను. మీరు వదిలితే, యే మార్పులైనా "
+"కోల్పోవుదురు.\""
 
-#: app/controllers/users_controller.rb:199
+#: app/controllers/users_controller.rb:198
 msgid "The default you supplied was the same as the old default."
 msgstr "మీరు అందించిన అప్రమేయం పాత అప్రమేయం వంటిదే."
 
-#: app/models/system_template.rb:250 app/models/system_template.rb:267
+#: app/models/system_template.rb:253 app/models/system_template.rb:270
 msgid "The environment still has content that belongs to product '%s'."
 msgstr "పరిసరం యింకా వుత్పత్తి '%s' కు చెందిన కాంటెంటునే కలిగివుంది."
 
-#: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
+#: app/views/password_resets/edit.html.haml:5
 msgid "The password should not contain the username."
 msgstr "సంకేతపదం వాడుకరిపేరును కలిగివుండ కూడదు."
 
-#: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
+#: app/views/password_resets/edit.html.haml:5
 msgid "The passwords do not match"
 msgstr "సంకేతపదాలు సరితూగలేదు"
 
-#: app/views/systems/_subs.html.haml:51
+#: app/views/systems/_subs.html.haml:49
 msgid "The system is not currently consuming any subscriptions."
 msgstr "సిస్టమ్ ప్రస్తుతం యే సబ్‌స్క్రిప్షన్లను ఖర్చుచేయుటలేదు."
 
-#: app/models/system_template.rb:518
+#: app/models/system_template.rb:507
 msgid "The template has children templates."
 msgstr "మాదిరి చిల్డ్రన్ మాదిరులను కలిగివుంది."
 
 #: app/views/roles/index.html.haml:9
-msgid "There are currently no Global permissions for this role.  Please click Add Permission in the action bar below to add a Global permission.  A Global permission is one that cuts across all organizations."
-msgstr "ఈ పాత్ర కొరకు యే గ్లోబల్ అనుమతులు లేవు. గ్లోబల్ అనుమతిని జతచేయుటకు కింది చర్యా పట్టీ నందలి అనుమతి జతచేయి నొక్కుము. గ్లోబల్ అనుమతి అనునది అన్ని సంస్థలనందు వుండును."
+msgid ""
+"There are currently no Global permissions for this role.  Please click Add "
+"Permission in the action bar below to add a Global permission.  A Global "
+"permission is one that cuts across all organizations."
+msgstr ""
+"ఈ పాత్ర కొరకు యే గ్లోబల్ అనుమతులు లేవు. గ్లోబల్ అనుమతిని జతచేయుటకు కింది "
+"చర్యా పట్టీ నందలి అనుమతి జతచేయి నొక్కుము. గ్లోబల్ అనుమతి అనునది అన్ని "
+"సంస్థలనందు వుండును."
 
 #: app/views/roles/index.html.haml:9
-msgid "There are currently no permissions for this organization.  Please click Add Permission in the action bar below to add a permission to this organization."
-msgstr "ఈ సంస్థ కొరకు ప్రస్తుతం యెటువంటి అనుమతులు లేవు. ఈ సంస్థకు అనుమతి జతచేయుటకు కింది చర్యా పట్టీనందు దయచేసి అనుమతి జతచేయి నొక్కుము."
+msgid ""
+"There are currently no permissions for this organization.  Please click Add "
+"Permission in the action bar below to add a permission to this organization."
+msgstr ""
+"ఈ సంస్థ కొరకు ప్రస్తుతం యెటువంటి అనుమతులు లేవు. ఈ సంస్థకు అనుమతి జతచేయుటకు "
+"కింది చర్యా పట్టీనందు దయచేసి అనుమతి జతచేయి నొక్కుము."
 
 #: app/views/system_events/_events.html.haml:35
 #, 
 msgid "There are no events to display."
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:110
+#: app/views/systems/_subs.html.haml:107
 #: app/views/activation_keys/_subscriptions.html.haml:54
 msgid "There are no more subscriptions available."
 msgstr "అక్కడ యింకా యే సబ్‌స్క్రిప్షన్లు అందుబాటులోలేవు."
 
 #: app/views/system_packages/_packages.html.haml:96
-#: app/views/errata/_packages.html.haml:29
+#: app/views/errata/_packages.html.haml:27
 msgid "There are no packages to display."
 msgstr "ప్రదర్శించుటకు యే ప్యాకేజీలు లేవు."
 
@@ -3266,16 +3389,6 @@ msgstr "మీరు యెంచుకొనిన వనరు రకాని
 #: app/models/glue/pulp/repos.rb:538
 msgid "There is already a repo with the name [ %s ] for product [ %s ]"
 msgstr "[ %s ] పేరుతో వొక రెపో యిప్పటికే వుత్పత్తి [ %s ] కొరకు వుంది"
-
-#: app/controllers/sync_schedules_controller.rb:78
-#, 
-msgid "There must be at least one plan selected"
-msgstr ""
-
-#: app/controllers/sync_schedules_controller.rb:93
-#, 
-msgid "There must be at least one product selected"
-msgstr ""
 
 #: app/controllers/api/system_packages_controller.rb:99
 msgid "This action doesn't support pacakge groups"
@@ -3293,9 +3406,9 @@ msgstr "ఈ చేంజ్‌సెట్ ప్రస్తుతం ఉన్
 msgid "This template contains no content."
 msgstr "ఈ టెంప్లెట్ యే కాంటెంట్ కలిగిలేదు."
 
-#: app/views/organizations/_events.html.haml:14
-#: app/views/sync_plans/_form.html.haml:25
 #: app/views/sync_plans/_edit.html.haml:29
+#: app/views/sync_plans/_form.html.haml:25
+#: app/views/organizations/_events.html.haml:14
 msgid "Time"
 msgstr "సమయం"
 
@@ -3303,8 +3416,12 @@ msgstr "సమయం"
 msgid "Title"
 msgstr "శీర్షిక"
 
-#: app/views/common/_panel.html.haml:14
-msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
+#: app/views/common/_panel.html.haml:8
+msgid ""
+"To view the details of an item on the left, simply click on a single "
+"row.<br/><br/>To select multiple rows, hold the Control Key and click "
+"multiple rows.<br/><br/>If you don't need this help anymore, please click "
+"the close button in the top right of this box."
 msgstr ""
 "ఒక అంశము యొక్క వివరాలను ఎడమ వైపున దర్శించుటకు, వొంటరి అడ్డువరుసపై నొక్కుము.<br/>\n"
 "<br/>బహుళ అడ్డువరుసలను యెంపికచేయుటకు, కంట్రోల్ కీను పట్టివుంచి బహుళ అడ్డువరుసలను నొక్కుము.<br/>\n"
@@ -3314,10 +3431,9 @@ msgstr ""
 msgid "Total Systems"
 msgstr "మొత్త సిస్టమ్స్"
 
-#: app/views/roles/_permission.html.haml:13
-#: app/views/roles/_closed_permission.html.haml:3
-#: app/views/dashboard/_errata.haml:7
 #: app/views/activation_keys/_subscriptions.html.haml:5
+#: app/views/roles/_closed_permission.html.haml:3
+#: app/views/roles/_permission.html.haml:13 app/views/dashboard/_errata.haml:7
 #: app/views/errata/_show.html.haml:24 app/views/errata/_show.html.haml:56
 msgid "Type"
 msgstr "రకం"
@@ -3334,8 +3450,13 @@ msgstr "రకం: విస్తరణ"
 msgid "Type: Security"
 msgstr "రకం: రక్షణ"
 
-#: app/views/repositories/_new.html.haml:20
+#: app/views/products/_new.html.haml:29
+msgid "Types"
+msgstr "రకాలు"
+
 #: app/views/repositories/_edit.html.haml:22
+#: app/views/repositories/_new.html.haml:20
+#: app/views/products/_new.html.haml:24
 msgid "URL"
 msgstr "URL"
 
@@ -3343,7 +3464,7 @@ msgstr "URL"
 msgid "UUID"
 msgstr "UUID"
 
-#: app/models/activation_key.rb:90
+#: app/models/activation_key.rb:86
 msgid "Unable to determine quantity for pool %s"
 msgstr "పూల్ %s కొరకు పరిమాణం నిర్థారించలేదు"
 
@@ -3368,13 +3489,13 @@ msgstr "ప్యాకేజీల '%{p}' నిర్మూలన సిస్
 msgid "Unknown"
 msgstr "తెలియని"
 
-#: app/views/systems/_subs.html.haml:90
-#: app/views/providers/redhat/_subscription_details.html.haml:30
+#: app/views/systems/_subs.html.haml:87
 #: app/views/subscriptions/index.html.haml:39
+#: app/views/providers/redhat/_subscription_details.html.haml:30
 msgid "Unlimited"
 msgstr "అపరిమిత"
 
-#: app/views/systems/_subs.html.haml:54 app/views/systems/_subs.html.haml:55
+#: app/views/systems/_subs.html.haml:52 app/views/systems/_subs.html.haml:53
 msgid "Unsubscribe"
 msgstr "అన్‌సబ్‌స్క్రైబ్"
 
@@ -3402,6 +3523,14 @@ msgstr "ప్యాకేజీ నవీకరణ దోషం"
 msgid "Update Package Timeout"
 msgstr "ప్యాకేజీ నవీకరణ గడువుముగెసెను"
 
+#: app/models/role.rb:108
+msgid "Update Roles"
+msgstr "పాత్రలు నవీకరించు"
+
+#: app/models/user.rb:354
+msgid "Update Users"
+msgstr "వాడుకరులు నవీకరించు"
+
 #: app/controllers/system_packages_controller.rb:108
 msgid "Update of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "ప్యాకేజీల '%{p}' నవీకరణ సిస్టమ్ '%{s}' కొరకు ప్రణాళిక వేయబడెను."
@@ -3418,10 +3547,10 @@ msgstr "నవీకరించిన"
 msgid "Updating Package..."
 msgstr "ప్యాకేజీను నవీకరించుచున్నది..."
 
-#: app/views/common/_edit_i18n.html.haml:4
-#: app/views/gpg_keys/_new.html.haml:28 app/views/gpg_keys/_new.html.haml:33
 #: app/views/gpg_keys/_edit.html.haml:30 app/views/gpg_keys/_edit.html.haml:35
-#: app/views/providers/redhat/show.html.haml:34
+#: app/views/gpg_keys/_new.html.haml:28 app/views/gpg_keys/_new.html.haml:33
+#: app/views/common/_edit_i18n.html.haml:4
+#: app/views/providers/redhat/show.html.haml:31
 msgid "Upload"
 msgstr "అప్‌లోడ్"
 
@@ -3433,7 +3562,7 @@ msgstr "సబ్‌స్క్రిప్షన్ మేనిఫెస్�
 msgid "Uploading"
 msgstr "అప్‌లోడింగ్"
 
-#: app/controllers/users_controller.rb:275
+#: app/controllers/users_controller.rb:274
 msgid "User"
 msgstr "వాడుకరి"
 
@@ -3445,31 +3574,34 @@ msgstr "వాడుకరి ప్రకటనలు"
 msgid "User assignments for this role"
 msgstr "ఈ పాత్ర కొరకు వాడుకరి అప్పగింతలు"
 
-#: app/controllers/application_controller.rb:115
+#: app/controllers/application_controller.rb:219
 msgid "User does not belong to an organization."
 msgstr "వాడుకరి వొక సంస్థకు చెందిలేరు."
 
-#: app/controllers/users_controller.rb:192
+#: app/controllers/users_controller.rb:191
 msgid "User environment updated successfully."
 msgstr "వాడుకరి యెన్విరాన్మెంట్ విజయవంతంగా నవీకరించబడెను."
 
 #: app/views/notices/show.html.haml:9
-msgid "User notifications lists all notifications generated by a user as well as global notifications that are sent to all users."
-msgstr "వాడుకరి ప్రకటనలు అనునవి వాడుకరిచేత జనియింపచేయబడిన అదేవిదంగా వాడుకరులందరికీ పంపిన ప్రకటనలను జాబితాను చేయును."
+msgid ""
+"User notifications lists all notifications generated by a user as well as "
+"global notifications that are sent to all users."
+msgstr ""
+"వాడుకరి ప్రకటనలు అనునవి వాడుకరిచేత జనియింపచేయబడిన అదేవిదంగా వాడుకరులందరికీ "
+"పంపిన ప్రకటనలను జాబితాను చేయును."
 
-#: app/controllers/users_controller.rb:128
-#: app/controllers/users_controller.rb:217
+#: app/controllers/users_controller.rb:127
+#: app/controllers/users_controller.rb:216
 msgid "User updated successfully."
 msgstr "వాడుకరి విజయవంతంగా నవీకరించబడెను."
 
-#: app/views/password_resets/new.html.haml:13
 #: app/views/users/_edit_form.html.haml:22 app/views/users/_new.html.haml:19
+#: app/views/password_resets/new.html.haml:13
 msgid "Username:"
 msgstr "వాడుకరిపేరు:"
 
-#: app/helpers/breadcrumb_helper.rb:242
-#: app/controllers/users_controller.rb:273 app/models/resource_type.rb:97
-#: lib/navigation/administration.rb:56
+#: app/models/resource_type.rb:97 app/controllers/users_controller.rb:272
+#: app/helpers/breadcrumb_helper.rb:241 lib/navigation/administration.rb:56
 msgid "Users"
 msgstr "వాడుకరులు"
 
@@ -3485,37 +3617,40 @@ msgstr "విలువ"
 msgid "Verb(s):"
 msgstr "Verb(s):"
 
-#: app/views/roles/_permission.html.haml:30
 #: app/views/roles/_closed_permission.html.haml:17
+#: app/views/roles/_permission.html.haml:30
 msgid "Verbs"
 msgstr "Verbs"
 
-#: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
+#: app/views/password_resets/edit.html.haml:5
 msgid "Very Weak"
 msgstr "చాలా బలహీనం"
 
-#: app/helpers/systems_helper.rb:43
+#: app/models/system.rb:71 app/controllers/activation_keys_controller.rb:346
 #: app/controllers/subscriptions_controller.rb:55
-#: app/controllers/providers_controller.rb:280
-#: app/controllers/activation_keys_controller.rb:348 app/models/system.rb:68
+#: app/controllers/providers_controller.rb:279
+#: app/helpers/systems_helper.rb:43
 msgid "Virtual"
 msgstr "వర్చ్యువల్"
 
 #: app/views/providers/index.html.haml:16
-msgid "WARNING: This will override any GPG keys already associated with a repository within this product"
-msgstr "హెచ్చరిక: ఈ వుత్పత్తినందు యిప్పటికే రిపోజిటరీతో కలిసివున్న యే GPG కీలనైనా యిది వోవర్‌రైడ్ చేయును."
+msgid ""
+"WARNING: This will override any GPG keys already associated with a "
+"repository within this product"
+msgstr ""
+"హెచ్చరిక: ఈ వుత్పత్తినందు యిప్పటికే రిపోజిటరీతో కలిసివున్న యే GPG కీలనైనా "
+"యిది వోవర్‌రైడ్ చేయును."
 
-#: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
+#: app/views/password_resets/edit.html.haml:5
 msgid "Weak"
 msgstr "బలహీనం"
 
-#: app/controllers/application_controller.rb:144
+#: app/controllers/application_controller.rb:248
 msgid "Welcome Back!"
 msgstr "పునః స్వాగతం!"
 
-#: app/views/common/_common_i18n.html.haml:3
 #: app/views/users/_edit_form.html.haml:33
 msgid "Yes"
 msgstr "అవును"
@@ -3524,83 +3659,120 @@ msgstr "అవును"
 msgid "You are not authorised to perform this action."
 msgstr "ఈ చర్య జరుపుటకు మీకు అధికారం లేదు."
 
-#: app/controllers/api/sync_controller.rb:96
+#: app/controllers/api/sync_controller.rb:84
 msgid "You can synchronize repositories only in locker environment'"
-msgstr "మీరు రిపోజిటరీలను లాకర్ యెన్విరాన్మెంట్ నందు మాత్రమే సింక్రొనైజ్ చేయగలరు"
+msgstr ""
+"మీరు రిపోజిటరీలను లాకర్ యెన్విరాన్మెంట్ నందు మాత్రమే సింక్రొనైజ్ చేయగలరు"
 
-#: app/controllers/application_controller.rb:453
-msgid "You current organization is no longer valid. It is possible that the organization has been deleted, please log back in to continue."
-msgstr "మీ ప్రస్తుత సంస్థ యింకా చెల్లేది కాదు. బహుశా ఆ సంస్థ తొలగించుట వలన యిది జరిగివుండవచ్చు, దయచేసి కొనసాగించుటకు మరలా లాగిన్ అవ్వండి."
+#: app/controllers/application_controller.rb:556
+msgid ""
+"You current organization is no longer valid. It is possible that the "
+"organization has been deleted, please log back in to continue."
+msgstr ""
+"మీ ప్రస్తుత సంస్థ యింకా చెల్లేది కాదు. బహుశా ఆ సంస్థ తొలగించుట వలన యిది "
+"జరిగివుండవచ్చు, దయచేసి కొనసాగించుటకు మరలా లాగిన్ అవ్వండి."
 
 #: app/views/dashboard/index.html.haml:16
-msgid "You currently do not have any permissions that grant access to an organization.  Please contact your system administrator to receive access."
-msgstr "ఒక సంస్థకు యాక్సెస్‌ను అందించే అనుమతులను మీరు ప్రస్తుతం కలిగిలేరు. ఏక్సెస్ పొందుటకు దయచేసి మీ సిస్టమ్ నిర్వహణాధికారిని సంప్రదించండి."
+msgid ""
+"You currently do not have any permissions that grant access to an "
+"organization.  Please contact your system administrator to receive access."
+msgstr ""
+"ఒక సంస్థకు యాక్సెస్‌ను అందించే అనుమతులను మీరు ప్రస్తుతం కలిగిలేరు. ఏక్సెస్ "
+"పొందుటకు దయచేసి మీ సిస్టమ్ నిర్వహణాధికారిని సంప్రదించండి."
 
 #: app/controllers/failed_authentication_controller.rb:28
-msgid "You do not have valid credentials to access this system. Please contact your administrator."
-msgstr "ఈ సిస్టమ్‌ను యాక్సెస్ చేయుటకు మీరు తగిన ఆనవాళ్ళు కలిగిలేరు. దయచేసి మీ నిర్వహణాధికారిని సంప్రదించండి."
+msgid ""
+"You do not have valid credentials to access this system. Please contact your"
+" administrator."
+msgstr ""
+"ఈ సిస్టమ్‌ను యాక్సెస్ చేయుటకు మీరు తగిన ఆనవాళ్ళు కలిగిలేరు. దయచేసి మీ "
+"నిర్వహణాధికారిని సంప్రదించండి."
 
 #: app/views/roles/index.html.haml:9
-msgid "You have selected all resource types; this will grant full access to the organization."
-msgstr "మీరు అన్ని వనరు రకాలను యెంచినారు; ఇది సంస్థకు పూర్తి యాక్సెస్‌ను అందించును."
+msgid ""
+"You have selected all resource types; this will grant full access to the "
+"organization."
+msgstr ""
+"మీరు అన్ని వనరు రకాలను యెంచినారు; ఇది సంస్థకు పూర్తి యాక్సెస్‌ను అందించును."
 
 #: app/views/common/404.html.haml:4
 msgid "You may have mistyped the address or the page may have moved."
-msgstr "మీరు చిరునామాను తప్పుగా ప్రవేశపెట్టి వుంటారు లేదా పేజీ కదల్చబడి వుంటుంది."
+msgstr ""
+"మీరు చిరునామాను తప్పుగా ప్రవేశపెట్టి వుంటారు లేదా పేజీ కదల్చబడి వుంటుంది."
 
 #: app/views/common/500.html.haml:6
 msgid "You might want to log out and log back in again to clear your cookies."
-msgstr "మీ కుకీలను శుబ్రంచేయుటకు మీరు లాగ్ అవుట్ అయ్యి మరియు లాగ్ బాక్ యిన్ అవ్వవలసి వుంటుంది."
+msgstr ""
+"మీ కుకీలను శుబ్రంచేయుటకు మీరు లాగ్ అవుట్ అయ్యి మరియు లాగ్ బాక్ యిన్ అవ్వవలసి"
+" వుంటుంది."
 
-#: app/controllers/application_controller.rb:133
-#: app/controllers/application_controller.rb:443
+#: app/controllers/application_controller.rb:237
+#: app/controllers/application_controller.rb:546
 msgid "You must be logged in to access that page."
 msgstr "ఆ పేజీను యాక్సెస్ చేయుటకు మీరు తప్పక లాగిన్ అయ్యివుండాలి."
 
-#: app/views/roles/_edit.html.haml:90
+#: app/views/roles/_edit.html.haml:89
 msgid "You must select an organization above before you can add a permission."
-msgstr "మీరు అనుమతిని జతచేయుటకు ముందుగా మీరు పైన వొక సంస్థను తప్పక యెంపికచేయాలి."
+msgstr ""
+"మీరు అనుమతిని జతచేయుటకు ముందుగా మీరు పైన వొక సంస్థను తప్పక యెంపికచేయాలి."
 
-#: app/views/roles/_edit.html.haml:95
+#: app/views/roles/_edit.html.haml:94
 msgid "You must select and view a permission before you can edit it."
-msgstr "మీరు దానిని సరికూర్చుటకు ముందుగా వొక అనుమతిని యెంపికచేసి మరియు దర్శించాలి."
+msgstr ""
+"మీరు దానిని సరికూర్చుటకు ముందుగా వొక అనుమతిని యెంపికచేసి మరియు దర్శించాలి."
 
 #: app/views/roles/index.html.haml:9
 msgid "You must select at least one verb."
 msgstr "మీరు కనీసం వొక verb ను యెంపికచేయాలి."
 
 #: app/views/systems/_new.html.haml:57
-msgid "You need to create an environment for this org before you can create a system."
-msgstr "మీరు వొక సిస్టమ్‌ను సృష్టించుటకు ముందుగా మీరు యీ org ఫైలునకు వొక పరిసరం సృష్టించాలి."
+msgid ""
+"You need to create an environment for this org before you can create a "
+"system."
+msgstr ""
+"మీరు వొక సిస్టమ్‌ను సృష్టించుటకు ముందుగా మీరు యీ org ఫైలునకు వొక పరిసరం "
+"సృష్టించాలి."
 
 #: app/controllers/failed_authentication_controller.rb:25
-msgid "You've entered an incorrect username, password combination or account disabled, please try again."
-msgstr "మీరు సరికాని వాడుకరిపేరు, సంకేతపదం ప్రవేశపెట్టివుంటారు లేదా ఖాతా అచేతనం అయ్యివుంటుంది, దయచేసి మరలా ప్రయత్నించండి."
+msgid ""
+"You've entered an incorrect username, password combination or account "
+"disabled, please try again."
+msgstr ""
+"మీరు సరికాని వాడుకరిపేరు, సంకేతపదం ప్రవేశపెట్టివుంటారు లేదా ఖాతా అచేతనం "
+"అయ్యివుంటుంది, దయచేసి మరలా ప్రయత్నించండి."
 
 #: app/views/promotions/show.html.haml:185
-msgid "Your update has applied successfully, but during that time another user has also made an update."
-msgstr "మీ నవీకరణ విజయవంతంగా ఆపాదించబడెను, అయితే అదే సమయంలో వేరే వాడుకరి కూడా వొక నవీకరణ చేసినారు."
+msgid ""
+"Your update has applied successfully, but during that time another user has "
+"also made an update."
+msgstr ""
+"మీ నవీకరణ విజయవంతంగా ఆపాదించబడెను, అయితే అదే సమయంలో వేరే వాడుకరి కూడా వొక "
+"నవీకరణ చేసినారు."
 
-#: app/controllers/activation_keys_controller.rb:361
+#: app/views/products/_new.html.haml:32
+msgid "Yum"
+msgstr "Yum"
+
+#: app/controllers/activation_keys_controller.rb:359
 msgid "activation_key"
 msgstr "activation_key"
 
-#: app/models/system_task.rb:124
+#: app/models/system_task.rb:112
 #, 
 msgid "all packages"
 msgstr ""
 
-#: app/models/system_task.rb:157
-#, 
-msgid "all packages update"
-msgstr ""
-
-#: app/models/system_task.rb:155
+#: app/models/system_task.rb:137
 #, 
 msgid "all packages update failed"
 msgstr ""
 
-#: app/models/user.rb:62
+#: app/models/system_task.rb:139
+#, 
+msgid "all packages updated"
+msgstr ""
+
+#: app/models/user.rb:63
 msgid "at least 5 characters"
 msgstr "కనీసం 5 అక్షరాలు"
 
@@ -3617,13 +3789,17 @@ msgstr "అల్ఫా న్యూమరల్స్, స్పేస్,'_','
 msgid "cannot contain characters other than alpha numerals,'_', '-'."
 msgstr "అల్ఫా న్యూమరల్స్,'_','-' కాక వేరే వాటిని కలిగివుండలేవు."
 
-#: app/controllers/changesets_controller.rb:281
+#: app/controllers/changesets_controller.rb:294
 msgid "changeset"
 msgstr "చెంజ్‌సెట్"
 
-#: app/controllers/system_templates_controller.rb:265
-msgid "contained the selected distribution for this template.  Please select another distribution to ensure a working system template."
-msgstr "ఈ మాదిరి కొరకు యెంపికచేసిన పంపిణీను కలిగివుంది. పనిచేయుచున్న సిస్టమ్ మాదిరిని పొందుటకు దయచేసి వేరొక పంపిణీను యెంపికచేయి."
+#: app/controllers/system_templates_controller.rb:273
+msgid ""
+"contained the selected distribution for this template.  Please select "
+"another distribution to ensure a working system template."
+msgstr ""
+"ఈ మాదిరి కొరకు యెంపికచేసిన పంపిణీను కలిగివుంది. పనిచేయుచున్న సిస్టమ్ "
+"మాదిరిని పొందుటకు దయచేసి వేరొక పంపిణీను యెంపికచేయి."
 
 #: app/views/promotions/show.html.haml:8
 msgid "currently editing this changeset"
@@ -3637,15 +3813,15 @@ msgstr "పరిసరం అనునది వొక చైల్డును
 msgid "environment required"
 msgstr "ఎన్విరాన్మెంట్ అవసరం"
 
-#: app/controllers/filters_controller.rb:214
+#: app/controllers/filters_controller.rb:227
 msgid "filter"
 msgstr "ఫిల్టర్"
 
-#: app/controllers/gpg_keys_controller.rb:173
+#: app/controllers/gpg_keys_controller.rb:171
 msgid "gpg_key"
 msgstr "gpg_key"
 
-#: app/models/system_task.rb:307
+#: app/models/system_task.rb:262
 #, 
 msgid "installed"
 msgstr ""
@@ -3670,17 +3846,17 @@ msgstr ""
 msgid "installing packages..."
 msgstr ""
 
-#: app/models/system_template_pack_group.rb:26
-#: app/models/system_template_pg_category.rb:25
 #: app/models/system_template_distribution.rb:25
+#: app/models/system_template_pg_category.rb:25
+#: app/models/system_template_pack_group.rb:26
 msgid "is already in the template"
 msgstr "టెంప్లేట్ నందు యిప్పటికే వుందా"
 
-#: app/models/provider.rb:78 app/models/katello_url_format_validator.rb:48
+#: app/models/katello_url_format_validator.rb:48 app/models/provider.rb:84
 msgid "is invalid"
 msgstr "చెల్లనిదా"
 
-#: app/models/provider.rb:77
+#: app/models/provider.rb:83
 msgid "is too long"
 msgstr "మరీ పొడవుగా వుంది"
 
@@ -3688,7 +3864,7 @@ msgstr "మరీ పొడవుగా వుంది"
 msgid "link"
 msgstr "లింకు"
 
-#: app/models/permission.rb:25
+#: app/models/permission.rb:24
 msgid "must be unique within an organization scope"
 msgstr "సంస్థ పరిథిలో తప్పక విశిష్టంగా వుండాలి"
 
@@ -3696,7 +3872,7 @@ msgstr "సంస్థ పరిథిలో తప్పక విశిష్
 msgid "must be unique within one environment"
 msgstr "ఒక యెన్విరాన్మెంటునందు తప్పక విశిష్టంగా వుండాలి"
 
-#: app/models/gpg_key.rb:32 app/models/kt_environment.rb:85
+#: app/models/gpg_key.rb:21 app/models/kt_environment.rb:85
 msgid "must be unique within one organization"
 msgstr "సంస్థ నందు తప్పక విశిష్టంగా వుండాలి"
 
@@ -3712,16 +3888,16 @@ msgstr "లీడింగ్ లేదా ట్రైలింగ్ వైట
 msgid "none"
 msgstr "ఏదీకాదు"
 
-#: app/models/system_task.rb:300
+#: app/models/system_task.rb:255
 msgid "obsoleted"
 msgstr "తొలగించిన"
 
-#: app/views/roles/_edit.html.haml:55 app/views/roles/_edit.html.haml:62
-#: app/views/roles/_edit.html.haml:69 app/views/gpg_keys/_new.html.haml:24
+#: app/views/gpg_keys/_new.html.haml:24 app/views/roles/_edit.html.haml:55
+#: app/views/roles/_edit.html.haml:62 app/views/roles/_edit.html.haml:69
 msgid "or"
 msgstr "లేదా"
 
-#: app/controllers/organizations_controller.rb:218
+#: app/controllers/organizations_controller.rb:214
 msgid "organization"
 msgstr "సంస్థ"
 
@@ -3737,11 +3913,15 @@ msgstr "ఉత్పత్తి"
 msgid "promote_confirm"
 msgstr "promote_confirm"
 
-#: app/controllers/providers_controller.rb:244
+#: app/controllers/providers_controller.rb:243
 msgid "provider"
 msgstr "సమర్పకులు"
 
-#: app/models/system_task.rb:306
+#: app/models/filter.rb:23
+msgid "pulp_id must be unique within one organization"
+msgstr "ఒక సంస్థ నందు pulp_id అనునది తప్పక విశిష్టంగా వుండాలి"
+
+#: app/models/system_task.rb:261
 msgid "removed"
 msgstr "తీసివేసిన"
 
@@ -3765,20 +3945,20 @@ msgstr ""
 msgid "removing packages..."
 msgstr ""
 
-#: app/controllers/roles_controller.rb:255
+#: app/controllers/roles_controller.rb:252
 msgid "role"
 msgstr "పాత్ర"
 
-#: app/controllers/sync_management_controller.rb:243
+#: app/controllers/sync_management_controller.rb:224
 msgid "sync did not complete successfully"
 msgstr "సింక్ అనునది విజయవంతంగా పూర్తికాలేదు"
 
-#: app/controllers/sync_plans_controller.rb:168
+#: app/controllers/sync_plans_controller.rb:165
 msgid "sync_plan"
 msgstr "sync_plan"
 
-#: app/controllers/systems_controller.rb:323
 #: app/controllers/system_packages_controller.rb:188
+#: app/controllers/systems_controller.rb:331
 msgid "system"
 msgstr "సిస్టమ్"
 
@@ -3786,15 +3966,16 @@ msgstr "సిస్టమ్"
 msgid "system templates"
 msgstr "సిస్టమ్ టెంప్లేట్స్"
 
-#: app/controllers/system_templates_controller.rb:76
+#: app/controllers/system_templates_controller.rb:84
 msgid "template"
 msgstr "టెంప్లేట్"
 
-#: app/models/provider.rb:71
-msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
+#: app/models/provider.rb:77
+msgid ""
+"the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Red Hat సమర్పకులు: [ %s ] కొరకు కింది యాట్రిబ్యూట్స్ నవీకరించబడలేవు"
 
-#: app/models/system_task.rb:297
+#: app/models/system_task.rb:252
 msgid "updated"
 msgstr "నవీకరించిన"
 
@@ -3818,11 +3999,11 @@ msgstr ""
 msgid "updating packages..."
 msgstr ""
 
-#: app/controllers/users_controller.rb:284
+#: app/controllers/users_controller.rb:282
 msgid "user"
 msgstr "వాడుకరి"
 
-#: app/views/common/_panel.html.haml:36
+#: app/views/common/_panel.html.haml:30
 msgid "viewing"
 msgstr "దర్శించిన"
 

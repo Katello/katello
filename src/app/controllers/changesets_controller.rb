@@ -106,7 +106,7 @@ class ChangesetsController < ApplicationController
     begin
       @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
                                      :environment_id=>@environment.id)
-      notice _("Changeset '#{@changeset["name"]}' was created.")
+      notice _("Promotion Changeset '#{@changeset["name"]}' was created.")
       bc = {}
       add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
                       {:client_render => true}, {:is_new=>true})
@@ -153,9 +153,9 @@ class ChangesetsController < ApplicationController
       render :json=>{:timestamp=>@changeset.updated_at.to_i.to_s} and return
     end
 
-    render :text => "The changeset is currently under review, no modifications can occur during this phase.",
+    render :text => "The promotion changeset is currently under review, no modifications can occur during this phase.",
            :status => :bad_request if @changeset.state == Changeset::REVIEW
-    render :text => "This changeset is already promoted, no content modifications can be made.",
+    render :text => "This promotion changeset is already promoted, no content modifications can be made.",
                :status => :bad_request if @changeset.state == Changeset::PROMOTED
 
     if params.has_key? :data
@@ -206,7 +206,7 @@ class ChangesetsController < ApplicationController
     name = @changeset.name
     id = @changeset.id
     @changeset.destroy
-    notice _("Changeset '#{name}' was deleted.")
+    notice _("Promotion Changeset '#{name}' was deleted.")
     render :text=>""
   end
 
@@ -243,8 +243,8 @@ class ChangesetsController < ApplicationController
       @environment = KTEnvironment.find(params[:env_id])
     else
       #didnt' find an environment, just do the first the user has access to
-      list = KTEnvironment.changesets_readable(current_organization).where(:locker=>false)
-      @environment ||= list.first || current_organization.locker
+      list = KTEnvironment.changesets_readable(current_organization).where(:library=>false)
+      @environment ||= list.first || current_organization.library
     end
   end
 
@@ -267,6 +267,7 @@ class ChangesetsController < ApplicationController
   def setup_options
     @panel_options = { :title => _('Changesets'),
                  :col => ['name'],
+                 :titles => [_('Name')],
                  :enable_create => false,
                  :name => controller_display_name,
                  :accessor => :id,

@@ -786,26 +786,34 @@ KT.panel.list = (function () {
             if (options['create']) {
                 $('#' + options['create']).live('submit', function (e) {
                     var button = $(this).find('input[type|="submit"]'),
-                        data = KT.common.getSearchParams() || {};
-                        
+                        data = KT.common.getSearchParams() || {},
+                        validation = options['validation'] || function(){ return true; };
+                                           
                     e.preventDefault();
-                    button.attr("disabled", "disabled");
-                    
-                    $(this).ajaxSubmit({
-                        url: KT.routes[resource_type + '_path'](),
-                        data: data,
-                        success: createSuccess,
-                        error: function (e) {
-                            button.removeAttr('disabled');
-                            notices.checkNotices();
-                        }
-                    });
+
+                    if( options['extra_create_data'] ){
+                        $.extend(data, options['extra_create_data']() );
+                    }
+
+                    if( validation() ){
+                        button.attr("disabled", "disabled");
+                        
+                        $(this).ajaxSubmit({
+                            url: KT.routes[resource_type + '_path'](),
+                            data: data,
+                            success: createSuccess,
+                            error: function (e) {
+                                button.removeAttr('disabled');
+                                notices.checkNotices();
+                            }
+                        });
+                    }
                 });
             }
         },
         createSuccess = function(data){
         	var id;
-                            
+
             if (data['no_match']) {
                 KT.panel.closePanel($('#panel'));
                 notices.checkNotices();

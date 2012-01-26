@@ -13,7 +13,7 @@
 class PackagesController < ApplicationController
 	
   before_filter :package_details_auth, :only=> [:filelist, :changelog, :dependencies]
-  before_filter :lookup_package, :except=>[:auto_complete_locker]
+  before_filter :lookup_package, :except=>[:auto_complete_library]
   before_filter :authorize
 
   def rules
@@ -24,7 +24,7 @@ class PackagesController < ApplicationController
       :filelist => test,
       :changelog => test,
       :dependencies => test,
-      :auto_complete_locker=>test
+      :auto_complete_library=>test
 
     }
   end
@@ -45,10 +45,9 @@ class PackagesController < ApplicationController
       render :partial=>"dependencies", :layout => "tupane_layout"
   end 	
 
-  def auto_complete_locker
+  def auto_complete_library
     name = params[:term]
-    render :json=>Pulp::Package.name_search(name).sort.uniq[0..19]
-    #ender :json=>Glue::Pulp::Package.name_search(name + '*')
+    render :json=>Glue::Pulp::Package.name_search(name)
   end
 
   private

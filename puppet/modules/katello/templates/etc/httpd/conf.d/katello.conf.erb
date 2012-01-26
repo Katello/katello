@@ -28,16 +28,19 @@ NameVirtualHost *:443
   Alias /<%= scope.lookupvar("katello::params::deployment") %>/assets "/usr/share/katello/public/assets"
   Alias /<%= scope.lookupvar("katello::params::deployment") %>/images "/usr/share/katello/public/images"
   Alias /<%= scope.lookupvar("katello::params::deployment") %>/fonts "/usr/share/katello/public/fonts"
+  Alias /<%= scope.lookupvar("katello::params::deployment") %>/javascripts "/usr/share/katello/public/javascripts"
 
   ProxyPass /<%= scope.lookupvar("katello::params::deployment") %>/assets !
   ProxyPass /<%= scope.lookupvar("katello::params::deployment") %>/images !
   ProxyPass /<%= scope.lookupvar("katello::params::deployment") %>/fonts !
+  ProxyPass /<%= scope.lookupvar("katello::params::deployment") %>/javascripts !
   ProxyPass /<%= scope.lookupvar("katello::params::deployment") %> balancer://thinservers
 
   ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %> balancer://thinservers
   ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %>/assets !
   ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %>/images !
   ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %>/fonts !
+  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %>/javascripts !
 
   <Location /<%= scope.lookupvar("katello::params::deployment") %>>
     RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"

@@ -40,7 +40,7 @@ describe Api::SystemPackagesController do
     Pulp::Consumer.stub!(:update).and_return(true)
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
+    @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.library.id, :organization => @organization)
     @system = System.create!(:environment => @environment_1, :uuid => "1234", :name => "system.example.com", :cp_type => 'system', :facts => {:foo => :bar})
     System.stub(:first => @system)
   end

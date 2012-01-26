@@ -31,8 +31,8 @@ class DashboardController < ApplicationController
   end
 
   def errata
-    # retrieve the list of repos that are readable by the user, but since a system cannot be registered to Locker,
-    # skip repos in Locker
+    # retrieve the list of repos that are readable by the user, but since a system cannot be registered to Library,
+    # skip repos in Library
     repos = Repository.readable_in_org(current_organization, true)
 
     systems_hash = {}

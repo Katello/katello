@@ -108,6 +108,13 @@ KT.templates = function() {
             trail: ['templates', template_root],
             url: ''
         };
+        bc['comps_' + id ] = {
+            cache: null,
+            client_render: true,
+            name: i18n.package_groups,
+            trail: ['templates', template_root],
+            url: ''
+        };
     },
     in_array =  function(name, array) {
         var to_ret = -1;
@@ -179,6 +186,7 @@ KT.templates = function() {
             buttons.save.addClass("disabled");
             buttons.download.addClass("disabled");
             $('.package_add_remove').hide();
+            $('.package_group_add_remove').hide();
             $('.repo_add_remove').hide();
             $('.product_add_remove').hide();
         }

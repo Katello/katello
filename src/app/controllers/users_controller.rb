@@ -101,7 +101,8 @@ class UsersController < ApplicationController
 
   def create
     begin
-      @user = User.new(params[:user])
+      user_params = params[:user]
+      @user = User.new(user_params)
       env_id = params[:user]['env_id']
       if env_id
         @environment = KTEnvironment.find(env_id)
@@ -331,6 +332,7 @@ class UsersController < ApplicationController
   def setup_options
     @panel_options = { :title => _('Users'),
                  :col => ['username'],
+                 :titles => [_('Username')],
                  :create => _('User'),
                  :name => controller_display_name,
                  :ajax_load  => true,
@@ -341,11 +343,6 @@ class UsersController < ApplicationController
 
   def controller_display_name
     return 'user'
-  end
-
-
-  def validate_default_perms
-
   end
 
 end

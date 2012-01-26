@@ -18,6 +18,7 @@ class Permission < ActiveRecord::Base
   has_many :tags, :class_name=>"PermissionTag", :inverse_of=>:permission
 
   before_save :cleanup_tags_verbs
+  before_save :check_global
   after_save :update_related_index
   
   validates :name, :presence => true, :katello_name_format => true
@@ -147,6 +148,11 @@ class Permission < ActiveRecord::Base
     self.verbs.clear if self.all_verbs?
   end
 
+  def check_global
+    unless self.organization_id
+      self.all_tags = true
+    end
+  end
 
   def update_related_index
     if self.name_changed?

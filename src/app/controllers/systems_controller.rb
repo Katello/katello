@@ -186,6 +186,13 @@ class SystemsController < ApplicationController
   end
 
   def products
+    if @system.class == Hypervisor
+      render :partial=>"hypervisor", :layout=>"tupane_layout",
+             :locals=>{:system=>@system,
+                       :message=>_("Hypervisors do not have software products")}
+      return
+    end
+
     products , offset = first_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
     render :partial=>"products", :layout => "tupane_layout", :locals=>{:system=>@system, :products => products, :offset => offset}
   end
@@ -274,7 +281,7 @@ class SystemsController < ApplicationController
     readable = KTEnvironment.systems_readable(current_organization)
     @environment = KTEnvironment.find(params[:env_id]) if params[:env_id]
     @environment ||= first_env_in_path(readable, false)
-    @environment ||=  current_organization.locker
+    @environment ||=  current_organization.library
   end
 
   def find_system
@@ -287,7 +294,8 @@ class SystemsController < ApplicationController
 
   def setup_options
     @panel_options = { :title => _('Systems'),
-                      :col => COLUMNS.keys,
+                      :col => ["name", "lastCheckin"],
+                      :titles => [_("Name"), _("Last Checked In")],
                       :custom_rows => true,
                       :enable_create => System.registerable?(@environment, current_organization),
                       :create => _("System"),

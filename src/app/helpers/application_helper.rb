@@ -86,7 +86,11 @@ module ApplicationHelper
     enable_create = true if enable_create.nil?
     enable_sort = options[:enable_sort] ? options[:enable_sort] : false
 
-    render :partial => "common/panel", 
+    raise ":titles option not provided" unless options[:titles]
+
+
+
+    render :partial => "common/panel",
            :locals => {
              :title => options[:title],
              :name => options[:name],
@@ -94,6 +98,7 @@ module ApplicationHelper
              :enable_create => enable_create,
              :enable_sort => enable_sort,
              :columns => options[:col],
+             :titles => options[:titles],
              :custom_rows => options[:custom_rows],
              :collection => collection,
              :accessor=>options[:accessor],
@@ -139,7 +144,7 @@ module ApplicationHelper
   end
 
   def environment_selector options = {}
-    options[:locker_clickable] = true if options[:locker_clickable].nil? # ||= doesn't work if false
+    options[:library_clickable] = true if options[:library_clickable].nil? # ||= doesn't work if false
     options[:url_proc] = nil if options[:url_proc].nil? #explicitly set url_method to nil if not provided
 
     # the path widget and entries classes allow the user to override the classes that will be applied to these
@@ -155,20 +160,20 @@ module ApplicationHelper
     render :partial=>"/common/env_select", :locals => options
   end
 
-  def env_select_class curr_env, selected_env, curr_path, selected_path, accessible_envs, locker_clickable
+  def env_select_class curr_env, selected_env, curr_path, selected_path, accessible_envs, library_clickable
     classes = []
-    if (locker_clickable or !curr_env.locker?) and accessible_envs.member?(curr_env)
+    if (library_clickable or !curr_env.library?) and accessible_envs.member?(curr_env)
       classes << "path_link"
     else
-      # if locker isn't clickable, disable the hover effect
+      # if library isn't clickable, disable the hover effect
       classes << "crumb-nohover"
     end
 
     if curr_env.id == selected_env.id
-      if !selected_env.locker?
+      if !selected_env.library?
         classes << "active"
       else
-        #we only want to highlight the Locker along the path that is actually selected
+        #we only want to highlight the Library along the path that is actually selected
         classes << "active" if curr_path[1] == selected_path[1]
       end
     end

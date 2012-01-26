@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Hypervisor < System
-  include IndexedModel
+  use_index_of System
 
   UNSUPPORTED_ACTIONS = [:package_profile, :pulp_facts, :simple_packages, :errata, :del_pulp_consumer, :set_pulp_consumer,
                          :update_pulp_consumer, :upload_package_profile, :install_package, :uninstall_package,

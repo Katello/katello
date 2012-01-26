@@ -29,10 +29,10 @@ describe Repository do
     User.current = superadmin
     @product = Product.new({:name => "prod"})
     @product.provider = @organization.redhat_provider
-    @product.environments << @organization.locker
+    @product.environments << @organization.library
     @product.stub(:arch).and_return('noarch')
     @product.save!
-    @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
+    @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
     @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",:pulp_id=>"1010", :enabled => true)
   end
 
@@ -74,12 +74,12 @@ describe Repository do
       end
       specify "user with content perms on env can access " do
         User.current = user_with_permissions{|u|
-          u.can([:read_contents], :environments, @organization.locker.id, @organization)}
-        Repository.readable(@organization.locker).should == [@repo]
+          u.can([:read_contents], :environments, @organization.library.id, @organization)}
+        Repository.readable(@organization.library).should == [@repo]
       end
       specify "user without content perms on env cannot access " do
         User.current = user_without_permissions
-        Repository.readable(@organization.locker).should == []
+        Repository.readable(@organization.library).should == []
       end
 
 
