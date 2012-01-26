@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jan 26 2012 Shannon Hughes <shughes@redhat.com> 0.1.44-2
+- se build (shughes@redhat.com)
+
 * Thu Jan 26 2012 Shannon Hughes <shughes@redhat.com> 0.1.44-1
 - 783513 - CLI BRANDING: Locker -> Library (mbacovsk@redhat.com)
 
