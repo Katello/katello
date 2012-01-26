@@ -34,6 +34,11 @@ class Api::SystemsController < Api::ApiController
     read_system = lambda { @system.readable? or User.consumer? }
     delete_system = lambda { @system.deletable? or User.consumer? }
 
+    # After a system registers, it immediately uploads its packages. Although newer subscription-managers send
+    # certificate (User.consumer? == true), some do not. In this case, confirm that the user has permission to
+    # register systems in the system's organization and environment.
+    upload_system_packages = lambda { @system.editable? or System.registerable?(@system.environment, @system.organization) or User.consumer? }
+
     {
       :new => register_system,
       :create => register_system,
@@ -45,7 +50,7 @@ class Api::SystemsController < Api::ApiController
       :destroy => delete_system,
       :package_profile => read_system,
       :errata => read_system,
-      :upload_package_profile => edit_system,
+      :upload_package_profile => upload_system_packages,
       :report => index_systems,
       :subscribe => edit_system,
       :unsubscribe => edit_system,
