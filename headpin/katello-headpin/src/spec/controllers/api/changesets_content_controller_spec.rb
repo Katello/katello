@@ -37,14 +37,14 @@ describe Api::ChangesetsContentController, :katello => true do
   let(:distribution_id) {4}
 
   before(:each) do
-    @locker = KTEnvironment.new(:name => 'Locker', :locker => true)
-    @locker.id = 2
-    @locker.stub(:locker?).and_return(true)
-    @environment = KTEnvironment.new(:name => 'environment', :locker => false)
+    @library = KTEnvironment.new(:name => 'Library', :library => true)
+    @library.id = 2
+    @library.stub(:library?).and_return(true)
+    @environment = KTEnvironment.new(:name => 'environment', :library => false)
     @environment.id = 1
-    @environment.stub(:locker?).and_return(false)
-    @environment.stub(:prior).and_return(@locker)
-    @locker.stub(:successor).and_return(@environment)
+    @environment.stub(:library?).and_return(false)
+    @environment.stub(:prior).and_return(@library)
+    @library.stub(:successor).and_return(@environment)
 
     @template = mock(SystemTemplate, {"name" => "tpl"})
     @product = mock(Product, {"name" => "prod"})

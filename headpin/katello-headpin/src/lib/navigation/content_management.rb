@@ -53,7 +53,7 @@ module Navigation
     def menu_providers
 
       {:key => :providers,
-       :name =>_("Providers"),
+       :name =>_("Content Providers"),
        :url => :sub_level,
        :if => :sub_level,
        :options => {:class=>'content second_level', "data-menu"=>"content"},
@@ -64,7 +64,7 @@ module Navigation
 
     def menu_redhat_providers
       {:key => :redhat_providers,
-        :name =>_("Red Hat"),
+        :name =>_("Red Hat Content Provider"),
         :url => redhat_provider_providers_path,
         :if => lambda{current_organization && current_organization.readable?},
         :options => {:class=>"third_level"}
@@ -73,7 +73,7 @@ module Navigation
 
     def menu_custom_providers
       {:key => :custom_providers,
-        :name =>_("Custom"),
+        :name =>_("Custom Content Provider"),
         :url => providers_path,
         :if => lambda{AppConfig.katello? && current_organization && Provider.any_readable?(current_organization())},
         :options => {:class=>"third_level"}
@@ -139,7 +139,7 @@ module Navigation
 
     def menu_changeset
        {:key => :changeset,
-        :name => _("Changeset History"),
+        :name => _("Promotion Changeset History"),
         :url => changesets_path,
         :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
         :options => {:class=>'content second_level', "data-menu"=>"content"}

@@ -26,8 +26,6 @@ Src::Application.routes.draw do
     end
   end
 
-  resource :account
-
   resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy, :auto_complete_search] do
     collection do
       get :auto_complete_search
@@ -116,7 +114,7 @@ Src::Application.routes.draw do
       get :dependencies
     end
     collection do
-      get :auto_complete_locker
+      get :auto_complete_library
     end
   end
 
@@ -211,7 +209,7 @@ Src::Application.routes.draw do
   match '/repositories/:id/enable_repo' => 'repositories#enable_repo', :via => :put, :as => :enable_repo
 
   resources :repositories, :only => [:new, :create, :edit, :destroy] do
-    get :auto_complete_locker, :on => :collection
+    get :auto_complete_library, :on => :collection
 
     resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ } do
       member do
@@ -306,8 +304,6 @@ Src::Application.routes.draw do
     get 'allowed_orgs'
   end
 
-
-  resource :account
 
   root :to => "user_sessions#new"
 

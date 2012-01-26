@@ -26,7 +26,7 @@ describe SystemErrataController, :katello => true do
       set_default_locale
 
       @organization = setup_system_creation
-      @environment = KTEnvironment.new(:name => 'test', :prior => @organization.locker.id, :organization => @organization)
+      @environment = KTEnvironment.new(:name => 'test', :prior => @organization.library.id, :organization => @organization)
       @environment.save!
 
       controller.stub!(:errors)
