@@ -56,7 +56,7 @@
     = form_tag update_preference_user_path(current_user, :preference => :subscriptions_match_system), :id=>"matchsystem_form", :method=>"put", :remote=>false do
       #{_("Available Subscriptions")}
       %span.fr{:style => "font-weight: normal; font-size: 90%;font-family: 'Overpass'', Interstate, sans-serif;"}
-        = check_box_tag "matchsystem", value=current_user.preferences[:user][:subscriptions_match_system], current_user.preferences[:user][:subscriptions_match_system]
+        = check_box_tag "matchsystem", value=current_user.subscriptions_match_system_preference, current_user.subscriptions_match_system_preference 
         #{_("Match System")}
   = form_tag update_subscriptions_system_path, :id=>"subscribe", :method=>"post", :remote=>true do
     -#= hidden_field_tag "commit", "subscribe"
