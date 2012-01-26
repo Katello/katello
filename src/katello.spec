@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.196
+Version:        0.1.197
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -353,6 +353,39 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Jan 26 2012 Shannon Hughes <shughes@redhat.com> 0.1.197-1
+- update to i18n strings (shughes@redhat.com)
+- 784679 - fixed prefs error on system subscription page that was causing the
+  page to not load. [stolen from tomckay] (jomara@redhat.com)
+- rename-locker - fixed locker that sneaked back during merge
+  (mbacovsk@redhat.com)
+- Gettext:find from master was going to be a HUGE pain. (jrist@redhat.com)
+- rename-branding - Fix for a small typo. (jrist@redhat.com)
+- Old string cleanup from pre-gettext days. (jrist@redhat.com)
+- rename-locker - fixed paths in test helper (mbacovsk@redhat.com)
+- 783511 - Wider menus for branding rename. (jrist@redhat.com)
+- rename-locker - locker renamed in controllers and views (mbacovsk@redhat.com)
+- locker-rename - locker renamed in model (mbacovsk@redhat.com)
+- locker-rename db mgration (mbacovsk@redhat.com)
+- 783512,783511,783509,783508 - Additional work for branding rename.      - New
+  strings for changes.      - Fixed a spec test since it failed properly, yay!
+  (jrist@redhat.com)
+- 783512,783511,783509,783508 -More work for branding rename.
+  (jrist@redhat.com)
+- 783512,783511,783509,783508 - Initial work for branding rename.
+  (jrist@redhat.com)
+- Fixed error on parsing json error messagae (mbacovsk@redhat.com)
+- 784607 - katello production.log can rapidly increase in size
+  (lzap+git@redhat.com)
+- 767475 - system packages - disable content form when no pkg/group is included
+  (bbuckingham@redhat.com)
+- 772744 - Removing accounts views/controllers period (jomara@redhat.com)
+- 761553 - adding better UI for non-admin viewing roles (jomara@redhat.com)
+- 773368 - GPG keys - update to show product the repo is associated with
+  (bbuckingham@redhat.com)
+- translation i18n files (shughes@redhat.com)
+- adding some more password util specs (lzap+git@redhat.com)
+
 * Tue Jan 24 2012 Martin Bačovský <mbacovsk@redhat.com> 0.1.195-1
 - 782775 - Unify unsubscription in RHSM and Katello CLI (mbacovsk@redhat.com)
 
