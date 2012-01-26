@@ -117,6 +117,39 @@ and then run katello-configure to configure everything.
 cp -Rf %{homedir}/* %{katello_dir}
 
 %changelog
+* Thu Jan 26 2012 Jordan OMara <jomara@redhat.com> 0.1.128-2
+- 783301 - fixing branding h1 tag for SUBSCRIPTION ACCESS MANAGER (thanks
+  tom!!) (jomara@redhat.com)
+- 754856 - Bryan Kearney - Katello cli improvements
+- 754840 - Tom McKay - Ping command errors out on pulp
+- 768421 - Tom McKay - headpin CLI product list and provider list fail with Invalid verb 'sync'
+- 758447 - Tom McKay - headpin CLI shell prompts katello> v. headpin>
+- 760189 - Tom McKay - headpin CLI fails with <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+- 784679 - Jason E. Rist - Getting undefined method `[]' for nil:NilClass when looking at subscription for a system
+- 773088 - Katello Internal Mailing List - During content sync, ui unresponsive and (Pulp::Repository: Request Timeout (GET /pulp/api/repositories/)
+- 767475 - Brad Buckingham - Add/Remove options shouldn't be active when no package name supplied in the text box.
+- 773368 - Brad Buckingham - List of repositories assigned to GPG key doesn't show products the repositories belong to
+- 771343 - Jason E. Rist - 404's for missing images in log
+- 759551 - Jordan OMara - dashboard widget size adjustment for headpin mode
+- 760803 - Jordan OMara - Headpin/api lists too many urls
+- 772744 - Jordan OMara - No visual notification when editing user's profile via /katello/account
+- 782562 - Jordan OMara - "force" checkbox necessary on the Red Hat import manifest upload
+- 771333 - Brad Buckingham - Password reset broken
+- 761553 - Jordan OMara - non-admin display of "Roles & Permissions" needs UI clean up
+- 784601 - Lukáš Zapletal - Content sync fails if /var/lib/pulp/packages is a separate disk partition
+- 784563 - Tomas Strachota - It is possible to delete repos in non-locker environment
+- 784607 - Lukáš Zapletal - katello production.log can rapidly increase in size (2.9G)
+- 783099 - Jordan OMara - Failed to import manifest into SAM
+- 754856 - Bryan Kearney - Katello cli improvements
+- 784563 - Tomas Strachota - It is possible to delete repos in non-locker environment
+- 783329 - Brad Buckingham - System Templates - update package check to use elastic search
+- 745955 - Eric Helms - Creating template and clicking on Package Groups goes in circles
+- 754724 - Eric Helms - Shouldn't be able to click "Promote" button if Changeset is already in process of being promoted
+- 773690 - Eric Helms - System Templates - scroll in system template package does not immediately appear when necessary (7 packages?)
+- 740931 - Partha Aji - Edit role: Entering a very long text string for a description overruns the edit graphic
+- 784009 - Tom McKay - ESX hypervisors don't show up in Web UI systems
+- 756518 - Partha Aji - "Access Provider" permission not sufficient to access providers
+- 784319 - Eric Helms - Organization is not being saved when creating new user
 * Thu Jan 19 2012 Jordan OMara <jomara@redhat.com> 0.1.126-2
 - Merge remote-tracking branch 'katello/headpin' into BRANDING
   (jomara@redhat.com)
