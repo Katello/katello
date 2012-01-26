@@ -102,10 +102,16 @@ module Glue::Pulp::Repo
     })
   end
 
-  def promote(to_environment, filters = [])
+  def promote(to_environment)
+    if to_environment.prior.locker?
+        filters_to_clone = self.filters + self.product.filters
+        filters_to_clone = filters_to_clone.uniq.collect {|f| f.pulp_id}
+    else
+        filters_to_clone = []
+    end
 
     key = EnvironmentProduct.find_or_create(to_environment, self.product)
-    repo = Repository.create!(:environment_product => key, :clone_from => self, :cloned_content => self.content, :cloned_filters => filters)
+    repo = Repository.create!(:environment_product => key, :clone_from => self, :cloned_content => self.content, :cloned_filters => filters_to_clone)
     repo.clone_response
   end
 
