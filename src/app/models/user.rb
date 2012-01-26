@@ -328,8 +328,8 @@ class User < ActiveRecord::Base
   end
 
   def self.cp_oauth_header
-    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if self.current.nil?
-    self.current.cp_oauth_header
+    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
+    User.current.cp_oauth_header
   end
 
   def pulp_oauth_header
@@ -337,8 +337,8 @@ class User < ActiveRecord::Base
   end
 
   def self.pulp_oauth_header
-    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if self.current.nil?
-    { 'pulp-user' => self.current.username }
+    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
+    { 'pulp-user' => User.current.username }
   end
 
   # is the current user consumer? (rhsm)

@@ -27,7 +27,7 @@ common:
   warden: database
   use_cp: true
   use_pulp: <%= scope.lookupvar("katello::params::deployment") == 'katello' %>
-  rest_client_timeout: 30
+  rest_client_timeout: 120
 
   host: <%= has_variable?("fqdn") ? fqdn : hostname %>
   use_ssl: true

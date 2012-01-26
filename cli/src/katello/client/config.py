@@ -16,6 +16,7 @@
 
 import os
 import ConfigParser
+from pwd import getpwuid
 
 class Config(object):
     """
@@ -47,8 +48,9 @@ class Config(object):
 
     FILE = 'client.conf'
     PATH = os.path.join('/etc/katello', FILE)
-    USER = os.path.expanduser(os.path.join('~/.katello', FILE))
-    USER_OPTIONS = os.path.expanduser(os.path.join('~/.katello', 'client-options.conf'))
+    USER_DIR = os.path.join(getpwuid(os.getuid())[5], '.katello')
+    USER = os.path.expanduser(os.path.join(USER_DIR, FILE))
+    USER_OPTIONS = os.path.expanduser(os.path.join(USER_DIR, 'client-options.conf'))
 
     parser = None
 

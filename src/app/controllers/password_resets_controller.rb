@@ -78,6 +78,7 @@ class PasswordResetsController < ApplicationController
   def find_user_by_user_and_email
     begin
       @user = User.find_by_username_and_email!(params[:username], params[:email])
+      User.current = @user
     rescue Exception => error
       Rails.logger.error error.to_s
     end
@@ -86,6 +87,7 @@ class PasswordResetsController < ApplicationController
   def find_users_by_email
     begin
       @users = User.where(:email => params[:email])
+      User.current = @users.first
     rescue Exception => error
       Rails.logger.error error.to_s
     end
@@ -94,6 +96,7 @@ class PasswordResetsController < ApplicationController
   def find_user_by_token
     begin
       @user = User.find_by_password_reset_token!(params[:id])
+      User.current = @user
     rescue Exception => error
       notice _("Request received has either an invalid or expired token.  Token: '%{t}'" % {:t => params[:id]}), {:level => :error, :persist => false}
       redirect_to root_url

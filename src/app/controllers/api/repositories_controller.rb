@@ -59,6 +59,8 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   def destroy
+    raise HttpErrors::BadRequest, _("Repositories can be deleted only in Locker environment.") if not @repository.environment.locker?
+
     @repository.product.delete_repo_by_id(params[:id])
     render :text => _("Deleted repository '#{params[:id]}'"), :status => 200
   end
