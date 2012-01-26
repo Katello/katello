@@ -73,7 +73,7 @@ module Navigation
 
     def menu_custom_providers
       {:key => :custom_providers,
-        :name =>_("Custom Content Provider"),
+        :name =>_("Custom Content Providers"),
         :url => providers_path,
         :if => lambda{current_organization && Provider.any_readable?(current_organization())},
         :options => {:class=>"third_level"}
