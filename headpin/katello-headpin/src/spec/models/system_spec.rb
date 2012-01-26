@@ -40,7 +40,7 @@ describe System do
     disable_org_orchestration
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.locker.id, :organization => @organization)
+    @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id, :organization => @organization)
 
     Organization.stub!(:first).and_return(@organization)
 
@@ -63,7 +63,7 @@ describe System do
     specify { System.new(:name => 'name', :environment => @organization.environments.first, :cp_type => cp_type).should_not be_valid }
     specify { System.new(:name => 'name', :environment => @organization.environments.first, :facts => facts).should_not be_valid }
     specify { System.new(:cp_type => cp_type, :environment => @organization.environments.first, :facts => facts).should_not be_valid }
-    specify { System.new(:name => system_name, :environment => @organization.locker, :cp_type => cp_type, :facts => facts).should_not be_valid }
+    specify { System.new(:name => system_name, :environment => @organization.library, :cp_type => cp_type, :facts => facts).should_not be_valid }
   end
 
   it "registers system in candlepin and pulp on create" do
@@ -92,6 +92,7 @@ describe System do
       @system.regenerate_identity_certificates
     end
   end
+
   context "subscribe an entitlement" do
     before { @system.uuid = uuid }
 
@@ -101,6 +102,35 @@ describe System do
       @system.subscribe pool_id
     end
   end
+
+  context "unsubscribe an entitlement" do
+    before { @system.uuid = uuid }
+    entitlement_id = "foo"
+    it "should call Candlepin::Consumer.remove_entitlement" do
+      Candlepin::Consumer.should_receive(:remove_entitlement).once.with(uuid, entitlement_id).and_return(true)
+      @system.unsubscribe entitlement_id
+    end
+  end
+
+  context "unsubscribe an certificate by serial" do
+    before { @system.uuid = uuid }
+
+    it "should call Candlepin::Consumer.remove_certificate" do
+      serial_id = "foo"
+      Candlepin::Consumer.should_receive(:remove_certificate).once.with(uuid,serial_id).and_return(true)
+      @system.unsubscribe_by_serial serial_id
+    end
+  end
+
+  context "unsubscribe all entitlements" do
+    before { @system.uuid = uuid }
+
+    it "should call Candlepin::Consumer.remove_entitlements" do
+      Candlepin::Consumer.should_receive(:remove_entitlements).once.with(uuid).and_return(true)
+      @system.unsubscribe_all
+    end
+  end
+
   context "update system" do
     before(:each) do
       @system.save!
@@ -187,8 +217,8 @@ s  end
         specify { @system.pools.should == pools }
       end
 
-      it "should access candlepin if available_pools is uninialized" do
-        Candlepin::Consumer.should_receive(:available_pools).once.with(uuid).and_return([])
+      it "should access candlepin if available_pools is uninitialized" do
+        Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
         @system.available_pools
       end
 

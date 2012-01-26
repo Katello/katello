@@ -263,14 +263,14 @@ class ApplicationController < ActionController::Base
     next_env = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
 
     @paths = []
-    @paths = org.promotion_paths.collect{|tmp_path| [org.locker] + tmp_path}
+    @paths = org.promotion_paths.collect{|tmp_path| [org.library] + tmp_path}
 
     # reject any paths that don't have accessible envs
     @paths.reject!{|path|  (path & accessible).empty?}
 
-    @paths = [[org.locker]] if @paths.empty?
+    @paths = [[org.library]] if @paths.empty?
 
-    if @environment and !@environment.locker?
+    if @environment and !@environment.library?
       @paths.each{|path|
         path.each{|env|
           @path = path and return if env.id == @environment.id
@@ -454,8 +454,8 @@ class ApplicationController < ActionController::Base
     flash_to_headers
   end
 
-  def first_env_in_path accessible_envs, include_locker=false, organization = current_organization
-    return current_organization.locker if include_locker && accessible_envs.member?(current_organization.locker)
+  def first_env_in_path accessible_envs, include_library=false, organization = current_organization
+    return current_organization.library if include_library && accessible_envs.member?(current_organization.library)
     organization.promotion_paths.each{|path|
       path.each{|env|
         if accessible_envs.member?(env)
@@ -506,7 +506,10 @@ class ApplicationController < ActionController::Base
   # This assumes that the input follows a syntax similar to:
   #   "{\"displayMessage\":\"Import is older than existing data\"}"
   def parse_display_message input
-    display_message = input.include?("displayMessage") ? input.split(":\"").last.split("\"").first : ""
+    if input.include? 'displayMessage'
+      return JSON.parse(input)['displayMessage']
+    end
+    input
   end
 end
 

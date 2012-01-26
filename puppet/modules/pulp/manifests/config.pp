@@ -3,8 +3,13 @@ class pulp::config {
   # assuming sharing certificates with candlepin on the same machine
   # if certificates needs to be distributed, please fix the following.
   file {
+    "/var/lib/pulp/packages":
+      ensure => directory,
+      owner => "apache", group => "apache", mode => 0755,
+      before => Class["pulp::service"];
     "/etc/pulp/pulp.conf":
       content => template("pulp/etc/pulp/pulp.conf.erb"),
+      require => File["/var/lib/pulp/packages"],
       before => [Class["apache2::service"]];
     "/etc/pulp/repo_auth.conf":
       content => template("pulp/etc/pulp/repo_auth.conf.erb"),

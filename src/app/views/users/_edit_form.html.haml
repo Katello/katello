@@ -45,8 +45,6 @@
           = label :user, :password, _("Change Password:")
         .grid_5.la
           = text_field :user, :password, :id=>"password_field", :value=>"", :type=>"password"
-      .grid_5.la.prefix_3
-        #password_meter
 
       %fieldset.fl.clear
         .grid_3.ra
@@ -72,6 +70,10 @@
       %fieldset
         .grid_3.ra
           = label :user, :locale, "%s:" % _("Preferred Locale")
-        .grid_5.la
-          = locale_select @user.default_locale
+        - if editable
+          .grid_5.la
+            = locale_select @user.default_locale
+        - else
+          .grid_5.la
+            =  @user.default_locale  || "#{_('Browser Default Locale')}"
 

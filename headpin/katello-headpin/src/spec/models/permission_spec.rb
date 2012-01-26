@@ -101,7 +101,7 @@ describe Permission do
   context "repo_admin" do
     it { @user_bob.allowed_to?('create', 'organizations').should be_false }
     it { @user_bob.allowed_to?("create_repo", "repogroup", @repogroup_internal).should be_true }
-    it { @user_bob.allowed_to?("create_repo", "repogroup", 10**7).should be_false }
+    it { @user_bob.allowed_to?("create_repo", "repogroup", 10**7).should be_true } #global implies all tags = true
     it { @user_bob.allowed_to?("create_repo", "repo-bad").should be_false }
     it { @user_bob.allowed_to?("delete_repo", "repo", [@repogroup_internal, @repo_rhel6]).should be_true }
     it { @user_bob.allowed_to?("delete_repo", "repo", [@repogroup_internal]).should be_true }
@@ -174,7 +174,8 @@ describe Permission do
       end
       specify{@admin.allowed_to?(@verb_name, @res_type_name,[@tag_name]).should be_true}
       specify{@admin.allowed_to?(@verb_name, @res_type_name,[@tag_name], @organization).should be_true}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,[@tag_name + 11]).should be_false}
+      #global implies all tags = true
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,[@tag_name + 11]).should be_true}
       specify{@admin.allowed_to?(@verb_name, @res_type_name + "foo",[@tag_name], @organization).should be_false}
     end
 
@@ -189,7 +190,9 @@ describe Permission do
       end
       specify{@admin.allowed_to?(@verb_name, @res_type_name,nil).should be_true}
       specify{@admin.allowed_to?(@verb_name, @res_type_name,nil, @organization).should be_true}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,["1000"]).should be_false}
+
+      #global implies all tags = true
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,["1000"]).should be_true}
     end
 
 

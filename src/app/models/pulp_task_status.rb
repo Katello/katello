@@ -50,7 +50,7 @@ class PulpTaskStatus < TaskStatus
   end
 
   def error
-    ActiveSupport::JSON.decode(self.result)["errors"][0] if self.error? 
+    self.result["errors"][0] if self.error? 
   end
 
   def self.refresh task_status

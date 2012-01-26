@@ -33,7 +33,7 @@ class RepositoriesController < ApplicationController
       :update_gpg_key => edit_test,
       :destroy => edit_test,
       :enable_repo => org_edit,
-      :auto_complete_locker => read_any_test
+      :auto_complete_library => read_any_test
     }
   end
 
@@ -60,7 +60,7 @@ class RepositoriesController < ApplicationController
       @product.save
 
     rescue Exception => error
-      Rails.logger.error error.to_s
+      log_exception error
       notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
@@ -81,7 +81,7 @@ class RepositoriesController < ApplicationController
       @repository.save!
       notice _("Repository '#{@repository.name}' updated.")
     rescue Exception => error
-      Rails.logger.error error.to_s
+      log_exception error
       notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
@@ -89,14 +89,15 @@ class RepositoriesController < ApplicationController
   end
 
   def enable_repo
-    @repository.enabled = params[:repo] == "1"
-    @repository.save!
-    if @repository.enabled?
-      notice _("Repository '#{@repository.name}' enabled.")
-    else
-      notice _("Repository '#{@repository.name}' disabled.")
+    begin
+      @repository.enabled = params[:repo] == "1"
+      @repository.save!
+      render :json => @repository.id
+    rescue Exception => error
+      log_exception error
+      notice error, {:level => :error}
+      render :text=> error.to_s, :status=>:bad_request and return
     end
-    render :json => ""
   end
 
   def destroy
@@ -107,10 +108,10 @@ class RepositoriesController < ApplicationController
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@provider.id)}
   end
 
-  def auto_complete_locker
-    # retrieve and return a list (array) of repo names in locker that contain the 'term' that was passed in
+  def auto_complete_library
+    # retrieve and return a list (array) of repo names in library that contain the 'term' that was passed in
     name = params[:term]
-    repos = Repository.readable(current_organization.locker).select(:name).where("name LIKE ?", "#{name}%")
+    repos = Repository.readable(current_organization.library).select(:name).where("name LIKE ?", "#{name}%")
     render :json => repos.map{|repo| repo.name}
   end
 
@@ -120,6 +121,7 @@ class RepositoriesController < ApplicationController
     begin
       @provider = Provider.find(params[:provider_id])
     rescue Exception => error
+      log_exception error
       notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
@@ -130,6 +132,7 @@ class RepositoriesController < ApplicationController
     begin
       @product = Product.find(params[:product_id])
     rescue Exception => error
+      log_exception error
       notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
@@ -140,6 +143,7 @@ class RepositoriesController < ApplicationController
     begin
       @repository = Repository.find(params[:id])
     rescue Exception => error
+      log_exception error
       notice _("Couldn't find repository with ID=#{params[:id]}"), {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request

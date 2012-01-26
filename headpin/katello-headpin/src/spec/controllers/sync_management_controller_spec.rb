@@ -30,9 +30,9 @@ describe SyncManagementController, :katello => true do
     before (:each) do
       Pulp::Repository.stub(:all).and_return([])
       setup_current_organization
-      @locker = KTEnvironment.new
-      @mock_org.stub!(:locker).and_return(@locker)
-      @locker.stub!(:products).and_return(OpenStruct.new(:readable => [], :syncable=>[]))
+      @library = KTEnvironment.new
+      @mock_org.stub!(:library).and_return(@library)
+      @library.stub!(:products).and_return(OpenStruct.new(:readable => [], :syncable=>[]))
       Provider.stub!(:any_readable?).and_return(true)
       
     end
@@ -48,7 +48,7 @@ describe SyncManagementController, :katello => true do
   describe "rules" do
     before (:each) do
       @organization = new_test_org
-      @product = new_test_product @organization, @organization.locker
+      @product = new_test_product @organization, @organization.library
       Provider.stub(:find).and_return @product.provider
       Product.stub(:find).and_return @product
       
@@ -73,7 +73,7 @@ describe SyncManagementController, :katello => true do
 
       let(:action) {:sync}
       let(:req) do
-        put 'sync', :repoids => [@product.repos(@organization.locker).first.id]
+        put 'sync', :repoids => [@product.repos(@organization.library).first.id]
       end
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:sync, :organizations, nil, @organization) }

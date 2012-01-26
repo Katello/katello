@@ -101,6 +101,15 @@ class Provider < ActiveRecord::Base
     redhat_provider?
   end
 
+  def organization
+    # note i need to add 'unscoped' here
+    # to account for the fact that org might have been "scoped out"
+    # on an Org delete action.
+    # we need the organization info to be present in the provider
+    # so that we can properly phase out the orchestration and handle search indices.
+    (read_attribute(:organization) || Organization.unscoped.find(self.organization_id)) if self.organization_id
+  end
+
   #permissions
   # returns list of virtual permission tags for the current user
   def self.list_tags org_id
@@ -175,7 +184,7 @@ class Provider < ActiveRecord::Base
   def extended_index_attrs
     if AppConfig.katello?
       products = self.products.map{|prod|
-        {:product=>prod.name, :repo=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
+        {:product=>prod.name, :repo=>prod.repos(self.organization.library).collect{|repo| repo.name}}
       }
     else
       products = self.products.map{|prod|
@@ -214,8 +223,6 @@ class Provider < ActiveRecord::Base
   READ_PERM_VERBS = [:read, :update] if !AppConfig.katello?
   EDIT_PERM_VERBS = [:create, :update] if AppConfig.katello?
   EDIT_PERM_VERBS = [:update] if !AppConfig.katello?
-
-
 
 
 end

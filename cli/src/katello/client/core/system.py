@@ -22,8 +22,7 @@ from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, Printer, convert_to_mime_type, attachment_file_name, save_report
-from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_task_errors
-import re
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask
 
 Config()
 
@@ -112,6 +111,10 @@ class Info(SystemAction):
 
         for akey in system['activation_key']:
             system["activation_keys"] = "[ "+ ", ".join([akey["name"] for pool in akey["pools"]]) +" ]"
+        if system.has_key('host'):
+            system['host'] = system['host']['name']
+        if system.has_key('guests'):
+            system["guests"] = "[ "+ ", ".join([guest["name"] for guest in system["guests"]]) +" ]"
 
         self.printer.addColumn('name')
         self.printer.addColumn('uuid')
@@ -120,6 +123,8 @@ class Info(SystemAction):
         self.printer.addColumn('updated_at', 'Last updated', time_format=True)
         self.printer.addColumn('description', multiline=True)
         self.printer.addColumn('activation_keys', multiline=True, show_in_grep=False)
+        self.printer.addColumn('host', show_in_grep=False)
+        self.printer.addColumn('guests',  show_in_grep=False)
         if system.has_key("template"):
             t = system["template"]["name"]
             self.printer.addColumn('template', show_in_grep=False, value=t)
@@ -191,7 +196,7 @@ class InstalledPackages(SystemAction):
             task = self.api.remove_packages(system_id, remove.split(packages_separator))
         if update:
             if update == '--all':
-                 update_packages = []
+                update_packages = []
             else:
                 update_packages = update.split(packages_separator)
             task = self.api.update_packages(system_id, update_packages)
@@ -469,12 +474,9 @@ class Subscriptions(SystemAction):
                 help=_("organization name (required)"))
         self.parser.add_option('--name', dest='name',
                 help=_("system name (required)"))
-        self.parser.add_option('--serials', dest='serials',
-                action="store_true", default=False,
-                help=_("show certificate serial numbers"))
         self.parser.add_option('--available', dest='available',
-                action="store_const", const=1, default=0,
-                help=_("show available subscription"))
+                action="store_true", default=False,
+                help=_("show available subscriptions"))
 
     def check_options(self):
         self.require_option('org')
@@ -483,26 +485,58 @@ class Subscriptions(SystemAction):
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
-        serials = self.get_option('serials')
         available = self.get_option('available')
         systems = self.api.systems_by_org(org, {'name': name})
 
-        if serials and available == 0:
-            print _("Serial parameter cannot be used with available")
-            return os.EX_DATAERR
 
         if systems == None or len(systems) != 1:
             print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
             self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
-            if available:
+            if not available:
+                # listing current subscriptions
+                result = self.api.subscriptions(systems[0]['uuid'])
+                if result == None or len(result['entitlements']) == 0:
+                    print _("No Subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
+                    return os.EX_OK
+
+                def entitlements():
+                    for entitlement in result['entitlements']:
+                        entitlement_ext = entitlement.copy()
+                        provided_products = ', '.join([e['name'] for e in entitlement_ext['providedProducts']])
+                        entitlement_ext['providedProductsFormatted'] = provided_products
+                        serial_ids = ', '.join([str(s['id']) for s in entitlement_ext['serials']])
+                        entitlement_ext['serialIds'] = serial_ids
+                        yield entitlement_ext
+
+                self.printer.setHeader(_("Current Subscriptions for System [ %s ]") % name)
+                self.printer.addColumn('entitlementId')
+                self.printer.addColumn('serialIds', name=_('Serial Id'))
+                self.printer.addColumn('poolName')
+                self.printer.addColumn('expires')
+                self.printer.addColumn('consumed')
+                self.printer.addColumn('quantity')
+                self.printer.addColumn('sla')
+                self.printer.addColumn('contractNumber')
+                self.printer.addColumn('providedProductsFormatted', name=_('Provided products'))
+                self.printer.printItems(entitlements())
+            else:
                 # listing available pools
                 result = self.api.available_pools(systems[0]['uuid'])
+
                 if result == None or len(result) == 0:
                     print _("No Pools found for System [ %s ] in Org [ %s ]") % (name, org)
-                    return os.EX_DATAERR
-                self.printer.setHeader(_("Available Pools for System [ %s ]") % name)
+                    return os.EX_OK
+
+                def available_pools():
+                    for pool in result['pools']:
+                        pool_ext = pool.copy()
+                        provided_products = ', '.join([p['name'] for p in pool_ext['providedProducts']])
+                        pool_ext['providedProductsFormatted'] = provided_products
+                        yield pool_ext
+
+                self.printer.setHeader(_("Available Subscriptions for System [ %s ]") % name)
                 self.printer.addColumn('poolId')
                 self.printer.addColumn('poolName')
                 self.printer.addColumn('expires')
@@ -510,24 +544,8 @@ class Subscriptions(SystemAction):
                 self.printer.addColumn('quantity')
                 self.printer.addColumn('sockets')
                 self.printer.addColumn('multiEntitlement')
-                self.printer.addColumn('providedProducts')
-                self.printer.printItems(result['pools'])
-            else:
-                # listing current subscriptions
-                result = self.api.subscriptions(systems[0]['uuid'])
-                if result == None or len(result) == 0:
-                    print _("No Subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
-                    return os.EX_DATAERR
-                self.printer.setHeader(_("Available Subscriptions for System [ %s ]") % name)
-                self.printer.addColumn('entitlementId')
-                self.printer.addColumn('poolName')
-                self.printer.addColumn('expires')
-                self.printer.addColumn('consumed')
-                self.printer.addColumn('quantity')
-                self.printer.addColumn('sla')
-                self.printer.addColumn('contractNumber')
-                self.printer.addColumn('providedProducts')
-                self.printer.printItems(result['entitlements'])
+                self.printer.addColumn('providedProductsFormatted', name=_('Provided products'))
+                self.printer.printItems(available_pools())
 
             return os.EX_OK
 
@@ -540,25 +558,37 @@ class Unsubscribe(SystemAction):
                        help=_("organization name (required)"))
         self.parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
-        self.parser.add_option('--pool', dest='pool',
-                               help=_("pool id to unsubscribe from (required)"))
+        self.parser.add_option('--entitlement', dest='entitlement',
+                               help=_("entitlement id to unsubscribe from (either entitlement or serial or all is required)"))
+        self.parser.add_option('--serial', dest='serial',
+                               help=_("serial id of a certificate to unsubscribe from (either entitlement or serial or all is required)"))
+        self.parser.add_option('--all', dest='all', action="store_true", default=None,
+                               help=_("unsubscribe from all currently subscribed certificates (either entitlement or serial or all is required)"))
 
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
-        self.require_option('pool')
+        self.require_one_of_options('entitlement', 'serial', 'all')
 
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
-        pool = self.get_option('pool')
+        entitlement = self.get_option('entitlement')
+        serial = self.get_option('serial')
+        all_entitlements = self.get_option('all')
         systems = self.api.systems_by_org(org, {'name': name})
         if systems == None or len(systems) != 1:
             print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
-            result = self.api.unsubscribe(systems[0]['uuid'], pool)
+            if all_entitlements: #unsubscribe from all
+                result = self.api.unsubscribe_all(systems[0]['uuid'])
+            elif serial: # unsubscribe from cert
+                result = self.api.unsubscribe_by_serial(systems[0]['uuid'], serial)
+            elif entitlement: # unsubscribe from entitlement
+                result = self.api.unsubscribe(systems[0]['uuid'], entitlement)
             print _("Successfully unsubscribed System [ %s ]") % name
+
             return os.EX_OK
 
 class Update(SystemAction):

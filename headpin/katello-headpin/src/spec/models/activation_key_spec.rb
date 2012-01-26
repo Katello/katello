@@ -22,7 +22,7 @@ describe ActivationKey do
     disable_org_orchestration
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
+    @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.library.id, :organization => @organization)
     @environment_2 = KTEnvironment.create!(:name => 'test', :prior => @environment_1.id, :organization => @organization)
     @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1) if AppConfig.katello?
     @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1) if AppConfig.katello?
@@ -54,9 +54,9 @@ describe ActivationKey do
       @akey.errors[:environment].should_not be_empty
     end
 
-    it "should be invalid if the environment is Locker" do
+    it "should be invalid if the environment is Library" do
       @akey.name = 'invalid key'
-      @akey.environment = @organization.locker
+      @akey.environment = @organization.library
       @akey.should_not be_valid
       @akey.errors[:base].should_not be_empty
     end

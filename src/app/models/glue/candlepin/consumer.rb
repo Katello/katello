@@ -32,7 +32,8 @@ module Glue::Candlepin::Consumer
                         }
       lazy_accessor :entitlements, :initializer => lambda { Candlepin::Consumer.entitlements(uuid) }
       lazy_accessor :pools, :initializer => lambda { entitlements.collect { |ent| Candlepin::Pool.get ent["pool"]["id"]} }
-      lazy_accessor :available_pools, :initializer => lambda { Candlepin::Consumer.available_pools(uuid) }
+      lazy_accessor :available_pools, :initializer => lambda { Candlepin::Consumer.available_pools(uuid, false) }
+      lazy_accessor :all_available_pools, :initializer => lambda { Candlepin::Consumer.available_pools(uuid, true) }
       lazy_accessor :host, :initializer => lambda {
         host_attributes = Candlepin::Consumer.host(self.uuid)
         System.new(host_attributes) if host_attributes
@@ -143,6 +144,22 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
+    def unsubscribe_by_serial serial
+      Rails.logger.info "Unsubscribing from certificate '#{serial}' for : #{name}"
+      Candlepin::Consumer.remove_certificate self.uuid, serial
+    rescue => e
+      Rails.logger.debug e.backtrace.join("\n\t")
+      raise e
+    end
+
+    def unsubscribe_all
+      Rails.logger.info "Unsubscribing from all entitlements for : #{name}"
+      Candlepin::Consumer.remove_entitlements self.uuid
+    rescue => e
+      Rails.logger.debug e.backtrace.join("\n\t")
+      raise e
+    end
+
     def to_json
       super(:methods => [:href, :facts, :idCert, :owner])
     end
@@ -238,8 +255,16 @@ module Glue::Candlepin::Consumer
       Time.parse(item)
     end
 
-    def available_pools_full
-      avail_pools = self.available_pools.collect {|pool|
+    def available_pools_full listall=false
+
+      # The available pools can be constrained to match the system (number of sockets, etc.), or
+      # all of the pools that could be applied to the system, even if not a perfect match.
+      if listall
+        pools = self.all_available_pools
+      else
+        pools = self.available_pools
+      end
+      avail_pools = pools.collect {|pool|
         sockets = ""
         multiEntitlement = false
         pool["productAttributes"].each do |attr|
@@ -273,6 +298,7 @@ module Glue::Candlepin::Consumer
 
     def consumed_entitlements
       consumed_entitlements = self.entitlements.collect { |entitlement|
+
         pool = self.get_pool entitlement["pool"]["id"]
 
         sla = ""
@@ -293,7 +319,15 @@ module Glue::Candlepin::Consumer
 
         quantity = entitlement["quantity"] != nil ? entitlement["quantity"] : pool["quantity"]
 
+        serials = []
+        entitlement['certificates'].each do |certificate|
+          if certificate.has_key?('serial')
+            serials << certificate['serial']
+          end
+        end
+
         OpenStruct.new(:entitlementId => entitlement["id"],
+                       :serials => serials,
                        :poolName => pool["productName"],
                        :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
                        :consumed => pool["consumed"],

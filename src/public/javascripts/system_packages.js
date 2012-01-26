@@ -44,6 +44,7 @@ KT.packages = function() {
     update_all_button = $('#update_all_packages'),
     content_form_row = $('#content_form_row'),
     content_form = $('#content_form'),
+    content_input = $('#content_input'),
     add_content_button = $('#add_content'),
     remove_content_button = $('#remove_content'),
     loaded_summary = $('#loaded_summary'),
@@ -88,14 +89,16 @@ KT.packages = function() {
         remove_content_button.addClass('disabled');
     },
     enableLinks = function() {
-        add_content_button.bind('click', addContent);
-        remove_content_button.bind('click', removeContent);
-
-        add_content_button.removeAttr('disabled');
-        remove_content_button.removeAttr('disabled');
-
-        add_content_button.removeClass('disabled');
-        remove_content_button.removeClass('disabled');
+        if (add_content_button.hasClass('disabled')) {
+            add_content_button.bind('click', addContent);
+            add_content_button.removeAttr('disabled');
+            add_content_button.removeClass('disabled');
+        }
+        if (remove_content_button.hasClass('disabled')) {
+            remove_content_button.bind('click', removeContent);
+            remove_content_button.removeAttr('disabled');
+            remove_content_button.removeClass('disabled');
+        }
     },
     getActionType = function(item) {
         var action_type = undefined;
@@ -119,7 +122,7 @@ KT.packages = function() {
         var spinner = $('#list-spinner');
         var dataScrollURL = more_button.attr("data-scroll_url");
 
-        var offset = parseInt(more_button.attr("data-offset"), 10) + parseInt(more_button.attr("data-page_size"), 10);
+        var offset = parseInt(more_button.attr("data-offset"), 10);
         dataScrollURL = dataScrollURL + "?offset=" + offset + "&pkg_order="+ sort_button.attr("data-sort") +"&";
         //console.log(dataScrollURL + ", page_size: " + offset);
         spinner.fadeIn();
@@ -138,6 +141,7 @@ KT.packages = function() {
                 if (data.length == 0) {
                     more_button.empty().remove();
                 }else{
+                    offset = offset + parseInt(more_button.attr("data-page_size"), 10);
                     more_button.attr("data-offset", offset);
                 }
             },
@@ -400,15 +404,24 @@ KT.packages = function() {
         }
     },
     registerEvents = function() {
+        content_input.bind('change, keyup', updateContentLinks);
         more_button.bind('click', morePackages);
         sort_button.bind('click', reverseSort);
-        add_content_button.bind('click', addContent);
-        remove_content_button.bind('click', removeContent);
         remove_button.bind('click', removePackages);
         update_button.bind('click', updatePackages);
         update_all_button.bind('click', updateAllPackages);
 
         registerCheckboxEvents();
+    },
+    updateContentLinks = function(data) {
+        if ($.trim($(this).val()).length == 0) {
+            // the user cleared the content box, so disable the add/remove links
+            disableLinks();
+
+        } else {
+            // the user has entered content in the content box, so enable the add/remove links
+            enableLinks();
+        }
     },
     addContent = function(data) {
         data.preventDefault();

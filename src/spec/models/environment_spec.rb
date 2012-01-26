@@ -26,12 +26,12 @@ describe KTEnvironment do
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
     @provider = @organization.redhat_provider
 
-    @first_product = Product.new(:name =>"prod1", :cp_id => '12345', :provider => @provider, :environments => [@organization.locker])
-    @second_product = Product.new(:name =>"prod2", :cp_id => '67890', :provider => @provider, :environments => [@organization.locker])
-    @third_product = Product.new(:name =>"prod3", :cp_id => '45678', :provider => @provider, :environments => [@organization.locker])
-    @fourth_product = Product.new(:name =>"prod4", :cp_id => '32683', :provider => @provider, :environments => [@organization.locker])
+    @first_product = Product.new(:name =>"prod1", :cp_id => '12345', :provider => @provider, :environments => [@organization.library])
+    @second_product = Product.new(:name =>"prod2", :cp_id => '67890', :provider => @provider, :environments => [@organization.library])
+    @third_product = Product.new(:name =>"prod3", :cp_id => '45678', :provider => @provider, :environments => [@organization.library])
+    @fourth_product = Product.new(:name =>"prod4", :cp_id => '32683', :provider => @provider, :environments => [@organization.library])
 
-    @environment = KTEnvironment.new({:name => @env_name, :prior => @organization.locker}) do |e|
+    @environment = KTEnvironment.new({:name => @env_name, :prior => @organization.library}) do |e|
       e.products << @first_product
       e.products << @third_product
     end
@@ -87,10 +87,10 @@ describe KTEnvironment do
       @prior_env.save!
       @organization.save!
       
-      @organization.locker.products << @first_product
-      @organization.locker.products << @second_product
-      @organization.locker.products << @third_product
-      @organization.locker.products << @fourth_product
+      @organization.library.products << @first_product
+      @organization.library.products << @second_product
+      @organization.library.products << @third_product
+      @organization.library.products << @fourth_product
     end
     
     it "should return products from prior env" do
@@ -100,7 +100,7 @@ describe KTEnvironment do
       @environment.available_products.should include @second_product
     end
     
-    it "should return products from the locker if there is no prior env" do
+    it "should return products from the library if there is no prior env" do
       @environment.available_products.size.should == 2
       @environment.available_products.should include @second_product
       @environment.available_products.should include @fourth_product
@@ -159,19 +159,19 @@ describe KTEnvironment do
               
   end
   
-  context "Lockers" do
+  context "libraries" do
     it "should be the only KTEnvironment that can have multiple priors" do
       @env1 = KTEnvironment.new({:name => @env_name + '1',
-                :organization => @organization, :prior => @organization.locker})
+                :organization => @organization, :prior => @organization.library})
       @env2 = KTEnvironment.new({:name => @env_name + '2',
-                :organization => @organization, :prior => @organization.locker})
+                :organization => @organization, :prior => @organization.library})
       @env3 = KTEnvironment.new({:name => @env_name + '3',
-                :organization => @organization, :prior => @organization.locker})
+                :organization => @organization, :prior => @organization.library})
                 
       @env1.should be_valid
       @env2.should be_valid
       @env3.should be_valid
-      @organization.locker.should be_valid
+      @organization.library.should be_valid
     end
   end
 end

@@ -11,10 +11,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class NonLockerEnvironmentValidator < ActiveModel::EachValidator
+class NonLibraryEnvironmentValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return unless value
-    record.errors[attribute] << N_("Cannot register a system with 'Locker' environment ") if record.environment != nil && record.environment.locker?
+    record.errors[attribute] << N_("Cannot register a system with 'Library' environment ") if record.environment != nil && record.environment.library?
   end
 end
 
@@ -47,7 +47,7 @@ class System < ActiveRecord::Base
   has_many :system_activation_keys, :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
 
-  validates :environment, :presence => true, :non_locker_environment => true
+  validates :environment, :presence => true, :non_library_environment => true
   validates :name, :presence => true, :no_trailing_space => true
   validates_uniqueness_of :name, :scope => :environment_id
   validates :description, :katello_description_format => true
@@ -131,6 +131,11 @@ class System < ActiveRecord::Base
     json['environment'] = environment.as_json unless environment.nil?
     json['activation_key'] = activation_keys.as_json unless activation_keys.nil?
     json['template'] = system_template.as_json unless system_template.nil?
+    if self.guest == 'true'
+      json['host'] = self.host.attributes if self.host
+    else
+      json['guests'] = self.guests.map(&:attributes)
+    end
     json
   end
 

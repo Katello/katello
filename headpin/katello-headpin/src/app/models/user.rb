@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
   # validate the password length before hashing
   validates_each :password do |model, attr, value|
     if model.password_changed?
-      model.errors.add(attr, _("at least 5 characters")) if value.length < 5
+      model.errors.add(attr, _("must be at least 5 characters.")) if value.length < 5
     end
   end
 
@@ -328,8 +328,8 @@ class User < ActiveRecord::Base
   end
 
   def self.cp_oauth_header
-    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if self.current.nil?
-    self.current.cp_oauth_header
+    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
+    User.current.cp_oauth_header
   end
 
   def pulp_oauth_header
@@ -337,8 +337,8 @@ class User < ActiveRecord::Base
   end
 
   def self.pulp_oauth_header
-    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if self.current.nil?
-    { 'pulp-user' => self.current.username }
+    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
+    { 'pulp-user' => User.current.username }
   end
 
   # is the current user consumer? (rhsm)
@@ -383,7 +383,7 @@ class User < ActiveRecord::Base
   end
 
   def deletable?
-    User.allowed_to?([:delete], :users, nil)
+    self.id != User.current.id && User.allowed_to?([:delete], :users, nil)
   end
 
   def send_password_reset
@@ -421,9 +421,17 @@ class User < ActiveRecord::Base
   end
 
   def default_locale= locale
-    self.preferences[:user] = {} unless self.preferences.has_key? :userd
+    self.preferences[:user] = {} unless self.preferences.has_key? :user
     self.preferences[:user][:locale] = locale
-    save!
+  end
+
+  def subscriptions_match_system_preference
+    self.preferences[:user][:subscriptions_match_system] rescue true
+  end
+
+  def subscriptions_match_system_preference= flag
+    self.preferences[:user] = {} unless self.preferences.has_key? :user
+    self.preferences[:user][:subscriptions_match_system] = flag
   end
 
   #method to delete the passed in org.  Due to the way delayed job is impelemented

@@ -108,7 +108,8 @@ class Api::ProvidersController < Api::ApiController
     raise HttpErrors::BadRequest, _("It is not allowed to create products in Red Hat provider.") if @provider.redhat_provider?
 
     product_params = params[:product]
-    prod = @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url])
+    gpg  = GpgKey.readable(@provider.organization).find_by_name!(product_params[:gpg_key_name]) unless product_params[:gpg_key_name].blank?
+    prod = @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
     render :json => prod
   end
 

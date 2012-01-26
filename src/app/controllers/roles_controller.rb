@@ -57,6 +57,7 @@ class RolesController < ApplicationController
   def setup_options
     @panel_options = { :title => _('Roles'),
                  :col => ['name'],
+                 :titles => [_('Name')],
                  :create => _('Role'),
                  :name => controller_display_name,
                  :ajax_load  => true,

@@ -67,9 +67,16 @@ class GpgKeysController < ApplicationController
 
   def products_repos
     products = @gpg_key.products
-    repositories = @gpg_key.repositories
+
+    repos_hash = {}
+    @gpg_key.repositories.each do |repo|
+      repos_hash[repo.environment_product.product.name] ||= []
+      repos_hash[repo.environment_product.product.name] << repo
+    end
+    products_repos = repos_hash.sort_by{|product, repo| product}
+
     render :partial => "products_repos", :layout => "tupane_layout", 
-            :locals => {:products => products, :repositories => repositories}
+            :locals => {:products => products, :products_repos => products_repos}
   end
 
   def create
@@ -157,6 +164,7 @@ class GpgKeysController < ApplicationController
     @panel_options = { 
       :title => _('GPG Keys'),
       :col => ['name'],
+      :titles => [_('Name')],
       :create => _('GPG Key'), 
       :name => controller_display_name,
       :ajax_load  => true,

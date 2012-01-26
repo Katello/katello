@@ -21,15 +21,15 @@ class PriorValidator < ActiveModel::Validator
     #need to ensure that prior
     #environment already does not have a successor
     #this is because in v1.0 we want
-    # prior to have only one child (unless its the Locker)
+    # prior to have only one child (unless its the Library)
     has_no_prior = true
     if record.organization
-      has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.locker}.empty?
+      has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.library}.empty?
     end
     record.errors[:prior] << _("environment can only have one child") unless has_no_prior
 
-    # only Locker can have prior=nil
-    record.errors[:prior] << _("environment required") unless !record.prior.nil? || record.locker?
+    # only Library can have prior=nil
+    record.errors[:prior] << _("environment required") unless !record.prior.nil? || record.library?
   end
 end
 
@@ -96,13 +96,18 @@ class KTEnvironment < ActiveRecord::Base
    ERROR_CLASS_NAME = "Environment"
 
 
-  def locker?
-    self.locker
+  def library?
+    self.library
   end
 
   def successor
-    return self.successors[0] unless self.locker?
+    return self.successors[0] unless self.library?
     self.organization.promotion_paths()[0][0] if !self.organization.promotion_paths().empty?
+  end
+
+  def display_name
+    return _("Library") if self.library?
+    self.name
   end
 
   def prior
@@ -144,16 +149,16 @@ class KTEnvironment < ActiveRecord::Base
   #  and then give me that entire path
   def full_path
     p = self
-    until p.prior.nil? or p.prior.locker
+    until p.prior.nil? or p.prior.library
       p = p.prior
     end
     p.prior.nil? ? p.path : [p.prior] + p.path
   end
 
   def available_products
-    if self.prior.locker
-      # if there is no prior, then the prior is the Locker, which has all products
-      prior_products = self.organization.locker.products
+    if self.prior.library
+      # if there is no prior, then the prior is the Library, which has all products
+      prior_products = self.organization.library.products
     else
       prior_products = self.prior.products
     end
@@ -175,11 +180,11 @@ class KTEnvironment < ActiveRecord::Base
 
   # returns list of virtual permission tags for the current user
   def self.list_tags org_id
-    select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+    KTEnvironment.where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
   def self.tags(ids)
-    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+    KTEnvironment.where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
 
@@ -245,7 +250,13 @@ class KTEnvironment < ActiveRecord::Base
       authorized_items(org, SYSTEMS_READABLE)
     end
   }
-  scope :systems_registerable, lambda{|org|  authorized_items(org, [:register_systems]) }
+  scope :systems_registerable, lambda { |org|
+    if org.systems_registerable?
+      where(:organization_id => org)
+    else
+      authorized_items(org, [:register_systems])
+    end
+  }
 
   def self.any_viewable_for_promotions? org
     return false if !AppConfig.katello?
@@ -302,7 +313,7 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def systems_registerable?
-    User.allowed_to?([:register_systems], :organizations, nil, self.organization) ||
+    self.organization.systems_registerable? ||
         User.allowed_to?([:register_systems], :environments, self.id, self.organization)
   end
 

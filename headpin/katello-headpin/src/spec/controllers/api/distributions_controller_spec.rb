@@ -29,13 +29,13 @@ describe Api::DistributionsController, :katello => true do
                                  :repository_url => "https://localhost")
     @product = Product.create!(:name => "prod",
                                :provider => @provider,
-                               :environments => [@organization.locker])
+                               :environments => [@organization.library])
     @product.stub(:repos).and_return([@repository])
 
-    ep_locker = EnvironmentProduct.find_or_create(@organization.locker, @product)
-    @repo = Repository.create!(:environment_product => ep_locker,
+    ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
+    @repo = Repository.create!(:environment_product => ep_library,
                                :name=> "repo",
-                               :relative_path => "#{@organization.name}/Locker/prod/repo",
+                               :relative_path => "#{@organization.name}/Library/prod/repo",
                                :pulp_id=> "1",
                                :enabled => true)
     @repo.stub(:has_distribution?).and_return(true)
@@ -48,7 +48,7 @@ describe Api::DistributionsController, :katello => true do
   end
   let(:authorized_user) do
     user_with_permissions do |u|
-      u.can(:read_contents, :environments, @organization.locker.id, @organization)
+      u.can(:read_contents, :environments, @organization.library.id, @organization)
       u.can(:read, :providers, @provider.id, @organization)
     end
   end
@@ -66,7 +66,7 @@ describe Api::DistributionsController, :katello => true do
     end
 
     describe "show a distribution" do
-      let(:action) { :index }
+      let(:action) { :show }
       let(:req) {
         get 'show', :id => 1, :repository_id => @repo.id
       }

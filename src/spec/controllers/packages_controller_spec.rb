@@ -1,4 +1,4 @@
-#
+ #
 # Copyright 2011 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -32,7 +32,7 @@ describe PackagesController do
       end
 
       it 'should call pulp' do
-        get :auto_complete_locker, :term => "a"
+        get :auto_complete_library, :term => "a"
         response.should be_success
       end
     end

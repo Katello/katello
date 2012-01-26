@@ -21,8 +21,7 @@ from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, format_date, Printer
-from time import strftime
+from katello.client.core.utils import is_valid_record, Printer
 from datetime import timedelta, datetime
 
 Config()

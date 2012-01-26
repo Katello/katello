@@ -27,10 +27,6 @@ from katello.client.api.utils import get_environment, get_product, get_repo
 from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_progress_errors, format_task_errors
 from katello.client.core.utils import ProgressBar
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
 
 Config()
 
@@ -92,7 +88,7 @@ class SingleRepoAction(RepoAction):
         self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com"))
         self.parser.add_option('--product', dest='product', help=_("product name eg: fedora-14"))
         if select_by_env:
-            self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Locker)"))
+            self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
 
     def check_repo_select_options(self):
         if not self.has_option('id'):
@@ -119,6 +115,10 @@ class Create(RepoAction):
                                help=_("url path to the repository (required)"))
         self.parser.add_option('--product', dest='prod',
                                help=_("product name (required)"))
+        self.parser.add_option('--gpgkey', dest='gpgkey',
+                               help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
+        self.parser.add_option('--nogpgkey', action='store_true',
+                               help=_("Don't assign a GPG key to the repository."))
 
     def check_options(self):
         self.require_option('org')
@@ -131,10 +131,13 @@ class Create(RepoAction):
         url      = self.get_option('url')
         prodName = self.get_option('prod')
         orgName  = self.get_option('org')
+        gpgkey   = self.get_option('gpgkey')
+        nogpgkey   = self.get_option('nogpgkey')
+
 
         prod = get_product(orgName, prodName)
         if prod != None:
-            repo = self.api.create(prod["id"], name, url)
+            repo = self.api.create(prod["id"], name, url, gpgkey, nogpgkey)
             print _("Successfully created repository [ %s ]") % name
         else:
             print _("No product [ %s ] found") % prodName
@@ -241,7 +244,7 @@ class Discovery(RepoAction):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
             repoName = self.repository_name(name, parsedUrl.path) # pylint: disable=E1101
-            repo = self.api.create(productid, repoName, repourl)
+            repo = self.api.create(productid, repoName, repourl, None, None)
 
             print _("Successfully created repository [ %s ]") % repoName
 
@@ -318,10 +321,34 @@ class Info(SingleRepoAction):
         self.printer.addColumn('url', show_in_grep=False)
         self.printer.addColumn('last_sync', show_in_grep=False)
         self.printer.addColumn('sync_state', name=_("Progress"), show_in_grep=False)
+        self.printer.addColumn('gpg_key_name', name=_("GPG key"), show_in_grep=False)
 
         self.printer.setHeader(_("Information About Repo %s") % repo['id'])
 
         self.printer.printItem(repo)
+        return os.EX_OK
+
+class Update(SingleRepoAction):
+
+    description = _('updates repository attributes')
+    select_by_env = True
+
+    def setup_parser(self):
+        super(Update, self).setup_parser()
+        self.parser.add_option('--gpgkey', dest='gpgkey',
+                               help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
+        self.parser.add_option('--nogpgkey', action='store_true',
+                               help=_("Don't assign a GPG key to the repository."))
+
+    def run(self):
+        repo = self.get_repo(True)
+        gpgkey   = self.get_option('gpgkey')
+        nogpgkey   = self.get_option('nogpgkey')
+        if repo == None:
+            return os.EX_DATAERR
+
+        self.api.update(repo['id'], gpgkey, nogpgkey)
+        print _("Successfully updated repository [ %s ]") % repo['name']
         return os.EX_OK
 
 
@@ -397,7 +424,7 @@ class List(RepoAction):
         self.parser.add_option('--org', dest='org',
             help=_("organization name eg: ACME_Corporation (required)"))
         self.parser.add_option('--environment', dest='env',
-            help=_("environment name eg: production (default: locker)"))
+            help=_("environment name eg: production (default: Library)"))
         self.parser.add_option('--product', dest='product',
             help=_("product name eg: fedora-14"))
         self.parser.add_option('--include_disabled', action="store_true", dest='disabled',
@@ -444,7 +471,7 @@ class List(RepoAction):
 class Delete(SingleRepoAction):
 
     description = _('delete a repository')
-    select_by_env = True
+    select_by_env = False
 
     def run(self):
         repo = self.get_repo()

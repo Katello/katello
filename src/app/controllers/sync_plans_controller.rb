@@ -44,9 +44,9 @@ class SyncPlansController < ApplicationController
   end
   
   def setup_options
-    columns = ['name', 'interval']
     @panel_options = { :title => _('Sync Plans'),
-                 :col => columns,
+                 :col =>  ['name', 'interval'],
+                  :titles => [_('Name'), _("Interval") ],
                  :create => _('Plan'),
                  :name => controller_display_name,
                  :ajax_load => true,

@@ -50,7 +50,7 @@ class List(ActivationKeyAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (Locker by default)"))
+                               help=_("environment name eg: dev (default: Library)"))
 
     def check_options(self):
         self.require_option('org')

@@ -23,49 +23,49 @@ describe SystemTemplate, :katello => true do
     disable_product_orchestration
 
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
-    @environment = KTEnvironment.create!(:name => 'env_1', :prior => @organization.locker.id, :organization => @organization)
+    @environment = KTEnvironment.create!(:name => 'env_1', :prior => @organization.library.id, :organization => @organization)
     @provider     = @organization.redhat_provider
 
-    @tpl1 = SystemTemplate.create!(:name => "template_1", :environment => @organization.locker)
+    @tpl1 = SystemTemplate.create!(:name => "template_1", :environment => @organization.library)
 
     @tpl1_clone = mock(SystemTemplate)
     @tpl1_clone.stub(:save!)
     @tpl1_clone.stub(:save)
 
-    @prod1 = Product.create!(:cp_id => "123456", :name => "prod1", :environments => [@organization.locker], :provider => @provider)
-    @prod2 = Product.create!(:cp_id => "789123", :name => "prod2", :environments => [@organization.locker], :provider => @provider)
+    @prod1 = Product.create!(:cp_id => "123456", :name => "prod1", :environments => [@organization.library], :provider => @provider)
+    @prod2 = Product.create!(:cp_id => "789123", :name => "prod2", :environments => [@organization.library], :provider => @provider)
 
-    @organization.locker.products << @prod1
-    @organization.locker.products << @prod2
+    @organization.library.products << @prod1
+    @organization.library.products << @prod2
   end
 
   describe "create template" do
 
     it "should create empty template" do
-      @empty_tpl = SystemTemplate.create!(:name => "template_2", :environment => @organization.locker)
+      @empty_tpl = SystemTemplate.create!(:name => "template_2", :environment => @organization.library)
 
       @empty_tpl.name.should == "template_2"
       @empty_tpl.created_at.should_not be_nil
-      @organization.locker.system_templates.should include @empty_tpl
+      @organization.library.system_templates.should include @empty_tpl
     end
 
     it "should create empty template with parent" do
-      @tpl_with_parent = SystemTemplate.create!(:name => "template_2", :environment => @organization.locker, :parent => @tpl1)
+      @tpl_with_parent = SystemTemplate.create!(:name => "template_2", :environment => @organization.library, :parent => @tpl1)
 
       @tpl_with_parent.name.should == "template_2"
       @tpl_with_parent.created_at.should_not be_nil
       @tpl_with_parent.parent.should == @tpl1
-      @organization.locker.system_templates.should include @tpl_with_parent
+      @organization.library.system_templates.should include @tpl_with_parent
     end
 
     it "should fail when creating template with invalid parent" do
       @tpl_in_other_env = SystemTemplate.create!(:name => "another_template", :environment => @environment)
 
-      lambda {SystemTemplate.create!(:name => "template_2", :environment => @organization.locker, :parent => @tpl_in_other_env)}.should raise_error
+      lambda {SystemTemplate.create!(:name => "template_2", :environment => @organization.library, :parent => @tpl_in_other_env)}.should raise_error
     end
 
     it  "should save valid product and packages" do
-      @valid_tpl = SystemTemplate.new(:name => "valid_template", :environment => @organization.locker)
+      @valid_tpl = SystemTemplate.new(:name => "valid_template", :environment => @organization.library)
 
       @pack1 = SystemTemplatePackage.new(:package_name => "pack1")
       @pack1.stub(:to_package).and_return {}
@@ -113,7 +113,7 @@ describe SystemTemplate, :katello => true do
   describe "promote template" do
 
     before :each do
-      @from_env = @organization.locker
+      @from_env = @organization.library
       @to_env = @environment
     end
 
@@ -216,7 +216,7 @@ describe SystemTemplate, :katello => true do
     it "should clone the template to the next environment" do
       @tpl1.should_receive(:copy_to_env).with(@environment).and_return(@tpl1_clone)
 
-      @tpl1.promote(@organization.locker, @environment)
+      @tpl1.promote(@organization.library, @environment)
     end
 
     it "should keep the content of the cloned template" do
@@ -270,7 +270,7 @@ describe SystemTemplate, :katello => true do
     end
 
     it "should import template content" do
-      @import_tpl = SystemTemplate.new(:environment => @organization.locker)
+      @import_tpl = SystemTemplate.new(:environment => @organization.library)
 
       @import_tpl.should_receive(:add_product).once.with('prod_a1').and_return nil
       @import_tpl.should_receive(:add_product).once.with('prod_a2').and_return nil
@@ -292,7 +292,7 @@ describe SystemTemplate, :katello => true do
 
     it "should export template content" do
 
-      @export_tpl = SystemTemplate.new(:name => "export_template", :environment => @organization.locker)
+      @export_tpl = SystemTemplate.new(:name => "export_template", :environment => @organization.library)
       @export_tpl.stub(:products).and_return [@prod1, @prod2]
       @export_tpl.stub(:packages).and_return [mock({:package_name => 'xxx', :nvrea => 'xxx'})]
       @export_tpl.stub(:parameters_json).and_return "{}"
@@ -315,7 +315,7 @@ describe SystemTemplate, :katello => true do
   describe "destroy template" do
 
     it "should fail when deleting template with children" do
-      @tpl2 = SystemTemplate.create!(:name => "template_2", :environment => @organization.locker, :parent => @tpl1)
+      @tpl2 = SystemTemplate.create!(:name => "template_2", :environment => @organization.library, :parent => @tpl1)
 
       lambda {@tpl1.destroy}.should raise_error
     end
@@ -405,7 +405,7 @@ describe SystemTemplate, :katello => true do
       :name => 'foo repo',
       :groupid => [
         "product:"+@prod1.cp_id.to_s,
-        "env:"+@organization.locker.id.to_s,
+        "env:"+@organization.library.id.to_s,
         "org:"+@organization.name.to_s
       ]
     })}
@@ -460,7 +460,7 @@ describe SystemTemplate, :katello => true do
       :name => 'foo repo',
       :groupid => [
         "product:"+@prod1.cp_id.to_s,
-        "env:"+@organization.locker.id.to_s,
+        "env:"+@organization.library.id.to_s,
         "org:"+@organization.name.to_s
       ]
     })}
@@ -573,7 +573,7 @@ describe SystemTemplate, :katello => true do
       it "should contain repos referencing to pulp repositories" do
         repo = subject.xpath("/template/repositories/repository").first
         repo["name"].should == "repo"
-        repo.xpath("./url").text.should =~ /repos\/ACME_Corporation\/Locker\/zoo\/base$/
+        repo.xpath("./url").text.should =~ /repos\/ACME_Corporation\/Library\/zoo\/base$/
       end
 
       it "should contain 'persisted' tag" do

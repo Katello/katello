@@ -26,10 +26,12 @@ describe Api::ProvidersController, :katello => true do
   let(:another_provider_name) { "another name" }
 
   before(:each) do
-    @organization = Organization.new(:name => "organization100", :cp_key => "organization100")
-    Organization.stub!(:first).and_return(@organization)
-
-    @provider = Provider.new(:name => provider_name)
+    disable_org_orchestration
+    disable_product_orchestration
+    disable_user_orchestration
+    @organization = new_test_org
+    @provider = Provider.create!(:name => provider_name, :provider_type => Provider::CUSTOM,
+                                 :organization => @organization)
     Provider.stub!(:find_by_name).and_return(@provider)
     Provider.stub!(:find).and_return(@provider)
     @provider.organization = @organization
@@ -155,7 +157,7 @@ describe Api::ProvidersController, :katello => true do
   describe "import manifest" do
 
     let(:action) { :import_manifest }
-    let(:req) { post :import_manifest, { :id => provider_id , :import => @temp_file } }
+    let(:req) { post :import_manifest, { :id => @organization.redhat_provider.id , :import => @temp_file } }
     let(:authorized_user) { user_with_write_permissions }
     let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
@@ -171,8 +173,8 @@ describe Api::ProvidersController, :katello => true do
     end
       
     it "should call Provider#import_manifest" do
-      Provider.should_receive(:find).with(provider_id).and_return(@provider)
-      @provider.should_receive(:import_manifest).once
+      Provider.should_receive(:find).with(@organization.redhat_provider.id).and_return(@organization.redhat_provider)
+      @organization.redhat_provider.should_receive(:import_manifest).once
       req
     end
   end

@@ -51,7 +51,7 @@ class FiltersController < ApplicationController
     @product_hash = {}
     products.each{|prod|
       repos = []
-      prod.repos(current_organization.locker).sort{|a,b| a.name <=> b.name}.each{|repo|
+      prod.repos(current_organization.library).sort{|a,b| a.name <=> b.name}.each{|repo|
         repos << {:name=>repo.name, :id=>repo.id}
       }
       @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id,
@@ -199,6 +199,7 @@ class FiltersController < ApplicationController
     @panel_options = {
         :title => _('Package Filters'),
         :col => ['name'],
+        :titles => [_('Name')],
         :create => _('Filter'),
         :name => controller_display_name,
         :ajax_scroll=>items_filters_path(),

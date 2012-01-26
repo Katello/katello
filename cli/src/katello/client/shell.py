@@ -27,7 +27,6 @@ import readline
 import re
 import sys
 from cmd import Cmd
-from pwd import getpwuid
 
 from katello.client.config import Config
 from katello.client.core.utils import parse_tokens
@@ -58,8 +57,7 @@ class KatelloShell(Cmd):
         except:
             self.prompt = 'katello> '
 
-        userinfo = getpwuid(os.getuid())
-        self.conf_dir = os.path.join(userinfo[5], '.katello')
+        self.conf_dir = Config.USER_DIR
 
         try:
             if not os.path.isdir(self.conf_dir):

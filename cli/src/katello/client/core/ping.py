@@ -14,7 +14,6 @@
 # in this software or its documentation.
 #
 
-import os
 from gettext import gettext as _
 
 from katello.client.api.ping import PingAPI

@@ -11,12 +11,20 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  */
 
-KT.panel.list.registerPage('users', { create : 'new_user' });
+KT.panel.list.registerPage(
+    'users', 
+    { create            : 'new_user', 
+    validation          : KT.user_page.verifyPassword,
+    extra_create_data   : function(){
+        var env_id = $(".path_link.active").attr('data-env_id');
+        return { "user" : { "env_id" : env_id }};
+    }
+});
 
 $(document).ready(function() {
 
     KT.user_page.registerEdits();
-
+    env_select.ajax_params ={};
     env_select.original_env_id = undefined;
     env_select.env_changed_callback = function(env_id) {
         if(env_select.original_env_id == env_id) {
@@ -56,10 +64,18 @@ $(document).ready(function() {
                 refill.html(i18n.noDefaultEnv);
                 env_select.env_changed_callback('');
             } else {
-                var url = KT.common.rootURL() + 'organizations/' + selected_org_id +  '/environments_partial';
+
+                var url = KT.routes.environments_partial_organization_path(selected_org_id),
+                    params = {};
+
+                if (env_select.ajax_params !== undefined) {
+                    params = env_select.ajax_params;
+                }
+
                 $.ajax({
                     type: "GET",
                     url: url,
+                    data: params,
                     success: function(data) {
                         refill.html(data);
                         // On successful update, update the original env id and disable save button
@@ -73,22 +89,6 @@ $(document).ready(function() {
         locale_selector.change(function(event) {
             $('#locale_form').trigger('submit');
         });
-
-        $('#password_field').simplePassMeter({
-            'container': '#password_meter',
-            'offset': 10,
-            'showOnFocus':false,
-            'requirements': {
-                'noUsernameMatch': {
-                    value: "#match",
-                    message: i18n.usernameMatch,
-                    callback: function(password, value) {
-                        return password.indexOf($("#username").text().trim()) === -1;
-                    }
-                }
-            },
-            'defaultText':i18n.meterText,
-            'ratings':ratings});
 
         //from user.js
         $('#helptips_enabled').bind('change', KT.user_page.checkboxChanged);

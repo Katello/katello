@@ -23,7 +23,7 @@ describe FiltersController, :katello => true do
     before(:each) do
       @organization = new_test_org
       @filter = Filter.create!(:name => 'filter', :organization => @organization)
-      @env = @organization.locker
+      @env = @organization.library
       @product = new_test_product(@organization, @env)
     end
 

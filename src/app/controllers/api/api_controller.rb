@@ -19,6 +19,7 @@ class Api::ApiController < ActionController::Base
   before_filter :set_locale
   before_filter :require_user
 
+
   rescue_from Exception, :with => proc { |e| render_exception(500, e) } # catch-all
   rescue_from HttpErrors::WrappedError, :with => proc { |e| render_wrapped_exception(500, e) }
 
@@ -101,7 +102,7 @@ class Api::ApiController < ActionController::Base
   end
 
   def find_organization
-    if not params[:organization_id].nil?
+    if params[:organization_id]
       @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].to_s.tr(' ', '_')})
       raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
       @organization

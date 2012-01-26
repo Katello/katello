@@ -17,13 +17,15 @@
 
 import sys
 import os
+from pwd import getpwuid
 
 # Set up the new locations for the config files
 from katello.client.config import Config
 Config.FILE = 'client.conf'
 Config.PATH = os.path.join('/etc/headpin', Config.FILE)
-Config.USER = os.path.expanduser(os.path.join('~/.headpin', Config.FILE))
-Config.USER_OPTIONS = os.path.expanduser(os.path.join('~/.headpin', 'client-options.conf'))
+Config.USER_DIR = os.path.join(getpwuid(os.getuid())[5], '.headpin')
+Config.USER = os.path.expanduser(os.path.join(Config.USER_DIR, Config.FILE))
+Config.USER_OPTIONS = os.path.expanduser(os.path.join(Config.USER_DIR, 'client-options.conf'))
 
 from katello.client.cli.admin import AdminCLI
 from katello.client.shell import KatelloShell
@@ -32,6 +34,8 @@ from katello.client.core import (
   environment,
   organization,
   user,
+  user_role,
+  permission,
   provider,
   product,
   ping,
@@ -48,7 +52,7 @@ def setup_admin(admin):
     akey_cmd.add_action('update', activation_key.Update())
     akey_cmd.add_action('delete', activation_key.Delete())
     admin.add_command('activation_key', akey_cmd)
-    
+
     env_cmd = environment.Environment()
     env_cmd.add_action('create', environment.Create())
     env_cmd.add_action('info', environment.Info())
@@ -63,6 +67,7 @@ def setup_admin(admin):
     org_cmd.add_action('list', organization.List())
     org_cmd.add_action('update', organization.Update())
     org_cmd.add_action('delete', organization.Delete())
+    org_cmd.add_action('subscriptions', organization.ShowSubscriptions())
     admin.add_command('org', org_cmd)
 
     user_cmd = user.User()
@@ -71,7 +76,26 @@ def setup_admin(admin):
     user_cmd.add_action('list', user.List())
     user_cmd.add_action('update', user.Update())
     user_cmd.add_action('delete', user.Delete())
+    user_cmd.add_action('report', user.Report())
+    user_cmd.add_action('assign_role', user.AssignRole(True))
+    user_cmd.add_action('unassign_role', user.AssignRole(False))
+    user_cmd.add_action('list_roles', user.ListRoles())
     admin.add_command('user', user_cmd)
+
+    user_role_cmd = user_role.UserRole()
+    user_role_cmd.add_action('create', user_role.Create())
+    user_role_cmd.add_action('info', user_role.Info())
+    user_role_cmd.add_action('list', user_role.List())
+    user_role_cmd.add_action('update', user_role.Update())
+    user_role_cmd.add_action('delete', user_role.Delete())
+    admin.add_command('user_role', user_role_cmd)
+
+    permission_cmd = permission.Permission()
+    permission_cmd.add_action('create', permission.Create())
+    permission_cmd.add_action('list', permission.List())
+    permission_cmd.add_action('delete', permission.Delete())
+    permission_cmd.add_action('available_verbs', permission.ListAvailableVerbs())
+    admin.add_command('permission', permission_cmd)
 
     admin.add_command('ping', ping.Status())
 
@@ -81,7 +105,6 @@ def setup_admin(admin):
 
     system_cmd = system.System()
     system_cmd.add_action('list', system.List())
-    system_cmd.add_action('register', system.Register())
     system_cmd.add_action('unregister', system.Unregister())
     system_cmd.add_action('subscriptions', system.Subscriptions())
     system_cmd.add_action('subscribe', system.Subscribe())
@@ -89,6 +112,7 @@ def setup_admin(admin):
     system_cmd.add_action('info', system.Info())
     system_cmd.add_action('facts', system.Facts())
     system_cmd.add_action('update', system.Update())
+    system_cmd.add_action('report', system.Report())
     admin.add_command('system', system_cmd)
 
     admin.add_command('shell', shell_command.ShellAction(admin))
@@ -100,7 +124,7 @@ def setup_admin(admin):
     prov_cmd.add_action('import_manifest', provider.ImportManifest())
     admin.add_command('provider', prov_cmd)
 
-    
+
     client_cmd = client.Client()
     client_cmd.add_action('remember', client.Remember())
     client_cmd.add_action('forget', client.Forget())

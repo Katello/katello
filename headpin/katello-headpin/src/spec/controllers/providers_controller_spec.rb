@@ -34,24 +34,33 @@ describe ProvidersController do
 
   describe "update a provider subscriptions" do
     before(:each) do
+      @test_export = File.new("#{Rails.root}/spec/controllers/export.zip")
+      @contents = {:contents => @test_export}
+
       @organization = new_test_org
+      @provider = @organization.redhat_provider
 
-      provider = @organization.redhat_provider
-      provider.should_receive(:import_manifest).and_return(true)
-      provider.stub(:name).and_return("RH_Provider")
-      provider.stub(:owner_imports).and_return([])
-
-      @organization.stub(:redhat_provider).and_return(provider)
-      controller.stub!(:current_organization).and_return(@organization)
+      @provider.stub(:name).and_return("RH_Provider")
+      @provider.stub(:owner_imports).and_return([])
 
       Candlepin::Owner.stub!(:pools).and_return({})
     end
 
     it "should update a provider subscription" do
-      test_export = File.new("#{Rails.root}/spec/controllers/export.zip")
-      contents = {:contents => test_export}
+      @provider.should_receive(:import_manifest).and_return(true)
+      @organization.stub(:redhat_provider).and_return(@provider)
+      controller.stub!(:current_organization).and_return(@organization)
 
-      post 'update_redhat_provider', {:provider => contents}
+      post 'update_redhat_provider', {:provider => @contents}
+      response.should be_success
+    end
+
+    it "should try to force a provider update" do
+      @provider.should_receive(:import_manifest).with(anything(), { :force => "true" }).and_return(true)
+      @organization.stub(:redhat_provider).and_return(@provider)
+      controller.stub!(:current_organization).and_return(@organization)
+
+      post 'update_redhat_provider', {:provider => @contents, :force_import => "1"}
       response.should be_success
     end
 

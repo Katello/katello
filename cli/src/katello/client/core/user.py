@@ -234,8 +234,8 @@ class AssignRole(UserAction):
             print _("Role [ %s ] not found" % roleName)
             return os.EX_DATAERR
 
-        msg = self.update_role(user['id'], role['id']) 
-        print msg 
+        msg = self.update_role(user['id'], role['id'])
+        print msg
         return os.EX_OK
 
     def update_role(self, userId, roleId):

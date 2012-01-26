@@ -17,10 +17,11 @@ class Api::EnvironmentsController < Api::ApiController
   before_filter :authorize
 
   def rules
+    index_rule = lambda{@organization.readable? || @organization.any_systems_registerable?}
     manage_rule = lambda{@organization.environments_manageable?}
     view_rule = lambda{@organization.readable?}
     {
-      :index => view_rule,
+      :index => index_rule,
       :show => view_rule,
       :create => manage_rule,
       :update => manage_rule,
@@ -46,8 +47,8 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   def update
-    if @environment.locker?
-      raise HttpErrors::BadRequest, _("Can't update Locker environment")
+    if @environment.library?
+      raise HttpErrors::BadRequest, _("Can't update Library environment")
     else
       @environment.update_attributes!(params[:environment])
       render :json => @environment

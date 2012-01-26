@@ -4,7 +4,7 @@
 .dash {
     $big_height: 350px;
     $big_width: 490px;
-    $small_height: 153px;
+    $small_height: 170px;
 
     @include border-radius(3px);
     background-color: $lightergrey_color;
@@ -30,11 +30,6 @@
     }
     .dashhead {
         position: relative;
-    }
-
-
-    #dashboard_notifications {
-      height: 170px;
     }
 
     #dashboard_subscriptions {
@@ -177,13 +172,16 @@
         width: 50%;
         padding-left: 2px;
       }
-      
       .col_3 {
         display: inline-block;
-        width: $big_width* .42;
+        width: $big_width* .40;
         padding-left: 2px;
       }
-
+      .col_4 {
+        display: inline-block;
+        width: $big_width * .05;
+        padding-left: 2px;
+      }
       .collapsed {
         float: left;
         width: 16px;

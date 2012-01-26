@@ -1,8 +1,5 @@
-= javascript :edit, :edit_helpers, :tabs, :provider_redhat
-= include_javascripts :treetable
+= javascript :edit, :edit_helpers, :tabs, :provider_redhat, :treetable
 = stylesheet :tabs, :dashboard
-= include_common_i18n
-= include_editable_i18n
 
 .grid_16
   = help_tip_button('subscriptions-help')
@@ -28,6 +25,10 @@
           = f.label :upload, _("Specify Local Manifest")
           %br
           = f.file_field :contents
+        #force_checkbox.fl
+          %br
+          = check_box_tag :force_import
+          = label_tag :force
         #upload_button.fl
           -#= f.submit _("Upload")
           %br

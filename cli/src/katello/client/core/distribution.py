@@ -47,7 +47,7 @@ class List(DistributionAction):
         self.parser.add_option('--org', dest='org',
                       help=_("organization name eg: foo.example.com"))
         self.parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: locker)"))
+                      help=_("environment name eg: production (default: Library)"))
         self.parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
 
@@ -92,7 +92,7 @@ class Info(DistributionAction):
     def setup_parser(self):
         # always provide --id option for create, even on registered clients
         self.parser.add_option('--repo_id', dest='repo_id',
-                      help=_("repository id"))
+                      help=_("repository id (required)"))
         self.parser.add_option('--id', dest='id',
                                help=_("distribution id eg: ks-rh-noarch (required)"))
 

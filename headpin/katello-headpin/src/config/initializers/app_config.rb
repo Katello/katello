@@ -19,16 +19,14 @@ module ApplicationConfiguration
       @hash = config['common'] || {}
       @hash.update(config[Rails.env] || {})
 
-      if ENV['RAILS_RELATIVE_ROOT_URL'] == '/katello'
+      # Hardcode to true to allow 'Headpin' to be added to the locale translation files
+      if false
         @hash["app_name"] = 'Katello'
         @hash["katello?"] = true
-        @hash["headpin?"] = false
       else
         @hash["app_name"] = 'Headpin'
         @hash["katello?"] = false
-        @hash["headpin?"] = true
       end
-      #@ostruct.app_name = app_name
 
       @ostruct = hashes2ostruct(@hash)
 
@@ -53,7 +51,7 @@ module ApplicationConfiguration
       end
       @ostruct.katello_version = version
 
-      available_locales = ['de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pt-BR', 'gu', 'hi', 'mr', 'or', 'ru', 'te', 'pa', 'kn', 'ko', 'bn', 'ta', 'zh-CN', 'zh-TW']
+      available_locales = ['de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pt-BR', 'gu', 'hi', 'mr', 'or', 'ru', 'te', 'pa', 'kn', 'bn', 'ta', 'zh-CN', 'zh-TW']
       @ostruct.available_locales = available_locales unless @ostruct.respond_to?(:available_locales)
     end
 

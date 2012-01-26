@@ -27,6 +27,15 @@ class OrganizationsController < ApplicationController
     edit_test = lambda{@organization.editable?}
     delete_test = lambda{@organization.deletable?}
 
+    environments_partial_test = lambda do
+      if "true" == params[:new]
+        Organization.creatable?
+      else
+        params[:user_id] &&
+            ((current_user.id.to_s ==  params[:user_id].to_s) || current_user.editable?)
+      end
+    end
+
     {:index =>  index_test,
       :items => index_test,
       :auto_complete_search => index_test,
@@ -35,7 +44,7 @@ class OrganizationsController < ApplicationController
       :edit => read_test,
       :update => edit_test,
       :destroy => delete_test,
-      :environments_partial => index_test,
+      :environments_partial => environments_partial_test,
       :events => read_test,
       :download_debug_certificate => edit_test
     }
@@ -69,7 +78,7 @@ class OrganizationsController < ApplicationController
 
       if @new_env
         @new_env.organization = @organization
-        @new_env.prior = @organization.locker
+        @new_env.prior = @organization.library
         @new_env.save!
       end
       notice [_("Organization '#{@organization["name"]}' was created.")]
@@ -144,7 +153,13 @@ class OrganizationsController < ApplicationController
 
   def environments_partial
     @organization = Organization.find(params[:id])
-    accessible_envs = KTEnvironment.systems_registerable(@organization)
+    env_user_id = params[:user_id]?params[:user_id].to_s : nil
+    if env_user_id == current_user.id.to_s && (!current_user.editable?)
+      accessible_envs = KTEnvironment.systems_registerable(@organization)
+    else
+      accessible_envs = KTEnvironment.where(:organization_id => @organization.id)
+    end
+
     setup_environment_selector(@organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs, false, @organization)
     render :partial=>"environments", :locals=>{:accessible_envs => accessible_envs}
@@ -200,6 +215,7 @@ class OrganizationsController < ApplicationController
   def setup_options
     @panel_options = { :title => _('Organizations'),
                :col => ['name'],
+               :titles => [_('Name')],
                :create => _('Organization'),
                :name => controller_display_name,
                :accessor => :cp_key,

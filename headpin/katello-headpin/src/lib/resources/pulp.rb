@@ -429,6 +429,21 @@ module Pulp
         JSON.parse(response.body)
       end
 
+      def errata_by_consumer repos
+        repoids_param = nil
+        repos.each do |repo|
+          if repoids_param.nil?
+            repoids_param = "?repoids=" + repo.pulp_id
+          else
+            repoids_param += "&repoids=" + repo.pulp_id
+          end
+        end
+
+        url = consumer_path() + "applicable_errata_in_repos/" + repoids_param
+        response = get(url, self.default_headers)
+        JSON.parse(response.body)
+      end
+
       def install_errata consumer_id, errata_ids
         url = consumer_path(consumer_id) + "installerrata/"
         attrs = { :errataids => errata_ids }

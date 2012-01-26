@@ -74,7 +74,6 @@ class UserSessionsController < ApplicationController
       self.current_organization = User.current.allowed_organizations.first
       # notice the user
       notice _("Login Successful")
-      #redirect_to account_url
       redirect_to dashboard_index_url
     end
   end

@@ -30,11 +30,11 @@ describe PromotionsController, :katello => true do
     before (:each) do
       @org = new_test_org
       controller.stub(:current_organization).and_return(@org)
-      @env = @org.locker
+      @env = @org.library
       
     end
 
-    it "should be successful with locker and no next environment" do
+    it "should be successful with library and no next environment" do
       get 'show', :id=>@env.name
 
       response.should be_success
@@ -43,8 +43,8 @@ describe PromotionsController, :katello => true do
       assigns(:next_environment).should == nil
     end
 
-    it "should be successful on the locker and a next environment" do
-      @env2 = KTEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv", :prior=>@org.locker)
+    it "should be successful on the library and a next environment" do
+      @env2 = KTEnvironment.new(:organization=>@org, :library=>false, :name=>"otherenv", :prior=>@org.library)
       @env2.save!
       get 'show', :id=>@env.name
       response.should be_success
@@ -54,7 +54,7 @@ describe PromotionsController, :katello => true do
     end
 
     it "should be successful on the next environment with no changeset" do
-      @env2 = KTEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv", :prior=>@org.locker)
+      @env2 = KTEnvironment.new(:organization=>@org, :library=>false, :name=>"otherenv", :prior=>@org.library)
       @env2.save!
       get 'show', :id=>@env2.name
       response.should be_success
@@ -70,7 +70,7 @@ describe PromotionsController, :katello => true do
     before (:each) do
       @org = new_test_org
       controller.stub(:current_organization).and_return(@org)
-      @env = @org.locker
+      @env = @org.library
       @product = new_test_product(@org, @env)
       @product.stub(:packages).and_return([])
       Product.stub(:find).and_return(@product)
@@ -111,7 +111,7 @@ describe PromotionsController, :katello => true do
 describe "rules" do
     before (:each) do
       @organization = new_test_org
-      @env1 = @organization.locker
+      @env1 = @organization.library
       @env2 = KTEnvironment.create!(:name=>"FOO", :prior => @env1, :organization=>@organization)
       @env3 = KTEnvironment.create!(:name=>"FOO2", :prior => @env2, :organization=>@organization)
     end

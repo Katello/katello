@@ -4,6 +4,8 @@
       "noDefaultEnv": '#{escape_javascript(_("No default environment. Select an organization to choose from available environments."))}'
     });
     env_select.original_env_id = '#{@old_env ? @old_env.id : ''}';
+    env_select.ajax_params = {};
+    env_select.ajax_params["user_id"] = '#{@user.id}';
 
 = content_for :title do
   #{@user.username}
@@ -21,32 +23,33 @@
       = label :user, :env, _("Default Environment:")
     .grid_5.la#env_name
       = @old_env ? @old_env.name : _("No default set for this user.")
-  %fieldset.fl.clear
-    .grid_3.ra
-      = N_("Choose new defaults:")
-  %fieldset.fl.clear
-    .grid_3.ra
-      = label :user, :org, _("New Default Organization:")
-    .grid_5.la
-      = organization_select (@organization ? @organization.id : nil)
-  %fieldset.fl.clear
-  .promotion_paths
-    = hidden_field_tag 'user[environment_id]', @environment.id unless @environment.nil?
-    .grid_3.ra
-      %label #{_("New Default Environment")}:
-    .grid_5.la
-      - if @environment.nil?
-        #env_box
-          -if @organization.nil?
-            #{_("No default environment. Select an organization to choose from available environments.")}
-          -else
-            #{_("No environments are currently available in this organization. Saving will set user to no default environment.")}
-      - else
-        #env_box
-          = environment_selector(:path_widget_class=>"grid_5", :path_entries_class=>"grid_5", :locker_clickable=>false,
-            :accessible_envs=>accessible_envs)
-    .clear
-      &nbsp;
-    .grid_5.la.prefix_3
-      #update_user.verify_password.disabled.button{'data-url'=>update_environment_user_path(@user.id)}
-        #{_("Save")}
+  - if editable
+    %fieldset.fl.clear
+      .grid_3.ra
+        = _("Choose new defaults:")
+    %fieldset.fl.clear
+      .grid_3.ra
+        = label :user, :org, _("New Default Organization:")
+      .grid_5.la
+        = organization_select (@organization ? @organization.id : nil)
+    %fieldset.fl.clear
+    .promotion_paths
+      = hidden_field_tag 'user[environment_id]', @environment.id unless @environment.nil?
+      .grid_3.ra
+        %label #{_("New Default Environment")}:
+      .grid_5.la
+        - if @environment.nil?
+          #env_box
+            -if @organization.nil?
+              #{_("No default environment. Select an organization to choose from available environments.")}
+            -else
+              #{_("No environments are currently available in this organization. Saving will set user to no default environment.")}
+        - else
+          #env_box
+            = environment_selector(:path_widget_class=>"grid_5", :path_entries_class=>"grid_5", :library_clickable=>false,
+              :accessible_envs=>accessible_envs)
+      .clear
+        &nbsp;
+      .grid_5.la.prefix_3
+        #update_user.verify_password.disabled.button{'data-url'=>update_environment_user_path(@user.id)}
+          #{_("Save")}

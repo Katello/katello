@@ -14,8 +14,7 @@ require 'resources/candlepin'
 
 class Api::CandlepinProxiesController < Api::ProxiesController
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  skip_before_filter :authorize # ok - proxy is consumer only
 
   def get
     r = ::Candlepin::Proxy.get(@request_path)

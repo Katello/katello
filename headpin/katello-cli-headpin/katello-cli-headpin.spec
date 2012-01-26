@@ -19,7 +19,7 @@ Summary:       Client package for managing a katello-headpin installation
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.13
+Version:       0.1.15
 Release:       2%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -57,12 +57,22 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+<<<<<<< HEAD
 * Mon Dec 19 2011 Bryan Kearney <bkearney@redhat.com> 0.1.13-2
 - Missed a merge (bkearney@redhat.com)
 - Latest upstream code (bkearney@redhat.com)
 - Automatic commit of package [katello-cli-headpin] release [0.1.12-2].
   (bkearney@redhat.com)
 - Bump the version (bkearney@redhat.com)
+=======
+* Wed Jan 25 2012 Bryan Kearney <bkearney@redhat.com> 0.1.15-1
+- 754856: Add shell history to the local .headpin directory instead of .katello
+  (bkearney@redhat.com)
+
+* Mon Jan 23 2012 Bryan Kearney <bkearney@redhat.com> 0.1.14-1
+- Add in the latest command line features from katello proper
+  (bkearney@redhat.com)
+>>>>>>> katello/headpin
 
 * Fri Dec 16 2011 Bryan Kearney <bkearney@redhat.com> 0.1.13-1
 - 758447: Add headpin prompt to the config file (bkearney@redhat.com)
