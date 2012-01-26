@@ -353,6 +353,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Jan 26 2012 Shannon Hughes <shughes@redhat.com> 0.1.197-2
+- se build (shughes@redhat.com)
 * Thu Jan 26 2012 Shannon Hughes <shughes@redhat.com> 0.1.197-1
 - update to i18n strings (shughes@redhat.com)
 - 784679 - fixed prefs error on system subscription page that was causing the
