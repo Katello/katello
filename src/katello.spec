@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.199
+Version:        0.1.200
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -353,6 +353,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jan 27 2012 Martin Bačovský <mbacovsk@redhat.com> 0.1.200-1
+- rename-locker - renamed locker in javascript (mbacovsk@redhat.com)
+- 785168 - Do not remove dots from pulp ids (lzap+git@redhat.com)
+- nicer errors for CLI and RHSM when service is down (lzap+git@redhat.com)
+- 769954 - org and repo names in custom repo content label (inecas@redhat.com)
+
 * Thu Jan 26 2012 Mike McCune <mmccune@redhat.com> 0.1.198-1
 - periodic rebuild
 
