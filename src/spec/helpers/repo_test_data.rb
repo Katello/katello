@@ -54,6 +54,13 @@ module RepoTestData
     ],
   }.with_indifferent_access
 
+  REPO_FILTER = {
+    "name" => "filter_1", 
+    "pulp_id" => "filter_1"
+  }
+
+  REPO_PULP_FILTER_IDS = ["filter_1"]
+
   REPO_PACKAGES = [
     {
       "size" => 2244,
