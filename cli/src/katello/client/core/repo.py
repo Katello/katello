@@ -464,7 +464,7 @@ class List(RepoAction):
 class Delete(SingleRepoAction):
 
     description = _('delete a repository')
-    select_by_env = False
+    select_by_env = True
 
     def run(self):
         repo = self.get_repo()
