@@ -384,7 +384,7 @@ module Glue::Pulp::Repos
         cdn_var_substitutor.substitute_vars(pc.content.contentUrl).each do |(substitutions, path)|
           feed_url = repo_url(path)
           arch = substitutions["basearch"] || "noarch"
-          repo_name = [pc.content.name, substitutions.sort_by {|k,_| k.to_s}.map(&:last)].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
+          repo_name = [pc.content.name, substitutions.sort_by {|k,_| k.to_s}.map(&:last)].flatten.compact.join(" ").gsub(/[^a-z0-9\-\._ ]/i,"")
           version = CDN::Utils.parse_version(substitutions["releasever"])
 
           begin
