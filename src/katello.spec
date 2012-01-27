@@ -355,6 +355,7 @@ fi
 %changelog
 * Fri Jan 27 2012 Mike McCune <mmccune@redhat.com> 0.1.201-1
 - rebuild
+
 * Fri Jan 27 2012 Martin Bačovský <mbacovsk@redhat.com> 0.1.200-1
 - rename-locker - renamed locker in javascript (mbacovsk@redhat.com)
 - 785168 - Do not remove dots from pulp ids (lzap+git@redhat.com)

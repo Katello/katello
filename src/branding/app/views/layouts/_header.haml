@@ -14,7 +14,7 @@
         = render :partial => '/layouts/org'
     %ul
       %li.hello
-        = link_to account_path do
+        = link_to "#{users_path(:id => current_user, :only => true)}#panel=user_#{current_user.id}" do
           %strong
             = current_user.username
       %li
