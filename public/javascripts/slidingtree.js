@@ -303,10 +303,11 @@ var sliding_tree = function(tree_id, options) {
 	            	$(this).ajaxSubmit({
 	                    url		: search_url,
 	                    data	: data,
-                            cache       : false,
+                        cache   : false,
 	                    success	: function (data) {
                                 var to_append = data.html ? data.html : data;
                                 panel.html(to_append);
+                                $(document).trigger('search_complete.slidingtree');
 	                    },
 	                    error: function (e) {
 	                        //button.removeAttr('disabled');
