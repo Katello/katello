@@ -25,13 +25,20 @@ class ChangesetPackageValidator < ActiveModel::Validator
     end
 
     found_in_repo = false
+    no_promotable_repo = true
     #search for the package in all repos in its product
     product.repos(from_env).each do |repo|
       if repo.has_package? record.package_id
-        record.errors[:base] <<  _("Repository of the package '#{record.package_id}' has not been promoted into the target environment!") if not repo.is_cloned_in? to_env
+        if not repo.is_cloned_in? to_env
+          no_promotable_repo = no_promotable_repo && true
+        else
+          no_promotable_repo = false
+        end
         found_in_repo = true
       end
     end
+
+    record.errors[:base] <<  _("Repository of the package '#{record.package_id}' has not been promoted into the target environment!") if no_promotable_repo
 
     record.errors[:base] <<  _("Package '#{record.package_id}' doesn't belong to the specified product!") if not found_in_repo
   end
