@@ -353,6 +353,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jan 27 2012 Jordan OMara <jomara@redhat.com> 0.1.200-3
+- Removing account_path from branded header (jomara@redhat.com)
+
 * Fri Jan 27 2012 Jordan OMara <jomara@redhat.com> 0.1.200-2
 - Friday rebuild 
 
