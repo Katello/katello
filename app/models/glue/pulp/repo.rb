@@ -157,7 +157,7 @@ module Glue::Pulp::Repo
     queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 2, :action => [self, :destroy_repo])
   end
 
-  # TODO: remove after pulp >= 0.0.401 get's released. There is this attribute
+  # TODO: remove after pulp >= 0.0.401 gets released. There is this attribute
   # directly in the repo API
   def uri
     if repo_base_path = AppConfig.pulp.url[/^(.*)api$/,1]
@@ -332,7 +332,7 @@ module Glue::Pulp::Repo
   end
 
   def cancel_sync
-    Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
+    Rails.logger.info "Canceling synchronization of repository #{self.pulp_id}"
     history = self.sync_status
     return if history.nil? || history.state == ::PulpSyncStatus::Status::NOT_SYNCED
 

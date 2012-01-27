@@ -15,6 +15,7 @@ require 'resources/pulp'
 require 'resources/cdn'
 require 'openssl'
 
+
 module Glue::Pulp::Repos
 
   def self.included(base)
@@ -68,7 +69,7 @@ module Glue::Pulp::Repos
     new_content.content
   end
 
-  # repo path for custom product repos (RH repo paths are derivated from
+  # repo path for custom product repos (RH repo paths are derived from
   # content url)
   def self.custom_repo_path(environment, product, name)
     prefix = [environment.organization.name,environment.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
@@ -78,7 +79,7 @@ module Glue::Pulp::Repos
   def self.custom_content_path(product, name)
     parts = []
     # We generate repo path only for custom product content. We add this
-    # constant string to avoid colisions with RH content. RH content url
+    # constant string to avoid collisions with RH content. RH content url
     # begins usually with something like "/content/dist/rhel/...".
     # There we prefix custom content/repo url with "/custom/..."
     parts << "custom"
@@ -124,7 +125,6 @@ module Glue::Pulp::Repos
     def empty?
       return self.repos(library).empty?
     end
-
 
     def repos env, include_disabled = false
       @repo_cache = {} if @repo_cache.nil?
@@ -251,7 +251,7 @@ module Glue::Pulp::Repos
       end
     end
 
-    # Get the most relavant status for all the repos in this Product
+    # Get the most relevant status for all the repos in this Product
     def sync_status
       return @status if @status
 
@@ -317,7 +317,7 @@ module Glue::Pulp::Repos
     end
 
     def cancel_sync
-      Rails.logger.info "Cancelling synchronization of product #{name}"
+      Rails.logger.info "Canceling synchronization of product #{name}"
       for r in repos(library)
         r.cancel_sync
       end
@@ -447,8 +447,8 @@ module Glue::Pulp::Repos
     end
 
     def del_repos
-      #destroy all repos in all environmnents
-      Rails.logger.debug "deleting all repositoris in product #{name}"
+      #destroy all repos in all environments
+      Rails.logger.debug "deleting all repositories in product #{name}"
       self.environments.each do |env|
         self.repos(env).each do |repo|
           repo.destroy
