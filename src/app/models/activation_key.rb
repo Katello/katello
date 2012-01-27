@@ -47,14 +47,14 @@ class ActivationKey < ActiveRecord::Base
     errors.add(:base, _("Cannot create activation keys in Library environment ")) if environment and  environment.library?
   end
 
-  # set's up system when registering with this activation key
+  # sets up system when registering with this activation key
   def apply_to_system(system)
     system.environment_id = self.environment_id if self.environment_id
     system.system_template_id = self.system_template_id if self.system_template_id
     system.system_activation_keys.build(:activation_key => self)
   end
 
-  # calculate entitlement consupmtion for given amount and pool quantity left, example use:
+  # calculate entitlement consumption for given amount and pool quantity left, example use:
   #   calculate_consumption(4, [10, 10]) -> [4, 0]
   #   calculate_consumption(4, [3, 2]) -> [3, 1]
   #   calculate_consumption(4, [1, 2, 1]) -> [1, 2, 1]

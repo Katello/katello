@@ -41,7 +41,7 @@ module Glue::Candlepin::Owner
     end
 
     def del_owner
-      Rails.logger.info _("Deleteing owner in candlepin: #{name}")
+      Rails.logger.info _("Deleting owner in candlepin: #{name}")
       Candlepin::Owner.destroy(cp_key)
     rescue => e
       Rails.logger.error _("Failed to delete candlepin owner #{name}: #{e}, #{e.backtrace.join("\n")}")

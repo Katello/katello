@@ -335,6 +335,7 @@ describe Product do
       ))
       @repo.stub!(:is_cloned_in?).and_return(false)
       @repo.stub!(:clone_id).and_return("cloned_repo")
+
       Glue::Pulp::Repos.stub!(:clone_repo_path).and_return("cloned_path")
 
       @product.stub!(:repos).and_return([@repo])
@@ -388,12 +389,13 @@ describe Product do
       end
 
       it "should get applied to the repositories" do
-        @repo.should_receive(:add_filters).once.with([@filter2.pulp_id]).and_return(true)
+        @repo.should_receive(:set_filters).once.with([@filter2.pulp_id]).and_return(true)
         @product.filters += [@filter2]
+        @product.save!
       end
 
       it "should get removed from repositories" do
-        @repo.should_receive(:remove_filters).once.with([@filter1.pulp_id]).and_return(true)
+        @repo.should_receive(:del_filters).once.with([@filter1.pulp_id]).and_return(true)
         @product.filters -= [@filter1]
       end
     end

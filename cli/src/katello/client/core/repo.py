@@ -23,7 +23,7 @@ from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.api.utils import get_environment, get_product, get_repo
+from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
 from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_progress_errors, format_task_errors
 from katello.client.core.utils import ProgressBar
 
@@ -58,19 +58,6 @@ class RepoAction(Action):
         super(RepoAction, self).__init__()
         self.api = RepoAPI()
 
-    def get_repo(self, includeDisabled=False):
-        repoId   = self.get_option('id')
-        repoName = self.get_option('name')
-        orgName  = self.get_option('org')
-        prodName = self.get_option('product')
-        envName  = self.get_option('env')
-
-        if repoId:
-            repo = self.api.repo(repoId)
-        else:
-            repo = get_repo(orgName, prodName, repoName, envName, includeDisabled)
-
-        return repo
 
 class SingleRepoAction(RepoAction):
 
@@ -96,6 +83,24 @@ class SingleRepoAction(RepoAction):
             self.require_option('org')
             self.require_option('product')
 
+    def get_repo(self, includeDisabled=False):
+        repoId   = self.get_option('id')
+        repoName = self.get_option('name')
+        orgName  = self.get_option('org')
+        prodName = self.get_option('product')
+        if self.select_by_env:
+            envName = self.get_option('env')
+        else:
+            envName = None
+
+        if repoId:
+            repo = self.api.repo(repoId)
+        else:
+            repo = get_repo(orgName, prodName, repoName, envName, includeDisabled)
+
+        if repo == None:
+            system_exit(os.EX_DATAERR)
+        return repo
 
 
 
@@ -273,8 +278,6 @@ class Status(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo()
-        if repo == None:
-            return os.EX_DATAERR
 
         task = AsyncTask(self.api.last_sync_status(repo['id']))
 
@@ -307,8 +310,6 @@ class Info(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo(True)
-        if repo == None:
-            return os.EX_DATAERR
 
         repo['url'] = repo['source']['url']
         repo['last_sync'] = format_sync_time(repo['last_sync'])
@@ -344,8 +345,6 @@ class Update(SingleRepoAction):
         repo = self.get_repo(True)
         gpgkey   = self.get_option('gpgkey')
         nogpgkey   = self.get_option('nogpgkey')
-        if repo == None:
-            return os.EX_DATAERR
 
         self.api.update(repo['id'], gpgkey, nogpgkey)
         print _("Successfully updated repository [ %s ]") % repo['name']
@@ -359,8 +358,6 @@ class Sync(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo()
-        if repo == None:
-            return os.EX_DATAERR
 
         task = AsyncTask(self.api.sync(repo['id']))
         run_async_task_with_status(task, ProgressBar())
@@ -383,8 +380,6 @@ class CancelSync(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo()
-        if repo == None:
-            return os.EX_DATAERR
 
         msg = self.api.cancel_sync(repo['id'])
         print msg
@@ -407,8 +402,6 @@ class Enable(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo(True)
-        if repo == None:
-            return os.EX_DATAERR
 
         msg = self.api.enable(repo["id"], self._enable)
         print msg
@@ -475,12 +468,78 @@ class Delete(SingleRepoAction):
 
     def run(self):
         repo = self.get_repo()
-        if repo == None:
-            return os.EX_DATAERR
 
         msg = self.api.delete(repo["id"])
         print msg
         return os.EX_OK
+
+
+class ListFilters(SingleRepoAction):
+
+    description = _('list filters of a repository')
+    select_by_env = False
+
+    def run(self):
+        repo = self.get_repo()
+
+        filters = self.api.filters(repo['id'])
+        self.printer.addColumn('name')
+        self.printer.addColumn('description')
+        self.printer.setHeader(_("Repository Filters"))
+        self.printer.printItems(filters)
+
+        return os.EX_OK
+
+
+class AddRemoveFilter(SingleRepoAction):
+
+    select_by_env = False
+    addition = True
+
+    @property
+    def description(self):
+        if self.addition:
+            return _('add a filter to a repository')
+        else:
+            return _('remove a filter from a repository')
+
+    def __init__(self, addition):
+        super(AddRemoveFilter, self).__init__()
+        self.addition = addition
+
+    def setup_parser(self):
+        self.set_repo_select_options(False)
+        self.parser.add_option('--filter', dest='filter', help=_("filter name (required)"))
+
+    def check_options(self):
+        self.check_repo_select_options()
+        self.require_option('filter')
+
+    def run(self):
+        filter_name  = self.get_option('filter')
+        org_name     = self.get_option('org')
+
+        repo = self.get_repo()
+
+        if get_filter(org_name, filter_name) == None:
+            return os.EX_DATAERR
+
+        filters = self.api.filters(repo['id'])
+        filters = [f['name'] for f in filters] 
+        self.update_filters(repo, filters, filter_name)
+        return os.EX_OK
+
+    def update_filters(self, repo, filters, filter_name):
+        if self.addition:
+            filters.append(filter_name)
+            message = _("Added filter [ %s ] to repository [ %s ]" % (filter_name, repo["name"]))
+        else:
+            filters.remove(filter_name)
+            message = _("Removed filter [ %s ] to repository [ %s ]" % (filter_name, repo["name"]))
+
+        self.api.update_filters(repo['id'], filters)
+        print message
+       
 
 
 # command --------------------------------------------------------------------
