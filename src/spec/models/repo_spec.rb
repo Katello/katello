@@ -252,20 +252,45 @@ describe Glue::Pulp::Repo, :katello => true do
 
     before :each do
       @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod", :prior=>@organization.library)
-
+      @from_env = @to_env.prior
 
       ep = EnvironmentProduct.find_or_create(@to_env, @product1)
       RepoTestData::CLONED_PROPERTIES.merge!(:environment_product => ep)
-      @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
+
       @content_path = "/content/dist/rhel/server/5/5.1/x86_64/os"
       @repo.stub(:relative_path => "#{@organization.name}/Library#{@content_path}")
 
     end
 
+    it "should sync the repo if it was already cloned" do
+      @clone = Repository.create!(RepoTestData::CLONED_PROPERTIES)
+      @clone.stub(:clone_id).with(@to_env).and_return(nil)
+      @clone.stub(:sync)
+      @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
+      @repo.stub(:get_clone).with(@to_env).and_return(@clone)
+
+      @clone.should_receive(:sync)
+      @repo.should_not_receive(:clone)
+
+      @repo.promote(@from_env, @to_env)
+    end
+
+    it "should promote filters when promoting from Library" do
+      @repo.stub(:filters).and_return([mock(RepoTestData::REPO_FILTER)])
+
+      @repo.filter_pulp_ids_to_promote(@from_env, @to_env).should == RepoTestData::REPO_PULP_FILTER_IDS
+    end
+
+    it "should promote filters when promoting from non-Library environment" do
+      @repo.stub(:filters).and_return([mock(RepoTestData::REPO_FILTER)])
+      @from_env.stub(:library?).and_return(false)
+
+      @repo.filter_pulp_ids_to_promote(@from_env, @to_env).should == []
+    end
+
     it "should clone the repo" do
       Pulp::Repository.should_receive(:clone_repo).with do |repo, cloned|
         repo.should == @repo
-        cloned.pulp_id.should == RepoTestData::CLONED_PROPERTIES[:pulp_id]
         cloned.name.should == RepoTestData::CLONED_PROPERTIES[:name]
 
         group_id = [
@@ -278,12 +303,14 @@ describe Glue::Pulp::Repo, :katello => true do
         cloned.feed.should == RepoTestData::CLONED_PROPERTIES[:feed]
         true
       end
-      @repo.promote(@to_env)
+      @repo.promote(@from_env, @to_env)
     end
 
     it "should return correct is_cloned_in? status" do
       @clone = Repository.create!(RepoTestData::CLONED_PROPERTIES)
-      @clone.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_2_REPO_ID)
+      @clone.stub(:clone_id).with(@to_env).and_return(nil)
+      @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
+
       @clone.is_cloned_in?(@to_env).should == false
       @repo.is_cloned_in?(@to_env).should == true
     end
@@ -300,7 +327,7 @@ describe Glue::Pulp::Repo, :katello => true do
         cloned.relative_path.should == "#{@repo.organization.name}/#{@to_env.name}#{@content_path}"
         true
       end
-      @repo.promote(@to_env)
+      @repo.promote(@from_env, @to_env)
     end
   end
 

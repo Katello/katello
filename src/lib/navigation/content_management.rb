@@ -73,7 +73,7 @@ module Navigation
 
     def menu_custom_providers
       {:key => :custom_providers,
-        :name =>_("Custom Content Provider"),
+        :name =>_("Custom Content Providers"),
         :url => providers_path,
         :if => lambda{AppConfig.katello? && current_organization && Provider.any_readable?(current_organization())},
         :options => {:class=>"third_level"}
@@ -125,15 +125,12 @@ module Navigation
 
     end
 
-
-
     def menu_promotions
        {:key => :promotions,
         :name => _("Promotions"),
         :url => promotions_path,
-        :options =>{:highlights_on =>/\/promotions.*/ ,:class => 'content'},
         :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
-        :options => {:class=>'content second_level', "data-menu"=>"content"}
+        :options => {:highlights_on =>/\/promotions.*/ , :class=>'content second_level', "data-menu"=>"content"}
        }
     end
 
@@ -146,7 +143,6 @@ module Navigation
        }
     end
 
-
     def menu_filters
        {:key => :filters,
         :name => _("Package Filters"),
@@ -156,7 +152,6 @@ module Navigation
        }
     end
 
-
     def menu_gpg
        {:key => :gpg,
         :name => _("GPG Keys"),
@@ -165,8 +160,6 @@ module Navigation
         :options => {:class=>"third_level"}
        }
     end
-
-
 
     def promotion_packages_navigation
       [
