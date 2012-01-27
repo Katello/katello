@@ -1592,5 +1592,7 @@ $(document).ready(function() {
    			KT.panel.closePanel(tupane);
    		}
    	});
+
+    $(document).bind('search_complete.slidingtree', promotion_page.reset_page);
     
 });
