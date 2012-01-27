@@ -72,7 +72,7 @@ SOURCES.each do |source|
         complete_target = File.join(target_dir, File.dirname(source))
         FileUtils.mkdir_p(complete_target)
         puts ("#{PAD}copying over #{source}")
-        FileUtils.cp_r(source, complete_target, :preserve => true)
+        output= `/bin/cp -r --preserve #{source} #{complete_target}`
     else
         puts ("#{PAD}skipping #{source} since it does not exist")
     end
