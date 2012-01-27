@@ -79,7 +79,7 @@ module Glue::Pulp::Repo
 
 
   def add_filters_orchestration(added_filter)
-    return true if not self.environment.locker?
+    return true if not self.environment.library?
 
     self.clone_ids.each do |clone_id|
       repo = Repository.find_by_pulp_id(clone_id)
@@ -96,7 +96,7 @@ module Glue::Pulp::Repo
   end
 
   def remove_filters_orchestration(removed_filter)
-    return true if not self.environment.locker?
+    return true if not self.environment.library?
 
     self.clone_ids.each do |clone_id|
       repo = Repository.find_by_pulp_id(clone_id)
@@ -153,7 +153,7 @@ module Glue::Pulp::Repo
   end
 
   def filter_pulp_ids_to_promote from_env, to_env
-    if from_env.locker?
+    if from_env.library?
       filters_to_clone = self.filters + self.product.filters
       filters_to_clone = filters_to_clone.uniq.collect {|f| f.pulp_id}
     else
@@ -210,7 +210,7 @@ module Glue::Pulp::Repo
     queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 2, :action => [self, :destroy_repo])
   end
 
-  # TODO: remove after pulp >= 0.0.401 gets released. There is this attribute
+  # TODO: remove after pulp >= 0.0.401 get's released. There is this attribute
   # directly in the repo API
   def uri
     if repo_base_path = AppConfig.pulp.url[/^(.*)api$/,1]
@@ -385,7 +385,7 @@ module Glue::Pulp::Repo
   end
 
   def cancel_sync
-    Rails.logger.info "Canceling synchronization of repository #{self.pulp_id}"
+    Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
     history = self.sync_status
     return if history.nil? || history.state == ::PulpSyncStatus::Status::NOT_SYNCED
 
