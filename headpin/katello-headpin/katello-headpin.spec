@@ -117,6 +117,10 @@ and then run katello-configure to configure everything.
 cp -Rf %{homedir}/* %{katello_dir}
 
 %changelog
+* Fri Jan 27 2012 Jordan OMara <jomara@redhat.com> 0.1.129-2
+- Extra rebuild for a few last minute katello js changes 
+  (jomara@redhat.com)
+
 * Thu Jan 26 2012 Jordan OMara <jomara@redhat.com> 0.1.128-3
 - Fixing branded header to have the right useres link (jomara@redhat.com)
 
