@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.45
+Version:       0.1.46
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jan 28 2012 Martin Bačovský <mbacovsk@redhat.com> 0.1.46-1
+- Fixed failing tests (mbacovsk@redhat.com)
+
 * Thu Jan 26 2012 Shannon Hughes <shughes@redhat.com> 0.1.44-1
 - 783513 - CLI BRANDING: Locker -> Library (mbacovsk@redhat.com)
 
