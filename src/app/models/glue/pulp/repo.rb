@@ -20,13 +20,16 @@ module Glue::Pulp::Repo
       before_validation :setup_repo_clone
       before_save :save_repo_orchestration
       before_destroy :destroy_repo_orchestration
+
+      has_and_belongs_to_many :filters, :uniq => true, :before_add => :add_filters_orchestration, :before_remove => :remove_filters_orchestration
+
       lazy_accessor :pulp_repo_facts,
                     :initializer => lambda {
                       if pulp_id
                         Pulp::Repository.find(pulp_id)
                       end
                     }
-      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source, :filters,
+      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source,
                 :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type,
                 :initializer => lambda {
                   if pulp_id
@@ -75,6 +78,39 @@ module Glue::Pulp::Repo
   TYPE_LOCAL = "local"
 
 
+  def add_filters_orchestration(added_filter)
+    return true if not self.environment.locker?
+
+    self.clone_ids.each do |clone_id|
+      repo = Repository.find_by_pulp_id(clone_id)
+
+      queue.create(
+        :name => "add filter '#{added_filter.pulp_id}' to repo: #{repo.id}",
+        :priority => 2,
+        :action => [repo, :set_filters, [added_filter.pulp_id]]
+      )
+    end
+
+    @orchestration_for = :add_filter
+    on_save
+  end
+
+  def remove_filters_orchestration(removed_filter)
+    return true if not self.environment.locker?
+
+    self.clone_ids.each do |clone_id|
+      repo = Repository.find_by_pulp_id(clone_id)
+
+      queue.create(
+        :name => "remove filter '#{removed_filter.pulp_id}' from repo: #{repo.id}",
+        :priority => 2,
+        :action => [repo, :del_filters, [removed_filter.pulp_id]]
+      )
+    end
+
+    @orchestration_for = :remove_filter
+    on_save
+  end
 
   def clone_or_create_repo
     if clone_from
@@ -102,17 +138,28 @@ module Glue::Pulp::Repo
     })
   end
 
-  def promote(to_environment)
-    if to_environment.prior.locker?
-        filters_to_clone = self.filters + self.product.filters
-        filters_to_clone = filters_to_clone.uniq.collect {|f| f.pulp_id}
-    else
-        filters_to_clone = []
-    end
+  def promote from_env, to_env
+    filters_to_clone = self.filter_pulp_ids_to_promote from_env, to_env
 
-    key = EnvironmentProduct.find_or_create(to_environment, self.product)
-    repo = Repository.create!(:environment_product => key, :clone_from => self, :cloned_content => self.content, :cloned_filters => filters_to_clone)
-    repo.clone_response
+    if self.is_cloned_in?(to_env)
+      #repo is already cloned, so lets just re-sync it from its parent
+      return self.get_clone(to_env).sync
+    else
+      #repo is not in the next environment yet, we have to clone it there
+      key = EnvironmentProduct.find_or_create(to_env, self.product)
+      clone = Repository.create!(:environment_product => key, :clone_from => self, :cloned_content => self.content, :cloned_filters => filters_to_clone)
+      return clone.clone_response
+    end
+  end
+
+  def filter_pulp_ids_to_promote from_env, to_env
+    if from_env.locker?
+      filters_to_clone = self.filters + self.product.filters
+      filters_to_clone = filters_to_clone.uniq.collect {|f| f.pulp_id}
+    else
+      filters_to_clone = []
+    end
+    filters_to_clone
   end
 
   def setup_repo_clone
@@ -409,11 +456,11 @@ module Glue::Pulp::Repo
     [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
-  def add_filters filter_ids
+  def set_filters filter_ids
     ::Pulp::Repository.add_filters self.pulp_id, filter_ids
   end
 
-  def remove_filters filter_ids
+  def del_filters filter_ids
     ::Pulp::Repository.remove_filters self.pulp_id, filter_ids
   end
 
