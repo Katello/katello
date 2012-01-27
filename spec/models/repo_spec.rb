@@ -275,15 +275,15 @@ describe Glue::Pulp::Repo do
       @repo.promote(@from_env, @to_env)
     end
 
-    it "should promote filters when promoting from Locker" do
+    it "should promote filters when promoting from Library" do
       @repo.stub(:filters).and_return([mock(RepoTestData::REPO_FILTER)])
 
       @repo.filter_pulp_ids_to_promote(@from_env, @to_env).should == RepoTestData::REPO_PULP_FILTER_IDS
     end
 
-    it "should promote filters when promoting from non-Locker environment" do
+    it "should promote filters when promoting from non-Library environment" do
       @repo.stub(:filters).and_return([mock(RepoTestData::REPO_FILTER)])
-      @from_env.stub(:locker?).and_return(false)
+      @from_env.stub(:library?).and_return(false)
 
       @repo.filter_pulp_ids_to_promote(@from_env, @to_env).should == []
     end

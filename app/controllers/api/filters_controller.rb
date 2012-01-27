@@ -105,7 +105,7 @@ class Api::FiltersController < Api::ApiController
   def find_repository
     @repository = Repository.find(params[:repository_id])
     raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repository.nil?
-    raise HttpErrors::BadRequest, _("Filters can be stored only in Locker repositories.") if not @repository.environment.locker?
+    raise HttpErrors::BadRequest, _("Filters can be stored only in Library repositories.") if not @repository.environment.library?
     @repository
   end
 
