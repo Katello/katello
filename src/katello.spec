@@ -353,6 +353,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jan 27 2012 Jordan OMara <jomara@redhat.com> 0.1.200-2
+- Friday rebuild 
+
 * Fri Jan 27 2012 Martin Bačovský <mbacovsk@redhat.com> 0.1.200-1
 - rename-locker - renamed locker in javascript (mbacovsk@redhat.com)
 - 785168 - Do not remove dots from pulp ids (lzap+git@redhat.com)
