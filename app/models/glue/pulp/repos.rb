@@ -59,7 +59,7 @@ module Glue::Pulp::Repos
         :contentUrl => Glue::Pulp::Repos.custom_content_path(self, repo.name),
         :gpgUrl => yum_gpg_key_url(repo),
         :type => "yum",
-        :label => "#{self.id}-#{repo.name}",
+        :label => custom_content_label(repo),
         :vendor => Provider::CUSTOM
       },
       :enabled => true
@@ -85,6 +85,10 @@ module Glue::Pulp::Repos
     parts << "custom"
     parts += [product.name,name]
     "/" + parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+  end
+
+  def custom_content_label(repo)
+    "#{self.organization.name} #{self.name} #{repo.name}".gsub(/\s/,"_")
   end
 
   def self.clone_repo_path_for_cp(repo)
