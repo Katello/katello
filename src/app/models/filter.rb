@@ -30,6 +30,7 @@ class Filter < ActiveRecord::Base
 
   belongs_to :organization
   has_and_belongs_to_many :products, :uniq => true
+  has_and_belongs_to_many :repositories, :uniq => true
 
   alias_attribute :name, :pulp_id
 

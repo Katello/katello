@@ -18,3 +18,7 @@ if [ $REPO_STATUS_CODE != '401' ]; then
   echo "We expected the pulp repo to be sucured (status code 401), got $REPO_STATUS_CODE"
   let failed_cnt+=1
 fi
+
+test_success "repo filter_list" repo list_filters --org="$TEST_ORG" --id="$REPO_ID"
+test_success "repo add_filter" repo add_filter --org="$TEST_ORG" --id="$REPO_ID" --filter="$FILTER1"
+test_success "repo remove_filter" repo remove_filter --org="$TEST_ORG" --id="$REPO_ID" --filter="$FILTER1"

@@ -52,7 +52,7 @@ KT.package_input = (function() {
 
     var register_autocomplete = function() {
         current_input = KT.auto_complete_box({
-            values:       KT.routes.auto_complete_locker_packages_path(),
+            values:       KT.routes.auto_complete_library_packages_path(),
             default_text: i18n.package_search_text,
             input_id:     "package_input",
             form_id:      "add_package_form",

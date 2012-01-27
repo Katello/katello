@@ -35,6 +35,12 @@ class Warden::SessionSerializer
   end
 end
 
+Warden::Manager.after_authentication do |user,auth,opts|
+  user = user.username if user.respond_to? :username
+  message = auth.winning_strategy.message
+  Rails.logger.info "User #{user} authenticated: #{auth.winning_strategy.message}"
+end
+
 # authenticate against database
 Warden::Strategies.add(:database) do
 
@@ -53,7 +59,7 @@ Warden::Strategies.add(:database) do
       Rails.logger.debug("Warden is authenticating #{params[:username]} against database")
       u = User.authenticate!(params[:username], params[:password])
     end
-    u ? success!(u) : fail!("Username or password is not correct - could not log in")
+    u ? success!(u, "database") : fail!("Username or password do not match database - could not log in")
   end
 end
 
@@ -76,7 +82,7 @@ Warden::Strategies.add(:ldap) do
       Rails.logger.debug("Warden is authenticating #{params[:username]} against database")
       u = User.authenticate_using_ldap!(params[:username], params[:password])
     end
-    u ? success!(u) : fail!("Could not log in")
+    u ? success!(u, "LDAP") : fail!("Could not log in using LDAP")
   end
 end
 
@@ -91,7 +97,7 @@ Warden::Strategies.add(:certificate) do
     return fail('No ssl client certificate, skipping ssl-certificate authentication') if ssl_client_cert.blank?
     consumer_cert = OpenSSL::X509::Certificate.new(ssl_client_cert)
     u = CpConsumerUser.new(:uuid => uuid(consumer_cert), :username => uuid(consumer_cert))
-    success!(u)
+    success!(u, "certificate")
   end
 
   def client_cert_from_request
@@ -125,7 +131,7 @@ Warden::Strategies.add(:sso) do
 
     user_id = request.env['HTTP_X_FORWARDED_USER'].split("@").first
     u = User.where(:username => user_id).first
-    u ? success!(u) : fail!("Username is not correct - could not log in")
+    u ? success!(u, "single sign-on") : fail!("Username is not correct - could not log in")
   end
 end
 
@@ -145,7 +151,7 @@ Warden::Strategies.add(:oauth) do
     return fail!("Invalid oauth signature") unless signature.verify
 
     u = User.where(:username => request.env['HTTP_KATELLO_USER']).first
-    u ? success!(u) : fail!("Username is not correct - could not log in")
+    u ? success!(u, "OAuth") : fail!("Username is not correct - could not log in")
   rescue OAuth::Signature::UnknownSignatureMethod => e
     Rails.logger.error "Unknown oauth signature method"+ e.to_s
     fail!("Unknown oauth signature method"+ e.to_s)

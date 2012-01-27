@@ -19,8 +19,8 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.1.128
-Release:        3%{?dist}
+Version:        0.1.129
+Release:        2%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
 License:        GPLv2

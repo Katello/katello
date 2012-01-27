@@ -32,12 +32,14 @@ class Ping
           :elasticsearch => {},
           :pulp_auth => {},
           :candlepin_auth => {},
+          :katello_jobs => {}
         }}
       else
         result = { :result => 'ok', :status => {
           :candlepin => {},
           :elasticsearch => {},
           :candlepin_auth => {},
+          :katello_jobs => {}
         }}
       end
 
