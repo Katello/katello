@@ -48,6 +48,12 @@ NameVirtualHost *:443
     SSLRenegBufferSize 262144
     SSLVerifyDepth 2
   </Location>
+
+  <Location /<%= scope.lookupvar("katello::params::deployment") %>/api>
+    # report to CLI and RHSM nicely when Katello is down
+    ErrorDocument 500 '{"displayMessage": "Internal error, contact administrator", "errors": ["Internal error, contact administrator"], "status": "500" }'
+    ErrorDocument 503 '{"displayMessage": "Service unavailable or restarting, try later", "errors": ["Service unavailable or restarting, try later"], "status": "503" }'
+  </Location>
 </VirtualHost>
 
 NameVirtualHost *:80
