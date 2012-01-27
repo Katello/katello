@@ -507,24 +507,18 @@ module Glue::Pulp::Repos
     def promote_repos repos, from_env, to_env
       async_tasks = []
       repos.each do |repo|
-        if repo.is_cloned_in?(to_env)
-          #repo is already cloned, so lets just re-sync it from its parent
-          async_tasks << repo.get_clone(to_env).sync
-        else
-          #repo is not in the next environment yet, we have to clone it there
-          async_tasks << repo.promote(to_env)
-        end
+        async_tasks << repo.promote(from_env, to_env)
       end
       async_tasks.flatten(1)
     end
 
 
     def set_filter repo, filter_id
-      repo.add_filters [filter_id]
+      repo.set_filters [filter_id]
     end
 
     def del_filter repo, filter_id
-      repo.remove_filters [filter_id]
+      repo.del_filters [filter_id]
     end
 
     def check_for_repo_conflicts(repo_name)

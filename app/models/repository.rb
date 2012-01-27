@@ -30,14 +30,13 @@ class Repository < ActiveRecord::Base
                 :json=>{:except=>[:pulp_repo_facts, :groupid, :environment_product_id]}
 
   after_save :update_related_index
-  
+
   belongs_to :environment_product, :inverse_of => :repositories
   has_and_belongs_to_many :changesets
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
   validates :enabled, :repo_disablement => true, :on => [:update]
   belongs_to :gpg_key, :inverse_of => :repositories
-  has_and_belongs_to_many :filters, :uniq => true
 
   def product
     self.environment_product.product
@@ -88,7 +87,7 @@ class Repository < ActiveRecord::Base
      :product=>self.product.name, :product_id=> self.product.id}
   end
 
-  def update_related_index 
+  def update_related_index
     self.product.provider.update_index if self.product.provider.respond_to? :update_index
   end
 
