@@ -411,7 +411,6 @@ KT.panel = (function ($) {
                 bodyY = parseInt(container.position().top, 10),
                 left_panel = container.find('.left');
             top_position = left_panel.position().top;
-            offset = offset ? offset : 10;
             offset += $('#maincontent').position().left;
             if (jQPanel.length > 0) {
                 if (left_panel.height() > 550) {
@@ -427,21 +426,21 @@ KT.panel = (function ($) {
                             jQPanel.stop().css({
                                 position: 'fixed',
                                 top: 40,
-                                left: -scrollX + offset
+                                //left: -scrollX + offset
                             });
                         }
                         else if (($('.left').position().top + $('.left').height() - 20) < (jQPanel.position().top + jQPanel.height() + 40)) {
                             jQPanel.css({
                                 position: 'absolute',
                                 top: ($('.left').position().top + $('.left').height()) - jQPanel.height() - 40,
-                                left: ''
+                                //left: ''
                             });
                         }
                         else if (!isfixed && ($('.left').position().top + $('.left').height()) > (jQPanel.position().top + jQPanel.height() + 40)) {
                             jQPanel.stop().css({
                                 position: 'fixed',
                                 top: 40,
-                                left: -scrollX + offset
+                                //left: -scrollX + offset
                             });
                         }
                     }

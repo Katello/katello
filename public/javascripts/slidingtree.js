@@ -416,9 +416,7 @@ sliding_tree.search = function(){
         set_search_button_state = function(current_crumb){
             var searchable = breadcrumbs[current_crumb]['searchable'];
 
-            if( !searchable ){
-                $.bbq.removeState('search');
-            }
+            $.bbq.removeState('search');
             toggle_search_button(searchable);
         },
         toggle_search_button = function(searchable){
