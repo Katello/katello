@@ -32,7 +32,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 class TemplateImportTest(CLIActionTestCase):
 
     ORG = test_data.ORGS[0]
-    LOCKER = test_data.ENVS[0]
+    LIBRARY = test_data.ENVS[0]
     TPL = test_data.TEMPLATES[0]
 
     OPTIONS = {
@@ -49,7 +49,7 @@ class TemplateImportTest(CLIActionTestCase):
 
         self.mock_options(self.OPTIONS)
 
-        self.mock(self.module, 'get_locker', self.LOCKER)
+        self.mock(self.module, 'get_library', self.LIBRARY)
         self.mock(self.module, 'run_spinner_in_bg')
         self.mock(self.module, '_', "")
 
@@ -67,13 +67,13 @@ class TemplateImportTest(CLIActionTestCase):
         self.action.open_file.side_effect = IOError()
         self.assertEqual(self.action.run(), os.EX_IOERR)
 
-    def test_it_finds_locker(self):
+    def test_it_finds_library(self):
         self.action.run()
-        self.module.get_locker.assert_called_once_with(self.ORG['name'])
+        self.module.get_library.assert_called_once_with(self.ORG['name'])
 
     def test_it_calls_template_import_api(self):
         self.action.run()
-        self.module.run_spinner_in_bg.assert_called_once_with(self.action.api.import_tpl, (self.LOCKER['id'], None, self.open_file), message="")
+        self.module.run_spinner_in_bg.assert_called_once_with(self.action.api.import_tpl, (self.LIBRARY['id'], None, self.open_file), message="")
 
     def test_it_closes_the_file(self):
         self.action.run()

@@ -46,7 +46,7 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def create
-    raise HttpErrors::BadRequest, _("New templates can be created only in a Locker environment") if not @environment.locker?
+    raise HttpErrors::BadRequest, _("New templates can be created only in a Library environment") if not @environment.library?
 
     @template = SystemTemplate.new(params[:template])
     @template.environment = @environment
@@ -56,7 +56,7 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def update
-    raise HttpErrors::BadRequest, _("Templates can be updated only in a Locker environment") if not @template.environment.locker?
+    raise HttpErrors::BadRequest, _("Templates can be updated only in a Library environment") if not @template.environment.library?
 
     clones = @template.get_clones
     @template.attributes = params[:template].slice(:name, :parent_id, :description)
@@ -77,7 +77,7 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def import
-    raise HttpErrors::BadRequest, _("New templates can be imported only into a Locker environment") if not @environment.locker?
+    raise HttpErrors::BadRequest, _("New templates can be imported only into a Library environment") if not @environment.library?
 
     begin
       temp_file = File.new(File.join("#{Rails.root}/tmp", "template_#{SecureRandom.hex(10)}.json"), 'w+', 0600)
@@ -95,7 +95,7 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def validate
-    raise HttpErrors::BadRequest, _("Cannot validate templates for the Locker environment.") if @template.environment.locker?
+    raise HttpErrors::BadRequest, _("Cannot validate templates for the Library environment.") if @template.environment.library?
 
     respond_to do |format|
       format.tdl { @template.validate_tdl; render :text => 'OK' and return }
@@ -104,7 +104,7 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def export
-    raise HttpErrors::BadRequest, _("Cannot export templates for the Locker environment.") if @template.environment.locker?
+    raise HttpErrors::BadRequest, _("Cannot export templates for the Library environment.") if @template.environment.library?
 
     respond_to do |format|
       format.tdl { render(:text => @template.export_as_tdl, :content_type => Mime::TDL) and return }

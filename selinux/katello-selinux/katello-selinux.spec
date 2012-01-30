@@ -19,7 +19,7 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        0.1.3
+Version:        0.1.4
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
@@ -122,6 +122,10 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 
 %changelog
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
+- selinux - adding requirement for the main package
+- selinux - adding rh header
+
 * Mon Jan 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.3-1
 - selinux - adding katello-selinux-enable script
 

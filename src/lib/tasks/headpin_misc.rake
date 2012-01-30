@@ -8,7 +8,7 @@ task :headpin_create_envs => :environment do
     if AppConfig.app_name != "katello"
       env_params = {:name => "Headpin",
                     :description => "Default environment for Headpin",
-                    :prior => org.locker.id,
+                    :prior => org.library.id,
                     :organization_id => org.id}
       environment =  KTEnvironment.new env_params
       puts "Saving default environment"

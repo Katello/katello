@@ -37,24 +37,24 @@ class ActivationKey < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates :environment, :presence => true
   validate :environment_exists
-  validate :environment_not_locker
+  validate :environment_not_library
 
   def environment_exists
     errors.add(:environment, _("id: #{environment_id} doesn't exist ")) if environment.nil?
   end
 
-  def environment_not_locker
-    errors.add(:base, _("Cannot create activation keys in Locker environment ")) if environment and  environment.locker?
+  def environment_not_library
+    errors.add(:base, _("Cannot create activation keys in Library environment ")) if environment and  environment.library?
   end
 
-  # set's up system when registering with this activation key
+  # sets up system when registering with this activation key
   def apply_to_system(system)
     system.environment_id = self.environment_id if self.environment_id
     system.system_template_id = self.system_template_id if self.system_template_id
     system.system_activation_keys.build(:activation_key => self)
   end
 
-  # calculate entitlement consupmtion for given amount and pool quantity left, example use:
+  # calculate entitlement consumption for given amount and pool quantity left, example use:
   #   calculate_consumption(4, [10, 10]) -> [4, 0]
   #   calculate_consumption(4, [3, 2]) -> [3, 1]
   #   calculate_consumption(4, [1, 2, 1]) -> [1, 2, 1]
@@ -124,13 +124,13 @@ class ActivationKey < ActiveRecord::Base
         end
       end
     rescue Exception => e
-      Rails.logger.info "Autosubscribtion failed, rolling back: #{already_subscribed.inspect}"
+      Rails.logger.error "Autosubscribtion failed, rolling back: #{already_subscribed.inspect}"
       already_subscribed.each do |entitlement_id|
         begin
           Rails.logger.debug "Rolling back: #{entitlement_id}"
           entitlements_array = system.unsubscribe entitlement_id
         rescue Exception => re
-          Rails.logger.warn "Rollback failed, skipping: #{re.message}"
+          Rails.logger.fatal "Rollback failed, skipping: #{re.message}"
         end
       end
       raise e

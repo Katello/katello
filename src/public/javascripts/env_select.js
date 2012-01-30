@@ -13,7 +13,7 @@
 var env_select =   {
     /* Click callback should be a function:
      *
-     * function(env_id, env_next_id, is_locker)
+     * function(env_id, env_next_id, is_library)
      * env_next_id may be undefined
      *
      */

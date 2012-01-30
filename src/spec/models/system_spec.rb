@@ -40,7 +40,7 @@ describe System do
     disable_org_orchestration
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.locker.id, :organization => @organization)
+    @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id, :organization => @organization)
 
     Organization.stub!(:first).and_return(@organization)
 
@@ -63,7 +63,7 @@ describe System do
     specify { System.new(:name => 'name', :environment => @organization.environments.first, :cp_type => cp_type).should_not be_valid }
     specify { System.new(:name => 'name', :environment => @organization.environments.first, :facts => facts).should_not be_valid }
     specify { System.new(:cp_type => cp_type, :environment => @organization.environments.first, :facts => facts).should_not be_valid }
-    specify { System.new(:name => system_name, :environment => @organization.locker, :cp_type => cp_type, :facts => facts).should_not be_valid }
+    specify { System.new(:name => system_name, :environment => @organization.library, :cp_type => cp_type, :facts => facts).should_not be_valid }
   end
 
   it "registers system in candlepin and pulp on create" do

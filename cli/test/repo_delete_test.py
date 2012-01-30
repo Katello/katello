@@ -6,6 +6,7 @@ import test_data
 
 import katello.client.core.repo
 from katello.client.core.repo import Delete
+from katello.client.core.utils import SystemExitRequest
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #repo is defined by either (org, product, repo_name) or repo_id
@@ -49,7 +50,6 @@ class DeleteTest(CLIActionTestCase):
         'name': REPO['name'],
         'product': PROD['name'],
         'org': ORG['name'],
-        'env': ENV['name'],
     }
 
     def setUp(self):
@@ -71,12 +71,14 @@ class DeleteTest(CLIActionTestCase):
     def test_finds_repo_by_name(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
         self.action.run()
-        self.module.get_repo.assert_called_once_with(self.ORG['name'], self.PROD['name'], self.REPO['name'], self.ENV['name'], False)
+        self.module.get_repo.assert_called_once_with(self.ORG['name'], self.PROD['name'], self.REPO['name'], None, False)
 
     def test_returns_with_error_when_no_repo_found(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
         self.module.get_repo.return_value =  None
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        ex = self.assertRaisesException(SystemExitRequest, self.action.run)
+        self.assertEqual(ex.args[0], os.EX_DATAERR)
+
 
     def test_it_calls_delete_api(self):
         self.action.run()

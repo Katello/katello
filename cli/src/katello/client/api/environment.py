@@ -39,9 +39,9 @@ class EnvironmentAPI(KatelloAPI):
         else:
             return None
 
-    def locker_by_org(self, orgId):
+    def library_by_org(self, orgId):
         path = "/api/organizations/%s/environments/" % (orgId)
-        envs = self.server.GET(path, {"locker": "true"})[1]
+        envs = self.server.GET(path, {"library": "true"})[1]
         if len(envs) > 0:
             return envs[0]
         else:

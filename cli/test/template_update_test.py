@@ -31,7 +31,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 class TemplateUpdateTest(CLIActionTestCase):
 
     ORG = test_data.ORGS[0]
-    ENV = test_data.LOCKER
+    ENV = test_data.LIBRARY
     TPL = test_data.TEMPLATES[0]
 
     TPL_DESC = "description of the template"
@@ -59,7 +59,7 @@ class TemplateUpdateTest(CLIActionTestCase):
         self.mock(self.action.api, 'templates', test_data.TEMPLATES)
 
         self.mock(self.module, 'get_environment', self.ENV)
-        self.mock(self.module, 'get_locker', self.ENV)
+        self.mock(self.module, 'get_library', self.ENV)
         self.mock(self.module, 'get_template', self.TPL)
 
         self.mock(self.action, 'updateTemplate')

@@ -2,15 +2,15 @@ module ProductHelperMethods
 
   
   
-  def new_test_product_with_locker org
+  def new_test_product_with_library org
 
-    @locker = KTEnvironment.new
-    @locker.locker = true
-    @locker.organization = org
-    @locker.name = "Locker"
-    @locker.stub!(:products).and_return([])
-    org.stub!(:locker).and_return(@locker)
-    new_test_product org, @locker
+    @library = KTEnvironment.new
+    @library.library = true
+    @library.organization = org
+    @library.name = "Library"
+    @library.stub!(:products).and_return([])
+    org.stub!(:library).and_return(@library)
+    new_test_product org, @library
   end
 
   def new_test_product org, env, suffix=""
@@ -36,11 +36,11 @@ module ProductHelperMethods
 
   def promote repo, environment
     disable_product_orchestration
-    repo.stub!(:pulp_repo_facts).and_return({})
+    repo.stub!(:pulp_repo_facts).and_return({:clone_ids => []})
     Pulp::Repository.stub!(:clone_repo).and_return({})
     Glue::Pulp::Repos.stub!(:groupid).and_return([])
     repo.stub(:content => {:id => "123"})
-    repo.promote(environment)
+    repo.promote(environment.prior, environment)
     ep = EnvironmentProduct.find_or_create(environment, repo.product)
     Repository.where(:environment_product_id => ep).first
   end

@@ -22,11 +22,11 @@ require 'spec_helper.rb'
 #  end
 #end
 
-def should_fail_in_non_locker_env method
-  it "should fail when editing a template in a non-locker environment" do
-    SystemTemplate.should_receive(:find).with(non_locker_template_id)
-    post   method, :template_id => non_locker_template_id             if method.to_s.match(/^add_/)
-    delete method, :template_id => non_locker_template_id, :id => 123 if method.to_s.match(/^remove_/)
+def should_fail_in_non_library_env method
+  it "should fail when editing a template in a non-library environment" do
+    SystemTemplate.should_receive(:find).with(non_library_template_id)
+    post   method, :template_id => non_library_template_id             if method.to_s.match(/^add_/)
+    delete method, :template_id => non_library_template_id, :id => 123 if method.to_s.match(/^remove_/)
     response.should_not be_success
   end
 end
@@ -36,7 +36,7 @@ describe Api::TemplatesContentController do
   include AuthorizationHelperMethods
 
   let(:template_id) { 1 }
-  let(:non_locker_template_id) { 2 }
+  let(:non_library_template_id) { 2 }
   let(:product_cp_id) { 123456 }
   let(:package_name) { "package-x.y-z" }
   let(:package_group_name) { "package_group" }
@@ -49,22 +49,22 @@ describe Api::TemplatesContentController do
     @organization = Organization.new(:name => 'organization', :cp_key => 'organization')
     @organization.id = 1
 
-    @environment = KTEnvironment.new(:name => 'environment', :locker => false)
+    @environment = KTEnvironment.new(:name => 'environment', :library => false)
     @environment.id = 1
-    @environment.stub(:locker?).and_return(false)
-    @locker = KTEnvironment.new(:name => 'Locker', :locker => true)
-    @locker.id = 2
-    @locker.stub(:locker?).and_return(true)
+    @environment.stub(:library?).and_return(false)
+    @library = KTEnvironment.new(:name => 'Library', :library => true)
+    @library.id = 2
+    @library.stub(:library?).and_return(true)
 
-    @organization.locker = @locker
-    @organization.environments << @locker
+    @organization.library = @library
+    @organization.environments << @library
     @organization.environments << @environment
 
-    @tpl = SystemTemplate.new(:name => "template", :environment => @locker, :id => template_id)
+    @tpl = SystemTemplate.new(:name => "template", :environment => @library, :id => template_id)
     SystemTemplate.stub(:find).with(template_id).and_return(@tpl)
 
-    @tpl_clone = SystemTemplate.new(:name => "template", :environment => @environment, :id => non_locker_template_id)
-    SystemTemplate.stub(:find).with(non_locker_template_id).and_return(@tpl_clone)
+    @tpl_clone = SystemTemplate.new(:name => "template", :environment => @environment, :id => non_library_template_id)
+    SystemTemplate.stub(:find).with(non_library_template_id).and_return(@tpl_clone)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
@@ -170,8 +170,8 @@ describe Api::TemplatesContentController do
 
     describe "update products" do
 
-      should_fail_in_non_locker_env :add_product
-      should_fail_in_non_locker_env :remove_product
+      should_fail_in_non_library_env :add_product
+      should_fail_in_non_library_env :remove_product
 
       it "should add product" do
         @tpl.should_receive(:add_product_by_cpid).with(product_cp_id).and_return(true)
@@ -191,8 +191,8 @@ describe Api::TemplatesContentController do
 
     describe "update packages" do
 
-      should_fail_in_non_locker_env :add_package
-      should_fail_in_non_locker_env :remove_package
+      should_fail_in_non_library_env :add_package
+      should_fail_in_non_library_env :remove_package
 
       it "should add package" do
         @tpl.should_receive(:add_package).with(package_name).and_return(true)
@@ -212,8 +212,8 @@ describe Api::TemplatesContentController do
 
     describe "update package groups" do
 
-      should_fail_in_non_locker_env :add_package_group
-      should_fail_in_non_locker_env :remove_package_group
+      should_fail_in_non_library_env :add_package_group
+      should_fail_in_non_library_env :remove_package_group
 
       it "should add package group" do
         @tpl.should_receive(:add_package_group).with(package_group_name).and_return(true)
@@ -233,8 +233,8 @@ describe Api::TemplatesContentController do
 
     describe "update package group categories" do
 
-      should_fail_in_non_locker_env :add_package_group_category
-      should_fail_in_non_locker_env :remove_package_group_category
+      should_fail_in_non_library_env :add_package_group_category
+      should_fail_in_non_library_env :remove_package_group_category
 
       it "should add package group category" do
         @tpl.should_receive(:add_pg_category).with(package_group_cat_name).and_return(true)
@@ -254,8 +254,8 @@ describe Api::TemplatesContentController do
 
     describe "update parameters" do
 
-      should_fail_in_non_locker_env :add_parameter
-      should_fail_in_non_locker_env :remove_parameter
+      should_fail_in_non_library_env :add_parameter
+      should_fail_in_non_library_env :remove_parameter
 
       it "should add a parameter" do
         @tpl.should_receive(:set_parameter).with(param_name, param_value).and_return(true)

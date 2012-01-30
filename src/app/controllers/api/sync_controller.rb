@@ -15,7 +15,7 @@ require 'resources/pulp'
 class Api::SyncController < Api::ApiController
 
   before_filter :find_object, :only => [:index, :create, :cancel]
-  before_filter :ensure_locker, :only => [:create]
+  before_filter :ensure_library, :only => [:create]
   respond_to :json
 
   before_filter :authorize
@@ -91,9 +91,9 @@ class Api::SyncController < Api::ApiController
     @repository
   end
 
-  def ensure_locker
+  def ensure_library
     if @sync_of == 'repository'
-      raise HttpErrors::NotFound, _("You can synchronize repositories only in locker environment'") if not @obj.environment.locker?
+      raise HttpErrors::NotFound, _("You can synchronize repositories only in library environment'") if not @obj.environment.library?
     end
   end
 
