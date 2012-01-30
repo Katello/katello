@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.201
+Version:        0.1.202
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -353,6 +353,14 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.202-1
+- changesets - fixed validations It was not checking whether the distribution's
+  repo has been promoted. Validations for other content is also simplified by
+  this commit.
+- 783402 - unique constraint for templates in changeset
+- debugging - replacing most info logs with debug
+- katello-debug was having an issue with symlinks
+
 * Fri Jan 27 2012 Mike McCune <mmccune@redhat.com> 0.1.201-1
 - rebuild
 * Fri Jan 27 2012 Martin Bačovský <mbacovsk@redhat.com> 0.1.200-1
