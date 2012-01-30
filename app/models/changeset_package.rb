@@ -16,17 +16,9 @@ class ChangesetPackageValidator < ActiveModel::Validator
     to_env   = record.changeset.environment
     product = Product.find(record.product_id)
 
-    #package must be in one of the repositories in the source environment
-    #the repository must belong to a product that is in both source and target environment
-    #the repository must be cloned in the target environment
+    record.errors[:base] <<  _("Package '#{record.package_id}' doesn't belong to the specified product!") and return if record.repositories.empty?
 
-    if not (product.environments.include? from_env and product.environments.include? to_env)
-      record.errors[:base] <<  _("Product of the package '#{record.package_id}' must belong to both source and target environment!")
-    end
-
-    found_in_repo = false
     no_promotable_repo = true
-    #search for the package in all repos in its product
     product.repos(from_env).each do |repo|
       if repo.has_package? record.package_id
         if not repo.is_cloned_in? to_env
@@ -34,13 +26,10 @@ class ChangesetPackageValidator < ActiveModel::Validator
         else
           no_promotable_repo = false
         end
-        found_in_repo = true
       end
     end
 
     record.errors[:base] <<  _("Repository of the package '#{record.package_id}' has not been promoted into the target environment!") if no_promotable_repo
-
-    record.errors[:base] <<  _("Package '#{record.package_id}' doesn't belong to the specified product!") if not found_in_repo
   end
 end
 
@@ -52,8 +41,21 @@ class ChangesetPackage < ActiveRecord::Base
   validates :display_name, :length => { :maximum => 255 }
   validates_with ChangesetPackageValidator
 
+  def repositories
+    return @repos if not @repos.nil?
+
+    from_env = self.changeset.environment.prior
+    @repos = []
+
+    self.product.repos(from_env).each do |repo|
+      @repos << repo if repo.has_package? self.package_id
+    end
+    @repos
+  end
+
   # returns list of virtual permission tags for the current user
   def self.list_tags
     select('id,display_name').all.collect { |m| VirtualTag.new(m.id, m.display_name) }
   end
+
 end

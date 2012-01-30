@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.196
+Version:        0.1.206
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -353,6 +353,70 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.206-1
+- 785703 - fixing user creation code
+
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.205-1
+- 785703 - increasing logging for seed script fix
+
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.204-1
+- Revert "Make default logging level be warn"
+
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.203-1
+- 785703 - increasing logging for seed script
+
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.202-1
+- changesets - fixed validations It was not checking whether the distribution's
+  repo has been promoted. Validations for other content is also simplified by
+  this commit.
+- 783402 - unique constraint for templates in changeset
+- debugging - replacing most info logs with debug
+- katello-debug was having an issue with symlinks
+
+* Fri Jan 27 2012 Mike McCune <mmccune@redhat.com> 0.1.201-1
+- rebuild
+* Fri Jan 27 2012 Martin Bačovský <mbacovsk@redhat.com> 0.1.200-1
+- rename-locker - renamed locker in javascript (mbacovsk@redhat.com)
+- 785168 - Do not remove dots from pulp ids (lzap+git@redhat.com)
+- nicer errors for CLI and RHSM when service is down (lzap+git@redhat.com)
+- 769954 - org and repo names in custom repo content label (inecas@redhat.com)
+
+* Thu Jan 26 2012 Mike McCune <mmccune@redhat.com> 0.1.198-1
+- periodic rebuild
+
+* Thu Jan 26 2012 Shannon Hughes <shughes@redhat.com> 0.1.197-1
+- update to i18n strings (shughes@redhat.com)
+- 784679 - fixed prefs error on system subscription page that was causing the
+  page to not load. [stolen from tomckay] (jomara@redhat.com)
+- rename-locker - fixed locker that sneaked back during merge
+  (mbacovsk@redhat.com)
+- Gettext:find from master was going to be a HUGE pain. (jrist@redhat.com)
+- rename-branding - Fix for a small typo. (jrist@redhat.com)
+- Old string cleanup from pre-gettext days. (jrist@redhat.com)
+- rename-locker - fixed paths in test helper (mbacovsk@redhat.com)
+- 783511 - Wider menus for branding rename. (jrist@redhat.com)
+- rename-locker - locker renamed in controllers and views (mbacovsk@redhat.com)
+- locker-rename - locker renamed in model (mbacovsk@redhat.com)
+- locker-rename db mgration (mbacovsk@redhat.com)
+- 783512,783511,783509,783508 - Additional work for branding rename.      - New
+  strings for changes.      - Fixed a spec test since it failed properly, yay!
+  (jrist@redhat.com)
+- 783512,783511,783509,783508 -More work for branding rename.
+  (jrist@redhat.com)
+- 783512,783511,783509,783508 - Initial work for branding rename.
+  (jrist@redhat.com)
+- Fixed error on parsing json error messagae (mbacovsk@redhat.com)
+- 784607 - katello production.log can rapidly increase in size
+  (lzap+git@redhat.com)
+- 767475 - system packages - disable content form when no pkg/group is included
+  (bbuckingham@redhat.com)
+- 772744 - Removing accounts views/controllers period (jomara@redhat.com)
+- 761553 - adding better UI for non-admin viewing roles (jomara@redhat.com)
+- 773368 - GPG keys - update to show product the repo is associated with
+  (bbuckingham@redhat.com)
+- translation i18n files (shughes@redhat.com)
+- adding some more password util specs (lzap+git@redhat.com)
+
 * Tue Jan 24 2012 Martin Bačovský <mbacovsk@redhat.com> 0.1.195-1
 - 782775 - Unify unsubscription in RHSM and Katello CLI (mbacovsk@redhat.com)
 
@@ -742,8 +806,8 @@ fi
 * Tue Nov 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.112-1
 - fixed failing spec tests all caused by new parameter in
   Candlepin::Consumer#update
-- template export - spec tests for disabled export form a Locker
-- template export - disabled exporting templates from Locker envs
+- template export - spec tests for disabled export form a Library
+- template export - disabled exporting templates from Library envs
 - moved auto-heal down next to current subs
 - system templates - fixing issue where distributions were not browsable on a
   newly created template without refreshing
@@ -918,7 +982,7 @@ fi
 - guests of a host cleanly displayed
 - adding rootpw tag to the TDL export
 - corrected test for creating user w/o env
-- manifest import - fixes in orchestration - content remained created in locker
+- manifest import - fixes in orchestration - content remained created in library
   env - fixed infinite recursive call of set_repos
 - + both new user and modifying a user's environment now work + TODO: probably
   need to wordsmith form labels
@@ -974,7 +1038,7 @@ fi
 - virt-who - support host-guests systems relationship (inecas@redhat.com)
 - virt-who - support uploading the guestIds to Candlepin (inecas@redhat.com)
 - sync api - fix for listing status of promoted repos A condition that ensures
-  synchronization of repos only in the Locker was too restrictive and affected
+  synchronization of repos only in the Library was too restrictive and affected
   also other actions. (tstrachota@redhat.com)
 - 741961 - Removed traces of the anonymous user since he is no longer needed
   (paji@redhat.com)
@@ -1145,7 +1209,7 @@ fi
 - adding/removal of packages from filters supports rollbacks now
 - added support for updating of package lists of filters
 - filters - a few package auto complete fixes
-- filters - adding auto complete for packages, and moving locker package search
+- filters - adding auto complete for packages, and moving library package search
   to central place from system templates controller
 - moving some javascript i18n to a common area for autocomplete
 - spliting out the auto complete javascript object to its own file for reuse
@@ -1653,7 +1717,7 @@ fi
 - fields residing in pulp are now present in the output of index
   (dmitri@redhat.com)
 - create/delete operations for filters are working now (dmitri@redhat.com)
-- first cut of filters used during promotion of content from Locker
+- first cut of filters used during promotion of content from Library
   (dmitri@redhat.com)
 
 * Fri Oct 07 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.90-1
@@ -2201,7 +2265,7 @@ fi
 - Added a system templates details page needed for promotion (paji@redhat.com)
 - Quick fix on promotions javascript to get the add/remove properly showing up
   (paji@redhat.com)
-- 734899 - fixing issue where changeset history would default to locker
+- 734899 - fixing issue where changeset history would default to library
   (jsherril@redhat.com)
 - changeset history - adding indentation to content items (jsherril@redhat.com)
 - Added some auth rules for changeset updating (paji@redhat.com)
@@ -2262,7 +2326,7 @@ fi
   (jsherril@redhat.com)
 - making sure sliding tree does not double render on page load
   (jsherril@redhat.com)
-- only allowing modification of a system template in locker within system
+- only allowing modification of a system template in library within system
   templates controller (jsherril@redhat.com)
 - adding spec tests for system_templates controller (jsherril@redhat.com)
 - fixing row height on system templates (jsherril@redhat.com)
@@ -2366,7 +2430,7 @@ fi
   for global and organizational permissions.
 - Merge branch 'master' into roles-ui
 - 736251 - use content name for repo id when importing manifest
-- templates - it is possible to create/edit only templates in the locker -
+- templates - it is possible to create/edit only templates in the library -
   added checks into template controller - spec tests fixed according to changes
 - Packages offset loading via "More..." now working with registered system.
 - 734026 - removing uneeded debug line that caused syncs to fail
@@ -2458,7 +2522,7 @@ fi
 - Refactor repo path generator
 - Merge branch 'repo-path'
 - Fix failing repo spec
-- Pulp repo for Locker products consistent with other envs
+- Pulp repo for Library products consistent with other envs
 - 734755 - Service katello-jobs status shows no file or directory
 - Refactor generating repo id when cloning
 - Change CP content url to product/repo
@@ -3067,7 +3131,7 @@ fi
 - 731810 Deleteing a provider renders an server side error
 - spec tests for Glue::Pulp::Repo
 - merge of repo#get_{env,product,org} functionality
-- repo sync - check for syncing only repos in locker
+- repo sync - check for syncing only repos in library
 - updated routes to support changes in rhsm related to explicit specification
   of owners
 - Activation Keys - fix API rspec tests
@@ -3222,7 +3286,7 @@ fi
 - Edits to enlarge tupane to take advantage of more screen real estate.
   Changeset package selection now highlights to match the rest of the
   promotions page highlighting.
-- General UI - disable hover on Locker when Locker not clickable
+- General UI - disable hover on Library when Library not clickable
 - api error reporting - final solution
 - Revert "introducing application error exception for API"
 - Revert "ApiError - fixing unit tests"

@@ -35,7 +35,7 @@ describe ChangesetsController do
     @org = new_test_org
 
     CSControllerTest::ENVIRONMENT["organization"] = @org
-    CSControllerTest::ENVIRONMENT["prior"] = @org.locker.id
+    CSControllerTest::ENVIRONMENT["prior"] = @org.library.id
     @env = KTEnvironment.create!(CSControllerTest::ENVIRONMENT)
     CSControllerTest::NEXT_ENVIRONMENT["organization"] = @org
     @next_env = KTEnvironment.new(CSControllerTest::NEXT_ENVIRONMENT)
@@ -195,7 +195,7 @@ describe ChangesetsController do
  describe "rules" do
     before (:each) do
       @organization = new_test_org
-      @env1 = @organization.locker
+      @env1 = @organization.library
       @env2 = KTEnvironment.create!(:name=>"FOO", :prior => @env1, :organization=>@organization)
       @env3 = KTEnvironment.create!(:name=>"FOO2", :prior => @env2, :organization=>@organization)
       @cs = Changeset.create!(:name=>"FOO", :environment=>@env3, :state=>"promoted")

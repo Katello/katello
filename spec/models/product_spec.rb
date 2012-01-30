@@ -37,11 +37,11 @@ describe Product do
     OpenSSL::X509::Certificate.stub(:new).and_return(&:to_s)
     OpenSSL::PKey::RSA.stub(:new).and_return(&:to_s)
 
-    ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider, :environments => [@organization.locker]})
-    ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider, :environments => [@organization.locker]})
-    ProductTestData::PRODUCT_WITH_ATTRS.merge!({:provider => @provider, :environments => [@organization.locker]})
-    ProductTestData::PRODUCT_WITH_CONTENT.merge!({:provider => @provider, :environments => [@organization.locker]})
-    ProductTestData::PRODUCT_WITH_CP_CONTENT.merge!({:provider => @provider, :environments => [@organization.locker]})
+    ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider, :environments => [@organization.library]})
+    ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider, :environments => [@organization.library]})
+    ProductTestData::PRODUCT_WITH_ATTRS.merge!({:provider => @provider, :environments => [@organization.library]})
+    ProductTestData::PRODUCT_WITH_CONTENT.merge!({:provider => @provider, :environments => [@organization.library]})
+    ProductTestData::PRODUCT_WITH_CP_CONTENT.merge!({:provider => @provider, :environments => [@organization.library]})
   end
 
   describe "create product" do
@@ -59,7 +59,7 @@ describe Product do
 
       specify { @p.name.should == ProductTestData::SIMPLE_PRODUCT['name'] }
       specify { @p.created_at.should_not be_nil }
-      specify { @p.environments.should include(@organization.locker) }
+      specify { @p.environments.should include(@organization.library) }
     end
 
     context "candlepin orchestration" do
@@ -96,7 +96,7 @@ describe Product do
         :id => ProductTestData::PRODUCT_ID,
         :productContent => [],
         :provider => @provider,
-        :environments => [@organization.locker]
+        :environments => [@organization.library]
       })
     end
 
@@ -141,9 +141,9 @@ describe Product do
       disable_product_orchestration
     end
 
-    specify { Product.new(:name => 'contains /', :environments => [@organization.locker], :provider => @provider).should_not be_valid }
-    specify { Product.new(:name => 'contains #', :environments => [@organization.locker], :provider => @provider).should_not be_valid }
-    specify { Product.new(:name => 'contains space', :environments => [@organization.locker], :provider => @provider).should be_valid }
+    specify { Product.new(:name => 'contains /', :environments => [@organization.library], :provider => @provider).should_not be_valid }
+    specify { Product.new(:name => 'contains #', :environments => [@organization.library], :provider => @provider).should_not be_valid }
+    specify { Product.new(:name => 'contains space', :environments => [@organization.library], :provider => @provider).should be_valid }
 
     it "should throw an exception when creating a product with duplicate name in one organization" do
       @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
@@ -205,7 +205,7 @@ describe Product do
         Candlepin::Content.stub!(:create).and_return({:id => "123"})
 
         #@p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
-        #@key = EnvironmentProduct.find_or_create(@organization.locker, @p)
+        #@key = EnvironmentProduct.find_or_create(@organization.library, @p)
         #@repo = Repository.create!(:pulp_id => '123' , :environment_product => key)
       end
 
@@ -218,7 +218,7 @@ describe Product do
         let(:eng_product_after_import) do
           product = Product.new(ProductTestData::PRODUCT_WITH_CP_CONTENT.merge("id" => "20", "name" => "Red Hat Enterprise Server 6")) do |p|
             p.provider = @provider
-            p.environments << @organization.locker
+            p.environments << @organization.library
           end
           product.orchestration_for = :import_from_cp_ar_setup
           product.save!
@@ -296,7 +296,7 @@ describe Product do
           end
 
           it "should follow the format of the content url in candlepin" do
-            expected_relative_path = "#{@organization.name}/Locker/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage"
+            expected_relative_path = "#{@organization.name}/Library/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage"
             Repository.should_receive(:create!).once.with(hash_including(:relative_path => expected_relative_path))
           end
         end
@@ -315,8 +315,8 @@ describe Product do
       disable_product_orchestration
       disable_filter_orchestration
 
-      @environment1 = KTEnvironment.create!(:name => 'dev', :locker => false, :prior => @organization.locker, :organization => @organization)
-      @environment2 = KTEnvironment.create!(:name => 'prod', :locker => false, :prior => @environment1, :organization => @organization)
+      @environment1 = KTEnvironment.create!(:name => 'dev', :library => false, :prior => @organization.library, :organization => @organization)
+      @environment2 = KTEnvironment.create!(:name => 'prod', :library => false, :prior => @environment1, :organization => @organization)
 
       @filter1 = Filter.create!(:pulp_id => FILTER1_ID, :package_list => PACKAGE_LIST_1, :organization => @organization)
       @filter2 = Filter.create!(:pulp_id => FILTER2_ID, :package_list => PACKAGE_LIST_2, :organization => @organization)
@@ -331,10 +331,11 @@ describe Product do
       @repo = Repository.create!(RepoTestData::REPO_PROPERTIES.merge(
            :environment_product => ep,
            :clone_ids => [],
-           :groupid => Glue::Pulp::Repos.groupid(@product, @product.locker)
+           :groupid => Glue::Pulp::Repos.groupid(@product, @product.library)
       ))
       @repo.stub!(:is_cloned_in?).and_return(false)
       @repo.stub!(:clone_id).and_return("cloned_repo")
+
       Glue::Pulp::Repos.stub!(:clone_repo_path).and_return("cloned_path")
 
       @product.stub!(:repos).and_return([@repo])
@@ -371,7 +372,7 @@ describe Product do
 
       it "should get applied during repositories cloning" do
         Pulp::Repository.should_receive(:clone_repo).once.with(anything, anything, anything, @product.filters.collect(&:pulp_id)).and_return([])
-        @product.promote @organization.locker, @environment1
+        @product.promote @organization.library, @environment1
       end
 
       it "should get applied to the first environment only" do
@@ -388,12 +389,13 @@ describe Product do
       end
 
       it "should get applied to the repositories" do
-        @repo.should_receive(:add_filters).once.with([@filter2.pulp_id]).and_return(true)
+        @repo.should_receive(:set_filters).once.with([@filter2.pulp_id]).and_return(true)
         @product.filters += [@filter2]
+        @product.save!
       end
 
       it "should get removed from repositories" do
-        @repo.should_receive(:remove_filters).once.with([@filter1.pulp_id]).and_return(true)
+        @repo.should_receive(:del_filters).once.with([@filter1.pulp_id]).and_return(true)
         @product.filters -= [@filter1]
       end
     end
@@ -407,10 +409,10 @@ describe Product do
       User.current = superadmin
       @product = Product.new({:name => "prod"})
       @product.provider = @organization.redhat_provider
-      @product.environments << @organization.locker
+      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
-      @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
+      @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",:pulp_id=>"1010")
       @repo.stub(:promoted?).and_return(false)
     end
@@ -451,15 +453,15 @@ describe Product do
                               :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
       @product = Product.new({:name => "prod#{suffix}"})
       @product.provider = @provider
-      @product.environments << @organization.locker
+      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
 
-      @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
+      @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       @repo = Repository.create!(:environment_product => @ep,
                                  :name => "testrepo",
                                  :pulp_id=>"1010",
-                                 :relative_path => "#{@organization.name}/Locker/Prod/Repo")
+                                 :relative_path => "#{@organization.name}/library/Prod/Repo")
       @repo.stub(:promoted?).and_return(false)
       @repo.stub(:content => {:id => "123"})
     end
@@ -474,7 +476,7 @@ describe Product do
 
     context "resetting product gpg work across multiple environments" do
       before do
-        @env = KTEnvironment.create!(:name => "new_repo", :organization =>@organization, :prior=>@organization.locker)
+        @env = KTEnvironment.create!(:name => "new_repo", :organization =>@organization, :prior=>@organization.library)
         @new_repo = promote(@repo, @env)
         @product = Product.find(@product.id)
         @product.update_attributes!(:gpg_key => @gpg)

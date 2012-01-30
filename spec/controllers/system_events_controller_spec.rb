@@ -24,7 +24,7 @@ describe SystemEventsController do
       login_user(:mock => false)
       set_default_locale
       @organization = setup_system_creation
-      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.locker.id, :organization => @organization)
+      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id, :organization => @organization)
 
       #controller.stub!(:errors)
       #controller.stub!(:notice)

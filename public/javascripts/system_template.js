@@ -709,7 +709,7 @@ KT.repo_actions = (function() {
     //called everytime 'repos is loaded'
     register_autocomplete = function() {
         current_input = KT.auto_complete_box({
-            values:       KT.routes.auto_complete_locker_repositories_path(),
+            values:       KT.routes.auto_complete_library_repositories_path(),
             default_text: i18n.repo_search_text,
             input_id:     "add_repo_input",
             form_id:      "add_repo_form",
@@ -720,7 +720,7 @@ KT.repo_actions = (function() {
     verify_add_repo = function(name, cleanup_cb){
         $.ajax({
             type: "GET",
-            url: KT.routes.auto_complete_locker_repositories_path(),
+            url: KT.routes.auto_complete_library_repositories_path(),
             data: {term:name},
             cache: false,
             success: function(data){
@@ -770,7 +770,7 @@ KT.package_actions = (function() {
     //called everytime 'packages is loaded'
     register_autocomplete = function() {
         current_input = KT.auto_complete_box({
-            values:       KT.routes.auto_complete_locker_packages_path(),
+            values:       KT.routes.auto_complete_library_packages_path(),
             default_text: i18n.package_search_text,
             input_id:     "add_package_input",
             form_id:      "add_package_form",
@@ -781,7 +781,7 @@ KT.package_actions = (function() {
     verify_add_package = function(name, cleanup_cb){
         $.ajax({
             type: "GET",
-            url: KT.routes.auto_complete_locker_packages_path(),
+            url: KT.routes.auto_complete_library_packages_path(),
             data: {term:name},
             cache: false,
             success: function(data){

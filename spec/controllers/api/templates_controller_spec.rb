@@ -23,20 +23,20 @@ describe Api::TemplatesController do
     @organization = Organization.new(:name => 'organization', :cp_key => 'organization')
     @organization.id = 1
 
-    @environment = KTEnvironment.new(:name => 'environment', :locker => false)
+    @environment = KTEnvironment.new(:name => 'environment', :library => false)
     @environment.id = 1
     @environment2 = KTEnvironment.new(:name => 'environment2')
     @environment2.id = 3
-    @locker = KTEnvironment.new(:name => 'Locker', :locker => true)
-    @locker.id = 2
-    KTEnvironment.stub(:find).with(@locker.id).and_return(@locker)
+    @library = KTEnvironment.new(:name => 'Library', :library => true)
+    @library.id = 2
+    KTEnvironment.stub(:find).with(@library.id).and_return(@library)
     KTEnvironment.stub(:find).with(@environment2.id).and_return(@environment2)
 
-    @organization.locker = @locker
-    @organization.environments << @locker
+    @organization.library = @library
+    @organization.environments << @library
     @organization.environments << @environment
 
-    @tpl = SystemTemplate.new(:name => TEMPLATE_NAME, :environment => @locker)
+    @tpl = SystemTemplate.new(:name => TEMPLATE_NAME, :environment => @library)
     SystemTemplate.stub(:find).and_return(@tpl)
     SystemTemplate.stub(:new).and_return(@tpl)
 
@@ -65,7 +65,7 @@ describe Api::TemplatesController do
     describe "index" do
       let(:action) { :index }
       let(:req) do
-        get 'index', :environment_id => @locker.id
+        get 'index', :environment_id => @library.id
       end
       let(:authorized_user) { user_with_read_permissions }
       it_should_behave_like "protected action"
@@ -81,7 +81,7 @@ describe Api::TemplatesController do
     describe "create" do
       let(:action) {:create}
       let(:req) do
-        post 'create', :template => to_create, :environment_id => @locker.id
+        post 'create', :template => to_create, :environment_id => @library.id
       end
       let(:authorized_user) { user_with_manage_permissions }
       it_should_behave_like "protected action"
@@ -119,11 +119,11 @@ describe Api::TemplatesController do
         @temp_file.stub(:path).and_return("/a/b/c")
 
         File.stub(:new).and_return(@temp_file)
-        KTEnvironment.stub(:find).and_return(@locker)
+        KTEnvironment.stub(:find).and_return(@library)
       end
       let(:action) {:import}
       let(:req) do
-        post :import, :template_file => @temp_file, :environment_id => @locker.id
+        post :import, :template_file => @temp_file, :environment_id => @library.id
       end
       let(:authorized_user) { user_with_manage_permissions }
       it_should_behave_like "protected action"
@@ -148,8 +148,8 @@ describe Api::TemplatesController do
       it 'should get a list of templates from specified environment' do
         tpl_selection_mock = mock('where')
         tpl_selection_mock.stub(:where).and_return([@tpl])
-        @locker.should_receive(:system_templates).and_return(tpl_selection_mock)
-        get 'index', :environment_id => @locker.id
+        @library.should_receive(:system_templates).and_return(tpl_selection_mock)
+        get 'index', :environment_id => @library.id
         response.should be_success
       end
 
@@ -174,25 +174,25 @@ describe Api::TemplatesController do
 
     describe "create" do
 
-      it "should fail when creating in non-locker environment" do
+      it "should fail when creating in non-library environment" do
         post 'create', :template => to_create, :environment_id => @environment.id
         SystemTemplate.should_not_receive(:new)
         response.should_not be_success
       end
 
       it "should call new and save!" do
-        KTEnvironment.stub(:find).and_return(@locker)
+        KTEnvironment.stub(:find).and_return(@library)
 
         SystemTemplate.should_receive(:new).and_return(@tpl)
         @tpl.should_receive(:save!)
 
-        post 'create', :template => to_create, :environment_id => @locker.id
+        post 'create', :template => to_create, :environment_id => @library.id
       end
     end
 
 
     describe "update" do
-      it "should fail when updating in non-locker environment" do
+      it "should fail when updating in non-library environment" do
         @tpl.environment = @environment
         @tpl.should_not_receive(:save!)
 
@@ -201,7 +201,7 @@ describe Api::TemplatesController do
         response.should_not be_success
       end
 
-      it 'should update template in the Locker' do
+      it 'should update template in the Library' do
         @tpl.stub(:get_clones).and_return([])
         @tpl.should_receive(:save!).once
 
@@ -210,7 +210,7 @@ describe Api::TemplatesController do
         response.should be_success
       end
 
-      it 'should change name of all template clones when updating template in the Locker' do
+      it 'should change name of all template clones when updating template in the Library' do
         tpl_clone = SystemTemplate.new(:name => TEMPLATE_NAME, :environment => @environment)
         tpl_clone.should_receive(:save!).once
 
@@ -243,10 +243,10 @@ describe Api::TemplatesController do
         @temp_file.stub(:path).and_return("/a/b/c")
 
         File.stub(:new).and_return(@temp_file)
-        KTEnvironment.stub(:find).and_return(@locker)
+        KTEnvironment.stub(:find).and_return(@library)
       end
 
-      it "should fail when imporing into non-locker environment" do
+      it "should fail when imporing into non-library environment" do
         post :import, :template_file => @temp_file, :environment_id => @environment.id
         response.should_not be_success
       end
@@ -255,7 +255,7 @@ describe Api::TemplatesController do
         SystemTemplate.should_receive(:new).and_return(@tpl)
         @tpl.should_receive(:import).once
 
-        post :import, :template_file => @temp_file, :environment_id => @locker.id
+        post :import, :template_file => @temp_file, :environment_id => @library.id
       end
     end
 
@@ -275,7 +275,7 @@ describe Api::TemplatesController do
         get :export, :id => TEMPLATE_ID, :format => 'tdl'
       end
 
-      it "should raise an exception when exporting from a Locker" do
+      it "should raise an exception when exporting from a Library" do
 
         get :export, :id => TEMPLATE_ID
         response.should_not be_success

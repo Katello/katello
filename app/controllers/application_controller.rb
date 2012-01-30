@@ -207,7 +207,7 @@ class ApplicationController < ActionController::Base
   # render a 404 page
   def render_404(exception = nil)
     if exception
-        logger.info _("Rendering 404:") + "#{exception.message}"
+        logger.error _("Rendering 404:") + "#{exception.message}"
     end
     respond_to do |format|
       format.html { render :template => "common/404", :layout => !request.xhr?, :status => 404 }
@@ -221,7 +221,7 @@ class ApplicationController < ActionController::Base
   # take care of 500 pages too
   def render_error(exception = nil)
     if exception
-      logger.info _("Rendering 500:") + "#{exception.message}"
+      logger.error _("Rendering 500:") + "#{exception.message}"
       notice exception.to_s, {:level => :error}
     end
     respond_to do |format|
@@ -263,14 +263,14 @@ class ApplicationController < ActionController::Base
     next_env = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
 
     @paths = []
-    @paths = org.promotion_paths.collect{|tmp_path| [org.locker] + tmp_path}
+    @paths = org.promotion_paths.collect{|tmp_path| [org.library] + tmp_path}
 
     # reject any paths that don't have accessible envs
     @paths.reject!{|path|  (path & accessible).empty?}
 
-    @paths = [[org.locker]] if @paths.empty?
+    @paths = [[org.library]] if @paths.empty?
 
-    if @environment and !@environment.locker?
+    if @environment and !@environment.library?
       @paths.each{|path|
         path.each{|env|
           @path = path and return if env.id == @environment.id
@@ -454,8 +454,8 @@ class ApplicationController < ActionController::Base
     flash_to_headers
   end
 
-  def first_env_in_path accessible_envs, include_locker=false, organization = current_organization
-    return current_organization.locker if include_locker && accessible_envs.member?(current_organization.locker)
+  def first_env_in_path accessible_envs, include_library=false, organization = current_organization
+    return current_organization.library if include_library && accessible_envs.member?(current_organization.library)
     organization.promotion_paths.each{|path|
       path.each{|env|
         if accessible_envs.member?(env)

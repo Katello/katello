@@ -37,8 +37,8 @@ describe Glue::Pulp::Repo do
       p.organization = @organization
     end
 
-    @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.locker]})
-    ep = EnvironmentProduct.find_or_create(@organization.locker, @product1)
+    @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+    ep = EnvironmentProduct.find_or_create(@organization.library, @product1)
     RepoTestData::REPO_PROPERTIES.merge!(:environment_product => ep)
 
     @repo = Repository.create!(RepoTestData::REPO_PROPERTIES)
@@ -224,7 +224,7 @@ describe Glue::Pulp::Repo do
 
   context "Get referenced objects" do
     it "should return correct environment" do
-      @repo.environment.should == @organization.locker
+      @repo.environment.should == @organization.library
     end
 
     it "should return correct organization" do
@@ -239,7 +239,7 @@ describe Glue::Pulp::Repo do
 
   describe "Cloned repo id" do
     before do
-      @to_env = KTEnvironment.create!(:name=>"Prod", :organization => @organization, :prior => @organization.locker)
+      @to_env = KTEnvironment.create!(:name=>"Prod", :organization => @organization, :prior => @organization.library)
     end
     it "should be composed from various attributes to be uniqe" do
       cloned_repo_id = @repo.clone_id(@to_env)
@@ -251,21 +251,46 @@ describe Glue::Pulp::Repo do
   context "Repo promote" do
 
     before :each do
-      @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod", :prior=>@organization.locker)
-
+      @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod", :prior=>@organization.library)
+      @from_env = @to_env.prior
 
       ep = EnvironmentProduct.find_or_create(@to_env, @product1)
       RepoTestData::CLONED_PROPERTIES.merge!(:environment_product => ep)
-      @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
-      @content_path = "/content/dist/rhel/server/5/5.1/x86_64/os"
-      @repo.stub(:relative_path => "#{@organization.name}/Locker#{@content_path}")
 
+      @content_path = "/content/dist/rhel/server/5/5.1/x86_64/os"
+      @repo.stub(:relative_path => "#{@organization.name}/Library#{@content_path}")
+
+    end
+
+    it "should sync the repo if it was already cloned" do
+      @clone = Repository.create!(RepoTestData::CLONED_PROPERTIES)
+      @clone.stub(:clone_id).with(@to_env).and_return(nil)
+      @clone.stub(:sync)
+      @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
+      @repo.stub(:get_clone).with(@to_env).and_return(@clone)
+
+      @clone.should_receive(:sync)
+      @repo.should_not_receive(:clone)
+
+      @repo.promote(@from_env, @to_env)
+    end
+
+    it "should promote filters when promoting from Library" do
+      @repo.stub(:filters).and_return([mock(RepoTestData::REPO_FILTER)])
+
+      @repo.filter_pulp_ids_to_promote(@from_env, @to_env).should == RepoTestData::REPO_PULP_FILTER_IDS
+    end
+
+    it "should promote filters when promoting from non-Library environment" do
+      @repo.stub(:filters).and_return([mock(RepoTestData::REPO_FILTER)])
+      @from_env.stub(:library?).and_return(false)
+
+      @repo.filter_pulp_ids_to_promote(@from_env, @to_env).should == []
     end
 
     it "should clone the repo" do
       Pulp::Repository.should_receive(:clone_repo).with do |repo, cloned|
         repo.should == @repo
-        cloned.pulp_id.should == RepoTestData::CLONED_PROPERTIES[:pulp_id]
         cloned.name.should == RepoTestData::CLONED_PROPERTIES[:name]
 
         group_id = [
@@ -278,12 +303,14 @@ describe Glue::Pulp::Repo do
         cloned.feed.should == RepoTestData::CLONED_PROPERTIES[:feed]
         true
       end
-      @repo.promote(@to_env)
+      @repo.promote(@from_env, @to_env)
     end
 
     it "should return correct is_cloned_in? status" do
       @clone = Repository.create!(RepoTestData::CLONED_PROPERTIES)
-      @clone.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_2_REPO_ID)
+      @clone.stub(:clone_id).with(@to_env).and_return(nil)
+      @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
+
       @clone.is_cloned_in?(@to_env).should == false
       @repo.is_cloned_in?(@to_env).should == true
     end
@@ -300,7 +327,7 @@ describe Glue::Pulp::Repo do
         cloned.relative_path.should == "#{@repo.organization.name}/#{@to_env.name}#{@content_path}"
         true
       end
-      @repo.promote(@to_env)
+      @repo.promote(@from_env, @to_env)
     end
   end
 

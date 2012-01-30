@@ -37,7 +37,7 @@ module Authorization
 
   # performs permission checks - do not override this method and
   # create check_permissions(operation) instead and return true if permission
-  # is granted or call access_denied(operation) explicitely for an
+  # is granted or call access_denied(operation) explicitly for an
   # intermediate denial
   def enforce_permissions operation
     # we get called again with the operation being set to create

@@ -47,8 +47,8 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   def update
-    if @environment.locker?
-      raise HttpErrors::BadRequest, _("Can't update Locker environment")
+    if @environment.library?
+      raise HttpErrors::BadRequest, _("Can't update Library environment")
     else
       @environment.update_attributes!(params[:environment])
       render :json => @environment

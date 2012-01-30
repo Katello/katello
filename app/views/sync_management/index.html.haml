@@ -37,7 +37,12 @@
         %th #{_("Size (Packages)")}
         %th #{_("Result")}
       %tbody
-        = render :partial=>"product", :collection=>@product_map, :as=>:prod
+        - if @sproducts.length > 0
+          = render :partial=>"product", :collection=>@product_map, :as=>:prod
+        - else
+          %tr
+            %td{:colspan=>5}
+              #{_("There are no custom products or repositories enabled. Try enabling via Content Providers.")}
 
     - if @sproducts.length > 0
       = submit_tag _('Synchronize Now'), :class => 'button fr', :id => 'sync_button'

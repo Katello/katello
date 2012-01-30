@@ -56,13 +56,13 @@ describe Provider do
       })
       @provider.save!
 
-      @product = Product.create!({:cp_id => "product_id", :name=> "prod", :productContent => [], :provider => @provider, :environments => [@organization.locker]})
+      @product = Product.create!({:cp_id => "product_id", :name=> "prod", :productContent => [], :provider => @provider, :environments => [@organization.library]})
     end
 
     specify { @product.should_not be_nil }
     specify { @product.provider.should == @provider }
-    specify { @product.environments.should include(@organization.locker) }
-    specify { @organization.locker.products.should include(@product) }
+    specify { @product.environments.should include(@organization.library) }
+    specify { @organization.library.products.should include(@product) }
   end
 
   context "import manifest via RED HAT provider" do
@@ -85,7 +85,7 @@ describe Provider do
       let(:eng_product_after_import) do
           product = Product.new(eng_product_attrs) do |p|
             p.provider = @provider
-            p.environments << @organization.locker
+            p.environments << @organization.library
           end
           product.orchestration_for = :import_from_cp_ar_setup
           product.save!
@@ -120,8 +120,8 @@ describe Provider do
         p.organization = @organization
       end
 
-      @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.locker]})
-      @product2 = Product.create!({:cp_id => "product2_id", :name=> "product2", :productContent => [], :provider => @provider, :environments => [@organization.locker]})
+      @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+      @product2 = Product.create!({:cp_id => "product2_id", :name=> "product2", :productContent => [], :provider => @provider, :environments => [@organization.library]})
     end
 
     it "should create sync for all it's products" do

@@ -68,7 +68,7 @@ class SystemErrataController < ApplicationController
     render :text => task.task_status.uuid
   rescue Exception => error
     errors error
-    Rails.logger.info error.backtrace.join("\n")
+    Rails.logger.error error.backtrace.join("\n")
     render :text => error, :status => :bad_request
   end
 

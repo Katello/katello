@@ -29,7 +29,7 @@ module Glue::Pulp::Consumer
   end
   module InstanceMethods
     def del_pulp_consumer
-      Rails.logger.info "Deleting consumer in pulp: #{self.name}"
+      Rails.logger.debug "Deleting consumer in pulp: #{self.name}"
       Pulp::Consumer.destroy(self.uuid)
     rescue => e
       Rails.logger.error "Failed to delete pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
@@ -42,7 +42,7 @@ module Glue::Pulp::Consumer
     end
 
     def set_pulp_consumer
-      Rails.logger.info "Creating a consumer in pulp: #{self.name}"
+      Rails.logger.debug "Creating a consumer in pulp: #{self.name}"
       return Pulp::Consumer.create(self.organization.cp_key, self.uuid, self.description)
     rescue => e
       Rails.logger.error "Failed to create pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
@@ -52,7 +52,7 @@ module Glue::Pulp::Consumer
     def update_pulp_consumer
       return true if @changed_attributes.empty?
 
-      Rails.logger.info "Updating consumer in pulp: #{@old.name}"
+      Rails.logger.debug "Updating consumer in pulp: #{@old.name}"
       Pulp::Consumer.update(self.organization.cp_key, self.uuid, self.description)
     rescue => e
       Rails.logger.error "Failed to update pulp consumer #{@old.name}: #{e}, #{e.backtrace.join("\n")}"
@@ -60,7 +60,7 @@ module Glue::Pulp::Consumer
     end
     
     def upload_package_profile profile
-      Rails.logger.info "Uploading package profile for consumer #{self.name}"
+      Rails.logger.debug "Uploading package profile for consumer #{self.name}"
       Pulp::Consumer.upload_package_profile(self.uuid, profile)
     rescue => e
       Rails.logger.error "Failed to upload package profile to pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
@@ -68,7 +68,7 @@ module Glue::Pulp::Consumer
     end
 
     def install_package packages
-      Rails.logger.info "Scheduling package install for consumer #{self.name}"
+      Rails.logger.debug "Scheduling package install for consumer #{self.name}"
       pulp_task = Pulp::Consumer.install_packages(self.uuid, packages)
     rescue => e
       Rails.logger.error "Failed to schedule package install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
@@ -76,7 +76,7 @@ module Glue::Pulp::Consumer
     end
 
     def uninstall_package packages
-      Rails.logger.info "Scheduling package uninstall for consumer #{self.name}"
+      Rails.logger.debug "Scheduling package uninstall for consumer #{self.name}"
       pulp_task = Pulp::Consumer.uninstall_packages(self.uuid, packages)
     rescue => e
       Rails.logger.error "Failed to schedule package uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
@@ -84,7 +84,7 @@ module Glue::Pulp::Consumer
     end
 
     def update_package packages
-      Rails.logger.info "Scheduling package update for consumer #{self.name}"
+      Rails.logger.debug "Scheduling package update for consumer #{self.name}"
       pulp_task = Pulp::Consumer.update_packages(self.uuid, packages)
     rescue => e
       Rails.logger.error "Failed to schedule package update for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
@@ -92,7 +92,7 @@ module Glue::Pulp::Consumer
     end
 
     def install_package_group groups
-      Rails.logger.info "Scheduling package group install for consumer #{self.name}"
+      Rails.logger.debug "Scheduling package group install for consumer #{self.name}"
       pulp_task = Pulp::Consumer.install_package_groups(self.uuid, groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
@@ -100,7 +100,7 @@ module Glue::Pulp::Consumer
     end
 
     def uninstall_package_group groups
-      Rails.logger.info "Scheduling package group uninstall for consumer #{self.name}"
+      Rails.logger.debug "Scheduling package group uninstall for consumer #{self.name}"
       pulp_task = Pulp::Consumer.uninstall_package_groups(self.uuid, groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
@@ -108,7 +108,7 @@ module Glue::Pulp::Consumer
     end
 
     def install_consumer_errata errata_ids
-      Rails.logger.info "Scheduling errata install for consumer #{self.name}"
+      Rails.logger.debug "Scheduling errata install for consumer #{self.name}"
       pulp_task = Pulp::Consumer.install_errata(self.uuid, errata_ids)
     rescue => e
       Rails.logger.error "Failed to schedule errata install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"

@@ -39,7 +39,7 @@ describe Api::SubscriptionsController do
     Pulp::Consumer.stub!(:update).and_return(true)
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
+    @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.library.id, :organization => @organization)
     @system = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
     System.stub!(:first).and_return(@system)
   end

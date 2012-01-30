@@ -15,6 +15,7 @@ require 'resources/pulp'
 require 'resources/cdn'
 require 'openssl'
 
+
 module Glue::Pulp::Repos
 
   def self.included(base)
@@ -31,7 +32,7 @@ module Glue::Pulp::Repos
   end
 
   def self.groupid(product, environment, content = nil)
-      groups = [self.product_groupid(product), self.env_groupid(environment), self.org_groupid(product.locker.organization)]
+      groups = [self.product_groupid(product), self.env_groupid(environment), self.org_groupid(product.library.organization)]
       groups << self.content_groupid(content) if content
       groups
   end
@@ -58,7 +59,7 @@ module Glue::Pulp::Repos
         :contentUrl => Glue::Pulp::Repos.custom_content_path(self, repo.name),
         :gpgUrl => yum_gpg_key_url(repo),
         :type => "yum",
-        :label => "#{self.id}-#{repo.name}",
+        :label => custom_content_label(repo),
         :vendor => Provider::CUSTOM
       },
       :enabled => true
@@ -68,7 +69,7 @@ module Glue::Pulp::Repos
     new_content.content
   end
 
-  # repo path for custom product repos (RH repo paths are derivated from
+  # repo path for custom product repos (RH repo paths are derived from
   # content url)
   def self.custom_repo_path(environment, product, name)
     prefix = [environment.organization.name,environment.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
@@ -78,12 +79,16 @@ module Glue::Pulp::Repos
   def self.custom_content_path(product, name)
     parts = []
     # We generate repo path only for custom product content. We add this
-    # constant string to avoid colisions with RH content. RH content url
+    # constant string to avoid collisions with RH content. RH content url
     # begins usually with something like "/content/dist/rhel/...".
     # There we prefix custom content/repo url with "/custom/..."
     parts << "custom"
     parts += [product.name,name]
     "/" + parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+  end
+
+  def custom_content_label(repo)
+    "#{self.organization.name} #{self.name} #{repo.name}".gsub(/\s/,"_")
   end
 
   def self.clone_repo_path_for_cp(repo)
@@ -122,9 +127,8 @@ module Glue::Pulp::Repos
   module InstanceMethods
 
     def empty?
-      return self.repos(locker).empty?
+      return self.repos(library).empty?
     end
-
 
     def repos env, include_disabled = false
       @repo_cache = {} if @repo_cache.nil?
@@ -234,28 +238,28 @@ module Glue::Pulp::Repos
     end
 
     def sync
-      Rails.logger.info "Syncing product #{name}"
-      self.repos(locker).collect do |r|
+      Rails.logger.debug "Syncing product #{name}"
+      self.repos(library).collect do |r|
         r.sync
       end.flatten
     end
 
     def synced?
-      self.repos(locker).any? { |r| r.synced? }
+      self.repos(library).any? { |r| r.synced? }
     end
 
     #get last sync status of all repositories in this product
     def latest_sync_statuses
-      self.repos(locker).collect do |r|
+      self.repos(library).collect do |r|
         r._get_most_recent_sync_status()
       end
     end
 
-    # Get the most relavant status for all the repos in this Product
+    # Get the most relevant status for all the repos in this Product
     def sync_status
       return @status if @status
 
-      statuses = repos(self.locker).map {|r| r.sync_status()}
+      statuses = repos(self.library).map {|r| r.sync_status()}
       return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
 
       #if any of repos sync still running -> product sync running
@@ -284,7 +288,7 @@ module Glue::Pulp::Repos
 
     def sync_start
       start_times = Array.new
-      for r in repos(locker)
+      for r in repos(library)
         start = r.sync_start
         start_times << start unless start.nil?
       end
@@ -294,7 +298,7 @@ module Glue::Pulp::Repos
 
     def sync_finish
       finish_times = Array.new
-      for r in repos(locker)
+      for r in repos(library)
         finish = r.sync_finish
         finish_times << finish unless finish.nil?
       end
@@ -303,12 +307,12 @@ module Glue::Pulp::Repos
     end
 
     def sync_size
-      size = self.repos(locker).inject(0) { |sum,v| sum + v.sync_status.progress.total_size }
+      size = self.repos(library).inject(0) { |sum,v| sum + v.sync_status.progress.total_size }
     end
 
     def last_sync
       sync_times = Array.new
-      for r in repos(locker)
+      for r in repos(library)
         sync = r.last_sync
         sync_times << sync unless sync.nil?
       end
@@ -317,8 +321,8 @@ module Glue::Pulp::Repos
     end
 
     def cancel_sync
-      Rails.logger.info "Cancelling synchronization of product #{name}"
-      for r in repos(locker)
+      Rails.logger.info "Canceling synchronization of product #{name}"
+      for r in repos(library)
         r.cancel_sync
       end
     end
@@ -343,10 +347,10 @@ module Glue::Pulp::Repos
 
     def add_repo(name, url, repo_type, gpg = nil)
       check_for_repo_conflicts(name)
-      key = EnvironmentProduct.find_or_create(self.organization.locker, self)
+      key = EnvironmentProduct.find_or_create(self.organization.library, self)
       repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
-          :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
-          :relative_path => Glue::Pulp::Repos.custom_repo_path(self.locker, self, name),
+          :groupid => Glue::Pulp::Repos.groupid(self, self.library),
+          :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, name),
           :arch => arch,
           :name => name,
           :feed => url,
@@ -361,7 +365,7 @@ module Glue::Pulp::Repos
     def setup_sync_schedule
 
       schedule = (self.sync_plan && self.sync_plan.schedule_format) || nil
-      self.repos(self.locker).each do |repo|
+      self.repos(self.library).each do |repo|
         repo.set_sync_schedule(schedule)
       end
     end
@@ -380,23 +384,23 @@ module Glue::Pulp::Repos
         cdn_var_substitutor.substitute_vars(pc.content.contentUrl).each do |(substitutions, path)|
           feed_url = repo_url(path)
           arch = substitutions["basearch"] || "noarch"
-          repo_name = [pc.content.name, substitutions.sort_by {|k,_| k.to_s}.map(&:last)].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
+          repo_name = [pc.content.name, substitutions.sort_by {|k,_| k.to_s}.map(&:last)].flatten.compact.join(" ").gsub(/[^a-z0-9\-\._ ]/i,"")
           version = CDN::Utils.parse_version(substitutions["releasever"])
 
           begin
-            env_prod = EnvironmentProduct.find_or_create(self.organization.locker, self)
+            env_prod = EnvironmentProduct.find_or_create(self.organization.library, self)
             repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
                                         :arch => arch,
                                         :major => version[:major],
                                         :minor => version[:minor],
-                                        :relative_path => Glue::Pulp::Repos.repo_path_from_content_path(self.locker, path),
+                                        :relative_path => Glue::Pulp::Repos.repo_path_from_content_path(self.library, path),
                                         :name => repo_name,
                                         :feed => feed_url,
                                         :feed_ca => ca,
                                         :feed_cert => self.certificate,
                                         :feed_key => self.key,
                                         :content_type => pc.content.type,
-                                        :groupid => Glue::Pulp::Repos.groupid(self, self.locker, pc.content),
+                                        :groupid => Glue::Pulp::Repos.groupid(self, self.library, pc.content),
                                         :preserve_metadata => true, #preserve repo metadata when importing from cp
                                         :enabled =>false
                                         )
@@ -421,11 +425,11 @@ module Glue::Pulp::Repos
       end
 
       added_content.each do |pc|
-        if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('Locker')
+        if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('Library')
           Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
           self.add_repo(pc.content.name, repo_url(pc.content.contentUrl), pc.content.type)
         else
-          raise "new content was added to environment other than Locker. use promotion instead."
+          raise "New content was added to environment other than Library. Please use promotion instead."
         end
       end
 
@@ -447,8 +451,8 @@ module Glue::Pulp::Repos
     end
 
     def del_repos
-      #destroy all repos in all environmnents
-      Rails.logger.debug "deleting all repositoris in product #{name}"
+      #destroy all repos in all environments
+      Rails.logger.debug "deleting all repositories in product #{name}"
       self.environments.each do |env|
         self.repos(env).each do |repo|
           repo.destroy
@@ -476,9 +480,9 @@ module Glue::Pulp::Repos
     end
 
     def add_filters_orchestration(added_filter)
-      return true unless environments.size > 1 and promoted_to?(locker.successor)
+      return true unless environments.size > 1 and promoted_to?(library.successor)
 
-      self.repos(locker.successor).each do |r|
+      self.repos(library.successor).each do |r|
         queue.create(
             :name => "add filter '#{added_filter.pulp_id}' to repo: #{r.id}",
             :priority => 5,
@@ -490,9 +494,9 @@ module Glue::Pulp::Repos
     end
 
     def remove_filters_orchestration(removed_filter)
-      return true unless environments.size > 1 and promoted_to?(locker.successor)
+      return true unless environments.size > 1 and promoted_to?(library.successor)
 
-      self.repos(locker.successor).each do |r|
+      self.repos(library.successor).each do |r|
         queue.create(
             :name => "remove filter '#{removed_filter.pulp_id}' from repo: #{r.id}",
             :priority => 5,
@@ -507,33 +511,23 @@ module Glue::Pulp::Repos
     def promote_repos repos, from_env, to_env
       async_tasks = []
       repos.each do |repo|
-        if repo.is_cloned_in?(to_env)
-          #repo is already cloned, so lets just re-sync it from its parent
-          async_tasks << repo.get_clone(to_env).sync
-        else
-          #repo is not in the next environment yet, we have to clone it there
-          if to_env.prior == locker
-            async_tasks << repo.promote(to_env, filters.collect {|p| p.pulp_id})
-          else
-            async_tasks << repo.promote(to_env)
-          end
-        end
+        async_tasks << repo.promote(from_env, to_env)
       end
       async_tasks.flatten(1)
     end
 
 
     def set_filter repo, filter_id
-      repo.add_filters [filter_id]
+      repo.set_filters [filter_id]
     end
 
     def del_filter repo, filter_id
-      repo.remove_filters [filter_id]
+      repo.del_filters [filter_id]
     end
 
     def check_for_repo_conflicts(repo_name)
       is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
-              "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.locker.id).count > 0
+              "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
       if is_dupe
         raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.name])
       end

@@ -53,7 +53,7 @@ module Navigation
     def menu_providers
 
       {:key => :providers,
-       :name =>_("Providers"),
+       :name =>_("Content Providers"),
        :url => :sub_level,
        :if => :sub_level,
        :options => {:class=>'content second_level', "data-menu"=>"content"},
@@ -64,7 +64,7 @@ module Navigation
 
     def menu_redhat_providers
       {:key => :redhat_providers,
-        :name =>_("Red Hat"),
+        :name =>_("Red Hat Content Provider"),
         :url => redhat_provider_providers_path,
         :if => lambda{current_organization && current_organization.readable?},
         :options => {:class=>"third_level"}
@@ -73,7 +73,7 @@ module Navigation
 
     def menu_custom_providers
       {:key => :custom_providers,
-        :name =>_("Custom"),
+        :name =>_("Custom Content Providers"),
         :url => providers_path,
         :if => lambda{current_organization && Provider.any_readable?(current_organization())},
         :options => {:class=>"third_level"}
@@ -125,27 +125,23 @@ module Navigation
 
     end
 
-
-
     def menu_promotions
        {:key => :promotions,
         :name => _("Promotions"),
         :url => promotions_path,
-        :options =>{:highlights_on =>/\/promotions.*/ ,:class => 'content'},
         :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)},
-        :options => {:class=>'content second_level', "data-menu"=>"content"}
+        :options => {:highlights_on =>/\/promotions.*/ , :class=>'content second_level', "data-menu"=>"content"}
        }
     end
 
     def menu_changeset
        {:key => :changeset,
-        :name => _("Changeset History"),
+        :name => _("Promotion Changeset History"),
         :url => changesets_path,
         :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)},
         :options => {:class=>'content second_level', "data-menu"=>"content"}
        }
     end
-
 
     def menu_filters
        {:key => :filters,
@@ -156,7 +152,6 @@ module Navigation
        }
     end
 
-
     def menu_gpg
        {:key => :gpg,
         :name => _("GPG Keys"),
@@ -165,8 +160,6 @@ module Navigation
         :options => {:class=>"third_level"}
        }
     end
-
-
 
     def promotion_packages_navigation
       [

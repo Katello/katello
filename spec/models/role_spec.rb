@@ -52,7 +52,7 @@ describe Permission do
    end
 
    context "Check the envs" do
-     let(:environment){KTEnvironment.create!(:name =>"my_env", :organization => organization, :prior => organization.locker)}
+     let(:environment){KTEnvironment.create!(:name =>"my_env", :organization => organization, :prior => organization.library)}
      KTEnvironment.read_verbs.each do |verb|
        specify{user.allowed_to?(verb, :environments,environment.id,organization).should be_true}
        specify{user.allowed_to?(verb, :environments).should be_false}

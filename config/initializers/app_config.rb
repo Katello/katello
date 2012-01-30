@@ -94,3 +94,7 @@ end
 # add a default format for date... without this, rendering a datetime included "UTC" as 
 # of the string
 Time::DATE_FORMATS[:default] = "%Y-%m-%d %H:%M:%S"
+
+unless ::AppConfig.host.present?
+   raise (_("You must specify host in %s for %s to work properly") % ["katello.yml", AppConfig.app_name])
+end
