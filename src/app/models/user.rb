@@ -558,7 +558,7 @@ class User < ActiveRecord::Base
       end
 
       org_str = org ? "organization #{org.name} (#{org.name})":" any organization"
-      Rails.logger.info "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} scoped for #{tags_str} in #{org_str}"
+      Rails.logger.debug "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} scoped for #{tags_str} in #{org_str}"
     end
   end
 end

@@ -29,7 +29,7 @@ module Glue::Pulp::Filter
   module InstanceMethods
 
     def set_pulp_filter
-      Rails.logger.info "creating pulp filter '#{self.pulp_id}'"
+      Rails.logger.debug "creating pulp filter '#{self.pulp_id}'"
       Pulp::Filter.create :id => self.pulp_id, :type => "blacklist", :package_list => self.package_list, :description => self.description
     rescue => e
       Rails.logger.error "Failed to create pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
@@ -37,7 +37,7 @@ module Glue::Pulp::Filter
     end
 
     def del_pulp_filter
-      Rails.logger.info "deleting pulp filter '#{self.pulp_id}'"
+      Rails.logger.debug "deleting pulp filter '#{self.pulp_id}'"
       Pulp::Filter.destroy self.pulp_id
     rescue => e
       Rails.logger.error "Failed to delete pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
@@ -45,7 +45,7 @@ module Glue::Pulp::Filter
     end
 
     def set_packages package_list
-      Rails.logger.info "adding packages to pulp filter '#{self.pulp_id}'"
+      Rails.logger.debug "adding packages to pulp filter '#{self.pulp_id}'"
       Pulp::Filter.add_packages pulp_id, package_list
     rescue => e
       Rails.logger.error "Failed to add packages to pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
@@ -53,7 +53,7 @@ module Glue::Pulp::Filter
     end
 
     def del_packages package_list
-      Rails.logger.info "removing packages to pulp filter '#{self.pulp_id}'"
+      Rails.logger.debug "removing packages to pulp filter '#{self.pulp_id}'"
       Pulp::Filter.remove_packages pulp_id, package_list
     rescue => e
       Rails.logger.error "Failed to remove packages from pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"

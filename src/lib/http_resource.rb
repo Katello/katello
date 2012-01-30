@@ -126,7 +126,6 @@ class HttpResource
       resource_permissions.before_delete_callback(a_path, headers)
       client = rest_client(Net::HTTP::Delete, :delete, a_path)
       result = process_response(client.delete(headers))
-      Rails.logger.info "delete result: "+result
       resource_permissions.after_delete_callback(a_path, headers, result)
       result
     rescue RestClient::Exception => e
