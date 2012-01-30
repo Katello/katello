@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.203
+Version:        0.1.204
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -353,6 +353,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.204-1
+- Revert "Make default logging level be warn"
+
 * Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.203-1
 - 785703 - increasing logging for seed script
 
