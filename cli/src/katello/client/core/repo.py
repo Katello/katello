@@ -464,7 +464,7 @@ class List(RepoAction):
 class Delete(SingleRepoAction):
 
     description = _('delete a repository')
-    select_by_env = True
+    select_by_env = False
 
     def run(self):
         repo = self.get_repo()
@@ -525,7 +525,7 @@ class AddRemoveFilter(SingleRepoAction):
             return os.EX_DATAERR
 
         filters = self.api.filters(repo['id'])
-        filters = [f['name'] for f in filters] 
+        filters = [f['name'] for f in filters]
         self.update_filters(repo, filters, filter_name)
         return os.EX_OK
 
@@ -539,7 +539,7 @@ class AddRemoveFilter(SingleRepoAction):
 
         self.api.update_filters(repo['id'], filters)
         print message
-       
+
 
 
 # command --------------------------------------------------------------------
