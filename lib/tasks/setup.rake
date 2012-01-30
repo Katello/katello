@@ -13,7 +13,7 @@ desc "executes db:seed but with rails logging on the STDOUT"
 task :seed_with_logging => ["db:seed"] do
   if defined?(Rails)
     Rails.logger = Logger.new(STDOUT)
-    config.active_record.logger = Logger.new("#{Rails.root}/log/setup_sql.log")
+    ActiveRecord::Base.logger = Logger.new("#{Rails.root}/log/setup_sql.log")
   end
 end
 
