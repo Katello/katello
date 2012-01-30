@@ -81,7 +81,7 @@ describe Changeset do
         @prod.stub(:arch).and_return('noarch')
         @prod.save!
         ep = EnvironmentProduct.find_or_create(@organization.library, @prod)
-        @pack = mock('Pack', {:id => 1, :name => 'pack'})
+        @pack = {:id => 1, :name => 'pack'}.with_indifferent_access
         @err  = mock('Err', {:id => 'err', :name => 'err'})
 
         @repo = Repository.create!(:environment_product => ep, :name=> "repo", :pulp_id=>"1")
@@ -141,11 +141,9 @@ describe Changeset do
           lambda {@changeset.add_erratum("err")}.should raise_error
         end
 
-      end
-
-      it "should add distribution" do
-        @changeset.add_distribution("some-distro-id", "prod")
-        @changeset.distributions.length.should == 1
+        it "should fail on add distribution" do
+          lambda {@changeset.add_distribution("some_distro_id")}.should raise_error
+        end
       end
 
       describe "adding content from the prior environment" do
@@ -162,6 +160,7 @@ describe Changeset do
         end
 
         it "should add package" do
+          @prod.stub(:find_packages_by_name).with(@changeset.environment.prior, "pack").and_return([@pack])
           @changeset.add_package("pack", "prod")
           @changeset.packages.length.should == 1
         end
@@ -177,7 +176,7 @@ describe Changeset do
         end
 
         it "should add distribution" do
-          @changeset.add_distribution("some-distro_id", "prod")
+          @changeset.add_distribution("some-distro-id", "prod")
           @changeset.distributions.length.should == 1
         end
 
