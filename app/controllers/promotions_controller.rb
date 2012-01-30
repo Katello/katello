@@ -63,23 +63,56 @@ class PromotionsController < ApplicationController
 
 
   def packages
-    old_packages  #switch to new once bz 765849 is resolved
+    new_packages  #switch to new once bz 765849 is resolved
   end
 
   def new_packages
+    product_id = params[:product_id]  
+    repos = Product.find(product_id).repos(@environment)
+    repo_ids = repos.collect{ |repo| repo.pulp_id }
     
-    @next_env_pkgs = Glue::Pulp::Package.search("*", 0, 0)
+    @promotable_packages = []
+    @not_promotable = []
 
     search = params[:search]
     search = "*" if search.nil? || search == ''
     offset = params[:offset] || 0
-    @packages = Glue::Pulp::Package.search(search, params[:offset], current_user.page_size)
+    @packages = Glue::Pulp::Package.search(search, params[:offset], current_user.page_size, repo_ids)
     render :text=>"" and return if @packages.empty?
+
+    if not @next_environment.nil?
+      @packages.each{ |pack|
+        promoted = true
+        promotable = false
+        repos.each{ |repo|
+          if pack.repoids.include? repo.pulp_id
+            if repo.is_cloned_in? @next_environment 
+              if pack.repoids.include? repo.clone_id(@next_environment)
+                promoted = promoted && true
+              else
+                promotable = true
+                promoted = false
+              end
+            else
+              promoted = false
+              promotable = promotable || false
+            end
+          end
+        }
+        if promotable && !promoted
+          @promotable_packages << pack.id
+        elsif !promoted && !promotable
+          @not_promotable << pack.id
+        end
+      }
+    else
+      @not_promotable = @packages.collect{ |pack| pack.id }
+    end
 
     options = {:list_partial => 'promotions/package_items'}
 
     if offset.to_i >  0
-      render_panel_results(@packages, options)
+      render_panel_results(@packages, @packages.length, options)
     else
       render :partial=>"packages", :locals=>{:collection => @packages}
     end

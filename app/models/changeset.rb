@@ -298,6 +298,12 @@ class Changeset < ActiveRecord::Base
     self.state = Changeset::PROMOTED
     self.save!
 
+    self.repos.each do |repo|
+      if repo.is_cloned_in? to_env
+        repo.get_clone(to_env).index_packages
+      end
+    end
+
   rescue Exception => e
     self.state = Changeset::FAILED
     self.save!
@@ -363,18 +369,20 @@ class Changeset < ActiveRecord::Base
       product = pkg.product
 
       product.repos(from_env).each do |repo|
-        clone = repo.get_clone to_env
-        next if clone.nil?
+        if repo.is_cloned_in? to_env
+          clone = repo.get_clone to_env
 
-        if (repo.has_package? pkg.package_id) and (!clone.has_package? pkg.package_id)
-          pkgs_promote[clone] ||= []
-          pkgs_promote[clone] << pkg.package_id
+          if (repo.has_package? pkg.package_id) and (!clone.has_package? pkg.package_id)
+            pkgs_promote[clone] ||= []
+            pkgs_promote[clone] << pkg.package_id
+          end
         end
       end
     end
 
     pkgs_promote.each_pair do |repo, pkgs|
       repo.add_packages(pkgs)
+      Glue::Pulp::Package.index_packages(pkgs)
     end
   end
 
