@@ -20,6 +20,8 @@ Src::Application.configure do
 
   # See everything in the log (default is :info)
   config.log_level = (ENV['KATELLO_LOGGING'] || "warn").dup
+  config.active_record.logger = Logger.new("#{Rails.root}/log/production_sql.log")
+  config.colorize_logging = false
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
