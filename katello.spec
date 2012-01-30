@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.202
+Version:        0.1.203
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -353,6 +353,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.203-1
+- 785703 - increasing logging for seed script
+
 * Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.202-1
 - changesets - fixed validations It was not checking whether the distribution's
   repo has been promoted. Validations for other content is also simplified by
