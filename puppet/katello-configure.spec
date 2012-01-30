@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.56
+Version:        0.1.57
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.57-1
+- 785703 - increasing logging for seed script
+
 * Fri Jan 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.56-1
 - nicer errors for CLI and RHSM when service is down
 - 771352 - SAM does need katello-jobs for email and org delete
