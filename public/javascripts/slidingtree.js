@@ -407,13 +407,21 @@ sliding_tree.search = function(){
             });
 
             $(document).bind('hashchange.' + tree_id, function(event, current_crumb){
-                $.bbq.removeState('search');
                 set_search_button_state(current_crumb);
             });
+
+            //init search button state
+            set_search_button_state(sliding_tree.get_current_crumb());
         },
         set_search_button_state = function(current_crumb){
             var searchable = breadcrumbs[current_crumb]['searchable'];
 
+            if( !searchable ){
+                $.bbq.removeState('search');
+            }
+            toggle_search_button(searchable);
+        },
+        toggle_search_button = function(searchable){
             close();
             if( !searchable ){
                 search_button.css({ backgroundPosition : "0 0" });
