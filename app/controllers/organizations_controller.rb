@@ -84,7 +84,7 @@ class OrganizationsController < ApplicationController
       notice [_("Organization '#{@organization["name"]}' was created.")]
     rescue Exception => error
       notice(error, {:level => :error, :include_class_name => KTEnvironment::ERROR_CLASS_NAME})
-      Rails.logger.info error.backtrace.join("\n")
+      Rails.logger.error error.backtrace.join("\n")
       #rollback creation of the org if the org creation passed but the environment was not created
       if @organization && @organization.id #it is saved to the db
         @organization.destroy
