@@ -1541,7 +1541,14 @@ $(document).ready(function() {
                                         bbq_tag         :  "content",
                                         base_icon       :  'home_img',
                                         enable_search   :  true,
-                                        tab_change_cb   :  promotion_page.set_current_product
+                                        tab_change_cb   :  function(hash_id) {
+                                            promotion_page.set_current_product(hash_id);
+                                            if (KT.panel.control_bbq) {
+                                                //hash change for panel to trigger on refresh or back/forward or link passing
+                                                $(window).bind('hashchange', KT.panel.hash_change);
+                                                $(window).trigger('hashchange');
+                                            }
+                                        }
                                     });
 
     promotion_page.set_changeset_tree( sliding_tree("changeset_tree", { 
@@ -1570,7 +1577,6 @@ $(document).ready(function() {
         }
     });
 
-
     //set function for env selection callback
     env_select.click_callback = promotion_page.env_change;
 
@@ -1592,5 +1598,5 @@ $(document).ready(function() {
    			KT.panel.closePanel(tupane);
    		}
    	});
-    
+
 });
