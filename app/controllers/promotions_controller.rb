@@ -73,7 +73,6 @@ class PromotionsController < ApplicationController
     
     @promotable_packages = []
     @not_promotable = []
-    next_env_repos = Product.find(product_id).repos(@next_environment)
 
     search = params[:search]
     search = "*" if search.nil? || search == ''
@@ -81,30 +80,34 @@ class PromotionsController < ApplicationController
     @packages = Glue::Pulp::Package.search(search, params[:offset], current_user.page_size, repo_ids)
     render :text=>"" and return if @packages.empty?
 
-    @packages.each{ |pack|
-      promoted = true
-      promotable = false
-      repos.each{ |repo|
-        if pack.repoids.include? repo.pulp_id
-          if repo.is_cloned_in? @next_environment 
-            if pack.repoids.include? repo.clone_id(@next_environment)
-              promoted = promoted && true
+    if not @next_environment.nil?
+      @packages.each{ |pack|
+        promoted = true
+        promotable = false
+        repos.each{ |repo|
+          if pack.repoids.include? repo.pulp_id
+            if repo.is_cloned_in? @next_environment 
+              if pack.repoids.include? repo.clone_id(@next_environment)
+                promoted = promoted && true
+              else
+                promotable = true
+                promoted = false
+              end
             else
-              promotable = true
               promoted = false
+              promotable = promotable || false
             end
-          else
-            promoted = false
-            promotable = promotable || false
           end
+        }
+        if promotable && !promoted
+          @promotable_packages << pack.id
+        elsif !promoted && !promotable
+          @not_promotable << pack.id
         end
       }
-      if promotable && !promoted
-        @promotable_packages << pack.id
-      elsif !promoted && !promotable
-        @not_promotable << pack.id
-      end
-    }
+    else
+      @not_promotable = @packages.collect{ |pack| pack.id }
+    end
 
     options = {:list_partial => 'promotions/package_items'}
 
