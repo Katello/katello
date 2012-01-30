@@ -322,7 +322,9 @@ class Changeset < ActiveRecord::Base
     self.save!
 
     self.repos.each do |repo|
-      repo.get_clone(to_env).index_packages
+      if repo.is_cloned_in? to_env
+        repo.get_clone(to_env).index_packages
+      end
     end
 
   rescue Exception => e
