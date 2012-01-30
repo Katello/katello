@@ -18,9 +18,18 @@ class ChangesetPackageValidator < ActiveModel::Validator
 
     record.errors[:base] <<  _("Package '#{record.package_id}' doesn't belong to the specified product!") and return if record.repositories.empty?
 
-    record.repositories.each do |repo|
-      record.errors[:base] <<  _("Repository of the package '#{record.package_id}' has not been promoted into the target environment!") and return if not repo.is_cloned_in? to_env
+    no_promotable_repo = true
+    product.repos(from_env).each do |repo|
+      if repo.has_package? record.package_id
+        if not repo.is_cloned_in? to_env
+          no_promotable_repo = no_promotable_repo && true
+        else
+          no_promotable_repo = false
+        end
+      end
     end
+
+    record.errors[:base] <<  _("Repository of the package '#{record.package_id}' has not been promoted into the target environment!") if no_promotable_repo
   end
 end
 

@@ -475,7 +475,6 @@ var promotion_page = (function($){
 
             
             if (current_changeset) {
-                console.log('test');
                 status.show();
                 $("#sliding_tree_actionbar > div").removeClass("disabled");
                 if (!permissions.manage_changesets) {
@@ -1540,16 +1539,9 @@ $(document).ready(function() {
                                         default_tab     :  "content",
                                         bbq_tag         :  "content",
                                         base_icon       :  'home_img',
-                                        enable_search   :  true,
-                                        tab_change_cb   :  function(hash_id) {
-                                            promotion_page.set_current_product(hash_id);
-                                            if (KT.panel.control_bbq) {
-                                                //hash change for panel to trigger on refresh or back/forward or link passing
-                                                $(window).bind('hashchange', KT.panel.hash_change);
-                                                $(window).trigger('hashchange');
-                                            }
-                                        }
+                                        tab_change_cb   :  promotion_page.set_current_product
                                     });
+    contentTree.enableSearch();
 
     promotion_page.set_changeset_tree( sliding_tree("changeset_tree", { 
                                         breadcrumb      :  changeset_breadcrumb,
