@@ -25,13 +25,13 @@ module Glue::Provider
 
     def import_manifest zip_file_path, options = {}
       options.assert_valid_keys(:force)
-      Rails.logger.info "Importing manifest for provider #{name}"
+      Rails.logger.debug "Importing manifest for provider #{name}"
       queue_import_manifest zip_file_path, options
       self.save!
     end
 
     def sync
-      Rails.logger.info "Syncing provider #{name}"
+      Rails.logger.debug "Syncing provider #{name}"
       self.products.collect do |p|
         p.sync
       end.flatten
@@ -112,7 +112,7 @@ module Glue::Provider
     end
 
     def cancel_sync
-      Rails.logger.info "Cancelling synchronization of provider #{name}"
+      Rails.logger.debug "Cancelling synchronization of provider #{name}"
       self.products.each do |p|
         p.cancel_sync
       end
@@ -121,7 +121,7 @@ module Glue::Provider
     def add_custom_product(name, description, url, gpg = nil)
       # URL isn't used yet until we can do custom repo discovery in pulp
       begin
-        Rails.logger.info "Creating custom product #{name} for provider: #{self.name}"
+        Rails.logger.debug "Creating custom product #{name} for provider: #{self.name}"
         product = Product.new({
             :name => name,
             :description => description,
@@ -145,7 +145,7 @@ module Glue::Provider
     end
 
     def del_products
-      Rails.logger.info "Deleting all products for provider: #{name}"
+      Rails.logger.debug "Deleting all products for provider: #{name}"
       self.products.each do |p|
         p.destroy
       end

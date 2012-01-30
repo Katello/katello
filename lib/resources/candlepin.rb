@@ -472,7 +472,7 @@ module Candlepin
           products = ([s['product']] + s['providedProducts'])
           products.each do |p|
             if p['id'] == product_id
-              Rails.logger.info "Deleting subscription: "+s.to_json
+              Rails.logger.debug "Deleting subscription: " + s.to_json
               Candlepin::Subscription.destroy s['id']
               break
             end
