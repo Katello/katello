@@ -1569,7 +1569,6 @@ $(document).ready(function() {
         }
     });
 
-
     //set function for env selection callback
     env_select.click_callback = promotion_page.env_change;
 
@@ -1592,6 +1591,4 @@ $(document).ready(function() {
    		}
    	});
 
-    $(document).bind('search_complete.slidingtree', promotion_page.reset_page);
-    
 });

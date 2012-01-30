@@ -15,8 +15,8 @@ module ProvidersHelper
   include SyncManagementHelper::RepoMethods
 
   def product_map
-    @product_map ||= collect_repos(@provider.products.with_repos_only(current_organization.locker),
-                                    current_organization.locker, true)
+    @product_map ||= collect_repos(@provider.products.with_repos_only(current_organization.library),
+                                    current_organization.library, true)
     @product_map
   end
 

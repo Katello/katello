@@ -240,9 +240,9 @@
   packages_system_system_packages_path: function(_system_id, options) {
   return Utils.build_path(1, ["/systems/", "/system_packages/packages"], ["format"], arguments)
   },
-// auto_complete_locker_repositories => /repositories/auto_complete_locker(.:format)
-  auto_complete_locker_repositories_path: function(options) {
-  return Utils.build_path(0, ["/repositories/auto_complete_locker"], ["format"], arguments)
+// auto_complete_library_repositories => /repositories/auto_complete_library(.:format)
+  auto_complete_library_repositories_path: function(options) {
+  return Utils.build_path(0, ["/repositories/auto_complete_library"], ["format"], arguments)
   },
 // edit_changeset => /changesets/:id/edit(.:format)
   edit_changeset_path: function(_id, options) {
@@ -824,9 +824,9 @@
   more_products_system_path: function(_id, options) {
   return Utils.build_path(1, ["/systems/", "/more_products"], ["format"], arguments)
   },
-// auto_complete_locker_packages => /packages/auto_complete_locker(.:format)
-  auto_complete_locker_packages_path: function(options) {
-  return Utils.build_path(0, ["/packages/auto_complete_locker"], ["format"], arguments)
+// auto_complete_library_packages => /packages/auto_complete_library(.:format)
+  auto_complete_library_packages_path: function(options) {
+  return Utils.build_path(0, ["/packages/auto_complete_library"], ["format"], arguments)
   },
 // validate_api_template => /api/templates/:id/validate(.:format)
   validate_api_template_path: function(_id, options) {

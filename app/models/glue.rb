@@ -110,7 +110,7 @@ module Glue
           execute({:action => task.action, :rollback => true})
         rescue => rollback_exception
           # if the operation failed, we can just report upon it
-          logger.info "Failed to perform rollback on #{task.name} - #{rollback_exception.inspect}\n  #{rollback_exception.backtrace.join('\n')}"
+          logger.error "Failed to perform rollback on #{task.name} - #{rollback_exception.inspect}\n  #{rollback_exception.backtrace.join('\n')}"
           errors.add :base, "Failed to perform rollback on #{task.name} - #{rollback_exception}"
         end
       end

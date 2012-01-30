@@ -174,7 +174,7 @@ class Provider < ActiveRecord::Base
 
   def extended_index_attrs
     products = self.products.map{|prod|
-      {:product=>prod.name, :repo=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
+      {:product=>prod.name, :repo=>prod.repos(self.organization.library).collect{|repo| repo.name}}
     }
     {
       :products=>products,

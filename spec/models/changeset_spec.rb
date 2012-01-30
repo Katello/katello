@@ -11,7 +11,7 @@ describe Changeset do
 
       User.current = User.find_or_create_by_username(:username => 'admin', :password => 'admin12345')
       @organization = Organization.create!(:name => 'candyroom', :cp_key => 'test_organization')
-      @environment = KTEnvironment.new({:name => 'julia', :prior=>@organization.locker})
+      @environment = KTEnvironment.new({:name => 'julia', :prior=>@organization.library})
       @organization.environments << @environment
       @organization.save!
       @environment.save!
@@ -77,11 +77,11 @@ describe Changeset do
         @prod = Product.new({:name => "prod"})
 
         @prod.provider = @provider
-        @prod.environments << @organization.locker
+        @prod.environments << @organization.library
         @prod.stub(:arch).and_return('noarch')
         @prod.save!
-        ep = EnvironmentProduct.find_or_create(@organization.locker, @prod)
-        @pack = mock('Pack', {:id => 1, :name => 'pack'})
+        ep = EnvironmentProduct.find_or_create(@organization.library, @prod)
+        @pack = {:id => 1, :name => 'pack'}.with_indifferent_access
         @err  = mock('Err', {:id => 'err', :name => 'err'})
 
         @repo = Repository.create!(:environment_product => ep, :name=> "repo", :pulp_id=>"1")
@@ -141,11 +141,9 @@ describe Changeset do
           lambda {@changeset.add_erratum("err")}.should raise_error
         end
 
-      end
-
-      it "should add distribution" do
-        @changeset.add_distribution("some-distro-id", "prod")
-        @changeset.distributions.length.should == 1
+        it "should fail on add distribution" do
+          lambda {@changeset.add_distribution("some_distro_id")}.should raise_error
+        end
       end
 
       describe "adding content from the prior environment" do
@@ -162,6 +160,7 @@ describe Changeset do
         end
 
         it "should add package" do
+          @prod.stub(:find_packages_by_name).with(@changeset.environment.prior, "pack").and_return([@pack])
           @changeset.add_package("pack", "prod")
           @changeset.packages.length.should == 1
         end
@@ -177,7 +176,7 @@ describe Changeset do
         end
 
         it "should add distribution" do
-          @changeset.add_distribution("some-distro_id", "prod")
+          @changeset.add_distribution("some-distro-id", "prod")
           @changeset.distributions.length.should == 1
         end
 
@@ -191,12 +190,12 @@ describe Changeset do
 
         @prod = Product.new({:name => "prod", :cp_id => "prod"})
         @prod.provider = @provider
-        @prod.environments << @organization.locker
+        @prod.environments << @organization.library
         @prod.environments << @environment
         @prod.stub(:arch).and_return('noarch')
         @prod.save!
 
-        ep = EnvironmentProduct.find_or_create(@organization.locker, @prod)
+        ep = EnvironmentProduct.find_or_create(@organization.library, @prod)
         @pack = mock('Pack', {:id => 1, :name => 'pack'})
         @err  = mock('Err', {:id => 'err', :name => 'err'})
 
@@ -253,7 +252,7 @@ describe Changeset do
 
         @prod = Product.new({:name => "prod"})
         @prod.provider = @provider
-        @prod.environments << @organization.locker
+        @prod.environments << @organization.library
         @prod.stub(:arch).and_return('noarch')
         @prod.stub(:promote).and_return([])
         @prod.save!
@@ -262,7 +261,7 @@ describe Changeset do
         @pack = mock('Pack', {:id => 1, :name => 'pack'})
         @err  = mock('Err', {:id => 'err', :name => 'err'})
         @distribution = mock('Distribution', {:id=> 'some-distro-id'})
-        ep = EnvironmentProduct.find_or_create(@organization.locker, @prod)
+        ep = EnvironmentProduct.find_or_create(@organization.library, @prod)
         @repo = Repository.create!(:environment_product => ep, :name=>'repo', :pulp_id=>"1")
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
         @repo.stub(:distributions).and_return([@distribution])

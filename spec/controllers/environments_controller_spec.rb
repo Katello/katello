@@ -23,7 +23,7 @@ describe EnvironmentsController do
     NEW_ENV_NAME = "another_environment_name"
     
     ENVIRONMENT = {:id => 2, :name => ENV_NAME, :description => nil, :prior => nil, :path => []}
-    LOCKER = {:id => 1, :name => "Locker", :description => nil, :prior => nil, :path => []}
+    LIBRARY = {:id => 1, :name => "Library", :description => nil, :prior => nil, :path => []}
     UPDATED_ENVIRONMENT = {:id => 3, :name => NEW_ENV_NAME, :description => nil, :prior => nil, :path => []}
     EMPTY_ENVIRONMENT = {:name => "", :description => "", :prior => nil}
     
@@ -51,7 +51,7 @@ describe EnvironmentsController do
     describe "post create" do
       let(:action) {:create}
       let(:req) { post :create, :organization_id => @organization.cp_key,
-                              :name => 'production', :prior => @organization.locker}
+                              :name => 'production', :prior => @organization.library}
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:update, :organizations,nil, @organization) }
       end
@@ -72,13 +72,13 @@ describe EnvironmentsController do
       @env = mock(KTEnvironment, EnvControllerTest::ENVIRONMENT)
       @env.stub!(:successor).and_return("")
 
-      @locker = mock(KTEnvironment, EnvControllerTest::LOCKER)
+      @library = mock(KTEnvironment, EnvControllerTest::LIBRARY)
 
       @org = new_test_org
 
       @org.stub!(:environments).and_return([@env])
       @org.environments.stub!(:first).with(:conditions => {:name => @env.name}).and_return(@env)
-      @org.stub!(:locker).and_return(@locker)
+      @org.stub!(:library).and_return(@library)
 
       Organization.stub!(:first).with(:conditions => {:cp_key=>@org.cp_key}).and_return(@org)
       KTEnvironment.stub!(:find).and_return(@env)
@@ -114,22 +114,22 @@ describe EnvironmentsController do
 
         it "should create new environment" do
           KTEnvironment.should_receive(:new).with({:name => 'production',
-                :organization_id => @org.id, :prior => @org.locker, :description => nil}).and_return(@new_env)
-          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
+                :organization_id => @org.id, :prior => @org.library, :description => nil}).and_return(@new_env)
+          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.library
         end
 
         it "should save new environment" do
           @new_env.should_receive(:save!).and_return(true)
-          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
+          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.library
         end
 
         it "assigns a newly created environment as @environment" do
-          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
+          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.library
           assigns(:environment).should_not be_nil
         end
 
         it "redirects to the created environment" do
-          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
+          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.library
           env = assigns(:environment)
           response.should be_success
         end

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
-"POT-Creation-Date: 2012-01-16 15:04-0500\n"
+"POT-Creation-Date: 2012-01-26 12:16-0500\n"
 "PO-Revision-Date: 2011-01-06 17:37-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,13 +16,14 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: app/views/promotions/show.html.haml:98
-msgid " Changesets"
-msgstr "變更集"
-
-#: app/views/promotions/show.html.haml:169
+#: app/views/promotions/show.html.haml:170
 msgid " Content"
 msgstr "內容"
+
+#: app/views/promotions/show.html.haml:97
+#, 
+msgid " Promotion Changesets"
+msgstr ""
 
 #: app/views/layouts/_footer.haml:6
 msgid " Red Hat, Inc."
@@ -32,7 +33,7 @@ msgstr " Red Hat, Inc."
 msgid " Total "
 msgstr "總數"
 
-#: app/controllers/users_controller.rb:107
+#: app/controllers/users_controller.rb:123
 msgid " created successfully."
 msgstr "已成功建立。"
 
@@ -207,6 +208,11 @@ msgstr ""
 msgid "%s (%s other packages) update timed out"
 msgstr ""
 
+#: app/views/layouts/_footer.haml:8
+#, 
+msgid "%s Version: %s"
+msgstr ""
+
 #: app/helpers/translation_helper.rb:15
 #: app/views/providers/redhat/_import_history.html.haml:14
 msgid "%s ago"
@@ -356,17 +362,22 @@ msgstr ""
 msgid "%s package update timed out"
 msgstr ""
 
-#: app/models/changeset.rb:328 app/controllers/providers_controller.rb:73
-#: app/controllers/providers_controller.rb:96
-#: app/controllers/providers_controller.rb:110
+#: app/controllers/providers_controller.rb:76
+#, 
+msgid "%{newline}If you are uploading an older manifest, you can use the Force checkbox to overwrite existing data."
+msgstr ""
+
+#: app/controllers/providers_controller.rb:75
+#: app/controllers/providers_controller.rb:99
+#: app/controllers/providers_controller.rb:113 app/models/changeset.rb:329
 msgid "%{newline}Reason: %{reason}"
 msgstr "%{newline}原因：%{reason}"
 
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/index.html.haml:15
 msgid "(%X of %Y repositories selected)"
 msgstr "（選擇了 %X 個軟體庫，總數為 %Y）"
 
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/index.html.haml:15
 msgid "(Entire product selected)"
 msgstr "（已選擇了整個產品）"
 
@@ -375,8 +386,8 @@ msgstr "（已選擇了整個產品）"
 msgid "(Load %X More)"
 msgstr ""
 
-#: app/views/system_packages/_packages.html.haml:6
 #: app/views/system_events/_events.html.haml:3
+#: app/views/system_packages/_packages.html.haml:6
 msgid "(Loaded %X of %Y Total)"
 msgstr "（總共載入了 %X，總數為 %Y）"
 
@@ -396,10 +407,11 @@ msgstr "+ 新增"
 
 #: app/views/promotions/show.html.haml:163
 #: app/views/promotions/show.html.haml:167
-msgid "+ New Changeset"
-msgstr "+ 新變更集"
+#, 
+msgid "+ New Promotion Changeset"
+msgstr ""
 
-#: app/views/system_templates/index.html.haml:105
+#: app/views/system_templates/index.html.haml:104
 msgid "+ New Template"
 msgstr "+ 新範本"
 
@@ -424,48 +436,49 @@ msgid "<< Previous"
 msgstr "<< 上一步"
 
 #: app/views/user_mailer/logins.text.haml:1
-msgid ""
-"A request has been received by Katello server '%s' to retrieve the logins "
-"for email '%s'. The following is a list of those logins:"
+msgid "A request has been received by Katello server '%s' to retrieve the logins for email '%s'. The following is a list of those logins:"
 msgstr "Katello 伺服器 '%s' 已收到要求擷取電子郵件 '%s' 的使用者名稱。下列為這些使用者名稱之清單："
 
 #: app/views/user_mailer/password_reset.text.haml:1
-msgid ""
-"A request has been received to reset the Katello password for user '%s'.  In"
-" order to reset this password, click the URL below."
+msgid "A request has been received to reset the Katello password for user '%s'.  In order to reset this password, click the URL below."
 msgstr "已收到要求重設使用者 '%s' 的 Katello 密碼。若要重設密碼，請點選下列 URL。"
 
-#: app/models/resource_type.rb:94
 #: app/controllers/activation_keys_controller.rb:272
-#: lib/navigation/systems.rb:50
+#: app/models/resource_type.rb:94 lib/navigation/systems.rb:50
 msgid "Activation Keys"
 msgstr "啟動金鑰"
 
-#: app/views/activation_keys/index.html.haml:3
-msgid ""
-"Activation Keys provide a set of characteristics that may be applied to a "
-"system during system registration.  This includes things such as, default "
-"environment to assign to the system, subscriptions to allocate to the "
-"system, system template to apply to the system...etc."
+#: app/views/activation_keys/index.html.haml:4
+msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system, system template to apply to the system...etc."
 msgstr "啟動金鑰提供了一組特性，可在系統註冊時套用在系統上。例如欲指定給系統的預設環境、欲分配給系統的訂閱，以及欲套用至系統上的系統範本等等。"
 
-#: app/views/system_templates/_product_comps.html.haml:6
-#: app/views/system_templates/_repositories.html.haml:8
-#: app/views/system_templates/_products.html.haml:9
-#: app/views/system_templates/_product_packages.html.haml:6
-#: app/views/system_templates/_product_repos.html.haml:6
-#: app/views/system_templates/index.html.haml:6
-#: app/views/filters/_packages.html.haml:24 app/views/roles/index.html.haml:9
-#: app/views/promotions/show.html.haml:8
+#: app/views/activation_keys/index.html.haml:9
+#, 
+msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system...etc."
+msgstr ""
+
+#: app/views/roles/index.html.haml:8 app/views/filters/_packages.html.haml:24
 #: app/views/common/_common_i18n.html.haml:3
+#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/_product_repos.html.haml:6
+#: app/views/system_templates/_products.html.haml:9
+#: app/views/system_templates/_product_packages_items.html.haml:3
+#: app/views/system_templates/_repositories.html.haml:8
+#: app/views/system_templates/_product_comps.html.haml:6
+#: app/views/promotions/show.html.haml:7
 msgid "Add"
 msgstr "新增"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/common/_common_i18n.html.haml:3
+#, 
+msgid "Add All"
+msgstr ""
+
+#: app/views/roles/index.html.haml:8
 msgid "Add Global Permission"
 msgstr "新增全域權限"
 
-#: app/views/organizations/_edit.html.haml:48
+#: app/views/organizations/_edit.html.haml:52
 msgid "Add New Environment"
 msgstr "新增環境"
 
@@ -501,12 +514,17 @@ msgstr "新增套件群組逾時"
 msgid "Add Package Timeout"
 msgstr "新增套件逾時"
 
-#: app/views/roles/_permissions.html.haml:6 app/views/roles/index.html.haml:9
+#: app/views/filters/_packages.html.haml:21
+#, 
+msgid "Add Packages"
+msgstr ""
+
+#: app/views/roles/index.html.haml:8 app/views/roles/_permissions.html.haml:6
 #: app/views/roles/_edit.html.haml:94
 msgid "Add Permission"
 msgstr "新增權限"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Add Permission to"
 msgstr "新增權限至"
 
@@ -527,7 +545,7 @@ msgstr "新增訂閱"
 msgid "Add to Key"
 msgstr "新增至金鑰"
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Added:"
 msgstr "已新增："
 
@@ -539,7 +557,7 @@ msgstr "正在新增套件群組..."
 msgid "Adding Package..."
 msgstr "正在新增套件..."
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Adding..."
 msgstr "正在新增..."
 
@@ -548,17 +566,17 @@ msgstr "正在新增..."
 msgid "Administer Activation Keys"
 msgstr ""
 
-#: app/models/kt_environment.rb:321
+#: app/models/kt_environment.rb:332
 #, 
 msgid "Administer Changesets in Environment"
 msgstr ""
 
-#: app/models/organization.rb:124
+#: app/models/organization.rb:134
 #, 
 msgid "Administer GPG Keys"
 msgstr ""
 
-#: app/models/organization.rb:127
+#: app/models/organization.rb:137
 #, 
 msgid "Administer Organization"
 msgstr ""
@@ -568,7 +586,7 @@ msgstr ""
 msgid "Administer Package Filters"
 msgstr ""
 
-#: app/models/provider.rb:116
+#: app/models/provider.rb:125
 #, 
 msgid "Administer Providers"
 msgstr ""
@@ -578,7 +596,7 @@ msgstr ""
 msgid "Administer Roles"
 msgstr ""
 
-#: app/models/system_template.rb:362
+#: app/models/system_template.rb:391
 #, 
 msgid "Administer System Templates"
 msgstr ""
@@ -601,8 +619,8 @@ msgstr "建議"
 msgid "Alert"
 msgstr ""
 
-#: app/models/resource_type.rb:99 app/helpers/breadcrumb_helper.rb:209
-#: app/views/roles/index.html.haml:9 app/views/roles/_permission.html.haml:23
+#: app/helpers/breadcrumb_helper.rb:209 app/models/resource_type.rb:99
+#: app/views/roles/index.html.haml:8 app/views/roles/_permission.html.haml:23
 #: app/views/roles/_permission.html.haml:33
 #: app/views/roles/_closed_permission.html.haml:11
 #: app/views/roles/_closed_permission.html.haml:20
@@ -610,29 +628,30 @@ msgstr ""
 msgid "All"
 msgstr "全部"
 
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/index.html.haml:15
 msgid "All Repositories"
 msgstr "所有軟體庫"
 
-#: app/views/promotions/show.html.haml:154
-msgid ""
-"An environment does not exist to promote content to.  If you would like to "
-"manage changesets and content, please create a new environment."
-msgstr "發送內容的目標環境不存在。如果您希望管理變更集與內容，請建立新的環境。"
+#: app/views/promotions/show.html.haml:153
+#, 
+msgid "An environment does not exist to promote content to.  If you would like to manage promotion changesets and content, please create a new environment."
+msgstr ""
 
-#: app/views/system_templates/index.html.haml:116
-msgid ""
-"An error has occured when communicating with the server, please refresh the "
-"page to retrieve the current System Template"
+#: app/views/system_templates/index.html.haml:115
+msgid "An error has occured when communicating with the server, please refresh the page to retrieve the current System Template"
 msgstr "與伺服器通訊時發生錯誤，請更新頁面，取得現有的系統範本。"
 
-#: app/views/promotions/show.html.haml:70
-msgid ""
-"An error has occured when communicating with the server, please refresh the "
-"page to retrieve the current changeset."
-msgstr "與伺服器通訊時發生錯誤，請更新頁面，取得現有的變更集。"
+#: app/views/promotions/show.html.haml:69
+#, 
+msgid "An error has occured when communicating with the server, please refresh the page to retrieve the current promotion changeset."
+msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/organizations/_new.html.haml:22
+#, 
+msgid "Application Life Cycle Management"
+msgstr ""
+
+#: app/views/roles/index.html.haml:8
 msgid "Applied"
 msgstr "已套用"
 
@@ -640,13 +659,13 @@ msgstr "已套用"
 msgid "Applied Subscriptions"
 msgstr "已套用的訂閱"
 
-#: app/views/sync_schedules/index.html.haml:18
+#: app/views/sync_schedules/index.html.haml:16
 msgid "Apply Selected Plan to Selected Products"
 msgstr "套用已選取的計劃至所選的產品上"
 
-#: app/views/subscriptions/index.html.haml:17
-#: app/views/providers/redhat/_subscription_details.html.haml:8
 #: app/views/systems/_edit.html.haml:40
+#: app/views/providers/redhat/_subscription_details.html.haml:8
+#: app/views/subscriptions/index.html.haml:17
 msgid "Arch"
 msgstr "架構"
 
@@ -662,12 +681,12 @@ msgstr "架構："
 msgid "Are you sure you want to delete this GPG Key?"
 msgstr "確定要刪除此 GPG 金鑰？"
 
-#: app/views/filters/_products.html.haml:12
 #: app/views/filters/_edit.html.haml:8
 msgid "Are you sure you want to delete this filster?"
 msgstr "確定要刪除此過濾器？"
 
 #: app/views/filters/_packages.html.haml:6
+#: app/views/filters/_products.html.haml:12
 msgid "Are you sure you want to delete this filter?"
 msgstr "確定要刪除此過濾器？"
 
@@ -676,7 +695,7 @@ msgstr "確定要刪除此過濾器？"
 msgid "Are you sure you want to delete this provider?"
 msgstr "確定要刪除此供應者？"
 
-#: app/views/organizations/_edit.html.haml:8
+#: app/views/organizations/_edit.html.haml:9
 msgid "Are you sure you want to remove this organization?"
 msgstr "確定要移除此組織？"
 
@@ -696,7 +715,7 @@ msgstr "確定要移除這個角色？"
 msgid "Are you sure you want to remove this system?"
 msgstr "確定要移除此系統？"
 
-#: app/views/system_templates/index.html.haml:84
+#: app/views/system_templates/index.html.haml:83
 msgid "Are you sure you want to remove this template?"
 msgstr "確定要移除此範本？"
 
@@ -704,27 +723,24 @@ msgstr "確定要移除此範本？"
 msgid "Are you sure you want to remove this user?"
 msgstr "確定要移除此使用者？"
 
-#: app/views/environments/_edit.html.haml:10
-#: app/views/activation_keys/_applied_subscriptions.html.haml:7
+#: app/views/roles/_self_role_edit.html.haml:6
+#: app/views/sync_plans/_edit.html.haml:11
+#: app/views/environments/_edit.html.haml:9
+#: app/views/notices/show.html.haml:16
+#: app/views/common/_common_i18n.html.haml:3
 #: app/views/activation_keys/_available_subscriptions.html.haml:7
 #: app/views/activation_keys/_edit.html.haml:15
+#: app/views/activation_keys/_applied_subscriptions.html.haml:7
+#: app/views/promotions/show.html.haml:128
 #: app/views/gpg_keys/_edit.html.haml:8
-#: app/views/roles/_self_role_edit.html.haml:6
-#: app/views/notices/show.html.haml:16 app/views/promotions/show.html.haml:129
-#: app/views/sync_plans/_edit.html.haml:11
-#: app/views/common/_common_i18n.html.haml:3
 msgid "Are you sure?"
 msgstr "您是否確定？"
-
-#: app/views/roles/_self_role_edit.html.haml:22
-msgid "Assigned roles:"
-msgstr "已指定的角色："
 
 #: app/views/errata/_show.html.haml:50
 msgid "Associated Bugs"
 msgstr "相聯的錯誤"
 
-#: app/controllers/api/systems_controller.rb:276
+#: app/controllers/api/systems_controller.rb:282
 msgid "At least one activation key must be provided"
 msgstr "必須提供至少一組啟動金鑰"
 
@@ -732,11 +748,16 @@ msgstr "必須提供至少一組啟動金鑰"
 msgid "At least one organization must exist."
 msgstr "至少必須存在一個組織。"
 
-#: app/models/system_template.rb:127
+#: app/models/system_template.rb:129
 msgid "At least one product or repository must be present to export a TDL"
 msgstr "要匯出 TDL，至少需要有一項產品或軟體庫存在"
 
-#: app/views/dashboard/index.html.haml:6
+#: app/views/systems/_subs.html.haml:9
+#, 
+msgid "Auto-heal"
+msgstr ""
+
+#: app/views/dashboard/index.html.haml:7
 msgid "Available Errata"
 msgstr "可用的勘誤"
 
@@ -744,15 +765,20 @@ msgstr "可用的勘誤"
 msgid "Available Subscriptions"
 msgstr "可用的訂閱"
 
-#: app/views/common/500.html.haml:15 app/views/common/404.html.haml:7
+#: app/views/common/404.html.haml:7 app/views/common/500.html.haml:15
 #: app/views/common/403.html.haml:8
 msgid "Back"
 msgstr "上一步"
 
-#: app/views/subscriptions/index.html.haml:19
 #: app/views/providers/redhat/_subscription_details.html.haml:10
+#: app/views/subscriptions/index.html.haml:19
 msgid "Begins"
 msgstr "開始"
+
+#: app/views/users/_edit_form.html.haml:78
+#, 
+msgid "Browser Default Locale"
+msgstr ""
 
 #: app/views/packages/_show.html.haml:64
 msgid "Build Date"
@@ -771,23 +797,24 @@ msgstr "透過環境"
 msgid "CDN loading error: %s not found"
 msgstr ""
 
-#: app/controllers/api/environments_controller.rb:50
-msgid "Can't update Locker environment"
-msgstr "無法更新 Locker 環境"
+#: app/controllers/api/environments_controller.rb:51
+#, 
+msgid "Can't update Library environment"
+msgstr ""
 
-#: app/views/sync_management/index.html.haml:5
-#: app/views/activation_keys/_edit.html.haml:73
 #: app/views/roles/_permission.html.haml:42
-#: app/views/common/_edit_i18n.html.haml:4
 #: app/views/systems/_actions.html.haml:12
+#: app/views/common/_edit_i18n.html.haml:4
+#: app/views/activation_keys/_edit.html.haml:73
+#: app/views/sync_management/index.html.haml:5
 msgid "Cancel"
 msgstr "取消"
 
-#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/index.html.haml:5
 msgid "Cancel Add"
 msgstr "取消新增"
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Cancel Review"
 msgstr "取消檢視"
 
@@ -800,7 +827,7 @@ msgstr "已取消。"
 msgid "Candlepin Event"
 msgstr ""
 
-#: app/models/permission.rb:37 app/models/permission.rb:160
+#: app/models/permission.rb:38 app/models/permission.rb:166
 #, 
 msgid "Cannot add/remove or change permissions related to a locked role."
 msgstr ""
@@ -811,40 +838,44 @@ msgid "Cannot change the name or description of a locked role."
 msgstr ""
 
 #: app/models/activation_key.rb:47
-msgid "Cannot create activation keys in Locker environment "
-msgstr "無法在 Locker 環境中建立啟動金鑰"
+#, 
+msgid "Cannot create activation keys in Library environment "
+msgstr ""
 
 #: app/models/user.rb:105
 msgid "Cannot delete currently logged user"
 msgstr "無法刪除目前登入的使用者"
 
 #: app/controllers/api/templates_controller.rb:107
-msgid "Cannot export templates for the Locker environment."
-msgstr "無法匯出 Locker 環境的範本。"
+#, 
+msgid "Cannot export templates for the Library environment."
+msgstr ""
 
-#: app/controllers/system_templates_controller.rb:277
+#: app/controllers/system_templates_controller.rb:285
 msgid "Cannot modify a template that is another environment"
 msgstr "無法修改另一個環境的範本"
 
 #: app/models/system.rb:17
-msgid "Cannot register a system with 'Locker' environment "
-msgstr "無法將系統向「Locker」環境註冊"
+#, 
+msgid "Cannot register a system with 'Library' environment "
+msgstr ""
 
-#: app/models/permission.rb:45
+#: app/models/permission.rb:46
 msgid "Cannot specify a tag if all_tags is selected."
 msgstr "選擇了「all_tags」（所有標籤）之後，將無法指定標籤。"
 
-#: app/models/permission.rb:41
+#: app/models/permission.rb:42
 msgid "Cannot specify a verb if all_verbs is selected."
 msgstr "選擇了「all_verbs」（所有動詞）之後，將無法指定動詞。"
 
-#: app/models/permission.rb:49
+#: app/models/permission.rb:50
 msgid "Cannot specify all_types without all_tags and all_verbs"
 msgstr "在無「all_tags」與「all_verbs」的情況下，將無法指定「all_types」"
 
 #: app/controllers/api/templates_controller.rb:98
-msgid "Cannot validate templates for the Locker environment."
-msgstr "無法驗證 Locker 環境的範本。"
+#, 
+msgid "Cannot validate templates for the Library environment."
+msgstr ""
 
 #: app/views/password_resets/edit.html.haml:18
 msgid "Change Password"
@@ -854,25 +885,12 @@ msgstr "變更密碼"
 msgid "Change Password:"
 msgstr "變更密碼："
 
-#: lib/navigation/content_management.rb:181
+#: lib/navigation/content_management.rb:180
 msgid "Changelog"
 msgstr "變更記錄"
 
-#: app/views/promotions/show.html.haml:117
-msgid "Changeset Details"
-msgstr "變更集的詳細資料"
-
-#: lib/navigation/content_management.rb:143
-msgid "Changeset History"
-msgstr "變更集的歷史"
-
-#: app/views/promotions/show.html.haml:8
-msgid "Changeset is empty."
-msgstr "變更集是空的。"
-
+#: app/helpers/breadcrumb_helper.rb:29
 #: app/controllers/changesets_controller.rb:268
-#: app/helpers/breadcrumb_helper.rb:29 app/views/promotions/show.html.haml:150
-#: app/views/promotions/show.html.haml:153
 msgid "Changesets"
 msgstr "變更集"
 
@@ -888,7 +906,7 @@ msgstr "選擇環境："
 msgid "Choose a product.."
 msgstr "選擇產品："
 
-#: app/views/users/_edit_environment.html.haml:26
+#: app/views/users/_edit_environment.html.haml:29
 msgid "Choose new defaults:"
 msgstr "選擇新預設值："
 
@@ -906,25 +924,23 @@ msgstr "清除已停用的求助提示："
 msgid "Clear the Search"
 msgstr "清除搜尋"
 
-#: app/controllers/users_controller.rb:261
+#: app/controllers/users_controller.rb:303
 msgid "Cleared"
 msgstr "已清除"
 
-#: app/views/roles/index.html.haml:9
-msgid ""
-"Click Add or Remove next to a user name to apply or remove them from role."
+#: app/views/roles/index.html.haml:8
+msgid "Click Add or Remove next to a user name to apply or remove them from role."
 msgstr "請按下使用者名稱旁邊的新增或移除，以套用至角色、或自角色中移除。"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Click Add permission from the bar below to add a permission."
 msgstr "從下方的工具列按下「新增權限」，以新增一項權限。"
 
-#: app/views/roles/index.html.haml:9
-msgid ""
-"Click edit permission from the bar below to edit the current permission."
+#: app/views/roles/index.html.haml:8
+msgid "Click edit permission from the bar below to edit the current permission."
 msgstr "從下方的工具列按下「編輯權限」，以編輯目前的權限。"
 
-#: app/controllers/organizations_controller.rb:89
+#: app/controllers/organizations_controller.rb:98
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr "按下「新增環境」以建立第一組環境"
 
@@ -939,23 +955,23 @@ msgstr "點選以編輯"
 msgid "Close"
 msgstr "關閉"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Close Add Permission"
 msgstr "關閉新增權限"
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Close Details"
 msgstr "關閉詳細資料"
 
-#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/index.html.haml:5
 msgid "Close Edit"
 msgstr "關閉編輯"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Close Edit Permission"
 msgstr "關閉編輯權限"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Close Role Details"
 msgstr "關閉角色的詳細資料"
 
@@ -963,11 +979,11 @@ msgstr "關閉角色的詳細資料"
 msgid "Collapse"
 msgstr "收回"
 
-#: app/views/password_resets/edit.html.haml:30
+#: app/views/password_resets/edit.html.haml:28
 msgid "Confirm Password:"
 msgstr "確認密碼："
 
-#: app/views/users/_new.html.haml:33 app/views/users/_edit_form.html.haml:53
+#: app/views/users/_edit_form.html.haml:51 app/views/users/_new.html.haml:33
 msgid "Confirm:"
 msgstr "確認："
 
@@ -976,8 +992,8 @@ msgstr "確認："
 msgid "Confirmation"
 msgstr ""
 
-#: app/views/subscriptions/index.html.haml:14
 #: app/views/providers/redhat/_subscription_details.html.haml:5
+#: app/views/subscriptions/index.html.haml:14
 msgid "Consumed"
 msgstr "已消耗"
 
@@ -993,14 +1009,19 @@ msgstr "內容下載 URL："
 msgid "Content Management"
 msgstr "內容管理"
 
-#: app/views/system_templates/_promotion_details.html.haml:13
+#: lib/navigation/content_management.rb:56
+#, 
+msgid "Content Providers"
+msgstr ""
+
 #: app/views/changesets/_edit.html.haml:32
+#: app/views/system_templates/_promotion_details.html.haml:13
 msgid "Contents:"
 msgstr "內容："
 
-#: app/views/subscriptions/index.html.haml:15
-#: app/views/providers/redhat/_subscription_details.html.haml:6
 #: app/views/systems/_subs.html.haml:19
+#: app/views/providers/redhat/_subscription_details.html.haml:6
+#: app/views/subscriptions/index.html.haml:15
 msgid "Contract"
 msgstr "合約"
 
@@ -1012,7 +1033,7 @@ msgstr "版權所有 &copy; "
 msgid "Could not delete organization '%s'."
 msgstr "無法刪除組織 '%s'。"
 
-#: app/controllers/api/products_controller.rb:74
+#: app/controllers/api/products_controller.rb:98
 msgid "Couldn't find environment '%s'"
 msgstr "找不到環境 '%s'"
 
@@ -1020,7 +1041,7 @@ msgstr "找不到環境 '%s'"
 msgid "Couldn't find pool '%s' in activation_key '%s'"
 msgstr "找不到 pool '%s' 於啟動金鑰 '%s' 中"
 
-#: app/controllers/api/providers_controller.rb:120
+#: app/controllers/api/providers_controller.rb:121
 msgid "Couldn't find provider '%s'"
 msgstr "找不到供應者「%s」"
 
@@ -1028,15 +1049,16 @@ msgstr "找不到供應者「%s」"
 msgid "Couldn't find subject of synchronization"
 msgstr "找不到要同步的東西"
 
-#: app/views/products/_new.html.haml:45
-#: app/views/environments/_new.html.haml:29
 #: app/views/repositories/_new.html.haml:33
+#: app/views/environments/_new.html.haml:29
+#: app/views/products/_new.html.haml:45
 msgid "Create"
 msgstr "建立"
 
 #: app/views/environments/_new.html.haml:2
-msgid "Create Environment"
-msgstr "建立環境"
+#, 
+msgid "Create Application Life Cycle Management Environment"
+msgstr ""
 
 #: app/views/products/_new.html.haml:2
 msgid "Create Product"
@@ -1060,8 +1082,9 @@ msgid "Current Subscriptions"
 msgstr "目前的訂閱"
 
 #: lib/navigation/content_management.rb:76
-msgid "Custom"
-msgstr "自訂"
+#, 
+msgid "Custom Content Provider"
+msgstr ""
 
 #: lib/navigation/dashboard.rb:17
 msgid "Dashboard"
@@ -1082,12 +1105,12 @@ msgstr ""
 msgid "Debug Certificate"
 msgstr "除錯憑證"
 
-#: app/views/users/_edit_environment.html.haml:21
+#: app/views/users/_edit_environment.html.haml:23
 msgid "Default Environment:"
 msgstr "預設環境："
 
-#: app/views/users/_new.html.haml:48
-#: app/views/users/_edit_environment.html.haml:17
+#: app/views/users/_edit_environment.html.haml:19
+#: app/views/users/_new.html.haml:50
 msgid "Default Organization:"
 msgstr "預設組織："
 
@@ -1095,7 +1118,7 @@ msgstr "預設組織："
 msgid "Delete All"
 msgstr "全部刪除"
 
-#: app/models/organization.rb:128
+#: app/models/organization.rb:138
 msgid "Delete Organization"
 msgstr "刪除組織"
 
@@ -1103,7 +1126,7 @@ msgstr "刪除組織"
 msgid "Delete Package Filters"
 msgstr "刪除套件篩選器"
 
-#: app/models/provider.rb:119
+#: app/models/provider.rb:128
 #, 
 msgid "Delete Providers"
 msgstr ""
@@ -1112,7 +1135,7 @@ msgstr ""
 msgid "Delete Roles"
 msgstr "刪除角色"
 
-#: app/models/organization.rb:122
+#: app/models/organization.rb:132
 msgid "Delete Systems"
 msgstr "刪除系統"
 
@@ -1124,77 +1147,78 @@ msgstr "刪除使用者"
 msgid "Deleted provider [ %s ]"
 msgstr "已刪除的供應者 [ %s ]"
 
-#: app/helpers/breadcrumb_helper.rb:61 app/views/promotions/show.html.haml:8
-#: lib/navigation/content_management.rb:175
+#: app/helpers/breadcrumb_helper.rb:61 app/views/promotions/show.html.haml:7
+#: lib/navigation/content_management.rb:174
 msgid "Dependencies"
 msgstr "相依性"
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Dependency of "
 msgstr "相依性，屬於 "
 
-#: app/views/distributions/_show.html.haml:18
+#: app/views/roles/_new.html.haml:14 app/views/packages/_show.html.haml:17
 #: app/views/organizations/_new.html.haml:17
-#: app/views/organizations/_edit.html.haml:18
-#: app/views/errata/_show.html.haml:80
-#: app/views/system_templates/_new.html.haml:15
-#: app/views/system_templates/_edit.html.haml:7
-#: app/views/changesets/_new.html.haml:15 app/views/products/_new.html.haml:13
-#: app/views/products/_edit.html.haml:21
-#: app/views/environments/_new.html.haml:19
-#: app/views/environments/_edit.html.haml:23
-#: app/views/activation_keys/_new.html.haml:15
-#: app/views/activation_keys/_edit.html.haml:42
-#: app/views/filters/_new.html.haml:18 app/views/filters/_edit.html.haml:26
-#: app/views/roles/_new.html.haml:14 app/views/notices/show.html.haml:29
+#: app/views/organizations/_new.html.haml:30
+#: app/views/organizations/_edit.html.haml:22
 #: app/views/sync_plans/_form.html.haml:10
 #: app/views/sync_plans/_edit.html.haml:20
-#: app/views/packages/_show.html.haml:17
+#: app/views/systems/_edit.html.haml:28 app/views/changesets/_new.html.haml:15
+#: app/views/environments/_new.html.haml:19
+#: app/views/environments/_edit.html.haml:22
+#: app/views/notices/show.html.haml:29 app/views/filters/_new.html.haml:18
+#: app/views/filters/_edit.html.haml:26
+#: app/views/system_templates/_new.html.haml:15
+#: app/views/system_templates/_edit.html.haml:7
+#: app/views/products/_new.html.haml:13 app/views/products/_edit.html.haml:21
+#: app/views/activation_keys/_new.html.haml:15
+#: app/views/activation_keys/_edit.html.haml:42
 #: app/views/providers/_form.html.haml:12
-#: app/views/providers/_edit.html.haml:28 app/views/systems/_edit.html.haml:28
+#: app/views/providers/_edit.html.haml:28 app/views/errata/_show.html.haml:80
+#: app/views/distributions/_show.html.haml:18
 msgid "Description"
 msgstr "描述"
 
-#: app/views/changesets/_edit.html.haml:16 app/views/roles/_edit.html.haml:40
-#: app/views/roles/_edit.html.haml:76 app/views/promotions/show.html.haml:123
+#: app/views/roles/_edit.html.haml:40 app/views/roles/_edit.html.haml:76
+#: app/views/changesets/_edit.html.haml:16
+#: app/views/promotions/show.html.haml:122
 msgid "Description:"
 msgstr "描述："
 
-#: app/views/changesets/_edit.html.haml:5 lib/navigation/administration.rb:35
-#: lib/navigation/systems.rb:60 lib/navigation/systems.rb:131
-#: lib/navigation/content_management.rb:35
-#: lib/navigation/content_management.rb:193
-#: lib/navigation/content_management.rb:210
-#: lib/navigation/content_management.rb:227
-#: lib/navigation/content_management.rb:251
-#: lib/navigation/content_management.rb:268 lib/navigation/organization.rb:51
+#: app/views/changesets/_edit.html.haml:5 lib/navigation/systems.rb:60
+#: lib/navigation/systems.rb:131 lib/navigation/administration.rb:35
+#: lib/navigation/organization.rb:51 lib/navigation/content_management.rb:35
+#: lib/navigation/content_management.rb:192
+#: lib/navigation/content_management.rb:209
+#: lib/navigation/content_management.rb:226
+#: lib/navigation/content_management.rb:249
+#: lib/navigation/content_management.rb:266
 msgid "Details"
 msgstr "詳細資料"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Details for the currently selected permission."
 msgstr "目前所選擇的權限之詳細資料"
 
-#: app/controllers/api/repositories_controller.rb:54
+#: app/controllers/api/repositories_controller.rb:69
 msgid "Disable/enable is not supported for custom repositories."
 msgstr "自訂軟體庫不支援停用/啟用。"
 
-#: app/controllers/users_controller.rb:260
+#: app/controllers/users_controller.rb:302
 msgid "Disabled help tips have been re-enabled."
 msgstr "停用的求助提示已重新啟用。"
 
-#: app/views/dashboard/index.html.haml:20
 #: app/views/systems/errata/_index.html.haml:16
+#: app/views/dashboard/index.html.haml:21
 #, 
 msgid "Display"
 msgstr ""
 
 #: app/views/dashboard/_systems.html.haml:17
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Distribution"
 msgstr "發行版"
 
-#: app/models/system_template.rb:311
+#: app/models/system_template.rb:313
 msgid "Distribution '%s' not found in this template."
 msgstr "此範本中找不到發行版 %s。"
 
@@ -1205,32 +1229,30 @@ msgstr "在 Pulp 中找不到發行版 %s。"
 #: app/helpers/breadcrumb_helper.rb:65 app/helpers/breadcrumb_helper.rb:170
 #: app/views/changesets/_edit.html.haml:64
 #: app/views/promotions/_detail.html.haml:30
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Distributions"
 msgstr "發行版"
 
-#: app/views/providers/index.html.haml:16
-msgid ""
-"Do you want to set this GPG Key as the key for all repositories within this "
-"product?"
+#: app/views/providers/index.html.haml:14
+msgid "Do you want to set this GPG Key as the key for all repositories within this product?"
 msgstr "您想要設定此產品中，所有軟體庫皆適用的 GPG 金鑰？"
 
 #: app/views/roles/_edit.html.haml:84
 msgid "Done"
 msgstr "完成"
 
-#: app/views/organizations/_download_debug_certificate.html.haml:11
-#: app/views/system_templates/_download.html.haml:12
-#: app/views/system_templates/index.html.haml:98
 #: app/views/packages/_show.html.haml:82
+#: app/views/organizations/_download_debug_certificate.html.haml:11
+#: app/views/system_templates/index.html.haml:97
+#: app/views/system_templates/_download.html.haml:12
 msgid "Download"
 msgstr "下載"
 
-#: app/views/system_templates/index.html.haml:75
+#: app/views/system_templates/index.html.haml:74
 msgid "Download System Template"
 msgstr "下載系統範本"
 
-#: app/views/sync_management/index.html.haml:23
+#: app/views/sync_management/index.html.haml:36
 msgid "Duration"
 msgstr "持續時間"
 
@@ -1239,29 +1261,27 @@ msgstr "持續時間"
 msgid "ERRATA"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:6
-#: app/views/system_templates/index.html.haml:83
-#: app/views/promotions/show.html.haml:8
-#: app/views/promotions/show.html.haml:138
+#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:82
+#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:137
 msgid "Edit Details"
 msgstr "編輯詳細資料"
 
-#: app/views/activation_keys/_edit.html.haml:5
 #: app/views/systems/_new.html.haml:4
+#: app/views/activation_keys/_edit.html.haml:5
 msgid "Edit Environment"
 msgstr "編輯環境"
 
 #: app/views/gpg_keys/_edit.html.haml:20
-msgid ""
-"Edit GPG Key enables you to modify the selected GPG Key.  A new key can be "
-"copied and pasted in directly."
+msgid "Edit GPG Key enables you to modify the selected GPG Key.  A new key can be copied and pasted in directly."
 msgstr "編輯 GPG 金鑰能讓您修改已選擇的 GPG 金鑰。新的金鑰可以直接複製、貼上。"
 
-#: app/views/roles/index.html.haml:9 app/views/roles/_edit.html.haml:99
+#: app/views/roles/index.html.haml:8 app/views/roles/_edit.html.haml:99
 msgid "Edit Permission"
 msgstr "編輯權限"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Edit Permission in"
 msgstr "編輯權限，於 "
 
@@ -1277,15 +1297,15 @@ msgstr "編輯軟體庫"
 msgid "Edit Role"
 msgstr "編輯角色"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Edit Role Details"
 msgstr "編輯角色的詳細資料"
 
-#: app/views/system_templates/index.html.haml:72
+#: app/views/system_templates/index.html.haml:71
 msgid "Edit System Template"
 msgstr "編輯系統範本"
 
-#: app/controllers/api/products_controller.rb:81
+#: app/controllers/api/products_controller.rb:105
 #: app/controllers/api/activation_keys_controller.rb:107
 msgid "Either organization id or environment id needs to be specified"
 msgstr "必須指定組織 ID 或環境 ID"
@@ -1294,13 +1314,13 @@ msgstr "必須指定組織 ID 或環境 ID"
 msgid "Either packages or groups  must be provided"
 msgstr "必須提供套件或群組"
 
-#: app/views/system_templates/index.html.haml:107
+#: app/views/system_templates/index.html.haml:106
 msgid "Eligible Content"
 msgstr "有資格的內容"
 
 #: app/views/password_resets/new.html.haml:16
 #: app/views/password_resets/new.html.haml:26
-#: app/views/users/_new.html.haml:42 app/views/users/_edit_form.html.haml:67
+#: app/views/users/_edit_form.html.haml:65 app/views/users/_new.html.haml:44
 msgid "Email Address:"
 msgstr "電子郵件地址："
 
@@ -1314,11 +1334,10 @@ msgstr "已發送電子郵件給 '%{e}'，並提供了有效的使用者名稱�
 
 #: app/controllers/system_packages_controller.rb:56
 #: app/controllers/system_packages_controller.rb:89
-msgid ""
-"Empty request received to install Packages or Package Groups System '%{s}'."
+msgid "Empty request received to install Packages or Package Groups System '%{s}'."
 msgstr "未收到安裝套件或套件群組系統 '%{s}' 的電子郵件。"
 
-#: app/views/providers/redhat/show.html.haml:46
+#: app/views/providers/redhat/show.html.haml:47
 msgid "Enable Repositories"
 msgstr "啟用軟體庫"
 
@@ -1334,24 +1353,16 @@ msgstr "結束日期"
 msgid "Enter Selected Content..."
 msgstr "輸入選擇的內容..."
 
+#: app/views/environments/_edit.html.haml:4
+#: app/views/dashboard/_errata.haml:39
 #: app/views/system_templates/_download.html.haml:8
-#: app/views/dashboard/_errata.haml:31
-#: app/views/environments/_edit.html.haml:5
 #: app/views/activation_keys/_new.html.haml:22
 #: app/views/activation_keys/_edit.html.haml:49
-#: app/views/users/_new.html.haml:56
+#: app/views/users/_new.html.haml:58
 msgid "Environment"
 msgstr "環境"
 
-#: app/views/organizations/_new.html.haml:30
-msgid "Environment Description"
-msgstr "環境詳述"
-
-#: app/views/organizations/_new.html.haml:25
-msgid "Environment Name"
-msgstr "環境名稱"
-
-#: app/views/organizations/_edit.html.haml:22
+#: app/views/organizations/_edit.html.haml:26
 msgid "Environment Promotion Paths"
 msgstr "發送環境的路徑"
 
@@ -1369,10 +1380,10 @@ msgstr "環境"
 
 #: app/helpers/breadcrumb_helper.rb:53 app/helpers/breadcrumb_helper.rb:126
 #: app/helpers/breadcrumb_helper.rb:157
-#: app/views/changesets/_edit.html.haml:60 app/views/dashboard/_errata.haml:9
+#: app/views/changesets/_edit.html.haml:60 app/views/dashboard/_errata.haml:10
 #: app/views/promotions/_detail.html.haml:9
 #: app/views/promotions/_detail.html.haml:22
-#: app/views/promotions/show.html.haml:8 lib/navigation/systems.rb:85
+#: app/views/promotions/show.html.haml:7 lib/navigation/systems.rb:85
 msgid "Errata"
 msgstr "勘誤"
 
@@ -1386,17 +1397,17 @@ msgstr ""
 msgid "Errata Install scheduled by %s"
 msgstr ""
 
-#: app/controllers/system_errata_controller.rb:60
+#: app/controllers/system_errata_controller.rb:67
 #, 
 msgid "Errata scheduled for install."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Erratum"
 msgstr "勘誤"
 
+#: app/views/dashboard/_sync.haml:23 app/views/common/_common_i18n.html.haml:3
 #: app/views/sync_management/index.html.haml:5
-#: app/views/dashboard/_sync.haml:23
 msgid "Error"
 msgstr "錯誤"
 
@@ -1408,6 +1419,11 @@ msgstr "同步錯誤！"
 msgid "Error while deleting provider [ %s ]: %s"
 msgstr "刪除供應者 [ %s ] 時發生錯誤：%s"
 
+#: app/views/common/500.html.haml:10
+#, 
+msgid "Error:"
+msgstr ""
+
 #: app/views/system_events/_events.html.haml:27
 #, 
 msgid "Event"
@@ -1418,14 +1434,14 @@ msgstr ""
 msgid "Events"
 msgstr ""
 
-#: app/models/system_template.rb:130
+#: app/models/system_template.rb:132
 msgid "Exactly one distribution must be present to export a TDL"
 msgstr "要匯出 TDL，需要正好一項發行版"
 
 #: app/views/organizations/_download_debug_certificate.html.haml:6
 #: app/views/changesets/_content_type.html.haml:7
-#: app/views/activation_keys/_subscriptions.html.haml:22
 #: app/views/common/_env_select.html.haml:9
+#: app/views/activation_keys/_subscriptions.html.haml:22
 #: app/views/providers/_products_repos.html.haml:35
 msgid "Expand"
 msgstr "展開"
@@ -1434,9 +1450,9 @@ msgstr "展開"
 msgid "Expand/Contract All"
 msgstr "全部展開/締結"
 
-#: app/views/subscriptions/index.html.haml:20
+#: app/views/systems/_subs.html.haml:21 app/views/systems/_subs.html.haml:73
 #: app/views/providers/redhat/_subscription_details.html.haml:11
-#: app/views/systems/_subs.html.haml:21 app/views/systems/_subs.html.haml:68
+#: app/views/subscriptions/index.html.haml:20
 msgid "Expires"
 msgstr "過期"
 
@@ -1452,18 +1468,19 @@ msgstr "詳情"
 msgid "File"
 msgstr "檔案"
 
-#: lib/navigation/content_management.rb:187
-#: lib/navigation/content_management.rb:221
+#: lib/navigation/content_management.rb:186
+#: lib/navigation/content_management.rb:220
 msgid "Filelist"
 msgstr "檔案清單"
 
-#: app/controllers/filters_controller.rb:202
-#: app/views/system_templates/index.html.haml:51
+#: app/controllers/filters_controller.rb:203
 #: app/views/roles/_edit.html.haml:14 app/views/roles/_edit.html.haml:18
-#: app/views/promotions/show.html.haml:8
-#: app/views/promotions/show.html.haml:102
+#: app/views/layouts/_org.haml:12
+#: app/views/system_templates/index.html.haml:50
+#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:101
+#: app/views/promotions/show.html.haml:103
 #: app/views/promotions/show.html.haml:104
-#: app/views/promotions/show.html.haml:105 app/views/layouts/_org.haml:12
 msgid "Filter"
 msgstr "篩選器"
 
@@ -1476,11 +1493,14 @@ msgstr ""
 msgid "Filter on loaded packages..."
 msgstr "已載入套件的篩選器..."
 
+#: app/views/roles/_edit.html.haml:13 app/views/layouts/_org.haml:11
 #: app/views/common/_filter_table.html.haml:2
+#: app/views/system_templates/index.html.haml:49
+#: app/views/promotions/show.html.haml:100
 msgid "Filter..."
 msgstr "篩選器…"
 
-#: lib/navigation/content_management.rb:239
+#: lib/navigation/content_management.rb:237
 msgid "Filtered Packages"
 msgstr "已篩選的套件"
 
@@ -1497,19 +1517,19 @@ msgstr ""
 msgid "Forgotten username or password?"
 msgstr "忘記使用者名稱或密碼？"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Full Access"
 msgstr "完整存取權限"
 
 #: app/views/changesets/_edit.html.haml:49
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Full Products"
 msgstr "所有產品"
 
-#: app/controllers/gpg_keys_controller.rb:160
-#: app/views/products/_new.html.haml:18 app/views/products/_edit.html.haml:26
+#: app/controllers/gpg_keys_controller.rb:168
 #: app/views/repositories/_new.html.haml:25
 #: app/views/repositories/_edit.html.haml:27
+#: app/views/products/_new.html.haml:18 app/views/products/_edit.html.haml:26
 msgid "GPG Key"
 msgstr "GPG 金鑰"
 
@@ -1517,36 +1537,35 @@ msgstr "GPG 金鑰"
 msgid "GPG Key URL: "
 msgstr "GPG 金鑰 URL："
 
-#: app/controllers/gpg_keys_controller.rb:158
-#: lib/navigation/content_management.rb:163
+#: app/views/gpg_keys/_products_repos.html.haml:21
+#, 
+msgid "GPG Key assigned at the Product Level for"
+msgstr ""
+
+#: app/views/gpg_keys/_products_repos.html.haml:36
+#, 
+msgid "GPG Key assigned at the Repository Level for"
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:165
+#: lib/navigation/content_management.rb:162
 msgid "GPG Keys"
 msgstr "GPG 金鑰"
 
 #: app/views/gpg_keys/index.html.haml:3
-msgid ""
-"GPG Keys may be stored by uploading a key directly or copying and pasting "
-"the key in upon creation. By visiting the Providers page and selecting "
-"either a product or repository, a GPG key that has been created here can be "
-"associated with the given entity."
-msgstr ""
-"GPG 金鑰必須透過直接上傳一組金鑰，或是在建立時，將金鑰複製並貼上。藉由參訪供應者的網頁，並選擇產品或軟體庫，在此建立的 GPG "
-"金鑰可與指定的項目進行相聯。"
+msgid "GPG Keys may be stored by uploading a key directly or copying and pasting the key in upon creation. By visiting the Providers page and selecting either a product or repository, a GPG key that has been created here can be associated with the given entity."
+msgstr "GPG 金鑰必須透過直接上傳一組金鑰，或是在建立時，將金鑰複製並貼上。藉由參訪供應者的網頁，並選擇產品或軟體庫，在此建立的 GPG 金鑰可與指定的項目進行相聯。"
 
 #: app/helpers/breadcrumb_helper.rb:244
 msgid "Global Permissions"
 msgstr "全域存取權限"
 
-#: app/views/roles/index.html.haml:9
-msgid ""
-"Global permissions allow you to create permissions that span all "
-"organizations, or choose a specific organization to apply permissions."
+#: app/views/roles/index.html.haml:8
+msgid "Global permissions allow you to create permissions that span all organizations, or choose a specific organization to apply permissions."
 msgstr "全域存取權限能讓您建立跨組織的存取權限，或選擇特定的組織以套用權限。"
 
-#: app/views/roles/index.html.haml:9
-msgid ""
-"Global permissions are permissions that span all organizations; however, "
-"organization permissions apply only to the organization they are associated "
-"with."
+#: app/views/roles/index.html.haml:8
+msgid "Global permissions are permissions that span all organizations; however, organization permissions apply only to the organization they are associated with."
 msgstr "全域存取權限乃跨越所有組織的權限；然而，組織權限只會套用至相聯的組織上。"
 
 #: app/views/password_resets/edit.html.haml:5
@@ -1558,7 +1577,7 @@ msgstr "好的"
 msgid "Group"
 msgstr "群組"
 
-#: app/views/systems/_edit.html.haml:74
+#: app/helpers/systems_helper.rb:59
 msgid "Guest"
 msgstr "客座端"
 
@@ -1570,7 +1589,7 @@ msgstr "客座端"
 msgid "History"
 msgstr "紀錄"
 
-#: app/views/systems/_edit.html.haml:77 app/views/systems/_edit.html.haml:82
+#: app/helpers/systems_helper.rb:65 app/views/systems/_edit.html.haml:77
 msgid "Host"
 msgstr "主機"
 
@@ -1578,9 +1597,29 @@ msgstr "主機"
 msgid "Host & Guest Info"
 msgstr "主機和客座端資訊"
 
+#: app/helpers/systems_helper.rb:63
+#, 
+msgid "Hypervisor"
+msgstr ""
+
 #: app/models/hypervisor.rb:22
 #, 
 msgid "Hypervisor does not support this action"
+msgstr ""
+
+#: app/controllers/system_errata_controller.rb:38
+#, 
+msgid "Hypervisors do not have errata"
+msgstr ""
+
+#: app/controllers/system_packages_controller.rb:118
+#, 
+msgid "Hypervisors do not have packages"
+msgstr ""
+
+#: app/controllers/systems_controller.rb:192
+#, 
+msgid "Hypervisors do not have software products"
 msgstr ""
 
 #: app/views/password_resets/new.html.haml:5
@@ -1605,24 +1644,18 @@ msgid "Id / Link"
 msgstr "Id / 連結"
 
 #: app/views/user_mailer/password_reset.text.haml:5
-msgid ""
-"If you did not request this password to be reset, just ignore this email and"
-" the password will continue to stay the same."
+msgid "If you did not request this password to be reset, just ignore this email and the password will continue to stay the same."
 msgstr "若您未要求重設此密碼，請忽略此電子郵件，您的密碼將會被保留為原始的密碼。"
 
 #: app/views/password_resets/new.html.haml:23
-msgid ""
-"If you do not know your login, please enter your email address below and "
-"your login will be sent to you."
+msgid "If you do not know your login, please enter your email address below and your login will be sent to you."
 msgstr "若您不知道您的使用者名稱為何，請在下方輸入您的電子郵件地址，我們將會寄給您您的使用者名稱。"
 
 #: app/views/password_resets/new.html.haml:10
-msgid ""
-"If you do not know your password, enter your login and email address below "
-"and instructions on resetting your password will be sent to you."
+msgid "If you do not know your password, enter your login and email address below and instructions on resetting your password will be sent to you."
 msgstr "若您不知道您的密碼為何，請輸入您的使用者名稱何電子郵件地址，我們將會寄給您重設密碼的相關指示。"
 
-#: app/views/providers/redhat/show.html.haml:50
+#: app/views/providers/redhat/show.html.haml:51
 msgid "Import History"
 msgstr "匯入紀錄"
 
@@ -1630,9 +1663,15 @@ msgstr "匯入紀錄"
 msgid "Import Time"
 msgstr "匯入時間"
 
-#: app/views/organizations/_new.html.haml:22
-msgid "Initial Environment"
-msgstr "初始環境"
+#: app/views/dashboard/_errata.haml:14
+#, 
+msgid "Info"
+msgstr ""
+
+#: app/models/system.rb:201
+#, 
+msgid "Initial Registration Params"
+msgstr ""
 
 #: app/views/users/_edit_form.html.haml:28
 msgid "Inline Help Enabled:"
@@ -1646,8 +1685,8 @@ msgstr "已為系統 '%{s}' 排程了套件群組 '%{g}' 的安裝程序。"
 msgid "Install of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "已為系統 '%{s}' 排程了套件 '%{p}' 的安裝程序。"
 
-#: app/views/systems/errata/_items.html.haml:16
 #: app/views/systems/errata/_index.html.haml:5
+#: app/views/systems/errata/_items.html.haml:16
 #, 
 msgid "Installing"
 msgstr ""
@@ -1656,6 +1695,7 @@ msgstr ""
 msgid "Insufficient Entitlements"
 msgstr "權利數不足"
 
+#: app/controllers/sync_plans_controller.rb:49
 #: app/views/sync_plans/_form.html.haml:15
 #: app/views/sync_plans/_edit.html.haml:23
 msgid "Interval"
@@ -1670,9 +1710,7 @@ msgid "Invalid Url"
 msgstr "無效的 URL"
 
 #: app/models/resource_type.rb:41
-msgid ""
-"Invalid resource type '%{resource_type}'. Resource Types can be one of "
-"'%{possible_types}'"
+msgid "Invalid resource type '%{resource_type}'. Resource Types can be one of '%{possible_types}'"
 msgstr "無效的資源種類「%{resource_type}」。資源類型可以是「%{possible_types}」之一"
 
 #: app/controllers/changesets_controller.rb:144
@@ -1680,9 +1718,7 @@ msgid "Invalid state"
 msgstr "無效的狀態"
 
 #: app/models/resource_type.rb:26
-msgid ""
-"Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be "
-"one of %{possible_verbs}"
+msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
 msgstr "無效的動詞「%{verb}」。資源類型「%{resource_type}」的動詞可以是「%{possible_verbs}」之一"
 
 #: app/views/errata/_show.html.haml:30
@@ -1697,11 +1733,17 @@ msgstr "不允許在 Red Hat 供應者中建立產品。"
 msgid "It is not allowed to import manifest for a custom provider."
 msgstr "不允許為自訂供應者匯入清單。"
 
-#: app/helpers/branding_helper.rb:16
-msgid "Katello"
-msgstr "Katello"
+#: app/controllers/api/products_controller.rb:42
+#, 
+msgid "It is not allowed to update a Red Hat product."
+msgstr ""
 
-#: app/mailers/user_mailer.rb:42
+#: app/controllers/api/repositories_controller.rb:56
+#, 
+msgid "It is not allowed to update a Red Hat repository."
+msgstr ""
+
+#: app/mailers/user_mailer.rb:41
 msgid "Katello Logins"
 msgstr "Katello 使用者名稱"
 
@@ -1709,15 +1751,11 @@ msgstr "Katello 使用者名稱"
 msgid "Katello Logo"
 msgstr "Katello 商標"
 
-#: app/mailers/user_mailer.rb:35
+#: app/mailers/user_mailer.rb:34
 msgid "Katello User '%s' Password Reset"
 msgstr "Katello 使用者 '%s' 密碼重設"
 
-#: app/views/layouts/_footer.haml:8
-msgid "Katello Version: "
-msgstr "Katello 版本："
-
-#: app/controllers/activation_keys_controller.rb:274
+#: app/controllers/activation_keys_controller.rb:275
 #: app/views/gpg_keys/_edit.html.haml:40
 msgid "Key"
 msgstr "金鑰"
@@ -1726,17 +1764,33 @@ msgstr "金鑰"
 msgid "Last Booted"
 msgstr "上一次開機"
 
+#: app/controllers/systems_controller.rb:298
+#, 
+msgid "Last Checked In"
+msgstr ""
+
 #: app/views/dashboard/_systems.html.haml:19
 msgid "Last Checked in Date"
 msgstr "上一次登入的日期"
 
-#: app/views/dashboard/index.html.haml:10
+#: app/views/dashboard/index.html.haml:11
 msgid "Latest Notifications"
 msgstr "最新的通知"
 
 #: app/views/notices/show.html.haml:27
 msgid "Level"
 msgstr "等級"
+
+#: app/controllers/environments_controller.rb:90
+#: app/models/kt_environment.rb:109 app/views/organizations/_edit.html.haml:36
+#, 
+msgid "Library"
+msgstr ""
+
+#: app/models/changeset.rb:15
+#, 
+msgid "Library environment cannot contain a changeset!"
+msgstr ""
 
 #: app/views/packages/_show.html.haml:70
 msgid "License"
@@ -1750,14 +1804,11 @@ msgstr "清單"
 msgid "List Actions"
 msgstr "清單動作"
 
-#: app/views/providers/redhat/show.html.haml:9
-msgid ""
-"Listed below are the subscriptions information. If you have a subscription "
-"manifest you may upload it below. This manifest may be obtained by visiting "
-"the Red Hat Customer Portal or by contacting your support representative."
+#: app/views/providers/redhat/show.html.haml:6
+msgid "Listed below are the subscriptions information. If you have a subscription manifest you may upload it below. This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."
 msgstr "以下列出的乃訂閱資訊。如果您有訂閱清單，您可藉由下方上傳。您可從 Red Hat 客戶入口網站，或聯絡業務代表以取得清單。"
 
-#: app/views/layouts/_header.haml:7
+#: app/views/layouts/_header.haml:8
 #: app/views/systems/errata/_items.html.haml:14
 msgid "Loading"
 msgstr "載入中"
@@ -1766,39 +1817,31 @@ msgstr "載入中"
 msgid "Loading "
 msgstr "載入中"
 
-#: app/views/promotions/show.html.haml:8
-#: app/views/promotions/show.html.haml:111
-msgid "Loading Changeset"
-msgstr "正在載入變更集"
-
 #: app/views/roles/_edit.html.haml:24
 msgid "Loading Permissions"
 msgstr "正在載入存取權限"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:110
+#, 
+msgid "Loading Promotion Changeset"
+msgstr ""
+
+#: app/views/roles/index.html.haml:8
 msgid "Loading Role"
 msgstr "正在載入角色"
 
-#: app/views/system_templates/index.html.haml:61
+#: app/views/system_templates/index.html.haml:60
 msgid "Loading System Template"
 msgstr "正在載入系統範本"
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Loading dependencies."
 msgstr "正在載入相依性。"
 
 #: app/views/systems/_edit.html.haml:44
 msgid "Location"
 msgstr "位置"
-
-#: app/controllers/environments_controller.rb:90
-#: app/views/organizations/_edit.html.haml:32
-msgid "Locker"
-msgstr "Locker"
-
-#: app/models/changeset.rb:15
-msgid "Locker environment can have no changeset!"
-msgstr "Locker 環境可以沒有變更集！"
 
 #: app/views/user_sessions/new.html.haml:4
 #: app/views/user_sessions/new.html.haml:18
@@ -1817,7 +1860,7 @@ msgstr "登入成功"
 msgid "Login Unknown"
 msgstr "不明的使用者名稱"
 
-#: app/views/layouts/_header.haml:23 app/views/layouts/_footer.haml:4
+#: app/views/layouts/_footer.haml:4 app/views/layouts/_header.haml:24
 msgid "Logout"
 msgstr "登出"
 
@@ -1825,8 +1868,8 @@ msgstr "登出"
 msgid "Logout Successful"
 msgstr "登出成功"
 
-#: app/views/subscriptions/index.html.haml:18
 #: app/views/providers/redhat/_subscription_details.html.haml:9
+#: app/views/subscriptions/index.html.haml:18
 msgid "Machine Type"
 msgstr "機器類型"
 
@@ -1834,12 +1877,17 @@ msgstr "機器類型"
 msgid "Manifest import for provider [ %s ] failed"
 msgstr "為供應者 [ %s ] 匯入清單失敗"
 
+#: app/views/systems/_subs.html.haml:61
+#, 
+msgid "Match System"
+msgstr ""
+
 #: app/views/organizations/_events.html.haml:16
 #: app/views/providers/redhat/_import_history.html.haml:3
 msgid "Message"
 msgstr "訊息"
 
-#: app/models/organization.rb:117
+#: app/models/organization.rb:127
 #, 
 msgid "Modify Organization and Administer Environments"
 msgstr ""
@@ -1849,7 +1897,7 @@ msgstr ""
 msgid "Modify Package Filters"
 msgstr ""
 
-#: app/models/provider.rb:118
+#: app/models/provider.rb:127
 #, 
 msgid "Modify Providers and Administer Products"
 msgstr ""
@@ -1859,12 +1907,12 @@ msgstr ""
 msgid "Modify Roles"
 msgstr ""
 
-#: app/models/organization.rb:121
+#: app/models/organization.rb:131
 #, 
 msgid "Modify Systems"
 msgstr ""
 
-#: app/models/kt_environment.rb:318
+#: app/models/kt_environment.rb:329
 #, 
 msgid "Modify Systems in Environment"
 msgstr ""
@@ -1890,31 +1938,43 @@ msgstr "更多…"
 msgid "Must be unique within an environment"
 msgstr "在環境中必須是獨一無二的"
 
-#: app/views/distributions/_show.html.haml:12
+#: app/controllers/organizations_controller.rb:218
+#: app/controllers/providers_controller.rb:237
+#: app/controllers/sync_plans_controller.rb:49
+#: app/controllers/systems_controller.rb:298
+#: app/controllers/system_templates_controller.rb:73
+#: app/controllers/filters_controller.rb:202
+#: app/controllers/roles_controller.rb:60
+#: app/controllers/gpg_keys_controller.rb:167
+#: app/controllers/changesets_controller.rb:270
+#: app/controllers/activation_keys_controller.rb:274
+#: app/views/roles/_new.html.haml:9 app/views/repositories/_new.html.haml:15
+#: app/views/repositories/_edit.html.haml:17
+#: app/views/packages/_show.html.haml:11
 #: app/views/organizations/_new.html.haml:12
+#: app/views/organizations/_new.html.haml:25
+#: app/views/sync_plans/_form.html.haml:5
+#: app/views/sync_plans/_edit.html.haml:17
+#: app/views/system_packages/_packages.html.haml:64
+#: app/views/systems/_edit.html.haml:24 app/views/changesets/_new.html.haml:10
+#: app/views/environments/_new.html.haml:13
+#: app/views/environments/_edit.html.haml:17
+#: app/views/filters/_new.html.haml:13 app/views/filters/_edit.html.haml:21
 #: app/views/system_templates/_new.html.haml:10
 #: app/views/system_templates/_promotion_details.html.haml:9
 #: app/views/system_templates/_edit.html.haml:4
-#: app/views/system_packages/_packages.html.haml:64
-#: app/views/changesets/_new.html.haml:10 app/views/products/_new.html.haml:8
-#: app/views/products/_edit.html.haml:16
-#: app/views/environments/_new.html.haml:13
-#: app/views/environments/_edit.html.haml:18
+#: app/views/products/_new.html.haml:8 app/views/products/_edit.html.haml:16
 #: app/views/activation_keys/_new.html.haml:9
 #: app/views/activation_keys/_edit.html.haml:37
-#: app/views/filters/_new.html.haml:13 app/views/filters/_edit.html.haml:21
 #: app/views/gpg_keys/_new.html.haml:9 app/views/gpg_keys/_edit.html.haml:25
-#: app/views/roles/_new.html.haml:9 app/views/sync_plans/_form.html.haml:5
-#: app/views/sync_plans/_edit.html.haml:17
-#: app/views/repositories/_new.html.haml:15
-#: app/views/repositories/_edit.html.haml:17
-#: app/views/packages/_show.html.haml:11 app/views/providers/_form.html.haml:6
+#: app/views/providers/_form.html.haml:6
 #: app/views/providers/redhat/_subscription_details.html.haml:4
-#: app/views/providers/_edit.html.haml:22 app/views/systems/_edit.html.haml:24
+#: app/views/providers/_edit.html.haml:22
+#: app/views/distributions/_show.html.haml:12
 msgid "Name"
 msgstr "名稱"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Name can not be blank."
 msgstr "名稱不能是空白的。"
 
@@ -1932,13 +1992,14 @@ msgstr ""
 msgid "Name of Your System:"
 msgstr "您的系統名稱："
 
+#: app/views/roles/_edit.html.haml:35 app/views/roles/_edit.html.haml:73
 #: app/views/changesets/_name.html.haml:3
-#: app/views/changesets/_edit.html.haml:11 app/views/roles/_edit.html.haml:35
-#: app/views/roles/_edit.html.haml:73 app/views/promotions/show.html.haml:120
+#: app/views/changesets/_edit.html.haml:11
+#: app/views/promotions/show.html.haml:119
 msgid "Name:"
 msgstr "名稱："
 
-#: app/helpers/systems_helper.rb:24 app/helpers/dashboard_helper.rb:124
+#: app/helpers/dashboard_helper.rb:130 app/helpers/systems_helper.rb:24
 msgid "Never checked in."
 msgstr "從未簽入。"
 
@@ -1950,11 +2011,11 @@ msgstr "新的啟動金鑰"
 msgid "New Changeset"
 msgstr "新的變更集"
 
-#: app/views/users/_edit_environment.html.haml:36
+#: app/views/users/_edit_environment.html.haml:39
 msgid "New Default Environment"
 msgstr "新的預設環境"
 
-#: app/views/users/_edit_environment.html.haml:29
+#: app/views/users/_edit_environment.html.haml:32
 msgid "New Default Organization:"
 msgstr "新的預設組織"
 
@@ -1986,7 +2047,7 @@ msgstr "新的同步計劃"
 msgid "New System Template"
 msgstr "新的系統範本"
 
-#: app/views/users/_new.html.haml:9
+#: app/views/users/_new.html.haml:12
 msgid "New User"
 msgstr "新使用者"
 
@@ -1995,12 +2056,14 @@ msgid "New system"
 msgstr "新的系統"
 
 #: app/controllers/api/templates_controller.rb:49
-msgid "New templates can be created only in a Locker environment"
-msgstr "新範本只能建立於 Locker 環境中"
+#, 
+msgid "New templates can be created only in a Library environment"
+msgstr ""
 
 #: app/controllers/api/templates_controller.rb:80
-msgid "New templates can be imported only into a Locker environment"
-msgstr "新範本只能匯入 Locker 環境"
+#, 
+msgid "New templates can be imported only into a Library environment"
+msgstr ""
 
 #: app/views/roles/_edit.html.haml:82
 msgid "Next >>"
@@ -2011,11 +2074,16 @@ msgstr "下一步 >>"
 msgid "No"
 msgstr "否"
 
+#: app/helpers/users_helper.rb:32
+#, 
+msgid "No Default Organization"
+msgstr ""
+
 #: app/views/subscriptions/index.html.haml:8
 msgid "No Subscriptions Available"
 msgstr "沒有可用的訂閱"
 
-#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/index.html.haml:5
 msgid "No System Templates are currently defined"
 msgstr "目前未定義任何系統範本"
 
@@ -2031,17 +2099,15 @@ msgstr "沒有範本"
 msgid "No changesets found."
 msgstr "找不到變更集。"
 
-#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:61
 #: app/views/users/_edit_environment.html.haml:3
-#: app/views/users/_edit_environment.html.haml:41
-msgid ""
-"No default environment. Select an organization to choose from available "
-"environments."
+#: app/views/users/_edit_environment.html.haml:44
+#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:63
+msgid "No default environment. Select an organization to choose from available environments."
 msgstr "沒有預設環境。請選擇可用環境中的組織。"
 
-#: app/controllers/users_controller.rb:210
-#: app/views/users/_edit_environment.html.haml:19
-#: app/views/users/_edit_environment.html.haml:23
+#: app/controllers/users_controller.rb:252
+#: app/views/users/_edit_environment.html.haml:21
+#: app/views/users/_edit_environment.html.haml:25
 msgid "No default set for this user."
 msgstr "此使用者尚未設置預設值。"
 
@@ -2049,41 +2115,35 @@ msgstr "此使用者尚未設置預設值。"
 msgid "No distributions available."
 msgstr "沒有可用的發行版。"
 
-#: app/views/promotions/show.html.haml:8
-msgid "No distributions exist in this changeset."
-msgstr "此變更集中沒有發行版。"
+#: app/views/promotions/show.html.haml:7
+#, 
+msgid "No distributions exist in this promotion changeset."
+msgstr ""
 
-#: app/views/organizations/_edit.html.haml:41
-msgid ""
-"No environments are available in this organization. Please add some "
-"environments to be able register systems to this organization."
+#: app/views/organizations/_edit.html.haml:45
+msgid "No environments are available in this organization. Please add some environments to be able register systems to this organization."
 msgstr "此組織中沒有可用的環境。請新增一些環境，以將系統註冊到組織中。"
 
 #: app/views/activation_keys/_new.html.haml:25
-msgid ""
-"No environments are currently available in this organization.  Please add "
-"some to be able to create activation keys."
+msgid "No environments are currently available in this organization.  Please add some to be able to create activation keys."
 msgstr "此組織中沒有可用的環境。請新增一些環境，以建立啟動金鑰。"
 
-#: app/views/common/_env_select.html.haml:2 app/views/users/_new.html.haml:63
-msgid ""
-"No environments are currently available in this organization.  Please add "
-"some to be able to set user default."
+#: app/views/common/_env_select.html.haml:2 app/views/users/_new.html.haml:65
+msgid "No environments are currently available in this organization.  Please add some to be able to set user default."
 msgstr "此組織中沒有可用的環境。請新增一些環境，以設置使用者預設值。"
 
-#: app/views/users/_edit_environment.html.haml:43
-msgid ""
-"No environments are currently available in this organization. Saving will "
-"set user to no default environment."
+#: app/views/users/_edit_environment.html.haml:46
+msgid "No environments are currently available in this organization. Saving will set user to no default environment."
 msgstr "此組織中沒有可用的環境。儲存會將使用者設為無預設環境。"
 
 #: app/views/promotions/_errata.html.haml:3
 msgid "No errata available."
 msgstr "沒有可用的勘誤。"
 
-#: app/views/promotions/show.html.haml:8
-msgid "No errata exist in this changeset."
-msgstr "此變更集中不存在勘誤。"
+#: app/views/promotions/show.html.haml:7
+#, 
+msgid "No errata exist in this promotion changeset."
+msgstr ""
 
 #: app/models/errors.rb:52
 msgid "No errors"
@@ -2098,7 +2158,7 @@ msgstr "未找到 %s 的事件紀錄"
 msgid "No events matching your search criteria."
 msgstr ""
 
-#: app/models/system_task.rb:313
+#: app/models/system_task.rb:306
 msgid "No new packages installed"
 msgstr "未安裝新的套件"
 
@@ -2106,7 +2166,8 @@ msgstr "未安裝新的套件"
 msgid "No package groups available."
 msgstr "沒有可用的套件群組。"
 
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/index.html.haml:15
+#: app/views/filters/_packages.html.haml:28
 msgid "No packages are currently filtered."
 msgstr "目前沒有已篩選的套件。"
 
@@ -2114,19 +2175,21 @@ msgstr "目前沒有已篩選的套件。"
 msgid "No packages available for promotion"
 msgstr "沒有可用套件以供推送"
 
+#: app/views/promotions/show.html.haml:7
+#, 
+msgid "No packages exist in this promotion changeset."
+msgstr ""
+
 #: app/views/system_templates/_product_packages.html.haml:3
-msgid "No packages available."
-msgstr "沒有可用的套件。"
+#, 
+msgid "No packages found."
+msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-msgid "No packages exist in this changeset."
-msgstr "此變更集裡沒有套件。"
-
-#: app/models/system_task.rb:311
+#: app/models/system_task.rb:304
 msgid "No packages removed"
 msgstr "未移除任何套件"
 
-#: app/models/system_task.rb:309
+#: app/models/system_task.rb:302
 msgid "No packages updated"
 msgstr "未更新任何套件"
 
@@ -2135,18 +2198,16 @@ msgstr "未更新任何套件"
 msgid "No products"
 msgstr "沒有產品"
 
-#: app/views/system_templates/index.html.haml:6
-msgid ""
-"No products are currently associated with this system template.  Please "
-"associate a product that contains distributions in order to select a "
-"distribution."
+#: app/views/system_templates/index.html.haml:5
+msgid "No products are currently associated with this system template.  Please associate a product that contains distributions in order to select a distribution."
 msgstr "目前沒有與此系統範本相聯的產品。請與一項包含發行版的產品相聯，以選擇發行版。"
 
-#: app/views/promotions/show.html.haml:8
-msgid "No products exist in the changeset."
-msgstr "變更集裡沒有產品。"
+#: app/views/promotions/show.html.haml:7
+#, 
+msgid "No products exist in the promotion changeset."
+msgstr ""
 
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/index.html.haml:15
 msgid "No products or repositories are currently associated."
 msgstr "目前沒有相聯的產品或軟體庫。"
 
@@ -2166,15 +2227,16 @@ msgstr "沒有軟體庫"
 msgid "No repositories available."
 msgstr "沒有可用的軟體庫。"
 
-#: app/views/promotions/show.html.haml:8
-msgid "No repositories exist in this changeset."
-msgstr "此變更集裡沒有軟體庫。"
+#: app/views/promotions/show.html.haml:7
+#, 
+msgid "No repositories exist in this promotion changeset."
+msgstr ""
 
 #: app/views/providers/redhat/_subscription_details.html.haml:55
 msgid "No subscriptions have been imported."
 msgstr "未匯入任何訂閱。"
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "No system templates exist in the changeset."
 msgstr "變更集裡沒有系統範本。"
 
@@ -2182,30 +2244,29 @@ msgstr "變更集裡沒有系統範本。"
 msgid "No systems found."
 msgstr "找不到系統。"
 
-#: app/models/product.rb:95 app/views/roles/_closed_permission.html.haml:13
+#: app/models/product.rb:95 app/models/system.rb:202
+#: app/views/roles/_closed_permission.html.haml:13
 #: app/views/systems/_subscription_details.html.haml:7
 #: app/views/systems/_edit.html.haml:64 app/views/systems/_edit.html.haml:88
 msgid "None"
 msgstr "無"
 
-#: app/views/products/_new.html.haml:23 app/views/products/_edit.html.haml:31
 #: app/views/repositories/_new.html.haml:30
 #: app/views/repositories/_edit.html.haml:32
+#: app/views/products/_new.html.haml:23 app/views/products/_edit.html.haml:31
 #, 
 msgid "None defined for this Organization."
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:6
-msgid ""
-"None of the associated products contain distributions, please select a "
-"product that contains at least one distribution."
+#: app/views/system_templates/index.html.haml:5
+msgid "None of the associated products contain distributions, please select a product that contains at least one distribution."
 msgstr "相聯的產品皆無包含發行版，請選擇一項包含了至少一個發行版的產品。"
 
 #: app/views/errata/_show.html.haml:78
 msgid "None."
 msgstr "無。"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Not Applied"
 msgstr "不適用"
 
@@ -2243,15 +2304,8 @@ msgid "Ok"
 msgstr ""
 
 #: app/views/providers/_products_repos.html.haml:17
-msgid ""
-"On Products & Repositories you can add your own Products and Repositories to"
-" your Provider.  This allows you to synchronize content from any remote "
-"repository to this server.  Simply add a Product and then setup one or more "
-"repositories to add to this Provider.  This feature is only available for "
-"Custom Providers."
-msgstr ""
-"在「產品與軟體庫」中，使用者可以將自己的產品與軟體庫加入供應者中。這能讓使用者從任何遠端軟體庫，將內容匯入至此伺服器。您只要新增產品，然後設定一或多個軟體庫，新增至此供應者即可。這項功能僅適用於自訂供應者（Custom"
-" Provider）。"
+msgid "On Products & Repositories you can add your own Products and Repositories to your Provider.  This allows you to synchronize content from any remote repository to this server.  Simply add a Product and then setup one or more repositories to add to this Provider.  This feature is only available for Custom Providers."
+msgstr "在「產品與軟體庫」中，使用者可以將自己的產品與軟體庫加入供應者中。這能讓使用者從任何遠端軟體庫，將內容匯入至此伺服器。您只要新增產品，然後設定一或多個軟體庫，新增至此供應者即可。這項功能僅適用於自訂供應者（Custom Provider）。"
 
 #: app/views/roles/_edit.html.haml:66
 msgid "On:"
@@ -2278,57 +2332,53 @@ msgstr "一或更多組套件名稱無效。"
 msgid "Only one Red Hat provider permitted for an Organization"
 msgstr "一個組織只能有一個 Red Hat 供應者"
 
-#: app/views/sync_management/index.html.haml:42
+#: app/views/sync_management/index.html.haml:28
 msgid "Only show syncing."
 msgstr "只顯示同步。"
 
-#: app/helpers/branding_helper.rb:20
+#: app/helpers/branding_helper.rb:23
+#, 
+msgid "Open Source Subscription Management"
+msgstr ""
+
+#: app/helpers/branding_helper.rb:21
 msgid "Open Source Systems Management"
 msgstr "開放式原始碼系統管理"
 
-#: app/controllers/organizations_controller.rb:203
+#: app/controllers/organizations_controller.rb:219
 msgid "Organization"
 msgstr "組織"
 
-#: app/controllers/organizations_controller.rb:138
+#: app/controllers/organizations_controller.rb:147
 msgid "Organization '%s' has been scheduled for background deletion."
 msgstr "組織 '%s' 已被排程進行背景刪除。"
 
-#: app/models/resource_type.rb:91
-#: app/controllers/organizations_controller.rb:201
-#: lib/navigation/organization.rb:23
+#: app/controllers/organizations_controller.rb:216
+#: app/models/resource_type.rb:91 lib/navigation/organization.rb:23
 msgid "Organizations"
 msgstr "組織"
 
 #: app/views/organizations/index.html.haml:3
-msgid ""
-"Organizations allow content and systems to be separated by logical "
-"divisions.  To edit the environments within an organization, click on that "
-"organization and then click on the desired environment."
+msgid "Organizations allow content and systems to be separated by logical divisions.  To edit the environments within an organization, click on that organization and then click on the desired environment."
 msgstr "組織可透過邏輯部門，區分內容與系統。若要編輯組織內的環境，請選擇該組織，然後點選您希望編輯的環境。"
 
+#: app/views/promotions/show.html.haml:7
 #: app/views/errata/_packages.html.haml:17
-#: app/views/promotions/show.html.haml:8
 msgid "Package"
 msgstr "套件"
 
-#: app/views/promotions/show.html.haml:81
+#: app/views/promotions/show.html.haml:80
 msgid "Package Dependencies"
 msgstr "套件相依性"
 
 #: app/controllers/filters_controller.rb:200
-#: lib/navigation/content_management.rb:153
+#: lib/navigation/content_management.rb:152
 msgid "Package Filters"
 msgstr "套件篩選器"
 
 #: app/views/filters/index.html.haml:4
-msgid ""
-"Package Filters allow you to blacklist packages from being promoted into "
-"subsequent environments. Simply create a filter and add either a package "
-"name or regular expression to the filter.  You can associate the filter with"
-" entire products or individual repositories within any product."
-msgstr ""
-"套件篩選器能讓您將套件納入黑名單中，使其不被推送至其後的環境中。只要建立一個篩選器，並加入套件名稱或是正規表示式至篩選器中即可。您可將該篩選器套用在整項產品，或是任何產品中的個別軟體庫上。"
+msgid "Package Filters allow you to blacklist packages from being promoted into subsequent environments. Simply create a filter and add either a package name or regular expression to the filter.  You can associate the filter with entire products or individual repositories within any product."
+msgstr "套件篩選器能讓您將套件納入黑名單中，使其不被推送至其後的環境中。只要建立一個篩選器，並加入套件名稱或是正規表示式至篩選器中即可。您可將該篩選器套用在整項產品，或是任何產品中的個別軟體庫上。"
 
 #: app/views/packages/_show.html.haml:76
 msgid "Package Group"
@@ -2362,9 +2412,9 @@ msgid "Package Group Update scheduled by %s"
 msgstr ""
 
 #: app/helpers/breadcrumb_helper.rb:382 app/helpers/breadcrumb_helper.rb:402
-#: app/views/system_templates/index.html.haml:6
-#: app/views/system_templates/_product_detail.html.haml:10
 #: app/views/system_packages/_packages.html.haml:75
+#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/_product_detail.html.haml:10
 msgid "Package Groups"
 msgstr "套件群組"
 
@@ -2375,6 +2425,11 @@ msgstr "套件安裝"
 #: app/models/system_task.rb:30
 #, 
 msgid "Package Install scheduled by %s"
+msgstr ""
+
+#: app/views/filters/_packages.html.haml:17
+#, 
+msgid "Package Name"
 msgstr ""
 
 #: app/models/system_task.rb:47
@@ -2399,24 +2454,24 @@ msgstr "套件更新"
 msgid "Package Update scheduled by %s"
 msgstr ""
 
-#: app/models/system_template.rb:288
+#: app/models/system_template.rb:290
 msgid "Package group '%s' not found in this template."
 msgstr "此範本中找不到套件群組 '%s'。"
 
-#: app/models/system_template.rb:300
+#: app/models/system_template.rb:302
 msgid "Package group category '%s' not found in this template."
 msgstr "此範本中找不到套件群組類別 '%s'。"
 
 #: app/helpers/breadcrumb_helper.rb:49 app/helpers/breadcrumb_helper.rb:153
 #: app/helpers/breadcrumb_helper.rb:378 app/helpers/breadcrumb_helper.rb:399
-#: app/views/system_templates/_promotion_details.html.haml:29
-#: app/views/system_templates/index.html.haml:6
-#: app/views/system_templates/_product_detail.html.haml:7
 #: app/views/system_packages/_packages.html.haml:73
 #: app/views/changesets/_edit.html.haml:58
+#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/_product_detail.html.haml:7
+#: app/views/system_templates/_promotion_details.html.haml:29
 #: app/views/promotions/_detail.html.haml:18
-#: app/views/promotions/show.html.haml:8 lib/navigation/systems.rb:79
-#: lib/navigation/content_management.rb:204
+#: app/views/promotions/show.html.haml:7 lib/navigation/systems.rb:79
+#: lib/navigation/content_management.rb:203
 msgid "Packages"
 msgstr "套件"
 
@@ -2424,7 +2479,7 @@ msgstr "套件"
 msgid "Packages must be provided"
 msgstr "必須提供套件"
 
-#: app/models/system_template.rb:276
+#: app/models/system_template.rb:278
 msgid "Parameter '%s' not found in the template."
 msgstr "範本中找不到參數 '%s'。"
 
@@ -2433,7 +2488,7 @@ msgstr "範本中找不到參數 '%s'。"
 msgid "Parameters"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Partial Products"
 msgstr "部分產品"
 
@@ -2456,7 +2511,7 @@ msgid "Password reset token has expired for user '%{s}'."
 msgstr "使用者 '%{s}' 的密碼重設 token 已過期。"
 
 #: app/views/password_resets/edit.html.haml:22
-#: app/views/users/_new.html.haml:25
+#: app/views/users/_new.html.haml:27
 msgid "Password:"
 msgstr "密碼："
 
@@ -2480,14 +2535,14 @@ msgstr "存取權限，給："
 msgid "Permissions"
 msgstr "存取權限"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Permissions for this role."
 msgstr "這個角色的存取權限。"
 
-#: app/models/system.rb:68 app/controllers/activation_keys_controller.rb:342
-#: app/controllers/providers_controller.rb:282
-#: app/controllers/subscriptions_controller.rb:57
 #: app/helpers/systems_helper.rb:42
+#: app/controllers/subscriptions_controller.rb:57
+#: app/controllers/providers_controller.rb:286
+#: app/controllers/activation_keys_controller.rb:343 app/models/system.rb:68
 msgid "Physical"
 msgstr "實體的"
 
@@ -2495,75 +2550,84 @@ msgstr "實體的"
 msgid "Pick your Environment to download template from:"
 msgstr "選擇您欲由哪個環境下載範本："
 
-#: app/controllers/sync_plans_controller.rb:50
 #: app/controllers/sync_schedules_controller.rb:39
 #: app/controllers/sync_schedules_controller.rb:45
+#: app/controllers/sync_plans_controller.rb:50
 msgid "Plan"
 msgstr "計劃"
 
-#: app/controllers/api/systems_controller.rb:88
-#: app/controllers/api/subscriptions_controller.rb:36
+#: app/controllers/api/subscriptions_controller.rb:45
+#, 
+msgid "Please provide entitlement id"
+msgstr ""
+
+#: app/controllers/api/subscriptions_controller.rb:38
+#: app/controllers/api/systems_controller.rb:93
 msgid "Please provide pool and quantity"
 msgstr "請提供集區與數量"
 
-#: app/controllers/api/systems_controller.rb:95
-#: app/controllers/api/subscriptions_controller.rb:43
+#: app/controllers/api/systems_controller.rb:100
 msgid "Please provide pool id"
 msgstr "請提供集區 ID"
+
+#: app/controllers/api/subscriptions_controller.rb:57
+#, 
+msgid "Please provide serial id"
+msgstr ""
 
 #: app/views/common/403.html.haml:5
 msgid "Please request the required privileges from an administrator."
 msgstr "請透過管理員取得必要的存取權限。"
 
-#: app/views/roles/index.html.haml:9
-msgid ""
-"Please select Permissions to view and add permissions for this role or Users"
-" to see current users with this role."
+#: app/views/roles/index.html.haml:8
+msgid "Please select Permissions to view and add permissions for this role or Users to see current users with this role."
 msgstr "請選擇「存取權限」，以檢視、新增這角色的存取權限，或選擇「使用者」以檢視擁有此角色的使用者。"
 
-#: app/views/roles/index.html.haml:9
-msgid ""
-"Please select Permissions to view permissions for this role or Users to see "
-"current users with this role."
+#: app/views/roles/index.html.haml:8
+msgid "Please select Permissions to view permissions for this role or Users to see current users with this role."
 msgstr "請選擇「存取權限」，以檢視此角色的存取權限，或選擇「使用者」以檢視擁有此角色的使用者。"
 
 #: app/models/activation_key.rb:87
 msgid "Pool %s has no product associated"
 msgstr "集區 %s 沒有相聯的產品"
 
-#: app/views/users/_edit_form.html.haml:74
+#: app/views/users/_edit_form.html.haml:72
 #, 
 msgid "Preferred Locale"
 msgstr ""
 
 #: app/views/environments/_new.html.haml:24
-#: app/views/environments/_edit.html.haml:29
+#: app/views/environments/_edit.html.haml:28
 msgid "Prior Environment"
 msgstr "之前的環境"
 
-#: app/views/promotions/show.html.haml:73
-msgid "Processing changeset modifications, please wait."
-msgstr "處理變更集的變動，請稍候。"
+#: app/views/promotions/show.html.haml:72
+#, 
+msgid "Processing promotion changeset modifications, please wait."
+msgstr ""
 
-#: app/views/sync_management/index.html.haml:21
-#: app/views/dashboard/_errata.haml:11
-#: app/views/subscriptions/index.html.haml:13
-#: app/views/promotions/show.html.haml:8
+#: app/views/systems/_products.html.haml:12
+#: app/views/dashboard/_errata.haml:12
+#: app/views/filters/_products.html.haml:22
+#: app/views/promotions/show.html.haml:7
+#: app/views/gpg_keys/_products_repos.html.haml:47
 #: app/views/providers/_products_repos.html.haml:38
 #: app/views/providers/redhat/_repo_whitelist.html.haml:3
-#: app/views/systems/_products.html.haml:12
+#: app/views/sync_management/index.html.haml:34
+#: app/views/subscriptions/index.html.haml:13
 msgid "Product"
 msgstr "產品"
 
-#: app/models/system_template.rb:241 app/models/system_template.rb:258
+#: app/models/system_template.rb:243 app/models/system_template.rb:260
 msgid "Product '%s' is already present in the template."
 msgstr "產品 '%s' 已存在範本中。"
 
-#: app/models/system_template.rb:239 app/models/system_template.rb:256
+#: app/models/system_template.rb:241 app/models/system_template.rb:258
+#: app/models/system_template.rb:327
 msgid "Product '%s' not found in this environment."
 msgstr "此環境中找不到產品 '%s'。"
 
-#: app/views/systems/_subs.html.haml:43 app/views/systems/_subs.html.haml:102
+#: app/views/systems/_subs.html.haml:43 app/views/systems/_subs.html.haml:107
 msgid "Product Name: "
 msgstr "產品名稱："
 
@@ -2578,11 +2642,11 @@ msgstr "產品："
 
 #: app/helpers/breadcrumb_helper.rb:134 app/helpers/breadcrumb_helper.rb:363
 #: app/helpers/breadcrumb_helper.rb:400
+#: app/views/system_templates/index.html.haml:5
 #: app/views/system_templates/_promotion_details.html.haml:21
-#: app/views/system_templates/index.html.haml:6
-#: app/views/gpg_keys/_products_repos.html.haml:20
 #: app/views/promotions/_detail.html.haml:6
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
+#: app/views/gpg_keys/_products_repos.html.haml:25
 msgid "Products"
 msgstr "產品"
 
@@ -2590,8 +2654,8 @@ msgstr "產品"
 msgid "Products & Repositories"
 msgstr "產品與軟體庫"
 
-#: lib/navigation/content_management.rb:245
-#: lib/navigation/content_management.rb:262
+#: lib/navigation/content_management.rb:243
+#: lib/navigation/content_management.rb:260
 msgid "Products and Repositories"
 msgstr "產品與軟體庫"
 
@@ -2603,22 +2667,22 @@ msgstr "組織中的產品必須擁有獨一無二的名稱。"
 msgid "Progress:"
 msgstr "進度："
 
-#: app/views/promotions/show.html.haml:147
+#: app/views/promotions/show.html.haml:146
 msgid "Promote"
 msgstr "推送"
 
-#: app/models/kt_environment.rb:322
+#: app/models/kt_environment.rb:333
 msgid "Promote Changesets in Environment"
 msgstr "在環境中推送變更集"
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Promote to "
 msgstr "推送至"
 
 #: app/views/promotions/_distributions.html.haml:11
-#: app/views/promotions/_package_items.html.haml:5
 #: app/views/promotions/_repo_items.html.haml:5
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/_package_items.html.haml:5
+#: app/views/promotions/show.html.haml:7
 msgid "Promoted"
 msgstr "已推送"
 
@@ -2631,43 +2695,58 @@ msgstr ""
 msgid "Promoting"
 msgstr "推送中"
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Promoting..."
 msgstr "推送中…"
+
+#: app/views/promotions/show.html.haml:7
+#, 
+msgid "Promotino Changeset is empty."
+msgstr ""
+
+#: app/views/promotions/show.html.haml:116
+#, 
+msgid "Promotion Changeset Details"
+msgstr ""
+
+#: lib/navigation/content_management.rb:142
+#, 
+msgid "Promotion Changeset History"
+msgstr ""
+
+#: app/views/promotions/show.html.haml:149
+#: app/views/promotions/show.html.haml:152
+#, 
+msgid "Promotion Changesets"
+msgstr ""
 
 #: app/views/changesets/_edit.html.haml:25
 msgid "Promotion Date:"
 msgstr "推送日期："
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Promotion Failed"
 msgstr "推送失敗"
 
-#: app/models/changeset.rb:327
+#: app/models/changeset.rb:328
 #, 
 msgid "Promotion of changeset '%{name}' failed."
 msgstr ""
 
-#: lib/navigation/content_management.rb:133
+#: lib/navigation/content_management.rb:132
 msgid "Promotions"
 msgstr "推送"
 
-#: app/views/dashboard/index.html.haml:11
+#: app/views/dashboard/index.html.haml:12
 msgid "Promotions Overview"
 msgstr "推送概要"
 
-#: app/views/promotions/show.html.haml:85
-msgid ""
-"Promotions allow you to promote content from one environment to the next "
-"along a promotion path. Once you have created a changeset, clicking \"Add\" "
-"next to  one or more products will add them to the change set. If products "
-"already exist in the next environment, you may promote other types of "
-"content. Once you have created a change set, click the \"Promote\" button to"
-" commit it to the next environment."
+#: app/views/promotions/show.html.haml:84
+#, 
+msgid "Promotions allow you to promote content from one environment to the next along a promotion path. Once you have created a promotion changeset, clicking \"Add\" next to  one or more products will add them to the promotion changeset. If products already exist in the next environment, you may promote other types of content. Once you have created a change set, click the \"Promote\" button to commit it to the next environment."
 msgstr ""
-"「推送」能讓您從一個環境中沿著推送路徑，推送內容至另一個環境中。一旦您建立了變更集之後，請按下一或多項產品旁邊的「新增」，將這些產品加入到變更集中。如果產品已經存在於下一個環境中，您可以推送其它內容類型。一旦您建立了變更集之後，請按下「推送」按鈕以將它推送至下一個環境。"
 
-#: app/controllers/providers_controller.rb:234
+#: app/controllers/providers_controller.rb:238
 msgid "Provider"
 msgstr "供應者"
 
@@ -2675,26 +2754,19 @@ msgstr "供應者"
 msgid "Provider: "
 msgstr "供應者："
 
-#: app/models/resource_type.rb:95 app/controllers/providers_controller.rb:232
-#: lib/navigation/content_management.rb:56
+#: app/controllers/providers_controller.rb:235 app/models/resource_type.rb:95
 msgid "Providers"
 msgstr "供應者"
 
 #: app/views/providers/index.html.haml:3
-msgid ""
-"Providers provide many types of content such as packages, errata, kickstart "
-"trees, and installation disc images.  A provider may be delivering all of "
-"your paid content or it could simply be a local yum repository providing a "
-"few yum repos."
-msgstr ""
-"供應者提供許多類型的內容（例如套件、勘誤、kickstart 目錄樹，以及安裝光碟映像）。供應者可能會提供您所有的付費內容，或是僅作為一個本機 yum "
-"軟體庫，以提供數個 yum repo。"
+msgid "Providers provide many types of content such as packages, errata, kickstart trees, and installation disc images.  A provider may be delivering all of your paid content or it could simply be a local yum repository providing a few yum repos."
+msgstr "供應者提供許多類型的內容（例如套件、勘誤、kickstart 目錄樹，以及安裝光碟映像）。供應者可能會提供您所有的付費內容，或是僅作為一個本機 yum 軟體庫，以提供數個 yum repo。"
 
 #: app/views/packages/_dependencies.html.haml:21
 msgid "Provides"
 msgstr "供應者"
 
-#: app/views/systems/_subs.html.haml:20 app/views/systems/_subs.html.haml:66
+#: app/views/systems/_subs.html.haml:20 app/views/systems/_subs.html.haml:71
 msgid "Quantity"
 msgstr "數量"
 
@@ -2707,17 +2779,17 @@ msgstr "已納入佇列。"
 msgid "Read Activation Keys"
 msgstr ""
 
-#: app/models/kt_environment.rb:320
+#: app/models/kt_environment.rb:331
 #, 
 msgid "Read Changesets in Environment"
 msgstr ""
 
-#: app/models/kt_environment.rb:315
+#: app/models/kt_environment.rb:326
 #, 
 msgid "Read Environment Contents"
 msgstr ""
 
-#: app/models/organization.rb:118
+#: app/models/organization.rb:128
 #, 
 msgid "Read Organization"
 msgstr ""
@@ -2727,7 +2799,7 @@ msgstr ""
 msgid "Read Package Filters"
 msgstr ""
 
-#: app/models/provider.rb:117
+#: app/models/provider.rb:126
 #, 
 msgid "Read Providers"
 msgstr ""
@@ -2737,17 +2809,17 @@ msgstr ""
 msgid "Read Roles"
 msgstr ""
 
-#: app/models/system_template.rb:363
+#: app/models/system_template.rb:392
 #, 
 msgid "Read System Templates"
 msgstr ""
 
-#: app/models/organization.rb:119
+#: app/models/organization.rb:129
 #, 
 msgid "Read Systems"
 msgstr ""
 
-#: app/models/kt_environment.rb:316
+#: app/models/kt_environment.rb:327
 #, 
 msgid "Read Systems in Environment"
 msgstr ""
@@ -2758,10 +2830,11 @@ msgid "Read Users"
 msgstr ""
 
 #: lib/navigation/content_management.rb:67
-msgid "Red Hat"
-msgstr "Red Hat"
+#, 
+msgid "Red Hat Content Provider"
+msgstr ""
 
-#: app/views/providers/redhat/show.html.haml:17
+#: app/views/providers/redhat/show.html.haml:14
 msgid "Red Hat Provider Details"
 msgstr "Red Hat 供應者詳細資訊"
 
@@ -2769,11 +2842,11 @@ msgstr "Red Hat 供應者詳細資訊"
 msgid "Red Hat provider can not be deleted"
 msgstr "不能刪除 Red Hat 供應者"
 
-#: app/models/organization.rb:120
+#: app/models/organization.rb:130
 msgid "Register Systems"
 msgstr "註冊系統"
 
-#: app/models/kt_environment.rb:317
+#: app/models/kt_environment.rb:328
 msgid "Register Systems in Environment"
 msgstr "在環境中註冊系統"
 
@@ -2785,29 +2858,36 @@ msgstr "已註冊"
 msgid "Release"
 msgstr "發行版"
 
-#: app/views/system_templates/index.html.haml:88
+#: app/views/roles/index.html.haml:8
 #: app/views/system_packages/_packages.html.haml:109
+#: app/views/systems/_actions.html.haml:13
+#: app/views/common/_common_i18n.html.haml:3
+#: app/views/system_templates/index.html.haml:87
 #: app/views/activation_keys/_applied_subscriptions.html.haml:37
 #: app/views/activation_keys/_applied_subscriptions.html.haml:38
-#: app/views/roles/index.html.haml:9 app/views/promotions/show.html.haml:8
-#: app/views/promotions/show.html.haml:133
-#: app/views/common/_common_i18n.html.haml:3
-#: app/views/systems/_actions.html.haml:13
+#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:132
 msgid "Remove"
 msgstr "移除"
 
-#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 #: app/views/activation_keys/_available_subscriptions.html.haml:7
 #: app/views/activation_keys/_edit.html.haml:15
+#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 msgid "Remove Activation Key"
 msgstr "移除啟動金鑰"
 
-#: app/views/environments/_edit.html.haml:10
+#: app/views/common/_common_i18n.html.haml:3
+#, 
+msgid "Remove All"
+msgstr ""
+
+#: app/views/environments/_edit.html.haml:9
 msgid "Remove Environment"
 msgstr "移除環境"
 
+#: app/views/filters/_packages.html.haml:6
 #: app/views/filters/_products.html.haml:12
-#: app/views/filters/_packages.html.haml:6 app/views/filters/_edit.html.haml:8
+#: app/views/filters/_edit.html.haml:8
 msgid "Remove Filter"
 msgstr "移除篩選器"
 
@@ -2816,7 +2896,8 @@ msgstr "移除篩選器"
 msgid "Remove GPG Key"
 msgstr "移除 GPG 金鑰"
 
-#: app/views/organizations/_edit.html.haml:8
+#: app/views/organizations/_edit.html.haml:9
+#: app/views/organizations/_edit.html.haml:12
 msgid "Remove Organization"
 msgstr "移除組織"
 
@@ -2885,7 +2966,7 @@ msgstr "移除系統"
 msgid "Remove System(s)"
 msgstr "移除系統"
 
-#: app/models/kt_environment.rb:319
+#: app/models/kt_environment.rb:330
 msgid "Remove Systems in Environment"
 msgstr "移除環境中的系統"
 
@@ -2894,7 +2975,7 @@ msgstr "移除環境中的系統"
 msgid "Remove User"
 msgstr "移除使用者"
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Removed:"
 msgstr "已移除："
 
@@ -2906,15 +2987,15 @@ msgstr "正在移除套件群組..."
 msgid "Removing Package..."
 msgstr "正在移除套件..."
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Removing..."
 msgstr "移除中…"
 
-#: app/controllers/application_controller.rb:194
+#: app/controllers/application_controller.rb:210
 msgid "Rendering 404:"
 msgstr "正在處理 404："
 
-#: app/controllers/application_controller.rb:208
+#: app/controllers/application_controller.rb:224
 msgid "Rendering 500:"
 msgstr "正在處理 505："
 
@@ -2922,7 +3003,7 @@ msgstr "正在處理 505："
 msgid "Repo Type: "
 msgstr "軟體庫類型："
 
-#: app/controllers/api/errata_controller.rb:25
+#: app/controllers/api/errata_controller.rb:35
 msgid "Repo id or environment must be provided"
 msgstr "必須提供軟體庫 ID 或環境"
 
@@ -2932,21 +3013,42 @@ msgstr "軟體庫"
 
 #: app/helpers/breadcrumb_helper.rb:57 app/helpers/breadcrumb_helper.rb:374
 #: app/helpers/breadcrumb_helper.rb:401
-#: app/views/system_templates/index.html.haml:6
-#: app/views/system_templates/_product_detail.html.haml:4
 #: app/views/changesets/_edit.html.haml:62
-#: app/views/gpg_keys/_products_repos.html.haml:28
+#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/_product_detail.html.haml:4
 #: app/views/promotions/_detail.html.haml:26
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
+#: app/views/gpg_keys/_products_repos.html.haml:40
 msgid "Repositories"
 msgstr "軟體庫"
 
-#: app/views/promotions/show.html.haml:8
+#: app/controllers/api/repositories_controller.rb:62
+#, 
+msgid "Repositories can be deleted only in Library environment."
+msgstr ""
+
+#: app/views/promotions/show.html.haml:7
+#: app/views/gpg_keys/_products_repos.html.haml:52
 #: app/views/providers/_products_repos.html.haml:46
 msgid "Repository"
 msgstr "軟體庫"
 
-#: app/views/providers/redhat/show.html.haml:20
+#: app/models/system_template.rb:321 app/models/system_template.rb:332
+#, 
+msgid "Repository '%s' is already present in the template."
+msgstr ""
+
+#: app/models/system_template.rb:320 app/models/system_template.rb:331
+#, 
+msgid "Repository '%s' not found in this environment."
+msgstr ""
+
+#: app/models/system_template.rb:338
+#, 
+msgid "Repository '%s' not found in this template."
+msgstr ""
+
+#: app/views/providers/redhat/show.html.haml:17
 msgid "Repository Url"
 msgstr "軟體庫 URL"
 
@@ -2959,9 +3061,8 @@ msgstr "軟體庫無法停用，因為該軟體庫已推送。"
 msgid "Request"
 msgstr ""
 
-#: app/controllers/password_resets_controller.rb:98
-msgid ""
-"Request received has either an invalid or expired token.  Token: '%{t}'"
+#: app/controllers/password_resets_controller.rb:101
+msgid "Request received has either an invalid or expired token.  Token: '%{t}'"
 msgstr "收到的請求包含了無效或是過期的 token。Token：'%{t}'"
 
 #: app/views/packages/_dependencies.html.haml:13
@@ -2972,8 +3073,8 @@ msgstr "需要"
 msgid "Reset Password"
 msgstr "重設密碼"
 
-#: app/views/sync_management/index.html.haml:25
 #: app/views/system_events/_details.html.haml:28
+#: app/views/sync_management/index.html.haml:38
 msgid "Result"
 msgstr "結果"
 
@@ -2981,12 +3082,12 @@ msgstr "結果"
 msgid "Revert Filter"
 msgstr "回復篩選"
 
-#: app/views/promotions/show.html.haml:8
-#: app/views/promotions/show.html.haml:143
+#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:142
 msgid "Review"
 msgstr "檢視"
 
-#: app/controllers/roles_controller.rb:60
+#: app/controllers/roles_controller.rb:61
 msgid "Role"
 msgstr "角色"
 
@@ -2994,7 +3095,7 @@ msgstr "角色"
 msgid "Role Details"
 msgstr "角色的詳細資料"
 
-#: app/models/resource_type.rb:98 app/controllers/roles_controller.rb:58
+#: app/controllers/roles_controller.rb:58 app/models/resource_type.rb:98
 #: app/views/roles/_self_role_edit.html.haml:13
 #: lib/navigation/administration.rb:29 lib/navigation/administration.rb:65
 msgid "Roles"
@@ -3009,25 +3110,23 @@ msgstr ""
 msgid "Running."
 msgstr "執行中。"
 
-#: app/views/systems/_subs.html.haml:18 app/views/systems/_subs.html.haml:64
+#: app/views/systems/_subs.html.haml:18 app/views/systems/_subs.html.haml:69
 msgid "SLA"
 msgstr "SLA"
 
+#: app/views/roles/_new.html.haml:18 app/views/roles/_permission.html.haml:39
 #: app/views/organizations/_new.html.haml:36
+#: app/views/sync_plans/_form.html.haml:31 app/views/systems/_new.html.haml:49
+#: app/views/password_resets/edit.html.haml:36
+#: app/views/filters/_new.html.haml:23 app/views/common/_edit_i18n.html.haml:4
+#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:92
 #: app/views/system_templates/_new.html.haml:21
-#: app/views/system_templates/index.html.haml:6
-#: app/views/system_templates/index.html.haml:93
 #: app/views/activation_keys/_new.html.haml:40
 #: app/views/activation_keys/_edit.html.haml:74
-#: app/views/password_resets/edit.html.haml:36
-#: app/views/filters/_new.html.haml:23 app/views/gpg_keys/_new.html.haml:19
-#: app/views/roles/_new.html.haml:18 app/views/roles/_permission.html.haml:39
-#: app/views/sync_plans/_form.html.haml:31
-#: app/views/common/_edit_i18n.html.haml:4
-#: app/views/providers/_form.html.haml:17
-#: app/views/users/_edit_form.html.haml:61
-#: app/views/users/_edit_environment.html.haml:52
-#: app/views/systems/_new.html.haml:49
+#: app/views/gpg_keys/_new.html.haml:19 app/views/providers/_form.html.haml:17
+#: app/views/users/_edit_environment.html.haml:55
+#: app/views/users/_edit_form.html.haml:59
 msgid "Save"
 msgstr "儲存"
 
@@ -3043,7 +3142,7 @@ msgstr "儲存篩選器"
 msgid "Save Roles"
 msgstr "儲存角色"
 
-#: app/views/users/_new.html.haml:74
+#: app/views/users/_new.html.haml:75
 msgid "Save User"
 msgstr "儲存使用者"
 
@@ -3051,7 +3150,7 @@ msgstr "儲存使用者"
 msgid "Save as Favorite"
 msgstr "儲存為我的最愛"
 
-#: app/views/system_templates/index.html.haml:65
+#: app/views/system_templates/index.html.haml:64
 msgid "Saving System Template"
 msgstr "儲存系統範本"
 
@@ -3064,34 +3163,40 @@ msgstr "儲存中…"
 msgid "Scope"
 msgstr "範圍"
 
-#: app/views/system_templates/index.html.haml:54
-#: app/views/notices/show.html.haml:19 app/views/promotions/show.html.haml:8
+#: app/views/notices/show.html.haml:19 app/views/common/_panel.html.haml:51
+#: app/views/common/_panel.html.haml:55
+#: app/views/system_templates/index.html.haml:53
+#: app/views/promotions/show.html.haml:7
 #: app/views/promotions/show.html.haml:173
 #: app/views/promotions/show.html.haml:174
 #: app/views/promotions/show.html.haml:175
-#: app/views/common/_panel.html.haml:51 app/views/common/_panel.html.haml:55
 msgid "Search"
 msgstr "搜尋"
 
-#: app/views/system_templates/index.html.haml:6
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/index.html.haml:15
+#: app/views/system_templates/index.html.haml:5
 msgid "Search available package names..."
 msgstr "搜尋可用的套件名稱…"
 
-#: app/views/system_templates/index.html.haml:6
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/index.html.haml:15
+#: app/views/system_templates/index.html.haml:5
 msgid "Search available product names..."
 msgstr "搜尋可用的產品名稱…"
 
-#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/index.html.haml:5
 msgid "Search available repository names..."
 msgstr "搜尋可用的軟體庫名稱…"
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Search is not available for the current content"
 msgstr "搜尋無法用於目前的內容"
 
-#: app/views/sync_management/index.html.haml:38
+#: app/views/common/_panel.html.haml:50 app/views/common/_panel.html.haml:54
+#, 
+msgid "Search..."
+msgstr ""
+
+#: app/views/sync_management/index.html.haml:24
 msgid "Select All"
 msgstr "全部選擇"
 
@@ -3099,13 +3204,13 @@ msgstr "全部選擇"
 msgid "Select Architecture"
 msgstr "選擇架構"
 
-#: app/views/sync_management/index.html.haml:35
-#: app/views/common/_panel.html.haml:24
 #: app/views/systems/_actions.html.haml:18
+#: app/views/common/_panel.html.haml:24
+#: app/views/sync_management/index.html.haml:21
 msgid "Select None"
 msgstr "全部不選擇"
 
-#: app/helpers/users_helper.rb:28
+#: app/helpers/users_helper.rb:35
 msgid "Select Organization"
 msgstr "選擇組織"
 
@@ -3117,16 +3222,16 @@ msgstr "選擇要套用到所選產品的計劃"
 msgid "Select Products to schedule"
 msgstr "選擇要排程的產品"
 
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/index.html.haml:15
 msgid "Select Repositories: "
 msgstr "選擇軟體庫："
 
-#: app/views/activation_keys/index.html.haml:18
+#: app/views/activation_keys/index.html.haml:21
 msgid "Select a System Template"
 msgstr "選擇系統範本"
 
 #: app/helpers/breadcrumb_helper.rb:403
-#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/index.html.haml:5
 msgid "Selected Distribution"
 msgstr "選擇散佈版本"
 
@@ -3154,11 +3259,11 @@ msgstr "嚴重性：中等"
 msgid "Signature"
 msgstr "簽章"
 
-#: app/views/sync_management/index.html.haml:24
+#: app/views/sync_management/index.html.haml:37
 msgid "Size (Packages)"
 msgstr "大小（套件）"
 
-#: app/views/systems/_subs.html.haml:65
+#: app/views/systems/_subs.html.haml:70
 msgid "Sockets"
 msgstr "插槽"
 
@@ -3166,29 +3271,26 @@ msgstr "插槽"
 msgid "Software"
 msgstr "軟體"
 
-#: app/views/promotions/show.html.haml:8
-msgid ""
-"Some changeset modifications have not finished processing, are you sure you "
-"want to leave the page?  By leaving you may lose some modifications."
-msgstr "修改變更集尚未完成，確定要離開此頁面？離開此頁面會遺失部分修改。"
+#: app/views/promotions/show.html.haml:7
+#, 
+msgid "Some promotion changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications."
+msgstr ""
 
 #: app/views/common/500.html.haml:4
-msgid ""
-"Sorry about that! It seems something went wrong.  If you continue having "
-"trouble with this, please contact an Administrator."
+msgid "Sorry about that! It seems something went wrong.  If you continue having trouble with this, please contact an Administrator."
 msgstr "很抱歉，有些地方出錯了。如果您繼續遇到此問題，請聯絡系統管理者。"
 
 #: app/views/packages/_show.html.haml:88
 msgid "Source Package"
 msgstr "來源套件"
 
-#: app/views/providers/redhat/show.html.haml:28
+#: app/views/providers/redhat/show.html.haml:25
 msgid "Specify Local Manifest"
 msgstr "指定本地清單"
 
-#: app/views/activation_keys/_subscriptions.html.haml:6
 #: app/views/sync_plans/_form.html.haml:20
 #: app/views/sync_plans/_edit.html.haml:26
+#: app/views/activation_keys/_subscriptions.html.haml:6
 msgid "Start Date"
 msgstr "起始日期"
 
@@ -3196,7 +3298,7 @@ msgstr "起始日期"
 msgid "Start Date and Time can't be blank"
 msgstr "起始日期與時間不能留白"
 
-#: app/views/sync_management/index.html.haml:22
+#: app/views/sync_management/index.html.haml:35
 msgid "Start Time"
 msgstr "起始時間"
 
@@ -3205,29 +3307,26 @@ msgstr "起始時間"
 msgid "Strong"
 msgstr "強"
 
-#: app/views/systems/_subs.html.haml:113 app/views/systems/_subs.html.haml:114
+#: app/views/systems/_subs.html.haml:118 app/views/systems/_subs.html.haml:119
 msgid "Subscribe"
 msgstr "訂閱"
 
+#: app/views/systems/_subs.html.haml:17 app/views/systems/_subs.html.haml:68
 #: app/views/activation_keys/_subscriptions.html.haml:4
-#: app/views/providers/redhat/show.html.haml:43
-#: app/views/systems/_subs.html.haml:17 app/views/systems/_subs.html.haml:63
+#: app/views/providers/redhat/show.html.haml:44
 msgid "Subscription"
 msgstr "訂閱"
 
-#: app/controllers/providers_controller.rb:83
+#: app/controllers/providers_controller.rb:86
 msgid "Subscription manifest must be specified on upload."
 msgstr "訂閱清單必須在上傳時指定。"
 
-#: app/controllers/providers_controller.rb:72
+#: app/controllers/providers_controller.rb:74
 msgid "Subscription manifest upload for provider '%{name}' failed."
 msgstr "為供應者「%{name}」上傳訂閱清單失敗。"
 
-#: app/controllers/providers_controller.rb:69
-msgid ""
-"Subscription manifest uploaded successfully for provider '%{name}'. Please "
-"enable the repositories you want to sync by selecting 'Enable Repositories' "
-"and selecting individual repositories to be enabled."
+#: app/controllers/providers_controller.rb:71
+msgid "Subscription manifest uploaded successfully for provider '%{name}'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled."
 msgstr "供應者 %{name} 的訂閱清單已成功上傳。請啟用您想要同步的軟體庫，方法是選擇「啟用軟體庫」，然後選擇要啟用的個別軟體庫。"
 
 #: lib/navigation/systems.rb:67 lib/navigation/organization.rb:42
@@ -3255,12 +3354,12 @@ msgstr "成功"
 msgid "Summary"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Summary:"
 msgstr "摘要："
 
-#: app/views/subscriptions/index.html.haml:16
 #: app/views/providers/redhat/_subscription_details.html.haml:7
+#: app/views/subscriptions/index.html.haml:16
 msgid "Support Level"
 msgstr "支援等級"
 
@@ -3269,16 +3368,16 @@ msgstr "支援等級"
 msgid "Sync Cancelled"
 msgstr ""
 
-#: lib/navigation/content_management.rb:86
+#: lib/navigation/content_management.rb:85
 msgid "Sync Management"
 msgstr "同步管理"
 
-#: app/views/dashboard/index.html.haml:12
+#: app/views/dashboard/index.html.haml:13
 msgid "Sync Overview"
 msgstr "同步概要"
 
-#: app/controllers/sync_plans_controller.rb:48
-#: lib/navigation/content_management.rb:105
+#: app/controllers/sync_plans_controller.rb:47
+#: lib/navigation/content_management.rb:104
 msgid "Sync Plans"
 msgstr "同步計劃"
 
@@ -3286,16 +3385,16 @@ msgstr "同步計劃"
 msgid "Sync Plans applied successfully."
 msgstr "已成功套用同步計劃。"
 
-#: app/models/organization.rb:123
+#: app/models/organization.rb:133
 msgid "Sync Products"
 msgstr "同步產品"
 
-#: lib/navigation/content_management.rb:113
+#: lib/navigation/content_management.rb:112
 msgid "Sync Schedule"
 msgstr "同步的排程"
 
 #: app/views/sync_management/index.html.haml:16
-#: lib/navigation/content_management.rb:96
+#: lib/navigation/content_management.rb:95
 msgid "Sync Status"
 msgstr "同步的狀態"
 
@@ -3304,11 +3403,22 @@ msgstr "同步的狀態"
 msgid "Sync complete."
 msgstr "完成同步。"
 
-#: app/views/sync_management/index.html.haml:49
+#: app/controllers/api/products_controller.rb:76
+#, 
+msgid "Synchronization plan assigned."
+msgstr ""
+
+#: app/controllers/api/products_controller.rb:82
+#, 
+msgid "Synchronization plan removed."
+msgstr ""
+
+#: app/views/sync_management/index.html.haml:48
 msgid "Synchronize Now"
 msgstr "立即同步"
 
-#: app/views/dashboard/_errata.haml:29
+#: app/controllers/systems_controller.rb:301
+#: app/views/dashboard/_errata.haml:37
 msgid "System"
 msgstr "系統"
 
@@ -3324,7 +3434,7 @@ msgstr "系統事件"
 msgid "System Info"
 msgstr "系統資訊"
 
-#: app/views/layouts/_header.haml:21
+#: app/views/layouts/_header.haml:22
 msgid "System Notifications"
 msgstr "系統通知"
 
@@ -3332,32 +3442,28 @@ msgstr "系統通知"
 msgid "System Properties"
 msgstr "系統屬性"
 
-#: app/views/dashboard/index.html.haml:5
+#: app/views/dashboard/index.html.haml:6
 msgid "System Subscription Status"
 msgstr "系統訂閱的狀態"
 
 #: app/views/activation_keys/_new.html.haml:35
 #: app/views/activation_keys/_edit.html.haml:59
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "System Template"
 msgstr "系統範本"
 
-#: app/models/resource_type.rb:92
-#: app/controllers/system_templates_controller.rb:73
 #: app/helpers/breadcrumb_helper.rb:137
-#: app/views/system_templates/index.html.haml:47
-#: app/views/changesets/_edit.html.haml:40
+#: app/controllers/system_templates_controller.rb:71
+#: app/models/resource_type.rb:92 app/views/changesets/_edit.html.haml:40
+#: app/views/system_templates/index.html.haml:46
 #: app/views/promotions/_detail.html.haml:12
-#: app/views/promotions/show.html.haml:8
-#: lib/navigation/content_management.rb:121
+#: app/views/promotions/show.html.haml:7
+#: lib/navigation/content_management.rb:120
 msgid "System Templates"
 msgstr "系統範本"
 
-#: app/views/system_templates/index.html.haml:39
-msgid ""
-"System Templates allow you to create a template for what a system should "
-"look like.  This includes what products are subscribed and what packages are"
-" installed."
+#: app/views/system_templates/index.html.haml:38
+msgid "System Templates allow you to create a template for what a system should look like.  This includes what products are subscribed and what packages are installed."
 msgstr "系統範本能讓您建立系統的模樣。這包括該並訂閱什麼產品、該安裝什麼透見。"
 
 #: app/views/systems/_edit.html.haml:71
@@ -3368,12 +3474,12 @@ msgstr "系統類型"
 msgid "System Type:"
 msgstr "系統類型："
 
-#: app/controllers/systems_controller.rb:176
+#: app/controllers/systems_controller.rb:179
 msgid "System subscriptions updated."
 msgstr "已更新系統訂閱。"
 
-#: app/controllers/systems_controller.rb:286
-#: app/views/dashboard/_errata.haml:21 lib/navigation/systems.rb:22
+#: app/controllers/systems_controller.rb:296
+#: app/views/dashboard/_errata.haml:27 lib/navigation/systems.rb:22
 msgid "Systems"
 msgstr "系統"
 
@@ -3387,8 +3493,8 @@ msgstr ""
 msgid "TYPE"
 msgstr ""
 
-#: app/controllers/system_templates_controller.rb:75
-#: app/controllers/system_templates_controller.rb:77
+#: app/controllers/system_templates_controller.rb:74
+#: app/controllers/system_templates_controller.rb:76
 msgid "Template"
 msgstr "範本"
 
@@ -3396,7 +3502,7 @@ msgstr "範本"
 msgid "Template can have parent templates only from the same environment"
 msgstr "範本只能有來自同樣環境的父範本"
 
-#: app/models/system_template.rb:139
+#: app/models/system_template.rb:141
 msgid "Template cannot be exported"
 msgstr "範本無法匯出"
 
@@ -3404,7 +3510,7 @@ msgstr "範本無法匯出"
 msgid "Template imported"
 msgstr "已匯入範本"
 
-#: app/models/system_template.rb:156
+#: app/models/system_template.rb:158
 msgid "Template is not complete and will likely fail."
 msgstr "範本無法完成，很有可能會失敗。"
 
@@ -3413,33 +3519,28 @@ msgid "Templates"
 msgstr "範本"
 
 #: app/controllers/api/templates_controller.rb:59
-#: app/controllers/api/templates_content_controller.rb:116
-msgid "Templates can be updated only in a Locker environment"
-msgstr "只能在 Locker 環境中更新範本"
+#: app/controllers/api/templates_content_controller.rb:130
+#, 
+msgid "Templates can be updated only in a Library environment"
+msgstr ""
 
-#: app/models/organization.rb:72
-msgid ""
-"The current organization cannot be deleted. Please switch to a different "
-"organization before deleting."
+#: app/models/organization.rb:72 app/views/organizations/_edit.html.haml:11
+msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
 msgstr "不能刪除目前的組織。刪除前請切換到其它組織。"
 
-#: app/views/system_templates/index.html.haml:6
-msgid ""
-"The current template \"$TEMPLATE\" has been modified.  Would you like to "
-"save the changes?"
+#: app/views/system_templates/index.html.haml:5
+msgid "The current template \"$TEMPLATE\" has been modified.  Would you like to save the changes?"
 msgstr "目前的範本「$TEMPLATE」已經修改。是否要儲存變更？"
 
-#: app/views/system_templates/index.html.haml:6
-msgid ""
-"The current template \"$TEMPLATE\" has been modified. If you leave, any "
-"changes will be lost.\""
+#: app/views/system_templates/index.html.haml:5
+msgid "The current template \"$TEMPLATE\" has been modified. If you leave, any changes will be lost.\""
 msgstr "目前的範本「$TEMPLATE」已經修改。如果您離開的話，會失去變更的部分。"
 
-#: app/controllers/users_controller.rb:212
+#: app/controllers/users_controller.rb:254
 msgid "The default you supplied was the same as the old default."
 msgstr "您輸入的預設值與舊的預設值相同。"
 
-#: app/models/system_template.rb:250 app/models/system_template.rb:267
+#: app/models/system_template.rb:252 app/models/system_template.rb:269
 msgid "The environment still has content that belongs to product '%s'."
 msgstr "環境仍擁有屬於產品 %s 的內容。"
 
@@ -3457,39 +3558,44 @@ msgstr "密碼不相符"
 msgid "The system is not currently consuming any subscriptions."
 msgstr "系統目前不消耗任何訂閱。"
 
-#: app/models/system_template.rb:518
+#: app/models/system_template.rb:563
 msgid "The template has children templates."
 msgstr "範本有子範本。"
 
-#: app/views/roles/index.html.haml:9
-msgid ""
-"There are currently no Global permissions for this role.  Please click Add "
-"Permission in the action bar below to add a Global permission.  A Global "
-"permission is one that cuts across all organizations."
+#: app/views/roles/index.html.haml:8
+msgid "There are currently no Global permissions for this role.  Please click Add Permission in the action bar below to add a Global permission.  A Global permission is one that cuts across all organizations."
 msgstr "目前這角色沒有「全域」存取權限。請按下下方動作列的「新增存取權限」，以新增全域權限。全域存取權限及於所有組織。"
 
-#: app/views/roles/index.html.haml:9
-msgid ""
-"There are currently no permissions for this organization.  Please click Add "
-"Permission in the action bar below to add a permission to this organization."
+#: app/views/roles/index.html.haml:8
+msgid "There are currently no permissions for this organization.  Please click Add Permission in the action bar below to add a permission to this organization."
 msgstr "目前沒有存取權限及於這個組織。請按下下方動作列的「新增存取權限」，為此組織新增存取權限。"
+
+#: app/views/sync_management/index.html.haml:45
+#, 
+msgid "There are no custom products or repositories enabled. Try enabling via Content Providers."
+msgstr ""
+
+#: app/views/dashboard/_errata.haml:3
+#, 
+msgid "There are no errata that need to be applied to registered systems."
+msgstr ""
 
 #: app/views/system_events/_events.html.haml:35
 #, 
 msgid "There are no events to display."
 msgstr ""
 
+#: app/views/systems/_subs.html.haml:115
 #: app/views/activation_keys/_subscriptions.html.haml:54
-#: app/views/systems/_subs.html.haml:110
 msgid "There are no more subscriptions available."
 msgstr "沒有更多的可用訂閱。"
 
-#: app/views/errata/_packages.html.haml:29
 #: app/views/system_packages/_packages.html.haml:96
+#: app/views/errata/_packages.html.haml:29
 msgid "There are no packages to display."
 msgstr "沒有可顯示的套件。"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "There are no tags for the resource type you have chosen."
 msgstr "沒有標籤可以給您所選的資源種類用。"
 
@@ -3507,6 +3613,16 @@ msgstr ""
 msgid "There must be at least one product selected"
 msgstr ""
 
+#: app/views/common/_common_i18n.html.haml:3
+#, 
+msgid "There was an error retrieving that row:"
+msgstr ""
+
+#: app/views/gpg_keys/_products_repos.html.haml:17
+#, 
+msgid "This GPG Key is not currently assigned to any products or repositories."
+msgstr ""
+
 #: app/controllers/api/system_packages_controller.rb:99
 msgid "This action doesn't support pacakge groups"
 msgstr "這項動作不支援套件群組"
@@ -3515,9 +3631,10 @@ msgstr "這項動作不支援套件群組"
 msgid "This changeset contains no content."
 msgstr "此變更集沒有內容。"
 
-#: app/views/promotions/show.html.haml:8
-msgid "This changeset is currently being promoted."
-msgstr "正在發送此變更集。"
+#: app/views/promotions/show.html.haml:7
+#, 
+msgid "This promotion changeset is currently being promoted."
+msgstr ""
 
 #: app/views/system_templates/_promotion_details.html.haml:16
 msgid "This template contains no content."
@@ -3534,24 +3651,18 @@ msgid "Title"
 msgstr "標題"
 
 #: app/views/common/_panel.html.haml:14
-msgid ""
-"To view the details of an item on the left, simply click on a single "
-"row.<br/><br/>To select multiple rows, hold the Control Key and click "
-"multiple rows.<br/><br/>If you don't need this help anymore, please click "
-"the close button in the top right of this box."
-msgstr ""
-"要檢視左方物品的詳細資料，請按下單一行。<br/><br/>要選擇多行，請按下 Control "
-"鍵再點選各行。<br/><br/>如果您不需要這求助畫面，請按下本方塊右上角的關閉按鈕。"
+msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
+msgstr "要檢視左方物品的詳細資料，請按下單一行。<br/><br/>要選擇多行，請按下 Control 鍵再點選各行。<br/><br/>如果您不需要這求助畫面，請按下本方塊右上角的關閉按鈕。"
 
 #: app/views/dashboard/_subscriptions.haml:41
 msgid "Total Systems"
 msgstr "總系統"
 
-#: app/views/errata/_show.html.haml:24 app/views/errata/_show.html.haml:56
-#: app/views/dashboard/_errata.haml:7
-#: app/views/activation_keys/_subscriptions.html.haml:5
 #: app/views/roles/_permission.html.haml:13
 #: app/views/roles/_closed_permission.html.haml:3
+#: app/views/dashboard/_errata.haml:8
+#: app/views/activation_keys/_subscriptions.html.haml:5
+#: app/views/errata/_show.html.haml:24 app/views/errata/_show.html.haml:56
 msgid "Type"
 msgstr "類型"
 
@@ -3580,11 +3691,11 @@ msgstr "UUID"
 msgid "Unable to determine quantity for pool %s"
 msgstr "無法決定集區 %s 的數量"
 
-#: app/controllers/providers_controller.rb:109
+#: app/controllers/providers_controller.rb:112
 msgid "Unable to retrieve subscription history for provider '%{name}."
 msgstr "無法取得供應者 %{name} 的訂閱歷史。"
 
-#: app/controllers/providers_controller.rb:95
+#: app/controllers/providers_controller.rb:98
 msgid "Unable to retrieve subscription manifest for provider '%{name}."
 msgstr "無法擷取供應者「%{name}」的訂閱清單。"
 
@@ -3597,14 +3708,14 @@ msgstr "排程系統 %{s} 解除安裝套件群組 %{p}。"
 msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "排程系統 %{s} 解除安裝套件 %{p}。"
 
-#: app/views/changesets/_edit.html.haml:22
 #: app/views/systems/_edit.html.haml:79
+#: app/views/changesets/_edit.html.haml:22
 msgid "Unknown"
 msgstr "未知"
 
-#: app/views/subscriptions/index.html.haml:39
+#: app/views/systems/_subs.html.haml:95
 #: app/views/providers/redhat/_subscription_details.html.haml:30
-#: app/views/systems/_subs.html.haml:90
+#: app/views/subscriptions/index.html.haml:39
 msgid "Unlimited"
 msgstr "沒有限制"
 
@@ -3652,14 +3763,14 @@ msgstr "已更新"
 msgid "Updating Package..."
 msgstr "正在更新套件……"
 
+#: app/views/common/_edit_i18n.html.haml:4
 #: app/views/gpg_keys/_new.html.haml:28 app/views/gpg_keys/_new.html.haml:33
 #: app/views/gpg_keys/_edit.html.haml:30 app/views/gpg_keys/_edit.html.haml:35
-#: app/views/common/_edit_i18n.html.haml:4
-#: app/views/providers/redhat/show.html.haml:34
+#: app/views/providers/redhat/show.html.haml:35
 msgid "Upload"
 msgstr "上傳"
 
-#: app/views/providers/redhat/show.html.haml:25
+#: app/views/providers/redhat/show.html.haml:22
 msgid "Upload Subscription Manifest"
 msgstr "上傳訂閱清單"
 
@@ -3667,12 +3778,12 @@ msgstr "上傳訂閱清單"
 msgid "Uploading"
 msgstr "上傳中"
 
-#: app/helpers/users_helper.rb:36 app/helpers/users_helper.rb:37
+#: app/helpers/users_helper.rb:43 app/helpers/users_helper.rb:44
 #, 
 msgid "Use Browser Locale"
 msgstr ""
 
-#: app/controllers/users_controller.rb:288
+#: app/controllers/users_controller.rb:336
 msgid "User"
 msgstr "使用者"
 
@@ -3680,7 +3791,7 @@ msgstr "使用者"
 msgid "User Notifications"
 msgstr "使用者提示"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "User assignments for this role"
 msgstr "這個角色的使用者指定"
 
@@ -3688,29 +3799,32 @@ msgstr "這個角色的使用者指定"
 msgid "User does not belong to an organization."
 msgstr "使用者並不屬於組織。"
 
-#: app/controllers/users_controller.rb:205
+#: app/controllers/users_controller.rb:247
 msgid "User environment updated successfully."
 msgstr "使用者環境已成功更新。"
 
 #: app/views/notices/show.html.haml:9
-msgid ""
-"User notifications lists all notifications generated by a user as well as "
-"global notifications that are sent to all users."
+msgid "User notifications lists all notifications generated by a user as well as global notifications that are sent to all users."
 msgstr "使用者通知會列出所有由使用者所產生的通知，以及發送到所有使用者的全域通知。"
 
-#: app/controllers/users_controller.rb:129
-#: app/controllers/users_controller.rb:151
-#: app/controllers/users_controller.rb:230
+#: app/controllers/users_controller.rb:145
+#: app/controllers/users_controller.rb:168
+#: app/controllers/users_controller.rb:272
 msgid "User updated successfully."
 msgstr "已成功更新使用者。"
 
+#: app/controllers/users_controller.rb:335
+msgid "Username"
+msgstr "使用者名稱"
+
 #: app/views/password_resets/new.html.haml:13
-#: app/views/users/_new.html.haml:19 app/views/users/_edit_form.html.haml:22
+#: app/views/users/_edit_form.html.haml:22 app/views/users/_new.html.haml:21
 msgid "Username:"
 msgstr "使用者名稱："
 
-#: app/models/resource_type.rb:97 app/controllers/users_controller.rb:286
-#: app/helpers/breadcrumb_helper.rb:242 lib/navigation/administration.rb:56
+#: app/helpers/breadcrumb_helper.rb:242
+#: app/controllers/users_controller.rb:333 app/models/resource_type.rb:97
+#: lib/navigation/administration.rb:56
 msgid "Users"
 msgstr "使用者"
 
@@ -3741,17 +3855,15 @@ msgstr "非常弱"
 msgid "Viewing %X of %Y results (%Z Total Errata)"
 msgstr ""
 
-#: app/models/system.rb:68 app/controllers/activation_keys_controller.rb:348
-#: app/controllers/providers_controller.rb:280
-#: app/controllers/subscriptions_controller.rb:55
 #: app/helpers/systems_helper.rb:43
+#: app/controllers/subscriptions_controller.rb:55
+#: app/controllers/providers_controller.rb:284
+#: app/controllers/activation_keys_controller.rb:349 app/models/system.rb:68
 msgid "Virtual"
 msgstr "虛擬"
 
-#: app/views/providers/index.html.haml:16
-msgid ""
-"WARNING: This will override any GPG keys already associated with a "
-"repository within this product"
+#: app/views/providers/index.html.haml:14
+msgid "WARNING: This will override any GPG keys already associated with a repository within this product"
 msgstr "警告：這會覆寫已與此產品軟體庫相關的 GPG 金鑰"
 
 #: app/views/password_resets/edit.html.haml:5
@@ -3773,32 +3885,30 @@ msgid "You are not authorised to perform this action."
 msgstr "無權進行此項動作。"
 
 #: app/controllers/api/sync_controller.rb:96
-msgid "You can synchronize repositories only in locker environment'"
-msgstr "您只可以在 locker 環境裡同步軟體庫"
+#, 
+msgid "You can synchronize repositories only in library environment'"
+msgstr ""
 
-#: app/controllers/application_controller.rb:472
-msgid ""
-"You current organization is no longer valid. It is possible that the "
-"organization has been deleted, please log back in to continue."
+#: app/controllers/application_controller.rb:488
+msgid "You current organization is no longer valid. It is possible that the organization has been deleted, please log back in to continue."
 msgstr "您目前的組織已經失效。這可能是因為組織已經被刪除，請重新登入已繼續。"
 
-#: app/views/dashboard/index.html.haml:16
-msgid ""
-"You currently do not have any permissions that grant access to an "
-"organization.  Please contact your system administrator to receive access."
+#: app/views/dashboard/index.html.haml:17
+msgid "You currently do not have any permissions that grant access to an organization.  Please contact your system administrator to receive access."
 msgstr "您目前沒有存取組織的權限。請聯絡系統管理員以取得存取的方法。"
 
 #: app/controllers/failed_authentication_controller.rb:28
-msgid ""
-"You do not have valid credentials to access this system. Please contact your"
-" administrator."
+msgid "You do not have valid credentials to access this system. Please contact your administrator."
 msgstr "您沒有足夠的權限存取此系統。請聯絡系統管理員。"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/_self_role_edit.html.haml:31
 #, 
-msgid ""
-"You have selected all resource types; this will grant full access to the "
-"organization. Press the Cancel button to select an individual resource type."
+msgid "You have no assigned roles."
+msgstr ""
+
+#: app/views/roles/index.html.haml:8
+#, 
+msgid "You have selected all resource types; this will grant full access to the organization. Press the Cancel button to select an individual resource type."
 msgstr ""
 
 #: app/views/common/404.html.haml:4
@@ -3810,7 +3920,7 @@ msgid "You might want to log out and log back in again to clear your cookies."
 msgstr "請重新登入，以清除 cookies。"
 
 #: app/controllers/application_controller.rb:138
-#: app/controllers/application_controller.rb:462
+#: app/controllers/application_controller.rb:478
 msgid "You must be logged in to access that page."
 msgstr "您必須先登入，才能存取該網頁。"
 
@@ -3822,26 +3932,25 @@ msgstr "新增權限前，必須選擇上方的組織。"
 msgid "You must select and view a permission before you can edit it."
 msgstr "編輯權限前，請先選擇並檢視權限。"
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "You must select at least one verb."
 msgstr "您必須選擇至少一個動詞。"
 
+#: config/initializers/app_config.rb:99
+#, 
+msgid "You must specify host in %s for %s to work properly"
+msgstr ""
+
 #: app/views/systems/_new.html.haml:57
-msgid ""
-"You need to create an environment for this org before you can create a "
-"system."
+msgid "You need to create an environment for this org before you can create a system."
 msgstr "建立系統之前，您需要為這組織建立環境。"
 
 #: app/controllers/failed_authentication_controller.rb:25
-msgid ""
-"You've entered an incorrect username, password combination or account "
-"disabled, please try again."
+msgid "You've entered an incorrect username, password combination or account disabled, please try again."
 msgstr "您輸入了不正確的使用者或密碼，或帳號已停用。請再嘗試一次。"
 
 #: app/views/promotions/show.html.haml:185
-msgid ""
-"Your update has applied successfully, but during that time another user has "
-"also made an update."
+msgid "Your update has applied successfully, but during that time another user has also made an update."
 msgstr "已成功套用更新，但更新時另一名使用者也進行了一項更新。"
 
 #: app/models/system_task.rb:136
@@ -3859,12 +3968,8 @@ msgstr ""
 msgid "all packages update failed"
 msgstr ""
 
-#: app/models/user.rb:62
-msgid "at least 5 characters"
-msgstr "至少五個字元"
-
-#: app/models/katello_url_format_validator.rb:50
 #: app/models/katello_name_format_validator.rb:20
+#: app/models/katello_url_format_validator.rb:50
 msgid "can't be blank"
 msgstr "不能留白"
 
@@ -3876,15 +3981,19 @@ msgstr "不能包含文數字、空白、「_」、或「-」以外的字元"
 msgid "cannot contain characters other than alpha numerals,'_', '-'."
 msgstr "不能包含文數字、「_」、或「-」以外的字元"
 
-#: app/controllers/system_templates_controller.rb:265
-msgid ""
-"contained the selected distribution for this template.  Please select "
-"another distribution to ensure a working system template."
+#: app/controllers/system_templates_controller.rb:273
+msgid "contained the selected distribution for this template.  Please select another distribution to ensure a working system template."
 msgstr "包含此範本的所選散佈版本。請選擇其它散佈版本，已確保用於運作中的系統範本。"
 
-#: app/views/promotions/show.html.haml:8
-msgid "currently editing this changeset"
-msgstr "目前正在編輯此變更集"
+#: app/views/promotions/show.html.haml:7
+#, 
+msgid "currently editing this promotion changeset"
+msgstr ""
+
+#: app/models/sync_plan.rb:28
+#, 
+msgid "daily"
+msgstr ""
 
 #: app/models/kt_environment.rb:29
 msgid "environment can only have one child"
@@ -3894,9 +4003,9 @@ msgstr "環境只能有一個子環境"
 msgid "environment required"
 msgstr "所需的環境"
 
-#: app/models/system_task.rb:330
+#: app/models/sync_plan.rb:27
 #, 
-msgid "installed"
+msgid "hourly"
 msgstr ""
 
 #: app/models/system_task.rb:105 app/models/system_task.rb:106
@@ -3930,8 +4039,8 @@ msgid "installing packages..."
 msgstr ""
 
 #: app/models/system_template_pack_group.rb:26
-#: app/models/system_template_distribution.rb:25
 #: app/models/system_template_pg_category.rb:25
+#: app/models/system_template_distribution.rb:25
 msgid "is already in the template"
 msgstr "已經位於範本中"
 
@@ -3943,11 +4052,21 @@ msgstr "失效"
 msgid "is too long"
 msgstr "太長"
 
+#: app/models/ping.rb:65
+#, 
+msgid "katello-jobs service not running"
+msgstr ""
+
 #: app/views/errata/_show.html.haml:70
 msgid "link"
 msgstr "連結"
 
-#: app/models/permission.rb:25
+#: app/models/user.rb:62
+#, 
+msgid "must be at least 5 characters."
+msgstr ""
+
+#: app/models/permission.rb:26
 msgid "must be unique within an organization scope"
 msgstr "在組織範圍中，必須是獨一無二的"
 
@@ -3955,28 +4074,26 @@ msgstr "在組織範圍中，必須是獨一無二的"
 msgid "must be unique within one environment"
 msgstr "在一組環境中，必須是獨一無二的"
 
-#: app/models/gpg_key.rb:32 app/models/kt_environment.rb:85
+#: app/models/gpg_key.rb:33 app/models/kt_environment.rb:85
 msgid "must be unique within one organization"
 msgstr "必須在組織中是獨一無二的"
 
 #: app/models/product.rb:15
-msgid "must contain 'Locker'"
-msgstr "必須包含「Locker」"
+#, 
+msgid "must contain 'Library'"
+msgstr ""
 
 #: app/models/no_trailing_space_validator.rb:20
 msgid "must not contain leading or trailing white spaces."
 msgstr "前、後都不可包含空白字元。"
 
-#: app/views/errata/_show.html.haml:72 app/views/errata/_show.html.haml:74
+#: app/models/sync_plan.rb:26 app/views/errata/_show.html.haml:72
+#: app/views/errata/_show.html.haml:74
 msgid "none"
 msgstr "無"
 
-#: app/models/system_task.rb:323
-msgid "obsoleted"
-msgstr "已淘汰"
-
-#: app/views/gpg_keys/_new.html.haml:24 app/views/roles/_edit.html.haml:55
-#: app/views/roles/_edit.html.haml:62 app/views/roles/_edit.html.haml:69
+#: app/views/roles/_edit.html.haml:55 app/views/roles/_edit.html.haml:62
+#: app/views/roles/_edit.html.haml:69 app/views/gpg_keys/_new.html.haml:24
 msgid "or"
 msgstr "或"
 
@@ -3988,13 +4105,9 @@ msgstr "計劃"
 msgid "product"
 msgstr "產品"
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "promote_confirm"
 msgstr "promote_confirm"
-
-#: app/models/system_task.rb:329
-msgid "removed"
-msgstr "已移除"
 
 #: app/models/system_task.rb:91 app/models/system_task.rb:92
 #, 
@@ -4016,26 +4129,26 @@ msgstr ""
 msgid "removing packages..."
 msgstr ""
 
+#: app/controllers/api/packages_controller.rb:49
+#, 
+msgid "repoids"
+msgstr ""
+
 #: app/controllers/sync_management_controller.rb:243
 msgid "sync did not complete successfully"
 msgstr "並未成功同步"
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "system templates"
 msgstr "系統範本"
 
-#: app/controllers/system_templates_controller.rb:76
+#: app/controllers/system_templates_controller.rb:75
 msgid "template"
 msgstr "範本"
 
 #: app/models/provider.rb:71
-msgid ""
-"the following attributes can not be updated for the Red Hat provider: [ %s ]"
+msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Red Hat 供應者的以下屬性可以更新：[ %s ]"
-
-#: app/models/system_task.rb:320
-msgid "updated"
-msgstr "已更新"
 
 #: app/models/system_task.rb:77 app/models/system_task.rb:78
 #, 
@@ -4061,6 +4174,6 @@ msgstr ""
 msgid "viewing"
 msgstr "檢視中"
 
-#: app/helpers/sync_schedules_helper.rb:19
+#: app/helpers/sync_schedules_helper.rb:19 app/models/sync_plan.rb:29
 msgid "weekly"
 msgstr "每週"

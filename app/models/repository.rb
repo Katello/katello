@@ -30,7 +30,7 @@ class Repository < ActiveRecord::Base
                 :json=>{:except=>[:pulp_repo_facts, :groupid, :environment_product_id]}
 
   after_save :update_related_index
-  
+
   belongs_to :environment_product, :inverse_of => :repositories
   has_and_belongs_to_many :changesets
   validates :pulp_id, :presence => true, :uniqueness => true
@@ -73,12 +73,12 @@ class Repository < ActiveRecord::Base
     end
   }
 
-  scope :readable_in_org, lambda {|org, *skip_locker|
-    if (skip_locker.empty? || skip_locker.first.nil?)
-      # 'skip locker' not included, so retrieve repos in locker in the result
+  scope :readable_in_org, lambda {|org, *skip_library|
+    if (skip_library.empty? || skip_library.first.nil?)
+      # 'skip library' not included, so retrieve repos in library in the result
       joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org))
     else
-      joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org).where(:locker => false))
+      joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org).where(:library => false))
     end
   }
 
@@ -87,7 +87,7 @@ class Repository < ActiveRecord::Base
      :product=>self.product.name, :product_id=> self.product.id}
   end
 
-  def update_related_index 
+  def update_related_index
     self.product.provider.update_index if self.product.provider.respond_to? :update_index
   end
 

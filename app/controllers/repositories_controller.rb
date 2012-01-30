@@ -33,7 +33,7 @@ class RepositoriesController < ApplicationController
       :update_gpg_key => edit_test,
       :destroy => edit_test,
       :enable_repo => org_edit,
-      :auto_complete_locker => read_any_test
+      :auto_complete_library => read_any_test
     }
   end
 
@@ -108,10 +108,10 @@ class RepositoriesController < ApplicationController
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@provider.id)}
   end
 
-  def auto_complete_locker
-    # retrieve and return a list (array) of repo names in locker that contain the 'term' that was passed in
+  def auto_complete_library
+    # retrieve and return a list (array) of repo names in library that contain the 'term' that was passed in
     name = params[:term]
-    repos = Repository.readable(current_organization.locker).select(:name).where("name LIKE ?", "#{name}%")
+    repos = Repository.readable(current_organization.library).select(:name).where("name LIKE ?", "#{name}%")
     render :json => repos.map{|repo| repo.name}
   end
 

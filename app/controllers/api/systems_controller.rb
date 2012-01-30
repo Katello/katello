@@ -34,6 +34,11 @@ class Api::SystemsController < Api::ApiController
     read_system = lambda { @system.readable? or User.consumer? }
     delete_system = lambda { @system.deletable? or User.consumer? }
 
+    # After a system registers, it immediately uploads its packages. Although newer subscription-managers send
+    # certificate (User.consumer? == true), some do not. In this case, confirm that the user has permission to
+    # register systems in the system's organization and environment.
+    upload_system_packages = lambda { @system.editable? or System.registerable?(@system.environment, @system.organization) or User.consumer? }
+
     {
       :new => register_system,
       :create => register_system,
@@ -45,7 +50,7 @@ class Api::SystemsController < Api::ApiController
       :destroy => delete_system,
       :package_profile => read_system,
       :errata => read_system,
-      :upload_package_profile => edit_system,
+      :upload_package_profile => upload_system_packages,
       :report => index_systems,
       :subscribe => edit_system,
       :unsubscribe => edit_system,
@@ -210,7 +215,7 @@ class Api::SystemsController < Api::ApiController
 
   def find_only_environment
     if !@environment && @organization && !params.has_key?(:environment_id)
-      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has 'Locker' environment only. Please create an environment for system registration.") if @organization.environments.empty?
+      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has 'Library' environment only. Please create an environment for system registration.") if @organization.environments.empty?
 
       # Some subscription-managers will call /users/$user/owners to retrieve the orgs that a user belongs to.
       # Then, If there is just one org, that will be passed to the POST /api/consumers as the owner. To handle

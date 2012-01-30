@@ -76,7 +76,7 @@ module Glue::Candlepin::Consumer
     end
 
     def set_candlepin_consumer
-      Rails.logger.info "Creating a consumer in candlepin: #{name}"
+      Rails.logger.debug "Creating a consumer in candlepin: #{name}"
       consumer_json = Candlepin::Consumer.create(self.organization.cp_key, self.name, self.cp_type, self.facts, self.installedProducts, self.autoheal)
 
       load_from_cp(consumer_json)
@@ -93,7 +93,7 @@ module Glue::Candlepin::Consumer
     end
 
     def update_candlepin_consumer
-      Rails.logger.info "Updating consumer in candlepin: #{name}"
+      Rails.logger.debug "Updating consumer in candlepin: #{name}"
       Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal)
     rescue => e
       Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
@@ -101,7 +101,7 @@ module Glue::Candlepin::Consumer
     end
 
     def del_candlepin_consumer
-      Rails.logger.info "Deleteing consumer in candlepin: #{name}"
+      Rails.logger.debug "Deleting consumer in candlepin: #{name}"
       Candlepin::Consumer.destroy(self.uuid)
     rescue => e
       Rails.logger.error "Failed to delete candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
@@ -109,7 +109,7 @@ module Glue::Candlepin::Consumer
     end
 
     def regenerate_identity_certificates
-      Rails.logger.info "Regenerating consumer identity certificates: #{name}"
+      Rails.logger.debug "Regenerating consumer identity certificates: #{name}"
       Candlepin::Consumer.regenerate_identity_certificates(self.uuid)
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
@@ -124,7 +124,7 @@ module Glue::Candlepin::Consumer
     end
 
     def subscribe pool, quantity = nil
-      Rails.logger.info "Subscribing to pool '#{pool}' for : #{name}"
+      Rails.logger.debug "Subscribing to pool '#{pool}' for : #{name}"
       Candlepin::Consumer.consume_entitlement self.uuid, pool, quantity
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
@@ -132,7 +132,7 @@ module Glue::Candlepin::Consumer
     end
 
     def unsubscribe entitlement
-      Rails.logger.info "Unsubscribing from entitlement '#{entitlement}' for : #{name}"
+      Rails.logger.debug "Unsubscribing from entitlement '#{entitlement}' for : #{name}"
       Candlepin::Consumer.remove_entitlement self.uuid, entitlement
       #ents = self.entitlements.collect {|ent| ent["id"] if ent["pool"]["id"] == pool}.compact
       #raise ArgumentError, "Not subscribed to the pool #{pool}" if ents.count < 1
@@ -145,7 +145,7 @@ module Glue::Candlepin::Consumer
     end
 
     def unsubscribe_by_serial serial
-      Rails.logger.info "Unsubscribing from certificate '#{serial}' for : #{name}"
+      Rails.logger.debug "Unsubscribing from certificate '#{serial}' for : #{name}"
       Candlepin::Consumer.remove_certificate self.uuid, serial
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
@@ -153,7 +153,7 @@ module Glue::Candlepin::Consumer
     end
 
     def unsubscribe_all
-      Rails.logger.info "Unsubscribing from all entitlements for : #{name}"
+      Rails.logger.debug "Unsubscribing from all entitlements for : #{name}"
       Candlepin::Consumer.remove_entitlements self.uuid
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")

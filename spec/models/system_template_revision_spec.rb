@@ -26,16 +26,16 @@ describe SystemTemplate do
     disable_product_orchestration
 
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
-    @environment = KTEnvironment.create!(:name => 'env_1', :prior => @organization.locker.id, :organization => @organization)
+    @environment = KTEnvironment.create!(:name => 'env_1', :prior => @organization.library.id, :organization => @organization)
     @provider     = @organization.redhat_provider
 
-    @tpl1 = SystemTemplate.create!(:name => "template_1", :description => "template_1 description", :environment => @organization.locker)
+    @tpl1 = SystemTemplate.create!(:name => "template_1", :description => "template_1 description", :environment => @organization.library)
 
-    @prod1 = Product.create!(:cp_id => "123456", :name => "prod1", :environments => [@organization.locker], :provider => @provider)
-    @prod2 = Product.create!(:cp_id => "789123", :name => "prod2", :environments => [@organization.locker], :provider => @provider)
+    @prod1 = Product.create!(:cp_id => "123456", :name => "prod1", :environments => [@organization.library], :provider => @provider)
+    @prod2 = Product.create!(:cp_id => "789123", :name => "prod2", :environments => [@organization.library], :provider => @provider)
 
-    @organization.locker.products << @prod1
-    @organization.locker.products << @prod2
+    @organization.library.products << @prod1
+    @organization.library.products << @prod2
   end
 
 
@@ -45,7 +45,7 @@ describe SystemTemplate do
       :name => 'foo repo',
       :groupid => [
        "product:"+@prod1.cp_id.to_s,
-        "env:"+@organization.locker.id.to_s,
+        "env:"+@organization.library.id.to_s,
         "org:"+@organization.name.to_s
       ]
     })}

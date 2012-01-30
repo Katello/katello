@@ -124,7 +124,7 @@ module Navigation
         { :key => :available_subscriptions,
           :name =>_("Available Subscriptions"),
           :url => lambda{available_subscriptions_activation_key_path(@activation_key.id)},
-          :if => lambda{@system},
+          :if => lambda{@activation_key},
           :options => {:class=>"navigation_element"}
         },
         { :key => :details,

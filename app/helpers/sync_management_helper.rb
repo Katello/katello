@@ -40,7 +40,7 @@ module SyncManagementHelper
       list = []
       products.each{|prod|
         minors = []
-        release, non_release = collect_minor(prod.repos(current_organization.locker, include_disabled))
+        release, non_release = collect_minor(prod.repos(current_organization.library, include_disabled))
         release.each{|minor, minor_repos|
           arches = []
           collect_arches(minor_repos).each{|arch, arch_repos|
