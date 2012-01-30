@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.46
+Version:       0.1.47
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.47-1
+- repo cli - option --environment removed from 'repo delete'
+
 * Sat Jan 28 2012 Martin Bačovský <mbacovsk@redhat.com> 0.1.46-1
 - Fixed failing tests (mbacovsk@redhat.com)
 
