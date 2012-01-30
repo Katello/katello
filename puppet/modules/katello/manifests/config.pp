@@ -175,7 +175,7 @@ class katello::config {
     cwd         => $katello::params::katello_dir,
     user        => $katello::params::user,
     environment => ["RAILS_ENV=${katello::params::environment}", "KATELLO_LOGGING=debug"],
-    command     => "/usr/bin/env rake db:seed --trace --verbose > ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/db_seed_done",
+    command     => "/usr/bin/env rake seed_with_logging --trace --verbose > ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/db_seed_done",
     creates => "/var/lib/katello/db_seed_done",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
