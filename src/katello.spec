@@ -53,7 +53,6 @@ Requires:       openssl
 Requires:       elasticsearch
 Requires:       rubygems
 Requires:       rubygem(rails) >= 3.0.10
-Requires:       rubygem(multimap)
 Requires:       rubygem(haml) >= 3.1.2
 Requires:       rubygem(haml-rails)
 Requires:       rubygem(json)
