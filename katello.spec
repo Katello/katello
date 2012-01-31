@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.206
+Version:        0.1.207
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -353,6 +353,28 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jan 31 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.207-1
+- 757817-Added code to show Activation Keys page if user has AK read privileges
+- Promotion Search: Fixes for broken unit tests related to adding
+  index_packages during promotion.
+- 782959,747827,782239 - i18n issues creating pulp users & repos were fixed
+- activation keys - fix missing navigation for Available Subscriptions
+- Promotion Search - Fixes issue with tupane slider showing up partially inside
+  the left side tree.
+- providers - fix broken arrow for products and repos
+- update to translation strings
+- Added "Environment" to Initial environment page on new Org.
+- 748060 - fix bbq on promotions page
+- Promotion Search - Changes to init search widget state on load properly.
+- Promotion Search - Re-factors search enabling on sliding tree to be more
+  stand alone and decoupled.  Fixes issues with search widget not closing
+  properly on tab changes.
+- 757094 - Product should be readable even it has no enabled repos
+- Promotion Search - Adds proper checks when there is no next environment for
+  listing promotable packages.
+- Promotion Search - Initial work to enable package search on the promotions
+  page with proper calculations.
+
 * Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.206-1
 - 785703 - fixing user creation code
 
