@@ -29,7 +29,7 @@ class Api::SystemsController < Api::ApiController
   def rules
     index_systems = lambda { System.any_readable?(@organization) }
     register_system = lambda { System.registerable?(@environment, @organization) }
-    register_hypervisor = lambda { User.consumer? }
+    consumer_only = lambda { User.consumer? }
     edit_system = lambda { @system.editable? or User.consumer? }
     read_system = lambda { @system.readable? or User.consumer? }
     delete_system = lambda { @system.deletable? or User.consumer? }
@@ -42,7 +42,7 @@ class Api::SystemsController < Api::ApiController
     {
       :new => register_system,
       :create => register_system,
-      :hypervisors_update => register_hypervisor,
+      :hypervisors_update => consumer_only,
       :regenerate_identity_certificates => edit_system,
       :update => edit_system,
       :index => index_systems,
@@ -58,7 +58,8 @@ class Api::SystemsController < Api::ApiController
       :pools => read_system,
       :activate => register_system,
       :tasks => index_systems,
-      :task_show => read_system
+      :task_show => read_system,
+      :enabled_repos => consumer_only
     }
   end
 
