@@ -356,7 +356,7 @@ module Glue::Pulp::Repo
   def index_after_sync tasks
     PulpTaskStatus::wait_for_tasks tasks
     self.index_packages
-    #self.index_errata
+    self.index_errata
   end
 
 
