@@ -63,7 +63,7 @@ class Create(UserAction):
         self.parser.add_option('--username', dest='username', help=_("user name (required)"))
         self.parser.add_option('--password', dest='password', help=_("initial password (required)"))
         self.parser.add_option('--email', dest='email', help=_("email (required)"))
-        self.parser.add_option("--disabled", dest="disabled", type="bool", help=_("disabled account (default is 'false')"))
+        self.parser.add_option("--disabled", dest="disabled", type="bool", help=_("disabled account (default is 'false')"), default=False)
 
     def check_options(self):
         self.require_option('username')
@@ -144,7 +144,7 @@ class Update(UserAction):
         self.parser.add_option('--username', dest='username', help=_("user name (required)"))
         self.parser.add_option('--password', dest='password', help=_("initial password"))
         self.parser.add_option('--email', dest='email', help=_("email"))
-        self.parser.add_option("--disabled", dest="disabled", help=_("disabled account (default is 'false')"))
+        self.parser.add_option("--disabled", dest="disabled", help=_("disabled account (default is 'false')"), default=False)
 
     def check_options(self):
         self.require_option('username')

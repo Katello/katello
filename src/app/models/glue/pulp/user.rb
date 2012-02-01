@@ -41,6 +41,7 @@ module Glue::Pulp::User
     rescue RestClient::ExceptionWithResponse => e
       if e.http_code == 409
         Rails.logger.info "pulp user #{self.username}: already exists. continuing"
+        true #assume everything is ok unless there was an exception thrown
       else
         Rails.logger.error "Failed to create pulp user #{self.username}: #{e}, #{e.backtrace.join("\n")}"
         raise e

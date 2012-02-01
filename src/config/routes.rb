@@ -331,6 +331,7 @@ Src::Application.routes.draw do
         get :packages, :action => :package_profile
         get :errata
         get :pools
+        put :enabled_repos
       end
       collection do
         match "/tasks/:id" => "systems#task_show", :via => :get

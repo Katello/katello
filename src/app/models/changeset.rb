@@ -17,6 +17,7 @@ class NotInLibraryValidator < ActiveModel::Validator
 end
 
 require 'util/notices'
+require 'util/package_util'
 
 class Changeset < ActiveRecord::Base
   include Authorization
@@ -52,7 +53,7 @@ class Changeset < ActiveRecord::Base
   has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name=>"ChangesetPackage", :inverse_of=>:changeset
   has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
-  has_and_belongs_to_many :system_templates
+  has_and_belongs_to_many :system_templates, :uniq => true
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
   has_and_belongs_to_many :repos, :class_name=>"Repository", :uniq => true
   has_many :distributions, :class_name=>"ChangesetDistribution", :inverse_of => :changeset
@@ -146,36 +147,20 @@ class Changeset < ActiveRecord::Base
 
   def add_package package_name, product_cpid
     product = find_product_by_cpid(product_cpid)
-    product.repos(self.environment.prior).each do |repo|
-      #search for package in all repos in a product
-      idx = repo.packages.index do |p| p.name == package_name end
-      if idx != nil
-        pack = repo.packages[idx]
-        cs_pack = ChangesetPackage.new(:package_id => pack.id, :display_name => package_name, :product_id => product.id, :changeset => self)
-        cs_pack.save!
-        self.packages << cs_pack
+    packs = product.find_packages_by_name(self.environment.prior, package_name)
 
-        return cs_pack
-      end
-    end
-    raise Errors::ChangesetContentException.new("Package not found in the source environment.")
+    raise Errors::ChangesetContentException.new("Package not found in the source environment.") if packs.empty?
+
+    cs_pack = ChangesetPackage.new(:package_id => packs[0]["id"], :display_name => package_name, :product_id => product.id, :changeset => self)
+    cs_pack.save!
+    self.packages << cs_pack
   end
 
   def add_erratum erratum_id, product_cpid
     product = find_product_by_cpid(product_cpid)
-    product.repos(self.environment.prior).each do |repo|
-      #search for erratum in all repos in a product
-      idx = repo.errata.index do |e| e.id == erratum_id end
-      if idx != nil
-        erratum = repo.errata[idx]
-        cs_erratum = ChangesetErratum.new(:errata_id => erratum.id, :display_name => erratum_id, :product_id => product.id, :changeset => self)
-        cs_erratum.save!
-        self.errata << cs_erratum
-
-        return cs_erratum
-      end
-    end
-    raise Errors::ChangesetContentException.new("Erratum not found in the source environment.")
+    cs_erratum = ChangesetErratum.new(:errata_id => erratum_id, :display_name => erratum_id, :product_id => product.id, :changeset => self)
+    cs_erratum.save!
+    self.errata << cs_erratum
   end
 
   def add_repo repo_id, product_cpid
@@ -187,19 +172,12 @@ class Changeset < ActiveRecord::Base
 
   def add_distribution distribution_id, product_cpid
     product = find_product_by_cpid(product_cpid)
-    repos = product.repos(self.environment.prior)
-    idx = nil
-    repos.each do |repo|
-      idx = repo.distributions.index do |d| d.id == distribution_id end
-    end
-    if idx != nil
-      self.distributions << ChangesetDistribution.new(:distribution_id => distribution_id,
-                                                      :display_name => distribution_id,
-                                                      :product_id => product.id,
-                                                      :changeset => self)
-      return
-    end
-    raise Errors::ChangesetContentException.new("Distribution not found within this environment.")
+    distro = ChangesetDistribution.new(:distribution_id => distribution_id,
+                                       :display_name => distribution_id,
+                                       :product_id => product.id,
+                                       :changeset => self)
+    distro.save!
+    self.distributions << distro
   end
 
   def remove_product cpid
@@ -244,12 +222,6 @@ class Changeset < ActiveRecord::Base
     repo = find_repo(repo_id, product_cpid)
     self.repos.delete(repo) if repo
   end
-
-  def find_repos product
-    ids = product.repos(self.environment).collect{|r| r.id} & self.repo_ids
-    ids.empty? ? [] : Repository.where(:ids=>ids)
-  end
-
 
   def remove_distribution distribution_id, product_cpid
     product = find_product_by_cpid(product_cpid)
@@ -317,9 +289,18 @@ class Changeset < ActiveRecord::Base
     update_progress! '95'
     promote_distributions from_env, to_env
     update_progress! '100'
+
+    generate_metadata from_env, to_env
+
     self.promotion_date = Time.now
     self.state = Changeset::PROMOTED
     self.save!
+
+    self.repos.each do |repo|
+      if repo.is_cloned_in? to_env
+        repo.get_clone(to_env).index_packages
+      end
+    end
 
   rescue Exception => e
     self.state = Changeset::FAILED
@@ -386,17 +367,20 @@ class Changeset < ActiveRecord::Base
       product = pkg.product
 
       product.repos(from_env).each do |repo|
-        clone = repo.get_clone to_env
+        if repo.is_cloned_in? to_env
+          clone = repo.get_clone to_env
 
-        if (repo.has_package? pkg.package_id) and (!clone.has_package? pkg.package_id)
-          pkgs_promote[clone] ||= []
-          pkgs_promote[clone] << pkg.package_id
+          if (repo.has_package? pkg.package_id) and (!clone.has_package? pkg.package_id)
+            pkgs_promote[clone] ||= []
+            pkgs_promote[clone] << pkg.package_id
+          end
         end
       end
     end
 
     pkgs_promote.each_pair do |repo, pkgs|
       repo.add_packages(pkgs)
+      Glue::Pulp::Package.index_packages(pkgs)
     end
   end
 
@@ -410,6 +394,7 @@ class Changeset < ActiveRecord::Base
 
       product.repos(from_env).each do |repo|
         clone = repo.get_clone to_env
+        next if clone.nil?
 
         if (repo.has_erratum? err.errata_id) and (!clone.has_erratum? err.errata_id)
           errata_promote[clone] ||= []
@@ -436,6 +421,7 @@ class Changeset < ActiveRecord::Base
 
       product.repos(from_env).each do |repo|
         clone = repo.get_clone to_env
+        next if clone.nil?
 
         if (repo.has_distribution? distro.distribution_id) and (!clone.has_distribution? distro.distribution_id)
           distribution_promote[clone] = distro.distribution_id
@@ -446,9 +432,13 @@ class Changeset < ActiveRecord::Base
     distribution_promote.each_pair do |repo, distro|
       repo.add_distribution(distro)
     end
-
   end
 
+  def generate_metadata from_env, to_env
+    affected_repos.each do |repo|
+        repo.get_clone(to_env).generate_metadata
+    end
+  end
 
   def uniquify_artifacts
     system_templates.uniq! unless self.system_templates.nil?
@@ -572,6 +562,14 @@ class Changeset < ActiveRecord::Base
     product.repos(self.environment.prior).where("repositories.id" => repo_id).first
   end
 
+  def affected_repos
+    repos = []
+    repos += self.packages.collect{ |e| e.repositories }.flatten(1)
+    repos += self.errata.collect{ |e| e.repositories }.flatten(1)
+    repos += self.distributions.collect{ |e| e.repositories }.flatten(1)
+
+    repos.uniq
+  end
 
   def extended_index_attrs
     pkgs = self.packages.collect{|pkg| pkg.display_name}

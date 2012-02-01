@@ -49,7 +49,8 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
         :properties => {
           :name          => { :type=> 'string', :analyzer=>'name_analyzer'},
           :nvrea         => { :type=> 'string', :analyzer=>'keyword'},
-          :nvrea_sort    => { :type => 'string', :index=> :not_analyzed }
+          :nvrea_sort    => { :type => 'string', :index=> :not_analyzed },
+          :repoids       => { :type=> 'string', :analyzer=>'keyword'}
         }
       }
     }
@@ -116,6 +117,17 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     return search.results
   rescue
     return []
+  end
+
+  def self.index_packages pkg_ids
+    pkgs = pkg_ids.collect{ |pkg_id| 
+      pkg = self.find(pkg_id)
+      pkg.as_json.merge(pkg.index_options)
+    }
+    Tire.index Glue::Pulp::Package.index do
+      create :settings => Glue::Pulp::Package.index_settings, :mappings => Glue::Pulp::Package.index_mapping
+      import pkgs
+    end if !pkgs.empty?
   end
 
 end

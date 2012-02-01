@@ -103,7 +103,7 @@ class SystemsController < ApplicationController
     rescue Exception => error
       display_message = error.response.include?('displayMessage') ? JSON.parse(error.response)['displayMessage'] : error.to_s
       notice display_message, {:level => :error}
-      Rails.logger.info error.backtrace.join("\n")
+      Rails.logger.error error.backtrace.join("\n")
       render :text => error, :status => :bad_request
     end
   end

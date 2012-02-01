@@ -81,7 +81,7 @@ describe Changeset do
         @prod.stub(:arch).and_return('noarch')
         @prod.save!
         ep = EnvironmentProduct.find_or_create(@organization.library, @prod)
-        @pack = mock('Pack', {:id => 1, :name => 'pack'})
+        @pack = {:id => 1, :name => 'pack'}.with_indifferent_access
         @err  = mock('Err', {:id => 'err', :name => 'err'})
 
         @repo = Repository.create!(:environment_product => ep, :name=> "repo", :pulp_id=>"1")
@@ -141,11 +141,9 @@ describe Changeset do
           lambda {@changeset.add_erratum("err")}.should raise_error
         end
 
-      end
-
-      it "should add distribution" do
-        @changeset.add_distribution("some-distro-id", "prod")
-        @changeset.distributions.length.should == 1
+        it "should fail on add distribution" do
+          lambda {@changeset.add_distribution("some_distro_id")}.should raise_error
+        end
       end
 
       describe "adding content from the prior environment" do
@@ -162,6 +160,7 @@ describe Changeset do
         end
 
         it "should add package" do
+          @prod.stub(:find_packages_by_name).with(@changeset.environment.prior, "pack").and_return([@pack])
           @changeset.add_package("pack", "prod")
           @changeset.packages.length.should == 1
         end
@@ -177,7 +176,7 @@ describe Changeset do
         end
 
         it "should add distribution" do
-          @changeset.add_distribution("some-distro_id", "prod")
+          @changeset.add_distribution("some-distro-id", "prod")
           @changeset.distributions.length.should == 1
         end
 
@@ -283,6 +282,7 @@ describe Changeset do
         @clone.stub(:has_package?).and_return(false)
         @clone.stub(:has_erratum?).and_return(false)
         @clone.stub(:has_distribution?).and_return(false)
+        @clone.stub(:generate_metadata)
         @repo.stub(:clone_ids).and_return([])
         @repo.stub(:get_clone).and_return(@clone)
         @repo.stub(:get_cloned_in).and_return(nil)
@@ -290,10 +290,15 @@ describe Changeset do
         @prod.stub(:repos).and_return([@repo])
         @prod.stub_chain(:repos, :where).and_return([@repo])
 
+        @clone.stub(:index_packages).and_return()
+        @repo.stub(:index_packages).and_return()
+
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
         @changeset.stub(:wait_for_tasks).and_return(nil)
         @changeset.stub(:calc_dependencies).and_return([])
+
+        Glue::Pulp::Package.stub(:index_packages).and_return(true)
 
       end
 
@@ -361,6 +366,14 @@ describe Changeset do
         @changeset.state = Changeset::REVIEW
 
         @clone.should_receive(:add_distribution).once.with(@distribution.id)
+
+        @changeset.promote(false)
+      end
+
+      it "should regenerate metadata of changed repos" do
+        @changeset.stub(:affected_repos).and_return([@repo])
+        @clone.should_receive(:generate_metadata)
+        @changeset.state = Changeset::REVIEW
 
         @changeset.promote(false)
       end

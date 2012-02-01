@@ -124,13 +124,13 @@ class ActivationKey < ActiveRecord::Base
         end
       end
     rescue Exception => e
-      Rails.logger.info "Autosubscribtion failed, rolling back: #{already_subscribed.inspect}"
+      Rails.logger.error "Autosubscribtion failed, rolling back: #{already_subscribed.inspect}"
       already_subscribed.each do |entitlement_id|
         begin
           Rails.logger.debug "Rolling back: #{entitlement_id}"
           entitlements_array = system.unsubscribe entitlement_id
         rescue Exception => re
-          Rails.logger.warn "Rollback failed, skipping: #{re.message}"
+          Rails.logger.fatal "Rollback failed, skipping: #{re.message}"
         end
       end
       raise e

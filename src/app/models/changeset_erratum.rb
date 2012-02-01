@@ -17,24 +17,11 @@ class ChangesetErratumValidator < ActiveModel::Validator
     to_env   = record.changeset.environment
     product = Product.find(record.product_id)
 
-    #package must be in one of the repositories in the source environment
-    #the repository must belong to a product that is in both source and target environment
-    #the repository must be cloned in the target environment
+    record.errors[:base] <<  _("Erratum '#{record.errata_id}' doesn't belong to the specified product!") and return if record.repositories.empty?
 
-    if not (product.environments.include? from_env and product.environments.include? to_env)
-      record.errors[:base] <<  _("Product of the erratum '#{record.errata_id}' must belong to both source and target environment!")
+    record.repositories.each do |repo|
+      record.errors[:base] << _("Repository of the erratum '#{record.errata_id}' has not been promoted into the target environment!") and return if not repo.is_cloned_in? to_env
     end
-
-    found_in_repo = false
-    #search for the erratum in all repos in its product
-    product.repos(from_env).each do |repo|
-      if repo.has_erratum? record.errata_id
-        record.errors[:base] <<  _("Repository of the erratum '#{record.errata_id}' has not been promoted into the target environment!") if not repo.is_cloned_in? to_env
-        found_in_repo = true
-      end
-    end
-
-    record.errors[:base] <<  _("Erratum '#{record.errata_id}' doesn't belong to the specified product!") if not found_in_repo
   end
 end
 
@@ -45,6 +32,18 @@ class ChangesetErratum < ActiveRecord::Base
   belongs_to :product
   validates :display_name, :length => { :maximum => 255 }
   validates_with ChangesetErratumValidator
+
+  def repositories
+    return @repos if not @repos.nil?
+
+    from_env = self.changeset.environment.prior
+    @repos = []
+
+    self.product.repos(from_env).each do |repo|
+      @repos << repo if repo.has_erratum? self.errata_id
+    end
+    @repos
+  end
 
   # returns list of virtual permission tags for the current user
   def self.list_tags
