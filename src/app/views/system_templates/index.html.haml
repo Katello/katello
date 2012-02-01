@@ -10,7 +10,8 @@
     KT.template_breadcrumb = $.parseJSON('#{escape_javascript(generate_template_breadcrumb())}');
     KT.product_hash = $.parseJSON('#{escape_javascript(product_hash.to_json)}');
     KT.package_groups = $.parseJSON('#{escape_javascript(package_groups.to_json)}');
-    KT.distributions = $.parseJSON('#{escape_javascript(distro_map.to_json)}');
+    KT.product_distributions = $.parseJSON('#{escape_javascript(product_distro_map.to_json)}');
+    KT.repo_distributions = $.parseJSON('#{escape_javascript(repo_distro_map.to_json)}');
 
     localize({
       "products": '#{escape_javascript(_('Products'))}',
@@ -23,8 +24,8 @@
       "add_label": '#{escape_javascript(_("Add"))}',
       "add_close_label": '#{escape_javascript(_("Cancel Add"))}',
       "templates_empty": '#{escape_javascript(_("No System Templates are currently defined"))}',
-      "need_product": '#{escape_javascript(_("No products are currently associated with this system template.  Please associate a product that contains distributions in order to select a distribution."))}',
-      "need_distro_product": '#{escape_javascript(_("None of the associated products contain distributions, please select a product that contains at least one distribution."))}',
+      "need_product_or_repo": '#{escape_javascript(_("No products or repositories are currently associated with this system template.  Please add either a product or repository that contains distributions in order to select a distribution."))}',
+      "need_distro_product_or_repo": '#{escape_javascript(_("None of the associated products or repositories contain distributions, please add a product or repository that contains at least one distribution."))}',
       "save" : '#{escape_javascript(_("Save"))}',
       "repo_search_text": '#{escape_javascript(_("Search available repository names..."))}',
       "package_search_text": '#{escape_javascript(_("Search available package names..."))}',
