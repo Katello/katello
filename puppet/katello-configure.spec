@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.55
+Version:        0.1.58
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,16 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.58-1
+- 785703 - increasing logging for seed script now used
+
+* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.57-1
+- 785703 - increasing logging for seed script
+
+* Fri Jan 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.56-1
+- nicer errors for CLI and RHSM when service is down
+- 771352 - SAM does need katello-jobs for email and org delete
+
 * Thu Jan 26 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.55-1
 - 784601 - sync fails if /var/lib/pulp/packages is separate mount
 - 773088 - short term bump of the REST client timeout to 120

@@ -85,7 +85,7 @@ module Candlepin
       end
 
       def path(id=nil)
-        "/candlepin/consumers/#{url_encode id}"
+        "/candlepin/consumers/#{id}"
       end
 
       def get uuid
@@ -93,7 +93,7 @@ module Candlepin
       end
 
       def create key, name, type, facts, installedProducts, autoheal=true
-        url = path() + "?owner=#{url_encode key}"
+        url = path() + "?owner=#{key}"
         attrs = {:name => name, :type => type, :facts => facts, :installedProducts => installedProducts, :autoheal => autoheal }
         response = self.post(url, attrs.to_json, self.default_headers).body
         JSON.parse(response).with_indifferent_access
@@ -101,7 +101,7 @@ module Candlepin
 
       def register_hypervisors params
         url = "/candlepin/hypervisors"
-        url << "?owner=#{url_encode params[:owner]}&env=#{url_encode params[:env]}"
+        url << "?owner=#{params[:owner]}&env=#{params[:env]}"
         attrs = params.except(:owner, :env)
         response = self.post(url, attrs.to_json, self.default_headers).body
         JSON.parse(response).with_indifferent_access
@@ -123,7 +123,7 @@ module Candlepin
       end
 
       def available_pools(uuid, listall=false)
-        url = Pool.path() + "?consumer=#{url_encode uuid}&listall=#{listall}"
+        url = Pool.path() + "?consumer=#{uuid}&listall=#{listall}"
         response = Candlepin::CandlepinResource.get(url,self.default_headers).body
         JSON.parse(response)
       end
@@ -140,13 +140,13 @@ module Candlepin
       end
 
       def consume_entitlement uuid, pool, quantity = nil
-        uri = join_path(path(uuid), 'entitlements') + "?pool=#{url_encode pool}"
-        uri += "&quantity=#{url_encode quantity}" if quantity
+        uri = join_path(path(uuid), 'entitlements') + "?pool=#{pool}"
+        uri += "&quantity=#{quantity}" if quantity
         self.post(uri, "", self.default_headers).body
       end
 
       def remove_entitlement uuid, ent_id
-        uri = join_path(path(uuid), 'entitlements') + "/#{url_encode ent_id}"
+        uri = join_path(path(uuid), 'entitlements') + "/#{ent_id}"
         self.delete(uri, self.default_headers).code.to_i
       end
 
@@ -207,7 +207,7 @@ module Candlepin
       end
 
       def path(id=nil)
-        "/candlepin/owners/#{url_encode id}/info"
+        "/candlepin/owners/#{id}/info"
       end
     end
   end
@@ -299,7 +299,7 @@ module Candlepin
 
 
       def path(id=nil)
-        "/candlepin/owners/#{url_encode id}"
+        "/candlepin/owners/#{id}"
       end
     end
   end
@@ -311,7 +311,7 @@ module Candlepin
       end
 
       def path(id=nil)
-        "/candlepin/users/#{url_encode id}"
+        "/candlepin/users/#{id}"
       end
     end
   end
@@ -324,7 +324,7 @@ module Candlepin
       end
 
       def path id=nil
-        "/candlepin/pools/#{url_encode id}"
+        "/candlepin/pools/#{id}"
       end
     end
   end
@@ -351,7 +351,7 @@ module Candlepin
       end
 
       def path(id=nil)
-        "/candlepin/content/#{url_encode id}"
+        "/candlepin/content/#{id}"
       end
     end
   end
@@ -370,22 +370,22 @@ module Candlepin
       end
 
       def create_for_owner owner_key, attrs
-        subscription = self.post("/candlepin/owners/#{url_encode owner_key}/subscriptions", attrs.to_json, self.default_headers).body
-        self.put("/candlepin/owners/#{url_encode owner_key}/subscriptions", {}.to_json, self.default_headers).body
+        subscription = self.post("/candlepin/owners/#{owner_key}/subscriptions", attrs.to_json, self.default_headers).body
+        self.put("/candlepin/owners/#{owner_key}/subscriptions", {}.to_json, self.default_headers).body
         subscription
       end
 
       def get_for_owner owner_key
-        content_json = Candlepin::CandlepinResource.get("/candlepin/owners/#{url_encode owner_key}/subscriptions", self.default_headers).body
+        content_json = Candlepin::CandlepinResource.get("/candlepin/owners/#{owner_key}/subscriptions", self.default_headers).body
         content = JSON.parse(content_json)
       end
 
       def refresh_for_owner owner_key
-        self.put("/candlepin/owners/#{url_encode owner_key}/subscriptions", {}.to_json, self.default_headers).body
+        self.put("/candlepin/owners/#{owner_key}/subscriptions", {}.to_json, self.default_headers).body
       end
 
       def path(id=nil)
-        "/candlepin/subscriptions/#{url_encode id}"
+        "/candlepin/subscriptions/#{id}"
       end
     end
   end
@@ -441,11 +441,11 @@ module Candlepin
       end
 
       def add_content product_id, content_id, enabled
-        self.post(join_path(path(product_id), "content/#{url_encode content_id}?enabled=#{enabled}"), nil, self.default_headers).code.to_i
+        self.post(join_path(path(product_id), "content/#{content_id}?enabled=#{enabled}"), nil, self.default_headers).code.to_i
       end
 
       def remove_content product_id, content_id
-        self.delete(join_path(path(product_id), "content/#{url_encode content_id}"), self.default_headers).code.to_i
+        self.delete(join_path(path(product_id), "content/#{content_id}"), self.default_headers).code.to_i
       end
 
       def create_unlimited_subscription owner_key, product_id
@@ -472,7 +472,7 @@ module Candlepin
           products = ([s['product']] + s['providedProducts'])
           products.each do |p|
             if p['id'] == product_id
-              Rails.logger.info "Deleting subscription: "+s.to_json
+              Rails.logger.debug "Deleting subscription: " + s.to_json
               Candlepin::Subscription.destroy s['id']
               break
             end
@@ -483,7 +483,7 @@ module Candlepin
       end
 
       def path(id=nil)
-        "/candlepin/products/#{url_encode id}"
+        "/candlepin/products/#{id}"
       end
     end
   end
@@ -491,11 +491,11 @@ module Candlepin
   class Entitlement < CandlepinResource
     class << self
       def regenerate_entitlement_certificates_for_product(product_id)
-        self.put("/candlepin/entitlements/product/#{url_encode product_id}", nil, self.default_headers).code.to_i
+        self.put("/candlepin/entitlements/product/#{product_id}", nil, self.default_headers).code.to_i
       end
 
       def path(id=nil)
-        "/candlepin/entitlements/#{url_encode id}"
+        "/candlepin/entitlements/#{id}"
       end
     end
   end

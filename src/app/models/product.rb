@@ -146,7 +146,7 @@ class Product < ActiveRecord::Base
   end
 
   def readable?
-    Product.readable(self.organization).where(:id => id).count > 0
+    Product.all_readable(self.organization).where(:id => id).count > 0
   end
 
   def syncable?
@@ -154,7 +154,7 @@ class Product < ActiveRecord::Base
   end
 
   def editable?
-    Product.editable(self.organization).where(:id => id).count > 0
+    Product.all_editable(self.organization).where(:id => id).count > 0
   end
 
   def update_related_index

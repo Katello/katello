@@ -43,7 +43,13 @@ class CLITestCase(unittest.TestCase):
     def tearDown(self):
         self.restore_mocks()
 
-
+    def assertRaisesException(self, expected, test_case, *args, **kvargs):
+        try:
+            test_case(*args, **kvargs)
+        except expected, e:
+            return e
+        else:
+            raise self.failureException("{0} not raised".format(expected))
 
 class CLIOptionTestCase(CLITestCase):
 

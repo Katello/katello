@@ -63,7 +63,7 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def import tpl_file_path
-    Rails.logger.info "Importing into template #{name}"
+    Rails.logger.debug "Importing into template #{name}"
 
     file = File.open(tpl_file_path,"r")
     content = file.read

@@ -27,7 +27,8 @@ var sliding_tree = function(tree_id, options) {
         list 		= container.find(".sliding_container .sliding_list"),
         breadcrumb 	= container.find(".tree_breadcrumb"),
         sliders 	= container.find('.sliders'),
-        current_crumb;
+        current_crumb,
+        search;
 
     var prerender = function(id) {
         
@@ -218,102 +219,8 @@ var sliding_tree = function(tree_id, options) {
             var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
             if (settings.current_tab != newContent) {
                 prerender(newContent);
-                $(document).trigger('hash_change.slidingtree');
-                $.bbq.removeState('search');
-                if( settings.enable_search ){
-                    set_search_button_state(newContent);
-                }
+                $(document).trigger('hashchange.' + tree_id, [newContent]);
             }
-        },
-        set_search_button_state = function(current_crumb){
-            var searchable = settings.breadcrumb[current_crumb]['searchable'],
-                search_button = container.find('.search_button');
-
-            if( !searchable ){
-                search_button.css({ backgroundPosition : "0 0" });
-                search_button.addClass('disabled');
-                search_button.attr('title', i18n.disabled_search);
-            } else {
-                search_button.css({backgroundPosition: "0 -16px"});
-                search_button.removeClass('disabled');
-                search_button.attr('title', i18n.search);
-            }
-        },
-        setup_search = function(options){
-             var bcs,
-                 bcs_height = 0,
-                 search_form = $('#search_form'),
-                 search_input = $('#search_input'),
-                 bcs = $('.breadcrumb_search');
-             
-             $('.search_button').toggle(
-                 function() {
-                    if( !$(this).hasClass('disabled') ){
-                         bcs_height = bcs.height();
-                         bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
-                         search_input.css("margin-left", '4px');
-                         search_form.css("opacity", "0").show();
-                         search_form.animate({"opacity":"1"}, { duration: 200, queue: false });
-                         search_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
-                         $(this).css({backgroundPosition: "-32px -16px"});
-                         $(this).attr('title', i18n.close);
-                         
-                         if( $('.remove_item').length ){
-                             $('.remove_item').css({ top : 52 });
-                         }
-                         
-                         if( $('.close').length ){
-                             $('.close').css({ top : 52 });
-                         }
-                    }
-                 },function() {
-                    if( !$(this).hasClass('disabled') ){
-                         search_form.fadeOut("fast", function(){
-                             bcs.animate({ "height": bcs_height }, "fast");
-                             if( $('.remove_item').length ){
-                                 $('.remove_item').css({ top : 12 });
-                             }
-                             if( $('.close').length ){
-                                 $('.close').css({ top : 12 });
-                             }
-                         });
-                         $(this).css({backgroundPosition: "0 -16px"});
-                         $(this).attr('title', i18n.search);
-                    }
-                 }
-             ).tipsy({ fade : true, gravity : 's' });
-             
-            search_form.live('submit', function(event){
-            	var current_crumb 	= $.bbq.getState(settings.bbq_tag) || settings.default_tab,
-					search_url 		= settings.breadcrumb[current_crumb]['url'],
-					offset 			= offset || 0,
-					data 			= {},
-	                panel           = list.children('.has_content');
-					
-            	event.preventDefault();
-            	
-            	if( settings.breadcrumb[current_crumb]['searchable'] ){
-                    if ($(this).serialize() !== 'search=') {
-                        $.bbq.pushState($(this).serialize());
-                    }
-
-            	    search_url += '?offset=' + offset;
-                    panel.html("<img src='images/spinner.gif' >");
-
-	            	$(this).ajaxSubmit({
-	                    url		: search_url,
-	                    data	: data,
-                            cache       : false,
-	                    success	: function (data) {
-                                var to_append = data.html ? data.html : data;
-                                panel.html(to_append);
-	                    },
-	                    error: function (e) {
-	                        //button.removeAttr('disabled');
-	                    }
-	               	});
-               	}
-            });
         },
         setup_filter = function(){
              var bcs,
@@ -371,6 +278,10 @@ var sliding_tree = function(tree_id, options) {
                  }
              });
              filter_input.val("").change();
+        },
+        enable_search = function(){
+            search = sliding_tree.search();
+            search.init(this, list);
         };
 
     var settings = {
@@ -395,10 +306,6 @@ var sliding_tree = function(tree_id, options) {
         setup_filter();
     }
     
-	if( settings.enable_search ){
-        setup_search();
-    }
-    
 	if( settings.enable_float ){
 		container.css('position', 'absolute');
 		sliders.css('height', sliders.css('minHeight'));
@@ -421,15 +328,133 @@ var sliding_tree = function(tree_id, options) {
     	get_current_crumb	: function(){
     		return current_crumb;
     	},
+        get_breadcrumbs     : function(){
+            return settings.breadcrumb;
+        },
+        get_tree_id         : function(){
+            return tree_id;
+        },
         render_content		: render_content,
         rerender_content	: function() {
                 render($.bbq.getState(settings.bbq_tag), list.children('.has_content'));
             },
         rerender_breadcrumb	: function() {
             reset_breadcrumb($.bbq.getState(settings.bbq_tag));
-        }
+        },
+        enableSearch       : enable_search
     };
 };
+
+sliding_tree.search = function(){
+    var bcs,
+        bcs_height = 0,
+        search_form, search_input, search_button,
+        breadcrumbs,
+
+        init = function(sliding_tree, parent){
+            var tree_id = sliding_tree.get_tree_id();
+
+            search_form = $('#search_form');
+            search_input = $('#search_input');
+            bcs = $('.breadcrumb_search');
+            search_button = bcs.find('.search_button');
+            bcs_height = bcs.height();
+            breadcrumbs = sliding_tree.get_breadcrumbs();
+         
+             search_button.toggle(
+                 function() {
+                    if( !search_button.hasClass('disabled') ){
+                        open();
+                    }
+                 },function() {
+                    if( !search_button.hasClass('disabled') ){
+                        close();
+                    }
+                 }
+             ).tipsy({ fade : true, gravity : 's' });
+             
+             search_form.live('submit', function(event){
+                var current_crumb 	= sliding_tree.get_current_crumb(),
+                    search_url 		= breadcrumbs[current_crumb]['url'],
+                    offset 			= offset || 0,
+                    data 			= {},
+                    panel           = parent.children('.has_content');
+                    
+                event.preventDefault();
+                
+                if( breadcrumbs[current_crumb]['searchable'] ){
+                    if ($(this).serialize() !== 'search=') {
+                        $.bbq.pushState($(this).serialize());
+                    }
+
+                    search_url += '?offset=' + offset;
+                    panel.html("<img src='images/spinner.gif' >");
+
+                    $(this).ajaxSubmit({
+                        url		: search_url,
+                        data	: data,
+                        cache   : false,
+                        success	: function (data) {
+                                var to_append = data.html ? data.html : data;
+                                panel.html(to_append);
+                                $(document).trigger('search_complete.slidingtree');
+                        },
+                        error: function (e) {
+                            //button.removeAttr('disabled');
+                        }
+                    });
+                }
+            });
+
+            $(document).bind('hashchange.' + tree_id, function(event, current_crumb){
+                set_search_button_state(current_crumb);
+            });
+
+            //init search button state
+            set_search_button_state(sliding_tree.get_current_crumb());
+        },
+        set_search_button_state = function(current_crumb){
+            var searchable = breadcrumbs[current_crumb]['searchable'];
+
+            $.bbq.removeState('search');
+            toggle_search_button(searchable);
+        },
+        toggle_search_button = function(searchable){
+            close();
+            if( !searchable ){
+                search_button.css({ backgroundPosition : "0 0" });
+                search_button.addClass('disabled');
+                search_button.attr('title', i18n.disabled_search);
+            } else {
+                search_button.css({backgroundPosition: "0 -16px"});
+                search_button.removeClass('disabled');
+                search_button.attr('title', i18n.search);
+            }
+        },
+        open = function(){
+             bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
+             search_input.css("margin-left", '4px');
+             search_form.css("opacity", "0").show();
+             search_form.animate({"opacity":"1"}, { duration: 200, queue: false });
+             search_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
+             search_button.css({backgroundPosition: "-32px -16px"});
+             search_button.attr('title', i18n.close);
+        },
+        close = function(){
+             search_form.fadeOut("fast", function(){
+                 bcs.animate({ "height" : bcs_height }, "fast");
+             });
+             search_button.css({ backgroundPosition : "0 -16px" });
+             search_button.attr('title', i18n.search);
+        };
+
+
+    return {
+        init    : init,
+        open    : open,
+        close   : close
+    };
+}
 
 sliding_tree.ActionBar = function(toggle_list){
     var open_panel 	= undefined,

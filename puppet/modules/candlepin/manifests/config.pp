@@ -28,6 +28,7 @@ class candlepin::config {
   # this does not really work if you use a password
    exec {"cpsetup":
      command => "/usr/share/candlepin/cpsetup >> ${candlepin::params::cpsetup_log} 2>&1",
+     timeout => 300, # 5 minutes timeout (cpsetup can be really slow sometimes)
      require => [
        Postgres::Createdb[$candlepin::params::db_name]
      ],

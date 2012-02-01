@@ -5,6 +5,7 @@ from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
 
 import katello.client.core.repo
 from katello.client.core.repo import Sync
+from katello.client.core.utils import SystemExitRequest
 
 try:
     import json
@@ -90,7 +91,9 @@ class SynchronizeTestWithRepoId(CLIActionTestCase):
     def test_returns_with_error_when_no_repo_found(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
         self.module.get_repo.return_value =  None
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        ex = self.assertRaisesException(SystemExitRequest, self.action.run)
+        self.assertEqual(ex.args[0], os.EX_DATAERR)
+
 
     def test_calls_sync_api(self):
         self.action.run()

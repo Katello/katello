@@ -475,7 +475,6 @@ var promotion_page = (function($){
 
             
             if (current_changeset) {
-                console.log('test');
                 status.show();
                 $("#sliding_tree_actionbar > div").removeClass("disabled");
                 if (!permissions.manage_changesets) {
@@ -1540,9 +1539,9 @@ $(document).ready(function() {
                                         default_tab     :  "content",
                                         bbq_tag         :  "content",
                                         base_icon       :  'home_img',
-                                        enable_search   :  true,
                                         tab_change_cb   :  promotion_page.set_current_product
                                     });
+    contentTree.enableSearch();
 
     promotion_page.set_changeset_tree( sliding_tree("changeset_tree", { 
                                         breadcrumb      :  changeset_breadcrumb,
@@ -1570,7 +1569,6 @@ $(document).ready(function() {
         }
     });
 
-
     //set function for env selection callback
     env_select.click_callback = promotion_page.env_change;
 
@@ -1592,5 +1590,5 @@ $(document).ready(function() {
    			KT.panel.closePanel(tupane);
    		}
    	});
-    
+
 });

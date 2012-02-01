@@ -38,7 +38,7 @@ end
 Warden::Manager.after_authentication do |user,auth,opts|
   user = user.username if user.respond_to? :username
   message = auth.winning_strategy.message
-  Rails.logger.info "User #{user} authenticated: #{auth.winning_strategy.message}"
+  Rails.logger.debug "User #{user} authenticated: #{auth.winning_strategy.message}"
 end
 
 # authenticate against database
