@@ -201,14 +201,17 @@ class ShowSubscriptions(OrganizationAction):
 
         updated_pool_info = [self.displayable_pool(pool) for pool in pools]
 
-        self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
+        # by default use verbose mode
+        if not self.has_option('grep'):
+            self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
+
         self.printer.addColumn('productName')
         self.printer.addColumn('consumed')
-        self.printer.addColumn('contractNumber')
-        self.printer.addColumn('sla')
+        self.printer.addColumn('contractNumber', show_in_grep=False)
+        self.printer.addColumn('sla', show_in_grep=False)
         self.printer.addColumn('id')
-        self.printer.addColumn('startDate')
-        self.printer.addColumn('endDate')
+        self.printer.addColumn('startDate', show_in_grep=False)
+        self.printer.addColumn('endDate', show_in_grep=False)
         self.printer.setHeader(_("Organization's Subscriptions"))
         self.printer.printItems(updated_pool_info)
 

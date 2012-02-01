@@ -1,12 +1,57 @@
 #!/bin/bash
+# this also tests ability to intall imported products
 
-header "Provider import"
+header "provider import"
+if [ -e /etc/redhat-release ]; then
+  RELEASEVER=$(rpm -qf /etc/redhat-release --queryformat '%{VERSION}' | sed 's/6Server/6.2/g' | sed 's/5Server/5.7/g')
+fi
+if [[ -z $RELEASEVER ]]; then
+  RELEASEVER=16
+fi
 
-# importing manifest from our testing export
-IMPORT_ORG="Import_Org_$RAND"
-IMPORT_PROV="Red Hat"
-test_success "org create" org create --name=$IMPORT_ORG
-#the red hat provider is created automatically
-test_failure "provider create" provider create --org="$IMPORT_ORG" --name="$IMPORT_PROV" --url="https://example.com/path/"
-test_success "provider import_manifest" provider import_manifest --org="$IMPORT_ORG" --name="$IMPORT_PROV" --file=$TESTDIR/fake-manifest.zip --force
-test_success "org delete" org delete --name=$IMPORT_ORG
+MANIFEST_ORG="org_manifest_$RAND"
+MANIFEST_ENV="env_manifest_$RAND"
+MANIFEST_AK1="manifest_ak1_$RAND"
+MANIFEST_AK2="manifest_ak2_$RAND"
+CS1_NAME="changeset_manifest_$RAND"
+MANIFEST_PATH="$TESTDIR/fake-manifest-syncable.zip"
+MANIFEST_REPO_URL="http://inecas.fedorapeople.org/fakerepos/cds/"
+MANIFEST_EPROD="Zoo Enterprise"
+MANIFEST_PROD="Zoo Enterprise 247"
+MANIFEST_PROD_CP="Zoo Enterprise 24/7"
+MANIFEST_REPO="Zoo Enterprise x86_64 $RELEASEVER"
+INSTALL_PACKAGE=cheetah
+HOST="$(hostname)_$RAND"
+
+
+
+test_success "org create for manifest ($MANIFEST_ORG)" org create --name="$MANIFEST_ORG" --description="org for rhsm"
+test_success "env create for manifest ($MANIFEST_ENV)" environment create --org="$MANIFEST_ORG" --name="$MANIFEST_ENV" --prior Library
+test_success "update provider url" provider update --name "Red Hat" --org "$MANIFEST_ORG" --url "$MANIFEST_REPO_URL"
+test_success "import manifest" provider import_manifest --name "Red Hat" --org "$MANIFEST_ORG" --file "$MANIFEST_PATH" --force
+test_success "repo enable" repo enable --name="$MANIFEST_REPO" --product "$MANIFEST_EPROD" --org "$MANIFEST_ORG"
+test_success "repo synchronize" repo synchronize --name="$MANIFEST_REPO" --product "$MANIFEST_EPROD" --org "$MANIFEST_ORG"
+test_success "changeset create" changeset create --org="$MANIFEST_ORG" --environment="$MANIFEST_ENV" --name="$CS1_NAME"
+test_success "changeset add product" changeset update  --org="$MANIFEST_ORG" --environment="$MANIFEST_ENV" --name="$CS1_NAME" --add_product="$MANIFEST_EPROD"
+test_success "changeset promote" changeset promote --org="$MANIFEST_ORG" --environment="$MANIFEST_ENV" --name="$CS1_NAME"
+POOLID=$($CMD org subscriptions --name "$MANIFEST_ORG" -g -d ";" | grep "$MANIFEST_PROD_CP" | awk -F ";" '{print $4}') # grab a pool for CP
+
+sm_present() {
+  which subscription-manager &> /dev/null
+  return $?
+}
+
+# testing registration from rhsm
+if sm_present; then
+  test_own_cmd_success "rhsm registration with org" sudo subscription-manager register --username=$USER --password=$PASSWORD \
+    --org=$MANIFEST_ORG --name=$HOST --force
+  test_own_cmd_success "rhsm subscribe to pool" sudo subscription-manager subscribe --pool $POOLID
+  sudo yum remove -y $INSTALL_PACKAGE &> /dev/null
+  test_own_cmd_success "install package from subscribed product" sudo yum install -y $INSTALL_PACKAGE --nogpgcheck --releasever $RELEASEVER
+  sudo yum remove -y $INSTALL_PACKAGE &> /dev/null
+  test_own_cmd_success "rhsm unsubscribe all" sudo subscription-manager unsubscribe --all
+  test_own_cmd_success "rhsm unregister" sudo subscription-manager unregister
+else
+  skip_test_success "rhsm registration" "subscription-manager command not found"
+fi
+test_success "org delete for manifest" org delete --name="$MANIFEST_ORG"
