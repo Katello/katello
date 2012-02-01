@@ -499,25 +499,39 @@ KT.template_renderer = function() {
         current = KT.options.current_template,
         selected;
 
-        if (current.products.length === 0){
-            return i18n.need_product;
+        if (current.products.length === 0 && current.repos.length === 0){
+            return i18n.need_product_or_repo;
         }
+
         $.each(current.products, function(index, prod){
-           $.each(KT.distributions[prod.id], function(index, dist){
-                distros.push(dist);
+           $.each(KT.product_distributions[prod.id], function(index, dist){
+               // if the distro was already added, skip it...
+               if (distros.indexOf(dist.id) === -1) {
+                   distros.push(dist.id);
+               }
            });
         });
 
+        $.each(current.repos, function(index, repo) {
+            $.each(KT.repo_distributions[repo.name], function(index, dist){
+                // if the distro was already added, skip it...
+                if (distros.indexOf(dist.id) === -1) {
+                    distros.push(dist.id);
+                }
+            });
+        });
+
         if (distros.length == 0){
-            return i18n.need_distro_product;
+            return i18n.need_distro_product_or_repo;
         }
+
         html = '<ul>';
         $.each(distros, function(index, dist){
-            selected = (dist.id === current.distribution)  ? " checked " : "";
+            selected = (dist === current.distribution)  ? " checked " : "";
             
             html +=  '<li class="no_hover">';
-            html += '<input ' + selected + 'type="radio" class="distro_select" name="distro" value="' + dist.id + '" id="' + dist.id + '"> ';
-            html += '<span class="sort_attr"><label for="' + dist.id + '">' + dist.description   + '</label></span>';
+            html += '<input ' + selected + 'type="radio" class="distro_select" name="distro" value="' + dist + '" id="' + dist + '"> ';
+            html += '<span class="sort_attr"><label for="' + dist + '">' + dist + '</label></span>';
             html += '</li>';
         });
         html += '</ul>';
