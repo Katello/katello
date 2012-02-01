@@ -322,6 +322,11 @@ module Pulp
         response.body
       end
 
+      def generate_metadata repo_id
+        response = post(repository_path + repo_id + "/generate_metadata/", {}, self.default_headers)
+        JSON.parse(response.body)
+      end
+
       private
       def get_repo_search_query groupids=nil, search_params = {}
         search_query = ""
