@@ -17,6 +17,7 @@ class NotInLibraryValidator < ActiveModel::Validator
 end
 
 require 'util/notices'
+require 'util/package_util'
 
 class Changeset < ActiveRecord::Base
   include Authorization
@@ -222,12 +223,6 @@ class Changeset < ActiveRecord::Base
     self.repos.delete(repo) if repo
   end
 
-  def find_repos product
-    ids = product.repos(self.environment).collect{|r| r.id} & self.repo_ids
-    ids.empty? ? [] : Repository.where(:ids=>ids)
-  end
-
-
   def remove_distribution distribution_id, product_cpid
     product = find_product_by_cpid(product_cpid)
     repos = product.repos(self.environment)
@@ -294,6 +289,9 @@ class Changeset < ActiveRecord::Base
     update_progress! '95'
     promote_distributions from_env, to_env
     update_progress! '100'
+
+    generate_metadata from_env, to_env
+
     self.promotion_date = Time.now
     self.state = Changeset::PROMOTED
     self.save!
@@ -434,9 +432,13 @@ class Changeset < ActiveRecord::Base
     distribution_promote.each_pair do |repo, distro|
       repo.add_distribution(distro)
     end
-
   end
 
+  def generate_metadata from_env, to_env
+    affected_repos.each do |repo|
+        repo.get_clone(to_env).generate_metadata
+    end
+  end
 
   def uniquify_artifacts
     system_templates.uniq! unless self.system_templates.nil?
@@ -560,6 +562,14 @@ class Changeset < ActiveRecord::Base
     product.repos(self.environment.prior).where("repositories.id" => repo_id).first
   end
 
+  def affected_repos
+    repos = []
+    repos += self.packages.collect{ |e| e.repositories }.flatten(1)
+    repos += self.errata.collect{ |e| e.repositories }.flatten(1)
+    repos += self.distributions.collect{ |e| e.repositories }.flatten(1)
+
+    repos.uniq
+  end
 
   def extended_index_attrs
     pkgs = self.packages.collect{|pkg| pkg.display_name}
