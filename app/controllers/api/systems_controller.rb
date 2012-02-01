@@ -202,6 +202,16 @@ class Api::SystemsController < Api::ApiController
     render :json => @task.to_json
   end
 
+  def enabled_repos
+    basearch = params['basearch'] rescue raise(HttpErrors::BadRequest, _("Expecting basearch attribute"))
+    releasever = params['releasever'] rescue raise(HttpErrors::BadRequest, _("Expecting releasever attribute"))
+    urls = params['repos'].collect{ |r| r['baseurl']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
+
+    logger.error "Not implemented yet: #{basearch} #{releasever} #{urls.inspect}"
+
+    render :json => {}.to_json
+  end
+
   protected
 
   def find_organization
