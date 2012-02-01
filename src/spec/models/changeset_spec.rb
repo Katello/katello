@@ -282,6 +282,7 @@ describe Changeset do
         @clone.stub(:has_package?).and_return(false)
         @clone.stub(:has_erratum?).and_return(false)
         @clone.stub(:has_distribution?).and_return(false)
+        @clone.stub(:generate_metadata)
         @repo.stub(:clone_ids).and_return([])
         @repo.stub(:get_clone).and_return(@clone)
         @repo.stub(:get_cloned_in).and_return(nil)
@@ -365,6 +366,14 @@ describe Changeset do
         @changeset.state = Changeset::REVIEW
 
         @clone.should_receive(:add_distribution).once.with(@distribution.id)
+
+        @changeset.promote(false)
+      end
+
+      it "should regenerate metadata of changed repos" do
+        @changeset.stub(:affected_repos).and_return([@repo])
+        @clone.should_receive(:generate_metadata)
+        @changeset.state = Changeset::REVIEW
 
         @changeset.promote(false)
       end
