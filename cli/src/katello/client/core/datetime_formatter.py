@@ -56,5 +56,10 @@ class DateTimeFormatter():
         loc_time = time.localtime(t)
         utc_time = time.gmtime(t)
 
-        shift = loc_time.tm_hour - utc_time.tm_hour
-        return "%+03i:00" % shift
+        shift = (loc_time.tm_hour*60 + loc_time.tm_min) - (utc_time.tm_hour*60 + utc_time.tm_min)
+        hr_shift = shift//60
+        min_shift = shift%60
+        if hr_shift < 0:
+            hr_shift += 1
+
+        return "%+03i:%02i" % (hr_shift, min_shift)

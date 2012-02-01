@@ -207,7 +207,7 @@ class ApplicationController < ActionController::Base
   # render a 404 page
   def render_404(exception = nil)
     if exception
-        logger.info _("Rendering 404:") + "#{exception.message}"
+        logger.error _("Rendering 404:") + " #{exception.message}"
     end
     respond_to do |format|
       format.html { render :template => "common/404", :layout => !request.xhr?, :status => 404 }
@@ -221,7 +221,7 @@ class ApplicationController < ActionController::Base
   # take care of 500 pages too
   def render_error(exception = nil)
     if exception
-      logger.info _("Rendering 500:") + "#{exception.message}"
+      logger.error _("Rendering 500:") + "#{exception.message}"
       notice exception.to_s, {:level => :error}
     end
     respond_to do |format|

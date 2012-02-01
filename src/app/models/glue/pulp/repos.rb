@@ -238,7 +238,7 @@ module Glue::Pulp::Repos
     end
 
     def sync
-      Rails.logger.info "Syncing product #{name}"
+      Rails.logger.debug "Syncing product #{name}"
       self.repos(library).collect do |r|
         r.sync
       end.flatten

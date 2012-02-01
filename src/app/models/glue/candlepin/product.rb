@@ -150,7 +150,7 @@ module Glue::Candlepin::Product
     end
 
     def set_product
-      Rails.logger.info "Creating a product in candlepin: #{name}"
+      Rails.logger.debug "Creating a product in candlepin: #{name}"
       json = Candlepin::Product.create({
         :name => self.name,
         :multiplier => self.multiplier || 1,
@@ -163,7 +163,7 @@ module Glue::Candlepin::Product
     end
 
     def del_product
-      Rails.logger.info "Deleting product in candlepin: #{name}"
+      Rails.logger.debug "Deleting product in candlepin: #{name}"
       Candlepin::Product.destroy self.cp_id
       true
     rescue => e
@@ -174,7 +174,7 @@ module Glue::Candlepin::Product
 
     def set_content
       self.productContent.each do |pc|
-        Rails.logger.info "Creating content in candlepin: #{pc.content.name}"
+        Rails.logger.debug "Creating content in candlepin: #{pc.content.name}"
         #TODO: use json returned from cp to populate productContent
         new_content = Candlepin::Content.create pc.content
         pc.content.id = new_content[:id]
@@ -186,7 +186,7 @@ module Glue::Candlepin::Product
 
     def del_content
       self.productContent.each do |pc|
-        Rails.logger.info "Deleting content in candlepin: #{pc.content.name}"
+        Rails.logger.debug "Deleting content in candlepin: #{pc.content.name}"
         Candlepin::Content.destroy(pc.content.id)
       end
     rescue => e
@@ -196,7 +196,7 @@ module Glue::Candlepin::Product
 
     def remove_all_content
       self.productContent.each do |pc|
-        Rails.logger.info "Removing content from product '#{self.cp_id}' in candlepin: #{pc.content.name}"
+        Rails.logger.debug "Removing content from product '#{self.cp_id}' in candlepin: #{pc.content.name}"
         self.remove_content_by_id pc.content.id
       end
       true
@@ -228,7 +228,7 @@ module Glue::Candlepin::Product
     def set_unlimited_subscription
       # we create unlimited subscriptions only for generic yum providers
       if self.provider and self.provider.yum_repo?
-        Rails.logger.info "Creating unlimited subscription for product #{name} in candlepin"
+        Rails.logger.debug "Creating unlimited subscription for product #{name} in candlepin"
         Candlepin::Product.create_unlimited_subscription self.organization.cp_key, self.cp_id
       end
       true
@@ -256,7 +256,7 @@ module Glue::Candlepin::Product
     end
 
     def del_subscriptions
-      Rails.logger.info "Deleting subscriptions for product #{name} in candlepin"
+      Rails.logger.debug "Deleting subscriptions for product #{name} in candlepin"
       Candlepin::Product.delete_subscriptions self.organization.cp_key, self.cp_id
       true
     rescue => e

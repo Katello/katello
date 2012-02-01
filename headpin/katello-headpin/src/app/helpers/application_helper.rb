@@ -125,6 +125,7 @@ module ApplicationHelper
              :title => options[:title],
              :name => options[:name],
              :columns => options[:col],
+             :column_titles => options[:col_titles],
              :custom_rows => options[:custom_rows],
              :collection => collection,
              :accessor=>options[:accessor] }
