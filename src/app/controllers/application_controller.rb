@@ -207,7 +207,7 @@ class ApplicationController < ActionController::Base
   # render a 404 page
   def render_404(exception = nil)
     if exception
-        logger.error _("Rendering 404:") + "#{exception.message}"
+        logger.error _("Rendering 404:") + " #{exception.message}"
     end
     respond_to do |format|
       format.html { render :template => "common/404", :layout => !request.xhr?, :status => 404 }
