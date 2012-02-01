@@ -37,7 +37,7 @@ class UsersController < ApplicationController
         if env_id
           KTEnvironment.find(env_id).systems_registerable?
         else
-          false
+          true # No env means removing previous default env
         end
       else
         @user.editable?
