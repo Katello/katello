@@ -26,11 +26,14 @@ $(document).ready(function() {
     KT.content_actions.addSyncing(ids);
 
 
-    KT.content.showAll();
 
 
     $('#select_all').click(KT.content.select_all);
     $('#select_none').click(KT.content.select_none);
+    $('#collapse_all').click(KT.content.collapse_all);
+    $('#expand_all').click(KT.content.expand_all);
+    
+    KT.content.showAll();
 
     $("#products_table").delegate(".cancel_sync", "click", function(){
         var repo_id = $(this).parents("tr").attr("data-id");
@@ -298,8 +301,17 @@ KT.content = (function(){
                 clickableNodeNames: true,
                 indent: 15
             });
+        },
+        expand_all = function() {
+          $("#products_table").find("tr").removeClass("collapsed").addClass("expanded").each(function(){
+            $(this).expand();
+          });
+        },
+        collapse_all = function() {
+          $("#products_table").find("tr").removeClass("expanded").addClass("collapsed").each(function(){
+            $(this).collapse();
+          });
         };
-
     
     return {
         cancelRepo: cancelRepo,
@@ -312,6 +324,8 @@ KT.content = (function(){
         draw_syncing: draw_syncing,
         reset_products: reset_products,
         showOnlySyncing: showOnlySyncing,
-        showAll: showAll
+        showAll: showAll,
+        expand_all: expand_all,
+        collapse_all: collapse_all
     }
 })();
