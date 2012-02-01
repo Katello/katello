@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.209
+Version:        0.1.210
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -353,6 +353,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Feb 01 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.210-1
+- binding - consumer must exist
+- binding - implementing security rule
+- errors - better error handling of 404 for CLI
+- binding - adding enabled_repos controller action
+
 * Wed Feb 01 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.208-1
 - 753318: add headers to sync schedule lists
 - 786160 - password reset - resolve error when saving task status
