@@ -59,11 +59,37 @@ class Glue::Pulp::Errata
     end
   end
 
+  def self.index_settings
+    {
+        "index" => {
+            "analysis" => {
+                "filter" => {
+                    "ngram_filter"  => {
+                        "type"      => "edgeNGram",
+                        "side"      => "front",
+                        "min_gram"  => 1,
+                        "max_gram"  => 10
+                    }
+                },
+                "analyzer" => {
+                    "name_analyzer" => {
+                        "type"      => "custom",
+                        "tokenizer" => "keyword",
+                        "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
+                    }
+                }
+            }
+        }
+    }
+  end
+
   def self.index_mapping
     {
-      :package => {
+      :errata => {
         :properties => {
-          :title_sort    => { :type => 'string', :index=> :not_analyzed }
+          :repoids  => { :type => 'string', :analyzer =>'keyword'},
+          :id       => { :type => 'string', :analyzer => 'keyword' },
+          :id_sort  => { :type => 'string', :index => :not_analyzed }
         }
       }
     }
@@ -75,10 +101,53 @@ class Glue::Pulp::Errata
 
   def index_options
     {
-      "_type" => :errata
+      "_type" => :errata,
+      :id_sort => self.id
     }
   end
-  
+
+  def self.search query, start, page_size, filters={}, sort=[:id_sort, "ASC"]
+    return [] if !Tire.index(self.index).exists?
+    query_down = query.downcase
+    query = "title:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
+    search = Tire.search self.index do
+      query do
+        string query
+      end
+
+      if page_size > 0
+       size page_size
+       from start
+      end
+      if filters.has_key?(:repoids)
+        filter :terms, :repoids => filters[:repoids]
+      end
+      if filters.has_key?(:type)
+        filter :term, :type => filters[:type]
+      end
+      if filters.has_key?(:severity)
+        filter :term, :type => filters[:severity]
+      end
+
+      sort { by sort[0], sort[1] }
+    end
+    return search.results
+  rescue
+    return []
+  end
+
+  def self.index_errata errata_ids
+    errata = errata_ids.collect{ |errata_id| 
+      erratum = self.find(errata_id)
+      erratum.as_json.merge(erratum.index_options)
+    }
+
+    Tire.index Glue::Pulp::Errata.index do
+      create :settings => Glue::Pulp::Errata.index_settings, :mappings => Glue::Pulp::Errata.index_mapping
+      import errata
+    end if !errata.empty?
+  end
+ 
   def included_packages
     packages = []
 
