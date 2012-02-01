@@ -177,21 +177,28 @@ class PromotionsController < ApplicationController
   end
 
   def errata
-    filter = params.slice(:type, :severity).symbolize_keys
-    filter[:environment_id] = @environment.id
-    filter[:product_id] = @product.cp_id unless @product.nil?
+    filters = {}
 
-    @errata = Glue::Pulp::Errata.filter(filter)
-    @errata.sort! {|a,b| a['title'] <=> b['title']}
+    product_id = params[:product_id]
+    if product_id
+      repos = Product.find(product_id).repos(@environment)
+      repo_ids = repos.collect{ |repo| repo.pulp_id }
+      filters[:repoids] = repo_ids
+    end
+    
+    filters = filters.merge(params.slice(:type, :severity).symbolize_keys)
 
-    offset = params[:offset]
-    if offset
-      render :text=>"" and return if @errata.empty?
+    search = params[:search]
+    search = "*" if search.nil? || search == ''
+    offset = params[:offset] || 0
 
-      options = {:list_partial => 'promotions/errata_items'}
-      render_panel_items(@errata, options, nil, offset)
+    @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters)
+
+    options = {:list_partial => 'promotions/errata_items'}
+
+    if offset.to_i >  0
+      render_panel_results(@errata, @errata.length, options)
     else
-      @errata = @errata[0..current_user.page_size]
       render :partial=>"errata", :locals=>{:collection => @errata}
     end
   end
