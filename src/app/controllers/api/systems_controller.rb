@@ -20,7 +20,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_environment_by_name, :only => [:hypervisors_update]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
-                                        :unsubscribe, :subscriptions, :pools]
+                                        :unsubscribe, :subscriptions, :pools, :enabled_repos]
   before_filter :find_task, :only => [:task_show]
   before_filter :authorize, :except => :activate
 
