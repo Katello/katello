@@ -519,7 +519,6 @@ class Changeset < ActiveRecord::Base
       deps = get_promotable_dependencies_for_packages to_resolve, from_repos, to_repos
       deps = Katello::PackageUtils::filter_latest_packages_by_name deps
 
-
       all_deps += deps
       to_resolve = deps.map{ |d| d['provides'] }.flatten.uniq - all_deps
     end
@@ -564,9 +563,9 @@ class Changeset < ActiveRecord::Base
 
   def affected_repos
     repos = []
-    repos += self.packages.collect{ |e| e.repositories }.flatten(1)
-    repos += self.errata.collect{ |e| e.repositories }.flatten(1)
-    repos += self.distributions.collect{ |e| e.repositories }.flatten(1)
+    repos += self.packages.collect{ |e| e.promotable_repositories }.flatten(1)
+    repos += self.errata.collect{ |p| p.promotable_repositories }.flatten(1)
+    repos += self.distributions.collect{ |d| d.promotable_repositories }.flatten(1)
 
     repos.uniq
   end
