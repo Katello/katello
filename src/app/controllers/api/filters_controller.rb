@@ -83,7 +83,10 @@ class Api::FiltersController < Api::ApiController
   end
 
   def list_repository_filters
-    render :json => @repository.filters.to_json
+    filters = @repository.filters
+    filters += @repository.product.filters if query_params[:inherit]
+
+    render :json => filters.uniq.to_json
   end
 
   def update_repository_filters

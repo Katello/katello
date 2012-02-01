@@ -133,6 +133,6 @@ class RepoAPI(KatelloAPI):
         path = "/api/repositories/%s/filters" % repo_id
         return self.server.PUT(path, {"filters": filters})[1]
 
-    def filters(self, repo_id):
+    def filters(self, repo_id, inherit=False):
         path = "/api/repositories/%s/filters" % repo_id
-        return self.server.GET(path)[1]
+        return self.server.GET(path, {"inherit": inherit})[1]
