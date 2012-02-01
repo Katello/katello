@@ -117,6 +117,7 @@ and then run katello-configure to configure everything.
 cp -Rf %{homedir}/* %{katello_dir}
 
 %changelog
+* Wed Feb 01 2012 Jordan OMara <jomara@redhat.com> 0.1.130-2
 * Fri Jan 27 2012 Jordan OMara <jomara@redhat.com> 0.1.129-2
 - Extra rebuild for a few last minute katello js changes 
   (jomara@redhat.com)
