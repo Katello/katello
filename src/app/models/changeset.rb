@@ -207,15 +207,7 @@ class Changeset < ActiveRecord::Base
 
   def remove_erratum erratum_id, product_cpid
     product = find_product_by_cpid(product_cpid)
-    product.repos(self.environment.prior).each do |repo|
-      #search for erratum in all repos in a product
-      idx = repo.errata.index do |e| e.id == erratum_id end
-      if idx != nil
-        erratum = repo.errata[idx]
-        ChangesetErratum.destroy_all(:errata_id => erratum.id, :changeset_id => self.id, :product_id => product.id)
-        return
-      end
-    end
+    ChangesetErratum.destroy_all(:errata_id => erratum_id, :changeset_id => self.id, :product_id => product.id)
   end
 
   def remove_repo repo_id, product_cpid
@@ -225,14 +217,7 @@ class Changeset < ActiveRecord::Base
 
   def remove_distribution distribution_id, product_cpid
     product = find_product_by_cpid(product_cpid)
-    repos = product.repos(self.environment)
-    idx = nil
-    repos.each do |repo|
-      idx = repo.distributions.index do |d| d.id == distribution_id end
-    end
-    if idx != nil
-      ChangesetDistribution.destroy_all(:distribution_id => distribution_id, :changeset_id => self.id, :product_id => product.id)
-    end
+    ChangesetDistribution.destroy_all(:distribution_id => distribution_id, :changeset_id => self.id, :product_id => product.id)
   end
 
   private
