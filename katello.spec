@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.212
+Version:        0.1.213
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -352,6 +352,14 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Feb 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.213-1
+- spec - moving newrelic gem out of test env (faster)
+- spec - making unit tests faster
+- spec - optimizing unit tests
+- binding - fetch existing bound repos from pulp
+- repos - removing unused repo_id class method
+- 786110 - system template - fix failure on removal if repo added
+
 * Wed Feb 01 2012 Mike McCune <mmccune@redhat.com> 0.1.211-1
 - rebuild
 * Wed Feb 01 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.210-1
