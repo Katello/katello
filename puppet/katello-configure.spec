@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.59
+Version:        0.1.60
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Thu Feb 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.60-1
+- puppet - increasing OS/BE reserve by 100 MB
+
 * Wed Feb 01 2012 Mike McCune <mmccune@redhat.com> 0.1.59-1
 - puppet - giving longer timeout for cpsetup (5 minutes) (lzap+git@redhat.com)
 
