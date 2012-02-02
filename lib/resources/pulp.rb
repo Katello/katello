@@ -453,6 +453,11 @@ module Pulp
         JSON.parse(response.body).with_indifferent_access
       end
 
+      def repoids consumer_id
+        response = get(consumer_path(consumer_id) + "repoids/", self.default_headers)
+        JSON.parse(response.body)
+      end
+
       def consumer_path id = nil
         id.nil? ? "/pulp/api/consumers/" : "/pulp/api/consumers/#{id}/"
       end

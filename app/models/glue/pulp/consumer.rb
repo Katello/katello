@@ -25,9 +25,15 @@ module Glue::Pulp::Consumer
                                                               collect{|pack| Glue::Pulp::SimplePackage.new(pack)} }
       lazy_accessor :errata, :initializer => lambda { Pulp::Consumer.errata(uuid).
                                                               collect{|errata| Glue::Pulp::Errata.new(errata)} }
+      lazy_accessor :repoids, :initializer => lambda { Pulp::Consumer.repoids(uuid).keys }
     end
   end
+
   module InstanceMethods
+    def enable_repos
+      bound_ids = repoids
+    end
+
     def del_pulp_consumer
       Rails.logger.debug "Deleting consumer in pulp: #{self.name}"
       Pulp::Consumer.destroy(self.uuid)
