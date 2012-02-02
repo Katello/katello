@@ -336,8 +336,8 @@ class ActivationKeysController < ApplicationController
       p = OpenStruct.new
       p.poolId = pool['id']
       p.productName = pool['productName']
-      p.startDate = Date.parse(pool['startDate']).strftime("%m/%d/%Y")
-      p.endDate = Date.parse(pool['endDate']).strftime("%m/%d/%Y")
+      p.startDate = format_time(Date.parse(pool['startDate']))
+      p.endDate = format_time(Date.parse(pool['endDate']))
 
       # TODO: this could be moved into the pool.rb
       p.poolType = _('Physical')

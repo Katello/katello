@@ -197,8 +197,8 @@ module ApplicationHelper
   end
 
   #formats the date time if the dat is not nil
-  def format_time  date
-    return date.localtime.strftime('%m/%d/%y %I:%M %p %Z') if date
+  def format_time  date, options = {}
+    return I18n.l(date, options) if date
     ""
   end
 
