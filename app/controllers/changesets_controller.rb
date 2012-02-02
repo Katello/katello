@@ -175,7 +175,7 @@ class ChangesetsController < ApplicationController
           when "errata"
             @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name,
                                                 :product_id => pid, :changeset => @changeset) if adding
-            ChangesetErrata.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
+            ChangesetErratum.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
           when "package"
             @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :product_id => pid,
                                                 :changeset => @changeset) if adding
@@ -301,10 +301,17 @@ class ChangesetsController < ApplicationController
       to_ret[:products][product.id][:all] =  true
     }
 
-    ['repo', 'errata', 'package', 'distribution'].each{ |type|
+    cs.send('repos').each{|item|
+      p item
+      pid = item.product.id
+      cs_product = to_ret[:products][pid]
+      cs_product['repo'] << {:id=>item.id, :name=>item.name}
+    }
+
+    ['errata', 'package', 'distribution'].each{ |type|
       cs.send(type.pluralize).each{|item|
         p item
-        pid = item.product_id
+        pid = item.product.id
         cs_product = to_ret[:products][pid]
         cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
       }
