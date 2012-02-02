@@ -427,7 +427,7 @@ Src::Application.routes.draw do
         post   :index, :on => :collection, :action => :add_product
         delete :destroy, :on => :member, :action => :remove_product
       end
-      resources :packages, :controller => :changesets_content do
+      resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ } do
         post   :index, :on => :collection, :action => :add_package
         delete :destroy, :on => :member, :action => :remove_package
       end
