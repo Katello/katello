@@ -20,7 +20,7 @@ class PulpTaskStatus < TaskStatus
     end
 
     while any_task_running(async_tasks)
-      sleep 1
+      sleep 10
     end
 
     async_tasks
