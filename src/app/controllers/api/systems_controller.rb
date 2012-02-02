@@ -204,11 +204,13 @@ class Api::SystemsController < Api::ApiController
   end
 
   def enabled_repos
-    basearch = params['basearch'] rescue raise(HttpErrors::BadRequest, _("Expecting basearch attribute"))
-    releasever = params['releasever'] rescue raise(HttpErrors::BadRequest, _("Expecting releasever attribute"))
-    urls = params['repos'].collect{ |r| r['baseurl']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
+    repos = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
+    basearch = repos['basearch'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " basearch")
+    releasever = repos['releasever'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " releasever")
+    urls = repos['repos'].collect{ |r| r['baseurl']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
 
-    logger.error "Not implemented yet: #{basearch} #{releasever} #{urls.inspect}"
+    logger.error "Not implemented yet: #{basearch} #{releasever} #{urls.inspect}" # TODO
+    @system.enable_repos
 
     render :json => {}.to_json
   end
