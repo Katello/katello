@@ -434,7 +434,7 @@ var promotion_page = (function($){
                             buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type).show(); //reset all to 'add'
                             if (product) {
                                 $.each(product[type], function(index, item) {
-                                    $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + item.id +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
+                                    $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + KT.common.escapeId(item.id) +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
                                 });
                             }
                         });
