@@ -44,7 +44,6 @@ module Glue::Pulp::Repo
     [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
-
   module InstanceMethods
     def save_repo_orchestration
       case orchestration_for
@@ -450,10 +449,6 @@ module Glue::Pulp::Repo
     if not self.content_id.nil?
       Glue::Candlepin::Content.new(::Candlepin::Content.get(self.content_id))
     end
-  end
-
-  def self.repo_id product_name, repo_name, env_name, organization_name
-    [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
   def set_filters filter_ids
