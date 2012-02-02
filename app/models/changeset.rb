@@ -305,11 +305,11 @@ class Changeset < ActiveRecord::Base
   rescue Exception => e
     self.state = Changeset::FAILED
     self.save!
-
-    error_text = _("Promotion of changeset '%{name}' failed." % {:name => self.name})
-    error_text += _("%{newline}Reason: %{reason}" % {:reason => e.to_s, :newline => "<br />"})
-    notice error_text, {:level => :error, :synchronous_request => false, :request_type => "changesets___promote"}
-
+    Rails.logger.error(e)
+    Rails.logger.error(e.backtrace.join("\n"))
+    details = e.message
+    error_text = _("Failed to promote changeset '%s'. Check notices for more details") % self.name
+    notice error_text, {:details =>details, :level => :error, :synchronous_request => false, :request_type => "changesets___promote"}
     raise e
   end
 
