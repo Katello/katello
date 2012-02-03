@@ -192,16 +192,27 @@ module Glue::Pulp::Repo
   end
 
   def del_content
-    return true if self.content.nil?
-    content_group_id = Glue::Pulp::Repos.content_groupid(self.content)
+    return true unless self.content_id
 
-    content_repo_ids = Pulp::Repository.all([content_group_id]).map{|r| r['id']}
-    other_content_repo_ids = (content_repo_ids - [self.pulp_id])
-
-    if other_content_repo_ids.empty?
+    if other_repos_with_same_product_and_content.empty?
       self.product.remove_content_by_id self.content_id
+      if other_repos_with_same_content.empty?
+        Candlepin::Content.destroy(self.content_id)
+      end
     end
+
     true
+  end
+
+  def other_repos_with_same_product_and_content
+    product_group_id = Glue::Pulp::Repos.product_groupid(self.product_id)
+    content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
+    Pulp::Repository.all([content_group_id, product_group_id]).map{|r| r['id']} - [self.pulp_id]
+  end
+
+  def other_repos_with_same_content
+    content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
+    Pulp::Repository.all([content_group_id]).map{|r| r['id']} - [self.pulp_id]
   end
 
   def destroy_repo_orchestration
