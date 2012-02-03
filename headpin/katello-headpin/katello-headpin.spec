@@ -115,6 +115,16 @@ and then run katello-configure to configure everything.
 %post
 # This overlays headpin onto katello
 cp -Rf %{homedir}/* %{katello_dir}
+cd %{katello_dir}
+
+# need to regenerate scss for headpin changes
+# compile SASS files
+echo Compiling SASS files...
+compass compile
+
+# generate Rails JS/CSS/... assets
+echo Generating Rails assets...
+jammit --config config/assets.yml -f
 
 %changelog
 * Mon Nov 28 2011 Tom McKay <thomasmckay@redhat.com> 0.1.107-1
