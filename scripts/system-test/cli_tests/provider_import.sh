@@ -2,6 +2,7 @@
 # this also tests ability to intall imported products
 
 header "provider import"
+
 if [ -e /etc/redhat-release ]; then
   RELEASEVER=$(rpm -qf /etc/redhat-release --queryformat '%{VERSION}' | sed 's/6Server/6.2/g' | sed 's/5Server/5.7/g')
 fi
