@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.214
+Version:        0.1.215
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -352,6 +352,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Feb 03 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.215-1
+- logging - setting default production level to 'warn'
+- 771886 - system packages - fix ui staying in processing state on pkg install
+
 * Thu Feb 02 2012 Mike McCune <mmccune@redhat.com> 0.1.214-1
 - rebuild
 * Thu Feb 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.213-1
