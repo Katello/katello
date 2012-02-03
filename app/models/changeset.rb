@@ -297,7 +297,8 @@ class Changeset < ActiveRecord::Base
         repo.get_clone(to_env).index_packages
       end
     end
-
+    message = _("Successfully promoted changeset '%s'.") % self.name
+    notice message, {:synchronous_request => false, :request_type => "changesets___promote"}
   rescue Exception => e
     self.state = Changeset::FAILED
     self.save!
