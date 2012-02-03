@@ -146,9 +146,11 @@ module Glue::Provider
 
     def del_products
       Rails.logger.debug "Deleting all products for provider: #{name}"
-      self.products.each do |p|
-        p.destroy
-      end
+      # we first delete marketing products, because there are no repos for them
+      # and they take care of deleting product <-> content association in CP
+      # for themselves.
+      self.products.where("type = 'MarketingProduct'").uniq.each(&:destroy)
+      self.products.where("type <> 'MarketingProduct'").uniq.each(&:destroy)
       true
     rescue => e
       Rails.logger.error "Failed to delete all products for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
