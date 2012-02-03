@@ -18,8 +18,8 @@ Src::Application.configure do
   # If you have no front-end server that supports something like X-Sendfile,
   # just comment this out and Rails will serve the files
 
-  # See everything in the log (default is :info)
-  config.log_level = (ENV['KATELLO_LOGGING'] || "info").dup
+  # See everything in the log (default is :warn)
+  config.log_level = (ENV['KATELLO_LOGGING'] || "warn").dup
   config.active_record.logger = Logger.new("#{Rails.root}/log/production_sql.log")
   config.colorize_logging = false
 
