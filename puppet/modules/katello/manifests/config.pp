@@ -48,19 +48,6 @@ class katello::config {
       notify  => Exec["reload-apache2"];
   }
 
-  # disable SELinux
-  augeas {"temp_disable_selinux":
-    context => "/files/etc/sysconfig/selinux",
-    changes => ["set SELINUX permissive"],
-    notify   => Exec["reload-apache2"]
-  }
-
-  exec {"temp_setenforce":
-    command => "setenforce 0",
-    path    => "/usr/sbin:/bin",
-    unless  => "getenforce |egrep -iq 'disable|Permissive'",
-  }
-
   exec {"httpd-restart":
     command => "/bin/sleep 5; /sbin/service httpd restart; /bin/sleep 10",
     onlyif => "/usr/sbin/apachectl -t",
