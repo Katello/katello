@@ -82,6 +82,11 @@ class Repository < ActiveRecord::Base
     end
   }
 
+  def self.any_readable_in_org? org, skip_library = false
+    KTEnvironment.any_contents_readable? org, skip_library
+  end
+
+
   def extended_index_attrs
     {:environment=>self.environment.name, :environment_id=>self.environment.id,
      :product=>self.product.name, :product_id=> self.product.id}
