@@ -74,7 +74,7 @@ SOURCES.each do |source|
         puts ("#{PAD}copying over #{source}")
         output= `/bin/cp -r --preserve #{source} #{complete_target}`
     else
-        puts ("#{PAD}skipping #{source} since it does not exist")
+        puts "#{PAD}skipping #{source} since it does not exist"
     end
 end
 
