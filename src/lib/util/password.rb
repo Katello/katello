@@ -41,10 +41,10 @@ module Password
 
   protected
 
-  if ENV["RAILS_ENV"] == 'production'
-    PASSWORD_ROUNDS = 500
-  else
+  if Rails.env.test?
     PASSWORD_ROUNDS = 1
+  else
+    PASSWORD_ROUNDS = 500
   end
 
   # Generates a psuedo-random 64 character string
