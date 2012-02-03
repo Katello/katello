@@ -145,16 +145,12 @@ class Changeset < ActiveRecord::Base
     tpl
   end
 
-  def add_package package_nvre, product_cpid
+  def add_package package_name, product_cpid
     product = find_product_by_cpid(product_cpid)
 
-    package_data = Katello::PackageUtils::parse_nvrea_nvre(package_nvre)
-    raise _("Package has to be specified by its nvre") if package_data.nil?
-
-    packs = product.find_packages_by_nvre(self.environment.prior, package_data[:name], package_data[:version], package_data[:release], package_data[:epoch])
-    raise Errors::ChangesetContentException.new(_("Package '#{package_nvre}' was not found in the source environment.")) if packs.empty?
-
-    cs_pack = ChangesetPackage.new(:package_id => packs[0]["id"], :display_name => package_nvre, :product_id => product.id, :changeset => self)
+    pack = find_package product, package_name
+    display_name = Katello::PackageUtils::build_nvrea(pack, false)
+    cs_pack = ChangesetPackage.new(:package_id => pack["id"], :display_name => display_name, :product_id => product.id, :changeset => self)
     cs_pack.save!
     self.packages << cs_pack
   end
@@ -197,13 +193,8 @@ class Changeset < ActiveRecord::Base
 
   def remove_package package_nvre, product_cpid
     product = find_product_by_cpid(product_cpid)
-    package_data = Katello::PackageUtils::parse_nvrea_nvre(package_nvre)
-    raise _("Package has to be specified by its nvre") if package_data.nil?
-
-    packs = product.find_packages_by_nvre(self.environment.prior, package_data[:name], package_data[:version], package_data[:release], package_data[:epoch])
-    raise Errors::ChangesetContentException.new(_("Package '#{package_nvre}' was not found in the source environment.")) if packs.empty?
-
-    ChangesetPackage.destroy_all(:package_id => packs[0]["id"], :changeset_id => self.id, :product_id => product.id)
+    pack = find_package_by_nvre product, package_nvre
+    ChangesetPackage.destroy_all(:package_id => pack["id"], :changeset_id => self.id, :product_id => product.id)
   end
 
   def remove_erratum erratum_id, product_cpid
@@ -244,7 +235,26 @@ class Changeset < ActiveRecord::Base
     product
   end
 
+  def find_package product, name_or_nvre
+    package_data = Katello::PackageUtils::parse_nvrea_nvre(name_or_nvre)
+    if not package_data.nil?
+      packs = product.find_packages_by_nvre(self.environment.prior, package_data[:name], package_data[:version], package_data[:release], package_data[:epoch])
+    else
+      packs = product.find_packages_by_name(self.environment.prior, name_or_nvre)
+      packs = Katello::PackageUtils::find_latest_packages(packs)
+    end
+    raise Errors::ChangesetContentException.new(_("Package '#{name_or_nvre}' was not found in the source environment.")) if packs.empty?
+    packs[0].with_indifferent_access
+  end
 
+  def find_package_by_nvre product, nvre
+    package_data = Katello::PackageUtils::parse_nvrea_nvre(nvre)
+    raise Errors::ChangesetContentException.new(_("Package has to be specified by its nvre.")) if package_data.nil?
+
+    packs = product.find_packages_by_nvre(self.environment.prior, package_data[:name], package_data[:version], package_data[:release], package_data[:epoch])
+    raise Errors::ChangesetContentException.new(_("Package '#{nvre}' was not found in the source environment.")) if packs.empty?
+    packs[0].with_indifferent_access
+  end
 
   def update_progress! percent
     if self.task_status
