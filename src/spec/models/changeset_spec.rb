@@ -86,7 +86,13 @@ describe Changeset do
         @pack_release = "1"
         @pack_arch = "noarch"
         @pack_nvre = @pack_name +"-"+ @pack_version +"-"+ @pack_release +"."+ @pack_arch
-        @pack = {:id => 1, :name => @pack_name}.with_indifferent_access
+        @pack = {
+          :id => 1,
+          :name => @pack_name,
+          :version => @pack_version,
+          :release => @pack_release,
+          :arch => @pack_arch
+        }.with_indifferent_access
         @err  = mock('Err', {:id => 'err', :name => 'err'})
 
         @repo = Repository.create!(:environment_product => ep, :name=> "repo", :pulp_id=>"1")
@@ -164,9 +170,15 @@ describe Changeset do
           @changeset.products.should include @prod
         end
 
-        it "should add package" do
+        it "should add package by nvre" do
           @prod.stub(:find_packages_by_nvre).with(@changeset.environment.prior, @pack_name, @pack_version, @pack_release, nil).and_return([@pack])
           @changeset.add_package(@pack_nvre, "prod")
+          @changeset.packages.length.should == 1
+        end
+
+        it "should add package by name" do
+          @prod.stub(:find_packages_by_name).with(@changeset.environment.prior, @pack_name).and_return([@pack])
+          @changeset.add_package(@pack_name, "prod")
           @changeset.packages.length.should == 1
         end
 

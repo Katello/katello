@@ -66,11 +66,13 @@ module Katello
       return name.split(SUFFIX_RE)
     end
 
-    def self.build_nvrea(package)
+    def self.build_nvrea(package, include_zero_epoch=true)
       nvrea = package[:name] +'-'+ package[:version] +'-'+ package[:release]
       nvrea = nvrea +'.'+ package[:arch] if not package[:arch].nil?
       nvrea = nvrea +'.'+ package[:suffix] if not package[:suffix].nil?
-      nvrea = package[:epoch] +':'+ nvrea if not package[:epoch].nil?
+      if not package[:epoch].nil?
+        nvrea = package[:epoch] +':'+ nvrea if package[:epoch].to_i != 0 || include_zero_epoch
+      end
       nvrea
     end
 
