@@ -207,10 +207,15 @@ class Api::SystemsController < Api::ApiController
     repos = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
     basearch = repos['basearch'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " basearch")
     releasever = repos['releasever'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " releasever")
-    urls = repos['repos'].collect{ |r| r['baseurl']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
+    update_labels = repos['repos'].collect{ |r| r['repositoryid']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
 
-    logger.error "Not implemented yet: #{basearch} #{releasever} #{urls.inspect}" # TODO
-    @system.enable_repos
+    update_ids = []
+    update_labels.each do |label|
+      repo = Repository.find_by_cp_label label
+      update_ids << repo.pulp_id
+    end
+
+    @system.enable_repos update_ids
 
     render :json => {}.to_json
   end
