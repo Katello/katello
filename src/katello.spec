@@ -352,6 +352,23 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Feb 06 2012 Jordan OMara <jomara@redhat.com> 0.1.222-2
+- 787745 MODIFIED - Brad Buckingham - Getting "404 Resource Not Found" when trying to Download a System Template
+- 786598 MODIFIED - Brad Buckingham - System Templates - issues exist when same repo name used across multiple products
+- 785799 MODIFIED - Tom McKay - Importing manifest failed with force selected.
+- 766968 MODIFIED - Partha Aji - Dashboard - user with limited permissions can see the dashboard
+- 771957 MODIFIED - Partha Aji - Cannot recreate org with same name
+- 771886 MODIFIED - Brad Buckingham - UI remains in processing state after triggering a package install via system packages
+- 784280    ON_QA - Lukáš Zapletal - SELinux denials during system cli test
+- 740007 MODIFIED - Partha Aji - Dates & time across katello aren't internationalized
+- 771957 MODIFIED - Partha Aji - Cannot recreate org with same name
+- 786110 MODIFIED - Brad Buckingham - Removal of system template fails if Repo  added
+- 786586 MODIFIED - Brad Buckingham - System Templates - repository duplicated in TDL export
+- 786222 MODIFIED - Brad Buckingham - Unable to export a system template containing a <repository> for a single RHEL release
+- 758441 MODIFIED - Shannon Hughes - Need an "Expand/Collapse All" button on the Sync Management page
+- 786200 MODIFIED - Tom McKay - Machine Type in the Subscriptions page does not need to be there.
+- 754526 MODIFIED - Tom McKay - Cannot unset a user's default env
+- 786574 MODIFIED - Tom McKay - consumer returned from /katello/api/consumer/$id missing autoheal value
 * Mon Feb 06 2012 Mike McCune <mmccune@redhat.com> 0.1.222-1
 - 787745 - system template - fix download containing distros
   (bbuckingham@redhat.com)
