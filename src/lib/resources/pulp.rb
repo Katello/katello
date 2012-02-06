@@ -145,9 +145,7 @@ module Pulp
 
     class << self
       def find dist_id
-        # distribution ids may contain spaces; however, pulp expects them to be encoded as %20, so
-        # use URI::escape to convert any spaces
-        response = get(dist_path + URI::escape(dist_id) + "/", self.default_headers)
+        response = get(dist_path + dist_id + "/", self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end
 
