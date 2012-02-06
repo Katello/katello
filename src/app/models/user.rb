@@ -13,12 +13,15 @@
 require 'ldap'
 require 'util/threadsession'
 require 'util/password'
+require 'util/notices'
 
 class User < ActiveRecord::Base
   include Glue::Pulp::User if (AppConfig.use_cp and AppConfig.use_pulp)
   include Glue if AppConfig.use_cp
   include AsyncOrchestration
+  include Katello::Notices
   include IndexedModel
+
 
   acts_as_reportable
 
@@ -440,14 +443,21 @@ class User < ActiveRecord::Base
     task = self.async(:organization=>org).destroy_organization(org.id)
     org.task_id = task.id
     org.save!
+    task
   end
 
   def destroy_organization org_id
     org = Organization.unscoped{Organization.find(org_id)}
+    name = org.name
     org.destroy
+    message = _("Successfully removed organization '%s'.") % name
+    notice message, { :synchronous_request => false, :request_type => "organization__delete"}
   rescue Exception=>e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
+    error_text =  _("Failed to delete organization '%s'. Check notices for more details. ") % name
+    details = e.message
+    notice error_text, {:level => :error, :details => details, :synchronous_request => false, :request_type => "organization__delete"}
     raise
   end
 

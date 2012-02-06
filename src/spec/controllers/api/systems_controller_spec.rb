@@ -382,4 +382,29 @@ describe Api::SystemsController do
     end
   end
 
+  pending "update enabled_repos" do
+    before do
+      User.stub(:consumer? => true)
+      @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+      System.stub!(:first).and_return(@system)
+    end
+    let(:enabled_repos) {
+      {
+        "basearch" => "i686",
+        "releasever" => "17",
+        "repos" => [
+          {
+            "repositoryid" => "nature-enterprise",
+            "baseurl" => ["https://localhost/repos/ACME_Corporation/$env/content/nature/$releasever/$basearch/rpms"],
+          },
+        ]
+      }
+    }
+
+    it "should get the list of existing repos from pulp" do
+      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'abc' => 'http://xxx'})
+      put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
+      response.status.should == 200
+    end
+  end
 end

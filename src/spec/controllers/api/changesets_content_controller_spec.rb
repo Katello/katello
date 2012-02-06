@@ -82,7 +82,7 @@ describe Api::ChangesetsContentController do
     it_should_behave_like "protected action"
 
     it "should remove a product" do
-      @cs.should_receive(:remove_product).with(product_cp_id).and_return(true)
+      @cs.should_receive(:remove_product).with(product_cp_id).and_return([true])
       req
       response.should be_success
     end
@@ -106,7 +106,7 @@ describe Api::ChangesetsContentController do
     it_should_behave_like "protected action"
 
     it "should remove a package" do
-      @cs.should_receive(:remove_package).with(package_name, product_cp_id).and_return(true)
+      @cs.should_receive(:remove_package).with(package_name, product_cp_id).and_return([true])
       req
       response.should be_success
     end
@@ -130,7 +130,7 @@ describe Api::ChangesetsContentController do
     it_should_behave_like "protected action"
 
     it "should remove an erratum" do
-      @cs.should_receive(:remove_erratum).with(erratum_id, product_cp_id).and_return(true)
+      @cs.should_receive(:remove_erratum).with(erratum_id, product_cp_id).and_return([true])
       req
       response.should be_success
     end
@@ -154,7 +154,7 @@ describe Api::ChangesetsContentController do
     it_should_behave_like "protected action"
 
     it "should remove a repo" do
-      @cs.should_receive(:remove_repo).with(repo_id, product_cp_id).and_return(true)
+      @cs.should_receive(:remove_repo).with(repo_id, product_cp_id).and_return([true])
       req
       response.should be_success
     end
@@ -178,7 +178,7 @@ describe Api::ChangesetsContentController do
     it_should_behave_like "protected action"
 
     it "should remove a template" do
-      @cs.should_receive(:remove_template).with(template_id).and_return(true)
+      @cs.should_receive(:remove_template).with(template_id).and_return([true])
       req
       response.should be_success
     end
@@ -202,7 +202,7 @@ describe Api::ChangesetsContentController do
     it_should_behave_like "protected action"
 
     it "should remove a distribution" do
-      @cs.should_receive(:remove_distribution).with(distribution_id, product_cp_id).and_return(true)
+      @cs.should_receive(:remove_distribution).with(distribution_id, product_cp_id).and_return([true])
       req
       response.should be_success
     end

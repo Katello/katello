@@ -1,12 +1,10 @@
 # Place this file in your /etc/yum.repos.d/ directory
 
-# Community Releases
+# Pulp RPMs as supported by Katello - This is a coordinated 
+# copy of Pulp's packages in order to ensure compatibility
 [pulp]
-name=Pulp Community Releases
-baseurl=http://repos.fedorapeople.org/repos/pulp/pulp/fedora-$releasever/$basearch/
+name=Pulp 
+baseurl=http://repos.fedorapeople.org/repos/katello/pulp/fedora-$releasever/$basearch/
 enabled=1
 skip_if_unavailable=1
 gpgcheck=0
-
-# To enable [pulp-testing] repo install katello-repos-testing package:
-#   yum -y install katello-repos-testing

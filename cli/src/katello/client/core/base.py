@@ -267,8 +267,8 @@ class Action(object):
         if not param_count == 1:
             self.add_option_error(_('One of %s is required; please see --help') % ', '.join(flags))
 
-        return 
-        
+        return
+
 
     def option_specified(self, opt):
         return self.has_option(opt) and self.get_option(opt) != ""
@@ -288,28 +288,6 @@ class Action(object):
         @note: this method should be overridden to add per-action options
         """
         self.parser.set_usage(self.usage)
-
-
-    def add_scheduled_time_option(self):
-        """
-        Adds a --when scheduled time option to the option parser
-        """
-        self.parser.add_option("--when", dest="when", default=None,
-                               help=_("Format: 'Year-Month-Day Hour:Min' specifies when to execute task"))
-
-
-    def parse_scheduled_time_option(self):
-        fmt = "%Y-%m-%d %H:%M"
-        when = self.opts.when
-        if when:
-            try:
-                when = time.strptime(when, fmt)
-                when = time.mktime(when)
-            except:
-                system_exit(-1, _("Unable to parse scheduled time of: %s. Format needs to be in: %s") % (self.opts.when, fmt))
-            if when < time.time():
-                system_exit(-1, _("Scheduled time is in the past: %s.  Please re-run with a valid time.") % (self.opts.when))
-        return when
 
     def run(self):
         """

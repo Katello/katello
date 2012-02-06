@@ -25,9 +25,29 @@ module Glue::Pulp::Consumer
                                                               collect{|pack| Glue::Pulp::SimplePackage.new(pack)} }
       lazy_accessor :errata, :initializer => lambda { Pulp::Consumer.errata(uuid).
                                                               collect{|errata| Glue::Pulp::Errata.new(errata)} }
+      lazy_accessor :repoids, :initializer => lambda { Pulp::Consumer.repoids(uuid).keys }
     end
   end
+
   module InstanceMethods
+    def enable_repos update_ids
+      # calculate repoids to bind/unbind
+      bound_ids = repoids
+      intersection = update_ids & bound_ids
+      bind_ids = update_ids - intersection
+      unbind_ids = bound_ids - intersection
+      Rails.logger.debug "Bound repo ids: #{bound_ids.inspect}"
+      Rails.logger.debug "Update repo ids: #{update_ids.inspect}"
+      Rails.logger.debug "Repo ids to bind: #{bind_ids.inspect}"
+      Rails.logger.debug "Repo ids to unbind: #{unbind_ids.inspect}"
+      unbind_ids.each do |repoid|
+        Pulp::Consumer.unbind(uuid, repoid)
+      end
+      bind_ids.each do |repoid|
+        Pulp::Consumer.bind(uuid, repoid)
+      end
+    end
+
     def del_pulp_consumer
       Rails.logger.debug "Deleting consumer in pulp: #{self.name}"
       Pulp::Consumer.destroy(self.uuid)

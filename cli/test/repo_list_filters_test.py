@@ -47,12 +47,14 @@ class RepoListFiltersTest(CLIActionTestCase):
 
     OPTIONS_WITH_ID = {
         'id': REPO['id'],
+        'inherit': False
     }
 
     OPTIONS_WITH_NAME = {
         'name': REPO['name'],
         'product': PROD['name'],
-        'org': ORG['name']
+        'org': ORG['name'],
+        'inherit': False
     }
 
     repo = None
@@ -88,4 +90,4 @@ class RepoListFiltersTest(CLIActionTestCase):
 
     def test_it_calls_filters_api(self):
         self.action.run()
-        self.action.api.filters.assert_called_once_with(self.REPO['id'])
+        self.action.api.filters.assert_called_once_with(self.REPO['id'], False)

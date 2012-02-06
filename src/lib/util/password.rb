@@ -41,6 +41,12 @@ module Password
 
   protected
 
+  if Rails.env.test?
+    PASSWORD_ROUNDS = 1
+  else
+    PASSWORD_ROUNDS = 500
+  end
+
   # Generates a psuedo-random 64 character string
   def Password.salt
     self.generate_random_string(64)
@@ -49,7 +55,7 @@ module Password
   # Generates a 128 character hash
   def Password.hash(password, salt)
     digest = "#{password}:#{salt}"
-    500.times { digest = Digest::SHA512.hexdigest(digest) }
+    PASSWORD_ROUNDS.times { digest = Digest::SHA512.hexdigest(digest) }
     digest
   end
 
