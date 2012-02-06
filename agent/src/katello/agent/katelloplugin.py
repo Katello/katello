@@ -302,29 +302,11 @@ class EnabledReport:
         @return: The report content
         @rtype: dict
         """
-        report = {}
         yb = Yum()
         try:
-            report.update(self.__vars(yb))
-            yb.conf.yumvar = {}
-            report.update(self.__enabled(yb, repofn))
-            return report
+            return dict(enabled_repos=self.__enabled(yb, repofn))
         finally:
             yb.close()
-
-    def __vars(self, yb):
-        """
-        Get yum variables part of the report.
-        @param yb: yum lib.
-        @type yb: YumBase
-        @return: The variables content
-        @rtype: dict
-        """
-        subset = {}
-        var = yb.conf.yumvar
-        for k in ('basearch', 'releasever',):
-            subset[k] = var[k]
-        return subset
 
     def __enabled(self, yb, repofn):
         """
@@ -342,9 +324,7 @@ class EnabledReport:
             fn = os.path.basename(r.repofile)
             if fn != repofn:
                 continue
-            item = dict(
-                repositoryid=r.id,
-                baseurl=r.baseurl,)
+            item = dict(repositoryid=r.id)
             enabled.append(item)
         return dict(repos=enabled)
 
@@ -396,7 +376,6 @@ class UEP(UEPConnection):
         @param report: The report to send.
         @type report: dict
         """
-        report = dict(enabled_repos=report)
         log.info('reporting: %s', report)
         method = '/systems/%s/enabled_repos' % self.sanitize(uuid)
         return self.conn.request_put(method, report)
