@@ -434,7 +434,7 @@ var promotion_page = (function($){
                             buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type).show(); //reset all to 'add'
                             if (product) {
                                 $.each(product[type], function(index, item) {
-                                    $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + KT.common.escapeId(item.id) +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
+                                    $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + KT.common.escapeId(item.id + "") +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
                                 });
                             }
                         });
@@ -1542,6 +1542,7 @@ $(document).ready(function() {
                                         tab_change_cb   :  promotion_page.set_current_product
                                     });
     contentTree.enableSearch();
+    $(document).bind('search_complete.slidingtree', promotion_page.reset_page);
 
     promotion_page.set_changeset_tree( sliding_tree("changeset_tree", { 
                                         breadcrumb      :  changeset_breadcrumb,
