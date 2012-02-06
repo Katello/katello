@@ -53,6 +53,13 @@ module Pulp
       {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(::User.pulp_oauth_header)
     end
 
+    # some old Pulp API need text/plain content type
+    def self.default_headers_text
+      h = self.default_headers
+      h['content-type'] = 'text/plain'
+      h
+    end
+
     # the path is expected to have trailing slash
     def self.path_with_prefix path
       PulpResource.prefix + path
@@ -456,6 +463,20 @@ module Pulp
       def repoids consumer_id
         response = get(consumer_path(consumer_id) + "repoids/", self.default_headers)
         JSON.parse(response.body)
+      end
+
+      def bind uuid, repoid
+        url = consumer_path(uuid) + "bind/"
+        # this is old-style Pulp API call
+        response = self.post(url, '"' + repoid + '"', self.default_headers_text)
+        response.body
+      end
+
+      def unbind uuid, repoid
+        url = consumer_path(uuid) + "unbind/"
+        # this is old-style Pulp API call
+        response = self.post(url, '"' + repoid + '"', self.default_headers_text)
+        response.body
       end
 
       def consumer_path id = nil
