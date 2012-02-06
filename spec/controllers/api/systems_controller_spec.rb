@@ -382,7 +382,7 @@ describe Api::SystemsController do
     end
   end
 
-  describe "update enabled_repos" do
+  pending "update enabled_repos" do
     before do
       User.stub(:consumer? => true)
       @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
