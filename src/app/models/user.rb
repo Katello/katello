@@ -443,6 +443,7 @@ class User < ActiveRecord::Base
     task = self.async(:organization=>org).destroy_organization(org.id)
     org.task_id = task.id
     org.save!
+    task
   end
 
   def destroy_organization org_id
