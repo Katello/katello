@@ -383,10 +383,6 @@ sliding_tree.search = function(){
                 event.preventDefault();
                 
                 if( breadcrumbs[current_crumb]['searchable'] ){
-                    if ($(this).serialize() !== 'search=') {
-                        $.bbq.pushState($(this).serialize());
-                    }
-                    
                     params["offset"] = offset;
                     panel.html('<img src="' + KT.common.spinner_path() + '">');
 
@@ -398,6 +394,9 @@ sliding_tree.search = function(){
                                 var to_append = data.html ? data.html : data;
                                 panel.html(to_append);
                                 $(document).trigger('search_complete.slidingtree');
+                                if ($(this).serialize() !== 'search=') {
+                                    $.bbq.pushState($(this).serialize());
+                                }
                         },
                         error: function (e) {
                             //button.removeAttr('disabled');
