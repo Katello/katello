@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.23
+Version:       0.1.24
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Feb 06 2012 Ivan Necas <inecas@redhat.com> 0.1.24-1
+- periodic build
 * Fri Jan 20 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.21-1
 - bug - adding missing file to system tests
 
