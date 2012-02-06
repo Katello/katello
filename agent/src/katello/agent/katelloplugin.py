@@ -23,11 +23,13 @@ import sys
 sys.path.append('/usr/share/rhsm')
 
 import os
-from logging import getLogger
+from yum import YumBase
 from gofer.decorators import *
 from gofer.agent.plugin import Plugin
 from gofer.pmon import PathMonitor
 from subscription_manager.certlib import ConsumerIdentity
+from rhsm.connection import UEPConnection
+from logging import getLogger, Logger
 
 
 log = getLogger(__name__)
@@ -38,7 +40,6 @@ cfg = plugin.cfg()
 package = Plugin.find('package')
 Package = package.export('Package')
 PackageGroup = package.export('PackageGroup')
-
 
 
 def getbool(v):
@@ -105,6 +106,41 @@ class RegistrationMonitor:
             return path
         finally:
             f.close()
+
+
+class RepoMonitor:
+    """
+    Monitor changes in the rhsm .repo file.
+    Changes reported to UEP.
+    @cvar PATH: The path to monitor.
+        Unable to get from RHSM without side effects.
+    @type PATH: str
+    """
+
+    PATH = '/etc/yum.repos.d/redhat.repo'
+
+    @classmethod
+    @action(days=0x8E94)
+    def init(cls):
+        RegistrationMonitor.pmon.add(cls.PATH, cls.changed)
+
+    @classmethod
+    def changed(cls, path):
+        """
+        A change in the rhsm .repo has been detected.
+        The change is reported to the UEP.
+        @param path: The changed file.
+        @type path: str
+        """
+        log.info('changed: %s', path)
+        uuid = plugin.getuuid()
+        if not uuid:
+            # not registered
+            return
+        filter = os.path.basename(path)
+        report = EnabledReport(filter)
+        uep = UEP()
+        uep.report_enabled(uuid, report.content)
 
 #
 # API
@@ -232,3 +268,135 @@ class PackageGroups:
         uninstalled = g.uninstall(names)
         log.info('Packages uninstalled: %s', uninstalled)
         return uninstalled
+
+#
+# Utilities
+#
+
+class EnabledReport:
+    """
+    Represents the enabled repos report.
+    @ivar content: The report content <dict>:
+      - basearch <str>
+      - releasever <str>
+      - repos[] <dict>:
+        - repositoryid <str>
+        - baseurl <str>
+    @type content: dict
+    """
+
+    def __init__(self, repofn):
+        """
+        @param repofn: The .repo file basename used to
+            filter the report.
+        @type repofn: str
+        """
+        self.content = self.__report(repofn)
+
+    def __report(self, repofn):
+        """
+        Generate the report content.
+        @param repofn: The .repo file basename used to
+            filter the report.
+        @type repofn: str
+        @return: The report content
+        @rtype: dict
+        """
+        report = {}
+        yb = Yum()
+        try:
+            report.update(self.__vars(yb))
+            yb.conf.yumvar = {}
+            report.update(self.__enabled(yb, repofn))
+            return report
+        finally:
+            yb.close()
+
+    def __vars(self, yb):
+        """
+        Get yum variables part of the report.
+        @param yb: yum lib.
+        @type yb: YumBase
+        @return: The variables content
+        @rtype: dict
+        """
+        subset = {}
+        var = yb.conf.yumvar
+        for k in ('basearch', 'releasever',):
+            subset[k] = var[k]
+        return subset
+
+    def __enabled(self, yb, repofn):
+        """
+        Get enabled repos part of the report.
+        @param yb: yum lib.
+        @type yb: YumBase
+        @param repofn: The .repo file basename used to
+            filter the report.
+        @type repofn: str
+        @return: The repo list content
+        @rtype: dict
+        """
+        enabled = []
+        for r in yb.repos.listEnabled():
+            fn = os.path.basename(r.repofile)
+            if fn != repofn:
+                continue
+            item = dict(
+                repositoryid=r.id,
+                baseurl=r.baseurl,)
+            enabled.append(item)
+        return dict(repos=enabled)
+
+    def __str__(self):
+        return str(self.content)
+
+
+class Yum(YumBase):
+    """
+    Provides custom configured yum object.
+    """
+
+    def cleanLoggers(self):
+        """
+        Clean handlers leaked by yum.
+        """
+        for n,lg in Logger.manager.loggerDict.items():
+            if not n.startswith('yum.'):
+                continue
+            for h in lg.handlers:
+                lg.removeHandler(h)
+
+    def close(self):
+        """
+        This should be handled by __del__() but YumBase
+        objects never seem to completely go out of scope and
+        garbage collected.
+        """
+        YumBase.close(self)
+        self.closeRpmDB()
+        self.cleanLoggers()
+
+
+class UEP(UEPConnection):
+    """
+    Represents the UEP.
+    """
+
+    def __init__(self):
+        key = ConsumerIdentity.keypath()
+        cert = ConsumerIdentity.certpath()
+        UEPConnection.__init__(self, key_file=key, cert_file=cert)
+
+    def report_enabled(self, uuid, report):
+        """
+        Report enabled (repos) to the UEP.
+        @param uuid: The consumer ID.
+        @type uuid: str
+        @param report: The report to send.
+        @type report: dict
+        """
+        report = dict(enabled_repos=report)
+        log.info('reporting: %s', report)
+        method = '/systems/%s/enabled_repos' % self.sanitize(uuid)
+        return self.conn.request_put(method, report)
