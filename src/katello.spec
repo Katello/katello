@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.220
+Version:        0.1.221
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -352,6 +352,14 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Feb 06 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.221-1
+- binding - implementing the glue logic
+- spec - removing some warning messages
+- binding - adding cp_label to repository model class
+- 785799 - show error message suggesting use of force upload not shown when
+  force upload is already set
+- 786598 - system templates - improve support for repos having same name
+
 * Mon Feb 06 2012 Ivan Necas <inecas@redhat.com> 0.1.220-1
 - periodic build
 * Fri Feb 03 2012 Ivan Necas <inecas@redhat.com> 0.1.218-1
