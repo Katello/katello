@@ -556,7 +556,7 @@ module Pulp
       end
 
       def destroy id
-        self.post(path(id) + "delete_filter/", self.default_headers).code.to_i
+        self.delete(path(id), self.default_headers).code.to_i
       end
 
       def find id
