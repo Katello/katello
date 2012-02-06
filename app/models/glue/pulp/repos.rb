@@ -369,6 +369,7 @@ module Glue::Pulp::Repos
       )
       content = create_content(repo)
       Pulp::Repository.update(repo.pulp_id, :addgrp => Glue::Pulp::Repos.content_groupid(content))
+      repo.update_attributes!(:cp_label => content.label)
       repo
     end
 
@@ -400,6 +401,7 @@ module Glue::Pulp::Repos
           begin
             env_prod = EnvironmentProduct.find_or_create(self.organization.library, self)
             repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
+                                        :cp_label => pc.content.label,
                                         :arch => arch,
                                         :major => version[:major],
                                         :minor => version[:minor],
