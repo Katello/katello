@@ -205,8 +205,6 @@ class Api::SystemsController < Api::ApiController
 
   def enabled_repos
     repos = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
-    basearch = repos['basearch'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " basearch")
-    releasever = repos['releasever'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " releasever")
     update_labels = repos['repos'].collect{ |r| r['repositoryid']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
 
     update_ids = []
