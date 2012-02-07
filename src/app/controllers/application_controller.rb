@@ -112,6 +112,12 @@ class ApplicationController < ActionController::Base
     CGI::escapeHTML(input)
   end
 
+  #formats the date time if the dat is not nil
+  def format_time  date, options = {}
+    return I18n.l(date, options) if date
+    ""
+  end
+
   private
 
   def require_org
