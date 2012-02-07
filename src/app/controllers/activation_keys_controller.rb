@@ -82,26 +82,18 @@ class ActivationKeysController < ApplicationController
   end
 
   def add_subscriptions
-    # In the current UI, the user does not provide an 'allocated' value for subscriptions.  Instead, they select
-    # the subscription and the intent is that during system registration the 'auto-subscribe' capability will
-    # be used to ensure proper subscriptions are assigned to the system. The backend currently needs this value;
-    # therefore, we are setting it to 1.  It can be refactored out, once backend no longer needs it.
-    allocated = "1"
     begin
       if params.has_key? :subscription_id
         params[:subscription_id].keys.each do |pool|
           kt_pool = KTPool.where(:cp_id => pool)[0]
 
           if kt_pool.nil?
-            KTPool.create!(:cp_id => pool, :key_pools => [KeyPool.create!(:allocated=> allocated, :activation_key => @activation_key)])
+            KTPool.create!(:cp_id => pool, :key_pools => [KeyPool.create!(:activation_key => @activation_key)])
           else
             key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)[0]
 
-            if key_sub
-              key_sub.allocated = allocated
-              key_sub.save!
-            else
-              KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id, :allocated => allocated)
+            if key_sub.nil?
+              KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)
             end
           end
         end
