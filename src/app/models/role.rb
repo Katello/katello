@@ -36,7 +36,7 @@ class Role < ActiveRecord::Base
 
   attr_accessor :self_role #used to indicate during user creation that a role is intended to be a self role
   has_many :roles_users
-  has_many :users, :through => :roles_users
+  has_many :users, :through => :roles_users, :before_remove =>:super_admin_check
   has_many :permissions, :dependent => :destroy,:inverse_of =>:role, :class_name=>"Permission"
   has_one :owner, :class_name => 'User', :foreign_key => "own_role_id"
   has_many :resource_types, :through => :permissions
@@ -108,6 +108,29 @@ class Role < ActiveRecord::Base
 
   end
 
+
+  ADMINISTRATOR = 'Administrator'
+
+  def superadmin?
+    name == ADMINISTRATOR
+  end
+
+  def self.make_super_admin_role
+    # create basic roles
+    superadmin_role = Role.find_or_create_by_name(
+      :name => ADMINISTRATOR,
+      :description => 'Super administrator with all access.')
+    raise "Unable to create super-admin role: #{format_errors superadmin_role}" if superadmin_role.nil? or superadmin_role.errors.size > 0
+
+    superadmin_role_perm = Permission.find_or_create_by_name(:name=> "super-admin-perm", :role => superadmin_role, :all_types => true)
+    raise "Unable to create super-admin role permission: #{format_errors superadmin_role_perm}" if superadmin_role_perm.nil? or superadmin_role_perm.errors.size > 0
+
+    superadmin_role.update_attributes(:locked => true)
+    superadmin_role
+  end
+
+
+
   # returns the candlepin role (for RHSM)
   def self.candlepin_role
     Role.find_by_name('candlepin_role')
@@ -166,6 +189,15 @@ class Role < ActiveRecord::Base
      :permissions=>self.permissions.collect{|p| p.name},
      :self_role=>(self_role_for_user != nil || self.self_role == true)
     }
+  end
+
+  def super_admin_check user
+    if superadmin? && users.length == 1
+      message = _("Cannot dissociate user '%s' from '%s' role. Need at least one user in the '%s' role.") % [user.username,
+                                                                                                              name,name]
+      errors[:base] << message
+      raise  ActiveRecord::RecordInvalid, self
+    end
   end
 
 end
