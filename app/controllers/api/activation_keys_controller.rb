@@ -59,7 +59,7 @@ class Api::ActivationKeysController < Api::ApiController
   end
 
   def add_pool
-    @activation_key.key_pools.create(:pool => @pool, :allocated => 1) unless @activation_key.pools.include?(@pool)
+    @activation_key.key_pools.create(:pool => @pool) unless @activation_key.pools.include?(@pool)
     render :json => @activation_key
   end
 
