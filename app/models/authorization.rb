@@ -75,9 +75,8 @@ module Authorization
   end
 
   def enforce?
+    # model auth is not used
     return false
-    # TODO - do we want to introduce "superadmin" flag?
-    #return false if (User.current and User.current.superadmin?)
     return false if Rails.env == "test"
     return false if defined?(Rake)
     true
