@@ -71,7 +71,7 @@ describe Api::ProductsController do
     end
 
     let(:action) { :show }
-    let(:req) { get 'show', :id => @product.id }
+    let(:req) { get 'show', :organization_id => @organization.name, :id => @product.id }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
@@ -91,7 +91,7 @@ describe Api::ProductsController do
     end
 
     let(:action) { :update }
-    let(:req) { put 'update', :id => @product.id, :product => {:gpg_key_name => gpg_key.name, :description => "another description" } }
+    let(:req) { put 'update', :id => @product.cp_id, :organization_id => @organization.cp_key, :product => {:gpg_key_name => gpg_key.name, :description => "another description" } }
     let(:authorized_user) { user_with_update_permissions }
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
@@ -108,7 +108,7 @@ describe Api::ProductsController do
 
       it "should reset repos' GPGs, if updating recursive" do
         @product.should_receive(:reset_repo_gpgs!)
-        put 'update', :id => @product.id, :product => {:gpg_key_name => gpg_key.name, :description => "another description", :recursive => true }
+        put 'update', :id => @product.cp_id, :organization_id => @organization.cp_key, :product => {:gpg_key_name => gpg_key.name, :description => "another description", :recursive => true }
       end
     end
 
