@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.52
+Version:       0.1.53
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb 07 2012 Ivan Necas <inecas@redhat.com> 0.1.53-1
+- 768254 - scope products API by organization (inecas@redhat.com)
+
 * Mon Feb 06 2012 Ivan Necas <inecas@redhat.com> 0.1.51-1
 - periodic build
 
