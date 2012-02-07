@@ -564,6 +564,7 @@ Src::Application.routes.draw do
       get 'status/memory'
     end
 
+    match '*a', :to => 'errors#render_404'
   # end '/api' namespace
   end
 
