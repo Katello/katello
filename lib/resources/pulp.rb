@@ -94,6 +94,8 @@ module Pulp
       def find id
         response = get(package_path + id + "/", self.default_headers).body
         JSON.parse(response)
+      rescue JSON::ParserError => e
+        nil
       end
 
       def search name, regex=false
