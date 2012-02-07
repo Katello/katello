@@ -210,7 +210,7 @@ class Api::SystemsController < Api::ApiController
     update_ids = []
     update_labels.each do |label|
       repo = Repository.find_by_cp_label label
-      raise(HttpErrors::NotFound, _("Couldn't find repository:") + " #{label}")
+      raise(HttpErrors::NotFound, _("Couldn't find repository:") + " #{label}") if repo.nil?
 
       update_ids << repo.pulp_id
     end
