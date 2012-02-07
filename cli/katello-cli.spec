@@ -19,7 +19,7 @@ Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
 Version:       0.1.53
-Release:       1%{?dist}
+Release:       2%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -84,11 +84,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb 07 2012 Mike McCune <mmccune@redhat.com> 0.1.53-2
+- brew build
 * Tue Feb 07 2012 Ivan Necas <inecas@redhat.com> 0.1.53-1
 - 768254 - scope products API by organization (inecas@redhat.com)
-
-* Thu Jan 26 2012 Shannon Hughes <shughes@redhat.com> 0.1.44-2
-- se build (shughes@redhat.com)
 
 * Mon Feb 06 2012 Ivan Necas <inecas@redhat.com> 0.1.51-1
 - periodic build
@@ -98,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 
 * Sat Jan 28 2012 Martin Bačovský <mbacovsk@redhat.com> 0.1.46-1
 - Fixed failing tests (mbacovsk@redhat.com)
+
+* Thu Jan 26 2012 Shannon Hughes <shughes@redhat.com> 0.1.44-2
+- se build (shughes@redhat.com)
 
 * Thu Jan 26 2012 Shannon Hughes <shughes@redhat.com> 0.1.44-1
 - 783513 - CLI BRANDING: Locker -> Library (mbacovsk@redhat.com)
