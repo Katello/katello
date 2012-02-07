@@ -322,33 +322,59 @@ class ChangesetsController < ApplicationController
   def update_artifacts_valid?
     if params.has_key? :data
       params[:data].each do |item|
+        product_id = item["product_id"]
         type = item["type"]
         id = item["item_id"]
-        pid = item["product_id"]
         item = nil
-        case type
-          when "template"
-            item = SystemTemplate.find(id)
-          when "product"
-            item = Product.find(id)
-
-          when "errata"
-            item = Product.find(pid)
-          when "package"
-            item = Product.find(pid)
-          when "repo"
-            item = Product.find(pid)
-          when "distribution"
-            item = Product.find(pid)
-        end
-        unless item && item.readable?()
-          return false
+  
+        if product_id
+          if not update_item_valid?(type, id, product_id)
+            return false
+          end
+        else
+          if type == "errata"
+            return false if not update_errata_valid?(id)
+          end
         end
       end
     end
     true
   end
 
+  def update_item_valid? type, id, product_id
+    case type
+      when "template"
+        item = SystemTemplate.find(id)
+      when "product"
+        item = Product.find(id)
+      when "errata"
+        item = Product.find(product_id)
+      when "repo"
+        item = Product.find(product_id)
+      when "distribution"
+        item = Product.find(product_id)
+    end
 
+    if item && item.readable?()
+      return true
+    else
+      return false
+    end
+  end
+
+  def update_errata_valid? id
+    errata = Glue::Pulp::Errata.find(id)
+    
+    errata.repoids.each{ |repoid|
+      repo = Repository.where(:pulp_id => repoid)[0]
+      product = repo.product
+
+      if not product && product.readable?
+        return false
+      end
+    }
+
+    return true
+  end
 
 end
