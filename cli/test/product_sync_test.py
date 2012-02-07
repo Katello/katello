@@ -43,7 +43,7 @@ class ProductSyncTest(CLIActionTestCase):
 
     def test_calls_sync_api(self):
         self.action.run()
-        self.action.api.sync.assert_called_once_with(self.PROD['id'])
+        self.action.api.sync.assert_called_once_with(self.ORG['name'], self.PROD['id'])
 
     def test_waits_for_sync(self):
         self.action.run()
