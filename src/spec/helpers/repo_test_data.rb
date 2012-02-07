@@ -274,6 +274,7 @@ module RepoTestData
         "relativepath" => "",
         "variant" => "Fedora",
         "version" => "15",
+        "arch" => "i386",
         "_ns" => "distribution",
         "_id" => "distro-id",
         "id" => "distro-id",
