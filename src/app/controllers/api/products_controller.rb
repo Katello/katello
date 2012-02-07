@@ -12,9 +12,9 @@
 
 class Api::ProductsController < Api::ApiController
   respond_to :json
-  before_filter :find_organization, :only => [:index]
-  before_filter :find_product, :only => [:repositories, :show, :update, :destroy, :set_sync_plan, :remove_sync_plan]
+  before_filter :find_organization, :only => [:index, :repositories, :show, :update, :destroy, :set_sync_plan, :remove_sync_plan]
   before_filter :find_environment, :only => [:index, :repositories]
+  before_filter :find_product, :only => [:repositories, :show, :update, :destroy, :set_sync_plan, :remove_sync_plan]
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :authorize
 
@@ -85,7 +85,7 @@ class Api::ProductsController < Api::ApiController
   private
 
   def find_product
-    @product = Product.find_by_cp_id(params[:id].to_s)
+    @product = @organization.products.find_by_cp_id(params[:id].to_s)
     raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:id]}'") if @product.nil?
   end
 

@@ -149,7 +149,7 @@ class Create(RepoAction):
 
         prod = get_product(orgName, prodName)
         if prod != None:
-            repo = self.api.create(prod["id"], name, url, gpgkey, nogpgkey)
+            repo = self.api.create(orgName, prod["id"], name, url, gpgkey, nogpgkey)
             print _("Successfully created repository [ %s ]") % name
         else:
             print _("No product [ %s ] found") % prodName
@@ -192,7 +192,7 @@ class Discovery(RepoAction):
 
         prod = get_product(orgName, prodName)
         if prod != None:
-            self.create_repositories(prod["id"], name, selectedurls)
+            self.create_repositories(orgName, prod["id"], name, selectedurls)
 
         return os.EX_OK
 
@@ -252,11 +252,11 @@ class Discovery(RepoAction):
 
         return selection
 
-    def create_repositories(self, productid, name, selectedurls):
+    def create_repositories(self, orgName, productid, name, selectedurls):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
             repoName = self.repository_name(name, parsedUrl.path) # pylint: disable=E1101
-            repo = self.api.create(productid, repoName, repourl, None, None)
+            repo = self.api.create(orgName, productid, repoName, repourl, None, None)
 
             print _("Successfully created repository [ %s ]") % repoName
 
@@ -454,7 +454,7 @@ class List(RepoAction):
             prod = get_product(orgName, prodName)
             if prod != None:
                 self.printer.setHeader(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
-                repos = self.api.repos_by_product(prod["id"], listDisabled)
+                repos = self.api.repos_by_product(orgName, prod["id"], listDisabled)
                 self.printer.printItems(repos)
             else:
                 return os.EX_DATAERR
