@@ -16,8 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.222
-Release:        2%{?dist}
+Version:        0.1.225
+Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -352,6 +352,20 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Feb 07 2012 Ivan Necas <inecas@redhat.com> 0.1.225-1
+- 768254 - scope products API by organization (inecas@redhat.com)
+
+* Tue Feb 07 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.224-1
+- binding - better error reporting fix
+
+* Tue Feb 07 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.223-1
+- binding - better error reporting
+- infra - improving rake routes script
+- 740964 - Added validation to make sure that there is atleast 1 user in the
+  Administrator/superadmin role
+- system template - update repos to use elastic search query
+- 769425 - set minimum width of selector box
+
 * Mon Feb 06 2012 Jordan OMara <jomara@redhat.com> 0.1.222-2
 - 787745 MODIFIED - Brad Buckingham - Getting "404 Resource Not Found" when trying to Download a System Template
 - 786598 MODIFIED - Brad Buckingham - System Templates - issues exist when same repo name used across multiple products
@@ -369,6 +383,7 @@ fi
 - 786200 MODIFIED - Tom McKay - Machine Type in the Subscriptions page does not need to be there.
 - 754526 MODIFIED - Tom McKay - Cannot unset a user's default env
 - 786574 MODIFIED - Tom McKay - consumer returned from /katello/api/consumer/$id missing autoheal value
+
 * Mon Feb 06 2012 Mike McCune <mmccune@redhat.com> 0.1.222-1
 - 787745 - system template - fix download containing distros
   (bbuckingham@redhat.com)

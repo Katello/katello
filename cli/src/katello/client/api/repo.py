@@ -19,8 +19,10 @@ class RepoAPI(KatelloAPI):
     """
     Connection class to access repositories
     """
-    def create(self, prod_id, name, url, gpgkey, nogpgkey):
-        repodata = {"product_id": prod_id,
+    def create(self, orgName, prod_id, name, url, gpgkey, nogpgkey):
+        repodata = {
+                    "organization_id": orgName,
+                    "product_id": prod_id,
                     "name": name,
                     "url": url}
         self.update_dict(repodata, "gpg_key_name", gpgkey)
@@ -58,8 +60,8 @@ class RepoAPI(KatelloAPI):
         result_list = self.server.GET(path, search_params)[1]
         return result_list
 
-    def repos_by_product(self, productId, includeDisabled=False):
-        path = "/api/products/%s/repositories" % productId
+    def repos_by_product(self, orgName, productId, includeDisabled=False):
+        path = "/api/organizations/%s/products/%s/repositories" % (orgName, productId)
         data = {
             "include_disabled": includeDisabled
         }

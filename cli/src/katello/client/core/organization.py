@@ -226,7 +226,7 @@ class ShowSubscriptions(OrganizationAction):
         return os.EX_OK
 
     def sla(self, pool):
-        return {'sla': self.extract_sla_from_product(self.productApi.show(pool['productId']))}
+        return {'sla': self.extract_sla_from_product(self.productApi.show(self.get_option('name'), pool['productId']))}
 
     def convert_timestamp(self, timestamp_field):
         offset = int(timestamp_field[-5:])

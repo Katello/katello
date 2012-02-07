@@ -33,7 +33,7 @@ task :list_permissions => :environment do
       url = URL + rule.sub(":", '#l')
     end
     if ENV['TEXT'].nil?
-      puts "||[#{url} #{klass_name}]||#{action}||#{rule}||#{notes}||"
+      puts "||[#{url} #{klass_name}]|| #{action} || #{rule} || #{notes} ||"
     else
       puts "#{klass_name} #{action} #{full_rule} #{notes}"
     end

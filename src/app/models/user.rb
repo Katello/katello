@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
 
 
   has_many :roles_users
-  has_many :roles, :through => :roles_users
+  has_many :roles, :through => :roles_users, :before_remove=>:super_admin_check
   belongs_to :own_role, :class_name => 'Role'
   has_many :help_tips
   has_many :user_notices
@@ -571,4 +571,15 @@ class User < ActiveRecord::Base
       Rails.logger.debug "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} scoped for #{tags_str} in #{org_str}"
     end
   end
+
+  def super_admin_check role
+    if role.superadmin? && role.users.length == 1
+      message = _("Cannot dissociate user '%s' from '%s' role. Need at least one user in the '%s' role.") % [username,
+                                                                                                              role.name,
+                                                                                                              role.name]
+      errors[:base] << message
+      raise  ActiveRecord::RecordInvalid, self
+    end
+  end
+
 end

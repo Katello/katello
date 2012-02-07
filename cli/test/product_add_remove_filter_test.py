@@ -82,7 +82,7 @@ class ProductAddRemoveFilterTest(object):
 
     def test_it_retrieves_all_product_filters(self):
         self.action.run()
-        self.action.api.filters.assert_called_once_with(self.PROD['id'])
+        self.action.api.filters.assert_called_once_with(self.ORG['name'], self.PROD['id'])
 
 
 class ProductAddFilterTest(ProductAddRemoveFilterTest, CLIActionTestCase):
@@ -91,7 +91,7 @@ class ProductAddFilterTest(ProductAddRemoveFilterTest, CLIActionTestCase):
     def test_it_calls_update_api(self):
         filters = [f['name'] for f in self.FILTERS + [self.FILTER]]
         self.action.run()
-        self.action.api.update_filters.assert_called_once_with(self.PROD['id'], filters)
+        self.action.api.update_filters.assert_called_once_with(self.ORG['name'], self.PROD['id'], filters)
 
 
 class ProductRemoveFilterTest(ProductAddRemoveFilterTest, CLIActionTestCase):
@@ -100,4 +100,4 @@ class ProductRemoveFilterTest(ProductAddRemoveFilterTest, CLIActionTestCase):
     def test_it_calls_update_api(self):
         filters = [f['name'] for f in self.FILTERS if f['name'] != self.FILTER['name']]
         self.action.run()
-        self.action.api.update_filters.assert_called_once_with(self.PROD['id'], filters)
+        self.action.api.update_filters.assert_called_once_with(self.ORG['name'], self.PROD['id'], filters)
