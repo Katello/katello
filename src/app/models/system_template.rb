@@ -188,9 +188,7 @@ class SystemTemplate < ActiveRecord::Base
           family, version = Mapping::ImageFactoryNaming.translate(distro.family, distro.version)
           xm.name family
           xm.version version
-          # TODO distro.arch is nil until resolved 750265 - RFE: Separate "arch" field for distribution
-          #xm.arch distro.arch
-          xm.arch "x86_64"
+          xm.arch distro.arch
           xm.install("type" => "url") {
             xm.url distro.url_for_environment(self.environment)
           }
