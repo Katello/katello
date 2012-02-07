@@ -45,7 +45,7 @@ NameVirtualHost *:443
   <Location /<%= scope.lookupvar("katello::params::deployment") %>>
     RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
     SSLVerifyClient optional
-    SSLRenegBufferSize 262144
+    SSLRenegBufferSize 16777216 
     SSLVerifyDepth 2
   </Location>
 
