@@ -208,16 +208,30 @@ class Api::SystemsController < Api::ApiController
     update_labels = repos['repos'].collect{ |r| r['repositoryid']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
 
     update_ids = []
+    unknown_labels = []
     update_labels.each do |label|
       repo = Repository.find_by_cp_label label
-      raise(HttpErrors::NotFound, _("Couldn't find repository:") + " #{label}") if repo.nil?
-
-      update_ids << repo.pulp_id
+      if repo.nil?
+        logger.warn(_("Unknown repository label") + ": #{label}")
+        unknown_labels << label
+      else
+        update_ids << repo.pulp_id
+      end
     end
 
-    @system.enable_repos update_ids
+    processed_ids, error_ids = @system.enable_repos(update_ids)
 
-    render :json => {}.to_json
+    result = {}
+    result[:processed_ids] = processed_ids
+    result[:error_ids] = error_ids
+    result[:unknown_labels] = unknown_labels
+    if error_ids.count > 0 or unknown_labels.count > 0
+      result[:result] = "error"
+    else
+      result[:result] = "ok"
+    end
+
+    render :json => result.to_json
   end
 
   protected

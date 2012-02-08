@@ -40,12 +40,29 @@ module Glue::Pulp::Consumer
       Rails.logger.debug "Update repo ids: #{update_ids.inspect}"
       Rails.logger.debug "Repo ids to bind: #{bind_ids.inspect}"
       Rails.logger.debug "Repo ids to unbind: #{unbind_ids.inspect}"
+      processed_ids = []; error_ids = []
       unbind_ids.each do |repoid|
-        Pulp::Consumer.unbind(uuid, repoid)
+        begin
+          Pulp::Consumer.unbind(uuid, repoid)
+          processed_ids << repoid
+        rescue => e
+          Rails.logger.error "Failed to unbind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
+          error_ids << repoid
+        end
       end
       bind_ids.each do |repoid|
-        Pulp::Consumer.bind(uuid, repoid)
+        begin
+          Pulp::Consumer.bind(uuid, repoid)
+          processed_ids << repoid
+        rescue => e
+          Rails.logger.error "Failed to bind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
+          error_ids << repoid
+        end
       end
+      [processed_ids, error_ids]
+    rescue => e
+      Rails.logger.error "Failed to enable repositories: #{e}, #{e.backtrace.join("\n")}"
+      raise e
     end
 
     def del_pulp_consumer
