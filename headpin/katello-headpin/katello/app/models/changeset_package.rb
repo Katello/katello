@@ -16,20 +16,8 @@ class ChangesetPackageValidator < ActiveModel::Validator
     to_env   = record.changeset.environment
     product = Product.find(record.product_id)
 
-    record.errors[:base] <<  _("Package '#{record.package_id}' doesn't belong to the specified product!") and return if record.repositories.empty?
-
-    no_promotable_repo = true
-    product.repos(from_env).each do |repo|
-      if repo.has_package? record.package_id
-        if not repo.is_cloned_in? to_env
-          no_promotable_repo = no_promotable_repo && true
-        else
-          no_promotable_repo = false
-        end
-      end
-    end
-
-    record.errors[:base] <<  _("Repository of the package '#{record.package_id}' has not been promoted into the target environment!") if no_promotable_repo
+    record.errors[:base] << _("Package '#{record.package_id}' doesn't belong to the specified product!") and return if record.repositories.empty?
+    record.errors[:base] << _("Repository of the package '#{record.errata_id}' has not been promoted into the target environment!") if record.promotable_repositories.empty?
   end
 end
 
@@ -51,6 +39,16 @@ class ChangesetPackage < ActiveRecord::Base
       @repos << repo if repo.has_package? self.package_id
     end
     @repos
+  end
+
+  def promotable_repositories
+    to_env = self.changeset.environment
+
+    repos = []
+    self.repositories.each do |repo|
+      repos << repo if repo.is_cloned_in? to_env
+    end
+    repos
   end
 
   # returns list of virtual permission tags for the current user

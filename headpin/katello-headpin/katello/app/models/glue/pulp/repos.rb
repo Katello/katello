@@ -105,11 +105,21 @@ module Glue::Pulp::Repos
   end
 
   def self.product_groupid(product)
-      "product:#{product.cp_id}"
+    if product.is_a? String
+      product_id = product
+    else
+      product_id = product.cp_id
+    end
+     "product:#{product_id}"
   end
 
   def self.content_groupid(content)
-      "content:#{content.id}"
+    if content.is_a? String
+      content_id = content
+    else
+      content_id = content.id
+    end
+    "content:#{content_id}"
   end
 
   def self.prepopulate! products, environment, repos=[]
@@ -359,6 +369,7 @@ module Glue::Pulp::Repos
       )
       content = create_content(repo)
       Pulp::Repository.update(repo.pulp_id, :addgrp => Glue::Pulp::Repos.content_groupid(content))
+      repo.update_attributes!(:cp_label => content.label)
       repo
     end
 
@@ -390,6 +401,7 @@ module Glue::Pulp::Repos
           begin
             env_prod = EnvironmentProduct.find_or_create(self.organization.library, self)
             repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
+                                        :cp_label => pc.content.label,
                                         :arch => arch,
                                         :major => version[:major],
                                         :minor => version[:minor],
@@ -453,11 +465,7 @@ module Glue::Pulp::Repos
     def del_repos
       #destroy all repos in all environments
       Rails.logger.debug "deleting all repositories in product #{name}"
-      self.environments.each do |env|
-        self.repos(env).each do |repo|
-          repo.destroy
-        end
-      end
+      self.environment_products.destroy_all
       true
     end
 

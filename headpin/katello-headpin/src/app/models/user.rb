@@ -13,12 +13,15 @@
 require 'ldap'
 require 'util/threadsession'
 require 'util/password'
+require 'util/notices'
 
 class User < ActiveRecord::Base
   include Glue::Pulp::User if AppConfig.katello?
   include Glue if AppConfig.use_cp
   include AsyncOrchestration
+  include Katello::Notices
   include IndexedModel
+
 
   acts_as_reportable
 
@@ -34,7 +37,7 @@ class User < ActiveRecord::Base
 
 
   has_many :roles_users
-  has_many :roles, :through => :roles_users
+  has_many :roles, :through => :roles_users, :before_remove=>:super_admin_check
   belongs_to :own_role, :class_name => 'Role'
   has_many :help_tips
   has_many :user_notices
@@ -440,14 +443,21 @@ class User < ActiveRecord::Base
     task = self.async(:organization=>org).destroy_organization(org.id)
     org.task_id = task.id
     org.save!
+    task
   end
 
   def destroy_organization org_id
     org = Organization.unscoped{Organization.find(org_id)}
+    name = org.name
     org.destroy
+    message = _("Successfully removed organization '%s'.") % name
+    notice message, { :synchronous_request => false, :request_type => "organization__delete"}
   rescue Exception=>e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
+    error_text =  _("Failed to delete organization '%s'. Check notices for more details. ") % name
+    details = e.message
+    notice error_text, {:level => :error, :details => details, :synchronous_request => false, :request_type => "organization__delete"}
     raise
   end
 
@@ -561,4 +571,15 @@ class User < ActiveRecord::Base
       Rails.logger.debug "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} scoped for #{tags_str} in #{org_str}"
     end
   end
+
+  def super_admin_check role
+    if role.superadmin? && role.users.length == 1
+      message = _("Cannot dissociate user '%s' from '%s' role. Need at least one user in the '%s' role.") % [username,
+                                                                                                              role.name,
+                                                                                                              role.name]
+      errors[:base] << message
+      raise  ActiveRecord::RecordInvalid, self
+    end
+  end
+
 end

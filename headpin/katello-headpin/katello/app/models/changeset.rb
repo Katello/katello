@@ -147,11 +147,10 @@ class Changeset < ActiveRecord::Base
 
   def add_package package_name, product_cpid
     product = find_product_by_cpid(product_cpid)
-    packs = product.find_packages_by_name(self.environment.prior, package_name)
 
-    raise Errors::ChangesetContentException.new("Package not found in the source environment.") if packs.empty?
-
-    cs_pack = ChangesetPackage.new(:package_id => packs[0]["id"], :display_name => package_name, :product_id => product.id, :changeset => self)
+    pack = find_package product, package_name
+    display_name = Katello::PackageUtils::build_nvrea(pack, false)
+    cs_pack = ChangesetPackage.new(:package_id => pack["id"], :display_name => display_name, :product_id => product.id, :changeset => self)
     cs_pack.save!
     self.packages << cs_pack
   end
@@ -192,30 +191,15 @@ class Changeset < ActiveRecord::Base
     self.system_templates.delete(tpl)
   end
 
-  def remove_package package_name, product_cpid
+  def remove_package package_nvre, product_cpid
     product = find_product_by_cpid(product_cpid)
-    product.repos(self.environment.prior).each do |repo|
-      #search for package in all repos in a product
-      idx = repo.packages.index do |p| p.name == package_name end
-      if idx != nil
-        pack = repo.packages[idx]
-        ChangesetPackage.destroy_all(:package_id => pack.id, :changeset_id => self.id, :product_id => product.id)
-        return
-     end
-    end
+    pack = find_package_by_nvre product, package_nvre
+    ChangesetPackage.destroy_all(:package_id => pack["id"], :changeset_id => self.id, :product_id => product.id)
   end
 
   def remove_erratum erratum_id, product_cpid
     product = find_product_by_cpid(product_cpid)
-    product.repos(self.environment.prior).each do |repo|
-      #search for erratum in all repos in a product
-      idx = repo.errata.index do |e| e.id == erratum_id end
-      if idx != nil
-        erratum = repo.errata[idx]
-        ChangesetErratum.destroy_all(:errata_id => erratum.id, :changeset_id => self.id, :product_id => product.id)
-        return
-      end
-    end
+    ChangesetErratum.destroy_all(:errata_id => erratum_id, :changeset_id => self.id, :product_id => product.id)
   end
 
   def remove_repo repo_id, product_cpid
@@ -225,14 +209,7 @@ class Changeset < ActiveRecord::Base
 
   def remove_distribution distribution_id, product_cpid
     product = find_product_by_cpid(product_cpid)
-    repos = product.repos(self.environment)
-    idx = nil
-    repos.each do |repo|
-      idx = repo.distributions.index do |d| d.id == distribution_id end
-    end
-    if idx != nil
-      ChangesetDistribution.destroy_all(:distribution_id => distribution_id, :changeset_id => self.id, :product_id => product.id)
-    end
+    ChangesetDistribution.destroy_all(:distribution_id => distribution_id, :changeset_id => self.id, :product_id => product.id)
   end
 
   private
@@ -258,7 +235,26 @@ class Changeset < ActiveRecord::Base
     product
   end
 
+  def find_package product, name_or_nvre
+    package_data = Katello::PackageUtils::parse_nvrea_nvre(name_or_nvre)
+    if not package_data.nil?
+      packs = product.find_packages_by_nvre(self.environment.prior, package_data[:name], package_data[:version], package_data[:release], package_data[:epoch])
+    else
+      packs = product.find_packages_by_name(self.environment.prior, name_or_nvre)
+      packs = Katello::PackageUtils::find_latest_packages(packs)
+    end
+    raise Errors::ChangesetContentException.new(_("Package '#{name_or_nvre}' was not found in the source environment.")) if packs.empty?
+    packs[0].with_indifferent_access
+  end
 
+  def find_package_by_nvre product, nvre
+    package_data = Katello::PackageUtils::parse_nvrea_nvre(nvre)
+    raise Errors::ChangesetContentException.new(_("Package has to be specified by its nvre.")) if package_data.nil?
+
+    packs = product.find_packages_by_nvre(self.environment.prior, package_data[:name], package_data[:version], package_data[:release], package_data[:epoch])
+    raise Errors::ChangesetContentException.new(_("Package '#{nvre}' was not found in the source environment.")) if packs.empty?
+    packs[0].with_indifferent_access
+  end
 
   def update_progress! percent
     if self.task_status
@@ -301,15 +297,16 @@ class Changeset < ActiveRecord::Base
         repo.get_clone(to_env).index_packages
       end
     end
-
+    message = _("Successfully promoted changeset '%s'.") % self.name
+    notice message, {:synchronous_request => false, :request_type => "changesets___promote"}
   rescue Exception => e
     self.state = Changeset::FAILED
     self.save!
-
-    error_text = _("Promotion of changeset '%{name}' failed." % {:name => self.name})
-    error_text += _("%{newline}Reason: %{reason}" % {:reason => e.to_s, :newline => "<br />"})
-    notice error_text, {:level => :error, :synchronous_request => false, :request_type => "changesets___promote"}
-
+    Rails.logger.error(e)
+    Rails.logger.error(e.backtrace.join("\n"))
+    details = e.message
+    error_text = _("Failed to promote changeset '%s'. Check notices for more details") % self.name
+    notice error_text, {:details =>details, :level => :error, :synchronous_request => false, :request_type => "changesets___promote"}
     raise e
   end
 
@@ -519,7 +516,6 @@ class Changeset < ActiveRecord::Base
       deps = get_promotable_dependencies_for_packages to_resolve, from_repos, to_repos
       deps = Katello::PackageUtils::filter_latest_packages_by_name deps
 
-
       all_deps += deps
       to_resolve = deps.map{ |d| d['provides'] }.flatten.uniq - all_deps
     end
@@ -564,9 +560,9 @@ class Changeset < ActiveRecord::Base
 
   def affected_repos
     repos = []
-    repos += self.packages.collect{ |e| e.repositories }.flatten(1)
-    repos += self.errata.collect{ |e| e.repositories }.flatten(1)
-    repos += self.distributions.collect{ |e| e.repositories }.flatten(1)
+    repos += self.packages.collect{ |e| e.promotable_repositories }.flatten(1)
+    repos += self.errata.collect{ |p| p.promotable_repositories }.flatten(1)
+    repos += self.distributions.collect{ |d| d.promotable_repositories }.flatten(1)
 
     repos.uniq
   end

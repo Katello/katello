@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.211
+Version:        0.1.228
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -274,7 +274,6 @@ fi
 
 %files
 %attr(600, katello, katello)
-%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %defattr(-,root,root)
 %{homedir}/app/controllers
 %{homedir}/app/helpers
@@ -285,7 +284,9 @@ fi
 %{homedir}/autotest
 %{homedir}/ca
 %{homedir}/config
-%{homedir}/db
+%{homedir}/db/migrate/
+%{homedir}/db/products.json
+%{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
 %{homedir}/lib/navigation
@@ -293,8 +294,7 @@ fi
 %{homedir}/lib/tasks
 %{homedir}/lib/util
 %{homedir}/locale
-%{homedir}/log
-%{homedir}/public/stylesheets/compiled
+%{homedir}/public
 %{homedir}/script
 %{homedir}/spec
 %{homedir}/tmp
@@ -308,6 +308,7 @@ fi
 %files common
 %defattr(-,root,root)
 %doc README LICENSE doc/
+%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config %{_sysconfdir}/%{name}/thin.yml
 %config %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
@@ -318,18 +319,8 @@ fi
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
 %{_sysconfdir}/bash_completion.d/%{name}
-
-# Break apart the main bits
-%{homedir}/public/assets
-%{homedir}/public/fonts
-%{homedir}/public/images
-%{homedir}/public/javascripts
-%{homedir}/public/stylesheets/*.css
-%{homedir}/public/stylesheets/images
-%{homedir}/public/*.html
-%{homedir}/public/favicon.ico
-%{homedir}/public/robots.txt
-
+%{homedir}/log
+%{homedir}/db/schema.rb
 
 %defattr(-, katello, katello)
 %{_localstatedir}/log/%{name}
@@ -363,6 +354,17 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Feb 08 2012 Jordan OMara <jomara@redhat.com> 0.1.228-1
+- Updating the spec to split out common/katello to facilitate headpin
+  (jomara@redhat.com)
+- comment - better todo comment for unwrapping (lzap+git@redhat.com)
+- comment - removing unnecessary todo (lzap+git@redhat.com)
+
+* Wed Feb 08 2012 Jordan OMara <jomara@redhat.com>
+- Updating the spec to split out common/katello to facilitate headpin
+  (jomara@redhat.com)
+- comment - better todo comment for unwrapping (lzap+git@redhat.com)
+
 * Wed Feb 01 2012 Mike McCune <mmccune@redhat.com> 0.1.211-1
 - rebuild
 * Wed Feb 01 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.210-1

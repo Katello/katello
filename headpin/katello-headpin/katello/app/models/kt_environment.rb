@@ -263,6 +263,13 @@ class KTEnvironment < ActiveRecord::Base
     User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.environment_ids, org, true)
   end
 
+  def self.any_contents_readable? org, skip_library=false
+    ids = org.environment_ids
+    ids = ids - [org.library.id] if skip_library
+    User.allowed_to?(CONTENTS_READABLE, :environments, ids, org, true)
+  end
+
+
   def viewable_for_promotions?
     return false if !AppConfig.katello?
     User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, self.id, self.organization)
@@ -291,7 +298,7 @@ class KTEnvironment < ActiveRecord::Base
   CONTENTS_READABLE = [:read_contents]
   def contents_readable?
     return false if !AppConfig.katello?
-    User.allowed_to?([:read_contents], :environments, self.id,
+    User.allowed_to?(CONTENTS_READABLE, :environments, self.id,
                               self.organization)
   end
 

@@ -17,11 +17,8 @@ class ChangesetDistributionValidator < ActiveModel::Validator
     to_env = record.changeset.environment
     product = Product.find(record.product_id)
 
-    record.errors[:base] <<  _("Distribution '#{record.distribution_id}' does not belong to the specified product!") and return if record.repositories.empty?
-
-    record.repositories.each do |repo|
-      record.errors[:base] <<  _("Distribution's repository must be promoted first!") and return if not repo.is_cloned_in? to_env
-    end
+    record.errors[:base] << _("Distribution '#{record.distribution_id}' does not belong to the specified product!") and return if record.repositories.empty?
+    record.errors[:base] << _("Repository of the distribution '#{record.errata_id}' has not been promoted into the target environment!") if record.promotable_repositories.empty?
   end
 end
 
@@ -41,6 +38,16 @@ class ChangesetDistribution < ActiveRecord::Base
       @repos << repo if repo.has_distribution? self.distribution_id
     end
     @repos
+  end
+
+  def promotable_repositories
+    to_env = self.changeset.environment
+
+    repos = []
+    self.repositories.each do |repo|
+      repos << repo if repo.is_cloned_in? to_env
+    end
+    repos
   end
 
 end

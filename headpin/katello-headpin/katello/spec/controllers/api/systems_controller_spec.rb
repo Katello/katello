@@ -382,4 +382,69 @@ describe Api::SystemsController do
     end
   end
 
+  describe "update enabled_repos" do
+    before do
+      User.stub(:consumer? => true)
+      @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+      System.stub!(:first).and_return(@system)
+      Repository.stub!(:find_by_cp_label).with('a').and_return(OpenStruct.new({:pulp_id => 'a'}))
+      Repository.stub!(:find_by_cp_label).with('b').and_return(OpenStruct.new({:pulp_id => 'b'}))
+    end
+    let(:enabled_repos) {
+      {
+        "repos" => [
+          {
+            "repositoryid" => "a",
+          },
+          {
+            "repositoryid" => "b",
+          },
+        ]
+      }
+    }
+    let(:enabled_repos_empty) { { "repos" => [] } }
+
+    it "should not bind any" do
+      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'a' => '', 'b' => ''})
+      put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
+      response.status.should == 200
+    end
+
+    it "should bind one" do
+      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'a' => ''})
+      Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'b').once
+      put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
+      response.status.should == 200
+    end
+
+    it "should bind two" do
+      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({})
+      Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'a').once
+      Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'b').once
+      put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
+      response.status.should == 200
+    end
+
+    it "should bind one and unbind one" do
+      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'b' => '', 'c' => ''})
+      Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'a').once
+      Pulp::Consumer.should_receive(:unbind).with(@system.uuid, 'c').once
+      put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
+      response.status.should == 200
+    end
+
+    it "should unbind two" do
+      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'a' => '', 'b' => ''})
+      Pulp::Consumer.should_receive(:unbind).with(@system.uuid, 'a').once
+      Pulp::Consumer.should_receive(:unbind).with(@system.uuid, 'b').once
+      put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
+      response.status.should == 200
+    end
+
+    it "should do nothing" do
+      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({})
+      put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
+      response.status.should == 200
+    end
+  end
 end

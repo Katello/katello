@@ -49,7 +49,7 @@ class Glue::Pulp::Errata
     elsif environment_id = filter[:environment_id]
       env = KTEnvironment.find(environment_id)
       if product_id = filter[:product_id]
-        products = [::Product.find_by_cp_id!(product_id)]
+        products = [env.products.find_by_cp_id!(product_id)]
       else
         products = env.products
       end

@@ -11,7 +11,7 @@
       .subs_text.fl
         - if @system.compliant?
           - until_time = @system.compliant_until
-          = until_time ? _("Subscriptions are Current Until %s") % I18n.l(until_time) : _("Subscriptions are Current")
+          = until_time ? _("Subscriptions are Current Until %s") % format_time(until_time) : _("Subscriptions are Current")
         - else
           = _("Subscriptions are not Current")
     -# .subs_left.ca

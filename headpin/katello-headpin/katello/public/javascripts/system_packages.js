@@ -443,7 +443,7 @@ KT.packages = function() {
                     success: function(data) {
                         monitorStatus(data, KT.package_action_types.PKG_INSTALL);
 
-                        for (i = 0; i < content_array.length; i++) {
+                        for (var i = 0; i < content_array.length; i++) {
                             var pkg_name = $.trim(content_array[i]), already_exists = false;
                             packages_in_progress[pkg_name] = true;
 
@@ -487,7 +487,7 @@ KT.packages = function() {
                     success: function(data) {
                         monitorStatus(data, KT.package_action_types.PKG_GRP_INSTALL);
 
-                        for (i = 0; i < content_array.length; i++) {
+                        for (var i = 0; i < content_array.length; i++) {
                             var group_name = $.trim(content_array[i]), already_exists = false;
                             groups_in_progress[group_name] = true;
 
@@ -541,7 +541,7 @@ KT.packages = function() {
                     success: function(data) {
                         monitorStatus(data, KT.package_action_types.PKG_REMOVE);
 
-                        for (i = 0; i < content_array.length; i++) {
+                        for (var i = 0; i < content_array.length; i++) {
                             var pkg_name = $.trim(content_array[i]), already_exists = false;
                             packages_in_progress[pkg_name] = true;
 
@@ -585,7 +585,7 @@ KT.packages = function() {
                     success: function(data) {
                         monitorStatus(data, KT.package_action_types.PKG_GRP_REMOVE);
 
-                        for (i = 0; i < content_array.length; i++) {
+                        for (var i = 0; i < content_array.length; i++) {
                             var group_name = $.trim(content_array[i]), already_exists = false;
                             groups_in_progress[group_name] = true;
 
@@ -731,9 +731,9 @@ KT.packages = function() {
     	}
     },
     valid_package_list_format = function(packages){
-    	var i, length = packages.length;
+    	var length = packages.length;
     		
-    	for( i = 0; i < length; i += 1){
+    	for (var i = 0; i < length; i += 1){
     		if( !valid_package_name(packages[i]) ){
     			return false;
     		}

@@ -74,11 +74,13 @@ group :test, :development do
   gem 'gettext', '>= 1.9.3', :require => false
   gem 'ruby_parser'
   
-  # profiler
-  gem 'newrelic_rpm'
-  
   #needed to generate routes in javascript
   gem "js-routes", :require => 'js_routes'
 
   #needed for unit tests
+end
+
+group :development do
+  # profiler
+  gem 'newrelic_rpm'
 end
