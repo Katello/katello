@@ -122,6 +122,7 @@ class Repository < ActiveRecord::Base
   def as_json(*args)
     ret = super
     ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
+    ret["package_count"] = package_count rescue nil
     ret
   end
 
