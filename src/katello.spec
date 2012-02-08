@@ -274,7 +274,6 @@ fi
 
 %files
 %attr(600, katello, katello)
-%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %defattr(-,root,root)
 %{homedir}/app/controllers
 %{homedir}/app/helpers
@@ -309,6 +308,7 @@ fi
 %files common
 %defattr(-,root,root)
 %doc README LICENSE doc/
+%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config %{_sysconfdir}/%{name}/thin.yml
 %config %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb

@@ -100,9 +100,6 @@ cp -R .bundle * %{buildroot}%{homedir}
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{katello_name}.yml %{buildroot}%{_sysconfdir}/%{katello_name}/%{katello_name}.yml
 
-#overwrite config files with symlinks to /etc/katello
-ln -svf %{_sysconfdir}/%{katello_name}/%{katello_name}.yml %{buildroot}%{homedir}/config/%{katello_name}.yml
-
 #remove files which are not needed in the homedir
 rm -rf %{buildroot}%{homedir}/README
 rm -rf %{buildroot}%{homedir}/LICENSE
@@ -161,7 +158,6 @@ and then run katello-configure to configure everything.
 
 %files
 %defattr(-,root,root)
-%config(noreplace) %{_sysconfdir}/%{katello_name}/%{katello_name}.yml
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
