@@ -201,7 +201,7 @@ class SystemTemplate < ActiveRecord::Base
       xm.packages {
         self.packages.each { |p| xm.package "name" => p.package_name }
         self.package_groups.each { |p| xm.package "name" => "@#{p.name}" }
-        # TODO package groups categories ("unwrap" them here or pass them to IF?)
+        # TODO package groups categories ("unwrap" them here - we need to create category->repository reference in our model)
       }
       xm.repositories {
         repos.each do |repoId, repo|
