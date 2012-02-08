@@ -42,9 +42,10 @@ class Api::ChangesetsContentController < Api::ApiController
   end
 
   def remove_product
-    @changeset.remove_product(params[:id])
+    removed = @changeset.remove_product(params[:id])
     @changeset.save!
-    render :text => _("Removed product '#{params[:id]}'"), :status => 200
+    render :text => _("Removed product '#{params[:id]}'"), :status => 200 if not removed.empty?
+    render :text => _("Product '#{params[:id]}' not found in the changeset"), :status => 200 if removed.empty?
   end
 
   def add_package
@@ -54,9 +55,10 @@ class Api::ChangesetsContentController < Api::ApiController
   end
 
   def remove_package
-    @changeset.remove_package(params[:id], params[:product_id])
+    removed = @changeset.remove_package(params[:id], params[:product_id])
     @changeset.save!
-    render :text => _("Removed package '#{params[:id]}'"), :status => 200
+    render :text => _("Removed package '#{params[:id]}'"), :status => 200 if not removed.empty?
+    render :text => _("Package '#{params[:id]}' not found in the changeset"), :status => 200 if removed.empty?
   end
 
   def add_erratum
@@ -66,9 +68,10 @@ class Api::ChangesetsContentController < Api::ApiController
   end
 
   def remove_erratum
-    @changeset.remove_erratum(params[:id], params[:product_id])
+    removed = @changeset.remove_erratum(params[:id], params[:product_id])
     @changeset.save!
-    render :text => _("Removed erratum '#{params[:id]}'"), :status => 200
+    render :text => _("Removed erratum '#{params[:id]}'"), :status => 200 if not removed.empty?
+    render :text => _("Erratum '#{params[:id]}' not found in the changeset"), :status => 200 if removed.empty?
   end
 
   def add_repo
@@ -78,9 +81,10 @@ class Api::ChangesetsContentController < Api::ApiController
   end
 
   def remove_repo
-    @changeset.remove_repo(params[:id], params[:product_id])
+    removed = @changeset.remove_repo(params[:id], params[:product_id])
     @changeset.save!
-    render :text => _("Removed repository '#{params[:id]}'"), :status => 200
+    render :text => _("Removed repository '#{params[:id]}'"), :status => 200 if not removed.empty?
+    render :text => _("Repository '#{params[:id]}' not found in the changeset"), :status => 200 if removed.empty?
   end
 
   def add_template
@@ -90,9 +94,10 @@ class Api::ChangesetsContentController < Api::ApiController
   end
 
   def remove_template
-    @changeset.remove_template(params[:id])
+    removed = @changeset.remove_template(params[:id])
     @changeset.save!
-    render :text => _("Removed template '#{params[:id]}'"), :status => 200
+    render :text => _("Removed template '#{params[:id]}'"), :status => 200 if not removed.empty?
+    render :text => _("Template '#{params[:id]}' not found in the changeset"), :status => 200 if removed.empty?
   end
 
   def add_distribution
@@ -102,9 +107,10 @@ class Api::ChangesetsContentController < Api::ApiController
   end
 
   def remove_distribution
-    @changeset.remove_distribution(params[:id], params[:product_id])
+    removed = @changeset.remove_distribution(params[:id], params[:product_id])
     @changeset.save!
-    render :text => _("Removed distribution '#{params[:id]}'")
+    render :text => _("Removed distribution '#{params[:id]}'"), :status => 200 if not removed.empty?
+    render :text => _("Distribution '#{params[:id]}' not found in the changeset"), :status => 200 if removed.empty?
   end
 
   private

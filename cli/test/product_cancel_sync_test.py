@@ -41,7 +41,7 @@ class ProductStatusTest(CLIActionTestCase):
 
     def test_it_calls_cancel_sync_api(self):
         self.action.run()
-        self.action.api.cancel_sync.assert_called_once_with(self.PROD['id'])
+        self.action.api.cancel_sync.assert_called_once_with(self.ORG['name'], self.PROD['id'])
 
     def test_it_returns_ok(self):
         self.assertEqual(self.action.run(), os.EX_OK)

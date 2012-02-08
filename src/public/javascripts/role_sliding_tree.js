@@ -791,6 +791,7 @@ var roleActions = (function($){
                },
                error 	: function(){
                		element.removeClass('disabled');
+                   KT.roles.tree.rerender_content();
                }
             });
         },

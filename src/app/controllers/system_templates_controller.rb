@@ -64,7 +64,7 @@ class SystemTemplatesController < ApplicationController
 
       prod.repos(current_organization.library).each{|repo|
         distros = repo.distributions
-        repo_distro_map[repo.name] = distros unless distros.empty?
+        repo_distro_map[repo.id] = distros unless distros.empty?
       }
     }
 
@@ -177,7 +177,7 @@ class SystemTemplatesController < ApplicationController
 
     @template.repositories = []
     repos.each{|repo|
-      @template.repositories << Repository.readable(current_organization.library).where(:name => repo[:name])
+      @template.repositories << Repository.readable(current_organization.library).find(repo[:id])
     }
 
     @template.package_groups = []

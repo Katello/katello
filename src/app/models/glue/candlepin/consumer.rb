@@ -285,7 +285,7 @@ module Glue::Candlepin::Consumer
 
         OpenStruct.new(:poolId => pool["id"],
                        :poolName => pool["productName"],
-                       :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                       :expires => Date.parse(pool["endDate"]),
                        :consumed => pool["consumed"],
                        :quantity => pool["quantity"],
                        :sockets => sockets,
@@ -329,7 +329,7 @@ module Glue::Candlepin::Consumer
         OpenStruct.new(:entitlementId => entitlement["id"],
                        :serials => serials,
                        :poolName => pool["productName"],
-                       :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                       :expires => Date.parse(pool["endDate"]),
                        :consumed => pool["consumed"],
                        :quantity => quantity,
                        :sla => sla,

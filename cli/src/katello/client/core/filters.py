@@ -153,7 +153,7 @@ class AddPackage(FilterAction):
                        help=_("organization name (required)"))
         self.parser.add_option('--name', dest='name',
                      help=_("filter name (required)"))
-        self.parser.add_option('--package_id', dest='package_id',
+        self.parser.add_option('--package', dest='package_id',
                        help=_("package id (required)"))
 
     def check_options(self):
@@ -180,7 +180,7 @@ class RemovePackage(FilterAction):
                        help=_("organization name (required)"))
         self.parser.add_option('--name', dest='name',
                      help=_("filter name (required)"))
-        self.parser.add_option('--package_id', dest='package_id',
+        self.parser.add_option('--package', dest='package_id',
                        help=_("package id (required)"))
 
     def check_options(self):

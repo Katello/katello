@@ -32,18 +32,4 @@ class pulp::config {
       require => Class["candlepin::config"],
   }
 
-  # disable SELinux
-  exec {"setenforce":
-    command => "setenforce 0",
-    path    => "/usr/sbin:/bin",
-    unless  => "getenforce |egrep -iq 'disable|Permissive'",
-    before  => [Class["pulp::service"], Exec["migrate_pulp_db"]],
-  }
-
-  augeas {"disable_selinux":
-    context => "/files/etc/sysconfig/selinux",
-    changes => ["set SELINUX permissive"],
-    before  => [Class["pulp::service"], Exec["migrate_pulp_db"]],
-  }
-
 }

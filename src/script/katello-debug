@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# :vim:sw=2:ts=2:et:
 
 require "optparse"
 require "fileutils"
@@ -10,31 +11,32 @@ PAD="  "
 options = {}
 
 optparse = OptionParser.new do|opts|
-    opts.banner = "Usage: #{NAME} [options] command"
+  opts.banner = "Usage: #{NAME} [options] command"
 
-    options[:basedir] = '/tmp'
-    opts.on( '--dir [DIRECTORY]', 'Directory to place the tarball. Defaults to /tmp' ) do |opt|
-        options[:basedir] = opt
-    end
+  options[:basedir] = '/tmp'
+  opts.on( '--dir [DIRECTORY]', 'Directory to place the tarball. Defaults to /tmp' ) do |opt|
+    options[:basedir] = opt
+  end
 
 
-    opts.on( '--help', 'Display help and exit' ) do
-        puts opts
-        exit
-    end
-
+  opts.on( '--help', 'Display help and exit' ) do
+    puts opts
+    exit
+  end
 end
 
 optparse.parse!
 
 # Check that we are running as root
 if Process.uid != 0
-    puts("#{NAME} must be run as root")
-    exit
+  puts("#{NAME} must be run as root")
+  exit
 end
 
 # Define what we want to collect
 SOURCES = [
+# All together
+"/var/log/audit/audit.log",
 # Candlepin
 "/var/log/tomcat6",
 "/etc/candlepin",
@@ -60,28 +62,26 @@ timename =  "katello-debug-#{Time.now.strftime("%Y%m%d%H%M%S")}"
 target_dir = File.join(options[:basedir], timename)
 
 if File.exists?(target_dir)
-    puts("#{target_dir} already exists. Please delete it")
-    exit
+  puts("#{target_dir} already exists. Please delete it")
+  exit
 end
 
 FileUtils.mkdir_p(target_dir)
 puts ("created directory #{target_dir}")
 
 SOURCES.each do |source|
-    if File.exists?(source)
-        complete_target = File.join(target_dir, File.dirname(source))
-        FileUtils.mkdir_p(complete_target)
-        puts ("#{PAD}copying over #{source}")
-        output= `/bin/cp -r --preserve #{source} #{complete_target}`
-    else
-        puts ("#{PAD}skipping #{source} since it does not exist")
-    end
+  if File.exists?(source)
+    complete_target = File.join(target_dir, File.dirname(source))
+    FileUtils.mkdir_p(complete_target)
+    puts ("#{PAD}copying over #{source}")
+    output= `/bin/cp -r --preserve #{source} #{complete_target}`
+  else
+    puts "#{PAD}skipping #{source} since it does not exist"
+  end
 end
 
 # Below are custom system calls to get more info
 ouput = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug" >> #{File.join(target_dir, "packages")}`
-
-
 
 # Tar the output and log it
 tarfile = target_dir + ".tar.gz"
@@ -94,7 +94,3 @@ puts "A debug file has been created at #{tarfile}."
 
 # Clean up
 FileUtils.rm_r(target_dir)
-
-
-
-

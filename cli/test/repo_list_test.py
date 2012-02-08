@@ -105,7 +105,7 @@ class RepoListTest(CLIActionTestCase):
     def test_it_gets_repos_by_product(self):
         self.mock_options(self.OPTIONS_BY_PRODUCT)
         self.action.run()
-        self.action.api.repos_by_product.assert_called_once_with(self.PROD['id'], False)
+        self.action.api.repos_by_product.assert_called_once_with(self.ORG['name'], self.PROD['id'], False)
 
     def test_it_gets_repos_by_product_and_env(self):
         self.mock_options(self.OPTIONS_BY_PRODUCT_ENV)

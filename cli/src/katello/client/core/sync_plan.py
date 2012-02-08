@@ -113,7 +113,7 @@ class Info(SyncPlanAction):
 
 class Create(SyncPlanAction):
 
-    description = _('create an environment')
+    description = _('create a synchronization plan')
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
@@ -143,10 +143,10 @@ class Create(SyncPlanAction):
 
         plan = self.api.create(org_name, name, sync_date, interval, description)
         if is_valid_record(plan):
-            print _("Successfully created environment [ %s ]") % plan['name']
+            print _("Successfully created synchronization plan [ %s ]") % plan['name']
             return os.EX_OK
         else:
-            print _("Could not create environment [ %s ]") % plan['name']
+            print _("Could not create synchronization plan [ %s ]") % plan['name']
             return os.EX_DATAERR
 
 
@@ -162,12 +162,14 @@ class Update(SyncPlanAction):
         self.parser.add_option('--interval', dest='interval',
             help=_("interval of recurring synchronizations (choices: [%s], default: none)") % ', '.join(self.interval_choices),
             default='none', choices=self.interval_choices)
-        self.parser.add_option("--date", dest="date", help=_("date of first synchronization (required, format: YYYY-MM-DD)"))
-        self.parser.add_option("--time", dest="time", help=_("time of first synchronization (format: HH:MM:SS, default: 00:00:00)"), default="00:00:00")
+        self.parser.add_option("--date", dest="date", help=_("date of first synchronization (format: YYYY-MM-DD)"))
+        self.parser.add_option("--time", dest="time", help=_("time of first synchronization (format: HH:MM:SS)"))
 
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
+        if not (self.has_option('date') and self.has_option('time')):
+            self.add_option_error(_('You have to specify both --date and --time'))
 
     def run(self):
         name        = self.get_option('name')
@@ -182,7 +184,10 @@ class Update(SyncPlanAction):
         if plan == None:
             return os.EX_DATAERR
 
-        sync_date = self.parse_datetime(date, time)
+        if date != None and time != None:
+            sync_date = self.parse_datetime(date, time)
+        else:
+            sync_date = None
 
         plan = self.api.update(org_name, plan["id"], new_name, sync_date, interval, description)
         print _("Successfully updated sync plan [ %s ]") % name
@@ -214,7 +219,7 @@ class Delete(SyncPlanAction):
         return os.EX_OK
 
 
-# environment command ------------------------------------------------------------
+# sync_plan command ------------------------------------------------------------
 
 class SyncPlan(Command):
 

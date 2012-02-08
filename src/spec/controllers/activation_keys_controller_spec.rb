@@ -38,7 +38,7 @@ describe ActivationKeysController do
     @system_template_2 = AppConfig.katello? ? SystemTemplate.create!(:name => 'template2', :environment => @environment_1) : nil
     @a_key = ActivationKey.create!(:name => "another test key", :organization => @organization, :environment => @environment_1)
     @subscription = KTPool.create!(:cp_id => "Test Subscription",
-                                          :key_pools => [KeyPool.create!(:activation_key => @a_key, :allocated=>5)])
+                                          :key_pools => [KeyPool.create!(:activation_key => @a_key)])
 
     @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id,
                                          :system_template_id => @system_template_1.id}} if AppConfig.katello?
@@ -241,8 +241,6 @@ describe ActivationKeysController do
           put :add_subscriptions, { :id => @a_key.id, :subscription_id => {"abc123" => "false"} }
           response.should be_success
           @a_key.pools.where(:cp_id => "abc123").should_not be_empty
-          sub = KTPool.where(:cp_id => "abc123")[0]
-          KeyPool.where(:activation_key_id => @a_key.id, :pool_id => sub.id)[0].allocated.should == 1
           response.should render_template(:partial => "_available_subscriptions_update")
         end
 

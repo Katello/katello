@@ -17,11 +17,8 @@ class ChangesetErratumValidator < ActiveModel::Validator
     to_env   = record.changeset.environment
     product = Product.find(record.product_id)
 
-    record.errors[:base] <<  _("Erratum '#{record.errata_id}' doesn't belong to the specified product!") and return if record.repositories.empty?
-
-    record.repositories.each do |repo|
-      record.errors[:base] << _("Repository of the erratum '#{record.errata_id}' has not been promoted into the target environment!") and return if not repo.is_cloned_in? to_env
-    end
+    record.errors[:base] << _("Erratum '#{record.errata_id}' doesn't belong to the specified product!") and return if record.repositories.empty?
+    record.errors[:base] << _("Repository of the erratum '#{record.errata_id}' has not been promoted into the target environment!") if record.promotable_repositories.empty?
   end
 end
 
@@ -43,6 +40,16 @@ class ChangesetErratum < ActiveRecord::Base
       @repos << repo if repo.has_erratum? self.errata_id
     end
     @repos
+  end
+
+  def promotable_repositories
+    to_env = self.changeset.environment
+
+    repos = []
+    self.repositories.each do |repo|
+      repos << repo if repo.is_cloned_in? to_env
+    end
+    repos
   end
 
   # returns list of virtual permission tags for the current user

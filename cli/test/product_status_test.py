@@ -47,7 +47,7 @@ class ProductStatusTest(CLIActionTestCase):
 
     def test_it_calls_last_sync_status_api(self):
         self.action.run()
-        self.action.api.last_sync_status.assert_called_once_with(self.PROD['id'])
+        self.action.api.last_sync_status.assert_called_once_with(self.ORG['name'], self.PROD['id'])
 
     def test_it_does_not_set_progress_for_not_running_sync(self):
         self.action.run()

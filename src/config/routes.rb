@@ -392,9 +392,20 @@ Src::Application.routes.draw do
     end
 
     resources :organizations do
-      resources :products, :only => [:index] do
+      resources :products, :only => [:index, :show, :update, :destroy] do
         get :repositories, :on => :member
+        post :sync_plan, :on => :member, :action => :set_sync_plan
+        delete :sync_plan, :on => :member, :action => :remove_sync_plan
+        get :repositories, :on => :member
+        resources :sync, :only => [:index, :create] do
+          delete :index, :on => :collection, :action => :cancel
+        end
+        resources :filters, :only => [] do
+          get :index, :on => :collection, :action => :list_product_filters
+          put :index, :on => :collection, :action => :update_product_filters
+        end
       end
+
       resources :environments do
         get :repositories, :on => :member
         resources :changesets, :only => [:index, :create]
@@ -427,7 +438,7 @@ Src::Application.routes.draw do
         post   :index, :on => :collection, :action => :add_product
         delete :destroy, :on => :member, :action => :remove_product
       end
-      resources :packages, :controller => :changesets_content do
+      resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ } do
         post   :index, :on => :collection, :action => :add_package
         delete :destroy, :on => :member, :action => :remove_package
       end
@@ -448,19 +459,6 @@ Src::Application.routes.draw do
         delete :destroy, :on => :member, :action => :remove_template
       end
 
-    end
-
-    resources :products, :only => [:show, :update, :destroy] do
-      post :sync_plan, :on => :member, :action => :set_sync_plan
-      delete :sync_plan, :on => :member, :action => :remove_sync_plan
-      get :repositories, :on => :member
-      resources :sync, :only => [:index, :create] do
-        delete :index, :on => :collection, :action => :cancel
-      end
-      resources :filters, :only => [] do
-        get :index, :on => :collection, :action => :list_product_filters
-        put :index, :on => :collection, :action => :update_product_filters
-      end
     end
 
     #resources :puppetclasses, :only => [:index]
@@ -566,6 +564,7 @@ Src::Application.routes.draw do
       get 'status/memory'
     end
 
+    match '*a', :to => 'errors#render_404'
   # end '/api' namespace
   end
 

@@ -164,19 +164,34 @@ KT.templates = function() {
     remove_package_group = function(name) {
         generic_remove(name, KT.options.current_template.package_groups);
     },
-    has_repo = function(name) {
-        return in_array(name, KT.options.current_template.repos) > -1;
+    in_repo_array = function(id) {
+        var to_ret = -1;
+        $.each(KT.options.current_template.repos, function(index, item) {
+            if (item.id  + "" === id + "") {
+                to_ret = index;
+                return false;
+            }
+        });
+        return to_ret;
     },
-    add_repo = function(name) {
-      var repos = KT.options.current_template.repos;
-      if (!has_repo(name)) {
-        repos.push({name:name});
-      }
-      KT.options.current_template.modified = true;
-      KT.options.template_tree.rerender_content();
+    has_repo = function(id) {
+        return in_repo_array(id) > -1;
     },
-    remove_repo = function(name) {
-        generic_remove(name, KT.options.current_template.repos);
+    add_repo = function(name, id) {
+        if (!has_repo(id)) {
+          KT.options.current_template.repos.push({name:name, id:id});
+          KT.options.current_template.modified = true;
+          KT.options.template_tree.rerender_content();
+        }
+    },
+    remove_repo = function(name, id) {
+        var repos = KT.options.current_template.repos;
+        var loc = in_repo_array(id);
+        if (loc > -1) {
+            repos.splice(loc, 1);
+            KT.options.current_template.modified = true;
+            KT.options.template_tree.rerender_content();
+        }
     },
     reset_page = function() {
         
@@ -205,12 +220,18 @@ KT.templates = function() {
             $.each( [["package", KT.options.current_template.packages],
                      ["package_group", KT.options.current_template.package_groups],
                      ["repo", KT.options.current_template.repos]], function(index, item) {
-                var type = item[0];
-                var array = item[1];
+
+                var type = item[0],
+                    array = item[1];
                 
                 $('.' + type + '_add_remove').not('.working').show().text(i18n.add_plus); //reset all add/remove to add
                 $.each(array, function(index, item){
-                    var btn = $('a[data-name="' + item.name + '"].' + type + '_add_remove').not('.working');
+                    var btn = undefined;
+                    if (type === "repo") {
+                        btn = $('a[data-name="' + item.name + '"][data-id="' + item.id +'"].' + type + '_add_remove').not('.working');
+                    } else {
+                        btn = $('a[data-name="' + item.name + '"].' + type + '_add_remove').not('.working');
+                    }
                     if (btn.length > 0) {
                         btn.text(i18n.remove);
                     }
@@ -341,10 +362,10 @@ KT.template_renderer = function() {
         }
     },
     render_hash = function(hash_id, render_cb) {
-        var node = hash_id.split('_')[0];
-        var template_id = hash_id.split('_')[1];
-        var curr_t = KT.options.current_template;
-        var modified = false;
+        var node = hash_id.split('_')[0],
+            template_id = hash_id.split('_')[1],
+            curr_t = KT.options.current_template,
+            modified = false;
 
         if(curr_t && (hash_id === "templates" ||  template_id + "" !== curr_t.id + "")) {
             modified = curr_t.modified;
@@ -435,6 +456,7 @@ KT.template_renderer = function() {
             html += '<ul><li class="content_input_item"><form id="add_repo_form">';
             html += '<input id="add_repo_input" type="text" size="33"><form>  ';
             html += '<a id="add_repo" class="fr st_button ">' + i18n.add_plus + '</a>';
+            html += '<input id="add_repo_input_id" type="hidden">';
             html += ' </li></ul>';
         }
         html +=  '<ul class="filterable">';
@@ -495,9 +517,9 @@ KT.template_renderer = function() {
     },
     distros = function(prod_id){
         var html = "",
-        distros = [],
-        current = KT.options.current_template,
-        selected;
+            distros = [],
+            current = KT.options.current_template,
+            selected;
 
         if (current.products.length === 0 && current.repos.length === 0){
             return i18n.need_product_or_repo;
@@ -573,27 +595,29 @@ KT.auto_complete_box = function(params) {
         values: undefined,       //either a url, an array, or a callback of items for auto_completion
         default_text: undefined,  //default text to go into the search box if desired
         input_id: undefined,
+        selected_input_id: undefined,
         form_id: undefined,
         add_btn_id: undefined,
         add_text: i18n.add_plus,
-        add_cb: function(t, cb){cb();}
+        add_cb: function(item, item_id, cb){cb();}
     };
     $.extend( settings, params );
     
     var add_item_from_input = function(e) {
-        var item = $("#" + settings.input_id).attr("value");
-        var add_btn = $("#" + settings.add_btn_id);
+        var item = $("#" + settings.input_id).attr("value"),
+            item_id = $("#" + settings.selected_input_id).val(),
+            add_btn = $("#" + settings.add_btn_id);
         
         e.preventDefault();
         if (item.length === 0 || item === settings.default_text){
                 return;
         }
         add_btn.addClass("working");
-        add_item_base(item, true);
+        add_item_base(item, item_id, true);
     },
-    add_item_base = function(item, focus) {
-        var input = $("#" + settings.input_id);
-        var add_btn = $("#" + settings.add_btn_id);
+    add_item_base = function(item, item_id, focus) {
+        var input = $("#" + settings.input_id),
+            add_btn = $("#" + settings.add_btn_id);
 
         add_btn.addClass("working");
         add_btn.html("<img  src='images/spinner.gif'>");
@@ -601,7 +625,7 @@ KT.auto_complete_box = function(params) {
         input.autocomplete('disable');
         input.autocomplete('close');
 
-        settings.add_cb(item, function(){
+        settings.add_cb(item, item_id, function(){
             add_success_cleanup();
             if (focus) {
                 $('#' + settings.input_id).focus();
@@ -610,8 +634,8 @@ KT.auto_complete_box = function(params) {
     },
     add_success_cleanup = function() {
         //re-lookup all items, since a redraw may have happened
-        var input = $("#" + settings.input_id);
-        var add_btn = $("#" + settings.add_btn_id);
+        var input = $("#" + settings.input_id),
+            add_btn = $("#" + settings.add_btn_id);
         add_btn.removeClass('working');
         if (add_btn.text() === "") {
             add_btn.html(settings.add_text);
@@ -619,8 +643,8 @@ KT.auto_complete_box = function(params) {
         input.removeAttr('disabled');
         input.autocomplete('enable');
     },
-    manually_add = function(item) {
-        add_item_base(item, false);
+    manually_add = function(item, item_id) {
+        add_item_base(item, item_id, false);
     },
     error = function() {
         var input = $("#" + settings.input_id);
@@ -628,9 +652,10 @@ KT.auto_complete_box = function(params) {
     };
 
     //initialization
-    var input = $("#" + settings.input_id);
-    var form = $("#" + settings.form_id);
-    var add_btn = $("#" + settings.add_btn_id);
+    var input = $("#" + settings.input_id),
+        form = $("#" + settings.form_id),
+        add_btn = $("#" + settings.add_btn_id);
+
     if (settings.default_text) {
         input.val(settings.default_text);
         input.focus(function() {
@@ -646,7 +671,12 @@ KT.auto_complete_box = function(params) {
     }
     
     input.autocomplete({
-        source: settings.values
+        source: settings.values,
+        select: function (event, ui) {
+            $("#" + settings.input_id).val(ui.item.value);
+            $("#" + settings.selected_input_id).val(ui.item.id);
+            return false;
+        }
     });
 
     add_btn.bind('click', add_item_from_input);
@@ -672,7 +702,7 @@ KT.product_actions = (function() {
             add_cb:       verify_add_product
         });
     },
-    verify_add_product = function(name, cleanup_cb) {
+    verify_add_product = function(name, name_id, cleanup_cb) {
         var names = Object.keys(KT.product_hash);
         
         if ($.inArray(name, names) > -1) {        
@@ -685,18 +715,18 @@ KT.product_actions = (function() {
     },
     register_events = function() {
         $(".remove_product").live('click', function() {
-            var btn = $(this);
-            var id = btn.attr("data-id");
-            var name = btn.attr("data-name");
+            var btn = $(this),
+                id = btn.attr("data-id"),
+                name = btn.attr("data-name");
 
             if (name && id) {
                 KT.templates.remove_product(name, id);
             }
         });
         $(".product_add_remove").live('click', function(){
-            var btn = $(this);
-            var name = btn.attr("data-name");
-            var id = btn.attr("data-id");
+            var btn = $(this),
+                name = btn.attr("data-name"),
+                id = btn.attr("data-id");
 
             if (KT.templates.has_product(name, id)) {
                 //need to remove
@@ -726,22 +756,46 @@ KT.repo_actions = (function() {
             values:       KT.routes.auto_complete_library_repositories_path(),
             default_text: i18n.repo_search_text,
             input_id:     "add_repo_input",
+            selected_input_id: "add_repo_input_id",
             form_id:      "add_repo_form",
             add_btn_id:   "add_repo",
             add_cb:       verify_add_repo
         });
     },
-    verify_add_repo = function(name, cleanup_cb){
+    verify_add_repo = function(name, name_id, cleanup_cb){
         $.ajax({
             type: "GET",
             url: KT.routes.auto_complete_library_repositories_path(),
             data: {term:name},
             cache: false,
             success: function(data){
-                if ($.inArray(name, data) > -1) {
-                    KT.templates.add_repo(name);
+                // the response will be an array containing a json structure consisting of repo name/id...
+                var found = false;
+
+                if (name_id !== undefined) {
+                    // user entered repo name from the template tree
+                    $.each(data, function(index, item) {
+                        if ((item.id === name_id) && (item.value === name)) {
+                            KT.templates.add_repo(item.value, item.id);
+                            found = true;
+                            return false;  // found, stop looping
+                        }
+                    });
                 }
-                else {
+                if (!found) {
+                    // either user selected repo from the content tree or
+                    // they selected it from template tree autocomplete results, but then retyped
+                    // a repo name (overriding a previous selection)
+                    $.each(data, function(index, item) {
+                        if (item.value === name) {
+                            KT.templates.add_repo(item.value, item.id);
+                            found = true;
+                            return true;  // continue looping
+                        }
+                    });
+                }
+
+                if (!found) {
                     current_input.error();
                 }
                 cleanup_cb();
@@ -752,23 +806,28 @@ KT.repo_actions = (function() {
     //called once on page load
     register_events = function() {
         $(".remove_repo").live('click', function() {
-            var repo = $(this).siblings("span").text();
-            if (repo && repo.length > 0) {
-                KT.templates.remove_repo(repo);
+            var btn = $(this),
+                id = btn.attr("data-id"),
+                name = btn.attr("data-name");
+
+            if (name && id) {
+                KT.templates.remove_repo(name, id);
             }
         });
 
         $(".repo_add_remove").live('click', function(){
-            var btn = $(this);
-            var name = btn.attr("data-name");
-            if (KT.templates.has_repo(name)) {
+            var btn = $(this),
+                name = btn.attr("data-name"),
+                id = btn.attr("data-id");
+
+            if (KT.templates.has_repo(id)) {
                 //need to remove
-                KT.templates.remove_repo(name);
+                KT.templates.remove_repo(name, id);
             }
             else {
                 //need to add
                 btn.html("<img  src='images/spinner.gif'>");
-                current_input.manually_add(name);
+                current_input.manually_add(name, id);
             }
         });
     };
@@ -792,7 +851,7 @@ KT.package_actions = (function() {
             add_cb:       verify_add_package
         });
     },
-    verify_add_package = function(name, cleanup_cb){
+    verify_add_package = function(name, name_id, cleanup_cb){
         $.ajax({
             type: "GET",
             url: KT.routes.auto_complete_library_packages_path(),
@@ -866,7 +925,7 @@ KT.package_group_actions = (function() {
             add_cb:       verify_add_group
         });
     },
-    verify_add_group = function(name, cleanup_cb){
+    verify_add_group = function(name, name_id, cleanup_cb){
         if ($.inArray(name, KT.package_groups) > -1) {
             KT.templates.add_package_group(name);
         }
