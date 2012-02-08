@@ -1,0 +1,1 @@
+$(document).ready(function(){KT.activation_key.subscription_setup()});

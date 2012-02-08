@@ -1,0 +1,1 @@
+$(document).ready(function(){$("#provider_provider_type").change(provider.toggleFields)});

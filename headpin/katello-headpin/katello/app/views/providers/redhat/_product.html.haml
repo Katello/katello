@@ -1,0 +1,15 @@
+- pid = prod[:id]
+%tr.product{:id=>product_id(pid)}
+  -#%td{:class=>'product', 'data-id'=>prod.id}
+  %td
+    -#= check_box_tag "product[#{pid}]", '', '', :disabled=>!@sproducts.include?(prod)
+    #{prod[:name]}
+
+= render :partial=>"providers/redhat/children", :locals=>{:children=>prod[:children], :parent_set=>[pid]} if !prod[:children].empty?
+
+= render :partial=>"providers/redhat/repo", :collection=>prod[:repos].sort{|a,b| a.name <=> b.name},
+                  :as=>:repo, :locals=>{:parent_set=>[pid]} if !prod[:repos].empty?
+
+
+
+  

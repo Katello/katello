@@ -1,0 +1,1 @@
+$(document).ready(function(){$("#login_form").live("submit",function(a){if(window.location.hash!=""){$("<input>").attr({type:"hidden",id:"hash_anchor",name:"hash_anchor",value:window.location.hash}).appendTo(this)}});$("input[type='text']:first",document.forms[0]).focus()});

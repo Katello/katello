@@ -275,6 +275,36 @@ fi
 %files
 %attr(600, katello, katello)
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
+%defattr(-,root,root)
+%{homedir}/app/controllers
+%{homedir}/app/helpers
+%{homedir}/app/mailers
+%{homedir}/app/models/*.rb
+%{homedir}/app/stylesheets
+%{homedir}/app/views
+%{homedir}/autotest
+%{homedir}/ca
+%{homedir}/config
+%{homedir}/db/migrate/
+%{homedir}/db/products.json
+%{homedir}/db/seeds.rb
+%{homedir}/integration_spec
+%{homedir}/lib/*.rb
+%{homedir}/lib/navigation
+%{homedir}/lib/resources/cdn.rb
+%{homedir}/lib/tasks
+%{homedir}/lib/util
+%{homedir}/locale
+%{homedir}/public
+%{homedir}/script
+%{homedir}/spec
+%{homedir}/tmp
+%{homedir}/vendor
+%{homedir}/.bundle
+%{homedir}/config.ru
+%{homedir}/Gemfile
+%{homedir}/Gemfile.lock
+%{homedir}/Rakefile
 
 %files common
 %defattr(-,root,root)
@@ -289,36 +319,8 @@ fi
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
 %{_sysconfdir}/bash_completion.d/%{name}
-
-# Break apart the main bits
-%{homedir}/app/controllers
-%{homedir}/app/helpers
-%{homedir}/app/mailers
-%{homedir}/app/models/*.rb
-%{homedir}/app/stylesheets
-%{homedir}/app/views
-%{homedir}/autotest
-%{homedir}/ca
-%{homedir}/config
-%{homedir}/db
-%{homedir}/integration_spec
-%{homedir}/lib/*.rb
-%{homedir}/lib/navigation
-%{homedir}/lib/resources/cdn.rb
-%{homedir}/lib/tasks
-%{homedir}/lib/util
-%{homedir}/locale
 %{homedir}/log
-%{homedir}/public
-%{homedir}/script
-%{homedir}/spec
-%{homedir}/tmp
-%{homedir}/vendor
-%{homedir}/.bundle
-%{homedir}/config.ru
-%{homedir}/Gemfile
-%{homedir}/Gemfile.lock
-%{homedir}/Rakefile
+%{homedir}/db/schema.rb
 
 %defattr(-, katello, katello)
 %{_localstatedir}/log/%{name}

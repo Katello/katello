@@ -1,0 +1,1 @@
+$(document).ready(function(){if(schedule.syncable==false){$(".block").die("click")}$("#apply_button").live("click",function(a){$("#data").val(JSON.stringify(one_panel.selectedItems));$("#sync_schedule_form").submit()})});

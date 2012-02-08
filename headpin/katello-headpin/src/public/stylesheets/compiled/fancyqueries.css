@@ -1,0 +1,239 @@
+@charset "UTF-8";
+/* Primary Katello ID */
+/* all selected items */
+/* default links */
+/* unfocused tabs */
+/* list items prelight state */
+/* GENERIC TEXT ENTRIES */
+/* line 5, ../../../app/stylesheets/fancyqueries.scss */
+input, textarea {
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+  /* -webkit-box-shadow: inset $x $y $blur $color; breaks on border-radius */
+  border: 1px solid #aaaaaa;
+  background-color: #f0f0f0;
+  background: #f0f0f0 url(../../images/input-bg.png) repeat-x 0 0;
+  padding: 4px;
+  margin: 0;
+}
+/* line 15, ../../../app/stylesheets/fancyqueries.scss */
+input:focus, textarea:focus {
+  border-width: 2px;
+  padding: 3px;
+  background-color: #fff;
+  outline: none;
+}
+/* line 21, ../../../app/stylesheets/fancyqueries.scss */
+input.disabled, input[disabled], textarea.disabled, textarea[disabled] {
+  opacity: 0.6;
+}
+
+/* search forms */
+/* line 27, ../../../app/stylesheets/fancyqueries.scss */
+.search {
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+  /* search widget dropdown list */
+}
+/* line 33, ../../../app/stylesheets/fancyqueries.scss */
+.search button {
+  z-index: 3;
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  text-indent: -300em;
+  color: rgba(0, 0, 0, 0);
+  right: 8px;
+  top: 50%;
+  margin: -8px 0 0;
+  background-position: 0 0;
+  border: none;
+  padding: 0;
+  background: url(../../images/icons/icon_search.png) no-repeat 0 0;
+}
+/* line 48, ../../../app/stylesheets/fancyqueries.scss */
+.search button:hover {
+  box-shadow: none;
+  -webkit-shadow: none;
+  -moz-box-shadow: none;
+}
+/* line 55, ../../../app/stylesheets/fancyqueries.scss */
+.search input[type="search"], .search input[type="text"] {
+  z-index: 2;
+  position: relative;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border-radius: 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  padding: 4px 30px 4px 10px;
+  float: right;
+}
+/* line 66, ../../../app/stylesheets/fancyqueries.scss */
+.search input[type="search"]:focus, .search input[type="text"]:focus {
+  padding: 3px 29px 3px 9px;
+}
+/* line 71, ../../../app/stylesheets/fancyqueries.scss */
+.search .queries {
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  -moz-border-radius-topleft: 20px;
+  -moz-border-radius-bottomleft: 20px;
+  -webkit-border-top-left-radius: 20px;
+  -webkit-border-bottom-left-radius: 20px;
+  background-color: #ddd;
+  /* for IE */
+  background: -moz-linear-gradient(top, #f0f0f0, #dddddd);
+  background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#dddddd));
+  border: 1px solid #aaa;
+}
+/* line 90, ../../../app/stylesheets/fancyqueries.scss */
+.search .queries .arrow {
+  display: block;
+  position: relative;
+  width: 18px;
+  height: 6px;
+  top: 10px;
+  left: 3px;
+  margin-top: -1px;
+  background: url(../../images/icons/icon_menu_arrow.gif) no-repeat 0 0;
+}
+/* line 101, ../../../app/stylesheets/fancyqueries.scss */
+.search .queries:active {
+  background: -moz-linear-gradient(top, #d0d0d0, #f0f0f0);
+  background: -webkit-gradient(linear, left top, left bottom, from(#d0d0d0), to(#f0f0f0));
+}
+/* line 106, ../../../app/stylesheets/fancyqueries.scss */
+.search .queries .open {
+  background: #f6f6f6;
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-top-left-radius: 14px;
+  -moz-border-radius-topleft: 14px;
+  -webkit-border-top-left-radius: 14px;
+}
+/* line 115, ../../../app/stylesheets/fancyqueries.scss */
+.search .queries .queryeditor {
+  background: #bbb;
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-top-left-radius: 14px;
+  -moz-border-radius-topleft: 14px;
+  -webkit-border-top-left-radius: 14px;
+}
+/* line 126, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown {
+  position: absolute;
+  border: 1px solid #bbb;
+  background-color: #f6f6f6;
+  top: 100%;
+  /* Providing a very high z-index.  The intent is to not have other elements over top of the dropdown. */
+  z-index: 4000;
+  /*
+  .qdropdown ul {
+    margin: 0; padding: 0;
+  }
+  */
+}
+/* line 134, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown.left-menu {
+  left: 0;
+}
+/* line 137, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown.right-menu {
+  right: 12px;
+}
+/* line 140, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown ul {
+  display: block;
+  margin: 0;
+}
+/* line 143, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown ul li {
+  display: block;
+  padding: 0 16px 0 0;
+}
+/* line 146, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown ul li:hover {
+  cursor: pointer !important;
+  text-decoration: none;
+  background-color: #E6E6E6;
+  color: #000000;
+}
+/* line 152, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown ul li span {
+  width: 300px;
+  display: block;
+  padding: 4px 10px 4px 24px;
+  white-space: nowrap;
+  color: #1ca5d2;
+}
+/* line 159, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown ul li span:hover {
+  cursor: pointer !important;
+  text-decoration: none;
+  background-color: #E6E6E6;
+  color: #000000;
+}
+/* line 166, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown ul li .delete {
+  position: absolute;
+  right: 3px;
+  width: 16px;
+  height: 16px;
+  margin: -22px 0 0 0;
+  background: url("../../images/icons/action-icons.png") no-repeat -160px 0px;
+}
+/* line 173, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown ul li .delete:hover {
+  background: url("../../images/icons/action-icons.png") no-repeat -160px -16px #e6e6e6;
+}
+/* line 177, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown ul li .favorite {
+  background: url(../../images/icons/favorite.png) no-repeat 4px center;
+}
+/* line 180, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown ul li .recent {
+  background: url(../../images/icons/recent.png) no-repeat 4px center;
+}
+/* line 190, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown .showmore {
+  display: block;
+  font-size: 80%;
+  text-align: right;
+  padding-right: 10px;
+  text-decoration: none;
+  color: #888;
+}
+/* line 198, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown .showmore:hover {
+  cursor: pointer;
+  background-color: #fff;
+  color: #000;
+}
+/* line 206, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown .queryeditor h1 {
+  font-size: 80%;
+  color: #fff;
+  background-color: #bbb;
+  text-align: right;
+  padding: 0.25em 0.5em;
+  margin: 0;
+}
+/* line 213, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown .queryeditor h2 {
+  margin: 0 0 1em;
+}
+/* line 216, ../../../app/stylesheets/fancyqueries.scss */
+.search .qdropdown .queryeditor div {
+  padding: 12px;
+}
