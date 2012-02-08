@@ -29,7 +29,7 @@ module Glue::Pulp::Repo
                         Pulp::Repository.find(pulp_id)
                       end
                     }
-      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source,
+      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source, :package_count,
                 :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type,
                 :initializer => lambda {
                   if pulp_id
