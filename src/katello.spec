@@ -274,23 +274,7 @@ fi
 
 %files
 %attr(600, katello, katello)
-%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
-
-%files common
 %defattr(-,root,root)
-%doc README LICENSE doc/
-%config %{_sysconfdir}/%{name}/thin.yml
-%config %{_sysconfdir}/httpd/conf.d/%{name}.conf
-%config %{_sysconfdir}/%{name}/environment.rb
-%config %{_sysconfdir}/logrotate.d/%{name}
-%config %{_sysconfdir}/logrotate.d/%{name}-jobs
-%config %{_sysconfdir}/%{name}/mapping.yml
-%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
-%{_initddir}/%{name}
-%{_initddir}/%{name}-jobs
-%{_sysconfdir}/bash_completion.d/%{name}
-
-# Break apart the main bits
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -300,7 +284,9 @@ fi
 %{homedir}/autotest
 %{homedir}/ca
 %{homedir}/config
-%{homedir}/db
+%{homedir}/db/migrate/
+%{homedir}/db/products.json
+%{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
 %{homedir}/lib/navigation
@@ -308,7 +294,6 @@ fi
 %{homedir}/lib/tasks
 %{homedir}/lib/util
 %{homedir}/locale
-%{homedir}/log
 %{homedir}/public
 %{homedir}/script
 %{homedir}/spec
@@ -319,6 +304,23 @@ fi
 %{homedir}/Gemfile
 %{homedir}/Gemfile.lock
 %{homedir}/Rakefile
+
+%files common
+%defattr(-,root,root)
+%doc README LICENSE doc/
+%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
+%config %{_sysconfdir}/%{name}/thin.yml
+%config %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%config %{_sysconfdir}/%{name}/environment.rb
+%config %{_sysconfdir}/logrotate.d/%{name}
+%config %{_sysconfdir}/logrotate.d/%{name}-jobs
+%config %{_sysconfdir}/%{name}/mapping.yml
+%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%{_initddir}/%{name}
+%{_initddir}/%{name}-jobs
+%{_sysconfdir}/bash_completion.d/%{name}
+%{homedir}/log
+%{homedir}/db/schema.rb
 
 %defattr(-, katello, katello)
 %{_localstatedir}/log/%{name}
@@ -352,53 +354,6 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-* Tue Feb 07 2012 Mike McCune <mmccune@redhat.com> 0.1.226-1
-- rebuild 
-* Tue Feb 07 2012 Ivan Necas <inecas@redhat.com> 0.1.225-1
-- 768254 - scope products API by organization (inecas@redhat.com)
-
-* Tue Feb 07 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.224-1
-- binding - better error reporting fix
-
-* Tue Feb 07 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.223-1
-- binding - better error reporting
-- infra - improving rake routes script
-- 740964 - Added validation to make sure that there is atleast 1 user in the
-  Administrator/superadmin role
-- system template - update repos to use elastic search query
-- 769425 - set minimum width of selector box
-
-* Mon Feb 06 2012 Mike McCune <mmccune@redhat.com> 0.1.222-1
-- 787745 - system template - fix download containing distros
-  (bbuckingham@redhat.com)
-
-* Mon Feb 06 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.221-1
-- binding - implementing the glue logic
-- spec - removing some warning messages
-- binding - adding cp_label to repository model class
-- 785799 - show error message suggesting use of force upload not shown when
-  force upload is already set
-- 786598 - system templates - improve support for repos having same name
-
-* Mon Feb 06 2012 Ivan Necas <inecas@redhat.com> 0.1.220-1
-- periodic build
-* Fri Feb 03 2012 Ivan Necas <inecas@redhat.com> 0.1.218-1
-- Fix problem with admin user password in production mode (inecas@redhat.com)
-
-* Fri Feb 03 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.215-1
-- logging - setting default production level to 'warn'
-- 771886 - system packages - fix ui staying in processing state on pkg install
-
-* Thu Feb 02 2012 Mike McCune <mmccune@redhat.com> 0.1.214-1
-- rebuild
-* Thu Feb 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.213-1
-- spec - moving newrelic gem out of test env (faster)
-- spec - making unit tests faster
-- spec - optimizing unit tests
-- binding - fetch existing bound repos from pulp
-- repos - removing unused repo_id class method
-- 786110 - system template - fix failure on removal if repo added
-
 * Wed Feb 01 2012 Mike McCune <mmccune@redhat.com> 0.1.211-1
 - rebuild
 * Wed Feb 01 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.210-1
