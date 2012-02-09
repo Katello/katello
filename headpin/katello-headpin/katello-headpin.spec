@@ -205,6 +205,8 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Thu Feb 09 2012 Jordan OMara <jomara@redhat.com> 0.1.135-2
+- temporarily removing selinux requires
 * Thu Feb 09 2012 Jordan OMara <jomara@redhat.com> 0.1.134-2
 - Fixing some branding issues
 * Thu Feb 09 2012 Jordan OMara <jomara@redhat.com> 0.1.133-2
