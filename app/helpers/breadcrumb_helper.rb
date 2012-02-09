@@ -127,7 +127,7 @@ module ContentBreadcrumbs
 
    errata_filters.each do |filter|
      add_crumb_node!(bc, filter[:id], filter[:path],
-         filter[:label], [content_crumb_id, errata_crumb_id], {:scrollable=>true})
+         filter[:label], [content_crumb_id, errata_crumb_id], {:scrollable=>true, :searchable => true})
    end
 
    add_crumb_node!(bc, products_crumb_id, products_promotion_path(@environment.name),
@@ -158,7 +158,7 @@ module ContentBreadcrumbs
 
      errata_filters.each do |filter|
        add_crumb_node!(bc, filter[:id], filter[:path],
-           filter[:label], [content_crumb_id, products_crumb_id, product_id, errata_id], {:scrollable=>true})
+           filter[:label], [content_crumb_id, products_crumb_id, product_id, errata_id], {:scrollable=>true, :searchable => true})
      end
 
      #product_repos

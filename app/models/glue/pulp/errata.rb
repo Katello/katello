@@ -65,14 +65,13 @@ class Glue::Pulp::Errata
             "analysis" => {
                 "filter" => {
                     "ngram_filter"  => {
-                        "type"      => "edgeNGram",
-                        "side"      => "front",
-                        "min_gram"  => 1,
+                        "type"      => "nGram",
+                        "min_gram"  => 2,
                         "max_gram"  => 10
                     }
                 },
                 "analyzer" => {
-                    "name_analyzer" => {
+                    "title_analyzer" => {
                         "type"      => "custom",
                         "tokenizer" => "keyword",
                         "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
@@ -87,9 +86,11 @@ class Glue::Pulp::Errata
     {
       :errata => {
         :properties => {
-          :repoids  => { :type => 'string', :analyzer =>'keyword'},
-          :id       => { :type => 'string', :analyzer => 'keyword' },
-          :id_sort  => { :type => 'string', :index => :not_analyzed }
+          :title        => { :type => 'string', :analyzer =>'title_analyzer'},
+          :repoids      => { :type => 'string', :analyzer =>'keyword'},
+          :id           => { :type => 'string', :analyzer => 'title_analyzer' },
+          :id_sort      => { :type => 'string', :index => :not_analyzed },
+          :product_ids  => { :type => 'integer', :analyzer => 'keyword' }
         }
       }
     }
@@ -102,14 +103,15 @@ class Glue::Pulp::Errata
   def index_options
     {
       "_type" => :errata,
-      :id_sort => self.id
+      :id_sort => self.id,
+      :product_ids => self.product_ids
     }
   end
 
-  def self.search query, start, page_size, filters={}, sort=[:id_sort, "ASC"]
+  def self.search query, start, page_size, filters={}, sort=[:id_sort, "DESC"]
     return [] if !Tire.index(self.index).exists?
     query_down = query.downcase
-    query = "title:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
+    query = "title:#{query} OR id:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
     search = Tire.search self.index do
       query do
         string query
@@ -129,7 +131,9 @@ class Glue::Pulp::Errata
         filter :term, :type => filters[:severity]
       end
 
-      sort { by sort[0], sort[1] }
+      if sort
+        sort { by sort[0], sort[1] }
+      end
     end
     return search.results
   rescue
@@ -148,6 +152,17 @@ class Glue::Pulp::Errata
     end if !errata.empty?
   end
  
+  def product_ids
+    product_ids = []
+
+    self.repoids.each{ |repoid|
+      repo = Repository.where(:pulp_id => repoid)[0]
+      product_ids << repo.product.id
+    }   
+
+    product_ids.uniq
+  end
+
   def included_packages
     packages = []
 

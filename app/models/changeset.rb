@@ -298,12 +298,6 @@ class Changeset < ActiveRecord::Base
     self.state = Changeset::PROMOTED
     self.save!
 
-    self.repos.each do |repo|
-      if repo.is_cloned_in? to_env
-        repo.get_clone(to_env).index_packages
-      end
-    end
-
   rescue Exception => e
     self.state = Changeset::FAILED
     self.save!
@@ -342,7 +336,7 @@ class Changeset < ActiveRecord::Base
       if cloned
         async_tasks << cloned.sync
       else
-        async_tasks << repo.promote(to_env)
+        async_tasks << repo.promote(from_env, to_env)
       end
     end
     async_tasks.flatten(1)
@@ -395,18 +389,20 @@ class Changeset < ActiveRecord::Base
       product = err.product
 
       product.repos(from_env).each do |repo|
-        clone = repo.get_clone to_env
-        next if clone.nil?
+        if repo.is_cloned_in? to_env
+          clone = repo.get_clone to_env
 
-        if (repo.has_erratum? err.errata_id) and (!clone.has_erratum? err.errata_id)
-          errata_promote[clone] ||= []
-          errata_promote[clone] << err.errata_id
+          if (repo.has_erratum? err.errata_id) and (!clone.has_erratum? err.errata_id)
+            errata_promote[clone] ||= []
+            errata_promote[clone] << err.errata_id
+          end
         end
       end
     end
 
     errata_promote.each_pair do |repo, errata|
       repo.add_errata(errata)
+      Glue::Pulp::Package.index_errata(errata)
     end
   end
 
