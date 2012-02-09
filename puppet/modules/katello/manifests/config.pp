@@ -131,14 +131,24 @@ class katello::config {
                   Class["pulp::service"], 
                   File["${katello::params::log_base}"], 
                   File["${katello::params::config_dir}/katello.yml"],
-                  Postgres::Createdb[$katello::params::db_name]
+                  Postgres::Createdb[$katello::params::db_name],
+                  Common::Simple_replace["org_name"],
+                  Common::Simple_replace["org_description"],
+                  Common::Simple_replace["primary_user_name"],
+                  Common::Simple_replace["primary_user_pass"],
+                  Common::Simple_replace["primary_user_email"]
                 ],
                 'headpin' => [
                   Class["candlepin::service"],
                   Class["thumbslug::service"],
                   File["${katello::params::log_base}"],
                   File["${katello::params::config_dir}/katello.yml"],
-                  Postgres::Createdb[$katello::params::db_name]
+                  Postgres::Createdb[$katello::params::db_name],
+                  Common::Simple_replace["org_name"],
+                  Common::Simple_replace["org_description"],
+                  Common::Simple_replace["primary_user_name"],
+                  Common::Simple_replace["primary_user_pass"],
+                  Common::Simple_replace["primary_user_email"]
                 ],
                 default => [],
     },
