@@ -85,6 +85,7 @@ describe PromotionsController do
     end
 
     it "should be successful when requesting errata" do
+      Glue::Pulp::Errata.stub(:search).and_return(["test"])
       get 'errata', :id=>@env.name, :product_id => @product.id
       response.should be_success
       assigns(:environment).should == @env
