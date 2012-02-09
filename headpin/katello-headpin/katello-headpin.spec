@@ -19,7 +19,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.1.134
+Version:        0.1.135
 Release:        2%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -30,7 +30,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       katello-common
 Requires:       katello-glue-candlepin
-Requires:       katello-selinux
 
 %if 0%{?rhel} == 6
 Requires:       redhat-logos >= 60.0.14
