@@ -94,7 +94,7 @@ var sliding_tree = function(tree_id, options) {
                     }
                   });
                   postrender(id);
-                  newPanel.html("<img src='images/spinner.gif' >");
+                  newPanel.html("<img src='"+ KT.common.rootURL() +"images/spinner.gif' >");
             }
         },
         postrender = function(id) {
@@ -388,7 +388,7 @@ sliding_tree.search = function(){
                     }
 
                     search_url += '?offset=' + offset;
-                    panel.html("<img src='images/spinner.gif' >");
+                    panel.html("<img src='"+ KT.common.rootURL() +"images/spinner.gif' >");
 
                     $(this).ajaxSubmit({
                         url		: search_url,

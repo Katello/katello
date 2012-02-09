@@ -174,7 +174,6 @@ module ContentBreadcrumbs
   end
 
   def product_bc_id product
-    Rails.logger.error("Should be called")
     "details_#{product.id}"
   end
 

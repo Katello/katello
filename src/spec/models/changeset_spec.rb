@@ -350,17 +350,6 @@ describe Changeset do
         @changeset.promote(false)
       end
 
-      it "should synchronize repositories that have been promoted" do
-        @prod.environments << @environment
-        @changeset.state = Changeset::REVIEW
-        @changeset.stub(:repos).and_return([@repo])
-        @repo.stub(:is_cloned_in?).and_return(true)
-        @repo.stub(:get_clone).and_return(@clone)
-        @clone.should_receive(:sync).once.and_return([])
-
-        @changeset.promote(false)
-      end
-
       it "should promote packages" do
         @prod.environments << @environment
         @changeset.packages << ChangesetPackage.new(:package_id => @pack.id, :display_name => @pack.name, :product_id => @prod.id, :changeset => @changeset)
