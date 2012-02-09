@@ -206,13 +206,34 @@ class Api::SystemsController < Api::ApiController
   end
 
   def enabled_repos
-    basearch = params['basearch'] rescue raise(HttpErrors::BadRequest, _("Expecting basearch attribute"))
-    releasever = params['releasever'] rescue raise(HttpErrors::BadRequest, _("Expecting releasever attribute"))
-    urls = params['repos'].collect{ |r| r['baseurl']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
+    repos = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
+    update_labels = repos['repos'].collect{ |r| r['repositoryid']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
 
-    logger.error "Not implemented yet: #{basearch} #{releasever} #{urls.inspect}"
+    update_ids = []
+    unknown_labels = []
+    update_labels.each do |label|
+      repo = Repository.find_by_cp_label label
+      if repo.nil?
+        logger.warn(_("Unknown repository label") + ": #{label}")
+        unknown_labels << label
+      else
+        update_ids << repo.pulp_id
+      end
+    end
 
-    render :json => {}.to_json
+    processed_ids, error_ids = @system.enable_repos(update_ids)
+
+    result = {}
+    result[:processed_ids] = processed_ids
+    result[:error_ids] = error_ids
+    result[:unknown_labels] = unknown_labels
+    if error_ids.count > 0 or unknown_labels.count > 0
+      result[:result] = "error"
+    else
+      result[:result] = "ok"
+    end
+
+    render :json => result.to_json
   end
 
   protected

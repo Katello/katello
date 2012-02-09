@@ -84,4 +84,4 @@ class CreateTest(unittest.TestCase):
 
     def test_create_repos(self):
         self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES, self.NODISC, None)
-        self.create_action.discoverRepos.create_repositories.assert_called_once_with(self.PRODUCT_ID, self.PRODUCT, self.DISCOVERED_REPOS)
+        self.create_action.discoverRepos.create_repositories.assert_called_once_with(self.ORGANIZATION, self.PRODUCT_ID, self.PRODUCT, self.DISCOVERED_REPOS)

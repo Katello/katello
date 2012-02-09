@@ -15,8 +15,8 @@ require 'resources/pulp' if AppConfig.katello?
 class Api::RepositoriesController < Api::ApiController
   respond_to :json
   before_filter :find_repository, :only => [:show, :update, :destroy, :package_groups, :package_group_categories, :enable, :gpg_key_content]
+  before_filter :find_organization, :only => [:create, :discovery]
   before_filter :find_product, :only => [:create]
-  before_filter :find_organization, :only => [:discovery]
 
   before_filter :authorize
   skip_filter   :set_locale, :require_user, :thread_locals, :authorize, :only => [:gpg_key_content]
@@ -120,7 +120,7 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   def find_product
-    @product = Product.find_by_cp_id params[:product_id]
+    @product = @organization.products.find_by_cp_id params[:product_id]
     raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
   end
 end

@@ -1,0 +1,17 @@
+- if @status
+  :javascript  
+    window.onload = function() {
+      if ("#{params[:task_id]}") update_status();   
+    }
+
+  %p Task id: #{params[:task_id]}
+  %p.status job status
+
+%p There are #{@info[:pending]} pending and #{@info[:processed]} processed jobs across #{@info[:queues]} queues.
+
+= form_for :owners, :html => { :multipart => true }, :url => { :action => "import" } do |f|
+  = f.file_field :import
+  = f.submit "Import"
+  
+=include_javascripts  :common, :workspace
+

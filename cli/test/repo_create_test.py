@@ -108,6 +108,7 @@ class RepositoryNameTest(unittest.TestCase):
 
 
 class CreateRepositoryTest(unittest.TestCase):
+    ORGANIZATION = 'ACME_Corporation'
     PRODUCT_ID = '123'
     NAME = 'REPO'
     URL = 'http://localhost/a/b/'
@@ -118,12 +119,12 @@ class CreateRepositoryTest(unittest.TestCase):
         self.create_action.api.create = Mock()
 
     def test_create_repo_in_pulp(self):
-        self.create_action.create_repositories(self.PRODUCT_ID, self.NAME, [self.URL])
+        self.create_action.create_repositories(self.ORGANIZATION, self.PRODUCT_ID, self.NAME, [self.URL])
         parsedUrl = urlparse.urlparse(self.URL)
-        self.create_action.api.create.assert_called_once_with(self.PRODUCT_ID, self.create_action.repository_name(self.NAME, parsedUrl.path), self.URL, None, None)
+        self.create_action.api.create.assert_called_once_with(self.ORGANIZATION, self.PRODUCT_ID, self.create_action.repository_name(self.NAME, parsedUrl.path), self.URL, None, None)
 
     def test_creates_repos_in_pulp_for_all_urls(self):
-        self.create_action.create_repositories(self.PRODUCT_ID, self.NAME, [self.URL, self.URL2])
+        self.create_action.create_repositories(self.ORGANIZATION, self.PRODUCT_ID, self.NAME, [self.URL, self.URL2])
         self.create_action.api.create.assert_called_twice
 
 

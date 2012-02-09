@@ -95,7 +95,7 @@ class SetSyncPlan(SingleProductAction):
         if (plan == None):
             return os.EX_DATAERR
 
-        msg = self.api.set_sync_plan(prod['id'], plan['id'])
+        msg = self.api.set_sync_plan(orgName, prod['id'], plan['id'])
         print msg
         return os.EX_OK
 
@@ -114,7 +114,7 @@ class RemoveSyncPlan(SingleProductAction):
         if (prod == None):
             return os.EX_DATAERR
 
-        msg = self.api.remove_sync_plan(prod['id'])
+        msg = self.api.remove_sync_plan(orgName, prod['id'])
         print msg
         return os.EX_OK
 
@@ -181,7 +181,7 @@ class Sync(SingleProductAction):
         if (prod == None):
             return os.EX_DATAERR
 
-        task = AsyncTask(self.api.sync(prod["id"]))
+        task = AsyncTask(self.api.sync(orgName, prod["id"]))
         run_async_task_with_status(task, ProgressBar())
 
         if task.failed():
@@ -209,7 +209,7 @@ class CancelSync(SingleProductAction):
         if (prod == None):
             return os.EX_DATAERR
 
-        msg = self.api.cancel_sync(prod["id"])
+        msg = self.api.cancel_sync(orgName, prod["id"])
         print msg
         return os.EX_OK
 
@@ -228,7 +228,7 @@ class Status(SingleProductAction):
         if (prod == None):
             return os.EX_DATAERR
 
-        task = AsyncTask(self.api.last_sync_status(prod['id']))
+        task = AsyncTask(self.api.last_sync_status(orgName, prod['id']))
 
         prod['last_sync'] = format_sync_time(prod['last_sync'])
         prod['sync_state'] = format_sync_state(prod['sync_state'])
@@ -367,7 +367,7 @@ class Create(ProductAction):
             repourls = self.discoverRepos.discover_repositories(orgName, url)
             self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
             selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)
-            self.discoverRepos.create_repositories(prod["id"], prod["name"], selectedurls)
+            self.discoverRepos.create_repositories(orgName, prod["id"], prod["name"], selectedurls)
 
         return os.EX_OK
 
@@ -403,7 +403,7 @@ class Update(SingleProductAction):
         if (prod == None):
             return os.EX_DATAERR
 
-        prod = self.api.update(prod["id"], description, gpgkey, nogpgkey, gpgkey_recursive)
+        prod = self.api.update(orgName, prod["id"], description, gpgkey, nogpgkey, gpgkey_recursive)
         print _("Successfully updated product [ %s ]") % prodName
         return os.EX_OK
 
@@ -420,7 +420,7 @@ class Delete(SingleProductAction):
         if product == None:
             return os.EX_DATAERR
 
-        msg = self.api.delete(product["id"])
+        msg = self.api.delete(orgName, product["id"])
         print msg
         return os.EX_OK
 
@@ -437,7 +437,7 @@ class ListFilters(SingleProductAction):
         if (prod == None):
             return os.EX_DATAERR
 
-        filters = self.api.filters(prod['id'])
+        filters = self.api.filters(orgName, prod['id'])
         self.printer.addColumn('name')
         self.printer.addColumn('description')
         self.printer.setHeader(_("Product Filters"))
@@ -484,12 +484,12 @@ class AddRemoveFilter(SingleProductAction):
         if get_filter(org_name, filter_name) == None:
             return os.EX_DATAERR
 
-        filters = self.api.filters(prod['id'])
+        filters = self.api.filters(org_name, prod['id'])
         filters = [f['name'] for f in filters] 
-        self.update_filters(prod, filters, filter_name)
+        self.update_filters(org_name, prod, filters, filter_name)
         return os.EX_OK
 
-    def update_filters(self, product, filters, filter_name):
+    def update_filters(self, org_name, product, filters, filter_name):
         if self.addition:
             filters.append(filter_name)
             message = _("Added filter [ %s ] to product [ %s ]" % (filter_name, product["name"]))
@@ -497,7 +497,7 @@ class AddRemoveFilter(SingleProductAction):
             filters.remove(filter_name)
             message = _("Removed filter [ %s ] to product [ %s ]" % (filter_name, product["name"]))
 
-        self.api.update_filters(product['id'], filters)
+        self.api.update_filters(org_name, product['id'], filters)
         print message
 
 

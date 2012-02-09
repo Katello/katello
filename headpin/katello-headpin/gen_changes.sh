@@ -21,3 +21,7 @@ do
     fi
 done < $HEADPIN/$CHANGES_FILE
 cd $HEADPIN
+
+# copy katello over
+mkdir katello
+cp -r ../../src/* katello/

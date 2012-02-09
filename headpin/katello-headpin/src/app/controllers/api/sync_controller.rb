@@ -80,7 +80,8 @@ class Api::SyncController < Api::ApiController
   end
 
   def find_product
-    @product = Product.find_by_cp_id(params[:product_id])
+    find_organization
+    @product = @organization.products.find_by_cp_id(params[:product_id])
     raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
     @product
   end

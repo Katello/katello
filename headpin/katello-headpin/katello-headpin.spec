@@ -13,13 +13,13 @@
 
 %global katello_name katello
 %global headpin_name headpin
-%global homedir %{_datarootdir}/%{headpin_name}
+%global homedir %{_datarootdir}/%{katello_name}
 %global katello_dir %{_datarootdir}/%{katello_name}
 %global datadir %{_sharedstatedir}/%{katello_name}
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.1.130
+Version:        0.1.132
 Release:        2%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -41,15 +41,44 @@ A subscription management only version of katello
 %setup -q
 
 %build
-# How to do SASS and JAMMIT at run time.
-mv src/* .
+mkdir build
+
+# katello files are copied over in gen_changes
+cp -r katello/* build
+rm -rf katello
+
+# override katello base with headpin files 
+cp -r src/* build
 rm -rf src
 
 #pull in branding if present
 if [ -d branding ] ; then
-  cp -r branding/* .
+  cp -r branding/* build
 fi
 
+#configure Bundler
+rm -f build/Gemfile.lock
+sed -i '/@@@DEV_ONLY@@@/,$d' build/Gemfile
+
+cd build
+
+#compile SASS files
+echo Compiling SASS files...
+compass compile
+
+#generate Rails JS/CSS/... assets
+echo Generating Rails assets...
+jammit --config config/assets.yml -f
+
+# remove extra files & stuff provided by common
+rm katello.spec
+rm db/schema.rb
+
+# remove glue-specific files
+rm -rf app/models/glue/*
+rm lib/resources/candlepin.rb
+rm lib/resources/pulp.rb
+rm lib/resources/foreman.rb
 
 %install
 rm -rf %{buildroot}
@@ -58,14 +87,15 @@ install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{katello_dir}/config
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{katello_name}
 
+cd build 
+
+# clean the application directory before installing
+[ -d tmp ] && rm -rf tmp
+
 #copy the application to the target directory
-cp -R * %{buildroot}%{homedir}
-
-#copy configs and other var files (will be all overwriten with symlinks)
-install -m 644 config/%{katello_name}.yml %{buildroot}%{_sysconfdir}/%{katello_name}/%{katello_name}.yml
-
-#overwrite config files with symlinks to /etc/katello
-ln -svf %{_sysconfdir}/%{katello_name}/%{katello_name}.yml %{buildroot}%{homedir}/config/%{katello_name}.yml
+mkdir .bundle
+mv ./deploy/bundle-config .bundle/config
+cp -R .bundle * %{buildroot}%{homedir}
 
 #remove files which are not needed in the homedir
 rm -rf %{buildroot}%{homedir}/README
@@ -77,6 +107,15 @@ rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
+#create symlinks for data
+ln -sv %{datadir}/tmp %{buildroot}%{homedir}/tmp
+
+#create symlink for Gemfile.lock (it's being regenerated each start)
+ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
+
+#re-configure database to the /var/lib/katello directory
+sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
+
 #branding
 if [ -d branding ] ; then
   ln -svf %{_datadir}/icons/hicolor/24x24/apps/system-logo-icon.png %{buildroot}%{homedir}/public/images/rh-logo.png
@@ -86,6 +125,15 @@ fi
 
 #remove development tasks
 rm %{buildroot}%{homedir}/lib/tasks/test.rake
+rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
+rm %{buildroot}%{homedir}/lib/tasks/yard.rake
+rm %{buildroot}%{homedir}/lib/tasks/hudson.rake
+
+#correct permissions
+find %{buildroot}%{homedir} -type d -print0 | xargs -0 chmod 755
+find %{buildroot}%{homedir} -type f -print0 | xargs -0 chmod 644
+chmod +x %{buildroot}%{homedir}/script/*
+chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 
 %clean
 rm -rf %{buildroot}
@@ -107,14 +155,51 @@ and then run katello-configure to configure everything.
 
 %files
 %defattr(-,root,root)
-%config(noreplace) %{_sysconfdir}/%{katello_name}/%{katello_name}.yml
-%{homedir}
+%{homedir}/app/controllers
+%{homedir}/app/helpers
+%{homedir}/app/mailers
+%{homedir}/app/models/
+%{homedir}/app/stylesheets
+%{homedir}/app/views
+%{homedir}/autotest
+%{homedir}/ca
+%{homedir}/config
+%{homedir}/db/migrate/
+%{homedir}/db/products.json
+%{homedir}/db/seeds.rb
+%{homedir}/integration_spec
+%{homedir}/lib/*.rb
+%{homedir}/lib/navigation
+%{homedir}/lib/resources
+%{homedir}/lib/tasks
+%{homedir}/lib/util
+%{homedir}/locale
+%{homedir}/public
+%{homedir}/script
+%{homedir}/spec
+%{homedir}/tmp
+%{homedir}/vendor
+%{homedir}/.bundle
+%{homedir}/config.ru
+%{homedir}/Gemfile
+%{homedir}/Gemfile.lock
+%{homedir}/Rakefile
 
 %files all
 
 %post
 # This overlays headpin onto katello
 cp -Rf %{homedir}/* %{katello_dir}
+cd %{katello_dir}
+
+# need to regenerate scss for headpin changes
+# compile SASS files
+echo Compiling SASS files...
+compass compile
+
+# generate Rails JS/CSS/... assets
+echo Generating Rails assets...
+jammit --config config/assets.yml -f
 
 %changelog
 * Wed Feb 01 2012 Jordan OMara <jomara@redhat.com> 0.1.130-2

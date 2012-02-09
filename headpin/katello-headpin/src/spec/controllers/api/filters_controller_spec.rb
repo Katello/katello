@@ -90,16 +90,16 @@ describe Api::FiltersController, :katello => true do
 
     it "should find product" do
       Product.should_receive(:find_by_cp_id).once.with(product_id).and_return(@product)
-      put :update_product_filters, :product_id => product_id, :filters => []
+      put :update_product_filters, :organization_id => @organization.cp_key, :product_id => product_id, :filters => []
     end
 
     it "should find filters" do
       Filter.should_receive(:where).once.with(hash_including(:pulp_id => [@filter.name]))
-      put :update_product_filters, :product_id => product_id, :filters => [@filter.name]
+      put :update_product_filters, :organization_id => @organization.cp_key, :product_id => product_id, :filters => [@filter.name]
     end
 
     it "should add new filter" do
-      put :update_product_filters, :product_id => product_id, :filters => [@filter.name]
+      put :update_product_filters, :organization_id => @organization.cp_key, :product_id => product_id, :filters => [@filter.name]
       assigns(:product).filters.size.should == 1
       assigns(:product).filters.should include(@filter)
     end

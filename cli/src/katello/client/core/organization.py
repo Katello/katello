@@ -21,7 +21,7 @@ from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, Printer
+from katello.client.core.utils import is_valid_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors, Printer
 from datetime import timedelta, datetime
 
 Config()
@@ -125,9 +125,17 @@ class Delete(OrganizationAction):
     def run(self):
         name = self.get_option('name')
 
-        self.api.delete(name)
-        print _("Successfully deleted org [ %s ]") % name
-        return os.EX_OK
+        task = self.api.delete(name)
+        task = AsyncTask(task)
+
+        run_spinner_in_bg(wait_for_async_task, [task], message=_("Deleting the organization, please wait... "))
+
+        if task.succeeded():
+            print _("Successfully deleted org [ %s ]") % name
+            return os.EX_OK
+        else:
+            print _("Organization [ %s ] deletion failed: %s" % (name, format_task_errors(task.errors())) )
+            return os.EX_DATAERR
 
 # ------------------------------------------------------------------------------
 
@@ -201,21 +209,24 @@ class ShowSubscriptions(OrganizationAction):
 
         updated_pool_info = [self.displayable_pool(pool) for pool in pools]
 
-        self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
+        # by default use verbose mode
+        if not self.has_option('grep'):
+            self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
+
         self.printer.addColumn('productName')
         self.printer.addColumn('consumed')
-        self.printer.addColumn('contractNumber')
-        self.printer.addColumn('sla')
+        self.printer.addColumn('contractNumber', show_in_grep=False)
+        self.printer.addColumn('sla', show_in_grep=False)
         self.printer.addColumn('id')
-        self.printer.addColumn('startDate')
-        self.printer.addColumn('endDate')
+        self.printer.addColumn('startDate', show_in_grep=False)
+        self.printer.addColumn('endDate', show_in_grep=False)
         self.printer.setHeader(_("Organization's Subscriptions"))
         self.printer.printItems(updated_pool_info)
 
         return os.EX_OK
 
     def sla(self, pool):
-        return {'sla': self.extract_sla_from_product(self.productApi.show(pool['productId']))}
+        return {'sla': self.extract_sla_from_product(self.productApi.show(self.get_option('name'), pool['productId']))}
 
     def convert_timestamp(self, timestamp_field):
         offset = int(timestamp_field[-5:])

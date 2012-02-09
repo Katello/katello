@@ -21,6 +21,7 @@ from gettext import gettext as _
 from katello.client import constants
 from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
+from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
@@ -58,6 +59,12 @@ class RepoAction(Action):
         super(RepoAction, self).__init__()
         self.api = RepoAPI()
 
+    def get_groupid_param(self, repo, param_name):
+        param_name += ":"
+        for gid in repo['groupid']:
+            if gid.find(param_name) >= 0:
+                return gid[len(param_name):]
+        return None
 
 class SingleRepoAction(RepoAction):
 
@@ -142,7 +149,7 @@ class Create(RepoAction):
 
         prod = get_product(orgName, prodName)
         if prod != None:
-            repo = self.api.create(prod["id"], name, url, gpgkey, nogpgkey)
+            repo = self.api.create(orgName, prod["id"], name, url, gpgkey, nogpgkey)
             print _("Successfully created repository [ %s ]") % name
         else:
             print _("No product [ %s ] found") % prodName
@@ -185,7 +192,7 @@ class Discovery(RepoAction):
 
         prod = get_product(orgName, prodName)
         if prod != None:
-            self.create_repositories(prod["id"], name, selectedurls)
+            self.create_repositories(orgName, prod["id"], name, selectedurls)
 
         return os.EX_OK
 
@@ -245,11 +252,11 @@ class Discovery(RepoAction):
 
         return selection
 
-    def create_repositories(self, productid, name, selectedurls):
+    def create_repositories(self, orgName, productid, name, selectedurls):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
             repoName = self.repository_name(name, parsedUrl.path) # pylint: disable=E1101
-            repo = self.api.create(productid, repoName, repourl, None, None)
+            repo = self.api.create(orgName, productid, repoName, repourl, None, None)
 
             print _("Successfully created repository [ %s ]") % repoName
 
@@ -447,7 +454,7 @@ class List(RepoAction):
             prod = get_product(orgName, prodName)
             if prod != None:
                 self.printer.setHeader(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
-                repos = self.api.repos_by_product(prod["id"], listDisabled)
+                repos = self.api.repos_by_product(orgName, prod["id"], listDisabled)
                 self.printer.printItems(repos)
             else:
                 return os.EX_DATAERR
@@ -479,10 +486,16 @@ class ListFilters(SingleRepoAction):
     description = _('list filters of a repository')
     select_by_env = False
 
+    def setup_parser(self):
+        super(ListFilters, self).setup_parser()
+        self.parser.add_option('--inherit', dest='inherit', action="store_true", default=False, help=_("prints also filters assigned to repository's product."))
+
     def run(self):
         repo = self.get_repo()
+        inherit = self.get_option('inherit')
 
-        filters = self.api.filters(repo['id'])
+        filters = self.api.filters(repo['id'], inherit)
+
         self.printer.addColumn('name')
         self.printer.addColumn('description')
         self.printer.setHeader(_("Repository Filters"))

@@ -1,0 +1,15 @@
+#!/bin/bash
+if [ -f $1 ]; then
+  LIST=$1
+else
+  LIST=$(find . -name $1*_spec*| tr "\\n" " ")
+fi
+
+echo $LIST
+if [ $# -eq 2 ]; then
+	RAILS_ENV=test  bundle exec rspec $LIST -e "$2"
+elif [ $# -eq 1 ]; then
+	RAILS_ENV=test  bundle exec rspec $LIST 
+else
+	echo "$0 <test-file> <test-name>"	
+fi
