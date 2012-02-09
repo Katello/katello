@@ -39,7 +39,6 @@ class System < ActiveRecord::Base
   acts_as_reportable
 
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
-  # TODO - system could belong to more than one system template in future (activation keys)
   belongs_to :system_template
 
   has_many :system_tasks, :dependent => :destroy
