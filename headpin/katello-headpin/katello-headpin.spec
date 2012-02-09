@@ -34,6 +34,16 @@ Conflicts:      katello
 
 BuildArch: noarch
 
+BuildRequires:  coreutils findutils sed
+BuildRequires:  rubygems
+BuildRequires:  rubygem-rake
+BuildRequires:  rubygem(gettext)
+BuildRequires:  rubygem(jammit)
+BuildRequires:  rubygem(chunky_png)
+BuildRequires:  rubygem(fssm) >= 0.2.7
+BuildRequires:  rubygem(compass) >= 0.11.5
+BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
+
 %description
 A subscription management only version of katello
 
