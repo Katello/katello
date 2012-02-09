@@ -22,6 +22,8 @@
 //Katello global object namespace that all others should be attached to
 var KT = {};
 
+KT.utils = _.noConflict();
+
 //i18n global variable
 var i18n = {};
 
