@@ -30,6 +30,12 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       katello-common
 Requires:       katello-glue-candlepin
+Requires:       katello-selinux
+
+%if 0%{?rhel} == 6
+Requires:       redhat-logos >= 60.0.14
+%endif
+
 Conflicts:      katello
 
 BuildArch: noarch
@@ -127,7 +133,7 @@ ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
 
 #branding
-if [ -d branding ] ; then
+if [ -d ../branding ] ; then
   ln -svf %{_datadir}/icons/hicolor/24x24/apps/system-logo-icon.png %{buildroot}%{homedir}/public/images/rh-logo.png
   ln -svf %{_sysconfdir}/favicon.png %{buildroot}%{homedir}/public/images/favicon.png
   rm -rf %{buildroot}%{homedir}/branding
@@ -198,18 +204,6 @@ and then run katello-configure to configure everything.
 %files all
 
 %post
-# This overlays headpin onto katello
-cp -Rf %{homedir}/* %{katello_dir}
-cd %{katello_dir}
-
-# need to regenerate scss for headpin changes
-# compile SASS files
-echo Compiling SASS files...
-compass compile
-
-# generate Rails JS/CSS/... assets
-echo Generating Rails assets...
-jammit --config config/assets.yml -f
 
 %changelog
 * Mon Nov 28 2011 Tom McKay <thomasmckay@redhat.com> 0.1.107-1
