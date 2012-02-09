@@ -178,10 +178,16 @@ class PromotionsController < ApplicationController
 
   def errata
     filters = {}
+    @promotable_errata = []
+    @not_promotable = []
 
     product_id = params[:product_id]
     if product_id
       repos = Product.find(product_id).repos(@environment)
+      repo_ids = repos.collect{ |repo| repo.pulp_id }
+      filters[:repoids] = repo_ids
+    else
+      repos = Repository.joins(:environment_product).where("environment_products.environment_id" => @environment)
       repo_ids = repos.collect{ |repo| repo.pulp_id }
       filters[:repoids] = repo_ids
     end
@@ -192,7 +198,41 @@ class PromotionsController < ApplicationController
     search = "*" if search.nil? || search == ''
     offset = params[:offset] || 0
 
-    @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters)
+    if search == "*"
+      @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters)
+    else
+      @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters, false)
+    end
+
+    if not @next_environment.nil?
+      @errata.each{ |erratum|
+        promoted = true
+        promotable = false
+
+        repos.each{ |repo|
+          if erratum.repoids.include? repo.pulp_id
+            if repo.is_cloned_in? @next_environment 
+              if erratum.repoids.include? repo.clone_id(@next_environment)
+                promoted = promoted && true
+              else
+                promotable = true
+                promoted = false
+              end
+            else
+              promoted = false
+              promotable = promotable || false
+            end
+          end
+        }
+        if promotable && !promoted
+          @promotable_errata << erratum.id
+        elsif !promoted && !promotable
+          @not_promotable << erratum.id
+        end
+      }
+    else
+      @not_promotable = @errata.collect{ |erratum| erratum.id }
+    end
 
     options = {:list_partial => 'promotions/errata_items'}
 
