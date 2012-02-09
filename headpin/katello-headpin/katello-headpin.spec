@@ -202,6 +202,8 @@ echo Generating Rails assets...
 jammit --config config/assets.yml -f
 
 %changelog
+* Thu Feb 09 2012 Jordan OMara <jomara@redhat.com> 0.1.132-2
+- Weekly SAM brew
 * Wed Feb 01 2012 Jordan OMara <jomara@redhat.com> 0.1.130-2
 * Fri Jan 27 2012 Jordan OMara <jomara@redhat.com> 0.1.129-2
 - Extra rebuild for a few last minute katello js changes 
