@@ -254,14 +254,23 @@ var promotion_page = (function($){
     
         },
         modify_changeset = function(id, display, type, product_id) {
-            var changeset = current_changeset;
-            var adding = true;
-            if ( changeset && changeset.has_item(type, id, product_id)) {
+            var i = 0,
+                length = product_id.length;
+
+            for(i = 0; i < length; i += 1){
+                process_changeset_modification(id, display, type, product_id[i]);                
+            }
+        },
+        process_changeset_modification = function(id, display, type, product_id){
+            var changeset = current_changeset,
+                adding = true,
+                button = find_button(id, type),
+                product_name = '';
+
+            if ( changeset && changeset.has_item(type, id, product_id) ){
                 adding = false;
             }
-    
-            var button = find_button(id, type);
-            var product_name = '';
+
             if (product_id) {
               product_name = content_breadcrumb['details_' + product_id].name;
             }
@@ -359,15 +368,15 @@ var promotion_page = (function($){
     
         },
         set_current_product = function(hash_id) {
-            var id = hash_id.split("_");
-            if (id.length > 1) {
-                current_product = id[id.length - 1];
+            var product_id = content_breadcrumb[hash_id].product_id;
+
+            if ( content_breadcrumb[hash_id].product_id ) {
+                current_product = product_id;
             }
             else {
                 current_product = undefined; //reset product
             }
             reset_page();
-    
         },
         draw_status = function() {
             if (current_changeset === undefined) {
@@ -424,7 +433,7 @@ var promotion_page = (function($){
         reset_page = function() {
             if (current_changeset && permissions.manage_changesets) {
 
-                if (current_product ) {
+                if ( current_product ) {
                     var product = current_changeset.getProducts()[current_product];
                     if( product !== undefined && product.all !== undefined ){
                         disable_all(subtypes);
@@ -441,6 +450,7 @@ var promotion_page = (function($){
                     }
                 } else{
                   var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
+
                   buttons.html(i18n.add).removeClass('remove_product').addClass("add_product").show(); //reset all to 'add'
                   $.each(current_changeset.getProducts(), function(index, product) {
                     $.each(buttons, function(button_index, button){
@@ -453,12 +463,25 @@ var promotion_page = (function($){
                       }
                     });
                   });
+
                  buttons = $('#list').find("a[class~=content_add_remove][data-type=template]");
                  buttons.html(i18n.add).removeClass('remove_template').addClass("add_template").show(); //reset all to 'add'
                   $.each(current_changeset.getTemplates(), function(index, template) {
                     $.each(buttons, function(button_index, button){
                       if( $(button).attr('id') === ('add_remove_template_' + template.id) ){ 
                         $(button).html(i18n.remove).removeClass('add_template').addClass("remove_template").removeClass("disabled");
+                      }
+                    });
+                  });
+
+                 buttons = $('#list').find("a[class~=content_add_remove][data-type=errata]");
+                 buttons.html(i18n.add).removeClass('remove_errata').addClass("add_errata").show(); //reset all to 'add'
+                  $.each(current_changeset.getErrata(), function(index, erratum) {
+                    $.each(buttons, function(button_index, button){
+                      if( $(button).attr('id') === ('add_remove_errata_' + erratum.id) ){
+                        if( KT.utils.intersection(erratum["product_ids"], $.parseJSON($(button).data("product_id"))).length === 0 ){
+                            $(button).html(i18n.remove).removeClass('add_errata').addClass("remove_errata").removeClass("disabled");
+                        }
                       }
                     });
                   });
@@ -704,21 +727,31 @@ var changeset_obj = function(data_struct) {
                 }
             }
           });
-    },
-    dep_solve = function() {
+        },
+        dep_solve = function() {
 
-        $.ajax({
-            type: "GET",
-            url: KT.common.rootURL() + "changesets/" + id + "/dependencies",
-            cache: false,
-            success: function(data) {
-                $.each(data, function(key, value) {
-                   products[key].deps = value;
-                });
-                promotion_page.get_changeset_tree().rerender_content();
+            $.ajax({
+                type: "GET",
+                url: KT.common.rootURL() + "changesets/" + id + "/dependencies",
+                cache: false,
+                success: function(data) {
+                    $.each(data, function(key, value) {
+                       products[key].deps = value;
+                    });
+                    promotion_page.get_changeset_tree().rerender_content();
+                }
+            });
+        },
+        productCount = function(){
+            var count = 0;
+            
+            for( var item in products ){
+                if( products.hasOwnProperty(item) ){
+                    count += 1;
+                }
             }
-        });
-    };
+            return count;
+        };
 
     if (!is_new) {
         dep_solve();
@@ -727,6 +760,7 @@ var changeset_obj = function(data_struct) {
 
     return {
         id:id,
+        productCount: productCount,
         getName: function(){return name;},
         setName: function(newName){
             name = newName;
@@ -741,15 +775,30 @@ var changeset_obj = function(data_struct) {
         has_failed : function() {return has_failed;},
         set_timestamp:function(ts) { timestamp = ts; },
         timestamp: function(){return timestamp;},
-        productCount: function(){
-            var count = 0;
-            
-            for( var item in products ){
-                if( products.hasOwnProperty(item) ){
-                    count += 1;
+        getErrata: function(){
+            var product, item, errata, erratum_id,
+                collection = {},
+                i, length,
+                product_count = productCount();
+
+            for( item in products ){
+                product = products[item];
+                errata = product.errata;
+                length = errata.length;
+
+                for( i = 0; i < length; i += 1){
+                    erratum_id = errata[i]["id"];
+
+                    if( collection[erratum_id] ){
+                        collection[erratum_id]["product_ids"].push(product.id);
+                    } else {
+                        errata[i]["product_ids"] = [product.id];
+                        collection[erratum_id] = errata[i];
+                    }
                 }
             }
-            return count;
+   
+            return collection;
         },
         has_item: function(type, id, product_id) {
             var found = undefined;
@@ -1248,7 +1297,7 @@ var templateLibrary = (function(){
             var anchor = "";
             if ( showButton && permissions.manage_changesets){
                 anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"' +
-                                 'data-type="' + type + '" data-product_id="' + product_id +  '" data-id="' + id + '">';
+                                 'data-type="' + type + '" data-product_id="[' + product_id +  ']" data-id="' + id + '">';
                             anchor += i18n.remove + "</a>";
             }
             return '<li>' + anchor + '<div class="no_slide"><span class="sort_attr">'  + name + '</span></div></li>';
@@ -1338,8 +1387,8 @@ var templateLibrary = (function(){
             if ( showButton ){
                 anchor = '<a class="st_button content_add_remove fr remove_product" data-display_name="' +
                     name +'" data-id="' + product_id + '" data-type="product" id="add_remove_product_' + product_id +
-                    '" data-product_id="' + product_id +
-                    '">' + i18n.remove + '</a>';
+                    '" data-product_id="[' + product_id +
+                    ']">' + i18n.remove + '</a>';
             }
             html += '<li class="clear ' + slide_link + '">' + anchor + '<div class="';
             html += (slide_link === 'slide_link') ? 'link_details' : '';
@@ -1526,7 +1575,7 @@ $(document).ready(function() {
           var id = $(this).attr('data-id');
           var display = $(this).attr('data-display_name');
           var type = $(this).attr('data-type');
-          var prod_id = $(this).attr('data-product_id');
+          var prod_id = $.parseJSON($(this).attr('data-product_id'));
           promotion_page.modify_changeset(id, display, type, prod_id);
        }
     });

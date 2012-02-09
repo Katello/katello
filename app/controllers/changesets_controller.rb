@@ -326,8 +326,8 @@ class ChangesetsController < ApplicationController
         type = item["type"]
         id = item["item_id"]
         item = nil
-  
-        if product_id
+ 
+        if not product_id.nil?
           if not update_item_valid?(type, id, product_id)
             return false
           end
@@ -347,6 +347,8 @@ class ChangesetsController < ApplicationController
         item = SystemTemplate.find(id)
       when "product"
         item = Product.find(id)
+      when "package"
+        item = Product.find(product_id)
       when "errata"
         item = Product.find(product_id)
       when "repo"
