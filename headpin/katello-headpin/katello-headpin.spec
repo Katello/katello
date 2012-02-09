@@ -212,6 +212,8 @@ echo Generating Rails assets...
 jammit --config config/assets.yml -f
 
 %changelog
+* Thu Feb 09 2012 Jordan OMara <jomara@redhat.com> 0.1.133-2
+- Adding compass to BuildRequires
 * Thu Feb 09 2012 Jordan OMara <jomara@redhat.com> 0.1.132-2
 - Weekly SAM brew
 * Wed Feb 01 2012 Jordan OMara <jomara@redhat.com> 0.1.130-2
