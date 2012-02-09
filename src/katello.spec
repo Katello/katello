@@ -354,6 +354,15 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Feb 09 2012 Jordan OMara <jomara@redhat.com> 0.1.228-2
+- 788599  Brad Buckingham - Unable to select a distribution on a system template
+- 786438  Tomas Strachota - [package info] failure - 705: unexpected token at 'null'
+- 788149  Brad Buckingham - 'format_time' error visiting activation key subscription tab
+- 768254  Ivan Necas - Empty repo list in case of 2nd manifest import and in different org
+- 788078  Bryan Kearney - Distro arch is ignored
+- 786572  Mike McCune - elasticsearch can get killed due to out of memory errors.
+- 788228  Mike McCune - manifest upload too large
+- 768254  Ivan Necas - Empty repo list in case of 2nd manifest import and in different org
 * Wed Feb 08 2012 Jordan OMara <jomara@redhat.com> 0.1.228-1
 - Updating the spec to split out common/katello to facilitate headpin
   (jomara@redhat.com)
