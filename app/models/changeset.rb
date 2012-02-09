@@ -333,12 +333,7 @@ class Changeset < ActiveRecord::Base
       product = repo.product
       next if (products.uniq! or []).include? product
 
-      cloned = repo.get_clone(to_env)
-      if cloned
-        async_tasks << cloned.sync
-      else
-        async_tasks << repo.promote(to_env)
-      end
+      async_tasks << repo.promote(from_env, to_env)
     end
     async_tasks.flatten(1)
   end
