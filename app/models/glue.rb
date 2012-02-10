@@ -29,16 +29,18 @@ module Glue
   module InstanceMethods
 
     def on_save
-      process queue
+      process pre_queue
       yield if block_given?
+      process post_queue
       @orchestration_for = nil
     end
 
     def on_destroy
       return false unless errors.empty?
 
-      process(queue)
+      process(pre_queue)
       yield if block_given?
+      process post_queue
       @orchestration_for = nil
     end
 
@@ -55,8 +57,12 @@ module Glue
       raise ActiveRecord::Rollback
     end
 
-    def queue
-      @queue ||= Queue.new
+    def pre_queue
+      @pre_queue ||= Queue.new
+    end
+
+    def post_queue
+      @post_queue ||= Queue.new(pre_queue)
     end
 
     public
@@ -72,7 +78,8 @@ module Glue
     # and to process the queue only if we found no errors
     def destroy
       @orchestration_for ||= :destroy
-      queue
+      pre_queue
+      post_queue
       super
     end
 
