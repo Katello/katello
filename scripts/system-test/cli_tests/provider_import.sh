@@ -21,6 +21,7 @@ MANIFEST_EPROD="Zoo Enterprise"
 MANIFEST_PROD="Zoo Enterprise 247"
 MANIFEST_PROD_CP="Zoo Enterprise 24/7"
 MANIFEST_REPO="Zoo Enterprise x86_64 $RELEASEVER"
+MANIFEST_REPO_LABEL="zoo-enterprise"
 INSTALL_PACKAGE=cheetah
 HOST="$(hostname)_$RAND"
 
@@ -48,7 +49,7 @@ if sm_present; then
     --org=$MANIFEST_ORG --name=$HOST --force
   test_own_cmd_success "rhsm subscribe to pool" sudo subscription-manager subscribe --pool $POOLID
   sudo yum remove -y $INSTALL_PACKAGE &> /dev/null
-  test_own_cmd_success "install package from subscribed product" sudo yum install -y $INSTALL_PACKAGE --nogpgcheck --releasever $RELEASEVER
+  test_own_cmd_success "install package from subscribed product" sudo yum install -y $INSTALL_PACKAGE --nogpgcheck --releasever $RELEASEVER --disablerepo \* --enablerepo "$MANIFEST_REPO_LABEL"
   sudo yum remove -y $INSTALL_PACKAGE &> /dev/null
   test_own_cmd_success "rhsm unsubscribe all" sudo subscription-manager unsubscribe --all
   test_own_cmd_success "rhsm unregister" sudo subscription-manager unregister
