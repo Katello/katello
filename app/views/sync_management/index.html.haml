@@ -12,10 +12,16 @@
     KT.repo_status = $.parseJSON('#{escape_javascript(status_obj.to_json)}');
 
 
-.grid_8
+.grid_4
   %h2 #{_("Sync Status") }
-.grid_8#list_actions
+.grid_12#list_actions
   - if @sproducts.length > 0
+    .grid_2
+      %a#collapse_all.fl
+        #{_("Collapse All")}
+    .grid_2
+      %a#expand_all.fl
+        #{_("Expand All")}
     .grid_2
       %a#select_none.fl
         #{_("Select None")}

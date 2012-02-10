@@ -34,7 +34,7 @@
                 %td{:style => "padding-top:9px;"} #{entitlement.contractNumber}
                 %td{:style => "padding-top:9px;"}
                   = entitlement.quantity < 0 ? 1 : entitlement.quantity
-                %td{:style => "padding-top:9px;"} #{entitlement.expires}
+                %td{:style => "padding-top:9px;"} #{format_time entitlement.expires}
               - entitlement.providedProducts.each do |product|
                 %tr{:class => "child-of-#{entitlement.entitlementId} " + cycle_class}
                   %td{:colspan=>7}
@@ -98,7 +98,7 @@
                     = hidden_field_tag "spinner[#{sub.poolId}]", 0, :class => "ui-nonspinner"
                 -# %td{:style => "padding-top:9px;"}
                 -#   = sub.quantity < 0 ? '' : sub.quantity
-                %td{:style => "padding-top:9px;"} #{sub.expires}
+                %td{:style => "padding-top:9px;"} #{format_time sub.expires}
               - sub.providedProducts.each do |product|
                 %tr{:class => "child-of-#{sub.poolId} " + cycle_class}
                   %td{:colspan=>6}

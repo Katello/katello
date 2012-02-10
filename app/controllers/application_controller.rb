@@ -112,6 +112,13 @@ class ApplicationController < ActionController::Base
     CGI::escapeHTML(input)
   end
 
+  helper_method :format_time
+  #formats the date time if the dat is not nil
+  def format_time  date, options = {}
+    return I18n.l(date, options) if date
+    ""
+  end
+
   private
 
   def require_org
@@ -207,7 +214,7 @@ class ApplicationController < ActionController::Base
   # render a 404 page
   def render_404(exception = nil)
     if exception
-        logger.error _("Rendering 404:") + "#{exception.message}"
+        logger.error _("Rendering 404:") + " #{exception.message}"
     end
     respond_to do |format|
       format.html { render :template => "common/404", :layout => !request.xhr?, :status => 404 }

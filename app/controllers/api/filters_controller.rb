@@ -12,7 +12,7 @@
 
 class Api::FiltersController < Api::ApiController
 
-  before_filter :find_organization, :only => [:index, :create]
+  before_filter :find_organization, :only => [:index, :create, :list_product_filters, :update_product_filters]
   before_filter :find_filter, :only => [:show, :destroy, :update]
   before_filter :find_product, :only => [:list_product_filters, :update_product_filters]
   before_filter :find_repository, :only => [:list_repository_filters, :update_repository_filters]
@@ -83,7 +83,10 @@ class Api::FiltersController < Api::ApiController
   end
 
   def list_repository_filters
-    render :json => @repository.filters.to_json
+    filters = @repository.filters
+    filters += @repository.product.filters if query_params[:inherit]
+
+    render :json => filters.uniq.to_json
   end
 
   def update_repository_filters
@@ -98,7 +101,7 @@ class Api::FiltersController < Api::ApiController
   end
 
   def find_product
-    @product = Product.find_by_cp_id(params[:product_id])
+    @product = @organization.products.find_by_cp_id(params[:product_id])
     raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
   end
 

@@ -57,14 +57,21 @@ class SystemTemplatesController < ApplicationController
 
     package_groups = current_organization.library.package_groups.collect{|grp| grp[:name]}.sort
 
-    distro_map = {}
+    product_distro_map = {}
+    repo_distro_map = {}
     @products.each{|prod|
-      distro_map[prod.id] = prod.distributions(current_organization.library)
+      product_distro_map[prod.id] = prod.distributions(current_organization.library)
+
+      prod.repos(current_organization.library).each{|repo|
+        distros = repo.distributions
+        repo_distro_map[repo.id] = distros unless distros.empty?
+      }
     }
 
     retain_search_history
     render :index, :locals=>{:editable=>SystemTemplate.manageable?(current_organization), :environment => @environment,
-                             :product_hash => product_hash, :package_groups => package_groups, :distro_map=>distro_map}
+                             :product_hash => product_hash, :package_groups => package_groups,
+                             :product_distro_map => product_distro_map, :repo_distro_map => repo_distro_map}
   end
   
   def setup_options
@@ -170,7 +177,7 @@ class SystemTemplatesController < ApplicationController
 
     @template.repositories = []
     repos.each{|repo|
-      @template.repositories << Repository.readable(current_organization.library).where(:name => repo[:name])
+      @template.repositories << Repository.readable(current_organization.library).find(repo[:id])
     }
 
     @template.package_groups = []
@@ -259,7 +266,7 @@ class SystemTemplatesController < ApplicationController
   
   protected
 
-  #verifies that the distro is in one of the templates products and gives a warning otherwise
+  #verifies that the distro is in one of the template's products or repositories and gives a warning otherwise
   def distro_check template
     dist = template.distributions.first
     if !dist.nil?
@@ -268,10 +275,15 @@ class SystemTemplatesController < ApplicationController
           return if dist.distribution_pulp_id == to_check.id
         }
       }
+      template.repositories.each{|repo|
+        repo.distributions.each{|to_check|
+          return if dist.distribution_pulp_id == to_check.id
+        }
+      }
       #not found
       template.distributions = []
-      notice _("Template '#{@template.name}' has been updated successfully, however you have removed a product that "+
-                   "contained the selected distribution for this template.  " +
+      notice _("Template '#{@template.name}' has been updated successfully, however you have removed either "+
+                   "a product or repository that contained the selected distribution for this template.  " +
                    "Please select another distribution to ensure a working system template."), :level=>:warning
     end
   end

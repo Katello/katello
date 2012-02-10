@@ -46,22 +46,7 @@ describe Api::SyncController do
 
   describe "rules" do
     before(:each) do
-      disable_product_orchestration
-
-      @organization = new_test_org
-      Organization.stub!(:first).and_return(@organization)
-      @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
-      Provider.stub!(:find).and_return(@provider)
-      @product = Product.new({:name => "prod"})
-      @product.provider = @provider
-      @product.environments << @organization.library
-      @product.stub(:arch).and_return('noarch')
-      @product.save!
-      Product.stub!(:find).and_return(@product)
-      Product.stub!(:find_by_cp_id).and_return(@product)
-      ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :pulp_id=>"1")
-      Repository.stub(:find).and_return(@repository)
+      stub_product_with_repo
     end
     describe "for provider index" do
       let(:action) {:index}
@@ -79,7 +64,7 @@ describe Api::SyncController do
     describe "for product index" do
       let(:action) {:index}
       let(:req) do
-        get :index, :product_id => product_id
+        get :index, :product_id => product_id, :organization_id => @organization.cp_key
       end
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read, :providers, nil, @organization) }
@@ -146,11 +131,10 @@ describe Api::SyncController do
       end
 
       it "should find product if :product_id is specified" do
-        found_product = {}
-        Product.should_receive(:find_by_cp_id).once.with(product_id).and_return(found_product)
-        controller.stub!(:params).and_return({:product_id => product_id })
+        stub_product_with_repo
+        controller.stub!(:params).and_return({:organization_id => @organization.cp_key, :product_id => @product.id })
 
-        controller.find_object.should == found_product
+        controller.find_object.should == @product
       end
 
       it "should find repository if :repository_id is specified" do
@@ -261,6 +245,25 @@ describe Api::SyncController do
          get :index, :provider_id => provider_id
       end
     end
+  end
+
+  def stub_product_with_repo
+      disable_product_orchestration
+
+      @organization = new_test_org
+      Organization.stub!(:first).and_return(@organization)
+      @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
+      Provider.stub!(:find).and_return(@provider)
+      @product = Product.new({:name => "prod"})
+      @product.provider = @provider
+      @product.environments << @organization.library
+      @product.stub(:arch).and_return('noarch')
+      @product.save!
+      Product.stub!(:find).and_return(@product)
+      Product.stub!(:find_by_cp_id).and_return(@product)
+      ep = EnvironmentProduct.find_or_create(@organization.library, @product)
+      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :pulp_id=>"1")
+      Repository.stub(:find).and_return(@repository)
   end
 
 end

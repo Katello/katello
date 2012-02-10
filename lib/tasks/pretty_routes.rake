@@ -9,15 +9,16 @@ task :pretty_routes => :environment do
   if ENV['TEXT']
     filename = 'routes.txt'
     puts "Generating #{filename}"
-    File.open(File.join(RAILS_ROOT, filename), "w") do |f|
-      routes.each do |r|
-        f.puts [r[:name], r[:verb], r[:path], r[:reqs]].compact.join(' | ')
+    File.open(File.join(::Rails.root.to_s, filename), "w") do |f|
+      routes_sorted = routes.sort { |a, b| a[:path] <=> b[:path] }
+      routes_sorted.each do |r|
+        f.puts '||' + [r[:name], r[:verb], r[:path], r[:reqs]].join(' || ') + '||'
       end
     end
   else
     filename = 'routes.html'
     puts "Generating #{filename}"
-    File.open(File.join(RAILS_ROOT, filename), "w") do |f|
+    File.open(File.join(::Rails.root.to_s, filename), "w") do |f|
       f.puts "<html><head><title>Rails 3 Routes</title></head><body><table border=1>"
       f.puts "<tr><th>Name</th><th>Verb</th><th>Path</th><th>Requirements</th></tr>"
       routes.each do |r|

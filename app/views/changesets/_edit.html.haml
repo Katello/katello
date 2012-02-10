@@ -24,7 +24,7 @@
       .grid_3.ra
         %label #{_("Promotion Date:")}
       .grid_6.la
-        = I18n.l(@changeset.promotion_date, :format=>:long)
+        = format_time(@changeset.promotion_date, :format=>:long)
 
 
     #changeset_history_tabs

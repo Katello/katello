@@ -124,6 +124,7 @@ module ApplicationHelper
              :title => options[:title],
              :name => options[:name],
              :columns => options[:col],
+             :column_titles => options[:col_titles],
              :custom_rows => options[:custom_rows],
              :collection => collection,
              :accessor=>options[:accessor] }
@@ -196,8 +197,8 @@ module ApplicationHelper
   end
 
   #formats the date time if the dat is not nil
-  def format_time  date
-    return date.localtime.strftime('%m/%d/%y %I:%M %p %Z') if date
+  def format_time  date, options = {}
+    return I18n.l(date, options) if date
     ""
   end
 
