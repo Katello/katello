@@ -334,6 +334,7 @@ describe Changeset do
         @changeset.state = Changeset::REVIEW
 
         @prod.should_receive(:promote).once
+        @changeset.should_receive(:index_repo_content).once
 
         @changeset.promote(false)
       end
@@ -346,6 +347,7 @@ describe Changeset do
         @repo.stub(:get_clone).and_return(nil)
         @changeset.stub(:repos).and_return([@repo])
         @repo.should_receive(:promote).once
+        @changeset.should_receive(:index_repo_content).once
 
         @changeset.promote(false)
       end
