@@ -21,6 +21,7 @@ var promotion_page = (function($){
         current_changeset,
         current_product,
         changeset_tree,
+        content_tree,
         
         start_timer = function() {
             interval_id = setInterval(push_changeset, 1000);
@@ -671,6 +672,8 @@ var promotion_page = (function($){
         subtypes:               subtypes,
         get_changeset_tree:     function(){return changeset_tree;},
         set_changeset_tree:     function(ct){changeset_tree = ct;},
+        get_content_tree:       function(){return content_tree;},
+        set_content_tree:       function(ct){content_tree = ct;},
         get_changeset:          function(){return current_changeset;},
         set_changeset:          function(cs){current_changeset = cs;},
         modify_changeset:       modify_changeset,
@@ -875,6 +878,7 @@ var changeset_obj = function(data_struct) {
                 changeset_breadcrumb['changeset_' + id].state = "new";
                 changeset_breadcrumb['changeset_' + id].progress = 0;
                 promotion_page.get_changeset_tree().render_content('changesets');
+                promotion_page.get_content_tree().render_content('content');
 
             },
             error: function() {
@@ -1591,6 +1595,8 @@ $(document).ready(function() {
                                         tab_change_cb   :  promotion_page.set_current_product
                                     });
     contentTree.enableSearch();
+    promotion_page.set_content_tree(contentTree);
+
     $(document).bind('search_complete.slidingtree', promotion_page.reset_page);
 
     promotion_page.set_changeset_tree( sliding_tree("changeset_tree", { 
