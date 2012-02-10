@@ -381,7 +381,9 @@ module Candlepin
       end
 
       def refresh_for_owner owner_key
-        self.put("/candlepin/owners/#{owner_key}/subscriptions", {}.to_json, self.default_headers).body
+        ret = self.put("/candlepin/owners/#{owner_key}/subscriptions", {}.to_json, self.default_headers).body
+        sleep 0.2 # TODO: temporary hack for avoiding bz_788932. Once it's handled on CP side remove this.
+        ret
       end
 
       def path(id=nil)
