@@ -153,13 +153,13 @@ class Api::SystemsController < Api::ApiController
   def package_profile
     render :json => @system.package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
   end
-  
+
   def errata
     render :json => Pulp::Consumer.errata(@system.uuid)
   end
-  
+
   def upload_package_profile
-    raise HttpError::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
+    raise HttpErrors::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
     @system.upload_package_profile(params[:_json])
     render :json => @system.to_json
   end

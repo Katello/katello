@@ -42,7 +42,8 @@ if sm_present; then
   test_own_cmd_success "rhsm force regenerate identity" sudo subscription-manager identity --regenerate --force --username=$USER --password=$PASSWORD
   test_own_cmd_success "rhsm registration with two aks" sudo subscription-manager register \
     --org=$RHSM_ORG --activationkey="$RHSM_AK1,$RHSM_AK2" --name=$HOST --force
-  test_own_cmd_success "rhsm auto subscribe" sudo subscription-manager subscribe --auto
+  # we expect we have installed a product and can't auto subscribe
+  test_own_cmd_exit_code 1 "rhsm auto subscribe" sudo subscription-manager subscribe --auto
   test_own_cmd_success "rhsm list all" sudo subscription-manager list --available --all
   POOLID=$(sudo subscription-manager list --available --all | grep PoolId | head -n1 | awk '{print $2}') # grab first pool
   test_own_cmd_success "rhsm subscribe to pool" sudo subscription-manager subscribe --pool $POOLID

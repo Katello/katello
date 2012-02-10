@@ -292,14 +292,13 @@ class Changeset < ActiveRecord::Base
     self.state = Changeset::PROMOTED
     self.save!
 
-    self.repos.each do |repo|
-      if repo.is_cloned_in? to_env
-        repo.get_clone(to_env).index_packages
-      end
-    end
+    index_repo_content to_env
+
     message = _("Successfully promoted changeset '%s'.") % self.name
     notice message, {:synchronous_request => false, :request_type => "changesets___promote"}
+
   rescue Exception => e
+
     self.state = Changeset::FAILED
     self.save!
     Rails.logger.error(e)
@@ -307,6 +306,9 @@ class Changeset < ActiveRecord::Base
     details = e.message
     error_text = _("Failed to promote changeset '%s'. Check notices for more details") % self.name
     notice error_text, {:details =>details, :level => :error, :synchronous_request => false, :request_type => "changesets___promote"}
+
+    index_repo_content to_env
+
     raise e
   end
 
@@ -385,18 +387,20 @@ class Changeset < ActiveRecord::Base
       product = err.product
 
       product.repos(from_env).each do |repo|
-        clone = repo.get_clone to_env
-        next if clone.nil?
+        if repo.is_cloned_in? to_env
+          clone = repo.get_clone to_env
 
-        if (repo.has_erratum? err.errata_id) and (!clone.has_erratum? err.errata_id)
-          errata_promote[clone] ||= []
-          errata_promote[clone] << err.errata_id
+          if (repo.has_erratum? err.errata_id) and (!clone.has_erratum? err.errata_id)
+            errata_promote[clone] ||= []
+            errata_promote[clone] << err.errata_id
+          end
         end
       end
     end
 
     errata_promote.each_pair do |repo, errata|
       repo.add_errata(errata)
+      Glue::Pulp::Errata.index_errata(errata)
     end
   end
 
@@ -423,6 +427,29 @@ class Changeset < ActiveRecord::Base
 
     distribution_promote.each_pair do |repo, distro|
       repo.add_distribution(distro)
+    end
+  end
+
+  def index_repo_content to_env
+    # for any repos contained within the changeset, index the packages & errata that have
+    # been promoted to the next environment
+    self.products.each do |product|
+      product.repos(to_env).each do |repo|
+        repo.index_packages
+        repo.index_errata
+      end
+    end
+
+    # during promotion of the repos, information like clone_id are updated... in order to have
+    # that information available, reload the repos
+    self.repos.reload
+
+    self.repos.each do |repo|
+      if repo.is_cloned_in? to_env
+        clone = repo.get_clone(to_env)
+        clone.index_packages
+        clone.index_errata
+      end
     end
   end
 

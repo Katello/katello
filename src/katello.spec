@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.229
+Version:        0.1.233
 Release:        2%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,13 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Feb 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.232-1
+- 789144 - promotions - redindex pkgs and errata after promotion of product or
+  repo
+
+* Fri Feb 10 2012 Ivan Necas <inecas@redhat.com> 0.1.230-1
+- periodic build
+
 * Thu Feb 09 2012 Jordan OMara <jomara@redhat.com> 0.1.229-2
 - 788708 - Mike McCune - Need a bootstrap.sh style script for system registration
 - 755028 - Brad Buckingham - spinner.gif missing in non-locker envs
@@ -361,6 +368,7 @@ fi
 - 788599 - Brad Buckingham - Unable to select a distribution on a system template
 - 768014 - Lukáš Zapletal - katello-configure with answer-file org_name fails
 - 771957 - Partha Aji - Cannot recreate org with same name
+
 * Thu Feb 09 2012 Mike McCune <mmccune@redhat.com> 0.1.229-1
 - rebuild
 

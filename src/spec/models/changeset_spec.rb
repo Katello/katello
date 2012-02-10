@@ -314,7 +314,9 @@ describe Changeset do
         @prod.stub_chain(:repos, :where).and_return([@repo])
 
         @clone.stub(:index_packages).and_return()
+        @clone.stub(:index_errata).and_return()
         @repo.stub(:index_packages).and_return()
+        @repo.stub(:index_errata).and_return()
 
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
@@ -322,6 +324,7 @@ describe Changeset do
         @changeset.stub(:calc_dependencies).and_return([])
 
         Glue::Pulp::Package.stub(:index_packages).and_return(true)
+        Glue::Pulp::Errata.stub(:index_errata).and_return(true)
 
       end
 
@@ -334,6 +337,7 @@ describe Changeset do
         @changeset.state = Changeset::REVIEW
 
         @prod.should_receive(:promote).once
+        @changeset.should_receive(:index_repo_content).once
 
         @changeset.promote(false)
       end
@@ -346,6 +350,7 @@ describe Changeset do
         @repo.stub(:get_clone).and_return(nil)
         @changeset.stub(:repos).and_return([@repo])
         @repo.should_receive(:promote).once
+        @changeset.should_receive(:index_repo_content).once
 
         @changeset.promote(false)
       end
