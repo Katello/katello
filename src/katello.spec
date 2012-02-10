@@ -354,6 +354,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Feb 10 2012 Jordan OMara <jomara@redhat.com> 0.1.233-2
+- Fixed headpin-only bug in glue-candlepin
 * Fri Feb 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.232-1
 - 789144 - promotions - redindex pkgs and errata after promotion of product or
   repo
