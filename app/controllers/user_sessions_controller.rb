@@ -71,7 +71,7 @@ class UserSessionsController < ApplicationController
 
       # set the current user in the thread-local variable (before notification)
       User.current = current_user
-      setup_current_organization
+      self.current_organization = User.current.allowed_organizations.first
       # notice the user
       notice _("Login Successful")
       redirect_to dashboard_index_url
