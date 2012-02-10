@@ -1,6 +1,6 @@
 class CreateSystemTemplateRepos < ActiveRecord::Migration
   def self.up
-    create_table :system_template_repositories, :id => false do |t|
+    create_table :system_template_repositories do |t|
        t.integer :system_template_id
        t.integer :repository_id
     end

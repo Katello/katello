@@ -110,9 +110,17 @@ class RepositoriesController < ApplicationController
 
   def auto_complete_library
     # retrieve and return a list (array) of repo names in library that contain the 'term' that was passed in
-    name = params[:term]
-    repos = Repository.readable(current_organization.library).select(:name).where("name LIKE ?", "#{name}%")
-    render :json => repos.map{|repo| repo.name}
+    name = 'name:' + params[:term] + '*'
+    ids = Repository.readable(current_organization.library).collect{|r| r.id}
+    repos = Repository.search do
+      query {string name}
+      filter :terms, :environment_id => ids
+    end
+
+    render :json => repos.map{|repo|
+      label = _("%{repo} (Product: %{product})" % {:repo => repo.name, :product => repo.product})
+      {:id => repo.id, :label => label, :value => repo.name}
+    }
   end
 
   protected

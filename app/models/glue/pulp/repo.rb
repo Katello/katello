@@ -29,7 +29,7 @@ module Glue::Pulp::Repo
                         Pulp::Repository.find(pulp_id)
                       end
                     }
-      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source,
+      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source, :package_count,
                 :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type,
                 :initializer => lambda {
                   if pulp_id
@@ -43,7 +43,6 @@ module Glue::Pulp::Repo
   def self.repo_id product_name, repo_name, env_name, organization_name
     [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
-
 
   module InstanceMethods
     def save_repo_orchestration
@@ -197,16 +196,27 @@ module Glue::Pulp::Repo
   end
 
   def del_content
-    return true if self.content.nil?
-    content_group_id = Glue::Pulp::Repos.content_groupid(self.content)
+    return true unless self.content_id
 
-    content_repo_ids = Pulp::Repository.all([content_group_id]).map{|r| r['id']}
-    other_content_repo_ids = (content_repo_ids - [self.pulp_id])
-
-    if other_content_repo_ids.empty?
+    if other_repos_with_same_product_and_content.empty?
       self.product.remove_content_by_id self.content_id
+      if other_repos_with_same_content.empty?
+        Candlepin::Content.destroy(self.content_id)
+      end
     end
+
     true
+  end
+
+  def other_repos_with_same_product_and_content
+    product_group_id = Glue::Pulp::Repos.product_groupid(self.product_id)
+    content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
+    Pulp::Repository.all([content_group_id, product_group_id]).map{|r| r['id']} - [self.pulp_id]
+  end
+
+  def other_repos_with_same_content
+    content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
+    Pulp::Repository.all([content_group_id]).map{|r| r['id']} - [self.pulp_id]
   end
 
   def destroy_repo_orchestration
@@ -456,10 +466,6 @@ module Glue::Pulp::Repo
     end
   end
 
-  def self.repo_id product_name, repo_name, env_name, organization_name
-    [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
-  end
-
   def set_filters filter_ids
     ::Pulp::Repository.add_filters self.pulp_id, filter_ids
   end
@@ -468,6 +474,9 @@ module Glue::Pulp::Repo
     ::Pulp::Repository.remove_filters self.pulp_id, filter_ids
   end
 
+  def generate_metadata
+    ::Pulp::Repository.generate_metadata self.pulp_id
+  end
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
   #

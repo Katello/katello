@@ -144,9 +144,7 @@ module Glue::Candlepin::Product
     end
 
     def remove_content_by_id content_id
-      self.productContent_will_change!
-      self.productContent.delete_if {|pc| pc.content.id == content_id}
-      self.save!
+      Candlepin::Product.remove_content cp_id, content_id
     end
 
     def set_product
@@ -195,6 +193,10 @@ module Glue::Candlepin::Product
     end
 
     def remove_all_content
+      # engineering products handle content deletion when destroying
+      # repositories
+      return true unless self.is_a? MarketingProduct
+
       self.productContent.each do |pc|
         Rails.logger.debug "Removing content from product '#{self.cp_id}' in candlepin: #{pc.content.name}"
         self.remove_content_by_id pc.content.id
@@ -244,17 +246,6 @@ module Glue::Candlepin::Product
       end
     end
 
-    def del_unused_content
-      self.productContent.each do |pc|
-        content_repos = Pulp::Repository.all [Glue::Pulp::Repos.content_groupid(pc)]
-        if content_repos.empty?
-          self.remove_content_by_id pc.content.id
-          pc.destroy
-        end
-      end
-      true
-    end
-
     def del_subscriptions
       Rails.logger.debug "Deleting subscriptions for product #{name} in candlepin"
       Candlepin::Product.delete_subscriptions self.organization.cp_key, self.cp_id
@@ -282,7 +273,6 @@ module Glue::Candlepin::Product
     def destroy_product_orchestration
       queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 7,  :action => [self, :del_subscriptions])
       queue.create(:name => "remove candlepin content from a product: #{self.name}",       :priority => 8,  :action => [self, :remove_all_content])
-      queue.create(:name => "delete unused content in candlein: #{self.name}",             :priority => 9,  :action => [self, :del_unused_content])
       queue.create(:name => "candlepin product: #{self.name}",                             :priority => 10, :action => [self, :del_product])
     end
 

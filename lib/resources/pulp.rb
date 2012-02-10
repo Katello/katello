@@ -53,6 +53,13 @@ module Pulp
       {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(::User.pulp_oauth_header)
     end
 
+    # some old Pulp API need text/plain content type
+    def self.default_headers_text
+      h = self.default_headers
+      h['content-type'] = 'text/plain'
+      h
+    end
+
     # the path is expected to have trailing slash
     def self.path_with_prefix path
       PulpResource.prefix + path
@@ -87,6 +94,8 @@ module Pulp
       def find id
         response = get(package_path + id + "/", self.default_headers).body
         JSON.parse(response)
+      rescue JSON::ParserError => e
+        nil
       end
 
       def search name, regex=false
@@ -138,9 +147,7 @@ module Pulp
 
     class << self
       def find dist_id
-        # distribution ids may contain spaces; however, pulp expects them to be encoded as %20, so
-        # use URI::escape to convert any spaces
-        response = get(dist_path + URI::escape(dist_id) + "/", self.default_headers)
+        response = get(dist_path + dist_id + "/", self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end
 
@@ -322,6 +329,11 @@ module Pulp
         response.body
       end
 
+      def generate_metadata repo_id
+        response = post(repository_path + repo_id + "/generate_metadata/", {}, self.default_headers)
+        JSON.parse(response.body)
+      end
+
       private
       def get_repo_search_query groupids=nil, search_params = {}
         search_query = ""
@@ -448,6 +460,25 @@ module Pulp
         JSON.parse(response.body).with_indifferent_access
       end
 
+      def repoids consumer_id
+        response = get(consumer_path(consumer_id) + "repoids/", self.default_headers)
+        JSON.parse(response.body)
+      end
+
+      def bind uuid, repoid
+        url = consumer_path(uuid) + "bind/"
+        # this is old-style Pulp API call
+        response = self.post(url, '"' + repoid + '"', self.default_headers_text)
+        response.body
+      end
+
+      def unbind uuid, repoid
+        url = consumer_path(uuid) + "unbind/"
+        # this is old-style Pulp API call
+        response = self.post(url, '"' + repoid + '"', self.default_headers_text)
+        response.body
+      end
+
       def consumer_path id = nil
         id.nil? ? "/pulp/api/consumers/" : "/pulp/api/consumers/#{id}/"
       end
@@ -546,7 +577,7 @@ module Pulp
       end
 
       def destroy id
-        self.post(path(id) + "delete_filter/", self.default_headers).code.to_i
+        self.delete(path(id), self.default_headers).code.to_i
       end
 
       def find id

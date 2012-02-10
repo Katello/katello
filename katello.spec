@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.206
+Version:        0.1.231
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -53,7 +53,6 @@ Requires:       openssl
 Requires:       elasticsearch
 Requires:       rubygems
 Requires:       rubygem(rails) >= 3.0.10
-Requires:       rubygem(multimap)
 Requires:       rubygem(haml) >= 3.1.2
 Requires:       rubygem(haml-rails)
 Requires:       rubygem(json)
@@ -275,23 +274,7 @@ fi
 
 %files
 %attr(600, katello, katello)
-%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
-
-%files common
 %defattr(-,root,root)
-%doc README LICENSE doc/
-%config %{_sysconfdir}/%{name}/thin.yml
-%config %{_sysconfdir}/httpd/conf.d/%{name}.conf
-%config %{_sysconfdir}/%{name}/environment.rb
-%config %{_sysconfdir}/logrotate.d/%{name}
-%config %{_sysconfdir}/logrotate.d/%{name}-jobs
-%config %{_sysconfdir}/%{name}/mapping.yml
-%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
-%{_initddir}/%{name}
-%{_initddir}/%{name}-jobs
-%{_sysconfdir}/bash_completion.d/%{name}
-
-# Break apart the main bits
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -301,7 +284,9 @@ fi
 %{homedir}/autotest
 %{homedir}/ca
 %{homedir}/config
-%{homedir}/db
+%{homedir}/db/migrate/
+%{homedir}/db/products.json
+%{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
 %{homedir}/lib/navigation
@@ -309,7 +294,6 @@ fi
 %{homedir}/lib/tasks
 %{homedir}/lib/util
 %{homedir}/locale
-%{homedir}/log
 %{homedir}/public
 %{homedir}/script
 %{homedir}/spec
@@ -320,6 +304,23 @@ fi
 %{homedir}/Gemfile
 %{homedir}/Gemfile.lock
 %{homedir}/Rakefile
+
+%files common
+%defattr(-,root,root)
+%doc README LICENSE doc/
+%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
+%config %{_sysconfdir}/%{name}/thin.yml
+%config %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%config %{_sysconfdir}/%{name}/environment.rb
+%config %{_sysconfdir}/logrotate.d/%{name}
+%config %{_sysconfdir}/logrotate.d/%{name}-jobs
+%config %{_sysconfdir}/%{name}/mapping.yml
+%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%{_initddir}/%{name}
+%{_initddir}/%{name}-jobs
+%{_sysconfdir}/bash_completion.d/%{name}
+%{homedir}/log
+%{homedir}/db/schema.rb
 
 %defattr(-, katello, katello)
 %{_localstatedir}/log/%{name}
@@ -353,6 +354,56 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Feb 10 2012 Ivan Necas <inecas@redhat.com> 0.1.230-1
+- periodic build
+
+* Thu Feb 09 2012 Mike McCune <mmccune@redhat.com> 0.1.229-1
+- rebuild
+* Wed Feb 08 2012 Jordan OMara <jomara@redhat.com> 0.1.228-1
+- Updating the spec to split out common/katello to facilitate headpin
+  (jomara@redhat.com)
+- comment - better todo comment for unwrapping (lzap+git@redhat.com)
+- comment - removing unnecessary todo (lzap+git@redhat.com)
+
+* Wed Feb 08 2012 Jordan OMara <jomara@redhat.com>
+- Updating the spec to split out common/katello to facilitate headpin
+  (jomara@redhat.com)
+- comment - better todo comment for unwrapping (lzap+git@redhat.com)
+
+* Wed Feb 01 2012 Mike McCune <mmccune@redhat.com> 0.1.211-1
+- rebuild
+* Wed Feb 01 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.210-1
+- binding - consumer must exist
+- binding - implementing security rule
+- errors - better error handling of 404 for CLI
+- binding - adding enabled_repos controller action
+
+* Wed Feb 01 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.208-1
+- 753318: add headers to sync schedule lists
+- 786160 - password reset - resolve error when saving task status
+
+* Tue Jan 31 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.207-1
+- 757817-Added code to show Activation Keys page if user has AK read privileges
+- Promotion Search: Fixes for broken unit tests related to adding
+  index_packages during promotion.
+- 782959,747827,782239 - i18n issues creating pulp users & repos were fixed
+- activation keys - fix missing navigation for Available Subscriptions
+- Promotion Search - Fixes issue with tupane slider showing up partially inside
+  the left side tree.
+- providers - fix broken arrow for products and repos
+- update to translation strings
+- Added "Environment" to Initial environment page on new Org.
+- 748060 - fix bbq on promotions page
+- Promotion Search - Changes to init search widget state on load properly.
+- Promotion Search - Re-factors search enabling on sliding tree to be more
+  stand alone and decoupled.  Fixes issues with search widget not closing
+  properly on tab changes.
+- 757094 - Product should be readable even it has no enabled repos
+- Promotion Search - Adds proper checks when there is no next environment for
+  listing promotable packages.
+- Promotion Search - Initial work to enable package search on the promotions
+  page with proper calculations.
+
 * Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.206-1
 - 785703 - fixing user creation code
 

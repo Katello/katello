@@ -20,7 +20,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_environment_by_name, :only => [:hypervisors_update]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
-                                        :unsubscribe, :subscriptions, :pools]
+                                        :unsubscribe, :subscriptions, :pools, :enabled_repos]
   before_filter :find_task, :only => [:task_show]
   before_filter :authorize, :except => :activate
 
@@ -29,7 +29,7 @@ class Api::SystemsController < Api::ApiController
   def rules
     index_systems = lambda { System.any_readable?(@organization) }
     register_system = lambda { System.registerable?(@environment, @organization) }
-    register_hypervisor = lambda { User.consumer? }
+    consumer_only = lambda { User.consumer? }
     edit_system = lambda { @system.editable? or User.consumer? }
     read_system = lambda { @system.readable? or User.consumer? }
     delete_system = lambda { @system.deletable? or User.consumer? }
@@ -42,7 +42,7 @@ class Api::SystemsController < Api::ApiController
     {
       :new => register_system,
       :create => register_system,
-      :hypervisors_update => register_hypervisor,
+      :hypervisors_update => consumer_only,
       :regenerate_identity_certificates => edit_system,
       :update => edit_system,
       :index => index_systems,
@@ -58,7 +58,8 @@ class Api::SystemsController < Api::ApiController
       :pools => read_system,
       :activate => register_system,
       :tasks => index_systems,
-      :task_show => read_system
+      :task_show => read_system,
+      :enabled_repos => consumer_only
     }
   end
 
@@ -152,13 +153,13 @@ class Api::SystemsController < Api::ApiController
   def package_profile
     render :json => @system.package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
   end
-  
+
   def errata
     render :json => Pulp::Consumer.errata(@system.uuid)
   end
-  
+
   def upload_package_profile
-    raise HttpError::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
+    raise HttpErrors::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
     @system.upload_package_profile(params[:_json])
     render :json => @system.to_json
   end
@@ -200,6 +201,37 @@ class Api::SystemsController < Api::ApiController
   def task_show
     @task.task_status.refresh
     render :json => @task.to_json
+  end
+
+  def enabled_repos
+    repos = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
+    update_labels = repos['repos'].collect{ |r| r['repositoryid']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
+
+    update_ids = []
+    unknown_labels = []
+    update_labels.each do |label|
+      repo = Repository.find_by_cp_label label
+      if repo.nil?
+        logger.warn(_("Unknown repository label") + ": #{label}")
+        unknown_labels << label
+      else
+        update_ids << repo.pulp_id
+      end
+    end
+
+    processed_ids, error_ids = @system.enable_repos(update_ids)
+
+    result = {}
+    result[:processed_ids] = processed_ids
+    result[:error_ids] = error_ids
+    result[:unknown_labels] = unknown_labels
+    if error_ids.count > 0 or unknown_labels.count > 0
+      result[:result] = "error"
+    else
+      result[:result] = "ok"
+    end
+
+    render :json => result.to_json
   end
 
   protected

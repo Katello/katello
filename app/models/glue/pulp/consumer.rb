@@ -25,9 +25,46 @@ module Glue::Pulp::Consumer
                                                               collect{|pack| Glue::Pulp::SimplePackage.new(pack)} }
       lazy_accessor :errata, :initializer => lambda { Pulp::Consumer.errata(uuid).
                                                               collect{|errata| Glue::Pulp::Errata.new(errata)} }
+      lazy_accessor :repoids, :initializer => lambda { Pulp::Consumer.repoids(uuid).keys }
     end
   end
+
   module InstanceMethods
+    def enable_repos update_ids
+      # calculate repoids to bind/unbind
+      bound_ids = repoids
+      intersection = update_ids & bound_ids
+      bind_ids = update_ids - intersection
+      unbind_ids = bound_ids - intersection
+      Rails.logger.debug "Bound repo ids: #{bound_ids.inspect}"
+      Rails.logger.debug "Update repo ids: #{update_ids.inspect}"
+      Rails.logger.debug "Repo ids to bind: #{bind_ids.inspect}"
+      Rails.logger.debug "Repo ids to unbind: #{unbind_ids.inspect}"
+      processed_ids = []; error_ids = []
+      unbind_ids.each do |repoid|
+        begin
+          Pulp::Consumer.unbind(uuid, repoid)
+          processed_ids << repoid
+        rescue => e
+          Rails.logger.error "Failed to unbind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
+          error_ids << repoid
+        end
+      end
+      bind_ids.each do |repoid|
+        begin
+          Pulp::Consumer.bind(uuid, repoid)
+          processed_ids << repoid
+        rescue => e
+          Rails.logger.error "Failed to bind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
+          error_ids << repoid
+        end
+      end
+      [processed_ids, error_ids]
+    rescue => e
+      Rails.logger.error "Failed to enable repositories: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
     def del_pulp_consumer
       Rails.logger.debug "Deleting consumer in pulp: #{self.name}"
       Pulp::Consumer.destroy(self.uuid)
