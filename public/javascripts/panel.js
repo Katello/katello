@@ -458,6 +458,7 @@ KT.panel = (function ($) {
             var refresh = $.bbq.getState("panel"),
                 search = $.bbq.getState("search"),
                 search_element = $('#search');
+
             if (page_load) {
                 if (refresh && search) {
                     search_element.val(search);

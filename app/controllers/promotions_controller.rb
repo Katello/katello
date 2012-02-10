@@ -177,21 +177,68 @@ class PromotionsController < ApplicationController
   end
 
   def errata
-    filter = params.slice(:type, :severity).symbolize_keys
-    filter[:environment_id] = @environment.id
-    filter[:product_id] = @product.cp_id unless @product.nil?
+    filters = {}
+    @promotable_errata = []
+    @not_promotable = []
 
-    @errata = Glue::Pulp::Errata.filter(filter)
-    @errata.sort! {|a,b| a['title'] <=> b['title']}
-
-    offset = params[:offset]
-    if offset
-      render :text=>"" and return if @errata.empty?
-
-      options = {:list_partial => 'promotions/errata_items'}
-      render_panel_items(@errata, options, nil, offset)
+    product_id = params[:product_id]
+    if product_id
+      repos = Product.find(product_id).repos(@environment)
+      repo_ids = repos.collect{ |repo| repo.pulp_id }
+      filters[:repoids] = repo_ids
     else
-      @errata = @errata[0..current_user.page_size]
+      repos = Repository.joins(:environment_product).where("environment_products.environment_id" => @environment)
+      repo_ids = repos.collect{ |repo| repo.pulp_id }
+      filters[:repoids] = repo_ids
+    end
+    
+    filters = filters.merge(params.slice(:type, :severity).symbolize_keys)
+
+    search = params[:search]
+    search = "*" if search.nil? || search == ''
+    offset = params[:offset] || 0
+
+    if search == "*"
+      @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters)
+    else
+      @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters, false)
+    end
+
+    if not @next_environment.nil?
+      @errata.each{ |erratum|
+        promoted = true
+        promotable = false
+
+        repos.each{ |repo|
+          if erratum.repoids.include? repo.pulp_id
+            if repo.is_cloned_in? @next_environment 
+              if erratum.repoids.include? repo.clone_id(@next_environment)
+                promoted = promoted && true
+              else
+                promotable = true
+                promoted = false
+              end
+            else
+              promoted = false
+              promotable = promotable || false
+            end
+          end
+        }
+        if promotable && !promoted
+          @promotable_errata << erratum.id
+        elsif !promoted && !promotable
+          @not_promotable << erratum.id
+        end
+      }
+    else
+      @not_promotable = @errata.collect{ |erratum| erratum.id }
+    end
+
+    options = {:list_partial => 'promotions/errata_items'}
+
+    if offset.to_i >  0
+      render_panel_results(@errata, @errata.length, options)
+    else
       render :partial=>"errata", :locals=>{:collection => @errata}
     end
   end

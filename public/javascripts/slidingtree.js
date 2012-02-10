@@ -94,7 +94,7 @@ var sliding_tree = function(tree_id, options) {
                     }
                   });
                   postrender(id);
-                  newPanel.html("<img src='"+ KT.common.rootURL() +"images/spinner.gif' >");
+                  newPanel.html('<img src="' + KT.common.spinner_path() + '">');
             }
         },
         postrender = function(id) {
@@ -180,7 +180,7 @@ var sliding_tree = function(tree_id, options) {
                 crumbs = trail.slice(1, trail.length);
             } else {
                 if( trail.length === 0 ){
-                    html += '<li class="one-line-ellipsis"><div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
+                    html += '<li><div id="' + id + '" class="one-line-ellipsis currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
                 }
             }
     
@@ -188,7 +188,7 @@ var sliding_tree = function(tree_id, options) {
                 for(var i = 0; i < crumbs.length; i++) {
                     html += create_crumb(crumbs[i]);
                 }
-                html += '<li class="one-line-ellipsis"><div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
+                html += '<li><div id="' + id + '" class="one-line-ellipsis currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
             }
             
             breadcrumb.append(html);
@@ -373,34 +373,34 @@ sliding_tree.search = function(){
                  }
              ).tipsy({ fade : true, gravity : 's' });
              
-             search_form.live('submit', function(event){
+             search_form.bind('submit', function(event){
                 var current_crumb 	= sliding_tree.get_current_crumb(),
                     search_url 		= breadcrumbs[current_crumb]['url'],
                     offset 			= offset || 0,
-                    data 			= {},
-                    panel           = parent.children('.has_content');
+                    params 			= {},
+                    panel           = parent.children('.has_content'),
+                    form            = $(this);
                     
                 event.preventDefault();
                 
                 if( breadcrumbs[current_crumb]['searchable'] ){
-                    if ($(this).serialize() !== 'search=') {
-                        $.bbq.pushState($(this).serialize());
-                    }
+                    params["offset"] = offset;
+                    panel.html('<img src="' + KT.common.spinner_path() + '">');
 
-                    search_url += '?offset=' + offset;
-                    panel.html("<img src='"+ KT.common.rootURL() +"images/spinner.gif' >");
-
-                    $(this).ajaxSubmit({
+                    form.ajaxSubmit({
                         url		: search_url,
-                        data	: data,
+                        data	: params,
                         cache   : false,
                         success	: function (data) {
                                 var to_append = data.html ? data.html : data;
                                 panel.html(to_append);
                                 $(document).trigger('search_complete.slidingtree');
-                        },
-                        error: function (e) {
-                            //button.removeAttr('disabled');
+                                /* disabled until conflicts with panel hash change can be resolved
+                                if( form.serialize() !== 'search=' ) {
+                                    $.bbq.pushState(form.serialize());
+                                } else {
+                                    $.bbq.removeState('search');
+                                }*/
                         }
                     });
                 }
@@ -432,7 +432,7 @@ sliding_tree.search = function(){
             }
         },
         open = function(){
-             bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
+             bcs.animate({ "min-height": bcs_height+40}, { duration: 200, queue: false });
              search_input.css("margin-left", '4px');
              search_form.css("opacity", "0").show();
              search_form.animate({"opacity":"1"}, { duration: 200, queue: false });
@@ -442,7 +442,7 @@ sliding_tree.search = function(){
         },
         close = function(){
              search_form.fadeOut("fast", function(){
-                 bcs.animate({ "height" : bcs_height }, "fast");
+                 bcs.animate({ "min-height" : bcs_height }, "fast");
              });
              search_button.css({ backgroundPosition : "0 -16px" });
              search_button.attr('title', i18n.search);

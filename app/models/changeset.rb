@@ -387,18 +387,20 @@ class Changeset < ActiveRecord::Base
       product = err.product
 
       product.repos(from_env).each do |repo|
-        clone = repo.get_clone to_env
-        next if clone.nil?
+        if repo.is_cloned_in? to_env
+          clone = repo.get_clone to_env
 
-        if (repo.has_erratum? err.errata_id) and (!clone.has_erratum? err.errata_id)
-          errata_promote[clone] ||= []
-          errata_promote[clone] << err.errata_id
+          if (repo.has_erratum? err.errata_id) and (!clone.has_erratum? err.errata_id)
+            errata_promote[clone] ||= []
+            errata_promote[clone] << err.errata_id
+          end
         end
       end
     end
 
     errata_promote.each_pair do |repo, errata|
       repo.add_errata(errata)
+      Glue::Pulp::Errata.index_errata(errata)
     end
   end
 
