@@ -7,5 +7,5 @@
             &nbsp;&nbsp;
         %span
           %h5
-            #{note[:date]}
+            #{format_time note[:date]}
           #{note[:text]}  #{link_to(_("More >>"), notices_path)}

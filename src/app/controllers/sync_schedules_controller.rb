@@ -36,12 +36,14 @@ class SyncSchedulesController < ApplicationController
 
     @products_options = { :title => _('Select Products to schedule'),
                  :col => ['name', 'plan_name'],
+                 :col_titles => [_('Name'), _('Plan Name')],
                  :create => _('Plan'),
                  :name => _('product'),
                  :enable_create => false}
 
     @plans_options = { :title => _('Select Plans to apply to selected Products'),
                  :col => ['name', 'interval'],
+                 :col_titles => [_('Name'), _('Interval')],
                  :create => _('Plan'),
                  :name => _('plan'),
                  :hover_text_cb => :hover_format,

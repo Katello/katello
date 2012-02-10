@@ -38,7 +38,7 @@ class DeleteTest(CLIActionTestCase):
 
     def test_it_calls_delete_api(self):
         self.action.run()
-        self.action.api.delete.assert_called_once_with(self.PROD['id'])
+        self.action.api.delete.assert_called_once_with(self.ORG['name'], self.PROD['id'])
 
     def test_it_returns_status_ok(self):
         self.action.run()

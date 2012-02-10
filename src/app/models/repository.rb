@@ -82,6 +82,11 @@ class Repository < ActiveRecord::Base
     end
   }
 
+  def self.any_readable_in_org? org, skip_library = false
+    KTEnvironment.any_contents_readable? org, skip_library
+  end
+
+
   def extended_index_attrs
     {:environment=>self.environment.name, :environment_id=>self.environment.id,
      :product=>self.product.name, :product_id=> self.product.id}
@@ -118,6 +123,7 @@ class Repository < ActiveRecord::Base
   def as_json(*args)
     ret = super
     ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
+    ret["package_count"] = package_count rescue nil
     ret
   end
 

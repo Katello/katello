@@ -53,7 +53,7 @@ class ProductAPI(KatelloAPI):
         result = self.server.POST(path, {"product": product})[1]
         return result
 
-    def update(self, prodId, description, gpgkey, nogpgkey, gpgkey_recursive):
+    def update(self, orgName, prodId, description, gpgkey, nogpgkey, gpgkey_recursive):
         product = {}
         self.update_dict(product, "description", description)
         self.update_dict(product, "gpg_key_name", gpgkey)
@@ -61,46 +61,46 @@ class ProductAPI(KatelloAPI):
         if nogpgkey:
             product["gpg_key_name"] = ""
 
-        path = "/api/products/%s/" % prodId
+        path = "/api/organizations/%s/products/%s/" % (orgName, prodId)
         result = self.server.PUT(path, {"product": product})[1]
         return result
 
 
-    def show(self, prodId):
-        path = "/api/products/%s/" % prodId
+    def show(self, orgName, prodId):
+        path = "/api/organizations/%s/products/%s/" % (orgName, prodId)
         return self.server.GET(path)[1]
 
-    def delete(self, prodId):
-        path = "/api/products/%s/" % prodId
+    def delete(self, orgName, prodId):
+        path = "/api/organizations/%s/products/%s/" % (orgName, prodId)
         return self.server.DELETE(path)[1]
 
-    def sync(self, prodId):
-        path = "/api/products/%s/sync" % prodId
+    def sync(self, orgName, prodId):
+        path = "/api/organizations/%s/products/%s/sync" % (orgName, prodId)
         return self.server.POST(path)[1]
 
-    def set_sync_plan(self, prodId, planId):
-        path = "/api/products/%s/sync_plan" % str(prodId)
+    def set_sync_plan(self, orgName, prodId, planId):
+        path = "/api/organizations/%s/products/%s/sync_plan" % (orgName, prodId)
         return self.server.POST(path, {"plan_id": planId})[1]
 
-    def remove_sync_plan(self, prodId):
-        path = "/api/products/%s/sync_plan" % str(prodId)
+    def remove_sync_plan(self, orgName, prodId):
+        path = "/api/organizations/%s/products/%s/sync_plan" % (orgName, prodId)
         return self.server.DELETE(path)[1]
 
-    def cancel_sync(self, prodId):
-        path = "/api/products/%s/sync" % prodId
+    def cancel_sync(self, orgName, prodId):
+        path = "/api/organizations/%s/products/%s/sync" % (orgName, prodId)
         return self.server.DELETE(path)[1]
 
-    def last_sync_status(self, prodId):
-        path = "/api/products/%s/sync" % prodId
+    def last_sync_status(self, orgName, prodId):
+        path = "/api/organizations/%s/products/%s/sync" % (orgName, prodId)
         data = self.server.GET(path)[1]
         return data
 
-    def update_filters(self, prodId, filters):
-        path = "/api/products/%s/filters" % prodId
+    def update_filters(self, orgName, prodId, filters):
+        path = "/api/organizations/%s/products/%s/filters" % (orgName, prodId)
         data = self.server.PUT(path, {"filters": filters})[1]
         return data
 
-    def filters(self, prodId):
-        path = "/api/products/%s/filters" % prodId
+    def filters(self, orgName, prodId):
+        path = "/api/organizations/%s/products/%s/filters" % (orgName, prodId)
         data = self.server.GET(path)[1]
         return data

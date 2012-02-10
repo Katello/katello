@@ -2,7 +2,7 @@
 
 require 'repo'
 
-ZOO_DISTRO_ID="ks-TestFamily-TestVariant-16-x86_64"
+ZOO_DISTRO_ID="ks-Test Family-TestVariant-16-x86_64"
 ZOO_DISTRO_NAME=$ZOO_DISTRO_ID
 
 header "Distribution"

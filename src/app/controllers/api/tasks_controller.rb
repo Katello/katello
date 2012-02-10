@@ -18,8 +18,16 @@ class Api::TasksController < Api::ApiController
   before_filter :authorize
 
   def rules
-    # tasks are used in: synchronization, promotion, packages updating
-    test = lambda{ Provider.any_readable?(@organization) || @organization.systems_readable? }
+    # tasks are used in: synchronization, promotion, packages updating, organizatino deletion
+    test = lambda do
+      if @organization
+        Provider.any_readable?(@organization) || @organization.systems_readable?
+      else
+        # at the end of organization deletion, there is no organization, so we
+        # check if the user has the rights to see the task.
+        User.current == @task.user
+      end
+    end
     { 
       :index => test,
       :show => test,

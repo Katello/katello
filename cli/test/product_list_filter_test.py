@@ -40,4 +40,4 @@ class ProductListFiltersTest(CLIActionTestCase):
 
     def test_it_uses_product_list_filter_api(self):
         self.action.run()
-        self.action.api.filters.assert_called_once_with(self.PROD['id'])
+        self.action.api.filters.assert_called_once_with(self.ORG['name'], self.PROD['id'])

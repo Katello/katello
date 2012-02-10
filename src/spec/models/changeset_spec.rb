@@ -81,7 +81,18 @@ describe Changeset do
         @prod.stub(:arch).and_return('noarch')
         @prod.save!
         ep = EnvironmentProduct.find_or_create(@organization.library, @prod)
-        @pack = {:id => 1, :name => 'pack'}.with_indifferent_access
+        @pack_name = "pack"
+        @pack_version = "0.1"
+        @pack_release = "1"
+        @pack_arch = "noarch"
+        @pack_nvre = @pack_name +"-"+ @pack_version +"-"+ @pack_release +"."+ @pack_arch
+        @pack = {
+          :id => 1,
+          :name => @pack_name,
+          :version => @pack_version,
+          :release => @pack_release,
+          :arch => @pack_arch
+        }.with_indifferent_access
         @err  = mock('Err', {:id => 'err', :name => 'err'})
 
         @repo = Repository.create!(:environment_product => ep, :name=> "repo", :pulp_id=>"1")
@@ -159,9 +170,15 @@ describe Changeset do
           @changeset.products.should include @prod
         end
 
-        it "should add package" do
-          @prod.stub(:find_packages_by_name).with(@changeset.environment.prior, "pack").and_return([@pack])
-          @changeset.add_package("pack", "prod")
+        it "should add package by nvre" do
+          @prod.stub(:find_packages_by_nvre).with(@changeset.environment.prior, @pack_name, @pack_version, @pack_release, nil).and_return([@pack])
+          @changeset.add_package(@pack_nvre, "prod")
+          @changeset.packages.length.should == 1
+        end
+
+        it "should add package by name" do
+          @prod.stub(:find_packages_by_name).with(@changeset.environment.prior, @pack_name).and_return([@pack])
+          @changeset.add_package(@pack_name, "prod")
           @changeset.packages.length.should == 1
         end
 
@@ -196,7 +213,12 @@ describe Changeset do
         @prod.save!
 
         ep = EnvironmentProduct.find_or_create(@organization.library, @prod)
-        @pack = mock('Pack', {:id => 1, :name => 'pack'})
+        @pack_name = "pack"
+        @pack_version = "0.1"
+        @pack_release = "1"
+        @pack_arch = "noarch"
+        @pack_nvre = @pack_name +"-"+ @pack_version +"-"+ @pack_release +"."+ @pack_arch
+        @pack = {:id => 1, :name => @pack_name}.with_indifferent_access
         @err  = mock('Err', {:id => 'err', :name => 'err'})
 
         @repo = Repository.create!(:environment_product => ep, :name=> "repo", :pulp_id=>"1")
@@ -224,8 +246,9 @@ describe Changeset do
       end
 
       it "should remove package" do
+        @prod.stub(:find_packages_by_nvre).with(@changeset.environment.prior, @pack_name, @pack_version, @pack_release, nil).and_return([@pack])
         ChangesetPackage.should_receive(:destroy_all).with(:package_id => 1, :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
-        @changeset.remove_package("pack", "prod")
+        @changeset.remove_package(@pack_nvre, "prod")
       end
 
       it "should remove erratum" do
@@ -282,6 +305,7 @@ describe Changeset do
         @clone.stub(:has_package?).and_return(false)
         @clone.stub(:has_erratum?).and_return(false)
         @clone.stub(:has_distribution?).and_return(false)
+        @clone.stub(:generate_metadata)
         @repo.stub(:clone_ids).and_return([])
         @repo.stub(:get_clone).and_return(@clone)
         @repo.stub(:get_cloned_in).and_return(nil)
@@ -300,7 +324,7 @@ describe Changeset do
         @changeset.stub(:calc_dependencies).and_return([])
 
         Glue::Pulp::Package.stub(:index_packages).and_return(true)
-        Glue::Pulp::Package.stub(:index_errata).and_return(true)
+        Glue::Pulp::Errata.stub(:index_errata).and_return(true)
 
       end
 
@@ -313,6 +337,7 @@ describe Changeset do
         @changeset.state = Changeset::REVIEW
 
         @prod.should_receive(:promote).once
+        @changeset.should_receive(:index_repo_content).once
 
         @changeset.promote(false)
       end
@@ -325,17 +350,7 @@ describe Changeset do
         @repo.stub(:get_clone).and_return(nil)
         @changeset.stub(:repos).and_return([@repo])
         @repo.should_receive(:promote).once
-
-        @changeset.promote(false)
-      end
-
-      it "should synchronize repositories that have been promoted" do
-        @prod.environments << @environment
-        @changeset.state = Changeset::REVIEW
-        @changeset.stub(:repos).and_return([@repo])
-        @repo.stub(:is_cloned_in?).and_return(true)
-        @repo.stub(:get_clone).and_return(@clone)
-        @clone.should_receive(:sync).once.and_return([])
+        @changeset.should_receive(:index_repo_content).once
 
         @changeset.promote(false)
       end
@@ -368,6 +383,14 @@ describe Changeset do
         @changeset.state = Changeset::REVIEW
 
         @clone.should_receive(:add_distribution).once.with(@distribution.id)
+
+        @changeset.promote(false)
+      end
+
+      it "should regenerate metadata of changed repos" do
+        @changeset.stub(:affected_repos).and_return([@repo])
+        @clone.should_receive(:generate_metadata)
+        @changeset.state = Changeset::REVIEW
 
         @changeset.promote(false)
       end

@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.22
+Version:       0.1.27
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,19 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Feb 10 2012 Ivan Necas <inecas@redhat.com> 0.1.27-1
+- system-tests - disable other repos when installing from fake repo
+  (inecas@redhat.com)
+- system-tests - check on specific exit code (inecas@redhat.com)
+
+* Fri Feb 10 2012 Ivan Necas <inecas@redhat.com> 0.1.26-1
+- system tests - enable uebercert test (inecas@redhat.com)
+
+* Thu Feb 09 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.25-1
+- system tests - use repo with space in distribution name
+
+* Mon Feb 06 2012 Ivan Necas <inecas@redhat.com> 0.1.24-1
+- periodic build
 * Fri Jan 20 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.21-1
 - bug - adding missing file to system tests
 

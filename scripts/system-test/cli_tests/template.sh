@@ -22,7 +22,7 @@ test_success "template update add package using nvrea"     template update --nam
 test_success "template update add package group"           template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group="mammal"
 test_success "template update add package group categrory" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group_category="all"
 test_success "template update add parameter"               template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_parameter="attr" --value="X"
-test_success "template update add distribution"            template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_distribution="ks-TestFamily-TestVariant-16-x86_64"
+test_success "template update add distribution"            template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_distribution="ks-Test Family-TestVariant-16-x86_64"
 
 check_delayed_jobs_running
 

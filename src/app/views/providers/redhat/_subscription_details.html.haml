@@ -6,7 +6,6 @@
       %th= _('Contract')
       %th= _('Support Level')
       %th= _('Arch')
-      %th= _('Machine Type')
       %th= _('Begins')
       %th= _('Expires')
     %tbody
@@ -33,7 +32,6 @@
               %td= sub['contractNumber']
               %td= sub['support_level'] or ""
               %td= sub['arch'] or ""
-              %td= sub['machine_type']
               %td=l Date.parse(sub['startDate'])
               %td=l Date.parse(sub['endDate'])
             -# TODO: Should the bundled products be displayed too?

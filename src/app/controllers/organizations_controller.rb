@@ -65,8 +65,14 @@ class OrganizationsController < ApplicationController
   end
 
   def create
-    
     begin
+      cp_key = params[:name].tr(' ', '_')
+      # org is being deleted
+      if Organization.find_by_cp_key(cp_key).nil? && Organization.unscoped.find_by_cp_key(cp_key)
+        msg = _("Organization '%s' already exists and either has been scheduled for deletion or failed deletion.") % params[:name]
+        raise msg
+      end
+
       if params[:envname] && params[:envname] != ''
         @new_env = KTEnvironment.new(:name => params[:envname], :description => params[:envdescription])
       else

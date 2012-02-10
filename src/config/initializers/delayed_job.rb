@@ -4,7 +4,9 @@ Delayed::Worker.logger.auto_flushing = 1
 
 # models have to use logger.info instead of Rails.logger.info in order for the desired log file to be used.
 if caller.last =~ /.*\/script\/delayed_job:\d+$/
-  ActiveRecord::Base.logger = Delayed::Worker.logger
+  Rails.logger = Delayed::Worker.logger
+  ActiveRecord::Base.logger = ActiveSupport::BufferedLogger.new("log/#{Rails.env}_delayed_jobs_sql.log", Rails.logger.level)
+  Rails.logger.auto_flushing = 1
 end
 
 Delayed::Worker.destroy_failed_jobs = false

@@ -15,16 +15,16 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.mock_options()
 
     def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_package', '--name=filter1', '--package_id=package1'])
+        self.assertRaises(Exception, self.action.process_options, ['add_package', '--name=filter1', '--package=package1'])
 
     def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_package', '--org=ACME', '--package_id=package1'])
+        self.assertRaises(Exception, self.action.process_options, ['add_package', '--org=ACME', '--package=package1'])
 
     def test_missing_package_id_generates_error(self):
         self.assertRaises(Exception, self.action.process_options, ['add_package', '--org=ACME', '--name=filter1'])
 
     def test_no_error_if_org_and_name_provided(self):
-        self.action.process_options(['add_package', '--org=ACME', '--name=filter1', '--package_id=package1'])
+        self.action.process_options(['add_package', '--org=ACME', '--name=filter1', '--package=package1'])
         self.assertEqual(len(self.action.optErrors), 0)
 
 

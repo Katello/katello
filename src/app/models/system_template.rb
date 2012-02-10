@@ -167,6 +167,18 @@ class SystemTemplate < ActiveRecord::Base
       uebercert = nil
     end
 
+    # determine the list of repos to include in the export based on the products & repos in the template...
+    # this is to avoid duplicate repos from being included.
+    repos = {}
+    self.products.each do |product|
+      product.repos(self.environment).each do |repo|
+        repos[repo.id] = repo
+      end
+    end
+    self.repositories.each do |repo|
+      repos[repo.id] = repo
+    end
+
     xm.template {
       # mandatory tags
       xm.name self.name
@@ -176,9 +188,7 @@ class SystemTemplate < ActiveRecord::Base
           family, version = Mapping::ImageFactoryNaming.translate(distro.family, distro.version)
           xm.name family
           xm.version version
-          # TODO distro.arch is nil until resolved 750265 - RFE: Separate "arch" field for distribution
-          #xm.arch distro.arch
-          xm.arch "x86_64"
+          xm.arch distro.arch
           xm.install("type" => "url") {
             xm.url distro.url_for_environment(self.environment)
           }
@@ -191,20 +201,10 @@ class SystemTemplate < ActiveRecord::Base
       xm.packages {
         self.packages.each { |p| xm.package "name" => p.package_name }
         self.package_groups.each { |p| xm.package "name" => "@#{p.name}" }
-        # TODO package groups categories ("unwrap" them here or pass them to IF?)
+        # TODO package groups categories ("unwrap" them here - we need to create category->repository reference in our model)
       }
       xm.repositories {
-        self.products.each do |p|
-          pc = p.repos(self.environment).each do |repo|
-            xm.repository("name" => repo.name) {
-              xm.url repo.uri
-              xm.persisted "No"
-              xm.clientcert uebercert[:cert] unless uebercert.nil?
-              xm.clientkey uebercert[:key] unless uebercert.nil?
-            }
-          end
-        end
-        self.repositories.each do |repo|
+        repos.each do |repoId, repo|
           xm.repository("name" => repo.name) {
             xm.url repo.uri
             xm.persisted "No"
