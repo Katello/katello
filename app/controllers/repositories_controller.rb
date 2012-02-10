@@ -114,7 +114,10 @@ class RepositoriesController < ApplicationController
     ids = Repository.readable(current_organization.library).collect{|r| r.id}
     repos = Repository.search do
       query {string name}
-      filter :terms, :environment_id => ids
+      filter "and", [
+          {:terms => {:environment_id => ids}},
+          {:terms => {:enabled => [true]}}
+      ]
     end
 
     render :json => repos.map{|repo|
