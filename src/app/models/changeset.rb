@@ -402,7 +402,7 @@ class Changeset < ActiveRecord::Base
 
     errata_promote.each_pair do |repo, errata|
       repo.add_errata(errata)
-      Glue::Pulp::Package.index_errata(errata)
+      Glue::Pulp::Errata.index_errata(errata)
     end
   end
 
