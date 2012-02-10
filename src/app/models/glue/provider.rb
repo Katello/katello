@@ -166,8 +166,8 @@ module Glue::Provider
     end
 
     def queue_import_manifest zip_file_path, options
-      queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}", :priority => 3, :action => [self, :owner_import, zip_file_path, options])
-      queue.create(:name => "import of products in manifest #{zip_file_path}",                       :priority => 5, :action => [self, :import_products_from_cp])
+      pre_queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}", :priority => 3, :action => [self, :owner_import, zip_file_path, options])
+      pre_queue.create(:name => "import of products in manifest #{zip_file_path}",                       :priority => 5, :action => [self, :import_products_from_cp])
     end
 
     def import_products_from_cp
@@ -197,7 +197,7 @@ module Glue::Provider
     end
 
     def destroy_products_orchestration
-      queue.create(:name => "delete products for provider: #{self.name}", :priority => 1, :action => [self, :del_products])
+      pre_queue.create(:name => "delete products for provider: #{self.name}", :priority => 1, :action => [self, :del_products])
     end
 
 

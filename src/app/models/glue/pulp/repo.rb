@@ -48,7 +48,7 @@ module Glue::Pulp::Repo
     def save_repo_orchestration
       case orchestration_for
         when :create
-          queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :clone_or_create_repo])
+          pre_queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :clone_or_create_repo])
       end
     end
 
@@ -83,7 +83,7 @@ module Glue::Pulp::Repo
     self.clone_ids.each do |clone_id|
       repo = Repository.find_by_pulp_id(clone_id)
 
-      queue.create(
+      pre_queue.create(
         :name => "add filter '#{added_filter.pulp_id}' to repo: #{repo.id}",
         :priority => 2,
         :action => [repo, :set_filters, [added_filter.pulp_id]]
@@ -100,7 +100,7 @@ module Glue::Pulp::Repo
     self.clone_ids.each do |clone_id|
       repo = Repository.find_by_pulp_id(clone_id)
 
-      queue.create(
+      pre_queue.create(
         :name => "remove filter '#{removed_filter.pulp_id}' from repo: #{repo.id}",
         :priority => 2,
         :action => [repo, :del_filters, [removed_filter.pulp_id]]
@@ -219,8 +219,8 @@ module Glue::Pulp::Repo
   end
 
   def destroy_repo_orchestration
-    queue.create(:name => "remove product content : #{self.name}", :priority => 1, :action => [self, :del_content])
-    queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 2, :action => [self, :destroy_repo])
+    pre_queue.create(:name => "remove product content : #{self.name}", :priority => 1, :action => [self, :del_content])
+    pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 2, :action => [self, :destroy_repo])
   end
 
   # TODO: remove after pulp >= 0.0.401 get's released. There is this attribute
