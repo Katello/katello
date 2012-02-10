@@ -373,12 +373,13 @@ sliding_tree.search = function(){
                  }
              ).tipsy({ fade : true, gravity : 's' });
              
-             search_form.live('submit', function(event){
+             search_form.bind('submit', function(event){
                 var current_crumb 	= sliding_tree.get_current_crumb(),
                     search_url 		= breadcrumbs[current_crumb]['url'],
                     offset 			= offset || 0,
                     params 			= {},
-                    panel           = parent.children('.has_content');
+                    panel           = parent.children('.has_content'),
+                    form            = $(this);
                     
                 event.preventDefault();
                 
@@ -386,7 +387,7 @@ sliding_tree.search = function(){
                     params["offset"] = offset;
                     panel.html('<img src="' + KT.common.spinner_path() + '">');
 
-                    $(this).ajaxSubmit({
+                    form.ajaxSubmit({
                         url		: search_url,
                         data	: params,
                         cache   : false,
@@ -394,12 +395,12 @@ sliding_tree.search = function(){
                                 var to_append = data.html ? data.html : data;
                                 panel.html(to_append);
                                 $(document).trigger('search_complete.slidingtree');
-                                if ($(this).serialize() !== 'search=') {
-                                    $.bbq.pushState($(this).serialize());
-                                }
-                        },
-                        error: function (e) {
-                            //button.removeAttr('disabled');
+                                /* disabled until conflicts with panel hash change can be resolved
+                                if( form.serialize() !== 'search=' ) {
+                                    $.bbq.pushState(form.serialize());
+                                } else {
+                                    $.bbq.removeState('search');
+                                }*/
                         }
                     });
                 }
