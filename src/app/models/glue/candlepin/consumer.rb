@@ -77,7 +77,8 @@ module Glue::Candlepin::Consumer
 
     def set_candlepin_consumer
       Rails.logger.debug "Creating a consumer in candlepin: #{name}"
-      consumer_json = Candlepin::Consumer.create(self.organization.cp_key,
+      consumer_json = Candlepin::Consumer.create(self.environment_id,
+                                                 self.organization.cp_key,
                                                  self.name, self.cp_type,
                                                  self.facts,
                                                  self.installedProducts,
