@@ -64,6 +64,8 @@ class Repository < ActiveRecord::Base
     !(redhat?)
   end
 
+  scope :enabled, where(:enabled => true)
+
   scope :readable, lambda { |env|
     if env.contents_readable?
       joins(:environment_product).where("environment_products.environment_id" => env.id)

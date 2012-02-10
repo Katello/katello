@@ -65,7 +65,7 @@ describe KTEnvironment do
     specify { @environment.successor.should == @new_env }
   end
   
-  
+
   context "delete an environment" do
     
     it "should delete the environment" do
@@ -172,6 +172,26 @@ describe KTEnvironment do
       @env2.should be_valid
       @env3.should be_valid
       @organization.library.should be_valid
+    end
+  end
+
+  describe "updating CP content assignment" do
+    it "should add content not already promoted" do
+      already_promoted_content("123", "456")
+      newly_promoted_content("123", "456", "789", "10")
+      Candlepin::Environment.should_receive(:add_content).with(@environment.id, Set.new(["789", "10"]))
+      @environment.update_cp_content
+    end
+
+    def already_promoted_content(*content_ids)
+      @already_promoted_content_ids = content_ids
+      Candlepin::Environment.stub(:find).and_return(
+        {:environmentContent => @already_promoted_content_ids.map {|id| {:contentId => id}}})
+    end
+
+    def newly_promoted_content(*content_ids)
+      promoted_repos = content_ids.map{|id| mock(:content_id => id) }
+      @environment.stub_chain(:repositories, :enabled).and_return(promoted_repos)
     end
   end
 end
