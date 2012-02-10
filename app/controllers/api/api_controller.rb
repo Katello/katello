@@ -75,31 +75,7 @@ class Api::ApiController < ActionController::Base
     return @query_params
   end
 
-  def exception_with_response(exception)
-    logger.error "exception when talking to a remote client: #{exception.message} " << pp_exception(exception)
-    if request_from_katello_cli?
-      render :text => pp_exception(exception) , :status => exception.http_code
-    else
-      render :text => exception.response , :status => exception.http_code
-    end
-  end
 
-  def render_403(e)
-    render :text => pp_exception(e) , :status => 403
-  end
-
-  def invalid_record(exception)
-    logger.error exception.class
-    logger.debug exception.backtrace.join("\n")
-    exception.record.errors.each_pair do |c,e|
-      logger.error "#{c}: #{e}"
-    end
-
-    respond_to do |format|
-      format.json { render :json => {:displayMessage => exception.message, :errors => [exception.message] }, :status => 400 }
-      format.all  { render :text => pp_exception(exception, :with_class => false), :status => 400 }
-    end
-  end
 
   def find_organization
     if params[:organization_id]
@@ -122,6 +98,42 @@ class Api::ApiController < ActionController::Base
   end
 
   protected
+
+  def exception_with_response(exception)
+    logger.error "exception when talking to a remote client: #{exception.message} " << pp_exception(exception)
+    if request_from_katello_cli?
+      render :json => format_subsys_exception_hash(exception), :status => 400
+    else
+      render :text => exception.response , :status => exception.http_code
+    end
+  end
+
+  def format_subsys_exception_hash(exception)
+
+    orig_hash = JSON.parse(exception.response).with_indifferent_access rescue {}
+
+    orig_hash[:displayMessage] = exception.response.gsub(/^"|"$/, "") if orig_hash[:displayMessage].nil?
+    orig_hash[:errors] = [orig_hash[:displayMessage]] if orig_hash[:errors].nil?
+    orig_hash
+  end
+
+  def render_403(e)
+    render :text => pp_exception(e) , :status => 403
+  end
+
+  def invalid_record(exception)
+    logger.error exception.class
+    logger.debug exception.backtrace.join("\n")
+    exception.record.errors.each_pair do |c,e|
+      logger.error "#{c}: #{e}"
+    end
+
+    respond_to do |format|
+      format.json { render :json => {:displayMessage => exception.message, :errors => [exception.message] }, :status => 400 }
+      format.all  { render :text => pp_exception(exception, :with_class => false), :status => 400 }
+    end
+  end
+
   def render_wrapped_exception(status_code, ex)
     logger.error "*** ERROR: #{ex.message} (#{status_code}) ***"
     logger.error "REQUEST URL: #{request.fullpath}"
