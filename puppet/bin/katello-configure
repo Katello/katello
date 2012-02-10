@@ -469,7 +469,7 @@ begin
 				print line
 				seen_err = true
 			end
-			if line =~ /\]: Executing \'(.+)/
+			if line =~ /debug: Executing \'(.+)/
 				line_rest = $1
 				commands_by_logfiles.keys.each do |logfile|
 					if line_rest.index(logfile) != nil
