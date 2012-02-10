@@ -61,13 +61,13 @@ module Glue::Pulp::Filter
     end
 
     def destroy_filter_orchestration
-      queue.create(:name => "delete pulp filter: #{self.pulp_id}", :priority => 3, :action => [self, :del_pulp_filter])
+      pre_queue.create(:name => "delete pulp filter: #{self.pulp_id}", :priority => 3, :action => [self, :del_pulp_filter])
     end
 
     def save_filter_orchestration
       case orchestration_for
         when :create
-          queue.create(:name => "create pulp filter: #{self.pulp_id}", :priority => 3, :action => [self, :set_pulp_filter])
+          pre_queue.create(:name => "create pulp filter: #{self.pulp_id}", :priority => 3, :action => [self, :set_pulp_filter])
         when :update
           if package_list_changed?
 
@@ -77,8 +77,8 @@ module Glue::Pulp::Filter
             added_filters = (new_packages - old_packages).uniq
             removed_filters = old_packages - new_packages
 
-            queue.create(:name => "adding packages to filter: #{self.pulp_id}", :priority => 3, :action => [self, :set_packages, added_filters]) unless added_filters.empty?
-            queue.create(:name => "removing packages from filter: #{self.pulp_id}", :priority => 4, :action => [self, :del_packages, removed_filters]) unless removed_filters.empty?
+            pre_queue.create(:name => "adding packages to filter: #{self.pulp_id}", :priority => 3, :action => [self, :set_packages, added_filters]) unless added_filters.empty?
+            pre_queue.create(:name => "removing packages from filter: #{self.pulp_id}", :priority => 4, :action => [self, :del_packages, removed_filters]) unless removed_filters.empty?
           end
       end
     end

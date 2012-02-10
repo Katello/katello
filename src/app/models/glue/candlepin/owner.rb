@@ -72,14 +72,14 @@ module Glue::Candlepin::Owner
     def save_owner_orchestration
       case self.orchestration_for
         when :create
-          queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :set_owner])
+          pre_queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :set_owner])
       end
     end
 
     def destroy_owner_orchestration
-      queue.create(:name => "candlepin systems for organization: #{self.name}", :priority => 2, :action => [self, :del_systems])
-      queue.create(:name => "candlepin providers for organization: #{self.name}", :priority => 3, :action => [self, :del_providers])
-      queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 4, :action => [self, :del_owner])
+      pre_queue.create(:name => "candlepin systems for organization: #{self.name}", :priority => 2, :action => [self, :del_systems])
+      pre_queue.create(:name => "candlepin providers for organization: #{self.name}", :priority => 3, :action => [self, :del_providers])
+      pre_queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 5, :action => [self, :del_owner])
     end
 
     def owner_info
