@@ -103,6 +103,14 @@ EOKEY
     Candlepin::Owner.stub!(:create_user).and_return(true)
     Candlepin::Owner.stub!(:destroy)
     Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => CERT, :key => KEY })
+    disable_env_orchestration # env is orchestrated with org - we disable this as well
+  end
+
+  def disable_env_orchestration
+    Candlepin::Environment.stub!(:create).and_return({})
+    Candlepin::Environment.stub!(:destroy).and_return({})
+    Candlepin::Environment.stub!(:find).and_return({:environmentContent => []})
+    Candlepin::Environment.stub!(:add_content).and_return({})
   end
 
   def disable_user_orchestration
