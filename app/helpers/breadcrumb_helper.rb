@@ -19,6 +19,7 @@ module BreadcrumbHelper
     hash[id][:scrollable] = params[:scrollable] ? true : false
     hash[id][:client_render] = true if params[:client_render]
     hash[id][:searchable] = true if params[:searchable]
+    hash[id][:product_id] = params[:product_id] if params[:product_id]
     hash[id] = hash[id].merge(attributes)
   end
 end
@@ -47,15 +48,15 @@ module ChangesetBreadcrumbs
                       {:client_render => true})
         #packages
         add_crumb_node!(bc, packages_cs_bc_id(cs, product), "",  _("Packages"),
-                        ['changesets', changeset_bc_id(cs),product_cs_bc_id(cs, product)], {:client_render => true})
+                        ['changesets', changeset_bc_id(cs),product_cs_bc_id(cs, product)], {:client_render => true, :product_id => product.id})
 
         #errata
         add_crumb_node!(bc, errata_cs_bc_id(cs, product), "",  _("Errata"),
-                        ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
+                        ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true, :product_id => product.id})
 
         #repos
         add_crumb_node!(bc, repos_cs_bc_id(cs, product), "",  _("Repositories"),
-                        ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
+                        ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true, :product_id => product.id})
 
         #repos
         add_crumb_node!(bc, deps_cs_bc_id(cs, product), "",  _("Dependencies"),
@@ -127,7 +128,7 @@ module ContentBreadcrumbs
 
    errata_filters.each do |filter|
      add_crumb_node!(bc, filter[:id], filter[:path],
-         filter[:label], [content_crumb_id, errata_crumb_id], {:scrollable=>true})
+         filter[:label], [content_crumb_id, errata_crumb_id], {:scrollable=>true, :searchable => true})
    end
 
    add_crumb_node!(bc, products_crumb_id, products_promotion_path(@environment.name),
@@ -143,31 +144,31 @@ module ContentBreadcrumbs
 
      #top of this product
      add_crumb_node!(bc, product_id, details_promotion_path(@environment.name, :product_id=>prod.id),
-        prod.name, [content_crumb_id,products_crumb_id], {:cache=>true,
+        prod.name, [content_crumb_id,products_crumb_id], {:cache=>true, :product_id => prod.id,
                 :content=>render(:partial=>"detail",
                                  :locals=>{:product=>prod, :environment_name => @environment.name,
                                            :read_contents => @environment.contents_readable?})})
 
      #product_packages
      add_crumb_node!(bc, packages_bc_id(prod), packages_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
-        _("Packages"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true, :searchable => true})
+        _("Packages"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true, :searchable => true, :product_id => prod.id})
 
      #product_errata
      add_crumb_node!(bc, errata_id, nil,
-         _("Errata"), [content_crumb_id, products_crumb_id, product_id], {:cache => true, :content => render(:partial => "errata_filters", :locals => {:errata_filters => errata_filters})})
+         _("Errata"), [content_crumb_id, products_crumb_id, product_id], {:cache => true, :product_id => prod.id, :content => render(:partial => "errata_filters", :locals => {:errata_filters => errata_filters})})
 
      errata_filters.each do |filter|
        add_crumb_node!(bc, filter[:id], filter[:path],
-           filter[:label], [content_crumb_id, products_crumb_id, product_id, errata_id], {:scrollable=>true})
+           filter[:label], [content_crumb_id, products_crumb_id, product_id, errata_id], {:scrollable=>true, :searchable => true, :product_id => prod.id})
      end
 
      #product_repos
      add_crumb_node!(bc, repo_bc_id(prod), repos_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
-                     _("Repos"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
+                     _("Repos"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true, :product_id => prod.id})
 
      #product_distributions
      add_crumb_node!(bc, distribution_bc_id(prod), distributions_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
-                     _("Distributions"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
+                     _("Distributions"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true, :product_id => prod.id})
    end
 
    bc.to_json
