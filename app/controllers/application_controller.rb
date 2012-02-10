@@ -92,10 +92,27 @@ class ApplicationController < ActionController::Base
     logger.debug "Setting locale: #{I18n.locale}"
   end
 
+  def setup_current_organization
+    orgs = User.current.allowed_organizations
+    return nil if  orgs.nil? || orgs.empty?
+    self.current_organization = orgs.first if orgs
+  end
+
+
   def current_organization
-    return nil unless session[:current_organization_id]
+    unless session[:current_organization_id]
+      setup_current_organization
+      return nil unless session[:current_organization_id]
+    end
     begin
-      @current_org ||=  Organization.find(session[:current_organization_id])
+      if @current_org.nil? && current_user
+        o = Organization.find(session[:current_organization_id])
+        if current_user.allowed_organizations.include?(o)
+          @current_org = o
+        else
+          raise _("Permission Denied. User '%s' does not have permissions to access organization '%s'.") % [User.current.username, o.name]
+        end
+      end
       return @current_org
     rescue Exception => error
       log_exception error
@@ -492,7 +509,7 @@ class ApplicationController < ActionController::Base
     logger.error exception.message
     execute_after_filters
     logout
-    notice _("You current organization is no longer valid. It is possible that the organization has been deleted, please log back in to continue."),{:level => :error, :persist => false}
+    notice _("You current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue."),{:level => :error, :persist => false}
     redirect_to new_user_session_url and return false
   end
 
