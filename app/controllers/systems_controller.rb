@@ -13,7 +13,7 @@
 class SystemsController < ApplicationController
   include SystemsHelper
 
-  before_filter :find_system, :except =>[:index, :items, :environments, :bulk_destroy, :destroy, :new, :create]
+  before_filter :find_system, :except =>[:index, :items, :environments, :bulk_destroy, :new, :create]
   before_filter :find_systems, :only=>[:bulk_destroy]
 
   before_filter :find_environment, :only => [:environments, :new]
@@ -27,16 +27,17 @@ class SystemsController < ApplicationController
   def rules
     edit_system = lambda{System.find(params[:id]).editable?}
     read_system = lambda{System.find(params[:id]).readable?}
-    env_system = lambda{@environment.systems_readable?}
-    any_readable = lambda{System.any_readable?(current_organization)}
-    delete_systems = lambda{true}
-    register_system = lambda { System.registerable?(@environment, current_organization) }
+    env_system = lambda{@environment && @environment.systems_readable?}
+    any_readable = lambda{current_organization && System.any_readable?(current_organization)}
+    delete_systems = lambda{@system.deletable?}
+    bulk_delete_systems = lambda{@systems.collect{|s| false unless s.deletable?}.compact.empty?}
+    register_system = lambda { current_organization && System.registerable?(@environment, current_organization) }
     items_test = lambda do
       if params[:env_id]
         @environment = KTEnvironment.find(params[:env_id])
         @environment && @environment.systems_readable?
       else
-        System.any_readable?(current_organization)
+        current_organization && System.any_readable?(current_organization)
       end
     end
     {
@@ -54,7 +55,7 @@ class SystemsController < ApplicationController
       :show => read_system,
       :facts => read_system,
       :destroy=> delete_systems,
-      :bulk_destroy => delete_systems
+      :bulk_destroy => bulk_delete_systems
     }
   end
 
@@ -278,10 +279,12 @@ class SystemsController < ApplicationController
   include SortColumnList
 
   def find_environment
-    readable = KTEnvironment.systems_readable(current_organization)
-    @environment = KTEnvironment.find(params[:env_id]) if params[:env_id]
-    @environment ||= first_env_in_path(readable, false)
-    @environment ||=  current_organization.library
+    if current_organization
+      readable = KTEnvironment.systems_readable(current_organization)
+      @environment = KTEnvironment.find(params[:env_id]) if params[:env_id]
+      @environment ||= first_env_in_path(readable, false)
+      @environment ||=  current_organization.library
+    end
   end
 
   def find_system
