@@ -22,7 +22,9 @@ class PromotionsController < ApplicationController
       to_ret
     }
 
-    prod_test = lambda{ @environment.contents_readable? and @product.nil? ? true : @product.provider.readable? }
+    prod_test = lambda{
+        @environment && @environment.contents_readable? && @product.nil? ? true : @product.provider.readable? }
+
     {
       :show => show_test,
       :system_templates => lambda{true},
@@ -283,14 +285,16 @@ class PromotionsController < ApplicationController
   private
 
   def find_environment
-    @organization = current_organization
-    @environment = KTEnvironment.where(:name=>params[:id]).where(:organization_id=>@organization.id).first if params[:id]
-    @environment ||= first_env_in_path(accessible_environments, true)
-    #raise Errors::SecurityViolation, _("Cannot find a readable environment.") if @environment.nil?
+    if current_organization
+      @organization = current_organization
+      @environment = KTEnvironment.where(:name=>params[:id]).where(:organization_id=>@organization.id).first if params[:id]
+      @environment ||= first_env_in_path(accessible_environments, true)
+      #raise Errors::SecurityViolation, _("Cannot find a readable environment.") if @environment.nil?
 
-    @next_environment = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
-    @next_environment ||= @environment.successor if @environment
-    @product = Product.find(params[:product_id]) if params[:product_id]
+      @next_environment = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
+      @next_environment ||= @environment.successor if @environment
+      @product = Product.find(params[:product_id]) if params[:product_id]
+    end
   end
 
   def accessible_environments

@@ -58,9 +58,9 @@ shared_examples_for "protected action" do
         @controller.stub(action)
         @controller.stub(:render)
       end
+      session.delete(:current_organization_id)
       login_user_by_described_class(unauthorized_user) if defined?  unauthorized_user
       before_failure if defined?(before_failure)
-
       if @controller.kind_of? Api::ApiController
         @controller.should_receive(:render_exception).with { |status, e| status.should == 403 }
       else

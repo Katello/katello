@@ -40,14 +40,14 @@ class SyncManagementController < ApplicationController
 
   def rules
 
-    list_test = lambda{Provider.any_readable?(current_organization) }
+    list_test = lambda{current_organization && Provider.any_readable?(current_organization) }
     sync_read_test = lambda{
       @providers.each{|prov|
         return false if !prov.readable?
       }
       return true
     }
-    sync_test = lambda {current_organization.syncable?}
+    sync_test = lambda {current_organization && current_organization.syncable?}
     
     { :index => list_test,
       :sync_status => sync_read_test,
