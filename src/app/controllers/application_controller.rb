@@ -73,7 +73,7 @@ class ApplicationController < ActionController::Base
     [:error, :warning, :success, :message].each do |type|
       unless flash[type].nil? or flash[type].blank?
         @enc = CGI::escape(flash[type].gsub("\n","<br \\>"))
-        response.headers['X-Message'] = @enc
+        response.headers['X-Message'] = @enc.gsub("%2B","&#43;")
         response.headers['X-Message-Type'] = type.to_s
         response.headers['X-Message-Request-Type'] = requested_action
         flash.delete(type)  # clear the flash

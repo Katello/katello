@@ -28,9 +28,6 @@ $(document).ready(function () {
                 "left": (panelLeft)
             });
         }
-        $('.left #new').css({
-            "width": "10em"
-        });
         $('.list-title').width(panelLeft);
         $('#list-title').width(panelLeft);
         if ($(this).hasClass('column_panel_3')) {
