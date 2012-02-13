@@ -119,8 +119,7 @@ class SystemPackagesController < ApplicationController
       return
     end
 
-    #offset = current_user.page_size
-    offset = 100
+    offset = current_user.page_size
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     total_packages = packages.length
     if packages.length > 0
