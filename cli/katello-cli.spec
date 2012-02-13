@@ -19,7 +19,7 @@ Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
 Version:       0.1.54
-Release:       2%{?dist}
+Release:       3%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -84,6 +84,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Feb 12 2012 Mike McCune <mmccune@redhat.com> 0.1.54-3
+- rebuild
 * Tue Feb 07 2012 Mike McCune <mmccune@redhat.com> 0.1.53-2
 - brew build
 * Tue Feb 07 2012 Ivan Necas <inecas@redhat.com> 0.1.53-1
