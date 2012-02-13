@@ -13,7 +13,7 @@
     = _("User Notifications")
 
 .grid_6
-  = link_to _("Delete All"), {:action => "destroy_all", :controller => "notices"}, :method => :delete, :confirm => _('Are you sure?'), :class=>'deletable'
+  = link_to _("Delete All"), {:action => "destroy_all", :controller => "notices"}, :method => :delete, :confirm => _('Are you sure?'), :class=>'deletable', :remote => true
   %form.fr#search_form.search{"data-url" => search_index_path()}
     = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Filter..."})
     %button.action{:form => "search_form"} #{_("Search")}
@@ -27,7 +27,7 @@
         = sortable "level", _("Level")
       %th
         = _("Description")
-    %tbody
+    %tbody#notification_list
       - for notice in @notices
         - if notice.details.nil?
           %tr{:class => "#{notice.level}"}
