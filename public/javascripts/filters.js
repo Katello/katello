@@ -585,9 +585,10 @@ KT.filters = (function(){
     },
     lookup_repo_product = function(repo_id){
       var found = undefined;
+
       $.each(KT.products, function(index, prod){
         $.each(prod.repos, function(index, repo){
-           if (repo.id === repo_id){
+           if (repo.id.toString() === repo_id){
                found = prod.id;
                return false;
            }
