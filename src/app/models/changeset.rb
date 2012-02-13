@@ -147,7 +147,6 @@ class Changeset < ActiveRecord::Base
 
   def add_package package_name, product_cpid
     product = find_product_by_cpid(product_cpid)
-
     pack = find_package product, package_name
     display_name = Katello::PackageUtils::build_nvrea(pack, false)
     cs_pack = ChangesetPackage.new(:package_id => pack["id"], :display_name => display_name, :product_id => product.id, :changeset => self)
@@ -530,16 +529,16 @@ class Changeset < ActiveRecord::Base
   end
 
   def calc_dependencies_for_packages package_names, from_repos, to_repos
-
     all_deps = []
+    deps = []
     to_resolve = package_names
     while not to_resolve.empty?
+      all_deps += deps
 
       deps = get_promotable_dependencies_for_packages to_resolve, from_repos, to_repos
       deps = Katello::PackageUtils::filter_latest_packages_by_name deps
 
-      all_deps += deps
-      to_resolve = deps.map{ |d| d['provides'] }.flatten.uniq - all_deps
+      to_resolve = deps.map{ |d| d['provides'] }.flatten(1).uniq - all_deps.map{ |d| d['provides'] }.flatten(1) - package_names
     end
     all_deps
   end
