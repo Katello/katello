@@ -56,7 +56,7 @@ from rhn_rpm import hdrLabelCompare, sortRPMs, get_package_header, \
         getInstalledHeader
 
 from sslToolConfig import ConfigFile, figureSerial, getOption, CERT_PATH, \
-        DEFS, MD, CRYPTO, LEGACY_SERVER_RPM_NAME1, LEGACY_SERVER_RPM_NAME2, \
+        DEFS, MD, CRYPTO, \
         CA_OPENSSL_CNF_NAME, SERVER_OPENSSL_CNF_NAME, POST_UNINSTALL_SCRIPT, \
         SERVER_RPM_SUMMARY, CA_CERT_RPM_SUMMARY, BASE_SERVER_RPM_NAME
 
@@ -89,131 +89,6 @@ def dependencyCheck(filename):
 def pathJoin(path, filename):
     filename = os.path.basename(filename)
     return os.path.join(path, filename)
-
-
-def legacyTreeFixup(d):
-    """ move old server.* files to and "unknown" machinename directory
-        Most of this is RHN Satellite 2.* and 3.* changes. Near the end
-        we get to 3.6 changes.
-    """
-
-    topdir = cleanupAbsPath(d['--dir'])
-
-    oldTree = '/etc/sysconfig/rhn/ssl'
-    if topdir != oldTree and os.path.exists(oldTree):
-        sys.stderr.write("""\
-WARNING: %s
-         still exists even though
-         %s
-         is the currently configured build tree. You may wish to either
-         (a) move %s to
-             %s, or
-         (b) point directly at the old tree by via the --dir option.
-""" % (oldTree, topdir, oldTree, topdir))
-        sys.stderr.write("Pausing for 5 secs")
-        for i in range(5):
-            sys.stderr.write("."); time.sleep(1)
-        sys.stderr.write("\n")
-
-    unknown = os.path.join(topdir, 'unknown')
-    server_rpm_name = os.path.basename(d.get('--server-rpm', ''))
-    serverKeyPairDir = None
-    if d.has_key('--set-hostname'):
-        serverKeyPairDir = os.path.join(d['--dir'],
-                                        getMachineName(d['--set-hostname']))
-
-    while os.path.exists(unknown):
-        # to avoid clashing with a possible "unknown" machinename
-        unknown = unknown + '_'
-
-    old_server_splat = os.path.join(topdir, 'server.')
-
-    moveMessage = ""
-    for ext in ('key', 'csr', 'crt'):
-        if os.path.exists(old_server_splat+ext):
-            gendir(unknown)
-            files = glob.glob(old_server_splat+ext+'*')
-            moved = []
-            for f in files:
-                # move the files to the "unknown" directory
-                new_server_splat = os.path.join(unknown, os.path.basename(f))
-                if not os.path.exists(new_server_splat):
-                    shutil.copy2(f, new_server_splat)
-                    os.unlink(f)
-                    moved.append(f)
-
-            #if files and verbosity:
-            if moved:
-                s = 'server.' + ext + '*'
-                moveMessage = moveMessage + (
-                  '  <BUILD_DIR>/%s --> <BUILD_DIR>/%s/%s\n'
-                  % (s, os.path.basename(unknown), s))
-
-    # move legacy server SSL RPMs. But if server_rpm_name is the same name
-    # as the target RPM name, then we move the RPMs into the appropriate
-    # machine name directory.
-    for name in [LEGACY_SERVER_RPM_NAME1, LEGACY_SERVER_RPM_NAME2]:
-        old_server_rpms = glob.glob(os.path.join(topdir, name+'-*-*.*.rpm'))
-        movedYN = 0
-        for old_rpm in old_server_rpms:
-            targetDir = unknown
-            if parseRPMFilename(old_rpm)[0] == server_rpm_name and serverKeyPairDir:
-                targetDir = serverKeyPairDir
-            gendir(targetDir)
-            # move the files to the targetDir directory
-            new_rpm = os.path.join(targetDir, os.path.basename(old_rpm))
-            if not os.path.exists(new_rpm):
-                shutil.copy2(old_rpm, new_rpm)
-                os.unlink(old_rpm)
-                movedYN = 1
-        if movedYN:
-            s = name+'-*-*.{noarch,src}.rpm'
-            moveMessage = moveMessage + """\
-  <BUILD_DIR>/%s
-      --> <BUILD_DIR>/%s/%s\n""" % (s, os.path.basename(targetDir), s)
-
-    # I move the first 100 .pem files I find
-    # if there is more than that... oh well
-    movedYN = 0
-    for i in range(100):
-        serial = fixSerial(hex(i))
-        oldPemPath = os.path.join(topdir, serial+'.pem')
-        newPemPath = os.path.join(unknown, serial+'.pem')
-        if os.path.exists(oldPemPath) and not os.path.exists(newPemPath):
-            gendir(unknown)
-            shutil.copy2(oldPemPath, newPemPath)
-            os.unlink(oldPemPath)
-            movedYN = 1
-    if movedYN:
-        moveMessage = moveMessage + (
-          '  <BUILD_DIR>/HEX*.pem --> <BUILD_DIR>/%s/HEX*.pem\n'
-          % os.path.basename(unknown))
-
-    if moveMessage:
-        sys.stdout.write('\nLegacy tree structured file(s) moved:\n%s'
-                         % moveMessage)
-
-    # move katello-httpd-ssl-MACHINENAME-VERSION.*.rpm files to the
-    # MACHINENAME directory! (an RHN 3.6.0 change)
-    rootFilename = pathJoin(topdir, 'katello-httpd-ssl-key-pair-')
-    filenames = glob.glob(rootFilename+'*')
-    for filename in filenames:
-        # note: assuming version-rel is of that form.
-        machinename = filename[len(rootFilename):]
-        machinename = string.join(string.split(machinename, '-')[:-2], '-')
-        serverKeySetDir = pathJoin(topdir, machinename)
-        gendir(serverKeySetDir)
-        fileto = pathJoin(serverKeySetDir, filename)
-        if os.path.exists(fileto):
-            rotateFile(filepath=fileto, verbosity=0)
-        shutil.copy2(filename, fileto)
-        os.unlink(filename)
-        print """\
-Moved (legacy tree cleanup):
-    %s
-    ...moved to...
-    %s""" % (filename, fileto)
-
 
 _workDirObj = None
 def _getWorkDir():
@@ -968,23 +843,6 @@ def genServerRpm(d, verbosity=0):
 
     if verbosity>=0:
         sys.stderr.write("\n...working...\n")
-    # check for old installed RPM.
-    oldHdr = getInstalledHeader(LEGACY_SERVER_RPM_NAME1)
-    if oldHdr and LEGACY_SERVER_RPM_NAME1 != server_rpm_name:
-        sys.stderr.write("""
-** NOTE ** older-styled RPM installed (%s),
-           it needs to be removed before installing the web server's RPM that
-           is about to generated.
-""" % LEGACY_SERVER_RPM_NAME1)
-
-    if not oldHdr:
-        oldHdr = getInstalledHeader(LEGACY_SERVER_RPM_NAME2)
-        if oldHdr and LEGACY_SERVER_RPM_NAME2 != server_rpm_name:
-            sys.stderr.write("""
-** NOTE ** older-styled RPM installed (%s),
-           it needs to be removed before installing the web server's RPM that
-           is about to generated.
-""" % LEGACY_SERVER_RPM_NAME2)
 
     # check for new installed RPM.
     # Work out the release number.
@@ -1152,8 +1010,6 @@ def _main():
     """ main routine """
 
     options = processCommandline()
-
-    legacyTreeFixup(DEFS)
 
     if getOption(options, 'gen_ca'):
         if getOption(options, 'key_only'):
