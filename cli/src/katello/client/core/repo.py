@@ -45,7 +45,7 @@ def format_sync_time(sync_time):
     if sync_time is None:
         return 'never'
     else:
-        return str(format_date(sync_time[0:19], '%Y-%m-%dT%H:%M:%S'))
+        return format_date(sync_time)
 
 def format_sync_state(state):
     return SYNC_STATES[state]
