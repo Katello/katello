@@ -2,4 +2,5 @@
   %thead
     %th #{_("Product")}
   %tbody
-    = render :partial=>"providers/redhat/product", :collection=>product_map, :as=>:prod
+  - unless product_map.empty?
+    = render :partial=>"providers/redhat/children", :collection=>product_map,:as =>:child
