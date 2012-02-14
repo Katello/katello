@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require_dependency 'resources/candlepin'
+require 'resources/cdn'
 
 module Glue::Provider
 
@@ -172,28 +173,31 @@ module Glue::Provider
 
     def import_products_from_cp
       product_existing_in_katello_ids = self.organization.library.products.all(:select => "cp_id").map(&:cp_id)
-      marketing_to_enginnering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
-        engineering_product_ids = engineering_product_ids.uniq
-        added_eng_products = (engineering_product_ids - product_existing_in_katello_ids).map do |id|
-          Candlepin::Product.get(id)[0]
-        end
-        added_eng_products.each do |product_attrs|
-          Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
-            p.provider = self
-            p.environments << self.organization.library
+      CDN::CdnVarSubstitutor.with_cache do
+        marketing_to_enginnering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
+          engineering_product_ids = engineering_product_ids.uniq
+          added_eng_products = (engineering_product_ids - product_existing_in_katello_ids).map do |id|
+            Candlepin::Product.get(id)[0]
           end
-        end
-        product_existing_in_katello_ids.concat(added_eng_products.map{|p| p["id"]})
+          added_eng_products.each do |product_attrs|
+            Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
+              p.provider = self
+              p.environments << self.organization.library
+            end
+          end
+          product_existing_in_katello_ids.concat(added_eng_products.map{|p| p["id"]})
 
-        unless product_existing_in_katello_ids.include?(marketing_product_id)
-          engineering_product_in_katello_ids = self.organization.library.products.where(:cp_id => engineering_product_ids).map(&:id)
-          Glue::Candlepin::Product.import_marketing_from_cp(Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
-            p.provider = self
-            p.environments << self.organization.library
+          unless product_existing_in_katello_ids.include?(marketing_product_id)
+            engineering_product_in_katello_ids = self.organization.library.products.where(:cp_id => engineering_product_ids).map(&:id)
+            Glue::Candlepin::Product.import_marketing_from_cp(Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
+              p.provider = self
+              p.environments << self.organization.library
+            end
+            product_existing_in_katello_ids << marketing_product_id
           end
-          product_existing_in_katello_ids << marketing_product_id
         end
       end
+      true
     end
 
     def destroy_products_orchestration
