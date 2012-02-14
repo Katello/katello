@@ -29,7 +29,7 @@ describe Product do
     @substitutor_mock = CDN::CdnVarSubstitutor.new("https://cdn.redhat.com", {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123"})
     @substitutor_mock.stub!(:precalculate).and_return do |paths|
       # we pretend, that all paths are substituted to themseves
-      @substitutor_mock.instance_variable_set("@precalculated_substitutions", Hash.new {|h,k| {{} => k} })
+      @substitutor_mock.instance_variable_set("@substitutions", Hash.new {|h,k| {{} => k} })
     end
 
     CDN::CdnVarSubstitutor.stub(:new => @substitutor_mock)
@@ -242,6 +242,7 @@ describe Product do
           @substitutor_mock.stub!(:precalculate).and_return do |paths|
             ret = {}
             paths.each do |path|
+              path = path[/^.*\$\w+/]
               path_substitutions = {}
               [ {"releasever" => "6Server", "basearch" => "x86_64"},
                 {"releasever" => "6.0", "basearch" => "x86_64"},
@@ -250,7 +251,7 @@ describe Product do
               end
               ret[path] = path_substitutions
             end
-            @substitutor_mock.instance_variable_set("@precalculated_substitutions", ret)
+            @substitutor_mock.instance_variable_set("@substitutions", ret)
           end
           env_product = mock_model(EnvironmentProduct, {:id => 1})
           EnvironmentProduct.stub(:find_or_create).and_return(env_product)
