@@ -497,8 +497,7 @@ module Glue::Pulp::Repo
       history = Pulp::Repository.sync_history(pulp_id)
     end
     return [::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)] if (history.nil? or history.empty?)
-    statuses = history.sort_by{ |item| item[:finish_time] }.reverse
-    statuses.collect{|item| ::PulpSyncStatus.using_pulp_task(item)}
+    history.collect{|item| ::PulpSyncStatus.using_pulp_task(item)}
   end
 
   private
