@@ -62,11 +62,12 @@ class SyncPlan < ActiveRecord::Base
   end
 
   def schedule_format
-    format = Time.parse(self.sync_date.to_s).iso8601
     if self.interval != NONE
-      format << "/P" << DURATION[self.interval]
+      format = self.sync_date.iso8601 << "/P" << DURATION[self.interval]
     else
-      format = "R1/" << format << "/P1D"
+      #workaround for Pulp scheduling the sync after a repeat period:
+      #move the start time 1 day earlier
+      format = "R1/" << self.sync_date.ago(24*3600).iso8601 << "/P1D"
     end
     return format
   end
