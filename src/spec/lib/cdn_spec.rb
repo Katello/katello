@@ -69,6 +69,26 @@ describe CDN::CdnVarSubstitutor do
     lambda { subject.substitute_vars(path_with_variables) }.should raise_error RestClient::Forbidden
   end
 
+  it "it should be able to cache the resolved paths" do
+    stub_successful_cdn_requests(["6","61"],["i386", "x86_64"])
+
+    @net_mock.should_receive(:start).exactly(3).times
+    CDN::CdnVarSubstitutor.with_cache do
+      CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
+      CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
+    end
+  end
+
+  it "it should cache the resolved paths only in with_cache block" do
+    stub_successful_cdn_requests(["6","61"],["i386", "x86_64"])
+
+    @net_mock.should_receive(:start).exactly(6).times
+    CDN::CdnVarSubstitutor.with_cache do
+      CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
+    end
+    CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
+  end
+
 
   # all requests for listing releasevers and basearchs reeturn the values in
   # arguments.
@@ -93,11 +113,11 @@ describe CDN::CdnVarSubstitutor do
 
   def stub_cdn_requests(&block)
     uri = URI.parse(provider_url)
-    net_mock = Net::HTTP.new(uri.host, uri.port)
-    Net::HTTP.stub(:new).with(uri.host, uri.port).and_return(net_mock)
+    @net_mock = Net::HTTP.new(uri.host, uri.port)
+    Net::HTTP.stub(:new).with(uri.host, uri.port).and_return(@net_mock)
     request_mock = mock
     request_mock.stub!(:request).and_return(&block)
-    net_mock.stub(:start).and_yield(request_mock)
+    @net_mock.stub(:start).and_yield(request_mock)
   end
 
 end
