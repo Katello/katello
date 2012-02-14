@@ -19,6 +19,7 @@ import sys
 import time
 import threading
 import calendar
+from xml.utils import iso8601
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 
 
@@ -384,16 +385,15 @@ def get_abs_path(path):
     return path
 
 
-def format_date(date, from_format="%Y-%m-%dT%H:%M:%SZ", to_format="%Y/%m/%d %H:%M:%S"):
+def format_date(date, to_format="%Y/%m/%d %H:%M:%S"):
     """
     Format standard rails timestamp to more human readable format
     @type date: string
     @param date: arguments for the function
     @return string, formatted date
     """
-    t = time.strptime(date, from_format)
-    lt = calendar.timegm(t)
-    return time.strftime(to_format, time.localtime(lt))
+    t = iso8601.parse(date)
+    return time.strftime(to_format, time.localtime(t))
 
 
 
