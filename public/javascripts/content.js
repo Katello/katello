@@ -210,7 +210,8 @@ KT.content = (function(){
         update_item = function(element, starttime, duration, progress, size, packages) {
 
             fadeUpdate(element.find(".start_time"), starttime);
-            fadeUpdate(element.find(".duration"), duration);
+            // clear duration during active sync
+            fadeUpdate(element.find(".duration"), '');
             fadeUpdate(element.find(".size"), size + ' (' + packages + ')');
             var pg = element.find(".progress");
             if (progress === 100) { 
