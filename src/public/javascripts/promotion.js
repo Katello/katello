@@ -256,10 +256,16 @@ var promotion_page = (function($){
         },
         modify_changeset = function(id, display, type, product_id) {
             var i = 0,
+                length;
+            
+            if( KT.utils.isArray(product_id) ){
                 length = product_id.length;
 
-            for(i = 0; i < length; i += 1){
-                process_changeset_modification(id, display, type, product_id[i]);                
+                for(i = 0; i < length; i += 1){
+                    process_changeset_modification(id, display, type, product_id[i]);
+                }
+            } else {
+                process_changeset_modification(id, display, type, product_id);
             }
         },
         process_changeset_modification = function(id, display, type, product_id){
