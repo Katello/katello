@@ -274,7 +274,7 @@ module Pulp
         response = get(path, self.default_headers)
         parsed = JSON.parse(response.body)
         return parsed if parsed.empty?
-        return parsed.with_indifferent_access
+        return parsed.first.with_indifferent_access
       end
 
       def destroy repo_id
