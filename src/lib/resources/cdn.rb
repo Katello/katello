@@ -130,13 +130,20 @@ module CDN
       @url = url
       @options = options
       @resource = CdnResource.new(@url, @options)
+      @substitutions = Thread.current[:cdn_var_substitutor_cache] || {}
+    end
+
+    def self.with_cache(&block)
+      Thread.current[:cdn_var_substitutor_cache] = {}
+      yield
+    ensure
+      Thread.current[:cdn_var_substitutor_cache] = nil
     end
 
     # precalcuclate all paths at once - let's you discover errors and stop
     # before it causes more pain
     def precalculate(paths_with_vars)
-      @precalculated_substitutions = nil
-      @precalculated_substitutions = paths_with_vars.uniq.reduce({}) do |ret, path_with_vars|
+      paths_with_vars.uniq.reduce({}) do |ret, path_with_vars|
         ret[path_with_vars] = substitute_vars(path_with_vars); ret
       end
     end
@@ -149,23 +156,45 @@ module CDN
   #
   # values are loaded from CDN
     def substitute_vars(path_with_vars)
-      return @precalculated_substitutions[path_with_vars] if @precalculated_substitutions
-      paths_with_vars    = { {} => path_with_vars}
-      paths_without_vars = {}
-
-      while not paths_with_vars.empty?
-        substitutions, path = paths_with_vars.shift
-
-        if is_substituable path
-          for_each_substitute_of_next_var substitutions, path do |new_substitution, new_path|
-            paths_with_vars[new_substitution] = new_path
-          end
-        else
-          paths_without_vars[substitutions] = path
-        end
+      if path_with_vars =~ /^(.*\$\w+)(.*)$/
+        prefix_with_vars, suffix_witout_vars =  $1, $2
+      else
+        prefix_with_vars, suffix_witout_vars = "", path_with_vars
       end
 
+      prefixes_without_vars = substitute_vars_in_prefix(prefix_with_vars)
+      paths_without_vars = prefixes_without_vars.reduce({}) do |h, (substitutions, prefix_without_vars)|
+        h[substitutions] = prefix_without_vars + suffix_witout_vars; h
+      end
       return paths_without_vars
+    end
+
+    # prefix_with_vars is the part of url containing some vars. We can cache
+    # calcualted values for this parts. So for example for:
+    #   "/a/$b/$c/d"
+    #   "/a/$b/$c/e"
+    # prefix_with_vars is "/a/$b/$c" and we store the result after resolving
+    # for the first path.
+    def substitute_vars_in_prefix(prefix_with_vars)
+      paths_with_vars = { {} => prefix_with_vars}
+      prefixes_without_vars = @substitutions[prefix_with_vars]
+
+      unless prefixes_without_vars
+        prefixes_without_vars = {}
+        while not paths_with_vars.empty?
+          substitutions, path = paths_with_vars.shift
+
+          if is_substituable path
+            for_each_substitute_of_next_var substitutions, path do |new_substitution, new_path|
+              paths_with_vars[new_substitution] = new_path
+            end
+          else
+            prefixes_without_vars[substitutions] = path
+          end
+        end
+        @substitutions[prefix_with_vars] = prefixes_without_vars
+      end
+      return prefixes_without_vars
     end
 
     def is_substituable path
