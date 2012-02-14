@@ -46,7 +46,6 @@ def format_sync_time(sync_time):
         return 'never'
     else:
         return str(format_date(sync_time[0:19], '%Y-%m-%dT%H:%M:%S'))
-        #'2011-07-11T15:03:52+02:00
 
 def format_sync_state(state):
     return SYNC_STATES[state]
@@ -290,6 +289,9 @@ class Status(SingleRepoAction):
 
         repo['last_sync'] = format_sync_time(repo['last_sync'])
         repo['sync_state'] = format_sync_state(repo['sync_state'])
+        if 'next_scheduled_sync' in repo:
+            repo['next_scheduled_sync'] = format_sync_time(repo['next_scheduled_sync'])
+
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
@@ -302,6 +304,8 @@ class Status(SingleRepoAction):
         self.printer.addColumn('package_count')
         self.printer.addColumn('last_sync')
         self.printer.addColumn('sync_state')
+        if 'next_scheduled_sync' in repo:
+            self.printer.addColumn('next_scheduled_sync')
         self.printer.addColumn('progress', show_in_grep=False)
         self.printer.addColumn('last_errors', multiline=True, show_in_grep=False)
 
