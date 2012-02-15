@@ -127,6 +127,7 @@ var sliding_tree = function(tree_id, options) {
                            oldPanel.addClass("no_content");
                            newPanel.addClass("has_content");
                            newPanel.removeClass("no_content");
+                            $(document).trigger('tab_change_complete.slidingtree');
                        });
                 } else {
                        list.css({'left': -width});
@@ -138,6 +139,8 @@ var sliding_tree = function(tree_id, options) {
                            oldPanel.addClass("no_content");
                            newPanel.addClass("has_content");
                            newPanel.removeClass("no_content");
+            
+                            $(document).trigger('tab_change_complete.slidingtree');
                        });
                 }
     
