@@ -423,7 +423,6 @@ module TemplateContentBreadcrumb
   end
 
   def product_bc_id product
-    Rails.logger.error("Should not be called")
     "product_#{product.id}"
   end
 
