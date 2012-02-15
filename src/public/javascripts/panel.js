@@ -226,7 +226,7 @@ KT.panel = (function ($) {
                         "z-index": "200"
                     });
                     thisPanel.parent().css({
-                        "z-index": "1"
+                        "z-index": "20"
                     });
                     thisPanel.animate({
                         left: (panelLeft) + "px",
@@ -250,7 +250,7 @@ KT.panel = (function ($) {
                         "z-index": "200"
                     });
                     thisPanel.parent().css({
-                        "z-index": "1"
+                        "z-index": "20"
                     });
                     thisPanel.addClass('opened').attr('data-id', activeBlockId);
                     $("#" + previousBlockId).removeClass('active');
