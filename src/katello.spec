@@ -354,6 +354,24 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Feb 15 2012 Jordan OMara <jomara@redhat.com> 0.1.238-2
+- 788599 - Brad Buckingham - Unable to select a distribution on a system template
+- 765806 - Partha Aji - Improve error message related to incorrect login
+- 787796 - Partha Aji - Slow performance on Red Hat Provider page
+- 786520 - Shannon Hughes - Sync: 'Duration' column should be cleared when new sync takes place.
+- 790502 - Eric Helms - Templates cannot be added to change set in UI
+- 786762 - Shannon Hughes - Re-running the cancelled sync on completion, should change the status from 'cancelled" to 'sync complete'
+- 782518 - Brad Buckingham - Search history - not working properly
+- 786179 - Brad Buckingham - Notifications: "Delete All" does not actually delete ALL.
+- 754914 - Eric Helms - Repo name should not be 'undefined' adjacent to "remove" on right pane of package filters
+- 767083 - Eric Helms - pkg filters: Nothing happens on UI when user selects repo without selecting the product first
+- 788213 - Eric Helms - Promotions: "Filelist" and "Changelog" subtabs populated with bogus/stub data.
+- 790487 - Jason E. Rist - Fix the width of the promotion changeset new button
+- 790355 - Katello Internal Mailing List - Error when promoting a repo with errata when another repo with that errata was removed
+- 789155 - Brad Buckingham - Cannot add repo to template if repo name as a minus character in it
+- 788657 - Tom McKay - load time of Systems/Subscriptions tab takes too long for large number of products
+- 755001 - Jason E. Rist - changesets with "+" in the name showing up incorrectly in notifications.
+- 790342 - Lukáš Zapletal - Error in async task is not returned
 * Wed Feb 15 2012 Mike McCune <mmccune@redhat.com> 0.1.238-1
 - rebuild
 
