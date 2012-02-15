@@ -321,7 +321,7 @@ module Candlepin
 
       def create owner_id, id, name, description
         attrs = {:id => id, :name => name, :description => description}
-        path = "/candlepin/owners/#{url_encode(owner_id)}/environments"
+        path = "/candlepin/owners/#{owner_id}/environments"
         environment_json = self.post(path, attrs.to_json, self.default_headers).body
         JSON.parse(environment_json).with_indifferent_access
       end
@@ -331,7 +331,7 @@ module Candlepin
       end
 
       def path(id)
-        "/candlepin/environments/#{url_encode id}"
+        "/candlepin/environments/#{id}"
       end
 
       def add_content(env_id, content_ids)
