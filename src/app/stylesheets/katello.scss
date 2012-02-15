@@ -897,12 +897,16 @@ footer {
 }
 
 #panel-frame {
-  position:absolute;
+  position: fixed;
   max-width:700px;
   z-index: -1;
   
   .tupane_footer {
     margin: 5px 0;
+    overflow: auto;
+  }
+  .tupane_header {
+    overflow: auto;
   }
 }
 .panel {
