@@ -1,0 +1,70 @@
+#!/usr/bin/ruby
+# Manifest cat - prints useful information about manifest ZIP import
+#
+# yum -y install unzip rubygem-json
+#
+
+require 'rubygems'
+require 'json'
+
+if ARGV.size == 0
+  puts "Usage: #{$0} manifest.zip"
+  exit 1
+end
+
+manifest=ARGV[0]
+
+unless File.exist? manifest
+  puts "Unable to read file #{manifest}"
+  exit 2
+end
+
+tmpdir=`mktemp -d`.chomp
+
+`unzip #{manifest} -d #{tmpdir}`
+`unzip #{tmpdir}/consumer_export.zip -d #{tmpdir}`
+
+# Grab Consumer Data
+File.open("#{tmpdir}/export/consumer.json", 'r') do |file_json|
+  c = JSON.parse(file_json.readlines.to_s)
+  puts "Consumer UUID:  #{c['uuid']}"
+end
+
+# Grab Meta data about the export
+File.open("#{tmpdir}/export/meta.json", 'r') do |file_json|
+  m = JSON.parse(file_json.readlines.to_s)
+  puts "Export Version: #{m['version']}"
+  puts "Creation Date:  #{m['created']}"
+end
+
+# Grab the products
+Dir.glob("#{tmpdir}/export/products/*.json").each do |file|
+  File.open(file, 'r') do |file_json|
+    p = JSON.parse(file_json.readlines.to_s)
+    puts "Product: #{p['name']} (#{p['id']})"
+  end
+end
+
+# Grab the entitlements
+Dir.glob("#{tmpdir}/export/entitlements/*.json").each do |file|
+  File.open(file, 'r') do |file_json|
+    e = JSON.parse(file_json.readlines.to_s)
+    puts "Entitlement (#{e['pool']['id']}):"
+    puts " Product: #{e['pool']['productName']} (#{e['pool']['productId']})"
+    puts " Pool Id: #{e['pool']['id']}"
+    puts " Quantity: #{e['pool']['quantity']}"
+    puts " Contract: #{e['pool']['contractNumber']}"
+    puts " Account: #{e['pool']['accountNumber']}"
+    puts " Ends: #{e['pool']['endDate']}"
+  end
+end
+
+# Grab the consumer types
+Dir.glob("#{tmpdir}/export/consumer_types/*.json").each do |file|
+  File.open(file, 'r') do |file_json|
+    c = JSON.parse(file_json.readlines.to_s)
+    puts "Consumer Type: #{c['label']} (#{c['id']})"
+  end
+end
+
+`rm -rf #{tmpdir}`

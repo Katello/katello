@@ -1,0 +1,57 @@
+<% config = YAML.load_file('/etc/katello/katello.yml') rescue nil
+  def find_db(config, env)
+    db = nil
+    if config
+      if config[env] && config[env]['database']
+        db = config[env]['database']
+      elsif config['common'] && config['common']['database']
+        db = config['common']['database']
+      end
+    end
+    return db.collect {|k,v| "  #{k}: #{v}"}.sort.join("\n") if db
+    nil
+  end
+%>
+
+
+development:
+  <%db = find_db(config, 'development')%>
+  <%if db %>
+<%=db%>
+  <%else%>
+  adapter: postgresql
+  username: katello
+  password: katello
+  database: katello
+  host: localhost
+  encoding: UTF8
+  <%end%>
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <%db = find_db(config, 'test')%>
+  <%if db %>
+<%=db%>
+  <%else%>
+  adapter: postgresql
+  username: katello
+  password: katello
+  database: katello_test
+  host: localhost
+  encoding: UTF8
+  <%end%>
+
+production:
+  <%db = find_db(config, 'production')%>
+  <%if db %>
+<%=db%>
+  <%else%>
+  adapter: postgresql
+  username: katello
+  password: katello
+  database: katello_production
+  host: localhost
+  encoding: UTF8
+  <%end%>

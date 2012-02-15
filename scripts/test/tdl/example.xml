@@ -1,0 +1,21 @@
+<template>
+  <name>test</name>
+  <os>
+    <name>Fedora</name>
+    <version>13</version>
+    <arch>x86_64</arch>
+    <install type='url'>
+      <url>http://example.org/fedora-13/os/</url>
+    </install>
+  </os>
+  <description>Fedora 14 x86_64 with postgres</description>
+  <packages>
+    <package name="@PostgreSQL Database"/>
+    <package name="zsh"/>
+  </packages>
+  <repositories>
+    <repository name="zoo">
+      <url>http://lzap.fedorapeople.org/fakerepos/zoo/</url>
+    </repository>
+  </repositories>
+</template>

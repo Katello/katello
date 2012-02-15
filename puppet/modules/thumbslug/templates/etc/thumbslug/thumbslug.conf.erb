@@ -1,0 +1,3 @@
+ssl.keystore = <%= scope.lookupvar("thumbslug::params::keystore") %>
+ssl.keystore.password = <%= scope.lookupvar("thumbslug::params::keystore_pass") %>
+candlepin.oauth.secret = <%= scope.lookupvar("thumbslug::params::oauth_secret") %>

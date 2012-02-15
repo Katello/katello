@@ -1,0 +1,2 @@
+db.getCollectionNames();
+db.dropDatabase();
