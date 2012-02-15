@@ -19,7 +19,6 @@ class DashboardController < ApplicationController
 
 
   def index
-    notice "lalalal", :details => "Details are here..."
   end
 
   def section_id
