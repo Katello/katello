@@ -183,9 +183,8 @@ module Glue::Pulp::Repo
     self.clone_response = [Pulp::Repository.clone_repo(clone_from, self, "parent", cloned_filters)]
   end
 
-  def populate_from list
-    found = list.find{|repo|
-      repo["id"] == self.pulp_id}
+  def populate_from repos_map
+    found = repos_map[self.pulp_id]
     prepopulate(found) if found
     !found.nil?
   end

@@ -64,7 +64,7 @@ class SystemTemplatesController < ApplicationController
 
       prod.repos(current_organization.library).each{|repo|
         distros = repo.distributions
-        repo_distro_map[repo.id] = distros unless distros.empty?
+        repo_distro_map[repo.id] = distros
       }
     }
 

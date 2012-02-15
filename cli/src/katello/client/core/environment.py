@@ -71,7 +71,7 @@ class List(EnvironmentAction):
 
 class Info(EnvironmentAction):
 
-    description = _('list a specific envrionment')
+    description = _('list a specific environment')
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',

@@ -15,7 +15,7 @@ module Katello
 
     SUFFIX_RE = /\.(rpm)$/
     EPOCH_RE = /([0-9]+):/
-    NVREA_RE = /^(?:([0-9]+):)?([^-]+)-([^-]+)-(.+)[.]([^.]+)?$/
+    NVREA_RE = /^(?:([0-9]+):)?([^.]+)-([^-]+)-(.+)[.]([^.]+)?$/
     SUPPORTED_ARCHS = %w[noarch i386 i686 ppc64 s390x x86_64 ia64]
 
     #parses package nvrea and stores it in a hash

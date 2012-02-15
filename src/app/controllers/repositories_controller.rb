@@ -110,12 +110,13 @@ class RepositoriesController < ApplicationController
 
   def auto_complete_library
     # retrieve and return a list (array) of repo names in library that contain the 'term' that was passed in
-    name = 'name:' + params[:term] + '*'
+    name = 'name:' + params[:term]
+    name_query = name + ' OR ' + name + '*'
     ids = Repository.readable(current_organization.library).collect{|r| r.id}
     repos = Repository.search do
-      query {string name}
+      query {string name_query}
       filter "and", [
-          {:terms => {:environment_id => ids}},
+          {:terms => {:id => ids}},
           {:terms => {:enabled => [true]}}
       ]
     end

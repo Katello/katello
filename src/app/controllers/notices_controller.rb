@@ -93,13 +93,13 @@ class NoticesController < ApplicationController
       for notice in current_user.notices
         notice.users.delete(current_user)
         notice.destroy unless notice.users.any?
-      end    
+      end
+      render :partial => "delete_all"
 
     rescue Exception => error
       notice error.to_s, {:level => :error}
+      render :text => error, :status => :bad_request
     end
-
-    redirect_to :action => "show"
   end
 
   private
