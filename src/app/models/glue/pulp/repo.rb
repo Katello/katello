@@ -30,7 +30,7 @@ module Glue::Pulp::Repo
                       end
                     }
       lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source, :package_count,
-                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type,
+                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type, :uri,
                 :initializer => lambda {
                   if pulp_id
                       pulp_repo_facts
@@ -221,16 +221,6 @@ module Glue::Pulp::Repo
   def destroy_repo_orchestration
     pre_queue.create(:name => "remove product content : #{self.name}", :priority => 1, :action => [self, :del_content])
     pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 2, :action => [self, :destroy_repo])
-  end
-
-  # TODO: remove after pulp >= 0.0.401 get's released. There is this attribute
-  # directly in the repo API
-  def uri
-    if repo_base_path = AppConfig.pulp.url[/^(.*)api$/,1]
-      return "#{repo_base_path}repos/#{self.relative_path}"
-    else
-      raise "We expect #{AppConfig.pulp.url} to end with 'api' suffix"
-    end
   end
 
   def get_params
