@@ -313,6 +313,7 @@ describe Product do
 
     before(:each) do
       disable_product_orchestration
+      disable_repo_orchestration
       disable_filter_orchestration
 
       @environment1 = KTEnvironment.create!(:name => 'dev', :library => false, :prior => @organization.library, :organization => @organization)
@@ -408,6 +409,7 @@ describe Product do
   describe "product permission tests" do
     before (:each) do
       disable_product_orchestration
+      disable_repo_orchestration
 
       User.current = superadmin
       @product = Product.new({:name => "prod"})
@@ -450,6 +452,8 @@ describe Product do
   describe "product reset repo gpgs test" do
     before do
       disable_product_orchestration
+      disable_repo_orchestration
+
       suffix = (rand 10 **6).to_s
       @gpg = GpgKey.create!(:name =>"GPG", :organization=>@organization, :content=>"bar")
       @provider = Provider.create!({:organization =>@organization, :name => 'provider' + suffix,
