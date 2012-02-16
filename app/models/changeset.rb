@@ -277,6 +277,8 @@ class Changeset < ActiveRecord::Base
     PulpTaskStatus::wait_for_tasks promote_templates(from_env, to_env)
     update_progress! '50'
     PulpTaskStatus::wait_for_tasks promote_repos(from_env, to_env)
+    update_progress! '70'
+    to_env.update_cp_content
     update_progress! '80'
     promote_packages from_env, to_env
     update_progress! '90'

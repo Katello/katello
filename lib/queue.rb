@@ -17,13 +17,19 @@ class Queue
   attr_reader :items
   STATUS = %w[ pending running failed completed rollbacked ]
 
-  def initialize
+  # we can put more queues sequentially. E.g. on queue before saving a record,
+  # another after saving. If something in later queue fails we roll-back also
+  # everything in previous queues.
+  def initialize(previous_queue = nil)
+    @previous_queue = previous_queue
     @items = []
   end
 
   def create options
     options[:status] ||= default_status
-    items << Task.new(options)
+    item = Task.new(options)
+    items << item
+    item
   end
 
   def delete item
@@ -35,7 +41,10 @@ class Queue
   end
 
   def all
-    items.sort
+    ret = []
+    ret.concat(@previous_queue.all) if @previous_queue
+    ret.concat(items.sort)
+    ret
   end
 
   def count
@@ -52,7 +61,7 @@ class Queue
 
   STATUS.each do |s|
     define_method s do
-      all.delete_if {|t| t.status != s}.sort
+      all.find_all {|t| t.status == s}
     end
   end
 

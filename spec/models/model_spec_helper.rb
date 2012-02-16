@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'helpers/repo_test_data'
+
 module OrchestrationHelper
 
   CERT = <<EOCERT
@@ -103,6 +105,14 @@ EOKEY
     Candlepin::Owner.stub!(:create_user).and_return(true)
     Candlepin::Owner.stub!(:destroy)
     Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => CERT, :key => KEY })
+    disable_env_orchestration # env is orchestrated with org - we disable this as well
+  end
+
+  def disable_env_orchestration
+    Candlepin::Environment.stub!(:create).and_return({})
+    Candlepin::Environment.stub!(:destroy).and_return({})
+    Candlepin::Environment.stub!(:find).and_return({:environmentContent => []})
+    Candlepin::Environment.stub!(:add_content).and_return({})
   end
 
   def disable_user_orchestration
@@ -120,6 +130,7 @@ EOKEY
 
   def disable_repo_orchestration
     Pulp::Repository.stub(:sync_history).and_return([])
+    Pulp::Task.stub!(:destroy).and_return({})
 
     Pulp::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
     Pulp::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)

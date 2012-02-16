@@ -355,6 +355,12 @@ describe Changeset do
         @changeset.promote(false)
       end
 
+      it "should update env content" do
+        @changeset.state = Changeset::REVIEW
+        @environment.should_receive(:update_cp_content)
+        @changeset.promote(false)
+      end
+
       it "should promote packages" do
         @prod.environments << @environment
         @changeset.packages << ChangesetPackage.new(:package_id => @pack.id, :display_name => @pack.name, :product_id => @prod.id, :changeset => @changeset)
