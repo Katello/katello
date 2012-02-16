@@ -3,7 +3,7 @@
 
 Name:           katello-configure
 Version:        0.1.64
-Release:        1%{?dist}
+Release:        5%{?dist}
 Summary:        Configuration tool for Katello
 
 Group:          Applications/Internet
@@ -56,6 +56,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Thu Feb 16 2012 Mike McCune <mmccune@redhat.com> 0.1.64-5
+- 773088 - reconfiguring the threading for pulp syncs
+
+* Thu Feb 16 2012 Mike McCune <mmccune@redhat.com>
+- 773088 - reconfiguring the threading for pulp syncs
 * Fri Feb 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.64-1
 - 789290 - fixing progress bars with new puppet
 - 789290 - updating log file sizes
