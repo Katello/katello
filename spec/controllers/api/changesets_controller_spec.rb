@@ -37,6 +37,7 @@ describe Api::ChangesetsController do
     @changeset.stub(:save!)
     @changeset.stub(:async).and_return(@changeset)
     @changeset.stub(:promote)
+    @changeset.stub(:to_json => "") # to avoid memory leaking
     Changeset.stub(:find).and_return(@changeset)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
