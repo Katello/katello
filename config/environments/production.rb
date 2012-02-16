@@ -11,7 +11,7 @@ Src::Application.configure do
           4 => "FATAL"
         }[severity] || "UNKNOWN"
         message = "[%s: %s #%d] %s" % [status,
-                                       Time.now.strftime("%m%d %H:%M:%S"),
+                                       Time.now.strftime("%Y-%m-%d %H:%M:%S"),
                                        $$,
                                        message]
         super(severity, message)
