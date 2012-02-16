@@ -1,4 +1,24 @@
 Src::Application.configure do
+  class KatelloLogger < ActiveSupport::BufferedLogger
+    def add(severity, message = nil, progname = nil, &block)
+      unless level > severity
+        message = (message || (block && block.call) || progname).to_s
+        status = {
+          0 => "DEBUG",
+          1 => "INFO",
+          2 => "WARN",
+          3 => "ERROR",
+          4 => "FATAL"
+        }[severity] || "UNKNOWN"
+        message = "[%s: %s #%d] %s" % [status,
+                                       Time.now.strftime("%m%d %H:%M:%S"),
+                                       $$,
+                                       message]
+        super(severity, message)
+      end
+    end
+  end
+
   # Settings specified here will take precedence over those in config/environment.rb
 
   # The production environment is meant for finished, "live" apps.
@@ -26,6 +46,9 @@ Src::Application.configure do
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
 
+  prod_logger = KatelloLogger.new("#{Rails.root}/log/production.log", 2)
+  prod_logger.auto_flushing = 1
+  config.logger = prod_logger
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store
 
