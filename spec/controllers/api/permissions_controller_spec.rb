@@ -86,7 +86,6 @@ describe Api::PermissionsController do
     end
 
     it 'should create a permission' do
-        #TODO: enhance!!!
         @resource_type = ResourceType.new(:name => resource_type)
         ResourceType.should_receive(:find_or_create_by_name).with(resource_type).and_return(@resource_type)
 
