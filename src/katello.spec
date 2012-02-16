@@ -17,7 +17,7 @@
 
 Name:           katello
 Version:        0.1.238
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -354,6 +354,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Feb 16 2012 Mike McCune <mmccune@redhat.com> 0.1.238-3
+- rebuild
 * Wed Feb 15 2012 Mike McCune <mmccune@redhat.com> 0.1.238-1
 - rebuild
 * Tue Feb 14 2012 Mike McCune <mmccune@redhat.com> 0.1.237-1
