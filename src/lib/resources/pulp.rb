@@ -300,7 +300,7 @@ module Pulp
       end
 
       def packages_by_nvre repo_id, name, version, release, epoch
-        #TODO: switch to https://fedorahosted.org/pulp/wiki/UGREST-Repositories#GetPackageByNVREA
+        #TODO: switch to https://fedorahosted.org/pulp/wiki/UGREST-Repositories#GetPackageByNVREA after bug 790909 gets fixed in Pulp
         path = repository_path + repo_id + "/packages/?name=^" + name +"$"
         path += "&release=" + release if not release.nil?
         path += "&version=" + version if not version.nil?
