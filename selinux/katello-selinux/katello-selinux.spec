@@ -48,7 +48,7 @@ Requires:       selinux-policy >= 2.4.6-80
 %endif
 Requires(post):   /usr/sbin/semodule, /sbin/restorecon, /usr/sbin/setsebool, /usr/sbin/selinuxenabled
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon
-Requires:       %{modulename}
+Requires:       %{modulename}-common
 
 %description
 SELinux policy module supporting Katello.
