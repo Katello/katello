@@ -15,7 +15,7 @@ class SubscriptionsController < ApplicationController
 
   def rules
     {
-      :index => lambda{current_organization.readable?}
+      :index => lambda{current_organization && current_organization.readable?}
     }
   end
 

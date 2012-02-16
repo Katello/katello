@@ -63,6 +63,7 @@ describe NoticesController do
 
   describe "deleting notices" do
     before (:each) do
+      controller.stub!(:render)
       10.times{|a| Notice.create!(:text=>"bar#{a}", :level=>:success, :user_notices=>[UserNotice.new(:user => @user)])}
     end
 
@@ -70,7 +71,7 @@ describe NoticesController do
       UserNotice.count.should == 10
       Notice.count.should == 10
       delete :destroy_all
-      response.should be_redirect
+      response.should be_success
       Notice.count.should == 0
       UserNotice.count.should == 0
     end 

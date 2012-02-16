@@ -316,19 +316,20 @@ KT.filter_renderer = (function(){
         return message;
     },
     repo_template = function(prod_id, repo_id, editable) {
-        var name;
-        var html = '';
-        $.each(KT.products[prod_id].repos, function(index, repo){
-            if(repo.id === repo_id){
-                name = repo.name;
-                return false;
-            }
+        var name, repo,
+            html = '';
+
+        repo = KT.utils.find(KT.products[prod_id].repos, function(repo){
+            return repo.id.toString() === repo_id;
         });
+
         html += '<div class="repo" data-id="'  + repo_id + '">';
-        html += name;
+        html += repo.name;
+
         if (editable){
             html += '<a class="remove_repo"> &nbsp;' + i18n.remove + '</a>';
         }
+
         html += '</div>';
         return html;
     },
@@ -584,9 +585,10 @@ KT.filters = (function(){
     },
     lookup_repo_product = function(repo_id){
       var found = undefined;
+
       $.each(KT.products, function(index, prod){
         $.each(prod.repos, function(index, repo){
-           if (repo.id === repo_id){
+           if (repo.id.toString() === repo_id){
                found = prod.id;
                return false;
            }

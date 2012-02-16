@@ -314,7 +314,9 @@ describe Changeset, :katello => true do
         @prod.stub_chain(:repos, :where).and_return([@repo])
 
         @clone.stub(:index_packages).and_return()
+        @clone.stub(:index_errata).and_return()
         @repo.stub(:index_packages).and_return()
+        @repo.stub(:index_errata).and_return()
 
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
@@ -322,6 +324,7 @@ describe Changeset, :katello => true do
         @changeset.stub(:calc_dependencies).and_return([])
 
         Glue::Pulp::Package.stub(:index_packages).and_return(true)
+        Glue::Pulp::Errata.stub(:index_errata).and_return(true)
 
       end
 
@@ -334,6 +337,7 @@ describe Changeset, :katello => true do
         @changeset.state = Changeset::REVIEW
 
         @prod.should_receive(:promote).once
+        @changeset.should_receive(:index_repo_content).once
 
         @changeset.promote(false)
       end
@@ -346,17 +350,7 @@ describe Changeset, :katello => true do
         @repo.stub(:get_clone).and_return(nil)
         @changeset.stub(:repos).and_return([@repo])
         @repo.should_receive(:promote).once
-
-        @changeset.promote(false)
-      end
-
-      it "should synchronize repositories that have been promoted" do
-        @prod.environments << @environment
-        @changeset.state = Changeset::REVIEW
-        @changeset.stub(:repos).and_return([@repo])
-        @repo.stub(:is_cloned_in?).and_return(true)
-        @repo.stub(:get_clone).and_return(@clone)
-        @clone.should_receive(:sync).once.and_return([])
+        @changeset.should_receive(:index_repo_content).once
 
         @changeset.promote(false)
       end

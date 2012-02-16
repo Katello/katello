@@ -327,6 +327,8 @@ class SystemTask < ActiveRecord::Base
     else
       errors
     end
+  rescue
+    task_status.result[:errors].join(' ').to_s
   end
 
   def as_json(*args)

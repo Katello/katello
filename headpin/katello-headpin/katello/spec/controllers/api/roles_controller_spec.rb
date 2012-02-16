@@ -46,7 +46,7 @@ describe Api::RolesController do
     it 'should find all roles' do
       Role.should_receive(:readable).and_return(Role)
       Role.should_receive(:non_self).once.and_return(Role)
-      Role.should_receive(:where).once.and_return(Role)
+      Role.should_receive(:where).once.and_return([@role])
       req
     end
   end

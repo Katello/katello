@@ -1,9 +1,13 @@
-- collection.each do |e|
-  %li.no_slide.block{:id => e['id'], "data-ajax_url" => erratum_path(e['id'])}
+- collection.each do |erratum|
+  %li.no_slide.block{:id => erratum.id, "data-ajax_url" => erratum_path(erratum.id)}
+    - if @promotable_errata.include?(erratum.id)
+      - if @product
+        %a{:class => "fr content_add_remove remove_errata st_button", "data-display_name"=> erratum.title, "data-id" => erratum.id, "data-type" => "errata", "data-product_id"=> "#{[@product.id].to_json}", :id => "add_remove_errata_#{erratum.id}"}
+      - else
+        %a{:class => "fr content_add_remove remove_errata st_button", "data-display_name"=> erratum.title, "data-id" => erratum.id, "data-type" => "errata", "data-product_id"=> "#{escape_javascript(erratum.product_ids.to_json)}", :id => "add_remove_errata_#{erratum.id}"}
+    - elsif !@not_promotable.include?(erratum.id)
+      .fr.promoted
+        = _("Promoted")
     .simple_link
       %span
-        = errata_title(e)
-        - if @next_environment && @next_environment.products.member?(@product)
-          %a{:class => "fr content_add_remove remove_errata st_button", "data-id" => e['id'], "data-display_name"=> e['title'],
-              "data-type" => "errata", "data-product_id" => @product.id, :id => "add_remove_errata_#{e['id']}"}
-
+        = errata_title(erratum)

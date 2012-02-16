@@ -251,6 +251,9 @@ describe Glue::Pulp::Repo, :katello => true do
   context "Repo promote" do
 
     before :each do
+      Pulp::Repository.stub(:packages).and_return([])
+      Pulp::Repository.stub(:errata).and_return([])
+
       @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod", :prior=>@organization.library)
       @from_env = @to_env.prior
 

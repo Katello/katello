@@ -59,11 +59,38 @@ class Glue::Pulp::Errata
     end
   end
 
+  def self.index_settings
+    {
+        "index" => {
+            "analysis" => {
+                "filter" => {
+                    "ngram_filter"  => {
+                        "type"      => "nGram",
+                        "min_gram"  => 2,
+                        "max_gram"  => 10
+                    }
+                },
+                "analyzer" => {
+                    "title_analyzer" => {
+                        "type"      => "custom",
+                        "tokenizer" => "keyword",
+                        "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
+                    }
+                }
+            }
+        }
+    }
+  end
+
   def self.index_mapping
     {
-      :package => {
+      :errata => {
         :properties => {
-          :title_sort    => { :type => 'string', :index=> :not_analyzed }
+          :title        => { :type => 'string', :analyzer =>'title_analyzer'},
+          :repoids      => { :type => 'string', :analyzer =>'keyword'},
+          :id           => { :type => 'string', :analyzer => 'title_analyzer' },
+          :id_sort      => { :type => 'string', :index => :not_analyzed },
+          :product_ids  => { :type => 'integer', :analyzer => 'keyword' }
         }
       }
     }
@@ -75,10 +102,71 @@ class Glue::Pulp::Errata
 
   def index_options
     {
-      "_type" => :errata
+      "_type" => :errata,
+      :id_sort => self.id,
+      :product_ids => self.product_ids
     }
   end
-  
+
+  def self.search query, start, page_size, filters={}, sort=[:id_sort, "DESC"]
+    return [] if !Tire.index(self.index).exists?
+    query_down = query.downcase
+    query = "title:#{query} OR id:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
+    search = Tire.search self.index do
+      query do
+        string query
+      end
+
+      if page_size > 0
+       size page_size
+       from start
+      end
+      if filters.has_key?(:repoids)
+        filter :terms, :repoids => filters[:repoids]
+      end
+      if filters.has_key?(:type)
+        filter :term, :type => filters[:type]
+      end
+      if filters.has_key?(:severity)
+        filter :term, :type => filters[:severity]
+      end
+
+      if sort
+        sort { by sort[0], sort[1] }
+      end
+    end
+    return search.results
+  rescue
+    return []
+  end
+
+  def self.index_errata errata_ids
+    errata = errata_ids.collect{ |errata_id| 
+      erratum = self.find(errata_id)
+      erratum.as_json.merge(erratum.index_options)
+    }
+
+    Tire.index Glue::Pulp::Errata.index do
+      create :settings => Glue::Pulp::Errata.index_settings, :mappings => Glue::Pulp::Errata.index_mapping
+      import errata
+    end if !errata.empty?
+  end
+ 
+  def product_ids
+    product_ids = []
+
+    self.repoids.each do |repoid|
+      # there is a problem, that Pulp in versino <= 0.0.265-1 doesn't remove
+      # repo frmo errata when deleting repository. Therefore there might be a
+      # situation that repo is not in Pulp anymore, see BZ 790356
+      if repo = Repository.where(:pulp_id => repoid)[0]
+        product_ids << repo.product.id
+      end
+    end
+
+    product_ids.uniq
+  end
+
   def included_packages
     packages = []
 

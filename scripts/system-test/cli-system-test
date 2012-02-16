@@ -133,12 +133,22 @@ function test_cmd() {
         result=`$CMD "$@" 2>&1`
     fi
 
-    if [ $? -ne 0 ] || [ "`echo $result | egrep -i "\bfail|\berror\b"`" != "" ]; then
+    ret=$?
+    if [ $ret -ne 0 ] || [ "`echo $result | egrep -i "\bfail|\berror\b"`" != "" ]; then
         #command failed
-        if [ $test_success -eq 1 ]; then status=0; else status=1; fi
+        if [ $test_success = "S" ]; then
+            status=0;
+        else
+            if [ $test_success = "F" ]; then
+                status=1;
+            else
+               ! [ $ret -eq $test_success ];
+               status=$?
+            fi
+        fi
     else
         #command succeeded
-        if [ $test_success -eq 1 ]; then status=1; else status=0; fi
+        if [ $test_success = "S" ]; then status=1; else status=0; fi
     fi
 
 
@@ -163,12 +173,12 @@ function test_cmd() {
 
 
 function test_success() {
-    test_cmd 1 "$@"
+    test_cmd "S" "$@"
 }
 
 
 function test_failure() {
-    test_cmd 0 "$@"
+    test_cmd "F" "$@"
 }
 
 function test_own_cmd_success() {
@@ -182,6 +192,15 @@ function test_own_cmd_failure() {
     shift
     CMD="" SHELL_MODE=0 test_failure "$MSG" "$@"
 }
+
+function test_own_cmd_exit_code() {
+    EXIT_CODE=$1
+    MSG=$2
+    shift
+    shift
+    CMD="" SHELL_MODE=0 test_cmd $EXIT_CODE "$MSG" "$@"
+}
+
 
 function skip_test_success() {
     if [ $RUN_DISABLED -eq 1 ]; then

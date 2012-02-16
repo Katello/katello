@@ -79,7 +79,15 @@ class HttpResource
 
     def print_debug_info(a_path, headers={}, payload={})
       Rails.logger.debug "Headers: #{headers.to_json}"
-      Rails.logger.debug "Body: #{payload.to_json}"
+      # calling to_json on file has side-effects breaking manifest import.
+      # this fix prevents this problem
+      payload_to_print = payload.reduce({}) do |h, (k,v)|
+        h[k] = case v
+               when File then "{{file}}"
+               else v
+               end
+      end
+      Rails.logger.debug "Body: #{payload_to_print.to_json}"
     rescue Exception => e
       Rails.logger.debug "Unable to print debug information"
     end

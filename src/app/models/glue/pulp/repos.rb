@@ -123,7 +123,10 @@ module Glue::Pulp::Repos
   end
 
   def self.prepopulate! products, environment, repos=[]
-    full_repos = Pulp::Repository.all
+    items = Pulp::Repository.all(["env:#{environment.id}"])
+    full_repos = {}
+    items.each {|item| full_repos[item["id"]] = item }
+
     products.each{|prod|
       prod.repos(environment, true).each{|repo|
         repo.populate_from(full_repos)

@@ -106,7 +106,8 @@ class Repository < ActiveRecord::Base
 
   def index_errata
     errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
-    Tire.index "#{AppConfig.elastic_index}_errata" do
+    Tire.index Glue::Pulp::Errata.index do
+      create :settings => Glue::Pulp::Errata.index_settings, :mappings => Glue::Pulp::Errata.index_mapping
       import errata
     end if !errata.empty?
   end
@@ -122,6 +123,7 @@ class Repository < ActiveRecord::Base
   def as_json(*args)
     ret = super
     ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
+    ret["package_count"] = package_count rescue nil
     ret
   end
 

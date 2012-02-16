@@ -93,14 +93,14 @@ def create_data(numorgs, numsystems, numproviders, numproducts, numrepos, single
                 product_name = "P-%s" % randomString()
                 print "  [%s] Creating product with name: [%s]" % (z, product_name)
                 productapi = ProductAPI()
-                product = productapi.create(provider["id"], product_name, "Desc")
+                product = productapi.create(provider["id"], product_name, "Desc", None)
                 print "    Creating [%s] Products in each product" % numproducts 
                 for x in range(numrepos):
                     repo_name = "Repo-%s" % randomString()
                     print "    [%s] Creating repo with name: [%s]" % (x, repo_name)
                     repoapi = RepoAPI()
                     url = "http://repos.example.com/%s" % repo_name
-                    repoapi.create(product["id"], repo_name, url)
+                    repoapi.create(org_names[i], product["id"], repo_name, url, None, True)
     ## Create systems
     print "Creating [%s] Systems in each org and assigning to random envs" % numsystems 
     for i in range(len(org_names)):

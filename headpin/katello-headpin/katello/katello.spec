@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.228
+Version:        0.1.238
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,25 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Feb 15 2012 Mike McCune <mmccune@redhat.com> 0.1.238-1
+- rebuild
+* Tue Feb 14 2012 Mike McCune <mmccune@redhat.com> 0.1.237-1
+- rebuild
+* Fri Feb 10 2012 Mike McCune <mmccune@redhat.com> 0.1.234-1
+- 789516 - Promotions - fix ability to add products and distros to a changeset
+  (bbuckingham@redhat.com)
+- 741499-Added code to deal with weird user current org behaviour
+  (paji@redhat.com)
+
+* Fri Feb 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.232-1
+- 789144 - promotions - redindex pkgs and errata after promotion of product or
+  repo
+
+* Fri Feb 10 2012 Ivan Necas <inecas@redhat.com> 0.1.230-1
+- periodic build
+
+* Thu Feb 09 2012 Mike McCune <mmccune@redhat.com> 0.1.229-1
+- rebuild
 * Wed Feb 08 2012 Jordan OMara <jomara@redhat.com> 0.1.228-1
 - Updating the spec to split out common/katello to facilitate headpin
   (jomara@redhat.com)

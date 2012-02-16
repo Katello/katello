@@ -535,7 +535,7 @@ KT.template_renderer = function() {
         });
 
         $.each(current.repos, function(index, repo) {
-            $.each(KT.repo_distributions[repo.name], function(index, dist){
+            $.each(KT.repo_distributions[repo.id], function(index, dist){
                 // if the distro was already added, skip it...
                 if (distros.indexOf(dist.id) === -1) {
                     distros.push(dist.id);
