@@ -30,6 +30,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       katello-common
 Requires:       katello-glue-candlepin
+Requires:       katello-selinux
 
 %if 0%{?rhel} == 6
 Requires:       redhat-logos >= 60.0.14
