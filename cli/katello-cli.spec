@@ -19,7 +19,7 @@ Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
 Version:       0.1.54
-Release:       1%{?dist}
+Release:       2%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb 16 2012 Mike McCune <mmccune@redhat.com> 0.1.54-2
+- 788073 - fixed time formatting in cli It now uses xml.utils.iso8601 for
+  parsing all times.
 * Tue Feb 07 2012 Ivan Necas <inecas@redhat.com> 0.1.53-1
 - 768254 - scope products API by organization (inecas@redhat.com)
 
