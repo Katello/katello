@@ -206,6 +206,8 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Thu Feb 16 2012 Jordan OMara <jomara@redhat.com> 0.1.138-2
+- rebuild for more katello changes
 * Thu Feb 16 2012 Jordan OMara <jomara@redhat.com> 0.1.137-2
 - large katello merge + selinux require
 * Thu Feb 09 2012 Jordan OMara <jomara@redhat.com> 0.1.135-2
