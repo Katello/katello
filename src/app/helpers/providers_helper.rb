@@ -14,22 +14,63 @@ module ProvidersHelper
   include SyncManagementHelper
   include SyncManagementHelper::RepoMethods
 
+  #def product_map
+  #  data = Support.time{product_map1}
+  #  logger.info("Took #{data} seconds to setup")
+  #  product_map1
+  #end
+
   def product_map
-    @product_map ||= collect_repos(@provider.products.with_repos_only(current_organization.library),
-                                    current_organization.library, true)
+    @product_map ||= normalize(collect_repos(
+                                    @provider.products.with_repos_only(current_organization.library),
+                                    current_organization.library, true))
     @product_map
   end
 
   def can_enable_repo?
-    @provider.editable?
+    @provider_editable ||= @provider.editable?
+    @provider_editable
   end
 
   def can_upload_rh_manifest?
-    @provider.editable?
+    @provider_editable ||= @provider.editable?
+    @provider_editable
   end
 
   def can_edit_rh_provider?
-    @provider.editable?
+    @provider_editable ||= @provider.editable?
+    @provider_editable
   end
+
+ def normalize children, parent_set =[], data = nil, item_type = nil
+   data = [] unless data
+   children.sort{|a,b| a[:name] <=> b[:name]}.each do |child|
+      new_set = parent_set + [child[:id]]
+      item =  {:id => set_id(new_set),
+               :class => parent_set_class(parent_set),
+               :name => child[:name],
+                :item => child
+               }
+      if item_type
+        item[:type] = item_type
+      elsif child[:type]
+        item[:type] = child[:type]
+      end
+      if item[:type] == "product"
+        item[:id] = product_id(child[:id])
+      end
+
+      data << item
+
+      if child[:children] && !child[:children].empty?
+        normalize(child[:children], new_set, data)
+      end
+      if child[:repos] && !child[:repos].empty?
+        normalize(child[:repos], new_set, data, "repository")
+      end
+    end
+   data
+ end
+
 end
 

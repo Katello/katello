@@ -28,8 +28,8 @@ class GpgKeysController < ApplicationController
   def rules
     read_test = lambda{@gpg_key.readable?}
     manage_test = lambda{@gpg_key.manageable?}
-    create_test = lambda{GpgKey.createable?(current_organization)}
-    index_test = lambda{GpgKey.any_readable?(current_organization)}
+    create_test = lambda{current_organization && GpgKey.createable?(current_organization)}
+    index_test = lambda{current_organization && GpgKey.any_readable?(current_organization)}
     {
       :index => index_test,
       :items => index_test,

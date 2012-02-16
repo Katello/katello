@@ -83,11 +83,9 @@ class SearchController < ApplicationController
   private 
 
   def retrieve_path
-    host = request.env['HTTP_HOST']
-    # remove host details from the path
-    path = request.env['HTTP_REFERER'].split(host).last
-    # remove request parameters from the path
-    path = path.split("?").first
+    # retrieve the 'path' from the referrer (e.g. /katello/organizations), leaving out info such as
+    # protocol, fqdn and port
+    path = URI(request.env['HTTP_REFERER']).path
   end
 
   def is_valid? path, query

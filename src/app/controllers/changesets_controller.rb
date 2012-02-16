@@ -175,7 +175,7 @@ class ChangesetsController < ApplicationController
           when "errata"
             @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name,
                                                 :product_id => pid, :changeset => @changeset) if adding
-            ChangesetErrata.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
+            ChangesetErratum.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
           when "package"
             @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :product_id => pid,
                                                 :changeset => @changeset) if adding
@@ -301,10 +301,17 @@ class ChangesetsController < ApplicationController
       to_ret[:products][product.id][:all] =  true
     }
 
-    ['repo', 'errata', 'package', 'distribution'].each{ |type|
+    cs.send('repos').each{|item|
+      p item
+      pid = item.product.id
+      cs_product = to_ret[:products][pid]
+      cs_product['repo'] << {:id=>item.id, :name=>item.name}
+    }
+
+    ['errata', 'package', 'distribution'].each{ |type|
       cs.send(type.pluralize).each{|item|
         p item
-        pid = item.product_id
+        pid = item.product.id
         cs_product = to_ret[:products][pid]
         cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
       }
@@ -315,33 +322,61 @@ class ChangesetsController < ApplicationController
   def update_artifacts_valid?
     if params.has_key? :data
       params[:data].each do |item|
+        product_id = item["product_id"]
         type = item["type"]
         id = item["item_id"]
-        pid = item["product_id"]
         item = nil
-        case type
-          when "template"
-            item = SystemTemplate.find(id)
-          when "product"
-            item = Product.find(id)
-
-          when "errata"
-            item = Product.find(pid)
-          when "package"
-            item = Product.find(pid)
-          when "repo"
-            item = Product.find(pid)
-          when "distribution"
-            item = Product.find(pid)
-        end
-        unless item && item.readable?()
-          return false
+ 
+        if not product_id.nil?
+          if not update_item_valid?(type, id, product_id)
+            return false
+          end
+        else
+          if type == "errata"
+            return false if not update_errata_valid?(id)
+          end
         end
       end
     end
     true
   end
 
+  def update_item_valid? type, id, product_id
+    case type
+      when "template"
+        item = SystemTemplate.find(id)
+      when "product"
+        item = Product.find(id)
+      when "package"
+        item = Product.find(product_id)
+      when "errata"
+        item = Product.find(product_id)
+      when "repo"
+        item = Product.find(product_id)
+      when "distribution"
+        item = Product.find(product_id)
+    end
 
+    if item && item.readable?()
+      return true
+    else
+      return false
+    end
+  end
+
+  def update_errata_valid? id
+    errata = Glue::Pulp::Errata.find(id)
+    
+    errata.repoids.each{ |repoid|
+      repo = Repository.where(:pulp_id => repoid)[0]
+      product = repo.product
+
+      if not product && product.readable?
+        return false
+      end
+    }
+
+    return true
+  end
 
 end

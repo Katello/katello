@@ -21,8 +21,8 @@ class SyncSchedulesController < ApplicationController
 
   def rules
     {
-      :index => lambda{Provider.any_readable?(current_organization)},
-      :apply => lambda{current_organization.syncable?}
+      :index => lambda{current_organization && Provider.any_readable?(current_organization)},
+      :apply => lambda{current_organization && current_organization.syncable?}
     }
   end
 

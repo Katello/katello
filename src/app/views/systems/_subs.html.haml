@@ -42,8 +42,9 @@
                       %li
                         = _("Product Name: ")
                         = product.name
-                      - product.productContent.each do |product_content|
-                        = render :partial=>'subscription_details', :locals=>{:group => entitlement.entitlementId, :product_content => product_content}
+                      -# BZ-788657 - too slow for large number of products
+                      -#- product.productContent.each do |product_content|
+                      -#  = render :partial=>'subscription_details', :locals=>{:group => entitlement.entitlementId, :product_content => product_content}
           - else
             %tr
               %td{:colspan=>6} #{_("The system is not currently consuming any subscriptions.")}
@@ -106,8 +107,9 @@
                       %li
                         = _("Product Name: ")
                         = product.name
-                      - product.productContent.each do |product_content|
-                        = render :partial=>'subscription_details', :locals=>{:group => sub.poolId, :product_content => product_content}
+                      -# BZ-788657 - too slow for large number of products
+                      -#- product.productContent.each do |product_content|
+                      -#  = render :partial=>'subscription_details', :locals=>{:group => sub.poolId, :product_content => product_content}
           - else
             %tr
               %td{:colspan=>6} #{_("There are no more subscriptions available.")}
