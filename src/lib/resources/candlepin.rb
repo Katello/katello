@@ -92,9 +92,13 @@ module Candlepin
         JSON.parse(super(path(uuid), self.default_headers).body).with_indifferent_access
       end
 
-      def create key, name, type, facts, installedProducts, autoheal=true
-        url = path() + "?owner=#{key}"
-        attrs = {:name => name, :type => type, :facts => facts, :installedProducts => installedProducts, :autoheal => autoheal }
+      def create env_id, key, name, type, facts, installedProducts, autoheal=true
+        url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
+        attrs = {:name => name,
+                 :type => type,
+                 :facts => facts,
+                 :installedProducts => installedProducts,
+                 :autoheal => autoheal}
         response = self.post(url, attrs.to_json, self.default_headers).body
         JSON.parse(response).with_indifferent_access
       end
@@ -108,7 +112,10 @@ module Candlepin
       end
 
       def update uuid, facts, guest_ids = nil, installedProducts = nil, autoheal = nil
-        attrs = {:facts => facts, :guestIds => guest_ids, :installedProducts => installedProducts, :autoheal => autoheal}.delete_if {|k,v| v.nil?}
+        attrs = {:facts => facts,
+                 :guestIds => guest_ids,
+                 :installedProducts => installedProducts,
+                 :autoheal => autoheal}.delete_if {|k,v| v.nil?}
         unless attrs.empty?
           response = self.put(path(uuid), attrs.to_json, self.default_headers).body
         else[]
@@ -300,6 +307,43 @@ module Candlepin
 
       def path(id=nil)
         "/candlepin/owners/#{id}"
+      end
+    end
+  end
+
+  class Environment < CandlepinResource
+    class << self
+
+      def find id
+        JSON.parse(self.get(path(id), self.default_headers).body).with_indifferent_access
+      end
+
+
+      def create owner_id, id, name, description
+        attrs = {:id => id, :name => name, :description => description}
+        path = "/candlepin/owners/#{owner_id}/environments"
+        environment_json = self.post(path, attrs.to_json, self.default_headers).body
+        JSON.parse(environment_json).with_indifferent_access
+      end
+
+      def destroy id
+        self.delete(path(id), User.cp_oauth_header).code.to_i
+      end
+
+      def path(id)
+        "/candlepin/environments/#{id}"
+      end
+
+      def add_content(env_id, content_ids)
+        path = self.path(env_id) + "/content"
+        params = content_ids.map {|content_id| {:contentId => content_id} }
+        JSON.parse(self.post(path, params.to_json, self.default_headers).body).with_indifferent_access
+      end
+
+      def delete_content(env_id, content_ids)
+        path = self.path(env_id) + "/content"
+        params = content_ids.map {|content_id| {:content => content_id}.to_param }.join("&")
+        self.delete("#{path}?#{params}", self.default_headers).code.to_i
       end
     end
   end

@@ -74,19 +74,25 @@ describe Glue do
     before do
       @object = Object.new
       @object_too = Object.new
+      @object_foo = Object.new
 
       @queue = Queue.new
-      @queue.create(:priority => 3, :action => [@object, :set])
-      @queue.create(:priority => 4, :action => [@object_too, :set])
+      @task_1 = @queue.create(:priority => 3, :action => [@object, :set])
+      @task_2 = @queue.create(:priority => 4, :action => [@object_too, :set])
+      @next_queue = Queue.new(@queue)
+      @task_3 = @next_queue.create(:priority => 1, :action => [@object_foo, :set])
 
-      @object_too.stub(:set).and_return(true)
+      [@object, @object_too, @object_foo].each { |o| o.stub(:set => true, :pretty_print => "mock") }
     end
 
     specify { lambda {@orchestrated.process(Queue.new) }.should_not raise_error }
 
     it "should execute pending tasks" do
       @object.should_receive(:set).once.and_return(true)
+      @object_too.should_receive(:set).once.and_return(true)
+      @object_foo.should_receive(:set).once.and_return(true)
       @orchestrated.process @queue
+      @orchestrated.process @next_queue
     end
 
     it "should change the status of successfully completed task to 'completed'" do
@@ -118,11 +124,23 @@ describe Glue do
 
       @orchestrated.process @queue rescue nil
     end
+
+    it "should perform rollback of aslo on previous queues" do
+      @object_foo.stub(:set).and_return(false)
+      @object_too.should_receive(:del).once.and_return(true)
+      @object.should_receive(:del).once.and_return(true)
+
+      @orchestrated.process @next_queue rescue nil
+    end
+
+    it "should order the tasks by priority in scope of one queue." do
+      @next_queue.all.should == [@task_1, @task_2, @task_3]
+    end
   end
 
   context "on save" do
     it "should process queue" do
-      @orchestrated.should_receive(:process).once.and_return(true)
+      @orchestrated.should_receive(:process).twice.and_return(true)
       @orchestrated.save
     end
   end
@@ -130,7 +148,7 @@ describe Glue do
   context "on destroy" do
     before { @orchestrated.save }
     it "should process queue" do
-      @orchestrated.should_receive(:process).once.and_return(true)
+      @orchestrated.should_receive(:process).twice.and_return(true)
       @orchestrated.destroy
     end
   end
