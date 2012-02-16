@@ -393,14 +393,23 @@ var promotion_page = (function($){
                 //array of  [type, quantity] arrays
                 var counts = [];
 
+                //count how many products are in the changeset
                 var prod_count = 0;
                 $.each(current_changeset.getProducts(), function(key, product){
                     if (product.all) {
                         prod_count+=1;
                     }
                 });
+                //push the i18n string to lookup and the count
                 counts.push(["product", prod_count]);
 
+                //count how many system templates are in the changeset
+                var template_count = 0;
+                $.each(current_changeset.getTemplates(), function(key, template){
+                  template_count+=1;
+                });
+                //push the i18n string to lookup and the count
+                counts.push(["system_template", template_count]);
 
                 $.each(subtypes, function(index,type) {
                     var amount = 0;
