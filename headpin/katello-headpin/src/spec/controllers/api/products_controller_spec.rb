@@ -27,6 +27,9 @@ describe Api::ProductsController, :katello => true do
     disable_product_orchestration
     disable_user_orchestration
 
+    Pulp::Repository.stub(:packages).and_return([])
+    Pulp::Repository.stub(:errata).and_return([])
+
     @organization = new_test_org
     @environment = KTEnvironment.create!(:name=> "foo123", :organization => @organization, :prior =>@organization.library)
     @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,

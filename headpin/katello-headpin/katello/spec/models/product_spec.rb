@@ -367,6 +367,9 @@ describe Product, :katello => true do
 
     context "adding to a product being promoted" do
       before(:each) do
+        Pulp::Repository.stub(:packages).and_return([])
+        Pulp::Repository.stub(:errata).and_return([])
+
         @product.filters += [@filter1, @filter2]
       end
 
@@ -476,6 +479,8 @@ describe Product, :katello => true do
 
     context "resetting product gpg work across multiple environments" do
       before do
+        Pulp::Repository.stub(:packages).and_return([])
+        Pulp::Repository.stub(:errata).and_return([])
         @env = KTEnvironment.create!(:name => "new_repo", :organization =>@organization, :prior=>@organization.library)
         @new_repo = promote(@repo, @env)
         @product = Product.find(@product.id)

@@ -169,18 +169,6 @@ module Navigation
           :if => lambda{@package},
           :options => {:class=>"navigation_element"}
         },
-        { :key => :changelog,
-          :name =>_("Changelog"),
-          :url => lambda{changelog_package_path(@package.id)},
-          :if => lambda{@package},
-          :options => {:class=>"navigation_element"}
-        },
-        { :key => :filelist,
-          :name =>_("Filelist"),
-          :url => lambda{filelist_package_path(@package.id)},
-          :if => lambda{@package},
-          :options => {:class=>"navigation_element"}
-        },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{package_path(@package.id)},

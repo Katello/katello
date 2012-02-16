@@ -22,8 +22,8 @@ class SyncPlansController < ApplicationController
   end
 
   def rules
-    read_test = lambda{Provider.any_readable?(current_organization)}
-    manage_test = lambda{current_organization.syncable?}
+    read_test = lambda{current_organization && Provider.any_readable?(current_organization)}
+    manage_test = lambda{current_organization && current_organization.syncable?}
     {
       :index => read_test,
       :items => read_test,

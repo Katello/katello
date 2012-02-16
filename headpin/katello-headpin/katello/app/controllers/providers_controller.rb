@@ -28,8 +28,8 @@ class ProvidersController < ApplicationController
   end
 
   def rules
-    index_test = lambda{Provider.any_readable?(current_organization)}
-    create_test = lambda{Provider.creatable?(current_organization)}
+    index_test = lambda{current_organization && Provider.any_readable?(current_organization)}
+    create_test = lambda{current_organization && Provider.creatable?(current_organization)}
     read_test = lambda{@provider.readable?}
     edit_test = lambda{@provider.editable?}
     delete_test = lambda{@provider.deletable?}

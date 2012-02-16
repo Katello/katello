@@ -184,6 +184,16 @@ module Pulp
         raise e
       end
 
+      def find_all repo_ids, yell_on_404 = false
+        ids = "id=#{repo_ids.join('&id=')}"
+        response = get(repository_path  + "/?#{ids}", self.default_headers)
+        body = response.body
+        JSON.parse(body).with_indifferent_access
+      rescue RestClient::ResourceNotFound => e
+        return nil if !yell_on_404
+        raise e
+      end
+
       # Get all the Repositories known by Pulp
       # currently filtering against only one groupid is supported in PULP
       def all groupids=nil, search_params = {}
@@ -293,14 +303,14 @@ module Pulp
       end
 
       def packages_by_name repo_id, name
-        response = get(repository_path  + repo_id + "/packages/?name=" + name, self.default_headers)
+        response = get(repository_path  + repo_id + "/packages/?name=^" + name + "$", self.default_headers)
         body = response.body
         JSON.parse(body)
       end
 
       def packages_by_nvre repo_id, name, version, release, epoch
         #TODO: switch to https://fedorahosted.org/pulp/wiki/UGREST-Repositories#GetPackageByNVREA
-        path = repository_path + repo_id + "/packages/?name=" + name
+        path = repository_path + repo_id + "/packages/?name=^" + name +"$"
         path += "&release=" + release if not release.nil?
         path += "&version=" + version if not version.nil?
         path += "&epoch=" + epoch if not epoch.nil?

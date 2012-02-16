@@ -28,9 +28,6 @@ $(document).ready(function () {
                 "left": (panelLeft)
             });
         }
-        $('.left #new').css({
-            "width": "10em"
-        });
         $('.list-title').width(panelLeft);
         $('#list-title').width(panelLeft);
         if ($(this).hasClass('column_panel_3')) {
@@ -458,6 +455,7 @@ KT.panel = (function ($) {
             var refresh = $.bbq.getState("panel"),
                 search = $.bbq.getState("search"),
                 search_element = $('#search');
+
             if (page_load) {
                 if (refresh && search) {
                     search_element.val(search);
