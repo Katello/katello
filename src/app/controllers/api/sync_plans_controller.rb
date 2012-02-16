@@ -56,6 +56,7 @@ class Api::SyncPlansController < Api::ApiController
 
     @plan.update_attributes!(params[:sync_plan])
     @plan.save!
+    @plan.products.each{ |p| p.save! }
     render :json => @plan
   end
 
