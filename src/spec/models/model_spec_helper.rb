@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'helpers/repo_test_data'
+
 module OrchestrationHelper
 
   CERT = <<EOCERT
@@ -128,6 +130,7 @@ EOKEY
 
   def disable_repo_orchestration
     Pulp::Repository.stub(:sync_history).and_return([])
+    Pulp::Task.stub!(:destroy).and_return({})
 
     Pulp::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
     Pulp::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)

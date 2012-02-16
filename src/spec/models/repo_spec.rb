@@ -205,16 +205,16 @@ describe Glue::Pulp::Repo do
           raise
         end
         Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::SUCCESSFULL_SYNC_HISTORY)
-        Pulp::Repository.should_receive(:cancel)
+        Pulp::Task.should_receive(:cancel).with(RepoTestData::SUCCESSFULL_SYNC_HISTORY[0]["id"])
         @repo.cancel_sync
       end
 
-      it "should call Pulp's cancel api if the sync history is empty" do
+      it "should not call Pulp's cancel api if the sync history is empty" do
         Pulp::Repository.stub(:sync_status) do
           raise
         end
         Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return([])
-        Pulp::Repository.should_not_receive(:cancel)
+        Pulp::Task.should_not_receive(:cancel)
         @repo.cancel_sync
       end
 

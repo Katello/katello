@@ -1,7 +1,7 @@
 module ProductHelperMethods
 
-  
-  
+
+
   def new_test_product_with_library org
 
     @library = KTEnvironment.new
@@ -15,6 +15,7 @@ module ProductHelperMethods
 
   def new_test_product org, env, suffix=""
     disable_product_orchestration
+    disable_repo_orchestration
     @provider = Provider.create!({:organization => org, :name => 'provider' + suffix, :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
     @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :environments => [env], :provider => @provider}))
     env_product = EnvironmentProduct.find_or_create(env, @p)
