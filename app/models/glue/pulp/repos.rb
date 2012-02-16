@@ -377,7 +377,6 @@ module Glue::Pulp::Repos
     end
 
     def setup_sync_schedule
-
       schedule = (self.sync_plan && self.sync_plan.schedule_format) || nil
       self.repos(self.library).each do |repo|
         repo.set_sync_schedule(schedule)

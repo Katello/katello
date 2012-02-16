@@ -65,9 +65,7 @@ class SyncPlan < ActiveRecord::Base
     if self.interval != NONE
       format = self.sync_date.iso8601 << "/P" << DURATION[self.interval]
     else
-      #workaround for Pulp scheduling the sync after a repeat period:
-      #move the start time 1 day earlier
-      format = "R1/" << self.sync_date.ago(24*3600).iso8601 << "/P1D"
+      format = "R1/" << self.sync_date.iso8601 << "/P1D"
     end
     return format
   end
