@@ -377,7 +377,6 @@ module Glue::Pulp::Repos
     end
 
     def setup_sync_schedule
-
       schedule = (self.sync_plan && self.sync_plan.schedule_format) || nil
       self.repos(self.library).each do |repo|
         repo.set_sync_schedule(schedule)
@@ -477,24 +476,24 @@ module Glue::Pulp::Repos
         when :create
           # no repositories are added when a product is created
         when :import_from_cp
-          queue.create(:name => "create pulp repositories for product: #{self.name}",      :priority => 1, :action => [self, :set_repos])
+          pre_queue.create(:name => "create pulp repositories for product: #{self.name}",      :priority => 1, :action => [self, :set_repos])
         when :update
           #called when sync schedule changed, repo added, repo deleted
-          queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 2, :action => [self, :setup_sync_schedule])
+          pre_queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 2, :action => [self, :setup_sync_schedule])
         when :promote
           # do nothing, as repos have already been promoted (see promote_repos method)
       end
     end
 
     def destroy_repos_orchestration
-      queue.create(:name => "delete pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :del_repos])
+      pre_queue.create(:name => "delete pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :del_repos])
     end
 
     def add_filters_orchestration(added_filter)
       return true unless environments.size > 1 and promoted_to?(library.successor)
 
       self.repos(library.successor).each do |r|
-        queue.create(
+        pre_queue.create(
             :name => "add filter '#{added_filter.pulp_id}' to repo: #{r.id}",
             :priority => 5,
             :action => [self, :set_filter, r, added_filter.pulp_id])
@@ -508,7 +507,7 @@ module Glue::Pulp::Repos
       return true unless environments.size > 1 and promoted_to?(library.successor)
 
       self.repos(library.successor).each do |r|
-        queue.create(
+        pre_queue.create(
             :name => "remove filter '#{removed_filter.pulp_id}' from repo: #{r.id}",
             :priority => 5,
             :action => [self, :del_filter, r, removed_filter.pulp_id])

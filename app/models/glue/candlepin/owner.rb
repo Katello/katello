@@ -48,6 +48,16 @@ module Glue::Candlepin::Owner
       raise e
     end
         
+    def del_environments
+      Rails.logger.debug _("All environments for owner #{name} in candlepin")
+      self.environments.destroy_all
+      self.library.destroy
+      self.library = nil
+      return true
+    rescue => e
+      Rails.logger.error _("Failed to delete all environments for owner #{name} in candlepin: #{e}, #{e.backtrace.join("\n")}")
+      raise e
+    end
 
     def del_providers
       Rails.logger.debug _("All providers for owner #{name} in candlepin")
@@ -72,14 +82,15 @@ module Glue::Candlepin::Owner
     def save_owner_orchestration
       case self.orchestration_for
         when :create
-          queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :set_owner])
+          pre_queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :set_owner])
       end
     end
 
     def destroy_owner_orchestration
-      queue.create(:name => "candlepin systems for organization: #{self.name}", :priority => 2, :action => [self, :del_systems])
-      queue.create(:name => "candlepin providers for organization: #{self.name}", :priority => 3, :action => [self, :del_providers])
-      queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 4, :action => [self, :del_owner])
+      pre_queue.create(:name => "candlepin systems for organization: #{self.name}", :priority => 2, :action => [self, :del_systems])
+      pre_queue.create(:name => "candlepin providers for organization: #{self.name}", :priority => 3, :action => [self, :del_providers])
+      pre_queue.create(:name => "candlepin environments for organization: #{self.name}", :priority => 4, :action => [self, :del_environments])
+      pre_queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 5, :action => [self, :del_owner])
     end
 
     def owner_info
