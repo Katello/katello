@@ -11,12 +11,14 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+require 'models/model_spec_helper'
 
 describe Organization do
 
   before(:each) do
     Candlepin::Owner.stub!(:create_user).and_return(true)
     Candlepin::Owner.should_receive(:create).at_least(:once).and_return({})
+    disable_env_orchestration
     @organization = Organization.create(:name => 'test_organization', :cp_key => 'test_organization')
   end
 

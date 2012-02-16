@@ -77,7 +77,12 @@ module Glue::Candlepin::Consumer
 
     def set_candlepin_consumer
       Rails.logger.debug "Creating a consumer in candlepin: #{name}"
-      consumer_json = Candlepin::Consumer.create(self.organization.cp_key, self.name, self.cp_type, self.facts, self.installedProducts, self.autoheal)
+      consumer_json = Candlepin::Consumer.create(self.environment_id,
+                                                 self.organization.cp_key,
+                                                 self.name, self.cp_type,
+                                                 self.facts,
+                                                 self.installedProducts,
+                                                 self.autoheal)
 
       load_from_cp(consumer_json)
     rescue => e
@@ -178,14 +183,14 @@ module Glue::Candlepin::Consumer
         when :hypervisor
           # it's already saved = do nothing
         when :create
-          queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 2, :action => [self, :set_candlepin_consumer])
+          pre_queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 2, :action => [self, :set_candlepin_consumer])
         when :update
-          queue.create(:name => "update candlepin consumer: #{self.name}", :priority => 3, :action => [self, :update_candlepin_consumer])
+          pre_queue.create(:name => "update candlepin consumer: #{self.name}", :priority => 3, :action => [self, :update_candlepin_consumer])
       end
     end
 
     def destroy_candlepin_orchestration
-      queue.create(:name => "delete candlepin consumer: #{self.name}", :priority => 3, :action => [self, :del_candlepin_consumer])
+      pre_queue.create(:name => "delete candlepin consumer: #{self.name}", :priority => 3, :action => [self, :del_candlepin_consumer])
     end
 
     def hostname

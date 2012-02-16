@@ -211,10 +211,10 @@ module Glue::Candlepin::Product
     def update_content
       return true unless productContent_changed?
 
-      deleted_content.each do |pc|
-        Rails.logger.debug "deleting content #{pc.content.id}"
-        Candlepin::Product.remove_content cp_id, pc.content.id
-        Candlepin::Content.destroy(pc.content.id)
+      deleted_content_ids.each do |content_id|
+        Rails.logger.debug "deleting content #{content_id}"
+        Candlepin::Product.remove_content cp_id, content_id
+        Candlepin::Content.destroy(content_id)
       end
 
       added_content.each do |pc|
@@ -258,22 +258,22 @@ module Glue::Candlepin::Product
     def save_product_orchestration
       case self.orchestration_for
         when :create
-          queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
-          queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
+          pre_queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
+          pre_queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
         when :import_from_cp
           # we leave it as it is - to not break re-import logic
         when :update
           #called when sync schedule changed, repo added, repo deleted
-          queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])
+          pre_queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])
         when :promote
           #queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
       end
     end
 
     def destroy_product_orchestration
-      queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 7,  :action => [self, :del_subscriptions])
-      queue.create(:name => "remove candlepin content from a product: #{self.name}",       :priority => 8,  :action => [self, :remove_all_content])
-      queue.create(:name => "candlepin product: #{self.name}",                             :priority => 10, :action => [self, :del_product])
+      pre_queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 7,  :action => [self, :del_subscriptions])
+      pre_queue.create(:name => "remove candlepin content from a product: #{self.name}",       :priority => 8,  :action => [self, :remove_all_content])
+      pre_queue.create(:name => "candlepin product: #{self.name}",                             :priority => 10, :action => [self, :del_product])
     end
 
     protected
