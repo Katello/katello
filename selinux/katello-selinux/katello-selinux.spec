@@ -122,6 +122,10 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 
 %changelog
+* Thu Feb 16 2012 Jordan OMara <jomara@redhat.com> 0.1.5-2
+- Updating to require katello-common 
+* Thu Feb 16 2012 Jordan OMara <jomara@redhat.com>
+- Updating to require katello-common 
 * Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
 - selinux - adding requirement for the main package
 - selinux - adding rh header
