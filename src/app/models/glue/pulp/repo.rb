@@ -327,6 +327,10 @@ module Glue::Pulp::Repo
   end
 
   def set_sync_schedule schedule
+    if self.sync_state == "waiting"
+        Pulp::Task.destroy(self.sync_status.uuid)
+    end
+
     if schedule
         Pulp::Repository.update_schedule(self.pulp_id, schedule)
     else
@@ -402,7 +406,7 @@ module Glue::Pulp::Repo
     history = self.sync_status
     return if history.nil? || history.state == ::PulpSyncStatus::Status::NOT_SYNCED
 
-    Pulp::Repository.cancel(self.pulp_id, history.uuid)
+    Pulp::Task.cancel(history.uuid)
   end
 
   def sync_finish

@@ -273,12 +273,6 @@ module Pulp
         end
       end
 
-      def cancel(repo_id, sync_id)
-        path = "/pulp/api/tasks/" + sync_id + "/cancel/"
-        response = post(path, {}, self.default_headers)
-        JSON.parse(response.body).with_indifferent_access
-      end
-
       def sync_status(repo_id)
         path = Repository.repository_path + repo_id + "/sync/"
         response = get(path, self.default_headers)
@@ -500,13 +494,24 @@ module Pulp
       def find uuids
         ids = "id=#{uuids.join('&id=')}"
         query_url = path  + "?state=archived&state=current&#{ids}"
-        response = get(query_url, self.default_headers)
+        response = self.get(query_url, self.default_headers)
         body = response.body
         JSON.parse(body).collect{|k| k.with_indifferent_access}
       end
 
+      def cancel uuid
+        response = self.post(path(uuid) +"cancel/" , {}, self.default_headers)
+
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def destroy uuid
+        response = self.delete(path(uuid), self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
       def path uuid=nil
-        "/pulp/api/tasks/"
+        uuid.nil? ? "/pulp/api/tasks/" : "/pulp/api/tasks/#{uuid}/"
       end
     end
   end
