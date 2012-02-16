@@ -19,8 +19,8 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        0.1.4
-Release:        1%{?dist}
+Version:        0.1.5
+Release:        2%{?dist}
 Summary:        SELinux policy module supporting Katello
 
 Group:          System Environment/Base
