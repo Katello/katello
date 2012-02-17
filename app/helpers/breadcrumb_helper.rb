@@ -371,15 +371,15 @@ module TemplateContentBreadcrumb
 
      #product.repositories
      add_crumb_node!(bc, repos_bc_id(prod), product_repos_system_templates_path(:product_id=>prod.id),
-        prod.name + " " +  _("Repositories"), [products_crumb_id, product_id], {:scrollable=>true})
+        _("Repositories"), [products_crumb_id, product_id], {:scrollable=>true})
 
      #product,packages
      add_crumb_node!(bc, packages_bc_id(prod), product_packages_system_templates_path(:product_id=>prod.id),
-        prod.name + " " +  _("Packages"), [products_crumb_id, product_id], {:scrollable=>true})
+        _("Packages"), [products_crumb_id, product_id], {:scrollable=>true})
 
      #product,comps
      add_crumb_node!(bc, comps_bc_id(prod), product_comps_system_templates_path(:product_id=>prod.id),
-        prod.name + " " +  _("Package Groups"), [products_crumb_id, product_id], {:scrollable=>true})
+        _("Package Groups"), [products_crumb_id, product_id], {:scrollable=>true})
    end
    bc.to_json
   end
