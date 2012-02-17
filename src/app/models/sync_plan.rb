@@ -65,7 +65,11 @@ class SyncPlan < ActiveRecord::Base
     if self.interval != NONE
       format = self.sync_date.iso8601 << "/P" << DURATION[self.interval]
     else
-      format = "R1/" << self.sync_date.iso8601 << "/P1D"
+      if self.sync_date < Time.now
+        format = nil # do not schedule tasks in past
+      else
+        format = "R1/" << self.sync_date.iso8601 << "/P1D"
+      end
     end
     return format
   end
