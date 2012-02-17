@@ -219,6 +219,12 @@
             }
         }
 
+        function closeAll(){
+            var elements = $('.tipsy');
+
+            elements.remove();
+        }
+
         function handleClose(){
             var elements = $('.tipsy-sticky-click'),
                 i, length, tipsy, node;
@@ -248,6 +254,10 @@
             $(document).bind('scroll', handleScroll);
             $(document).bind('close.tipsy', handleClose);
         }
+
+        $(document).bind('close.tipsy', function(){
+            closeAll();  
+        });
 
         return this;
         

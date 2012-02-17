@@ -12,7 +12,8 @@
       = yield :navigation
 
   - if content_for?(:header)
-    = yield :header
+    .tupane_header
+      = yield :header
   
   - if content_for?(:content)
     %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}

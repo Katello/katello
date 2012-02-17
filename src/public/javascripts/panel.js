@@ -219,11 +219,14 @@ KT.panel = (function ($) {
                 if (!thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId) {
                     $('.block.active').removeClass('active');
                     // Open the Panel                           /4
+
+                    handleScroll($('#panel-frame'));
+
                     thisPanel.css({
                         "z-index": "200"
                     });
                     thisPanel.parent().css({
-                        "z-index": "1"
+                        "z-index": "20"
                     });
                     thisPanel.animate({
                         left: (panelLeft) + "px",
@@ -247,7 +250,7 @@ KT.panel = (function ($) {
                         "z-index": "200"
                     });
                     thisPanel.parent().css({
-                        "z-index": "1"
+                        "z-index": "20"
                     });
                     thisPanel.addClass('opened').attr('data-id', activeBlockId);
                     $("#" + previousBlockId).removeClass('active');
@@ -306,24 +309,35 @@ KT.panel = (function ($) {
         adjustHeight = function (paneljQ, isSubpanel) {
             var leftPanel = $('.left'),
                 tupane_panel = $('#panel'),
-                default_height = 500,
                 new_top = Math.floor($('.list').offset().top - 60),
                 header_spacing = tupane_panel.find('.head').height(),
                 subnav_spacing = tupane_panel.find('nav').height() + 10,
                 content_spacing = paneljQ.height(),
-                height = default_height - header_spacing - subnav_spacing,
                 panelFrame = paneljQ.parent().parent().parent().parent(),
+                tupane_header = $('.tupane_header').height() || 0,
+                tupane_footer = $('.tupane_footer').height() || 0,
                 extraHeight = 0,
                 window_height = $(window).height(),
-                subpanelnav;
+                container_offset = $('#container').offset().top,
+                subpanelnav,
+                height,
+                default_height = 565,
+                default_spacing = header_spacing + subnav_spacing + tupane_header + tupane_footer + 30;
+
             if (window_height <= (height + 80) && leftPanel.height() > 550) {
-                height = window_height - 80 - header_spacing - subnav_spacing;
+                height = window_height - container_offset - default_spacing;
+            } else if( leftPanel.height() > 575 ){
+                height = window_height - container_offset - default_spacing;
+            } else {
+                height = default_height - default_spacing + 20;
             }
             if (isSubpanel) {
                 subpanelnav = ($('#subpanel').find('nav').length > 0) ? $('#subpanel').find('nav').height() + 10 : 0;
                 height = height - subpanelSpacing * 2 - subpanelnav + subnav_spacing;
             }
+            
             paneljQ.height(height);
+            
             if (paneljQ.length > 0) {
                 paneljQ.data('jsp').reinitialise();
             }
@@ -403,51 +417,55 @@ KT.panel = (function ($) {
         handleScroll = function (jQPanel, offset) {
             var scrollY = KT.common.scrollTop(),
                 scrollX = KT.common.scrollLeft(),
-                isfixed = jQPanel.css('position') === 'fixed',
+                isFixed = jQPanel.css('position') === 'fixed',
                 container = $('#container'),
                 bodyY = parseInt(container.position().top, 10),
-                left_panel = container.find('.left');
-            top_position = left_panel.position().top;
-            offset += $('#maincontent').position().left;
+                left_panel = container.find('.left'),
+                left_bottom_pos = left_panel.offset().top + left_panel.height(),
+                top;
+
+            top_position = left_panel.offset().top;
+            offset = offset ? offset : 10;
+            offset += $('#maincontent').offset().left;
+            offset -= scrollX;
+
             if (jQPanel.length > 0) {
-                if (left_panel.height() > 550) {
-                    if (scrollY < bodyY) {
+                if (scrollY <= container.offset().top) {
+                    top = (container.offset().top - scrollY <= 30 && container.offset().top - scrollY >= -30) ? 30 : top_position - scrollY;
+
+                    jQPanel.css({
+                        position: 'fixed',
+                        top: top,
+                        left: offset
+                    });
+                }
+                else {
+                    if ( left_bottom_pos - (jQPanel.offset().top + jQPanel.height()) <= 40 ) {
                         jQPanel.css({
-                            position: 'absolute',
-                            top: top_position,
-                            left: ''
+                            position: 'fixed',
+                            top: (left_bottom_pos - jQPanel.height()) - scrollY,
+                            left: offset
                         });
-                    }
-                    else {
-                        if (!isfixed && jQPanel.position().top - KT.common.scrollTop() > 40) {
-                            jQPanel.stop().css({
-                                position: 'fixed',
-                                top: 40,
-                                //left: -scrollX + offset
-                            });
-                        }
-                        else if (($('.left').position().top + $('.left').height() - 20) < (jQPanel.position().top + jQPanel.height() + 40)) {
-                            jQPanel.css({
-                                position: 'absolute',
-                                top: ($('.left').position().top + $('.left').height()) - jQPanel.height() - 40,
-                                //left: ''
-                            });
-                        }
-                        else if (!isfixed && ($('.left').position().top + $('.left').height()) > (jQPanel.position().top + jQPanel.height() + 40)) {
-                            jQPanel.stop().css({
-                                position: 'fixed',
-                                top: 40,
-                                //left: -scrollX + offset
-                            });
-                        }
+                    } else {
+                        jQPanel.stop().css({
+                            position: 'fixed',
+                            top: 30,
+                            left: offset
+                        });
                     }
                 }
             }
         },
-        handleScrollResize = function (jQPanel) {
+        handleScrollResize = function (jQPanel, offset) {
+            var scrollX = KT.common.scrollLeft();
+
+            offset = offset ? offset : 10;
+            offset += $('#maincontent').offset().left;
+            offset -= scrollX;
+
             if (jQPanel.length > 0) {
                 if (jQPanel.css('position') === 'fixed') {
-                    jQPanel.css('left', '');
+                    jQPanel.css('left', offset);
                 }
             }
         },
@@ -500,11 +518,13 @@ KT.panel = (function ($) {
                 panel: jQPanel,
                 offset: offset
             };
-            $(window).scroll(function () {
-                handleScroll(jQPanel, offset);
+            $(window).scroll(function (event) {
+                if( event.target === document){
+                    handleScroll(jQPanel, offset);
+                }
             });
             $(window).resize(function () {
-                handleScrollResize(jQPanel);
+                handleScrollResize(jQPanel, offset);
             });
             $(document).bind('helptip-closed', function () {
                 handleScroll(jQPanel, offset);
@@ -640,7 +660,8 @@ KT.panel = (function ($) {
         control_bbq: control_bbq,
         registerPanel: registerPanel,
         queryParameters: queryParameters,
-        actions: actions
+        actions: actions,
+        handleScroll : handleScroll
     };
 })(jQuery);
 

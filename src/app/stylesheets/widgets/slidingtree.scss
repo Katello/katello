@@ -13,9 +13,10 @@
     padding: 10px 5px;
     overflow: auto;
     
-    .currentCrumb{ color: $tree-current-breadcrumb_color; }
+    .currentCrumb{ color: $tree-current-breadcrumb_color; max-width: 350px; }
     .crumb { color: $tree-breadcrumb_color; }
-    .slide_link { display: inline; }
+    .slide_link { color: $tree-breadcrumb_color; }
+    span { display: inline-block; max-width: 120px; white-space: nowrap; overflow: hidden; }
     
     .home_img {
       width: 16px;
@@ -44,7 +45,7 @@
     float: left;
     bottom: 31px;
     left: 0px;
-    z-index: 300;
+    z-index: 10;
     margin-left: 1px;
     height: 250px;
     background-color:$panel_color;
