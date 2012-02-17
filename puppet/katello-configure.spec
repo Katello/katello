@@ -56,6 +56,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Feb 17 2012 Bryan Kearney <bkearney@redhat.com> 0.1.64-7
+- Bump the configure build to -7 (bkearney@redhat.com)
+- 794902: Do not start tumbslug until tomcat is sarted, which is after the
+  candlepin configure
+
 * Fri Feb 17 2012 Bryan Kearney <bkearney@redhat.com> 0.1.64-6
 - Bump the configure to 0.1.64-6 (bkearney@redhat.com)
 - 794852: Disable per-environmen filtering for SAM
