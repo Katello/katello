@@ -17,7 +17,7 @@
 
 Name:           katello
 Version:        0.1.238
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -354,6 +354,14 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Feb 16 2012 Mike McCune <mmccune@redhat.com> 0.1.238-4
+- Missing branding files after we branched for 1.0 (mmccune@redhat.com)
+- 784649 - Fix for empty changeset message when System Templates are added.
+- 786376 - add waiting state to non running pulp list
+- 790966 - updated date format
+- 790966 - Added a logger for the prod env to print timestamp information on
+  errors and warnings.
+
 * Thu Feb 16 2012 Mike McCune <mmccune@redhat.com> 0.1.238-3
 - rebuild
 * Wed Feb 15 2012 Mike McCune <mmccune@redhat.com> 0.1.238-1
