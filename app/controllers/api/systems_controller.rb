@@ -210,7 +210,7 @@ class Api::SystemsController < Api::ApiController
     update_ids = []
     unknown_labels = []
     update_labels.each do |label|
-      repo = Repository.find_by_cp_label label
+      repo = @system.environment.repositories.find_by_cp_label label
       if repo.nil?
         logger.warn(_("Unknown repository label") + ": #{label}")
         unknown_labels << label
