@@ -25,3 +25,5 @@ cd $HEADPIN
 # copy katello over
 mkdir katello
 cp -r ../../src/* katello/
+# remove COMPILED css
+rm -rf katello/public/stylesheets/compiled
