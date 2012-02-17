@@ -39,6 +39,7 @@ Requires:      python-iniparse
 Requires:      python-simplejson
 Requires:      m2crypto
 Requires:      python-kerberos
+Requires:      PyXML
 BuildRequires: python2-devel
 BuildRequires: gettext
 BuildArch:     noarch
