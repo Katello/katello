@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.64
+Version:        0.1.65
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
