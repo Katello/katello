@@ -57,6 +57,8 @@ end
 
 class KTEnvironment < ActiveRecord::Base
   include Authorization
+  include Glue::Candlepin::Environment if AppConfig.use_cp
+  include Glue if AppConfig.use_cp
   set_table_name "environments"
 
   acts_as_reportable
@@ -75,6 +77,8 @@ class KTEnvironment < ActiveRecord::Base
       super( items - proxy_owner.environment_products.collect{|ep| ep.product} )
     end
   end
+
+  has_many :repositories, :through => :environment_products, :source => :repositories
 
   has_many :systems, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
