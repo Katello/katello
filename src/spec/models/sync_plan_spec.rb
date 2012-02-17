@@ -48,10 +48,16 @@ describe SyncPlan do
 
     it "should properly handle pulp duration of none" do
       @plan.interval = 'none'
+      @plan.sync_date = DateTime.now.tomorrow()
       @plan.schedule_format.should_not be_nil
       @plan.schedule_format.should =~ /R1\/.*\/P1D/
     end
 
+    it "should properly handle pulp duration of none if scheduled in past" do
+      @plan.interval = 'none'
+      @plan.sync_date = DateTime.now.yesterday()
+      @plan.schedule_format.should == nil
+    end
   end
 
 end
