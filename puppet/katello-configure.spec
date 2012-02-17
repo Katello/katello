@@ -56,6 +56,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Feb 17 2012 Bryan Kearney <bkearney@redhat.com> 0.1.64-6
+- Bump the configure to 0.1.64-6 (bkearney@redhat.com)
+- 794852: Disable per-environmen filtering for SAM
+
 * Thu Feb 16 2012 Mike McCune <mmccune@redhat.com> 0.1.64-5
 - 773088 - reconfiguring the threading for pulp syncs
 
