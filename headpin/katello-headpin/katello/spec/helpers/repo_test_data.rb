@@ -55,7 +55,7 @@ module RepoTestData
   }.with_indifferent_access
 
   REPO_FILTER = {
-    "name" => "filter_1", 
+    "name" => "filter_1",
     "pulp_id" => "filter_1"
   }
 
