@@ -146,7 +146,11 @@ module Glue::Pulp::Repo
     else
       #repo is not in the next environment yet, we have to clone it there
       key = EnvironmentProduct.find_or_create(to_env, self.product)
-      clone = Repository.create!(:environment_product => key, :clone_from => self, :cloned_content => self.content, :cloned_filters => filters_to_clone)
+      clone = Repository.create!(:environment_product => key,
+                                 :clone_from => self,
+                                 :cloned_content => self.content,
+                                 :cloned_filters => filters_to_clone,
+                                 :cp_label => self.cp_label)
 
       clone.index_packages
       clone.index_errata
