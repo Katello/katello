@@ -206,6 +206,8 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Fri Feb 17 2012 Jordan OMara <jomara@redhat.com> 0.1.139-2
+- rebuild
 * Thu Feb 16 2012 Jordan OMara <jomara@redhat.com> 0.1.138-2
 - rebuild for more katello changes
 * Thu Feb 16 2012 Jordan OMara <jomara@redhat.com> 0.1.137-2
