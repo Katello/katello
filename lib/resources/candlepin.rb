@@ -426,12 +426,32 @@ module Candlepin
 
       def refresh_for_owner owner_key
         ret = self.put("/candlepin/owners/#{owner_key}/subscriptions", {}.to_json, self.default_headers).body
-        sleep 0.2 # TODO: temporary hack for avoiding bz_788932. Once it's handled on CP side remove this.
-        ret
+        JSON.parse(ret).with_indifferent_access
       end
 
       def path(id=nil)
         "/candlepin/subscriptions/#{id}"
+      end
+    end
+  end
+
+  class Job < CandlepinResource
+    class << self
+
+      NOT_FINISHED_STATES = %w[CREATED PENDING RUNNING] unless defined? NOT_FINISHED_STATES
+
+      def not_finished?(job)
+        NOT_FINISHED_STATES.include?(job[:state])
+      end
+
+      def get id
+        job_json = super(path(id), self.default_headers).body
+        job = JSON.parse(job_json)
+        job.with_indifferent_access
+      end
+
+      def path(id=nil)
+        "/candlepin/jobs/#{id}"
       end
     end
   end
