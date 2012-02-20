@@ -9,3 +9,6 @@ do
 done
 
 /sbin/restorecon -rvvi /var/lib/katello /var/log/katello
+
+# bz 790507 - httpd needs to work as proxy for Katello
+/usr/sbin/setsebool -P httpd_can_network_connect 1
