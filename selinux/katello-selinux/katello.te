@@ -20,7 +20,6 @@ files_type(httpd_katello_script_var_lib_t)
 # httpd_katello_script local policy
 #
 
-
 manage_dirs_pattern(httpd_katello_script_t, httpd_katello_script_log_t, httpd_katello_script_log_t)
 manage_files_pattern(httpd_katello_script_t, httpd_katello_script_log_t, httpd_katello_script_log_t)
 logging_log_filetrans(httpd_katello_script_t, httpd_katello_script_log_t, { dir file })
@@ -49,3 +48,12 @@ logging_send_syslog_msg(httpd_katello_script_t)
 miscfiles_read_localization(httpd_katello_script_t)
 
 mta_send_mail(httpd_katello_script_t)
+
+# temporary fix for RHEL 6.2 GOLD (base policy is coming out soon)
+gen_require(`
+	type qpidd_t;
+')
+
+files_list_tmp(qpidd_t)
+miscfiles_read_certs(qpidd_t)   
+
