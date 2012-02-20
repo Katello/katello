@@ -161,6 +161,7 @@ module Glue::Candlepin::Product
     end
 
     def del_product
+      return true unless no_other_assignment?
       Rails.logger.debug "Deleting product in candlepin: #{name}"
       Candlepin::Product.destroy self.cp_id
       true
@@ -193,6 +194,7 @@ module Glue::Candlepin::Product
     end
 
     def remove_all_content
+      return true unless no_other_assignment?
       # engineering products handle content deletion when destroying
       # repositories
       return true unless self.is_a? MarketingProduct
@@ -207,6 +209,9 @@ module Glue::Candlepin::Product
       raise e
     end
 
+    def no_other_assignment?
+      ::Product.where(["cp_id = ? AND id != ?", self.cp_id, self.id]).empty?
+    end
 
     def update_content
       return true unless productContent_changed?
