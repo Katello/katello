@@ -20,7 +20,7 @@
 
 Name:           %{modulename}-selinux
 Version:        0.1.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        SELinux policy module supporting Katello
 
 Group:          System Environment/Base
