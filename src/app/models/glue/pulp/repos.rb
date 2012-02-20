@@ -42,13 +42,13 @@ module Glue::Pulp::Repos
     if for_cp
       "/#{content_path}"
     else
-      "#{org}/#{environment.name}/#{content_path}"
+      "#{org}/#{environment.name.gsub(/[^-\w]/,"_")}/#{content_path}"
     end
   end
 
   def self.repo_path_from_content_path(environment, content_path)
     content_path = content_path.sub(/^\//, "")
-    "#{environment.organization.name}/#{environment.name}/#{content_path}"
+    "#{environment.organization.name}/#{environment.name.gsub(/[^-\w]/,"_")}/#{content_path}"
   end
 
   # create content for custom repo
