@@ -248,8 +248,8 @@ module Glue::Candlepin::Product
 
     def del_subscriptions
       Rails.logger.debug "Deleting subscriptions for product #{name} in candlepin"
-      jobs = Candlepin::Product.delete_subscriptions self.organization.cp_key, self.cp_id
-      wait_for_jobs(jobs)
+      job = Candlepin::Product.delete_subscriptions self.organization.cp_key, self.cp_id
+      wait_for_job(job) if job
       true
     rescue => e
       Rails.logger.error "Failed to delete subscription for product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
@@ -258,15 +258,9 @@ module Glue::Candlepin::Product
 
     # preventing of going into race-condition described in BZ_788932 by waiting
     # for each job to finish before proceeding.
-    def wait_for_jobs(jobs)
-      while (jobs = pending_jobs(jobs)) && !jobs.empty?
+    def wait_for_job(job)
+      while Candlepin::Job.not_finished?(Candlepin::Job.get(job[:id]))
         sleep 0.5
-      end
-    end
-
-    def pending_jobs(jobs)
-      jobs.find_all do |job|
-        Candlepin::Job.not_finished?(Candlepin::Job.get(job[:id]))
       end
     end
 
