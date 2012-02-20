@@ -3,7 +3,7 @@ module Puppet::Parser::Functions
     begin
       cpu_count = lookupvar('::processorcount').to_i
       consumes = 230_000_000 # for each thin process
-      reserve = 600_000_000 # for the OS and backend engines
+      reserve = 2_000_000_000 # for the OS and backend engines
       mem,unit = lookupvar('::memorysize').split
 
       # convert total memory into bytes
