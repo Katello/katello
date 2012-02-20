@@ -46,7 +46,7 @@ Requires:       selinux-policy >= %{selinux_policyver}
 %if 0%{?rhel} == 5
 Requires:       selinux-policy >= 2.4.6-80
 %endif
-Requires(post):   /usr/sbin/semodule, /sbin/restorecon, /usr/sbin/setsebool, /usr/sbin/selinuxenabled
+Requires(post):   /usr/sbin/semodule, /sbin/restorecon, /usr/sbin/setsebool, /usr/sbin/selinuxenabled, /usr/sbin/semanage
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon
 Requires:       %{modulename}-common
 

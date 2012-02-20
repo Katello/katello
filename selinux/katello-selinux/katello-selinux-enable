@@ -8,6 +8,9 @@ do
     /usr/share/selinux/${selinuxvariant}/katello.pp || :
 done
 
+# allow qpidd to use port 5674
+/usr/sbin/semanage port -a -t amqp_port_t -p tcp 5674
+
 /sbin/restorecon -rvvi /var/lib/katello /var/log/katello
 
 # bz 790507 - httpd needs to work as proxy for Katello

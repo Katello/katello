@@ -370,6 +370,7 @@ x509_extensions         = req_ca_x509_extensions
 basicConstraints = CA:true
 keyUsage = digitalSignature, keyEncipherment, keyCertSign
 extendedKeyUsage = serverAuth, clientAuth
+nsCertType = server
 # PKIX recommendations harmless if included in all certificates.
 nsComment               = "Katello SSL Tool Generated Certificate"
 subjectKeyIdentifier    = hash

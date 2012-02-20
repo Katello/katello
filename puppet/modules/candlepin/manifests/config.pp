@@ -1,5 +1,11 @@
 class candlepin::config {
 
+  exec { "add-tomcat-user-to-katello-group":
+        command => "usermod -a -G katello tomcat",
+        path => "/usr/sbin",
+        before => Exec["cpsetup"]
+  }
+
   postgres::createuser { $candlepin::params::db_user:
     passwd => $candlepin::params::db_pass,
     roles  => "CREATEDB",
@@ -30,9 +36,11 @@ class candlepin::config {
      command => "/usr/share/candlepin/cpsetup >> ${candlepin::params::cpsetup_log} 2>&1",
      timeout => 300, # 5 minutes timeout (cpsetup can be really slow sometimes)
      require => [
-       Postgres::Createdb[$candlepin::params::db_name]
+       Postgres::Createdb[$candlepin::params::db_name],
+       Class["certs::config"]
      ],
-     creates => "/etc/candlepin/certs/candlepin-ca.crt", # another hack not to run it again
+     creates => "/etc/tomcat6/server.xml.original", # another hack not to run it again
+     #creates => "/etc/candlepin/certs/candlepin-ca.crt", # another hack not to run it again
      before  => Class["apache2::service"],               # another hack, as we reuse cp certs by default
    }
 }

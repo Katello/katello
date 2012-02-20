@@ -16,6 +16,7 @@ Requires:       puppet >= 2.6.6
 Requires:       wget
 Requires:       katello-certs-tools
 Requires:       nss-tools
+Requires:       policycoreutils-python
 BuildRequires:  /usr/bin/pod2man
 
 BuildArch: noarch
