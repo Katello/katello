@@ -532,19 +532,23 @@ module Candlepin
       end
 
       def delete_subscriptions owner_key, product_id
+        update_subscriptions = false
         subscriptions = Candlepin::Subscription.get_for_owner owner_key
-        subscriptions.collect do |s|
-
+        subscriptions.each do |s|
           products = ([s['product']] + s['providedProducts'])
           products.each do |p|
             if p['id'] == product_id
               Rails.logger.debug "Deleting subscription: " + s.to_json
               Candlepin::Subscription.destroy s['id']
-              break
+              update_subscriptions = true
             end
           end
+        end
 
-          Candlepin::Subscription.refresh_for_owner owner_key
+        if update_subscriptions
+          return Candlepin::Subscription.refresh_for_owner owner_key
+        else
+          return nil
         end
       end
 
