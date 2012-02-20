@@ -95,6 +95,3 @@ class ProductPromoteTest(CLIActionTestCase):
         self.action.run()
         self.module.run_spinner_in_bg.assert_called_once()
 
-    def test_it_deletes_the_changeset(self):
-        self.action.run()
-        self.action.csapi.delete.assert_called_once_with(self.CSET['id'])
