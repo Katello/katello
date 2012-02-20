@@ -203,7 +203,7 @@ class Action(object):
         return _('no description available')
 
 
-    def get_option(self, opt):
+    def get_option(self, opt_dest):
         """
         Get an option from opts or from the config file
         Options from opts take precedence.
@@ -211,9 +211,13 @@ class Action(object):
         @param opt: name of option to get
         @return: value of the option or None if the option is no present
         """
-        attr = getattr(self.opts, opt, None)
-        if Config.parser.has_option('options', opt) and not attr:
-            attr = Config.parser.get('options', opt)
+        attr = getattr(self.opts, opt_dest, None)
+        if not attr:
+            option = self.parser.get_option_by_dest(opt_dest)
+            if option != None:
+                opt_name = option.get_name()
+                if Config.parser.has_option('options', opt_name):
+                    attr = Config.parser.get('options', opt_name)
         return attr
 
 
@@ -417,3 +421,6 @@ class KatelloOption(Option):
     TYPES = Option.TYPES + ("bool",)
     TYPE_CHECKER = copy(Option.TYPE_CHECKER)
     TYPE_CHECKER["bool"] = check_bool
+
+    def get_name(self):
+        return self.get_opt_string().lstrip('-')
