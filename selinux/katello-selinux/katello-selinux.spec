@@ -122,6 +122,12 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 
 %changelog
+* Mon Feb 20 2012 Jordan OMara <jomara@redhat.com> 0.1.5-3
+- 790507 - fixing httpds SAM denials of mod_proxy
+
+* Mon Feb 20 2012 Jordan OMara <jomara@redhat.com>
+- 790507 - fixing httpds SAM denials of mod_proxy
+
 * Thu Feb 16 2012 Jordan OMara <jomara@redhat.com> 0.1.5-2
 - Updating to require katello-common 
 * Thu Feb 16 2012 Jordan OMara <jomara@redhat.com>
