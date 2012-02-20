@@ -1,15 +1,23 @@
 Src::Application.configure do
   class KatelloLogger < ActiveSupport::BufferedLogger
+    def initialize(log, level)
+      level = {
+        "DEBUG" => 0,
+        "INFO" => 1,
+        "WARN" => 2,
+        "ERROR" => 3,
+        "FATAL" => 4
+      }[level.upcase] if level.is_a? String
+      super(log, level)
+    end
+
+    SEVERITY_TO_TEXT = ['DEBUG',' INFO',' WARN','ERROR','FATAL']
+
     def add(severity, message = nil, progname = nil, &block)
+      status = SEVERITY_TO_TEXT[severity] || "UNKNOWN"
       unless level > severity
         message = (message || (block && block.call) || progname).to_s
-        status = {
-          0 => "DEBUG",
-          1 => "INFO",
-          2 => "WARN",
-          3 => "ERROR",
-          4 => "FATAL"
-        }[severity] || "UNKNOWN"
+        status = SEVERITY_TO_TEXT[severity] || "UNKNOWN"
         message = "[%s: %s #%d] %s" % [status,
                                        Time.now.strftime("%Y-%m-%d %H:%M:%S"),
                                        $$,
@@ -46,7 +54,7 @@ Src::Application.configure do
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
 
-  prod_logger = KatelloLogger.new("#{Rails.root}/log/production.log", 2)
+  prod_logger = KatelloLogger.new("#{Rails.root}/log/production.log", config.log_level)
   prod_logger.auto_flushing = 1
   config.logger = prod_logger
   # Use a different cache store in production
