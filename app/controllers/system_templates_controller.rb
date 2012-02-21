@@ -119,19 +119,19 @@ class SystemTemplatesController < ApplicationController
           @packages << pkg.name
         }
       }
-    
-    offset = params[:offset] || 0
+
+    offset = params[:offset].to_i || 0
     @packages.sort!.uniq!
+    total = @packages.length
+    options = {:total_count=>@packages.length}
+    @packages = @packages[offset..(offset+current_user.page_size-1)]
 
-    if offset.to_i >  0
-      render :text=>"" and return if @packages.empty?
-
-      options = {:list_partial => 'product_packages_items'}
-      render_panel_items(@packages, options, nil, offset)
+    if offset >  0
+      options[:list_partial]  = 'product_packages_items'
     else
-      @packages = @packages[0..current_user.page_size]
-      render :partial=>"product_packages", :locals=>{:collection => @packages}
+      options[:list_partial] = 'product_packages'
     end
+    render_panel_results(@packages, total, options)
   end
 
   def product_comps

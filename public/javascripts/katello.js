@@ -305,7 +305,7 @@ KT.common = (function() {
             }
             return root_url;
         },
-        getSearchParams : function() {
+        getSearchParams : function(val) {
             var search_string = $.bbq.getState('search');
 
         	if( search_string ){
