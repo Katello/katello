@@ -162,7 +162,7 @@ class Printer:
                 value = item[col['attr_name']]
             if not col['multiline']:
                 output = format_date(value) if col['time_format'] else value
-                print (unicode("{0:<" + str(colWidth + 1) + "} {1}")).format(self.u_str(col['name']) + ":", output)
+                print (unicode("{0:<" + str(colWidth + 1) + "} {1}")).format(u_str(col['name']) + ":", output)
                 # +1 to account for the : after the column name
             else:
                 print indent+col['name']+":"
@@ -194,7 +194,7 @@ class Printer:
                 continue
             if col['multiline']:
                 value = text_to_line(value)
-            print self.u_str(value).ljust(width),
+            print u_str(value).ljust(width),
             print self._delim,
 
 
@@ -203,29 +203,20 @@ class Printer:
         #return widths
         for col in self._columns:
             key = col['attr_name']
-            widths[key] = len(self.u_str(col['name']))+1
+            widths[key] = len(u_str(col['name']))+1
             for item in items:
                 if not key in item: continue
-                value = self.u_str(item[key])
+                value = u_str(item[key])
                 if widths[key] < len(value):
                     widths[key] = len(value)+1
 
         return widths
 
-    def u_str(self, value):
-        """
-        Casts value to string unless it's unicode.
-        There is a problem using str on unicode values.
-        """
-        if not isinstance(value, unicode):
-            return str(value)
-        else:
-            return value
 
     def _minColumnWidth(self):
         width = 0
         for col in self._columns:
-            width = len(self.u_str(col['name'])) if (len(self.u_str(col['name'])) > width) else width
+            width = len(u_str(col['name'])) if (len(u_str(col['name'])) > width) else width
 
         return width
 
@@ -631,6 +622,17 @@ def progress(left, total):
     sizeLeft = float(left)
     sizeTotal = float(total)
     return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal
+
+
+def u_str(value):
+    """
+    Casts value to string unless it's unicode.
+    There is a problem using str on unicode values.
+    """
+    if not isinstance(value, unicode):
+        return str(value)
+    else:
+        return value
 
 
 def convert_to_mime_type(type, default=None):
