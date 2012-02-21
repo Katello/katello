@@ -1607,7 +1607,8 @@ $(document).ready(function() {
                                         default_tab     :  "content",
                                         bbq_tag         :  "content",
                                         base_icon       :  'home_img',
-                                        tab_change_cb   :  promotion_page.set_current_product
+                                        tab_change_cb   :  promotion_page.set_current_product,
+                                        expand_cb       :  promotion_page.reset_page //need to reset page during the extended scroll
                                     });
     contentTree.enableSearch();
     promotion_page.set_content_tree(contentTree);
@@ -1627,8 +1628,8 @@ $(document).ready(function() {
                                         }
                                     }));
 
-    //need to reset page during the extended scroll
-    KT.panel.list.set_extended_cb(promotion_page.reset_page);
+
+    $(window).trigger('hashchange');
 
     //when loading the new panel item, if its new, we need to add a form submit handler
     KT.panel.set_expand_cb(function(id) {
