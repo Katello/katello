@@ -215,10 +215,8 @@ KT.roles.permissionWidget = function(){
         handleKeypress = function(event){
         	if( event.which === 13 ){
 	        	event.preventDefault();
-        		if( current_stage === 'details' && $('#description').is(":focus") ){
+        		if( current_stage === 'details' && $('#permission_name').is(":focus") ){
         			handleDone();
-        		} else {
-        			handleNext();
         		}
         	}
         },
