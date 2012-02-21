@@ -1,12 +1,14 @@
-Delayed::Worker.logger =
-  ActiveSupport::BufferedLogger.new("log/#{Rails.env}_delayed_jobs.log", Rails.logger.level)
-Delayed::Worker.logger.auto_flushing = 1
+require 'katello_logger'
 
-# models have to use logger.info instead of Rails.logger.info in order for the desired log file to be used.
-if caller.last =~ /.*\/script\/delayed_job:\d+$/
+# Models have to use logger.info instead of Rails.logger.info in order for the desired log file to be used.
+# When running under Rails last caller is "/usr/share/katello/config.ru:1" but when running standalone
+# last caller is "script/delayed_job:3".
+if caller.last =~ /script\/delayed_job:\d+$/
+  level = (ENV['KATELLO_LOGGING'] || "warn").dup
+  level_sql = (ENV['KATELLO_LOGGING_SQL'] || "fatal").dup
+  Delayed::Worker.logger = KatelloLogger.new("#{Rails.root}/log/#{Rails.env}_delayed_jobs.log", level)
   Rails.logger = Delayed::Worker.logger
-  ActiveRecord::Base.logger = ActiveSupport::BufferedLogger.new("log/#{Rails.env}_delayed_jobs_sql.log", Rails.logger.level)
-  Rails.logger.auto_flushing = 1
+  ActiveRecord::Base.logger = KatelloLogger.new("#{Rails.root}/log/#{Rails.env}_delayed_jobs_sql.log", level_sql)
 end
 
 Delayed::Worker.destroy_failed_jobs = false
