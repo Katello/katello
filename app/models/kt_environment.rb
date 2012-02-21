@@ -92,6 +92,7 @@ class KTEnvironment < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates_with PriorValidator
   validates_with PathDescendentsValidator
+  validate :constant_name, :on => :update
 
 
   after_save :update_related_index
@@ -360,6 +361,12 @@ class KTEnvironment < ActiveRecord::Base
 
   def delete_related_index
     self.organization.update_index if self.organization
+  end
+
+  def constant_name
+    if changes[:name]
+      errors[:name] << _("can not be updated")
+    end
   end
 
 end

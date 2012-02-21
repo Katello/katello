@@ -64,7 +64,13 @@ describe KTEnvironment do
     specify { @new_env.prior.should == @environment }
     specify { @environment.successor.should == @new_env }
   end
-  
+
+  describe "update an environment" do
+    specify "name should not be changed" do
+      @environment.name = "changed_name"
+      @environment.should_not be_valid
+    end
+  end
 
   context "delete an environment" do
     
