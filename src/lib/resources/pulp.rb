@@ -50,7 +50,9 @@ module Pulp
     self.ca_cert_file = cfg.ca_cert_file
 
     def self.default_headers
-      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(::User.pulp_oauth_header)
+      {'accept' => 'application/json',
+       'accept-language' => I18n.locale,
+       'content-type' => 'application/json'}.merge(::User.pulp_oauth_header)
     end
 
     # some old Pulp API need text/plain content type
