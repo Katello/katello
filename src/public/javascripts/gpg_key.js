@@ -11,7 +11,13 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.panel.list.registerPage('gpg_keys', { create : 'new_gpg_key' });
+KT.panel.list.registerPage('gpg_keys', { 
+    create              : 'new_gpg_key',
+    extra_create_data   : function(){
+		return { 'gpg_key[name]' : $('#gpg_key_name').val() };
+    }
+
+});
 
 $(document).ready(function(){
 	$('#upload_gpg_key').live('click', function(event){
@@ -139,6 +145,8 @@ KT.gpg_key = (function($){
 				$('#gpg_key_content').html(data);
 				notices.checkNoticesInResponse(xhr);
 				$('#upload_gpg_key').val('');		
+                $('#update_upload_gpg_key').removeAttr('disabled');
+				$('#clear_upload_gpg_key').removeAttr('disabled');
 			},
 			error	: function(){
                 $('#update_upload_gpg_key').removeAttr('disabled');
