@@ -91,7 +91,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
      return to_ret
   end
 
-  def self.search query, start, page_size, repoids=nil, not_repoids=nil, sort=[:nvrea_sort, "ASC"]
+  def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"]
     return [] if !Tire.index(self.index).exists?
     query_down = query.downcase
     query = "name:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
@@ -106,11 +106,6 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
       end
       if repoids
         filter :terms, :repoids => repoids
-      end
-      if not_repoids
-        #filter do
-        #   not :terms, :repository_ids => not_repoids
-        #end
       end
 
       sort { by sort[0], sort[1] }

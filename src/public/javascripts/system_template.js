@@ -1229,7 +1229,7 @@ $(document).ready(function() {
 
     $("#modified_dialog").dialog({modal: true, width: 400, autoOpen: false});
 
-    KT.panel.list.set_extended_cb(KT.templates.reset_page);
+
 
     KT.options.templates = KT.template_breadcrumb["templates"].templates;
 
@@ -1241,8 +1241,10 @@ $(document).ready(function() {
                             enable_filter   :  false,
                             tab_change_cb   :  function(hash_id) {
                                 KT.templates.reset_page();
-                            }
+                            },
+                            expand_cb      :  KT.templates.reset_page
                         });
+    KT.options.content_tree.enableSearch();
 
     KT.options.template_tree = sliding_tree("template_tree", {
                             breadcrumb      :  KT.template_breadcrumb,
@@ -1278,4 +1280,5 @@ $(document).ready(function() {
             return i18n.leave_page.replace("$TEMPLATE",  KT.options.current_template.name);
         }
     };
+    $(window).trigger('hashchange');
 });
