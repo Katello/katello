@@ -59,7 +59,9 @@ module Candlepin
     self.resource_permissions = CandlepinResourcePermissions
 
     def self.default_headers
-      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.cp_oauth_header)
+      {'accept' => 'application/json',
+       'accept-language' => I18n.locale,
+       'content-type' => 'application/json'}.merge(User.cp_oauth_header)
     end
 
     def self.name_to_key a_name
