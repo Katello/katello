@@ -152,8 +152,6 @@ class Update(EnvironmentAction):
                                help=_("environment description eg: foo's environment"))
         self.parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--new_name', dest='new_name',
-                               help=_("new environment name"))
         self.parser.add_option('--prior', dest='prior',
                                help=_("name of prior environment"))
         self.parser.add_option('--name', dest='name',
@@ -167,7 +165,6 @@ class Update(EnvironmentAction):
 
     def run(self):
         envName     = self.get_option('name')
-        newName     = self.get_option('new_name')
         description = self.get_option('description')
         orgName     = self.get_option('org')
         priorName   = self.get_option('prior')
@@ -178,7 +175,7 @@ class Update(EnvironmentAction):
                 priorId = self.get_prior_id(orgName, priorName)
             else:
                 priorId = None
-            env = self.api.update(orgName, env["id"], newName, description, priorId)
+            env = self.api.update(orgName, env["id"], envName, description, priorId)
             print _("Successfully updated environment [ %s ]") % env['name']
             return os.EX_OK
         else:
