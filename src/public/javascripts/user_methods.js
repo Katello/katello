@@ -76,7 +76,12 @@ KT.user_page = function() {
                 $('#save_password').die('click');
                 $('#save_password').live('click',changePassword);
                 //reset the new user button
-                $('#save_user').removeClass('disabled');
+                if (a == "" && b == "") {
+                    $('#save_user').addClass('disabled');
+                    $('#save_password').addClass('disabled');
+                } else {
+                    $('#save_user').removeClass('disabled');
+                }
                 return true;
             }
             else {
@@ -114,6 +119,9 @@ KT.user_page = function() {
     },
     changePassword = function() {
         var button = $(this);
+        if(button.hasClass("disabled")) {
+            return;
+        }
         var url = button.attr("data-url");
         var password = $('#password_field').val();
         button.addClass("disabled");
