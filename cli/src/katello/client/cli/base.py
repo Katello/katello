@@ -20,7 +20,7 @@ from gettext import gettext as _
 from kerberos import GSSError
 from optparse import OptionGroup, SUPPRESS_HELP
 from katello.client.i18n_optparse import OptionParser, OptionParserExitError
-from katello.client.core.utils import parse_tokens
+from katello.client.core.utils import parse_tokens, u_str
 
 from katello.client.config import Config
 from katello.client.logutil import getLogger
@@ -179,9 +179,9 @@ class KatelloCLI(object):
             raise KatelloError("Invalid credentials or unable to authenticate", e)
 
     def error(self, exception, errorMsg = None):
-        msg = errorMsg if errorMsg else str(exception)
+        msg = errorMsg if errorMsg else u_str(exception)
         print >> sys.stderr, "error: %s (more in the log file)" % msg
-        _log.error(str(exception))
+        _log.error(u_str(exception))
         _log.error(format_exc(exception))
 
     def command_names(self):

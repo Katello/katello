@@ -23,7 +23,7 @@ from M2Crypto import SSL
 from socket import error as SocketError
 
 from katello.client.config import Config
-from katello.client.core.utils import system_exit, parse_tokens, Printer, SystemExitRequest
+from katello.client.core.utils import system_exit, parse_tokens, Printer, SystemExitRequest, u_str
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
 
@@ -347,11 +347,11 @@ class Action(object):
         return True
 
     def error(self, errorMsg):
-        _log.error("error: %s" % str(errorMsg))
-        if str(errorMsg) == '':
+        _log.error("error: %s" % u_str(errorMsg))
+        if u_str(errorMsg) == '':
             msg = _('error: operation failed')
         else:
-            msg = str(errorMsg)
+            msg = u_str(errorMsg)
         print >> sys.stderr, msg
 
     def main(self, args):
@@ -376,7 +376,10 @@ class Action(object):
 
         except ServerRequestError, re:
             try:
-                msg = ", ".join(re.args[1]["errors"])
+                if "displayMessage" in re.args[1]:
+                    msg = re.args[1]["displayMessage"]
+                else:
+                    msg = ", ".join(re.args[1]["errors"])
             except:
                 msg = re.args[1]
             if re.args[0] == 401:
@@ -396,7 +399,7 @@ class Action(object):
             msg = "\n".join(ser.args[1]).strip()
             if ser.args[0] == os.EX_OK:
                 out = sys.stdout
-                _log.error("error: %s" % str(msg))
+                _log.error("error: %s" % u_str(msg))
             else:
                 out = sys.stderr
 
