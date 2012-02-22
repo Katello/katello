@@ -19,7 +19,7 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        0.1.4
+Version:        0.1.7
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
@@ -48,7 +48,7 @@ Requires:       selinux-policy >= 2.4.6-80
 %endif
 Requires(post):   /usr/sbin/semodule, /sbin/restorecon, /usr/sbin/setsebool, /usr/sbin/selinuxenabled
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon
-Requires:       %{modulename}
+Requires:       %{modulename}-common
 
 %description
 SELinux policy module supporting Katello.
@@ -122,6 +122,22 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 
 %changelog
+* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.1.7-1
+- retag
+
+* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.1.6-1
+- rebuild in brew
+
+* Mon Feb 20 2012 Jordan OMara <jomara@redhat.com> 0.1.5-3
+- 790507 - fixing httpds SAM denials of mod_proxy
+
+* Mon Feb 20 2012 Jordan OMara <jomara@redhat.com>
+- 790507 - fixing httpds SAM denials of mod_proxy
+
+* Thu Feb 16 2012 Jordan OMara <jomara@redhat.com> 0.1.5-2
+- Updating to require katello-common 
+* Thu Feb 16 2012 Jordan OMara <jomara@redhat.com>
+- Updating to require katello-common 
 * Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
 - selinux - adding requirement for the main package
 - selinux - adding rh header

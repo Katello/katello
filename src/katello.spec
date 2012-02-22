@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.240
+Version:        0.1.300
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,9 +354,21 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.1.300-1
+- rebuild
+* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com>
+- rebuild
+* Thu Feb 16 2012 Mike McCune <mmccune@redhat.com> 0.1.238-4
+- Missing branding files after we branched for 1.0 (mmccune@redhat.com)
+- 784649 - Fix for empty changeset message when System Templates are added.
+- 786376 - add waiting state to non running pulp list
+- 790966 - updated date format
+- 790966 - Added a logger for the prod env to print timestamp information on
+  errors and warnings.
+* Thu Feb 16 2012 Mike McCune <mmccune@redhat.com> 0.1.238-3
+- rebuild
 * Thu Feb 16 2012 Ivan Necas <inecas@redhat.com> 0.1.239-1
 - 789456 - fix problem with unicode (inecas@redhat.com)
-
 * Wed Feb 15 2012 Mike McCune <mmccune@redhat.com> 0.1.238-1
 - rebuild
 * Tue Feb 14 2012 Mike McCune <mmccune@redhat.com> 0.1.237-1
@@ -364,6 +376,7 @@ fi
 * Fri Feb 10 2012 Mike McCune <mmccune@redhat.com> 0.1.234-1
 - 789516 - Promotions - fix ability to add products and distros to a changeset
   (bbuckingham@redhat.com)
+
 - 741499-Added code to deal with weird user current org behaviour
   (paji@redhat.com)
 

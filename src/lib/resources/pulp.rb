@@ -53,7 +53,9 @@ module Pulp
 
 
     def self.default_headers
-      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(::User.pulp_oauth_header)
+      {'accept' => 'application/json',
+       'accept-language' => I18n.locale,
+       'content-type' => 'application/json'}.merge(::User.pulp_oauth_header)
     end
 
     # some old Pulp API need text/plain content type
@@ -132,6 +134,8 @@ module Pulp
       def find(errata_id)
         response = get(errata_path + errata_id + "/", self.default_headers)
         JSON.parse(response.body).with_indifferent_access
+      rescue JSON::ParserError => e
+        nil
       end
 
       def errata_path

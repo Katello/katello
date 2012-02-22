@@ -15,8 +15,11 @@ class candlepin::params {
         require "thumbslug::params"
         $thumbslug_oauth_key = "thumbslug"
         $thumbslug_oauth_secret = $thumbslug::params::oauth_secret
+        $env_filtering_enabled = "false"
       }
-      default : {}
+      default : {
+		$env_filtering_enabled = "true"
+	  }
   }
 
 }

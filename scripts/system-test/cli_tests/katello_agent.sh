@@ -23,7 +23,7 @@ gpgcheck=0
 EOF
 
   test_own_cmd_success "rhsm registration with org" sudo subscription-manager register --username=$USER --password=$PASSWORD \
-    --org=$TEST_ORG --environment $TEST_ENV --name=$HOST --force
+    --org="$TEST_ORG" --environment "$TEST_ENV" --name=$HOST --force
 
   echo "removing package $INSTALL_PACKAGE from the system"
   sudo yum remove -y $INSTALL_PACKAGE &> /dev/null

@@ -59,7 +59,9 @@ module Candlepin
     self.resource_permissions = CandlepinResourcePermissions
 
     def self.default_headers
-      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.cp_oauth_header)
+      {'accept' => 'application/json',
+       'accept-language' => I18n.locale,
+       'content-type' => 'application/json'}.merge(User.cp_oauth_header)
     end
 
     def self.name_to_key a_name
@@ -426,12 +428,32 @@ module Candlepin
 
       def refresh_for_owner owner_key
         ret = self.put("/candlepin/owners/#{owner_key}/subscriptions", {}.to_json, self.default_headers).body
-        sleep 0.2 # TODO: temporary hack for avoiding bz_788932. Once it's handled on CP side remove this.
-        ret
+        JSON.parse(ret).with_indifferent_access
       end
 
       def path(id=nil)
         "/candlepin/subscriptions/#{id}"
+      end
+    end
+  end
+
+  class Job < CandlepinResource
+    class << self
+
+      NOT_FINISHED_STATES = %w[CREATED PENDING RUNNING] unless defined? NOT_FINISHED_STATES
+
+      def not_finished?(job)
+        NOT_FINISHED_STATES.include?(job[:state])
+      end
+
+      def get id
+        job_json = super(path(id), self.default_headers).body
+        job = JSON.parse(job_json)
+        job.with_indifferent_access
+      end
+
+      def path(id=nil)
+        "/candlepin/jobs/#{id}"
       end
     end
   end
@@ -512,19 +534,23 @@ module Candlepin
       end
 
       def delete_subscriptions owner_key, product_id
+        update_subscriptions = false
         subscriptions = Candlepin::Subscription.get_for_owner owner_key
-        subscriptions.collect do |s|
-
+        subscriptions.each do |s|
           products = ([s['product']] + s['providedProducts'])
           products.each do |p|
             if p['id'] == product_id
               Rails.logger.debug "Deleting subscription: " + s.to_json
               Candlepin::Subscription.destroy s['id']
-              break
+              update_subscriptions = true
             end
           end
+        end
 
-          Candlepin::Subscription.refresh_for_owner owner_key
+        if update_subscriptions
+          return Candlepin::Subscription.refresh_for_owner owner_key
+        else
+          return nil
         end
       end
 

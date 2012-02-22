@@ -2,8 +2,8 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.64
-Release:        1%{?dist}
+Version:        0.1.100
+Release:        7%{?dist}
 Summary:        Configuration tool for Katello
 
 Group:          Applications/Internet
@@ -56,6 +56,23 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.1.100-7
+- rebuild
+
+* Fri Feb 17 2012 Bryan Kearney <bkearney@redhat.com> 0.1.64-7
+- Bump the configure build to -7 (bkearney@redhat.com)
+- 794902: Do not start tumbslug until tomcat is sarted, which is after the
+  candlepin configure
+
+* Fri Feb 17 2012 Bryan Kearney <bkearney@redhat.com> 0.1.64-6
+- Bump the configure to 0.1.64-6 (bkearney@redhat.com)
+- 794852: Disable per-environmen filtering for SAM
+
+* Thu Feb 16 2012 Mike McCune <mmccune@redhat.com> 0.1.64-5
+- 773088 - reconfiguring the threading for pulp syncs
+
+* Thu Feb 16 2012 Mike McCune <mmccune@redhat.com>
+- 773088 - reconfiguring the threading for pulp syncs
 * Fri Feb 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.64-1
 - 789290 - fixing progress bars with new puppet
 - 789290 - updating log file sizes

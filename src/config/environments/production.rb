@@ -1,3 +1,5 @@
+require 'katello_logger'
+
 Src::Application.configure do
   # Settings specified here will take precedence over those in config/environment.rb
 
@@ -20,11 +22,14 @@ Src::Application.configure do
 
   # See everything in the log (default is :warn)
   config.log_level = (ENV['KATELLO_LOGGING'] || "warn").dup
-  config.active_record.logger = Logger.new("#{Rails.root}/log/production_sql.log")
+  log_level_sql = (ENV['KATELLO_LOGGING_SQL'] || "fatal").dup
+  config.active_record.logger = KatelloLogger.new("#{Rails.root}/log/production_sql.log", log_level_sql)
   config.colorize_logging = false
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
+
+  config.logger = KatelloLogger.new("#{Rails.root}/log/production.log", config.log_level)
 
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store

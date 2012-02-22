@@ -297,9 +297,6 @@ class Promote(SingleProductAction):
             #exception message is printed from action's main method
             raise e
 
-        finally:
-            self.csapi.delete(cset["id"])
-
         return returnCode
 
     def create_cs_name(self):
