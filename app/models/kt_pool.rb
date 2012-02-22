@@ -15,7 +15,7 @@ class KTPool < ActiveRecord::Base
   include Authorization
 
   set_table_name "pools"
-  has_many :key_pools, :foreign_key => "pool_id"
+  has_many :key_pools, :foreign_key => "pool_id", :dependent => :destroy
   has_many :activation_keys, :through => :key_pools
 
   def as_json(*args)
