@@ -19,7 +19,7 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        0.1.5
+Version:        0.2.1
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
@@ -122,6 +122,9 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 
 %changelog
+* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.2.1-1
+- 790507 - fixing httpds SAM denials of mod_proxy (lzap+git@redhat.com)
+
 * Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
 - selinux - adding requirement for the main package
 - selinux - adding rh header
