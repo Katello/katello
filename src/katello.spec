@@ -16,8 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.238
-Release:        4%{?dist}
+Version:        0.1.300
+Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -354,6 +354,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.1.300-1
+- rebuild
+* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com>
+- rebuild
 * Thu Feb 16 2012 Mike McCune <mmccune@redhat.com> 0.1.238-4
 - Missing branding files after we branched for 1.0 (mmccune@redhat.com)
 - 784649 - Fix for empty changeset message when System Templates are added.
