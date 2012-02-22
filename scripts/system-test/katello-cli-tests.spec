@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.29
+Version:       0.1.30
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 22 2012 Ivan Necas <inecas@redhat.com> 0.1.30-1
+- repetitive build
+
 * Fri Feb 10 2012 Ivan Necas <inecas@redhat.com> 0.1.27-1
 - system-tests - disable other repos when installing from fake repo
   (inecas@redhat.com)
