@@ -206,6 +206,9 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Wed Feb 22 2012 Jordan OMara <jomara@redhat.com> 0.1.140-3
+- Bumping release - lots of new katello features (jomara@redhat.com)
+
 * Fri Feb 17 2012 Jordan OMara <jomara@redhat.com> 0.1.140-2
 - removed some accidentally checked in pre-compiled scss stuff
 * Fri Feb 17 2012 Jordan OMara <jomara@redhat.com> 0.1.139-2
