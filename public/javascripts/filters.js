@@ -141,12 +141,11 @@ KT.product_input = (function(){
 
     },
     post_render_register = function() {
-        
         $(".product_radio").unbind().change(function(){
             var radio = $(this),
                 value = radio.val(),
                 parent = radio.parents(".product_entry"),
-                prod_id = parseInt(parent.attr("data-id")),
+                prod_id = parseInt(parent.attr("data-id"), 10),
                 list = parent.find(".repos_list"),
                 search = parent.find(".repos_search"),
                 filter = KT.filters.get_current_filter(),
@@ -175,7 +174,7 @@ KT.product_input = (function(){
                 filter.repos[prod_id] = [];
                 repos = KT.filters.get_repo_cache()[prod_id];
                 if (repos && repos.length > 0){
-                    filter.repos[prod_id] =  repos
+                    filter.repos[prod_id] =  repos;
                     delete KT.filters.get_repo_cache()[prod_id];
                 }
                 KT.filter_renderer.render_product_message(prod_id, false, KT.filters.get_current_filter().repos[prod_id]);
@@ -197,7 +196,7 @@ KT.product_input = (function(){
             var repo = $(this).parent(),
                 repo_id = repo.attr("data-id"),
                 parent = repo.parents('.product_entry'),
-                prod_id = parseInt(parent.attr("data-id")),
+                prod_id = parseInt(parent.attr("data-id"), 10),
                 filter = KT.filters.get_current_filter();
 
             KT.filters.pop_repo(prod_id, repo_id);
@@ -209,7 +208,7 @@ KT.product_input = (function(){
 
         $(".remove_product").unbind().click(function(){
             var parent = $(this).parents('.product_entry');
-            var prod_id = parseInt(parent.attr("data-id"));
+            var prod_id = parseInt(parent.attr("data-id"), 10);
             var filter = KT.filters.get_current_filter();
             KT.filters.pop_product(prod_id);
             delete filter.repos[prod_id];
@@ -243,7 +242,7 @@ KT.filter_renderer = (function(){
 
     },
     render_single_product = function(prod_id){
-        prod_id = parseInt(prod_id);
+        prod_id = parseInt(prod_id, 10);
         $('.product_entry[data-id=' + prod_id + ']').remove();
         $("#product_list").prepend(single_product(prod_id));
         $('.product_entry[data-id=' + prod_id + ']').hide();
@@ -306,12 +305,9 @@ KT.filter_renderer = (function(){
       return html;
     },
     product_message = function(prod_id, is_full, repos){
-        if(repos=== undefined){
-            repos = [];
-        }
         var message = i18n.entire_selected;
         if (!is_full){
-            message = i18n.x_of_y_repos(repos.length, KT.products[prod_id].repos.length);
+            message = i18n.x_of_y_repos(KT.utils.size(repos), KT.utils.size(KT.products[prod_id].repos));
         }
         return message;
     },
@@ -344,7 +340,7 @@ KT.filter_renderer = (function(){
         var html = "";
         $.each(KT.products[prod_id].repos, function(index, item){
             var used = KT.filters.get_current_filter().repos[prod_id] || [];
-            if (used.indexOf(item.id) === -1) {
+            if (used[item.id] === undefined) {
                 html+= '<option value="' + item.id + '">' + item.name + '</option>';
             }
         });
@@ -393,7 +389,7 @@ KT.filter_renderer = (function(){
     products_template = function(){
         var html = "";
         var filter = KT.filters.get_current_filter();
-        if (!filter){return ""}
+        if (!filter){return "";}
         var all_products = filter.products.concat(Object.keys(filter.repos));
         $.each(all_products , function(index, id){
             html += single_product(id);
@@ -409,7 +405,7 @@ KT.filter_renderer = (function(){
         render_single_repo : render_single_repo,
         rerender_repo_select: rerender_repo_select,
         empty_check: empty_check
-    }
+    };
 
 })();
 
@@ -508,7 +504,7 @@ KT.filters = (function(){
         return current_filter;
     },
     set_current_filter = function(filter_in) {
-        current_filter = filter_in
+        current_filter = filter_in;
         saved_filter = $.parseJSON(JSON.stringify(filter_in));
     },
     revert_products = function() {
@@ -521,7 +517,7 @@ KT.filters = (function(){
             type: "POST",
             contentType: "application/json",
             url: KT.routes.update_products_filter_path(current_filter.id),
-            data: JSON.stringify({products:current_filter.products, repos:repos}),
+            data: JSON.stringify({products:current_filter.products, repos:current_filter.repos}),
             cache: false,
             success: function(){
                 repo_cache = []; //clear repo cache
@@ -532,9 +528,9 @@ KT.filters = (function(){
         });
     },
     add_product = function(prod_id){
-        prod_id = parseInt(prod_id);
-        if ($.inArray( prod_id, current_filter.products) === -1
-            && current_filter.repos[prod_id] === undefined){
+        prod_id = parseInt(prod_id, 10);
+        if ($.inArray( prod_id, current_filter.products) === -1 &&
+             current_filter.repos[prod_id] === undefined){
             repo_cache[prod_id] = [];
             current_filter.products.push(prod_id);
             KT.filter_renderer.render_single_product(prod_id);
@@ -542,24 +538,24 @@ KT.filters = (function(){
         }
     },
     pop_product = function(prod_id){
-      var index = current_filter.products.indexOf(parseInt(prod_id));
+      var index = current_filter.products.indexOf(parseInt(prod_id, 10));
         if (index > -1) {
             current_filter.products.splice(index, 1);
         }
 
     },
     pop_repo = function(prod_id, repo_id){
-        var repos = current_filter.repos[parseInt(prod_id)],
+        var repos = current_filter.repos[parseInt(prod_id, 10)],
         index;
         if(repos) {
-            index = repos.indexOf(parseInt(repo_id));
+            index = repos.indexOf(parseInt(repo_id, 10));
             repos.splice(index, 1);
         }
 
     },
     add_repo = function(repo_id, prod_id, bump_up){
         if(repo_id === null || repo_id === undefined) return;
-        prod_id = parseInt(prod_id);
+        prod_id = parseInt(prod_id, 10);
         if ($.inArray( prod_id, current_filter.products) > -1){
             KT.filters.pop_product(prod_id);
         }

@@ -75,6 +75,12 @@ class Repository < ActiveRecord::Base
     end
   }
 
+  scope :editable_in_library, lambda {|org|
+    joins(:environment_product).
+        where("environment_products.environment_id" => org.library.id).
+        where("environment_products.product_id in (#{Product.editable(org).select("products.id").to_sql})")
+  }
+
   scope :readable_in_org, lambda {|org, *skip_library|
     if (skip_library.empty? || skip_library.first.nil?)
       # 'skip library' not included, so retrieve repos in library in the result
