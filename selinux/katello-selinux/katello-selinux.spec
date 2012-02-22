@@ -19,8 +19,8 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        0.1.5
-Release:        3%{?dist}
+Version:        0.1.6
+Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
 Group:          System Environment/Base
@@ -122,6 +122,9 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 
 %changelog
+* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.1.6-1
+- rebuild in brew
+
 * Mon Feb 20 2012 Jordan OMara <jomara@redhat.com> 0.1.5-3
 - 790507 - fixing httpds SAM denials of mod_proxy
 
