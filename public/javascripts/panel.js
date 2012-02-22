@@ -20,7 +20,7 @@ $(document).ready(function () {
     $('.left').resize(function () {
         var apanel = $('.panel');
         panelLeft = $(this).width();
-        $('.block').width(panelLeft - 17);
+        $('.block').not('#new').width(panelLeft - 17);
         apanel.width(940 - panelLeft);
         $('.right').width(898 - panelLeft);
         if (apanel.hasClass('opened')) {
