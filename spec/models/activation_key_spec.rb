@@ -150,7 +150,7 @@ describe ActivationKey do
   describe "#subscribe_system" do
 
     before(:each) do
-      Candlepin::Pool.stub!(:get) do |x|
+      Candlepin::Pool.stub!(:find) do |x|
         {
           :productName => "Blah Server OS",
           :productId => dates[x][:productId],
