@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.65
+Version:        0.1.66
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Wed Feb 22 2012 Ivan Necas <inecas@redhat.com> 0.1.66-1
+- periodic build
+
 * Fri Feb 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.64-1
 - 789290 - fixing progress bars with new puppet
 - 789290 - updating log file sizes
