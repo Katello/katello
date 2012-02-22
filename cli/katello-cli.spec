@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.54
+Version:       0.1.100
 Release:       2%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -85,6 +85,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.1.100-2
+- rebuild
 * Thu Feb 16 2012 Mike McCune <mmccune@redhat.com> 0.1.54-2
 - 788073 - fixed time formatting in cli It now uses xml.utils.iso8601 for
   parsing all times.
