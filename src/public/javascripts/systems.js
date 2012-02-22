@@ -70,12 +70,19 @@ $(document).ready(function() {
         var url = id.attr('data-ajax_url');
         url = url.substring(0, url.length - 5);  // Strip off trailing '/edit'
         KT.panel.list.refresh(id.attr('id'), url);
+        $(this).find('input[type="submit"]').removeAttr('disabled');
+    }).live('ajax:before', function(){
+        $(this).find('input[type="submit"]').attr('disabled', 'disabled');
     });
+
     $('#subscribe').live('ajax:complete', function(evt, data, status, xhr){
         var id = $('.left').find('.active');
         var url = id.attr('data-ajax_url');
         url = url.substring(0, url.length - 5);  // Strip off trailing '/edit'
         KT.panel.list.refresh(id.attr('id'), url);
+        $(this).find('input[type="submit"]').removeAttr('disabled');
+    }).live('ajax:before', function(){
+        $(this).find('input[type="submit"]').attr('disabled', 'disabled');
     });
 });
 
