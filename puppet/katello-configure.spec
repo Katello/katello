@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.64
+Version:        0.1.100
 Release:        7%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.1.100-7
+- rebuild
+
 * Fri Feb 17 2012 Bryan Kearney <bkearney@redhat.com> 0.1.64-7
 - Bump the configure build to -7 (bkearney@redhat.com)
 - 794902: Do not start tumbslug until tomcat is sarted, which is after the
