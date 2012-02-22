@@ -16,7 +16,8 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
 
 
   def self.find id
-    Glue::Pulp::Package.new(Pulp::Package.find(id))
+    package_attrs = Pulp::Package.find(id)
+    Glue::Pulp::Package.new(package_attrs) if not package_attrs.nil?
   end
 
   def self.index_settings
@@ -77,16 +78,16 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
       query do
         string query
       end
-      
+
       if repoids
         filter :terms, :repoids => repoids
       end
      end
      to_ret = []
-     search.results.each{|pkg|  
+     search.results.each{|pkg|
         to_ret << pkg.name if !to_ret.include?(pkg.name)
         break if to_ret.size == number
-     } 
+     }
      return to_ret
   end
 
@@ -109,7 +110,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
       if not_repoids
         #filter do
         #   not :terms, :repository_ids => not_repoids
-        #end 
+        #end
       end
 
       sort { by sort[0], sort[1] }
@@ -120,7 +121,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
   end
 
   def self.index_packages pkg_ids
-    pkgs = pkg_ids.collect{ |pkg_id| 
+    pkgs = pkg_ids.collect{ |pkg_id|
       pkg = self.find(pkg_id)
       pkg.as_json.merge(pkg.index_options)
     }
