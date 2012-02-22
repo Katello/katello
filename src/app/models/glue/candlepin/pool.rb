@@ -22,7 +22,7 @@ module Glue::Candlepin::Pool
     base.class_eval do
       lazy_accessor :productName, :productId, :startDate, :endDate, :consumed, :quantity, :attrs, :owner,
         :initializer => lambda {
-          json = Candlepin::Pool.get(cp_id)
+          json = Candlepin::Pool.find(cp_id)
           # symbol "attributes" is reserved by Rails and cannot be used
           json['attrs'] = json['attributes']
           json
@@ -36,7 +36,7 @@ module Glue::Candlepin::Pool
 
   module ClassMethods
     def find_by_organization_and_id(organization, pool_id)
-      pool = KTPool.find_by_cp_id(pool_id) || KTPool.new(Candlepin::Pool.get(pool_id))
+      pool = KTPool.find_by_cp_id(pool_id) || KTPool.new(Candlepin::Pool.find(pool_id))
       if pool.organization == organization
         return pool
       end

@@ -200,7 +200,7 @@ s  end
 
       it "should access candlepin if pools is uninialized" do
         Candlepin::Consumer.should_receive(:entitlements).once.with(uuid).and_return([{"pool" => {"id" => 100}}])
-        Candlepin::Pool.should_receive(:get).once.and_return({})
+        Candlepin::Pool.should_receive(:find).once.and_return({})
         @system.pools
       end
 
@@ -210,7 +210,7 @@ s  end
           @system.pools = {}
           Candlepin::Consumer.should_not_receive(:get)
           Candlepin::Consumer.should_not_receive(:entitlements)
-          Candlepin::Pool.should_not_receive(:get)
+          Candlepin::Pool.should_not_receive(:find)
         end
 
         specify { @system.href.should == href }
