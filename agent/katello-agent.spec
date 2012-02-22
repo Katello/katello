@@ -1,7 +1,7 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 
 Name: katello-agent
-Version: 0.14
+Version: 1.0.1
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -45,6 +45,9 @@ rm -rf %{buildroot}
 %doc LICENSE
 
 %changelog
+* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 1.0.1-1
+- version bump
+
 * Tue Feb 07 2012 Lukas Zapletal <lzap+git@redhat.com> 0.14-1
 - Fixing agent conf file to match katello wiki page.  Removing now-superfluous
   install step from wiki.
