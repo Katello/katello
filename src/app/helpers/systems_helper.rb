@@ -33,8 +33,7 @@ module SystemsHelper
   end
 
   def architecture_select
-    select(:arch, "arch_id",
-             System.architectures {|a| [a.id, a.name]},
+    select(:arch, "arch_id", System.architectures.invert,
              {:prompt => _('Select Architecture'), :id=>"arch_field", :tabindex => 2})
   end
 
