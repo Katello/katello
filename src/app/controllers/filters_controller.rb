@@ -124,24 +124,44 @@ class FiltersController < ApplicationController
   end
 
   def update_products
+    if params[:products]
+      existing_editable = @filter.products.editable(current_organization)
 
-    existing_readable = @filter.products.readable(current_organization)
-    new_readable = Product.readable(current_organization).where(:id=>params[:products])
+      new_editable = params[:products].empty? ? []:Product.editable(current_organization).where(:id=>params[:products])
 
-    
-    #remove unneeded ones
-    (existing_readable - new_readable).each{|prod|
-      prod = Product.find(prod.id) #reload readonly obj
-      prod.filters.delete(@filter)
-      prod.save!
-    }
-    #add new ones
-    (new_readable - existing_readable).each{|prod|
-      prod = Product.find(prod.id) #reload readonly obj
-      prod.filters << @filter
-      prod.save!
-    }
+      #remove unneeded ones
+      (existing_editable - new_editable).each{|prod|
+        prod = Product.find(prod.id) #reload readonly obj
+        prod.filters.delete(@filter)
+        prod.save!
+      }
+      #add new ones
+      (new_editable - existing_editable).each{|prod|
+        prod = Product.find(prod.id) #reload readonly obj
+        prod.filters << @filter
+        prod.save!
+      }
+    end
+
+    if params[:repos]
+      #deal with the repos now
+      existing_editable_repos = @filter.repositories.editable_in_library(current_organization)
+      new_editable_repos = params[:repos].empty? ? []:Repository.editable_in_library(current_organization).where(:id=>params[:repos].values.flatten)
+      #remove unneeded ones
+      (existing_editable_repos - new_editable_repos).each{|repo|
+        repo = Repository.find(repo.id) #reload readonly obj
+        repo.filters.delete(@filter)
+        repo.save!
+      }
+      #add new ones
+      (new_editable_repos - existing_editable_repos).each{|repo|
+        repo = Repository.find(repo.id) #reload readonly obj
+        repo.filters << @filter
+        repo.save!
+      }
+    end
     @filter.save!
+
 
     notice _("Sucessfully updated '#{@filter.name}' package filter.")
     render :text=>''
