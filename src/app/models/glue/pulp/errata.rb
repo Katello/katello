@@ -30,7 +30,8 @@ class Glue::Pulp::Errata
   end
 
   def self.find(id)
-    Glue::Pulp::Errata.new(Pulp::Errata.find(id))
+    erratum_attrs = Pulp::Errata.find(id)
+    Glue::Pulp::Errata.new(erratum_attrs) if not erratum_attrs.nil?
   end
 
   def self.filter(filter)
@@ -141,7 +142,7 @@ class Glue::Pulp::Errata
   end
 
   def self.index_errata errata_ids
-    errata = errata_ids.collect{ |errata_id| 
+    errata = errata_ids.collect{ |errata_id|
       erratum = self.find(errata_id)
       erratum.as_json.merge(erratum.index_options)
     }
@@ -151,7 +152,7 @@ class Glue::Pulp::Errata
       import errata
     end if !errata.empty?
   end
- 
+
   def product_ids
     product_ids = []
 
