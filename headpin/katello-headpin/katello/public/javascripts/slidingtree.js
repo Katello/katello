@@ -127,6 +127,7 @@ var sliding_tree = function(tree_id, options) {
                            oldPanel.addClass("no_content");
                            newPanel.addClass("has_content");
                            newPanel.removeClass("no_content");
+                            $(document).trigger('tab_change_complete.slidingtree');
                        });
                 } else {
                        list.css({'left': -width});
@@ -138,6 +139,8 @@ var sliding_tree = function(tree_id, options) {
                            oldPanel.addClass("no_content");
                            newPanel.addClass("has_content");
                            newPanel.removeClass("no_content");
+            
+                            $(document).trigger('tab_change_complete.slidingtree');
                        });
                 }
     
@@ -180,7 +183,7 @@ var sliding_tree = function(tree_id, options) {
                 crumbs = trail.slice(1, trail.length);
             } else {
                 if( trail.length === 0 ){
-                    html += '<li><div id="' + id + '" class="one-line-ellipsis currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
+                    html += '<li class="fl"><span title="' + settings.breadcrumb[id].name + '" id="' + id + '" class="currentCrumb one-line-ellipsis">' + settings.breadcrumb[id].name + '</span></li>';
                 }
             }
     
@@ -188,32 +191,36 @@ var sliding_tree = function(tree_id, options) {
                 for(var i = 0; i < crumbs.length; i++) {
                     html += create_crumb(crumbs[i]);
                 }
-                html += '<li><div id="' + id + '" class="one-line-ellipsis currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
+                html += '<li class="fl"><span title="' + settings.breadcrumb[id].name + '" id="' + id + '" class="currentCrumb one-line-ellipsis">' + settings.breadcrumb[id].name + '</span></li>';
             }
             
             breadcrumb.append(html);
         },
         create_crumb = function(id, currentCrumb, icon) {
-            var html = '<li class="slide_link">';
+            var html = '<li class="slide_link fl">';
     
             if( icon ){
                 if( currentCrumb ){
-                    html += '<div class="' + icon + ' fl">' + id + '</div>';
+                    html += '<span title="' + settings.breadcrumb[id].name + '" class="crumb ' + icon + '">' + id + '</span>';
                 } else {
-                    html += '<div class="' + icon + '_inactive fl">' + id + '</div>';
+                    html += '<span title="' + settings.breadcrumb[id].name + '" class="crumb ' + icon + '_inactive">' + id + '</span>';
                 }
             }
     
-            html += '<div class="fl crumb link_details slide_left" id= "' + id + '">';
+            html += '<span title="' + settings.breadcrumb[id].name + '" class="one-line-ellipsis crumb link_details slide_left" id= "' + id + '">';
     
             if( !icon ){
                 html += settings.breadcrumb[id].name;
+
             }
+            
+            html  += '</span>';
+
             if( currentCrumb === undefined ){
-                html += "\u2002\u00BB\u2002";
+                html += '<span>\u2002\u00BB\u2002</span>';
             }
     
-            return html + '</div></li>';
+            return html + '</li>';
         },
         hash_change = function() {
             var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
@@ -315,6 +322,11 @@ var sliding_tree = function(tree_id, options) {
 
     $(window).trigger( 'hashchange.' + tree_id );
 
+    $('.crumb').tipsy({ fade : true, gravity : 's', live : true, delayIn : 500, hoverable : true, delayOut : 50 });
+    $('.currentCrumb').tipsy({ fade : true, gravity : 's', live : true, delayIn : 500, hoverable : true, delayOut : 50 });
+    $(document).bind('tab_change_complete.slidingtree', function(){
+        $(document).trigger('close.tipsy');
+    });
 
     container.find('.slide_link').live('click', function(event){
         if( event.target.nodeName === "A" ){

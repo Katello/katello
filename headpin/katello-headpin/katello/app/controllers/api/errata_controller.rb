@@ -63,6 +63,7 @@ class Api::ErrataController < Api::ApiController
 
   def find_erratum
     @erratum = Glue::Pulp::Errata.find(params[:id])
+    raise HttpErrors::NotFound, _("Erratum with id '#{params[:id]}' not found") if @erratum.nil?
     # and check ownership of it
     raise HttpErrors::NotFound, _("Erratum '#{params[:id]}' not found within the repository") unless @erratum.repoids.include? @repo.pulp_id
     @erratum

@@ -20,7 +20,7 @@
 
 Name:           katello-headpin
 Version:        0.1.140
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
 License:        GPLv2

@@ -161,6 +161,7 @@ module Glue::Candlepin::Product
     end
 
     def del_product
+      return true unless no_other_assignment?
       Rails.logger.debug "Deleting product in candlepin: #{name}"
       Candlepin::Product.destroy self.cp_id
       true
@@ -193,6 +194,7 @@ module Glue::Candlepin::Product
     end
 
     def remove_all_content
+      return true unless no_other_assignment?
       # engineering products handle content deletion when destroying
       # repositories
       return true unless self.is_a? MarketingProduct
@@ -207,6 +209,9 @@ module Glue::Candlepin::Product
       raise e
     end
 
+    def no_other_assignment?
+      ::Product.where(["cp_id = ? AND id != ?", self.cp_id, self.id]).empty?
+    end
 
     def update_content
       return true unless productContent_changed?
@@ -248,11 +253,20 @@ module Glue::Candlepin::Product
 
     def del_subscriptions
       Rails.logger.debug "Deleting subscriptions for product #{name} in candlepin"
-      Candlepin::Product.delete_subscriptions self.organization.cp_key, self.cp_id
+      job = Candlepin::Product.delete_subscriptions self.organization.cp_key, self.cp_id
+      wait_for_job(job) if job
       true
     rescue => e
       Rails.logger.error "Failed to delete subscription for product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
+    end
+
+    # preventing of going into race-condition described in BZ_788932 by waiting
+    # for each job to finish before proceeding.
+    def wait_for_job(job)
+      while Candlepin::Job.not_finished?(Candlepin::Job.get(job[:id]))
+        sleep 0.5
+      end
     end
 
     def save_product_orchestration

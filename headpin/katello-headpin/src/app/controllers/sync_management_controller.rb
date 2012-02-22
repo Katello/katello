@@ -159,9 +159,9 @@ private
 
     end
 
-
     not_running_states = [PulpSyncStatus::Status::FINISHED,
                           PulpSyncStatus::Status::ERROR,
+                          PulpSyncStatus::Status::WAITING,
                           PulpSyncStatus::Status::CANCELED,
                           PulpSyncStatus::Status::NOT_SYNCED]
     {   :id             => repo.id,
