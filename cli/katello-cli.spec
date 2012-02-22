@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.56
+Version:       0.1.57
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -85,6 +85,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 22 2012 Ivan Necas <inecas@redhat.com> 0.1.57-1
+- periodic build
 * Fri Feb 17 2012 Brad Buckingham <bbuckingham@redhat.com> 0.1.56-1
 - 794782: Add PyXML to the cli dependencies (bkearney@redhat.com)
 
