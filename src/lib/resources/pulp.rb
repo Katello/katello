@@ -131,6 +131,8 @@ module Pulp
       def find(errata_id)
         response = get(errata_path + errata_id + "/", self.default_headers)
         JSON.parse(response.body).with_indifferent_access
+      rescue JSON::ParserError => e
+        nil
       end
 
       def errata_path
