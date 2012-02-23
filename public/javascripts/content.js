@@ -176,7 +176,10 @@ KT.content = (function(){
                 value: progress
             });
             element.html("");
-            element.append(progressBar).append(cancelButton);
+            element.append(progressBar);
+            if( KT.permissions.syncable ){
+                element.append(cancelButton);
+            }
         },
         updateRepo = function(repo_id, starttime, duration, progress, size, packages){
             var repo = $("#repo-" + repo_id);
