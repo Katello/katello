@@ -84,7 +84,7 @@ module Navigation
       {:key => :sync_mgmt,
        :name =>_("Sync Management"),
        :items => lambda{[menu_sync_status, menu_sync_plan, menu_sync_schedule]},
-       :if => lambda{current_organization.syncable?},
+       :if => lambda{current_organization.syncable? || Provider.any_readable?(current_organization)},
        :options => {:class=>'content second_level', "data-menu"=>"content"}
       }
 
