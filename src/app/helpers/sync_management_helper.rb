@@ -33,6 +33,9 @@ module SyncManagementHelper
     "repo-#{repo.id}"
   end
 
+  def syncable?
+    return current_organization.syncable?
+  end
 
   module RepoMethods
     def collect_repos products, env, include_disabled = false
