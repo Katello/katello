@@ -10,24 +10,27 @@
     });
 
     KT.repo_status = $.parseJSON('#{escape_javascript(status_obj.to_json)}');
+    KT.permissions = { "syncable" : #{syncable?} };
 
 
 .grid_4
   %h2 #{_("Sync Status") }
 .grid_12#list_actions
-  - if @sproducts.length > 0
+  - if @products.length > 0
     .grid_2
       %a#collapse_all.fl
         #{_("Collapse All")}
     .grid_2
       %a#expand_all.fl
         #{_("Expand All")}
-    .grid_2
-      %a#select_none.fl
-        #{_("Select None")}
-    .grid_2
-      %a#select_all.fl
-        #{_("Select All")}
+    -if syncable?
+      .grid_2
+        %a#select_none.fl
+          #{_("Select None")}
+    -if syncable?
+      .grid_2
+        %a#select_all.fl
+          #{_("Select All")}
   #sync_toggle_cont.grid_3
     %input#sync_toggle{:type=>'checkbox'}
     %label{:for=>"sync_toggle"}
@@ -43,12 +46,12 @@
         %th #{_("Size (Packages)")}
         %th #{_("Result")}
       %tbody
-        - if @sproducts.length > 0
+        - if @products.length > 0
           = render :partial=>"product", :collection=>@product_map, :as=>:prod
         - else
           %tr
             %td{:colspan=>5}
               #{_("There are no custom products or repositories enabled. Try enabling via Content Providers.")}
 
-    - if @sproducts.length > 0
+    - if syncable?
       = submit_tag _('Synchronize Now'), :class => 'button fr', :id => 'sync_button'
