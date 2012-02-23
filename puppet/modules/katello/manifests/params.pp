@@ -9,7 +9,26 @@ class katello::params {
   $db_user = katello_config_value('db_user')
   $db_name = katello_config_value('db_name')
   $db_pass = katello_config_value('db_password')
-  $deployment = katello_config_value('deployment')
+  $deployment_url = katello_config_value('deployment')
+
+  case $deployment_url {
+      'cfse': {
+        $deployment = 'katello' 
+      }
+      'katello': {
+        $deployment = 'katello' 
+      }
+      'sam': {
+        $deployment = 'headpin' 
+      }
+      'headpin': {
+        $deployment = 'headpin' 
+      }
+      default : {
+	$deployment = katello_config_value('deployment') 
+      }
+  }
+
 
   # HTTP Proxy settings (currently used by pulp)
   $proxy_url = katello_config_value('proxy_url')
