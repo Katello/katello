@@ -12,7 +12,7 @@
           %span.rh-product-sprite
         - else
           %span.custom-product-sprite
-        %span.product-icon{:style=>"display: inline;"}
+        %span{:style=>"display: inline;"}
           #{product.name}&nbsp;
           - for arch in product.repos(@environment).collect{|repo| repo.arch }.uniq
             .product_arch
