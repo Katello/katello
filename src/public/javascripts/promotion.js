@@ -1382,7 +1382,7 @@ var templateLibrary = (function(){
                     '">' + i18n.remove + '</a>';
             }
             html += '<li class="clear">' + anchor;
-            html += '<div id="template-cs_' + changeset_id + '_' + id + '">' +
+            html += '<div id="simple_link template-cs_' + changeset_id + '_' + id + '">' +
                     '<span class="template-icon sort_attr" >' + name + '</span>' +
                     '</div></li>';
 
@@ -1409,11 +1409,11 @@ var templateLibrary = (function(){
                     '" data-product_id="[' + product_id +
                     ']">' + i18n.remove + '</a>';
             }
-            html += '<li class="clear ' + slide_link + '">' + anchor + '<div class="';
+            html += '<li class="clear ' + slide_link + '">' + anchor + '<div class="simple_link ';
             html += (slide_link === 'slide_link') ? 'link_details' : '';
             html += '" id="product-cs_' + changeset_id + '_' + product_id + '">' +
                     '<span class="' + provider + '-product-sprite"></span>' +
-                    '<span class="product-icon sort_attr" >' + name + '</span>' +
+                    '<span class="sort_attr" >' + name + '</span>' +
                     '</div></li>';
 
             return html;
