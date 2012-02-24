@@ -77,8 +77,8 @@ class katello::config {
       replacement => "$katello::params::org_name Organization",
       before => Exec["katello_seed_db"],
       require => $katello::params::deployment ? {
-                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
-                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"], Common::Simple_replace["org_name"]  ],
+                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"], Common::Simple_replace["org_name"] ],
                 default => [],
     },
   }
