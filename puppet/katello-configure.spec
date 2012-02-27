@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.3
+Version:        0.2.4
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Feb 27 2012 Martin Bačovský <mbacovsk@redhat.com> 0.2.4-1
+- 761314 - Make sure katello-agent communicates with ssl (mbacovsk@redhat.com)
+
 * Mon Feb 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.3-1
 - 790835 - restart goferd after rhsm configuration and fix
 - 786572 - elasticsearch - reduce heap to 256m
