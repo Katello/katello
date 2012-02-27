@@ -1,7 +1,7 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 
 Name: katello-agent
-Version: 1.0.1
+Version: 1.0.2
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -45,6 +45,9 @@ rm -rf %{buildroot}
 %doc LICENSE
 
 %changelog
+* Mon Feb 27 2012 Lukas Zapletal <lzap+git@redhat.com> 1.0.2-1
+- 761314 - Make sure katello-agent communicates with ssl
+
 * Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 1.0.1-1
 - version bump
 
