@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.1
+Version:        0.2.2
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -57,6 +57,13 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Feb 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.2-1
+- 761314 - Make sure katello-agent communicates with ssl
+- 790835 - Create bootstrap RPM package with cons. cert
+- 795869 org_name is not overriding itself in db_seed correctly
+- 786978 - updating puppet to accept sam/cfse/headpin/katello and make the url
+  respond accordingly
+
 * Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.2.1-1
 - version bump
 
