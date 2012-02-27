@@ -251,8 +251,8 @@ module ApplicationHelper
       options[:as] = id ? field.to_s.upcase : field.to_s.humanize
     end
 
-    ascend  = "#{field} ASC"
-    descend = "#{field} DESC"
+    ascend  = "#{field}|ASC"
+    descend = "#{field}|DESC"
 
     ascending = params[:order] == ascend
     new_sort = ascending ? descend : ascend
