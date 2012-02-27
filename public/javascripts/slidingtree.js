@@ -460,8 +460,15 @@ sliding_tree.search = function(){
                  pre_search_state:sliding_tree.get_current_crumb});
 
             $(document).bind(search_obj.search_event(), KT.panel.search_started);
-            $(document).bind(search_obj.search_event(), function(){
-                tabchange_cb(sliding_tree.get_current_crumb());
+            $(document).bind(search_obj.search_event(), function(e, promise){
+                if (promise){
+                    promise.done(function(){
+                        tabchange_cb(sliding_tree.get_current_crumb());      
+                    });
+                }
+                else {
+                  tabchange_cb(sliding_tree.get_current_crumb());
+                }
             });
 
             if (expand_cb) {
