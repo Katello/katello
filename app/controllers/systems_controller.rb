@@ -147,7 +147,7 @@ class SystemsController < ApplicationController
 
   def split_order order
     if order
-      order.split
+      order.split("|")
     else
       [:name_sort, "ASC"]
     end
@@ -297,7 +297,7 @@ class SystemsController < ApplicationController
 
   def setup_options
     @panel_options = { :title => _('Systems'),
-                      :col => ["name", "lastCheckin"],
+                      :col => ["name_sort", "lastCheckin"],
                       :titles => [_("Name"), _("Last Checked In")],
                       :custom_rows => true,
                       :enable_create => System.registerable?(@environment, current_organization),
