@@ -40,4 +40,5 @@ $(document).ready(function() {
     $('.arrow-right').remove();
     $('#list .active').width(284);
 
+    $(window).trigger("hashchange");
 });
