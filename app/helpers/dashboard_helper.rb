@@ -53,6 +53,8 @@ module DashboardHelper
       _("Success")
     elsif cs.state === Changeset::PROMOTING && cs.task_status.start_time
       _("Promoting")
+    elsif cs.state == Changeset::FAILED
+      _("Failed")
     else
       _("Pending")
     end        
