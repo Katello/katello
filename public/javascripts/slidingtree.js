@@ -401,7 +401,6 @@ KT.sliding_tree.list = function(parent, bcs, sliding_tree){
     append = function(html, args) {
 
         if (!args || args === sliding_tree.get_current_crumb()){
-            console.log("appending");
             var expand_list = parent.find('.has_content').find('.expand_list');
             expand_list.append(html);
         }
@@ -411,7 +410,6 @@ KT.sliding_tree.list = function(parent, bcs, sliding_tree){
             current_items = current;
             bcs.find('.current_items_count').text(current_items);
             bcs.find('.total_results_count').text(results);
-            console.log(total);
             sliding_tree.get_breadcrumbs()[sliding_tree.get_current_crumb()].total_size = total;
             sliding_tree.rerender_breadcrumb();
         }
