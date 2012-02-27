@@ -509,12 +509,12 @@ KT.panel = (function ($) {
             var queryString = new Object;
             var qstr = window.location.search.substring(1);
             var params = qstr.split('&');
-            for (var i=0; i<params.length; i++) {
-                var pair=params[i].split('=');
+            $.each(params, function(index, item){
+                var pair=item.split('=');
                 if(pair[1]) {
-                    queryString[pair[0]]=pair[1];
+                    queryString[pair[0]]=decodeURI(pair[1]);
                 }
-            }
+            });
             return queryString;
         },
         actions = (function(){
