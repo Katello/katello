@@ -38,7 +38,10 @@ test -f $CFG_BACKUP || cp $CFG $CFG_BACKUP
 sed -i "s/^hostname\s*=.*/hostname = $KATELLO_SERVER/g" $CFG
 sed -i "s|^prefix\s*=.*|prefix = $PREFIX|g" $CFG
 sed -i "s/^port\s*=.*/port = $PORT/g" $CFG
-sed -i 's/^repo_ca_cert\s*=.*/repo_ca_cert = %(ca_cert_dir)scandlepin-local.pem/g' $CFG
+sed -i 's/^repo_ca_cert\s*=.*/repo_ca_cert = %%(ca_cert_dir)scandlepin-local.pem/g' $CFG
 sed -i "s|^baseurl\s*=.*|baseurl=$BASEURL|g" $CFG
+
+# restart goferd if it is running
+/sbin/service goferd status >/dev/null && /sbin/service goferd restart >/dev/null 2&>1
 
 # vim:sw=2:ts=2:et:
