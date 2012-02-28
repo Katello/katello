@@ -13,9 +13,9 @@ Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       puppet >= 2.6.6
-Requires:       wget
+Requires:       coreutils shadow-utils wget
 Requires:       katello-certs-tools
-Requires:       nss-tools
+Requires:       nss-tools openssl
 Requires:       policycoreutils-python
 BuildRequires:  /usr/bin/pod2man
 
