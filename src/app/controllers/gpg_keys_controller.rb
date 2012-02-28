@@ -40,7 +40,7 @@ class GpgKeysController < ApplicationController
       :new => create_test,
       :create => create_test,
 
-      :edit => manage_test,
+      :edit => read_test,
       :update => manage_test,
 
       :destroy => manage_test
@@ -48,7 +48,7 @@ class GpgKeysController < ApplicationController
   end
 
   def items
-    render_panel_direct(GpgKey, @panel_options, params[:search], params[:offset], [:name, :asc],
+    render_panel_direct(GpgKey, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
       :filter=>{:organization_id=>[current_organization.id]})
   end
 

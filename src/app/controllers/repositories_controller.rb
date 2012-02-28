@@ -29,7 +29,7 @@ class RepositoriesController < ApplicationController
     {
       :new => edit_test,
       :create => edit_test,
-      :edit =>read_test,
+      :edit => read_test,
       :update_gpg_key => edit_test,
       :destroy => edit_test,
       :enable_repo => org_edit,
