@@ -68,7 +68,11 @@ class ProvidersController < ApplicationController
         # force must be a string value
         force_update = params[:force_import] == "1" ? "true" : "false"
         @provider.import_manifest(File.expand_path(temp_file.path), { :force => force_update })
-        notice _("Subscription manifest uploaded successfully for provider '%{name}'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled." % {:name => @provider.name}), {:synchronous_request => false}
+        if AppConfig.katello?
+          notice _("Subscription manifest uploaded successfully for provider '%{name}'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled." % {:name => @provider.name}), {:synchronous_request => false}
+        else
+          notice _("Subscription manifest uploaded successfully for provider '%{name}'." % {:name => @provider.name}), {:synchronous_request => false}
+        end
       rescue Exception => error
         display_message = parse_display_message(error.response)
         error_text = _("Subscription manifest upload for provider '%{name}' failed." % {:name => @provider.name})
@@ -150,12 +154,12 @@ class ProvidersController < ApplicationController
     begin
       @provider = Provider.create! params[:provider].merge({:provider_type => Provider::CUSTOM,
                                                                     :organization => current_organization})
-      notice _("Provider '#{@provider['name']}' was created.")
+      notice _("Provider '%s' was created.") % @provider['name']
       
       if search_validate(Provider, @provider.id, params[:search])
         render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
       else
-        notice _("'#{@provider["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+        notice _("'%s' did not meet the current search criteria and is not being shown.") % @provider["name"], { :level => 'message', :synchronous_request => false }
         render :json => { :no_match => true }
       end
     rescue Exception => error
@@ -170,7 +174,7 @@ class ProvidersController < ApplicationController
     begin
       @provider.destroy
       if @provider.destroyed?
-        notice _("Provider '#{@provider[:name]}' was deleted.")
+        notice _("Provider '%s' was deleted.") % @provider[:name]
         #render and do the removal in one swoop!
         render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
       else
@@ -197,10 +201,10 @@ class ProvidersController < ApplicationController
       updated_provider.provider_type = params[:provider][:provider_type] unless params[:provider][:provider_type].nil?
 
       updated_provider.save!
-      notice _("Provider '#{updated_provider.name}' was updated.")
+      notice _("Provider '%s' was updated.") % updated_provider.name
 
       if not search_validate(Provider, updated_provider.id, params[:search])       
-        notice _("'#{updated_provider["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+        notice _("'%s' no longer matches the current search criteria.") % updated_provider["name"], { :level => 'message', :synchronous_request => false }
       end
 
       respond_to do |format|

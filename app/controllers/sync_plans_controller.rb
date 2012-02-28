@@ -83,10 +83,10 @@ class SyncPlansController < ApplicationController
       end
 
       updated_plan.save!
-      notice N_("Sync Plan '#{updated_plan.name}' was updated.")
+      notice N_("Sync Plan '%s' was updated.") % updated_plan.name
 
       if not search_validate(SyncPlan, updated_plan.id, params[:search])
-        notice _("'#{updated_plan["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+        notice _("'%s' no longer matches the current search criteria.") % updated_plan["name"], { :level => 'message', :synchronous_request => false }
       end
 
       respond_to do |format|
@@ -108,7 +108,7 @@ class SyncPlansController < ApplicationController
     @id = @plan.id
     begin
       @plan.destroy
-      notice N_("Sync plan '#{@plan[:name]}' was deleted.")
+      notice N_("Sync plan '%s' was deleted.") % @plan[:name]
     rescue Exception => e
       notice e.to_s, {:level => :error}
     end
@@ -137,12 +137,12 @@ class SyncPlansController < ApplicationController
       end
       
       @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
-      notice N_("Sync Plan '#{@plan['name']}' was created.")
+      notice N_("Sync Plan '%s' was created.") % @plan['name']
       
       if search_validate(SyncPlan, @plan.id, params[:search])
         render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
       else
-        notice _("'#{@plan["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+        notice _("'%s' did not meet the current search criteria and is not being shown.") % @plan["name"], { :level => 'message', :synchronous_request => false }
         render :json => { :no_match => true }
       end
     rescue Exception => error

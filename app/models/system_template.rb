@@ -135,7 +135,7 @@ class SystemTemplate < ActiveRecord::Base
     begin
       Candlepin::Owner.get_ueber_cert(environment.organization.cp_key)
     rescue RestClient::ResourceNotFound
-      verrors << N_("Uebercert for #{environment.organization.name} has not been generated.")
+      verrors << N_("Uebercert for %s has not been generated.") % environment.organization.name
     end
 
     raise Errors::TemplateValidationException.new(_("Template cannot be exported"), verrors) if verrors.count > 0

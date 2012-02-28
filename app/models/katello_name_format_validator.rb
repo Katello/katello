@@ -23,8 +23,8 @@ class KatelloNameFormatValidator < ActiveModel::EachValidator
 
   def self.validate_length(record, attribute, value, max_length = 128, min_length = 2)
     if value
-      record.errors[attribute] << N_("cannot contain more than #{max_length} characters") unless value.length <= max_length
-      record.errors[attribute] << N_("must contain at least #{min_length} characters") unless value.length >= min_length
+      record.errors[attribute] << N_("cannot contain more than %s characters") % max_length unless value.length <= max_length
+      record.errors[attribute] << N_("must contain at least %s characters") % min_length unless value.length >= min_length
     end
   end
 end
