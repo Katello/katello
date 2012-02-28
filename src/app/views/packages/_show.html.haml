@@ -59,11 +59,11 @@
     .grid_4.la
       = @package.buildhost
       
-  %fieldset
-    .grid_2.ra
-      %label #{_("Build Date")}:
-    .grid_4.la
-      = "Unknown" 
+  -#%fieldset
+  -#  .grid_2.ra
+  -#    %label #{_("Build Date")}:
+  -#  .grid_4.la
+  -#    = "Unknown"
   
   %fieldset
     .grid_2.ra
@@ -77,14 +77,14 @@
     .grid_4.la
       = @package.group
       
-  %fieldset
-    .grid_2.ra
-      %label #{_("Download")}:
-    .grid_4.la
-      = content_tag(:a, @package.filename, :href => @package.download_url)
+  -#%fieldset
+  -#  .grid_2.ra
+  -#    %label #{_("Download")}:
+  -#  .grid_4.la
+  -#    = content_tag(:a, @package.filename, :href => @package.download_url)
     
-  %fieldset
-    .grid_2.ra
-      %label #{_("Source Package")}:
-    .grid_4.la
-      = "Not Available"
+  -#%fieldset
+  -#  .grid_2.ra
+  -#    %label #{_("Source Package")}:
+  -#  .grid_4.la
+  -#    = "Not Available"
