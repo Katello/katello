@@ -170,14 +170,14 @@ class Api::SystemsController < Api::ApiController
     data = data.flatten.map do |r|
       r.reportable_data(:only => [:uuid, :name, :location, :created_at, :updated_at],
         :include => { :environment => { :only => [:name] }},
-        :methods => [ :organization ])
+        :methods => [ :organization, :compliance_color, :compliant_until])
     end.flatten!
 
     system_report = Ruport::Data::Table.new(:data => data,
-        :column_names => ["name", "uuid", "location", "environment.name", "organization", "created_at", "updated_at"],
+        :column_names => ["name", "uuid", "location", "environment.name", "organization", "created_at", "updated_at", "compliance_color", "compliant_until"],
         :record_class => Ruport::Data::Record,
-        :transforms => lambda {|r| r.organization = r.organization.name })
-
+        :transforms => lambda {|r| r.organization = r.organization.name})
+    system_report.rename_column("compliance_color", "compliance")
     respond_to do |format|
       format.html { render :text => system_report.as(:html), :type => :html and return }
       format.text { render :text => system_report.as(:text, :ignore_table_width => true) }
