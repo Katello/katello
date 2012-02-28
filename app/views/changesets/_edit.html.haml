@@ -14,7 +14,8 @@
     #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
       .grid_3.ra
         %label #{_("Description:")}
-      .grid_6.la{:name=>"description", :class=>("editable edit_description" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.description}
+      .grid_6.la{:name=>"description", :class=>("editable edit_description" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)}
+        = @changeset.description.blank? ? _("None") : @changeset.description
     .fieldset
       .grid_3.ra
         %label #{_("Promoted By:")}
