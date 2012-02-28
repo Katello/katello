@@ -39,7 +39,11 @@ module ApplicationConfiguration
       @ostruct.use_cp = true unless @ostruct.respond_to?(:use_cp)
       @ostruct.use_pulp = true unless @ostruct.respond_to?(:use_pulp)
       # backticks gets you the equiv of a system() command in Ruby
-      version =  `rpm -q katello-common --queryformat '%{VERSION}-%{RELEASE}\n'`
+      if @hash["app_name"] == 'Katello'
+        version =  `rpm -q katello-common --queryformat '%{VERSION}-%{RELEASE}\n'`
+      else
+        version =  `rpm -q katello-headpin --queryformat '%{VERSION}-%{RELEASE}\n'`
+      end
       exit_code = $?
       if exit_code != 0
         hash = `git rev-parse --short HEAD`
