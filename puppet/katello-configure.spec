@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.4
+Version:        0.2.5
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -57,6 +57,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Feb 28 2012 Martin Bačovský <mbacovsk@redhat.com> 0.2.5-1
+- 761314 - Make sure katello-agent communicates with ssl (mbacovsk@redhat.com)
+- 781505 - randomize default admin password for Pulp (lzap+git@redhat.com)
+
 * Mon Feb 27 2012 Martin Bačovský <mbacovsk@redhat.com> 0.2.4-1
 - 761314 - Make sure katello-agent communicates with ssl (mbacovsk@redhat.com)
 
