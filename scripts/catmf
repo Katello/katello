@@ -42,6 +42,9 @@ Dir.glob("#{tmpdir}/export/products/*.json").each do |file|
   File.open(file, 'r') do |file_json|
     p = JSON.parse(file_json.readlines.to_s)
     puts "Product: #{p['name']} (#{p['id']})"
+    me = "No"
+    p['attributes'].each { |a| me = "Yes" if a['name'] == 'multi-entitlement' and a['value'].downcase == 'yes' } rescue me = "No"
+    puts " Multi-entitlement: #{me}"
   end
 end
 
