@@ -142,6 +142,58 @@ class Permission < ActiveRecord::Base
     ret
   end
 
+  # Used when displaying the localized version of permissions and
+  # to insure these string make it into locale files
+  def i18n_name
+    case name
+      when "Read Organizations"
+        _("Read Organizations")
+      when "Read Environments"
+        _("Read Environments")
+      when "Read System_templates"
+        _("Read System Templates")
+      when "Read Providers"
+        _("Read Providers")
+      when "Read Activation_keys"
+        _("Read Activation Keys")
+      when "Read Filters"
+        _("Read Filters")
+      when "Read Users"
+        _("Read Users")
+      when "Read Roles"
+        _("Read Roles")
+      when "super-admin-perm"
+        _("Super Admin")
+      else
+        name
+    end
+  end
+
+  def i18n_description
+    case description
+      when "Read Organizations permission"
+        _("Read Organizations permission")
+      when "Read Environments permission"
+        _("Read Environments permission")
+      when "Read System_templates permission"
+        _("Read System Templates permission")
+      when "Read Providers permission"
+        _("Read Providers permission")
+      when "Read Activation_keys permission"
+        _("Read Activation Keys permission")
+      when "Read Filters permission"
+        _("Read Filters permission")
+      when "Read Users permission"
+        _("Read Users permission")
+      when "Read Roles permission"
+        _("Read Roles permission")
+      when "Super Admin permission"
+        _("Super Admin permission")
+      else
+        description
+    end
+  end
+
   private
   def cleanup_tags_verbs
     self.tags.clear if self.all_tags?
