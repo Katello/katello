@@ -289,7 +289,7 @@ module RolesBreadcrumbs
       add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'global'],
                   { :client_render => true },
                   { :global => global, :type => type.name, :type_name => type_name,
-                    :name => perm.name, :description => perm.description,
+                    :name => _(perm.name), :description => _(perm.description),
                     :verbs => verbs,
                     :tags => tags })
       if adjust_count
@@ -300,7 +300,7 @@ module RolesBreadcrumbs
                   { :client_render => true },
                   { :organization => "organization_#{perm.organization_id}",
                     :global => global, :type =>  type.name, :type_name => type_name,
-                    :name => perm.name, :description => perm.description,
+                    :name => _(perm.name), :description => _(perm.description),
                     :verbs => verbs,
                     :tags => tags })
       if adjust_count
