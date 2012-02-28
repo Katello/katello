@@ -1,7 +1,5 @@
 class certs::params {
 
-  $skip_ssl_ca_generation = katello_config_value('skip_ssl_ca_generation')
-
   # SSL settings
   $ssl_ca_pw = katello_config_value('ssl_ca_password')
   $ssl_ca_country = katello_config_value('ssl_ca_country')
