@@ -302,13 +302,7 @@ final_options.delete('answer_file')
 mandatory, regex, __unused_data_order, error, __unused_titles, __usused_docs = read_options_format(options_format_path)
 
 non_interactive_option = _get_valid_option_value('non_interactive', default_options, final_options)
-skip_ssl_ca_generation_option = _get_valid_option_value('skip_ssl_ca_generation', default_options, final_options)
 ssl_ca_password_file_option = _get_valid_option_value('ssl_ca_password_file', default_options, final_options)
-
-if (_is_option_true(skip_ssl_ca_generation_option)) or
-	File.exist?(ssl_ca_password_file_option)
-	mandatory.delete('ssl_ca_password')
-end
 
 mandatory.each do |key, mand|
 	if (not final_options.has_key?(key) and mandatory[key]) or
@@ -343,15 +337,13 @@ end
 
 # handle ca password separately, because we do not want
 # to store it into the katello-configure.conf
-if not _is_option_true(skip_ssl_ca_generation_option)
-	begin
-		File.open(ssl_ca_password_file_option, 'w') do |f|
-			f.write(_get_valid_option_value('ssl_ca_password', default_options, final_options))
-		end
-	rescue
-		$stderr.puts "Failed to write to file [#{ssl_ca_password_file_option}]."
-		exit 8
-	end
+begin
+    File.open(ssl_ca_password_file_option, 'w') do |f|
+        f.write(_get_valid_option_value('ssl_ca_password', default_options, final_options))
+    end
+rescue
+    $stderr.puts "Failed to write to file [#{ssl_ca_password_file_option}]."
+    exit 8
 end
 final_options.delete('ssl_ca_password')
 default_options_order.delete('ssl_ca_password')
