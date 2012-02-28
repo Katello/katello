@@ -113,9 +113,9 @@ class Changeset < ActiveRecord::Base
 
 
   def promote async=true
-    raise _("Cannot promote the changset '#{self.name}' because it is not in the review phase.") if self.state != Changeset::REVIEW
+    raise _("Cannot promote the changset '%s' because it is not in the review phase.") % self.name if self.state != Changeset::REVIEW
     #check for other changesets promoting
-    raise _("Cannot promote the changeset '#{self.name}' while another changeset (#{self.environment.promoting.first.name}) is being promoted.") if self.environment.promoting_to?
+    raise _("Cannot promote the changeset '%s' while another changeset (%s) is being promoted.") % [self.name, self.environment.promoting.first.name] if self.environment.promoting_to?
 
     self.state = Changeset::PROMOTING
     self.save!
@@ -134,7 +134,7 @@ class Changeset < ActiveRecord::Base
 
   def add_product cpid
     product = find_product_by_cpid(cpid)
-    raise _("Product '#{product.name}' hasn't any repositories") if product.repos(self.environment.prior).empty?
+    raise _("Product '%s' hasn't any repositories") % product.name if product.repos(self.environment.prior).empty?
     self.products << product
     product
   end
@@ -242,7 +242,7 @@ class Changeset < ActiveRecord::Base
       packs = product.find_packages_by_name(self.environment.prior, name_or_nvre)
       packs = Katello::PackageUtils::find_latest_packages(packs)
     end
-    raise Errors::ChangesetContentException.new(_("Package '#{name_or_nvre}' was not found in the source environment.")) if packs.empty?
+    raise Errors::ChangesetContentException.new(_("Package '%s' was not found in the source environment.") % name_or_nvre) if packs.empty?
     packs[0].with_indifferent_access
   end
 
@@ -251,7 +251,7 @@ class Changeset < ActiveRecord::Base
     raise Errors::ChangesetContentException.new(_("Package has to be specified by its nvre.")) if package_data.nil?
 
     packs = product.find_packages_by_nvre(self.environment.prior, package_data[:name], package_data[:version], package_data[:release], package_data[:epoch])
-    raise Errors::ChangesetContentException.new(_("Package '#{nvre}' was not found in the source environment.")) if packs.empty?
+    raise Errors::ChangesetContentException.new(_("Package '%s' was not found in the source environment.") % nvre) if packs.empty?
     packs[0].with_indifferent_access
   end
 

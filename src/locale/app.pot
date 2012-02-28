@@ -7,33 +7,33 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
-"POT-Creation-Date: 2012-01-04 15:13-0500\n"
+"POT-Creation-Date: 2012-02-28 14:42-0500\n"
 "PO-Revision-Date: 2011-01-06 17:37-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: app/views/promotions/show.html.haml:98
-msgid " Changesets"
+#: app/views/promotions/show.html.haml:170
+msgid " Content"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:169
-msgid " Content"
+#: app/views/promotions/show.html.haml:97
+msgid " Promotion Changesets"
 msgstr ""
 
 #: app/views/layouts/_footer.haml:6
 msgid " Red Hat, Inc."
 msgstr ""
 
-#: app/views/common/_panel.html.haml:40
+#: app/views/common/_panel.html.haml:46
 msgid " Total "
 msgstr ""
 
-#: app/controllers/users_controller.rb:105
+#: app/controllers/users_controller.rb:123
 msgid " created successfully."
 msgstr ""
 
@@ -45,12 +45,40 @@ msgstr ""
 msgid " items selected."
 msgstr ""
 
-#: app/views/common/_panel.html.haml:33
+#: app/views/common/_panel.html.haml:39
 msgid " of  "
 msgstr ""
 
-#: app/views/common/_panel.html.haml:37
+#: app/views/common/_panel.html.haml:43
 msgid " results "
+msgstr ""
+
+#: app/models/system_task.rb:157
+msgid "%s (%s other errata)"
+msgstr ""
+
+#: app/models/system_task.rb:109
+msgid "%s (%s other errata) install cancelled"
+msgstr ""
+
+#: app/models/system_task.rb:108
+msgid "%s (%s other errata) install failed"
+msgstr ""
+
+#: app/models/system_task.rb:110
+msgid "%s (%s other errata) install timed out"
+msgstr ""
+
+#: app/models/system_task.rb:107
+msgid "%s (%s other errata) install."
+msgstr ""
+
+#: app/models/system_task.rb:150
+msgid "%s (%s other package groups)"
+msgstr ""
+
+#: app/models/system_task.rb:66
+msgid "%s (%s other package groups) install"
 msgstr ""
 
 #: app/models/system_task.rb:68
@@ -65,8 +93,8 @@ msgstr ""
 msgid "%s (%s other package groups) install timed out"
 msgstr ""
 
-#: app/models/system_task.rb:66
-msgid "%s (%s other package groups) installed."
+#: app/models/system_task.rb:93
+msgid "%s (%s other package groups) removal"
 msgstr ""
 
 #: app/models/system_task.rb:95
@@ -81,8 +109,8 @@ msgstr ""
 msgid "%s (%s other package groups) remove timed out"
 msgstr ""
 
-#: app/models/system_task.rb:93
-msgid "%s (%s other package groups) removed"
+#: app/models/system_task.rb:79
+msgid "%s (%s other package groups) update"
 msgstr ""
 
 #: app/models/system_task.rb:81
@@ -97,11 +125,7 @@ msgstr ""
 msgid "%s (%s other package groups) update timed out"
 msgstr ""
 
-#: app/models/system_task.rb:79
-msgid "%s (%s other package groups) updated"
-msgstr ""
-
-#: app/models/system_task.rb:119
+#: app/models/system_task.rb:143
 msgid "%s (%s other packages)"
 msgstr ""
 
@@ -118,7 +142,11 @@ msgid "%s (%s other packages) install timed out"
 msgstr ""
 
 #: app/models/system_task.rb:25
-msgid "%s (%s other packages) installed."
+msgid "%s (%s other packages) install."
+msgstr ""
+
+#: app/models/system_task.rb:52
+msgid "%s (%s other packages) removal"
 msgstr ""
 
 #: app/models/system_task.rb:54
@@ -133,8 +161,8 @@ msgstr ""
 msgid "%s (%s other packages) remove timed out"
 msgstr ""
 
-#: app/models/system_task.rb:52
-msgid "%s (%s other packages) removed"
+#: app/models/system_task.rb:39
+msgid "%s (%s other packages) update"
 msgstr ""
 
 #: app/models/system_task.rb:41
@@ -149,8 +177,16 @@ msgstr ""
 msgid "%s (%s other packages) update timed out"
 msgstr ""
 
-#: app/models/system_task.rb:39
-msgid "%s (%s other packages) updated"
+#: app/controllers/systems_controller.rb:265
+msgid "%s Removed Successfully"
+msgstr ""
+
+#: app/controllers/systems_controller.rb:253
+msgid "%s Systems Removed Successfully"
+msgstr ""
+
+#: app/views/layouts/_footer.haml:8
+msgid "%s Version: %s"
 msgstr ""
 
 #: app/helpers/translation_helper.rb:15
@@ -158,8 +194,28 @@ msgstr ""
 msgid "%s ago"
 msgstr ""
 
+#: app/models/system_task.rb:107
+msgid "%s erratum install"
+msgstr ""
+
+#: app/models/system_task.rb:109
+msgid "%s erratum install cancelled"
+msgstr ""
+
+#: app/models/system_task.rb:108
+msgid "%s erratum install failed"
+msgstr ""
+
+#: app/models/system_task.rb:110
+msgid "%s erratum install timed out"
+msgstr ""
+
 #: app/controllers/api/system_packages_controller.rb:84
 msgid "%s is not a valid package name"
+msgstr ""
+
+#: app/models/system_task.rb:66
+msgid "%s package group install"
 msgstr ""
 
 #: app/models/system_task.rb:68
@@ -174,8 +230,8 @@ msgstr ""
 msgid "%s package group install timed out"
 msgstr ""
 
-#: app/models/system_task.rb:66
-msgid "%s package group installed"
+#: app/models/system_task.rb:93
+msgid "%s package group removal"
 msgstr ""
 
 #: app/models/system_task.rb:95
@@ -190,8 +246,8 @@ msgstr ""
 msgid "%s package group remove timed out"
 msgstr ""
 
-#: app/models/system_task.rb:93
-msgid "%s package group removed"
+#: app/models/system_task.rb:79
+msgid "%s package group update"
 msgstr ""
 
 #: app/models/system_task.rb:81
@@ -206,8 +262,8 @@ msgstr ""
 msgid "%s package group update timed out"
 msgstr ""
 
-#: app/models/system_task.rb:79
-msgid "%s package group updated"
+#: app/models/system_task.rb:25
+msgid "%s package install"
 msgstr ""
 
 #: app/models/system_task.rb:27
@@ -222,8 +278,8 @@ msgstr ""
 msgid "%s package install timed out"
 msgstr ""
 
-#: app/models/system_task.rb:25
-msgid "%s package installed"
+#: app/models/system_task.rb:52
+msgid "%s package removal"
 msgstr ""
 
 #: app/models/system_task.rb:54
@@ -238,8 +294,8 @@ msgstr ""
 msgid "%s package remove timed out"
 msgstr ""
 
-#: app/models/system_task.rb:52
-msgid "%s package removed"
+#: app/models/system_task.rb:39
+msgid "%s package update"
 msgstr ""
 
 #: app/models/system_task.rb:41
@@ -254,21 +310,60 @@ msgstr ""
 msgid "%s package update timed out"
 msgstr ""
 
-#: app/models/system_task.rb:39
-msgid "%s package updated"
+#: app/controllers/sync_management_controller.rb:238
+msgid "%s product was synced successfully"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:73
-#: app/controllers/providers_controller.rb:96
-#: app/controllers/providers_controller.rb:110
+#: app/controllers/sync_management_controller.rb:234
+msgid "%s product was synced successfully with errors. See log for details"
+msgstr ""
+
+#: app/controllers/providers_controller.rb:82
+msgid ""
+"%{newline}If you are uploading an older manifest, you can use the Force "
+"checkbox to overwrite existing data."
+msgstr ""
+
+#: app/controllers/providers_controller.rb:79
+#: app/controllers/providers_controller.rb:106
+#: app/controllers/providers_controller.rb:120
 msgid "%{newline}Reason: %{reason}"
 msgstr ""
 
-#: app/views/filters/index.html.haml:18
+#: app/controllers/repositories_controller.rb:125
+msgid "%{repo} (Product: %{product})"
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:97
+#: app/controllers/organizations_controller.rb:109
+#: app/controllers/activation_keys_controller.rb:180
+#: app/controllers/systems_controller.rb:100
+#: app/controllers/sync_plans_controller.rb:145
+#: app/controllers/providers_controller.rb:162
+#: app/controllers/filters_controller.rb:107
+#: app/controllers/users_controller.rb:127
+#: app/controllers/roles_controller.rb:94
+msgid "'%s' did not meet the current search criteria and is not being shown."
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:119
+#: app/controllers/organizations_controller.rb:130
+#: app/controllers/activation_keys_controller.rb:212
+#: app/controllers/systems_controller.rb:220
+#: app/controllers/sync_plans_controller.rb:89
+#: app/controllers/providers_controller.rb:207
+#: app/controllers/filters_controller.rb:83
+#: app/controllers/users_controller.rb:150
+#: app/controllers/users_controller.rb:275
+#: app/controllers/roles_controller.rb:120
+msgid "'%s' no longer matches the current search criteria."
+msgstr ""
+
+#: app/views/filters/index.html.haml:15
 msgid "(%X of %Y repositories selected)"
 msgstr ""
 
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/index.html.haml:15
 msgid "(Entire product selected)"
 msgstr ""
 
@@ -276,13 +371,13 @@ msgstr ""
 msgid "(Load %X More)"
 msgstr ""
 
-#: app/views/system_packages/_packages.html.haml:6
 #: app/views/system_events/_events.html.haml:3
+#: app/views/system_packages/_packages.html.haml:6
 msgid "(Loaded %X of %Y Total)"
 msgstr ""
 
+#: app/views/filters/_products.html.haml:33
 #: app/views/system_packages/_packages.html.haml:86
-#: app/views/filters/_products.html.haml:34
 msgid "+ Add"
 msgstr ""
 
@@ -291,16 +386,16 @@ msgstr ""
 msgid "+ All"
 msgstr ""
 
-#: app/views/common/_panel.html.haml:27
+#: app/views/common/_panel.html.haml:33
 msgid "+ New "
 msgstr ""
 
 #: app/views/promotions/show.html.haml:163
 #: app/views/promotions/show.html.haml:167
-msgid "+ New Changeset"
+msgid "+ New Promotion Changeset"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:105
+#: app/views/system_templates/index.html.haml:106
 msgid "+ New Template"
 msgstr ""
 
@@ -336,53 +431,12 @@ msgid ""
 "order to reset this password, click the URL below."
 msgstr ""
 
-#: app/models/kt_environment.rb:317
-msgid "Access Changesets in Environment"
-msgstr ""
-
-#: app/models/kt_environment.rb:312
-msgid "Access Environment Contents"
-msgstr ""
-
-#: app/models/organization.rb:126
-msgid "Access Organization"
-msgstr ""
-
-#: app/models/filter.rb:65
-msgid "Access Package Filters"
-msgstr ""
-
-#: app/models/provider.rb:123
-msgid "Access Provider"
-msgstr ""
-
-#: app/models/role.rb:107
-msgid "Access Roles"
-msgstr ""
-
-#: app/models/organization.rb:127
-msgid "Access Systems"
-msgstr ""
-
-#: app/models/kt_environment.rb:313
-msgid "Access Systems in Environment"
-msgstr ""
-
-#: app/models/user.rb:353
-msgid "Access Users"
-msgstr ""
-
-#: app/models/activation_key.rb:143
-msgid "Access all Activation Keys"
-msgstr ""
-
-#: app/models/resource_type.rb:94
-#: app/controllers/activation_keys_controller.rb:271
-#: lib/navigation/systems.rb:50
+#: app/controllers/activation_keys_controller.rb:264
+#: app/models/resource_type.rb:94 lib/navigation/systems.rb:51
 msgid "Activation Keys"
 msgstr ""
 
-#: app/views/activation_keys/index.html.haml:3
+#: app/views/activation_keys/index.html.haml:4
 msgid ""
 "Activation Keys provide a set of characteristics that may be applied to a "
 "system during system registration.  This includes things such as, default "
@@ -390,23 +444,44 @@ msgid ""
 "system, system template to apply to the system...etc."
 msgstr ""
 
-#: app/views/system_templates/_product_repos.html.haml:6
-#: app/views/system_templates/_products.html.haml:9
-#: app/views/system_templates/_repositories.html.haml:8
-#: app/views/system_templates/index.html.haml:6
-#: app/views/system_templates/_product_packages.html.haml:6
-#: app/views/system_templates/_product_comps.html.haml:6
-#: app/views/promotions/show.html.haml:8
+#: app/views/activation_keys/index.html.haml:9
+msgid ""
+"Activation Keys provide a set of characteristics that may be applied to a "
+"system during system registration.  This includes things such as, default "
+"environment to assign to the system, subscriptions to allocate to the "
+"system...etc."
+msgstr ""
+
+#: app/controllers/activation_keys_controller.rb:175
+msgid "Activation key '%s' was created."
+msgstr ""
+
+#: app/controllers/activation_keys_controller.rb:203
+msgid "Activation key '%s' was updated."
+msgstr ""
+
+#: app/views/filters/_packages.html.haml:24
 #: app/views/common/_common_i18n.html.haml:3
-#: app/views/filters/_packages.html.haml:25 app/views/roles/index.html.haml:9
+#: app/views/promotions/show.html.haml:7
+#: app/views/system_templates/_product_packages_items.html.haml:3
+#: app/views/system_templates/_products.html.haml:9
+#: app/views/system_templates/_product_repos.html.haml:7
+#: app/views/system_templates/_product_comps.html.haml:6
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/_repositories.html.haml:8
+#: app/views/roles/index.html.haml:8
 msgid "Add"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/common/_common_i18n.html.haml:3
+msgid "Add All"
+msgstr ""
+
+#: app/views/roles/index.html.haml:8
 msgid "Add Global Permission"
 msgstr ""
 
-#: app/views/organizations/_edit.html.haml:48
+#: app/views/organizations/_edit.html.haml:52
 msgid "Add New Environment"
 msgstr ""
 
@@ -442,33 +517,37 @@ msgstr ""
 msgid "Add Package Timeout"
 msgstr ""
 
-#: app/views/roles/_edit.html.haml:93 app/views/roles/_permissions.html.haml:6
-#: app/views/roles/index.html.haml:9
+#: app/views/filters/_packages.html.haml:21
+msgid "Add Packages"
+msgstr ""
+
+#: app/views/roles/_edit.html.haml:94 app/views/roles/index.html.haml:8
+#: app/views/roles/_permissions.html.haml:6
 msgid "Add Permission"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Add Permission to"
 msgstr ""
 
-#: app/views/providers/_products_repos.html.haml:28
+#: app/views/providers/_products_repos.html.haml:27
 msgid "Add Product"
 msgstr ""
 
-#: app/views/providers/_products_repos.html.haml:52
+#: app/views/providers/_products_repos.html.haml:51
 msgid "Add Repository"
 msgstr ""
 
-#: app/views/activation_keys/_applied_subscriptions.html.haml:32
+#: app/views/activation_keys/_applied_subscriptions.html.haml:33
 msgid "Add Subscriptions ▸"
 msgstr ""
 
-#: app/views/activation_keys/_available_subscriptions.html.haml:32
 #: app/views/activation_keys/_available_subscriptions.html.haml:33
+#: app/views/activation_keys/_available_subscriptions.html.haml:34
 msgid "Add to Key"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Added:"
 msgstr ""
 
@@ -480,64 +559,124 @@ msgstr ""
 msgid "Adding Package..."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Adding..."
+msgstr ""
+
+#: app/models/activation_key.rb:148
+msgid "Administer Activation Keys"
+msgstr ""
+
+#: app/models/kt_environment.rb:344
+msgid "Administer Changesets in Environment"
+msgstr ""
+
+#: app/models/organization.rb:135
+msgid "Administer GPG Keys"
+msgstr ""
+
+#: app/models/organization.rb:138
+msgid "Administer Organization"
+msgstr ""
+
+#: app/models/filter.rb:65
+msgid "Administer Package Filters"
+msgstr ""
+
+#: app/models/provider.rb:125
+msgid "Administer Providers"
+msgstr ""
+
+#: app/models/role.rb:171
+msgid "Administer Roles"
+msgstr ""
+
+#: app/models/system_template.rb:391
+msgid "Administer System Templates"
+msgstr ""
+
+#: app/models/user.rb:354
+msgid "Administer Users"
 msgstr ""
 
 #: app/views/operations/index.html.haml:2 lib/navigation/administration.rb:45
 msgid "Administration"
 msgstr ""
 
+#: app/models/role.rb:191
+msgid "Administrator"
+msgstr ""
+
 #: app/views/errata/_show.html.haml:12
 msgid "Advisory"
 msgstr ""
 
-#: app/models/resource_type.rb:99 app/helpers/breadcrumb_helper.rb:209
+#: app/views/common/_common_i18n.html.haml:3
+msgid "Alert"
+msgstr ""
+
+#: app/helpers/breadcrumb_helper.rb:211 app/models/resource_type.rb:99
+#: app/views/roles/index.html.haml:8 app/views/roles/_permission.html.haml:23
+#: app/views/roles/_permission.html.haml:33
 #: app/views/roles/_closed_permission.html.haml:11
 #: app/views/roles/_closed_permission.html.haml:20
-#: app/views/roles/_permission.html.haml:23
-#: app/views/roles/_permission.html.haml:33 app/views/roles/index.html.haml:9
-#: lib/navigation/systems.rb:33
+#: lib/navigation/systems.rb:32
 msgid "All"
 msgstr ""
 
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/index.html.haml:15
 msgid "All Repositories"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:154
-msgid ""
-"An environment does not exist to promote content to.  If you would like to "
-"manage changesets and content, please create a new environment."
+#: app/models/glue/candlepin/owner.rb:73
+msgid "All Systems for owner %s in candlepin"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:115
+#: app/models/glue/candlepin/owner.rb:52
+msgid "All environments for owner %s in candlepin"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:63
+msgid "All providers for owner %s in candlepin"
+msgstr ""
+
+#: app/controllers/products_controller.rb:76
+msgid "All repository GPG keys for Product '%s' were updated."
+msgstr ""
+
+#: app/views/promotions/show.html.haml:153
+msgid ""
+"An environment does not exist to promote content to.  If you would like to "
+"manage promotion changesets and content, please create a new environment."
+msgstr ""
+
+#: app/views/system_templates/index.html.haml:117
 msgid ""
 "An error has occured when communicating with the server, please refresh the "
 "page to retrieve the current System Template"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:70
+#: app/views/promotions/show.html.haml:69
 msgid ""
 "An error has occured when communicating with the server, please refresh the "
-"page to retrieve the current changeset."
+"page to retrieve the current promotion changeset."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Applied"
 msgstr ""
 
-#: lib/navigation/systems.rb:112
+#: lib/navigation/systems.rb:120
 msgid "Applied Subscriptions"
 msgstr ""
 
-#: app/views/sync_schedules/index.html.haml:20
+#: app/views/sync_schedules/index.html.haml:16
 msgid "Apply Selected Plan to Selected Products"
 msgstr ""
 
+#: app/views/providers/redhat/_subscription_details.html.haml:8
 #: app/views/systems/_edit.html.haml:40
 #: app/views/subscriptions/index.html.haml:17
-#: app/views/providers/redhat/_subscription_details.html.haml:8
 msgid "Arch"
 msgstr ""
 
@@ -554,20 +693,20 @@ msgid "Are you sure you want to delete this GPG Key?"
 msgstr ""
 
 #: app/views/filters/_edit.html.haml:8
-#: app/views/filters/_products.html.haml:12
 msgid "Are you sure you want to delete this filster?"
 msgstr ""
 
 #: app/views/filters/_packages.html.haml:6
+#: app/views/filters/_products.html.haml:12
 msgid "Are you sure you want to delete this filter?"
 msgstr ""
 
-#: app/views/providers/_edit.html.haml:8
 #: app/views/providers/_products_repos.html.haml:8
+#: app/views/providers/_edit.html.haml:8
 msgid "Are you sure you want to delete this provider?"
 msgstr ""
 
-#: app/views/organizations/_edit.html.haml:8
+#: app/views/organizations/_edit.html.haml:9
 msgid "Are you sure you want to remove this organization?"
 msgstr ""
 
@@ -579,7 +718,7 @@ msgstr ""
 msgid "Are you sure you want to remove this repository?"
 msgstr ""
 
-#: app/views/roles/_edit.html.haml:106
+#: app/views/roles/_edit.html.haml:107
 msgid "Are you sure you want to remove this role?"
 msgstr ""
 
@@ -587,7 +726,7 @@ msgstr ""
 msgid "Are you sure you want to remove this system?"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:84
+#: app/views/system_templates/index.html.haml:85
 msgid "Are you sure you want to remove this template?"
 msgstr ""
 
@@ -595,55 +734,59 @@ msgstr ""
 msgid "Are you sure you want to remove this user?"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:129
-#: app/views/gpg_keys/_edit.html.haml:8
 #: app/views/common/_common_i18n.html.haml:3
+#: app/views/promotions/show.html.haml:128
+#: app/views/gpg_keys/_edit.html.haml:8
+#: app/views/sync_plans/_edit.html.haml:11
+#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 #: app/views/activation_keys/_edit.html.haml:15
 #: app/views/activation_keys/_available_subscriptions.html.haml:7
-#: app/views/activation_keys/_applied_subscriptions.html.haml:7
-#: app/views/environments/_edit.html.haml:10
-#: app/views/sync_plans/_edit.html.haml:11
+#: app/views/environments/_edit.html.haml:9
 #: app/views/roles/_self_role_edit.html.haml:6
 #: app/views/notices/show.html.haml:16
 msgid "Are you sure?"
-msgstr ""
-
-#: app/views/roles/_self_role_edit.html.haml:22
-msgid "Assigned roles:"
 msgstr ""
 
 #: app/views/errata/_show.html.haml:50
 msgid "Associated Bugs"
 msgstr ""
 
-#: app/controllers/api/systems_controller.rb:276
+#: app/controllers/api/systems_controller.rb:314
 msgid "At least one activation key must be provided"
 msgstr ""
 
-#: app/models/organization.rb:82
+#: app/models/organization.rb:75
 msgid "At least one organization must exist."
 msgstr ""
 
-#: app/models/system_template.rb:130
+#: app/models/system_template.rb:129
 msgid "At least one product or repository must be present to export a TDL"
 msgstr ""
 
-#: app/views/dashboard/index.html.haml:6
+#: app/views/systems/_subs.html.haml:9
+msgid "Auto-heal"
+msgstr ""
+
+#: app/views/dashboard/index.html.haml:10
 msgid "Available Errata"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:57 lib/navigation/systems.rb:118
+#: app/views/systems/_subs.html.haml:58 lib/navigation/systems.rb:126
 msgid "Available Subscriptions"
 msgstr ""
 
-#: app/views/common/500.html.haml:15 app/views/common/403.html.haml:8
+#: app/views/common/403.html.haml:8 app/views/common/500.html.haml:15
 #: app/views/common/404.html.haml:7
 msgid "Back"
 msgstr ""
 
+#: app/views/providers/redhat/_subscription_details.html.haml:9
 #: app/views/subscriptions/index.html.haml:19
-#: app/views/providers/redhat/_subscription_details.html.haml:10
 msgid "Begins"
+msgstr ""
+
+#: app/views/users/_edit_form.html.haml:78
+msgid "Browser Default Locale"
 msgstr ""
 
 #: app/views/packages/_show.html.haml:64
@@ -658,8 +801,12 @@ msgstr ""
 msgid "By Environments"
 msgstr ""
 
-#: app/controllers/api/environments_controller.rb:50
-msgid "Can't update Locker environment"
+#: lib/resources/cdn.rb:93
+msgid "CDN loading error: %s not found"
+msgstr ""
+
+#: app/controllers/api/environments_controller.rb:51
+msgid "Can't update Library environment"
 msgstr ""
 
 #: app/views/sync_management/index.html.haml:5
@@ -674,48 +821,76 @@ msgstr ""
 msgid "Cancel Add"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Cancel Review"
 msgstr ""
 
 #: app/controllers/sync_management_controller.rb:26
-msgid "Canceled."
+msgid "Cancelled."
 msgstr ""
 
-#: app/models/activation_key.rb:43
-msgid "Cannot create activation keys in Locker environment "
+#: app/models/system_task.rb:115
+msgid "Candlepin Event"
 msgstr ""
 
-#: app/models/user.rb:106
+#: app/models/permission.rb:38 app/models/permission.rb:218
+msgid "Cannot add/remove or change permissions related to a locked role."
+msgstr ""
+
+#: app/models/role.rb:18
+msgid "Cannot change the name or description of a locked role."
+msgstr ""
+
+#: app/models/activation_key.rb:47
+msgid "Cannot create activation keys in Library environment "
+msgstr ""
+
+#: app/models/user.rb:108
 msgid "Cannot delete currently logged user"
 msgstr ""
 
-#: app/controllers/api/templates_controller.rb:96
-msgid "Cannot export templates for the Locker environment."
+#: app/models/role.rb:229 app/models/user.rb:577
+msgid ""
+"Cannot dissociate user '%s' from '%s' role. Need at least one user in the '%"
+"s' role."
 msgstr ""
 
-#: app/controllers/system_templates_controller.rb:285
+#: app/controllers/api/templates_controller.rb:107
+msgid "Cannot export templates for the Library environment."
+msgstr ""
+
+#: app/controllers/system_templates_controller.rb:297
 msgid "Cannot modify a template that is another environment"
 msgstr ""
 
-#: app/models/system.rb:17
-msgid "Cannot register a system with 'Locker' environment "
+#: app/models/changeset.rb:118
+msgid ""
+"Cannot promote the changeset '%s' while another changeset (%s) is being "
+"promoted."
 msgstr ""
 
-#: app/models/permission.rb:39
+#: app/models/changeset.rb:116
+msgid "Cannot promote the changset '%s' because it is not in the review phase."
+msgstr ""
+
+#: app/models/system.rb:17
+msgid "Cannot register a system with 'Library' environment "
+msgstr ""
+
+#: app/models/permission.rb:46
 msgid "Cannot specify a tag if all_tags is selected."
 msgstr ""
 
-#: app/models/permission.rb:35
+#: app/models/permission.rb:42
 msgid "Cannot specify a verb if all_verbs is selected."
 msgstr ""
 
-#: app/models/permission.rb:43
+#: app/models/permission.rb:50
 msgid "Cannot specify all_types without all_tags and all_verbs"
 msgstr ""
 
-#: app/controllers/api/templates_controller.rb:87
-msgid "Cannot validate templates for the Locker environment."
+#: app/controllers/api/templates_controller.rb:98
+msgid "Cannot validate templates for the Library environment."
 msgstr ""
 
 #: app/views/password_resets/edit.html.haml:18
@@ -726,25 +901,8 @@ msgstr ""
 msgid "Change Password:"
 msgstr ""
 
-#: lib/navigation/content_management.rb:181
-msgid "Changelog"
-msgstr ""
-
-#: app/views/promotions/show.html.haml:117
-msgid "Changeset Details"
-msgstr ""
-
-#: lib/navigation/content_management.rb:143
-msgid "Changeset History"
-msgstr ""
-
-#: app/views/promotions/show.html.haml:8
-msgid "Changeset is empty."
-msgstr ""
-
-#: app/controllers/changesets_controller.rb:283
-#: app/helpers/breadcrumb_helper.rb:29 app/views/promotions/show.html.haml:150
-#: app/views/promotions/show.html.haml:153
+#: app/controllers/changesets_controller.rb:268
+#: app/helpers/breadcrumb_helper.rb:30
 msgid "Changesets"
 msgstr ""
 
@@ -756,17 +914,17 @@ msgstr ""
 msgid "Choose Environment:"
 msgstr ""
 
-#: app/views/filters/_products.html.haml:31
+#: app/views/filters/_products.html.haml:30
 msgid "Choose a product.."
 msgstr ""
 
-#: app/views/users/_edit_environment.html.haml:26
+#: app/views/users/_edit_environment.html.haml:29
 msgid "Choose new defaults:"
 msgstr ""
 
+#: app/views/gpg_keys/_new.html.haml:21 app/views/gpg_keys/_new.html.haml:35
+#: app/views/gpg_keys/_edit.html.haml:37
 #: app/views/users/_edit_form.html.haml:41
-#: app/views/gpg_keys/_edit.html.haml:37 app/views/gpg_keys/_new.html.haml:21
-#: app/views/gpg_keys/_new.html.haml:35
 msgid "Clear"
 msgstr ""
 
@@ -778,25 +936,25 @@ msgstr ""
 msgid "Clear the Search"
 msgstr ""
 
-#: app/controllers/users_controller.rb:247
+#: app/controllers/users_controller.rb:303
 msgid "Cleared"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid ""
 "Click Add or Remove next to a user name to apply or remove them from role."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Click Add permission from the bar below to add a permission."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid ""
 "Click edit permission from the bar below to edit the current permission."
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:88
+#: app/controllers/organizations_controller.rb:104
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr ""
 
@@ -805,17 +963,17 @@ msgid "Click to edit"
 msgstr ""
 
 #: app/views/common/_edit_i18n.html.haml:4
-#: app/views/layouts/_tupane_layout.html.haml:15
-#: app/views/layouts/_tupane_layout.html.haml:20
+#: app/views/layouts/_tupane_layout.html.haml:19
+#: app/views/layouts/_tupane_layout.html.haml:24
 #: app/views/roles/_edit.html.haml:11
 msgid "Close"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Close Add Permission"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Close Details"
 msgstr ""
 
@@ -823,32 +981,40 @@ msgstr ""
 msgid "Close Edit"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Close Edit Permission"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Close Role Details"
 msgstr ""
 
-#: app/views/common/_env_select.html.haml:10
+#: app/views/common/_env_select.html.haml:11
 msgid "Collapse"
 msgstr ""
 
-#: app/views/password_resets/edit.html.haml:30
+#: app/views/sync_management/index.html.haml:22
+msgid "Collapse All"
+msgstr ""
+
+#: app/views/password_resets/edit.html.haml:28
 msgid "Confirm Password:"
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:53 app/views/users/_new.html.haml:33
+#: app/views/users/_edit_form.html.haml:51 app/views/users/_new.html.haml:33
 msgid "Confirm:"
 msgstr ""
 
-#: app/views/subscriptions/index.html.haml:14
+#: app/views/common/_common_i18n.html.haml:3
+msgid "Confirmation"
+msgstr ""
+
 #: app/views/providers/redhat/_subscription_details.html.haml:5
+#: app/views/subscriptions/index.html.haml:14
 msgid "Consumed"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:121
+#: app/helpers/breadcrumb_helper.rb:122
 msgid "Content"
 msgstr ""
 
@@ -860,14 +1026,18 @@ msgstr ""
 msgid "Content Management"
 msgstr ""
 
+#: lib/navigation/content_management.rb:56
+msgid "Content Providers"
+msgstr ""
+
+#: app/views/changesets/_edit.html.haml:32
 #: app/views/system_templates/_promotion_details.html.haml:13
-#: app/views/changesets/_edit.html.haml:26
 msgid "Contents:"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:17
-#: app/views/subscriptions/index.html.haml:15
 #: app/views/providers/redhat/_subscription_details.html.haml:6
+#: app/views/systems/_subs.html.haml:19
+#: app/views/subscriptions/index.html.haml:15
 msgid "Contract"
 msgstr ""
 
@@ -875,66 +1045,71 @@ msgstr ""
 msgid "Copyright &copy; "
 msgstr ""
 
-#: app/models/organization.rb:78
+#: app/models/organization.rb:71
 msgid "Could not delete organization '%s'."
 msgstr ""
 
-#: app/controllers/api/products_controller.rb:76
+#: app/controllers/api/products_controller.rb:98
 msgid "Couldn't find environment '%s'"
+msgstr ""
+
+#: app/controllers/environments_controller.rb:133
+msgid "Couldn't find environment with ID=%d"
+msgstr ""
+
+#: app/controllers/environments_controller.rb:125
+msgid "Couldn't find organization '%d'"
+msgstr ""
+
+#: app/controllers/organizations_controller.rb:204
+#: app/controllers/organizations_controller.rb:215
+msgid "Couldn't find organization with ID=%s"
 msgstr ""
 
 #: app/controllers/api/activation_keys_controller.rb:68
 msgid "Couldn't find pool '%s' in activation_key '%s'"
 msgstr ""
 
-#: app/controllers/api/providers_controller.rb:120
+#: app/controllers/api/providers_controller.rb:121
 msgid "Couldn't find provider '%s'"
 msgstr ""
 
-#: app/controllers/api/sync_controller.rb:77
+#: app/controllers/repositories_controller.rb:159
+msgid "Couldn't find repository with ID=%s"
+msgstr ""
+
+#: app/controllers/api/sync_controller.rb:69
 msgid "Couldn't find subject of synchronization"
 msgstr ""
 
-#: app/views/repositories/_new.html.haml:30
-#: app/views/products/_new.html.haml:42
+#: app/views/repositories/_new.html.haml:33
 #: app/views/environments/_new.html.haml:29
+#: app/views/products/_new.html.haml:45
 msgid "Create"
 msgstr ""
 
 #: app/views/environments/_new.html.haml:2
-msgid "Create Environment"
-msgstr ""
-
-#: app/models/organization.rb:135
-msgid "Create Organization"
-msgstr ""
-
-#: app/models/filter.rb:64
-msgid "Create Package Filters"
+msgid "Create Application Life Cycle Management Environment"
 msgstr ""
 
 #: app/views/products/_new.html.haml:2
 msgid "Create Product"
 msgstr ""
 
-#: app/models/provider.rb:122
-msgid "Create Provider"
-msgstr ""
-
 #: app/views/repositories/_new.html.haml:9
 msgid "Create Repository"
 msgstr ""
 
-#: app/models/role.rb:106
-msgid "Create Roles"
-msgstr ""
-
-#: app/models/user.rb:352
-msgid "Create Users"
-msgstr ""
-
 #: app/views/notices/show.html.haml:25
 msgid "Created (UTC)"
+msgstr ""
+
+#: app/models/glue/candlepin/environment.rb:29
+msgid "Creating an environment in candlepin: %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:36
+msgid "Creating an owner in candlepin: %s"
 msgstr ""
 
 #: app/views/layouts/_allowed_orgs.html.haml:3
@@ -947,7 +1122,7 @@ msgid "Current Subscriptions"
 msgstr ""
 
 #: lib/navigation/content_management.rb:76
-msgid "Custom"
+msgid "Custom Content Providers"
 msgstr ""
 
 #: lib/navigation/dashboard.rb:17
@@ -958,16 +1133,21 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
+#: app/controllers/api/sync_plans_controller.rb:44
+#: app/controllers/api/sync_plans_controller.rb:54
+msgid "Date format is incorrect."
+msgstr ""
+
 #: app/views/organizations/_download_debug_certificate.html.haml:8
 msgid "Debug Certificate"
 msgstr ""
 
-#: app/views/users/_edit_environment.html.haml:21
+#: app/views/users/_edit_environment.html.haml:23
 msgid "Default Environment:"
 msgstr ""
 
-#: app/views/users/_new.html.haml:48
-#: app/views/users/_edit_environment.html.haml:17
+#: app/views/users/_new.html.haml:50
+#: app/views/users/_edit_environment.html.haml:19
 msgid "Default Organization:"
 msgstr ""
 
@@ -975,27 +1155,27 @@ msgstr ""
 msgid "Delete All"
 msgstr ""
 
-#: app/models/organization.rb:136
+#: app/models/organization.rb:139
 msgid "Delete Organization"
 msgstr ""
 
-#: app/models/filter.rb:66
+#: app/models/filter.rb:67
 msgid "Delete Package Filters"
 msgstr ""
 
-#: app/models/provider.rb:125
-msgid "Delete Provider"
+#: app/models/provider.rb:128
+msgid "Delete Providers"
 msgstr ""
 
-#: app/models/role.rb:109
+#: app/models/role.rb:174
 msgid "Delete Roles"
 msgstr ""
 
-#: app/models/organization.rb:130
+#: app/models/organization.rb:133
 msgid "Delete Systems"
 msgstr ""
 
-#: app/models/user.rb:355
+#: app/models/user.rb:357
 msgid "Delete Users"
 msgstr ""
 
@@ -1003,72 +1183,94 @@ msgstr ""
 msgid "Deleted provider [ %s ]"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:61 app/views/promotions/show.html.haml:8
-#: lib/navigation/content_management.rb:175
+#: app/models/glue/candlepin/environment.rb:37
+msgid "Deleteing environment in candlepin: %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:44
+msgid "Deleting owner in candlepin: %s"
+msgstr ""
+
+#: app/helpers/breadcrumb_helper.rb:62 app/views/promotions/show.html.haml:7
+#: lib/navigation/content_management.rb:167
 msgid "Dependencies"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Dependency of "
 msgstr ""
 
-#: app/views/system_templates/_edit.html.haml:7
-#: app/views/system_templates/_new.html.haml:15
-#: app/views/distributions/_show.html.haml:17
-#: app/views/products/_edit.html.haml:21 app/views/products/_new.html.haml:13
-#: app/views/systems/_edit.html.haml:28
-#: app/views/activation_keys/_edit.html.haml:42
-#: app/views/activation_keys/_new.html.haml:15
-#: app/views/environments/_edit.html.haml:23
-#: app/views/environments/_new.html.haml:19
+#: app/views/filters/_new.html.haml:18 app/views/filters/_edit.html.haml:26
 #: app/views/packages/_show.html.haml:17
+#: app/views/providers/_edit.html.haml:28
+#: app/views/providers/_form.html.haml:12
+#: app/views/organizations/_new.html.haml:17
+#: app/views/organizations/_new.html.haml:30
+#: app/views/organizations/_edit.html.haml:22
+#: app/views/changesets/_new.html.haml:15
 #: app/views/sync_plans/_edit.html.haml:20
 #: app/views/sync_plans/_form.html.haml:10
-#: app/views/filters/_edit.html.haml:27 app/views/filters/_new.html.haml:18
-#: app/views/roles/_new.html.haml:14 app/views/changesets/_new.html.haml:15
-#: app/views/notices/show.html.haml:29 app/views/providers/_edit.html.haml:28
-#: app/views/providers/_form.html.haml:12
-#: app/views/organizations/_edit.html.haml:18
-#: app/views/organizations/_new.html.haml:17
-#: app/views/errata/_show.html.haml:80
+#: app/views/systems/_edit.html.haml:28 app/views/errata/_show.html.haml:80
+#: app/views/activation_keys/_new.html.haml:15
+#: app/views/activation_keys/_edit.html.haml:42
+#: app/views/system_templates/_new.html.haml:15
+#: app/views/system_templates/_edit.html.haml:7
+#: app/views/environments/_new.html.haml:19
+#: app/views/environments/_edit.html.haml:22 app/views/roles/_new.html.haml:14
+#: app/views/notices/show.html.haml:29
+#: app/views/distributions/_show.html.haml:18
+#: app/views/products/_new.html.haml:13 app/views/products/_edit.html.haml:21
 msgid "Description"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:123 app/views/roles/_edit.html.haml:40
-#: app/views/roles/_edit.html.haml:76 app/views/changesets/_edit.html.haml:16
+#: app/views/promotions/show.html.haml:122
+#: app/views/changesets/_edit.html.haml:16 app/views/roles/_edit.html.haml:40
+#: app/views/roles/_edit.html.haml:76 app/views/roles/index.html.haml:8
 msgid "Description:"
 msgstr ""
 
-#: app/views/system_events/_details.html.haml:16
-#: app/views/changesets/_edit.html.haml:5 lib/navigation/organization.rb:51
-#: lib/navigation/systems.rb:124 lib/navigation/administration.rb:35
+#: app/views/changesets/_edit.html.haml:5 lib/navigation/administration.rb:35
+#: lib/navigation/systems.rb:61 lib/navigation/systems.rb:132
 #: lib/navigation/content_management.rb:35
-#: lib/navigation/content_management.rb:193
-#: lib/navigation/content_management.rb:210
-#: lib/navigation/content_management.rb:227
-#: lib/navigation/content_management.rb:251
-#: lib/navigation/content_management.rb:268
+#: lib/navigation/content_management.rb:173
+#: lib/navigation/content_management.rb:190
+#: lib/navigation/content_management.rb:207
+#: lib/navigation/content_management.rb:230
+#: lib/navigation/content_management.rb:247 lib/navigation/organization.rb:51
 msgid "Details"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Details for the currently selected permission."
 msgstr ""
 
-#: app/controllers/api/repositories_controller.rb:44
+#: app/controllers/api/repositories_controller.rb:69
 msgid "Disable/enable is not supported for custom repositories."
 msgstr ""
 
-#: app/controllers/users_controller.rb:246
+#: app/controllers/users_controller.rb:302
 msgid "Disabled help tips have been re-enabled."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/systems/errata/_index.html.haml:16
+#: app/views/dashboard/index.html.haml:21
+msgid "Display"
+msgstr ""
+
+#: app/views/promotions/show.html.haml:7
 #: app/views/dashboard/_systems.html.haml:17
 msgid "Distribution"
 msgstr ""
 
-#: app/models/system_template.rb:314
+#: app/models/changeset_distribution.rb:20
+msgid "Distribution '%s' does not belong to the specified product!"
+msgstr ""
+
+#: app/models/system_template_distribution.rb:19
+msgid "Distribution '%s' not found in the '%s' environment"
+msgstr ""
+
+#: app/models/system_template.rb:313
 msgid "Distribution '%s' not found in this template."
 msgstr ""
 
@@ -1076,14 +1278,14 @@ msgstr ""
 msgid "Distribution '%s' was not found in Pulp."
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:65 app/helpers/breadcrumb_helper.rb:170
+#: app/helpers/breadcrumb_helper.rb:66 app/helpers/breadcrumb_helper.rb:173
+#: app/views/promotions/show.html.haml:7
 #: app/views/promotions/_detail.html.haml:30
-#: app/views/promotions/show.html.haml:8
-#: app/views/changesets/_edit.html.haml:58
+#: app/views/changesets/_edit.html.haml:64
 msgid "Distributions"
 msgstr ""
 
-#: app/views/providers/index.html.haml:16
+#: app/views/providers/index.html.haml:14
 msgid ""
 "Do you want to set this GPG Key as the key for all repositories within this "
 "product?"
@@ -1093,25 +1295,36 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: app/views/system_templates/_download.html.haml:12
-#: app/views/system_templates/index.html.haml:98
 #: app/views/packages/_show.html.haml:82
 #: app/views/organizations/_download_debug_certificate.html.haml:11
+#: app/views/system_templates/_download.html.haml:12
+#: app/views/system_templates/index.html.haml:99
 msgid "Download"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:75
+#: app/views/system_templates/index.html.haml:76
 msgid "Download System Template"
 msgstr ""
 
-#: app/views/sync_management/index.html.haml:23
+#: app/views/sync_management/index.html.haml:45
 msgid "Duration"
 msgstr ""
 
+#: app/views/systems/errata/_index.html.haml:39
+msgid "ERRATA"
+msgstr ""
+
+#: app/views/activation_keys/_edit.html.haml:28
+msgid ""
+"Edit Activation Key enables you to modify the selected activation key.  This "
+"key may be used during system registration.  For example, <BR/><BR/"
+">subscription-manager register --org %s --activationkey %s"
+msgstr ""
+
+#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:137
 #: app/views/system_templates/index.html.haml:6
-#: app/views/system_templates/index.html.haml:83
-#: app/views/promotions/show.html.haml:8
-#: app/views/promotions/show.html.haml:138
+#: app/views/system_templates/index.html.haml:84
 msgid "Edit Details"
 msgstr ""
 
@@ -1126,15 +1339,11 @@ msgid ""
 "copied and pasted in directly."
 msgstr ""
 
-#: app/models/filter.rb:67
-msgid "Edit Package Filters"
-msgstr ""
-
-#: app/views/roles/_edit.html.haml:98 app/views/roles/index.html.haml:9
+#: app/views/roles/_edit.html.haml:99 app/views/roles/index.html.haml:8
 msgid "Edit Permission"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Edit Permission in"
 msgstr ""
 
@@ -1142,24 +1351,20 @@ msgstr ""
 msgid "Edit Product"
 msgstr ""
 
-#: app/views/repositories/_edit.html.haml:13
-msgid "Edit Repository"
-msgstr ""
-
-#: app/views/roles/_edit.html.haml:103
+#: app/views/roles/_edit.html.haml:104
 msgid "Edit Role"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Edit Role Details"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:72
+#: app/views/system_templates/index.html.haml:73
 msgid "Edit System Template"
 msgstr ""
 
-#: app/controllers/api/products_controller.rb:83
 #: app/controllers/api/activation_keys_controller.rb:107
+#: app/controllers/api/products_controller.rb:105
 msgid "Either organization id or environment id needs to be specified"
 msgstr ""
 
@@ -1167,13 +1372,13 @@ msgstr ""
 msgid "Either packages or groups  must be provided"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:107
+#: app/views/system_templates/index.html.haml:108
 msgid "Eligible Content"
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:67 app/views/users/_new.html.haml:42
 #: app/views/password_resets/new.html.haml:16
 #: app/views/password_resets/new.html.haml:26
+#: app/views/users/_edit_form.html.haml:65 app/views/users/_new.html.haml:44
 msgid "Email Address:"
 msgstr ""
 
@@ -1191,7 +1396,7 @@ msgid ""
 "Empty request received to install Packages or Package Groups System '%{s}'."
 msgstr ""
 
-#: app/views/providers/redhat/show.html.haml:42
+#: app/views/providers/redhat/show.html.haml:47
 msgid "Enable Repositories"
 msgstr ""
 
@@ -1207,24 +1412,27 @@ msgstr ""
 msgid "Enter Selected Content..."
 msgstr ""
 
-#: app/views/system_templates/_download.html.haml:8
-#: app/views/users/_new.html.haml:56
-#: app/views/activation_keys/_edit.html.haml:49
+#: app/views/users/_new.html.haml:58 app/views/dashboard/_errata.haml:39
 #: app/views/activation_keys/_new.html.haml:22
-#: app/views/environments/_edit.html.haml:5
-#: app/views/dashboard/_errata.haml:31
+#: app/views/activation_keys/_edit.html.haml:49
+#: app/views/system_templates/_download.html.haml:8
+#: app/views/environments/_edit.html.haml:4
 msgid "Environment"
 msgstr ""
 
-#: app/views/organizations/_new.html.haml:30
-msgid "Environment Description"
+#: app/controllers/environments_controller.rb:73
+msgid "Environment '%s' was created."
 msgstr ""
 
-#: app/views/organizations/_new.html.haml:25
-msgid "Environment Name"
+#: app/controllers/environments_controller.rb:103
+msgid "Environment '%s' was deleted."
 msgstr ""
 
-#: app/views/organizations/_edit.html.haml:22
+#: app/controllers/environments_controller.rb:95
+msgid "Environment '%s' was updated."
+msgstr ""
+
+#: app/views/organizations/_edit.html.haml:26
 msgid "Environment Promotion Paths"
 msgstr ""
 
@@ -1240,21 +1448,37 @@ msgstr ""
 msgid "Environments"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:53 app/helpers/breadcrumb_helper.rb:126
-#: app/helpers/breadcrumb_helper.rb:157
+#: app/helpers/breadcrumb_helper.rb:54 app/helpers/breadcrumb_helper.rb:127
+#: app/helpers/breadcrumb_helper.rb:159 app/views/promotions/show.html.haml:7
 #: app/views/promotions/_detail.html.haml:9
 #: app/views/promotions/_detail.html.haml:22
-#: app/views/promotions/show.html.haml:8 app/views/dashboard/_errata.haml:9
-#: app/views/changesets/_edit.html.haml:54
+#: app/views/changesets/_edit.html.haml:60 app/views/dashboard/_errata.haml:10
+#: lib/navigation/systems.rb:86
 msgid "Errata"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/models/system_task.rb:102
+msgid "Errata Install"
+msgstr ""
+
+#: app/models/system_task.rb:112
+msgid "Errata Install scheduled by %s"
+msgstr ""
+
+#: app/controllers/system_errata_controller.rb:67
+msgid "Errata scheduled for install."
+msgstr ""
+
+#: app/views/promotions/show.html.haml:7
 msgid "Erratum"
 msgstr ""
 
+#: app/models/changeset_erratum.rb:20
+msgid "Erratum '%s' doesn't belong to the specified product!"
+msgstr ""
+
 #: app/views/sync_management/index.html.haml:5
-#: app/views/dashboard/_sync.haml:23
+#: app/views/common/_common_i18n.html.haml:3 app/views/dashboard/_sync.haml:23
 msgid "Error"
 msgstr ""
 
@@ -1266,33 +1490,45 @@ msgstr ""
 msgid "Error while deleting provider [ %s ]: %s"
 msgstr ""
 
+#: app/views/common/500.html.haml:10
+msgid "Error:"
+msgstr ""
+
 #: app/views/system_events/_events.html.haml:27
 msgid "Event"
 msgstr ""
 
-#: lib/navigation/systems.rb:89
+#: lib/navigation/systems.rb:103
 msgid "Events"
 msgstr ""
 
-#: app/models/system_template.rb:133
+#: app/models/system_template.rb:132
 msgid "Exactly one distribution must be present to export a TDL"
 msgstr ""
 
-#: app/views/common/_env_select.html.haml:8
-#: app/views/activation_keys/_subscriptions.html.haml:22
-#: app/views/changesets/_content_type.html.haml:7
-#: app/views/providers/_products_repos.html.haml:36
+#: app/views/common/_env_select.html.haml:9
+#: app/views/providers/_products_repos.html.haml:35
 #: app/views/organizations/_download_debug_certificate.html.haml:6
+#: app/views/changesets/_content_type.html.haml:7
+#: app/views/activation_keys/_subscriptions.html.haml:22
 msgid "Expand"
+msgstr ""
+
+#: app/views/sync_management/index.html.haml:25
+msgid "Expand All"
 msgstr ""
 
 #: app/views/subscriptions/index.html.haml:51
 msgid "Expand/Contract All"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:19 app/views/systems/_subs.html.haml:65
+#: app/controllers/api/systems_controller.rb:207
+msgid "Expected attribute is missing:"
+msgstr ""
+
+#: app/views/providers/redhat/_subscription_details.html.haml:10
+#: app/views/systems/_subs.html.haml:21 app/views/systems/_subs.html.haml:74
 #: app/views/subscriptions/index.html.haml:20
-#: app/views/providers/redhat/_subscription_details.html.haml:11
 msgid "Expires"
 msgstr ""
 
@@ -1300,28 +1536,70 @@ msgstr ""
 msgid "Fact"
 msgstr ""
 
-#: lib/navigation/systems.rb:101
+#: lib/navigation/systems.rb:109
 msgid "Facts"
 msgstr ""
 
+#: app/helpers/dashboard_helper.rb:57
+msgid "Failed"
+msgstr ""
+
+#: app/models/glue/candlepin/environment.rb:32
+msgid "Failed to create candlepin environment %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:39
+msgid "Failed to create candlepin owner %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:58
+msgid "Failed to delete all environments for owner %s in candlepin:"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:66
+msgid "Failed to delete all providers for owner %s in candlepin: %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:78
+msgid "Failed to delete all systems for owner %s in candlepin: %s"
+msgstr ""
+
+#: app/models/glue/candlepin/environment.rb:40
+msgid "Failed to delete candlepin environment %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:47
+msgid "Failed to delete candlepin owner %s"
+msgstr ""
+
+#: app/models/user.rb:458
+msgid "Failed to delete organization '%s'. Check notices for more details. "
+msgstr ""
+
+#: app/models/changeset.rb:308
+msgid "Failed to promote changeset '%s'. Check notices for more details"
+msgstr ""
+
 #: app/views/distributions/_filelist.html.haml:14
-#: app/views/products/_new.html.haml:37
 msgid "File"
 msgstr ""
 
-#: lib/navigation/content_management.rb:187
-#: lib/navigation/content_management.rb:221
+#: lib/navigation/content_management.rb:201
 msgid "Filelist"
 msgstr ""
 
-#: app/controllers/filters_controller.rb:217
-#: app/views/system_templates/index.html.haml:51
-#: app/views/promotions/show.html.haml:8
-#: app/views/promotions/show.html.haml:102
-#: app/views/promotions/show.html.haml:104
-#: app/views/promotions/show.html.haml:105 app/views/layouts/_org.haml:12
+#: app/controllers/filters_controller.rb:223
+#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:101
+#: app/views/promotions/show.html.haml:103
+#: app/views/promotions/show.html.haml:104 app/views/layouts/_org.haml:12
+#: app/views/system_templates/index.html.haml:52
 #: app/views/roles/_edit.html.haml:14 app/views/roles/_edit.html.haml:18
 msgid "Filter"
+msgstr ""
+
+#: app/controllers/filters_controller.rb:104
+msgid "Filter %s created successfully."
 msgstr ""
 
 #: app/views/system_events/_events.html.haml:18
@@ -1333,10 +1611,13 @@ msgid "Filter on loaded packages..."
 msgstr ""
 
 #: app/views/common/_filter_table.html.haml:2
+#: app/views/promotions/show.html.haml:100 app/views/layouts/_org.haml:11
+#: app/views/system_templates/index.html.haml:51
+#: app/views/roles/_edit.html.haml:13
 msgid "Filter..."
 msgstr ""
 
-#: lib/navigation/content_management.rb:239
+#: lib/navigation/content_management.rb:218
 msgid "Filtered Packages"
 msgstr ""
 
@@ -1344,32 +1625,64 @@ msgstr ""
 msgid "Filters"
 msgstr ""
 
+#: app/controllers/api/filters_controller.rb:111
+msgid "Filters can be stored only in Library repositories."
+msgstr ""
+
+#: app/views/systems/errata/_index.html.haml:5
+msgid "Finished"
+msgstr ""
+
+#: app/views/providers/redhat/show.html.haml:31
+msgid "Force"
+msgstr ""
+
 #: app/views/user_sessions/new.html.haml:17
 msgid "Forgotten username or password?"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Full Access"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-#: app/views/changesets/_edit.html.haml:43
+#: app/views/promotions/show.html.haml:7
+#: app/views/changesets/_edit.html.haml:49
 msgid "Full Products"
 msgstr ""
 
-#: app/controllers/gpg_keys_controller.rb:159
-#: app/views/repositories/_edit.html.haml:27
+#: app/controllers/gpg_keys_controller.rb:168
 #: app/views/repositories/_new.html.haml:25
-#: app/views/products/_edit.html.haml:26 app/views/products/_new.html.haml:18
+#: app/views/repositories/_edit.html.haml:27
+#: app/views/products/_new.html.haml:18 app/views/products/_edit.html.haml:26
 msgid "GPG Key"
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:92
+msgid "GPG Key '%s' was created."
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:136
+msgid "GPG Key '%s' was deleted."
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:116
+msgid "GPG Key '%s' was updated."
 msgstr ""
 
 #: app/views/systems/_subscription_details.html.haml:4
 msgid "GPG Key URL: "
 msgstr ""
 
-#: app/controllers/gpg_keys_controller.rb:157
-#: lib/navigation/content_management.rb:163
+#: app/views/gpg_keys/_products_repos.html.haml:21
+msgid "GPG Key assigned at the Product Level for"
+msgstr ""
+
+#: app/views/gpg_keys/_products_repos.html.haml:36
+msgid "GPG Key assigned at the Repository Level for"
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:165
+#: lib/navigation/content_management.rb:157
 msgid "GPG Keys"
 msgstr ""
 
@@ -1381,29 +1694,25 @@ msgid ""
 "associated with the given entity."
 msgstr ""
 
-#: lib/navigation/systems.rb:60
-msgid "General"
-msgstr ""
-
-#: app/helpers/breadcrumb_helper.rb:243
+#: app/helpers/breadcrumb_helper.rb:246
 msgid "Global Permissions"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid ""
 "Global permissions allow you to create permissions that span all "
 "organizations, or choose a specific organization to apply permissions."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid ""
 "Global permissions are permissions that span all organizations; however, "
 "organization permissions apply only to the organization they are associated "
 "with."
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:3
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "Good"
 msgstr ""
 
@@ -1411,7 +1720,7 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:74
+#: app/helpers/systems_helper.rb:58
 msgid "Guest"
 msgstr ""
 
@@ -1423,7 +1732,7 @@ msgstr ""
 msgid "History"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:77 app/views/systems/_edit.html.haml:82
+#: app/helpers/systems_helper.rb:64 app/views/systems/_edit.html.haml:77
 msgid "Host"
 msgstr ""
 
@@ -1431,8 +1740,24 @@ msgstr ""
 msgid "Host & Guest Info"
 msgstr ""
 
+#: app/helpers/systems_helper.rb:62
+msgid "Hypervisor"
+msgstr ""
+
 #: app/models/hypervisor.rb:22
 msgid "Hypervisor does not support this action"
+msgstr ""
+
+#: app/controllers/system_errata_controller.rb:38
+msgid "Hypervisors do not have errata"
+msgstr ""
+
+#: app/controllers/system_packages_controller.rb:118
+msgid "Hypervisors do not have packages"
+msgstr ""
+
+#: app/controllers/systems_controller.rb:194
+msgid "Hypervisors do not have software products"
 msgstr ""
 
 #: app/views/password_resets/new.html.haml:5
@@ -1443,8 +1768,11 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: app/views/systems/_list_system.html.haml:22
-#: app/views/systems/_list_system_show.html.haml:18
+#: app/views/systems/errata/_index.html.haml:43
+msgid "INFO"
+msgstr ""
+
+#: app/views/systems/_list_system_show.html.haml:20
 msgid "IP: "
 msgstr ""
 
@@ -1470,7 +1798,7 @@ msgid ""
 "and instructions on resetting your password will be sent to you."
 msgstr ""
 
-#: app/views/providers/redhat/show.html.haml:46
+#: app/views/providers/redhat/show.html.haml:51
 msgid "Import History"
 msgstr ""
 
@@ -1478,8 +1806,16 @@ msgstr ""
 msgid "Import Time"
 msgstr ""
 
+#: app/views/dashboard/_errata.haml:14
+msgid "Info"
+msgstr ""
+
 #: app/views/organizations/_new.html.haml:22
-msgid "Initial Environment"
+msgid "Initial Application Life Cycle Management Environment"
+msgstr ""
+
+#: app/models/system.rb:200
+msgid "Initial Registration Params"
 msgstr ""
 
 #: app/views/users/_edit_form.html.haml:28
@@ -1494,10 +1830,17 @@ msgstr ""
 msgid "Install of Packages '%{p}' scheduled for System '%{s}'."
 msgstr ""
 
+#: app/views/systems/errata/_items.html.haml:16
+#: app/views/systems/errata/_index.html.haml:5
+msgid "Installing"
+msgstr ""
+
 #: app/views/dashboard/_subscriptions.haml:26
 msgid "Insufficient Entitlements"
 msgstr ""
 
+#: app/controllers/sync_plans_controller.rb:49
+#: app/controllers/sync_schedules_controller.rb:46
 #: app/views/sync_plans/_edit.html.haml:23
 #: app/views/sync_plans/_form.html.haml:15
 msgid "Interval"
@@ -1513,11 +1856,11 @@ msgstr ""
 
 #: app/models/resource_type.rb:41
 msgid ""
-"Invalid resource type '%{resource_type}'. Resource Types can be one of "
-"'%{possible_types}'"
+"Invalid resource type '%{resource_type}'. Resource Types can be one of '%"
+"{possible_types}'"
 msgstr ""
 
-#: app/controllers/changesets_controller.rb:159
+#: app/controllers/changesets_controller.rb:144
 msgid "Invalid state"
 msgstr ""
 
@@ -1539,11 +1882,15 @@ msgstr ""
 msgid "It is not allowed to import manifest for a custom provider."
 msgstr ""
 
-#: app/helpers/branding_helper.rb:16
-msgid "Katello"
+#: app/controllers/api/products_controller.rb:42
+msgid "It is not allowed to update a Red Hat product."
 msgstr ""
 
-#: app/mailers/user_mailer.rb:42
+#: app/controllers/api/repositories_controller.rb:56
+msgid "It is not allowed to update a Red Hat repository."
+msgstr ""
+
+#: app/mailers/user_mailer.rb:41
 msgid "Katello Logins"
 msgstr ""
 
@@ -1551,19 +1898,11 @@ msgstr ""
 msgid "Katello Logo"
 msgstr ""
 
-#: app/mailers/user_mailer.rb:35
+#: app/mailers/user_mailer.rb:34
 msgid "Katello User '%s' Password Reset"
 msgstr ""
 
-#: app/views/layouts/_footer.haml:8
-msgid "Katello Version: "
-msgstr ""
-
-#: app/views/systems/_list_system_show.html.haml:15
-msgid "Kernel: "
-msgstr ""
-
-#: app/controllers/activation_keys_controller.rb:273
+#: app/controllers/activation_keys_controller.rb:267
 #: app/views/gpg_keys/_edit.html.haml:40
 msgid "Key"
 msgstr ""
@@ -1572,16 +1911,29 @@ msgstr ""
 msgid "Last Booted"
 msgstr ""
 
+#: app/controllers/systems_controller.rb:302
+msgid "Last Checked In"
+msgstr ""
+
 #: app/views/dashboard/_systems.html.haml:19
 msgid "Last Checked in Date"
 msgstr ""
 
-#: app/views/dashboard/index.html.haml:10
+#: app/views/dashboard/index.html.haml:13
 msgid "Latest Notifications"
 msgstr ""
 
 #: app/views/notices/show.html.haml:27
 msgid "Level"
+msgstr ""
+
+#: app/controllers/environments_controller.rb:90
+#: app/models/kt_environment.rb:114 app/views/organizations/_edit.html.haml:36
+msgid "Library"
+msgstr ""
+
+#: app/models/changeset.rb:15
+msgid "Library environment cannot contain a changeset!"
 msgstr ""
 
 #: app/views/packages/_show.html.haml:70
@@ -1596,14 +1948,15 @@ msgstr ""
 msgid "List Actions"
 msgstr ""
 
-#: app/views/providers/redhat/show.html.haml:9
+#: app/views/providers/redhat/show.html.haml:6
 msgid ""
 "Listed below are the subscriptions information. If you have a subscription "
 "manifest you may upload it below. This manifest may be obtained by visiting "
 "the Red Hat Customer Portal or by contacting your support representative."
 msgstr ""
 
-#: app/views/layouts/_header.haml:7
+#: app/views/systems/errata/_items.html.haml:14
+#: app/views/layouts/_header.haml:8
 msgid "Loading"
 msgstr ""
 
@@ -1611,38 +1964,29 @@ msgstr ""
 msgid "Loading "
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-#: app/views/promotions/show.html.haml:111
-msgid "Loading Changeset"
-msgstr ""
-
 #: app/views/roles/_edit.html.haml:24
 msgid "Loading Permissions"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:110
+msgid "Loading Promotion Changeset"
+msgstr ""
+
+#: app/views/roles/index.html.haml:8
 msgid "Loading Role"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:61
+#: app/views/system_templates/index.html.haml:62
 msgid "Loading System Template"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Loading dependencies."
 msgstr ""
 
 #: app/views/systems/_edit.html.haml:44
 msgid "Location"
-msgstr ""
-
-#: app/controllers/environments_controller.rb:91
-#: app/views/organizations/_edit.html.haml:32
-msgid "Locker"
-msgstr ""
-
-#: app/models/changeset.rb:15
-msgid "Locker environment can have no changeset!"
 msgstr ""
 
 #: app/views/user_sessions/new.html.haml:4
@@ -1654,7 +1998,7 @@ msgstr ""
 msgid "Login Information"
 msgstr ""
 
-#: app/controllers/user_sessions_controller.rb:77
+#: app/controllers/user_sessions_controller.rb:76
 msgid "Login Successful"
 msgstr ""
 
@@ -1662,53 +2006,24 @@ msgstr ""
 msgid "Login Unknown"
 msgstr ""
 
-#: app/views/layouts/_footer.haml:4 app/views/layouts/_header.haml:23
+#: app/views/layouts/_header.haml:24 app/views/layouts/_footer.haml:4
 msgid "Logout"
 msgstr ""
 
-#: app/controllers/user_sessions_controller.rb:42
+#: app/controllers/user_sessions_controller.rb:41
 msgid "Logout Successful"
 msgstr ""
 
 #: app/views/subscriptions/index.html.haml:18
-#: app/views/providers/redhat/_subscription_details.html.haml:9
 msgid "Machine Type"
-msgstr ""
-
-#: app/models/system_template.rb:365
-msgid "Manage All System Templates"
-msgstr ""
-
-#: app/models/kt_environment.rb:318
-msgid "Manage Changesets in Environment"
-msgstr ""
-
-#: app/models/organization.rb:132
-msgid "Manage GPG Keys"
-msgstr ""
-
-#: app/models/organization.rb:125
-msgid "Manage Organization and Environments"
-msgstr ""
-
-#: app/models/provider.rb:124
-msgid "Manage Provider and Products"
-msgstr ""
-
-#: app/models/organization.rb:129
-msgid "Manage Systems"
-msgstr ""
-
-#: app/models/kt_environment.rb:315
-msgid "Manage Systems in Environment"
-msgstr ""
-
-#: app/models/activation_key.rb:144
-msgid "Manage all Activation Keys"
 msgstr ""
 
 #: app/controllers/api/providers_controller.rb:93
 msgid "Manifest import for provider [ %s ] failed"
+msgstr ""
+
+#: app/views/systems/_subs.html.haml:61
+msgid "Match System"
 msgstr ""
 
 #: app/views/providers/redhat/_import_history.html.haml:3
@@ -1716,11 +2031,39 @@ msgstr ""
 msgid "Message"
 msgstr ""
 
+#: app/models/organization.rb:128
+msgid "Modify Organization and Administer Environments"
+msgstr ""
+
+#: app/models/filter.rb:68
+msgid "Modify Package Filters"
+msgstr ""
+
+#: app/models/provider.rb:127
+msgid "Modify Providers and Administer Products"
+msgstr ""
+
+#: app/models/role.rb:173
+msgid "Modify Roles"
+msgstr ""
+
+#: app/models/organization.rb:132
+msgid "Modify Systems"
+msgstr ""
+
+#: app/models/kt_environment.rb:341
+msgid "Modify Systems in Environment"
+msgstr ""
+
+#: app/models/user.rb:356
+msgid "Modify Users"
+msgstr ""
+
 #: app/views/dashboard/_notices.html.haml:11
 msgid "More >>"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:186
+#: app/views/promotions/show.html.haml:196
 msgid "More details"
 msgstr ""
 
@@ -1728,51 +2071,72 @@ msgstr ""
 msgid "More..."
 msgstr ""
 
-#: app/models/changeset.rb:43
+#: app/models/changeset.rb:49
 msgid "Must be unique within an environment"
 msgstr ""
 
-#: app/views/repositories/_edit.html.haml:17
+#: app/controllers/gpg_keys_controller.rb:167
+#: app/controllers/changesets_controller.rb:270
+#: app/controllers/organizations_controller.rb:224
+#: app/controllers/activation_keys_controller.rb:266
+#: app/controllers/system_templates_controller.rb:80
+#: app/controllers/systems_controller.rb:302
+#: app/controllers/sync_plans_controller.rb:49
+#: app/controllers/providers_controller.rb:244
+#: app/controllers/filters_controller.rb:222
+#: app/controllers/sync_schedules_controller.rb:39
+#: app/controllers/sync_schedules_controller.rb:46
+#: app/controllers/roles_controller.rb:60 app/views/filters/_new.html.haml:13
+#: app/views/filters/_edit.html.haml:21
 #: app/views/repositories/_new.html.haml:15
-#: app/views/system_templates/_edit.html.haml:4
-#: app/views/system_templates/_promotion_details.html.haml:9
-#: app/views/system_templates/_new.html.haml:10
-#: app/views/gpg_keys/_edit.html.haml:25 app/views/gpg_keys/_new.html.haml:9
-#: app/views/distributions/_show.html.haml:11
-#: app/views/products/_edit.html.haml:16 app/views/products/_new.html.haml:8
-#: app/views/systems/_edit.html.haml:24
-#: app/views/activation_keys/_edit.html.haml:37
-#: app/views/activation_keys/_new.html.haml:9
-#: app/views/system_packages/_packages.html.haml:64
-#: app/views/environments/_edit.html.haml:18
-#: app/views/environments/_new.html.haml:13
+#: app/views/repositories/_edit.html.haml:17
 #: app/views/packages/_show.html.haml:11
-#: app/views/sync_plans/_edit.html.haml:17
-#: app/views/sync_plans/_form.html.haml:5 app/views/filters/_edit.html.haml:22
-#: app/views/filters/_new.html.haml:13 app/views/roles/_new.html.haml:9
-#: app/views/changesets/_new.html.haml:10
-#: app/views/providers/_edit.html.haml:22
 #: app/views/providers/redhat/_subscription_details.html.haml:4
-#: app/views/providers/_form.html.haml:6
+#: app/views/providers/_edit.html.haml:22
+#: app/views/providers/_form.html.haml:6 app/views/gpg_keys/_new.html.haml:9
+#: app/views/gpg_keys/_edit.html.haml:25
 #: app/views/organizations/_new.html.haml:12
+#: app/views/organizations/_new.html.haml:25
+#: app/views/changesets/_new.html.haml:10
+#: app/views/sync_plans/_edit.html.haml:17
+#: app/views/sync_plans/_form.html.haml:5 app/views/systems/_edit.html.haml:24
+#: app/views/activation_keys/_new.html.haml:9
+#: app/views/activation_keys/_edit.html.haml:37
+#: app/views/system_templates/_new.html.haml:10
+#: app/views/system_templates/_promotion_details.html.haml:9
+#: app/views/system_templates/_edit.html.haml:4
+#: app/views/system_packages/_packages.html.haml:64
+#: app/views/environments/_new.html.haml:13
+#: app/views/environments/_edit.html.haml:17 app/views/roles/_new.html.haml:9
+#: app/views/distributions/_show.html.haml:12
+#: app/views/products/_new.html.haml:8 app/views/products/_edit.html.haml:16
 msgid "Name"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Name can not be blank."
+msgstr ""
+
+#: app/models/filter.rb:30
+msgid "Name cannot be blank."
+msgstr ""
+
+#: app/models/filter.rb:31
+msgid "Name must be unique within one organization"
 msgstr ""
 
 #: app/views/systems/_new.html.haml:18
 msgid "Name of Your System:"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:120 app/views/roles/_edit.html.haml:35
-#: app/views/roles/_edit.html.haml:73 app/views/changesets/_edit.html.haml:11
+#: app/views/promotions/show.html.haml:119
 #: app/views/changesets/_name.html.haml:3
+#: app/views/changesets/_edit.html.haml:11 app/views/roles/_edit.html.haml:35
+#: app/views/roles/_edit.html.haml:73 app/views/roles/index.html.haml:8
 msgid "Name:"
 msgstr ""
 
-#: app/helpers/systems_helper.rb:24 app/helpers/dashboard_helper.rb:123
+#: app/helpers/dashboard_helper.rb:145 app/helpers/systems_helper.rb:24
 msgid "Never checked in."
 msgstr ""
 
@@ -1784,11 +2148,11 @@ msgstr ""
 msgid "New Changeset"
 msgstr ""
 
-#: app/views/users/_edit_environment.html.haml:36
+#: app/views/users/_edit_environment.html.haml:39
 msgid "New Default Environment"
 msgstr ""
 
-#: app/views/users/_edit_environment.html.haml:29
+#: app/views/users/_edit_environment.html.haml:32
 msgid "New Default Organization:"
 msgstr ""
 
@@ -1820,7 +2184,7 @@ msgstr ""
 msgid "New System Template"
 msgstr ""
 
-#: app/views/users/_new.html.haml:9
+#: app/views/users/_new.html.haml:12
 msgid "New User"
 msgstr ""
 
@@ -1828,20 +2192,25 @@ msgstr ""
 msgid "New system"
 msgstr ""
 
-#: app/controllers/api/templates_controller.rb:38
-msgid "New templates can be created only in a Locker environment"
+#: app/controllers/api/templates_controller.rb:49
+msgid "New templates can be created only in a Library environment"
 msgstr ""
 
-#: app/controllers/api/templates_controller.rb:69
-msgid "New templates can be imported only into a Locker environment"
+#: app/controllers/api/templates_controller.rb:80
+msgid "New templates can be imported only into a Library environment"
 msgstr ""
 
 #: app/views/roles/_edit.html.haml:82
 msgid "Next >>"
 msgstr ""
 
+#: app/views/common/_common_i18n.html.haml:3
 #: app/views/users/_edit_form.html.haml:33
 msgid "No"
+msgstr ""
+
+#: app/helpers/users_helper.rb:32
+msgid "No Default Organization"
 msgstr ""
 
 #: app/views/subscriptions/index.html.haml:8
@@ -1864,17 +2233,17 @@ msgstr ""
 msgid "No changesets found."
 msgstr ""
 
-#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:61
+#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:63
 #: app/views/users/_edit_environment.html.haml:3
-#: app/views/users/_edit_environment.html.haml:41
+#: app/views/users/_edit_environment.html.haml:44
 msgid ""
 "No default environment. Select an organization to choose from available "
 "environments."
 msgstr ""
 
-#: app/controllers/users_controller.rb:196
-#: app/views/users/_edit_environment.html.haml:19
-#: app/views/users/_edit_environment.html.haml:23
+#: app/controllers/users_controller.rb:252
+#: app/views/users/_edit_environment.html.haml:21
+#: app/views/users/_edit_environment.html.haml:25
 msgid "No default set for this user."
 msgstr ""
 
@@ -1882,11 +2251,11 @@ msgstr ""
 msgid "No distributions available."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-msgid "No distributions exist in this changeset."
+#: app/views/promotions/show.html.haml:7
+msgid "No distributions exist in this promotion changeset."
 msgstr ""
 
-#: app/views/organizations/_edit.html.haml:41
+#: app/views/organizations/_edit.html.haml:45
 msgid ""
 "No environments are available in this organization. Please add some "
 "environments to be able register systems to this organization."
@@ -1898,13 +2267,13 @@ msgid ""
 "some to be able to create activation keys."
 msgstr ""
 
-#: app/views/users/_new.html.haml:63 app/views/common/_env_select.html.haml:2
+#: app/views/common/_env_select.html.haml:2 app/views/users/_new.html.haml:65
 msgid ""
 "No environments are currently available in this organization.  Please add "
 "some to be able to set user default."
 msgstr ""
 
-#: app/views/users/_edit_environment.html.haml:43
+#: app/views/users/_edit_environment.html.haml:46
 msgid ""
 "No environments are currently available in this organization. Saving will "
 "set user to no default environment."
@@ -1914,8 +2283,8 @@ msgstr ""
 msgid "No errata available."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-msgid "No errata exist in this changeset."
+#: app/views/promotions/show.html.haml:7
+msgid "No errata exist in this promotion changeset."
 msgstr ""
 
 #: app/models/errors.rb:52
@@ -1926,7 +2295,11 @@ msgstr ""
 msgid "No event history found for %s"
 msgstr ""
 
-#: app/models/system_task.rb:245
+#: app/controllers/system_events_controller.rb:87
+msgid "No events matching your search criteria."
+msgstr ""
+
+#: app/models/system_task.rb:306
 msgid "No new packages installed"
 msgstr ""
 
@@ -1934,7 +2307,8 @@ msgstr ""
 msgid "No package groups available."
 msgstr ""
 
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/_packages.html.haml:28
+#: app/views/filters/index.html.haml:15
 msgid "No packages are currently filtered."
 msgstr ""
 
@@ -1942,39 +2316,39 @@ msgstr ""
 msgid "No packages available for promotion"
 msgstr ""
 
+#: app/views/promotions/show.html.haml:7
+msgid "No packages exist in this promotion changeset."
+msgstr ""
+
 #: app/views/system_templates/_product_packages.html.haml:3
-msgid "No packages available."
+msgid "No packages found."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-msgid "No packages exist in this changeset."
-msgstr ""
-
-#: app/models/system_task.rb:243
+#: app/models/system_task.rb:304
 msgid "No packages removed"
 msgstr ""
 
-#: app/models/system_task.rb:241
+#: app/models/system_task.rb:302
 msgid "No packages updated"
 msgstr ""
 
-#: app/views/system_templates/_products.html.haml:5
 #: app/views/promotions/_products.html.haml:5
+#: app/views/system_templates/_products.html.haml:5
 msgid "No products"
+msgstr ""
+
+#: app/views/promotions/show.html.haml:7
+msgid "No products exist in the promotion changeset."
 msgstr ""
 
 #: app/views/system_templates/index.html.haml:6
 msgid ""
-"No products are currently associated with this system template.  Please "
-"associate a product that contains distributions in order to select a "
-"distribution."
+"No products or repositories are currently associated with this system "
+"template.  Please add either a product or repository that contains "
+"distributions in order to select a distribution."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-msgid "No products exist in the changeset."
-msgstr ""
-
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/index.html.haml:15
 msgid "No products or repositories are currently associated."
 msgstr ""
 
@@ -1994,15 +2368,15 @@ msgstr ""
 msgid "No repositories available."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-msgid "No repositories exist in this changeset."
+#: app/views/promotions/show.html.haml:7
+msgid "No repositories exist in this promotion changeset."
 msgstr ""
 
-#: app/views/providers/redhat/_subscription_details.html.haml:55
+#: app/views/providers/redhat/_subscription_details.html.haml:53
 msgid "No subscriptions have been imported."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "No system templates exist in the changeset."
 msgstr ""
 
@@ -2010,29 +2384,39 @@ msgstr ""
 msgid "No systems found."
 msgstr ""
 
-#: app/models/product.rb:96 app/views/systems/_edit.html.haml:64
-#: app/views/systems/_edit.html.haml:88
+#: app/models/system.rb:201 app/models/product.rb:95
+#: app/views/systems/_edit.html.haml:64 app/views/systems/_edit.html.haml:88
 #: app/views/systems/_subscription_details.html.haml:7
 #: app/views/roles/_closed_permission.html.haml:13
 msgid "None"
 msgstr ""
 
+#: app/views/repositories/_new.html.haml:30
+#: app/views/repositories/_edit.html.haml:32
+#: app/views/products/_new.html.haml:23 app/views/products/_edit.html.haml:31
+msgid "None defined for this Organization."
+msgstr ""
+
 #: app/views/system_templates/index.html.haml:6
 msgid ""
-"None of the associated products contain distributions, please select a "
-"product that contains at least one distribution."
+"None of the associated products or repositories contain distributions, "
+"please add a product or repository that contains at least one distribution."
 msgstr ""
 
 #: app/views/errata/_show.html.haml:78
 msgid "None."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Not Applied"
 msgstr ""
 
-#: app/models/activation_key.rb:71
+#: app/models/activation_key.rb:75
 msgid "Not enough entitlements in pools (%d), required: %d, available: %d"
+msgstr ""
+
+#: app/controllers/api/errors_controller.rb:19
+msgid "Not found"
 msgstr ""
 
 #: app/views/organizations/_new.html.haml:34
@@ -2043,11 +2427,11 @@ msgstr ""
 msgid "Number of Sockets or LPARs:"
 msgstr ""
 
-#: app/models/activation_key.rb:88
+#: app/models/activation_key.rb:92
 msgid "Number of consumed entitlements exceeded quantity for %s"
 msgstr ""
 
-#: app/models/activation_key.rb:95
+#: app/models/activation_key.rb:99
 msgid "Number of sockets must be higher than 0 for system %s"
 msgstr ""
 
@@ -2055,11 +2439,15 @@ msgstr ""
 msgid "OS"
 msgstr ""
 
-#: app/views/systems/_list_system.html.haml:16
+#: app/views/systems/_list_system_show.html.haml:14
 msgid "OS: "
 msgstr ""
 
-#: app/views/providers/_products_repos.html.haml:18
+#: app/views/common/_common_i18n.html.haml:3
+msgid "Ok"
+msgstr ""
+
+#: app/views/providers/_products_repos.html.haml:17
 msgid ""
 "On Products & Repositories you can add your own Products and Repositories to "
 "your Provider.  This allows you to synchronize content from any remote "
@@ -2068,7 +2456,7 @@ msgid ""
 "Custom Providers."
 msgstr ""
 
-#: app/views/roles/_edit.html.haml:66
+#: app/views/roles/_edit.html.haml:66 app/views/roles/index.html.haml:8
 msgid "On:"
 msgstr ""
 
@@ -2089,29 +2477,52 @@ msgstr ""
 msgid "One or more package names are invalid."
 msgstr ""
 
-#: app/models/provider.rb:60
+#: app/models/search_favorite.rb:25
+msgid "Only %s favorites may be created."
+msgstr ""
+
+#: app/models/provider.rb:54
 msgid "Only one Red Hat provider permitted for an Organization"
 msgstr ""
 
-#: app/views/sync_management/index.html.haml:42
+#: app/views/sync_management/index.html.haml:37
 msgid "Only show syncing."
 msgstr ""
 
-#: app/helpers/branding_helper.rb:20
+#: app/helpers/branding_helper.rb:23
+msgid "Open Source Subscription Management"
+msgstr ""
+
+#: app/helpers/branding_helper.rb:21
 msgid "Open Source Systems Management"
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:201
+#: app/controllers/organizations_controller.rb:225
 msgid "Organization"
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:136
+#: app/controllers/organizations_controller.rb:72
+msgid ""
+"Organization '%s' already exists and either has been scheduled for deletion "
+"or failed deletion."
+msgstr ""
+
+#: app/controllers/organizations_controller.rb:153
 msgid "Organization '%s' has been scheduled for background deletion."
 msgstr ""
 
-#: app/models/resource_type.rb:91
-#: app/controllers/organizations_controller.rb:199
-#: lib/navigation/organization.rb:23
+#: app/controllers/organizations_controller.rb:90
+#: app/controllers/organizations_controller.rb:103
+#: app/controllers/organizations_controller.rb:108
+msgid "Organization '%s' was created."
+msgstr ""
+
+#: app/controllers/organizations_controller.rb:127
+msgid "Organization '%s' was updated."
+msgstr ""
+
+#: app/controllers/organizations_controller.rb:222
+#: app/models/resource_type.rb:91 lib/navigation/organization.rb:23
 msgid "Organizations"
 msgstr ""
 
@@ -2122,17 +2533,41 @@ msgid ""
 "organization and then click on the desired environment."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-#: app/views/errata/_packages.html.haml:15
+#: app/views/promotions/show.html.haml:7
+#: app/views/errata/_packages.html.haml:17
 msgid "Package"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:81
+#: app/models/changeset_package.rb:19
+msgid "Package '%s' doesn't belong to the specified product!"
+msgstr ""
+
+#: app/models/system_template_package.rb:17
+msgid "Package '%s' is already present in the template"
+msgstr ""
+
+#: app/models/system_template_package.rb:32
+msgid "Package '%s' not found in the %s environment"
+msgstr ""
+
+#: app/models/changeset.rb:245 app/models/changeset.rb:254
+msgid "Package '%s' was not found in the source environment."
+msgstr ""
+
+#: app/views/promotions/show.html.haml:80
 msgid "Package Dependencies"
 msgstr ""
 
-#: app/controllers/filters_controller.rb:215
-#: lib/navigation/content_management.rb:153
+#: app/controllers/filters_controller.rb:198
+msgid "Package Filter %s deleted."
+msgstr ""
+
+#: app/controllers/filters_controller.rb:80
+msgid "Package Filter '%s' has been updated."
+msgstr ""
+
+#: app/controllers/filters_controller.rb:220
+#: lib/navigation/content_management.rb:148
 msgid "Package Filters"
 msgstr ""
 
@@ -2172,7 +2607,7 @@ msgstr ""
 msgid "Package Group Update scheduled by %s"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:381 app/helpers/breadcrumb_helper.rb:401
+#: app/helpers/breadcrumb_helper.rb:384 app/helpers/breadcrumb_helper.rb:404
 #: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_product_detail.html.haml:10
 #: app/views/system_packages/_packages.html.haml:75
@@ -2185,6 +2620,10 @@ msgstr ""
 
 #: app/models/system_task.rb:30
 msgid "Package Install scheduled by %s"
+msgstr ""
+
+#: app/views/filters/_packages.html.haml:17
+msgid "Package Name"
 msgstr ""
 
 #: app/models/system_task.rb:47
@@ -2207,24 +2646,36 @@ msgstr ""
 msgid "Package Update scheduled by %s"
 msgstr ""
 
-#: app/models/system_template.rb:291
+#: app/models/system_template_pack_group.rb:18
+msgid "Package group '%s' not found in the %s environment"
+msgstr ""
+
+#: app/models/system_template.rb:290
 msgid "Package group '%s' not found in this template."
 msgstr ""
 
-#: app/models/system_template.rb:303
+#: app/models/system_template_pg_category.rb:17
+msgid "Package group category '%s' not found in the %s environment"
+msgstr ""
+
+#: app/models/system_template.rb:302
 msgid "Package group category '%s' not found in this template."
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:49 app/helpers/breadcrumb_helper.rb:153
-#: app/helpers/breadcrumb_helper.rb:377 app/helpers/breadcrumb_helper.rb:398
+#: app/models/changeset.rb:251
+msgid "Package has to be specified by its nvre."
+msgstr ""
+
+#: app/helpers/breadcrumb_helper.rb:50 app/helpers/breadcrumb_helper.rb:156
+#: app/helpers/breadcrumb_helper.rb:380 app/helpers/breadcrumb_helper.rb:401
+#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/_detail.html.haml:18
+#: app/views/changesets/_edit.html.haml:58
 #: app/views/system_templates/_promotion_details.html.haml:29
 #: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_product_detail.html.haml:7
-#: app/views/promotions/_detail.html.haml:18
-#: app/views/promotions/show.html.haml:8
 #: app/views/system_packages/_packages.html.haml:73
-#: app/views/changesets/_edit.html.haml:52 lib/navigation/systems.rb:78
-#: lib/navigation/content_management.rb:204
+#: lib/navigation/systems.rb:80 lib/navigation/content_management.rb:184
 msgid "Packages"
 msgstr ""
 
@@ -2232,7 +2683,7 @@ msgstr ""
 msgid "Packages must be provided"
 msgstr ""
 
-#: app/models/system_template.rb:279
+#: app/models/system_template.rb:278
 msgid "Parameter '%s' not found in the template."
 msgstr ""
 
@@ -2240,12 +2691,16 @@ msgstr ""
 msgid "Parameters"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Partial Products"
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:3
+#: app/views/user_sessions/new.html.haml:11
+msgid "Password"
+msgstr ""
+
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "Password Strength"
 msgstr ""
 
@@ -2262,16 +2717,16 @@ msgstr ""
 msgid "Password reset token has expired for user '%{s}'."
 msgstr ""
 
-#: app/views/users/_new.html.haml:25
 #: app/views/password_resets/edit.html.haml:22
+#: app/views/users/_new.html.haml:27
 msgid "Password:"
 msgstr ""
 
-#: app/views/gpg_keys/_new.html.haml:14
+#: app/views/gpg_keys/_new.html.haml:28
 msgid "Paste GPG Key"
 msgstr ""
 
-#: app/helpers/dashboard_helper.rb:57
+#: app/helpers/dashboard_helper.rb:59
 msgid "Pending"
 msgstr ""
 
@@ -2279,22 +2734,40 @@ msgstr ""
 msgid "Permission"
 msgstr ""
 
-#: app/views/roles/_edit.html.haml:52
+#: app/controllers/roles_controller.rb:219
+msgid "Permission '%s' was created."
+msgstr ""
+
+#: app/controllers/roles_controller.rb:239
+msgid "Permission '%s' was removed."
+msgstr ""
+
+#: app/controllers/roles_controller.rb:196
+msgid "Permission '%s' was updated."
+msgstr ""
+
+#: app/controllers/application_controller.rb:113
+msgid ""
+"Permission Denied. User '%s' does not have permissions to access "
+"organization '%s'."
+msgstr ""
+
+#: app/views/roles/_edit.html.haml:52 app/views/roles/index.html.haml:8
 msgid "Permission For:"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:239
+#: app/helpers/breadcrumb_helper.rb:242
 msgid "Permissions"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Permissions for this role."
 msgstr ""
 
-#: app/models/system.rb:71 app/controllers/activation_keys_controller.rb:340
+#: app/controllers/activation_keys_controller.rb:335
+#: app/controllers/providers_controller.rb:293
 #: app/controllers/subscriptions_controller.rb:57
-#: app/controllers/providers_controller.rb:281
-#: app/helpers/systems_helper.rb:42
+#: app/helpers/systems_helper.rb:41 app/models/system.rb:67
 msgid "Physical"
 msgstr ""
 
@@ -2302,70 +2775,104 @@ msgstr ""
 msgid "Pick your Environment to download template from:"
 msgstr ""
 
-#: app/controllers/sync_schedules_controller.rb:39
-#: app/controllers/sync_schedules_controller.rb:45
-#: app/controllers/sync_plans_controller.rb:48
+#: app/controllers/sync_plans_controller.rb:50
+#: app/controllers/sync_schedules_controller.rb:40
+#: app/controllers/sync_schedules_controller.rb:47
 msgid "Plan"
 msgstr ""
 
-#: app/controllers/api/subscriptions_controller.rb:36
-#: app/controllers/api/systems_controller.rb:88
+#: app/controllers/sync_schedules_controller.rb:39
+msgid "Plan Name"
+msgstr ""
+
+#: app/controllers/api/subscriptions_controller.rb:45
+msgid "Please provide entitlement id"
+msgstr ""
+
+#: app/controllers/api/systems_controller.rb:94
+#: app/controllers/api/subscriptions_controller.rb:38
 msgid "Please provide pool and quantity"
 msgstr ""
 
-#: app/controllers/api/subscriptions_controller.rb:43
-#: app/controllers/api/systems_controller.rb:95
+#: app/controllers/api/systems_controller.rb:101
 msgid "Please provide pool id"
+msgstr ""
+
+#: app/controllers/api/subscriptions_controller.rb:57
+msgid "Please provide serial id"
 msgstr ""
 
 #: app/views/common/403.html.haml:5
 msgid "Please request the required privileges from an administrator."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid ""
 "Please select Permissions to view and add permissions for this role or Users "
 "to see current users with this role."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid ""
 "Please select Permissions to view permissions for this role or Users to see "
 "current users with this role."
 msgstr ""
 
-#: app/models/activation_key.rb:83
+#: app/models/activation_key.rb:87
 msgid "Pool %s has no product associated"
 msgstr ""
 
-#: app/views/environments/_edit.html.haml:29
+#: app/views/users/_edit_form.html.haml:72
+msgid "Preferred Locale"
+msgstr ""
+
 #: app/views/environments/_new.html.haml:24
+#: app/views/environments/_edit.html.haml:28
 msgid "Prior Environment"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:73
-msgid "Processing changeset modifications, please wait."
+#: app/views/promotions/show.html.haml:72
+msgid "Processing promotion changeset modifications, please wait."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-#: app/views/sync_management/index.html.haml:21
+#: app/views/sync_management/index.html.haml:43
+#: app/views/filters/_products.html.haml:22
+#: app/views/promotions/show.html.haml:7
+#: app/views/providers/_products_repos.html.haml:38
+#: app/views/providers/redhat/_repo_whitelist.html.haml:3
+#: app/views/gpg_keys/_products_repos.html.haml:47
 #: app/views/systems/_products.html.haml:12
 #: app/views/subscriptions/index.html.haml:13
-#: app/views/dashboard/_errata.haml:11
-#: app/views/providers/_products_repos.html.haml:39
-#: app/views/providers/redhat/_repo_whitelist.html.haml:3
+#: app/views/dashboard/_errata.haml:12
 msgid "Product"
 msgstr ""
 
-#: app/models/system_template.rb:244 app/models/system_template.rb:261
+#: app/controllers/products_controller.rb:51
+msgid "Product '%s' created."
+msgstr ""
+
+#: app/models/changeset.rb:137
+msgid "Product '%s' hasn't any repositories"
+msgstr ""
+
+#: app/models/system_template.rb:243 app/models/system_template.rb:260
 msgid "Product '%s' is already present in the template."
 msgstr ""
 
-#: app/models/system_template.rb:242 app/models/system_template.rb:259
+#: app/models/system_template.rb:241 app/models/system_template.rb:258
+#: app/models/system_template.rb:327
 msgid "Product '%s' not found in this environment."
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:41 app/views/systems/_subs.html.haml:99
+#: app/controllers/products_controller.rb:101
+msgid "Product '%s' removed."
+msgstr ""
+
+#: app/controllers/products_controller.rb:79
+msgid "Product '%s' was updated."
+msgstr ""
+
+#: app/views/systems/_subs.html.haml:43 app/views/systems/_subs.html.haml:108
 msgid "Product Name: "
 msgstr ""
 
@@ -2373,18 +2880,17 @@ msgstr ""
 msgid "Product(s) in this environment"
 msgstr ""
 
-#: app/views/repositories/_edit.html.haml:4
 #: app/views/repositories/_new.html.haml:2
+#: app/views/repositories/_edit.html.haml:4
 msgid "Product: "
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:134 app/helpers/breadcrumb_helper.rb:362
-#: app/helpers/breadcrumb_helper.rb:399
+#: app/helpers/breadcrumb_helper.rb:135 app/helpers/breadcrumb_helper.rb:365
+#: app/helpers/breadcrumb_helper.rb:402 app/views/promotions/show.html.haml:7
+#: app/views/promotions/_detail.html.haml:6
+#: app/views/gpg_keys/_products_repos.html.haml:25
 #: app/views/system_templates/_promotion_details.html.haml:21
 #: app/views/system_templates/index.html.haml:6
-#: app/views/promotions/_detail.html.haml:6
-#: app/views/promotions/show.html.haml:8
-#: app/views/gpg_keys/_products_repos.html.haml:20
 msgid "Products"
 msgstr ""
 
@@ -2392,8 +2898,8 @@ msgstr ""
 msgid "Products & Repositories"
 msgstr ""
 
-#: lib/navigation/content_management.rb:245
-#: lib/navigation/content_management.rb:262
+#: lib/navigation/content_management.rb:224
+#: lib/navigation/content_management.rb:241
 msgid "Products and Repositories"
 msgstr ""
 
@@ -2405,69 +2911,110 @@ msgstr ""
 msgid "Progress:"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:147
+#: app/views/promotions/show.html.haml:146
 msgid "Promote"
 msgstr ""
 
-#: app/models/kt_environment.rb:319
+#: app/models/kt_environment.rb:345
 msgid "Promote Changesets in Environment"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Promote to "
 msgstr ""
 
-#: app/views/promotions/_repo_items.html.haml:5
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 #: app/views/promotions/_distributions.html.haml:11
-#: app/views/promotions/_package_items.html.haml:5
+#: app/views/promotions/_package_items.html.haml:7
+#: app/views/promotions/_errata_items.html.haml:10
+#: app/views/promotions/_repo_items.html.haml:5
 msgid "Promoted"
+msgstr ""
+
+#: app/views/changesets/_edit.html.haml:20
+msgid "Promoted By:"
 msgstr ""
 
 #: app/helpers/dashboard_helper.rb:55
 msgid "Promoting"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Promoting..."
 msgstr ""
 
-#: app/views/changesets/_edit.html.haml:21
+#: app/controllers/changesets_controller.rb:109
+msgid "Promotion Changeset '%s' was created."
+msgstr ""
+
+#: app/controllers/changesets_controller.rb:209
+msgid "Promotion Changeset '%s' was deleted."
+msgstr ""
+
+#: app/views/promotions/show.html.haml:116
+msgid "Promotion Changeset Details"
+msgstr ""
+
+#: lib/navigation/content_management.rb:139
+msgid "Promotion Changeset History"
+msgstr ""
+
+#: app/views/promotions/show.html.haml:7
+msgid "Promotion Changeset is empty."
+msgstr ""
+
+#: app/views/promotions/show.html.haml:149
+#: app/views/promotions/show.html.haml:152
+msgid "Promotion Changesets"
+msgstr ""
+
+#: app/views/changesets/_edit.html.haml:25
 msgid "Promotion Date:"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Promotion Failed"
 msgstr ""
 
-#: lib/navigation/content_management.rb:133
+#: lib/navigation/content_management.rb:130
 msgid "Promotions"
 msgstr ""
 
-#: app/views/dashboard/index.html.haml:11
+#: app/views/dashboard/index.html.haml:15
 msgid "Promotions Overview"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:85
+#: app/views/promotions/show.html.haml:84
 msgid ""
 "Promotions allow you to promote content from one environment to the next "
-"along a promotion path. Once you have created a changeset, clicking \"Add\" "
-"next to  one or more products will add them to the change set. If products "
-"already exist in the next environment, you may promote other types of "
-"content. Once you have created a change set, click the \"Promote\" button to "
-"commit it to the next environment."
+"along a promotion path. Once you have created a promotion changeset, "
+"clicking \"Add\" next to  one or more products will add them to the "
+"promotion changeset. If products already exist in the next environment, you "
+"may promote other types of content. Once you have created a change set, "
+"click the \"Promote\" button to commit it to the next environment."
 msgstr ""
 
-#: app/controllers/providers_controller.rb:234
+#: app/controllers/providers_controller.rb:245
 msgid "Provider"
+msgstr ""
+
+#: app/controllers/providers_controller.rb:157
+msgid "Provider '%s' was created."
+msgstr ""
+
+#: app/controllers/providers_controller.rb:177
+msgid "Provider '%s' was deleted."
+msgstr ""
+
+#: app/controllers/providers_controller.rb:204
+msgid "Provider '%s' was updated."
 msgstr ""
 
 #: app/views/products/_edit.html.haml:4
 msgid "Provider: "
 msgstr ""
 
-#: app/models/resource_type.rb:95 app/controllers/providers_controller.rb:232
-#: lib/navigation/content_management.rb:56
+#: app/controllers/providers_controller.rb:242 app/models/resource_type.rb:95
 msgid "Providers"
 msgstr ""
 
@@ -2483,7 +3030,7 @@ msgstr ""
 msgid "Provides"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:18 app/views/systems/_subs.html.haml:63
+#: app/views/systems/_subs.html.haml:20 app/views/systems/_subs.html.haml:72
 msgid "Quantity"
 msgstr ""
 
@@ -2491,27 +3038,119 @@ msgstr ""
 msgid "Queued."
 msgstr ""
 
-#: app/models/system_template.rb:366
-msgid "Read All System Templates"
+#: app/models/permission.rb:158 app/models/activation_key.rb:147
+msgid "Read Activation Keys"
+msgstr ""
+
+#: app/models/permission.rb:183
+msgid "Read Activation Keys permission"
+msgstr ""
+
+#: app/models/kt_environment.rb:343
+msgid "Read Changesets in Environment"
+msgstr ""
+
+#: app/models/kt_environment.rb:338
+msgid "Read Environment Contents"
+msgstr ""
+
+#: app/models/permission.rb:152
+msgid "Read Environments"
+msgstr ""
+
+#: app/models/permission.rb:177
+msgid "Read Environments permission"
+msgstr ""
+
+#: app/models/role.rb:193
+msgid "Read Everything"
+msgstr ""
+
+#: app/models/permission.rb:160
+msgid "Read Filters"
+msgstr ""
+
+#: app/models/permission.rb:185
+msgid "Read Filters permission"
+msgstr ""
+
+#: app/models/organization.rb:129
+msgid "Read Organization"
+msgstr ""
+
+#: app/models/permission.rb:150
+msgid "Read Organizations"
+msgstr ""
+
+#: app/models/permission.rb:175
+msgid "Read Organizations permission"
+msgstr ""
+
+#: app/models/filter.rb:66
+msgid "Read Package Filters"
+msgstr ""
+
+#: app/models/permission.rb:156 app/models/provider.rb:126
+msgid "Read Providers"
+msgstr ""
+
+#: app/models/permission.rb:181
+msgid "Read Providers permission"
+msgstr ""
+
+#: app/models/permission.rb:164 app/models/role.rb:172
+msgid "Read Roles"
+msgstr ""
+
+#: app/models/permission.rb:189
+msgid "Read Roles permission"
+msgstr ""
+
+#: app/models/permission.rb:154 app/models/system_template.rb:392
+msgid "Read System Templates"
+msgstr ""
+
+#: app/models/permission.rb:179
+msgid "Read System Templates permission"
+msgstr ""
+
+#: app/models/organization.rb:130
+msgid "Read Systems"
+msgstr ""
+
+#: app/models/kt_environment.rb:339
+msgid "Read Systems in Environment"
+msgstr ""
+
+#: app/models/permission.rb:162 app/models/user.rb:355
+msgid "Read Users"
+msgstr ""
+
+#: app/models/permission.rb:187
+msgid "Read Users permission"
+msgstr ""
+
+#: app/models/role.rb:208
+msgid "Read only role."
 msgstr ""
 
 #: lib/navigation/content_management.rb:67
-msgid "Red Hat"
+msgid "Red Hat Content Provider"
 msgstr ""
 
-#: app/views/providers/redhat/show.html.haml:17
+#: app/views/providers/redhat/show.html.haml:14
 msgid "Red Hat Provider Details"
 msgstr ""
 
-#: app/models/provider.rb:66
+#: app/models/provider.rb:60
 msgid "Red Hat provider can not be deleted"
 msgstr ""
 
-#: app/models/organization.rb:128
+#: app/models/organization.rb:131
 msgid "Register Systems"
 msgstr ""
 
-#: app/models/kt_environment.rb:314
+#: app/models/kt_environment.rb:340
 msgid "Register Systems in Environment"
 msgstr ""
 
@@ -2523,39 +3162,49 @@ msgstr ""
 msgid "Release"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:88
-#: app/views/promotions/show.html.haml:8
-#: app/views/promotions/show.html.haml:133
+#: app/views/user_sessions/new.html.haml:15
+msgid "Remember me"
+msgstr ""
+
 #: app/views/common/_common_i18n.html.haml:3
+#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:132
 #: app/views/systems/_actions.html.haml:13
-#: app/views/activation_keys/_applied_subscriptions.html.haml:36
 #: app/views/activation_keys/_applied_subscriptions.html.haml:37
+#: app/views/activation_keys/_applied_subscriptions.html.haml:38
+#: app/views/system_templates/index.html.haml:89
 #: app/views/system_packages/_packages.html.haml:109
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Remove"
 msgstr ""
 
+#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 #: app/views/activation_keys/_edit.html.haml:15
 #: app/views/activation_keys/_available_subscriptions.html.haml:7
-#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 msgid "Remove Activation Key"
 msgstr ""
 
-#: app/views/environments/_edit.html.haml:10
+#: app/views/common/_common_i18n.html.haml:3
+msgid "Remove All"
+msgstr ""
+
+#: app/views/environments/_edit.html.haml:9
 msgid "Remove Environment"
 msgstr ""
 
-#: app/views/filters/_packages.html.haml:6 app/views/filters/_edit.html.haml:8
+#: app/views/filters/_packages.html.haml:6
 #: app/views/filters/_products.html.haml:12
+#: app/views/filters/_edit.html.haml:8
 msgid "Remove Filter"
 msgstr ""
 
-#: app/views/gpg_keys/_edit.html.haml:8
 #: app/views/gpg_keys/_products_repos.html.haml:8
+#: app/views/gpg_keys/_edit.html.haml:8
 msgid "Remove GPG Key"
 msgstr ""
 
-#: app/views/organizations/_edit.html.haml:8
+#: app/views/organizations/_edit.html.haml:9
+#: app/views/organizations/_edit.html.haml:12
 msgid "Remove Organization"
 msgstr ""
 
@@ -2591,7 +3240,7 @@ msgstr ""
 msgid "Remove Package Timeout"
 msgstr ""
 
-#: app/views/filters/_packages.html.haml:39
+#: app/views/filters/_packages.html.haml:38
 msgid "Remove Packages"
 msgstr ""
 
@@ -2599,8 +3248,8 @@ msgstr ""
 msgid "Remove Product"
 msgstr ""
 
-#: app/views/providers/_edit.html.haml:8
 #: app/views/providers/_products_repos.html.haml:8
+#: app/views/providers/_edit.html.haml:8
 msgid "Remove Provider"
 msgstr ""
 
@@ -2608,7 +3257,7 @@ msgstr ""
 msgid "Remove Repository"
 msgstr ""
 
-#: app/views/roles/_edit.html.haml:109
+#: app/views/roles/_edit.html.haml:110
 msgid "Remove Role"
 msgstr ""
 
@@ -2624,7 +3273,7 @@ msgstr ""
 msgid "Remove System(s)"
 msgstr ""
 
-#: app/models/kt_environment.rb:316
+#: app/models/kt_environment.rb:342
 msgid "Remove Systems in Environment"
 msgstr ""
 
@@ -2633,7 +3282,7 @@ msgstr ""
 msgid "Remove User"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Removed:"
 msgstr ""
 
@@ -2645,15 +3294,15 @@ msgstr ""
 msgid "Removing Package..."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "Removing..."
 msgstr ""
 
-#: app/controllers/application_controller.rb:279
+#: app/controllers/application_controller.rb:234
 msgid "Rendering 404:"
 msgstr ""
 
-#: app/controllers/application_controller.rb:293
+#: app/controllers/application_controller.rb:248
 msgid "Rendering 500:"
 msgstr ""
 
@@ -2661,31 +3310,63 @@ msgstr ""
 msgid "Repo Type: "
 msgstr ""
 
-#: app/controllers/api/errata_controller.rb:25
+#: app/controllers/api/errata_controller.rb:35
 msgid "Repo id or environment must be provided"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:166
+#: app/helpers/breadcrumb_helper.rb:169
 msgid "Repos"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:57 app/helpers/breadcrumb_helper.rb:373
-#: app/helpers/breadcrumb_helper.rb:400
+#: app/helpers/breadcrumb_helper.rb:58 app/helpers/breadcrumb_helper.rb:376
+#: app/helpers/breadcrumb_helper.rb:403 app/views/promotions/show.html.haml:7
+#: app/views/promotions/_detail.html.haml:26
+#: app/views/gpg_keys/_products_repos.html.haml:40
+#: app/views/changesets/_edit.html.haml:62
 #: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_product_detail.html.haml:4
-#: app/views/promotions/_detail.html.haml:26
-#: app/views/promotions/show.html.haml:8
-#: app/views/gpg_keys/_products_repos.html.haml:28
-#: app/views/changesets/_edit.html.haml:56
 msgid "Repositories"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-#: app/views/providers/_products_repos.html.haml:47
+#: app/controllers/api/repositories_controller.rb:62
+msgid "Repositories can be deleted only in Library environment."
+msgstr ""
+
+#: app/views/promotions/show.html.haml:7
+#: app/views/providers/_products_repos.html.haml:46
+#: app/views/gpg_keys/_products_repos.html.haml:52
 msgid "Repository"
 msgstr ""
 
-#: app/views/providers/redhat/show.html.haml:20
+#: app/controllers/repositories_controller.rb:67
+msgid "Repository '%s' created."
+msgstr ""
+
+#: app/models/system_template.rb:321 app/models/system_template.rb:332
+msgid "Repository '%s' is already present in the template."
+msgstr ""
+
+#: app/models/system_template.rb:320 app/models/system_template.rb:331
+msgid "Repository '%s' not found in this environment."
+msgstr ""
+
+#: app/models/system_template.rb:338
+msgid "Repository '%s' not found in this template."
+msgstr ""
+
+#: app/controllers/repositories_controller.rb:107
+msgid "Repository '%s' removed."
+msgstr ""
+
+#: app/controllers/repositories_controller.rb:82
+msgid "Repository '%s' updated."
+msgstr ""
+
+#: app/views/repositories/_edit.html.haml:13
+msgid "Repository Details"
+msgstr ""
+
+#: app/views/providers/redhat/show.html.haml:17
 msgid "Repository Url"
 msgstr ""
 
@@ -2693,7 +3374,29 @@ msgstr ""
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr ""
 
-#: app/controllers/password_resets_controller.rb:98
+#: app/models/changeset_distribution.rb:21
+msgid ""
+"Repository of the distribution '%s' has not been promoted into the target "
+"environment!"
+msgstr ""
+
+#: app/models/changeset_erratum.rb:21
+msgid ""
+"Repository of the erratum '%s' has not been promoted into the target "
+"environment!"
+msgstr ""
+
+#: app/models/changeset_package.rb:20
+msgid ""
+"Repository of the package '%s' has not been promoted into the target "
+"environment!"
+msgstr ""
+
+#: app/views/system_events/_details.html.haml:16
+msgid "Request"
+msgstr ""
+
+#: app/controllers/password_resets_controller.rb:101
 msgid "Request received has either an invalid or expired token.  Token: '%{t}'"
 msgstr ""
 
@@ -2705,56 +3408,75 @@ msgstr ""
 msgid "Reset Password"
 msgstr ""
 
-#: app/views/sync_management/index.html.haml:25
+#: app/views/sync_management/index.html.haml:47
 #: app/views/system_events/_details.html.haml:28
 msgid "Result"
 msgstr ""
 
-#: app/views/filters/_products.html.haml:41
+#: app/views/filters/_products.html.haml:40
 msgid "Revert Filter"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-#: app/views/promotions/show.html.haml:143
+#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:142
 msgid "Review"
 msgstr ""
 
-#: app/controllers/roles_controller.rb:59
+#: app/controllers/roles_controller.rb:61
 msgid "Role"
+msgstr ""
+
+#: app/controllers/roles_controller.rb:89
+msgid "Role '%s' was created."
+msgstr ""
+
+#: app/controllers/roles_controller.rb:140
+msgid "Role '%s' was deleted."
+msgstr ""
+
+#: app/controllers/roles_controller.rb:117
+msgid "Role '%s' was updated."
 msgstr ""
 
 #: app/views/roles/_edit.html.haml:31
 msgid "Role Details"
 msgstr ""
 
-#: app/models/resource_type.rb:98 app/controllers/roles_controller.rb:57
+#: app/controllers/roles_controller.rb:58 app/models/resource_type.rb:98
 #: app/views/roles/_self_role_edit.html.haml:13
 #: lib/navigation/administration.rb:29 lib/navigation/administration.rb:65
 msgid "Roles"
+msgstr ""
+
+#: app/controllers/errors_controller.rb:20
+msgid "Route does not exist:"
+msgstr ""
+
+#: app/views/systems/errata/_index.html.haml:57
+msgid "Run"
 msgstr ""
 
 #: app/controllers/sync_management_controller.rb:25
 msgid "Running."
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:16 app/views/systems/_subs.html.haml:61
+#: app/views/systems/_subs.html.haml:18 app/views/systems/_subs.html.haml:70
 msgid "SLA"
 msgstr ""
 
+#: app/views/filters/_new.html.haml:23 app/views/common/_edit_i18n.html.haml:4
+#: app/views/providers/_form.html.haml:17 app/views/gpg_keys/_new.html.haml:33
+#: app/views/organizations/_new.html.haml:36
+#: app/views/sync_plans/_form.html.haml:31 app/views/systems/_new.html.haml:49
+#: app/views/password_resets/edit.html.haml:36
+#: app/views/users/_edit_form.html.haml:59
+#: app/views/users/_edit_environment.html.haml:55
+#: app/views/activation_keys/_new.html.haml:40
+#: app/views/activation_keys/_edit.html.haml:74
 #: app/views/system_templates/_new.html.haml:21
 #: app/views/system_templates/index.html.haml:6
-#: app/views/system_templates/index.html.haml:93
-#: app/views/users/_edit_form.html.haml:61
-#: app/views/users/_edit_environment.html.haml:52
-#: app/views/gpg_keys/_new.html.haml:19
-#: app/views/common/_edit_i18n.html.haml:4 app/views/systems/_new.html.haml:49
-#: app/views/activation_keys/_edit.html.haml:74
-#: app/views/activation_keys/_new.html.haml:40
-#: app/views/password_resets/edit.html.haml:36
-#: app/views/sync_plans/_form.html.haml:31 app/views/filters/_new.html.haml:23
-#: app/views/roles/_permission.html.haml:39 app/views/roles/_new.html.haml:18
-#: app/views/providers/_form.html.haml:17
-#: app/views/organizations/_new.html.haml:36
+#: app/views/system_templates/index.html.haml:94
+#: app/views/roles/_new.html.haml:18 app/views/roles/_permission.html.haml:39
 msgid "Save"
 msgstr ""
 
@@ -2762,7 +3484,7 @@ msgstr ""
 msgid "Save Changeset"
 msgstr ""
 
-#: app/views/filters/_products.html.haml:42
+#: app/views/filters/_products.html.haml:41
 msgid "Save Filter"
 msgstr ""
 
@@ -2770,7 +3492,7 @@ msgstr ""
 msgid "Save Roles"
 msgstr ""
 
-#: app/views/users/_new.html.haml:74
+#: app/views/users/_new.html.haml:75
 msgid "Save User"
 msgstr ""
 
@@ -2778,7 +3500,7 @@ msgstr ""
 msgid "Save as Favorite"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:65
+#: app/views/system_templates/index.html.haml:66
 msgid "Saving System Template"
 msgstr ""
 
@@ -2786,28 +3508,28 @@ msgstr ""
 msgid "Saving..."
 msgstr ""
 
-#: app/views/roles/_closed_permission.html.haml:8
 #: app/views/roles/_permission.html.haml:20
+#: app/views/roles/_closed_permission.html.haml:8
 msgid "Scope"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:54
-#: app/views/promotions/show.html.haml:8
-#: app/views/promotions/show.html.haml:173
-#: app/views/promotions/show.html.haml:174
-#: app/views/promotions/show.html.haml:175
-#: app/views/common/_panel.html.haml:45 app/views/common/_panel.html.haml:49
+#: app/views/common/_panel.html.haml:51 app/views/common/_panel.html.haml:55
+#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:171
+#: app/views/promotions/show.html.haml:172
+#: app/views/promotions/show.html.haml:183
+#: app/views/system_templates/index.html.haml:55
 #: app/views/notices/show.html.haml:19
 msgid "Search"
 msgstr ""
 
+#: app/views/filters/index.html.haml:15
 #: app/views/system_templates/index.html.haml:6
-#: app/views/filters/index.html.haml:18
 msgid "Search available package names..."
 msgstr ""
 
+#: app/views/filters/index.html.haml:15
 #: app/views/system_templates/index.html.haml:6
-#: app/views/filters/index.html.haml:18
 msgid "Search available product names..."
 msgstr ""
 
@@ -2815,29 +3537,33 @@ msgstr ""
 msgid "Search available repository names..."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Search is not available for the current content"
 msgstr ""
 
-#: app/views/sync_management/index.html.haml:38
+#: app/views/common/_panel.html.haml:50 app/views/common/_panel.html.haml:54
+msgid "Search..."
+msgstr ""
+
+#: app/views/sync_management/index.html.haml:33
 msgid "Select All"
 msgstr ""
 
-#: app/helpers/systems_helper.rb:38
+#: app/helpers/systems_helper.rb:37
 msgid "Select Architecture"
 msgstr ""
 
-#: app/views/sync_management/index.html.haml:35
-#: app/views/common/_panel.html.haml:18
+#: app/views/sync_management/index.html.haml:29
+#: app/views/common/_panel.html.haml:24
 #: app/views/systems/_actions.html.haml:18
 msgid "Select None"
 msgstr ""
 
-#: app/helpers/users_helper.rb:28
+#: app/helpers/users_helper.rb:35
 msgid "Select Organization"
 msgstr ""
 
-#: app/controllers/sync_schedules_controller.rb:43
+#: app/controllers/sync_schedules_controller.rb:44
 msgid "Select Plans to apply to selected Products"
 msgstr ""
 
@@ -2845,15 +3571,15 @@ msgstr ""
 msgid "Select Products to schedule"
 msgstr ""
 
-#: app/views/filters/index.html.haml:18
+#: app/views/filters/index.html.haml:15
 msgid "Select Repositories: "
 msgstr ""
 
-#: app/views/activation_keys/index.html.haml:18
+#: app/views/activation_keys/index.html.haml:21
 msgid "Select a System Template"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:402
+#: app/helpers/breadcrumb_helper.rb:405
 #: app/views/system_templates/index.html.haml:6
 msgid "Selected Distribution"
 msgstr ""
@@ -2862,19 +3588,19 @@ msgstr ""
 msgid "Send Login"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:211
 msgid "Severity: Critical"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:211
 msgid "Severity: Important"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:210
+#: app/helpers/breadcrumb_helper.rb:212
 msgid "Severity: Low"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:211
 msgid "Severity: Moderate"
 msgstr ""
 
@@ -2882,22 +3608,22 @@ msgstr ""
 msgid "Signature"
 msgstr ""
 
-#: app/views/sync_management/index.html.haml:24
+#: app/views/sync_management/index.html.haml:46
 msgid "Size (Packages)"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:62
+#: app/views/systems/_subs.html.haml:71
 msgid "Sockets"
 msgstr ""
 
-#: lib/navigation/systems.rb:72
+#: lib/navigation/systems.rb:74
 msgid "Software"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid ""
-"Some changeset modifications have not finished processing, are you sure you "
-"want to leave the page?  By leaving you may lose some modifications."
+"Some promotion changeset modifications have not finished processing, are you "
+"sure you want to leave the page?  By leaving you may lose some modifications."
 msgstr ""
 
 #: app/views/common/500.html.haml:4
@@ -2910,55 +3636,63 @@ msgstr ""
 msgid "Source Package"
 msgstr ""
 
-#: app/views/providers/redhat/show.html.haml:28
+#: app/views/providers/redhat/show.html.haml:25
 msgid "Specify Local Manifest"
 msgstr ""
 
-#: app/views/activation_keys/_subscriptions.html.haml:6
 #: app/views/sync_plans/_edit.html.haml:26
 #: app/views/sync_plans/_form.html.haml:20
+#: app/views/activation_keys/_subscriptions.html.haml:6
 msgid "Start Date"
 msgstr ""
 
-#: app/models/sync_plan.rb:41
+#: app/models/sync_plan.rb:49
 msgid "Start Date and Time can't be blank"
 msgstr ""
 
-#: app/views/sync_management/index.html.haml:22
+#: app/views/sync_management/index.html.haml:44
 msgid "Start Time"
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:3
+#: app/controllers/changesets_controller.rb:218
+msgid "Started promotion of '%s' to %s environment"
+msgstr ""
+
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "Strong"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:110 app/views/systems/_subs.html.haml:111
+#: app/views/systems/_subs.html.haml:118 app/views/systems/_subs.html.haml:119
 msgid "Subscribe"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:15 app/views/systems/_subs.html.haml:60
+#: app/views/providers/redhat/show.html.haml:44
+#: app/views/systems/_subs.html.haml:17 app/views/systems/_subs.html.haml:69
 #: app/views/activation_keys/_subscriptions.html.haml:4
-#: app/views/providers/redhat/show.html.haml:39
 msgid "Subscription"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:83
+#: app/controllers/providers_controller.rb:93
 msgid "Subscription manifest must be specified on upload."
 msgstr ""
 
-#: app/controllers/providers_controller.rb:72
+#: app/controllers/providers_controller.rb:78
 msgid "Subscription manifest upload for provider '%{name}' failed."
 msgstr ""
 
-#: app/controllers/providers_controller.rb:69
+#: app/controllers/providers_controller.rb:74
+msgid "Subscription manifest uploaded successfully for provider '%{name}'."
+msgstr ""
+
+#: app/controllers/providers_controller.rb:72
 msgid ""
 "Subscription manifest uploaded successfully for provider '%{name}'. Please "
 "enable the repositories you want to sync by selecting 'Enable Repositories' "
 "and selecting individual repositories to be enabled."
 msgstr ""
 
-#: lib/navigation/organization.rb:42 lib/navigation/systems.rb:66
+#: lib/navigation/systems.rb:68 lib/navigation/organization.rb:42
 msgid "Subscriptions"
 msgstr ""
 
@@ -2974,50 +3708,94 @@ msgstr ""
 msgid "Subscriptions are not Current"
 msgstr ""
 
+#: app/controllers/activation_keys_controller.rb:101
+msgid "Subscriptions successfully added to Activation Key '%s'."
+msgstr ""
+
+#: app/controllers/activation_keys_controller.rb:125
+msgid "Subscriptions successfully removed from Activation Key '%s'."
+msgstr ""
+
 #: app/helpers/dashboard_helper.rb:53 app/views/dashboard/_sync.haml:27
 msgid "Success"
+msgstr ""
+
+#: app/models/changeset.rb:298
+msgid "Successfully promoted changeset '%s'."
+msgstr ""
+
+#: app/models/user.rb:453
+msgid "Successfully removed organization '%s'."
+msgstr ""
+
+#: app/controllers/filters_controller.rb:166
+msgid "Sucessfully updated '%s' package filter."
 msgstr ""
 
 #: app/views/system_events/_details.html.haml:10
 msgid "Summary"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "Summary:"
 msgstr ""
 
-#: app/views/subscriptions/index.html.haml:16
+#: app/models/permission.rb:166
+msgid "Super Admin"
+msgstr ""
+
+#: app/models/permission.rb:191
+msgid "Super Admin permission"
+msgstr ""
+
+#: app/models/role.rb:206
+msgid "Super administrator with all access."
+msgstr ""
+
 #: app/views/providers/redhat/_subscription_details.html.haml:7
+#: app/views/subscriptions/index.html.haml:16
 msgid "Support Level"
 msgstr ""
 
-#: lib/navigation/content_management.rb:86
+#: app/views/sync_management/index.html.haml:5
+msgid "Sync Cancelled"
+msgstr ""
+
+#: lib/navigation/content_management.rb:85
 msgid "Sync Management"
 msgstr ""
 
-#: app/views/dashboard/index.html.haml:12
+#: app/views/dashboard/index.html.haml:18
 msgid "Sync Overview"
 msgstr ""
 
-#: app/controllers/sync_plans_controller.rb:46
-#: lib/navigation/content_management.rb:105
+#: app/controllers/sync_plans_controller.rb:140
+msgid "Sync Plan '%s' was created."
+msgstr ""
+
+#: app/controllers/sync_plans_controller.rb:86
+msgid "Sync Plan '%s' was updated."
+msgstr ""
+
+#: app/controllers/sync_plans_controller.rb:47
+#: lib/navigation/content_management.rb:104
 msgid "Sync Plans"
 msgstr ""
 
-#: app/controllers/sync_schedules_controller.rb:73
+#: app/controllers/sync_schedules_controller.rb:76
 msgid "Sync Plans applied successfully."
 msgstr ""
 
-#: app/models/organization.rb:131
+#: app/models/organization.rb:134
 msgid "Sync Products"
 msgstr ""
 
-#: lib/navigation/content_management.rb:113
+#: lib/navigation/content_management.rb:112
 msgid "Sync Schedule"
 msgstr ""
 
-#: app/views/sync_management/index.html.haml:16
-#: lib/navigation/content_management.rb:96
+#: app/views/sync_management/index.html.haml:17
+#: lib/navigation/content_management.rb:95
 msgid "Sync Status"
 msgstr ""
 
@@ -3026,15 +3804,36 @@ msgstr ""
 msgid "Sync complete."
 msgstr ""
 
-#: app/views/sync_management/index.html.haml:49
+#: app/controllers/sync_plans_controller.rb:111
+msgid "Sync plan '%s' was deleted."
+msgstr ""
+
+#: app/controllers/api/products_controller.rb:76
+msgid "Synchronization plan assigned."
+msgstr ""
+
+#: app/controllers/api/products_controller.rb:82
+msgid "Synchronization plan removed."
+msgstr ""
+
+#: app/views/sync_management/index.html.haml:57
 msgid "Synchronize Now"
 msgstr ""
 
-#: app/views/dashboard/_errata.haml:29
+#: app/controllers/systems_controller.rb:305
+#: app/views/dashboard/_errata.haml:37
 msgid "System"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:5
+#: app/controllers/systems_controller.rb:94
+msgid "System '%s' was created."
+msgstr ""
+
+#: app/controllers/systems_controller.rb:217
+msgid "System '%s' was updated."
+msgstr ""
+
+#: app/views/systems/_subs.html.haml:6
 msgid "System Current Subscription(s)"
 msgstr ""
 
@@ -3042,11 +3841,11 @@ msgstr ""
 msgid "System Events"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:8 lib/navigation/systems.rb:95
+#: app/views/systems/_edit.html.haml:8 lib/navigation/systems.rb:97
 msgid "System Info"
 msgstr ""
 
-#: app/views/layouts/_header.haml:21
+#: app/views/layouts/_header.haml:22
 msgid "System Notifications"
 msgstr ""
 
@@ -3054,28 +3853,31 @@ msgstr ""
 msgid "System Properties"
 msgstr ""
 
-#: app/views/dashboard/index.html.haml:5
+#: app/views/dashboard/index.html.haml:7
 msgid "System Subscription Status"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-#: app/views/activation_keys/_edit.html.haml:59
+#: app/views/promotions/show.html.haml:7
 #: app/views/activation_keys/_new.html.haml:35
+#: app/views/activation_keys/_edit.html.haml:59
 msgid "System Template"
 msgstr ""
 
-#: app/models/resource_type.rb:92
-#: app/controllers/system_templates_controller.rb:81
-#: app/helpers/breadcrumb_helper.rb:137
-#: app/views/system_templates/index.html.haml:47
+#: app/controllers/system_templates_controller.rb:259
+msgid "System Template '%s' was created."
+msgstr ""
+
+#: app/controllers/system_templates_controller.rb:78
+#: app/helpers/breadcrumb_helper.rb:140 app/models/resource_type.rb:92
+#: app/views/promotions/show.html.haml:7
 #: app/views/promotions/_detail.html.haml:12
-#: app/views/promotions/show.html.haml:8
-#: app/views/changesets/_edit.html.haml:34
-#: lib/navigation/content_management.rb:121
+#: app/views/changesets/_edit.html.haml:40
+#: app/views/system_templates/index.html.haml:48
+#: lib/navigation/content_management.rb:120
 msgid "System Templates"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:39
+#: app/views/system_templates/index.html.haml:40
 msgid ""
 "System Templates allow you to create a template for what a system should "
 "look like.  This includes what products are subscribed and what packages are "
@@ -3090,46 +3892,74 @@ msgstr ""
 msgid "System Type:"
 msgstr ""
 
-#: app/controllers/systems_controller.rb:186
+#: app/controllers/systems_controller.rb:181
 msgid "System subscriptions updated."
 msgstr ""
 
-#: app/controllers/systems_controller.rb:296
-#: app/views/dashboard/_errata.haml:21 lib/navigation/systems.rb:22
+#: app/controllers/systems_controller.rb:300
+#: app/views/dashboard/_errata.haml:27 lib/navigation/systems.rb:22
 msgid "Systems"
 msgstr ""
 
+#: app/views/systems/errata/_index.html.haml:41
+msgid "TITLE"
+msgstr ""
+
+#: app/views/systems/errata/_index.html.haml:37
+msgid "TYPE"
+msgstr ""
+
+#: app/controllers/system_templates_controller.rb:81
 #: app/controllers/system_templates_controller.rb:83
-#: app/controllers/system_templates_controller.rb:85
 msgid "Template"
+msgstr ""
+
+#: app/controllers/system_templates_controller.rb:195
+msgid "Template %s has been updated successfully"
+msgstr ""
+
+#: app/controllers/system_templates_controller.rb:207
+msgid "Template %s updated successfully."
+msgstr ""
+
+#: app/controllers/system_templates_controller.rb:285
+msgid ""
+"Template '%s' has been updated successfully, however you have removed either "
+"a product or repository that contained the selected distribution for this "
+"template.  Please select another distribution to ensure a working system "
+"template."
+msgstr ""
+
+#: app/controllers/system_templates_controller.rb:217
+msgid "Template '%s' was deleted."
 msgstr ""
 
 #: app/models/system_template.rb:21
 msgid "Template can have parent templates only from the same environment"
 msgstr ""
 
-#: app/models/system_template.rb:142
+#: app/models/system_template.rb:141
 msgid "Template cannot be exported"
 msgstr ""
 
-#: app/controllers/api/templates_controller.rb:83
+#: app/controllers/api/templates_controller.rb:94
 msgid "Template imported"
 msgstr ""
 
-#: app/models/system_template.rb:159
+#: app/models/system_template.rb:158
 msgid "Template is not complete and will likely fail."
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:390
+#: app/helpers/breadcrumb_helper.rb:393
 msgid "Templates"
 msgstr ""
 
-#: app/controllers/api/templates_content_controller.rb:99
-#: app/controllers/api/templates_controller.rb:48
-msgid "Templates can be updated only in a Locker environment"
+#: app/controllers/api/templates_content_controller.rb:130
+#: app/controllers/api/templates_controller.rb:59
+msgid "Templates can be updated only in a Library environment"
 msgstr ""
 
-#: app/models/organization.rb:80
+#: app/models/organization.rb:73 app/views/organizations/_edit.html.haml:11
 msgid ""
 "The current organization cannot be deleted. Please switch to a different "
 "organization before deleting."
@@ -3147,86 +3977,124 @@ msgid ""
 "changes will be lost.\""
 msgstr ""
 
-#: app/controllers/users_controller.rb:198
+#: app/controllers/users_controller.rb:254
 msgid "The default you supplied was the same as the old default."
 msgstr ""
 
-#: app/models/system_template.rb:253 app/models/system_template.rb:270
+#: app/models/system_template.rb:252 app/models/system_template.rb:269
 msgid "The environment still has content that belongs to product '%s'."
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:3
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "The password should not contain the username."
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:3
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "The passwords do not match"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:49
+#: app/views/systems/_subs.html.haml:50
 msgid "The system is not currently consuming any subscriptions."
 msgstr ""
 
-#: app/models/system_template.rb:507
+#: app/models/system_template.rb:563
 msgid "The template has children templates."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid ""
 "There are currently no Global permissions for this role.  Please click Add "
 "Permission in the action bar below to add a Global permission.  A Global "
 "permission is one that cuts across all organizations."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid ""
 "There are currently no permissions for this organization.  Please click Add "
 "Permission in the action bar below to add a permission to this organization."
+msgstr ""
+
+#: app/views/sync_management/index.html.haml:54
+msgid ""
+"There are no custom products or repositories enabled. Try enabling via "
+"Content Providers."
+msgstr ""
+
+#: app/views/dashboard/_errata.haml:3
+msgid "There are no errata that need to be applied to registered systems."
 msgstr ""
 
 #: app/views/system_events/_events.html.haml:35
 msgid "There are no events to display."
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:107
+#: app/views/systems/_subs.html.haml:115
 #: app/views/activation_keys/_subscriptions.html.haml:54
 msgid "There are no more subscriptions available."
 msgstr ""
 
+#: app/views/errata/_packages.html.haml:29
 #: app/views/system_packages/_packages.html.haml:96
-#: app/views/errata/_packages.html.haml:27
 msgid "There are no packages to display."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "There are no tags for the resource type you have chosen."
 msgstr ""
 
-#: app/models/glue/pulp/repos.rb:538
+#: app/models/glue/pulp/repos.rb:542
 msgid "There is already a repo with the name [ %s ] for product [ %s ]"
+msgstr ""
+
+#: app/controllers/sync_management_controller.rb:213
+msgid ""
+"There is already an active sync process for the '%s' repository. Please try "
+"again later"
+msgstr ""
+
+#: app/controllers/sync_schedules_controller.rb:80
+msgid "There must be at least one plan selected"
+msgstr ""
+
+#: app/controllers/sync_schedules_controller.rb:95
+msgid "There must be at least one product selected"
+msgstr ""
+
+#: app/views/common/_common_i18n.html.haml:3
+msgid "There was an error retrieving that row:"
+msgstr ""
+
+#: app/controllers/sync_management_controller.rb:155
+msgid ""
+"There were errors with one of the syncs: %s in repository: %s. See the log "
+"for more details."
+msgstr ""
+
+#: app/views/gpg_keys/_products_repos.html.haml:17
+msgid "This GPG Key is not currently assigned to any products or repositories."
 msgstr ""
 
 #: app/controllers/api/system_packages_controller.rb:99
 msgid "This action doesn't support pacakge groups"
 msgstr ""
 
-#: app/views/changesets/_edit.html.haml:29
+#: app/views/changesets/_edit.html.haml:35
 msgid "This changeset contains no content."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-msgid "This changeset is currently being promoted."
+#: app/views/promotions/show.html.haml:7
+msgid "This promotion changeset is currently being promoted."
 msgstr ""
 
 #: app/views/system_templates/_promotion_details.html.haml:16
 msgid "This template contains no content."
 msgstr ""
 
+#: app/views/organizations/_events.html.haml:14
 #: app/views/sync_plans/_edit.html.haml:29
 #: app/views/sync_plans/_form.html.haml:25
-#: app/views/organizations/_events.html.haml:14
 msgid "Time"
 msgstr ""
 
@@ -3234,7 +4102,7 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: app/views/common/_panel.html.haml:8
+#: app/views/common/_panel.html.haml:14
 msgid ""
 "To view the details of an item on the left, simply click on a single row.<br/"
 "><br/>To select multiple rows, hold the Control Key and click multiple rows."
@@ -3246,32 +4114,28 @@ msgstr ""
 msgid "Total Systems"
 msgstr ""
 
+#: app/views/dashboard/_errata.haml:8 app/views/errata/_show.html.haml:24
+#: app/views/errata/_show.html.haml:56
 #: app/views/activation_keys/_subscriptions.html.haml:5
+#: app/views/roles/_permission.html.haml:13
 #: app/views/roles/_closed_permission.html.haml:3
-#: app/views/roles/_permission.html.haml:13 app/views/dashboard/_errata.haml:7
-#: app/views/errata/_show.html.haml:24 app/views/errata/_show.html.haml:56
 msgid "Type"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:210
+#: app/helpers/breadcrumb_helper.rb:212
 msgid "Type: Bug Fix"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:210
+#: app/helpers/breadcrumb_helper.rb:212
 msgid "Type: Enhancement"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:210
+#: app/helpers/breadcrumb_helper.rb:212
 msgid "Type: Security"
 msgstr ""
 
-#: app/views/products/_new.html.haml:29
-msgid "Types"
-msgstr ""
-
-#: app/views/repositories/_edit.html.haml:22
 #: app/views/repositories/_new.html.haml:20
-#: app/views/products/_new.html.haml:24
+#: app/views/repositories/_edit.html.haml:22
 msgid "URL"
 msgstr ""
 
@@ -3279,15 +4143,19 @@ msgstr ""
 msgid "UUID"
 msgstr ""
 
-#: app/models/activation_key.rb:86
+#: app/models/system_template.rb:138
+msgid "Uebercert for %s has not been generated."
+msgstr ""
+
+#: app/models/activation_key.rb:90
 msgid "Unable to determine quantity for pool %s"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:109
+#: app/controllers/providers_controller.rb:119
 msgid "Unable to retrieve subscription history for provider '%{name}."
 msgstr ""
 
-#: app/controllers/providers_controller.rb:95
+#: app/controllers/providers_controller.rb:105
 msgid "Unable to retrieve subscription manifest for provider '%{name}."
 msgstr ""
 
@@ -3300,17 +4168,22 @@ msgstr ""
 msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
 msgstr ""
 
+#: app/views/changesets/_edit.html.haml:22
 #: app/views/systems/_edit.html.haml:79
 msgid "Unknown"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:87
+#: app/controllers/api/systems_controller.rb:215
+msgid "Unknown repository label"
+msgstr ""
+
+#: app/views/providers/redhat/_subscription_details.html.haml:29
+#: app/views/systems/_subs.html.haml:96
 #: app/views/subscriptions/index.html.haml:39
-#: app/views/providers/redhat/_subscription_details.html.haml:30
 msgid "Unlimited"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:52 app/views/systems/_subs.html.haml:53
+#: app/views/systems/_subs.html.haml:53 app/views/systems/_subs.html.haml:54
 msgid "Unsubscribe"
 msgstr ""
 
@@ -3338,14 +4211,6 @@ msgstr ""
 msgid "Update Package Timeout"
 msgstr ""
 
-#: app/models/role.rb:108
-msgid "Update Roles"
-msgstr ""
-
-#: app/models/user.rb:354
-msgid "Update Users"
-msgstr ""
-
 #: app/controllers/system_packages_controller.rb:108
 msgid "Update of Packages '%{p}' scheduled for System '%{s}'."
 msgstr ""
@@ -3362,14 +4227,14 @@ msgstr ""
 msgid "Updating Package..."
 msgstr ""
 
-#: app/views/gpg_keys/_edit.html.haml:30 app/views/gpg_keys/_edit.html.haml:35
-#: app/views/gpg_keys/_new.html.haml:28 app/views/gpg_keys/_new.html.haml:33
 #: app/views/common/_edit_i18n.html.haml:4
-#: app/views/providers/redhat/show.html.haml:31
+#: app/views/providers/redhat/show.html.haml:35
+#: app/views/gpg_keys/_new.html.haml:14 app/views/gpg_keys/_new.html.haml:19
+#: app/views/gpg_keys/_edit.html.haml:30 app/views/gpg_keys/_edit.html.haml:35
 msgid "Upload"
 msgstr ""
 
-#: app/views/providers/redhat/show.html.haml:25
+#: app/views/providers/redhat/show.html.haml:22
 msgid "Upload Subscription Manifest"
 msgstr ""
 
@@ -3377,23 +4242,31 @@ msgstr ""
 msgid "Uploading"
 msgstr ""
 
-#: app/controllers/users_controller.rb:274
+#: app/helpers/users_helper.rb:43 app/helpers/users_helper.rb:44
+msgid "Use Browser Locale"
+msgstr ""
+
+#: app/controllers/users_controller.rb:336
 msgid "User"
+msgstr ""
+
+#: app/controllers/users_controller.rb:289
+msgid "User '%s' was deleted."
 msgstr ""
 
 #: app/views/notices/show.html.haml:13
 msgid "User Notifications"
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "User assignments for this role"
 msgstr ""
 
-#: app/controllers/application_controller.rb:219
+#: app/controllers/application_controller.rb:144
 msgid "User does not belong to an organization."
 msgstr ""
 
-#: app/controllers/users_controller.rb:191
+#: app/controllers/users_controller.rb:247
 msgid "User environment updated successfully."
 msgstr ""
 
@@ -3403,18 +4276,25 @@ msgid ""
 "global notifications that are sent to all users."
 msgstr ""
 
-#: app/controllers/users_controller.rb:127
-#: app/controllers/users_controller.rb:216
+#: app/controllers/users_controller.rb:145
+#: app/controllers/users_controller.rb:168
+#: app/controllers/users_controller.rb:272
 msgid "User updated successfully."
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:22 app/views/users/_new.html.haml:19
+#: app/controllers/users_controller.rb:335
+#: app/views/user_sessions/new.html.haml:8
+msgid "Username"
+msgstr ""
+
 #: app/views/password_resets/new.html.haml:13
+#: app/views/users/_edit_form.html.haml:22 app/views/users/_new.html.haml:21
 msgid "Username:"
 msgstr ""
 
-#: app/models/resource_type.rb:97 app/controllers/users_controller.rb:272
-#: app/helpers/breadcrumb_helper.rb:241 lib/navigation/administration.rb:56
+#: app/controllers/users_controller.rb:333
+#: app/helpers/breadcrumb_helper.rb:244 app/models/resource_type.rb:97
+#: lib/navigation/administration.rb:56
 msgid "Users"
 msgstr ""
 
@@ -3426,42 +4306,47 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
-#: app/views/roles/_edit.html.haml:59
+#: app/views/roles/_edit.html.haml:59 app/views/roles/index.html.haml:8
 msgid "Verb(s):"
 msgstr ""
 
-#: app/views/roles/_closed_permission.html.haml:17
 #: app/views/roles/_permission.html.haml:30
+#: app/views/roles/_closed_permission.html.haml:17
 msgid "Verbs"
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:3
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "Very Weak"
 msgstr ""
 
-#: app/models/system.rb:71 app/controllers/activation_keys_controller.rb:346
+#: app/views/systems/errata/_index.html.haml:5
+msgid "Viewing %X of %Y results (%Z Total Errata)"
+msgstr ""
+
+#: app/controllers/activation_keys_controller.rb:341
+#: app/controllers/providers_controller.rb:291
 #: app/controllers/subscriptions_controller.rb:55
-#: app/controllers/providers_controller.rb:279
-#: app/helpers/systems_helper.rb:43
+#: app/helpers/systems_helper.rb:42 app/models/system.rb:67
 msgid "Virtual"
 msgstr ""
 
-#: app/views/providers/index.html.haml:16
+#: app/views/providers/index.html.haml:14
 msgid ""
 "WARNING: This will override any GPG keys already associated with a "
 "repository within this product"
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:3
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "Weak"
 msgstr ""
 
-#: app/controllers/application_controller.rb:248
+#: app/controllers/application_controller.rb:173
 msgid "Welcome Back!"
 msgstr ""
 
+#: app/views/common/_common_i18n.html.haml:3
 #: app/views/users/_edit_form.html.haml:33
 msgid "Yes"
 msgstr ""
@@ -3470,20 +4355,15 @@ msgstr ""
 msgid "You are not authorised to perform this action."
 msgstr ""
 
-#: app/controllers/api/sync_controller.rb:84
-msgid "You can synchronize repositories only in locker environment'"
+#: app/controllers/api/sync_controller.rb:97
+msgid "You can synchronize repositories only in library environment'"
 msgstr ""
 
-#: app/controllers/application_controller.rb:556
+#: app/controllers/application_controller.rb:511
 msgid ""
-"You current organization is no longer valid. It is possible that the "
-"organization has been deleted, please log back in to continue."
-msgstr ""
-
-#: app/views/dashboard/index.html.haml:16
-msgid ""
-"You currently do not have any permissions that grant access to an "
-"organization.  Please contact your system administrator to receive access."
+"You current organization is no longer valid. It is possible that either the "
+"organization has been deleted or your permissions revoked, please log back "
+"in to continue."
 msgstr ""
 
 #: app/controllers/failed_authentication_controller.rb:28
@@ -3492,10 +4372,20 @@ msgid ""
 "administrator."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/controllers/failed_authentication_controller.rb:25
+msgid ""
+"You have entered an incorrect username/password combination, or your account "
+"may currently be disabled. Please try again or contact your administrator."
+msgstr ""
+
+#: app/views/roles/_self_role_edit.html.haml:31
+msgid "You have no assigned roles."
+msgstr ""
+
+#: app/views/roles/index.html.haml:8
 msgid ""
 "You have selected all resource types; this will grant full access to the "
-"organization."
+"organization. Press the Cancel button to select an individual resource type."
 msgstr ""
 
 #: app/views/common/404.html.haml:4
@@ -3506,21 +4396,25 @@ msgstr ""
 msgid "You might want to log out and log back in again to clear your cookies."
 msgstr ""
 
-#: app/controllers/application_controller.rb:237
-#: app/controllers/application_controller.rb:546
+#: app/controllers/application_controller.rb:162
+#: app/controllers/application_controller.rb:501
 msgid "You must be logged in to access that page."
 msgstr ""
 
-#: app/views/roles/_edit.html.haml:89
+#: app/views/roles/_edit.html.haml:90
 msgid "You must select an organization above before you can add a permission."
 msgstr ""
 
-#: app/views/roles/_edit.html.haml:94
+#: app/views/roles/_edit.html.haml:95
 msgid "You must select and view a permission before you can edit it."
 msgstr ""
 
-#: app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:8
 msgid "You must select at least one verb."
+msgstr ""
+
+#: config/initializers/app_config.rb:99
+msgid "You must specify host in %s for %s to work properly"
 msgstr ""
 
 #: app/views/systems/_new.html.haml:57
@@ -3529,44 +4423,30 @@ msgid ""
 "system."
 msgstr ""
 
-#: app/controllers/failed_authentication_controller.rb:25
-msgid ""
-"You've entered an incorrect username, password combination or account "
-"disabled, please try again."
-msgstr ""
-
-#: app/views/promotions/show.html.haml:185
+#: app/views/promotions/show.html.haml:195
 msgid ""
 "Your update has applied successfully, but during that time another user has "
 "also made an update."
 msgstr ""
 
-#: app/views/products/_new.html.haml:32
-msgid "Yum"
-msgstr ""
-
-#: app/controllers/activation_keys_controller.rb:359
-msgid "activation_key"
-msgstr ""
-
-#: app/models/system_task.rb:112
+#: app/models/system_task.rb:136
 msgid "all packages"
 msgstr ""
 
-#: app/models/system_task.rb:137
+#: app/models/system_task.rb:176
+msgid "all packages update"
+msgstr ""
+
+#: app/models/system_task.rb:174
 msgid "all packages update failed"
 msgstr ""
 
-#: app/models/system_task.rb:139
-msgid "all packages updated"
+#: app/models/kt_environment.rb:368
+msgid "can not be updated"
 msgstr ""
 
-#: app/models/user.rb:63
-msgid "at least 5 characters"
-msgstr ""
-
-#: app/models/katello_name_format_validator.rb:20
 #: app/models/katello_url_format_validator.rb:50
+#: app/models/katello_name_format_validator.rb:20
 msgid "can't be blank"
 msgstr ""
 
@@ -3578,18 +4458,21 @@ msgstr ""
 msgid "cannot contain characters other than alpha numerals,'_', '-'."
 msgstr ""
 
-#: app/controllers/changesets_controller.rb:294
-msgid "changeset"
+#: app/models/katello_description_format_validator.rb:17
+#: app/models/katello_name_format_validator.rb:26
+msgid "cannot contain more than %s characters"
 msgstr ""
 
-#: app/controllers/system_templates_controller.rb:273
-msgid ""
-"contained the selected distribution for this template.  Please select "
-"another distribution to ensure a working system template."
+#: app/views/promotions/show.html.haml:7
+msgid "currently editing this promotion changeset"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-msgid "currently editing this changeset"
+#: app/models/sync_plan.rb:28
+msgid "daily"
+msgstr ""
+
+#: app/views/promotions/show.html.haml:177
+msgid "displayed"
 msgstr ""
 
 #: app/models/kt_environment.rb:29
@@ -3600,16 +4483,20 @@ msgstr ""
 msgid "environment required"
 msgstr ""
 
-#: app/controllers/filters_controller.rb:227
-msgid "filter"
+#: app/models/sync_plan.rb:27
+msgid "hourly"
 msgstr ""
 
-#: app/controllers/gpg_keys_controller.rb:171
-msgid "gpg_key"
+#: app/models/activation_key.rb:43
+msgid "id: %s doesn't exist "
 msgstr ""
 
-#: app/models/system_task.rb:262
-msgid "installed"
+#: app/models/system_task.rb:105 app/models/system_task.rb:106
+msgid "installing errata..."
+msgstr ""
+
+#: app/models/system_task.rb:105 app/models/system_task.rb:106
+msgid "installing erratum..."
 msgstr ""
 
 #: app/models/system_task.rb:64 app/models/system_task.rb:65
@@ -3628,25 +4515,33 @@ msgstr ""
 msgid "installing packages..."
 msgstr ""
 
-#: app/models/system_template_distribution.rb:25
-#: app/models/system_template_pg_category.rb:25
 #: app/models/system_template_pack_group.rb:26
+#: app/models/system_template_pg_category.rb:25
+#: app/models/system_template_distribution.rb:25
 msgid "is already in the template"
 msgstr ""
 
-#: app/models/katello_url_format_validator.rb:48 app/models/provider.rb:84
+#: app/models/katello_url_format_validator.rb:48 app/models/provider.rb:78
 msgid "is invalid"
 msgstr ""
 
-#: app/models/provider.rb:83
+#: app/models/provider.rb:77
 msgid "is too long"
+msgstr ""
+
+#: app/models/ping.rb:65
+msgid "katello-jobs service not running"
 msgstr ""
 
 #: app/views/errata/_show.html.haml:70
 msgid "link"
 msgstr ""
 
-#: app/models/permission.rb:24
+#: app/models/user.rb:65
+msgid "must be at least 5 characters."
+msgstr ""
+
+#: app/models/permission.rb:26
 msgid "must be unique within an organization scope"
 msgstr ""
 
@@ -3654,24 +4549,25 @@ msgstr ""
 msgid "must be unique within one environment"
 msgstr ""
 
-#: app/models/gpg_key.rb:21 app/models/kt_environment.rb:85
+#: app/models/kt_environment.rb:89 app/models/gpg_key.rb:33
 msgid "must be unique within one organization"
 msgstr ""
 
 #: app/models/product.rb:15
-msgid "must contain 'Locker'"
+msgid "must contain 'Library'"
+msgstr ""
+
+#: app/models/katello_name_format_validator.rb:27
+msgid "must contain at least %s characters"
 msgstr ""
 
 #: app/models/no_trailing_space_validator.rb:20
 msgid "must not contain leading or trailing white spaces."
 msgstr ""
 
-#: app/views/errata/_show.html.haml:72 app/views/errata/_show.html.haml:74
+#: app/models/sync_plan.rb:26 app/views/errata/_show.html.haml:72
+#: app/views/errata/_show.html.haml:74
 msgid "none"
-msgstr ""
-
-#: app/models/system_task.rb:255
-msgid "obsoleted"
 msgstr ""
 
 #: app/views/gpg_keys/_new.html.haml:24 app/views/roles/_edit.html.haml:55
@@ -3679,32 +4575,16 @@ msgstr ""
 msgid "or"
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:214
-msgid "organization"
-msgstr ""
-
-#: app/controllers/sync_schedules_controller.rb:46
+#: app/controllers/sync_schedules_controller.rb:48
 msgid "plan"
 msgstr ""
 
-#: app/controllers/sync_schedules_controller.rb:40
+#: app/controllers/sync_schedules_controller.rb:41
 msgid "product"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "promote_confirm"
-msgstr ""
-
-#: app/controllers/providers_controller.rb:243
-msgid "provider"
-msgstr ""
-
-#: app/models/filter.rb:23
-msgid "pulp_id must be unique within one organization"
-msgstr ""
-
-#: app/models/system_task.rb:261
-msgid "removed"
 msgstr ""
 
 #: app/models/system_task.rb:91 app/models/system_task.rb:92
@@ -3723,38 +4603,29 @@ msgstr ""
 msgid "removing packages..."
 msgstr ""
 
-#: app/controllers/roles_controller.rb:252
-msgid "role"
+#: app/controllers/api/packages_controller.rb:50
+msgid "repoids"
 msgstr ""
 
-#: app/controllers/sync_management_controller.rb:224
+#: app/views/promotions/show.html.haml:180
+msgid "results."
+msgstr ""
+
+#: app/controllers/sync_management_controller.rb:243
 msgid "sync did not complete successfully"
 msgstr ""
 
-#: app/controllers/sync_plans_controller.rb:165
-msgid "sync_plan"
-msgstr ""
-
-#: app/controllers/system_packages_controller.rb:188
-#: app/controllers/systems_controller.rb:331
-msgid "system"
-msgstr ""
-
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:7
 msgid "system templates"
 msgstr ""
 
-#: app/controllers/system_templates_controller.rb:84
+#: app/controllers/system_templates_controller.rb:82
 msgid "template"
 msgstr ""
 
-#: app/models/provider.rb:77
+#: app/models/provider.rb:71
 msgid ""
 "the following attributes can not be updated for the Red Hat provider: [ %s ]"
-msgstr ""
-
-#: app/models/system_task.rb:252
-msgid "updated"
 msgstr ""
 
 #: app/models/system_task.rb:77 app/models/system_task.rb:78
@@ -3773,14 +4644,10 @@ msgstr ""
 msgid "updating packages..."
 msgstr ""
 
-#: app/controllers/users_controller.rb:282
-msgid "user"
-msgstr ""
-
-#: app/views/common/_panel.html.haml:30
+#: app/views/common/_panel.html.haml:36
 msgid "viewing"
 msgstr ""
 
-#: app/helpers/sync_schedules_helper.rb:19
+#: app/helpers/sync_schedules_helper.rb:19 app/models/sync_plan.rb:29
 msgid "weekly"
 msgstr ""
