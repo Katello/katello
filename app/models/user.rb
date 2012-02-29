@@ -138,13 +138,21 @@ class User < ActiveRecord::Base
     return nil unless Password.check(password, u.password)
     u
   end
-
+  
+  # if the user authenticates with LDAP, log them in
   def self.authenticate_using_ldap!(username, password)
     if Ldap.valid_ldap_authentication? username, password
-      User.new :username => username
+      u = User.where({:username => username}).first || create_ldap_user!(username)
     else
       nil
     end
+    u
+  end
+
+  # an ldap user still needs a katello model
+  def self.create_ldap_user!(username)
+    # user gets a dummy password and email
+    User.create!(:username => username, :email => "#{username}@ldap.net", :password => 'ldapldap')
   end
 
   # Returns true if for a given verbs, resource_type org combination
