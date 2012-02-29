@@ -62,6 +62,7 @@ KT.templates = function() {
                 return true;
             }
         });
+        KT.options.current_template = undefined;
         KT.options.template_tree.render_content("templates");
     },
     add_new_template = function(id, name) {
