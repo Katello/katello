@@ -30,8 +30,16 @@ strong { font-weight: bold; }
 .wrap { overflow: hidden; margin-bottom: 2em; } /* wrapper around floating elements */
 .nomargin { margin: none; }
 .placeholder { margin-bottom: 2em; }
-.disabled { opacity: 0.4; cursor: default;
-  a:hover {
+.disabled { 
+  opacity: 0.4; 
+  cursor: default;
+  text-decoration: none;
+
+  &:hover, &:link, &:visited, &:active {
+    text-decoration: none;
+    cursor: default;
+  }
+  a:hover, a:link, a:visited, a:active {
     text-decoration: none;
     cursor: default;
   }
