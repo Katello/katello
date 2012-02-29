@@ -18,7 +18,7 @@ class ChangesetDistributionValidator < ActiveModel::Validator
     product = Product.find(record.product_id)
 
     record.errors[:base] << _("Distribution '%s' does not belong to the specified product!") % record.distribution_id and return if record.repositories.empty?
-    record.errors[:base] << _("Repository of the distribution '%s' has not been promoted into the target environment!") % record.errata_id if record.promotable_repositories.empty?
+    record.errors[:base] << _("Repository of the distribution '%s' has not been promoted into the target environment!") % record.distribution_id if record.promotable_repositories.empty?
   end
 end
 
