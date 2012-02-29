@@ -29,7 +29,7 @@
       %header
         %h2.fl #{title}
         - if enable_create
-          %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => url_for(:action=> 'new')}
+          %a.fr#new{:href => "#", :class => (disable_create ? "disabled tipsify-west" : "block"), "data-ajax_url" => url_for(:action=> 'new'), :title => (disable_create if disable_create) }
             #{_('+ New ')} #{create}
             .arrow-right
       %div.fl.clear#items_count
