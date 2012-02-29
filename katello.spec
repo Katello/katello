@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.3
+Version:        0.2.4
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,29 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Feb 29 2012 Brad Buckingham <bbuckingham@redhat.com> 0.2.4-1
+- 789533 - upgrading to tire 0.3.13pre with additional hashr dependency
+  (bbuckingham@redhat.com)
+- 798007 - fixing trivial error for our mem dump debug controller
+  (lzap+git@redhat.com)
+- 795832 - removing package download link as well as some hardcoded package
+  data (jsherril@redhat.com)
+- 787696, 796753 - localization corrections of roles, plus instances of
+  embedded strings, plus gettext:find ran (thomasmckay@redhat.com)
+- 787966 - preventing changeset history details from being jumbled if no
+  description is set (jsherril@redhat.com)
+- 796964 - The 'Sync Product' permission no longer allows a user to edit a
+  repository. (ehelms@redhat.com)
+- 773279 - show compliance status and date in systems report
+  (inecas@redhat.com)
+- 796573 - promotion searchable items now showing add/remove correctly
+  (jsherril@redhat.com)
+- removing some logging (jsherril@redhat.com)
+- 790254 - fixing issue where failed changesets would show as pending on
+  dashboard (jsherril@redhat.com)
+- 740365 - fixing sort on systems page (jsherril@redhat.com)
+- 797914 - fixing not being able to edit/view roles (jsherril@redhat.com)
+
 * Mon Feb 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.3-1
 - 751843 - adding counts go promotion search pages
 
