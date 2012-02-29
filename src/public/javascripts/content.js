@@ -211,19 +211,15 @@ KT.content = (function(){
 
         },
         update_item = function(element, starttime, duration, progress, size, packages) {
-
+            var pg = element.find(".progress"),
+                value = pg.find(".ui-progressbar-value");
             fadeUpdate(element.find(".start_time"), starttime);
             // clear duration during active sync
             fadeUpdate(element.find(".duration"), '');
             fadeUpdate(element.find(".size"), size + ' (' + packages + ')');
-            var pg = element.find(".progress");
-            if (progress === 100) { 
-              pg.find(".ui-progressbar-value").animate({'width': 99 },{ queue:false,
-                                               duration:"slow", easing:"easeInSine" });
-            } 
-            else {
-              pg.progressbar({ value : progress});
-            }
+            progress = progress == 100 ? 99 : progress;
+            value.animate({'width': progress },{ queue:false,
+                                           duration:"slow", easing:"easeInSine" });
         },
         updateProduct = function (prod_id, done, percent) {
             var element = $("#product-" + prod_id).find(".result");
@@ -232,16 +228,15 @@ KT.content = (function(){
                 element.html("");
             }
             else{
-                var progressBar = $('<div/>').attr('class', 'progress').text(" ");
-                element.html(progressBar);
-                if(percent === 100) {
-                  var past = oldpg ? oldpg.progressbar("option", "value") : 0;  
-                  progressBar.progressbar({value: past});
-                  progressBar.find(".ui-progressbar-value").animate({'width': 99 },{ queue:false,
-                                               duration:"slow", easing:"easeInSine" });
+                if (oldpg.length == 0){
+                    element.html($('<div/>').attr('class', 'progress').text(" "));
+                    element.find(".progress").progressbar({value: 0});
                 }
                 else {
-                  progressBar.progressbar({value: percent});
+                    var value = oldpg.find(".ui-progressbar-value");
+                    percent = percent == 100 ? 99 : percent;
+                    value.animate({'width': percent },{ queue:false,
+                          duration:"slow", easing:"easeInSine" });
                 }
             }
         },
