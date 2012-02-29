@@ -103,8 +103,12 @@ class SystemsController < ApplicationController
       end
 
     rescue Exception => error
-      display_message = error.response.include?('displayMessage') ? JSON.parse(error.response)['displayMessage'] : error.to_s
-      notice display_message, {:level => :error}
+      if error.respond_to?('response')
+        display_message = error.response.include?('displayMessage') ? JSON.parse(error.response)['displayMessage'] : error.to_s
+        notice display_message, {:level => :error}
+      else
+        notice error, {:level => :error}
+      end
       Rails.logger.error error.backtrace.join("\n")
       render :text => error, :status => :bad_request
     end
@@ -297,20 +301,22 @@ class SystemsController < ApplicationController
   end
 
   def setup_options
-    @panel_options = { :title => _('Systems'),
-                      :col => ["name_sort", "lastCheckin"],
-                      :titles => [_("Name"), _("Last Checked In")],
-                      :custom_rows => true,
-                      :enable_create => System.registerable?(@environment, current_organization),
-                      :create => _("System"),
-                      :enable_sort => true,
-                      :name => controller_display_name,
-                      :list_partial => 'systems/list_systems',
-                      :ajax_load  => true,
-                      :ajax_scroll => items_systems_path(),
-                      :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil,
-                      :search_class=>System
-                      }
+    @panel_options = { 
+      :title => _('Systems'),
+      :col => ["name_sort", "lastCheckin"],
+      :titles => [_("Name"), _("Last Checked In")],
+      :custom_rows => true,
+      :enable_create => System.registerable?(@environment, current_organization),
+      :create => _("System"),
+      :enable_sort => true,
+      :name => controller_display_name,
+      :list_partial => 'systems/list_systems',
+      :ajax_load  => true,
+      :ajax_scroll => items_systems_path(),
+      :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil,
+      :search_class=>System,
+      :disable_create=> current_organization.environments.length == 0 ? "At least one environment is required to create or register systems in your current organization." : false
+    }
   end
 
   def sys_consumed_pools
