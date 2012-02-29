@@ -132,7 +132,7 @@ KT.content_actions = (function(){
                }
                $.each(data, function(index, repo){
                    // Only stop when we reach 100% and the finish_time is done sometimes they are not both complete
-                   if (!repo.is_running) {
+                   if (!repo.is_running && (repo.raw_state !== 'waiting')) {
                         removeSyncing(repo.id);
                         KT.content.finishRepo(repo.id, repo.state, repo.duration);
                    }
