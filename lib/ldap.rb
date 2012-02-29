@@ -22,7 +22,8 @@ module Ldap
     attr_reader :ldap, :host, :base
 
     def initialize(config={})
-      @ldap = Net::LDAP.new
+      encryption = AppConfig.ldap.encryption
+      @ldap = Net::LDAP.new(encryption.to_sym)
       @ldap.host = @host = AppConfig.ldap.host
       @base = AppConfig.ldap.base
     end
