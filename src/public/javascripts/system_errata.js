@@ -64,10 +64,11 @@ KT.system.errata = function() {
             $.ajax({
     			method	: 'get',
     			url		: KT.routes.items_system_errata_path(system_id),
-    			data	: { filter_type : type, offset : offset, errata_state : state },
+    			data	: { filter_type : type, offset : offset, errata_state : state }
     		}).success(function(data){
     			insert_data(data, !clear_items);
     			show_spinner(false);
+
     		});
     	},
     	get_current_filter = function(){
@@ -89,6 +90,10 @@ KT.system.errata = function() {
             var selected_errata = $('#system_errata').find(':checkbox:checked'),
                 errata_ids = [],
                 params = {};
+
+            if ($('#run_errata_button').hasClass("disabled") || selected_errata.length === 0){
+                return;
+            }
 
             $.each(selected_errata, function(index, value){
                 errata_ids.push($(value).val());
@@ -134,6 +139,9 @@ KT.system.errata = function() {
     	insert_data = function(data, append){
             var html = data["html"];
 
+            if(data.total_count > 0){
+                $('#run_errata_button').removeClass("disabled");
+            }
     		if( append ){
     			table_body.append(html);
     		} else {
