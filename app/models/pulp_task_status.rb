@@ -50,7 +50,7 @@ class PulpTaskStatus < TaskStatus
   end
 
   def error
-    self.result["errors"][0] if self.error? 
+    self.result[:errors][0] if self.error? && self.result[:errors]
   end
 
   def self.refresh task_status
