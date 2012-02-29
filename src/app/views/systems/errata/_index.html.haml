@@ -53,5 +53,5 @@
 
   - if editable
     %span.fr
-      %button{ :class => 'button', :id => 'run_errata_button', 'data-url' => system_errata_path(@system.id) }
-        #{_('Run')}
+      %button.button.disabled{:id => 'run_errata_button', 'data-url' => system_errata_path(@system.id) }
+        #{_('Install')}
