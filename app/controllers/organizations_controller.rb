@@ -186,7 +186,7 @@ class OrganizationsController < ApplicationController
 
   def download_debug_certificate
     pem = @organization.debug_cert
-    data = "#{pem[:key]}\n\n #{pem[:cert]}"
+    data = "#{pem[:key]}\n\n#{pem[:cert]}"
     send_data data,
       :filename => "#{@organization.name}-key-cert.pem",
       :type => "application/text"
