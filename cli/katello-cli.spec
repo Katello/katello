@@ -75,6 +75,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files 
 %attr(755,root,root) %{_bindir}/%{base_name}
+%attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
 %doc README LICENSE
 #%{_mandir}/man8/%{base_name}.8*
