@@ -354,6 +354,22 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Mar 01 2012 Jordan OMara <jomara@redhat.com> 0.1.301-2
+- Rebuild (jomara@redhat.com)
+- 787696 - removed incorrectly calling _() in javascript
+- 796740 - Fixes unhelpful message when attempting to create a new system with
+  no environments in the current organization. (ehelms@redhat.com)
+- 796964 - The 'Sync Product' permission no longer allows a user to edit a
+  repository.
+- 798299 - fix reporting errors from Pulp (inecas@redhat.com)
+- 795825 - Sync Mgmt - fix display when state is 'waiting'
+  (bbuckingham@redhat.com)
+- 796360 - fixing issue where system install errata button was clickable even
+  if no errata exist
+- 783577 - removing template with unsaved changes should not prompt for saving
+- 798327 - fixing stray space in debug certificate download
+- 754873 - fixing issue where product sync bar would continually go to 100
+
 * Wed Feb 29 2012 Jordan OMara <jomara@redhat.com> 0.1.301-1
 - 795832 - removing package download link as well as some hardcoded package
   data
