@@ -5,8 +5,9 @@
     #{_("No products")}
   -for product in products
     %li.clear.slide_link
-      %a.product_add_remove.st_button.fr{ "data-id" => product.id, "data-name"=>product.name}
-        = "+ #{_("Add")}"
+      -# bz 796239
+      -#%a.product_add_remove.st_button.fr{ "data-id" => product.id, "data-name"=>product.name}
+      -#  = "+ #{_("Add")}"
       .link_details.simple_link{:id=>product_bc_id(product)}
         - if product.provider.provider_type == Provider::REDHAT
           %span.rh-product-sprite
