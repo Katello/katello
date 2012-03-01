@@ -57,6 +57,18 @@ SOURCES = [
 "/etc/httpd.d/pulp.conf",
 ]
 
+EXCLUDES = [
+"/etc/tomcat6/keystore",
+"/etc/candlepin/certs/candlepin-ca.key",
+"/etc/candlepin/certs/candlepin-ca.crt",
+"/etc/candlepin/certs/candlepin-upstream-ca.crt",
+"/etc/katello/pk12_password-file",
+"/etc/katello/candlepin_ca_password-file",
+"/etc/katello/nss_db_password-file",
+"/etc/katello/keystore_password-file",
+"/etc/katello/ssl_ca_password-file"
+]
+
 # Collect the files
 timename =  "katello-debug-#{Time.now.strftime("%Y%m%d%H%M%S")}"
 target_dir = File.join(options[:basedir], timename)
@@ -77,6 +89,14 @@ SOURCES.each do |source|
     output= `/bin/cp -r --preserve #{source} #{complete_target}`
   else
     puts "#{PAD}skipping #{source} since it does not exist"
+  end
+end
+
+EXCLUDES.each do |exclude|
+  target = File.join(target_dir, exclude)
+  if File.exists?(target)
+    puts ("#{PAD}removing #{target} from archive")
+    File.delete(target)
   end
 end
 
