@@ -111,6 +111,9 @@ EXCLUDES.each do |exclude|
   end
 end
 
+# Create certificates report
+output= `katello-debug-certificates >> #{File.join(target_dir, "certificates")}`
+
 # Below are custom system calls to get more info
 ouput = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug" >> #{File.join(target_dir, "packages")}`
 
