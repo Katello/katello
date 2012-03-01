@@ -103,6 +103,31 @@ var env_select =   {
         env_select.active_div.addClass("path_entry_selected");
         return false;
     },
+    init : function(){
+        $('#path-expanded').hide();
+        $('#path-collapsed').live('click', env_select.expand);
+        $('#path-expanded').live('click', env_select.close);
+        $('.path_link').live('click', env_select.env_selected);
+        $('.path_entry').live('click', env_select.path_selected);
+
+        //If we mouse over the entries box, deselect what is already selected
+        $('#path-entries').mouseover(env_select.disable_active);
+        $('#path-entries').mouseout(env_select.highlight_selected);
+
+        env_select.active_div = $(".path_link.active").parents(".path_entry");
+        env_select.highlight_selected();
+
+        //Close the drop down if the user clicks somewhere else
+        $('body').click(function(event){
+            if (!($(event.target).parents("#path-entries").size() > 0) && env_select.is_open()) {
+                env_select.close();
+              }
+        });
+
+        env_select.reset_hover();
+        env_select.scroll_obj = KT.env_select_scroll({});
+        env_select.recalc_scroll();
+    },
     reset_hover: function() {
         $('#path-container').hoverIntent({
             over:env_select.expand,
@@ -113,29 +138,7 @@ var env_select =   {
     }
 };
 
-$(function() {
-    $('#path-expanded').hide();
-    $('#path-collapsed').live('click', env_select.expand);
-    $('#path-expanded').live('click', env_select.close);
-    $('.path_link').live('click', env_select.env_selected);
-    $('.path_entry').live('click', env_select.path_selected);
-
-    //If we mouse over the entries box, deselect what is already selected
-    $('#path-entries').mouseover(env_select.disable_active);
-    $('#path-entries').mouseout(env_select.highlight_selected);
-
-    env_select.active_div = $(".path_link.active").parents(".path_entry");
-    env_select.highlight_selected();
-
-    //Close the drop down if the user clicks somewhere else
-    $('body').click(function(event){
-        if (!($(event.target).parents("#path-entries").size() > 0) && env_select.is_open()) {
-            env_select.close();
-          }
-    });
-
-    env_select.reset_hover();
-    env_select.scroll_obj = KT.env_select_scroll({});
-    env_select.recalc_scroll();
+$(document).ready(function() {
+    env_select.init();
 });
 
