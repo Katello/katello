@@ -60,6 +60,7 @@ $(document).ready(function() {
         org_selector.change(function(event) {
             var refill = $('#env_box');
             var selected_org_id = org_selector.val();
+
             if(!selected_org_id) {
                 refill.html(i18n.noDefaultEnv);
                 env_select.env_changed_callback('');
@@ -79,6 +80,7 @@ $(document).ready(function() {
                     success: function(data) {
                         refill.html(data);
                         // On successful update, update the original env id and disable save button
+                        env_select.init();
                         env_select.env_changed_callback(env_select.get_selected_env());
                     }
                 });
