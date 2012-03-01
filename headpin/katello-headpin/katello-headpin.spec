@@ -19,8 +19,8 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.1.140
-Release:        3%{?dist}
+Version:        0.1.141
+Release:        1%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
 License:        GPLv2
@@ -206,6 +206,8 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Thu Mar 01 2012 Jordan OMara <jomara@redhat.com> 0.1.141-1
+- 796823 Fixing version in footer for headpin mode
 * Wed Feb 22 2012 Jordan OMara <jomara@redhat.com> 0.1.140-3
 - Bumping release - lots of new katello features (jomara@redhat.com)
 
