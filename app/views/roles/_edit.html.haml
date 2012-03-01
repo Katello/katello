@@ -33,13 +33,18 @@
         .fieldset
           .grid_2.ra
             %label #{_("Name:")}
-          .grid_7.la.editable.edit_name_text{'name' => 'role[name]'} #{@role.i18n_name}
+          - if Role.editable?  
+            .grid_7.la.multiline.editable.edit_name_text{'name' => 'role[name]'} #{@role.i18n_name}
+          - else
+            .grid_7.la.multiline #{@role.i18n_name}
           %br
           %br
           .grid_2.ra
             %label #{_("Description:")}
-          .grid_7.la.editable.edit_description{'name' => 'role[description]'} #{@role.i18n_description}
-
+          - if Role.editable?
+            .grid_7.la.multiline.editable.edit_description{'name' => 'role[description]'} #{@role.i18n_description}
+          - else
+            .grid_7.la.multiline #{@role.i18n_description}
       #permission_widget.slide_up_container
         %h2#permission_widget_header
         #progressbar_container
