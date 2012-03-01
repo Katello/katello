@@ -64,6 +64,11 @@ class Repository < ActiveRecord::Base
     !(redhat?)
   end
 
+  def has_filters?
+    return false unless environment.library?
+    filters.count > 0 || product.filters.count > 0
+  end
+
   scope :enabled, where(:enabled => true)
 
   scope :readable, lambda { |env|
