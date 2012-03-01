@@ -37,6 +37,22 @@ class TaskStatus < ActiveRecord::Base
     end
   end
 
+  # log error to the rails log
+  before_save do |status|
+    if status.state_changed?
+      begin
+        if status.state == TaskStatus::Status::ERROR.to_s
+          Rails.logger.error "Task #{status.task_type} (#{status.id}) is in error state"
+          Rails.logger.debug "Task parameters: #{status.parameters.inspect.to_s[0,255]}, result: #{status.result.inspect.to_s[0,255]}"
+        else
+          Rails.logger.debug "Task #{status.task_type} (#{status.id}) #{status.state}" if status.id
+        end
+      rescue Exception => e
+          Rails.logger.debug "Unable to report status change" # minor error
+      end
+    end
+  end
+
   index_options :json=>{:only=> [:parameters, :result,
                      :organization_id, :system_ids, :start_time, :finish_time ]},
                 :extended_json=>:extended_index_attrs
