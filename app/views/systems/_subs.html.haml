@@ -4,7 +4,11 @@
   %h5
     = form_tag system_path(@system), :id=>"autoheal_form", :method=>"put", :remote=>true do
       #{_("System Current Subscription(s)")}
-      %span.fr{:style => "font-weight: normal; font-size: 90%;font-family: 'Overpass'', Interstate, sans-serif;"}
+      - if editable
+        - autoheal_class = ""
+      - else
+        - autoheal_class = "disabled"
+      %span.fr{:style => "font-weight: normal; font-size: 90%;font-family: 'Overpass'', Interstate, sans-serif;", :class => autoheal_class}
         = check_box_tag "autoheal", value=@system.autoheal, @system.autoheal
         #{_("Auto-heal")}
   = form_tag update_subscriptions_system_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
