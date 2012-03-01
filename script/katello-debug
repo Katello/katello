@@ -55,6 +55,7 @@ SOURCES = [
 "/etc/pulp",
 "/var/log/pulp",
 "/etc/httpd.d/pulp.conf",
+"/etc/qpidd.conf"
 ]
 
 EXCLUDES = [
@@ -111,8 +112,12 @@ EXCLUDES.each do |exclude|
   end
 end
 
+# Pick qpidd messages from syslog
+FileUtils.mkdir_p(File.join(target_dir, '/var/log'))
+output = `cat /var/log/messages|grep qpidd > #{File.join(target_dir, "/var/log/qpidd.log")}`
+
 # Create certificates report
-output= `katello-debug-certificates >> #{File.join(target_dir, "certificates")}`
+output = `katello-debug-certificates >> #{File.join(target_dir, "certificates")}`
 
 # Below are custom system calls to get more info
 ouput = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug" >> #{File.join(target_dir, "packages")}`
