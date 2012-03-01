@@ -22,6 +22,12 @@
                    //  3  vertical 1 px seperators (borders), and 448-3 isn't divisible by 4.  We come up 1 px short
   }
   
+  .filter_warning_icon {
+        width: 16px;
+        @include action-icon($warning_icon_triangle);
+        margin-right: 4px;
+        margin-top: 1px;
+  }
 
 
   #edit_changeset_icon {
@@ -119,6 +125,7 @@
       .locked {
         outline: 2px solid gray;
       }
+
     }
     .locked_breadcrumb_filter {
       @extend breadcrumb_filter;
