@@ -70,7 +70,7 @@ KT.roles.permissionWidget = function(){
                                   						done_button.show();
                                   						previous_button.show();
                                   						progress_bar.setProgress(100);
-                                  					} else if( $('#resource_type').val() === 'organizations' ){
+                                  					} else if( $('#resource_type').val() === 'organizations' || only_no_tag_verbs_selected() ){
                                   						flow['tags'].container.hide();
                                   						current_stage = 'details';
                                   						flow[current_stage].container.show();
@@ -278,7 +278,7 @@ KT.roles.permissionWidget = function(){
 
             types_select.append(html);
         },
-        set_verbs_and_tags = function(type, current_organization){
+        set_verbs_and_tags = function(type, current_organization, no_tags){
         	var i, length=0,
                 verbs_select = flow['verbs'].input,
                 tags_select = flow['tags'].input,
@@ -287,18 +287,21 @@ KT.roles.permissionWidget = function(){
                 html = '';
 
             length = verbs.length;
-            verbs_select.empty();
-            for( i=0; i < length; i+= 1){
-                html += '<option value="' + verbs[i].name + '">' + verbs[i].display_name + "</option>";
+
+            if( no_tags === undefined ){
+                verbs_select.empty();
+                for( i=0; i < length; i+= 1){
+                    html += '<option value="' + verbs[i].name + '">' + verbs[i].display_name + "</option>";
+                }
+                verbs_select.append(html);
             }
-            verbs_select.append(html);
 
             html = '';
             flow['tags'].container.find('.info_text').remove();
 
-            if( type !== 'organizations' && current_organization !== "global" ){
+            tags_select.empty();
+            if( type !== 'organizations' && current_organization !== "global" && !no_tags ){
                 length = tags.length;
-                tags_select.empty();
                 for( i=0; i < length; i+= 1){
                     html += '<option value="' + tags[i].name + '">' + tags[i].display_name + "</option>";
                 }
@@ -306,6 +309,14 @@ KT.roles.permissionWidget = function(){
                 tags_select.show();
                 all_tags_button.show();
             }
+        },
+        only_no_tag_verbs_selected = function(){
+            var selected                = flow['verbs'].input.find(':selected'),
+                current_organization    = roleActions.getCurrentOrganization(),
+                no_tag_verbs            = roles_breadcrumb[current_organization].permission_details[flow['resource_type'].input.val()].no_tag_verbs,
+                selected_verbs          = KT.utils.map(selected, function(element){ return $(element).val() });
+
+            return KT.utils.difference(selected_verbs, no_tag_verbs).length === 0 ? true : false;
         },
        	add_permission = function(options){
             var opening                 = options.opening,
@@ -338,6 +349,31 @@ KT.roles.permissionWidget = function(){
                     if( all_tags_button.hasClass('selected') ){
                         handleAllTags();
                     }
+                });
+
+                flow['verbs'].input.unbind('change').change(function(event){
+                    if( only_no_tag_verbs_selected() ){
+                        current_stage = 'verbs';
+                        flow['tags'].container.hide();
+                        flow['details'].container.hide();
+                        next_button.show();
+                        done_button.hide();
+                        progress_bar.setProgress(50);
+                        set_verbs_and_tags(flow['resource_type'].input.val(), current_organization, true);
+                    } else {
+                        if( current_stage === 'tags' ){
+                            flow['tags'].container.show();
+                        } else if( current_stage === 'details' ){
+                            flow['tags'].container.show();
+                            flow['details'].container.hide();
+                            current_stage = 'tags';
+                            progress_bar.setProgress(75);
+                        }
+                        next_button.show();
+                        done_button.hide();
+                        set_verbs_and_tags(flow['resource_type'].input.val(), current_organization, false);
+                    }
+                    
                 });
 
                 if( current_organization === "global" ){
@@ -395,6 +431,17 @@ KT.roles.permissionWidget = function(){
                     if( all_tags_button.hasClass('selected') ){
                         handleAllTags();
                     }
+                }).change();
+
+                flow['verbs'].input.unbind('change').change(function(event){
+                    if( only_no_tag_verbs_selected() ){
+                        flow['tags'].container.hide();
+                        set_verbs_and_tags(flow['resource_type'].input.val(), current_organization, true);
+                    } else {
+                        set_verbs_and_tags(flow['resource_type'].input.val(), current_organization, false);
+                        flow['tags'].container.show();
+                    }
+                    
                 }).change();
 
 				if( permission.tags === 'all'){
