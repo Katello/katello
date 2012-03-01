@@ -436,7 +436,7 @@ KT.roles.permissionWidget = function(){
 
 				progress_bar.setProgress(100);
 
-                $('#permission_widget_header').html(i18n.edit_permission_header + ' ' + roles_breadcrumb[current_organization].name + ' - ' + _(permission.name));
+                $('#permission_widget_header').html(i18n.edit_permission_header + ' ' + roles_breadcrumb[current_organization].name + ' - ' + permission.name);
                 $('#permission_widget_header').addClass('one-line-ellipsis');
             } else {
                 button.children('span').html(i18n.edit_permission);
