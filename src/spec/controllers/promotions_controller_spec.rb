@@ -30,6 +30,7 @@ describe PromotionsController do
     before (:each) do
       @org = new_test_org
       controller.stub(:current_organization).and_return(@org)
+      Glue::Pulp::Repos.stub!(:prepopulate!).and_return([])
       @env = @org.library
       
     end
@@ -119,6 +120,7 @@ describe "rules" do
       @env1 = @organization.library
       @env2 = KTEnvironment.create!(:name=>"FOO", :prior => @env1, :organization=>@organization)
       @env3 = KTEnvironment.create!(:name=>"FOO2", :prior => @env2, :organization=>@organization)
+      Glue::Pulp::Repos.stub!(:prepopulate!).and_return([])
     end
 
     describe "GET index with changesets readable" do
