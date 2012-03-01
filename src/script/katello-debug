@@ -81,6 +81,7 @@ end
 FileUtils.mkdir_p(target_dir)
 puts ("created directory #{target_dir}")
 
+missing_files = Array.new
 SOURCES.each do |source|
   if File.exists?(source)
     complete_target = File.join(target_dir, File.dirname(source))
@@ -88,10 +89,20 @@ SOURCES.each do |source|
     puts ("#{PAD}copying over #{source}")
     output= `/bin/cp -r --preserve #{source} #{complete_target}`
   else
+    missing_files << source
     puts "#{PAD}skipping #{source} since it does not exist"
   end
 end
 
+# Store misisng filenames to archive if there are any
+if not missing_files.empty?
+  missing_target = File.join(target_dir, 'missing_files')
+  File.open(missing_target, 'w') do |missing|  
+    missing.puts missing_files.join("\n")
+  end
+end
+
+# Remove security sensitive data
 EXCLUDES.each do |exclude|
   target = File.join(target_dir, exclude)
   if File.exists?(target)
