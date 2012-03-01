@@ -87,7 +87,7 @@ class OrganizationsController < ApplicationController
         @new_env.prior = @organization.library
         @new_env.save!
       end
-      notice [_("Organization '#{@organization["name"]}' was created.")]
+      notice [_("Organization '%s' was created.") % @organization["name"]]
     rescue Exception => error
       notice(error, {:level => :error, :include_class_name => KTEnvironment::ERROR_CLASS_NAME})
       Rails.logger.error error.backtrace.join("\n")
@@ -100,13 +100,13 @@ class OrganizationsController < ApplicationController
     end
 
     if search_validate(Organization, @organization.id, params[:search])
-      collected = [_("Organization '#{@organization["name"]}' was created.")]
+      collected = [_("Organization '%s' was created.") % @organization["name"]]
       collected.push(_("Click on 'Add Environment' to create the first environment")) if @new_env.nil?
       notice collected
       render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
     else
-      notice _("Organization '#{@organization["name"]}' was created.")
-      notice _("'#{@organization["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+      notice _("Organization '%s' was created.") % @organization["name"]
+      notice _("'%s' did not meet the current search criteria and is not being shown.") % @organization["name"], { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     end
   end
@@ -124,10 +124,10 @@ class OrganizationsController < ApplicationController
       end
 
       @organization.update_attributes!(params[:organization])
-      notice _("Organization '#{@organization["name"]}' was updated.")
+      notice _("Organization '%s' was updated.") % @organization["name"]
 
       if not search_validate(Organization, @organization.id, params[:search])
-        notice _("'#{@organization["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+        notice _("'%s' no longer matches the current search criteria.") % @organization["name"], { :level => :message, :synchronous_request => true }
       end
 
       render :text => escape_html(result)
@@ -186,7 +186,7 @@ class OrganizationsController < ApplicationController
 
   def download_debug_certificate
     pem = @organization.debug_cert
-    data = "#{pem[:key]}\n\n #{pem[:cert]}"
+    data = "#{pem[:key]}\n\n#{pem[:cert]}"
     send_data data,
       :filename => "#{@organization.name}-key-cert.pem",
       :type => "application/text"
@@ -201,7 +201,7 @@ class OrganizationsController < ApplicationController
       @organization = Organization.first(:conditions => {:cp_key => params[:id]})
       raise if @organization.nil?
     rescue Exception => error
-      notice _("Couldn't find organization with ID=#{params[:id]}"), {:level => :error}
+      notice _("Couldn't find organization with ID=%s") % params[:id], {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end
@@ -212,7 +212,7 @@ class OrganizationsController < ApplicationController
       @organization = Organization.find(params[:id])
       raise if @organization.nil?
     rescue Exception => error
-      notice _("Couldn't find organization with ID=#{params[:id]}"), {:level => :error}
+      notice _("Couldn't find organization with ID=%s") % params[:id], {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end

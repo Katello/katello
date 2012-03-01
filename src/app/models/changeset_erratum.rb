@@ -17,8 +17,8 @@ class ChangesetErratumValidator < ActiveModel::Validator
     to_env   = record.changeset.environment
     product = Product.find(record.product_id)
 
-    record.errors[:base] << _("Erratum '#{record.errata_id}' doesn't belong to the specified product!") and return if record.repositories.empty?
-    record.errors[:base] << _("Repository of the erratum '#{record.errata_id}' has not been promoted into the target environment!") if record.promotable_repositories.empty?
+    record.errors[:base] << _("Erratum '%s' doesn't belong to the specified product!") % record.errata_id and return if record.repositories.empty?
+    record.errors[:base] << _("Repository of the erratum '%s' has not been promoted into the target environment!") % record.errata_id if record.promotable_repositories.empty?
   end
 end
 

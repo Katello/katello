@@ -16,9 +16,9 @@
       .fl
         - for env in @activation_key.environment.full_path
           - if env != @activation_key.environment
-            #{env.name} >
+            #{env.display_name} >
           - else
-            %strong #{env.name}
+            %strong #{env.display_name}
             - break
       .fr
         = render :partial => "common/filter_table"

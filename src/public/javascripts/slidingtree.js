@@ -20,8 +20,12 @@
  *  tab_change_cb : callback to happen once a new tab is selected and rendered, the tab 'key' that was is the first paramter
  *  render_cb : callback to use for rendering if client_render is set to true in the crumb, the hash_id is
  *                      passed as a parameter, should return the html to display
+ *  expand_cb : callback for extended scroll
+ *  enable_search: enable search on init (before initial hashchange)
  */
 
+
+KT.sliding_tree = KT.sliding_tree || {};
 var sliding_tree = function(tree_id, options) {
     var container 	= $('#' + tree_id),
         list 		= container.find(".sliding_container .sliding_list"),
@@ -31,29 +35,29 @@ var sliding_tree = function(tree_id, options) {
         search;
 
     var prerender = function(id) {
-        
+
             var crumb = settings.breadcrumb[id],
 
                 newPanel = list.children('.no_content'),
                 oldPanel = list.children('.has_content');
-                
+
             settings.current_tab = id;
             settings.fetching = 0;
             reset_breadcrumb(id);
-        
+
             //If we are really 'sliding' indicate what will actually have the content once we're done
             if (settings.direction) {
                 oldPanel.removeClass("will_have_content");
                 newPanel.addClass("will_have_content");
             }
-    
+
             //If we aren't sliding, we only worry about 1 panel'
             if (!settings.direction) {
                 newPanel = oldPanel;
             }
-    
+
             settings.prerender_cb(id);
-    
+
             render(id, newPanel);
         },
         render = function (id, newPanel) {
@@ -62,6 +66,11 @@ var sliding_tree = function(tree_id, options) {
             }
 
             var crumb = settings.breadcrumb[id];
+
+            if (search) {
+                search.set_search_button_state(crumb);
+                search.set_url(null);
+            }
 
             if (crumb.client_render) {
                 settings.render_cb(id, function(html) {
@@ -75,33 +84,33 @@ var sliding_tree = function(tree_id, options) {
                 settings.tab_change_cb(id);
                 postrender(id);
             }
-            else { //Else fetch the data and place it in the new panel when we are done
+            else if (!crumb.searchable){
+                    //Else fetch the data and place it in the new panel when we are done
                    //  we set fetching to the id, so once its done we know whether to actually
                    //  display the data, or throw it away.
+                   // If the crumb is searchable, let the search module take care of this
                  settings.fetching = id;
                 $.get(crumb.url, function(data) {
                     if (settings.fetching == id) {
-                        if (data.html) {
-                            newPanel.html(data.html);
-                        }
-                        else {
-                            newPanel.html(data);
-                        }
-
+                        newPanel.html(data.html ? data.html : data);
                         settings.fetching = 0;
                         settings.tab_change_cb(id);
-    
                     }
                   });
                   postrender(id);
                   newPanel.html('<img src="' + KT.common.spinner_path() + '">');
+            }
+            else {
+                search.set_url(crumb.url);
+                $(document).trigger("slidingtree.initiatesearch");
+                postrender(id);
             }
         },
         postrender = function(id) {
             var crumb = settings.breadcrumb[id],
                 newPanel = list.children('.no_content'),
                 oldPanel = list.children('.has_content');
-            
+
             if (crumb.scrollable) {
                 list.addClass("ajaxScroll");
                 list.attr("data-scroll_url", crumb.url);
@@ -109,13 +118,13 @@ var sliding_tree = function(tree_id, options) {
             else {
                 list.removeClass("ajaxScroll");
             }
-    
+
             //If we have a direction, we need to slide
             if(settings.direction) {
                 var leaving = settings.direction == "right" ? "left" : "right",
                     width = $('.sliding_container').width();
                 //The old pane, we need to hide it away, remove the contents, and reset the classes
-    
+
 
                 if( leaving === 'left' ){
                     list.css({'left': 0});
@@ -139,18 +148,18 @@ var sliding_tree = function(tree_id, options) {
                            oldPanel.addClass("no_content");
                            newPanel.addClass("has_content");
                            newPanel.removeClass("no_content");
-            
+
                             $(document).trigger('tab_change_complete.slidingtree');
                        });
                 }
-    
-    
+
+
                 settings.direction = undefined;
             }
         },
         content_clicked = function(link) {
             var element = link.find('.link_details');
-            
+
             if(element.hasClass("slide_left")) {
               settings.direction = "left";
             }else {
@@ -161,19 +170,28 @@ var sliding_tree = function(tree_id, options) {
         render_content = function(id){
             var bbq = {};
             bbq[settings.bbq_tag] = id;
-            $.bbq.pushState(bbq);        
+            if(search) {
+                $.bbq.removeState(search.search_bbq());
+            }
+            $.bbq.pushState(bbq)
         },
         reset_breadcrumb = function(id) {
+            var name;
             if (settings.breadcrumb[id] === undefined) {
                 id = settings.default_tab;
             }
             var trail = settings.breadcrumb[id].trail,
                 crumbs = trail,
                 html = '<ul>';
-            
+
             current_crumb = id;
             breadcrumb.html("");
-            
+            name = settings.breadcrumb[id].name;
+            if (settings.breadcrumb[id].total_size){
+                name += ' (' + settings.breadcrumb[id].total_size + ')';
+            }
+
+
             if( settings.base_icon ){
                 if( trail.length > 0) {
                     html += create_crumb(trail[0], undefined, settings.base_icon);
@@ -183,43 +201,49 @@ var sliding_tree = function(tree_id, options) {
                 crumbs = trail.slice(1, trail.length);
             } else {
                 if( trail.length === 0 ){
-                    html += '<li class="fl"><span title="' + settings.breadcrumb[id].name + '" id="' + id + '" class="currentCrumb one-line-ellipsis">' + settings.breadcrumb[id].name + '</span></li>';
+                    html += '<li class="fl"><span title="' + name + '" id="' + id +
+                        '" class="currentCrumb one-line-ellipsis">' + name + '</span></li>';
                 }
             }
-    
+
             if( trail.length > 0){
                 for(var i = 0; i < crumbs.length; i++) {
                     html += create_crumb(crumbs[i]);
                 }
-                html += '<li class="fl"><span title="' + settings.breadcrumb[id].name + '" id="' + id + '" class="currentCrumb one-line-ellipsis">' + settings.breadcrumb[id].name + '</span></li>';
+                html += '<li class="fl"><span title="' + name + '" id="' + id +
+                    '" class="currentCrumb one-line-ellipsis">' + name + '</span></li>';
             }
-            
+
             breadcrumb.append(html);
         },
         create_crumb = function(id, currentCrumb, icon) {
             var html = '<li class="slide_link fl">';
-    
+            var name = settings.breadcrumb[id].name;
+            if (settings.breadcrumb[id].total_size){
+                name += ' (' + settings.breadcrumb[id].total_size + ')';
+            }
+
             if( icon ){
                 if( currentCrumb ){
-                    html += '<span title="' + settings.breadcrumb[id].name + '" class="crumb ' + icon + '">' + id + '</span>';
+                    html += '<span title="' + name + '" class="crumb ' + icon + '">' + id + '</span>';
                 } else {
-                    html += '<span title="' + settings.breadcrumb[id].name + '" class="crumb ' + icon + '_inactive">' + id + '</span>';
+                    html += '<span title="' + name + '" class="crumb ' + icon + '_inactive">' + id + '</span>';
                 }
             }
-    
-            html += '<span title="' + settings.breadcrumb[id].name + '" class="one-line-ellipsis crumb link_details slide_left" id= "' + id + '">';
-    
+
+            html += '<span title="' + name + '" class="one-line-ellipsis crumb link_details slide_left" id= "' + id + '">';
+
             if( !icon ){
-                html += settings.breadcrumb[id].name;
+                html += name;
 
             }
-            
+
             html  += '</span>';
 
             if( currentCrumb === undefined ){
                 html += '<span>\u2002\u00BB\u2002</span>';
             }
-    
+
             return html + '</li>';
         },
         hash_change = function() {
@@ -228,18 +252,24 @@ var sliding_tree = function(tree_id, options) {
                 prerender(newContent);
                 $(document).trigger('hashchange.' + tree_id, [newContent]);
             }
+            else {
+                signal_panel();
+            }
+        },
+        signal_panel = function(){
+            KT.panel.search_started();
         },
         setup_filter = function(){
              var bcs,
                  bcs_height = 0,
                  filter_form = $('#filter_form'),
                  filter_input = $('#filter_input');
-             
+
              filter_form.submit(function(){
                  filter_input.change();
                  return false;
              });
-             
+
              $('.filter_button').toggle(
                  function() {
                      bcs = $('.breadcrumb_filter');
@@ -251,11 +281,11 @@ var sliding_tree = function(tree_id, options) {
                      filter_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
                      $(this).css({backgroundPosition: "-32px -16px"});
                      $(this).attr('title', i18n.close);
-                     
+
                      if( $('.remove_item').length ){
                          $('.remove_item').css({ top : 52 });
                      }
-                     
+
                      if( $('.close').length ){
                          $('.close').css({ top : 52 });
                      }
@@ -275,7 +305,7 @@ var sliding_tree = function(tree_id, options) {
                      $("#" + tree_id + " .has_content .filterable li").fadeIn('fast');
                  }
             ).tipsy({ fade : true, gravity : 's' });
-             
+
              filter_input.live('change, keyup', function(){
                  if ($.trim($(this).val()).length >= 2) {
                      $("#" + tree_id + " .has_content .filterable li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
@@ -288,7 +318,7 @@ var sliding_tree = function(tree_id, options) {
         },
         enable_search = function(){
             search = sliding_tree.search();
-            search.init(this, list);
+            search.init(this, list, options.expand_cb, settings.tab_change_cb);
         };
 
     var settings = {
@@ -308,19 +338,20 @@ var sliding_tree = function(tree_id, options) {
     if ( options ) {
         $.extend( settings, options );
     }
-    
+
     if( settings.enable_filter ){
         setup_filter();
     }
-    
+
 	if( settings.enable_float ){
 		container.css('position', 'absolute');
 		sliders.css('height', sliders.css('minHeight'));
 	}
 
+
     $(window).unbind('hashchange.' + tree_id).bind( 'hashchange.' + tree_id, hash_change);
 
-    $(window).trigger( 'hashchange.' + tree_id );
+    //$(window).trigger( 'hashchange.' + tree_id );
 
     $('.crumb').tipsy({ fade : true, gravity : 's', live : true, delayIn : 500, hoverable : true, delayOut : 50 });
     $('.currentCrumb').tipsy({ fade : true, gravity : 's', live : true, delayIn : 500, hoverable : true, delayOut : 50 });
@@ -334,7 +365,7 @@ var sliding_tree = function(tree_id, options) {
         } else {
             content_clicked($(this));
         }
-    });    
+    });
 
     return {
     	get_current_crumb	: function(){
@@ -357,23 +388,94 @@ var sliding_tree = function(tree_id, options) {
     };
 };
 
+
+
+KT.sliding_tree.list = function(parent, bcs, sliding_tree){
+
+    var current_items = 0,
+    replace_list = function(html, args){
+        if (!args || args === sliding_tree.get_current_crumb()){
+            parent.children('.has_content').html(html);
+        }
+    },
+    append = function(html, args) {
+
+        if (!args || args === sliding_tree.get_current_crumb()){
+            var expand_list = parent.find('.has_content').find('.expand_list');
+            expand_list.append(html);
+        }
+    },
+    update_counts = function(current, total, results, clear){
+        if (clear){
+            current_items = current;
+            bcs.find('.current_items_count').text(current_items);
+            bcs.find('.total_results_count').text(results);
+            sliding_tree.get_breadcrumbs()[sliding_tree.get_current_crumb()].total_size = total;
+            sliding_tree.rerender_breadcrumb();
+        }
+        else {
+            current_items += current;
+            bcs.find('.current_items_count').text(current_items);
+        }
+    },
+    current_count = function(){
+        return current_items;
+    },
+    full_spinner = function(){
+        var panel = parent.children('.will_have_content');
+        if (panel.length === 0){
+            panel = parent.children('.has_content');
+        }
+        panel.html('<img src="' + KT.common.spinner_path() + '">');
+    };
+
+    return {
+        replace_list  : replace_list,
+        append        : append,
+        update_counts : update_counts,
+        full_spinner  : full_spinner,
+        current_count : current_count
+    }
+};
+
 sliding_tree.search = function(){
     var bcs,
         bcs_height = 0,
-        search_form, search_input, search_button,
-        breadcrumbs,
+        search_form, search_input, search_button, search_box,
+        breadcrumbs, search_obj,
 
-        init = function(sliding_tree, parent){
+        init = function(sliding_tree, parent, expand_cb, tabchange_cb){
             var tree_id = sliding_tree.get_tree_id();
 
             search_form = $('#search_form');
             search_input = $('#search_input');
             bcs = $('.breadcrumb_search');
             search_button = bcs.find('.search_button');
+            search_box = bcs.find('.search_box');
             bcs_height = bcs.height();
             breadcrumbs = sliding_tree.get_breadcrumbs();
-         
-             search_button.toggle(
+
+            search_obj = KT.search("search_form", "list", KT.sliding_tree.list(parent, bcs, sliding_tree),
+                {disable_fancy: true, trigger_name:"slidingtree.initiatesearch",
+                 pre_search_state:sliding_tree.get_current_crumb});
+
+            $(document).bind(search_obj.search_event(), KT.panel.search_started);
+            $(document).bind(search_obj.search_event(), function(e, promise){
+                if (promise){
+                    promise.done(function(){
+                        tabchange_cb(sliding_tree.get_current_crumb());      
+                    });
+                }
+                else {
+                  tabchange_cb(sliding_tree.get_current_crumb());
+                }
+            });
+
+            if (expand_cb) {
+                $(window).bind(search_obj.extend_event(), expand_cb);
+            }
+
+            search_button.toggle(
                  function() {
                     if( !search_button.hasClass('disabled') ){
                         open();
@@ -383,53 +485,13 @@ sliding_tree.search = function(){
                         close();
                     }
                  }
-             ).tipsy({ fade : true, gravity : 's' });
-             
-             search_form.bind('submit', function(event){
-                var current_crumb 	= sliding_tree.get_current_crumb(),
-                    search_url 		= breadcrumbs[current_crumb]['url'],
-                    offset 			= offset || 0,
-                    params 			= {},
-                    panel           = parent.children('.has_content'),
-                    form            = $(this);
-                    
-                event.preventDefault();
-                
-                if( breadcrumbs[current_crumb]['searchable'] ){
-                    params["offset"] = offset;
-                    panel.html('<img src="' + KT.common.spinner_path() + '">');
-
-                    form.ajaxSubmit({
-                        url		: search_url,
-                        data	: params,
-                        cache   : false,
-                        success	: function (data) {
-                                var to_append = data.html ? data.html : data;
-                                panel.html(to_append);
-                                $(document).trigger('search_complete.slidingtree');
-                                /* disabled until conflicts with panel hash change can be resolved
-                                if( form.serialize() !== 'search=' ) {
-                                    $.bbq.pushState(form.serialize());
-                                } else {
-                                    $.bbq.removeState('search');
-                                }*/
-                        }
-                    });
-                }
-            });
-
-            $(document).bind('hashchange.' + tree_id, function(event, current_crumb){
-                set_search_button_state(current_crumb);
-            });
-
-            //init search button state
-            set_search_button_state(sliding_tree.get_current_crumb());
+            ).tipsy({ fade : true, gravity : 's' });
+        },
+        set_search_url = function(url) {
+            search_obj.set_url(url);
         },
         set_search_button_state = function(current_crumb){
-            var searchable = breadcrumbs[current_crumb]['searchable'];
-
-            $.bbq.removeState('search');
-            toggle_search_button(searchable);
+            toggle_search_button(current_crumb.searchable);
         },
         toggle_search_button = function(searchable){
             close();
@@ -441,19 +503,23 @@ sliding_tree.search = function(){
                 search_button.css({backgroundPosition: "0 -16px"});
                 search_button.removeClass('disabled');
                 search_button.attr('title', i18n.search);
+                //if there is a search, open the search bar
+                if($.bbq.getState(search_obj.search_bbq())){
+                    open();
+                }
             }
         },
         open = function(){
              bcs.animate({ "min-height": bcs_height+40}, { duration: 200, queue: false });
              search_input.css("margin-left", '4px');
-             search_form.css("opacity", "0").show();
-             search_form.animate({"opacity":"1"}, { duration: 200, queue: false });
+             search_box.css("opacity", "0").show();
+             search_box.animate({"opacity":"1"}, { duration: 200, queue: false });
              search_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
              search_button.css({backgroundPosition: "-32px -16px"});
              search_button.attr('title', i18n.close);
         },
         close = function(){
-             search_form.fadeOut("fast", function(){
+             search_box.fadeOut("fast", function(){
                  bcs.animate({ "min-height" : bcs_height }, "fast");
              });
              search_button.css({ backgroundPosition : "0 -16px" });
@@ -464,14 +530,17 @@ sliding_tree.search = function(){
     return {
         init    : init,
         open    : open,
-        close   : close
+        close   : close,
+        set_url : set_search_url,
+        search_bbq : function(){return search_obj.search_bbq()},
+        set_search_button_state : set_search_button_state
     };
-}
+};
 
 sliding_tree.ActionBar = function(toggle_list){
     var open_panel 	= undefined,
     	toggle_list	= toggle_list || {},
-        
+
         toggle = function(id, options){
             var options = options || {};
 
@@ -480,7 +549,7 @@ sliding_tree.ActionBar = function(toggle_list){
             if( open_panel !== id && open_panel !== undefined ){
             	options.opening = false;
                 toggle_list[open_panel].setup_fn(options);
-                
+
                 $("#" + toggle_list[open_panel].container).slideToggle(options.animate_time, function(){
 		            open_panel = id;
 		            options.opening = true;
@@ -495,12 +564,12 @@ sliding_tree.ActionBar = function(toggle_list){
                 options.opening = true;
                 handle_toggle(options, id);
             }
-        }, 
+        },
         handle_toggle = function(options, id){
         	var slide_window = $('#' + toggle_list[id].container);
 
             options = toggle_list[id].setup_fn(options);
-            slide_window.slideToggle(options.animate_time, options.after_function);        	
+            slide_window.slideToggle(options.animate_time, options.after_function);
         },
         close = function() {
             if( open_panel ){
@@ -508,7 +577,7 @@ sliding_tree.ActionBar = function(toggle_list){
             }
         },
         reset = function(){
-            close();    
+            close();
         },
         add_to_toggle_list = function(id, properties){
             if( toggle_list[id] !== undefined ){
@@ -534,11 +603,11 @@ sliding_tree.ActionBar = function(toggle_list){
                 }
             });
         };
-        
+
     for( item in toggle_list ){
     	register_toggle(item, toggle_list[item]);
     }
-        
+
     return {
         toggle              :  toggle,
         close               :  close,

@@ -40,7 +40,7 @@ class ActivationKey < ActiveRecord::Base
   validate :environment_not_library
 
   def environment_exists
-    errors.add(:environment, _("id: #{environment_id} doesn't exist ")) if environment.nil?
+    errors.add(:environment, _("id: %s doesn't exist ") % environment_id) if environment.nil?
   end
 
   def environment_not_library

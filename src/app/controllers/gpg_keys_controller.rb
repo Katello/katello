@@ -40,7 +40,7 @@ class GpgKeysController < ApplicationController
       :new => create_test,
       :create => create_test,
 
-      :edit => manage_test,
+      :edit => read_test,
       :update => manage_test,
 
       :destroy => manage_test
@@ -48,7 +48,7 @@ class GpgKeysController < ApplicationController
   end
 
   def items
-    render_panel_direct(GpgKey, @panel_options, params[:search], params[:offset], [:name, :asc],
+    render_panel_direct(GpgKey, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
       :filter=>{:organization_id=>[current_organization.id]})
   end
 
@@ -89,12 +89,12 @@ class GpgKeysController < ApplicationController
 
     @gpg_key = GpgKey.create!( gpg_key_params.merge({ :organization => current_organization }) )
 
-    notice _("GPG Key '#{@gpg_key['name']}' was created.")
+    notice _("GPG Key '%s' was created.") % @gpg_key['name']
 
     if search_validate(GpgKey, @gpg_key.id, params[:search])
       render :partial=>"common/list_item", :locals=>{:item=>@gpg_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
     else
-      notice _("'#{@gpg_key["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+      notice _("'%s' did not meet the current search criteria and is not being shown.") % @gpg_key["name"], { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     end
   rescue Exception => error
@@ -105,20 +105,20 @@ class GpgKeysController < ApplicationController
 
   def update
     gpg_key_params = params[:gpg_key]
-    
+
     if params[:gpg_key].has_key?("content_upload") and not params[:gpg_key].has_key?("content")
       gpg_key_params['content'] = params[:gpg_key][:content_upload].read
       gpg_key_params.delete('content_upload')
     end
-    
+
     @gpg_key.update_attributes!(gpg_key_params)
 
-    notice _("GPG Key '#{@gpg_key["name"]}' was updated.")
-    
+    notice _("GPG Key '%s' was updated.") % @gpg_key["name"]
+
     if not search_validate(GpgKey, @gpg_key.id, params[:search])
-      notice _("'#{@gpg_key["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+      notice _("'%s' no longer matches the current search criteria.") % @gpg_key["name"], { :level => :message, :synchronous_request => true }
     end
-    
+
     render :text => escape_html(gpg_key_params.values.first)
 
   rescue Exception => error
@@ -133,7 +133,7 @@ class GpgKeysController < ApplicationController
     begin
       @gpg_key.destroy
       if @gpg_key.destroyed?
-        notice _("GPG Key '#{@gpg_key[:name]}' was deleted.")
+        notice _("GPG Key '%s' was deleted.") % @gpg_key[:name]
         render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
       else
         raise

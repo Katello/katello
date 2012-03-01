@@ -132,7 +132,9 @@ module ContentBreadcrumbs
    end
 
    add_crumb_node!(bc, products_crumb_id, products_promotion_path(@environment.name),
-       _("Products"), [content_crumb_id], {:cache=>true, :content=>render(:partial=>"products", :locals=>{:products=>@products, :changeset=>@changeset})})
+       _('Products'), [content_crumb_id], {:cache=>true,
+                                           :content=>render(:partial=>"products", :locals=>{:products=>@products, :changeset=>@changeset})},
+                                          {:total_size=>@products.length})
 
    add_crumb_node!(bc, templates_crumb_id, system_templates_promotion_path(@environment.name),
                             _("System Templates"), [content_crumb_id])
@@ -151,11 +153,11 @@ module ContentBreadcrumbs
 
      #product_packages
      add_crumb_node!(bc, packages_bc_id(prod), packages_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
-        _("Packages"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true, :searchable => true, :product_id => prod.id})
+        _('Packages'), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true, :searchable => true, :product_id => prod.id})
 
      #product_errata
-     add_crumb_node!(bc, errata_id, nil,
-         _("Errata"), [content_crumb_id, products_crumb_id, product_id], {:cache => true, :product_id => prod.id, :content => render(:partial => "errata_filters", :locals => {:errata_filters => errata_filters})})
+     add_crumb_node!(bc, errata_id, nil, _('Errata'), [content_crumb_id, products_crumb_id, product_id],
+                     {:cache => true, :product_id => prod.id, :content => render(:partial => "errata_filters", :locals => {:errata_filters => errata_filters})})
 
      errata_filters.each do |filter|
        add_crumb_node!(bc, filter[:id], filter[:path],
@@ -287,7 +289,7 @@ module RolesBreadcrumbs
       add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'global'],
                   { :client_render => true },
                   { :global => global, :type => type.name, :type_name => type_name,
-                    :name => perm.name, :description => perm.description,
+                    :name => _(perm.name), :description => _(perm.description),
                     :verbs => verbs,
                     :tags => tags })
       if adjust_count
@@ -298,7 +300,7 @@ module RolesBreadcrumbs
                   { :client_render => true },
                   { :organization => "organization_#{perm.organization_id}",
                     :global => global, :type =>  type.name, :type_name => type_name,
-                    :name => perm.name, :description => perm.description,
+                    :name => _(perm.name), :description => _(perm.description),
                     :verbs => verbs,
                     :tags => tags })
       if adjust_count
@@ -375,7 +377,7 @@ module TemplateContentBreadcrumb
 
      #product,packages
      add_crumb_node!(bc, packages_bc_id(prod), product_packages_system_templates_path(:product_id=>prod.id),
-        _("Packages"), [products_crumb_id, product_id], {:scrollable=>true})
+        _("Packages"), [products_crumb_id, product_id], {:scrollable=>true, :searchable=>true})
 
      #product,comps
      add_crumb_node!(bc, comps_bc_id(prod), product_comps_system_templates_path(:product_id=>prod.id),

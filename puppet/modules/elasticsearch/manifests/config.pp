@@ -12,10 +12,10 @@ class elasticsearch::config {
   }
   
   # Set elasticsearch's heap sizes
-  exec { "/bin/sed -i '1i ES_MIN_MEM=1512m' /usr/share/java/elasticsearch/bin/elasticsearch.in.sh":
-       unless => "/bin/grep -qFx 'ES_MIN_MEM=1512m' /usr/share/java/elasticsearch/bin/elasticsearch.in.sh"
+  exec { "/bin/sed -i '/#ES_MIN_MEM=/c ES_MIN_MEM=256m' /etc/sysconfig/elasticsearch":
+       unless => "/bin/grep -qFx 'ES_MIN_MEM=256m' /etc/sysconfig/elasticsearch"
   }
-  exec { "/bin/sed -i '1i ES_MAX_MEM=1512m' /usr/share/java/elasticsearch/bin/elasticsearch.in.sh":
-       unless => "/bin/grep -qFx 'ES_MAX_MEM=1512m' /usr/share/java/elasticsearch/bin/elasticsearch.in.sh"
+  exec { "/bin/sed -i '/#ES_MAX_MEM=/c ES_MAX_MEM=256m' /etc/sysconfig/elasticsearch":
+       unless => "/bin/grep -qFx 'ES_MAX_MEM=256m' /etc/sysconfig/elasticsearch"
   }
 }

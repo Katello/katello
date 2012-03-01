@@ -16,8 +16,8 @@ class ChangesetPackageValidator < ActiveModel::Validator
     to_env   = record.changeset.environment
     product = Product.find(record.product_id)
 
-    record.errors[:base] << _("Package '#{record.package_id}' doesn't belong to the specified product!") and return if record.repositories.empty?
-    record.errors[:base] << _("Repository of the package '#{record.errata_id}' has not been promoted into the target environment!") if record.promotable_repositories.empty?
+    record.errors[:base] << _("Package '%s' doesn't belong to the specified product!") % record.package_id and return if record.repositories.empty?
+    record.errors[:base] << _("Repository of the package '%s' has not been promoted into the target environment!") % record.errata_id if record.promotable_repositories.empty?
   end
 end
 

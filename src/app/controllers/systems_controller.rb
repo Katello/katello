@@ -77,7 +77,7 @@ class SystemsController < ApplicationController
 
   def create
     begin
-      #{"method"=>"post", "system"=>{"name"=>"asdfsdf", "sockets"=>"asdfasdf", "arch"=>"asdfasdfasdf", "virtualized"=>"asdfasd"}, "authenticity_token"=>"n7hXf3d+YZZnvxqcjhQjPaD»
+      #{"method"=>"post", "system"=>{"name"=>"asdfsdf", "sockets"=>"asdfasdf", "arch"=>"asdfasdfasdf", "virtualized"=>"asdfasd"}, "authenticity_token"=>"n7hXf3d+YZZnvxqcjhQjPaD"
       @system = System.new
       @system.facts = {}
       @system.arch = params["arch"]["arch_id"]
@@ -90,20 +90,24 @@ class SystemsController < ApplicationController
       saved = @system.save!
       #find the newly created system
       if saved
-        notice _("System '#{@system['name']}' was created.")
+        notice _("System '%s' was created.") % @system['name']
 
         if search_validate(System, @system.id, params[:search])
           render :partial=>"systems/list_systems",
             :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
         else
-          notice _("'#{@system["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+          notice _("'%s' did not meet the current search criteria and is not being shown.") % @system["name"], { :level => 'message', :synchronous_request => false }
           render :json => { :no_match => true }
         end
       end
 
     rescue Exception => error
-      display_message = error.response.include?('displayMessage') ? JSON.parse(error.response)['displayMessage'] : error.to_s
-      notice display_message, {:level => :error}
+      if error.respond_to?('response')
+        display_message = error.response.include?('displayMessage') ? JSON.parse(error.response)['displayMessage'] : error.to_s
+        notice display_message, {:level => :error}
+      else
+        notice error, {:level => :error}
+      end
       Rails.logger.error error.backtrace.join("\n")
       render :text => error, :status => :bad_request
     end
@@ -147,7 +151,7 @@ class SystemsController < ApplicationController
 
   def split_order order
     if order
-      order.split
+      order.split("|")
     else
       [:name_sort, "ASC"]
     end
@@ -213,10 +217,10 @@ class SystemsController < ApplicationController
       @system.autoheal = params[:autoheal] if params[:autoheal]
 
       @system.update_attributes!(params[:system])
-      notice _("System '#{@system["name"]}' was updated.")
+      notice _("System '%s' was updated.") % @system["name"]
       
       if not search_validate(System, @system.id, params[:search])
-        notice _("'#{@system["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+        notice _("'%s' no longer matches the current search criteria.") % @system["name"], { :level => :message, :synchronous_request => true }
       end
 
       respond_to do |format|
@@ -249,7 +253,7 @@ class SystemsController < ApplicationController
     @systems.each{|sys|
       sys.destroy
     }
-    notice _("#{@systems.length} Systems Removed Successfully")
+    notice _("%s Systems Removed Successfully") % @systems.length
     render :text=>""
   rescue Exception => e
     notice e, {:level => :error}
@@ -261,7 +265,7 @@ class SystemsController < ApplicationController
     system = find_system
     system.destroy
     if system.destroyed?
-      notice _("#{system.name} Removed Successfully")
+      notice _("%s Removed Successfully") % system.name
       #render and do the removal in one swoop!
       render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name} and return
     end
@@ -296,19 +300,22 @@ class SystemsController < ApplicationController
   end
 
   def setup_options
-    @panel_options = { :title => _('Systems'),
-                      :col => ["name", "lastCheckin"],
-                      :titles => [_("Name"), _("Last Checked In")],
-                      :custom_rows => true,
-                      :enable_create => false, 
-                      :enable_sort => true,
-                      :name => controller_display_name,
-                      :list_partial => 'systems/list_systems',
-                      :ajax_load  => true,
-                      :ajax_scroll => items_systems_path(),
-                      :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil,
-                      :search_class=>System
-                      }
+    @panel_options = { 
+      :title => _('Systems'),
+      :col => ["name_sort", "lastCheckin"],
+      :titles => [_("Name"), _("Last Checked In")],
+      :custom_rows => true,
+      :enable_create => AppConfig.katello? && System.registerable?(@environment, current_organization),
+      :create => _("System"),
+      :enable_sort => true,
+      :name => controller_display_name,
+      :list_partial => 'systems/list_systems',
+      :ajax_load  => true,
+      :ajax_scroll => items_systems_path(),
+      :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil,
+      :search_class=>System,
+      :disable_create=> current_organization.environments.length == 0 ? "At least one environment is required to create or register systems in your current organization." : false
+    }
   end
 
   def sys_consumed_pools

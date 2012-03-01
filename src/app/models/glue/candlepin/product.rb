@@ -251,6 +251,18 @@ module Glue::Candlepin::Product
       end
     end
 
+    def del_pools
+      Rails.logger.debug "Deleting pools for product #{name} in candlepin"
+      Candlepin::Product.pools(organization.cp_key, self.cp_id).each do |pool|
+        KTPool.find_all_by_cp_id(pool['id']).each(&:destroy)
+        Candlepin::Pool.destroy(pool['id'])
+      end
+      true
+    rescue => e
+      Rails.logger.error "Failed to delete pools for product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
     def del_subscriptions
       Rails.logger.debug "Deleting subscriptions for product #{name} in candlepin"
       job = Candlepin::Product.delete_subscriptions self.organization.cp_key, self.cp_id
@@ -285,8 +297,9 @@ module Glue::Candlepin::Product
     end
 
     def destroy_product_orchestration
-      pre_queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 7,  :action => [self, :del_subscriptions])
-      pre_queue.create(:name => "remove candlepin content from a product: #{self.name}",       :priority => 8,  :action => [self, :remove_all_content])
+      pre_queue.create(:name => "delete pools for product in candlepin: #{self.name}", :priority => 7,  :action => [self, :del_pools])
+      pre_queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 8,  :action => [self, :del_subscriptions])
+      pre_queue.create(:name => "remove candlepin content from a product: #{self.name}",       :priority => 9,  :action => [self, :remove_all_content])
       pre_queue.create(:name => "candlepin product: #{self.name}",                             :priority => 10, :action => [self, :del_product])
     end
 

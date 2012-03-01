@@ -1,7 +1,5 @@
 class certs::params {
 
-  $skip_ssl_ca_generation = katello_config_value('skip_ssl_ca_generation')
-
   # SSL settings
   $ssl_ca_pw = katello_config_value('ssl_ca_password')
   $ssl_ca_country = katello_config_value('ssl_ca_country')
@@ -15,6 +13,9 @@ class certs::params {
   $ssl_cert_expiration = katello_config_value('ssl_cert_expiration')
 
   $ssl_ca_password_file = katello_config_value('ssl_ca_password_file')
+  $candlepin_ca_password_file = katello_config_value('candlepin_ca_password_file')
   $keystore_password_file = katello_config_value('keystore_password_file')
   $nss_db_password_file = katello_config_value('nss_db_password_file')
+  $nss_db_dir = katello_config_value('nss_db_dir')
+  $ssl_pk12_password_file = katello_config_value('ssl_pk12_password_file')
 }

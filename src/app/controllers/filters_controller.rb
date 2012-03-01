@@ -77,10 +77,10 @@ class FiltersController < ApplicationController
       to_ret = @filter.description
     end
     @filter.save!
-    notice _("Package Filter '#{@filter.name}' has been updated.")
+    notice _("Package Filter '%s' has been updated.") % @filter.name
 
     if not search_validate(Filter, @filter.id, params[:search]) 
-      notice _("'#{@filter["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+      notice _("'%s' no longer matches the current search criteria.") % @filter["name"], { :level => :message, :synchronous_request => true }
     end
 
     render :text=>to_ret
@@ -101,17 +101,17 @@ class FiltersController < ApplicationController
 
   def create
     @filter = Filter.create!(params[:filter].merge({:organization_id=>current_organization.id}))
-    notice N_("Filter #{@filter.name} created successfully.")
-    if !search_validate(Filter, @filter.id, params[:search]) 
+    notice N_("Filter %s created successfully.") % @filter.name
+    if !search_validate(Filter, @filter.id, params[:search])
 
-      notice _("'#{@filter.name}' did not meet the current search criteria and is not being shown."),
+      notice _("'%s' did not meet the current search criteria and is not being shown.") % @filter.name,
              { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     else
       render :partial=>"common/list_item", :locals=>{:item=>@filter, :initial_action=>"packages", :accessor=>"id",
                                                      :columns=>['name'], :name=>controller_display_name}
     end
-    
+
   rescue Exception=> e
     notice e, {:level => :error}
     render :text=>e, :status=>500
@@ -124,26 +124,46 @@ class FiltersController < ApplicationController
   end
 
   def update_products
+    if params[:products]
+      existing_editable = @filter.products.editable(current_organization)
 
-    existing_readable = @filter.products.readable(current_organization)
-    new_readable = Product.readable(current_organization).where(:id=>params[:products])
+      new_editable = params[:products].empty? ? []:Product.editable(current_organization).where(:id=>params[:products])
 
-    
-    #remove unneeded ones
-    (existing_readable - new_readable).each{|prod|
-      prod = Product.find(prod.id) #reload readonly obj
-      prod.filters.delete(@filter)
-      prod.save!
-    }
-    #add new ones
-    (new_readable - existing_readable).each{|prod|
-      prod = Product.find(prod.id) #reload readonly obj
-      prod.filters << @filter
-      prod.save!
-    }
+      #remove unneeded ones
+      (existing_editable - new_editable).each{|prod|
+        prod = Product.find(prod.id) #reload readonly obj
+        prod.filters.delete(@filter)
+        prod.save!
+      }
+      #add new ones
+      (new_editable - existing_editable).each{|prod|
+        prod = Product.find(prod.id) #reload readonly obj
+        prod.filters << @filter
+        prod.save!
+      }
+    end
+
+    if params[:repos]
+      #deal with the repos now
+      existing_editable_repos = @filter.repositories.editable_in_library(current_organization)
+      new_editable_repos = params[:repos].empty? ? []:Repository.editable_in_library(current_organization).where(:id=>params[:repos].values.flatten)
+      #remove unneeded ones
+      (existing_editable_repos - new_editable_repos).each{|repo|
+        repo = Repository.find(repo.id) #reload readonly obj
+        repo.filters.delete(@filter)
+        repo.save!
+      }
+      #add new ones
+      (new_editable_repos - existing_editable_repos).each{|repo|
+        repo = Repository.find(repo.id) #reload readonly obj
+        repo.filters << @filter
+        repo.save!
+      }
+    end
     @filter.save!
 
-    notice _("Sucessfully updated '#{@filter.name}' package filter.")
+
+    notice _("Sucessfully updated '%s' package filter.") % @filter.name
     render :text=>''
   rescue Exception => e
     notice e, {:level => :error}
@@ -175,7 +195,7 @@ class FiltersController < ApplicationController
 
   def destroy
     @filter.destroy
-    notice _("Package Filter #{@filter.name} deleted.")
+    notice _("Package Filter %s deleted.") % @filter.name
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
   rescue Exception => e
     notice e, {:level => :error}

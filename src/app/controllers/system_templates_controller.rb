@@ -119,19 +119,19 @@ class SystemTemplatesController < ApplicationController
           @packages << pkg.name
         }
       }
-    
-    offset = params[:offset] || 0
+
+    offset = params[:offset].to_i || 0
     @packages.sort!.uniq!
+    total = @packages.length
+    options = {:total_count=>@packages.length}
+    @packages = @packages[offset..(offset+current_user.page_size-1)]
 
-    if offset.to_i >  0
-      render :text=>"" and return if @packages.empty?
-
-      options = {:list_partial => 'product_packages_items'}
-      render_panel_items(@packages, options, nil, offset)
+    if offset >  0
+      options[:list_partial]  = 'product_packages_items'
     else
-      @packages = @packages[0..current_user.page_size]
-      render :partial=>"product_packages", :locals=>{:collection => @packages}
+      options[:list_partial] = 'product_packages'
     end
+    render_panel_results(@packages, total, options)
   end
 
   def product_comps
@@ -192,7 +192,7 @@ class SystemTemplatesController < ApplicationController
     distro_check @template
 
     @template.save!
-    notice _("Template #{@template.name} has been updated successfully")
+    notice _("Template %s has been updated successfully") % @template.name
     object()
   end
 
@@ -204,7 +204,7 @@ class SystemTemplatesController < ApplicationController
       result = @template.description = attrs[:description]
     end
     @template.save!
-    notice _("Template #{@template.name} updated successfully.")
+    notice _("Template %s updated successfully.") % @template.name
     render :text=>result
 
   rescue Exception => e
@@ -214,7 +214,7 @@ class SystemTemplatesController < ApplicationController
 
   def destroy
       @template.destroy
-      notice _("Template '#{@template.name}' was deleted.")
+      notice _("Template '%s' was deleted.") % @template.name
       render :partial => "common/list_remove", :locals => {:id => @template.id, :name=>"details"}
   rescue Exception => e
       notice e.to_s, {:level => :error}
@@ -256,7 +256,7 @@ class SystemTemplatesController < ApplicationController
     obj_params[:environment_id] = current_organization.library.id
 
     @template = SystemTemplate.create!(obj_params)
-    notice _("System Template '#{@template.name}' was created.")
+    notice _("System Template '%s' was created.") % @template.name
     render :json=>{:name=>@template.name, :id=>@template.id}
 
   rescue Exception => e
@@ -282,9 +282,9 @@ class SystemTemplatesController < ApplicationController
       }
       #not found
       template.distributions = []
-      notice _("Template '#{@template.name}' has been updated successfully, however you have removed either "+
+      notice _("Template '%s' has been updated successfully, however you have removed either "+
                    "a product or repository that contained the selected distribution for this template.  " +
-                   "Please select another distribution to ensure a working system template."), :level=>:warning
+                   "Please select another distribution to ensure a working system template.") % @template.name, :level=>:warning
     end
   end
 

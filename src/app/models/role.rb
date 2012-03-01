@@ -43,7 +43,6 @@ class Role < ActiveRecord::Base
 
   # scope to facilitate retrieving roles that are 'non-self' roles... group() so that unique roles are returned
   scope :non_self, joins("left outer join users on users.own_role_id = roles.id").where('users.own_role_id'=>nil).order('roles.name')
-
   validates :name, :uniqueness => true, :katello_name_format => true, :presence => true
   validates :description, :katello_description_format => true
   validates_with LockValidator, :on => :update
@@ -122,7 +121,10 @@ class Role < ActiveRecord::Base
       :description => 'Super administrator with all access.')
     raise "Unable to create super-admin role: #{format_errors superadmin_role}" if superadmin_role.nil? or superadmin_role.errors.size > 0
 
-    superadmin_role_perm = Permission.find_or_create_by_name(:name=> "super-admin-perm", :role => superadmin_role, :all_types => true)
+    superadmin_role_perm = Permission.find_or_create_by_name(
+      :name=> "super-admin-perm",
+      :description => 'Super Admin permission',
+      :role => superadmin_role, :all_types => true)
     raise "Unable to create super-admin role permission: #{format_errors superadmin_role_perm}" if superadmin_role_perm.nil? or superadmin_role_perm.errors.size > 0
 
     superadmin_role.update_attributes(:locked => true)
@@ -181,6 +183,37 @@ class Role < ActiveRecord::Base
     [:create]
   end
 
+  # Used when displaying the localized version of locked roles
+  def i18n_name
+    if locked
+      case name
+        when "Administrator"
+          _("Administrator")
+        when "Read Everything"
+          _("Read Everything")
+        else
+          name
+      end
+    else
+      name
+    end
+  end
+
+  def i18n_description
+    if locked
+      case description
+        when "Super administrator with all access."
+          _("Super administrator with all access.")
+        when "Read only role."
+          _("Read only role.")
+        else
+          description
+      end
+    else
+      description
+    end
+  end
+
   private
   READ_PERM_VERBS = [:read,:update, :create,:delete]
 
@@ -199,5 +232,4 @@ class Role < ActiveRecord::Base
       raise  ActiveRecord::RecordInvalid, self
     end
   end
-
 end

@@ -110,7 +110,8 @@ module ApplicationHelper
              :search_env =>options[:search_env],
              :initial_action=>options[:initial_action] || :edit,
              :actions=>options[:actions],
-             :search_class=>options[:search_class]}
+             :search_class=>options[:search_class],
+             :disable_create=>options[:disable_create] || false}
   end
 
   def one_panel(panel_id, collection, options)
@@ -252,8 +253,8 @@ module ApplicationHelper
       options[:as] = id ? field.to_s.upcase : field.to_s.humanize
     end
 
-    ascend  = "#{field} ASC"
-    descend = "#{field} DESC"
+    ascend  = "#{field}|ASC"
+    descend = "#{field}|DESC"
 
     ascending = params[:order] == ascend
     new_sort = ascending ? descend : ascend

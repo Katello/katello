@@ -6,7 +6,7 @@
 
 # the prefix added as part of the base path for accessing
 # the katello web application (e.g. http://0.0.0.0/katello)
-KATELLO_PREFIX=/<%= scope.lookupvar("katello::params::deployment") %>
+KATELLO_PREFIX=/<%= scope.lookupvar("katello::params::deployment_url") %>
 
 # the port which katello web server is running at
 # note that if the katello user is not root, it has to be a > 1024

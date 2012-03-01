@@ -61,7 +61,7 @@ KT.menu = (function(){
           $(this).trigger("open");
         },
         out: function(){
-          $(this).trigger("close");
+          $(this).trigger("close.menu");
         }
       };
 
@@ -84,7 +84,7 @@ KT.menu = (function(){
           }).bind("hovering", function(){
             currentSubnav.show();
           })
-          .bind("close", function(){
+          .bind("close.menu", function(){
             //take away tab highlight
             $(this).removeClass('selected');
             activeTab.addClass('selected');

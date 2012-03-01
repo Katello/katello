@@ -13,7 +13,7 @@
 
 module BrandingHelper
   def project_name
-    _("Cloud Forms System Engine")
+    _("CloudForms System Engine")
   end
   
   def default_title

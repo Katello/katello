@@ -1382,7 +1382,7 @@ var templateLibrary = (function(){
                     '">' + i18n.remove + '</a>';
             }
             html += '<li class="clear">' + anchor;
-            html += '<div id="template-cs_' + changeset_id + '_' + id + '">' +
+            html += '<div id="simple_link template-cs_' + changeset_id + '_' + id + '">' +
                     '<span class="template-icon sort_attr" >' + name + '</span>' +
                     '</div></li>';
 
@@ -1409,11 +1409,11 @@ var templateLibrary = (function(){
                     '" data-product_id="[' + product_id +
                     ']">' + i18n.remove + '</a>';
             }
-            html += '<li class="clear ' + slide_link + '">' + anchor + '<div class="';
+            html += '<li class="clear ' + slide_link + '">' + anchor + '<div class="simple_link ';
             html += (slide_link === 'slide_link') ? 'link_details' : '';
             html += '" id="product-cs_' + changeset_id + '_' + product_id + '">' +
                     '<span class="' + provider + '-product-sprite"></span>' +
-                    '<span class="product-icon sort_attr" >' + name + '</span>' +
+                    '<span class="sort_attr" >' + name + '</span>' +
                     '</div></li>';
 
             return html;
@@ -1607,7 +1607,8 @@ $(document).ready(function() {
                                         default_tab     :  "content",
                                         bbq_tag         :  "content",
                                         base_icon       :  'home_img',
-                                        tab_change_cb   :  promotion_page.set_current_product
+                                        tab_change_cb   :  promotion_page.set_current_product,
+                                        expand_cb       :  promotion_page.reset_page //need to reset page during the extended scroll
                                     });
     contentTree.enableSearch();
     promotion_page.set_content_tree(contentTree);
@@ -1627,8 +1628,8 @@ $(document).ready(function() {
                                         }
                                     }));
 
-    //need to reset page during the extended scroll
-    KT.panel.list.set_extended_cb(promotion_page.reset_page);
+
+    $(window).trigger('hashchange');
 
     //when loading the new panel item, if its new, we need to add a form submit handler
     KT.panel.set_expand_cb(function(id) {
