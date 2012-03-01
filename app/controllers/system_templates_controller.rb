@@ -170,10 +170,11 @@ class SystemTemplatesController < ApplicationController
       @template.packages << SystemTemplatePackage.new(:system_template=>@template, :package_name=>pkg[:name])
     }
 
-    @template.products = []
-    products.each{|prod|
-      @template.products << Product.readable(current_organization).find(prod[:id])
-    }
+    #bz 796239
+    #@template.products = []
+    #products.each{|prod|
+    #  @template.products << Product.readable(current_organization).find(prod[:id])
+    #}
 
     @template.repositories = []
     repos.each{|repo|
