@@ -2,11 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
-"POT-Creation-Date: 2012-01-26 12:16-0500\n"
+"POT-Creation-Date: 2012-02-28 14:42-0500\n"
 "PO-Revision-Date: 2011-01-06 17:37-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -176,6 +176,16 @@ msgstr "%s (%s 기타 패키지) 업데이트 실패 "
 msgid "%s (%s other packages) update timed out"
 msgstr "%s (%s 기타 패키지) 업데이트 시간 초과 "
 
+#: app/controllers/systems_controller.rb:265
+#, fuzzy
+msgid "%s Removed Successfully"
+msgstr "성공적으로 생성되었습니다. "
+
+#: app/controllers/systems_controller.rb:253
+#, fuzzy
+msgid "%s Systems Removed Successfully"
+msgstr "성공적으로 생성되었습니다. "
+
 #: app/views/layouts/_footer.haml:8
 msgid "%s Version: %s"
 msgstr "%s 버전: %s"
@@ -301,15 +311,58 @@ msgstr "%s 패키지 업데이트 실패 "
 msgid "%s package update timed out"
 msgstr "%s 패키지 업데이트 시간 초과 "
 
-#: app/controllers/providers_controller.rb:76
-msgid "%{newline}If you are uploading an older manifest, you can use the Force checkbox to overwrite existing data."
-msgstr "%{newline} 기존 매니페스트를 업그레이드하려는 경우, 강제 체크박스를 사용하여 기존 데이터를 덮어쓰기할 수 있습니다. "
+#: app/controllers/sync_management_controller.rb:238
+#, fuzzy
+msgid "%s product was synced successfully"
+msgstr "사용자가 성공적으로 업데이트되었습니다. "
 
-#: app/controllers/providers_controller.rb:75
-#: app/controllers/providers_controller.rb:99
-#: app/controllers/providers_controller.rb:113 app/models/changeset.rb:329
+#: app/controllers/sync_management_controller.rb:234
+msgid "%s product was synced successfully with errors. See log for details"
+msgstr ""
+
+#: app/controllers/providers_controller.rb:82
+msgid ""
+"%{newline}If you are uploading an older manifest, you can use the Force "
+"checkbox to overwrite existing data."
+msgstr ""
+"%{newline} 기존 매니페스트를 업그레이드하려는 경우, 강제 체크박스를 사용하여 "
+"기존 데이터를 덮어쓰기할 수 있습니다. "
+
+#: app/controllers/providers_controller.rb:79
+#: app/controllers/providers_controller.rb:106
+#: app/controllers/providers_controller.rb:120
 msgid "%{newline}Reason: %{reason}"
 msgstr "%{newline}이유: %{reason}"
+
+#: app/controllers/repositories_controller.rb:125
+msgid "%{repo} (Product: %{product})"
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:97
+#: app/controllers/organizations_controller.rb:109
+#: app/controllers/activation_keys_controller.rb:180
+#: app/controllers/systems_controller.rb:100
+#: app/controllers/sync_plans_controller.rb:145
+#: app/controllers/providers_controller.rb:162
+#: app/controllers/filters_controller.rb:107
+#: app/controllers/users_controller.rb:127
+#: app/controllers/roles_controller.rb:94
+msgid "'%s' did not meet the current search criteria and is not being shown."
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:119
+#: app/controllers/organizations_controller.rb:130
+#: app/controllers/activation_keys_controller.rb:212
+#: app/controllers/systems_controller.rb:220
+#: app/controllers/sync_plans_controller.rb:89
+#: app/controllers/providers_controller.rb:207
+#: app/controllers/filters_controller.rb:83
+#: app/controllers/users_controller.rb:150
+#: app/controllers/users_controller.rb:275
+#: app/controllers/roles_controller.rb:120
+#, fuzzy
+msgid "'%s' no longer matches the current search criteria."
+msgstr "검색 조건에 일치하는 이벤트가 없음. "
 
 #: app/views/filters/index.html.haml:15
 msgid "(%X of %Y repositories selected)"
@@ -328,8 +381,8 @@ msgstr "(%X 로딩)"
 msgid "(Loaded %X of %Y Total)"
 msgstr "(총 %Y 중 %X 로딩) "
 
-#: app/views/system_packages/_packages.html.haml:86
 #: app/views/filters/_products.html.haml:33
+#: app/views/system_packages/_packages.html.haml:86
 msgid "+ Add"
 msgstr "+ 추가 "
 
@@ -347,7 +400,7 @@ msgstr "+새 "
 msgid "+ New Promotion Changeset"
 msgstr "+ 새 승격 변경 집합 "
 
-#: app/views/system_templates/index.html.haml:104
+#: app/views/system_templates/index.html.haml:106
 msgid "+ New Template"
 msgstr "+새 템플릿 "
 
@@ -372,35 +425,66 @@ msgid "<< Previous"
 msgstr "<< 이전 "
 
 #: app/views/user_mailer/logins.text.haml:1
-msgid "A request has been received by Katello server '%s' to retrieve the logins for email '%s'. The following is a list of those logins:"
-msgstr "Katello 서버 '%s'는 요청을 수신하여 이메일 '%s'에 대한 로그인 정보를 검색했습니다. 다음은 로그인 정보 목록입니다: "
+msgid ""
+"A request has been received by Katello server '%s' to retrieve the logins "
+"for email '%s'. The following is a list of those logins:"
+msgstr ""
+"Katello 서버 '%s'는 요청을 수신하여 이메일 '%s'에 대한 로그인 정보를 검색했습"
+"니다. 다음은 로그인 정보 목록입니다: "
 
 #: app/views/user_mailer/password_reset.text.haml:1
-msgid "A request has been received to reset the Katello password for user '%s'.  In order to reset this password, click the URL below."
-msgstr "사용자 '%s'의 Katello 암호 재설정 요청을 받았습니다. 암호를 재설정하려면 아래의 URL을 클릭하십시오. "
+msgid ""
+"A request has been received to reset the Katello password for user '%s'.  In "
+"order to reset this password, click the URL below."
+msgstr ""
+"사용자 '%s'의 Katello 암호 재설정 요청을 받았습니다. 암호를 재설정하려면 아래"
+"의 URL을 클릭하십시오. "
 
-#: app/controllers/activation_keys_controller.rb:272
-#: app/models/resource_type.rb:94 lib/navigation/systems.rb:50
+#: app/controllers/activation_keys_controller.rb:264
+#: app/models/resource_type.rb:94 lib/navigation/systems.rb:51
 msgid "Activation Keys"
 msgstr "활성키 "
 
 #: app/views/activation_keys/index.html.haml:4
-msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system, system template to apply to the system...etc."
-msgstr "활성키는 시스템 등록 시 시스템에 적용할 수 있는 일련의 특징을 제공합니다. 예를 들어 시스템에 할당할 디폴트 환경, 시스템에 할당할 서브스크립션, 시스템에 적용할 시스템 템플릿 등이 포함됩니다. "
+msgid ""
+"Activation Keys provide a set of characteristics that may be applied to a "
+"system during system registration.  This includes things such as, default "
+"environment to assign to the system, subscriptions to allocate to the "
+"system, system template to apply to the system...etc."
+msgstr ""
+"활성키는 시스템 등록 시 시스템에 적용할 수 있는 일련의 특징을 제공합니다. 예"
+"를 들어 시스템에 할당할 디폴트 환경, 시스템에 할당할 서브스크립션, 시스템에 "
+"적용할 시스템 템플릿 등이 포함됩니다. "
 
 #: app/views/activation_keys/index.html.haml:9
-msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system...etc."
-msgstr "활성키는 시스템 등록 시 시스템에 적용할 수 있는 일련의 특징을 제공합니다. 예를 들어, 시스템에 할당할 디폴트 환경, 시스템에 할당할 서브스크립션 등이 포함됩니다. "
+msgid ""
+"Activation Keys provide a set of characteristics that may be applied to a "
+"system during system registration.  This includes things such as, default "
+"environment to assign to the system, subscriptions to allocate to the "
+"system...etc."
+msgstr ""
+"활성키는 시스템 등록 시 시스템에 적용할 수 있는 일련의 특징을 제공합니다. 예"
+"를 들어, 시스템에 할당할 디폴트 환경, 시스템에 할당할 서브스크립션 등이 포함"
+"됩니다. "
 
-#: app/views/roles/index.html.haml:8 app/views/filters/_packages.html.haml:24
+#: app/controllers/activation_keys_controller.rb:175
+msgid "Activation key '%s' was created."
+msgstr ""
+
+#: app/controllers/activation_keys_controller.rb:203
+msgid "Activation key '%s' was updated."
+msgstr ""
+
+#: app/views/filters/_packages.html.haml:24
 #: app/views/common/_common_i18n.html.haml:3
-#: app/views/system_templates/index.html.haml:5
-#: app/views/system_templates/_product_repos.html.haml:6
-#: app/views/system_templates/_products.html.haml:9
-#: app/views/system_templates/_product_packages_items.html.haml:3
-#: app/views/system_templates/_repositories.html.haml:8
-#: app/views/system_templates/_product_comps.html.haml:6
 #: app/views/promotions/show.html.haml:7
+#: app/views/system_templates/_product_packages_items.html.haml:3
+#: app/views/system_templates/_products.html.haml:9
+#: app/views/system_templates/_product_repos.html.haml:7
+#: app/views/system_templates/_product_comps.html.haml:6
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/_repositories.html.haml:8
+#: app/views/roles/index.html.haml:8
 msgid "Add"
 msgstr "추가 "
 
@@ -452,8 +536,8 @@ msgstr "패키지 시간 초과 추가 "
 msgid "Add Packages"
 msgstr "패키지 추가 "
 
-#: app/views/roles/index.html.haml:8 app/views/roles/_permissions.html.haml:6
-#: app/views/roles/_edit.html.haml:94
+#: app/views/roles/_edit.html.haml:94 app/views/roles/index.html.haml:8
+#: app/views/roles/_permissions.html.haml:6
 msgid "Add Permission"
 msgstr "권한 추가 "
 
@@ -498,19 +582,19 @@ msgstr "추가 중..."
 msgid "Administer Activation Keys"
 msgstr "관리자 활성키 "
 
-#: app/models/kt_environment.rb:332
+#: app/models/kt_environment.rb:344
 msgid "Administer Changesets in Environment"
 msgstr "환경에 있는 관리자 변경 집합 "
 
-#: app/models/organization.rb:134
+#: app/models/organization.rb:135
 msgid "Administer GPG Keys"
 msgstr "관리자 GPG 키 "
 
-#: app/models/organization.rb:137
+#: app/models/organization.rb:138
 msgid "Administer Organization"
 msgstr "관리자 조직 "
 
-#: app/models/filter.rb:64
+#: app/models/filter.rb:65
 msgid "Administer Package Filters"
 msgstr "관리자 패키지 필터 "
 
@@ -518,7 +602,7 @@ msgstr "관리자 패키지 필터 "
 msgid "Administer Providers"
 msgstr "관리자 공급자 "
 
-#: app/models/role.rb:146
+#: app/models/role.rb:171
 msgid "Administer Roles"
 msgstr "관리자 역할 "
 
@@ -526,12 +610,17 @@ msgstr "관리자 역할 "
 msgid "Administer System Templates"
 msgstr "관리자 시스템 템플릿 "
 
-#: app/models/user.rb:351
+#: app/models/user.rb:354
 msgid "Administer Users"
 msgstr "관리자 사용자 "
 
 #: app/views/operations/index.html.haml:2 lib/navigation/administration.rb:45
 msgid "Administration"
+msgstr "관리 "
+
+#: app/models/role.rb:191
+#, fuzzy
+msgid "Administrator"
 msgstr "관리 "
 
 #: app/views/errata/_show.html.haml:12
@@ -542,12 +631,12 @@ msgstr "권고 "
 msgid "Alert"
 msgstr "경고 "
 
-#: app/helpers/breadcrumb_helper.rb:209 app/models/resource_type.rb:99
+#: app/helpers/breadcrumb_helper.rb:211 app/models/resource_type.rb:99
 #: app/views/roles/index.html.haml:8 app/views/roles/_permission.html.haml:23
 #: app/views/roles/_permission.html.haml:33
 #: app/views/roles/_closed_permission.html.haml:11
 #: app/views/roles/_closed_permission.html.haml:20
-#: lib/navigation/systems.rb:33
+#: lib/navigation/systems.rb:32
 msgid "All"
 msgstr "전체 "
 
@@ -555,27 +644,51 @@ msgstr "전체 "
 msgid "All Repositories"
 msgstr "전체 리포지터리 "
 
-#: app/views/promotions/show.html.haml:153
-msgid "An environment does not exist to promote content to.  If you would like to manage promotion changesets and content, please create a new environment."
-msgstr "컨텐츠를 승격하기 위한 환경을 존재하지 않습니다. 승격 변경 집합과 컨텐츠를 관리하려면 새 환경을 생성하십시오. "
+#: app/models/glue/candlepin/owner.rb:73
+msgid "All Systems for owner %s in candlepin"
+msgstr ""
 
-#: app/views/system_templates/index.html.haml:115
-msgid "An error has occured when communicating with the server, please refresh the page to retrieve the current System Template"
-msgstr "서버와 통신할 때 오류가 발생했습니다. 현재 시스템 템플릿을 검색하기 위해 페이지를 새로 고침하십시오.  "
+#: app/models/glue/candlepin/owner.rb:52
+msgid "All environments for owner %s in candlepin"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:63
+msgid "All providers for owner %s in candlepin"
+msgstr ""
+
+#: app/controllers/products_controller.rb:76
+msgid "All repository GPG keys for Product '%s' were updated."
+msgstr ""
+
+#: app/views/promotions/show.html.haml:153
+msgid ""
+"An environment does not exist to promote content to.  If you would like to "
+"manage promotion changesets and content, please create a new environment."
+msgstr ""
+"컨텐츠를 승격하기 위한 환경을 존재하지 않습니다. 승격 변경 집합과 컨텐츠를 관"
+"리하려면 새 환경을 생성하십시오. "
+
+#: app/views/system_templates/index.html.haml:117
+msgid ""
+"An error has occured when communicating with the server, please refresh the "
+"page to retrieve the current System Template"
+msgstr ""
+"서버와 통신할 때 오류가 발생했습니다. 현재 시스템 템플릿을 검색하기 위해 페이"
+"지를 새로 고침하십시오.  "
 
 #: app/views/promotions/show.html.haml:69
-msgid "An error has occured when communicating with the server, please refresh the page to retrieve the current promotion changeset."
-msgstr "서버와 통신할 때 오류가 발생했습니다. 현재 승격 변경 집합을 검색하려면 페이지를 새로 고침하십시오. "
-
-#: app/views/organizations/_new.html.haml:22
-msgid "Application Life Cycle Management"
-msgstr "애플리케이션 라이프 사이클 관리 "
+msgid ""
+"An error has occured when communicating with the server, please refresh the "
+"page to retrieve the current promotion changeset."
+msgstr ""
+"서버와 통신할 때 오류가 발생했습니다. 현재 승격 변경 집합을 검색하려면 페이지"
+"를 새로 고침하십시오. "
 
 #: app/views/roles/index.html.haml:8
 msgid "Applied"
 msgstr "적용됨 "
 
-#: lib/navigation/systems.rb:119
+#: lib/navigation/systems.rb:120
 msgid "Applied Subscriptions"
 msgstr "적용된 서브스크립션 "
 
@@ -583,8 +696,8 @@ msgstr "적용된 서브스크립션 "
 msgid "Apply Selected Plan to Selected Products"
 msgstr "선택한 계획을 선택한 제품에 적용 "
 
-#: app/views/systems/_edit.html.haml:40
 #: app/views/providers/redhat/_subscription_details.html.haml:8
+#: app/views/systems/_edit.html.haml:40
 #: app/views/subscriptions/index.html.haml:17
 msgid "Arch"
 msgstr "아키텍처 "
@@ -635,7 +748,7 @@ msgstr "정말로 이 역할을 삭제하시겠습니까? "
 msgid "Are you sure you want to remove this system?"
 msgstr "정말로 이 시스템을 삭제하시겠습니까? "
 
-#: app/views/system_templates/index.html.haml:83
+#: app/views/system_templates/index.html.haml:85
 msgid "Are you sure you want to remove this template?"
 msgstr "정말로 이 템플릿을 삭제하시겠습니까? "
 
@@ -643,16 +756,16 @@ msgstr "정말로 이 템플릿을 삭제하시겠습니까? "
 msgid "Are you sure you want to remove this user?"
 msgstr "정말로 이 사용자를 삭제하시겠습니까? "
 
-#: app/views/roles/_self_role_edit.html.haml:6
-#: app/views/sync_plans/_edit.html.haml:11
-#: app/views/environments/_edit.html.haml:9
-#: app/views/notices/show.html.haml:16
 #: app/views/common/_common_i18n.html.haml:3
-#: app/views/activation_keys/_available_subscriptions.html.haml:7
-#: app/views/activation_keys/_edit.html.haml:15
-#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 #: app/views/promotions/show.html.haml:128
 #: app/views/gpg_keys/_edit.html.haml:8
+#: app/views/sync_plans/_edit.html.haml:11
+#: app/views/activation_keys/_applied_subscriptions.html.haml:7
+#: app/views/activation_keys/_edit.html.haml:15
+#: app/views/activation_keys/_available_subscriptions.html.haml:7
+#: app/views/environments/_edit.html.haml:9
+#: app/views/roles/_self_role_edit.html.haml:6
+#: app/views/notices/show.html.haml:16
 msgid "Are you sure?"
 msgstr "정말로 그렇게 하시겠습니까? "
 
@@ -660,36 +773,37 @@ msgstr "정말로 그렇게 하시겠습니까? "
 msgid "Associated Bugs"
 msgstr "관련 버그 "
 
-#: app/controllers/api/systems_controller.rb:282
+#: app/controllers/api/systems_controller.rb:314
 msgid "At least one activation key must be provided"
 msgstr "최소 하나의 활성키가 필요합니다. "
 
-#: app/models/organization.rb:74
+#: app/models/organization.rb:75
 msgid "At least one organization must exist."
 msgstr "최소 하나의 조직이 존재해야 합니다. "
 
 #: app/models/system_template.rb:129
 msgid "At least one product or repository must be present to export a TDL"
-msgstr "TDL을 내보내기하려면 최소 하나의 제품이나 리포지터리가 존재해야 합니다. "
+msgstr ""
+"TDL을 내보내기하려면 최소 하나의 제품이나 리포지터리가 존재해야 합니다. "
 
 #: app/views/systems/_subs.html.haml:9
 msgid "Auto-heal"
 msgstr "자동 복구 "
 
-#: app/views/dashboard/index.html.haml:7
+#: app/views/dashboard/index.html.haml:10
 msgid "Available Errata"
 msgstr "사용 가능한 에라타 "
 
-#: app/views/systems/_subs.html.haml:59 lib/navigation/systems.rb:125
+#: app/views/systems/_subs.html.haml:58 lib/navigation/systems.rb:126
 msgid "Available Subscriptions"
 msgstr "사용 가능한 서브스크립션 "
 
-#: app/views/common/404.html.haml:7 app/views/common/500.html.haml:15
-#: app/views/common/403.html.haml:8
+#: app/views/common/403.html.haml:8 app/views/common/500.html.haml:15
+#: app/views/common/404.html.haml:7
 msgid "Back"
 msgstr "뒤로 "
 
-#: app/views/providers/redhat/_subscription_details.html.haml:10
+#: app/views/providers/redhat/_subscription_details.html.haml:9
 #: app/views/subscriptions/index.html.haml:19
 msgid "Begins"
 msgstr "시작 "
@@ -718,15 +832,15 @@ msgstr "CDN 로딩 중 오류 발생: %s을 찾을 수 없음 "
 msgid "Can't update Library environment"
 msgstr "라이브러리 환경을 업데이트할 수 없음 "
 
-#: app/views/roles/_permission.html.haml:42
-#: app/views/systems/_actions.html.haml:12
-#: app/views/common/_edit_i18n.html.haml:4
-#: app/views/activation_keys/_edit.html.haml:73
 #: app/views/sync_management/index.html.haml:5
+#: app/views/common/_edit_i18n.html.haml:4
+#: app/views/systems/_actions.html.haml:12
+#: app/views/activation_keys/_edit.html.haml:73
+#: app/views/roles/_permission.html.haml:42
 msgid "Cancel"
 msgstr "취소 "
 
-#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:6
 msgid "Cancel Add"
 msgstr "추가 취소 "
 
@@ -735,14 +849,15 @@ msgid "Cancel Review"
 msgstr "확인 취소 "
 
 #: app/controllers/sync_management_controller.rb:26
-msgid "Canceled."
+#, fuzzy
+msgid "Cancelled."
 msgstr "취소됨. "
 
 #: app/models/system_task.rb:115
 msgid "Candlepin Event"
 msgstr "Candlepin 이벤트 "
 
-#: app/models/permission.rb:38 app/models/permission.rb:166
+#: app/models/permission.rb:38 app/models/permission.rb:218
 msgid "Cannot add/remove or change permissions related to a locked role."
 msgstr "잠금 역할과 관련된 권한을 추가/제거 또는 변경할 수 없습니다. "
 
@@ -754,17 +869,33 @@ msgstr "잠금 역할의 이름이나 설명을 변경할 수 없습니다. "
 msgid "Cannot create activation keys in Library environment "
 msgstr "라이브러리 환경에서 활성키를 생성할 수 없음 "
 
-#: app/models/user.rb:105
+#: app/models/user.rb:108
 msgid "Cannot delete currently logged user"
 msgstr "현재 로그인된 사용자를 삭제할 수 없음 "
+
+#: app/models/role.rb:229 app/models/user.rb:577
+msgid ""
+"Cannot dissociate user '%s' from '%s' role. Need at least one user in the '%"
+"s' role."
+msgstr ""
 
 #: app/controllers/api/templates_controller.rb:107
 msgid "Cannot export templates for the Library environment."
 msgstr "라이브러리 환경에 대해 템플릿을 내보내기할 수 없음 "
 
-#: app/controllers/system_templates_controller.rb:285
+#: app/controllers/system_templates_controller.rb:297
 msgid "Cannot modify a template that is another environment"
 msgstr "다른 환경에 있는 템플릿을 수정할 수 없음 "
+
+#: app/models/changeset.rb:118
+msgid ""
+"Cannot promote the changeset '%s' while another changeset (%s) is being "
+"promoted."
+msgstr ""
+
+#: app/models/changeset.rb:116
+msgid "Cannot promote the changset '%s' because it is not in the review phase."
+msgstr ""
 
 #: app/models/system.rb:17
 msgid "Cannot register a system with 'Library' environment "
@@ -794,12 +925,8 @@ msgstr "암호 변경 "
 msgid "Change Password:"
 msgstr "암호 변경: "
 
-#: lib/navigation/content_management.rb:180
-msgid "Changelog"
-msgstr "로그 변경 "
-
-#: app/helpers/breadcrumb_helper.rb:29
 #: app/controllers/changesets_controller.rb:268
+#: app/helpers/breadcrumb_helper.rb:30
 msgid "Changesets"
 msgstr "변경 집합 "
 
@@ -838,18 +965,22 @@ msgid "Cleared"
 msgstr "삭제됨 "
 
 #: app/views/roles/index.html.haml:8
-msgid "Click Add or Remove next to a user name to apply or remove them from role."
-msgstr "역할에서 사용자 이름을 적용 또는 삭제하려면 이름 옆에 있는 추가 또는 삭제를 클릭합니다. "
+msgid ""
+"Click Add or Remove next to a user name to apply or remove them from role."
+msgstr ""
+"역할에서 사용자 이름을 적용 또는 삭제하려면 이름 옆에 있는 추가 또는 삭제를 "
+"클릭합니다. "
 
 #: app/views/roles/index.html.haml:8
 msgid "Click Add permission from the bar below to add a permission."
 msgstr "권한을 추가혀려면 하단 바에서 권한 추가를 클릭합니다. "
 
 #: app/views/roles/index.html.haml:8
-msgid "Click edit permission from the bar below to edit the current permission."
+msgid ""
+"Click edit permission from the bar below to edit the current permission."
 msgstr "현재 권한을 편집하려면 하단 바에서 권한 편집을 클릭합니다. "
 
-#: app/controllers/organizations_controller.rb:98
+#: app/controllers/organizations_controller.rb:104
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr "첫 번째 환경을 생성하려면 '환경 추가'를 클릭합니다. "
 
@@ -857,10 +988,10 @@ msgstr "첫 번째 환경을 생성하려면 '환경 추가'를 클릭합니다.
 msgid "Click to edit"
 msgstr "클릭하여 편집 "
 
-#: app/views/roles/_edit.html.haml:11
-#: app/views/layouts/_tupane_layout.html.haml:18
-#: app/views/layouts/_tupane_layout.html.haml:23
 #: app/views/common/_edit_i18n.html.haml:4
+#: app/views/layouts/_tupane_layout.html.haml:19
+#: app/views/layouts/_tupane_layout.html.haml:24
+#: app/views/roles/_edit.html.haml:11
 msgid "Close"
 msgstr "종료 "
 
@@ -872,7 +1003,7 @@ msgstr "권한 추가 종료 "
 msgid "Close Details"
 msgstr "상세 정보 종료 "
 
-#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:6
 msgid "Close Edit"
 msgstr "편집 종료 "
 
@@ -886,6 +1017,11 @@ msgstr "역할 상세 정보 종료 "
 
 #: app/views/common/_env_select.html.haml:11
 msgid "Collapse"
+msgstr "손상 "
+
+#: app/views/sync_management/index.html.haml:22
+#, fuzzy
+msgid "Collapse All"
 msgstr "손상 "
 
 #: app/views/password_resets/edit.html.haml:28
@@ -905,7 +1041,7 @@ msgstr "확인 "
 msgid "Consumed"
 msgstr "사용됨 "
 
-#: app/helpers/breadcrumb_helper.rb:121
+#: app/helpers/breadcrumb_helper.rb:122
 msgid "Content"
 msgstr "컨텐츠 "
 
@@ -926,8 +1062,8 @@ msgstr "컨텐츠 공급자 "
 msgid "Contents:"
 msgstr "컨텐츠: "
 
-#: app/views/systems/_subs.html.haml:19
 #: app/views/providers/redhat/_subscription_details.html.haml:6
+#: app/views/systems/_subs.html.haml:19
 #: app/views/subscriptions/index.html.haml:15
 msgid "Contract"
 msgstr "계약 "
@@ -936,7 +1072,7 @@ msgstr "계약 "
 msgid "Copyright &copy; "
 msgstr "저작권 &copy; "
 
-#: app/models/organization.rb:70
+#: app/models/organization.rb:71
 msgid "Could not delete organization '%s'."
 msgstr "조직 '%s'을 삭제할 수 없음. "
 
@@ -944,12 +1080,33 @@ msgstr "조직 '%s'을 삭제할 수 없음. "
 msgid "Couldn't find environment '%s'"
 msgstr "환경 '%s'을 찾을 수 없음 "
 
+#: app/controllers/environments_controller.rb:133
+#, fuzzy
+msgid "Couldn't find environment with ID=%d"
+msgstr "환경 '%s'을 찾을 수 없음 "
+
+#: app/controllers/environments_controller.rb:125
+#, fuzzy
+msgid "Couldn't find organization '%d'"
+msgstr "조직 '%s'을 삭제할 수 없음. "
+
+#: app/controllers/organizations_controller.rb:204
+#: app/controllers/organizations_controller.rb:215
+#, fuzzy
+msgid "Couldn't find organization with ID=%s"
+msgstr "조직 '%s'을 삭제할 수 없음. "
+
 #: app/controllers/api/activation_keys_controller.rb:68
 msgid "Couldn't find pool '%s' in activation_key '%s'"
 msgstr "activation_key '%s'에서 풀 '%s'을 찾을 수 없음 "
 
 #: app/controllers/api/providers_controller.rb:121
 msgid "Couldn't find provider '%s'"
+msgstr "공급자 '%s'을 찾을 수 없음 "
+
+#: app/controllers/repositories_controller.rb:159
+#, fuzzy
+msgid "Couldn't find repository with ID=%s"
 msgstr "공급자 '%s'을 찾을 수 없음 "
 
 #: app/controllers/api/sync_controller.rb:69
@@ -978,17 +1135,26 @@ msgstr "리포지터리 생성 "
 msgid "Created (UTC)"
 msgstr "생성됨 (UTC) "
 
+#: app/models/glue/candlepin/environment.rb:29
+msgid "Creating an environment in candlepin: %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:36
+msgid "Creating an owner in candlepin: %s"
+msgstr ""
+
 #: app/views/layouts/_allowed_orgs.html.haml:3
 msgid "Current Organization"
 msgstr "현재 조직 "
 
-#: app/views/dashboard/_subscriptions.haml:33
 #: app/views/subscriptions/index.html.haml:5
+#: app/views/dashboard/_subscriptions.haml:33
 msgid "Current Subscriptions"
 msgstr "현재 서브스크립션 "
 
 #: lib/navigation/content_management.rb:76
-msgid "Custom Content Provider"
+#, fuzzy
+msgid "Custom Content Providers"
 msgstr "사용자 정의 컨텐츠 공급자 "
 
 #: lib/navigation/dashboard.rb:17
@@ -1012,8 +1178,8 @@ msgstr "디버그 인증서 "
 msgid "Default Environment:"
 msgstr "디폴트 환경: "
 
-#: app/views/users/_edit_environment.html.haml:19
 #: app/views/users/_new.html.haml:50
+#: app/views/users/_edit_environment.html.haml:19
 msgid "Default Organization:"
 msgstr "디폴트 조직: "
 
@@ -1021,11 +1187,11 @@ msgstr "디폴트 조직: "
 msgid "Delete All"
 msgstr "모두 삭제 "
 
-#: app/models/organization.rb:138
+#: app/models/organization.rb:139
 msgid "Delete Organization"
 msgstr "조직 삭제 "
 
-#: app/models/filter.rb:66
+#: app/models/filter.rb:67
 msgid "Delete Package Filters"
 msgstr "패키지 필터 삭제 "
 
@@ -1033,15 +1199,15 @@ msgstr "패키지 필터 삭제 "
 msgid "Delete Providers"
 msgstr "공급자 삭제 "
 
-#: app/models/role.rb:149
+#: app/models/role.rb:174
 msgid "Delete Roles"
 msgstr "역할 삭제 "
 
-#: app/models/organization.rb:132
+#: app/models/organization.rb:133
 msgid "Delete Systems"
 msgstr "시스템 삭제 "
 
-#: app/models/user.rb:354
+#: app/models/user.rb:357
 msgid "Delete Users"
 msgstr "사용자 삭제 "
 
@@ -1049,8 +1215,16 @@ msgstr "사용자 삭제 "
 msgid "Deleted provider [ %s ]"
 msgstr "삭제된 공급자 [ %s ] "
 
-#: app/helpers/breadcrumb_helper.rb:61 app/views/promotions/show.html.haml:7
-#: lib/navigation/content_management.rb:174
+#: app/models/glue/candlepin/environment.rb:37
+msgid "Deleteing environment in candlepin: %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:44
+msgid "Deleting owner in candlepin: %s"
+msgstr ""
+
+#: app/helpers/breadcrumb_helper.rb:62 app/views/promotions/show.html.haml:7
+#: lib/navigation/content_management.rb:167
 msgid "Dependencies"
 msgstr "종속성 "
 
@@ -1058,42 +1232,43 @@ msgstr "종속성 "
 msgid "Dependency of "
 msgstr "종속성 "
 
-#: app/views/roles/_new.html.haml:14 app/views/packages/_show.html.haml:17
+#: app/views/filters/_new.html.haml:18 app/views/filters/_edit.html.haml:26
+#: app/views/packages/_show.html.haml:17
+#: app/views/providers/_edit.html.haml:28
+#: app/views/providers/_form.html.haml:12
 #: app/views/organizations/_new.html.haml:17
 #: app/views/organizations/_new.html.haml:30
 #: app/views/organizations/_edit.html.haml:22
-#: app/views/sync_plans/_form.html.haml:10
+#: app/views/changesets/_new.html.haml:15
 #: app/views/sync_plans/_edit.html.haml:20
-#: app/views/systems/_edit.html.haml:28 app/views/changesets/_new.html.haml:15
-#: app/views/environments/_new.html.haml:19
-#: app/views/environments/_edit.html.haml:22
-#: app/views/notices/show.html.haml:29 app/views/filters/_new.html.haml:18
-#: app/views/filters/_edit.html.haml:26
-#: app/views/system_templates/_new.html.haml:15
-#: app/views/system_templates/_edit.html.haml:7
-#: app/views/products/_new.html.haml:13 app/views/products/_edit.html.haml:21
+#: app/views/sync_plans/_form.html.haml:10
+#: app/views/systems/_edit.html.haml:28 app/views/errata/_show.html.haml:80
 #: app/views/activation_keys/_new.html.haml:15
 #: app/views/activation_keys/_edit.html.haml:42
-#: app/views/providers/_form.html.haml:12
-#: app/views/providers/_edit.html.haml:28 app/views/errata/_show.html.haml:80
+#: app/views/system_templates/_new.html.haml:15
+#: app/views/system_templates/_edit.html.haml:7
+#: app/views/environments/_new.html.haml:19
+#: app/views/environments/_edit.html.haml:22 app/views/roles/_new.html.haml:14
+#: app/views/notices/show.html.haml:29
 #: app/views/distributions/_show.html.haml:18
+#: app/views/products/_new.html.haml:13 app/views/products/_edit.html.haml:21
 msgid "Description"
 msgstr "설명 "
 
-#: app/views/roles/_edit.html.haml:40 app/views/roles/_edit.html.haml:76
-#: app/views/changesets/_edit.html.haml:16
 #: app/views/promotions/show.html.haml:122
+#: app/views/changesets/_edit.html.haml:16 app/views/roles/_edit.html.haml:40
+#: app/views/roles/_edit.html.haml:76 app/views/roles/index.html.haml:8
 msgid "Description:"
 msgstr "설명: "
 
-#: app/views/changesets/_edit.html.haml:5 lib/navigation/systems.rb:60
-#: lib/navigation/systems.rb:131 lib/navigation/administration.rb:35
-#: lib/navigation/organization.rb:51 lib/navigation/content_management.rb:35
-#: lib/navigation/content_management.rb:192
-#: lib/navigation/content_management.rb:209
-#: lib/navigation/content_management.rb:226
-#: lib/navigation/content_management.rb:249
-#: lib/navigation/content_management.rb:266
+#: app/views/changesets/_edit.html.haml:5 lib/navigation/administration.rb:35
+#: lib/navigation/systems.rb:61 lib/navigation/systems.rb:132
+#: lib/navigation/content_management.rb:35
+#: lib/navigation/content_management.rb:173
+#: lib/navigation/content_management.rb:190
+#: lib/navigation/content_management.rb:207
+#: lib/navigation/content_management.rb:230
+#: lib/navigation/content_management.rb:247 lib/navigation/organization.rb:51
 msgid "Details"
 msgstr "상세 정보 "
 
@@ -1114,10 +1289,20 @@ msgstr "비활성화된 도움말 정보가 다시 활성화되었습니다. "
 msgid "Display"
 msgstr "보기 "
 
-#: app/views/dashboard/_systems.html.haml:17
 #: app/views/promotions/show.html.haml:7
+#: app/views/dashboard/_systems.html.haml:17
 msgid "Distribution"
 msgstr "배포판 "
+
+#: app/models/changeset_distribution.rb:20
+#, fuzzy
+msgid "Distribution '%s' does not belong to the specified product!"
+msgstr "템플릿에서 배포판 '%s'을 찾을 수 없습니다. "
+
+#: app/models/system_template_distribution.rb:19
+#, fuzzy
+msgid "Distribution '%s' not found in the '%s' environment"
+msgstr "템플릿에서 배포판 '%s'을 찾을 수 없습니다. "
 
 #: app/models/system_template.rb:313
 msgid "Distribution '%s' not found in this template."
@@ -1127,16 +1312,19 @@ msgstr "템플릿에서 배포판 '%s'을 찾을 수 없습니다. "
 msgid "Distribution '%s' was not found in Pulp."
 msgstr "Pulp에서 배포판을 찾을 수 없습니다. "
 
-#: app/helpers/breadcrumb_helper.rb:65 app/helpers/breadcrumb_helper.rb:170
-#: app/views/changesets/_edit.html.haml:64
-#: app/views/promotions/_detail.html.haml:30
+#: app/helpers/breadcrumb_helper.rb:66 app/helpers/breadcrumb_helper.rb:173
 #: app/views/promotions/show.html.haml:7
+#: app/views/promotions/_detail.html.haml:30
+#: app/views/changesets/_edit.html.haml:64
 msgid "Distributions"
 msgstr "배포판 "
 
 #: app/views/providers/index.html.haml:14
-msgid "Do you want to set this GPG Key as the key for all repositories within this product?"
-msgstr "이 GPG 키를 이 제품에 있는 모든 리포지터리에 대한 키로 설정하시겠습니까? "
+msgid ""
+"Do you want to set this GPG Key as the key for all repositories within this "
+"product?"
+msgstr ""
+"이 GPG 키를 이 제품에 있는 모든 리포지터리에 대한 키로 설정하시겠습니까? "
 
 #: app/views/roles/_edit.html.haml:84
 msgid "Done"
@@ -1144,16 +1332,16 @@ msgstr "완료 "
 
 #: app/views/packages/_show.html.haml:82
 #: app/views/organizations/_download_debug_certificate.html.haml:11
-#: app/views/system_templates/index.html.haml:97
 #: app/views/system_templates/_download.html.haml:12
+#: app/views/system_templates/index.html.haml:99
 msgid "Download"
 msgstr "다운로드 "
 
-#: app/views/system_templates/index.html.haml:74
+#: app/views/system_templates/index.html.haml:76
 msgid "Download System Template"
 msgstr "시스템 템플릿 다운로드 "
 
-#: app/views/sync_management/index.html.haml:36
+#: app/views/sync_management/index.html.haml:45
 msgid "Duration"
 msgstr "기간 "
 
@@ -1161,10 +1349,17 @@ msgstr "기간 "
 msgid "ERRATA"
 msgstr "에라타 "
 
-#: app/views/system_templates/index.html.haml:5
-#: app/views/system_templates/index.html.haml:82
+#: app/views/activation_keys/_edit.html.haml:28
+msgid ""
+"Edit Activation Key enables you to modify the selected activation key.  This "
+"key may be used during system registration.  For example, <BR/><BR/"
+">subscription-manager register --org %s --activationkey %s"
+msgstr ""
+
 #: app/views/promotions/show.html.haml:7
 #: app/views/promotions/show.html.haml:137
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/index.html.haml:84
 msgid "Edit Details"
 msgstr "상세 정보 편집 "
 
@@ -1174,10 +1369,14 @@ msgid "Edit Environment"
 msgstr "환경 편집 "
 
 #: app/views/gpg_keys/_edit.html.haml:20
-msgid "Edit GPG Key enables you to modify the selected GPG Key.  A new key can be copied and pasted in directly."
-msgstr "GPG 키 편집으로 선택한 GPG 키를 변경할 수 있습니다. 새 키는 직접 복사 및 붙여넣기가 가능합니다. "
+msgid ""
+"Edit GPG Key enables you to modify the selected GPG Key.  A new key can be "
+"copied and pasted in directly."
+msgstr ""
+"GPG 키 편집으로 선택한 GPG 키를 변경할 수 있습니다. 새 키는 직접 복사 및 붙여"
+"넣기가 가능합니다. "
 
-#: app/views/roles/index.html.haml:8 app/views/roles/_edit.html.haml:99
+#: app/views/roles/_edit.html.haml:99 app/views/roles/index.html.haml:8
 msgid "Edit Permission"
 msgstr "권한 편집 "
 
@@ -1189,10 +1388,6 @@ msgstr "권한 편집 "
 msgid "Edit Product"
 msgstr "제품 편집 "
 
-#: app/views/repositories/_edit.html.haml:13
-msgid "Edit Repository"
-msgstr "리포지터리 편집 "
-
 #: app/views/roles/_edit.html.haml:104
 msgid "Edit Role"
 msgstr "역할 편집 "
@@ -1201,12 +1396,12 @@ msgstr "역할 편집 "
 msgid "Edit Role Details"
 msgstr "역할 정보 편집 "
 
-#: app/views/system_templates/index.html.haml:71
+#: app/views/system_templates/index.html.haml:73
 msgid "Edit System Template"
 msgstr "시스템 템플릿 편집 "
 
-#: app/controllers/api/products_controller.rb:105
 #: app/controllers/api/activation_keys_controller.rb:107
+#: app/controllers/api/products_controller.rb:105
 msgid "Either organization id or environment id needs to be specified"
 msgstr "조직 Id 또는 환경 Id를 지정해야 함 "
 
@@ -1214,7 +1409,7 @@ msgstr "조직 Id 또는 환경 Id를 지정해야 함 "
 msgid "Either packages or groups  must be provided"
 msgstr "패키지 또는 그룹이 필요함 "
 
-#: app/views/system_templates/index.html.haml:106
+#: app/views/system_templates/index.html.haml:108
 msgid "Eligible Content"
 msgstr "자격을 갖는 컨텐츠 "
 
@@ -1234,8 +1429,10 @@ msgstr "유효한 로그인 사용자 이름이 있는 이메일이 '%{e}'로 �
 
 #: app/controllers/system_packages_controller.rb:56
 #: app/controllers/system_packages_controller.rb:89
-msgid "Empty request received to install Packages or Package Groups System '%{s}'."
-msgstr "패키지 또는 패키지 그룹 시스템 '%{s}'을 설치하기 위해 빈 요청을 받았습니다. "
+msgid ""
+"Empty request received to install Packages or Package Groups System '%{s}'."
+msgstr ""
+"패키지 또는 패키지 그룹 시스템 '%{s}'을 설치하기 위해 빈 요청을 받았습니다. "
 
 #: app/views/providers/redhat/show.html.haml:47
 msgid "Enable Repositories"
@@ -1253,14 +1450,26 @@ msgstr "종료 날짜 "
 msgid "Enter Selected Content..."
 msgstr "선택한 컨텐츠를 입력..."
 
-#: app/views/environments/_edit.html.haml:4
-#: app/views/dashboard/_errata.haml:39
-#: app/views/system_templates/_download.html.haml:8
+#: app/views/users/_new.html.haml:58 app/views/dashboard/_errata.haml:39
 #: app/views/activation_keys/_new.html.haml:22
 #: app/views/activation_keys/_edit.html.haml:49
-#: app/views/users/_new.html.haml:58
+#: app/views/system_templates/_download.html.haml:8
+#: app/views/environments/_edit.html.haml:4
 msgid "Environment"
 msgstr "환경 "
+
+#: app/controllers/environments_controller.rb:73
+#, fuzzy
+msgid "Environment '%s' was created."
+msgstr "필수 환경 "
+
+#: app/controllers/environments_controller.rb:103
+msgid "Environment '%s' was deleted."
+msgstr ""
+
+#: app/controllers/environments_controller.rb:95
+msgid "Environment '%s' was updated."
+msgstr ""
 
 #: app/views/organizations/_edit.html.haml:26
 msgid "Environment Promotion Paths"
@@ -1278,12 +1487,12 @@ msgstr "환경: "
 msgid "Environments"
 msgstr "환경 "
 
-#: app/helpers/breadcrumb_helper.rb:53 app/helpers/breadcrumb_helper.rb:126
-#: app/helpers/breadcrumb_helper.rb:157
-#: app/views/changesets/_edit.html.haml:60 app/views/dashboard/_errata.haml:10
+#: app/helpers/breadcrumb_helper.rb:54 app/helpers/breadcrumb_helper.rb:127
+#: app/helpers/breadcrumb_helper.rb:159 app/views/promotions/show.html.haml:7
 #: app/views/promotions/_detail.html.haml:9
 #: app/views/promotions/_detail.html.haml:22
-#: app/views/promotions/show.html.haml:7 lib/navigation/systems.rb:85
+#: app/views/changesets/_edit.html.haml:60 app/views/dashboard/_errata.haml:10
+#: lib/navigation/systems.rb:86
 msgid "Errata"
 msgstr "에라타 "
 
@@ -1303,8 +1512,12 @@ msgstr "설치를 위해 에라타를 스케줄함 "
 msgid "Erratum"
 msgstr "에라타 "
 
-#: app/views/dashboard/_sync.haml:23 app/views/common/_common_i18n.html.haml:3
+#: app/models/changeset_erratum.rb:20
+msgid "Erratum '%s' doesn't belong to the specified product!"
+msgstr ""
+
 #: app/views/sync_management/index.html.haml:5
+#: app/views/common/_common_i18n.html.haml:3 app/views/dashboard/_sync.haml:23
 msgid "Error"
 msgstr "오류 "
 
@@ -1324,7 +1537,7 @@ msgstr "오류: "
 msgid "Event"
 msgstr "이벤트 "
 
-#: lib/navigation/systems.rb:102
+#: lib/navigation/systems.rb:103
 msgid "Events"
 msgstr "이벤트 "
 
@@ -1332,20 +1545,29 @@ msgstr "이벤트 "
 msgid "Exactly one distribution must be present to export a TDL"
 msgstr "TDL을 내보내기하려면 정확히 하나의 배포판이 존재해야 합니다 "
 
+#: app/views/common/_env_select.html.haml:9
+#: app/views/providers/_products_repos.html.haml:35
 #: app/views/organizations/_download_debug_certificate.html.haml:6
 #: app/views/changesets/_content_type.html.haml:7
-#: app/views/common/_env_select.html.haml:9
 #: app/views/activation_keys/_subscriptions.html.haml:22
-#: app/views/providers/_products_repos.html.haml:35
 msgid "Expand"
+msgstr "확장 "
+
+#: app/views/sync_management/index.html.haml:25
+#, fuzzy
+msgid "Expand All"
 msgstr "확장 "
 
 #: app/views/subscriptions/index.html.haml:51
 msgid "Expand/Contract All"
 msgstr "확장/모두 계약 "
 
-#: app/views/systems/_subs.html.haml:21 app/views/systems/_subs.html.haml:73
-#: app/views/providers/redhat/_subscription_details.html.haml:11
+#: app/controllers/api/systems_controller.rb:207
+msgid "Expected attribute is missing:"
+msgstr ""
+
+#: app/views/providers/redhat/_subscription_details.html.haml:10
+#: app/views/systems/_subs.html.haml:21 app/views/systems/_subs.html.haml:74
 #: app/views/subscriptions/index.html.haml:20
 msgid "Expires"
 msgstr "만료 "
@@ -1354,29 +1576,74 @@ msgstr "만료 "
 msgid "Fact"
 msgstr "정보 "
 
-#: lib/navigation/systems.rb:108
+#: lib/navigation/systems.rb:109
 msgid "Facts"
 msgstr "정보 "
+
+#: app/helpers/dashboard_helper.rb:57
+#, fuzzy
+msgid "Failed"
+msgstr "파일 "
+
+#: app/models/glue/candlepin/environment.rb:32
+#, fuzzy
+msgid "Failed to create candlepin environment %s"
+msgstr "라이브러리 환경에서 활성키를 생성할 수 없음 "
+
+#: app/models/glue/candlepin/owner.rb:39
+msgid "Failed to create candlepin owner %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:58
+msgid "Failed to delete all environments for owner %s in candlepin:"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:66
+msgid "Failed to delete all providers for owner %s in candlepin: %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:78
+msgid "Failed to delete all systems for owner %s in candlepin: %s"
+msgstr ""
+
+#: app/models/glue/candlepin/environment.rb:40
+msgid "Failed to delete candlepin environment %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:47
+msgid "Failed to delete candlepin owner %s"
+msgstr ""
+
+#: app/models/user.rb:458
+msgid "Failed to delete organization '%s'. Check notices for more details. "
+msgstr ""
+
+#: app/models/changeset.rb:308
+msgid "Failed to promote changeset '%s'. Check notices for more details"
+msgstr ""
 
 #: app/views/distributions/_filelist.html.haml:14
 msgid "File"
 msgstr "파일 "
 
-#: lib/navigation/content_management.rb:186
-#: lib/navigation/content_management.rb:220
+#: lib/navigation/content_management.rb:201
 msgid "Filelist"
 msgstr "파일 목록 "
 
-#: app/controllers/filters_controller.rb:203
-#: app/views/roles/_edit.html.haml:14 app/views/roles/_edit.html.haml:18
-#: app/views/layouts/_org.haml:12
-#: app/views/system_templates/index.html.haml:50
+#: app/controllers/filters_controller.rb:223
 #: app/views/promotions/show.html.haml:7
 #: app/views/promotions/show.html.haml:101
 #: app/views/promotions/show.html.haml:103
-#: app/views/promotions/show.html.haml:104
+#: app/views/promotions/show.html.haml:104 app/views/layouts/_org.haml:12
+#: app/views/system_templates/index.html.haml:52
+#: app/views/roles/_edit.html.haml:14 app/views/roles/_edit.html.haml:18
 msgid "Filter"
 msgstr "필터 "
+
+#: app/controllers/filters_controller.rb:104
+#, fuzzy
+msgid "Filter %s created successfully."
+msgstr "성공적으로 생성되었습니다. "
 
 #: app/views/system_events/_events.html.haml:18
 msgid "Filter on loaded Events..."
@@ -1386,14 +1653,14 @@ msgstr "로딩된 이벤트를 필터..."
 msgid "Filter on loaded packages..."
 msgstr "로딩된 패키지를 필터..."
 
-#: app/views/roles/_edit.html.haml:13 app/views/layouts/_org.haml:11
 #: app/views/common/_filter_table.html.haml:2
-#: app/views/system_templates/index.html.haml:49
-#: app/views/promotions/show.html.haml:100
+#: app/views/promotions/show.html.haml:100 app/views/layouts/_org.haml:11
+#: app/views/system_templates/index.html.haml:51
+#: app/views/roles/_edit.html.haml:13
 msgid "Filter..."
 msgstr "필터..."
 
-#: lib/navigation/content_management.rb:237
+#: lib/navigation/content_management.rb:218
 msgid "Filtered Packages"
 msgstr "필터된 패키지 "
 
@@ -1401,9 +1668,18 @@ msgstr "필터된 패키지 "
 msgid "Filters"
 msgstr "필터 "
 
+#: app/controllers/api/filters_controller.rb:111
+#, fuzzy
+msgid "Filters can be stored only in Library repositories."
+msgstr "리포지터리는 라이브러리 환경에서만 삭제할 수 있습니다. "
+
 #: app/views/systems/errata/_index.html.haml:5
 msgid "Finished"
 msgstr "종료 "
+
+#: app/views/providers/redhat/show.html.haml:31
+msgid "Force"
+msgstr ""
 
 #: app/views/user_sessions/new.html.haml:17
 msgid "Forgotten username or password?"
@@ -1413,8 +1689,8 @@ msgstr "사용자 이름 또는 암호를 잊어버리셨습니까? "
 msgid "Full Access"
 msgstr "전체 액세스 "
 
-#: app/views/changesets/_edit.html.haml:49
 #: app/views/promotions/show.html.haml:7
+#: app/views/changesets/_edit.html.haml:49
 msgid "Full Products"
 msgstr "전체 제품 "
 
@@ -1424,6 +1700,18 @@ msgstr "전체 제품 "
 #: app/views/products/_new.html.haml:18 app/views/products/_edit.html.haml:26
 msgid "GPG Key"
 msgstr "GPG 키 "
+
+#: app/controllers/gpg_keys_controller.rb:92
+msgid "GPG Key '%s' was created."
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:136
+msgid "GPG Key '%s' was deleted."
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:116
+msgid "GPG Key '%s' was updated."
+msgstr ""
 
 #: app/views/systems/_subscription_details.html.haml:4
 msgid "GPG Key URL: "
@@ -1438,25 +1726,41 @@ msgid "GPG Key assigned at the Repository Level for"
 msgstr "리포지터리 수준에 할당된 GPG 키 "
 
 #: app/controllers/gpg_keys_controller.rb:165
-#: lib/navigation/content_management.rb:162
+#: lib/navigation/content_management.rb:157
 msgid "GPG Keys"
 msgstr "GPG 키 "
 
 #: app/views/gpg_keys/index.html.haml:3
-msgid "GPG Keys may be stored by uploading a key directly or copying and pasting the key in upon creation. By visiting the Providers page and selecting either a product or repository, a GPG key that has been created here can be associated with the given entity."
-msgstr "직접 키를 업로드하거나 키 생성시 키를 복사 및 붙여넣기하여 GPG 키를 저장할 수 있습니다. 공급자 페이지로 이동하여 제품이나 리포지터리를 선택하여 여기서 생성한 GPG 키를 주어진 엔티티에 연결할 수 있습니다. "
+msgid ""
+"GPG Keys may be stored by uploading a key directly or copying and pasting "
+"the key in upon creation. By visiting the Providers page and selecting "
+"either a product or repository, a GPG key that has been created here can be "
+"associated with the given entity."
+msgstr ""
+"직접 키를 업로드하거나 키 생성시 키를 복사 및 붙여넣기하여 GPG 키를 저장할 "
+"수 있습니다. 공급자 페이지로 이동하여 제품이나 리포지터리를 선택하여 여기서 "
+"생성한 GPG 키를 주어진 엔티티에 연결할 수 있습니다. "
 
-#: app/helpers/breadcrumb_helper.rb:244
+#: app/helpers/breadcrumb_helper.rb:246
 msgid "Global Permissions"
 msgstr "글로벌 권한 "
 
 #: app/views/roles/index.html.haml:8
-msgid "Global permissions allow you to create permissions that span all organizations, or choose a specific organization to apply permissions."
-msgstr "글로벌 권한은 모든 조직을 확장하는 권한을 생성하거나 권한을 적용하기 위한 특정 조직을 선택하게 할 수 있습니다. "
+msgid ""
+"Global permissions allow you to create permissions that span all "
+"organizations, or choose a specific organization to apply permissions."
+msgstr ""
+"글로벌 권한은 모든 조직을 확장하는 권한을 생성하거나 권한을 적용하기 위한 특"
+"정 조직을 선택하게 할 수 있습니다. "
 
 #: app/views/roles/index.html.haml:8
-msgid "Global permissions are permissions that span all organizations; however, organization permissions apply only to the organization they are associated with."
-msgstr "글로벌 권한은 모든 조직을 확장하는 권한이지만 조직 권한은 관련 조직에만 적용됩니다. "
+msgid ""
+"Global permissions are permissions that span all organizations; however, "
+"organization permissions apply only to the organization they are associated "
+"with."
+msgstr ""
+"글로벌 권한은 모든 조직을 확장하는 권한이지만 조직 권한은 관련 조직에만 적용"
+"됩니다. "
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
@@ -1467,7 +1771,7 @@ msgstr "만족 "
 msgid "Group"
 msgstr "그룹 "
 
-#: app/helpers/systems_helper.rb:59
+#: app/helpers/systems_helper.rb:58
 msgid "Guest"
 msgstr "게스트 "
 
@@ -1479,7 +1783,7 @@ msgstr "게스트 "
 msgid "History"
 msgstr "기록 "
 
-#: app/helpers/systems_helper.rb:65 app/views/systems/_edit.html.haml:77
+#: app/helpers/systems_helper.rb:64 app/views/systems/_edit.html.haml:77
 msgid "Host"
 msgstr "호스트 "
 
@@ -1487,7 +1791,7 @@ msgstr "호스트 "
 msgid "Host & Guest Info"
 msgstr "호스트 & 게스트 정보 "
 
-#: app/helpers/systems_helper.rb:63
+#: app/helpers/systems_helper.rb:62
 msgid "Hypervisor"
 msgstr "하이퍼바이저 "
 
@@ -1503,7 +1807,7 @@ msgstr "하이퍼바이저는 에라타를 갖지 않습니다 "
 msgid "Hypervisors do not have packages"
 msgstr "하이퍼바이저는 패키지를 갖지 않습니다 "
 
-#: app/controllers/systems_controller.rb:192
+#: app/controllers/systems_controller.rb:194
 msgid "Hypervisors do not have software products"
 msgstr "하이퍼바이저는 소프트웨어 제품을 갖지 않습니다 "
 
@@ -1528,16 +1832,28 @@ msgid "Id / Link"
 msgstr "Id / 링크 "
 
 #: app/views/user_mailer/password_reset.text.haml:5
-msgid "If you did not request this password to be reset, just ignore this email and the password will continue to stay the same."
-msgstr "이 암호를 재설정하도록 요청하지 않은 경우 이 이메일을 무시하십시오. 암호는 동일하게 유지됩니다. "
+msgid ""
+"If you did not request this password to be reset, just ignore this email and "
+"the password will continue to stay the same."
+msgstr ""
+"이 암호를 재설정하도록 요청하지 않은 경우 이 이메일을 무시하십시오. 암호는 동"
+"일하게 유지됩니다. "
 
 #: app/views/password_resets/new.html.haml:23
-msgid "If you do not know your login, please enter your email address below and your login will be sent to you."
-msgstr "로그인 정보를 모르는 경우 아래에 이메일 주소를 입력합니다. 로그인 정보가 전송됩니다. "
+msgid ""
+"If you do not know your login, please enter your email address below and "
+"your login will be sent to you."
+msgstr ""
+"로그인 정보를 모르는 경우 아래에 이메일 주소를 입력합니다. 로그인 정보가 전송"
+"됩니다. "
 
 #: app/views/password_resets/new.html.haml:10
-msgid "If you do not know your password, enter your login and email address below and instructions on resetting your password will be sent to you."
-msgstr "암호를 모르는 경우 아래에 로그인 정보와 이메일 주소를 입력합니다. 암호를 재설정하는 방법이 전송됩니다. "
+msgid ""
+"If you do not know your password, enter your login and email address below "
+"and instructions on resetting your password will be sent to you."
+msgstr ""
+"암호를 모르는 경우 아래에 로그인 정보와 이메일 주소를 입력합니다. 암호를 재설"
+"정하는 방법이 전송됩니다. "
 
 #: app/views/providers/redhat/show.html.haml:51
 msgid "Import History"
@@ -1551,7 +1867,12 @@ msgstr "가져오기 시간 "
 msgid "Info"
 msgstr "정보 "
 
-#: app/models/system.rb:201
+#: app/views/organizations/_new.html.haml:22
+#, fuzzy
+msgid "Initial Application Life Cycle Management Environment"
+msgstr "애플리케이션 라이프 사이클 관리 환경 생성 "
+
+#: app/models/system.rb:200
 msgid "Initial Registration Params"
 msgstr "초기 등록 매개 변수 "
 
@@ -1567,8 +1888,8 @@ msgstr "패키지 그룹 '%{g}'의 설치가 시스템 '%{s}'에 대해 스케�
 msgid "Install of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "패키지 '%{p}'의 설치가 시스템 '%{s}'에 대해 스케줄되었습니다. "
 
-#: app/views/systems/errata/_index.html.haml:5
 #: app/views/systems/errata/_items.html.haml:16
+#: app/views/systems/errata/_index.html.haml:5
 msgid "Installing"
 msgstr "설치 중 "
 
@@ -1577,8 +1898,9 @@ msgid "Insufficient Entitlements"
 msgstr "불충분한 인타이틀먼트 "
 
 #: app/controllers/sync_plans_controller.rb:49
-#: app/views/sync_plans/_form.html.haml:15
+#: app/controllers/sync_schedules_controller.rb:46
 #: app/views/sync_plans/_edit.html.haml:23
+#: app/views/sync_plans/_form.html.haml:15
 msgid "Interval"
 msgstr "간격 "
 
@@ -1591,7 +1913,9 @@ msgid "Invalid Url"
 msgstr "잘못된 Url "
 
 #: app/models/resource_type.rb:41
-msgid "Invalid resource type '%{resource_type}'. Resource Types can be one of '%{possible_types}'"
+msgid ""
+"Invalid resource type '%{resource_type}'. Resource Types can be one of '%"
+"{possible_types}'"
 msgstr ""
 "잘못된 리소스 유형 '%{resource_type}'. \n"
 "리소스 유형은 '%{possible_types}' 중 하나가 될 수 있음 "
@@ -1601,8 +1925,12 @@ msgid "Invalid state"
 msgstr "잘못된 상태 "
 
 #: app/models/resource_type.rb:26
-msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
-msgstr "잘못된 verb '%{verb}'. 리소스 유형 '%{resource_type}'에 대한 verb는 %{possible_verbs} 중 하나가 될 수 있습니다"
+msgid ""
+"Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be "
+"one of %{possible_verbs}"
+msgstr ""
+"잘못된 verb '%{verb}'. 리소스 유형 '%{resource_type}'에 대한 verb는 %"
+"{possible_verbs} 중 하나가 될 수 있습니다"
 
 #: app/views/errata/_show.html.haml:30
 msgid "Issued"
@@ -1636,7 +1964,7 @@ msgstr "Katello 로고 "
 msgid "Katello User '%s' Password Reset"
 msgstr "Katello 사용자 '%s' 암호 재설정 "
 
-#: app/controllers/activation_keys_controller.rb:275
+#: app/controllers/activation_keys_controller.rb:267
 #: app/views/gpg_keys/_edit.html.haml:40
 msgid "Key"
 msgstr "키 "
@@ -1645,7 +1973,7 @@ msgstr "키 "
 msgid "Last Booted"
 msgstr "마지막 부팅 "
 
-#: app/controllers/systems_controller.rb:298
+#: app/controllers/systems_controller.rb:302
 msgid "Last Checked In"
 msgstr "마지막 접속 "
 
@@ -1653,7 +1981,7 @@ msgstr "마지막 접속 "
 msgid "Last Checked in Date"
 msgstr "마지막 접속 날짜 "
 
-#: app/views/dashboard/index.html.haml:11
+#: app/views/dashboard/index.html.haml:13
 msgid "Latest Notifications"
 msgstr "최근 통지 "
 
@@ -1662,7 +1990,7 @@ msgid "Level"
 msgstr "레벨 "
 
 #: app/controllers/environments_controller.rb:90
-#: app/models/kt_environment.rb:109 app/views/organizations/_edit.html.haml:36
+#: app/models/kt_environment.rb:114 app/views/organizations/_edit.html.haml:36
 msgid "Library"
 msgstr "라이브러리 "
 
@@ -1683,11 +2011,17 @@ msgid "List Actions"
 msgstr "작업 목록 "
 
 #: app/views/providers/redhat/show.html.haml:6
-msgid "Listed below are the subscriptions information. If you have a subscription manifest you may upload it below. This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."
-msgstr "다음 목록은 서브스크립션 정보입니다. 서브스크립션 매니페스트가 있는 경우 이를 다음에 업로드할 수 있습니다. 이 매니페스트를 얻으려면 Red Hat 고객 포털로 가보시거나 지원 담당자에게 문의하십시오."
+msgid ""
+"Listed below are the subscriptions information. If you have a subscription "
+"manifest you may upload it below. This manifest may be obtained by visiting "
+"the Red Hat Customer Portal or by contacting your support representative."
+msgstr ""
+"다음 목록은 서브스크립션 정보입니다. 서브스크립션 매니페스트가 있는 경우 이"
+"를 다음에 업로드할 수 있습니다. 이 매니페스트를 얻으려면 Red Hat 고객 포털로 "
+"가보시거나 지원 담당자에게 문의하십시오."
 
-#: app/views/layouts/_header.haml:8
 #: app/views/systems/errata/_items.html.haml:14
+#: app/views/layouts/_header.haml:8
 msgid "Loading"
 msgstr "로딩 중 "
 
@@ -1708,7 +2042,7 @@ msgstr "승격 변경 집합 로딩 중 "
 msgid "Loading Role"
 msgstr "역할 로딩 중 "
 
-#: app/views/system_templates/index.html.haml:60
+#: app/views/system_templates/index.html.haml:62
 msgid "Loading System Template"
 msgstr "시스템 템플릿 로딩 중 "
 
@@ -1737,7 +2071,7 @@ msgstr "성공적으로 로그인했습니다 "
 msgid "Login Unknown"
 msgstr "알 수 없는 로그인 "
 
-#: app/views/layouts/_footer.haml:4 app/views/layouts/_header.haml:24
+#: app/views/layouts/_header.haml:24 app/views/layouts/_footer.haml:4
 msgid "Logout"
 msgstr "로그 아웃 "
 
@@ -1745,7 +2079,6 @@ msgstr "로그 아웃 "
 msgid "Logout Successful"
 msgstr "성공적으로 로그 아웃했습니다 "
 
-#: app/views/providers/redhat/_subscription_details.html.haml:9
 #: app/views/subscriptions/index.html.haml:18
 msgid "Machine Type"
 msgstr "시스템 유형 "
@@ -1758,16 +2091,16 @@ msgstr "공급자 [ %s ]에 대해 매니페스트 가져오기 실패 "
 msgid "Match System"
 msgstr "시스템과 일치 "
 
-#: app/views/organizations/_events.html.haml:16
 #: app/views/providers/redhat/_import_history.html.haml:3
+#: app/views/organizations/_events.html.haml:16
 msgid "Message"
 msgstr "메세지 "
 
-#: app/models/organization.rb:127
+#: app/models/organization.rb:128
 msgid "Modify Organization and Administer Environments"
 msgstr "조직 및 관리자 환경 수정 "
 
-#: app/models/filter.rb:67
+#: app/models/filter.rb:68
 msgid "Modify Package Filters"
 msgstr "패키지 필터 수정 "
 
@@ -1775,19 +2108,19 @@ msgstr "패키지 필터 수정 "
 msgid "Modify Providers and Administer Products"
 msgstr "공급자 및 관리자 제품 수정 "
 
-#: app/models/role.rb:148
+#: app/models/role.rb:173
 msgid "Modify Roles"
 msgstr "역할 수정 "
 
-#: app/models/organization.rb:131
+#: app/models/organization.rb:132
 msgid "Modify Systems"
 msgstr "시스템 수정 "
 
-#: app/models/kt_environment.rb:329
+#: app/models/kt_environment.rb:341
 msgid "Modify Systems in Environment"
 msgstr "환경에 있는 시스템 수정 "
 
-#: app/models/user.rb:353
+#: app/models/user.rb:356
 msgid "Modify Users"
 msgstr "사용자 수정 "
 
@@ -1795,7 +2128,7 @@ msgstr "사용자 수정 "
 msgid "More >>"
 msgstr "상세 정보 >>"
 
-#: app/views/promotions/show.html.haml:186
+#: app/views/promotions/show.html.haml:196
 msgid "More details"
 msgstr "상세 정보 "
 
@@ -1803,43 +2136,45 @@ msgstr "상세 정보 "
 msgid "More..."
 msgstr "상세 정보..."
 
-#: app/models/changeset.rb:48
+#: app/models/changeset.rb:49
 msgid "Must be unique within an environment"
 msgstr "환경에서 고유해야 함 "
 
-#: app/controllers/organizations_controller.rb:218
-#: app/controllers/providers_controller.rb:237
-#: app/controllers/sync_plans_controller.rb:49
-#: app/controllers/systems_controller.rb:298
-#: app/controllers/system_templates_controller.rb:73
-#: app/controllers/filters_controller.rb:202
-#: app/controllers/roles_controller.rb:60
 #: app/controllers/gpg_keys_controller.rb:167
 #: app/controllers/changesets_controller.rb:270
-#: app/controllers/activation_keys_controller.rb:274
-#: app/views/roles/_new.html.haml:9 app/views/repositories/_new.html.haml:15
+#: app/controllers/organizations_controller.rb:224
+#: app/controllers/activation_keys_controller.rb:266
+#: app/controllers/system_templates_controller.rb:80
+#: app/controllers/systems_controller.rb:302
+#: app/controllers/sync_plans_controller.rb:49
+#: app/controllers/providers_controller.rb:244
+#: app/controllers/filters_controller.rb:222
+#: app/controllers/sync_schedules_controller.rb:39
+#: app/controllers/sync_schedules_controller.rb:46
+#: app/controllers/roles_controller.rb:60 app/views/filters/_new.html.haml:13
+#: app/views/filters/_edit.html.haml:21
+#: app/views/repositories/_new.html.haml:15
 #: app/views/repositories/_edit.html.haml:17
 #: app/views/packages/_show.html.haml:11
+#: app/views/providers/redhat/_subscription_details.html.haml:4
+#: app/views/providers/_edit.html.haml:22
+#: app/views/providers/_form.html.haml:6 app/views/gpg_keys/_new.html.haml:9
+#: app/views/gpg_keys/_edit.html.haml:25
 #: app/views/organizations/_new.html.haml:12
 #: app/views/organizations/_new.html.haml:25
-#: app/views/sync_plans/_form.html.haml:5
+#: app/views/changesets/_new.html.haml:10
 #: app/views/sync_plans/_edit.html.haml:17
-#: app/views/system_packages/_packages.html.haml:64
-#: app/views/systems/_edit.html.haml:24 app/views/changesets/_new.html.haml:10
-#: app/views/environments/_new.html.haml:13
-#: app/views/environments/_edit.html.haml:17
-#: app/views/filters/_new.html.haml:13 app/views/filters/_edit.html.haml:21
+#: app/views/sync_plans/_form.html.haml:5 app/views/systems/_edit.html.haml:24
+#: app/views/activation_keys/_new.html.haml:9
+#: app/views/activation_keys/_edit.html.haml:37
 #: app/views/system_templates/_new.html.haml:10
 #: app/views/system_templates/_promotion_details.html.haml:9
 #: app/views/system_templates/_edit.html.haml:4
-#: app/views/products/_new.html.haml:8 app/views/products/_edit.html.haml:16
-#: app/views/activation_keys/_new.html.haml:9
-#: app/views/activation_keys/_edit.html.haml:37
-#: app/views/gpg_keys/_new.html.haml:9 app/views/gpg_keys/_edit.html.haml:25
-#: app/views/providers/_form.html.haml:6
-#: app/views/providers/redhat/_subscription_details.html.haml:4
-#: app/views/providers/_edit.html.haml:22
+#: app/views/system_packages/_packages.html.haml:64
+#: app/views/environments/_new.html.haml:13
+#: app/views/environments/_edit.html.haml:17 app/views/roles/_new.html.haml:9
 #: app/views/distributions/_show.html.haml:12
+#: app/views/products/_new.html.haml:8 app/views/products/_edit.html.haml:16
 msgid "Name"
 msgstr "이름 "
 
@@ -1859,14 +2194,14 @@ msgstr "이름은 하나의 조직 내에서 유일한 것이어야 합니다 "
 msgid "Name of Your System:"
 msgstr "시스템 이름: "
 
-#: app/views/roles/_edit.html.haml:35 app/views/roles/_edit.html.haml:73
-#: app/views/changesets/_name.html.haml:3
-#: app/views/changesets/_edit.html.haml:11
 #: app/views/promotions/show.html.haml:119
+#: app/views/changesets/_name.html.haml:3
+#: app/views/changesets/_edit.html.haml:11 app/views/roles/_edit.html.haml:35
+#: app/views/roles/_edit.html.haml:73 app/views/roles/index.html.haml:8
 msgid "Name:"
 msgstr "이름: "
 
-#: app/helpers/dashboard_helper.rb:130 app/helpers/systems_helper.rb:24
+#: app/helpers/dashboard_helper.rb:145 app/helpers/systems_helper.rb:24
 msgid "Never checked in."
 msgstr "한 번도 접속하지 않았습니다. "
 
@@ -1947,7 +2282,7 @@ msgstr "디폴트 조직이 없음 "
 msgid "No Subscriptions Available"
 msgstr "사용 가능한 서브스크립션이 없음 "
 
-#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:6
 msgid "No System Templates are currently defined"
 msgstr "현재 정의된 시스템 템플릿이 없음 "
 
@@ -1963,11 +2298,15 @@ msgstr "템플릿이 없음 "
 msgid "No changesets found."
 msgstr "변경 집합을 찾을 수 없음 "
 
+#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:63
 #: app/views/users/_edit_environment.html.haml:3
 #: app/views/users/_edit_environment.html.haml:44
-#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:63
-msgid "No default environment. Select an organization to choose from available environments."
-msgstr "디폴트 환경이 없습니다. 사용 가능한 환경에서 선택하기 위해 조직을 선택합니다. "
+msgid ""
+"No default environment. Select an organization to choose from available "
+"environments."
+msgstr ""
+"디폴트 환경이 없습니다. 사용 가능한 환경에서 선택하기 위해 조직을 선택합니"
+"다. "
 
 #: app/controllers/users_controller.rb:252
 #: app/views/users/_edit_environment.html.haml:21
@@ -1984,20 +2323,36 @@ msgid "No distributions exist in this promotion changeset."
 msgstr "승격 변경 집합에 존재하는 배포판이 없음. "
 
 #: app/views/organizations/_edit.html.haml:45
-msgid "No environments are available in this organization. Please add some environments to be able register systems to this organization."
-msgstr "이 조직에서 사용 가능한 환경이 없습니다. 시스템을 조직에 등록 가능하게 하려면 환경을 추가하십시오. "
+msgid ""
+"No environments are available in this organization. Please add some "
+"environments to be able register systems to this organization."
+msgstr ""
+"이 조직에서 사용 가능한 환경이 없습니다. 시스템을 조직에 등록 가능하게 하려"
+"면 환경을 추가하십시오. "
 
 #: app/views/activation_keys/_new.html.haml:25
-msgid "No environments are currently available in this organization.  Please add some to be able to create activation keys."
-msgstr "현재 이 조직에서 사용 가능한 환경이 없습니다. 활성키를 생성 가능하게 하려면 일부 환경을 추가하십시오. "
+msgid ""
+"No environments are currently available in this organization.  Please add "
+"some to be able to create activation keys."
+msgstr ""
+"현재 이 조직에서 사용 가능한 환경이 없습니다. 활성키를 생성 가능하게 하려면 "
+"일부 환경을 추가하십시오. "
 
 #: app/views/common/_env_select.html.haml:2 app/views/users/_new.html.haml:65
-msgid "No environments are currently available in this organization.  Please add some to be able to set user default."
-msgstr "현재 이 조직에서 사용 가능한 환경이 없습니다. 사용자 디폴트를 설정 가능하게 하려면 일부 환경을 추가하십시오. "
+msgid ""
+"No environments are currently available in this organization.  Please add "
+"some to be able to set user default."
+msgstr ""
+"현재 이 조직에서 사용 가능한 환경이 없습니다. 사용자 디폴트를 설정 가능하게 "
+"하려면 일부 환경을 추가하십시오. "
 
 #: app/views/users/_edit_environment.html.haml:46
-msgid "No environments are currently available in this organization. Saving will set user to no default environment."
-msgstr "현재 이 조직에서 사용 가능한 환경이 없습니다. 저장하면 디폴트 환경 없음으로 사용자를 설정하게 됩니다. "
+msgid ""
+"No environments are currently available in this organization. Saving will "
+"set user to no default environment."
+msgstr ""
+"현재 이 조직에서 사용 가능한 환경이 없습니다. 저장하면 디폴트 환경 없음으로 "
+"사용자를 설정하게 됩니다. "
 
 #: app/views/promotions/_errata.html.haml:3
 msgid "No errata available."
@@ -2027,8 +2382,8 @@ msgstr "설치된 새 패키지가 없음 "
 msgid "No package groups available."
 msgstr "사용 가능한 패키지 그룹이 없음. "
 
-#: app/views/filters/index.html.haml:15
 #: app/views/filters/_packages.html.haml:28
+#: app/views/filters/index.html.haml:15
 msgid "No packages are currently filtered."
 msgstr "현재 필터되는 패키지가 없음. "
 
@@ -2052,18 +2407,24 @@ msgstr "삭제된 패키지가 없음 "
 msgid "No packages updated"
 msgstr "업데이트된 패키지가 없음 "
 
-#: app/views/system_templates/_products.html.haml:5
 #: app/views/promotions/_products.html.haml:5
+#: app/views/system_templates/_products.html.haml:5
 msgid "No products"
 msgstr "제품이 없음 "
-
-#: app/views/system_templates/index.html.haml:5
-msgid "No products are currently associated with this system template.  Please associate a product that contains distributions in order to select a distribution."
-msgstr "현재 이 시스템 템플릿과 관련된 제품이 없습니다. 배포판을 선택하기 위해 배포판이 들어 있는 제품을 연결하십시오. "
 
 #: app/views/promotions/show.html.haml:7
 msgid "No products exist in the promotion changeset."
 msgstr "승격 변경 집합에 존재하는 제품이 없음. "
+
+#: app/views/system_templates/index.html.haml:6
+#, fuzzy
+msgid ""
+"No products or repositories are currently associated with this system "
+"template.  Please add either a product or repository that contains "
+"distributions in order to select a distribution."
+msgstr ""
+"현재 이 시스템 템플릿과 관련된 제품이 없습니다. 배포판을 선택하기 위해 배포판"
+"이 들어 있는 제품을 연결하십시오. "
 
 #: app/views/filters/index.html.haml:15
 msgid "No products or repositories are currently associated."
@@ -2089,7 +2450,7 @@ msgstr "사용 가능한 리포지터리가 없음. "
 msgid "No repositories exist in this promotion changeset."
 msgstr "승격 변경 집합에 존재하는 리포지터리가 없음. "
 
-#: app/views/providers/redhat/_subscription_details.html.haml:55
+#: app/views/providers/redhat/_subscription_details.html.haml:53
 msgid "No subscriptions have been imported."
 msgstr "불러온 서브스크립션이 없음. "
 
@@ -2101,10 +2462,10 @@ msgstr "변경 집합에 존재하는 시스템 템플릿이 없음. "
 msgid "No systems found."
 msgstr "시스템을 찾을 수 없음. "
 
-#: app/models/product.rb:95 app/models/system.rb:202
-#: app/views/roles/_closed_permission.html.haml:13
-#: app/views/systems/_subscription_details.html.haml:7
+#: app/models/system.rb:201 app/models/product.rb:95
 #: app/views/systems/_edit.html.haml:64 app/views/systems/_edit.html.haml:88
+#: app/views/systems/_subscription_details.html.haml:7
+#: app/views/roles/_closed_permission.html.haml:13
 msgid "None"
 msgstr "없음 "
 
@@ -2114,9 +2475,14 @@ msgstr "없음 "
 msgid "None defined for this Organization."
 msgstr "이 조직에 대해 정의된 것이 없음."
 
-#: app/views/system_templates/index.html.haml:5
-msgid "None of the associated products contain distributions, please select a product that contains at least one distribution."
-msgstr "배포판이 포함된 연관된 제품이 없습니다. 최소 하나의 배포판이 들어 있는 제품을 선택하십시오. "
+#: app/views/system_templates/index.html.haml:6
+#, fuzzy
+msgid ""
+"None of the associated products or repositories contain distributions, "
+"please add a product or repository that contains at least one distribution."
+msgstr ""
+"배포판이 포함된 연관된 제품이 없습니다. 최소 하나의 배포판이 들어 있는 제품"
+"을 선택하십시오. "
 
 #: app/views/errata/_show.html.haml:78
 msgid "None."
@@ -2129,6 +2495,11 @@ msgstr "적용되지 않음 "
 #: app/models/activation_key.rb:75
 msgid "Not enough entitlements in pools (%d), required: %d, available: %d"
 msgstr "풀 (%d)에 충분한 인타이틀먼트가 없습니다. 필요: %d, 사용 가능:  %d"
+
+#: app/controllers/api/errors_controller.rb:19
+#, fuzzy
+msgid "Not found"
+msgstr "시스템을 찾을 수 없음. "
 
 #: app/views/organizations/_new.html.haml:34
 msgid "Note: This will be set as your initial default environment."
@@ -2159,10 +2530,19 @@ msgid "Ok"
 msgstr "Ok"
 
 #: app/views/providers/_products_repos.html.haml:17
-msgid "On Products & Repositories you can add your own Products and Repositories to your Provider.  This allows you to synchronize content from any remote repository to this server.  Simply add a Product and then setup one or more repositories to add to this Provider.  This feature is only available for Custom Providers."
-msgstr "제품 & 리포지터리에서 공급자에게 제품 및 리포지터리를 추가할 수 있습니다. 이는 모든 원격 리포지터리에서 이 서버로 컨텐츠를 동기화 가능하게 합니다. 간단하게 제품을 추가한 후 공급자를 추가하기 위해 하나 이상의 리포지터리를 설정합니다. 이 기능은 사용자 정의 공급자에 대해서만 사용 가능합니다. "
+msgid ""
+"On Products & Repositories you can add your own Products and Repositories to "
+"your Provider.  This allows you to synchronize content from any remote "
+"repository to this server.  Simply add a Product and then setup one or more "
+"repositories to add to this Provider.  This feature is only available for "
+"Custom Providers."
+msgstr ""
+"제품 & 리포지터리에서 공급자에게 제품 및 리포지터리를 추가할 수 있습니다. 이"
+"는 모든 원격 리포지터리에서 이 서버로 컨텐츠를 동기화 가능하게 합니다. 간단하"
+"게 제품을 추가한 후 공급자를 추가하기 위해 하나 이상의 리포지터리를 설정합니"
+"다. 이 기능은 사용자 정의 공급자에 대해서만 사용 가능합니다. "
 
-#: app/views/roles/_edit.html.haml:66
+#: app/views/roles/_edit.html.haml:66 app/views/roles/index.html.haml:8
 msgid "On:"
 msgstr "위치: "
 
@@ -2183,11 +2563,15 @@ msgstr "하나 이상의 패키지에 보류 중인 작업이 있습니다. "
 msgid "One or more package names are invalid."
 msgstr "하나 이상의 패키지 이름이 잘못되었습니다. "
 
+#: app/models/search_favorite.rb:25
+msgid "Only %s favorites may be created."
+msgstr ""
+
 #: app/models/provider.rb:54
 msgid "Only one Red Hat provider permitted for an Organization"
 msgstr "하나의 조직에 대해 하나의 Red Hat 공급자만을 허용 "
 
-#: app/views/sync_management/index.html.haml:28
+#: app/views/sync_management/index.html.haml:37
 msgid "Only show syncing."
 msgstr "동기화 중인 것만을 표시. "
 
@@ -2199,40 +2583,100 @@ msgstr "오픈 소스 서브스크립션 관리 "
 msgid "Open Source Systems Management"
 msgstr "오픈 소스 시스템 관리 "
 
-#: app/controllers/organizations_controller.rb:219
+#: app/controllers/organizations_controller.rb:225
 msgid "Organization"
 msgstr "조직 "
 
-#: app/controllers/organizations_controller.rb:147
+#: app/controllers/organizations_controller.rb:72
+#, fuzzy
+msgid ""
+"Organization '%s' already exists and either has been scheduled for deletion "
+"or failed deletion."
+msgstr "조직 '%s'이(가) 백그라운드 삭제 용으로 스케줄되었습니다. "
+
+#: app/controllers/organizations_controller.rb:153
 msgid "Organization '%s' has been scheduled for background deletion."
 msgstr "조직 '%s'이(가) 백그라운드 삭제 용으로 스케줄되었습니다. "
 
-#: app/controllers/organizations_controller.rb:216
+#: app/controllers/organizations_controller.rb:90
+#: app/controllers/organizations_controller.rb:103
+#: app/controllers/organizations_controller.rb:108
+#, fuzzy
+msgid "Organization '%s' was created."
+msgstr "조직 "
+
+#: app/controllers/organizations_controller.rb:127
+#, fuzzy
+msgid "Organization '%s' was updated."
+msgstr "조직 "
+
+#: app/controllers/organizations_controller.rb:222
 #: app/models/resource_type.rb:91 lib/navigation/organization.rb:23
 msgid "Organizations"
 msgstr "조직 "
 
 #: app/views/organizations/index.html.haml:3
-msgid "Organizations allow content and systems to be separated by logical divisions.  To edit the environments within an organization, click on that organization and then click on the desired environment."
-msgstr "조직은 컨텐츠와 시스템을 논리적 단위로 구분할 수 있습니다. 조직에 있는 환경을 편집하려면 해당 조직을 클릭하고 원하는 환경을 클릭합니다. "
+msgid ""
+"Organizations allow content and systems to be separated by logical "
+"divisions.  To edit the environments within an organization, click on that "
+"organization and then click on the desired environment."
+msgstr ""
+"조직은 컨텐츠와 시스템을 논리적 단위로 구분할 수 있습니다. 조직에 있는 환경"
+"을 편집하려면 해당 조직을 클릭하고 원하는 환경을 클릭합니다. "
 
 #: app/views/promotions/show.html.haml:7
 #: app/views/errata/_packages.html.haml:17
 msgid "Package"
 msgstr "패키지 "
 
+#: app/models/changeset_package.rb:19
+#, fuzzy
+msgid "Package '%s' doesn't belong to the specified product!"
+msgstr "제품 '%s'을 이 환경에서 찾을 수 없습니다. "
+
+#: app/models/system_template_package.rb:17
+#, fuzzy
+msgid "Package '%s' is already present in the template"
+msgstr "제품 '%s'는 이미 템플릿에 있습니다. "
+
+#: app/models/system_template_package.rb:32
+#, fuzzy
+msgid "Package '%s' not found in the %s environment"
+msgstr "제품 '%s'을 이 환경에서 찾을 수 없습니다. "
+
+#: app/models/changeset.rb:245 app/models/changeset.rb:254
+#, fuzzy
+msgid "Package '%s' was not found in the source environment."
+msgstr "제품 '%s'을 이 환경에서 찾을 수 없습니다. "
+
 #: app/views/promotions/show.html.haml:80
 msgid "Package Dependencies"
 msgstr "패키지 종속성 "
 
-#: app/controllers/filters_controller.rb:200
-#: lib/navigation/content_management.rb:152
+#: app/controllers/filters_controller.rb:198
+#, fuzzy
+msgid "Package Filter %s deleted."
+msgstr "패키지 필터 "
+
+#: app/controllers/filters_controller.rb:80
+msgid "Package Filter '%s' has been updated."
+msgstr ""
+
+#: app/controllers/filters_controller.rb:220
+#: lib/navigation/content_management.rb:148
 msgid "Package Filters"
 msgstr "패키지 필터 "
 
 #: app/views/filters/index.html.haml:4
-msgid "Package Filters allow you to blacklist packages from being promoted into subsequent environments. Simply create a filter and add either a package name or regular expression to the filter.  You can associate the filter with entire products or individual repositories within any product."
-msgstr "패키지 필터는 후속 환경으로 승격되는 것에서 패키지를 블랙리스트할 수 있습니다. 필터를 생성하여 필터에 패키지 이름 또는 정규 표현을 추가하면 됩니다. 전체 제품 또는 제품에 있는 개별 리포지터리와 필터를 연결할 수 있습니다.  "
+msgid ""
+"Package Filters allow you to blacklist packages from being promoted into "
+"subsequent environments. Simply create a filter and add either a package "
+"name or regular expression to the filter.  You can associate the filter with "
+"entire products or individual repositories within any product."
+msgstr ""
+"패키지 필터는 후속 환경으로 승격되는 것에서 패키지를 블랙리스트할 수 있습니"
+"다. 필터를 생성하여 필터에 패키지 이름 또는 정규 표현을 추가하면 됩니다. 전"
+"체 제품 또는 제품에 있는 개별 리포지터리와 필터를 연결할 수 있습니다.  "
 
 #: app/views/packages/_show.html.haml:76
 msgid "Package Group"
@@ -2262,10 +2706,10 @@ msgstr "패키지 그룹 업데이트 "
 msgid "Package Group Update scheduled by %s"
 msgstr "%s에 의해 스케줄된 패키지 그룹 업데이트 "
 
-#: app/helpers/breadcrumb_helper.rb:382 app/helpers/breadcrumb_helper.rb:402
-#: app/views/system_packages/_packages.html.haml:75
-#: app/views/system_templates/index.html.haml:5
+#: app/helpers/breadcrumb_helper.rb:384 app/helpers/breadcrumb_helper.rb:404
+#: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_product_detail.html.haml:10
+#: app/views/system_packages/_packages.html.haml:75
 msgid "Package Groups"
 msgstr "패키지 그룹 "
 
@@ -2301,24 +2745,39 @@ msgstr "패키지 업데이트 "
 msgid "Package Update scheduled by %s"
 msgstr "%s에 의해 스케줄된 패키지 업데이트 "
 
+#: app/models/system_template_pack_group.rb:18
+#, fuzzy
+msgid "Package group '%s' not found in the %s environment"
+msgstr "제품 '%s'을 이 환경에서 찾을 수 없습니다. "
+
 #: app/models/system_template.rb:290
 msgid "Package group '%s' not found in this template."
 msgstr "템플릿에서 패키지 그룹 '%s'을 찾을 수 없습니다. "
+
+#: app/models/system_template_pg_category.rb:17
+#, fuzzy
+msgid "Package group category '%s' not found in the %s environment"
+msgstr "템플릿에서 패키지 그룹 카테고리 '%s'를 찾을 수 없습니다. "
 
 #: app/models/system_template.rb:302
 msgid "Package group category '%s' not found in this template."
 msgstr "템플릿에서 패키지 그룹 카테고리 '%s'를 찾을 수 없습니다. "
 
-#: app/helpers/breadcrumb_helper.rb:49 app/helpers/breadcrumb_helper.rb:153
-#: app/helpers/breadcrumb_helper.rb:378 app/helpers/breadcrumb_helper.rb:399
-#: app/views/system_packages/_packages.html.haml:73
-#: app/views/changesets/_edit.html.haml:58
-#: app/views/system_templates/index.html.haml:5
-#: app/views/system_templates/_product_detail.html.haml:7
-#: app/views/system_templates/_promotion_details.html.haml:29
+#: app/models/changeset.rb:251
+#, fuzzy
+msgid "Package has to be specified by its nvre."
+msgstr "%s에 의해 스케줄된 패키지 업데이트 "
+
+#: app/helpers/breadcrumb_helper.rb:50 app/helpers/breadcrumb_helper.rb:156
+#: app/helpers/breadcrumb_helper.rb:380 app/helpers/breadcrumb_helper.rb:401
+#: app/views/promotions/show.html.haml:7
 #: app/views/promotions/_detail.html.haml:18
-#: app/views/promotions/show.html.haml:7 lib/navigation/systems.rb:79
-#: lib/navigation/content_management.rb:203
+#: app/views/changesets/_edit.html.haml:58
+#: app/views/system_templates/_promotion_details.html.haml:29
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/_product_detail.html.haml:7
+#: app/views/system_packages/_packages.html.haml:73
+#: lib/navigation/systems.rb:80 lib/navigation/content_management.rb:184
 msgid "Packages"
 msgstr "패키지 "
 
@@ -2337,6 +2796,11 @@ msgstr "매개 변수 "
 #: app/views/promotions/show.html.haml:7
 msgid "Partial Products"
 msgstr "일부 제품 "
+
+#: app/views/user_sessions/new.html.haml:11
+#, fuzzy
+msgid "Password"
+msgstr "암호: "
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
@@ -2361,11 +2825,11 @@ msgstr "사용자 '%{s}'에 대한 암호 재설정 토큰이 만료되었습니
 msgid "Password:"
 msgstr "암호: "
 
-#: app/views/gpg_keys/_new.html.haml:14
+#: app/views/gpg_keys/_new.html.haml:28
 msgid "Paste GPG Key"
 msgstr "GPG 키 붙여넣기 "
 
-#: app/helpers/dashboard_helper.rb:57
+#: app/helpers/dashboard_helper.rb:59
 msgid "Pending"
 msgstr "보류 중 "
 
@@ -2373,11 +2837,31 @@ msgstr "보류 중 "
 msgid "Permission"
 msgstr "권한 "
 
-#: app/views/roles/_edit.html.haml:52
+#: app/controllers/roles_controller.rb:219
+#, fuzzy
+msgid "Permission '%s' was created."
+msgstr "이 역할에 대한 권한 "
+
+#: app/controllers/roles_controller.rb:239
+#, fuzzy
+msgid "Permission '%s' was removed."
+msgstr "이 역할에 대한 권한 "
+
+#: app/controllers/roles_controller.rb:196
+msgid "Permission '%s' was updated."
+msgstr ""
+
+#: app/controllers/application_controller.rb:113
+msgid ""
+"Permission Denied. User '%s' does not have permissions to access "
+"organization '%s'."
+msgstr ""
+
+#: app/views/roles/_edit.html.haml:52 app/views/roles/index.html.haml:8
 msgid "Permission For:"
 msgstr "권한 "
 
-#: app/helpers/breadcrumb_helper.rb:240
+#: app/helpers/breadcrumb_helper.rb:242
 msgid "Permissions"
 msgstr "권한 "
 
@@ -2385,10 +2869,10 @@ msgstr "권한 "
 msgid "Permissions for this role."
 msgstr "이 역할에 대한 권한 "
 
-#: app/helpers/systems_helper.rb:42
+#: app/controllers/activation_keys_controller.rb:335
+#: app/controllers/providers_controller.rb:293
 #: app/controllers/subscriptions_controller.rb:57
-#: app/controllers/providers_controller.rb:286
-#: app/controllers/activation_keys_controller.rb:343 app/models/system.rb:68
+#: app/helpers/systems_helper.rb:41 app/models/system.rb:67
 msgid "Physical"
 msgstr "물리적 "
 
@@ -2396,22 +2880,27 @@ msgstr "물리적 "
 msgid "Pick your Environment to download template from:"
 msgstr "템플릿을 다운로드할 환경을 선택합니다: "
 
-#: app/controllers/sync_schedules_controller.rb:39
-#: app/controllers/sync_schedules_controller.rb:45
 #: app/controllers/sync_plans_controller.rb:50
+#: app/controllers/sync_schedules_controller.rb:40
+#: app/controllers/sync_schedules_controller.rb:47
 msgid "Plan"
 msgstr "계획 "
+
+#: app/controllers/sync_schedules_controller.rb:39
+#, fuzzy
+msgid "Plan Name"
+msgstr "패키지 이름 "
 
 #: app/controllers/api/subscriptions_controller.rb:45
 msgid "Please provide entitlement id"
 msgstr "인타이틀먼트 ID를 입력하십시오 "
 
+#: app/controllers/api/systems_controller.rb:94
 #: app/controllers/api/subscriptions_controller.rb:38
-#: app/controllers/api/systems_controller.rb:93
 msgid "Please provide pool and quantity"
 msgstr "풀 및 수량을 입력하십시오 "
 
-#: app/controllers/api/systems_controller.rb:100
+#: app/controllers/api/systems_controller.rb:101
 msgid "Please provide pool id"
 msgstr "풀 id를 입력하십시오 "
 
@@ -2424,12 +2913,20 @@ msgid "Please request the required privileges from an administrator."
 msgstr "관리자로 부터 필요한 권한을 요청하십시오. "
 
 #: app/views/roles/index.html.haml:8
-msgid "Please select Permissions to view and add permissions for this role or Users to see current users with this role."
-msgstr "이 역할에 대한 권한을 보거나 추가하려면 권한을 선택하고 역할을 갖는 현재 사용자를 확인하려면 사용자를 선택하십시오. "
+msgid ""
+"Please select Permissions to view and add permissions for this role or Users "
+"to see current users with this role."
+msgstr ""
+"이 역할에 대한 권한을 보거나 추가하려면 권한을 선택하고 역할을 갖는 현재 사용"
+"자를 확인하려면 사용자를 선택하십시오. "
 
 #: app/views/roles/index.html.haml:8
-msgid "Please select Permissions to view permissions for this role or Users to see current users with this role."
-msgstr "이 역할에 대한 권한을 보려면 권한을 선택하고 역할을 갖는 현재 사용자를 확인하려면 사용자를 선택하십시오. "
+msgid ""
+"Please select Permissions to view permissions for this role or Users to see "
+"current users with this role."
+msgstr ""
+"이 역할에 대한 권한을 보려면 권한을 선택하고 역할을 갖는 현재 사용자를 확인하"
+"려면 사용자를 선택하십시오. "
 
 #: app/models/activation_key.rb:87
 msgid "Pool %s has no product associated"
@@ -2448,17 +2945,26 @@ msgstr "이전 환경 "
 msgid "Processing promotion changeset modifications, please wait."
 msgstr "승격 변경 집합 수정을 처리하고 있습니다. 잠시만 기다려 주십시오. "
 
-#: app/views/systems/_products.html.haml:12
-#: app/views/dashboard/_errata.haml:12
+#: app/views/sync_management/index.html.haml:43
 #: app/views/filters/_products.html.haml:22
 #: app/views/promotions/show.html.haml:7
-#: app/views/gpg_keys/_products_repos.html.haml:47
 #: app/views/providers/_products_repos.html.haml:38
 #: app/views/providers/redhat/_repo_whitelist.html.haml:3
-#: app/views/sync_management/index.html.haml:34
+#: app/views/gpg_keys/_products_repos.html.haml:47
+#: app/views/systems/_products.html.haml:12
 #: app/views/subscriptions/index.html.haml:13
+#: app/views/dashboard/_errata.haml:12
 msgid "Product"
 msgstr "제품 "
+
+#: app/controllers/products_controller.rb:51
+msgid "Product '%s' created."
+msgstr ""
+
+#: app/models/changeset.rb:137
+#, fuzzy
+msgid "Product '%s' hasn't any repositories"
+msgstr "제품 및 리포지터리 "
 
 #: app/models/system_template.rb:243 app/models/system_template.rb:260
 msgid "Product '%s' is already present in the template."
@@ -2469,7 +2975,15 @@ msgstr "제품 '%s'는 이미 템플릿에 있습니다. "
 msgid "Product '%s' not found in this environment."
 msgstr "제품 '%s'을 이 환경에서 찾을 수 없습니다. "
 
-#: app/views/systems/_subs.html.haml:43 app/views/systems/_subs.html.haml:107
+#: app/controllers/products_controller.rb:101
+msgid "Product '%s' removed."
+msgstr ""
+
+#: app/controllers/products_controller.rb:79
+msgid "Product '%s' was updated."
+msgstr ""
+
+#: app/views/systems/_subs.html.haml:43 app/views/systems/_subs.html.haml:108
 msgid "Product Name: "
 msgstr "제품 이름: "
 
@@ -2482,13 +2996,12 @@ msgstr "이 환경에 있는 제품 "
 msgid "Product: "
 msgstr "제품: "
 
-#: app/helpers/breadcrumb_helper.rb:134 app/helpers/breadcrumb_helper.rb:363
-#: app/helpers/breadcrumb_helper.rb:400
-#: app/views/system_templates/index.html.haml:5
-#: app/views/system_templates/_promotion_details.html.haml:21
+#: app/helpers/breadcrumb_helper.rb:135 app/helpers/breadcrumb_helper.rb:365
+#: app/helpers/breadcrumb_helper.rb:402 app/views/promotions/show.html.haml:7
 #: app/views/promotions/_detail.html.haml:6
-#: app/views/promotions/show.html.haml:7
 #: app/views/gpg_keys/_products_repos.html.haml:25
+#: app/views/system_templates/_promotion_details.html.haml:21
+#: app/views/system_templates/index.html.haml:6
 msgid "Products"
 msgstr "제품 "
 
@@ -2496,8 +3009,8 @@ msgstr "제품 "
 msgid "Products & Repositories"
 msgstr "제품 & 리포지터리 "
 
-#: lib/navigation/content_management.rb:243
-#: lib/navigation/content_management.rb:260
+#: lib/navigation/content_management.rb:224
+#: lib/navigation/content_management.rb:241
 msgid "Products and Repositories"
 msgstr "제품 및 리포지터리 "
 
@@ -2513,7 +3026,7 @@ msgstr "진행 상태: "
 msgid "Promote"
 msgstr "승격 "
 
-#: app/models/kt_environment.rb:333
+#: app/models/kt_environment.rb:345
 msgid "Promote Changesets in Environment"
 msgstr "환경에 있는 승격 변경 집합"
 
@@ -2521,10 +3034,11 @@ msgstr "환경에 있는 승격 변경 집합"
 msgid "Promote to "
 msgstr "승격 "
 
-#: app/views/promotions/_distributions.html.haml:11
-#: app/views/promotions/_repo_items.html.haml:5
-#: app/views/promotions/_package_items.html.haml:5
 #: app/views/promotions/show.html.haml:7
+#: app/views/promotions/_distributions.html.haml:11
+#: app/views/promotions/_package_items.html.haml:7
+#: app/views/promotions/_errata_items.html.haml:10
+#: app/views/promotions/_repo_items.html.haml:5
 msgid "Promoted"
 msgstr "승격됨 "
 
@@ -2540,17 +3054,28 @@ msgstr "승격 중 "
 msgid "Promoting..."
 msgstr "승격 중... "
 
-#: app/views/promotions/show.html.haml:7
-msgid "Promotino Changeset is empty."
+#: app/controllers/changesets_controller.rb:109
+#, fuzzy
+msgid "Promotion Changeset '%s' was created."
+msgstr "승격 변경 집합이 비어 있습니다. "
+
+#: app/controllers/changesets_controller.rb:209
+#, fuzzy
+msgid "Promotion Changeset '%s' was deleted."
 msgstr "승격 변경 집합이 비어 있습니다. "
 
 #: app/views/promotions/show.html.haml:116
 msgid "Promotion Changeset Details"
 msgstr "승격 변경 집합 상세 정보 "
 
-#: lib/navigation/content_management.rb:142
+#: lib/navigation/content_management.rb:139
 msgid "Promotion Changeset History"
 msgstr "승격 변경 집합 기록 "
+
+#: app/views/promotions/show.html.haml:7
+#, fuzzy
+msgid "Promotion Changeset is empty."
+msgstr "승격 변경 집합이 비어 있습니다. "
 
 #: app/views/promotions/show.html.haml:149
 #: app/views/promotions/show.html.haml:152
@@ -2565,43 +3090,69 @@ msgstr "승격 날짜: "
 msgid "Promotion Failed"
 msgstr "승격 실패 "
 
-#: app/models/changeset.rb:328
-msgid "Promotion of changeset '%{name}' failed."
-msgstr "변경 집합 '%{name}' 의 승격을 실패했습니다. "
-
-#: lib/navigation/content_management.rb:132
+#: lib/navigation/content_management.rb:130
 msgid "Promotions"
 msgstr "승격 "
 
-#: app/views/dashboard/index.html.haml:12
+#: app/views/dashboard/index.html.haml:15
 msgid "Promotions Overview"
 msgstr "승격 개요 "
 
 #: app/views/promotions/show.html.haml:84
-msgid "Promotions allow you to promote content from one environment to the next along a promotion path. Once you have created a promotion changeset, clicking \"Add\" next to  one or more products will add them to the promotion changeset. If products already exist in the next environment, you may promote other types of content. Once you have created a change set, click the \"Promote\" button to commit it to the next environment."
-msgstr "승격을 통해 하나의 환경에서 다음 환경 승격 경로를 따라 컨텐츠를 승격할 수 있습니다. 승격 변경 집합을 생성한 후, 하나 이상의 제품 옆에 있는\"추가\"를 클릭하여 승격 변경 집합에 이를 추가할 수 있습니다. 다음 환경에 제품이 이미 존재하는 경우, 다른 컨텐츠 형식을 승격할 수 있습니다. 변경 집합을 생성한 후, \"승격\" 버튼을 클릭하여 다음 환경에 이를 커밋합니다. "
+msgid ""
+"Promotions allow you to promote content from one environment to the next "
+"along a promotion path. Once you have created a promotion changeset, "
+"clicking \"Add\" next to  one or more products will add them to the "
+"promotion changeset. If products already exist in the next environment, you "
+"may promote other types of content. Once you have created a change set, "
+"click the \"Promote\" button to commit it to the next environment."
+msgstr ""
+"승격을 통해 하나의 환경에서 다음 환경 승격 경로를 따라 컨텐츠를 승격할 수 있"
+"습니다. 승격 변경 집합을 생성한 후, 하나 이상의 제품 옆에 있는\"추가\"를 클릭"
+"하여 승격 변경 집합에 이를 추가할 수 있습니다. 다음 환경에 제품이 이미 존재하"
+"는 경우, 다른 컨텐츠 형식을 승격할 수 있습니다. 변경 집합을 생성한 후, \"승격"
+"\" 버튼을 클릭하여 다음 환경에 이를 커밋합니다. "
 
-#: app/controllers/providers_controller.rb:238
+#: app/controllers/providers_controller.rb:245
 msgid "Provider"
 msgstr "공급자 "
+
+#: app/controllers/providers_controller.rb:157
+msgid "Provider '%s' was created."
+msgstr ""
+
+#: app/controllers/providers_controller.rb:177
+msgid "Provider '%s' was deleted."
+msgstr ""
+
+#: app/controllers/providers_controller.rb:204
+msgid "Provider '%s' was updated."
+msgstr ""
 
 #: app/views/products/_edit.html.haml:4
 msgid "Provider: "
 msgstr "공급자: "
 
-#: app/controllers/providers_controller.rb:235 app/models/resource_type.rb:95
+#: app/controllers/providers_controller.rb:242 app/models/resource_type.rb:95
 msgid "Providers"
 msgstr "공급자 "
 
 #: app/views/providers/index.html.haml:3
-msgid "Providers provide many types of content such as packages, errata, kickstart trees, and installation disc images.  A provider may be delivering all of your paid content or it could simply be a local yum repository providing a few yum repos."
-msgstr "공급자는 패키지, 에라타, 킥스타트 트리, 설치 디스크 이미지와 같은 여러 종류의 컨텐츠를 제공합니다. 공급자는 모든 유료 컨텐츠를 제공하거나 yum 리포지터리를 제공하는 로컬 yum 리포지터리가 될 수 도 있습니다. "
+msgid ""
+"Providers provide many types of content such as packages, errata, kickstart "
+"trees, and installation disc images.  A provider may be delivering all of "
+"your paid content or it could simply be a local yum repository providing a "
+"few yum repos."
+msgstr ""
+"공급자는 패키지, 에라타, 킥스타트 트리, 설치 디스크 이미지와 같은 여러 종류"
+"의 컨텐츠를 제공합니다. 공급자는 모든 유료 컨텐츠를 제공하거나 yum 리포지터리"
+"를 제공하는 로컬 yum 리포지터리가 될 수 도 있습니다. "
 
 #: app/views/packages/_dependencies.html.haml:21
 msgid "Provides"
 msgstr "제공 "
 
-#: app/views/systems/_subs.html.haml:20 app/views/systems/_subs.html.haml:71
+#: app/views/systems/_subs.html.haml:20 app/views/systems/_subs.html.haml:72
 msgid "Quantity"
 msgstr "수량 "
 
@@ -2609,49 +3160,113 @@ msgstr "수량 "
 msgid "Queued."
 msgstr "대기열에 등록됨 "
 
-#: app/models/activation_key.rb:147
+#: app/models/permission.rb:158 app/models/activation_key.rb:147
 msgid "Read Activation Keys"
 msgstr "활성키 읽기 "
 
-#: app/models/kt_environment.rb:331
+#: app/models/permission.rb:183
+#, fuzzy
+msgid "Read Activation Keys permission"
+msgstr "활성키 읽기 "
+
+#: app/models/kt_environment.rb:343
 msgid "Read Changesets in Environment"
 msgstr "환경에 있는 변경 집합 읽기 "
 
-#: app/models/kt_environment.rb:326
+#: app/models/kt_environment.rb:338
 msgid "Read Environment Contents"
 msgstr "환경 컨텐츠 읽기 "
 
-#: app/models/organization.rb:128
+#: app/models/permission.rb:152
+#, fuzzy
+msgid "Read Environments"
+msgstr "환경 "
+
+#: app/models/permission.rb:177
+#, fuzzy
+msgid "Read Environments permission"
+msgstr "환경 컨텐츠 읽기 "
+
+#: app/models/role.rb:193
+msgid "Read Everything"
+msgstr ""
+
+#: app/models/permission.rb:160
+#, fuzzy
+msgid "Read Filters"
+msgstr "패키지 필터 읽기 "
+
+#: app/models/permission.rb:185
+#, fuzzy
+msgid "Read Filters permission"
+msgstr "권한 편집 "
+
+#: app/models/organization.rb:129
 msgid "Read Organization"
 msgstr "조직 읽기 "
 
-#: app/models/filter.rb:65
+#: app/models/permission.rb:150
+#, fuzzy
+msgid "Read Organizations"
+msgstr "조직 읽기 "
+
+#: app/models/permission.rb:175
+#, fuzzy
+msgid "Read Organizations permission"
+msgstr "조직 읽기 "
+
+#: app/models/filter.rb:66
 msgid "Read Package Filters"
 msgstr "패키지 필터 읽기 "
 
-#: app/models/provider.rb:126
+#: app/models/permission.rb:156 app/models/provider.rb:126
 msgid "Read Providers"
 msgstr "공급자 읽기 "
 
-#: app/models/role.rb:147
+#: app/models/permission.rb:181
+#, fuzzy
+msgid "Read Providers permission"
+msgstr "공급자 읽기 "
+
+#: app/models/permission.rb:164 app/models/role.rb:172
 msgid "Read Roles"
 msgstr "역할 읽기 "
 
-#: app/models/system_template.rb:392
+#: app/models/permission.rb:189
+#, fuzzy
+msgid "Read Roles permission"
+msgstr "글로벌 권한 추가 "
+
+#: app/models/permission.rb:154 app/models/system_template.rb:392
 msgid "Read System Templates"
 msgstr "시스템 템플릿 읽기 "
 
-#: app/models/organization.rb:129
+#: app/models/permission.rb:179
+#, fuzzy
+msgid "Read System Templates permission"
+msgstr "시스템 템플릿 읽기 "
+
+#: app/models/organization.rb:130
 msgid "Read Systems"
 msgstr "시스템 읽기 "
 
-#: app/models/kt_environment.rb:327
+#: app/models/kt_environment.rb:339
 msgid "Read Systems in Environment"
 msgstr "환경에 있는 시스템 읽기 "
 
-#: app/models/user.rb:352
+#: app/models/permission.rb:162 app/models/user.rb:355
 msgid "Read Users"
 msgstr "사용자 읽기 "
+
+#: app/models/permission.rb:187
+#, fuzzy
+msgid "Read Users permission"
+msgstr "사용자 읽기 "
+
+#: app/models/role.rb:208
+#, fuzzy
+msgid "Read only role."
+msgstr "역할 읽기 "
 
 #: lib/navigation/content_management.rb:67
 msgid "Red Hat Content Provider"
@@ -2665,11 +3280,11 @@ msgstr "Red Hat 공급자 정보 "
 msgid "Red Hat provider can not be deleted"
 msgstr "Red Hat 공급자는 삭제할 수 없음 "
 
-#: app/models/organization.rb:130
+#: app/models/organization.rb:131
 msgid "Register Systems"
 msgstr "시스템 등록 "
 
-#: app/models/kt_environment.rb:328
+#: app/models/kt_environment.rb:340
 msgid "Register Systems in Environment"
 msgstr "환경에 있는 시스템 등록 "
 
@@ -2681,21 +3296,25 @@ msgstr "등록됨 "
 msgid "Release"
 msgstr "릴리즈 "
 
-#: app/views/roles/index.html.haml:8
-#: app/views/system_packages/_packages.html.haml:109
-#: app/views/systems/_actions.html.haml:13
+#: app/views/user_sessions/new.html.haml:15
+msgid "Remember me"
+msgstr ""
+
 #: app/views/common/_common_i18n.html.haml:3
-#: app/views/system_templates/index.html.haml:87
-#: app/views/activation_keys/_applied_subscriptions.html.haml:37
-#: app/views/activation_keys/_applied_subscriptions.html.haml:38
 #: app/views/promotions/show.html.haml:7
 #: app/views/promotions/show.html.haml:132
+#: app/views/systems/_actions.html.haml:13
+#: app/views/activation_keys/_applied_subscriptions.html.haml:37
+#: app/views/activation_keys/_applied_subscriptions.html.haml:38
+#: app/views/system_templates/index.html.haml:89
+#: app/views/system_packages/_packages.html.haml:109
+#: app/views/roles/index.html.haml:8
 msgid "Remove"
 msgstr "삭제 "
 
-#: app/views/activation_keys/_available_subscriptions.html.haml:7
-#: app/views/activation_keys/_edit.html.haml:15
 #: app/views/activation_keys/_applied_subscriptions.html.haml:7
+#: app/views/activation_keys/_edit.html.haml:15
+#: app/views/activation_keys/_available_subscriptions.html.haml:7
 msgid "Remove Activation Key"
 msgstr "활성 키 삭제 "
 
@@ -2788,12 +3407,12 @@ msgstr "시스템 삭제 "
 msgid "Remove System(s)"
 msgstr "시스템 삭제 "
 
-#: app/models/kt_environment.rb:330
+#: app/models/kt_environment.rb:342
 msgid "Remove Systems in Environment"
 msgstr "환경에 있는 시스템 삭제 "
 
-#: app/views/roles/_self_role_edit.html.haml:6
 #: app/views/users/_edit.html.haml:6
+#: app/views/roles/_self_role_edit.html.haml:6
 msgid "Remove User"
 msgstr "사용자 삭제 "
 
@@ -2813,11 +3432,11 @@ msgstr "패키지 삭제 중..."
 msgid "Removing..."
 msgstr "삭제 중..."
 
-#: app/controllers/application_controller.rb:210
+#: app/controllers/application_controller.rb:234
 msgid "Rendering 404:"
 msgstr "렌더링 404: "
 
-#: app/controllers/application_controller.rb:224
+#: app/controllers/application_controller.rb:248
 msgid "Rendering 500:"
 msgstr "렌더링 500: "
 
@@ -2829,18 +3448,17 @@ msgstr "리포지터리 유형: "
 msgid "Repo id or environment must be provided"
 msgstr "리포지터리 ID 또는 환경을 지정해야 합니다 "
 
-#: app/helpers/breadcrumb_helper.rb:166
+#: app/helpers/breadcrumb_helper.rb:169
 msgid "Repos"
 msgstr "리포지터리 "
 
-#: app/helpers/breadcrumb_helper.rb:57 app/helpers/breadcrumb_helper.rb:374
-#: app/helpers/breadcrumb_helper.rb:401
-#: app/views/changesets/_edit.html.haml:62
-#: app/views/system_templates/index.html.haml:5
-#: app/views/system_templates/_product_detail.html.haml:4
+#: app/helpers/breadcrumb_helper.rb:58 app/helpers/breadcrumb_helper.rb:376
+#: app/helpers/breadcrumb_helper.rb:403 app/views/promotions/show.html.haml:7
 #: app/views/promotions/_detail.html.haml:26
-#: app/views/promotions/show.html.haml:7
 #: app/views/gpg_keys/_products_repos.html.haml:40
+#: app/views/changesets/_edit.html.haml:62
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/_product_detail.html.haml:4
 msgid "Repositories"
 msgstr "리포지터리 "
 
@@ -2849,10 +3467,15 @@ msgid "Repositories can be deleted only in Library environment."
 msgstr "리포지터리는 라이브러리 환경에서만 삭제할 수 있습니다. "
 
 #: app/views/promotions/show.html.haml:7
-#: app/views/gpg_keys/_products_repos.html.haml:52
 #: app/views/providers/_products_repos.html.haml:46
+#: app/views/gpg_keys/_products_repos.html.haml:52
 msgid "Repository"
 msgstr "리포지터리 "
+
+#: app/controllers/repositories_controller.rb:67
+#, fuzzy
+msgid "Repository '%s' created."
+msgstr "리포지터리 Url"
 
 #: app/models/system_template.rb:321 app/models/system_template.rb:332
 msgid "Repository '%s' is already present in the template."
@@ -2866,6 +3489,21 @@ msgstr "리포지터리 '%s'를 이 환경에서 찾을 수 없습니다. "
 msgid "Repository '%s' not found in this template."
 msgstr "리포지터리 '%s'를 템플릿에서 찾을 수 없습니다. "
 
+#: app/controllers/repositories_controller.rb:107
+#, fuzzy
+msgid "Repository '%s' removed."
+msgstr "리포지터리 Url"
+
+#: app/controllers/repositories_controller.rb:82
+#, fuzzy
+msgid "Repository '%s' updated."
+msgstr "리포지터리 '%s'를 템플릿에서 찾을 수 없습니다. "
+
+#: app/views/repositories/_edit.html.haml:13
+#, fuzzy
+msgid "Repository Details"
+msgstr "리포지터리 Url"
+
 #: app/views/providers/redhat/show.html.haml:17
 msgid "Repository Url"
 msgstr "리포지터리 Url"
@@ -2873,6 +3511,27 @@ msgstr "리포지터리 Url"
 #: app/models/repository.rb:16
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "리포지터리는 이미 승격되었기 때문에 이를 비활성화할 수 없습니다. "
+
+#: app/models/changeset_distribution.rb:21
+#, fuzzy
+msgid ""
+"Repository of the distribution '%s' has not been promoted into the target "
+"environment!"
+msgstr "리포지터리 '%s'를 이 환경에서 찾을 수 없습니다. "
+
+#: app/models/changeset_erratum.rb:21
+#, fuzzy
+msgid ""
+"Repository of the erratum '%s' has not been promoted into the target "
+"environment!"
+msgstr "리포지터리 '%s'를 이 환경에서 찾을 수 없습니다. "
+
+#: app/models/changeset_package.rb:20
+#, fuzzy
+msgid ""
+"Repository of the package '%s' has not been promoted into the target "
+"environment!"
+msgstr "리포지터리 '%s'를 이 환경에서 찾을 수 없습니다. "
 
 #: app/views/system_events/_details.html.haml:16
 msgid "Request"
@@ -2890,8 +3549,8 @@ msgstr "요구 사항 "
 msgid "Reset Password"
 msgstr "암호 재설정 "
 
+#: app/views/sync_management/index.html.haml:47
 #: app/views/system_events/_details.html.haml:28
-#: app/views/sync_management/index.html.haml:38
 msgid "Result"
 msgstr "결과 "
 
@@ -2908,6 +3567,18 @@ msgstr "확인 "
 msgid "Role"
 msgstr "역할 "
 
+#: app/controllers/roles_controller.rb:89
+msgid "Role '%s' was created."
+msgstr ""
+
+#: app/controllers/roles_controller.rb:140
+msgid "Role '%s' was deleted."
+msgstr ""
+
+#: app/controllers/roles_controller.rb:117
+msgid "Role '%s' was updated."
+msgstr ""
+
 #: app/views/roles/_edit.html.haml:31
 msgid "Role Details"
 msgstr "역할 상세 정보 "
@@ -2918,7 +3589,11 @@ msgstr "역할 상세 정보 "
 msgid "Roles"
 msgstr "역할 "
 
-#: app/views/systems/errata/_index.html.haml:58
+#: app/controllers/errors_controller.rb:20
+msgid "Route does not exist:"
+msgstr ""
+
+#: app/views/systems/errata/_index.html.haml:57
 msgid "Run"
 msgstr "실행 "
 
@@ -2926,23 +3601,23 @@ msgstr "실행 "
 msgid "Running."
 msgstr "실행 중. "
 
-#: app/views/systems/_subs.html.haml:18 app/views/systems/_subs.html.haml:69
+#: app/views/systems/_subs.html.haml:18 app/views/systems/_subs.html.haml:70
 msgid "SLA"
 msgstr "SLA"
 
-#: app/views/roles/_new.html.haml:18 app/views/roles/_permission.html.haml:39
+#: app/views/filters/_new.html.haml:23 app/views/common/_edit_i18n.html.haml:4
+#: app/views/providers/_form.html.haml:17 app/views/gpg_keys/_new.html.haml:33
 #: app/views/organizations/_new.html.haml:36
 #: app/views/sync_plans/_form.html.haml:31 app/views/systems/_new.html.haml:49
 #: app/views/password_resets/edit.html.haml:36
-#: app/views/filters/_new.html.haml:23 app/views/common/_edit_i18n.html.haml:4
-#: app/views/system_templates/index.html.haml:5
-#: app/views/system_templates/index.html.haml:92
-#: app/views/system_templates/_new.html.haml:21
+#: app/views/users/_edit_form.html.haml:59
+#: app/views/users/_edit_environment.html.haml:55
 #: app/views/activation_keys/_new.html.haml:40
 #: app/views/activation_keys/_edit.html.haml:74
-#: app/views/gpg_keys/_new.html.haml:19 app/views/providers/_form.html.haml:17
-#: app/views/users/_edit_environment.html.haml:55
-#: app/views/users/_edit_form.html.haml:59
+#: app/views/system_templates/_new.html.haml:21
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/index.html.haml:94
+#: app/views/roles/_new.html.haml:18 app/views/roles/_permission.html.haml:39
 msgid "Save"
 msgstr "저장 "
 
@@ -2966,7 +3641,7 @@ msgstr "사용자 저장 "
 msgid "Save as Favorite"
 msgstr "즐겨찾기로 저장 "
 
-#: app/views/system_templates/index.html.haml:64
+#: app/views/system_templates/index.html.haml:66
 msgid "Saving System Template"
 msgstr "시스템 템플릿 저장 중 "
 
@@ -2979,27 +3654,27 @@ msgstr "저장 중..."
 msgid "Scope"
 msgstr "범위 "
 
-#: app/views/notices/show.html.haml:19 app/views/common/_panel.html.haml:51
-#: app/views/common/_panel.html.haml:55
-#: app/views/system_templates/index.html.haml:53
+#: app/views/common/_panel.html.haml:51 app/views/common/_panel.html.haml:55
 #: app/views/promotions/show.html.haml:7
-#: app/views/promotions/show.html.haml:173
-#: app/views/promotions/show.html.haml:174
-#: app/views/promotions/show.html.haml:175
+#: app/views/promotions/show.html.haml:171
+#: app/views/promotions/show.html.haml:172
+#: app/views/promotions/show.html.haml:183
+#: app/views/system_templates/index.html.haml:55
+#: app/views/notices/show.html.haml:19
 msgid "Search"
 msgstr "검색 "
 
 #: app/views/filters/index.html.haml:15
-#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:6
 msgid "Search available package names..."
 msgstr "사용 가능한 패키지 이름 검색..."
 
 #: app/views/filters/index.html.haml:15
-#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:6
 msgid "Search available product names..."
 msgstr "사용 가능한 제품 이름 검색..."
 
-#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:6
 msgid "Search available repository names..."
 msgstr "사용 가능한 리포지터리 이름 검색..."
 
@@ -3011,17 +3686,17 @@ msgstr "현재 컨텐츠에 대해 검색을 사용할 수 없습니다. "
 msgid "Search..."
 msgstr "검색..."
 
-#: app/views/sync_management/index.html.haml:24
+#: app/views/sync_management/index.html.haml:33
 msgid "Select All"
 msgstr "모두 선택 "
 
-#: app/helpers/systems_helper.rb:38
+#: app/helpers/systems_helper.rb:37
 msgid "Select Architecture"
 msgstr "아키텍처 선택 "
 
-#: app/views/systems/_actions.html.haml:18
+#: app/views/sync_management/index.html.haml:29
 #: app/views/common/_panel.html.haml:24
-#: app/views/sync_management/index.html.haml:21
+#: app/views/systems/_actions.html.haml:18
 msgid "Select None"
 msgstr "선택하지 않음 "
 
@@ -3029,7 +3704,7 @@ msgstr "선택하지 않음 "
 msgid "Select Organization"
 msgstr "조직 선택 "
 
-#: app/controllers/sync_schedules_controller.rb:43
+#: app/controllers/sync_schedules_controller.rb:44
 msgid "Select Plans to apply to selected Products"
 msgstr "선택한 제품에 적용할 계획을 선택 "
 
@@ -3045,8 +3720,8 @@ msgstr "리포지터리 선택: "
 msgid "Select a System Template"
 msgstr "시스템 템플릿 선택 "
 
-#: app/helpers/breadcrumb_helper.rb:403
-#: app/views/system_templates/index.html.haml:5
+#: app/helpers/breadcrumb_helper.rb:405
+#: app/views/system_templates/index.html.haml:6
 msgid "Selected Distribution"
 msgstr "선택한 배포판 "
 
@@ -3054,19 +3729,19 @@ msgstr "선택한 배포판 "
 msgid "Send Login"
 msgstr "로그인 전송 "
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:211
 msgid "Severity: Critical"
 msgstr "중요도: 아주 중요 "
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:211
 msgid "Severity: Important"
 msgstr "중요도: 중요 "
 
-#: app/helpers/breadcrumb_helper.rb:210
+#: app/helpers/breadcrumb_helper.rb:212
 msgid "Severity: Low"
 msgstr "중요도: 낮음 "
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:211
 msgid "Severity: Moderate"
 msgstr "중요도: 중간 "
 
@@ -3074,25 +3749,33 @@ msgstr "중요도: 중간 "
 msgid "Signature"
 msgstr "서명 "
 
-#: app/views/sync_management/index.html.haml:37
+#: app/views/sync_management/index.html.haml:46
 msgid "Size (Packages)"
 msgstr "크기 (패키지) "
 
-#: app/views/systems/_subs.html.haml:70
+#: app/views/systems/_subs.html.haml:71
 msgid "Sockets"
 msgstr "소켓 "
 
-#: lib/navigation/systems.rb:73
+#: lib/navigation/systems.rb:74
 msgid "Software"
 msgstr "소프트웨어 "
 
 #: app/views/promotions/show.html.haml:7
-msgid "Some promotion changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications."
-msgstr "일부 승격 변경 집합 수정 사항이 처리 완료되지 않았습니다. 페이지를 종료하면 수정 사항을 손실할 수 있습니다. 정말로 종료하시겠습니까? "
+msgid ""
+"Some promotion changeset modifications have not finished processing, are you "
+"sure you want to leave the page?  By leaving you may lose some modifications."
+msgstr ""
+"일부 승격 변경 집합 수정 사항이 처리 완료되지 않았습니다. 페이지를 종료하면 "
+"수정 사항을 손실할 수 있습니다. 정말로 종료하시겠습니까? "
 
 #: app/views/common/500.html.haml:4
-msgid "Sorry about that! It seems something went wrong.  If you continue having trouble with this, please contact an Administrator."
-msgstr "죄송합니다! 문제가 발생한 것 같습니다. 문제가 계속 발생할 경우 관리자에게 문의하십시오. "
+msgid ""
+"Sorry about that! It seems something went wrong.  If you continue having "
+"trouble with this, please contact an Administrator."
+msgstr ""
+"죄송합니다! 문제가 발생한 것 같습니다. 문제가 계속 발생할 경우 관리자에게 문"
+"의하십시오. "
 
 #: app/views/packages/_show.html.haml:88
 msgid "Source Package"
@@ -3102,8 +3785,8 @@ msgstr "소스 패키지 "
 msgid "Specify Local Manifest"
 msgstr "로컬 매니페스트 지정 "
 
-#: app/views/sync_plans/_form.html.haml:20
 #: app/views/sync_plans/_edit.html.haml:26
+#: app/views/sync_plans/_form.html.haml:20
 #: app/views/activation_keys/_subscriptions.html.haml:6
 msgid "Start Date"
 msgstr "시작 날짜 "
@@ -3112,9 +3795,14 @@ msgstr "시작 날짜 "
 msgid "Start Date and Time can't be blank"
 msgstr "시작 날짜 및 시간을 비워둘 수 없음 "
 
-#: app/views/sync_management/index.html.haml:35
+#: app/views/sync_management/index.html.haml:44
 msgid "Start Time"
 msgstr "시작 시간 "
+
+#: app/controllers/changesets_controller.rb:218
+#, fuzzy
+msgid "Started promotion of '%s' to %s environment"
+msgstr "리포지터리 '%s'를 이 환경에서 찾을 수 없습니다. "
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
@@ -3125,25 +3813,38 @@ msgstr "강력한 "
 msgid "Subscribe"
 msgstr "구독 "
 
-#: app/views/systems/_subs.html.haml:17 app/views/systems/_subs.html.haml:68
-#: app/views/activation_keys/_subscriptions.html.haml:4
 #: app/views/providers/redhat/show.html.haml:44
+#: app/views/systems/_subs.html.haml:17 app/views/systems/_subs.html.haml:69
+#: app/views/activation_keys/_subscriptions.html.haml:4
 msgid "Subscription"
 msgstr "서브스크립션 "
 
-#: app/controllers/providers_controller.rb:86
+#: app/controllers/providers_controller.rb:93
 msgid "Subscription manifest must be specified on upload."
 msgstr "서브스크립션 매니페스트는 업로드시 지정해야 합니다. "
 
-#: app/controllers/providers_controller.rb:74
+#: app/controllers/providers_controller.rb:78
 msgid "Subscription manifest upload for provider '%{name}' failed."
-msgstr "공급자 '%{name}'에 대한 서브스크립션 매니페스트 업로드를 실패했습니다. "
+msgstr ""
+"공급자 '%{name}'에 대한 서브스크립션 매니페스트 업로드를 실패했습니다. "
 
-#: app/controllers/providers_controller.rb:71
-msgid "Subscription manifest uploaded successfully for provider '%{name}'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled."
-msgstr "공급자 '%{name}'에 대한 서브스크립션 매니페스트를 성공적으로 업로드했습니다. '리포지터리 활성화'를 및 활성화하려는 개별 리포지터리를 선택하여 동기화하고자 하는 리포지터리를 활성화하십시오. "
+#: app/controllers/providers_controller.rb:74
+#, fuzzy
+msgid "Subscription manifest uploaded successfully for provider '%{name}'."
+msgstr ""
+"공급자 '%{name}'에 대한 서브스크립션 매니페스트 업로드를 실패했습니다. "
 
-#: lib/navigation/systems.rb:67 lib/navigation/organization.rb:42
+#: app/controllers/providers_controller.rb:72
+msgid ""
+"Subscription manifest uploaded successfully for provider '%{name}'. Please "
+"enable the repositories you want to sync by selecting 'Enable Repositories' "
+"and selecting individual repositories to be enabled."
+msgstr ""
+"공급자 '%{name}'에 대한 서브스크립션 매니페스트를 성공적으로 업로드했습니다. "
+"'리포지터리 활성화'를 및 활성화하려는 개별 리포지터리를 선택하여 동기화하고"
+"자 하는 리포지터리를 활성화하십시오. "
+
+#: lib/navigation/systems.rb:68 lib/navigation/organization.rb:42
 msgid "Subscriptions"
 msgstr "서브스크립션 "
 
@@ -3159,9 +3860,32 @@ msgstr "서브스크립션은 %s까지 최신 버전임 "
 msgid "Subscriptions are not Current"
 msgstr "최신 서브스크립션이 아님 "
 
+#: app/controllers/activation_keys_controller.rb:101
+#, fuzzy
+msgid "Subscriptions successfully added to Activation Key '%s'."
+msgstr "조직 '%s'을 삭제할 수 없음. "
+
+#: app/controllers/activation_keys_controller.rb:125
+#, fuzzy
+msgid "Subscriptions successfully removed from Activation Key '%s'."
+msgstr "조직 '%s'을 삭제할 수 없음. "
+
 #: app/helpers/dashboard_helper.rb:53 app/views/dashboard/_sync.haml:27
 msgid "Success"
 msgstr "성공 "
+
+#: app/models/changeset.rb:298
+msgid "Successfully promoted changeset '%s'."
+msgstr ""
+
+#: app/models/user.rb:453
+#, fuzzy
+msgid "Successfully removed organization '%s'."
+msgstr "조직 '%s'을 삭제할 수 없음. "
+
+#: app/controllers/filters_controller.rb:166
+msgid "Sucessfully updated '%s' package filter."
+msgstr ""
 
 #: app/views/system_events/_details.html.haml:10
 msgid "Summary"
@@ -3170,6 +3894,19 @@ msgstr "요약 "
 #: app/views/promotions/show.html.haml:7
 msgid "Summary:"
 msgstr "요약: "
+
+#: app/models/permission.rb:166
+msgid "Super Admin"
+msgstr ""
+
+#: app/models/permission.rb:191
+#, fuzzy
+msgid "Super Admin permission"
+msgstr "권한 추가 "
+
+#: app/models/role.rb:206
+msgid "Super administrator with all access."
+msgstr ""
 
 #: app/views/providers/redhat/_subscription_details.html.haml:7
 #: app/views/subscriptions/index.html.haml:16
@@ -3184,20 +3921,28 @@ msgstr "동기화 취소됨 "
 msgid "Sync Management"
 msgstr "동기화 관리 "
 
-#: app/views/dashboard/index.html.haml:13
+#: app/views/dashboard/index.html.haml:18
 msgid "Sync Overview"
 msgstr "동기화 개요 "
+
+#: app/controllers/sync_plans_controller.rb:140
+msgid "Sync Plan '%s' was created."
+msgstr ""
+
+#: app/controllers/sync_plans_controller.rb:86
+msgid "Sync Plan '%s' was updated."
+msgstr ""
 
 #: app/controllers/sync_plans_controller.rb:47
 #: lib/navigation/content_management.rb:104
 msgid "Sync Plans"
 msgstr "동기화 계획 "
 
-#: app/controllers/sync_schedules_controller.rb:74
+#: app/controllers/sync_schedules_controller.rb:76
 msgid "Sync Plans applied successfully."
 msgstr "동기화 계획이 성공적으로 적용되었습니다. "
 
-#: app/models/organization.rb:133
+#: app/models/organization.rb:134
 msgid "Sync Products"
 msgstr "동기화 제품 "
 
@@ -3205,7 +3950,7 @@ msgstr "동기화 제품 "
 msgid "Sync Schedule"
 msgstr "동기화 스케줄 "
 
-#: app/views/sync_management/index.html.haml:16
+#: app/views/sync_management/index.html.haml:17
 #: lib/navigation/content_management.rb:95
 msgid "Sync Status"
 msgstr "동기화 상태 "
@@ -3215,6 +3960,10 @@ msgstr "동기화 상태 "
 msgid "Sync complete."
 msgstr "동기화가 완료되었습니다. "
 
+#: app/controllers/sync_plans_controller.rb:111
+msgid "Sync plan '%s' was deleted."
+msgstr ""
+
 #: app/controllers/api/products_controller.rb:76
 msgid "Synchronization plan assigned."
 msgstr "동기화 계획이 할당되었습니다. "
@@ -3223,14 +3972,24 @@ msgstr "동기화 계획이 할당되었습니다. "
 msgid "Synchronization plan removed."
 msgstr "동기화 계획이 삭제되었습니다. "
 
-#: app/views/sync_management/index.html.haml:48
+#: app/views/sync_management/index.html.haml:57
 msgid "Synchronize Now"
 msgstr "지금 동기화 "
 
-#: app/controllers/systems_controller.rb:301
+#: app/controllers/systems_controller.rb:305
 #: app/views/dashboard/_errata.haml:37
 msgid "System"
 msgstr "시스템 "
+
+#: app/controllers/systems_controller.rb:94
+#, fuzzy
+msgid "System '%s' was created."
+msgstr "시스템 서브스크립션이 업데이트되었습니다. "
+
+#: app/controllers/systems_controller.rb:217
+#, fuzzy
+msgid "System '%s' was updated."
+msgstr "시스템 서브스크립션이 업데이트되었습니다. "
 
 #: app/views/systems/_subs.html.haml:6
 msgid "System Current Subscription(s)"
@@ -3240,7 +3999,7 @@ msgstr "현재 시스템 서브스크립션 "
 msgid "System Events"
 msgstr "시스템 이벤트 "
 
-#: app/views/systems/_edit.html.haml:8 lib/navigation/systems.rb:96
+#: app/views/systems/_edit.html.haml:8 lib/navigation/systems.rb:97
 msgid "System Info"
 msgstr "시스템 정보 "
 
@@ -3252,29 +4011,39 @@ msgstr "시스템 통지 "
 msgid "System Properties"
 msgstr "시스템 속성 "
 
-#: app/views/dashboard/index.html.haml:6
+#: app/views/dashboard/index.html.haml:7
 msgid "System Subscription Status"
 msgstr "시스템 서브스크립션 상태 "
 
+#: app/views/promotions/show.html.haml:7
 #: app/views/activation_keys/_new.html.haml:35
 #: app/views/activation_keys/_edit.html.haml:59
-#: app/views/promotions/show.html.haml:7
 msgid "System Template"
 msgstr "시스템 템플릿 "
 
-#: app/helpers/breadcrumb_helper.rb:137
-#: app/controllers/system_templates_controller.rb:71
-#: app/models/resource_type.rb:92 app/views/changesets/_edit.html.haml:40
-#: app/views/system_templates/index.html.haml:46
-#: app/views/promotions/_detail.html.haml:12
+#: app/controllers/system_templates_controller.rb:259
+#, fuzzy
+msgid "System Template '%s' was created."
+msgstr "현재 정의된 시스템 템플릿이 없음 "
+
+#: app/controllers/system_templates_controller.rb:78
+#: app/helpers/breadcrumb_helper.rb:140 app/models/resource_type.rb:92
 #: app/views/promotions/show.html.haml:7
+#: app/views/promotions/_detail.html.haml:12
+#: app/views/changesets/_edit.html.haml:40
+#: app/views/system_templates/index.html.haml:48
 #: lib/navigation/content_management.rb:120
 msgid "System Templates"
 msgstr "시스템 템플릿 "
 
-#: app/views/system_templates/index.html.haml:38
-msgid "System Templates allow you to create a template for what a system should look like.  This includes what products are subscribed and what packages are installed."
-msgstr "시스템 템플릿은 시스템의 모양을 설정하는 템플릿을 생성 가능하게 합니다. 이에는 구독된 제품 및 설치된 패키지가 포함되어 있습니다. "
+#: app/views/system_templates/index.html.haml:40
+msgid ""
+"System Templates allow you to create a template for what a system should "
+"look like.  This includes what products are subscribed and what packages are "
+"installed."
+msgstr ""
+"시스템 템플릿은 시스템의 모양을 설정하는 템플릿을 생성 가능하게 합니다. 이에"
+"는 구독된 제품 및 설치된 패키지가 포함되어 있습니다. "
 
 #: app/views/systems/_edit.html.haml:71
 msgid "System Type"
@@ -3284,11 +4053,11 @@ msgstr "시스템 유형"
 msgid "System Type:"
 msgstr "시스템 유형: "
 
-#: app/controllers/systems_controller.rb:179
+#: app/controllers/systems_controller.rb:181
 msgid "System subscriptions updated."
 msgstr "시스템 서브스크립션이 업데이트되었습니다. "
 
-#: app/controllers/systems_controller.rb:296
+#: app/controllers/systems_controller.rb:300
 #: app/views/dashboard/_errata.haml:27 lib/navigation/systems.rb:22
 msgid "Systems"
 msgstr "시스템 "
@@ -3301,10 +4070,36 @@ msgstr "제목 "
 msgid "TYPE"
 msgstr "유형 "
 
-#: app/controllers/system_templates_controller.rb:74
-#: app/controllers/system_templates_controller.rb:76
+#: app/controllers/system_templates_controller.rb:81
+#: app/controllers/system_templates_controller.rb:83
 msgid "Template"
 msgstr "템플릿 "
+
+#: app/controllers/system_templates_controller.rb:195
+#, fuzzy
+msgid "Template %s has been updated successfully"
+msgstr "사용자가 성공적으로 업데이트되었습니다. "
+
+#: app/controllers/system_templates_controller.rb:207
+#, fuzzy
+msgid "Template %s updated successfully."
+msgstr "사용자가 성공적으로 업데이트되었습니다. "
+
+#: app/controllers/system_templates_controller.rb:285
+#, fuzzy
+msgid ""
+"Template '%s' has been updated successfully, however you have removed either "
+"a product or repository that contained the selected distribution for this "
+"template.  Please select another distribution to ensure a working system "
+"template."
+msgstr ""
+"이 템플릿에 선택한 배포판이 들어 있습니다. 시스템 템플릿이 작동하는 지를 확인"
+"하기 위해 다른 배포판을 선택하십시오. "
+
+#: app/controllers/system_templates_controller.rb:217
+#, fuzzy
+msgid "Template '%s' was deleted."
+msgstr "템플릿을 내보내기할 수 없음 "
 
 #: app/models/system_template.rb:21
 msgid "Template can have parent templates only from the same environment"
@@ -3322,26 +4117,36 @@ msgstr "템플릿을 가져옴 "
 msgid "Template is not complete and will likely fail."
 msgstr "템플릿이 완료되지 않았기 때문에 실패할 수 있습니다. "
 
-#: app/helpers/breadcrumb_helper.rb:391
+#: app/helpers/breadcrumb_helper.rb:393
 msgid "Templates"
 msgstr "템플릿 "
 
-#: app/controllers/api/templates_controller.rb:59
 #: app/controllers/api/templates_content_controller.rb:130
+#: app/controllers/api/templates_controller.rb:59
 msgid "Templates can be updated only in a Library environment"
 msgstr "템플릿은 라이브러리 환경에서만 업데이트할 수 있습니다 "
 
-#: app/models/organization.rb:72 app/views/organizations/_edit.html.haml:11
-msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
-msgstr "현재 조직을 삭제할 수 없습니다. 삭제하기 전 다른 조직으로 전환하십시오. "
+#: app/models/organization.rb:73 app/views/organizations/_edit.html.haml:11
+msgid ""
+"The current organization cannot be deleted. Please switch to a different "
+"organization before deleting."
+msgstr ""
+"현재 조직을 삭제할 수 없습니다. 삭제하기 전 다른 조직으로 전환하십시오. "
 
-#: app/views/system_templates/index.html.haml:5
-msgid "The current template \"$TEMPLATE\" has been modified.  Would you like to save the changes?"
-msgstr "현재 템플릿 \"$TEMPLATE\"이 수정되었습니다. 변경 사항을 저장하시겠습니까? "
+#: app/views/system_templates/index.html.haml:6
+msgid ""
+"The current template \"$TEMPLATE\" has been modified.  Would you like to "
+"save the changes?"
+msgstr ""
+"현재 템플릿 \"$TEMPLATE\"이 수정되었습니다. 변경 사항을 저장하시겠습니까? "
 
-#: app/views/system_templates/index.html.haml:5
-msgid "The current template \"$TEMPLATE\" has been modified. If you leave, any changes will be lost.\""
-msgstr "현재 템플릿 \"$TEMPLATE\"이 수정되었습니다. 종료할 경우 변경 사항을 손실하게 됩니다. "
+#: app/views/system_templates/index.html.haml:6
+msgid ""
+"The current template \"$TEMPLATE\" has been modified. If you leave, any "
+"changes will be lost.\""
+msgstr ""
+"현재 템플릿 \"$TEMPLATE\"이 수정되었습니다. 종료할 경우 변경 사항을 손실하게 "
+"됩니다. "
 
 #: app/controllers/users_controller.rb:254
 msgid "The default you supplied was the same as the old default."
@@ -3361,7 +4166,7 @@ msgstr "암호에 사용자 이름이 포함되어 있어서는 안됩니다. "
 msgid "The passwords do not match"
 msgstr "암호가 일치하지 않음 "
 
-#: app/views/systems/_subs.html.haml:51
+#: app/views/systems/_subs.html.haml:50
 msgid "The system is not currently consuming any subscriptions."
 msgstr "현재 시스템은 서비스크립션을 소비하지 않고 있습니다. "
 
@@ -3370,16 +4175,30 @@ msgid "The template has children templates."
 msgstr "템플릿에 자식 템플릿이 있습니다. "
 
 #: app/views/roles/index.html.haml:8
-msgid "There are currently no Global permissions for this role.  Please click Add Permission in the action bar below to add a Global permission.  A Global permission is one that cuts across all organizations."
-msgstr "현재 이 역할에 대한 글로벌 권한이 없습니다. 하단 작업 표시줄의 권한 추가를 클릭하여 글로벌 권한을 추가합니다. 글로벌 권한은 모든 조직에 걸쳐 영향을 미치는 권한입니다. "
+msgid ""
+"There are currently no Global permissions for this role.  Please click Add "
+"Permission in the action bar below to add a Global permission.  A Global "
+"permission is one that cuts across all organizations."
+msgstr ""
+"현재 이 역할에 대한 글로벌 권한이 없습니다. 하단 작업 표시줄의 권한 추가를 클"
+"릭하여 글로벌 권한을 추가합니다. 글로벌 권한은 모든 조직에 걸쳐 영향을 미치"
+"는 권한입니다. "
 
 #: app/views/roles/index.html.haml:8
-msgid "There are currently no permissions for this organization.  Please click Add Permission in the action bar below to add a permission to this organization."
-msgstr "현재 이 조직에 대한 권한이 없습니다. 하단 작업 표시줄의 권한 추가를 클릭하여 이 조직에 권한을 추가합니다. "
+msgid ""
+"There are currently no permissions for this organization.  Please click Add "
+"Permission in the action bar below to add a permission to this organization."
+msgstr ""
+"현재 이 조직에 대한 권한이 없습니다. 하단 작업 표시줄의 권한 추가를 클릭하여 "
+"이 조직에 권한을 추가합니다. "
 
-#: app/views/sync_management/index.html.haml:45
-msgid "There are no custom products or repositories enabled. Try enabling via Content Providers."
-msgstr "활성화된 사용자 정의 제품 또는 리포지터리가 없습니다. 컨텐츠 공급자를 통해 활성화하십시오. "
+#: app/views/sync_management/index.html.haml:54
+msgid ""
+"There are no custom products or repositories enabled. Try enabling via "
+"Content Providers."
+msgstr ""
+"활성화된 사용자 정의 제품 또는 리포지터리가 없습니다. 컨텐츠 공급자를 통해 활"
+"성화하십시오. "
 
 #: app/views/dashboard/_errata.haml:3
 msgid "There are no errata that need to be applied to registered systems."
@@ -3394,8 +4213,8 @@ msgstr "표시할 이벤트가 없습니다. "
 msgid "There are no more subscriptions available."
 msgstr "더 이상 사용 가능한 서브스크립션이 없습니다. "
 
-#: app/views/system_packages/_packages.html.haml:96
 #: app/views/errata/_packages.html.haml:29
+#: app/views/system_packages/_packages.html.haml:96
 msgid "There are no packages to display."
 msgstr "표시할 패키지가 없습니다. "
 
@@ -3403,30 +4222,39 @@ msgstr "표시할 패키지가 없습니다. "
 msgid "There are no tags for the resource type you have chosen."
 msgstr "선택하신 리소스 유형에 대한 태그가 없습니다. "
 
-#: app/models/glue/pulp/repos.rb:538
+#: app/models/glue/pulp/repos.rb:542
 msgid "There is already a repo with the name [ %s ] for product [ %s ]"
 msgstr "제품 [ %s ]의 이름 [ %s ]을 갖는 리포지터리가 이미 존재합니다 "
 
-#: app/controllers/sync_schedules_controller.rb:78
+#: app/controllers/sync_management_controller.rb:213
+msgid ""
+"There is already an active sync process for the '%s' repository. Please try "
+"again later"
+msgstr ""
+
+#: app/controllers/sync_schedules_controller.rb:80
 msgid "There must be at least one plan selected"
 msgstr "최소 하나의 계획이 선택되어 있어야 합니다 "
 
-#: app/controllers/sync_schedules_controller.rb:93
+#: app/controllers/sync_schedules_controller.rb:95
 msgid "There must be at least one product selected"
 msgstr "최소 하나의 제품이 선택되어 있어야 합니다 "
 
 #: app/views/common/_common_i18n.html.haml:3
-#, 
 msgid "There was an error retrieving that row:"
 msgstr ""
 
+#: app/controllers/sync_management_controller.rb:155
+msgid ""
+"There were errors with one of the syncs: %s in repository: %s. See the log "
+"for more details."
+msgstr ""
+
 #: app/views/gpg_keys/_products_repos.html.haml:17
-#, 
 msgid "This GPG Key is not currently assigned to any products or repositories."
 msgstr ""
 
 #: app/controllers/api/system_packages_controller.rb:99
-#, 
 msgid "This action doesn't support pacakge groups"
 msgstr ""
 
@@ -3435,7 +4263,6 @@ msgid "This changeset contains no content."
 msgstr "변경 집합에 컨텐츠가 들어있지 않습니다. "
 
 #: app/views/promotions/show.html.haml:7
-#, 
 msgid "This promotion changeset is currently being promoted."
 msgstr ""
 
@@ -3444,8 +4271,8 @@ msgid "This template contains no content."
 msgstr "이 템플릿에는 컨텐츠가 들어 있지 않습니다. "
 
 #: app/views/organizations/_events.html.haml:14
-#: app/views/sync_plans/_form.html.haml:25
 #: app/views/sync_plans/_edit.html.haml:29
+#: app/views/sync_plans/_form.html.haml:25
 msgid "Time"
 msgstr "시간 "
 
@@ -3454,33 +4281,34 @@ msgid "Title"
 msgstr "제목 "
 
 #: app/views/common/_panel.html.haml:14
-#, 
-msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
+msgid ""
+"To view the details of an item on the left, simply click on a single row.<br/"
+"><br/>To select multiple rows, hold the Control Key and click multiple rows."
+"<br/><br/>If you don't need this help anymore, please click the close button "
+"in the top right of this box."
 msgstr ""
 
 #: app/views/dashboard/_subscriptions.haml:41
 msgid "Total Systems"
 msgstr "전체 시스템 "
 
+#: app/views/dashboard/_errata.haml:8 app/views/errata/_show.html.haml:24
+#: app/views/errata/_show.html.haml:56
+#: app/views/activation_keys/_subscriptions.html.haml:5
 #: app/views/roles/_permission.html.haml:13
 #: app/views/roles/_closed_permission.html.haml:3
-#: app/views/dashboard/_errata.haml:8
-#: app/views/activation_keys/_subscriptions.html.haml:5
-#: app/views/errata/_show.html.haml:24 app/views/errata/_show.html.haml:56
 msgid "Type"
 msgstr "유형 "
 
-#: app/helpers/breadcrumb_helper.rb:210
+#: app/helpers/breadcrumb_helper.rb:212
 msgid "Type: Bug Fix"
 msgstr "유형: 버그 수정 "
 
-#: app/helpers/breadcrumb_helper.rb:210
-#, 
+#: app/helpers/breadcrumb_helper.rb:212
 msgid "Type: Enhancement"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:210
-#, 
+#: app/helpers/breadcrumb_helper.rb:212
 msgid "Type: Security"
 msgstr ""
 
@@ -3493,39 +4321,49 @@ msgstr "URL"
 msgid "UUID"
 msgstr "UUID"
 
+#: app/models/system_template.rb:138
+msgid "Uebercert for %s has not been generated."
+msgstr ""
+
 #: app/models/activation_key.rb:90
 msgid "Unable to determine quantity for pool %s"
 msgstr "풀 %s의 수량을 지정할 수 없음 "
 
-#: app/controllers/providers_controller.rb:112
+#: app/controllers/providers_controller.rb:119
 msgid "Unable to retrieve subscription history for provider '%{name}."
 msgstr "공급자 '%{name}에 대한 서브스크립션 기록을 가져올 수 없습니다. "
 
-#: app/controllers/providers_controller.rb:98
+#: app/controllers/providers_controller.rb:105
 msgid "Unable to retrieve subscription manifest for provider '%{name}."
 msgstr "공급자 '%{name}에 대한 서브스크립션 매니페스트를 가져올 수 없습니다. "
 
 #: app/controllers/system_packages_controller.rb:86
 msgid "Uninstall of Package Groups '%{p}' scheduled for System '%{s}'."
-msgstr "패키지 그룹 '%{p}'의 설치 해제가 시스템 '%{s}'에 대해 스케줄되었습니다. "
+msgstr ""
+"패키지 그룹 '%{p}'의 설치 해제가 시스템 '%{s}'에 대해 스케줄되었습니다. "
 
 #: app/controllers/system_packages_controller.rb:68
 #: app/controllers/system_packages_controller.rb:76
 msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "패키지 '%{p}'의 설치 해제가 시스템 '%{s}'에 대해 스케줄되었습니다. "
 
-#: app/views/systems/_edit.html.haml:79
 #: app/views/changesets/_edit.html.haml:22
+#: app/views/systems/_edit.html.haml:79
 msgid "Unknown"
 msgstr "알 수 없음 "
 
-#: app/views/systems/_subs.html.haml:95
-#: app/views/providers/redhat/_subscription_details.html.haml:30
+#: app/controllers/api/systems_controller.rb:215
+#, fuzzy
+msgid "Unknown repository label"
+msgstr "사용 가능한 리포지터리가 없음. "
+
+#: app/views/providers/redhat/_subscription_details.html.haml:29
+#: app/views/systems/_subs.html.haml:96
 #: app/views/subscriptions/index.html.haml:39
 msgid "Unlimited"
 msgstr "제한 없음 "
 
-#: app/views/systems/_subs.html.haml:54 app/views/systems/_subs.html.haml:55
+#: app/views/systems/_subs.html.haml:53 app/views/systems/_subs.html.haml:54
 msgid "Unsubscribe"
 msgstr "구독 해제 "
 
@@ -3570,9 +4408,9 @@ msgid "Updating Package..."
 msgstr "패키지 업데이트 중..."
 
 #: app/views/common/_edit_i18n.html.haml:4
-#: app/views/gpg_keys/_new.html.haml:28 app/views/gpg_keys/_new.html.haml:33
-#: app/views/gpg_keys/_edit.html.haml:30 app/views/gpg_keys/_edit.html.haml:35
 #: app/views/providers/redhat/show.html.haml:35
+#: app/views/gpg_keys/_new.html.haml:14 app/views/gpg_keys/_new.html.haml:19
+#: app/views/gpg_keys/_edit.html.haml:30 app/views/gpg_keys/_edit.html.haml:35
 msgid "Upload"
 msgstr "업로드 "
 
@@ -3592,6 +4430,10 @@ msgstr "브라우저 로케일 사용 "
 msgid "User"
 msgstr "사용자 "
 
+#: app/controllers/users_controller.rb:289
+msgid "User '%s' was deleted."
+msgstr ""
+
 #: app/views/notices/show.html.haml:13
 msgid "User Notifications"
 msgstr "사용자 통지 "
@@ -3600,7 +4442,7 @@ msgstr "사용자 통지 "
 msgid "User assignments for this role"
 msgstr "이 역할에 대해 사용자 할당 "
 
-#: app/controllers/application_controller.rb:120
+#: app/controllers/application_controller.rb:144
 msgid "User does not belong to an organization."
 msgstr "사용자가 조직에 속해 있지 않습니다. "
 
@@ -3609,8 +4451,12 @@ msgid "User environment updated successfully."
 msgstr "사용자 환경이 성공적으로 업데이트되었습니다. "
 
 #: app/views/notices/show.html.haml:9
-msgid "User notifications lists all notifications generated by a user as well as global notifications that are sent to all users."
-msgstr "사용자 통지는 모든 사용자에게 전송되는 글로벌 통지 및 사용자가 생성한 모든 통지를 나열합니다. "
+msgid ""
+"User notifications lists all notifications generated by a user as well as "
+"global notifications that are sent to all users."
+msgstr ""
+"사용자 통지는 모든 사용자에게 전송되는 글로벌 통지 및 사용자가 생성한 모든 통"
+"지를 나열합니다. "
 
 #: app/controllers/users_controller.rb:145
 #: app/controllers/users_controller.rb:168
@@ -3619,6 +4465,7 @@ msgid "User updated successfully."
 msgstr "사용자가 성공적으로 업데이트되었습니다. "
 
 #: app/controllers/users_controller.rb:335
+#: app/views/user_sessions/new.html.haml:8
 msgid "Username"
 msgstr "사용자 이름 "
 
@@ -3627,8 +4474,8 @@ msgstr "사용자 이름 "
 msgid "Username:"
 msgstr "사용자 이름: "
 
-#: app/helpers/breadcrumb_helper.rb:242
-#: app/controllers/users_controller.rb:333 app/models/resource_type.rb:97
+#: app/controllers/users_controller.rb:333
+#: app/helpers/breadcrumb_helper.rb:244 app/models/resource_type.rb:97
 #: lib/navigation/administration.rb:56
 msgid "Users"
 msgstr "사용자 "
@@ -3641,7 +4488,7 @@ msgstr "유효성 검사 실패: "
 msgid "Value"
 msgstr "값 "
 
-#: app/views/roles/_edit.html.haml:59
+#: app/views/roles/_edit.html.haml:59 app/views/roles/index.html.haml:8
 msgid "Verb(s):"
 msgstr "Verb: "
 
@@ -3659,23 +4506,26 @@ msgstr "매우 취약함 "
 msgid "Viewing %X of %Y results (%Z Total Errata)"
 msgstr "%Y 중 %X 보기 (총 %Z 에라타) "
 
-#: app/helpers/systems_helper.rb:43
+#: app/controllers/activation_keys_controller.rb:341
+#: app/controllers/providers_controller.rb:291
 #: app/controllers/subscriptions_controller.rb:55
-#: app/controllers/providers_controller.rb:284
-#: app/controllers/activation_keys_controller.rb:349 app/models/system.rb:68
+#: app/helpers/systems_helper.rb:42 app/models/system.rb:67
 msgid "Virtual"
 msgstr "가상 "
 
 #: app/views/providers/index.html.haml:14
-msgid "WARNING: This will override any GPG keys already associated with a repository within this product"
-msgstr "경고: 이 제품에 있는 리포지터리와 이미 연결된 GPG 키만을 덮어 쓰기합니다.  "
+msgid ""
+"WARNING: This will override any GPG keys already associated with a "
+"repository within this product"
+msgstr ""
+"경고: 이 제품에 있는 리포지터리와 이미 연결된 GPG 키만을 덮어 쓰기합니다.  "
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
 msgid "Weak"
 msgstr "취약함 "
 
-#: app/controllers/application_controller.rb:149
+#: app/controllers/application_controller.rb:173
 msgid "Welcome Back!"
 msgstr "환영합니다! "
 
@@ -3688,29 +4538,48 @@ msgstr "예 "
 msgid "You are not authorised to perform this action."
 msgstr "이 작업을 실행할 권한이 없습니다. "
 
-#: app/controllers/api/sync_controller.rb:96
+#: app/controllers/api/sync_controller.rb:97
 msgid "You can synchronize repositories only in library environment'"
 msgstr "라이브러리 환경에 있는 리포지터리만 동기화할 수 있습니다 "
 
-#: app/controllers/application_controller.rb:488
-msgid "You current organization is no longer valid. It is possible that the organization has been deleted, please log back in to continue."
-msgstr "현재 조직은 더 이상 유효하지 않습니다. 조직이 삭제되었을 수 도 있습니다. 다시 로그인하여 계속 진행하십시오. "
-
-#: app/views/dashboard/index.html.haml:17
-msgid "You currently do not have any permissions that grant access to an organization.  Please contact your system administrator to receive access."
-msgstr "조직으로의 액세스를 허용하는 권한이 현재 없습니다. 시스템 관리자에게 문의하여 액세스 권한을 취득하십시오."
+#: app/controllers/application_controller.rb:511
+#, fuzzy
+msgid ""
+"You current organization is no longer valid. It is possible that either the "
+"organization has been deleted or your permissions revoked, please log back "
+"in to continue."
+msgstr ""
+"현재 조직은 더 이상 유효하지 않습니다. 조직이 삭제되었을 수 도 있습니다. 다"
+"시 로그인하여 계속 진행하십시오. "
 
 #: app/controllers/failed_authentication_controller.rb:28
-msgid "You do not have valid credentials to access this system. Please contact your administrator."
-msgstr "이 시스템을 액세스하기 위한 유효한 인증서가 없습니다. 관리자에게 문의하십시오. "
+msgid ""
+"You do not have valid credentials to access this system. Please contact your "
+"administrator."
+msgstr ""
+"이 시스템을 액세스하기 위한 유효한 인증서가 없습니다. 관리자에게 문의하십시"
+"오. "
+
+#: app/controllers/failed_authentication_controller.rb:25
+#, fuzzy
+msgid ""
+"You have entered an incorrect username/password combination, or your account "
+"may currently be disabled. Please try again or contact your administrator."
+msgstr ""
+"잘못된 사용자 이름, 암호 조합 또는 비활성화된 계정이 입력되었습니다. 다시 실"
+"행하십시오. "
 
 #: app/views/roles/_self_role_edit.html.haml:31
 msgid "You have no assigned roles."
 msgstr "할당된 역할이 없습니다. "
 
 #: app/views/roles/index.html.haml:8
-msgid "You have selected all resource types; this will grant full access to the organization. Press the Cancel button to select an individual resource type."
-msgstr "모든 리소스 유형을 선택했습니다. 이제 조직에 대해 완전한 액세스가 가능합니다. 취소 버튼을 눌러 개별 리소스 유형을 선택합니다. "
+msgid ""
+"You have selected all resource types; this will grant full access to the "
+"organization. Press the Cancel button to select an individual resource type."
+msgstr ""
+"모든 리소스 유형을 선택했습니다. 이제 조직에 대해 완전한 액세스가 가능합니"
+"다. 취소 버튼을 눌러 개별 리소스 유형을 선택합니다. "
 
 #: app/views/common/404.html.haml:4
 msgid "You may have mistyped the address or the page may have moved."
@@ -3720,8 +4589,8 @@ msgstr "주소를 잘못 입력했거나 페이지가 이전되었을 수 있습
 msgid "You might want to log out and log back in again to clear your cookies."
 msgstr "쿠키를 삭제하기 위해 로그아웃 후 다시 로그인하고자 할 수 있습니다. "
 
-#: app/controllers/application_controller.rb:138
-#: app/controllers/application_controller.rb:478
+#: app/controllers/application_controller.rb:162
+#: app/controllers/application_controller.rb:501
 msgid "You must be logged in to access that page."
 msgstr "페이지에 액세스하려면 로그인해야 합니다. "
 
@@ -3739,19 +4608,22 @@ msgstr "최소 하나의 verb를 선택해야 합니다. "
 
 #: config/initializers/app_config.rb:99
 msgid "You must specify host in %s for %s to work properly"
-msgstr "올바르게 작동하게 하기 위해 %s에 대해 %s에 있는 호스트를 지정해야 합니다. "
+msgstr ""
+"올바르게 작동하게 하기 위해 %s에 대해 %s에 있는 호스트를 지정해야 합니다. "
 
 #: app/views/systems/_new.html.haml:57
-msgid "You need to create an environment for this org before you can create a system."
+msgid ""
+"You need to create an environment for this org before you can create a "
+"system."
 msgstr "시스템을 생성하기 전 이 조직에 대한 환경을 생성해야 합니다. "
 
-#: app/controllers/failed_authentication_controller.rb:25
-msgid "You've entered an incorrect username, password combination or account disabled, please try again."
-msgstr "잘못된 사용자 이름, 암호 조합 또는 비활성화된 계정이 입력되었습니다. 다시 실행하십시오. "
-
-#: app/views/promotions/show.html.haml:185
-msgid "Your update has applied successfully, but during that time another user has also made an update."
-msgstr "업데이트가 성공적으로 적용되었으나 동일한 시간에 다른 사용자도 업데이트를 수행했습니다. "
+#: app/views/promotions/show.html.haml:195
+msgid ""
+"Your update has applied successfully, but during that time another user has "
+"also made an update."
+msgstr ""
+"업데이트가 성공적으로 적용되었으나 동일한 시간에 다른 사용자도 업데이트를 수"
+"행했습니다. "
 
 #: app/models/system_task.rb:136
 msgid "all packages"
@@ -3765,8 +4637,13 @@ msgstr "모든 패키지 업데이트 "
 msgid "all packages update failed"
 msgstr "모든 패키지 업데이트 실패 "
 
-#: app/models/katello_name_format_validator.rb:20
+#: app/models/kt_environment.rb:368
+#, fuzzy
+msgid "can not be updated"
+msgstr "템플릿을 내보내기할 수 없음 "
+
 #: app/models/katello_url_format_validator.rb:50
+#: app/models/katello_name_format_validator.rb:20
 msgid "can't be blank"
 msgstr "빈 칸으로 두지 마십시오. "
 
@@ -3778,9 +4655,11 @@ msgstr "영문, 숫자, 공백, '_', '-' 이외의 문자는 포함할 수 없�
 msgid "cannot contain characters other than alpha numerals,'_', '-'."
 msgstr "영문, 숫자, '_', '-' 이외의 문자는 포함할 수 없습니다. "
 
-#: app/controllers/system_templates_controller.rb:273
-msgid "contained the selected distribution for this template.  Please select another distribution to ensure a working system template."
-msgstr "이 템플릿에 선택한 배포판이 들어 있습니다. 시스템 템플릿이 작동하는 지를 확인하기 위해 다른 배포판을 선택하십시오. "
+#: app/models/katello_description_format_validator.rb:17
+#: app/models/katello_name_format_validator.rb:26
+#, fuzzy
+msgid "cannot contain more than %s characters"
+msgstr "5자 이상이어야 합니다. "
 
 #: app/views/promotions/show.html.haml:7
 msgid "currently editing this promotion changeset"
@@ -3789,6 +4668,11 @@ msgstr "현재 승격 변경 집합을 편집하고 있습니다 "
 #: app/models/sync_plan.rb:28
 msgid "daily"
 msgstr "매일 "
+
+#: app/views/promotions/show.html.haml:177
+#, fuzzy
+msgid "displayed"
+msgstr "보기 "
 
 #: app/models/kt_environment.rb:29
 msgid "environment can only have one child"
@@ -3801,6 +4685,10 @@ msgstr "필수 환경 "
 #: app/models/sync_plan.rb:27
 msgid "hourly"
 msgstr "한 시간 마다 "
+
+#: app/models/activation_key.rb:43
+msgid "id: %s doesn't exist "
+msgstr ""
 
 #: app/models/system_task.rb:105 app/models/system_task.rb:106
 msgid "installing errata..."
@@ -3832,7 +4720,7 @@ msgstr "패키지 설치 중..."
 msgid "is already in the template"
 msgstr "이미 템플릿에 있음 "
 
-#: app/models/provider.rb:78 app/models/katello_url_format_validator.rb:48
+#: app/models/katello_url_format_validator.rb:48 app/models/provider.rb:78
 msgid "is invalid"
 msgstr "유효하지 않음 "
 
@@ -3848,7 +4736,7 @@ msgstr "katello-jobs 서비스가 실행되고 있지 않음 "
 msgid "link"
 msgstr "링크 "
 
-#: app/models/user.rb:62
+#: app/models/user.rb:65
 msgid "must be at least 5 characters."
 msgstr "5자 이상이어야 합니다. "
 
@@ -3860,13 +4748,18 @@ msgstr "조직 범위 내에서 고유한 것이어야 함 "
 msgid "must be unique within one environment"
 msgstr "하나의 환경에서 고유한 것이어야 함 "
 
-#: app/models/gpg_key.rb:33 app/models/kt_environment.rb:85
+#: app/models/kt_environment.rb:89 app/models/gpg_key.rb:33
 msgid "must be unique within one organization"
 msgstr "하나의 조직 내에서 고유한 것이어야 함 "
 
 #: app/models/product.rb:15
 msgid "must contain 'Library'"
 msgstr "'라이브러리'가 포함되어 있어야 함 "
+
+#: app/models/katello_name_format_validator.rb:27
+#, fuzzy
+msgid "must contain at least %s characters"
+msgstr "5자 이상이어야 합니다. "
 
 #: app/models/no_trailing_space_validator.rb:20
 msgid "must not contain leading or trailing white spaces."
@@ -3877,16 +4770,16 @@ msgstr "선행 또는 후행 공백을 포함할 수 없음 "
 msgid "none"
 msgstr "없음 "
 
-#: app/views/roles/_edit.html.haml:55 app/views/roles/_edit.html.haml:62
-#: app/views/roles/_edit.html.haml:69 app/views/gpg_keys/_new.html.haml:24
+#: app/views/gpg_keys/_new.html.haml:24 app/views/roles/_edit.html.haml:55
+#: app/views/roles/_edit.html.haml:62 app/views/roles/_edit.html.haml:69
 msgid "or"
 msgstr "또는 "
 
-#: app/controllers/sync_schedules_controller.rb:46
+#: app/controllers/sync_schedules_controller.rb:48
 msgid "plan"
 msgstr "계획 "
 
-#: app/controllers/sync_schedules_controller.rb:40
+#: app/controllers/sync_schedules_controller.rb:41
 msgid "product"
 msgstr "제품 "
 
@@ -3910,9 +4803,14 @@ msgstr "패키지 삭제 중..."
 msgid "removing packages..."
 msgstr "패키지 삭제 중..."
 
-#: app/controllers/api/packages_controller.rb:49
+#: app/controllers/api/packages_controller.rb:50
 msgid "repoids"
 msgstr "리포지터리 ID "
+
+#: app/views/promotions/show.html.haml:180
+#, fuzzy
+msgid "results."
+msgstr "결과 "
 
 #: app/controllers/sync_management_controller.rb:243
 msgid "sync did not complete successfully"
@@ -3922,12 +4820,13 @@ msgstr "동기화가 성공적으로 완료되지 않았습니다 "
 msgid "system templates"
 msgstr "시스템 템플릿 "
 
-#: app/controllers/system_templates_controller.rb:75
+#: app/controllers/system_templates_controller.rb:82
 msgid "template"
 msgstr "템플릿 "
 
 #: app/models/provider.rb:71
-msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
+msgid ""
+"the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "다음 속성은 Red Hat 공급자 [ %s ]에 대해 업데이트될 수 없습니다 "
 
 #: app/models/system_task.rb:77 app/models/system_task.rb:78
@@ -3953,3 +4852,22 @@ msgstr "보기 "
 #: app/helpers/sync_schedules_helper.rb:19 app/models/sync_plan.rb:29
 msgid "weekly"
 msgstr "매주 "
+
+#~ msgid "Application Life Cycle Management"
+#~ msgstr "애플리케이션 라이프 사이클 관리 "
+
+#~ msgid "Changelog"
+#~ msgstr "로그 변경 "
+
+#~ msgid "Edit Repository"
+#~ msgstr "리포지터리 편집 "
+
+#~ msgid "Promotion of changeset '%{name}' failed."
+#~ msgstr "변경 집합 '%{name}' 의 승격을 실패했습니다. "
+
+#~ msgid ""
+#~ "You currently do not have any permissions that grant access to an "
+#~ "organization.  Please contact your system administrator to receive access."
+#~ msgstr ""
+#~ "조직으로의 액세스를 허용하는 권한이 현재 없습니다. 시스템 관리자에게 문의"
+#~ "하여 액세스 권한을 취득하십시오."

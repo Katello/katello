@@ -212,7 +212,7 @@ class Provider < ActiveRecord::Base
   def self.items org, verbs
     raise "scope requires an organization" if org.nil?
     resource = :providers
-    if (AppConfig.katello? && org.syncable?) ||  User.allowed_all_tags?(verbs, resource, org)
+    if (AppConfig.katello? && verbs.include?(:read) && org.syncable?) || User.allowed_all_tags?(verbs, resource, org)
        where(:organization_id => org)
     else
       where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")

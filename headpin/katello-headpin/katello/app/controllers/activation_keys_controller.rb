@@ -98,7 +98,7 @@ class ActivationKeysController < ApplicationController
           end
         end
       end
-      notice _("Subscriptions successfully added to Activation Key '#{@activation_key.name}'.")
+      notice _("Subscriptions successfully added to Activation Key '%s'.") % @activation_key.name
       render :partial => "available_subscriptions_update.js.haml"
 
     rescue Exception => error
@@ -122,7 +122,7 @@ class ActivationKeysController < ApplicationController
           end
         end
       end
-      notice _("Subscriptions successfully removed from Activation Key '#{@activation_key.name}'.")
+      notice _("Subscriptions successfully removed from Activation Key '%s'.") % @activation_key.name
       render :partial => "applied_subscriptions_update.js.haml"
 
     rescue Exception => error
@@ -172,12 +172,12 @@ class ActivationKeysController < ApplicationController
       key.organization = current_organization
       key.user = current_user
     end
-    notice _("Activation key '#{@activation_key['name']}' was created.")
-    
-    if search_validate(ActivationKey, @activation_key.id, params[:search])     
+    notice _("Activation key '%s' was created.") % @activation_key['name']
+
+    if search_validate(ActivationKey, @activation_key.id, params[:search])
       render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
     else
-      notice _("'#{@activation_key["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+      notice _("'%s' did not meet the current search criteria and is not being shown.") % @activation_key["name"], { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     end
   rescue Exception => error
@@ -200,7 +200,7 @@ class ActivationKeysController < ApplicationController
 
       @activation_key.update_attributes!(params[:activation_key])
 
-      notice _("Activation key '#{@activation_key["name"]}' was updated.")
+      notice _("Activation key '%s' was updated.") % @activation_key["name"]
 
       unless params[:activation_key][:system_template_id].nil? or params[:activation_key][:system_template_id].blank?
         # template is being updated.. so return template name vs id...
@@ -208,8 +208,8 @@ class ActivationKeysController < ApplicationController
         result = system_template.name
       end
 
-      if not search_validate(ActivationKey, @activation_key.id, params[:search])     
-        notice _("'#{@activation_key["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+      if not search_validate(ActivationKey, @activation_key.id, params[:search])
+        notice _("'%s' no longer matches the current search criteria.") % @activation_key["name"], { :level => :message, :synchronous_request => true }
       end
 
       render :text => escape_html(result)

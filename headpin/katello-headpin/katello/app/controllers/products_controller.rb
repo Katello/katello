@@ -48,7 +48,7 @@ class ProductsController < ApplicationController
       product_params = params[:product]
       gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] and product_params[:gpg_key] != ""
       @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
-      notice _("Product '#{product_params[:name]}' created.")
+      notice _("Product '%s' created.") % product_params[:name]
     rescue Exception => error
       Rails.logger.error error.to_s
       notice error, {:level => :error}
@@ -73,10 +73,10 @@ class ProductsController < ApplicationController
       end 
       
       if params[:product].has_key?(:gpg_all_repos)
-        notice _("All repository GPG keys for Product '#{@product.name}' were updated.")
+        notice _("All repository GPG keys for Product '%s' were updated.") % @product.name
         @product.reset_repo_gpgs!
       else
-        notice _("Product '#{@product.name}' was updated.")
+        notice _("Product '%s' was updated.") % @product.name
       end
       
       @product.save!
@@ -98,7 +98,7 @@ class ProductsController < ApplicationController
   def destroy
     begin
       @product.destroy
-      notice _("Product '#{@product[:name]}' removed.")
+      notice _("Product '%s' removed.") % @product[:name]
     rescue Exception => error
       Rails.logger.error error.to_s
       notice error.to_s, {:level => :error}

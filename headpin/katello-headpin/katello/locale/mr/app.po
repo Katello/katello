@@ -2,11 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
-"POT-Creation-Date: 2012-01-26 12:16-0500\n"
+"POT-Creation-Date: 2012-02-28 14:42-0500\n"
 "PO-Revision-Date: 2011-01-06 17:37-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,6 @@ msgid " Content"
 msgstr "कंटेंट"
 
 #: app/views/promotions/show.html.haml:97
-#, 
 msgid " Promotion Changesets"
 msgstr ""
 
@@ -177,8 +176,17 @@ msgstr "%s (%s इतर संकुले) सुधारणा अपयश�
 msgid "%s (%s other packages) update timed out"
 msgstr "%s (%s इतर संकुले) सुधारणा वेळसमाप्ति"
 
+#: app/controllers/systems_controller.rb:265
+#, fuzzy
+msgid "%s Removed Successfully"
+msgstr "यशस्वीरित्या निर्माण केले."
+
+#: app/controllers/systems_controller.rb:253
+#, fuzzy
+msgid "%s Systems Removed Successfully"
+msgstr "यशस्वीरित्या निर्माण केले."
+
 #: app/views/layouts/_footer.haml:8
-#, 
 msgid "%s Version: %s"
 msgstr ""
 
@@ -303,16 +311,56 @@ msgstr "%s संकुल सुधारणा अपयशी"
 msgid "%s package update timed out"
 msgstr "%s संकुल सुधारणा वेळसमाप्ति"
 
-#: app/controllers/providers_controller.rb:76
-#, 
-msgid "%{newline}If you are uploading an older manifest, you can use the Force checkbox to overwrite existing data."
+#: app/controllers/sync_management_controller.rb:238
+#, fuzzy
+msgid "%s product was synced successfully"
+msgstr "वापरकर्ता यशस्वीरित्या सुधारित केले."
+
+#: app/controllers/sync_management_controller.rb:234
+msgid "%s product was synced successfully with errors. See log for details"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:75
-#: app/controllers/providers_controller.rb:99
-#: app/controllers/providers_controller.rb:113 app/models/changeset.rb:329
+#: app/controllers/providers_controller.rb:82
+msgid ""
+"%{newline}If you are uploading an older manifest, you can use the Force "
+"checkbox to overwrite existing data."
+msgstr ""
+
+#: app/controllers/providers_controller.rb:79
+#: app/controllers/providers_controller.rb:106
+#: app/controllers/providers_controller.rb:120
 msgid "%{newline}Reason: %{reason}"
 msgstr "%{newline}कारण: %{reason}"
+
+#: app/controllers/repositories_controller.rb:125
+msgid "%{repo} (Product: %{product})"
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:97
+#: app/controllers/organizations_controller.rb:109
+#: app/controllers/activation_keys_controller.rb:180
+#: app/controllers/systems_controller.rb:100
+#: app/controllers/sync_plans_controller.rb:145
+#: app/controllers/providers_controller.rb:162
+#: app/controllers/filters_controller.rb:107
+#: app/controllers/users_controller.rb:127
+#: app/controllers/roles_controller.rb:94
+msgid "'%s' did not meet the current search criteria and is not being shown."
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:119
+#: app/controllers/organizations_controller.rb:130
+#: app/controllers/activation_keys_controller.rb:212
+#: app/controllers/systems_controller.rb:220
+#: app/controllers/sync_plans_controller.rb:89
+#: app/controllers/providers_controller.rb:207
+#: app/controllers/filters_controller.rb:83
+#: app/controllers/users_controller.rb:150
+#: app/controllers/users_controller.rb:275
+#: app/controllers/roles_controller.rb:120
+#, fuzzy
+msgid "'%s' no longer matches the current search criteria."
+msgstr "शोध अटिंसह इव्हेंटस् जुळत नाही."
 
 #: app/views/filters/index.html.haml:15
 msgid "(%X of %Y repositories selected)"
@@ -331,8 +379,8 @@ msgstr "(%X आणखी लोड करा)"
 msgid "(Loaded %X of %Y Total)"
 msgstr "(%X लोड केले, एकूण %Y पैकी)"
 
-#: app/views/system_packages/_packages.html.haml:86
 #: app/views/filters/_products.html.haml:33
+#: app/views/system_packages/_packages.html.haml:86
 msgid "+ Add"
 msgstr "+ समावेष"
 
@@ -347,11 +395,10 @@ msgstr "+ नवीन"
 
 #: app/views/promotions/show.html.haml:163
 #: app/views/promotions/show.html.haml:167
-#, 
 msgid "+ New Promotion Changeset"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:104
+#: app/views/system_templates/index.html.haml:106
 msgid "+ New Template"
 msgstr "+ नवीन टेम्पलेट"
 
@@ -376,41 +423,67 @@ msgid "<< Previous"
 msgstr "<< मागील"
 
 #: app/views/user_mailer/logins.text.haml:1
-msgid "A request has been received by Katello server '%s' to retrieve the logins for email '%s'. The following is a list of those logins:"
-msgstr "इमेल '%s' करीता लॉगिंस् प्राप्त करण्यासाठी कटेलो सर्व्हर '%s' कडून विनंती प्राप्त झाली आहे. खालील त्या लॉगिंची सूची आहे:"
+msgid ""
+"A request has been received by Katello server '%s' to retrieve the logins "
+"for email '%s'. The following is a list of those logins:"
+msgstr ""
+"इमेल '%s' करीता लॉगिंस् प्राप्त करण्यासाठी कटेलो सर्व्हर '%s' कडून विनंती प्राप्त झाली "
+"आहे. खालील त्या लॉगिंची सूची आहे:"
 
 #: app/views/user_mailer/password_reset.text.haml:1
-msgid "A request has been received to reset the Katello password for user '%s'.  In order to reset this password, click the URL below."
-msgstr "वापरकर्ता '%s' करीता कटेलो पासवर्ड रिसेट करण्यासाठी विनंती प्राप्त झाली आहे.  पासवर्ड पूर्ववत् करण्यासाठी, खालील URL यावर क्लिक करा."
+msgid ""
+"A request has been received to reset the Katello password for user '%s'.  In "
+"order to reset this password, click the URL below."
+msgstr ""
+"वापरकर्ता '%s' करीता कटेलो पासवर्ड रिसेट करण्यासाठी विनंती प्राप्त झाली आहे.  पासवर्ड "
+"पूर्ववत् करण्यासाठी, खालील URL यावर क्लिक करा."
 
-#: app/controllers/activation_keys_controller.rb:272
-#: app/models/resource_type.rb:94 lib/navigation/systems.rb:50
+#: app/controllers/activation_keys_controller.rb:264
+#: app/models/resource_type.rb:94 lib/navigation/systems.rb:51
 msgid "Activation Keys"
 msgstr "ॲक्टिवेशन किज्"
 
 #: app/views/activation_keys/index.html.haml:4
-msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system, system template to apply to the system...etc."
-msgstr "ॲक्टिवेशन किज् गुणधर्मांचा संच पुरवतो ज्यास प्रणालीची नोंदणी करताना प्रणालीसाठी लागू करणे शक्य आहे.  यामध्ये, प्रणालीकरीता लागू करण्याजोगी पूर्वनिर्धारित वातावरणे, प्रणालीसाठी वाटपकरीता सबस्क्रिप्शन्स्, प्रणालीकरीता लागू करण्याजोगी टेम्पलेट...इत्यादि समाविष्टीत आहे."
+msgid ""
+"Activation Keys provide a set of characteristics that may be applied to a "
+"system during system registration.  This includes things such as, default "
+"environment to assign to the system, subscriptions to allocate to the "
+"system, system template to apply to the system...etc."
+msgstr ""
+"ॲक्टिवेशन किज् गुणधर्मांचा संच पुरवतो ज्यास प्रणालीची नोंदणी करताना प्रणालीसाठी लागू करणे "
+"शक्य आहे.  यामध्ये, प्रणालीकरीता लागू करण्याजोगी पूर्वनिर्धारित वातावरणे, प्रणालीसाठी "
+"वाटपकरीता सबस्क्रिप्शन्स्, प्रणालीकरीता लागू करण्याजोगी टेम्पलेट...इत्यादि समाविष्टीत आहे."
 
 #: app/views/activation_keys/index.html.haml:9
-#, 
-msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system...etc."
+msgid ""
+"Activation Keys provide a set of characteristics that may be applied to a "
+"system during system registration.  This includes things such as, default "
+"environment to assign to the system, subscriptions to allocate to the "
+"system...etc."
 msgstr ""
 
-#: app/views/roles/index.html.haml:8 app/views/filters/_packages.html.haml:24
+#: app/controllers/activation_keys_controller.rb:175
+msgid "Activation key '%s' was created."
+msgstr ""
+
+#: app/controllers/activation_keys_controller.rb:203
+msgid "Activation key '%s' was updated."
+msgstr ""
+
+#: app/views/filters/_packages.html.haml:24
 #: app/views/common/_common_i18n.html.haml:3
-#: app/views/system_templates/index.html.haml:5
-#: app/views/system_templates/_product_repos.html.haml:6
-#: app/views/system_templates/_products.html.haml:9
-#: app/views/system_templates/_product_packages_items.html.haml:3
-#: app/views/system_templates/_repositories.html.haml:8
-#: app/views/system_templates/_product_comps.html.haml:6
 #: app/views/promotions/show.html.haml:7
+#: app/views/system_templates/_product_packages_items.html.haml:3
+#: app/views/system_templates/_products.html.haml:9
+#: app/views/system_templates/_product_repos.html.haml:7
+#: app/views/system_templates/_product_comps.html.haml:6
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/_repositories.html.haml:8
+#: app/views/roles/index.html.haml:8
 msgid "Add"
 msgstr "समाविष्ट करा"
 
 #: app/views/common/_common_i18n.html.haml:3
-#, 
 msgid "Add All"
 msgstr ""
 
@@ -455,12 +528,11 @@ msgid "Add Package Timeout"
 msgstr "संकुल वेळसमाप्ति समाविष्ट करा"
 
 #: app/views/filters/_packages.html.haml:21
-#, 
 msgid "Add Packages"
 msgstr ""
 
-#: app/views/roles/index.html.haml:8 app/views/roles/_permissions.html.haml:6
-#: app/views/roles/_edit.html.haml:94
+#: app/views/roles/_edit.html.haml:94 app/views/roles/index.html.haml:8
+#: app/views/roles/_permissions.html.haml:6
 msgid "Add Permission"
 msgstr "परवानगी समाविष्ट करा"
 
@@ -505,19 +577,19 @@ msgstr "समाविष्ट करत आहे..."
 msgid "Administer Activation Keys"
 msgstr "ॲक्टिवेशन किज् व्यवस्थापीत करा"
 
-#: app/models/kt_environment.rb:332
+#: app/models/kt_environment.rb:344
 msgid "Administer Changesets in Environment"
 msgstr "वातावरणात चेंजसेट व्यवस्थापीत करा"
 
-#: app/models/organization.rb:134
+#: app/models/organization.rb:135
 msgid "Administer GPG Keys"
 msgstr "GPG किज् व्यवस्थापीत करा"
 
-#: app/models/organization.rb:137
+#: app/models/organization.rb:138
 msgid "Administer Organization"
 msgstr "संस्था व्यवस्थापीत करा"
 
-#: app/models/filter.rb:64
+#: app/models/filter.rb:65
 msgid "Administer Package Filters"
 msgstr "संकुल फिल्टर व्यवस्थापीत करा"
 
@@ -525,7 +597,7 @@ msgstr "संकुल फिल्टर व्यवस्थापीत क
 msgid "Administer Providers"
 msgstr "प्रोव्हाइडर्स् व्यवस्थापीत करा"
 
-#: app/models/role.rb:146
+#: app/models/role.rb:171
 msgid "Administer Roles"
 msgstr "रोल्स् व्यवस्थापीत करा"
 
@@ -533,12 +605,17 @@ msgstr "रोल्स् व्यवस्थापीत करा"
 msgid "Administer System Templates"
 msgstr "प्रणाली टेम्प्लेटस् व्यवस्थापीत करा"
 
-#: app/models/user.rb:351
+#: app/models/user.rb:354
 msgid "Administer Users"
 msgstr "वापरकर्ते व्यवस्थापीत करा"
 
 #: app/views/operations/index.html.haml:2 lib/navigation/administration.rb:45
 msgid "Administration"
+msgstr "प्रशासन"
+
+#: app/models/role.rb:191
+#, fuzzy
+msgid "Administrator"
 msgstr "प्रशासन"
 
 #: app/views/errata/_show.html.haml:12
@@ -549,12 +626,12 @@ msgstr "ॲडवाइजरि"
 msgid "Alert"
 msgstr "सतर्कता"
 
-#: app/helpers/breadcrumb_helper.rb:209 app/models/resource_type.rb:99
+#: app/helpers/breadcrumb_helper.rb:211 app/models/resource_type.rb:99
 #: app/views/roles/index.html.haml:8 app/views/roles/_permission.html.haml:23
 #: app/views/roles/_permission.html.haml:33
 #: app/views/roles/_closed_permission.html.haml:11
 #: app/views/roles/_closed_permission.html.haml:20
-#: lib/navigation/systems.rb:33
+#: lib/navigation/systems.rb:32
 msgid "All"
 msgstr "सर्व"
 
@@ -562,30 +639,47 @@ msgstr "सर्व"
 msgid "All Repositories"
 msgstr "सर्व रेपॉजिटरिज्"
 
-#: app/views/promotions/show.html.haml:153
-#, 
-msgid "An environment does not exist to promote content to.  If you would like to manage promotion changesets and content, please create a new environment."
+#: app/models/glue/candlepin/owner.rb:73
+msgid "All Systems for owner %s in candlepin"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:115
-msgid "An error has occured when communicating with the server, please refresh the page to retrieve the current System Template"
-msgstr "सर्व्हरसह संपर्क करताना त्रुटी आढळली, कृपया सध्याचे प्रणाली टेम्पलेट पुनःप्राप्त करण्यासाठी पृष्ठाला पुनः ताजे करा"
+#: app/models/glue/candlepin/owner.rb:52
+msgid "All environments for owner %s in candlepin"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:63
+msgid "All providers for owner %s in candlepin"
+msgstr ""
+
+#: app/controllers/products_controller.rb:76
+msgid "All repository GPG keys for Product '%s' were updated."
+msgstr ""
+
+#: app/views/promotions/show.html.haml:153
+msgid ""
+"An environment does not exist to promote content to.  If you would like to "
+"manage promotion changesets and content, please create a new environment."
+msgstr ""
+
+#: app/views/system_templates/index.html.haml:117
+msgid ""
+"An error has occured when communicating with the server, please refresh the "
+"page to retrieve the current System Template"
+msgstr ""
+"सर्व्हरसह संपर्क करताना त्रुटी आढळली, कृपया सध्याचे प्रणाली टेम्पलेट पुनःप्राप्त करण्यासाठी "
+"पृष्ठाला पुनः ताजे करा"
 
 #: app/views/promotions/show.html.haml:69
-#, 
-msgid "An error has occured when communicating with the server, please refresh the page to retrieve the current promotion changeset."
-msgstr ""
-
-#: app/views/organizations/_new.html.haml:22
-#, 
-msgid "Application Life Cycle Management"
+msgid ""
+"An error has occured when communicating with the server, please refresh the "
+"page to retrieve the current promotion changeset."
 msgstr ""
 
 #: app/views/roles/index.html.haml:8
 msgid "Applied"
 msgstr "लागू केले"
 
-#: lib/navigation/systems.rb:119
+#: lib/navigation/systems.rb:120
 msgid "Applied Subscriptions"
 msgstr "लागू केलेले सबस्क्रिप्शन्स्"
 
@@ -593,8 +687,8 @@ msgstr "लागू केलेले सबस्क्रिप्शन्�
 msgid "Apply Selected Plan to Selected Products"
 msgstr "नीवडलेल्या उत्पादनांकरीता नीवडलेले प्लॅन लागू करा"
 
-#: app/views/systems/_edit.html.haml:40
 #: app/views/providers/redhat/_subscription_details.html.haml:8
+#: app/views/systems/_edit.html.haml:40
 #: app/views/subscriptions/index.html.haml:17
 msgid "Arch"
 msgstr "आर्क"
@@ -645,7 +739,7 @@ msgstr "तुम्हाला नक्की हा रोल काढू�
 msgid "Are you sure you want to remove this system?"
 msgstr "तुम्हाला नक्की हि प्रणाली काढून टाकायची?"
 
-#: app/views/system_templates/index.html.haml:83
+#: app/views/system_templates/index.html.haml:85
 msgid "Are you sure you want to remove this template?"
 msgstr "तुम्हाला नक्की हे टेम्पलेट काढून टाकायचे?"
 
@@ -653,16 +747,16 @@ msgstr "तुम्हाला नक्की हे टेम्पलेट
 msgid "Are you sure you want to remove this user?"
 msgstr "तुम्हाला नक्की या वापरकर्त्याला काढून टाकायचे?"
 
-#: app/views/roles/_self_role_edit.html.haml:6
-#: app/views/sync_plans/_edit.html.haml:11
-#: app/views/environments/_edit.html.haml:9
-#: app/views/notices/show.html.haml:16
 #: app/views/common/_common_i18n.html.haml:3
-#: app/views/activation_keys/_available_subscriptions.html.haml:7
-#: app/views/activation_keys/_edit.html.haml:15
-#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 #: app/views/promotions/show.html.haml:128
 #: app/views/gpg_keys/_edit.html.haml:8
+#: app/views/sync_plans/_edit.html.haml:11
+#: app/views/activation_keys/_applied_subscriptions.html.haml:7
+#: app/views/activation_keys/_edit.html.haml:15
+#: app/views/activation_keys/_available_subscriptions.html.haml:7
+#: app/views/environments/_edit.html.haml:9
+#: app/views/roles/_self_role_edit.html.haml:6
+#: app/views/notices/show.html.haml:16
 msgid "Are you sure?"
 msgstr "तुमची खात्री आहे?"
 
@@ -670,11 +764,11 @@ msgstr "तुमची खात्री आहे?"
 msgid "Associated Bugs"
 msgstr "संबंधित बग्स्"
 
-#: app/controllers/api/systems_controller.rb:282
+#: app/controllers/api/systems_controller.rb:314
 msgid "At least one activation key must be provided"
 msgstr "किमान एक ॲक्टिवेशन कि पुरवणे आवश्यक आहे"
 
-#: app/models/organization.rb:74
+#: app/models/organization.rb:75
 msgid "At least one organization must exist."
 msgstr "किमान एक संस्था पुरवणे आवश्यक आहे."
 
@@ -683,30 +777,28 @@ msgid "At least one product or repository must be present to export a TDL"
 msgstr "TDL एक्सपोर्ट करण्यासाठी किमान एक उत्पादन किंवा रेपॉजिटरि उपलब्ध असायला हवे"
 
 #: app/views/systems/_subs.html.haml:9
-#, 
 msgid "Auto-heal"
 msgstr ""
 
-#: app/views/dashboard/index.html.haml:7
+#: app/views/dashboard/index.html.haml:10
 msgid "Available Errata"
 msgstr "उपलब्ध एराटा"
 
-#: app/views/systems/_subs.html.haml:59 lib/navigation/systems.rb:125
+#: app/views/systems/_subs.html.haml:58 lib/navigation/systems.rb:126
 msgid "Available Subscriptions"
 msgstr "उपलब्ध सबस्क्रिप्शन्स्"
 
-#: app/views/common/404.html.haml:7 app/views/common/500.html.haml:15
-#: app/views/common/403.html.haml:8
+#: app/views/common/403.html.haml:8 app/views/common/500.html.haml:15
+#: app/views/common/404.html.haml:7
 msgid "Back"
 msgstr " मागे"
 
-#: app/views/providers/redhat/_subscription_details.html.haml:10
+#: app/views/providers/redhat/_subscription_details.html.haml:9
 #: app/views/subscriptions/index.html.haml:19
 msgid "Begins"
 msgstr "सुरुवात"
 
 #: app/views/users/_edit_form.html.haml:78
-#, 
 msgid "Browser Default Locale"
 msgstr ""
 
@@ -727,19 +819,18 @@ msgid "CDN loading error: %s not found"
 msgstr "CDN लोड करतेवेळी त्रुटी: %s आढळले नाही"
 
 #: app/controllers/api/environments_controller.rb:51
-#, 
 msgid "Can't update Library environment"
 msgstr ""
 
-#: app/views/roles/_permission.html.haml:42
-#: app/views/systems/_actions.html.haml:12
-#: app/views/common/_edit_i18n.html.haml:4
-#: app/views/activation_keys/_edit.html.haml:73
 #: app/views/sync_management/index.html.haml:5
+#: app/views/common/_edit_i18n.html.haml:4
+#: app/views/systems/_actions.html.haml:12
+#: app/views/activation_keys/_edit.html.haml:73
+#: app/views/roles/_permission.html.haml:42
 msgid "Cancel"
 msgstr "रद्द करा"
 
-#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:6
 msgid "Cancel Add"
 msgstr "समावेष रद्द करा"
 
@@ -748,14 +839,15 @@ msgid "Cancel Review"
 msgstr "पुनरावलोकन रद्द करा"
 
 #: app/controllers/sync_management_controller.rb:26
-msgid "Canceled."
+#, fuzzy
+msgid "Cancelled."
 msgstr "रद्द केले. "
 
 #: app/models/system_task.rb:115
 msgid "Candlepin Event"
 msgstr "कँडलपिन इव्हेंट"
 
-#: app/models/permission.rb:38 app/models/permission.rb:166
+#: app/models/permission.rb:38 app/models/permission.rb:218
 msgid "Cannot add/remove or change permissions related to a locked role."
 msgstr "लॉकड् रोल संबंधित परवानगी समाविष्ट करणे/काढून टाकणे अशक्य."
 
@@ -764,25 +856,38 @@ msgid "Cannot change the name or description of a locked role."
 msgstr "लॉक्ड् रोलचे नाव किंवा वर्णन बदलणे अशक्य."
 
 #: app/models/activation_key.rb:47
-#, 
 msgid "Cannot create activation keys in Library environment "
 msgstr ""
 
-#: app/models/user.rb:105
+#: app/models/user.rb:108
 msgid "Cannot delete currently logged user"
 msgstr "सध्या लॉगड् वापरकर्त्याला नष्ट करणे अशक्य"
 
+#: app/models/role.rb:229 app/models/user.rb:577
+msgid ""
+"Cannot dissociate user '%s' from '%s' role. Need at least one user in the '%"
+"s' role."
+msgstr ""
+
 #: app/controllers/api/templates_controller.rb:107
-#, 
 msgid "Cannot export templates for the Library environment."
 msgstr ""
 
-#: app/controllers/system_templates_controller.rb:285
+#: app/controllers/system_templates_controller.rb:297
 msgid "Cannot modify a template that is another environment"
 msgstr "दुसरे वातावरण असणारे टेम्प्लेट संपादित करणे अशक्य"
 
+#: app/models/changeset.rb:118
+msgid ""
+"Cannot promote the changeset '%s' while another changeset (%s) is being "
+"promoted."
+msgstr ""
+
+#: app/models/changeset.rb:116
+msgid "Cannot promote the changset '%s' because it is not in the review phase."
+msgstr ""
+
 #: app/models/system.rb:17
-#, 
 msgid "Cannot register a system with 'Library' environment "
 msgstr ""
 
@@ -799,7 +904,6 @@ msgid "Cannot specify all_types without all_tags and all_verbs"
 msgstr "all_tags व all_verbs विना all_types निर्देशीत करणे अशक्य"
 
 #: app/controllers/api/templates_controller.rb:98
-#, 
 msgid "Cannot validate templates for the Library environment."
 msgstr ""
 
@@ -811,12 +915,8 @@ msgstr "पासवर्ड बदला"
 msgid "Change Password:"
 msgstr "पासवर्ड बदला:"
 
-#: lib/navigation/content_management.rb:180
-msgid "Changelog"
-msgstr "चेंजलॉग"
-
-#: app/helpers/breadcrumb_helper.rb:29
 #: app/controllers/changesets_controller.rb:268
+#: app/helpers/breadcrumb_helper.rb:30
 msgid "Changesets"
 msgstr "चेंजसेटस्"
 
@@ -855,18 +955,23 @@ msgid "Cleared"
 msgstr "नष्ट केले"
 
 #: app/views/roles/index.html.haml:8
-msgid "Click Add or Remove next to a user name to apply or remove them from role."
-msgstr "रोलपासून वापरकर्तानाव लागू किंवा काढून टाकण्यासाठी वापरकर्तानावाच्या बाजूचे समाविष्ट करा किंवा काढून टाका क्लिक करा."
+msgid ""
+"Click Add or Remove next to a user name to apply or remove them from role."
+msgstr ""
+"रोलपासून वापरकर्तानाव लागू किंवा काढून टाकण्यासाठी वापरकर्तानावाच्या बाजूचे समाविष्ट "
+"करा किंवा काढून टाका क्लिक करा."
 
 #: app/views/roles/index.html.haml:8
 msgid "Click Add permission from the bar below to add a permission."
 msgstr "परवानगी समाविष्ट करण्यासाठी खालील पट्टीपासून परवानगी समाविष्ट करा क्लिक करा."
 
 #: app/views/roles/index.html.haml:8
-msgid "Click edit permission from the bar below to edit the current permission."
-msgstr "सध्याची परवानगी संपादित करण्यासाठी खालील पट्टीपासून परवानगी समाविष्ट करा क्लिक करा."
+msgid ""
+"Click edit permission from the bar below to edit the current permission."
+msgstr ""
+"सध्याची परवानगी संपादित करण्यासाठी खालील पट्टीपासून परवानगी समाविष्ट करा क्लिक करा."
 
-#: app/controllers/organizations_controller.rb:98
+#: app/controllers/organizations_controller.rb:104
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr "पहिले वातावरण निर्माण करण्यासठी 'वातावरण समाविष्ट करा' क्लिक करा"
 
@@ -874,10 +979,10 @@ msgstr "पहिले वातावरण निर्माण करण्
 msgid "Click to edit"
 msgstr "संपादित करण्यासाठी क्लिक करा"
 
-#: app/views/roles/_edit.html.haml:11
-#: app/views/layouts/_tupane_layout.html.haml:18
-#: app/views/layouts/_tupane_layout.html.haml:23
 #: app/views/common/_edit_i18n.html.haml:4
+#: app/views/layouts/_tupane_layout.html.haml:19
+#: app/views/layouts/_tupane_layout.html.haml:24
+#: app/views/roles/_edit.html.haml:11
 msgid "Close"
 msgstr "बंद करा"
 
@@ -889,7 +994,7 @@ msgstr "समाविष्ट करा परवानगी बंद क�
 msgid "Close Details"
 msgstr "तपशील बंद करा"
 
-#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:6
 msgid "Close Edit"
 msgstr "संपादित करा बंद करा"
 
@@ -903,6 +1008,11 @@ msgstr "रोल तपशील बंद करा"
 
 #: app/views/common/_env_select.html.haml:11
 msgid "Collapse"
+msgstr "कोलॅप्स्"
+
+#: app/views/sync_management/index.html.haml:22
+#, fuzzy
+msgid "Collapse All"
 msgstr "कोलॅप्स्"
 
 #: app/views/password_resets/edit.html.haml:28
@@ -922,7 +1032,7 @@ msgstr "खात्री"
 msgid "Consumed"
 msgstr "वापरलेले"
 
-#: app/helpers/breadcrumb_helper.rb:121
+#: app/helpers/breadcrumb_helper.rb:122
 msgid "Content"
 msgstr "कंटेंट"
 
@@ -935,7 +1045,6 @@ msgid "Content Management"
 msgstr "कंटेंट व्यवस्थापन"
 
 #: lib/navigation/content_management.rb:56
-#, 
 msgid "Content Providers"
 msgstr ""
 
@@ -944,8 +1053,8 @@ msgstr ""
 msgid "Contents:"
 msgstr "कंटेंटस्:"
 
-#: app/views/systems/_subs.html.haml:19
 #: app/views/providers/redhat/_subscription_details.html.haml:6
+#: app/views/systems/_subs.html.haml:19
 #: app/views/subscriptions/index.html.haml:15
 msgid "Contract"
 msgstr "काँट्रॅक्ट"
@@ -954,7 +1063,7 @@ msgstr "काँट्रॅक्ट"
 msgid "Copyright &copy; "
 msgstr "सर्वहक्काधिकार &copy; "
 
-#: app/models/organization.rb:70
+#: app/models/organization.rb:71
 msgid "Could not delete organization '%s'."
 msgstr "संस्था '%s' नष्ट करणे अशक्य."
 
@@ -962,12 +1071,33 @@ msgstr "संस्था '%s' नष्ट करणे अशक्य."
 msgid "Couldn't find environment '%s'"
 msgstr "वातावरण '%s' आढळले नाही"
 
+#: app/controllers/environments_controller.rb:133
+#, fuzzy
+msgid "Couldn't find environment with ID=%d"
+msgstr "वातावरण '%s' आढळले नाही"
+
+#: app/controllers/environments_controller.rb:125
+#, fuzzy
+msgid "Couldn't find organization '%d'"
+msgstr "संस्था '%s' नष्ट करणे अशक्य."
+
+#: app/controllers/organizations_controller.rb:204
+#: app/controllers/organizations_controller.rb:215
+#, fuzzy
+msgid "Couldn't find organization with ID=%s"
+msgstr "संस्था '%s' नष्ट करणे अशक्य."
+
 #: app/controllers/api/activation_keys_controller.rb:68
 msgid "Couldn't find pool '%s' in activation_key '%s'"
 msgstr "activation_key '%s' अंतर्गत पूल '%s' आढळले नाही"
 
 #: app/controllers/api/providers_controller.rb:121
 msgid "Couldn't find provider '%s'"
+msgstr "प्रोव्हाइडर '%s' आढळले नाही"
+
+#: app/controllers/repositories_controller.rb:159
+#, fuzzy
+msgid "Couldn't find repository with ID=%s"
 msgstr "प्रोव्हाइडर '%s' आढळले नाही"
 
 #: app/controllers/api/sync_controller.rb:69
@@ -981,7 +1111,6 @@ msgid "Create"
 msgstr "निर्माण करा"
 
 #: app/views/environments/_new.html.haml:2
-#, 
 msgid "Create Application Life Cycle Management Environment"
 msgstr ""
 
@@ -997,19 +1126,27 @@ msgstr "रेपॉजिटरि निर्माण करा"
 msgid "Created (UTC)"
 msgstr "निर्माण केले (UTC)"
 
+#: app/models/glue/candlepin/environment.rb:29
+msgid "Creating an environment in candlepin: %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:36
+msgid "Creating an owner in candlepin: %s"
+msgstr ""
+
 #: app/views/layouts/_allowed_orgs.html.haml:3
 msgid "Current Organization"
 msgstr "सध्याची संस्था"
 
-#: app/views/dashboard/_subscriptions.haml:33
 #: app/views/subscriptions/index.html.haml:5
+#: app/views/dashboard/_subscriptions.haml:33
 msgid "Current Subscriptions"
 msgstr "सध्याचे सबस्क्रिप्शन्स्"
 
 #: lib/navigation/content_management.rb:76
-#, 
-msgid "Custom Content Provider"
-msgstr ""
+#, fuzzy
+msgid "Custom Content Providers"
+msgstr "प्रोव्हाइडर्स् व्यवस्थापीत करा"
 
 #: lib/navigation/dashboard.rb:17
 msgid "Dashboard"
@@ -1032,8 +1169,8 @@ msgstr "डिबग प्रमाणपत्र"
 msgid "Default Environment:"
 msgstr "डिबग वातावरण:"
 
-#: app/views/users/_edit_environment.html.haml:19
 #: app/views/users/_new.html.haml:50
+#: app/views/users/_edit_environment.html.haml:19
 msgid "Default Organization:"
 msgstr "पूर्वनिर्धारित संस्था:"
 
@@ -1041,11 +1178,11 @@ msgstr "पूर्वनिर्धारित संस्था:"
 msgid "Delete All"
 msgstr "सर्व नष्ट करा"
 
-#: app/models/organization.rb:138
+#: app/models/organization.rb:139
 msgid "Delete Organization"
 msgstr "संस्था नष्ट करा"
 
-#: app/models/filter.rb:66
+#: app/models/filter.rb:67
 msgid "Delete Package Filters"
 msgstr "संकुल फिल्टर्स् नष्ट करा "
 
@@ -1053,15 +1190,15 @@ msgstr "संकुल फिल्टर्स् नष्ट करा "
 msgid "Delete Providers"
 msgstr "प्रोव्हाइडर्स् नष्ट करा"
 
-#: app/models/role.rb:149
+#: app/models/role.rb:174
 msgid "Delete Roles"
 msgstr "रोल्स् नष्ट करा"
 
-#: app/models/organization.rb:132
+#: app/models/organization.rb:133
 msgid "Delete Systems"
 msgstr "प्रणाली नष्ट करा"
 
-#: app/models/user.rb:354
+#: app/models/user.rb:357
 msgid "Delete Users"
 msgstr "वापरकर्ते नष्ट करा"
 
@@ -1069,8 +1206,16 @@ msgstr "वापरकर्ते नष्ट करा"
 msgid "Deleted provider [ %s ]"
 msgstr "प्रोव्हाइडर [ %s ] नष्ट केले"
 
-#: app/helpers/breadcrumb_helper.rb:61 app/views/promotions/show.html.haml:7
-#: lib/navigation/content_management.rb:174
+#: app/models/glue/candlepin/environment.rb:37
+msgid "Deleteing environment in candlepin: %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:44
+msgid "Deleting owner in candlepin: %s"
+msgstr ""
+
+#: app/helpers/breadcrumb_helper.rb:62 app/views/promotions/show.html.haml:7
+#: lib/navigation/content_management.rb:167
 msgid "Dependencies"
 msgstr "अवलंबने"
 
@@ -1078,42 +1223,43 @@ msgstr "अवलंबने"
 msgid "Dependency of "
 msgstr "याचे अवलंबने"
 
-#: app/views/roles/_new.html.haml:14 app/views/packages/_show.html.haml:17
+#: app/views/filters/_new.html.haml:18 app/views/filters/_edit.html.haml:26
+#: app/views/packages/_show.html.haml:17
+#: app/views/providers/_edit.html.haml:28
+#: app/views/providers/_form.html.haml:12
 #: app/views/organizations/_new.html.haml:17
 #: app/views/organizations/_new.html.haml:30
 #: app/views/organizations/_edit.html.haml:22
-#: app/views/sync_plans/_form.html.haml:10
+#: app/views/changesets/_new.html.haml:15
 #: app/views/sync_plans/_edit.html.haml:20
-#: app/views/systems/_edit.html.haml:28 app/views/changesets/_new.html.haml:15
-#: app/views/environments/_new.html.haml:19
-#: app/views/environments/_edit.html.haml:22
-#: app/views/notices/show.html.haml:29 app/views/filters/_new.html.haml:18
-#: app/views/filters/_edit.html.haml:26
-#: app/views/system_templates/_new.html.haml:15
-#: app/views/system_templates/_edit.html.haml:7
-#: app/views/products/_new.html.haml:13 app/views/products/_edit.html.haml:21
+#: app/views/sync_plans/_form.html.haml:10
+#: app/views/systems/_edit.html.haml:28 app/views/errata/_show.html.haml:80
 #: app/views/activation_keys/_new.html.haml:15
 #: app/views/activation_keys/_edit.html.haml:42
-#: app/views/providers/_form.html.haml:12
-#: app/views/providers/_edit.html.haml:28 app/views/errata/_show.html.haml:80
+#: app/views/system_templates/_new.html.haml:15
+#: app/views/system_templates/_edit.html.haml:7
+#: app/views/environments/_new.html.haml:19
+#: app/views/environments/_edit.html.haml:22 app/views/roles/_new.html.haml:14
+#: app/views/notices/show.html.haml:29
 #: app/views/distributions/_show.html.haml:18
+#: app/views/products/_new.html.haml:13 app/views/products/_edit.html.haml:21
 msgid "Description"
 msgstr "वर्णन"
 
-#: app/views/roles/_edit.html.haml:40 app/views/roles/_edit.html.haml:76
-#: app/views/changesets/_edit.html.haml:16
 #: app/views/promotions/show.html.haml:122
+#: app/views/changesets/_edit.html.haml:16 app/views/roles/_edit.html.haml:40
+#: app/views/roles/_edit.html.haml:76 app/views/roles/index.html.haml:8
 msgid "Description:"
 msgstr "वर्णन:"
 
-#: app/views/changesets/_edit.html.haml:5 lib/navigation/systems.rb:60
-#: lib/navigation/systems.rb:131 lib/navigation/administration.rb:35
-#: lib/navigation/organization.rb:51 lib/navigation/content_management.rb:35
-#: lib/navigation/content_management.rb:192
-#: lib/navigation/content_management.rb:209
-#: lib/navigation/content_management.rb:226
-#: lib/navigation/content_management.rb:249
-#: lib/navigation/content_management.rb:266
+#: app/views/changesets/_edit.html.haml:5 lib/navigation/administration.rb:35
+#: lib/navigation/systems.rb:61 lib/navigation/systems.rb:132
+#: lib/navigation/content_management.rb:35
+#: lib/navigation/content_management.rb:173
+#: lib/navigation/content_management.rb:190
+#: lib/navigation/content_management.rb:207
+#: lib/navigation/content_management.rb:230
+#: lib/navigation/content_management.rb:247 lib/navigation/organization.rb:51
 msgid "Details"
 msgstr "तपशील"
 
@@ -1134,10 +1280,20 @@ msgstr "बंद केलेले मदत टिपा पुनःसु�
 msgid "Display"
 msgstr "डिस्पले"
 
-#: app/views/dashboard/_systems.html.haml:17
 #: app/views/promotions/show.html.haml:7
+#: app/views/dashboard/_systems.html.haml:17
 msgid "Distribution"
 msgstr "वितरण"
+
+#: app/models/changeset_distribution.rb:20
+#, fuzzy
+msgid "Distribution '%s' does not belong to the specified product!"
+msgstr "या टेम्पलेट अंतर्गत वितरण '%s' आढळले नाही."
+
+#: app/models/system_template_distribution.rb:19
+#, fuzzy
+msgid "Distribution '%s' not found in the '%s' environment"
+msgstr "या टेम्पलेट अंतर्गत वितरण '%s' आढळले नाही."
 
 #: app/models/system_template.rb:313
 msgid "Distribution '%s' not found in this template."
@@ -1147,15 +1303,17 @@ msgstr "या टेम्पलेट अंतर्गत वितरण '%
 msgid "Distribution '%s' was not found in Pulp."
 msgstr "वितरण '%s' पल्प अंतर्गत आढळले नाही."
 
-#: app/helpers/breadcrumb_helper.rb:65 app/helpers/breadcrumb_helper.rb:170
-#: app/views/changesets/_edit.html.haml:64
-#: app/views/promotions/_detail.html.haml:30
+#: app/helpers/breadcrumb_helper.rb:66 app/helpers/breadcrumb_helper.rb:173
 #: app/views/promotions/show.html.haml:7
+#: app/views/promotions/_detail.html.haml:30
+#: app/views/changesets/_edit.html.haml:64
 msgid "Distributions"
 msgstr "वितरणे"
 
 #: app/views/providers/index.html.haml:14
-msgid "Do you want to set this GPG Key as the key for all repositories within this product?"
+msgid ""
+"Do you want to set this GPG Key as the key for all repositories within this "
+"product?"
 msgstr "या उत्पादन अंतर्गत सर्व रेपॉजिटरिज्करीता तुम्हाला GPG कि निश्चित करायचे?"
 
 #: app/views/roles/_edit.html.haml:84
@@ -1164,16 +1322,16 @@ msgstr "पूर्ण झाले"
 
 #: app/views/packages/_show.html.haml:82
 #: app/views/organizations/_download_debug_certificate.html.haml:11
-#: app/views/system_templates/index.html.haml:97
 #: app/views/system_templates/_download.html.haml:12
+#: app/views/system_templates/index.html.haml:99
 msgid "Download"
 msgstr "डाउनलोड"
 
-#: app/views/system_templates/index.html.haml:74
+#: app/views/system_templates/index.html.haml:76
 msgid "Download System Template"
 msgstr "प्रणाली टेम्पलेट डाउनलोड करा"
 
-#: app/views/sync_management/index.html.haml:36
+#: app/views/sync_management/index.html.haml:45
 msgid "Duration"
 msgstr "कालावधि"
 
@@ -1181,10 +1339,17 @@ msgstr "कालावधि"
 msgid "ERRATA"
 msgstr "ERRATA"
 
-#: app/views/system_templates/index.html.haml:5
-#: app/views/system_templates/index.html.haml:82
+#: app/views/activation_keys/_edit.html.haml:28
+msgid ""
+"Edit Activation Key enables you to modify the selected activation key.  This "
+"key may be used during system registration.  For example, <BR/><BR/"
+">subscription-manager register --org %s --activationkey %s"
+msgstr ""
+
 #: app/views/promotions/show.html.haml:7
 #: app/views/promotions/show.html.haml:137
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/index.html.haml:84
 msgid "Edit Details"
 msgstr "तपशील संपादित करा"
 
@@ -1194,10 +1359,14 @@ msgid "Edit Environment"
 msgstr "वातावरण संपादित करा"
 
 #: app/views/gpg_keys/_edit.html.haml:20
-msgid "Edit GPG Key enables you to modify the selected GPG Key.  A new key can be copied and pasted in directly."
-msgstr "GPG कि संपादित करा कि तुम्हाला नीवडलेली GPG कि संपादित करण्यास परवानगी देतो.  नवीन किचे प्रत बनवणे व त्यास प्रत्यक्षरित्या चिकटवणे शक्य आहे."
+msgid ""
+"Edit GPG Key enables you to modify the selected GPG Key.  A new key can be "
+"copied and pasted in directly."
+msgstr ""
+"GPG कि संपादित करा कि तुम्हाला नीवडलेली GPG कि संपादित करण्यास परवानगी देतो.  नवीन "
+"किचे प्रत बनवणे व त्यास प्रत्यक्षरित्या चिकटवणे शक्य आहे."
 
-#: app/views/roles/index.html.haml:8 app/views/roles/_edit.html.haml:99
+#: app/views/roles/_edit.html.haml:99 app/views/roles/index.html.haml:8
 msgid "Edit Permission"
 msgstr "परवानगी संपादित करा"
 
@@ -1209,10 +1378,6 @@ msgstr "येथील परवानगी संपादित करा"
 msgid "Edit Product"
 msgstr "उत्पादन संपादित करा"
 
-#: app/views/repositories/_edit.html.haml:13
-msgid "Edit Repository"
-msgstr "रेपॉजिटरि संपादित करा"
-
 #: app/views/roles/_edit.html.haml:104
 msgid "Edit Role"
 msgstr "रोल संपादित करा"
@@ -1221,12 +1386,12 @@ msgstr "रोल संपादित करा"
 msgid "Edit Role Details"
 msgstr "रोल तपशील संपादित करा"
 
-#: app/views/system_templates/index.html.haml:71
+#: app/views/system_templates/index.html.haml:73
 msgid "Edit System Template"
 msgstr "प्रणाली टेम्पलेट संपादित करा"
 
-#: app/controllers/api/products_controller.rb:105
 #: app/controllers/api/activation_keys_controller.rb:107
+#: app/controllers/api/products_controller.rb:105
 msgid "Either organization id or environment id needs to be specified"
 msgstr "एकतर संस्था id किंवा वातावरण id निर्देशीत करणे आवश्यक"
 
@@ -1234,7 +1399,7 @@ msgstr "एकतर संस्था id किंवा वातावरण
 msgid "Either packages or groups  must be provided"
 msgstr "संकुले किंवा गट पुरवणे आवश्यक आहे"
 
-#: app/views/system_templates/index.html.haml:106
+#: app/views/system_templates/index.html.haml:108
 msgid "Eligible Content"
 msgstr "पात्र कंटेंट"
 
@@ -1254,8 +1419,10 @@ msgstr "वैध लॉगिन वापरकर्ता नावांस
 
 #: app/controllers/system_packages_controller.rb:56
 #: app/controllers/system_packages_controller.rb:89
-msgid "Empty request received to install Packages or Package Groups System '%{s}'."
-msgstr "संकुले किंवा पॅकेज ग्रुप्स् सिस्टम '%{s}' प्रतिष्ठापीत करण्यासाठी रिकामी विनंती प्राप्त झाली."
+msgid ""
+"Empty request received to install Packages or Package Groups System '%{s}'."
+msgstr ""
+"संकुले किंवा पॅकेज ग्रुप्स् सिस्टम '%{s}' प्रतिष्ठापीत करण्यासाठी रिकामी विनंती प्राप्त झाली."
 
 #: app/views/providers/redhat/show.html.haml:47
 msgid "Enable Repositories"
@@ -1273,14 +1440,26 @@ msgstr "समाप्ति दिनांक"
 msgid "Enter Selected Content..."
 msgstr "नीवडलेले कंटेंट द्या..."
 
-#: app/views/environments/_edit.html.haml:4
-#: app/views/dashboard/_errata.haml:39
-#: app/views/system_templates/_download.html.haml:8
+#: app/views/users/_new.html.haml:58 app/views/dashboard/_errata.haml:39
 #: app/views/activation_keys/_new.html.haml:22
 #: app/views/activation_keys/_edit.html.haml:49
-#: app/views/users/_new.html.haml:58
+#: app/views/system_templates/_download.html.haml:8
+#: app/views/environments/_edit.html.haml:4
 msgid "Environment"
 msgstr "वातावरण"
+
+#: app/controllers/environments_controller.rb:73
+#, fuzzy
+msgid "Environment '%s' was created."
+msgstr "वातावरण आवश्यक"
+
+#: app/controllers/environments_controller.rb:103
+msgid "Environment '%s' was deleted."
+msgstr ""
+
+#: app/controllers/environments_controller.rb:95
+msgid "Environment '%s' was updated."
+msgstr ""
 
 #: app/views/organizations/_edit.html.haml:26
 msgid "Environment Promotion Paths"
@@ -1298,12 +1477,12 @@ msgstr "वातावरण:"
 msgid "Environments"
 msgstr "वातावरणे"
 
-#: app/helpers/breadcrumb_helper.rb:53 app/helpers/breadcrumb_helper.rb:126
-#: app/helpers/breadcrumb_helper.rb:157
-#: app/views/changesets/_edit.html.haml:60 app/views/dashboard/_errata.haml:10
+#: app/helpers/breadcrumb_helper.rb:54 app/helpers/breadcrumb_helper.rb:127
+#: app/helpers/breadcrumb_helper.rb:159 app/views/promotions/show.html.haml:7
 #: app/views/promotions/_detail.html.haml:9
 #: app/views/promotions/_detail.html.haml:22
-#: app/views/promotions/show.html.haml:7 lib/navigation/systems.rb:85
+#: app/views/changesets/_edit.html.haml:60 app/views/dashboard/_errata.haml:10
+#: lib/navigation/systems.rb:86
 msgid "Errata"
 msgstr "एराटा"
 
@@ -1323,8 +1502,12 @@ msgstr "प्रतिष्ठापनकरीता एराटा क्�
 msgid "Erratum"
 msgstr "एराटम"
 
-#: app/views/dashboard/_sync.haml:23 app/views/common/_common_i18n.html.haml:3
+#: app/models/changeset_erratum.rb:20
+msgid "Erratum '%s' doesn't belong to the specified product!"
+msgstr ""
+
 #: app/views/sync_management/index.html.haml:5
+#: app/views/common/_common_i18n.html.haml:3 app/views/dashboard/_sync.haml:23
 msgid "Error"
 msgstr "त्रुटी"
 
@@ -1337,7 +1520,6 @@ msgid "Error while deleting provider [ %s ]: %s"
 msgstr "प्रोव्हाइडर [ %s ] नष्ट करतेवेळी त्रुटी आढळली: %s"
 
 #: app/views/common/500.html.haml:10
-#, 
 msgid "Error:"
 msgstr ""
 
@@ -1345,7 +1527,7 @@ msgstr ""
 msgid "Event"
 msgstr "इव्हेंट"
 
-#: lib/navigation/systems.rb:102
+#: lib/navigation/systems.rb:103
 msgid "Events"
 msgstr "इव्हेंटस्"
 
@@ -1353,20 +1535,29 @@ msgstr "इव्हेंटस्"
 msgid "Exactly one distribution must be present to export a TDL"
 msgstr "TDL एक्सपोर्ट करण्यासाठी किमान एक वितरण उपलब्ध असायला हवे"
 
+#: app/views/common/_env_select.html.haml:9
+#: app/views/providers/_products_repos.html.haml:35
 #: app/views/organizations/_download_debug_certificate.html.haml:6
 #: app/views/changesets/_content_type.html.haml:7
-#: app/views/common/_env_select.html.haml:9
 #: app/views/activation_keys/_subscriptions.html.haml:22
-#: app/views/providers/_products_repos.html.haml:35
 msgid "Expand"
+msgstr "विस्तारित करा"
+
+#: app/views/sync_management/index.html.haml:25
+#, fuzzy
+msgid "Expand All"
 msgstr "विस्तारित करा"
 
 #: app/views/subscriptions/index.html.haml:51
 msgid "Expand/Contract All"
 msgstr "सर्व वाढवा/कमी"
 
-#: app/views/systems/_subs.html.haml:21 app/views/systems/_subs.html.haml:73
-#: app/views/providers/redhat/_subscription_details.html.haml:11
+#: app/controllers/api/systems_controller.rb:207
+msgid "Expected attribute is missing:"
+msgstr ""
+
+#: app/views/providers/redhat/_subscription_details.html.haml:10
+#: app/views/systems/_subs.html.haml:21 app/views/systems/_subs.html.haml:74
 #: app/views/subscriptions/index.html.haml:20
 msgid "Expires"
 msgstr "वेळसमाप्ति"
@@ -1375,29 +1566,73 @@ msgstr "वेळसमाप्ति"
 msgid "Fact"
 msgstr "फॅक्ट"
 
-#: lib/navigation/systems.rb:108
+#: lib/navigation/systems.rb:109
 msgid "Facts"
 msgstr "फॅक्टस्"
+
+#: app/helpers/dashboard_helper.rb:57
+#, fuzzy
+msgid "Failed"
+msgstr "फाइल"
+
+#: app/models/glue/candlepin/environment.rb:32
+msgid "Failed to create candlepin environment %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:39
+msgid "Failed to create candlepin owner %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:58
+msgid "Failed to delete all environments for owner %s in candlepin:"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:66
+msgid "Failed to delete all providers for owner %s in candlepin: %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:78
+msgid "Failed to delete all systems for owner %s in candlepin: %s"
+msgstr ""
+
+#: app/models/glue/candlepin/environment.rb:40
+msgid "Failed to delete candlepin environment %s"
+msgstr ""
+
+#: app/models/glue/candlepin/owner.rb:47
+msgid "Failed to delete candlepin owner %s"
+msgstr ""
+
+#: app/models/user.rb:458
+msgid "Failed to delete organization '%s'. Check notices for more details. "
+msgstr ""
+
+#: app/models/changeset.rb:308
+msgid "Failed to promote changeset '%s'. Check notices for more details"
+msgstr ""
 
 #: app/views/distributions/_filelist.html.haml:14
 msgid "File"
 msgstr "फाइल"
 
-#: lib/navigation/content_management.rb:186
-#: lib/navigation/content_management.rb:220
+#: lib/navigation/content_management.rb:201
 msgid "Filelist"
 msgstr "फाइलसूची"
 
-#: app/controllers/filters_controller.rb:203
-#: app/views/roles/_edit.html.haml:14 app/views/roles/_edit.html.haml:18
-#: app/views/layouts/_org.haml:12
-#: app/views/system_templates/index.html.haml:50
+#: app/controllers/filters_controller.rb:223
 #: app/views/promotions/show.html.haml:7
 #: app/views/promotions/show.html.haml:101
 #: app/views/promotions/show.html.haml:103
-#: app/views/promotions/show.html.haml:104
+#: app/views/promotions/show.html.haml:104 app/views/layouts/_org.haml:12
+#: app/views/system_templates/index.html.haml:52
+#: app/views/roles/_edit.html.haml:14 app/views/roles/_edit.html.haml:18
 msgid "Filter"
 msgstr "फिल्टर"
+
+#: app/controllers/filters_controller.rb:104
+#, fuzzy
+msgid "Filter %s created successfully."
+msgstr "यशस्वीरित्या निर्माण केले."
 
 #: app/views/system_events/_events.html.haml:18
 msgid "Filter on loaded Events..."
@@ -1407,14 +1642,14 @@ msgstr "लोड झालेल्या इव्हेंटस्ला फ
 msgid "Filter on loaded packages..."
 msgstr "लोड झालेल्या संकुलांना फिल्टर करा..."
 
-#: app/views/roles/_edit.html.haml:13 app/views/layouts/_org.haml:11
 #: app/views/common/_filter_table.html.haml:2
-#: app/views/system_templates/index.html.haml:49
-#: app/views/promotions/show.html.haml:100
+#: app/views/promotions/show.html.haml:100 app/views/layouts/_org.haml:11
+#: app/views/system_templates/index.html.haml:51
+#: app/views/roles/_edit.html.haml:13
 msgid "Filter..."
 msgstr "फिल्टर..."
 
-#: lib/navigation/content_management.rb:237
+#: lib/navigation/content_management.rb:218
 msgid "Filtered Packages"
 msgstr "फिल्टर झालेले संकुले"
 
@@ -1422,9 +1657,17 @@ msgstr "फिल्टर झालेले संकुले"
 msgid "Filters"
 msgstr "फिल्टर्स्"
 
+#: app/controllers/api/filters_controller.rb:111
+msgid "Filters can be stored only in Library repositories."
+msgstr ""
+
 #: app/views/systems/errata/_index.html.haml:5
 msgid "Finished"
 msgstr "पूर्ण झाले"
+
+#: app/views/providers/redhat/show.html.haml:31
+msgid "Force"
+msgstr ""
 
 #: app/views/user_sessions/new.html.haml:17
 msgid "Forgotten username or password?"
@@ -1434,8 +1677,8 @@ msgstr "वापरकर्तानाव किंवा पासवर्�
 msgid "Full Access"
 msgstr "संपूर्ण प्रवेश"
 
-#: app/views/changesets/_edit.html.haml:49
 #: app/views/promotions/show.html.haml:7
+#: app/views/changesets/_edit.html.haml:49
 msgid "Full Products"
 msgstr "संपूर्ण उत्पादने"
 
@@ -1446,40 +1689,66 @@ msgstr "संपूर्ण उत्पादने"
 msgid "GPG Key"
 msgstr "GPG कि"
 
+#: app/controllers/gpg_keys_controller.rb:92
+msgid "GPG Key '%s' was created."
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:136
+msgid "GPG Key '%s' was deleted."
+msgstr ""
+
+#: app/controllers/gpg_keys_controller.rb:116
+msgid "GPG Key '%s' was updated."
+msgstr ""
+
 #: app/views/systems/_subscription_details.html.haml:4
 msgid "GPG Key URL: "
 msgstr "GPG कि URL: "
 
 #: app/views/gpg_keys/_products_repos.html.haml:21
-#, 
 msgid "GPG Key assigned at the Product Level for"
 msgstr ""
 
 #: app/views/gpg_keys/_products_repos.html.haml:36
-#, 
 msgid "GPG Key assigned at the Repository Level for"
 msgstr ""
 
 #: app/controllers/gpg_keys_controller.rb:165
-#: lib/navigation/content_management.rb:162
+#: lib/navigation/content_management.rb:157
 msgid "GPG Keys"
 msgstr "GPG किज्"
 
 #: app/views/gpg_keys/index.html.haml:3
-msgid "GPG Keys may be stored by uploading a key directly or copying and pasting the key in upon creation. By visiting the Providers page and selecting either a product or repository, a GPG key that has been created here can be associated with the given entity."
-msgstr "GPG किज्ला प्रत्यक्षरित्या अपलोड करून किंवा निर्माणवेळी त्यास चिकटवणे शक्य आहे. प्रोव्हाइडर्स् पेजला भेट देऊन व एकतर उत्पादन किंवा रेपॉजिटरी पसंत करून, येथील निर्मीत GPG किला दिलेल्या एंटिटिसह संलग्न करणे शक्य आहे."
+msgid ""
+"GPG Keys may be stored by uploading a key directly or copying and pasting "
+"the key in upon creation. By visiting the Providers page and selecting "
+"either a product or repository, a GPG key that has been created here can be "
+"associated with the given entity."
+msgstr ""
+"GPG किज्ला प्रत्यक्षरित्या अपलोड करून किंवा निर्माणवेळी त्यास चिकटवणे शक्य आहे. "
+"प्रोव्हाइडर्स् पेजला भेट देऊन व एकतर उत्पादन किंवा रेपॉजिटरी पसंत करून, येथील निर्मीत GPG "
+"किला दिलेल्या एंटिटिसह संलग्न करणे शक्य आहे."
 
-#: app/helpers/breadcrumb_helper.rb:244
+#: app/helpers/breadcrumb_helper.rb:246
 msgid "Global Permissions"
 msgstr "ग्लोबल परवानगी"
 
 #: app/views/roles/index.html.haml:8
-msgid "Global permissions allow you to create permissions that span all organizations, or choose a specific organization to apply permissions."
-msgstr "ग्लोबल परवानगी तुम्हाला सर्व संस्थाकरीता परवानगी निर्माण करण्यास परवानगी देते, किंवा परवानगी लागू करण्यासाठी ठराविक संस्था नीवडा."
+msgid ""
+"Global permissions allow you to create permissions that span all "
+"organizations, or choose a specific organization to apply permissions."
+msgstr ""
+"ग्लोबल परवानगी तुम्हाला सर्व संस्थाकरीता परवानगी निर्माण करण्यास परवानगी देते, किंवा "
+"परवानगी लागू करण्यासाठी ठराविक संस्था नीवडा."
 
 #: app/views/roles/index.html.haml:8
-msgid "Global permissions are permissions that span all organizations; however, organization permissions apply only to the organization they are associated with."
-msgstr "ग्लोबल परवानगी असे परवानगी आहेत जे सर्व संस्थाकरीता लागू होते; तरी, संस्था परवानगी फक्त संबंधित संस्थाकरीताच लागू होते."
+msgid ""
+"Global permissions are permissions that span all organizations; however, "
+"organization permissions apply only to the organization they are associated "
+"with."
+msgstr ""
+"ग्लोबल परवानगी असे परवानगी आहेत जे सर्व संस्थाकरीता लागू होते; तरी, संस्था परवानगी फक्त "
+"संबंधित संस्थाकरीताच लागू होते."
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
@@ -1490,7 +1759,7 @@ msgstr "चांगले"
 msgid "Group"
 msgstr "गट"
 
-#: app/helpers/systems_helper.rb:59
+#: app/helpers/systems_helper.rb:58
 msgid "Guest"
 msgstr "अतिथी"
 
@@ -1502,7 +1771,7 @@ msgstr "अतिथी"
 msgid "History"
 msgstr "इतिहास"
 
-#: app/helpers/systems_helper.rb:65 app/views/systems/_edit.html.haml:77
+#: app/helpers/systems_helper.rb:64 app/views/systems/_edit.html.haml:77
 msgid "Host"
 msgstr "यजमान"
 
@@ -1510,8 +1779,7 @@ msgstr "यजमान"
 msgid "Host & Guest Info"
 msgstr "यजमान व अतिथीची माहिती"
 
-#: app/helpers/systems_helper.rb:63
-#, 
+#: app/helpers/systems_helper.rb:62
 msgid "Hypervisor"
 msgstr ""
 
@@ -1520,17 +1788,14 @@ msgid "Hypervisor does not support this action"
 msgstr "हायपरवाइजर ह्या कृतीला समर्थन पुरवत नाही"
 
 #: app/controllers/system_errata_controller.rb:38
-#, 
 msgid "Hypervisors do not have errata"
 msgstr ""
 
 #: app/controllers/system_packages_controller.rb:118
-#, 
 msgid "Hypervisors do not have packages"
 msgstr ""
 
-#: app/controllers/systems_controller.rb:192
-#, 
+#: app/controllers/systems_controller.rb:194
 msgid "Hypervisors do not have software products"
 msgstr ""
 
@@ -1555,16 +1820,28 @@ msgid "Id / Link"
 msgstr "Id / दुवा"
 
 #: app/views/user_mailer/password_reset.text.haml:5
-msgid "If you did not request this password to be reset, just ignore this email and the password will continue to stay the same."
-msgstr "पासवर्डला पूर्ववत् करयसाठी विनंती न केल्यास, या इमेलला दुर्लक्ष करा व पासवर्ड समानच राहतील."
+msgid ""
+"If you did not request this password to be reset, just ignore this email and "
+"the password will continue to stay the same."
+msgstr ""
+"पासवर्डला पूर्ववत् करयसाठी विनंती न केल्यास, या इमेलला दुर्लक्ष करा व पासवर्ड समानच "
+"राहतील."
 
 #: app/views/password_resets/new.html.haml:23
-msgid "If you do not know your login, please enter your email address below and your login will be sent to you."
-msgstr "लॉगिन माहिती नसल्यास, कृपया खालील येथे तुमचा इमेल पत्ता द्या व तुम्हाला लॉगिन पाठवले जाईल."
+msgid ""
+"If you do not know your login, please enter your email address below and "
+"your login will be sent to you."
+msgstr ""
+"लॉगिन माहिती नसल्यास, कृपया खालील येथे तुमचा इमेल पत्ता द्या व तुम्हाला लॉगिन पाठवले "
+"जाईल."
 
 #: app/views/password_resets/new.html.haml:10
-msgid "If you do not know your password, enter your login and email address below and instructions on resetting your password will be sent to you."
-msgstr "पासवर्ड माहिती नसल्यास, खालील येथे लॉगिन व इमेल पत्ता द्या व पासवर्ड पुन्हा निश्चित करण्याबाबत सूचना तुम्हाला सूचना पाठवले जाईल."
+msgid ""
+"If you do not know your password, enter your login and email address below "
+"and instructions on resetting your password will be sent to you."
+msgstr ""
+"पासवर्ड माहिती नसल्यास, खालील येथे लॉगिन व इमेल पत्ता द्या व पासवर्ड पुन्हा निश्चित "
+"करण्याबाबत सूचना तुम्हाला सूचना पाठवले जाईल."
 
 #: app/views/providers/redhat/show.html.haml:51
 msgid "Import History"
@@ -1575,12 +1852,14 @@ msgid "Import Time"
 msgstr "आयात वेळ"
 
 #: app/views/dashboard/_errata.haml:14
-#, 
 msgid "Info"
 msgstr ""
 
-#: app/models/system.rb:201
-#, 
+#: app/views/organizations/_new.html.haml:22
+msgid "Initial Application Life Cycle Management Environment"
+msgstr ""
+
+#: app/models/system.rb:200
 msgid "Initial Registration Params"
 msgstr ""
 
@@ -1596,8 +1875,8 @@ msgstr "संकुल गटे '%{g}' यांचे प्रणाली '
 msgid "Install of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "संकुले '%{p}' यांचे प्रणाली '%{s}' करीता प्रतिष्ठापन ठरवले आहे.."
 
-#: app/views/systems/errata/_index.html.haml:5
 #: app/views/systems/errata/_items.html.haml:16
+#: app/views/systems/errata/_index.html.haml:5
 msgid "Installing"
 msgstr "प्रतिष्ठापन करत आहे"
 
@@ -1606,8 +1885,9 @@ msgid "Insufficient Entitlements"
 msgstr "अपुरे एंटाइटलमेंटस्"
 
 #: app/controllers/sync_plans_controller.rb:49
-#: app/views/sync_plans/_form.html.haml:15
+#: app/controllers/sync_schedules_controller.rb:46
 #: app/views/sync_plans/_edit.html.haml:23
+#: app/views/sync_plans/_form.html.haml:15
 msgid "Interval"
 msgstr "अवधि"
 
@@ -1620,16 +1900,24 @@ msgid "Invalid Url"
 msgstr "अवैध Url"
 
 #: app/models/resource_type.rb:41
-msgid "Invalid resource type '%{resource_type}'. Resource Types can be one of '%{possible_types}'"
-msgstr "अवैध स्रोत प्रकार '%{resource_type}'. स्रोत प्रकारे '%{possible_types}' पैकी एक असू शकते"
+msgid ""
+"Invalid resource type '%{resource_type}'. Resource Types can be one of '%"
+"{possible_types}'"
+msgstr ""
+"अवैध स्रोत प्रकार '%{resource_type}'. स्रोत प्रकारे '%{possible_types}' पैकी एक असू "
+"शकते"
 
 #: app/controllers/changesets_controller.rb:144
 msgid "Invalid state"
 msgstr "अवैध स्तर"
 
 #: app/models/resource_type.rb:26
-msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
-msgstr "अवैध वर्ब '%{verb}'. स्रोत प्रकार '%{resource_type}' %{possible_verbs} पैकी एक असू शकते"
+msgid ""
+"Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be "
+"one of %{possible_verbs}"
+msgstr ""
+"अवैध वर्ब '%{verb}'. स्रोत प्रकार '%{resource_type}' %{possible_verbs} पैकी एक असू "
+"शकते"
 
 #: app/views/errata/_show.html.haml:30
 msgid "Issued"
@@ -1644,12 +1932,10 @@ msgid "It is not allowed to import manifest for a custom provider."
 msgstr "कस्टम प्रोव्हाइडरकरीता मॅनिफेस्ट आयात करणे आवश्यक नाही."
 
 #: app/controllers/api/products_controller.rb:42
-#, 
 msgid "It is not allowed to update a Red Hat product."
 msgstr ""
 
 #: app/controllers/api/repositories_controller.rb:56
-#, 
 msgid "It is not allowed to update a Red Hat repository."
 msgstr ""
 
@@ -1665,7 +1951,7 @@ msgstr "कटेलो चिन्ह"
 msgid "Katello User '%s' Password Reset"
 msgstr "कटेलो वापरकर्ता '%s' पासवर्ड पूर्ववत्"
 
-#: app/controllers/activation_keys_controller.rb:275
+#: app/controllers/activation_keys_controller.rb:267
 #: app/views/gpg_keys/_edit.html.haml:40
 msgid "Key"
 msgstr "कि"
@@ -1674,8 +1960,7 @@ msgstr "कि"
 msgid "Last Booted"
 msgstr "शेटवच्यावेळी बूटे केलेले"
 
-#: app/controllers/systems_controller.rb:298
-#, 
+#: app/controllers/systems_controller.rb:302
 msgid "Last Checked In"
 msgstr ""
 
@@ -1683,7 +1968,7 @@ msgstr ""
 msgid "Last Checked in Date"
 msgstr "शेवटच्यावेळी तपासलेले दिनांक"
 
-#: app/views/dashboard/index.html.haml:11
+#: app/views/dashboard/index.html.haml:13
 msgid "Latest Notifications"
 msgstr "नुकतेच सूचना"
 
@@ -1692,13 +1977,11 @@ msgid "Level"
 msgstr "स्तर"
 
 #: app/controllers/environments_controller.rb:90
-#: app/models/kt_environment.rb:109 app/views/organizations/_edit.html.haml:36
-#, 
+#: app/models/kt_environment.rb:114 app/views/organizations/_edit.html.haml:36
 msgid "Library"
 msgstr ""
 
 #: app/models/changeset.rb:15
-#, 
 msgid "Library environment cannot contain a changeset!"
 msgstr ""
 
@@ -1715,11 +1998,17 @@ msgid "List Actions"
 msgstr "कृती दाखवा"
 
 #: app/views/providers/redhat/show.html.haml:6
-msgid "Listed below are the subscriptions information. If you have a subscription manifest you may upload it below. This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."
-msgstr "खालील सबस्क्रिप्शन्स् माहिती सूचीत दाखवले आहे. सबस्क्रिप्शन मॅनिफेस्ट आढळल्यास त्यास अपलोड करणे शक्य आहे. Red Hat कस्टमर पोर्टल किंवा सपोर्ट प्रतिनिधिसह संपर्क करून हे मॅनिफेस्ट प्राप्त करणे शक्य आहे."
+msgid ""
+"Listed below are the subscriptions information. If you have a subscription "
+"manifest you may upload it below. This manifest may be obtained by visiting "
+"the Red Hat Customer Portal or by contacting your support representative."
+msgstr ""
+"खालील सबस्क्रिप्शन्स् माहिती सूचीत दाखवले आहे. सबस्क्रिप्शन मॅनिफेस्ट आढळल्यास त्यास अपलोड "
+"करणे शक्य आहे. Red Hat कस्टमर पोर्टल किंवा सपोर्ट प्रतिनिधिसह संपर्क करून हे मॅनिफेस्ट "
+"प्राप्त करणे शक्य आहे."
 
-#: app/views/layouts/_header.haml:8
 #: app/views/systems/errata/_items.html.haml:14
+#: app/views/layouts/_header.haml:8
 msgid "Loading"
 msgstr "लोड करत आहे"
 
@@ -1733,7 +2022,6 @@ msgstr "परवानगी लोड करत आहे"
 
 #: app/views/promotions/show.html.haml:7
 #: app/views/promotions/show.html.haml:110
-#, 
 msgid "Loading Promotion Changeset"
 msgstr ""
 
@@ -1741,7 +2029,7 @@ msgstr ""
 msgid "Loading Role"
 msgstr "रोल लोड करत आहे"
 
-#: app/views/system_templates/index.html.haml:60
+#: app/views/system_templates/index.html.haml:62
 msgid "Loading System Template"
 msgstr "प्रणाली टेम्पलेट लोड करत आहे"
 
@@ -1770,7 +2058,7 @@ msgstr "लॉगिन यशस्वी!"
 msgid "Login Unknown"
 msgstr "लॉगिन अपरिचीत"
 
-#: app/views/layouts/_footer.haml:4 app/views/layouts/_header.haml:24
+#: app/views/layouts/_header.haml:24 app/views/layouts/_footer.haml:4
 msgid "Logout"
 msgstr "लॉगआउट"
 
@@ -1778,7 +2066,6 @@ msgstr "लॉगआउट"
 msgid "Logout Successful"
 msgstr "लॉगआउट यशस्वी!"
 
-#: app/views/providers/redhat/_subscription_details.html.haml:9
 #: app/views/subscriptions/index.html.haml:18
 msgid "Machine Type"
 msgstr "मशीन प्रकार"
@@ -1788,20 +2075,19 @@ msgid "Manifest import for provider [ %s ] failed"
 msgstr "प्रोव्हाइडर [ %s ] करीता इम्पोर्ट मॅनिफेस्ट करा"
 
 #: app/views/systems/_subs.html.haml:61
-#, 
 msgid "Match System"
 msgstr ""
 
-#: app/views/organizations/_events.html.haml:16
 #: app/views/providers/redhat/_import_history.html.haml:3
+#: app/views/organizations/_events.html.haml:16
 msgid "Message"
 msgstr "संदेश"
 
-#: app/models/organization.rb:127
+#: app/models/organization.rb:128
 msgid "Modify Organization and Administer Environments"
 msgstr "संस्था संपादित करा व वातावरण व्यवस्थापीत करा"
 
-#: app/models/filter.rb:67
+#: app/models/filter.rb:68
 msgid "Modify Package Filters"
 msgstr "संकुल फिल्टरे संपादित करा"
 
@@ -1809,19 +2095,19 @@ msgstr "संकुल फिल्टरे संपादित करा"
 msgid "Modify Providers and Administer Products"
 msgstr "प्रोव्हाइडर्स् संपादित करा व उत्पादने व्यवस्थापीत करा"
 
-#: app/models/role.rb:148
+#: app/models/role.rb:173
 msgid "Modify Roles"
 msgstr "रोल्स् संपादित करा"
 
-#: app/models/organization.rb:131
+#: app/models/organization.rb:132
 msgid "Modify Systems"
 msgstr "प्रणाली संपादित करा"
 
-#: app/models/kt_environment.rb:329
+#: app/models/kt_environment.rb:341
 msgid "Modify Systems in Environment"
 msgstr "वातावरणात प्रणाली संपादित करा"
 
-#: app/models/user.rb:353
+#: app/models/user.rb:356
 msgid "Modify Users"
 msgstr "वापरकर्ते संपादित करा"
 
@@ -1829,7 +2115,7 @@ msgstr "वापरकर्ते संपादित करा"
 msgid "More >>"
 msgstr "अधिक >>"
 
-#: app/views/promotions/show.html.haml:186
+#: app/views/promotions/show.html.haml:196
 msgid "More details"
 msgstr "अधिक तपशील"
 
@@ -1837,43 +2123,45 @@ msgstr "अधिक तपशील"
 msgid "More..."
 msgstr "अधिक..."
 
-#: app/models/changeset.rb:48
+#: app/models/changeset.rb:49
 msgid "Must be unique within an environment"
 msgstr "वातावरण अंतर्गत एकमेव असायला हवे"
 
-#: app/controllers/organizations_controller.rb:218
-#: app/controllers/providers_controller.rb:237
-#: app/controllers/sync_plans_controller.rb:49
-#: app/controllers/systems_controller.rb:298
-#: app/controllers/system_templates_controller.rb:73
-#: app/controllers/filters_controller.rb:202
-#: app/controllers/roles_controller.rb:60
 #: app/controllers/gpg_keys_controller.rb:167
 #: app/controllers/changesets_controller.rb:270
-#: app/controllers/activation_keys_controller.rb:274
-#: app/views/roles/_new.html.haml:9 app/views/repositories/_new.html.haml:15
+#: app/controllers/organizations_controller.rb:224
+#: app/controllers/activation_keys_controller.rb:266
+#: app/controllers/system_templates_controller.rb:80
+#: app/controllers/systems_controller.rb:302
+#: app/controllers/sync_plans_controller.rb:49
+#: app/controllers/providers_controller.rb:244
+#: app/controllers/filters_controller.rb:222
+#: app/controllers/sync_schedules_controller.rb:39
+#: app/controllers/sync_schedules_controller.rb:46
+#: app/controllers/roles_controller.rb:60 app/views/filters/_new.html.haml:13
+#: app/views/filters/_edit.html.haml:21
+#: app/views/repositories/_new.html.haml:15
 #: app/views/repositories/_edit.html.haml:17
 #: app/views/packages/_show.html.haml:11
+#: app/views/providers/redhat/_subscription_details.html.haml:4
+#: app/views/providers/_edit.html.haml:22
+#: app/views/providers/_form.html.haml:6 app/views/gpg_keys/_new.html.haml:9
+#: app/views/gpg_keys/_edit.html.haml:25
 #: app/views/organizations/_new.html.haml:12
 #: app/views/organizations/_new.html.haml:25
-#: app/views/sync_plans/_form.html.haml:5
+#: app/views/changesets/_new.html.haml:10
 #: app/views/sync_plans/_edit.html.haml:17
-#: app/views/system_packages/_packages.html.haml:64
-#: app/views/systems/_edit.html.haml:24 app/views/changesets/_new.html.haml:10
-#: app/views/environments/_new.html.haml:13
-#: app/views/environments/_edit.html.haml:17
-#: app/views/filters/_new.html.haml:13 app/views/filters/_edit.html.haml:21
+#: app/views/sync_plans/_form.html.haml:5 app/views/systems/_edit.html.haml:24
+#: app/views/activation_keys/_new.html.haml:9
+#: app/views/activation_keys/_edit.html.haml:37
 #: app/views/system_templates/_new.html.haml:10
 #: app/views/system_templates/_promotion_details.html.haml:9
 #: app/views/system_templates/_edit.html.haml:4
-#: app/views/products/_new.html.haml:8 app/views/products/_edit.html.haml:16
-#: app/views/activation_keys/_new.html.haml:9
-#: app/views/activation_keys/_edit.html.haml:37
-#: app/views/gpg_keys/_new.html.haml:9 app/views/gpg_keys/_edit.html.haml:25
-#: app/views/providers/_form.html.haml:6
-#: app/views/providers/redhat/_subscription_details.html.haml:4
-#: app/views/providers/_edit.html.haml:22
+#: app/views/system_packages/_packages.html.haml:64
+#: app/views/environments/_new.html.haml:13
+#: app/views/environments/_edit.html.haml:17 app/views/roles/_new.html.haml:9
 #: app/views/distributions/_show.html.haml:12
+#: app/views/products/_new.html.haml:8 app/views/products/_edit.html.haml:16
 msgid "Name"
 msgstr "नाव"
 
@@ -1893,14 +2181,14 @@ msgstr "एका संस्थाअंतर्गत नाव एकमे
 msgid "Name of Your System:"
 msgstr "तुमच्या प्रणालीचे नाव:"
 
-#: app/views/roles/_edit.html.haml:35 app/views/roles/_edit.html.haml:73
-#: app/views/changesets/_name.html.haml:3
-#: app/views/changesets/_edit.html.haml:11
 #: app/views/promotions/show.html.haml:119
+#: app/views/changesets/_name.html.haml:3
+#: app/views/changesets/_edit.html.haml:11 app/views/roles/_edit.html.haml:35
+#: app/views/roles/_edit.html.haml:73 app/views/roles/index.html.haml:8
 msgid "Name:"
 msgstr "नाव:"
 
-#: app/helpers/dashboard_helper.rb:130 app/helpers/systems_helper.rb:24
+#: app/helpers/dashboard_helper.rb:145 app/helpers/systems_helper.rb:24
 msgid "Never checked in."
 msgstr "कधिच प्रवेश केले नाही."
 
@@ -1957,12 +2245,10 @@ msgid "New system"
 msgstr "नवीन प्रणाली"
 
 #: app/controllers/api/templates_controller.rb:49
-#, 
 msgid "New templates can be created only in a Library environment"
 msgstr ""
 
 #: app/controllers/api/templates_controller.rb:80
-#, 
 msgid "New templates can be imported only into a Library environment"
 msgstr ""
 
@@ -1976,7 +2262,6 @@ msgid "No"
 msgstr "नाही"
 
 #: app/helpers/users_helper.rb:32
-#, 
 msgid "No Default Organization"
 msgstr ""
 
@@ -1984,7 +2269,7 @@ msgstr ""
 msgid "No Subscriptions Available"
 msgstr "सबस्क्रिप्शन्स् उपलब्ध नाही"
 
-#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:6
 msgid "No System Templates are currently defined"
 msgstr "सध्या प्रणाली टेम्पलेट निश्चित केले नाही"
 
@@ -2000,11 +2285,14 @@ msgstr "टेम्पलेटस् आढळले नाही"
 msgid "No changesets found."
 msgstr "चेंजसेटस् आढळले नाही."
 
+#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:63
 #: app/views/users/_edit_environment.html.haml:3
 #: app/views/users/_edit_environment.html.haml:44
-#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:63
-msgid "No default environment. Select an organization to choose from available environments."
-msgstr "पूर्वनिर्धारित वातावरण आढळले नाही. उपलब्ध वातावरणांपासून नीवडण्याजोगी संस्था पसंत करा."
+msgid ""
+"No default environment. Select an organization to choose from available "
+"environments."
+msgstr ""
+"पूर्वनिर्धारित वातावरण आढळले नाही. उपलब्ध वातावरणांपासून नीवडण्याजोगी संस्था पसंत करा."
 
 #: app/controllers/users_controller.rb:252
 #: app/views/users/_edit_environment.html.haml:21
@@ -2017,32 +2305,46 @@ msgid "No distributions available."
 msgstr "वितरणे उपलब्ध नाही."
 
 #: app/views/promotions/show.html.haml:7
-#, 
 msgid "No distributions exist in this promotion changeset."
 msgstr ""
 
 #: app/views/organizations/_edit.html.haml:45
-msgid "No environments are available in this organization. Please add some environments to be able register systems to this organization."
-msgstr "या संस्था अंतर्गत वातावरणे आढळले नाही. प्रणालींना या संस्थासह नोंदणी करण्यासाठी कृपया काहिक वातावरणे समाविष्ट करा."
+msgid ""
+"No environments are available in this organization. Please add some "
+"environments to be able register systems to this organization."
+msgstr ""
+"या संस्था अंतर्गत वातावरणे आढळले नाही. प्रणालींना या संस्थासह नोंदणी करण्यासाठी कृपया "
+"काहिक वातावरणे समाविष्ट करा."
 
 #: app/views/activation_keys/_new.html.haml:25
-msgid "No environments are currently available in this organization.  Please add some to be able to create activation keys."
-msgstr "या संस्था अंतर्गत वातावरणे आढळले नाही. कृपया ॲक्टिवेशन किज निर्माण करण्यासाठी काहिक वातावरणे समाविष्ट करा."
+msgid ""
+"No environments are currently available in this organization.  Please add "
+"some to be able to create activation keys."
+msgstr ""
+"या संस्था अंतर्गत वातावरणे आढळले नाही. कृपया ॲक्टिवेशन किज निर्माण करण्यासाठी काहिक "
+"वातावरणे समाविष्ट करा."
 
 #: app/views/common/_env_select.html.haml:2 app/views/users/_new.html.haml:65
-msgid "No environments are currently available in this organization.  Please add some to be able to set user default."
-msgstr "या संस्था अंतर्गत वातावरणे आढळले नाही. कृपया वापरकर्ता पूर्वनिर्धारित ठरवण्याकरीता ठराविक समाविष्ट करा."
+msgid ""
+"No environments are currently available in this organization.  Please add "
+"some to be able to set user default."
+msgstr ""
+"या संस्था अंतर्गत वातावरणे आढळले नाही. कृपया वापरकर्ता पूर्वनिर्धारित ठरवण्याकरीता "
+"ठराविक समाविष्ट करा."
 
 #: app/views/users/_edit_environment.html.haml:46
-msgid "No environments are currently available in this organization. Saving will set user to no default environment."
-msgstr "या संस्था अंतर्गत वातावरणे आढळले नाही. साठवल्याने वापरकर्त्याला पूर्वनिर्धारित वातावरणकरीता निश्चित केले जाईल."
+msgid ""
+"No environments are currently available in this organization. Saving will "
+"set user to no default environment."
+msgstr ""
+"या संस्था अंतर्गत वातावरणे आढळले नाही. साठवल्याने वापरकर्त्याला पूर्वनिर्धारित "
+"वातावरणकरीता निश्चित केले जाईल."
 
 #: app/views/promotions/_errata.html.haml:3
 msgid "No errata available."
 msgstr "एराटा उपलब्ध नाही."
 
 #: app/views/promotions/show.html.haml:7
-#, 
 msgid "No errata exist in this promotion changeset."
 msgstr ""
 
@@ -2066,8 +2368,8 @@ msgstr "नवीन संकुले प्रतिष्ठापीत झ
 msgid "No package groups available."
 msgstr "संकुल गटे अनुपलब्ध."
 
-#: app/views/filters/index.html.haml:15
 #: app/views/filters/_packages.html.haml:28
+#: app/views/filters/index.html.haml:15
 msgid "No packages are currently filtered."
 msgstr "सध्या संकुले फिल्टर केले जात नाही."
 
@@ -2076,12 +2378,10 @@ msgid "No packages available for promotion"
 msgstr "प्रमोशनकरिता संकुल अनुपलब्ध"
 
 #: app/views/promotions/show.html.haml:7
-#, 
 msgid "No packages exist in this promotion changeset."
 msgstr ""
 
 #: app/views/system_templates/_product_packages.html.haml:3
-#, 
 msgid "No packages found."
 msgstr ""
 
@@ -2093,19 +2393,24 @@ msgstr "संकुले काढून टाकले नाही"
 msgid "No packages updated"
 msgstr "संकुले सुधारित केले नाही"
 
-#: app/views/system_templates/_products.html.haml:5
 #: app/views/promotions/_products.html.haml:5
+#: app/views/system_templates/_products.html.haml:5
 msgid "No products"
 msgstr "उत्पादने आढळले नाही"
 
-#: app/views/system_templates/index.html.haml:5
-msgid "No products are currently associated with this system template.  Please associate a product that contains distributions in order to select a distribution."
-msgstr "या प्रणाली टेम्पलेटसह सध्या उत्पादने संलग्न नाहीत.  कृपया वितरण नीवडण्यासाठी वितरणे समाविष्टीत असलेल्या उत्पादनाशी संलग्न करा."
-
 #: app/views/promotions/show.html.haml:7
-#, 
 msgid "No products exist in the promotion changeset."
 msgstr ""
+
+#: app/views/system_templates/index.html.haml:6
+#, fuzzy
+msgid ""
+"No products or repositories are currently associated with this system "
+"template.  Please add either a product or repository that contains "
+"distributions in order to select a distribution."
+msgstr ""
+"या प्रणाली टेम्पलेटसह सध्या उत्पादने संलग्न नाहीत.  कृपया वितरण नीवडण्यासाठी वितरणे "
+"समाविष्टीत असलेल्या उत्पादनाशी संलग्न करा."
 
 #: app/views/filters/index.html.haml:15
 msgid "No products or repositories are currently associated."
@@ -2128,11 +2433,10 @@ msgid "No repositories available."
 msgstr "रेपॉजिटरिज् उपलब्ध नाही."
 
 #: app/views/promotions/show.html.haml:7
-#, 
 msgid "No repositories exist in this promotion changeset."
 msgstr ""
 
-#: app/views/providers/redhat/_subscription_details.html.haml:55
+#: app/views/providers/redhat/_subscription_details.html.haml:53
 msgid "No subscriptions have been imported."
 msgstr "सबस्क्रिप्शन्स् इम्पोर्ट केले नाही."
 
@@ -2144,10 +2448,10 @@ msgstr "चेंजसेट अंतर्गत प्रणाली टे
 msgid "No systems found."
 msgstr "प्रणाली आढळले नाही."
 
-#: app/models/product.rb:95 app/models/system.rb:202
-#: app/views/roles/_closed_permission.html.haml:13
-#: app/views/systems/_subscription_details.html.haml:7
+#: app/models/system.rb:201 app/models/product.rb:95
 #: app/views/systems/_edit.html.haml:64 app/views/systems/_edit.html.haml:88
+#: app/views/systems/_subscription_details.html.haml:7
+#: app/views/roles/_closed_permission.html.haml:13
 msgid "None"
 msgstr "काहिच नाही"
 
@@ -2157,9 +2461,14 @@ msgstr "काहिच नाही"
 msgid "None defined for this Organization."
 msgstr "या संस्थाकरीता काहिच निश्चित नाही."
 
-#: app/views/system_templates/index.html.haml:5
-msgid "None of the associated products contain distributions, please select a product that contains at least one distribution."
-msgstr "संलग्न उत्पादनांमध्ये वितरणे समाविष्टीत नाही, कृपया किमान एकच वितरण समाविष्टीत असणारे उत्पादन पसंत करा."
+#: app/views/system_templates/index.html.haml:6
+#, fuzzy
+msgid ""
+"None of the associated products or repositories contain distributions, "
+"please add a product or repository that contains at least one distribution."
+msgstr ""
+"संलग्न उत्पादनांमध्ये वितरणे समाविष्टीत नाही, कृपया किमान एकच वितरण समाविष्टीत असणारे "
+"उत्पादन पसंत करा."
 
 #: app/views/errata/_show.html.haml:78
 msgid "None."
@@ -2172,6 +2481,11 @@ msgstr "लागू केले नाही"
 #: app/models/activation_key.rb:75
 msgid "Not enough entitlements in pools (%d), required: %d, available: %d"
 msgstr "पूल्स् (%d) अंतर्गत अतिरिक्त एंटाइटलमेंटस् आढळले नाही, आवश्यक: %d, उपलब्ध: %d"
+
+#: app/controllers/api/errors_controller.rb:19
+#, fuzzy
+msgid "Not found"
+msgstr "प्रणाली आढळले नाही."
 
 #: app/views/organizations/_new.html.haml:34
 msgid "Note: This will be set as your initial default environment."
@@ -2202,10 +2516,19 @@ msgid "Ok"
 msgstr "ठिक आहे"
 
 #: app/views/providers/_products_repos.html.haml:17
-msgid "On Products & Repositories you can add your own Products and Repositories to your Provider.  This allows you to synchronize content from any remote repository to this server.  Simply add a Product and then setup one or more repositories to add to this Provider.  This feature is only available for Custom Providers."
-msgstr "उत्पादने व रेपॉजिटरिजवर तुम्ही प्रोव्हाइडरकरीता स्वतःचे उत्पादने व रेपॉजिटरिज् समाविष्ट करू शकता. यामुळे कोणत्याहि रिमोट रेपॉजिटरिपासून सर्व्हरकरीता कंटेंट सिंक्रोनाइज करणे शक्य आहे.  फक्त उत्पादन समाविष्ट करा व एक किंवा त्यापेक्षा जास्त रेपॉजिटरिज् सेटअप करून या प्रोव्हाइडरकरीता समावेश करा.  हे गुणविशेष फक्त कस्टम प्रोव्हाइडर्स् करीता लागू होते."
+msgid ""
+"On Products & Repositories you can add your own Products and Repositories to "
+"your Provider.  This allows you to synchronize content from any remote "
+"repository to this server.  Simply add a Product and then setup one or more "
+"repositories to add to this Provider.  This feature is only available for "
+"Custom Providers."
+msgstr ""
+"उत्पादने व रेपॉजिटरिजवर तुम्ही प्रोव्हाइडरकरीता स्वतःचे उत्पादने व रेपॉजिटरिज् समाविष्ट करू "
+"शकता. यामुळे कोणत्याहि रिमोट रेपॉजिटरिपासून सर्व्हरकरीता कंटेंट सिंक्रोनाइज करणे शक्य आहे.  "
+"फक्त उत्पादन समाविष्ट करा व एक किंवा त्यापेक्षा जास्त रेपॉजिटरिज् सेटअप करून या "
+"प्रोव्हाइडरकरीता समावेश करा.  हे गुणविशेष फक्त कस्टम प्रोव्हाइडर्स् करीता लागू होते."
 
-#: app/views/roles/_edit.html.haml:66
+#: app/views/roles/_edit.html.haml:66 app/views/roles/index.html.haml:8
 msgid "On:"
 msgstr "यावरील:"
 
@@ -2226,16 +2549,19 @@ msgstr "एक किंवा त्यापेक्षा जास्त �
 msgid "One or more package names are invalid."
 msgstr "एक किंवा त्यापेक्षा जास्त संकुले नावे अवैध आहेत."
 
+#: app/models/search_favorite.rb:25
+msgid "Only %s favorites may be created."
+msgstr ""
+
 #: app/models/provider.rb:54
 msgid "Only one Red Hat provider permitted for an Organization"
 msgstr "संस्थाकरीता फक्त एक Red Hat प्रोव्हाडर स्वीकारले जाते"
 
-#: app/views/sync_management/index.html.haml:28
+#: app/views/sync_management/index.html.haml:37
 msgid "Only show syncing."
 msgstr "फक्त सिंकिंग दाखवा."
 
 #: app/helpers/branding_helper.rb:23
-#, 
 msgid "Open Source Subscription Management"
 msgstr ""
 
@@ -2243,40 +2569,100 @@ msgstr ""
 msgid "Open Source Systems Management"
 msgstr "ओपन सोअर्स् सिस्टम्स् मॅनेजमेंट"
 
-#: app/controllers/organizations_controller.rb:219
+#: app/controllers/organizations_controller.rb:225
 msgid "Organization"
 msgstr "संस्था"
 
-#: app/controllers/organizations_controller.rb:147
+#: app/controllers/organizations_controller.rb:72
+#, fuzzy
+msgid ""
+"Organization '%s' already exists and either has been scheduled for deletion "
+"or failed deletion."
+msgstr "संस्था '%s' यास बॅकग्राऊंड डिलिशनकरीता ठरवले आहे."
+
+#: app/controllers/organizations_controller.rb:153
 msgid "Organization '%s' has been scheduled for background deletion."
 msgstr "संस्था '%s' यास बॅकग्राऊंड डिलिशनकरीता ठरवले आहे."
 
-#: app/controllers/organizations_controller.rb:216
+#: app/controllers/organizations_controller.rb:90
+#: app/controllers/organizations_controller.rb:103
+#: app/controllers/organizations_controller.rb:108
+#, fuzzy
+msgid "Organization '%s' was created."
+msgstr "संस्था"
+
+#: app/controllers/organizations_controller.rb:127
+#, fuzzy
+msgid "Organization '%s' was updated."
+msgstr "संस्था"
+
+#: app/controllers/organizations_controller.rb:222
 #: app/models/resource_type.rb:91 lib/navigation/organization.rb:23
 msgid "Organizations"
 msgstr "संस्था"
 
 #: app/views/organizations/index.html.haml:3
-msgid "Organizations allow content and systems to be separated by logical divisions.  To edit the environments within an organization, click on that organization and then click on the desired environment."
-msgstr "लॉजिकल विभाजनतर्फे संस्था कंटेंट व प्रणालींना वेगळ करण्यास परवानगी देते.  संस्था अंतर्गत वातावरणे संपादित करण्यासाठी, संस्थावर क्लिक करा व पसंतीच्या वातावरणावर क्लिक करा."
+msgid ""
+"Organizations allow content and systems to be separated by logical "
+"divisions.  To edit the environments within an organization, click on that "
+"organization and then click on the desired environment."
+msgstr ""
+"लॉजिकल विभाजनतर्फे संस्था कंटेंट व प्रणालींना वेगळ करण्यास परवानगी देते.  संस्था अंतर्गत "
+"वातावरणे संपादित करण्यासाठी, संस्थावर क्लिक करा व पसंतीच्या वातावरणावर क्लिक करा."
 
 #: app/views/promotions/show.html.haml:7
 #: app/views/errata/_packages.html.haml:17
 msgid "Package"
 msgstr "संकुल"
 
+#: app/models/changeset_package.rb:19
+#, fuzzy
+msgid "Package '%s' doesn't belong to the specified product!"
+msgstr "उत्पादन '%s' या वातावरणात आढळले नाही."
+
+#: app/models/system_template_package.rb:17
+#, fuzzy
+msgid "Package '%s' is already present in the template"
+msgstr "उत्पादन '%s' आधिपासूनच टेम्पलेट अंतर्गत आढळले."
+
+#: app/models/system_template_package.rb:32
+#, fuzzy
+msgid "Package '%s' not found in the %s environment"
+msgstr "उत्पादन '%s' या वातावरणात आढळले नाही."
+
+#: app/models/changeset.rb:245 app/models/changeset.rb:254
+#, fuzzy
+msgid "Package '%s' was not found in the source environment."
+msgstr "उत्पादन '%s' या वातावरणात आढळले नाही."
+
 #: app/views/promotions/show.html.haml:80
 msgid "Package Dependencies"
 msgstr "संकुल अवलंबने"
 
-#: app/controllers/filters_controller.rb:200
-#: lib/navigation/content_management.rb:152
+#: app/controllers/filters_controller.rb:198
+#, fuzzy
+msgid "Package Filter %s deleted."
+msgstr "संकुले फिल्टरे"
+
+#: app/controllers/filters_controller.rb:80
+msgid "Package Filter '%s' has been updated."
+msgstr ""
+
+#: app/controllers/filters_controller.rb:220
+#: lib/navigation/content_management.rb:148
 msgid "Package Filters"
 msgstr "संकुले फिल्टरे"
 
 #: app/views/filters/index.html.haml:4
-msgid "Package Filters allow you to blacklist packages from being promoted into subsequent environments. Simply create a filter and add either a package name or regular expression to the filter.  You can associate the filter with entire products or individual repositories within any product."
-msgstr "संकुल फिल्टर्स् तुम्हाला संकुलला परस्पर वातावरणात ब्लॅकलिस्ट करण्यास परवानगी देते. एकतर फिल्टर निर्माण करा व फिल्टरमध्ये संकुल नाव किंवा रेग्युलर एक्सप्रेशन समाविष्ट करा.  फिल्टरला संपूर्ण उत्पादनांसह किंवा कोणत्याहि उत्पादन अंतर्गत एकमेव रेपॉजिटरिजसह संलग्न करणे शक्य आहे."
+msgid ""
+"Package Filters allow you to blacklist packages from being promoted into "
+"subsequent environments. Simply create a filter and add either a package "
+"name or regular expression to the filter.  You can associate the filter with "
+"entire products or individual repositories within any product."
+msgstr ""
+"संकुल फिल्टर्स् तुम्हाला संकुलला परस्पर वातावरणात ब्लॅकलिस्ट करण्यास परवानगी देते. एकतर "
+"फिल्टर निर्माण करा व फिल्टरमध्ये संकुल नाव किंवा रेग्युलर एक्सप्रेशन समाविष्ट करा.  फिल्टरला "
+"संपूर्ण उत्पादनांसह किंवा कोणत्याहि उत्पादन अंतर्गत एकमेव रेपॉजिटरिजसह संलग्न करणे शक्य आहे."
 
 #: app/views/packages/_show.html.haml:76
 msgid "Package Group"
@@ -2306,10 +2692,10 @@ msgstr "संकुल गट सुधारणा"
 msgid "Package Group Update scheduled by %s"
 msgstr "%s तर्फे संकुल गट सुधारणा क्रमवारित लावले"
 
-#: app/helpers/breadcrumb_helper.rb:382 app/helpers/breadcrumb_helper.rb:402
-#: app/views/system_packages/_packages.html.haml:75
-#: app/views/system_templates/index.html.haml:5
+#: app/helpers/breadcrumb_helper.rb:384 app/helpers/breadcrumb_helper.rb:404
+#: app/views/system_templates/index.html.haml:6
 #: app/views/system_templates/_product_detail.html.haml:10
+#: app/views/system_packages/_packages.html.haml:75
 msgid "Package Groups"
 msgstr "संकुल गटे"
 
@@ -2322,7 +2708,6 @@ msgid "Package Install scheduled by %s"
 msgstr "%s तर्फे संकुल प्रतिष्ठापन क्रमवारित लावले"
 
 #: app/views/filters/_packages.html.haml:17
-#, 
 msgid "Package Name"
 msgstr ""
 
@@ -2346,24 +2731,39 @@ msgstr "संकुल सुधारणा"
 msgid "Package Update scheduled by %s"
 msgstr "%s तर्फे संकुल काढून टाकणे क्रमवारित लावले"
 
+#: app/models/system_template_pack_group.rb:18
+#, fuzzy
+msgid "Package group '%s' not found in the %s environment"
+msgstr "उत्पादन '%s' या वातावरणात आढळले नाही."
+
 #: app/models/system_template.rb:290
 msgid "Package group '%s' not found in this template."
 msgstr "संकुल गट '%s' या टेम्पलेट अंतर्गत आढळले नाही."
+
+#: app/models/system_template_pg_category.rb:17
+#, fuzzy
+msgid "Package group category '%s' not found in the %s environment"
+msgstr "संकुल गट विभाग '%s' या टेम्पलेट अंतर्गत आढळले नाही."
 
 #: app/models/system_template.rb:302
 msgid "Package group category '%s' not found in this template."
 msgstr "संकुल गट विभाग '%s' या टेम्पलेट अंतर्गत आढळले नाही."
 
-#: app/helpers/breadcrumb_helper.rb:49 app/helpers/breadcrumb_helper.rb:153
-#: app/helpers/breadcrumb_helper.rb:378 app/helpers/breadcrumb_helper.rb:399
-#: app/views/system_packages/_packages.html.haml:73
-#: app/views/changesets/_edit.html.haml:58
-#: app/views/system_templates/index.html.haml:5
-#: app/views/system_templates/_product_detail.html.haml:7
-#: app/views/system_templates/_promotion_details.html.haml:29
+#: app/models/changeset.rb:251
+#, fuzzy
+msgid "Package has to be specified by its nvre."
+msgstr "%s तर्फे संकुल काढून टाकणे क्रमवारित लावले"
+
+#: app/helpers/breadcrumb_helper.rb:50 app/helpers/breadcrumb_helper.rb:156
+#: app/helpers/breadcrumb_helper.rb:380 app/helpers/breadcrumb_helper.rb:401
+#: app/views/promotions/show.html.haml:7
 #: app/views/promotions/_detail.html.haml:18
-#: app/views/promotions/show.html.haml:7 lib/navigation/systems.rb:79
-#: lib/navigation/content_management.rb:203
+#: app/views/changesets/_edit.html.haml:58
+#: app/views/system_templates/_promotion_details.html.haml:29
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/_product_detail.html.haml:7
+#: app/views/system_packages/_packages.html.haml:73
+#: lib/navigation/systems.rb:80 lib/navigation/content_management.rb:184
 msgid "Packages"
 msgstr "संकुले"
 
@@ -2382,6 +2782,11 @@ msgstr "घटके"
 #: app/views/promotions/show.html.haml:7
 msgid "Partial Products"
 msgstr "अर्धवट उत्पादने"
+
+#: app/views/user_sessions/new.html.haml:11
+#, fuzzy
+msgid "Password"
+msgstr "पासवर्ड:"
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
@@ -2406,11 +2811,11 @@ msgstr "वापरकर्ता '%{s}' करीता पासवर्ड
 msgid "Password:"
 msgstr "पासवर्ड:"
 
-#: app/views/gpg_keys/_new.html.haml:14
+#: app/views/gpg_keys/_new.html.haml:28
 msgid "Paste GPG Key"
 msgstr "GPG कि चिकटवा"
 
-#: app/helpers/dashboard_helper.rb:57
+#: app/helpers/dashboard_helper.rb:59
 msgid "Pending"
 msgstr "उर्वरित"
 
@@ -2418,11 +2823,31 @@ msgstr "उर्वरित"
 msgid "Permission"
 msgstr "परवानगी"
 
-#: app/views/roles/_edit.html.haml:52
+#: app/controllers/roles_controller.rb:219
+#, fuzzy
+msgid "Permission '%s' was created."
+msgstr "या रोलकरीता परवानगी."
+
+#: app/controllers/roles_controller.rb:239
+#, fuzzy
+msgid "Permission '%s' was removed."
+msgstr "या रोलकरीता परवानगी."
+
+#: app/controllers/roles_controller.rb:196
+msgid "Permission '%s' was updated."
+msgstr ""
+
+#: app/controllers/application_controller.rb:113
+msgid ""
+"Permission Denied. User '%s' does not have permissions to access "
+"organization '%s'."
+msgstr ""
+
+#: app/views/roles/_edit.html.haml:52 app/views/roles/index.html.haml:8
 msgid "Permission For:"
 msgstr "याकरीता परवानगी:"
 
-#: app/helpers/breadcrumb_helper.rb:240
+#: app/helpers/breadcrumb_helper.rb:242
 msgid "Permissions"
 msgstr "परवानगी"
 
@@ -2430,10 +2855,10 @@ msgstr "परवानगी"
 msgid "Permissions for this role."
 msgstr "या रोलकरीता परवानगी."
 
-#: app/helpers/systems_helper.rb:42
+#: app/controllers/activation_keys_controller.rb:335
+#: app/controllers/providers_controller.rb:293
 #: app/controllers/subscriptions_controller.rb:57
-#: app/controllers/providers_controller.rb:286
-#: app/controllers/activation_keys_controller.rb:343 app/models/system.rb:68
+#: app/helpers/systems_helper.rb:41 app/models/system.rb:67
 msgid "Physical"
 msgstr "फिजिकल"
 
@@ -2441,28 +2866,31 @@ msgstr "फिजिकल"
 msgid "Pick your Environment to download template from:"
 msgstr "टेम्पलेट डाऊनलोड करण्यासाठी वातावरण नीवडा:"
 
-#: app/controllers/sync_schedules_controller.rb:39
-#: app/controllers/sync_schedules_controller.rb:45
 #: app/controllers/sync_plans_controller.rb:50
+#: app/controllers/sync_schedules_controller.rb:40
+#: app/controllers/sync_schedules_controller.rb:47
 msgid "Plan"
 msgstr "प्लॅन"
 
+#: app/controllers/sync_schedules_controller.rb:39
+#, fuzzy
+msgid "Plan Name"
+msgstr "नाव"
+
 #: app/controllers/api/subscriptions_controller.rb:45
-#, 
 msgid "Please provide entitlement id"
 msgstr ""
 
+#: app/controllers/api/systems_controller.rb:94
 #: app/controllers/api/subscriptions_controller.rb:38
-#: app/controllers/api/systems_controller.rb:93
 msgid "Please provide pool and quantity"
 msgstr "कृपया पूल व प्रमाण पुरवा"
 
-#: app/controllers/api/systems_controller.rb:100
+#: app/controllers/api/systems_controller.rb:101
 msgid "Please provide pool id"
 msgstr "कृपया पूल id पुरवा"
 
 #: app/controllers/api/subscriptions_controller.rb:57
-#, 
 msgid "Please provide serial id"
 msgstr ""
 
@@ -2471,12 +2899,20 @@ msgid "Please request the required privileges from an administrator."
 msgstr "कृपया प्रशासकपासून आवश्यक परवानगीकरीता विनंती करा."
 
 #: app/views/roles/index.html.haml:8
-msgid "Please select Permissions to view and add permissions for this role or Users to see current users with this role."
-msgstr "या रोलकरीता परवानगीच्या अवलोकन व समावेशकरीता किंवा या रोलसह सध्याचे वापरकर्ते पहाण्यासाठी कृपया परवानगी नीवडा."
+msgid ""
+"Please select Permissions to view and add permissions for this role or Users "
+"to see current users with this role."
+msgstr ""
+"या रोलकरीता परवानगीच्या अवलोकन व समावेशकरीता किंवा या रोलसह सध्याचे वापरकर्ते "
+"पहाण्यासाठी कृपया परवानगी नीवडा."
 
 #: app/views/roles/index.html.haml:8
-msgid "Please select Permissions to view permissions for this role or Users to see current users with this role."
-msgstr "या रोलकरीता परवानगीच्या अवलोकनकरीता किंवा या रोलसह सध्याचे वापरकर्ते पहाण्यासाठी कृपया परवानगी नीवडा."
+msgid ""
+"Please select Permissions to view permissions for this role or Users to see "
+"current users with this role."
+msgstr ""
+"या रोलकरीता परवानगीच्या अवलोकनकरीता किंवा या रोलसह सध्याचे वापरकर्ते पहाण्यासाठी "
+"कृपया परवानगी नीवडा."
 
 #: app/models/activation_key.rb:87
 msgid "Pool %s has no product associated"
@@ -2492,21 +2928,29 @@ msgid "Prior Environment"
 msgstr "पूर्वीचे वातावरण"
 
 #: app/views/promotions/show.html.haml:72
-#, 
 msgid "Processing promotion changeset modifications, please wait."
 msgstr ""
 
-#: app/views/systems/_products.html.haml:12
-#: app/views/dashboard/_errata.haml:12
+#: app/views/sync_management/index.html.haml:43
 #: app/views/filters/_products.html.haml:22
 #: app/views/promotions/show.html.haml:7
-#: app/views/gpg_keys/_products_repos.html.haml:47
 #: app/views/providers/_products_repos.html.haml:38
 #: app/views/providers/redhat/_repo_whitelist.html.haml:3
-#: app/views/sync_management/index.html.haml:34
+#: app/views/gpg_keys/_products_repos.html.haml:47
+#: app/views/systems/_products.html.haml:12
 #: app/views/subscriptions/index.html.haml:13
+#: app/views/dashboard/_errata.haml:12
 msgid "Product"
 msgstr "उत्पादन"
+
+#: app/controllers/products_controller.rb:51
+msgid "Product '%s' created."
+msgstr ""
+
+#: app/models/changeset.rb:137
+#, fuzzy
+msgid "Product '%s' hasn't any repositories"
+msgstr "उत्पादने व रेपॉजिटरिज्"
 
 #: app/models/system_template.rb:243 app/models/system_template.rb:260
 msgid "Product '%s' is already present in the template."
@@ -2517,7 +2961,15 @@ msgstr "उत्पादन '%s' आधिपासूनच टेम्प�
 msgid "Product '%s' not found in this environment."
 msgstr "उत्पादन '%s' या वातावरणात आढळले नाही."
 
-#: app/views/systems/_subs.html.haml:43 app/views/systems/_subs.html.haml:107
+#: app/controllers/products_controller.rb:101
+msgid "Product '%s' removed."
+msgstr ""
+
+#: app/controllers/products_controller.rb:79
+msgid "Product '%s' was updated."
+msgstr ""
+
+#: app/views/systems/_subs.html.haml:43 app/views/systems/_subs.html.haml:108
 msgid "Product Name: "
 msgstr "उत्पादनचे नाव: "
 
@@ -2530,13 +2982,12 @@ msgstr "या वातावरणातील उत्पादने"
 msgid "Product: "
 msgstr "उत्पादन: "
 
-#: app/helpers/breadcrumb_helper.rb:134 app/helpers/breadcrumb_helper.rb:363
-#: app/helpers/breadcrumb_helper.rb:400
-#: app/views/system_templates/index.html.haml:5
-#: app/views/system_templates/_promotion_details.html.haml:21
+#: app/helpers/breadcrumb_helper.rb:135 app/helpers/breadcrumb_helper.rb:365
+#: app/helpers/breadcrumb_helper.rb:402 app/views/promotions/show.html.haml:7
 #: app/views/promotions/_detail.html.haml:6
-#: app/views/promotions/show.html.haml:7
 #: app/views/gpg_keys/_products_repos.html.haml:25
+#: app/views/system_templates/_promotion_details.html.haml:21
+#: app/views/system_templates/index.html.haml:6
 msgid "Products"
 msgstr "उत्पादने"
 
@@ -2544,8 +2995,8 @@ msgstr "उत्पादने"
 msgid "Products & Repositories"
 msgstr "उत्पादने व रेपॉजिटरिज्"
 
-#: lib/navigation/content_management.rb:243
-#: lib/navigation/content_management.rb:260
+#: lib/navigation/content_management.rb:224
+#: lib/navigation/content_management.rb:241
 msgid "Products and Repositories"
 msgstr "उत्पादने व रेपॉजिटरिज्"
 
@@ -2561,7 +3012,7 @@ msgstr "प्रगति:"
 msgid "Promote"
 msgstr "प्रमोट"
 
-#: app/models/kt_environment.rb:333
+#: app/models/kt_environment.rb:345
 msgid "Promote Changesets in Environment"
 msgstr "वातावरणातील चेंजसेटस् प्रमोट करा"
 
@@ -2569,10 +3020,11 @@ msgstr "वातावरणातील चेंजसेटस् प्र�
 msgid "Promote to "
 msgstr "येथे प्रमोट करा"
 
-#: app/views/promotions/_distributions.html.haml:11
-#: app/views/promotions/_repo_items.html.haml:5
-#: app/views/promotions/_package_items.html.haml:5
 #: app/views/promotions/show.html.haml:7
+#: app/views/promotions/_distributions.html.haml:11
+#: app/views/promotions/_package_items.html.haml:7
+#: app/views/promotions/_errata_items.html.haml:10
+#: app/views/promotions/_repo_items.html.haml:5
 msgid "Promoted"
 msgstr "प्रमोट केले"
 
@@ -2588,24 +3040,31 @@ msgstr "प्रमोट करत आहे"
 msgid "Promoting..."
 msgstr "प्रमोट करत आहे..."
 
-#: app/views/promotions/show.html.haml:7
-#, 
-msgid "Promotino Changeset is empty."
-msgstr ""
+#: app/controllers/changesets_controller.rb:109
+#, fuzzy
+msgid "Promotion Changeset '%s' was created."
+msgstr "वातावरणातील चेंजसेटस् प्रमोट करा"
+
+#: app/controllers/changesets_controller.rb:209
+#, fuzzy
+msgid "Promotion Changeset '%s' was deleted."
+msgstr "वातावरणातील चेंजसेटस् प्रमोट करा"
 
 #: app/views/promotions/show.html.haml:116
-#, 
 msgid "Promotion Changeset Details"
 msgstr ""
 
-#: lib/navigation/content_management.rb:142
-#, 
+#: lib/navigation/content_management.rb:139
 msgid "Promotion Changeset History"
 msgstr ""
 
+#: app/views/promotions/show.html.haml:7
+#, fuzzy
+msgid "Promotion Changeset is empty."
+msgstr "वातावरणातील चेंजसेटस् प्रमोट करा"
+
 #: app/views/promotions/show.html.haml:149
 #: app/views/promotions/show.html.haml:152
-#, 
 msgid "Promotion Changesets"
 msgstr ""
 
@@ -2617,44 +3076,64 @@ msgstr "प्रमोशन दिनांक:"
 msgid "Promotion Failed"
 msgstr "प्रमोशन अपयशी"
 
-#: app/models/changeset.rb:328
-msgid "Promotion of changeset '%{name}' failed."
-msgstr "चेंजसेट '%{name}' चे प्रमोशन अपयशी."
-
-#: lib/navigation/content_management.rb:132
+#: lib/navigation/content_management.rb:130
 msgid "Promotions"
 msgstr "प्रमोशन्स्"
 
-#: app/views/dashboard/index.html.haml:12
+#: app/views/dashboard/index.html.haml:15
 msgid "Promotions Overview"
 msgstr "प्रमोशन्स् पुनरावलोकन"
 
 #: app/views/promotions/show.html.haml:84
-#, 
-msgid "Promotions allow you to promote content from one environment to the next along a promotion path. Once you have created a promotion changeset, clicking \"Add\" next to  one or more products will add them to the promotion changeset. If products already exist in the next environment, you may promote other types of content. Once you have created a change set, click the \"Promote\" button to commit it to the next environment."
+msgid ""
+"Promotions allow you to promote content from one environment to the next "
+"along a promotion path. Once you have created a promotion changeset, "
+"clicking \"Add\" next to  one or more products will add them to the "
+"promotion changeset. If products already exist in the next environment, you "
+"may promote other types of content. Once you have created a change set, "
+"click the \"Promote\" button to commit it to the next environment."
 msgstr ""
 
-#: app/controllers/providers_controller.rb:238
+#: app/controllers/providers_controller.rb:245
 msgid "Provider"
 msgstr "प्रोव्हाइडर"
+
+#: app/controllers/providers_controller.rb:157
+msgid "Provider '%s' was created."
+msgstr ""
+
+#: app/controllers/providers_controller.rb:177
+msgid "Provider '%s' was deleted."
+msgstr ""
+
+#: app/controllers/providers_controller.rb:204
+msgid "Provider '%s' was updated."
+msgstr ""
 
 #: app/views/products/_edit.html.haml:4
 msgid "Provider: "
 msgstr "प्रोव्हाइडर: "
 
-#: app/controllers/providers_controller.rb:235 app/models/resource_type.rb:95
+#: app/controllers/providers_controller.rb:242 app/models/resource_type.rb:95
 msgid "Providers"
 msgstr "प्रोव्हाइडर्स्"
 
 #: app/views/providers/index.html.haml:3
-msgid "Providers provide many types of content such as packages, errata, kickstart trees, and installation disc images.  A provider may be delivering all of your paid content or it could simply be a local yum repository providing a few yum repos."
-msgstr "प्रोव्हाइडर्स् अनेक प्रकारचे कंटेंट पुरवते जसे कि संकुले, एराटा, किकस्टार्ट ट्रीज्, व प्रतिष्ठापन डिस्क प्रतिमा. प्रोव्हाइडर पैड कंटेंट पुरवत असे किंवा यम रेपोज पुरवणारे स्थानीय यम रेपॉजिटरि असू शकते."
+msgid ""
+"Providers provide many types of content such as packages, errata, kickstart "
+"trees, and installation disc images.  A provider may be delivering all of "
+"your paid content or it could simply be a local yum repository providing a "
+"few yum repos."
+msgstr ""
+"प्रोव्हाइडर्स् अनेक प्रकारचे कंटेंट पुरवते जसे कि संकुले, एराटा, किकस्टार्ट ट्रीज्, व प्रतिष्ठापन "
+"डिस्क प्रतिमा. प्रोव्हाइडर पैड कंटेंट पुरवत असे किंवा यम रेपोज पुरवणारे स्थानीय यम रेपॉजिटरि "
+"असू शकते."
 
 #: app/views/packages/_dependencies.html.haml:21
 msgid "Provides"
 msgstr "पुरवते"
 
-#: app/views/systems/_subs.html.haml:20 app/views/systems/_subs.html.haml:71
+#: app/views/systems/_subs.html.haml:20 app/views/systems/_subs.html.haml:72
 msgid "Quantity"
 msgstr "प्रमाण"
 
@@ -2662,52 +3141,115 @@ msgstr "प्रमाण"
 msgid "Queued."
 msgstr "क्युउड्."
 
-#: app/models/activation_key.rb:147
+#: app/models/permission.rb:158 app/models/activation_key.rb:147
 msgid "Read Activation Keys"
 msgstr "ॲक्टिवेशन किज् वाचा"
 
-#: app/models/kt_environment.rb:331
+#: app/models/permission.rb:183
+#, fuzzy
+msgid "Read Activation Keys permission"
+msgstr "ॲक्टिवेशन किज् वाचा"
+
+#: app/models/kt_environment.rb:343
 msgid "Read Changesets in Environment"
 msgstr "वातावरणात चेंजसेटस् वाचा"
 
-#: app/models/kt_environment.rb:326
+#: app/models/kt_environment.rb:338
 msgid "Read Environment Contents"
 msgstr "वातावरणातील अंतर्भुत माहिती वाचा"
 
-#: app/models/organization.rb:128
+#: app/models/permission.rb:152
+#, fuzzy
+msgid "Read Environments"
+msgstr "वातावरणे"
+
+#: app/models/permission.rb:177
+#, fuzzy
+msgid "Read Environments permission"
+msgstr "वातावरणातील अंतर्भुत माहिती वाचा"
+
+#: app/models/role.rb:193
+msgid "Read Everything"
+msgstr ""
+
+#: app/models/permission.rb:160
+#, fuzzy
+msgid "Read Filters"
+msgstr "संकुल फिल्टर्स् वाचा"
+
+#: app/models/permission.rb:185
+#, fuzzy
+msgid "Read Filters permission"
+msgstr "परवानगी संपादित करा"
+
+#: app/models/organization.rb:129
 msgid "Read Organization"
 msgstr "संस्था वाचा"
 
-#: app/models/filter.rb:65
+#: app/models/permission.rb:150
+#, fuzzy
+msgid "Read Organizations"
+msgstr "संस्था वाचा"
+
+#: app/models/permission.rb:175
+#, fuzzy
+msgid "Read Organizations permission"
+msgstr "संस्था वाचा"
+
+#: app/models/filter.rb:66
 msgid "Read Package Filters"
 msgstr "संकुल फिल्टर्स् वाचा"
 
-#: app/models/provider.rb:126
+#: app/models/permission.rb:156 app/models/provider.rb:126
 msgid "Read Providers"
 msgstr "प्रोव्हाइडर्स् वाचा"
 
-#: app/models/role.rb:147
+#: app/models/permission.rb:181
+#, fuzzy
+msgid "Read Providers permission"
+msgstr "प्रोव्हाइडर्स् वाचा"
+
+#: app/models/permission.rb:164 app/models/role.rb:172
 msgid "Read Roles"
 msgstr "रोल्स् वाचा"
 
-#: app/models/system_template.rb:392
+#: app/models/permission.rb:189
+#, fuzzy
+msgid "Read Roles permission"
+msgstr "ग्लोबल परवानगी समाविष्ट करा"
+
+#: app/models/permission.rb:154 app/models/system_template.rb:392
 msgid "Read System Templates"
 msgstr "प्रणाली टेम्पलेटस् वाचा"
 
-#: app/models/organization.rb:129
+#: app/models/permission.rb:179
+#, fuzzy
+msgid "Read System Templates permission"
+msgstr "प्रणाली टेम्पलेटस् वाचा"
+
+#: app/models/organization.rb:130
 msgid "Read Systems"
 msgstr "प्रणाली वाचा"
 
-#: app/models/kt_environment.rb:327
+#: app/models/kt_environment.rb:339
 msgid "Read Systems in Environment"
 msgstr "वातावरणात प्रणाली वाचा"
 
-#: app/models/user.rb:352
+#: app/models/permission.rb:162 app/models/user.rb:355
 msgid "Read Users"
 msgstr "वापकर्ते वाचा"
 
+#: app/models/permission.rb:187
+#, fuzzy
+msgid "Read Users permission"
+msgstr "वापकर्ते वाचा"
+
+#: app/models/role.rb:208
+#, fuzzy
+msgid "Read only role."
+msgstr "रोल्स् वाचा"
+
 #: lib/navigation/content_management.rb:67
-#, 
 msgid "Red Hat Content Provider"
 msgstr ""
 
@@ -2719,11 +3261,11 @@ msgstr "Red Hat प्रोव्हाइडर तपशील"
 msgid "Red Hat provider can not be deleted"
 msgstr "Red Hat प्रोव्हाडर नष्ट करणे अशक्य"
 
-#: app/models/organization.rb:130
+#: app/models/organization.rb:131
 msgid "Register Systems"
 msgstr "प्रणालींची नोंदणी करा"
 
-#: app/models/kt_environment.rb:328
+#: app/models/kt_environment.rb:340
 msgid "Register Systems in Environment"
 msgstr "वातावरणात प्रणालींची नोंदणी करतो"
 
@@ -2735,26 +3277,29 @@ msgstr "नोंदणी केली"
 msgid "Release"
 msgstr "प्रकाशन"
 
-#: app/views/roles/index.html.haml:8
-#: app/views/system_packages/_packages.html.haml:109
-#: app/views/systems/_actions.html.haml:13
+#: app/views/user_sessions/new.html.haml:15
+msgid "Remember me"
+msgstr ""
+
 #: app/views/common/_common_i18n.html.haml:3
-#: app/views/system_templates/index.html.haml:87
-#: app/views/activation_keys/_applied_subscriptions.html.haml:37
-#: app/views/activation_keys/_applied_subscriptions.html.haml:38
 #: app/views/promotions/show.html.haml:7
 #: app/views/promotions/show.html.haml:132
+#: app/views/systems/_actions.html.haml:13
+#: app/views/activation_keys/_applied_subscriptions.html.haml:37
+#: app/views/activation_keys/_applied_subscriptions.html.haml:38
+#: app/views/system_templates/index.html.haml:89
+#: app/views/system_packages/_packages.html.haml:109
+#: app/views/roles/index.html.haml:8
 msgid "Remove"
 msgstr "काढून टाका"
 
-#: app/views/activation_keys/_available_subscriptions.html.haml:7
-#: app/views/activation_keys/_edit.html.haml:15
 #: app/views/activation_keys/_applied_subscriptions.html.haml:7
+#: app/views/activation_keys/_edit.html.haml:15
+#: app/views/activation_keys/_available_subscriptions.html.haml:7
 msgid "Remove Activation Key"
 msgstr "ॲक्टिवेशन कि काढून टाका"
 
 #: app/views/common/_common_i18n.html.haml:3
-#, 
 msgid "Remove All"
 msgstr ""
 
@@ -2843,12 +3388,12 @@ msgstr "प्रणाली काढून टाका"
 msgid "Remove System(s)"
 msgstr "प्रणाली काढून टाका"
 
-#: app/models/kt_environment.rb:330
+#: app/models/kt_environment.rb:342
 msgid "Remove Systems in Environment"
 msgstr "वातावरणातील प्रणाली काढून टाका"
 
-#: app/views/roles/_self_role_edit.html.haml:6
 #: app/views/users/_edit.html.haml:6
+#: app/views/roles/_self_role_edit.html.haml:6
 msgid "Remove User"
 msgstr "वापरकर्ता काढून टाका"
 
@@ -2868,11 +3413,11 @@ msgstr "संकुल काढून टाकत आहे..."
 msgid "Removing..."
 msgstr "काढून टाकत आहे..."
 
-#: app/controllers/application_controller.rb:210
+#: app/controllers/application_controller.rb:234
 msgid "Rendering 404:"
 msgstr "404 दाखवत आहे:"
 
-#: app/controllers/application_controller.rb:224
+#: app/controllers/application_controller.rb:248
 msgid "Rendering 500:"
 msgstr "500 दाखवत आहे:"
 
@@ -2884,46 +3429,60 @@ msgstr "रेपो प्रकार: "
 msgid "Repo id or environment must be provided"
 msgstr "रेपो id किंवा वातावरण पुरवणे आवश्यक"
 
-#: app/helpers/breadcrumb_helper.rb:166
+#: app/helpers/breadcrumb_helper.rb:169
 msgid "Repos"
 msgstr "रेपोज्"
 
-#: app/helpers/breadcrumb_helper.rb:57 app/helpers/breadcrumb_helper.rb:374
-#: app/helpers/breadcrumb_helper.rb:401
-#: app/views/changesets/_edit.html.haml:62
-#: app/views/system_templates/index.html.haml:5
-#: app/views/system_templates/_product_detail.html.haml:4
+#: app/helpers/breadcrumb_helper.rb:58 app/helpers/breadcrumb_helper.rb:376
+#: app/helpers/breadcrumb_helper.rb:403 app/views/promotions/show.html.haml:7
 #: app/views/promotions/_detail.html.haml:26
-#: app/views/promotions/show.html.haml:7
 #: app/views/gpg_keys/_products_repos.html.haml:40
+#: app/views/changesets/_edit.html.haml:62
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/_product_detail.html.haml:4
 msgid "Repositories"
 msgstr "रेपॉजिटरिज्"
 
 #: app/controllers/api/repositories_controller.rb:62
-#, 
 msgid "Repositories can be deleted only in Library environment."
 msgstr ""
 
 #: app/views/promotions/show.html.haml:7
-#: app/views/gpg_keys/_products_repos.html.haml:52
 #: app/views/providers/_products_repos.html.haml:46
+#: app/views/gpg_keys/_products_repos.html.haml:52
 msgid "Repository"
 msgstr "रेपॉजिटरि"
 
+#: app/controllers/repositories_controller.rb:67
+#, fuzzy
+msgid "Repository '%s' created."
+msgstr "रेपॉजिटरि Url"
+
 #: app/models/system_template.rb:321 app/models/system_template.rb:332
-#, 
 msgid "Repository '%s' is already present in the template."
 msgstr ""
 
 #: app/models/system_template.rb:320 app/models/system_template.rb:331
-#, 
 msgid "Repository '%s' not found in this environment."
 msgstr ""
 
 #: app/models/system_template.rb:338
-#, 
 msgid "Repository '%s' not found in this template."
 msgstr ""
+
+#: app/controllers/repositories_controller.rb:107
+#, fuzzy
+msgid "Repository '%s' removed."
+msgstr "रेपॉजिटरि Url"
+
+#: app/controllers/repositories_controller.rb:82
+msgid "Repository '%s' updated."
+msgstr ""
+
+#: app/views/repositories/_edit.html.haml:13
+#, fuzzy
+msgid "Repository Details"
+msgstr "रेपॉजिटरि Url"
 
 #: app/views/providers/redhat/show.html.haml:17
 msgid "Repository Url"
@@ -2932,6 +3491,26 @@ msgstr "रेपॉजिटरि Url"
 #: app/models/repository.rb:16
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "रेपॉजिटरिला आधिपासूनच प्रमोट केल्यामुळे त्यास बंद करणे अशक्य."
+
+#: app/models/changeset_distribution.rb:21
+#, fuzzy
+msgid ""
+"Repository of the distribution '%s' has not been promoted into the target "
+"environment!"
+msgstr "या टेम्पलेट अंतर्गत वितरण '%s' आढळले नाही."
+
+#: app/models/changeset_erratum.rb:21
+msgid ""
+"Repository of the erratum '%s' has not been promoted into the target "
+"environment!"
+msgstr ""
+
+#: app/models/changeset_package.rb:20
+#, fuzzy
+msgid ""
+"Repository of the package '%s' has not been promoted into the target "
+"environment!"
+msgstr "उत्पादन '%s' या वातावरणात आढळले नाही."
 
 #: app/views/system_events/_details.html.haml:16
 msgid "Request"
@@ -2949,8 +3528,8 @@ msgstr "आवश्यक"
 msgid "Reset Password"
 msgstr "पासवर्ड पूर्ववत् करा"
 
+#: app/views/sync_management/index.html.haml:47
 #: app/views/system_events/_details.html.haml:28
-#: app/views/sync_management/index.html.haml:38
 msgid "Result"
 msgstr "परिणाम"
 
@@ -2967,6 +3546,18 @@ msgstr "पूर्वावलोकन"
 msgid "Role"
 msgstr "रोल"
 
+#: app/controllers/roles_controller.rb:89
+msgid "Role '%s' was created."
+msgstr ""
+
+#: app/controllers/roles_controller.rb:140
+msgid "Role '%s' was deleted."
+msgstr ""
+
+#: app/controllers/roles_controller.rb:117
+msgid "Role '%s' was updated."
+msgstr ""
+
 #: app/views/roles/_edit.html.haml:31
 msgid "Role Details"
 msgstr "रोलचे तपशील"
@@ -2977,7 +3568,11 @@ msgstr "रोलचे तपशील"
 msgid "Roles"
 msgstr "रोल्स्"
 
-#: app/views/systems/errata/_index.html.haml:58
+#: app/controllers/errors_controller.rb:20
+msgid "Route does not exist:"
+msgstr ""
+
+#: app/views/systems/errata/_index.html.haml:57
 msgid "Run"
 msgstr "चालवा"
 
@@ -2985,23 +3580,23 @@ msgstr "चालवा"
 msgid "Running."
 msgstr "चालवत आहे."
 
-#: app/views/systems/_subs.html.haml:18 app/views/systems/_subs.html.haml:69
+#: app/views/systems/_subs.html.haml:18 app/views/systems/_subs.html.haml:70
 msgid "SLA"
 msgstr "SLA"
 
-#: app/views/roles/_new.html.haml:18 app/views/roles/_permission.html.haml:39
+#: app/views/filters/_new.html.haml:23 app/views/common/_edit_i18n.html.haml:4
+#: app/views/providers/_form.html.haml:17 app/views/gpg_keys/_new.html.haml:33
 #: app/views/organizations/_new.html.haml:36
 #: app/views/sync_plans/_form.html.haml:31 app/views/systems/_new.html.haml:49
 #: app/views/password_resets/edit.html.haml:36
-#: app/views/filters/_new.html.haml:23 app/views/common/_edit_i18n.html.haml:4
-#: app/views/system_templates/index.html.haml:5
-#: app/views/system_templates/index.html.haml:92
-#: app/views/system_templates/_new.html.haml:21
+#: app/views/users/_edit_form.html.haml:59
+#: app/views/users/_edit_environment.html.haml:55
 #: app/views/activation_keys/_new.html.haml:40
 #: app/views/activation_keys/_edit.html.haml:74
-#: app/views/gpg_keys/_new.html.haml:19 app/views/providers/_form.html.haml:17
-#: app/views/users/_edit_environment.html.haml:55
-#: app/views/users/_edit_form.html.haml:59
+#: app/views/system_templates/_new.html.haml:21
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/index.html.haml:94
+#: app/views/roles/_new.html.haml:18 app/views/roles/_permission.html.haml:39
 msgid "Save"
 msgstr "साठवा"
 
@@ -3025,7 +3620,7 @@ msgstr "वापरकर्ता साठवा"
 msgid "Save as Favorite"
 msgstr "पंसतीचे म्हणून साठवा"
 
-#: app/views/system_templates/index.html.haml:64
+#: app/views/system_templates/index.html.haml:66
 msgid "Saving System Template"
 msgstr "प्रणाली टेम्पलेट साठवत आहे"
 
@@ -3038,27 +3633,27 @@ msgstr "साठवत आहे..."
 msgid "Scope"
 msgstr "व्याप्ति"
 
-#: app/views/notices/show.html.haml:19 app/views/common/_panel.html.haml:51
-#: app/views/common/_panel.html.haml:55
-#: app/views/system_templates/index.html.haml:53
+#: app/views/common/_panel.html.haml:51 app/views/common/_panel.html.haml:55
 #: app/views/promotions/show.html.haml:7
-#: app/views/promotions/show.html.haml:173
-#: app/views/promotions/show.html.haml:174
-#: app/views/promotions/show.html.haml:175
+#: app/views/promotions/show.html.haml:171
+#: app/views/promotions/show.html.haml:172
+#: app/views/promotions/show.html.haml:183
+#: app/views/system_templates/index.html.haml:55
+#: app/views/notices/show.html.haml:19
 msgid "Search"
 msgstr "शोध"
 
 #: app/views/filters/index.html.haml:15
-#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:6
 msgid "Search available package names..."
 msgstr "उपलब्ध संकुल नावे शोधा..."
 
 #: app/views/filters/index.html.haml:15
-#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:6
 msgid "Search available product names..."
 msgstr "उपलब्ध उत्पादन नावे शोधा..."
 
-#: app/views/system_templates/index.html.haml:5
+#: app/views/system_templates/index.html.haml:6
 msgid "Search available repository names..."
 msgstr "उपलब्ध रेपॉजिटरि नावे शोधा..."
 
@@ -3067,21 +3662,20 @@ msgid "Search is not available for the current content"
 msgstr "शोध सध्याच्या कंटेंटकरीता उपलब्ध नाही"
 
 #: app/views/common/_panel.html.haml:50 app/views/common/_panel.html.haml:54
-#, 
 msgid "Search..."
 msgstr ""
 
-#: app/views/sync_management/index.html.haml:24
+#: app/views/sync_management/index.html.haml:33
 msgid "Select All"
 msgstr "सर्व नीवडा"
 
-#: app/helpers/systems_helper.rb:38
+#: app/helpers/systems_helper.rb:37
 msgid "Select Architecture"
 msgstr "आर्किटेक्चर नीवडा"
 
-#: app/views/systems/_actions.html.haml:18
+#: app/views/sync_management/index.html.haml:29
 #: app/views/common/_panel.html.haml:24
-#: app/views/sync_management/index.html.haml:21
+#: app/views/systems/_actions.html.haml:18
 msgid "Select None"
 msgstr "काहिच नीवडू नका"
 
@@ -3089,7 +3683,7 @@ msgstr "काहिच नीवडू नका"
 msgid "Select Organization"
 msgstr "संस्था नीवडा"
 
-#: app/controllers/sync_schedules_controller.rb:43
+#: app/controllers/sync_schedules_controller.rb:44
 msgid "Select Plans to apply to selected Products"
 msgstr "नीवडलेल्या उत्पादनांकरीता लागू करण्याजोगी प्लॅन्स् नीवडा"
 
@@ -3105,8 +3699,8 @@ msgstr "रेपॉजिटरिज् नीवडा: "
 msgid "Select a System Template"
 msgstr "प्रणाली टेम्पलेट नीवडा"
 
-#: app/helpers/breadcrumb_helper.rb:403
-#: app/views/system_templates/index.html.haml:5
+#: app/helpers/breadcrumb_helper.rb:405
+#: app/views/system_templates/index.html.haml:6
 msgid "Selected Distribution"
 msgstr "वितरण नीवडा"
 
@@ -3114,19 +3708,19 @@ msgstr "वितरण नीवडा"
 msgid "Send Login"
 msgstr "प्रवेश पाठवा"
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:211
 msgid "Severity: Critical"
 msgstr "तीव्रता: गंभीर"
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:211
 msgid "Severity: Important"
 msgstr "तीव्रता: महत्वाचे"
 
-#: app/helpers/breadcrumb_helper.rb:210
+#: app/helpers/breadcrumb_helper.rb:212
 msgid "Severity: Low"
 msgstr "तीव्रता: कमी"
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:211
 msgid "Severity: Moderate"
 msgstr "तीव्रता: मध्यम"
 
@@ -3134,26 +3728,30 @@ msgstr "तीव्रता: मध्यम"
 msgid "Signature"
 msgstr "स्वाक्षरि"
 
-#: app/views/sync_management/index.html.haml:37
+#: app/views/sync_management/index.html.haml:46
 msgid "Size (Packages)"
 msgstr "आकार (संकुले)"
 
-#: app/views/systems/_subs.html.haml:70
+#: app/views/systems/_subs.html.haml:71
 msgid "Sockets"
 msgstr "सॉकेटस्"
 
-#: lib/navigation/systems.rb:73
+#: lib/navigation/systems.rb:74
 msgid "Software"
 msgstr "सॉफ्टवेअर"
 
 #: app/views/promotions/show.html.haml:7
-#, 
-msgid "Some promotion changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications."
+msgid ""
+"Some promotion changeset modifications have not finished processing, are you "
+"sure you want to leave the page?  By leaving you may lose some modifications."
 msgstr ""
 
 #: app/views/common/500.html.haml:4
-msgid "Sorry about that! It seems something went wrong.  If you continue having trouble with this, please contact an Administrator."
-msgstr "माफ करा! काहितरी अयोग्य घडले.  अडचण पुनः आढळल्यास, कृपया प्रशासकाशी संपर्क करा."
+msgid ""
+"Sorry about that! It seems something went wrong.  If you continue having "
+"trouble with this, please contact an Administrator."
+msgstr ""
+"माफ करा! काहितरी अयोग्य घडले.  अडचण पुनः आढळल्यास, कृपया प्रशासकाशी संपर्क करा."
 
 #: app/views/packages/_show.html.haml:88
 msgid "Source Package"
@@ -3163,8 +3761,8 @@ msgstr "सोअर्स् संकुल"
 msgid "Specify Local Manifest"
 msgstr "स्थानीय मॅनिफेस्ट निर्देशीत करा"
 
-#: app/views/sync_plans/_form.html.haml:20
 #: app/views/sync_plans/_edit.html.haml:26
+#: app/views/sync_plans/_form.html.haml:20
 #: app/views/activation_keys/_subscriptions.html.haml:6
 msgid "Start Date"
 msgstr "प्रारंभ दिनांक"
@@ -3173,9 +3771,13 @@ msgstr "प्रारंभ दिनांक"
 msgid "Start Date and Time can't be blank"
 msgstr "सुरवात दिनांक व वेळ रिकामे असणे अशक्य"
 
-#: app/views/sync_management/index.html.haml:35
+#: app/views/sync_management/index.html.haml:44
 msgid "Start Time"
 msgstr "प्रारंभ वेळ"
+
+#: app/controllers/changesets_controller.rb:218
+msgid "Started promotion of '%s' to %s environment"
+msgstr ""
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
@@ -3186,25 +3788,36 @@ msgstr "मजबूत"
 msgid "Subscribe"
 msgstr "सबस्क्राइब"
 
-#: app/views/systems/_subs.html.haml:17 app/views/systems/_subs.html.haml:68
-#: app/views/activation_keys/_subscriptions.html.haml:4
 #: app/views/providers/redhat/show.html.haml:44
+#: app/views/systems/_subs.html.haml:17 app/views/systems/_subs.html.haml:69
+#: app/views/activation_keys/_subscriptions.html.haml:4
 msgid "Subscription"
 msgstr "सबस्क्रिप्शन"
 
-#: app/controllers/providers_controller.rb:86
+#: app/controllers/providers_controller.rb:93
 msgid "Subscription manifest must be specified on upload."
 msgstr "अपलोडनंतर सबस्क्रिप्शन मॅनिफेस्ट निर्देशीत करणे आवश्यक."
 
-#: app/controllers/providers_controller.rb:74
+#: app/controllers/providers_controller.rb:78
 msgid "Subscription manifest upload for provider '%{name}' failed."
 msgstr "प्रोव्हाइडर '%{name}' करीता सबस्क्रिप्शन मॅनिफेस्ट अपयशी."
 
-#: app/controllers/providers_controller.rb:71
-msgid "Subscription manifest uploaded successfully for provider '%{name}'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled."
-msgstr "प्रोव्हाइडर'%{name}' करीता सबस्क्रिप्शन मॅनिफेस्ट यशस्वीरित्या अपलोड केले गेले. कृपया सिंक करण्यासाठी रेपॉजिटरिज् सुरू करा व त्याकरीता 'रेपॉजिटरिज् सुरू करा' नीवडा व सुरू करण्यासाठी प्रत्यक्ष रेपॉजिटरिज् नीवडा."
+#: app/controllers/providers_controller.rb:74
+#, fuzzy
+msgid "Subscription manifest uploaded successfully for provider '%{name}'."
+msgstr "प्रोव्हाइडर '%{name}' करीता सबस्क्रिप्शन मॅनिफेस्ट अपयशी."
 
-#: lib/navigation/systems.rb:67 lib/navigation/organization.rb:42
+#: app/controllers/providers_controller.rb:72
+msgid ""
+"Subscription manifest uploaded successfully for provider '%{name}'. Please "
+"enable the repositories you want to sync by selecting 'Enable Repositories' "
+"and selecting individual repositories to be enabled."
+msgstr ""
+"प्रोव्हाइडर'%{name}' करीता सबस्क्रिप्शन मॅनिफेस्ट यशस्वीरित्या अपलोड केले गेले. कृपया सिंक "
+"करण्यासाठी रेपॉजिटरिज् सुरू करा व त्याकरीता 'रेपॉजिटरिज् सुरू करा' नीवडा व सुरू "
+"करण्यासाठी प्रत्यक्ष रेपॉजिटरिज् नीवडा."
+
+#: lib/navigation/systems.rb:68 lib/navigation/organization.rb:42
 msgid "Subscriptions"
 msgstr "सबस्क्रिप्शन्स्"
 
@@ -3220,9 +3833,32 @@ msgstr "%s पर्यंतच सबस्क्रिप्शन्स् �
 msgid "Subscriptions are not Current"
 msgstr "सबस्क्रिप्शन्स् सध्याचे नाही"
 
+#: app/controllers/activation_keys_controller.rb:101
+#, fuzzy
+msgid "Subscriptions successfully added to Activation Key '%s'."
+msgstr "संस्था '%s' नष्ट करणे अशक्य."
+
+#: app/controllers/activation_keys_controller.rb:125
+#, fuzzy
+msgid "Subscriptions successfully removed from Activation Key '%s'."
+msgstr "संस्था '%s' नष्ट करणे अशक्य."
+
 #: app/helpers/dashboard_helper.rb:53 app/views/dashboard/_sync.haml:27
 msgid "Success"
 msgstr "यशस्वी"
+
+#: app/models/changeset.rb:298
+msgid "Successfully promoted changeset '%s'."
+msgstr ""
+
+#: app/models/user.rb:453
+#, fuzzy
+msgid "Successfully removed organization '%s'."
+msgstr "संस्था '%s' नष्ट करणे अशक्य."
+
+#: app/controllers/filters_controller.rb:166
+msgid "Sucessfully updated '%s' package filter."
+msgstr ""
 
 #: app/views/system_events/_details.html.haml:10
 msgid "Summary"
@@ -3231,6 +3867,19 @@ msgstr "सारांश"
 #: app/views/promotions/show.html.haml:7
 msgid "Summary:"
 msgstr "सारांश:"
+
+#: app/models/permission.rb:166
+msgid "Super Admin"
+msgstr ""
+
+#: app/models/permission.rb:191
+#, fuzzy
+msgid "Super Admin permission"
+msgstr "परवानगी समाविष्ट करा"
+
+#: app/models/role.rb:206
+msgid "Super administrator with all access."
+msgstr ""
 
 #: app/views/providers/redhat/_subscription_details.html.haml:7
 #: app/views/subscriptions/index.html.haml:16
@@ -3245,20 +3894,28 @@ msgstr "सिंक रद्द केले"
 msgid "Sync Management"
 msgstr "सिंक व्यवस्थापन"
 
-#: app/views/dashboard/index.html.haml:13
+#: app/views/dashboard/index.html.haml:18
 msgid "Sync Overview"
 msgstr "सिंक पुनरावलोकन"
+
+#: app/controllers/sync_plans_controller.rb:140
+msgid "Sync Plan '%s' was created."
+msgstr ""
+
+#: app/controllers/sync_plans_controller.rb:86
+msgid "Sync Plan '%s' was updated."
+msgstr ""
 
 #: app/controllers/sync_plans_controller.rb:47
 #: lib/navigation/content_management.rb:104
 msgid "Sync Plans"
 msgstr "सिंक प्लॅन्स्"
 
-#: app/controllers/sync_schedules_controller.rb:74
+#: app/controllers/sync_schedules_controller.rb:76
 msgid "Sync Plans applied successfully."
 msgstr "सिंक प्लॅन्स् यशस्वीरित्या लागू केले."
 
-#: app/models/organization.rb:133
+#: app/models/organization.rb:134
 msgid "Sync Products"
 msgstr "सिंक उत्पादने"
 
@@ -3266,7 +3923,7 @@ msgstr "सिंक उत्पादने"
 msgid "Sync Schedule"
 msgstr "सिंक शेड्युल"
 
-#: app/views/sync_management/index.html.haml:16
+#: app/views/sync_management/index.html.haml:17
 #: lib/navigation/content_management.rb:95
 msgid "Sync Status"
 msgstr "सिंक स्थिती"
@@ -3276,24 +3933,36 @@ msgstr "सिंक स्थिती"
 msgid "Sync complete."
 msgstr "सिंक पूर्ण."
 
+#: app/controllers/sync_plans_controller.rb:111
+msgid "Sync plan '%s' was deleted."
+msgstr ""
+
 #: app/controllers/api/products_controller.rb:76
-#, 
 msgid "Synchronization plan assigned."
 msgstr ""
 
 #: app/controllers/api/products_controller.rb:82
-#, 
 msgid "Synchronization plan removed."
 msgstr ""
 
-#: app/views/sync_management/index.html.haml:48
+#: app/views/sync_management/index.html.haml:57
 msgid "Synchronize Now"
 msgstr "आत्ता समजुळवणी करा"
 
-#: app/controllers/systems_controller.rb:301
+#: app/controllers/systems_controller.rb:305
 #: app/views/dashboard/_errata.haml:37
 msgid "System"
 msgstr "प्रणाली"
+
+#: app/controllers/systems_controller.rb:94
+#, fuzzy
+msgid "System '%s' was created."
+msgstr "प्रणाली सबस्क्रिप्शन्स् सुधारित केले."
+
+#: app/controllers/systems_controller.rb:217
+#, fuzzy
+msgid "System '%s' was updated."
+msgstr "प्रणाली सबस्क्रिप्शन्स् सुधारित केले."
 
 #: app/views/systems/_subs.html.haml:6
 msgid "System Current Subscription(s)"
@@ -3303,7 +3972,7 @@ msgstr "प्रणालीवरील सध्याचे सबस्क�
 msgid "System Events"
 msgstr "प्रणाली घटना"
 
-#: app/views/systems/_edit.html.haml:8 lib/navigation/systems.rb:96
+#: app/views/systems/_edit.html.haml:8 lib/navigation/systems.rb:97
 msgid "System Info"
 msgstr "प्रणाली माहिती"
 
@@ -3315,29 +3984,40 @@ msgstr "प्रणाली सूचना"
 msgid "System Properties"
 msgstr "प्रणाली गुणधर्म"
 
-#: app/views/dashboard/index.html.haml:6
+#: app/views/dashboard/index.html.haml:7
 msgid "System Subscription Status"
 msgstr "प्रणाली सबस्क्रिप्शन स्थिती"
 
+#: app/views/promotions/show.html.haml:7
 #: app/views/activation_keys/_new.html.haml:35
 #: app/views/activation_keys/_edit.html.haml:59
-#: app/views/promotions/show.html.haml:7
 msgid "System Template"
 msgstr "प्रणाली टेम्पलेट"
 
-#: app/helpers/breadcrumb_helper.rb:137
-#: app/controllers/system_templates_controller.rb:71
-#: app/models/resource_type.rb:92 app/views/changesets/_edit.html.haml:40
-#: app/views/system_templates/index.html.haml:46
-#: app/views/promotions/_detail.html.haml:12
+#: app/controllers/system_templates_controller.rb:259
+#, fuzzy
+msgid "System Template '%s' was created."
+msgstr "सध्या प्रणाली टेम्पलेट निश्चित केले नाही"
+
+#: app/controllers/system_templates_controller.rb:78
+#: app/helpers/breadcrumb_helper.rb:140 app/models/resource_type.rb:92
 #: app/views/promotions/show.html.haml:7
+#: app/views/promotions/_detail.html.haml:12
+#: app/views/changesets/_edit.html.haml:40
+#: app/views/system_templates/index.html.haml:48
 #: lib/navigation/content_management.rb:120
 msgid "System Templates"
 msgstr "प्रणाली टेम्पलेटस्"
 
-#: app/views/system_templates/index.html.haml:38
-msgid "System Templates allow you to create a template for what a system should look like.  This includes what products are subscribed and what packages are installed."
-msgstr "प्रणाली टेम्पलेटस् तुम्हाला प्रणाली कशी दिसायला हवे त्याकरीता टेम्पलेट निर्माण करण्यास परवानगी देते.  यामध्ये उत्पादनांकरीता सब्स्क्राइब केलेले उत्पादने व प्रतिष्ठापीत संकुले समाविष्टीत आहे."
+#: app/views/system_templates/index.html.haml:40
+msgid ""
+"System Templates allow you to create a template for what a system should "
+"look like.  This includes what products are subscribed and what packages are "
+"installed."
+msgstr ""
+"प्रणाली टेम्पलेटस् तुम्हाला प्रणाली कशी दिसायला हवे त्याकरीता टेम्पलेट निर्माण करण्यास "
+"परवानगी देते.  यामध्ये उत्पादनांकरीता सब्स्क्राइब केलेले उत्पादने व प्रतिष्ठापीत संकुले "
+"समाविष्टीत आहे."
 
 #: app/views/systems/_edit.html.haml:71
 msgid "System Type"
@@ -3347,11 +4027,11 @@ msgstr "प्रणाली प्रकार"
 msgid "System Type:"
 msgstr "प्रणाली प्रकार:"
 
-#: app/controllers/systems_controller.rb:179
+#: app/controllers/systems_controller.rb:181
 msgid "System subscriptions updated."
 msgstr "प्रणाली सबस्क्रिप्शन्स् सुधारित केले."
 
-#: app/controllers/systems_controller.rb:296
+#: app/controllers/systems_controller.rb:300
 #: app/views/dashboard/_errata.haml:27 lib/navigation/systems.rb:22
 msgid "Systems"
 msgstr "प्रणाली"
@@ -3364,10 +4044,36 @@ msgstr "TITLE"
 msgid "TYPE"
 msgstr "TYPE"
 
-#: app/controllers/system_templates_controller.rb:74
-#: app/controllers/system_templates_controller.rb:76
+#: app/controllers/system_templates_controller.rb:81
+#: app/controllers/system_templates_controller.rb:83
 msgid "Template"
 msgstr "टेम्पलेट"
+
+#: app/controllers/system_templates_controller.rb:195
+#, fuzzy
+msgid "Template %s has been updated successfully"
+msgstr "वापरकर्ता यशस्वीरित्या सुधारित केले."
+
+#: app/controllers/system_templates_controller.rb:207
+#, fuzzy
+msgid "Template %s updated successfully."
+msgstr "वापरकर्ता यशस्वीरित्या सुधारित केले."
+
+#: app/controllers/system_templates_controller.rb:285
+#, fuzzy
+msgid ""
+"Template '%s' has been updated successfully, however you have removed either "
+"a product or repository that contained the selected distribution for this "
+"template.  Please select another distribution to ensure a working system "
+"template."
+msgstr ""
+"या टेम्पलेटकरीता नीवडलेले वितरण समाविष्टीत आहे.  कार्यरत प्रणाली टेम्पलेटची खात्री "
+"करण्यासाठी कृपया दुसरे वितरण नीवडा."
+
+#: app/controllers/system_templates_controller.rb:217
+#, fuzzy
+msgid "Template '%s' was deleted."
+msgstr "टेम्पलेटला एकस्पोर्ट करणे अशक्य"
 
 #: app/models/system_template.rb:21
 msgid "Template can have parent templates only from the same environment"
@@ -3385,26 +4091,31 @@ msgstr "टेम्पलेट आयात केले"
 msgid "Template is not complete and will likely fail."
 msgstr "टेम्पलेट पूर्ण नाही व संभाव्यतया अपयशी होईल."
 
-#: app/helpers/breadcrumb_helper.rb:391
+#: app/helpers/breadcrumb_helper.rb:393
 msgid "Templates"
 msgstr "टेम्पलेटस्"
 
-#: app/controllers/api/templates_controller.rb:59
 #: app/controllers/api/templates_content_controller.rb:130
-#, 
+#: app/controllers/api/templates_controller.rb:59
 msgid "Templates can be updated only in a Library environment"
 msgstr ""
 
-#: app/models/organization.rb:72 app/views/organizations/_edit.html.haml:11
-msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
+#: app/models/organization.rb:73 app/views/organizations/_edit.html.haml:11
+msgid ""
+"The current organization cannot be deleted. Please switch to a different "
+"organization before deleting."
 msgstr "सध्याची संस्था नष्ट करणे अशक्य. कृपया नष्ट करण्यापूर्वी वेगळ्या संस्थेचा वापर करा."
 
-#: app/views/system_templates/index.html.haml:5
-msgid "The current template \"$TEMPLATE\" has been modified.  Would you like to save the changes?"
+#: app/views/system_templates/index.html.haml:6
+msgid ""
+"The current template \"$TEMPLATE\" has been modified.  Would you like to "
+"save the changes?"
 msgstr "सध्याचे टेम्पलेट \"$TEMPLATE\" संपादित केले आहे.  तुम्हाला बदल साठवायला आवडेल?"
 
-#: app/views/system_templates/index.html.haml:5
-msgid "The current template \"$TEMPLATE\" has been modified. If you leave, any changes will be lost.\""
+#: app/views/system_templates/index.html.haml:6
+msgid ""
+"The current template \"$TEMPLATE\" has been modified. If you leave, any "
+"changes will be lost.\""
 msgstr "सध्याचे टेम्पलेट \"$TEMPLATE\" संपादित केले आहे. दुर्लक्ष्य केल्यास, बदल गमवाल.\""
 
 #: app/controllers/users_controller.rb:254
@@ -3425,7 +4136,7 @@ msgstr "पासवर्डमध्ये वापरकर्ताना�
 msgid "The passwords do not match"
 msgstr "पासवर्डस् जुळत नाही"
 
-#: app/views/systems/_subs.html.haml:51
+#: app/views/systems/_subs.html.haml:50
 msgid "The system is not currently consuming any subscriptions."
 msgstr "प्रणाली सध्या कोणत्याहि सबस्क्रिपशन्स्चा वापर करत नाही."
 
@@ -3434,20 +4145,30 @@ msgid "The template has children templates."
 msgstr "टेम्लपेटमध्ये चिल्डरन टेम्पलेटस् आढळले."
 
 #: app/views/roles/index.html.haml:8
-msgid "There are currently no Global permissions for this role.  Please click Add Permission in the action bar below to add a Global permission.  A Global permission is one that cuts across all organizations."
-msgstr "या रोलकरीता सध्या ग्लोबल परवानगी आढळली नाही.  कृपया ग्लोबल परवानगी समाविष्ट करण्यासाठी ॲक्शन पट्टीतील परवानगी समाविष्ट करा क्लिक करा. ग्लोबल परवानगी सर्व संस्थाकरीता लागू होते."
+msgid ""
+"There are currently no Global permissions for this role.  Please click Add "
+"Permission in the action bar below to add a Global permission.  A Global "
+"permission is one that cuts across all organizations."
+msgstr ""
+"या रोलकरीता सध्या ग्लोबल परवानगी आढळली नाही.  कृपया ग्लोबल परवानगी समाविष्ट "
+"करण्यासाठी ॲक्शन पट्टीतील परवानगी समाविष्ट करा क्लिक करा. ग्लोबल परवानगी सर्व "
+"संस्थाकरीता लागू होते."
 
 #: app/views/roles/index.html.haml:8
-msgid "There are currently no permissions for this organization.  Please click Add Permission in the action bar below to add a permission to this organization."
-msgstr "या रोलकरीता सध्या परवानगी आढळली नाही. कृपया संस्थाकरीता परवानगी समाविष्ट करण्यासाठी ॲक्शन पट्टीतील परवानगी समाविष्ट करा क्लिक करा."
+msgid ""
+"There are currently no permissions for this organization.  Please click Add "
+"Permission in the action bar below to add a permission to this organization."
+msgstr ""
+"या रोलकरीता सध्या परवानगी आढळली नाही. कृपया संस्थाकरीता परवानगी समाविष्ट "
+"करण्यासाठी ॲक्शन पट्टीतील परवानगी समाविष्ट करा क्लिक करा."
 
-#: app/views/sync_management/index.html.haml:45
-#, 
-msgid "There are no custom products or repositories enabled. Try enabling via Content Providers."
+#: app/views/sync_management/index.html.haml:54
+msgid ""
+"There are no custom products or repositories enabled. Try enabling via "
+"Content Providers."
 msgstr ""
 
 #: app/views/dashboard/_errata.haml:3
-#, 
 msgid "There are no errata that need to be applied to registered systems."
 msgstr ""
 
@@ -3460,8 +4181,8 @@ msgstr "दाखवण्याकरीता इव्हेंटस् आ�
 msgid "There are no more subscriptions available."
 msgstr "यापेक्षा जास्त सबस्क्रिप्शन्स उपलब्ध नाही."
 
-#: app/views/system_packages/_packages.html.haml:96
 #: app/views/errata/_packages.html.haml:29
+#: app/views/system_packages/_packages.html.haml:96
 msgid "There are no packages to display."
 msgstr "दाखवण्याकरीता संकुले आढळले नाही."
 
@@ -3469,25 +4190,35 @@ msgstr "दाखवण्याकरीता संकुले आढळल�
 msgid "There are no tags for the resource type you have chosen."
 msgstr "नीवडलेल्या रिसोअर्स् प्रकारकरीता टॅग्स् आढळले नाही."
 
-#: app/models/glue/pulp/repos.rb:538
+#: app/models/glue/pulp/repos.rb:542
 msgid "There is already a repo with the name [ %s ] for product [ %s ]"
 msgstr "नाव [ %s ] सह उत्पादन [ %s ] करीता आधिपासूनच रेपो आढळले"
 
-#: app/controllers/sync_schedules_controller.rb:78
+#: app/controllers/sync_management_controller.rb:213
+msgid ""
+"There is already an active sync process for the '%s' repository. Please try "
+"again later"
+msgstr ""
+
+#: app/controllers/sync_schedules_controller.rb:80
 msgid "There must be at least one plan selected"
 msgstr "किमान एक प्लॅन पसंत करणे आवश्यक"
 
-#: app/controllers/sync_schedules_controller.rb:93
+#: app/controllers/sync_schedules_controller.rb:95
 msgid "There must be at least one product selected"
 msgstr "किमान एक उत्पादन पसंत करणे आवश्यक"
 
 #: app/views/common/_common_i18n.html.haml:3
-#, 
 msgid "There was an error retrieving that row:"
 msgstr ""
 
+#: app/controllers/sync_management_controller.rb:155
+msgid ""
+"There were errors with one of the syncs: %s in repository: %s. See the log "
+"for more details."
+msgstr ""
+
 #: app/views/gpg_keys/_products_repos.html.haml:17
-#, 
 msgid "This GPG Key is not currently assigned to any products or repositories."
 msgstr ""
 
@@ -3500,7 +4231,6 @@ msgid "This changeset contains no content."
 msgstr "या चेंजसेट अंतर्गत कंटेंट समाविष्टीत नाही."
 
 #: app/views/promotions/show.html.haml:7
-#, 
 msgid "This promotion changeset is currently being promoted."
 msgstr ""
 
@@ -3509,8 +4239,8 @@ msgid "This template contains no content."
 msgstr "या टेम्पलेटमध्ये कंटेंट समाविष्टी नाही."
 
 #: app/views/organizations/_events.html.haml:14
-#: app/views/sync_plans/_form.html.haml:25
 #: app/views/sync_plans/_edit.html.haml:29
+#: app/views/sync_plans/_form.html.haml:25
 msgid "Time"
 msgstr "वेळ"
 
@@ -3519,30 +4249,37 @@ msgid "Title"
 msgstr "शीर्षक"
 
 #: app/views/common/_panel.html.haml:14
-msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
-msgstr "डावीकडील घटकाच्या तपशील अवलोकनकरीता, एका ओळीवर क्लिक करा.<br/><br/>एकापेक्षा जास्त ओळी नीवडण्याकरीता, कंट्रोल कि दाबा व एकापेक्षा जास्त ओळींवर क्लिक करा.<br/><br/>हि मदत यापुढे हवे नसल्यास, कृपया या पेटीतील वरून उजव्या बाजूस बंद करा बटणावर क्लिक करा."
+msgid ""
+"To view the details of an item on the left, simply click on a single row.<br/"
+"><br/>To select multiple rows, hold the Control Key and click multiple rows."
+"<br/><br/>If you don't need this help anymore, please click the close button "
+"in the top right of this box."
+msgstr ""
+"डावीकडील घटकाच्या तपशील अवलोकनकरीता, एका ओळीवर क्लिक करा.<br/><br/>एकापेक्षा "
+"जास्त ओळी नीवडण्याकरीता, कंट्रोल कि दाबा व एकापेक्षा जास्त ओळींवर क्लिक करा.<br/><br/"
+">हि मदत यापुढे हवे नसल्यास, कृपया या पेटीतील वरून उजव्या बाजूस बंद करा बटणावर क्लिक करा."
 
 #: app/views/dashboard/_subscriptions.haml:41
 msgid "Total Systems"
 msgstr "एकूण प्रणाली"
 
+#: app/views/dashboard/_errata.haml:8 app/views/errata/_show.html.haml:24
+#: app/views/errata/_show.html.haml:56
+#: app/views/activation_keys/_subscriptions.html.haml:5
 #: app/views/roles/_permission.html.haml:13
 #: app/views/roles/_closed_permission.html.haml:3
-#: app/views/dashboard/_errata.haml:8
-#: app/views/activation_keys/_subscriptions.html.haml:5
-#: app/views/errata/_show.html.haml:24 app/views/errata/_show.html.haml:56
 msgid "Type"
 msgstr "प्रकार"
 
-#: app/helpers/breadcrumb_helper.rb:210
+#: app/helpers/breadcrumb_helper.rb:212
 msgid "Type: Bug Fix"
 msgstr "प्रकार: बग फिक्स्"
 
-#: app/helpers/breadcrumb_helper.rb:210
+#: app/helpers/breadcrumb_helper.rb:212
 msgid "Type: Enhancement"
 msgstr "प्रकार: सुधारणा"
 
-#: app/helpers/breadcrumb_helper.rb:210
+#: app/helpers/breadcrumb_helper.rb:212
 msgid "Type: Security"
 msgstr "प्रकार: सेक्युरिटि"
 
@@ -3555,15 +4292,19 @@ msgstr "URL"
 msgid "UUID"
 msgstr "UUID"
 
+#: app/models/system_template.rb:138
+msgid "Uebercert for %s has not been generated."
+msgstr ""
+
 #: app/models/activation_key.rb:90
 msgid "Unable to determine quantity for pool %s"
 msgstr "पूल %s करीता प्रमाण ओळखणे अशक्य"
 
-#: app/controllers/providers_controller.rb:112
+#: app/controllers/providers_controller.rb:119
 msgid "Unable to retrieve subscription history for provider '%{name}."
 msgstr "प्रोव्हाइडर '%{name} करीता सबस्क्रिप्शन इतिहास प्राप्त करणे अशक्य."
 
-#: app/controllers/providers_controller.rb:98
+#: app/controllers/providers_controller.rb:105
 msgid "Unable to retrieve subscription manifest for provider '%{name}."
 msgstr "प्रोव्हाइडर '%{name} करीता सबस्क्रिप्शन मॅनिफेस्ट प्राप्त करणे अशक्य."
 
@@ -3576,18 +4317,23 @@ msgstr "संकुल गटे '%{p}' यांचे प्रणाली '
 msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "संकुले '%{p}' यांचे प्रणाली '%{s}' करीता प्रतिष्ठापन अशक्य ठरवले आहे."
 
-#: app/views/systems/_edit.html.haml:79
 #: app/views/changesets/_edit.html.haml:22
+#: app/views/systems/_edit.html.haml:79
 msgid "Unknown"
 msgstr "अपरिचीत"
 
-#: app/views/systems/_subs.html.haml:95
-#: app/views/providers/redhat/_subscription_details.html.haml:30
+#: app/controllers/api/systems_controller.rb:215
+#, fuzzy
+msgid "Unknown repository label"
+msgstr "रेपॉजिटरिज् उपलब्ध नाही."
+
+#: app/views/providers/redhat/_subscription_details.html.haml:29
+#: app/views/systems/_subs.html.haml:96
 #: app/views/subscriptions/index.html.haml:39
 msgid "Unlimited"
 msgstr "अमर्यादित"
 
-#: app/views/systems/_subs.html.haml:54 app/views/systems/_subs.html.haml:55
+#: app/views/systems/_subs.html.haml:53 app/views/systems/_subs.html.haml:54
 msgid "Unsubscribe"
 msgstr "सबस्क्राइब अशक्य करा"
 
@@ -3632,9 +4378,9 @@ msgid "Updating Package..."
 msgstr "संकुल सुधारित करत आहे..."
 
 #: app/views/common/_edit_i18n.html.haml:4
-#: app/views/gpg_keys/_new.html.haml:28 app/views/gpg_keys/_new.html.haml:33
-#: app/views/gpg_keys/_edit.html.haml:30 app/views/gpg_keys/_edit.html.haml:35
 #: app/views/providers/redhat/show.html.haml:35
+#: app/views/gpg_keys/_new.html.haml:14 app/views/gpg_keys/_new.html.haml:19
+#: app/views/gpg_keys/_edit.html.haml:30 app/views/gpg_keys/_edit.html.haml:35
 msgid "Upload"
 msgstr "अपलोड करा"
 
@@ -3654,6 +4400,10 @@ msgstr "ब्राउजर लोकेलचा वापर करा"
 msgid "User"
 msgstr "वापरकर्ता"
 
+#: app/controllers/users_controller.rb:289
+msgid "User '%s' was deleted."
+msgstr ""
+
 #: app/views/notices/show.html.haml:13
 msgid "User Notifications"
 msgstr "वापरकर्ता सूचना"
@@ -3662,7 +4412,7 @@ msgstr "वापरकर्ता सूचना"
 msgid "User assignments for this role"
 msgstr "या रोलकरीता वापरकर्ता लागू करणे"
 
-#: app/controllers/application_controller.rb:120
+#: app/controllers/application_controller.rb:144
 msgid "User does not belong to an organization."
 msgstr "वापरकर्त्याची संस्थाकरीता मालकि."
 
@@ -3671,8 +4421,12 @@ msgid "User environment updated successfully."
 msgstr "वापरकर्ता वातावरण यशस्वीरित्या सुधारित केले."
 
 #: app/views/notices/show.html.haml:9
-msgid "User notifications lists all notifications generated by a user as well as global notifications that are sent to all users."
-msgstr "वापरकर्ता सूचनांमध्ये वापरकर्ता तर्फे निर्मीत सूचनांची तसेच सर्व वापरकर्त्यांसाठी पाठवलेली ग्लोबल सूचनांची सूची दाखवतो."
+msgid ""
+"User notifications lists all notifications generated by a user as well as "
+"global notifications that are sent to all users."
+msgstr ""
+"वापरकर्ता सूचनांमध्ये वापरकर्ता तर्फे निर्मीत सूचनांची तसेच सर्व वापरकर्त्यांसाठी पाठवलेली "
+"ग्लोबल सूचनांची सूची दाखवतो."
 
 #: app/controllers/users_controller.rb:145
 #: app/controllers/users_controller.rb:168
@@ -3681,6 +4435,7 @@ msgid "User updated successfully."
 msgstr "वापरकर्ता यशस्वीरित्या सुधारित केले."
 
 #: app/controllers/users_controller.rb:335
+#: app/views/user_sessions/new.html.haml:8
 msgid "Username"
 msgstr "वापरकर्तानाव"
 
@@ -3689,8 +4444,8 @@ msgstr "वापरकर्तानाव"
 msgid "Username:"
 msgstr "वापरकर्तानाव:"
 
-#: app/helpers/breadcrumb_helper.rb:242
-#: app/controllers/users_controller.rb:333 app/models/resource_type.rb:97
+#: app/controllers/users_controller.rb:333
+#: app/helpers/breadcrumb_helper.rb:244 app/models/resource_type.rb:97
 #: lib/navigation/administration.rb:56
 msgid "Users"
 msgstr "वापरकर्ते"
@@ -3703,7 +4458,7 @@ msgstr "तपासणी अपयशी:"
 msgid "Value"
 msgstr "मूल्य"
 
-#: app/views/roles/_edit.html.haml:59
+#: app/views/roles/_edit.html.haml:59 app/views/roles/index.html.haml:8
 msgid "Verb(s):"
 msgstr "वर्ब्स्:"
 
@@ -3721,23 +4476,27 @@ msgstr "खूपच दुर्बल"
 msgid "Viewing %X of %Y results (%Z Total Errata)"
 msgstr "%Y परिणाम पैकी %X पहात आहे (%Z एकूण एराटा)"
 
-#: app/helpers/systems_helper.rb:43
+#: app/controllers/activation_keys_controller.rb:341
+#: app/controllers/providers_controller.rb:291
 #: app/controllers/subscriptions_controller.rb:55
-#: app/controllers/providers_controller.rb:284
-#: app/controllers/activation_keys_controller.rb:349 app/models/system.rb:68
+#: app/helpers/systems_helper.rb:42 app/models/system.rb:67
 msgid "Virtual"
 msgstr "वर्चुअल"
 
 #: app/views/providers/index.html.haml:14
-msgid "WARNING: This will override any GPG keys already associated with a repository within this product"
-msgstr "सावधानता: यामुळे उत्पादन अंतर्गत आधिपासून संलग्न रेपॉजिटरिसह कोणतेहि GPG किज् खोडून पुन्हा लिहले जातिल"
+msgid ""
+"WARNING: This will override any GPG keys already associated with a "
+"repository within this product"
+msgstr ""
+"सावधानता: यामुळे उत्पादन अंतर्गत आधिपासून संलग्न रेपॉजिटरिसह कोणतेहि GPG किज् खोडून पुन्हा "
+"लिहले जातिल"
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
 msgid "Weak"
 msgstr "दुर्बल"
 
-#: app/controllers/application_controller.rb:149
+#: app/controllers/application_controller.rb:173
 msgid "Welcome Back!"
 msgstr "स्वागत आहे!"
 
@@ -3750,31 +4509,45 @@ msgstr "होय"
 msgid "You are not authorised to perform this action."
 msgstr "हि कृती करण्यास तुमच्याकडे परवानगी नाही."
 
-#: app/controllers/api/sync_controller.rb:96
-#, 
+#: app/controllers/api/sync_controller.rb:97
 msgid "You can synchronize repositories only in library environment'"
 msgstr ""
 
-#: app/controllers/application_controller.rb:488
-msgid "You current organization is no longer valid. It is possible that the organization has been deleted, please log back in to continue."
-msgstr "सध्याची संस्था वैध नाही. संस्था नष्ट केली असावी असे शक्य आहे, कृपया पुढे जाण्याकरीता पुनः प्रवेश करा."
-
-#: app/views/dashboard/index.html.haml:17
-msgid "You currently do not have any permissions that grant access to an organization.  Please contact your system administrator to receive access."
-msgstr "संस्थाकरीता प्रवेश प्रदानकरण्यासाठी तुमच्याकडे परवानगी नाही. कृपया प्रवेश प्राप्त करण्यासाठी प्रणाली प्रशासकाशी संपर्क करा."
+#: app/controllers/application_controller.rb:511
+#, fuzzy
+msgid ""
+"You current organization is no longer valid. It is possible that either the "
+"organization has been deleted or your permissions revoked, please log back "
+"in to continue."
+msgstr ""
+"सध्याची संस्था वैध नाही. संस्था नष्ट केली असावी असे शक्य आहे, कृपया पुढे जाण्याकरीता पुनः "
+"प्रवेश करा."
 
 #: app/controllers/failed_authentication_controller.rb:28
-msgid "You do not have valid credentials to access this system. Please contact your administrator."
+msgid ""
+"You do not have valid credentials to access this system. Please contact your "
+"administrator."
 msgstr "या प्रणालीकरीता तुमच्याकडे वैध परवानगी नाही. कृपया प्रशासकाशी संपर्क करा."
 
+#: app/controllers/failed_authentication_controller.rb:25
+#, fuzzy
+msgid ""
+"You have entered an incorrect username/password combination, or your account "
+"may currently be disabled. Please try again or contact your administrator."
+msgstr ""
+"अयोग्य वापरकर्तानाव, पासवर्ड जोडणी दिले किंवा खाते बंद केले आहे, कृपया पुनः प्रयत्न करा."
+
 #: app/views/roles/_self_role_edit.html.haml:31
-#, 
 msgid "You have no assigned roles."
 msgstr ""
 
 #: app/views/roles/index.html.haml:8
-msgid "You have selected all resource types; this will grant full access to the organization. Press the Cancel button to select an individual resource type."
-msgstr "तुम्ही सर्व स्रोत प्रकार नीवडले आहेत; यामुळे संस्थाकरीता संपूर्ण प्रवेश प्राप्त होईल. प्रत्यक्ष स्रोत प्रकार नीवडण्यासाठी रद्द करा बटन दाबा."
+msgid ""
+"You have selected all resource types; this will grant full access to the "
+"organization. Press the Cancel button to select an individual resource type."
+msgstr ""
+"तुम्ही सर्व स्रोत प्रकार नीवडले आहेत; यामुळे संस्थाकरीता संपूर्ण प्रवेश प्राप्त होईल. प्रत्यक्ष "
+"स्रोत प्रकार नीवडण्यासाठी रद्द करा बटन दाबा."
 
 #: app/views/common/404.html.haml:4
 msgid "You may have mistyped the address or the page may have moved."
@@ -3784,8 +4557,8 @@ msgstr "तुम्ही कदाचित पत्ता चुकिने
 msgid "You might want to log out and log back in again to clear your cookies."
 msgstr "कुकिज् नष्ट करण्यासाठी तुम्हाला कदाचित बाहेर पडावे लागेल व पुनः प्रवेश करावे लागेल."
 
-#: app/controllers/application_controller.rb:138
-#: app/controllers/application_controller.rb:478
+#: app/controllers/application_controller.rb:162
+#: app/controllers/application_controller.rb:501
 msgid "You must be logged in to access that page."
 msgstr "पृष्ठकरीता प्रवेश प्राप्त करण्यासाठी तुम्ही लॉग्ड् इन व्हायला हवे."
 
@@ -3802,20 +4575,19 @@ msgid "You must select at least one verb."
 msgstr "किमान एक वर्ब नीवडायला हवे."
 
 #: config/initializers/app_config.rb:99
-#, 
 msgid "You must specify host in %s for %s to work properly"
 msgstr ""
 
 #: app/views/systems/_new.html.haml:57
-msgid "You need to create an environment for this org before you can create a system."
+msgid ""
+"You need to create an environment for this org before you can create a "
+"system."
 msgstr "प्रणाली निर्माण करण्यापूर्वी या संस्थाकरीता वातावरण निर्माण करणे आवश्यक आहे."
 
-#: app/controllers/failed_authentication_controller.rb:25
-msgid "You've entered an incorrect username, password combination or account disabled, please try again."
-msgstr "अयोग्य वापरकर्तानाव, पासवर्ड जोडणी दिले किंवा खाते बंद केले आहे, कृपया पुनः प्रयत्न करा."
-
-#: app/views/promotions/show.html.haml:185
-msgid "Your update has applied successfully, but during that time another user has also made an update."
+#: app/views/promotions/show.html.haml:195
+msgid ""
+"Your update has applied successfully, but during that time another user has "
+"also made an update."
 msgstr "सुधारणा यशस्वीरित्या लागू केले, परंतु त्याचवेळी दुसऱ्या वापरकर्त्याने सुधारणा केली."
 
 #: app/models/system_task.rb:136
@@ -3830,8 +4602,13 @@ msgstr "सर्व संकुलांची सुधारणा"
 msgid "all packages update failed"
 msgstr "सर्व संकुलांची सुधारणा अपयशी झाली"
 
-#: app/models/katello_name_format_validator.rb:20
+#: app/models/kt_environment.rb:368
+#, fuzzy
+msgid "can not be updated"
+msgstr "टेम्पलेटला एकस्पोर्ट करणे अशक्य"
+
 #: app/models/katello_url_format_validator.rb:50
+#: app/models/katello_name_format_validator.rb:20
 msgid "can't be blank"
 msgstr "रिकामे असणे अशक्य"
 
@@ -3843,19 +4620,23 @@ msgstr "अल्फा न्युमेरल्स्, स्पेस्,'_
 msgid "cannot contain characters other than alpha numerals,'_', '-'."
 msgstr "अल्फा न्युमेरल्स्, '_', '-' पेक्षा वेगळे अक्षरे समाविष्टीत असणे अशक्य."
 
-#: app/controllers/system_templates_controller.rb:273
-msgid "contained the selected distribution for this template.  Please select another distribution to ensure a working system template."
-msgstr "या टेम्पलेटकरीता नीवडलेले वितरण समाविष्टीत आहे.  कार्यरत प्रणाली टेम्पलेटची खात्री करण्यासाठी कृपया दुसरे वितरण नीवडा."
+#: app/models/katello_description_format_validator.rb:17
+#: app/models/katello_name_format_validator.rb:26
+msgid "cannot contain more than %s characters"
+msgstr ""
 
 #: app/views/promotions/show.html.haml:7
-#, 
 msgid "currently editing this promotion changeset"
 msgstr ""
 
 #: app/models/sync_plan.rb:28
-#, 
 msgid "daily"
 msgstr ""
+
+#: app/views/promotions/show.html.haml:177
+#, fuzzy
+msgid "displayed"
+msgstr "डिस्पले"
 
 #: app/models/kt_environment.rb:29
 msgid "environment can only have one child"
@@ -3866,8 +4647,11 @@ msgid "environment required"
 msgstr "वातावरण आवश्यक"
 
 #: app/models/sync_plan.rb:27
-#, 
 msgid "hourly"
+msgstr ""
+
+#: app/models/activation_key.rb:43
+msgid "id: %s doesn't exist "
 msgstr ""
 
 #: app/models/system_task.rb:105 app/models/system_task.rb:106
@@ -3900,7 +4684,7 @@ msgstr "संकुले प्रतिष्ठापीत करत आह
 msgid "is already in the template"
 msgstr "आधिपासूनच टेम्पलेटमध्ये समाविष्टीत आहे"
 
-#: app/models/provider.rb:78 app/models/katello_url_format_validator.rb:48
+#: app/models/katello_url_format_validator.rb:48 app/models/provider.rb:78
 msgid "is invalid"
 msgstr "अवैध आहे"
 
@@ -3909,7 +4693,6 @@ msgid "is too long"
 msgstr "खूपच लांब आहे"
 
 #: app/models/ping.rb:65
-#, 
 msgid "katello-jobs service not running"
 msgstr ""
 
@@ -3917,8 +4700,7 @@ msgstr ""
 msgid "link"
 msgstr "दुवा"
 
-#: app/models/user.rb:62
-#, 
+#: app/models/user.rb:65
 msgid "must be at least 5 characters."
 msgstr ""
 
@@ -3930,13 +4712,16 @@ msgstr "संस्था व्याप्ति अंतर्गत एक
 msgid "must be unique within one environment"
 msgstr "एका वातावरणात एकमेव असायला हवे"
 
-#: app/models/gpg_key.rb:33 app/models/kt_environment.rb:85
+#: app/models/kt_environment.rb:89 app/models/gpg_key.rb:33
 msgid "must be unique within one organization"
 msgstr "एक संस्था अंतर्गत एकमेव असायला हवे"
 
 #: app/models/product.rb:15
-#, 
 msgid "must contain 'Library'"
+msgstr ""
+
+#: app/models/katello_name_format_validator.rb:27
+msgid "must contain at least %s characters"
 msgstr ""
 
 #: app/models/no_trailing_space_validator.rb:20
@@ -3948,16 +4733,16 @@ msgstr "लिडिंग किंवा ट्रेलिंग वाइट
 msgid "none"
 msgstr "काहिच नाही"
 
-#: app/views/roles/_edit.html.haml:55 app/views/roles/_edit.html.haml:62
-#: app/views/roles/_edit.html.haml:69 app/views/gpg_keys/_new.html.haml:24
+#: app/views/gpg_keys/_new.html.haml:24 app/views/roles/_edit.html.haml:55
+#: app/views/roles/_edit.html.haml:62 app/views/roles/_edit.html.haml:69
 msgid "or"
 msgstr "किंवा"
 
-#: app/controllers/sync_schedules_controller.rb:46
+#: app/controllers/sync_schedules_controller.rb:48
 msgid "plan"
 msgstr "प्लॅन"
 
-#: app/controllers/sync_schedules_controller.rb:40
+#: app/controllers/sync_schedules_controller.rb:41
 msgid "product"
 msgstr "उत्पादन"
 
@@ -3981,10 +4766,14 @@ msgstr "संकुल काढून टाकत आहे..."
 msgid "removing packages..."
 msgstr "संकुले काढून टाकत आहे..."
 
-#: app/controllers/api/packages_controller.rb:49
-#, 
+#: app/controllers/api/packages_controller.rb:50
 msgid "repoids"
 msgstr ""
+
+#: app/views/promotions/show.html.haml:180
+#, fuzzy
+msgid "results."
+msgstr "परिणाम"
 
 #: app/controllers/sync_management_controller.rb:243
 msgid "sync did not complete successfully"
@@ -3994,12 +4783,13 @@ msgstr "सिंक यशस्वीरित्या पूर्ण झा
 msgid "system templates"
 msgstr "प्रणाली टेम्पलेटस्"
 
-#: app/controllers/system_templates_controller.rb:75
+#: app/controllers/system_templates_controller.rb:82
 msgid "template"
 msgstr "टेम्पलेट"
 
 #: app/models/provider.rb:71
-msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
+msgid ""
+"the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "खालील गुणधर्मांना Red Hat प्रोव्हाइडरकरीता: [ %s ] करीता सुधारित करणे अशक्य"
 
 #: app/models/system_task.rb:77 app/models/system_task.rb:78
@@ -4025,3 +4815,19 @@ msgstr "अवलोकन"
 #: app/helpers/sync_schedules_helper.rb:19 app/models/sync_plan.rb:29
 msgid "weekly"
 msgstr "साप्ताहिक"
+
+#~ msgid "Changelog"
+#~ msgstr "चेंजलॉग"
+
+#~ msgid "Edit Repository"
+#~ msgstr "रेपॉजिटरि संपादित करा"
+
+#~ msgid "Promotion of changeset '%{name}' failed."
+#~ msgstr "चेंजसेट '%{name}' चे प्रमोशन अपयशी."
+
+#~ msgid ""
+#~ "You currently do not have any permissions that grant access to an "
+#~ "organization.  Please contact your system administrator to receive access."
+#~ msgstr ""
+#~ "संस्थाकरीता प्रवेश प्रदानकरण्यासाठी तुमच्याकडे परवानगी नाही. कृपया प्रवेश प्राप्त "
+#~ "करण्यासाठी प्रणाली प्रशासकाशी संपर्क करा."

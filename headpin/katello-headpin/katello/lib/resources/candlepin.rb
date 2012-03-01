@@ -364,9 +364,19 @@ module Candlepin
 
   class Pool < CandlepinResource
     class << self
-      def get pool_id
-        pool_json = super(path(pool_id), self.default_headers).body
+      def find pool_id
+        pool_json = self.get(path(pool_id), self.default_headers).body
         JSON.parse(pool_json).with_indifferent_access
+      end
+
+      def get_for_owner owner_key
+        pools_json = self.get("/candlepin/owners/#{owner_key}/pools", self.default_headers).body
+        JSON.parse(pools_json)
+      end
+
+      def destroy id
+        raise ArgumentError, "pool id has to be specified" unless id
+        self.delete(path(id), self.default_headers).code.to_i
       end
 
       def path id=nil
@@ -531,6 +541,10 @@ module Candlepin
           'contractNumber' => ''
         }
         Candlepin::Subscription.create_for_owner owner_key, subscription
+      end
+
+      def pools owner_key, product_id
+        Candlepin::Pool.get_for_owner(owner_key).find_all {|pool| pool['productId'] == product_id }
       end
 
       def delete_subscriptions owner_key, product_id

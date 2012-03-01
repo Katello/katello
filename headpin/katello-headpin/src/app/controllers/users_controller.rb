@@ -124,7 +124,7 @@ class UsersController < ApplicationController
       if search_validate(User, user.id, params[:search])
         render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
       else
-        notice _("'#{@user["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+        notice _("'%s' did not meet the current search criteria and is not being shown.") % @user["name"], { :level => 'message', :synchronous_request => false }
         render :json => { :no_match => true }
       end
     rescue Exception => error
@@ -147,7 +147,7 @@ class UsersController < ApplicationController
       attr ||= ""
       
       if not search_validate(User, user.id, params[:search])
-        notice _("'#{@user["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+        notice _("'%s' no longer matches the current search criteria.") % @user["name"], { :level => 'message', :synchronous_request => false }
       end
 
       render :text => attr and return
@@ -272,7 +272,7 @@ class UsersController < ApplicationController
       notice _("User updated successfully.")
       
       if not search_validate(User, user.id, params[:search])
-        notice _("'#{@user["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+        notice _("'%s' no longer matches the current search criteria.") % @user["name"], { :level => 'message', :synchronous_request => false }
       end
       
       render :nothing => true and return
@@ -286,7 +286,7 @@ class UsersController < ApplicationController
     #remove the user
     @user.destroy
     if @user.destroyed?
-      notice _("User '#{@user[:username]}' was deleted.")
+      notice _("User '%s' was deleted.") % @user[:username]
       #render and do the removal in one swoop!
       render :partial => "common/list_remove", :locals => {:id => @id, :name=>controller_display_name} and return
     end

@@ -305,7 +305,7 @@ KT.common = (function() {
             }
             return root_url;
         },
-        getSearchParams : function() {
+        getSearchParams : function(val) {
             var search_string = $.bbq.getState('search');
 
         	if( search_string ){
@@ -373,6 +373,7 @@ $(document).ready(function (){
   // Add a handler for ellipsis
   $(".one-line-ellipsis").ellipsis(true);
   $(".tipsify").tipsy({ live : true, gravity: 's', fade: true, delayIn : 350 });
+  $(".tipsify-west").tipsy({ gravity: 'w', hoverable : 'true' });
 
   KT.common.orgSwitcherSetup();
   KT.common.orgFilterSetup();

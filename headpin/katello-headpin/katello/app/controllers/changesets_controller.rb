@@ -106,7 +106,7 @@ class ChangesetsController < ApplicationController
     begin
       @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
                                      :environment_id=>@environment.id)
-      notice _("Promotion Changeset '#{@changeset["name"]}' was created.")
+      notice _("Promotion Changeset '%s' was created.") % @changeset["name"]
       bc = {}
       add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
                       {:client_render => true}, {:is_new=>true})
@@ -206,7 +206,7 @@ class ChangesetsController < ApplicationController
     name = @changeset.name
     id = @changeset.id
     @changeset.destroy
-    notice _("Promotion Changeset '#{name}' was deleted.")
+    notice _("Promotion Changeset '%s' was deleted.") % name
     render :text=>""
   end
 
@@ -215,7 +215,7 @@ class ChangesetsController < ApplicationController
       @changeset.promote
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
-      notice _("Started promotion of '#{@changeset.name}' to #{@environment.name} environment")
+      notice _("Started promotion of '%s' to %s environment") % [@changeset.name, @environment.name]
     rescue Exception => e
         notice "Failed to promote: #{e.to_s}", {:level => :error}
         render :text=>e.to_s, :status=>500

@@ -65,10 +65,6 @@ class PromotionsController < ApplicationController
 
 
   def packages
-    new_packages  #switch to new once bz 765849 is resolved
-  end
-
-  def new_packages
     product_id = params[:product_id]  
     repos = Product.find(product_id).repos(@environment)
     repo_ids = repos.collect{ |repo| repo.pulp_id }
@@ -80,6 +76,8 @@ class PromotionsController < ApplicationController
     search = "*" if search.nil? || search == ''
     offset = params[:offset] || 0
     @packages = Glue::Pulp::Package.search(search, params[:offset], current_user.page_size, repo_ids)
+    total_count = Product.find(product_id).total_package_count(@environment)
+
     render :text=>"" and return if @packages.empty?
 
     if not @next_environment.nil?
@@ -111,48 +109,17 @@ class PromotionsController < ApplicationController
       @not_promotable = @packages.collect{ |pack| pack.id }
     end
 
-    options = {:list_partial => 'promotions/package_items'}
+
 
     if offset.to_i >  0
-      render_panel_results(@packages, @packages.length, options)
-    else
-      render :partial=>"packages", :locals=>{:collection => @packages}
-    end
-    
-  end
-
-  def old_packages 
-    package_hash = {}
-    @product.repos(@environment).each{|repo|
-      repo.packages.each{|pkg|
-        package_hash[pkg.id] = pkg if package_hash[pkg.id].nil?
-      }
-    }
-
-    @next_env_pkgs = []
-    if @next_environment
-      @product.repos(@next_environment).each{|repo|
-        repo.packages.each{|pkg|
-          @next_env_pkgs << pkg.id
-        }
-      }
-    end
-
-    @packages = package_hash.values
-    @packages.sort! {|a,b| a.nvrea <=> b.nvrea}
-    offset = params[:offset]
-    if offset
-      render :text=>"" and return if @packages.empty?
-
       options = {:list_partial => 'promotions/package_items'}
-      render_panel_items(@packages, options, nil, offset)
-
-
     else
-      @packages = @packages[0..current_user.page_size]
-      render :partial=>"packages", :locals=>{:collection => @packages}
+      options = {:list_partial => 'promotions/packages'}
     end
+
+    render_panel_results(@packages, total_count, options)
   end
+
 
   def repos
     @repos = @product.repos(@environment)
@@ -202,8 +169,11 @@ class PromotionsController < ApplicationController
 
     if search == "*"
       @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters)
+      total_size =  @errata.empty? ? 0 :  @errata.total
     else
       @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters, false)
+      all = Glue::Pulp::Errata.search("*", offset, 1, filters, false)
+      total_size = all.empty? ? 0 : all.total
     end
 
     if not @next_environment.nil?
@@ -236,13 +206,15 @@ class PromotionsController < ApplicationController
       @not_promotable = @errata.collect{ |erratum| erratum.id }
     end
 
-    options = {:list_partial => 'promotions/errata_items'}
+
 
     if offset.to_i >  0
-      render_panel_results(@errata, @errata.length, options)
+      options = {:list_partial =>'promotions/errata_items'}
     else
-      render :partial=>"errata", :locals=>{:collection => @errata}
+      options = {:list_partial =>'errata'}
     end
+    #render :partial=>"errata", :locals=>{:collection => @errata}
+    render_panel_results(@errata, total_size, options)
   end
 
   def distributions

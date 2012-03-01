@@ -31,7 +31,7 @@ module Glue::Candlepin::Consumer
                           end
                         }
       lazy_accessor :entitlements, :initializer => lambda { Candlepin::Consumer.entitlements(uuid) }
-      lazy_accessor :pools, :initializer => lambda { entitlements.collect { |ent| Candlepin::Pool.get ent["pool"]["id"]} }
+      lazy_accessor :pools, :initializer => lambda { entitlements.collect { |ent| Candlepin::Pool.find ent["pool"]["id"]} }
       lazy_accessor :available_pools, :initializer => lambda { Candlepin::Consumer.available_pools(uuid, false) }
       lazy_accessor :all_available_pools, :initializer => lambda { Candlepin::Consumer.available_pools(uuid, true) }
       lazy_accessor :host, :initializer => lambda {
@@ -125,7 +125,7 @@ module Glue::Candlepin::Consumer
     end
 
     def get_pool id
-      Candlepin::Pool.get id
+      Candlepin::Pool.find id
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e

@@ -90,7 +90,7 @@
   = environment_selector(:url_proc=>breadcrumb_url_proc,  :accessible_envs=>accessible_envs)
 
 .grid_16
-  #container
+  #container.promotions
     .right_tree.sliding_tree
       #changeset_tree
         - if read_changesets
@@ -170,14 +170,24 @@
       .breadcrumb_search.clear.clickable
         .search_button.clickable.fr{ :disabled => "disabled", :title => "#{_('Search')}" }
           #{_('Search')}
-        %form#search_form.search{"data-url" => search_index_path()}
-          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Search...", :class => "auto_complete_input ui-autocomplete-input"})
-          %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
+        .search_box
+          %span.search_status
+            %span.current_items_count
+              0
+            #{_('displayed')} of
+            %span.total_results_count
+              0
+            #{_('results.')}
+          %form#search_form.search{"data-url" => search_index_path()}
+            = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Search...", :class => "auto_complete_input ui-autocomplete-input"})
+            %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
         .tree_breadcrumb
       .sliding_container
         #list.list.sliding_list{"data-page_size"=>current_user.page_size}
           .slider_one.has_content.slider
+            = image_tag("spinner.gif")
           .slider_two.no_content.slider
+            = image_tag("spinner.gif")
 
 
 #conflict-dialog{:style=>"display: none"}

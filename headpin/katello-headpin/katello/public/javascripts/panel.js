@@ -20,7 +20,7 @@ $(document).ready(function () {
     $('.left').resize(function () {
         var apanel = $('.panel');
         panelLeft = $(this).width();
-        $('.block').width(panelLeft - 17);
+        $('.block').not('#new').width(panelLeft - 17);
         apanel.width(940 - panelLeft);
         $('.right').width(898 - panelLeft);
         if (apanel.hasClass('opened')) {
@@ -143,13 +143,7 @@ $(document).ready(function () {
     //register the default actions for the page's actions partial
     KT.panel.actions.registerDefaultActions();
 
-    $('.search').fancyQueries();
-    if (KT.panel.control_bbq) {
-        //hash change for panel to trigger on refresh or back/forward or link passing
-        $(window).bind('hashchange', KT.panel.hash_change);
-        $(window).trigger('hashchange');
-    }
-    //end doc ready
+
 });
 
 var list = (function(){
@@ -195,7 +189,6 @@ var list = (function(){
 $(window).ready(function(){
     if ($('#container').length > 0) {
         KT.panel.registerPanel($('#panel-frame'), 0);
-        $(window).scroll(KT.panel.list.extend);
     }
     KT.panel.actions.resetActions();
 });
@@ -206,6 +199,7 @@ KT.panel = (function ($) {
         panels_list = [],
         left_list_content = "",
         expand_cb = [],
+        search = undefined,
         //callback after a pane is loaded
         contract_cb = function () {},
         switch_content_cb = function () {},
@@ -469,47 +463,23 @@ KT.panel = (function ($) {
                 }
             }
         },
-        hash_change = function (event, page_load) {
-            var refresh = $.bbq.getState("panel"),
-                search = $.bbq.getState("search"),
-                search_element = $('#search');
+        search_started = function (event, promise) {
+            var refresh = $.bbq.getState("panel");
 
-            if (page_load) {
-                if (refresh && search) {
-                    search_element.val(search);
-                    $('#search_form').trigger('submit', [page_load, function () {
+            if (refresh) {
+                if (promise) {
+                    closePanel();
+                    promise.done(function(){
+                        $('.left').resize();
                         select_item(refresh);
-                    }]);
-                }
-                else if (refresh && !search) {
-                    $('#search_form').trigger('submit', [page_load, function () {
-                        select_item(refresh);
-                    }]);
-                }
-                else if (search && !refresh) {
-                    search_element.val(search);
-                    $('#search_form').trigger('submit', [page_load]);
+                    });
                 }
                 else {
-                    $('#search_form').trigger('submit', [page_load]);
+                    select_item(refresh);
                 }
             }
             else {
-                if (search_element.val() !== search && search !== undefined) {
-                    search_element.val(search);
-                    $('#search_form').trigger('submit', [page_load]);
-                }
-                else if (refresh) {
-                    select_item(refresh);
-                }
-                else if (!refresh) {
-                    closePanel();
-                    
-                    if( search_element.val() !== "" && search === undefined ){
-                        search_element.val('');
-                        $('#search_form').trigger('submit');
-                    }
-                }
+                closePanel();
             }
             return false;
         },
@@ -537,12 +507,14 @@ KT.panel = (function ($) {
         // http://devnull.djolley.net/2010/11/accessing-query-string-parameters-from.html
         queryParameters = function () {
             var queryString = new Object;
-            var qstr=window.location.search.substring(1);
-            var params=qstr.split('&');
-            for (var i=0; i<params.length; i++) {
-                var pair=params[i].split('=');
-                queryString[pair[0]]=pair[1];
-            }
+            var qstr = window.location.search.substring(1);
+            var params = qstr.split('&');
+            $.each(params, function(index, item){
+                var pair=item.split('=');
+                if(pair[1]) {
+                    queryString[pair[0]]=decodeURI(pair[1]);
+                }
+            });
             return queryString;
         },
         actions = (function(){
@@ -650,7 +622,7 @@ KT.panel = (function ($) {
             switch_content_cb = callBack;
         },
         select_item: select_item,
-        hash_change: hash_change,
+        search_started: search_started,
         openSubPanel: openSubPanel,
         updateResult: updateResult,
         closeSubPanel: closeSubPanel,
@@ -669,8 +641,7 @@ KT.panel.list = (function () {
     var total_items_count = 0,
         current_items_count = 0,
         results_items_count = 0,
-        retrievingNewContent = false,
-        extended_cb = function () {},
+        search,
         
         update_counts = function (current, total, results, clear) {
             if (clear) {
@@ -693,7 +664,7 @@ KT.panel.list = (function () {
         first_child = function () {
             return $("#list section").children().first();
         },
-        add = function (html) {
+        append = function (html) {
             $('#list section').prepend($(html).hide().fadeIn(function () {
                 $(this).addClass("add", 250, function () {
                     $(this).removeClass("add", 250);
@@ -707,6 +678,20 @@ KT.panel.list = (function () {
                 update_counts(-1, -1, -1);
             });
             return false;
+        },
+        current_count = function(){
+            return current_items_count;
+        },
+        replace_list = function(html) {
+            var list_elem = $("#list");
+
+            list_elem.find('.spinner').hide();
+            list_elem.find('section').html(html).show();
+        },
+        full_spinner = function() {
+            var list_elem = $("#list");
+            list_elem.find('section').empty();
+            list_elem.find('.spinner').show();
         },
         refresh = function (id, url, success_cb) {
             var jQid = $('#' + id);
@@ -736,62 +721,25 @@ KT.panel.list = (function () {
             });
             return false;
         },
-        extend = function () { //If we are scrolling past the bottom, we need to request more data
-            var list = $('#list'),
-                offset = list.find(".block").size(),
-                page_size = list.attr("data-page_size"),
-                url = list.attr("data-scroll_url"),
-                search = KT.common.getSearchParams(),
-                params = {
-                    "offset": offset
-                };
-            if (list.hasClass("ajaxScroll") && !retrievingNewContent && KT.common.scrollTop() >= ($(document).height() - $(window).height()) - 700) {
-                retrievingNewContent = true;
-                if (parseInt(page_size) > parseInt(offset)) {
-                    return; //If we have fewer items than the pagesize, don't try to fetch anything else
-                }
-                if (search) {
-                    $.extend(params, search);
-                }
-                $(".expand_list").append('<div class="list-spinner"> <img src="/katello/images/spinner.gif" class="ajax_scroll">  </div>');
-                $.ajax({
-                    type: "GET",
-                    url: url,
-                    data: params,
-                    cache: false,
-                    success: function (data) {
-                        var expand_list = $('.expand_list').find('section');
-                        if (expand_list.length == 0) {
-                            expand_list = $('.expand_list');
-                        }
-                        retrievingNewContent = false;
-                        expand_list.append(data['html']);
-                        $('.list-spinner').remove();
-                        if (data['current_items'] === 0) {
-                            list.removeClass("ajaxScroll");
-                        }
-                        update_counts(data['current_items'], 0, 0);
-                        extended_cb();
-                    },
-                    error: function () {
-                        $('.list-spinner').remove();
-                        retrievingNewContent = false;
-                    }
-                });
-            }
-        },
         registerPage = function (resource_type, options) {
             options = options || {};
             
-            setupSearch(resource_type, options);
+            search = KT.search("search_form", "list", this,
+                {url: $("#list").attr("data-scroll_url")});
+
+
+            $(document).bind(search.search_event(), KT.panel.search_started);
+
 
             if (KT.panel_search_autocomplete){
-              KT.search.enableAutoComplete({data:KT.panel_search_autocomplete});
+              search.enableAutoComplete({data:KT.panel_search_autocomplete});
             }
 
+            $(window).trigger('hashchange');
+
             KT.panel.control_bbq = false;
-            
-            $(window).bind('hashchange', KT.panel.hash_change);
+
+
             $(document).ready(function () {
                 if (options['extra_params']) {
                     for (var i = 0; i < options['extra_params'].length; i += 1) {
@@ -838,7 +786,7 @@ KT.panel.list = (function () {
                 update_counts(0, 0, 1);
             }
             else {
-                add(data);
+                append(data);
                 KT.panel.closePanel($('#panel'));
                 id = first_child().attr("id");
                 $.bbq.pushState({
@@ -848,96 +796,17 @@ KT.panel.list = (function () {
                 notices.checkNotices();
                 update_counts(1, 1, 1);
             }
-        },
-        setupSearch = function (resource_type, options) {
-            $('#search_form').live('submit', function (e, page_load, search_cb) {
-                var button = $('#search_button'),
-                    element = $('#list'),
-                    url = KT.routes['items_' + resource_type + '_path'](),
-                    offset = offset || 0,
-                    extra_params = options['extra_params'],
-                    data = {},
-                    page_load = page_load || false,
-                    search_cb = search_cb || function () {};
-                e.preventDefault();
-                button.attr("disabled", "disabled");
-                element.find('section').empty();
-                element.find('.spinner').show();
-                if ($(this).serialize() !== 'search=') {
-                    $.bbq.pushState($(this).serialize());
-                }
-                url += '?offset=' + offset;
-
-                // Pass along all additional parameters
-                var qp = KT.panel.queryParameters();
-                if (qp) {
-                    for (var key in qp) {
-                        url += '&' + key + '=' + qp[key];
-                    }
-                }
-                if (extra_params) {
-                    for (var i = 0; i < extra_params.length; i += 1) {
-                        data[extra_params[i]['hash_id']] = $.bbq.getState(extra_params[i]['hash_id']);
-                    }
-                }
-                if (!page_load) {
-                    KT.panel.closePanel();
-                }
-                        
-                $(this).ajaxSubmit({
-                    url: url,
-                    data: data,
-                    cache: false,
-                    success: function (data) {
-                        var to_append = data.html ? data.html : data;
-                        element.find('section').append(to_append);
-                        element.find('.spinner').hide();
-                        button.removeAttr('disabled');
-                        element.find('section').fadeIn();
-                        update_counts(data['current_items'], data['total_items'], data['results_count'], true);
-                        $('.left').resize();
-                        $('.ui-autocomplete').hide();
-                        $('#list').addClass("ajaxScroll");
-                        search_cb();
-                    },
-                    error: function (e) {
-                        button.removeAttr('disabled');
-                    }
-                });
-            });
-
-            $('#search').live('change', function(){
-                var value = $(this).val();
-
-                if( value === "" ){
-                    $.bbq.removeState("search");
-                    $('#search_form').trigger('submit');
-                }
-            }).live('keypress', function(event){
-                var button = $('#search_button'),
-                    value = $(this).val();
-
-                if( event.keyCode === 13 ){
-                    event.preventDefault();
-                    
-                    if( button.attr('disabled') !== "disabled" ){
-                        if( value === "" ){
-                            $.bbq.removeState("search");
-                        } else {
-                            $.bbq.pushState({ "search" : value });
-                        }
-                        $('#search_form').trigger('submit');
-                    }
-                }
-            });
         };
     return {
-        set_extended_cb	: function (callBack) { extended_cb = callBack; },
-        extend			: extend,
+        extended_event	: function () { if(search){search.extend_event()} },
         registerPage	: registerPage,
         createSuccess	: createSuccess,
         remove			: remove,
         refresh			: refresh,
-        add				: add
+        append		    : append,
+        replace_list    : replace_list,
+        update_counts   : update_counts,
+        full_spinner    : full_spinner,
+        current_count   :  current_count
     };
 })();
