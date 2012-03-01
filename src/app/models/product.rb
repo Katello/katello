@@ -140,6 +140,13 @@ class Product < ActiveRecord::Base
     result.length > 0 ? result.total : 0
   end
 
+  def has_filters? env
+    return false unless env == organization.library
+    return true if filters.count > 0
+    repos(organization.library).any?{|repo| repo.has_filters?}
+
+  end
+
   #Permissions
   scope :all_readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
   scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.library)}
