@@ -282,17 +282,15 @@ module Pulp
         response = get(path, self.default_headers)
         parsed = JSON.parse(response.body)
 
-        parsed.reject!{ |task| task['start_time'].nil? }
-
         return parsed if parsed.empty?
 
         parsed.sort!{|a,b|
           if a['finish_time'].nil? && b['finish_time'].nil?
-            a['start_time'] <=> b['start_time']
+            b['start_time'] <=> a['start_time']
           elsif a['finish_time'].nil?
-            -1
-          elsif b['finish_time'].nil?
             1
+          elsif b['finish_time'].nil?
+            -1
           else
             b['finish_time'] <=> a['finish_time'] 
           end
