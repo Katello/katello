@@ -283,7 +283,7 @@ module Pulp
         parsed = JSON.parse(response.body)
 
         parsed.reject!{ |task| task['start_time'].nil? }
-        
+
         return parsed if parsed.empty?
 
         parsed.sort!{|a,b|
@@ -294,11 +294,11 @@ module Pulp
           elsif b['finish_time'].nil?
             1
           else
-            a['finish_time'] <=> b['finish_time']
+            b['finish_time'] <=> a['finish_time'] 
           end
-        }.reverse!
+        }
 
-        return parsed.first.with_indifferent_access
+        return [parsed.first.with_indifferent_access]
       end
 
       def destroy repo_id

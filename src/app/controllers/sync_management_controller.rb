@@ -118,7 +118,6 @@ class SyncManagementController < ApplicationController
   def destroy
     retval = Repository.find(params[:id]).cancel_sync
     render :text=>""
-
   end
 
 
