@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.6
+Version:        0.2.7
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Mar 02 2012 Martin Bačovský <mbacovsk@redhat.com> 0.2.7-1
+- 799138 - katello-configure --deployment=headpin fails (mbacovsk@redhat.com)
+
 * Fri Mar 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.6-1
 - 798454 - SSLCACertificateFile not set properly
 - 761314 - Make sure katello-agent communicates with ssl
