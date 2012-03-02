@@ -135,6 +135,8 @@ KT.content_actions = (function(){
                    if (!repo.is_running && (repo.raw_state !== 'waiting')) {
                         removeSyncing(repo.id);
                         KT.content.finishRepo(repo.id, repo.state, repo.duration);
+                        KT.content.updateRepo(repo.id, repo.start_time, repo.duration, repo.progress.progress, repo.size, repo.packages);
+                        KT.content.updateProduct(repo.product_id, false, false, repo.product_size);
                    }
                    else {
                     KT.content.updateRepo(  repo.id,
@@ -213,6 +215,7 @@ KT.content = (function(){
         update_item = function(element, starttime, duration, progress, size, packages) {
             var pg = element.find(".progress"),
                 value = pg.find(".ui-progressbar-value");
+            
             fadeUpdate(element.find(".start_time"), starttime);
             // clear duration during active sync
             fadeUpdate(element.find(".duration"), '');
@@ -221,10 +224,14 @@ KT.content = (function(){
             value.animate({'width': progress },{ queue:false,
                                            duration:"slow", easing:"easeInSine" });
         },
-        updateProduct = function (prod_id, done, percent) {
-            var element = $("#product-" + prod_id).find(".result");
-            var oldpg = element.find('.progress');
-            if(done){
+        updateProduct = function (prod_id, done, percent, size) {
+            var product_element = $("#product-" + prod_id),
+                element = product_element.find(".result"),
+                oldpg = element.find('.progress');
+            
+            if( size ){
+                fadeUpdate(product_element.find('.size'), size);
+            } else if(done){
                 element.html("");
             }
             else{

@@ -281,7 +281,23 @@ module Pulp
         path = Repository.repository_path + repo_id + "/sync/"
         response = get(path, self.default_headers)
         parsed = JSON.parse(response.body)
+
+        parsed.reject!{ |task| task['start_time'].nil? }
+        
         return parsed if parsed.empty?
+
+        parsed.sort!{|a,b|
+          if a['finish_time'].nil? && b['finish_time'].nil?
+            a['start_time'] <=> b['start_time']
+          elsif a['finish_time'].nil?
+            -1
+          elsif b['finish_time'].nil?
+            1
+          else
+            a['finish_time'] <=> b['finish_time']
+          end
+        }.reverse!
+
         return parsed.first.with_indifferent_access
       end
 
