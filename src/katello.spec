@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.4
+Version:        0.2.5
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,31 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Mar 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.5-1
+- 740931 - Long name issue with GPG key names
+- 740931 - fixed a long name/desc role ui bug
+- 796239 - removing system template product association from UI
+- Fixed some unit test issues
+- Adding some basic LDAP support to katello.
+- 767574 - Promotion page - code to indicate warnings if products/repos have
+  filters applied on them
+- 798324 - UI permission creation widget will now handle verbs that have no
+  tags properly.
+- 787979 - auto-heal checkbox only enabled if system editable
+- 788329 - fixing env selector not initializing properly on new user page
+- 787696 - removed incorrectly calling _() in javascript
+- 798007 - adding logging information for statuses
+- 798737 - Promotion of only distribution fails
+- Gemfile - temporarily removing the tire and hashr gem updates
+- 795825 - Sync Mgmt - fix display when state is 'waiting'
+- 796360 - fixing issue where system install errata button was clickable
+- 783577 - removing template with unsaved changes should not prompt for saving
+- 798327 - fixing stray space in debug certificate download
+- 796740 - Fixes unhelpful message when attempting to create a new system with
+  no environments in the current organization.
+- 754873 - fixing issue where product sync bar would continually go to 100
+- 798299 - fix reporting errors from Pulp
+
 * Wed Feb 29 2012 Brad Buckingham <bbuckingham@redhat.com> 0.2.4-1
 - 789533 - upgrading to tire 0.3.13pre with additional hashr dependency
   (bbuckingham@redhat.com)
