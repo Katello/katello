@@ -489,9 +489,13 @@ module Glue::Pulp::Repo
 
   def _get_most_recent_sync_status()
     begin
-      history = [Pulp::Repository.sync_status(pulp_id)]
+      history = Pulp::Repository.sync_status(pulp_id)
+
+      if history.nil? or history.empty?
+        history = Pulp::Repository.sync_history(pulp_id)
+      end
     rescue
-      history = Pulp::Repository.sync_history(pulp_id)
+        history = Pulp::Repository.sync_history(pulp_id)
     end
     return [::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)] if (history.nil? or history.empty?)
     history.collect{|item| ::PulpSyncStatus.using_pulp_task(item)}
