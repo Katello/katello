@@ -175,6 +175,7 @@ private
         :duration       => format_duration(sync_status.finish_time, sync_status.start_time),
         :packages       => sync_status.progress.total_count,
         :size           => number_to_human_size(sync_status.progress.total_size),
+        :product_size   => number_to_human_size(repo.product.sync_size),
         :is_running     => !not_running_states.include?(sync_status.state.to_sym) && sync_status.finish_time.nil?,
         :error_details  => error_flag ? error_details : "No errors."
     }
