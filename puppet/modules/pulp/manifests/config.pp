@@ -11,6 +11,9 @@ class pulp::config {
       content => template("pulp/etc/pulp/pulp.conf.erb"),
       require => File["/var/lib/pulp/packages"],
       before => [Class["apache2::service"]];
+    "/etc/httpd/conf.d/pulp.conf":
+      content => template("pulp/etc/httpd/conf.d/pulp.conf.erb"),
+      before => [Class["apache2::service"]];
     "/etc/pulp/repo_auth.conf":
       content => template("pulp/etc/pulp/repo_auth.conf.erb"),
       before => [Class["apache2::service"]];
