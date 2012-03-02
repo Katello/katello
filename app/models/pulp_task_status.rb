@@ -25,7 +25,7 @@ class PulpTaskStatus < TaskStatus
           break  if !any_task_running(async_tasks)
           timeout_count = 0
        rescue RestClient::RequestTimeout => e
-          timeout_count++
+          timeout_count += 1
           Rails.logger.error "Timeout in pulp occured: #{timeout_count}"
           raise e if timeout_count >= 10 #10 timeouts in a row, lets bail
           sleep 50 #if we got a timeout, lets backoff and let it catchup 
