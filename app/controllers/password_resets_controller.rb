@@ -24,6 +24,7 @@ class PasswordResetsController < ApplicationController
   end
 
   def new
+    @ldap = AppConfig.warden == 'ldap'
   end
 
   def create

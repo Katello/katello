@@ -24,6 +24,8 @@ class UserSessionsController < ApplicationController
       # attempt to authenticate and log the user in now versus requiring them to enter 
       # credentials 
       login_user
+    else
+      @ldap = AppConfig.warden == 'ldap'
     end
   end
 

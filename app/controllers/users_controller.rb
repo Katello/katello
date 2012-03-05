@@ -90,7 +90,8 @@ class UsersController < ApplicationController
     render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user,
                                                                    :editable=>can_edit_user?,
                                                                    :name=>controller_display_name,
-                                                                   :accessible_envs => accessible_envs}
+                                                                   :accessible_envs => accessible_envs,
+                                                                   :ldap => ldap_enabled?}
   end
   
   def new
@@ -317,6 +318,9 @@ class UsersController < ApplicationController
     @user && (current_user.id == @user.id || @user.editable?)
   end
 
+  def ldap_enabled?
+    AppConfig.warden == 'ldap'
+  end
 
   private
 
