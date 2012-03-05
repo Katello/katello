@@ -353,7 +353,7 @@ module Pulp
 
       def generate_metadata repo_id
         response = post(repository_path + repo_id + "/generate_metadata/", {}, self.default_headers)
-        JSON.parse(response.body)
+        JSON.parse(response.body).with_indifferent_access
       end
 
       private
