@@ -112,6 +112,7 @@ class RepositoriesController < ApplicationController
     # retrieve and return a list (array) of repo names in library that contain the 'term' that was passed in
     name = 'name:' + params[:term]
     name_query = name + ' OR ' + name + '*'
+    name_query = Katello::Search::filter_input name_query
     ids = Repository.readable(current_organization.library).collect{|r| r.id}
     repos = Repository.search do
       query {string name_query}
