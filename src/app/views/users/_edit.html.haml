@@ -9,4 +9,4 @@
   = render_menu(1..2, user_navigation)
 
 = content_for :content do
-  = render :partial => "edit_form", :locals=>{:editable=>editable, :accessible_envs => accessible_envs}
+  = render :partial => "edit_form", :locals=>{:editable=>editable, :accessible_envs => accessible_envs, :ldap => ldap}
