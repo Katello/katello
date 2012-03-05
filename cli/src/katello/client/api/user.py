@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.utils.encoding import u_str
 
 class UserAPI(KatelloAPI):
     """
@@ -28,7 +29,7 @@ class UserAPI(KatelloAPI):
         return self.server.POST(path, userdata)[1]
 
     def delete(self, user_id):
-        path = "/api/users/%s" % str(user_id)
+        path = "/api/users/%s" % u_str(user_id)
         return self.server.DELETE(path)[1]
 
     def update(self, user_id, pw, email, disabled):
@@ -36,7 +37,7 @@ class UserAPI(KatelloAPI):
         userdata = self.update_dict(userdata, "password", pw)
         userdata = self.update_dict(userdata, "email", email)
         userdata = self.update_dict(userdata, "disabled", disabled)
-        path = "/api/users/%s" % str(user_id)
+        path = "/api/users/%s" % u_str(user_id)
         return self.server.PUT(path, {"user": userdata})[1]
 
     def users(self, query={}):
@@ -45,7 +46,7 @@ class UserAPI(KatelloAPI):
         return users
 
     def user(self, user_id):
-        path = "/api/users/%s" % str(user_id)
+        path = "/api/users/%s" % u_str(user_id)
         user = self.server.GET(path)[1]
         return user
 
@@ -57,16 +58,16 @@ class UserAPI(KatelloAPI):
             return None
 
     def assign_role(self, user_id, role_id):
-        path = "/api/users/%s/roles" % str(user_id)
+        path = "/api/users/%s/roles" % u_str(user_id)
         data = {"role_id": role_id}
         return self.server.POST(path, data)[1]
 
     def unassign_role(self, user_id, role_id):
-        path = "/api/users/%s/roles/%s" % (str(user_id), str(role_id))
+        path = "/api/users/%s/roles/%s" % (u_str(user_id), u_str(role_id))
         return self.server.DELETE(path)[1]
 
     def roles(self, user_id):
-        path = "/api/users/%s/roles/" % str(user_id)
+        path = "/api/users/%s/roles/" % u_str(user_id)
         return self.server.GET(path)[1]
 
     def report(self, format):

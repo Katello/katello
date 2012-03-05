@@ -22,6 +22,7 @@ from katello.client.api.system import SystemAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_repo, get_environment, get_product
+from katello.client.utils.encoding import u_str
 
 Config()
 
@@ -177,7 +178,7 @@ class Info(ErrataAction):
 
         pack = self.api.errata(errId, repoId)
 
-        pack['affected_packages'] = [str(pinfo['filename'])
+        pack['affected_packages'] = [u_str(pinfo['filename'])
                          for pkg in pack['pkglist']
                          for pinfo in pkg['packages']]
 

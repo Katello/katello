@@ -14,30 +14,31 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.utils.encoding import u_str
 
 class FilterAPI(KatelloAPI):
     """
     Connection class to access Filter Data
     """
     def filters(self, org):
-        path = "/api/organizations/%s/filters" % str(org)
+        path = "/api/organizations/%s/filters" % u_str(org)
         return self.server.GET(path)[1]
 
     def create(self, org, name, description, filter_list):
         data = {"name": name,
                    "description": description,
                    "package_list": filter_list}
-        path = "/api/organizations/%s/filters" % str(org)
+        path = "/api/organizations/%s/filters" % u_str(org)
         return self.server.POST(path, data)[1]
 
     def delete(self, org, name):
-        path = "/api/organizations/%s/filters/%s" % (str(org), str(name))
+        path = "/api/organizations/%s/filters/%s" % (u_str(org), u_str(name))
         return self.server.DELETE(path)[1]
 
     def info(self, org, name):
-        path = "/api/organizations/%s/filters/%s" % (str(org), str(name))
+        path = "/api/organizations/%s/filters/%s" % (u_str(org), u_str(name))
         return self.server.GET(path)[1]
 
     def update_packages(self, org, name, package_list):
-        path = "/api/organizations/%s/filters/%s" % (str(org), str(name))
+        path = "/api/organizations/%s/filters/%s" % (u_str(org), u_str(name))
         return self.server.PUT(path, {'packages': package_list})[1]

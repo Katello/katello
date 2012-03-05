@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.utils.encoding import u_str
 
 class SyncPlanAPI(KatelloAPI):
     """
@@ -26,7 +27,7 @@ class SyncPlanAPI(KatelloAPI):
             "interval": interval,
             "sync_date": sync_date
         }
-        path = "/api/organizations/%s/sync_plans/" % str(org_id)
+        path = "/api/organizations/%s/sync_plans/" % u_str(org_id)
         return self.server.POST(path, {"sync_plan": data})[1]
 
     def update(self, org_id, plan_id, name, sync_date, interval, description):
@@ -36,15 +37,15 @@ class SyncPlanAPI(KatelloAPI):
         data = self.update_dict(data, "interval", interval)
         data = self.update_dict(data, "sync_date", sync_date)
 
-        path = "/api/organizations/%s/sync_plans/%s" % (str(org_id), str(plan_id))
+        path = "/api/organizations/%s/sync_plans/%s" % (u_str(org_id), u_str(plan_id))
         return self.server.PUT(path, {"sync_plan": data})[1]
 
     def sync_plans(self, org_id, query={}):
-        path = "/api/organizations/%s/sync_plans/" % str(org_id)
+        path = "/api/organizations/%s/sync_plans/" % u_str(org_id)
         return self.server.GET(path, query)[1]
 
     def sync_plan(self, org_id, plan_id):
-        path = "/api/organizations/%s/sync_plans/%s/" % (str(org_id), str(plan_id))
+        path = "/api/organizations/%s/sync_plans/%s/" % (u_str(org_id), u_str(plan_id))
         return self.server.GET(path)[1]
 
     def sync_plan_by_name(self, org_id, name):
@@ -55,5 +56,5 @@ class SyncPlanAPI(KatelloAPI):
             return None
 
     def delete(self, org_id, plan_id):
-        path = "/api/organizations/%s/sync_plans/%s" % (str(org_id), str(plan_id))
+        path = "/api/organizations/%s/sync_plans/%s" % (u_str(org_id), u_str(plan_id))
         return self.server.DELETE(path)[1]

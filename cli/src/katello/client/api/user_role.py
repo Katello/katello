@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.utils.encoding import u_str
 
 class UserRoleAPI(KatelloAPI):
     """
@@ -32,7 +33,7 @@ class UserRoleAPI(KatelloAPI):
         return self.server.GET(path, query)[1]
 
     def role(self, role_id):
-        path = "/api/roles/%s" % str(role_id)
+        path = "/api/roles/%s" % u_str(role_id)
         return self.server.GET(path)[1]
 
     def role_by_name(self, name):
@@ -43,14 +44,14 @@ class UserRoleAPI(KatelloAPI):
             return None
 
     def delete(self, role_id):
-        path = "/api/roles/%s" % str(role_id)
+        path = "/api/roles/%s" % u_str(role_id)
         return self.server.DELETE(path)[1]
 
     def update(self, role_id, name, desc):
         data = {}
         data = self.update_dict(data, "name", name)
         data = self.update_dict(data, "description", desc)
-        path = "/api/roles/%s" % str(role_id)
+        path = "/api/roles/%s" % u_str(role_id)
         return self.server.PUT(path, {"role": data})[1]
 
     def available_verbs(self, orgName):
