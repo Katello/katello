@@ -472,7 +472,7 @@ module Glue::Pulp::Repo
   end
 
   def generate_metadata
-    ::Pulp::Repository.generate_metadata self.pulp_id
+    ::Pulp::Repository.generate_metadata(self.pulp_id)
   end
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
