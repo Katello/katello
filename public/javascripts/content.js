@@ -13,8 +13,8 @@
 
 
 $(document).ready(function() {
+  // Setup initial state
 
-    // Setup initial state
     var ids = [];
     $.each(KT.repo_status, function(repo_id, status){
       if (status.is_running) {
