@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.5
+Version:        0.2.6
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,22 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Mar 05 2012 Martin Bačovský <mbacovsk@redhat.com> 0.2.6-1
+- 798264 - Katello debug collects certificate password files and some certs
+  (mbacovsk@redhat.com)
+- fixing syntax error (jsherril@redhat.com)
+- 796264 - adding code to hopefully mitigate pulp timeouts during promotion
+  (jsherril@redhat.com)
+- 795780 - Sync status page will not appropriately display completed and queued
+  repositories and show progress for syncs that are started on queued
+  repositories. (ehelms@redhat.com)
+- 786762 - Sync status in the UI will now be updated properly whenever a user
+  cancels and restarts a sync. (ehelms@redhat.com)
+- 790143 - Fixes display of architecture in left hand list view of systems to
+  match that of the system details. (ehelms@redhat.com)
+- 786495 - When syncing repositories, UI will now show updated size and package
+  counts for repositories and products. (ehelms@redhat.com)
+
 * Fri Mar 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.5-1
 - 740931 - Long name issue with GPG key names
 - 740931 - fixed a long name/desc role ui bug
