@@ -94,7 +94,7 @@ class KTEnvironment < ActiveRecord::Base
   validates_with PathDescendentsValidator
   validate :constant_name, :on => :update
 
-
+  before_destroy :confirm_last_env
   after_save :update_related_index
   after_destroy :delete_related_index
 
@@ -148,6 +148,11 @@ class KTEnvironment < ActiveRecord::Base
         'task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING])
   end
 
+  def confirm_last_env
+    return true if successor.nil?
+    errors.add(:base, _("Environment %s has a successor.  Only the last environment on a path can be deleted" % self.name))
+    return false
+  end
 
   #Unlike path which only gives the path from this environment going forward
   #  Get the full path, that is go to the HEAD of the path this environment is on
