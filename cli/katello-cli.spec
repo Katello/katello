@@ -61,6 +61,7 @@ install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client
 install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/api
 install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/cli
 install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/core
+install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/utils
 install -pm 0644 bin/%{base_name} $RPM_BUILD_ROOT%{_bindir}/%{base_name}
 install -pm 0644 bin/%{base_name}-debug-certificates $RPM_BUILD_ROOT%{_bindir}/%{base_name}-debug-certificates
 install -pm 0644 etc/client.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/client.conf
@@ -69,6 +70,7 @@ install -pm 0644 src/%{base_name}/client/*.py $RPM_BUILD_ROOT%{python_sitelib}/%
 install -pm 0644 src/%{base_name}/client/api/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/api/
 install -pm 0644 src/%{base_name}/client/cli/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/cli/
 install -pm 0644 src/%{base_name}/client/core/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/core/
+install -pm 0644 src/%{base_name}/client/utils/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/utils/
 
 
 %clean
