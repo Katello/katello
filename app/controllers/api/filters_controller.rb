@@ -22,7 +22,7 @@ class Api::FiltersController < Api::ApiController
   def rules
     index_filters = lambda { Filter.any_readable?(@organization) }
     create_filter = lambda { Filter.creatable?(@organization) }
-    update_filter = lambda { Filter.updatable?(@organization)}
+    update_filter = lambda { Filter.any_editable?(@organization)}
     read_filter = lambda { @filter.readable? }
     delete_filter = lambda { @filter.deletable? }
 
