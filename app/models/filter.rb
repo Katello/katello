@@ -39,13 +39,14 @@ class Filter < ActiveRecord::Base
 
 
   READ_PERM_VERBS = [:read, :create, :delete]
+  UPDATE_PERM_VERBS = [:create, :update]
 
   def readable?
     User.allowed_to?(READ_PERM_VERBS, :filters, self.id, self.organization)
   end
 
   def editable?
-    User.allowed_to?([:update], :filters, self.id, self.organization)
+    User.allowed_to?(UPDATE_PERM_VERBS, :filters, self.id, self.organization)
   end
 
   def deletable?
@@ -82,8 +83,8 @@ class Filter < ActiveRecord::Base
     User.allowed_to?([:create], :filters, nil, org)
   end
 
-  def self.updatable? org
-    User.allowed_to?([:read, :update], :filters, nil, org)
+  def self.any_editable? org
+    User.allowed_to?(UPDATE_PERM_VERBS, :filters, nil, org)
   end
 
   def self.any_readable?(org)
