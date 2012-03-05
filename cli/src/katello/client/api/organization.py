@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.utils.encoding import u_str
 
 class OrganizationAPI(KatelloAPI):
     """
@@ -26,7 +27,7 @@ class OrganizationAPI(KatelloAPI):
         return self.server.POST(path, orgdata)[1]
 
     def delete(self, name):
-        path = "/api/organizations/%s" % str(name)
+        path = "/api/organizations/%s" % u_str(name)
         return self.server.DELETE(path)[1]
 
     def update(self, name, description):
@@ -34,7 +35,7 @@ class OrganizationAPI(KatelloAPI):
         orgdata = {}
         orgdata = self.update_dict(orgdata, "description", description)
 
-        path = "/api/organizations/%s" % str(name)
+        path = "/api/organizations/%s" % u_str(name)
         return self.server.PUT(path, {"organization": orgdata})[1]
 
     def organizations(self):
@@ -43,14 +44,14 @@ class OrganizationAPI(KatelloAPI):
         return orgs
 
     def organization(self, name):
-        path = "/api/organizations/%s" % str(name)
+        path = "/api/organizations/%s" % u_str(name)
         org = self.server.GET(path)[1]
         return org
 
     def uebercert(self, name):
-        path = "/api/organizations/%s/uebercert" % str(name)
+        path = "/api/organizations/%s/uebercert" % u_str(name)
         return self.server.GET(path)[1]
 
     def pools(self, name):
-        path = "/api/owners/%s/pools" % str(name)
+        path = "/api/owners/%s/pools" % u_str(name)
         return self.server.GET(path)[1]

@@ -21,7 +21,7 @@ import threading
 import calendar
 from xml.utils import iso8601
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
-
+from katello.client.utils.encoding import u_str
 
 
 # output formatting -----------------------------------------------------------
@@ -49,7 +49,6 @@ class Printer:
         self._output_mode = output_mode
 
     def _printDivLine(self, width):
-        #print '+' + '-'*(width-2) + '+'
         print '-'*width
 
     def _printHeader(self, heading, grep_mode, widths={}):
@@ -156,13 +155,13 @@ class Printer:
             if not col['attr_name'] in item:
                 continue
 
-            if len(str(col['value'])) > 0:
+            if len(u_str(col['value'])) > 0:
                 value = col['value']
             else:
                 value = item[col['attr_name']]
             if not col['multiline']:
                 output = format_date(value) if col['time_format'] else value
-                print (unicode("{0:<" + str(colWidth + 1) + "} {1}")).format(u_str(col['name']) + ":", output)
+                print ("{0:<" + u_str(colWidth + 1) + "} {1}").format(col['name'] + ":", output)
                 # +1 to account for the : after the column name
             else:
                 print indent+col['name']+":"
@@ -194,6 +193,7 @@ class Printer:
                 continue
             if col['multiline']:
                 value = text_to_line(value)
+
             print u_str(value).ljust(width),
             print self._delim,
 
@@ -286,7 +286,7 @@ def is_valid_record(rec):
 # indent block of text --------------------------------------------------------
 def indent_text(text, indent="\t"):
     if text == None:
-        text = str(None)
+        text = u_str(None)
 
     if isinstance(text, (list)):
         glue = "\n"+indent
@@ -298,7 +298,7 @@ def indent_text(text, indent="\t"):
 # converts block of text to one line ------------------------------------------
 def text_to_line(text, glue=" "):
     if text == None:
-        text = str(None)
+        text = u_str(None)
 
     if isinstance(text, (list)):
         return glue.join(text)
@@ -622,17 +622,6 @@ def progress(left, total):
     sizeLeft = float(left)
     sizeTotal = float(total)
     return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal
-
-
-def u_str(value):
-    """
-    Casts value to string unless it's unicode.
-    There is a problem using str on unicode values.
-    """
-    if not isinstance(value, unicode):
-        return str(value)
-    else:
-        return value
 
 
 def convert_to_mime_type(type, default=None):

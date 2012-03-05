@@ -59,9 +59,9 @@ class Remember(ClientAction):
         try:
             Config.save()
             verb = "overwrote" if has_option else "remembered"
-            print ("Successfully " + verb + " option [ {0} ] ").format(option)
+            print _("Successfully " + verb + " option [ {0} ] ").format(option)
         except (Exception):
-            print "Unsuccessfully remembered option [ {0} ]".format(option)
+            print _("Unsuccessfully remembered option [ {0} ]").format(option)
             raise # re-raise to get into main method -> log
 
         return os.EX_OK
@@ -83,9 +83,9 @@ class Forget(ClientAction):
         Config.parser.remove_option('options', option)
         try:
             Config.save()
-            print "Successfully forgot option [ {0} ]".format(option)
+            print _("Successfully forgot option [ {0} ]").format(option)
         except (Exception):
-            print "Unsuccessfully forgot option [ {0} ]".format(option)
+            print _("Unsuccessfully forgot option [ {0} ]").format(option)
             raise # re-raise to get into main method -> log
 
         return os.EX_OK

@@ -30,6 +30,7 @@ except ImportError:
 from M2Crypto import SSL, httpslib
 
 from katello.client.logutil import getLogger
+from katello.client.utils.encoding import u_str
 
 # current active server -------------------------------------------------------
 
@@ -236,19 +237,24 @@ class KatelloServer(Server):
 
     # protected request utilities ---------------------------------------------
 
-    def _build_url(self, path, queries=()):
+    def _build_url(self, path, queries={}):
         # build the request url from the path and queries dict or tuple
         if not path.startswith(self.path_prefix):
             path = '/'.join((self.path_prefix, path))
+
         # make sure the path is ascii and uses appropriate characters
-        path = urllib.quote(str(path))
+        path = urllib.quote(path.encode('utf-8'))
+        for key, value in queries.items():
+            if isinstance(value, basestring):
+                queries[key] = value.encode('utf-8')
+
         queries = urllib.urlencode(queries)
         if queries:
             path = '?'.join((path, queries))
         return path
 
 
-    def _request(self, method, path, queries=(), body=None, multipart=False, customHeaders={}):
+    def _request(self, method, path, queries={}, body=None, multipart=False, customHeaders={}):
         # make a request to the server and return the response
         connection = self._connect()
         url = self._build_url(path, queries)
@@ -297,7 +303,7 @@ class KatelloServer(Server):
         try:
             response_body = json.loads(response_body, encoding='utf-8')
         except:
-            pass
+            response_body = u_str(response_body)
 
         if response.status >= 300:
             # if the server has responded with a python traceback
@@ -369,15 +375,14 @@ class KatelloServer(Server):
                 content  = value.read()
 
                 L.append('--' + BOUNDARY)
-                L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename))
+                L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (str(key), str(filename)))
                 L.append('Content-Type: %s' % self._get_content_type(filename))
                 L.append('')
                 L.append(content)
 
             else:
-                value = str(value)
                 L.append('--' + BOUNDARY)
-                L.append('Content-Disposition: form-data; name="%s"' % key)
+                L.append('Content-Disposition: form-data; name="%s"' % str(key))
                 L.append('')
                 L.append(value)
         L.append('--' + BOUNDARY + '--')
@@ -435,7 +440,7 @@ class KatelloServer(Server):
     def DELETE(self, path, body=None):
         return self._request('DELETE', path, body=body)
 
-    def GET(self, path, queries=(), customHeaders={}):
+    def GET(self, path, queries={}, customHeaders={}):
         return self._request('GET', path, queries, customHeaders=customHeaders)
 
     def HEAD(self, path):

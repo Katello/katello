@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.utils.encoding import u_str
 
 class PermissionAPI(KatelloAPI):
     """
@@ -28,15 +29,15 @@ class PermissionAPI(KatelloAPI):
             "tags": tagIds,
             "organization_id": orgId
         }
-        path = "/api/roles/%s/permissions/" % str(roleId)
+        path = "/api/roles/%s/permissions/" % u_str(roleId)
         return self.server.POST(path, data)[1]
 
     def permissions(self, roleId, query={}):
-        path = "/api/roles/%s/permissions/" % str(roleId)
+        path = "/api/roles/%s/permissions/" % u_str(roleId)
         return self.server.GET(path, query)[1]
 
     def permission(self, roleId, permissionId):
-        path = "/api/roles/%s/permissions/%s/" % (str(roleId), str(permissionId))
+        path = "/api/roles/%s/permissions/%s/" % (u_str(roleId), u_str(permissionId))
         return self.server.GET(path)[1]
 
     def permission_by_name(self, roleId, name):
@@ -47,5 +48,5 @@ class PermissionAPI(KatelloAPI):
             return None
 
     def delete(self, roleId, permissionId):
-        path = "/api/roles/%s/permissions/%s" % (str(roleId), str(permissionId))
+        path = "/api/roles/%s/permissions/%s" % (u_str(roleId), u_str(permissionId))
         return self.server.DELETE(path)[1]
