@@ -19,6 +19,7 @@ from gettext import gettext as _
 
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
+from katello.client.utils.encoding import u_str
 
 Config()
 
@@ -59,9 +60,9 @@ class Remember(ClientAction):
         try:
             Config.save()
             verb = "overwrote" if has_option else "remembered"
-            print _("Successfully " + verb + " option [ {0} ] ").format(option)
+            print _("Successfully " + verb + " option [ %s ] ") % u_str(option)
         except (Exception):
-            print _("Unsuccessfully remembered option [ {0} ]").format(option)
+            print _("Unsuccessfully remembered option [ %s ]") % u_str(option)
             raise # re-raise to get into main method -> log
 
         return os.EX_OK
@@ -83,9 +84,9 @@ class Forget(ClientAction):
         Config.parser.remove_option('options', option)
         try:
             Config.save()
-            print _("Successfully forgot option [ {0} ]").format(option)
+            print _("Successfully forgot option [ %s ]") % u_str(option)
         except (Exception):
-            print _("Unsuccessfully forgot option [ {0} ]").format(option)
+            print _("Unsuccessfully forgot option [ %s ]") % u_str(option)
             raise # re-raise to get into main method -> log
 
         return os.EX_OK
