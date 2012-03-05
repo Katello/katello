@@ -11,9 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require_dependency "resources/pulp"
+require "util/search"
+
 class Glue::Pulp::Package < Glue::Pulp::SimplePackage
   attr_accessor :id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description, :size, :buildhost, :repoids
-
 
   def self.find id
     package_attrs = Pulp::Package.find(id)
@@ -71,9 +72,12 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
 
   def self.name_search query, repoids=nil, number=15, sort=[:nvrea_sort, "ASC"]
     return [] if !Tire.index(self.index).exists?
-     start = 0
-     query = "name:#{query}"
-     search = Tire.search self.index do
+    start = 0
+
+    query = "name:#{query}"
+    query = Katello::Search::filter_input query
+
+    search = Tire.search self.index do
       fields [:name]
       query do
         string query
@@ -82,19 +86,21 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
       if repoids
         filter :terms, :repoids => repoids
       end
-     end
-     to_ret = []
-     search.results.each{|pkg|
-        to_ret << pkg.name if !to_ret.include?(pkg.name)
-        break if to_ret.size == number
-     }
-     return to_ret
+    end
+    to_ret = []
+    search.results.each{|pkg|
+       to_ret << pkg.name if !to_ret.include?(pkg.name)
+       break if to_ret.size == number
+    }
+    return to_ret
   end
 
   def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"]
     return [] if !Tire.index(self.index).exists?
     query_down = query.downcase
     query = "name:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
+    query = Katello::Search::filter_input query
+
     search = Tire.search self.index do
       query do
         string query

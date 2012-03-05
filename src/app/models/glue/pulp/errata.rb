@@ -12,6 +12,7 @@
 
 require_dependency "resources/pulp"
 require 'set'
+require 'util/search'
 
 class Glue::Pulp::Errata
 
@@ -113,6 +114,8 @@ class Glue::Pulp::Errata
     return [] if !Tire.index(self.index).exists?
     query_down = query.downcase
     query = "title:#{query} OR id:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
+    query = Katello::Search::filter_input query
+
     search = Tire.search self.index do
       query do
         string query

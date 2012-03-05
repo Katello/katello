@@ -12,6 +12,7 @@
 
 require 'util/threadsession'
 require 'util/notices'
+require 'util/search'
 require 'cgi'
 require 'base64'
 
@@ -320,6 +321,8 @@ class ApplicationController < ActionController::Base
   def search_validate(obj_class, id, search)
     obj_class.index.refresh
     search = '*' if search.nil? || search == ''
+    search = Katello::Search::filter_input search
+
     results = obj_class.search do
       query { string search}
       filter :terms, :id=>[id]
@@ -345,6 +348,7 @@ class ApplicationController < ActionController::Base
     elsif search_options[:simple_query] && !AppConfig.simple_search_tokens.any?{|s| search.downcase.match(s)}
       search = search_options[:simple_query]
     end
+    search = Katello::Search::filter_input search
 
     panel_options[:accessor] ||= "id"
     panel_options[:columns] = panel_options[:col]
