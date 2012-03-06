@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.6
+Version:        0.2.7
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,23 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.2.7-1
+- Was accidentally hiding login button if ldap was enabled (jomara@redhat.com)
+- 788008 - do not attempt to poll errata status when user does not have edit
+  permission (thomasmckay@redhat.com)
+- Adding LDAP fencing for change email, change password and forgot password
+  (jomara@redhat.com)
+- 798706 - making promotions block on repodata generation for non-complete repo
+  promotions (jsherril@redhat.com)
+- 787305 - Fix for nasty lines when details are present in notices.
+  (jrist@redhat.com)
+- 796852, 789533 - search - update to handle - search queries
+  (bbuckingham@redhat.com)
+- 794799 - disabling the ability to delete environments that are not the last
+  in a promotion path (jsherril@redhat.com)
+- 782022 - adding permissions to packages and errata controllers
+  (jsherril@redhat.com)
+
 * Mon Mar 05 2012 Martin Bačovský <mbacovsk@redhat.com> 0.2.6-1
 - 798264 - Katello debug collects certificate password files and some certs
   (mbacovsk@redhat.com)
