@@ -21,8 +21,8 @@ class Api::TemplatesContentController < Api::ApiController
   def rules
     manage_test = lambda{SystemTemplate.manageable?(@template.environment.organization)}
     {
-      :add_product => manage_test,
-      :remove_product => manage_test,
+      #:add_product => manage_test,
+      #:remove_product => manage_test,
       :add_package => manage_test,
       :remove_package => manage_test,
       :add_parameter => manage_test,
@@ -38,17 +38,18 @@ class Api::TemplatesContentController < Api::ApiController
     }
   end
 
-  def add_product
-    @template.add_product_by_cpid(params[:id])
-    @template.save!
-    render :text => _("Added product '#{params[:id]}'"), :status => 200
-  end
-
-  def remove_product
-    @template.remove_product_by_cpid(params[:id])
-    @template.save!
-    render :text => _("Removed product '#{params[:id]}'"), :status => 200
-  end
+  # adding a products reults in an unusable tempalte bz 799149
+  #def add_product
+  #  @template.add_product_by_cpid(params[:id])
+  #  @template.save!
+  #  render :text => _("Added product '#{params[:id]}'"), :status => 200
+  #end
+  #
+  #def remove_product
+  #  @template.remove_product_by_cpid(params[:id])
+  #  @template.save!
+  #  render :text => _("Removed product '#{params[:id]}'"), :status => 200
+  #end
 
   def add_package
     @template.add_package(params[:name])
