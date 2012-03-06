@@ -85,7 +85,8 @@ class SystemTemplate < ActiveRecord::Base
     self.description = json["description"]
     self.name = json["name"] if json["name"]
     self.save!
-    json["products"].each {|p| self.add_product(p) } if json["products"]
+    #bz 799149
+    #json["products"].each {|p| self.add_product(p) } if json["products"]
     json["packages"].each {|p| self.add_package(p) } if json["packages"]
     json["package_groups"].each {|pg| self.add_package_group(pg) } if json["package_groups"]
     json["package_group_categories"].each {|pgc| self.add_pg_category(pgc) } if json["package_group_categories"]
@@ -101,7 +102,8 @@ class SystemTemplate < ActiveRecord::Base
       :name => self.name,
       :revision => self.revision,
       :packages => self.packages.map(&:nvrea),
-      :products => self.products.map(&:name),
+      #bz 799149
+      #:products => self.products.map(&:name),
       :parameters => ActiveSupport::JSON.decode(self.parameters_json || "{}"),
       :package_groups => self.package_groups.map(&:name),
       :package_group_categories => self.pg_categories.map(&:name),
@@ -126,7 +128,7 @@ class SystemTemplate < ActiveRecord::Base
     verrors = []
 
     # (1)
-    verrors << _("At least one product or repository must be present to export a TDL") if (self.products.count < 1 and self.repositories.count < 1)
+    verrors << _("At least repository must be present to export a TDL") if (self.products.count < 1 and self.repositories.count < 1)
 
     # (2)
     verrors << _("Exactly one distribution must be present to export a TDL") if self.distributions.count != 1

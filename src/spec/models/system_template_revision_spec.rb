@@ -113,25 +113,25 @@ describe SystemTemplate do
       version_after.should == (version_before + 1)
     end
 
-
-    it "should bump revision number after product added" do
-      version_before = @tpl1.revision
-      @tpl1.add_product("prod2")
-      @tpl1.save!
-      version_after  = @tpl1.revision
-
-      version_after.should == (version_before + 1)
-    end
-
-
-    it "should bump revision number after product removal" do
-      version_before = @tpl1.revision
-      @tpl1.remove_product("prod1")
-      @tpl1.save!
-      version_after  = @tpl1.revision
-
-      version_after.should == (version_before + 1)
-    end
+    #bz 799149
+    #it "should bump revision number after product added" do
+    #  version_before = @tpl1.revision
+    #  @tpl1.add_product("prod2")
+    #  @tpl1.save!
+    #  version_after  = @tpl1.revision
+    #
+    #  version_after.should == (version_before + 1)
+    #end
+    #
+    #
+    #it "should bump revision number after product removal" do
+    #  version_before = @tpl1.revision
+    #  @tpl1.remove_product("prod1")
+    #  @tpl1.save!
+    #  version_after  = @tpl1.revision
+    #
+    #  version_after.should == (version_before + 1)
+    #end
 
 
     it "should bump revision number after package added" do
