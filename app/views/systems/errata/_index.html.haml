@@ -1,4 +1,15 @@
 = javascript :filtertable, :system_errata
+= javascript do
+  -if editable
+    :javascript
+      $(document).ready(function() {
+        KT.system.errata.init(true);
+      });
+  -else
+    :javascript
+      $(document).ready(function() {
+        KT.system.errata.init(false);
+      });
 
 = javascript do
   :javascript
