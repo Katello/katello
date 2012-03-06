@@ -20,7 +20,8 @@ from gettext import gettext as _
 from kerberos import GSSError
 from optparse import OptionGroup, SUPPRESS_HELP
 from katello.client.i18n_optparse import OptionParser, OptionParserExitError
-from katello.client.core.utils import parse_tokens, u_str
+from katello.client.core.utils import parse_tokens
+from katello.client.utils.encoding import u_str
 
 from katello.client.config import Config
 from katello.client.logutil import getLogger

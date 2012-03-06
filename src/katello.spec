@@ -16,8 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.300
-Release:        1%{?dist}
+Version:        0.1.301
+Release:        2%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -354,6 +354,55 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Mar 01 2012 Jordan OMara <jomara@redhat.com> 0.1.301-2
+- Rebuild (jomara@redhat.com)
+- 787696 - removed incorrectly calling _() in javascript
+- 796740 - Fixes unhelpful message when attempting to create a new system with
+  no environments in the current organization. (ehelms@redhat.com)
+- 796964 - The 'Sync Product' permission no longer allows a user to edit a
+  repository.
+- 798299 - fix reporting errors from Pulp (inecas@redhat.com)
+- 795825 - Sync Mgmt - fix display when state is 'waiting'
+  (bbuckingham@redhat.com)
+- 796360 - fixing issue where system install errata button was clickable even
+  if no errata exist
+- 783577 - removing template with unsaved changes should not prompt for saving
+- 798327 - fixing stray space in debug certificate download
+- 754873 - fixing issue where product sync bar would continually go to 100
+
+* Wed Feb 29 2012 Jordan OMara <jomara@redhat.com> 0.1.301-1
+- 795832 - removing package download link as well as some hardcoded package
+  data
+- 787696, 796753 - localization corrections of roles, plus instances of
+  embedded strings, plus gettext:find ran
+- 787966 - preventing changeset history details from being jumbled if no
+  description is set
+- 773279 - show compliance status and date in systems report
+- 796573 - promotion searchable items now showing add/remove correctly
+- removing some logging
+- 790254 - fixing issue where failed changesets would show as pending on
+  dashboard
+- 740365 - fixing sort on systems page
+- 797914 - fixing not being able to edit/view roles
+- 795862 - delete assignment to activation keys on product deletion
+- 795932 - changing branding to CloudForms (jsherril@redhat.com)
+- 751843 - adding counts go promotion search pages (jsherril@redhat.com)
+- 790520 - Fixes styling around product icons and product names in promotions
+  and system templates.
+- 796853 - Resolves issue of having two different rails.js files in code base.
+- 786109 - Fixes issue where sync status dashboard widget caused an error when
+  more than one product had a sync plan attached to it. (ehelms@redhat.com)
+- 790489 - Changes to allow read only user to have a read only view of the sync
+  management pages.
+- 795908 - Changes title of repository edit view to 'Repository Details' to
+  address lack of editable content within view.
+- 771999 - Added UI bits to associate repositories to package filters
+- 796021 - On sytems subscriptions page, prevents user clicking subscribe or
+  unsubscribe multiple times before the action completes.
+- 794892 - Fix for new key width and highlighting.
+- 790143 - Systems will now show the architecture by name instead of by label.
+  (e.g. Itanium instead of ia64)
+
 * Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.1.300-1
 - rebuild
 * Wed Feb 22 2012 Mike McCune <mmccune@redhat.com>

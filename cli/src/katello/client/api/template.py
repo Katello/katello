@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.utils.encoding import u_str
 
 try:
     import json
@@ -24,19 +25,19 @@ class TemplateAPI(KatelloAPI):
     format_content_type = {'json': 'application/json', 'tdl':'application/tdl-xml'}
 
     def templates(self, envId):
-        path = "/api/environments/%s/templates/" % str(envId)
+        path = "/api/environments/%s/templates/" % u_str(envId)
         tpls = self.server.GET(path)[1]
         return tpls
 
 
     def template(self, tplId):
-        path = "/api/templates/%s" % str(tplId)
+        path = "/api/templates/%s" % u_str(tplId)
         tpl = self.server.GET(path)[1]
         return tpl
 
 
     def template_by_name(self, envId, tplName):
-        path = "/api/environments/%s/templates/" % str(envId)
+        path = "/api/environments/%s/templates/" % u_str(envId)
         tpls = self.server.GET(path, {"name": tplName})[1]
         if len(tpls) > 0:
             #show provides more information than index
@@ -97,22 +98,22 @@ class TemplateAPI(KatelloAPI):
             "template": tplData
         }
 
-        path = "/api/templates/%s" % str(tplId)
+        path = "/api/templates/%s" % u_str(tplId)
         return self.server.PUT(path, tplData)[1]
 
 
     def add_content(self, tplId, contentType, attrs):
-        path = "/api/templates/%s/%s/" % (str(tplId), contentType)
+        path = "/api/templates/%s/%s/" % (u_str(tplId), contentType)
         return self.server.POST(path, attrs)[1]
 
     def remove_content(self, tplId, contentType, contentId):
-        path = "/api/templates/%s/%s/%s/" % (str(tplId), contentType, str(contentId))
+        path = "/api/templates/%s/%s/%s/" % (u_str(tplId), contentType, u_str(contentId))
         return self.server.DELETE(path)[1]
 
     def promotion_status(self, task_id):
-        path = "/api/tasks/%s" % str(task_id)
+        path = "/api/tasks/%s" % u_str(task_id)
         return self.server.GET(path)[1]
 
     def delete(self, template_id):
-        path = "/api/templates/%s" % str(template_id)
+        path = "/api/templates/%s" % u_str(template_id)
         return self.server.DELETE(path)[1]

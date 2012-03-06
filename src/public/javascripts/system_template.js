@@ -62,6 +62,7 @@ KT.templates = function() {
                 return true;
             }
         });
+        KT.options.current_template = undefined;
         KT.options.template_tree.render_content("templates");
     },
     add_new_template = function(id, name) {
@@ -561,7 +562,8 @@ KT.template_renderer = function() {
     },
     details = function(t_id) {
         var html = "<ul>";
-        $.each([['products_', i18n.products], ['repos_', i18n.repos], ['packages_', i18n.packages], ['comps_', i18n.package_groups],
+        //bz 796239
+        $.each([/*['products_', i18n.products],*/ ['repos_', i18n.repos], ['packages_', i18n.packages], ['comps_', i18n.package_groups],
             ['distribution_', i18n.selected_distribution]],
             function(index, item_set) {
                 html += list_item(item_set[0] + t_id, item_set[1], true);

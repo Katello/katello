@@ -13,7 +13,7 @@
           %input{ :name => "filter", :type => "input", :placeholder => _("Filter..."), :id=>"filter_input"}
           %button.action #{_("Filter")}
           %br.clear
-  
+
         .filter_button.fr.clickable
           #{_('Filter')}
         .tree_breadcrumb
@@ -25,7 +25,7 @@
               = image_tag ("spinner.gif")
           .slider_one.has_content.slider.will_have_content
           .slider_two.no_content.slider
-      
+
       #role_edit.slide_up_container
         %h2
           &nbsp; #{_("Role Details")}
@@ -33,13 +33,18 @@
         .fieldset
           .grid_2.ra
             %label #{_("Name:")}
-          .grid_7.la.editable.edit_name_text{'name' => 'role[name]'} #{@role.name}
+          - if Role.editable?  
+            .grid_7.la.multiline.editable.edit_name_text{'name' => 'role[name]'} #{@role.i18n_name}
+          - else
+            .grid_7.la.multiline #{@role.i18n_name}
           %br
           %br
           .grid_2.ra
             %label #{_("Description:")}
-          .grid_7.la.editable.edit_description{'name' => 'role[description]'} #{@role.description}
-  
+          - if Role.editable?
+            .grid_7.la.multiline.editable.edit_description{'name' => 'role[description]'} #{@role.i18n_description}
+          - else
+            .grid_7.la.multiline #{@role.i18n_description}
       #permission_widget.slide_up_container
         %h2#permission_widget_header
         #progressbar_container
@@ -82,7 +87,7 @@
               #{_("Next >>")}
             .button.fr#save_permission_button{'data-url' => role_create_permission_path(@role.id), :tabindex => 6}
               #{_("Done")}
-  
+
       #roles_status
       #sliding_tree_actionbar.clickable
         - unless @role.locked?

@@ -104,7 +104,7 @@ class SystemErrataController < ApplicationController
     }
     
     errata_list = errata_list[start...finish]
-    
+
     return errata_list, total_errata_count, filtered_errata_count
   end
 

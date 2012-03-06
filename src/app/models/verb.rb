@@ -37,5 +37,10 @@ class Verb < ActiveRecord::Base
     {}
   end
 
+  def self.no_tag_verbs(resource_type_name)
+    res_type = ResourceType::TYPES[resource_type_name]
+    return res_type[:model].no_tag_verbs if res_type && res_type[:model] && res_type[:model].respond_to?('no_tag_verbs')
+    {}
+  end
 
 end

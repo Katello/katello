@@ -106,7 +106,7 @@ class ChangesetsController < ApplicationController
     begin
       @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
                                      :environment_id=>@environment.id)
-      notice _("Promotion Changeset '#{@changeset["name"]}' was created.")
+      notice _("Promotion Changeset '%s' was created.") % @changeset["name"]
       bc = {}
       add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
                       {:client_render => true}, {:is_new=>true})
@@ -206,7 +206,7 @@ class ChangesetsController < ApplicationController
     name = @changeset.name
     id = @changeset.id
     @changeset.destroy
-    notice _("Promotion Changeset '#{name}' was deleted.")
+    notice _("Promotion Changeset '%s' was deleted.") % name
     render :text=>""
   end
 
@@ -215,7 +215,7 @@ class ChangesetsController < ApplicationController
       @changeset.promote
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
-      notice _("Started promotion of '#{@changeset.name}' to #{@environment.name} environment")
+      notice _("Started promotion of '%s' to %s environment") % [@changeset.name, @environment.name]
     rescue Exception => e
         notice "Failed to promote: #{e.to_s}", {:level => :error}
         render :text=>e.to_s, :status=>500
@@ -293,24 +293,24 @@ class ChangesetsController < ApplicationController
     end
 
     cs.involved_products.each{|product|
-      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type,
-                                       'package'=>[], 'errata'=>[], 'repo'=>[], 'distribution'=>[]}
+      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name,     :provider=>product.provider.provider_type,
+      :filtered => product.has_filters?(cs.environment.prior),
+       'package'=>[], 'errata'=>[], 'repo'=>[], 'distribution'=>[]}
     }
 
     cs.products.each {|product|
       to_ret[:products][product.id][:all] =  true
     }
 
-    cs.send('repos').each{|item|
-      p item
+    cs.repos.each{|item|
       pid = item.product.id
       cs_product = to_ret[:products][pid]
-      cs_product['repo'] << {:id=>item.id, :name=>item.name}
+      cs_product['repo'] << {:id=>item.id, :name=>item.name, :filtered => item.has_filters?}
+      cs_product[:filtered] = true if item.has_filters?
     }
 
     ['errata', 'package', 'distribution'].each{ |type|
       cs.send(type.pluralize).each{|item|
-        p item
         pid = item.product.id
         cs_product = to_ret[:products][pid]
         cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}

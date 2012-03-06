@@ -23,6 +23,7 @@ from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, Printer, convert_to_mime_type, attachment_file_name, save_report
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask
+from katello.client.utils.encoding import u_str
 
 Config()
 
@@ -506,7 +507,7 @@ class Subscriptions(SystemAction):
                         entitlement_ext = entitlement.copy()
                         provided_products = ', '.join([e['name'] for e in entitlement_ext['providedProducts']])
                         entitlement_ext['providedProductsFormatted'] = provided_products
-                        serial_ids = ', '.join([str(s['id']) for s in entitlement_ext['serials']])
+                        serial_ids = ', '.join([u_str(s['id']) for s in entitlement_ext['serials']])
                         entitlement_ext['serialIds'] = serial_ids
                         yield entitlement_ext
 

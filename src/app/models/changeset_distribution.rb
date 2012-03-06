@@ -17,8 +17,8 @@ class ChangesetDistributionValidator < ActiveModel::Validator
     to_env = record.changeset.environment
     product = Product.find(record.product_id)
 
-    record.errors[:base] << _("Distribution '#{record.distribution_id}' does not belong to the specified product!") and return if record.repositories.empty?
-    record.errors[:base] << _("Repository of the distribution '#{record.errata_id}' has not been promoted into the target environment!") if record.promotable_repositories.empty?
+    record.errors[:base] << _("Distribution '%s' does not belong to the specified product!") % record.distribution_id and return if record.repositories.empty?
+    record.errors[:base] << _("Repository of the distribution '%s' has not been promoted into the target environment!") % record.distribution_id if record.promotable_repositories.empty?
   end
 end
 

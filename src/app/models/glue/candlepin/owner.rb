@@ -33,49 +33,49 @@ module Glue::Candlepin::Owner
 
   module InstanceMethods
     def set_owner
-      Rails.logger.debug _("Creating an owner in candlepin: #{name}")
+      Rails.logger.debug _("Creating an owner in candlepin: %s") % name
       Candlepin::Owner.create(cp_key, name)
     rescue => e
-      Rails.logger.error _("Failed to create candlepin owner #{name}: #{e}, #{e.backtrace.join("\n")}")
+      Rails.logger.error _("Failed to create candlepin owner %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def del_owner
-      Rails.logger.debug _("Deleting owner in candlepin: #{name}")
+      Rails.logger.debug _("Deleting owner in candlepin: %s") % name
       Candlepin::Owner.destroy(cp_key)
     rescue => e
-      Rails.logger.error _("Failed to delete candlepin owner #{name}: #{e}, #{e.backtrace.join("\n")}")
+      Rails.logger.error _("Failed to delete candlepin owner %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
         
     def del_environments
-      Rails.logger.debug _("All environments for owner #{name} in candlepin")
+      Rails.logger.debug _("All environments for owner %s in candlepin") % name
       self.environments.destroy_all
       self.library.destroy
       self.library = nil
       return true
     rescue => e
-      Rails.logger.error _("Failed to delete all environments for owner #{name} in candlepin: #{e}, #{e.backtrace.join("\n")}")
+      Rails.logger.error _("Failed to delete all environments for owner %s in candlepin:") % [name, "#{e}, #{e.backtrace.join("\n")}"]
       raise e
     end
 
     def del_providers
-      Rails.logger.debug _("All providers for owner #{name} in candlepin")
+      Rails.logger.debug _("All providers for owner %s in candlepin") % name
       self.providers.destroy_all
     rescue => e
-      Rails.logger.error _("Failed to delete all providers for owner #{name} in candlepin: #{e}, #{e.backtrace.join("\n")}")
+      Rails.logger.error _("Failed to delete all providers for owner %s in candlepin: %s") % [name, "#{e}, #{e.backtrace.join("\n")}"]
       raise e
     end
 
     #we must delete all systems as part of org deletion explicitly, otherwise the consumers in
     #  candlepin will be deleted before destroy is called on the Organization object 
     def del_systems
-      Rails.logger.debug _("All Systems for owner #{name} in candlepin")
+      Rails.logger.debug _("All Systems for owner %s in candlepin") % name
       System.joins(:environment).where("environments.organization_id = :org_id", :org_id=>self.id).each do |sys|
         sys.destroy
       end
     rescue => e
-      Rails.logger.error _("Failed to delete all systems for owner #{name} in candlepin: #{e}, #{e.backtrace.join("\n")}")
+      Rails.logger.error _("Failed to delete all systems for owner %s in candlepin: %s") % [name, "#{e}, #{e.backtrace.join("\n")}"]
       raise e
     end
 

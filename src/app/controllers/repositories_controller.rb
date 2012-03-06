@@ -29,7 +29,7 @@ class RepositoriesController < ApplicationController
     {
       :new => edit_test,
       :create => edit_test,
-      :edit =>read_test,
+      :edit => read_test,
       :update_gpg_key => edit_test,
       :destroy => edit_test,
       :enable_repo => org_edit,
@@ -64,7 +64,7 @@ class RepositoriesController < ApplicationController
       notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
-    notice _("Repository '#{repo_params[:name]}' created.")
+    notice _("Repository '%s' created.") % repo_params[:name]
     render :json => ""
   end
 
@@ -79,7 +79,7 @@ class RepositoriesController < ApplicationController
       end
       @repository.gpg_key = gpg
       @repository.save!
-      notice _("Repository '#{@repository.name}' updated.")
+      notice _("Repository '%s' updated.") % @repository.name
     rescue Exception => error
       log_exception error
       notice error, {:level => :error}
@@ -104,7 +104,7 @@ class RepositoriesController < ApplicationController
     r = Repository.find(@repository[:id])
     name = r.name
     @product.delete_repo_by_id(@repository[:id])
-    notice _("Repository '#{name}' removed.")
+    notice _("Repository '%s' removed.") % name
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@provider.id)}
   end
 
@@ -112,6 +112,7 @@ class RepositoriesController < ApplicationController
     # retrieve and return a list (array) of repo names in library that contain the 'term' that was passed in
     name = 'name:' + params[:term]
     name_query = name + ' OR ' + name + '*'
+    name_query = Katello::Search::filter_input name_query
     ids = Repository.readable(current_organization.library).collect{|r| r.id}
     repos = Repository.search do
       query {string name_query}
@@ -156,7 +157,7 @@ class RepositoriesController < ApplicationController
       @repository = Repository.find(params[:id])
     rescue Exception => error
       log_exception error
-      notice _("Couldn't find repository with ID=#{params[:id]}"), {:level => :error}
+      notice _("Couldn't find repository with ID=%s") % params[:id], {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end

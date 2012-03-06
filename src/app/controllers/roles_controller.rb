@@ -51,7 +51,7 @@ class RolesController < ApplicationController
   
   def items
     render_panel_direct(Role, @panel_options,  params[:search], params[:offset], [:name_sort, :asc],
-                        {:filter=>[{:self_role=>[false]}]})
+                        {:filter=>[{:self_role=>[false]}], :load=>true})
   end
   
   def setup_options
@@ -86,12 +86,12 @@ class RolesController < ApplicationController
 
   def create
     @role = Role.create!(params[:role])
-    notice _("Role '#{@role.name}' was created.")
+    notice _("Role '%s' was created.") % @role.name
     
     if search_validate(Role, @role.id, params[:search])
       render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"], :name=>controller_display_name}
     else
-      notice _("'#{@role["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+      notice _("'%s' did not meet the current search criteria and is not being shown.") % @role["name"], { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     end
   rescue Exception => error
@@ -114,10 +114,10 @@ class RolesController < ApplicationController
         render :json => params[:update_users]
       else 
         @role.update_attributes!(params[:role])
-        notice _("Role '#{@role.name}' was updated.")
+        notice _("Role '%s' was updated.") % @role.name
         
         if not search_validate(Role, @role.id, params[:search])
-          notice _("'#{@role["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+          notice _("'%s' no longer matches the current search criteria." % @role["name"]), { :level => :message, :synchronous_request => true }
         end
         
         render :json=>params[:role]
@@ -137,7 +137,7 @@ class RolesController < ApplicationController
       #remove the user
       @role.destroy
       if @role.destroyed?
-        notice _("Role '#{@role[:name]}' was deleted.")
+        notice _("Role '%s' was deleted.") % @role[:name]
         #render and do the removal in one swoop!
         render :partial => "common/list_remove", :locals => {:id=>id, :name=>controller_display_name}
       else
@@ -158,6 +158,7 @@ class RolesController < ApplicationController
         details[type][:verbs] = Verb.verbs_for(type, false).collect {|name, display_name| VirtualTag.new(name, display_name)}
         details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
         details[type][:tags] = Tag.tags_for(type, params[:organization_id]).collect { |t| VirtualTag.new(t.name, t.display_name) }
+        details[type][:no_tag_verbs] = Verb.no_tag_verbs(type)
         details[type][:global] = value["global"]
         details[type][:name] = value["name"]
       end
@@ -193,7 +194,7 @@ class RolesController < ApplicationController
     @permission.update_attributes!(params[:permission])
     to_return = { :type => @permission.resource_type.name }
     add_permission_bc(to_return, @permission, false)
-    notice _("Permission '#{@permission.name}' was updated.")
+    notice _("Permission '%s' was updated.") % @permission.name
     render :json => to_return
   rescue Exception => error
       notice error, {:level => :error}
@@ -216,7 +217,7 @@ class RolesController < ApplicationController
       @perm = Permission.create! new_params
       to_return = { :type => @perm.resource_type.name }
       add_permission_bc(to_return, @perm, false)
-      notice _("Permission '#{@perm.name}' was created.")
+      notice _("Permission '%s' was created.") % @perm.name
       render :json => to_return
     rescue Exception => error
       notice error, {:level => :error}
@@ -236,7 +237,7 @@ class RolesController < ApplicationController
   def destroy_permission
     permission = Permission.find(params[:permission_id])
     permission.destroy
-    notice _("Permission '#{permission.name}' was removed.")
+    notice _("Permission '%s' was removed.") % permission.name
     render :json => params[:permission_id]
   end
 

@@ -27,6 +27,7 @@ from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
 from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_progress_errors, format_task_errors
 from katello.client.core.utils import ProgressBar
+from katello.client.utils.encoding import u_str
 
 
 Config()
@@ -215,7 +216,7 @@ class Discovery(RepoAction):
         selection = Selection()
         if not assumeyes:
             proceed = ''
-            num_selects = [str(i+1) for i in range(len(repourls))]
+            num_selects = [u_str(i+1) for i in range(len(repourls))]
             select_range_str = constants.SELECTION_QUERY % len(repourls)
             while proceed.strip().lower() not in  ['q', 'y']:
                 if not proceed.strip().lower() == 'h':

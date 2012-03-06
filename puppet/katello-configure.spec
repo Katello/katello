@@ -2,8 +2,8 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.100
-Release:        7%{?dist}
+Version:        0.1.101
+Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
 Group:          Applications/Internet
@@ -13,9 +13,9 @@ Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       puppet >= 2.6.6
-Requires:       wget
+Requires:       coreutils shadow-utils wget
 Requires:       katello-certs-tools
-Requires:       nss-tools
+Requires:       nss-tools openssl
 Requires:       policycoreutils-python
 BuildRequires:  /usr/bin/pod2man
 
@@ -57,6 +57,18 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Wed Feb 29 2012 Jordan OMara <jomara@redhat.com> 0.1.101-1
+- 761314 - Make sure katello-agent communicates with ssl (mbacovsk@redhat.com)
+- 781505 - randomize default admin password for Pulp
+- 790835 - restart goferd after rhsm configuration and fix
+- 786572 - elasticsearch - reduce heap to 256m
+- 761314 - Make sure katello-agent communicates with ssl (mbacovsk@redhat.com)
+- 790835 - Create bootstrap RPM package with cons. cert
+- 795869 org_name is not overriding itself in db_seed correctly
+  (jomara@redhat.com)
+- 786978 - updating puppet to accept sam/cfse/headpin/katello and make the url
+  respond accordingly (jomara@redhat.com)
+
 * Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.1.100-7
 - rebuild
 

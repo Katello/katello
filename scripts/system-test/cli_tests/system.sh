@@ -3,7 +3,7 @@
 header "System"
 
 # testing systems
-SYSTEM_NAME_ADMIN="admin_system_$RAND"
+SYSTEM_NAME_ADMIN="admin_system_$PLAIN_RAND"
 SYSTEM_NAME_ADMIN_2=$SYSTEM_NAME_ADMIN"_2"
 SYSTEM_NAME_USER="user_system_$RAND"
 ACTIVATION_KEY_NAME_1="activation_key_1_$RAND"

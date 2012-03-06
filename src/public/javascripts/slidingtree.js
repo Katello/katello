@@ -35,29 +35,29 @@ var sliding_tree = function(tree_id, options) {
         search;
 
     var prerender = function(id) {
-        
+
             var crumb = settings.breadcrumb[id],
 
                 newPanel = list.children('.no_content'),
                 oldPanel = list.children('.has_content');
-                
+
             settings.current_tab = id;
             settings.fetching = 0;
             reset_breadcrumb(id);
-        
+
             //If we are really 'sliding' indicate what will actually have the content once we're done
             if (settings.direction) {
                 oldPanel.removeClass("will_have_content");
                 newPanel.addClass("will_have_content");
             }
-    
+
             //If we aren't sliding, we only worry about 1 panel'
             if (!settings.direction) {
                 newPanel = oldPanel;
             }
-    
+
             settings.prerender_cb(id);
-    
+
             render(id, newPanel);
         },
         render = function (id, newPanel) {
@@ -110,7 +110,7 @@ var sliding_tree = function(tree_id, options) {
             var crumb = settings.breadcrumb[id],
                 newPanel = list.children('.no_content'),
                 oldPanel = list.children('.has_content');
-            
+
             if (crumb.scrollable) {
                 list.addClass("ajaxScroll");
                 list.attr("data-scroll_url", crumb.url);
@@ -118,13 +118,13 @@ var sliding_tree = function(tree_id, options) {
             else {
                 list.removeClass("ajaxScroll");
             }
-    
+
             //If we have a direction, we need to slide
             if(settings.direction) {
                 var leaving = settings.direction == "right" ? "left" : "right",
                     width = $('.sliding_container').width();
                 //The old pane, we need to hide it away, remove the contents, and reset the classes
-    
+
 
                 if( leaving === 'left' ){
                     list.css({'left': 0});
@@ -148,7 +148,7 @@ var sliding_tree = function(tree_id, options) {
                            oldPanel.addClass("no_content");
                            newPanel.addClass("has_content");
                            newPanel.removeClass("no_content");
-            
+
                             $(document).trigger('tab_change_complete.slidingtree');
                        });
                 }
@@ -159,7 +159,7 @@ var sliding_tree = function(tree_id, options) {
         },
         content_clicked = function(link) {
             var element = link.find('.link_details');
-            
+
             if(element.hasClass("slide_left")) {
               settings.direction = "left";
             }else {
@@ -183,7 +183,7 @@ var sliding_tree = function(tree_id, options) {
             var trail = settings.breadcrumb[id].trail,
                 crumbs = trail,
                 html = '<ul>';
-            
+
             current_crumb = id;
             breadcrumb.html("");
             name = settings.breadcrumb[id].name;
@@ -205,7 +205,7 @@ var sliding_tree = function(tree_id, options) {
                         '" class="currentCrumb one-line-ellipsis">' + name + '</span></li>';
                 }
             }
-    
+
             if( trail.length > 0){
                 for(var i = 0; i < crumbs.length; i++) {
                     html += create_crumb(crumbs[i]);
@@ -230,20 +230,20 @@ var sliding_tree = function(tree_id, options) {
                     html += '<span title="' + name + '" class="crumb ' + icon + '_inactive">' + id + '</span>';
                 }
             }
-    
+
             html += '<span title="' + name + '" class="one-line-ellipsis crumb link_details slide_left" id= "' + id + '">';
-    
+
             if( !icon ){
                 html += name;
 
             }
-            
+
             html  += '</span>';
 
             if( currentCrumb === undefined ){
                 html += '<span>\u2002\u00BB\u2002</span>';
             }
-    
+
             return html + '</li>';
         },
         hash_change = function() {
@@ -264,12 +264,12 @@ var sliding_tree = function(tree_id, options) {
                  bcs_height = 0,
                  filter_form = $('#filter_form'),
                  filter_input = $('#filter_input');
-             
+
              filter_form.submit(function(){
                  filter_input.change();
                  return false;
              });
-             
+
              $('.filter_button').toggle(
                  function() {
                      bcs = $('.breadcrumb_filter');
@@ -281,11 +281,11 @@ var sliding_tree = function(tree_id, options) {
                      filter_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
                      $(this).css({backgroundPosition: "-32px -16px"});
                      $(this).attr('title', i18n.close);
-                     
+
                      if( $('.remove_item').length ){
                          $('.remove_item').css({ top : 52 });
                      }
-                     
+
                      if( $('.close').length ){
                          $('.close').css({ top : 52 });
                      }
@@ -305,7 +305,7 @@ var sliding_tree = function(tree_id, options) {
                      $("#" + tree_id + " .has_content .filterable li").fadeIn('fast');
                  }
             ).tipsy({ fade : true, gravity : 's' });
-             
+
              filter_input.live('change, keyup', function(){
                  if ($.trim($(this).val()).length >= 2) {
                      $("#" + tree_id + " .has_content .filterable li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
@@ -338,11 +338,11 @@ var sliding_tree = function(tree_id, options) {
     if ( options ) {
         $.extend( settings, options );
     }
-    
+
     if( settings.enable_filter ){
         setup_filter();
     }
-    
+
 	if( settings.enable_float ){
 		container.css('position', 'absolute');
 		sliders.css('height', sliders.css('minHeight'));
@@ -365,7 +365,7 @@ var sliding_tree = function(tree_id, options) {
         } else {
             content_clicked($(this));
         }
-    });    
+    });
 
     return {
     	get_current_crumb	: function(){
@@ -401,7 +401,6 @@ KT.sliding_tree.list = function(parent, bcs, sliding_tree){
     append = function(html, args) {
 
         if (!args || args === sliding_tree.get_current_crumb()){
-            console.log("appending");
             var expand_list = parent.find('.has_content').find('.expand_list');
             expand_list.append(html);
         }
@@ -411,7 +410,6 @@ KT.sliding_tree.list = function(parent, bcs, sliding_tree){
             current_items = current;
             bcs.find('.current_items_count').text(current_items);
             bcs.find('.total_results_count').text(results);
-            console.log(total);
             sliding_tree.get_breadcrumbs()[sliding_tree.get_current_crumb()].total_size = total;
             sliding_tree.rerender_breadcrumb();
         }
@@ -462,8 +460,15 @@ sliding_tree.search = function(){
                  pre_search_state:sliding_tree.get_current_crumb});
 
             $(document).bind(search_obj.search_event(), KT.panel.search_started);
-            $(document).bind(search_obj.search_event(), function(){
-                tabchange_cb(sliding_tree.get_current_crumb());
+            $(document).bind(search_obj.search_event(), function(e, promise){
+                if (promise){
+                    promise.done(function(){
+                        tabchange_cb(sliding_tree.get_current_crumb());      
+                    });
+                }
+                else {
+                  tabchange_cb(sliding_tree.get_current_crumb());
+                }
             });
 
             if (expand_cb) {
@@ -535,7 +540,7 @@ sliding_tree.search = function(){
 sliding_tree.ActionBar = function(toggle_list){
     var open_panel 	= undefined,
     	toggle_list	= toggle_list || {},
-        
+
         toggle = function(id, options){
             var options = options || {};
 
@@ -544,7 +549,7 @@ sliding_tree.ActionBar = function(toggle_list){
             if( open_panel !== id && open_panel !== undefined ){
             	options.opening = false;
                 toggle_list[open_panel].setup_fn(options);
-                
+
                 $("#" + toggle_list[open_panel].container).slideToggle(options.animate_time, function(){
 		            open_panel = id;
 		            options.opening = true;
@@ -559,12 +564,12 @@ sliding_tree.ActionBar = function(toggle_list){
                 options.opening = true;
                 handle_toggle(options, id);
             }
-        }, 
+        },
         handle_toggle = function(options, id){
         	var slide_window = $('#' + toggle_list[id].container);
 
             options = toggle_list[id].setup_fn(options);
-            slide_window.slideToggle(options.animate_time, options.after_function);        	
+            slide_window.slideToggle(options.animate_time, options.after_function);
         },
         close = function() {
             if( open_panel ){
@@ -572,7 +577,7 @@ sliding_tree.ActionBar = function(toggle_list){
             }
         },
         reset = function(){
-            close();    
+            close();
         },
         add_to_toggle_list = function(id, properties){
             if( toggle_list[id] !== undefined ){
@@ -598,11 +603,11 @@ sliding_tree.ActionBar = function(toggle_list){
                 }
             });
         };
-        
+
     for( item in toggle_list ){
     	register_toggle(item, toggle_list[item]);
     }
-        
+
     return {
         toggle              :  toggle,
         close               :  close,

@@ -11,7 +11,7 @@ export TESTDIR=$script_dir
 
 . $script_dir/helpers
 
-RAND=$(date | openssl md5 | cut -c10-16)
+
 USER='admin'
 PASSWORD='admin'
 if [ -x "$script_dir/../../cli/bin/katello" ]; then
@@ -42,8 +42,9 @@ TEST_ALL=0
 NO_BASE=0
 NO_CLEANUP=0
 RUN_DISABLED=0
-for param in $*; do
-    case "$param" in
+RAND_PREFIX=""
+while [ $# -gt 0 ]; do
+    case "$1" in
         "-h"|"--help")
             printf "System test script for testing Katello CLI\n\n"
             printf "It will fill your database with resources, and then delete them!\n\n"
@@ -54,6 +55,7 @@ for param in $*; do
             printf " -d,--disabled   run disabled tests as well\n"
             printf " -s, --shell     runs tests in the shell mode\n"
             printf " -p, --ping      checks whether the server is ready\n"
+            printf " --rand-prefix   prefixes random hash with given value\n"
             printf "\n"
             printf "Available tests:\n"
             printf " all\n"
@@ -82,6 +84,10 @@ for param in $*; do
         "-d"|"--disabled")
             RUN_DISABLED=1
             ;;
+        "--rand-prefix")
+            shift
+            RAND_PREFIX=$1
+            ;;
         "-s"|"--shell")
             SHELL_MODE=1
             ;;
@@ -89,10 +95,18 @@ for param in $*; do
             TEST_ALL=1
             ;;
         *)
-            required_tests="$required_tests $param"
+            required_tests="$required_tests $1"
             ;;
     esac
+    shift
 done
+
+PLAIN_RAND=$(date | openssl md5 | cut -c10-16)
+if [ "$RAND_PREFIX" == "" ]; then
+    RAND="${PLAIN_RAND}"
+else
+    RAND="${RAND_PREFIX}_${PLAIN_RAND}"
+fi
 
 
 if [ $TEST_ALL -eq 1 ]; then

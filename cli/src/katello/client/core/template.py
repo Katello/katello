@@ -23,7 +23,7 @@ from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, system_exit
 from katello.client.api.utils import get_library, get_environment, get_template, get_product, get_repo
-
+from katello.client.utils.encoding import u_str
 
 # set import (works for both Python 2.6+ and 2.5)
 try:
@@ -307,24 +307,24 @@ class Update(TemplateAction):
 
 
     def store_parameter_name(self, option, opt_str, value, parser):
-        self.current_parameter = value
+        self.current_parameter = u_str(value)
         self.items['add_parameters'][value] = None
 
     def store_parameter_value(self, option, opt_str, value, parser):
         if self.current_parameter == None:
             raise OptionValueError(_("each %s must be preceeded by %s") % (option, "--add_parameter") )
 
-        self.items['add_parameters'][self.current_parameter] = value
+        self.items['add_parameters'][self.current_parameter] = u_str(value)
         self.current_parameter = None
 
     def store_from_product(self, option, opt_str, value, parser):
-        self.current_product = value
+        self.current_product = u_str(value)
         parser.values.from_product = True
 
     def store_item_with_product(self, option, opt_str, value, parser):
         if parser.values.from_product == None:
             raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product") )
-        self.items[option.dest].append({"name": value, "product": self.current_product})
+        self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name', help=_("template name (required)"))
@@ -418,8 +418,6 @@ class Update(TemplateAction):
         desc    = self.get_option('description')
         parentName = self.get_option('parent')
         content = self.getContent()
-        #reset parameters for next call in shell mode
-
 
         env = get_library(orgName)
         if env == None:
@@ -467,6 +465,7 @@ class Update(TemplateAction):
 
 
     def updateContent(self, tplId, content):
+
 
         for p in content['-products']:
             self.api.remove_content(tplId, 'products', p)

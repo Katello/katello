@@ -22,7 +22,7 @@ class SearchFavorite < ActiveRecord::Base
     if new_record?
       path = self.attributes["path"]
       if count_favorites(path) >= max_search_favorites
-        errors.add(:base, _("Only #{max_search_favorites} favorites may be created."))
+        errors.add(:base, _("Only %s favorites may be created.") % max_search_favorites)
       end
     end
   end

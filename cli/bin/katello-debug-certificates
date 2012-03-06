@@ -1,0 +1,112 @@
+#!/bin/bash
+
+PREFIX='  '
+PERMS=0 
+
+function cert_info() {
+  CERT=$1
+  DESCR=$2
+  [[ -n "$DESCR" ]] && echo -e "$DESCR"
+  if [[ -n "$CERT" ]]; then 
+    SERIAL=$(echo "$CERT" | grep "Serial Number" -A1 | tail -n1 | awk '{print $1}')
+    DN=$(echo "$CERT" | grep "Subject:" | sed 's/\s*Subject: //')
+    CA=$(echo "$CERT" | grep "CA" | head -n1 | awk '{print $1}')
+    CA_SERIAL=$(echo "$CERT" | grep "Authority Key Identifier:" -A10 | grep serial | sed 's/serial/CA_SERIAL/' | awk '{print $1}')
+    echo -e "${PREFIX}DN: $DN"
+    echo -e "${PREFIX}SERIAL: $SERIAL"
+    echo -e "${PREFIX}$CA"
+    echo -e "${PREFIX}$CA_SERIAL"
+  else
+    echo "${PREFIX}N/A"
+  fi
+}
+
+function certutils_cert_info() {
+  CERT=$1
+  DESCR=$2
+  [[ -n "$DESCR" ]] && echo -e "$DESCR"
+  if [[ -n "$CERT" ]]; then 
+    SERIAL=$(echo "$CERT" | grep "Serial Number" -A1 | head -n2 | tail -n1 | awk '{print $1}')
+    DN=$(echo "$CERT" | grep "Subject:" | sed 's/\s*Subject: //')
+    CA=$(echo "$CERT" | grep "Certificate Basic Constraints" -A1| tail -n1 | sed 's/^\s*Data: //')
+    CA_SERIAL=$(echo "$CERT" | grep "Signed Extensions:" -A50 | grep Serial -A1| tail -n1 | awk '{print $1}')
+    echo -e "${PREFIX}DN: $DN"
+    echo -e "${PREFIX}SERIAL: $SERIAL"
+    echo -e "${PREFIX}CA: $CA"
+    echo -e "${PREFIX}CA_SERIAL: $CA_SERIAL"
+  else
+    echo "${PREFIX}N/A"
+  fi
+}
+
+function cert_file_info() {
+  CERTFILE=$1
+  if [ -f "$CERTFILE" ]; then
+    CERT=$( openssl x509 -noout -text -in "$CERTFILE" )
+    cert_info "$CERT" "$CERTFILE"
+    path_perms "$CERTFILE"
+  else 
+    cert_info "" "$CERTFILE"
+  fi
+}
+
+function nss_info() {
+  echo "NSS DB - Broker Key"
+  echo -e "$PREFIX$(certutil -d /etc/pki/katello/nssdb -K -f /etc/katello/nss_db_password-file|grep broker)\n"
+  path_perms "/etc/katello/nss_db_password-file"
+  certutils_cert_info "$(certutil -d /etc/pki/katello/nssdb -L -n ca)" 'NSS DB - CA'
+  certutils_cert_info "$(certutil -d /etc/pki/katello/nssdb -L -n broker)" 'NSS DB - Broker'
+  for f in `ls /etc/pki/katello/nssdb/*`; do
+    path_perms "$f"
+  done
+}
+
+function keystore_info() {
+  path_perms "/usr/share/tomcat6/conf/keystore"
+}
+
+function path_perms() {
+    if [ $PERMS = 1 ]; then
+        CERTPATH=$1
+        while [ "$CERTPATH" != '/' ]; do
+            LSOUT=$(ls -lahd "$CERTPATH")
+            echo "$PREFIX$LSOUT"
+            CERTPATH=$(dirname "$CERTPATH")
+        done 
+    fi
+    echo ""
+}
+
+function usage() {
+    echo "$0 [-p]"
+    echo "  -p|--perms     show file permissions"
+
+}
+
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -p | --perms )          PERMS=1
+                                ;;
+        -h )                    usage
+                                exit 0
+                                ;;
+        * )                     usage
+                                exit 1
+    esac
+    shift
+done
+
+
+cert_file_info "/usr/share/katello/candlepin-cert.crt"
+cert_file_info "/etc/candlepin/certs/candlepin-ca.crt"
+path_perms "/var/lib/candlepin/candlepin-crl.crl"
+cert_file_info "/etc/pki/pulp/ca.crt"
+cert_file_info "/etc/pki/tls/certs/qpid-broker.crt"
+cert_file_info "/etc/pki/tls/certs/qpid-client.crt"
+cert_file_info "/etc/pki/pulp/qpid_client_striped.crt"
+cert_file_info "/etc/rhsm/ca/candlepin-local.pem"
+nss_info
+keystore_info
+
+

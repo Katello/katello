@@ -19,10 +19,19 @@ class PulpTaskStatus < TaskStatus
       PulpTaskStatus.using_pulp_task(t)
     end
 
-    while any_task_running(async_tasks)
-      sleep 10
+    timeout_count = 0
+    while true
+       begin
+          break  if !any_task_running(async_tasks)
+          timeout_count = 0
+       rescue RestClient::RequestTimeout => e
+          timeout_count += 1
+          Rails.logger.error "Timeout in pulp occured: #{timeout_count}"
+          raise e if timeout_count >= 10 #10 timeouts in a row, lets bail
+          sleep 50 #if we got a timeout, lets backoff and let it catchup 
+       end
+       sleep 15
     end
-
     async_tasks
   end
 
@@ -50,7 +59,7 @@ class PulpTaskStatus < TaskStatus
   end
 
   def error
-    self.result["errors"][0] if self.error? 
+    self.result[:errors][0] if self.error? && self.result[:errors]
   end
 
   def self.refresh task_status

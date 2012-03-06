@@ -118,7 +118,6 @@ class SyncManagementController < ApplicationController
   def destroy
     retval = Repository.find(params[:id]).cancel_sync
     render :text=>""
-
   end
 
 
@@ -152,7 +151,7 @@ private
           error_details.each { |d|
             error_flag = true
             Rails.logger.error("*** Sync error: " +  d.to_hash.to_json)
-            notice N_("There were errors with one of the syncs: #{d[:error]} in repository: #{repo.name}. See the log for more details."), {:level=>:warning}
+            notice N_("There were errors with one of the syncs: %s in repository: %s. See the log for more details.") % [d[:error], repo.name], {:level=>:warning}
           }
         end
       }
@@ -175,6 +174,7 @@ private
         :duration       => format_duration(sync_status.finish_time, sync_status.start_time),
         :packages       => sync_status.progress.total_count,
         :size           => number_to_human_size(sync_status.progress.total_size),
+        :product_size   => number_to_human_size(repo.product.sync_size),
         :is_running     => !not_running_states.include?(sync_status.state.to_sym) && sync_status.finish_time.nil?,
         :error_details  => error_flag ? error_details : "No errors."
     }
@@ -210,7 +210,7 @@ private
         resp = repo.sync().first
         collected.push({:id => id, :product_id=>repo.product.id, :state => resp[:state]})
       rescue RestClient::Conflict => e
-        notice N_("There is already an active sync process for the '#{repo.name}' repository. Please try again later"), {:level => :error}
+        notice N_("There is already an active sync process for the '%s' repository. Please try again later") % repo.name, {:level => :error}
       end
     end
     collected
@@ -231,11 +231,11 @@ private
 
   def send_notification(product, status)
     if status.error_details.size > 0 then
-      notice _("#{product.name} product was synced successfully with errors. See log for details"),
+      notice _("%s product was synced successfully with errors. See log for details") % product.name,
                                   {:details => status.error_details.join("\n"),:synchronous_request => false}
       status.error_details.each { |d| Rails.logger.error("Sync error:" +  d[:error]) }
     else
-      notice _("#{product.name} product was synced successfully")
+      notice _("%s product was synced successfully") % product.name
     end
   end
 

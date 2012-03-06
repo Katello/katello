@@ -132,9 +132,11 @@ KT.content_actions = (function(){
                }
                $.each(data, function(index, repo){
                    // Only stop when we reach 100% and the finish_time is done sometimes they are not both complete
-                   if (!repo.is_running) {
+                   if (!repo.is_running && (repo.raw_state !== 'waiting')) {
                         removeSyncing(repo.id);
                         KT.content.finishRepo(repo.id, repo.state, repo.duration);
+                        KT.content.updateRepo(repo.id, repo.start_time, repo.duration, repo.progress.progress, repo.size, repo.packages);
+                        KT.content.updateProduct(repo.product_id, false, false, repo.product_size);
                    }
                    else {
                     KT.content.updateRepo(  repo.id,
@@ -211,37 +213,37 @@ KT.content = (function(){
 
         },
         update_item = function(element, starttime, duration, progress, size, packages) {
-
+            var pg = element.find(".progress"),
+                value = pg.find(".ui-progressbar-value");
+            
             fadeUpdate(element.find(".start_time"), starttime);
             // clear duration during active sync
             fadeUpdate(element.find(".duration"), '');
             fadeUpdate(element.find(".size"), size + ' (' + packages + ')');
-            var pg = element.find(".progress");
-            if (progress === 100) { 
-              pg.find(".ui-progressbar-value").animate({'width': 99 },{ queue:false,
-                                               duration:"slow", easing:"easeInSine" });
-            } 
-            else {
-              pg.progressbar({ value : progress});
-            }
+            progress = progress == 100 ? 99 : progress;
+            value.animate({'width': progress },{ queue:false,
+                                           duration:"slow", easing:"easeInSine" });
         },
-        updateProduct = function (prod_id, done, percent) {
-            var element = $("#product-" + prod_id).find(".result");
-            var oldpg = element.find('.progress');
-            if(done){
+        updateProduct = function (prod_id, done, percent, size) {
+            var product_element = $("#product-" + prod_id),
+                element = product_element.find(".result"),
+                oldpg = element.find('.progress');
+            
+            if( size ){
+                fadeUpdate(product_element.find('.size'), size);
+            } else if(done){
                 element.html("");
             }
             else{
-                var progressBar = $('<div/>').attr('class', 'progress').text(" ");
-                element.html(progressBar);
-                if(percent === 100) {
-                  var past = oldpg ? oldpg.progressbar("option", "value") : 0;  
-                  progressBar.progressbar({value: past});
-                  progressBar.find(".ui-progressbar-value").animate({'width': 99 },{ queue:false,
-                                               duration:"slow", easing:"easeInSine" });
+                if (oldpg.length == 0){
+                    element.html($('<div/>').attr('class', 'progress').text(" "));
+                    element.find(".progress").progressbar({value: 0});
                 }
                 else {
-                  progressBar.progressbar({value: percent});
+                    var value = oldpg.find(".ui-progressbar-value");
+                    percent = percent == 100 ? 99 : percent;
+                    value.animate({'width': percent },{ queue:false,
+                          duration:"slow", easing:"easeInSine" });
                 }
             }
         },
