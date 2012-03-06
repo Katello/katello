@@ -333,8 +333,9 @@ class Update(TemplateAction):
         self.parser.add_option('--new_name', dest='new_name', help=_("new template name"))
         self.parser.add_option("--description", dest="description", help=_("template description"))
 
-        self.parser.add_option('--add_product', dest='add_products', action="append", help=_("name of the product"))
-        self.parser.add_option('--remove_product', dest='remove_products', action="append", help=_("name of the product"))
+        #bz 799149
+        #self.parser.add_option('--add_product', dest='add_products', action="append", help=_("name of the product"))
+        #self.parser.add_option('--remove_product', dest='remove_products', action="append", help=_("name of the product"))
 
         self.parser.add_option('--add_package', dest='add_packages', action="append", help=_("name or nvre of the product (epoch:name-rel.ease-ver.sio.n)"))
         self.parser.add_option('--remove_package', dest='remove_packages', action="append", help=_("name or nvre of the product (epoch:name-rel.ease-ver.sio.n)"))
@@ -383,11 +384,13 @@ class Update(TemplateAction):
         self.resetParameters()
 
         content = {}
-        content['+products'] = self.get_option('add_products') or []
-        content['+products'] = self.productNamesToIds(orgName, content['+products'])
 
-        content['-products'] = self.get_option('remove_products') or []
-        content['-products'] = self.productNamesToIds(orgName, content['-products'])
+        # bz 799149
+        #content['+products'] = self.get_option('add_products') or []
+        #content['+products'] = self.productNamesToIds(orgName, content['+products'])
+
+        #content['-products'] = self.get_option('remove_products') or []
+        #content['-products'] = self.productNamesToIds(orgName, content['-products'])
 
         content['+packages'] = self.get_option('add_packages') or []
         content['-packages'] = self.get_option('remove_packages') or []
