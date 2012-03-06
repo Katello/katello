@@ -272,8 +272,9 @@ describe SystemTemplate do
     it "should import template content" do
       @import_tpl = SystemTemplate.new(:environment => @organization.library)
 
-      @import_tpl.should_receive(:add_product).once.with('prod_a1').and_return nil
-      @import_tpl.should_receive(:add_product).once.with('prod_a2').and_return nil
+      #bz 799149
+      #@import_tpl.should_receive(:add_product).once.with('prod_a1').and_return nil
+      #@import_tpl.should_receive(:add_product).once.with('prod_a2').and_return nil
       @import_tpl.should_receive(:add_package).once.with('walrus').and_return nil
       @import_tpl.should_receive(:add_package_group).once.with('pg-123').and_return nil
       @import_tpl.should_receive(:add_package_group).once.with('pg-456').and_return nil
@@ -302,7 +303,8 @@ describe SystemTemplate do
 
       str = @export_tpl.export_as_json
       json = ActiveSupport::JSON.decode(str)
-      json['products'].size.should == 2
+      #bz 799149
+      #json['products'].size.should == 2
       json['packages'].size.should == 1
       json['package_groups'].size.should == 1
       json['package_group_categories'].size.should == 1
