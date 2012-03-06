@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.101
+Version:        0.1.102
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -57,6 +57,13 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.1.102-1
+- 798430: Keep the permissions for the candlepin.conf file the same as the spec
+  file
+- 799138 - katello-configure --deployment=headpin fails (mbacovsk@redhat.com)
+- 798454 - SSLCACertificateFile not set properly
+- 790835 - fixing deployment url and goferd restart in bootstrap
+
 * Wed Feb 29 2012 Jordan OMara <jomara@redhat.com> 0.1.101-1
 - 761314 - Make sure katello-agent communicates with ssl (mbacovsk@redhat.com)
 - 781505 - randomize default admin password for Pulp
