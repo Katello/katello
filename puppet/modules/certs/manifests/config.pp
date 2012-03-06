@@ -155,7 +155,7 @@ class certs::config {
     command   => "gen-rpm.sh --name '${candlepin_consumer_name}' --version 1.0 --release 1 --packager None --vendor None --group 'Applications/System' --summary '${candlepin_consumer_summary}' --description '${candlepin_consumer_description}' --post ${ssl_build_path}/rhsm-katello-reconfigure /etc/rhsm/ca/candlepin-local.pem:666=${ssl_build_path}/$candlepin_cert_name.crt && /sbin/restorecon ./*rpm",
     path      => "/usr/share/katello/certs:/usr/bin:/bin",
     creates   => "${katello_www_pub_dir}/${candlepin_cert_name}-1.0-1.noarch.rpm",
-    require   => [Exec["generate-candlepin-certificate"], File["${ssl_build_path}/rhsm-katello-reconfigure"]]
+    require   => [File["${katello_www_pub_dir}"], Exec["generate-candlepin-certificate"], File["${ssl_build_path}/rhsm-katello-reconfigure"]]
   }
 
   exec { "deploy-candlepin-certificate":
