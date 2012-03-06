@@ -20,13 +20,17 @@ KT.system.errata = function() {
     	load_more = $('#load_more_errata'),
         task_list = {},
         actions_updater,
-    		
-    	init = function(){
-    		register_events();
-            init_status_check();
+        init = function(editable){
+            register_events();
+
+            // Not all users have permission to interact with errata; those that don't
+            // cannot check their status either.
+            if(editable) {
+                init_status_check();
+            }
             show_spinner(true);
             fetch_errata({ data : { clear_items : false }});
-    	},
+        },
     	register_events = function(){
     		$('#display_errata_type').bind('change', { clear_items : true }, fetch_errata);
     		$('#select_all_errata').bind('change', select_all_errata);
@@ -207,6 +211,8 @@ KT.system.errata = function() {
     
 }();
 
-$(document).ready(function() {
-    KT.system.errata.init();
-});
+// Call this init() from a location where the 'editable' flag can be set
+// appropriately. In this case it is called from errata/_index.html.haml
+//$(document).ready(function() {
+//    KT.system.errata.init(editable);
+//});
