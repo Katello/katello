@@ -1106,12 +1106,13 @@ KT.actions =  (function(){
         $('#download_key').live('click', function(e){
             e.preventDefault();  //stop the browser from following
             environment_id = $("#system_template_environment_id").attr('value');
-            url = KT.common.rootURL() + '/system_templates/' +
-                        options.current_template.id +
-                        '/download?environment_id=' +
-                        environment_id;
-            window.location.href = url;
-            return false;
+            validate_url = KT.routes.validate_system_template_path(options.current_template.id) +
+                    '?environment_id=' + environment_id;
+            $.get(validate_url, function(){
+                url = KT.routes.download_system_template_path(options.current_template.id) +
+                        '?environment_id=' + environment_id;
+                window.location.href = url;
+            });
         });
         $('#save_template').live('click', function(){
             if ($(this).hasClass("disabled")) {
