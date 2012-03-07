@@ -36,10 +36,11 @@ class ChangesetAPI(KatelloAPI):
         else:
             return None
 
-    def create(self, orgName, envId, name):
+    def create(self, orgName, envId, name, description=None):
         data = {
             "changeset": {
                 "name": name,
+                "description": description
             }
         }
         path = "/api/organizations/%s/environments/%s/changesets/" % (orgName, envId)
