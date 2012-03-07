@@ -11,21 +11,26 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class PackagesController < ApplicationController
-	
-  before_filter :package_details_auth, :only=> [:filelist, :changelog, :dependencies]
+
   before_filter :lookup_package, :except=>[:auto_complete_library]
   before_filter :authorize
 
   def rules
-    #TODO, only allow the user to see a package if they have rights to a product its in
-    test = lambda{true}
-    {
-      :show => test,
-      :filelist => test,
-      :changelog => test,
-      :dependencies => test,
-      :auto_complete_library=>test
 
+    view = lambda{
+      !Repository.readable_in_org(current_organization).where(
+          :pulp_id=>@package.repoids).empty?
+    }
+
+    search = lambda{
+      SystemTemplate.manageable?(current_organization) || Filter.any_editable?(current_organization)
+    }
+    {
+      :show => view,
+      :filelist => view,
+      :changelog => view,
+      :dependencies => view,
+      :auto_complete_library=>search
     }
   end
 
@@ -51,14 +56,11 @@ class PackagesController < ApplicationController
   end
 
   private
-  
-  def package_details_auth
-    authorize params[:controller], :show
-  end    
-  
+
   def lookup_package
     @package_id = params[:id] 
-    @package = Glue::Pulp::Package.find @package_id      
+    @package = Glue::Pulp::Package.find @package_id
+    raise(_("Unable to find package %s" % @package_id)) if @package.nil?
   end
 
 end

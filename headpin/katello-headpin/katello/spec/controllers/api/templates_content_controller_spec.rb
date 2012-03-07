@@ -77,20 +77,21 @@ describe Api::TemplatesContentController do
     let(:unauthorized_user) do
       user_without_permissions
     end
-    describe "for add_product" do
-      let(:action) { :add_product }
-      let(:req) do
-        post :add_product, :template_id => template_id, :id => product_cp_id
-      end
-      it_should_behave_like "protected action"
-    end
-    describe "for remove_product" do
-      let(:action) { :remove_product }
-      let(:req) do
-        post :remove_product, :template_id => template_id, :id => product_cp_id
-      end
-      it_should_behave_like "protected action"
-    end
+    #bz 799149
+    #describe "for add_product" do
+    #  let(:action) { :add_product }
+    #  let(:req) do
+    #    post :add_product, :template_id => template_id, :id => product_cp_id
+    #  end
+    #  it_should_behave_like "protected action"
+    #end
+    #describe "for remove_product" do
+    #  let(:action) { :remove_product }
+    #  let(:req) do
+    #    post :remove_product, :template_id => template_id, :id => product_cp_id
+    #  end
+    #  it_should_behave_like "protected action"
+    #end
     describe "for add_package" do
       let(:action) { :add_package }
       let(:req) do
@@ -168,26 +169,27 @@ describe Api::TemplatesContentController do
       disable_authorization_rules
     end
 
-    describe "update products" do
-
-      should_fail_in_non_library_env :add_product
-      should_fail_in_non_library_env :remove_product
-
-      it "should add product" do
-        @tpl.should_receive(:add_product_by_cpid).with(product_cp_id).and_return(true)
-
-        post :add_product, :template_id => template_id, :id => product_cp_id
-        response.should be_success
-      end
-
-      it "should remove product" do
-        @tpl.should_receive(:remove_product_by_cpid).with(product_cp_id).and_return(true)
-
-        delete :remove_product, :template_id => template_id, :id => product_cp_id
-        response.should be_success
-      end
-
-    end
+    # bz 799149
+    #describe "update products" do
+    #
+    #  should_fail_in_non_library_env :add_product
+    #  should_fail_in_non_library_env :remove_product
+    #
+    #  it "should add product" do
+    #    @tpl.should_receive(:add_product_by_cpid).with(product_cp_id).and_return(true)
+    #
+    #    post :add_product, :template_id => template_id, :id => product_cp_id
+    #    response.should be_success
+    #  end
+    #
+    #  it "should remove product" do
+    #    @tpl.should_receive(:remove_product_by_cpid).with(product_cp_id).and_return(true)
+    #
+    #    delete :remove_product, :template_id => template_id, :id => product_cp_id
+    #    response.should be_success
+    #  end
+    #
+    #end
 
     describe "update packages" do
 

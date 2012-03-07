@@ -287,7 +287,7 @@ class Changeset < ActiveRecord::Base
     promote_distributions from_env, to_env
     update_progress! '100'
 
-    generate_metadata from_env, to_env
+    PulpTaskStatus::wait_for_tasks generate_metadata from_env, to_env
 
     self.promotion_date = Time.now
     self.state = Changeset::PROMOTED
@@ -455,9 +455,10 @@ class Changeset < ActiveRecord::Base
   end
 
   def generate_metadata from_env, to_env
-    affected_repos.each do |repo|
+    async_tasks = affected_repos.collect do  |repo|
         repo.get_clone(to_env).generate_metadata
     end
+    async_tasks
   end
 
   def uniquify_artifacts

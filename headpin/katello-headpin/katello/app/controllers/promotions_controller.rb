@@ -31,7 +31,7 @@ class PromotionsController < ApplicationController
       :packages => prod_test,
       :repos => prod_test,
       :errata => prod_test,
-      :distributions => prod_test
+      :distributions => prod_test,
     }
   end
 
@@ -44,6 +44,7 @@ class PromotionsController < ApplicationController
     setup_environment_selector(current_organization, access_envs)
     @products = @environment.products.readable(current_organization)
     @products = @products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
+    Glue::Pulp::Repos.prepopulate! @products, @environment,[]
 
     @changesets = @next_environment.working_changesets if (@next_environment && @next_environment.changesets_readable?)
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
@@ -252,7 +253,6 @@ class PromotionsController < ApplicationController
     # render the list of system_templates
     render :partial=>"system_templates", :locals => {:system_templates => templates}
   end
-
 
   private
 

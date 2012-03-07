@@ -1039,7 +1039,7 @@ var registerEvents = function(){
         return true;
     });
 
-
+    KT.tipsy.custom.promotion_filter_tooltip();
 };
 
 var changesetEdit = (function(){
@@ -1307,19 +1307,26 @@ var templateLibrary = (function(){
             }
             $.each(items, function(index, item) {
                //for item names that mach item.name from search hash
-               html += listItem(item.id, item.name, type, product_id, showButton);
+               html += listItem(item.id, item.name, type, product_id, showButton, item.filtered);
             });
             html += '</ul>';
             return html;
         },
-        listItem = function(id, name, type, product_id, showButton) {
-            var anchor = "";
+        listItem = function(id, name, type, product_id, showButton, isFiltered) {
+            var anchor = "", 
+                filter_repo_class = "";
             if ( showButton && permissions.manage_changesets){
                 anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"' +
                                  'data-type="' + type + '" data-product_id="[' + product_id +  ']" data-id="' + id + '">';
                             anchor += i18n.remove + "</a>";
             }
-            return '<li>' + anchor + '<div class="no_slide"><span class="sort_attr">'  + name + '</span></div></li>';
+            if(type === "repo" && isFiltered) {
+                filter_repo_class = '<span class="filter_warning_icon fl promotion_tipsify"' + " data-content_id=\"" +
+                            id +"\" data-content_type=\"repo\""  + '>&nbsp;</span> ';
+            }
+
+
+            return '<li>' + anchor + '<div class="no_slide">' + filter_repo_class + '<span class="sort_attr">'  + name + '</span></div></li>';
 
         },
         productList = function(changeset, changeset_id, showButton){
@@ -1344,10 +1351,10 @@ var templateLibrary = (function(){
                         provider = (product.provider === 'REDHAT') ? 'rh' : 'custom';
                         toSlide = product.all ? 'no_slide' : 'slide_link';
                         if( product.all ){
-                          all_list += productListItem(changeset_id, key, product.name, provider, toSlide, showButton);
+                          all_list += productListItem(changeset_id, key, product.name, provider, toSlide, showButton, product.filtered);
                         }
                         else {
-                            partial_list += productListItem(changeset_id, key, product.name, provider, toSlide, false);
+                            partial_list += productListItem(changeset_id, key, product.name, provider, toSlide, false, product.filtered);
                         }
                     }
                 }
@@ -1399,7 +1406,7 @@ var templateLibrary = (function(){
             html += "</div>";
             return html;
         },
-        productListItem = function(changeset_id, product_id, name, provider, slide_link, showButton){
+        productListItem = function(changeset_id, product_id, name, provider, slide_link, showButton, isFiltered){
             var anchor = "",
                 html = '';
 
@@ -1411,8 +1418,12 @@ var templateLibrary = (function(){
             }
             html += '<li class="clear ' + slide_link + '">' + anchor + '<div class="simple_link ';
             html += (slide_link === 'slide_link') ? 'link_details' : '';
-            html += '" id="product-cs_' + changeset_id + '_' + product_id + '">' +
-                    '<span class="' + provider + '-product-sprite"></span>' +
+            html += '" id="product-cs_' + changeset_id + '_' + product_id + '">';
+            if (isFiltered) {
+                html += '<span class="filter_warning_icon fl promotion_tipsify"' + " data-content_id=\"" +
+                            product_id +"\" data-content_type=\"product\""  + '>&nbsp;</span> ';
+            }
+            html += '<span class="' + provider + '-product-sprite"></span>' +
                     '<span class="sort_attr" >' + name + '</span>' +
                     '</div></li>';
 
@@ -1486,7 +1497,7 @@ var changesetStatusActions = (function($){
 
             if (status_text === undefined) {
                 status_text = i18n.promoting;
-                status_title = i18n.changeset_progress
+                status_title = i18n.changeset_progress;
             }
 
             changeset.css('margin-left', '0');

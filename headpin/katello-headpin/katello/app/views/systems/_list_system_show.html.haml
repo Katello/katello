@@ -14,7 +14,7 @@
         = _('OS: ')
         = item.send('distribution_name')
         &nbsp;&nbsp;
-        = item.send('arch')
+        = System.architectures[item.send('arch')]
       %li
         &nbsp;&nbsp;
         = _('IP: ')

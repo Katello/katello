@@ -293,24 +293,24 @@ class ChangesetsController < ApplicationController
     end
 
     cs.involved_products.each{|product|
-      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type,
-                                       'package'=>[], 'errata'=>[], 'repo'=>[], 'distribution'=>[]}
+      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name,     :provider=>product.provider.provider_type,
+      :filtered => product.has_filters?(cs.environment.prior),
+       'package'=>[], 'errata'=>[], 'repo'=>[], 'distribution'=>[]}
     }
 
     cs.products.each {|product|
       to_ret[:products][product.id][:all] =  true
     }
 
-    cs.send('repos').each{|item|
-      p item
+    cs.repos.each{|item|
       pid = item.product.id
       cs_product = to_ret[:products][pid]
-      cs_product['repo'] << {:id=>item.id, :name=>item.name}
+      cs_product['repo'] << {:id=>item.id, :name=>item.name, :filtered => item.has_filters?}
+      cs_product[:filtered] = true if item.has_filters?
     }
 
     ['errata', 'package', 'distribution'].each{ |type|
       cs.send(type.pluralize).each{|item|
-        p item
         pid = item.product.id
         cs_product = to_ret[:products][pid]
         cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
