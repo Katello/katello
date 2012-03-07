@@ -53,6 +53,7 @@ class List(ChangesetAction):
     def run(self):
         orgName = self.get_option('org')
         envName = self.get_option('env')
+        verbose = self.get_option('verbose')
 
         env = get_environment(orgName, envName)
         if env == None:
@@ -69,6 +70,7 @@ class List(ChangesetAction):
         self.printer.addColumn('state')
         self.printer.addColumn('environment_id')
         self.printer.addColumn('environment_name')
+        if verbose: self.printer.addColumn('description', multiline=True)
 
         self.printer.setHeader(_("Changeset List"))
         self.printer.printItems(changesets)
@@ -153,6 +155,8 @@ class Create(ChangesetAction):
                                help=_("environment name (required)"))
         self.parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
+        self.parser.add_option('--description', dest='description',
+                               help=_("changeset description"))
 
     def check_options(self):
         self.require_option('org')
@@ -163,11 +167,11 @@ class Create(ChangesetAction):
         orgName = self.get_option('org')
         envName = self.get_option('env')
         csName = self.get_option('name')
+        csDescription = self.get_option('description')
 
         env = get_environment(orgName, envName)
         if env != None:
-
-            cset = self.api.create(orgName, env["id"], csName)
+            cset = self.api.create(orgName, env["id"], csName, csDescription)
             if is_valid_record(cset):
                 print _("Successfully created changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
             else:
