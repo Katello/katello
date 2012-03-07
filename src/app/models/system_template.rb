@@ -462,7 +462,7 @@ class SystemTemplate < ActiveRecord::Base
       if cloned
         async_tasks += cloned.sync
       else
-        async_tasks += repo.promote(to_env)
+        async_tasks += repo.promote(from_env, to_env)
       end
     end
     async_tasks
