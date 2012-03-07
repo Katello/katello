@@ -66,14 +66,16 @@ class Info(PackageGroupAction):
         if group == None:
             system_exit(os.EX_DATAERR, _("Package group [%s] not found in repo [%s]") % (groupid, repoid))
 
+        group['conditional_package_names'] = [name+": "+required_package  for name, required_package in group['conditional_package_names'].items()]
+
         self.printer.setHeader(_("Package Group Information"))
         self.printer.addColumn('id')
         self.printer.addColumn('name')
-        self.printer.addColumn('description')
-        self.printer.addColumn('mandatory_package_names')
-        self.printer.addColumn('default_package_names')
-        self.printer.addColumn('optional_package_names')
-        self.printer.addColumn('conditional_package_names')
+        self.printer.addColumn('description', multiline=True)
+        self.printer.addColumn('mandatory_package_names', multiline=True)
+        self.printer.addColumn('default_package_names', multiline=True)
+        self.printer.addColumn('optional_package_names', multiline=True)
+        self.printer.addColumn('conditional_package_names', multiline=True)
 
         self.printer.printItem(group)
 
