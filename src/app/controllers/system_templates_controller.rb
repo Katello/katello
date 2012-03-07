@@ -14,7 +14,7 @@ class SystemTemplatesController < ApplicationController
   include AutoCompleteSearch
 
   before_filter :setup_options, :only => [:index, :items]
-  before_filter :find_template, :only =>[:update, :edit, :destroy, :show, :download, :object, :update_content]
+  before_filter :find_template, :only =>[:update, :edit, :destroy, :show, :download, :validate, :object, :update_content]
   before_filter :find_read_only_template, :only =>[:promotion_details]
 
   #around_filter :catch_exceptions
@@ -36,6 +36,7 @@ class SystemTemplatesController < ApplicationController
       :show => read_test,
       :edit => read_test,
       :download => read_test,
+      :validate => read_test,
       :product_repos => read_test,
       :product_packages => read_test,
       :product_comps => read_test,
@@ -224,6 +225,15 @@ class SystemTemplatesController < ApplicationController
 
   def show
     render :partial => "common/list_update", :locals=>{:item=>@template, :accessor=>"id", :columns=>['name']}
+  end
+
+  def validate
+    env_template = SystemTemplate.where(:name => @template.name, :environment_id => params[:environment_id]).first
+    env_template.validate_tdl
+    render :text=>""
+  rescue Errors::TemplateValidationException => e
+    notice e.errors, {:level=>:error}
+    render :text=>"", :status=>500
   end
 
   def download

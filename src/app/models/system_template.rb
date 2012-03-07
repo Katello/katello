@@ -133,13 +133,6 @@ class SystemTemplate < ActiveRecord::Base
     # (2)
     verrors << _("Exactly one distribution must be present to export a TDL") if self.distributions.count != 1
 
-    # (3)
-    begin
-      Candlepin::Owner.get_ueber_cert(environment.organization.cp_key)
-    rescue RestClient::ResourceNotFound
-      verrors << N_("Uebercert for %s has not been generated.") % environment.organization.name
-    end
-
     raise Errors::TemplateValidationException.new(_("Template cannot be exported"), verrors) if verrors.count > 0
     true
   end
@@ -150,21 +143,13 @@ class SystemTemplate < ActiveRecord::Base
   # Method validate_tdl MUST be called before exporting, this method expects
   # validated system template.
   def export_as_tdl
-
     xm = Builder::XmlMarkup.new
     xm.instruct!
 
-    begin
-      validate_tdl
-    rescue Errors::TemplateValidationException => e
-      xm.comment! _("Template is not complete and will likely fail.")
-      e.errors.each do |e|
-        xm.comment! " - #{e}"
-      end
-    end
+    validate_tdl
 
     begin
-      uebercert = Candlepin::Owner.get_ueber_cert(environment.organization.cp_key)
+      uebercert = self.environment.organization.debug_cert
     rescue RestClient::ResourceNotFound => e
       uebercert = nil
     end
