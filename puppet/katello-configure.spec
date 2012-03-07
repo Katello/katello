@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.103
+Version:        0.1.104
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -57,6 +57,13 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Wed Mar 07 2012 Mike McCune <mmccune@redhat.com> 0.1.104-1
+- 800318 - installer fails: Working directory '/var/www/html/pub' does not
+  exist
+- 798435: Make the pulp.conf file readable only by the apache user
+- 788708 - moving the var/www/html/pub dir creation a bit higher up
+  (mmccune@redhat.com)
+
 * Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.1.103-1
 - 788708 - moving the var/www/html/pub dir creation a bit higher up
   (mmccune@redhat.com)
