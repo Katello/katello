@@ -470,11 +470,6 @@ class Update(TemplateAction):
     def updateContent(self, tplId, content):
 
 
-        for p in content['-products']:
-            self.api.remove_content(tplId, 'products', p)
-        for p in content['+products']:
-            self.api.add_content(tplId, 'products', {'id': p})
-
         for p in content['-packages']:
             self.api.remove_content(tplId, 'packages', p)
         for p in content['+packages']:
