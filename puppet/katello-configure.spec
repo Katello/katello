@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.9
+Version:        0.2.10
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -57,6 +57,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.2.10-1
+- 788708 - moving the var/www/html/pub dir creation a bit higher up
+  (mmccune@redhat.com)
+
 * Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.2.9-1
 - Keep the permissions for the candlepin.conf file the same as the spec file
   (bkearney@redhat.com)
