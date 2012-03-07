@@ -2,6 +2,7 @@ import unittest
 from mock import Mock
 import urlparse
 from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
+from copy import deepcopy
 import test_data
 
 import katello.client.core.packagegroup
@@ -57,4 +58,6 @@ class PackageGroupInfoTest(CLIActionTestCase):
 
     def test_it_prints_package_groups(self):
         self.action.run()
-        self.action.printer.printItem.assert_called_once_with(self.PACKAGE_GROUP)
+        printed_group = deepcopy(self.PACKAGE_GROUP)
+        printed_group["conditional_package_names"] = []
+        self.action.printer.printItem.assert_called_once_with(printed_group)
