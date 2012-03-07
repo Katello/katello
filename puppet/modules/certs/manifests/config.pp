@@ -7,11 +7,12 @@ class certs::config {
   $ssl_build_path = '/root/ssl-build'
   $ssl_tool_common = "--set-country '${certs::params::ssl_ca_country}' --set-state '${certs::params::ssl_ca_state}' --set-city '${certs::params::ssl_ca_city}' --set-org-unit '${certs::params::ssl_ca_org_unit}' --set-email '${certs::params::ssl_ca_email}'"
 
-
+  
   $katello_pub_cert_name = "KATELLO-TRUSTED-SSL-CERT"
   $katello_private_key_name = "KATELLO-PRIVATE-SSL-KEY"
   $katello_pub_cert = "/usr/share/katello/$katello_pub_cert_name"
   $katello_private_key = "${ssl_build_path}/$katello_private_key_name"
+  $katello_www_pub_dir = "/var/www/html/pub"
 
   $candlepin_pub_cert_name = "$candlepin_cert_name.crt"
   $candlepin_private_key_name = "$candlepin_cert_name.key"
@@ -43,6 +44,13 @@ class certs::config {
     mode => 600,
     require => Exec["generate-candlepin-ca-password"]
   }
+  
+  file { "${katello_www_pub_dir}":
+    ensure => "directory",
+    owner  => "apache",
+    group  => "apache",
+    mode   => 755,
+  }
 
   if (1==0) { #Katello CA is currently not used at all
       exec { "generate-ssl-ca-certificate":
@@ -57,10 +65,10 @@ class certs::config {
         path => "/bin:/usr/bin",
         #creates => $$katello_pub_cert,
         require => Exec["generate-ssl-ca-certificate"],
-        notify => File["/var/www/html/pub/${katello_pub_cert_name}"]
+        notify => File["${katello_www_pub_dir}/${katello_pub_cert_name}"]
       }
 
-      file { "/var/www/html/pub/${katello_pub_cert_name}":
+      file { "${katello_www_pub_dir}/${katello_pub_cert_name}":
         source => $katello_pub_cert,
         #replace => true,
         require => Exec["deploy-ssl-ca-certificate"]
@@ -142,19 +150,12 @@ class certs::config {
 
   $candlepin_certs_dir = "/etc/candlepin/certs"
 
-  file { "/var/www/html/pub":
-    ensure => "directory",
-    owner  => "apache",
-    group  => "apache",
-    mode   => 755
-  }
-
   exec { "generate-candlepin-consumer-certificate":
-    cwd       => '/var/www/html/pub',
+    cwd       => "${katello_www_pub_dir}",
     command   => "gen-rpm.sh --name '${candlepin_consumer_name}' --version 1.0 --release 1 --packager None --vendor None --group 'Applications/System' --summary '${candlepin_consumer_summary}' --description '${candlepin_consumer_description}' --post ${ssl_build_path}/rhsm-katello-reconfigure /etc/rhsm/ca/candlepin-local.pem:666=${ssl_build_path}/$candlepin_cert_name.crt && /sbin/restorecon ./*rpm",
     path      => "/usr/share/katello/certs:/usr/bin:/bin",
-    creates   => "/var/www/html/pub/${candlepin_cert_name}-1.0-1.noarch.rpm",
-    require   => [File["/var/www/html/pub"], Exec["generate-candlepin-certificate"], File["${ssl_build_path}/rhsm-katello-reconfigure"]]
+    creates   => "${katello_www_pub_dir}/${candlepin_cert_name}-1.0-1.noarch.rpm",
+    require   => [Exec["generate-candlepin-certificate"], File["${ssl_build_path}/rhsm-katello-reconfigure"]]
   }
 
   exec { "deploy-candlepin-certificate":
