@@ -18,6 +18,10 @@ optparse = OptionParser.new do|opts|
     options[:basedir] = opt
   end
 
+  options[:archive] = true
+  opts.on( '--notar', 'Do not generate a tar file, just copy the files to target dir' ) do
+    options[:archive] = false
+  end
 
   opts.on( '--help', 'Display help and exit' ) do
     puts opts
@@ -103,7 +107,7 @@ end
 # Store misisng filenames to archive if there are any
 if not missing_files.empty?
   missing_target = File.join(target_dir, 'missing_files')
-  File.open(missing_target, 'w') do |missing|  
+  File.open(missing_target, 'w') do |missing|
     missing.puts missing_files.join("\n")
   end
 end
@@ -136,15 +140,21 @@ output = `katello-debug-certificates >> #{File.join(target_dir, "certificates")}
 # Below are custom system calls to get more info
 ouput = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug|qpid" >> #{File.join(target_dir, "packages")}`
 
-# Tar the output and log it
-tarfile = target_dir + ".tar.gz"
-pwd = Dir.pwd()
-Dir.chdir(options[:basedir])
-output = `tar -czf #{tarfile} #{timename}`
-Dir.chdir(pwd)
 
-puts "A debug file has been created at #{tarfile}."
-puts "Make sure it contains no security sensitive data before making it public!"
+if (options[:archive])
+    # Tar the output and log it
+    tarfile = target_dir + ".tar.gz"
+    pwd = Dir.pwd()
+    Dir.chdir(options[:basedir])
+    output = `tar -czf #{tarfile} #{timename}`
+    Dir.chdir(pwd)
 
-# Clean up
-FileUtils.rm_r(target_dir)
+    puts "A debug file has been created at #{tarfile}."
+    puts "Make sure it contains no security sensitive data before making it public!"
+
+    # Clean up
+    FileUtils.rm_r(target_dir)
+else
+    puts "Debug files have been created at #{target_dir}"
+    puts "Make sure it contains no security sensitive data before making it public!"
+end
