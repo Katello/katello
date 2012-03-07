@@ -465,6 +465,7 @@ class SystemTemplate < ActiveRecord::Base
         async_tasks += repo.promote(from_env, to_env)
       end
     end
+    PulpTaskStatus::wait_for_tasks async_tasks
     async_tasks
   end
 
