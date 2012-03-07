@@ -149,6 +149,12 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def confirm_last_env
+    # when deleting env while org is deleted, self.organization is nil (and we
+    # can't do this logic properly)
+    # we don't have to check this anyway, all environments will be destroyed
+    # with the org.
+    return true unless self.organization
+
     return true if successor.nil?
     errors.add(:base, _("Environment %s has a successor.  Only the last environment on a path can be deleted" % self.name))
     return false
