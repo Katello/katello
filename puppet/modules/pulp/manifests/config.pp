@@ -10,6 +10,8 @@ class pulp::config {
     "/etc/pulp/pulp.conf":
       content => template("pulp/etc/pulp/pulp.conf.erb"),
       require => File["/var/lib/pulp/packages"],
+      owner=>"apache",
+      mode=>"600",
       before => [Class["apache2::service"]];
     "/etc/httpd/conf.d/pulp.conf":
       content => template("pulp/etc/httpd/conf.d/pulp.conf.erb"),
