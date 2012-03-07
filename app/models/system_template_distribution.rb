@@ -15,7 +15,6 @@ class DistributionValidator < ActiveModel::Validator
     id = record.distribution_pulp_id
     env = record.system_template.environment
     cnt = env.get_distribution(id).length
-
     record.errors[:base] << _("Distribution '%s' not found in the '%s' environment") % [id, env.name] if cnt == 0
   end
 end

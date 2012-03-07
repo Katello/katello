@@ -47,6 +47,10 @@ module Errors
       super(msg)
     end
 
+    def errors
+      return @errors
+    end
+
     def message
       if @errors.nil?
         "#{to_s}: " + _("No errors")
