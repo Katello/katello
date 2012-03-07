@@ -23,7 +23,7 @@ from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit, format_task_errors
 from katello.client.api.utils import get_organization, get_environment, get_changeset, get_template, get_repo, get_product
-
+from katello.client.utils.encoding import u_str
 
 Config()
 
@@ -316,17 +316,17 @@ class UpdateContent(ChangesetAction):
 
 
     def store_from_product(self, option, opt_str, value, parser):
-        self.current_product = value
+        self.current_product = u_str(value)
         parser.values.from_product = True
 
     def store_item_with_product(self, option, opt_str, value, parser):
         if parser.values.from_product == None:
             raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product") )
 
-        self.items[option.dest].append({"name": value, "product": self.current_product})
+        self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
 
     def store_item(self, option, opt_str, value, parser):
-        self.items[option.dest].append({"name": value})
+        self.items[option.dest].append({"name": u_str(value)})
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',

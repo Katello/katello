@@ -1,5 +1,5 @@
 - if read_contents
-  - if !defined? product or product.nil?
+  - if (!defined? product) || product.nil?
     %ul
       %li.slide_link
         .simple_link.link_details{:id=>"products"}

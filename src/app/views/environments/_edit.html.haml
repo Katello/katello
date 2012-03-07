@@ -6,7 +6,11 @@
 = content_for :remove_item do
   -# editable on the org means CRUD on the environments
   -if editable
-    = link_to _("Remove Environment"), {:controller=>"environments", :action=>"destroy"}, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true, "data-forward"=>edit_organization_path(@organization.cp_key)
+    - if @environment.successor.nil?
+      = link_to _("Remove Environment"), {:controller=>"environments", :action=>"destroy"}, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true, "data-forward"=>edit_organization_path(@organization.cp_key)
+    - else
+      %span{ :class => "remove_item disabled tipsify", :title => _("The selected environment is not the last environment in its promotion path.  Only the last environment can be deleted.") }
+        = _("Remove Environment")
 
 = content_for :subcontent do
   .clear

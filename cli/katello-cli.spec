@@ -18,8 +18,8 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.100
-Release:       2%{?dist}
+Version:       0.1.102
+Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -61,13 +61,16 @@ install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client
 install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/api
 install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/cli
 install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/core
+install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/utils
 install -pm 0644 bin/%{base_name} $RPM_BUILD_ROOT%{_bindir}/%{base_name}
+install -pm 0644 bin/%{base_name}-debug-certificates $RPM_BUILD_ROOT%{_bindir}/%{base_name}-debug-certificates
 install -pm 0644 etc/client.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/client.conf
 install -pm 0644 src/%{base_name}/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/
 install -pm 0644 src/%{base_name}/client/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/
 install -pm 0644 src/%{base_name}/client/api/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/api/
 install -pm 0644 src/%{base_name}/client/cli/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/cli/
 install -pm 0644 src/%{base_name}/client/core/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/core/
+install -pm 0644 src/%{base_name}/client/utils/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/utils/
 
 
 %clean
@@ -75,6 +78,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files 
 %attr(755,root,root) %{_bindir}/%{base_name}
+%attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
 %doc README LICENSE
 #%{_mandir}/man8/%{base_name}.8*
@@ -85,6 +89,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 07 2012 Jordan OMara <jomara@redhat.com> 0.1.102-1
+- 799149 - fix problems when adding repo to a template
+- 799149 - disabling template product addition/removal from cli
+
+* Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.1.101-1
+- periodic rebuild
 * Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.1.100-2
 - rebuild
 * Thu Feb 16 2012 Mike McCune <mmccune@redhat.com> 0.1.54-2

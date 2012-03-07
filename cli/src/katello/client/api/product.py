@@ -14,28 +14,29 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.utils.encoding import u_str
 
 class ProductAPI(KatelloAPI):
     """
     Connection class to access environment calls
     """
     def products_by_org(self, orgName, prodName=None):
-        path = "/api/organizations/%s/products" % orgName
+        path = "/api/organizations/%s/products" % u_str(orgName)
         products = self.server.GET(path, {"name": prodName} if prodName != None else {})[1]
         return products
 
     def products_by_env(self, envId):
-        path = "/api/environments/%s/products" % envId
+        path = "/api/environments/%s/products" % u_str(envId)
         products = self.server.GET(path)[1]
         return products
 
     def products_by_provider(self, provId, prodName=None):
-        path = "/api/providers/%s/products/" % str(provId)
+        path = "/api/providers/%s/products/" % u_str(provId)
         products = self.server.GET(path, {"name": prodName} if prodName != None else {})[1]
         return products
 
     def product_by_name(self, orgName, prodName):
-        path = "/api/organizations/%s/products" % orgName
+        path = "/api/organizations/%s/products" % u_str(orgName)
         products = self.server.GET(path, {"name": prodName})[1]
         if len(products) > 0:
             return products[0]
@@ -49,7 +50,7 @@ class ProductAPI(KatelloAPI):
             "gpg_key_name": gpgkey
         }
 
-        path = "/api/providers/%s/product_create" % str(provId)
+        path = "/api/providers/%s/product_create" % u_str(provId)
         result = self.server.POST(path, {"product": product})[1]
         return result
 
@@ -61,46 +62,46 @@ class ProductAPI(KatelloAPI):
         if nogpgkey:
             product["gpg_key_name"] = ""
 
-        path = "/api/organizations/%s/products/%s/" % (orgName, prodId)
+        path = "/api/organizations/%s/products/%s/" % (u_str(orgName), u_str(prodId))
         result = self.server.PUT(path, {"product": product})[1]
         return result
 
 
     def show(self, orgName, prodId):
-        path = "/api/organizations/%s/products/%s/" % (orgName, prodId)
+        path = "/api/organizations/%s/products/%s/" % (u_str(orgName), u_str(prodId))
         return self.server.GET(path)[1]
 
     def delete(self, orgName, prodId):
-        path = "/api/organizations/%s/products/%s/" % (orgName, prodId)
+        path = "/api/organizations/%s/products/%s/" % (u_str(orgName), u_str(prodId))
         return self.server.DELETE(path)[1]
 
     def sync(self, orgName, prodId):
-        path = "/api/organizations/%s/products/%s/sync" % (orgName, prodId)
+        path = "/api/organizations/%s/products/%s/sync" % (u_str(orgName), u_str(prodId))
         return self.server.POST(path)[1]
 
     def set_sync_plan(self, orgName, prodId, planId):
-        path = "/api/organizations/%s/products/%s/sync_plan" % (orgName, prodId)
+        path = "/api/organizations/%s/products/%s/sync_plan" % (u_str(orgName), u_str(prodId))
         return self.server.POST(path, {"plan_id": planId})[1]
 
     def remove_sync_plan(self, orgName, prodId):
-        path = "/api/organizations/%s/products/%s/sync_plan" % (orgName, prodId)
+        path = "/api/organizations/%s/products/%s/sync_plan" % (u_str(orgName), u_str(prodId))
         return self.server.DELETE(path)[1]
 
     def cancel_sync(self, orgName, prodId):
-        path = "/api/organizations/%s/products/%s/sync" % (orgName, prodId)
+        path = "/api/organizations/%s/products/%s/sync" % (u_str(orgName), u_str(prodId))
         return self.server.DELETE(path)[1]
 
     def last_sync_status(self, orgName, prodId):
-        path = "/api/organizations/%s/products/%s/sync" % (orgName, prodId)
+        path = "/api/organizations/%s/products/%s/sync" % (u_str(orgName), u_str(prodId))
         data = self.server.GET(path)[1]
         return data
 
     def update_filters(self, orgName, prodId, filters):
-        path = "/api/organizations/%s/products/%s/filters" % (orgName, prodId)
+        path = "/api/organizations/%s/products/%s/filters" % (u_str(orgName), u_str(prodId))
         data = self.server.PUT(path, {"filters": filters})[1]
         return data
 
     def filters(self, orgName, prodId):
-        path = "/api/organizations/%s/products/%s/filters" % (orgName, prodId)
+        path = "/api/organizations/%s/products/%s/filters" % (u_str(orgName), u_str(prodId))
         data = self.server.GET(path)[1]
         return data

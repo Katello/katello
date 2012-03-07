@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.utils.encoding import u_str
 
 class ProviderAPI(KatelloAPI):
     """
@@ -35,7 +36,7 @@ class ProviderAPI(KatelloAPI):
 
 
     def delete(self, name):
-        path = "/api/providers/%s" % str(name)
+        path = "/api/providers/%s" % u_str(name)
         return self.server.DELETE(path)[1]
 
 
@@ -46,24 +47,24 @@ class ProviderAPI(KatelloAPI):
         provdata = self.update_dict(provdata, "description", description)
         provdata = self.update_dict(provdata, "repository_url", url)
 
-        path = "/api/providers/%s" % str(provId)
+        path = "/api/providers/%s" % u_str(provId)
         return self.server.PUT(path, {"provider": provdata})[1]
 
 
     def providers_by_org(self, orgId):
-        path = "/api/organizations/%s/providers/" % str(orgId)
+        path = "/api/organizations/%s/providers/" % u_str(orgId)
         providers = self.server.GET(path)[1]
         return providers
 
 
     def provider(self, provId):
-        path = "/api/providers/%s" % str(provId)
+        path = "/api/providers/%s" % u_str(provId)
         provider = self.server.GET(path)[1]
         return provider
 
 
     def provider_by_name(self, orgName, provName):
-        path = "/api/organizations/%s/providers/" % str(orgName)
+        path = "/api/organizations/%s/providers/" % orgName
         providers = self.server.GET(path, {"name": provName})[1]
         if len(providers) > 0:
             return providers[0]
@@ -72,13 +73,13 @@ class ProviderAPI(KatelloAPI):
 
 
     def sync(self, provId):
-        path = "/api/providers/%s/sync/" % str(provId)
+        path = "/api/providers/%s/sync/" % u_str(provId)
         provider = self.server.POST(path)[1]
         return provider
 
 
     def cancel_sync(self, provId):
-        path = "/api/providers/%s/sync/" % str(provId)
+        path = "/api/providers/%s/sync/" % u_str(provId)
         provider = self.server.DELETE(path)[1]
         return provider
 
@@ -90,7 +91,7 @@ class ProviderAPI(KatelloAPI):
 
 
     def import_manifest(self, provId, manifestFile, force=False):
-        path = "/api/providers/%s/import_manifest" % str(provId)
+        path = "/api/providers/%s/import_manifest" % u_str(provId)
         params = {"import": manifestFile}
         if force: params["force"] = "true"
         result = self.server.POST(path, params, multipart=True)[1]

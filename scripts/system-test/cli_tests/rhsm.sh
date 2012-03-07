@@ -10,7 +10,7 @@ RHSM_YPROV="yum_$RAND"
 CS1_NAME="changeset_$RAND"
 RHSM_REPO="http://lzap.fedorapeople.org/fakerepos/zoo/"
 RHSM_YPROD="yum_product_$RAND"
-HOST="$(hostname)_$RAND"
+HOST="$(hostname)_$PLAIN_RAND"
 
 sm_present() {
   which subscription-manager &> /dev/null

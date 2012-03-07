@@ -11,17 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ErrataController < ApplicationController
-    
-  skip_before_filter :authorize, :only => [:packages]
-  before_filter :details_auth, :only=> [:packages]
+
   
   before_filter :lookup_errata
+  before_filter :authorize
 
   def rules
-    test = lambda{true}
+    view = lambda{
+      !Repository.readable_in_org(current_organization).where(
+          :pulp_id=>@errata.repoids).empty?
+    }
     {
-        :show => test,
-        :packages => test
+        :show => view,
+        :packages => view
     }
 
   end
@@ -35,10 +37,7 @@ class ErrataController < ApplicationController
   end
   
   private
-  
-  def details_auth
-    authorize params[:controller], :show
-  end    
+
   
   def lookup_errata
     @errata = Glue::Pulp::Errata.find(params[:id])

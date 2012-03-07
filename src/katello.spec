@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.301
+Version:        0.1.303
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,31 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Mar 07 2012 Jordan OMara <jomara@redhat.com> 0.1.303-1
+- 794799 - fix deleting organization (inecas@redhat.com)
+- 752547: Add -notar option to improve integratoin with sos tooling
+- 794883 - wait for repositories to be synced when promoting template
+  (inecas@redhat.com)
+- 799149 - disabling add/remove of products from a system template in api
+
+* Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.1.302-1
+- periodic rebuild
+* Thu Mar 01 2012 Jordan OMara <jomara@redhat.com> 0.1.301-2
+- Rebuild (jomara@redhat.com)
+- 787696 - removed incorrectly calling _() in javascript
+- 796740 - Fixes unhelpful message when attempting to create a new system with
+  no environments in the current organization. (ehelms@redhat.com)
+- 796964 - The 'Sync Product' permission no longer allows a user to edit a
+  repository.
+- 798299 - fix reporting errors from Pulp (inecas@redhat.com)
+- 795825 - Sync Mgmt - fix display when state is 'waiting'
+  (bbuckingham@redhat.com)
+- 796360 - fixing issue where system install errata button was clickable even
+  if no errata exist
+- 783577 - removing template with unsaved changes should not prompt for saving
+- 798327 - fixing stray space in debug certificate download
+- 754873 - fixing issue where product sync bar would continually go to 100
+
 * Wed Feb 29 2012 Jordan OMara <jomara@redhat.com> 0.1.301-1
 - 795832 - removing package download link as well as some hardcoded package
   data

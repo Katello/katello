@@ -23,7 +23,7 @@
       %fieldset
         .grid_1.ra
           %label #{_("Name")}:
-        .grid_8.la#gpg_key_name{'name' => 'gpg_key[name]', :class => ("editable edit_panel_element" if editable), 'data-url' => gpg_key_path(@gpg_key.id)} #{@gpg_key[:name]}
+        .grid_8.la#gpg_key_name{'name' => 'gpg_key[name]', :class => editable_class(editable), 'data-url' => gpg_key_path(@gpg_key.id)} #{@gpg_key[:name]}
       = form_tag gpg_key_path(@gpg_key.id), :method => "post", "data-url" => gpg_key_path(@gpg_key.id), :id => "upload_gpg_key" do
         - if editable
           %fieldset

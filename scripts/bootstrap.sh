@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# This bootstrap script is deprecated now, see:
+# http://fedorahosted.org/katello/wiki/ConsumerBootstrap
 
 if [ -e $1 ]
 then
