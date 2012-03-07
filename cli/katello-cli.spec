@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.101
+Version:       0.1.102
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,6 +89,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 07 2012 Jordan OMara <jomara@redhat.com> 0.1.102-1
+- 799149 - fix problems when adding repo to a template
+- 799149 - disabling template product addition/removal from cli
+
 * Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.1.101-1
 - periodic rebuild
 * Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.1.100-2
