@@ -16,6 +16,7 @@ test_success "template update" template update --name="$TEMPLATE_NAME_2" --new_n
 
 test_success "template list" template list --org="$TEST_ORG" --environment="Library"
 
+test_success "template update add repo"                    template update --name="$TEMPLATE_NAME" --org="$TEST_ORG"  --from_product="$FEWUPS_PRODUCT" --add_repo="$REPO_NAME"
 test_success "template update add package"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package="cheetah"
 test_success "template update add package using nvrea"     template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package="lion-0.3-0.8.noarch.rpm"
 test_success "template update add package group"           template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group="mammal"
