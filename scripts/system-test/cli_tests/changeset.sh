@@ -35,7 +35,6 @@ test_success "changeset remove repo"     changeset update  --org="$TEST_ORG" --e
 #promote template with product and package
 PROM_TEMPLATE_NAME="promotion_test_tpl_$RAND"
 test_success "template create" template create --name="$PROM_TEMPLATE_NAME" --description="template description" --org="$TEST_ORG"
-test_success "template update add product" template update --name="$PROM_TEMPLATE_NAME" --org="$TEST_ORG" --add_product="$FEWUPS_PRODUCT"
 test_success "template update add package" template update --name="$PROM_TEMPLATE_NAME" --org="$TEST_ORG" --add_package="cheetah"
 
 test_success "changeset create" changeset create --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_3"
