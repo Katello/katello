@@ -17,27 +17,28 @@ class Api::ChangesetsController < Api::ApiController
   before_filter :authorize
 
   def rules
-    read_perm = lambda{@environment.changesets_readable?}
-    manage_perm = lambda{@environment.changesets_manageable?}
-    promote_perm = lambda{@environment.changesets_promotable?}
-    {
-      :index => read_perm,
-      :show => read_perm,
+    read_perm    = lambda { @environment.changesets_readable? }
+    manage_perm  = lambda { @environment.changesets_manageable? }
+    promote_perm = lambda { @environment.changesets_promotable? }
+    { :index        => read_perm,
+      :show         => read_perm,
       :dependencies => read_perm,
-      :create => manage_perm,
-      :promote => promote_perm,
-      :destroy =>manage_perm,
+      :create       => manage_perm,
+      :promote      => promote_perm,
+      :destroy      => manage_perm,
     }
   end
 
   respond_to :json
 
   def index
-    render :json => Changeset.select("changesets.*, environments.name AS environment_name").joins(:environment).where(params.slice(:name, :environment_id))
+    render :json => Changeset.select("changesets.*, environments.name AS environment_name").
+        joins(:environment).where(params.slice(:name, :environment_id))
   end
 
   def show
-    render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos, :system_templates, :distributions])
+    render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos, :system_templates,
+                                                    :distributions])
   end
 
   def dependencies
@@ -45,7 +46,7 @@ class Api::ChangesetsController < Api::ApiController
   end
 
   def create
-    @changeset = Changeset.new(params[:changeset])
+    @changeset             = Changeset.new(params[:changeset])
     @changeset.environment = @environment
     @changeset.save!
 
