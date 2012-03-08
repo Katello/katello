@@ -107,7 +107,7 @@ class certs::config {
 
   file { $katello_keystore:
     owner => "root",
-    group => "tomcat",
+    group => "katello",
     mode => 640,
     require => [Exec["generate-keystore-password"], Exec["generate-ssl-keystore"]]
   }
