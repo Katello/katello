@@ -51,7 +51,7 @@ class RolesController < ApplicationController
   
   def items
     render_panel_direct(Role, @panel_options,  params[:search], params[:offset], [:name_sort, :asc],
-                        {:filter=>[{:self_role=>[false]}], :load=>true})
+                        {:default_field => :name, :filter=>[{:self_role=>[false]}], :load=>true})
   end
   
   def setup_options

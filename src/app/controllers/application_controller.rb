@@ -332,6 +332,8 @@ class ApplicationController < ActionController::Base
   end
 
   # search_options
+  #    :default_field - The field that should be used by the search engine when a user performs
+  #                     a search without specifying field.
   #    :filter  -  Filter to apply to search. Array of hashes.  Each key/value within the hash
   #                  is OR'd, whereas each HASH itself is AND'd together
   #    :load  - whether or not to load the active record object (defaults to false)
@@ -348,7 +350,11 @@ class ApplicationController < ActionController::Base
     elsif search_options[:simple_query] && !AppConfig.simple_search_tokens.any?{|s| search.downcase.match(s)}
       search = search_options[:simple_query]
     end
-    search = Katello::Search::filter_input search
+    #search = Katello::Search::filter_input search
+
+    # set the query default field, if one was provided.
+    query_options = {}
+    query_options[:default_field] = search_options[:default_field] unless search_options[:default_field].blank?
 
     panel_options[:accessor] ||= "id"
     panel_options[:columns] = panel_options[:col]
@@ -362,11 +368,11 @@ class ApplicationController < ActionController::Base
           if all_rows
             all
           else
-            string search
+            string search, query_options
           end
         end
 
-        sort {by sort[0], sort[1].to_s.downcase }
+        sort {by sort[0], sort[1].to_s.downcase } unless !all_rows
 
         filters = [filters] if !filters.is_a? Array
         filters.each{|i|

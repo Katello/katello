@@ -146,7 +146,7 @@ class SystemsController < ApplicationController
       filters = {:environment_id=> KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
     end
     render_panel_direct(System, @panel_options, search, params[:offset], order,
-                        {:filter=>filters, :load=>true})
+                        {:default_field => :name, :filter=>filters, :load=>true})
 
   end
 
