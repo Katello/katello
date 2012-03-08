@@ -521,6 +521,10 @@ KT.panel = (function ($) {
             });
             return queryString;
         },
+        refreshPanel = function() {
+          var active = $('#list').find('.active');
+          KT.panel.panelAjax(active, active.attr("data-ajax_url"), $('#panel'), false);
+        },
         actions = (function(){
             var action_list = {};
 
@@ -636,6 +640,7 @@ KT.panel = (function ($) {
         control_bbq: control_bbq,
         registerPanel: registerPanel,
         queryParameters: queryParameters,
+        refreshPanel : refreshPanel,
         actions: actions,
         handleScroll : handleScroll
     };
