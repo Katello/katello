@@ -70,7 +70,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     }
   end
 
-  def self.name_search query, repoids=nil, number=15, sort=[:nvrea_sort, "ASC"]
+  def self.name_search query, repoids=nil, number=15
     return [] if !Tire.index(self.index).exists?
     start = 0
 
@@ -97,13 +97,23 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
 
   def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"]
     return [] if !Tire.index(self.index).exists?
-    query_down = query.downcase
-    query = "name:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
-    query = Katello::Search::filter_input query
+    all_rows = false
+
+    if query.blank?
+      all_rows = true
+    else
+      query_down = query.downcase
+      query = "nvrea:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
+      query = Katello::Search::filter_input query
+    end
 
     search = Tire.search self.index do
       query do
-        string query
+        if all_rows
+          all
+        else
+          string query
+        end
       end
 
       if page_size > 0
@@ -114,7 +124,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
         filter :terms, :repoids => repoids
       end
 
-      sort { by sort[0], sort[1] }
+      sort { by sort[0], sort[1] } unless !all_rows
     end
     return search.results
   rescue

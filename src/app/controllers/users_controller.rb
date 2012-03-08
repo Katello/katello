@@ -72,7 +72,8 @@ class UsersController < ApplicationController
   # to view all users, the results are restricted to just themselves.
   def items
     if !params[:only] && User.any_readable?
-      render_panel_direct(User, @panel_options, params[:search], params[:offset], [:username_sort, 'asc'])
+      render_panel_direct(User, @panel_options, params[:search], params[:offset], [:username_sort, 'asc'],
+                          {:default_field => :username})
     else
       users = [@user]
       render_panel_items(users, @panel_options, nil, params[:offset])
