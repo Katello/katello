@@ -71,7 +71,8 @@ class EnvironmentsController < ApplicationController
 
     @environment.save!
     notice _("Environment '%s' was created.") % @environment.name
-    render :json=>""
+    #this render just means return a 200 success
+    render :nothing => true
 
   end
 
