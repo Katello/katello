@@ -17,6 +17,7 @@ class ActivationKey < ActiveRecord::Base
   index_options :extended_json=>:extended_json, :display_attrs=>[:name, :description, :environment, :template]
 
   mapping do
+    indexes :name, :type => 'string', :analyzer => :keyword
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 

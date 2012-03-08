@@ -32,6 +32,7 @@ class System < ActiveRecord::Base
                 :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin]
 
   mapping do
+    indexes :name, :type => 'string', :analyzer => :keyword
     indexes :name_sort, :type => 'string', :index => :not_analyzed
     indexes :lastCheckin, :type=>'date'
   end

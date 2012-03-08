@@ -56,7 +56,7 @@ class ActivationKeysController < ApplicationController
 
   def items
     render_panel_direct(ActivationKey, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-        :filter=>{:organization_id=>[current_organization.id]})
+        {:default_field => :name, :filter=>{:organization_id=>[current_organization.id]}})
   end
 
   def show
