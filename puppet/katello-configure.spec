@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.104
+Version:        0.1.105
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -57,6 +57,12 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Thu Mar 08 2012 Jordan OMara <jomara@redhat.com> 0.1.105-1
+- 801549 - After katello-configure thumbslug fails to start with Unable to load
+  the ssl keystore (mbacovsk@redhat.com)
+- 786572 - elasticsearch - reduce config to use 3 shards vs default (5)
+  (bbuckingham@redhat.com)
+
 * Wed Mar 07 2012 Mike McCune <mmccune@redhat.com> 0.1.104-1
 - 800318 - installer fails: Working directory '/var/www/html/pub' does not
   exist
