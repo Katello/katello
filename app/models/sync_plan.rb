@@ -18,6 +18,7 @@ class SyncPlan < ActiveRecord::Base
                 :display_attrs=>[:name, :sync_date, :description, :interval]
 
   mapping do
+    indexes :name, :type => 'string', :analyzer => :keyword
     indexes :name_sort, :type => 'string', :index => :not_analyzed
     indexes :sync_date, :type=>'date'
   end
