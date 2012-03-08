@@ -30,14 +30,12 @@ Config()
 
 # base changeset action ========================================================
 class ChangesetAction(Action):
-
     def __init__(self):
         super(ChangesetAction, self).__init__()
         self.api = ChangesetAPI()
 
 # ==============================================================================
 class List(ChangesetAction):
-
     description = _('list new changesets of an environment')
 
     def setup_parser(self):
@@ -59,7 +57,6 @@ class List(ChangesetAction):
         if env == None:
             return os.EX_DATAERR
 
-
         changesets = self.api.changesets(orgName, env['id'])
         for cs in changesets:
             cs['updated_at'] = format_date(cs['updated_at'])
@@ -79,14 +76,14 @@ class List(ChangesetAction):
 
 # ==============================================================================
 class Info(ChangesetAction):
-
     description = _('detailed information about a changeset')
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org', help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env', help=_("environment name (required)"))
         self.parser.add_option('--name', dest='name', help=_("changeset name (required)"))
-        self.parser.add_option('--dependencies', dest='deps', action='store_true', help=_("will display dependent packages"))
+        self.parser.add_option('--dependencies', dest='deps', action='store_true',
+                               help=_("will display dependent packages"))
 
     def check_options(self):
         self.require_option('org')
@@ -113,12 +110,12 @@ class Info(ChangesetAction):
         cset['updated_at'] = format_date(cset['updated_at'])
         cset['environment_name'] = envName
 
-        cset["errata"]       = self.format_item_list("display_name", cset["errata"])
-        cset["products"]     = self.format_item_list("name", cset["products"])
-        cset["packages"]     = self.format_item_list("display_name", cset["packages"])
+        cset["errata"] = self.format_item_list("display_name", cset["errata"])
+        cset["products"] = self.format_item_list("name", cset["products"])
+        cset["packages"] = self.format_item_list("display_name", cset["packages"])
         cset["repositories"] = self.format_item_list("name", cset["repos"])
         cset["system_templates"] = self.format_item_list("name", cset["system_templates"])
-        cset["distributions"]    = self.format_item_list("distribution_id", cset["distributions"])
+        cset["distributions"] = self.format_item_list("distribution_id", cset["distributions"])
         if displayDeps:
             cset["dependencies"] = self.get_dependencies(cset["id"])
 
@@ -145,7 +142,6 @@ class Info(ChangesetAction):
 
 # ==============================================================================
 class Create(ChangesetAction):
-
     description = _('create a new changeset for an environment')
 
     def setup_parser(self):
@@ -182,23 +178,19 @@ class Create(ChangesetAction):
 
 # ==============================================================================
 class UpdateContent(ChangesetAction):
-
-
     class PatchBuilder(object):
-
         @staticmethod
         def build_patch(action, itemBuilder, items):
             patch = {}
-            patch['packages']      = [itemBuilder.package(i) for i in items[action+"_package"]]
-            patch['errata']        = [itemBuilder.erratum(i) for i in items[action+"_erratum"]]
-            patch['repositories']  = [itemBuilder.repo(i) for i in items[action+"_repo"]]
-            patch['products']      = [itemBuilder.product(i) for i in items[action+"_product"]]
-            patch['templates']     = [itemBuilder.template(i) for i in items[action+"_template"]]
-            patch['distributions'] = [itemBuilder.distro(i) for i in items[action+"_distribution"]]
+            patch['packages'] = [itemBuilder.package(i) for i in items[action + "_package"]]
+            patch['errata'] = [itemBuilder.erratum(i) for i in items[action + "_erratum"]]
+            patch['repositories'] = [itemBuilder.repo(i) for i in items[action + "_repo"]]
+            patch['products'] = [itemBuilder.product(i) for i in items[action + "_product"]]
+            patch['templates'] = [itemBuilder.template(i) for i in items[action + "_template"]]
+            patch['distributions'] = [itemBuilder.distro(i) for i in items[action + "_distribution"]]
             return patch
 
     class PatchItemBuilder(object):
-
         def __init__(self, orgName, envName):
             self.orgName = orgName
             self.envName = envName
@@ -234,7 +226,6 @@ class UpdateContent(ChangesetAction):
 
 
     class AddPatchItemBuilder(PatchItemBuilder):
-
         def package(self, options):
             return {
                 'name': options['name'],
@@ -270,9 +261,7 @@ class UpdateContent(ChangesetAction):
             }
 
 
-
     class RemovePatchItemBuilder(PatchItemBuilder):
-
         def package(self, options):
             return {
                 'content_id': options['name'],
@@ -308,7 +297,6 @@ class UpdateContent(ChangesetAction):
             }
 
 
-
     productDependentContent = ['package', 'erratum', 'repo', 'distribution']
     productIndependentContent = ['product', 'template']
 
@@ -325,7 +313,7 @@ class UpdateContent(ChangesetAction):
 
     def store_item_with_product(self, option, opt_str, value, parser):
         if parser.values.from_product == None:
-            raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product") )
+            raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product"))
 
         self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
 
@@ -334,41 +322,41 @@ class UpdateContent(ChangesetAction):
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
-                                help=_("changeset name (required)"))
+                               help=_("changeset name (required)"))
         self.parser.add_option('--org', dest='org',
-                                help=_("name of organization (required)"))
+                               help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                                help=_("environment name (required)"))
+                               help=_("environment name (required)"))
         self.parser.add_option('--add_product', dest='add_product', type="string",
-                                action="callback", callback=self.store_item,
-                                help=_("product to add to the changeset"))
+                               action="callback", callback=self.store_item,
+                               help=_("product to add to the changeset"))
         self.parser.add_option('--remove_product', dest='remove_product', type="string",
-                                action="callback", callback=self.store_item,
-                                help=_("product to remove from the changeset"))
+                               action="callback", callback=self.store_item,
+                               help=_("product to remove from the changeset"))
         self.parser.add_option('--add_template', dest='add_template', type="string",
-                                action="callback", callback=self.store_item,
-                                help=_("name of a template to be added to the changeset"))
+                               action="callback", callback=self.store_item,
+                               help=_("name of a template to be added to the changeset"))
         self.parser.add_option('--remove_template', dest='remove_template', type="string",
-                                action="callback", callback=self.store_item,
-                                help=_("name of a template to be removed from the changeset"))
+                               action="callback", callback=self.store_item,
+                               help=_("name of a template to be removed from the changeset"))
         self.parser.add_option('--from_product', dest='from_product',
-                                action="callback", callback=self.store_from_product, type="string",
-                                help=_("determines product from which the packages/errata/repositories are picked"))
+                               action="callback", callback=self.store_from_product, type="string",
+                               help=_("determines product from which the packages/errata/repositories are picked"))
 
         for ct in self.productDependentContent:
-            self.parser.add_option('--add_'+ct, dest='add_'+ct,
-                                action="callback", callback=self.store_item_with_product, type="string",
-                                help=_(ct+" to add to the changeset"))
-            self.parser.add_option('--remove_'+ct, dest='remove_'+ct,
-                                action="callback", callback=self.store_item_with_product, type="string",
-                                help=_(ct+" to remove from the changeset"))
+            self.parser.add_option('--add_' + ct, dest='add_' + ct,
+                                   action="callback", callback=self.store_item_with_product, type="string",
+                                   help=_(ct + " to add to the changeset"))
+            self.parser.add_option('--remove_' + ct, dest='remove_' + ct,
+                                   action="callback", callback=self.store_item_with_product, type="string",
+                                   help=_(ct + " to remove from the changeset"))
         self.reset_items()
 
     def reset_items(self):
         self.items = {}
         for ct in self.productDependentContent + self.productIndependentContent:
-            self.items['add_'+ct]    = []
-            self.items['remove_'+ct] = []
+            self.items['add_' + ct] = []
+            self.items['remove_' + ct] = []
 
     def check_options(self):
         self.require_option('name')
@@ -381,7 +369,7 @@ class UpdateContent(ChangesetAction):
         items = self.items.copy()
         self.reset_items()
 
-        csName  = self.get_option('name')
+        csName = self.get_option('name')
         orgName = self.get_option('org')
         envName = self.get_option('env')
 
@@ -389,7 +377,7 @@ class UpdateContent(ChangesetAction):
         if cset == None:
             return os.EX_DATAERR
 
-        addPatch    = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName), items)
+        addPatch = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName), items)
         removePatch = self.PatchBuilder.build_patch('remove', self.RemovePatchItemBuilder(orgName, envName), items)
         self.update_content(cset["id"], addPatch, self.api.add_content)
         self.update_content(cset["id"], removePatch, self.api.remove_content)
@@ -404,10 +392,8 @@ class UpdateContent(ChangesetAction):
                 updateMethod(csId, contentType, i)
 
 
-
 # ==============================================================================
 class Delete(ChangesetAction):
-
     description = _('deletes a changeset')
 
     def setup_parser(self):
@@ -424,7 +410,7 @@ class Delete(ChangesetAction):
         self.require_option('env')
 
     def run(self):
-        csName  = self.get_option('name')
+        csName = self.get_option('name')
         orgName = self.get_option('org')
         envName = self.get_option('env')
 
@@ -439,7 +425,6 @@ class Delete(ChangesetAction):
 
 # ==============================================================================
 class Promote(ChangesetAction):
-
     description = _('promotes a changeset to the next environment')
 
     def setup_parser(self):
@@ -456,7 +441,7 @@ class Promote(ChangesetAction):
         self.require_option('env')
 
     def run(self):
-        csName  = self.get_option('name')
+        csName = self.get_option('name')
         orgName = self.get_option('org')
         envName = self.get_option('env')
 
@@ -473,7 +458,7 @@ class Promote(ChangesetAction):
             print _("Changeset [ %s ] promoted" % csName)
             return os.EX_OK
         else:
-            print _("Changeset [ %s ] promotion failed: %s" % (csName, format_task_errors(task.errors())) )
+            print _("Changeset [ %s ] promotion failed: %s" % (csName, format_task_errors(task.errors())))
             return os.EX_DATAERR
 
 

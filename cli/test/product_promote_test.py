@@ -9,9 +9,7 @@ import katello.client.core.product
 from katello.client.core.product import Promote
 
 
-
 class RequiredCLIOptionsTests(CLIOptionTestCase):
-
     def setUp(self):
         self.set_action(Promote())
         self.mock_options()
@@ -25,7 +23,6 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 
 
 class ProductPromoteTest(CLIActionTestCase):
-
     ORG = test_data.ORGS[0]
     ENV = test_data.ENVS[0]
     PROV = test_data.PROVIDERS[2]
@@ -66,7 +63,7 @@ class ProductPromoteTest(CLIActionTestCase):
         self.module.get_environment.assert_called_once_with(self.ORG['name'], self.ENV['name'])
 
     def test_it_returns_with_error_when_no_environment_found(self):
-        self.module.get_environment.return_value =  None
+        self.module.get_environment.return_value = None
         self.action.run()
         self.assertEqual(self.action.run(), os.EX_DATAERR)
 
@@ -75,7 +72,7 @@ class ProductPromoteTest(CLIActionTestCase):
         self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
 
     def test_it_returns_with_error_when_no_product_found(self):
-        self.module.get_product.return_value =  None
+        self.module.get_product.return_value = None
         self.action.run()
         self.assertEqual(self.action.run(), os.EX_DATAERR)
 
@@ -85,7 +82,8 @@ class ProductPromoteTest(CLIActionTestCase):
 
     def test_it_updates_the_changeset(self):
         self.action.run()
-        self.action.csapi.add_content.assert_called_once_with(self.CSET['id'], 'products', {'product_id': self.PROD['id']})
+        self.action.csapi.add_content.assert_called_once_with(self.CSET['id'], 'products',
+                {'product_id': self.PROD['id']})
 
     def test_it_promotes_the_changeset(self):
         self.action.run()
