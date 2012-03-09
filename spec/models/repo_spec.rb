@@ -138,8 +138,11 @@ describe Glue::Pulp::Repo do
 
     it "should call pulp synchronization api" do
       @repo.stub(:async).and_return(@repo)
-      @repo.should_receive(:index_after_sync)
-      Pulp::Repository.should_receive(:sync).with(RepoTestData::REPO_ID)
+      @repo.should_receive(:after_sync)
+      Pulp::Repository.should_receive(:sync).with(RepoTestData::REPO_ID).and_return({})
+      task = mock()
+      task.stub(:save!)
+      PulpSyncStatus.should_receive(:using_pulp_task).and_return(task)
       @repo.sync
     end
 
