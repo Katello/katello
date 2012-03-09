@@ -39,6 +39,12 @@ class katello::config {
       owner   => "root",
       group   => "root",
       mode    => "644";
+    
+    "/etc/katello/client.conf":
+      content => template("katello/etc/katello/client.conf.erb"),
+      owner   => "root",
+      group   => "root",
+      mode    => "644";
 
     "/etc/httpd/conf.d/katello.conf":
       content => template("katello/etc/httpd/conf.d/katello.conf.erb"),
