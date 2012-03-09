@@ -22,7 +22,7 @@ from pwd import getpwuid
 # Set up the new locations for the config files
 from katello.client.config import Config
 Config.FILE = 'client.conf'
-Config.PATH = os.path.join('/etc/headpin', Config.FILE)
+Config.PATH = os.path.join('/etc/katello', Config.FILE)
 Config.USER_DIR = os.path.join(getpwuid(os.getuid())[5], '.headpin')
 Config.USER = os.path.expanduser(os.path.join(Config.USER_DIR, Config.FILE))
 Config.USER_OPTIONS = os.path.expanduser(os.path.join(Config.USER_DIR, 'client-options.conf'))
