@@ -19,8 +19,8 @@ Summary:       Client package for managing a katello-headpin installation
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.15
-Release:       2%{?dist}
+Version:       0.1.16
+Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 09 2012 Jordan OMara <jomara@redhat.com> 0.1.16-1
+- 801786 - removing client.conf from katello-headpin-cli package
+
 * Thu Jan 26 2012 Jordan OMara <jomara@redhat.com> 0.1.15-2
 - Merge remote-tracking branch 'katello/headpin' into BRANDING
   (jomara@redhat.com)
