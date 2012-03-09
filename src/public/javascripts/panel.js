@@ -665,7 +665,7 @@ KT.panel.list = (function () {
             return $("#list section").children().first();
         },
         append = function (html) {
-            $('#list section').prepend($(html).hide().fadeIn(function () {
+            $('#list section').append($(html).hide().fadeIn(function () {
                 $(this).addClass("add", 250, function () {
                     $(this).removeClass("add", 250);
                 });
