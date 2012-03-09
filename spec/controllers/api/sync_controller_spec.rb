@@ -154,22 +154,23 @@ describe Api::SyncController do
 
     describe "start a sync" do
       before(:each) do
-        @organization = Organization.create!(:name => "organization", :cp_key => "123")
+        #@organization = Organization.create!(:name => "organization", :cp_key => "123")
+        
+        Pulp::Repository.stub(:sync).with("1").and_return(async_task_1)
+        Pulp::Repository.stub(:sync).with("2").and_return(async_task_2)
+        #@syncable = mock()
+        #@syncable.stub!(:organization).and_return(@organization)
 
-        @syncable = mock()
-        @syncable.stub!(:sync).and_return([async_task_1, async_task_2])
-        @syncable.stub!(:organization).and_return(@organization)
-
-        Provider.stub!(:find).and_return(@syncable)
+        stub_product_with_repo
       end
 
       it "should find provider" do
-        Provider.should_receive(:find).once.with(provider_id).and_return(@syncable)
+        Provider.should_receive(:find).once.with(provider_id).and_return(@provider)
         post :create, :provider_id => provider_id
       end
 
       it "should call sync on the object of synchronization" do
-         @syncable.should_receive(:sync).once.and_return([async_task_1, async_task_2])
+         @provider.should_receive(:sync).once.and_return([async_task_1, async_task_2])
          post :create, :provider_id => provider_id
       end
 
@@ -263,6 +264,8 @@ describe Api::SyncController do
       Product.stub!(:find_by_cp_id).and_return(@product)
       ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :pulp_id=>"1")
+      Repository.stub(:find).and_return(@repository)
+      @repository2 = Repository.create!(:environment_product => ep, :name=> "repo_2", :pulp_id=>"2")
       Repository.stub(:find).and_return(@repository)
   end
 
