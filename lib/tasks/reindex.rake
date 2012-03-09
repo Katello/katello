@@ -19,7 +19,7 @@ task :reindex=>["environment", "clear_search_indices"]  do
   #repos = Repository.all
   #repos.each{|r| r.populate_from pulp_repos}
 
-  Repository.all.each{|repo|
+  Repository.enabled.each{|repo|
     repo.index_packages
     repo.index_errata
   }
