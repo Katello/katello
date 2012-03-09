@@ -23,12 +23,16 @@ module Mapping
   class ImageFactoryNaming
 
     def self.translate(name = '', version = '')
+      matched_name = "#{name} #{version}"
       naming = Mapping.configuration['imagefactory_naming']
-      naming["#{name} #{version}"].map(&:to_s)
-    rescue Exception => e
-      [name.to_s, version.to_s]
+      naming.each do |key, values|
+        regexp_str = "^#{Regexp.escape(key).gsub('\*','.*')}$"
+        if Regexp.new(regexp_str) =~ matched_name
+          return values.map(&:to_s)
+        end
+      end
+      return [name.to_s, version.to_s]
     end
-
   end
 
 end
