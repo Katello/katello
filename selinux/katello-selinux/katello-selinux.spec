@@ -11,7 +11,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-%define selinux_variants mls strict targeted
+%define selinux_variants targeted simple mls
 %define selinux_policyver %(sed -e 's,.*selinux-policy-\\([^/]*\\)/.*,\\1,' /usr/share/selinux/devel/policyhelp 2> /dev/null)
 %define POLICYCOREUTILSVER 1.33.12-1
 
@@ -47,6 +47,8 @@ Requires:       selinux-policy >= %{selinux_policyver}
 Requires:       selinux-policy >= 2.4.6-80
 %endif
 Requires(post):   /usr/sbin/semodule, /sbin/restorecon, /usr/sbin/setsebool, /usr/sbin/selinuxenabled, /usr/sbin/semanage
+Requires(post): policycoreutils-python
+Requires(post): selinux-policy-targeted
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon
 Requires:       %{modulename}-common
 
@@ -62,7 +64,8 @@ perl -i -pe 'BEGIN { $VER = join ".", grep /^\d+$/, split /\./, "%{version}.%{re
 for selinuxvariant in %{selinux_variants}
 do
     make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile
-    mv %{modulename}.pp %{modulename}.pp.${selinuxvariant}
+    bzip2 -9 %{modulename}.pp
+    mv %{modulename}.pp.bz2 %{modulename}.ppbz2.${selinuxvariant}
     make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile clean
 done
 
@@ -73,8 +76,8 @@ rm -rf %{buildroot}
 for selinuxvariant in %{selinux_variants}
   do
     install -d %{buildroot}%{_datadir}/selinux/${selinuxvariant}
-    install -p -m 644 %{modulename}.pp.${selinuxvariant} \
-           %{buildroot}%{_datadir}/selinux/${selinuxvariant}/%{modulename}.pp
+    install -p -m 644 %{modulename}.ppbz2.${selinuxvariant} \
+           %{buildroot}%{_datadir}/selinux/${selinuxvariant}/%{modulename}.pp.bz2
   done
 
 # Install SELinux interfaces
@@ -117,7 +120,7 @@ fi
 %files
 %defattr(-,root,root,0755)
 %doc %{modulename}.fc %{modulename}.if %{modulename}.te
-%{_datadir}/selinux/*/%{modulename}.pp
+%{_datadir}/selinux/*/%{modulename}.pp.bz2
 %{_datadir}/selinux/devel/include/%{moduletype}/%{modulename}.if
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 

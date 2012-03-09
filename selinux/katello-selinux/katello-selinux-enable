@@ -1,17 +1,18 @@
 #!/bin/bash
 
-# Install SELinux policy modules
-for selinuxvariant in mls strict targeted
+# Install SELinux policy modules in one transaction
+for selinuxvariant in targeted simple mls
 do
-  /usr/sbin/semodule -s ${selinuxvariant} -l > /dev/null 2>&1 \
-    && /usr/sbin/semodule -s ${selinuxvariant} -i \
-    /usr/share/selinux/${selinuxvariant}/katello.pp || :
+  /usr/sbin/semodule -s ${selinuxvariant} -l >/dev/null 2>&1 && \
+  /usr/sbin/semanage -S $selinuxvariant -i - << _EOF
+  module -a /usr/share/selinux/${selinuxvariant}/katello.pp.bz2
+  boolean -m --on httpd_can_network_connect
+  boolean -m --on httpd_tmp_exec
+_EOF
 done
 
-# allow qpidd to use port 5674
-/usr/sbin/semanage port -a -t amqp_port_t -p tcp 5674
+# Separate transaction for AMQP port (it is missing in 6.2 GOLD policy)
+semanage port -l | grep amqp_port_t | grep tcp | grep 5674 >/dev/null || \
+  /usr/sbin/semanage port -a -t amqp_port_t -p tcp 5674
 
 /sbin/restorecon -rvvi /var/lib/katello /var/log/katello
-
-# bz 790507 - httpd needs to work as proxy for Katello
-/usr/sbin/setsebool -P httpd_can_network_connect 1
