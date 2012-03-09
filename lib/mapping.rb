@@ -17,14 +17,20 @@ require 'yaml'
 module Mapping
 
   def self.configuration
-    @config ||= YAML.load_file('/etc/katello/mapping.yml')
+    return @config if @config
+    mapping_file = '/etc/katello/mapping.yml'
+    if File.readable?(mapping_file)
+      @config = YAML.load_file(mapping_file)
+    else
+      @config = {}
+    end
   end
 
   class ImageFactoryNaming
 
     def self.translate(name = '', version = '')
       matched_name = "#{name} #{version}"
-      naming = Mapping.configuration['imagefactory_naming']
+      naming = Mapping.configuration['imagefactory_naming'] || {}
       naming.each do |key, values|
         regexp_str = "^#{Regexp.escape(key).gsub('\*','.*')}$"
         if Regexp.new(regexp_str) =~ matched_name
