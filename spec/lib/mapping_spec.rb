@@ -21,8 +21,8 @@ describe Mapping do
       "imagefactory_naming" =>
         {
           "Red Hat Enterprise Linux 6" => ["RHEL-6", 0],
-          "Red Hat Enterprise Linux 6.0" => ["RHEL-6", 0],
-          "Red Hat Enterprise Linux 5.5" => ["RHEL-5", "U5"],
+          "Red Hat Enterprise Linux* 6.0" => ["RHEL-6", 0],
+          "Red Hat Enterprise Linux* 5.5" => ["RHEL-5", "U5"],
           "Fedora 15" => ["Fedora", "15"],
         }
     }
@@ -42,6 +42,10 @@ describe Mapping do
 
   it "should handle identity" do
     Mapping::ImageFactoryNaming.translate("Fedora", "15").should == ["Fedora", "15"]
+  end
+
+  it "should ba able to handle wild chars" do
+    Mapping::ImageFactoryNaming.translate("Red Hat Enterprise Linux Server", "5.5").should == ["RHEL-5", "U5"]
   end
 
 end
