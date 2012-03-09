@@ -74,8 +74,8 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     return [] if !Tire.index(self.index).exists?
     start = 0
 
-    query = "name:#{query}"
     query = Katello::Search::filter_input query
+    query = "name:#{query}"
 
     search = Tire.search self.index do
       fields [:name]
@@ -102,9 +102,9 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     if query.blank?
       all_rows = true
     else
+      query = Katello::Search::filter_input query
       query_down = query.downcase
       query = "nvrea:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
-      query = Katello::Search::filter_input query
     end
 
     search = Tire.search self.index do
