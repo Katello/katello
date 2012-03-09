@@ -135,15 +135,16 @@ KT.content_actions = (function(){
                    if (!repo.is_running && (repo.raw_state !== 'waiting')) {
                         removeSyncing(repo.id);
                         KT.content.finishRepo(repo.id, repo.state, repo.duration);
-                        KT.content.updateRepo(repo.id, repo.start_time, repo.duration, repo.progress.progress, repo.size, repo.packages);
-                        KT.content.updateProduct(repo.product_id, false, false, repo.product_size);
+                        KT.content.updateRepo(repo.id, repo.start_time, repo.duration, repo.progress.progress, repo.display_size, repo.packages, repo.size);
+                        KT.content.updateProduct(repo.product_id, false, false, true);
+                        notices.checkNotices();
                    }
                    else {
                     KT.content.updateRepo(  repo.id,
                                             repo.start_time,
                                             repo.duration,
                                             repo.progress.progress,
-                                            repo.size,
+                                            repo.display_size,
                                             repo.packages);
                    }
                });
@@ -183,9 +184,9 @@ KT.content = (function(){
                 element.append(cancelButton);
             }
         },
-        updateRepo = function(repo_id, starttime, duration, progress, size, packages){
+        updateRepo = function(repo_id, starttime, duration, progress, display_size, packages, size){
             var repo = $("#repo-" + repo_id);
-            update_item(repo, starttime, duration, progress, size, packages );
+            update_item(repo, starttime, duration, progress, display_size, packages, size );
         },
         finishRepo = function(repo_id, state, duration){
             var element = $("#repo-" + repo_id);
@@ -212,14 +213,15 @@ KT.content = (function(){
             }
 
         },
-        update_item = function(element, starttime, duration, progress, size, packages) {
+        update_item = function(element, starttime, duration, progress, display_size, packages, size) {
             var pg = element.find(".progress"),
                 value = pg.find(".ui-progressbar-value");
             
             fadeUpdate(element.find(".start_time"), starttime);
             // clear duration during active sync
             fadeUpdate(element.find(".duration"), '');
-            fadeUpdate(element.find(".size"), size + ' (' + packages + ')');
+            fadeUpdate(element.find(".size"), display_size + ' (' + packages + ')');
+            element.find('.size').data('size', size);
             progress = progress == 100 ? 99 : progress;
             value.animate({'width': progress },{ queue:false,
                                            duration:"slow", easing:"easeInSine" });
@@ -230,7 +232,8 @@ KT.content = (function(){
                 oldpg = element.find('.progress');
             
             if( size ){
-                fadeUpdate(product_element.find('.size'), size);
+                size = KT.utils.reduce($('table').find("[data-product_id=" + prod_id + "]").find('.size'), function(memo, num){ return $(num).data('size') + memo;}, 0);
+                fadeUpdate(product_element.find('.size'), KT.common.to_human_readable_bytes(size));
             } else if(done){
                 element.html("");
             }
