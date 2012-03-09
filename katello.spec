@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.8
+Version:        0.2.9
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Mar 09 2012 Mike McCune <mmccune@redhat.com> 0.2.9-1
+- periodic rebuild 
 * Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.2.7-1
 - Was accidentally hiding login button if ldap was enabled (jomara@redhat.com)
 - 788008 - do not attempt to poll errata status when user does not have edit
