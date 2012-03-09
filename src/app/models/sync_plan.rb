@@ -49,16 +49,23 @@ class SyncPlan < ActiveRecord::Base
     errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?
   end
 
+  def zone_converted 
+     #convert time to local timezone
+     self.sync_date.to_time.in_time_zone(Time.now.zone).to_datetime
+  end
+
   def plan_day
     WEEK_DAYS[self.sync_date.strftime('%e').to_i]
   end
 
-  def plan_date
-    self.sync_date.nil? ? '' : self.sync_date.strftime('%m/%d/%Y')
+  def plan_date localtime=true
+    date_obj = localtime ? self.zone_converted : self.sync_date
+    date_obj.strftime('%m/%d/%Y')
   end
 
-  def plan_time
-    self.sync_date.nil? ? '' : self.sync_date.strftime('%I:%M %p')
+  def plan_time localtime=true
+    date_obj = localtime ? self.zone_converted : self.sync_date
+    date_obj.strftime('%I:%M %p')
   end
 
   def schedule_format
