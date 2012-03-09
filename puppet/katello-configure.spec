@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.105
+Version:        0.1.106
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Mar 09 2012 Jordan OMara <jomara@redhat.com> 0.1.106-1
+- 801786 - puppetizing cli client.conf so it respects install URL
+
 * Thu Mar 08 2012 Jordan OMara <jomara@redhat.com> 0.1.105-1
 - 801549 - After katello-configure thumbslug fails to start with Unable to load
   the ssl keystore (mbacovsk@redhat.com)
