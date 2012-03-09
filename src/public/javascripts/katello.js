@@ -327,6 +327,17 @@ KT.common = (function() {
                     element.data('jsp').reinitialise();
                 }
             });
+        },
+        to_human_readable_bytes : function(bytes) {
+            var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'],
+                i;
+            
+            if (bytes == 0) { 
+                return '0';
+            } else {
+                i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+                return ((i == 0) ? (bytes / Math.pow(1024, i)) : (bytes / Math.pow(1024, i)).toFixed(1)) + ' ' + sizes[i];
+            }
         }
     };
 })();
