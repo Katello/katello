@@ -1,0 +1,6 @@
+#!/bin/bash
+for F in $*;
+do
+  echo -n "ERB check: $F... "
+  erb -x -T '-' "$F" | ruby -c
+done
