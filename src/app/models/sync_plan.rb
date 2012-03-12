@@ -51,7 +51,7 @@ class SyncPlan < ActiveRecord::Base
 
   def zone_converted 
      #convert time to local timezone
-     self.sync_date.to_time.in_time_zone(Time.now.zone).to_datetime
+     self.sync_date.localtime.to_datetime
   end
 
   def plan_day
