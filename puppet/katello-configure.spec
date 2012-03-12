@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.11
+Version:        0.2.12
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -59,6 +59,12 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Mar 12 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.12-1
+- 802346 - wait until PostgreSQL accepts connections
+- pchalupa's public key
+- 802252 - Adding ERB syntax checker to the SPEC
+- 802252 - Unable to install Katello on Puppet 2.7
+
 * Fri Mar 09 2012 Mike McCune <mmccune@redhat.com> 0.2.11-1
 - periodic rebuild
 * Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.2.10-1
