@@ -270,7 +270,7 @@ var sliding_tree = function(tree_id, options) {
                  return false;
              });
 
-             $('.filter_button').toggle(
+             $('#container .filter_button').toggle(
                  function() {
                      bcs = $('.breadcrumb_filter');
                      bcs_height = bcs.height();
