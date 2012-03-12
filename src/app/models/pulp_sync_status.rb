@@ -22,7 +22,7 @@ class PulpSyncProgress
       @size_left   = ht.null_safe_get(progress_attrs, 0, ['size_left'])
       @total_count = ht.null_safe_get(progress_attrs, 0, ['details','rpm','total_count'])
       @items_left  = ht.null_safe_get(progress_attrs, 0, ['details','rpm','items_left'])
-      @error_details = ht.null_safe_get(progress_attrs, 0, ['error_details'])
+      @error_details = ht.null_safe_get(progress_attrs, [], ['error_details'])
       @step = ht.null_safe_get(progress_attrs, 0, ['step'])
     end
   end
