@@ -17,7 +17,7 @@ Requires:       coreutils shadow-utils wget
 Requires:       katello-certs-tools
 Requires:       nss-tools openssl
 Requires:       policycoreutils-python
-BuildRequires:  /usr/bin/pod2man
+BuildRequires:  /usr/bin/pod2man /usr/bin/erb
 
 BuildArch: noarch
 
