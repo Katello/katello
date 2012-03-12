@@ -6,7 +6,7 @@ define postgres::createuser($passwd, $roles = "", $logfile) {
     database => "postgres",
     sql      => "CREATE ROLE ${name} WITH LOGIN PASSWORD '${passwd}' ${roles};",
     sqlcheck => "\"SELECT usename FROM pg_user WHERE usename = '${name}'\" | grep ${name}",
-    require  => Class["postgres::service"],
+    require  => Exec["wait-for-postgresql"],
     logfile  => $logfile,
   }
 
