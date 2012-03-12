@@ -486,13 +486,17 @@ fieldset {
     position: relative;
     width: 16px; height: 16px;
     text-indent: -4000em;
-    margin: 8px 12px 3px 3px;
+    margin: 6px 12px 3px 3px;
     background-position: 0 0;
     border: none;
     padding: 0;
     &:hover {
         background-position: 0 -16px;
     }
+}
+.filter_button {
+  left: -28px;
+  top: -2px;
 }
 .org {
     .filter {
@@ -509,8 +513,9 @@ fieldset {
         margin-bottom: 3px;
     }
     .filter_button {
-        margin: 4px 0 0 0;
-        top: 0;
+        margin: 0;
+        top: 6px;
+        left: 204px;
     }
 }
 
@@ -729,6 +734,10 @@ footer {
             width: 62%;
             clear: both;
         }
+        .filter_button {
+
+
+        }
     }
 
     /* left side of 2 pane that has clickable links */
@@ -798,7 +807,7 @@ footer {
         }
         input[type="text"] {
           float: right; /* webkit adds an extra padding and makes the widget narrower */
-          width: 215px;
+          width: 185px;
         }
       }
     }
