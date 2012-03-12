@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.9
+Version:        0.2.10
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,11 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Mar 12 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.10-1
+- 798772 - fix conversion to local timezone
+- 798376 - fix problem with discovery process
+- 790063 - search - few more mods for consistency
+
 * Fri Mar 09 2012 Mike McCune <mmccune@redhat.com> 0.2.9-1
 - periodic rebuild 
 * Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.2.7-1
