@@ -303,7 +303,11 @@ class KatelloServer(Server):
         try:
             response_body = json.loads(response_body, encoding='utf-8')
         except:
-            response_body = u_str(response_body)
+            content_type = response.getheader('content-type')
+            if content_type and content_type.startswith('text/'):
+                response_body = u_str(response_body)
+            else:
+                pass
 
         if response.status >= 300:
             # if the server has responded with a python traceback
