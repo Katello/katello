@@ -30,7 +30,9 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 class UserReportTest(CLIActionTestCase):
 
     ORG_ID = 'some_org'
-    ENV_NAME = 'env'
+    ENV = test_data.ENVS[1]
+    ENV_NAME = ENV['name']
+    ENV_ID = ENV['id']
 
     def setUp(self):
         self.set_action(Report())
@@ -38,6 +40,7 @@ class UserReportTest(CLIActionTestCase):
         self.mock(self.action.api, 'report_by_org', ('', ''))
         self.mock(self.action.api, 'report_by_env', ('', ''))
         self.mock(self.module, 'save_report')
+        self.mock(self.module, 'get_environment', self.ENV)
 
     def tearDown(self):
         self.restore_mocks()
@@ -60,4 +63,4 @@ class UserReportTest(CLIActionTestCase):
     def test_it_calls_report_by_env_api(self):
         self.mock_options({'org': self.ORG_ID, 'environment': self.ENV_NAME})
         self.action.run()
-        self.action.api.report_by_env.assert_called_once_with(self.ORG_ID, self.ENV_NAME, 'text/plain')
+        self.action.api.report_by_env.assert_called_once_with(self.ENV_ID, 'text/plain')

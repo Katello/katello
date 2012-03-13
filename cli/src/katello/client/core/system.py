@@ -19,6 +19,7 @@ from gettext import gettext as _
 
 from katello.client.api.system import SystemAPI
 from katello.client.api.task_status import SystemTaskStatusAPI
+from katello.client.api.utils import get_environment
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, Printer, convert_to_mime_type, attachment_file_name, save_report
@@ -670,7 +671,10 @@ class Report(SystemAction):
         if envName is None:
             report = self.api.report_by_org(orgId, convert_to_mime_type(format, 'text'))
         else:
-            report = self.api.report_by_env(orgId, envName, convert_to_mime_type(format, 'text'))
+            environment = get_environment(orgId, envName)
+            if environment is None:
+                return os.EX_DATAERR
+            report = self.api.report_by_env(environment['id'], convert_to_mime_type(format, 'text'))
 
 
         if format == 'pdf':

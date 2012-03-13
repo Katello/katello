@@ -142,11 +142,7 @@ class SystemAPI(KatelloAPI):
         to_return = self.server.GET(path, customHeaders={"Accept": format})
         return (to_return[1], to_return[2])
 
-    def report_by_env(self, orgId, envName, format):
-        environment = get_environment(orgId, envName)
-        if environment is None:
-            return None
-
-        path = "/api/environments/%s/systems/report" % environment['id']
+    def report_by_env(self, env_id, format):
+        path = "/api/environments/%s/systems/report" % env_id
         to_return = self.server.GET(path, customHeaders={"Accept": format})
         return (to_return[1], to_return[2])
