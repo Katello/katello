@@ -48,12 +48,15 @@ class ProductsController < ApplicationController
       product_params = params[:product]
       gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] and product_params[:gpg_key] != ""
       @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
+
       notice _("Product '%s' created.") % product_params[:name]
+      render :nothing => true
+
     rescue Exception => error
       Rails.logger.error error.to_s
       notice error, {:level => :error}
+      render :text => error, :status => :bad_request
     end
-    render :json => ""
   end
 
   def update

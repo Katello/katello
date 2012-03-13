@@ -1,4 +1,4 @@
-= javascript :environment_new
+= javascript :subpanel_new
 
 = content_for :title do
   #{_("Create Application Life Cycle Management Environment")}
@@ -9,7 +9,7 @@
 = content_for :subcontent do
   .clear
     &nbsp;
-  = form_tag organization_environments_path(@organization.cp_key), :id=>"new_environment", :method => "post", :remote=>true do
+  = form_tag organization_environments_path(@organization.cp_key), :id=>"new_subpanel", :method => "post", :remote=>true do
     %fieldset.clearfix
       %b
         %label.grid_2 #{_("Name")}:
@@ -27,5 +27,5 @@
       .grid_5
         = select_tag "prior", options_for_select(@env_labels, @selected), :tabindex => auto_tab_index
     .grid_5.prefix_2
-      = submit_tag _("Create"), :class => 'fr environment_create', :tabindex => auto_tab_index, :disable_with => "Creating..."
+      = submit_tag _("Create"), :class => 'fr create_subpanel', :tabindex => auto_tab_index, :disable_with => _("Creating...")
 
