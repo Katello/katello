@@ -168,21 +168,47 @@ class Api::SystemsController < Api::ApiController
     data = @environment.nil? ? @organization.systems.readable(@organization) : @environment.systems.readable(@organization)
 
     data = data.flatten.map do |r|
-      r.reportable_data(:only => [:uuid, :name, :location, :created_at, :updated_at],
-        :include => { :environment => { :only => [:name] }},
-        :methods => [ :organization, :compliance_color, :compliant_until])
+      r.reportable_data(
+        :only => [:uuid, :name, :location, :created_at, :updated_at],
+        :methods => [ :environment, :organization, :compliance_color, :compliant_until]
+      )
     end.flatten!
 
-    system_report = Ruport::Data::Table.new(:data => data,
-        :column_names => ["name", "uuid", "location", "environment.name", "organization", "created_at", "updated_at", "compliance_color", "compliant_until"],
-        :record_class => Ruport::Data::Record,
-        :transforms => lambda {|r| r.organization = r.organization.name})
+    system_report = Ruport::Data::Table.new(
+      :data => data,
+      :column_names => ["name", "uuid", "location", "environment", "organization", "created_at", "updated_at", "compliance_color", "compliant_until"],
+      :record_class => Ruport::Data::Record,
+      :transforms => lambda {|r|
+        r.organization = r.organization.name
+        r.environment = r.environment.name
+      })
+
+    system_report.rename_column("environment.name", "environment")
+    system_report.rename_column("created_at", "created")
+    system_report.rename_column("updated_at", "updated")
     system_report.rename_column("compliance_color", "compliance")
+    system_report.rename_column("compliant_until", "compliant until")
+
+    pdf_options = {:table_format => {
+      :heading_font_size => 10,
+      :font_size => 8,
+      :column_options => {
+        "width" => 50,
+        "name" => {"width" => 100},
+        "uuid" => {"width" => 100},
+        "location" => {"width" => 50},
+        "environment" => {"width" => 40},
+        "organization" => {"width" => 75},
+        "created" => {"width" => 60},
+        "updated" => {"width" => 60}
+       }
+    }}
+
     respond_to do |format|
       format.html { render :text => system_report.as(:html), :type => :html and return }
       format.text { render :text => system_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => system_report.as(:csv) }
-      format.pdf { send_data(system_report.as(:pdf), :filename => "katello_systems_report.pdf", :type => "application/pdf") }
+      format.pdf { send_data(system_report.as(:pdf, pdf_options), :filename => "katello_systems_report.pdf", :type => "application/pdf") }
     end
   end
 
