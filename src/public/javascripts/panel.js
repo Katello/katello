@@ -321,7 +321,11 @@ KT.panel = (function ($) {
             if (window_height <= (height + 80) && leftPanel.height() > 550) {
                 height = window_height - container_offset - default_spacing;
             } else if( leftPanel.height() > 575 ){
-                height = window_height - container_offset - default_spacing;
+                if( leftPanel.height() < window_height ){
+                    height = leftPanel.height() - default_spacing;
+                } else {
+                    height = window_height - container_offset - default_spacing;
+                }
             } else {
                 height = default_height - default_spacing + 20;
             }
