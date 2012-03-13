@@ -59,13 +59,14 @@ class RepositoriesController < ApplicationController
       @product.add_repo(repo_params[:name], repo_params[:feed], 'yum', gpg)
       @product.save
 
+      notice _("Repository '%s' created.") % repo_params[:name]
+      render :nothing => true
+
     rescue Exception => error
       log_exception error
       notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
-    notice _("Repository '%s' created.") % repo_params[:name]
-    render :json => ""
   end
 
   def update_gpg_key
