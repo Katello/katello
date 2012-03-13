@@ -518,9 +518,9 @@ module Glue::Pulp::Repo
         if a['finish_time'].nil? && b['finish_time'].nil?
           a['start_time'] <=> b['start_time']
         elsif a['finish_time'].nil?
-          1
-        elsif b['finish_time'].nil?
           -1
+        elsif b['finish_time'].nil?
+          1
         else
           b['finish_time'] <=> a['finish_time'] 
         end
