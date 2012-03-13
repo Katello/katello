@@ -49,9 +49,13 @@ class PulpTaskStatus < TaskStatus
   end
 
   def self.using_pulp_task(pulp_status)
-    task_status = TaskStatus.find_by_uuid(pulp_status[:id])
-    task_status = self.new { |t| yield t if block_given? } if task_status.nil?
-    PulpTaskStatus.dump_state(pulp_status, task_status)
+    if pulp_status.is_a? TaskStatus
+      pulp_status
+    else
+      task_status = TaskStatus.find_by_uuid(pulp_status[:id])
+      task_status = self.new { |t| yield t if block_given? } if task_status.nil?
+      PulpTaskStatus.dump_state(pulp_status, task_status)
+    end
   end
 
   def self.dump_state(pulp_status, task_status)
