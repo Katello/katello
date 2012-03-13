@@ -34,23 +34,6 @@ $(document).ready(function() {
     $('#provider_submit').val("Uploading...").attr("disabled", true);
   });
 
-  $('.product_create').live('click', function(event) {
-    var button = $(this);
-    button.addClass("disabled");
-
-    event.preventDefault();
-    var form = $(this).closest("form");
-    var url = form.attr('action');
-    var dataToSend = form.serialize();
-    // send a request to create the product
-    client_common.create(dataToSend, url, function() {
-        KT.panel.panelAjax('', button.attr("data-url") ,$('#panel'));
-        KT.panel.closeSubPanel($('#subpanel'));
-      },
-      function() {button.removeClass("disabled")
-    });
-  });
-
   $('.repo_create').live('click', function(event) {
     var button = $(this);
     button.addClass("disabled");

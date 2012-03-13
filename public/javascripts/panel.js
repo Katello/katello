@@ -508,6 +508,18 @@ KT.panel = (function ($) {
             });
             panels_list.push(new_panel);
         },
+        registerSubPanelSubmit = function(form_id, form_submit_id) {
+            form_id.bind('ajax:beforeSend', function(){
+               form_submit_id.addClass('disabled');
+            }).bind("ajax:complete", function(){
+               form_submit_id.removeClass('disabled');
+            }).bind("ajax:success", function(){
+                KT.panel.closeSubPanel($('#subpanel'));
+                KT.panel.refreshPanel();
+            }).bind("ajax:error", function(){
+               //validation notice appears
+            });
+        },
         // http://devnull.djolley.net/2010/11/accessing-query-string-parameters-from.html
         queryParameters = function () {
             var queryString = new Object;
@@ -639,6 +651,7 @@ KT.panel = (function ($) {
         panelAjax: panelAjax,
         control_bbq: control_bbq,
         registerPanel: registerPanel,
+        registerSubPanelSubmit: registerSubPanelSubmit,
         queryParameters: queryParameters,
         refreshPanel : refreshPanel,
         actions: actions,
