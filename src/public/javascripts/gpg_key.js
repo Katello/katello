@@ -142,11 +142,13 @@ KT.gpg_key = (function($){
 			type 	: 'POST',
 			iframe	: true,
 			success	: function(data, status, xhr){
-				$('#gpg_key_content').html(data);
-				notices.checkNoticesInResponse(xhr);
-				$('#upload_gpg_key').val('');		
+                if( !data.match(/notices/) ){
+                    $('#gpg_key_content').html(data);
+                    $('#upload_gpg_key').val('');		
+                }
+                notices.checkNotices();
                 $('#update_upload_gpg_key').removeAttr('disabled');
-				$('#clear_upload_gpg_key').removeAttr('disabled');
+                $('#clear_upload_gpg_key').removeAttr('disabled');
 			},
 			error	: function(){
                 $('#update_upload_gpg_key').removeAttr('disabled');
