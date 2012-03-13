@@ -56,8 +56,13 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   def destroy
-    @environment.destroy
-    render :text => _("Deleted environment '#{params[:id]}'"), :status => 200
+    if @environment.confirm_last_env
+      @environment.destroy
+      render :text => _("Deleted environment '#{params[:id]}'"), :status => 200
+    else
+      raise HttpErrors::BadRequest,
+            _("Environment #{@environment.name} has a successor. Only the last environment on a path can be deleted.")
+    end
   end
 
   def repositories
