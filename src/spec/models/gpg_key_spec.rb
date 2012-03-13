@@ -14,6 +14,7 @@ require 'spec_helper'
 
 describe GpgKey do
   include OrchestrationHelper
+  include OrganizationHelperMethods
   include AuthorizationHelperMethods
 
   describe "permission checks" do
@@ -54,6 +55,32 @@ describe GpgKey do
       end
     end
 
+  end
+
+  describe "create gpg key" do
+    before(:each) do
+      new_test_org_model
+    end
+
+    it "should be successful with valid parameters" do
+      gpg_key = GpgKey.new(:name => "Gpg Key 1", :content => "This is the fake GPG Key content text that is valid", :organization => @organization)
+      gpg_key.should be_valid
+    end
+
+    it "should be unsuccessful without content" do
+      gpg_key = GpgKey.new(:name => "Gpg Key 1", :organization => @organization)
+      gpg_key.should_not be_valid
+    end
+    
+    it "should be unsuccessful without a name" do
+      gpg_key = GpgKey.new(:content => "This is the fake GPG Key content text that is valid", :organization => @organization)
+      gpg_key.should_not be_valid
+    end
+
+    it "should be unsuccessful with binary content" do
+      gpg_key = GpgKey.new(:name => "Gpg Key 1", :content =>"\231\001\r\004N�\026\001\b\000\276��2q", :organization => @organization)
+      gpg_key.should_not be_valid    
+    end
   end
 
 end
