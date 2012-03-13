@@ -185,7 +185,9 @@ class Sync(SingleProductAction):
         run_async_task_with_status(task, ProgressBar())
 
         if task.failed():
-            errors = [t["result"]['errors'][0] for t in task.get_hashes() if t['state'] == 'error']
+            errors = [t["result"]['errors'][0] for t in task.get_hashes() if t['state'] == 'error' and
+                                                                             isinstance(t["result"], dict) and
+                                                                             t["result"].has_key("errors")]
             print _("Product [ %s ] failed to sync: %s" % (prodName, errors))
             return os.EX_DATAERR
         elif task.cancelled():

@@ -119,14 +119,10 @@ class Repository < ActiveRecord::Base
       details = ''
       log_details = []
       if(!task.progress.error_details.nil? and !task.progress.error_details.empty?)
-        task.progress.error_details.each{|error|
-          if (error["error_type"] == "error")
-            task.progress.error_details.each { |d|
-              log_details << d.to_hash
-              details += d[:error] + "\n"
-            }
-          end
-        }
+        task.progress.error_details.each do |error|
+          log_details << error
+          details += error[:error].to_s + "\n"
+        end
       end
       Rails.logger.error("*** Sync error: " +  log_details.to_json)
       notice N_("There were errors syncing repository '%s'.  See notices page for more details.") % [self.name], 
