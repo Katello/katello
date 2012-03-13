@@ -122,11 +122,10 @@ class GpgKeysController < ApplicationController
     render :text => escape_html(gpg_key_params.values.first)
 
   rescue Exception => error
-    notice error, {:level => :error}
-
-    respond_to do |format|
-      format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
-    end
+    Rails.logger.error error.to_s
+    return_error = notice(error, {:level => :error, :synchronous_request => false})
+  
+    render :json => return_error.to_json, :status => :bad_request
   end
 
   def destroy
