@@ -406,6 +406,23 @@ class SystemTemplate < ActiveRecord::Base
     self.class.readable?(self.environment.organization)
   end
 
+  def repos_to_be_promoted
+    repos = self.repositories || []
+    if self.parent
+      parent_repos = self.parent.repos_to_be_promoted
+      repos += parent_repos if parent_repos
+    end
+    return repos.uniq
+  end
+
+  def products_to_be_promoted
+    products = self.products || []
+    if self.parent
+      parent_products = self.products_to_be_promoted
+      products += parent_products if parent_product
+    end
+    return products.uniq
+  end
 
   protected
 
