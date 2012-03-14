@@ -137,6 +137,11 @@ class ApplicationController < ActionController::Base
     ""
   end
 
+  helper_method :no_env_available_msg
+  def no_env_available_msg
+    _("No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default.")
+  end
+
   private
 
   def require_org
