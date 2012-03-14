@@ -12,7 +12,7 @@
 
 class UsersController < ApplicationController
   include AutoCompleteSearch
-  
+
   def section_id
      'operations'
   end
@@ -117,9 +117,15 @@ class UsersController < ApplicationController
                            :organization=> @organization
         PermissionTag.create!(:permission_id => perm.id, :tag_id => @environment.id)
       else
-        @user.save!
-        @environment = nil
-        @organization = nil
+        if params['org_id']['org_id'].blank?
+          # user selected 'No Default Organization'
+          @user.save!
+          @environment = nil
+          @organization = nil
+        else
+          # user selected an org that has no environments defined
+          raise no_env_available_msg
+        end
       end
 
       notice @user.username + _(" created successfully.")
@@ -226,10 +232,10 @@ class UsersController < ApplicationController
       end
       #if (old_perm.nil? || (old_env != new_env))
       if ((old_env != nil || new_env != nil) && old_env != new_env)
-        #First delete the old role if it is not equal to the old one
-        old_perm.destroy if @user.has_default_env?
 
         if new_env
+          old_perm.destroy if @user.has_default_env?
+
           @environment = KTEnvironment.find(new_env)
           @organization = @environment.organization
 
@@ -241,9 +247,17 @@ class UsersController < ApplicationController
                        :organization=> @organization
           PermissionTag.create!(:permission_id => perm.id, :tag_id => new_env)
         else
-          @old_env = nil
-          @environment = nil
-          @organization = nil
+          if params['org_id'].blank?
+            # user selected 'No Default Organization'
+            old_perm.destroy if @user.has_default_env?
+
+            @old_env = nil
+            @environment = nil
+            @organization = nil
+          else
+            # user selected an org that has no environments defined
+            raise no_env_available_msg
+          end
         end
 
         notice _("User environment updated successfully.")
