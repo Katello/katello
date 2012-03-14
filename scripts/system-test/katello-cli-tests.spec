@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 14 2012 Jordan OMara <jomara@redhat.com> 0.1.31-1
+- Manual version bump for cli tests (jomara@redhat.com)
+
 * Wed Mar 14 2012 Jordan OMara <jomara@redhat.com> 0.1.29-1
 - 790455 - "--description" option for changeset create (pchalupa@redhat.com)
 - 799149 - fix failing system test - TDL export (inecas@redhat.com)
