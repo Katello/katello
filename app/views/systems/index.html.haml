@@ -36,6 +36,5 @@
           env_select.env_changed_callback('#{@environment.id}');
           env_select.click_callback = function(env_id) {
               $.bbq.pushState({env_id : env_id});
-              $('#search_form').trigger('submit');
           };
       });

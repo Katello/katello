@@ -76,9 +76,9 @@ KT.favorite = function(form, input) {
  * @param params   list of options:
  *          disable_fancy  - disable fancy queries
  *
- *
+ * @param extra_params list of extra parameters to pass along with search
  */
-KT.search = function(form_id, list_id, list_module, params){
+KT.search = function(form_id, list_id, list_module, params, extra_params){
 
     var form = $('#' + form_id),
     input = form.find('input'),
@@ -90,9 +90,10 @@ KT.search = function(form_id, list_id, list_module, params){
     extend_event_name = list_id + ".search.extend",
     url_param = "search",
     favorite = KT.favorite(form, input),
-    current_search = null,
+    current_search = {},
     retrievingNewContent = false,
     trigger_name = params.trigger || "hashchange", //custom event to trigger search
+    extra_params,
 
 
     init = function(){
@@ -115,6 +116,8 @@ KT.search = function(form_id, list_id, list_module, params){
     		form.find('.qdropdown').hide();
     	});
 
+        reset_current_search();
+
     },
     search_bbq = function(){
       return search_hash;
@@ -132,9 +135,13 @@ KT.search = function(form_id, list_id, list_module, params){
     },
     set_url = function(url_in){
         if (url != url_in){
-            current_search = null; //reset current search
+            reset_current_search();
             url = url_in;
         }
+    },
+    reset_current_search = function(){
+        current_search = {};
+        current_search[search_hash] = null;
     },
     setupSearch = function() {
         var button = form.find('button');
@@ -169,25 +176,28 @@ KT.search = function(form_id, list_id, list_module, params){
     },
     start_search = function(args){
         var button = form.find('button'),
-            extra_params = {},//options['extra_params'],
             data = get_params(),
             search_val = $.bbq.getState(search_hash),
             event = $.Deferred(),
-            pre_state;
-
+            pre_state,
+            params_changed = function(){
+                var changed = KT.utils.all(current_search, function(item, index){
+                    return item === $.bbq.getState(index);
+                });
+                return !changed;
+            };
 
         if (params.pre_search_state){
             pre_state = params.pre_search_state();
         }
 
-
         //search already in process, or already searched for
-        if (current_search === search_val){
+        if ( !params_changed() ){
             $(document).trigger(event_name);
             return;
         }
 
-        current_search = search_val;
+        current_search[search_hash] = search_val;
         input.val(search_val);
 
         $(document).trigger(event_name, [event.promise()]);
@@ -201,7 +211,10 @@ KT.search = function(form_id, list_id, list_module, params){
 
         if (extra_params) {
             $.each(extra_params, function(index, item){
-                data[item['hash_id']] = $.bbq.getState(item['hash_id']);
+                var item_id = item['hash_id'];
+
+                data[item_id] = $.bbq.getState(item_id);
+                current_search[item_id] = $.bbq.getState(item_id);
             });
         }
 
