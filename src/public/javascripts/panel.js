@@ -747,7 +747,7 @@ KT.panel.list = (function () {
             options = options || {};
             
             search = KT.search("search_form", "list", this,
-                {url: $("#list").attr("data-scroll_url")});
+                {url: $("#list").attr("data-scroll_url")}, options['extra_params']);
 
 
             $(document).bind(search.search_event(), KT.panel.search_started);
