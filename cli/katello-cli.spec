@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.103
+Version:       0.1.104
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -87,6 +87,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 14 2012 Jordan OMara <jomara@redhat.com> 0.1.104-1
+- 790455 - "--description" option for changeset create (pchalupa@redhat.com)
+- 798683 - handle errors comming from repo synchronization (inecas@redhat.com)
+- 799351 - failure of system reports cli when environment not found
+- 799351 - cli - fix for converting all incoming data to unicode
+  (tstrachota@redhat.com)
+
 * Fri Mar 09 2012 Jordan OMara <jomara@redhat.com> 0.1.103-1
 - 801786 - puppetizing cli client.conf so it respects install URL
 
