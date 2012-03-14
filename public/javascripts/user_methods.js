@@ -139,15 +139,16 @@ KT.user_page = function() {
         });
     },
     updateUser = function() {
-        var button = $(this);
-        var url = button.attr("data-url");
-        var password = $('#password_field').val();
-        var env_id = $(".path_link.active").attr('data-env_id');
+        var button = $(this),
+            url = button.attr("data-url"),
+            env_id = $(".path_link.active").attr('data-env_id'),
+            org_id = $('#org_id_org_id').val();
+
         button.addClass("disabled");
         $.ajax({
             type: "PUT",
             url: url,
-            data: {"env_id":{"env_id":env_id}},
+            data: {"org_id":org_id, "env_id":{"env_id":env_id}},
             cache: false,
             success: function(data) {
                 $('#env_name').html(data.env);
