@@ -11,7 +11,7 @@ ACTIVATION_KEY_NAME_2="activation_key_2_$RAND"
 
 
 test_success "system register as admin" system register --name="$SYSTEM_NAME_ADMIN" --org="$TEST_ORG" --environment="$TEST_ENV"
-skip_test_success "system register as $TEST_USER" "none" -u $TEST_USER -p password system register --name="$SYSTEM_NAME_USER" --org="$TEST_ORG" --environment="$TEST_ENV"
+skip_test_success "system register as $TEST_USER" "none" -u "$TEST_USER" -p password system register --name="$SYSTEM_NAME_USER" --org="$TEST_ORG" --environment="$TEST_ENV"
 test_success "system info" system info --name="$SYSTEM_NAME_ADMIN" --org="$TEST_ORG"
 test_success "system list" system list --org="$TEST_ORG"
 test_success "system packages" system packages --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN"
