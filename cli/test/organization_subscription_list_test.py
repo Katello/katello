@@ -37,6 +37,7 @@ class SubscriptionsListTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS)
         self.mock_printer()
 
+        self.mock(self.action.api, 'organization', test_data.ORGS[0])
         self.mock(self.action.api, 'pools', [test_data.POOL])
         self.mock(self.action.productApi, 'show', test_data.PRODUCTS[0])
 
@@ -45,7 +46,7 @@ class SubscriptionsListTest(CLIActionTestCase):
 
     def test_it_finds_all_pools_for_organization(self):
         self.action.run()
-        self.action.api.pools.assert_called_once_with(self.ORGANIZATION)
+        self.action.api.pools.assert_called_once_with(test_data.ORGS[0]["cp_key"])
 
     def test_extract_sla_from_product(self):
         self.assertEqual(test_data.SLA_VALUE, self.action.extract_sla_from_product(test_data.PRODUCTS[0]))
