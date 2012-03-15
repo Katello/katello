@@ -544,8 +544,10 @@ class ApplicationController < ActionController::Base
   # This assumes that the input follows a syntax similar to:
   #   "{\"displayMessage\":\"Import is older than existing data\"}"
   def parse_display_message input
-    if input.include? 'displayMessage'
-      return JSON.parse(input)['displayMessage']
+    unless input.nil?
+      if input.include? 'displayMessage'
+        return JSON.parse(input)['displayMessage']
+      end
     end
     input
   end
