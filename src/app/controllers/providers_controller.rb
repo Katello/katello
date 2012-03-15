@@ -73,15 +73,20 @@ class ProvidersController < ApplicationController
         else
           notice _("Subscription manifest uploaded successfully for provider '%{name}'." % {:name => @provider.name}), {:synchronous_request => false}
         end
+
       rescue Exception => error
         display_message = parse_display_message(error.response)
+
         error_text = _("Subscription manifest upload for provider '%{name}' failed." % {:name => @provider.name})
         error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+
         # In some cases, force_update will allow the manifest to be uploaded when it normally would not
         if force_update == "false"
           error_text += _("%{newline}If you are uploading an older manifest, you can use the Force checkbox to overwrite existing data." % { :newline => "<br />"})
         end
-        notice error_text, {:level => :error}
+
+        notice error_text, {:level => :error, :details => pp_exception(error)}
+
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error
         Rails.logger.error error.backtrace.join("\n")
