@@ -23,7 +23,7 @@ MANIFEST_PROD_CP="Zoo Enterprise 24/7"
 MANIFEST_REPO="Zoo Enterprise x86_64 $RELEASEVER"
 MANIFEST_REPO_LABEL="zoo-enterprise"
 INSTALL_PACKAGE=cheetah
-HOST="$(hostname)_$RAND"
+HOST=$(nospace "$(hostname)_$RAND")
 
 
 
