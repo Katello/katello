@@ -113,9 +113,12 @@ class Repository < ActiveRecord::Base
   end
 
   def sync_complete task
+    user = task.user
     if task.state == 'finished'
-      notice N_("Repository '%s' finished syncing successfully.") % [self.name], {:level=>:success, :synchronous_request => false}
+      notice _("Repository '%s' finished syncing successfully.") % [self.name],
+             {:level=>:success, :synchronous_request => false, :user=>user} if user
     elsif task.state == 'error'
+
       details = ''
       log_details = []
       if(!task.progress.error_details.nil? and !task.progress.error_details.empty?)
@@ -125,8 +128,8 @@ class Repository < ActiveRecord::Base
         end
       end
       Rails.logger.error("*** Sync error: " +  log_details.to_json)
-      notice N_("There were errors syncing repository '%s'.  See notices page for more details.") % [self.name], 
-                  {:level=>:error, :synchronous_request => false, :details => details}
+      notice _("There were errors syncing repository '%s'.  See notices page for more details.") % [self.name],
+                  {:level=>:error, :synchronous_request => false, :details => details, :user=>user} if user
     end
   end
 
