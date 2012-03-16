@@ -482,6 +482,9 @@ Src::Application.routes.draw do
         get :gpg_key_content
         post :enable
       end
+      collection do
+        post :sync_complete
+      end
     end
 
     resources :environments, :only => [:show, :update, :destroy] do
