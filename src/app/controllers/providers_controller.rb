@@ -174,7 +174,7 @@ class ProvidersController < ApplicationController
       notice _("Provider '%s' was created.") % @provider['name']
       
       if search_validate(Provider, @provider.id, params[:search])
-        render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+        render :partial=>"common/list_item", :locals=>{:item=>@provider, :initial_action=>:products_repos, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
       else
         notice _("'%s' did not meet the current search criteria and is not being shown.") % @provider["name"], { :level => 'message', :synchronous_request => false }
         render :json => { :no_match => true }
