@@ -320,7 +320,9 @@ module Glue::Pulp::Repos
     end
 
     def sync_size
-      size = self.repos(library).inject(0) { |sum,v| sum + v.sync_status.progress.total_size }
+      self.repos(library).inject(0) { |sum, v| 
+        sum + v.sync_status.progress.total_size 
+      }
     end
 
     def last_sync

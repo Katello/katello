@@ -72,14 +72,12 @@ class SyncPlansController < ApplicationController
         result = updated_plan.description = params[:sync_plan][:description].gsub("\n",'')
       end
 
-      unless params[:sync_plan][:time].nil?
-        ttime = updated_plan.plan_date + ' ' + params[:sync_plan][:time].strip
-        updated_plan.sync_date = DateTime.strptime(ttime, '%m/%d/%Y %I:%M %p')
+      if params[:sync_plan][:time]
+        updated_plan.sync_date = convert_date_time(updated_plan.plan_date, params[:sync_plan][:time].strip)
       end
 
-      unless params[:sync_plan][:date].nil?
-        ddate = params[:sync_plan][:date].strip + ' ' + updated_plan.plan_time
-        updated_plan.sync_date = DateTime.strptime(ddate, '%m/%d/%Y %I:%M %p')
+      if params[:sync_plan][:date]
+        updated_plan.sync_date = convert_date_time(params[:sync_plan][:date].strip, updated_plan.plan_time)
       end
 
       updated_plan.save!
@@ -104,6 +102,12 @@ class SyncPlansController < ApplicationController
 
   end
 
+  #convert date, time from UI to object
+  def convert_date_time(date, time)
+    sync_event = date + ' ' + time + ' '  + DateTime.now.zone
+    DateTime.strptime(sync_event, "%m/%d/%Y %I:%M %P %:z")
+  end
+
   def destroy
     @id = @plan.id
     begin
@@ -121,6 +125,7 @@ class SyncPlansController < ApplicationController
 
   def new
     @plan = SyncPlan.new
+    @plan.sync_date = DateTime.now
     render :partial => "new", :layout => "tupane_layout", :locals => {:plan => @plan}
   end
 
@@ -128,11 +133,9 @@ class SyncPlansController < ApplicationController
     begin
       sdate = params[:sync_plan].delete :plan_date
       stime = params[:sync_plan].delete :plan_time
-      sync_event = sdate + ' ' + stime
-      
       begin
-        params[:sync_plan][:sync_date] = DateTime.strptime(sync_event, "%m/%d/%Y %I:%M %P")
-      rescue Exception => error
+        params[:sync_plan][:sync_date] = convert_date_time(sdate, stime)
+      rescue
         params[:sync_plan][:sync_date] = nil
       end
       
@@ -145,10 +148,10 @@ class SyncPlansController < ApplicationController
         notice _("'%s' did not meet the current search criteria and is not being shown.") % @plan["name"], { :level => 'message', :synchronous_request => false }
         render :json => { :no_match => true }
       end
-    rescue Exception => error
-      Rails.logger.error error.to_s
-      notice error, {:level => :error}
-      render :text => error, :status => :bad_request
+    rescue Exception => e
+      Rails.logger.error e.to_s
+      notice e, {:level => :error}
+      render :text => e, :status => :bad_request
     end
   end
   

@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.303
+Version:        0.1.304
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,37 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Mar 14 2012 Jordan OMara <jomara@redhat.com> 0.1.304-1
+- 801070 - Better error message for deleting ends from middle of the path
+- 799052 - Promoting template with assigned repo should fail if product is not
+  already in the target environment (mbacovsk@redhat.com)
+- 799052 - Promoting template with assigned repo should fail if product is not
+  already in the target environment (mbacovsk@redhat.com)
+- 798683 - handle errors comming from repo synchronization (inecas@redhat.com)
+- 798376 - fix finding the recent task status for sync in UI
+- 798376 - handle change in value returned by repo.sync method
+  (inecas@redhat.com)
+- 798376 - fix problem with discovery process (inecas@redhat.com)
+- 798376 - Sync management page reworked to generate error and success notices
+  once upon sync completion. (ehelms@redhat.com)
+- 802897 - setting default index type for all facts to string
+  (jsherril@redhat.com)
+- 801516 - Fixes issue with details tupane sizing on medium sized tupane lists.
+- 801547 - GPG Key: Adds validation that gpg key does not contain binary data.
+  (ehelms@redhat.com)
+- 799351 - system reports does not show first 2 columns (in pdf format)
+  (tstrachota@redhat.com)
+- 798772 - fix conversion to local timezone (inecas@redhat.com)
+- 799036 - Promoting template with repo that is not already in target
+  environment fails
+- 801445 - fixing issue with errata filters not returning any errata
+- 801107 - don't crush if mapping file does not exist
+- 801107 - allow wildcards in image factory names mappings (inecas@redhat.com)
+- 740365 - fixing issue where 2pane extended scroll was prepending instead of
+  appending
+- 798772 - fixing issue where sync plans were being set in UTC
+- 783576 - performing validation on system template prior to export
+
 * Wed Mar 07 2012 Jordan OMara <jomara@redhat.com> 0.1.303-1
 - 794799 - fix deleting organization (inecas@redhat.com)
 - 752547: Add -notar option to improve integratoin with sos tooling

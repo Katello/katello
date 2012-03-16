@@ -387,16 +387,28 @@ def format_date(date, to_format="%Y/%m/%d %H:%M:%S"):
     return time.strftime(to_format, time.localtime(t))
 
 
-
-def format_progress_errors(errors):
+def format_sync_errors(task):
     """
     Format errors in progress returned from AsyncTask
     @type errors: list
     @param errors: list of progress errors returned from AsyncTask.progress_errors()
     @return string, each error on one line
     """
-    error_list = [e["error"]["error"] for e in errors]
-    return "\n".join(error_list)
+    def format_progress_error(e):
+        if e.has_key("error"):
+           if isinstance(e["error"], dict) and e["error"].has_key("error"):
+               return e["error"]["error"]
+           else:
+               return str(e["error"])
+
+    def format_task_error(e):
+        if isinstance(e, list) and len(e) > 0:
+            return e[0]
+
+    error_list = [format_progress_error(e) for e in task.progress_errors()]
+    error_list += [format_task_error(e) for e in task.errors()]
+
+    return "\n".join([e for e in error_list if e])
 
 
 def format_task_errors(errors):
@@ -406,7 +418,7 @@ def format_task_errors(errors):
     @param errors: list of errors returned from AsyncTask.errors()
     @return string, each error on one line
     """
-    error_list = [e[0] for e in errors]
+    error_list = [e[0] for e in errors if e[0]]
     return "\n".join(error_list)
 
 
@@ -569,7 +581,7 @@ class AsyncTask():
         return [err for task in self._tasks if 'error_details' in task['progress'] for err in task['progress']['error_details']]
 
     def errors(self):
-        return [task["result"]["errors"] for task in self._tasks]
+        return [task["result"]["errors"] for task in self._tasks if isinstance(task["result"], dict)]
 
     def _get_progress_sum(self, name):
         return sum([t['progress'][name] for t in self._tasks])

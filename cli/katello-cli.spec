@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.102
+Version:       0.1.104
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -64,7 +64,6 @@ install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/core
 install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/utils
 install -pm 0644 bin/%{base_name} $RPM_BUILD_ROOT%{_bindir}/%{base_name}
 install -pm 0644 bin/%{base_name}-debug-certificates $RPM_BUILD_ROOT%{_bindir}/%{base_name}-debug-certificates
-install -pm 0644 etc/client.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/client.conf
 install -pm 0644 src/%{base_name}/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/
 install -pm 0644 src/%{base_name}/client/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/
 install -pm 0644 src/%{base_name}/client/api/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/api/
@@ -79,7 +78,6 @@ rm -rf $RPM_BUILD_ROOT
 %files 
 %attr(755,root,root) %{_bindir}/%{base_name}
 %attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
 %doc README LICENSE
 #%{_mandir}/man8/%{base_name}.8*
 
@@ -89,6 +87,16 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 14 2012 Jordan OMara <jomara@redhat.com> 0.1.104-1
+- 790455 - "--description" option for changeset create (pchalupa@redhat.com)
+- 798683 - handle errors comming from repo synchronization (inecas@redhat.com)
+- 799351 - failure of system reports cli when environment not found
+- 799351 - cli - fix for converting all incoming data to unicode
+  (tstrachota@redhat.com)
+
+* Fri Mar 09 2012 Jordan OMara <jomara@redhat.com> 0.1.103-1
+- 801786 - puppetizing cli client.conf so it respects install URL
+
 * Wed Mar 07 2012 Jordan OMara <jomara@redhat.com> 0.1.102-1
 - 799149 - fix problems when adding repo to a template
 - 799149 - disabling template product addition/removal from cli

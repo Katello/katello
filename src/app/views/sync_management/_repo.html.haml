@@ -9,8 +9,8 @@
     #{@repo_status[repo.id][:start_time]}
   %td.duration
     #{@repo_status[repo.id][:duration]}
-  %td.size
-    #{@repo_status[repo.id][:size]}
+  %td.size{ "data-size" => @repo_status[repo.id][:size] }
+    #{@repo_status[repo.id][:display_size]}
     (#{@repo_status[repo.id][:packages]})
   %td.result
     #{@repo_status[repo.id][:state]}

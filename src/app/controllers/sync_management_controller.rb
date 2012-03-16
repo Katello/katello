@@ -36,8 +36,6 @@ class SyncManagementController < ApplicationController
     'contents'
   end
 
-
-
   def rules
 
     list_test = lambda{current_organization && Provider.any_readable?(current_organization) }
@@ -79,11 +77,13 @@ class SyncManagementController < ApplicationController
     @product_map = collect_repos(@products, org.library)
 
     for p in @products
-      pstatus = p.sync_status
-      @product_size[p.id] = number_to_human_size(p.sync_size)
+      product_size = 0
       for r in p.repos(p.organization.library)
-        @repo_status[r.id] = format_sync_progress(r.sync_status, r)
+        status = r.sync_status 
+        @repo_status[r.id] = format_sync_progress(status, r)
+        product_size += status.progress.total_size
       end
+      @product_size[p.id] = number_to_human_size(product_size)
     end
 
     render :index, :locals=>{:status_obj=>@repo_status}
@@ -143,20 +143,6 @@ private
   def format_sync_progress(sync_status, repo)
     progress = sync_status.progress
     error_details = progress.error_details
-    error_flag = false
-
-    if (!error_details.nil? && !error_details.empty?)
-      error_details.each{|error|
-        if (error["error_type"] == "error")
-          error_details.each { |d|
-            error_flag = true
-            Rails.logger.error("*** Sync error: " +  d.to_hash.to_json)
-            notice N_("There were errors with one of the syncs: %s in repository: %s. See the log for more details.") % [d[:error], repo.name], {:level=>:warning}
-          }
-        end
-      }
-
-    end
 
     not_running_states = [PulpSyncStatus::Status::FINISHED,
                           PulpSyncStatus::Status::ERROR,
@@ -173,10 +159,10 @@ private
         :finish_time    => format_date(sync_status.finish_time),
         :duration       => format_duration(sync_status.finish_time, sync_status.start_time),
         :packages       => sync_status.progress.total_count,
-        :size           => number_to_human_size(sync_status.progress.total_size),
-        :product_size   => number_to_human_size(repo.product.sync_size),
-        :is_running     => !not_running_states.include?(sync_status.state.to_sym) && sync_status.finish_time.nil?,
-        :error_details  => error_flag ? error_details : "No errors."
+        :display_size   => number_to_human_size(sync_status.progress.total_size),
+        :size           => sync_status.progress.total_size,
+        :is_running     => !not_running_states.include?(sync_status.state.to_sym),
+        :error_details  => error_details ? error_details : "No errors."
     }
   end
 

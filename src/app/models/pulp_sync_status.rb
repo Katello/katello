@@ -22,7 +22,7 @@ class PulpSyncProgress
       @size_left   = ht.null_safe_get(progress_attrs, 0, ['size_left'])
       @total_count = ht.null_safe_get(progress_attrs, 0, ['details','rpm','total_count'])
       @items_left  = ht.null_safe_get(progress_attrs, 0, ['details','rpm','items_left'])
-      @error_details = ht.null_safe_get(progress_attrs, 0, ['error_details'])
+      @error_details = ht.null_safe_get(progress_attrs, [], ['error_details'])
       @step = ht.null_safe_get(progress_attrs, 0, ['step'])
     end
   end
@@ -30,9 +30,11 @@ end
 
 class PulpSyncStatus < PulpTaskStatus
   use_index_of TaskStatus
+  
   FINISHED = "finished"
   ERROR = "error"
   RUNNING = "running"
+  WAITING = "waiting"
 
   class Status < ::TaskStatus::Status
     NOT_SYNCED = :not_synced
@@ -41,4 +43,37 @@ class PulpSyncStatus < PulpTaskStatus
   def progress
     PulpSyncProgress.new(attributes['progress'])
   end
+  
+  def after_refresh
+    correct_state
+  end
+
+  def self.pulp_task(pulp_status)
+    task_status = PulpSyncStatus.find_by_uuid(pulp_status[:id])
+    task_status = self.new { |t| yield t if block_given? } if task_status.nil?
+    task_status.update_state(pulp_status)
+  end
+
+  def update_state(pulp_status)
+    self.attributes = {
+      :uuid => pulp_status[:id],
+      :state => pulp_status[:state],
+      :start_time => pulp_status[:start_time],
+      :finish_time => pulp_status[:finish_time],
+      :progress => pulp_status[:progress],
+      :result => pulp_status[:result].nil? ? {:errors => [pulp_status[:exception], pulp_status[:traceback]]} : pulp_status[:result]
+    }
+
+    self.save! if not self.new_record?
+    correct_state
+    self
+  end
+
+  def correct_state
+    if [FINISHED].include?(self.state) && self.progress.error_details.length > 0
+      self.state = ERROR
+      self.save! if not self.new_record?
+    end
+  end
+
 end

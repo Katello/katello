@@ -60,7 +60,7 @@ class SynchronizeTestWithRepoId(CLIActionTestCase):
     }
 
     SYNC_RESULT_WITHOUT_ERROR = [{'state':'finished'}]
-    SYNC_RESULT_WITH_ERROR = [{'state':'error', 'result':{'errors':["some error"]}}]
+    SYNC_RESULT_WITH_ERROR = [{'state':'error', 'result':{'errors':["some error"]}, 'progress': {'error_details': []} }]
 
     def setUp(self):
         self.set_action(Sync())

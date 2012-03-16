@@ -25,7 +25,7 @@ from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
-from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_progress_errors, format_task_errors
+from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_sync_errors, format_task_errors
 from katello.client.core.utils import ProgressBar
 from katello.client.utils.encoding import u_str
 
@@ -298,9 +298,7 @@ class Status(SingleRepoAction):
             pkgsLeft = task.items_left()
             repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
 
-        errors = task.progress_errors()
-        if len(errors) > 0:
-            repo['last_errors'] = format_progress_errors(errors)
+        repo['last_errors'] = format_sync_errors(task)
 
         self.printer.addColumn('package_count')
         self.printer.addColumn('last_sync')
@@ -381,7 +379,7 @@ class Sync(SingleRepoAction):
             print _("Repo [ %s ] synchronization cancelled" % repo['name'])
             return os.EX_OK
         else:
-            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], format_task_errors(task.errors())) )
+            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], format_sync_errors(task)) )
             return os.EX_DATAERR
 
 

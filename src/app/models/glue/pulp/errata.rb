@@ -92,7 +92,9 @@ class Glue::Pulp::Errata
           :repoids      => { :type => 'string', :analyzer =>'keyword'},
           :id           => { :type => 'string', :analyzer => 'title_analyzer' },
           :id_sort      => { :type => 'string', :index => :not_analyzed },
-          :product_ids  => { :type => 'integer', :analyzer => 'keyword' }
+          :product_ids  => { :type => 'integer', :analyzer => 'keyword' },
+          :severity     => { :type => 'string', :analyzer => 'keyword'},
+          :type => { :type => 'string', :analyzer => 'keyword'}
         }
       }
     }
@@ -132,7 +134,7 @@ class Glue::Pulp::Errata
         filter :term, :type => filters[:type]
       end
       if filters.has_key?(:severity)
-        filter :term, :type => filters[:severity]
+        filter :term, :severity => filters[:severity]
       end
 
       if sort
