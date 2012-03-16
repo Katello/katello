@@ -4,6 +4,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :username
       t.string :password
       t.boolean :helptips_enabled, :default=>true
+      t.boolean :hidden, :default => false, :null=>false
       t.timestamps
     end
   end
