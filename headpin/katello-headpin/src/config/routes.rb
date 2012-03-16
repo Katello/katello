@@ -178,6 +178,7 @@ Src::Application.routes.draw do
       get :promotion_details
       get :object
       get :download
+      get :validate
       put :update_content
     end
   end

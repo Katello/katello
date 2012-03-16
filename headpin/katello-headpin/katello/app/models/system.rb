@@ -31,9 +31,21 @@ class System < ActiveRecord::Base
                 :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
                 :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin]
 
-  mapping do
+  mapping   :dynamic_templates =>[{"fact_string" => {
+                          :path_match => "facts.*",
+                          :mapping => {
+                              :type=>"string",
+                              :analyzer=>"keyword"
+                          }
+                        }} ] do
+    indexes :name, :type => 'string', :analyzer => :keyword
+    indexes :description, :type => 'string', :analyzer => :keyword
     indexes :name_sort, :type => 'string', :index => :not_analyzed
     indexes :lastCheckin, :type=>'date'
+
+    indexes :facts, :path=>"just_name" do
+    end
+
   end
 
   acts_as_reportable

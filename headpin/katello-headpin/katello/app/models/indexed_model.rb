@@ -20,7 +20,7 @@ module IndexedModel
 
       else
         #stub mapping
-        def self.mapping
+        def self.mapping *args
         end
         def self.index_import list
         end

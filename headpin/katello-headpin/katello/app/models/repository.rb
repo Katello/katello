@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'util/notices'
+
 class RepoDisablementValidator < ActiveModel::Validator
   def validate(record)
     if record.redhat? && record.enabled_changed? && (!record.enabled?) && record.promoted?
@@ -25,6 +27,7 @@ class Repository < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
   include IndexedModel
+  include Katello::Notices
 
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:except=>[:pulp_repo_facts, :groupid, :environment_product_id]}
@@ -107,6 +110,24 @@ class Repository < ActiveRecord::Base
 
   def update_related_index
     self.product.provider.update_index if self.product.provider.respond_to? :update_index
+  end
+
+  def sync_complete task
+    if task.state == 'finished'
+      notice N_("Repository '%s' finished syncing successfully.") % [self.name], {:level=>:success, :synchronous_request => false}
+    elsif task.state == 'error'
+      details = ''
+      log_details = []
+      if(!task.progress.error_details.nil? and !task.progress.error_details.empty?)
+        task.progress.error_details.each do |error|
+          log_details << error
+          details += error[:error].to_s + "\n"
+        end
+      end
+      Rails.logger.error("*** Sync error: " +  log_details.to_json)
+      notice N_("There were errors syncing repository '%s'.  See notices page for more details.") % [self.name], 
+                  {:level=>:error, :synchronous_request => false, :details => details}
+    end
   end
 
   def index_packages

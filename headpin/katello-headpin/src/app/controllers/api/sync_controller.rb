@@ -35,13 +35,7 @@ class Api::SyncController < Api::ApiController
   end
 
   def create
-    async_jobs = @obj.sync
-    to_return = async_jobs.collect do |pulp_task|
-      ts = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = @obj.organization}
-      ts.save!
-      ts
-    end
-
+    to_return = @obj.sync
     render :json => to_return, :status => 202
   end
 

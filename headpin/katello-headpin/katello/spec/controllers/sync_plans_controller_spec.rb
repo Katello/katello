@@ -53,7 +53,7 @@ describe SyncPlansController, :katello => true do
           :sync_plan => {
                          :name => 'myplan',
                          :interval => 'weekly',
-                         :plan_date =>'01/01/11',
+                         :plan_date =>'01/01/2011',
                          :plan_time => '07:00 am',
                          :description => 'RSPEC me'
                         }

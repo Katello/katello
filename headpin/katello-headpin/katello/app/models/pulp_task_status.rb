@@ -14,6 +14,19 @@
 
 class PulpTaskStatus < TaskStatus
   use_index_of TaskStatus
+
+  def refresh
+    PulpTaskStatus.refresh(self)
+  end
+
+  def after_refresh
+    #potentially used by child class, see PulpSyncStatus for example
+  end
+
+  def error
+    self.result[:errors][0] if self.error? && self.result[:errors]
+  end
+
   def self.wait_for_tasks async_tasks
     async_tasks = async_tasks.collect do |t|
       PulpTaskStatus.using_pulp_task(t)
@@ -35,31 +48,27 @@ class PulpTaskStatus < TaskStatus
     async_tasks
   end
 
-
-  def self.using_pulp_task(sync)
-    t = self.new { |t| yield t if block_given? }
-    PulpTaskStatus.dump_state(sync, t)
+  def self.using_pulp_task(pulp_status)
+    if pulp_status.is_a? TaskStatus
+      pulp_status
+    else
+      task_status = TaskStatus.find_by_uuid(pulp_status[:id])
+      task_status = self.new { |t| yield t if block_given? } if task_status.nil?
+      PulpTaskStatus.dump_state(pulp_status, task_status)
+    end
   end
 
   def self.dump_state(pulp_status, task_status)
     task_status.attributes = {
-    :uuid => pulp_status[:id],
-    :state => pulp_status[:state],
-    :start_time => pulp_status[:start_time],
-    :finish_time => pulp_status[:finish_time],
-    :progress => pulp_status[:progress],
-    :result => pulp_status[:result].nil? ? {:errors => [pulp_status[:exception], pulp_status[:traceback]]} : pulp_status[:result]
+      :uuid => pulp_status[:id],
+      :state => pulp_status[:state],
+      :start_time => pulp_status[:start_time],
+      :finish_time => pulp_status[:finish_time],
+      :progress => pulp_status[:progress],
+      :result => pulp_status[:result].nil? ? {:errors => [pulp_status[:exception], pulp_status[:traceback]]} : pulp_status[:result]
     }
     task_status.save! if not task_status.new_record?
     task_status
-  end
-
-  def refresh
-    PulpTaskStatus.refresh(self)
-  end
-
-  def error
-    self.result[:errors][0] if self.error? && self.result[:errors]
   end
 
   def self.refresh task_status
@@ -71,6 +80,7 @@ class PulpTaskStatus < TaskStatus
         :result => pulp_task[:result].nil? ? {:errors => [pulp_task[:exception], pulp_task[:traceback]]} : pulp_task[:result]
     }
     task_status.save! if not task_status.new_record?
+    task_status.after_refresh
     task_status
   end
 
@@ -83,7 +93,7 @@ class PulpTaskStatus < TaskStatus
       if not t.finished?
         return true
       elsif t.error?
-        raise RuntimeError, t.error
+        raise RuntimeError, t
       end
     end
     return false
