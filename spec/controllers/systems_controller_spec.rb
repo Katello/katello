@@ -245,6 +245,19 @@ describe SystemsController do
         response.should_not be_success
         System.where(:name=>invalid_name).should be_empty
       end
+
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          put :update, { :id => @system.id, :system => { :bad_foo => "1900", :name=> "foo" }}
+        end
+
+      end
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          put :update, { :id => @system.id, :autoheal => false, :bad_foo => "ugh"}
+        end
+      end
+
     end
 
 
@@ -323,6 +336,13 @@ describe SystemsController do
                        :system_type=>{:virtualized=>'virtual'}}
         response.should be_success
         response.should contain '{"no_match":true}'
+      end
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          post :create, {:system=>{:bad_foo=> true,:name=>"sys1", :environment_id=>@env2.id, :sockets=>2},
+                         :arch=>{:arch_id=>1},
+                         :system_type=>{:virtualized=>'virtual'}}
+        end
       end
     end
 

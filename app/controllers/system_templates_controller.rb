@@ -74,7 +74,15 @@ class SystemTemplatesController < ApplicationController
                              :product_hash => product_hash, :package_groups => package_groups,
                              :product_distro_map => product_distro_map, :repo_distro_map => repo_distro_map}
   end
-  
+
+  def param_rules
+    {
+      :create => {:system_template => [:name, :description]},
+      :update => {:system_template  => [:name, :description]}
+    }
+  end
+
+
   def setup_options
     @panel_options = { :title => _('System Templates'),
                  :col => ["name"],

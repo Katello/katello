@@ -50,6 +50,14 @@ class OrganizationsController < ApplicationController
     }
   end
 
+  def param_rules
+    {
+      :create =>[:name, :description, :envname, :envdescription],
+      :update => {:organization  => [:description]}
+    }
+  end
+
+
   def section_id
     'orgs'
   end

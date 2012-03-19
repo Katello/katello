@@ -129,6 +129,13 @@ class SyncPlansController < ApplicationController
     render :partial => "new", :layout => "tupane_layout", :locals => {:plan => @plan}
   end
 
+  def param_rules
+    {
+      :create => {:sync_plan => [:description, :name, :interval, :plan_date, :plan_time]},
+      :update => {:sync_plan => [:description, :name, :interval, :date, :time]},
+    }
+  end
+
   def create
     begin
       sdate = params[:sync_plan].delete :plan_date

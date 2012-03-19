@@ -99,6 +99,15 @@ describe Api::PermissionsController do
         Permission.should_receive(:create!).with(hash_including(expected_params))
         req
     end
+    describe "with invalid params" do
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = perm_params
+          perm_params[:bad_foo] = "bad"
+          post :create, bad_req
+        end
+      end
+    end
   end
 
   describe "destroy permission" do

@@ -20,12 +20,12 @@ describe ActivationKey do
 
   before(:each) do
     disable_org_orchestration
-
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.library.id, :organization => @organization)
     @environment_2 = KTEnvironment.create!(:name => 'test', :prior => @environment_1.id, :organization => @organization)
     @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1)
     @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1)
+    @system_template_env2 = SystemTemplate.create!(:name => 'template3', :environment => @environment_2)
     @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization,
                                   :environment_id => @environment_1.id, :system_template_id => @system_template_1.id)
   end
@@ -57,6 +57,25 @@ describe ActivationKey do
       @akey.environment = @organization.library
       @akey.should_not be_valid
       @akey.errors[:base].should_not be_empty
+    end
+
+    it "should be invalid if environment in another org is specified" do
+      org_2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
+      env_1_org2 = KTEnvironment.create!(:name => 'dev', :prior => org_2.library.id, :organization => org_2)
+      @akey.name = 'invalid key'
+      @akey.organization=@organization
+      @akey.environment = env_1_org2
+      @akey.should_not be_valid
+      @akey.errors[:environment].should_not be_empty
+    end
+
+    it "should be invalid if system template in another environment" do
+      @akey.name = 'invalid key'
+      @akey.organization=@organization
+      @akey.environment = @environment_1
+      @akey.system_template = @system_template_env2
+      @akey.should_not be_valid
+      @akey.errors[:system_template].should_not be_empty
     end
 
   end
