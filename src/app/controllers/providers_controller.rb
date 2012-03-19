@@ -50,6 +50,13 @@ class ProvidersController < ApplicationController
     }
   end
 
+  def param_rules
+    {
+        :create => {:provider => [:name, :description]},
+    }
+  end
+
+
   def products_repos
     @products = @provider.products
     render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider,

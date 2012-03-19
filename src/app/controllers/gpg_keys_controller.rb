@@ -47,6 +47,13 @@ class GpgKeysController < ApplicationController
     }
   end
 
+  def param_rules
+    {
+      :create => {:gpg_key => [:name, :content, :content_upload]},
+      :update => {:gpg_key => [:name, :content, :content_upload]}
+    }
+  end
+
   def items
     render_panel_direct(GpgKey, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
       {:default_field => :name, :filter=>{:organization_id=>[current_organization.id]}})

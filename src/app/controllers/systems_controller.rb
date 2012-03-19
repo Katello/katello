@@ -60,6 +60,21 @@ class SystemsController < ApplicationController
     }
   end
 
+  def param_rules
+    update_check = lambda do
+      if params[:system]
+        sys_rules = {:system => [:name, :description, :location] }
+        check_hash_params(sys_rules, params)
+      else
+        check_array_params([:autoheal, :id], params)
+      end
+    end
+    {   :create => {:arch => [:arch_id],:system=>[:sockets, :name, :environment_id], :system_type =>[:virtualized]},
+        :update => update_check
+    }
+  end
+
+
   def new
     @system = System.new
     @system.facts = {} #this is nil to begin with

@@ -45,9 +45,34 @@ class RolesController < ApplicationController
       }
   end
 
+  def param_rules
+    perm_check = lambda do
+      if params[:permission]
+        perm_attrs = {:permission => [:organization_id, :verb_values, :tag_values, :name, :resource_type_attributes,
+                                                        :all_tags, :all_verbs, :description]}
+
+        diff = check_hash_params(perm_attrs, params)
+        return diff unless diff.empty?
+
+        if params[:permission][:resource_type_attributes]
+          return check_hash_params({:resource_type_attributes => [:name]}, params[:permission])
+        end
+      end
+      []
+    end
+
+     {
+       :create => {:role => [:name, :description]},
+       :update => {:role => [:name, :description], :update_users => [:user_id,:adding]},
+       :create_permission => perm_check,
+       :update_permission => perm_check
+     }
+  end
+
+
   def section_id
      'operations'
-   end
+  end
   
   def items
     render_panel_direct(Role, @panel_options,  params[:search], params[:offset], [:name_sort, :asc],

@@ -36,6 +36,14 @@ class Api::TemplatesController < Api::ApiController
     }
   end
 
+
+  def param_rules
+    {
+      :create => {:template => [:name, :description, :parent_id]},
+      :update => {:template  => [:name, :description, :parent_id]}
+    }
+  end
+
   def index
     tpls = @environment.system_templates.where(params.slice(:name))
     render :json => tpls.to_json

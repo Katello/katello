@@ -47,11 +47,7 @@ describe Api::ProvidersController do
       :name => provider_name,
       :description => "a description",
       :repository_url => "https://some.url",
-      :provider_type => Provider::REDHAT,
-      :login_credential_attributes => {
-          :username => 'username',
-          :password => 'password'
-      }
+      :provider_type => Provider::CUSTOM,
     }
   end
 
@@ -90,6 +86,17 @@ describe Api::ProvidersController do
       Provider.should_receive(:create!).and_return(Provider.new)
       req
     end
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = {:organization_id => @organization.cp_key,
+                   :provider =>
+                      {:bad_foo => "mwahahaha",
+                       :name => "Provider Key",
+                       :description => "This is the key string" }
+        }.with_indifferent_access
+        post :create, bad_req
+      end
+    end
   end
 
   describe "update a provider" do
@@ -105,6 +112,17 @@ describe Api::ProvidersController do
       @provider.should_receive(:update_attributes!).once
       
       req
+    end
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = {:id => 123,
+                   :provider =>
+                      {:bad_foo => "mwahahaha",
+                       :name => "prov Key",
+                       :description => "This is the key string" }
+        }.with_indifferent_access
+        put :update, bad_req
+      end
     end
   end
 
