@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.13
+Version:       0.2.14
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Mar 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.14-1
+- 803441 - fix cli unit test for org subscriptions
+
 * Thu Mar 15 2012 Ivan Necas <inecas@redhat.com> 0.2.13-1
 - priodic build
 
