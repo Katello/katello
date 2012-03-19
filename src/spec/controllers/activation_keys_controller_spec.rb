@@ -171,6 +171,13 @@ describe ActivationKeysController do
         post :create, @akey_params
         response.should be_success
       end
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = @akey_params
+          bad_req[:activation_key][:bad_foo] = "mwahaha"
+          post :create, bad_req
+        end
+      end
     end
 
     describe "with invalid params" do
@@ -263,6 +270,12 @@ describe ActivationKeysController do
       end
 
       describe "with invalid params" do
+        it_should_behave_like "bad request"  do
+          let(:req) do
+            bad_req = {:id => @a_key.id, :activation_key => {:name => "bar", :bad_foo => "hahaha"}}
+            put :update, bad_req
+          end
+        end
         it "should generate an error notice" do
           controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_NAME_INVALID

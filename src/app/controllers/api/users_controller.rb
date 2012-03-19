@@ -41,6 +41,13 @@ class Api::UsersController < Api::ApiController
      }
   end
 
+  def param_rules
+    {
+      :create => [:username, :password, :email, :disabled],
+      :update => {:user => [:password, :email, :disabled]}
+    }
+  end
+
   def index
     render :json => (User.readable.where query_params).to_json
   end

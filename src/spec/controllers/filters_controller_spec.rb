@@ -66,6 +66,11 @@ describe FiltersController do
         response.should_not be_success
       end
 
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          post :create, :filter => {:name=>"testfilter", :bad_foo =>"lame"}
+        end
+      end
     end
 
     describe "edit a filter" do
@@ -121,6 +126,12 @@ describe FiltersController do
       it "should not allow updating of description of bad id" do
         post :update, :id=> -1, :filter=>{:description=>"TestDescription"}
         response.should_not be_success
+      end
+
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          post :update, :id=> @filter, :filter=>{:description=>"TestDescription", :bad_foo =>"lame"}
+        end
       end
     end
 

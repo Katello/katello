@@ -40,6 +40,12 @@ class Api::ProvidersController < Api::ApiController
     }
   end
 
+  def param_rules
+    {
+      :create => {:provider  => [:name, :description, :provider_type, :repository_url]},
+      :update => {:provider  => [:name, :description, :repository_url]}
+    }
+  end
 
   def index
     query_params.delete(:organization_id)

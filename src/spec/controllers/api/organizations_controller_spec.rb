@@ -113,7 +113,7 @@ describe Api::OrganizationsController do
   describe "update a organization" do
 
     let(:action) {:update }
-    let(:req) { put 'update', :id => "spec" }
+    let(:req) { put 'update', :id => "spec", :organization=>{:description=>"bah"} }
     let(:authorized_user) { user_with_update_permissions }
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
@@ -121,7 +121,7 @@ describe Api::OrganizationsController do
     it 'should call org update_attributes' do
       Organization.should_receive(:first).once.with(:conditions => {:cp_key => "spec"}).and_return(@org)
       @org.should_receive(:update_attributes!).once
-      put 'update', :id => "spec"
+      put 'update', :id => "spec", :organization=>{:description=>"bah"}
     end
   end
 
@@ -129,7 +129,18 @@ describe Api::OrganizationsController do
     it 'should call org update_attributes while accounting for spaces in the search name' do
       Organization.should_receive(:first).once.with(:conditions => {:cp_key => "update_org_with_spaces"}).and_return(@org)
       @org.should_receive(:update_attributes!).once
-      put 'update', :id => "update org with spaces"
+      put 'update', :id => "update org with spaces", :organization=>{:description=>"bah"}
+    end
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = {:id => 123,
+                   :organization =>
+                      {:bad_foo => "mwahahaha",
+                       :name => "Gpg Key",
+                       :description => "This is the key string" }
+        }.with_indifferent_access
+        put :update, bad_req
+      end
     end
   end
 end

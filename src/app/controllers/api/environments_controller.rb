@@ -15,7 +15,6 @@ class Api::EnvironmentsController < Api::ApiController
   before_filter :find_organization, :only => [:index, :create]
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories]
   before_filter :authorize
-
   def rules
     index_rule = lambda{@organization.readable? || @organization.any_systems_registerable?}
     manage_rule = lambda{@organization.environments_manageable?}
@@ -29,6 +28,17 @@ class Api::EnvironmentsController < Api::ApiController
       :repositories => view_rule
     }
   end
+
+
+  def param_rules
+    manage_match =  {:environment =>  ["name", "description", "prior" ]}
+
+    {
+      :create =>manage_match,
+      :update => manage_match
+    }
+  end
+
 
   def index
     query_params[:organization_id] = @organization.id

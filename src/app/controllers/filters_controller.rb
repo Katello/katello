@@ -43,6 +43,12 @@ class FiltersController < ApplicationController
     }
   end
 
+  def param_rules
+     {
+       :create => {:filter => [:name, :description]},
+       :update => {:filter => [:name, :description]}
+     }
+  end
 
   def index
     products = Product.readable(current_organization)

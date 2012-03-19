@@ -65,6 +65,15 @@ describe UsersController do
       post 'create', {:user => {:username=>"testuser", :password=>"password1234", :env_id => @environment.id}}
       response.should_not be_success
     end
+
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        name = "foo-user"
+        bad_req = {:user => {:username=>name, :password=>"password1234", :email=>"#{name}@somewhere.com", :env_id => @environment.id}}
+        bad_req[:user][:bad_foo] = "hahaha"
+        post 'create', bad_req
+      end
+    end
   end
   
   describe "edit a user" do
@@ -94,9 +103,20 @@ describe UsersController do
        assert !User.where(:id => @user.id, :email => new_email).empty?
     end
 
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        new_email = "foo-user@somewhere-new.com"
+        bad_req = {:id => @user.id, :user => {:email=>new_email}}
+        bad_req[:user][:bad_foo] = "hahaha"
+        put 'update', bad_req
+      end
+    end
+
+
     it "should not change the username" do 
        put 'update', {:id => @user.id, :user => {:username=>"FOO"}}
-       response.should be_success
+       response.should_not be_success
+       response.status.should == 400
        assert User.where(:username=>"FOO").empty?
        assert !User.where(:username=>@user.username).empty?      
     end
@@ -112,6 +132,14 @@ describe UsersController do
        #should still have self role
        assert User.find(@user.id).roles.size == 1
     end
+
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        role = Role.where(:name=>"Test")[0]
+        put 'update_roles', {:id => @user.id, :user=>{:bad_foo => "boo", :role_ids=>[role.id]}}
+      end
+    end
+
   end  
   
   describe "set helptips" do
@@ -182,7 +210,7 @@ describe UsersController do
     describe "update user put" do
       let(:action) {:update}
       let(:req) do
-        put 'update', :id => @testuser.id, :password=>"barfoo"
+        put 'update', :id => @testuser.id, :user => {:password=>"barfoo"}
       end
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:update, :users, nil, nil) }

@@ -39,6 +39,12 @@ class Api::FiltersController < Api::ApiController
     }
   end
 
+  def param_rules
+     {
+       :create => [:name, :description, :organization_id, :package_list]
+     }
+  end
+
   def index
     render :json => @organization.filters.to_json
   end
