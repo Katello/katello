@@ -16,6 +16,17 @@ class postgres::config {
       notify  => Service["postgresql"],
       require => Exec["InitDB"];
   }
+
+  # wait 30 seconds for postgresql daemon to accept connections and execute SQL commands or timeout when not running
+  exec { "wait-for-postgresql":
+    environment => "PGCONNECT_TIMEOUT=5",
+    path        => "/usr/bin:/bin",
+    command     => "bash -c \"for i in {1..7}; do psql -U ${postgres::params::user} -h localhost -c 'select count(*) from pg_tables' >/dev/null 2>&1 || sleep 5; done\"",
+    timeout     => 30, # loop above is for 35 secs max but we timeout after 30
+    user        => $postgres::params::user,
+    require     => Class["postgres::service"],
+  }
+
   exec { "InitDB":
     command => $postgres::params::password ? {
       ""      => "/usr/bin/initdb ${postgres::params::home}//data -E UTF8",
