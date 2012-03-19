@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.12
+Version:        0.2.13
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -63,6 +63,12 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Mar 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.13-1
+- 802346 - adding puppet syntax check to the spec
+- 802346 - wait for postgres to come up in puppet
+- Revert "802346 - wait until PostgreSQL accepts connections"
+- 802252 - adding missing Ruby build dependency
+
 * Mon Mar 12 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.12-1
 - 802346 - wait until PostgreSQL accepts connections
 - pchalupa's public key
