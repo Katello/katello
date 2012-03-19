@@ -75,7 +75,13 @@ class ProvidersController < ApplicationController
         end
 
       rescue Exception => error
-        display_message = parse_display_message(error.response)
+        if error.respond_to?(:response)
+          display_message = parse_display_message(error.response)
+        elsif error.message
+          display_message = error.message
+        else
+          display_message = ""
+        end
 
         error_text = _("Subscription manifest upload for provider '%{name}' failed." % {:name => @provider.name})
         error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
