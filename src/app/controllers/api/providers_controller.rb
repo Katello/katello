@@ -89,8 +89,6 @@ class Api::ProvidersController < Api::ApiController
 
     @provider.import_manifest File.expand_path(temp_file.path), :force => params[:force]
     render :text => "Manifest imported", :status => 200
-    rescue => e
-      raise HttpErrors::ApiError, _("Manifest import for provider [ %s ] failed") % @provider.name
   end
 
   def import_products
