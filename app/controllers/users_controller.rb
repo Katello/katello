@@ -67,6 +67,15 @@ class UsersController < ApplicationController
        :disable_helptip => user_helptip,
      }
   end
+  
+  def param_rules
+     {       
+       :create => {:user => [:password, :username, :env_id, :email]},
+       :update => {:user => [:password, :env_id, :email]},
+       :update_roles=> {:user => [:role_ids]}
+     }
+  end
+ 
 
   # Render list of users. Note that if the current user does not have permission
   # to view all users, the results are restricted to just themselves.

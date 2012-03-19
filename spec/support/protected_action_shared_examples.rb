@@ -74,3 +74,11 @@ shared_examples_for "protected action" do
 end
 
 
+shared_examples_for "bad request" do
+  context "action" do
+    it "should fail" do
+      req
+      response.status.should == 400
+    end
+  end
+end

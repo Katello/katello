@@ -59,7 +59,9 @@ class ApplicationController < ActionController::Base
     org_not_found_error(exception)
   end
 
-
+  rescue_from Errors::BadParameters do |exception|
+      execute_rescue(exception, lambda{|exception| render_bad_parameters(exception)})
+  end
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller
   include AuthorizationRules
@@ -247,6 +249,24 @@ class ApplicationController < ActionController::Base
     end
     User.current = nil
   end
+
+  # render bad params
+  def render_bad_parameters(exception = nil)
+    if exception
+        logger.error _("Rendering 400:") + " #{exception.message}"
+        notice _("Invalid parameters sent in the request for this operation. Please contact a system administrator."), {:level => :error, :details => exception.message}
+    end
+    respond_to do |format|
+      #format.html { render :template => "common/400", :layout => "katello", :status => 400,
+      #                          :locals=>{:error=>exception} }
+      format.html { render :template => "common/400", :layout => !request.xhr?, :status => 400 }
+      format.atom { head 400 }
+      format.xml  { head 400 }
+      format.json { head 400 }
+    end
+    User.current = nil
+  end
+
 
   # take care of 500 pages too
   def render_error(exception = nil)

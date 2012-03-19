@@ -32,6 +32,11 @@ class Api::PermissionsController < Api::ApiController
        :available_verbs => read_test
      }
   end
+  def param_rules
+     {
+       :create => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type,:type ]
+     }
+  end
 
   def index
     render :json => @role.permissions.where(query_params).to_json()

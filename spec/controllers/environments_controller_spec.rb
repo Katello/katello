@@ -62,6 +62,26 @@ describe EnvironmentsController do
     end
   end
 
+  describe "other-tests-update with with invalid params" do
+    before do
+      login_user
+      set_default_locale
+      new_test_org
+      @environment = KTEnvironment.create!(:name => "boo", :organization=> @organization, :prior => @organization.library)
+    end
+    it_should_behave_like "bad request"  do
+      let(:req) do
+
+        bad_req = {:env_id => @environment.id, :org_id => @organization.cp_key,
+                    :kt_environment => { :name => 'production', :prior => @organization.library}
+          }
+        bad_req[:kt_environment][:bad_foo] = "mwahaha"
+        put 'update', bad_req
+      end
+    end
+  end
+
+
   describe "other-tests" do
     before (:each) do
       login_user
@@ -109,6 +129,7 @@ describe EnvironmentsController do
           @new_env = mock(KTEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
           KTEnvironment.stub!(:new).and_return(@new_env)
           @new_env.stub!(:save!).and_return(true)
+          Support.stub!(:deep_copy) {|p| p}
         end
 
 
@@ -135,6 +156,19 @@ describe EnvironmentsController do
         end
 
       end
+    end
+
+    describe "env create invalid params" do
+      before do
+        new_test_org
+      end
+        it_should_behave_like "bad request"  do
+          let(:req) do
+            bad_req = {:organization_id => @organization.cp_key, :name => 'production', :prior => @organization.library}
+            bad_req[:bad_foo] = "mwahaha"
+            post :create, bad_req
+          end
+        end
     end
 
     describe "update an environment" do
@@ -177,9 +211,7 @@ describe EnvironmentsController do
           response.should_not be_redirect
         end
       end
-
     end
-
     describe "destroy an environment" do
         before(:each) do
           @env.stub(:destroy)

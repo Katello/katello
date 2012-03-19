@@ -33,6 +33,13 @@ class Api::GpgKeysController < Api::ApiController
     }
   end
 
+  def param_rules
+    {
+        :create => {:gpg_key => [:name, :content]},
+        :update => {:gpg_key => [:name, :content]}
+    }
+  end
+
   def index
     gpg_keys = @organization.gpg_keys.where(params.slice(:name))
     render :json => gpg_keys, :only => [:id, :name]
