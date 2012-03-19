@@ -342,9 +342,9 @@ fi
 
 %pre common
 # Add the "katello" user and group
-getent group %{name} >/dev/null || groupadd -r %{name}
+getent group %{name} >/dev/null || groupadd -r %{name} -g 182
 getent passwd %{name} >/dev/null || \
-    useradd -r -g %{name} -d %{homedir} -s /sbin/nologin -c "Katello" %{name}
+    useradd -r -g %{name} -d %{homedir} -u 182 -s /sbin/nologin -c "Katello" %{name}
 exit 0
 
 %preun common
