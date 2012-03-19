@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.304
+Version:        0.1.305
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,23 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Mar 19 2012 Jordan OMara <jomara@redhat.com> 0.1.305-1
+- 803420 - 2pane - incorrect pane opens on object create
+  (bbuckingham@redhat.com)
+- 803441 - handle space in organization when importing manifest
+- 801797 - Fixes regression with environment selector and tupane pages not
+  filtering on environment.
+- 800169 - Users - do not allow setting of def org, if the org has no envs
+  (bbuckingham@redhat.com)
+- 799122 - showing warning if trying to promote repo with failed sync or
+  currently syncing (jsherril@redhat.com)
+- 790063 - search - few more mods for consistency (bbuckingham@redhat.com)
+- 790063 - search - changes for consistency/behavior (bbuckingham@redhat.com)
+- 801148 - providers - fix tabindex for products and repos
+  (bbuckingham@redhat.com)
+- 799523 - Fix for new environment full page load. (jrist@redhat.com)
+- 801448 - Missing resource (font) in UI
+
 * Wed Mar 14 2012 Jordan OMara <jomara@redhat.com> 0.1.304-1
 - 801070 - Better error message for deleting ends from middle of the path
 - 799052 - Promoting template with assigned repo should fail if product is not
