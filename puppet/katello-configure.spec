@@ -18,6 +18,7 @@ Requires:       katello-certs-tools
 Requires:       nss-tools openssl
 Requires:       policycoreutils-python
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
+BuildRequires:  findutils puppet >= 2.6.6
 
 BuildArch: noarch
 
@@ -28,6 +29,9 @@ Provides katello-configure script which configures Katello installation.
 %setup -q
 
 %build
+#check syntax for all puppet scripts
+find -name '*.pp' | xargs -n 1 -t puppet --parseonly
+
 #check for puppet erb syntax errors
 find modules/ -name \*erb | xargs aux/check_erb
 
