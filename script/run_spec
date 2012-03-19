@@ -7,9 +7,9 @@ fi
 
 echo $LIST
 if [ $# -eq 2 ]; then
-	RAILS_ENV=test  bundle exec rspec $LIST -e "$2"
+	RAILS_ENV=test  bundle exec rspec $LIST -e "$2" -c -fd
 elif [ $# -eq 1 ]; then
-	RAILS_ENV=test  bundle exec rspec $LIST 
+	RAILS_ENV=test  bundle exec rspec $LIST  -c -fd
 else
 	echo "$0 <test-file> <test-name>"	
 fi
