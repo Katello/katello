@@ -11,7 +11,11 @@ module ApplicationConfiguration
 
     attr_reader :config_file
 
-    def initialize 
+    LOG_LEVELS = ['debug', 'info', 'warn', 'error', 'fatal']
+
+
+    def initialize
+
       @config_file = "/etc/katello/katello.yml"
       @config_file = "#{Rails.root}/config/katello.yml" unless File.exists? @config_file
 
@@ -38,6 +42,11 @@ module ApplicationConfiguration
       # candlepin and pulp are turned on by default
       @ostruct.use_cp = true unless @ostruct.respond_to?(:use_cp)
       @ostruct.use_pulp = true unless @ostruct.respond_to?(:use_pulp)
+
+      #configuration is created after environment initializers, so lets override them here
+      Rails.logger.level = LOG_LEVELS.index(@ostruct.log_level) if LOG_LEVELS.include?(@ostruct.log_level)
+      ActiveRecord::Base.logger.level = LOG_LEVELS.index(@ostruct.log_level_sql) if LOG_LEVELS.include?(@ostruct.log_level_sql)
+
       # backticks gets you the equiv of a system() command in Ruby
       version =  `rpm -q katello-common --queryformat '%{VERSION}-%{RELEASE}\n'`
       exit_code = $?
