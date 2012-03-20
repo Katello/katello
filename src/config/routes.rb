@@ -432,7 +432,7 @@ Src::Application.routes.draw do
       resources :gpg_keys, :only => [:index, :create]
     end
 
-    resources :changesets, :only => [:show, :destroy] do
+    resources :changesets, :only => [:show, :update, :destroy] do
       post :promote, :on => :member, :action => :promote
       get :dependencies, :on => :member, :action => :dependencies
       resources :products, :controller => :changesets_content do
