@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.14
+Version:        0.2.15
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Mar 20 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.15-1
+- 802346 - wait for postgres to come up in puppet
+
 * Mon Mar 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.14-1
 - Revert "802346 - wait for postgres to come up in puppet"
 
