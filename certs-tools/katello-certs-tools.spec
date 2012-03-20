@@ -2,7 +2,7 @@ Name: katello-certs-tools
 Summary: Katello SSL Key/Cert Tool
 Group: Applications/Internet
 License: GPLv2 and Python
-Version: 1.1.3
+Version: 1.1.4
 Release: 1%{?dist}
 URL:      https://fedorahosted.org/katello
 Source0:  https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
@@ -42,6 +42,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc ssl-howto-simple.txt ssl-howto.txt
 
 %changelog
+* Tue Mar 20 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.4-1
+- 781210 - cert tools man page review
+
 * Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 1.1.3-1
 - 800093 - CRL was non functional without these config options
   (jmatthew@redhat.com)
