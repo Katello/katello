@@ -328,6 +328,10 @@ class UpdateContent(ChangesetAction):
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
+        self.parser.add_option('--description', dest='description',
+                               help=_("changeset description"))
+        self.parser.add_option('--new_name', dest='new_name',
+                               help=_("new changeset name"))
         self.parser.add_option('--add_product', dest='add_product', type="string",
                                action="callback", callback=self.store_item,
                                help=_("product to add to the changeset"))
@@ -373,11 +377,14 @@ class UpdateContent(ChangesetAction):
         csName = self.get_option('name')
         orgName = self.get_option('org')
         envName = self.get_option('env')
+        csNewName = self.get_option('new_name')
+        csDescription = self.get_option('description')
 
         cset = get_changeset(orgName, envName, csName)
         if cset == None:
             return os.EX_DATAERR
 
+        self.update(cset["id"], csNewName, csDescription)
         addPatch = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName), items)
         removePatch = self.PatchBuilder.build_patch('remove', self.RemovePatchItemBuilder(orgName, envName), items)
         self.update_content(cset["id"], addPatch, self.api.add_content)
@@ -385,6 +392,10 @@ class UpdateContent(ChangesetAction):
 
         print _("Successfully updated changeset [ %s ]") % csName
         return os.EX_OK
+
+
+    def update(self, csId, newName, description):
+        self.api.update(csId, newName, description)
 
 
     def update_content(self, csId, patch, updateMethod):

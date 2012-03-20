@@ -46,6 +46,14 @@ class ChangesetAPI(KatelloAPI):
         path = "/api/organizations/%s/environments/%s/changesets/" % (orgName, envId)
         return self.server.POST(path, data)[1]
 
+    def update(self, csId, newName, description):
+        data = {}
+        data = self.update_dict(data, "name", newName)
+        data = self.update_dict(data, "description", description)
+
+        path = "/api/changesets/%s" % csId
+        return self.server.PUT(path, {"changeset": data})[1]
+
     def delete(self, csId):
         path = "/api/changesets/%s" % (csId)
         return self.server.DELETE(path)[1]
