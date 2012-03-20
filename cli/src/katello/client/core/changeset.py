@@ -121,6 +121,7 @@ class Info(ChangesetAction):
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
+        self.printer.addColumn('description', multiline=True, show_in_grep=False)
         self.printer.addColumn('updated_at')
         self.printer.addColumn('state')
         self.printer.addColumn('environment_id')
