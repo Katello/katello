@@ -6,7 +6,7 @@ define postgres::createdb($owner, $logfile) {
     database => "postgres",
     sql => "CREATE DATABASE $name WITH OWNER = $owner ENCODING = 'UTF8';",
     sqlcheck => "\"SELECT datname FROM pg_database WHERE datname ='$name'\" | grep $name",
-    require  => Class["postgres::service"],
+    require  => Exec["wait-for-postgresql"],
     logfile  => $logfile,
   }
 }
