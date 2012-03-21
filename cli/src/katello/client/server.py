@@ -304,7 +304,7 @@ class KatelloServer(Server):
             response_body = json.loads(response_body, encoding='utf-8')
         except:
             content_type = response.getheader('content-type')
-            if content_type and content_type.startswith('text/'):
+            if content_type and (content_type.startswith('text/') or content_type.startswith('application/json')):
                 response_body = u_str(response_body)
             else:
                 pass
