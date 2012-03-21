@@ -1,7 +1,7 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 
 Name: katello-agent
-Version: 0.16
+Version: 0.17
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -45,6 +45,9 @@ rm -rf %{buildroot}
 %doc LICENSE
 
 %changelog
+* Wed Mar 21 2012 Mike McCune <mmccune@redhat.com> 0.17-1
+- 770693 - handle repos without repofile in katello-agent (inecas@redhat.com)
+
 * Wed Feb 29 2012 Jordan OMara <jomara@redhat.com> 0.16-1
 - 761314 - Make sure katello-agent communicates with ssl (mbacovsk@redhat.com)
 
