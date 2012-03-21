@@ -125,6 +125,7 @@ end
 output = `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
 output = `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
 output = `sed -i -e 's/^\\(.*secret\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
+output = `sed -i -e 's/^\\(.*password\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
 output = `sed -i -e 's/^\\(\\s*oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/katello/katello.yml')}`
 output = `sed -i -e 's/^\\(\\s*password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/katello/katello.yml')}`
 output = `sed -i -e 's/\\(keystorePass=\\)\\(\\S*\\)/\\1 "***************"/' #{File.join(target_dir, '/etc/tomcat6/server.xml')}`
