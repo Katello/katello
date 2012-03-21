@@ -488,6 +488,36 @@ module Glue::Pulp::Repo
     }.flatten]
   end
 
+  def sort_sync_status statuses 
+    statuses.sort!{|a,b|
+      if a['finish_time'].nil? && b['finish_time'].nil?
+        if a['start_time'].nil?
+          1
+        elsif b['start_time'].nil?
+          -1
+        else
+          a['start_time'] <=> b['start_time']
+        end
+      elsif a['finish_time'].nil?
+        if a['start_time'].nil?
+          1
+        else
+          -1
+        end
+      elsif b['finish_time'].nil?
+        if b['start_time'].nil?
+          -1
+        else
+          1
+        end
+      else
+        b['finish_time'] <=> a['finish_time'] 
+      end
+    }
+
+    return statuses
+  end
+
   protected
 
   def _get_most_recent_sync_status()
@@ -504,18 +534,7 @@ module Glue::Pulp::Repo
     if history.nil? or history.empty?
       return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)
     else
-      history.sort!{|a,b|
-        if a['finish_time'].nil? && b['finish_time'].nil?
-          a['start_time'] <=> b['start_time']
-        elsif a['finish_time'].nil?
-          -1
-        elsif b['finish_time'].nil?
-          1
-        else
-          b['finish_time'] <=> a['finish_time'] 
-        end
-      }
-
+      history = sort_sync_status(history)
       return PulpSyncStatus.pulp_task(history.first.with_indifferent_access)
     end
   end
