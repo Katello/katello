@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.305
+Version:        0.1.306
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,23 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Mar 21 2012 Mike McCune <mmccune@redhat.com> 0.1.306-1
+- 803409 - providers - on provider create, open products & repos tab
+  (bbuckingham@redhat.com)
+- 795780, 805122 - Improvement to the way the most recent sync status is
+  determined to prevent error and show proper completion. (ehelms@redhat.com)
+- 798264 - Katello debug collects certificate password files and some certs
+  (mbacovsk@redhat.com)
+- 798264 - Katello debug collects certificate password files and some certs
+  (mbacovsk@redhat.com)
+- 790455 - api for updating changeset name and description
+- 800573 - Comprehensive bug fix to deal with mass-assign vulnerability
+  (paji@redhat.com)
+- 803740 - adding our assigned uid/groupid for katello
+- 799357 - provide descriptive information on CDN access denied
+  (inecas@redhat.com)
+- 799357 - manifest import - fix for nil error message (bbuckingham@redhat.com)
+
 * Mon Mar 19 2012 Jordan OMara <jomara@redhat.com> 0.1.305-1
 - 803420 - 2pane - incorrect pane opens on object create
   (bbuckingham@redhat.com)
