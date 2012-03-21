@@ -21,7 +21,7 @@ from urlparse import urlparse
 from katello.client.api.provider import ProviderAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask
+from katello.client.core.utils import is_valid_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask, format_sync_errors
 from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.core.utils import ProgressBar
 from katello.client.api.utils import get_provider
@@ -229,7 +229,7 @@ class Sync(SingleProviderAction):
         result = run_async_task_with_status(task, ProgressBar())
 
         if task.failed():
-            errors = [t["result"]['errors'][0] for t in task.get_hashes() if t['state'] == 'error']
+            errors = format_sync_errors(task)
             print _("Provider [ %s ] failed to sync: %s" % (providerName, errors))
             return os.EX_DATAERR
         elif task.cancelled():
