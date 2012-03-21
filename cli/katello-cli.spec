@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.106
+Version:       0.1.107
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,6 +89,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 21 2012 Mike McCune <mmccune@redhat.com> 0.1.107-1
+- 804230 - cli - fix error on handling of provider sync errors
+  (bbuckingham@redhat.com)
+
 * Wed Mar 21 2012 Mike McCune <mmccune@redhat.com> 0.1.106-1
 - 790455 - cli for updating changeset name and description
 - 790455 - field 'description' added to changeset info
