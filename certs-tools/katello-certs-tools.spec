@@ -39,7 +39,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/katello-ssl-tool
 %doc %{_mandir}/man1/katello-*.1*
 %doc LICENSE PYTHON-LICENSES.txt
-%doc ssl-howto-simple.txt ssl-howto.txt
 
 %changelog
 * Tue Mar 20 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.4-1
