@@ -362,13 +362,25 @@ module Glue::Pulp::Repo
     pulp_task = Pulp::Repository.sync(self.pulp_id)
     task = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = self.environment.organization}
     task.save!
-    self.async(:organization=>self.environment.organization).after_sync(pulp_task)
     return [task]
   end
 
-  def after_sync pulp_task
+  def after_sync pulp_task_id
+
+    pulp_tasks =  Pulp::Task.find([pulp_task_id])
+
+    if pulp_tasks.empty?
+      Rails.logger.error("Sync_complete called for #{params[:task_id]}, but no task found.")
+      return
+    end
+
+    task = PulpTaskStatus.using_pulp_task(pulp_tasks.first)
+    task.user ||= User.current
+    task.organization ||= self.environment.organization
+    task.save!
+
     begin
-      tasks = PulpTaskStatus::wait_for_tasks [pulp_task]
+      tasks = PulpTaskStatus::wait_for_tasks [pulp_tasks.first]
     rescue Exception => e
       tasks = [e.message]
     end

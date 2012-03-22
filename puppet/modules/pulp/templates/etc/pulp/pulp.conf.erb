@@ -14,6 +14,7 @@ key_url: /pulp/gpg
 ks_url: /pulp/ks
 default_login: <%= scope.lookupvar("pulp::params::pulp_user_name") %> 
 default_password: <%= scope.lookupvar("pulp::params::pulp_user_pass") %>
+post_sync_url = <%= "https://localhost/#{scope.lookupvar('katello::params::deployment_url')}/api/repositories/sync_complete" %>
 
 # Messaging options.
 #
