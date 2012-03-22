@@ -99,7 +99,6 @@ Requires(postun): initscripts coreutils sed
 BuildRequires:  coreutils findutils sed
 BuildRequires:  rubygems
 BuildRequires:  rubygem-rake
-BuildRequires:  rubygem(gettext)
 BuildRequires:  rubygem(jammit)
 BuildRequires:  rubygem(chunky_png)
 BuildRequires:  rubygem(fssm) >= 0.2.7
