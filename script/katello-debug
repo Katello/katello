@@ -132,6 +132,8 @@ output = `sed -i -e 's/\\(keystorePass=\\)\\(\\S*\\)/\\1 "***************"/' #{F
 output = `sed -i -e 's/\\(truststorePass=\\)\\(\\S*\\)/\\1 "***************"/' #{File.join(target_dir, '/etc/tomcat6/server.xml')}`
 output = `find #{target_dir} -name "*katello-configure.conf" -type f -exec sed -i -e 's/\\(\\(password\\|pass\\)\\s[^=]*=\\)\\(.*\\)$/\\1 ***************/' {} \\;`
 output = `find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e 's/echo password/echo *********/' {} \\;`
+output = `find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e "s/\\(password => '\\)[^']*'/\\1*********'/g" {} \\;`
+output = `find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e "s/\\(PASSWORD '\\)[^']*'/\\1*********'/g" {} \\;`
 
 # Pick qpidd messages from syslog
 FileUtils.mkdir_p(File.join(target_dir, '/var/log'))
