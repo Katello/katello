@@ -2,7 +2,7 @@ Name: katello-certs-tools
 Summary: Katello SSL Key/Cert Tool
 Group: Applications/Internet
 License: GPLv2 and Python
-Version: 1.1.4
+Version: 1.1.5
 Release: 1%{?dist}
 URL:      https://fedorahosted.org/katello
 Source0:  https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
@@ -41,6 +41,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE PYTHON-LICENSES.txt
 
 %changelog
+* Thu Mar 22 2012 Mike McCune <mmccune@redhat.com> 1.1.5-1
+- 781210 - remove from specfile a txt file that was removed in dcdde7a876
+  (mmccune@redhat.com)
+
 * Tue Mar 20 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.4-1
 - 781210 - cert tools man page review
 
