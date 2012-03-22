@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.16
+Version:        0.2.17
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -354,6 +354,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Mar 22 2012 Mike McCune <mmccune@redhat.com> 0.2.17-1
+- Revert "removing BuildRequires we don't need anymore" (mmccune@redhat.com)
+
 * Thu Mar 22 2012 Mike McCune <mmccune@redhat.com> 0.2.16-1
 - removing BuildRequires we don't need anymore (mmccune@redhat.com)
 - 798264 - Katello debug collects certificate password files and some certs
