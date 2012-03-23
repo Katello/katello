@@ -188,7 +188,7 @@ describe Provider do
       Thread.current[:cdn_var_substitutor_cache] = nil
     end
 
-    it "should create repositories that were added in CDN", :f => true do
+    it "should create repositories that were added in CDN" do
       @organization.library.repositories(true).map(&:name).sort.should == ["product-with-change 1.0",
                                                                            "product-without-change 1.0",
                                                                            "product-without-change 1.1"]

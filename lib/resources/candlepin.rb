@@ -94,13 +94,14 @@ module Candlepin
         JSON.parse(super(path(uuid), self.default_headers).body).with_indifferent_access
       end
 
-      def create env_id, key, name, type, facts, installedProducts, autoheal=true
+      def create env_id, key, name, type, facts, installedProducts, autoheal=true, releaseVer=nil
         url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
         attrs = {:name => name,
                  :type => type,
                  :facts => facts,
                  :installedProducts => installedProducts,
-                 :autoheal => autoheal}
+                 :autoheal => autoheal,
+                 :releaseVer => releaseVer}
         response = self.post(url, attrs.to_json, self.default_headers).body
         JSON.parse(response).with_indifferent_access
       end
@@ -113,11 +114,13 @@ module Candlepin
         JSON.parse(response).with_indifferent_access
       end
 
-      def update uuid, facts, guest_ids = nil, installedProducts = nil, autoheal = nil
+      def update(uuid, facts, guest_ids = nil, installedProducts = nil, autoheal = nil, releaseVer = nil)
         attrs = {:facts => facts,
                  :guestIds => guest_ids,
+                 :releaseVer => releaseVer,
                  :installedProducts => installedProducts,
                  :autoheal => autoheal}.delete_if {|k,v| v.nil?}
+
         unless attrs.empty?
           response = self.put(path(uuid), attrs.to_json, self.default_headers).body
         else[]

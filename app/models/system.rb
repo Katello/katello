@@ -88,6 +88,10 @@ class System < ActiveRecord::Base
     self.pools.collect {|t| t['id']}
   end
 
+  def available_releases
+    self.environment.available_releases
+  end
+
   def consumed_pool_ids=attributes
     attribs_to_unsub = consumed_pool_ids - attributes
    

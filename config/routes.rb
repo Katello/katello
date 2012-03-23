@@ -332,6 +332,7 @@ Src::Application.routes.draw do
         get :packages, :action => :package_profile
         get :errata
         get :pools
+        get :releases
         put :enabled_repos
       end
       collection do
@@ -497,6 +498,10 @@ Src::Application.routes.draw do
       end
       resources :activation_keys, :only => [:index, :create]
       resources :templates, :only => [:index]
+
+      member do
+        get :releases
+      end
     end
 
     resources :gpg_keys, :only => [:show, :update, :destroy] do
@@ -551,6 +556,7 @@ Src::Application.routes.draw do
     # proxies -------------------
       # candlepin proxy ---------
     match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get
+    match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:id/certificates/serials' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:id/entitlements' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:id/entitlements' => 'candlepin_proxies#post', :via => :post

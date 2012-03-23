@@ -322,8 +322,17 @@ describe Api::SystemsController do
     it "should update installed products" do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil).and_return(true)
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil).and_return(true)
       post :update, :id => uuid, :installedProducts => installed_products
+      response.body.should == @sys.to_json
+      response.should be_success
+    end
+
+    it "should update releaseVer" do
+      @sys.facts = nil
+      @sys.stub(:guest => 'false', :guests => [])
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, "1.1").and_return(true)
+      post :update, :id => uuid, :releaseVer => "1.1"
       response.body.should == @sys.to_json
       response.should be_success
     end
@@ -379,6 +388,25 @@ describe Api::SystemsController do
       #@system.should_receive(:available_pools_full).once.and_return([])
       Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, true).and_return([])
       get :pools, :id => @system.uuid, :listall => true
+    end
+  end
+
+  describe "list available releases" do
+    before(:each) do
+      @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+      System.stub!(:first).and_return(@system)
+    end
+
+    let(:action) { :releases}
+    let(:req) { get :releases, :id => @system.uuid }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
+    it "should show releases that are available in given environment" do
+      @system.should_receive(:available_releases).and_return(["6.1", "6.2", "6Server"])
+      req
+      JSON.parse(response.body).should == { "releases" => ["6.1", "6.2", "6Server"] }
     end
   end
 
