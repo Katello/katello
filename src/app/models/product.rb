@@ -58,6 +58,8 @@ class Product < ActiveRecord::Base
         with_repos(env, true)
   }
 
+  scope :engineering, where(:type => "Product")
+
   after_save :update_related_index
 
   def initialize(attrs = nil)

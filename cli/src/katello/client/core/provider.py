@@ -336,6 +336,23 @@ class ImportManifest(SingleProviderAction):
             f.close()
             return os.EX_DATAERR
 
+# ------------------------------------------------------------------------------
+class RefreshProducts(SingleProviderAction):
+
+    description = _('refresh provider\'s products repositories')
+
+    def run(self):
+        provName = self.get_option('name')
+        orgName  = self.get_option('org')
+
+        prov = get_provider(orgName, provName)
+        if prov == None:
+            return os.EX_DATAERR
+
+        self.api.refresh_products(prov["id"])
+        print _("Provider successfully refreshed [ %s ]") % prov['name']
+        return os.EX_OK
+
 # provider command =============================================================
 
 class Provider(Command):

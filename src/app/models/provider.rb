@@ -182,6 +182,15 @@ class Provider < ActiveRecord::Base
     }
   end
 
+
+  # refreshes products' repositories from CDS. If new versions are released on
+  # the CDN, this method will provide loading this new versions.
+  def refresh_products
+    self.products.engineering.each do |product|
+      product.set_repos
+    end
+  end
+
   protected
 
    def sanitize_repository_url

@@ -96,3 +96,8 @@ class ProviderAPI(KatelloAPI):
         if force: params["force"] = "true"
         result = self.server.POST(path, params, multipart=True)[1]
         return result
+
+    def refresh_products(self, provId):
+
+        path = "/api/providers/%s/refresh_products" % u_str(provId)
+        return self.server.POST(path, {})[1]
