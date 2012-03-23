@@ -151,4 +151,23 @@ describe Api::EnvironmentsController do
     end
   end
 
+  describe "list available releases" do
+    before(:each) do
+      KTEnvironment.stub(:find => @environment)
+    end
+
+    let(:action) { :releases}
+    let(:req) { get :releases, :id => "123" }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
+    it "should show releases that are available in given environment" do
+      @environment.should_receive(:available_releases).and_return(["6.1", "6.2", "6Server"])
+      req
+      JSON.parse(response.body).should == { "releases" => ["6.1", "6.2", "6Server"] }
+    end
+  end
+
+
 end

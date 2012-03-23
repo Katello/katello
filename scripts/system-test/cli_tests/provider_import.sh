@@ -53,6 +53,9 @@ if sm_present; then
   sudo yum remove -y "$INSTALL_PACKAGE" &> /dev/null
   test_own_cmd_success "install package from subscribed product" sudo yum install -y "$INSTALL_PACKAGE" --nogpgcheck --releasever "$RELEASEVER" --disablerepo \* --enablerepo "$MANIFEST_REPO_LABEL"
   sudo yum remove -y "$INSTALL_PACKAGE" &> /dev/null
+  test_own_cmd_success "rhsm set releasever" sudo subscription-manager release --set "$RELEASEVER"
+  test_own_cmd_success "install package from subscribed product after set releasever" sudo yum install -y "$INSTALL_PACKAGE" --nogpgcheck
+  sudo yum remove -y "$INSTALL_PACKAGE" &> /dev/null
   test_own_cmd_success "rhsm unsubscribe all" sudo subscription-manager unsubscribe --all
   test_own_cmd_success "rhsm unregister" sudo subscription-manager unregister
 else

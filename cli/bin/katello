@@ -182,6 +182,7 @@ def setup_admin(admin):
     system_cmd.add_action('report', system.Report())
     system_cmd.add_action('tasks', system.TasksList())
     system_cmd.add_action('task', system.TaskInfo())
+    system_cmd.add_action('releases', system.Releases())
     admin.add_command('system', system_cmd)
 
     sync_plan_cmd = sync_plan.SyncPlan()

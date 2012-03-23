@@ -20,7 +20,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_environment_by_name, :only => [:hypervisors_update]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
-                                        :unsubscribe, :subscriptions, :pools, :enabled_repos]
+                                        :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases]
   before_filter :find_task, :only => [:task_show]
   before_filter :authorize, :except => :activate
 
@@ -56,6 +56,7 @@ class Api::SystemsController < Api::ApiController
       :unsubscribe => edit_system,
       :subscriptions => read_system,
       :pools => read_system,
+      :releases => read_system,
       :activate => register_system,
       :tasks => index_systems,
       :task_show => read_system,
@@ -109,15 +110,8 @@ class Api::SystemsController < Api::ApiController
   end
 
   def update
-    # not sure if this is the best way to do this...
-    @system.description = params[:description] if params[:description]
-    @system.name = params[:name] if params[:name]
-    @system.location = params[:location] if params[:location]
-    @system.facts = params[:facts] if params.has_key?(:facts)
-    @system.guestIds = params[:guestIds] if params.has_key?(:guestIds)
-    @system.installedProducts = params[:installedProducts] if params.has_key?(:installedProducts)
+    @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer))
 
-    @system.save!
     render :json => @system.to_json
   end
 
@@ -148,6 +142,10 @@ class Api::SystemsController < Api::ApiController
   def pools
     listall = (params.has_key?(:listall) ? true : false)
     render :json => { :pools => @system.available_pools_full(listall) }
+  end
+
+  def releases
+    render :json => { :releases => @system.available_releases }
   end
 
   def package_profile

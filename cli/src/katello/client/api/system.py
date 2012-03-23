@@ -21,7 +21,7 @@ class SystemAPI(KatelloAPI):
     """
     Connection class to access environment calls
     """
-    def register(self, name, org, envName, activation_keys, cp_type):
+    def register(self, name, org, envName, activation_keys, cp_type, release=None):
         if envName is not None:
             environment = get_environment(org, envName)
             if environment is None:
@@ -41,6 +41,10 @@ class SystemAPI(KatelloAPI):
         }
         if activation_keys:
             sysdata["activation_keys"] = activation_keys
+
+        if release:
+            sysdata["releaseVer"] = release
+
         return self.server.POST(path, sysdata)[1]
 
     def unregister(self, system_uuid):
@@ -95,6 +99,14 @@ class SystemAPI(KatelloAPI):
 
     def packages(self, system_id):
         path = "/api/systems/%s/packages" % system_id
+        return self.server.GET(path)[1]
+
+    def releases_for_system(self, system_id):
+        path = "/api/systems/%s/releases" % system_id
+        return self.server.GET(path)[1]
+
+    def releases_for_environment(self, env_id):
+        path = "/api/environments/%s/releases" % env_id
         return self.server.GET(path)[1]
 
     def update(self, system_id, params = {}):

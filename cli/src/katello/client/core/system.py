@@ -124,6 +124,8 @@ class Info(SystemAction):
         self.printer.addColumn('created_at', 'Registered', time_format=True)
         self.printer.addColumn('updated_at', 'Last updated', time_format=True)
         self.printer.addColumn('description', multiline=True)
+        if system.has_key('releaseVer') and system['releaseVer']:
+             self.printer.addColumn('releaseVer', 'OS release')
         self.printer.addColumn('activation_keys', multiline=True, show_in_grep=False)
         self.printer.addColumn('host', show_in_grep=False)
         self.printer.addColumn('guests',  show_in_grep=False)
@@ -319,6 +321,42 @@ class TaskInfo(SystemAction):
         return os.EX_OK
 
 
+class Releases(SystemAction):
+
+    description = _('list releases available for the system')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                       help=_("system name (if not specified, list all releases in the environment)"))
+        self.parser.add_option('--environment', dest='environment',
+                       help=_("environment name eg: development"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_one_of_options('name', 'environment')
+
+    def run(self):
+        org_name = self.get_option('org')
+        env_name = self.get_option('environment')
+        sys_name = self.get_option('name')
+
+        if sys_name:
+            system = self.api.systems_by_org(org_name, {'name': sys_name})[0]
+            releases = self.api.releases_for_system(system["uuid"])["releases"]
+        else:
+            environment = get_environment(org_name, env_name)
+            releases = self.api.releases_for_environment(environment['id'])["releases"]
+
+        releases = [{"value": r} for r in releases]
+
+        self.printer.setHeader(_("Available releases"))
+        self.printer.addColumn('value')
+
+        self.printer._grep = True
+        self.printer.printItems(releases)
+        return os.EX_OK
 
 class Facts(SystemAction):
 
@@ -378,6 +416,8 @@ class Register(SystemAction):
                        help=_("environment name eg: development"))
         self.parser.add_option('--activationkey', dest='activationkey',
             help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
+        self.parser.add_option('--release', dest='release',
+                       help=_("values of $releasever for the system"))
 
     def check_options(self):
         self.require_option('name')
@@ -399,8 +439,9 @@ class Register(SystemAction):
         org = self.get_option('org')
         environment = self.get_option('environment')
         activation_keys = self.get_option('activationkey')
+        release = self.get_option('release')
 
-        system = self.api.register(name, org, environment, activation_keys, 'system')
+        system = self.api.register(name, org, environment, activation_keys, 'system', release)
 
         if is_valid_record(system):
             print _("Successfully registered system [ %s ]") % system['name']
@@ -611,6 +652,8 @@ class Update(SystemAction):
                        help=_('a description of the system'))
         self.parser.add_option('--location', dest='location',
                        help=_("location of the system"))
+        self.parser.add_option('--release', dest='release',
+                       help=_("value of $releasever for the system"))
 
     def check_options(self):
         self.require_option('org')
@@ -623,6 +666,7 @@ class Update(SystemAction):
         new_name = self.get_option('new_name')
         new_description = self.get_option('description')
         new_location = self.get_option('location')
+        new_release = self.get_option('release')
 
         if env_name is None:
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
@@ -638,6 +682,7 @@ class Update(SystemAction):
         if new_name: updates['name'] = new_name
         if new_description: updates['description'] = new_description
         if new_location: updates['location'] = new_location
+        if new_release: updates['releaseVer'] = new_release
 
         response = self.api.update(system_uuid, updates)
 

@@ -46,7 +46,7 @@ if sm_present; then
   # we expect we have installed a product and can't auto subscribe
   test_own_cmd_exit_code 1 "rhsm auto subscribe" sudo subscription-manager subscribe --auto
   test_own_cmd_success "rhsm list all" sudo subscription-manager list --available --all
-  POOLID=$(sudo subscription-manager list --available --all | grep PoolId | head -n1 | awk '{print $2}') # grab first pool
+  POOLID=$(sudo subscription-manager list --available --all | sed 's/Pool Id/PoolId/g' | grep PoolId | head -n1 | awk '{print $2}') # grab first pool
   test_own_cmd_success "rhsm subscribe to pool" sudo subscription-manager subscribe --pool "$POOLID"
   test_own_cmd_success "rhsm list" sudo subscription-manager list
   test_own_cmd_success "rhsm list available" sudo subscription-manager list --available
@@ -54,7 +54,7 @@ if sm_present; then
   test_own_cmd_success "rhsm list ondate" sudo subscription-manager list --ondate=2011-09-15 --available
   test_own_cmd_success "rhsm list repos" sudo subscription-manager repos --list
   test_own_cmd_success "rhsm refresh" sudo subscription-manager refresh
-  SERIAL=$(sudo subscription-manager list --consumed | grep SerialNumber | head -n1 | awk '{print $2}') # grab first serial
+  SERIAL=$(sudo subscription-manager list --consumed | sed 's/Serial Number/SerialNumber/g' | grep SerialNumber | head -n1 | awk '{print $2}') # grab first serial
   test_own_cmd_success "rhsm unsubscribe to serial" sudo subscription-manager unsubscribe --serial="$SERIAL"
   test_own_cmd_success "rhsm subscribe to pool" sudo subscription-manager subscribe --pool "$POOLID" # again
   test_own_cmd_success "rhsm unsubscribe all" sudo subscription-manager unsubscribe --all
