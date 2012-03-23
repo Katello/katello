@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.27
+Version:       0.1.31
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,31 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 14 2012 Jordan OMara <jomara@redhat.com> 0.1.31-1
+- Manual version bump for cli tests (jomara@redhat.com)
+
+* Wed Mar 14 2012 Jordan OMara <jomara@redhat.com> 0.1.29-1
+- 790455 - "--description" option for changeset create (pchalupa@redhat.com)
+- 799149 - fix failing system test - TDL export (inecas@redhat.com)
+- 794799 - fixed order of deleting environments in system tests
+- 799149 - fix system tests
+- 799149 - fix problems when adding repo to a template
+- 798323 - nex parameter for prefixing rand values in system tests
+- 787226 - disable updating environment name (inecas@redhat.com)
+- 791194 - system tests - added spaces to environment names
+- 787682 - fixed sync plan system tests not to schedule synces in past
+
+* Wed Mar 14 2012 Jordan OMara <jomara@redhat.com>
+- 790455 - "--description" option for changeset create (pchalupa@redhat.com)
+- 799149 - fix failing system test - TDL export (inecas@redhat.com)
+- 794799 - fixed order of deleting environments in system tests
+- 799149 - fix system tests
+- 799149 - fix problems when adding repo to a template
+- 798323 - nex parameter for prefixing rand values in system tests
+- 787226 - disable updating environment name (inecas@redhat.com)
+- 791194 - system tests - added spaces to environment names
+- 787682 - fixed sync plan system tests not to schedule synces in past
+
 * Fri Feb 10 2012 Ivan Necas <inecas@redhat.com> 0.1.27-1
 - system-tests - disable other repos when installing from fake repo
   (inecas@redhat.com)

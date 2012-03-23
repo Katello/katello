@@ -545,10 +545,19 @@ class AsyncTask():
         self._tasks = [self.status_api().status(t['uuid']) for t in self._tasks]
 
     def get_progress(self):
-        return progress(self.items_left(), self.total_count())
+        """
+        In case only one task is running, we get the progress by the number of finished/unfinished files.
+        If more tasks are running (e.g. more repos being synced at the same time, this approach is not enough
+        because we don't know the number of unfinished packages for pending repo synchronizations.
+        Therefore we use the number of finished/unfinished tasks instead
+        """
+        if self.is_multiple():
+            return progress(self.subtask_left(), self.subtask_count())
+        else:
+            return progress(self.items_left(), self.total_count())
 
     def is_running(self):
-        return (len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled', 'not_synced'), self._tasks)) > 0)
+        return (len(filter(self._subtask_is_running, self._tasks)) > 0)
 
     def finished(self):
         return not self.is_running()
@@ -561,6 +570,9 @@ class AsyncTask():
 
     def succeeded(self):
         return not (self.failed() or self.cancelled())
+
+    def subtask_left(self):
+        return len([1 for task in self._tasks if self._subtask_is_running(task)])
 
     def subtask_count(self):
         return len(self._tasks)
@@ -585,6 +597,9 @@ class AsyncTask():
 
     def _get_progress_sum(self, name):
         return sum([t['progress'][name] for t in self._tasks])
+
+    def _subtask_is_running(self, task):
+        return task['state'] not in ('finished', 'error', 'timed out', 'canceled', 'not_synced')
 
     def is_multiple(self):
         return self.subtask_count() > 1
@@ -620,7 +635,7 @@ def run_async_task_with_status(task, progressBar):
     if not isinstance(task, AsyncTask):
         task = AsyncTask(task)
 
-    delay = 1 if not task.is_multiple() else (1.0/task.subtask_count())
+    delay = 1
     while task.is_running():
         time.sleep(delay)
         task.update()

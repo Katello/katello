@@ -508,6 +508,18 @@ KT.panel = (function ($) {
             });
             panels_list.push(new_panel);
         },
+        registerSubPanelSubmit = function(form_id, form_submit_id) {
+            form_id.bind('ajax:beforeSend', function(){
+               form_submit_id.addClass('disabled');
+            }).bind("ajax:complete", function(){
+               form_submit_id.removeClass('disabled');
+            }).bind("ajax:success", function(){
+                KT.panel.closeSubPanel($('#subpanel'));
+                KT.panel.refreshPanel();
+            }).bind("ajax:error", function(){
+               //validation notice appears
+            });
+        },
         // http://devnull.djolley.net/2010/11/accessing-query-string-parameters-from.html
         queryParameters = function () {
             var queryString = new Object;
@@ -520,6 +532,10 @@ KT.panel = (function ($) {
                 }
             });
             return queryString;
+        },
+        refreshPanel = function() {
+          var active = $('#list').find('.active');
+          KT.panel.panelAjax(active, active.attr("data-ajax_url"), $('#panel'), false);
         },
         actions = (function(){
             var action_list = {};
@@ -635,7 +651,9 @@ KT.panel = (function ($) {
         panelAjax: panelAjax,
         control_bbq: control_bbq,
         registerPanel: registerPanel,
+        registerSubPanelSubmit: registerSubPanelSubmit,
         queryParameters: queryParameters,
+        refreshPanel : refreshPanel,
         actions: actions,
         handleScroll : handleScroll
     };
@@ -646,6 +664,7 @@ KT.panel.list = (function () {
         current_items_count = 0,
         results_items_count = 0,
         search,
+        list_section = $('#list section'),
         
         update_counts = function (current, total, results, clear) {
             if (clear) {
@@ -663,15 +682,23 @@ KT.panel.list = (function () {
             $('#total_results_count').html(results_items_count);
         },
         last_child = function () {
-            return $("#list section").children().last();
+            return list_section.children().last();
         },
         first_child = function () {
-            return $("#list section").children().first();
+            return list_section.children().first();
         },
         append = function (html) {
-            $('#list section').append($(html).hide().fadeIn(function () {
-                $(this).addClass("add", 250, function () {
-                    $(this).removeClass("add", 250);
+            list_section.append($(html).hide().fadeIn(function () {
+                list_section.addClass("add", 250, function () {
+                    list_section.removeClass("add", 250);
+                });
+            }));
+            return false;
+        },
+        prepend = function (html) {
+            list_section.prepend($(html).hide().fadeIn(function () {
+                list_section.addClass("add", 250, function () {
+                    list_section.removeClass("add", 250);
                 });
             }));
             return false;
@@ -690,11 +717,11 @@ KT.panel.list = (function () {
             var list_elem = $("#list");
 
             list_elem.find('.spinner').hide();
-            list_elem.find('section').html(html).show();
+            list_section.html(html).show();
         },
         full_spinner = function() {
             var list_elem = $("#list");
-            list_elem.find('section').empty();
+            list_section.empty();
             list_elem.find('.spinner').show();
         },
         refresh = function (id, url, success_cb) {
@@ -729,7 +756,7 @@ KT.panel.list = (function () {
             options = options || {};
             
             search = KT.search("search_form", "list", this,
-                {url: $("#list").attr("data-scroll_url")});
+                {url: $("#list").attr("data-scroll_url")}, options['extra_params']);
 
 
             $(document).bind(search.search_event(), KT.panel.search_started);
@@ -790,7 +817,7 @@ KT.panel.list = (function () {
                 update_counts(0, 0, 1);
             }
             else {
-                append(data);
+                prepend(data);
                 KT.panel.closePanel($('#panel'));
                 id = first_child().attr("id");
                 $.bbq.pushState({

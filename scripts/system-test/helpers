@@ -5,8 +5,12 @@ KATELLO_URL=${KATELLO_URL:-"http://localhost:3000/katello/api/"}
 PULP_URL=${PULP_URL:-"https://localhost/pulp/api/"}
 CP_URL=${CP_URL:-"https://localhost:8443/candlepin/"}
 
+function nospace(){
+  echo "$@" | sed 's/ /_/g'
+}
+
 function get_repo_id() {
-    echo `$CMD repo list --org="$TEST_ORG" -g | grep $FEWUPS_REPO | awk '{print $1}'`
+    echo `$CMD repo list --org="$TEST_ORG" -g | grep "$FEWUPS_REPO" | awk '{print $1}'`
 }
 
 function get_pulp_repo_id() {
@@ -15,7 +19,7 @@ function get_pulp_repo_id() {
 }
 
 function get_repo_name() {
-    echo `$CMD repo list --org="$TEST_ORG" -g | grep $FEWUPS_REPO | awk '{print $2}'`
+    echo `$CMD repo list --org="$TEST_ORG" -g -d "##" | grep "$FEWUPS_REPO" | awk -F ' *## *' '{print $3}'`
 }
 
 function valid_id() {

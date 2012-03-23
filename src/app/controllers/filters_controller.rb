@@ -43,6 +43,12 @@ class FiltersController < ApplicationController
     }
   end
 
+  def param_rules
+     {
+       :create => {:filter => [:name, :description]},
+       :update => {:filter => [:name, :description]}
+     }
+  end
 
   def index
     products = Product.readable(current_organization)
@@ -63,7 +69,7 @@ class FiltersController < ApplicationController
 
   def items
     render_panel_direct(Filter, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
-      {:filter=>{:organization_id=>[current_organization.id]}})
+      {:default_field => :name, :filter=>{:organization_id=>[current_organization.id]}})
   end
 
   def update

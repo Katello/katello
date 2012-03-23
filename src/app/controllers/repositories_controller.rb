@@ -59,13 +59,14 @@ class RepositoriesController < ApplicationController
       @product.add_repo(repo_params[:name], repo_params[:feed], 'yum', gpg)
       @product.save
 
+      notice _("Repository '%s' created.") % repo_params[:name]
+      render :nothing => true
+
     rescue Exception => error
       log_exception error
       notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
-    notice _("Repository '%s' created.") % repo_params[:name]
-    render :json => ""
   end
 
   def update_gpg_key
@@ -110,9 +111,9 @@ class RepositoriesController < ApplicationController
 
   def auto_complete_library
     # retrieve and return a list (array) of repo names in library that contain the 'term' that was passed in
-    name = 'name:' + params[:term]
+    term = Katello::Search::filter_input params[:term]
+    name = 'name:' + term
     name_query = name + ' OR ' + name + '*'
-    name_query = Katello::Search::filter_input name_query
     ids = Repository.readable(current_organization.library).collect{|r| r.id}
     repos = Repository.search do
       query {string name_query}

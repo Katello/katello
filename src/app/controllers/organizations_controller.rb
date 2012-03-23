@@ -50,6 +50,14 @@ class OrganizationsController < ApplicationController
     }
   end
 
+  def param_rules
+    {
+      :create =>[:name, :description, :envname, :envdescription],
+      :update => {:organization  => [:description]}
+    }
+  end
+
+
   def section_id
     'orgs'
   end
@@ -57,7 +65,7 @@ class OrganizationsController < ApplicationController
   def items
     ids = Organization.readable.collect{|o| o.id}
     render_panel_direct(Organization, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-                        :filter=>[{"id"=>ids}])
+                        {:default_field => :name, :filter=>[{"id"=>ids}]})
   end
 
   def new

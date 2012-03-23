@@ -201,6 +201,69 @@ describe Glue::Pulp::Repo, :katello => true do
       end
     end
 
+    context "should properly sort sync status" do
+      before(:each) do
+        @finished = {
+          "start_time" => "2012-03-09T12:50:18-05:00",
+          "finish_time" => "2012-03-09T13:03:00-05:00",
+          "state" => "finished"
+        }
+        @finished_2 = {
+          "start_time" => "2012-03-09T14:50:18-05:00",
+          "finish_time" => "2012-03-09T16:03:00-08:00",
+          "state" => "finished"
+        }
+        @running = {
+          "start_time" => "2012-03-09T12:50:18-05:00",
+          "finish_time" => nil,
+          "state" => "running"
+        }
+        @scheduled = {
+          "start_time" => nil,
+          "finish_time" => nil,
+          "state" => "waiting",
+          "scheduler" => "interval"
+        }
+      end
+    
+      it "for a single running status" do
+        @repo.sort_sync_status([@running]).should == [@running]
+      end
+      
+      it "for a single scheduled status" do
+        @repo.sort_sync_status([@scheduled]).should == [@scheduled]
+      end
+      
+      it "for a single finished status" do
+        @repo.sort_sync_status([@finished]).should == [@finished]
+      end
+
+      it "for a running status and complete status" do
+        @repo.sort_sync_status([@finished, @running]).should == [@running, @finished]
+      end
+      
+      it "for a running status and a scheduled status" do
+        @repo.sort_sync_status([@scheduled, @running]).should == [@running, @scheduled]
+      end
+      
+      it "for a finished status and a scheduled status" do
+        @repo.sort_sync_status([@scheduled, @finished]).should == [@finished, @scheduled]
+      end
+
+      it "for two finished and a scheduled status" do
+        @repo.sort_sync_status([@finished_2, @scheduled, @finished]).should == [@finished_2, @finished, @scheduled]
+      end
+      
+      it "for a finished, running and a scheduled status" do
+        @repo.sort_sync_status([@scheduled, @running, @finished]).should == [@running, @finished, @scheduled]
+      end
+
+      it "for two finished, running and a scheduled status" do
+        @repo.sort_sync_status([@finished_2, @scheduled, @running, @finished]).should == [@running, @finished_2, @finished, @scheduled]
+      end
+
+    end
+
     context "cancelling" do
 
       it "should call Pulp's cancel api if the sync history is not empty" do

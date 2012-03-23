@@ -880,21 +880,45 @@ var changeset_obj = function(data_struct) {
             change_state("new", on_success, on_error);
             changeset_breadcrumb['changeset_' + id].is_new = true;
         },
-        promote: function(on_success, on_error) {
+        promote: function(on_success, on_error, confirm) {
+         var data = {},
+             cs = this;
+         if(confirm){
+             data.confirm = confirm;
+         }
          $.ajax({
             type: "POST",
             url: KT.common.rootURL() + "changesets/" + id + "/promote",
             cache: false,
+            data: data,
             success: function(data) {
-                if (on_success) {
-                    on_success();
+                if(data.warnings){ //if there is a warning, make the user confirm
+                    var warn_elem = $("#warning_dialog");
+                    var buttons = {};
+                    warn_elem.find(".warning").html(data.warnings);
+                    buttons[i18n.cancel] = function(){$(this).dialog('close'); on_error();};
+                    buttons[i18n.continue_promotion] =function(){
+                        $(this).dialog('close');
+                        cs.promote(on_success, on_error, true)
+                    };
+                    warn_elem.dialog({
+                        closeOnEscape: false,
+                        modal: true,
+                        title: i18n.warning,
+                        buttons: buttons,
+                        open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); }
+                    })
                 }
-                changeset_breadcrumb['changeset_' + id].is_new = true;
-                changeset_breadcrumb['changeset_' + id].state = "new";
-                changeset_breadcrumb['changeset_' + id].progress = 0;
-                promotion_page.get_changeset_tree().render_content('changesets');
-                promotion_page.get_content_tree().render_content('content');
-
+                else {
+                    if (on_success) {
+                        on_success();
+                    }
+                    changeset_breadcrumb['changeset_' + id].is_new = true;
+                    changeset_breadcrumb['changeset_' + id].state = "new";
+                    changeset_breadcrumb['changeset_' + id].progress = 0;
+                    promotion_page.get_changeset_tree().render_content('changesets');
+                    promotion_page.get_content_tree().render_content('content');
+                }
             },
             error: function() {
                 if(on_error) {
@@ -1015,7 +1039,11 @@ var registerEvents = function(){
         $("#sliding_tree_actionbar > div").addClass("disabled");
         var cs = promotion_page.get_changeset();
         var after = function() {$(this).removeClass("disabled");};
-        cs.promote(after, function(){});
+        var error = function(){
+            after();
+            $("#sliding_tree_actionbar > div").removeClass("disabled");
+        };
+        cs.promote(after, error);
         return true;
     });
 
