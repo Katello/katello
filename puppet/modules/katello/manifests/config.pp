@@ -4,7 +4,7 @@ class katello::config {
   file { "${katello::params::log_base}":
     owner   => $katello::params::user,
     group   => $katello::params::group,
-    mode    => 644,
+    mode    => 640,
     recurse => true;
   }
 
