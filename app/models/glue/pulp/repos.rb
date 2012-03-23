@@ -405,7 +405,8 @@ module Glue::Pulp::Repos
 
           begin
             env_prod = EnvironmentProduct.find_or_create(self.organization.library, self)
-            repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
+            unless Repository.where(:environment_product_id => env_prod.id, :pulp_id => repo_id(repo_name)).any?
+              repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
                                         :cp_label => pc.content.label,
                                         :arch => arch,
                                         :major => version[:major],
@@ -420,7 +421,8 @@ module Glue::Pulp::Repos
                                         :groupid => Glue::Pulp::Repos.groupid(self, self.library, pc.content),
                                         :preserve_metadata => true, #preserve repo metadata when importing from cp
                                         :enabled =>false
-                                        )
+                                       )
+            end
 
           rescue RestClient::InternalServerError => e
             if e.message.include? "Architecture must be one of"

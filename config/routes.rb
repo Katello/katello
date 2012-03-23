@@ -353,6 +353,7 @@ Src::Application.routes.draw do
       member do
         post :import_products
         post :import_manifest
+        post :refresh_products
         post :product_create
         get :products
       end
