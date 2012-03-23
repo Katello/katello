@@ -174,10 +174,18 @@ class certs::config {
     before => Class["apache2::service"]
   }
 
-  file { ["$candlepin_certs_dir/candlepin-ca.crt", "$candlepin_certs_dir/candlepin-ca.key"]:
+  file { ["$candlepin_certs_dir/candlepin-ca.key"]:
     owner => "root",
-    group => "root",
-    # TODO we should not give o+r (but both tomcat and httpd need it)
+    group => "katello",
+    mode => 640,
+    require => Exec["deploy-candlepin-certificate-to-cp"],
+    before => Class["candlepin::service"]
+  }
+
+
+  file { ["$candlepin_certs_dir/candlepin-ca.crt"]:
+    owner => "root",
+    group => "katello",
     mode => 644,
     require => Exec["deploy-candlepin-certificate-to-cp"],
     before => Class["candlepin::service"]
@@ -187,8 +195,7 @@ class certs::config {
   file { "${candlepin_certs_dir}/candlepin-upstream-ca.crt":
     ensure => link,
     owner => "root",
-    group => "root",
-    # TODO we should not give o+r (but both tomcat and httpd need it)
+    group => "katello",
     mode => 644,
     target => "${candlepin_certs_dir}/candlepin-ca.crt",
     require => File["${candlepin_certs_dir}/candlepin-ca.crt"]
