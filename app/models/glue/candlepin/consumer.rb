@@ -23,7 +23,7 @@ module Glue::Candlepin::Consumer
       before_save :save_candlepin_orchestration
       before_destroy :destroy_candlepin_orchestration
 
-      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts, :autoheal,
+      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts, :autoheal, :releaseVer,
         :initializer => lambda {
                           if uuid
                             consumer_json = Candlepin::Consumer.get(uuid)
@@ -85,7 +85,8 @@ module Glue::Candlepin::Consumer
                                                  self.name, self.cp_type,
                                                  self.facts,
                                                  self.installedProducts,
-                                                 self.autoheal)
+                                                 self.autoheal,
+                                                 self.releaseVer)
 
       load_from_cp(consumer_json)
     rescue => e
@@ -102,7 +103,7 @@ module Glue::Candlepin::Consumer
 
     def update_candlepin_consumer
       Rails.logger.debug "Updating consumer in candlepin: #{name}"
-      Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal)
+      Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal, @releaseVer)
     rescue => e
       Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -169,7 +170,7 @@ module Glue::Candlepin::Consumer
     end
 
     def to_json
-      super(:methods => [:href, :facts, :idCert, :owner, :autoheal])
+      super(:methods => [:href, :facts, :idCert, :owner, :autoheal, :releaseVer])
     end
 
     def convert_from_cp_fields(cp_json)

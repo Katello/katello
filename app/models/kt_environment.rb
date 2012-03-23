@@ -380,4 +380,8 @@ class KTEnvironment < ActiveRecord::Base
     end
   end
 
+  def available_releases
+    self.repositories.enabled.map(&:minor).compact.uniq.sort
+  end
+
 end

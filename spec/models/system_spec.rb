@@ -67,7 +67,7 @@ describe System do
   end
 
   it "registers system in candlepin and pulp on create" do
-    Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}})
     @system.save!
   end
@@ -139,14 +139,14 @@ describe System do
     it "should give facts to Candlepin::Consumer" do
       @system.facts = facts
       @system.installedProducts = nil # simulate it's not loaded in memory
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil, nil).and_return(true)
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil, nil, nil).and_return(true)
       @system.save!
     end
 
     it "should give installeProducts to Candlepin::Consumer" do
       @system.installedProducts = installed_products
       @system.facts = nil # simulate it's not loaded in memory
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil).and_return(true)
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil).and_return(true)
       @system.save!
     end
 s  end
@@ -243,6 +243,40 @@ s  end
     it "should update package-profile" do
       Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
       @system.upload_package_profile(package_profile)
+    end
+  end
+
+  describe "available releases" do
+    before do
+      disable_product_orchestration
+      @product = Product.create!(:name =>"prod1", :cp_id => '12345', :provider => @organization.redhat_provider, :environments => [@organization.library])
+      @environment = KTEnvironment.create!({:name => "Dev", :prior => @organization.library, :organization => @organization}) do |e|
+        e.products << @product
+      end
+      env_product = @product.environment_products.where(:environment_id => @environment.id).first
+      @releases = %w[6.1 6.2 6Server]
+      @releases.each do |release|
+        Repository.create!(:name => "Repo #{release}",
+                          :pulp_id => "repo #{release}",
+                          :enabled => true,
+                          :environment_product_id => env_product.id,
+                          :major => "6",
+                          :minor => release,
+                          :cp_label => "repo")
+      end
+      Repository.create!(:name => "Repo without releases",
+                         :pulp_id => "repo_without_release",
+                         :enabled => true,
+                         :environment_product_id => env_product.id,
+                         :major => nil,
+                         :minor => nil,
+                         :cp_label => "repo")
+      @system.environment = @environment
+      @system.save!
+    end
+
+    it "returns all releases available for the current environment" do
+      @system.available_releases.should == @releases.sort
     end
   end
 
