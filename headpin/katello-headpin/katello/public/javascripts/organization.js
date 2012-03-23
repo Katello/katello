@@ -26,26 +26,6 @@ $(document).ready(function() {
 
    });
 
-   $('.environment_create').live('click', function(event) {
-        var button = $(this);
-        button.addClass("disabled");
-
-        event.preventDefault();
-        var form = $(this).closest("form");
-        var url = form.attr('action');
-        var dataToSend = form.serialize();
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: dataToSend,
-            cache: false,
-            success: function() {
-                KT.panel.panelAjax('', button.attr("data-url") ,$('#panel'));
-                KT.panel.closeSubPanel($('#subpanel'));
-           },
-            error: function() {button.removeClass("disabled")}
-        });
-   });
   $('#debug_cert').live('click',function(){
     $('#show_debug_button').slideToggle();
 

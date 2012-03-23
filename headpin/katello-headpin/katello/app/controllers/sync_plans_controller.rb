@@ -39,7 +39,7 @@ class SyncPlansController < ApplicationController
   
   def items
     render_panel_direct(SyncPlan, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
-                        { :filter=>{:organization_id=>[current_organization.id]}})
+                        {:default_field => :name, :filter=>{:organization_id=>[current_organization.id]}})
     
   end
   
@@ -127,6 +127,13 @@ class SyncPlansController < ApplicationController
     @plan = SyncPlan.new
     @plan.sync_date = DateTime.now
     render :partial => "new", :layout => "tupane_layout", :locals => {:plan => @plan}
+  end
+
+  def param_rules
+    {
+      :create => {:sync_plan => [:description, :name, :interval, :plan_date, :plan_time]},
+      :update => {:sync_plan => [:description, :name, :interval, :date, :time]},
+    }
   end
 
   def create

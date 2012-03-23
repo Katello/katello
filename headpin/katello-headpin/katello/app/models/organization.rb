@@ -22,6 +22,7 @@ class Organization < ActiveRecord::Base
                 :display_attrs=>[:name, :description, :environment]
 
   mapping do
+    indexes :name, :type => 'string', :analyzer => :keyword
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 

@@ -59,7 +59,9 @@ class ApplicationController < ActionController::Base
     org_not_found_error(exception)
   end
 
-
+  rescue_from Errors::BadParameters do |exception|
+      execute_rescue(exception, lambda{|exception| render_bad_parameters(exception)})
+  end
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller
   include AuthorizationRules
@@ -135,6 +137,11 @@ class ApplicationController < ActionController::Base
   def format_time  date, options = {}
     return I18n.l(date, options) if date
     ""
+  end
+
+  helper_method :no_env_available_msg
+  def no_env_available_msg
+    _("No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default.")
   end
 
   private
@@ -243,6 +250,24 @@ class ApplicationController < ActionController::Base
     User.current = nil
   end
 
+  # render bad params
+  def render_bad_parameters(exception = nil)
+    if exception
+        logger.error _("Rendering 400:") + " #{exception.message}"
+        notice _("Invalid parameters sent in the request for this operation. Please contact a system administrator."), {:level => :error, :details => exception.message}
+    end
+    respond_to do |format|
+      #format.html { render :template => "common/400", :layout => "katello", :status => 400,
+      #                          :locals=>{:error=>exception} }
+      format.html { render :template => "common/400", :layout => !request.xhr?, :status => 400 }
+      format.atom { head 400 }
+      format.xml  { head 400 }
+      format.json { head 400 }
+    end
+    User.current = nil
+  end
+
+
   # take care of 500 pages too
   def render_error(exception = nil)
     if exception
@@ -332,6 +357,8 @@ class ApplicationController < ActionController::Base
   end
 
   # search_options
+  #    :default_field - The field that should be used by the search engine when a user performs
+  #                     a search without specifying field.
   #    :filter  -  Filter to apply to search. Array of hashes.  Each key/value within the hash
   #                  is OR'd, whereas each HASH itself is AND'd together
   #    :load  - whether or not to load the active record object (defaults to false)
@@ -348,7 +375,11 @@ class ApplicationController < ActionController::Base
     elsif search_options[:simple_query] && !AppConfig.simple_search_tokens.any?{|s| search.downcase.match(s)}
       search = search_options[:simple_query]
     end
-    search = Katello::Search::filter_input search
+    #search = Katello::Search::filter_input search
+
+    # set the query default field, if one was provided.
+    query_options = {}
+    query_options[:default_field] = search_options[:default_field] unless search_options[:default_field].blank?
 
     panel_options[:accessor] ||= "id"
     panel_options[:columns] = panel_options[:col]
@@ -362,11 +393,11 @@ class ApplicationController < ActionController::Base
           if all_rows
             all
           else
-            string search
+            string search, query_options
           end
         end
 
-        sort {by sort[0], sort[1].to_s.downcase }
+        sort {by sort[0], sort[1].to_s.downcase } unless !all_rows
 
         filters = [filters] if !filters.is_a? Array
         filters.each{|i|
@@ -533,8 +564,10 @@ class ApplicationController < ActionController::Base
   # This assumes that the input follows a syntax similar to:
   #   "{\"displayMessage\":\"Import is older than existing data\"}"
   def parse_display_message input
-    if input.include? 'displayMessage'
-      return JSON.parse(input)['displayMessage']
+    unless input.nil?
+      if input.include? 'displayMessage'
+        return JSON.parse(input)['displayMessage']
+      end
     end
     input
   end

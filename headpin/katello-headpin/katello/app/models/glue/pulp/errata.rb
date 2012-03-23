@@ -68,8 +68,8 @@ class Glue::Pulp::Errata
                 "filter" => {
                     "ngram_filter"  => {
                         "type"      => "nGram",
-                        "min_gram"  => 2,
-                        "max_gram"  => 10
+                        "min_gram"  => 3,
+                        "max_gram"  => 40
                     }
                 },
                 "analyzer" => {
@@ -88,13 +88,12 @@ class Glue::Pulp::Errata
     {
       :errata => {
         :properties => {
-          :title        => { :type => 'string', :analyzer =>'title_analyzer'},
           :repoids      => { :type => 'string', :analyzer =>'keyword'},
-          :id           => { :type => 'string', :analyzer => 'title_analyzer' },
           :id_sort      => { :type => 'string', :index => :not_analyzed },
+          :id_title     => { :type => 'string', :analyzer => 'title_analyzer'},
           :product_ids  => { :type => 'integer', :analyzer => 'keyword' },
           :severity     => { :type => 'string', :analyzer => 'keyword'},
-          :type => { :type => 'string', :analyzer => 'keyword'}
+          :type         => { :type => 'string', :analyzer => 'keyword'}
         }
       }
     }
@@ -108,19 +107,30 @@ class Glue::Pulp::Errata
     {
       "_type" => :errata,
       :id_sort => self.id,
+      :id_title => self.id + ' : ' + self.title,
       :product_ids => self.product_ids
     }
   end
 
   def self.search query, start, page_size, filters={}, sort=[:id_sort, "DESC"]
     return [] if !Tire.index(self.index).exists?
-    query_down = query.downcase
-    query = "title:#{query} OR id:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
-    query = Katello::Search::filter_input query
+    all_rows = false
+
+    if query.blank?
+      all_rows = true
+    else
+      query = Katello::Search::filter_input query
+      query_down = query.downcase
+      query = "id_title:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
+    end
 
     search = Tire.search self.index do
       query do
-        string query
+        if all_rows
+          all
+        else
+          string query
+        end
       end
 
       if page_size > 0
@@ -137,9 +147,7 @@ class Glue::Pulp::Errata
         filter :term, :severity => filters[:severity]
       end
 
-      if sort
-        sort { by sort[0], sort[1] }
-      end
+      sort { by sort[0], sort[1] } unless !all_rows
     end
     return search.results
   rescue

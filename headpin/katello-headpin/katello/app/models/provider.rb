@@ -21,9 +21,9 @@ class Provider < ActiveRecord::Base
                 :display_attrs=>[:name, :product, :repo, :description]
 
   mapping do
+    indexes :name, :type => 'string', :analyzer => :keyword
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
-
 
   REDHAT = 'Red Hat'
   CUSTOM = 'Custom'

@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.304
+Version:        0.1.306
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -342,9 +342,9 @@ fi
 
 %pre common
 # Add the "katello" user and group
-getent group %{name} >/dev/null || groupadd -r %{name}
+getent group %{name} >/dev/null || groupadd -r %{name} -g 182
 getent passwd %{name} >/dev/null || \
-    useradd -r -g %{name} -d %{homedir} -s /sbin/nologin -c "Katello" %{name}
+    useradd -r -g %{name} -d %{homedir} -u 182 -s /sbin/nologin -c "Katello" %{name}
 exit 0
 
 %preun common
@@ -354,6 +354,40 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Mar 21 2012 Mike McCune <mmccune@redhat.com> 0.1.306-1
+- 803409 - providers - on provider create, open products & repos tab
+  (bbuckingham@redhat.com)
+- 795780, 805122 - Improvement to the way the most recent sync status is
+  determined to prevent error and show proper completion. (ehelms@redhat.com)
+- 798264 - Katello debug collects certificate password files and some certs
+  (mbacovsk@redhat.com)
+- 798264 - Katello debug collects certificate password files and some certs
+  (mbacovsk@redhat.com)
+- 790455 - api for updating changeset name and description
+- 800573 - Comprehensive bug fix to deal with mass-assign vulnerability
+  (paji@redhat.com)
+- 803740 - adding our assigned uid/groupid for katello
+- 799357 - provide descriptive information on CDN access denied
+  (inecas@redhat.com)
+- 799357 - manifest import - fix for nil error message (bbuckingham@redhat.com)
+
+* Mon Mar 19 2012 Jordan OMara <jomara@redhat.com> 0.1.305-1
+- 803420 - 2pane - incorrect pane opens on object create
+  (bbuckingham@redhat.com)
+- 803441 - handle space in organization when importing manifest
+- 801797 - Fixes regression with environment selector and tupane pages not
+  filtering on environment.
+- 800169 - Users - do not allow setting of def org, if the org has no envs
+  (bbuckingham@redhat.com)
+- 799122 - showing warning if trying to promote repo with failed sync or
+  currently syncing (jsherril@redhat.com)
+- 790063 - search - few more mods for consistency (bbuckingham@redhat.com)
+- 790063 - search - changes for consistency/behavior (bbuckingham@redhat.com)
+- 801148 - providers - fix tabindex for products and repos
+  (bbuckingham@redhat.com)
+- 799523 - Fix for new environment full page load. (jrist@redhat.com)
+- 801448 - Missing resource (font) in UI
+
 * Wed Mar 14 2012 Jordan OMara <jomara@redhat.com> 0.1.304-1
 - 801070 - Better error message for deleting ends from middle of the path
 - 799052 - Promoting template with assigned repo should fail if product is not

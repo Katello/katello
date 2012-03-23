@@ -38,6 +38,12 @@ class Api::RepositoriesController < Api::ApiController
     }
   end
 
+  def param_rules
+    {
+      :update => {:repository  => [:gpg_key_name]}
+    }
+  end
+
   def create
     if params[:gpg_key_name].present?
       gpg = GpgKey.readable(@product.organization).find_by_name!(params[:gpg_key_name])

@@ -74,7 +74,6 @@ class PromotionsController < ApplicationController
     @not_promotable = []
 
     search = params[:search]
-    search = "*" if search.nil? || search == ''
     offset = params[:offset] || 0
     @packages = Glue::Pulp::Package.search(search, params[:offset], current_user.page_size, repo_ids)
     total_count = Product.find(product_id).total_package_count(@environment)
@@ -165,10 +164,9 @@ class PromotionsController < ApplicationController
     filters = filters.merge(params.slice(:type, :severity).symbolize_keys)
 
     search = params[:search]
-    search = "*" if search.nil? || search == ''
     offset = params[:offset] || 0
 
-    if search == "*"
+    if search.blank?
       @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters)
       total_size =  @errata.empty? ? 0 :  @errata.total
     else

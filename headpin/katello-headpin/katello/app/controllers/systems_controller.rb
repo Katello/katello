@@ -60,6 +60,21 @@ class SystemsController < ApplicationController
     }
   end
 
+  def param_rules
+    update_check = lambda do
+      if params[:system]
+        sys_rules = {:system => [:name, :description, :location] }
+        check_hash_params(sys_rules, params)
+      else
+        check_array_params([:autoheal, :id], params)
+      end
+    end
+    {   :create => {:arch => [:arch_id],:system=>[:sockets, :name, :environment_id], :system_type =>[:virtualized]},
+        :update => update_check
+    }
+  end
+
+
   def new
     @system = System.new
     @system.facts = {} #this is nil to begin with
@@ -145,7 +160,7 @@ class SystemsController < ApplicationController
       filters = {:environment_id=> KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
     end
     render_panel_direct(System, @panel_options, search, params[:offset], order,
-                        {:filter=>filters, :load=>true})
+                        {:default_field => :name, :filter=>filters, :load=>true})
 
   end
 

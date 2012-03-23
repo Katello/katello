@@ -80,7 +80,7 @@ describe Api::RepositoriesController, :katello => true do
     end
     describe "for update" do
       let(:action) {:update}
-      let(:req) { put :update, :id => 1, :gpg_key_name => "test" }
+      let(:req) { put :update, :id => 1, :repository =>{:gpg_key_name => "test" }}
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:update, :providers, @provider.id, @organization) }
       end
@@ -222,18 +222,34 @@ describe Api::RepositoriesController, :katello => true do
 
   end
   describe "update a repository" do
-
     before do
       @repo = mock(Glue::Pulp::Repo)
-      Repository.should_receive(:find).with("1").and_return(@repo)
+    end
+
+    context "Bad request" do
+      before { @repo.stub(:redhat? => false) }
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = {:id => 123,
+                     :repository =>
+                        {:bad_foo => "mwahahaha",
+                         :gpg_key_name => "Gpg Key"}
+          }.with_indifferent_access
+          put :update, bad_req
+        end
+      end
+
     end
 
     context "Custom repo" do
-      before { @repo.stub(:redhat? => false) }
+      before do
+            Repository.should_receive(:find).with("1").and_return(@repo)
+            @repo.stub(:redhat? => false)
+      end
 
       it 'should update values thet migth change' do
         @repo.should_receive(:update_attributes!).with("gpg_key_name" => "gpg_key")
-        put :update, {:id => '1', :repository => {:gpg_key_name => "gpg_key", :name => "another name"}}
+        put :update, {:id => '1', :repository => {:gpg_key_name => "gpg_key"}}
       end
     end
 

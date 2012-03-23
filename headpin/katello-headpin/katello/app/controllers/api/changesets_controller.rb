@@ -12,7 +12,7 @@
 
 class Api::ChangesetsController < Api::ApiController
 
-  before_filter :find_changeset, :only => [:show, :destroy, :promote, :dependencies]
+  before_filter :find_changeset, :only => [:show, :update, :destroy, :promote, :dependencies]
   before_filter :find_environment
   before_filter :authorize
 
@@ -26,6 +26,7 @@ class Api::ChangesetsController < Api::ApiController
       :dependencies => read_perm,
       :create => manage_perm,
       :promote => promote_perm,
+      :update => manage_perm,
       :destroy =>manage_perm,
     }
   end
@@ -38,6 +39,13 @@ class Api::ChangesetsController < Api::ApiController
 
   def show
     render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos, :system_templates, :distributions])
+  end
+
+  def update
+    @changeset.attributes = params[:changeset].slice(:name, :description)
+    @changeset.save!
+
+    render :json => @changeset
   end
 
   def dependencies

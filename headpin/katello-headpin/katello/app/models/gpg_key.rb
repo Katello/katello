@@ -29,6 +29,7 @@ class GpgKey < ActiveRecord::Base
                 :display_attrs=>[:name, :content]
 
   mapping do
+    indexes :name, :type => 'string', :analyzer => :keyword
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 

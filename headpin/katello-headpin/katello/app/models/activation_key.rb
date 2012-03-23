@@ -17,6 +17,7 @@ class ActivationKey < ActiveRecord::Base
   index_options :extended_json=>:extended_json, :display_attrs=>[:name, :description, :environment, :template]
 
   mapping do
+    indexes :name, :type => 'string', :analyzer => :keyword
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 
@@ -37,10 +38,21 @@ class ActivationKey < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates :environment, :presence => true
   validate :environment_exists
+  validate :system_template_exists
   validate :environment_not_library
 
+  def system_template_exists
+    if system_template && system_template.environment != self.environment
+      errors.add(:system_template, _("name: %s doesn't exist ") % system_template.name)
+    end
+  end
+
   def environment_exists
-    errors.add(:environment, _("id: %s doesn't exist ") % environment_id) if environment.nil?
+    if environment.nil?
+      errors.add(:environment, _("id: %s doesn't exist ") % environment_id)
+    elsif environment.organization != self.organization
+      errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
+    end
   end
 
   def environment_not_library

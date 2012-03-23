@@ -62,7 +62,7 @@ class ChangesetsController < ApplicationController
   #extended scroll for changeset_history
   def items
     render_panel_direct(Changeset, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-        :filter=>[{:environment_id=>[@environment.id]}, {:state=>[Changeset::PROMOTED]}])
+        {:default_field => :name, :filter=>[{:environment_id=>[@environment.id]}, {:state=>[Changeset::PROMOTED]}]})
   end
 
   def edit
@@ -211,19 +211,35 @@ class ChangesetsController < ApplicationController
   end
 
   def promote
-    begin
+    messages = {}
+    if !params[:confirm] && @environment.prior.library?
+      syncing = []
+      errors = []
+
+      @changeset.involved_products.each{|prod|
+        prod.repos(current_organization.library).each{ |repo|
+          status = repo.sync_status
+          syncing << repo.name if status.state == PulpSyncStatus::RUNNING
+          errors << repo.name if status.state == PulpSyncStatus::ERROR
+        }
+      }
+      messages[:syncing] =  syncing if !syncing.empty?
+      messages[:error] =  errors if !errors.empty?
+    end
+
+    to_ret = {}
+    if  !messages.empty?
+      to_ret[:warnings] = render_to_string(:partial=>'warning', :locals=>messages)
+    else
       @changeset.promote
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
       notice _("Started promotion of '%s' to %s environment") % [@changeset.name, @environment.name]
-    rescue Exception => e
-        notice "Failed to promote: #{e.to_s}", {:level => :error}
-        render :text=>e.to_s, :status=>500
-        return
     end
-
-    render :text=>url_for(:controller=>"promotions", :action => "show",
-          :env_id => @environment.name, :org_id =>  @environment.organization.cp_key)
+    render :json=>to_ret
+  rescue Exception => e
+    notice "Failed to promote: #{e.to_s}", {:level => :error}
+    render :text=>e.to_s, :status=>500
   end
 
   def promotion_progress

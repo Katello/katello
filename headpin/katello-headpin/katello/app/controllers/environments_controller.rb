@@ -40,6 +40,14 @@ class EnvironmentsController < ApplicationController
     }
   end
 
+  def param_rules
+    {
+      :create => [:name, :description, :organization_id, :org_id, :prior],
+      :update => {:kt_environment  => [:name, :description, :prior]}
+    }
+  end
+
+
   # GET /environments/new
   def new
     @environment = KTEnvironment.new(:organization => @organization)
@@ -71,7 +79,8 @@ class EnvironmentsController < ApplicationController
 
     @environment.save!
     notice _("Environment '%s' was created.") % @environment.name
-    render :json=>""
+    #this render just means return a 200 success
+    render :nothing => true
 
   end
 
