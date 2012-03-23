@@ -6,12 +6,13 @@
 
 = content_for :content do
   .grid_10
-    #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
+    %input#changeset{:type => "hidden", 'data-ajax_url'=>changeset_path(@changeset.id)}
+
+    .fieldset
       .grid_3.ra
         %label #{_("Name:")}
       .grid_6.la{:name=>"name", :class=>("editable edit_textfield" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
-
-    #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
+    .fieldset
       .grid_3.ra
         %label #{_("Description:")}
       .grid_6.la{:name=>"description", :class=>("editable edit_description" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)}
