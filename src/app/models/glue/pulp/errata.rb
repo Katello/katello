@@ -114,22 +114,14 @@ class Glue::Pulp::Errata
 
   def self.search query, start, page_size, filters={}, sort=[:id_sort, "DESC"]
     return [] if !Tire.index(self.index).exists?
-    all_rows = false
-
-    if query.blank?
-      all_rows = true
-    else
-      query = Katello::Search::filter_input query
-      query_down = query.downcase
-      query = "id_title:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
-    end
+    all_rows = query.blank?
 
     search = Tire.search self.index do
       query do
         if all_rows
           all
         else
-          string query
+          string query, {:default_field=>'id_title'}
         end
       end
 
