@@ -105,6 +105,7 @@ BuildRequires:  rubygem(chunky_png)
 BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
+BuildRequires:  java >= 0:1.6.0
 
 %description common
 Common bits for all Katello instances
