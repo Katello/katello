@@ -2,7 +2,7 @@
 
 header "Katello Agent"
 
-HOST=$(nospace "$(hostname)_$RAND")
+HOST=$(nospace "$(hostname)_$PLAIN_RAND")
 
 INSTALL_PACKAGE=cheetah
 INSTALL_GROUP=mammals
