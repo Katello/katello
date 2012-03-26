@@ -36,7 +36,7 @@ class Api::ActivationKeysController < Api::ApiController
   def param_rules
     {
       :create => {:activation_key => [:name, :description, :system_template_id]},
-      :update => {:activation_key  => [:name, :description, :system_template_id]}
+      :update => {:activation_key  => [:name, :description, :environment_id, :system_template_id]}
     }
   end
 
