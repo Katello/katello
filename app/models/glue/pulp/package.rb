@@ -30,7 +30,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
                         "type"      => "edgeNGram",
                         "side"      => "front",
                         "min_gram"  => 1,
-                        "max_gram"  => 20
+                        "max_gram"  => 30
                     }
                 },
                 "analyzer" => {
