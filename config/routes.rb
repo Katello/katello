@@ -542,6 +542,7 @@ Src::Application.routes.draw do
     resources :consumers, :controller => 'systems'
     match '/owners/:organization_id/environments' => 'environments#index', :via => :get
     match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get
+    match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
