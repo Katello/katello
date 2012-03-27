@@ -860,7 +860,6 @@ KT.package_actions = (function() {
             data: {term:name},
             cache: false,
             success: function(data){
-                console.log(data);
                 if (data > 0) {
                     KT.templates.add_package(name);
                 }
