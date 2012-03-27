@@ -1,56 +1,55 @@
-!!!
-%html
-  %head
-    %meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
-    = csrf_meta_tag
-    = favicon_link_tag 'favicon.png'
-    %title
-      = project_name
-      = "-"
-      = content_for?(:title) ? yield(:title) : default_title
+= content_for(:title) do
+  = project_name
+  = "-"
+  = default_title
 
-    = include_stylesheets  :common
-    = include_stylesheets  controller.section_id
-    = yield :stylesheets
+= content_for(:stylesheets) do
+  = include_stylesheets :common
+  = include_stylesheets controller.section_id
 
-    / [if lt IE 9]
-      = include_javascripts  :html5
-    / [if IE]
-      = include_stylesheets  :ie, :embed_assets=>false
+  / [if lt IE 9]
+    = include_javascripts  :html5
+  / [if IE]
+    = include_stylesheets  :ie, :embed_assets=>false
 
-  - if controller.respond_to?(:section_id)
-    - section_id = controller.section_id
+  = yield :stylesheets
+ 
+= content_for(:header) do
+  = render :partial => 'common/header', :layout => "layouts/lib/header_layout"
+
+= content_for(:content) do   
+  - if not current_user
+    #maincontent
+      #formwindow
+        = yield
   - else
-    - section_id = "generic"
-  %body{:id => controller.section_id}
-    %div#head.container_16
-      %header
-        = render :partial => 'layouts/header'
-    - if not current_user
-      #maincontent.container_16
-        #formwindow
-          = yield
-    - else
-      #subheader.container_16
-        %nav.tab_nav
-          = render_menu(1..3)
-      #maincontent.container_16
-        %nav.subnav#subnav.container_16
-          = render_menu(2..3)
-        .inner.container_16
-          = yield
-    %footer
-      = render :partial => "layouts/footer"
-    
-    = include_javascripts  :common
-    %script{ :type => "text/javascript" }
-      -if protect_against_forgery?
-        :plain
-          var AUTH_TOKEN = #{form_authenticity_token.inspect};
-      = render :partial => "common/common_i18n"
-      = render :partial => 'common/config'
-      = render :partial => 'layouts/ajax_notices'
-      = render :partial => 'layouts/notification'
-      = yield :inline_javascript
+    #maincontent
+      %nav.subnav#subnav
+        = render_menu(2..3)
+      .inner.container_16
+        = yield
 
-    = yield :javascripts
+= content_for(:footer) do
+  = render :partial => "common/footer"
+
+= content_for(:extra) do
+  = include_javascripts  :common
+  %script{ :type => "text/javascript" }
+    -if protect_against_forgery?
+      :plain
+        var AUTH_TOKEN = #{form_authenticity_token.inspect};
+    = render :partial => "common/common_i18n"
+    = render :partial => 'common/config'
+    = render :partial => 'layouts/ajax_notices'
+    = render :partial => 'layouts/notification'
+    = yield :inline_javascript
+
+  / [if lt IE 9]
+    = include_javascripts  :html5
+
+  = yield :javascripts
+  
+  = csrf_meta_tag
+  = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery?
+
+= render :file => 'layouts/lib/shell'
