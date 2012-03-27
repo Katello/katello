@@ -115,6 +115,7 @@ Src::Application.routes.draw do
     end
     collection do
       get :auto_complete_library
+      get :validate_name_library
     end
   end
 

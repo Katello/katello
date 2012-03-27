@@ -856,11 +856,11 @@ KT.package_actions = (function() {
     verify_add_package = function(name, name_id, cleanup_cb){
         $.ajax({
             type: "GET",
-            url: KT.routes.auto_complete_library_packages_path(),
+            url: KT.routes.validate_name_library_packages_path(),
             data: {term:name},
             cache: false,
             success: function(data){
-                if ($.inArray(name, data) > -1) {
+                if (data > 0) {
                     KT.templates.add_package(name);
                 }
                 else {
