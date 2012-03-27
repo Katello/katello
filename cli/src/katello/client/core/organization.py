@@ -103,6 +103,7 @@ class Info(OrganizationAction):
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('description', multiline=True)
+        self.printer.addColumn('service_levels', name=_("Available Service Levels"), multiline=True)
 
         self.printer.setHeader(_("Organization Information"))
         self.printer.printItem(org)
