@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
                                   :disabled, :own_role_id, :login]}
 
   mapping do
-    indexes :username, :type => 'string', :analyzer => :keyword
+    indexes :username, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :username_sort, :type => 'string', :index => :not_analyzed
   end
 

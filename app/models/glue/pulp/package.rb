@@ -34,12 +34,12 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
                     }
                 },
                 "analyzer" => {
-                    "name_analyzer" => {
+                    "autcomplete_name_analyzer" => {
                         "type"      => "custom",
                         "tokenizer" => "keyword",
                         "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
                     }
-                }
+                }.merge(Katello::Search::custom_analzyers)
             }
         }
     }
@@ -49,11 +49,11 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     {
       :package => {
         :properties => {
-          :name          => { :type=> 'string', :analyzer=>'keyword'},
-          :name_autocomplete          => { :type=> 'string', :analyzer=>'name_analyzer'},
-          :nvrea         => { :type=> 'string', :analyzer=>'keyword'},
+          :name          => { :type=> 'string', :analyzer=>:kt_name_analyzer},
+          :name_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
+          :nvrea         => { :type=> 'string', :analyzer=>:kt_name_analyzer},
           :nvrea_sort    => { :type => 'string', :index=> :not_analyzed },
-          :repoids       => { :type=> 'string', :analyzer=>'keyword'}
+          :repoids       => { :type=> 'string', :index=>:not_analyzed}
         }
       }
     }
