@@ -306,6 +306,14 @@ module Candlepin
         JSON.parse(response).collect { |e| e.with_indifferent_access }
       end
 
+      def service_levels uuid
+        response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'servicelevels'), self.default_headers).body
+        unless response.empty?
+          JSON.parse(response)
+        else
+          return []
+        end
+      end
 
       def path(id=nil)
         "/candlepin/owners/#{id}"
