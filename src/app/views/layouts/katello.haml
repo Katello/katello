@@ -11,6 +11,9 @@
     = include_stylesheets  :common
     = include_stylesheets  controller.section_id
     = yield :stylesheets
+
+    / [if lt IE 9]
+      = include_javascripts  :html5
     
   - if controller.respond_to?(:section_id)
     - section_id = controller.section_id
@@ -38,9 +41,6 @@
     
     = include_javascripts  :common
     = render :partial => '/common/config'
-
-    / [if lt IE 9]
-      = include_javascripts  :html5
 
     = render :partial => '/layouts/ajax_notices'
     = render :partial => '/layouts/notification'
