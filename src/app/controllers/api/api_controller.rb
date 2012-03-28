@@ -18,7 +18,7 @@ class Api::ApiController < ActionController::Base
   respond_to :json
   before_filter :set_locale
   before_filter :require_user
-
+  before_filter :add_candlepin_version_header
 
   rescue_from Exception, :with => proc { |e| render_exception(500, e) } # catch-all
   rescue_from HttpErrors::WrappedError, :with => proc { |e| render_wrapped_exception(500, e) }
@@ -49,6 +49,10 @@ class Api::ApiController < ActionController::Base
   def current_user
     # get the logged user from the correct scope
     user(:api)
+  end
+
+  def add_candlepin_version_header
+    response.headers["X-CANDLEPIN-VERSION"] = "katello/#{AppConfig.katello_version}"
   end
 
   # remove unwanted parameters 'action' and 'controller' from params list and return it
@@ -155,11 +159,13 @@ class Api::ApiController < ActionController::Base
     end
   end
 
-  def pp_exception(exception, options = {})
-    options = options.reverse_merge(:with_class => true)
+  def pp_exception(exception, options = { })
+    options = options.reverse_merge(:with_class => true, :with_body => true)
     message = ""
     message << "#{exception.class}: " if options[:with_class]
-    message << "#{exception.message}\n" << exception.backtrace.join("\n")
+    message << "#{exception.message}\n"
+    message << "Body: #{exception.http_body}\n" if options[:with_body] && exception.respond_to?(:http_body)
+    message << exception.backtrace.join("\n")
     message
   end
 
@@ -167,4 +173,12 @@ class Api::ApiController < ActionController::Base
      request.headers['User-Agent'].to_s =~ /^katello-cli/
   end
 
+  protected
+
+  if AppConfig.debug_rest
+    def process_action(method_name, *args)
+      super(method_name, *args)
+      Rails.logger.debug "With body: #{response.body}\n"
+    end
+  end
 end

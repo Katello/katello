@@ -162,6 +162,19 @@ describe Api::SystemsController do
 
   end
 
+  it "returns 410 for deleted systems" do
+    Candlepin::Consumer.should_receive(:get).and_return do
+      raise RestClient::Gone.new(
+                mock(:response, :code => 410, :body =>
+                    '{"displayMessage":"Consumer 83705a61-8968-444f-9253-caefbc0e9995 has been deleted",' +
+                        '"deletedId":"83705a61-8968-444f-9253-caefbc0e9995"}'))
+    end
+
+    get :show, :id => '83705a61-8968-444f-9253-caefbc0e9995'
+    response.code.should == "410"
+    response.headers['X-CANDLEPIN-VERSION'].should_not be_blank
+  end
+
   describe "create a hypervisor" do
 
     before do
