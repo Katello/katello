@@ -318,8 +318,11 @@ class Api::SystemsController < Api::ApiController
   end
 
   def find_system
-    @system = System.first(:conditions => {:uuid => params[:id]})
-    raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'") if @system.nil?
+    @system = System.first(:conditions => { :uuid => params[:id] })
+    if @system.nil?
+      Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
+      raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'")
+    end
     @system
   end
 
