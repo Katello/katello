@@ -112,7 +112,8 @@ class Api::ApiController < ActionController::Base
 
     orig_hash = JSON.parse(exception.response).with_indifferent_access rescue {}
 
-    orig_hash[:displayMessage] = exception.response.gsub(/^"|"$/, "") if orig_hash[:displayMessage].nil?
+    orig_hash[:displayMessage] = exception.response.to_s.gsub(/^"|"$/, "") if orig_hash[:displayMessage].nil? && exception.respond_to?(:response)
+    orig_hash[:displayMessage] = exception.message if orig_hash[:displayMessage].blank?
     orig_hash[:errors] = [orig_hash[:displayMessage]] if orig_hash[:errors].nil?
     orig_hash
   end
