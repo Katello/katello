@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.20
+Version:        0.2.21
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -355,6 +355,26 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Mar 28 2012 Mike McCune <mmccune@redhat.com> 0.2.21-1
+- 807319 - Fix for ie8 rendering for filters page (paji@redhat.com)
+- 807319 - Fix for IE8 Rendering (jrist@redhat.com)
+- 807319 - Adds new version of html5shiv to handle html5 nodes inserted after
+  page load. (ehelms@redhat.com)
+- 806068 - repo - update pkg/errata search index on repo delete
+  (bbuckingham@redhat.com)
+- 807319 - Fixes errors thrown on roles page in IE8. (ehelms@redhat.com)
+- 807804 - fixing issue where hidden user shows up under roles
+  (jsherril@redhat.com)
+- 807332 - better exception handling in case of requst time-out
+  (inecas@redhat.com)
+- 807319 - Fix for IE8 Rendering (jrist@redhat.com)
+- 807319 - Fix for IE8 Rendering (jrist@redhat.com)
+- 807319 - Fix for IE8 (regression) (jrist@redhat.com)
+- removing console.log (jsherril@redhat.com)
+- 805202 - changing verification of package names to do a specific search
+  (jsherril@redhat.com)
+- 806942 - changing all models away from keyword analyzer (jsherril@redhat.com)
+
 * Tue Mar 27 2012 Ivan Necas <inecas@redhat.com> 0.2.20-1
 - periodic-build
 
