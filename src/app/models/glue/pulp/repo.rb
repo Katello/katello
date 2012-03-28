@@ -194,6 +194,8 @@ module Glue::Pulp::Repo
   end
 
   def destroy_repo
+    self.update_packages_index
+    self.update_errata_index
     Pulp::Repository.destroy(self.pulp_id)
     true
   end
