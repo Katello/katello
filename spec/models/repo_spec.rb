@@ -58,6 +58,8 @@ describe Glue::Pulp::Repo do
     end
 
     it "should call the Pulp's delete api on destroy" do
+      @repo.stub(:update_packages_index).and_return
+      @repo.stub(:update_errata_index).and_return
       Pulp::Repository.should_receive(:destroy).with(RepoTestData::REPO_ID)
       @repo.destroy_repo
     end
