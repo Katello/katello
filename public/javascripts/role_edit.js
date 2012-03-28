@@ -12,7 +12,9 @@ $(document).ready(function() {
                       render_cb       :  rolesRenderer.render,
                       enable_filter   :  true,
                       tab_change_cb   :  function(hash_id) {
-                            rolesRenderer.sort(hash_id);
+                            if( hash_id.split('_')[0] !== 'permission' ){
+                                rolesRenderer.sort(hash_id);
+                            }
                             rolesRenderer.setTreeHeight();
                             rolesRenderer.setSummary(hash_id);
                             rolesRenderer.handleButtons(hash_id);
