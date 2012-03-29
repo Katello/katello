@@ -19,7 +19,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.1.144
+Version:        0.1.145
 Release:        1%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -206,6 +206,9 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Thu Mar 29 2012 Jordan OMara <jomara@redhat.com> 0.1.145-1
+- gen changes (jomara@redhat.com)
+
 * Fri Mar 23 2012 Jordan OMara <jomara@redhat.com> 0.1.144-1
 - gen_changes (jomara@redhat.com)
 
