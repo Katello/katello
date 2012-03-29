@@ -19,7 +19,7 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        0.1.9
+Version:        0.1.10
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
@@ -125,6 +125,10 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 
 %changelog
+* Thu Mar 29 2012 Mike McCune <mmccune@redhat.com> 0.1.10-1
+- 805124 - Do a security review of all world-readable config file
+  (mbacovsk@redhat.com)
+
 * Wed Mar 14 2012 Jordan OMara <jomara@redhat.com> 0.1.9-1
 - 801752 - Errors installing katello-selinux
 
