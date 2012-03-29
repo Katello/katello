@@ -1,7 +1,10 @@
+require "util/search"
+
 module IndexedModel
 
   def self.included(base)
     base.class_eval do
+
 
         cattr_accessor :class_index_options
         def self.display_attributes
@@ -13,6 +16,12 @@ module IndexedModel
         include Tire::Model::Search
         include Tire::Model::Callbacks
         index_name AppConfig.elastic_index + '_' +  self.base_class.name.downcase
+
+        #Shared analyzers.  If you need a model-specific analyzer for some reason,
+        #  we'll need to refactor this to support that.
+        settings :analysis => {
+                    "analyzer" => Katello::Search.custom_analzyers
+                  }
 
         def self.index_import list
           self.index.import(list)
@@ -44,6 +53,9 @@ module IndexedModel
       end
     end
   end
+
+
+
 
   #mocked methods for testing
   if Rails.env.test?

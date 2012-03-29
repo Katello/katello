@@ -120,7 +120,7 @@ fi
 %files
 %defattr(-,root,root,0755)
 %doc %{modulename}.fc %{modulename}.if %{modulename}.te
-%{_datadir}/selinux/*/%{modulename}.pp.bz2
+%attr(0600,root,root) %{_datadir}/selinux/*/%{modulename}.pp.bz2
 %{_datadir}/selinux/devel/include/%{moduletype}/%{modulename}.if
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 

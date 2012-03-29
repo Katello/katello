@@ -189,11 +189,11 @@ KT.roles.permissionWidget = function(){
 
             current_stage = 'resource_type';
 
-	        for( item in flow ){
-                if( flow.hasOwnProperty(item) && item !== current_stage ){
-                    flow[item].container.hide();
+            KT.utils.each(flow, function(item, key){
+                if( key !== current_stage ){
+                    item.container.hide();
                 }
-            }
+            });
 
             progress_bar.setProgress(25);
 
@@ -260,21 +260,20 @@ KT.roles.permissionWidget = function(){
                 html            = "";
 
             types_select.empty();
-            for( type in types ){
-                if( types.hasOwnProperty(type) ){
-                    if( type !== "all" ){
-                        if( current_organization.split('_')[0] === 'organization' ){
-                            if( !types[type].global ){
-                                html += '<option value="' + type + '">' + types[type].name + '</option>';
-                            }
-                        } else {
-                            html += '<option value="' + type + '">' + types[type].name + '</option>';
+            
+            KT.utils.each(types, function(type, key){
+                if( key !== "all" ){
+                    if( current_organization.split('_')[0] === 'organization' ){
+                        if( !type.global ){
+                            html += '<option value="' + key + '">' + type.name + '</option>';
                         }
                     } else {
-                        html += '<option class="hidden" value="all">' + i18n.all + '</option>';
+                        html += '<option value="' + key + '">' + type.name + '</option>';
                     }
+                } else {
+                    html += '<option class="hidden" value="all">' + i18n.all + '</option>';
                 }
-            }
+            });
 
             types_select.append(html);
         },
@@ -404,9 +403,9 @@ KT.roles.permissionWidget = function(){
                 button.addClass("highlighted");
                 set_types(current_organization);
 
-				for( item in flow ){
-					flow[item].container.show();
-				}
+                KT.utils.each(flow, function(item, key){
+					item.container.show();
+				});
 
 				flow['resource_type'].input.val(permission.type);
 				flow['details'].input.val(permission.name);
@@ -795,13 +794,11 @@ var roleActions = (function($){
 	                    delete roles_breadcrumb[id];
                     	roles_breadcrumb[current_organization].full_access = false;
 
-                    	for( item in roles_breadcrumb ){
-                    		if( roles_breadcrumb.hasOwnProperty(item) ){
-                    			if( item.split('_')[0] === 'permission' && item.split('_')[1] === id.split('_')[1] && roles_breadcrumb[item].type === 'all'){
-                    				roles_breadcrumb[current_organization].full_access = true;
-                    			}
-                    		}
-                    	}
+                        KT.utils.each(roles_breadcrumb, function(item, key){
+                            if( key.split('_')[0] === 'permission' && key.split('_')[1] === id.split('_')[1] && item.type === 'all'){
+                                roles_breadcrumb[current_organization].full_access = true;
+                            }
+                    	});
                     } else {
                 		delete roles_breadcrumb[id];
                 	}
@@ -911,13 +908,11 @@ var templateLibrary = (function($){
         list = function(items, type, options){
             var html = '<ul class="filterable">',
                 options = options ? options : {};
-            for( item in items){
-                if( items.hasOwnProperty(item) ){
-                    if( item.split("_")[0] === type ){
-                        html += listItem(item, items[item].name, false, false, options.no_slide);
-                    }
+            KT.utils.each(items, function(item, key){
+                if( key.split("_")[0] === type ){
+                    html += listItem(key, item.name, false, false, options.no_slide);
                 }
-            }
+            });
             html += '</ul>';
             return html;
         },
@@ -928,14 +923,12 @@ var templateLibrary = (function($){
 
             html += listItem('global', items['global'].name, items['global'].count, false);
 
-            for( item in items){
-                if( items.hasOwnProperty(item) ){
-                    if( item.split("_")[0] === type ){
-                        full_access = items[item].full_access ? i18n.full_access : false;
-                        html += listItem(item, items[item].name, items[item].count, full_access, options.no_slide);
-                    }
+            KT.utils.each(items, function(item, key){
+                if( key.split("_")[0] === type ){
+                    full_access = item.full_access ? i18n.full_access : false;
+                    html += listItem(key, item.name, item.count, full_access, options.no_slide);
                 }
-            }
+            });
             html += '</ul>';
             return html;
         },
@@ -943,14 +936,13 @@ var templateLibrary = (function($){
             var html = '<ul class="filterable">',
             	count = 0;
 
-            for( item in permissions){
-                if( permissions.hasOwnProperty(item) ){
-                    if( item.split("_")[0] === "permission" && permissions[item].organization === 'organization_' + organization_id ){
-                        html += permissionsListItem(item, permissions[item].name, options.show_button);
-                        count += 1;
-                    }
+            KT.utils.each(permissions, function(item, key){
+                if( key.split("_")[0] === "permission" && permissions[key].organization === 'organization_' + organization_id ){
+                    html += permissionsListItem(key, item.name, options.show_button);
+                    count += 1;
                 }
-            }
+            });
+
             if( count === 0 ){
             	html += '<li class="no_slide no_hover">' + i18n.no_permissions + '</li>';
             }
@@ -1024,15 +1016,13 @@ var templateLibrary = (function($){
         usersList = function(users, options){
             var html = '<ul class="filterable">',
                 user = undefined;
-
-            for( item in users){
-                if( users.hasOwnProperty(item) ){
-                    user = item.split("_");
-                    if( user[0] === "user" ){
-                        html += usersListItem(item, users[item].name, users[item].has_role, options.no_slide, options.show_button);
-                    }
+    
+            KT.utils.each(users, function(user, key){
+                username = key.split("_");
+                if( username[0] === "user" ){
+                    html += usersListItem(key, user.name, user.has_role, options.no_slide, options.show_button);
                 }
-            }
+            });
             html += '</ul>';
             return html;
         },
@@ -1040,14 +1030,12 @@ var templateLibrary = (function($){
             var html = '<ul class="filterable">',
             	count = 0;
 
-            for( item in globals ){
-                if( globals.hasOwnProperty(item) ){
-                    if( item.split("_")[0] === "permission" && item.split("_")[1] === 'global' ){
-                        html += permissionsListItem(item, globals[item].name, options.show_button);
-                        count += 1;
-                    }
+            KT.utils.each(globals, function(item, key){
+                if( key.split("_")[0] === "permission" && key.split("_")[1] === 'global' ){
+                    html += permissionsListItem(key, item.name, options.show_button);
+                    count += 1;
                 }
-            }
+            });
             if( count === 0 ){
             	html += '<li class="no_slide no_hover">' + i18n.no_global_permissions + '</li>';
             }

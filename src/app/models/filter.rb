@@ -21,7 +21,7 @@ class Filter < ActiveRecord::Base
                 :json=>{:except=>[:pulp_id, :package_list]}
 
   mapping do
-    indexes :name, :type => 'string', :analyzer => :keyword
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 

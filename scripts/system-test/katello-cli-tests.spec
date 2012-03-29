@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.31
+Version:       0.1.32
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 21 2012 Mike McCune <mmccune@redhat.com> 0.1.32-1
+- 790455 - updated system test for changeset
+- 803441 - handle space in organization when importing manifest
+- 803441 - add support for spaces in system tests --rand-prefix command
+  (inecas@redhat.com)
+
 * Wed Mar 14 2012 Jordan OMara <jomara@redhat.com> 0.1.31-1
 - Manual version bump for cli tests (jomara@redhat.com)
 

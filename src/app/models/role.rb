@@ -29,7 +29,7 @@ class Role < ActiveRecord::Base
                 :display_attrs=>[:name, :permissions, :description]
 
   mapping do
-    indexes :name, :type => 'string', :analyzer => :keyword
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 

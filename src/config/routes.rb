@@ -115,6 +115,7 @@ Src::Application.routes.draw do
     end
     collection do
       get :auto_complete_library
+      get :validate_name_library
     end
   end
 
@@ -481,6 +482,9 @@ Src::Application.routes.draw do
         get :package_group_categories
         get :gpg_key_content
         post :enable
+      end
+      collection do
+        post :sync_complete
       end
     end
 
