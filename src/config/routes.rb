@@ -287,6 +287,14 @@ Src::Application.routes.draw do
       get :auto_complete_search
       get :items
     end
+    resources :ldap_groups, :only => [] do
+      member do 
+		delete "destroy" => "roles#destroy_ldap_group", :as => "destroy"
+      end
+      collection do
+		post "create" => "roles#create_ldap_group", :as => "create"
+      end
+    end
   end
   match '/roles/:organization_id/resource_type/verbs_and_scopes' => 'roles#verbs_and_scopes', :via=>:get, :as=>'verbs_and_scopes'
 
@@ -526,6 +534,7 @@ Src::Application.routes.draw do
 
     resources :users do
       get :report, :on => :collection
+      get :sync_ldap_roles, :on => :collection
       resources :roles, :controller => :users do
        post   :index, :on => :collection, :action => :add_role
        delete :destroy, :on => :member, :action => :remove_role
@@ -535,6 +544,7 @@ Src::Application.routes.draw do
     resources :roles do
       get :available_verbs, :on => :collection, :action => :available_verbs
       resources :permissions, :only => [:index, :show, :create, :destroy]
+      resources :ldap_groups, :controller => :role_ldap_groups , :only => [:create, :destroy, :index]
     end
 
 
