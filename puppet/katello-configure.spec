@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.106
+Version:        0.1.107
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -57,6 +57,13 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Thu Mar 29 2012 Mike McCune <mmccune@redhat.com> 0.1.107-1
+- 805124 - Do a security review of all world-readable config file
+  (mbacovsk@redhat.com)
+- 806028 - postgres sysvinit script workaround
+- 802346 - wait for postgres to come up in puppet (lzap+git@redhat.com)
+- 802454 - adding support for pulp post-sync request (jsherril@redhat.com)
+
 * Fri Mar 09 2012 Jordan OMara <jomara@redhat.com> 0.1.106-1
 - 801786 - puppetizing cli client.conf so it respects install URL
 
