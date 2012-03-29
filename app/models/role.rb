@@ -39,6 +39,7 @@ class Role < ActiveRecord::Base
   has_many :roles_users
   has_many :users, :through => :roles_users, :before_remove =>:super_admin_check
   has_many :permissions, :dependent => :destroy,:inverse_of =>:role, :class_name=>"Permission"
+  has_many :ldap_group_roles, :dependent => :destroy, :inverse_of => :role
   has_one :owner, :class_name => 'User', :foreign_key => "own_role_id"
   has_many :resource_types, :through => :permissions
 
@@ -50,6 +51,20 @@ class Role < ActiveRecord::Base
 
   #validates_associated :permissions
   accepts_nested_attributes_for :permissions, :allow_destroy => true
+
+
+  def add_ldap_group(group_name)
+    self.ldap_group_roles.create!(:ldap_group => group_name)
+    User.all.each { |user| user.set_ldap_roles }
+    self.save
+  end
+
+  def remove_ldap_group(group_name)
+    ldap_group = self.ldap_group_roles.where(:ldap_group => group_name).first
+    raise Errors::NotFound.new(_("LDAP group '%s' associated to role '%s' was not found.") % [group_name, self.name]) unless ldap_group
+    ldap_group.destroy
+    self.users.each { |user| user.set_ldap_roles }
+  end
 
 
   def self.search_by_verb(key, operator, value)
