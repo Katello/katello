@@ -604,9 +604,9 @@ sliding_tree.ActionBar = function(toggle_list){
             });
         };
 
-    for( item in toggle_list ){
-    	register_toggle(item, toggle_list[item]);
-    }
+    $.each(toggle_list, function(item){
+      register_toggle(item, toggle_list[item]);
+    });
 
     return {
         toggle              :  toggle,

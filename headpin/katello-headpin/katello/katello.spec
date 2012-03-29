@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.306
+Version:        0.1.307
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -105,6 +105,7 @@ BuildRequires:  rubygem(chunky_png)
 BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
+BuildRequires:  java >= 0:1.6.0
 
 %description common
 Common bits for all Katello instances
@@ -354,6 +355,33 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Mar 29 2012 Mike McCune <mmccune@redhat.com> 0.1.307-1
+- 807319 - Fix for ie8 rendering for filters page
+- 807319 - Fix for IE8 Rendering
+- 807319 - Adds new version of html5shiv to handle html5 nodes inserted after
+  page load.
+- 807319 - Fixes errors thrown on roles page in IE8.
+- 807319 - Fix for IE8 Rendering
+- 807319 - Fix for IE8 Rendering
+- 807319 - Fix for IE8 (regression)
+- 806068 - repo - update pkg/errata search index on repo delete
+  (bbuckingham@redhat.com)
+- 805202 - changing verification of package names to do a specific search
+  (jsherril@redhat.com)
+- 806942 - changing all models away from keyword analyzer (jsherril@redhat.com)
+- 805324 - making lucene style search syntax work on packages/errata panes in
+  promotions
+- 787696 - updated translations zanata ticket #144039
+- 806741 - added missing environment_id to api/activation_keys_controller
+  param_rules
+- 806482 - BR for java so we can actually run jammit compression
+  (mmccune@redhat.com)
+- 802454 - adding support for pulp post-sync request (jsherril@redhat.com)
+- 798264 - Katello debug collects certificate password files and some certs
+  (mbacovsk@redhat.com)
+- 798264 - Katello debug collects certificate password files and some certs
+  (mbacovsk@redhat.com)
+
 * Wed Mar 21 2012 Mike McCune <mmccune@redhat.com> 0.1.306-1
 - 803409 - providers - on provider create, open products & repos tab
   (bbuckingham@redhat.com)

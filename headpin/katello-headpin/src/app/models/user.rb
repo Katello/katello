@@ -32,10 +32,12 @@ class User < ActiveRecord::Base
                                   :disabled, :own_role_id, :login]}
 
   mapping do
-    indexes :username, :type => 'string', :analyzer => :keyword
+    indexes :username, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :username_sort, :type => 'string', :index => :not_analyzed
   end
 
+  scope :hidden, where(:hidden=>true)
+  scope :visible, where(:hidden=>false)
 
   has_many :roles_users
   has_many :roles, :through => :roles_users, :before_remove=>:super_admin_check
@@ -102,6 +104,7 @@ class User < ActiveRecord::Base
     end
   end
 
+
   # THIS CHECK MUST BE THE FIRST before_destroy
   # check if this is not the last superuser
   before_destroy do |u|
@@ -128,6 +131,8 @@ class User < ActiveRecord::Base
   # support for session (thread-local) variables
   include Katello::ThreadSession::UserModel
   include Ldap
+
+
 
   def self.authenticate!(username, password)
     u = User.where({:username => username}).first
@@ -368,7 +373,7 @@ class User < ActiveRecord::Base
   end
 
   READ_PERM_VERBS = [:read,:update, :create,:delete]
-  scope :readable, lambda {where("0 = 1")  unless User.allowed_all_tags?(READ_PERM_VERBS, :users)}
+  scope :readable, lambda {User.allowed_all_tags?(READ_PERM_VERBS, :users) ? where(:hidden=>false) :  where("0 = 1")}
 
   def self.creatable?
     User.allowed_to?([:create], :users, nil)
@@ -379,11 +384,11 @@ class User < ActiveRecord::Base
   end
 
   def readable?
-    User.any_readable?
+    User.any_readable? && !hidden
   end
 
   def editable?
-    User.allowed_to?([:create, :update], :users, nil)
+    User.allowed_to?([:create, :update], :users, nil) && !hidden
   end
 
   def deletable?

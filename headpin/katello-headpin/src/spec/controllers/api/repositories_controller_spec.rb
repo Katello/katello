@@ -306,6 +306,49 @@ describe Api::RepositoriesController, :katello => true do
       end
     end
 
+
+    describe "trigger sync complete" do
+      before do
+        @repo = Repository.new(:pulp_id=>"123", :id=>"123")
+        @repo.stub(:environment).and_return(KTEnvironment.new(:name=>"FOO"))
+        Repository.stub(:where).and_return([@repo])
+        @fake_async = OpenStruct.new
+      end
+      it "should call async task correctly with no forwarded header" do
+        @repo.should_receive(:async).and_return(@fake_async)
+        @fake_async.should_receive(:after_sync)
+        request.env['RAW_POST_DATA'] = {:task_id=>"123", :repo_id=>"123"}.to_json
+        post :sync_complete, {}
+        response.should be_success
+      end
+
+      it "should accept a forwarded request from ipv4 localhost" do
+        request.env["HTTP_X_FORWARDED_FOR"] = '127.0.0.1'
+        @repo.should_receive(:async).and_return(@fake_async)
+        @fake_async.should_receive(:after_sync)
+        request.env['RAW_POST_DATA'] = {:task_id=>"123", :repo_id=>"123"}.to_json
+        post :sync_complete, {}
+        response.should be_success
+      end
+
+      it "should accept a forwarded request from ipv6 localhost" do
+        request.env["HTTP_X_FORWARDED_FOR"] = '::1'
+        @repo.should_receive(:async).and_return(@fake_async)
+        @fake_async.should_receive(:after_sync)
+        request.env['RAW_POST_DATA'] = {:task_id=>"123", :repo_id=>"123"}.to_json
+        post :sync_complete, {}
+        response.should be_success
+      end
+
+      it "should get a permission denied if forwarded from a different ip" do
+        request.env["HTTP_X_FORWARDED_FOR"] = '192.168.0.1'
+        post :sync_complete, {}
+        response.status.should == 403
+      end
+
+
+    end
+
     describe "get list of repository package groups" do
       subject { get :package_groups, :id => "123" }
       before do

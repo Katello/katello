@@ -21,10 +21,16 @@ class Organization < ActiveRecord::Base
                 :json=>{:except=>[:debug_cert, :events]},
                 :display_attrs=>[:name, :description, :environment]
 
+
+
+
   mapping do
-    indexes :name, :type => 'string', :analyzer => :keyword
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
+
+
+
 
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy

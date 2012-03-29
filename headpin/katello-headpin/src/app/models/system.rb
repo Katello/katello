@@ -35,11 +35,11 @@ class System < ActiveRecord::Base
                           :path_match => "facts.*",
                           :mapping => {
                               :type=>"string",
-                              :analyzer=>"keyword"
+                              :analyzer=>"kt_name_analyzer"
                           }
                         }} ] do
-    indexes :name, :type => 'string', :analyzer => :keyword
-    indexes :description, :type => 'string', :analyzer => :keyword
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+    indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
     indexes :lastCheckin, :type=>'date'
 

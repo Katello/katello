@@ -82,7 +82,8 @@ class UsersController < ApplicationController
   def items
     if !params[:only] && User.any_readable?
       render_panel_direct(User, @panel_options, params[:search], params[:offset], [:username_sort, 'asc'],
-                          {:default_field => :username})
+                          {:default_field => :username,
+                           :filter=>[{:hidden=>[false]}]})
     else
       users = [@user]
       render_panel_items(users, @panel_options, nil, params[:offset])

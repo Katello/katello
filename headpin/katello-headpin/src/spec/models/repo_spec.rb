@@ -58,6 +58,8 @@ describe Glue::Pulp::Repo, :katello => true do
     end
 
     it "should call the Pulp's delete api on destroy" do
+      @repo.stub(:update_packages_index).and_return
+      @repo.stub(:update_errata_index).and_return
       Pulp::Repository.should_receive(:destroy).with(RepoTestData::REPO_ID)
       @repo.destroy_repo
     end
@@ -138,7 +140,6 @@ describe Glue::Pulp::Repo, :katello => true do
 
     it "should call pulp synchronization api" do
       @repo.stub(:async).and_return(@repo)
-      @repo.should_receive(:after_sync)
       Pulp::Repository.should_receive(:sync).with(RepoTestData::REPO_ID).and_return({})
       task = mock()
       task.stub(:save!)
