@@ -105,6 +105,7 @@ BuildRequires:  rubygem(chunky_png)
 BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
+BuildRequires:  converge-ui
 
 %description common
 Common bits for all Katello instances
@@ -154,6 +155,10 @@ Katello connection classes for the Candlepin backend
 %setup -q
 
 %build
+
+#copy converge-ui
+cp -R /usr/share/converge-ui ./vendor/
+
 #configure Bundler
 rm -f Gemfile.lock
 sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
