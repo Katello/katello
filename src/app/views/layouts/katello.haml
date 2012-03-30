@@ -14,9 +14,6 @@
 
   = yield :stylesheets
  
-= content_for(:header) do
-  = render :partial => 'common/header', :layout => "layouts/lib/header_layout"
-
 = content_for(:content) do   
   - if not current_user
     #maincontent
@@ -52,4 +49,6 @@
   = csrf_meta_tag
   = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery?
 
-= render :file => 'layouts/lib/shell_layout'
+= render :partial => 'common/header'
+
+= render :file => 'layouts/converge-ui/shell_layout'
