@@ -218,6 +218,13 @@ describe Api::RepositoriesController do
             post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key, :gpg_key_name => ""
           end
         end
+
+        context "the url is empty" do
+          let(:req) do
+            post 'create', :name => 'repo_1', :url => '', :product_id => 'product_1', :organization_id => @organization.cp_key, :gpg_key_name => ""
+          end
+          it_should_behave_like "bad request"
+        end
       end
     end
 
