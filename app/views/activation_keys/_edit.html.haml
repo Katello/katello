@@ -23,12 +23,11 @@
 
   #activation_key
     = hidden_field_tag 'environment_id', @activation_key.environment_id
-
     .grid_10
-      = help_tip(_("Edit Activation Key enables you to modify the selected activation key.  This key may " + |
+      = help_tip((_("Edit Activation Key enables you to modify the selected activation key.  This key may " + |
                  "be used during system registration.  For example, <BR/><BR/>" + |
                  "subscription-manager register --org %s " + |
-                 "--activationkey %s") % [@activation_key.organization.name, @activation_key.name], 'activation_keys_edit-help') |
+                 "--activationkey %s") % [h(@activation_key.organization.name), h(@activation_key.name)]).html_safe, 'activation_keys_edit-help') |
 
     .grid_10
       = form_tag activation_key_path(@activation_key), :method => :put, :remote => true do
