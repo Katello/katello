@@ -155,120 +155,120 @@ describe Api::RepositoriesController do
       disable_authorization_rules
     end
 
-  describe "show a repository" do
-    it 'should call pulp glue layer' do
-      repo_mock = mock(Glue::Pulp::Repo)
-      Repository.should_receive(:find).with("1").and_return(repo_mock)
-      repo_mock.should_receive(:to_hash)
-      get 'show', :id => '1'
+    describe "show a repository" do
+      it 'should call pulp glue layer' do
+        repo_mock = mock(Glue::Pulp::Repo)
+        Repository.should_receive(:find).with("1").and_return(repo_mock)
+        repo_mock.should_receive(:to_hash)
+        get 'show', :id => '1'
+      end
     end
-  end
 
     describe "create a repository" do
-    before do
-      Product.stub(:find_by_cp_id => @product)
-    end
+      before do
+        Product.stub(:find_by_cp_id => @product)
+      end
 
-    it 'should call pulp and candlepin layer' do
-      Product.should_receive(:find_by_cp_id).with('product_1').and_return(@product)
-      @product.should_receive(:add_repo).and_return({})
+      it 'should call pulp and candlepin layer' do
+        Product.should_receive(:find_by_cp_id).with('product_1').and_return(@product)
+        @product.should_receive(:add_repo).and_return({})
 
-      post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key
-    end
-
-    context 'there is already a repo for the product with the same name' do
-      it "should notify about conflict" do
-        @product.stub(:add_repo).and_return { raise Errors::ConflictException }
         post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key
-        response.code.should == '409'
-      end
-    end
-
-    context 'some gpg key is assigned to the product' do
-      let(:product_gpg) { GpgKey.create!(:name => "Product GPG", :content => "100", :organization => @organization) }
-      let(:repo_gpg) { GpgKey.create!(:name => "Repo GPG", :content => "200", :organization => @organization) }
-
-      before do
-        @product.update_attributes!(:gpg_key => product_gpg)
       end
 
-      context "we dont provide gpg_key_name key" do
-        it "should use the product's key" do
-          @product.should_receive(:add_repo).with do |name, url, type, gpg|
-            gpg == product_gpg
-          end.and_return({})
+      context 'there is already a repo for the product with the same name' do
+        it "should notify about conflict" do
+          @product.stub(:add_repo).and_return { raise Errors::ConflictException }
           post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key
+          response.code.should == '409'
         end
       end
 
-      context "we provide another gpg_key_name key" do
-        it "should use provided key" do
-          @product.should_receive(:add_repo).with do |name, url, type, gpg|
-            gpg == repo_gpg
-          end.and_return({})
-          post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key, :gpg_key_name => repo_gpg.name
-        end
-      end
+      context 'some gpg key is assigned to the product' do
+        let(:product_gpg) { GpgKey.create!(:name => "Product GPG", :content => "100", :organization => @organization) }
+        let(:repo_gpg) { GpgKey.create!(:name => "Repo GPG", :content => "200", :organization => @organization) }
 
-      context "we provide empty gpg_key_name key" do
-        it "should use no gpg key" do
-          @product.should_receive(:add_repo).with do |name, url, type, gpg|
-            gpg == nil
-          end.and_return({})
-          post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key, :gpg_key_name => ""
+        before do
+          @product.update_attributes!(:gpg_key => product_gpg)
+        end
+
+        context "we dont provide gpg_key_name key" do
+          it "should use the product's key" do
+            @product.should_receive(:add_repo).with do |name, url, type, gpg|
+              gpg == product_gpg
+            end.and_return({})
+            post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key
+          end
+        end
+
+        context "we provide another gpg_key_name key" do
+          it "should use provided key" do
+            @product.should_receive(:add_repo).with do |name, url, type, gpg|
+              gpg == repo_gpg
+            end.and_return({})
+            post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key, :gpg_key_name => repo_gpg.name
+          end
+        end
+
+        context "we provide empty gpg_key_name key" do
+          it "should use no gpg key" do
+            @product.should_receive(:add_repo).with do |name, url, type, gpg|
+              gpg == nil
+            end.and_return({})
+            post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key, :gpg_key_name => ""
+          end
         end
       end
     end
 
-  end
-  describe "update a repository" do
-    before do
-      @repo = mock(Glue::Pulp::Repo)
-    end
-
-    context "Bad request" do
-      before { @repo.stub(:redhat? => false) }
-      it_should_behave_like "bad request"  do
-        let(:req) do
-          bad_req = {:id => 123,
-                     :repository =>
-                        {:bad_foo => "mwahahaha",
-                         :gpg_key_name => "Gpg Key"}
-          }.with_indifferent_access
-          put :update, bad_req
-        end
-      end
-
-    end
-
-    context "Custom repo" do
+    describe "update a repository" do
       before do
-            Repository.should_receive(:find).with("1").and_return(@repo)
-            @repo.stub(:redhat? => false)
+        @repo = mock(Glue::Pulp::Repo)
       end
 
-      it 'should update values thet migth change' do
-        @repo.should_receive(:update_attributes!).with("gpg_key_name" => "gpg_key")
-        put :update, {:id => '1', :repository => {:gpg_key_name => "gpg_key"}}
+      context "Bad request" do
+        before { @repo.stub(:redhat? => false) }
+        it_should_behave_like "bad request"  do
+          let(:req) do
+            bad_req = {:id => 123,
+                       :repository =>
+                          {:bad_foo => "mwahahaha",
+                           :gpg_key_name => "Gpg Key"}
+            }.with_indifferent_access
+            put :update, bad_req
+          end
+        end
+
+      end
+
+      context "Custom repo" do
+        before do
+              Repository.should_receive(:find).with("1").and_return(@repo)
+              @repo.stub(:redhat? => false)
+        end
+
+        it 'should update values thet migth change' do
+          @repo.should_receive(:update_attributes!).with("gpg_key_name" => "gpg_key")
+          put :update, {:id => '1', :repository => {:gpg_key_name => "gpg_key"}}
+        end
+      end
+
+      context "RH repo" do
+
+        before { @repo.stub(:redhat? => true) }
+
+        it "should fail with bad request" do
+          put :update, {:id => '1', :repository => {:gpg_key_name => "gpg_key", :name => "another name"}}
+          response.code.should eq("400")
+        end
+
       end
     end
 
-    context "RH repo" do
-
-      before { @repo.stub(:redhat? => true) }
-
-      it "should fail with bad request" do
-        put :update, {:id => '1', :repository => {:gpg_key_name => "gpg_key", :name => "another name"}}
-        response.code.should eq("400")
-      end
-
-    end
-  end
-
-  describe "repository discovery" do
-    it "should call Pulp::Proxy.post" do
-      url  = "http://url.org"
-      type = "yum"
+    describe "repository discovery" do
+      it "should call Pulp::Proxy.post" do
+        url  = "http://url.org"
+        type = "yum"
 
         post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key
       end
