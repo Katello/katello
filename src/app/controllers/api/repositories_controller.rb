@@ -13,6 +13,7 @@
 require 'resources/pulp'
 
 class Api::RepositoriesController < Api::ApiController
+  include KatelloUrlHelper
   respond_to :json
   before_filter :find_repository, :only => [:show, :update, :destroy, :package_groups, :package_group_categories, :enable, :gpg_key_content]
   before_filter :find_organization, :only => [:create, :discovery]
@@ -50,6 +51,8 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   def create
+    raise HttpErrors::BadRequest, _('Invalid Url') if !kurl_valid?(params[:url])
+
     if params[:gpg_key_name].present?
       gpg = GpgKey.readable(@product.organization).find_by_name!(params[:gpg_key_name])
     elsif params[:gpg_key_name].nil?
