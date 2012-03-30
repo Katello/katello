@@ -76,16 +76,16 @@ describe Glue do
       @object_too = Object.new
       @object_foo = Object.new
 
-      @queue = Queue.new
+      @queue = Glue::Queue.new
       @task_1 = @queue.create(:priority => 3, :action => [@object, :set])
       @task_2 = @queue.create(:priority => 4, :action => [@object_too, :set])
-      @next_queue = Queue.new(@queue)
+      @next_queue = Glue::Queue.new(@queue)
       @task_3 = @next_queue.create(:priority => 1, :action => [@object_foo, :set])
 
       [@object, @object_too, @object_foo].each { |o| o.stub(:set => true, :pretty_print => "mock") }
     end
 
-    specify { lambda {@orchestrated.process(Queue.new) }.should_not raise_error }
+    specify { lambda {@orchestrated.process(Glue::Queue.new) }.should_not raise_error }
 
     it "should execute pending tasks" do
       @object.should_receive(:set).once.and_return(true)
