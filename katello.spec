@@ -290,6 +290,7 @@ fi
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
+%{homedir}/lib/glue/*.rb
 %{homedir}/lib/navigation
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
