@@ -74,14 +74,14 @@ describe SystemsController do
           let(:unauthorized_user) do
             user_without_permissions
           end
-          
+
           let(:before_success) do
             controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
               search_options[:filter][:environment_id].should include(@environment.id)
               controller.stub(:render)
             }
           end
-          
+
           it_should_behave_like "protected action"
         end
 
@@ -143,15 +143,16 @@ describe SystemsController do
 
       controller.stub!(:notice)
       controller.stub(:search_validate).and_return(false)
-      
+
       Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+      Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Candlepin::Consumer.stub!(:update).and_return(true)
 
       Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Pulp::Consumer.stub!(:update).and_return(true)
     end
 
-    describe "viewing systems" do      
+    describe "viewing systems" do
       before (:each) do
         100.times{|a| System.create!(:name=>"bar#{a}", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})}
         @systems = System.select(:id).where(:environment_id => @environment.id).all.collect{|s| s.id}
@@ -223,11 +224,11 @@ describe SystemsController do
 
     describe 'updating a system' do
       before (:each) do
-        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""}, :serviceLevel => nil)
       end
 
       it "should update the system name" do
-        put :update, { :id => @system.id, :system => { :name=> "foo" }}
+        put :update, { :id => @system.id, :system => { :name => "foo" }}
         response.should be_success
         assigns[:system].name.should == "foo"
       end
