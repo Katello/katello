@@ -65,7 +65,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def create
-    system = System.create!(params.merge({:environment => @environment}))
+    system = System.create!(params.merge({:environment => @environment, :serviceLevel => params[:service_level]}))
     render :json => system.to_json
   end
 
@@ -110,8 +110,8 @@ class Api::SystemsController < Api::ApiController
   end
 
   def update
-    @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer))
-
+    params[:serviceLevel] = params.delete(:service_level) if params.has_key?(:service_level)
+    @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel))
     render :json => @system.to_json
   end
 

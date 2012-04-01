@@ -23,7 +23,7 @@ module Glue::Candlepin::Consumer
       before_save :save_candlepin_orchestration
       before_destroy :destroy_candlepin_orchestration
 
-      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts, :autoheal, :releaseVer,
+      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts, :autoheal, :releaseVer, :serviceLevel,
         :initializer => lambda {
                           if uuid
                             consumer_json = Candlepin::Consumer.get(uuid)
@@ -71,6 +71,12 @@ module Glue::Candlepin::Consumer
       end
     end
 
+    def serializable_hash(options={})
+      hash = super(options)
+      hash = hash.merge(:service_level => self.serviceLevel)
+      hash
+    end
+
     def validate_cp_consumer
       if new_record?
         validates_inclusion_of :cp_type, :in => %w( system hypervisor)
@@ -86,7 +92,8 @@ module Glue::Candlepin::Consumer
                                                  self.facts,
                                                  self.installedProducts,
                                                  self.autoheal,
-                                                 self.releaseVer)
+                                                 self.releaseVer,
+                                                 self.serviceLevel)
 
       load_from_cp(consumer_json)
     rescue => e
@@ -103,7 +110,7 @@ module Glue::Candlepin::Consumer
 
     def update_candlepin_consumer
       Rails.logger.debug "Updating consumer in candlepin: #{name}"
-      Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal, @releaseVer)
+      Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal, @releaseVer, self.serviceLevel)
     rescue => e
       Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -353,7 +360,7 @@ module Glue::Candlepin::Consumer
       return self.compliance['compliant'] == true
     end
 
-    # As a convenience and common terminology 
+    # As a convenience and common terminology
     def compliance_color
       return 'green' if self.compliant?
       return 'yellow' if self.compliance['partiallyCompliantProducts'].length > 0 && self.compliance['nonCompliantProducts'].length == 0
