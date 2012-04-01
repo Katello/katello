@@ -335,7 +335,7 @@ describe Api::SystemsController do
     it "should update installed products" do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil).and_return(true)
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil).and_return(true)
       post :update, :id => uuid, :installedProducts => installed_products
       response.body.should == @sys.to_json
       response.should be_success
@@ -344,11 +344,21 @@ describe Api::SystemsController do
     it "should update releaseVer" do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, "1.1").and_return(true)
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, "1.1", nil).and_return(true)
       post :update, :id => uuid, :releaseVer => "1.1"
       response.body.should == @sys.to_json
       response.should be_success
     end
+
+    it "should update service level agreement" do
+      @sys.facts = nil
+      @sys.stub(:guest => 'false', :guests => [])
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, nil, "SLA").and_return(true)
+      post :update, :id => uuid, :service_level => "SLA"
+      response.body.should == @sys.to_json
+      response.should be_success
+    end
+
   end
 
   describe "list errata" do

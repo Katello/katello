@@ -50,7 +50,8 @@ describe System do
                          :facts => facts,
                          :description => description,
                          :uuid => uuid,
-                         :installedProducts => installed_products)
+                         :installedProducts => installed_products,
+                         :serviceLevel => nil)
 
     Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Candlepin::Consumer.stub!(:update).and_return(true)
@@ -67,7 +68,7 @@ describe System do
   end
 
   it "registers system in candlepin and pulp on create" do
-    Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}})
     @system.save!
   end
@@ -139,14 +140,14 @@ describe System do
     it "should give facts to Candlepin::Consumer" do
       @system.facts = facts
       @system.installedProducts = nil # simulate it's not loaded in memory
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil, nil, nil).and_return(true)
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil, nil, nil, nil).and_return(true)
       @system.save!
     end
 
     it "should give installeProducts to Candlepin::Consumer" do
       @system.installedProducts = installed_products
       @system.facts = nil # simulate it's not loaded in memory
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil).and_return(true)
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil).and_return(true)
       @system.save!
     end
 s  end
