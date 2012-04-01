@@ -115,7 +115,7 @@ module Candlepin
         JSON.parse(response).with_indifferent_access
       end
 
-      def update(uuid, facts, guest_ids = nil, installedProducts = nil, autoheal = nil, releaseVer = nil, service_level=nil
+      def update(uuid, facts, guest_ids = nil, installedProducts = nil, autoheal = nil, releaseVer = nil, service_level=nil)
         attrs = {:facts => facts,
                  :guestIds => guest_ids,
                  :releaseVer => releaseVer,
