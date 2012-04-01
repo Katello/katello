@@ -70,6 +70,7 @@ class List(SystemAction):
             self.printer.setHeader(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
 
         self.printer.addColumn('name')
+        self.printer.addColumn('service_level')
 
         self.printer._grep = True
         self.printer.printItems(systems)
@@ -128,6 +129,7 @@ class Info(SystemAction):
              self.printer.addColumn('releaseVer', 'OS release')
         self.printer.addColumn('activation_keys', multiline=True, show_in_grep=False)
         self.printer.addColumn('host', show_in_grep=False)
+        self.printer.addColumn('service_level')
         self.printer.addColumn('guests',  show_in_grep=False)
         if system.has_key("template"):
             t = system["template"]["name"]
@@ -414,6 +416,8 @@ class Register(SystemAction):
                        help=_("organization name (required)"))
         self.parser.add_option('--environment', dest='environment',
                        help=_("environment name eg: development"))
+        self.parser.add_option('--service_level', dest='sla',
+                       help=_("service level agreement"))
         self.parser.add_option('--activationkey', dest='activationkey',
             help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
         self.parser.add_option('--release', dest='release',
@@ -440,8 +444,9 @@ class Register(SystemAction):
         environment = self.get_option('environment')
         activation_keys = self.get_option('activationkey')
         release = self.get_option('release')
+        sla = self.get_option('sla')
 
-        system = self.api.register(name, org, environment, activation_keys, 'system', release)
+        system = self.api.register(name, org, environment, activation_keys, 'system', release, sla)
 
         if is_valid_record(system):
             print _("Successfully registered system [ %s ]") % system['name']
@@ -646,7 +651,7 @@ class Update(SystemAction):
         self.parser.add_option('--environment', dest='environment',
                        help=_("environment name"))
 
-        self.parser.add_option('--new-name', dest='new_name',
+        self.parser.add_option('--new_name', dest='new_name',
                        help=_('a new name for the system'))
         self.parser.add_option('--description', dest='description',
                        help=_('a description of the system'))
@@ -654,6 +659,8 @@ class Update(SystemAction):
                        help=_("location of the system"))
         self.parser.add_option('--release', dest='release',
                        help=_("value of $releasever for the system"))
+        self.parser.add_option('--service_level', dest='sla',
+                       help=_("service level agreement"))
 
     def check_options(self):
         self.require_option('org')
@@ -667,6 +674,7 @@ class Update(SystemAction):
         new_description = self.get_option('description')
         new_location = self.get_option('location')
         new_release = self.get_option('release')
+        new_sla = self.get_option('sla')
 
         if env_name is None:
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
@@ -683,6 +691,7 @@ class Update(SystemAction):
         if new_description: updates['description'] = new_description
         if new_location: updates['location'] = new_location
         if new_release: updates['releaseVer'] = new_release
+        if new_sla: updates['service_level'] = new_sla
 
         response = self.api.update(system_uuid, updates)
 
