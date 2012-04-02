@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 from gettext import gettext as _
 
 from katello.client.api.filter import FilterAPI
@@ -86,7 +87,7 @@ class Create(FilterAction):
         if is_valid_record(new_filter):
             print _("Successfully created filter [ %s ]") % new_filter['name']
         else:
-            print _("Could not create filter [ %s ]") % name
+            print >> sys.stderr, _("Could not create filter [ %s ]") % name
 
         return os.EX_OK
 

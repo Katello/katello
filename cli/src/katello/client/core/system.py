@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 from gettext import gettext as _
 
 from katello.client.api.system import SystemAPI
@@ -451,7 +452,7 @@ class Register(SystemAction):
         if is_valid_record(system):
             print _("Successfully registered system [ %s ]") % system['name']
         else:
-            print _("Could not register system [ %s ]") % name
+            print >> sys.stderr, _("Could not register system [ %s ]") % name
         return os.EX_OK
 
 class Unregister(SystemAction):
@@ -473,7 +474,7 @@ class Unregister(SystemAction):
         org = self.get_option('org')
         systems = self.api.systems_by_org(org, {'name': name})
         if systems == None or len(systems) != 1:
-            print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
+            print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
             result = self.api.unregister(systems[0]['uuid'])
@@ -506,7 +507,7 @@ class Subscribe(SystemAction):
         qty = self.get_option('quantity') or 1
         systems = self.api.systems_by_org(org, {'name': name})
         if systems == None or len(systems) != 1:
-            print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
+            print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
             result = self.api.subscribe(systems[0]['uuid'], pool, qty)
@@ -538,7 +539,7 @@ class Subscriptions(SystemAction):
 
 
         if systems == None or len(systems) != 1:
-            print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
+            print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
             self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
@@ -626,7 +627,7 @@ class Unsubscribe(SystemAction):
         all_entitlements = self.get_option('all')
         systems = self.api.systems_by_org(org, {'name': name})
         if systems == None or len(systems) != 1:
-            print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
+            print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
             if all_entitlements: #unsubscribe from all
@@ -698,7 +699,7 @@ class Update(SystemAction):
         if is_valid_record(response):
             print _("Successfully updated system [ %s ]") % response['name']
         else:
-            print _("Could not update system [ %s ]") % systems[0]['name']
+            print >> sys.stderr, _("Could not update system [ %s ]") % systems[0]['name']
 
         return os.EX_OK
 

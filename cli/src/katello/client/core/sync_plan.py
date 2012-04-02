@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 from gettext import gettext as _
 
 from katello.client.api.sync_plan import SyncPlanAPI
@@ -146,7 +147,7 @@ class Create(SyncPlanAction):
             print _("Successfully created synchronization plan [ %s ]") % plan['name']
             return os.EX_OK
         else:
-            print _("Could not create synchronization plan [ %s ]") % plan['name']
+            print >> sys.stderr, _("Could not create synchronization plan [ %s ]") % plan['name']
             return os.EX_DATAERR
 
 

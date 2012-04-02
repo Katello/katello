@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 from gettext import gettext as _
 
 from katello.client.api.user_role import UserRoleAPI
@@ -113,7 +114,7 @@ class Create(PermissionAction):
             print _("Successfully created permission [ %s ] for user role [ %s ]") % (name, role['name'])
             return os.EX_OK
         else:
-            print _("Could not create permission [ %s ]") % name
+            print >> sys.stderr, _("Could not create permission [ %s ]") % name
             return os.EX_DATAERR
 
 

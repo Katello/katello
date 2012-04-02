@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 from gettext import gettext as _
 from optparse import OptionValueError
 
@@ -172,7 +173,7 @@ class Create(ChangesetAction):
             if is_valid_record(cset):
                 print _("Successfully created changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
             else:
-                print _("Could not create changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
+                print >> sys.stderr, _("Could not create changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
 
         return os.EX_OK
 

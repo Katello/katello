@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 from gettext import gettext as _
 
 from katello.client.api.organization import OrganizationAPI
@@ -77,7 +78,7 @@ class Create(OrganizationAction):
             print _("Successfully created org [ %s ]") % org['name']
             return os.EX_OK
         else:
-            print _("Could not create org [ %s ]") % org['name']
+            print >> sys.stderr, _("Could not create org [ %s ]") % org['name']
             return os.EX_DATAERR
 
 

@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 from gettext import gettext as _
 from optparse import OptionValueError
 
@@ -235,7 +236,7 @@ class Export(TemplateAction):
         try:
             f = self.open_file(tplPath)
         except:
-            print _("Could not create file %s") % tplPath
+            print >> sys.stderr, _("Could not create file %s") % tplPath
             return os.EX_IOERR
 
         self.api.validate_tpl(template["id"], format)
@@ -289,7 +290,7 @@ class Create(TemplateAction):
                 print _("Successfully created template [ %s ]") % template['name']
                 return os.EX_OK
             else:
-                print _("Could not create template [ %s ]") % name
+                print >> sys.stderr, _("Could not create template [ %s ]") % name
                 return os.EX_DATAERR
         else:
             return os.EX_DATAERR

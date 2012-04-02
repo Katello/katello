@@ -14,6 +14,7 @@
 # in this software or its documentation.
 #
 
+import sys
 from gettext import gettext as _
 from katello.client.api.organization import OrganizationAPI
 from katello.client.api.environment import EnvironmentAPI
@@ -33,7 +34,7 @@ def get_organization(orgName):
 
     org = organization_api.organization(orgName)
     if org == None:
-        print _("Could not find organization [ %s ]") % orgName
+        print >> sys.stderr, _("Could not find organization [ %s ]") % orgName
 
     return org
 
@@ -48,7 +49,7 @@ def get_environment(orgName, envName=None):
         env = environment_api.environment_by_name(orgName, envName)
 
     if env == None:
-        print _("Could not find environment [ %s ] within organization [ %s ]") % (envName, orgName)
+        print >> sys.stderr, _("Could not find environment [ %s ] within organization [ %s ]") % (envName, orgName)
     return env
 
 
@@ -61,7 +62,7 @@ def get_product(orgName, prodName):
 
     prod = product_api.product_by_name(orgName, prodName)
     if prod == None:
-        print _("Could not find product [ %s ] within organization [ %s ]") % (prodName, orgName)
+        print >> sys.stderr, _("Could not find product [ %s ] within organization [ %s ]") % (prodName, orgName)
     return prod
 
 
@@ -81,7 +82,7 @@ def get_repo(orgName, prodName, repoName, envName=None, includeDisabled=False):
         #repo by id call provides more information
         return repo_api.repo(repos[0]["id"])
 
-    print _("Could not find repository [ %s ] within organization [ %s ], product [ %s ] and environment [ %s ]") % (repoName, orgName, prodName, env["name"])
+    print >> sys.stderr, _("Could not find repository [ %s ] within organization [ %s ], product [ %s ] and environment [ %s ]") % (repoName, orgName, prodName, env["name"])
     return None
 
 
@@ -90,7 +91,7 @@ def get_provider(orgName, provName):
 
     prov = provider_api.provider_by_name(orgName, provName)
     if prov == None:
-        print _("Could not find provider [ %s ] within organization [ %s ]") % (provName, orgName)
+        print >> sys.stderr, _("Could not find provider [ %s ] within organization [ %s ]") % (provName, orgName)
     return prov
 
 
@@ -103,7 +104,7 @@ def get_template(orgName, envName, tplName):
 
     tpl = template_api.template_by_name(env["id"], tplName)
     if tpl == None:
-        print _("Could not find template [ %s ] within environment [ %s ]") % (tplName, env["name"])
+        print >> sys.stderr, _("Could not find template [ %s ] within environment [ %s ]") % (tplName, env["name"])
     return tpl
 
 
@@ -116,14 +117,14 @@ def get_changeset(orgName, envName, csName):
 
     cset = changeset_api.changeset_by_name(orgName, env["id"], csName)
     if cset == None:
-        print _("Could not find changeset [ %s ] within environment [ %s ]") % (csName, env["name"])
+        print >> sys.stderr, _("Could not find changeset [ %s ] within environment [ %s ]") % (csName, env["name"])
     return cset
 
 def get_user(userName):
     user_api = UserAPI()
     user = user_api.user_by_name(userName)
     if user == None:
-        print _("Could not fing user [ %s ]") % (userName)
+        print >> sys.stderr, _("Could not fing user [ %s ]") % (userName)
     return user
 
 def get_role(name):

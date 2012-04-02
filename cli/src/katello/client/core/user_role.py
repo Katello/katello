@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 from gettext import gettext as _
 
 from katello.client.api.user_role import UserRoleAPI
@@ -77,7 +78,7 @@ class Create(UserRoleAction):
             print _("Successfully created user role [ %s ]") % role['name']
             return os.EX_OK
         else:
-            print _("Could not create user role [ %s ]") % name
+            print >> sys.stderr, _("Could not create user role [ %s ]") % name
             return os.EX_DATAERR
 
 # ------------------------------------------------------------------------------

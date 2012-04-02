@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 from gettext import gettext as _
 
 from katello.client.api.environment import EnvironmentAPI
@@ -137,7 +138,7 @@ class Create(EnvironmentAction):
             print _("Successfully created environment [ %s ]") % env['name']
             return os.EX_OK
         else:
-            print _("Could not create environment [ %s ]") % env['name']
+            print >> sys.stderr, _("Could not create environment [ %s ]") % env['name']
             return os.EX_DATAERR
 
 

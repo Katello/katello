@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 from gettext import gettext as _
 
 from katello.client.api.user import UserAPI
@@ -80,7 +81,7 @@ class Create(UserAction):
         if is_valid_record(user):
             print _("Successfully created user [ %s ]") % user['username']
         else:
-            print _("Could not create user [ %s ]") % user['username']
+            print >> sys.stderr, _("Could not create user [ %s ]") % user['username']
         return os.EX_OK
 
 # ------------------------------------------------------------------------------

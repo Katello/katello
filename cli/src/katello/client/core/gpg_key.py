@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 from gettext import gettext as _
 
 from katello.client.api.gpg_key import GpgKeyAPI
@@ -100,7 +101,7 @@ class Info(GpgKeyAction):
         keyName = self.get_option('name')
         key_id = self.get_key_id()
         if not key_id:
-            print _("Could not find gpg key [ %s ]") % keyName
+            print >> sys.stderr, _("Could not find gpg key [ %s ]") % keyName
             return os.EX_DATAERR
 
         key = self.api.gpg_key(key_id)
@@ -151,7 +152,7 @@ class Create(GpgKeyAction):
             print _("Successfully created gpg key [ %s ]") % key['name']
             return os.EX_OK
         else:
-            print _("Could not create gpg key [ %s ]") % keyName
+            print >> sys.stderr, _("Could not create gpg key [ %s ]") % keyName
             return os.EX_DATAERR
 
 
@@ -190,7 +191,7 @@ class Update(GpgKeyAction):
 
         key_id = self.get_key_id()
         if not key_id:
-            print _("Could not find gpg key [ %s ]") % keyName
+            print >> sys.stderr, _("Could not find gpg key [ %s ]") % keyName
             return os.EX_DATAERR
 
         key = self.api.update(key_id, newKeyName, content)
@@ -198,7 +199,7 @@ class Update(GpgKeyAction):
             print _("Successfully updated gpg key [ %s ]") % key['name']
             return os.EX_OK
         else:
-            print _("Could not updated gpg key [ %s ]") % keyName
+            print >> sys.stderr, _("Could not updated gpg key [ %s ]") % keyName
             return os.EX_DATAERR
 
 
@@ -222,7 +223,7 @@ class Delete(GpgKeyAction):
 
         key_id = self.get_key_id()
         if not key_id:
-            print _("Could not find gpg key [ %s ]") % keyName
+            print >> sys.stderr, _("Could not find gpg key [ %s ]") % keyName
             return os.EX_DATAERR
 
         self.api.delete(key_id)

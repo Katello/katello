@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 from gettext import gettext as _
 from urlparse import urlparse
 
@@ -159,7 +160,7 @@ class Update(ProviderAction):
             print _("Successfully created provider [ %s ]") % prov['name']
             return True
         else:
-            print _("Could not create provider [ %s ]") % prov['name']
+            print >> sys.stderr, _("Could not create provider [ %s ]") % prov['name']
             return False
 
 
