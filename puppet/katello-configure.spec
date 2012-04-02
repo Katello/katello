@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.16
+Version:        0.2.17
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -63,6 +63,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Apr 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.17-1
+- 794778 - option ssl_ca_certificate is set for pulp V1
+- 768399 - deployment configure values are checked
+- 805436 - Parametrize Candlepin db credentials, keystore and postgre passwords
+
 * Mon Mar 26 2012 Martin Bačovský <mbacovsk@redhat.com> 0.2.16-1
 - 805124 - Security review of world-readable files (mbacovsk@redhat.com)
 - 804127 - adding configurable log property (jsherril@redhat.com)
