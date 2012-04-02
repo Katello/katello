@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.23
+Version:        0.2.24
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -359,6 +359,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Apr 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.24-1
+- 750410 - katello-jobs init script links removal
+
 * Wed Mar 28 2012 Mike McCune <mmccune@redhat.com> 0.2.21-1
 - 807319 - Fix for ie8 rendering for filters page (paji@redhat.com)
 - 807319 - Fix for IE8 Rendering (jrist@redhat.com)
