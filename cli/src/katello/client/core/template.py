@@ -26,12 +26,6 @@ from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner
 from katello.client.api.utils import get_library, get_environment, get_template, get_product, get_repo
 from katello.client.utils.encoding import u_str
 
-# set import (works for both Python 2.6+ and 2.5)
-try:
-    set
-except NameError:
-    from sets import Set as set
-
 Config()
 
 

@@ -18,7 +18,6 @@ import re
 import sys
 import time
 import threading
-import calendar
 from xml.utils import iso8601
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 from katello.client.utils.encoding import u_str

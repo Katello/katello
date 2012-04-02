@@ -176,7 +176,6 @@ class Update(ProviderAction):
 
 
     def run(self):
-        provId      = self.get_option('id')
         name        = self.get_option('name')
         newName     = self.get_option('new_name')
         orgName     = self.get_option('org')
@@ -227,7 +226,7 @@ class Sync(SingleProviderAction):
             return os.EX_DATAERR
 
         task = AsyncTask(self.api.sync(prov["id"]))
-        result = run_async_task_with_status(task, ProgressBar())
+        run_async_task_with_status(task, ProgressBar())
 
         if task.failed():
             errors = format_sync_errors(task)

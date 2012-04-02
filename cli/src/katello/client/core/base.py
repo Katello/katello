@@ -15,9 +15,7 @@
 
 import os
 import sys
-import time
 from gettext import gettext as _
-from katello.client.i18n_optparse import OptionParser
 from katello.client.i18n_optparse import OptionParser, OptionParserExitError
 from M2Crypto import SSL
 from socket import error as SocketError

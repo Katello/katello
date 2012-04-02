@@ -426,8 +426,8 @@ class KatelloServer(Server):
         self.__keyfile = keyfile
 
     def set_kerberos_auth(self):
-        _ignore, ctx = kerberos.authGSSClientInit("HTTP@" + self.host, gssflags=kerberos.GSS_C_DELEG_FLAG|kerberos.GSS_C_MUTUAL_FLAG|kerberos.GSS_C_SEQUENCE_FLAG)
-        _ignore = kerberos.authGSSClientStep(ctx, '')
+        _, ctx = kerberos.authGSSClientInit("HTTP@" + self.host, gssflags=kerberos.GSS_C_DELEG_FLAG|kerberos.GSS_C_MUTUAL_FLAG|kerberos.GSS_C_SEQUENCE_FLAG)
+        kerberos.authGSSClientStep(ctx, '')
         self.__tgt = kerberos.authGSSClientResponse(ctx)
 
         if self.__tgt:

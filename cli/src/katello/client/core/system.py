@@ -477,7 +477,7 @@ class Unregister(SystemAction):
             print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
-            result = self.api.unregister(systems[0]['uuid'])
+            self.api.unregister(systems[0]['uuid'])
             print _("Successfully unregistered System [ %s ]") % name
             return os.EX_OK
 
@@ -510,7 +510,7 @@ class Subscribe(SystemAction):
             print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
-            result = self.api.subscribe(systems[0]['uuid'], pool, qty)
+            self.api.subscribe(systems[0]['uuid'], pool, qty)
             print _("Successfully subscribed System [ %s ]") % name
             return os.EX_OK
 
@@ -631,11 +631,11 @@ class Unsubscribe(SystemAction):
             return os.EX_DATAERR
         else:
             if all_entitlements: #unsubscribe from all
-                result = self.api.unsubscribe_all(systems[0]['uuid'])
+                self.api.unsubscribe_all(systems[0]['uuid'])
             elif serial: # unsubscribe from cert
-                result = self.api.unsubscribe_by_serial(systems[0]['uuid'], serial)
+                self.api.unsubscribe_by_serial(systems[0]['uuid'], serial)
             elif entitlement: # unsubscribe from entitlement
-                result = self.api.unsubscribe(systems[0]['uuid'], entitlement)
+                self.api.unsubscribe(systems[0]['uuid'], entitlement)
             print _("Successfully unsubscribed System [ %s ]") % name
 
             return os.EX_OK

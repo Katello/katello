@@ -170,7 +170,7 @@ class Update(UserRoleAction):
 
         role = self.get_role(name)
 
-        user = self.api.update(role['id'], newName, desc)
+        self.api.update(role['id'], newName, desc)
         print _("Successfully updated user role [ %s ]") % name
         return os.EX_OK
 

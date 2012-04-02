@@ -21,7 +21,6 @@ from gettext import gettext as _
 from katello.client import constants
 from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
-from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
@@ -149,7 +148,7 @@ class Create(RepoAction):
 
         prod = get_product(orgName, prodName)
         if prod != None:
-            repo = self.api.create(orgName, prod["id"], name, url, gpgkey, nogpgkey)
+            self.api.create(orgName, prod["id"], name, url, gpgkey, nogpgkey)
             print _("Successfully created repository [ %s ]") % name
         else:
             print _("No product [ %s ] found") % prodName
@@ -256,7 +255,7 @@ class Discovery(RepoAction):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
             repoName = self.repository_name(name, parsedUrl.path) # pylint: disable=E1101
-            repo = self.api.create(orgName, productid, repoName, repourl, None, None)
+            self.api.create(orgName, productid, repoName, repourl, None, None)
 
             print _("Successfully created repository [ %s ]") % repoName
 
