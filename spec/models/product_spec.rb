@@ -318,8 +318,8 @@ describe Product do
       @environment1 = KTEnvironment.create!(:name => 'dev', :library => false, :prior => @organization.library, :organization => @organization)
       @environment2 = KTEnvironment.create!(:name => 'prod', :library => false, :prior => @environment1, :organization => @organization)
 
-      @filter1 = Filter.create!(:pulp_id => FILTER1_ID, :package_list => PACKAGE_LIST_1, :organization => @organization)
-      @filter2 = Filter.create!(:pulp_id => FILTER2_ID, :package_list => PACKAGE_LIST_2, :organization => @organization)
+      @filter1 = Filter.create!(:name => FILTER1_ID, :package_list => PACKAGE_LIST_1, :organization => @organization)
+      @filter2 = Filter.create!(:name => FILTER2_ID, :package_list => PACKAGE_LIST_2, :organization => @organization)
 
       Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
       Candlepin::Content.stub!(:create).and_return({:id => ProductTestData::PRODUCT_WITH_CONTENT[:productContent][0].content.id})
