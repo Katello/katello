@@ -14,6 +14,8 @@
 
     / [if lt IE 9]
       = include_javascripts  :html5
+    /[if IE]
+      = include_stylesheets  :ie
     
   - if controller.respond_to?(:section_id)
     - section_id = controller.section_id
