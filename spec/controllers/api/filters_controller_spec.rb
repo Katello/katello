@@ -47,7 +47,7 @@ describe Api::FiltersController do
 
     it "should create a filter" do
       Filter.should_receive(:create!).once.with(hash_including(
-          :pulp_id => pulp_id,
+          :name => pulp_id,
           :organization => @organization,
           :description => description,
           :package_list => package_list)).and_return({})
