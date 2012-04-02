@@ -44,5 +44,13 @@ class candlepin::config {
      creates => "/etc/tomcat6/server.xml.original", # another hack not to run it again
      #creates => "/etc/candlepin/certs/candlepin-ca.crt", # another hack not to run it again
      before  => Class["apache2::service"],               # another hack, as we reuse cp certs by default
+     notify => Exec["update_keystore_pass_in_server_xml"]
+   }
+
+   require certs::params
+   exec {"update_keystore_pass_in_server_xml":
+    command => "perl -i -0777 -pe 's#(<Connector.*?port=\"8443\".*?keystorePass=\")password(\".*?truststorePass=\")password(\".*?\\/>)#\${1}${certs::params::keystore_password}\${2}${certs::params::keystore_password}\${3}#msg\' /etc/tomcat6/server.xml",
+    require => Exec["cpsetup"],
+    path => "/usr/bin",
    }
 }

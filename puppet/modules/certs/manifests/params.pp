@@ -15,6 +15,7 @@ class certs::params {
   $ssl_ca_password_file = katello_config_value('ssl_ca_password_file')
   $candlepin_ca_password_file = katello_config_value('candlepin_ca_password_file')
   $keystore_password_file = katello_config_value('keystore_password_file')
+  $keystore_password = regsubst(generate('/usr/bin/openssl', 'rand', '-hex', '13'), '^(.{24}).*', '\1', 'M')
   $nss_db_password_file = katello_config_value('nss_db_password_file')
   $nss_db_dir = katello_config_value('nss_db_dir')
   $ssl_pk12_password_file = katello_config_value('ssl_pk12_password_file')
