@@ -29,14 +29,16 @@ class Filter < ActiveRecord::Base
 
   validates :pulp_id, :presence => true
   validates_presence_of :organization_id, :message => N_("Name cannot be blank.")
-  validates_uniqueness_of :pulp_id, :scope => :organization_id, :message => N_("Name must be unique within one organization")
+  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("Name must be unique within one organization")
+  validates_uniqueness_of :pulp_id, :message=> N_("Pulp identifier must be unique.")
 
   belongs_to :organization
   has_and_belongs_to_many :products, :uniq => true
   has_and_belongs_to_many :repositories, :uniq => true
 
-  alias_attribute :name, :pulp_id
-
+  before_validation(:on=>:create) do
+    self.pulp_id ||= "#{self.organization.cp_key}-#{self.name}-#{SecureRandom.hex(4)}"
+  end
 
 
   READ_PERM_VERBS = [:read, :create, :delete]
