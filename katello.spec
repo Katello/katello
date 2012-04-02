@@ -262,6 +262,7 @@ rm -rf %{buildroot}
 %post common
 #Add /etc/rc*.d links for the script
 /sbin/chkconfig --add %{name}
+/sbin/chkconfig --add %{name}-jobs
 
 %postun common
 #update config/initializers/secret_token.rb with new key
@@ -351,6 +352,8 @@ exit 0
 
 %preun common
 if [ $1 -eq 0 ] ; then
+    /sbin/service %{name}-jobs stop >/dev/null 2>&1
+    /sbin/chkconfig --del %{name}-jobs
     /sbin/service %{name} stop >/dev/null 2>&1
     /sbin/chkconfig --del %{name}
 fi
