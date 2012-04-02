@@ -15,6 +15,26 @@
 KT.panel.list.registerPage('filters', { create : 'new_filter' });
 
 $(document).ready(function() {
+    var edit_func = function(){
+        $(".edit_name").each(function(){
+            $(this).editable($(this).data("url"), {
+                type        :  'text',
+                width       :  250,
+                method      :  'PUT',
+                name        :  $(this).attr('name'),
+                cancel      :  i18n.cancel,
+                submit      :  i18n.save,
+                indicator   :  i18n.saving,
+                tooltip     :  i18n.clickToEdit,
+                placeholder :  i18n.clickToEdit,
+                submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
+                onsuccess   :  function(data){
+                    var id = $('#filter_id');
+                    list.refresh(id.val(), id.data('ajax_url'))
+                }
+            });
+        })
+    };
 
     $("#container").delegate("#remove_packages", 'click', function(e){
         KT.filters.remove_packages();
@@ -41,6 +61,7 @@ $(document).ready(function() {
     KT.panel.set_expand_cb(function(){
         KT.package_input.register_autocomplete();
         KT.product_input.register();
+        edit_func();
     });
 
     

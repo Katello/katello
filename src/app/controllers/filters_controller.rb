@@ -17,7 +17,7 @@ class FiltersController < ApplicationController
   before_filter :panel_options, :only=>[:index, :items]
   before_filter :find_filter, :only=>[:edit, :update, :destroy,
                                       :packages, :add_packages, :remove_packages,
-                                      :products, :update_products]
+                                      :products, :update_products, :show]
   before_filter :authorize
 
   def rules
@@ -36,6 +36,7 @@ class FiltersController < ApplicationController
       :update=>editable,
       :destroy=>deletable,
       :packages=>readable,
+      :show=>readable,
       :add_packages=>editable,
       :remove_packages=>editable,
       :products=>readable,
@@ -72,6 +73,10 @@ class FiltersController < ApplicationController
       {:default_field => :name, :filter=>{:organization_id=>[current_organization.id]}})
   end
 
+  def show
+    render :partial => "common/list_update", :locals=>{:item=>@filter, :accessor=>"id", :columns=>['name']}
+  end
+
   def update
     options = params[:filter]
     to_ret = ""
@@ -82,6 +87,11 @@ class FiltersController < ApplicationController
       @filter.description = options[:description]
       to_ret = @filter.description
     end
+
+    if not search_validate(Filter, @filter.id, params[:search])
+      notice _("'%s' no longer matches the current search criteria.") % @filter["name"], { :level => 'message', :synchronous_request => false }
+    end
+
     @filter.save!
     notice _("Package Filter '%s' has been updated.") % @filter.name
 
