@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.307
+Version:        0.1.308
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -355,6 +355,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Apr 03 2012 Mike McCune <mmccune@redhat.com> 0.1.308-1
+- 802454 - a few fixes to support post sync url with scheduled syncs
+
 * Thu Mar 29 2012 Mike McCune <mmccune@redhat.com> 0.1.307-1
 - 807319 - Fix for ie8 rendering for filters page
 - 807319 - Fix for IE8 Rendering
