@@ -378,11 +378,10 @@ module Glue::Pulp::Repo
   end
 
   def after_sync pulp_task_id
-
     pulp_tasks =  Pulp::Task.find([pulp_task_id])
 
     if pulp_tasks.empty?
-      Rails.logger.error("Sync_complete called for #{params[:task_id]}, but no task found.")
+      Rails.logger.error("Sync_complete called for #{pulp_task_id}, but no task found.")
       return
     end
 
@@ -391,13 +390,7 @@ module Glue::Pulp::Repo
     task.organization ||= self.environment.organization
     task.save!
 
-    begin
-      tasks = PulpTaskStatus::wait_for_tasks [pulp_tasks.first]
-    rescue Exception => e
-      tasks = [e.message]
-    end
-
-    self.sync_complete(tasks.first)
+    self.sync_complete(task)
     self.index_packages
     self.index_errata
   end
