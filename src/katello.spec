@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.308
+Version:        0.1.309
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -355,6 +355,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Apr 04 2012 Mike McCune <mmccune@redhat.com> 0.1.309-1
+- 808576 - Regression for IE only stylesheet. Added back in.
+
 * Tue Apr 03 2012 Mike McCune <mmccune@redhat.com> 0.1.308-1
 - 802454 - a few fixes to support post sync url with scheduled syncs
 
