@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.24
+Version:        0.2.25
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -359,6 +359,15 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Apr 04 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.25-1
+- 798649 - RFE - Better listing of products and repos
+- check script - initial version
+- 805412 - fixing org creation error with invalid chars
+- 802454 - a few fixes to support post sync url with scheduled syncs
+- 805709 - spec test fix
+- 805709 - making filter name unique within an org and editable
+- 808576 - Regression for IE only stylesheet. Added back in.
+
 * Mon Apr 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.24-1
 - 750410 - katello-jobs init script links removal
 
