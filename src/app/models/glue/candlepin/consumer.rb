@@ -73,7 +73,7 @@ module Glue::Candlepin::Consumer
 
     def serializable_hash(options={})
       hash = super(options)
-      hash = hash.merge(:service_level => self.serviceLevel)
+      hash = hash.merge(:serviceLevel => self.serviceLevel)
       hash
     end
 

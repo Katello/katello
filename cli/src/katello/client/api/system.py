@@ -33,7 +33,7 @@ class SystemAPI(KatelloAPI):
         sysdata = {
           "name": name,
           "cp_type": cp_type,
-          "service_level": sla,
+          "serviceLevel": sla,
           "facts": {
               # TODO - provide real facts
               "distribution.name": "Fedora",

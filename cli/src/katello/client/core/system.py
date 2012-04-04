@@ -71,7 +71,7 @@ class List(SystemAction):
             self.printer.setHeader(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
 
         self.printer.addColumn('name')
-        self.printer.addColumn('service_level')
+        self.printer.addColumn('serviceLevel', _('Service Level'))
 
         self.printer._grep = True
         self.printer.printItems(systems)
@@ -130,7 +130,7 @@ class Info(SystemAction):
              self.printer.addColumn('releaseVer', 'OS release')
         self.printer.addColumn('activation_keys', multiline=True, show_in_grep=False)
         self.printer.addColumn('host', show_in_grep=False)
-        self.printer.addColumn('service_level')
+        self.printer.addColumn('serviceLevel', _('Service Level'))
         self.printer.addColumn('guests',  show_in_grep=False)
         if system.has_key("template"):
             t = system["template"]["name"]
@@ -411,18 +411,13 @@ class Register(SystemAction):
     description = _('register a system')
 
     def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                       help=_("system name (required)"))
-        self.parser.add_option('--org', dest='org',
-                       help=_("organization name (required)"))
-        self.parser.add_option('--environment', dest='environment',
-                       help=_("environment name eg: development"))
-        self.parser.add_option('--service_level', dest='sla',
-                       help=_("service level agreement"))
+        self.parser.add_option('--name', dest='name', help=_("system name (required)"))
+        self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        self.parser.add_option('--environment', dest='environment', help=_("environment name eg: development"))
+        self.parser.add_option('--service_level', dest='sla', help=_("service level agreement"))
         self.parser.add_option('--activationkey', dest='activationkey',
             help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
-        self.parser.add_option('--release', dest='release',
-                       help=_("values of $releasever for the system"))
+        self.parser.add_option('--release', dest='release', help=_("values of $releasever for the system"))
 
     def check_options(self):
         self.require_option('name')
@@ -692,7 +687,7 @@ class Update(SystemAction):
         if new_description: updates['description'] = new_description
         if new_location: updates['location'] = new_location
         if new_release: updates['releaseVer'] = new_release
-        if new_sla: updates['service_level'] = new_sla
+        if new_sla: updates['serviceLevel'] = new_sla
 
         response = self.api.update(system_uuid, updates)
 
