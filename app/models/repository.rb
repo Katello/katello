@@ -211,6 +211,7 @@ class Repository < ActiveRecord::Base
     ret = super
     ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
     ret["package_count"] = package_count rescue nil
+    ret["last_sync"] = last_sync rescue nil
     ret
   end
 
