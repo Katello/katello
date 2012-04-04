@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.20
+Version:       0.2.21
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 04 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.21-1
+- 798649 - RFE - Better listing of products and repos
+
 * Mon Apr 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.20-1
 - cleanup - removing unused imports and variables
 - 744199 - cli now reports all errors to stderr
