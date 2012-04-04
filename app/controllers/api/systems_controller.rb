@@ -110,7 +110,6 @@ class Api::SystemsController < Api::ApiController
   end
 
   def update
-    params[:serviceLevel] = params.delete(:service_level) if params.has_key?(:service_level)
     @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel))
     render :json => @system.to_json
   end
