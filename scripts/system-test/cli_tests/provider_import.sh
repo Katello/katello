@@ -23,6 +23,7 @@ MANIFEST_PROD_CP="Zoo Enterprise 24/7"
 MANIFEST_REPO="Zoo Enterprise x86_64 $RELEASEVER"
 MANIFEST_REPO_LABEL="zoo-enterprise"
 INSTALL_PACKAGE=cheetah
+SLA="SELF-SUPPORT"
 HOST=$(nospace "$(hostname)_$RAND")
 
 
@@ -39,6 +40,11 @@ test_success "changeset add product" changeset update  --org="$MANIFEST_ORG" --e
 check_delayed_jobs_running
 test_success "changeset promote" changeset promote --org="$MANIFEST_ORG" --environment="$MANIFEST_ENV" --name="$CS1_NAME"
 POOLID=$($CMD org subscriptions --name "$MANIFEST_ORG" -g -d ";" | grep "$MANIFEST_PROD_CP" | awk -F ' *; *' '{print $4}') # grab a pool for CP
+
+test_success "system register with SLA" system register --name="$HOST" --org="$MANIFEST_ORG" --environment="$MANIFEST_ENV" --service_level="$SLA"
+test_success "system update SLA" system update --name="$HOST" --org="$MANIFEST_ORG" --service_level="$SLA"
+test_success "system unregister" system unregister --name="$HOST"  --org="$MANIFEST_ORG"
+
 
 sm_present() {
   which subscription-manager &> /dev/null
@@ -58,6 +64,12 @@ if sm_present; then
   sudo yum remove -y "$INSTALL_PACKAGE" &> /dev/null
   test_own_cmd_success "rhsm unsubscribe all" sudo subscription-manager unsubscribe --all
   test_own_cmd_success "rhsm unregister" sudo subscription-manager unregister
+
+  test_own_cmd_success "rhsm list available SLAs" sudo subscription-manager service-level --list --org="$MANIFEST_ORG"  --username="$USER" --password="$PASSWORD"
+  test_own_cmd_exit_code 1 "rhsm registration with SLA" sudo subscription-manager register --username="$USER" --password="$PASSWORD" \
+    --org="$MANIFEST_ORG" --name="$HOST" --servicelevel="$SLA" --autosubscribe --force
+  test_own_cmd_success "rhsm unregister" sudo subscription-manager unregister
+
 else
   skip_test_success "rhsm registration" "subscription-manager command not found"
 fi
