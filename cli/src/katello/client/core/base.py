@@ -21,7 +21,8 @@ from M2Crypto import SSL
 from socket import error as SocketError
 
 from katello.client.config import Config
-from katello.client.core.utils import system_exit, parse_tokens, Printer, SystemExitRequest
+from katello.client.core.utils import system_exit, parse_tokens, SystemExitRequest
+from katello.client.utils.printer import Printer
 from katello.client.utils.encoding import u_str, u_obj
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
