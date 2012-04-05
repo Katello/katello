@@ -48,6 +48,6 @@ module SystemPackagesHelper
   end
 
   def row_shading
-    @shading = cycle("alt", "")
+    @shading = cycle("", "alt")
   end
 end
