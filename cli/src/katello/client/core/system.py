@@ -71,6 +71,7 @@ class List(SystemAction):
             self.printer.setHeader(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
 
         self.printer.addColumn('name')
+        self.printer.addColumn('ipv4_address')
         self.printer.addColumn('serviceLevel', _('Service Level'))
 
         self.printer._grep = True
@@ -121,6 +122,7 @@ class Info(SystemAction):
             system["guests"] = "[ "+ ", ".join([guest["name"] for guest in system["guests"]]) +" ]"
 
         self.printer.addColumn('name')
+        self.printer.addColumn('ipv4_address')
         self.printer.addColumn('uuid')
         self.printer.addColumn('location')
         self.printer.addColumn('created_at', 'Registered', time_format=True)
