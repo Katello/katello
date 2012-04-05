@@ -39,17 +39,17 @@ KT.packages = function() {
     more_button = $('#more'),
     sort_button = $('#package_sort'),
     packages_form = $('#packages_form'),
+    packages_top = $('.packages').find('tbody'),
     remove_button = $('#remove_packages'),
     update_button = $('#update_packages'),
     update_all_button = $('#update_all_packages'),
-    content_form_row = $('#content_form_row'),
     content_form = $('#content_form'),
     content_input = $('#content_input'),
     add_content_button = $('#add_content'),
     remove_content_button = $('#remove_content'),
     loaded_summary = $('#loaded_summary'),
     error_message = $('#error_message'),
-    add_row_shading = false,
+    add_row_shading = true,
     selected_checkboxes = 0,
     actions_in_progress = {},
     packages_in_progress = {},
@@ -411,6 +411,7 @@ KT.packages = function() {
         update_button.bind('click', updatePackages);
         update_all_button.bind('click', updateAllPackages);
 
+        KT.tipsy.custom.system_packages_tooltips();
         registerCheckboxEvents();
     },
     updateContentLinks = function(data) {
@@ -458,10 +459,10 @@ KT.packages = function() {
                             if (already_exists === false) {
                                 if (add_row_shading) {
                                     add_row_shading = false;
-                                    content_form_row.after('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                                    packages_top.prepend('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
                                 } else {
                                     add_row_shading = true;
-                                    content_form_row.after('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                                    packages_top.prepend('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
                                 }
                             }
                         }
@@ -502,10 +503,10 @@ KT.packages = function() {
                             if (already_exists === false) {
                                 if (add_row_shading) {
                                     add_row_shading = false;
-                                    content_form_row.after('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                                    packages_top.prepend('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
                                 } else {
                                     add_row_shading = true;
-                                    content_form_row.after('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                                    packages_top.prepend('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
                                 }
                             }
                         }
@@ -556,10 +557,10 @@ KT.packages = function() {
                             if (already_exists === false) {
                                 if (add_row_shading) {
                                     add_row_shading = false;
-                                    content_form_row.after('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                                    packages_top.prepend('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
                                 } else {
                                     add_row_shading = true;
-                                    content_form_row.after('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                                    packages_top.prepend('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
                                 }
                             }
                         }
@@ -600,10 +601,10 @@ KT.packages = function() {
                             if (already_exists === false) {
                                 if (add_row_shading) {
                                     add_row_shading = false;
-                                    content_form_row.after('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                                    packages_top.prepend('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
                                 } else {
                                     add_row_shading = true;
-                                    content_form_row.after('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                                    packages_top.prepend('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
                                 }
                             }
                         }

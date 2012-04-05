@@ -28,14 +28,31 @@ KT.tipsy.custom = (function(){
                  $('.details_container').addClass('scroll-pane');
                  KT.common.jscroll_init($('.scroll-pane'));
              }});
+    },
+    system_packages_tooltip = function(){
+        var element = $(this);
+
+        $('.system_content_action').tipsy({
+           gravity: 'e', live : true, html : true, title : KT.tipsy.templates.table_template,
+           hoverable : true, delayOut : 250, opacity : 1, delayIn : 300, className : 'table_tooltip',
+           afterShow : function(){
+               $('.details_container').addClass('scroll-pane');
+               KT.common.jscroll_init($('.scroll-pane'));
+           }});
+
+        $('.system_packages_action').tipsy({
+           gravity: 'e', live : true, html : true, title : KT.tipsy.templates.table_template,
+           hoverable : true, delayOut : 250, opacity : 1, delayIn : 300, className : 'table_tooltip',
+           afterShow : function(){
+               $('.details_container').addClass('scroll-pane');
+               KT.common.jscroll_init($('.scroll-pane'));
+           }});
     };
-
-
-
     return {
-        errata_tooltip          : errata_tooltip,
-        disable_details_tooltip : disable_details_tooltip,
-        promotion_filter_tooltip : promotion_filter_tooltip
+        errata_tooltip           : errata_tooltip,
+        disable_details_tooltip  : disable_details_tooltip,
+        promotion_filter_tooltip : promotion_filter_tooltip,
+        system_packages_tooltips : system_packages_tooltip
     };
 })();
 
@@ -118,12 +135,20 @@ KT.tipsy.templates = (function(){
             }
         }
         return tipsy_body + '</div>';
+    },
+    table_template = function(){
+        var html = '<div class="details_container">',
+            element = $(this);
+
+        html += '<div class="item-container">' + '<p>' + element.data('help') + '</p></div>';
+        html += '</div>';
+        return html;
     };
 
-
     return {
-        errata : errata,
-        promotion_filters: promotion_filters
+        errata            : errata,
+        promotion_filters : promotion_filters,
+        table_template    : table_template
     };
 
 })();
