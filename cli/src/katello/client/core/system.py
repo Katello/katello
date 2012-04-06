@@ -27,6 +27,7 @@ from katello.client.core.utils import is_valid_record, convert_to_mime_type, att
 from katello.client.utils.printer import Printer
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask
 from katello.client.utils.encoding import u_str
+from katello.client.utils import printer
 
 Config()
 
@@ -131,13 +132,13 @@ class Info(SystemAction):
         self.printer.add_column('description', multiline=True)
         if system.has_key('releaseVer') and system['releaseVer']:
              self.printer.add_column('releaseVer', 'OS release')
-        self.printer.add_column('activation_keys', multiline=True, show_in_grep=False)
-        self.printer.add_column('host', show_in_grep=False)
+        self.printer.add_column('activation_keys', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('host', show_with=printer.VerboseStrategy)
         self.printer.add_column('serviceLevel', _('Service Level'))
-        self.printer.add_column('guests',  show_in_grep=False)
+        self.printer.add_column('guests',  show_with=printer.VerboseStrategy)
         if system.has_key("template"):
             t = system["template"]["name"]
-            self.printer.add_column('template', show_in_grep=False, value=t)
+            self.printer.add_column('template', show_with=printer.VerboseStrategy, value=t)
 
         self.printer.print_item(system)
 

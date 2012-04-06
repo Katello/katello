@@ -21,6 +21,7 @@ from katello.client.api.distribution import DistributionAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_repo
+from katello.client.utils import printer
 
 Config()
 
@@ -66,7 +67,7 @@ class List(DistributionAction):
 
         self.printer.add_column('id')
         self.printer.add_column('description')
-        self.printer.add_column('files', multiline=True, show_in_grep=False)
+        self.printer.add_column('files', multiline=True, show_with=printer.VerboseStrategy)
 
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
@@ -111,7 +112,7 @@ class Info(DistributionAction):
         self.printer.add_column('family')
         self.printer.add_column('variant')
         self.printer.add_column('version')
-        self.printer.add_column('files', multiline=True, show_in_grep=False)
+        self.printer.add_column('files', multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Distribution Information"))
 

@@ -21,6 +21,7 @@ from katello.client.api.package import PackageAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_repo
+from katello.client.utils import printer
 
 Config()
 
@@ -84,10 +85,10 @@ class Info(PackageAction):
         self.printer.add_column('release')
         self.printer.add_column('version')
         self.printer.add_column('vendor')
-        self.printer.add_column('download_url', show_in_grep=False)
-        self.printer.add_column('description', multiline=True, show_in_grep=False)
-        self.printer.add_column('provides', multiline=True, show_in_grep=False)
-        self.printer.add_column('requires', multiline=True, show_in_grep=False)
+        self.printer.add_column('download_url', show_with=printer.VerboseStrategy)
+        self.printer.add_column('description', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('provides', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('requires', multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Package Information"))
         self.printer.print_item(pack)

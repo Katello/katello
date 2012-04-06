@@ -22,6 +22,7 @@ from katello.client.api.activation_key import ActivationKeyAPI
 from katello.client.api.template import TemplateAPI
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record
+from katello.client.utils import printer
 from katello.client.api.utils import get_environment, get_organization
 from katello.client.cli.base import OptionException
 
@@ -125,7 +126,7 @@ class Info(ActivationKeyAction):
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('environment_id')
         self.printer.add_column('system_template_id')
-        self.printer.add_column('pools', multiline=True, show_in_grep=False)
+        self.printer.add_column('pools', multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Activation Key Info"))
         self.printer.print_item(keys[0])

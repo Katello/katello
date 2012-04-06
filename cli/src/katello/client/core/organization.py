@@ -24,6 +24,7 @@ from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.utils.printer import Printer
+from katello.client.utils import printer
 from datetime import timedelta, datetime
 
 Config()
@@ -219,11 +220,11 @@ class ShowSubscriptions(OrganizationAction):
 
         self.printer.add_column('productName')
         self.printer.add_column('consumed')
-        self.printer.add_column('contractNumber', show_in_grep=False)
-        self.printer.add_column('sla', show_in_grep=False)
+        self.printer.add_column('contractNumber', show_with=printer.VerboseStrategy)
+        self.printer.add_column('sla', show_with=printer.VerboseStrategy)
         self.printer.add_column('id')
-        self.printer.add_column('startDate', show_in_grep=False)
-        self.printer.add_column('endDate', show_in_grep=False)
+        self.printer.add_column('startDate', show_with=printer.VerboseStrategy)
+        self.printer.add_column('endDate', show_with=printer.VerboseStrategy)
         self.printer.set_header(_("Organization's Subscriptions"))
         self.printer.print_items(updated_pool_info)
 

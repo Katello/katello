@@ -27,7 +27,7 @@ from katello.client.api.utils import get_environment, get_product, get_repo, get
 from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_sync_errors, format_task_errors
 from katello.client.core.utils import ProgressBar
 from katello.client.utils.encoding import u_str
-
+from katello.client.utils import printer
 
 Config()
 
@@ -304,8 +304,8 @@ class Status(SingleRepoAction):
         self.printer.add_column('sync_state')
         if 'next_scheduled_sync' in repo:
             self.printer.add_column('next_scheduled_sync')
-        self.printer.add_column('progress', show_in_grep=False)
-        self.printer.add_column('last_errors', multiline=True, show_in_grep=False)
+        self.printer.add_column('progress', show_with=printer.VerboseStrategy)
+        self.printer.add_column('last_errors', multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Repository Status"))
         self.printer.print_item(repo)
@@ -327,11 +327,11 @@ class Info(SingleRepoAction):
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('package_count')
-        self.printer.add_column('arch', show_in_grep=False)
-        self.printer.add_column('url', show_in_grep=False)
-        self.printer.add_column('last_sync', show_in_grep=False)
-        self.printer.add_column('sync_state', name=_("Progress"), show_in_grep=False)
-        self.printer.add_column('gpg_key_name', name=_("GPG key"), show_in_grep=False)
+        self.printer.add_column('arch', show_with=printer.VerboseStrategy)
+        self.printer.add_column('url', show_with=printer.VerboseStrategy)
+        self.printer.add_column('last_sync', show_with=printer.VerboseStrategy)
+        self.printer.add_column('sync_state', name=_("Progress"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('gpg_key_name', name=_("GPG key"), show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Information About Repo %s") % repo['id'])
 

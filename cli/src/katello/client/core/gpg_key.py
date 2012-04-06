@@ -21,6 +21,7 @@ from gettext import gettext as _
 from katello.client.api.gpg_key import GpgKeyAPI
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, get_abs_path
+from katello.client.utils import printer
 
 from sys import stdin
 
@@ -111,9 +112,9 @@ class Info(GpgKeyAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
-        self.printer.add_column('content', show_in_grep=False)
-        self.printer.add_column('products', multiline=True, show_in_grep=False)
-        self.printer.add_column('repos', multiline=True, show_in_grep=False, name=_("Repositories"))
+        self.printer.add_column('content', show_with=printer.VerboseStrategy)
+        self.printer.add_column('products', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('repos', multiline=True, show_with=printer.VerboseStrategy, name=_("Repositories"))
 
         self.printer.set_header(_("Gpg Key Info"))
         self.printer.print_item(key)

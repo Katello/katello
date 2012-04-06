@@ -22,7 +22,7 @@ from socket import error as SocketError
 
 from katello.client.config import Config
 from katello.client.core.utils import system_exit, parse_tokens, SystemExitRequest
-from katello.client.utils.printer import Printer
+from katello.client.utils.printer import Printer, GrepStrategy, VerboseStrategy
 from katello.client.utils.encoding import u_str, u_obj
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
@@ -309,14 +309,13 @@ class Action(object):
         """
         return
 
-    def output_mode(self):
+    def __print_strategy(self):
         if (self.has_option('grep') or (Config.parser.has_option('interface', 'force_grep_friendly') and Config.parser.get('interface', 'force_grep_friendly').lower() == 'true')):
-            return Printer.OUTPUT_FORCE_GREP
+            return GrepStrategy()
         elif (self.has_option('verbose') or (Config.parser.has_option('interface', 'force_verbose') and Config.parser.get('interface', 'force_verbose').lower() == 'true')):
-            return Printer.OUTPUT_FORCE_VERBOSE
+            return VerboseStrategy()
         else:
-            return  Printer.OUTPUT_FORCE_NONE
-
+            return None
 
     def process_options(self, args):
         """
@@ -325,7 +324,7 @@ class Action(object):
         """
         self.opts, self.args = self.parser.parse_args(args)
 
-        self.printer = Printer(self.output_mode(), self.get_option('delimiter'))
+        self.printer = Printer(self.__print_strategy())
 
         self.optErrors = []
         self.check_options()

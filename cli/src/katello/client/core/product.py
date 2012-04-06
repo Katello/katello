@@ -28,7 +28,7 @@ from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan, get_filter
 from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
-
+from katello.client.utils import printer
 
 Config()
 
@@ -249,7 +249,7 @@ class Status(SingleProductAction):
         self.printer.add_column('provider_name')
         self.printer.add_column('last_sync')
         self.printer.add_column('sync_state')
-        self.printer.add_column('progress', show_in_grep=False)
+        self.printer.add_column('progress', show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Product Status"))
         self.printer.print_item(prod)

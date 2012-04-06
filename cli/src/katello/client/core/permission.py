@@ -25,7 +25,7 @@ from katello.client.core.utils import system_exit, is_valid_record
 from katello.client.utils.printer import Printer
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-
+from katello.client.utils import printer
 
 Config()
 
@@ -210,7 +210,7 @@ class ListAvailableVerbs(PermissionAction):
         self.printer.add_column("scope")
         self.printer.add_column("available_verbs", multiline=True)
         if not listGlobal:
-            self.printer.add_column("available_tags", multiline=True, show_in_grep=False)
+            self.printer.add_column("available_tags", multiline=True, show_with=printer.VerboseStrategy)
 
         permissions = self.getAvailablePermissions(orgName, scope)
         display_data = self.formatDisplayData(permissions, listGlobal)

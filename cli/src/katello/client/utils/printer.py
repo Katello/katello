@@ -15,95 +15,170 @@
 
 import os
 import sys
+import pdb
+from gettext import gettext as _
+from pprint import pprint
 from katello.client.utils.encoding import u_str
 
 
-# output formatting -----------------------------------------------------------
+
+class PrinterStrategy:
+
+    def print_item(self, heading, columns, item):
+        self.print_items(heading, columns, [item])
+
+    def print_items(self, heading, columns, items):
+        pass
+
+
+class VerboseStrategy(PrinterStrategy):
+
+    def print_items(self, heading, columns, items):
+        """
+        """
+        self._print_header(heading)
+        for item in items:
+            self._print_item(item, columns)
+            print
+
+    def _print_header(self, heading):
+        """
+        Print a fancy header to stdout.
+        @type heading: string or list of strings
+        @param heading: headers to be displayed
+        """
+        print_line()
+        print center_text(heading)
+        print_line()
+
+    def _print_item(self, item, columns):
+        """
+        """
+        print
+        for column in columns:
+            #skip missing attributes
+            if not column['attr_name'] in item:
+                continue
+
+            value = item.get(column['attr_name'], column.get('value', None))
+
+            if not column.get('multiline', False):
+                col_width = self._column_width(columns)
+                print ("{0:<" + u_str(col_width + 1) + "} {1}").format(column['name']+":", value)
+                # +1 to account for the : after the column name
+            else:
+                print column['name']+":"
+                print indent_text(value, "    ")
+
+    def _column_width(self, columns):
+        """
+        """
+        width = 0
+        for column in columns:
+            current_width = len(_(column['name']))
+            width = current_width if (current_width > width) else width
+        return width
+
+
+class GrepStrategy(PrinterStrategy):
+
+    def __init__(self, delimiter=None):
+        """
+        """
+        self.__delim = delimiter if delimiter else ""
+
+    def print_items(self, heading, columns, items):
+        """
+        """
+        column_widths = self._calc_column_widths(items, columns)
+        self._print_header(heading, columns, column_widths)
+        for item in items:
+            self._print_item(item, columns, column_widths)
+            print
+
+    def _print_header(self, heading, columns, column_widths):
+        """
+        Print a fancy header to stdout.
+        @type heading: string or list of strings
+        @param heading: headers to be displayed
+        """
+        print_line()
+        print center_text(heading)
+
+        print
+        print self.__delim,
+        for column in columns:
+            width = column_widths.get(column['attr_name'], 0)
+
+            print column['name'].ljust(width),
+            print self.__delim,
+        print
+        print_line()
+
+    def _print_item(self, item, columns, column_widths):
+        """
+        Print item of a list on single line
+        @type item: hash
+        @param item: data to print
+        """
+        print self.__delim,
+        for column in columns:
+            #get defined width
+            width = column_widths.get(column['attr_name'], 0)
+
+            #skip missing attributes
+            if not column['attr_name'] in item:
+                print " " * width,
+                print self.__delim,
+                continue
+
+            value = item[column['attr_name']]
+            if column.get('multiline', False):
+                value = text_to_line(value)
+
+            print u_str(value).ljust(width),
+            print self.__delim,
+
+    def _column_width(self, items, column):
+        """
+        """
+        key = column['attr_name']
+        width = len(column['name'])+1
+        for column_value in [u_str(item.get(key, "")) for item in items]:
+            if width <= len(column_value):
+                width = len(column_value)+1
+        return width
+
+    def _calc_column_widths(self, items, columns):
+        """
+        """
+        widths = {}
+        for column in columns:
+            widths[column['attr_name']] = self._column_width(items, column)
+        return widths
 
 
 class Printer:
     """
     Class for unified printing of the CLI output.
     """
-    OUTPUT_FORCE_NONE = 0
-    OUTPUT_FORCE_GREP = 1
-    OUTPUT_FORCE_VERBOSE = 2
 
-    def __init__(self, output_mode, delimiter=""):
-        self.__output_mode = output_mode
+    def __init__(self, strategy=None):
+        self.__printer_strategy = strategy
         self.__columns = []
         self.__heading = ""
-        self.__delim = delimiter
-
 
     def set_header(self, heading):
+        """
+        """
         self.__heading = heading
 
-    def set_output_mode(self, output_mode):
-        self.__output_mode = output_mode
-
-    def _printDivLine(self, width):
-        print '-'*width
-
-    def _printHeader(self, heading, grep_mode, widths={}):
+    def set_strategy(self, strategy):
         """
-        Print a fancy header to stdout.
-        @type heading: string or list of strings
-        @param heading: headers to be displayed
         """
-        padding = 0
-        header_width = self._getTermWidth()
+        self.__printer_strategy = strategy
 
-        self._printDivLine(header_width)
-        for line in heading.split("\n"):
-            if len(line) < header_width:
-                padding = ((header_width - len(line)) / 2) - 1
-            print ' ' * padding, line
-
-        if grep_mode:
-            print
-            print self.__delim,
-            for col in self.__columns:
-                if col['show_in_grep']:
-
-                    if col['attr_name'] in widths:
-                        width = widths[col['attr_name']]
-                    else:
-                        width = 0
-
-                    print col['name'].ljust(width),
-                    print self.__delim,
-            print
-        self._printDivLine(header_width)
-
-    # returns terminal width (tested only with Linux)
-    def _getTermWidth(self):
-        try:
-            import fcntl
-            import termios
-            import struct
-            h, w, hp, wp = struct.unpack('HHHH',
-                fcntl.ioctl(0, termios.TIOCGWINSZ,
-                struct.pack('HHHH', 0, 0, 0, 0)))
-            w = int(w)
-            return 80 if w == 0 else w
-        except:
-            return 80
-
-    def _attrToName(self, attr_name):
-        """
-        Convert attribute name to display name.
-        oraganization_id -> Organization Id
-        @type attr_name: string
-        @param attr_name: attribute name
-        """
-        result = ''
-        for part in attr_name.split("_"):
-            result += part[0].upper() + part[1:] + ' '
-        return result.strip()
-
-
-    def add_column(self, attr_name, name = None, multiline = False, show_in_grep = True, time_format=False, value=''):
+    def add_column(self, attr_name, name = None, **kwargs):
         """
         Add column to display
         @type attr_name: string
@@ -115,154 +190,54 @@ class Printer:
         @param multiline: flag to mark multiline values
         @type show_in_grep: bool
         @param show_in_grep: flag to set whether the column should be displayed also in grep mode or not
-        @type time_format: bool
-        @param time_format: flag to set this column as a rails date string to be parsed
         @type value: string
         @param value: value that should be used rather than accessing the data hash
         """
-        col = {}
-        col['attr_name']    = attr_name
-        col['multiline']    = multiline
-        col['show_in_grep'] = show_in_grep
-        col['time_format']  = time_format
-        col['value']        = value
-        if name == None:
-            col['name'] = self._attrToName(attr_name)
-        else:
-            col['name'] = name
-
+        col = kwargs
+        col['attr_name'] = attr_name
+        col['name'] = _(self.__attr_to_name(attr_name)) if not name else name
         self.__columns.append(col)
 
-
-    def _print_item(self, item, indent=""):
+    def print_item(self, item):
         """
-        Print item from a list on number of lines
-        @type item: hash
-        @param item: data to print
-        @type indent: string
-        @param indent: text that is prepended to every printed line in multiline mode
         """
-        colWidth = self._minColumnWidth()
-        print
-        for col in self.__columns:
-            #skip missing attributes
-            if not col['attr_name'] in item:
-                continue
+        if not self.__printer_strategy:
+            self.set_strategy(VerboseStrategy())
+        self.__printer_strategy.print_item(self.__heading, self.__filtered_columns(), item)
 
-            if len(u_str(col['value'])) > 0:
-                value = col['value']
-            else:
-                value = item[col['attr_name']]
-            if not col['multiline']:
-                output = format_date(value) if col['time_format'] else value
-                print ("{0:<" + u_str(colWidth + 1) + "} {1}").format(col['name'] + ":", output)
-                # +1 to account for the : after the column name
-            else:
-                print indent+col['name']+":"
-                print indent_text(value, indent+"    ")
-
-
-    def _print_itemGrep(self, item, widths={}):
+    def print_items(self, items):
         """
-        Print item of a list on single line in grep mode
-        @type item: hash
-        @param item: data to print
         """
-        print self.__delim,
-        for col in self.__columns:
-            #get defined width
-            if col['attr_name'] in widths:
-                width = widths[col['attr_name']]
-            else:
-                width = 0
+        if not self.__printer_strategy:
+            self.set_strategy(GrepStrategy())
+        self.__printer_strategy.print_items(self.__heading, self.__filtered_columns(), items)
 
-            #skip missing attributes
-            if not col['attr_name'] in item:
-                print " " * width,
-                print self.__delim,
-                continue
-
-            value = item[col['attr_name']]
-            if not col['show_in_grep']:
-                continue
-            if col['multiline']:
-                value = text_to_line(value)
-
-            print u_str(value).ljust(width),
-            print self.__delim,
-
-
-    def _calculateGrepWidths(self, items):
-        widths = {}
-        #return widths
-        for col in self.__columns:
-            key = col['attr_name']
-            widths[key] = len(u_str(col['name']))+1
-            for item in items:
-                if not key in item: continue
-                value = u_str(item[key])
-                if widths[key] < len(value):
-                    widths[key] = len(value)+1
-
-        return widths
-
-
-    def _minColumnWidth(self):
-        width = 0
-        for col in self.__columns:
-            width = len(u_str(col['name'])) if (len(u_str(col['name'])) > width) else width
-
-        return width
-
-    def _getRandomNumber(self):
-        return 4 # guaranteed to be random
-
-
-    def print_item(self, item, indent=""):
+    def __attr_to_name(self, attr_name):
         """
-        Print one data item
-        @type item: hash
-        @param item: data to print
-        @type indent: string
-        @param indent: text that is prepended to every printed line in multiline mode
+        Convert attribute name to display name.
+        oraganization_id -> Organization Id
+        @type attr_name: string
+        @param attr_name: attribute name
         """
-        if self.__output_mode == Printer.OUTPUT_FORCE_GREP:
-            widths = self._calculateGrepWidths([item])
-            self._printHeader(self.__heading, True, widths)
-            self._print_itemGrep(item, widths)
-            print
-        else:
-            self._printHeader(self.__heading, False)
-            self._print_item(item, indent)
-            print
+        return " ".join([part[0].upper() + part[1:] for part in attr_name.split("_")])
 
-
-    def print_items(self, items, indent=""):
+    def __filtered_columns(self):
         """
-        Print collection of data items
-        @type items: list of hashes
-        @param items: list of data items to print
-        @type indent: string
-        @param indent: text that is prepended to every printed line in multiline mode
         """
-        if self.__output_mode == Printer.OUTPUT_FORCE_VERBOSE:
-            self._printHeader(self.__heading, False)
-            for item in items:
-                self._print_item(item, indent)
-                print
-        else:
-            widths = self._calculateGrepWidths(items)
-            self._printHeader(self.__heading, True, widths)
-            for item in items:
-                self._print_itemGrep(item, widths)
-                print
-
+        filtered = []
+        for column in self.__columns:
+            allowed_strategies = column.get('show_with', (object))
+            if isinstance(self.__printer_strategy, allowed_strategies):
+                filtered.append(column)
+        return filtered
 
 
 
 # indent block of text --------------------------------------------------------
 def indent_text(text, indent="\t"):
-    if text == None:
+    """
+    """
+    if not text:
         text = u_str(None)
 
     if isinstance(text, (list)):
@@ -274,10 +249,53 @@ def indent_text(text, indent="\t"):
 
 # converts block of text to one line ------------------------------------------
 def text_to_line(text, glue=" "):
-    if text == None:
+    """
+    """
+    if not text:
         text = u_str(None)
 
     if isinstance(text, (list)):
         return glue.join(text)
     else:
         return glue.join(text.split("\n"))
+
+
+def center_text(text, width = None):
+    """
+    """
+    if not width:
+        width = get_term_width()
+    centered = []
+    for line in text.split("\n"):
+        if len(line) < width:
+            padding = ((width - len(line)) / 2) - 1
+        else:
+            padding = 0
+        centered.append(' ' * padding + line)
+    return "\n".join(centered)
+
+
+def print_line(width = None):
+    """
+    """
+    if not width:
+        width = get_term_width()
+    print '-'*width
+
+
+def get_term_width():
+    """
+    returns terminal width (tested only with Linux)
+    """
+    try:
+        import fcntl
+        import termios
+        import struct
+        h, w, hp, wp = struct.unpack('HHHH',
+            fcntl.ioctl(0, termios.TIOCGWINSZ,
+            struct.pack('HHHH', 0, 0, 0, 0)))
+        w = int(w)
+        return 80 if w == 0 else w
+    except:
+        return 80
+

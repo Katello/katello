@@ -25,6 +25,7 @@ from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, system_exit
 from katello.client.api.utils import get_library, get_environment, get_template, get_product, get_repo
 from katello.client.utils.encoding import u_str
+from katello.client.utils import printer
 
 Config()
 
@@ -116,17 +117,17 @@ class Info(TemplateAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
-        self.printer.add_column('revision', show_in_grep=False)
+        self.printer.add_column('revision', show_with=printer.VerboseStrategy)
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('environment_id')
         self.printer.add_column('parent_id')
-        self.printer.add_column('errata', multiline=True, show_in_grep=False)
-        self.printer.add_column('products', multiline=True, show_in_grep=False)
-        self.printer.add_column('repositories', multiline=True, show_in_grep=False)
-        self.printer.add_column('packages', multiline=True, show_in_grep=False)
-        self.printer.add_column('parameters', multiline=True, show_in_grep=False)
-        self.printer.add_column('package_groups', multiline=True, show_in_grep=False)
-        self.printer.add_column('package_group_categories', multiline=True, show_in_grep=False)
+        self.printer.add_column('errata', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('products', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('repositories', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('packages', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('parameters', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('package_groups', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('package_group_categories', multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Template Info"))
         self.printer.print_item(template)

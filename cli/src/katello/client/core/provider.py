@@ -289,7 +289,7 @@ class Status(SingleProviderAction):
 
         self.printer.add_column('last_sync')
         self.printer.add_column('sync_state')
-        self.printer.add_column('progress', show_in_grep=False)
+        self.printer.add_column('progress', show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Provider Status"))
         self.printer.print_item(prov)
