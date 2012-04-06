@@ -354,7 +354,7 @@ describe Api::SystemsController do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
       Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, nil, "SLA").and_return(true)
-      post :update, :id => uuid, :service_level => "SLA"
+      post :update, :id => uuid, :serviceLevel => "SLA"
       response.body.should == @sys.to_json
       response.should be_success
     end
