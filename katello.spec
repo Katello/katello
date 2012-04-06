@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.25
+Version:        0.2.26
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -359,6 +359,13 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Apr 06 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.26-1
+- slas - field for SLA in hash export of consumer renamed We used service_level
+  but subscription-manager requires serviceLevel and checks for it's presence.
+- 808596 - Initial fix didn't take into consideration production mode.
+- 804685 - system packages - reformat content and add tipsy help on tables for
+  user
+
 * Wed Apr 04 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.25-1
 - 798649 - RFE - Better listing of products and repos
 - check script - initial version
