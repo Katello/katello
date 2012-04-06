@@ -45,13 +45,13 @@ class List(UserAction):
     def run(self):
         users = self.api.users()
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('username')
-        self.printer.addColumn('email')
-        self.printer.addColumn('disabled')
+        self.printer.add_column('id')
+        self.printer.add_column('username')
+        self.printer.add_column('email')
+        self.printer.add_column('disabled')
 
-        self.printer.setHeader(_("User List"))
-        self.printer.printItems(users)
+        self.printer.set_header(_("User List"))
+        self.printer.print_items(users)
         return os.EX_OK
 
 # ------------------------------------------------------------------------------
@@ -103,13 +103,13 @@ class Info(UserAction):
         if user == None:
             return os.EX_DATAERR
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('username')
-        self.printer.addColumn('email')
-        self.printer.addColumn('disabled')
+        self.printer.add_column('id')
+        self.printer.add_column('username')
+        self.printer.add_column('email')
+        self.printer.add_column('disabled')
 
-        self.printer.setHeader(_("User Information"))
-        self.printer.printItem(user)
+        self.printer.set_header(_("User Information"))
+        self.printer.print_item(user)
         return os.EX_OK
 
 # ------------------------------------------------------------------------------
@@ -189,10 +189,10 @@ class ListRoles(UserAction):
 
         roles = self.api.roles(user['id'])
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.setHeader(_("User Role List"))
-        self.printer.printItems(roles)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.set_header(_("User Role List"))
+        self.printer.print_items(roles)
         return os.EX_OK
 
 

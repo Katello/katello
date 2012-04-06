@@ -140,19 +140,20 @@ class List(ProductAction):
         env_name = self.get_option('env')
         prov_name = self.get_option('prov')
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('provider_id')
-        self.printer.addColumn('provider_name')
-        self.printer.addColumn('last_sync', time_format=True)
-        self.printer.addColumn('gpg_key_name', name=_("GPG key"))
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('provider_id')
+        self.printer.add_column('provider_name')
+        self.printer.add_column('sync_plan_name')
+        self.printer.add_column('last_sync', formatter=format_date)
+        self.printer.add_column('gpg_key_name', name=_("GPG key"))
 
         if prov_name:
             prov = get_provider(org_name, prov_name)
             if prov == None:
                 return os.EX_DATAERR
 
-            self.printer.setHeader(_("Product List For Provider %s") % (prov_name))
+            self.printer.set_header(_("Product List For Provider %s") % (prov_name))
             prods = self.api.products_by_provider(prov["id"])
 
         else:
@@ -160,10 +161,10 @@ class List(ProductAction):
             if env == None:
                 return os.EX_DATAERR
 
-            self.printer.setHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
+            self.printer.set_header(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
             prods = self.api.products_by_env(env['id'])
 
-        self.printer.printItems(prods)
+        self.printer.print_items(prods)
         return os.EX_OK
 
 
@@ -242,16 +243,16 @@ class Status(SingleProductAction):
 
         #TODO: last errors?
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('provider_id')
-        self.printer.addColumn('provider_name')
-        self.printer.addColumn('last_sync')
-        self.printer.addColumn('sync_state')
-        self.printer.addColumn('progress', show_in_grep=False)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('provider_id')
+        self.printer.add_column('provider_name')
+        self.printer.add_column('last_sync')
+        self.printer.add_column('sync_state')
+        self.printer.add_column('progress', show_in_grep=False)
 
-        self.printer.setHeader(_("Product Status"))
-        self.printer.printItem(prod)
+        self.printer.set_header(_("Product Status"))
+        self.printer.print_item(prod)
         return os.EX_OK
 
 
@@ -364,7 +365,7 @@ class Create(ProductAction):
 
         if not nodiscovery:
             repourls = self.discoverRepos.discover_repositories(orgName, url)
-            self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
+            self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
             selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)
             self.discoverRepos.create_repositories(orgName, prod["id"], prod["name"], selectedurls)
 
@@ -437,17 +438,17 @@ class ListFilters(SingleProductAction):
             return os.EX_DATAERR
 
         filters = self.api.filters(orgName, prod['id'])
-        self.printer.addColumn('name')
-        self.printer.addColumn('description')
-        self.printer.setHeader(_("Product Filters"))
-        self.printer.printItems(filters)
+        self.printer.add_column('name')
+        self.printer.add_column('description')
+        self.printer.set_header(_("Product Filters"))
+        self.printer.print_items(filters)
 
 
         return os.EX_OK
 
 
 class AddRemoveFilter(SingleProductAction):
-    
+
     select_by_env = False
     addition = True
 
@@ -484,7 +485,7 @@ class AddRemoveFilter(SingleProductAction):
             return os.EX_DATAERR
 
         filters = self.api.filters(org_name, prod['id'])
-        filters = [f['name'] for f in filters] 
+        filters = [f['name'] for f in filters]
         self.update_filters(org_name, prod, filters, filter_name)
         return os.EX_OK
 

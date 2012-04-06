@@ -77,20 +77,20 @@ class Info(PackageAction):
 
         pack = self.api.package(packId, repoId)
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('filename')
-        self.printer.addColumn('arch')
-        self.printer.addColumn('release')
-        self.printer.addColumn('version')
-        self.printer.addColumn('vendor')
-        self.printer.addColumn('download_url', show_in_grep=False)
-        self.printer.addColumn('description', multiline=True, show_in_grep=False)
-        self.printer.addColumn('provides', multiline=True, show_in_grep=False)
-        self.printer.addColumn('requires', multiline=True, show_in_grep=False)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('filename')
+        self.printer.add_column('arch')
+        self.printer.add_column('release')
+        self.printer.add_column('version')
+        self.printer.add_column('vendor')
+        self.printer.add_column('download_url', show_in_grep=False)
+        self.printer.add_column('description', multiline=True, show_in_grep=False)
+        self.printer.add_column('provides', multiline=True, show_in_grep=False)
+        self.printer.add_column('requires', multiline=True, show_in_grep=False)
 
-        self.printer.setHeader(_("Package Information"))
-        self.printer.printItem(pack)
+        self.printer.set_header(_("Package Information"))
+        self.printer.print_item(pack)
         return os.EX_OK
 
 # package actions ------------------------------------------------------------
@@ -123,9 +123,9 @@ class List(PackageAction):
         envName  = self.get_option('env')
         prodName = self.get_option('product')
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('filename')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('filename')
 
 
         if not repoId:
@@ -135,11 +135,11 @@ class List(PackageAction):
             repoId = repo["id"]
 
 
-        self.printer.setHeader(_("Package List For Repo %s") % repoId)
+        self.printer.set_header(_("Package List For Repo %s") % repoId)
 
         packages = self.api.packages_by_repo(repoId)
 
-        self.printer.printItems(packages)
+        self.printer.print_items(packages)
         return os.EX_OK
 
 

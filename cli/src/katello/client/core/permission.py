@@ -181,14 +181,14 @@ class List(PermissionAction):
         for p in permissions:
             display_permissons.append(self.format_permission(p))
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('scope')
-        self.printer.addColumn('verbs', multiline=True)
-        self.printer.addColumn('tags', multiline=True)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('scope')
+        self.printer.add_column('verbs', multiline=True)
+        self.printer.add_column('tags', multiline=True)
 
-        self.printer.setHeader(_("Permission List"))
-        self.printer.printItems(display_permissons)
+        self.printer.set_header(_("Permission List"))
+        self.printer.print_items(display_permissons)
         return os.EX_OK
 
 
@@ -205,30 +205,30 @@ class ListAvailableVerbs(PermissionAction):
         orgName = self.get_option('org')
         listGlobal = not self.has_option('org')
 
-        self.setOutputMode()
+        self.set_output_mode()
 
-        self.printer.addColumn("scope")
-        self.printer.addColumn("available_verbs", multiline=True)
+        self.printer.add_column("scope")
+        self.printer.add_column("available_verbs", multiline=True)
         if not listGlobal:
-            self.printer.addColumn("available_tags", multiline=True, show_in_grep=False)
+            self.printer.add_column("available_tags", multiline=True, show_in_grep=False)
 
         permissions = self.getAvailablePermissions(orgName, scope)
         display_data = self.formatDisplayData(permissions, listGlobal)
 
         if scope:
-            self.printer.setHeader(_("Available verbs and tags for permission scope %s") % scope)
+            self.printer.set_header(_("Available verbs and tags for permission scope %s") % scope)
         else:
-            self.printer.setHeader(_("Available verbs"))
-        self.printer.printItems(display_data)
+            self.printer.set_header(_("Available verbs"))
+        self.printer.print_items(display_data)
         return os.EX_OK
 
-    def setOutputMode(self):
+    def set_output_mode(self):
         if self.output_mode() == Printer.OUTPUT_FORCE_NONE:
             if self.has_option('scope'):
-                self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
+                self.printer.set_output_mode(Printer.OUTPUT_FORCE_VERBOSE)
                 self.grepMode = False
             else:
-                self.printer.setOutputMode(Printer.OUTPUT_FORCE_GREP)
+                self.printer.set_output_mode(Printer.OUTPUT_FORCE_GREP)
                 self.grepMode = True
 
     def formatMultilineRecord(self, lines):

@@ -59,14 +59,14 @@ class List(EnvironmentAction):
 
         envs = self.api.environments_by_org(orgName)
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('organization', _('Org'))
-        self.printer.addColumn('prior', _('Prior Environment'))
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('organization', _('Org'))
+        self.printer.add_column('prior', _('Prior Environment'))
 
-        self.printer.setHeader(_("Environment List"))
-        self.printer.printItems(envs)
+        self.printer.set_header(_("Environment List"))
+        self.printer.print_items(envs)
         return os.EX_OK
 
 
@@ -90,14 +90,14 @@ class Info(EnvironmentAction):
 
         env = get_environment(orgName, envName)
         if env != None:
-            self.printer.addColumn('id')
-            self.printer.addColumn('name')
-            self.printer.addColumn('description', multiline=True)
-            self.printer.addColumn('organization', _('Org'))
-            self.printer.addColumn('prior', _('Prior Environment'))
+            self.printer.add_column('id')
+            self.printer.add_column('name')
+            self.printer.add_column('description', multiline=True)
+            self.printer.add_column('organization', _('Org'))
+            self.printer.add_column('prior', _('Prior Environment'))
 
-            self.printer.setHeader(_("Environment Info"))
-            self.printer.printItem(env)
+            self.printer.set_header(_("Environment Info"))
+            self.printer.print_item(env)
             return os.EX_OK
         else:
             return os.EX_DATAERR

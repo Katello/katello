@@ -73,9 +73,9 @@ class List(ErrataAction):
         env_id, prod_id = None, None
         prod_name = self.get_option('product')
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('title')
-        self.printer.addColumn('type')
+        self.printer.add_column('id')
+        self.printer.add_column('title')
+        self.printer.add_column('type')
 
         if not repo_id:
             if repo_name:
@@ -99,8 +99,8 @@ class List(ErrataAction):
 
         errata = self.api.errata_filter(repo_id=repo_id, environment_id=env_id, type=self.get_option('type'), severity=self.get_option('severity'),prod_id=prod_id)
 
-        self.printer.setHeader(_("Errata List"))
-        self.printer.printItems(errata)
+        self.printer.set_header(_("Errata List"))
+        self.printer.print_items(errata)
         return os.EX_OK
 
 class SystemErrata(ErrataAction):
@@ -128,12 +128,12 @@ class SystemErrata(ErrataAction):
 
         errata = systemApi.errata(systems[0]["uuid"])
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('title')
-        self.printer.addColumn('type')
+        self.printer.add_column('id')
+        self.printer.add_column('title')
+        self.printer.add_column('type')
 
-        self.printer.setHeader(_("Errata for system %s in organization %s") % (sys_name, org_name))
-        self.printer.printItems(errata)
+        self.printer.set_header(_("Errata for system %s in organization %s") % (sys_name, org_name))
+        self.printer.print_items(errata)
 
         return os.EX_OK
 
@@ -182,20 +182,20 @@ class Info(ErrataAction):
                          for pkg in pack['pkglist']
                          for pinfo in pkg['packages']]
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('title')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('type')
-        self.printer.addColumn('issued')
-        self.printer.addColumn('updated')
-        self.printer.addColumn('version')
-        self.printer.addColumn('release')
-        self.printer.addColumn('status')
-        self.printer.addColumn('reboot_suggested')
-        self.printer.addColumn('affected_packages', multiline=True)
+        self.printer.add_column('id')
+        self.printer.add_column('title')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('type')
+        self.printer.add_column('issued')
+        self.printer.add_column('updated')
+        self.printer.add_column('version')
+        self.printer.add_column('release')
+        self.printer.add_column('status')
+        self.printer.add_column('reboot_suggested')
+        self.printer.add_column('affected_packages', multiline=True)
 
-        self.printer.setHeader(_("Errata Information"))
-        self.printer.printItem(pack)
+        self.printer.set_header(_("Errata Information"))
+        self.printer.print_item(pack)
         return os.EX_OK
 
 

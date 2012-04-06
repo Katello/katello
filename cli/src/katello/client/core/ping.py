@@ -49,16 +49,16 @@ class Status(PingAction):
         status = self.api.ping()
 
 
-        self.printer.addColumn('status')
-        self.printer.addColumn('service')
-        self.printer.addColumn('result')
-        self.printer.addColumn('duration')
-        self.printer.addColumn('message')
+        self.printer.add_column('status')
+        self.printer.add_column('service')
+        self.printer.add_column('result')
+        self.printer.add_column('duration')
+        self.printer.add_column('message')
 
-        self.printer.setHeader(_("Katello Status"))
+        self.printer.set_header(_("Katello Status"))
 
         statusList = self.__statusToList(status)
-        self.printer.printItems(statusList)
+        self.printer.print_items(statusList)
 
         return self.__returnCode(status)
 

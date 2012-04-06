@@ -68,14 +68,14 @@ class List(SyncPlanAction):
         for p in plans:
             p['start_date'] = format_date(p['sync_date'])
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('start_date')
-        self.printer.addColumn('interval')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('start_date')
+        self.printer.add_column('interval')
 
-        self.printer.setHeader(_("Sync Plan List"))
-        self.printer.printItems(plans)
+        self.printer.set_header(_("Sync Plan List"))
+        self.printer.print_items(plans)
         return os.EX_OK
 
 
@@ -100,14 +100,14 @@ class Info(SyncPlanAction):
             return os.EX_DATAERR
 
         plan['start_date'] = format_date(plan['sync_date'])
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('start_date')
-        self.printer.addColumn('interval')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('start_date')
+        self.printer.add_column('interval')
 
-        self.printer.setHeader(_("Sync Plan Info"))
-        self.printer.printItem(plan)
+        self.printer.set_header(_("Sync Plan Info"))
+        self.printer.print_item(plan)
 
         return os.EX_OK
 

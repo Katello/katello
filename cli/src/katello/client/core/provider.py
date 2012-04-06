@@ -72,15 +72,15 @@ class List(ProviderAction):
 
         provs = self.api.providers_by_org(orgName)
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('provider_type', 'Type')
-        self.printer.addColumn('repository_url', 'Url')
-        #self.printer.addColumn('organization_id', 'Org Id')
-        self.printer.addColumn('description', multiline=True)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('provider_type', 'Type')
+        self.printer.add_column('repository_url', 'Url')
+        #self.printer.add_column('organization_id', 'Org Id')
+        self.printer.add_column('description', multiline=True)
 
-        self.printer.setHeader(_("Provider List"))
-        self.printer.printItems(provs)
+        self.printer.set_header(_("Provider List"))
+        self.printer.print_items(provs)
         return os.EX_OK
 
 
@@ -95,15 +95,15 @@ class Info(SingleProviderAction):
 
         prov = get_provider(orgName, provName)
         if prov != None:
-            self.printer.addColumn('id')
-            self.printer.addColumn('name')
-            self.printer.addColumn('provider_type', 'Type')
-            self.printer.addColumn('repository_url', 'Url')
-            self.printer.addColumn('organization_id', 'Org Id')
-            self.printer.addColumn('description', multiline=True)
+            self.printer.add_column('id')
+            self.printer.add_column('name')
+            self.printer.add_column('provider_type', 'Type')
+            self.printer.add_column('repository_url', 'Url')
+            self.printer.add_column('organization_id', 'Org Id')
+            self.printer.add_column('description', multiline=True)
 
-            self.printer.setHeader(_("Provider Information"))
-            self.printer.printItem(prov)
+            self.printer.set_header(_("Provider Information"))
+            self.printer.print_item(prov)
             return os.EX_OK
         else:
             return os.EX_DATAERR
@@ -284,15 +284,15 @@ class Status(SingleProviderAction):
 
         #TODO: last errors?
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
 
-        self.printer.addColumn('last_sync')
-        self.printer.addColumn('sync_state')
-        self.printer.addColumn('progress', show_in_grep=False)
+        self.printer.add_column('last_sync')
+        self.printer.add_column('sync_state')
+        self.printer.add_column('progress', show_in_grep=False)
 
-        self.printer.setHeader(_("Provider Status"))
-        self.printer.printItem(prov)
+        self.printer.set_header(_("Provider Status"))
+        self.printer.print_item(prov)
         return os.EX_OK
 
 

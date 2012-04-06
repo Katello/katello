@@ -49,11 +49,11 @@ class List(UserRoleAction):
     def run(self):
         roles = self.api.roles()
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
 
-        self.printer.setHeader(_("User Role List"))
-        self.printer.printItems(roles)
+        self.printer.set_header(_("User Role List"))
+        self.printer.print_items(roles)
         return os.EX_OK
 
 # ------------------------------------------------------------------------------
@@ -116,13 +116,13 @@ class Info(UserRoleAction):
 
         role['permissions'] = "\n".join([self.formatPermission(p, permDetails) for p in permissions])
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description')
-        self.printer.addColumn('permissions', multiline=True)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description')
+        self.printer.add_column('permissions', multiline=True)
 
-        self.printer.setHeader(_("User Role Information"))
-        self.printer.printItem(role)
+        self.printer.set_header(_("User Role Information"))
+        self.printer.print_item(role)
         return os.EX_OK
 
 # ------------------------------------------------------------------------------

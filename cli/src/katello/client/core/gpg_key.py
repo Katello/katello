@@ -76,10 +76,10 @@ class List(GpgKeyAction):
 
             return os.EX_OK
 
-        self.printer.addColumn('name')
+        self.printer.add_column('name')
 
-        self.printer.setHeader(_("Gpg Key List"))
-        self.printer.printItems(gpg_keys)
+        self.printer.set_header(_("Gpg Key List"))
+        self.printer.print_items(gpg_keys)
         return os.EX_OK
 
 
@@ -109,14 +109,14 @@ class Info(GpgKeyAction):
         key["repos"] = "[ "+ ", ".join([repo["product"]["name"] + " - " + repo["name"] for repo in key["repositories"]]) +" ]"
         key["content"] = "\n" + key["content"]
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('content', show_in_grep=False)
-        self.printer.addColumn('products', multiline=True, show_in_grep=False)
-        self.printer.addColumn('repos', multiline=True, show_in_grep=False, name=_("Repositories"))
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('content', show_in_grep=False)
+        self.printer.add_column('products', multiline=True, show_in_grep=False)
+        self.printer.add_column('repos', multiline=True, show_in_grep=False, name=_("Repositories"))
 
-        self.printer.setHeader(_("Gpg Key Info"))
-        self.printer.printItem(key)
+        self.printer.set_header(_("Gpg Key Info"))
+        self.printer.print_item(key)
         return os.EX_OK
 
 

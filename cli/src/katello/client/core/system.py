@@ -67,16 +67,16 @@ class List(SystemAction):
             return os.EX_DATAERR
 
         if env_name is None:
-            self.printer.setHeader(_("Systems List For Org [ %s ]") % org_name)
+            self.printer.set_header(_("Systems List For Org [ %s ]") % org_name)
         else:
-            self.printer.setHeader(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
+            self.printer.set_header(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
 
-        self.printer.addColumn('name')
-        self.printer.addColumn('ipv4_address')
-        self.printer.addColumn('serviceLevel', _('Service Level'))
+        self.printer.add_column('name')
+        self.printer.add_column('ipv4_address')
+        self.printer.add_column('serviceLevel', _('Service Level'))
 
         self.printer._grep = True
-        self.printer.printItems(systems)
+        self.printer.print_items(systems)
         return os.EX_OK
 
 class Info(SystemAction):
@@ -102,10 +102,10 @@ class Info(SystemAction):
         # info is always grep friendly
 
         if env_name is None:
-            self.printer.setHeader(_("System Information For Org [ %s ]") % org_name)
+            self.printer.set_header(_("System Information For Org [ %s ]") % org_name)
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
-            self.printer.setHeader(_("System Information For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
+            self.printer.set_header(_("System Information For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
             systems = self.api.systems_by_env(org_name, env_name,
                     {'name': sys_name})
 
@@ -122,24 +122,24 @@ class Info(SystemAction):
         if system.has_key('guests'):
             system["guests"] = "[ "+ ", ".join([guest["name"] for guest in system["guests"]]) +" ]"
 
-        self.printer.addColumn('name')
-        self.printer.addColumn('ipv4_address')
-        self.printer.addColumn('uuid')
-        self.printer.addColumn('location')
-        self.printer.addColumn('created_at', 'Registered', time_format=True)
-        self.printer.addColumn('updated_at', 'Last updated', time_format=True)
-        self.printer.addColumn('description', multiline=True)
-        if system.has_key('release') and system['release']:
-             self.printer.addColumn('release', 'OS release')
-        self.printer.addColumn('activation_keys', multiline=True, show_in_grep=False)
-        self.printer.addColumn('host', show_in_grep=False)
-        self.printer.addColumn('serviceLevel', _('Service Level'))
-        self.printer.addColumn('guests',  show_in_grep=False)
+        self.printer.add_column('name')
+        self.printer.add_column('ipv4_address')
+        self.printer.add_column('uuid')
+        self.printer.add_column('location')
+        self.printer.add_column('created_at', 'Registered', time_format=True)
+        self.printer.add_column('updated_at', 'Last updated', time_format=True)
+        self.printer.add_column('description', multiline=True)
+        if system.has_key('releaseVer') and system['releaseVer']:
+             self.printer.add_column('releaseVer', 'OS release')
+        self.printer.add_column('activation_keys', multiline=True, show_in_grep=False)
+        self.printer.add_column('host', show_in_grep=False)
+        self.printer.add_column('serviceLevel', _('Service Level'))
+        self.printer.add_column('guests',  show_in_grep=False)
         if system.has_key("template"):
             t = system["template"]["name"]
-            self.printer.addColumn('template', show_in_grep=False, value=t)
+            self.printer.add_column('template', show_in_grep=False, value=t)
 
-        self.printer.printItem(system)
+        self.printer.print_item(system)
 
         return os.EX_OK
 
@@ -189,10 +189,10 @@ class InstalledPackages(SystemAction):
         task = None
 
         if env_name is None:
-            self.printer.setHeader(_("Package Information for System [ %s ] in Org [ %s ]") % (sys_name, org_name))
+            self.printer.set_header(_("Package Information for System [ %s ] in Org [ %s ]") % (sys_name, org_name))
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
-            self.printer.setHeader(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") % (sys_name, env_name, org_name))
+            self.printer.set_header(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") % (sys_name, env_name, org_name))
             systems = self.api.systems_by_env(org_name, env_name, {'name': sys_name})
 
         if not systems:
@@ -237,17 +237,17 @@ class InstalledPackages(SystemAction):
                     (p['name'], p['version'], p['release'], p['arch'])
 
         if verbose:
-            self.printer.addColumn('name')
-            self.printer.addColumn('vendor')
-            self.printer.addColumn('version')
-            self.printer.addColumn('release')
-            self.printer.addColumn('arch')
+            self.printer.add_column('name')
+            self.printer.add_column('vendor')
+            self.printer.add_column('version')
+            self.printer.add_column('release')
+            self.printer.add_column('arch')
         else:
             # print compact list of package names only
-            self.printer.addColumn('name_version_release_arch')
+            self.printer.add_column('name_version_release_arch')
             self.printer._grep = True
 
-        self.printer.printItems(packages)
+        self.printer.print_items(packages)
 
         return os.EX_OK
 
@@ -272,7 +272,7 @@ class TasksList(SystemAction):
         sys_name = self.get_option('name')
         verbose = self.get_option('verbose')
 
-        self.printer.setHeader(_("Remote tasks"))
+        self.printer.set_header(_("Remote tasks"))
 
         tasks = self.api.tasks(org_name, env_name, sys_name)
 
@@ -281,19 +281,19 @@ class TasksList(SystemAction):
             t['result'] = "\n" + t['result_description']
 
         if verbose:
-            self.printer.addColumn('system_name', name=_("System"))
-            self.printer.addColumn('description', name=_("Action"))
-            self.printer.addColumn('created_at', name=_("Started"), time_format=True)
-            self.printer.addColumn('finish_time', name=_("Finished"), time_format=True)
-            self.printer.addColumn('state', name=_("Status"))
-            self.printer.addColumn('result', name=_("Result"))
+            self.printer.add_column('system_name', name=_("System"))
+            self.printer.add_column('description', name=_("Action"))
+            self.printer.add_column('created_at', name=_("Started"), time_format=True)
+            self.printer.add_column('finish_time', name=_("Finished"), time_format=True)
+            self.printer.add_column('state', name=_("Status"))
+            self.printer.add_column('result', name=_("Result"))
         else:
-            self.printer.addColumn('uuid', name=_("Task id"))
-            self.printer.addColumn('system_name', name=_("System"))
-            self.printer.addColumn('description', name=_("Action"))
-            self.printer.addColumn('state', name=_("Status"))
+            self.printer.add_column('uuid', name=_("Task id"))
+            self.printer.add_column('system_name', name=_("System"))
+            self.printer.add_column('description', name=_("Action"))
+            self.printer.add_column('state', name=_("Status"))
 
-        self.printer.printItems(tasks)
+        self.printer.print_items(tasks)
 
         return os.EX_OK
 
@@ -311,18 +311,18 @@ class TaskInfo(SystemAction):
     def run(self):
         uuid = self.get_option('id')
 
-        self.printer.setHeader(_("Remote task"))
+        self.printer.set_header(_("Remote task"))
 
         task = SystemTaskStatusAPI().status(uuid)
         task['result'] = "\n" + task['result_description']
 
-        self.printer.addColumn('system_name', name=_("System"))
-        self.printer.addColumn('description', name=_("Action"))
-        self.printer.addColumn('created_at', name=_("Started"), time_format=True)
-        self.printer.addColumn('finish_time', name=_("Finished"), time_format=True)
-        self.printer.addColumn('state', name=_("Status"))
-        self.printer.addColumn('result', name=_("Result"))
-        self.printer.printItem(task)
+        self.printer.add_column('system_name', name=_("System"))
+        self.printer.add_column('description', name=_("Action"))
+        self.printer.add_column('created_at', name=_("Started"), time_format=True)
+        self.printer.add_column('finish_time', name=_("Finished"), time_format=True)
+        self.printer.add_column('state', name=_("Status"))
+        self.printer.add_column('result', name=_("Result"))
+        self.printer.print_item(task)
 
         return os.EX_OK
 
@@ -357,11 +357,11 @@ class Releases(SystemAction):
 
         releases = [{"value": r} for r in releases]
 
-        self.printer.setHeader(_("Available releases"))
-        self.printer.addColumn('value')
+        self.printer.set_header(_("Available releases"))
+        self.printer.add_column('value')
 
         self.printer._grep = True
-        self.printer.printItems(releases)
+        self.printer.print_items(releases)
         return os.EX_OK
 
 class Facts(SystemAction):
@@ -387,10 +387,10 @@ class Facts(SystemAction):
         # info is always grep friendly
 
         if env_name is None:
-            self.printer.setHeader(_("System Facts For System [ %s ] in Org [ %s ]") % (sys_name, org_name))
+            self.printer.set_header(_("System Facts For System [ %s ] in Org [ %s ]") % (sys_name, org_name))
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
-            self.printer.setHeader(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") % (sys_name, env_name, org_name))
+            self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") % (sys_name, env_name, org_name))
             systems = self.api.systems_by_env(org_name, env_name, {'name': sys_name})
 
         if not systems:
@@ -402,10 +402,10 @@ class Facts(SystemAction):
         facts_hash = system['facts']
         facts_tuples_sorted = [(k, facts_hash[k]) for k in sorted(facts_hash.keys())]
         for k, v in facts_tuples_sorted:
-            self.printer.addColumn(k)
+            self.printer.add_column(k)
             system[k] = v
 
-        self.printer.printItem(system)
+        self.printer.print_item(system)
 
         return os.EX_OK
 
@@ -543,7 +543,7 @@ class Subscriptions(SystemAction):
             print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
-            self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
+            self.printer.set_output_mode(Printer.OUTPUT_FORCE_VERBOSE)
             if not available:
                 # listing current subscriptions
                 result = self.api.subscriptions(systems[0]['uuid'])
@@ -560,17 +560,17 @@ class Subscriptions(SystemAction):
                         entitlement_ext['serialIds'] = serial_ids
                         yield entitlement_ext
 
-                self.printer.setHeader(_("Current Subscriptions for System [ %s ]") % name)
-                self.printer.addColumn('entitlementId')
-                self.printer.addColumn('serialIds', name=_('Serial Id'))
-                self.printer.addColumn('poolName')
-                self.printer.addColumn('expires')
-                self.printer.addColumn('consumed')
-                self.printer.addColumn('quantity')
-                self.printer.addColumn('sla')
-                self.printer.addColumn('contractNumber')
-                self.printer.addColumn('providedProductsFormatted', name=_('Provided products'))
-                self.printer.printItems(entitlements())
+                self.printer.set_header(_("Current Subscriptions for System [ %s ]") % name)
+                self.printer.add_column('entitlementId')
+                self.printer.add_column('serialIds', name=_('Serial Id'))
+                self.printer.add_column('poolName')
+                self.printer.add_column('expires')
+                self.printer.add_column('consumed')
+                self.printer.add_column('quantity')
+                self.printer.add_column('sla')
+                self.printer.add_column('contractNumber')
+                self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
+                self.printer.print_items(entitlements())
             else:
                 # listing available pools
                 result = self.api.available_pools(systems[0]['uuid'])
@@ -586,16 +586,16 @@ class Subscriptions(SystemAction):
                         pool_ext['providedProductsFormatted'] = provided_products
                         yield pool_ext
 
-                self.printer.setHeader(_("Available Subscriptions for System [ %s ]") % name)
-                self.printer.addColumn('poolId')
-                self.printer.addColumn('poolName')
-                self.printer.addColumn('expires')
-                self.printer.addColumn('consumed')
-                self.printer.addColumn('quantity')
-                self.printer.addColumn('sockets')
-                self.printer.addColumn('multiEntitlement')
-                self.printer.addColumn('providedProductsFormatted', name=_('Provided products'))
-                self.printer.printItems(available_pools())
+                self.printer.set_header(_("Available Subscriptions for System [ %s ]") % name)
+                self.printer.add_column('poolId')
+                self.printer.add_column('poolName')
+                self.printer.add_column('expires')
+                self.printer.add_column('consumed')
+                self.printer.add_column('quantity')
+                self.printer.add_column('sockets')
+                self.printer.add_column('multiEntitlement')
+                self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
+                self.printer.print_items(available_pools())
 
             return os.EX_OK
 

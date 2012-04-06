@@ -36,10 +36,10 @@ class Printer:
         self.__delim = delimiter
 
 
-    def setHeader(self, heading):
+    def set_header(self, heading):
         self.__heading = heading
 
-    def setOutputMode(self, output_mode):
+    def set_output_mode(self, output_mode):
         self.__output_mode = output_mode
 
     def _printDivLine(self, width):
@@ -103,7 +103,7 @@ class Printer:
         return result.strip()
 
 
-    def addColumn(self, attr_name, name = None, multiline = False, show_in_grep = True, time_format=False, value=''):
+    def add_column(self, attr_name, name = None, multiline = False, show_in_grep = True, time_format=False, value=''):
         """
         Add column to display
         @type attr_name: string
@@ -134,7 +134,7 @@ class Printer:
         self.__columns.append(col)
 
 
-    def _printItem(self, item, indent=""):
+    def _print_item(self, item, indent=""):
         """
         Print item from a list on number of lines
         @type item: hash
@@ -162,7 +162,7 @@ class Printer:
                 print indent_text(value, indent+"    ")
 
 
-    def _printItemGrep(self, item, widths={}):
+    def _print_itemGrep(self, item, widths={}):
         """
         Print item of a list on single line in grep mode
         @type item: hash
@@ -218,7 +218,7 @@ class Printer:
         return 4 # guaranteed to be random
 
 
-    def printItem(self, item, indent=""):
+    def print_item(self, item, indent=""):
         """
         Print one data item
         @type item: hash
@@ -229,15 +229,15 @@ class Printer:
         if self.__output_mode == Printer.OUTPUT_FORCE_GREP:
             widths = self._calculateGrepWidths([item])
             self._printHeader(self.__heading, True, widths)
-            self._printItemGrep(item, widths)
+            self._print_itemGrep(item, widths)
             print
         else:
             self._printHeader(self.__heading, False)
-            self._printItem(item, indent)
+            self._print_item(item, indent)
             print
 
 
-    def printItems(self, items, indent=""):
+    def print_items(self, items, indent=""):
         """
         Print collection of data items
         @type items: list of hashes
@@ -248,13 +248,13 @@ class Printer:
         if self.__output_mode == Printer.OUTPUT_FORCE_VERBOSE:
             self._printHeader(self.__heading, False)
             for item in items:
-                self._printItem(item, indent)
+                self._print_item(item, indent)
                 print
         else:
             widths = self._calculateGrepWidths(items)
             self._printHeader(self.__heading, True, widths)
             for item in items:
-                self._printItemGrep(item, widths)
+                self._print_itemGrep(item, widths)
                 print
 
 

@@ -32,13 +32,13 @@ class List(PackageGroupAction):
         if not groups:
             system_exit(os.EX_DATAERR,
                         _("No package groups found in repo [%s]") % (repoid))
-        self.printer.setHeader(_("Package Group Information"))
+        self.printer.set_header(_("Package Group Information"))
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description')
 
-        self.printer.printItems(groups)
+        self.printer.print_items(groups)
 
         return os.EX_OK
 
@@ -68,16 +68,16 @@ class Info(PackageGroupAction):
 
         group['conditional_package_names'] = [name+": "+required_package  for name, required_package in group['conditional_package_names'].items()]
 
-        self.printer.setHeader(_("Package Group Information"))
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('mandatory_package_names', multiline=True)
-        self.printer.addColumn('default_package_names', multiline=True)
-        self.printer.addColumn('optional_package_names', multiline=True)
-        self.printer.addColumn('conditional_package_names', multiline=True)
+        self.printer.set_header(_("Package Group Information"))
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('mandatory_package_names', multiline=True)
+        self.printer.add_column('default_package_names', multiline=True)
+        self.printer.add_column('optional_package_names', multiline=True)
+        self.printer.add_column('conditional_package_names', multiline=True)
 
-        self.printer.printItem(group)
+        self.printer.print_item(group)
 
 
 class CategoryList(PackageGroupAction):
@@ -97,12 +97,12 @@ class CategoryList(PackageGroupAction):
         if not groups:
             system_exit(os.EX_DATAERR,
                         _("No package group categories found in repo [%s]") % (repoid))
-        self.printer.setHeader(_("Package Group Cateogory Information"))
+        self.printer.set_header(_("Package Group Cateogory Information"))
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
 
-        self.printer.printItems(groups)
+        self.printer.print_items(groups)
 
         return os.EX_OK
 
@@ -130,12 +130,12 @@ class CategoryInfo(PackageGroupAction):
         if category == None:
             system_exit(os.EX_DATAERR, _("Package group category [%s] not found in repo [%s]") % (categoryId, repoid))
 
-        self.printer.setHeader(_("Package Group Category Information"))
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('packagegroupids')
+        self.printer.set_header(_("Package Group Category Information"))
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('packagegroupids')
 
-        self.printer.printItem(category)
+        self.printer.print_item(category)
 
 
 class PackageGroup(Command):

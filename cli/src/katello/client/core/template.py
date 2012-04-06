@@ -70,14 +70,14 @@ class List(TemplateAction):
         if not templates:
             print _("No templates found in environment [ %s ]") % environment["name"]
             return os.EX_OK
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('environment_id')
-        self.printer.addColumn('parent_id')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('environment_id')
+        self.printer.add_column('parent_id')
 
-        self.printer.setHeader(_("Template List"))
-        self.printer.printItems(templates)
+        self.printer.set_header(_("Template List"))
+        self.printer.print_items(templates)
         return os.EX_OK
 
 
@@ -114,22 +114,22 @@ class Info(TemplateAction):
         template["package_groups"] = [p["name"] for p in template["package_groups"]]
         template["package_group_categories"] = [p["name"] for p in template["pg_categories"]]
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('revision', show_in_grep=False)
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('environment_id')
-        self.printer.addColumn('parent_id')
-        self.printer.addColumn('errata', multiline=True, show_in_grep=False)
-        self.printer.addColumn('products', multiline=True, show_in_grep=False)
-        self.printer.addColumn('repositories', multiline=True, show_in_grep=False)
-        self.printer.addColumn('packages', multiline=True, show_in_grep=False)
-        self.printer.addColumn('parameters', multiline=True, show_in_grep=False)
-        self.printer.addColumn('package_groups', multiline=True, show_in_grep=False)
-        self.printer.addColumn('package_group_categories', multiline=True, show_in_grep=False)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('revision', show_in_grep=False)
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('environment_id')
+        self.printer.add_column('parent_id')
+        self.printer.add_column('errata', multiline=True, show_in_grep=False)
+        self.printer.add_column('products', multiline=True, show_in_grep=False)
+        self.printer.add_column('repositories', multiline=True, show_in_grep=False)
+        self.printer.add_column('packages', multiline=True, show_in_grep=False)
+        self.printer.add_column('parameters', multiline=True, show_in_grep=False)
+        self.printer.add_column('package_groups', multiline=True, show_in_grep=False)
+        self.printer.add_column('package_group_categories', multiline=True, show_in_grep=False)
 
-        self.printer.setHeader(_("Template Info"))
-        self.printer.printItem(template)
+        self.printer.set_header(_("Template Info"))
+        self.printer.print_item(template)
         return os.EX_OK
 
 

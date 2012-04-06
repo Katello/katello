@@ -64,9 +64,9 @@ class List(DistributionAction):
         envName  = self.get_option('env')
         prodName = self.get_option('product')
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('description')
-        self.printer.addColumn('files', multiline=True, show_in_grep=False)
+        self.printer.add_column('id')
+        self.printer.add_column('description')
+        self.printer.add_column('files', multiline=True, show_in_grep=False)
 
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
@@ -75,11 +75,11 @@ class List(DistributionAction):
             repoId = repo["id"]
 
 
-        self.printer.setHeader(_("Distribution List For Repo %s") % repoId)
+        self.printer.set_header(_("Distribution List For Repo %s") % repoId)
 
         distributions = self.api.distributions_by_repo(repoId)
 
-        self.printer.printItems(distributions)
+        self.printer.print_items(distributions)
         return os.EX_OK
 
 
@@ -106,16 +106,16 @@ class Info(DistributionAction):
 
         data = self.api.distribution(repoId, dist_id)
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('description')
-        self.printer.addColumn('family')
-        self.printer.addColumn('variant')
-        self.printer.addColumn('version')
-        self.printer.addColumn('files', multiline=True, show_in_grep=False)
+        self.printer.add_column('id')
+        self.printer.add_column('description')
+        self.printer.add_column('family')
+        self.printer.add_column('variant')
+        self.printer.add_column('version')
+        self.printer.add_column('files', multiline=True, show_in_grep=False)
 
-        self.printer.setHeader(_("Distribution Information"))
+        self.printer.set_header(_("Distribution Information"))
 
-        self.printer.printItem(data)
+        self.printer.print_item(data)
         return os.EX_OK
 
 

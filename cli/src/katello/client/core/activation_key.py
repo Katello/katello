@@ -70,14 +70,14 @@ class List(ActivationKeyAction):
 
             return os.EX_OK
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('environment_id')
-        self.printer.addColumn('system_template_id')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('environment_id')
+        self.printer.add_column('system_template_id')
 
-        self.printer.setHeader(_("Activation Key List"))
-        self.printer.printItems(keys)
+        self.printer.set_header(_("Activation Key List"))
+        self.printer.print_items(keys)
         return os.EX_OK
 
     def get_keys_for_organization(self, orgName):
@@ -120,15 +120,15 @@ class Info(ActivationKeyAction):
         for akey in keys:
             akey["pools"] = "[ "+ ", ".join([pool["cp_id"] for pool in akey["pools"]]) +" ]"
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('environment_id')
-        self.printer.addColumn('system_template_id')
-        self.printer.addColumn('pools', multiline=True, show_in_grep=False)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('environment_id')
+        self.printer.add_column('system_template_id')
+        self.printer.add_column('pools', multiline=True, show_in_grep=False)
 
-        self.printer.setHeader(_("Activation Key Info"))
-        self.printer.printItem(keys[0])
+        self.printer.set_header(_("Activation Key Info"))
+        self.printer.print_item(keys[0])
         return os.EX_OK
 
 
