@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.21
+Version:       0.2.22
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 06 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.22-1
+- slas - field for SLA in hash export of consumer renamed We used service_level
+  but subscription-manager requires serviceLevel and checks for it's presence.
 * Wed Apr 04 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.21-1
 - 798649 - RFE - Better listing of products and repos
 
