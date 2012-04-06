@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.17
+Version:        0.2.18
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Apr 06 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.18-1
+- puppet - adding pulp migration logging
+
 * Mon Apr 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.17-1
 - 794778 - option ssl_ca_certificate is set for pulp V1
 - 768399 - deployment configure values are checked
