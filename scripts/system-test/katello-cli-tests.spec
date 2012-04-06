@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.9
+Version:       0.2.10
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 06 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.10-1
+- slas - system tests
+- slas - fake manifest products with service_level
 * Tue Mar 27 2012 Ivan Necas <inecas@redhat.com> 0.2.7-1
 - periodic build
 
