@@ -139,7 +139,6 @@ class PromotionsController < ApplicationController
       options = {:list_partial => 'promotions/repo_items'}
       render_panel_items(@repos, options, nil, offset)
     else
-      @repos = @repos[0..current_user.page_size]
       render :partial=>"repos", :locals=>{:collection => @repos}
     end
 
