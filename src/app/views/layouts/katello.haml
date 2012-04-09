@@ -16,15 +16,13 @@
  
 = content_for(:content) do   
   - if not current_user
-    #maincontent
-      #formwindow
-        = yield
+    #formwindow
+      = yield
   - else
-    #maincontent
-      %nav.subnav#subnav
-        = render_menu(2..3)
-      .inner.container_16
-        = yield
+    %nav.subnav#subnav
+      = render_menu(2..3)
+    .inner.container_16
+      = yield
 
 = content_for(:footer) do
   = render :partial => "common/footer"
