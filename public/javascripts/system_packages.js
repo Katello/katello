@@ -43,8 +43,7 @@ KT.packages = function() {
     remove_button = $('#remove_packages'),
     update_button = $('#update_packages'),
     update_all_button = $('#update_all_packages'),
-    package_checkboxes = $('input[type="checkbox"]'),
-    packages_tabindex = package_checkboxes.last().attr('tabindex'),
+    packages_tabindex = $('input[type="checkbox"]').last().attr('tabindex'),
     content_form = $('#content_form'),
     content_input = $('#content_input'),
     add_content_button = $('#add_content'),
@@ -223,8 +222,10 @@ KT.packages = function() {
         });
     },
     registerCheckboxEvents = function() {
-        package_checkboxes.unbind('change');
-        package_checkboxes.each(function(){
+        var checkboxes = $('input[type="checkbox"]');
+
+        checkboxes.unbind('change');
+        checkboxes.each(function(){
             $(this).change(function(){
                 if($(this).is(":checked")){
                     selected_checkboxes++;
