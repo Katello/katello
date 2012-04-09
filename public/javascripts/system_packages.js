@@ -43,6 +43,8 @@ KT.packages = function() {
     remove_button = $('#remove_packages'),
     update_button = $('#update_packages'),
     update_all_button = $('#update_all_packages'),
+    package_checkboxes = $('input[type="checkbox"]'),
+    packages_tabindex = package_checkboxes.last().attr('tabindex'),
     content_form = $('#content_form'),
     content_input = $('#content_input'),
     add_content_button = $('#add_content'),
@@ -79,8 +81,8 @@ KT.packages = function() {
         update_all_button.removeClass('disabled');
     },
     disableLinks = function() {
-        add_content_button.unbind('click');
-        remove_content_button.unbind('click');
+        add_content_button.unbind('click, keypress');
+        remove_content_button.unbind('click, keypress');
 
         add_content_button.attr('disabled', 'disabled');
         remove_content_button.attr('disabled', 'disabled');
@@ -91,11 +93,24 @@ KT.packages = function() {
     enableLinks = function() {
         if (add_content_button.hasClass('disabled')) {
             add_content_button.bind('click', addContent);
+            add_content_button.bind('keypress', function(event) {
+                if( event.which === 13) {
+                    event.preventDefault();
+                    KT.packages.addContent(event);
+                }
+            });
+
             add_content_button.removeAttr('disabled');
             add_content_button.removeClass('disabled');
         }
         if (remove_content_button.hasClass('disabled')) {
             remove_content_button.bind('click', removeContent);
+            remove_content_button.bind('keypress', function(event) {
+                if( event.which === 13) {
+                    event.preventDefault();
+                    KT.packages.removeContent(event);
+                }
+            });
             remove_content_button.removeAttr('disabled');
             remove_content_button.removeClass('disabled');
         }
@@ -133,7 +148,18 @@ KT.packages = function() {
             success: function(data) {
                 retrievingNewContent = false;
                 spinner.fadeOut();
-                list.append(data);
+
+                // using the response received, update the tabindexes for the packages and buttons
+                var pkgs_response = $(data);
+                pkgs_response.find('input[type="checkbox"]').each( function(){
+                    $(this).attr('tabindex', ++packages_tabindex);
+                });
+                list.append(pkgs_response);
+                more_button.attr('tabindex', ++packages_tabindex);
+                update_all_button.attr('tabindex', ++packages_tabindex);
+                update_button.attr('tabindex', ++packages_tabindex);
+                remove_button.attr('tabindex', ++packages_tabindex);
+
                 registerCheckboxEvents();
                 $('#filter').keyup();
                 $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
@@ -197,9 +223,8 @@ KT.packages = function() {
         });
     },
     registerCheckboxEvents = function() {
-        var checkboxes = $('input[type="checkbox"]');
-        checkboxes.unbind('change');
-        checkboxes.each(function(){
+        package_checkboxes.unbind('change');
+        package_checkboxes.each(function(){
             $(this).change(function(){
                 if($(this).is(":checked")){
                     selected_checkboxes++;
@@ -405,7 +430,21 @@ KT.packages = function() {
     },
     registerEvents = function() {
         content_input.bind('change, keyup', updateContentLinks);
+        content_input.bind('keypress', function(event) {
+            // if the user presses enter, ignore it... do not submit the form...
+            if( event.which === 13) {
+                event.preventDefault();
+            }
+        });
+
         more_button.bind('click', morePackages);
+        more_button.bind('keypress', function(event) {
+            if( event.which === 13) {
+                event.preventDefault();
+                morePackages();
+            }
+        });
+
         sort_button.bind('click', reverseSort);
         remove_button.bind('click', removePackages);
         update_button.bind('click', updatePackages);
