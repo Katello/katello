@@ -72,7 +72,7 @@ module AuthorizationRules
   end
 
   def check_array_params(rule, params)
-    (params.keys - ["_method", "controller", "action", "commit", "authenticity_token", "utf8"] - rule.collect { |r| r.to_s })
+    (params.keys - ["_method", "controller", "action", "commit", "authenticity_token", "utf8", "search"] - rule.collect { |r| r.to_s })
   end
 
   def param_rules
