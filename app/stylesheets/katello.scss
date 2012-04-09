@@ -511,7 +511,7 @@ fieldset {
         margin-bottom: 33px;
     }
     #orgfilter_input {
-        width: 230px;
+        width: 218px;
         margin-bottom: 3px;
     }
     .filter_button {
@@ -1214,16 +1214,13 @@ fieldset {
 
 /* switcher Container (default to float:right) */
 #switcherContainer {
-  position: relative;
+  position: absolute;
   display: inline-block;
+  left: 218px;
+  top: 22px;
 
   /* switcher Button */
    #switcherButton {
-    display: inline-block;
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    position: relative;
-    z-index: 30;
     cursor: pointer;
 
     div:first-child {
@@ -1248,15 +1245,15 @@ fieldset {
     }
     &:hover {
       @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
-      text-decoration: underline;
+      text-decoration: none;
     }
   }
 
   /* switcher Box */
   #switcherBox {
     position: absolute;
-    top: 43px;
-    left: 2px;
+    top: 17px;
+    left: 0px;
     display: none;
     z-index: 2000;
     a {
@@ -1302,7 +1299,7 @@ fieldset {
     margin: 0;
     height: 220px;
     overflow-y: auto;
-    width: 210px;
+    width: 230px;
   }
 }
 
@@ -1392,3 +1389,4 @@ fieldset {
   position: relative;
   bottom: -18px;
 }
+
