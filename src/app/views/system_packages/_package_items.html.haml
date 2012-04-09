@@ -36,7 +36,7 @@
   %tr{:class => row_shading + ' package'}
     - if editable
       %td.package_select
-        = check_box_tag "package[#{p.name}]"
+        = check_box_tag "package[#{p.name}]", "0", false, {:tabindex => auto_tab_index}
     -#%td.package_status.packages_icon
     %td.package_name
       #{p.nvrea}
