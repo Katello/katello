@@ -233,6 +233,12 @@ describe SystemsController do
         assigns[:system].name.should == "foo"
       end
 
+      it "should update the system release version" do
+        put :update, { :id => @system.id, :system => { :releaseVer => "6Server" }}
+        response.should be_success
+        assigns[:system].releaseVer.should == "6Server"
+      end
+
       # The params to #update_subscriptions are entirely wrong here. The only reason the test
       # used to pass was because the error handler was not passing back an error status
       it "should not update a subscription" do

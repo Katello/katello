@@ -65,4 +65,16 @@ module SystemsHelper
     end
   end
 
+  def system_releasevers_edit system
+    vers = {}
+    system.available_releases.each { |ver|
+      vers[ver] = ver
+    }
+
+    vers[""] = ""
+    vers["selected"] = system[:releaseVer]
+
+    return vers.to_json
+  end
+
 end

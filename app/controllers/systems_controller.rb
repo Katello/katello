@@ -63,7 +63,7 @@ class SystemsController < ApplicationController
   def param_rules
     update_check = lambda do
       if params[:system]
-        sys_rules = {:system => [:name, :description, :location] }
+        sys_rules = {:system => [:name, :description, :location, :releaseVer] }
         check_hash_params(sys_rules, params)
       else
         check_array_params([:autoheal, :id], params)

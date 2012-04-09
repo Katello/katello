@@ -380,8 +380,15 @@ class KTEnvironment < ActiveRecord::Base
     end
   end
 
+  # Katello, which understands repository content and promotion, provides release versions based upon
+  # enabled repos. Headpin, which does not traverse products to the repo level, exposes all release
+  # versions in the manifest.
   def available_releases
-    self.repositories.enabled.map(&:minor).compact.uniq.sort
+    if AppConfig.katello?
+      self.repositories.enabled.map(&:minor).compact.uniq.sort
+    else
+      self.organization.library.repositories.map(&:minor).compact.uniq.sort
+    end
   end
 
 end
