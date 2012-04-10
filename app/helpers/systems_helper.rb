@@ -77,4 +77,30 @@ module SystemsHelper
     return vers.to_json
   end
 
+  def system_servicelevel system
+    if system.autoheal
+      if system.serviceLevel == ""
+        _("Auto-subscribe On, No Service Level Preference")
+      else
+        _("Auto-subscribe On, Service Level %s") % system.serviceLevel
+      end
+    else
+      _("Auto-subscribe Off")
+    end
+  end
+
+  def system_servicelevel_edit system
+    levels = {}
+    system.organization.service_levels.each { |level|
+      levels[level] = _("Auto-subscribe On, Service Level %s") % level
+    }
+
+    levels["Auto-subscribe On"] = _("Auto-subscribe On, No Service Level Preference")
+    levels["Auto-subscribe Off"] = _("Auto-subscribe Off")
+
+    levels["selected"] = system_servicelevel(system)
+
+    return levels.to_json
+  end
+
 end
