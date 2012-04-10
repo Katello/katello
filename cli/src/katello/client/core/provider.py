@@ -20,6 +20,7 @@ from gettext import gettext as _
 from urlparse import urlparse
 
 from katello.client.api.provider import ProviderAPI
+from katello.client.server import ServerRequestError
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask, format_sync_errors
@@ -328,7 +329,12 @@ class ImportManifest(SingleProviderAction):
 
         prov = get_provider(orgName, provName)
         if prov != None:
-            response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f, force), message=_("Importing manifest, please wait... "))
+            try:
+                response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f, force), message=_("Importing manifest, please wait... "))
+            except ServerRequestError, re:
+                if re.args[0] == 400 and "displayMessage" in re.args[1] and re.args[1]["displayMessage"] == "Import is older than existing data":
+                    re.args[1]["displayMessage"] = "Import is older then existing data, please try with --force option to import manifest."
+                raise re
             f.close()
             print response
             return os.EX_OK
