@@ -1,6 +1,5 @@
-= stylesheet :tipsy
 
-= javascript :env_select, :tipsy_custom
+= javascript
 -# Add env selector and Set the flag appropriately to indicate if there is one
 -if defined? envsys
   -if envsys == true
@@ -27,7 +26,7 @@
 .grid_16#main
   = two_panel(@systems, @panel_options)
 
-= javascript :edit, :multiselect, :system, :treetable
+= javascript :multiselect, :system, :treetable
 
 -if defined? envsys
   = javascript do
