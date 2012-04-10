@@ -414,7 +414,7 @@ class Register(SystemAction):
         self.parser.add_option('--name', dest='name', help=_("system name (required)"))
         self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
         self.parser.add_option('--environment', dest='environment', help=_("environment name eg: development"))
-        self.parser.add_option('--service_level', dest='sla', help=_("service level agreement"))
+        self.parser.add_option('--servicelevel', dest='sla', help=_("service level agreement"))
         self.parser.add_option('--activationkey', dest='activationkey',
             help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
         self.parser.add_option('--release', dest='release', help=_("values of $releasever for the system"))
@@ -655,7 +655,7 @@ class Update(SystemAction):
                        help=_("location of the system"))
         self.parser.add_option('--release', dest='release',
                        help=_("value of $releasever for the system"))
-        self.parser.add_option('--service_level', dest='sla',
+        self.parser.add_option('--servicelevel', dest='sla',
                        help=_("service level agreement"))
 
     def check_options(self):
