@@ -24,7 +24,7 @@ from katello.client.api.utils import get_environment
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, convert_to_mime_type, attachment_file_name, save_report
-from katello.client.utils.printer import Printer
+from katello.client.utils.printer import Printer, VerboseStrategy
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
@@ -544,7 +544,7 @@ class Subscriptions(SystemAction):
             print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
-            self.printer.set_output_mode(Printer.OUTPUT_FORCE_VERBOSE)
+            self.printer.set_strategy(VerboseStrategy())
             if not available:
                 # listing current subscriptions
                 result = self.api.subscriptions(systems[0]['uuid'])

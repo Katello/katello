@@ -22,7 +22,7 @@ from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.api.utils import get_role, get_permission
 from katello.client.core.utils import system_exit, is_valid_record
-from katello.client.utils.printer import Printer
+from katello.client.utils.printer import Printer, GrepStrategy, VerboseStrategy
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.utils import printer
@@ -195,6 +195,7 @@ class List(PermissionAction):
 class ListAvailableVerbs(PermissionAction):
 
     description = _('list available scopes, verbs and tags that can be set in a permission')
+    grep_mode = False
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com,\nlists organization specific verbs"))
@@ -223,24 +224,28 @@ class ListAvailableVerbs(PermissionAction):
         return os.EX_OK
 
     def set_output_mode(self):
-        if self.output_mode() == Printer.OUTPUT_FORCE_NONE:
+        if self.has_option('grep'):
+            self.grep_mode = True
+        elif self.has_option('verbose'):
+            self.grep_mode = False
+        else:
             if self.has_option('scope'):
-                self.printer.set_output_mode(Printer.OUTPUT_FORCE_VERBOSE)
-                self.grepMode = False
+                self.printer.set_strategy(VerboseStrategy())
+                self.grep_mode = False
             else:
-                self.printer.set_output_mode(Printer.OUTPUT_FORCE_GREP)
-                self.grepMode = True
+                self.printer.set_strategy(GrepStrategy())
+                self.grep_mode = True
 
     def formatMultilineRecord(self, lines):
         if len(lines) == 0:
             return _('None')
-        elif self.grepMode:
+        elif self.grep_mode:
             return ", ".join(lines)
         else:
             return lines
 
     def formatVerb(self, verb):
-        if self.grepMode:
+        if self.grep_mode:
             return verb["name"]
         else:
             return ("%-20s (%s)" % (verb["name"], verb["display_name"]))

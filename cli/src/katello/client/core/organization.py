@@ -23,7 +23,7 @@ from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
-from katello.client.utils.printer import Printer
+from katello.client.utils.printer import Printer, VerboseStrategy
 from katello.client.utils import printer
 from datetime import timedelta, datetime
 
@@ -216,7 +216,7 @@ class ShowSubscriptions(OrganizationAction):
 
         # by default use verbose mode
         if not self.has_option('grep'):
-            self.printer.set_output_mode(Printer.OUTPUT_FORCE_VERBOSE)
+            self.printer.set_strategy(VerboseStrategy())
 
         self.printer.add_column('productName')
         self.printer.add_column('consumed')
