@@ -352,7 +352,6 @@ class ApplicationController < ActionController::Base
       query { string search}
       filter :terms, :id=>[id]
     end
-    print results.inspect
     results.total > 0
   end
 
