@@ -179,7 +179,7 @@ class Action(object):
                         help=_("verbose, more structured output"))
         self.parser.add_option('-d', dest='delimiter',
                         default="",
-                        help=_("grep friendly output column delimiter"))
+                        help=_("column delimiter in grep friendly output, works only with option -g"))
         self.setup_parser()
 
     @property
@@ -311,7 +311,7 @@ class Action(object):
 
     def __print_strategy(self):
         if (self.has_option('grep') or (Config.parser.has_option('interface', 'force_grep_friendly') and Config.parser.get('interface', 'force_grep_friendly').lower() == 'true')):
-            return GrepStrategy()
+            return GrepStrategy(delimiter=self.get_option('delimiter'))
         elif (self.has_option('verbose') or (Config.parser.has_option('interface', 'force_verbose') and Config.parser.get('interface', 'force_verbose').lower() == 'true')):
             return VerboseStrategy()
         else:
