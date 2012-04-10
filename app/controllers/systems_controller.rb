@@ -63,10 +63,10 @@ class SystemsController < ApplicationController
   def param_rules
     update_check = lambda do
       if params[:system]
-        sys_rules = {:system => [:name, :description, :location, :releaseVer] }
+        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel] }
         check_hash_params(sys_rules, params)
       else
-        check_array_params([:autoheal, :id], params)
+        check_array_params([:id], params)
       end
     end
     {   :create => {:arch => [:arch_id],:system=>[:sockets, :name, :environment_id], :system_type =>[:virtualized]},
@@ -230,7 +230,17 @@ class SystemsController < ApplicationController
   def update
     begin
       # The 'autoheal' flag is not an ActiveRecord attribute so update it explicitly if present
-      @system.autoheal = params[:autoheal] if params[:autoheal]
+      if params[:system] && params[:system][:serviceLevel]
+        if params[:system][:serviceLevel] == "Auto-subscribe Off"
+          params[:system][:serviceLevel] = ""
+          @system.autoheal = false
+        elsif params[:system][:serviceLevel] == "Auto-subscribe On"
+          params[:system][:serviceLevel] = ""
+          @system.autoheal = true
+        else
+          @system.autoheal = true
+        end
+      end
 
       @system.update_attributes!(params[:system])
       notice _("System '%s' was updated.") % @system["name"]
@@ -240,7 +250,14 @@ class SystemsController < ApplicationController
       end
 
       respond_to do |format|
-        format.html { render :text=>(params[:system] ? params[:system].first[1] : "") }
+        format.html {
+          # Use the systems_helper method when returning service level so the UI reflects proper text
+          if params[:system] && params[:system][:serviceLevel]
+            render :text=>system_servicelevel(@system)
+          else
+            render :text=>(params[:system] ? params[:system].first[1] : "")
+          end
+        }
         format.js
       end
     rescue Exception => error
