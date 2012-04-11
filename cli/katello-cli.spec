@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.23
+Version:       0.2.24
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,6 +89,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 11 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.24-1
+- 713153 - RFE: include IP information in consumers/systems related API calls.
+- 768243 - Error msg needs to be improved
+
 * Tue Apr 10 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.23-1
 - slas - all cli options --service_level renamed to --servicelevel
 
