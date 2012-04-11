@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.28
+Version:        0.2.29
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -359,6 +359,21 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Apr 11 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.29-1
+- 713153 - RFE: include IP information in consumers/systems related API calls.
+- 803412 - auto-subscribe w/ SLA now on system subscription page
+- reorganizing assets to reduce the number of javascript files downloaded
+- removing unneeded print statement
+- allowing search param for all, needed for all creates 
+- system packages - fix checbox events after loading more pkgs
+- system packages - add support for tabindex
+- 810375 - remove page size limit on repos displayed
+- 803410 - Y-stream release version is now available on System Details page +
+  If no specific release version is specified (value of "") then "System
+  Default" is displayed. + For Katello, release version choices come from
+  enabled repos in the system's environment. For Headpin, choices are all
+  available in the Library environment.
+
 * Fri Apr 06 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.28-1
 - 809826 - regression in finding filters in the filters controller
 
