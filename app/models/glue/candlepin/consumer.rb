@@ -177,7 +177,7 @@ module Glue::Candlepin::Consumer
     end
 
     def to_json
-      super(:methods => [:href, :facts, :idCert, :owner, :autoheal, :releaseVer])
+      super(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release])
     end
 
     def convert_from_cp_fields(cp_json)
@@ -269,6 +269,14 @@ module Glue::Candlepin::Consumer
 
     def convert_time(item)
       Time.parse(item)
+    end
+
+    def release
+      if self.releaseVer.is_a? Hash
+         self.releaseVer["releaseVer"]
+      else
+        self.releaseVer
+      end
     end
 
     def available_pools_full listall=false
