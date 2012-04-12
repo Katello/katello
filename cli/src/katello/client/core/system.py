@@ -420,6 +420,8 @@ class Register(SystemAction):
         self.parser.add_option('--activationkey', dest='activationkey',
             help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
         self.parser.add_option('--release', dest='release', help=_("values of $releasever for the system"))
+        self.parser.add_option('--fact', dest='fact', action='append', nargs=2, metavar="KEY VALUE",
+                               help=_("system facts"))
 
     def check_options(self):
         self.require_option('name')
@@ -443,8 +445,9 @@ class Register(SystemAction):
         activation_keys = self.get_option('activationkey')
         release = self.get_option('release')
         sla = self.get_option('sla')
+        facts = dict(self.get_option('fact') or {})
 
-        system = self.api.register(name, org, environment, activation_keys, 'system', release, sla)
+        system = self.api.register(name, org, environment, activation_keys, 'system', release, sla, facts=facts)
 
         if is_valid_record(system):
             print _("Successfully registered system [ %s ]") % system['name']

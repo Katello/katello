@@ -21,7 +21,7 @@ class SystemAPI(KatelloAPI):
     """
     Connection class to access environment calls
     """
-    def register(self, name, org, envName, activation_keys, cp_type, release=None, sla=None):
+    def register(self, name, org, envName, activation_keys, cp_type, release=None, sla=None, facts={}):
         if envName is not None:
             environment = get_environment(org, envName)
             if environment is None:
@@ -30,15 +30,13 @@ class SystemAPI(KatelloAPI):
             path = "/api/environments/%s/systems" % environment["id"]
         else:
             path = "/api/organizations/%s/systems" % org
+        facts_with_defaults = { "distribution.name": "Unknown", "cpu.cpu_socket(s)": "1" }
+        facts_with_defaults.update(facts)
         sysdata = {
           "name": name,
           "cp_type": cp_type,
           "serviceLevel": sla,
-          "facts": {
-              # TODO - provide real facts
-              "distribution.name": "Fedora",
-              "cpu.cpu_socket(s)": "1"
-              }
+          "facts": facts_with_defaults
         }
         if activation_keys:
             sysdata["activation_keys"] = activation_keys
