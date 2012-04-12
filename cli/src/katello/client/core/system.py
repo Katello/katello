@@ -128,8 +128,8 @@ class Info(SystemAction):
         self.printer.addColumn('created_at', 'Registered', time_format=True)
         self.printer.addColumn('updated_at', 'Last updated', time_format=True)
         self.printer.addColumn('description', multiline=True)
-        if system.has_key('releaseVer') and system['releaseVer']:
-             self.printer.addColumn('releaseVer', 'OS release')
+        if system.has_key('release') and system['release']:
+             self.printer.addColumn('release', 'OS release')
         self.printer.addColumn('activation_keys', multiline=True, show_in_grep=False)
         self.printer.addColumn('host', show_in_grep=False)
         self.printer.addColumn('serviceLevel', _('Service Level'))
