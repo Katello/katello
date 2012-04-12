@@ -18,6 +18,7 @@ describe SystemGroup do
 
   before(:each) do
     disable_org_orchestration
+    disable_consumer_group_orchestration
     @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
 
   end
@@ -25,6 +26,7 @@ describe SystemGroup do
   context "create should" do
 
     it "should create succesfully with an org" do
+      Pulp::ConsumerGroup.should_receive(:create).and_return({})
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.pulp_id.should_not == nil
     end
@@ -46,9 +48,10 @@ describe SystemGroup do
   end
 
   context "delete should" do
-    it "should delete a group succesfully" do
+    it "should delete a group successfully" do
+      Pulp::ConsumerGroup.should_receive(:destroy).and_return(200)
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
-      grp.delete
+      grp.destroy
       SystemGroup.where(:name=>"TestGroup").count.should == 0
     end
   end
