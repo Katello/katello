@@ -1,5 +1,7 @@
 Src::Application.routes.draw do
 
+  resources :system_groups
+
   resources :activation_keys do
     collection do
       get :auto_complete_search
