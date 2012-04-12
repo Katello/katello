@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.29
+Version:        0.2.30
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -359,6 +359,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Apr 12 2012 Ivan Necas <inecas@redhat.com> 0.2.30-1
+- cp-releasever - release as a scalar value in API system json
+- removing bail out check for env-selector
+
 * Wed Apr 11 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.29-1
 - 713153 - RFE: include IP information in consumers/systems related API calls.
 - 803412 - auto-subscribe w/ SLA now on system subscription page
