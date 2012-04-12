@@ -123,9 +123,15 @@ EOKEY
   end
 
   def disable_filter_orchestration
-    Pulp::Filter.stub!(:create).and_return({})
-    Pulp::Filter.stub!(:destroy).and_return(200)
-    Pulp::Filter.stub(:find).and_return({})
+      Pulp::Filter.stub!(:create).and_return({})
+      Pulp::Filter.stub!(:destroy).and_return(200)
+      Pulp::Filter.stub(:find).and_return({})
+  end
+
+  def disable_consumer_group_orchestration
+      Pulp::ConsumerGroup.stub!(:create).and_return({})
+      Pulp::ConsumerGroup.stub!(:destroy).and_return(200)
+      Pulp::ConsumerGroup.stub(:find).and_return({})
   end
 
   def disable_repo_orchestration
