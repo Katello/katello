@@ -14,8 +14,11 @@
 class SystemsController < ApplicationController
   include SystemsHelper
 
-  before_filter :find_system, :except =>[:index, :items, :environments, :bulk_destroy, :new, :create]
-  before_filter :find_systems, :only=>[:bulk_destroy]
+  before_filter :find_system, :except =>[:index, :items, :environments, :new, :create, :bulk_destroy,
+                                         :bulk_package_install, :bulk_package_update, :bulk_package_remove,
+                                         :bulk_package_group_install, :bulk_package_group_remove, :bulk_errata_install]
+  before_filter :find_systems, :only=>[:bulk_destroy, :bulk_package_install, :bulk_package_update, :bulk_package_remove,
+                                       :bulk_package_group_install, :bulk_package_group_remove, :bulk_errata_install]
 
   before_filter :find_environment, :only => [:environments, :new]
   before_filter :authorize
@@ -32,6 +35,7 @@ class SystemsController < ApplicationController
     any_readable = lambda{current_organization && System.any_readable?(current_organization)}
     delete_systems = lambda{@system.deletable?}
     bulk_delete_systems = lambda{@systems.collect{|s| false unless s.deletable?}.compact.empty?}
+    bulk_edit_systems = lambda{@systems.collect{|s| false unless s.editable?}.compact.empty?}
     register_system = lambda { current_organization && System.registerable?(@environment, current_organization) }
     items_test = lambda do
       if params[:env_id]
@@ -56,7 +60,13 @@ class SystemsController < ApplicationController
       :show => read_system,
       :facts => read_system,
       :destroy=> delete_systems,
-      :bulk_destroy => bulk_delete_systems
+      :bulk_destroy => bulk_delete_systems,
+      :bulk_package_install => bulk_edit_systems,
+      :bulk_package_update => bulk_edit_systems,
+      :bulk_package_remove => bulk_edit_systems,
+      :bulk_package_group_install => bulk_edit_systems,
+      :bulk_package_group_remove => bulk_edit_systems,
+      :bulk_errata_install => bulk_edit_systems
     }
   end
 
@@ -73,7 +83,6 @@ class SystemsController < ApplicationController
         :update => update_check
     }
   end
-
 
   def new
     @system = System.new
@@ -282,17 +291,6 @@ class SystemsController < ApplicationController
     render :partial => 'facts', :layout => "tupane_layout"
   end
 
-  def bulk_destroy
-    @systems.each{|sys|
-      sys.destroy
-    }
-    notice _("%s Systems Removed Successfully") % @systems.length
-    render :text=>""
-  rescue Exception => e
-    notice e, {:level => :error}
-    render :text=>e, :status=>500
-  end
-
   def destroy
     id = params[:id]
     system = find_system
@@ -309,7 +307,40 @@ class SystemsController < ApplicationController
     render :text=>e, :status=>500
   end
 
+  def bulk_destroy
+    @systems.each{|sys|
+      sys.destroy
+    }
+    notice _("%s Systems Removed Successfully") % @systems.length
+    render :text=>""
+  rescue Exception => e
+    notice e, {:level => :error}
+    render :text=>e, :status=>500
+  end
 
+  def bulk_package_install
+    render :nothing => true
+  end
+
+  def bulk_package_update
+    render :nothing => true
+  end
+
+  def bulk_package_remove
+    render :nothing => true
+  end
+
+  def bulk_package_group_install
+    render :nothing => true
+  end
+
+  def bulk_package_group_remove
+    render :nothing => true
+  end
+
+  def bulk_errata_install
+    render :nothing => true
+  end
 
   private
 

@@ -104,6 +104,12 @@ Src::Application.routes.draw do
       get :env_items
       get :environments
       delete :bulk_destroy
+      post :bulk_package_install
+      post :bulk_package_update
+      post :bulk_package_remove
+      post :bulk_package_group_install
+      post :bulk_package_group_remove
+      post :bulk_errata_install
     end
   end
   resources :operations, :only => [:index]  do
