@@ -13,6 +13,9 @@
 class SystemGroup < ActiveRecord::Base
 
 
+  include Glue::Pulp::ConsumerGroup if (AppConfig.use_pulp)
+  include Glue
+
   validates :pulp_id, :presence => true
   validates :name, :presence => true, :katello_name_format => true
   validates_presence_of :organization_id, :message => N_("Organization cannot be blank.")
@@ -21,7 +24,6 @@ class SystemGroup < ActiveRecord::Base
 
 
   belongs_to :organization
-  has_and_belongs_to_many :systems, :uniq => true
 
   before_validation(:on=>:create) do
     self.pulp_id ||= "#{self.organization.cp_key}-#{self.name}-#{SecureRandom.hex(4)}"
