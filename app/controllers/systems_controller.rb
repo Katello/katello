@@ -319,32 +319,148 @@ class SystemsController < ApplicationController
   end
 
   def bulk_package_install
+    successful_systems = []
+    failed_systems = []
+
+    if !params[:packages].blank?
+      @systems.each do |system|
+        begin
+          system.install_packages params[:packages]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+    end
+
+    action = "Bulk Action: Schedule install of package(s): %{p}" % {:p => params[:packages].join(',')}
+    notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
 
   def bulk_package_update
+    successful_systems = []
+    failed_systems = []
+
+    @systems.each do |system|
+      begin
+        system.update_packages params[:packages]
+        successful_systems.push(system.name)
+      rescue Exception => error
+        failed_systems.push(system.name)
+      end
+    end
+
+    params[:packages].blank? ?
+      action = "Bulk Action: Schedule update of all packages" :
+      action = "Bulk Action: Schedule update of package(s): %{p}" % {:p => params[:packages].join(',')}
+
+    notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
 
   def bulk_package_remove
+    successful_systems = []
+    failed_systems = []
+
+    if !params[:packages].blank?
+      @systems.each do |system|
+        begin
+          system.uninstall_packages params[:packages]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+    end
+
+    action = "Bulk Action: Schedule uninstall of package(s): %{p}" % {:p => params[:packages].join(',')}
+    notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
 
   def bulk_package_group_install
+    successful_systems = []
+    failed_systems = []
+
+    if !params[:groups].blank?
+      @systems.each do |system|
+        begin
+          system.install_package_groups params[:groups]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+    end
+
+    action = "Bulk Action: Schedule install of package group(s): %{p}" % {:p => params[:groups].join(',')}
+    notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
 
   def bulk_package_group_remove
+    successful_systems = []
+    failed_systems = []
+
+    if !params[:groups].blank?
+      @systems.each do |system|
+        begin
+          system.uninstall_package_groups params[:groups]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+    end
+
+    action = "Bulk Action: Schedule uninstall of package group(s): %{p}" % {:p => params[:groups].join(',')}
+    notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
 
   def bulk_errata_install
+    successful_systems = []
+    failed_systems = []
+
+    if !params[:errata].blank?
+      @systems.each do |system|
+        begin
+          system.install_errata params[:errata]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+    end
+
+    action = "Bulk Action: Schedule install of errata(s): %{p}" % {:p => params[:errata].join(',')}
+    notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
 
   private
 
   include SortColumnList
+
+  def notice_bulk_action action, successful_systems, failed_systems
+    # generate a notice for a bulk action
+
+    success_msg = _("Successful for system(s): ")
+    failure_msg = _("Failed for system(s):")
+    newline = '<br />'
+
+    if failed_systems.empty?
+      notice (action + newline + success_msg + successful_systems.join(','))
+    else
+      if successful_systems.empty?
+        notice((action + newline + failure_msg + failed_systems.join(',')), {:level => :error})
+      else
+        notice((action + newline + success_msg + successful_systems.join(',') + newline + failure_msg + failed_systems.join(',')),
+               {:level => :error})
+      end
+    end
+  end
 
   def find_environment
     if current_organization
