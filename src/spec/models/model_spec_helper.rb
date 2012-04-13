@@ -132,6 +132,8 @@ EOKEY
       Pulp::ConsumerGroup.stub!(:create).and_return({})
       Pulp::ConsumerGroup.stub!(:destroy).and_return(200)
       Pulp::ConsumerGroup.stub(:find).and_return({})
+      Pulp::ConsumerGroup.stub!(:add_consumer).and_return(200)
+      Pulp::ConsumerGroup.stub!(:delete_consumer).and_return(200)
   end
 
   def disable_repo_orchestration
