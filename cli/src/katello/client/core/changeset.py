@@ -60,12 +60,10 @@ class List(ChangesetAction):
             return os.EX_DATAERR
 
         changesets = self.api.changesets(orgName, env['id'])
-        for cs in changesets:
-            cs['updated_at'] = format_date(cs['updated_at'])
 
         self.printer.add_column('id')
         self.printer.add_column('name')
-        self.printer.add_column('updated_at')
+        self.printer.add_column('updated_at', formatter=format_date)
         self.printer.add_column('state')
         self.printer.add_column('environment_id')
         self.printer.add_column('environment_name')
@@ -109,7 +107,6 @@ class Info(ChangesetAction):
         if cset == None:
             return os.EX_DATAERR
 
-        cset['updated_at'] = format_date(cset['updated_at'])
         cset['environment_name'] = envName
 
         cset["errata"] = self.format_item_list("display_name", cset["errata"])
@@ -124,7 +121,7 @@ class Info(ChangesetAction):
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('description', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('updated_at')
+        self.printer.add_column('updated_at', formatter=format_date)
         self.printer.add_column('state')
         self.printer.add_column('environment_id')
         self.printer.add_column('environment_name')

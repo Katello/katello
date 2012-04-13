@@ -133,11 +133,10 @@ class Info(FilterAction):
         name = self.get_option('name')
 
         filter_info = self.api.info(org, name)
-        filter_info['package_list'] = self.package_list_as_string(filter_info["package_list"])
 
         self.printer.add_column('name')
         self.printer.add_column('description')
-        self.printer.add_column('package_list')
+        self.printer.add_column('package_list', formatter=self.package_list_as_string)
 
         self.printer.set_header(_("Filter Information"))
         self.printer.print_item(filter_info)

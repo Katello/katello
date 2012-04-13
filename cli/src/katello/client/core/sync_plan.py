@@ -65,13 +65,11 @@ class List(SyncPlanAction):
         org_name = self.get_option('org')
 
         plans = self.api.sync_plans(org_name)
-        for p in plans:
-            p['start_date'] = format_date(p['sync_date'])
 
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('description', multiline=True)
-        self.printer.add_column('start_date')
+        self.printer.add_column('start_date', formatter=format_date)
         self.printer.add_column('interval')
 
         self.printer.set_header(_("Sync Plan List"))
@@ -99,11 +97,10 @@ class Info(SyncPlanAction):
         if plan == None:
             return os.EX_DATAERR
 
-        plan['start_date'] = format_date(plan['sync_date'])
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('description', multiline=True)
-        self.printer.add_column('start_date')
+        self.printer.add_column('start_date', formatter=format_date)
         self.printer.add_column('interval')
 
         self.printer.set_header(_("Sync Plan Info"))

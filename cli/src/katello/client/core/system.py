@@ -25,7 +25,7 @@ from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, convert_to_mime_type, attachment_file_name, save_report
 from katello.client.utils.printer import Printer, VerboseStrategy
-from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_date
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 
@@ -76,7 +76,6 @@ class List(SystemAction):
         self.printer.add_column('ipv4_address')
         self.printer.add_column('serviceLevel', _('Service Level'))
 
-        self.printer._grep = True
         self.printer.print_items(systems)
         return os.EX_OK
 
@@ -127,8 +126,8 @@ class Info(SystemAction):
         self.printer.add_column('ipv4_address')
         self.printer.add_column('uuid')
         self.printer.add_column('location')
-        self.printer.add_column('created_at', 'Registered', time_format=True)
-        self.printer.add_column('updated_at', 'Last updated', time_format=True)
+        self.printer.add_column('created_at', 'Registered', formatter=format_date)
+        self.printer.add_column('updated_at', 'Last updated', formatter=format_date)
         self.printer.add_column('description', multiline=True)
         if system.has_key('releaseVer') and system['releaseVer']:
              self.printer.add_column('releaseVer', 'OS release')
@@ -232,21 +231,14 @@ class InstalledPackages(SystemAction):
 
         packages = self.api.packages(system_id)
 
-
-        for p in packages:
-            p['name_version_release_arch'] = "%s-%s-%s.%s" % \
-                    (p['name'], p['version'], p['release'], p['arch'])
-
-        if verbose:
-            self.printer.add_column('name')
-            self.printer.add_column('vendor')
-            self.printer.add_column('version')
-            self.printer.add_column('release')
-            self.printer.add_column('arch')
-        else:
-            # print compact list of package names only
-            self.printer.add_column('name_version_release_arch')
-            self.printer._grep = True
+        self.printer.add_column('name', show_with=printer.VerboseStrategy)
+        self.printer.add_column('vendor', show_with=printer.VerboseStrategy)
+        self.printer.add_column('version', show_with=printer.VerboseStrategy)
+        self.printer.add_column('release', show_with=printer.VerboseStrategy)
+        self.printer.add_column('arch', show_with=printer.VerboseStrategy)
+        self.printer.add_column('name_version_release_arch',
+                    show_with=printer.GrepStrategy,
+                    item_formatter=lambda p: "%s-%s-%s.%s" % (p['name'], p['version'], p['release'], p['arch']))
 
         self.printer.print_items(packages)
 
@@ -282,10 +274,11 @@ class TasksList(SystemAction):
             t['result'] = "\n" + t['result_description']
 
         if verbose:
+            self.printer.add_column('uuid', name=_("Task id"))
             self.printer.add_column('system_name', name=_("System"))
             self.printer.add_column('description', name=_("Action"))
-            self.printer.add_column('created_at', name=_("Started"), time_format=True)
-            self.printer.add_column('finish_time', name=_("Finished"), time_format=True)
+            self.printer.add_column('created_at', name=_("Started"), formatter=format_date)
+            self.printer.add_column('finish_time', name=_("Finished"), formatter=format_date)
             self.printer.add_column('state', name=_("Status"))
             self.printer.add_column('result', name=_("Result"))
         else:
@@ -319,8 +312,8 @@ class TaskInfo(SystemAction):
 
         self.printer.add_column('system_name', name=_("System"))
         self.printer.add_column('description', name=_("Action"))
-        self.printer.add_column('created_at', name=_("Started"), time_format=True)
-        self.printer.add_column('finish_time', name=_("Finished"), time_format=True)
+        self.printer.add_column('created_at', name=_("Started"), formatter=format_date)
+        self.printer.add_column('finish_time', name=_("Finished"), formatter=format_date)
         self.printer.add_column('state', name=_("Status"))
         self.printer.add_column('result', name=_("Result"))
         self.printer.print_item(task)
@@ -361,7 +354,6 @@ class Releases(SystemAction):
         self.printer.set_header(_("Available releases"))
         self.printer.add_column('value')
 
-        self.printer._grep = True
         self.printer.print_items(releases)
         return os.EX_OK
 

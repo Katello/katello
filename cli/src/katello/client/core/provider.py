@@ -274,21 +274,18 @@ class Status(SingleProviderAction):
 
         task = AsyncTask(self.api.last_sync_status(prov['id']))
 
-        prov['last_sync'] = format_sync_time(prov['last_sync'])
-        prov['sync_state'] = format_sync_state(prov['sync_state'])
-
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
-            prov['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+            prov['progress'] = (_("%d%% done (%d of %d packages downloaded)") % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
 
         #TODO: last errors?
 
         self.printer.add_column('id')
         self.printer.add_column('name')
 
-        self.printer.add_column('last_sync')
-        self.printer.add_column('sync_state')
+        self.printer.add_column('last_sync', formatter=format_sync_time)
+        self.printer.add_column('sync_state', formatter=format_sync_state)
         self.printer.add_column('progress', show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Provider Status"))

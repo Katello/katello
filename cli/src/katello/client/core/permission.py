@@ -163,12 +163,6 @@ class List(PermissionAction):
     def format_tags(self, tags):
         return [t['formatted']['display_name'] for t in tags]
 
-    def format_permission(self, permission):
-        permission['scope'] = permission['resource_type']['name']
-        permission['verbs'] = self.format_verbs(permission['verbs'])
-        permission['tags'] = self.format_tags(permission['tags'])
-        return permission
-
     def run(self):
         role_name = self.get_option('user_role')
 
@@ -177,18 +171,15 @@ class List(PermissionAction):
             return os.EX_DATAERR
 
         permissions = self.api.permissions(role['id'])
-        display_permissons = []
-        for p in permissions:
-            display_permissons.append(self.format_permission(p))
 
         self.printer.add_column('id')
         self.printer.add_column('name')
-        self.printer.add_column('scope')
-        self.printer.add_column('verbs', multiline=True)
-        self.printer.add_column('tags', multiline=True)
+        self.printer.add_column('scope', item_formatter=lambda perm: perm['resource_type']['name'])
+        self.printer.add_column('verbs', multiline=True, formatter=self.format_verbs)
+        self.printer.add_column('tags', multiline=True, formatter=self.format_tags)
 
         self.printer.set_header(_("Permission List"))
-        self.printer.print_items(display_permissons)
+        self.printer.print_items(permissions)
         return os.EX_OK
 
 

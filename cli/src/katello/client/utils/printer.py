@@ -30,6 +30,16 @@ class PrinterStrategy:
     def print_items(self, heading, columns, items):
         pass
 
+    def _get_column_value(self, column, item):
+        value = item.get(column['attr_name'], column.get('value', None))
+        value_format_func = column.get('formatter', column.get('value_formatter', None))
+        item_format_func = column.get('item_formatter', None)
+
+        if value_format_func and value:
+            value = value_format_func(value)
+        elif item_format_func:
+            value = item_format_func(item)
+        return value
 
 class VerboseStrategy(PrinterStrategy):
 
@@ -56,15 +66,14 @@ class VerboseStrategy(PrinterStrategy):
         """
         print
         for column in columns:
+            value = self._get_column_value(column, item)
             #skip missing attributes
-            if not column['attr_name'] in item:
+            if not value:
                 continue
-
-            value = item.get(column['attr_name'], column.get('value', None))
 
             if not column.get('multiline', False):
                 col_width = self._column_width(columns)
-                print ("{0:<" + u_str(col_width + 1) + "} {1}").format(column['name']+":", value)
+                print ("{0:<" + u_str(col_width + 1) + "} {1}").format(u_str(column['name'])+":", u_str(value))
                 # +1 to account for the : after the column name
             else:
                 print column['name']+":"
@@ -127,12 +136,12 @@ class GrepStrategy(PrinterStrategy):
             width = column_widths.get(column['attr_name'], 0)
 
             #skip missing attributes
-            if not column['attr_name'] in item:
+            value = self._get_column_value(column, item)
+            if not value:
                 print " " * width,
                 print self.__delim,
                 continue
 
-            value = item[column['attr_name']]
             if column.get('multiline', False):
                 value = text_to_line(value)
 
@@ -144,7 +153,7 @@ class GrepStrategy(PrinterStrategy):
         """
         key = column['attr_name']
         width = len(column['name'])+1
-        for column_value in [u_str(item.get(key, "")) for item in items]:
+        for column_value in [u_str(self._get_column_value(column, item)) for item in items]:
             if width <= len(column_value):
                 width = len(column_value)+1
         return width

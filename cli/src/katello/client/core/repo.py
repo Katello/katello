@@ -287,11 +287,6 @@ class Status(SingleRepoAction):
 
         task = AsyncTask(self.api.last_sync_status(repo['id']))
 
-        repo['last_sync'] = format_sync_time(repo['last_sync'])
-        repo['sync_state'] = format_sync_state(repo['sync_state'])
-        if 'next_scheduled_sync' in repo:
-            repo['next_scheduled_sync'] = format_sync_time(repo['next_scheduled_sync'])
-
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
@@ -300,10 +295,10 @@ class Status(SingleRepoAction):
         repo['last_errors'] = format_sync_errors(task)
 
         self.printer.add_column('package_count')
-        self.printer.add_column('last_sync')
-        self.printer.add_column('sync_state')
+        self.printer.add_column('last_sync', formatter=format_sync_time)
+        self.printer.add_column('sync_state', formatter=format_sync_state)
         if 'next_scheduled_sync' in repo:
-            self.printer.add_column('next_scheduled_sync')
+            self.printer.add_column('next_scheduled_sync', formatter=format_sync_time)
         self.printer.add_column('progress', show_with=printer.VerboseStrategy)
         self.printer.add_column('last_errors', multiline=True, show_with=printer.VerboseStrategy)
 
@@ -321,16 +316,14 @@ class Info(SingleRepoAction):
         repo = self.get_repo(True)
 
         repo['url'] = repo['source']['url']
-        repo['last_sync'] = format_sync_time(repo['last_sync'])
-        repo['sync_state'] = format_sync_state(repo['sync_state'])
 
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('package_count')
         self.printer.add_column('arch', show_with=printer.VerboseStrategy)
         self.printer.add_column('url', show_with=printer.VerboseStrategy)
-        self.printer.add_column('last_sync', show_with=printer.VerboseStrategy)
-        self.printer.add_column('sync_state', name=_("Progress"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('last_sync', show_with=printer.VerboseStrategy, formatter=format_sync_time)
+        self.printer.add_column('sync_state', name=_("Progress"), show_with=printer.VerboseStrategy, formatter=format_sync_state)
         self.printer.add_column('gpg_key_name', name=_("GPG key"), show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Information About Repo %s") % repo['id'])

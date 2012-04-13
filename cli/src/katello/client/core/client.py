@@ -107,13 +107,10 @@ class SavedOptions(ClientAction):
         if Config.parser.has_section('options'):
             options = Config.parser.options('options')
 
-            options_list = []
-            for o in options:
-                options_list.append({ 'option': o, 'value': Config.parser.get('options', o) })
+            options_list = [{'option': o, 'value': Config.parser.get('options', o)} for o in options]
 
             self.printer.add_column('option')
             self.printer.add_column('value')
-            self.printer._grep = True
             self.printer.print_items(options_list)
 
         return os.EX_OK
