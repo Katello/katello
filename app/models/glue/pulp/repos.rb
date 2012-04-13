@@ -551,9 +551,12 @@ module Glue::Pulp::Repos
     private
 
     def yum_gpg_key_url(repo)
-      host = AppConfig.host
-      host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
-      gpg_key_content_api_repository_url(repo, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
+      # if the repo has a gpg key return a url to access it
+      if (repo.gpg_key && repo.gpg_key.content.present?)
+        host = AppConfig.host
+        host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
+        gpg_key_content_api_repository_url(repo, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
+      end
     end
 
   end
