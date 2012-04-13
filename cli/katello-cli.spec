@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.25
+Version:       0.2.26
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,6 +89,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 13 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.26-1
+- cli - documentation strings for printer
+- cli - output formatters in printer
+- cli - fix for method set_output_mode removed from Printer
+- cli - printer refactored to enable more output modes
+- cli - printer class moved out from utils.py into separate file
+
 * Thu Apr 12 2012 Ivan Necas <inecas@redhat.com> 0.2.25-1
 - cp-releasever - release as a scalar value in API system json
 - 769302 - CLI `system register` needs enhancement
