@@ -545,8 +545,15 @@ KT.panel = (function ($) {
                 actions.each(function(index){
                     var action = $(this);
                     var options = action.find(".options");
-                    action.find("a").click(function() {
-                        if (!action.hasClass("disabled")) {
+                    action.find(".request_action").click(function() {
+                        var params = action_list[action.attr("data-id")],
+                            valid = true;
+
+                        if(params.valid_input_cb) {
+                            // Has the user provided valid input for the request?
+                            valid = params.valid_input_cb();
+                        }
+                        if (valid && !action.hasClass("disabled")) {
                             options.slideDown('fast');
                         }
                     });
@@ -571,10 +578,9 @@ KT.panel = (function ($) {
                         };
 
                         if ($(this).hasClass("disabled")){return}
-                        action.find("input").addClass("disabled");
 
                         if(params.ajax_cb) {
-                            params.ajax_cb(getSelected());
+                            params.ajax_cb(getSelected(), options);
                         }
                         else {
                             $.ajax({
@@ -585,6 +591,9 @@ KT.panel = (function ($) {
                                 success: success,
                                 error: error
                             });
+                        }
+                        if (getSelected() === 0) {
+                            action.find("input").addClass("disabled");
                         }
                     });
                 });
