@@ -67,4 +67,4 @@ class TemplateInfoTest(CLIActionTestCase):
 
     def test_it_prints_the_templates(self):
         self.action.run()
-        self.action.printer.printItems.assert_called_once()
+        self.action.printer.print_items.assert_called_once()

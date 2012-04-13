@@ -58,4 +58,4 @@ class PackageGroupCategoryInfoTest(CLIActionTestCase):
 
     def test_it_prints_package_groups(self):
         self.action.run()
-        self.action.printer.printItem.assert_called_once_with(self.PACKAGE_GROUP_CATEGORY)
+        self.action.printer.print_item.assert_called_once_with(self.PACKAGE_GROUP_CATEGORY)

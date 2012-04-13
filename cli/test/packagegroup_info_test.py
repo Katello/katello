@@ -60,4 +60,4 @@ class PackageGroupInfoTest(CLIActionTestCase):
         self.action.run()
         printed_group = deepcopy(self.PACKAGE_GROUP)
         printed_group["conditional_package_names"] = []
-        self.action.printer.printItem.assert_called_once_with(printed_group)
+        self.action.printer.print_item.assert_called_once_with(printed_group)

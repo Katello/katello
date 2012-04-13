@@ -115,14 +115,14 @@ class RepoListTest(CLIActionTestCase):
     def test_it_prints_repos(self):
         self.mock_options(self.OPTIONS_BY_ORG)
         self.action.run()
-        self.action.printer.printItems.assert_called_with(test_data.REPOS)
-        self.action.printer.printItems.reset_mock()
+        self.action.printer.print_items.assert_called_with(test_data.REPOS)
+        self.action.printer.print_items.reset_mock()
 
         self.mock_options(self.OPTIONS_BY_PRODUCT)
         self.action.run()
-        self.action.printer.printItems.assert_called_with(test_data.REPOS)
-        self.action.printer.printItems.reset_mock()
+        self.action.printer.print_items.assert_called_with(test_data.REPOS)
+        self.action.printer.print_items.reset_mock()
 
         self.mock_options(self.OPTIONS_BY_PRODUCT_ENV)
         self.action.run()
-        self.action.printer.printItems.assert_called_with(test_data.REPOS)
+        self.action.printer.print_items.assert_called_with(test_data.REPOS)

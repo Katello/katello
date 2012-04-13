@@ -68,10 +68,10 @@ class CLIActionTestCase(CLITestCase):
 
     def mock_printer(self):
         printer = self.mock(self.action, 'printer')
-        printer.setHeader = Mock()
-        printer.addColumn = Mock()
-        printer.printItem = Mock()
-        printer.printItems = Mock()
+        printer.set_header = Mock()
+        printer.add_column = Mock()
+        printer.print_item = Mock()
+        printer.print_items = Mock()
         return printer
 
     def mock_options(self, options):

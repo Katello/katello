@@ -87,4 +87,4 @@ class ProductListTest(CLIActionTestCase):
 
     def test_it_prints_products(self):
         self.action.run()
-        self.action.printer.printItems.assert_called_once_with(test_data.PRODUCTS)
+        self.action.printer.print_items.assert_called_once_with(test_data.PRODUCTS)
