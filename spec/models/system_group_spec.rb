@@ -66,5 +66,25 @@ describe SystemGroup do
     end
   end
 
-
+  context "changing consumer ids"  do
+    it "should contact pulp if new ids are added" do
+      Pulp::ConsumerGroup.should_receive(:add_consumer).twice
+      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumerids=>[:a, :b])
+      grp.consumerids = [:a, :b, :c, :d]
+      grp.save!
+    end
+    it "should contact pulp if new ids are removed" do
+      Pulp::ConsumerGroup.should_receive(:delete_consumer).twice
+      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumerids=>[:a, :b])
+      grp.consumerids = []
+      grp.save!
+    end
+    it "should contact pulp if new ids are added and removed" do
+      Pulp::ConsumerGroup.should_receive(:add_consumer).twice
+      Pulp::ConsumerGroup.should_receive(:delete_consumer).twice
+      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumerids=>[:a, :b])
+      grp.consumerids = [:c, :d]
+      grp.save!
+    end
+  end
 end
