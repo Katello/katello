@@ -689,7 +689,6 @@ footer {
         float:right;
         width:448px;
         min-height: 300px;
-        height: 300px;
         padding: 20px;
         border: 1px solid $border_color;
         @include border-right-radius(5px);
@@ -715,6 +714,17 @@ footer {
               .actions {
                   float: right;
               }
+            }
+            input[type="radio"] {
+              margin-left: 10px;            
+            }
+            input[type="text"] {
+              margin-left: 20px;
+            }
+            .validation_error {
+              padding-left: 20px;
+              color: $validation_error_color;
+              font-weight: 600;
             }
         }
         #select-result {

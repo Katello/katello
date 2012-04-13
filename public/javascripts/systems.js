@@ -86,13 +86,12 @@ $(document).ready(function() {
     });
 });
 
-KT.systems_page = (function() {
-  return {
-    env_change : function(env_id, element) {
+KT.systems_page = function() {
+    var env_change = function(env_id, element) {
       var url = element.attr("data-url");
       window.location = url;
     },
-    create_system : function(data) {
+    create_system = function(data) {
         var button = data.find('input[type|="submit"]');
         button.attr("disabled","disabled");
         data.ajaxSubmit({
@@ -106,11 +105,18 @@ KT.systems_page = (function() {
             }
         });
     },
-    registerActions : function() {
-        var remove = $(".panel_action[data-id=remove_systems]");
+    registerActions = function() {
+        var removeSystem = $(".panel_action[data-id=remove_systems]"),
+            package = $(".panel_action[data-id=systems_package_action]"),
+            package_error = package.find('.validation_error'),
+            package_group = $(".panel_action[data-id=systems_package_group_action]"),
+            package_group_error = package_group.find('.validation_error'),
+            errata = $(".panel_action[data-id=systems_errata_action]"),
+            errata_error = errata.find('.validation_error');
+
         KT.panel.actions.registerAction("remove_systems",
-            {  url: remove.attr("data-url"),
-               method: remove.attr("data-method"),
+            {  url: removeSystem.attr("data-url"),
+               method: removeSystem.attr("data-method"),
                success_cb: function(ids){
                     $.each(ids,function(index, item){
                         list.remove("system_" + item);
@@ -118,9 +124,173 @@ KT.systems_page = (function() {
                }
             }
         );
-    }
+
+        KT.panel.actions.registerAction("systems_package_action",
+            {
+                valid_input_cb: function() {
+                    // If the user hasn't provided the necessary inputs, generate an error
+                    var valid = true,
+                        selected_action = $("input[name=package_action]:checked"),
+                        action_id = selected_action.attr('id'),
+                        packages_input = $.trim($('#packages_input').val());
+
+                    if (selected_action.length === 0) {
+                        // an action hasn't been selected
+                        package_error.html(i18n.validation_error_select_action);
+                        valid = false;
+                    }
+                    else if ((action_id !== 'package_action_update_packages') && (packages_input.length === 0)) {
+                        // the pkg list is empty, but the action is install or remove
+                        package_error.html(i18n.validation_error_pkg_list_empty);
+                        valid = false;
+                    }
+                    else if (!KT.packages.valid_package_list_format(packages_input.split(/ *, */))) {
+                        // the pkg list is invalid
+                        package_error.html(i18n.validation_error_pkg_name_format);
+                        valid = false;
+                    }
+                    if (valid) {
+                        package_error.html('');
+                    }
+                    return valid;
+                },
+                ajax_cb: function(ids_selected, confirm_dialog) {
+                    var action_selected = $("input[name=package_action]:checked"),
+                        package_array = [],
+                        package_string = $.trim($('#packages_input').val());
+
+                    if (package_string.length > 0) {
+                        package_array = package_string.split(/ *, */);
+                    }
+                    $.ajax({
+                        cache: 'false',
+                        type: package.attr('data-method'),
+                        url: action_selected.attr('data-url'),
+                        data: {ids:ids_selected, packages:package_array},
+                        success: function() {
+                            // on success, close the request confirmation dialog
+                            confirm_dialog.slideUp('fast');
+                        }
+                    });
+                }
+            }
+        );
+
+        KT.panel.actions.registerAction("systems_package_group_action",
+            {
+                valid_input_cb: function() {
+                    // If the user hasn't provided the necessary inputs, generate an error
+                    var valid = true,
+                        selected_action = $("input[name=package_group_action]:checked"),
+                        action_id = selected_action.attr('id'),
+                        package_group_input = $.trim($('#package_groups_input').val());
+
+                    if (selected_action.length === 0) {
+                        // an action hasn't been selected
+                        package_group_error.html(i18n.validation_error_select_action);
+                        valid = false;
+                    }
+                    else if (package_group_input.length === 0) {
+                        // the pkg group list is empty
+                        package_group_error.html(i18n.validation_error_pkg_group_list_empty);
+                        valid = false;
+                    }
+                    if (valid) {
+                        package_group_error.html('');
+                    }
+                    return valid;
+                },
+                ajax_cb: function(ids_selected, confirm_dialog) {
+                    var action_selected = $("input[name=package_group_action]:checked");
+                        group_string = $('#package_groups_input').val(),
+                        group_array = group_string.split(/ *, */);
+
+                    $.ajax({
+                        cache: 'false',
+                        type: package_group.attr('data-method'),
+                        url: action_selected.attr('data-url'),
+                        data: {ids:ids_selected, groups:group_array},
+                        success: function() {
+                            // on success, close the request confirmation dialog
+                            confirm_dialog.slideUp('fast');
+                        }
+                    });
+                }
+            }
+        );
+
+        KT.panel.actions.registerAction("systems_errata_action",
+            {
+                valid_input_cb: function() {
+                    // If the user hasn't provided the necessary inputs, generate an error
+                    var valid = true,
+                        errata_input = $.trim($('#errata_input').val());
+
+                    if (errata_input.length === 0) {
+                        // the errata list is empty
+                        errata_error.html(i18n.validation_error_errata_list_empty);
+                        valid = false;
+                    }
+                    if (valid) {
+                        errata_error.html('');
+                    }
+                    return valid;
+                },
+                ajax_cb: function(ids_selected, confirm_dialog) {
+                    var errata_string = $('#errata_input').val(),
+                        errata_array = errata_string.split(/ *, */);
+
+                    $.ajax({
+                        cache: 'false',
+                        type: errata.attr('data-method'),
+                        url: errata.attr('data-url'),
+                        data: {ids:ids_selected, errata:errata_array},
+                        success: function() {
+                            // on success, close the request confirmation dialog
+                            confirm_dialog.slideUp('fast');
+                        }
+                    });
+                }
+            }
+        );
+
+        $(".radio_option").click(function() {
+            // Whenever the user selects a radio button, update the action value in the confirmation text
+            var label_text = $(this).next('label').text().toLowerCase(),
+                option_action = $(this).nextAll('div.options').find('span.action_text');
+
+            option_action.html(label_text);
+        });
+
+    };
+  return {
+      env_change : env_change,
+      create_system : create_system,
+      registerActions : registerActions
   }
-})();
+}();
+
+KT.packages = function() {
+    var valid_package_list_format = function(packages){
+        var length = packages.length;
+
+        for (var i = 0; i < length; i += 1){
+            if( !valid_package_name(packages[i]) ){
+                return false;
+            }
+        }
+        return true;
+    },
+    valid_package_name = function(package_name){
+        var is_match = package_name.match(/[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/);
+
+        return is_match === null ? true : false;
+    };
+return {
+        valid_package_list_format : valid_package_list_format,
+        valid_package_name : valid_package_name
+    }
+}();
 
 KT.subs = function() {
     var unsubSetup = function(){
