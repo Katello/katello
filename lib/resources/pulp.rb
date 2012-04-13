@@ -603,6 +603,14 @@ module Pulp
         JSON.parse(response.body).with_indifferent_access
       end
 
+      def add_consumer id, consumer_id
+        self.post "#{path(id)}add_consumer/", consumer_id.to_json, self.default_headers
+      end
+
+      def delete_consumer id, consumer_id
+        self.post "#{path(id)}delete_consumer/", consumer_id.to_json, self.default_headers
+      end
+
       def path(id=nil)
         groups = self.path_with_prefix("/consumergroups/")
         id.nil? ? groups : groups + "#{id}/"
