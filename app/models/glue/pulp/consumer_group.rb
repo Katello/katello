@@ -30,7 +30,7 @@ module Glue::Pulp::ConsumerGroup
 
     def set_pulp_consumer_group
       Rails.logger.debug "creating pulp consumer group '#{self.pulp_id}'"
-      Pulp::ConsumerGroup.create :id => self.pulp_id, :description=>self.description, :consumerids=>consumerids
+      Pulp::ConsumerGroup.create :id => self.pulp_id, :description=>self.description, :consumerids=>(consumerids || [])
     rescue => e
       Rails.logger.error "Failed to create pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
