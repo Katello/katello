@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.107
+Version:        0.1.108
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Apr 16 2012 Mike McCune <mmccune@redhat.com> 0.1.108-1
+- 811011 - adding keep alive and expires (jsherril@redhat.com)
+
 * Thu Mar 29 2012 Mike McCune <mmccune@redhat.com> 0.1.107-1
 - 805124 - Do a security review of all world-readable config file
   (mbacovsk@redhat.com)
