@@ -15,6 +15,7 @@ module Navigation
       base.class_eval do
         helper_method :systems_navigation
         helper_method :activation_keys_navigation
+        helper_method :system_groups_navigation
       end
     end
     def menu_systems
@@ -113,6 +114,18 @@ module Navigation
         }
       ]
     end
+
+    def system_groups_navigation
+      [
+        { :key => :details,
+          :name =>_("Details"),
+          :url => lambda{edit_system_group_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
+
 
     def activation_keys_navigation
       [
