@@ -28,6 +28,8 @@ from katello.client.utils.printer import Printer, VerboseStrategy
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_date
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
+from pprint import pprint
+from katello.client.server import ServerRequestError
 
 Config()
 
@@ -458,6 +460,8 @@ class Unregister(SystemAction):
                        help=_("organization name (required)"))
         self.parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
+        self.parser.add_option('--environment', dest='environment',
+                               help=_("environment name eg: development"))
 
     def check_options(self):
         self.require_option('org')
@@ -466,9 +470,29 @@ class Unregister(SystemAction):
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
-        systems = self.api.systems_by_org(org, {'name': name})
-        if systems == None or len(systems) != 1:
-            print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
+        environment = self.get_option('environment')
+        try:
+            if environment:
+                systems = self.api.systems_by_env(org, environment, {'name': name})
+            else:
+                systems = self.api.systems_by_org(org, {'name': name})
+        except ServerRequestError, e:
+            if e[0] == 404:
+                systems = None
+            else:
+                raise e
+
+        if systems == None:
+            if environment is None:
+                print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
+            else:
+                print >> sys.stderr, _("Could not find System [ %s ] in Environment [ %s ] in Org [ %s ]") % (name, environment, org)
+            return os.EX_DATAERR
+        elif len(systems) != 1:
+            if environment is None:
+                print >> sys.stderr, _("Found ambiguous Systems [ %s ] in Org [ %s ], use --environment") % (name, org)
+            else:
+                print >> sys.stderr, _("Found ambiguous Systems [ %s ] in Environment [ %s ] in Org [ %s ]") % (name, environment, org)
             return os.EX_DATAERR
         else:
             self.api.unregister(systems[0]['uuid'])
