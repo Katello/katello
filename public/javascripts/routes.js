@@ -92,14 +92,6 @@
   package_group_categories_api_repository_path: function(_id, options) {
   return Utils.build_path(2, ["/api/repositories/", "/package_group_categories"], arguments)
   },
-// auto_complete_search_activation_keys => /activation_keys/auto_complete_search(.:format)
-  auto_complete_search_activation_keys_path: function(options) {
-  return Utils.build_path(1, ["/activation_keys/auto_complete_search"], arguments)
-  },
-// changesets => /changesets(.:format)
-  changesets_path: function(options) {
-  return Utils.build_path(1, ["/changesets"], arguments)
-  },
 // clear_helptips_user => /users/:id/clear_helptips(.:format)
   clear_helptips_user_path: function(_id, options) {
   return Utils.build_path(2, ["/users/", "/clear_helptips"], arguments)
@@ -119,6 +111,10 @@
 // releases_api_environment => /api/environments/:id/releases(.:format)
   releases_api_environment_path: function(_id, options) {
   return Utils.build_path(2, ["/api/environments/", "/releases"], arguments)
+  },
+// gpg_keys => /gpg_keys(.:format)
+  gpg_keys_path: function(options) {
+  return Utils.build_path(1, ["/gpg_keys"], arguments)
   },
 // object_changeset => /changesets/:id/object(.:format)
   object_changeset_path: function(_id, options) {
@@ -164,25 +160,29 @@
   new_sync_plan_path: function(options) {
   return Utils.build_path(1, ["/sync_plans/new"], arguments)
   },
+// activation_keys => /activation_keys(.:format)
+  activation_keys_path: function(options) {
+  return Utils.build_path(1, ["/activation_keys"], arguments)
+  },
 // provider_product_repositories => /providers/:provider_id/products/:product_id/repositories(.:format)
   provider_product_repositories_path: function(_provider_id, _product_id, options) {
   return Utils.build_path(3, ["/providers/", "/products/", "/repositories"], arguments)
+  },
+// filters => /filters(.:format)
+  filters_path: function(options) {
+  return Utils.build_path(1, ["/filters"], arguments)
   },
 // edit_provider_product => /providers/:provider_id/products/:id/edit(.:format)
   edit_provider_product_path: function(_provider_id, _id, options) {
   return Utils.build_path(3, ["/providers/", "/products/", "/edit"], arguments)
   },
-// edit_environment => /environments/:id/edit(.:format)
-  edit_environment_path: function(_id, options) {
-  return Utils.build_path(2, ["/environments/", "/edit"], arguments)
-  },
-// system_events => /systems/:system_id/events(.:format)
-  system_events_path: function(_system_id, options) {
-  return Utils.build_path(2, ["/systems/", "/events"], arguments)
-  },
 // items_organizations => /organizations/items(.:format)
   items_organizations_path: function(options) {
   return Utils.build_path(1, ["/organizations/items"], arguments)
+  },
+// sync_plan => /sync_plans/:id(.:format)
+  sync_plan_path: function(_id, options) {
+  return Utils.build_path(2, ["/sync_plans/"], arguments)
   },
 // filelist_repository_distribution => /repositories/:repository_id/distributions/:id/filelist(.:format)
   filelist_repository_distribution_path: function(_repository_id, _id, options) {
@@ -191,6 +191,10 @@
 // remove_system_system_packages => /systems/:system_id/system_packages/remove(.:format)
   remove_system_system_packages_path: function(_system_id, options) {
   return Utils.build_path(2, ["/systems/", "/system_packages/remove"], arguments)
+  },
+// system_events => /systems/:system_id/events(.:format)
+  system_events_path: function(_system_id, options) {
+  return Utils.build_path(2, ["/systems/", "/events"], arguments)
   },
 // install_system_errata => /systems/:system_id/errata/install(.:format)
   install_system_errata_path: function(_system_id, options) {
@@ -212,10 +216,6 @@
   add_packages_filter_path: function(_id, options) {
   return Utils.build_path(2, ["/filters/", "/add_packages"], arguments)
   },
-// activation_key => /activation_keys/:id(.:format)
-  activation_key_path: function(_id, options) {
-  return Utils.build_path(2, ["/activation_keys/"], arguments)
-  },
 // edit_activation_key => /activation_keys/:id/edit(.:format)
   edit_activation_key_path: function(_id, options) {
   return Utils.build_path(2, ["/activation_keys/", "/edit"], arguments)
@@ -224,21 +224,13 @@
   import_api_templates_path: function(options) {
   return Utils.build_path(1, ["/api/templates/import"], arguments)
   },
-// organizations => /organizations(.:format)
-  organizations_path: function(options) {
-  return Utils.build_path(1, ["/organizations"], arguments)
-  },
-// notices => /notices(.:format)
-  notices_path: function(options) {
-  return Utils.build_path(1, ["/notices"], arguments)
-  },
 // edit_api_template_product => /api/templates/:template_id/products/:id/edit(.:format)
   edit_api_template_product_path: function(_template_id, _id, options) {
   return Utils.build_path(3, ["/api/templates/", "/products/", "/edit"], arguments)
   },
-// jammit => /assets/:package.:extension(.:format)
-  jammit_path: function(_package, _extension, options) {
-  return Utils.build_path(3, ["/assets/", "."], arguments)
+// system_groups => /system_groups(.:format)
+  system_groups_path: function(options) {
+  return Utils.build_path(1, ["/system_groups"], arguments)
   },
 // changelog_package => /packages/:id/changelog(.:format)
   changelog_package_path: function(_id, options) {
@@ -252,9 +244,9 @@
   edit_api_organization_path: function(_id, options) {
   return Utils.build_path(2, ["/api/organizations/", "/edit"], arguments)
   },
-// gpg_keys => /gpg_keys(.:format)
-  gpg_keys_path: function(options) {
-  return Utils.build_path(1, ["/gpg_keys"], arguments)
+// sync_management => /sync_management/:id(.:format)
+  sync_management_path: function(_id, options) {
+  return Utils.build_path(2, ["/sync_management/"], arguments)
   },
 // edit_api_template_package_group => /api/templates/:template_id/package_groups/:id/edit(.:format)
   edit_api_template_package_group_path: function(_template_id, _id, options) {
@@ -276,10 +268,6 @@
   auto_complete_search_systems_path: function(options) {
   return Utils.build_path(1, ["/systems/auto_complete_search"], arguments)
   },
-// edit_api_user => /api/users/:id/edit(.:format)
-  edit_api_user_path: function(_id, options) {
-  return Utils.build_path(2, ["/api/users/", "/edit"], arguments)
-  },
 // edit_api_template_repository => /api/templates/:template_id/repositories/:id/edit(.:format)
   edit_api_template_repository_path: function(_template_id, _id, options) {
   return Utils.build_path(3, ["/api/templates/", "/repositories/", "/edit"], arguments)
@@ -296,6 +284,14 @@
   new_api_changeset_repository_path: function(_changeset_id, options) {
   return Utils.build_path(2, ["/api/changesets/", "/repositories/new"], arguments)
   },
+// edit_api_user => /api/users/:id/edit(.:format)
+  edit_api_user_path: function(_id, options) {
+  return Utils.build_path(2, ["/api/users/", "/edit"], arguments)
+  },
+// new_api_role => /api/roles/new(.:format)
+  new_api_role_path: function(options) {
+  return Utils.build_path(1, ["/api/roles/new"], arguments)
+  },
 // sync_management_index => /sync_management/index(.:format)
   sync_management_index_path: function(options) {
   return Utils.build_path(1, ["/sync_management/index"], arguments)
@@ -304,25 +300,21 @@
   sync_plan_api_organization_product_path: function(_organization_id, _id, options) {
   return Utils.build_path(3, ["/api/organizations/", "/products/", "/sync_plan"], arguments)
   },
-// new_api_role => /api/roles/new(.:format)
-  new_api_role_path: function(options) {
-  return Utils.build_path(1, ["/api/roles/new"], arguments)
+// promotion => /promotions/:id(.:format)
+  promotion_path: function(_id, options) {
+  return Utils.build_path(2, ["/promotions/"], arguments)
   },
 // owner => /owners/:id(.:format)
   owner_path: function(_id, options) {
   return Utils.build_path(2, ["/owners/"], arguments)
   },
-// system_template => /system_templates/:id(.:format)
-  system_template_path: function(_id, options) {
-  return Utils.build_path(2, ["/system_templates/"], arguments)
+// gpg_key => /gpg_keys/:id(.:format)
+  gpg_key_path: function(_id, options) {
+  return Utils.build_path(2, ["/gpg_keys/"], arguments)
   },
 // new_environment => /environments/new(.:format)
   new_environment_path: function(options) {
   return Utils.build_path(1, ["/environments/new"], arguments)
-  },
-// password_resets => /password_resets(.:format)
-  password_resets_path: function(options) {
-  return Utils.build_path(1, ["/password_resets"], arguments)
   },
 // auto_complete_search_sync_plans => /sync_plans/auto_complete_search(.:format)
   auto_complete_search_sync_plans_path: function(options) {
@@ -348,6 +340,10 @@
   edit_organization_path: function(_id, options) {
   return Utils.build_path(2, ["/organizations/", "/edit"], arguments)
   },
+// new_system_group => /system_groups/new(.:format)
+  new_system_group_path: function(options) {
+  return Utils.build_path(1, ["/system_groups/new"], arguments)
+  },
 // destroy_favorite_search_index => /search/favorite/:id(.:format)
   destroy_favorite_search_index_path: function(_id, options) {
   return Utils.build_path(2, ["/search/favorite/"], arguments)
@@ -372,6 +368,10 @@
   new_system_template_path: function(options) {
   return Utils.build_path(1, ["/system_templates/new"], arguments)
   },
+// filter => /filters/:id(.:format)
+  filter_path: function(_id, options) {
+  return Utils.build_path(2, ["/filters/"], arguments)
+  },
 // new_provider_product_repository => /providers/:provider_id/products/:product_id/repositories/new(.:format)
   new_provider_product_repository_path: function(_provider_id, _product_id, options) {
   return Utils.build_path(3, ["/providers/", "/products/", "/repositories/new"], arguments)
@@ -387,10 +387,6 @@
 // show_user_session => /user_session(.:format)
   show_user_session_path: function(options) {
   return Utils.build_path(1, ["/user_session"], arguments)
-  },
-// promotions => /promotions(.:format)
-  promotions_path: function(options) {
-  return Utils.build_path(1, ["/promotions"], arguments)
   },
 // repository_distribution => /repositories/:repository_id/distributions/:id(.:format)
   repository_distribution_path: function(_repository_id, _id, options) {
@@ -408,9 +404,13 @@
   status_system_errata_path: function(_system_id, options) {
   return Utils.build_path(2, ["/systems/", "/errata/status"], arguments)
   },
-// activation_keys => /activation_keys(.:format)
-  activation_keys_path: function(options) {
-  return Utils.build_path(1, ["/activation_keys"], arguments)
+// user => /users/:id(.:format)
+  user_path: function(_id, options) {
+  return Utils.build_path(2, ["/users/"], arguments)
+  },
+// system => /systems/:id(.:format)
+  system_path: function(_id, options) {
+  return Utils.build_path(2, ["/systems/"], arguments)
   },
 // auto_complete_search_gpg_keys => /gpg_keys/auto_complete_search(.:format)
   auto_complete_search_gpg_keys_path: function(options) {
@@ -419,14 +419,6 @@
 // products_api_provider => /api/providers/:id/products(.:format)
   products_api_provider_path: function(_id, options) {
   return Utils.build_path(2, ["/api/providers/", "/products"], arguments)
-  },
-// user => /users/:id(.:format)
-  user_path: function(_id, options) {
-  return Utils.build_path(2, ["/users/"], arguments)
-  },
-// system => /systems/:id(.:format)
-  system_path: function(_id, options) {
-  return Utils.build_path(2, ["/systems/"], arguments)
   },
 // remove_packages_filter => /filters/:id/remove_packages(.:format)
   remove_packages_filter_path: function(_id, options) {
@@ -440,13 +432,13 @@
   export_api_template_path: function(_id, options) {
   return Utils.build_path(2, ["/api/templates/", "/export"], arguments)
   },
+// systems => /systems(.:format)
+  systems_path: function(options) {
+  return Utils.build_path(1, ["/systems"], arguments)
+  },
 // auto_complete_library_repositories => /repositories/auto_complete_library(.:format)
   auto_complete_library_repositories_path: function(options) {
   return Utils.build_path(1, ["/repositories/auto_complete_library"], arguments)
-  },
-// sync_plan => /sync_plans/:id(.:format)
-  sync_plan_path: function(_id, options) {
-  return Utils.build_path(2, ["/sync_plans/"], arguments)
   },
 // new_api_template_parameter => /api/templates/:template_id/parameters/new(.:format)
   new_api_template_parameter_path: function(_template_id, options) {
@@ -504,9 +496,13 @@
   edit_api_role_path: function(_id, options) {
   return Utils.build_path(2, ["/api/roles/", "/edit"], arguments)
   },
-// sync_management => /sync_management/:id(.:format)
-  sync_management_path: function(_id, options) {
-  return Utils.build_path(2, ["/sync_management/"], arguments)
+// subscriptions => /subscriptions(.:format)
+  subscriptions_path: function(options) {
+  return Utils.build_path(1, ["/subscriptions"], arguments)
+  },
+// user_session => /user_session(.:format)
+  user_session_path: function(options) {
+  return Utils.build_path(1, ["/user_session"], arguments)
   },
 // rails_info_properties => /rails/info/properties(.:format)
   rails_info_properties_path: function(options) {
@@ -540,6 +536,14 @@
   repositories_api_environment_product_path: function(_environment_id, _id, options) {
   return Utils.build_path(3, ["/api/environments/", "/products/", "/repositories"], arguments)
   },
+// edit_system_group => /system_groups/:id/edit(.:format)
+  edit_system_group_path: function(_id, options) {
+  return Utils.build_path(2, ["/system_groups/", "/edit"], arguments)
+  },
+// login => /login(.:format)
+  login_path: function(options) {
+  return Utils.build_path(1, ["/login"], arguments)
+  },
 // content_api_gpg_key => /api/gpg_keys/:id/content(.:format)
   content_api_gpg_key_path: function(_id, options) {
   return Utils.build_path(2, ["/api/gpg_keys/", "/content"], arguments)
@@ -552,17 +556,21 @@
   available_subscriptions_activation_key_path: function(_id, options) {
   return Utils.build_path(2, ["/activation_keys/", "/available_subscriptions"], arguments)
   },
+// environment => /environments/:id(.:format)
+  environment_path: function(_id, options) {
+  return Utils.build_path(2, ["/environments/"], arguments)
+  },
 // subscriptions_dashboard_index => /dashboard/subscriptions(.:format)
   subscriptions_dashboard_index_path: function(options) {
   return Utils.build_path(1, ["/dashboard/subscriptions"], arguments)
   },
-// gpg_key => /gpg_keys/:id(.:format)
-  gpg_key_path: function(_id, options) {
-  return Utils.build_path(2, ["/gpg_keys/"], arguments)
+// operations => /operations(.:format)
+  operations_path: function(options) {
+  return Utils.build_path(1, ["/operations"], arguments)
   },
-// environment => /environments/:id(.:format)
-  environment_path: function(_id, options) {
-  return Utils.build_path(2, ["/environments/"], arguments)
+// root => /(.:format)
+  root_path: function(options) {
+  return Utils.build_path(1, ["/"], arguments)
   },
 // edit_system_template => /system_templates/:id/edit(.:format)
   edit_system_template_path: function(_id, options) {
@@ -571,14 +579,6 @@
 // favorite_search_index => /search/favorite(.:format)
   favorite_search_index_path: function(options) {
   return Utils.build_path(1, ["/search/favorite"], arguments)
-  },
-// repositories => /repositories(.:format)
-  repositories_path: function(options) {
-  return Utils.build_path(1, ["/repositories"], arguments)
-  },
-// root => /(.:format)
-  root_path: function(options) {
-  return Utils.build_path(1, ["/"], arguments)
   },
 // edit_provider_product_repository => /providers/:provider_id/products/:product_id/repositories/:id/edit(.:format)
   edit_provider_product_repository_path: function(_provider_id, _product_id, _id, options) {
@@ -592,13 +592,13 @@
   items_providers_path: function(options) {
   return Utils.build_path(1, ["/providers/items"], arguments)
   },
-// login => /login(.:format)
-  login_path: function(options) {
-  return Utils.build_path(1, ["/login"], arguments)
-  },
 // product_comps_system_templates => /system_templates/product_comps(.:format)
   product_comps_system_templates_path: function(options) {
   return Utils.build_path(1, ["/system_templates/product_comps"], arguments)
+  },
+// role => /roles/:id(.:format)
+  role_path: function(_id, options) {
+  return Utils.build_path(2, ["/roles/"], arguments)
   },
 // packages_system_system_packages => /systems/:system_id/system_packages/packages(.:format)
   packages_system_system_packages_path: function(_system_id, options) {
@@ -616,10 +616,6 @@
   packages_promotion_path: function(_id, options) {
   return Utils.build_path(2, ["/promotions/", "/packages"], arguments)
   },
-// environments => /environments(.:format)
-  environments_path: function(options) {
-  return Utils.build_path(1, ["/environments"], arguments)
-  },
 // products_filter => /filters/:id/products(.:format)
   products_filter_path: function(_id, options) {
   return Utils.build_path(2, ["/filters/", "/products"], arguments)
@@ -636,14 +632,6 @@
   validate_api_template_path: function(_id, options) {
   return Utils.build_path(2, ["/api/templates/", "/validate"], arguments)
   },
-// logout => /logout(.:format)
-  logout_path: function(options) {
-  return Utils.build_path(1, ["/logout"], arguments)
-  },
-// filters => /filters(.:format)
-  filters_path: function(options) {
-  return Utils.build_path(1, ["/filters"], arguments)
-  },
 // edit_api_template_parameter => /api/templates/:template_id/parameters/:id/edit(.:format)
   edit_api_template_parameter_path: function(_template_id, _id, options) {
   return Utils.build_path(3, ["/api/templates/", "/parameters/", "/edit"], arguments)
@@ -655,6 +643,10 @@
 // promote_api_changeset => /api/changesets/:id/promote(.:format)
   promote_api_changeset_path: function(_id, options) {
   return Utils.build_path(2, ["/api/changesets/", "/promote"], arguments)
+  },
+// providers => /providers(.:format)
+  providers_path: function(options) {
+  return Utils.build_path(1, ["/providers"], arguments)
   },
 // edit_api_activation_key => /api/activation_keys/:id/edit(.:format)
   edit_api_activation_key_path: function(_id, options) {
@@ -692,10 +684,6 @@
   new_api_changeset_erratum_path: function(_changeset_id, options) {
   return Utils.build_path(2, ["/api/changesets/", "/errata/new"], arguments)
   },
-// filter => /filters/:id(.:format)
-  filter_path: function(_id, options) {
-  return Utils.build_path(2, ["/filters/"], arguments)
-  },
 // promotion_details_system_template => /system_templates/:id/promotion_details(.:format)
   promotion_details_system_template_path: function(_id, options) {
   return Utils.build_path(2, ["/system_templates/", "/promotion_details"], arguments)
@@ -711,6 +699,10 @@
 // bulk_package_group_install_systems => /systems/bulk_package_group_install(.:format)
   bulk_package_group_install_systems_path: function(options) {
   return Utils.build_path(1, ["/systems/bulk_package_group_install"], arguments)
+  },
+// sync_plans => /sync_plans(.:format)
+  sync_plans_path: function(options) {
+  return Utils.build_path(1, ["/sync_plans"], arguments)
   },
 // new_api_changeset_template => /api/changesets/:changeset_id/templates/new(.:format)
   new_api_changeset_template_path: function(_changeset_id, options) {
@@ -732,9 +724,21 @@
   system_templates_promotion_path: function(_id, options) {
   return Utils.build_path(2, ["/promotions/", "/system_templates"], arguments)
   },
+// promotions => /promotions(.:format)
+  promotions_path: function(options) {
+  return Utils.build_path(1, ["/promotions"], arguments)
+  },
+// environments => /environments(.:format)
+  environments_path: function(options) {
+  return Utils.build_path(1, ["/environments"], arguments)
+  },
 // packages_api_system => /api/systems/:id/packages(.:format)
   packages_api_system_path: function(_id, options) {
   return Utils.build_path(2, ["/api/systems/", "/packages"], arguments)
+  },
+// new_filter => /filters/new(.:format)
+  new_filter_path: function(options) {
+  return Utils.build_path(1, ["/filters/new"], arguments)
   },
 // items_users => /users/items(.:format)
   items_users_path: function(options) {
@@ -743,6 +747,10 @@
 // sync_complete_api_repositories => /api/repositories/sync_complete(.:format)
   sync_complete_api_repositories_path: function(options) {
   return Utils.build_path(1, ["/api/repositories/sync_complete"], arguments)
+  },
+// system_group => /system_groups/:id(.:format)
+  system_group_path: function(_id, options) {
+  return Utils.build_path(2, ["/system_groups/"], arguments)
   },
 // update_content_system_template => /system_templates/:id/update_content(.:format)
   update_content_system_template_path: function(_id, options) {
@@ -756,13 +764,13 @@
   name_changeset_path: function(_id, options) {
   return Utils.build_path(2, ["/changesets/", "/name"], arguments)
   },
+// jammit => /assets/:package.:extension(.:format)
+  jammit_path: function(_package, _extension, options) {
+  return Utils.build_path(3, ["/assets/", "."], arguments)
+  },
 // remove_subscriptions_activation_key => /activation_keys/:id/remove_subscriptions(.:format)
   remove_subscriptions_activation_key_path: function(_id, options) {
   return Utils.build_path(2, ["/activation_keys/", "/remove_subscriptions"], arguments)
-  },
-// subscriptions => /subscriptions(.:format)
-  subscriptions_path: function(options) {
-  return Utils.build_path(1, ["/subscriptions"], arguments)
   },
 // list_changesets => /changesets/list(.:format)
   list_changesets_path: function(options) {
@@ -771,10 +779,6 @@
 // sync_dashboard_index => /dashboard/sync(.:format)
   sync_dashboard_index_path: function(options) {
   return Utils.build_path(1, ["/dashboard/sync"], arguments)
-  },
-// user_session => /user_session(.:format)
-  user_session_path: function(options) {
-  return Utils.build_path(1, ["/user_session"], arguments)
   },
 // dashboard_index => /dashboard(.:format)
   dashboard_index_path: function(options) {
@@ -796,10 +800,6 @@
   sync_management_product_status_path: function(options) {
   return Utils.build_path(1, ["/sync_management/product_status"], arguments)
   },
-// provider => /providers/:id(.:format)
-  provider_path: function(_id, options) {
-  return Utils.build_path(2, ["/providers/"], arguments)
-  },
 // distributions_promotion => /promotions/:id/distributions(.:format)
   distributions_promotion_path: function(_id, options) {
   return Utils.build_path(2, ["/promotions/", "/distributions"], arguments)
@@ -807,10 +807,6 @@
 // provider_product_repository => /providers/:provider_id/products/:product_id/repositories/:id(.:format)
   provider_product_repository_path: function(_provider_id, _product_id, _id, options) {
   return Utils.build_path(4, ["/providers/", "/products/", "/repositories/"], arguments)
-  },
-// changeset => /changesets/:id(.:format)
-  changeset_path: function(_id, options) {
-  return Utils.build_path(2, ["/changesets/"], arguments)
   },
 // download_debug_certificate_organization => /organizations/:id/download_debug_certificate(.:format)
   download_debug_certificate_organization_path: function(_id, options) {
@@ -840,10 +836,6 @@
   update_products_filter_path: function(_id, options) {
   return Utils.build_path(2, ["/filters/", "/update_products"], arguments)
   },
-// promotion => /promotions/:id(.:format)
-  promotion_path: function(_id, options) {
-  return Utils.build_path(2, ["/promotions/"], arguments)
-  },
 // products_repos_gpg_key => /gpg_keys/:id/products_repos(.:format)
   products_repos_gpg_key_path: function(_id, options) {
   return Utils.build_path(2, ["/gpg_keys/", "/products_repos"], arguments)
@@ -872,13 +864,13 @@
   auto_complete_library_packages_path: function(options) {
   return Utils.build_path(1, ["/packages/auto_complete_library"], arguments)
   },
-// products => /products(.:format)
-  products_path: function(options) {
-  return Utils.build_path(1, ["/products"], arguments)
-  },
 // products_system => /systems/:id/products(.:format)
   products_system_path: function(_id, options) {
   return Utils.build_path(2, ["/systems/", "/products"], arguments)
+  },
+// enable_repo => /repositories/:id/enable_repo(.:format)
+  enable_repo_path: function(_id, options) {
+  return Utils.build_path(2, ["/repositories/", "/enable_repo"], arguments)
   },
 // new_api_template_package_group_category => /api/templates/:template_id/package_group_categories/new(.:format)
   new_api_template_package_group_category_path: function(_template_id, options) {
@@ -920,25 +912,25 @@
   edit_api_template_path: function(_id, options) {
   return Utils.build_path(2, ["/api/templates/", "/edit"], arguments)
   },
+// repositories => /repositories(.:format)
+  repositories_path: function(options) {
+  return Utils.build_path(1, ["/repositories"], arguments)
+  },
 // edit_api_changeset_template => /api/changesets/:changeset_id/templates/:id/edit(.:format)
   edit_api_changeset_template_path: function(_changeset_id, _id, options) {
   return Utils.build_path(3, ["/api/changesets/", "/templates/", "/edit"], arguments)
+  },
+// notices => /notices(.:format)
+  notices_path: function(options) {
+  return Utils.build_path(1, ["/notices"], arguments)
   },
 // edit_api_repository_package => /api/repositories/:repository_id/packages/:id/edit(.:format)
   edit_api_repository_package_path: function(_repository_id, _id, options) {
   return Utils.build_path(3, ["/api/repositories/", "/packages/", "/edit"], arguments)
   },
-// systems => /systems(.:format)
-  systems_path: function(options) {
-  return Utils.build_path(1, ["/systems"], arguments)
-  },
-// package => /packages/:id(.:format)
-  package_path: function(_id, options) {
-  return Utils.build_path(2, ["/packages/"], arguments)
-  },
-// providers => /providers(.:format)
-  providers_path: function(options) {
-  return Utils.build_path(1, ["/providers"], arguments)
+// system_templates => /system_templates(.:format)
+  system_templates_path: function(options) {
+  return Utils.build_path(1, ["/system_templates"], arguments)
   },
 // enable_helptip_users => /users/enable_helptip(.:format)
   enable_helptip_users_path: function(options) {
@@ -948,17 +940,17 @@
   errata_api_system_path: function(_id, options) {
   return Utils.build_path(2, ["/api/systems/", "/errata"], arguments)
   },
-// edit_environment_user => /users/:id/edit_environment(.:format)
-  edit_environment_user_path: function(_id, options) {
-  return Utils.build_path(2, ["/users/", "/edit_environment"], arguments)
-  },
 // dependencies_changeset => /changesets/:id/dependencies(.:format)
   dependencies_changeset_path: function(_id, options) {
   return Utils.build_path(2, ["/changesets/", "/dependencies"], arguments)
   },
-// pools_api_activation_key => /api/activation_keys/:id/pools(.:format)
-  pools_api_activation_key_path: function(_id, options) {
-  return Utils.build_path(2, ["/api/activation_keys/", "/pools"], arguments)
+// auto_complete_search_activation_keys => /activation_keys/auto_complete_search(.:format)
+  auto_complete_search_activation_keys_path: function(options) {
+  return Utils.build_path(1, ["/activation_keys/auto_complete_search"], arguments)
+  },
+// edit_environment_user => /users/:id/edit_environment(.:format)
+  edit_environment_user_path: function(_id, options) {
+  return Utils.build_path(2, ["/users/", "/edit_environment"], arguments)
   },
 // items_changesets => /changesets/items(.:format)
   items_changesets_path: function(options) {
@@ -968,13 +960,17 @@
   add_subscriptions_activation_key_path: function(_id, options) {
   return Utils.build_path(2, ["/activation_keys/", "/add_subscriptions"], arguments)
   },
-// sync_plans => /sync_plans(.:format)
-  sync_plans_path: function(options) {
-  return Utils.build_path(1, ["/sync_plans"], arguments)
-  },
 // notices_get_new => /notices/get_new(.:format)
   notices_get_new_path: function(options) {
   return Utils.build_path(1, ["/notices/get_new"], arguments)
+  },
+// pools_api_activation_key => /api/activation_keys/:id/pools(.:format)
+  pools_api_activation_key_path: function(_id, options) {
+  return Utils.build_path(2, ["/api/activation_keys/", "/pools"], arguments)
+  },
+// roles => /roles(.:format)
+  roles_path: function(options) {
+  return Utils.build_path(1, ["/roles"], arguments)
   },
 // notices_dashboard_index => /dashboard/notices(.:format)
   notices_dashboard_index_path: function(options) {
@@ -992,25 +988,25 @@
   items_system_templates_path: function(options) {
   return Utils.build_path(1, ["/system_templates/items"], arguments)
   },
+// activation_key => /activation_keys/:id(.:format)
+  activation_key_path: function(_id, options) {
+  return Utils.build_path(2, ["/activation_keys/"], arguments)
+  },
 // edit_user => /users/:id/edit(.:format)
   edit_user_path: function(_id, options) {
   return Utils.build_path(2, ["/users/", "/edit"], arguments)
+  },
+// changeset => /changesets/:id(.:format)
+  changeset_path: function(_id, options) {
+  return Utils.build_path(2, ["/changesets/"], arguments)
   },
 // new_product => /products/new(.:format)
   new_product_path: function(options) {
   return Utils.build_path(1, ["/products/new"], arguments)
   },
-// users => /users(.:format)
-  users_path: function(options) {
-  return Utils.build_path(1, ["/users"], arguments)
-  },
 // provider_products => /providers/:provider_id/products(.:format)
   provider_products_path: function(_provider_id, options) {
   return Utils.build_path(2, ["/providers/", "/products"], arguments)
-  },
-// system_errata => /systems/:system_id/errata(.:format)
-  system_errata_path: function(_system_id, options) {
-  return Utils.build_path(2, ["/systems/", "/errata"], arguments)
   },
 // system_templates_organization_environment => /organizations/:organization_id/environments/:id/system_templates(.:format)
   system_templates_organization_environment_path: function(_organization_id, _id, options) {
@@ -1036,6 +1032,10 @@
   sync_management_sync_status_path: function(options) {
   return Utils.build_path(1, ["/sync_management/sync_status"], arguments)
   },
+// product => /products/:id(.:format)
+  product_path: function(_id, options) {
+  return Utils.build_path(2, ["/products/"], arguments)
+  },
 // new_api_system_packages => /api/systems/:system_id/packages/new(.:format)
   new_api_system_packages_path: function(_system_id, options) {
   return Utils.build_path(2, ["/api/systems/", "/packages/new"], arguments)
@@ -1048,10 +1048,6 @@
   new_changeset_path: function(options) {
   return Utils.build_path(1, ["/changesets/new"], arguments)
   },
-// product => /products/:id(.:format)
-  product_path: function(_id, options) {
-  return Utils.build_path(2, ["/products/"], arguments)
-  },
 // import_manifest_api_provider => /api/providers/:id/import_manifest(.:format)
   import_manifest_api_provider_path: function(_id, options) {
   return Utils.build_path(2, ["/api/providers/", "/import_manifest"], arguments)
@@ -1059,10 +1055,6 @@
 // email_logins_password_resets => /password_resets/email_logins(.:format)
   email_logins_password_resets_path: function(options) {
   return Utils.build_path(1, ["/password_resets/email_logins"], arguments)
-  },
-// organization => /organizations/:id(.:format)
-  organization_path: function(_id, options) {
-  return Utils.build_path(2, ["/organizations/"], arguments)
   },
 // import_status_owner => /owners/:id/import_status(.:format)
   import_status_owner_path: function(_id, options) {
@@ -1080,6 +1072,14 @@
   edit_api_template_package_path: function(_template_id, _id, options) {
   return Utils.build_path(3, ["/api/templates/", "/packages/", "/edit"], arguments)
   },
+// logout => /logout(.:format)
+  logout_path: function(options) {
+  return Utils.build_path(1, ["/logout"], arguments)
+  },
+// owners => /owners(.:format)
+  owners_path: function(options) {
+  return Utils.build_path(1, ["/owners"], arguments)
+  },
 // allowed_orgs_user_session => /user_session/allowed_orgs(.:format)
   allowed_orgs_user_session_path: function(options) {
   return Utils.build_path(1, ["/user_session/allowed_orgs"], arguments)
@@ -1088,6 +1088,10 @@
   validate_name_library_packages_path: function(options) {
   return Utils.build_path(1, ["/packages/validate_name_library"], arguments)
   },
+// items_system_groups => /system_groups/items(.:format)
+  items_system_groups_path: function(options) {
+  return Utils.build_path(1, ["/system_groups/items"], arguments)
+  },
 // more_products_system => /systems/:id/more_products(.:format)
   more_products_system_path: function(_id, options) {
   return Utils.build_path(2, ["/systems/", "/more_products"], arguments)
@@ -1095,6 +1099,10 @@
 // new_api_changeset_package => /api/changesets/:changeset_id/packages/new(.:format)
   new_api_changeset_package_path: function(_changeset_id, options) {
   return Utils.build_path(2, ["/api/changesets/", "/packages/new"], arguments)
+  },
+// changesets => /changesets(.:format)
+  changesets_path: function(options) {
+  return Utils.build_path(1, ["/changesets"], arguments)
   },
 // new_api_organization_sync_plan => /api/organizations/:organization_id/sync_plans/new(.:format)
   new_api_organization_sync_plan_path: function(_organization_id, options) {
@@ -1128,6 +1136,10 @@
   new_api_changeset_distribution_path: function(_changeset_id, options) {
   return Utils.build_path(2, ["/api/changesets/", "/distributions/new"], arguments)
   },
+// organization => /organizations/:id(.:format)
+  organization_path: function(_id, options) {
+  return Utils.build_path(2, ["/organizations/"], arguments)
+  },
 // new_gpg_key => /gpg_keys/new(.:format)
   new_gpg_key_path: function(options) {
   return Utils.build_path(1, ["/gpg_keys/new"], arguments)
@@ -1136,9 +1148,9 @@
   package_groups_api_repository_path: function(_id, options) {
   return Utils.build_path(2, ["/api/repositories/", "/package_groups"], arguments)
   },
-// enable_repo => /repositories/:id/enable_repo(.:format)
-  enable_repo_path: function(_id, options) {
-  return Utils.build_path(2, ["/repositories/", "/enable_repo"], arguments)
+// package => /packages/:id(.:format)
+  package_path: function(_id, options) {
+  return Utils.build_path(2, ["/packages/"], arguments)
   },
 // edit_filter => /filters/:id/edit(.:format)
   edit_filter_path: function(_id, options) {
@@ -1156,6 +1168,10 @@
   update_environment_user_path: function(_id, options) {
   return Utils.build_path(2, ["/users/", "/update_environment"], arguments)
   },
+// system_errata => /systems/:system_id/errata(.:format)
+  system_errata_path: function(_system_id, options) {
+  return Utils.build_path(2, ["/systems/", "/errata"], arguments)
+  },
 // promote_changeset => /changesets/:id/promote(.:format)
   promote_changeset_path: function(_id, options) {
   return Utils.build_path(2, ["/changesets/", "/promote"], arguments)
@@ -1172,13 +1188,13 @@
   packages_erratum_path: function(_id, options) {
   return Utils.build_path(2, ["/errata/", "/packages"], arguments)
   },
+// edit_environment => /environments/:id/edit(.:format)
+  edit_environment_path: function(_id, options) {
+  return Utils.build_path(2, ["/environments/", "/edit"], arguments)
+  },
 // errata_dashboard_index => /dashboard/errata(.:format)
   errata_dashboard_index_path: function(options) {
   return Utils.build_path(1, ["/dashboard/errata"], arguments)
-  },
-// system_templates => /system_templates(.:format)
-  system_templates_path: function(options) {
-  return Utils.build_path(1, ["/system_templates"], arguments)
   },
 // more_events_system_events => /systems/:system_id/events/more_events(.:format)
   more_events_system_events_path: function(_system_id, options) {
@@ -1192,9 +1208,17 @@
   auto_complete_search_roles_path: function(options) {
   return Utils.build_path(1, ["/roles/auto_complete_search"], arguments)
   },
+// system_template => /system_templates/:id(.:format)
+  system_template_path: function(_id, options) {
+  return Utils.build_path(2, ["/system_templates/"], arguments)
+  },
 // new_system => /systems/new(.:format)
   new_system_path: function(options) {
   return Utils.build_path(1, ["/systems/new"], arguments)
+  },
+// products => /products(.:format)
+  products_path: function(options) {
+  return Utils.build_path(1, ["/products"], arguments)
   },
 // update_repo_gpg_key_provider_product_repository => /providers/:provider_id/products/:product_id/repositories/:id/update_gpg_key(.:format)
   update_repo_gpg_key_provider_product_repository_path: function(_provider_id, _product_id, _id, options) {
@@ -1204,6 +1228,10 @@
   notices_note_count_path: function(options) {
   return Utils.build_path(1, ["/notices/note_count"], arguments)
   },
+// provider => /providers/:id(.:format)
+  provider_path: function(_id, options) {
+  return Utils.build_path(2, ["/providers/"], arguments)
+  },
 // products_promotion => /promotions/:id/products(.:format)
   products_promotion_path: function(_id, options) {
   return Utils.build_path(2, ["/promotions/", "/products"], arguments)
@@ -1211,6 +1239,10 @@
 // new_provider_product => /providers/:provider_id/products/new(.:format)
   new_provider_product_path: function(_provider_id, options) {
   return Utils.build_path(2, ["/providers/", "/products/new"], arguments)
+  },
+// organizations => /organizations(.:format)
+  organizations_path: function(options) {
+  return Utils.build_path(1, ["/organizations"], arguments)
   },
 // edit_product => /products/:id/edit(.:format)
   edit_product_path: function(_id, options) {
@@ -1223,10 +1255,6 @@
 // schedule_provider => /providers/:id/schedule(.:format)
   schedule_provider_path: function(_id, options) {
   return Utils.build_path(2, ["/providers/", "/schedule"], arguments)
-  },
-// roles => /roles(.:format)
-  roles_path: function(options) {
-  return Utils.build_path(1, ["/roles"], arguments)
   },
 // role_permission_destroy => /roles/:role_id/permission/:permission_id/destroy_permission(.:format)
   role_permission_destroy_path: function(_role_id, _permission_id, options) {
@@ -1300,10 +1328,6 @@
   system_erratum_path: function(_system_id, _id, options) {
   return Utils.build_path(3, ["/systems/", "/errata/"], arguments)
   },
-// operations => /operations(.:format)
-  operations_path: function(options) {
-  return Utils.build_path(1, ["/operations"], arguments)
-  },
 // facts_system => /systems/:id/facts(.:format)
   facts_system_path: function(_id, options) {
   return Utils.build_path(2, ["/systems/", "/facts"], arguments)
@@ -1312,13 +1336,13 @@
   edit_api_changeset_package_path: function(_changeset_id, _id, options) {
   return Utils.build_path(3, ["/api/changesets/", "/packages/", "/edit"], arguments)
   },
+// password_resets => /password_resets(.:format)
+  password_resets_path: function(options) {
+  return Utils.build_path(1, ["/password_resets"], arguments)
+  },
 // edit_api_organization_sync_plan => /api/organizations/:organization_id/sync_plans/:id/edit(.:format)
   edit_api_organization_sync_plan_path: function(_organization_id, _id, options) {
   return Utils.build_path(3, ["/api/organizations/", "/sync_plans/", "/edit"], arguments)
-  },
-// role => /roles/:id(.:format)
-  role_path: function(_id, options) {
-  return Utils.build_path(2, ["/roles/"], arguments)
   },
 // report_api_users => /api/users/report(.:format)
   report_api_users_path: function(options) {
@@ -1348,21 +1372,17 @@
   edit_api_changeset_distribution_path: function(_changeset_id, _id, options) {
   return Utils.build_path(3, ["/api/changesets/", "/distributions/", "/edit"], arguments)
   },
-// repositories_api_organization_environment => /api/organizations/:organization_id/environments/:id/repositories(.:format)
-  repositories_api_organization_environment_path: function(_organization_id, _id, options) {
-  return Utils.build_path(3, ["/api/organizations/", "/environments/", "/repositories"], arguments)
-  },
-// new_filter => /filters/new(.:format)
-  new_filter_path: function(options) {
-  return Utils.build_path(1, ["/filters/new"], arguments)
+// users => /users(.:format)
+  users_path: function(options) {
+  return Utils.build_path(1, ["/users"], arguments)
   },
 // set_org_user_session => /user_session/set_org(.:format)
   set_org_user_session_path: function(options) {
   return Utils.build_path(1, ["/user_session/set_org"], arguments)
   },
-// owners => /owners(.:format)
-  owners_path: function(options) {
-  return Utils.build_path(1, ["/owners"], arguments)
+// repositories_api_organization_environment => /api/organizations/:organization_id/environments/:id/repositories(.:format)
+  repositories_api_organization_environment_path: function(_organization_id, _id, options) {
+  return Utils.build_path(3, ["/api/organizations/", "/environments/", "/repositories"], arguments)
   }}
 ;
   

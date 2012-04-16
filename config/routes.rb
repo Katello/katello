@@ -1,6 +1,13 @@
 Src::Application.routes.draw do
 
-  resources :system_groups
+  resources :system_groups do
+    collection do
+      get :items
+    end
+    member do
+
+    end
+  end
 
   resources :activation_keys do
     collection do

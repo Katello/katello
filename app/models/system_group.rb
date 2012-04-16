@@ -15,6 +15,19 @@ class SystemGroup < ActiveRecord::Base
 
   include Glue::Pulp::ConsumerGroup if (AppConfig.use_pulp)
   include Glue
+  include Authorization
+  include IndexedModel
+
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :description],
+                :json=>{}
+
+  mapping do
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+    indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
+
 
   validates :pulp_id, :presence => true
   validates :name, :presence => true, :katello_name_format => true
@@ -27,6 +40,32 @@ class SystemGroup < ActiveRecord::Base
 
   before_validation(:on=>:create) do
     self.pulp_id ||= "#{self.organization.cp_key}-#{self.name}-#{SecureRandom.hex(4)}"
+  end
+
+  scope :readable, lambda { |org|
+        where(:organization_id => org.id)
+  }
+
+  def self.creatable? org
+    true
+  end
+
+  def readable?
+    true
+  end
+
+  def editable?
+    true
+  end
+
+
+  def deletable?
+    true
+  end
+
+
+  def extended_index_attrs
+    {}
   end
 
 end
