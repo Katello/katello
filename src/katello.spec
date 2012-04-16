@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.309
+Version:        0.1.310
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -355,6 +355,13 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Apr 16 2012 Mike McCune <mmccune@redhat.com> 0.1.310-1
+- 812346 - fixing org deletion envrionment error (jsherril@redhat.com)
+- 803428 - repos - do not pass candlepin a gpgurl, if no gpgkey is defined
+  (bbuckingham@redhat.com)
+- 808596 - Initial fix didn't take into consideration production mode.
+- 810375 - remove page size limit on repos displayed
+
 * Wed Apr 04 2012 Mike McCune <mmccune@redhat.com> 0.1.309-1
 - 808576 - Regression for IE only stylesheet. Added back in.
 
