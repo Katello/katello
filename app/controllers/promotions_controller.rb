@@ -122,9 +122,6 @@ class PromotionsController < ApplicationController
 
 
   def repos
-    @repos = @product.repos(@environment)
-    @repos.sort! {|a,b| a.name <=> b.name}
-
     @next_env_repos = []
     if @next_environment
       @product.repos(@next_environment).each{|repo|
@@ -133,15 +130,11 @@ class PromotionsController < ApplicationController
     end
 
     offset = params[:offset]
-    if offset
-      render :text=>"" and return if @repos.empty?
+    partial = offset.to_i > 0 ? 'promotions/repo_items' : 'repos'
 
-      options = {:list_partial => 'promotions/repo_items'}
-      render_panel_items(@repos, options, nil, offset)
-    else
-      render :partial=>"repos", :locals=>{:collection => @repos}
-    end
-
+    filters = [{:product_id=>[@product.id]}, {:enabled=>[true]}, {:environment_id=>[@environment.id]}]
+    render_panel_direct(Repository, {:list_partial=>partial}, params[:search],
+                        offset, [:name_sort, :ASC], {:default_field => :name, :filter=>filters})
   end
 
   def errata
