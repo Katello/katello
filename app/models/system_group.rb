@@ -28,6 +28,8 @@ class SystemGroup < ActiveRecord::Base
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 
+  has_many :key_system_groups, :dependent => :destroy
+  has_many :activation_keys, :through => :key_system_groups
 
   validates :pulp_id, :presence => true
   validates :name, :presence => true, :katello_name_format => true

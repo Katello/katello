@@ -20,7 +20,11 @@ Src::Application.routes.draw do
       get :available_subscriptions
       post :remove_subscriptions
       post :add_subscriptions
+
       post :update
+
+      get :system_groups
+      put :update_system_groups
     end
   end
 

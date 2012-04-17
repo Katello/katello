@@ -21,7 +21,6 @@ class ActivationKey < ActiveRecord::Base
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 
-
   belongs_to :organization
   belongs_to :environment, :class_name => "KTEnvironment"
   belongs_to :user
@@ -29,6 +28,9 @@ class ActivationKey < ActiveRecord::Base
 
   has_many :key_pools
   has_many :pools, :class_name => "KTPool", :through => :key_pools
+
+  has_many :key_system_groups, :dependent => :destroy
+  has_many :system_groups, :through => :key_system_groups
 
   scope :readable, lambda {|org| ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")}
 
