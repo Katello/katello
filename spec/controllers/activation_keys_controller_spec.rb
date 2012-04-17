@@ -18,7 +18,7 @@ describe ActivationKeysController do
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
-
+  include OrchestrationHelper
 
   module AKeyControllerTest
     AKEY_INVALID = {}
@@ -312,6 +312,57 @@ describe ActivationKeysController do
       end
 
     end
+  end
+
+  describe "GET system_groups" do
+    before(:each) do
+      disable_consumer_group_orchestration
+      @group = SystemGroup.create!(:name=>"test_group", :organization=>@organization)
+    end
+
+    it "retrieves the system groups to display" do
+      SystemGroup.should_receive(:where).with(:organization_id => @organization)
+      get :system_groups, :id => @a_key.id
+    end
+
+    it "renders the system_group partial" do
+      get :system_groups, :id => @a_key.id
+      response.should render_template(:partial => "_system_groups")
+    end
+
+    it "should be successful" do
+      get :system_groups, :id => @a_key.id
+      response.should be_success
+    end
+  end
+
+  describe "PUT update_system_groups" do
+    before(:each) do
+      disable_consumer_group_orchestration
+      @group = SystemGroup.create!(:name=>"test_group", :organization=>@organization)
+    end
+
+    it "should allow the list of system groups to be changed" do
+      group = SystemGroup.where(:name=>"test_group")[0]
+      assert !group.nil?
+      put 'update_system_groups', {:id => @a_key.id, :activation_key=>{:system_group_ids=>[group.id]}}
+      response.should be_success
+      assert ActivationKey.find(@a_key.id).system_groups.size == 1
+      put 'update_system_groups', {:id => @a_key.id, :activation_key=>{:system_group_ids=>[]}}
+      assert ActivationKey.find(@a_key.id).system_groups.size == 0
+      response.should be_success
+    end
+
+    it "should generate a success notice" do
+      controller.should_receive(:notice)
+      put 'update_system_groups', {:id => @a_key.id, :activation_key=>{:system_group_ids=>[@group.id]}}
+    end
+
+    it "should be successful" do
+      put 'update_system_groups', {:id => @a_key.id, :activation_key=>{:system_group_ids=>[@group.id]}}
+      response.should be_success
+    end
+
   end
 
   describe "DELETE destroy" do
