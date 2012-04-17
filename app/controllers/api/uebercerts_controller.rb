@@ -16,13 +16,12 @@ class Api::UebercertsController < Api::ApiController
   before_filter :authorize
 
   def rules
-    read_test = lambda{ @organization.readable? }
-    {
-      :show => read_test,
-    }
+    read_test = lambda { @organization.readable? }
+    { :show => read_test }
   end
 
   def show
+    @organization.generate_debug_cert if params[:regenerate] == 'True'
     render :json => @organization.debug_cert
   end
 end
