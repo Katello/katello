@@ -17,6 +17,8 @@
     / [if IE]
       = include_stylesheets  :ie, :embed_assets=>false
     
+      = csrf_meta_tag
+
   - if controller.respond_to?(:section_id)
     - section_id = controller.section_id
   - else
@@ -24,7 +26,7 @@
   %body{:id => controller.section_id}
     %div#head.container_16
       %header
-        = render :partial => '/layouts/header'
+        = render :partial => 'layouts/header'
     - if not current_user
       #maincontent.container_16
         #formwindow
@@ -42,13 +44,14 @@
       = render :partial => "layouts/footer"
     
     = include_javascripts  :common
-    = render :partial => '/common/config'
+    %script{ :type => "text/javascript" }
+      -if protect_against_forgery?
+        :plain
+          var AUTH_TOKEN = #{form_authenticity_token.inspect};
+      = render :partial => "common/common_i18n"
+      = render :partial => 'common/config'
+      = yield :inline_javascript
 
-    = render :partial => '/layouts/ajax_notices'
-    = render :partial => '/layouts/notification'
-    = render :partial => "/common/common_i18n"
-    = include_editable_i18n
+    = render :partial => 'layouts/ajax_notices'
+    = render :partial => 'layouts/notification'
     = yield :javascripts
-    
-    = csrf_meta_tag
-    = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery?
