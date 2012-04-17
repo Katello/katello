@@ -17,7 +17,8 @@ class ActivationKeysController < ApplicationController
   before_filter :require_user
   before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy,
                                                 :available_subscriptions, :applied_subscriptions,
-                                                :add_subscriptions, :remove_subscriptions]
+                                                :add_subscriptions, :remove_subscriptions,
+                                                :system_groups, :update_system_groups]
   before_filter :find_environment, :only => [:edit]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
   before_filter :panel_options, :only => [:index, :items]
@@ -50,6 +51,9 @@ class ActivationKeysController < ApplicationController
       :add_subscriptions => manage_test,
       :remove_subscriptions => manage_test,
 
+      :system_groups => read_test,
+      :update_system_groups => manage_test,
+
       :destroy => manage_test
     }
   end
@@ -57,7 +61,8 @@ class ActivationKeysController < ApplicationController
   def param_rules
     {
       :create => {:activation_key => [:name, :description, :environment_id, :system_template_id]},
-      :update => {:activation_key  => [:name, :description,:environment_id, :system_template_id]}
+      :update => {:activation_key  => [:name, :description,:environment_id, :system_template_id]},
+      :update_system_groups => {:activation_key => [:system_group_ids]}
     }
   end
 
@@ -136,6 +141,23 @@ class ActivationKeysController < ApplicationController
       notice error.to_s, {:level => :error}
       render :nothing => true
     end
+  end
+
+  def system_groups
+    @system_groups = SystemGroup.where(:organization_id => current_organization)
+    render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:system_groups=>@system_groups,
+                                                                            :editable=>ActivationKey.manageable?(current_organization)}
+  end
+
+  def update_system_groups
+    params[:activation_key] = {"system_group_ids"=>[]} unless params.has_key? :activation_key
+
+    if @activation_key.update_attributes(params[:activation_key])
+      notice _("Activation key '%s' was updated.") % @activation_key["name"]
+      render :nothing => true and return
+    end
+    notice "", {:level => :error, :list_items => @activation_key.errors.to_a}
+    render :text => @activation_key.errors, :status=>:ok
   end
 
   def new

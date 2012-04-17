@@ -141,6 +141,12 @@ module Navigation
           :if => lambda{@activation_key},
           :options => {:class=>"navigation_element"}
         },
+        { :key => :system_groups,
+          :name =>_("System Groups"),
+          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
+          :if => lambda{@activation_key},
+          :options => {:class=>"navigation_element"}
+        },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{edit_activation_key_path(@activation_key.id)},
