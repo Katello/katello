@@ -1,0 +1,29 @@
+= javascript :edit_helpers
+
+= content_for :title do
+  #{@group.name}
+
+= content_for :remove_item do
+  - if @group.deletable?
+    = link_to _("Remove System Group"), {:action => "destroy", :controller => "system_groups"}, :method => :delete, :confirm => _('Are you sure you want to delete this group?'), :class => "remove_item", :remote=>true
+
+= content_for :navigation do
+  = render_menu(1..2, system_groups_navigation)
+
+= content_for :content do
+  #system_group
+    %input{:name=> @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
+    .grid_9
+      = form_for(@group, :html => {:multipart => true, :method => :put, :id => 'system_group_edit', :remote => true}, :url => system_group_path(@group)) do |f|
+        %input#system_group_id{:name => @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
+        %fieldset.fl.clear
+          .grid_2.ra
+            %label #{_("Name")}:
+          .grid_5.la#system_group_name{'name' => 'system_group[name]', 'data-url' => system_group_path(@group.id), :class=>("edit_name editable" if editable)} #{@group.name}
+  
+        %fieldset.fl.clear
+          .grid_2.ra
+            %label #{_("Description")}:
+          .grid_5.la{:style => "word-wrap: break-word;", 'name' => 'system_group[description]', 'data-url' => system_group_path(@group.id), :class=>("editable edit_textarea" if editable)}<> #{@group.description}
+
+
