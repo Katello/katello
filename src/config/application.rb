@@ -51,7 +51,7 @@ module Src
     end
 
     # Load the katello.yml.  Details from it are used in setting some config elements of the environment.
-    katello_config = YAML.load_file('/etc/katello/katello.yml')
+    katello_config = YAML.load_file('/etc/katello/katello.yml') rescue nil
     if katello_config.nil?
       katello_config = YAML.load_file("#{Rails.root}/config/katello.yml") rescue nil
     end
