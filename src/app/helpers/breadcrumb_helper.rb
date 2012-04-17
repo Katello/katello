@@ -166,7 +166,7 @@ module ContentBreadcrumbs
 
      #product_repos
      add_crumb_node!(bc, repo_bc_id(prod), repos_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
-                     _("Repos"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true, :product_id => prod.id})
+                     _("Repos"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true, :searchable=>true, :product_id => prod.id})
 
      #product_distributions
      add_crumb_node!(bc, distribution_bc_id(prod), distributions_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),

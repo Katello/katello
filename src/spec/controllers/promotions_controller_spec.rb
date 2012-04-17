@@ -98,10 +98,25 @@ describe PromotionsController do
     end
 
     it "should be successful when requesting repos" do
+      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+        filter =  search_options[:filter]
+        found_product_id = false
+        found_enabled = false
+        found_environment_id = false
+        filter.each{|f|
+          found_product_id = true if f.keys.include?(:product_id)
+          found_enabled = true if f.keys.include?(:enabled)
+          found_environment_id = true if f.keys.include?(:environment_id)
+        }
+
+        found_product_id.should == true
+        found_enabled.should == true
+        found_environment_id.should == true
+        controller.stub(:render)
+      }
       get 'repos', :id=>@env.name, :product_id => @product.id
       response.should be_success
       assigns(:environment).should == @env
-      assigns(:repos).size.should == 1
     end
 
     it "should be successful when requesting distributions" do
