@@ -112,7 +112,7 @@ class VerboseStrategy(PrinterStrategy):
         for column in columns:
             value = self._get_column_value(column, item)
             #skip missing attributes
-            if not value:
+            if value == None:
                 continue
 
             if not column.get('multiline', False):
@@ -206,7 +206,7 @@ class GrepStrategy(PrinterStrategy):
 
             #skip missing attributes
             value = self._get_column_value(column, item)
-            if not value:
+            if value == None:
                 print " " * width,
                 print self.__delim,
                 continue
