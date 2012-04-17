@@ -174,14 +174,17 @@ class GenerateDebugCert(OrganizationAction):
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
                                help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option("--regenerate", dest="regenerate", action="store_true",
+                               help=_("regenerate the certificate"))
 
     def check_options(self):
         self.require_option('name')
 
     def run(self):
         name = self.get_option('name')
+        regenerate = self.get_option('regenerate')
 
-        uebercert = self.api.uebercert(name)
+        uebercert = self.api.uebercert(name, regenerate)
 
         self.printer.add_column('key')
         self.printer.add_column('cert')
