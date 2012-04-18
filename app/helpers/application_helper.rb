@@ -131,14 +131,6 @@ module ApplicationHelper
              :accessor=>options[:accessor] }
   end
 
-  def include_common_i18n
-    render :partial => "common/common_i18n"
-  end
-
-  def include_editable_i18n
-    render :partial=> "common/edit_i18n"
-  end
- 
   def notification_polling_time
     time  = AppConfig.notification && AppConfig.notification.polling_seconds
     return time.to_i  * 1000 if time
