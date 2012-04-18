@@ -33,4 +33,7 @@
   = yield :custom
 
 = yield :javascripts
+- if content_for?(:inline_javascript)
+  %script{ :type => "text/javascript" }
+    = yield :inline_javascript
 = yield :stylesheets
