@@ -108,12 +108,17 @@ describe SystemGroupsController do
     end
 
     describe "PUT update" do
-      it "should allow name and description to be changed" do
+      it "should allow name to be changed" do
         old_name = @group.name
-        put :update, :id=>@group.id, :system_group=>{:name=>"rocky", :description=>"describe"}
+        put :update, :id=>@group.id, :system_group=>{:name=>"rocky"}
         response.should be_success
         SystemGroup.where(:name=>'rocky').first.should_not be_nil
         SystemGroup.where(:name=>old_name).first.should be_nil
+
+      end
+      it "should allow locked to be toggled" do
+        put :update, :id=>@group.id, :system_group=>{:locked=>"true"}
+        SystemGroup.find(@group.id).locked.should == true
       end
     end
 

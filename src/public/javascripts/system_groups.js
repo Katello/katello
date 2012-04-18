@@ -39,11 +39,34 @@ $(document).ready(function() {
     };
     KT.panel.set_expand_cb(function(){
         edit_func();
+        $('#system_group_locked').bind('change', KT.system_groups.lockedChanged);
     });
 
 
 });
 
 
+KT.system_groups = (function(){
+    var lockedChanged = function(){
+        var checkbox = $(this),
+        name = $(this).attr("name"),
+        options = {};
+        if (checkbox.attr("checked") !== undefined) {
+            options[name] = true;
+        } else {
+            options[name] = false;
+        }
+        $.ajax({
+            type: "PUT",
+            url: checkbox.attr("data-url"),
+            data: options,
+            cache: false
+        });
+        return false;
+    };
 
+    return {
+        lockedChanged: lockedChanged
+    }
+})();
 
