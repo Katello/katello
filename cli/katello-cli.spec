@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.27
+Version:       0.2.28
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,6 +89,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 18 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.28-1
+- 812842 - complete removal of skipping None values in verbose print strategy
+- 741595 - uebercert POST/GET/DELETE - either support or delete the calls from
+  CLI
+
 * Tue Apr 17 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.27-1
 - 812842 - fix for cli printer skipping values that are evaluated as False
 - 798918 - Headpin cli unregister doesn't have environment option
