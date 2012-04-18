@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.30
+Version:        0.2.31
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -359,6 +359,20 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Apr 18 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.31-1
+- 810378 - adding search for repos on promotion page
+- Changes the way inline javascript declarations are handled such that they are
+  all injected into one universal script tag.
+- 741595 - uebercert POST/GET/DELETE - either support or delete the calls from
+  CLI
+- boot - default conf was never loaded
+- added a script to restore a katello backup that was made with the matching
+  backup script
+- 803428 - repos - do not pass candlepin a gpgurl, if no gpgkey is defined
+- 812346 - fixing org deletion envrionment error
+- added basic backup script to handle backup part of
+  https://fedorahosted.org/katello/wiki/GuideServerBackups
+
 * Thu Apr 12 2012 Ivan Necas <inecas@redhat.com> 0.2.30-1
 - cp-releasever - release as a scalar value in API system json
 - removing bail out check for env-selector
