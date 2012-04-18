@@ -111,9 +111,6 @@ class VerboseStrategy(PrinterStrategy):
         print
         for column in columns:
             value = self._get_column_value(column, item)
-            #skip missing attributes
-            if value == None:
-                continue
 
             if not column.get('multiline', False):
                 col_width = self._max_label_width(columns)
