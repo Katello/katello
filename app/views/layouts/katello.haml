@@ -2,6 +2,7 @@
 %html
   %head
     %meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
+    = csrf_meta_tag
     = favicon_link_tag 'favicon.png'
     %title
       = project_name
@@ -16,8 +17,6 @@
       = include_javascripts  :html5
     / [if IE]
       = include_stylesheets  :ie, :embed_assets=>false
-    
-      = csrf_meta_tag
 
   - if controller.respond_to?(:section_id)
     - section_id = controller.section_id
@@ -50,8 +49,8 @@
           var AUTH_TOKEN = #{form_authenticity_token.inspect};
       = render :partial => "common/common_i18n"
       = render :partial => 'common/config'
+      = render :partial => 'layouts/ajax_notices'
+      = render :partial => 'layouts/notification'
       = yield :inline_javascript
 
-    = render :partial => 'layouts/ajax_notices'
-    = render :partial => 'layouts/notification'
     = yield :javascripts
