@@ -437,7 +437,7 @@ class List(RepoAction):
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('package_count')
-        self.printer.add_column('last_sync', formatter=format_date)
+        self.printer.add_column('last_sync', formatter=format_sync_time)
 
         if prodName and envName:
             env  = get_environment(orgName, envName)

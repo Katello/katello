@@ -145,7 +145,7 @@ class List(ProductAction):
         self.printer.add_column('provider_id')
         self.printer.add_column('provider_name')
         self.printer.add_column('sync_plan_name')
-        self.printer.add_column('last_sync', formatter=format_date)
+        self.printer.add_column('last_sync', formatter=format_sync_time)
         self.printer.add_column('gpg_key_name', name=_("GPG key"))
 
         if prov_name:
