@@ -2,6 +2,7 @@
 
 header "RHSM"
 
+
 RHSM_ORG="org_rhsm_$RAND"
 RHSM_ENV="env_rhsm_$RAND"
 RHSM_AK1=$(nospace "ak1_$RAND")
@@ -68,7 +69,11 @@ if sm_present; then
   name1=$(sudo subscription-manager identity | grep -o -E "^name:.*")
   name=${name1:6} # grab name
   test_success "system unregister in katello" system unregister --name="$name" --org="$RHSM_ORG"
-  test_own_cmd_success "restart rhsmcrtd" sudo service rhsmcertd restart
+
+  # ignore output from service restart: we don't care it says stopping failed
+  # as long as the exit code is 0
+  function restart_rhsmcertd { sudo service rhsmcertd restart &>/dev/null; }
+  test_own_cmd_success "restart rhsmcrtd" restart_rhsmcertd
   test_own_cmd_failure "system is not registered" sudo subscription-manager identity
 
   # should cascade and delete everything
