@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.28
+Version:       0.2.29
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,6 +89,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 19 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.29-1
+- periodic-build
 * Wed Apr 18 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.28-1
 - 812842 - complete removal of skipping None values in verbose print strategy
 - 741595 - uebercert POST/GET/DELETE - either support or delete the calls from
