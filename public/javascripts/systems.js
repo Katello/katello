@@ -17,7 +17,11 @@
  *
  */
 KT.panel.set_expand_cb(function(){
-	KT.menu.hoverMenu('#panel .third_level:first-child', { top : '75px' });
+    var children = $('#panel .third_level:first-child');
+
+    $.each(children, function(i, item) {
+        KT.menu.hoverMenu(item, { top : '75px' });
+    });
 });
 
 
