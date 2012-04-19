@@ -15,9 +15,7 @@
 
 import os
 import sys
-import pdb
 from gettext import gettext as _
-from pprint import pprint
 from katello.client.utils.encoding import u_str
 
 
@@ -51,6 +49,19 @@ class PrinterStrategy:
         """
         pass
 
+    def _column_has_value(self, column, item):
+        """
+        Tests whether there is any value to print in the column.
+        It can be value either from the item or set explicitly 
+        in the column definition.
+        @type column: dict
+        @param column: column definition
+        @type item: dict
+        @param item: data to get the value from
+        @rtype: bool
+        """
+        return (column['attr_name'] in item) or ('value' in column)
+
     def _get_column_value(self, column, item):
         """
         Returns string that should be displayed in the column.
@@ -66,9 +77,9 @@ class PrinterStrategy:
         value_format_func = column.get('formatter', column.get('value_formatter', None))
         item_format_func = column.get('item_formatter', None)
 
-        if value_format_func and value:
+        if value_format_func is not None:
             value = value_format_func(value)
-        elif item_format_func:
+        elif item_format_func is not None:
             value = item_format_func(item)
         return value
 
@@ -110,6 +121,9 @@ class VerboseStrategy(PrinterStrategy):
         """
         print
         for column in columns:
+            if not self._column_has_value(column, item):
+                continue
+
             value = self._get_column_value(column, item)
 
             if not column.get('multiline', False):
@@ -202,11 +216,11 @@ class GrepStrategy(PrinterStrategy):
             width = column_widths.get(column['attr_name'], 0)
 
             #skip missing attributes
-            value = self._get_column_value(column, item)
-            if value == None:
+            if not self._column_has_value(column, item):
                 print " " * width,
                 print self.__delim,
                 continue
+            value = self._get_column_value(column, item)
 
             if column.get('multiline', False):
                 value = text_to_line(value)
