@@ -140,7 +140,6 @@ class SystemAPI(KatelloAPI):
         environment = get_environment(orgId, envName)
         if environment is None:
             return None
-
         path = "/api/environments/%s/systems" % environment["id"]
         return self.server.GET(path, query)[1]
 
