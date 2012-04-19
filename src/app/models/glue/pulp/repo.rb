@@ -202,10 +202,9 @@ module Glue::Pulp::Repo
 
   def del_content
     return true unless self.content_id
-
     if other_repos_with_same_product_and_content.empty?
       self.product.remove_content_by_id self.content_id
-      if other_repos_with_same_content.empty?
+      if other_repos_with_same_content.empty? && !self.product.provider.redhat_provider?
         Candlepin::Content.destroy(self.content_id)
       end
     end
