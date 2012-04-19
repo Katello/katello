@@ -2,10 +2,10 @@
   :javascript
     localize({
       "validation_error_pkg_name_format" : '#{escape_javascript(_('One or more package names are invalid.'))}',
-      "validation_error_pkg_list_empty" : '#{escape_javascript(_('At least one package name must be provided.'))}',
+      "validation_error_pkg_list_empty" : '#{escape_javascript(_('At least one name must be provided.'))}',
       "validation_error_pkg_group_list_empty" : '#{escape_javascript(_('At least one package group name must be provided.'))}',
       "validation_error_errata_list_empty" : '#{escape_javascript(_('At least one erratum ID must be provided.'))}',
-      "validation_error_select_action" : '#{escape_javascript(_('Please select the desired action.'))}'
+      "validation_error_select_content_type" : '#{escape_javascript(_('Please select Package(s) or Package Group(s).'))}'
       });
 
 %h4
@@ -23,45 +23,23 @@
       %input.trigger.button{:type=>"button", :value=>_('Yes') }
     %br.clearfloat
 
-.panel_action{:class=>"disabled", 'data-id'=>"systems_package_action", 'data-method'=>"POST"}
+.panel_action{:class=>"disabled", 'data-id'=>"systems_package_action"}
   .delete_icon.fl
-  %label
-    #{_("Package(s):")}
-  = radio_button_tag :package_action, :install_packages, false, {:class => 'radio_option', 'data-url'=>bulk_package_install_systems_path()}
-  = label_tag _('Install')
-  = radio_button_tag :package_action, :update_packages, false, {:class => 'radio_option', 'data-url'=>bulk_package_update_systems_path()}
-  = label_tag _('Update')
-  = radio_button_tag :package_action, :remove_packages, false, {:class => 'radio_option', 'data-url'=>bulk_package_remove_systems_path()}
-  = label_tag _('Remove')
+  = radio_button_tag :systems_action, :packages, false
+  = label_tag _('Package(s)')
+  = radio_button_tag :systems_action, :package_groups, false
+  = label_tag _('Package Group(s)')
   %div
-    - help_text = _("Enter Package(s)...")
-    %input{:type=>'text', :id=>'packages_input', :size=>'30', :placeholder => help_text, :title => help_text}
-    %input.request_action.button{:type=>'button', :value=>_('Run')}
-  %div.validation_error
-  .options
-    %div
-      #{_("Are you sure you want to %{a} the packages entered on the %{u} selected system(s)?" % {:a => "<span class='action_text'></span>", :u => "<span class='numitems'></span>"})}
-    .actions
-      %input.cancel.button{:type=>"button", :value=>_('No')}
-      %input.trigger.button{:type=>"button", :value=>_('Yes') }
-    %br.clearfloat
+    - help_text = _("Enter Package or Group Name(s)...")
+    %input{:type=>'text', :id=>'packages_input', :size=>'25', :placeholder => help_text, :title => help_text}
+    %input.request_action.package.button{:type=>'button', :value=>_('Install'), 'data-method'=>"POST", 'data-url'=>bulk_content_install_systems_path()}
+    %input.request_action.package.button{:type=>'button', :value=>_('Update'), 'data-method'=>"POST", 'data-url'=>bulk_content_update_systems_path()}
+    %input.request_action.package.button{:type=>'button', :value=>_('Remove'), 'data-method'=>"POST", 'data-url'=>bulk_content_remove_systems_path()}
 
-.panel_action{:class=>"disabled", 'data-id'=>"systems_package_group_action", 'data-method'=>"POST"}
-  .delete_icon.fl
-  %label
-    #{_("Package Group(s):")}
-  = radio_button_tag :package_group_action, :install_package_groups, false, {:class => 'radio_option', 'data-url'=>bulk_package_group_install_systems_path()}
-  = label_tag _('Install')
-  = radio_button_tag :package_group_action, :remove_package_groups, false, {:class => 'radio_option', 'data-url'=>bulk_package_group_remove_systems_path()}
-  = label_tag _('Remove')
-  %div
-    - help_text = _("Enter Package Group(s)...")
-    %input{:type=>'text', :id=>'package_groups_input', :size=>'30', :placeholder => help_text, :title => help_text}
-    %input.request_action.button{:type=>'button', :value=>_('Run')}
   %div.validation_error
   .options
     %div
-      #{_("Are you sure you want to %{a} the package groups entered on the %{u} selected system(s)?" % {:a => "<span class='action_text'></span>", :u => "<span class='numitems'></span>"})}
+      #{_("Are you sure you want to %{a} the %{c} entered on the %{u} selected system(s)?" % {:a => "<span class='action_text'></span>", :c => "<span class='content_type_text'></span>", :u => "<span class='numitems'></span>"})}
     .actions
       %input.cancel.button{:type=>"button", :value=>_('No')}
       %input.trigger.button{:type=>"button", :value=>_('Yes') }
@@ -73,7 +51,7 @@
     #{_("Install Errata")}
   %div
     - help_text = _("Enter Errata...")
-    %input{:type=>'text', :id=>'errata_input', :size=>'30', :placeholder => help_text, :title => help_text}
+    %input{:type=>'text', :id=>'errata_input', :size=>'25', :placeholder => help_text, :title => help_text}
     %input.request_action.button{:type=>'button', :value=>_('Run')}
   %div.validation_error
   .options

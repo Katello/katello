@@ -538,7 +538,8 @@ KT.panel = (function ($) {
           KT.panel.panelAjax(active, active.attr("data-ajax_url"), $('#panel'), false);
         },
         actions = (function(){
-            var action_list = {};
+            var action_list = {},
+                current_request_action = undefined;
 
             var registerDefaultActions = function() {
                 var actions = $(".panel_action");
@@ -549,6 +550,7 @@ KT.panel = (function ($) {
                         var params = action_list[action.attr("data-id")],
                             valid = true;
 
+                        current_request_action = $(this);
                         if(params.valid_input_cb) {
                             // Has the user provided valid input for the request?
                             valid = params.valid_input_cb();
@@ -580,7 +582,7 @@ KT.panel = (function ($) {
                         if ($(this).hasClass("disabled")){return}
 
                         if(params.ajax_cb) {
-                            params.ajax_cb(getSelected(), options);
+                            params.ajax_cb(getSelected(), current_request_action, options);
                         }
                         else {
                             $.ajax({
@@ -607,7 +609,8 @@ KT.panel = (function ($) {
                  *    url      //URL for ajax call
                  *    method   //METHOD for ajax call
                  *    unselected_action // true if the action is 'doable' even if
-                 *    ajax_cb(id_list, success_cb, error_cb)  //To manually do the ajax call yourself
+                 *    ajax_cb(id_list, request_action, options, success_cb, error_cb)  //To manually do the ajax call yourself
+                 *    valid_input_cb() // to validate the input for the request... return true if valid; otherwise, false
                  *
                  */
               action_list[name] = params;
