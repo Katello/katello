@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.11
+Version:       0.2.12
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 19 2012 Ivan Necas <inecas@redhat.com> 0.2.12-1
+- cli-test-rhsmcerd - don't check the output of rhsmcertd restart
+
 * Tue Apr 10 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.11-1
 - slas - all cli options --service_level renamed to --servicelevel
 
