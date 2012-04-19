@@ -36,7 +36,7 @@ class SystemGroupsController < ApplicationController
   def param_rules
      {
        :create => {:system_group => [:name, :description]},
-       :update => {:system_group => [:name, :description]}
+       :update => {:system_group => [:name, :description, :locked]}
      }
   end
 
@@ -88,6 +88,8 @@ class SystemGroupsController < ApplicationController
     elsif options[:description]
       @group.description = options[:description]
       to_ret = @group.description
+    elsif options[:locked]
+      @group.locked = options[:locked] == "true"
     end
 
     @group.save!
