@@ -71,24 +71,13 @@ module Navigation
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         },
-        { :key => :products,
-          :name =>_("Software"),
+        { :key => :content,
+          :name =>_("Content"),
           :url => lambda{products_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"navigation_element"}
-        },
-        { :key => :packages,
-          :name =>_("Packages"),
-          :url => lambda{packages_system_system_packages_path(@system.id)},
-          :if => lambda{@system},
-          :options => {:class=>"navigation_element"}
-        },
-        { :key => :errata,
-          :name =>_("Errata"),
-          :url => lambda{system_errata_path(@system.id)},
-          :if => lambda{@system},
           :options => {:class=>"navigation_element"},
-        }
+          :items => systems_content_subnav
+        }          
       ]
     end
 
@@ -109,6 +98,29 @@ module Navigation
         { :key => :facts,
           :name =>_("Facts"),
           :url => lambda{facts_system_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"third_level navigation_element"},
+        }
+      ]
+    end
+
+    def systems_content_subnav
+      [
+        { :key => :products,
+          :name =>_("Software"),
+          :url => lambda{products_system_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"third_level navigation_element"}
+        },
+        { :key => :packages,
+          :name =>_("Packages"),
+          :url => lambda{packages_system_system_packages_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"third_level navigation_element"}
+        },
+        { :key => :errata,
+          :name =>_("Errata"),
+          :url => lambda{system_errata_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level navigation_element"},
         }
