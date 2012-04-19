@@ -15,10 +15,10 @@ class SystemsController < ApplicationController
   include SystemsHelper
 
   before_filter :find_system, :except =>[:index, :items, :environments, :new, :create, :bulk_destroy,
-                                         :bulk_package_install, :bulk_package_update, :bulk_package_remove,
-                                         :bulk_package_group_install, :bulk_package_group_remove, :bulk_errata_install]
-  before_filter :find_systems, :only=>[:bulk_destroy, :bulk_package_install, :bulk_package_update, :bulk_package_remove,
-                                       :bulk_package_group_install, :bulk_package_group_remove, :bulk_errata_install]
+                                         :bulk_content_install, :bulk_content_update, :bulk_content_remove,
+                                         :bulk_errata_install]
+  before_filter :find_systems, :only=>[:bulk_destroy, :bulk_content_install, :bulk_content_update, :bulk_content_remove,
+                                       :bulk_errata_install]
 
   before_filter :find_environment, :only => [:environments, :new]
   before_filter :authorize
@@ -61,11 +61,9 @@ class SystemsController < ApplicationController
       :facts => read_system,
       :destroy=> delete_systems,
       :bulk_destroy => bulk_delete_systems,
-      :bulk_package_install => bulk_edit_systems,
-      :bulk_package_update => bulk_edit_systems,
-      :bulk_package_remove => bulk_edit_systems,
-      :bulk_package_group_install => bulk_edit_systems,
-      :bulk_package_group_remove => bulk_edit_systems,
+      :bulk_content_install => bulk_edit_systems,
+      :bulk_content_update => bulk_edit_systems,
+      :bulk_content_remove => bulk_edit_systems,
       :bulk_errata_install => bulk_edit_systems
     }
   end
@@ -318,7 +316,7 @@ class SystemsController < ApplicationController
     render :text=>e, :status=>500
   end
 
-  def bulk_package_install
+  def bulk_content_install
     successful_systems = []
     failed_systems = []
 
@@ -331,55 +329,25 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
-    end
+      action_text = "Bulk Action: Schedule install of package(s): %{p}" % {:p => params[:packages].join(',')}
 
-    action = "Bulk Action: Schedule install of package(s): %{p}" % {:p => params[:packages].join(',')}
-    notice_bulk_action action, successful_systems, failed_systems
-    render :nothing => true
-  end
-
-  def bulk_package_update
-    successful_systems = []
-    failed_systems = []
-
-    @systems.each do |system|
-      begin
-        system.update_packages params[:packages]
-        successful_systems.push(system.name)
-      rescue Exception => error
-        failed_systems.push(system.name)
-      end
-    end
-
-    params[:packages].blank? ?
-      action = "Bulk Action: Schedule update of all packages" :
-      action = "Bulk Action: Schedule update of package(s): %{p}" % {:p => params[:packages].join(',')}
-
-    notice_bulk_action action, successful_systems, failed_systems
-    render :nothing => true
-  end
-
-  def bulk_package_remove
-    successful_systems = []
-    failed_systems = []
-
-    if !params[:packages].blank?
+    elsif !params[:groups].blank?
       @systems.each do |system|
         begin
-          system.uninstall_packages params[:packages]
+          system.install_package_groups params[:groups]
           successful_systems.push(system.name)
         rescue Exception => error
           failed_systems.push(system.name)
         end
       end
+      action_text = "Bulk Action: Schedule install of package group(s): %{p}" % {:p => params[:groups].join(',')}
     end
 
-    action = "Bulk Action: Schedule uninstall of package(s): %{p}" % {:p => params[:packages].join(',')}
-    notice_bulk_action action, successful_systems, failed_systems
+    notice_bulk_action action_text, successful_systems, failed_systems
     render :nothing => true
   end
 
-  def bulk_package_group_install
+  def bulk_content_update
     successful_systems = []
     failed_systems = []
 
@@ -392,18 +360,40 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
+      action_text = "Bulk Action: Schedule update of package group(s): %{p}" % {:p => params[:groups].join(',')}
+    else
+      @systems.each do |system|
+        begin
+          system.update_packages params[:packages]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+      params[:packages].blank? ?
+        action_text = "Bulk Action: Schedule update of all packages" :
+        action_text = "Bulk Action: Schedule update of package(s): %{p}" % {:p => params[:packages].join(',')}
     end
 
-    action = "Bulk Action: Schedule install of package group(s): %{p}" % {:p => params[:groups].join(',')}
-    notice_bulk_action action, successful_systems, failed_systems
+    notice_bulk_action action_text, successful_systems, failed_systems
     render :nothing => true
   end
 
-  def bulk_package_group_remove
+  def bulk_content_remove
     successful_systems = []
     failed_systems = []
 
-    if !params[:groups].blank?
+    if !params[:packages].blank?
+      @systems.each do |system|
+        begin
+          system.uninstall_packages params[:packages]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+      action_text = "Bulk Action: Schedule uninstall of package(s): %{p}" % {:p => params[:packages].join(',')}
+    elsif !params[:groups].blank?
       @systems.each do |system|
         begin
           system.uninstall_package_groups params[:groups]
@@ -412,10 +402,10 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
+      action_text = "Bulk Action: Schedule uninstall of package group(s): %{p}" % {:p => params[:groups].join(',')}
     end
 
-    action = "Bulk Action: Schedule uninstall of package group(s): %{p}" % {:p => params[:groups].join(',')}
-    notice_bulk_action action, successful_systems, failed_systems
+    notice_bulk_action action_text, successful_systems, failed_systems
     render :nothing => true
   end
 

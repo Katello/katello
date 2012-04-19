@@ -109,8 +109,6 @@ KT.systems_page = function() {
         var removeSystem = $(".panel_action[data-id=remove_systems]"),
             package = $(".panel_action[data-id=systems_package_action]"),
             package_error = package.find('.validation_error'),
-            package_group = $(".panel_action[data-id=systems_package_group_action]"),
-            package_group_error = package_group.find('.validation_error'),
             errata = $(".panel_action[data-id=systems_errata_action]"),
             errata_error = errata.find('.validation_error');
 
@@ -130,21 +128,27 @@ KT.systems_page = function() {
                 valid_input_cb: function() {
                     // If the user hasn't provided the necessary inputs, generate an error
                     var valid = true,
-                        selected_action = $("input[name=package_action]:checked"),
-                        action_id = selected_action.attr('id'),
-                        packages_input = $.trim($('#packages_input').val());
+                        content_type_selected = $("input[name=systems_action]:checked"),
+                        content_id = content_type_selected.attr('id'),
+                        content_input = $.trim($('#packages_input').val());
 
-                    if (selected_action.length === 0) {
-                        // an action hasn't been selected
-                        package_error.html(i18n.validation_error_select_action);
+                    if (content_type_selected.length === 0) {
+                        // an content type hasn't been selected
+                        package_error.html(i18n.validation_error_select_content_type);
                         valid = false;
                     }
-                    else if ((action_id !== 'package_action_update_packages') && (packages_input.length === 0)) {
-                        // the pkg list is empty, but the action is install or remove
-                        package_error.html(i18n.validation_error_pkg_list_empty);
-                        valid = false;
+                    else if (content_input.length === 0) {
+                        if (content_id === 'systems_action_packages') {
+                            // the pkg list is empty, but the action is install or remove
+                            package_error.html(i18n.validation_error_pkg_list_empty);
+                            valid = false;
+                        } else {
+                            // user selected pkg groups
+                            package_error.html(i18n.validation_error_pkg_group_list_empty);
+                            valid = false;
+                        }
                     }
-                    else if (!KT.packages.valid_package_list_format(packages_input.split(/ *, */))) {
+                    else if ((content_id === 'systems_action_packages') && !KT.packages.valid_package_list_format(content_input.split(/ *, */))) {
                         // the pkg list is invalid
                         package_error.html(i18n.validation_error_pkg_name_format);
                         valid = false;
@@ -154,67 +158,38 @@ KT.systems_page = function() {
                     }
                     return valid;
                 },
-                ajax_cb: function(ids_selected, confirm_dialog) {
-                    var action_selected = $("input[name=package_action]:checked"),
-                        package_array = [],
-                        package_string = $.trim($('#packages_input').val());
+                ajax_cb: function(ids_selected, request_action, confirm_dialog) {
+                    var content_type_selected = $("input[name=systems_action]:checked").attr('id'),
+                        content_array = [],
+                        content_string = $.trim($('#packages_input').val());
 
-                    if (package_string.length > 0) {
-                        package_array = package_string.split(/ *, */);
+                    if (content_string.length > 0) {
+                        content_array = content_string.split(/ *, */);
                     }
-                    $.ajax({
-                        cache: 'false',
-                        type: package.attr('data-method'),
-                        url: action_selected.attr('data-url'),
-                        data: {ids:ids_selected, packages:package_array},
-                        success: function() {
-                            // on success, close the request confirmation dialog
-                            confirm_dialog.slideUp('fast');
-                        }
-                    });
-                }
-            }
-        );
 
-        KT.panel.actions.registerAction("systems_package_group_action",
-            {
-                valid_input_cb: function() {
-                    // If the user hasn't provided the necessary inputs, generate an error
-                    var valid = true,
-                        selected_action = $("input[name=package_group_action]:checked"),
-                        action_id = selected_action.attr('id'),
-                        package_group_input = $.trim($('#package_groups_input').val());
-
-                    if (selected_action.length === 0) {
-                        // an action hasn't been selected
-                        package_group_error.html(i18n.validation_error_select_action);
-                        valid = false;
+                    if (content_type_selected === 'systems_action_packages') {
+                        $.ajax({
+                            cache: 'false',
+                            type: request_action.attr('data-method'),
+                            url: request_action.attr('data-url'),
+                            data: {ids:ids_selected, packages:content_array},
+                            success: function() {
+                                // on success, close the request confirmation dialog
+                                confirm_dialog.slideUp('fast');
+                            }
+                        });
+                    } else {
+                        $.ajax({
+                            cache: 'false',
+                            type: request_action.attr('data-method'),
+                            url: request_action.attr('data-url'),
+                            data: {ids:ids_selected, groups:content_array},
+                            success: function() {
+                                // on success, close the request confirmation dialog
+                                confirm_dialog.slideUp('fast');
+                            }
+                        });
                     }
-                    else if (package_group_input.length === 0) {
-                        // the pkg group list is empty
-                        package_group_error.html(i18n.validation_error_pkg_group_list_empty);
-                        valid = false;
-                    }
-                    if (valid) {
-                        package_group_error.html('');
-                    }
-                    return valid;
-                },
-                ajax_cb: function(ids_selected, confirm_dialog) {
-                    var action_selected = $("input[name=package_group_action]:checked");
-                        group_string = $('#package_groups_input').val(),
-                        group_array = group_string.split(/ *, */);
-
-                    $.ajax({
-                        cache: 'false',
-                        type: package_group.attr('data-method'),
-                        url: action_selected.attr('data-url'),
-                        data: {ids:ids_selected, groups:group_array},
-                        success: function() {
-                            // on success, close the request confirmation dialog
-                            confirm_dialog.slideUp('fast');
-                        }
-                    });
                 }
             }
         );
@@ -254,12 +229,16 @@ KT.systems_page = function() {
             }
         );
 
-        $(".radio_option").click(function() {
-            // Whenever the user selects a radio button, update the action value in the confirmation text
-            var label_text = $(this).next('label').text().toLowerCase(),
-                option_action = $(this).nextAll('div.options').find('span.action_text');
+        $(".request_action.package").click(function() {
+            // Whenever the user selects a package/package group action, update the confirmation text
+            var action_text = $(this).val().toLowerCase(),
+                content_type_text = $("input[name=systems_action]:checked").next('label').text().toLowerCase(),
+                option = $(this).parent().nextAll('div.options'),
+                action = option.find('span.action_text'),
+                content_type = option.find('span.content_type_text');
 
-            option_action.html(label_text);
+            action.html(action_text);
+            content_type.html(content_type_text);
         });
 
     };
