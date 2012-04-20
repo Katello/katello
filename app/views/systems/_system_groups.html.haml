@@ -1,0 +1,25 @@
+= render :partial => "system_tupane_header_nav"
+
+= content_for :content do
+  .grid_8#system_groups
+    %h5.grid_8 #{_("System Groups")}
+    - if editable
+      = form_tag update_system_groups_system_path(@system), :method => "put", :id => "update_system_groups" do
+        .grid_8
+          = select_tag "system[system_group_ids]", options_from_collection_for_select(@system_groups, :id, :name, @system.system_group_ids), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
+        .grid_2
+          = button_to _("Save System Groups"), update_system_groups_system_path(@system), :method => :put, :id => :save_groups
+    -else
+      -if @system_groups.length > 0
+        %table{:style=>"width:400px;"}
+          %thead
+            %tr
+              %th #{_("Name")}
+          %tbody
+            - for group in @system_groups
+              - cycle_class = cycle("", "alt")
+              %tr{:class => cycle_class}
+                %td
+                  = group.name
+      -else
+        = _("You have no system groups defined.")
