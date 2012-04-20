@@ -52,8 +52,6 @@ class User < ActiveRecord::Base
   validates :username, :uniqueness => true, :presence => true, :username => true, :length => { :maximum => 255 }
   validates_presence_of :email
 
-  validate :own_role_included_in_roles
-
   # check if the role does not already exist for new username
   validates_each :username do |model, attr, value|
     if model.new_record? and Role.find_by_name(value)
@@ -132,7 +130,8 @@ class User < ActiveRecord::Base
   include Katello::ThreadSession::UserModel
   include Ldap
 
-
+  before_save :default_systems_reg_permission_check
+  before_save :own_role_included_in_roles
 
   def self.authenticate!(username, password)
     u = User.where({:username => username}).first
@@ -412,25 +411,52 @@ class User < ActiveRecord::Base
     UserMailer.send_password_reset(self)
   end
 
-  def has_default_env?
-    #the own_role is used exclusively for storing a perm with a tag that tells the default env
-    if !self.own_role
-      return false
-    else
-      if Permission.find_all_by_role_id(self.own_role.id).empty?
-        return false
-      end
+  def has_default_environment?
+    !!default_systems_reg_permission
+  end
+
+  def default_systems_reg_permission(create_with_organization = false)
+    return nil unless own_role # TODO fix controll aftrer save
+
+    resource_type = ResourceType.find_or_create_by_name("environments")
+    verb          = Verb.find_or_create_by_verb("register_systems")
+    name          = "default systems reg permission"
+
+    permission = own_role.permissions.joins(:verbs).
+        where(:resource_type_id => resource_type, :verbs => { :id => verb }, :name => name).first
+    if permission.nil? && create_with_organization
+      permission = own_role.permissions.create!(:resource_type => resource_type,
+                                                :verbs         => [verb],
+                                                :name          => name,
+                                                :organization  => create_with_organization)
     end
-    true
+    permission
   end
 
   def default_environment
-    sr = self.own_role
-    perm = Permission.find_all_by_role_id(self.own_role.id)
-    if sr && !perm.empty? && perm[0].tags
-      return KTEnvironment.find(perm[0].tags[0].tag_id)
+    permission = default_systems_reg_permission and KTEnvironment.find(permission.tags.first.tag_id)
+  end
+
+  def default_environment=(environment)
+    raise 'do not call default_environment= on new_record objects' if new_record? #TODO-P fix
+
+    unless environment.nil? || environment.kind_of?(KTEnvironment)
+      raise ArgumentError, "environment has to be KTEnvironment or nil"
     end
-    nil
+
+    if environment.nil?
+      default_systems_reg_permission.try :destroy
+      return
+    end
+
+    permission = default_systems_reg_permission(environment.organization)
+    if tag = permission.tags.first
+      tag.tag_id = environment.id
+      tag.save!
+    else
+      permission.tags.create! :tag_id => environment.id
+    end
+    environment
   end
 
   def default_locale
@@ -475,6 +501,11 @@ class User < ActiveRecord::Base
     raise
   end
 
+  def as_json(options)
+    super(options).merge 'default_organization' => default_environment.try(:organization).try(:name),
+                         'default_environment'  => default_environment.try(:name)
+  end
+
   protected
 
   def can_be_deleted?
@@ -488,8 +519,13 @@ class User < ActiveRecord::Base
   end
 
   def own_role_included_in_roles
-    unless own_role.nil?
-      errors.add(:own_role, 'own role must be included in roles') unless roles.include? own_role
+    return true if own_role.nil?
+    raise ActiveRecord::ActiveRecordError, 'own role must be included in roles' unless roles.include? own_role
+  end
+
+  def default_systems_reg_permission_check
+    if permission = default_systems_reg_permission and permission.tags.size != 1
+      raise ActiveRecord::ActiveRecordError, 'default_systems_reg_permission must have one tag'
     end
   end
 

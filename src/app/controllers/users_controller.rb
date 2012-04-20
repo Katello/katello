@@ -112,50 +112,40 @@ class UsersController < ApplicationController
   end
 
   def create
-    begin
-      user_params = params[:user]
-      @user = User.new(user_params)
-      env_id = params[:user]['env_id']
-      if env_id
-        @environment = KTEnvironment.find(env_id)
-        @organization = @environment.organization
-        @user.save!
-        perm = Permission.create! :role => @user.own_role,
-                           :resource_type=> ResourceType.find_or_create_by_name("environments"),
-                           :verbs=>[Verb.find_or_create_by_verb("register_systems")],
-                           :name=>"default systems reg permission",
-                           :organization=> @organization
-        PermissionTag.create!(:permission_id => perm.id, :tag_id => @environment.id)
-      else
-        if params['org_id']['org_id'].blank?
-          # user selected 'No Default Organization'
-          @user.save!
-          @environment = nil
-          @organization = nil
-        else
-          # user selected an org that has no environments defined
-          raise no_env_available_msg
-        end
-      end
+    @user                  = User.new(params[:user])
+    default_environment_id = params[:user][:env_id]
 
-      notice @user.username + _(" created successfully.")
-      if search_validate(User, user.id, params[:search])
-        render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
-      else
-        notice _("'%s' did not meet the current search criteria and is not being shown.") % @user["name"], { :level => 'message', :synchronous_request => false }
-        render :json => { :no_match => true }
-      end
-    rescue Exception => error
-      notice error, {:level => :error}
-      #transaction, if something goes wrong with the creation of the permission, we will need to delete the user
-      @user.destroy if @user.id
-      render :json=>@user.errors, :status=>:bad_request
+    if default_environment_id
+      @environment  = KTEnvironment.find(default_environment_id)
+      @organization = @environment.organization
+      @user.save!
+      @user.default_environment = @environment
+    else
+      # user selected an org that has no environments defined
+      raise no_env_available_msg unless params['org_id']['org_id'].blank?
+
+      # user selected 'No Default Organization'
+      @environment  = nil
+      @organization = nil
+      @user.save!
     end
-  rescue Exception => error
-    notice error, {:level => :error}
-    render :json=>@user.errors, :status=>:bad_request
+
+    notice @user.username + _(" created successfully.")
+    if search_validate(User, user.id, params[:search])
+      render :partial => "common/list_item",
+             :locals  => { :item => @user, :accessor => "id", :columns => ["username"], :name => controller_display_name }
+    else
+      notice _("'%s' did not meet the current search criteria and is not being shown.") % @user["name"],
+             { :level => 'message', :synchronous_request => false }
+      render :json => { :no_match => true }
+    end
+  rescue ActiveRecord::RecordNotSaved => error
+    notice error, { :level => :error }
+    #transaction, if something goes wrong with the creation of the permission, we will need to delete the user
+    @user.destroy unless @user.new_record?
+    render :json => @user.errors, :status => :bad_request
   end
-  
+
   def update
     params[:user].delete :username
 
@@ -209,83 +199,57 @@ class UsersController < ApplicationController
   end
 
   def edit_environment
-    if @user.has_default_env?
-      @old_perm = Permission.find_all_by_role_id(@user.own_role.id)[0]
-      @environment = @user.default_environment
-      @old_env = @environment
+    if @user.has_default_environment?
+      @old_perm     = @user.default_systems_reg_permission
+      @environment  = @user.default_environment
+      @old_env      = @environment
       @organization = Organization.find(@environment.attributes['organization_id'])
-      if current_user.id == @user.id
-        accessible_envs = KTEnvironment.systems_registerable(@organization)
-      else
-        accessible_envs = KTEnvironment.where(:organization_id => @organization.id)
-      end
+
+      accessible_envs = if current_user.id == @user.id
+                          KTEnvironment.systems_registerable(@organization)
+                        else
+                          KTEnvironment.where(:organization_id => @organization.id)
+                        end
       setup_environment_selector(@organization, accessible_envs)
     else
-      @organization = nil
+      @organization   = nil
       accessible_envs = nil
     end
 
-    render :partial=>"edit_environment", :layout => "tupane_layout", :locals=>{:user=>@user,
-                                                                   :editable=>can_edit_user?,
-                                                                   :name=>controller_display_name,
-                                                                   :accessible_envs => accessible_envs}
+    render :partial => "edit_environment", :layout => "tupane_layout",
+           :locals  => { :user            => @user,
+                         :editable        => can_edit_user?,
+                         :name            => controller_display_name,
+                         :accessible_envs => accessible_envs }
   end
 
   def update_environment
-    begin
-      new_env = params['env_id'] ? params['env_id']['env_id'].to_i : nil
-      if @user.has_default_env?
-        old_perm = Permission.find_all_by_role_id(@user.own_role.id)[0]
-        old_env = old_perm.tags[0].tag_id
-      else
-        old_env = nil
-      end
-      #if (old_perm.nil? || (old_env != new_env))
-      if ((old_env != nil || new_env != nil) && old_env != new_env)
+    default_environment_id = params['env_id'].try(:[], 'env_id').try(:to_i)
 
-        if new_env
-          old_perm.destroy if @user.has_default_env?
-
-          @environment = KTEnvironment.find(new_env)
-          @organization = @environment.organization
-
-          #Second create a new one with the newly selected env
-          perm = Permission.create! :role => @user.own_role,
-                       :resource_type=> ResourceType.find_or_create_by_name("environments"),
-                       :verbs=>[Verb.find_or_create_by_verb("register_systems")],
-                       :name=>"default systems reg permission",
-                       :organization=> @organization
-          PermissionTag.create!(:permission_id => perm.id, :tag_id => new_env)
-        else
-          if params['org_id'].blank?
-            # user selected 'No Default Organization'
-            old_perm.destroy if @user.has_default_env?
-
-            @old_env = nil
-            @environment = nil
-            @organization = nil
-          else
-            # user selected an org that has no environments defined
-            raise no_env_available_msg
-          end
-        end
-
-        notice _("User environment updated successfully.")
-
-        if @organization && @environment
-          render :json => {:org => @organization.name, :env => @environment.name} and return
-        end
-        render :json => {:org => _("No default set for this user."), :env => _("No default set for this user.")} and return
-      else
-        err_msg = N_("The default you supplied was the same as the old default.")
-        notice err_msg, {:level => :error}
-        render(:text => err_msg, :status => 400) and return
-      end
-
-    rescue Exception => error
-      notice error.message, {:level => :error}
-      render :text =>error.message, :status=>400
+    if @user.default_environment.try(:id) == default_environment_id
+      err_msg = N_("The default you supplied was the same as the old default.")
+      notice err_msg, { :level => :error }
+      render(:text => err_msg, :status => 400) and return
     end
+
+    raise no_env_available_msg if default_environment_id.nil? && params['org_id'].present?
+
+    @environment              = default_environment_id.nil? ? nil : KTEnvironment.find(default_environment_id)
+    @user.default_environment = @environment
+    #@user.save!
+
+    @organization = @environment.try :organization
+
+    notice _("User environment updated successfully.")
+
+    if @organization && @environment
+      render :json => { :org => @organization.name, :env => @environment.name } and return
+    end
+    render :json => { :org => _("No default set for this user."), :env => _("No default set for this user.") } and return
+
+  rescue ActiveRecord::RecordNotSaved => error
+    notice error.message, { :level => :error }
+    render :text => error.message, :status => 400
   end
 
   def update_roles

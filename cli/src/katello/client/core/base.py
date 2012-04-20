@@ -253,6 +253,19 @@ class Action(object):
 
         return
 
+    def reject_option(self, opt_dest, *opt_collisions):
+        """
+        Add option error if an option is present.
+        @type opt_dest: str
+        @param opt: name of option or option destination to check
+        """
+        if (self.option_specified(opt_dest)):
+            flag = self.get_option_string(opt_dest)
+            self.add_option_error(_('Option %s is colliding with %s; please see --help') % (flag, ', '.join(opt_collisions)))
+
+        return
+
+
     def require_one_of_options(self, *opt_dests):
         """
         Add option error if one of the options is not present.

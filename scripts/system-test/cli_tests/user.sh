@@ -14,3 +14,19 @@ test_success "user info" user info --username="$TEST_USER"
 test_success "user_role create" user_role create --name="$ROLE_NAME"
 test_success "user assign_role" user assign_role --username="$TEST_USER" --role="$ROLE_NAME"
 test_success "user unassign_role" user unassign_role --username="$TEST_USER" --role="$ROLE_NAME"
+
+
+# test default environment
+
+TEST_USER2=${TEST_USER}2
+test_success "user create with default environment" user create --username="$TEST_USER2" --email=email@example.com \
+  --password=password --default_organization="$TEST_ORG" --default_environment="$TEST_ENV"
+test_own_cmd_success "user has default environment" $CMD user info --username="$TEST_USER2" | grep "$TEST_ENV"
+test_success "user default_environment_update" user update --username="$TEST_USER2" \
+  --default_organization="$TEST_ORG" --default_environment="$TEST_ENV_2"
+test_own_cmd_success "user has default environment" $CMD user info --username="$TEST_USER2" | grep "$TEST_ENV_2"
+test_success "user default_environment_update" user update --username="$TEST_USER2" \
+  --no_default_environment
+test_own_cmd_success "user has default environment" $CMD user info --username="$TEST_USER2" | grep "$TEST_ENV_2"
+test_success "user deletion" user delete --username="$TEST_USER2"
+

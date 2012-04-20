@@ -20,7 +20,7 @@ from gettext import gettext as _
 
 from katello.client.api.user import UserAPI
 from katello.client.api.user_role import UserRoleAPI
-from katello.client.api.utils import get_user
+from katello.client.api.utils import get_user, get_environment
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, convert_to_mime_type, attachment_file_name, save_report
@@ -49,6 +49,8 @@ class List(UserAction):
         self.printer.add_column('username')
         self.printer.add_column('email')
         self.printer.add_column('disabled')
+        self.printer.add_column('default_organization')
+        self.printer.add_column('default_environment')
 
         self.printer.set_header(_("User List"))
         self.printer.print_items(users)
@@ -65,23 +67,38 @@ class Create(UserAction):
         self.parser.add_option('--password', dest='password', help=_("initial password (required)"))
         self.parser.add_option('--email', dest='email', help=_("email (required)"))
         self.parser.add_option("--disabled", dest="disabled", type="bool", help=_("disabled account (default is 'false')"), default=False)
+        self.parser.add_option('--default_organization', dest='default_organization',
+                               help=_("user's default organization name"))
+        self.parser.add_option('--default_environment', dest='default_environment',
+                               help=_("user's default environment name"))
 
     def check_options(self):
         self.require_option('username')
         self.require_option('password')
         self.require_option('email')
+        if self.option_specified('default_organization') or self.option_specified('default_environment'):
+            self.require_option('default_organization')
+            self.require_option('default_environment')
 
     def run(self):
         username = self.get_option('username')
         password = self.get_option('password')
         email = self.get_option('email')
         disabled = self.get_option('disabled')
+        default_organization = self.get_option('default_organization')
+        default_environment = self.get_option('default_environment')
 
-        user = self.api.create(username, password, email, disabled)
+        if default_environment is not None:
+            environment = get_environment(default_organization, default_environment)
+            if environment is None: return None
+        else:
+            environment = None
+
+        user = self.api.create(username, password, email, disabled, environment)
         if is_valid_record(user):
             print _("Successfully created user [ %s ]") % user['username']
         else:
-            print >> sys.stderr, _("Could not create user [ %s ]") % user['username']
+            print >> sys.stderr, _("Could not create user [ %s ]") % username
         return os.EX_OK
 
 # ------------------------------------------------------------------------------
@@ -107,6 +124,8 @@ class Info(UserAction):
         self.printer.add_column('username')
         self.printer.add_column('email')
         self.printer.add_column('disabled')
+        self.printer.add_column('default_organization')
+        self.printer.add_column('default_environment')
 
         self.printer.set_header(_("User Information"))
         self.printer.print_item(user)
@@ -146,25 +165,50 @@ class Update(UserAction):
         self.parser.add_option('--password', dest='password', help=_("initial password"))
         self.parser.add_option('--email', dest='email', help=_("email"))
         self.parser.add_option("--disabled", dest="disabled", help=_("disabled account (default is 'false')"), default=False)
+        self.parser.add_option('--default_organization', dest='default_organization',
+                               help=_("user's default organization name"))
+        self.parser.add_option('--default_environment', dest='default_environment',
+                               help=_("user's default environment name"))
+        self.parser.add_option('--no_default_environment', dest='no_default_environment', action="store_true",
+                               help=_("user's default environment is None"))
 
     def check_options(self):
         self.require_option('username')
+        if self.option_specified('default_organization') or self.option_specified('default_environment'):
+            self.require_option('default_organization')
+            self.require_option('default_environment')
+            self.reject_option('no_default_environment', 'default_organization', 'default_environment')
+        if self.option_specified('no_default_environment'):
+            self.reject_option('default_organization', 'no_default_environment')
+            self.reject_option('default_environment', 'no_default_environment')
 
     def run(self):
         username = self.get_option('username')
         password = self.get_option('password')
         email = self.get_option('email')
         disabled = self.get_option('disabled')
+        default_organization = self.get_option('default_organization')
+        default_environment = self.get_option('default_environment')
+        no_default_environment = self.get_option('no_default_environment')
+
+        if no_default_environment is True:
+            environment = None
+        elif default_environment is not None:
+            environment = get_environment(default_organization, default_environment)
+            if environment is None: return None
+        else:
+            environment = False
 
         user = get_user(username)
         if user == None:
             return os.EX_DATAERR
 
-        if password == None and email == None and disabled == None:
+        if password == None and email == None and disabled == None and default_organization == None and\
+           default_environment == None and no_default_environment != True:
             print _("Provide at least one parameter to update user [ %s ]") % username
             return os.EX_DATAERR
 
-        user = self.api.update(user['id'], password, email, disabled)
+        user = self.api.update(user['id'], password, email, disabled, environment)
         print _("Successfully updated user [ %s ]") % username
         return os.EX_OK
 
