@@ -87,11 +87,14 @@ sleep 10s # let mongo initialize
 echo "Initializing Candlepin database"
 /usr/share/candlepin/cpsetup -s
 
+# cpsetup alters tomcat configuration, use the original
+cp /etc/tomcat6/server.xml.original /etc/tomcat6/server.xml
+
 echo "Starting Pulp instance"
 $SRV pulp-server start
 
 echo "Starting Candlepin instance"
-start_unless_running tomcat6
+$SRV tomcat6 restart
 
 echo "Initializing Katello database"
 # cannot use initdb for this (BZ 745542)
