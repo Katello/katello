@@ -64,7 +64,9 @@ class SystemsController < ApplicationController
       :bulk_content_install => bulk_edit_systems,
       :bulk_content_update => bulk_edit_systems,
       :bulk_content_remove => bulk_edit_systems,
-      :bulk_errata_install => bulk_edit_systems
+      :bulk_errata_install => bulk_edit_systems,
+      :system_groups => read_system,
+      :update_system_groups => edit_system
     }
   end
 
@@ -427,6 +429,23 @@ class SystemsController < ApplicationController
     action = "Bulk Action: Schedule install of errata(s): %{p}" % {:p => params[:errata].join(',')}
     notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
+  end
+
+  def system_groups
+    @system_groups = SystemGroup.where(:organization_id => current_organization)
+    render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:system_groups=>@system_groups,
+                                                                            :editable=>@system.editable?}
+  end
+
+  def update_system_groups
+    params[:system] = {"system_group_ids"=>[]} unless params.has_key? :system
+
+    if @system.update_attributes(params[:system])
+      notice _("System '%s' was updated.") % @system["name"]
+      render :nothing => true and return
+    end
+    notice "", {:level => :error, :list_items => @system.errors.to_a}
+    render :text => @system.errors, :status=>:ok
   end
 
   private
