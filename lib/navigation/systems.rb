@@ -77,6 +77,12 @@ module Navigation
           :if => lambda{@system},
           :options => {:class=>"navigation_element"},
           :items => systems_content_subnav
+        },
+        { :key => :system_groups,
+          :name =>_("System Groups"),
+          :url => lambda{system_groups_system_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"navigation_element"}
         }          
       ]
     end

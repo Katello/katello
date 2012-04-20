@@ -59,7 +59,7 @@ class System < ActiveRecord::Base
   has_many :activation_keys, :through => :system_activation_keys
 
   has_many :system_system_groups, :dependent => :destroy
-  has_many :system_groups, :through => :system_system_groups
+  has_many :system_groups, :through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group
 
   validates :environment, :presence => true, :non_library_environment => true
   validates :name, :presence => true, :no_trailing_space => true
@@ -203,14 +203,19 @@ class System < ActiveRecord::Base
     SystemTask.refresh_for_system(self)
   end
 
-
-
   def extended_index_attrs
     {:facts=>self.facts, :organization_id=>self.organization.id, :name_sort=>name.downcase}
   end
 
-
   private
+    def add_pulp_consumer_group record
+      record.add_consumers([self.uuid])
+    end
+
+    def remove_pulp_consumer_group record
+      record.del_consumers([self.uuid])
+    end
+
     def save_system_task pulp_task, task_type, parameters_type, parameters
       SystemTask.make(self, pulp_task, task_type, parameters_type => parameters)
     end
