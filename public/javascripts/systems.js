@@ -22,6 +22,8 @@ KT.panel.set_expand_cb(function(){
     $.each(children, function(i, item) {
         KT.menu.hoverMenu(item, { top : '75px' });
     });
+
+    $(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false});
 });
 
 
@@ -66,6 +68,7 @@ $(document).ready(function() {
   });
 
   KT.systems_page.registerActions();
+  KT.systems_page.system_group_setup();
 
     // These run after the subscribe/unsubscribe forms have been submitted to update
     // the left hand list entry (which reflects the subscribed status of the system).
@@ -245,11 +248,28 @@ KT.systems_page = function() {
             content_type.html(content_type_text);
         });
 
+    },
+    system_group_setup = function() {
+        $('#update_system_groups').live('submit', update_system_groups);
+    },
+    update_system_groups = function(e) {
+        e.preventDefault();
+        var button = $(this).find('input[type|="submit"]');
+        button.attr("disabled","disabled");
+        $(this).ajaxSubmit({
+            success: function(data) {
+                button.removeAttr('disabled');
+            },
+            error: function(e) {
+                button.removeAttr('disabled');
+            }
+        });
     };
   return {
       env_change : env_change,
       create_system : create_system,
-      registerActions : registerActions
+      registerActions : registerActions,
+      system_group_setup: system_group_setup
   }
 }();
 

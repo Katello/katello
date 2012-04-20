@@ -108,6 +108,8 @@ Src::Application.routes.draw do
       get :products
       get :more_products
       get :facts
+      get :system_groups
+      put :update_system_groups
     end
     collection do
       get :auto_complete_search
