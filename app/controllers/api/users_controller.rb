@@ -43,8 +43,8 @@ class Api::UsersController < Api::ApiController
 
   def param_rules
     {
-      :create => [:username, :password, :email, :disabled],
-      :update => {:user => [:password, :email, :disabled]}
+      :create => [:username, :password, :email, :disabled, :default_environment_id],
+      :update => {:user => [:password, :email, :disabled, :default_environment_id]}
     }
   end
 
@@ -58,16 +58,24 @@ class Api::UsersController < Api::ApiController
 
   def create
     # warning - request already contains "username" and "password" (logged user)
-    render :json => User.create!(
-      :username => params[:username],
-      :password => params[:password],
-      :email => params[:email],
-      :disabled=> params[:disabled]
-    ).to_json
+    user = User.create!(:username => params[:username],
+                        :password => params[:password],
+                        :email    => params[:email],
+                        :disabled => params[:disabled])
+
+    user.default_environment = KTEnvironment.find(params[:default_environment_id]) if params[:default_environment_id]
+    render :json => user.to_json
   end
 
   def update
-    render :json => @user.update_attributes!(params[:user]).to_json
+    user_params = params[:user].reject { |k, _| k == 'default_environment_id' }
+    @user.update_attributes!(user_params)
+    @user.default_environment = if params[:user][:default_environment_id]
+                                  KTEnvironment.find(params[:user][:default_environment_id])
+                                else
+                                  nil
+                                end
+    render :json => @user.to_json
   end
 
   def destroy
