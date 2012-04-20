@@ -58,6 +58,9 @@ class System < ActiveRecord::Base
   has_many :system_activation_keys, :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
 
+  has_many :system_system_groups, :dependent => :destroy
+  has_many :system_groups, :through => :system_system_groups
+
   validates :environment, :presence => true, :non_library_environment => true
   validates :name, :presence => true, :no_trailing_space => true
   validates_uniqueness_of :name, :scope => :environment_id

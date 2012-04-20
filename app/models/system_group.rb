@@ -31,6 +31,9 @@ class SystemGroup < ActiveRecord::Base
   has_many :key_system_groups, :dependent => :destroy
   has_many :activation_keys, :through => :key_system_groups
 
+  has_many :system_system_groups, :dependent => :destroy
+  has_many :systems, :through => :system_system_groups
+
   validates :pulp_id, :presence => true
   validates :name, :presence => true, :katello_name_format => true
   validates_presence_of :organization_id, :message => N_("Organization cannot be blank.")
