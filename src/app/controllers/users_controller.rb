@@ -1,4 +1,4 @@
- #
+#
 # Copyright 2011 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -14,9 +14,9 @@ class UsersController < ApplicationController
   include AutoCompleteSearch
 
   def section_id
-     'operations'
+    'operations'
   end
-   
+
   before_filter :setup_options, :only => [:items, :index]
   before_filter :find_user, :only => [:items, :index, :edit, :edit_environment, :update_environment, :update_preference,
                                       :update, :update_roles, :update_locale, :clear_helptips, :destroy]
@@ -24,13 +24,13 @@ class UsersController < ApplicationController
   skip_before_filter :require_org
 
   def rules
-    index_test = lambda{true}
-    create_test = lambda{User.creatable?}
+    index_test  = lambda { true }
+    create_test = lambda { User.creatable? }
 
-    read_test = lambda{@user.id == current_user.id || @user.readable?}
-    edit_test = lambda{can_edit_user?}
-    delete_test = lambda{@user.deletable?}
-    edit_details_test = lambda{can_edit_user?}
+    read_test               = lambda { @user.id == current_user.id || @user.readable? }
+    edit_test               = lambda { can_edit_user? }
+    delete_test             = lambda { @user.deletable? }
+    edit_details_test       = lambda { can_edit_user? }
     update_environment_test = lambda do
       if @user.id == current_user.id
         env_id = params['env_id'] ? params['env_id']['env_id'].to_i : nil
@@ -45,45 +45,43 @@ class UsersController < ApplicationController
     end
 
 
-    user_helptip = lambda{true} #everyone can enable disable a helptip
-    
-     {
-       :index => index_test,
-       :items => index_test,
-       :auto_complete_search => index_test,
-       :new => create_test,
-       :create => create_test,
-       :edit => read_test,
-       :account => read_test,
-       :edit_environment => read_test,
-       :update_environment => update_environment_test,
-       :update => edit_details_test,
-       :update_roles => edit_test,
-       :update_locale => edit_test,
-       :update_preference => edit_test,
-       :clear_helptips => edit_details_test,
-       :destroy => delete_test,
-       :enable_helptip => user_helptip,
-       :disable_helptip => user_helptip,
-     }
+    user_helptip = lambda { true } #everyone can enable disable a helptip
+
+    { :index                => index_test,
+      :items                => index_test,
+      :auto_complete_search => index_test,
+      :new                  => create_test,
+      :create               => create_test,
+      :edit                 => read_test,
+      :account              => read_test,
+      :edit_environment     => read_test,
+      :update_environment   => update_environment_test,
+      :update               => edit_details_test,
+      :update_roles         => edit_test,
+      :update_locale        => edit_test,
+      :update_preference    => edit_test,
+      :clear_helptips       => edit_details_test,
+      :destroy              => delete_test,
+      :enable_helptip       => user_helptip,
+      :disable_helptip      => user_helptip,
+    }
   end
-  
+
   def param_rules
-     {       
-       :create => {:user => [:password, :username, :env_id, :email]},
-       :update => {:user => [:password, :env_id, :email, :helptips_enabled]},
-       :update_roles=> {:user => [:role_ids]}
-     }
+    { :create       => { :user => [:password, :username, :env_id, :email] },
+      :update       => { :user => [:password, :env_id, :email, :helptips_enabled] },
+      :update_roles => { :user => [:role_ids] }
+    }
   end
- 
+
 
   # Render list of users. Note that if the current user does not have permission
   # to view all users, the results are restricted to just themselves.
   def items
     if !params[:only] && User.any_readable?
       render_panel_direct(User, @panel_options, params[:search], params[:offset], [:username_sort, 'asc'],
-                          {:default_field => :username,
-                           :filter=>[{:hidden=>[false]}]})
+                          { :default_field => :username,
+                            :filter        => [{ :hidden => [false] }] })
     else
       users = [@user]
       render_panel_items(users, @panel_options, nil, params[:offset])
@@ -93,22 +91,23 @@ class UsersController < ApplicationController
   def edit
     accessible_envs = []
     if current_organization
-      @organization = current_organization
+      @organization   = current_organization
       accessible_envs = current_organization.environments
       setup_environment_selector(current_organization, accessible_envs)
       @environment = first_env_in_path(accessible_envs)
     end
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user,
-                                                                   :editable=>can_edit_user?,
-                                                                   :name=>controller_display_name,
-                                                                   :accessible_envs => accessible_envs,
-                                                                   :ldap => ldap_enabled?}
+    render :partial => "edit", :layout => "tupane_layout",
+           :locals  => { :user            => @user,
+                         :editable        => can_edit_user?,
+                         :name            => controller_display_name,
+                         :accessible_envs => accessible_envs,
+                         :ldap            => ldap_enabled? }
   end
-  
+
   def new
-    @user = User.new
+    @user         = User.new
     @organization = nil
-    render :partial=>"new", :layout => "tupane_layout", :locals=>{:user=>@user, :accessible_envs => nil}
+    render :partial => "new", :layout => "tupane_layout", :locals => { :user => @user, :accessible_envs => nil }
   end
 
   def create
@@ -153,22 +152,23 @@ class UsersController < ApplicationController
       notice _("User updated successfully.")
       attr = params[:user].first.last if params[:user].first
       attr ||= ""
-      
+
       if not search_validate(User, user.id, params[:search])
-        notice _("'%s' no longer matches the current search criteria.") % @user["name"], { :level => 'message', :synchronous_request => false }
+        notice _("'%s' no longer matches the current search criteria.") % @user["name"],
+               { :level => 'message', :synchronous_request => false }
       end
 
       render :text => attr and return
     end
-    notice "", {:level => :error, :list_items => @user.errors.to_a}
-    render :text => @user.errors, :status=>:ok
+    notice "", { :level => :error, :list_items => @user.errors.to_a }
+    render :text => @user.errors, :status => :ok
   end
 
   def update_locale
     locale = params[:locale][:locale]
     if AppConfig.available_locales.include? locale
       @user.default_locale = locale
-      I18n.locale = locale
+      I18n.locale          = locale
     else
       @user.default_locale = nil
     end
@@ -180,7 +180,7 @@ class UsersController < ApplicationController
   def update_preference
     preference = params[:preference]
     if preference
-      @user.preferences[:user] = {} unless @user.preferences.has_key? :user
+      @user.preferences[:user] = { } unless @user.preferences.has_key? :user
       if params[:value] == "true"
         value = true
       elsif  params[:value] == "false"
@@ -193,7 +193,7 @@ class UsersController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { render :text=>params[:preference] }
+      format.html { render :text => params[:preference] }
       format.js
     end
   end
@@ -238,7 +238,7 @@ class UsersController < ApplicationController
     @user.default_environment = @environment
     #@user.save!
 
-    @organization = @environment.try :organization
+    @organization             = @environment.try :organization
 
     notice _("User environment updated successfully.")
 
@@ -253,22 +253,22 @@ class UsersController < ApplicationController
   end
 
   def update_roles
-    params[:user] = {"role_ids"=>[]} unless params.has_key? :user
+    params[:user] = { "role_ids" => [] } unless params.has_key? :user
 
     #Add in the own role if updating roles, cause the user shouldn't see his own role
     params[:user][:role_ids] << @user.own_role.id
 
     if  @user.update_attributes(params[:user])
       notice _("User updated successfully.")
-      
+
       if not search_validate(User, user.id, params[:search])
         notice _("'%s' no longer matches the current search criteria.") % @user["name"], { :level => 'message', :synchronous_request => false }
       end
-      
+
       render :nothing => true and return
     end
-    notice "", {:level => :error, :list_items => @user.errors.to_a}
-    render :text => @user.errors, :status=>:ok
+    notice "", { :level => :error, :list_items => @user.errors.to_a }
+    render :text => @user.errors, :status => :ok
   end
 
   def destroy
@@ -278,13 +278,13 @@ class UsersController < ApplicationController
     if @user.destroyed?
       notice _("User '%s' was deleted.") % @user[:username]
       #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => {:id => @id, :name=>controller_display_name} and return
+      render :partial => "common/list_remove", :locals => { :id => @id, :name => controller_display_name } and return
     end
-    notice "", {:level => :error, :list_items => @user.errors.to_a}
-    render :text => @user.errors, :status=>:ok
+    notice "", { :level => :error, :list_items => @user.errors.to_a }
+    render :text => @user.errors, :status => :ok
   rescue Exception => error
-    notice "", {:level => :error, :list_items => @user.errors.to_a}
-    render :json=>@user.errors, :status=>:bad_request
+    notice "", { :level => :error, :list_items => @user.errors.to_a }
+    render :json => @user.errors, :status => :bad_request
   end
 
   def clear_helptips
@@ -320,18 +320,18 @@ class UsersController < ApplicationController
       @user = current_user
     end
   end
-  
+
 
   def setup_options
-    @panel_options = { :title => _('Users'),
-                 :col => ['username'],
-                 :titles => [_('Username')],
-                 :create => _('User'),
-                 :name => controller_display_name,
-                 :ajax_load  => true,
-                 :ajax_scroll => items_users_path(),
-                 :enable_create => User.creatable?,
-                 :search_class=>User}
+    @panel_options = { :title         => _('Users'),
+                       :col           => ['username'],
+                       :titles        => [_('Username')],
+                       :create        => _('User'),
+                       :name          => controller_display_name,
+                       :ajax_load     => true,
+                       :ajax_scroll   => items_users_path(),
+                       :enable_create => User.creatable?,
+                       :search_class  => User }
   end
 
   def controller_display_name
