@@ -332,7 +332,7 @@ class SystemsController < ApplicationController
           system_group = SystemGroup.create!(:name => params[:system_group], :organization_id => current_organization.id)
           new_group = true
         rescue Exception => error
-          notice _("Systems Bulk Action: Unable to create system group: %{g}.  Reason: %{e}." % {:g => params[:system_group], :e => error.to_s}), {:level => :error}
+          notice _("Systems Bulk Action: Unable to create system group: %s.  Reason: %s.") % [params[:system_group], error.to_s], {:level => :error}
           render :nothing => true and return
         end
       end
@@ -352,8 +352,8 @@ class SystemsController < ApplicationController
     end
 
     new_group.nil? ?
-        action = "Systems Bulk Action: Add to system group: %{g}" % {:g => params[:system_group]} :
-        action = "Systems Bulk Action: Added to new system group: %{g}" % {:g => params[:system_group]}
+        action = _("Systems Bulk Action: Add to system group: %s") % params[:system_group] :
+        action = _("Systems Bulk Action: Added to new system group: %s") % params[:system_group]
     notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
@@ -375,12 +375,12 @@ class SystemsController < ApplicationController
           end
         end
       else
-        notice _("Systems Bulk Action: Unable to remove system group: %{g}.  Reason: Group does not exist." % {:g => params[:system_group]}), {:level => :error}
+        notice _("Systems Bulk Action: Unable to remove system group: %s.  Reason: Group does not exist.") % params[:system_group], {:level => :error}
         render :nothing => true and return
       end
     end
 
-    action = "Systems Bulk Action: Remove from system group: %{g}" % {:g => params[:system_group]}
+    action = _("Systems Bulk Action: Remove from system group: %s") % params[:system_group]
     notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
@@ -398,7 +398,7 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
-      action_text = "Systems Bulk Action: Schedule install of package(s): %{p}" % {:p => params[:packages].join(',')}
+      action_text = _("Systems Bulk Action: Schedule install of package(s): %s") % params[:packages].join(',')
 
     elsif !params[:groups].blank?
       @systems.each do |system|
@@ -409,7 +409,7 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
-      action_text = "Systems Bulk Action: Schedule install of package group(s): %{p}" % {:p => params[:groups].join(',')}
+      action_text = _("Systems Bulk Action: Schedule install of package group(s): %s") % params[:groups].join(',')
     end
 
     notice_bulk_action action_text, successful_systems, failed_systems
@@ -429,7 +429,7 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
-      action_text = "Systems Bulk Action: Schedule update of package group(s): %{p}" % {:p => params[:groups].join(',')}
+      action_text = _("Systems Bulk Action: Schedule update of package group(s): %s") % params[:groups].join(',')
     else
       @systems.each do |system|
         begin
@@ -440,8 +440,8 @@ class SystemsController < ApplicationController
         end
       end
       params[:packages].blank? ?
-        action_text = "Systems Bulk Action: Schedule update of all packages" :
-        action_text = "Systems Bulk Action: Schedule update of package(s): %{p}" % {:p => params[:packages].join(',')}
+        action_text = _("Systems Bulk Action: Schedule update of all packages") :
+        action_text = _("Systems Bulk Action: Schedule update of package(s): %s") % params[:packages].join(',')
     end
 
     notice_bulk_action action_text, successful_systems, failed_systems
@@ -461,7 +461,7 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
-      action_text = "Systems Bulk Action: Schedule uninstall of package(s): %{p}" % {:p => params[:packages].join(',')}
+      action_text = _("Systems Bulk Action: Schedule uninstall of package(s): %s") % params[:packages].join(',')
     elsif !params[:groups].blank?
       @systems.each do |system|
         begin
@@ -471,7 +471,7 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
-      action_text = "Systems Bulk Action: Schedule uninstall of package group(s): %{p}" % {:p => params[:groups].join(',')}
+      action_text = _("Systems Bulk Action: Schedule uninstall of package group(s): %s") % params[:groups].join(',')
     end
 
     notice_bulk_action action_text, successful_systems, failed_systems
@@ -493,7 +493,7 @@ class SystemsController < ApplicationController
       end
     end
 
-    action = "Systems Bulk Action: Schedule install of errata(s): %{p}" % {:p => params[:errata].join(',')}
+    action = _("Systems Bulk Action: Schedule install of errata(s): %s") % params[:errata].join(',')
     notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
