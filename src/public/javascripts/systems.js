@@ -26,9 +26,6 @@ KT.panel.set_expand_cb(function(){
     $(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false});
 });
 
-
-
-
 KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:", "...Any System Fact"]);
 
 (function(){
@@ -115,9 +112,8 @@ KT.systems_page = function() {
     registerActions = function() {
         var removeSystem = $(".panel_action[data-id=remove_systems]"),
             package = $(".panel_action[data-id=systems_package_action]"),
-            package_error = package.find('.validation_error'),
             errata = $(".panel_action[data-id=systems_errata_action]"),
-            errata_error = errata.find('.validation_error');
+            system_group = $(".panel_action[data-id=systems_system_groups_action]");
 
         KT.panel.actions.registerAction("remove_systems",
             {  url: removeSystem.attr("data-url"),
@@ -137,31 +133,32 @@ KT.systems_page = function() {
                     var valid = true,
                         content_type_selected = $("input[name=systems_action]:checked"),
                         content_id = content_type_selected.attr('id'),
-                        content_input = $.trim($('#packages_input').val());
+                        content_input = $.trim($('#packages_input').val()),
+                        content_error = package.find('.validation_error');
 
                     if (content_type_selected.length === 0) {
                         // an content type hasn't been selected
-                        package_error.html(i18n.validation_error_select_content_type);
+                        content_error.html(i18n.validation_error_select_content_type);
                         valid = false;
                     }
                     else if (content_input.length === 0) {
                         if (content_id === 'systems_action_packages') {
                             // the pkg list is empty, but the action is install or remove
-                            package_error.html(i18n.validation_error_pkg_list_empty);
+                            content_error.html(i18n.validation_error_pkg_list_empty);
                             valid = false;
                         } else {
                             // user selected pkg groups
-                            package_error.html(i18n.validation_error_pkg_group_list_empty);
+                            content_error.html(i18n.validation_error_pkg_group_list_empty);
                             valid = false;
                         }
                     }
                     else if ((content_id === 'systems_action_packages') && !KT.packages.valid_package_list_format(content_input.split(/ *, */))) {
                         // the pkg list is invalid
-                        package_error.html(i18n.validation_error_pkg_name_format);
+                        content_error.html(i18n.validation_error_pkg_name_format);
                         valid = false;
                     }
                     if (valid) {
-                        package_error.html('');
+                        content_error.html('');
                     }
                     return valid;
                 },
@@ -206,7 +203,8 @@ KT.systems_page = function() {
                 valid_input_cb: function() {
                     // If the user hasn't provided the necessary inputs, generate an error
                     var valid = true,
-                        errata_input = $.trim($('#errata_input').val());
+                        errata_input = $.trim($('#errata_input').val()),
+                        errata_error = errata.find('.validation_error');
 
                     if (errata_input.length === 0) {
                         // the errata list is empty
@@ -218,7 +216,7 @@ KT.systems_page = function() {
                     }
                     return valid;
                 },
-                ajax_cb: function(ids_selected, confirm_dialog) {
+                ajax_cb: function(ids_selected, request_action, confirm_dialog) {
                     var errata_string = $('#errata_input').val(),
                         errata_array = errata_string.split(/ *, */);
 
@@ -227,6 +225,40 @@ KT.systems_page = function() {
                         type: errata.attr('data-method'),
                         url: errata.attr('data-url'),
                         data: {ids:ids_selected, errata:errata_array},
+                        success: function() {
+                            // on success, close the request confirmation dialog
+                            confirm_dialog.slideUp('fast');
+                        }
+                    });
+                }
+            }
+        );
+
+        KT.panel.actions.registerAction("systems_system_groups_action",
+            {
+                valid_input_cb: function() {
+                    // If the user hasn't provided the necessary inputs, generate an error
+                    var valid = true,
+                        system_group_input = $.trim($('#system_group_input').val()),
+                        system_group_error = system_group.find('.validation_error');
+
+                    if (system_group_input.length === 0) {
+                        system_group_error.html(i18n.validation_error_system_group_name_empty);
+                        valid = false;
+                    }
+                    if (valid) {
+                        system_group_error.html('');
+                    }
+                    return valid;
+                },
+                ajax_cb: function(ids_selected, request_action, confirm_dialog) {
+                    var system_group_string = $('#system_group_input').val();
+
+                    $.ajax({
+                        cache: 'false',
+                        type: request_action.attr('data-method'),
+                        url: request_action.attr('data-url'),
+                        data: {ids:ids_selected, system_group:system_group_string},
                         success: function() {
                             // on success, close the request confirmation dialog
                             confirm_dialog.slideUp('fast');
@@ -246,6 +278,15 @@ KT.systems_page = function() {
 
             action.html(action_text);
             content_type.html(content_type_text);
+        });
+
+        $(".request_action.system_group").click(function() {
+            // Whenever the user selects to add/remove a system group, update the confirmation text
+            var action_text = $(this).val().toLowerCase(),
+                option = $(this).parent().nextAll('div.options'),
+                action = option.find('span.action_text');
+
+            action.html(action_text);
         });
 
     },

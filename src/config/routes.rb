@@ -117,6 +117,8 @@ Src::Application.routes.draw do
       get :env_items
       get :environments
       delete :bulk_destroy
+      post :bulk_add_system_group
+      post :bulk_remove_system_group
       post :bulk_content_install
       post :bulk_content_update
       post :bulk_content_remove
