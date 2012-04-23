@@ -417,7 +417,7 @@ class User < ActiveRecord::Base
   end
 
   def default_systems_reg_permission(create_with_organization = false)
-    return nil unless own_role # TODO fix controll aftrer save
+    return nil unless own_role
 
     resource_type = ResourceType.find_or_create_by_name("environments")
     verb          = Verb.find_or_create_by_verb("register_systems")
@@ -439,7 +439,7 @@ class User < ActiveRecord::Base
   end
 
   def default_environment=(environment)
-    raise 'do not call default_environment= on new_record objects' if new_record? #TODO-P fix
+    raise 'do not call default_environment= on new_record objects' if new_record?
 
     unless environment.nil? || environment.kind_of?(KTEnvironment)
       raise ArgumentError, "environment has to be KTEnvironment or nil"
