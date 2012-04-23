@@ -90,7 +90,8 @@ class Create(UserAction):
 
         if default_environment is not None:
             environment = get_environment(default_organization, default_environment)
-            if environment is None: return None
+            if environment is None:
+                return os.EX_DATAERR
         else:
             environment = None
 
@@ -164,7 +165,7 @@ class Update(UserAction):
         self.parser.add_option('--username', dest='username', help=_("user name (required)"))
         self.parser.add_option('--password', dest='password', help=_("initial password"))
         self.parser.add_option('--email', dest='email', help=_("email"))
-        self.parser.add_option("--disabled", dest="disabled", help=_("disabled account (default is 'false')"), default=False)
+        self.parser.add_option("--disabled", dest="disabled", help=_("disabled account"))
         self.parser.add_option('--default_organization', dest='default_organization',
                                help=_("user's default organization name"))
         self.parser.add_option('--default_environment', dest='default_environment',
@@ -174,6 +175,8 @@ class Update(UserAction):
 
     def check_options(self):
         self.require_option('username')
+        self.require_at_least_one_of_options('password','email','disabled','default_organization','default_environment',
+                                         'no_default_environment')
         if self.option_specified('default_organization') or self.option_specified('default_environment'):
             self.require_option('default_organization')
             self.require_option('default_environment')
@@ -195,17 +198,13 @@ class Update(UserAction):
             environment = None
         elif default_environment is not None:
             environment = get_environment(default_organization, default_environment)
-            if environment is None: return None
+            if environment is None:
+                return os.EX_DATAERR
         else:
             environment = False
 
         user = get_user(username)
         if user == None:
-            return os.EX_DATAERR
-
-        if password == None and email == None and disabled == None and default_organization == None and\
-           default_environment == None and no_default_environment != True:
-            print _("Provide at least one parameter to update user [ %s ]") % username
             return os.EX_DATAERR
 
         user = self.api.update(user['id'], password, email, disabled, environment)

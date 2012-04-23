@@ -287,6 +287,25 @@ class Action(object):
 
         return
 
+    def require_at_least_one_of_options(self, *opt_dests):
+        """
+        Add option error if no one of the options is present
+        @type opt_dests: str
+        @param opt_dests: name of option or options destination to check
+        """
+        param_count = 0
+        flags = []
+
+        for opt_dest in opt_dests:
+            if self.option_specified(opt_dest):
+                param_count +=1
+            flag = self.get_option_string(opt_dest)
+            flags.append(flag)
+
+        if not param_count > 0:
+            self.add_option_error(_('At least one of %s is required; please see --help') % ', '.join(flags))
+
+        return
 
     def option_specified(self, opt):
         return self.has_option(opt) and self.get_option(opt) != ""
