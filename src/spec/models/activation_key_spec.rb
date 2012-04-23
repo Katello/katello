@@ -71,7 +71,7 @@ describe ActivationKey do
       @akey.errors[:environment].should_not be_empty
     end
 
-    it "should be invalid if system template in another environment" do
+    it "should be invalid if system template in another environment", :katello => true do
       @akey.name = 'invalid key'
       @akey.organization=@organization
       @akey.environment = @environment_1

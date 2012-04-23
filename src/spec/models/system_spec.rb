@@ -254,7 +254,11 @@ s  end
       @environment = KTEnvironment.create!({:name => "Dev", :prior => @organization.library, :organization => @organization}) do |e|
         e.products << @product
       end
-      env_product = @product.environment_products.where(:environment_id => @environment.id).first
+      if AppConfig.katello?
+        env_product = @product.environment_products.where(:environment_id => @environment.id).first
+      else
+        env_product = @product.environment_products.where(:environment_id => @organization.library.id).first
+      end
       @releases = %w[6.1 6.2 6Server]
       @releases.each do |release|
         Repository.create!(:name => "Repo #{release}",
@@ -277,6 +281,7 @@ s  end
     end
 
     it "returns all releases available for the current environment" do
+      x = @system.available_releases
       @system.available_releases.should == @releases.sort
     end
   end
