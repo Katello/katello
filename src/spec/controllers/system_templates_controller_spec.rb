@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe SystemTemplatesController do
+describe SystemTemplatesController, :katello => true do
 
   include LoginHelperMethods
   include LocaleHelperMethods

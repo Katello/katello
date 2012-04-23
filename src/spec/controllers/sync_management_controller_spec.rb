@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe SyncManagementController do
+describe SyncManagementController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods
