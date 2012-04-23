@@ -32,10 +32,10 @@
   = label_tag _('Package Group(s)')
   %div
     - help_text = _("Enter Package or Group Name(s)...")
-    %input{:type=>'text', :id=>'packages_input', :size=>'25', :placeholder => help_text, :title => help_text}
-    %input.request_action.package.button{:type=>'button', :value=>_('Install'), 'data-method'=>"POST", 'data-url'=>bulk_content_install_systems_path()}
-    %input.request_action.package.button{:type=>'button', :value=>_('Update'), 'data-method'=>"POST", 'data-url'=>bulk_content_update_systems_path()}
-    %input.request_action.package.button{:type=>'button', :value=>_('Remove'), 'data-method'=>"POST", 'data-url'=>bulk_content_remove_systems_path()}
+    %input{:type=>'text', :id=>'packages_input', :disabled => 'disabled', :size=>'25', :placeholder => help_text, :title => help_text}
+    %input.request_action.package.button{:type=>'button', :value=>_('Install'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_content_install_systems_path()}
+    %input.request_action.package.button{:type=>'button', :value=>_('Update'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_content_update_systems_path()}
+    %input.request_action.package.button{:type=>'button', :value=>_('Remove'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_content_remove_systems_path()}
 
   %div.validation_error
   .options
@@ -52,8 +52,8 @@
     #{_("Errata")}
   %div
     - help_text = _("Enter Errata...")
-    %input{:type=>'text', :id=>'errata_input', :size=>'25', :placeholder => help_text, :title => help_text}
-    %input.request_action.button{:type=>'button', :value=>_('Install')}
+    %input{:type=>'text', :id=>'errata_input', :disabled => 'disabled', :size=>'25', :placeholder => help_text, :title => help_text}
+    %input.request_action.errata.button{:type=>'button', :value=>_('Install'), :disabled => 'disabled'}
   %div.validation_error
   .options
     %div
@@ -69,9 +69,9 @@
     #{_("System Groups")}
   %div
     - help_text = _("Add Name or Select by Name...")
-    %input{:type=>'text', :id=>'system_group_input', :size=>'25', :placeholder => help_text, :title => help_text}
-    %input#add_system_group.request_action.system_group.button{:type=>'button', :value=>_('Add'), 'data-method'=>"POST", 'data-url'=>bulk_add_system_group_systems_path()}
-    %input.request_action.system_group.button{:type=>'button', :value=>_('Remove'), 'data-method'=>"POST", 'data-url'=>bulk_remove_system_group_systems_path()}
+    %input{:type=>'text', :id=>'system_group_input', :disabled => 'disabled', :size=>'25', :placeholder => help_text, :title => help_text}
+    %input#add_system_group.request_action.system_group.button{:type=>'button', :value=>_('Add'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_add_system_group_systems_path()}
+    %input.request_action.system_group.button{:type=>'button', :value=>_('Remove'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_remove_system_group_systems_path()}
   %div.validation_error
   .options
     %div
