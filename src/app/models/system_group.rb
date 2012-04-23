@@ -26,6 +26,7 @@ class SystemGroup < ActiveRecord::Base
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
+    indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
   end
 
   has_many :key_system_groups, :dependent => :destroy
@@ -74,7 +75,7 @@ class SystemGroup < ActiveRecord::Base
 
 
   def extended_index_attrs
-    {}
+    {:name_sort=>name.downcase, :name_autocomplete=>self.name}
   end
 
 end
