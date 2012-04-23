@@ -16,7 +16,8 @@ class SystemsController < ApplicationController
 
   before_filter :find_system, :except =>[:index, :items, :environments, :new, :create, :bulk_destroy,
                                          :bulk_content_install, :bulk_content_update, :bulk_content_remove,
-                                         :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group]
+                                         :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group,
+                                         :auto_complete]
   before_filter :find_systems, :only=>[:bulk_destroy, :bulk_content_install, :bulk_content_update, :bulk_content_remove,
                                        :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group]
 
@@ -59,6 +60,7 @@ class SystemsController < ApplicationController
       :edit => read_system,
       :show => read_system,
       :facts => read_system,
+      :auto_complete => any_readable,
       :destroy=> delete_systems,
       :bulk_destroy => bulk_delete_systems,
       :bulk_add_system_group => bulk_edit_systems,
@@ -175,6 +177,22 @@ class SystemsController < ApplicationController
                         {:default_field => :name, :filter=>filters, :load=>true})
 
   end
+
+  def auto_complete
+    query = Katello::Search::filter_input query
+    query = "name_autocomplete:#{params[:term]}"
+    org = current_organization
+    env_ids = KTEnvironment.systems_readable(org).collect{|item| item.id}
+
+    systems = System.search do
+      query do
+        string query
+      end
+      filter :terms, {:environment_id => env_ids}
+    end
+    render :json=>systems.map{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
+  end
+
 
   def split_order order
     if order

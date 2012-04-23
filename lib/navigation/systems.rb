@@ -63,6 +63,15 @@ module Navigation
        }
     end
 
+    def menu_system_groups
+       {:key => :system_groups,
+        :name => _("System Groups"),
+        :url => system_groups_path,
+        :if => lambda {current_organization && SystemGroup.any_readable?(current_organization())},
+        :options => {:class=>'systems second_level', "data-menu"=>"systems"}
+       }
+    end
+
     def systems_navigation
       [
         { :key => :details,
@@ -142,6 +151,13 @@ module Navigation
 
     def system_groups_navigation
       [
+        {
+          :key => :systems,
+          :name => _('Systems'),
+          :url => lambda{systems_system_group_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"navigation_element"}
+        },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{edit_system_group_path(@group.id)},

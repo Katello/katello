@@ -11,7 +11,7 @@
   = render_menu(1..2, system_groups_navigation)
 
 = content_for :content do
-  #system_group
+  #system_group_edit
     %input{:name=> @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
     .grid_9
       = form_for(@group, :html => {:multipart => true, :method => :put, :id => 'system_group_edit', :remote => true}, :url => system_group_path(@group)) do |f|
