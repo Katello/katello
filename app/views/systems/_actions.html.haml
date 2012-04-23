@@ -25,7 +25,7 @@
     %br.clearfloat
 
 .panel_action{:class=>"disabled", 'data-id'=>"systems_package_action"}
-  .delete_icon.fl
+  .package_icon.fl
   = radio_button_tag :systems_action, :packages, false
   = label_tag _('Package(s)')
   = radio_button_tag :systems_action, :package_groups, false
@@ -47,13 +47,13 @@
     %br.clearfloat
 
 .panel_action{:class=>"disabled", 'data-id'=>"systems_errata_action", 'data-url'=>bulk_errata_install_systems_path(), 'data-method'=>"POST"}
-  .delete_icon.fl
+  .erratum_icon.fl
   %label
-    #{_("Install Errata")}
+    #{_("Errata")}
   %div
     - help_text = _("Enter Errata...")
     %input{:type=>'text', :id=>'errata_input', :size=>'25', :placeholder => help_text, :title => help_text}
-    %input.request_action.button{:type=>'button', :value=>_('Run')}
+    %input.request_action.button{:type=>'button', :value=>_('Install')}
   %div.validation_error
   .options
     %div
@@ -64,13 +64,13 @@
     %br.clearfloat
 
 .panel_action{:class=>"disabled", 'data-id'=>"systems_system_groups_action"}
-  .delete_icon.fl
+  .system_group_icon.fl
   %label
     #{_("System Groups")}
   %div
     - help_text = _("Add Name or Select by Name...")
     %input{:type=>'text', :id=>'system_group_input', :size=>'25', :placeholder => help_text, :title => help_text}
-    %input.request_action.system_group.button{:type=>'button', :value=>_('Add'), 'data-method'=>"POST", 'data-url'=>bulk_add_system_group_systems_path()}
+    %input#add_system_group.request_action.system_group.button{:type=>'button', :value=>_('Add'), 'data-method'=>"POST", 'data-url'=>bulk_add_system_group_systems_path()}
     %input.request_action.system_group.button{:type=>'button', :value=>_('Remove'), 'data-method'=>"POST", 'data-url'=>bulk_remove_system_group_systems_path()}
   %div.validation_error
   .options
