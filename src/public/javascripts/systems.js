@@ -130,10 +130,14 @@ KT.systems_page = function() {
             {
                 enable_cb: function() {
                     $('#packages_input').removeAttr('disabled');
+                    $('#systems_action_packages').removeAttr('disabled');
+                    $('#systems_action_package_groups').removeAttr('disabled');
                     $('.request_action.package').removeAttr('disabled');
                 },
                 disable_cb: function() {
                     $('#packages_input').attr('disabled', true);
+                    $('#systems_action_packages').attr('disabled', true);
+                    $('#systems_action_package_groups').attr('disabled', true);
                     $('.request_action.package').attr('disabled', true);
                     package.find('.validation_error').hide();
                 },
