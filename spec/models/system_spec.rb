@@ -247,7 +247,7 @@ s  end
     end
   end
 
-  describe "available releases" do
+  describe "available releases", :katello => true do
     before do
       disable_product_orchestration
       @product = Product.create!(:name =>"prod1", :cp_id => '12345', :provider => @organization.redhat_provider, :environments => [@organization.library])
