@@ -292,6 +292,11 @@ KT.systems_page = function() {
     },
     system_group_setup = function() {
         $('#update_system_groups').live('submit', update_system_groups);
+
+        var current_input = KT.auto_complete_box({
+            values:       KT.routes.auto_complete_system_groups_path(),
+            input_id:     "system_group_input"
+        });
     },
     update_system_groups = function(e) {
         e.preventDefault();

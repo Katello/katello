@@ -12,12 +12,12 @@
 
 class SystemGroupsController < ApplicationController
 
-
   before_filter :panel_options, :only=>[:index, :items, :create]
   before_filter :find_group, :only=>[:edit, :update, :destroy, :systems,
                                      :show, :add_systems, :remove_systems]
 
   def rules
+    any_readable = lambda{current_organization && SystemGroup.any_readable?(current_organization)}
     read = lambda{true}
     edit = lambda{true}
     create = lambda{true}
@@ -31,6 +31,7 @@ class SystemGroupsController < ApplicationController
         :update=>edit,
         :destroy=>edit,
         :show=>read,
+        :auto_complete=>any_readable
     }
 
   end
@@ -43,8 +44,6 @@ class SystemGroupsController < ApplicationController
        :remove_systems => [:system_ids]
      }
   end
-
-
 
   def index
     render "index"
@@ -159,6 +158,18 @@ class SystemGroupsController < ApplicationController
     @group.save!
   end
 
+  def auto_complete
+    query = "name_autocomplete:#{params[:term]}"
+    org = current_organization
+
+    groups = SystemGroup.search do
+      query do
+        string query
+      end
+      filter :term, {:organization_id => org.id}
+    end
+    render :json=>groups.map{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
+  end
 
   def controller_display_name
     return 'system_group'

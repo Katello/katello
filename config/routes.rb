@@ -3,6 +3,7 @@ Src::Application.routes.draw do
   resources :system_groups do
     collection do
       get :items
+      get :auto_complete
     end
     member do
       get :systems
