@@ -5,7 +5,9 @@ Src::Application.routes.draw do
       get :items
     end
     member do
-
+      get :systems
+      post :add_systems
+      post :remove_systems
     end
   end
 
@@ -112,7 +114,7 @@ Src::Application.routes.draw do
       put :update_system_groups
     end
     collection do
-      get :auto_complete_search
+      get :auto_complete
       get :items
       get :env_items
       get :environments

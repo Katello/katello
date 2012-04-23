@@ -14,7 +14,8 @@ class SystemGroupsController < ApplicationController
 
 
   before_filter :panel_options, :only=>[:index, :items, :create]
-  before_filter :find_group, :only=>[:edit, :update, :destroy, :show]
+  before_filter :find_group, :only=>[:edit, :update, :destroy, :systems,
+                                     :show, :add_systems, :remove_systems]
 
   def rules
     read = lambda{true}
@@ -26,6 +27,7 @@ class SystemGroupsController < ApplicationController
         :new => create,
         :create=>create,
         :edit=>read,
+        :systems => read,
         :update=>edit,
         :destroy=>edit,
         :show=>read,
@@ -36,7 +38,9 @@ class SystemGroupsController < ApplicationController
   def param_rules
      {
        :create => {:system_group => [:name, :description]},
-       :update => {:system_group => [:name, :description, :locked]}
+       :update => {:system_group => [:name, :description, :locked]},
+       :add_systems => [:system_ids],
+       :remove_systems => [:system_ids]
      }
   end
 
@@ -128,11 +132,33 @@ class SystemGroupsController < ApplicationController
         :name => controller_display_name,
         :ajax_scroll=>items_system_groups_path(),
         :enable_create=> SystemGroup.creatable?(current_organization),
-        :initial_action=>:edit,
+        :initial_action=>:systems,
         :ajax_load=>true,
         :search_class=>Filter
     }
   end
+
+  def systems
+
+    @systems = @group.systems
+    render :partial => "systems", :layout => "tupane_layout",
+           :locals => {:filter => @group, :editable=>@group.editable?,
+                                :name=>controller_display_name}
+  end
+
+  def add_systems
+    systems = System.where(:id=>params[:system_ids]).collect{|s| s.uuid}
+    @group.system_ids << systems
+    @group.system_ids.uniq!
+    @group.save!
+  end
+
+  def remove_systems
+    systems = System.where(:id=>params[:system_ids]).collect{|s| s.uuid}
+    @group.consumerids = (@group.consumerids - systems).uniq
+    @group.save!
+  end
+
 
   def controller_display_name
     return 'system_group'

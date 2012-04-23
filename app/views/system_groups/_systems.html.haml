@@ -1,0 +1,34 @@
+
+= javascript do
+  :javascript
+    localize({
+        'foo' : 'foo'
+      });
+
+= content_for :title do
+  #{@group.name}
+
+= content_for :remove_item do
+  - if @group.deletable?
+    = link_to _("Remove System Group"), {:action => "destroy", :controller => "system_groups"}, :method => :delete, :confirm => _('Are you sure you want to delete this group?'), :class => "remove_item", :remote=>true
+
+= content_for :navigation do
+  = render_menu(1..2, system_groups_navigation)
+
+= content_for :content do
+  #system_group_systems
+    -if editable
+      %form#system_form
+        %table
+          %thead
+            %th
+              -#%span.fr.details-icon.tipsy{"data-help" => _('This allows you to search for systems and add them to the selected system group.')}
+              -##{_("Add Systems")}
+
+          %tbody
+            %tr.no_sort.not_filtered
+              %td
+                %div
+                  - help_text = _("Enter system name...")
+                  %input{:type=>'text', :id=>'add_system_input', :size=>'30', :placeholder => help_text, :title => help_text, :tabindex => auto_tab_index}
+                  %a#add_system.disabled{:style => 'padding-left: 10px;', :tabindex => auto_tab_index} #{_('+ Add')}
