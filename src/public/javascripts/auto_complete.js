@@ -10,75 +10,73 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
-
 KT.auto_complete_box = function(params) {
 
     var settings = {
-        values: undefined,       //either a url, an array, or a callback of items for auto_completion
-        default_text: undefined,  //default text to go into the search box if desired
+        values: undefined, //either a url, an array, or a callback of items for auto_completion
+        default_text: undefined, //default text to go into the search box if desired
         input_id: undefined,
+        selected_input_id: undefined,
         form_id: undefined,
         add_btn_id: undefined,
         add_text: i18n.add_plus,
-        add_cb: function(t, cb){cb();}
+        add_cb: function(item, item_id, cb){cb();}
     };
     $.extend( settings, params );
     
     var add_item_from_input = function(e) {
-        var item = $("#" + settings.input_id).attr("value");
-        var add_btn = $("#" + settings.add_btn_id);
+        var item = $("#" + settings.input_id).attr("value"),
+            item_id = $("#" + settings.selected_input_id).val(),
+            add_btn = $("#" + settings.add_btn_id);
         
         e.preventDefault();
-        if (item.length === 0 || item === settings.default_text ||item.length === 0 ){
+        if (item.length === 0 || item === settings.default_text){
                 return;
         }
         add_btn.addClass("working");
-        add_item_base(item, true);
+        add_item_base(item, item_id, true);
     },
-    add_item_base = function(item, focus) {
-        var input = $("#" + settings.input_id);
-        var add_btn = $("#" + settings.add_btn_id);
+    add_item_base = function(item, item_id, focus) {
+        var input = $("#" + settings.input_id),
+            add_btn = $("#" + settings.add_btn_id);
 
         add_btn.addClass("working");
-        add_btn.html("<img  src='images/spinner.gif'>");
+        add_btn.html("<img src='images/spinner.gif'>");
         input.attr("disabled", "disabled");
         input.autocomplete('disable');
         input.autocomplete('close');
 
-        settings.add_cb(item, function(){
+        settings.add_cb(item, item_id, function(){
             add_success_cleanup();
             if (focus) {
                 $('#' + settings.input_id).focus();
             }
         });
-
     },
     add_success_cleanup = function() {
         //re-lookup all items, since a redraw may have happened
-        var input = $("#" + settings.input_id);
-        var add_btn = $("#" + settings.add_btn_id);
+        var input = $("#" + settings.input_id),
+            add_btn = $("#" + settings.add_btn_id);
         add_btn.removeClass('working');
         if (add_btn.text() === "") {
             add_btn.html(settings.add_text);
         }
-        input.val("");
         input.removeAttr('disabled');
         input.autocomplete('enable');
     },
-    manually_add = function(item) {
-        add_item_base(item, false);
+    manually_add = function(item, item_id) {
+        add_item_base(item, item_id, false);
     },
     error = function() {
         var input = $("#" + settings.input_id);
         input.addClass("error");
-
     };
 
     //initialization
+    var input = $("#" + settings.input_id),
+        form = $("#" + settings.form_id),
+        add_btn = $("#" + settings.add_btn_id);
 
-    var input = $("#" + settings.input_id);
-    var form = $("#" + settings.form_id);
-    var add_btn = $("#" + settings.add_btn_id);
     if (settings.default_text) {
         input.val(settings.default_text);
         input.focus(function() {
@@ -94,10 +92,15 @@ KT.auto_complete_box = function(params) {
     }
     
     input.autocomplete({
-        source: settings.values
+        source: settings.values,
+        select: function (event, ui) {
+            $("#" + settings.input_id).val(ui.item.value);
+            $("#" + settings.selected_input_id).val(ui.item.id);
+            return false;
+        }
     });
 
-    add_btn.click( add_item_from_input);
+    add_btn.bind('click', add_item_from_input);
     form.submit(add_item_from_input);
 
     return {
@@ -105,3 +108,5 @@ KT.auto_complete_box = function(params) {
         error: error
     };
 };
+
+
