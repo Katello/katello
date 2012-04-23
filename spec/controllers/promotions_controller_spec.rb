@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe PromotionsController do
+describe PromotionsController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrchestrationHelper
@@ -66,7 +66,7 @@ describe PromotionsController do
   end
 
 
-  describe "Requesting items of a product" do
+  describe "Requesting items of a product", :katello => true do
 
     before (:each) do
       @org = new_test_org
