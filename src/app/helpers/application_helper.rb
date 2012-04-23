@@ -25,6 +25,7 @@ module ApplicationHelper
     url_for params.merge(extra_params)
   end
 
+
   def link_to_authorized(*args, &block)
 
     if block_given?

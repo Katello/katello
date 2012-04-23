@@ -121,12 +121,19 @@ class Provider < ActiveRecord::Base
   end
 
   def self.list_verbs  global = false
-    {
-       :create => _("Administer Providers"),
-       :read => _("Read Providers"),
-       :update => _("Modify Providers and Administer Products"),
-       :delete => _("Delete Providers"),
-    }.with_indifferent_access
+    if AppConfig.katello?
+      {
+        :create => _("Administer Providers"),
+        :read => _("Read Providers"),
+        :update => _("Modify Providers and Administer Products"),
+        :delete => _("Delete Providers"),
+      }.with_indifferent_access
+    else
+      {
+        :read => _("Read Providers"),
+        :update => _("Modify Providers and Administer Products"),
+      }.with_indifferent_access
+    end
   end
 
   def self.read_verbs
@@ -142,12 +149,12 @@ class Provider < ActiveRecord::Base
 
   def readable?
     return organization.readable? if redhat_provider?
-    User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || self.organization.syncable?
+    User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || (AppConfig.katello? && self.organization.syncable?)
   end
 
 
   def self.any_readable? org
-    org.syncable? || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
+    (AppConfig.katello? && org.syncable?) || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
   end
 
   def self.creatable? org
@@ -167,15 +174,23 @@ class Provider < ActiveRecord::Base
   def serializable_hash(options={})
     options = {} if options == nil
     hash = super(options)
-    hash = hash.merge(:sync_state => self.sync_state,
-                      :last_sync => self.last_sync)
+    if AppConfig.katello?
+      hash = hash.merge(:sync_state => self.sync_state,
+                        :last_sync => self.last_sync)
+    end
     hash
   end
 
   def extended_index_attrs
-    products = self.products.map{|prod|
-      {:product=>prod.name, :repo=>prod.repos(self.organization.library).collect{|repo| repo.name}}
-    }
+    if AppConfig.katello?
+      products = self.products.map{|prod|
+        {:product=>prod.name, :repo=>prod.repos(self.organization.library).collect{|repo| repo.name}}
+      }
+    else
+      products = self.products.map{|prod|
+        {:product=>prod.name}
+      }
+    end
     {
       :products=>products,
       :name_sort=>name.downcase
@@ -206,15 +221,17 @@ class Provider < ActiveRecord::Base
   def self.items org, verbs
     raise "scope requires an organization" if org.nil?
     resource = :providers
-    if verbs.include?(:read) && org.syncable? || User.allowed_all_tags?(verbs, resource, org)
+    if (AppConfig.katello? && verbs.include?(:read) && org.syncable?) ||  User.allowed_all_tags?(verbs, resource, org)
        where(:organization_id => org)
     else
       where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
     end
   end
 
-  READ_PERM_VERBS = [:read, :create, :update, :delete]
-  EDIT_PERM_VERBS = [:create, :update]
+  READ_PERM_VERBS = [:read, :create, :update, :delete] if AppConfig.katello?
+  READ_PERM_VERBS = [:read, :update] if !AppConfig.katello?
+  EDIT_PERM_VERBS = [:create, :update] if AppConfig.katello?
+  EDIT_PERM_VERBS = [:update] if !AppConfig.katello?
 
 
 end
