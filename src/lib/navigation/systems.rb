@@ -45,15 +45,6 @@ module Navigation
       }
     end
 
-    def menu_system_groups
-      {:key => :env,
-       :name => _("System Groups"),
-       :url => system_groups_path(),
-       :if => lambda{current_organization && SystemGroup.readable(current_organization)},
-       :options => {:class=>'systems second_level', "data-menu"=>"systems"}
-      }
-    end
-
     def menu_activation_keys
        {:key => :activation_keys,
         :name => _("Activation Keys"),
