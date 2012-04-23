@@ -13,7 +13,7 @@
 require 'spec_helper'
 require 'util/package_util'
 
-describe Katello::PackageUtils do
+describe Katello::PackageUtils, :katello => true do
 
   describe "nvrea" do
 
