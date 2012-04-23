@@ -55,6 +55,10 @@ class SystemGroup < ActiveRecord::Base
     true
   end
 
+  def self.any_readable? org
+    true
+  end
+
   def readable?
     true
   end
