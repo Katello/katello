@@ -115,8 +115,6 @@ class Api::SystemsController < Api::ApiController
   end
 
   def index
-    raise HttpErrors::NotFound, _("Neither organization nor environment was found.") if @organization.nil? and @environment.nil?
-
     # expected parameters
     expected_params = params.slice('name')
 
@@ -312,7 +310,7 @@ class Api::SystemsController < Api::ApiController
     if @environment
       @organization = @environment.organization
     else
-      raise _("You have not set a default organization and environment on the user #{current_user.username}.")
+      raise HttpErrors::NotFound, _("You have not set a default organization and environment on the user #{current_user.username}.")
     end
   end
 
