@@ -328,7 +328,7 @@ Src::Application.routes.draw do
     end
     match '/' => 'root#resource_list'
 
-    resources :systems, :only => [:show, :destroy, :create, :index, :update] do
+    resources :systems, :only => [:show, :destroy, :index, :update] do
       member do
         get :packages, :action => :package_profile
         get :errata

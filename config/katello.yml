@@ -24,8 +24,9 @@ common:
     base: ou=People,dc=company,dc=com
 
   warden: database
+  app: headpin
   use_cp: true
-  use_pulp: true
+  use_pulp: false
   debug_rest: false
   debug_cp_proxy: false
   debug_pulp_proxy: false
@@ -80,7 +81,7 @@ common:
   candlepin:
     url: https://localhost:8443/candlepin
     oauth_key: katello
-    oauth_secret: shhhh
+    oauth_secret: DLVk+O0R34gnwVUai1N2oac+
 
 # Setup your pulp environment here
 # url: refers to the url of the candlepin
@@ -136,12 +137,18 @@ production:
 # The following configuration values override ones from the common section
 #
 development:
+  database:
+   username: katello
+   password: katello
+   database: katello
+   host: localhost
+   encoding: UTF8
 
 #
 # Test environment configuration
 #
 # The following configuration values override ones from the common section
 #
-test:
+#test:
 
 # EOF
