@@ -42,16 +42,17 @@
         %li
           %a{:href => "#tabs-1"}
             = _("Subscription")
-        %li
-          %a{:href => "#tabs-2"}
-            = _("Enable Repositories")
-
+        - if AppConfig.katello?
+          %li
+            %a{:href => "#tabs-2"}
+              = _("Enable Repositories")
         %li
           %a{:href => "#tabs-3"}
             = _("Import History")
     #tabs-1
       = render :partial=>"providers/redhat/subscription_details"
-    #tabs-2
-      = render :partial=>"providers/redhat/repo_whitelist"
+    - if AppConfig.katello?
+      #tabs-2
+        = render :partial=>"providers/redhat/repo_whitelist"
     #tabs-3
       = render :partial=>"providers/redhat/import_history"

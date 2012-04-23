@@ -113,9 +113,9 @@ class UsersController < ApplicationController
 
   def create
     begin
-      user_params = params[:user]
-      @user = User.new(user_params)
-      env_id = params[:user]['env_id']
+      # Pulp quietly ignored unkonwn attributes; Headpin needs to remove
+      env_id = params[:user].delete(:env_id)
+      @user = User.new(params[:user])
       if env_id
         @environment = KTEnvironment.find(env_id)
         @organization = @environment.organization

@@ -13,7 +13,7 @@
 require 'spec_helper'
 include OrchestrationHelper
 
-describe Api::SyncController do
+describe Api::SyncController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
