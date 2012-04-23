@@ -160,6 +160,7 @@ def setup_admin(admin):
     pack_cmd = package.Package()
     pack_cmd.add_action('info', package.Info())
     pack_cmd.add_action('list', package.List())
+    pack_cmd.add_action('search', package.Search())
     admin.add_command('package', pack_cmd)
 
     errata_cmd = errata.Errata()
