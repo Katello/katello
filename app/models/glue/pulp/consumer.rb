@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require_dependency "resources/pulp"
+require_dependency "resources/pulp" if AppConfig.katello?
 
 module Glue::Pulp::Consumer
   def self.included(base)

@@ -13,7 +13,7 @@
 require 'spec_helper'
 require 'helpers/repo_test_data'
 
-describe Glue::Pulp::Errata do
+describe Glue::Pulp::Errata, :katello => true do
 
   before (:each) do
     disable_errata_orchestration
