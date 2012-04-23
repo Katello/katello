@@ -128,6 +128,15 @@ KT.systems_page = function() {
 
         KT.panel.actions.registerAction("systems_package_action",
             {
+                enable_cb: function() {
+                    $('#packages_input').removeAttr('disabled');
+                    $('.request_action.package').removeAttr('disabled');
+                },
+                disable_cb: function() {
+                    $('#packages_input').attr('disabled', true);
+                    $('.request_action.package').attr('disabled', true);
+                    package.find('.validation_error').hide();
+                },
                 valid_input_cb: function() {
                     // If the user hasn't provided the necessary inputs, generate an error
                     var valid = true,
@@ -158,7 +167,9 @@ KT.systems_page = function() {
                         valid = false;
                     }
                     if (valid) {
-                        content_error.html('');
+                        content_error.hide();
+                    } else {
+                        content_error.show();
                     }
                     return valid;
                 },
@@ -200,6 +211,15 @@ KT.systems_page = function() {
 
         KT.panel.actions.registerAction("systems_errata_action",
             {
+                enable_cb: function() {
+                    $('#errata_input').removeAttr('disabled');
+                    $('.request_action.errata').removeAttr('disabled');
+                },
+                disable_cb: function() {
+                    $('#errata_input').attr('disabled', true);
+                    $('.request_action.errata').attr('disabled', true);
+                    errata.find('.validation_error').hide();
+                },
                 valid_input_cb: function() {
                     // If the user hasn't provided the necessary inputs, generate an error
                     var valid = true,
@@ -212,7 +232,9 @@ KT.systems_page = function() {
                         valid = false;
                     }
                     if (valid) {
-                        errata_error.html('');
+                        errata_error.hide();
+                    } else {
+                        errata_error.show();
                     }
                     return valid;
                 },
@@ -236,6 +258,15 @@ KT.systems_page = function() {
 
         KT.panel.actions.registerAction("systems_system_groups_action",
             {
+                enable_cb: function() {
+                    $('#system_group_input').removeAttr('disabled');
+                    $('.request_action.system_group').removeAttr('disabled');
+                },
+                disable_cb: function() {
+                    $('#system_group_input').attr('disabled', true);
+                    $('.request_action.system_group').attr('disabled', true);
+                    system_group.find('.validation_error').hide();
+                },
                 valid_input_cb: function() {
                     // If the user hasn't provided the necessary inputs, generate an error
                     var valid = true,
@@ -247,7 +278,9 @@ KT.systems_page = function() {
                         valid = false;
                     }
                     if (valid) {
-                        system_group_error.html('');
+                        system_group_error.hide();
+                    } else {
+                        system_group_error.show();
                     }
                     return valid;
                 },
@@ -292,7 +325,6 @@ KT.systems_page = function() {
     },
     system_group_setup = function() {
         $('#update_system_groups').live('submit', update_system_groups);
-
         var current_input = KT.auto_complete_box({
             values:       KT.routes.auto_complete_system_groups_path(),
             input_id:     "system_group_input"

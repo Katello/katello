@@ -611,7 +611,8 @@ KT.panel = (function ($) {
                  *    unselected_action // true if the action is 'doable' even if
                  *    ajax_cb(id_list, request_action, options, success_cb, error_cb)  //To manually do the ajax call yourself
                  *    valid_input_cb() // to validate the input for the request... return true if valid; otherwise, false
-                 *
+                 *    enable_cb()  // callback to provide custom initialization logic when 1 or more elements are selected
+                 *    disable_cb() // callback to provide custom logic when all elements are cleared (i.e. select none)
                  */
               action_list[name] = params;
             },
@@ -621,9 +622,15 @@ KT.panel = (function ($) {
                     var div = $("[data-id=" + name + "]");
                     if (num > 0) {
                         div.removeClass("disabled");
+                        if (params.enable_cb) {
+                            params.enable_cb();
+                        }
                     }
                     else {
                         div.addClass("disabled");
+                        if (params.disable_cb) {
+                            params.disable_cb();
+                        }
                     }
                   }
               });
