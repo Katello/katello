@@ -69,7 +69,7 @@ describe System do
 
   it "registers system in candlepin and pulp on create" do
     Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if AppConfig.katello?
     @system.save!
   end
 
@@ -80,7 +80,7 @@ describe System do
 
     it "should delete consumer in candlepin and pulp" do
       Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
-      Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
+      Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true) if AppConfig.katello?
       @system.destroy
     end
   end
@@ -240,7 +240,7 @@ s  end
     end
   end
 
-  context "pulp attributes" do
+  context "pulp attributes", :katello => true do
     it "should update package-profile" do
       Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
       @system.upload_package_profile(package_profile)
