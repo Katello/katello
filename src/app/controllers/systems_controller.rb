@@ -337,7 +337,7 @@ class SystemsController < ApplicationController
       :col => ["name_sort", "lastCheckin"],
       :titles => [_("Name"), _("Last Checked In")],
       :custom_rows => true,
-      :enable_create => System.registerable?(@environment, current_organization),
+      :enable_create => AppConfig.katello? && System.registerable?(@environment, current_organization),
       :create => _("System"),
       :enable_sort => true,
       :name => controller_display_name,
