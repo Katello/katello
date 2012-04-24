@@ -148,7 +148,8 @@ class SystemGroupsController < ApplicationController
   end
 
   def add_systems
-    @systems = System.where(:id=>params[:system_ids])
+    ids = params[:system_ids].collect{|s| s.to_i} - @group.system_ids #ignore dups
+    @systems = System.where(:id=>ids)
     @group.system_ids = (@group.system_ids + @systems.collect{|s| s.id}).uniq
     @group.save!
     render :partial=>'system_item', :collection=>@systems, :as=>:system

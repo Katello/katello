@@ -19,7 +19,8 @@ describe SystemGroupsController do
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include OrchestrationHelper
-
+  include SystemHelperMethods
+  let(:uuid) { '1234' }
   before(:each) do
       set_default_locale
       login_user
@@ -30,7 +31,12 @@ describe SystemGroupsController do
       @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
       setup_current_organization(@org)
 
+      setup_system_creation
 
+      Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+      Candlepin::Consumer.stub!(:update).and_return(true)
+      @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@org.library, :organization=>@org)
+      @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
   end
 
 
@@ -118,8 +124,25 @@ describe SystemGroupsController do
       end
       it "should allow locked to be toggled" do
         put :update, :id=>@group.id, :system_group=>{:locked=>"true"}
+        response.should be_success
         SystemGroup.find(@group.id).locked.should == true
       end
+    end
+
+    describe "POST add/remove systems" do
+      it "should allow adding of systems" do
+        post :add_systems, :id=>@group.id, :system_ids=>[@system.id]
+        @group.systems.should include @system
+        response.should be_success
+      end
+      it "should allow removal of systems" do
+        @group.systems  = [@system]
+        @group.save
+        post :remove_systems, :id=>@group.id, :system_ids=>[@system.id]
+        response.should be_success
+        @group.reload.systems.should_not include @system
+      end
+
     end
 
     describe "DELETE" do
