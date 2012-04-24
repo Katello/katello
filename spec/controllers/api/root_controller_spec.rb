@@ -33,6 +33,9 @@ describe Api::RootController do
   end
 
   context "in headpin mode" do
+    before (:each) do
+      AppConfig.stub!(:katello?).and_return(false)
+    end
     it "should not show katello apis" do
       resource_list
       json(response).should include @systems
