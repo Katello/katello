@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.30
+Version:       0.2.31
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 24 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.31-1
+- katello-cli, katello - setting default environment for user
+
 * Thu Apr 19 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.30-1
 - cli - fixed wrong formatters used for product and repo last sync time
 
