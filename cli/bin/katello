@@ -99,6 +99,8 @@ def setup_admin(admin):
     user_role_cmd.add_action('info', user_role.Info())
     user_role_cmd.add_action('list', user_role.List())
     user_role_cmd.add_action('update', user_role.Update())
+    user_role_cmd.add_action('add_ldap_group', user_role.AddLdapGroup())
+    user_role_cmd.add_action('remove_ldap_group', user_role.RemoveLdapGroup())
     user_role_cmd.add_action('delete', user_role.Delete())
     admin.add_command('user_role', user_role_cmd)
 

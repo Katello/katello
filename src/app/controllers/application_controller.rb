@@ -66,6 +66,9 @@ class ApplicationController < ActionController::Base
   include Katello::ThreadSession::Controller
   include AuthorizationRules
   include Menu
+
+  before_filter :verify_ldap
+
   def section_id
     'generic'
   end
@@ -145,6 +148,11 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+   def verify_ldap
+    u = current_user
+    u.verify_ldap_roles if (AppConfig.ldap_roles && u != nil)
+  end
 
   def require_org
     unless session && current_organization
