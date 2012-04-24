@@ -28,6 +28,29 @@ $(document).ready(function() {
 });
 
 
+KT.sg_table = (function(){
+    var add_system = function(html){
+        var tbody =  $("#systems_table").find("tbody");
+        tbody.prepend(html);
+        tbody.find(".empty_row").hide();
+
+    },
+    remove_system = function(id){
+        var table = $("#systems_table"),
+            rows;
+        table.find("tr[data-id=" + id +"]").remove();
+        rows = table.find('tbody').find('tr').not('.empty_row');
+        if(rows.length === 0){
+            table.find(".empty_row").show();
+        }
+    };
+
+    return {
+        add_system: add_system,
+        remove_system: remove_system
+    };
+}());
+
 KT.system_groups = (function(){
     var lockedChanged = function(){
         var checkbox = $(this),
@@ -76,21 +99,43 @@ KT.system_groups = (function(){
         if (pane.length === 0){
             return;
         }
-
+        pane.find('#systems_table').delegate('.remove_system', 'click', function(){
+            remove_system($(this).data('id'));
+        });
         var current_input = KT.auto_complete_box({
             values:       KT.routes.auto_complete_systems_path(),
             input_id:     "add_system_input",
             form_id:      "system_form",
             add_btn_id:   "add_system",
+            selected_input_id: 'add_system_input_id',
             add_cb:       add_system
         });
 
     },
-    add_system = function(item, foo, bar){
+    add_system = function(string, item_id, cb){
+        var grp_id = $("#system_group_systems").data('id');
+        if (item_id) {
+            submit_change(grp_id, item_id, true, function(content){
+                KT.sg_table.add_system(content);
+                cb();
+                $("#add_system_input").val('');
+            });
+        }
+        else {
+            //TODO look up name
+            console.log("NOT IMPLEMENTED");
+        }
 
-        console.log(item);
-        console.log(foo);
-        console.log(bar);
+    },
+    remove_system = function(id){
+        var grp_id = $("#system_group_systems").data('id');
+        submit_change(grp_id, id, false,
+            function(){KT.sg_table.remove_system(id);});
+    },
+    submit_change = function(grp_id, sys_id, add, cb){
+      var url = add ? KT.routes.add_systems_system_group_path(grp_id) :
+                        KT.routes.remove_systems_system_group_path(grp_id);
+      $.post(url, {'system_ids':[sys_id]}, cb);
     };
 
     return {
