@@ -239,6 +239,19 @@ class ListRoles(UserAction):
         return os.EX_OK
 
 
+# ------------------------------------------------------------------------------
+
+class SyncLdapRoles(UserAction):
+
+    description = _("synchronise roles with LDAP groups")
+
+    def run(self):
+        msg = self.api.sync_ldap_roles()
+        print msg
+        return os.EX_OK
+
+# ------------------------------------------------------------------------------
+
 class AssignRole(UserAction):
 
     @property
