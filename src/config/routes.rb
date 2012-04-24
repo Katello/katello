@@ -328,7 +328,13 @@ Src::Application.routes.draw do
     end
     match '/' => 'root#resource_list'
 
-    resources :systems, :only => [:show, :destroy, :create, :index, :update] do
+    # Headpin does not support system creation
+    if AppConfig.katello?
+      onlies = [:show, :destroy, :create, :index, :update]
+    else
+      onlies = [:show, :destroy, :index, :update]
+    end
+    resources :systems, :only => onlies do
       member do
         get :packages, :action => :package_profile
         get :errata
@@ -472,7 +478,9 @@ Src::Application.routes.draw do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end
-      resources :packages
+      resources :packages do
+        get :search, :on => :collection
+      end
       resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
       resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
       resources :filters, :only => [] do

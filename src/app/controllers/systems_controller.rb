@@ -103,7 +103,6 @@ class SystemsController < ApplicationController
       @system.environment = KTEnvironment.find(params["system"]["environment_id"])
       #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
       saved = @system.save!
-
       #find the newly created system
       if saved
         notice _("System '%s' was created.") % @system['name']
@@ -338,7 +337,7 @@ class SystemsController < ApplicationController
       :col => ["name_sort", "lastCheckin"],
       :titles => [_("Name"), _("Last Checked In")],
       :custom_rows => true,
-      :enable_create => System.registerable?(@environment, current_organization),
+      :enable_create => AppConfig.katello? && System.registerable?(@environment, current_organization),
       :create => _("System"),
       :enable_sort => true,
       :name => controller_display_name,

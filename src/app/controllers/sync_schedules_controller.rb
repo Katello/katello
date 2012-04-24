@@ -59,17 +59,18 @@ class SyncSchedulesController < ApplicationController
     data = JSON.parse(params[:data]).with_indifferent_access
     begin
       raise if (data[:plans].empty?)
-      selected_plans = data[:plans].collect{ |i| i.to_i}
-      selected_products = data[:products].collect{ |i| i.to_i}
-      plans = SyncPlan.where(:id => selected_plans)
-      products = Product.where(:id => selected_products)
+      # TODO it receives only one plan, but it collects many. Only the last one is assigned, see [1]
+      selected_plans    = data[:plans].collect { |i| i.to_i }
+      selected_products = data[:products].collect { |i| i.to_i }
+      plans             = SyncPlan.where(:id => selected_plans)
+      products          = Product.where(:id => selected_products)
       products.each do |prod|
         unless plans.empty?
           plans.each do |plan|
-            prod.sync_plan = plan
+            prod.sync_plan = plan # TODO [1]
           end
         else
-            prod.sync_plan = nil
+          prod.sync_plan = nil
         end
         prod.save!
       end

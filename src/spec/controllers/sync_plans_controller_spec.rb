@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'ruby-debug'
 
-describe SyncPlansController do
+describe SyncPlansController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods

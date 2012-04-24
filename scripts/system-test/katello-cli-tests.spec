@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.12
+Version:       0.2.13
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 24 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.13-1
+- katello-cli, katello - setting default environment for user
+
 * Thu Apr 19 2012 Ivan Necas <inecas@redhat.com> 0.2.12-1
 - cli-test-rhsmcerd - don't check the output of rhsmcertd restart
 

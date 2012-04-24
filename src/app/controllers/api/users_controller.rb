@@ -18,33 +18,31 @@ class Api::UsersController < Api::ApiController
   respond_to :json
 
   def rules
-    index_test = lambda{User.any_readable?}
-    create_test = lambda{User.creatable?}
+    index_test  = lambda { User.any_readable? }
+    create_test = lambda { User.creatable? }
 
-    read_test = lambda{@user.readable?}
-    edit_test = lambda{@user.editable?}
-    delete_test = lambda{@user.deletable?}
-    user_helptip = lambda{true} #everyone can enable disable a helptip
-    list_owners_test = lambda{@user.id == User.current.id} #user can see only his/her owners
+    read_test        = lambda { @user.readable? }
+    edit_test        = lambda { @user.editable? }
+    delete_test      = lambda { @user.deletable? }
+    user_helptip     = lambda { true }                        #everyone can enable disable a helptip
+    list_owners_test = lambda { @user.id == User.current.id } #user can see only his/her owners
 
-     {
-       :index => index_test,
-       :show => read_test,
-       :create => create_test,
-       :update => edit_test,
-       :destroy => delete_test,
-       :list_owners => list_owners_test,
-       :add_role => edit_test,
-       :remove_role => edit_test,
-       :list_roles => edit_test,
-       :report => index_test
-     }
+    { :index       => index_test,
+      :show        => read_test,
+      :create      => create_test,
+      :update      => edit_test,
+      :destroy     => delete_test,
+      :list_owners => list_owners_test,
+      :add_role    => edit_test,
+      :remove_role => edit_test,
+      :list_roles  => edit_test,
+      :report      => index_test
+    }
   end
 
   def param_rules
-    {
-      :create => [:username, :password, :email, :disabled],
-      :update => {:user => [:password, :email, :disabled]}
+    { :create => [:username, :password, :email, :disabled, :default_environment_id],
+      :update => { :user => [:password, :email, :disabled, :default_environment_id] }
     }
   end
 
@@ -58,16 +56,24 @@ class Api::UsersController < Api::ApiController
 
   def create
     # warning - request already contains "username" and "password" (logged user)
-    render :json => User.create!(
-      :username => params[:username],
-      :password => params[:password],
-      :email => params[:email],
-      :disabled=> params[:disabled]
-    ).to_json
+    user = User.create!(:username => params[:username],
+                        :password => params[:password],
+                        :email    => params[:email],
+                        :disabled => params[:disabled])
+
+    user.default_environment = KTEnvironment.find(params[:default_environment_id]) if params[:default_environment_id]
+    render :json => user.to_json
   end
 
   def update
-    render :json => @user.update_attributes!(params[:user]).to_json
+    user_params = params[:user].reject { |k, _| k == 'default_environment_id' }
+    @user.update_attributes!(user_params)
+    @user.default_environment = if params[:user][:default_environment_id]
+                                  KTEnvironment.find(params[:user][:default_environment_id])
+                                else
+                                  nil
+                                end
+    render :json => @user.to_json
   end
 
   def destroy
@@ -96,14 +102,15 @@ class Api::UsersController < Api::ApiController
 
   def report
     users_report = User.report_table(:all,
-        :only => [:username, :created_at, :updated_at],
-        :include => { :roles => { :only => [:name]}})
+                                     :only    => [:username, :created_at, :updated_at],
+                                     :include => { :roles => { :only => [:name] } })
 
     respond_to do |format|
       format.html { render :text => users_report.as(:html), :type => :html and return }
       format.text { render :text => users_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => users_report.as(:csv) }
-      format.pdf { send_data(users_report.as(:pdf), :filename => "katello_users_report.pdf", :type => "application/pdf") }
+      format.pdf { send_data(users_report.as(:pdf),
+                             :filename => "katello_users_report.pdf", :type => "application/pdf") }
     end
   end
 
@@ -111,7 +118,7 @@ class Api::UsersController < Api::ApiController
   def list_owners
     orgs = @user.allowed_organizations
     # rhsm expects owner (Candlepin format)
-    render :json => orgs.map {|o| {:key => o.cp_key, :displayName => o.name} }
+    render :json => orgs.map { |o| { :key => o.cp_key, :displayName => o.name } }
   end
 
   private
