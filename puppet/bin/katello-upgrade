@@ -1,0 +1,347 @@
+#!/usr/bin/ruby
+
+require 'optparse'
+
+
+#UPGRADE_SCRIPTS_DIR_PATH = '/home/tstracho/Work/katello/puppet/upgrade-scripts/'
+UPGRADE_SCRIPTS_DIR_PATH = '/usr/share/katello/install/upgrade-scripts/'
+#HISTORY_FILE_PATH = '/home/tstracho/Work/katello/puppet/upgrade-history'
+HISTORY_FILE_PATH = '/var/lib/katello/upgrade-history'
+PERMANENT_SCRIPTS_DIR = 'permanent/'
+ONETIME_SCRIPTS_DIR = 'onetime/'
+
+# error codes for exit_with function
+ERROR_CODES = {
+  :success => 0,
+  :general => 1,
+  :option_parser_error => 2,
+  :not_root => 3,
+  :unknown => 127,
+}
+
+
+# Terminate script with error code from ERROR_CODES hash
+def exit_with(code = :unknown)
+  code = ERROR_CODES[code.to_sym] || ERROR_CODES[:unknown]
+  exit code
+end
+
+# Indent each line of text with spacing
+def indent_text(text, spacing=" ")
+  new_text = ""
+  text.split("\n").each do |line|
+    new_text += spacing+line+"\n"
+  end
+  new_text
+end
+
+# Prints message and waits for Y/n answer.
+# Returns true if the answer is 'Y', false if it is 'n'.
+def confirm(message)
+  yes = 'Y'
+  no = 'n'
+  begin
+    print message + " (Y/n): "
+    answer = gets.strip
+  end while (answer != yes and answer != no)
+  return answer == yes
+end
+
+
+# Stores history of executed scripts
+class UpgradeHistory
+
+  def initialize(path_to_history_file)
+    @history_file = path_to_history_file
+  end
+
+  # Returns last inserted executed script
+  def get_last_script
+    last_line = nil
+    f = open_history_file 'r'
+    f.each_line do |line|
+        last_line = line
+    end
+    f.close
+    last_line
+  end
+
+  # Ddds a script to history
+  def add_script(script)
+    f = open_history_file 'a'
+    f.puts File.basename(script)
+    f.close
+  end
+
+  private
+
+  def ensure_file(path)
+    if not File.exists? path
+      f = File.new(path, "w")
+      f.close
+    end
+  end
+
+  def open_history_file(mode)
+    ensure_file @history_file
+    File.open(@history_file, mode)
+  end
+
+end
+
+
+# Dummy history with /dev/null-like behaviour
+class DevNullHistory
+
+  def get_last_script
+    nil
+  end
+
+  def add_script(script)
+  end
+end
+
+
+# Queue of upgrade scripts.
+class UpgradeQueue
+
+  # Constructor.
+  # Takes path to a directory with upgrade scripts and an upgrade history instance
+  def initialize(script_dir, history)
+    @history = history
+    @script_dir = script_dir
+  end
+
+  # Returns all scripts in the queue that have not been executed yet
+  def get_scripts
+    @scripts ||= find_upgrade_scripts(@script_dir, @history.get_last_script)
+    @scripts
+  end
+
+  # Process all scripts in the queue. Execute a block for each of them
+  def process &block
+    while not self.get_scripts.empty?
+      yield self.get_scripts.first, @history
+      self.get_scripts.shift
+    end
+  end
+
+  def empty?
+    self.get_scripts.empty?
+  end
+
+  def length
+    self.get_scripts.length
+  end
+
+  protected
+
+  def find_upgrade_scripts(path, starting_from = nil)
+    scripts = Dir.glob(path+'*').sort
+    if not starting_from.nil?
+      scripts = scripts.delete_if {|script| (script <= path+starting_from)}
+    end
+    scripts
+  end
+
+end
+
+# Parses upgrade scripts headers
+# The files can contain:
+# '#name: NAME' - on a single line, pretty name of the script
+# '#description: DESC' - can be multiline, longer description of the script
+class ScriptParser
+
+  # Returns info available from the file header
+  def get_info(script_path)
+    @info = {}
+    parse_script_file script_path
+    @info[:filename] = File.basename(script_path)
+    @info
+  end
+
+  private
+
+  def parse_script_file(script_path)
+    f = File.open(script_path, 'r')
+    f.each_line do |line|
+      process_line line
+    end
+    f.close
+  end
+
+  def process_line(line)
+    @in_desc ||= false
+
+    if /#[ ]*name:.*/.match line
+      @info[:name] = line.gsub(/#[ ]*name:[ ]*/, "").strip
+
+    elsif /#[ ]*description:.*/.match line
+      @info[:description] = line.gsub(/#[ ]*description:[ ]*/, "").strip
+      @in_desc = true
+
+    elsif (/#.*/.match line) and @in_desc
+      @info[:description] ||= ""
+      @info[:description] += "\n" + line.gsub(/#/, "").strip
+      @info[:description] = @info[:description].strip
+
+    else
+      @in_desc = false
+
+    end
+  end
+
+end
+
+
+# The upgrade process itself.
+# It creates two upgrade queues:
+#  - one for permanent scripts that are executed everytime
+#  - one for one-time scripts that get executed only once
+# Tries to execute the scripts one by one. If any of them fails, the process
+# is stopped.
+# Prints a result status at the end.
+class UpgradeProcess
+
+  LINE_LEN = 80
+
+  def run(options)
+    @options = options
+    fake_history    = DevNullHistory.new
+    onetime_history = UpgradeHistory.new(HISTORY_FILE_PATH)
+    @permanent_queue = UpgradeQueue.new(UPGRADE_SCRIPTS_DIR_PATH+PERMANENT_SCRIPTS_DIR, fake_history)
+    @onetime_queue   = UpgradeQueue.new(UPGRADE_SCRIPTS_DIR_PATH+ONETIME_SCRIPTS_DIR, onetime_history)
+    @script_parser = ScriptParser.new
+
+    print_header
+
+    @step_count = @permanent_queue.length + @onetime_queue.length
+
+    if @step_count == 0
+      print_nothing_to_do
+      exit_with :success
+    end
+
+    process_queue(@permanent_queue)
+    process_queue(@onetime_queue) if @permanent_queue.empty?
+
+    print_result
+
+    if finished_step_count < @step_count
+      exit_with :general
+    else
+      exit_with :success
+    end
+  end
+
+  protected
+
+  def print_line(char="=", repeats=LINE_LEN)
+    puts char*repeats
+  end
+
+  def print_nothing_to_do
+    print_line
+    puts "Nothing to do"
+  end
+
+  def print_header
+    print_line
+    puts " Katello upgrade"
+  end
+
+  def print_step_info info
+    print_line
+    puts
+    puts "%s/%s: %s (%s)" % [@current_step, @step_count, info[:name], info[:filename]]
+    puts indent_text(info[:description]) if info[:description]
+    puts
+  end
+
+  def print_result
+    print_line
+    puts "Upgrade successful" if finished_step_count == @step_count
+    puts "Finished %i of %i upgrade steps" % [finished_step_count, @step_count]
+  end
+
+  def finished_step_count
+    @step_count - @permanent_queue.length - @onetime_queue.length
+  end
+
+  def process_queue(queue)
+    @current_step ||= 1
+    queue.process do |script, history|
+      info = get_script_info(script)
+      print_step_info(info)
+
+      break if not @options[:assume_yes] and not confirm("Do you want to proceed?")
+      break if not process_script(script, info)
+
+      history.add_script script
+      @current_step+=1
+    end
+  end
+
+  def process_script(script, info)
+    if system(script)
+      puts
+      puts info[:name]+" OK."
+      puts
+      return true
+    else
+      puts
+      puts info[:name]+" FAILED."
+      puts
+      return false
+    end
+  end
+
+  def get_script_info(script)
+    info = @script_parser.get_info(script)
+    info[:name] ||= ""
+    info
+  end
+
+end
+
+
+
+# Parse and return script options
+def parse_options
+  opts = {}
+  opts[:assume_yes] = false
+
+  begin
+    option_parser = OptionParser.new
+    option_parser.banner = "Usage: #{$0} [options]"
+
+    option_parser.on_tail.on('-y', '--assumeyes', 'Assume yes on confirmations') do
+      opts[:assume_yes] = true
+    end
+
+    option_parser.on_tail.on('-h', '--help', 'Show this short summary') do
+      puts option_parser
+      exit_with :success
+    end
+
+    option_parser.parse!
+  rescue => e
+    $stderr.puts e.message
+    $stderr.puts option_parser
+    exit_with :option_parser_error
+  end
+  opts
+end
+
+
+# check if running as root
+unless Process.uid == 0
+  $stderr.puts "You must run katello-upgrade as root"
+  exit_with :not_root
+end
+
+# start the upgrade process
+upgrade = UpgradeProcess.new
+upgrade.run(parse_options)
+
+
