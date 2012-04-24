@@ -103,7 +103,6 @@ class SystemsController < ApplicationController
       @system.environment = KTEnvironment.find(params["system"]["environment_id"])
       #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
       saved = @system.save!
-
       #find the newly created system
       if saved
         notice _("System '%s' was created.") % @system['name']

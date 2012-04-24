@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe GpgKey do
+describe GpgKey, :katello => true do
   include OrchestrationHelper
   include OrganizationHelperMethods
   include AuthorizationHelperMethods

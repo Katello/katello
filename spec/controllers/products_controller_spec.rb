@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe ProductsController do
+describe ProductsController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods

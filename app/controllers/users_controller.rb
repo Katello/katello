@@ -111,8 +111,9 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user                  = User.new(params[:user])
-    default_environment_id = params[:user][:env_id]
+    # Pulp quietly ignored unkonwn attributes; Headpin needs to remove
+    default_environment_id = params[:user].delete(:env_id)
+    @user = User.new(params[:user])
 
     if default_environment_id
       @environment  = KTEnvironment.find(default_environment_id)
