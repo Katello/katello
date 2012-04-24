@@ -21,7 +21,7 @@ module ApplicationConfiguration
       @hash = config['common'] || {}
       @hash.update(config[Rails.env] || {})
 
-      # Hardcode to true to allow 'Headpin' to be added to the locale translation files
+      # Based upon root url, switch between headpin and katello modes
       if ENV['RAILS_RELATIVE_URL_ROOT'] == '/headpin' || ENV['RAILS_RELATIVE_URL_ROOT'] == '/sam'
         @hash["app_name"] = 'Headpin'
         @hash["katello?"] = false
