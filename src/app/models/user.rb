@@ -129,11 +129,10 @@ class User < ActiveRecord::Base
 
   # support for session (thread-local) variables
   include Katello::ThreadSession::UserModel
-  include Ldap
 
   before_save :default_systems_reg_permission_check
   before_save :own_role_included_in_roles
-
+  
   def self.authenticate!(username, password)
     u = User.where({ :username => username }).first
     # check if user exists
@@ -269,6 +268,7 @@ class User < ActiveRecord::Base
     end
   end
 
+    
   # Class method that has the same functionality as allowed_to? method but operates
   # on the current logged user. The class attribute User.current must be set!
   def self.allowed_to?(verb, resource_type, tags = nil, org = nil, any_tags = false)
@@ -508,6 +508,49 @@ class User < ActiveRecord::Base
     super(options).merge 'default_organization' => default_environment.try(:organization).try(:name),
                          'default_environment'  => default_environment.try(:name)
   end
+ 
+  # verify the user is in the groups we are think they are in
+  # if not, reset them
+  def verify_ldap_roles
+    # get list of ldap_groups bound to roles the user is in
+    ldap_groups = LdapGroupRole.
+        joins(:role => :roles_users).
+        where(:roles_users => { :ldap => true, :user_id => id }).
+        select(:ldap_group).
+        uniq.
+        map(&:ldap_group)
+
+    # make sure the user is still in those groups
+    # this operation is inexpensive compared to getting a new group list
+    if !Ldap.is_in_groups(self.username, ldap_groups)
+      # if user is not in these groups, flush their roles
+      # this is expensive
+      set_ldap_roles
+    end
+  end
+
+  # flush existing ldap roles + load & save new ones 
+  def set_ldap_roles
+    # first, delete existing ldap roles
+    clear_existing_ldap_roles
+    # load groups from ldap
+    groups = Ldap.ldap_groups(self.username)
+    groups.each do |group|
+      # find corresponding 
+      group_roles = LdapGroupRole.find_all_by_ldap_group(group)
+      group_roles.each do |group_role|
+        if group_role
+          role_user = RolesUser.new(:role => group_role.role, :user => self, :ldap => true)
+          self.roles_users << role_user unless self.roles.include?(group_role.role)
+        end
+      end
+    end
+    self.save
+  end
+
+  def clear_existing_ldap_roles
+    self.roles = self.roles_users.select { |r| !r.ldap }.map { |r| r.role }
+  end
 
   protected
 
@@ -616,7 +659,6 @@ class User < ActiveRecord::Base
     return query.where(org_clause, org_hash) unless exclude_orgs_clause
     query
   end
-
 
   def log_roles verbs, resource_type, tags, org, any_tags = false
     if AppConfig.allow_roles_logging
