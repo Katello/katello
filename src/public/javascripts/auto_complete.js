@@ -39,7 +39,7 @@ KT.auto_complete_box = function(params) {
     add_item_base = function(item, item_id, focus) {
         var input = $("#" + settings.input_id),
             add_btn = $("#" + settings.add_btn_id);
-
+        input.removeClass("input_error");
         add_btn.addClass("working");
         add_btn.html("<img src='images/spinner.gif'>");
         input.attr("disabled", "disabled");
@@ -69,7 +69,7 @@ KT.auto_complete_box = function(params) {
     },
     error = function() {
         var input = $("#" + settings.input_id);
-        input.addClass("error");
+        input.addClass("input_error");
     };
 
     //initialization
@@ -93,6 +93,9 @@ KT.auto_complete_box = function(params) {
     
     input.autocomplete({
         source: settings.values,
+        search: function(){
+            $("#" + settings.selected_input_id).val('');
+        },
         select: function (event, ui) {
             $("#" + settings.input_id).val(ui.item.value);
             $("#" + settings.selected_input_id).val(ui.item.id);
