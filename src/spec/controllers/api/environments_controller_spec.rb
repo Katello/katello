@@ -44,6 +44,7 @@ describe Api::EnvironmentsController do
   describe "create an environment" do
     before(:each) do
       KTEnvironment.should_receive(:new).once.and_return(@environment)
+      @environment.should_receive(:valid?).and_return(true)
       @org.should_receive(:save!).once
     end
 
