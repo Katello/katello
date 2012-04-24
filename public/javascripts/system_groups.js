@@ -52,7 +52,8 @@ KT.sg_table = (function(){
 }());
 
 KT.system_groups = (function(){
-    var lockedChanged = function(){
+    var current_system_input,
+    lockedChanged = function(){
         var checkbox = $(this),
         name = $(this).attr("name"),
         options = {};
@@ -102,7 +103,7 @@ KT.system_groups = (function(){
         pane.find('#systems_table').delegate('.remove_system', 'click', function(){
             remove_system($(this).data('id'));
         });
-        var current_input = KT.auto_complete_box({
+        current_system_input = KT.auto_complete_box({
             values:       KT.routes.auto_complete_systems_path(),
             input_id:     "add_system_input",
             form_id:      "system_form",
@@ -113,17 +114,37 @@ KT.system_groups = (function(){
 
     },
     add_system = function(string, item_id, cb){
-        var grp_id = $("#system_group_systems").data('id');
-        if (item_id) {
-            submit_change(grp_id, item_id, true, function(content){
-                KT.sg_table.add_system(content);
+        var grp_id = $("#system_group_systems").data('id'),
+        add_funct = function(id){
+            if(id){
+                submit_change(grp_id, id, true, function(content){
+                    KT.sg_table.add_system(content);
+                    $("#add_system_input").val('');
+                    cb();
+                });
+            }
+            else {
+                current_system_input.error();
                 cb();
-                $("#add_system_input").val('');
-            });
+            }
+        };
+        if (item_id) {
+            add_funct(item_id);
         }
         else {
-            //TODO look up name
-            console.log("NOT IMPLEMENTED");
+            //User did not select from the list, so we must search
+            $.get(KT.routes.auto_complete_systems_path(), {term:string}, function(data){
+                var found = false;
+                $.each(data, function(index, element){
+                    console.log(element.label);
+                    if (element.label === string){
+                        found = element.id;
+
+                        return false;
+                    }
+                });
+                add_funct(found);
+            });
         }
 
     },
