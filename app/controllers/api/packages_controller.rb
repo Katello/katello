@@ -16,19 +16,25 @@ class Api::PackagesController < Api::ApiController
   respond_to :json
 
   before_filter :find_repository
-  before_filter :find_package, :except => [:index]
+  before_filter :find_package, :only => [:show]
   before_filter :authorize
 
   def rules
     readable = lambda{ @repo.environment.contents_readable? and @repo.product.readable? }
     {
       :index => readable,
+      :search => readable,
       :show => readable,
     }
   end
 
   def index
     render :json => @repo.packages
+  end
+
+  def search
+    packages = Glue::Pulp::Package.search(params[:search], 0, 0, [@repo.pulp_id])
+    render :json => packages.to_a
   end
 
   def show
