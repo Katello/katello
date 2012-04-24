@@ -16,7 +16,7 @@ require 'util/password'
 require 'util/notices'
 
 class User < ActiveRecord::Base
-  include Glue::Pulp::User if (AppConfig.use_cp and AppConfig.use_pulp)
+  include Glue::Pulp::User if AppConfig.katello?
   include Glue if AppConfig.use_cp
   include AsyncOrchestration
   include Katello::Notices

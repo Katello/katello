@@ -114,7 +114,7 @@ describe Provider do
     end
   end
 
-  describe "products refresh" do
+  describe "products refresh", :katello => true do
 
     def product_content(name)
       Glue::Candlepin::ProductContent.new(

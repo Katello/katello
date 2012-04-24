@@ -15,7 +15,7 @@ require 'helpers/product_test_data'
 require 'helpers/repo_test_data'
 
 
-describe Product do
+describe Product, :katello => true do
 
   include OrchestrationHelper
   include AuthorizationHelperMethods
