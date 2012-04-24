@@ -76,7 +76,7 @@ describe Role do
            :roles => [ role ])
        LdapGroupRole.create!(:ldap_group => "ldap_group", :role => ldap_role)
        # make ldap groups return the correct thing
-       user.stub(:ldap_groups).and_return(['ldap_group'])
+       Ldap.stub(:ldap_groups).and_return(['ldap_group'])
        user.roles.include?(ldap_role).should be_false
        user.set_ldap_roles
        # reload the user object from the db
@@ -98,15 +98,15 @@ describe Role do
            :roles => [ role ])
        LdapGroupRole.create!(:ldap_group => "ldap_group", :role => ldap_role)
        # make ldap groups return the correct thing
-       user.stub(:ldap_groups).and_return(['ldap_group'])
+       Ldap.stub(:ldap_groups).and_return(['ldap_group'])
        user.set_ldap_roles
        # not sure if reloading the user like this is necessary
        user = User.find_by_username('ldapman5000')
        user.roles.include?(ldap_role).should be_true
        (user.roles.size == 3).should be_true
        # ldap server hax
-       user.stub(:is_in_groups).and_return(true)
-       user.stub(:ldap_groups).and_return(['ldap_group'])
+       Ldap.stub(:is_in_groups).and_return(true)
+       Ldap.stub(:ldap_groups).and_return(['ldap_group'])
        user.verify_ldap_roles
        # make sure we didnt survive the hax
        user = User.find_by_username('ldapman5000')
@@ -124,14 +124,14 @@ describe Role do
            :roles => [ role ])
        LdapGroupRole.create!(:ldap_group => "ldap_group", :role => ldap_role)
        # make ldap groups return the correct thing
-       user.stub(:ldap_groups).and_return(['ldap_group'])
+       Ldap.stub(:ldap_groups).and_return(['ldap_group'])
        user.set_ldap_roles
        # not sure if reloading the user like this is necessary
        user = User.find_by_username('ldapman5000')
        user.roles.include?(ldap_role).should be_true
        # ldap server hax
-       user.stub(:is_in_groups).and_return(false)
-       user.stub(:ldap_groups).and_return(['ldapppp_group'])
+       Ldap.stub(:is_in_groups).and_return(false)
+       Ldap.stub(:ldap_groups).and_return(['ldapppp_group'])
        user.verify_ldap_roles
        # make sure we didnt survive the hax
        user = User.find_by_username('ldapman5000')

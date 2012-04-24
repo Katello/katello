@@ -4,6 +4,6 @@ class AddLdapFlagToRole < ActiveRecord::Migration
   end
 
   def self.down
-    drop_column :roles, :ldap
+    remove_column :roles, :ldap
   end
 end
