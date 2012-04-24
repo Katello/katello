@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.31
+Version:        0.2.32
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -359,6 +359,25 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Apr 24 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.32-1
+- reverted katello.yml back to katello master version
+- removed reference to headpin in client.conf and katello.yml
+- fixed headpin-specific variation of available releases spec test
+- fenced spec tests 
+- 766647 - duplicate env creation - better error message needed
+- katello-cli, katello - setting default environment for user
+- 812263 - keep the original tomcat server.xml when resetting dbs
+- Fixes issue on Roles page loading the edit panel where a javascript ordering
+  problem caused the role details to not show properly.
+- 813427 - do not delete repos from Red Hat Providers
+- Fixes issue with CSRF meta tag being out of place and notifications not being
+  in the proper script tag resulting from moving all inline javascript to a
+  single script tag.
+- 814063 - warning message for all possible urls
+- 814063 - katello now returns warning when not configured
+- 814063 - unable to restart httpd
+- 810232 - system templates - fix issue editing multiple templates
+
 * Wed Apr 18 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.31-1
 - 810378 - adding search for repos on promotion page
 - Changes the way inline javascript declarations are handled such that they are
