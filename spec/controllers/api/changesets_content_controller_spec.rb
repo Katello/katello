@@ -24,7 +24,7 @@ require 'spec_helper.rb'
 #end
 
 
-describe Api::ChangesetsContentController do
+describe Api::ChangesetsContentController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 

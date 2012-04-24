@@ -69,7 +69,7 @@ describe System do
 
   it "registers system in candlepin and pulp on create" do
     Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if AppConfig.katello?
     @system.save!
   end
 
@@ -80,7 +80,7 @@ describe System do
 
     it "should delete consumer in candlepin and pulp" do
       Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
-      Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
+      Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true) if AppConfig.katello?
       @system.destroy
     end
   end
@@ -240,7 +240,7 @@ s  end
     end
   end
 
-  context "pulp attributes" do
+  context "pulp attributes", :katello => true do
     it "should update package-profile" do
       Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
       @system.upload_package_profile(package_profile)
@@ -254,7 +254,11 @@ s  end
       @environment = KTEnvironment.create!({:name => "Dev", :prior => @organization.library, :organization => @organization}) do |e|
         e.products << @product
       end
-      env_product = @product.environment_products.where(:environment_id => @environment.id).first
+      if AppConfig.katello?
+        env_product = @product.environment_products.where(:environment_id => @environment.id).first
+      else
+        env_product = @product.environment_products.where(:environment_id => @organization.library.id).first
+      end
       @releases = %w[6.1 6.2 6Server]
       @releases.each do |release|
         Repository.create!(:name => "Repo #{release}",
@@ -277,6 +281,7 @@ s  end
     end
 
     it "returns all releases available for the current environment" do
+      x = @system.available_releases
       @system.available_releases.should == @releases.sort
     end
   end

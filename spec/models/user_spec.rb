@@ -69,7 +69,7 @@ describe User do
     end
   end
 
-  context "Pulp orchestration" do
+  context "Pulp orchestration", :katello => true do
     context "on create" do
 
       before(:each) { disable_user_orchestration }

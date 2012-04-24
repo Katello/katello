@@ -13,7 +13,7 @@
 require 'spec_helper'
 require 'helpers/repo_test_data'
 
-describe Glue::Pulp::Repo do
+describe Glue::Pulp::Repo, :katello => true do
 
     let(:to_create_custom) do
     {
