@@ -123,11 +123,11 @@ class Info(UserRoleAction):
         ldap_groups = self.getLdapGroups(role['id'])
         role['ldap_groups'] = ", ".join(ldap_groups)
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description')
-        self.printer.addColumn('permissions', multiline=True)
-        self.printer.addColumn('ldap_groups')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description')
+        self.printer.add_column('permissions', multiline=True)
+        self.printer.add_column('ldap_groups')
 
         self.printer.set_header(_("User Role Information"))
         self.printer.print_item(role)
