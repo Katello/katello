@@ -396,6 +396,9 @@ KT.panel = (function ($) {
             });
             return to_ret;
         },
+        numSelected = function() {
+            return $('.block.active').length;
+        },
         openSubPanel = function (url) {
             var thisPanel = $('#subpanel');
             thisPanel.animate({
@@ -553,7 +556,7 @@ KT.panel = (function ($) {
                         current_request_action = $(this);
                         if(params.valid_input_cb) {
                             // Has the user provided valid input for the request?
-                            valid = params.valid_input_cb();
+                            valid = params.valid_input_cb(current_request_action);
                         }
                         if (valid && !action.hasClass("disabled")) {
                             options.slideDown('fast');
@@ -661,6 +664,7 @@ KT.panel = (function ($) {
             switch_content_cb = callBack;
         },
         select_item: select_item,
+        numSelected: numSelected,
         search_started: search_started,
         openSubPanel: openSubPanel,
         updateResult: updateResult,

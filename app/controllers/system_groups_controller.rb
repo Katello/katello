@@ -33,7 +33,8 @@ class SystemGroupsController < ApplicationController
         :show=>read,
         :auto_complete=>any_readable,
         :add_systems=> edit,
-        :remove_systems=>edit
+        :remove_systems=>edit,
+        :validate_name=>any_readable
     }
 
   end
@@ -177,6 +178,11 @@ class SystemGroupsController < ApplicationController
 
   def controller_display_name
     return 'system_group'
+  end
+
+  def validate_name
+    name = params[:term]
+    render :json=>SystemGroup.search("name:#{name}").count
   end
 
   def find_group

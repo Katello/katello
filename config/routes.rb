@@ -4,6 +4,7 @@ Src::Application.routes.draw do
     collection do
       get :items
       get :auto_complete
+      get :validate_name
     end
     member do
       get :systems
