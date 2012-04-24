@@ -101,7 +101,7 @@ KT.system_groups = (function(){
             return;
         }
         pane.find('#systems_table').delegate('.remove_system', 'click', function(){
-            remove_system($(this).data('id'));
+            remove_system($(this).data('id'), $(this));
         });
         current_system_input = KT.auto_complete_box({
             values:       KT.routes.auto_complete_systems_path(),
@@ -148,8 +148,9 @@ KT.system_groups = (function(){
         }
 
     },
-    remove_system = function(id){
+    remove_system = function(id, link){
         var grp_id = $("#system_group_systems").data('id');
+        link.replaceWith('<img class="remove_spinner fr" src="' + KT.common.spinner_path() + '">');
         submit_change(grp_id, id, false,
             function(){KT.sg_table.remove_system(id);});
     },
