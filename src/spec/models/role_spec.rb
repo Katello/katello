@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
-describe Permission do
+describe Role do
   include OrchestrationHelper
   include AuthorizationHelperMethods
 
@@ -38,7 +38,6 @@ describe Permission do
          :roles => [ global_role ])
    }
 
-
    context "Check the orgs" do
      specify{user.allowed_to?(:read, :organizations).should be_false }
      specify{global_user.allowed_to?(:read, :organizations).should be_true }
@@ -61,8 +60,85 @@ describe Permission do
      specify{user.allowed_to?("update_systems", :environments,environment.id,organization).should be_false}
      specify{global_user.allowed_to?("update_systems", :environments,environment.id,organization).should be_false}
    end
-
  end
+
+ context "read ldap roles" do
+   AppConfig.ldap_roles = true
+   let(:organization) {Organization.create!(:name => "test_org", :cp_key =>"my_key")}
+   let(:role) { Role.make_readonly_role("name", organization)}
+   let(:ldap_role) { Role.make_readonly_role("ldap_role", organization)}
+   context "setting roles on login" do
+     specify {
+       user = User.find_or_create_by_username(
+           :username => 'ldapman5000',
+           :password => "password",
+           :email => 'fooo@somewhere.com',
+           :roles => [ role ])
+       LdapGroupRole.create!(:ldap_group => "ldap_group", :role => ldap_role)
+       # make ldap groups return the correct thing
+       Ldap.stub(:ldap_groups).and_return(['ldap_group'])
+       user.roles.include?(ldap_role).should be_false
+       user.set_ldap_roles
+       # reload the user object from the db
+       user = User.find_by_username("ldapman5000")
+       # ensure the user got the correct ldap role
+       user.roles.include?(ldap_role).should be_true
+       # ensure the user still has his original roles, role + username
+       user.roles.include?(role).should be_true
+       (user.roles.size == 3).should be_true
+     }
+   end
+   
+   context "verify ldap roles for a normal user" do
+     specify {
+       user = User.find_or_create_by_username(
+           :username => 'ldapman5000',
+           :password => "password",
+           :email => 'fooo@somewhere.com',
+           :roles => [ role ])
+       LdapGroupRole.create!(:ldap_group => "ldap_group", :role => ldap_role)
+       # make ldap groups return the correct thing
+       Ldap.stub(:ldap_groups).and_return(['ldap_group'])
+       user.set_ldap_roles
+       # not sure if reloading the user like this is necessary
+       user = User.find_by_username('ldapman5000')
+       user.roles.include?(ldap_role).should be_true
+       (user.roles.size == 3).should be_true
+       # ldap server hax
+       Ldap.stub(:is_in_groups).and_return(true)
+       Ldap.stub(:ldap_groups).and_return(['ldap_group'])
+       user.verify_ldap_roles
+       # make sure we didnt survive the hax
+       user = User.find_by_username('ldapman5000')
+       user.roles.include?(ldap_role).should be_true
+       (user.roles.size == 3).should be_true
+     }
+   end
+
+   context "verify ldap roles for a changed user" do
+     specify {
+       user = User.find_or_create_by_username(
+           :username => 'ldapman5000',
+           :password => "password",
+           :email => 'fooo@somewhere.com',
+           :roles => [ role ])
+       LdapGroupRole.create!(:ldap_group => "ldap_group", :role => ldap_role)
+       # make ldap groups return the correct thing
+       Ldap.stub(:ldap_groups).and_return(['ldap_group'])
+       user.set_ldap_roles
+       # not sure if reloading the user like this is necessary
+       user = User.find_by_username('ldapman5000')
+       user.roles.include?(ldap_role).should be_true
+       # ldap server hax
+       Ldap.stub(:is_in_groups).and_return(false)
+       Ldap.stub(:ldap_groups).and_return(['ldapppp_group'])
+       user.verify_ldap_roles
+       # make sure we didnt survive the hax
+       user = User.find_by_username('ldapman5000')
+       user.roles.include?(ldap_role).should be_false
+     }
+   end
+  end 
 
  context "checking locked roles" do
    context "create check" do
