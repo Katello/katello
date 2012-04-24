@@ -117,7 +117,12 @@ KT.systems_page = function() {
                     $.each(ids,function(index, item){
                         list.remove("system_" + item);
                     });
-               }
+               },
+                valid_input_cb: function() {
+                    var confirmation_text = removeSystem.find('.confirmation_text');
+                    confirmation_text.html(i18n.confirm_system_remove_action(KT.panel.numSelected()));
+                    return true;
+                }
             }
         );
 
@@ -142,7 +147,8 @@ KT.systems_page = function() {
                         content_type_selected = $("input[name=systems_action]:checked"),
                         content_id = content_type_selected.attr('id'),
                         content_input = $.trim($('#packages_input').val()),
-                        content_error = package.find('.validation_error');
+                        content_error = package.find('.validation_error'),
+                        confirmation_text = package.find('.confirmation_text');
 
                     if (content_type_selected.length === 0) {
                         // an content type hasn't been selected
@@ -170,13 +176,9 @@ KT.systems_page = function() {
 
                         // update the confirmation text based on the requested action
                         var action_text = request_action.val().toLowerCase(),
-                            content_type_text = content_type_selected.next('label').text().toLowerCase(),
-                            option = request_action.parent().nextAll('div.options'),
-                            action = option.find('span.action_text'),
-                            content_type = option.find('span.content_type_text');
+                            content_type_text = content_type_selected.next('label').text().toLowerCase();
 
-                        action.html(action_text);
-                        content_type.html(content_type_text);
+                        confirmation_text.html(i18n.confirm_package_action(action_text, content_type_text, KT.panel.numSelected()));
 
                     } else {
                         content_error.show();
@@ -234,7 +236,8 @@ KT.systems_page = function() {
                     // If the user hasn't provided the necessary inputs, generate an error
                     var valid = true,
                         errata_input = $.trim($('#errata_input').val()),
-                        errata_error = errata.find('.validation_error');
+                        errata_error = errata.find('.validation_error'),
+                        confirmation_text = errata.find('.confirmation_text');
 
                     if (errata_input.length === 0) {
                         // the errata list is empty
@@ -242,6 +245,8 @@ KT.systems_page = function() {
                         valid = false;
                     }
                     if (valid) {
+                        confirmation_text.html(i18n.confirm_errata_action(KT.panel.numSelected()));
+
                         errata_error.hide();
                     } else {
                         errata_error.show();
