@@ -92,6 +92,7 @@ def setup_admin(admin):
     user_cmd.add_action('assign_role', user.AssignRole(True))
     user_cmd.add_action('unassign_role', user.AssignRole(False))
     user_cmd.add_action('list_roles', user.ListRoles())
+    user_cmd.add_action('sync_ldap_roles', user.SyncLdapRoles())
     admin.add_command('user', user_cmd)
 
     user_role_cmd = user_role.UserRole()
@@ -99,6 +100,8 @@ def setup_admin(admin):
     user_role_cmd.add_action('info', user_role.Info())
     user_role_cmd.add_action('list', user_role.List())
     user_role_cmd.add_action('update', user_role.Update())
+    user_role_cmd.add_action('add_ldap_group', user_role.AddLdapGroup())
+    user_role_cmd.add_action('remove_ldap_group', user_role.RemoveLdapGroup())
     user_role_cmd.add_action('delete', user_role.Delete())
     admin.add_command('user_role', user_role_cmd)
 
