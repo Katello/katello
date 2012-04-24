@@ -36,7 +36,8 @@ class Api::UsersController < Api::ApiController
       :add_role    => edit_test,
       :remove_role => edit_test,
       :list_roles  => edit_test,
-      :report      => index_test
+      :report      => index_test,
+      :sync_ldap_roles => create_test # expensive operation, set high perms to avoid DOS
     }
   end
 
@@ -82,8 +83,14 @@ class Api::UsersController < Api::ApiController
   end
 
   def list_roles
+    @user.set_ldap_roles if AppConfig.ldap_roles
     render :json => @user.roles.non_self.to_json
   end
+
+  def sync_ldap_roles
+    User.all.each { |user| user.set_ldap_roles }
+    render :text => _("Roles for all users were synchronised with LDAP groups"), :status => 200
+  end 
 
   def add_role
     role = Role.find(params[:role_id])
