@@ -16,9 +16,9 @@
   = render_menu(1..2, system_groups_navigation)
 
 = content_for :content do
-  #system_group_systems
-    -if editable
-      %form#system_form
+  #system_group_systems.grid_8{'data-id'=>@group.id}
+    %form#system_form
+      -if editable
         %table
           %thead
             %th
@@ -30,5 +30,17 @@
               %td
                 %div
                   - help_text = _("Enter system name...")
+                  %input#add_system_input_id{:type=>'hidden'}
                   %input{:type=>'text', :id=>'add_system_input', :size=>'30', :placeholder => help_text, :title => help_text, :tabindex => auto_tab_index}
-                  %a#add_system.disabled{:style => 'padding-left: 10px;', :tabindex => auto_tab_index} #{_('+ Add')}
+                  %a#add_system{:style => 'padding-left: 10px;', :tabindex => auto_tab_index} #{_('+ Add')}
+        %table#systems_table.filter_table
+          %thead.header
+            %tr
+              %th
+                = _("Name")
+          %tbody
+            %tr.empty_row{:class=>(:hidden if !@systems.empty?)}
+              %td
+                = _("No systems currently exist in this system group.")
+            = render :partial=>'system_item', :collection=>@systems, :as=>:system
+

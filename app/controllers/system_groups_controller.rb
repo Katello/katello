@@ -31,7 +31,9 @@ class SystemGroupsController < ApplicationController
         :update=>edit,
         :destroy=>edit,
         :show=>read,
-        :auto_complete=>any_readable
+        :auto_complete=>any_readable,
+        :add_systems=> edit,
+        :remove_systems=>edit
     }
 
   end
@@ -40,8 +42,8 @@ class SystemGroupsController < ApplicationController
      {
        :create => {:system_group => [:name, :description]},
        :update => {:system_group => [:name, :description, :locked]},
-       :add_systems => [:system_ids],
-       :remove_systems => [:system_ids]
+       :add_systems => [:system_ids, :id],
+       :remove_systems => [:system_ids, :id]
      }
   end
 
@@ -146,16 +148,17 @@ class SystemGroupsController < ApplicationController
   end
 
   def add_systems
-    systems = System.where(:id=>params[:system_ids]).collect{|s| s.uuid}
-    @group.system_ids << systems
-    @group.system_ids.uniq!
+    @systems = System.where(:id=>params[:system_ids])
+    @group.system_ids = (@group.system_ids + @systems.collect{|s| s.id}).uniq
     @group.save!
+    render :partial=>'system_item', :collection=>@systems, :as=>:system
   end
 
   def remove_systems
-    systems = System.where(:id=>params[:system_ids]).collect{|s| s.uuid}
-    @group.consumerids = (@group.consumerids - systems).uniq
+    systems = System.where(:id=>params[:system_ids]).collect{|s| s.id}
+    @group.system_ids = (@group.system_ids - systems).uniq
     @group.save!
+    render :text=>''
   end
 
   def auto_complete
