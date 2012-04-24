@@ -66,6 +66,11 @@ class UserAPI(KatelloAPI):
         else:
             return None
 
+    def sync_ldap_roles(self):
+        path = "/api/users/sync_ldap_roles/"
+        return self.server.GET(path)[1]
+        
+
     def assign_role(self, user_id, role_id):
         path = "/api/users/%s/roles" % u_str(user_id)
         data = {"role_id": role_id}

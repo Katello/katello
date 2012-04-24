@@ -92,6 +92,7 @@ def setup_admin(admin):
     user_cmd.add_action('assign_role', user.AssignRole(True))
     user_cmd.add_action('unassign_role', user.AssignRole(False))
     user_cmd.add_action('list_roles', user.ListRoles())
+    user_cmd.add_action('sync_ldap_roles', user.SyncLdapRoles())
     admin.add_command('user', user_cmd)
 
     user_role_cmd = user_role.UserRole()

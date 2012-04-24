@@ -129,7 +129,6 @@ class User < ActiveRecord::Base
 
   # support for session (thread-local) variables
   include Katello::ThreadSession::UserModel
-  include Ldap
 
   before_save :default_systems_reg_permission_check
   before_save :own_role_included_in_roles
@@ -509,7 +508,7 @@ class User < ActiveRecord::Base
     super(options).merge 'default_organization' => default_environment.try(:organization).try(:name),
                          'default_environment'  => default_environment.try(:name)
   end
-  
+ 
   # verify the user is in the groups we are think they are in
   # if not, reset them
   def verify_ldap_roles
