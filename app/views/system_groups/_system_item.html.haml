@@ -1,0 +1,6 @@
+= print @systems
+%tr{'data-id'=>system.id, :class=> cycle("", "alt")}
+  %td
+    = system.name
+    %a.fr.remove_system{'data-id'=>system.id}
+      = _("Remove")
