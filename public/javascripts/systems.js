@@ -11,11 +11,6 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-
-/*
- * A small javascript file needed to load system subscription related stuff
- *
- */
 KT.panel.set_expand_cb(function(){
     var children = $('#panel .third_level:first-child');
 
@@ -116,8 +111,8 @@ KT.systems_page = function() {
             system_group = $(".panel_action[data-id=systems_system_groups_action]");
 
         KT.panel.actions.registerAction("remove_systems",
-            {  url: removeSystem.attr("data-url"),
-               method: removeSystem.attr("data-method"),
+            {  url: removeSystem.data("url"),
+               method: removeSystem.data("method"),
                success_cb: function(ids){
                     $.each(ids,function(index, item){
                         list.remove("system_" + item);
@@ -141,7 +136,7 @@ KT.systems_page = function() {
                     $('.request_action.package').attr('disabled', true);
                     package.find('.validation_error').hide();
                 },
-                valid_input_cb: function() {
+                valid_input_cb: function(request_action) {
                     // If the user hasn't provided the necessary inputs, generate an error
                     var valid = true,
                         content_type_selected = $("input[name=systems_action]:checked"),
@@ -172,6 +167,17 @@ KT.systems_page = function() {
                     }
                     if (valid) {
                         content_error.hide();
+
+                        // update the confirmation text based on the requested action
+                        var action_text = request_action.val().toLowerCase(),
+                            content_type_text = content_type_selected.next('label').text().toLowerCase(),
+                            option = request_action.parent().nextAll('div.options'),
+                            action = option.find('span.action_text'),
+                            content_type = option.find('span.content_type_text');
+
+                        action.html(action_text);
+                        content_type.html(content_type_text);
+
                     } else {
                         content_error.show();
                     }
@@ -189,8 +195,8 @@ KT.systems_page = function() {
                     if (content_type_selected === 'systems_action_packages') {
                         $.ajax({
                             cache: 'false',
-                            type: request_action.attr('data-method'),
-                            url: request_action.attr('data-url'),
+                            type: request_action.data('method'),
+                            url: request_action.data('url'),
                             data: {ids:ids_selected, packages:content_array},
                             success: function() {
                                 // on success, close the request confirmation dialog
@@ -200,8 +206,8 @@ KT.systems_page = function() {
                     } else {
                         $.ajax({
                             cache: 'false',
-                            type: request_action.attr('data-method'),
-                            url: request_action.attr('data-url'),
+                            type: request_action.data('method'),
+                            url: request_action.data('url'),
                             data: {ids:ids_selected, groups:content_array},
                             success: function() {
                                 // on success, close the request confirmation dialog
@@ -224,7 +230,7 @@ KT.systems_page = function() {
                     $('.request_action.errata').attr('disabled', true);
                     errata.find('.validation_error').hide();
                 },
-                valid_input_cb: function() {
+                valid_input_cb: function(request_action) {
                     // If the user hasn't provided the necessary inputs, generate an error
                     var valid = true,
                         errata_input = $.trim($('#errata_input').val()),
@@ -248,8 +254,8 @@ KT.systems_page = function() {
 
                     $.ajax({
                         cache: 'false',
-                        type: errata.attr('data-method'),
-                        url: errata.attr('data-url'),
+                        type: errata.data('method'),
+                        url: errata.data('url'),
                         data: {ids:ids_selected, errata:errata_array},
                         success: function() {
                             // on success, close the request confirmation dialog
@@ -271,18 +277,41 @@ KT.systems_page = function() {
                     $('.request_action.system_group').attr('disabled', true);
                     system_group.find('.validation_error').hide();
                 },
-                valid_input_cb: function() {
+                valid_input_cb: function(request_action) {
                     // If the user hasn't provided the necessary inputs, generate an error
                     var valid = true,
                         system_group_input = $.trim($('#system_group_input').val()),
-                        system_group_error = system_group.find('.validation_error');
+                        system_group_error = system_group.find('.validation_error'),
+                        confirmation_text = system_group.find('.confirmation_text');
 
                     if (system_group_input.length === 0) {
                         system_group_error.html(i18n.validation_error_system_group_name_empty);
                         valid = false;
                     }
+
                     if (valid) {
                         system_group_error.hide();
+
+                        if (request_action.data('action') === 'add_group') {
+                            // check to see if the system group already exists...
+                            $.ajax({
+                                type: "GET",
+                                url: KT.routes.validate_name_system_groups_path(),
+                                data: {term:system_group_input},
+                                cache: false,
+                                async: false,
+                                success: function(data){
+                                    if (data === 0) {
+                                        confirmation_text.html(i18n.confirm_system_group_create_and_add(system_group_input, KT.panel.numSelected()));
+                                    } else {
+                                        confirmation_text.html(i18n.confirm_system_group_add_action(KT.panel.numSelected()));
+                                    }
+                                }
+                            });
+                        } else {
+                            confirmation_text.html(i18n.confirm_system_group_remove_action(KT.panel.numSelected()));
+                        }
+
                     } else {
                         system_group_error.show();
                     }
@@ -293,8 +322,8 @@ KT.systems_page = function() {
 
                     $.ajax({
                         cache: 'false',
-                        type: request_action.attr('data-method'),
-                        url: request_action.attr('data-url'),
+                        type: request_action.data('method'),
+                        url: request_action.data('url'),
                         data: {ids:ids_selected, system_group:system_group_string},
                         success: function() {
                             // on success, close the request confirmation dialog
@@ -304,28 +333,6 @@ KT.systems_page = function() {
                 }
             }
         );
-
-        $(".request_action.package").click(function() {
-            // Whenever the user selects a package/package group action, update the confirmation text
-            var action_text = $(this).val().toLowerCase(),
-                content_type_text = $("input[name=systems_action]:checked").next('label').text().toLowerCase(),
-                option = $(this).parent().nextAll('div.options'),
-                action = option.find('span.action_text'),
-                content_type = option.find('span.content_type_text');
-
-            action.html(action_text);
-            content_type.html(content_type_text);
-        });
-
-        $(".request_action.system_group").click(function() {
-            // Whenever the user selects to add/remove a system group, update the confirmation text
-            var action_text = $(this).val().toLowerCase(),
-                option = $(this).parent().nextAll('div.options'),
-                action = option.find('span.action_text');
-
-            action.html(action_text);
-        });
-
     },
     system_group_setup = function() {
         $('#update_system_groups').live('submit', update_system_groups);

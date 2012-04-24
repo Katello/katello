@@ -16,7 +16,7 @@
     - if editable
       = form_tag update_system_groups_activation_key_path(@activation_key), :method => "put", :id => "update_system_groups" do
         .grid_10
-          = select_tag "activation_key[system_group_ids]", options_from_collection_for_select(@system_groups, :id, :name, @activation_key.system_group_ids), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
+          = select_tag "activation_key[system_group_ids]", options_from_collection_for_select(@system_groups, :id, :name, @activation_key.system_group_ids), :multiple => true, :class => 'multiselect', :style=>"width:500px; height:350px"
         .grid_2
           = button_to _("Save System Groups"), update_system_groups_activation_key_path(@activation_key), :method => :put, :id => :save_groups
     -else
