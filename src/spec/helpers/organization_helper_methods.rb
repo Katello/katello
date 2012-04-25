@@ -7,7 +7,7 @@ module OrganizationHelperMethods
     suffix = Organization.count + 1
     @organization = Organization.create!(:name => "test_organization#{suffix}", :cp_key => "test_organization#{suffix}")
 
-    session[:current_organization_id] = @organization.id
+    session[:current_organization_id] = @organization.id if defined? session
     return @organization
   end
 
