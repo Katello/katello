@@ -1,0 +1,116 @@
+= include_javascripts :treetable
+
+.grid_8
+  %h5
+    = form_tag system_path(@system), :id=>"autoheal_form", :method=>"put", :remote=>true do
+      #{_("System Current Subscription(s)")}
+  = form_tag update_subscriptions_system_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
+    -#= hidden_field_tag "commit", "unsubscribe"
+    .tree
+      %table#unsubscribeTable
+        %thead
+          %tr
+            %th
+            %th #{_("Subscription")}
+            %th #{_("SLA")}
+            %th #{_("Contract")}
+            %th #{_("Quantity")}
+            %th #{_("Expires")}
+        %tbody
+          - if consumed_entitlements.length > 0
+            - for entitlement in consumed_entitlements
+              - cycle_class = cycle("", "alt")
+              %tr{:id => "#{entitlement.entitlementId}", :class => cycle_class}
+                %td{:style => "padding-top:9px;"}
+                %td{:style => "padding-top:9px;"}
+                  %span.fl
+                    = check_box_tag "system[#{entitlement.entitlementId}]", value="#{entitlement.entitlementId}", false
+                  &nbsp;
+                  #{entitlement.poolName}
+                %td{:style => "padding-top:9px;"} #{entitlement.sla}
+                %td{:style => "padding-top:9px;"} #{entitlement.contractNumber}
+                %td{:style => "padding-top:9px;"}
+                  = entitlement.quantity < 0 ? 1 : entitlement.quantity
+                %td{:style => "padding-top:9px;"} #{format_time entitlement.expires}
+              - entitlement.providedProducts.each do |product|
+                %tr{:class => "child-of-#{entitlement.entitlementId} " + cycle_class}
+                  %td{:colspan=>7}
+                    %ul
+                      %li
+                        = _("Product Name: ")
+                        = product.name
+                      -# BZ-788657 - too slow for large number of products
+                      -#- product.productContent.each do |product_content|
+                      -#  = render :partial=>'subscription_details', :locals=>{:group => entitlement.entitlementId, :product_content => product_content}
+          - else
+            %tr
+              %td{:colspan=>6} #{_("The system is not currently consuming any subscriptions.")}
+      - if editable && consumed_entitlements.length > 0
+        .actions
+          %a{:class=>'dialogbutton button disabled', :id=>"fake_unsub_submit"} #{_('Unsubscribe')}
+          = submit_tag _('Unsubscribe'), :class => 'update_subscriptions submit dialogbutton', :id=>"unsub_submit"
+.grid_8
+  %h5
+    = form_tag update_preference_user_path(current_user, :preference => :subscriptions_match_system), :id=>"matchsystem_form", :method=>"put", :remote=>false do
+      #{_("Available Subscriptions")}
+      %span.fr{:style => "font-weight: normal; font-size: 90%;font-family: 'Overpass'', Interstate, sans-serif;"}
+        = check_box_tag "matchsystem", value=current_user.subscriptions_match_system_preference, current_user.subscriptions_match_system_preference 
+        #{_("Match System")}
+  = form_tag update_subscriptions_system_path, :id=>"subscribe", :method=>"post", :remote=>true do
+    -#= hidden_field_tag "commit", "subscribe"
+    .tree
+      %table#subscribeTable
+        %thead
+          %tr
+            %th
+            %th #{_("Subscription")}
+            %th #{_("SLA")}
+            %th #{_("Sockets")}
+            %th #{_("Quantity")}
+            -# %th #{_("Total")}
+            %th #{_("Expires")}
+        %tbody
+          - if avail_subs.length > 0
+            - for sub in avail_subs
+              - cycle_class = cycle("", "alt")
+              %tr{:id => "#{sub.poolId}", :class => cycle_class}
+                %td{:style => "padding-top:9px;"}
+                %td{:style => "padding-top:9px;"}
+                  %span.fl
+                    = check_box_tag "system[#{sub.poolId}]", false
+                  &nbsp;
+                  #{sub.poolName}
+                %td{:style => "padding-top:9px;"} #{sub.sla}
+                %td{:style => "padding-top:9px;"} #{sub.sockets}
+                - if sub.multiEntitlement
+                  %td
+                    = text_field_tag "spinner[#{sub.poolId}]", nil, :min => 0, :max => (sub.quantity-sub.consumed), :step=>1, :value=>0, :class=>"ui-spinner"
+                    %span{:style => "padding-top:9px;"}
+                      = "of #{sub.quantity - sub.consumed}"
+                - else
+                  %td{:style => "padding-top:9px;"}
+                    - if sub.quantity < 0
+                      = _("Unlimited")
+                    -else
+                      %div{:class=>"ui-nonspinner-label"} 0 of #{sub.quantity - sub.consumed}
+                    = hidden_field_tag "spinner[#{sub.poolId}]", 0, :class => "ui-nonspinner"
+                -# %td{:style => "padding-top:9px;"}
+                -#   = sub.quantity < 0 ? '' : sub.quantity
+                %td{:style => "padding-top:9px;"} #{format_time sub.expires}
+              - sub.providedProducts.each do |product|
+                %tr{:class => "child-of-#{sub.poolId} " + cycle_class}
+                  %td{:colspan=>6}
+                    %ul
+                      %li
+                        = _("Product Name: ")
+                        = product.name
+                      -# BZ-788657 - too slow for large number of products
+                      -#- product.productContent.each do |product_content|
+                      -#  = render :partial=>'subscription_details', :locals=>{:group => sub.poolId, :product_content => product_content}
+          - else
+            %tr
+              %td{:colspan=>6} #{_("There are no more subscriptions available.")}
+      - if editable && avail_subs.length > 0
+        .actions
+          = submit_tag _('Subscribe'), :class => 'submit dialogbutton', :id=>"sub_submit"
+          %a{:class=>'dialogbutton button disabled', :id=>"fake_sub_submit"} #{_('Subscribe')}
