@@ -37,12 +37,12 @@ end
 # Prints message and waits for Y/n answer.
 # Returns true if the answer is 'Y', false if it is 'n'.
 def confirm(message)
-  yes = 'Y'
+  yes = 'y'
   no = 'n'
   begin
-    print message + " (Y/n): "
+    print message + " (y/N): "
     answer = gets.strip
-  end while (answer != yes and answer != no)
+  end while !(answer == yes or answer == no or answer == '')
   return answer == yes
 end
 
