@@ -19,7 +19,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.1.140
+Version:        0.2.4
 Release:        1%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -60,12 +60,7 @@ A subscription management only version of katello
 mkdir build
 
 # katello files are copied over in gen_changes
-cp -r katello/* build
-rm -rf katello
-
-# override katello base with headpin files 
 cp -r src/* build
-rm -rf src
 
 #pull in branding if present
 if [ -d branding ] ; then
@@ -88,7 +83,6 @@ jammit --config config/assets.yml -f
 
 # remove extra files & stuff provided by common
 rm katello.spec
-rm db/schema.rb
 
 # remove glue-specific files
 rm -rf app/models/glue/*
@@ -189,6 +183,7 @@ and then run katello-configure to configure everything.
 %{homedir}/lib/resources
 %{homedir}/lib/tasks
 %{homedir}/lib/util
+%{homedir}/lib/glue/queue.rb
 %{homedir}/locale
 %{homedir}/public
 %{homedir}/script
@@ -206,6 +201,17 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Wed Apr 25 2012 Jordan OMara <jomara@redhat.com> 0.2.4-1
+- 
+
+* Wed Apr 25 2012 Jordan OMara <jomara@redhat.com> 0.2.3-1
+- Adding all the katello files back in src/ (jomara@redhat.com)
+
+* Wed Apr 25 2012 Jordan OMara <jomara@redhat.com> 0.2.2-1
+- Moving src copy to symlink (jomara@redhat.com)
+- test (jomara@redhat.com)
+- Merging headpin flags into master (jomara@redhat.com)
+
 * Mon Nov 28 2011 Tom McKay <thomasmckay@redhat.com> 0.1.107-1
 - gen_changes.sh. run (thomasmckay@redhat.com)
 - Add thumbslug requires for katello-headpin (jbowes@redhat.com)
