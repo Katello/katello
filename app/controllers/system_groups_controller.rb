@@ -153,7 +153,8 @@ class SystemGroupsController < ApplicationController
     @systems = System.where(:id=>ids)
     @group.system_ids = (@group.system_ids + @systems.collect{|s| s.id}).uniq
     @group.save!
-    render :partial=>'system_item', :collection=>@systems, :as=>:system
+    render :partial=>'system_item', :collection=>@systems, :as=>:system,
+           :locals=>{:editable=>@group.editable?}
   end
 
   def remove_systems
