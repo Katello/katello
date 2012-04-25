@@ -3,12 +3,11 @@
 require 'optparse'
 
 
-#UPGRADE_SCRIPTS_DIR_PATH = '/home/tstracho/Work/katello/puppet/upgrade-scripts/'
+
 UPGRADE_SCRIPTS_DIR_PATH = '/usr/share/katello/install/upgrade-scripts/'
-#HISTORY_FILE_PATH = '/home/tstracho/Work/katello/puppet/upgrade-history'
 HISTORY_FILE_PATH = '/var/lib/katello/upgrade-history'
-PERMANENT_SCRIPTS_DIR = 'permanent/'
-ONETIME_SCRIPTS_DIR = 'onetime/'
+DEFAULT_SCRIPTS_DIR = 'default/'
+UPGRADE_SCRIPTS_DIR = 'upgrade/'
 
 # error codes for exit_with function
 ERROR_CODES = {
@@ -196,7 +195,7 @@ end
 
 # The upgrade process itself.
 # It creates two upgrade queues:
-#  - one for permanent scripts that are executed everytime
+#  - one for default scripts that are executed everytime
 #  - one for one-time scripts that get executed only once
 # Tries to execute the scripts one by one. If any of them fails, the process
 # is stopped.
@@ -208,22 +207,22 @@ class UpgradeProcess
   def run(options)
     @options = options
     fake_history    = DevNullHistory.new
-    onetime_history = UpgradeHistory.new(HISTORY_FILE_PATH)
-    @permanent_queue = UpgradeQueue.new(UPGRADE_SCRIPTS_DIR_PATH+PERMANENT_SCRIPTS_DIR, fake_history)
-    @onetime_queue   = UpgradeQueue.new(UPGRADE_SCRIPTS_DIR_PATH+ONETIME_SCRIPTS_DIR, onetime_history)
+    upgrade_history = UpgradeHistory.new(HISTORY_FILE_PATH)
+    @default_queue = UpgradeQueue.new(UPGRADE_SCRIPTS_DIR_PATH+DEFAULT_SCRIPTS_DIR, fake_history)
+    @upgrade_queue = UpgradeQueue.new(UPGRADE_SCRIPTS_DIR_PATH+UPGRADE_SCRIPTS_DIR, upgrade_history)
     @script_parser = ScriptParser.new
 
     print_header
 
-    @step_count = @permanent_queue.length + @onetime_queue.length
+    @step_count = @default_queue.length + @upgrade_queue.length
 
     if @step_count == 0
       print_nothing_to_do
       exit_with :success
     end
 
-    process_queue(@permanent_queue)
-    process_queue(@onetime_queue) if @permanent_queue.empty?
+    process_queue(@default_queue)
+    process_queue(@upgrade_queue) if @default_queue.empty?
 
     print_result
 
@@ -265,7 +264,7 @@ class UpgradeProcess
   end
 
   def finished_step_count
-    @step_count - @permanent_queue.length - @onetime_queue.length
+    @step_count - @default_queue.length - @upgrade_queue.length
   end
 
   def process_queue(queue)
