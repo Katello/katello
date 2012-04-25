@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.32
+Version:        0.2.33
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -359,6 +359,29 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Apr 25 2012 Jordan OMara <jomara@redhat.com> 0.2.33-1
+- Merge pull request #33 from ehelms/master (mmccune@redhat.com)
+- Merge pull request #37 from jsomara/ldap-rebase (jrist@redhat.com)
+- Merge pull request #36 from thomasmckay/system-release-version
+  (jrist@redhat.com)
+- Reverting User.all => User.visible as per ehelms+jsherrill
+  (jomara@redhat.com)
+- Adding destroy_ldap_group to before filter to prevent extraneous loading. Thx
+  jrist + bbuck! (jomara@redhat.com)
+- Fixing various LDAP issues from the last pull request (mbacovsk@redhat.com)
+- Loading group roles from ldap (jomara@redhat.com)
+- katello - fix broken unit test (pchalupa@redhat.com)
+- Adds logical-insight Gem for development and moves the logical insight code
+  to an initializer so that it can be turned on and off via config file.
+  (ehelms@redhat.com)
+- jenkins build failure for test that crosses katello/headpin boundary
+  (thomasmckay@redhat.com)
+- cleaning up use of AppConfig.katello? (thomasmckay@redhat.com)
+- Merge pull request #23 from iNecas/bz767925 (lzap@seznam.cz)
+- incorrect display of release version in system details tab
+  (thomasmckay@redhat.com)
+- 767925 - search packages command in CLI/API (inecas@redhat.com)
+
 * Tue Apr 24 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.32-1
 - reverted katello.yml back to katello master version
 - removed reference to headpin in client.conf and katello.yml
