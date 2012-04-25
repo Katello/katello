@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #name: Migrate Katello database
+#apply: katello headpin
 #description:
 #Updates Katello database schema to the latest version
 
