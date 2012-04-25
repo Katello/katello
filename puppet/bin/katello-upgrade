@@ -18,6 +18,16 @@ ERROR_CODES = {
   :unknown => 127,
 }
 
+def are_we_headpin?
+  return system('grep "deployment = \\(headpin\\|sam\\)" /etc/katello/katello-configure.conf >/dev/null')
+end
+
+# list of backend services
+if are_we_headpin?
+  BACKEND_SERVICES = ['katello', 'katello-jobs', 'tomcat6', 'thumbslug']
+else # we are katello
+  BACKEND_SERVICES = ['katello', 'katello-jobs', 'tomcat6', 'pulp-server']
+end
 
 # Terminate script with error code from ERROR_CODES hash
 def exit_with(code = :unknown)
@@ -212,6 +222,15 @@ class UpgradeProcess
 
   def run(options)
     @options = options
+
+    # check if backend services are stopped
+    BACKEND_SERVICES.each do |service|
+      if !is_stopped? service 
+        $stderr.puts "Service '%s' can not be running while katello-upgrade is in progress" % service
+        exit_with :general
+      end
+    end
+
     fake_history    = DevNullHistory.new
     upgrade_history = UpgradeHistory.new(HISTORY_FILE_PATH)
     @default_queue = UpgradeQueue.new
@@ -315,7 +334,10 @@ class UpgradeProcess
 
 end
 
-
+# test if given service is stopped
+def is_stopped? (service)
+  return !system('/sbin/service %s status 2>/dev/null >/dev/null' % service)
+end
 
 # Parse and return script options
 def parse_options
