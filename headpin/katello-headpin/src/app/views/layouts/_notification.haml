@@ -1,0 +1,29 @@
+- if flash[:error]
+  :plain
+    $(document).ready(function(){
+      notices.displayNotice("error", '#{ escape_javascript(flash[:error]) }');
+    });
+
+- if flash[:warning]
+  :plain
+    $(document).ready(function(){
+      notices.displayNotice("warning", '#{ escape_javascript(flash[:warning]) }');
+    });
+
+- if flash[:success]
+  :plain
+    $(document).ready(function(){
+      notices.displayNotice("success", '#{ escape_javascript(flash[:success]) }');
+    });
+
+- if flash[:message]
+  :plain
+    $(document).ready(function(){
+      notices.displayNotice("", '#{ escape_javascript(flash[:message]) }');
+    });
+
+- if flash[:notice]
+  :plain
+    $(document).ready(function(){
+      notices.displayNotice("", '#{ escape_javascript(flash[:notice]) }');
+    });

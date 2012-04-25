@@ -1,0 +1,17 @@
+%ul.expand_list
+  -if @distributions.empty?
+    #{_("No distributions available.")}
+
+  - @distributions.each do |element|
+    - distribution = element[0]
+    - repo = element[1]
+    %li.no_slide.block{:id => distribution.id, "data-ajax_url" => repository_distribution_path(repo.id, URI::escape(distribution.id))}
+      - if @next_env_distros.include? distribution.id
+        .fr.promoted
+          = _("Promoted")
+      - elsif @next_environment && !(@next_env_repos & repo.clone_ids).empty?
+        %a{:class => "fr content_add_remove remove_distribution st_button","data-display_name"=> distribution.id, "data-id" => distribution.id, "data-type" => "distribution", "data-product_id" => [@product.id].to_json, :id => "add_remove_distribution_#{distribution.id}"}
+
+      .simple_link
+        %span
+          = distribution.id
