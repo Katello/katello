@@ -27,6 +27,7 @@ class SystemGroup < ActiveRecord::Base
     indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
     indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
+    indexes :locked, :type=>'boolean'
   end
 
   has_many :key_system_groups, :dependent => :destroy
@@ -69,31 +70,31 @@ class SystemGroup < ActiveRecord::Base
     true
   end
 
-
   def deletable?
     true
   end
-
 
   def extended_index_attrs
     {:name_sort=>name.downcase, :name_autocomplete=>self.name}
   end
 
+  def lock_check
+    raise _("Group membership cannot be changed while locked.") if self.locked
+  end
+
   private
 
   def add_pulp_consumer_group record
-    group_lock_check
+    lock_check
     self.add_consumers([record.uuid])
   end
 
   def remove_pulp_consumer_group record
-    group_lock_check
+    lock_check
     self.del_consumers([record.uuid])
   end
 
-  def group_lock_check
-    raise _("Group membership cannot be changed while locked.") if self.locked
-  end
+
 
 
 

@@ -141,8 +141,7 @@ class SystemGroupsController < ApplicationController
   end
 
   def systems
-
-    @systems = @group.systems
+    @systems = @group.systems.sort_by{|a| a.name}
     render :partial => "systems", :layout => "tupane_layout",
            :locals => {:filter => @group, :editable=>@group.editable?,
                                 :name=>controller_display_name}
@@ -173,6 +172,7 @@ class SystemGroupsController < ApplicationController
         string query
       end
       filter :term, {:organization_id => org.id}
+      filter :term, {:locked=>false}
     end
     render :json=>groups.map{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
   end
