@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+#
+# Copyright 2012 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'util', 'password'))
+require 'optparse'
+
+options = {}
+optparse = OptionParser.new do |opts|
+  opts.banner = <<EOS
+Katello password utility tool.
+
+Encrypts given password for use in all Katello configuration files.
+It's recommended to quote all parameters when using this tool.
+
+Usage:
+  katello-passwd [-s] [password1] ..."
+
+Example:
+  katello-passwd 'test123$ABC'
+  $1$wiWTZz7VT4J2th5OTd75pg==
+
+Options:
+EOS
+
+  options[:stdin] = false
+  opts.on( '-s', '--stdin', 'Take password from STDIN' ) do
+    options[:stdin] = true
+  end
+
+  opts.on( '-l', '--license', 'Display license' ) do
+    puts 'Distributed under GNU GPLv2+, see /usr/share/doc/katello-common-*/LICENSE.'
+    exit
+  end
+
+  opts.on( '-h', '--help', 'Display this screen' ) do
+    puts opts
+    exit
+  end
+end
+
+optparse.parse!
+
+if options[:stdin] 
+  # stdin method
+  ARGF.each_line do |line|
+    puts Password.encrypt(line.chomp)
+  end
+elsif ARGV.count > 0
+  # parameter method
+  ARGV.each do |pass|
+    puts Password.encrypt(pass)
+  end
+else
+  # query method
+  begin
+    system "stty -echo"
+    print "Password: "; pass1 = $stdin.gets.chomp; puts "\n"
+    print "Password (repeat): "; pass2 = $stdin.gets.chomp; puts "\n"
+    if pass1 == pass2
+      puts Password.encrypt(pass2)
+    else
+      STDERR.puts "Passwords do not match!"
+    end
+  ensure
+    system "stty echo"
+  end
+end
