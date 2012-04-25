@@ -353,6 +353,8 @@ class SystemsController < ApplicationController
           notice _("Systems Bulk Action: Unable to create system group: %s.  Reason: %s.") % [params[:system_group], error.to_s], {:level => :error}
           render :nothing => true and return
         end
+      else
+        system_group.lock_check
       end
 
       # add the systems to the group
@@ -383,6 +385,7 @@ class SystemsController < ApplicationController
     if !params[:system_group].blank?
       system_group = SystemGroup.where(:name => params[:system_group]).first
       if !system_group.blank?
+        system_group.lock_check
         @systems.each do |system|
           begin
             system.system_groups.delete(system_group)
