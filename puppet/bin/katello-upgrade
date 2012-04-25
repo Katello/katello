@@ -3,8 +3,7 @@
 require 'optparse'
 
 
-
-UPGRADE_SCRIPTS_DIR_PATH = '/usr/share/katello/install/upgrade-scripts/'
+KATELLO_UPGRADE_DIR = ENV['KATELLO_UPGRADE_DIR'] || '/usr/share/katello/install/upgrade-scripts/'
 HISTORY_FILE_PATH = '/var/lib/katello/upgrade-history'
 DEFAULT_SCRIPTS_DIR = 'default/'
 UPGRADE_SCRIPTS_DIR = 'upgrade/'
@@ -216,9 +215,9 @@ class UpgradeProcess
     fake_history    = DevNullHistory.new
     upgrade_history = UpgradeHistory.new(HISTORY_FILE_PATH)
     @default_queue = UpgradeQueue.new
-    @default_queue.load(UPGRADE_SCRIPTS_DIR_PATH+DEFAULT_SCRIPTS_DIR, fake_history) if not @options[:skip_default]
+    @default_queue.load(KATELLO_UPGRADE_DIR+DEFAULT_SCRIPTS_DIR, fake_history) if not @options[:skip_default]
     @upgrade_queue = UpgradeQueue.new
-    @upgrade_queue.load(UPGRADE_SCRIPTS_DIR_PATH+UPGRADE_SCRIPTS_DIR, upgrade_history)
+    @upgrade_queue.load(KATELLO_UPGRADE_DIR+UPGRADE_SCRIPTS_DIR, upgrade_history)
     @script_parser = ScriptParser.new
 
     print_header
