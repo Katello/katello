@@ -221,7 +221,7 @@ class System < ActiveRecord::Base
     end
 
     def group_lock_check record
-      raise "Group membership cannot be changed while locked" if record.locked
+      raise _("Group membership cannot be changed while locked.") if record.locked
     end
 
     def save_system_task pulp_task, task_type, parameters_type, parameters

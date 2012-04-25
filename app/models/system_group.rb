@@ -92,7 +92,7 @@ class SystemGroup < ActiveRecord::Base
   end
 
   def group_lock_check
-    raise "Group membership cannot be changed while locked" if self.locked
+    raise _("Group membership cannot be changed while locked.") if self.locked
   end
 
 
