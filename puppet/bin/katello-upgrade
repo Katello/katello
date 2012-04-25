@@ -15,6 +15,7 @@ ERROR_CODES = {
   :general => 1,
   :option_parser_error => 2,
   :not_root => 3,
+  :io_error => 4,
   :unknown => 127,
 }
 
@@ -84,6 +85,9 @@ class UpgradeHistory
   def open_history_file(mode)
     ensure_file @history_file
     File.open(@history_file, mode)
+  rescue => e
+    $stderr.puts e.message
+    exit_with :io_error
   end
 
 end
@@ -273,10 +277,13 @@ class UpgradeProcess
       info = get_script_info(script)
       print_step_info(info)
 
-      break if not @options[:assume_yes] and not confirm("Do you want to proceed?")
-      break if not process_script(script, info)
+      if not @options[:dry_run]
+        break if not @options[:assume_yes] and not confirm("Do you want to proceed?")
+        break if not process_script(script, info)
 
-      history.add_script script
+        history.add_script script
+      end
+
       @current_step+=1
     end
   end
@@ -316,6 +323,10 @@ def parse_options
 
     option_parser.on_tail.on('-y', '--assumeyes', 'Assume yes on confirmations') do
       opts[:assume_yes] = true
+    end
+
+    option_parser.on_tail.on('-d', '--dry-run', 'Prints the upgrade steps without modifying anything') do
+      opts[:dry_run] = true
     end
 
     option_parser.on_tail.on('-h', '--help', 'Show this short summary') do
