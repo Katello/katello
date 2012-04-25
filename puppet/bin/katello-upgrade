@@ -108,15 +108,18 @@ end
 # Queue of upgrade scripts.
 class UpgradeQueue
 
-  # Constructor.
+  # Load scripts form a directory
   # Takes path to a directory with upgrade scripts and an upgrade history instance
-  def initialize(script_dir, history)
+  def load(script_dir, history)
     @history = history
     @script_dir = script_dir
+    @scripts = nil
   end
 
   # Returns all scripts in the queue that have not been executed yet
   def get_scripts
+    return [] if not @history or not @script_dir
+
     @scripts ||= find_upgrade_scripts(@script_dir, @history.get_last_script)
     @scripts
   end
@@ -212,13 +215,16 @@ class UpgradeProcess
     @options = options
     fake_history    = DevNullHistory.new
     upgrade_history = UpgradeHistory.new(HISTORY_FILE_PATH)
-    @default_queue = UpgradeQueue.new(UPGRADE_SCRIPTS_DIR_PATH+DEFAULT_SCRIPTS_DIR, fake_history)
-    @upgrade_queue = UpgradeQueue.new(UPGRADE_SCRIPTS_DIR_PATH+UPGRADE_SCRIPTS_DIR, upgrade_history)
+    @default_queue = UpgradeQueue.new
+    @default_queue.load(UPGRADE_SCRIPTS_DIR_PATH+DEFAULT_SCRIPTS_DIR, fake_history) if not @options[:skip_default]
+    @upgrade_queue = UpgradeQueue.new
+    @upgrade_queue.load(UPGRADE_SCRIPTS_DIR_PATH+UPGRADE_SCRIPTS_DIR, upgrade_history)
     @script_parser = ScriptParser.new
 
     print_header
 
-    @step_count = @default_queue.length + @upgrade_queue.length
+    @step_count = @upgrade_queue.length
+    @step_count += @default_queue.length
 
     if @step_count == 0
       print_nothing_to_do
@@ -268,7 +274,7 @@ class UpgradeProcess
   end
 
   def finished_step_count
-    @step_count - @default_queue.length - @upgrade_queue.length
+    @step_count - @upgrade_queue.length - @default_queue.length
   end
 
   def process_queue(queue)
@@ -327,6 +333,10 @@ def parse_options
 
     option_parser.on_tail.on('-d', '--dry-run', 'Prints the upgrade steps without modifying anything') do
       opts[:dry_run] = true
+    end
+
+    option_parser.on_tail.on('-s', '--skip-default', 'Skips the default upgrade steps') do
+      opts[:skip_default] = true
     end
 
     option_parser.on_tail.on('-h', '--help', 'Show this short summary') do
