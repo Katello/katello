@@ -83,4 +83,5 @@ end
 group :development do
   # profiler
   gem 'newrelic_rpm'
+  gem 'logical-insight'
 end
