@@ -33,7 +33,8 @@ class SystemGroup < ActiveRecord::Base
   has_many :activation_keys, :through => :key_system_groups
 
   has_many :system_system_groups, :dependent => :destroy
-  has_many :systems, :through => :system_system_groups
+  has_many :systems, :through => :system_system_groups, :before_add => :add_pulp_consumer_group,
+           :before_remove => :remove_pulp_consumer_group
 
   validates :pulp_id, :presence => true
   validates :name, :presence => true, :katello_name_format => true
@@ -77,5 +78,23 @@ class SystemGroup < ActiveRecord::Base
   def extended_index_attrs
     {:name_sort=>name.downcase, :name_autocomplete=>self.name}
   end
+
+  private
+
+  def add_pulp_consumer_group record
+    group_lock_check
+    self.add_consumers([record.uuid])
+  end
+
+  def remove_pulp_consumer_group record
+    group_lock_check
+    self.del_consumers([record.uuid])
+  end
+
+  def group_lock_check
+    raise "Group membership cannot be changed while locked" if self.locked
+  end
+
+
 
 end

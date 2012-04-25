@@ -2,5 +2,6 @@
 %tr{'data-id'=>system.id, :class=> cycle("", "alt")}
   %td
     = system.name
-    %a.fr.st_button.remove_system{'data-id'=>system.id}
-      = _("Remove")
+    - if @group.editable? && !@group.locked
+      %a.fr.st_button.remove_system{'data-id'=>system.id}
+        = _("Remove")

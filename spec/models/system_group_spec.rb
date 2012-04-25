@@ -11,16 +11,28 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
-include OrchestrationHelper
+
 
 
 describe SystemGroup do
+
+  include SystemHelperMethods
+  include OrchestrationHelper
+
+  let(:uuid) { '1234' }
 
   before(:each) do
     disable_org_orchestration
     disable_consumer_group_orchestration
     @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
 
+    @group = SystemGroup.create!(:name=>"TestSystemGroup", :organization=>@org)
+
+    setup_system_creation
+    Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Candlepin::Consumer.stub!(:update).and_return(true)
+    @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@org.library, :organization=>@org)
+    @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
   end
 
   context "create should" do
@@ -50,18 +62,16 @@ describe SystemGroup do
   context "delete should" do
     it "should delete a group successfully" do
       Pulp::ConsumerGroup.should_receive(:destroy).and_return(200)
-      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
-      grp.destroy
-      SystemGroup.where(:name=>"TestGroup").count.should == 0
+      @group.destroy
+      SystemGroup.where(:name=>@group.name).count.should == 0
     end
   end
 
   context "update should" do
 
     it "should allow the name to change" do
-      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
-      grp.name = "NotATestGroup"
-      grp.save!
+      @group.name = "NotATestGroup"
+      @group.save!
       SystemGroup.where(:name=>"NotATestGroup").count.should == 1
     end
   end
@@ -87,4 +97,42 @@ describe SystemGroup do
       grp.save!
     end
   end
+
+  context "changing systems" do
+    it "should call out to pulp when adding" do
+      Pulp::ConsumerGroup.should_receive(:add_consumer).once
+      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
+      grp.systems << @system
+      grp.save!
+    end
+    it "should call out to pulp when removing" do
+      Pulp::ConsumerGroup.should_receive(:add_consumer).once
+      Pulp::ConsumerGroup.should_receive(:delete_consumer).once
+      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :systems=>[@system])
+      grp.systems = grp.systems - [@system]
+      grp.save!
+    end
+
+    it "should not be allowed to add if locked" do
+      @group.locked = true
+      @group.save!
+      lambda{
+        @group.systems = [@system]
+        @group.save!
+      }.should raise_error
+    end
+
+    it "should not be allowed to remove if locked" do
+      @group.systems = [@system]
+      @group.save!
+      @group.locked = true
+      @group.save!
+      lambda{
+        @group.systems = []
+        @group.save!
+      }.should raise_error
+    end
+
+  end
+
 end
