@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.311
+Version:        0.1.312
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -355,6 +355,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Apr 25 2012 Jordan OMara <jomara@redhat.com> 0.1.312-1
+- Tagging for end of sprint wednesday 
+
 * Thu Apr 19 2012 Justin Sherrill <jsherril@redhat.com> 0.1.311-1
 - 813427 - do not delete repos from Red Hat Providers (jsherril@redhat.com)
 - 810232 - system templates - fix issue editing multiple templates
