@@ -435,6 +435,15 @@ Src::Application.routes.draw do
         end
       end
 
+      resources :system_groups do
+        collection do
+
+        end
+        member do
+          get :systems
+        end
+      end
+
       resources :environments do
         get :repositories, :on => :member
         resources :changesets, :only => [:index, :create]
@@ -552,15 +561,6 @@ Src::Application.routes.draw do
     resources :roles do
       get :available_verbs, :on => :collection, :action => :available_verbs
       resources :permissions, :only => [:index, :show, :create, :destroy]
-    end
-
-    resources :system_groups do
-      collection do
-
-      end
-      member do
-        get :systems
-      end
     end
 
 
