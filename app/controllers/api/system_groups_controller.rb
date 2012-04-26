@@ -30,6 +30,14 @@ class Api::SystemGroupsController < Api::ApiController
     }
   end
 
+  def param_rules
+    {
+      :create => {:system_group=>[:name, :description, :system_ids]},
+      :update =>  {:system_group=>[:name, :description, :system_ids]}
+    }
+  end
+
+
   respond_to :json
 
   def index
