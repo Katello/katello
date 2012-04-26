@@ -1,4 +1,8 @@
-<% config = YAML.load_file('/etc/katello/katello.yml') rescue nil
+<%
+  # Rails has not been initialized yet (no Rails.root defined)
+  require File.expand_path('/usr/share/katello/lib/util/password.rb')
+
+  config = YAML.load_file('/etc/katello/katello.yml') rescue nil
   def find_db(config, env)
     db = nil
     if config
@@ -8,6 +12,8 @@
         db = config['common']['database']
       end
     end
+    # d3crypt password
+    db['password'] = Password.decrypt(db['password'])
     return db.collect {|k,v| "  #{k}: #{v}"}.sort.join("\n") if db
     nil
   end
