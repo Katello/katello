@@ -47,7 +47,7 @@ module Password
     if defined?(Rails)
       Rails.logger.warn "Unable to encrypt password: #{e}"
     else
-      STDERR.puts "Unable to encrypt password: #{e}"
+      STDERR.puts "Unable to encrypt password: #{e}".chomp
     end
     text # return the input if anything goes wrong
   end
@@ -59,7 +59,7 @@ module Password
     if defined?(Rails)
       Rails.logger.warn "Unable to decrypt password, returning encrypted version #{e}"
     else
-      STDERR.puts "Unable to decrypt password, returning encrypted version #{e}"
+      STDERR.puts "Unable to decrypt password, returning encrypted version #{e}".chomp
     end
     text # return the input if anything goes wrong
   end
