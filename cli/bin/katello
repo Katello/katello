@@ -52,7 +52,8 @@ from katello.client.core import (
   changeset,
   client,
   filters,
-  gpg_key
+  gpg_key,
+  system_group
 )
 
 def setup_admin(admin):
@@ -184,6 +185,10 @@ def setup_admin(admin):
     system_cmd.add_action('task', system.TaskInfo())
     system_cmd.add_action('releases', system.Releases())
     admin.add_command('system', system_cmd)
+
+    system_group_cmd = system_group.SystemGroup()
+    system_group_cmd.add_action('list', system_group.List())
+    admin.add_command('system_group', system_group_cmd)
 
     sync_plan_cmd = sync_plan.SyncPlan()
     sync_plan_cmd.add_action('create', sync_plan.Create())

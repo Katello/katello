@@ -959,3 +959,26 @@ FILTERS = [
     "organization_id": 1
   }
 ]
+
+SYSTEM_GROUPS = [
+    {
+        "description" : "This is my first system group.",
+        "updated_at" : "2012-04-26T19:59:46Z",
+        "pulp_id" : "ACME_Corporation-Test System Group 1-0cdaf879",
+        "locked" : False,
+        "created_at" : "2012-04-26T19:59:23Z",
+        "name" : "Test System Group 1",
+        "id" : 1,
+        "organization_id" : 1
+    },
+    {
+        "description" : "This is another system group.",
+        "updated_at" : "2012-04-26T19:59:46Z",
+        "pulp_id" : "ACME_Corporation-Test System Group 3-0adcf897",
+        "locked" : False,
+        "created_at" : "2012-04-27T19:59:23Z",
+        "name" : "Test System Group 2",
+        "id" : 2,
+        "organization_id" : 1
+    }
+]
