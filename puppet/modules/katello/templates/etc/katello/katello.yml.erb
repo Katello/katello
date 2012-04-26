@@ -137,10 +137,12 @@ common:
 #
 # The following configuration values override ones from the common section
 #
+<%# bug #7991 in puppet 2.6 - need to explicitly load custom functions %>
+<% Puppet::Parser::Functions::function('katello_passencrypt') %>
   database:
    adapter: postgresql
    username: <%= scope.lookupvar("katello::params::db_user") %>
-   password: <%= scope.lookupvar("katello::params::db_pass") %>
+   password: <%= scope.function_katello_passencrypt([scope.lookupvar("katello::params::db_pass")]) %>
    database: <%= scope.lookupvar("katello::params::db_name") %>
    host: localhost
    encoding: UTF8

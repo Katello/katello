@@ -1,0 +1,63 @@
+
+=head1 NAME
+
+katello-passwd - Katello password encryption tool
+
+=head1 SYNOPSIS
+
+    katello-passwd
+      [ -s | --stdin ]
+      [ -h | --help ]
+      [ -v | --version ]
+
+=head1 DESCRIPTION
+
+The B<katello-passwd> program encrypts plain text password into format
+that is readable only to Katello. Encrypted paswords are in the format
+of '$N$xxx' where N is version number.
+
+Katello is able to read passwords in both plain text and encrypted form,
+but it is recommended to use encrypted form. If password starts with the
+prefix (see above), it is decrypted, otherwise plain text form is used.
+
+The B<katello-configure> use the same encryption to encrypt all sensitive
+passwords during configuration.
+
+This utility refuses to encrypt empty password, error is thrown.
+
+=head1 COMMAND LINE PARAMETERS
+
+=over
+
+=item --stdin, -s
+
+Read password from STDIN. For each line it prints encrypted password.
+
+=item --version, -v
+
+Display version and licensing information.
+
+=item --help, -h
+
+Display short summary of all options.
+
+=back
+
+=head1 EXIT STATUS
+
+Returns 1 when initialization failed.
+
+Returns 2 when passwords did not match.
+
+Returns 3 when encrypted password was not decrypted successfuly or when
+input was an empty string.
+
+Otherwise, returns 0.
+
+=head1 VERSION
+
+THE_VERSION
+
+=head1 SEE ALSO
+
+katello-configure(1)

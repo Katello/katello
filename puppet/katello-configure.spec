@@ -18,7 +18,7 @@ Requires:       katello-certs-tools
 Requires:       nss-tools openssl
 Requires:       policycoreutils-python
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
-BuildRequires:  findutils puppet >= 2.6.6
+BuildRequires:  findutils sed puppet >= 2.6.6
 
 BuildArch: noarch
 
@@ -38,11 +38,15 @@ find modules/ -name \*erb | xargs aux/check_erb
 THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/; s/\s+CLI_OPTIONS/$C/; s/^CLI_OPTIONS_LONG/$X/; print; next } ($t, $l, $v, $d) = /^#\s*(.+?\n)(.+\n)?(\S+)\s*=\s*(.*?)\n+$/s; $l =~ s/^#\s*//gm; $l = $t if not $l; ($o = $v) =~ s/_/-/g; $x .= qq/=item --$o=<\U$v\E>\n\n$l\nThe default value is "$d".\n\n/; $C .= "\n        [ --$o=<\U$v\E> ]"; $X = $x if eof' default-answer-file man/katello-configure.pod \
 	| /usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} - man/katello-configure.man1
 
+THE_VERSION=%version sed -i "s/THE_VERSION/$THE_VERSION/g" man/katello-passwd.pod bin/katello-passwd
+/usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} man/katello-passwd.pod man/katello-passwd.man1
+
 %install
 rm -rf %{buildroot}
 #prepare dir structure
 install -d -m 0755 %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
+install -m 0755 bin/katello-passwd %{buildroot}%{_sbindir}
 install -d -m 0755 %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{homedir}/puppet/modules
 cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
@@ -52,6 +56,7 @@ install -m 0644 default-answer-file %{buildroot}%{homedir}
 install -m 0644 options-format-file %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/katello-configure.man1 %{buildroot}%{_mandir}/man1/katello-configure.1
+install -m 0644 man/katello-passwd.man1 %{buildroot}%{_mandir}/man1/katello-passwd.1
 
 %clean
 rm -rf %{buildroot}
@@ -60,7 +65,9 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{homedir}
 %{_sbindir}/katello-configure
+%{_sbindir}/katello-passwd
 %{_mandir}/man1/katello-configure.1*
+%{_mandir}/man1/katello-passwd.1*
 
 %changelog
 * Fri Apr 06 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.18-1
