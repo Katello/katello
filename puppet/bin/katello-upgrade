@@ -4,14 +4,14 @@ require 'optparse'
 
 
 KATELLO_UPGRADE_DIR = ENV['KATELLO_UPGRADE_DIR'] || '/usr/share/katello/install/upgrade-scripts/'
-HISTORY_FILE_PATH = '/var/lib/katello/upgrade-history'
+HISTORY_FILE_PATH = ENV['KATELLO_UPGRADE_HISTORY'] || '/var/lib/katello/upgrade-history'
 DEFAULT_SCRIPTS_DIR = 'default/'
 UPGRADE_SCRIPTS_DIR = 'upgrade/'
 
 # error codes for exit_with function
 ERROR_CODES = {
   :success => 0,
-  :general => 1,
+  :general_error => 1,
   :option_parser_error => 2,
   :not_root => 3,
   :io_error => 4,
@@ -29,11 +29,7 @@ end
 
 # Indent each line of text with spacing
 def indent_text(text, spacing=" ")
-  new_text = ""
-  text.split("\n").each do |line|
-    new_text += spacing+line+"\n"
-  end
-  new_text
+  text.gsub(/^/, spacing)
 end
 
 # Prints message and waits for Y/n answer.
@@ -42,9 +38,9 @@ def confirm(message)
   yes = 'y'
   no = 'n'
   begin
-    print message + " (y/N): "
+    print message + " (y/n): "
     answer = gets.strip
-  end while !(answer == yes or answer == no or answer == '')
+  end while !(answer == yes or answer == no)
   return answer == yes
 end
 
@@ -180,16 +176,16 @@ class ScriptParser
   def process_line(line)
     @in_desc ||= false
 
-    if /#[ ]*name:.*/.match line
-      @info[:name] = line.gsub(/#[ ]*name:[ ]*/, "").strip
+    if line =~ /#\s*name:\s*(.*)\s*$/
+      @info[:name] = $1
 
-    elsif /#[ ]*description:.*/.match line
-      @info[:description] = line.gsub(/#[ ]*description:[ ]*/, "").strip
+    elsif /#\s*description:\s*(.*)\s*$/.match line
+      @info[:description] = $1
       @in_desc = true
 
-    elsif (/#.*/.match line) and @in_desc
+    elsif ( line =~ /^\s*#.*/ ) and @in_desc
       @info[:description] ||= ""
-      @info[:description] += "\n" + line.gsub(/#/, "").strip
+      @info[:description] += "\n" + line.gsub(/\s*#/, "").strip
       @info[:description] = @info[:description].strip
 
     else
@@ -242,7 +238,7 @@ class UpgradeProcess
     print_result
 
     if finished_step_count < @step_count
-      exit_with :general
+      exit_with :general_error
     else
       exit_with :success
     end
@@ -254,7 +250,7 @@ class UpgradeProcess
     BACKEND_SERVICES.each do |service|
       if !is_stopped? service
         $stderr.puts "Service '%s' can not be running while katello-upgrade is in progress" % service
-        exit_with :general
+        exit_with :general_error
       end
     end
   end
