@@ -230,14 +230,20 @@ class SystemsController < ApplicationController
     begin
       # The 'autoheal' flag is not an ActiveRecord attribute so update it explicitly if present
       if params[:system] && params[:system][:serviceLevel]
-        if params[:system][:serviceLevel] == "Auto-subscribe Off"
-          params[:system][:serviceLevel] = ""
+        val = params[:system][:serviceLevel]
+        if val == '0'
+          params[:system][:serviceLevel] = ''
           @system.autoheal = false
-        elsif params[:system][:serviceLevel] == "Auto-subscribe On"
-          params[:system][:serviceLevel] = ""
+        elsif val == '1'
+          params[:system][:serviceLevel] = ''
           @system.autoheal = true
         else
-          @system.autoheal = true
+          if val.start_with? '1'
+            @system.autoheal = true
+          else
+            @system.autoheal = false
+          end
+          params[:system][:serviceLevel] = val[1..-1]
         end
       end
 
