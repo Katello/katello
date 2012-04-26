@@ -78,25 +78,21 @@ module SystemsHelper
   end
 
   def system_servicelevel system
-    if system.autoheal
-      if system.serviceLevel == ""
-        _("Auto-subscribe On, No Service Level Preference")
-      else
-        _("Auto-subscribe On, Service Level %s") % system.serviceLevel
-      end
-    else
-      _("Auto-subscribe Off")
-    end
+    _("Auto-subscribe %s, %s") % [
+        system.autoheal ? "On" : "Off",
+        system.serviceLevel == '' ? "No Service Level Preference" : ("Service Level %s" % system.serviceLevel)
+    ]
   end
 
   def system_servicelevel_edit system
     levels = {}
     system.organization.service_levels.each { |level|
-      levels[level] = _("Auto-subscribe On, Service Level %s") % level
+      levels["1#{level}"] = _("Auto-subscribe On, Service Level %s") % level
+      levels["0#{level}"] = _("Auto-subscribe Off, Service Level %s") % level
     }
 
     levels["Auto-subscribe On"] = _("Auto-subscribe On, No Service Level Preference")
-    levels["Auto-subscribe Off"] = _("Auto-subscribe Off")
+    levels["Auto-subscribe Off"] = _("Auto-subscribe Off, No Service Level Preference")
 
     levels["selected"] = system_servicelevel(system)
 
