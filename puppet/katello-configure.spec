@@ -17,6 +17,7 @@ Requires:       coreutils shadow-utils wget
 Requires:       katello-certs-tools
 Requires:       nss-tools openssl
 Requires:       policycoreutils-python
+Requires:       %{name}-upgrade
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
 BuildRequires:  findutils puppet >= 2.6.6
 
@@ -29,7 +30,6 @@ katello-upgrade which handles upgrades between versions.
 %package upgrade
 BuildArch:      noarch
 Summary:        Katello ugrade scripts
-Requires:       %{name}
 
 %description upgrade
 Katello ugrade scripts
@@ -93,11 +93,11 @@ rm -rf %{buildroot}
 %{homedir}/default-answer-file
 %{homedir}/options-format-file
 %{_sbindir}/katello-configure
-%{_sbindir}/katello-upgrade
 %{_mandir}/man1/katello-configure.1*
 
 %files upgrade
 %{homedir}/upgrade-scripts
+%{_sbindir}/katello-upgrade
 
 %changelog
 * Fri Apr 06 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.18-1

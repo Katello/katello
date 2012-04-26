@@ -48,6 +48,10 @@ class katello::params {
   $migrate_log = "$log_base/katello-configure/db_migrate.log"
   $seed_log    = "$log_base/katello-configure/db_seed.log"
 
+  # katello upgrade settings
+  $katello_upgrade_scripts_dir  = "/usr/share/katello/install/upgrade-scripts/upgrade/"
+  $katello_upgrade_history_file = "/var/lib/katello/upgrade-history"
+
   # SSL settings
   #$ssl_certificate_file     = "/etc/pki/tls/certs/httpd-ssl.crt"
   #$ssl_certificate_key_file = "/etc/pki/tls/private/httpd-ssl.key"
