@@ -336,6 +336,11 @@ if show_resulting_answer_file
 	exit
 end
 
+#Set the deployment to be the relative url
+url_root = final_options['deployment'].nil? ? default_options['deployment'] : final_options['deployment']
+ENV['RAILS_RELATIVE_URL_ROOT'] = "/" + url_root
+
+
 # handle ca password separately, because we do not want
 # to store it into the katello-configure.conf
 begin
