@@ -554,6 +554,15 @@ Src::Application.routes.draw do
       resources :permissions, :only => [:index, :show, :create, :destroy]
     end
 
+    resources :system_groups do
+      collection do
+
+      end
+      member do
+        get :systems
+      end
+    end
+
 
     resources :tasks, :only => [:show]
 
