@@ -15,4 +15,5 @@ done
 semanage port -l | grep amqp_port_t | grep tcp | grep 5674 >/dev/null || \
   /usr/sbin/semanage port -a -t amqp_port_t -p tcp 5674
 
-/sbin/restorecon -rvvi /var/lib/katello /var/log/katello
+# TODO this should go to extra script (and should be called from SPEC too)
+/sbin/restorecon -rvvi /var/lib/katello /var/log/katello /usr/share/katello /etc/katello /usr/sbin/katello-*
