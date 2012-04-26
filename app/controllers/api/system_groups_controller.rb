@@ -41,7 +41,8 @@ class Api::SystemGroupsController < Api::ApiController
   respond_to :json
 
   def index
-    render :json => SystemGroup.readable(@organization)
+    query_params.delete(:organization_id)
+    render :json => SystemGroup.readable(@organization).where(query_params)
   end
 
   def show
