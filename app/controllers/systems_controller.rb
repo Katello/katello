@@ -227,6 +227,7 @@ class SystemsController < ApplicationController
   def update
     begin
       # The 'autoheal' flag is not an ActiveRecord attribute so update it explicitly if present
+      # The 'serviceLevel' comes in as a string 0/1 + level (eg. 0STANDARD = auto off, STANDARD))
       if params[:system] && params[:system][:serviceLevel]
         val = params[:system][:serviceLevel]
         if val == '0'
@@ -349,6 +350,7 @@ class SystemsController < ApplicationController
       :ajax_load  => true,
       :ajax_scroll => items_systems_path(),
       :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil,
+      :initial_action => :subscriptions,
       :search_class=>System,
       :disable_create=> current_organization.environments.length == 0 ? "At least one environment is required to create or register systems in your current organization." : false
     }
