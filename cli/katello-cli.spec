@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.31
+Version:       0.2.32
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,6 +89,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.32-1
+- Fixed addColumn to match new name
+- Fixing various LDAP issues from the last pull request
+- Loading group roles from ldap
+- 767925 - search packages command in CLI/API
+
 * Tue Apr 24 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.31-1
 - katello-cli, katello - setting default environment for user
 

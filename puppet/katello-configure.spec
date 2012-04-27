@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.18
+Version:        0.2.19
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -100,6 +100,15 @@ rm -rf %{buildroot}
 %{_sbindir}/katello-upgrade
 
 %changelog
+* Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.19-1
+- Set the rails relative url in the installer based on the deployment option
+- Installer updates upgrade history to record upgrades already included in the
+  build
+- upgrade script introduced
+- Loading group roles from ldap
+- First verision of Katello upgrade script
+- 811011 - adding keep alive and expires
+
 * Fri Apr 06 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.18-1
 - puppet - adding pulp migration logging
 
