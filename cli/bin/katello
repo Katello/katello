@@ -190,6 +190,8 @@ def setup_admin(admin):
     system_group_cmd.add_action('list', system_group.List())
     system_group_cmd.add_action('info', system_group.Info())
     system_group_cmd.add_action('systems', system_group.Systems())
+    system_group_cmd.add_action('lock', system_group.Lock())
+    system_group_cmd.add_action('unlock', system_group.Unlock())
     admin.add_command('system_group', system_group_cmd)
 
     sync_plan_cmd = sync_plan.SyncPlan()

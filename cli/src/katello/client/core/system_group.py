@@ -140,3 +140,67 @@ class Systems(SystemGroupAction):
         self.printer.printItems(systems)
 
         return os.EX_OK
+
+class Lock(SystemGroupAction):
+
+    description = _('lock down a system group')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                       help=_("system group name (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        org_name = self.get_option('org')
+        system_group_name = self.get_option('name')
+        # info is always grep friendly
+
+        # get system details
+        system_group = get_system_group(org_name, system_group_name)
+        if not system_group:
+            return os.EX_DATAERR
+
+        system_group = self.api.lock(org_name, system_group["id"])
+
+        if system_group != None:
+            print _("Successfully locked system group [ %s ]") % system_group['name']
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
+
+class Unlock(SystemGroupAction):
+
+    description = _('unlock a system group')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                       help=_("system group name (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        org_name = self.get_option('org')
+        system_group_name = self.get_option('name')
+        # info is always grep friendly
+
+        # get system details
+        system_group = get_system_group(org_name, system_group_name)
+        if not system_group:
+            return os.EX_DATAERR
+
+        system_group = self.api.unlock(org_name, system_group["id"])
+
+        if system_group != None:
+            print _("Successfully unlocked system group [ %s ]") % system_group['name']
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
