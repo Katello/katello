@@ -15,6 +15,12 @@ skip_test_success "system register as $TEST_USER" "none" -u "$TEST_USER" -p pass
 test_success "system info" system info --name="$SYSTEM_NAME_ADMIN" --org="$TEST_ORG"
 test_success "system releases" system releases --name="$SYSTEM_NAME_ADMIN" --org="$TEST_ORG"
 test_success "system list" system list --org="$TEST_ORG"
+
+POOL_ID=$($CMD system subscriptions --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --available -v | grep PoolId | sed 's/PoolId:\s*//')
+test_success "system subscribe" system subscribe --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --pool="$POOL_ID"
+test_success "system list for a pool id" system list --org="$TEST_ORG" --pool="$POOL_ID"
+test_success "system list for unknown pool id" system list --org="$TEST_ORG" --pool="unknown_pool_id"
+
 test_success "system packages" system packages --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN"
 test_success "system facts" system facts --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN"
 test_success "system update name" system update --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --new_name="$SYSTEM_NAME_ADMIN_2"

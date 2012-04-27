@@ -53,19 +53,25 @@ class List(SystemAction):
                        help=_("organization name eg: foo.example.com (required)"))
         self.parser.add_option('--environment', dest='environment',
                        help=_("environment name eg: development"))
+        self.parser.add_option('--pool', dest='pool_id',
+                       help=_("pool id to filter systems by subscriptions"))
 
     def check_options(self):
         self.require_option('org')
 
+    def get_systems(self, org_name, env_name, pool_id):
+        query = {'pool_id': pool_id} if pool_id else {}
+        if env_name is None:
+            return self.api.systems_by_org(org_name, query)
+        else:
+            return self.api.systems_by_env(org_name, env_name, query)
+
     def run(self):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
+        pool_id = self.get_option('pool_id')
 
-        if env_name is None:
-            systems = self.api.systems_by_org(org_name)
-        else:
-            systems = self.api.systems_by_env(org_name, env_name)
-
+        systems = self.get_systems(org_name, env_name, pool_id)
         if systems is None:
             return os.EX_DATAERR
 
