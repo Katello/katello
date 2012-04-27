@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.33
+Version:        0.2.34
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -359,6 +359,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.34-1
+- Do not reference logical-insight unless it is configured
+
 * Wed Apr 25 2012 Jordan OMara <jomara@redhat.com> 0.2.33-1
 - Merge pull request #33 from ehelms/master (mmccune@redhat.com)
 - Merge pull request #37 from jsomara/ldap-rebase (jrist@redhat.com)
