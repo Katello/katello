@@ -13,7 +13,7 @@
 class Api::SystemGroupsController < Api::ApiController
 
   before_filter :find_group, :only => [:show, :update, :destroy, :lock, :unlock,
-                                       :add_systems, :remove_systems]
+                                       :add_systems, :remove_systems, :systems]
   before_filter :find_organization, :only => [:index, :create]
   before_filter :authorize
 

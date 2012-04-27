@@ -125,17 +125,18 @@ class Systems(SystemGroupAction):
 
         # get system details
         system_group = get_system_group(org_name, system_group_name)
-
         if not system_group:
             return os.EX_DATAERR
 
-        self.printer.setHeader(_("Systems within System Group [ %s ] For Org [ %s ]") % (org_name, system_group["name"]))
+        systems = self.api.system_group_systems(org_name, system_group["id"])
+        if not systems:
+            return os.EX_DATAERR
+
+        self.printer.setHeader(_("Systems within System Group [ %s ] For Org [ %s ]") % (system_group["name"], org_name))
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('locked')
 
-        self.printer.printItem(system_group)
+        self.printer.printItems(systems)
 
         return os.EX_OK
