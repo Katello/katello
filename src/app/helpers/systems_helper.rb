@@ -91,8 +91,8 @@ module SystemsHelper
       levels["0#{level}"] = _("Auto-subscribe Off, Service Level %s") % level
     }
 
-    levels["Auto-subscribe On"] = _("Auto-subscribe On, No Service Level Preference")
-    levels["Auto-subscribe Off"] = _("Auto-subscribe Off, No Service Level Preference")
+    levels['1'] = _("Auto-subscribe On, No Service Level Preference")
+    levels['0'] = _("Auto-subscribe Off, No Service Level Preference")
 
     levels["selected"] = system_servicelevel(system)
 
