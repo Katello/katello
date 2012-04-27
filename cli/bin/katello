@@ -193,6 +193,7 @@ def setup_admin(admin):
     system_group_cmd.add_action('lock', system_group.Lock())
     system_group_cmd.add_action('unlock', system_group.Unlock())
     system_group_cmd.add_action('create', system_group.Create())
+    system_group_cmd.add_action('update', system_group.Update())
     system_group_cmd.add_action('delete', system_group.Delete())
     admin.add_command('system_group', system_group_cmd)
 

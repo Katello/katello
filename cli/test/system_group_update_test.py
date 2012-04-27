@@ -1,0 +1,71 @@
+import unittest
+import os
+
+from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
+import test_data
+
+import katello.client.core.system_group
+from katello.client.core.system_group import Update
+
+
+class RequiredCLIOptionsTests(CLIOptionTestCase):
+    #requires: organization, name
+
+    def setUp(self):
+        self.set_action(Update())
+        self.mock_options()
+
+    def test_missing_org_generates_error(self):
+        self.assertRaises(Exception, self.action.process_options, ['update', '--name=system_group_1'])
+
+    def test_missing_name_generates_error(self):
+        self.assertRaises(Exception, self.action.process_options, ['update', '--org=ACME'])
+
+    def test_no_error_if_org_and_name_provided(self):
+        self.action.process_options(['update', '--org=ACME', '--name=system_group_1'])
+        self.assertEqual(len(self.action.optErrors), 0)
+
+
+class SystemGroupUpdateTest(CLIActionTestCase):
+
+    ORG = test_data.ORGS[0]
+    SYSTEM_GROUP = test_data.SYSTEM_GROUPS[1]
+
+    OPTIONS = {
+        'org': ORG['name'],
+        'id' : SYSTEM_GROUP['id'],
+        'new_name': SYSTEM_GROUP['name'],
+        'new_description': SYSTEM_GROUP['description']
+    }
+
+    OPTIONS_NO_DESC = {
+        'org': ORG['name'],
+        'id' : SYSTEM_GROUP['id'],
+        'new_name': SYSTEM_GROUP['name']
+    }
+
+    def setUp(self):
+        self.set_action(Update())
+        self.set_module(katello.client.core.system_group)
+        self.mock_printer()
+
+        self.mock_options(self.OPTIONS)
+
+        self.mock(self.module, 'get_system_group', self.SYSTEM_GROUP)
+        self.mock(self.action.api, 'update', self.SYSTEM_GROUP)
+
+    def test_it_calls_system_group_update_api(self):
+        self.action.run()
+        self.action.api.update.assert_called_once_with(self.OPTIONS['org'], self.OPTIONS['id'], self.OPTIONS["new_name"], self.OPTIONS['new_description'])
+
+    def test_it_calls_system_group_update_name_api(self):
+        self.mock_options(self.OPTIONS_NO_DESC)
+        self.action.run()
+        self.action.api.update.assert_called_once_with(self.OPTIONS['org'], self.OPTIONS['id'], self.OPTIONS["new_name"], None)
+
+    def test_it_returns_error_when_creation_failed(self):
+        self.mock(self.action.api, 'update', None)
+        self.assertEqual(self.action.run(), os.EX_DATAERR)
+
+    def test_it_success_on_successful_creation(self):
+        self.assertEqual(self.action.run(), os.EX_OK)

@@ -69,6 +69,37 @@ class List(SystemGroupAction):
         return os.EX_OK
 
 
+class Create(SystemGroupAction):
+
+    description = _('create a system group')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("system group name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--description', dest='description',
+                               help=_("system group description"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+    def run(self):
+        org_name = self.get_option('org')
+        name = self.get_option('name')
+        description = self.get_option('description')
+
+        system_group = self.api.create(org_name, name, description)
+
+        if is_valid_record(system_group):
+            print _("Successfully created system group [ %s ]") % system_group['name']
+            return os.EX_OK
+        else:
+            print >> sys.stderr, _("Could not create system group [ %s ]") % name
+            return os.EX_DATAERR
+
+
 class Info(SystemGroupAction):
 
     description = _('display a system group within an organization')
@@ -106,17 +137,19 @@ class Info(SystemGroupAction):
         return os.EX_OK
 
 
-class Create(SystemGroupAction):
+class Update(SystemGroupAction):
 
-    description = _('create a system group')
+    description = _('update a system group')
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
-                               help=_("activation key name (required)"))
+                               help=_("system group name (required)"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--description', dest='description',
-                               help=_("activation key description"))
+        self.parser.add_option('--new_name', dest='new_name',
+                              help=_("new system group name"))
+        self.parser.add_option('--description', dest='new_description',
+                               help=_("new description"))
 
     def check_options(self):
         self.require_option('name')
@@ -125,15 +158,20 @@ class Create(SystemGroupAction):
     def run(self):
         org_name = self.get_option('org')
         name = self.get_option('name')
-        description = self.get_option('description')
+        new_name = self.get_option('new_name')
+        new_description = self.get_option('new_description')
 
-        system_group = self.api.create(org_name, name, description)
+        system_group = get_system_group(org_name, name)
 
-        if is_valid_record(system_group):
-            print _("Successfully created system group [ %s ]") % system_group['name']
+        if system_group is None:
+            return os.EX_DATAERR
+
+        system_group = self.api.update(org_name, system_group["id"], new_name, new_description)
+
+        if system_group != None:
+            print _("Successfully updated system group [ %s ]") % system_group['name']
             return os.EX_OK
         else:
-            print >> sys.stderr, _("Could not create system group [ %s ]") % name
             return os.EX_DATAERR
 
 
@@ -143,7 +181,7 @@ class Delete(SystemGroupAction):
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
-                               help=_("activation key name (required)"))
+                               help=_("system group name (required)"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
 
