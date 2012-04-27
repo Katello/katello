@@ -18,6 +18,11 @@ fi
 # default configuration values (should be the same as in our sysv init script)
 KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
+DEPLOYMENT="katello"
+
+if [ $KATELLO_PREFIX = "/headpin" -o $KATELLO_PREFIX = "/sam" ] ; then
+    DEPLOYMENT="sam"
+fi
 
 echo -e "\n"
 echo '***********************************************************'
@@ -29,7 +34,9 @@ echo -e "\n"
 echo "This script only works with PostgreSQL database."
 echo -e "\n"
 echo "It is strongly recommended to back up databases:"
-echo " # mongodump --db pulp_database --out - > pulp_database.json"
+if [ $DEPLOYMENT = "katello" ] ; then
+    echo " # mongodump --db pulp_database --out - > pulp_database.json"
+fi
 echo " # pg_dump -c candlepin > candlepin_db.sql"
 echo " # pg_dump -c katello > katello_db.sql"
 echo -e "\n"
@@ -67,22 +74,26 @@ stop_if_running katello
 echo "Stopping Katello jobs instance"
 stop_if_running katello-jobs
 
-echo "Stopping Pulp instance"
-stop_if_running pulp-server
+if [ $DEPLOYMENT = "katello" ] ; then
+    echo "Stopping Pulp instance"
+    stop_if_running pulp-server
+fi
 
 echo "Stopping Candlepin instance"
 stop_if_running tomcat6
 
-echo "Dropping Pulp database"
-# mongo sometimes hang in F14/F15 (workaround 725601)
-#echo 'db.dropDatabase();' | mongo pulp_database
-$SRV mongod status >/dev/null && $SRV mongod stop
-rm -rf /var/lib/mongodb/pulp_database*
-$SRV mongod start
+if [ $DEPLOYMENT = "katello" ] ; then
+    echo "Dropping Pulp database"
+    # mongo sometimes hang in F14/F15 (workaround 725601)
+    #echo 'db.dropDatabase();' | mongo pulp_database
+    $SRV mongod status >/dev/null && $SRV mongod stop
+    rm -rf /var/lib/mongodb/pulp_database*
+    $SRV mongod start
 
-echo "Initializing Pulp database"
-sleep 10s # let mongo initialize
-/usr/bin/pulp-migrate
+    echo "Initializing Pulp database"
+    sleep 10s # let mongo initialize
+    /usr/bin/pulp-migrate
+fi
 
 echo "Initializing Candlepin database"
 /usr/share/candlepin/cpsetup -s
@@ -90,8 +101,10 @@ echo "Initializing Candlepin database"
 # cpsetup alters tomcat configuration, use the original
 cp /etc/tomcat6/server.xml.original /etc/tomcat6/server.xml
 
-echo "Starting Pulp instance"
-$SRV pulp-server start
+if [ $DEPLOYMENT = "katello" ] ; then
+    echo "Starting Pulp instance"
+    $SRV pulp-server start
+fi
 
 echo "Starting Candlepin instance"
 $SRV tomcat6 restart
