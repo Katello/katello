@@ -132,8 +132,8 @@ describe SystemGroupsController do
     describe "POST add/remove systems" do
       it "should allow adding of systems" do
         post :add_systems, :id=>@group.id, :system_ids=>[@system.id]
-        @group.systems.should include @system
         response.should be_success
+        @group.reload.systems.should include @system
       end
       it "should allow removal of systems" do
         @group.systems  = [@system]
