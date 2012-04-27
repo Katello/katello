@@ -390,6 +390,12 @@ module Glue::Candlepin::Consumer
 
   module ClassMethods
 
+    def all_by_pool(pool_id)
+      entitlements = Candlepin::Entitlement.get
+      system_uuids = entitlements.delete_if{|ent| ent["pool"]["id"] != pool_id }.map{|ent| ent["consumer"]["uuid"]}
+      return where(:uuid => system_uuids)
+    end
+
     def create_hypervisor(environment_id, hypervisor_json)
       hypervisor = Hypervisor.new(:environment_id => environment_id)
       hypervisor.name = hypervisor_json[:name]
