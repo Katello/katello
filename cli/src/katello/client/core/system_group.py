@@ -13,6 +13,7 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 import os
+import sys
 from gettext import gettext as _
 
 from katello.client.config import Config
@@ -20,6 +21,7 @@ from katello.client.core.base import Action, Command
 from katello.client.core.utils import Printer
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
+from katello.client.core.utils import is_valid_record
 
 
 Config()
@@ -102,6 +104,37 @@ class Info(SystemGroupAction):
         self.printer.printItem(system_group)
 
         return os.EX_OK
+
+
+class Create(SystemGroupAction):
+
+    description = _('create a system group')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("activation key name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--description', dest='description',
+                               help=_("activation key description"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+    def run(self):
+        org_name = self.get_option('org')
+        name = self.get_option('name')
+        description = self.get_option('description')
+
+        system_group = self.api.create(org_name, name, description)
+
+        if is_valid_record(system_group):
+            print _("Successfully created system group [ %s ]") % system_group['name']
+            return os.EX_OK
+        else:
+            print >> sys.stderr, _("Could not create system group [ %s ]") % name
+            return os.EX_DATAERR
 
 
 class Systems(SystemGroupAction):
