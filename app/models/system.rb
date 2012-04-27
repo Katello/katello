@@ -26,11 +26,9 @@ class System < ActiveRecord::Base
   include AsyncOrchestration
   include IndexedModel
 
-  
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
-                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin]
-
+                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, :system_group]
 
   mapping   :dynamic_templates =>[{"fact_string" => {
                           :path_match => "facts.*",
@@ -49,6 +47,8 @@ class System < ActiveRecord::Base
 
   end
 
+  update_related_indexes :system_groups, :name
+
   acts_as_reportable
 
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
@@ -60,7 +60,7 @@ class System < ActiveRecord::Base
   has_many :activation_keys, :through => :system_activation_keys
 
   has_many :system_system_groups, :dependent => :destroy
-  has_many :system_groups, :through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group
+  has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
 
   validates :environment, :presence => true, :non_library_environment => true
   validates :name, :presence => true, :no_trailing_space => true
@@ -206,7 +206,9 @@ class System < ActiveRecord::Base
 
   def extended_index_attrs
     {:facts=>self.facts, :organization_id=>self.organization.id,
-      :name_sort=>name.downcase, :name_autocomplete=>self.name}
+     :name_sort=>name.downcase, :name_autocomplete=>self.name,
+     :system_group=>self.system_groups.collect{|g| g.name}
+    }
   end
 
   private

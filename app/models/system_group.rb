@@ -19,8 +19,8 @@ class SystemGroup < ActiveRecord::Base
   include IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
-                :display_attrs=>[:name, :description],
-                :json=>{}
+                :json=>{},
+                :display_attrs=>[:name, :description, :system]
 
   mapping do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
@@ -30,12 +30,14 @@ class SystemGroup < ActiveRecord::Base
     indexes :locked, :type=>'boolean'
   end
 
+  update_related_indexes :systems, :name
+
   has_many :key_system_groups, :dependent => :destroy
   has_many :activation_keys, :through => :key_system_groups
 
   has_many :system_system_groups, :dependent => :destroy
-  has_many :systems, :through => :system_system_groups, :before_add => :add_pulp_consumer_group,
-           :before_remove => :remove_pulp_consumer_group
+  has_many :systems, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group,
+           :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
 
   validates :pulp_id, :presence => true
   validates :name, :presence => true, :katello_name_format => true
@@ -75,7 +77,9 @@ class SystemGroup < ActiveRecord::Base
   end
 
   def extended_index_attrs
-    {:name_sort=>name.downcase, :name_autocomplete=>self.name}
+    {:name_sort=>name.downcase, :name_autocomplete=>self.name,
+     :system=>self.systems.collect{|s| s.name}
+    }
   end
 
   def lock_check
