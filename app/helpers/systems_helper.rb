@@ -79,8 +79,8 @@ module SystemsHelper
 
   def system_servicelevel system
     _("Auto-subscribe %s, %s") % [
-        system.autoheal ? "On" : "Off",
-        system.serviceLevel == '' ? "No Service Level Preference" : ("Service Level %s" % system.serviceLevel)
+        system.autoheal ? _("On") : _("Off"),
+        system.serviceLevel == '' ? _("No Service Level Preference") : (_("Service Level %s") % system.serviceLevel)
     ]
   end
 

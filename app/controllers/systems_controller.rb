@@ -176,11 +176,9 @@ class SystemsController < ApplicationController
   def subscriptions
     consumed_entitlements = @system.consumed_entitlements
     avail_pools = @system.available_pools_full !current_user.subscriptions_match_system_preference
-    facts = @system.facts.stringify_keys
-    sockets = facts['cpu.cpu_socket(s)']
     render :partial=>"subscriptions", :layout => "tupane_layout",
                                       :locals=>{:system=>@system, :avail_subs => avail_pools,
-                                                :consumed_entitlements => consumed_entitlements, :sockets=>sockets,
+                                                :consumed_entitlements => consumed_entitlements,
                                                 :editable=>@system.editable?}
   end
 
@@ -359,7 +357,8 @@ class SystemsController < ApplicationController
   def sys_consumed_pools
     consumed_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
                             :poolName => pool["productName"],
-                            :expires => format_time(Date.parse(pool["endDate"])),
+                            :startDate => format_time(Date.parse(pool["startDate"])),
+                            :endDate => format_time(Date.parse(pool["endDate"])),
                             :consumed => pool["consumed"],
                             :quantity => pool["quantity"])}
     consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
@@ -369,7 +368,8 @@ class SystemsController < ApplicationController
   def sys_available_pools
     avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
                             :poolName => pool["productName"],
-                            :expires => format_time(Date.parse(pool["endDate"])),
+                            :startDate => format_time(Date.parse(pool["startDate"])),
+                            :endDate => format_time(Date.parse(pool["endDate"])),
                             :consumed => pool["consumed"],
                             :quantity => pool["quantity"])}
     avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
