@@ -435,7 +435,7 @@ Src::Application.routes.draw do
         end
       end
 
-      resources :system_groups do
+      resources :system_groups, :except => [:new, :edit] do
         member do
           post :lock
           post :unlock
