@@ -16,8 +16,8 @@
           %th= _('Support Level')
           %th= _('Arch')
           %th= _('Machine Type')
-          %th= _('Begins')
-          %th= _('Expires')
+          %th= _('Start Date')
+          %th= _('End Date')
         %tbody
           - @subscriptions.each do |sub|
             - new_group = sub.product.object_id
