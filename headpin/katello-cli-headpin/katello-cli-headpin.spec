@@ -19,7 +19,7 @@ Summary:       Client package for managing a katello-headpin installation
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.15
+Version:       0.1.17
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -58,6 +58,16 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.17-1
+- Pull in the latest commands around LDAP Roles and Releases to the headpin cli
+- The headpin cli should deliver its own etc file
+- Merging headpin flags into master
+
+* Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com>
+- Pull in the latest commands around LDAP Roles and Releases to the headpin cli
+- The headpin cli should deliver its own etc file
+- Merging headpin flags into master
+
 * Wed Jan 25 2012 Bryan Kearney <bkearney@redhat.com> 0.1.15-1
 - 754856: Add shell history to the local .headpin directory instead of .katello
   (bkearney@redhat.com)
