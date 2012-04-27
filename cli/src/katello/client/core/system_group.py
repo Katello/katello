@@ -137,6 +137,37 @@ class Create(SystemGroupAction):
             return os.EX_DATAERR
 
 
+class Delete(SystemGroupAction):
+
+    description = _('delete a system group')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("activation key name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+    def run(self):
+        org_name = self.get_option('org')
+        name = self.get_option('name')
+
+        system_group = get_system_group(org_name, name)
+        if not system_group:
+            return os.EX_DATAERR
+
+        message = self.api.delete(org_name, system_group["id"])
+
+        if message != None:
+            print message
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
+
+
 class Systems(SystemGroupAction):
 
     description = _('display the systems in a system group within an organization')
