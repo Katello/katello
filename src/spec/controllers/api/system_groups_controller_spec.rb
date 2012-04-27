@@ -108,7 +108,7 @@ describe Api::SystemGroupsController do
          post :add_systems, :organization_id=>@org.id, :id=>@group.id,
               :system_group=>{:system_ids=>[@system.uuid]}
          response.should be_success
-         @group.systems.should include @system
+         @group.reload.systems.should include @system
 
        end
        it "should allow removal of systems" do

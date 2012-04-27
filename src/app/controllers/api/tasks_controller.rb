@@ -12,7 +12,7 @@
 
 class Api::TasksController < Api::ApiController
   respond_to :json
-  before_filter :find_organization
+  before_filter :find_organization, :only=>[:index]
   before_filter :find_task, :only => [:show]
 
   before_filter :authorize
