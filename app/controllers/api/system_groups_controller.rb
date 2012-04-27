@@ -12,7 +12,8 @@
 
 class Api::SystemGroupsController < Api::ApiController
 
-  before_filter :find_group, :only => [:show, :update]
+  before_filter :find_group, :only => [:show, :update, :destroy, :lock, :unlock,
+                                       :add_systems, :remove_systems]
   before_filter :find_organization, :only => [:index, :create]
   before_filter :authorize
 
@@ -20,20 +21,27 @@ class Api::SystemGroupsController < Api::ApiController
     read = lambda { true }
     edit = lambda{true}
     create = lambda{true}
+    locking = lambda{true}
     destroy = lambda{true}
     { :index        => read,
       :show         => read,
       :systems      => read,
       :create       => create,
       :update       => edit,
-      :destroy      => destroy
+      :destroy      => destroy,
+      :add_systems  => edit,
+      :remove_systems => edit,
+      :lock        => locking,
+      :unlock      => locking
     }
   end
 
   def param_rules
     {
       :create => {:system_group=>[:name, :description, :system_ids]},
-      :update =>  {:system_group=>[:name, :description, :system_ids]}
+      :update =>  {:system_group=>[:name, :description, :system_ids]},
+      :add_systems => {:system_group=>[:system_ids]},
+      :remove_systems => {:system_group=>[:system_ids]}
     }
   end
 
@@ -50,21 +58,53 @@ class Api::SystemGroupsController < Api::ApiController
   end
 
   def update
-    @group.attributes = params[:group].slice(:name, :description)
+    grp_param = params[:system_group]
+    if grp_param[:system_ids]
+      grp_param[:system_ids] = system_uuids_to_ids(grp_param[:system_ids])
+    end
+    @group.attributes = grp_param.slice(:name, :description, :system_ids)
     @group.save!
     render :json => @group
   end
 
   def systems
-    render :json => @group.systems.collect{|sys| {:id=>sys.id, :name=>sys.name}}
+    render :json => @group.systems.collect{|sys| {:id=>sys.uuid, :name=>sys.name}}
   end
 
+  def add_systems
+    ids = system_uuids_to_ids(params[:system_group][:system_ids])
+    @group.system_ids = (@group.system_ids + ids).uniq
+    @group.save!
+    systems
+  end
+
+  def remove_systems
+    ids = system_uuids_to_ids(params[:system_group][:system_ids])
+    @group.system_ids = (@group.system_ids - ids)
+    @group.save!
+    systems
+  end
+
+  def  lock
+    @group.locked = true
+    @group.save!
+    render :json => @group
+  end
+
+  def  unlock
+    @group.locked = false
+    @group.save!
+    render :json => @group
+  end
 
   def create
-    @group = SystemGroup.new(params[:system_group])
+    grp_param = params[:system_group]
+    if grp_param[:system_ids]
+      grp_param[:system_ids] = system_ids_to_uuids(grp_param[:system_ids])
+    end
+    @group = SystemGroup.new(grp_param)
     @group.organization = @organization
     @group.save!
-
     render :json => @group
   end
 
@@ -79,6 +119,10 @@ class Api::SystemGroupsController < Api::ApiController
   def find_group
     @group = SystemGroup.where(:id=>params[:id]).first
     raise HttpErrors::NotFound, _("Couldn't find system group '#{params[:id]}'") if @group.nil?
+  end
+
+  def system_uuids_to_ids  ids
+    System.where(:uuid=>ids).collect{|s| s.id}
   end
 
 end

@@ -436,11 +436,12 @@ Src::Application.routes.draw do
       end
 
       resources :system_groups do
-        collection do
-
-        end
         member do
+          post :lock
+          post :unlock
           get :systems
+          post :add_systems
+          post :remove_systems
         end
       end
 
