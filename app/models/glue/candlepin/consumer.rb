@@ -209,7 +209,7 @@ module Glue::Candlepin::Consumer
     end
 
     def ip
-      facts.keys().grep(/eth.*ipaddr/).collect { |k| facts[k]}.first
+      facts['network.ipv4_address']
     end
 
     def kernel
