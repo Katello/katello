@@ -291,11 +291,14 @@ module Glue::Candlepin::Consumer
       avail_pools = pools.collect {|pool|
         sockets = ""
         multiEntitlement = false
+        supportLevel = ""
         pool["productAttributes"].each do |attr|
-          if attr["name"] == "socket_limit"
+          if attr["name"] == "sockets"
             sockets = attr["value"]
           elsif attr["name"] == "multi-entitlement"
             multiEntitlement = true
+          elsif attr["name"] == "support_level"
+            supportLevel = attr["value"]
           end
         end
 
@@ -309,10 +312,12 @@ module Glue::Candlepin::Consumer
 
         OpenStruct.new(:poolId => pool["id"],
                        :poolName => pool["productName"],
-                       :expires => Date.parse(pool["endDate"]),
+                       :endDate => Date.parse(pool["endDate"]),
+                       :startDate => Date.parse(pool["startDate"]),
                        :consumed => pool["consumed"],
                        :quantity => pool["quantity"],
                        :sockets => sockets,
+                       :supportLevel => supportLevel,
                        :multiEntitlement => multiEntitlement,
                        :providedProducts => providedProducts)
       }
@@ -326,10 +331,12 @@ module Glue::Candlepin::Consumer
         pool = self.get_pool entitlement["pool"]["id"]
 
         sla = ""
+        sockets = ""
         pool["productAttributes"].each do |attr|
           if attr["name"] == "support_level"
             sla = attr["value"]
-            break
+          elsif attr["name"] == "sockets"
+            sockets = attr["value"]
           end
         end
 
@@ -353,10 +360,12 @@ module Glue::Candlepin::Consumer
         OpenStruct.new(:entitlementId => entitlement["id"],
                        :serials => serials,
                        :poolName => pool["productName"],
-                       :expires => Date.parse(pool["endDate"]),
                        :consumed => pool["consumed"],
                        :quantity => quantity,
                        :sla => sla,
+                       :sockets => sockets,
+                       :endDate => Date.parse(pool["endDate"]),
+                       :startDate => Date.parse(pool["startDate"]),
                        :contractNumber => pool["contractNumber"],
                        :providedProducts => providedProducts)
       }
