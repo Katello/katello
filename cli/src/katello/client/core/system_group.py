@@ -19,6 +19,7 @@ from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import Printer
 from katello.client.api.system_group import SystemGroupAPI
+from katello.client.api.utils import get_system_group
 
 
 Config()
@@ -53,14 +54,88 @@ class List(SystemGroupAction):
 
         system_groups = self.api.system_groups(org_name)
 
+        self.printer.setHeader(_("System Groups List For Org [ %s ]") % org_name)
+
         if system_groups is None:
             return os.EX_DATAERR
-
-        self.printer.setHeader(_("System Groups"))
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
 
         self.printer._grep = True
         self.printer.printItems(system_groups)
+        return os.EX_OK
+
+
+class Info(SystemGroupAction):
+
+    description = _('display a system group within an organization')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                       help=_("system group name (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        org_name = self.get_option('org')
+        system_group_name = self.get_option('name')
+        # info is always grep friendly
+
+        self.printer.setHeader(_("System Group Information For Org [ %s ]") % (org_name))
+
+        # get system details
+        system_group = get_system_group(org_name, system_group_name)
+
+        if not system_group:
+            return os.EX_DATAERR
+
+        self.printer.addColumn('id')
+        self.printer.addColumn('name')
+        self.printer.addColumn('description', multiline=True)
+        self.printer.addColumn('locked')
+
+        self.printer.printItem(system_group)
+
+        return os.EX_OK
+
+
+class Systems(SystemGroupAction):
+
+    description = _('display the systems in a system group within an organization')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                       help=_("system group name (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        org_name = self.get_option('org')
+        system_group_name = self.get_option('name')
+        # info is always grep friendly
+
+        # get system details
+        system_group = get_system_group(org_name, system_group_name)
+
+        if not system_group:
+            return os.EX_DATAERR
+
+        self.printer.setHeader(_("Systems within System Group [ %s ] For Org [ %s ]") % (org_name, system_group["name"]))
+
+        self.printer.addColumn('id')
+        self.printer.addColumn('name')
+        self.printer.addColumn('description', multiline=True)
+        self.printer.addColumn('locked')
+
+        self.printer.printItem(system_group)
+
         return os.EX_OK

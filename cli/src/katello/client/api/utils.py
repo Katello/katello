@@ -28,6 +28,7 @@ from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.api.filter import FilterAPI
+from katello.client.api.system_group import SystemGroupAPI
 
 def get_organization(orgName):
     organization_api = OrganizationAPI()
@@ -159,3 +160,11 @@ def get_filter(org_name, name):
     if filter == None:
         print _("Cannot find filter [ %s ]") % (name)
     return filter
+
+def get_system_group(org_name, system_group_name):
+    system_group_api = SystemGroupAPI()
+
+    system_group = system_group_api.system_group_by_name(org_name, system_group_name)
+    if system_group == None:
+        print >> sys.stderr, _("Could not find system group [ %s ] within organization [ %s ]") % (system_group_name, org_name)
+    return system_group
