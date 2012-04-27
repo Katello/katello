@@ -82,8 +82,8 @@ class Api::ApiController < ActionController::Base
 
 
   def find_organization
+    raise HttpErrors::NotFound, _("organization_id required but not specified.") if params[:organization_id].nil?
     find_optional_organization
-    raise HttpErrors::NotFound, _("organization_id required but not specified.") if @organization.nil?
   end
 
   def find_optional_organization
