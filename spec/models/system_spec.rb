@@ -13,6 +13,7 @@
 require 'spec_helper'
 require 'helpers/system_test_data'
 include OrchestrationHelper
+include SystemHelperMethods
 
 describe System do
 
@@ -284,6 +285,42 @@ s  end
       x = @system.available_releases
       @system.available_releases.should == @releases.sort
     end
+  end
+
+
+  describe "find system by a pool id" do
+    let(:pool_id_1) {"POOL_ID_123"}
+    let(:pool_id_2) {"POOL_ID_456"}
+    let(:pool_id_3) {"POOL_ID_789"}
+    let(:common_attrs) {
+      {:environment => @environment,
+       :cp_type => cp_type,
+       :facts => facts}
+    }
+
+    before :each do
+
+      @system_1 = create_system(common_attrs.merge(:name => "sys_1", :uuid => "sys_1_uuid"))
+      @system_2 = create_system(common_attrs.merge(:name => "sys_2", :uuid => "sys_2_uuid"))
+      @system_3 = create_system(common_attrs.merge(:name => "sys_3", :uuid => "sys_3_uuid"))
+
+      Candlepin::Entitlement.stub(:get).and_return([
+        {"pool" => {"id" => pool_id_1}, "consumer" => {"uuid" => @system_1.uuid}},
+        {"pool" => {"id" => pool_id_1}, "consumer" => {"uuid" => @system_2.uuid}},
+        {"pool" => {"id" => pool_id_2}, "consumer" => {"uuid" => @system_2.uuid}},
+        {"pool" => {"id" => pool_id_2}, "consumer" => {"uuid" => @system_3.uuid}}
+      ])
+    end
+
+    it "should find all systems that are subscribed to the pool" do
+      pool_uuids = System.all_by_pool(pool_id_1).map{ |sys| sys.uuid}
+      pool_uuids.should == [@system_1.uuid, @system_2.uuid]
+    end
+
+    it "should return empty array if the system isn't subscribed to that pool" do
+      System.all_by_pool(pool_id_3).should == []
+    end
+
   end
 
   describe "host-guest relation" do

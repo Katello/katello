@@ -117,15 +117,11 @@ class Api::SystemsController < Api::ApiController
   def index
     # expected parameters
     expected_params = params.slice('name')
-    error_msg = "No systems found" if expected_params.empty?
-    error_msg = "Couldn't find system '#{expected_params[:name]}'" unless expected_params.empty?
-    unless @environment.nil?
-      systems = @environment.systems.readable(@organization).where(expected_params)
-      raise HttpErrors::NotFound, _(error_msg + " in environment '#{@environment.name}'") if systems.empty?
-    else
-      systems = @organization.systems.readable(@organization).where(expected_params)
-      raise HttpErrors::NotFound, _(error_msg + " in organization '#{@organization.name}'") if systems.empty?
-    end
+
+    systems = (@environment.nil?) ? @organization.systems : @environment.systems
+    systems = systems.all_by_pool(params['pool_id']) if params['pool_id']
+    systems = systems.readable(@organization).where(expected_params)
+
     render :json => systems.to_json
   end
 
@@ -314,7 +310,7 @@ class Api::SystemsController < Api::ApiController
     if @environment
       @organization = @environment.organization
     else
-      raise _("You have not set a default organization and environment on the user #{current_user.username}.")
+      raise HttpErrors::NotFound, _("You have not set a default organization and environment on the user #{current_user.username}.")
     end
   end
 
