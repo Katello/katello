@@ -113,7 +113,8 @@ Src::Application.routes.draw do
       get :more_products
       get :facts
       get :system_groups
-      put :update_system_groups
+      put :add_system_groups
+      put :remove_system_groups
     end
     collection do
       get :auto_complete
