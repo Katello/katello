@@ -5,6 +5,7 @@ require 'optparse'
 
 KATELLO_UPGRADE_DIR = ENV['KATELLO_UPGRADE_DIR'] || '/usr/share/katello/install/upgrade-scripts/'
 HISTORY_FILE_PATH = ENV['KATELLO_UPGRADE_HISTORY'] || '/var/lib/katello/upgrade-history'
+DEFAULT_LOG_FILE = '/var/log/katello/katello_upgrade.log'
 DEFAULT_SCRIPTS_DIR = 'default/'
 UPGRADE_SCRIPTS_DIR = 'upgrade/'
 
@@ -19,7 +20,7 @@ ERROR_CODES = {
 }
 
 BACKEND_SERVICES = ['katello', 'katello-jobs', 'tomcat6', 'pulp-server', 'thumbslug']
-
+STDOUT_NAME = "stdout"
 
 # Terminate script with error code from ERROR_CODES hash
 def exit_with(code = :unknown)
@@ -305,7 +306,7 @@ class UpgradeProcess
   end
 
   def process_script(script, info)
-    if system(script)
+    if execute_script(script)
       puts
       puts info[:name]+" OK."
       puts
@@ -316,6 +317,30 @@ class UpgradeProcess
       puts
       return false
     end
+  end
+
+  def execute_script script
+    command = script
+    command += ' &>>'+ log_file if log_file != STDOUT_NAME
+
+    log_start(script) if log_file != STDOUT_NAME
+    result = system(command)
+    log_result(result) if log_file != STDOUT_NAME
+
+    return result
+  end
+
+  def log_start script
+    system('printf "\n[$(date)] '+ script +'\n" >> '+ log_file)
+  end
+
+  def log_result success
+    system('printf "SUCCEEDED\n" >> '+ log_file) if success
+    system('printf "FAILED\n" >> '+ log_file) if not success
+  end
+
+  def log_file
+    return @options[:log_file] || DEFAULT_LOG_FILE
   end
 
   def get_script_info(script)
@@ -350,6 +375,10 @@ def parse_options
 
     option_parser.on_tail.on('-s', '--skip-default', 'Skips the default upgrade steps') do
       opts[:skip_default] = true
+    end
+
+    option_parser.on_tail.on('--log=LOG_FILE', 'Log file, can also be set to stdout') do |value|
+      opts[:log_file] = value
     end
 
     option_parser.on_tail.on('-h', '--help', 'Show this short summary') do
