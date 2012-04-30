@@ -18,7 +18,7 @@ KT.panel.set_expand_cb(function(){
         KT.menu.hoverMenu(item, { top : '75px' });
     });
 
-    $(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false});
+    KT.system_groups_pane.register_autocomplete();
 });
 
 KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:", "...Any System Fact"]);
@@ -55,12 +55,13 @@ KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distributio
 
 $(document).ready(function() {
 
-  KT.panel.set_expand_cb(function() {
-    KT.subs.initialize_edit();
-  });
+    KT.panel.set_expand_cb(function() {
+        KT.subs.initialize_edit();
+    });
 
-  KT.systems_page.registerActions();
-  KT.systems_page.system_group_setup();
+    KT.systems_page.registerActions();
+    KT.systems_page.system_group_setup();
+    KT.system_groups_pane.register_events();
 
     // These run after the subscribe/unsubscribe forms have been submitted to update
     // the left hand list entry (which reflects the subscribed status of the system).
@@ -526,5 +527,98 @@ KT.subs = function() {
         reset_env_select: reset_env_select,
         autohealSetup: autohealSetup,
         matchsystemSetup: matchsystemSetup
+    }
+}();
+
+KT.system_groups_pane = function() {
+    var current_input = undefined,
+        system_groups = $("#system_groups"),
+
+    add_groups = function(names, item_id, cleanup_cb){
+        var input = $("#system_group_pane_input");
+
+        disable_inputs();
+
+        $.ajax({
+            type: "PUT",
+            url: input.data("url"),
+            data: {groups:names},
+            cache: false,
+            success: function(data) {
+                // The response will include a block of html representing the list of groups successfully added.
+                // Add that response to the top of the table.
+                $("tr#empty_row").hide();
+                $("tr#add_groups").after(data);
+                cleanup_cb();
+                enable_inputs();
+            },
+            error: function() {
+                cleanup_cb();
+                enable_inputs();
+            }
+        });
+    },
+    remove_groups = function() {
+        var btn = $("#remove_groups"),
+            groups = [],
+            checked = $("input.group_select:checked");
+
+        checked.each(function(index, item){
+            groups.push($(item).val());
+        });
+        if (groups.length === 0){
+            return;
+        }
+        disable_inputs();
+
+        $.ajax({
+            type: "PUT",
+            url: btn.data("url"),
+            data: {group_ids:groups},
+            cache: false,
+            success: function(data) {
+                checked.parents("tr").remove();
+                if ($("input.group_select").length === 0) {
+                    $("tr#empty_row").show();
+                }
+                enable_inputs();
+            },
+            error: function() {
+                cleanup_cb();
+                enable_inputs();
+            }
+        });
+    },
+    disable_inputs = function(){
+        $("input#system_group_pane_input").attr("disabled", true);
+        $("input#add_groups").attr("disabled", true);
+        $("input#remove_groups").attr("disabled", true);
+        $("input.group_select").attr("disabled", true);
+    },
+    enable_inputs = function(){
+        $("input#system_group_pane_input").removeAttr("disabled");
+        $("input#add_groups").removeAttr("disabled");
+        $("input#remove_groups").removeAttr("disabled");
+        $("input.group_select").removeAttr("disabled");
+    },
+    register_autocomplete = function() {
+        current_input = KT.auto_complete_box({
+            values:       KT.routes.auto_complete_system_groups_path(),
+            comma_separated_input: true,
+            default_text: i18n.system_group_search_input,
+            input_id:     "system_group_pane_input",
+            form_id:      "add_group_form",
+            add_btn_id:   "add_group",
+            add_cb:       KT.system_groups_pane.add_groups
+        });
+    },
+    register_events = function() {
+        $("#remove_groups").live('click', remove_groups);
+    };
+    return {
+        add_groups: add_groups,
+        remove_groups: remove_groups,
+        register_events: register_events,
+        register_autocomplete: register_autocomplete
     }
 }();
