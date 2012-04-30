@@ -1,0 +1,7 @@
+- system_groups.each do |system_group|
+  %tr
+    %td
+      -if @system.editable?
+        %input.group_select{:type=>"checkbox", :id=>system_group.name, :name=>system_group.name, :value=>system_group.id}
+      %label{:for=>system_group.name}
+        = system_group.name

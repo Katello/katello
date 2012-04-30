@@ -70,7 +70,8 @@ class SystemsController < ApplicationController
       :bulk_content_remove => bulk_edit_systems,
       :bulk_errata_install => bulk_edit_systems,
       :system_groups => read_system,
-      :update_system_groups => edit_system
+      :add_system_groups => edit_system,
+      :remove_system_groups => edit_system
     }
   end
 
@@ -520,20 +521,38 @@ class SystemsController < ApplicationController
   end
 
   def system_groups
-    @system_groups = SystemGroup.where(:organization_id => current_organization)
-    render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:system_groups=>@system_groups,
-                                                                            :editable=>@system.editable?}
+    @system_groups = @system.system_groups.sort_by{|s| s.name}
+    render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>@system.editable?}
   end
 
-  def update_system_groups
-    params[:system] = {"system_group_ids"=>[]} unless params.has_key? :system
+  def add_system_groups
+    # TODO: need to address the scenario where user provides a system group that does not exist...
 
-    if @system.update_attributes(params[:system])
+    # for each group in the list... look up the group... and add it to the system
+    unless params[:groups].blank?
+      # retrieve the system groups to be added
+      add_groups = SystemGroup.where(:organization_id => current_organization, :name => params[:groups].uniq)
+      # narrow the list to only those the system doesn't already have assigned to it
+      new_groups = (add_groups - @system.system_groups)
+      @system.system_group_ids = (@system.system_group_ids + add_groups.collect{|g| g.id})
+      @system.save!
       notice _("System '%s' was updated.") % @system["name"]
-      render :nothing => true and return
+      render :partial =>'system_group_items', :locals=>{:system_groups=>new_groups.sort_by{|g| g.name}} and return
     end
-    notice "", {:level => :error, :list_items => @system.errors.to_a}
-    render :text => @system.errors, :status=>:ok
+  rescue Exception => e
+    notice e, {:level => :error}
+    render :text=>e, :status=>500
+  end
+
+  def remove_system_groups
+    system_groups = SystemGroup.where(:organization_id=>current_organization, :id=>params[:group_ids]).collect{|s| s.id}
+    @system.system_group_ids = (@system.system_group_ids - system_groups).uniq
+    @system.save!
+    notice _("System '%s' was updated.") % @system["name"]
+    render :nothing => true
+  rescue Exception => e
+    notice e, {:level => :error}
+    render :text=>e, :status=>500
   end
 
   private
