@@ -208,7 +208,7 @@ class Delete(SystemGroupAction):
 
 class Systems(SystemGroupAction):
 
-    description = _('display the systems in a system group within an organization')
+    description = _('display the systems in a system group')
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
@@ -245,7 +245,7 @@ class Systems(SystemGroupAction):
 
 class Lock(SystemGroupAction):
 
-    description = _('lock down a system group')
+    description = _('lock a system group')
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
@@ -306,3 +306,40 @@ class Unlock(SystemGroupAction):
             return os.EX_OK
         else:
             return os.EX_DATAERR
+
+
+class AddSystems(SystemGroupAction):
+
+    description = _('add systems to a system group')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("system group name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--system_ids', dest='system_ids',
+                              help=_("list of system uuids (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+        self.require_option('system_ids')
+
+    def run(self):
+        org_name = self.get_option('org')
+        name = self.get_option('name')
+        system_ids = self.get_option('system_ids')
+
+        system_group = get_system_group(org_name, name)
+
+        if system_group is None:
+            return os.EX_DATAERR
+
+        systems = self.api.add_systems(org_name, system_group["id"], system_ids)
+
+        if systems!= None:
+            print _("Successfully added systems to system group [ %s ]") % system_group['name']
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
+

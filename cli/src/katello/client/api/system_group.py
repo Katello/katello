@@ -71,3 +71,13 @@ class SystemGroupAPI(KatelloAPI):
     def delete(self, org_id, system_group_id):
         path = "/api/organizations/%s/system_groups/%s" % (u_str(org_id), u_str(system_group_id))
         return self.server.DELETE(path)[1]
+
+    def add_systems(self, org_id, system_group_id, system_ids):
+        data = { 
+            "system_group" : {
+                "system_ids": system_ids,
+            }
+        }
+
+        path = "/api/organizations/%s/system_groups/%s/add_systems" % (org_id, system_group_id)
+        return self.server.POST(path, data)[1]
