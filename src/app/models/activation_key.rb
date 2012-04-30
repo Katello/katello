@@ -32,6 +32,7 @@ class ActivationKey < ActiveRecord::Base
 
   scope :readable, lambda {|org| ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")}
 
+  after_find :validate_pools
 
   validates :name, :presence => true, :katello_name_format => true, :length => { :maximum => 255 }
   validates_uniqueness_of :name, :scope => :organization_id
@@ -191,4 +192,24 @@ class ActivationKey < ActiveRecord::Base
     to_ret
   end
 
+  private
+
+  def validate_pools
+    obsolete_pools = []
+    self.pools.each { |pool|
+      begin
+        # This will hit candlepin; if it fails that means the
+        # pool is no longer accessible.
+        pool.productName
+        next
+      rescue
+        obsolete_pools << pool
+      end
+    }
+    updated_pools = self.pools - obsolete_pools
+    if self.pools != updated_pools
+      self.pools = updated_pools
+      self.save!
+    end
+  end
 end
