@@ -45,8 +45,12 @@ find -name '*.pp' | xargs -n 1 -t puppet --parseonly
 #check for puppet erb syntax errors
 find modules/ -name \*erb | xargs aux/check_erb
 
+#build katello-configure man page
 THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/; s/\s+CLI_OPTIONS/$C/; s/^CLI_OPTIONS_LONG/$X/; print; next } ($t, $l, $v, $d) = /^#\s*(.+?\n)(.+\n)?(\S+)\s*=\s*(.*?)\n+$/s; $l =~ s/^#\s*//gm; $l = $t if not $l; ($o = $v) =~ s/_/-/g; $x .= qq/=item --$o=<\U$v\E>\n\n$l\nThe default value is "$d".\n\n/; $C .= "\n        [ --$o=<\U$v\E> ]"; $X = $x if eof' default-answer-file man/katello-configure.pod \
 	| /usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} - man/katello-configure.man1
+
+#build katello-upgrade man page
+sed -e 's/THE_VERSION/%version/g' man/katello-upgrade.pod | /usr/bin/pod2man --name=katello-upgrade -c "Katello Reference" --section=1 --release=%{version} - man/katello-upgrade.man1
 
 
 %install
@@ -64,6 +68,7 @@ install -m 0644 default-answer-file %{buildroot}%{homedir}
 install -m 0644 options-format-file %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/katello-configure.man1 %{buildroot}%{_mandir}/man1/katello-configure.1
+install -m 0644 man/katello-upgrade.man1 %{buildroot}%{_mandir}/man1/katello-upgrade.1
 install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts
 cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
@@ -81,6 +86,7 @@ rm -rf %{buildroot}
 %files upgrade
 %{homedir}/upgrade-scripts
 %{_sbindir}/katello-upgrade
+%{_mandir}/man1/katello-upgrade.1*
 
 %changelog
 * Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.19-1
