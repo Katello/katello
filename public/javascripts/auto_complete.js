@@ -15,6 +15,7 @@ KT.auto_complete_box = function(params) {
     var settings = {
         values: undefined, //either a url, an array, or a callback of items for auto_completion
         default_text: undefined, //default text to go into the search box if desired
+        comma_separated_input: false,
         input_id: undefined,
         selected_input_id: undefined,
         form_id: undefined,
@@ -46,6 +47,10 @@ KT.auto_complete_box = function(params) {
         input.autocomplete('disable');
         input.autocomplete('close');
 
+        if (settings.comma_separated_input) {
+            // convert the item string to an array
+            item = split(item);
+        }
         settings.add_cb(item, item_id, function(){
             add_success_cleanup();
             if (focus) {
@@ -70,6 +75,12 @@ KT.auto_complete_box = function(params) {
     error = function() {
         var input = $("#" + settings.input_id);
         input.addClass("input_error");
+    },
+    split = function(val) {
+        return val.split(/,\s*/);
+    },
+    extractLast = function(term) {
+        return split(term).pop();
     };
 
     //initialization
@@ -90,18 +101,50 @@ KT.auto_complete_box = function(params) {
             }
         });
     }
-    
-    input.autocomplete({
-        source: settings.values,
-        search: function(){
-            $("#" + settings.selected_input_id).val('');
-        },
-        select: function (event, ui) {
-            $("#" + settings.input_id).val(ui.item.value);
-            $("#" + settings.selected_input_id).val(ui.item.id);
-            return false;
-        }
-    });
+
+    if (!settings.comma_separated_input) {
+        input.autocomplete({
+            source: settings.values,
+            search: function(){
+                $("#" + settings.selected_input_id).val('');
+            },
+            select: function (event, ui) {
+                $("#" + settings.input_id).val(ui.item.value);
+                $("#" + settings.selected_input_id).val(ui.item.id);
+                return false;
+            }
+        });
+    } else {
+        input.autocomplete({
+            source: function(request, response) {
+                $.getJSON( settings.values, {
+                    term: extractLast(request.term)
+                }, response);
+            },
+            search: function () {
+                // custom minLength
+                var term = extractLast(this.value);
+                if (term.length < 1) {
+                    return false;
+                }
+            },
+            focus: function () {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function (event, ui) {
+                var terms = split(this.value);
+                // remove the current input
+                terms.pop();
+                // add the selected item
+                terms.push(ui.item.value);
+                // add placeholder to get the comma-and-space at the end
+                terms.push("");
+                this.value = terms.join(", ");
+                return false;
+            }
+        });
+    }
 
     add_btn.bind('click', add_item_from_input);
     form.submit(add_item_from_input);
