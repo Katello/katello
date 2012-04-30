@@ -1,0 +1,63 @@
+=head1 NAME
+
+katello-upgrade - Katello upgrade tool
+
+=head1 SYNOPSIS
+
+    katello-upgrade
+        [ -h | --help ]
+        [ -d | --dry-run ]
+        [ -s | --skip-defaults ]
+        [ --log=<LOG_FILE> ]
+
+=head1 DESCRIPTION
+
+The B<katello-upgrade> program will upgrade a previously installed version
+of katello to the latest version. It guides a user through the upgrade proces
+allowing him to interrupt it after each upgrade step.
+Upgrade steps are divided into a separate scripts. There are two types of them:
+
+=over 2
+
+=item default scripts - they are executed every time
+
+=item upgrade scripts - executed only once
+
+=back
+
+The default scripts can be skipped with the flag -s or --skip-default.
+
+=head1 COMMAND LINE PARAMETERS
+
+=over 4
+
+=item --assumeyes, -y
+
+Answer yes to all prompts.
+
+=item --dry-run, -d
+
+Print the upgrade steps without doing anything.
+
+=item --skip-default, -s
+
+Skips the default upgrade steps.
+
+=item --log=<LOG_FILE>
+
+Log file for the script output. Defaults to /var/log/katello/katello_upgrade.log.
+Set to 'stdout' to print the output directly on the console.
+
+=item --help, -h
+
+Display short summary of all options.
+
+=back
+
+=head1 VERSION
+
+THE_VERSION
+
+=head1 SEE ALSO
+
+katello(8), katello(1)
