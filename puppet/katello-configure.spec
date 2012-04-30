@@ -48,23 +48,6 @@ find modules/ -name \*erb | xargs aux/check_erb
 THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/; s/\s+CLI_OPTIONS/$C/; s/^CLI_OPTIONS_LONG/$X/; print; next } ($t, $l, $v, $d) = /^#\s*(.+?\n)(.+\n)?(\S+)\s*=\s*(.*?)\n+$/s; $l =~ s/^#\s*//gm; $l = $t if not $l; ($o = $v) =~ s/_/-/g; $x .= qq/=item --$o=<\U$v\E>\n\n$l\nThe default value is "$d".\n\n/; $C .= "\n        [ --$o=<\U$v\E> ]"; $X = $x if eof' default-answer-file man/katello-configure.pod \
 	| /usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} - man/katello-configure.man1
 
-#create directories for sorting upgrade scripts
-for d in $(find upgrade-scripts/* -type d); do
-  mkdir -p katello-$d
-  mkdir -p headpin-$d
-done
-
-#sort the upgrade scripts
-for f in $(find upgrade-scripts/ -type f); do
-  apply=$(cat $f | egrep -e "[ ]*#[ ]*apply:")
-  if echo $apply | grep -q -e "katello"; then
-    cp $f katello-$f
-  fi
-  if echo $apply | grep -q -e "headpin"; then
-    cp $f headpin-$f
-  fi
-done
-rm -r upgrade-scripts/
 
 %install
 rm -rf %{buildroot}
@@ -82,7 +65,7 @@ install -m 0644 options-format-file %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/katello-configure.man1 %{buildroot}%{_mandir}/man1/katello-configure.1
 install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts
-cp -Rp katello-upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
+cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
 %clean
 rm -rf %{buildroot}
