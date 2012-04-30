@@ -5,6 +5,7 @@ require 'optparse'
 
 KATELLO_UPGRADE_DIR = ENV['KATELLO_UPGRADE_DIR'] || '/usr/share/katello/install/upgrade-scripts/'
 HISTORY_FILE_PATH = ENV['KATELLO_UPGRADE_HISTORY'] || '/var/lib/katello/upgrade-history'
+DEFAULT_LOG_FILE = '/var/log/katello/katello_upgrade.log'
 DEFAULT_SCRIPTS_DIR = 'default/'
 UPGRADE_SCRIPTS_DIR = 'upgrade/'
 
@@ -19,12 +20,16 @@ ERROR_CODES = {
 }
 
 BACKEND_SERVICES = ['katello', 'katello-jobs', 'tomcat6', 'pulp-server', 'thumbslug']
-
+STDOUT_NAME = "stdout"
 
 # Terminate script with error code from ERROR_CODES hash
 def exit_with(code = :unknown)
   code = ERROR_CODES[code.to_sym] || ERROR_CODES[:unknown]
   exit code
+end
+
+def are_we_headpin?
+  return system('grep "deployment = \\(headpin\\|sam\\)" /etc/katello/katello-configure.conf >/dev/null')
 end
 
 # Indent each line of text with spacing
@@ -106,10 +111,14 @@ end
 class UpgradeQueue
 
   # Load scripts form a directory
-  # Takes path to a directory with upgrade scripts and an upgrade history instance
-  def load(script_dir, history)
+  # Takes path to a directory with upgrade scripts, an upgrade history instance
+  # and an instance of script parser.
+  # The queue finds all scripts applicable to current deployment that have not been
+  # executed yet.
+  def load(script_dir, history, script_parser)
     @history = history
     @script_dir = script_dir
+    @script_parser = script_parser
     @scripts = nil
   end
 
@@ -117,7 +126,7 @@ class UpgradeQueue
   def get_scripts
     return [] if not @history or not @script_dir
 
-    @scripts ||= find_upgrade_scripts(@script_dir, @history.get_last_script)
+    @scripts ||= upgrade_scripts(@script_dir, @history.get_last_script)
     @scripts
   end
 
@@ -139,12 +148,27 @@ class UpgradeQueue
 
   protected
 
+  def upgrade_scripts(dir_path, starting_from = nil)
+    script_infos = find_upgrade_scripts(dir_path, starting_from).map do |path|
+      @script_parser.get_info(path)
+    end
+
+    return filter_scripts_for("headpin", script_infos) if are_we_headpin?
+    return filter_scripts_for("katello", script_infos) unless are_we_headpin?
+  end
+
+  def filter_scripts_for(deployment, script_infos)
+    script_infos.delete_if do |script|
+      not script[:apply].include? deployment
+    end
+  end
+
   def find_upgrade_scripts(path, starting_from = nil)
     scripts = Dir.glob(path+'*').sort
     if not starting_from.nil?
       scripts = scripts.delete_if {|script| (script <= path+starting_from)}
     end
-    scripts
+    return scripts
   end
 
 end
@@ -159,7 +183,10 @@ class ScriptParser
   def get_info(script_path)
     @info = {}
     parse_script_file script_path
+    @info[:name] ||= ""
+    @info[:apply] ||= []
     @info[:filename] = File.basename(script_path)
+    @info[:path] = script_path
     @info
   end
 
@@ -178,6 +205,11 @@ class ScriptParser
 
     if line =~ /#\s*name:\s*(.*)\s*$/
       @info[:name] = $1
+      @in_desc = false
+
+    elsif line =~ /#\s*apply:\s*(.*)$/
+      @info[:apply] = $1.strip.split(/\s/)
+      @in_desc = false
 
     elsif /#\s*description:\s*(.*)\s*$/.match line
       @info[:description] = $1
@@ -217,10 +249,9 @@ class UpgradeProcess
     fake_history    = DevNullHistory.new
     upgrade_history = UpgradeHistory.new(HISTORY_FILE_PATH)
     @default_queue = UpgradeQueue.new
-    @default_queue.load(KATELLO_UPGRADE_DIR+DEFAULT_SCRIPTS_DIR, fake_history) if not @options[:skip_default]
+    @default_queue.load(KATELLO_UPGRADE_DIR+DEFAULT_SCRIPTS_DIR, fake_history, ScriptParser.new) if not @options[:skip_default]
     @upgrade_queue = UpgradeQueue.new
-    @upgrade_queue.load(KATELLO_UPGRADE_DIR+UPGRADE_SCRIPTS_DIR, upgrade_history)
-    @script_parser = ScriptParser.new
+    @upgrade_queue.load(KATELLO_UPGRADE_DIR+UPGRADE_SCRIPTS_DIR, upgrade_history, ScriptParser.new)
 
     print_header
 
@@ -289,39 +320,56 @@ class UpgradeProcess
 
   def process_queue(queue)
     @current_step ||= 1
-    queue.process do |script, history|
-      info = get_script_info(script)
-      print_step_info(info)
+    queue.process do |script_info, history|
+      print_step_info(script_info)
 
       if not @options[:dry_run]
         break if not @options[:assume_yes] and not confirm("Do you want to proceed?")
-        break if not process_script(script, info)
+        break if not process_script(script_info)
 
-        history.add_script script
+        history.add_script script_info[:path]
       end
 
       @current_step+=1
     end
   end
 
-  def process_script(script, info)
-    if system(script)
+  def process_script(script_info)
+    if execute_script(script_info[:path])
       puts
-      puts info[:name]+" OK."
+      puts script_info[:name]+" OK."
       puts
       return true
     else
       puts
-      puts info[:name]+" FAILED."
+      puts script_info[:name]+" FAILED."
       puts
       return false
     end
   end
 
-  def get_script_info(script)
-    info = @script_parser.get_info(script)
-    info[:name] ||= ""
-    info
+  def execute_script script
+    command = script
+    command += ' &>>'+ log_file if log_file != STDOUT_NAME
+
+    log_start(script) if log_file != STDOUT_NAME
+    result = system(command)
+    log_result(result) if log_file != STDOUT_NAME
+
+    return result
+  end
+
+  def log_start script
+    system('printf "\n[$(date)] '+ script +'\n" >> '+ log_file)
+  end
+
+  def log_result success
+    system('printf "SUCCEEDED\n" >> '+ log_file) if success
+    system('printf "FAILED\n" >> '+ log_file) if not success
+  end
+
+  def log_file
+    return @options[:log_file] || DEFAULT_LOG_FILE
   end
 
 end
@@ -350,6 +398,10 @@ def parse_options
 
     option_parser.on_tail.on('-s', '--skip-default', 'Skips the default upgrade steps') do
       opts[:skip_default] = true
+    end
+
+    option_parser.on_tail.on('--log=LOG_FILE', 'Log file, can also be set to stdout') do |value|
+      opts[:log_file] = value
     end
 
     option_parser.on_tail.on('-h', '--help', 'Show this short summary') do
