@@ -97,6 +97,7 @@ module ApplicationHelper
              :name => options[:name],
              :create => options[:create],
              :enable_create => enable_create,
+             :create_label => options[:create_label] || nil,
              :enable_sort => enable_sort,
              :columns => options[:col],
              :titles => options[:titles],

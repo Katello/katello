@@ -233,6 +233,7 @@ class OrganizationsController < ApplicationController
                :col => ['name'],
                :titles => [_('Name')],
                :create => _('Organization'),
+               :create_label => _('+ New Organization'),
                :name => controller_display_name,
                :accessor => :cp_key,
                :ajax_load  => true,
