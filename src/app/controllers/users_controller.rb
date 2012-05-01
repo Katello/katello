@@ -328,6 +328,7 @@ class UsersController < ApplicationController
                        :col           => ['username'],
                        :titles        => [_('Username')],
                        :create        => _('User'),
+                       :create_label => _('+ New User'),
                        :name          => controller_display_name,
                        :ajax_load     => true,
                        :ajax_scroll   => items_users_path(),

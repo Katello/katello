@@ -237,6 +237,7 @@ class FiltersController < ApplicationController
         :col => ['name'],
         :titles => [_('Name')],
         :create => _('Filter'),
+        :create_label => _('+ New Filter'),
         :name => controller_display_name,
         :ajax_scroll=>items_filters_path(),
         :enable_create=> Filter.creatable?(current_organization),
