@@ -196,16 +196,15 @@ class ActivationKey < ActiveRecord::Base
 
   def validate_pools
     obsolete_pools = []
-    self.pools.each { |pool|
+    self.pools.each do |pool|
       begin
         # This will hit candlepin; if it fails that means the
         # pool is no longer accessible.
         pool.productName
-        next
       rescue
         obsolete_pools << pool
       end
-    }
+    end
     updated_pools = self.pools - obsolete_pools
     if self.pools != updated_pools
       self.pools = updated_pools
