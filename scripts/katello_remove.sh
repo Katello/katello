@@ -1,4 +1,4 @@
-service mongod stop; service pulp-server stop; service tomcat6 stop; service katello stop; service katello-jobs stop;
+service mongod stop; service pulp-server stop; service tomcat6 stop; service katello stop; service katello-jobs stop; service elasticsearch stop
 kill -9 `ps -aef | grep katello | grep -v grep | awk '{print $2}'`
 kill -9 `ps -aef | grep delayed_job | grep -v grep | awk '{print $2}'`
 
