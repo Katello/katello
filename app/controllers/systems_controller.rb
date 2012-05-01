@@ -344,6 +344,7 @@ class SystemsController < ApplicationController
       :custom_rows => true,
       :enable_create => AppConfig.katello? && System.registerable?(@environment, current_organization),
       :create => _("System"),
+      :create_label => _('+ New System'),
       :enable_sort => true,
       :name => controller_display_name,
       :list_partial => 'systems/list_systems',
