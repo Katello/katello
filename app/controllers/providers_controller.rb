@@ -260,6 +260,7 @@ class ProvidersController < ApplicationController
              :col => ['name'],
              :titles => [_('Name')],
              :create => _('Provider'),
+             :create_label => _('+ New Provider'),
              :name => controller_display_name,
              :ajax_load => true,
              :ajax_scroll=>items_providers_path(),

@@ -38,6 +38,7 @@ class SyncSchedulesController < ApplicationController
                  :col => ['name', 'plan_name'],
                  :col_titles => [_('Name'), _('Plan Name')],
                  :create => _('Plan'),
+                 :create_label => _('+ New Plan'),
                  :name => _('product'),
                  :enable_create => false}
 
@@ -45,6 +46,7 @@ class SyncSchedulesController < ApplicationController
                  :col => ['name', 'interval'],
                  :col_titles => [_('Name'), _('Interval')],
                  :create => _('Plan'),
+                 :create_label => _('+ New Plan'),
                  :name => _('plan'),
                  :hover_text_cb => :hover_format,
                  :enable_create => false,
