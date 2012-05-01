@@ -76,6 +76,35 @@ class SystemGroup < ActiveRecord::Base
     true
   end
 
+  def self.list_tags org_id
+    SystemGroup.select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+  end
+
+  def self.tags(ids)
+    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+  end
+
+  def self.list_verbs  global = false
+    {
+       :create => _("Administer System Groups"),
+       :read => _("Read System Group"),
+       :update => _("Modify System Group details and system membership"),
+       :delete => _("Delete System Group"),
+       :locking => _("Lock/Unlock System Group"),
+       :read_systems => _("Read Systems in System Group"),
+       :update_systems => _("Modify Systems in System Group"),
+    }.with_indifferent_access
+  end
+
+  def self.read_verbs
+    [:read]
+  end
+
+  def self.no_tag_verbs
+    [:create]
+  end
+
+
   def extended_index_attrs
     {:name_sort=>name.downcase, :name_autocomplete=>self.name,
      :system=>self.systems.collect{|s| s.name}
