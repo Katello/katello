@@ -93,6 +93,7 @@ class ResourceType < ActiveRecord::Base
       :environments => {:model => KTEnvironment, :name => _("Environments"), :global=>false},
       :activation_keys => { :model => ActivationKey, :name => _("Activation Keys"), :global=>false},
       :providers => { :model => Provider, :name => _("Providers"), :global=>false},
+      :system_group => {:model => SystemGroup, :name=>_("System Groups"), :global=>false},
       :filters => { :model => Filter, :name => _("Filters"), :global => false},
       :users => { :model => User, :name => _("Users"), :global=>true},
       :roles => { :model => Role, :name => _("Roles"), :global=>true},
