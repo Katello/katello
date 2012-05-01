@@ -13,13 +13,6 @@ class candlepin::config {
     require => [ File["${katello::params::log_base}"] ],
   }
 
-  # cpsetup drops our db, safe to keep it here until this gets fixed in cpsetup
-  postgres::createdb {$candlepin::params::db_name:
-    owner   => $candlepin::params::db_user,
-    logfile  => "${katello::params::log_base}/katello-configure/create-postgresql-candlepin-database.log",
-    require => [ File["${katello::params::log_base}"], Postgres::Createuser[$candlepin::params::db_user] ],
-  }
-
   file { "/etc/candlepin/candlepin.conf":
     content => template("candlepin/etc/candlepin/candlepin.conf.erb"),
     require => Exec["cpsetup"],
@@ -38,7 +31,8 @@ class candlepin::config {
      command => "/usr/share/candlepin/cpsetup >> ${candlepin::params::cpsetup_log} 2>&1",
      timeout => 300, # 5 minutes timeout (cpsetup can be really slow sometimes)
      require => [
-       Postgres::Createdb[$candlepin::params::db_name],
+       File["${katello::params::log_base}"],
+       Postgres::Createuser[$candlepin::params::db_user],
        Class["certs::config"]
      ],
      creates => "/etc/tomcat6/server.xml.original", # another hack not to run it again
