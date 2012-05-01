@@ -88,6 +88,7 @@ class RolesController < ApplicationController
                  :col => ['name'],
                  :titles => [_('Name')],
                  :create => _('Role'),
+                 :create_label => _('+ New Role'),
                  :name => controller_display_name,
                  :ajax_load  => true,
                  :list_partial => 'roles/list_roles',
