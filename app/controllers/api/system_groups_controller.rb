@@ -18,21 +18,22 @@ class Api::SystemGroupsController < Api::ApiController
   before_filter :authorize
 
   def rules
-    read = lambda { true }
-    edit = lambda{true}
-    create = lambda{true}
-    locking = lambda{true}
-    destroy = lambda{true}
-    { :index        => read,
-      :show         => read,
-      :systems      => read,
-      :create       => create,
-      :update       => edit,
-      :destroy      => destroy,
-      :add_systems  => edit,
-      :remove_systems => edit,
-      :lock        => locking,
-      :unlock      => locking
+    any_readable = lambda{@organization && SystemGroup.any_readable?(@organization)}
+    read_perm = lambda{@group.readable?}
+    edit_perm = lambda{@group.editable?}
+    create_perm = lambda{SystemGroup.creatable?(@organization)}
+    destroy_perm = lambda{@group.deletable?}
+    locking_perm = lambda{@group.locking?}
+    { :index        => any_readable,
+      :show         => read_perm,
+      :systems      => read_perm,
+      :create       => create_perm,
+      :update       => edit_perm,
+      :destroy      => destroy_perm,
+      :add_systems  => edit_perm,
+      :remove_systems => edit_perm,
+      :lock        => locking_perm,
+      :unlock      => locking_perm
     }
   end
 
