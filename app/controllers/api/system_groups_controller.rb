@@ -76,14 +76,14 @@ class Api::SystemGroupsController < Api::ApiController
     ids = system_uuids_to_ids(params[:system_group][:system_ids])
     @group.system_ids = (@group.system_ids + ids).uniq
     @group.save!
-    render :json => @group.systems
+    systems
   end
 
   def remove_systems
     ids = system_uuids_to_ids(params[:system_group][:system_ids])
     @group.system_ids = (@group.system_ids - ids)
     @group.save!
-    render :json => @group.systems
+    systems
   end
 
   def  lock
