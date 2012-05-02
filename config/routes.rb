@@ -361,6 +361,8 @@ Src::Application.routes.draw do
         get :pools
         get :releases
         put :enabled_repos
+        post :system_groups, :action => :add_system_groups
+        delete :system_groups, :action => :remove_system_groups
       end
       collection do
         match "/tasks/:id" => "systems#task_show", :via => :get
