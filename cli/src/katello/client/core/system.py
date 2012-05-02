@@ -258,7 +258,6 @@ class TasksList(SystemAction):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
-        verbose = self.get_option('verbose')
 
         self.printer.set_header(_("Remote tasks"))
 
@@ -268,20 +267,13 @@ class TasksList(SystemAction):
         for t in tasks:
             t['result'] = "\n" + t['result_description']
 
-        #TODO: change to new style printer
-        if verbose:
-            self.printer.add_column('uuid', name=_("Task id"))
-            self.printer.add_column('system_name', name=_("System"))
-            self.printer.add_column('description', name=_("Action"))
-            self.printer.add_column('created_at', name=_("Started"), formatter=format_date)
-            self.printer.add_column('finish_time', name=_("Finished"), formatter=format_date)
-            self.printer.add_column('state', name=_("Status"))
-            self.printer.add_column('result', name=_("Result"))
-        else:
-            self.printer.add_column('uuid', name=_("Task id"))
-            self.printer.add_column('system_name', name=_("System"))
-            self.printer.add_column('description', name=_("Action"))
-            self.printer.add_column('state', name=_("Status"))
+        self.printer.add_column('uuid', name=_("Task id"))
+        self.printer.add_column('system_name', name=_("System"))
+        self.printer.add_column('description', name=_("Action"))
+        self.printer.add_column('created_at', name=_("Started"), formatter=format_date, show_with=printer.VerboseStrategy)
+        self.printer.add_column('finish_time', name=_("Finished"), formatter=format_date, show_with=printer.VerboseStrategy)
+        self.printer.add_column('state', name=_("Status"))
+        self.printer.add_column('result', name=_("Result"), show_with=printer.VerboseStrategy)
 
         self.printer.print_items(tasks)
 

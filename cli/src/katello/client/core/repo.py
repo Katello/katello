@@ -104,8 +104,6 @@ class SingleRepoAction(RepoAction):
         else:
             repo = get_repo(orgName, prodName, repoName, envName, includeDisabled)
 
-        if repo == None:
-            system_exit(os.EX_DATAERR)
         return repo
 
 
