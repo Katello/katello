@@ -20,7 +20,7 @@ from gettext import gettext as _
 
 from katello.client.api.system import SystemAPI
 from katello.client.api.task_status import SystemTaskStatusAPI
-from katello.client.api.utils import get_environment
+from katello.client.api.utils import get_environment, get_system
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, convert_to_mime_type, attachment_file_name, save_report
@@ -28,7 +28,6 @@ from katello.client.utils.printer import Printer, VerboseStrategy
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_date
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
-from pprint import pprint
 from katello.client.server import ServerRequestError
 
 Config()
@@ -108,27 +107,22 @@ class Info(SystemAction):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
-        # info is always grep friendly
 
         if env_name is None:
             self.printer.set_header(_("System Information For Org [ %s ]") % org_name)
-            systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
             self.printer.set_header(_("System Information For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
-            environment = get_environment(org_name, env_name)
-            systems = self.api.systems_by_env(org_name, environment["id"], {'name': sys_name})
-
-        if not systems:
-            return os.EX_DATAERR
 
         # get system details
-        system = self.api.system(systems[0]['uuid'])
+        system = get_system(org_name, sys_name, env_name)
+        if not system:
+            return os.EX_DATAERR
 
         for akey in system['activation_key']:
             system["activation_keys"] = "[ "+ ", ".join([akey["name"] for pool in akey["pools"]]) +" ]"
-        if system.has_key('host'):
+        if 'host' in system:
             system['host'] = system['host']['name']
-        if system.has_key('guests'):
+        if 'guests' in system:
             system["guests"] = "[ "+ ", ".join([guest["name"] for guest in system["guests"]]) +" ]"
 
         self.printer.add_column('name')
@@ -138,15 +132,14 @@ class Info(SystemAction):
         self.printer.add_column('created_at', 'Registered', formatter=format_date)
         self.printer.add_column('updated_at', 'Last updated', formatter=format_date)
         self.printer.add_column('description', multiline=True)
-        if system.has_key('releaseVer') and system['releaseVer']:
+        if 'releaseVer' in system and system['releaseVer']:
              self.printer.add_column('releaseVer', 'OS release')
         self.printer.add_column('activation_keys', multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('host', show_with=printer.VerboseStrategy)
         self.printer.add_column('serviceLevel', _('Service Level'))
-        self.printer.add_column('guests',  show_with=printer.VerboseStrategy)
+        self.printer.add_column('guests', show_with=printer.VerboseStrategy)
         if system.has_key("template"):
-            t = system["template"]["name"]
-            self.printer.add_column('template', show_with=printer.VerboseStrategy, value=t)
+            self.printer.add_column('template', show_with=printer.VerboseStrategy, value=system["template"]["name"])
 
         self.printer.print_item(system)
 
@@ -199,18 +192,13 @@ class InstalledPackages(SystemAction):
 
         if env_name is None:
             self.printer.set_header(_("Package Information for System [ %s ] in Org [ %s ]") % (sys_name, org_name))
-            systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
             self.printer.set_header(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") % (sys_name, env_name, org_name))
-            environment = get_environment(org_name, env_name)
-            if environemnt is None:
-                return os.EX_DATAERR
-            systems = self.api.systems_by_env(org_name, environment["id"], {'name': sys_name})
 
-        if not systems:
+        system = get_system(org_name, sys_name, env_name)
+        if not system:
             return os.EX_DATAERR
-
-        system_id = systems[0]['uuid']
+        system_id = system['uuid']
 
         if install:
             task = self.api.install_packages(system_id, install.split(packages_separator))
@@ -360,7 +348,9 @@ class Releases(SystemAction):
         sys_name = self.get_option('name')
 
         if sys_name:
-            system = self.api.systems_by_org(org_name, {'name': sys_name})[0]
+            system = get_system(org_name, sys_name)
+            if not system:
+                return os.EX_DATAERR
             releases = self.api.releases_for_system(system["uuid"])["releases"]
         else:
             environment = get_environment(org_name, env_name)
@@ -394,23 +384,16 @@ class Facts(SystemAction):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
-        # info is always grep friendly
 
         if env_name is None:
             self.printer.set_header(_("System Facts For System [ %s ] in Org [ %s ]") % (sys_name, org_name))
-            systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
             self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") % (sys_name, env_name, org_name))
-            environment = get_environment(org_name, env_name)
-            if environemnt is None:
-                return os.EX_DATAERR
-            systems = self.api.systems_by_env(org_name, environment["id"], {'name': sys_name})
 
-        if not systems:
+        system = get_system(org_name, sys_name, env_name)
+        if not system:
             return os.EX_DATAERR
-
-        # get system details
-        system = self.api.system(systems[0]['uuid'])
+        system_id = system['uuid']
 
         facts_hash = system['facts']
         facts_tuples_sorted = [(k, facts_hash[k]) for k in sorted(facts_hash.keys())]
@@ -493,35 +476,19 @@ class Unregister(SystemAction):
         org = self.get_option('org')
         env_name = self.get_option('environment')
         try:
-            if env_name:
-                environment = get_environment(org_name, env_name)
-                if environemnt is None:
-                    return os.EX_DATAERR
-                systems = self.api.systems_by_env(org, environment["id"], {'name': name})
-            else:
-                systems = self.api.systems_by_org(org, {'name': name})
+            system = get_system(org, name, env_name)
+            if not system:
+                return os.EX_DATAERR
+
         except ServerRequestError, e:
             if e[0] == 404:
-                systems = None
+                return os.EX_DATAERR
             else:
                 raise e
 
-        if systems == None:
-            if env_name is None:
-                print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
-            else:
-                print >> sys.stderr, _("Could not find System [ %s ] in Environment [ %s ] in Org [ %s ]") % (name, env_name, org)
-            return os.EX_DATAERR
-        elif len(systems) != 1:
-            if env_name is None:
-                print >> sys.stderr, _("Found ambiguous Systems [ %s ] in Org [ %s ], use --environment") % (name, org)
-            else:
-                print >> sys.stderr, _("Found ambiguous Systems [ %s ] in Environment [ %s ] in Org [ %s ]") % (name, env_name, org)
-            return os.EX_DATAERR
-        else:
-            self.api.unregister(systems[0]['uuid'])
-            print _("Successfully unregistered System [ %s ]") % name
-            return os.EX_OK
+        self.api.unregister(system['uuid'])
+        print _("Successfully unregistered System [ %s ]") % name
+        return os.EX_OK
 
 class Subscribe(SystemAction):
 
@@ -547,14 +514,14 @@ class Subscribe(SystemAction):
         org = self.get_option('org')
         pool = self.get_option('pool')
         qty = self.get_option('quantity') or 1
-        systems = self.api.systems_by_org(org, {'name': name})
-        if systems == None or len(systems) != 1:
-            print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
+
+        system = get_system(org, name)
+        if not system:
             return os.EX_DATAERR
-        else:
-            self.api.subscribe(systems[0]['uuid'], pool, qty)
-            print _("Successfully subscribed System [ %s ]") % name
-            return os.EX_OK
+
+        self.api.subscribe(system['uuid'], pool, qty)
+        print _("Successfully subscribed System [ %s ]") % name
+        return os.EX_OK
 
 class Subscriptions(SystemAction):
 
@@ -576,67 +543,65 @@ class Subscriptions(SystemAction):
         org = self.get_option('org')
         available = self.get_option('available')
 
-        systems = self.api.systems_by_org(org, {'name': name})
-
-        if systems == None or len(systems) != 1:
-            print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
+        system = get_system(org, name)
+        if not system:
             return os.EX_DATAERR
+
+        self.printer.set_strategy(VerboseStrategy())
+        if not available:
+            # listing current subscriptions
+            result = self.api.subscriptions(system['uuid'])
+            if result == None or len(result['entitlements']) == 0:
+                print _("No Subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
+                return os.EX_OK
+
+            def entitlements():
+                for entitlement in result['entitlements']:
+                    entitlement_ext = entitlement.copy()
+                    provided_products = ', '.join([e['name'] for e in entitlement_ext['providedProducts']])
+                    entitlement_ext['providedProductsFormatted'] = provided_products
+                    serial_ids = ', '.join([u_str(s['id']) for s in entitlement_ext['serials']])
+                    entitlement_ext['serialIds'] = serial_ids
+                    yield entitlement_ext
+
+            self.printer.set_header(_("Current Subscriptions for System [ %s ]") % name)
+            self.printer.add_column('entitlementId')
+            self.printer.add_column('serialIds', name=_('Serial Id'))
+            self.printer.add_column('poolName')
+            self.printer.add_column('expires')
+            self.printer.add_column('consumed')
+            self.printer.add_column('quantity')
+            self.printer.add_column('sla')
+            self.printer.add_column('contractNumber')
+            self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
+            self.printer.print_items(entitlements())
         else:
-            self.printer.set_strategy(VerboseStrategy())
-            if not available:
-                # listing current subscriptions
-                result = self.api.subscriptions(systems[0]['uuid'])
-                if result == None or len(result['entitlements']) == 0:
-                    print _("No Subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
-                    return os.EX_OK
+            # listing available pools
+            result = self.api.available_pools(system['uuid'])
 
-                def entitlements():
-                    for entitlement in result['entitlements']:
-                        entitlement_ext = entitlement.copy()
-                        provided_products = ', '.join([e['name'] for e in entitlement_ext['providedProducts']])
-                        entitlement_ext['providedProductsFormatted'] = provided_products
-                        serial_ids = ', '.join([u_str(s['id']) for s in entitlement_ext['serials']])
-                        entitlement_ext['serialIds'] = serial_ids
-                        yield entitlement_ext
+            if result == None or len(result) == 0:
+                print _("No Pools found for System [ %s ] in Org [ %s ]") % (name, org)
+                return os.EX_OK
 
-                self.printer.set_header(_("Current Subscriptions for System [ %s ]") % name)
-                self.printer.add_column('entitlementId')
-                self.printer.add_column('serialIds', name=_('Serial Id'))
-                self.printer.add_column('poolName')
-                self.printer.add_column('expires')
-                self.printer.add_column('consumed')
-                self.printer.add_column('quantity')
-                self.printer.add_column('sla')
-                self.printer.add_column('contractNumber')
-                self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
-                self.printer.print_items(entitlements())
-            else:
-                # listing available pools
-                result = self.api.available_pools(systems[0]['uuid'])
+            def available_pools():
+                for pool in result['pools']:
+                    pool_ext = pool.copy()
+                    provided_products = ', '.join([p['name'] for p in pool_ext['providedProducts']])
+                    pool_ext['providedProductsFormatted'] = provided_products
+                    yield pool_ext
 
-                if result == None or len(result) == 0:
-                    print _("No Pools found for System [ %s ] in Org [ %s ]") % (name, org)
-                    return os.EX_OK
+            self.printer.set_header(_("Available Subscriptions for System [ %s ]") % name)
+            self.printer.add_column('poolId')
+            self.printer.add_column('poolName')
+            self.printer.add_column('expires')
+            self.printer.add_column('consumed')
+            self.printer.add_column('quantity')
+            self.printer.add_column('sockets')
+            self.printer.add_column('multiEntitlement')
+            self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
+            self.printer.print_items(available_pools())
 
-                def available_pools():
-                    for pool in result['pools']:
-                        pool_ext = pool.copy()
-                        provided_products = ', '.join([p['name'] for p in pool_ext['providedProducts']])
-                        pool_ext['providedProductsFormatted'] = provided_products
-                        yield pool_ext
-
-                self.printer.set_header(_("Available Subscriptions for System [ %s ]") % name)
-                self.printer.add_column('poolId')
-                self.printer.add_column('poolName')
-                self.printer.add_column('expires')
-                self.printer.add_column('consumed')
-                self.printer.add_column('quantity')
-                self.printer.add_column('sockets')
-                self.printer.add_column('multiEntitlement')
-                self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
-                self.printer.print_items(available_pools())
-
-            return os.EX_OK
+        return os.EX_OK
 
 class Unsubscribe(SystemAction):
 
@@ -665,20 +630,20 @@ class Unsubscribe(SystemAction):
         entitlement = self.get_option('entitlement')
         serial = self.get_option('serial')
         all_entitlements = self.get_option('all')
-        systems = self.api.systems_by_org(org, {'name': name})
-        if systems == None or len(systems) != 1:
-            print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
-            return os.EX_DATAERR
-        else:
-            if all_entitlements: #unsubscribe from all
-                self.api.unsubscribe_all(systems[0]['uuid'])
-            elif serial: # unsubscribe from cert
-                self.api.unsubscribe_by_serial(systems[0]['uuid'], serial)
-            elif entitlement: # unsubscribe from entitlement
-                self.api.unsubscribe(systems[0]['uuid'], entitlement)
-            print _("Successfully unsubscribed System [ %s ]") % name
 
-            return os.EX_OK
+        system = get_system(org_name, sys_name, env_name)
+        if not system:
+            return os.EX_DATAERR
+
+        if all_entitlements: #unsubscribe from all
+            self.api.unsubscribe_all(system['uuid'])
+        elif serial: # unsubscribe from cert
+            self.api.unsubscribe_by_serial(system['uuid'], serial)
+        elif entitlement: # unsubscribe from entitlement
+            self.api.unsubscribe(system['uuid'], entitlement)
+        print _("Successfully unsubscribed System [ %s ]") % name
+
+        return os.EX_OK
 
 class Update(SystemAction):
 
@@ -717,18 +682,11 @@ class Update(SystemAction):
         new_release = self.get_option('release')
         new_sla = self.get_option('sla')
 
-        if env_name is None:
-            systems = self.api.systems_by_org(org_name, {'name': sys_name})
-        else:
-            environemnt = get_environment(org_name, env_name)
-            if environemnt is None:
-                return os.EX_DATAERR
-            systems = self.api.systems_by_env(org_name, environemnt["id"], {'name': sys_name})
-
-        if not systems:
+        system = get_system(org_name, sys_name, env_name)
+        if not system:
             return os.EX_DATAERR
+        system_uuid = system['uuid']
 
-        system_uuid = systems[0]['uuid']
         updates = {}
         if new_name: updates['name'] = new_name
         if new_description: updates['description'] = new_description

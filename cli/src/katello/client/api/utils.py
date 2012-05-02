@@ -28,7 +28,7 @@ from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.api.filter import FilterAPI
-#from katello.client.api.system import SystemAPI
+from katello.client.api.system import SystemAPI
 
 def get_organization(orgName):
     organization_api = OrganizationAPI()
@@ -161,10 +161,29 @@ def get_filter(org_name, name):
         print >> sys.stderr, _("Cannot find filter [ %s ]") % (name)
     return filter
 
-def get_system(org_name, name):
+def get_system(org_name, sys_name, env_name=None):
     system_api = SystemAPI()
-    systems = self.api.systems_by_org(org, {'name': name})
-    if systems is None or len(systems) != 1:
-        print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org_name)
-        return None
-    return systems[0]
+    if env_name is None:
+        systems = system_api.systems_by_org(org_name, {'name': sys_name})
+        if systems is None:
+            print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (sys_name, org_name)
+            return None
+        elif len(systems) != 1:
+            print >> sys.stderr, _("Found ambiguous Systems [ %s ] in Environment [ %s ] in Org [ %s ]") % (name, env_name, org)
+            return None
+
+    else:
+        environment = get_environment(org_name, env_name)
+        if environemnt is None:
+            return None
+        systems = system_api.systems_by_env(org_name, environment["id"], {'name': sys_name})
+        if systems is None:
+            print >> sys.stderr, _("Could not find System [ %s ] in Environment [ %s ] in Org [ %s ]") % (sys_name, env_name, org_name)
+            return None
+        elif len(systems) != 1:
+            print >> sys.stderr, _("Found ambiguous Systems [ %s ] in Org [ %s ], you have to specify the environment") % (name, org)
+            return None
+
+    return system_api.system(systems[0]['uuid'])
+
+
