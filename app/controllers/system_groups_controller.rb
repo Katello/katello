@@ -20,7 +20,7 @@ class SystemGroupsController < ApplicationController
     any_readable = lambda{current_organization && SystemGroup.any_readable?(current_organization)}
     read_perm = lambda{@group.readable?}
     edit_perm = lambda{@group.editable?}
-    create_perm = lambda{SystemGroup.creatable?}
+    create_perm = lambda{SystemGroup.creatable?(current_organization)}
     destroy_perm = lambda{@group.deletable?}
     {
         :index=>any_readable,
