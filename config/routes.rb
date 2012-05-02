@@ -463,7 +463,12 @@ Src::Application.routes.draw do
         end
       end
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
-      resources :activation_keys, :only => [:index]
+      resources :activation_keys, :only => [:index] do
+        member do
+          post :system_groups, :action => :add_system_groups
+          delete :system_groups, :action => :remove_system_groups
+        end
+      end
       resources :repositories, :only => [] do
         post :discovery, :on => :collection
       end
