@@ -27,8 +27,9 @@ class candlepin::config {
   }
 
   # this does not really work if you use a password
+   require certs::params
    exec {"cpsetup":
-     command => "/usr/share/candlepin/cpsetup >> ${candlepin::params::cpsetup_log} 2>&1",
+     command => "/usr/share/candlepin/cpsetup -k ${certs::params::keystore_password} >> ${candlepin::params::cpsetup_log} 2>&1",
      timeout => 300, # 5 minutes timeout (cpsetup can be really slow sometimes)
      require => [
        File["${katello::params::log_base}"],
@@ -37,14 +38,6 @@ class candlepin::config {
      ],
      creates => "/etc/tomcat6/server.xml.original", # another hack not to run it again
      #creates => "/etc/candlepin/certs/candlepin-ca.crt", # another hack not to run it again
-     before  => Class["apache2::service"],               # another hack, as we reuse cp certs by default
-     notify => Exec["update_keystore_pass_in_server_xml"]
-   }
-
-   require certs::params
-   exec {"update_keystore_pass_in_server_xml":
-    command => "perl -i -0777 -pe 's#(<Connector.*?port=\"8443\".*?keystorePass=\")password(\".*?truststorePass=\")password(\".*?\\/>)#\${1}${certs::params::keystore_password}\${2}${certs::params::keystore_password}\${3}#msg\' /etc/tomcat6/server.xml",
-    require => Exec["cpsetup"],
-    path => "/usr/bin",
+     before  => Class["apache2::service"]               # another hack, as we reuse cp certs by default
    }
 }
