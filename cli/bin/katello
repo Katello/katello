@@ -38,6 +38,7 @@ from katello.client.core import (
   user_role,
   provider,
   ping,
+  version,
   product,
   repo,
   packagegroup,
@@ -113,6 +114,7 @@ def setup_admin(admin):
     admin.add_command('permission', permission_cmd)
 
     admin.add_command('ping', ping.Status())
+    admin.add_command('version', version.Info())
 
     prod_cmd = product.Product()
     prod_cmd.add_action('create', product.Create())

@@ -21,4 +21,8 @@ class Api::PingController < Api::ApiController
   def status
     render :json => {:version => "katello/#{AppConfig.katello_version}", :result => true}
   end
+
+  def version
+    render :json => {:name => AppConfig.app_name, :version => AppConfig.katello_version}
+  end
 end

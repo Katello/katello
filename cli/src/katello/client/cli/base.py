@@ -23,6 +23,7 @@ from katello.client.i18n_optparse import OptionParser, OptionParserExitError
 from katello.client.core.utils import parse_tokens
 from katello.client.utils.encoding import u_str
 
+from katello.client.api.version import VersionAPI
 from katello.client.config import Config
 from katello.client.logutil import getLogger
 from katello.client import server
@@ -114,6 +115,8 @@ class KatelloCLI(object):
         self.parser = OptionParser()
         self.parser.disable_interspersed_args()
         self.parser.set_usage(self.usage)
+        self.parser.add_option("-v", "--version", action="store_true", default=False,
+                                    dest="version",  help=_('prints version information'))
         credentials = OptionGroup(self.parser, _('Katello User Account Credentials'))
         credentials.add_option('-u', '--username', dest='username',
                                default=None, help=_('account username'))
@@ -209,6 +212,13 @@ class KatelloCLI(object):
         try:
             self.setup_parser()
             self.opts, args = self.parser.parse_args(args)
+            
+            if self.opts.version:
+                self.setup_server()
+                self.setup_credentials()
+                api = VersionAPI()
+                print api.version_formatted()
+                return
 
             if not args:
                 self.parser.error(_('No command given; please see --help'))
@@ -220,10 +230,10 @@ class KatelloCLI(object):
             command_args = args[1:]
             command.process_options(command_args)
             self.setup_server()
-
             action = command.extract_action(command_args)
             if not action or action.require_credentials():
                 self.setup_credentials()
+
             return command.main(command_args)
 
         except OptionParserExitError, opee:
