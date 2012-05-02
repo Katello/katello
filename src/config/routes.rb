@@ -551,7 +551,7 @@ Src::Application.routes.draw do
     resources :tasks, :only => [:show]
 
     match "/status"  => "ping#status", :via => :get
-
+    match "/version"  => "ping#version", :via => :get 
     # some paths conflicts with rhsm
     scope 'katello' do
 
