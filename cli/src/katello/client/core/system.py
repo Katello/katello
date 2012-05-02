@@ -20,6 +20,7 @@ from gettext import gettext as _
 
 from katello.client.api.system import SystemAPI
 from katello.client.api.task_status import SystemTaskStatusAPI
+from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_environment
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
@@ -733,6 +734,97 @@ class Report(SystemAction):
             print report[0]
 
         return os.EX_OK
+
+
+class AddSystemGroups(SystemAction):
+
+    description = _('add system groups to a system')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("system group name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--system_groups', dest='system_group_names',
+                              help=_("list of system groups (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+        self.require_option('system_group_names')
+
+    def run(self):
+        org_name = self.get_option('org')
+        name = self.get_option('name')
+        system_group_names = self.get_option('system_group_names')
+
+        system = self.api.systems_by_org(org_name, {'name': name})
+
+        if system is None:
+            return os.EX_DATAERR
+        else:
+            system = system[0]
+
+        system_groups = SystemGroupAPI().system_groups(org_name, { 'name' : system_group_names})
+
+        if system_groups is None:
+            return os.EX_DATAERR
+
+        system_group_ids = [group["id"] for group in system_groups]
+        
+        system = self.api.add_system_groups(system["uuid"], system_group_ids)
+
+        if system != None:
+            print _("Successfully added system groups to system [ %s ]") % system['name']
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
+
+
+class RemoveSystemGroups(SystemAction):
+
+    description = _('remove system groups to a system')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("system group name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--system_groups', dest='system_group_names',
+                              help=_("list of system groups (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+        self.require_option('system_group_names')
+
+    def run(self):
+        org_name = self.get_option('org')
+        name = self.get_option('name')
+        system_group_names = self.get_option('system_group_names')
+
+        system = self.api.systems_by_org(org_name, {'name': name})
+
+        if system is None:
+            return os.EX_DATAERR
+        else:
+            system = system[0]
+
+        system_groups = SystemGroupAPI().system_groups(org_name, { 'name' : system_group_names})
+
+        if system_groups is None:
+            return os.EX_DATAERR
+
+        system_group_ids = [group["id"] for group in system_groups]
+        
+        system = self.api.remove_system_groups(system["uuid"], system_group_ids)
+
+        if system != None:
+            print _("Successfully removed system groups from system [ %s ]") % system['name']
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
+
 
 
 class System(Command):

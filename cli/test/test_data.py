@@ -982,3 +982,65 @@ SYSTEM_GROUPS = [
         "organization_id" : 1
     }
 ]
+
+SYSTEMS = [
+  {
+    "guests": [
+
+    ],
+    "created_at": "2012-04-26T20:00:38Z",
+    "serviceLevel": "",
+    "name": "FakeSystem345",
+    "description": "Initial Registration Params",
+    "location": "None",
+    "updated_at": "2012-04-26T20:00:38Z",
+    "id": 1,
+    "environment": {
+      "created_at": "2012-04-20T14:01:22Z",
+      "name": "Dev",
+      "description": "",
+      "updated_at": "2012-04-20T14:01:22Z",
+      "prior_id": 1,
+      "organization": "ACME_Corporation",
+      "id": 5,
+      "library": False,
+      "organization_id": 1,
+      "prior": "Library"
+    },
+    "uuid": "d49f6d91-0bb3-43f0-9881-dc051fa818c7",
+    "activation_key": [
+
+    ],
+    "environment_id": 5,
+    "system_template_id": None
+  },
+  {
+    "guests": [
+    ],
+    "created_at": "2012-04-30T19:05:14Z",
+    "serviceLevel": "",
+    "name": "Winterfell",
+    "description": "Initial Registration Params",
+    "location": "None",
+    "updated_at": "2012-04-30T19:05:14Z",
+    "id": 2,
+    "environment": {
+      "created_at": "2012-04-20T14:01:22Z",
+      "name": "Dev",
+      "description": "",
+      "updated_at": "2012-04-20T14:01:22Z",
+      "prior_id": 1,
+      "organization": "ACME_Corporation",
+      "id": 5,
+      "library": False,
+      "organization_id": 1,
+      "prior": "Library"
+    },
+    "uuid": "92eb02a6-0d33-4f89-885c-55aebedaf0e1",
+    "activation_key": [
+
+    ],
+    "environment_id": 5,
+    "system_template_id": None
+  }
+]                                
