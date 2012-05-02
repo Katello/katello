@@ -72,8 +72,6 @@ class List(SystemAction):
         pool_id = self.get_option('pool_id')
 
         systems = self.get_systems(org_name, env_name, pool_id)
-        if systems is None:
-            return os.EX_DATAERR
 
         if env_name is None:
             self.printer.set_header(_("Systems List For Org [ %s ]") % org_name)
@@ -115,8 +113,6 @@ class Info(SystemAction):
 
         # get system details
         system = get_system(org_name, sys_name, env_name)
-        if not system:
-            return os.EX_DATAERR
 
         for akey in system['activation_key']:
             system["activation_keys"] = "[ "+ ", ".join([akey["name"] for pool in akey["pools"]]) +" ]"
@@ -196,8 +192,6 @@ class InstalledPackages(SystemAction):
             self.printer.set_header(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") % (sys_name, env_name, org_name))
 
         system = get_system(org_name, sys_name, env_name)
-        if not system:
-            return os.EX_DATAERR
         system_id = system['uuid']
 
         if install:
@@ -269,10 +263,7 @@ class TasksList(SystemAction):
         self.printer.set_header(_("Remote tasks"))
 
         environment = get_environment(org_name, env_name)
-        if environment is None:
-            return os.EX_DATAERR
         tasks = self.api.tasks(org_name, environment["id"], sys_name)
-
 
         for t in tasks:
             t['result'] = "\n" + t['result_description']
@@ -349,8 +340,6 @@ class Releases(SystemAction):
 
         if sys_name:
             system = get_system(org_name, sys_name)
-            if not system:
-                return os.EX_DATAERR
             releases = self.api.releases_for_system(system["uuid"])["releases"]
         else:
             environment = get_environment(org_name, env_name)
@@ -391,8 +380,6 @@ class Facts(SystemAction):
             self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") % (sys_name, env_name, org_name))
 
         system = get_system(org_name, sys_name, env_name)
-        if not system:
-            return os.EX_DATAERR
         system_id = system['uuid']
 
         facts_hash = system['facts']
@@ -445,8 +432,6 @@ class Register(SystemAction):
         facts = dict(self.get_option('fact') or {})
 
         environment = get_environment(org, environment_name)
-        if environment is None:
-            return os.EX_DATAERR
         system = self.api.register(name, org, environment['id'], activation_keys, 'system', release, sla, facts=facts)
 
         if is_valid_record(system):
@@ -477,8 +462,6 @@ class Unregister(SystemAction):
         env_name = self.get_option('environment')
         try:
             system = get_system(org, name, env_name)
-            if not system:
-                return os.EX_DATAERR
 
         except ServerRequestError, e:
             if e[0] == 404:
@@ -516,8 +499,6 @@ class Subscribe(SystemAction):
         qty = self.get_option('quantity') or 1
 
         system = get_system(org, name)
-        if not system:
-            return os.EX_DATAERR
 
         self.api.subscribe(system['uuid'], pool, qty)
         print _("Successfully subscribed System [ %s ]") % name
@@ -544,8 +525,6 @@ class Subscriptions(SystemAction):
         available = self.get_option('available')
 
         system = get_system(org, name)
-        if not system:
-            return os.EX_DATAERR
 
         self.printer.set_strategy(VerboseStrategy())
         if not available:
@@ -631,9 +610,7 @@ class Unsubscribe(SystemAction):
         serial = self.get_option('serial')
         all_entitlements = self.get_option('all')
 
-        system = get_system(org_name, sys_name, env_name)
-        if not system:
-            return os.EX_DATAERR
+        system = get_system(org, name)
 
         if all_entitlements: #unsubscribe from all
             self.api.unsubscribe_all(system['uuid'])
@@ -683,8 +660,6 @@ class Update(SystemAction):
         new_sla = self.get_option('sla')
 
         system = get_system(org_name, sys_name, env_name)
-        if not system:
-            return os.EX_DATAERR
         system_uuid = system['uuid']
 
         updates = {}
@@ -727,10 +702,7 @@ class Report(SystemAction):
             report = self.api.report_by_org(orgId, convert_to_mime_type(format, 'text'))
         else:
             environment = get_environment(orgId, envName)
-            if environment is None:
-                return os.EX_DATAERR
             report = self.api.report_by_env(environment['id'], convert_to_mime_type(format, 'text'))
-
 
         if format == 'pdf':
             save_report(report[0], attachment_file_name(report[1], 'katello_systems_report.pdf'))

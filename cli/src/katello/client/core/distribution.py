@@ -71,10 +71,7 @@ class List(DistributionAction):
 
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
-            if repo == None:
-                return os.EX_DATAERR
             repoId = repo["id"]
-
 
         self.printer.set_header(_("Distribution List For Repo %s") % repoId)
 

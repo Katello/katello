@@ -107,8 +107,6 @@ class Create(PermissionAction):
         tag_ids = self.tags_to_ids(tags, org_name, scope)
 
         role = get_role(role_name)
-        if role == None:
-            return os.EX_DATAERR
 
         permission = self.api.create(role['id'], name, desc, scope, verbs, tag_ids, org_name)
         if is_valid_record(permission):
@@ -136,11 +134,7 @@ class Delete(PermissionAction):
         name = self.get_option('name')
 
         role = get_role(role_name)
-        if role == None:
-            return os.EX_DATAERR
         perm = get_permission(role_name, name)
-        if perm == None:
-            return os.EX_DATAERR
 
         self.api.delete(role['id'], perm['id'])
         print _("Successfully deleted permission [ %s ] for role [ %s ]") % (name, role_name)
@@ -167,8 +161,6 @@ class List(PermissionAction):
         role_name = self.get_option('user_role')
 
         role = get_role(role_name)
-        if role == None:
-            return os.EX_DATAERR
 
         permissions = self.api.permissions(role['id'])
 

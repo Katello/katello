@@ -94,19 +94,18 @@ class Info(SingleProviderAction):
         orgName  = self.get_option('org')
 
         prov = get_provider(orgName, provName)
-        if prov != None:
-            self.printer.add_column('id')
-            self.printer.add_column('name')
-            self.printer.add_column('provider_type', 'Type')
-            self.printer.add_column('repository_url', 'Url')
-            self.printer.add_column('organization_id', 'Org Id')
-            self.printer.add_column('description', multiline=True)
 
-            self.printer.set_header(_("Provider Information"))
-            self.printer.print_item(prov)
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('provider_type', 'Type')
+        self.printer.add_column('repository_url', 'Url')
+        self.printer.add_column('organization_id', 'Org Id')
+        self.printer.add_column('description', multiline=True)
+
+        self.printer.set_header(_("Provider Information"))
+        self.printer.print_item(prov)
+        return os.EX_OK
+
 
 
 # ==============================================================================
@@ -203,12 +202,10 @@ class Delete(SingleProviderAction):
         orgName  = self.get_option('org')
 
         prov = get_provider(orgName, provName)
-        if prov != None:
-            msg = self.api.delete(prov["id"])
-            print msg
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
+
+        msg = self.api.delete(prov["id"])
+        print msg
+        return os.EX_OK
 
 
 # ==============================================================================
@@ -223,8 +220,6 @@ class Sync(SingleProviderAction):
 
     def sync_provider(self, providerName, orgName):
         prov = get_provider(orgName, providerName)
-        if prov == None:
-            return os.EX_DATAERR
 
         task = AsyncTask(self.api.sync(prov["id"]))
         run_async_task_with_status(task, ProgressBar())
@@ -250,8 +245,6 @@ class CancelSync(SingleProviderAction):
         orgName  = self.get_option('org')
 
         prov = get_provider(orgName, provName)
-        if prov == None:
-            return os.EX_DATAERR
 
         msg = self.api.cancel_sync(prov["id"])
         print msg
@@ -269,8 +262,6 @@ class Status(SingleProviderAction):
         orgName  = self.get_option('org')
 
         prov = get_provider(orgName, provName)
-        if prov == None:
-            return os.EX_DATAERR
 
         task = AsyncTask(self.api.last_sync_status(prov['id']))
 
@@ -349,8 +340,6 @@ class RefreshProducts(SingleProviderAction):
         orgName  = self.get_option('org')
 
         prov = get_provider(orgName, provName)
-        if prov == None:
-            return os.EX_DATAERR
 
         self.api.refresh_products(prov["id"])
         print _("Provider successfully refreshed [ %s ]") % prov['name']

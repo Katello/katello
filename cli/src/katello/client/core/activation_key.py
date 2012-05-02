@@ -83,14 +83,10 @@ class List(ActivationKeyAction):
 
     def get_keys_for_organization(self, orgName):
         organization = get_organization(orgName)
-        if not organization: return os.EX_DATAERR
-
         return self.api.activation_keys_by_organization(organization['cp_key'])
 
     def get_keys_for_environment(self, orgName, envName):
         environment = get_environment(orgName, envName)
-        if not environment: return os.EX_DATAERR
-
         return self.api.activation_keys_by_environment(environment['id'])
 
 class Info(ActivationKeyAction):
@@ -112,7 +108,6 @@ class Info(ActivationKeyAction):
         keyName = self.get_option('name')
 
         organization = get_organization(orgName)
-        if not organization: return os.EX_DATAERR
 
         keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
         if len(keys) == 0:
@@ -162,7 +157,6 @@ class Create(ActivationKeyAction):
         templateName = self.get_option('template')
 
         environment = get_environment(orgName, envName)
-        if not environment: return os.EX_DATAERR
 
         try:
             templateId = self.get_template_id(environment['id'], templateName)
@@ -218,11 +212,9 @@ class Update(ActivationKeyAction):
         remove_poolids = self.get_option('remove_poolid') or []
 
         organization = get_organization(orgName)
-        if not organization: return os.EX_DATAERR
 
         if envName != None:
             environment = get_environment(orgName, envName)
-            if not environment: return os.EX_DATAERR
         else:
             environment = None
 
@@ -269,10 +261,10 @@ class Delete(ActivationKeyAction):
         keyName = self.get_option('name')
 
         organization = get_organization(orgName)
-        if not organization: return os.EX_DATAERR
 
         keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
         if len(keys) == 0:
+            #TODO: not found?
             return os.EX_DATAERR
 
         self.api.delete(keys[0]['id'])

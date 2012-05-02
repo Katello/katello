@@ -101,7 +101,7 @@ class Info(UserRoleAction):
     def getLdapGroups(self, roleId):
         ldap_groups = self.api.ldap_groups(roleId)
         return [lg['ldap_group'] for lg in ldap_groups]
-        
+
 
     def formatPermission(self, p, details=True):
         if details:

@@ -21,6 +21,7 @@ from M2Crypto import SSL
 from socket import error as SocketError
 
 from katello.client.config import Config
+from katello.client.api.utils import ApiDataError
 from katello.client.core.utils import system_exit, parse_tokens, SystemExitRequest
 from katello.client.utils.printer import Printer, GrepStrategy, VerboseStrategy
 from katello.client.utils.encoding import u_str, u_obj
@@ -427,6 +428,10 @@ class Action(object):
 
         except OptionParserExitError, opee:
             return opee.args[0]
+
+        except ApiDataError, ade:
+            print >> sys.stderr, ade.args[0]
+            return os.EX_DATAERR
 
         except SystemExitRequest, ser:
             msg = "\n".join(ser.args[1]).strip()

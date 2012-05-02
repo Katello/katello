@@ -56,9 +56,6 @@ class List(ChangesetAction):
         verbose = self.get_option('verbose')
 
         env = get_environment(orgName, envName)
-        if env == None:
-            return os.EX_DATAERR
-
         changesets = self.api.changesets(orgName, env['id'])
 
         self.printer.add_column('id')
@@ -104,8 +101,6 @@ class Info(ChangesetAction):
         displayDeps = self.has_option('deps')
 
         cset = get_changeset(orgName, envName, csName)
-        if cset == None:
-            return os.EX_DATAERR
 
         cset['environment_name'] = envName
 
@@ -380,8 +375,6 @@ class UpdateContent(ChangesetAction):
         csDescription = self.get_option('description')
 
         cset = get_changeset(orgName, envName, csName)
-        if cset == None:
-            return os.EX_DATAERR
 
         self.update(cset["id"], csNewName, csDescription)
         addPatch = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName), items)
@@ -426,8 +419,6 @@ class Delete(ChangesetAction):
         envName = self.get_option('env')
 
         cset = get_changeset(orgName, envName, csName)
-        if cset == None:
-            return os.EX_DATAERR
 
         msg = self.api.delete(cset["id"])
         print msg
@@ -457,8 +448,6 @@ class Promote(ChangesetAction):
         envName = self.get_option('env')
 
         cset = get_changeset(orgName, envName, csName)
-        if cset == None:
-            return os.EX_DATAERR
 
         task = self.api.promote(cset["id"])
         task = AsyncTask(task)

@@ -88,12 +88,7 @@ class SetSyncPlan(SingleProductAction):
         planName = self.get_option('plan')
 
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
-
         plan = get_sync_plan(orgName, planName)
-        if (plan == None):
-            return os.EX_DATAERR
 
         msg = self.api.set_sync_plan(orgName, prod['id'], plan['id'])
         print msg
@@ -111,8 +106,6 @@ class RemoveSyncPlan(SingleProductAction):
         prodName = self.get_option('name')
 
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         msg = self.api.remove_sync_plan(orgName, prod['id'])
         print msg
@@ -150,16 +143,12 @@ class List(ProductAction):
 
         if prov_name:
             prov = get_provider(org_name, prov_name)
-            if prov == None:
-                return os.EX_DATAERR
 
             self.printer.set_header(_("Product List For Provider %s") % (prov_name))
             prods = self.api.products_by_provider(prov["id"])
 
         else:
             env = get_environment(org_name, env_name)
-            if env == None:
-                return os.EX_DATAERR
 
             self.printer.set_header(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
             prods = self.api.products_by_env(env['id'])
@@ -179,8 +168,6 @@ class Sync(SingleProductAction):
         prodName    = self.get_option('name')
 
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         task = AsyncTask(self.api.sync(orgName, prod["id"]))
         run_async_task_with_status(task, ProgressBar())
@@ -209,8 +196,6 @@ class CancelSync(SingleProductAction):
         prodName    = self.get_option('name')
 
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         msg = self.api.cancel_sync(orgName, prod["id"])
         print msg
@@ -228,8 +213,6 @@ class Status(SingleProductAction):
         prodName    = self.get_option('name')
 
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         task = AsyncTask(self.api.last_sync_status(orgName, prod['id']))
 
@@ -272,12 +255,7 @@ class Promote(SingleProductAction):
         envName     = self.get_option('env')
 
         env = get_environment(orgName, envName)
-        if (env == None):
-            return os.EX_DATAERR
-
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         returnCode = os.EX_OK
 
@@ -354,8 +332,6 @@ class Create(ProductAction):
 
     def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes, nodiscovery, gpgkey):
         prov = get_provider(orgName, provName)
-        if prov == None:
-            return os.EX_DATAERR
 
         prod = self.api.create(prov["id"], name, description, gpgkey)
         print _("Successfully created product [ %s ]") % name
@@ -400,8 +376,6 @@ class Update(SingleProductAction):
         gpgkey_recursive = self.get_option('recursive')
 
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         prod = self.api.update(orgName, prod["id"], description, gpgkey, nogpgkey, gpgkey_recursive)
         print _("Successfully updated product [ %s ]") % prodName
@@ -417,8 +391,6 @@ class Delete(SingleProductAction):
         orgName  = self.get_option('org')
         prodName = self.get_option('name')
         product = get_product(orgName, prodName)
-        if product == None:
-            return os.EX_DATAERR
 
         msg = self.api.delete(orgName, product["id"])
         print msg
@@ -434,8 +406,6 @@ class ListFilters(SingleProductAction):
         orgName     = self.get_option('org')
         prodName    = self.get_option('name')
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         filters = self.api.filters(orgName, prod['id'])
         self.printer.add_column('name')
@@ -478,11 +448,7 @@ class AddRemoveFilter(SingleProductAction):
         filter_name  = self.get_option('filter')
 
         prod = get_product(org_name, prod_name)
-        if (prod == None):
-            return os.EX_DATAERR
-
-        if get_filter(org_name, filter_name) == None:
-            return os.EX_DATAERR
+        get_filter(org_name, filter_name)
 
         filters = self.api.filters(org_name, prod['id'])
         filters = [f['name'] for f in filters]

@@ -89,18 +89,17 @@ class Info(EnvironmentAction):
         envName = self.get_option('name')
 
         env = get_environment(orgName, envName)
-        if env != None:
-            self.printer.add_column('id')
-            self.printer.add_column('name')
-            self.printer.add_column('description', multiline=True)
-            self.printer.add_column('organization', _('Org'))
-            self.printer.add_column('prior', _('Prior Environment'))
 
-            self.printer.set_header(_("Environment Info"))
-            self.printer.print_item(env)
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('organization', _('Org'))
+        self.printer.add_column('prior', _('Prior Environment'))
+
+        self.printer.set_header(_("Environment Info"))
+        self.printer.print_item(env)
+        return os.EX_OK
+
 
 
 class Create(EnvironmentAction):
@@ -171,16 +170,15 @@ class Update(EnvironmentAction):
         priorName   = self.get_option('prior')
 
         env = get_environment(orgName, envName)
-        if env != None:
-            if priorName != None:
-                priorId = self.get_prior_id(orgName, priorName)
-            else:
-                priorId = None
-            env = self.api.update(orgName, env["id"], envName, description, priorId)
-            print _("Successfully updated environment [ %s ]") % env['name']
-            return os.EX_OK
+
+        if priorName != None:
+            priorId = self.get_prior_id(orgName, priorName)
         else:
-            return os.EX_DATAERR
+            priorId = None
+        env = self.api.update(orgName, env["id"], envName, description, priorId)
+        print _("Successfully updated environment [ %s ]") % env['name']
+        return os.EX_OK
+
 
 
 class Delete(EnvironmentAction):
@@ -203,12 +201,11 @@ class Delete(EnvironmentAction):
         envName     = self.get_option('name')
 
         env = get_environment(orgName, envName)
-        if env != None:
-            self.api.delete(orgName, env["id"])
-            print _("Successfully deleted environment [ %s ]") % envName
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
+
+        self.api.delete(orgName, env["id"])
+        print _("Successfully deleted environment [ %s ]") % envName
+        return os.EX_OK
+
 
 
 # environment command ------------------------------------------------------------

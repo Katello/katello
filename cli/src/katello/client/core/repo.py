@@ -145,14 +145,9 @@ class Create(RepoAction):
         gpgkey   = self.get_option('gpgkey')
         nogpgkey   = self.get_option('nogpgkey')
 
-
         prod = get_product(orgName, prodName)
-        if prod != None:
-            self.api.create(orgName, prod["id"], name, url, gpgkey, nogpgkey)
-            print _("Successfully created repository [ %s ]") % name
-        else:
-            print _("No product [ %s ] found") % prodName
-            return os.EX_DATAERR
+        self.api.create(orgName, prod["id"], name, url, gpgkey, nogpgkey)
+        print _("Successfully created repository [ %s ]") % name
 
         return os.EX_OK
 
@@ -442,24 +437,22 @@ class List(RepoAction):
         if prodName and envName:
             env  = get_environment(orgName, envName)
             prod = get_product(orgName, prodName)
-            if env != None and prod != None:
-                self.printer.set_header(_("Repo List For Org %s Environment %s Product %s") % (orgName, env["name"], prodName))
-                repos = self.api.repos_by_env_product(env["id"], prod["id"], None, listDisabled)
-                self.printer.print_items(repos)
+
+            self.printer.set_header(_("Repo List For Org %s Environment %s Product %s") % (orgName, env["name"], prodName))
+            repos = self.api.repos_by_env_product(env["id"], prod["id"], None, listDisabled)
+            self.printer.print_items(repos)
+
         elif prodName:
             prod = get_product(orgName, prodName)
-            if prod != None:
-                self.printer.set_header(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
-                repos = self.api.repos_by_product(orgName, prod["id"], listDisabled)
-                self.printer.print_items(repos)
-            else:
-                return os.EX_DATAERR
+            self.printer.set_header(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
+            repos = self.api.repos_by_product(orgName, prod["id"], listDisabled)
+            self.printer.print_items(repos)
+
         else:
             env  = get_environment(orgName, envName)
-            if env != None:
-                self.printer.set_header(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
-                repos = self.api.repos_by_org_env(orgName,  env["id"], listDisabled)
-                self.printer.print_items(repos)
+            self.printer.set_header(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
+            repos = self.api.repos_by_org_env(orgName,  env["id"], listDisabled)
+            self.printer.print_items(repos)
 
         return os.EX_OK
 
@@ -530,8 +523,7 @@ class AddRemoveFilter(SingleRepoAction):
 
         repo = self.get_repo()
 
-        if get_filter(org_name, filter_name) == None:
-            return os.EX_DATAERR
+        get_filter(org_name, filter_name)
 
         filters = self.api.filters(repo['id'])
         filters = [f['name'] for f in filters]

@@ -63,9 +63,6 @@ class List(TemplateAction):
         orgName = self.get_option('org')
 
         environment = get_environment(orgName, envName)
-
-        if not environment:
-            return os.EX_DATAERR
         templates = self.api.templates(environment["id"])
 
         if not templates:
@@ -105,8 +102,6 @@ class Info(TemplateAction):
         envName = self.get_option('env')
 
         template = get_template(orgName, envName, tplName)
-        if template == None:
-            return os.EX_DATAERR
 
         template["products"]     = [p["name"] for p in template["products"]]
         template["repositories"] = [r["name"] for r in template["repositories"]]
@@ -175,8 +170,6 @@ class Import(TemplateAction):
         tplPath = self.get_option('file')
 
         env = get_library(orgName)
-        if env == None:
-            return os.EX_DATAERR
 
         try:
             f = self.open_file(tplPath)
@@ -225,8 +218,6 @@ class Export(TemplateAction):
         tplPath = self.get_option('file')
 
         template = get_template(orgName, envName, tplName)
-        if not template:
-            return os.EX_DATAERR
 
         try:
             f = self.open_file(tplPath)
@@ -274,21 +265,20 @@ class Create(TemplateAction):
         parentName = self.get_option('parent')
 
         env = get_library(orgName)
-        if env != None:
-            if parentName != None:
-                parentId = self.get_parent_id(orgName, env['name'], parentName)
-            else:
-                parentId = None
 
-            template = self.api.create(env["id"], name, desc, parentId)
-            if is_valid_record(template):
-                print _("Successfully created template [ %s ]") % template['name']
-                return os.EX_OK
-            else:
-                print >> sys.stderr, _("Could not create template [ %s ]") % name
-                return os.EX_DATAERR
+        if parentName != None:
+            parentId = self.get_parent_id(orgName, env['name'], parentName)
         else:
+            parentId = None
+
+        template = self.api.create(env["id"], name, desc, parentId)
+        if is_valid_record(template):
+            print _("Successfully created template [ %s ]") % template['name']
+            return os.EX_OK
+        else:
+            print >> sys.stderr, _("Could not create template [ %s ]") % name
             return os.EX_DATAERR
+
 
 
 # ==============================================================================
@@ -419,22 +409,18 @@ class Update(TemplateAction):
         content = self.getContent()
 
         env = get_library(orgName)
-        if env == None:
-            return os.EX_DATAERR
-
         template = get_template(orgName, env["name"], tplName)
-        if template != None:
-            if parentName != None:
-                parentId = self.get_parent_id(orgName, env["name"], parentName)
-            else:
-                parentId = None
 
-            run_spinner_in_bg(self.updateTemplate, [template["id"], newName, desc, parentId], _("Updating the template, please wait... "))
-            run_spinner_in_bg(self.updateContent,  [template["id"], content], _("Updating the template, please wait... "))
-            print _("Successfully updated template [ %s ]") % template['name']
-            return os.EX_OK
+        if parentName != None:
+            parentId = self.get_parent_id(orgName, env["name"], parentName)
         else:
-            return os.EX_DATAERR
+            parentId = None
+
+        run_spinner_in_bg(self.updateTemplate, [template["id"], newName, desc, parentId], _("Updating the template, please wait... "))
+        run_spinner_in_bg(self.updateContent,  [template["id"], content], _("Updating the template, please wait... "))
+        print _("Successfully updated template [ %s ]") % template['name']
+        return os.EX_OK
+
 
 
     def productNamesToIds(self, orgName, productNames):
@@ -520,12 +506,9 @@ class Delete(TemplateAction):
         envName = self.get_option('env')
 
         template = get_template(orgName, envName, tplName)
-        if template != None:
-            msg = self.api.delete(template["id"])
-            print msg
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
+        msg = self.api.delete(template["id"])
+        print msg
+        return os.EX_OK
 
 
 # provider command =============================================================

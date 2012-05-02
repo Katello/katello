@@ -90,8 +90,6 @@ class Create(UserAction):
 
         if default_environment is not None:
             environment = get_environment(default_organization, default_environment)
-            if environment is None:
-                return os.EX_DATAERR
         else:
             environment = None
 
@@ -118,8 +116,6 @@ class Info(UserAction):
         username = self.get_option('username')
 
         user = get_user(username)
-        if user == None:
-            return os.EX_DATAERR
 
         self.printer.add_column('id')
         self.printer.add_column('username')
@@ -148,8 +144,6 @@ class Delete(UserAction):
         username = self.get_option('username')
 
         user = get_user(username)
-        if user == None:
-            return os.EX_DATAERR
 
         self.api.delete(user['id'])
         print _("Successfully deleted user [ %s ]") % username
@@ -198,14 +192,10 @@ class Update(UserAction):
             environment = None
         elif default_environment is not None:
             environment = get_environment(default_organization, default_environment)
-            if environment is None:
-                return os.EX_DATAERR
         else:
             environment = False
 
         user = get_user(username)
-        if user == None:
-            return os.EX_DATAERR
 
         user = self.api.update(user['id'], password, email, disabled, environment)
         print _("Successfully updated user [ %s ]") % username
@@ -227,8 +217,6 @@ class ListRoles(UserAction):
         username = self.get_option('username')
 
         user = get_user(username)
-        if user == None:
-            return os.EX_DATAERR
 
         roles = self.api.roles(user['id'])
 
@@ -283,8 +271,6 @@ class AssignRole(UserAction):
         roleName = self.get_option('role')
 
         user = get_user(userName)
-        if user == None:
-            return os.EX_DATAERR
 
         role = self.role_api.role_by_name(roleName)
         if role == None:

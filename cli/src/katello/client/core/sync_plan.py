@@ -94,8 +94,6 @@ class Info(SyncPlanAction):
         plan_name = self.get_option('name')
 
         plan = get_sync_plan(org_name, plan_name)
-        if plan == None:
-            return os.EX_DATAERR
 
         self.printer.add_column('id')
         self.printer.add_column('name')
@@ -179,8 +177,6 @@ class Update(SyncPlanAction):
         time        = self.get_option('time')
 
         plan = get_sync_plan(org_name, name)
-        if plan == None:
-            return os.EX_DATAERR
 
         if date != None and time != None:
             sync_date = self.parse_datetime(date, time)
@@ -209,8 +205,6 @@ class Delete(SyncPlanAction):
         plan_name = self.get_option('name')
 
         plan = get_sync_plan(org_name, plan_name)
-        if plan == None:
-            return os.EX_DATAERR
 
         self.api.delete(org_name, plan["id"])
         print _("Successfully deleted sync plan [ %s ]") % plan_name
