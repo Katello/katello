@@ -521,33 +521,30 @@ class SystemsController < ApplicationController
   end
 
   def system_groups
-    @system_groups = @system.system_groups.sort_by{|s| s.name}
+    # retrieve the available groups that aren't currently assigned to the system
+    @system_groups = SystemGroup.where(:organization_id=>current_organization).order(:name) - @system.system_groups
     render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>@system.editable?}
   end
 
   def add_system_groups
-    # TODO: need to address the scenario where user provides a system group that does not exist...
-
-    # for each group in the list... look up the group... and add it to the system
-    unless params[:groups].blank?
-      # retrieve the system groups to be added
-      add_groups = SystemGroup.where(:organization_id => current_organization, :name => params[:groups].uniq)
-      # narrow the list to only those the system doesn't already have assigned to it
-      new_groups = (add_groups - @system.system_groups)
-      @system.system_group_ids = (@system.system_group_ids + add_groups.collect{|g| g.id})
+    unless params[:group_ids].blank?
+      ids = params[:group_ids].collect{|g| g.to_i} - @system.system_group_ids #ignore dups
+      @system_groups = SystemGroup.where(:id=>ids)
+      @system.system_group_ids = (@system.system_group_ids + @system_groups.collect{|g| g.id}).uniq
       @system.save!
-      notice _("System '%s' was updated.") % @system["name"]
-      render :partial =>'system_group_items', :locals=>{:system_groups=>new_groups.sort_by{|g| g.name}} and return
     end
+    notice _("System '%s' was updated.") % @system["name"]
+    render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}} and return
   rescue Exception => e
     notice e, {:level => :error}
     render :text=>e, :status=>500
   end
 
   def remove_system_groups
-    system_groups = SystemGroup.where(:organization_id=>current_organization, :id=>params[:group_ids]).collect{|s| s.id}
+    system_groups = SystemGroup.where(:id=>params[:group_ids]).collect{|g| g.id}
     @system.system_group_ids = (@system.system_group_ids - system_groups).uniq
     @system.save!
+
     notice _("System '%s' was updated.") % @system["name"]
     render :nothing => true
   rescue Exception => e
