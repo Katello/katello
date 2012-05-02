@@ -15,25 +15,26 @@ class SystemGroupsController < ApplicationController
   before_filter :panel_options, :only=>[:index, :items, :create]
   before_filter :find_group, :only=>[:edit, :update, :destroy, :systems,
                                      :show, :add_systems, :remove_systems]
-
+  before_filter :authorize
   def rules
     any_readable = lambda{current_organization && SystemGroup.any_readable?(current_organization)}
-    read = lambda{true}
-    edit = lambda{true}
-    create = lambda{true}
+    read_perm = lambda{@group.readable?}
+    edit_perm = lambda{@group.editable?}
+    create_perm = lambda{SystemGroup.creatable?}
+    destroy_perm = lambda{@group.deletable?}
     {
-        :index=>read,
-        :items=>read,
-        :new => create,
-        :create=>create,
-        :edit=>read,
-        :systems => read,
-        :update=>edit,
-        :destroy=>edit,
-        :show=>read,
+        :index=>any_readable,
+        :items=>any_readable,
+        :new => create_perm,
+        :create=>create_perm,
+        :edit=>read_perm,
+        :systems => read_perm,
+        :update=>edit_perm,
+        :destroy=>edit_perm,
+        :show=>read_perm,
         :auto_complete=>any_readable,
-        :add_systems=> edit,
-        :remove_systems=>edit,
+        :add_systems=> edit_perm,
+        :remove_systems=>edit_perm,
         :validate_name=>any_readable
     }
 
@@ -121,8 +122,9 @@ class SystemGroupsController < ApplicationController
   end
 
   def items
+    ids = SystemGroup.readable(current_organization).collect{|s| s.id}
     render_panel_direct(SystemGroup, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
-      {:default_field => :name, :filter=>{:organization_id=>[current_organization.id]}})
+      {:default_field => :name, :filter=>[{:id=>ids},{:organization_id=>[current_organization.id]}]})
   end
 
   def panel_options
