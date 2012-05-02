@@ -12,19 +12,17 @@
 
 class ChangesetPackageValidator < ActiveModel::Validator
   def validate(record)
-    from_env = record.changeset.environment.prior
-    to_env   = record.changeset.environment
-    product = Product.find(record.product_id)
-
-    record.errors[:base] << _("Package '%s' doesn't belong to the specified product!") % record.package_id and return if record.repositories.empty?
-    record.errors[:base] << _("Repository of the package '%s' has not been promoted into the target environment!") % record.errata_id if record.promotable_repositories.empty?
+    record.errors[:base] << _("Package '%s' doesn't belong to the specified product!") %
+        record.package_id and return if record.repositories.empty?
+    record.errors[:base] << _("Repository of the package '%s' has not been promoted into the target environment!") %
+        record.package_id if record.promotable_repositories.empty?
   end
 end
 
 class ChangesetPackage < ActiveRecord::Base
   include Authorization
 
-  belongs_to :changeset, :inverse_of=>:packages
+  belongs_to :changeset, :inverse_of => :packages
   belongs_to :product
   validates :display_name, :length => { :maximum => 255 }
   validates_with ChangesetPackageValidator
@@ -33,7 +31,7 @@ class ChangesetPackage < ActiveRecord::Base
     return @repos if not @repos.nil?
 
     from_env = self.changeset.environment.prior
-    @repos = []
+    @repos   = []
 
     self.product.repos(from_env).each do |repo|
       @repos << repo if repo.has_package? self.package_id
