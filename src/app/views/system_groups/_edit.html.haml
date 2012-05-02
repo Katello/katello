@@ -30,4 +30,7 @@
           .grid_2.ra
             %label #{_("Locked")}:
           .grid_5.la
-            = check_box("system_group", "locked", :id=>"system_group_locked", 'data-url'=>system_group_path(@group.id), :checked=>@group.locked ? "checked": "")
+            - if @group.locking?
+              = check_box("system_group", "locked", :id=>"system_group_locked", 'data-url'=>system_group_path(@group.id), :checked=>@group.locked ? "checked": "")
+            - else
+              = @group.locked? ? 'Locked' : 'Unlocked'

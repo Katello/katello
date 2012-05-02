@@ -53,27 +53,31 @@ class SystemGroup < ActiveRecord::Base
   end
 
   scope :readable, lambda { |org|
-        where(:organization_id => org.id)
+    items(org, READ_PERM_VERBS)
   }
 
   def self.creatable? org
-    true
+    User.allowed_to?([:create], :system_groups, nil, org)
   end
 
   def self.any_readable? org
-    true
+    User.allowed_to?(READ_PERM_VERBS, :system_groups, nil, org)
   end
 
   def readable?
-    true
+    User.allowed_to?(READ_PERM_VERBS, :system_groups, self.id, self.organization)
   end
 
   def editable?
-    true
+    User.allowed_to?([:update, :create], :system_groups, self.id, self.organization)
   end
 
   def deletable?
-    true
+    User.allowed_to?([:delete, :create], :system_groups, self.id, self.organization)
+  end
+
+  def locking?
+    User.allowed_to?([:locking], :system_groups, self.id, self.organization)
   end
 
   def self.list_tags org_id
@@ -127,8 +131,16 @@ class SystemGroup < ActiveRecord::Base
     self.del_consumers([record.uuid])
   end
 
+  def self.items org, verbs
+    raise "scope requires an organization" if org.nil?
+    resource = :system_groups
+    if User.allowed_all_tags?(verbs, resource, org)
+       where(:organization_id => org)
+    else
+      where("system_groups.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+    end
+  end
 
-
-
+  READ_PERM_VERBS = SystemGroup.list_verbs.keys
 
 end
