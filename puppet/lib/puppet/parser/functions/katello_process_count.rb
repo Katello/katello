@@ -27,9 +27,9 @@ module Puppet::Parser::Functions
       max_processes = (((total_mem - reserve) / consumes)).floor
       notice("Maximum processes: #{max_processes}")
 
-      # safeguard not to have less than 1 or more than max
+      # safeguard not to have less than 2 or more than max
       no_processes = max_processes if no_processes > max_processes
-      no_processes = 1 if no_processes < 1
+      no_processes = 2 if no_processes < 2
 
       notice("Thin processes: #{no_processes}")
       no_processes.to_s
