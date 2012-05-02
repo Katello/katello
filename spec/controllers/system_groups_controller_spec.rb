@@ -20,6 +20,8 @@ describe SystemGroupsController do
   include OrganizationHelperMethods
   include OrchestrationHelper
   include SystemHelperMethods
+  include AuthorizationHelperMethods
+
   let(:uuid) { '1234' }
   before(:each) do
       set_default_locale
@@ -46,6 +48,16 @@ describe SystemGroupsController do
     end
 
     describe "GET index" do
+      let(:action) {:items}
+      let(:req) { get :items }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :system_groups, @group.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action" 
+      
       it "requests filters using search criteria" do
         get :index
         response.should be_success
@@ -55,7 +67,7 @@ describe SystemGroupsController do
     describe "GET items" do
       it "requests filters using search criteria" do
         controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
-          search_options[:filter][:organization_id].should include(@org.id)
+          search_options[:filter][1][:organization_id].should include(@org.id)
           controller.stub(:render)
         }
         get :items
