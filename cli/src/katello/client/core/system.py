@@ -64,7 +64,8 @@ class List(SystemAction):
         if env_name is None:
             return self.api.systems_by_org(org_name, query)
         else:
-            return self.api.systems_by_env(org_name, env_name, query)
+            environment = get_environment(org_name, env_name)
+            return self.api.systems_by_env(org_name, environment["id"], query)
 
     def run(self):
         org_name = self.get_option('org')
@@ -114,8 +115,8 @@ class Info(SystemAction):
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
             self.printer.set_header(_("System Information For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
-            systems = self.api.systems_by_env(org_name, env_name,
-                    {'name': sys_name})
+            environment = get_environment(org_name, env_name)
+            systems = self.api.systems_by_env(org_name, environment["id"], {'name': sys_name})
 
         if not systems:
             return os.EX_DATAERR
@@ -201,7 +202,10 @@ class InstalledPackages(SystemAction):
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
             self.printer.set_header(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") % (sys_name, env_name, org_name))
-            systems = self.api.systems_by_env(org_name, env_name, {'name': sys_name})
+            environment = get_environment(org_name, env_name)
+            if environemnt is None:
+                return os.EX_DATAERR
+            systems = self.api.systems_by_env(org_name, environment["id"], {'name': sys_name})
 
         if not systems:
             return os.EX_DATAERR
@@ -252,6 +256,7 @@ class InstalledPackages(SystemAction):
 
         return os.EX_OK
 
+
 class TasksList(SystemAction):
 
     description = _('display status of remote tasks')
@@ -275,12 +280,16 @@ class TasksList(SystemAction):
 
         self.printer.set_header(_("Remote tasks"))
 
-        tasks = self.api.tasks(org_name, env_name, sys_name)
+        environment = get_environment(org_name, env_name)
+        if environment is None:
+            return os.EX_DATAERR
+        tasks = self.api.tasks(org_name, environment["id"], sys_name)
 
 
         for t in tasks:
             t['result'] = "\n" + t['result_description']
 
+        #TODO: change to new style printer
         if verbose:
             self.printer.add_column('uuid', name=_("Task id"))
             self.printer.add_column('system_name', name=_("System"))
@@ -392,7 +401,10 @@ class Facts(SystemAction):
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
             self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") % (sys_name, env_name, org_name))
-            systems = self.api.systems_by_env(org_name, env_name, {'name': sys_name})
+            environment = get_environment(org_name, env_name)
+            if environemnt is None:
+                return os.EX_DATAERR
+            systems = self.api.systems_by_env(org_name, environment["id"], {'name': sys_name})
 
         if not systems:
             return os.EX_DATAERR
@@ -443,13 +455,16 @@ class Register(SystemAction):
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
-        environment = self.get_option('environment')
+        environment_name = self.get_option('environment')
         activation_keys = self.get_option('activationkey')
         release = self.get_option('release')
         sla = self.get_option('sla')
         facts = dict(self.get_option('fact') or {})
 
-        system = self.api.register(name, org, environment, activation_keys, 'system', release, sla, facts=facts)
+        environment = get_environment(org, environment_name)
+        if environment is None:
+            return os.EX_DATAERR
+        system = self.api.register(name, org, environment['id'], activation_keys, 'system', release, sla, facts=facts)
 
         if is_valid_record(system):
             print _("Successfully registered system [ %s ]") % system['name']
@@ -476,10 +491,13 @@ class Unregister(SystemAction):
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
-        environment = self.get_option('environment')
+        env_name = self.get_option('environment')
         try:
-            if environment:
-                systems = self.api.systems_by_env(org, environment, {'name': name})
+            if env_name:
+                environment = get_environment(org_name, env_name)
+                if environemnt is None:
+                    return os.EX_DATAERR
+                systems = self.api.systems_by_env(org, environment["id"], {'name': name})
             else:
                 systems = self.api.systems_by_org(org, {'name': name})
         except ServerRequestError, e:
@@ -489,16 +507,16 @@ class Unregister(SystemAction):
                 raise e
 
         if systems == None:
-            if environment is None:
+            if env_name is None:
                 print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             else:
-                print >> sys.stderr, _("Could not find System [ %s ] in Environment [ %s ] in Org [ %s ]") % (name, environment, org)
+                print >> sys.stderr, _("Could not find System [ %s ] in Environment [ %s ] in Org [ %s ]") % (name, env_name, org)
             return os.EX_DATAERR
         elif len(systems) != 1:
-            if environment is None:
+            if env_name is None:
                 print >> sys.stderr, _("Found ambiguous Systems [ %s ] in Org [ %s ], use --environment") % (name, org)
             else:
-                print >> sys.stderr, _("Found ambiguous Systems [ %s ] in Environment [ %s ] in Org [ %s ]") % (name, environment, org)
+                print >> sys.stderr, _("Found ambiguous Systems [ %s ] in Environment [ %s ] in Org [ %s ]") % (name, env_name, org)
             return os.EX_DATAERR
         else:
             self.api.unregister(systems[0]['uuid'])
@@ -543,10 +561,8 @@ class Subscriptions(SystemAction):
     description = _('list subscriptions for a system')
 
     def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
-                help=_("organization name (required)"))
-        self.parser.add_option('--name', dest='name',
-                help=_("system name (required)"))
+        self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        self.parser.add_option('--name', dest='name', help=_("system name (required)"))
         self.parser.add_option('--available', dest='available',
                 action="store_true", default=False,
                 help=_("show available subscriptions"))
@@ -559,8 +575,8 @@ class Subscriptions(SystemAction):
         name = self.get_option('name')
         org = self.get_option('org')
         available = self.get_option('available')
-        systems = self.api.systems_by_org(org, {'name': name})
 
+        systems = self.api.systems_by_org(org, {'name': name})
 
         if systems == None or len(systems) != 1:
             print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
@@ -704,8 +720,10 @@ class Update(SystemAction):
         if env_name is None:
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
-            systems = self.api.systems_by_env(org_name, env_name,
-                    {'name': sys_name})
+            environemnt = get_environment(org_name, env_name)
+            if environemnt is None:
+                return os.EX_DATAERR
+            systems = self.api.systems_by_env(org_name, environemnt["id"], {'name': sys_name})
 
         if not systems:
             return os.EX_DATAERR

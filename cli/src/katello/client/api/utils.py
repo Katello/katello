@@ -28,6 +28,7 @@ from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.api.filter import FilterAPI
+#from katello.client.api.system import SystemAPI
 
 def get_organization(orgName):
     organization_api = OrganizationAPI()
@@ -131,14 +132,14 @@ def get_role(name):
     user_role_api = UserRoleAPI()
     role = user_role_api.role_by_name(name)
     if role == None:
-        print _("Cannot find user role [ %s ]") % (name)
+        print >> sys.stderr, _("Cannot find user role [ %s ]") % (name)
     return role
 
 def get_sync_plan(org_name, name):
     plan_api = SyncPlanAPI()
     plan = plan_api.sync_plan_by_name(org_name, name)
     if plan == None:
-        print _("Cannot find sync plan [ %s ]") % (name)
+        print >> sys.stderr, _("Cannot find sync plan [ %s ]") % (name)
     return plan
 
 def get_permission(role_name, permission_name):
@@ -150,12 +151,20 @@ def get_permission(role_name, permission_name):
 
     perm = permission_api.permission_by_name(role['id'], permission_name)
     if perm == None:
-        print _("Cannot find permission [ %s ] for user role [ %s ]") % (role_name, permission_name)
+        print >> sys.stderr, _("Cannot find permission [ %s ] for user role [ %s ]") % (role_name, permission_name)
     return perm
 
 def get_filter(org_name, name):
     filter_api = FilterAPI()
     filter = filter_api.info(org_name, name)
     if filter == None:
-        print _("Cannot find filter [ %s ]") % (name)
+        print >> sys.stderr, _("Cannot find filter [ %s ]") % (name)
     return filter
+
+def get_system(org_name, name):
+    system_api = SystemAPI()
+    systems = self.api.systems_by_org(org, {'name': name})
+    if systems is None or len(systems) != 1:
+        print >> sys.stderr, _("Could not find System [ %s ] in Org [ %s ]") % (name, org_name)
+        return None
+    return systems[0]

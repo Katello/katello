@@ -21,26 +21,21 @@ class SystemAPI(KatelloAPI):
     """
     Connection class to access environment calls
     """
-    def register(self, name, org, envName, activation_keys, cp_type, release=None, sla=None, facts={}):
-        if envName is not None:
-            environment = get_environment(org, envName)
-            if environment is None:
-                return None
-
-            path = "/api/environments/%s/systems" % environment["id"]
+    def register(self, name, org, environment_id, activation_keys, cp_type, release=None, sla=None, facts={}):
+        if environment_id is not None:
+            path = "/api/environments/%s/systems" % environment_id
         else:
             path = "/api/organizations/%s/systems" % org
         facts_with_defaults = { "distribution.name": "Unknown", "cpu.cpu_socket(s)": "1" }
         facts_with_defaults.update(facts)
         sysdata = {
-          "name": name,
-          "cp_type": cp_type,
-          "serviceLevel": sla,
-          "facts": facts_with_defaults
+            "name": name,
+            "cp_type": cp_type,
+            "serviceLevel": sla,
+            "facts": facts_with_defaults
         }
         if activation_keys:
             sysdata["activation_keys"] = activation_keys
-
         if release:
             sysdata["releaseVer"] = release
 
@@ -53,9 +48,9 @@ class SystemAPI(KatelloAPI):
     def subscribe(self, system_id, pool, quantity):
         path = "/api/systems/%s/subscriptions" % system_id
         data = {
-                "pool": pool,
-                "quantity": quantity
-                }
+            "pool": pool,
+            "quantity": quantity
+        }
         return self.server.POST(path, data)[1]
 
     def subscriptions(self, system_id):
@@ -82,16 +77,10 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s" % system_id
         return self.server.GET(path)[1]
 
-    def tasks(self, org_name, env_name, system_name):
+    def tasks(self, org_name, environment_id, system_name):
         params = {}
-        if env_name:
-            environment = get_environment(org_name, env_name)
-            if not environment:
-                return None
-            params['environment_id'] = environment['id']
-
-        if system_name:
-            params['system_name'] = system_name
+        self.update_dict(params, "environment_id", environment_id)
+        self.update_dict(params, "system_name", system_name)
 
         path = "/api/organizations/%s/systems/tasks" % org_name
         return self.server.GET(path, params)[1]
@@ -136,11 +125,8 @@ class SystemAPI(KatelloAPI):
         path = "/api/organizations/%s/systems" % orgId
         return self.server.GET(path, query)[1]
 
-    def systems_by_env(self, orgId, envName, query = {}):
-        environment = get_environment(orgId, envName)
-        if environment is None:
-            return None
-        path = "/api/environments/%s/systems" % environment["id"]
+    def systems_by_env(self, org_name, environment_id, query = {}):
+        path = "/api/environments/%s/systems" % environment_id
         return self.server.GET(path, query)[1]
 
     def errata(self, system_id):
