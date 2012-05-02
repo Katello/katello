@@ -47,9 +47,9 @@ module ApplicationConfiguration
 
       # backticks gets you the equiv of a system() command in Ruby
       if @hash["app_name"] == 'Katello'
-        version =  `rpm -q katello-common --queryformat '%{VERSION}-%{RELEASE}\n'`
+        version =  `rpm -q katello-common --queryformat '%{VERSION}-%{RELEASE}'`
       else
-        version =  `rpm -q katello-headpin --queryformat '%{VERSION}-%{RELEASE}\n'`
+        version =  `rpm -q katello-headpin --queryformat '%{VERSION}-%{RELEASE}'`
       end
       exit_code = $?
       if exit_code != 0
