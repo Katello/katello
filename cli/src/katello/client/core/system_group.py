@@ -318,23 +318,25 @@ class AddSystems(SystemGroupAction):
                                help=_("system group name (required)"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--system_ids', dest='system_ids',
+        self.parser.add_option('--system_uuids', dest='system_uuids',
                               help=_("list of system uuids (required)"))
 
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
-        self.require_option('system_ids')
+        self.require_option('system_uuids')
 
     def run(self):
         org_name = self.get_option('org')
         name = self.get_option('name')
-        system_ids = self.get_option('system_ids')
+        system_ids = self.get_option('system_uuids')
 
         system_group = get_system_group(org_name, name)
 
         if system_group is None:
             return os.EX_DATAERR
+
+        system_ids = [uuid for uuid in system_ids.split(',')]
 
         systems = self.api.add_systems(org_name, system_group["id"], system_ids)
 
@@ -354,23 +356,25 @@ class RemoveSystems(SystemGroupAction):
                                help=_("system group name (required)"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--system_ids', dest='system_ids',
+        self.parser.add_option('--system_uuids', dest='system_uuids',
                               help=_("list of system uuids (required)"))
 
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
-        self.require_option('system_ids')
+        self.require_option('system_uuids')
 
     def run(self):
         org_name = self.get_option('org')
         name = self.get_option('name')
-        system_ids = self.get_option('system_ids')
+        system_ids = self.get_option('system_uuids')
 
         system_group = get_system_group(org_name, name)
 
         if system_group is None:
             return os.EX_DATAERR
+
+        system_ids = [uuid for uuid in system_ids.split(',')]
 
         systems = self.api.remove_systems(org_name, system_group["id"], system_ids)
 

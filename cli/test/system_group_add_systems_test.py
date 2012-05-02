@@ -16,16 +16,16 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.mock_options()
 
     def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_systems', '--name=system_group_1', '--system_ids=34-453sa,agt754ad'])
+        self.assertRaises(Exception, self.action.process_options, ['add_systems', '--name=system_group_1', '--system_uuids=34-453sa,agt754ad'])
 
     def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_systems', '--org=ACME', '--system_ids=34-453sa, agt754ad'])
+        self.assertRaises(Exception, self.action.process_options, ['add_systems', '--org=ACME', '--system_uuids=34-453sa, agt754ad'])
 
-    def test_missing_system_ids_generates_error(self):
+    def test_missing_system_uuids_generates_error(self):
         self.assertRaises(Exception, self.action.process_options, ['add_systems', '--org=ACME', '--name=system_group_1'])
 
-    def test_no_error_if_org_and_name_and_system_ids_provided(self):
-        self.action.process_options(['add_systems', '--org=ACME', '--name=system_group_1', '--system_ids=34-453sa,agt754ad'])
+    def test_no_error_if_org_and_name_and_system_uuids_provided(self):
+        self.action.process_options(['add_systems', '--org=ACME', '--name=system_group_1', '--system_uuids=34-453sa,agt754ad'])
         self.assertEqual(len(self.action.optErrors), 0)
 
 
@@ -37,7 +37,7 @@ class SystemGroupAddSystemsTest(CLIActionTestCase):
     OPTIONS = {
         'org': ORG['name'],
         'name': SYSTEM_GROUP['name'],
-        'system_ids' : 'fgadg3943-daf323,34ad5-34ad3-h6ddss4'
+        'system_uuids' : 'fgadg3943-daf323,34ad5-34ad3-h6ddss4'
     }
 
     def setUp(self):
@@ -51,8 +51,9 @@ class SystemGroupAddSystemsTest(CLIActionTestCase):
         self.mock(self.module, 'get_system_group', self.SYSTEM_GROUP)
 
     def test_it_calls_system_group_add_systems_api(self):
+        ids = [id for id in self.OPTIONS['system_uuids'].split(',')]
         self.action.run()
-        self.action.api.add_systems.assert_called_once_with(self.OPTIONS['org'], self.SYSTEM_GROUP['id'], self.OPTIONS['system_ids'])
+        self.action.api.add_systems.assert_called_once_with(self.OPTIONS['org'], self.SYSTEM_GROUP['id'], ids)
 
     def test_it_returns_error_when_adding_failed(self):
         self.mock(self.action.api, 'add_systems', None)
