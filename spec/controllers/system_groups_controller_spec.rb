@@ -48,10 +48,10 @@ describe SystemGroupsController do
     end
 
     describe "GET index" do
-      let(:action) {:items}
-      let(:req) { get :items }
+      let(:action) {:index}
+      let(:req) { get :index }
       let(:authorized_user) do
-        user_with_permissions { |u| u.can(:read, :system_groups, @group.id, @organization) }
+        user_with_permissions { |u| u.can(:read, :system_groups, @group.id, @org) }
       end
       let(:unauthorized_user) do
         user_without_permissions
@@ -65,6 +65,18 @@ describe SystemGroupsController do
     end
 
     describe "GET items" do
+
+      let(:action) {:items}
+      let(:req) { get :items }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+
       it "requests filters using search criteria" do
         controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
           search_options[:filter][1][:organization_id].should include(@org.id)
@@ -76,6 +88,17 @@ describe SystemGroupsController do
     end
 
     describe "GET new" do
+
+      let(:action) {:new}
+      let(:req) { get :new }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:create, :system_groups, nil, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
       it "should return successfully" do
         get :new
         response.should be_success
@@ -84,6 +107,16 @@ describe SystemGroupsController do
     end
 
     describe "GET edit" do
+      let(:action) {:edit}
+      let(:req) { get :edit, :id=>@group.id }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
       it "should return successfully" do
         get :edit, :id=>@group.id
         response.should be_success
@@ -92,6 +125,17 @@ describe SystemGroupsController do
     end
 
     describe "GET show" do
+      let(:action) {:show}
+      let(:req) { get :show, :id=>@group.id }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+
       it "should return successfully" do
         get :show, :id=>@group.id
         response.should be_success
@@ -101,6 +145,18 @@ describe SystemGroupsController do
 
 
     describe "POST create" do
+
+      let(:action) {:create}
+      let(:req) { post :create }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:create, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+
       it "should create a group correctly" do
         post :create, :system_group=>{:name=>"foo", :description=>"describe"}
         response.should be_success
@@ -126,6 +182,19 @@ describe SystemGroupsController do
     end
 
     describe "PUT update" do
+
+      let(:action) {:update}
+      let(:req) { post :update, :id=>@group.id }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+
+
       it "should allow name to be changed" do
         old_name = @group.name
         put :update, :id=>@group.id, :system_group=>{:name=>"rocky"}
@@ -141,12 +210,36 @@ describe SystemGroupsController do
       end
     end
 
-    describe "POST add/remove systems" do
+    describe "POST add systems" do
+      let(:action) {:add_systems}
+      let(:req) { post :add_systems, :id=>@group.id, :system_ids=>[] }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+
       it "should allow adding of systems" do
         post :add_systems, :id=>@group.id, :system_ids=>[@system.id]
         response.should be_success
         @group.reload.systems.should include @system
       end
+    end
+
+    describe "POST remove_systems" do
+      let(:action) {:remove_systems}
+      let(:req) { post :remove_systems, :id=>@group.id, :system_ids=>[] }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
       it "should allow removal of systems" do
         @group.systems  = [@system]
         @group.save
@@ -154,10 +247,21 @@ describe SystemGroupsController do
         response.should be_success
         @group.reload.systems.should_not include @system
       end
-
     end
 
+
     describe "DELETE" do
+      let(:action) {:destroy}
+      let(:req) { delete :destroy, :id=>@group.id}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:delete, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+
       it "should complete successfully" do
         controller.stub(:render)
         delete :destroy, :id=>@group.id
