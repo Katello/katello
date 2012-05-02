@@ -30,7 +30,7 @@ class SystemGroupsController < ApplicationController
         :edit=>read_perm,
         :systems => read_perm,
         :update=>edit_perm,
-        :destroy=>edit_perm,
+        :destroy=>destroy_perm,
         :show=>read_perm,
         :auto_complete=>any_readable,
         :add_systems=> edit_perm,
