@@ -21,7 +21,7 @@ from gettext import gettext as _
 from katello.client.api.filter import FilterAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import test_record
 
 Config()
 
@@ -84,12 +84,10 @@ class Create(FilterAction):
 
         new_filter = self.api.create(org, name, description, packages)
 
-        if is_valid_record(new_filter):
-            print _("Successfully created filter [ %s ]") % new_filter['name']
-        else:
-            print >> sys.stderr, _("Could not create filter [ %s ]") % name
-
-        return os.EX_OK
+        test_record(new_filter,
+            _("Successfully created filter [ %s ]") % new_filter['name'],
+            _("Could not create filter [ %s ]") % name
+        )
 
     def parse_packages(self, packages):
         return ([] if packages == None else [p.strip() for p in packages.split(',')])

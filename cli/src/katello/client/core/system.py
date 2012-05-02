@@ -23,7 +23,7 @@ from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.utils import get_environment, get_system
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, convert_to_mime_type, attachment_file_name, save_report
+from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
 from katello.client.utils.printer import Printer, VerboseStrategy
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_date
 from katello.client.utils.encoding import u_str
@@ -434,11 +434,10 @@ class Register(SystemAction):
         environment = get_environment(org, environment_name)
         system = self.api.register(name, org, environment['id'], activation_keys, 'system', release, sla, facts=facts)
 
-        if is_valid_record(system):
-            print _("Successfully registered system [ %s ]") % system['name']
-        else:
-            print >> sys.stderr, _("Could not register system [ %s ]") % name
-        return os.EX_OK
+        test_record(system,
+            _("Successfully registered system [ %s ]") % system['name'],
+            _("Could not register system [ %s ]") % name
+        )
 
 class Unregister(SystemAction):
 
@@ -671,12 +670,11 @@ class Update(SystemAction):
 
         response = self.api.update(system_uuid, updates)
 
-        if is_valid_record(response):
-            print _("Successfully updated system [ %s ]") % response['name']
-        else:
-            print >> sys.stderr, _("Could not update system [ %s ]") % systems[0]['name']
+        test_record(response,
+            _("Successfully updated system [ %s ]") % response['name'],
+            _("Could not update system [ %s ]") % systems[0]['name']
+        )
 
-        return os.EX_OK
 
 class Report(SystemAction):
 

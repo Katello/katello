@@ -22,7 +22,7 @@ from optparse import OptionValueError
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, system_exit
+from katello.client.core.utils import test_record, get_abs_path, run_spinner_in_bg, system_exit
 from katello.client.api.utils import get_library, get_environment, get_template, get_product, get_repo
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
@@ -272,12 +272,10 @@ class Create(TemplateAction):
             parentId = None
 
         template = self.api.create(env["id"], name, desc, parentId)
-        if is_valid_record(template):
-            print _("Successfully created template [ %s ]") % template['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create template [ %s ]") % name
-            return os.EX_DATAERR
+        test_record(template,
+            _("Successfully created template [ %s ]") % template['name'],
+            _("Could not create template [ %s ]") % name
+        )
 
 
 

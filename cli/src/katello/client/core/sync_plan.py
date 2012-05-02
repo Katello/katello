@@ -21,7 +21,7 @@ from gettext import gettext as _
 from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, format_date, system_exit
+from katello.client.core.utils import test_record, format_date, system_exit
 from katello.client.core.datetime_formatter import DateTimeFormatter, DateTimeFormatException
 from katello.client.api.utils import get_sync_plan
 
@@ -138,12 +138,10 @@ class Create(SyncPlanAction):
         sync_date = self.parse_datetime(date, time)
 
         plan = self.api.create(org_name, name, sync_date, interval, description)
-        if is_valid_record(plan):
-            print _("Successfully created synchronization plan [ %s ]") % plan['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create synchronization plan [ %s ]") % plan['name']
-            return os.EX_DATAERR
+        test_record(plan,
+            _("Successfully created synchronization plan [ %s ]") % plan['name'],
+            _("Could not create synchronization plan [ %s ]") % plan['name']
+        )
 
 
 class Update(SyncPlanAction):

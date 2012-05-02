@@ -21,7 +21,7 @@ from gettext import gettext as _
 from katello.client.api.environment import EnvironmentAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import test_record
 from katello.client.api.utils import get_environment
 
 Config()
@@ -133,12 +133,10 @@ class Create(EnvironmentAction):
         priorId = self.get_prior_id(orgName, priorName)
 
         env = self.api.create(orgName, name, description, priorId)
-        if is_valid_record(env):
-            print _("Successfully created environment [ %s ]") % env['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create environment [ %s ]") % env['name']
-            return os.EX_DATAERR
+        test_record(env,
+            _("Successfully created environment [ %s ]") % env['name'],
+            _("Could not create environment [ %s ]") % env['name']
+        )
 
 
 class Update(EnvironmentAction):

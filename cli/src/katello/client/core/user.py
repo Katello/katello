@@ -23,7 +23,7 @@ from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.utils import get_user, get_environment
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, convert_to_mime_type, attachment_file_name, save_report
+from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
 
 Config()
 
@@ -94,11 +94,10 @@ class Create(UserAction):
             environment = None
 
         user = self.api.create(username, password, email, disabled, environment)
-        if is_valid_record(user):
-            print _("Successfully created user [ %s ]") % user['username']
-        else:
-            print >> sys.stderr, _("Could not create user [ %s ]") % username
-        return os.EX_OK
+        test_record(user,
+            _("Successfully created user [ %s ]") % user['username'],
+            _("Could not create user [ %s ]") % username
+        )
 
 # ------------------------------------------------------------------------------
 

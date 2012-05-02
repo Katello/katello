@@ -23,7 +23,7 @@ from katello.client.api.provider import ProviderAPI
 from katello.client.server import ServerRequestError
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask, format_sync_errors
+from katello.client.core.utils import test_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask, format_sync_errors
 from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.core.utils import ProgressBar
 from katello.client.api.utils import get_provider
@@ -156,24 +156,16 @@ class Update(ProviderAction):
 
     def create(self, name, orgName, description, url):
         prov = self.api.create(name, orgName, description, "Custom", url)
-        if is_valid_record(prov):
-            print _("Successfully created provider [ %s ]") % prov['name']
-            return True
-        else:
-            print >> sys.stderr, _("Could not create provider [ %s ]") % prov['name']
-            return False
+        test_record(prov,
+            _("Successfully created provider [ %s ]") % prov['name'],
+            _("Could not create provider [ %s ]") % prov['name']
+        )
 
 
     def update(self, name, orgName, newName, description, url):
-
         prov = get_provider(orgName, name)
-        if prov != None:
-            prov = self.api.update(prov["id"], newName, description, url)
-            print _("Successfully updated provider [ %s ]") % prov['name']
-            return True
-        else:
-            return False
-
+        prov = self.api.update(prov["id"], newName, description, url)
+        system_exit(os.EX_OK, _("Successfully updated provider [ %s ]") % prov['name'])
 
     def run(self):
         name        = self.get_option('name')
@@ -183,13 +175,9 @@ class Update(ProviderAction):
         url         = self.get_option('url')
 
         if self._create:
-            if not self.create(name, orgName, description, url):
-                return os.EX_DATAERR
+            self.create(name, orgName, description, url)
         else:
-            if not self.update(name, orgName, newName, description, url):
-                return os.EX_DATAERR
-
-        return os.EX_OK
+            self.update(name, orgName, newName, description, url)
 
 
 # ==============================================================================

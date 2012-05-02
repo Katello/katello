@@ -33,11 +33,25 @@ def is_valid_record(rec):
     """
     if type(rec)==type(dict()) and 'created_at' in rec:
         return (rec['created_at'] != None)
-
     elif type(rec)==type(dict()) and 'created' in rec:
         return (rec['created'] != None)
     else:
         return False
+
+def test_record(rec, success_msg, failure_msg):
+    """
+    Test if a record is valid, and exit with a proper return code and a message.
+    @type rec: dictionary
+    @param rec: record returned from server
+    @type success_msg: string
+    @param success_msg: success message
+    @type failure_msg: string
+    @param failure_msg: failure message
+    """
+    if is_valid_record(rec):
+        system_exit(os.EX_OK, success_msg)
+    else:
+        system_exit(os.EX_DATAERR, failure_msg)
 
 
 

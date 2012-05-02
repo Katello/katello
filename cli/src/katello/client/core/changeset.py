@@ -22,7 +22,7 @@ from optparse import OptionValueError
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit, format_task_errors
+from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit, format_task_errors
 from katello.client.api.utils import get_organization, get_environment, get_changeset, get_template, get_repo, get_product
 from katello.client.utils import printer
 from katello.client.utils.encoding import u_str
@@ -161,12 +161,11 @@ class Create(ChangesetAction):
         csDescription = self.get_option('description')
 
         env = get_environment(orgName, envName)
-        if env != None:
-            cset = self.api.create(orgName, env["id"], csName, csDescription)
-            if is_valid_record(cset):
-                print _("Successfully created changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
-            else:
-                print >> sys.stderr, _("Could not create changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
+        cset = self.api.create(orgName, env["id"], csName, csDescription)
+        test_record(cset,
+            _("Successfully created changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"]),
+            _("Could not create changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
+        )
 
         return os.EX_OK
 

@@ -21,7 +21,7 @@ from gettext import gettext as _
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.api.utils import get_role, get_permission
-from katello.client.core.utils import system_exit, is_valid_record
+from katello.client.core.utils import system_exit, test_record
 from katello.client.utils.printer import Printer, GrepStrategy, VerboseStrategy
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
@@ -109,12 +109,10 @@ class Create(PermissionAction):
         role = get_role(role_name)
 
         permission = self.api.create(role['id'], name, desc, scope, verbs, tag_ids, org_name)
-        if is_valid_record(permission):
-            print _("Successfully created permission [ %s ] for user role [ %s ]") % (name, role['name'])
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create permission [ %s ]") % name
-            return os.EX_DATAERR
+        test_record(permission,
+            _("Successfully created permission [ %s ] for user role [ %s ]") % (name, role['name']),
+            _("Could not create permission [ %s ]") % name
+        )
 
 
 class Delete(PermissionAction):

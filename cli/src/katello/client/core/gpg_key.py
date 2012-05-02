@@ -20,7 +20,7 @@ from gettext import gettext as _
 
 from katello.client.api.gpg_key import GpgKeyAPI
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path
+from katello.client.core.utils import test_record, get_abs_path
 from katello.client.utils import printer
 
 from sys import stdin
@@ -147,15 +147,11 @@ class Create(GpgKeyAction):
             print m
             return os.EX_DATAERR
 
-
         key = self.api.create(orgName, keyName, content)
-        if is_valid_record(key):
-            print _("Successfully created gpg key [ %s ]") % key['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create gpg key [ %s ]") % keyName
-            return os.EX_DATAERR
-
+        test_record(key,
+            _("Successfully created gpg key [ %s ]") % key['name'],
+            _("Could not create gpg key [ %s ]") % keyName
+        )
 
 
 class Update(GpgKeyAction):
@@ -196,13 +192,10 @@ class Update(GpgKeyAction):
             return os.EX_DATAERR
 
         key = self.api.update(key_id, newKeyName, content)
-        if is_valid_record(key):
-            print _("Successfully updated gpg key [ %s ]") % key['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not updated gpg key [ %s ]") % keyName
-            return os.EX_DATAERR
-
+        test_record(key,
+            _("Successfully updated gpg key [ %s ]") % key['name'],
+            _("Could not updated gpg key [ %s ]") % keyName
+        )
 
 
 class Delete(GpgKeyAction):

@@ -22,7 +22,7 @@ from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.core.utils import test_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.utils.printer import Printer, VerboseStrategy
 from katello.client.utils import printer
 from datetime import timedelta, datetime
@@ -76,12 +76,10 @@ class Create(OrganizationAction):
         description = self.get_option('description')
 
         org = self.api.create(name, description)
-        if is_valid_record(org):
-            print _("Successfully created org [ %s ]") % org['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create org [ %s ]") % org['name']
-            return os.EX_DATAERR
+        test_record(org,
+            _("Successfully created org [ %s ]") % org['name'],
+            _("Could not create org [ %s ]") % org['name']
+        )
 
 
 # ------------------------------------------------------------------------------

@@ -22,7 +22,7 @@ from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, system_exit
+from katello.client.core.utils import test_record, system_exit
 
 Config()
 
@@ -74,12 +74,11 @@ class Create(UserRoleAction):
         desc = self.get_option('desc')
 
         role = self.api.create(name, desc)
-        if is_valid_record(role):
-            print _("Successfully created user role [ %s ]") % role['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create user role [ %s ]") % name
-            return os.EX_DATAERR
+        test_record(role,
+            _("Successfully created user role [ %s ]") % role['name'],
+            _("Could not create user role [ %s ]") % name
+        )
+
 
 # ------------------------------------------------------------------------------
 

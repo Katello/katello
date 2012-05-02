@@ -21,7 +21,7 @@ from gettext import gettext as _
 from katello.client.api.activation_key import ActivationKeyAPI
 from katello.client.api.template import TemplateAPI
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import test_record
 from katello.client.utils import printer
 from katello.client.api.utils import get_environment, get_organization
 from katello.client.cli.base import OptionException
@@ -165,12 +165,10 @@ class Create(ActivationKeyAction):
             return os.EX_DATAERR
 
         key = self.api.create(environment['id'], keyName, keyDescription, templateId)
-        if is_valid_record(key):
-            print _("Successfully created activation key [ %s ]") % key['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create activation key [ %s ]") % keyName
-            return os.EX_DATAERR
+        test_record(key,
+            _("Successfully created activation key [ %s ]") % key['name'],
+            _("Could not create activation key [ %s ]") % keyName
+        )
 
 
 
