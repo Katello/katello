@@ -49,6 +49,7 @@ describe Api::SystemsController do
     login_user
     set_default_locale
     disable_org_orchestration
+    disable_consumer_group_orchestration
 
     Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Candlepin::Consumer.stub!(:update).and_return(true)
@@ -357,6 +358,55 @@ describe Api::SystemsController do
       post :update, :id => uuid, :serviceLevel => "SLA"
       response.body.should == @sys.to_json
       response.should be_success
+    end
+
+  end
+
+  describe "add system groups to a system" do
+    before(:each) do
+      @system = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
+      @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id )
+      @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
+      Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid})
+      System.stub!(:first).and_return(@system)
+    end
+
+    let(:action) { :add_system_groups }
+    let(:req) { post :add_system_groups, :id => @system.uuid }
+    let(:authorized_user) { user_with_update_permissions }
+    let(:unauthorized_user) { user_without_update_permissions }
+    it_should_behave_like "protected action"
+
+    it "should update the system groups the system is in" do
+      ids = "" + @system_group_1.id.to_s + "," + @system_group_2.id.to_s
+      post :add_system_groups, :id => @system.uuid, :system => { :system_group_ids => ids }
+      response.should be_success
+      @system.system_group_ids.should include(@system_group_1.id)
+      @system.system_group_ids.should include(@system_group_2.id)
+    end
+
+  end
+
+  describe "remove system groups to a system" do
+    before(:each) do
+      @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id )
+      @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
+      @system = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, 
+                              :uuid => uuid, :description => "fake description", :system_group_ids => [@system_group_1.id, @system_group_2.id])
+      Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid})
+      System.stub!(:first).and_return(@system)
+    end
+
+    let(:action) { :add_system_groups }
+    let(:req) { post :add_system_groups, :id => @system.uuid }
+    let(:authorized_user) { user_with_update_permissions }
+    let(:unauthorized_user) { user_without_update_permissions }
+    it_should_behave_like "protected action"
+
+    it "should update the system groups the system is in" do
+      ids = "" + @system_group_1.id.to_s + "," + @system_group_2.id.to_s
+      delete :remove_system_groups, :id => @system.uuid, :system => { :system_group_ids => ids }
+      @system.system_group_ids.should be_empty
     end
 
   end
