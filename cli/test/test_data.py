@@ -205,7 +205,7 @@ PRODUCTS = [
 
 COMMON_ASYNC_RESULT_SUCCESS = [
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": "{\"errors\":[None,None]}",
     "created_at": None,
     "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
     "updated_at": None,
@@ -274,7 +274,7 @@ SYNC_RESULT_WITHOUT_ERROR = [
     "start_time": "2011-08-25T14:42:16Z"
   },
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": "{\"errors\":[None,None]}",
     "created_at": None,
     "uuid": "6d523975-cf28-11e0-b196-f0def13c24e5",
     "updated_at": None,
@@ -1043,4 +1043,36 @@ SYSTEMS = [
     "environment_id": 5,
     "system_template_id": None
   }
-]                                
+]
+
+ACTIVATION_KEYS = [
+  {
+    "user_id": 1,
+    "created_at": "2012-05-03T17:19:49Z",
+    "name": "Test Key 1",
+    "updated_at": "2012-05-03T17:19:49Z",
+    "description": "This is my first activation key.",
+    "pools": [
+
+    ],
+    "id": 1,
+    "organization_id": 1,
+    "system_template_id": None,
+    "environment_id": 5
+  },
+  {
+    "user_id": 1,
+    "created_at": "2012-05-03T17:19:49Z",
+    "name": "For The Horde",
+    "updated_at": "2012-05-03T17:19:49Z",
+    "description": "Activation Key for testing.",
+    "pools": [
+
+    ],
+    "id": 2,
+    "organization_id": 1,
+    "system_template_id": None,
+    "environment_id": 5
+  }
+]
+                                

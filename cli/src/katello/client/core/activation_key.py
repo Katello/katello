@@ -20,6 +20,7 @@ from gettext import gettext as _
 
 from katello.client.api.activation_key import ActivationKeyAPI
 from katello.client.api.template import TemplateAPI
+from katello.client.api.system_group import SystemGroupAPI
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record
 from katello.client.api.utils import get_environment, get_organization
@@ -277,6 +278,97 @@ class Delete(ActivationKeyAction):
         self.api.delete(keys[0]['id'])
         print _("Successfully deleted activation key [ %s ]") % keyName
         return os.EX_OK
+
+
+class AddSystemGroup(ActivationKeyAction):
+
+    description = _('add system group to an activation key')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("activation key name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--system_group', dest='system_group_name',
+                              help=_("system group name (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+        self.require_option('system_group_name')
+
+    def run(self):
+        org_name = self.get_option('org')
+        name = self.get_option('name')
+        system_group_name = self.get_option('system_group_name')
+
+        activation_key = self.api.activation_keys_by_organization(org_name, name)
+
+        if activation_key is None:
+            return os.EX_DATAERR
+        else:
+            activation_key = activation_key[0]
+
+        system_group = SystemGroupAPI().system_groups(org_name, { 'name' : system_group_name})
+
+        if system_group is None:
+            return os.EX_DATAERR
+        else:
+            system_group = system_group[0]
+
+        activation_key = self.api.add_system_group(org_name, activation_key["id"], system_group['id'])
+
+        if activation_key != None:
+            print _("Successfully added system group to activation key [ %s ]") % activation_key['name']
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
+
+
+class RemoveSystemGroup(ActivationKeyAction):
+
+    description = _('remove system groups to a system')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("activation key name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--system_group', dest='system_group_name',
+                              help=_("system group name (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+        self.require_option('system_group_name')
+
+    def run(self):
+        org_name = self.get_option('org')
+        name = self.get_option('name')
+        system_group_name = self.get_option('system_group_name')
+
+        activation_key = self.api.activation_keys_by_organization(org_name, name)
+
+        if activation_key is None:
+            return os.EX_DATAERR
+        else:
+            activation_key = activation_key[0]
+
+        system_group = SystemGroupAPI().system_groups(org_name, { 'name' : system_group_name})
+
+        if system_group is None:
+            return os.EX_DATAERR
+        else:
+            system_group = system_group[0]
+
+        activation_key = self.api.remove_system_group(org_name, activation_key["id"], system_group['id'])
+
+        if activation_key != None:
+            print _("Successfully removed system group from activation key [ %s ]") % activation_key['name']
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
+
 
 class ActivationKey(Command):
     description = _('activation key specific actions in the katello server')

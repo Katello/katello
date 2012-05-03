@@ -72,6 +72,7 @@ class List(SystemAction):
             self.printer.setHeader(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
 
         self.printer.addColumn('name')
+        self.printer.addColumn('uuid')
         self.printer.addColumn('serviceLevel', _('Service Level'))
 
         self.printer._grep = True
@@ -742,7 +743,7 @@ class AddSystemGroups(SystemAction):
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
-                               help=_("system group name (required)"))
+                               help=_("system name (required)"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--system_groups', dest='system_group_names',
@@ -787,7 +788,7 @@ class RemoveSystemGroups(SystemAction):
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
-                               help=_("system group name (required)"))
+                               help=_("system name (required)"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--system_groups', dest='system_group_names',

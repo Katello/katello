@@ -63,6 +63,8 @@ def setup_admin(admin):
     akey_cmd.add_action('list', activation_key.List())
     akey_cmd.add_action('update', activation_key.Update())
     akey_cmd.add_action('delete', activation_key.Delete())
+    akey_cmd.add_action('add_system_group', activation_key.AddSystemGroup())
+    akey_cmd.add_action('remove_system_group', activation_key.RemoveSystemGroup())
     admin.add_command('activation_key', akey_cmd)
 
     env_cmd = environment.Environment()
