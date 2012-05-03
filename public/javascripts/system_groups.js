@@ -63,7 +63,7 @@ KT.system_groups = (function(){
             options[name] = false;
         }
         $.ajax({
-            type: "PUT",
+            type: "POST",
             url: checkbox.attr("data-url"),
             data: options,
             cache: false
