@@ -206,6 +206,23 @@ class Provider < ActiveRecord::Base
     end
   end
 
+  def available_releases
+    releases = []
+    #ca = File.read(CDN::CdnResource.ca_file)
+    self.products.engineering.each do |product|
+      #content_urls = product.productContent.map { |pc| pc.content.contentUrl }
+      cdn_var_substitutor = CDN::CdnVarSubstitutor.new(product.provider[:repository_url],
+                                                       :ssl_client_cert => OpenSSL::X509::Certificate.new(product.certificate),
+                                                       :ssl_client_key => OpenSSL::PKey::RSA.new(product.key))
+      product.productContent.each do |pc|
+        cdn_var_substitutor.substitute_vars(pc.content.contentUrl).each do |(substitutions, path)|
+          releases << CDN::Utils.parse_version(substitutions['releasever'])[:minor]
+        end
+      end
+    end
+    releases.uniq.sort
+  end
+
   protected
 
    def sanitize_repository_url
