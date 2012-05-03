@@ -10,6 +10,7 @@ Src::Application.routes.draw do
       get :systems
       post :add_systems
       post :remove_systems
+      post :lock
     end
   end
 
