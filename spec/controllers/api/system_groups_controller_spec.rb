@@ -45,6 +45,16 @@ describe Api::SystemGroupsController do
      end
 
      describe "GET index" do
+      let(:action) {:index}
+      let(:req) { get :index, :organization_id=>@org.cp_key}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
        it "requests filters using search criteria" do
          get :index, :organization_id=>@org.cp_key
          response.should be_success
@@ -53,6 +63,17 @@ describe Api::SystemGroupsController do
 
 
      describe "GET show" do
+      let(:action) {:show}
+      let(:req) { get :show, :id=>@group.id, :organization_id=>@org.cp_key}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+
        it "should return successfully" do
          get :show, :id=>@group.id, :organization_id=>@org.cp_key
          response.should be_success
@@ -62,6 +83,16 @@ describe Api::SystemGroupsController do
 
 
      describe "POST create" do
+       let(:action) {:create}
+       let(:req) { post :create, :organization_id=>@org.cp_key}
+       let(:authorized_user) do
+         user_with_permissions { |u| u.can(:create, :system_groups, nil, @org) }
+       end
+       let(:unauthorized_user) do
+         user_without_permissions
+       end
+       it_should_behave_like "protected action"
+
        it "should create a group correctly" do
          post :create, :organization_id=>@org.cp_key, :system_group=>{:name=>"foo", :description=>"describe"}
          response.should be_success
@@ -87,6 +118,16 @@ describe Api::SystemGroupsController do
      end
 
      describe "PUT update" do
+       let(:action) {:update}
+       let(:req) { put :update, :id=>@group.id, :organization_id=>@org.cp_key}
+       let(:authorized_user) do
+         user_with_permissions { |u| u.can(:update, :system_groups, @group.id, @org) }
+       end
+       let(:unauthorized_user) do
+         user_without_permissions
+       end
+       it_should_behave_like "protected action"
+
        it "should allow name to be changed" do
          old_name = @group.name
          put :update, :organization_id=>@org.cp_key, :id=>@group.id, :system_group=>{:name=>"rocky"}
@@ -103,21 +144,23 @@ describe Api::SystemGroupsController do
 
 
 
-     describe "POST add/remove systems" do
+     describe "POST add systems" do
+       let(:action) {:add_systems}
+       let(:req) { post :add_systems, :id=>@group.id, :organization_id=>@org.cp_key}
+       let(:authorized_user) do
+         user_with_permissions { |u| u.can(:update, :system_groups, @group.id, @org) }
+       end
+       let(:unauthorized_user) do
+         user_without_permissions
+       end
+       it_should_behave_like "protected action"
+
        it "should allow adding of systems" do
          post :add_systems, :organization_id=>@org.id, :id=>@group.id,
               :system_group=>{:system_ids=>[@system.uuid]}
          response.should be_success
          @group.reload.systems.should include @system
 
-       end
-       it "should allow removal of systems" do
-         @group.systems  = [@system]
-         @group.save!
-         post :remove_systems, :organization_id=>@org.id, :id=>@group.id,
-              :system_group=>{:system_ids=>[@system.uuid]}
-         response.should be_success
-         @group.reload.systems.should_not include @system
        end
 
        it "should not allow addition if locked" do
@@ -130,7 +173,39 @@ describe Api::SystemGroupsController do
        end
      end
 
-    describe "POST lock/unlock group" do
+     describe "POST remove systems" do
+       let(:action) {:remove_systems}
+       let(:req) { post :remove_systems, :id=>@group.id, :organization_id=>@org.cp_key}
+       let(:authorized_user) do
+         user_with_permissions { |u| u.can(:update, :system_groups, @group.id, @org) }
+       end
+       let(:unauthorized_user) do
+         user_without_permissions
+       end
+       it_should_behave_like "protected action"
+
+       it "should allow removal of systems" do
+         @group.systems  = [@system]
+         @group.save!
+         post :remove_systems, :organization_id=>@org.id, :id=>@group.id,
+              :system_group=>{:system_ids=>[@system.uuid]}
+         response.should be_success
+         @group.reload.systems.should_not include @system
+       end
+
+     end
+
+    describe "POST lock group" do
+      let(:action) {:lock}
+      let(:req) { post :lock, :id=>@group.id, :organization_id=>@org.cp_key}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:locking, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
       it "should allow locking" do
         @group.locked = false
         @group.save!
@@ -138,17 +213,41 @@ describe Api::SystemGroupsController do
         response.should be_success
         @group.reload.locked.should == true
       end
-      it "should allow locking" do
-        @group.locked = true
-        @group.save!
-        post :unlock, :organization_id=>@org.id, :id=>@group.id
-        response.should be_success
-        @group.reload.locked.should == false
-      end
     end
+
+     describe "POST unlock group" do
+       let(:action) {:unlock}
+       let(:req) { post :unlock, :id=>@group.id, :organization_id=>@org.cp_key}
+       let(:authorized_user) do
+         user_with_permissions { |u| u.can(:locking, :system_groups, @group.id, @org) }
+       end
+       let(:unauthorized_user) do
+         user_without_permissions
+       end
+       it_should_behave_like "protected action"
+
+       it "should allow unlocking" do
+         @group.locked = true
+         @group.save!
+         post :unlock, :organization_id=>@org.id, :id=>@group.id
+         response.should be_success
+         @group.reload.locked.should == false
+       end
+     end
 
 
      describe "DELETE" do
+       let(:action) {:destroy}
+       let(:req) { delete :destroy, :id=>@group.id, :organization_id=>@org.cp_key}
+       let(:authorized_user) do
+         user_with_permissions { |u| u.can(:delete, :system_groups, @group.id, @org) }
+       end
+       let(:unauthorized_user) do
+         user_without_permissions
+       end
+       it_should_behave_like "protected action"
+
+
        it "should complete successfully" do
          controller.stub(:render)
          delete :destroy, :organization_id=>@org.cp_key, :id=>@group.id
