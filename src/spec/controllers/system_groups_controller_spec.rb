@@ -193,8 +193,6 @@ describe SystemGroupsController do
       end
       it_should_behave_like "protected action"
 
-
-
       it "should allow name to be changed" do
         old_name = @group.name
         put :update, :id=>@group.id, :system_group=>{:name=>"rocky"}
@@ -203,12 +201,35 @@ describe SystemGroupsController do
         SystemGroup.where(:name=>old_name).first.should be_nil
 
       end
-      it "should allow locked to be toggled" do
-        put :update, :id=>@group.id, :system_group=>{:locked=>"true"}
+    end
+
+    describe "POST lock/unlock" do
+      let(:action) {:lock}
+      let(:req) { post :lock, :id=>@group.id }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:locking, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+      it "should allow locked to be toggled on" do
+        post :lock, :id=>@group.id, :system_group=>{:lock=>"true"}
         response.should be_success
         SystemGroup.find(@group.id).locked.should == true
       end
+
+      it "should allow locked to be toggled on" do
+        @group.locked = true
+        @group.save!
+        post :lock, :id=>@group.id, :system_group=>{:lock=>"false"}
+        response.should be_success
+        SystemGroup.find(@group.id).locked.should == false
+      end
+
     end
+
 
     describe "POST add systems" do
       let(:action) {:add_systems}

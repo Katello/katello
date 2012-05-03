@@ -13,7 +13,7 @@
 class SystemGroupsController < ApplicationController
 
   before_filter :panel_options, :only=>[:index, :items, :create]
-  before_filter :find_group, :only=>[:edit, :update, :destroy, :systems,
+  before_filter :find_group, :only=>[:edit, :update, :destroy, :systems, :lock,
                                      :show, :add_systems, :remove_systems]
   before_filter :authorize
   def rules
@@ -22,6 +22,7 @@ class SystemGroupsController < ApplicationController
     edit_perm = lambda{@group.editable?}
     create_perm = lambda{SystemGroup.creatable?(current_organization)}
     destroy_perm = lambda{@group.deletable?}
+    lock_perm = lambda{@group.locking?}
     {
         :index=>any_readable,
         :items=>any_readable,
@@ -35,7 +36,9 @@ class SystemGroupsController < ApplicationController
         :auto_complete=>any_readable,
         :add_systems=> edit_perm,
         :remove_systems=>edit_perm,
-        :validate_name=>any_readable
+        :validate_name=>any_readable,
+        :lock=>lock_perm,
+        :unlock=>lock_perm
     }
 
   end
@@ -95,8 +98,6 @@ class SystemGroupsController < ApplicationController
     elsif options[:description]
       @group.description = options[:description]
       to_ret = @group.description
-    elsif options[:locked]
-      @group.locked = options[:locked] == "true"
     end
 
     @group.save!
@@ -111,6 +112,15 @@ class SystemGroupsController < ApplicationController
     notice e, {:level => :error}
     render :text=>e, :status=>500
   end
+
+
+  def lock
+    @group.locked = params[:system_group][:lock] == 'true'
+    @group.save!
+    notice _("Package Filter '%s' has been updated.") % @group.name
+    render :text=>""
+  end
+
 
   def destroy
     @group.destroy
