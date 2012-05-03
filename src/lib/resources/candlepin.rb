@@ -101,7 +101,7 @@ module Candlepin
                  :facts => facts,
                  :installedProducts => installedProducts,
                  :autoheal => autoheal,
-                 :releaseVer => releaseVer,
+                 :releaseVer => releaseVer||'',
                  :serviceLevel => service_level}
         response = self.post(url, attrs.to_json, self.default_headers).body
         JSON.parse(response).with_indifferent_access
