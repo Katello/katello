@@ -59,12 +59,26 @@ describe Katello::PackageUtils, :katello => true do
           :name  => "name",
           :version => "ver.si.on",
           :release => "relea.se",
-          :arch => "x86_64", }
+          :arch => "x86_64" }
       end
 
       it_should_behave_like "nvrea parsable string"
       it_should_behave_like "nvrea_nvre parsable string"
     end
+
+    context "nvrea with dash and dots in name and rpm" do
+      subject { "name-with-dashes-and.dots-1.0-1.noarch.rpm" }
+      let(:expected) do
+        { :name  => "name-with-dashes-and.dots",
+          :version => "1.0",
+          :release => "1",
+          :arch => "noarch",
+          :suffix => "rpm" }
+      end
+      it_should_behave_like "nvrea parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
+    end
+
 
     context "nvrea with rpm without epoch" do
       subject { "name-ver.si.on-relea.se.x86_64.rpm" }
@@ -131,5 +145,17 @@ describe Katello::PackageUtils, :katello => true do
       it_should_behave_like "nvre parsable string"
       it_should_behave_like "nvrea_nvre parsable string"
     end
+
+    context "nvre with dash and dots in name and rpm" do
+      subject { "name-with-dashes-and.dots-1.0-1" }
+      let(:expected) do
+        { :name  => "name-with-dashes-and.dots",
+          :version => "1.0",
+          :release => "1" }
+      end
+      it_should_behave_like "nvre parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
+    end
+
   end
 end
