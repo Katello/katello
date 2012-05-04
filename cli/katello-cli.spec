@@ -42,6 +42,8 @@ Requires:      python-kerberos
 Requires:      PyXML
 BuildRequires: python2-devel
 BuildRequires: gettext
+BuildRequires: /usr/bin/pod2man
+
 BuildArch:     noarch
 
 %description common
@@ -51,6 +53,13 @@ Common classes for katello clients
 %setup -q
 
 %build
+# generate usage docs and incorporate it into the man page
+pushd man
+PYTHONPATH=../src python ../bin/katello usage >katello-usage.txt
+sed -e '/^THE_USAGE/{r katello-usage.txt' -e 'd}' katello.pod |\
+    sed -e 's/THE_VERSION/%{version}/g' |\
+    /usr/bin/pod2man --name=katello -c "Katello Reference" --section=1 --release=%{version} - katello.man1
+popd
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -71,6 +80,8 @@ install -pm 0644 src/%{base_name}/client/api/*.py $RPM_BUILD_ROOT%{python_siteli
 install -pm 0644 src/%{base_name}/client/cli/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/cli/
 install -pm 0644 src/%{base_name}/client/core/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/core/
 install -pm 0644 src/%{base_name}/client/utils/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/utils/
+install -d -m 0755 %{buildroot}%{_mandir}/man1
+install -m 0644 man/%{base_name}.man1 %{buildroot}%{_mandir}/man1/%{base_name}.1
 
 
 %clean
@@ -81,7 +92,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
 %doc README LICENSE
-#%{_mandir}/man8/%{base_name}.8*
+%{_mandir}/man1/%{base_name}.1*
 
 %files common
 %defattr(-,root,root)

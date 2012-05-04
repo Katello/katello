@@ -30,6 +30,7 @@ if sys.getdefaultencoding() == 'ascii':
 
 from katello.client.cli.admin import AdminCLI
 from katello.client.shell import KatelloShell
+from katello.client.utils.usage import UsageGenerator
 from katello.client.core import (
   activation_key,
   environment,
@@ -256,9 +257,14 @@ def setup_admin(admin):
     gpgkey_cmd.add_action('delete', gpg_key.Delete())
     admin.add_command('gpg_key', gpgkey_cmd)
 
-
 if __name__ == "__main__":
-    admin = AdminCLI()
-    setup_admin(admin)
-    sys.exit(admin.main())
-
+    # "hidden" parameter "usage" shows extensive help page with all commands
+    # for generating manual page and documentation
+    if len(sys.argv) > 1 and sys.argv[1] == 'usage':
+        usage_gen = UsageGenerator()
+        setup_admin(usage_gen.collector())
+        usage_gen.print_usage()
+    else:
+        admin = AdminCLI()
+        setup_admin(admin)
+        sys.exit(admin.main())
