@@ -14,41 +14,35 @@ module Katello
   module PackageUtils
 
     SUFFIX_RE = /\.(rpm)$/
+    ARCH_RE = /\.([^.\-]*)$/
     EPOCH_RE = /([0-9]+):/
-    NVREA_RE = /^(?:([0-9]+):)?([^.]+)-([^-]+)-(.+)[.]([^.]+)?$/
+    NVRE_RE = /^(?:([0-9]+):)?(.*)-([^-]*)-([^-]*)$/
     SUPPORTED_ARCHS = %w[noarch i386 i686 ppc64 s390x x86_64 ia64]
 
     #parses package nvrea and stores it in a hash
     #epoch:name-ve.rs.ion-rel.e.ase.arch.rpm
     def self.parse_nvrea(name)
       name, suffix = extract_suffix(name)
-      package = {:suffix => suffix}
+      name, arch = extract_arch(name)
+      return unless arch
 
-      if match = NVREA_RE.match(name)
-        package.merge!(:epoch => match[1],
-         :name => match[2],
-         :version => match[3],
-         :release => match[4],
-         :arch => match[5])
-        return package.delete_if{|k,v| v.nil?}
-      else
-        return
+      if nvre = parse_nvre(name)
+        nvre.merge(:suffix => suffix, :arch => arch).delete_if {|k,v| v.nil?}
       end
-
     end
 
     #parses package nvre and stores it in a hash
-    #epoch:name-ve.rs.ion-rel.e.ase.arch.rpm
+    #epoch:name-ve.rs.ion-rel.e.ase.rpm
     def self.parse_nvre(name)
-      package = parse_nvrea(name)
-      return unless package
+      name, suffix = extract_suffix(name)
 
-      if package[:arch]
-        package[:release] << ".#{package[:arch]}"
-        package.delete(:arch)
+      if match = NVRE_RE.match(name)
+        {:suffix => suffix,
+         :epoch => match[1],
+         :name => match[2],
+         :version => match[3],
+         :release => match[4]}.delete_if {|k,v| v.nil?}
       end
-
-      package
     end
 
     # is able to take both nvre and nvrea and parse it correctly
@@ -64,6 +58,10 @@ module Katello
 
     def self.extract_suffix(name)
       return name.split(SUFFIX_RE)
+    end
+
+    def self.extract_arch(name)
+      return name.split(ARCH_RE)
     end
 
     def self.build_nvrea(package, include_zero_epoch=true)
@@ -118,7 +116,6 @@ module Katello
       end
       result
     end
-
 
   end
 end
