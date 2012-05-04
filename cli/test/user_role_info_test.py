@@ -46,6 +46,7 @@ class UserRoleInfoTest(CLIActionTestCase):
         self.mock(self.action, 'getPermissions', self.PERMISSIONS)
 
     def test_finds_role(self):
+        self.mock(self.action.api, 'ldap_groups', [])
         self.action.run()
         self.action.api.roles.assert_called_once_with({'name': self.ROLE['name']})
 
@@ -54,4 +55,5 @@ class UserRoleInfoTest(CLIActionTestCase):
         self.assertRaises(Exception, self.action.run)
 
     def test_returns_ok(self):
+        self.mock(self.action.api, 'ldap_groups', [])
         self.assertEqual(self.action.run(), os.EX_OK)
