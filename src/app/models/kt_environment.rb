@@ -407,7 +407,7 @@ class KTEnvironment < ActiveRecord::Base
     if AppConfig.katello?
       self.repositories.enabled.map(&:minor).compact.uniq.sort
     else
-      self.organization.library.repositories.map(&:minor).compact.uniq.sort
+      self.organization.redhat_provider.available_releases
     end
   end
 
