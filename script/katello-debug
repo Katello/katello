@@ -143,7 +143,7 @@ output = `cat /var/log/messages|grep qpidd > #{File.join(target_dir, "/var/log/q
 output = `katello-debug-certificates >> #{File.join(target_dir, "certificates")}`
 
 # Add list of ssl-build dir
-output = `find /root/ssl-build -ls | sort > #{File.join(target_dir, "ssl_build_dir")}`
+output = `find /root/ssl-build -ls | sort -k 11 > #{File.join(target_dir, "ssl_build_dir")}`
 
 # Below are custom system calls to get more info
 ouput = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug|qpid" >> #{File.join(target_dir, "packages")}`
