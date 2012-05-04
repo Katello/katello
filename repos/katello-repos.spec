@@ -34,6 +34,7 @@ install -d -m 0755 %{buildroot}%{_sysconfdir}/yum.repos.d
 
 %if 0%{?fedora}
 install -m 644 fedora-katello.repo %{buildroot}%{_sysconfdir}/yum.repos.d/katello.repo
+install -m 644 fedora-katello-testing.repo %{buildroot}%{_sysconfdir}/yum.repos.d/katello-testing.repo
 install -m 644 fedora-candlepin.repo %{buildroot}%{_sysconfdir}/yum.repos.d/candlepin.repo
 install -m 644 fedora-pulp.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp.repo
 install -m 644 fedora-pulp-testing.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp-testing.repo
@@ -42,6 +43,7 @@ install -m 644 fedora-thumbslug.repo %{buildroot}%{_sysconfdir}/yum.repos.d/thum
 
 %if 0%{?rhel}
 install -m 644 rhel-katello.repo %{buildroot}%{_sysconfdir}/yum.repos.d/katello.repo
+install -m 644 rhel-katello-testing.repo %{buildroot}%{_sysconfdir}/yum.repos.d/katello-testing.repo
 install -m 644 rhel-candlepin.repo %{buildroot}%{_sysconfdir}/yum.repos.d/candlepin.repo
 install -m 644 rhel-pulp.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp.repo
 install -m 644 rhel-pulp-testing.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp-testing.repo
@@ -60,6 +62,7 @@ rm -rf %{buildroot}
 
 %files testing
 %defattr(-,root,root)
+%{_sysconfdir}/yum.repos.d/katello-testing.repo
 %{_sysconfdir}/yum.repos.d/pulp-testing.repo
 
 %changelog
