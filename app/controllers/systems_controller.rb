@@ -172,7 +172,7 @@ class SystemsController < ApplicationController
       find_environment
       filters = {:environment_id=>[params[:env_id]]}
     else
-      filters = {:environment_id=> KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
+      filters = readable_filters
     end
     render_panel_direct(System, @panel_options, search, params[:offset], order,
                         {:default_field => :name, :filter=>filters, :load=>true})
@@ -189,7 +189,7 @@ class SystemsController < ApplicationController
       query do
         string query
       end
-      filter :terms, {:environment_id => env_ids}
+      filter :terms, readable_filters
     end
     render :json=>systems.map{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
   end
@@ -633,6 +633,14 @@ class SystemsController < ApplicationController
 
   def controller_display_name
     return 'system'
+  end
+
+  #array constructing a filter
+  # to filter readable systems that can be
+  # passed to search
+  def readable_filters
+    {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id},
+     :system_group_ids=>SystemGroup.systems_readable(current_organization).collect{|item| item.id}}
   end
 
   def search_filter

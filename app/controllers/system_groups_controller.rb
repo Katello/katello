@@ -161,7 +161,7 @@ class SystemGroupsController < ApplicationController
 
   def add_systems
     ids = params[:system_ids].collect{|s| s.to_i} - @group.system_ids #ignore dups
-    @systems = System.where(:id=>ids)
+    @systems = System.readable(current_organization).where(:id=>ids)
     @group.system_ids = (@group.system_ids + @systems.collect{|s| s.id}).uniq
     @group.save!
     render :partial=>'system_item', :collection=>@systems, :as=>:system,
@@ -169,7 +169,7 @@ class SystemGroupsController < ApplicationController
   end
 
   def remove_systems
-    systems = System.where(:id=>params[:system_ids]).collect{|s| s.id}
+    systems = System.readable(current_organization).where(:id=>params[:system_ids]).collect{|s| s.id}
     @group.system_ids = (@group.system_ids - systems).uniq
     @group.save!
     render :text=>''
@@ -185,6 +185,7 @@ class SystemGroupsController < ApplicationController
       end
       filter :term, {:organization_id => org.id}
       filter :term, {:locked=>false}
+      filter :terms, {:id=>SystemGroup.editable.collect{|g| g.id}}
     end
     render :json=>groups.map{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
   end
