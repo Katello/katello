@@ -319,11 +319,9 @@ s  end
   end
 
   describe "a readable system" do
-
     it "should not be readable if the user has no access" do
       User.current =  user_with_permissions
       System.readable(@organization).should_not include(@system)
-
       @system.readable?.should == false
       @system.editable?.should == false
     end
@@ -349,7 +347,6 @@ s  end
       grp = SystemGroup.create!(:organization=>@organization, :name=>"test_group")
       @system.system_groups << grp
       @system.save!
-      debugger
       User.current =  user_with_permissions { |u| u.can(:read_systems, :system_groups, grp.id, @organization) }
       System.readable(@organization).should include(@system)
       @system.readable?.should == true
