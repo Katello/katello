@@ -169,10 +169,11 @@ class System < ActiveRecord::Base
       if org.systems_readable?
          where(:environment_id => org.environment_ids) #list all systems in an org
       else #just list for environments the user can access
-        where_clause = "systems.environment_id in (#{User.allowed_tags_sql(KTEnvironment::SYSTEMS_READABLE, :environments, org)})"
+        where_clause = "systems.environment_id in (#{KTEnvironment.systems_readable(org).select(:id).to_sql})"
         where_clause += " or "
-        where_clause += "system_groups.id in (#{User.allowed_tags_sql(SystemGroup::SYSTEM_READ_PERMS, :system_groups, org)})"
-        joins(:system_groups).where(where_clause)
+        where_clause += "system_system_groups.system_group_id in (#{SystemGroup.systems_readable(org).select(:id).to_sql})"
+        joins("left outer join system_system_groups on systems.id =
+                                    system_system_groups.system_id").where(where_clause)
       end    
   end
 
