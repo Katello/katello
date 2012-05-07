@@ -74,14 +74,16 @@ class Api::SystemGroupsController < Api::ApiController
 
   def add_systems
     ids = system_uuids_to_ids(params[:system_group][:system_ids])
-    @group.system_ids = (@group.system_ids + ids).uniq
+    @systems = System.readable(@group.organization).where(:id=>ids)
+    @group.system_ids = (@group.system_ids + @systems.collect{|s| s.id}).uniq
     @group.save!
     systems
   end
 
   def remove_systems
     ids = system_uuids_to_ids(params[:system_group][:system_ids])
-    @group.system_ids = (@group.system_ids - ids)
+    system_ids = System.readable(@group.organization).where(:id=>ids).collect{|s| s.id}
+    @group.system_ids = (@group.system_ids - system_ids).uniq
     @group.save!
     systems
   end
