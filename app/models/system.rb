@@ -160,7 +160,8 @@ class System < ActiveRecord::Base
 
   def self.any_readable? org
     org.systems_readable? ||
-        User.allowed_to?(KTEnvironment::SYSTEMS_READABLE, :environments, org.environment_ids, org, true)
+        KTEnvironment.systems_readable(org).count > 0 ||
+        SystemGroup.systems_readable(org).count > 0
   end
 
   def self.readable org
@@ -168,6 +169,7 @@ class System < ActiveRecord::Base
       if org.systems_readable?
          where(:environment_id => org.environment_ids) #list all systems in an org 
       else #just list for environments the user can access
+
         where("systems.environment_id in (#{User.allowed_tags_sql(KTEnvironment::SYSTEMS_READABLE, :environments, org)})")
       end    
   end
@@ -207,7 +209,8 @@ class System < ActiveRecord::Base
   def extended_index_attrs
     {:facts=>self.facts, :organization_id=>self.organization.id,
      :name_sort=>name.downcase, :name_autocomplete=>self.name,
-     :system_group=>self.system_groups.collect{|g| g.name}
+     :system_group=>self.system_groups.collect{|g| g.name},
+     :system_group_ids=>self.system_groups.collect{|g| g.id}
     }
   end
 

@@ -55,6 +55,16 @@ class SystemGroup < ActiveRecord::Base
   scope :readable, lambda { |org|
     items(org, READ_PERM_VERBS)
   }
+  scope :editable, lambda { |org|
+    items(org, [:update])
+  }
+  scope :systems_readable, lambda{|org|
+    if  org.systems_readable?
+      where(:organization_id => org)
+    else
+      SystemGroup.items(org, SYSTEM_READ_PERMS)
+    end
+  }
 
   def self.creatable? org
     User.allowed_to?([:create], :system_groups, nil, org)
@@ -142,5 +152,6 @@ class SystemGroup < ActiveRecord::Base
   end
 
   READ_PERM_VERBS = SystemGroup.list_verbs.keys
+  SYSTEM_READ_PERMS = [:read_systems, :update_systems]
 
 end
