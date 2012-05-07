@@ -25,20 +25,21 @@ describe SystemGroupsController do
   let(:uuid) { '1234' }
   before(:each) do
       set_default_locale
-      login_user
+      login_user :mock=>false
       disable_org_orchestration
       disable_consumer_group_orchestration
 
       controller.stub(:search_validate).and_return(true)
       @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+      @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@org.library, :organization=>@org)
+      @org = @org.reload
       setup_current_organization(@org)
-
       setup_system_creation
-
       Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Candlepin::Consumer.stub!(:update).and_return(true)
-      @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@org.library, :organization=>@org)
+
       @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+
   end
 
 
@@ -232,23 +233,24 @@ describe SystemGroupsController do
 
 
     describe "POST add systems" do
-      let(:action) {:add_systems}
-      let(:req) { post :add_systems, :id=>@group.id, :system_ids=>[] }
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :system_groups, @group.id, @org) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-
-
       it "should allow adding of systems" do
         post :add_systems, :id=>@group.id, :system_ids=>[@system.id]
         response.should be_success
         @group.reload.systems.should include @system
       end
+
+      let(:action) {:add_systems}
+        let(:req) { post :add_systems, :id=>@group.id, :system_ids=>[] }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:update, :system_groups, @group.id, @org) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
     end
+
+
 
     describe "POST remove_systems" do
       let(:action) {:remove_systems}
