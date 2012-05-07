@@ -183,7 +183,7 @@ class System < ActiveRecord::Base
   end
 
   def deletable?
-    environment.systems_deletable?
+    environment.systems_deletable? || self.system_groups.any?{|g| g.systems_deletable?}
   end
 
   def self.deletable? env, org
