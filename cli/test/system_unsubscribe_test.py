@@ -55,29 +55,27 @@ class SystemUnsubscribeTest(CLIActionTestCase):
         self.mock(self.action.api, 'unsubscribe', 0)
         self.mock(self.action.api, 'unsubscribe_by_serial', 0)
         self.mock(self.action.api, 'unsubscribe_all', 0)
-
-    def tearDown(self):
-        self.restore_mocks()
+        self.mock(self.module, 'get_system', {'uuid':self.SYS_ID})
 
     def test_it_calls_unsubscribe_api(self):
         self.mock_options({'org': self.ORG_ID})
         self.mock_options({'name': self.SYS_NAME})
         self.mock_options({'entitlement': self.ENT_ID})
-        self.action.run()
+        self.run_action()
         self.action.api.unsubscribe.assert_called_once_with(self.SYS_ID, self.ENT_ID)
 
     def test_it_calls_unsubscribe_by_serial(self):
         self.mock_options({'org': self.ORG_ID})
         self.mock_options({'name': self.SYS_NAME})
         self.mock_options({'serial': self.SERIAL_ID})
-        self.action.run()
+        self.run_action()
         self.action.api.unsubscribe_by_serial.assert_called_once_with(self.SYS_ID, self.SERIAL_ID)
 
     def test_it_calls_unsubscribe_all(self):
         self.mock_options({'org': self.ORG_ID})
         self.mock_options({'name': self.SYS_NAME})
         self.mock_options({'all': True})
-        self.action.run()
+        self.run_action()
         self.action.api.unsubscribe_all.assert_called_once_with(self.SYS_ID)
 
 

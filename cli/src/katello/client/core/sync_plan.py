@@ -139,8 +139,8 @@ class Create(SyncPlanAction):
 
         plan = self.api.create(org_name, name, sync_date, interval, description)
         test_record(plan,
-            _("Successfully created synchronization plan [ %s ]") % plan['name'],
-            _("Could not create synchronization plan [ %s ]") % plan['name']
+            _("Successfully created synchronization plan [ %s ]") % name,
+            _("Could not create synchronization plan [ %s ]") % name
         )
 
 

@@ -273,7 +273,7 @@ class Create(TemplateAction):
 
         template = self.api.create(env["id"], name, desc, parentId)
         test_record(template,
-            _("Successfully created template [ %s ]") % template['name'],
+            _("Successfully created template [ %s ]") % name,
             _("Could not create template [ %s ]") % name
         )
 

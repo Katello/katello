@@ -166,7 +166,7 @@ class Create(ActivationKeyAction):
 
         key = self.api.create(environment['id'], keyName, keyDescription, templateId)
         test_record(key,
-            _("Successfully created activation key [ %s ]") % key['name'],
+            _("Successfully created activation key [ %s ]") % keyName,
             _("Could not create activation key [ %s ]") % keyName
         )
 

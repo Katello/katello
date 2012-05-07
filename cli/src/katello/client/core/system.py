@@ -427,7 +427,7 @@ class Register(SystemAction):
         system = self.api.register(name, org, environment['id'], activation_keys, 'system', release, sla, facts=facts)
 
         test_record(system,
-            _("Successfully registered system [ %s ]") % system['name'],
+            _("Successfully registered system [ %s ]") % name,
             _("Could not register system [ %s ]") % name
         )
 
@@ -663,7 +663,7 @@ class Update(SystemAction):
         response = self.api.update(system_uuid, updates)
 
         test_record(response,
-            _("Successfully updated system [ %s ]") % response['name'],
+            _("Successfully updated system [ %s ]") % system['name'],
             _("Could not update system [ %s ]") % system['name']
         )
 

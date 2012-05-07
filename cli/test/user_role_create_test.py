@@ -47,12 +47,15 @@ class UserRoleCreateTest(CLIActionTestCase):
         self.mock(self.action.api, 'create', self.ROLE)
 
     def test_it_creates_role(self):
-        self.action.run()
+        self.run_action()
         self.action.api.create.assert_called_once_with(self.ROLE['name'], self.ROLE['description'])
 
     def test_returns_error_when_role_not_created(self):
         self.mock(self.action.api, 'create', {})
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.run_action(os.EX_DATAERR)
 
     def test_returns_ok(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)
+
+
+

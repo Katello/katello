@@ -44,5 +44,5 @@ class UserRoleAddLdapGroupTest(CLIActionTestCase):
         self.mock(self.action.api, 'add_ldap_group', [])
 
     def test_it_calls_add_ldap_group_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.add_ldap_group.assert_called_once_with(self.ROLE['id'], 'test')

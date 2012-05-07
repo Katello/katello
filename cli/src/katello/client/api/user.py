@@ -42,9 +42,9 @@ class UserAPI(KatelloAPI):
         userdata = self.update_dict(userdata, "disabled", disabled)
 
         if default_environment is None:
-            userdata.update(default_environment_id=None)
+            userdata.update(default_environment_id=None)                        # pylint: disable=E1101
         elif default_environment is not False:
-            userdata.update(default_environment_id=default_environment['id'])
+            userdata.update(default_environment_id=default_environment['id'])   # pylint: disable=E1101
 
         path = "/api/users/%s" % u_str(user_id)
         return self.server.PUT(path, {"user": userdata})[1]
@@ -69,7 +69,7 @@ class UserAPI(KatelloAPI):
     def sync_ldap_roles(self):
         path = "/api/users/sync_ldap_roles/"
         return self.server.GET(path)[1]
-        
+
 
     def assign_role(self, user_id, role_id):
         path = "/api/users/%s/roles" % u_str(user_id)

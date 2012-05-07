@@ -75,7 +75,7 @@ class Create(UserRoleAction):
 
         role = self.api.create(name, desc)
         test_record(role,
-            _("Successfully created user role [ %s ]") % role['name'],
+            _("Successfully created user role [ %s ]") % name,
             _("Could not create user role [ %s ]") % name
         )
 

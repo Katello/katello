@@ -95,7 +95,7 @@ class Create(UserAction):
 
         user = self.api.create(username, password, email, disabled, environment)
         test_record(user,
-            _("Successfully created user [ %s ]") % user['username'],
+            _("Successfully created user [ %s ]") % username,
             _("Could not create user [ %s ]") % username
         )
 

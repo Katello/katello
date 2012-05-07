@@ -77,8 +77,8 @@ class Create(OrganizationAction):
 
         org = self.api.create(name, description)
         test_record(org,
-            _("Successfully created org [ %s ]") % org['name'],
-            _("Could not create org [ %s ]") % org['name']
+            _("Successfully created org [ %s ]") % name,
+            _("Could not create org [ %s ]") % name
         )
 
 

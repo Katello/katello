@@ -157,8 +157,8 @@ class Update(ProviderAction):
     def create(self, name, orgName, description, url):
         prov = self.api.create(name, orgName, description, "Custom", url)
         test_record(prov,
-            _("Successfully created provider [ %s ]") % prov['name'],
-            _("Could not create provider [ %s ]") % prov['name']
+            _("Successfully created provider [ %s ]") % name,
+            _("Could not create provider [ %s ]") % name
         )
 
 

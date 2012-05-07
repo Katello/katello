@@ -18,9 +18,9 @@ class VersionTest(CLIActionTestCase):
         self.mock(self.action.api, 'version_formatted', test_data.VERSION_INFO)
 
     def test_calls_the_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.version_formatted.assert_called_once()
 
     def test_call_returns_correct_value(self):
-        self.assertEqual(self.action.run(),test_data.VERSION_INFO )
+        self.assertEqual(self.action.run(), test_data.VERSION_INFO )
 

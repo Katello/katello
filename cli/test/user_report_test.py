@@ -20,15 +20,15 @@ class UserReportTest(CLIActionTestCase):
         self.restore_mocks()
 
     def test_it_calls_report_api_with_default_format(self):
-        self.action.run()
+        self.run_action()
         self.action.api.report.assert_called_once_with('text/plain')
 
     def test_it_uses_format_parameter(self):
         self.mock_options({'format': 'pdf'})
-        self.action.run()
+        self.run_action()
         self.action.api.report.assert_called_once_with(convert_to_mime_type('pdf'))
 
     def test_it_saves_pdf_report(self):
         self.mock_options({'format': 'pdf'})
-        self.action.run()
+        self.run_action()
         self.module.save_report.assert_called_once()

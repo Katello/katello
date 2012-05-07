@@ -85,7 +85,7 @@ class Create(FilterAction):
         new_filter = self.api.create(org, name, description, packages)
 
         test_record(new_filter,
-            _("Successfully created filter [ %s ]") % new_filter['name'],
+            _("Successfully created filter [ %s ]") % name,
             _("Could not create filter [ %s ]") % name
         )
 

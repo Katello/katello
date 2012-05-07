@@ -6,7 +6,7 @@ import test_data
 
 import katello.client.core.template
 from katello.client.core.template import Update
-
+from katello.client.api.utils import ApiDataError
 
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
@@ -70,34 +70,33 @@ class TemplateUpdateTest(CLIActionTestCase):
 
     def test_it_finds_the_template_by_name(self):
         self.mock_options(self.OPTIONS)
-        self.action.run()
+        self.run_action()
         self.module.get_template.assert_called_with(self.ORG['name'], self.ENV['name'], self.TPL['name'])
 
     def test_it_returns_error_when_template_not_found(self):
-        self.mock(self.module, 'get_template', None)
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_template').side_effect = ApiDataError
+        self.run_action(os.EX_DATAERR)
 
     def test_it_finds_parent_template(self):
         self.mock_options(self.OPTIONS_WITH_PARENT)
         self.mock(self.action, 'get_parent_id', self.TPL_PARENT_ID)
-        self.action.run()
+        self.run_action()
         self.action.get_parent_id.assert_called_once_with(self.ORG['name'], self.ENV["name"], self.TPL_PARENT_NAME)
 
     def test_it_returns_error_when_parent_not_found(self):
-        self.mock(self.module, 'get_template', None)
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_template').side_effect = ApiDataError
+        self.run_action(os.EX_DATAERR)
 
     def test_it_calls_update_template(self):
         self.mock_options(self.OPTIONS)
-        self.action.run()
+        self.run_action()
         self.action.updateTemplate.assert_called_once()
 
     def test_it_calls_update_content(self):
         self.mock_options(self.OPTIONS)
-        self.action.run()
+        self.run_action()
         self.action.updateContent.assert_called_once()
 
     def test_it_returns_status_ok(self):
         self.mock_options(self.OPTIONS)
-        self.action.run()
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)

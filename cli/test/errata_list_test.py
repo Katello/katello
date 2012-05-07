@@ -101,32 +101,32 @@ class ErrataListTest(CLIActionTestCase):
 
     def test_it_prints_errata(self):
         self.mock_options(self.OPTIONS_BY_PRODUCT_AND_REPO)
-        self.action.run()
+        self.run_action()
         self.action.printer.print_items.assert_called_once_with(test_data.ERRATA_BY_REPO)
 
     def test_it_uses_library_when_no_env_is_specified(self):
         self.mock_options(self.OPTIONS_BY_ORG)
-        self.action.run()
+        self.run_action()
         self.module.get_environment.assert_called_once_with(self.OPTIONS_BY_ORG['org'], None)
 
     def test_it_searches_for_env_id_when_env_is_specified(self):
         self.mock_options(self.OPTIONS_BY_ENV)
-        self.action.run()
+        self.run_action()
         self.module.get_environment.assert_called_once_with(self.OPTIONS_BY_ENV['org'], self.OPTIONS_BY_ENV['env'])
 
     def test_it_searches_for_product_id_when_product_specified(self):
         self.mock_options(self.OPTIONS_BY_ORG_AND_PRODUCT)
-        self.action.run()
+        self.run_action()
         self.module.get_environment.assert_called_once_with(self.OPTIONS_BY_ORG_AND_PRODUCT['org'], None)
         self.module.get_product.assert_called_once_with(self.OPTIONS_BY_ORG_AND_PRODUCT['org'], self.OPTIONS_BY_ORG_AND_PRODUCT['product'])
         self.action.api.errata_filter.assert_called_once_with(repo_id=None, type=None, environment_id=self.ENV['id'], prod_id=self.PRODUCT['id'], severity=None)
 
     def test_it_supports_filtering_by_type(self):
         self.mock_options(self.OPTIONS_BY_TYPE)
-        self.action.run()
+        self.run_action()
         self.action.api.errata_filter.assert_called_once_with(repo_id=self.REPO['id'], type=self.OPTIONS_BY_TYPE['type'], environment_id=None, prod_id=None, severity=None)
 
     def test_it_supports_filtering_by_severity(self):
         self.mock_options(self.OPTIONS_BY_SEVERITY)
-        self.action.run()
+        self.run_action()
         self.action.api.errata_filter.assert_called_once_with(repo_id=self.REPO['id'], type=None, environment_id=None, prod_id=None, severity=self.OPTIONS_BY_SEVERITY['severity'])

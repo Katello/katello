@@ -23,11 +23,11 @@ class ProductListTest(CLIActionTestCase):
 
 
     def test_calls_the_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.ping.assert_called_once()
 
     def test_it_returns_correct_error_code_when_all_systems_up(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)
 
     def test_it_returns_correct_error_codes(self):
         self.check_return_code(['candlepin'], 2)
@@ -47,4 +47,4 @@ class ProductListTest(CLIActionTestCase):
 
         self.mock(self.action.api, 'ping', status)
 
-        self.assertEqual(self.action.run(), expected_code)
+        self.run_action(expected_code)

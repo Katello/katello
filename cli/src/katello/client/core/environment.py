@@ -134,8 +134,8 @@ class Create(EnvironmentAction):
 
         env = self.api.create(orgName, name, description, priorId)
         test_record(env,
-            _("Successfully created environment [ %s ]") % env['name'],
-            _("Could not create environment [ %s ]") % env['name']
+            _("Successfully created environment [ %s ]") % name,
+            _("Could not create environment [ %s ]") % name
         )
 
 

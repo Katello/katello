@@ -83,46 +83,46 @@ class RepoListTest(CLIActionTestCase):
 
     def test_it_finds_environment(self):
         self.mock_options(self.OPTIONS_BY_ORG)
-        self.action.run()
+        self.run_action()
         self.module.get_environment.assert_called_once_with(self.ORG['name'], self.ENV['name'])
 
     def test_it_finds_product(self):
         self.mock_options(self.OPTIONS_BY_PRODUCT)
-        self.action.run()
+        self.run_action()
         self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
 
     def test_it_finds_product_and_env(self):
         self.mock_options(self.OPTIONS_BY_PRODUCT_ENV)
-        self.action.run()
+        self.run_action()
         self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
         self.module.get_environment.assert_called_once_with(self.ORG['name'], self.ENV['name'])
 
     def test_it_gets_repos_by_org(self):
         self.mock_options(self.OPTIONS_BY_ORG)
-        self.action.run()
+        self.run_action()
         self.action.api.repos_by_org_env.assert_called_once_with(self.ORG['name'], self.ENV['id'], False)
 
     def test_it_gets_repos_by_product(self):
         self.mock_options(self.OPTIONS_BY_PRODUCT)
-        self.action.run()
+        self.run_action()
         self.action.api.repos_by_product.assert_called_once_with(self.ORG['name'], self.PROD['id'], False)
 
     def test_it_gets_repos_by_product_and_env(self):
         self.mock_options(self.OPTIONS_BY_PRODUCT_ENV)
-        self.action.run()
+        self.run_action()
         self.action.api.repos_by_env_product.assert_once_once_with(self.ENV['id'], self.PROD['id'], None, False)
 
     def test_it_prints_repos(self):
         self.mock_options(self.OPTIONS_BY_ORG)
-        self.action.run()
+        self.run_action()
         self.action.printer.print_items.assert_called_with(test_data.REPOS)
         self.action.printer.print_items.reset_mock()
 
         self.mock_options(self.OPTIONS_BY_PRODUCT)
-        self.action.run()
+        self.run_action()
         self.action.printer.print_items.assert_called_with(test_data.REPOS)
         self.action.printer.print_items.reset_mock()
 
         self.mock_options(self.OPTIONS_BY_PRODUCT_ENV)
-        self.action.run()
+        self.run_action()
         self.action.printer.print_items.assert_called_with(test_data.REPOS)

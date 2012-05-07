@@ -163,8 +163,8 @@ class Create(ChangesetAction):
         env = get_environment(orgName, envName)
         cset = self.api.create(orgName, env["id"], csName, csDescription)
         test_record(cset,
-            _("Successfully created changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"]),
-            _("Could not create changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
+            _("Successfully created changeset [ %s ] for environment [ %s ]") % (csName, env["name"]),
+            _("Could not create changeset [ %s ] for environment [ %s ]") % (csName, env["name"])
         )
 
         return os.EX_OK

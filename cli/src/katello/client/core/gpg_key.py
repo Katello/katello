@@ -149,7 +149,7 @@ class Create(GpgKeyAction):
 
         key = self.api.create(orgName, keyName, content)
         test_record(key,
-            _("Successfully created gpg key [ %s ]") % key['name'],
+            _("Successfully created gpg key [ %s ]") % keyName,
             _("Could not create gpg key [ %s ]") % keyName
         )
 
@@ -193,7 +193,7 @@ class Update(GpgKeyAction):
 
         key = self.api.update(key_id, newKeyName, content)
         test_record(key,
-            _("Successfully updated gpg key [ %s ]") % key['name'],
+            _("Successfully updated gpg key [ %s ]") % keyName,
             _("Could not updated gpg key [ %s ]") % keyName
         )
 

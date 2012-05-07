@@ -43,20 +43,18 @@ class SystemSubscriptionsTest(CLIActionTestCase):
         self.mock(self.action.api, 'systems_by_org', [{'uuid':self.SYS_ID}])
         self.mock(self.action.api, 'subscriptions', {'entitlements':[]})
         self.mock(self.action.api, 'available_pools', ('', ''))
-
-    def tearDown(self):
-        self.restore_mocks()
+        self.mock(self.module, 'get_system', {'uuid':self.SYS_ID})
 
     def test_it_calls_subscriptions_api(self):
         self.mock_options({'org': self.ORG_ID})
         self.mock_options({'name': self.SYS_NAME})
-        self.action.run()
+        self.run_action()
         self.action.api.subscriptions.assert_called_once_with(self.SYS_ID)
 
     def test_it_calls_subscriptions_api(self):
         self.mock_options({'org': self.ORG_ID})
         self.mock_options({'name': self.SYS_NAME})
         self.mock_options({'available': True})
-        self.action.run()
+        self.run_action()
         self.action.api.available_pools.assert_called_once_with(self.SYS_ID)
 

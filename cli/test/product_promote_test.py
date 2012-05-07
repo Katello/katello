@@ -7,6 +7,7 @@ import test_data
 
 import katello.client.core.product
 from katello.client.core.product import Promote
+from katello.client.api.utils import ApiDataError
 
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
@@ -59,37 +60,35 @@ class ProductPromoteTest(CLIActionTestCase):
         self.restore_mocks()
 
     def test_it_finds_the_environment(self):
-        self.action.run()
+        self.run_action()
         self.module.get_environment.assert_called_once_with(self.ORG['name'], self.ENV['name'])
 
     def test_it_returns_with_error_when_no_environment_found(self):
-        self.module.get_environment.return_value = None
-        self.action.run()
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_environment').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
     def test_it_finds_the_product(self):
-        self.action.run()
+        self.run_action()
         self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
 
     def test_it_returns_with_error_when_no_product_found(self):
-        self.module.get_product.return_value = None
-        self.action.run()
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_product').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
     def test_it_creates_new_changeset(self):
-        self.action.run()
+        self.run_action()
         self.action.csapi.create.assert_called_once_with(self.ORG['name'], self.ENV['id'], self.TMP_CHANGESET_NAME)
 
     def test_it_updates_the_changeset(self):
-        self.action.run()
+        self.run_action()
         self.action.csapi.add_content.assert_called_once_with(self.CSET['id'], 'products',
                 {'product_id': self.PROD['id']})
 
     def test_it_promotes_the_changeset(self):
-        self.action.run()
+        self.run_action()
         self.action.csapi.promote.assert_called_once_with(self.CSET['id'])
 
     def test_waits_for_promotion(self):
-        self.action.run()
+        self.run_action()
         self.module.run_spinner_in_bg.assert_called_once()
 
