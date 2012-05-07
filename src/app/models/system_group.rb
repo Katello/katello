@@ -74,6 +74,10 @@ class SystemGroup < ActiveRecord::Base
     User.allowed_to?(READ_PERM_VERBS, :system_groups, nil, org)
   end
 
+  def system_deletable?
+    User.allowed_to?([:delete_systems], :system_groups, self.id, self.organization)
+  end
+
   def readable?
     User.allowed_to?(READ_PERM_VERBS, :system_groups, self.id, self.organization)
   end
@@ -107,6 +111,7 @@ class SystemGroup < ActiveRecord::Base
        :locking => _("Lock/Unlock System Group"),
        :read_systems => _("Read Systems in System Group"),
        :update_systems => _("Modify Systems in System Group"),
+       :delete_systems => _("Delete Systems in System Group")
     }.with_indifferent_access
   end
 
