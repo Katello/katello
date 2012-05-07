@@ -69,9 +69,12 @@ class SystemGroupsController < ApplicationController
              { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     else
-      render :partial=>"common/list_item",
-             :locals=>{:item=>@group, :initial_action=>@panel_options[:initial_action],
-                   :accessor=>"id", :columns=>@panel_options[:col], :name=>controller_display_name}
+      respond_to do |format|
+        format.html {render :partial=>"common/list_item",
+                     :locals=>{:item=>@group, :initial_action=>@panel_options[:initial_action],
+                     :accessor=>"id", :columns=>@panel_options[:col], :name=>controller_display_name}}
+        format.json {render :json => @group}
+      end
     end
 
   rescue Exception=> e

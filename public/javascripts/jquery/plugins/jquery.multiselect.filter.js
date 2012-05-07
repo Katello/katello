@@ -111,6 +111,9 @@
 			
 			if( !term ){
 				rows.show();
+
+                this._trigger( "filter", e, null);
+
 			} else {
 				rows.hide();
 				
