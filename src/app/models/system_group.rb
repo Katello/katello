@@ -74,12 +74,16 @@ class SystemGroup < ActiveRecord::Base
     User.allowed_to?(READ_PERM_VERBS, :system_groups, nil, org)
   end
 
-  def system_readable?
+  def systems_readable?
     User.allowed_to?(SYSTEM_READ_PERMS, :system_groups, self.id, self.organization)
   end
 
-  def system_deletable?
+  def systems_deletable?
     User.allowed_to?([:delete_systems], :system_groups, self.id, self.organization)
+  end
+
+  def systems_editable?
+    User.allowed_to?([:update_systems], :system_groups, self.id, self.organization)
   end
 
   def readable?
