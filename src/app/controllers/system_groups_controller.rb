@@ -104,7 +104,7 @@ class SystemGroupsController < ApplicationController
     end
 
     @group.save!
-    notice _("Package Filter '%s' has been updated.") % @group.name
+    notice _("System Group %s has been updated.") % @group.name
 
     if not search_validate(SystemGroup, @group.id, params[:search])
       notice _("'%s' no longer matches the current search criteria.") % @group["name"], { :level => :message, :synchronous_request => true }
@@ -118,16 +118,16 @@ class SystemGroupsController < ApplicationController
 
 
   def lock
-    @group.locked = params[:system_group][:lock] == 'true'
+    @group.locked = params[:system_group][:locked] == 'true'
     @group.save!
-    notice _("Package Filter '%s' has been updated.") % @group.name
+    notice _("System Group %s has been updated.") % @group.name
     render :text=>""
   end
 
 
   def destroy
     @group.destroy
-    notice _("System Group  %s deleted.") % @group.name
+    notice _("System Group %s deleted.") % @group.name
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
   rescue Exception => e
     notice e, {:level => :error}
