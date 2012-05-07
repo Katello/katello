@@ -39,6 +39,10 @@ post_update()
 {
   pulp-migrate
   # we dont store snapshot for mongodb - its fast enough
+  if [ -e /usr/share/candlepin/cpdb ]; then
+    /usr/share/candlepin/cpdb --update
+  fi
+
   cp /etc/candlepin/candlepin.conf /etc/candlepin/candlepin.conf.original
   /usr/share/candlepin/cpsetup
   mv /etc/candlepin/candlepin.conf.original /etc/candlepin/candlepin.conf
