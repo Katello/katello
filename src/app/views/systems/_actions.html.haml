@@ -6,15 +6,14 @@
       "validation_error_pkg_group_list_empty" : '#{escape_javascript(_('At least one package group name must be provided.'))}',
       "validation_error_errata_list_empty" : '#{escape_javascript(_('At least one erratum ID must be provided.'))}',
       "validation_error_select_content_type" : '#{escape_javascript(_('Please select Package(s) or Package Group(s).'))}',
-      "validation_error_system_group_name_empty" : '#{escape_javascript(_('A system group name must be provided.'))}',
+      "validation_error_system_group_empty" : '#{escape_javascript(_('At least one system group must be selected.'))}',
 
       "confirm_system_remove_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to delete the %X selected system(s)?"))}'.replace("%X", x); },
       "confirm_package_action" : function(x,y,z){ return '#{escape_javascript(_("Are you sure you want to %X the %Y entered on the %Z selected system(s)?"))}'.replace("%X", x).replace("%Y", y).replace("%Z", z); },
       "confirm_errata_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to install the errata entered on the %X selected system(s)?"))}'.replace("%X", x); },
 
-      "confirm_system_group_create_and_add" : function(x,y){ return '#{escape_javascript(_("System group %X does not exist.  Would you like to create it and add the %Y selected systems?"))}'.replace("%X", x).replace("%Y", y); },
-      "confirm_system_group_add_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to add the %X selected system(s) to the system group entered?"))}'.replace("%X", x); },
-      "confirm_system_group_remove_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to remove the %X selected system(s) from the system group entered?"))}'.replace("%X", x); }
+      "confirm_system_group_add_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to add the %X selected system(s) to the system group(s) entered?"))}'.replace("%X", x); },
+      "confirm_system_group_remove_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to remove the %X selected system(s) from the system group(s) entered?"))}'.replace("%X", x); }
       });
 
 %h4
@@ -73,9 +72,8 @@
   %label
     #{_("System Groups")}
   %div
-    - help_text = _("Add Name or Select by Name...")
-    %input{:type=>'text', :id=>'system_group_input', :disabled => 'disabled', :size=>'25', :placeholder => help_text, :title => help_text}
-    %input#add_system_group.request_action.system_group.button{:type=>'button', :value=>_('Add'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_add_system_group_systems_path(), 'data-action'=>'add_group'}
+    = select_tag 'bulk_system[system_group_id]', options_from_collection_for_select(@system_groups, :id, :name), :multiple => true
+    %input.request_action.system_group.button{:type=>'button', :value=>_('Add'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_add_system_group_systems_path(), 'data-action'=>'add_group'}
     %input.request_action.system_group.button{:type=>'button', :value=>_('Remove'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_remove_system_group_systems_path(), 'data-action'=>'remove_group'}
   %div.validation_error
   .options
