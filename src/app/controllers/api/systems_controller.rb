@@ -76,8 +76,10 @@ class Api::SystemsController < Api::ApiController
 
   # used for registering with activation keys
   def activate
+    # Activation keys are userless by definition so use the internal generic user
+    # Set it before calling find_activation_keys to allow communication with candlepin
+    User.current = User.hidden.first
     activation_keys = find_activation_keys
-    User.current = activation_keys.first.user
     system = System.new(params.except(:activation_keys))
     # we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
     activation_keys.reverse_each {|ak| ak.apply_to_system(system) }
