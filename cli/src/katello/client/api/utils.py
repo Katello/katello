@@ -143,8 +143,6 @@ def get_permission(role_name, permission_name):
     permission_api = PermissionAPI()
 
     role = get_role(role_name)
-    if role == None:
-        return None
 
     perm = permission_api.permission_by_name(role['id'], permission_name)
     if perm == None:

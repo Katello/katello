@@ -664,7 +664,7 @@ class Update(SystemAction):
 
         test_record(response,
             _("Successfully updated system [ %s ]") % response['name'],
-            _("Could not update system [ %s ]") % systems[0]['name']
+            _("Could not update system [ %s ]") % system['name']
         )
 
 

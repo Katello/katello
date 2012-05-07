@@ -23,7 +23,7 @@ from katello.client.api.provider import ProviderAPI
 from katello.client.server import ServerRequestError
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import test_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask, format_sync_errors
+from katello.client.core.utils import test_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask, format_sync_errors, system_exit
 from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.core.utils import ProgressBar
 from katello.client.api.utils import get_provider
@@ -300,23 +300,20 @@ class ImportManifest(SingleProviderAction):
         try:
             f = open(get_abs_path(manifestPath))
         except:
-            print _("File %s does not exist" % manifestPath)
-            return os.EX_IOERR
+            system_exit(os.EX_IOERR, _("File %s does not exist" % manifestPath))
 
         prov = get_provider(orgName, provName)
-        if prov != None:
-            try:
-                response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f, force), message=_("Importing manifest, please wait... "))
-            except ServerRequestError, re:
-                if re.args[0] == 400 and "displayMessage" in re.args[1] and re.args[1]["displayMessage"] == "Import is older than existing data":
-                    re.args[1]["displayMessage"] = "Import is older then existing data, please try with --force option to import manifest."
-                raise re
-            f.close()
-            print response
-            return os.EX_OK
-        else:
-            f.close()
-            return os.EX_DATAERR
+
+        try:
+            response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f, force), message=_("Importing manifest, please wait... "))
+        except ServerRequestError, re:
+            if re.args[0] == 400 and "displayMessage" in re.args[1] and re.args[1]["displayMessage"] == "Import is older than existing data":
+                re.args[1]["displayMessage"] = "Import is older then existing data, please try with --force option to import manifest."
+            raise re
+        f.close()
+        print response
+        return os.EX_OK
+
 
 # ------------------------------------------------------------------------------
 class RefreshProducts(SingleProviderAction):

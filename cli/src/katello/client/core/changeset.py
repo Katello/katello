@@ -185,37 +185,27 @@ class UpdateContent(ChangesetAction):
             return patch
 
     class PatchItemBuilder(object):
-        def __init__(self, orgName, envName):
-            self.orgName = orgName
-            self.envName = envName
-
-            self.orgId = get_organization(orgName)['id']
-            self.envId = get_environment(orgName, envName)['id']
-            self.priorEnvId = get_environment(orgName, envName)['prior_id']
-            self.priorEnvName = get_environment(orgName, envName)['prior']
+        def __init__(self, org_name, env_name):
+            self.org_name = org_name
+            self.env_name = env_name
+            self.prior_env_name = get_environment(org_name, env_name)['prior']
 
 
         def product_id(self, options):
             if 'product' in options:
-                prodName = options['product']
+                prod_name = options['product']
             else:
-                prodName = options['name']
+                prod_name = options['name']
 
-            prod = get_product(self.orgName, prodName)
-            if prod == None:
-                system_exit(os.EX_DATAERR)
+            prod = get_product(self.org_name, prod_name)
             return prod['id']
 
         def repo_id(self, options):
-            repo = get_repo(self.orgName, options['product'], options['name'], self.priorEnvName)
-            if repo == None:
-                system_exit(os.EX_DATAERR)
+            repo = get_repo(self.org_name, options['product'], options['name'], self.prior_env_name)
             return repo['id']
 
         def template_id(self, options):
-            tpl = get_template(self.orgName, self.priorEnvName, options['name'])
-            if tpl == None:
-                system_exit(os.EX_DATAERR)
+            tpl = get_template(self.org_name, self.prior_env_name, options['name'])
             return tpl['id']
 
 
