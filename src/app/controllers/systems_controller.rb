@@ -349,13 +349,18 @@ class SystemsController < ApplicationController
 
       # does the user have permission to modify the requested system groups?
       invalid_perms = []
+      group_locked = []
       @system_groups.each do |system_group|
         if !system_group.editable?
           invalid_perms.push(system_group.name)
+        elsif system_group.locked
+          group_locked.push(system_group.name)
         end
       end
       if !invalid_perms.empty?
-        raise _("System Group membership modification not allowed for system group(s): %s") % invalid_perms.join(', ')
+        raise _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
+      elsif !group_locked.empty?
+        raise _("System Group membership cannot be changed for locked group(s): %s") % group_locked.join(', ')
       end
 
       @systems.each do |system|
@@ -383,13 +388,18 @@ class SystemsController < ApplicationController
 
       # does the user have permission to modify the requested system groups?
       invalid_perms = []
+      group_locked = []
       @system_groups.each do |system_group|
         if !system_group.editable?
           invalid_perms.push(system_group.name)
+        elsif system_group.locked
+          group_locked.push(system_group.name)
         end
       end
       if !invalid_perms.empty?
-        raise _("System Group membership modification not allowed for system group(s): %s") % invalid_perms.join(', ')
+        raise _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
+      elsif !group_locked.empty?
+        raise _("System Group membership cannot be changed for locked group(s): %s") % group_locked.join(', ')
       end
 
       @systems.each do |system|
