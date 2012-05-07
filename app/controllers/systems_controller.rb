@@ -144,6 +144,7 @@ class SystemsController < ApplicationController
   end
 
   def index
+    @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name)
   end
 
   def environments
@@ -343,41 +344,33 @@ class SystemsController < ApplicationController
     successful_systems = []
     failed_systems = []
 
-    if !params[:system_group].blank?
-      system_group = SystemGroup.where(:name => params[:system_group]).first
-      raise _("System Group membership modification not allowed") if system_group && !system_group.editable?
-      if system_group.blank?
-        # if the system group requested does not exist, create it...
-        begin
-          raise _("System Group creation not allowed.") if !SystemGroup.creatable?(current_organization)
-          system_group = SystemGroup.create!(:name => params[:system_group], :organization_id => current_organization.id)
-          new_group = true
-        rescue Exception => error
-          notice _("Systems Bulk Action: Unable to create system group: %s.  Reason: %s.") % [params[:system_group], error.to_s], {:level => :error}
-          render :nothing => true and return
+    unless params[:group_ids].blank?
+      @system_groups = SystemGroup.where(:id=>params[:group_ids])
+
+      # does the user have permission to modify the requested system groups?
+      invalid_perms = []
+      @system_groups.each do |system_group|
+        if !system_group.editable?
+          invalid_perms.push(system_group.name)
         end
-      else
-        system_group.lock_check
+      end
+      if !invalid_perms.empty?
+        raise _("System Group membership modification not allowed for system group(s): %s") % invalid_perms.join(', ')
       end
 
-      # add the systems to the group
       @systems.each do |system|
         begin
-          unless system.system_groups.include? system_group
-            system.system_groups << system_group
-            system.save!
-          end
+          system.system_group_ids = (system.system_group_ids + @system_groups.collect{|g| g.id}).uniq
+          system.save!
           successful_systems.push(system.name)
         rescue Exception => error
           failed_systems.push(system.name)
         end
       end
+      action = _("Systems Bulk Action: Add to system group(s): %s") % @system_groups.collect{|g| g.name}.join(', ')
+      notice_bulk_action action, successful_systems, failed_systems
     end
 
-    new_group.nil? ?
-        action = _("Systems Bulk Action: Add to system group: %s") % params[:system_group] :
-        action = _("Systems Bulk Action: Added to new system group: %s") % params[:system_group]
-    notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
 
@@ -385,29 +378,33 @@ class SystemsController < ApplicationController
     successful_systems = []
     failed_systems = []
 
-    if !params[:system_group].blank?
-      system_group = SystemGroup.where(:name => params[:system_group]).first
-      raise _("System Group membership modification not allowed") if system_group && !system_group.editable?
+    unless params[:group_ids].blank?
+      @system_groups = SystemGroup.where(:id=>params[:group_ids])
 
-      if !system_group.blank?
-        system_group.lock_check
-        @systems.each do |system|
-          begin
-            system.system_groups.delete(system_group)
-            system.save!
-            successful_systems.push(system.name)
-          rescue Exception => error
-            failed_systems.push(system.name)
-          end
+      # does the user have permission to modify the requested system groups?
+      invalid_perms = []
+      @system_groups.each do |system_group|
+        if !system_group.editable?
+          invalid_perms.push(system_group.name)
         end
-      else
-        notice _("Systems Bulk Action: Unable to remove system group: %s.  Reason: Group does not exist.") % params[:system_group], {:level => :error}
-        render :nothing => true and return
       end
+      if !invalid_perms.empty?
+        raise _("System Group membership modification not allowed for system group(s): %s") % invalid_perms.join(', ')
+      end
+
+      @systems.each do |system|
+        begin
+          system.system_group_ids = (system.system_group_ids - @system_groups.collect{|g| g.id}).uniq
+          system.save!
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+      action = _("Systems Bulk Action: Remove from system group(s): %s") % @system_groups.collect{|g| g.name}.join(', ')
+      notice_bulk_action action, successful_systems, failed_systems
     end
 
-    action = _("Systems Bulk Action: Remove from system group: %s") % params[:system_group]
-    notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
 
@@ -424,7 +421,7 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
-      action_text = _("Systems Bulk Action: Schedule install of package(s): %s") % params[:packages].join(',')
+      action_text = _("Systems Bulk Action: Schedule install of package(s): %s") % params[:packages].join(', ')
 
     elsif !params[:groups].blank?
       @systems.each do |system|
@@ -435,7 +432,7 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
-      action_text = _("Systems Bulk Action: Schedule install of package group(s): %s") % params[:groups].join(',')
+      action_text = _("Systems Bulk Action: Schedule install of package group(s): %s") % params[:groups].join(', ')
     end
 
     notice_bulk_action action_text, successful_systems, failed_systems
@@ -455,7 +452,7 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
-      action_text = _("Systems Bulk Action: Schedule update of package group(s): %s") % params[:groups].join(',')
+      action_text = _("Systems Bulk Action: Schedule update of package group(s): %s") % params[:groups].join(', ')
     else
       @systems.each do |system|
         begin
@@ -467,7 +464,7 @@ class SystemsController < ApplicationController
       end
       params[:packages].blank? ?
         action_text = _("Systems Bulk Action: Schedule update of all packages") :
-        action_text = _("Systems Bulk Action: Schedule update of package(s): %s") % params[:packages].join(',')
+        action_text = _("Systems Bulk Action: Schedule update of package(s): %s") % params[:packages].join(', ')
     end
 
     notice_bulk_action action_text, successful_systems, failed_systems
@@ -487,7 +484,7 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
-      action_text = _("Systems Bulk Action: Schedule uninstall of package(s): %s") % params[:packages].join(',')
+      action_text = _("Systems Bulk Action: Schedule uninstall of package(s): %s") % params[:packages].join(', ')
     elsif !params[:groups].blank?
       @systems.each do |system|
         begin
@@ -497,7 +494,7 @@ class SystemsController < ApplicationController
           failed_systems.push(system.name)
         end
       end
-      action_text = _("Systems Bulk Action: Schedule uninstall of package group(s): %s") % params[:groups].join(',')
+      action_text = _("Systems Bulk Action: Schedule uninstall of package group(s): %s") % params[:groups].join(', ')
     end
 
     notice_bulk_action action_text, successful_systems, failed_systems
@@ -519,7 +516,7 @@ class SystemsController < ApplicationController
       end
     end
 
-    action = _("Systems Bulk Action: Schedule install of errata(s): %s") % params[:errata].join(',')
+    action = _("Systems Bulk Action: Schedule install of errata(s): %s") % params[:errata].join(', ')
     notice_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
@@ -568,12 +565,12 @@ class SystemsController < ApplicationController
     newline = '<br />'
 
     if failed_systems.empty?
-      notice (action + newline + success_msg + successful_systems.join(','))
+      notice (action + newline + success_msg + successful_systems.join(', '))
     else
       if successful_systems.empty?
-        notice((action + newline + failure_msg + failed_systems.join(',')), {:level => :error})
+        notice((action + newline + failure_msg + failed_systems.join(', ')), {:level => :error})
       else
-        notice((action + newline + success_msg + successful_systems.join(',') + newline + failure_msg + failed_systems.join(',')),
+        notice((action + newline + success_msg + successful_systems.join(', ') + newline + failure_msg + failed_systems.join(',')),
                {:level => :error})
       end
     end

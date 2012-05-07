@@ -87,7 +87,8 @@ $(document).ready(function() {
 });
 
 KT.systems_page = function() {
-    var env_change = function(env_id, element) {
+    var system_group_widget = undefined,
+    env_change = function(env_id, element) {
       var url = element.attr("data-url");
       window.location = url;
     },
@@ -275,23 +276,21 @@ KT.systems_page = function() {
         KT.panel.actions.registerAction("systems_system_groups_action",
             {
                 enable_cb: function() {
-                    $('#system_group_input').removeAttr('disabled');
-                    $('.request_action.system_group').removeAttr('disabled');
+                    enable_system_group_inputs();
                 },
                 disable_cb: function() {
-                    $('#system_group_input').attr('disabled', true);
-                    $('.request_action.system_group').attr('disabled', true);
+                    disable_system_group_inputs();
                     system_group.find('.validation_error').hide();
                 },
                 valid_input_cb: function(request_action) {
                     // If the user hasn't provided the necessary inputs, generate an error
                     var valid = true,
-                        system_group_input = $.trim($('#system_group_input').val()),
+                        system_groups_checked = $("#bulk_system_system_group_id").multiselect("getChecked"),
                         system_group_error = system_group.find('.validation_error'),
                         confirmation_text = system_group.find('.confirmation_text');
 
-                    if (system_group_input.length === 0) {
-                        system_group_error.html(i18n.validation_error_system_group_name_empty);
+                    if (system_groups_checked.length === 0) {
+                        system_group_error.html(i18n.validation_error_system_group_empty);
                         valid = false;
                     }
 
@@ -299,38 +298,24 @@ KT.systems_page = function() {
                         system_group_error.hide();
 
                         if (request_action.data('action') === 'add_group') {
-                            // check to see if the system group already exists...
-                            $.ajax({
-                                type: "GET",
-                                url: KT.routes.validate_name_system_groups_path(),
-                                data: {term:system_group_input},
-                                cache: false,
-                                async: false,
-                                success: function(data){
-                                    if (data === 0) {
-                                        confirmation_text.html(i18n.confirm_system_group_create_and_add(system_group_input, KT.panel.numSelected()));
-                                    } else {
-                                        confirmation_text.html(i18n.confirm_system_group_add_action(KT.panel.numSelected()));
-                                    }
-                                }
-                            });
+                            confirmation_text.html(i18n.confirm_system_group_add_action(KT.panel.numSelected()));
                         } else {
                             confirmation_text.html(i18n.confirm_system_group_remove_action(KT.panel.numSelected()));
                         }
-
                     } else {
                         system_group_error.show();
                     }
                     return valid;
                 },
                 ajax_cb: function(ids_selected, request_action, confirm_dialog) {
-                    var system_group_string = $('#system_group_input').val();
+                    var checked = $("#bulk_system_system_group_id").multiselect("getChecked"),
+                        group_ids = checked.map(function(){return this.value;}).get();
 
                     $.ajax({
                         cache: 'false',
                         type: request_action.data('method'),
                         url: request_action.data('url'),
-                        data: {ids:ids_selected, system_group:system_group_string},
+                        data: {ids:ids_selected, group_ids:group_ids},
                         success: function() {
                             // on success, close the request confirmation dialog
                             confirm_dialog.slideUp('fast');
@@ -341,11 +326,66 @@ KT.systems_page = function() {
         );
     },
     system_group_setup = function() {
+        $('#create_system_group').live('click', create_system_group);
         $('#update_system_groups').live('submit', update_system_groups);
-        var current_input = KT.auto_complete_box({
-            values:       KT.routes.auto_complete_system_groups_path(),
-            input_id:     "system_group_input"
+
+        system_group_widget = $("#bulk_system_system_group_id").multiselect({
+            noneSelectedText: i18n.select_system_groups,
+            selectedList: 4,
+            create: function(event, ui) {
+                var html = '<div class="none_matched">'+i18n.group_does_not_exist+'<a id="create_system_group" class="st_button" style="padding-left: 10px; font-weight: bolder; color: #1CA5D2;">'+i18n.confirm_create+'</a></div>';
+                $('.ui-multiselect-checkboxes').before(html);
+
+            },
+            beforeopen: function(event, ui) {
+                var none_matched = $('.none_matched');
+                none_matched.hide();
+            }
+        }).multiselectfilter({
+            autoReset: true,
+            filter: function(event, matches) {
+                var none_matched = $('.none_matched'),
+                    filter = $('.ui-multiselect-filter > input').val();
+
+                if (!filter.length || $(matches).filter('[title="'+filter+'"]').length) {
+                    // found an exact match or the filter is empty
+                    none_matched.hide();
+                } else {
+                    none_matched.show();
+                }
+            }
         });
+    },
+    create_system_group = function() {
+        var group = $('.ui-multiselect-filter > input').val();
+        disable_system_group_inputs();
+        $.ajax({
+            cache: 'false',
+            type: 'POST',
+            url: KT.routes.system_groups_path(),
+            data: {system_group:{name:group}},
+            dataType: 'json',
+            success: function(response) {
+                // add the new group to the multiselect and select it
+                var opt = $('<option />', {value: response.id, text: response.name});
+                opt.appendTo(system_group_widget);
+                opt.attr('selected','selected');
+                system_group_widget.multiselect('refresh');
+                system_group_widget.multiselect('close');
+                enable_system_group_inputs();
+            },
+            error: function() {
+                enable_system_group_inputs();
+            }
+        });
+    },
+    disable_system_group_inputs = function(){
+        $("#bulk_system_system_group_id").multiselect('disable');
+        $('.request_action.system_group').attr('disabled', true);
+    },
+    enable_system_group_inputs = function(){
+        $("#bulk_system_system_group_id").multiselect('enable');
+        $('.request_action.system_group').removeAttr('disabled');
     },
     update_system_groups = function(e) {
         e.preventDefault();
