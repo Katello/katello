@@ -185,7 +185,7 @@ class SystemGroupsController < ApplicationController
       end
       filter :term, {:organization_id => org.id}
       filter :term, {:locked=>false}
-      filter :terms, {:id=>SystemGroup.editable.collect{|g| g.id}}
+      filter :terms, {:id=>SystemGroup.editable(org).collect{|g| g.id}}
     end
     render :json=>groups.map{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
   end

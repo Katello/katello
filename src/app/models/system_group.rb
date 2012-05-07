@@ -74,6 +74,10 @@ class SystemGroup < ActiveRecord::Base
     User.allowed_to?(READ_PERM_VERBS, :system_groups, nil, org)
   end
 
+  def system_readable?
+    User.allowed_to?(SYSTEM_READ_PERMS, :system_groups, self.id, self.organization)
+  end
+
   def system_deletable?
     User.allowed_to?([:delete_systems], :system_groups, self.id, self.organization)
   end
@@ -157,6 +161,6 @@ class SystemGroup < ActiveRecord::Base
   end
 
   READ_PERM_VERBS = SystemGroup.list_verbs.keys
-  SYSTEM_READ_PERMS = [:read_systems, :update_systems]
+  SYSTEM_READ_PERMS = [:read_systems, :update_systems, :delete_systems]
 
 end

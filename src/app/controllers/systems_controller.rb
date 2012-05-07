@@ -345,11 +345,11 @@ class SystemsController < ApplicationController
 
     if !params[:system_group].blank?
       system_group = SystemGroup.where(:name => params[:system_group]).first
-      raise _("System Group membership modification not allowed") if system_group && !system_group.manageable?
+      raise _("System Group membership modification not allowed") if system_group && !system_group.editable?
       if system_group.blank?
         # if the system group requested does not exist, create it...
         begin
-          raise _("System Group creation not allowed.") if SystemGroup.creatable?(current_organization)
+          raise _("System Group creation not allowed.") if !SystemGroup.creatable?(current_organization)
           system_group = SystemGroup.create!(:name => params[:system_group], :organization_id => current_organization.id)
           new_group = true
         rescue Exception => error
@@ -387,7 +387,7 @@ class SystemsController < ApplicationController
 
     if !params[:system_group].blank?
       system_group = SystemGroup.where(:name => params[:system_group]).first
-      raise _("System Group membership modification not allowed") if system_group && !system_group.manageable?
+      raise _("System Group membership modification not allowed") if system_group && !system_group.editable?
 
       if !system_group.blank?
         system_group.lock_check
