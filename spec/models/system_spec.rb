@@ -14,7 +14,11 @@ require 'spec_helper'
 require 'helpers/system_test_data'
 include OrchestrationHelper
 
+
 describe System do
+
+  include AuthorizationHelperMethods
+
 
   let(:facts) { {"distribution.name" => "Fedora"} }
   let(:system_name) { 'testing' }
@@ -41,7 +45,7 @@ describe System do
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id, :organization => @organization)
-
+    @organization.reload #reload to get environment info
     Organization.stub!(:first).and_return(@organization)
 
     @system = System.new(:name => system_name,
@@ -313,4 +317,45 @@ s  end
     end
 
   end
+
+  describe "a readable system" do
+
+    it "should not be readable if the user has no access" do
+      User.current =  user_with_permissions
+      System.readable(@organization).should_not include(@system)
+
+      @system.readable?.should == false
+      @system.editable?.should == false
+    end
+
+    it "should be readable if user can read systems for org" do
+      @system.save!
+      User.current =  user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) }
+      System.readable(@organization).should include(@system)
+      @system.readable?.should == true
+      @system.editable?.should == false
+    end
+
+    it "should be readable if user can read systems for environemnt" do
+      @system.save!
+      User.current =  user_with_permissions { |u| u.can(:read_systems, :environments, @environment.id, @organization) }
+      System.readable(@organization).should include(@system)
+      @system.readable?.should == true
+      @system.editable?.should == false
+    end
+
+    it "should be readable if user can read systems for system group" do
+      disable_consumer_group_orchestration
+      grp = SystemGroup.create!(:organization=>@organization, :name=>"test_group")
+      @system.system_groups << grp
+      @system.save!
+      debugger
+      User.current =  user_with_permissions { |u| u.can(:read_systems, :system_groups, grp.id, @organization) }
+      System.readable(@organization).should include(@system)
+      @system.readable?.should == true
+      @system.editable?.should == false
+    end
+
+  end
+
 end

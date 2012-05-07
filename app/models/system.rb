@@ -167,19 +167,21 @@ class System < ActiveRecord::Base
   def self.readable org
       raise "scope requires an organization" if org.nil?
       if org.systems_readable?
-         where(:environment_id => org.environment_ids) #list all systems in an org 
+         where(:environment_id => org.environment_ids) #list all systems in an org
       else #just list for environments the user can access
-
-        where("systems.environment_id in (#{User.allowed_tags_sql(KTEnvironment::SYSTEMS_READABLE, :environments, org)})")
+        where_clause = "systems.environment_id in (#{User.allowed_tags_sql(KTEnvironment::SYSTEMS_READABLE, :environments, org)})"
+        where_clause += " or "
+        where_clause += "system_groups.id in (#{User.allowed_tags_sql(SystemGroup::SYSTEM_READ_PERMS, :system_groups, org)})"
+        joins(:system_groups).where(where_clause)
       end    
   end
 
   def readable?
-    environment.systems_readable?
+    environment.systems_readable? || self.system_groups.any?{|g| g.systems_readable?}
   end
 
   def editable?
-    environment.systems_editable?
+    environment.systems_editable?  || self.system_groups.any?{|g| g.systems_editable?}
   end
 
   def deletable?
