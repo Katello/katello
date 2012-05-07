@@ -212,7 +212,7 @@ class KatelloCLI(object):
         try:
             self.setup_parser()
             self.opts, args = self.parser.parse_args(args)
-            
+
             if self.opts.version:
                 self.setup_server()
                 self.setup_credentials()

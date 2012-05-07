@@ -24,7 +24,7 @@ from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
-from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_sync_errors, format_task_errors
+from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_sync_errors
 from katello.client.core.utils import ProgressBar
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
@@ -436,19 +436,22 @@ class List(RepoAction):
             env  = get_environment(orgName, envName)
             prod = get_product(orgName, prodName)
 
-            self.printer.set_header(_("Repo List For Org %s Environment %s Product %s") % (orgName, env["name"], prodName))
+            self.printer.set_header(_("Repo List For Org %s Environment %s Product %s") %
+                (orgName, env["name"], prodName))
             repos = self.api.repos_by_env_product(env["id"], prod["id"], None, listDisabled)
             self.printer.print_items(repos)
 
         elif prodName:
             prod = get_product(orgName, prodName)
-            self.printer.set_header(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
+            self.printer.set_header(_("Repo List for Product %s in Org %s ") %
+                (prodName, orgName))
             repos = self.api.repos_by_product(orgName, prod["id"], listDisabled)
             self.printer.print_items(repos)
 
         else:
             env  = get_environment(orgName, envName)
-            self.printer.set_header(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
+            self.printer.set_header(_("Repo List For Org %s Environment %s") %
+                (orgName, env["name"]))
             repos = self.api.repos_by_org_env(orgName,  env["id"], listDisabled)
             self.printer.print_items(repos)
 
@@ -475,7 +478,8 @@ class ListFilters(SingleRepoAction):
 
     def setup_parser(self):
         super(ListFilters, self).setup_parser()
-        self.parser.add_option('--inherit', dest='inherit', action="store_true", default=False, help=_("prints also filters assigned to repository's product."))
+        self.parser.add_option('--inherit', dest='inherit', action="store_true", default=False,
+            help=_("prints also filters assigned to repository's product."))
 
     def run(self):
         repo = self.get_repo()

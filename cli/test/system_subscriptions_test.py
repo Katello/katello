@@ -57,4 +57,3 @@ class SystemSubscriptionsTest(CLIActionTestCase):
         self.mock_options({'available': True})
         self.run_action()
         self.action.api.available_pools.assert_called_once_with(self.SYS_ID)
-

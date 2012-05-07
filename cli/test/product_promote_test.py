@@ -91,4 +91,3 @@ class ProductPromoteTest(CLIActionTestCase):
     def test_waits_for_promotion(self):
         self.run_action()
         self.module.run_spinner_in_bg.assert_called_once()
-

@@ -20,7 +20,6 @@ import time
 import threading
 from xml.utils import iso8601
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
-from katello.client.utils.encoding import u_str
 
 
 # server output validity ------------------------------------------------------
@@ -144,11 +143,11 @@ def format_sync_errors(task):
     @return string, each error on one line
     """
     def format_progress_error(e):
-        if e.has_key("error"):
-           if isinstance(e["error"], dict) and e["error"].has_key("error"):
-               return e["error"]["error"]
-           else:
-               return str(e["error"])
+        if "error" in e:
+            if isinstance(e["error"], dict) and ("error" in e["error"]):
+                return e["error"]["error"]
+            else:
+                return str(e["error"])
 
     def format_task_error(e):
         if isinstance(e, list) and len(e) > 0:

@@ -13,8 +13,6 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 
-import os
-import sys
 from gettext import gettext as _
 from katello.client.utils.encoding import u_str
 
@@ -52,7 +50,7 @@ class PrinterStrategy:
     def _column_has_value(self, column, item):
         """
         Tests whether there is any value to print in the column.
-        It can be value either from the item or set explicitly 
+        It can be value either from the item or set explicitly
         in the column definition.
         @type column: dict
         @param column: column definition
@@ -434,4 +432,3 @@ def get_term_width():
         return 80 if w == 0 else w
     except:
         return 80
-

@@ -42,4 +42,3 @@ def u_obj(data, encoding='utf-8'):
 
     else:
         return data
-

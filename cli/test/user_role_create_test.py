@@ -56,6 +56,3 @@ class UserRoleCreateTest(CLIActionTestCase):
 
     def test_returns_ok(self):
         self.run_action(os.EX_OK)
-
-
-

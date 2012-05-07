@@ -15,7 +15,6 @@
 #
 
 import os
-import sys
 from gettext import gettext as _
 
 from katello.client.api.organization import OrganizationAPI
@@ -23,7 +22,7 @@ from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import test_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
-from katello.client.utils.printer import Printer, VerboseStrategy
+from katello.client.utils.printer import VerboseStrategy
 from katello.client.utils import printer
 from datetime import timedelta, datetime
 

@@ -22,5 +22,4 @@ class VersionTest(CLIActionTestCase):
         self.action.api.version_formatted.assert_called_once()
 
     def test_call_returns_correct_value(self):
-        self.assertEqual(self.action.run(), test_data.VERSION_INFO )
-
+        self.assertEqual(self.action.run(), test_data.VERSION_INFO)

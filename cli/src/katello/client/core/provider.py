@@ -15,7 +15,6 @@
 #
 
 import os
-import sys
 from gettext import gettext as _
 from urlparse import urlparse
 

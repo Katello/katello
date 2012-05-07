@@ -77,6 +77,3 @@ class SystemUnsubscribeTest(CLIActionTestCase):
         self.mock_options({'all': True})
         self.run_action()
         self.action.api.unsubscribe_all.assert_called_once_with(self.SYS_ID)
-
-
-

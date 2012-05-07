@@ -39,11 +39,10 @@ class UserRoleRemoveLdapGroupTest(CLIActionTestCase):
         self.mock_printer()
 
         self.mock_options(self.OPTIONS)
-        
+
         self.mock(self.action.api, 'roles', [self.ROLE])
         self.mock(self.action.api, 'remove_ldap_group', [])
 
     def test_it_calls_remove_ldap_group_api(self):
         self.run_action()
         self.action.api.remove_ldap_group.assert_called_once_with(self.ROLE['id'], 'test')
-

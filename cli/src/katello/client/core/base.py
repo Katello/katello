@@ -22,7 +22,7 @@ from socket import error as SocketError
 
 from katello.client.config import Config
 from katello.client.api.utils import ApiDataError
-from katello.client.core.utils import system_exit, parse_tokens, SystemExitRequest
+from katello.client.core.utils import parse_tokens, SystemExitRequest
 from katello.client.utils.printer import Printer, GrepStrategy, VerboseStrategy
 from katello.client.utils.encoding import u_str, u_obj
 from katello.client.logutil import getLogger

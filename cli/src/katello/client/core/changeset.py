@@ -15,15 +15,14 @@
 #
 
 import os
-import sys
 from gettext import gettext as _
 from optparse import OptionValueError
 
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit, format_task_errors
-from katello.client.api.utils import get_organization, get_environment, get_changeset, get_template, get_repo, get_product
+from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
 from katello.client.utils import printer
 from katello.client.utils.encoding import u_str
 

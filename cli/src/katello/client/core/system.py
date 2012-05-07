@@ -15,7 +15,6 @@
 #
 
 import os
-import sys
 from gettext import gettext as _
 
 from katello.client.api.system import SystemAPI
@@ -24,7 +23,7 @@ from katello.client.api.utils import get_environment, get_system
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
-from katello.client.utils.printer import Printer, VerboseStrategy
+from katello.client.utils.printer import VerboseStrategy
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_date
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
@@ -129,12 +128,12 @@ class Info(SystemAction):
         self.printer.add_column('updated_at', 'Last updated', formatter=format_date)
         self.printer.add_column('description', multiline=True)
         if 'releaseVer' in system and system['releaseVer']:
-             self.printer.add_column('releaseVer', 'OS release')
+            self.printer.add_column('releaseVer', 'OS release')
         self.printer.add_column('activation_keys', multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('host', show_with=printer.VerboseStrategy)
         self.printer.add_column('serviceLevel', _('Service Level'))
         self.printer.add_column('guests', show_with=printer.VerboseStrategy)
-        if system.has_key("template"):
+        if "template" in system:
             self.printer.add_column('template', show_with=printer.VerboseStrategy, value=system["template"]["name"])
 
         self.printer.print_item(system)
