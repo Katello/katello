@@ -134,7 +134,7 @@ describe Api::SystemsController do
 
         it "uses user credentials of the hidden user" do
           User.should_receive("current=").at_least(:once)
-          User.should_receive("current=").with(User.hidden).once
+          User.should_receive("current=").with(User.hidden.first).once
           post :activate, :organization_id => @organization.cp_key, :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
         end
 
