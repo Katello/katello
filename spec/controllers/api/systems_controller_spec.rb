@@ -378,7 +378,8 @@ describe Api::SystemsController do
     it_should_behave_like "protected action"
 
     it "should update the system groups the system is in" do
-      ids = "" + @system_group_1.id.to_s + "," + @system_group_2.id.to_s
+      #ids = "" + @system_group_1.id.to_s + "," + @system_group_2.id.to_s
+      ids = [@system_group_1.id, @system_group_2.id]
       post :add_system_groups, :id => @system.uuid, :system => { :system_group_ids => ids }
       response.should be_success
       @system.system_group_ids.should include(@system_group_1.id)
@@ -404,9 +405,11 @@ describe Api::SystemsController do
     it_should_behave_like "protected action"
 
     it "should update the system groups the system is in" do
-      ids = "" + @system_group_1.id.to_s + "," + @system_group_2.id.to_s
+      #ids = "" + @system_group_1.id.to_s + "," + @system_group_2.id.to_s
+      ids = [@system_group_1.id, @system_group_2.id]
       delete :remove_system_groups, :id => @system.uuid, :system => { :system_group_ids => ids }
-      @system.system_group_ids.should be_empty
+      response.should be_success
+      @system.reload.system_group_ids.should be_empty
     end
 
   end

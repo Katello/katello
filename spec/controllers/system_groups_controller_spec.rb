@@ -216,7 +216,7 @@ describe SystemGroupsController do
       it_should_behave_like "protected action"
 
       it "should allow locked to be toggled on" do
-        post :lock, :id=>@group.id, :system_group=>{:lock=>"true"}
+        post :lock, :id=>@group.id, :system_group=>{:locked=>"true"}
         response.should be_success
         SystemGroup.find(@group.id).locked.should == true
       end
