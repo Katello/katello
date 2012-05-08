@@ -12,7 +12,7 @@
         %tr#add_groups.no_sort
           %td
             %form{:id=>'add_group_form'}
-              = select_tag 'system[system_group_id]', options_from_collection_for_select(@system_groups, :id, :name), :multiple => true
+              = select_tag :system_group, options_from_collection_for_select(@system_groups, :id, :name), :multiple => true
               %input.button{:type=>'submit', :id=>'add_groups', :value=>_('Add'), 'data-url'=> add_system_groups_system_path(@system)}
 
         %tr#empty_row{:class=>(:hidden if !@system.system_groups.empty?)}
