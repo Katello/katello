@@ -1,5 +1,3 @@
-= javascript :activation_key_system_groups
-
 = content_for :title do
   #{@activation_key.name}
 
@@ -11,25 +9,24 @@
   = render_menu(1..2, activation_keys_navigation)
 
 = content_for :content do
-  .grid_10#system_groups
-    %h5.grid_10 #{_("System Groups")}
+  #system_groups
+    %table
+      %thead
+        %tr.no_sort
+          %th
+            #{_("Name")}
+
+      -if editable
+        %tr#add_groups.no_sort
+          %td
+            %form{:id=>'add_group_form'}
+              = select_tag :system_group, options_from_collection_for_select(@system_groups, :id, :name), :multiple => true
+              %input.button{:type=>'submit', :id=>'add_groups', :value=>_('Add'), 'data-url'=> add_system_groups_activation_key_path(@activation_key)}
+
+        %tr#empty_row{:class=>(:hidden if !@activation_key.system_groups.empty?)}
+          %td
+            = _("This activation key is not currently associated with a System Group.")
+        = render :partial=>'system_group_items', :locals=>{:system_groups=>@activation_key.system_groups, :editable=>editable}
+
     - if editable
-      = form_tag update_system_groups_activation_key_path(@activation_key), :method => "put", :id => "update_system_groups" do
-        .grid_10
-          = select_tag "activation_key[system_group_ids]", options_from_collection_for_select(@system_groups, :id, :name, @activation_key.system_group_ids), :multiple => true, :class => 'multiselect', :style=>"width:500px; height:350px"
-        .grid_2
-          = button_to _("Save System Groups"), update_system_groups_activation_key_path(@activation_key), :method => :put, :id => :save_groups
-    -else
-      -if @system_groups.length > 0
-        %table{:style=>"width:400px;"}
-          %thead
-            %tr
-              %th #{_("Name")}
-          %tbody
-            - for group in @system_groups
-              - cycle_class = cycle("", "alt")
-              %tr{:class => cycle_class}
-                %td
-                  = group.name
-      -else
-        = _("You have no system groups defined.")
+      %input.fr.button{:type=>"button", :id=>"remove_groups", :value=>_("Remove"), 'data-url'=> remove_system_groups_activation_key_path(@activation_key)}
