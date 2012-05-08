@@ -154,7 +154,7 @@ describe System do
       Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil).and_return(true)
       @system.save!
     end
-s  end
+  end
 
   context "persisted system has correct attributes" do
     before(:each) { @system.save! }
@@ -318,40 +318,193 @@ s  end
 
   end
 
-  describe "a readable system" do
-    it "should not be readable if the user has no access" do
-      User.current =  user_with_permissions
+
+  describe "a user with no permissions" do
+    before :each do
+      #give access to the org
+      User.current =  user_with_permissions{ |u| u.can(:create, :providers, nil, @organization) }
+    end
+
+    it "Should not be able to do anything with systems" do
       System.readable(@organization).should_not include(@system)
+      System.any_readable?(@organization).should == false
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
       @system.readable?.should == false
       @system.editable?.should == false
+      @system.deletable?.should == false
+    end
+  end
+
+
+  describe "a user with environment system perms" do
+    before :each do
+      @system.save!
     end
 
-    it "should be readable if user can read systems for org" do
-      @system.save!
-      User.current =  user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) }
-      System.readable(@organization).should include(@system)
-      @system.readable?.should == true
-      @system.editable?.should == false
-    end
-
-    it "should be readable if user can read systems for environemnt" do
-      @system.save!
+    it "should be readable if user can read systems for environment" do
       User.current =  user_with_permissions { |u| u.can(:read_systems, :environments, @environment.id, @organization) }
       System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
       @system.readable?.should == true
       @system.editable?.should == false
+      @system.deletable?.should == false
     end
 
-    it "should be readable if user can read systems for system group" do
-      disable_consumer_group_orchestration
-      grp = SystemGroup.create!(:organization=>@organization, :name=>"test_group")
-      @system.system_groups << grp
-      @system.save!
-      User.current =  user_with_permissions { |u| u.can(:read_systems, :system_groups, grp.id, @organization) }
+    it "should be editable if user can edit systems for environment" do
+      User.current =  user_with_permissions { |u| u.can(:update_systems, :environments, @environment.id, @organization) }
       System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
+      @system.readable?.should == true
+      @system.editable?.should == true
+      @system.deletable?.should == false
+    end
+
+    it "should be registerable if user can edit systems for environment" do
+      User.current =  user_with_permissions { |u| u.can(:register_systems, :environments, @environment.id, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == true
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
       @system.readable?.should == true
       @system.editable?.should == false
+      @system.deletable?.should == false
     end
+
+    it "should be deletable if user can delete systems for environment" do
+      User.current =  user_with_permissions { |u| u.can(:delete_systems, :environments, @environment.id, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == true
+      System.any_deletable?(nil, @organization).should == false
+      @system.readable?.should == true
+      @system.editable?.should == false
+      @system.deletable?.should == true
+    end
+
+
+  end
+
+  describe "a user with organization system perms " do
+    before :each do
+      @system.save!
+    end
+
+    it "should be readable if user can read systems for organization" do
+      User.current =  user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
+      @system.readable?.should == true
+      @system.editable?.should == false
+      @system.deletable?.should == false
+    end
+
+    it "should be editable if user can edit systems for organization" do
+      User.current =  user_with_permissions { |u| u.can(:update_systems, :organizations, nil, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
+      @system.readable?.should == true
+      @system.editable?.should == true
+      @system.deletable?.should == false
+    end
+
+    it "should be registerable if user can edit systems for organization" do
+      User.current =  user_with_permissions { |u| u.can(:register_systems, :organizations, nil, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == true
+      System.registerable?(nil, @organization).should == true
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
+      @system.readable?.should == true
+      @system.editable?.should == false
+      @system.deletable?.should == false
+    end
+
+    it "should be deletable if user can delete systems for organization" do
+      User.current =  user_with_permissions { |u| u.can(:delete_systems, :organizations, nil, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == true
+      System.any_deletable?(nil, @organization).should == true
+      @system.readable?.should == true
+      @system.editable?.should == false
+      @system.deletable?.should == true
+    end
+  end
+
+
+  describe "a user with organization system perms " do
+    before :each do
+      disable_consumer_group_orchestration
+      @group = SystemGroup.create!(:organization=>@organization, :name=>"test_group")
+      @system.system_groups << @group
+      @system.save!
+    end
+
+    it "should be readable if user can read systems for organization" do
+      User.current =  user_with_permissions { |u| u.can(:read_systems, :system_groups, @group.id, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
+      @system.readable?.should == true
+      @system.editable?.should == false
+      @system.deletable?.should == false
+    end
+
+    it "should be editable if user can edit systems for organization" do
+      User.current =  user_with_permissions { |u| u.can(:update_systems, :system_groups, @group.id, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
+      @system.readable?.should == true
+      @system.editable?.should == true
+      @system.deletable?.should == false
+    end
+
+    it "should be deletable if user can delete systems for organization" do
+      User.current =  user_with_permissions { |u| u.can(:delete_systems, :system_groups, @group.id, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == true
+      System.any_deletable?(nil, @organization).should == true
+      @system.readable?.should == true
+      @system.editable?.should == false
+      @system.deletable?.should == true
+    end
+
 
   end
 
