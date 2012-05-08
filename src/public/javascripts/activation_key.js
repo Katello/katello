@@ -12,6 +12,9 @@
 */
 
 KT.panel.list.registerPage('activation_keys', { create : 'new_activation_key' });
+KT.panel.set_expand_cb(function() {
+    KT.system_groups_pane.register_multiselect();
+});
 
 $(document).ready(function() {
 
@@ -74,8 +77,7 @@ $(document).ready(function() {
          }
      });
 
-    KT.activation_key.system_group_setup();
-
+    KT.system_groups_pane.register_events();
 });
 
 KT.activation_key = (function($) {
@@ -103,22 +105,6 @@ KT.activation_key = (function($) {
         });
 
         subbutton.unbind('click').click(disableSubmit);
-    },
-    system_group_setup = function() {
-        $('#update_system_groups').live('submit', update_system_groups);
-    },
-    update_system_groups = function(e) {
-        e.preventDefault();
-        var button = $(this).find('input[type|="submit"]');
-        button.attr("disabled","disabled");
-        $(this).ajaxSubmit({
-            success: function(data) {
-                button.removeAttr('disabled');
-            },
-            error: function(e) {
-                button.removeAttr('disabled');
-            }
-        });
     },
     go_to_available_subscriptions = function() {
         var url = $('#go_to_available_subscriptions').attr('href');
@@ -304,7 +290,6 @@ KT.activation_key = (function($) {
     };
     return {
         subscription_setup: subscription_setup,
-        system_group_setup: system_group_setup,
         go_to_available_subscriptions: go_to_available_subscriptions,
         initialize_edit: initialize_edit,
         reset_env_select: reset_env_select,

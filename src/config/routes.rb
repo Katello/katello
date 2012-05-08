@@ -29,7 +29,8 @@ Src::Application.routes.draw do
       post :update
 
       get :system_groups
-      put :update_system_groups
+      put :add_system_groups
+      put :remove_system_groups
     end
   end
 
