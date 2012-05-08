@@ -115,6 +115,10 @@ EOKEY
     Candlepin::Environment.stub!(:add_content).and_return({})
   end
 
+  def disable_system_orchestration
+    Candlepin::Consumer.stub(:get).and_return({})
+  end
+
   def disable_user_orchestration
     Pulp::User.stub!(:create).and_return({})
     Pulp::User.stub!(:destroy).and_return(200)
