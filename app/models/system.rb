@@ -189,20 +189,21 @@ class System < ActiveRecord::Base
     environment.systems_deletable? || self.system_groups.any?{|g| g.systems_deletable?}
   end
 
-  def self.deletable? env, org
-    org ||= env.organization if env
-    ret = false
-    ret ||= User.allowed_to?([:delete_systems], :organizations, nil, org) if org
-    ret ||= User.allowed_to?([:delete_systems], :environments, env.id, org) if env
-    ret
+  #TODO these two functions are somewhat poorly written and need to be redone
+  def self.any_deletable? env, org
+    if env
+      env.systems_deletable? || org.system_groups.any?{|g| g.systems_deletable?}
+    else
+      org.systems_deletable? || org.system_groups.any?{|g| g.systems_deletable?}
+    end
   end
 
   def self.registerable? env, org
-    org ||= env.organization if env
-    ret = false
-    ret ||= User.allowed_to?([:register_systems], :organizations, nil, org) if org
-    ret ||= User.allowed_to?([:register_systems], :environments, env.id, org) if env
-    ret
+    if env
+      env.systems_registerable?
+    else
+      org.systems_registerable?
+    end
   end
 
   def tasks
