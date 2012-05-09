@@ -7,8 +7,7 @@ import test_data
 
 import katello.client.core.repo
 from katello.client.core.repo import ListFilters
-from katello.client.core.utils import SystemExitRequest
-
+from katello.client.api.utils import ApiDataError
 
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
@@ -74,20 +73,19 @@ class RepoListFiltersTest(CLIActionTestCase):
 
     def test_finds_repo_by_id(self):
         self.mock_options(self.OPTIONS_WITH_ID)
-        self.action.run()
+        self.run_action()
         self.action.api.repo.assert_called_once_with(self.REPO['id'])
 
     def test_finds_repo_by_name(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
-        self.action.run()
+        self.run_action()
         self.module.get_repo.assert_called_once_with(self.ORG['name'], self.PROD['name'], self.REPO['name'], None, False)
 
     def test_returns_with_error_when_no_repo_found(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
-        self.module.get_repo.return_value =  None
-        ex = self.assertRaisesException(SystemExitRequest, self.action.run)
-        self.assertEqual(ex.args[0], os.EX_DATAERR)
+        self.mock(self.module, 'get_repo').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
     def test_it_calls_filters_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.filters.assert_called_once_with(self.REPO['id'], False)

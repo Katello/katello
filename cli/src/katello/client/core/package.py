@@ -21,6 +21,7 @@ from katello.client.api.package import PackageAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_repo
+from katello.client.utils import printer
 
 Config()
 
@@ -71,26 +72,24 @@ class Info(PackageAction):
 
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
-            if repo == None:
-                return os.EX_DATAERR
             repoId = repo["id"]
 
         pack = self.api.package(packId, repoId)
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('filename')
-        self.printer.addColumn('arch')
-        self.printer.addColumn('release')
-        self.printer.addColumn('version')
-        self.printer.addColumn('vendor')
-        self.printer.addColumn('download_url', show_in_grep=False)
-        self.printer.addColumn('description', multiline=True, show_in_grep=False)
-        self.printer.addColumn('provides', multiline=True, show_in_grep=False)
-        self.printer.addColumn('requires', multiline=True, show_in_grep=False)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('filename')
+        self.printer.add_column('arch')
+        self.printer.add_column('release')
+        self.printer.add_column('version')
+        self.printer.add_column('vendor')
+        self.printer.add_column('download_url', show_with=printer.VerboseStrategy)
+        self.printer.add_column('description', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('provides', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('requires', multiline=True, show_with=printer.VerboseStrategy)
 
-        self.printer.setHeader(_("Package Information"))
-        self.printer.printItem(pack)
+        self.printer.set_header(_("Package Information"))
+        self.printer.print_item(pack)
         return os.EX_OK
 
 # package actions ------------------------------------------------------------
@@ -117,32 +116,62 @@ class List(PackageAction):
             self.require_option('product')
 
     def run(self):
+        repoId = self.get_repo_id()
+        if not repoId:
+            return os.EX_DATAERR
+
+        self.printer.set_header(_("Package List For Repo %s") % repoId)
+
+        packages = self.api.packages_by_repo(repoId)
+        self.print_packages(packages)
+
+        return os.EX_OK
+
+    def get_repo_id(self):
         repoId   = self.get_option('repo_id')
         repoName = self.get_option('repo')
         orgName  = self.get_option('org')
         envName  = self.get_option('env')
         prodName = self.get_option('product')
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('filename')
-
-
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
-            if repo == None:
-                return os.EX_DATAERR
-            repoId = repo["id"]
+            if repo != None:
+                repoId = repo["id"]
+
+        return repoId
+
+    def print_packages(self, packages):
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('filename')
+        self.printer.print_items(packages)
 
 
-        self.printer.setHeader(_("Package List For Repo %s") % repoId)
 
-        packages = self.api.packages_by_repo(repoId)
+class Search(List):
 
-        self.printer.printItems(packages)
+    description = _('search packages in a repository')
+
+    def setup_parser(self):
+        super(Search, self).setup_parser()
+        self.parser.add_option('--query', dest='query',
+                      help=_("query string for searching packages, e.g. 'kernel*','kernel-3.3.0-4.el6.x86_64'"))
+
+    def check_options(self):
+        super(Search, self).check_options()
+        self.require_option('query')
+
+    def run(self):
+        repoId = self.get_repo_id()
+        if not repoId:
+            return os.EX_DATAERR
+        query   = self.get_option('query')
+        self.printer.set_header(_("Package List For Repo %s and Query %s") % (repoId, query))
+
+        packages = self.api.search(query, repoId)
+        self.print_packages(packages)
         return os.EX_OK
-
-
 
 
 # package command ------------------------------------------------------------

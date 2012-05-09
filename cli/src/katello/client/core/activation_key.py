@@ -22,7 +22,8 @@ from katello.client.api.activation_key import ActivationKeyAPI
 from katello.client.api.template import TemplateAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import test_record
+from katello.client.utils import printer
 from katello.client.api.utils import get_environment, get_organization
 from katello.client.cli.base import OptionException
 
@@ -71,26 +72,22 @@ class List(ActivationKeyAction):
 
             return os.EX_OK
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('environment_id')
-        self.printer.addColumn('system_template_id')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('environment_id')
+        self.printer.add_column('system_template_id')
 
-        self.printer.setHeader(_("Activation Key List"))
-        self.printer.printItems(keys)
+        self.printer.set_header(_("Activation Key List"))
+        self.printer.print_items(keys)
         return os.EX_OK
 
     def get_keys_for_organization(self, orgName):
         organization = get_organization(orgName)
-        if not organization: return os.EX_DATAERR
-
         return self.api.activation_keys_by_organization(organization['cp_key'])
 
     def get_keys_for_environment(self, orgName, envName):
         environment = get_environment(orgName, envName)
-        if not environment: return os.EX_DATAERR
-
         return self.api.activation_keys_by_environment(environment['id'])
 
 class Info(ActivationKeyAction):
@@ -112,7 +109,6 @@ class Info(ActivationKeyAction):
         keyName = self.get_option('name')
 
         organization = get_organization(orgName)
-        if not organization: return os.EX_DATAERR
 
         keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
         if len(keys) == 0:
@@ -121,15 +117,15 @@ class Info(ActivationKeyAction):
         for akey in keys:
             akey["pools"] = "[ "+ ", ".join([pool["cp_id"] for pool in akey["pools"]]) +" ]"
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('environment_id')
-        self.printer.addColumn('system_template_id')
-        self.printer.addColumn('pools', multiline=True, show_in_grep=False)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('environment_id')
+        self.printer.add_column('system_template_id')
+        self.printer.add_column('pools', multiline=True, show_with=printer.VerboseStrategy)
 
-        self.printer.setHeader(_("Activation Key Info"))
-        self.printer.printItem(keys[0])
+        self.printer.set_header(_("Activation Key Info"))
+        self.printer.print_item(keys[0])
         return os.EX_OK
 
 
@@ -162,7 +158,6 @@ class Create(ActivationKeyAction):
         templateName = self.get_option('template')
 
         environment = get_environment(orgName, envName)
-        if not environment: return os.EX_DATAERR
 
         try:
             templateId = self.get_template_id(environment['id'], templateName)
@@ -171,12 +166,10 @@ class Create(ActivationKeyAction):
             return os.EX_DATAERR
 
         key = self.api.create(environment['id'], keyName, keyDescription, templateId)
-        if is_valid_record(key):
-            print _("Successfully created activation key [ %s ]") % key['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create activation key [ %s ]") % keyName
-            return os.EX_DATAERR
+        test_record(key,
+            _("Successfully created activation key [ %s ]") % keyName,
+            _("Could not create activation key [ %s ]") % keyName
+        )
 
 
 
@@ -218,11 +211,9 @@ class Update(ActivationKeyAction):
         remove_poolids = self.get_option('remove_poolid') or []
 
         organization = get_organization(orgName)
-        if not organization: return os.EX_DATAERR
 
         if envName != None:
             environment = get_environment(orgName, envName)
-            if not environment: return os.EX_DATAERR
         else:
             environment = None
 
@@ -269,10 +260,10 @@ class Delete(ActivationKeyAction):
         keyName = self.get_option('name')
 
         organization = get_organization(orgName)
-        if not organization: return os.EX_DATAERR
 
         keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
         if len(keys) == 0:
+            #TODO: not found?
             return os.EX_DATAERR
 
         self.api.delete(keys[0]['id'])

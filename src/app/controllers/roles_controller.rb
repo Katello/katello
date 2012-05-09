@@ -12,7 +12,7 @@
 
 class RolesController < ApplicationController
 
-  before_filter :find_role, :except => [:index, :items, :new, :create, :verbs_and_scopes, :auto_complete_search]
+  before_filter :find_role, :except => [:index, :items, :new, :create, :verbs_and_scopes, :auto_complete_search, :create_ldap_group, :destroy_ldap_group]
   before_filter :authorize #call authorize after find_role so we call auth based on the id instead of cp_id
   skip_before_filter :require_org
   before_filter :setup_options, :only => [:index, :items]
@@ -42,6 +42,8 @@ class RolesController < ApplicationController
       :update_permission=> edit_check,
       :destroy_permission => edit_check,
       :destroy => delete_check,
+      :create_ldap_group => edit_check,
+      :destroy_ldap_group => edit_check,
       }
   end
 
@@ -65,7 +67,9 @@ class RolesController < ApplicationController
        :create => {:role => [:name, :description]},
        :update => {:role => [:name, :description], :update_users => [:user_id,:adding]},
        :create_permission => perm_check,
-       :update_permission => perm_check
+       :update_permission => perm_check,
+       :create_ldap_group => [:group, :role_id],
+       :destroy_ldap_group => [:id, :role_id],
      }
   end
 
@@ -84,6 +88,7 @@ class RolesController < ApplicationController
                  :col => ['name'],
                  :titles => [_('Name')],
                  :create => _('Role'),
+                 :create_label => _('+ New Role'),
                  :name => controller_display_name,
                  :ajax_load  => true,
                  :list_partial => 'roles/list_roles',
@@ -266,6 +271,26 @@ class RolesController < ApplicationController
     render :json => params[:permission_id]
   end
 
+  def create_ldap_group
+    group_hash = { :role_id => params[:role_id], :ldap_group => params[:group] }
+    @group = LdapGroupRole.create!(group_hash)
+    to_return = { :group => @group.ldap_group }
+    add_group_to_bc(to_return, @group)
+    notice _("LDAP Group '%s' was created.") % @group.ldap_group
+    render :json => to_return
+  rescue Exception => error
+    notice error, {:level => :error}
+    render :json=>@group.errors, :status=>:bad_request
+  end
+
+  def destroy_ldap_group
+    group = LdapGroupRole.find(params[:id])
+    name = group.ldap_group
+    group.destroy
+    notice _("LDAP Group Mapping for '%s' was removed.") % name 
+    render :json => params[:id]
+  end
+ 
   private
   def find_role
     @role =  Role.find(params[:role_id]) if params.has_key? :role_id

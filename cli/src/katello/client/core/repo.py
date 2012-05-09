@@ -24,10 +24,10 @@ from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
-from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_sync_errors, format_task_errors
+from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_sync_errors
 from katello.client.core.utils import ProgressBar
 from katello.client.utils.encoding import u_str
-
+from katello.client.utils import printer
 
 Config()
 
@@ -104,8 +104,6 @@ class SingleRepoAction(RepoAction):
         else:
             repo = get_repo(orgName, prodName, repoName, envName, includeDisabled)
 
-        if repo == None:
-            system_exit(os.EX_DATAERR)
         return repo
 
 
@@ -145,14 +143,9 @@ class Create(RepoAction):
         gpgkey   = self.get_option('gpgkey')
         nogpgkey   = self.get_option('nogpgkey')
 
-
         prod = get_product(orgName, prodName)
-        if prod != None:
-            self.api.create(orgName, prod["id"], name, url, gpgkey, nogpgkey)
-            print _("Successfully created repository [ %s ]") % name
-        else:
-            print _("No product [ %s ] found") % prodName
-            return os.EX_DATAERR
+        self.api.create(orgName, prod["id"], name, url, gpgkey, nogpgkey)
+        print _("Successfully created repository [ %s ]") % name
 
         return os.EX_OK
 
@@ -186,7 +179,7 @@ class Discovery(RepoAction):
         orgName  = self.get_option('org')
 
         repourls = self.discover_repositories(orgName, url)
-        self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
+        self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
         selectedurls = self.select_repositories(repourls, assumeyes)
 
         prod = get_product(orgName, prodName)
@@ -287,11 +280,6 @@ class Status(SingleRepoAction):
 
         task = AsyncTask(self.api.last_sync_status(repo['id']))
 
-        repo['last_sync'] = format_sync_time(repo['last_sync'])
-        repo['sync_state'] = format_sync_state(repo['sync_state'])
-        if 'next_scheduled_sync' in repo:
-            repo['next_scheduled_sync'] = format_sync_time(repo['next_scheduled_sync'])
-
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
@@ -299,16 +287,16 @@ class Status(SingleRepoAction):
 
         repo['last_errors'] = format_sync_errors(task)
 
-        self.printer.addColumn('package_count')
-        self.printer.addColumn('last_sync')
-        self.printer.addColumn('sync_state')
+        self.printer.add_column('package_count')
+        self.printer.add_column('last_sync', formatter=format_sync_time)
+        self.printer.add_column('sync_state', formatter=format_sync_state)
         if 'next_scheduled_sync' in repo:
-            self.printer.addColumn('next_scheduled_sync')
-        self.printer.addColumn('progress', show_in_grep=False)
-        self.printer.addColumn('last_errors', multiline=True, show_in_grep=False)
+            self.printer.add_column('next_scheduled_sync', formatter=format_sync_time)
+        self.printer.add_column('progress', show_with=printer.VerboseStrategy)
+        self.printer.add_column('last_errors', multiline=True, show_with=printer.VerboseStrategy)
 
-        self.printer.setHeader(_("Repository Status"))
-        self.printer.printItem(repo)
+        self.printer.set_header(_("Repository Status"))
+        self.printer.print_item(repo)
         return os.EX_OK
 
 
@@ -321,21 +309,19 @@ class Info(SingleRepoAction):
         repo = self.get_repo(True)
 
         repo['url'] = repo['source']['url']
-        repo['last_sync'] = format_sync_time(repo['last_sync'])
-        repo['sync_state'] = format_sync_state(repo['sync_state'])
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('package_count')
-        self.printer.addColumn('arch', show_in_grep=False)
-        self.printer.addColumn('url', show_in_grep=False)
-        self.printer.addColumn('last_sync', show_in_grep=False)
-        self.printer.addColumn('sync_state', name=_("Progress"), show_in_grep=False)
-        self.printer.addColumn('gpg_key_name', name=_("GPG key"), show_in_grep=False)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('package_count')
+        self.printer.add_column('arch', show_with=printer.VerboseStrategy)
+        self.printer.add_column('url', show_with=printer.VerboseStrategy)
+        self.printer.add_column('last_sync', show_with=printer.VerboseStrategy, formatter=format_sync_time)
+        self.printer.add_column('sync_state', name=_("Progress"), show_with=printer.VerboseStrategy, formatter=format_sync_state)
+        self.printer.add_column('gpg_key_name', name=_("GPG key"), show_with=printer.VerboseStrategy)
 
-        self.printer.setHeader(_("Information About Repo %s") % repo['id'])
+        self.printer.set_header(_("Information About Repo %s") % repo['id'])
 
-        self.printer.printItem(repo)
+        self.printer.print_item(repo)
         return os.EX_OK
 
 class Update(SingleRepoAction):
@@ -441,32 +427,33 @@ class List(RepoAction):
         prodName = self.get_option('product')
         listDisabled = self.has_option('disabled')
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('package_count')
-        self.printer.addColumn('last_sync', time_format=True)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('package_count')
+        self.printer.add_column('last_sync', formatter=format_sync_time)
 
         if prodName and envName:
             env  = get_environment(orgName, envName)
             prod = get_product(orgName, prodName)
-            if env != None and prod != None:
-                self.printer.setHeader(_("Repo List For Org %s Environment %s Product %s") % (orgName, env["name"], prodName))
-                repos = self.api.repos_by_env_product(env["id"], prod["id"], None, listDisabled)
-                self.printer.printItems(repos)
+
+            self.printer.set_header(_("Repo List For Org %s Environment %s Product %s") %
+                (orgName, env["name"], prodName))
+            repos = self.api.repos_by_env_product(env["id"], prod["id"], None, listDisabled)
+            self.printer.print_items(repos)
+
         elif prodName:
             prod = get_product(orgName, prodName)
-            if prod != None:
-                self.printer.setHeader(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
-                repos = self.api.repos_by_product(orgName, prod["id"], listDisabled)
-                self.printer.printItems(repos)
-            else:
-                return os.EX_DATAERR
+            self.printer.set_header(_("Repo List for Product %s in Org %s ") %
+                (prodName, orgName))
+            repos = self.api.repos_by_product(orgName, prod["id"], listDisabled)
+            self.printer.print_items(repos)
+
         else:
             env  = get_environment(orgName, envName)
-            if env != None:
-                self.printer.setHeader(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
-                repos = self.api.repos_by_org_env(orgName,  env["id"], listDisabled)
-                self.printer.printItems(repos)
+            self.printer.set_header(_("Repo List For Org %s Environment %s") %
+                (orgName, env["name"]))
+            repos = self.api.repos_by_org_env(orgName,  env["id"], listDisabled)
+            self.printer.print_items(repos)
 
         return os.EX_OK
 
@@ -491,7 +478,8 @@ class ListFilters(SingleRepoAction):
 
     def setup_parser(self):
         super(ListFilters, self).setup_parser()
-        self.parser.add_option('--inherit', dest='inherit', action="store_true", default=False, help=_("prints also filters assigned to repository's product."))
+        self.parser.add_option('--inherit', dest='inherit', action="store_true", default=False,
+            help=_("prints also filters assigned to repository's product."))
 
     def run(self):
         repo = self.get_repo()
@@ -499,10 +487,10 @@ class ListFilters(SingleRepoAction):
 
         filters = self.api.filters(repo['id'], inherit)
 
-        self.printer.addColumn('name')
-        self.printer.addColumn('description')
-        self.printer.setHeader(_("Repository Filters"))
-        self.printer.printItems(filters)
+        self.printer.add_column('name')
+        self.printer.add_column('description')
+        self.printer.set_header(_("Repository Filters"))
+        self.printer.print_items(filters)
 
         return os.EX_OK
 
@@ -537,8 +525,7 @@ class AddRemoveFilter(SingleRepoAction):
 
         repo = self.get_repo()
 
-        if get_filter(org_name, filter_name) == None:
-            return os.EX_DATAERR
+        get_filter(org_name, filter_name)
 
         filters = self.api.filters(repo['id'])
         filters = [f['name'] for f in filters]

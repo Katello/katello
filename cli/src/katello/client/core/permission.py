@@ -15,16 +15,16 @@
 #
 
 import os
-import sys
 from gettext import gettext as _
 
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.api.utils import get_role, get_permission
-from katello.client.core.utils import Printer, system_exit, is_valid_record
+from katello.client.core.utils import system_exit, test_record
+from katello.client.utils.printer import GrepStrategy, VerboseStrategy
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-
+from katello.client.utils import printer
 
 Config()
 
@@ -106,16 +106,12 @@ class Create(PermissionAction):
         tag_ids = self.tags_to_ids(tags, org_name, scope)
 
         role = get_role(role_name)
-        if role == None:
-            return os.EX_DATAERR
 
         permission = self.api.create(role['id'], name, desc, scope, verbs, tag_ids, org_name)
-        if is_valid_record(permission):
-            print _("Successfully created permission [ %s ] for user role [ %s ]") % (name, role['name'])
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create permission [ %s ]") % name
-            return os.EX_DATAERR
+        test_record(permission,
+            _("Successfully created permission [ %s ] for user role [ %s ]") % (name, role['name']),
+            _("Could not create permission [ %s ]") % name
+        )
 
 
 class Delete(PermissionAction):
@@ -135,11 +131,7 @@ class Delete(PermissionAction):
         name = self.get_option('name')
 
         role = get_role(role_name)
-        if role == None:
-            return os.EX_DATAERR
         perm = get_permission(role_name, name)
-        if perm == None:
-            return os.EX_DATAERR
 
         self.api.delete(role['id'], perm['id'])
         print _("Successfully deleted permission [ %s ] for role [ %s ]") % (name, role_name)
@@ -162,38 +154,28 @@ class List(PermissionAction):
     def format_tags(self, tags):
         return [t['formatted']['display_name'] for t in tags]
 
-    def format_permission(self, permission):
-        permission['scope'] = permission['resource_type']['name']
-        permission['verbs'] = self.format_verbs(permission['verbs'])
-        permission['tags'] = self.format_tags(permission['tags'])
-        return permission
-
     def run(self):
         role_name = self.get_option('user_role')
 
         role = get_role(role_name)
-        if role == None:
-            return os.EX_DATAERR
 
         permissions = self.api.permissions(role['id'])
-        display_permissons = []
-        for p in permissions:
-            display_permissons.append(self.format_permission(p))
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('scope')
-        self.printer.addColumn('verbs', multiline=True)
-        self.printer.addColumn('tags', multiline=True)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('scope', item_formatter=lambda perm: perm['resource_type']['name'])
+        self.printer.add_column('verbs', multiline=True, formatter=self.format_verbs)
+        self.printer.add_column('tags', multiline=True, formatter=self.format_tags)
 
-        self.printer.setHeader(_("Permission List"))
-        self.printer.printItems(display_permissons)
+        self.printer.set_header(_("Permission List"))
+        self.printer.print_items(permissions)
         return os.EX_OK
 
 
 class ListAvailableVerbs(PermissionAction):
 
     description = _('list available scopes, verbs and tags that can be set in a permission')
+    grep_mode = False
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com,\nlists organization specific verbs"))
@@ -204,42 +186,46 @@ class ListAvailableVerbs(PermissionAction):
         orgName = self.get_option('org')
         listGlobal = not self.has_option('org')
 
-        self.setOutputMode()
+        self.set_output_mode()
 
-        self.printer.addColumn("scope")
-        self.printer.addColumn("available_verbs", multiline=True)
+        self.printer.add_column("scope")
+        self.printer.add_column("available_verbs", multiline=True)
         if not listGlobal:
-            self.printer.addColumn("available_tags", multiline=True, show_in_grep=False)
+            self.printer.add_column("available_tags", multiline=True, show_with=printer.VerboseStrategy)
 
         permissions = self.getAvailablePermissions(orgName, scope)
         display_data = self.formatDisplayData(permissions, listGlobal)
 
         if scope:
-            self.printer.setHeader(_("Available verbs and tags for permission scope %s") % scope)
+            self.printer.set_header(_("Available verbs and tags for permission scope %s") % scope)
         else:
-            self.printer.setHeader(_("Available verbs"))
-        self.printer.printItems(display_data)
+            self.printer.set_header(_("Available verbs"))
+        self.printer.print_items(display_data)
         return os.EX_OK
 
-    def setOutputMode(self):
-        if self.output_mode() == Printer.OUTPUT_FORCE_NONE:
+    def set_output_mode(self):
+        if self.has_option('grep'):
+            self.grep_mode = True
+        elif self.has_option('verbose'):
+            self.grep_mode = False
+        else:
             if self.has_option('scope'):
-                self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
-                self.grepMode = False
+                self.printer.set_strategy(VerboseStrategy())
+                self.grep_mode = False
             else:
-                self.printer.setOutputMode(Printer.OUTPUT_FORCE_GREP)
-                self.grepMode = True
+                self.printer.set_strategy(GrepStrategy())
+                self.grep_mode = True
 
     def formatMultilineRecord(self, lines):
         if len(lines) == 0:
             return _('None')
-        elif self.grepMode:
+        elif self.grep_mode:
             return ", ".join(lines)
         else:
             return lines
 
     def formatVerb(self, verb):
-        if self.grepMode:
+        if self.grep_mode:
             return verb["name"]
         else:
             return ("%-20s (%s)" % (verb["name"], verb["display_name"]))

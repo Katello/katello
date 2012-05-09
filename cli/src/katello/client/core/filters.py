@@ -15,13 +15,12 @@
 #
 
 import os
-import sys
 from gettext import gettext as _
 
 from katello.client.api.filter import FilterAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import test_record
 
 Config()
 
@@ -50,11 +49,11 @@ class List(FilterAction):
 
         filters = self.api.filters(org)
 
-        self.printer.addColumn('name')
-        self.printer.addColumn('description')
+        self.printer.add_column('name')
+        self.printer.add_column('description')
 
-        self.printer.setHeader(_("Filter List"))
-        self.printer.printItems(filters)
+        self.printer.set_header(_("Filter List"))
+        self.printer.print_items(filters)
         return os.EX_OK
 
 
@@ -84,12 +83,10 @@ class Create(FilterAction):
 
         new_filter = self.api.create(org, name, description, packages)
 
-        if is_valid_record(new_filter):
-            print _("Successfully created filter [ %s ]") % new_filter['name']
-        else:
-            print >> sys.stderr, _("Could not create filter [ %s ]") % name
-
-        return os.EX_OK
+        test_record(new_filter,
+            _("Successfully created filter [ %s ]") % name,
+            _("Could not create filter [ %s ]") % name
+        )
 
     def parse_packages(self, packages):
         return ([] if packages == None else [p.strip() for p in packages.split(',')])
@@ -133,14 +130,13 @@ class Info(FilterAction):
         name = self.get_option('name')
 
         filter_info = self.api.info(org, name)
-        filter_info['package_list'] = self.package_list_as_string(filter_info["package_list"])
 
-        self.printer.addColumn('name')
-        self.printer.addColumn('description')
-        self.printer.addColumn('package_list')
+        self.printer.add_column('name')
+        self.printer.add_column('description')
+        self.printer.add_column('package_list', formatter=self.package_list_as_string)
 
-        self.printer.setHeader(_("Filter Information"))
-        self.printer.printItem(filter_info)
+        self.printer.set_header(_("Filter Information"))
+        self.printer.print_item(filter_info)
         return os.EX_OK
 
     def package_list_as_string(self, package_list):

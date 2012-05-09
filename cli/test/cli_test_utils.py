@@ -1,8 +1,11 @@
 import unittest
+import os
 from copy import deepcopy
 from mock import Mock
 
 import katello.client.core.utils
+from katello.client.core.utils import SystemExitRequest
+from katello.client.api.utils import ApiDataError
 
 class CLITestCase(unittest.TestCase):
 
@@ -68,10 +71,10 @@ class CLIActionTestCase(CLITestCase):
 
     def mock_printer(self):
         printer = self.mock(self.action, 'printer')
-        printer.setHeader = Mock()
-        printer.addColumn = Mock()
-        printer.printItem = Mock()
-        printer.printItems = Mock()
+        printer.set_header = Mock()
+        printer.add_column = Mock()
+        printer.print_item = Mock()
+        printer.print_items = Mock()
         return printer
 
     def mock_options(self, options):
@@ -90,3 +93,23 @@ class CLIActionTestCase(CLITestCase):
         self.mock(spinner, "stop")
         self.mock(spinner, "join")
         self.mock(katello.client.core.utils, "Spinner", spinner)
+
+    def run_action(self, expected_return_code=None):
+        if expected_return_code:
+            self.assert_exits_with(expected_return_code)
+        else:
+            try:
+                self.action.run()
+            except SystemExitRequest, ex:
+                pass
+
+    def assert_exits_with(self, expected_return_code):
+        ret_val = None
+        try:
+            ret_val = self.action.run()
+        except SystemExitRequest, ex:
+            self.assertEqual(ex.args[0], expected_return_code)
+        except ApiDataError, ex:
+            self.assertEqual(os.EX_DATAERR, expected_return_code)
+        else:
+            self.assertEqual(ret_val, expected_return_code)

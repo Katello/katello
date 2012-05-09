@@ -20,7 +20,8 @@ from gettext import gettext as _
 
 from katello.client.api.gpg_key import GpgKeyAPI
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path
+from katello.client.core.utils import test_record, get_abs_path
+from katello.client.utils import printer
 
 from sys import stdin
 
@@ -76,10 +77,10 @@ class List(GpgKeyAction):
 
             return os.EX_OK
 
-        self.printer.addColumn('name')
+        self.printer.add_column('name')
 
-        self.printer.setHeader(_("Gpg Key List"))
-        self.printer.printItems(gpg_keys)
+        self.printer.set_header(_("Gpg Key List"))
+        self.printer.print_items(gpg_keys)
         return os.EX_OK
 
 
@@ -109,14 +110,14 @@ class Info(GpgKeyAction):
         key["repos"] = "[ "+ ", ".join([repo["product"]["name"] + " - " + repo["name"] for repo in key["repositories"]]) +" ]"
         key["content"] = "\n" + key["content"]
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('content', show_in_grep=False)
-        self.printer.addColumn('products', multiline=True, show_in_grep=False)
-        self.printer.addColumn('repos', multiline=True, show_in_grep=False, name=_("Repositories"))
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('content', show_with=printer.VerboseStrategy)
+        self.printer.add_column('products', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('repos', multiline=True, show_with=printer.VerboseStrategy, name=_("Repositories"))
 
-        self.printer.setHeader(_("Gpg Key Info"))
-        self.printer.printItem(key)
+        self.printer.set_header(_("Gpg Key Info"))
+        self.printer.print_item(key)
         return os.EX_OK
 
 
@@ -146,15 +147,11 @@ class Create(GpgKeyAction):
             print m
             return os.EX_DATAERR
 
-
         key = self.api.create(orgName, keyName, content)
-        if is_valid_record(key):
-            print _("Successfully created gpg key [ %s ]") % key['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create gpg key [ %s ]") % keyName
-            return os.EX_DATAERR
-
+        test_record(key,
+            _("Successfully created gpg key [ %s ]") % keyName,
+            _("Could not create gpg key [ %s ]") % keyName
+        )
 
 
 class Update(GpgKeyAction):
@@ -195,13 +192,10 @@ class Update(GpgKeyAction):
             return os.EX_DATAERR
 
         key = self.api.update(key_id, newKeyName, content)
-        if is_valid_record(key):
-            print _("Successfully updated gpg key [ %s ]") % key['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not updated gpg key [ %s ]") % keyName
-            return os.EX_DATAERR
-
+        test_record(key,
+            _("Successfully updated gpg key [ %s ]") % keyName,
+            _("Could not updated gpg key [ %s ]") % keyName
+        )
 
 
 class Delete(GpgKeyAction):

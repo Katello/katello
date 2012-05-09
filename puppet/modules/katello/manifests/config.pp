@@ -188,6 +188,12 @@ class katello::config {
     },
   }
 
+  exec {"update_upgrade_history":
+    command => "ls ${katello::params::katello_upgrade_scripts_dir} > ${katello::params::katello_upgrade_history_file}",
+    path    => "/bin",
+    before  => Class["katello::service"],
+  }
+
   # Headpin does not care about pulp
   case $katello::params::deployment {
       'katello': {

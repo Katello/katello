@@ -1,0 +1,75 @@
+
+
+= javascript do
+  - if search_class
+    :plain
+      KT.panel_search_autocomplete = $.parseJSON('#{escape_javascript(search_class.display_attributes.collect{|a| a.to_s + ":"}.to_json)}');
+
+#container
+  .right
+    .helptip_area
+      = help_tip_button('panel-help')
+      = help_tip(_("To view the details of an item on the left, simply click on a single row." + |
+                "<br/><br/>To select multiple rows, hold the Control Key and click multiple rows." + |
+                "<br/><br/>If you don't need this help anymore, please click the close button in the top right " + |
+                "of this box."), 'panel-help') |
+    .fl.clear
+      -if actions
+        = render :partial=>actions
+      -else
+        .panel_action{'data-id'=>"select_none"}
+          #select-result
+          %a#select-none #{_("Select None")}
+  = render :partial=>"common/tupane"
+
+  %div.left{:class => left_panel_width ? left_panel_width : 'column_panel_' + columns.length.to_s }
+    #list-title
+      %header
+        %h2.fl #{title}
+        - if enable_create
+          %a.fr#new{:href => "#", :class => (disable_create ? "disabled tipsify-west" : "block"), "data-ajax_url" => url_for(:action=> 'new'), :title => (disable_create if disable_create) }
+            #{_('+ New ')} #{create}
+            .arrow-right
+      %div.fl.clear#items_count
+        #{_("viewing")}
+        %span#current_items_count
+          = 0
+        #{_(" of  ")}
+        %span#total_results_count
+          = 0
+        %span
+          #{_(" results ")} (
+          %span#total_items_count
+            = 0
+          #{_(" Total ")} #{title} )
+                
+      - if url.nil?
+        %form#search_form.search{"data-url" => search_index_path()}
+          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => _("Search..."), :class => "auto_complete_input ui-autocomplete-input"})
+          %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
+      - else
+        %form#search_form.search{"data-url" => url_for(url)}
+          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => _("Search..."), :class => "auto_complete_input ui-autocomplete-input"})
+          %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
+
+    #list.list.clear.expand_list{:class=>("ajaxScroll" if ajax_scroll), "data-scroll_url"=>ajax_scroll, "data-page_size"=>current_user.page_size}
+      %header
+        .block_head.clear
+          - columns.each_index do |index|
+            %div{:class => 'column_' + columns.length.to_s}
+              -if enable_sort 
+                = sort(columns[index], :as => titles[index])
+              -else
+                = titles[index]
+      - if ajax_load
+        .spinner
+          = image_tag ("spinner.gif")
+        %section.hidden
+      - elsif custom_rows
+        %section
+          = render_rows(:collection=>collection, :columns=>columns, :accessor=>accessor, :name=>name)
+      - else
+        %section
+          = render :partial=>"common/list_item", :collection=>collection, :as=>:item, :locals=>{:accessor=>accessor, :columns=>columns, :name=>name, :initial_action=>initial_action}
+
+    %br.clear

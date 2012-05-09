@@ -28,7 +28,7 @@ from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan, get_filter
 from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
-
+from katello.client.utils import printer
 
 Config()
 
@@ -88,12 +88,7 @@ class SetSyncPlan(SingleProductAction):
         planName = self.get_option('plan')
 
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
-
         plan = get_sync_plan(orgName, planName)
-        if (plan == None):
-            return os.EX_DATAERR
 
         msg = self.api.set_sync_plan(orgName, prod['id'], plan['id'])
         print msg
@@ -111,8 +106,6 @@ class RemoveSyncPlan(SingleProductAction):
         prodName = self.get_option('name')
 
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         msg = self.api.remove_sync_plan(orgName, prod['id'])
         print msg
@@ -140,30 +133,27 @@ class List(ProductAction):
         env_name = self.get_option('env')
         prov_name = self.get_option('prov')
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('provider_id')
-        self.printer.addColumn('provider_name')
-        self.printer.addColumn('last_sync', time_format=True)
-        self.printer.addColumn('gpg_key_name', name=_("GPG key"))
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('provider_id')
+        self.printer.add_column('provider_name')
+        self.printer.add_column('sync_plan_name')
+        self.printer.add_column('last_sync', formatter=format_sync_time)
+        self.printer.add_column('gpg_key_name', name=_("GPG key"))
 
         if prov_name:
             prov = get_provider(org_name, prov_name)
-            if prov == None:
-                return os.EX_DATAERR
 
-            self.printer.setHeader(_("Product List For Provider %s") % (prov_name))
+            self.printer.set_header(_("Product List For Provider %s") % (prov_name))
             prods = self.api.products_by_provider(prov["id"])
 
         else:
             env = get_environment(org_name, env_name)
-            if env == None:
-                return os.EX_DATAERR
 
-            self.printer.setHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
+            self.printer.set_header(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
             prods = self.api.products_by_env(env['id'])
 
-        self.printer.printItems(prods)
+        self.printer.print_items(prods)
         return os.EX_OK
 
 
@@ -178,8 +168,6 @@ class Sync(SingleProductAction):
         prodName    = self.get_option('name')
 
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         task = AsyncTask(self.api.sync(orgName, prod["id"]))
         run_async_task_with_status(task, ProgressBar())
@@ -187,7 +175,7 @@ class Sync(SingleProductAction):
         if task.failed():
             errors = [t["result"]['errors'][0] for t in task.get_hashes() if t['state'] == 'error' and
                                                                              isinstance(t["result"], dict) and
-                                                                             t["result"].has_key("errors")]
+                                                                             "errors" in t["result"]]
             print _("Product [ %s ] failed to sync: %s" % (prodName, errors))
             return os.EX_DATAERR
         elif task.cancelled():
@@ -208,8 +196,6 @@ class CancelSync(SingleProductAction):
         prodName    = self.get_option('name')
 
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         msg = self.api.cancel_sync(orgName, prod["id"])
         print msg
@@ -227,8 +213,6 @@ class Status(SingleProductAction):
         prodName    = self.get_option('name')
 
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         task = AsyncTask(self.api.last_sync_status(orgName, prod['id']))
 
@@ -242,16 +226,16 @@ class Status(SingleProductAction):
 
         #TODO: last errors?
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('provider_id')
-        self.printer.addColumn('provider_name')
-        self.printer.addColumn('last_sync')
-        self.printer.addColumn('sync_state')
-        self.printer.addColumn('progress', show_in_grep=False)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('provider_id')
+        self.printer.add_column('provider_name')
+        self.printer.add_column('last_sync')
+        self.printer.add_column('sync_state')
+        self.printer.add_column('progress', show_with=printer.VerboseStrategy)
 
-        self.printer.setHeader(_("Product Status"))
-        self.printer.printItem(prod)
+        self.printer.set_header(_("Product Status"))
+        self.printer.print_item(prod)
         return os.EX_OK
 
 
@@ -271,12 +255,7 @@ class Promote(SingleProductAction):
         envName     = self.get_option('env')
 
         env = get_environment(orgName, envName)
-        if (env == None):
-            return os.EX_DATAERR
-
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         returnCode = os.EX_OK
 
@@ -353,8 +332,6 @@ class Create(ProductAction):
 
     def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes, nodiscovery, gpgkey):
         prov = get_provider(orgName, provName)
-        if prov == None:
-            return os.EX_DATAERR
 
         prod = self.api.create(prov["id"], name, description, gpgkey)
         print _("Successfully created product [ %s ]") % name
@@ -364,7 +341,7 @@ class Create(ProductAction):
 
         if not nodiscovery:
             repourls = self.discoverRepos.discover_repositories(orgName, url)
-            self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
+            self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
             selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)
             self.discoverRepos.create_repositories(orgName, prod["id"], prod["name"], selectedurls)
 
@@ -399,8 +376,6 @@ class Update(SingleProductAction):
         gpgkey_recursive = self.get_option('recursive')
 
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         prod = self.api.update(orgName, prod["id"], description, gpgkey, nogpgkey, gpgkey_recursive)
         print _("Successfully updated product [ %s ]") % prodName
@@ -416,8 +391,6 @@ class Delete(SingleProductAction):
         orgName  = self.get_option('org')
         prodName = self.get_option('name')
         product = get_product(orgName, prodName)
-        if product == None:
-            return os.EX_DATAERR
 
         msg = self.api.delete(orgName, product["id"])
         print msg
@@ -433,21 +406,19 @@ class ListFilters(SingleProductAction):
         orgName     = self.get_option('org')
         prodName    = self.get_option('name')
         prod = get_product(orgName, prodName)
-        if (prod == None):
-            return os.EX_DATAERR
 
         filters = self.api.filters(orgName, prod['id'])
-        self.printer.addColumn('name')
-        self.printer.addColumn('description')
-        self.printer.setHeader(_("Product Filters"))
-        self.printer.printItems(filters)
+        self.printer.add_column('name')
+        self.printer.add_column('description')
+        self.printer.set_header(_("Product Filters"))
+        self.printer.print_items(filters)
 
 
         return os.EX_OK
 
 
 class AddRemoveFilter(SingleProductAction):
-    
+
     select_by_env = False
     addition = True
 
@@ -477,14 +448,10 @@ class AddRemoveFilter(SingleProductAction):
         filter_name  = self.get_option('filter')
 
         prod = get_product(org_name, prod_name)
-        if (prod == None):
-            return os.EX_DATAERR
-
-        if get_filter(org_name, filter_name) == None:
-            return os.EX_DATAERR
+        get_filter(org_name, filter_name)
 
         filters = self.api.filters(org_name, prod['id'])
-        filters = [f['name'] for f in filters] 
+        filters = [f['name'] for f in filters]
         self.update_filters(org_name, prod, filters, filter_name)
         return os.EX_OK
 

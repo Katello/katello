@@ -53,11 +53,11 @@ class PackageGroupInfoTest(CLIActionTestCase):
 
     def test_it_finds_package_group_by_id(self):
         self.mock_options(self.OPTIONS)
-        self.action.run()
+        self.run_action()
         self.action.api.packagegroup_by_id.assert_called_once_with(self.REPO['id'], self.PACKAGE_GROUP['id'])
 
     def test_it_prints_package_groups(self):
-        self.action.run()
+        self.run_action()
         printed_group = deepcopy(self.PACKAGE_GROUP)
         printed_group["conditional_package_names"] = []
-        self.action.printer.printItem.assert_called_once_with(printed_group)
+        self.action.printer.print_item.assert_called_once_with(printed_group)

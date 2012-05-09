@@ -13,6 +13,7 @@
 require 'spec_helper.rb'
 require 'helpers/system_test_data.rb'
 include OrchestrationHelper
+include SystemHelperMethods
 
 describe Api::SystemsController do
   include LoginHelperMethods
@@ -145,7 +146,7 @@ describe Api::SystemsController do
           @controller.stub(:find_activation_keys).and_return([@activation_key_1,@activation_key_2])
         end
 
-        it "uses user credentials of the user associated with the first activation key" do
+        it "uses user credentials of the hidden user" do
           User.should_receive("current=").at_least(:once)
           User.should_receive("current=").with(@activation_key_1.user).once
           post :activate, @system_data
@@ -226,13 +227,18 @@ describe Api::SystemsController do
 
 
   describe "list systems" do
+
+    let(:uuid_1) {"abc"}
+    let(:uuid_2) {"def"}
+    let(:uuid_3) {"ghi"}
+
     before(:each) do
       @environment_2 = KTEnvironment.new(:name => 'test_2', :prior => @environment_1, :organization => @organization)
       @environment_2.save!
 
-      @system_1 = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts)
-      @system_2 = System.create!(:name => 'test2', :environment => @environment_2, :cp_type => 'system', :facts => facts)
-      
+      @system_1 = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid_1)
+      @system_2 = create_system(:name => 'test2', :environment => @environment_2, :cp_type => 'system', :facts => facts, :uuid => uuid_2)
+
       Candlepin::Consumer.stub(:get => SystemTestData.host)
     end
 
@@ -243,6 +249,7 @@ describe Api::SystemsController do
     it_should_behave_like "protected action"
 
     it "requires either organization_id, owner, or environment_id" do
+      login_user.stub(:default_environment).and_return(nil)
       get :index
       response.code.should == "404"
     end
@@ -262,9 +269,43 @@ describe Api::SystemsController do
       response.body.should == [@system_1].to_json
     end
 
+
+
+    context "with pool_id" do
+
+      let(:pool_id) {"POOL_ID_123456"}
+
+      before :each do
+        Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid_3})
+        @system_3 = System.create!(:name => 'test3', :environment => @environment_2, :cp_type => 'system', :facts => facts)
+
+        Candlepin::Entitlement.stub(:get).and_return([
+          {"pool" => {"id" => pool_id}, "consumer" => {"uuid" => @system_1.uuid}},
+          {"pool" => {"id" => pool_id}, "consumer" => {"uuid" => @system_3.uuid}}
+        ])
+      end
+
+      it "should show all systems in the organization that are subscribed to a pool" do
+        get :index, :organization_id => @organization.cp_key, :pool_id => pool_id
+        returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
+        expected_uuids = [@system_1.uuid, @system_3.uuid]
+
+        returned_uuids.should == expected_uuids
+      end
+
+      it "should show only systems in the environment that are subscribed to a pool" do
+        get :index, :environment_id => @environment_2.id, :pool_id => pool_id
+        returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
+        expected_uuids = [@system_3.uuid]
+
+        returned_uuids.should == expected_uuids
+      end
+
+    end
+
   end
 
-  describe "upload package profile" do
+  describe "upload package profile", :katello => true do
 
     before(:each) do
       @sys = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
@@ -335,21 +376,21 @@ describe Api::SystemsController do
     it_should_behave_like "protected action"
 
     it "should change the name" do
-      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true)
+      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true) if AppConfig.katello?
       post :update, :id => uuid, :name => "foo_name"
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the description" do
-      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, "redkin is awesome.").and_return(true)
+      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, "redkin is awesome.").and_return(true) if AppConfig.katello?
       post :update, :id => uuid, :description => "redkin is awesome."
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the location" do
-      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true)
+      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true) if AppConfig.katello?
       post :update, :id => uuid, :location => "never-neverland"
       response.body.should == @sys.to_json
       response.should be_success
@@ -502,7 +543,7 @@ describe Api::SystemsController do
     end
   end
 
-  describe "update enabled_repos" do
+  describe "update enabled_repos" , :katello => true do
     before do
       User.stub(:consumer? => true)
       @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)

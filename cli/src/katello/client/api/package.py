@@ -28,3 +28,8 @@ class PackageAPI(KatelloAPI):
         path = "/api/repositories/%s/packages" % repoId
         pack_list = self.server.GET(path)[1]
         return pack_list
+
+    def search(self, query, repoId):
+        path = "/api/repositories/%s/packages/search" % repoId
+        pack_list = self.server.GET(path, {"search": query})[1]
+        return pack_list

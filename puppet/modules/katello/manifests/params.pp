@@ -48,6 +48,10 @@ class katello::params {
   $migrate_log = "$log_base/katello-configure/db_migrate.log"
   $seed_log    = "$log_base/katello-configure/db_seed.log"
 
+  # katello upgrade settings
+  $katello_upgrade_scripts_dir  = "/usr/share/katello/install/upgrade-scripts/upgrade/"
+  $katello_upgrade_history_file = "/var/lib/katello/upgrade-history"
+
   # SSL settings
   #$ssl_certificate_file     = "/etc/pki/tls/certs/httpd-ssl.crt"
   #$ssl_certificate_key_file = "/etc/pki/tls/private/httpd-ssl.key"
@@ -62,8 +66,14 @@ class katello::params {
   $process_count   = katello_process_count()
 
   # LDAP settings
-  $ldap_server = "localhost"
-  $ldap_basedn = "ou=People,dc=company,dc=com"
+  $ldap_server = katello_config_value('ldap_server')
+  $ldap_encryption = katello_config_value('ldap_encryption')
+  $ldap_basedn = katello_config_value('ldap_basedn')
+  $ldap_groups_basedn = katello_config_value('ldap_groups_basedn')
+  $ldap_roles = katello_config_value('ldap_roles')
+
+  # auth method
+  $auth_method = katello_config_value('auth_method') 
 
   # OAUTH settings
   $oauth_key    = "katello"

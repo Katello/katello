@@ -1,0 +1,18 @@
+%h4
+  #{_('List Actions')}:
+
+.panel_action{:class=>"disabled", 'data-id'=>"remove_systems", 'data-url'=>bulk_destroy_systems_path(), 'data-method'=>"DELETE"}
+  .delete_icon.fl
+  %a
+    #{_("Remove System(s)")}
+  .options
+    %div
+      #{_("Are you sure you want to delete the %{u} selected system(s)?" % {:u => "<span class='numitems'></span>"})}
+    .actions
+      %input.cancel.button{:type=>"button", :value=>_('Cancel')}
+      %input.trigger.button{:type=>"button", :value=>_('Remove') }
+    %br.clearfloat
+
+.panel_action{'data-id'=>"select_none"}
+  #select-result
+  %a#select-none #{_("Select None")}

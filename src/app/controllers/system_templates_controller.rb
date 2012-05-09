@@ -88,6 +88,7 @@ class SystemTemplatesController < ApplicationController
                  :col => ["name"],
                  :titles => [_('Name') ],
                  :create => _('Template'),
+                 :create_label => _('+ New Template'),
                  :name => _('template'),
                  :create => _('Template'),
                  :ajax_scroll => items_system_templates_path(),

@@ -1,0 +1,7 @@
+%table
+  %th Name
+  %th Value
+  - @facts.each do |name,value|
+    %tr{:class => cycle(nil, 'alt')}
+      %td= name
+      %td= value

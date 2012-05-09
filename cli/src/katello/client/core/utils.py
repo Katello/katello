@@ -20,253 +20,6 @@ import time
 import threading
 from xml.utils import iso8601
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
-from katello.client.utils.encoding import u_str
-
-
-# output formatting -----------------------------------------------------------
-
-
-class Printer:
-    """
-    Class for unified printing of the CLI output.
-    """
-    OUTPUT_FORCE_NONE = 0
-    OUTPUT_FORCE_GREP = 1
-    OUTPUT_FORCE_VERBOSE = 2
-
-    def __init__(self, output_mode, delimiter=""):
-        self._output_mode = output_mode
-        self._columns = []
-        self._heading = ""
-        self._delim = delimiter
-
-
-    def setHeader(self, heading):
-        self._heading = heading
-
-    def setOutputMode(self, output_mode):
-        self._output_mode = output_mode
-
-    def _printDivLine(self, width):
-        print '-'*width
-
-    def _printHeader(self, heading, grep_mode, widths={}):
-        """
-        Print a fancy header to stdout.
-        @type heading: string or list of strings
-        @param heading: headers to be displayed
-        """
-        padding = 0
-        header_width = self._getTermWidth()
-
-        self._printDivLine(header_width)
-        for line in heading.split("\n"):
-            if len(line) < header_width:
-                padding = ((header_width - len(line)) / 2) - 1
-            print ' ' * padding, line
-
-        if grep_mode:
-            print
-            print self._delim,
-            for col in self._columns:
-                if col['show_in_grep']:
-
-                    if col['attr_name'] in widths:
-                        width = widths[col['attr_name']]
-                    else:
-                        width = 0
-
-                    print col['name'].ljust(width),
-                    print self._delim,
-            print
-        self._printDivLine(header_width)
-
-    # returns terminal width (tested only with Linux)
-    def _getTermWidth(self):
-        try:
-            import fcntl
-            import termios
-            import struct
-            h, w, hp, wp = struct.unpack('HHHH',
-                fcntl.ioctl(0, termios.TIOCGWINSZ,
-                struct.pack('HHHH', 0, 0, 0, 0)))
-            w = int(w)
-            return 80 if w == 0 else w
-        except:
-            return 80
-
-    def _attrToName(self, attr_name):
-        """
-        Convert attribute name to display name.
-        oraganization_id -> Organization Id
-        @type attr_name: string
-        @param attr_name: attribute name
-        """
-        result = ''
-        for part in attr_name.split("_"):
-            result += part[0].upper() + part[1:] + ' '
-        return result.strip()
-
-
-    def addColumn(self, attr_name, name = None, multiline = False, show_in_grep = True, time_format=False, value=''):
-        """
-        Add column to display
-        @type attr_name: string
-        @param attr_name: key to data hash
-        @type name: string
-        @param name: display name of the column. It is automatically transformed from display name
-        if not set.
-        @type multiline: bool
-        @param multiline: flag to mark multiline values
-        @type show_in_grep: bool
-        @param show_in_grep: flag to set whether the column should be displayed also in grep mode or not
-        @type time_format: bool
-        @param time_format: flag to set this column as a rails date string to be parsed
-        @type value: string
-        @param value: value that should be used rather than accessing the data hash
-        """
-        col = {}
-        col['attr_name']    = attr_name
-        col['multiline']    = multiline
-        col['show_in_grep'] = show_in_grep
-        col['time_format']  = time_format
-        col['value']        = value
-        if name == None:
-            col['name'] = self._attrToName(attr_name)
-        else:
-            col['name'] = name
-
-        self._columns.append(col)
-
-
-    def _printItem(self, item, indent=""):
-        """
-        Print item from a list on number of lines
-        @type item: hash
-        @param item: data to print
-        @type indent: string
-        @param indent: text that is prepended to every printed line in multiline mode
-        """
-        colWidth = self._minColumnWidth()
-        print
-        for col in self._columns:
-            #skip missing attributes
-            if not col['attr_name'] in item:
-                continue
-
-            if len(u_str(col['value'])) > 0:
-                value = col['value']
-            else:
-                value = item[col['attr_name']]
-            if not col['multiline']:
-                output = format_date(value) if col['time_format'] else value
-                print ("{0:<" + u_str(colWidth + 1) + "} {1}").format(col['name'] + ":", output)
-                # +1 to account for the : after the column name
-            else:
-                print indent+col['name']+":"
-                print indent_text(value, indent+"    ")
-
-
-    def _printItemGrep(self, item, widths={}):
-        """
-        Print item of a list on single line in grep mode
-        @type item: hash
-        @param item: data to print
-        """
-        print self._delim,
-        for col in self._columns:
-            #get defined width
-            if col['attr_name'] in widths:
-                width = widths[col['attr_name']]
-            else:
-                width = 0
-
-            #skip missing attributes
-            if not col['attr_name'] in item:
-                print " " * width,
-                print self._delim,
-                continue
-
-            value = item[col['attr_name']]
-            if not col['show_in_grep']:
-                continue
-            if col['multiline']:
-                value = text_to_line(value)
-            if col['time_format'] and value is not None:
-                value = format_date(value)
-
-            print u_str(value).ljust(width),
-            print self._delim,
-
-
-    def _calculateGrepWidths(self, items):
-        widths = {}
-        #return widths
-        for col in self._columns:
-            key = col['attr_name']
-            widths[key] = len(u_str(col['name']))+1
-            for item in items:
-                if not key in item: continue
-                value = item[key]
-                if col['time_format'] and value is not None: value = format_date(value)
-                value = u_str(value)
-                if widths[key] < len(value):
-                    widths[key] = len(value)+1
-
-        return widths
-
-
-    def _minColumnWidth(self):
-        width = 0
-        for col in self._columns:
-            width = len(u_str(col['name'])) if (len(u_str(col['name'])) > width) else width
-
-        return width
-
-    def _getRandomNumber(self):
-        return 4 # guaranteed to be random
-
-
-    def printItem(self, item, indent=""):
-        """
-        Print one data item
-        @type item: hash
-        @param item: data to print
-        @type indent: string
-        @param indent: text that is prepended to every printed line in multiline mode
-        """
-        if self._output_mode == Printer.OUTPUT_FORCE_GREP:
-            widths = self._calculateGrepWidths([item])
-            self._printHeader(self._heading, True, widths)
-            self._printItemGrep(item, widths)
-            print
-        else:
-            self._printHeader(self._heading, False)
-            self._printItem(item, indent)
-            print
-
-
-    def printItems(self, items, indent=""):
-        """
-        Print collection of data items
-        @type items: list of hashes
-        @param items: list of data items to print
-        @type indent: string
-        @param indent: text that is prepended to every printed line in multiline mode
-        """
-        if self._output_mode == Printer.OUTPUT_FORCE_VERBOSE:
-            self._printHeader(self._heading, False)
-            for item in items:
-                self._printItem(item, indent)
-                print
-        else:
-            widths = self._calculateGrepWidths(items)
-            self._printHeader(self._heading, True, widths)
-            for item in items:
-                self._printItemGrep(item, widths)
-                print
-
-
 
 
 # server output validity ------------------------------------------------------
@@ -279,34 +32,26 @@ def is_valid_record(rec):
     """
     if type(rec)==type(dict()) and 'created_at' in rec:
         return (rec['created_at'] != None)
-
     elif type(rec)==type(dict()) and 'created' in rec:
         return (rec['created'] != None)
     else:
         return False
 
-
-# indent block of text --------------------------------------------------------
-def indent_text(text, indent="\t"):
-    if text == None:
-        text = u_str(None)
-
-    if isinstance(text, (list)):
-        glue = "\n"+indent
-        return indent+glue.join(text)
+def test_record(rec, success_msg, failure_msg):
+    """
+    Test if a record is valid, and exit with a proper return code and a message.
+    @type rec: dictionary
+    @param rec: record returned from server
+    @type success_msg: string
+    @param success_msg: success message
+    @type failure_msg: string
+    @param failure_msg: failure message
+    """
+    if is_valid_record(rec):
+        system_exit(os.EX_OK, success_msg)
     else:
-        return indent_text(text.split("\n"), indent)
+        system_exit(os.EX_DATAERR, failure_msg)
 
-
-# converts block of text to one line ------------------------------------------
-def text_to_line(text, glue=" "):
-    if text == None:
-        text = u_str(None)
-
-    if isinstance(text, (list)):
-        return glue.join(text)
-    else:
-        return glue.join(text.split("\n"))
 
 
 class SystemExitRequest(Exception):
@@ -398,11 +143,11 @@ def format_sync_errors(task):
     @return string, each error on one line
     """
     def format_progress_error(e):
-        if e.has_key("error"):
-           if isinstance(e["error"], dict) and e["error"].has_key("error"):
-               return e["error"]["error"]
-           else:
-               return str(e["error"])
+        if "error" in e:
+            if isinstance(e["error"], dict) and ("error" in e["error"]):
+                return e["error"]["error"]
+            else:
+                return str(e["error"])
 
     def format_task_error(e):
         if isinstance(e, list) and len(e) > 0:
