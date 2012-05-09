@@ -7,6 +7,7 @@ import test_data
 
 import katello.client.core.permission
 from katello.client.core.permission import List
+from katello.client.api.utils import ApiDataError
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #takes only name of the role
@@ -44,20 +45,20 @@ class PermissionListTest(CLIActionTestCase):
         self.mock(self.action.api, 'permissions', self.PERMISSIONS)
 
     def test_finds_role(self):
-        self.action.run()
+        self.run_action()
         self.module.get_role.assert_called_once()
 
     def test_returns_error_when_no_role_found(self):
-        self.mock(self.module, 'get_role', None)
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_role').side_effect = ApiDataError
+        self.run_action(os.EX_DATAERR)
 
     def test_calls_permission_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.permissions.assert_called_once_with(self.ROLE['id'])
 
     def test_returns_ok(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)
 
     def test_it_prints_the_permissions(self):
-        self.action.run()
+        self.run_action()
         self.action.printer.print_items.assert_called_once()

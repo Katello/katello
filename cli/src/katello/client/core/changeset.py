@@ -15,15 +15,14 @@
 #
 
 import os
-import sys
 from gettext import gettext as _
 from optparse import OptionValueError
 
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit, format_task_errors
-from katello.client.api.utils import get_organization, get_environment, get_changeset, get_template, get_repo, get_product
+from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
 from katello.client.utils import printer
 from katello.client.utils.encoding import u_str
 
@@ -56,9 +55,6 @@ class List(ChangesetAction):
         verbose = self.get_option('verbose')
 
         env = get_environment(orgName, envName)
-        if env == None:
-            return os.EX_DATAERR
-
         changesets = self.api.changesets(orgName, env['id'])
 
         self.printer.add_column('id')
@@ -104,8 +100,6 @@ class Info(ChangesetAction):
         displayDeps = self.has_option('deps')
 
         cset = get_changeset(orgName, envName, csName)
-        if cset == None:
-            return os.EX_DATAERR
 
         cset['environment_name'] = envName
 
@@ -166,12 +160,11 @@ class Create(ChangesetAction):
         csDescription = self.get_option('description')
 
         env = get_environment(orgName, envName)
-        if env != None:
-            cset = self.api.create(orgName, env["id"], csName, csDescription)
-            if is_valid_record(cset):
-                print _("Successfully created changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
-            else:
-                print >> sys.stderr, _("Could not create changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
+        cset = self.api.create(orgName, env["id"], csName, csDescription)
+        test_record(cset,
+            _("Successfully created changeset [ %s ] for environment [ %s ]") % (csName, env["name"]),
+            _("Could not create changeset [ %s ] for environment [ %s ]") % (csName, env["name"])
+        )
 
         return os.EX_OK
 
@@ -191,37 +184,27 @@ class UpdateContent(ChangesetAction):
             return patch
 
     class PatchItemBuilder(object):
-        def __init__(self, orgName, envName):
-            self.orgName = orgName
-            self.envName = envName
-
-            self.orgId = get_organization(orgName)['id']
-            self.envId = get_environment(orgName, envName)['id']
-            self.priorEnvId = get_environment(orgName, envName)['prior_id']
-            self.priorEnvName = get_environment(orgName, envName)['prior']
+        def __init__(self, org_name, env_name):
+            self.org_name = org_name
+            self.env_name = env_name
+            self.prior_env_name = get_environment(org_name, env_name)['prior']
 
 
         def product_id(self, options):
             if 'product' in options:
-                prodName = options['product']
+                prod_name = options['product']
             else:
-                prodName = options['name']
+                prod_name = options['name']
 
-            prod = get_product(self.orgName, prodName)
-            if prod == None:
-                system_exit(os.EX_DATAERR)
+            prod = get_product(self.org_name, prod_name)
             return prod['id']
 
         def repo_id(self, options):
-            repo = get_repo(self.orgName, options['product'], options['name'], self.priorEnvName)
-            if repo == None:
-                system_exit(os.EX_DATAERR)
+            repo = get_repo(self.org_name, options['product'], options['name'], self.prior_env_name)
             return repo['id']
 
         def template_id(self, options):
-            tpl = get_template(self.orgName, self.priorEnvName, options['name'])
-            if tpl == None:
-                system_exit(os.EX_DATAERR)
+            tpl = get_template(self.org_name, self.prior_env_name, options['name'])
             return tpl['id']
 
 
@@ -380,8 +363,6 @@ class UpdateContent(ChangesetAction):
         csDescription = self.get_option('description')
 
         cset = get_changeset(orgName, envName, csName)
-        if cset == None:
-            return os.EX_DATAERR
 
         self.update(cset["id"], csNewName, csDescription)
         addPatch = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName), items)
@@ -426,8 +407,6 @@ class Delete(ChangesetAction):
         envName = self.get_option('env')
 
         cset = get_changeset(orgName, envName, csName)
-        if cset == None:
-            return os.EX_DATAERR
 
         msg = self.api.delete(cset["id"])
         print msg
@@ -457,8 +436,6 @@ class Promote(ChangesetAction):
         envName = self.get_option('env')
 
         cset = get_changeset(orgName, envName, csName)
-        if cset == None:
-            return os.EX_DATAERR
 
         task = self.api.promote(cset["id"])
         task = AsyncTask(task)

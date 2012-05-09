@@ -6,7 +6,7 @@ import os
 class ActionTest(TestCase):
 
     def require_one_of_options_action_class(self):
-        """ 
+        """
         Helper to setup fresh testing action for require_one_of_options
         """
         class TestAction(Action):
@@ -49,4 +49,3 @@ class ActionTest(TestCase):
         args = ['test', '--test1', '--test2']
         result = test_action.main(args)
         self.assertEquals(result, 2) # optparser exitcode on error
-

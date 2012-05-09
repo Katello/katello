@@ -6,6 +6,7 @@ import test_data
 
 import katello.client.core.product
 from katello.client.core.product import Delete
+from katello.client.api.utils import ApiDataError
 
 
 class DeleteTest(CLIActionTestCase):
@@ -29,17 +30,16 @@ class DeleteTest(CLIActionTestCase):
 
 
     def test_it_finds_the_product(self):
-        self.action.run()
+        self.run_action()
         self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
 
     def test_it_returns_error_when_product_not_found(self):
-        self.mock(self.module, 'get_product', None)
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_product').side_effect = ApiDataError
+        self.run_action(os.EX_DATAERR)
 
     def test_it_calls_delete_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.delete.assert_called_once_with(self.ORG['name'], self.PROD['id'])
 
     def test_it_returns_status_ok(self):
-        self.action.run()
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)

@@ -53,9 +53,9 @@ class PackageGroupCategoryInfoTest(CLIActionTestCase):
 
     def test_it_finds_package_groups_by_id(self):
         self.mock_options(self.OPTIONS)
-        self.action.run()
+        self.run_action()
         self.action.api.packagegroupcategory_by_id.assert_called_once_with(self.REPO['id'], self.PACKAGE_GROUP_CATEGORY['id'])
 
     def test_it_prints_package_groups(self):
-        self.action.run()
+        self.run_action()
         self.action.printer.print_item.assert_called_once_with(self.PACKAGE_GROUP_CATEGORY)

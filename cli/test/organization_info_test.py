@@ -41,8 +41,8 @@ class OrgInfoTest(CLIActionTestCase):
         self.mock(self.action.api, 'organization', self.ORG)
 
     def test_finds_org(self):
-        self.action.run()
+        self.run_action()
         self.action.api.organization.assert_called_once_with(self.ORG['cp_key'])
 
     def test_returns_ok(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)
