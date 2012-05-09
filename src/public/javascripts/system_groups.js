@@ -14,17 +14,12 @@
 
 KT.panel.list.registerPage('system_groups', { create : 'new_system_group' });
 
-
 $(document).ready(function() {
-
-
-
     KT.panel.set_expand_cb(function(){
+        KT.system_groups.new_setup();
         KT.system_groups.details_setup();
         KT.system_groups.systems_setup();
     });
-
-
 });
 
 
@@ -53,6 +48,7 @@ KT.sg_table = (function(){
 
 KT.system_groups = (function(){
     var current_system_input,
+        current_max_systems = undefined,
     lockedChanged = function(){
         var checkbox = $(this),
         name = $(this).attr("name"),
@@ -69,6 +65,68 @@ KT.system_groups = (function(){
             cache: false
         });
         return false;
+    },
+    quota_setup = function() {
+        // quota_setup is used for both the 'new' and 'edit' panes.  While the logic is nearly the same
+        // there are slight differences, since the 'edit' uses inline editing, but the 'new' does not.
+        var unlimited = '-1',
+            initial_max = undefined;
+
+        if ($('system_group_new').length > 0) {
+            // user is creating a group
+            initial_max = $('#system_group_max_members').val();
+        } else {
+            // user is editing a group
+            initial_max = $('#system_group_max_members').html();
+        }
+        current_max_systems = initial_max.length === 0 ? unlimited : initial_max;
+
+        $('input.unlimited_members').unbind('click');
+        $('input.unlimited_members').bind('click', function(){
+            var max_systems_element = $('.limit'),
+                max_systems = $('#system_group_max_members');
+
+            if($(this).is(":checked")){
+                // user checked unlimited
+                max_systems_element.hide();
+                max_systems.val(unlimited);
+
+                if (max_systems.hasClass('editable')) {
+                    // user is editing an existing group
+                    if (max_systems.val() !== current_max_systems) {
+                        // user has changed the value since toggling unlimited on/off/on, so send request to server to set max_systems to unlimited
+                        $.ajax({
+                            type: "PUT",
+                            url: max_systems.data("url"),
+                            data: {system_group:{max_members:unlimited}},
+                            cache: false,
+                            success: function(data) {
+                                max_systems.html(i18n.clickToEdit); // reset the jeditable input
+                                current_max_systems = unlimited;
+                            },
+                            error: function() {
+                            }
+                        });
+                    }
+                }
+            } else {
+                // user unchecked unlimited
+                max_systems.val('');
+                max_systems_element.show();
+
+                if (max_systems.hasClass('editable')) {
+                    // user is editing an existing group, send a click event to jeditable to open, so the user doesn't need to
+                    max_systems.click();
+                }
+            }
+        });
+    },
+    new_setup = function(){
+        var pane = $("#system_group_new");
+        if (pane.length === 0){
+            return;
+        }
+        quota_setup();
     },
     details_setup = function(){
         var pane = $("#system_group_edit");
@@ -93,7 +151,35 @@ KT.system_groups = (function(){
                     list.refresh(id.val(), id.data('ajax_url'))
                 }
             });
-        })
+        });
+        pane.find(".edit_max_members").each(function(){
+            $(this).editable($(this).data("url"), {
+                type        :  'text',
+                width       :  250,
+                method      :  'PUT',
+                name        :  $(this).attr('name'),
+                cancel      :  i18n.cancel,
+                submit      :  i18n.save,
+                indicator   :  i18n.saving,
+                tooltip     :  i18n.clickToEdit,
+                placeholder :  i18n.clickToEdit,
+                submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
+                onsuccess   :  function(data){
+                    $(this).html(data);
+                    current_max_systems = data;
+                },
+                onresetcomplete :  function(settings, element){
+                    // This event is invoked on cancel, esc and click outside of the element.
+                    // When this occurs, if the user hasn't changed the value, reset to 'unlimited', hiding
+                    // the limit element.
+                    if ($(element).html() === i18n.clickToEdit) {
+                        $('.limit').hide();
+                        $('input.unlimited_members').attr('checked', 'checked');
+                    }
+                }
+            });
+        });
+        quota_setup();
     },
     systems_setup = function(){
         var pane = $("#system_group_systems");
@@ -111,7 +197,6 @@ KT.system_groups = (function(){
             selected_input_id: 'add_system_input_id',
             add_cb:       add_system
         });
-
     },
     add_system = function(string, item_id, cb){
         var grp_id = $("#system_group_systems").data('id'),
@@ -162,6 +247,7 @@ KT.system_groups = (function(){
 
     return {
         lockedChanged: lockedChanged,
+        new_setup: new_setup,
         details_setup: details_setup,
         systems_setup: systems_setup,
         add_system : add_system
