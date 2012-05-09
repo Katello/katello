@@ -7,7 +7,7 @@ import test_data
 
 import katello.client.core.repo
 from katello.client.core.repo import AddRemoveFilter
-
+from katello.client.api.utils import ApiDataError
 
 
 class RequiredCLIOptionsTest(object):
@@ -72,7 +72,7 @@ class RepoAddRemoveFilterTest(object):
     }
 
     addition = True
-    
+
 
     def setUp(self):
         self.set_action(AddRemoveFilter(self.addition))
@@ -101,13 +101,13 @@ class RepoAddRemoveFilterTest(object):
 
     def test_returns_error_when_no_repo_found(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
-        self.module.get_repo.return_value =  None
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_repo').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
     def test_returns_error_when_no_filter_found(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
-        self.module.get_filter.return_value =  None
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_filter').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
     def test_it_calls_filters_api(self):
         self.action.run()

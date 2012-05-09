@@ -7,6 +7,7 @@ import test_data
 
 import katello.client.core.product
 from katello.client.core.product import ListFilters
+from katello.client.api.utils import ApiDataError
 
 
 class ProductListFiltersTest(CLIActionTestCase):
@@ -34,10 +35,9 @@ class ProductListFiltersTest(CLIActionTestCase):
         self.restore_mocks()
 
     def test_it_returns_with_error_if_no_product_was_found(self):
-        self.module.get_product.return_value =  None
-        self.action.run()
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_product').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
     def test_it_uses_product_list_filter_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.filters.assert_called_once_with(self.ORG['name'], self.PROD['id'])

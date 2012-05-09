@@ -72,8 +72,6 @@ class Info(PackageAction):
 
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
-            if repo == None:
-                return os.EX_DATAERR
             repoId = repo["id"]
 
         pack = self.api.package(packId, repoId)

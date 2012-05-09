@@ -15,7 +15,6 @@
 #
 
 import os
-import sys
 from gettext import gettext as _
 
 from katello.client.api.user import UserAPI
@@ -23,7 +22,7 @@ from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.utils import get_user, get_environment
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, convert_to_mime_type, attachment_file_name, save_report
+from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
 
 Config()
 
@@ -90,17 +89,14 @@ class Create(UserAction):
 
         if default_environment is not None:
             environment = get_environment(default_organization, default_environment)
-            if environment is None:
-                return os.EX_DATAERR
         else:
             environment = None
 
         user = self.api.create(username, password, email, disabled, environment)
-        if is_valid_record(user):
-            print _("Successfully created user [ %s ]") % user['username']
-        else:
-            print >> sys.stderr, _("Could not create user [ %s ]") % username
-        return os.EX_OK
+        test_record(user,
+            _("Successfully created user [ %s ]") % username,
+            _("Could not create user [ %s ]") % username
+        )
 
 # ------------------------------------------------------------------------------
 
@@ -118,8 +114,6 @@ class Info(UserAction):
         username = self.get_option('username')
 
         user = get_user(username)
-        if user == None:
-            return os.EX_DATAERR
 
         self.printer.add_column('id')
         self.printer.add_column('username')
@@ -148,8 +142,6 @@ class Delete(UserAction):
         username = self.get_option('username')
 
         user = get_user(username)
-        if user == None:
-            return os.EX_DATAERR
 
         self.api.delete(user['id'])
         print _("Successfully deleted user [ %s ]") % username
@@ -198,14 +190,10 @@ class Update(UserAction):
             environment = None
         elif default_environment is not None:
             environment = get_environment(default_organization, default_environment)
-            if environment is None:
-                return os.EX_DATAERR
         else:
             environment = False
 
         user = get_user(username)
-        if user == None:
-            return os.EX_DATAERR
 
         user = self.api.update(user['id'], password, email, disabled, environment)
         print _("Successfully updated user [ %s ]") % username
@@ -227,8 +215,6 @@ class ListRoles(UserAction):
         username = self.get_option('username')
 
         user = get_user(username)
-        if user == None:
-            return os.EX_DATAERR
 
         roles = self.api.roles(user['id'])
 
@@ -283,8 +269,6 @@ class AssignRole(UserAction):
         roleName = self.get_option('role')
 
         user = get_user(userName)
-        if user == None:
-            return os.EX_DATAERR
 
         role = self.role_api.role_by_name(roleName)
         if role == None:

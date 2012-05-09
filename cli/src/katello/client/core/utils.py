@@ -20,7 +20,6 @@ import time
 import threading
 from xml.utils import iso8601
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
-from katello.client.utils.encoding import u_str
 
 
 # server output validity ------------------------------------------------------
@@ -33,11 +32,25 @@ def is_valid_record(rec):
     """
     if type(rec)==type(dict()) and 'created_at' in rec:
         return (rec['created_at'] != None)
-
     elif type(rec)==type(dict()) and 'created' in rec:
         return (rec['created'] != None)
     else:
         return False
+
+def test_record(rec, success_msg, failure_msg):
+    """
+    Test if a record is valid, and exit with a proper return code and a message.
+    @type rec: dictionary
+    @param rec: record returned from server
+    @type success_msg: string
+    @param success_msg: success message
+    @type failure_msg: string
+    @param failure_msg: failure message
+    """
+    if is_valid_record(rec):
+        system_exit(os.EX_OK, success_msg)
+    else:
+        system_exit(os.EX_DATAERR, failure_msg)
 
 
 
@@ -130,11 +143,11 @@ def format_sync_errors(task):
     @return string, each error on one line
     """
     def format_progress_error(e):
-        if e.has_key("error"):
-           if isinstance(e["error"], dict) and e["error"].has_key("error"):
-               return e["error"]["error"]
-           else:
-               return str(e["error"])
+        if "error" in e:
+            if isinstance(e["error"], dict) and ("error" in e["error"]):
+                return e["error"]["error"]
+            else:
+                return str(e["error"])
 
     def format_task_error(e):
         if isinstance(e, list) and len(e) > 0:

@@ -7,6 +7,7 @@ import test_data
 
 import katello.client.core.product
 from katello.client.core.product import CancelSync
+from katello.client.api.utils import ApiDataError
 
 
 class ProductStatusTest(CLIActionTestCase):
@@ -32,16 +33,16 @@ class ProductStatusTest(CLIActionTestCase):
 
 
     def test_it_finds_the_product(self):
-        self.action.run()
+        self.run_action()
         self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
 
     def test_it_returns_with_error_when_no_product_found(self):
-        self.module.get_product.return_value =  None
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_product').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
     def test_it_calls_cancel_sync_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.cancel_sync.assert_called_once_with(self.ORG['name'], self.PROD['id'])
 
     def test_it_returns_ok(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)

@@ -60,24 +60,24 @@ class TemplateImportTest(CLIActionTestCase):
 
 
     def test_it_opens_the_file(self):
-        self.action.run()
+        self.run_action()
         self.action.open_file.assert_called_once_with(self.OPTIONS['file'])
 
     def test_it_returns_error_on_file_exception(self):
         self.action.open_file.side_effect = IOError()
-        self.assertEqual(self.action.run(), os.EX_IOERR)
+        self.run_action(os.EX_IOERR)
 
     def test_it_finds_library(self):
-        self.action.run()
+        self.run_action()
         self.module.get_library.assert_called_once_with(self.ORG['name'])
 
     def test_it_calls_template_import_api(self):
-        self.action.run()
+        self.run_action()
         self.module.run_spinner_in_bg.assert_called_once_with(self.action.api.import_tpl, (self.LIBRARY['id'], None, self.open_file), message="")
 
     def test_it_closes_the_file(self):
-        self.action.run()
+        self.run_action()
         self.open_file.close.assert_called_once()
 
     def test_it_returns_status_ok(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)

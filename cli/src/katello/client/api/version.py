@@ -26,4 +26,3 @@ class VersionAPI(KatelloAPI):
     def version_formatted(self):
         v = self.version()
         return v['name'] + ' ' + v['version']
-
