@@ -59,7 +59,7 @@ class SystemGroupUnlockTest(CLIActionTestCase):
 
     def test_it_prints_the_system_group(self):
         self.action.run()
-        self.action.printer.printItems.assert_called_once()
+        self.action.printer.print_items.assert_called_once()
 
     def test_it_calls_the_system_group_unlock_api(self):
         self.action.run()
@@ -74,4 +74,4 @@ class SystemGroupUnlockTest(CLIActionTestCase):
 
     def test_it_prints_the_system_group_unlock_success_message(self):
         self.action.run()
-        self.action.printer.printItems.assert_called_once()   
+        self.action.printer.print_items.assert_called_once()   

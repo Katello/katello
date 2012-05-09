@@ -169,7 +169,7 @@ def get_system_group(org_name, system_group_name):
 
     system_group = system_group_api.system_group_by_name(org_name, system_group_name)
     if system_group == None:
-        print >> sys.stderr, _("Could not find system group [ %s ] within organization [ %s ]") % (system_group_name, org_name)
+        raise ApiDataError(_("Could not find system group [ %s ] within organization [ %s ]") % (system_group_name, org_name))
     return system_group
 
 def get_system(org_name, sys_name, env_name=None):

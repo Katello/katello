@@ -18,7 +18,6 @@ from gettext import gettext as _
 
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import Printer
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
 from katello.client.core.utils import is_valid_record
@@ -26,10 +25,12 @@ from katello.client.core.utils import is_valid_record
 
 Config()
 
+
 # base system group action --------------------------------------------------------
 class SystemGroup(Command):
 
     description = _('system group specific actions in the katello server')
+
 
 class SystemGroupAction(Action):
 
@@ -56,16 +57,16 @@ class List(SystemGroupAction):
 
         system_groups = self.api.system_groups(org_name)
 
-        self.printer.setHeader(_("System Groups List For Org [ %s ]") % org_name)
+        self.printer.set_header(_("System Groups List For Org [ %s ]") % org_name)
 
         if system_groups is None:
             return os.EX_DATAERR
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
 
         self.printer._grep = True
-        self.printer.printItems(system_groups)
+        self.printer.print_items(system_groups)
         return os.EX_OK
 
 
@@ -119,7 +120,7 @@ class Info(SystemGroupAction):
         system_group_name = self.get_option('name')
         # info is always grep friendly
 
-        self.printer.setHeader(_("System Group Information For Org [ %s ]") % (org_name))
+        self.printer.set_header(_("System Group Information For Org [ %s ]") % (org_name))
 
         # get system details
         system_group = get_system_group(org_name, system_group_name)
@@ -127,10 +128,10 @@ class Info(SystemGroupAction):
         if not system_group:
             return os.EX_DATAERR
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('locked')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('locked')
 
         self.printer.printItem(system_group)
 
@@ -235,14 +236,15 @@ class Systems(SystemGroupAction):
         if systems is None:
             return os.EX_DATAERR
 
-        self.printer.setHeader(_("Systems within System Group [ %s ] For Org [ %s ]") % (system_group["name"], org_name))
+        self.printer.set_header(_("Systems within System Group [ %s ] For Org [ %s ]") % (system_group["name"], org_name))
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
 
-        self.printer.printItems(systems)
+        self.printer.print_items(systems)
 
         return os.EX_OK
+
 
 class Lock(SystemGroupAction):
 
@@ -275,6 +277,7 @@ class Lock(SystemGroupAction):
             return os.EX_OK
         else:
             return os.EX_DATAERR
+
 
 class Unlock(SystemGroupAction):
 
@@ -340,7 +343,7 @@ class AddSystems(SystemGroupAction):
 
         systems = self.api.add_systems(org_name, system_group["id"], system_ids)
 
-        if systems!= None:
+        if systems != None:
             print _("Successfully added systems to system group [ %s ]") % system_group['name']
             return os.EX_OK
         else:
@@ -378,9 +381,8 @@ class RemoveSystems(SystemGroupAction):
 
         systems = self.api.remove_systems(org_name, system_group["id"], system_ids)
 
-        if systems!= None:
+        if systems != None:
             print _("Successfully remove systems to system group [ %s ]") % system_group['name']
             return os.EX_OK
         else:
             return os.EX_DATAERR
-

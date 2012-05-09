@@ -70,4 +70,4 @@ class SystemGroupSystemsTest(CLIActionTestCase):
 
     def test_it_prints_the_system_group_systems(self):
         self.action.run()
-        self.action.printer.printItems.assert_called_once()   
+        self.action.printer.print_items.assert_called_once()   
