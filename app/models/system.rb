@@ -20,7 +20,7 @@ end
 
 class System < ActiveRecord::Base
   include Glue::Candlepin::Consumer
-  include Glue::Pulp::Consumer
+  include Glue::Pulp::Consumer if AppConfig.katello?
   include Glue
   include Authorization
   include AsyncOrchestration
@@ -76,7 +76,8 @@ class System < ActiveRecord::Base
   class << self
     def architectures
       { 'i386' => 'x86', 'ia64' => 'Itanium', 'x86_64' => 'x86_64', 'ppc' => 'PowerPC',
-      's390' => 'IBM S/390', 's390x' => 'IBM System z', 'sparc64' => 'SPARC Solaris' }
+      's390' => 'IBM S/390', 's390x' => 'IBM System z', 'sparc64' => 'SPARC Solaris',
+      'i686' => 'i686'}
     end
 
     def virtualized
@@ -150,6 +151,7 @@ class System < ActiveRecord::Base
     json['environment'] = environment.as_json unless environment.nil?
     json['activation_key'] = activation_keys.as_json unless activation_keys.nil?
     json['template'] = system_template.as_json unless system_template.nil?
+    json['ipv4_address'] = facts.try(:[], 'network.ipv4_address')
     if self.guest == 'true'
       json['host'] = self.host.attributes if self.host
     else

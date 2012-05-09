@@ -104,10 +104,6 @@ var env_select =   {
         return false;
     },
     init : function(){
-        if ($('#path-expanded').length == 0){
-            return;
-        }
-
         $('#path-expanded').hide();
         $('#path-collapsed').live('click', env_select.expand);
         $('#path-expanded').live('click', env_select.close);

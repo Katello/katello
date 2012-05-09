@@ -73,6 +73,8 @@ class UserSessionsController < ApplicationController
 
       # set the current user in the thread-local variable (before notification)
       User.current = current_user
+      # set ldap roles
+      current_user.set_ldap_roles if AppConfig.ldap_roles
       setup_current_organization
       # notice the user
       notice _("Login Successful")

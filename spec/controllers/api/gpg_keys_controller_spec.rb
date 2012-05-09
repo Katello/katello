@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe Api::GpgKeysController do
+describe Api::GpgKeysController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 

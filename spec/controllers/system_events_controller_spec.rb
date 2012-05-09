@@ -37,7 +37,7 @@ describe SystemEventsController do
       Pulp::Consumer.stub!(:update).and_return(true)
     end
 
-    describe "system tasks" do
+    describe "system tasks", :katello => true do
       before do
         @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
       end

@@ -13,7 +13,7 @@
 require 'spec_helper'
 require 'helpers/repo_test_data'
 
-describe Glue::Pulp::Repo do
+describe Glue::Pulp::Repo, :katello => true do
 
     let(:to_create_custom) do
     {
@@ -23,8 +23,6 @@ describe Glue::Pulp::Repo do
       :provider_type => Provider::CUSTOM
     }
     end
-
-
 
   before :each do
     disable_repo_orchestration
@@ -37,11 +35,19 @@ describe Glue::Pulp::Repo do
       p.organization = @organization
     end
 
+    
+
     @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
     ep = EnvironmentProduct.find_or_create(@organization.library, @product1)
     RepoTestData::REPO_PROPERTIES.merge!(:environment_product => ep)
 
     @repo = Repository.create!(RepoTestData::REPO_PROPERTIES)
+
+    @rh_product =  Product.create!({:cp_id => "rh_product1_id", :name=> "rh_product1", :productContent => [], 
+                                    :provider => @organization.redhat_provider, :environments => [@organization.library]})
+    ep2 = EnvironmentProduct.find_or_create(@organization.library, @rh_product)
+    @rh_repo = Repository.create!(:name=>"red hat repo", :environment_product=>ep2, :pulp_id=>"redhat_pulp_id", :uri=>"http://redhat.com/cdn/content")
+
   end
 
   context "Create & destroy a repo" do
@@ -57,11 +63,25 @@ describe Glue::Pulp::Repo do
       @repo.create_pulp_repo
     end
 
-    it "should call the Pulp's delete api on destroy" do
+    it "should call  Pulp and candlepin's delete api on destroy for custom providers" do
       @repo.stub(:update_packages_index).and_return
       @repo.stub(:update_errata_index).and_return
+      @repo.stub(:content_id).and_return("124321323")
+      Candlepin::Product.should_receive(:remove_content)
+      Candlepin::Content.should_receive(:destroy)
       Pulp::Repository.should_receive(:destroy).with(RepoTestData::REPO_ID)
-      @repo.destroy_repo
+      @repo.destroy
+    end
+
+    it "should only call Pulp's repo delete api on destroy for redhat providers" do
+      @rh_repo.stub(:update_packages_index).and_return
+      @rh_repo.stub(:update_errata_index).and_return
+      @rh_repo.stub(:content_id).and_return("124321323")
+      Pulp::Repository.stub(:find).and_return({:groupid=>["product:123", "env:123", "org:123"]})
+      Candlepin::Product.should_receive(:remove_content)
+      Candlepin::Content.should_not_receive(:destroy)
+      Pulp::Repository.should_receive(:destroy).with(@rh_repo.pulp_id)
+      @rh_repo.destroy
     end
   end
 

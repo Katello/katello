@@ -13,7 +13,7 @@
 #:nocov:
 
 require 'rest_client'
-require 'resources/pulp'
+require 'resources/pulp' if AppConfig.katello?
 require 'resources/candlepin'
 
 class Ping
@@ -25,19 +25,30 @@ class Ping
     # This should be called as 'admin' user otherwise the oauth will fail.
     #
     def ping
-      result = { :result => 'ok', :status => {
-        :pulp => {},
-        :candlepin => {},
-        :elasticsearch => {},
-        :pulp_auth => {},
-        :candlepin_auth => {},
-        :katello_jobs =>{}
-      }}
+      if AppConfig.katello?
+        result = { :result => 'ok', :status => {
+          :pulp => {},
+          :candlepin => {},
+          :elasticsearch => {},
+          :pulp_auth => {},
+          :candlepin_auth => {},
+          :katello_jobs => {}
+        }}
+      else
+        result = { :result => 'ok', :status => {
+          :candlepin => {},
+          :elasticsearch => {},
+          :candlepin_auth => {},
+          :katello_jobs => {}
+        }}
+      end
 
       # pulp - ping without oauth
-      url = AppConfig.pulp.url
-      exception_watch(result[:status][:pulp]) do
-        RestClient.get "#{url}/services/status/"
+      if AppConfig.katello?
+        url = AppConfig.pulp.url
+        exception_watch(result[:status][:pulp]) do
+          RestClient.get "#{url}/services/status/"
+        end
       end
 
       # candlepin - ping without oauth
@@ -52,8 +63,10 @@ class Ping
       end
 
       # pulp - ping with oauth
-      exception_watch(result[:status][:pulp_auth]) do
-        Pulp::PulpPing.ping
+      if AppConfig.katello?
+        exception_watch(result[:status][:pulp_auth]) do
+          Pulp::PulpPing.ping
+        end
       end
 
       # candlepin - ping with oauth

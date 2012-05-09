@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'ruby-debug'
 
-describe RepositoriesController do
+describe RepositoriesController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods

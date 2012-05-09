@@ -53,6 +53,7 @@ class Api::EnvironmentsController < Api::ApiController
   def create
     environment = KTEnvironment.new(params[:environment])
     @organization.environments << environment
+    raise ActiveRecord::RecordInvalid.new(environment) unless environment.valid?
     @organization.save!
     render :json => environment
   end

@@ -57,7 +57,7 @@ module Navigation
        :url => :sub_level,
        :if => :sub_level,
        :options => {:class=>'content second_level', "data-menu"=>"content"},
-       :items => [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg]
+       :items => AppConfig.katello? ? [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg] : [menu_custom_providers, menu_redhat_providers]
       }
 
     end
@@ -75,7 +75,7 @@ module Navigation
       {:key => :custom_providers,
         :name =>_("Custom Content Providers"),
         :url => providers_path,
-        :if => lambda{current_organization && Provider.any_readable?(current_organization())},
+        :if => lambda{AppConfig.katello? && current_organization && Provider.any_readable?(current_organization())},
         :options => {:class=>"third_level"}
       }
     end
@@ -84,7 +84,7 @@ module Navigation
       {:key => :sync_mgmt,
        :name =>_("Sync Management"),
        :items => lambda{[menu_sync_status, menu_sync_plan, menu_sync_schedule]},
-       :if => lambda{current_organization.syncable? || Provider.any_readable?(current_organization)},
+       :if => lambda{AppConfig.katello? && (current_organization.syncable? || Provider.any_readable?(current_organization))},
        :options => {:class=>'content second_level', "data-menu"=>"content"}
       }
 
@@ -119,7 +119,7 @@ module Navigation
       {:key => :system_templates,
        :name =>_("System Templates"),
         :url => system_templates_path,
-        :if => lambda{SystemTemplate.any_readable?(current_organization())},
+        :if => lambda{AppConfig.katello? && SystemTemplate.any_readable?(current_organization())},
         :options => {:class=>'content second_level', "data-menu"=>"content"}
       }
 
@@ -129,7 +129,7 @@ module Navigation
        {:key => :promotions,
         :name => _("Promotions"),
         :url => promotions_path,
-        :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)},
+        :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
         :options => {:highlights_on =>/\/promotions.*/ , :class=>'content second_level', "data-menu"=>"content"}
        }
     end
@@ -138,7 +138,7 @@ module Navigation
        {:key => :changeset,
         :name => _("Promotion Changeset History"),
         :url => changesets_path,
-        :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)},
+        :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
         :options => {:class=>'content second_level', "data-menu"=>"content"}
        }
     end

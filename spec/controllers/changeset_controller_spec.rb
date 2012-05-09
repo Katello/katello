@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe ChangesetsController do
+describe ChangesetsController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods

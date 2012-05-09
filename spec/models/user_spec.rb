@@ -56,9 +56,20 @@ describe User do
 
     specify { @user.cp_oauth_header.should == {'cp-user' => @user.username}}
     specify { @user.pulp_oauth_header.should == {'pulp-user' => @user.username}}
+
+    it "be able to set default_environment" do
+      disable_org_orchestration
+      @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id,
+                                           :organization => @organization)
+
+      @user.default_environment = @environment
+      @user.reload
+      @user.default_environment.should == @environment
+    end
   end
 
-  context "Pulp orchestration" do
+  context "Pulp orchestration", :katello => true do
     context "on create" do
 
       before(:each) { disable_user_orchestration }

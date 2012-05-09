@@ -30,7 +30,13 @@ class Repository < ActiveRecord::Base
   include Katello::Notices
 
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{:except=>[:pulp_repo_facts, :groupid, :environment_product_id]}
+                :json=>{:except=>[:pulp_repo_facts, :groupid, :feed_cert, :environment_product_id]}
+
+  mapping do
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
+
 
   after_save :update_related_index
 
@@ -105,7 +111,7 @@ class Repository < ActiveRecord::Base
 
   def extended_index_attrs
     {:environment=>self.environment.name, :environment_id=>self.environment.id,
-     :product=>self.product.name, :product_id=> self.product.id}
+     :product=>self.product.name, :product_id=> self.product.id, :name_sort=>self.name}
   end
 
   def update_related_index

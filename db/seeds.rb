@@ -35,8 +35,7 @@ unless user_admin
 end
 raise "Unable to create admin user: #{format_errors user_admin}" if user_admin.nil? or user_admin.errors.size > 0
 
-hidden_user = nil
-unless User.hidden.first
+unless hidden_user = User.hidden.first
   hidden_user = User.new(
     :roles => [],
     :username => "hidden-#{Password.generate_random_string(6)}",
