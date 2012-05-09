@@ -64,8 +64,8 @@ module Navigation
     end
 
     def systems_navigation
-      [
-        { :key => :details,
+      a = [
+        { :key => :general,
           :name =>_("Details"),
           :url => lambda{edit_system_path(@system.id)},
           :if => lambda{@system},
@@ -84,14 +84,27 @@ module Navigation
           :if => lambda{@system},
           :options => {:class=>"navigation_element"},
           :items => systems_content_subnav
-        },
-        { :key => :system_groups,
+        }
+      ]
+      a << { :key => :system_groups,
           :name =>_("System Groups"),
           :url => lambda{system_groups_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
-        }          
-      ]
+        } if AppConfig.katello?          
+      a << { :key => :packages,
+          :name =>_("Packages"),
+          :url => lambda{packages_system_system_packages_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"navigation_element"}
+        } if AppConfig.katello?
+      a << { :key => :errata,
+          :name =>_("Errata"),
+          :url => lambda{system_errata_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"navigation_element"},
+        } if AppConfig.katello?
+      a
     end
 
     def systems_subnav

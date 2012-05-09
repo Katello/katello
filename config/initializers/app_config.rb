@@ -2,7 +2,7 @@
 # are not available in all initializers starting with 'a' letter.
 require 'ostruct'
 require 'yaml'
- 
+
 module ApplicationConfiguration
 
 
@@ -13,9 +13,7 @@ module ApplicationConfiguration
 
     LOG_LEVELS = ['debug', 'info', 'warn', 'error', 'fatal']
 
-
     def initialize
-
       @config_file = "/etc/katello/katello.yml"
       @config_file = "#{Rails.root}/config/katello.yml" unless File.exists? @config_file
 
@@ -23,13 +21,13 @@ module ApplicationConfiguration
       @hash = config['common'] || {}
       @hash.update(config[Rails.env] || {})
 
-      # Hardcode to true to allow 'Headpin' to be added to the locale translation files
-      if true
-        @hash["app_name"] = 'Katello'
-        @hash["katello?"] = true
-      else
+      # Based upon root url, switch between headpin and katello modes
+      if ENV['RAILS_RELATIVE_URL_ROOT'] == '/headpin' || ENV['RAILS_RELATIVE_URL_ROOT'] == '/sam'
         @hash["app_name"] = 'Headpin'
         @hash["katello?"] = false
+      else
+        @hash["app_name"] = 'Katello'
+        @hash["katello?"] = true
       end
 
       @ostruct = hashes2ostruct(@hash)
@@ -48,7 +46,11 @@ module ApplicationConfiguration
       ActiveRecord::Base.logger.level = LOG_LEVELS.index(@ostruct.log_level_sql) if LOG_LEVELS.include?(@ostruct.log_level_sql)
 
       # backticks gets you the equiv of a system() command in Ruby
-      version =  `rpm -q katello-common --queryformat '%{VERSION}-%{RELEASE}\n'`
+      if @hash["app_name"] == 'Katello'
+        version =  `rpm -q katello-common --queryformat '%{VERSION}-%{RELEASE}'`
+      else
+        version =  `rpm -q katello-headpin --queryformat '%{VERSION}-%{RELEASE}'`
+      end
       exit_code = $?
       if exit_code != 0
         hash = `git rev-parse --short HEAD`

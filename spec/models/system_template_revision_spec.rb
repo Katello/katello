@@ -18,7 +18,7 @@ include OrchestrationHelper
 
 
 
-describe SystemTemplate do
+describe SystemTemplate, :katello => true do
 
 
   before(:each) do

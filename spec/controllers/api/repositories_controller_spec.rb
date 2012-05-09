@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'lib/authorization_rules'
 
-describe Api::RepositoriesController do
+describe Api::RepositoriesController, :katello => true do
   include OrchestrationHelper
   include LoginHelperMethods
   include AuthorizationHelperMethods

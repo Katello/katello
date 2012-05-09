@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FiltersController do
+describe FiltersController, :katello => true do
 
   include LoginHelperMethods
   include LocaleHelperMethods

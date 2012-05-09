@@ -592,6 +592,11 @@ module Candlepin
         self.put("/candlepin/entitlements/product/#{product_id}", nil, self.default_headers).code.to_i
       end
 
+      def get id=nil
+        json = Candlepin::CandlepinResource.get(path(id), self.default_headers).body
+        JSON.parse(json)
+      end
+
       def path(id=nil)
         "/candlepin/entitlements/#{id}"
       end

@@ -66,7 +66,7 @@ describe ProvidersController do
 
   end
 
-  describe "should be able to create a custom provider" do
+  describe "should be able to create a custom provider", :katello => true do
     before do
       disable_product_orchestration
       controller.stub(:search_validate).and_return(true)
@@ -84,7 +84,7 @@ describe ProvidersController do
       end
     end
   end
-  describe "rules" do
+  describe "rules", :katello => true do
     before (:each) do
       @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)

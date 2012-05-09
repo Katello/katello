@@ -89,7 +89,7 @@ describe Permission do
 
   context "super_admin" do
     it { @god.allowed_to?('create', 'organizations').should be_true }
-    it { @god.allowed_to?('create', 'providers').should be_true }
+    it { @god.allowed_to?('create', 'providers').should be_true if AppConfig.katello? }
   end
 
   context "some_role" do
@@ -250,7 +250,7 @@ describe Permission do
     end
 
 
-    describe "no_tag_verbs" do
+    describe "no_tag_verbs", :katello => true do
       before do
         @foo_tag = 0022
         @res_type_name = :providers

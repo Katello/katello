@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.28
+Version:        0.2.34
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -238,6 +238,9 @@ rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
+#remove development tasks
+rm %{buildroot}%{homedir}/lib/tasks/test.rake
+
 #branding
 if [ -d branding ] ; then
   ln -svf %{_datadir}/icons/hicolor/24x24/apps/system-logo-icon.png %{buildroot}%{homedir}/public/images/rh-logo.png
@@ -359,6 +362,84 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.34-1
+- Do not reference logical-insight unless it is configured
+
+* Wed Apr 25 2012 Jordan OMara <jomara@redhat.com> 0.2.33-1
+- Merge pull request #33 from ehelms/master (mmccune@redhat.com)
+- Merge pull request #37 from jsomara/ldap-rebase (jrist@redhat.com)
+- Merge pull request #36 from thomasmckay/system-release-version
+  (jrist@redhat.com)
+- Reverting User.all => User.visible as per ehelms+jsherrill
+  (jomara@redhat.com)
+- Adding destroy_ldap_group to before filter to prevent extraneous loading. Thx
+  jrist + bbuck! (jomara@redhat.com)
+- Fixing various LDAP issues from the last pull request (mbacovsk@redhat.com)
+- Loading group roles from ldap (jomara@redhat.com)
+- katello - fix broken unit test (pchalupa@redhat.com)
+- Adds logical-insight Gem for development and moves the logical insight code
+  to an initializer so that it can be turned on and off via config file.
+  (ehelms@redhat.com)
+- jenkins build failure for test that crosses katello/headpin boundary
+  (thomasmckay@redhat.com)
+- cleaning up use of AppConfig.katello? (thomasmckay@redhat.com)
+- Merge pull request #23 from iNecas/bz767925 (lzap@seznam.cz)
+- incorrect display of release version in system details tab
+  (thomasmckay@redhat.com)
+- 767925 - search packages command in CLI/API (inecas@redhat.com)
+
+* Tue Apr 24 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.32-1
+- reverted katello.yml back to katello master version
+- removed reference to headpin in client.conf and katello.yml
+- fixed headpin-specific variation of available releases spec test
+- fenced spec tests 
+- 766647 - duplicate env creation - better error message needed
+- katello-cli, katello - setting default environment for user
+- 812263 - keep the original tomcat server.xml when resetting dbs
+- Fixes issue on Roles page loading the edit panel where a javascript ordering
+  problem caused the role details to not show properly.
+- 813427 - do not delete repos from Red Hat Providers
+- Fixes issue with CSRF meta tag being out of place and notifications not being
+  in the proper script tag resulting from moving all inline javascript to a
+  single script tag.
+- 814063 - warning message for all possible urls
+- 814063 - katello now returns warning when not configured
+- 814063 - unable to restart httpd
+- 810232 - system templates - fix issue editing multiple templates
+
+* Wed Apr 18 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.31-1
+- 810378 - adding search for repos on promotion page
+- Changes the way inline javascript declarations are handled such that they are
+  all injected into one universal script tag.
+- 741595 - uebercert POST/GET/DELETE - either support or delete the calls from
+  CLI
+- boot - default conf was never loaded
+- added a script to restore a katello backup that was made with the matching
+  backup script
+- 803428 - repos - do not pass candlepin a gpgurl, if no gpgkey is defined
+- 812346 - fixing org deletion envrionment error
+- added basic backup script to handle backup part of
+  https://fedorahosted.org/katello/wiki/GuideServerBackups
+
+* Thu Apr 12 2012 Ivan Necas <inecas@redhat.com> 0.2.30-1
+- cp-releasever - release as a scalar value in API system json
+- removing bail out check for env-selector
+
+* Wed Apr 11 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.29-1
+- 713153 - RFE: include IP information in consumers/systems related API calls.
+- 803412 - auto-subscribe w/ SLA now on system subscription page
+- reorganizing assets to reduce the number of javascript files downloaded
+- removing unneeded print statement
+- allowing search param for all, needed for all creates 
+- system packages - fix checbox events after loading more pkgs
+- system packages - add support for tabindex
+- 810375 - remove page size limit on repos displayed
+- 803410 - Y-stream release version is now available on System Details page +
+  If no specific release version is specified (value of "") then "System
+  Default" is displayed. + For Katello, release version choices come from
+  enabled repos in the system's environment. For Headpin, choices are all
+  available in the Library environment.
+
 * Fri Apr 06 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.28-1
 - 809826 - regression in finding filters in the filters controller
 

@@ -12,7 +12,7 @@
 
 require 'spec_helper.rb'
 
-describe Api::PackagesController do
+describe Api::PackagesController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 
@@ -79,6 +79,14 @@ describe Api::PackagesController do
       }
       it_should_behave_like "protected action"
     end
+
+    describe "search" do
+      let(:action) { :search }
+      let(:req) {
+        get 'search', :id => 1, :repository_id => repo_id, :query => "cheetah*"
+      }
+      it_should_behave_like "protected action"
+    end
   end
 
   context "tests" do
@@ -96,6 +104,13 @@ describe Api::PackagesController do
       it "should call pulp find package api" do
         Pulp::Package.should_receive(:find).once.with(1)
         get 'show', :id => 1, :repository_id => repo_id
+      end
+    end
+
+    describe "search for a package" do
+      it "should call glue layer" do
+        Glue::Pulp::Package.should_receive(:search).once.with("cheetah*", 0, 0, [@repo.pulp_id])
+        get 'search', :repository_id => repo_id, :search => "cheetah*"
       end
     end
   end

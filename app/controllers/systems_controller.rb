@@ -117,7 +117,6 @@ class SystemsController < ApplicationController
       @system.environment = KTEnvironment.find(params["system"]["environment_id"])
       #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
       saved = @system.save!
-
       #find the newly created system
       if saved
         notice _("System '%s' was created.") % @system['name']
@@ -208,11 +207,9 @@ class SystemsController < ApplicationController
   def subscriptions
     consumed_entitlements = @system.consumed_entitlements
     avail_pools = @system.available_pools_full !current_user.subscriptions_match_system_preference
-    facts = @system.facts.stringify_keys
-    sockets = facts['cpu.cpu_socket(s)']
     render :partial=>"subscriptions", :layout => "tupane_layout",
                                       :locals=>{:system=>@system, :avail_subs => avail_pools,
-                                                :consumed_entitlements => consumed_entitlements, :sockets=>sockets,
+                                                :consumed_entitlements => consumed_entitlements,
                                                 :editable=>@system.editable?}
   end
 
@@ -261,15 +258,22 @@ class SystemsController < ApplicationController
   def update
     begin
       # The 'autoheal' flag is not an ActiveRecord attribute so update it explicitly if present
+      # The 'serviceLevel' comes in as a string 0/1 + level (eg. 0STANDARD = auto off, STANDARD))
       if params[:system] && params[:system][:serviceLevel]
-        if params[:system][:serviceLevel] == "Auto-subscribe Off"
-          params[:system][:serviceLevel] = ""
+        val = params[:system][:serviceLevel]
+        if val == '0'
+          params[:system][:serviceLevel] = ''
           @system.autoheal = false
-        elsif params[:system][:serviceLevel] == "Auto-subscribe On"
-          params[:system][:serviceLevel] = ""
+        elsif val == '1'
+          params[:system][:serviceLevel] = ''
           @system.autoheal = true
         else
-          @system.autoheal = true
+          if val.start_with? '1'
+            @system.autoheal = true
+          else
+            @system.autoheal = false
+          end
+          params[:system][:serviceLevel] = val[1..-1]
         end
       end
 
@@ -609,14 +613,16 @@ class SystemsController < ApplicationController
       :col => ["name_sort", "lastCheckin"],
       :titles => [_("Name"), _("Last Checked In")],
       :custom_rows => true,
-      :enable_create => System.registerable?(@environment, current_organization),
+      :enable_create => AppConfig.katello? && System.registerable?(@environment, current_organization),
       :create => _("System"),
+      :create_label => _('+ New System'),
       :enable_sort => true,
       :name => controller_display_name,
       :list_partial => 'systems/list_systems',
       :ajax_load  => true,
       :ajax_scroll => items_systems_path(),
       :actions => System.any_deletable?(@environment, current_organization) ? 'actions' : nil,
+      :initial_action => :subscriptions,
       :search_class=>System,
       :disable_create=> current_organization.environments.length == 0 ? "At least one environment is required to create or register systems in your current organization." : false
     }
@@ -625,7 +631,8 @@ class SystemsController < ApplicationController
   def sys_consumed_pools
     consumed_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
                             :poolName => pool["productName"],
-                            :expires => format_time(Date.parse(pool["endDate"])),
+                            :startDate => format_time(Date.parse(pool["startDate"])),
+                            :endDate => format_time(Date.parse(pool["endDate"])),
                             :consumed => pool["consumed"],
                             :quantity => pool["quantity"])}
     consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
@@ -635,7 +642,8 @@ class SystemsController < ApplicationController
   def sys_available_pools
     avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
                             :poolName => pool["productName"],
-                            :expires => format_time(Date.parse(pool["endDate"])),
+                            :startDate => format_time(Date.parse(pool["startDate"])),
+                            :endDate => format_time(Date.parse(pool["endDate"])),
                             :consumed => pool["consumed"],
                             :quantity => pool["quantity"])}
     avail_pools.sort! {|a,b| a.poolName <=> b.poolName}

@@ -13,7 +13,7 @@ require 'spec_helper'
 require 'helpers/product_test_data'
 require 'helpers/repo_test_data'
 
-describe Repository do
+describe Repository, :katello => true do
 
   include OrchestrationHelper
   include ProductHelperMethods

@@ -13,6 +13,7 @@
 require 'spec_helper'
 require 'helpers/system_test_data'
 include OrchestrationHelper
+include SystemHelperMethods
 
 
 describe System do
@@ -73,7 +74,7 @@ describe System do
 
   it "registers system in candlepin and pulp on create" do
     Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if AppConfig.katello?
     @system.save!
   end
 
@@ -84,7 +85,7 @@ describe System do
 
     it "should delete consumer in candlepin and pulp" do
       Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
-      Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
+      Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true) if AppConfig.katello?
       @system.destroy
     end
   end
@@ -244,7 +245,7 @@ describe System do
     end
   end
 
-  context "pulp attributes" do
+  context "pulp attributes", :katello => true do
     it "should update package-profile" do
       Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
       @system.upload_package_profile(package_profile)
@@ -258,7 +259,11 @@ describe System do
       @environment = KTEnvironment.create!({:name => "Dev", :prior => @organization.library, :organization => @organization}) do |e|
         e.products << @product
       end
-      env_product = @product.environment_products.where(:environment_id => @environment.id).first
+      if AppConfig.katello?
+        env_product = @product.environment_products.where(:environment_id => @environment.id).first
+      else
+        env_product = @product.environment_products.where(:environment_id => @organization.library.id).first
+      end
       @releases = %w[6.1 6.2 6Server]
       @releases.each do |release|
         Repository.create!(:name => "Repo #{release}",
@@ -281,8 +286,45 @@ describe System do
     end
 
     it "returns all releases available for the current environment" do
+      x = @system.available_releases
       @system.available_releases.should == @releases.sort
     end
+  end
+
+
+  describe "find system by a pool id" do
+    let(:pool_id_1) {"POOL_ID_123"}
+    let(:pool_id_2) {"POOL_ID_456"}
+    let(:pool_id_3) {"POOL_ID_789"}
+    let(:common_attrs) {
+      {:environment => @environment,
+       :cp_type => cp_type,
+       :facts => facts}
+    }
+
+    before :each do
+
+      @system_1 = create_system(common_attrs.merge(:name => "sys_1", :uuid => "sys_1_uuid"))
+      @system_2 = create_system(common_attrs.merge(:name => "sys_2", :uuid => "sys_2_uuid"))
+      @system_3 = create_system(common_attrs.merge(:name => "sys_3", :uuid => "sys_3_uuid"))
+
+      Candlepin::Entitlement.stub(:get).and_return([
+        {"pool" => {"id" => pool_id_1}, "consumer" => {"uuid" => @system_1.uuid}},
+        {"pool" => {"id" => pool_id_1}, "consumer" => {"uuid" => @system_2.uuid}},
+        {"pool" => {"id" => pool_id_2}, "consumer" => {"uuid" => @system_2.uuid}},
+        {"pool" => {"id" => pool_id_2}, "consumer" => {"uuid" => @system_3.uuid}}
+      ])
+    end
+
+    it "should find all systems that are subscribed to the pool" do
+      pool_uuids = System.all_by_pool(pool_id_1).map{ |sys| sys.uuid}
+      pool_uuids.should == [@system_1.uuid, @system_2.uuid]
+    end
+
+    it "should return empty array if the system isn't subscribed to that pool" do
+      System.all_by_pool(pool_id_3).should == []
+    end
+
   end
 
   describe "host-guest relation" do

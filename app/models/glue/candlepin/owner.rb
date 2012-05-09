@@ -58,7 +58,12 @@ module Glue::Candlepin::Owner
 
     def del_environments
       Rails.logger.debug _("All environments for owner %s in candlepin") % name
-      self.environments.destroy_all
+      #need to destroy environments in the proper order to not leave orphans
+      self.promotion_paths.each{|path|
+        path.reverse.each{|env|
+          env.reload.destroy #if we do not reload, the environment may think its successor still exists
+        }
+      }
       self.library.destroy
       self.library = nil
       return true

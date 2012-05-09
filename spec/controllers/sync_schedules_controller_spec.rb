@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SyncSchedulesController do
+describe SyncSchedulesController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
