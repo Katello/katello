@@ -13,7 +13,7 @@
 = content_for :content do
   #system_group_edit
     %input{:name=> @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
-    .grid_9
+    .grid_8
       = form_for(@group, :html => {:multipart => true, :method => :put, :id => 'system_group_edit', :remote => true}, :url => system_group_path(@group)) do |f|
         %input#system_group_id{:name => @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
         %fieldset.fl.clear
@@ -34,3 +34,24 @@
               = check_box("system_group", "locked", :id=>"system_group_locked", 'data-url'=>lock_system_group_path(@group.id), :checked=>@group.locked ? "checked": "")
             - else
               = @group.locked? ? 'Locked' : 'Unlocked'
+
+        %fieldset.fl.clear
+          .grid_4
+            %label #{_("Maximum Number of Systems")}:
+          .grid_8.la
+            - if @group.max_members == -1
+              .grid_2.ra
+                %label #{_("Unlimited")}:
+              .grid_5.la
+                %input.unlimited_members{:type=>"checkbox", :value=>:true, :checked => :true}
+              .grid_2.ra.limit{:style => "display:none;"}
+                %label #{_("Limit")}:
+              .grid_5.la.limit#system_group_max_members{'name' => 'system_group[max_members]', 'data-url' => system_group_path(@group.id), :class=>("editable edit_max_members" if editable), :style => "display:none;"}
+            - else
+              .grid_2.ra
+                %label #{_("Unlimited")}:
+              .grid_5.la
+                %input.unlimited_members{:type=>"checkbox", :value=>:true}
+              .grid_2.ra.limit
+                %label #{_("Limit")}:
+              .grid_5.la.limit#system_group_max_members{'name' => 'system_group[max_members]', 'data-url' => system_group_path(@group.id), :class=>("editable edit_max_members" if editable)} #{@group.max_members}

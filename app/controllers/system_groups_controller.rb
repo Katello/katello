@@ -45,8 +45,8 @@ class SystemGroupsController < ApplicationController
 
   def param_rules
      {
-       :create => {:system_group => [:name, :description]},
-       :update => {:system_group => [:name, :description, :locked]},
+       :create => {:system_group => [:name, :description, :max_members]},
+       :update => {:system_group => [:name, :description, :max_members, :locked]},
        :add_systems => [:system_ids, :id],
        :remove_systems => [:system_ids, :id]
      }
@@ -101,6 +101,9 @@ class SystemGroupsController < ApplicationController
     elsif options[:description]
       @group.description = options[:description]
       to_ret = @group.description
+    elsif options[:max_members]
+      @group.max_members = options[:max_members]
+      to_ret = @group.max_members
     end
 
     @group.save!
