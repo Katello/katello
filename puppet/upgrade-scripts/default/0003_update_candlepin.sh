@@ -8,7 +8,7 @@
 CANDLEPIN_HOME=${CANDLEPIN_HOME:-/usr/share/candlepin}
 
 pushd $CANDLEPIN_HOME >/dev/null
-./cpdb --upgrade 2>&1
+./cpdb --update 2>&1
 ret_code=$?
 popd >/dev/null
 
