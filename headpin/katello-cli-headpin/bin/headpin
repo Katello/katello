@@ -125,7 +125,6 @@ def setup_admin(admin):
     prov_cmd = provider.Provider()
     prov_cmd.add_action('info', provider.Info())
     prov_cmd.add_action('list', provider.List())
-    prov_cmd.add_action('status', provider.Status())
     prov_cmd.add_action('import_manifest', provider.ImportManifest())
     admin.add_command('provider', prov_cmd)
 
