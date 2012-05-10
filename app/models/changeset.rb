@@ -139,131 +139,138 @@ class Changeset < ActiveRecord::Base
     end
   end
 
-  def add_product cpid
-    product = find_product_by_cpid(cpid)
-    raise _("Product '%s' hasn't any repositories") % product.name if product.repos(self.environment.prior).empty?
+  def add_product! product
+    product.repos(self.environment.prior).empty? and
+        raise _("Product '%s' hasn't any repositories") % product.name
+
+    environment.prior.products.include? product or
+        raise Errors::ChangesetContentException.new("Product not found within environment you want to promote from.")
+
     self.products << product
-    product
+    save!
+    return product
   end
 
-  def add_template template_id
-    tpl = find_template(template_id)
-    self.system_templates << tpl
-    tpl
-  end
+  def add_template! template
+    environment.prior.system_templates.include? template or
+        raise Errors::ChangesetContentException.new("Template not found within environment you want to promote from.")
 
-  def add_package package_name, product_cpid
-    product = find_product_by_cpid(product_cpid)
-    pack = find_package product, package_name
-    display_name = Katello::PackageUtils::build_nvrea(pack, false)
-    cs_pack = ChangesetPackage.new(:package_id => pack["id"], :display_name => display_name, :product_id => product.id, :changeset => self)
     cs_pack.save!
-    self.packages << cs_pack
+    self.system_templates << template # updates foreign key immediately
+    save!
+    return template
   end
 
-  def add_erratum erratum_id, product_cpid
-    product = find_product_by_cpid(product_cpid)
-    cs_erratum = ChangesetErratum.new(:errata_id => erratum_id, :display_name => erratum_id, :product_id => product.id, :changeset => self)
-    cs_erratum.save!
-    self.errata << cs_erratum
+  def add_package! name_or_nvre, product
+    environment.prior.products.include? product or
+        raise Errors::ChangesetContentException.new(
+                  "Package's product not found within environment you want to promote from.")
+
+    package_data = find_package_data(product, name_or_nvre) or
+        raise Errors::ChangesetContentException.new(
+                  _("Package '%s' was not found in the source environment.") % name_or_nvre)
+
+    nvrea = Katello::PackageUtils::build_nvrea(package_data, false)
+    self.packages << package =
+        ChangesetPackage.create!(:package_id => package_data["id"], :display_name => nvrea,
+                                 :product_id => product.id, :changeset => self, :nvrea => nvrea)
+    save!
+    return package
   end
 
-  def add_repo repo_id, product_cpid
-    repo = find_repo(repo_id, product_cpid)
-    raise Errors::ChangesetContentException.new("Repository not found within this environment.") unless repo
-    self.repos << repo
-    repo
+  def add_erratum! erratum_id, product
+    product.has_erratum?(environment.prior, erratum_id) or
+        raise Errors::ChangesetContentException.new(
+                  "Erratum not found within this environment you want to promote from.")
+
+    self.errata << erratum =
+        ChangesetErratum.create!(:errata_id  => erratum_id, :display_name => erratum_id,
+                                 :product_id => product.id, :changeset => self)
+    save!
+    return erratum
   end
 
-  def add_distribution distribution_id, product_cpid
-    product = find_product_by_cpid(product_cpid)
-    distro = ChangesetDistribution.new(:distribution_id => distribution_id,
-                                       :display_name => distribution_id,
-                                       :product_id => product.id,
-                                       :changeset => self)
-    distro.save!
-    self.distributions << distro
+  def add_repository! repository
+    environment.prior.repositories.include? repository or
+        raise Errors::ChangesetContentException.new(
+                  "Repository not found within this environment you want to promote from.")
+
+    self.repos << repository
+    save!
+    return repository
   end
 
-  def remove_product cpid
-    prod = self.products.find_by_cp_id(cpid)
-    raise Errors::ChangesetContentException.new("Product #{cpid} not found in the changeset.") if prod.nil?
-    self.products.delete(prod)
+  def add_distribution! distribution_id, product
+    environment.prior.repositories.any? { |repo| repo.has_distribution? distribution_id } or
+        raise Errors::ChangesetContentException.new(
+                  "Distribution not found within this environment you want to promote from.")
+
+    self.distributions << distro =
+        ChangesetDistribution.create!(:distribution_id => distribution_id,
+                                      :display_name    => distribution_id,
+                                      :product_id      => product.id,
+                                      :changeset       => self)
+    save!
+    return distro
   end
 
-  def remove_template template_id
-    tpl = self.system_templates.find(template_id)
-    raise Errors::ChangesetContentException.new("Template #{template_id} not found in the changeset.") if tpl.nil?
-    self.system_templates.delete(tpl)
+  def remove_product! product
+    deleted = self.products.delete(product)
+    save!
+    return deleted
   end
 
-  def remove_package package_nvre, product_cpid
-    product = find_product_by_cpid(product_cpid)
-    pack = find_package_by_nvre product, package_nvre
-    ChangesetPackage.destroy_all(:package_id => pack["id"], :changeset_id => self.id, :product_id => product.id)
+  def remove_template! template
+    deleted = self.system_templates.delete(template)
+    save!
+    return deleted
   end
 
-  def remove_erratum erratum_id, product_cpid
-    product = find_product_by_cpid(product_cpid)
-    ChangesetErratum.destroy_all(:errata_id => erratum_id, :changeset_id => self.id, :product_id => product.id)
+  def remove_package! package_data, product
+    deleted = ChangesetPackage.destroy_all(:package_id => package_data[:id], :changeset_id => self.id,
+                                           :product_id => product.id)
+    save!
+    return deleted
   end
 
-  def remove_repo repo_id, product_cpid
-    repo = find_repo(repo_id, product_cpid)
-    self.repos.delete(repo) if repo
+  def remove_erratum! erratum_id, product
+    deleted = ChangesetErratum.destroy_all(:errata_id  => erratum_id, :changeset_id => self.id,
+                                           :product_id => product.id)
+    save!
+    return deleted
   end
 
-  def remove_distribution distribution_id, product_cpid
-    product = find_product_by_cpid(product_cpid)
-    ChangesetDistribution.destroy_all(:distribution_id => distribution_id, :changeset_id => self.id, :product_id => product.id)
+  def remove_repository! repository
+    deleted = self.repos.delete(repository)
+    save!
+    return deleted
+  end
+
+  def remove_distribution! distribution_id, product
+    deleted = ChangesetDistribution.destroy_all(:distribution_id => distribution_id,
+                                                :changeset_id    => self.id, :product_id => product.id)
+    save!
+    return deleted
   end
 
   private
 
   def validate_content! elements
-    elements.each {|e| raise ActiveRecord::RecordInvalid.new(e) if not e.valid?}
+    elements.each { |e| raise ActiveRecord::RecordInvalid.new(e) if not e.valid? }
   end
 
-  def find_template template_id
-    from_env = self.environment.prior
-    tpl = from_env.system_templates.find(template_id)
-    raise Errors::ChangesetContentException.new("Template not found within environment you want to promote from.") if tpl.nil?
-    tpl
-  end
+  def find_package_data(product, name_or_nvre)
+    package_data = Katello::PackageUtils.parse_nvrea_nvre(name_or_nvre)
+    packs        = if package_data
+                     product.find_packages_by_nvre(self.environment.prior,
+                                                   package_data[:name], package_data[:version],
+                                                   package_data[:release], package_data[:epoch])
+                   else
+                     Katello::PackageUtils::find_latest_packages(
+                         product.find_packages_by_name(self.environment.prior, name_or_nvre))
+                   end
 
-  def find_product product_name
-    from_env = self.environment.prior
-    product = from_env.products.find_by_name(product_name)
-    raise Errors::ChangesetContentException.new("Product not found within environment you want to promote from.") if product.nil?
-    product
-  end
-
-  def find_product_by_cpid product_cpid
-    from_env = self.environment.prior
-    product = from_env.products.find_by_cp_id(product_cpid.to_s)
-    raise Errors::ChangesetContentException.new("Product not found within environment you want to promote from.") if product.nil?
-    product
-  end
-
-  def find_package product, name_or_nvre
-    package_data = Katello::PackageUtils::parse_nvrea_nvre(name_or_nvre)
-    if not package_data.nil?
-      packs = product.find_packages_by_nvre(self.environment.prior, package_data[:name], package_data[:version], package_data[:release], package_data[:epoch])
-    else
-      packs = product.find_packages_by_name(self.environment.prior, name_or_nvre)
-      packs = Katello::PackageUtils::find_latest_packages(packs)
-    end
-    raise Errors::ChangesetContentException.new(_("Package '%s' was not found in the source environment.") % name_or_nvre) if packs.empty?
-    packs[0].with_indifferent_access
-  end
-
-  def find_package_by_nvre product, nvre
-    package_data = Katello::PackageUtils::parse_nvrea_nvre(nvre)
-    raise Errors::ChangesetContentException.new(_("Package has to be specified by its nvre.")) if package_data.nil?
-
-    packs = product.find_packages_by_nvre(self.environment.prior, package_data[:name], package_data[:version], package_data[:release], package_data[:epoch])
-    raise Errors::ChangesetContentException.new(_("Package '%s' was not found in the source environment.") % nvre) if packs.empty?
-    packs[0].with_indifferent_access
+    packs.first.with_indifferent_access
   end
 
   def update_progress! percent
