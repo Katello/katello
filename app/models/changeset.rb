@@ -25,42 +25,44 @@ class Changeset < ActiveRecord::Base
   include Katello::Notices
 
   include IndexedModel
-  index_options :extended_json=>:extended_index_attrs,
-                :display_attrs=>[:name, :description, :package, :errata, :product, :repo, :system_template, :user]
+  index_options :extended_json => :extended_index_attrs,
+                :display_attrs => [:name, :description, :package, :errata, :product, :repo, :system_template, :user]
 
   mapping do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 
-  NEW = 'new'
-  REVIEW = 'review'
-  PROMOTED = 'promoted'
+  NEW       = 'new'
+  REVIEW    = 'review'
+  PROMOTED  = 'promoted'
   PROMOTING = 'promoting'
-  FAILED = 'failed'
-  STATES = [NEW, REVIEW, PROMOTING, PROMOTED, FAILED]
+  FAILED    = 'failed'
+  STATES    = [NEW, REVIEW, PROMOTING, PROMOTED, FAILED]
 
 
   validates_inclusion_of :state,
-    :in => STATES,
-    :allow_blank => false,
-    :message => "A changeset must have one of the following states: #{STATES.join(', ')}."
+                         :in          => STATES,
+                         :allow_blank => false,
+                         :message     => "A changeset must have one of the following states: #{STATES.join(', ')}."
 
   validates :name, :presence => true, :allow_blank => false, :length => { :maximum => 255 }
   validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Must be unique within an environment")
-  validates :environment, :presence=>true
+  validates :environment, :presence => true
   validates :description, :katello_description_format => true
   validates_with NotInLibraryValidator
+
   has_and_belongs_to_many :products, :uniq => true
-  has_many :packages, :class_name=>"ChangesetPackage", :inverse_of=>:changeset
-  has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
+  has_many :packages, :class_name => "ChangesetPackage", :inverse_of => :changeset
+  has_many :users, :class_name => "ChangesetUser", :inverse_of => :changeset
   has_and_belongs_to_many :system_templates, :uniq => true
-  has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
-  has_and_belongs_to_many :repos, :class_name=>"Repository", :uniq => true
-  has_many :distributions, :class_name=>"ChangesetDistribution", :inverse_of => :changeset
-  has_many :dependencies, :class_name=>"ChangesetDependency", :inverse_of =>:changeset
-  belongs_to :environment, :class_name=>"KTEnvironment"
+  has_many :errata, :class_name => "ChangesetErratum", :inverse_of => :changeset
+  has_and_belongs_to_many :repos, :class_name => "Repository", :uniq => true
+  has_many :distributions, :class_name => "ChangesetDistribution", :inverse_of => :changeset
+  has_many :dependencies, :class_name => "ChangesetDependency", :inverse_of => :changeset
+  belongs_to :environment, :class_name => "KTEnvironment"
   belongs_to :task_status
+
   before_save :uniquify_artifacts
 
   def key_for item
@@ -68,7 +70,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def errata_ids
-    errata.collect{|erratum| erratum.errata_id}
+    errata.collect { |erratum| erratum.errata_id }
   end
 
   #get a list of all the products involved in the changeset
@@ -81,18 +83,17 @@ class Changeset < ActiveRecord::Base
 
   def partial_products
     to_ret = []
-    to_ret = to_ret + self.packages.collect{|pkg| pkg.product}
-    to_ret = to_ret + self.errata.collect{|pkg| pkg.product}
-    to_ret = to_ret + self.repos.collect{|rep| rep.product}
-    to_ret = to_ret + self.distributions.collect{|distro| distro.product}
+    to_ret = to_ret + self.packages.collect { |pkg| pkg.product }
+    to_ret = to_ret + self.errata.collect { |pkg| pkg.product }
+    to_ret = to_ret + self.repos.collect { |rep| rep.product }
+    to_ret = to_ret + self.distributions.collect { |distro| distro.product }
     to_ret.uniq
   end
-
 
   def calc_dependencies
     all_dependencies = []
     not_included_products.each do |product|
-      dependencies = calc_dependencies_for_product product
+      dependencies     = calc_dependencies_for_product product
       all_dependencies += build_dependencies(product, dependencies)
     end
     all_dependencies
@@ -109,14 +110,21 @@ class Changeset < ActiveRecord::Base
   end
 
   def promote async=true
-    raise _("Cannot promote the changset '%s' because it is not in the review phase.") % self.name if self.state != Changeset::REVIEW
+    self.state == Changeset::REVIEW or
+        raise _("Cannot promote the changset '%s' because it is not in the review phase.") % self.name
+
     #check for other changesets promoting
-    raise _("Cannot promote the changeset '%s' while another changeset (%s) is being promoted.") % [self.name, self.environment.promoting.first.name] if self.environment.promoting_to?
+    if self.environment.promoting_to?
+      raise _("Cannot promote the changeset '%s' while another changeset (%s) is being promoted.") %
+                [self.name, self.environment.promoting.first.name]
+    end
+
     # check that solitare repos in the changeset and its templates
     # will have its associated product in the env as well after promotion
     repos_to_be_promoted.each do |repo|
       if not self.environment.products.to_a.include? repo.product and not products_to_be_promoted.include? repo.product
-        raise _("Cannot promote the changset '%s' because the repo '%s' does not belong to any promoted product.") % [self.name, repo.name]
+        raise _("Cannot promote the changset '%s' because the repo '%s' does not belong to any promoted product.") %
+                  [self.name, repo.name]
       end
     end
 
@@ -128,7 +136,7 @@ class Changeset < ActiveRecord::Base
     self.save!
 
     if async
-      task = self.async(:organization=>self.environment.organization).promote_content
+      task             = self.async(:organization => self.environment.organization).promote_content
       self.task_status = task
       self.save!
       self.task_status
@@ -155,7 +163,6 @@ class Changeset < ActiveRecord::Base
     environment.prior.system_templates.include? template or
         raise Errors::ChangesetContentException.new("Template not found within environment you want to promote from.")
 
-    cs_pack.save!
     self.system_templates << template # updates foreign key immediately
     save!
     return template
@@ -300,7 +307,7 @@ class Changeset < ActiveRecord::Base
     update_progress! '80'
     promote_packages from_env, to_env
     update_progress! '90'
-    promote_errata   from_env, to_env
+    promote_errata from_env, to_env
     update_progress! '95'
     promote_distributions from_env, to_env
     update_progress! '100'
@@ -308,13 +315,13 @@ class Changeset < ActiveRecord::Base
     PulpTaskStatus::wait_for_tasks generate_metadata from_env, to_env
 
     self.promotion_date = Time.now
-    self.state = Changeset::PROMOTED
+    self.state          = Changeset::PROMOTED
     self.save!
 
     index_repo_content to_env
 
     message = _("Successfully promoted changeset '%s'.") % self.name
-    notice message, {:synchronous_request => false, :request_type => "changesets___promote"}
+    notice message, { :synchronous_request => false, :request_type => "changesets___promote" }
 
   rescue Exception => e
 
@@ -322,9 +329,10 @@ class Changeset < ActiveRecord::Base
     self.save!
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
-    details = e.message
+    details    = e.message
     error_text = _("Failed to promote changeset '%s'. Check notices for more details") % self.name
-    notice error_text, {:details =>details, :level => :error, :synchronous_request => false, :request_type => "changesets___promote"}
+    notice error_text, :details => details, :level => :error,
+           :synchronous_request => false, :request_type => "changesets___promote"
 
     index_repo_content to_env
 
@@ -374,7 +382,7 @@ class Changeset < ActiveRecord::Base
 
   def promote_packages from_env, to_env
     #repo->list of pkg_ids
-    pkgs_promote = {}
+    pkgs_promote = { }
 
     (not_included_packages + dependencies).each do |pkg|
       product = pkg.product
@@ -400,17 +408,18 @@ class Changeset < ActiveRecord::Base
 
   def promote_errata from_env, to_env
     #repo->list of errata_ids
-    errata_promote = {}
+    errata_promote = { }
 
     not_included_errata.each do |err|
       product = err.product
 
       product.repos(from_env).each do |repo|
         if repo.is_cloned_in? to_env
-          clone = repo.get_clone to_env
+          clone             = repo.get_clone to_env
           affecting_filters = (repo.filters + repo.product.filters).uniq
 
-          if (repo.has_erratum? err.errata_id) and (!clone.has_erratum? err.errata_id) and (!err.blocked_by_filters? affecting_filters)
+          if repo.has_erratum? err.errata_id and !clone.has_erratum? err.errata_id and
+              !err.blocked_by_filters? affecting_filters
             errata_promote[clone] ||= []
             errata_promote[clone] << err.errata_id
           end
@@ -427,7 +436,7 @@ class Changeset < ActiveRecord::Base
 
   def promote_distributions from_env, to_env
     #repo->list of distribution_ids
-    distribution_promote = {}
+    distribution_promote = { }
 
     for distro in self.distributions
       product = distro.product
@@ -439,7 +448,8 @@ class Changeset < ActiveRecord::Base
         clone = repo.get_clone to_env
         next if clone.nil?
 
-        if (repo.has_distribution? distro.distribution_id) and (!clone.has_distribution? distro.distribution_id)
+        if repo.has_distribution? distro.distribution_id and
+            !clone.has_distribution? distro.distribution_id
           distribution_promote[clone] = distro.distribution_id
         end
       end
@@ -474,8 +484,8 @@ class Changeset < ActiveRecord::Base
   end
 
   def generate_metadata from_env, to_env
-    async_tasks = affected_repos.collect do  |repo|
-        repo.get_clone(to_env).generate_metadata
+    async_tasks = affected_repos.collect do |repo|
+      repo.get_clone(to_env).generate_metadata
     end
     async_tasks
   end
@@ -483,7 +493,7 @@ class Changeset < ActiveRecord::Base
   def uniquify_artifacts
     system_templates.uniq! unless self.system_templates.nil?
     products.uniq! unless self.products.nil?
-    [[:packages,:package_id],[:errata, :errata_id],[:distributions, :distribution_id]].each do |items, item_id|
+    [[:packages, :package_id], [:errata, :errata_id], [:distributions, :distribution_id]].each do |items, item_id|
       unless self.send(items).nil?
         s = Set.new
         # for some reason uniq! with a closure didn''t work
@@ -501,7 +511,7 @@ class Changeset < ActiveRecord::Base
     products_ids = []
     products_ids += self.packages.map { |p| p.product.cp_id }
     products_ids += self.errata.map { |e| e.product.cp_id }
-    products_ids -= self.products.collect{ |p| p.cp_id }
+    products_ids -= self.products.collect { |p| p.cp_id }
     products_ids.uniq.collect do |product_cp_id|
       Product.find_by_cp_id(product_cp_id)
     end
@@ -513,7 +523,7 @@ class Changeset < ActiveRecord::Base
 
 
   def errata_for_dep_calc product
-    cs_errata = ChangesetErratum.where({:changeset_id=>self.id, :product_id=>product.id})
+    cs_errata = ChangesetErratum.where({ :changeset_id => self.id, :product_id => product.id })
     cs_errata.collect do |err|
       Glue::Pulp::Errata.find(err.errata_id)
     end
@@ -523,8 +533,8 @@ class Changeset < ActiveRecord::Base
   def packages_for_dep_calc product
     packages = []
 
-    cs_pacakges = ChangesetPackage.where({:changeset_id=>self.id, :product_id=>product.id})
-    packages += cs_pacakges.collect do |pack|
+    cs_pacakges = ChangesetPackage.where({ :changeset_id => self.id, :product_id => product.id })
+    packages    += cs_pacakges.collect do |pack|
       Glue::Pulp::Package.find(pack.package_id)
     end
 
@@ -540,19 +550,19 @@ class Changeset < ActiveRecord::Base
     from_env = self.environment.prior
     to_env   = self.environment
 
-    package_names = packages_for_dep_calc(product).map{ |p| p.name }.uniq
-    return {} if package_names.empty?
+    package_names = packages_for_dep_calc(product).map { |p| p.name }.uniq
+    return { } if package_names.empty?
 
     from_repos = not_included_repos(product, from_env)
-    to_repos = product.repos(to_env)
+    to_repos   = product.repos(to_env)
 
     dependencies = calc_dependencies_for_packages package_names, from_repos, to_repos
     dependencies
   end
 
   def calc_dependencies_for_packages package_names, from_repos, to_repos
-    all_deps = []
-    deps = []
+    all_deps   = []
+    deps       = []
     to_resolve = package_names
     while not to_resolve.empty?
       all_deps += deps
@@ -560,18 +570,20 @@ class Changeset < ActiveRecord::Base
       deps = get_promotable_dependencies_for_packages to_resolve, from_repos, to_repos
       deps = Katello::PackageUtils::filter_latest_packages_by_name deps
 
-      to_resolve = deps.map{ |d| d['provides'] }.flatten(1).uniq - all_deps.map{ |d| d['provides'] }.flatten(1) - package_names
+      to_resolve = deps.map { |d| d['provides'] }.flatten(1).uniq -
+          all_deps.map { |d| d['provides'] }.flatten(1) -
+          package_names
     end
     all_deps
   end
 
   def get_promotable_dependencies_for_packages package_names, from_repos, to_repos
-    from_repo_ids = from_repos.map{ |r| r.pulp_id }
+    from_repo_ids     = from_repos.map { |r| r.pulp_id }
     @next_env_pkg_ids ||= package_ids(to_repos)
 
     resolved_deps = Pulp::Package.dep_solve(package_names, from_repo_ids)['resolved']
     resolved_deps = resolved_deps.values.flatten(1)
-    resolved_deps = resolved_deps.reject {|dep| not @next_env_pkg_ids.index(dep['id']).nil? }
+    resolved_deps = resolved_deps.reject { |dep| not @next_env_pkg_ids.index(dep['id']).nil? }
     resolved_deps
   end
 
@@ -587,11 +599,11 @@ class Changeset < ActiveRecord::Base
     new_dependencies = []
 
     dependencies.each do |dep|
-        new_dependencies << ChangesetDependency.new(:package_id => dep['id'],
-                                                    :display_name => dep['filename'],
-                                                    :product_id => product.id,
-                                                    :dependency_of => '???',
-                                                    :changeset => self)
+      new_dependencies << ChangesetDependency.new(:package_id    => dep['id'],
+                                                  :display_name  => dep['filename'],
+                                                  :product_id    => product.id,
+                                                  :dependency_of => '???',
+                                                  :changeset     => self)
     end
     new_dependencies
   end
@@ -603,39 +615,38 @@ class Changeset < ActiveRecord::Base
 
   def affected_repos
     repos = []
-    repos += self.packages.collect{ |e| e.promotable_repositories }.flatten(1)
-    repos += self.errata.collect{ |p| p.promotable_repositories }.flatten(1)
-    repos += self.distributions.collect{ |d| d.promotable_repositories }.flatten(1)
+    repos += self.packages.collect { |e| e.promotable_repositories }.flatten(1)
+    repos += self.errata.collect { |p| p.promotable_repositories }.flatten(1)
+    repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
 
     repos.uniq
   end
 
   def extended_index_attrs
-    pkgs = self.packages.collect{|pkg| pkg.display_name}
-    errata = self.errata.collect{|err| err.display_name}
-    products = self.products.collect{|prod| prod.name}
-    repos = self.repos.collect{|repo| repo.name}
-    templates = self.system_templates.collect{|t| t.name}
-    {
-      :name_sort=> self.name.downcase,
-      :package=>pkgs,
-      :errata=>errata,
-      :product=>products,
-      :repo=>repos,
-      :system_template=>templates,
-      :user=> self.task_status.nil? ? "" : self.task_status.user.username
+    pkgs      = self.packages.collect { |pkg| pkg.display_name }
+    errata    = self.errata.collect { |err| err.display_name }
+    products  = self.products.collect { |prod| prod.name }
+    repos     = self.repos.collect { |repo| repo.name }
+    templates = self.system_templates.collect { |t| t.name }
+    { :name_sort       => self.name.downcase,
+      :package         => pkgs,
+      :errata          => errata,
+      :product         => products,
+      :repo            => repos,
+      :system_template => templates,
+      :user            => self.task_status.nil? ? "" : self.task_status.user.username
     }
   end
 
   def repos_to_be_promoted
     repos = self.repos || []
-    repos += self.system_templates.map{|tpl| tpl.repos_to_be_promoted}.flatten(1)
+    repos += self.system_templates.map { |tpl| tpl.repos_to_be_promoted }.flatten(1)
     return repos.uniq
   end
 
   def products_to_be_promoted
     products = self.products || []
-    products += self.system_templates.map{|tpl| tpl.products_to_be_promoted}.flatten(1)
+    products += self.system_templates.map { |tpl| tpl.products_to_be_promoted }.flatten(1)
     return products.uniq
   end
 
