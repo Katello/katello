@@ -423,8 +423,8 @@ KT.panel = (function ($) {
                 top;
 
             top_position = left_panel.offset().top;
-            offset = offset ? offset : 40;
-            offset += $('#maincontent').offset().left;
+            offset = offset ? offset : 10;
+            offset += $('#maincontent .maincontent').offset().left;
             offset -= scrollX;
 
             if (jQPanel.length > 0) {
