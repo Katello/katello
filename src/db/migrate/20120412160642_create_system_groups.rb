@@ -4,7 +4,7 @@ class CreateSystemGroups < ActiveRecord::Migration
       t.string :name, :null=>false
       t.string :pulp_id, :null=>false
       t.string :description, :null=>true
-      t.integer :max_members, :null=>false, :default=>-1
+      t.integer :max_systems, :null=>false, :default=>-1
       t.references :organization, :null=>false
       t.timestamps
     end
