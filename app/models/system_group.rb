@@ -45,8 +45,17 @@ class SystemGroup < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("Name must be unique within one organization")
   validates_uniqueness_of :pulp_id, :message=> N_("Pulp identifier must be unique.")
 
+  UNLIMITED_SYSTEMS = -1
   validate :validate_max_systems
   validates_numericality_of :max_systems, :only_integer => true, :greater_than_or_equal_to => -1, :message => N_("must be an integer value.")
+
+  def validate_max_systems
+    if new_record? or max_systems_changed?
+      if (max_systems != UNLIMITED_SYSTEMS) and (systems.length > max_systems)
+        errors.add :max_systems, _("may not be less than the number of systems associated with the system group.")
+      end
+    end
+  end
 
   belongs_to :organization
 
@@ -67,12 +76,6 @@ class SystemGroup < ActiveRecord::Base
       SystemGroup.items(org, SYSTEM_READ_PERMS)
     end
   }
-
-  def validate_max_systems
-    if (max_systems != -1) and (systems.length > max_systems)
-      errors.add :max_systems, _("may not be less than the number of systems currently associated with the system group.")
-    end
-  end
 
   def self.creatable? org
     User.allowed_to?([:create], :system_groups, nil, org)
