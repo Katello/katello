@@ -31,6 +31,7 @@ class ChangesetErratum < ActiveRecord::Base
   belongs_to :changeset, :inverse_of=>:errata
   belongs_to :product
   validates :display_name, :length => { :maximum => 255 }
+  validates :errata_id, :uniqueness => { :scope => :changeset_id }
   validates_with ChangesetErratumValidator
 
   def repositories

@@ -25,6 +25,7 @@ class ChangesetPackage < ActiveRecord::Base
   belongs_to :changeset, :inverse_of => :packages
   belongs_to :product
   validates :display_name, :length => { :maximum => 255 }
+  validates :nvrea, :presence => true, :uniqueness => { :scope => :changeset_id }
   validates_with ChangesetPackageValidator
 
   def repositories
