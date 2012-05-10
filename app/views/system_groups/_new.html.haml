@@ -25,7 +25,7 @@
         .grid_4
           %label #{_("Maximum Number of Systems")}:
         .grid_8.la
-          - if @group.max_members == -1
+          - if @group.max_systems == -1
             .grid_2.ra
               %label #{_("Unlimited")}:
             .grid_5.la
@@ -33,7 +33,7 @@
             .grid_2.ra.limit{:style => "display:none;"}
               %label #{_("Limit")}:
             .grid_5.la.limit{:style => "display:none;"}
-              = form.number_field :max_members, {:size => 5, :value => "-1"}
+              = form.number_field :max_systems, {:size => 5, :value => "-1"}
           - else
             .grid_2.ra
               %label #{_("Unlimited")}:
@@ -42,7 +42,7 @@
             .grid_2.ra.limit
               %label #{_("Limit")}:
             .grid_5.la.limit
-              = form.number_field :max_members, {:size => 5}
+              = form.number_field :max_systems, {:size => 5}
 
       .grid_4.la.prefix_2
         = button_to _("Save"), {:action => "create", :controller => "system_groups"}, :method => :post, :id => :group_save

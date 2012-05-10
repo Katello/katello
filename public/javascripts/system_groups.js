@@ -74,17 +74,17 @@ KT.system_groups = (function(){
 
         if ($('system_group_new').length > 0) {
             // user is creating a group
-            initial_max = $('#system_group_max_members').val();
+            initial_max = $('#system_group_max_systems').val();
         } else {
             // user is editing a group
-            initial_max = $('#system_group_max_members').html();
+            initial_max = $('#system_group_max_systems').html();
         }
         current_max_systems = initial_max.length === 0 ? unlimited : initial_max;
 
         $('input.unlimited_members').unbind('click');
         $('input.unlimited_members').bind('click', function(){
             var max_systems_element = $('.limit'),
-                max_systems = $('#system_group_max_members');
+                max_systems = $('#system_group_max_systems');
 
             if($(this).is(":checked")){
                 // user checked unlimited
@@ -98,7 +98,7 @@ KT.system_groups = (function(){
                         $.ajax({
                             type: "PUT",
                             url: max_systems.data("url"),
-                            data: {system_group:{max_members:unlimited}},
+                            data: {system_group:{max_systems:unlimited}},
                             cache: false,
                             success: function(data) {
                                 max_systems.html(i18n.clickToEdit); // reset the jeditable input
@@ -152,7 +152,7 @@ KT.system_groups = (function(){
                 }
             });
         });
-        pane.find(".edit_max_members").each(function(){
+        pane.find(".edit_max_systems").each(function(){
             $(this).editable($(this).data("url"), {
                 type        :  'text',
                 width       :  250,
