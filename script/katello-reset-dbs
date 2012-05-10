@@ -20,14 +20,35 @@ KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
 DEPLOYMENT="katello"
 
-if [ -e $1 ]
-then
-  KATELLO_ENV=${KATELLO_ENV:-production}
-  echo "Defaulting to [$KATELLO_ENV] environment"
-else
-  KATELLO_ENV=$1
-fi
 
+# If we are using arguments
+if ([ $# -gt 0 ])
+then
+  # Print help if asked for
+  if [ $1 = "--help" ]
+    then
+      echo "Usage: `basename $0` <env: development, production> <katello-root-dir>"
+      exit 1
+  fi
+  
+  # If they only specified the env, we 
+  if [ $# -eq 1 ]
+  then
+    echo "Please specify the env and root location of your Katello install:"
+    echo ""
+    echo "  For [development]: $ sudo katello-reset-dbs development /home/myuser/devel/katello/src"
+    echo "  For [production] : $ sudo katello-reset-dbs production /usr/share/katello"
+    echo ""
+    exit 55
+  fi
+  KATELLO_ENV=$1
+  KATELLO_HOME=$2
+  echo "Resetting [$KATELLO_ENV] environment found @: [$KATELLO_HOME]"
+else
+  KATELLO_ENV=${KATELLO_ENV:-production}
+  KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
+  echo "Defaulting [$KATELLO_ENV] environment found @: [$KATELLO_HOME]"
+fi
 
 
 if [ $KATELLO_PREFIX = "/headpin" -o $KATELLO_PREFIX = "/sam" ] ; then
@@ -110,6 +131,7 @@ if [ $DEPLOYMENT = "katello" ] ; then
 fi
 
 echo "Initializing Candlepin database"
+/usr/share/candlepin/cpdb --drop --create
 /usr/share/candlepin/cpsetup -s
 
 # cpsetup alters tomcat configuration, use the original
