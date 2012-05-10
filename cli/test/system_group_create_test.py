@@ -16,13 +16,16 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.mock_options()
 
     def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--name=system_group_1'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--name=system_group_1', '--max_systems=5'])
 
     def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--max_systems=5'])
+
+    def test_missing_max_systems_generates_error(self):
+        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--name=sys_g_1'])
 
     def test_no_error_if_org_and_name_provided(self):
-        self.action.process_options(['create', '--org=ACME', '--name=system_group_1'])
+        self.action.process_options(['create', '--org=ACME', '--name=system_group_1', '--max_systems=5'])
         self.assertEqual(len(self.action.optErrors), 0)
 
 
@@ -34,7 +37,8 @@ class SystemGroupCreateTest(CLIActionTestCase):
     OPTIONS = {
         'org': ORG['name'],
         'name': SYSTEM_GROUP['name'],
-        'description': SYSTEM_GROUP['description']
+        'description': SYSTEM_GROUP['description'],
+        'max_systems' : 5
     }
 
     def setUp(self):
@@ -48,7 +52,8 @@ class SystemGroupCreateTest(CLIActionTestCase):
 
     def test_it_calls_system_group_create_api(self):
         self.action.run()
-        self.action.api.create.assert_called_once_with(self.OPTIONS['org'], self.OPTIONS['name'], self.OPTIONS['description'])
+        self.action.api.create.assert_called_once_with(self.OPTIONS['org'], self.OPTIONS['name'], 
+                                                        self.OPTIONS['description'], self.OPTIONS['max_systems'])
 
     def test_it_returns_error_when_creation_failed(self):
         self.mock(self.action.api, 'create', {})

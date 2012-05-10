@@ -35,13 +35,15 @@ class SystemGroupUpdateTest(CLIActionTestCase):
         'org': ORG['name'],
         'id' : SYSTEM_GROUP['id'],
         'new_name': SYSTEM_GROUP['name'],
-        'new_description': SYSTEM_GROUP['description']
+        'new_description': SYSTEM_GROUP['description'],
+        'max_systems' : 5
     }
 
     OPTIONS_NO_DESC = {
         'org': ORG['name'],
         'id' : SYSTEM_GROUP['id'],
-        'new_name': SYSTEM_GROUP['name']
+        'new_name': SYSTEM_GROUP['name'],
+        'max_systems' : 5
     }
 
     def setUp(self):
@@ -56,12 +58,14 @@ class SystemGroupUpdateTest(CLIActionTestCase):
 
     def test_it_calls_system_group_update_api(self):
         self.action.run()
-        self.action.api.update.assert_called_once_with(self.OPTIONS['org'], self.OPTIONS['id'], self.OPTIONS["new_name"], self.OPTIONS['new_description'])
+        self.action.api.update.assert_called_once_with(self.OPTIONS['org'], self.OPTIONS['id'], 
+                                                        self.OPTIONS["new_name"], self.OPTIONS['new_description'], 
+                                                        self.OPTIONS['max_systems'])
 
     def test_it_calls_system_group_update_name_api(self):
         self.mock_options(self.OPTIONS_NO_DESC)
         self.action.run()
-        self.action.api.update.assert_called_once_with(self.OPTIONS['org'], self.OPTIONS['id'], self.OPTIONS["new_name"], None)
+        self.action.api.update.assert_called_once_with(self.OPTIONS['org'], self.OPTIONS['id'], self.OPTIONS["new_name"], None, self.OPTIONS['max_systems'])
 
     def test_it_returns_error_when_creation_failed(self):
         self.mock(self.action.api, 'update', None)

@@ -39,8 +39,8 @@ class Api::SystemGroupsController < Api::ApiController
 
   def param_rules
     {
-      :create => {:system_group=>[:name, :description, :system_ids]},
-      :update =>  {:system_group=>[:name, :description, :system_ids]},
+      :create => {:system_group=>[:name, :description, :system_ids, :max_systems]},
+      :update =>  {:system_group=>[:name, :description, :system_ids, :max_systems]},
       :add_systems => {:system_group=>[:system_ids]},
       :remove_systems => {:system_group=>[:system_ids]}
     }

@@ -49,21 +49,23 @@ class SystemGroupAPI(KatelloAPI):
         path = "/api/organizations/%s/system_groups/%s/unlock" % (org_id, system_group_id)
         return self.server.POST(path, query)[1]
 
-    def create(self, org_id, name, description):
+    def create(self, org_id, name, description, max_systems):
         data = {
             "system_group" : {
                 "name": name,
-                "description": description
+                "description": description,
+                "max_systems": max_systems
             }
         }
 
         path = "/api/organizations/%s/system_groups/" % (org_id)
         return self.server.POST(path, data)[1]
 
-    def update(self, org_id, system_group_id, name, description):
+    def update(self, org_id, system_group_id, name, description, max_systems):
         data = {}
         data = self.update_dict(data, "name", name)
         data = self.update_dict(data, "description", description)
+        data = self.update_dict(data, "max_systems", max_systems)
         data = { "system_group" : data }
 
         path = "/api/organizations/%s/system_groups/%s" % (org_id, system_group_id)

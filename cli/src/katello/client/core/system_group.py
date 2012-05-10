@@ -79,19 +79,23 @@ class Create(SystemGroupAction):
                                help=_("system group name (required)"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
+        self.parser.add_option('--max_systems', dest='max_systems',
+                               help=_("maximum number of systems in this group (enter -1 for unlimited) (required)"))
         self.parser.add_option('--description', dest='description',
                                help=_("system group description"))
 
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
+        self.require_option('max_systems')
 
     def run(self):
         org_name = self.get_option('org')
         name = self.get_option('name')
         description = self.get_option('description')
+        max_systems = self.get_option('max_systems')
 
-        system_group = self.api.create(org_name, name, description)
+        system_group = self.api.create(org_name, name, description, max_systems)
 
         if is_valid_record(system_group):
             print _("Successfully created system group [ %s ]") % system_group['name']
@@ -149,6 +153,8 @@ class Update(SystemGroupAction):
                                help=_("name of organization (required)"))
         self.parser.add_option('--new_name', dest='new_name',
                               help=_("new system group name"))
+        self.parser.add_option('--max_systems', dest='max_systems',
+                               help=_("maximum number of systems in this group (enter -1 for unlimited)"))
         self.parser.add_option('--description', dest='new_description',
                                help=_("new description"))
 
@@ -161,13 +167,14 @@ class Update(SystemGroupAction):
         name = self.get_option('name')
         new_name = self.get_option('new_name')
         new_description = self.get_option('new_description')
+        max_systems = self.get_option('max_systems')
 
         system_group = get_system_group(org_name, name)
 
         if system_group is None:
             return os.EX_DATAERR
 
-        system_group = self.api.update(org_name, system_group["id"], new_name, new_description)
+        system_group = self.api.update(org_name, system_group["id"], new_name, new_description, max_systems)
 
         if system_group != None:
             print _("Successfully updated system group [ %s ]") % system_group['name']
