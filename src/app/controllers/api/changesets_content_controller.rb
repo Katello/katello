@@ -14,111 +14,117 @@ require 'rest_client'
 
 class Api::ChangesetsContentController < Api::ApiController
 
-  before_filter :find_changeset
+  before_filter :find_changeset!
   before_filter :authorize
 
   def rules
-    manage_perm = lambda{@changeset.environment.changesets_manageable?}
-    {
-      :add_product => manage_perm,
-      :remove_product => manage_perm,
-      :add_package => manage_perm,
-      :remove_package => manage_perm,
-      :add_erratum => manage_perm,
-      :remove_erratum => manage_perm,
-      :add_repo => manage_perm,
-      :remove_repo => manage_perm,
-      :add_template => manage_perm,
-      :remove_template => manage_perm,
-      :add_distribution => manage_perm,
+    manage_perm = lambda { @changeset.environment.changesets_manageable? }
+    { :add_product         => manage_perm,
+      :remove_product      => manage_perm,
+      :add_package         => manage_perm,
+      :remove_package      => manage_perm,
+      :add_erratum         => manage_perm,
+      :remove_erratum      => manage_perm,
+      :add_repo            => manage_perm,
+      :remove_repo         => manage_perm,
+      :add_template        => manage_perm,
+      :remove_template     => manage_perm,
+      :add_distribution    => manage_perm,
       :remove_distribution => manage_perm,
     }
   end
 
   def add_product
-    product = @changeset.add_product(params[:product_id])
-    @changeset.save!
+    product = Product.find_by_cp_id!(params[:product_id])
+    @changeset.add_product! product
     render :text => _("Added product '#{product.name}'"), :status => 200
   end
 
   def remove_product
-    removed = @changeset.remove_product(params[:id])
-    @changeset.save!
-    render :text => _("Removed product '#{params[:id]}'"), :status => 200 if not removed.empty?
-    render :text => _("Product '#{params[:id]}' not found in the changeset"), :status => 200 if removed.empty?
+    product = Product.find_by_cp_id!(params[:id])
+    render_after_removal @changeset.remove_product!(product),
+                         :success   => _("Removed product '#{params[:id]}'"),
+                         :not_found => _("Product #{params[:id]} not found in the changeset.")
   end
 
   def add_package
-    @changeset.add_package(params[:name], params[:product_id])
-    @changeset.save!
+    product = Product.find_by_cp_id!(params[:product_id])
+    @changeset.add_package!(params[:name], product)
     render :text => _("Added package '#{params[:name]}'"), :status => 200
   end
 
   def remove_package
-    removed = @changeset.remove_package(params[:id], params[:product_id])
-    @changeset.save!
-    render :text => _("Removed package '#{params[:id]}'"), :status => 200 if not removed.empty?
-    render :text => _("Package '#{params[:id]}' not found in the changeset"), :status => 200 if removed.empty?
+    product = Product.find_by_cp_id!(params[:product_id])
+    render_after_removal @changeset.remove_package!(params[:id], product),
+                         :success   => _("Removed package '#{params[:id]}'"),
+                         :not_found => _("Package '#{params[:id]}' not found in the changeset")
   end
 
   def add_erratum
-    @changeset.add_erratum(params[:erratum_id], params[:product_id])
-    @changeset.save!
+    product = Product.find_by_cp_id!(params[:product_id])
+    @changeset.add_erratum!(params[:erratum_id], product)
     render :text => _("Added erratum '#{params[:erratum_id]}'"), :status => 200
   end
 
   def remove_erratum
-    removed = @changeset.remove_erratum(params[:id], params[:product_id])
-    @changeset.save!
-    render :text => _("Removed erratum '#{params[:id]}'"), :status => 200 if not removed.empty?
-    render :text => _("Erratum '#{params[:id]}' not found in the changeset"), :status => 200 if removed.empty?
+    product = Product.find_by_cp_id!(params[:product_id])
+    render_after_removal @changeset.remove_erratum!(params[:id], product),
+                         :success   => _("Removed erratum '#{params[:id]}'"),
+                         :not_found => _("Erratum '#{params[:id]}' not found in the changeset")
   end
 
   def add_repo
-    repo = @changeset.add_repo(params[:repository_id], params[:product_id])
-    @changeset.save!
-    render :text => _("Added repository '#{repo.name}'"), :status => 200
+    repository = Repository.find(params[:repository_id])
+    @changeset.add_repository!(repository)
+    render :text => _("Added repository '#{repository.name}'"), :status => 200
   end
 
   def remove_repo
-    removed = @changeset.remove_repo(params[:id], params[:product_id])
-    @changeset.save!
-    render :text => _("Removed repository '#{params[:id]}'"), :status => 200 if not removed.empty?
-    render :text => _("Repository '#{params[:id]}' not found in the changeset"), :status => 200 if removed.empty?
+    repository = Repository.find(params[:id])
+    render_after_removal @changeset.remove_repository!(repository),
+                         :success   => _("Removed repository'#{params[:id]}'"),
+                         :not_found => _("Repository '#{params[:id]}' not found in the changeset")
   end
 
   def add_template
-    tpl = @changeset.add_template(params[:template_id])
-    @changeset.save!
-    render :text => _("Added template '#{tpl.name}'"), :status => 200
+    template = SystemTemplate.find(params[:template_id])
+    @changeset.add_template!(template)
+    render :text => _("Added template '#{template.name}'"), :status => 200
   end
 
   def remove_template
-    removed = @changeset.remove_template(params[:id])
-    @changeset.save!
-    render :text => _("Removed template '#{params[:id]}'"), :status => 200 if not removed.empty?
-    render :text => _("Template '#{params[:id]}' not found in the changeset"), :status => 200 if removed.empty?
+    template = SystemTemplate.find(params[:id])
+    render_after_removal @changeset.remove_template!(template),
+                         :success   => _("Removed template '#{params[:id]}'"),
+                         :not_found => _("Template '#{params[:id]}' not found in the changeset")
   end
 
   def add_distribution
-    @changeset.add_distribution(params[:distribution_id], params[:product_id])
-    @changeset.save!
+    product = Product.find_by_cp_id!(params[:product_id])
+    @changeset.add_distribution!(params[:distribution_id], product)
     render :text => _("Added distribution '#{params[:distribution_id]}'")
   end
 
   def remove_distribution
-    removed = @changeset.remove_distribution(params[:id], params[:product_id])
-    @changeset.save!
-    render :text => _("Removed distribution '#{params[:id]}'"), :status => 200 if not removed.empty?
-    render :text => _("Distribution '#{params[:id]}' not found in the changeset"), :status => 200 if removed.empty?
+    product = Product.find_by_cp_id!(params[:product_id])
+    render_after_removal @changeset.remove_distribution!(params[:id], product),
+                         :success   => _("Removed distribution '#{params[:id]}'"),
+                         :not_found => _("Distribution '#{params[:id]}' not found in the changeset")
   end
 
   private
 
-  def find_changeset
-    @changeset = Changeset.find(params[:changeset_id])
-    raise HttpErrors::NotFound, _("Couldn't find changeset '#{params[:changeset_id]}'") if @changeset.nil?
-    @changeset
+  def find_changeset!
+    @changeset = Changeset.find_by_id(params[:changeset_id]) or
+        raise HttpErrors::NotFound, _("Couldn't find changeset '#{params[:changeset_id]}'")
+  end
+
+  def render_after_removal(removed_objects, options = { })
+    render(unless removed_objects.blank?
+             { :text => (options[:success] or raise ArgumentError), :status => 200 }
+           else
+             { :text => (options[:not_found] or raise ArgumentError), :status => 200 }
+           end)
   end
 
 end
