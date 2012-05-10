@@ -184,12 +184,12 @@ class SystemsController < ApplicationController
     query = "name_autocomplete:#{params[:term]}"
     org = current_organization
     env_ids = KTEnvironment.systems_readable(org).collect{|item| item.id}
-
+    filters = readable_filters
     systems = System.search do
       query do
         string query
       end
-      filter :terms, readable_filters
+      filter :terms, filters
     end
     render :json=>systems.map{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
   end
