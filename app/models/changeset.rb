@@ -67,10 +67,6 @@ class Changeset < ActiveRecord::Base
     "changeset_#{id}_#{item}"
   end
 
-  def package_ids
-    packages.collect{|pack| pack.package_id}
-  end
-
   def errata_ids
     errata.collect{|erratum| erratum.errata_id}
   end
