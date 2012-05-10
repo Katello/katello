@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.19
+Version:        0.2.20
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -76,6 +76,22 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.20-1
+- 820273 - removed change to example script
+- 820273 - correct example and real upgrade scripts
+- Adding back db_user & db_name to cpsetup call
+- Pass the keystore/truststore password into cpsetup
+- 816188 - installer minimum is 2 thins now
+- Modify the installation and upgrade process for the candlepin usage of
+  liquibase.
+- 809823 - Blocking katello-configure from installing katello if headpin is
+  installed
+- 799979 - updated candlepin option to allow any characters in system name
+- upgrade script - moving it all back to the package katello-configure
+- upgrade script - man page
+- upgrade script - subscripts being filtered accoring to a deployment at
+  runtime
+- upgrade script - logging
 * Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.19-1
 - Set the rails relative url in the installer based on the deployment option
 - Installer updates upgrade history to record upgrades already included in the
