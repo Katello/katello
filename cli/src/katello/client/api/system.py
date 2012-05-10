@@ -141,3 +141,7 @@ class SystemAPI(KatelloAPI):
         path = "/api/environments/%s/systems/report" % env_id
         to_return = self.server.GET(path, customHeaders={"Accept": format})
         return (to_return[1], to_return[2])
+
+    def remove_consumer_deletion_record(self, uuid):
+        path = "/api/consumers/%s/deletionrecord" % uuid
+        return self.server.DELETE(path)[1]

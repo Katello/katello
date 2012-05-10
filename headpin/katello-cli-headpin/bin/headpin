@@ -118,6 +118,7 @@ def setup_admin(admin):
     system_cmd.add_action('update', system.Update())
     system_cmd.add_action('report', system.Report())
     system_cmd.add_action('releases', system.Releases())
+    system_cmd.add_action('remove_deletion', system.RemoveDeletion())
     admin.add_command('system', system_cmd)
 
     admin.add_command('shell', shell_command.ShellAction(admin))
