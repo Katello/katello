@@ -216,9 +216,6 @@ class Status(SingleProductAction):
 
         task = AsyncTask(self.api.last_sync_status(orgName, prod['id']))
 
-        prod['last_sync'] = format_sync_time(prod['last_sync'])
-        prod['sync_state'] = format_sync_state(prod['sync_state'])
-
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
@@ -230,8 +227,8 @@ class Status(SingleProductAction):
         self.printer.add_column('name')
         self.printer.add_column('provider_id')
         self.printer.add_column('provider_name')
-        self.printer.add_column('last_sync')
-        self.printer.add_column('sync_state')
+        self.printer.add_column('last_sync', formatter=format_sync_time)
+        self.printer.add_column('sync_state', formatter=format_sync_state)
         self.printer.add_column('progress', show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Product Status"))
