@@ -41,7 +41,7 @@ describe Api::SystemGroupsController do
 
   describe "Controller tests " do
      before(:each) do
-       @group = SystemGroup.create!(:name=>"test_group", :organization=>@org)
+       @group = SystemGroup.create!(:name=>"test_group", :organization=>@org, :max_systems => 5)
      end
 
      describe "GET index" do
@@ -94,15 +94,23 @@ describe Api::SystemGroupsController do
        it_should_behave_like "protected action"
 
        it "should create a group correctly" do
-         post :create, :organization_id=>@org.cp_key, :system_group=>{:name=>"foo", :description=>"describe"}
+         post :create, :organization_id=>@org.cp_key, :system_group=>{:name=>"foo", :description=>"describe", :max_systems => 5}
          response.should be_success
          SystemGroup.where(:name=>"foo").first.should_not be_nil
        end
+
        it "should not create a group without a name" do
-         post :create, :organization_id=>@org.cp_key, :system_group=>{:description=>"describe"}
+         post :create, :organization_id=>@org.cp_key, :system_group=>{:description=>"describe", :max_systems => 5}
          response.should_not be_success
          SystemGroup.where(:description=>"describe").first.should be_nil
        end
+
+       it "should not create a group without setting the maximum systems" do
+         post :create, :organization_id=>@org.cp_key, :system_group=>{:description=>"describe", :name => "foo"}
+         response.should_not be_success
+         SystemGroup.where(:description=>"describe").first.should be_nil
+       end
+
        it "should allow two groups with the same name in different orgs" do
          @org2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
          #setup_current_organization(@org2)
@@ -110,6 +118,7 @@ describe Api::SystemGroupsController do
          response.should be_success
          SystemGroup.where(:name=>@group.name).count.should == 2
        end
+
        it "should not allow a group to be created that already exists" do
          post :create, :organization_id=>@org.cp_key, :system_group=>{:name=>@group.name, :description=>@group.description}
          response.should_not be_success
