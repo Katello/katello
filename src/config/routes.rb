@@ -583,6 +583,7 @@ Src::Application.routes.draw do
     match '/consumers/:id/entitlements/dry-run' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:id/owner' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:consumer_id/certificates/:id' => 'candlepin_proxies#delete', :via => :delete
+    match '/consumers/:id/deletionrecord' => 'candlepin_proxies#delete', :via => :delete
     match '/pools' => 'candlepin_proxies#get', :via => :get
     match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get
     match '/subscriptions' => 'candlepin_proxies#post', :via => :post
