@@ -26,6 +26,7 @@ class ChangesetDistribution < ActiveRecord::Base
 
   belongs_to :changeset, :inverse_of=>:distributions
   belongs_to :product
+  validates :distribution_id, :uniqueness => { :scope => :changeset_id }
   validates_with ChangesetDistributionValidator
 
   def repositories
