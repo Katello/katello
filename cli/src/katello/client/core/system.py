@@ -432,11 +432,11 @@ class Register(SystemAction):
 
 class RemoveDeletion(SystemAction):
 
-    description = _("remove a consumer deletion record")
+    description = _("remove a deletion record for hypervisor")
 
     def setup_parser(self):
         self.parser.add_option("--uuid", dest="uuid",
-                       help=_("consumer uuid (required"))
+                       help=_("hypervisor uuid (required"))
 
     def check_options(self):
         self.require_option('uuid')
@@ -444,7 +444,7 @@ class RemoveDeletion(SystemAction):
     def run(self):
         uuid = self.get_option('uuid')
         self.api.remove_consumer_deletion_record(uuid)
-        print _("Successfully removed consumer deletion record for hypervisor with uuid [ %s ]") % uuid
+        print _("Successfully removed deletion record for hypervisor with uuid [ %s ]") % uuid
         return os.EX_OK
 
 
