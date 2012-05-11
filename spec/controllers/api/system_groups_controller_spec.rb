@@ -105,10 +105,16 @@ describe Api::SystemGroupsController do
          SystemGroup.where(:description=>"describe").first.should be_nil
        end
 
-       it "should not create a group without setting the maximum systems" do
+       it "should allow creation of a group without specifying maximum systems" do
          post :create, :organization_id=>@org.cp_key, :system_group=>{:description=>"describe", :name => "foo"}
-         response.should_not be_success
-         SystemGroup.where(:description=>"describe").first.should be_nil
+         response.should be_success
+         SystemGroup.where(:max_systems=>"-1").count.should == 1
+       end
+
+       it "should allow creation of a group specifying maximum systems" do
+         post :create, :organization_id=>@org.cp_key, :system_group=>{:description=>"describe", :name => "foo", :max_systems => "100"}
+         response.should be_success
+         SystemGroup.where(:max_systems=>"100").count.should == 1
        end
 
        it "should allow two groups with the same name in different orgs" do
