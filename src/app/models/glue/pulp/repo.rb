@@ -49,6 +49,7 @@ module Glue::Pulp::Repo
       case orchestration_for
         when :create
           pre_queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :clone_or_create_repo])
+
       end
     end
 
