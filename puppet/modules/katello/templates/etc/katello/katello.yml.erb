@@ -23,7 +23,7 @@ common:
   ldap:
     host: <%= scope.lookupvar("katello::params::ldap_server") %>
     encryption: <%= scope.lookupvar("katello::params::ldap_encryption") %>
-    base: <%= scope.lookupvar("katello::params::ldap_basedn") %>
+    base: <%= scope.lookupvar("katello::params::ldap_users_basedn") %>
     group_base: <%= scope.lookupvar("katello::params::ldap_groups_basedn") %>
 
   warden:  <%= scope.lookupvar("katello::params::auth_method") %>
