@@ -542,8 +542,8 @@ class SystemsController < ApplicationController
   end
 
   def system_groups
-    # retrieve the available groups that aren't currently assigned to the system
-    @system_groups = SystemGroup.where(:organization_id=>current_organization).order(:name) - @system.system_groups
+    # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
+    @system_groups = SystemGroup.where(:organization_id=>current_organization).where('max_systems < ?', @system.system_groups.length).order(:name) - @system.system_groups
     render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>@system.editable?}
   end
 
