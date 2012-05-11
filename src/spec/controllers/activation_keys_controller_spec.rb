@@ -337,33 +337,54 @@ describe ActivationKeysController do
     end
   end
 
-  describe "PUT update_system_groups" do
+  describe "PUT add_system_groups" do
     before(:each) do
       disable_consumer_group_orchestration
       @group = SystemGroup.create!(:name=>"test_group", :organization=>@organization)
     end
 
-    it "should allow the list of system groups to be changed" do
-      group = SystemGroup.where(:name=>"test_group")[0]
-      assert !group.nil?
-      put 'update_system_groups', {:id => @a_key.id, :activation_key=>{:system_group_ids=>[group.id]}}
+    it "should allow system groups to be added to the key" do
+      assert ActivationKey.find(@a_key.id).system_groups.size == 0
+      put 'add_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
       response.should be_success
       assert ActivationKey.find(@a_key.id).system_groups.size == 1
-      put 'update_system_groups', {:id => @a_key.id, :activation_key=>{:system_group_ids=>[]}}
-      assert ActivationKey.find(@a_key.id).system_groups.size == 0
-      response.should be_success
     end
 
     it "should generate a success notice" do
       controller.should_receive(:notice)
-      put 'update_system_groups', {:id => @a_key.id, :activation_key=>{:system_group_ids=>[@group.id]}}
+      put 'add_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
     end
 
     it "should be successful" do
-      put 'update_system_groups', {:id => @a_key.id, :activation_key=>{:system_group_ids=>[@group.id]}}
+      put 'add_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
       response.should be_success
     end
+  end
 
+  describe "PUT remove_system_groups" do
+    before(:each) do
+      disable_consumer_group_orchestration
+      @group = SystemGroup.create!(:name=>"test_group", :organization=>@organization)
+      @a_key.system_groups = [@group]
+      @a_key.save!
+    end
+
+    it "should allow system groups to be removed from the key" do
+      assert ActivationKey.find(@a_key.id).system_groups.size == 1
+      put 'remove_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
+      response.should be_success
+      assert ActivationKey.find(@a_key.id).system_groups.size == 0
+    end
+
+    it "should generate a success notice" do
+      controller.should_receive(:notice)
+      put 'remove_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
+    end
+
+    it "should be successful" do
+      put 'remove_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
+      response.should be_success
+    end
   end
 
   describe "DELETE destroy" do
