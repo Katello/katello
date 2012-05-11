@@ -1,11 +1,6 @@
 #!/bin/bash
 
-if [ "$(id -u)" != "0" ]; then
-  echo "This script must be run as root" 1>&2
-  exit 1
-fi
-
-SRV=/sbin/service
+SRV="sudo /sbin/service"
 
 if [ -f /etc/sysconfig/katello ]; then
   # load configuration values
@@ -23,7 +18,9 @@ DEPLOYMENT="katello"
 function usage {
   echo "Reset your Katello databases.  Wipes all Katello, Pulp and Candlepin"
   echo "Usage: `basename $0` [-f|--force] [-h|--help] "
-  echo "       <env: development, production> <katello-root-dir>"
+  echo "       <env: development, production> <katello-rakefile-dir>"
+  echo "example:"
+  echo "$ `basename $0` development /home/youruser/dev/katello/src"
   exit 1
 }
 # Stolen from:
@@ -83,6 +80,12 @@ if [ ! "$FORCE" = "1" ]; then
   [ "$REPLY" != "yes" ] && exit 1
 fi
 
+if [ ! -f "$KATELLO_HOME/Rakefile" ]; then
+  echo "** ERROR **"
+  echo "Katello Rakefile not not found in $KATELLO_HOME" 1>&2
+  exit 1
+fi
+
 echo "Erasing all data..."
 
 function stop_if_running {
@@ -116,20 +119,20 @@ if [ $DEPLOYMENT = "katello" ] ; then
     # mongo sometimes hang in F14/F15 (workaround 725601)
     #echo 'db.dropDatabase();' | mongo pulp_database
     $SRV mongod status >/dev/null && $SRV mongod stop
-    rm -rf /var/lib/mongodb/pulp_database*
+    sudo rm -rf /var/lib/mongodb/pulp_database*
     $SRV mongod start
 
     echo "Initializing Pulp database"
     sleep 10s # let mongo initialize
-    /usr/bin/pulp-migrate
+    sudo /usr/bin/pulp-migrate
 fi
 
 echo "Initializing Candlepin database"
-/usr/share/candlepin/cpdb --drop --create
-/usr/share/candlepin/cpsetup -s
+sudo /usr/share/candlepin/cpdb --drop --create
+sudo /usr/share/candlepin/cpsetup -s
 
 # cpsetup alters tomcat configuration, use the original
-cp /etc/tomcat6/server.xml.original /etc/tomcat6/server.xml
+sudo cp /etc/tomcat6/server.xml.original /etc/tomcat6/server.xml
 
 if [ $DEPLOYMENT = "katello" ] ; then
     echo "Starting Pulp instance"
