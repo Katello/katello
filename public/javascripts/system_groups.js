@@ -202,11 +202,19 @@ KT.system_groups = (function(){
         var grp_id = $("#system_group_systems").data('id'),
         add_funct = function(id){
             if(id){
-                submit_change(grp_id, id, true, function(content){
-                    KT.sg_table.add_system(content);
-                    $("#add_system_input").val('');
-                    cb();
-                });
+                submit_change(grp_id, id, true,
+                    function(content){
+                        KT.sg_table.add_system(content);
+                        $("#add_system_input").val('');
+                        cb();
+                    },
+                    function() {
+                        // error_cb - handle scenario where error is returned from the server during 'add'
+                        // reset the autocomplete input (e.g. remove the spinner, re-add add button..etc)
+                        current_system_input.reset_input();
+                        current_system_input.error();
+                        cb();
+                    });
             }
             else {
                 current_system_input.error();
@@ -235,14 +243,19 @@ KT.system_groups = (function(){
     },
     remove_system = function(id, link){
         var grp_id = $("#system_group_systems").data('id');
-        link.replaceWith('<img class="remove_spinner fr" src="' + KT.common.spinner_path() + '">');
+        link.replaceWith('<img class="remove_spinner fr" src="' + KT.common.spinner_path() + '" data-id="'+id+'">');
         submit_change(grp_id, id, false,
-            function(){KT.sg_table.remove_system(id);});
+            function(){KT.sg_table.remove_system(id);},
+            function(){
+                // error_cb - error returned from the server, replace spinner with the original remove link
+                var spinner = $('img[data-id="'+id+'"]');
+                spinner.replaceWith(link);
+            });
     },
-    submit_change = function(grp_id, sys_id, add, cb){
+    submit_change = function(grp_id, sys_id, add, cb, error_cb){
       var url = add ? KT.routes.add_systems_system_group_path(grp_id) :
                         KT.routes.remove_systems_system_group_path(grp_id);
-      $.post(url, {'system_ids':[sys_id]}, cb);
+      $.post(url, {'system_ids':[sys_id]}, cb).error(error_cb);
     };
 
     return {
