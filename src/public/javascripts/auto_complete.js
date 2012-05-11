@@ -52,13 +52,13 @@ KT.auto_complete_box = function(params) {
             item = split(item);
         }
         settings.add_cb(item, item_id, function(){
-            add_success_cleanup();
+            reset_input();
             if (focus) {
                 $('#' + settings.input_id).focus();
             }
         });
     },
-    add_success_cleanup = function() {
+    reset_input = function() {
         //re-lookup all items, since a redraw may have happened
         var input = $("#" + settings.input_id),
             add_btn = $("#" + settings.add_btn_id);
@@ -151,7 +151,8 @@ KT.auto_complete_box = function(params) {
 
     return {
         manually_add: manually_add,
-        error: error
+        error: error,
+        reset_input: reset_input
     };
 };
 
