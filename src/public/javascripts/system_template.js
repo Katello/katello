@@ -1277,7 +1277,7 @@ $(document).ready(function() {
     KT.package_group_actions.register_events();
 
     //Handle scrolling
-    KT.panel.registerPanel($('#template_tree'), $('#template_tree').width() + 50);
+    KT.panel.registerPanel($('#template_tree'), $('#content_tree').width() + 50);
 
     //Ask the user if they really want to leave the page if the template isn't saved
     window.onbeforeunload = function(){

@@ -14,6 +14,13 @@
 
   = yield :stylesheets
  
+= content_for(:body_tag) do
+  - if controller.respond_to?(:section_id)
+    - section_id = controller.section_id
+  - else
+    - section_id = "generic"
+  %body{ :id => section_id }
+
 = content_for(:content) do   
   - if not current_user
     #formwindow
@@ -35,12 +42,9 @@
         var AUTH_TOKEN = #{form_authenticity_token.inspect};
     = render :partial => "common/common_i18n"
     = render :partial => 'common/config'
-    = render :partial => 'layouts/ajax_notices'
-    = render :partial => 'layouts/notification'
+    = render :partial => 'common/ajax_notices'
+    = render :partial => 'common/notification'
     = yield :inline_javascript
-
-  / [if lt IE 9]
-    = include_javascripts  :html5
 
   = yield :javascripts
   
