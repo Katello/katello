@@ -94,16 +94,14 @@ auth_method = database
 # LDAP server hostname
 ldap_server = localhost
 
-# encryption method used in communication with LDAP server
-# (<empty>, start_tls)
+# encryption method used in communication with LDAP server (<empty>, start_tls)
 ldap_encryption = 
 
 # Base DN for users accounts
-ldap_basedn = ou=People,dc=company,dc=com
+ldap_users_basedn = ou=People,dc=company,dc=com
 
 # Base DN for users groups
 ldap_groups_basedn = ou=Groups,dc=company,dc=com
 
-# Use LDAP for roles membership definition
-# (true, false)
+# Use LDAP for roles membership definition (true, false)
 ldap_roles = false
