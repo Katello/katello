@@ -42,13 +42,17 @@ describe Repository do
     let(:another_gpg_key) { @organization.gpg_keys.create!(:name => "Gpg key 2", :content => "another key") }
     subject do
       repo = Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
-                                :name=>"newname#{rand 10**6}", :url => "http://fedorahosted org")
-      repo.update_attributes!(:gpg_key_name => gpg_key.name)
+                                :name=>"newname#{rand 10**6}", :url => "http://fedorahosted org", :gpg_key_id => gpg_key.id)
+
+      prod = repo.product
+      repo.stub(:product).and_return(prod)
       repo
     end
 
     describe "reassigns gpg key" do
       before do
+        subject.stub(:content).and_return(OpenStruct.new(:gpgUrl=>""))
+        subject.product.should_not_receive(:refresh_content)
         subject.update_attributes!(:gpg_key_name => another_gpg_key.name)
       end
 
@@ -57,6 +61,8 @@ describe Repository do
 
     describe "removing gpg key assigment" do
       before do
+        subject.stub(:content).and_return(OpenStruct.new(:gpgUrl=>"http://foo"))
+        subject.product.should_receive(:refresh_content)
         subject.update_attributes!(:gpg_key_name => nil)
       end
 

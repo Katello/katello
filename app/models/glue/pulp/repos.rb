@@ -12,6 +12,7 @@
 
 require 'http_resource'
 require 'resources/pulp'
+require 'resources/candlepin'
 require 'resources/cdn'
 require 'openssl'
 
@@ -68,6 +69,21 @@ module Glue::Pulp::Repos
     new_content.create
     add_content new_content
     new_content.content
+  end
+
+  # removes content for a repo and recreates it with any changes
+  #   then sets the content_id in pulp for each repository that needs updating
+  def refresh_content(repo)
+    old_content = repo.content
+    old_content_repos = Pulp::Repository.all(Glue::Pulp::Repos.content_groupid(old_content))
+    remove_content_by_id repo.content.id
+    Candlepin::Content.destroy(repo.content.id)
+    new_content = create_content(repo)
+    old_content_repos.each{|r|
+      Pulp::Repository.update(r['id'].to_s,
+                  :addgrp => Glue::Pulp::Repos.content_groupid(new_content),
+                  :rmgrp => Glue::Pulp::Repos.content_groupid(old_content))
+    }
   end
 
   # repo path for custom product repos (RH repo paths are derived from

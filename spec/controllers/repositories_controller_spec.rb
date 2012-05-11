@@ -104,8 +104,17 @@ describe RepositoriesController do
 
     context "Test update gpg" do
       before do
+
+
         @repo = Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
                                  :name=>"newname#{rand 10**6}", :url => "http://fedorahosted org")
+
+        product = @repo.product
+        Repository.stub(:find).and_return(@repo)
+        @repo.stub(:content).and_return(OpenStruct.new(:gpgUrl=>""))
+        product.should_receive(:refresh_content)
+        @repo.stub(:product).and_return(product)
+
         put :update_gpg_key, { :product_id => @product.id,
                               :provider_id => @product.provider.id,
                                 :id => @repo.id,
