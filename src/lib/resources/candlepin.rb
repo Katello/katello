@@ -94,13 +94,15 @@ module Candlepin
         JSON.parse(super(path(uuid), self.default_headers).body).with_indifferent_access
       end
 
-      def create env_id, key, name, type, facts, installedProducts, autoheal=true
+      def create env_id, key, name, type, facts, installedProducts, autoheal=true, releaseVer=nil, service_level=""
         url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
         attrs = {:name => name,
                  :type => type,
                  :facts => facts,
                  :installedProducts => installedProducts,
-                 :autoheal => autoheal}
+                 :autoheal => autoheal,
+                 :releaseVer => releaseVer,
+                 :serviceLevel => service_level}
         response = self.post(url, attrs.to_json, self.default_headers).body
         JSON.parse(response).with_indifferent_access
       end
@@ -113,11 +115,13 @@ module Candlepin
         JSON.parse(response).with_indifferent_access
       end
 
-      def update uuid, facts, guest_ids = nil, installedProducts = nil, autoheal = nil
+      def update(uuid, facts, guest_ids = nil, installedProducts = nil, autoheal = nil, releaseVer = nil, service_level=nil)
         attrs = {:facts => facts,
                  :guestIds => guest_ids,
+                 :releaseVer => releaseVer,
                  :installedProducts => installedProducts,
-                 :autoheal => autoheal}.delete_if {|k,v| v.nil?}
+                 :autoheal => autoheal,
+                 :serviceLevel => service_level}.delete_if {|k,v| v.nil?}
         unless attrs.empty?
           response = self.put(path(uuid), attrs.to_json, self.default_headers).body
         else[]
@@ -306,6 +310,14 @@ module Candlepin
         JSON.parse(response).collect { |e| e.with_indifferent_access }
       end
 
+      def service_levels uuid
+        response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'servicelevels'), self.default_headers).body
+        unless response.empty?
+          JSON.parse(response)
+        else
+          return []
+        end
+      end
 
       def path(id=nil)
         "/candlepin/owners/#{id}"
@@ -578,6 +590,11 @@ module Candlepin
     class << self
       def regenerate_entitlement_certificates_for_product(product_id)
         self.put("/candlepin/entitlements/product/#{product_id}", nil, self.default_headers).code.to_i
+      end
+
+      def get id=nil
+        json = Candlepin::CandlepinResource.get(path(id), self.default_headers).body
+        JSON.parse(json)
       end
 
       def path(id=nil)

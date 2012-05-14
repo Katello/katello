@@ -78,17 +78,12 @@ class certs::config {
   $katello_pki_dir = "/etc/pki/katello"
   $katello_keystore = "$katello_pki_dir/keystore"
 
-  exec { "generate-keystore-password":
-    command => "echo password > ${certs::params::keystore_password_file}",
-    path => "/bin",
-    creates => "${certs::params::keystore_password_file}"
-  }
 
   file { "${certs::params::keystore_password_file}":
+    content => "${certs::params::keystore_password}",
     owner => "root",
     group => "tomcat",
     mode => 640,
-    require => Exec["generate-keystore-password"]
   }
 
   file { $katello_pki_dir:
@@ -102,14 +97,14 @@ class certs::config {
     command => "openssl pkcs12 -export -in /etc/candlepin/certs/candlepin-ca.crt -inkey /etc/candlepin/certs/candlepin-ca.key -out ${katello_keystore} -name tomcat -CAfile ${candlepin_pub_cert} -caname root -password \"file:${certs::params::keystore_password_file}\"",
     path => "/usr/bin",
     creates => $katello_keystore,
-    require => [Exec["generate-keystore-password"], File[$katello_pki_dir], Exec["deploy-candlepin-certificate-to-cp"]]
+    require => [File[$certs::params::keystore_password_file], File[$katello_pki_dir], Exec["deploy-candlepin-certificate-to-cp"]]
   }
 
   file { $katello_keystore:
     owner => "root",
     group => "katello",
     mode => 640,
-    require => [Exec["generate-keystore-password"], Exec["generate-ssl-keystore"]]
+    require => [Exec["generate-ssl-keystore"]]
   }
 
   file { "/usr/share/tomcat6/conf/keystore":
@@ -174,10 +169,18 @@ class certs::config {
     before => Class["apache2::service"]
   }
 
-  file { ["$candlepin_certs_dir/candlepin-ca.crt", "$candlepin_certs_dir/candlepin-ca.key"]:
+  file { ["$candlepin_certs_dir/candlepin-ca.key"]:
     owner => "root",
-    group => "root",
-    # TODO we should not give o+r (but both tomcat and httpd need it)
+    group => "katello",
+    mode => 640,
+    require => Exec["deploy-candlepin-certificate-to-cp"],
+    before => Class["candlepin::service"]
+  }
+
+
+  file { ["$candlepin_certs_dir/candlepin-ca.crt"]:
+    owner => "root",
+    group => "katello",
     mode => 644,
     require => Exec["deploy-candlepin-certificate-to-cp"],
     before => Class["candlepin::service"]
@@ -187,8 +190,7 @@ class certs::config {
   file { "${candlepin_certs_dir}/candlepin-upstream-ca.crt":
     ensure => link,
     owner => "root",
-    group => "root",
-    # TODO we should not give o+r (but both tomcat and httpd need it)
+    group => "katello",
     mode => 644,
     target => "${candlepin_certs_dir}/candlepin-ca.crt",
     require => File["${candlepin_certs_dir}/candlepin-ca.crt"]

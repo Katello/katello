@@ -7,6 +7,7 @@ import test_data
 
 import katello.client.core.product
 from katello.client.core.product import Sync
+from katello.client.api.utils import ApiDataError
 
 
 class ProductSyncTest(CLIActionTestCase):
@@ -34,24 +35,24 @@ class ProductSyncTest(CLIActionTestCase):
 
 
     def test_finds_the_product(self):
-        self.action.run()
+        self.run_action()
         self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
 
     def test_returns_with_error_when_no_product_found(self):
-        self.module.get_product.return_value =  None
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_product').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
     def test_calls_sync_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.sync.assert_called_once_with(self.ORG['name'], self.PROD['id'])
 
     def test_waits_for_sync(self):
-        self.action.run()
+        self.run_action()
         self.module.run_async_task_with_status.assert_called_once()
 
     def test_returns_ok_when_sync_was_successful(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)
 
     def test_returns_error_if_sync_failed(self):
         self.mock(self.action.api, 'sync', test_data.SYNC_RESULT_WITH_ERROR)
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.run_action(os.EX_DATAERR)

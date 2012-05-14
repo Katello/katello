@@ -1,0 +1,13 @@
+-# children, parent_set
+- for child in children.sort{|a,b| a[:name] <=> b[:name]}
+  - new_set = parent_set + [child[:id]]
+  %tr{:id=>set_id(new_set), :class=>parent_set_class(parent_set) + " #{cycle_class}"}
+    %td
+      #{child[:name]}
+    %td
+    %td
+    %td
+    %td
+  = render :partial=>"children", :locals=>{:children=>child[:children], :parent_set=>new_set, :cycle_class=>cycle_class} if !child[:children].empty?
+  = render :partial=>"repo", :collection=>child[:repos].sort{|a,b| a.name <=> b.name}, :as=>:repo,
+            :locals=>{:parent_set=>new_set, :cycle_class=>cycle_class} if !child[:repos].empty?

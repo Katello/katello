@@ -4,7 +4,7 @@ class katello::config {
   file { "${katello::params::log_base}":
     owner   => $katello::params::user,
     group   => $katello::params::group,
-    mode    => 644,
+    mode    => 640,
     recurse => true;
   }
 
@@ -186,6 +186,12 @@ class katello::config {
                 'headpin' => [ Exec["katello_migrate_db"], File["${katello::params::log_base}"] ],
                 default => [],
     },
+  }
+
+  exec {"update_upgrade_history":
+    command => "ls ${katello::params::katello_upgrade_scripts_dir} > ${katello::params::katello_upgrade_history_file}",
+    path    => "/bin",
+    before  => Class["katello::service"],
   }
 
   # Headpin does not care about pulp

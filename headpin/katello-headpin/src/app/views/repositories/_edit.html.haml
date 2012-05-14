@@ -1,0 +1,32 @@
+= javascript :edit_helpers
+
+= content_for :title do
+  = _("Product: ") + @product.name
+
+= content_for :remove_item do
+  -if editable
+    = link_to _("Remove Repository"), {:controller=>"repositories", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this repository?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+
+= content_for :subcontent do
+  %h3
+    = _("Repository Details")
+  
+  %fieldset
+    .grid_2.ra
+      %label #{_("Name")}:
+    .grid_5.la.multiline#repo_name{'name' => 'repo[name]', 'data-url' => provider_path(@provider.id)} #{@repository[:name]}
+  
+  %fieldset
+    .grid_2.ra
+      %label #{_("URL")}:
+    .grid_5.la{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id)} #{@repository.source[:url]}
+    
+  %fieldset
+    .grid_2.ra
+      %label #{_("GPG Key")}:
+    - if gpg_keys.length != 0
+      .grid_5.la{'name' => 'gpg_key', 'class' => ("editable edit_select" if editable), 'data-url' => update_repo_gpg_key_provider_product_repository_path(@provider.id, @product.id, @repository.id), 'data-options' => gpg_keys_edit } #{@repository.gpg_key.name if @repository.gpg_key}
+    - else
+      .grid_5.la
+        #{_("None defined for this Organization.")}

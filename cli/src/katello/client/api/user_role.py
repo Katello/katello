@@ -59,3 +59,18 @@ class UserRoleAPI(KatelloAPI):
         data = self.update_dict(data, "organization_id", orgName)
         path = "/api/roles/available_verbs/"
         return self.server.GET(path, data)[1]
+
+    def add_ldap_group(self, role_id, group_name):
+        data = {}
+        data = self.update_dict(data, "name", group_name)
+        path = "/api/roles/%s/ldap_groups/" % u_str(role_id)
+        return self.server.POST(path, data)[1]
+
+    def remove_ldap_group(self, role_id, group_name):
+        data = {}
+        path = "/api/roles/%s/ldap_groups/%s" % (u_str(role_id), u_str(group_name))
+        return self.server.DELETE(path, data)[1]
+
+    def ldap_groups(self, role_id):
+        path = "/api/roles/%s/ldap_groups/" % u_str(role_id)
+        return self.server.GET(path)[1]

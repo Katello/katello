@@ -18,6 +18,21 @@ fi
 # default configuration values (should be the same as in our sysv init script)
 KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
+DEPLOYMENT="katello"
+
+if [ -e $1 ]
+then
+  KATELLO_ENV=${KATELLO_ENV:-production}
+  echo "Defaulting to [$KATELLO_ENV] environment"
+else
+  KATELLO_ENV=$1
+fi
+
+
+
+if [ $KATELLO_PREFIX = "/headpin" -o $KATELLO_PREFIX = "/sam" ] ; then
+    DEPLOYMENT="sam"
+fi
 
 echo -e "\n"
 echo '***********************************************************'
@@ -29,7 +44,9 @@ echo -e "\n"
 echo "This script only works with PostgreSQL database."
 echo -e "\n"
 echo "It is strongly recommended to back up databases:"
-echo " # mongodump --db pulp_database --out - > pulp_database.json"
+if [ $DEPLOYMENT = "katello" ] ; then
+    echo " # mongodump --db pulp_database --out - > pulp_database.json"
+fi
 echo " # pg_dump -c candlepin > candlepin_db.sql"
 echo " # pg_dump -c katello > katello_db.sql"
 echo -e "\n"
@@ -47,7 +64,7 @@ while getopts ":f" opt; do
 done
 
 if [ ! "$FORCE" = "1" ]; then
-  read -p "Are you sure you want to proceed (yes/no)? "
+  read -p "Are you sure you want reset your [$KATELLO_ENV] environment? (yes/no)? "
   [ "$REPLY" != "yes" ] && exit 1
 fi
 
@@ -61,37 +78,50 @@ function start_unless_running {
   $SRV "$1" status >/dev/null || $SRV "$1" start
 }
 
-echo "Stopping Katello instance"
-stop_if_running katello
+# Only stop the services if we are in production mode
+if [ $KATELLO_ENV = "production" ]
+then
+    echo "Stopping Katello instance"
+    stop_if_running katello
 
-echo "Stopping Katello jobs instance"
-stop_if_running katello-jobs
+    echo "Stopping Katello jobs instance"
+    stop_if_running katello-jobs
+fi
 
-echo "Stopping Pulp instance"
-stop_if_running pulp-server
+if [ $DEPLOYMENT = "katello" ] ; then
+    echo "Stopping Pulp instance"
+    stop_if_running pulp-server
+fi
 
 echo "Stopping Candlepin instance"
 stop_if_running tomcat6
 
-echo "Dropping Pulp database"
-# mongo sometimes hang in F14/F15 (workaround 725601)
-#echo 'db.dropDatabase();' | mongo pulp_database
-$SRV mongod status >/dev/null && $SRV mongod stop
-rm -rf /var/lib/mongodb/pulp_database*
-$SRV mongod start
+if [ $DEPLOYMENT = "katello" ] ; then
+    echo "Dropping Pulp database"
+    # mongo sometimes hang in F14/F15 (workaround 725601)
+    #echo 'db.dropDatabase();' | mongo pulp_database
+    $SRV mongod status >/dev/null && $SRV mongod stop
+    rm -rf /var/lib/mongodb/pulp_database*
+    $SRV mongod start
 
-echo "Initializing Pulp database"
-sleep 10s # let mongo initialize
-/usr/bin/pulp-migrate
+    echo "Initializing Pulp database"
+    sleep 10s # let mongo initialize
+    /usr/bin/pulp-migrate
+fi
 
 echo "Initializing Candlepin database"
 /usr/share/candlepin/cpsetup -s
 
-echo "Starting Pulp instance"
-$SRV pulp-server start
+# cpsetup alters tomcat configuration, use the original
+cp /etc/tomcat6/server.xml.original /etc/tomcat6/server.xml
+
+if [ $DEPLOYMENT = "katello" ] ; then
+    echo "Starting Pulp instance"
+    $SRV pulp-server start
+fi
 
 echo "Starting Candlepin instance"
-start_unless_running tomcat6
+$SRV tomcat6 restart
 
 echo "Initializing Katello database"
 # cannot use initdb for this (BZ 745542)
@@ -99,10 +129,14 @@ pushd $KATELLO_HOME >/dev/null
 RAILS_ENV=$KATELLO_ENV rake setup --trace 2>&1
 popd >/dev/null
 
-echo "Starting Katello instance"
-$SRV katello start
+# Only stop the services if we are in production mode
+if [ $KATELLO_ENV = "production" ]
+then
+    echo "Starting Katello instance"
+    $SRV katello start
 
-echo "Starting Katello jobs instance"
-$SRV katello-jobs start
+    echo "Starting Katello jobs instance"
+    $SRV katello-jobs start
+fi
 
 echo "DONE. CHECK ALL THE MESSAGES ABOVE!"

@@ -73,34 +73,26 @@ class List(ErrataAction):
         env_id, prod_id = None, None
         prod_name = self.get_option('product')
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('title')
-        self.printer.addColumn('type')
+        self.printer.add_column('id')
+        self.printer.add_column('title')
+        self.printer.add_column('type')
 
         if not repo_id:
             if repo_name:
                 repo = get_repo(org_name, prod_name, repo_name, env_name)
-                if repo == None:
-                    return os.EX_DATAERR
                 repo_id = repo["id"]
             else:
                 env = get_environment(org_name, env_name)
-                if env == None:
-                    return os.EX_DATAERR
-                else:
-                    env_id = env["id"]
+                env_id = env["id"]
                 if prod_name:
                     product = get_product(org_name, prod_name)
-                    if product == None:
-                        return os.EX_DATAERR
-                    else:
-                        prod_id = product["id"]
+                    prod_id = product["id"]
 
 
         errata = self.api.errata_filter(repo_id=repo_id, environment_id=env_id, type=self.get_option('type'), severity=self.get_option('severity'),prod_id=prod_id)
 
-        self.printer.setHeader(_("Errata List"))
-        self.printer.printItems(errata)
+        self.printer.set_header(_("Errata List"))
+        self.printer.print_items(errata)
         return os.EX_OK
 
 class SystemErrata(ErrataAction):
@@ -123,17 +115,15 @@ class SystemErrata(ErrataAction):
         sys_name = self.get_option('name')
 
         systems = systemApi.systems_by_org(org_name, {'name': sys_name})
-        if len(systems) == 0:
-            return os.EX_DATAERR
 
         errata = systemApi.errata(systems[0]["uuid"])
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('title')
-        self.printer.addColumn('type')
+        self.printer.add_column('id')
+        self.printer.add_column('title')
+        self.printer.add_column('type')
 
-        self.printer.setHeader(_("Errata for system %s in organization %s") % (sys_name, org_name))
-        self.printer.printItems(errata)
+        self.printer.set_header(_("Errata for system %s in organization %s") % (sys_name, org_name))
+        self.printer.print_items(errata)
 
         return os.EX_OK
 
@@ -172,8 +162,6 @@ class Info(ErrataAction):
 
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
-            if repo == None:
-                return os.EX_DATAERR
             repoId = repo["id"]
 
         pack = self.api.errata(errId, repoId)
@@ -182,20 +170,20 @@ class Info(ErrataAction):
                          for pkg in pack['pkglist']
                          for pinfo in pkg['packages']]
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('title')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('type')
-        self.printer.addColumn('issued')
-        self.printer.addColumn('updated')
-        self.printer.addColumn('version')
-        self.printer.addColumn('release')
-        self.printer.addColumn('status')
-        self.printer.addColumn('reboot_suggested')
-        self.printer.addColumn('affected_packages', multiline=True)
+        self.printer.add_column('id')
+        self.printer.add_column('title')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('type')
+        self.printer.add_column('issued')
+        self.printer.add_column('updated')
+        self.printer.add_column('version')
+        self.printer.add_column('release')
+        self.printer.add_column('status')
+        self.printer.add_column('reboot_suggested')
+        self.printer.add_column('affected_packages', multiline=True)
 
-        self.printer.setHeader(_("Errata Information"))
-        self.printer.printItem(pack)
+        self.printer.set_header(_("Errata Information"))
+        self.printer.print_item(pack)
         return os.EX_OK
 
 
