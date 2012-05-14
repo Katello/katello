@@ -65,9 +65,9 @@ module SystemsHelper
     end
   end
 
-  def system_releasevers_edit system
+  def system_releasevers_edit system, releases
     vers = {}
-    system.available_releases.each { |ver|
+    releases.each { |ver|
       vers[ver] = ver
     }
 

@@ -468,11 +468,16 @@ describe Product, :katello => true do
                                  :name => "testrepo",
                                  :pulp_id=>"1010",
                                  :relative_path => "#{@organization.name}/library/Prod/Repo")
+
+      @repo.stub(:product).and_return(@product)
       @repo.stub(:promoted?).and_return(false)
-      @repo.stub(:content => {:id => "123"})
+      @repo.stub(:content).and_return(OpenStruct.new(:id=>"123", :gpgUrl=>""))
+      @ep.stub(:repositories).and_return([@repo])
+      @product.stub(:environment_products).and_return([@ep])
     end
     context "resetting product gpg and asking repos to reset should work" do
       before do
+        @product.should_receive(:refresh_content).once
         @product.update_attributes!(:gpg_key => @gpg)
         @product.reset_repo_gpgs!
       end
@@ -484,9 +489,21 @@ describe Product, :katello => true do
       before do
         Pulp::Repository.stub(:packages).and_return([])
         Pulp::Repository.stub(:errata).and_return([])
+
         @env = KTEnvironment.create!(:name => "new_repo", :organization =>@organization, :prior=>@organization.library)
         @new_repo = promote(@repo, @env)
+        @new_repo.stub(:content).and_return(OpenStruct.new(:id=>"adsf", :gpgUrl=>'http://foo'))
+        @repo.stub(:content).and_return(OpenStruct.new(:id=>"adsf", :gpgUrl=>''))
+        @ep.stub(:repositories).and_return([@repo, @new_repo])
+
         @product = Product.find(@product.id)
+        @new_repo.stub(:product).and_return(@product)
+        @repo.stub(:product).and_return(@product)
+        @product.stub(:environment_products).and_return([@ep])
+        @ep.stub(:repositories).and_return([@repo, @new_repo])
+
+        @product.should_receive(:refresh_content).once
+
         @product.update_attributes!(:gpg_key => @gpg)
         @product.reset_repo_gpgs!
       end
@@ -496,8 +513,10 @@ describe Product, :katello => true do
 
     context "resetting product gpg to nil should also nil out repos under it" do
       before do
+        @product.should_receive(:refresh_content).twice
         @product.update_attributes!(:gpg_key => @gpg)
         @product.reset_repo_gpgs!
+        @repo.stub(:content).and_return(OpenStruct.new(:id=>"adsf", :gpgUrl=>'http://moose.com/squirrel'))
         @product.update_attributes!(:gpg_key => nil)
         @product.reset_repo_gpgs!
       end
