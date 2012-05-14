@@ -48,7 +48,8 @@ module Glue::Pulp::Repos
 
   def self.repo_path_from_content_path(environment, content_path)
     content_path = content_path.sub(/^\//, "")
-    "#{environment.organization.name}/#{environment.name.gsub(/[^-\w]/,"_")}/#{content_path}"
+    path_prefix = [environment.organization.name, environment.name].map {|x| x.gsub(/[^-\w]/,"_") }.join("/")
+    "#{path_prefix}/#{content_path}"
   end
 
   # create content for custom repo
@@ -404,7 +405,8 @@ module Glue::Pulp::Repos
 
           begin
             env_prod = EnvironmentProduct.find_or_create(self.organization.library, self)
-            repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
+            unless Repository.where(:environment_product_id => env_prod.id, :pulp_id => repo_id(repo_name)).any?
+              repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
                                         :cp_label => pc.content.label,
                                         :arch => arch,
                                         :major => version[:major],
@@ -419,7 +421,8 @@ module Glue::Pulp::Repos
                                         :groupid => Glue::Pulp::Repos.groupid(self, self.library, pc.content),
                                         :preserve_metadata => true, #preserve repo metadata when importing from cp
                                         :enabled =>false
-                                        )
+                                       )
+            end
 
           rescue RestClient::InternalServerError => e
             if e.message.include? "Architecture must be one of"
@@ -548,9 +551,12 @@ module Glue::Pulp::Repos
     private
 
     def yum_gpg_key_url(repo)
-      host = AppConfig.host
-      host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
-      gpg_key_content_api_repository_url(repo, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
+      # if the repo has a gpg key return a url to access it
+      if (repo.gpg_key && repo.gpg_key.content.present?)
+        host = AppConfig.host
+        host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
+        gpg_key_content_api_repository_url(repo, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
+      end
     end
 
   end

@@ -66,7 +66,7 @@ describe CDN::CdnVarSubstitutor do
 
   it "should handle error codes from CDN" do
     stub_forbidden_cdn_requests
-    lambda { subject.substitute_vars(path_with_variables) }.should raise_error RestClient::Forbidden
+    lambda { subject.substitute_vars(path_with_variables) }.should raise_error Errors::SecurityViolation
   end
 
   it "it should be able to cache the resolved paths" do

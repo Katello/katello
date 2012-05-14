@@ -12,10 +12,12 @@
 
 class Api::FiltersController < Api::ApiController
 
-  before_filter :find_organization, :only => [:index, :create, :list_product_filters, :update_product_filters]
+  before_filter :find_repository, :only => [:list_repository_filters, :update_repository_filters]
+  before_filter :find_organization, :only => [:index, :show, :destroy, :update, :create,
+                                              :list_product_filters, :update_product_filters,
+                                              :list_repository_filters, :update_repository_filters]
   before_filter :find_filter, :only => [:show, :destroy, :update]
   before_filter :find_product, :only => [:list_product_filters, :update_product_filters]
-  before_filter :find_repository, :only => [:list_repository_filters, :update_repository_filters]
   before_filter :find_filters, :only => [:update_product_filters, :update_repository_filters]
   before_filter :authorize
 
@@ -39,12 +41,18 @@ class Api::FiltersController < Api::ApiController
     }
   end
 
+  def param_rules
+     {
+       :create => [:name, :description, :organization_id, :package_list]
+     }
+  end
+
   def index
     render :json => @organization.filters.to_json
   end
 
   def create
-    @filter = Filter.create!(:pulp_id => params[:name],
+    @filter = Filter.create!(:name => params[:name],
       :organization => @organization,
       :description => params[:description],
       :package_list => params[:package_list]
@@ -100,6 +108,13 @@ class Api::FiltersController < Api::ApiController
     render :json => @repository.filters.to_json
   end
 
+  def find_organization
+    if not super
+      @organization = @repository.organization
+    end
+    @organization
+  end
+
   def find_product
     @product = @organization.products.find_by_cp_id(params[:product_id])
     raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
@@ -113,13 +128,13 @@ class Api::FiltersController < Api::ApiController
   end
 
   def find_filter
-    @filter = Filter.first(:conditions => {:pulp_id => params[:id]})
+    @filter = Filter.first(:conditions => {:name => params[:id], :organization_id => @organization.id})
     raise HttpErrors::NotFound, _("Couldn't find filter '#{params[:id]}'") if @filter.nil?
     @filter
   end
 
   def find_filters
-    @filters = Filter.where(:pulp_id => params[:filters])
+    @filters = Filter.where(:name => params[:filters], :organization_id => @organization.id)
     raise HttpErrors::NotFound, _("Couldn't one of the filters in '#{params[:product_id]}'") if @filters.any? {|f| f.nil?}
     @filters
   end

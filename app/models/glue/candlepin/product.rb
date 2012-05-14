@@ -46,9 +46,6 @@ module Glue::Candlepin::Product
 
     attrs = attrs.merge('name' => validate_name(attrs['name']))
 
-    # orchestration has 2 phases:
-    # 1) create the product and environment_product active records
-    # 2) create repositories and delete content in the content library
     product = Product.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup
     product.save!

@@ -44,6 +44,7 @@ describe Api::EnvironmentsController do
   describe "create an environment" do
     before(:each) do
       KTEnvironment.should_receive(:new).once.and_return(@environment)
+      @environment.should_receive(:valid?).and_return(true)
       @org.should_receive(:save!).once
     end
 
@@ -51,6 +52,20 @@ describe Api::EnvironmentsController do
       post 'create', :organization_id => "1", :environment => {:name => "production", :description =>"a"}
     end
   end
+  describe "bad create request" do
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = {:organization_id => 1,
+                   :environment =>
+                      {:bad_foo => "mwahahaha",
+                       :name => "production",
+                       :description => "This is the key string" }
+        }.with_indifferent_access
+        post :create, bad_req
+      end
+    end
+  end
+
 
   describe "get a listing of environments" do
 
@@ -102,6 +117,22 @@ describe Api::EnvironmentsController do
     end
   end
 
+  describe "bad update request" do
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = {:organization_id => 1,
+                    :id => 1000,
+                   :environment =>
+                      {:bad_foo => "mwahahaha",
+                       :name => "production",
+                       :description => "This is the key string" }
+        }.with_indifferent_access
+        put :update, bad_req
+      end
+    end
+  end
+
+
   describe "update an environment" do
 
     before(:each) do
@@ -109,7 +140,7 @@ describe Api::EnvironmentsController do
     end
 
     let(:action) { :update }
-    let(:req) { put 'update', :id => 'to_update', :organization_id => "1" }
+    let(:req) { put 'update', :id => 'to_update', :organization_id => "1", :environment=> {"name"=>@environment.name} }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
@@ -120,5 +151,24 @@ describe Api::EnvironmentsController do
       req
     end
   end
+
+  describe "list available releases" do
+    before(:each) do
+      KTEnvironment.stub(:find => @environment)
+    end
+
+    let(:action) { :releases}
+    let(:req) { get :releases, :id => "123" }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
+    it "should show releases that are available in given environment" do
+      @environment.should_receive(:available_releases).and_return(["6.1", "6.2", "6Server"])
+      req
+      JSON.parse(response.body).should == { "releases" => ["6.1", "6.2", "6Server"] }
+    end
+  end
+
 
 end

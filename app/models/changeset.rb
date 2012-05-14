@@ -29,7 +29,7 @@ class Changeset < ActiveRecord::Base
                 :display_attrs=>[:name, :description, :package, :errata, :product, :repo, :system_template, :user]
 
   mapping do
-    indexes :name, :type => 'string', :analyzer => :keyword
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 
@@ -112,18 +112,21 @@ class Changeset < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
-
   def promote async=true
     raise _("Cannot promote the changset '%s' because it is not in the review phase.") % self.name if self.state != Changeset::REVIEW
     #check for other changesets promoting
     raise _("Cannot promote the changeset '%s' while another changeset (%s) is being promoted.") % [self.name, self.environment.promoting.first.name] if self.environment.promoting_to?
-    # check that solitare repos in the changeset and its templates 
+    # check that solitare repos in the changeset and its templates
     # will have its associated product in the env as well after promotion
     repos_to_be_promoted.each do |repo|
       if not self.environment.products.to_a.include? repo.product and not products_to_be_promoted.include? repo.product
         raise _("Cannot promote the changset '%s' because the repo '%s' does not belong to any promoted product.") % [self.name, repo.name]
       end
     end
+
+    validate_content! self.errata
+    validate_content! self.packages
+    validate_content! self.distributions
 
     self.state = Changeset::PROMOTING
     self.save!
@@ -220,6 +223,10 @@ class Changeset < ActiveRecord::Base
   end
 
   private
+
+  def validate_content! elements
+    elements.each {|e| raise ActiveRecord::RecordInvalid.new(e) if not e.valid?}
+  end
 
   def find_template template_id
     from_env = self.environment.prior
@@ -398,8 +405,9 @@ class Changeset < ActiveRecord::Base
       product.repos(from_env).each do |repo|
         if repo.is_cloned_in? to_env
           clone = repo.get_clone to_env
+          affecting_filters = (repo.filters + repo.product.filters).uniq
 
-          if (repo.has_erratum? err.errata_id) and (!clone.has_erratum? err.errata_id)
+          if (repo.has_erratum? err.errata_id) and (!clone.has_erratum? err.errata_id) and (!err.blocked_by_filters? affecting_filters)
             errata_promote[clone] ||= []
             errata_promote[clone] << err.errata_id
           end

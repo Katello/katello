@@ -50,6 +50,13 @@ class ProvidersController < ApplicationController
     }
   end
 
+  def param_rules
+    {
+        :create => {:provider => [:name, :description]},
+    }
+  end
+
+
   def products_repos
     @products = @provider.products
     render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider,
@@ -73,15 +80,26 @@ class ProvidersController < ApplicationController
         else
           notice _("Subscription manifest uploaded successfully for provider '%{name}'." % {:name => @provider.name}), {:synchronous_request => false}
         end
+
       rescue Exception => error
-        display_message = parse_display_message(error.response)
+        if error.respond_to?(:response)
+          display_message = parse_display_message(error.response)
+        elsif error.message
+          display_message = error.message
+        else
+          display_message = ""
+        end
+
         error_text = _("Subscription manifest upload for provider '%{name}' failed." % {:name => @provider.name})
         error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+
         # In some cases, force_update will allow the manifest to be uploaded when it normally would not
         if force_update == "false"
           error_text += _("%{newline}If you are uploading an older manifest, you can use the Force checkbox to overwrite existing data." % { :newline => "<br />"})
         end
-        notice error_text, {:level => :error}
+
+        notice error_text, {:level => :error, :details => pp_exception(error)}
+
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error
         Rails.logger.error error.backtrace.join("\n")
@@ -156,7 +174,7 @@ class ProvidersController < ApplicationController
       notice _("Provider '%s' was created.") % @provider['name']
       
       if search_validate(Provider, @provider.id, params[:search])
-        render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+        render :partial=>"common/list_item", :locals=>{:item=>@provider, :initial_action=>:products_repos, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
       else
         notice _("'%s' did not meet the current search criteria and is not being shown.") % @provider["name"], { :level => 'message', :synchronous_request => false }
         render :json => { :no_match => true }
@@ -242,6 +260,7 @@ class ProvidersController < ApplicationController
              :col => ['name'],
              :titles => [_('Name')],
              :create => _('Provider'),
+             :create_label => _('+ New Provider'),
              :name => controller_display_name,
              :ajax_load => true,
              :ajax_scroll=>items_providers_path(),

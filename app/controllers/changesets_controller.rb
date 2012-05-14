@@ -285,6 +285,7 @@ class ChangesetsController < ApplicationController
                  :col => ['name'],
                  :titles => [_('Name')],
                  :enable_create => false,
+                 :create_label => _('+ New Changeset'),
                  :name => controller_display_name,
                  :accessor => :id,
                  :ajax_load => true,

@@ -41,6 +41,6 @@ $(document).ready(function() {
 
 var changeset_page = {
     signal_rename: function(changeset_id, name) {
-        KT.panel.list.refresh('changeset_' + changeset_id, $('#changeset').attr("data-ajax_url"));
+        KT.panel.list.refresh('changeset_' + changeset_id, $('input[id^=changeset]').attr("data-ajax_url"));
     }
 };

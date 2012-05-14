@@ -1,10 +1,10 @@
 .grid_16
   = two_panel(@roles, @panel_options)
 
-= javascript :edit, :role
+= javascript :role
 
 = javascript do
-  :javascript
+  :plain
     localize({
       "add_permission"                    : '#{escape_javascript(_('Add Permission'))}',
       "close_add_permission"              : '#{escape_javascript(_('Close Add Permission'))}',

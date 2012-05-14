@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe SystemTemplatesController do
+describe SystemTemplatesController, :katello => true do
 
   include LoginHelperMethods
   include LocaleHelperMethods
@@ -134,6 +134,11 @@ describe SystemTemplatesController do
           post :create, :template => {}
           response.should_not be_success
         end
+        it_should_behave_like "bad request"  do
+          let(:req) do
+            post :create, :system_template=>{:name=>"Guard", :bad_foo => 100,:description=>"me"}
+          end
+        end
       end
     end
 
@@ -208,6 +213,13 @@ describe SystemTemplatesController do
           put :update, :id => 9999,  :system_template=>{:description=>"bar"}
           response.should_not be_success
         end
+
+        it_should_behave_like "bad request"  do
+          let(:req) do
+            put :update, :id => @system_template_1.id, :system_template=>{:bad_foo=>100, :name=>"bar"}
+          end
+        end
+
       end
 
       describe "with template not in library" do

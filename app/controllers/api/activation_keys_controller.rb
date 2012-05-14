@@ -33,6 +33,14 @@ class Api::ActivationKeysController < Api::ApiController
     }
   end
 
+  def param_rules
+    {
+      :create => {:activation_key => [:name, :description, :system_template_id]},
+      :update => {:activation_key  => [:name, :description, :environment_id, :system_template_id]}
+    }
+  end
+
+
   def index
     query_params[:organization_id] = @organization.id unless @organization.nil?
     query_params[:environment_id] = @environment.id unless @environment.nil?

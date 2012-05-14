@@ -15,6 +15,20 @@ module Errors
 
   # unauthorized access
   class SecurityViolation < StandardError; end
+  class BadParameters < HttpErrors::BadRequest
+    attr_accessor :broken_params, :params
+    def initialize broken_params, params
+      @broken_params = broken_params
+      @params = Support.scrub(Support.deep_copy(params)) do |key, value|
+        String === value && key.to_s.downcase =~ /password|authenticity_token/
+      end
+      super BadParameters.generate_message @broken_params, @params
+    end
+
+    def self.generate_message broken_params, params
+      _("Wrong/Invalid parameters sent for %s/%s.\n Wrong Parameters: \n%s\n Parameters Received:\n %s ") % [params[:controller],params[:action], broken_params.inspect, params.inspect]
+    end
+  end
 
   class UserNotSet < SecurityViolation; end
 

@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
@@ -177,14 +177,12 @@ msgid "%s (%s other packages) update timed out"
 msgstr "%s (%s otros paquetes) actualización se detuvo "
 
 #: app/controllers/systems_controller.rb:265
-#, fuzzy
 msgid "%s Removed Successfully"
-msgstr "Creado con éxito"
+msgstr "%s retirados exitosamente"
 
 #: app/controllers/systems_controller.rb:253
-#, fuzzy
 msgid "%s Systems Removed Successfully"
-msgstr "Creado con éxito"
+msgstr "%s  sistemas retirados exitosamente"
 
 #: app/views/layouts/_footer.haml:8
 msgid "%s Version: %s"
@@ -312,13 +310,14 @@ msgid "%s package update timed out"
 msgstr "%s actualización de paquetes se detuvo"
 
 #: app/controllers/sync_management_controller.rb:238
-#, fuzzy
 msgid "%s product was synced successfully"
-msgstr "Usuario actualizado con éxito."
+msgstr "%s producto sincronizado correctamente"
 
 #: app/controllers/sync_management_controller.rb:234
 msgid "%s product was synced successfully with errors. See log for details"
 msgstr ""
+"%s producto sincronizado con errores. Consulte el registro para obtener más "
+"información"
 
 #: app/controllers/providers_controller.rb:82
 msgid ""
@@ -336,7 +335,7 @@ msgstr "%{newline}Razón: %{reason}"
 
 #: app/controllers/repositories_controller.rb:125
 msgid "%{repo} (Product: %{product})"
-msgstr ""
+msgstr "%{repo} (Producto: %{product})"
 
 #: app/controllers/gpg_keys_controller.rb:97
 #: app/controllers/organizations_controller.rb:109
@@ -349,6 +348,7 @@ msgstr ""
 #: app/controllers/roles_controller.rb:94
 msgid "'%s' did not meet the current search criteria and is not being shown."
 msgstr ""
+"'%s' no cumplió con los criterios actuales de búsqueda y no se muestra."
 
 #: app/controllers/gpg_keys_controller.rb:119
 #: app/controllers/organizations_controller.rb:130
@@ -360,9 +360,8 @@ msgstr ""
 #: app/controllers/users_controller.rb:150
 #: app/controllers/users_controller.rb:275
 #: app/controllers/roles_controller.rb:120
-#, fuzzy
 msgid "'%s' no longer matches the current search criteria."
-msgstr "No hay eventos coincidentes con sus criterios de búsqueda."
+msgstr "'%s' ya no concuerda con los criterios de búsqueda actuales."
 
 #: app/views/filters/index.html.haml:15
 msgid "(%X of %Y repositories selected)"
@@ -384,7 +383,7 @@ msgstr "(Cargado %X de %Y Total)"
 #: app/views/filters/_products.html.haml:33
 #: app/views/system_packages/_packages.html.haml:86
 msgid "+ Add"
-msgstr "+ Sumar"
+msgstr "+ Añadir"
 
 #: app/views/roles/_edit.html.haml:57 app/views/roles/_edit.html.haml:64
 #: app/views/roles/_edit.html.haml:71
@@ -435,8 +434,8 @@ msgstr ""
 
 #: app/views/user_mailer/password_reset.text.haml:1
 msgid ""
-"A request has been received to reset the Katello password for user '%s'.  In "
-"order to reset this password, click the URL below."
+"A request has been received to reset the Katello password for user '%s'.  In"
+" order to reset this password, click the URL below."
 msgstr ""
 "Se ha recibido una solicitud para restablecer la contraseña de Katello para "
 "usuario '%s'. Para restablecerla, haga clic en la URL de abajo."
@@ -473,11 +472,11 @@ msgstr ""
 
 #: app/controllers/activation_keys_controller.rb:175
 msgid "Activation key '%s' was created."
-msgstr ""
+msgstr "Ha sido creada la llave de activación '%' "
 
 #: app/controllers/activation_keys_controller.rb:203
 msgid "Activation key '%s' was updated."
-msgstr ""
+msgstr "Ha sido actualizada la llave de activación '%' "
 
 #: app/views/filters/_packages.html.haml:24
 #: app/views/common/_common_i18n.html.haml:3
@@ -623,9 +622,8 @@ msgid "Administration"
 msgstr "Administración"
 
 #: app/models/role.rb:191
-#, fuzzy
 msgid "Administrator"
-msgstr "Administración"
+msgstr "Gestor"
 
 #: app/views/errata/_show.html.haml:12
 msgid "Advisory"
@@ -650,19 +648,20 @@ msgstr "Todos los repositorios"
 
 #: app/models/glue/candlepin/owner.rb:73
 msgid "All Systems for owner %s in candlepin"
-msgstr ""
+msgstr "Todos los sistemas para propietario %s en Candlepin"
 
 #: app/models/glue/candlepin/owner.rb:52
 msgid "All environments for owner %s in candlepin"
-msgstr ""
+msgstr "Todos los entornos para propietario %s en Candlepin"
 
 #: app/models/glue/candlepin/owner.rb:63
 msgid "All providers for owner %s in candlepin"
-msgstr ""
+msgstr "Todos los proveedores para propietario en %s Candlepin"
 
 #: app/controllers/products_controller.rb:76
 msgid "All repository GPG keys for Product '%s' were updated."
 msgstr ""
+"Todas las llaves GPG de repositorio para producto '%' han sido actualizadas"
 
 #: app/views/promotions/show.html.haml:153
 msgid ""
@@ -854,9 +853,8 @@ msgid "Cancel Review"
 msgstr "Cancelar revisión"
 
 #: app/controllers/sync_management_controller.rb:26
-#, fuzzy
 msgid "Cancelled."
-msgstr "Cancelado."
+msgstr "Cancelada."
 
 #: app/models/system_task.rb:115
 msgid "Candlepin Event"
@@ -881,9 +879,11 @@ msgstr "No se puede borrar el usuario que está conectado actualmente "
 
 #: app/models/role.rb:229 app/models/user.rb:577
 msgid ""
-"Cannot dissociate user '%s' from '%s' role. Need at least one user in the '%"
-"s' role."
+"Cannot dissociate user '%s' from '%s' role. Need at least one user in the "
+"'%s' role."
 msgstr ""
+"No se puede disociar usuario '%' del '%' rol. Se necesita por lo menos un "
+"usuario en el rol '%'."
 
 #: app/controllers/api/templates_controller.rb:107
 msgid "Cannot export templates for the Library environment."
@@ -898,10 +898,14 @@ msgid ""
 "Cannot promote the changeset '%s' while another changeset (%s) is being "
 "promoted."
 msgstr ""
+"No se puede promover el Changeset '%' mientras otro changeset (%s)se está "
+"promoviendo."
 
 #: app/models/changeset.rb:116
-msgid "Cannot promote the changset '%s' because it is not in the review phase."
+msgid ""
+"Cannot promote the changset '%s' because it is not in the review phase."
 msgstr ""
+"No se puede promover el Changeset '%' porque no está en la fase de revisión."
 
 #: app/models/system.rb:17
 msgid "Cannot register a system with 'Library' environment "
@@ -1029,9 +1033,8 @@ msgid "Collapse"
 msgstr "Caída"
 
 #: app/views/sync_management/index.html.haml:22
-#, fuzzy
 msgid "Collapse All"
-msgstr "Caída"
+msgstr "Colapsó todo"
 
 #: app/views/password_resets/edit.html.haml:28
 msgid "Confirm Password:"
@@ -1090,20 +1093,17 @@ msgid "Couldn't find environment '%s'"
 msgstr "No se pudo hallar entorno '%s'"
 
 #: app/controllers/environments_controller.rb:133
-#, fuzzy
 msgid "Couldn't find environment with ID=%d"
-msgstr "No se pudo hallar entorno '%s'"
+msgstr "No se pudo hallar el entorno con ID=%d"
 
 #: app/controllers/environments_controller.rb:125
-#, fuzzy
 msgid "Couldn't find organization '%d'"
-msgstr "No se puede borrar organización '%s'."
+msgstr "No se pudo hallar organización '%d'"
 
 #: app/controllers/organizations_controller.rb:204
 #: app/controllers/organizations_controller.rb:215
-#, fuzzy
 msgid "Couldn't find organization with ID=%s"
-msgstr "No se puede borrar organización '%s'."
+msgstr "No se pudo hallar organización con ID=%s"
 
 #: app/controllers/api/activation_keys_controller.rb:68
 msgid "Couldn't find pool '%s' in activation_key '%s'"
@@ -1114,9 +1114,8 @@ msgid "Couldn't find provider '%s'"
 msgstr "No se pudo hallar proveedor '%s'"
 
 #: app/controllers/repositories_controller.rb:159
-#, fuzzy
 msgid "Couldn't find repository with ID=%s"
-msgstr "No se pudo hallar proveedor '%s'"
+msgstr "No se pudo hallar repositorio con ID=%s"
 
 #: app/controllers/api/sync_controller.rb:69
 msgid "Couldn't find subject of synchronization"
@@ -1146,11 +1145,11 @@ msgstr "Creado (UTC)"
 
 #: app/models/glue/candlepin/environment.rb:29
 msgid "Creating an environment in candlepin: %s"
-msgstr ""
+msgstr "Crear un entorno en Candlepin: %s"
 
 #: app/models/glue/candlepin/owner.rb:36
 msgid "Creating an owner in candlepin: %s"
-msgstr ""
+msgstr "Crear un propietario en Candlepin: %s"
 
 #: app/views/layouts/_allowed_orgs.html.haml:3
 msgid "Current Organization"
@@ -1162,9 +1161,8 @@ msgid "Current Subscriptions"
 msgstr "Suscripciones actuales"
 
 #: lib/navigation/content_management.rb:76
-#, fuzzy
 msgid "Custom Content Providers"
-msgstr "Personalizar proveedor de contenido"
+msgstr "Personalizar proveedores de contenido "
 
 #: lib/navigation/dashboard.rb:17
 msgid "Dashboard"
@@ -1226,11 +1224,11 @@ msgstr "Proveedor borrado [ %s ]"
 
 #: app/models/glue/candlepin/environment.rb:37
 msgid "Deleteing environment in candlepin: %s"
-msgstr ""
+msgstr "Borrando entorno en Candlepin: %s"
 
 #: app/models/glue/candlepin/owner.rb:44
 msgid "Deleting owner in candlepin: %s"
-msgstr ""
+msgstr "Borrando propietario en Candlepin: %s"
 
 #: app/helpers/breadcrumb_helper.rb:62 app/views/promotions/show.html.haml:7
 #: lib/navigation/content_management.rb:167
@@ -1304,14 +1302,12 @@ msgid "Distribution"
 msgstr "Distribución"
 
 #: app/models/changeset_distribution.rb:20
-#, fuzzy
 msgid "Distribution '%s' does not belong to the specified product!"
-msgstr "No se encontró distribución '%s' en esta plantilla."
+msgstr "iDistribución '%s' no pertenece al producto especificado!"
 
 #: app/models/system_template_distribution.rb:19
-#, fuzzy
 msgid "Distribution '%s' not found in the '%s' environment"
-msgstr "No se encontró distribución '%s' en esta plantilla."
+msgstr "No se encontró distribución '%s' en el entorno '%'"
 
 #: app/models/system_template.rb:313
 msgid "Distribution '%s' not found in this template."
@@ -1361,10 +1357,14 @@ msgstr "ERRATA"
 
 #: app/views/activation_keys/_edit.html.haml:28
 msgid ""
-"Edit Activation Key enables you to modify the selected activation key.  This "
-"key may be used during system registration.  For example, <BR/><BR/"
-">subscription-manager register --org %s --activationkey %s"
+"Edit Activation Key enables you to modify the selected activation key.  This"
+" key may be used during system registration.  For example, <BR/><BR"
+"/>subscription-manager register --org %s --activationkey %s"
 msgstr ""
+"Modificar llave de activación le permite modificar la llave de activación "
+"seleccionada. Esta llave puede utilizarse durante el registro del sistema.  "
+"Por ejemplo, <BR/><BR/>subscription-manager register --org %s "
+"--activationkey %s"
 
 #: app/views/promotions/show.html.haml:7
 #: app/views/promotions/show.html.haml:137
@@ -1471,17 +1471,16 @@ msgid "Environment"
 msgstr "Entorno"
 
 #: app/controllers/environments_controller.rb:73
-#, fuzzy
 msgid "Environment '%s' was created."
-msgstr "Se requiere entorno"
+msgstr "Ha sido creado entorno '%'."
 
 #: app/controllers/environments_controller.rb:103
 msgid "Environment '%s' was deleted."
-msgstr ""
+msgstr "Ha sido borrado entorno '%'. "
 
 #: app/controllers/environments_controller.rb:95
 msgid "Environment '%s' was updated."
-msgstr ""
+msgstr "Ha sido actualizado entorno '%s'"
 
 #: app/views/organizations/_edit.html.haml:26
 msgid "Environment Promotion Paths"
@@ -1526,7 +1525,7 @@ msgstr "Errata"
 
 #: app/models/changeset_erratum.rb:20
 msgid "Erratum '%s' doesn't belong to the specified product!"
-msgstr ""
+msgstr "iLa errata '%' no pertenece al producto especificado!"
 
 #: app/views/sync_management/index.html.haml:5
 #: app/views/common/_common_i18n.html.haml:3 app/views/dashboard/_sync.haml:23
@@ -1566,9 +1565,8 @@ msgid "Expand"
 msgstr "Expandir"
 
 #: app/views/sync_management/index.html.haml:25
-#, fuzzy
 msgid "Expand All"
-msgstr "Expandir"
+msgstr "Expandir todos"
 
 #: app/views/subscriptions/index.html.haml:51
 msgid "Expand/Contract All"
@@ -1576,7 +1574,7 @@ msgstr "Expandir o Contraer todos"
 
 #: app/controllers/api/systems_controller.rb:207
 msgid "Expected attribute is missing:"
-msgstr ""
+msgstr "Falta atributo esperado:"
 
 #: app/views/providers/redhat/_subscription_details.html.haml:10
 #: app/views/systems/_subs.html.haml:21 app/views/systems/_subs.html.haml:74
@@ -1593,46 +1591,52 @@ msgid "Facts"
 msgstr "Eventos"
 
 #: app/helpers/dashboard_helper.rb:57
-#, fuzzy
 msgid "Failed"
-msgstr "Archivo"
+msgstr "Falló"
 
 #: app/models/glue/candlepin/environment.rb:32
-#, fuzzy
 msgid "Failed to create candlepin environment %s"
-msgstr "No se pueden crear llaves de activación en el entorno de biblioteca"
+msgstr "Falló la creación de entorno de Candlepin %s"
 
 #: app/models/glue/candlepin/owner.rb:39
 msgid "Failed to create candlepin owner %s"
-msgstr ""
+msgstr "Falló  la creación de propietario de Candlepin %s"
 
 #: app/models/glue/candlepin/owner.rb:58
 msgid "Failed to delete all environments for owner %s in candlepin:"
-msgstr ""
+msgstr "Falló  el borrado de entorno de propietario %s en Candlepin: "
 
 #: app/models/glue/candlepin/owner.rb:66
 msgid "Failed to delete all providers for owner %s in candlepin: %s"
 msgstr ""
+"Falló el borrado de todos los proveedores para propietario %s en Candlepin: "
+"%s"
 
 #: app/models/glue/candlepin/owner.rb:78
 msgid "Failed to delete all systems for owner %s in candlepin: %s"
 msgstr ""
+"Falló el borrado de todos los sistemas para propietario %s en Candlepin: "
+"%s\n"
 
 #: app/models/glue/candlepin/environment.rb:40
 msgid "Failed to delete candlepin environment %s"
-msgstr ""
+msgstr "Falló el borrado de entorno de Candlepin %s"
 
 #: app/models/glue/candlepin/owner.rb:47
 msgid "Failed to delete candlepin owner %s"
-msgstr ""
+msgstr " Falló el borrado de Candlepin %s"
 
 #: app/models/user.rb:458
 msgid "Failed to delete organization '%s'. Check notices for more details. "
 msgstr ""
+"Falló el borrado de organización '%'. Verifique los anuncios para obtener "
+"mayor información. "
 
 #: app/models/changeset.rb:308
 msgid "Failed to promote changeset '%s'. Check notices for more details"
 msgstr ""
+"Falló la promoción de Changeset '%'. Verifique los anuncios para obtener "
+"mayor información. "
 
 #: app/views/distributions/_filelist.html.haml:14
 msgid "File"
@@ -1650,12 +1654,11 @@ msgstr "Lista de archivo"
 #: app/views/system_templates/index.html.haml:52
 #: app/views/roles/_edit.html.haml:14 app/views/roles/_edit.html.haml:18
 msgid "Filter"
-msgstr "Filtrar"
+msgstr "Filtro"
 
 #: app/controllers/filters_controller.rb:104
-#, fuzzy
 msgid "Filter %s created successfully."
-msgstr "Creado con éxito"
+msgstr "Filtro %s ha sido creado correctamente."
 
 #: app/views/system_events/_events.html.haml:18
 msgid "Filter on loaded Events..."
@@ -1681,10 +1684,10 @@ msgid "Filters"
 msgstr "Filtros"
 
 #: app/controllers/api/filters_controller.rb:111
-#, fuzzy
 msgid "Filters can be stored only in Library repositories."
 msgstr ""
-"Solamente se pueden borrar los repositorios  en un entorno de biblioteca."
+"Los filtros pueden ser almacenados únicamente en repositorios de "
+"bibliotecas."
 
 #: app/views/systems/errata/_index.html.haml:5
 msgid "Finished"
@@ -1692,7 +1695,7 @@ msgstr "Completo"
 
 #: app/views/providers/redhat/show.html.haml:31
 msgid "Force"
-msgstr ""
+msgstr "Forzar "
 
 #: app/views/user_sessions/new.html.haml:17
 msgid "Forgotten username or password?"
@@ -1716,15 +1719,15 @@ msgstr "llave GPG"
 
 #: app/controllers/gpg_keys_controller.rb:92
 msgid "GPG Key '%s' was created."
-msgstr ""
+msgstr "Ha sido creada llave GPG '%'."
 
 #: app/controllers/gpg_keys_controller.rb:136
 msgid "GPG Key '%s' was deleted."
-msgstr ""
+msgstr "Ha sido borrada llave GPG '%'."
 
 #: app/controllers/gpg_keys_controller.rb:116
 msgid "GPG Key '%s' was updated."
-msgstr ""
+msgstr "Ha sido actualizada llave GPG '%' "
 
 #: app/views/systems/_subscription_details.html.haml:4
 msgid "GPG Key URL: "
@@ -1752,8 +1755,8 @@ msgid ""
 msgstr ""
 "Las llaves GPG pueden ser almacenadas al cargar una llave directamente o "
 "copiar y pegar la llave tras la creación. Al visitar la página de "
-"proveedores y seleccionar ya sea un producto o repositorio, la llave GPG que "
-"ha sido creada aquí puede asociarse con la identidad dada."
+"proveedores y seleccionar ya sea un producto o repositorio, la llave GPG que"
+" ha sido creada aquí puede asociarse con la identidad dada."
 
 #: app/helpers/breadcrumb_helper.rb:246
 msgid "Global Permissions"
@@ -1848,19 +1851,19 @@ msgstr "ID / Enlace"
 
 #: app/views/user_mailer/password_reset.text.haml:5
 msgid ""
-"If you did not request this password to be reset, just ignore this email and "
-"the password will continue to stay the same."
+"If you did not request this password to be reset, just ignore this email and"
+" the password will continue to stay the same."
 msgstr ""
 "Si no solicitó el restablecimiento de esta contraseña, haga caso omiso de "
-"este correo-e y contraseña y la contraseña seguirá siendo la misma."
+"este correo-e y la contraseña seguirá siendo la misma."
 
 #: app/views/password_resets/new.html.haml:23
 msgid ""
 "If you do not know your login, please enter your email address below and "
 "your login will be sent to you."
 msgstr ""
-"Si no conoce su nombre de usuario, por favor ingrese su dirección de correo-"
-"e abajo y su nombre de usuario le será enviado."
+"Si no conoce su nombre de usuario, por favor ingrese su dirección de "
+"correo-e abajo y su nombre de usuario le será enviado."
 
 #: app/views/password_resets/new.html.haml:10
 msgid ""
@@ -1868,7 +1871,7 @@ msgid ""
 "and instructions on resetting your password will be sent to you."
 msgstr ""
 "Si no conoce su contraseña, ingrese su nombre de usuario y correo-e abajo y "
-"le serán enviadas las instrucciones para restablecer su contraseña."
+"le serán enviadas las instrucciones para restablecerla."
 
 #: app/views/providers/redhat/show.html.haml:51
 msgid "Import History"
@@ -1883,9 +1886,8 @@ msgid "Info"
 msgstr "Info"
 
 #: app/views/organizations/_new.html.haml:22
-#, fuzzy
 msgid "Initial Application Life Cycle Management Environment"
-msgstr "Crear entorno de administración de ciclo de vida de la aplicación"
+msgstr "Entorno de administración de ciclo de vida de aplicaciones iniciales"
 
 #: app/models/system.rb:200
 msgid "Initial Registration Params"
@@ -1930,8 +1932,8 @@ msgstr "URL inválida"
 
 #: app/models/resource_type.rb:41
 msgid ""
-"Invalid resource type '%{resource_type}'. Resource Types can be one of '%"
-"{possible_types}'"
+"Invalid resource type '%{resource_type}'. Resource Types can be one of "
+"'%{possible_types}'"
 msgstr ""
 "Tipo de recurso inválido '%{resource_type}'. Tipos de recursos pueden ser "
 "alguno de '%{possible_types}'"
@@ -2282,7 +2284,8 @@ msgstr ""
 #: app/controllers/api/templates_controller.rb:80
 msgid "New templates can be imported only into a Library environment"
 msgstr ""
-"Solamente las nuevas plantillas pueden importarse en un entorno de biblioteca"
+"Solamente las nuevas plantillas pueden importarse en un entorno de "
+"biblioteca"
 
 #: app/views/roles/_edit.html.haml:82
 msgid "Next >>"
@@ -2324,8 +2327,8 @@ msgid ""
 "No default environment. Select an organization to choose from available "
 "environments."
 msgstr ""
-"No hay entorno predeterminado. Seleccione una organización para elegir entre "
-"los entornos disponibles."
+"No hay entorno predeterminado. Seleccione una organización para elegir entre"
+" los entornos disponibles."
 
 #: app/controllers/users_controller.rb:252
 #: app/views/users/_edit_environment.html.haml:21
@@ -2436,15 +2439,14 @@ msgid "No products exist in the promotion changeset."
 msgstr "No existen productos en la promoción de Changeset."
 
 #: app/views/system_templates/index.html.haml:6
-#, fuzzy
 msgid ""
 "No products or repositories are currently associated with this system "
 "template.  Please add either a product or repository that contains "
 "distributions in order to select a distribution."
 msgstr ""
-"No hay productos actualmente asociados con la plantilla del sistema. Por "
-"favor asocie un producto que contenga distribuciones para seleccionar una "
-"distribución."
+"No hay productos o repositorios actualmente asociados con esta plantilla de "
+"sistema. Por favor añada el producto o el repositorio que contenga "
+"distribuciones para seleccionar una distribución."
 
 #: app/views/filters/index.html.haml:15
 msgid "No products or repositories are currently associated."
@@ -2496,13 +2498,13 @@ msgid "None defined for this Organization."
 msgstr "Ninguno definido para esta organización"
 
 #: app/views/system_templates/index.html.haml:6
-#, fuzzy
 msgid ""
 "None of the associated products or repositories contain distributions, "
 "please add a product or repository that contains at least one distribution."
 msgstr ""
-"Ninguno de los productos asociados contienen distribuciones, por favor "
-"seleccione un producto que contenga al menos una distribución."
+"Ninguno de los productos asociados o repositorios cont¡ene distribuciones, "
+"por favor añada un producto o un repositorio que contenga al menos una "
+"distribución."
 
 #: app/views/errata/_show.html.haml:78
 msgid "None."
@@ -2518,9 +2520,8 @@ msgstr ""
 "No hay suficientes derechos en grupos (%d), requeridos: %d,  disponibles: %d"
 
 #: app/controllers/api/errors_controller.rb:19
-#, fuzzy
 msgid "Not found"
-msgstr "No se hallaron sistemas."
+msgstr "No se encontró"
 
 #: app/views/organizations/_new.html.haml:34
 msgid "Note: This will be set as your initial default environment."
@@ -2552,8 +2553,8 @@ msgstr "Aceptar"
 
 #: app/views/providers/_products_repos.html.haml:17
 msgid ""
-"On Products & Repositories you can add your own Products and Repositories to "
-"your Provider.  This allows you to synchronize content from any remote "
+"On Products & Repositories you can add your own Products and Repositories to"
+" your Provider.  This allows you to synchronize content from any remote "
 "repository to this server.  Simply add a Product and then setup one or more "
 "repositories to add to this Provider.  This feature is only available for "
 "Custom Providers."
@@ -2580,7 +2581,8 @@ msgstr "Uno o más de uno de los grupos provistos tiene una acción pendiente."
 
 #: app/views/system_packages/_packages.html.haml:6
 msgid "One or more of the packages provided has an action pending."
-msgstr "Uno o más de uno de los paquetes provistos tiene una acción pendiente."
+msgstr ""
+"Uno o más de uno de los paquetes provistos tiene una acción pendiente."
 
 #: app/views/system_packages/_packages.html.haml:6
 msgid "One or more package names are invalid."
@@ -2588,7 +2590,7 @@ msgstr "Uno o más de uno de los nombres de paquete es inválido."
 
 #: app/models/search_favorite.rb:25
 msgid "Only %s favorites may be created."
-msgstr ""
+msgstr "Únicamente se pueden crear %s favoritos "
 
 #: app/models/provider.rb:54
 msgid "Only one Red Hat provider permitted for an Organization"
@@ -2611,27 +2613,27 @@ msgid "Organization"
 msgstr "Organización"
 
 #: app/controllers/organizations_controller.rb:72
-#, fuzzy
 msgid ""
 "Organization '%s' already exists and either has been scheduled for deletion "
 "or failed deletion."
-msgstr "Organización '%s' ha sido programada para borrado en el segundo plano."
+msgstr ""
+"Organización '%' ya existe y puede haber sido programada para ser borrada o "
+"falló el borrado."
 
 #: app/controllers/organizations_controller.rb:153
 msgid "Organization '%s' has been scheduled for background deletion."
-msgstr "Organización '%s' ha sido programada para borrado en el segundo plano."
+msgstr ""
+"Organización '%s' ha sido programada para borrado en el segundo plano."
 
 #: app/controllers/organizations_controller.rb:90
 #: app/controllers/organizations_controller.rb:103
 #: app/controllers/organizations_controller.rb:108
-#, fuzzy
 msgid "Organization '%s' was created."
-msgstr "Organizaciones"
+msgstr "Organización '%s' ha sido creada."
 
 #: app/controllers/organizations_controller.rb:127
-#, fuzzy
 msgid "Organization '%s' was updated."
-msgstr "Organizaciones"
+msgstr "Organización '%s' ha sido actualizada."
 
 #: app/controllers/organizations_controller.rb:222
 #: app/models/resource_type.rb:91 lib/navigation/organization.rb:23
@@ -2655,37 +2657,32 @@ msgid "Package"
 msgstr "Paquete"
 
 #: app/models/changeset_package.rb:19
-#, fuzzy
 msgid "Package '%s' doesn't belong to the specified product!"
-msgstr "No se halló producto '%s' en este entorno."
+msgstr "iPaquete '%s' no pertenece al producto especificado!"
 
 #: app/models/system_template_package.rb:17
-#, fuzzy
 msgid "Package '%s' is already present in the template"
-msgstr "Producto '%s' ya está presente en la plantilla."
+msgstr "Paquete '%s' ya está presente en la plantilla"
 
 #: app/models/system_template_package.rb:32
-#, fuzzy
 msgid "Package '%s' not found in the %s environment"
-msgstr "No se halló producto '%s' en este entorno."
+msgstr "No se encontró paquete %s en el entorno"
 
 #: app/models/changeset.rb:245 app/models/changeset.rb:254
-#, fuzzy
 msgid "Package '%s' was not found in the source environment."
-msgstr "No se halló producto '%s' en este entorno."
+msgstr "No se encontró paquete '%s' en el entorno de origen."
 
 #: app/views/promotions/show.html.haml:80
 msgid "Package Dependencies"
 msgstr "Dependencias de paquetes"
 
 #: app/controllers/filters_controller.rb:198
-#, fuzzy
 msgid "Package Filter %s deleted."
-msgstr "Filtros de paquetes"
+msgstr "Filtro de paquete %s borrado"
 
 #: app/controllers/filters_controller.rb:80
 msgid "Package Filter '%s' has been updated."
-msgstr ""
+msgstr "Filtro de paquete  '%s' ha sido actualizado."
 
 #: app/controllers/filters_controller.rb:220
 #: lib/navigation/content_management.rb:148
@@ -2696,8 +2693,8 @@ msgstr "Filtros de paquetes"
 msgid ""
 "Package Filters allow you to blacklist packages from being promoted into "
 "subsequent environments. Simply create a filter and add either a package "
-"name or regular expression to the filter.  You can associate the filter with "
-"entire products or individual repositories within any product."
+"name or regular expression to the filter.  You can associate the filter with"
+" entire products or individual repositories within any product."
 msgstr ""
 "Los filtros de paquetes le permiten poner en lista negra los paquetes para "
 "que no sean promovidos a entornos subsiguientes. Simplemente cree un filtro "
@@ -2773,27 +2770,24 @@ msgid "Package Update scheduled by %s"
 msgstr "Actualización de paquetes programada por %s"
 
 #: app/models/system_template_pack_group.rb:18
-#, fuzzy
 msgid "Package group '%s' not found in the %s environment"
-msgstr "No se halló producto '%s' en este entorno."
+msgstr "No se halló grupo de paquetes '%s' en el entorno %s"
 
 #: app/models/system_template.rb:290
 msgid "Package group '%s' not found in this template."
 msgstr "No se halló grupo de paquetes '%s' en esta plantilla."
 
 #: app/models/system_template_pg_category.rb:17
-#, fuzzy
 msgid "Package group category '%s' not found in the %s environment"
-msgstr "No se halló categoría de grupo de paquetes %s' en esta plantilla."
+msgstr "No se halló categoría de grupo de paquetes '%s' en el entorno"
 
 #: app/models/system_template.rb:302
 msgid "Package group category '%s' not found in this template."
 msgstr "No se halló categoría de grupo de paquetes %s' en esta plantilla."
 
 #: app/models/changeset.rb:251
-#, fuzzy
 msgid "Package has to be specified by its nvre."
-msgstr "Actualización de paquetes programada por %s"
+msgstr "El paquete tiene que ser especificado por su NVRE."
 
 #: app/helpers/breadcrumb_helper.rb:50 app/helpers/breadcrumb_helper.rb:156
 #: app/helpers/breadcrumb_helper.rb:380 app/helpers/breadcrumb_helper.rb:401
@@ -2825,9 +2819,8 @@ msgid "Partial Products"
 msgstr "Productos parciales"
 
 #: app/views/user_sessions/new.html.haml:11
-#, fuzzy
 msgid "Password"
-msgstr "Contraseña:"
+msgstr "Contraseña"
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
@@ -2846,8 +2839,8 @@ msgstr "La contraseña ha sido restablecida para el usuario '%{s}'."
 #: app/controllers/password_resets_controller.rb:47
 msgid "Password reset token has expired for user '%{s}'."
 msgstr ""
-"La señal de restablecimiento de la contraseña ha expirado para usuario '%"
-"{s}'."
+"La señal de restablecimiento de la contraseña ha expirado para usuario "
+"'%{s}'."
 
 #: app/views/password_resets/edit.html.haml:22
 #: app/views/users/_new.html.haml:27
@@ -2867,24 +2860,24 @@ msgid "Permission"
 msgstr "Permiso"
 
 #: app/controllers/roles_controller.rb:219
-#, fuzzy
 msgid "Permission '%s' was created."
-msgstr "Permisos para este rol."
+msgstr "Permiso '%s' ha sido creado."
 
 #: app/controllers/roles_controller.rb:239
-#, fuzzy
 msgid "Permission '%s' was removed."
-msgstr "Permisos para este rol."
+msgstr "Permiso '%s' ha sido retirado."
 
 #: app/controllers/roles_controller.rb:196
 msgid "Permission '%s' was updated."
-msgstr ""
+msgstr "Permiso '%s' ha sido actualizado."
 
 #: app/controllers/application_controller.rb:113
 msgid ""
 "Permission Denied. User '%s' does not have permissions to access "
 "organization '%s'."
 msgstr ""
+"Permiso negado. El usuario '%s' no tiene permisos para acceder organización "
+"'%s'."
 
 #: app/views/roles/_edit.html.haml:52 app/views/roles/index.html.haml:8
 msgid "Permission For:"
@@ -2916,9 +2909,8 @@ msgid "Plan"
 msgstr "Plan"
 
 #: app/controllers/sync_schedules_controller.rb:39
-#, fuzzy
 msgid "Plan Name"
-msgstr "Nombre de paquetes"
+msgstr "Nombre de plan"
 
 #: app/controllers/api/subscriptions_controller.rb:45
 msgid "Please provide entitlement id"
@@ -2943,11 +2935,11 @@ msgstr "Por favor solicitar privilegios requeridos de un administrador."
 
 #: app/views/roles/index.html.haml:8
 msgid ""
-"Please select Permissions to view and add permissions for this role or Users "
-"to see current users with this role."
+"Please select Permissions to view and add permissions for this role or Users"
+" to see current users with this role."
 msgstr ""
-"Por favor seleccione Permisos para ver y añadir permisos al rol o a Usuarios "
-"para ver los usuarios actuales con este rol."
+"Por favor seleccione Permisos para ver y añadir permisos al rol o a Usuarios"
+" para ver los usuarios actuales con este rol."
 
 #: app/views/roles/index.html.haml:8
 msgid ""
@@ -2988,12 +2980,11 @@ msgstr "Producto"
 
 #: app/controllers/products_controller.rb:51
 msgid "Product '%s' created."
-msgstr ""
+msgstr "Producto '%s' creado."
 
 #: app/models/changeset.rb:137
-#, fuzzy
 msgid "Product '%s' hasn't any repositories"
-msgstr "Productos y repositorios"
+msgstr "Producto '%s' no tiene repositorios"
 
 #: app/models/system_template.rb:243 app/models/system_template.rb:260
 msgid "Product '%s' is already present in the template."
@@ -3006,11 +2997,11 @@ msgstr "No se halló producto '%s' en este entorno."
 
 #: app/controllers/products_controller.rb:101
 msgid "Product '%s' removed."
-msgstr ""
+msgstr "Producto '%s' retirado."
 
 #: app/controllers/products_controller.rb:79
 msgid "Product '%s' was updated."
-msgstr ""
+msgstr "Producto '%s' ha sido actualizado."
 
 #: app/views/systems/_subs.html.haml:43 app/views/systems/_subs.html.haml:108
 msgid "Product Name: "
@@ -3084,14 +3075,12 @@ msgid "Promoting..."
 msgstr "Promoviendo..."
 
 #: app/controllers/changesets_controller.rb:109
-#, fuzzy
 msgid "Promotion Changeset '%s' was created."
-msgstr "Promoción de Changeset está vacía."
+msgstr "Promoción de Changeset '%s' ha sido creada."
 
 #: app/controllers/changesets_controller.rb:209
-#, fuzzy
 msgid "Promotion Changeset '%s' was deleted."
-msgstr "Promoción de Changeset está vacía."
+msgstr "Promoción de Changeset '%s' ha sido borrada."
 
 #: app/views/promotions/show.html.haml:116
 msgid "Promotion Changeset Details"
@@ -3102,7 +3091,6 @@ msgid "Promotion Changeset History"
 msgstr "Historia de promoción de Changeset"
 
 #: app/views/promotions/show.html.haml:7
-#, fuzzy
 msgid "Promotion Changeset is empty."
 msgstr "Promoción de Changeset está vacía."
 
@@ -3149,15 +3137,15 @@ msgstr "Proveedor"
 
 #: app/controllers/providers_controller.rb:157
 msgid "Provider '%s' was created."
-msgstr ""
+msgstr "Proveedor '%s' ha sido creado."
 
 #: app/controllers/providers_controller.rb:177
 msgid "Provider '%s' was deleted."
-msgstr ""
+msgstr "Proveedor '%s' ha sido borrado."
 
 #: app/controllers/providers_controller.rb:204
 msgid "Provider '%s' was updated."
-msgstr ""
+msgstr "Proveedor '%s' ha sido actualizado."
 
 #: app/views/products/_edit.html.haml:4
 msgid "Provider: "
@@ -3177,7 +3165,7 @@ msgstr ""
 "Los proveedores proporcionan muchos tipos de contenido tales como paquetes, "
 "erratas, árboles de Kickstart e instalación de imágenes de disco. Un "
 "proveedor puede estar enviando todo el contenido pago o simplemente ser un "
-"repositorio local al proveer algunos repositorios de Yum."
+"repositorio local que provee algunos repositorios de Yum."
 
 #: app/views/packages/_dependencies.html.haml:21
 msgid "Provides"
@@ -3193,111 +3181,99 @@ msgstr "En cola"
 
 #: app/models/permission.rb:158 app/models/activation_key.rb:147
 msgid "Read Activation Keys"
-msgstr "Llaves de activación de lectura"
+msgstr "Ver llaves de activación"
 
 #: app/models/permission.rb:183
-#, fuzzy
 msgid "Read Activation Keys permission"
-msgstr "Llaves de activación de lectura"
+msgstr "Ver permiso de llaves de activación"
 
 #: app/models/kt_environment.rb:343
 msgid "Read Changesets in Environment"
-msgstr "Lectura d Changesets en entorno"
+msgstr "Ver Changesets  en entorno"
 
 #: app/models/kt_environment.rb:338
 msgid "Read Environment Contents"
-msgstr "Lectura de contenido de entorno"
+msgstr "Ver contenido de entorno"
 
 #: app/models/permission.rb:152
-#, fuzzy
 msgid "Read Environments"
-msgstr "Entornos"
+msgstr "Ver entornos"
 
 #: app/models/permission.rb:177
-#, fuzzy
 msgid "Read Environments permission"
-msgstr "Lectura de contenido de entorno"
+msgstr "Ver Permiso de entornos "
 
 #: app/models/role.rb:193
 msgid "Read Everything"
-msgstr ""
+msgstr "Ver todo"
 
 #: app/models/permission.rb:160
-#, fuzzy
 msgid "Read Filters"
-msgstr "Lectura de filtro de paquetes"
+msgstr "Ver filtros "
 
 #: app/models/permission.rb:185
-#, fuzzy
 msgid "Read Filters permission"
-msgstr "Modificar permiso"
+msgstr "Ver permiso de filtros"
 
 #: app/models/organization.rb:129
 msgid "Read Organization"
-msgstr "Lectura de organización"
+msgstr "Ver organización"
 
 #: app/models/permission.rb:150
-#, fuzzy
 msgid "Read Organizations"
-msgstr "Lectura de organización"
+msgstr "Ver organizaciones"
 
 #: app/models/permission.rb:175
-#, fuzzy
 msgid "Read Organizations permission"
-msgstr "Lectura de organización"
+msgstr "Ver permiso de organizaciones"
 
 #: app/models/filter.rb:66
 msgid "Read Package Filters"
-msgstr "Lectura de filtro de paquetes"
+msgstr "Ver filtro de paquetes"
 
 #: app/models/permission.rb:156 app/models/provider.rb:126
 msgid "Read Providers"
-msgstr "Lectura de proveedores"
+msgstr "Ver proveedores"
 
 #: app/models/permission.rb:181
-#, fuzzy
 msgid "Read Providers permission"
-msgstr "Lectura de proveedores"
+msgstr "Ver permiso de proveedores "
 
 #: app/models/permission.rb:164 app/models/role.rb:172
 msgid "Read Roles"
-msgstr "Lectura de roles"
+msgstr "Ver roles"
 
 #: app/models/permission.rb:189
-#, fuzzy
 msgid "Read Roles permission"
-msgstr "Añadir permiso global"
+msgstr "Ver permiso de roles"
 
 #: app/models/permission.rb:154 app/models/system_template.rb:392
 msgid "Read System Templates"
-msgstr "Lectura de plantillas del sistema"
+msgstr "Ver plantillas del sistema"
 
 #: app/models/permission.rb:179
-#, fuzzy
 msgid "Read System Templates permission"
-msgstr "Lectura de plantillas del sistema"
+msgstr "Ver permiso de plantillas de sistemas"
 
 #: app/models/organization.rb:130
 msgid "Read Systems"
-msgstr "Lectura de sistemas"
+msgstr "Ver sistemas"
 
 #: app/models/kt_environment.rb:339
 msgid "Read Systems in Environment"
-msgstr "Lectura de sistemas en entorno"
+msgstr "Ver sistemas en entorno"
 
 #: app/models/permission.rb:162 app/models/user.rb:355
 msgid "Read Users"
-msgstr "Lectura de usuarios"
+msgstr "Ver usuarios"
 
 #: app/models/permission.rb:187
-#, fuzzy
 msgid "Read Users permission"
-msgstr "Lectura de usuarios"
+msgstr "Ver permiso de usuarios"
 
 #: app/models/role.rb:208
-#, fuzzy
 msgid "Read only role."
-msgstr "Lectura de roles"
+msgstr "Ver solamente rol.\n"
 
 #: lib/navigation/content_management.rb:67
 msgid "Red Hat Content Provider"
@@ -3329,7 +3305,7 @@ msgstr "Lanzamiento"
 
 #: app/views/user_sessions/new.html.haml:15
 msgid "Remember me"
-msgstr ""
+msgstr "Recuérdeme"
 
 #: app/views/common/_common_i18n.html.haml:3
 #: app/views/promotions/show.html.haml:7
@@ -3505,9 +3481,8 @@ msgid "Repository"
 msgstr "Repositorio"
 
 #: app/controllers/repositories_controller.rb:67
-#, fuzzy
 msgid "Repository '%s' created."
-msgstr "URL de repositorio"
+msgstr "Repositorio '%s' creado."
 
 #: app/models/system_template.rb:321 app/models/system_template.rb:332
 msgid "Repository '%s' is already present in the template."
@@ -3522,19 +3497,16 @@ msgid "Repository '%s' not found in this template."
 msgstr "No se encontró repositorio '%s' en esta plantilla."
 
 #: app/controllers/repositories_controller.rb:107
-#, fuzzy
 msgid "Repository '%s' removed."
-msgstr "URL de repositorio"
+msgstr "Repositorio '%s' retirado."
 
 #: app/controllers/repositories_controller.rb:82
-#, fuzzy
 msgid "Repository '%s' updated."
-msgstr "No se encontró repositorio '%s' en esta plantilla."
+msgstr "Repositorio '%s' actualizado."
 
 #: app/views/repositories/_edit.html.haml:13
-#, fuzzy
 msgid "Repository Details"
-msgstr "URL de repositorio"
+msgstr "Información de repositorio"
 
 #: app/views/providers/redhat/show.html.haml:17
 msgid "Repository Url"
@@ -3542,35 +3514,39 @@ msgstr "URL de repositorio"
 
 #: app/models/repository.rb:16
 msgid "Repository cannot be disabled since it has already been promoted."
-msgstr "El repositorio no puede inhabilitarse porque ya está siendo promovido."
+msgstr ""
+"El repositorio no puede inhabilitarse porque ya está siendo promovido."
 
 #: app/models/changeset_distribution.rb:21
-#, fuzzy
 msgid ""
 "Repository of the distribution '%s' has not been promoted into the target "
 "environment!"
-msgstr "No se encontró repositorio '%s' en este entorno."
+msgstr ""
+"iRepositorio de la distribución '%s' no ha sido promovido en el entorno de "
+"destino!"
 
 #: app/models/changeset_erratum.rb:21
-#, fuzzy
 msgid ""
 "Repository of the erratum '%s' has not been promoted into the target "
 "environment!"
-msgstr "No se encontró repositorio '%s' en este entorno."
+msgstr ""
+"iRepositorio de la errata '%s' no ha sido promovido en el entorno de "
+"destino!"
 
 #: app/models/changeset_package.rb:20
-#, fuzzy
 msgid ""
 "Repository of the package '%s' has not been promoted into the target "
 "environment!"
-msgstr "No se encontró repositorio '%s' en este entorno."
+msgstr ""
+"iRepositorio del paquete '%s' no ha sido promovido en el entorno de destino!"
 
 #: app/views/system_events/_details.html.haml:16
 msgid "Request"
 msgstr "Solicitud"
 
 #: app/controllers/password_resets_controller.rb:101
-msgid "Request received has either an invalid or expired token.  Token: '%{t}'"
+msgid ""
+"Request received has either an invalid or expired token.  Token: '%{t}'"
 msgstr ""
 "La solicitud recibida tiene ya sea una credencial inválida o caduca. "
 "Credencial: '%{t}'"
@@ -3603,15 +3579,15 @@ msgstr "Rol"
 
 #: app/controllers/roles_controller.rb:89
 msgid "Role '%s' was created."
-msgstr ""
+msgstr "Rol '%s' ha sido creado."
 
 #: app/controllers/roles_controller.rb:140
 msgid "Role '%s' was deleted."
-msgstr ""
+msgstr "Rol '%s' ha sido borrado."
 
 #: app/controllers/roles_controller.rb:117
 msgid "Role '%s' was updated."
-msgstr ""
+msgstr "Rol '%s' ha sido actualizado."
 
 #: app/views/roles/_edit.html.haml:31
 msgid "Role Details"
@@ -3625,7 +3601,7 @@ msgstr "Roles"
 
 #: app/controllers/errors_controller.rb:20
 msgid "Route does not exist:"
-msgstr ""
+msgstr "Ruta no existe:"
 
 #: app/views/systems/errata/_index.html.haml:57
 msgid "Run"
@@ -3797,8 +3773,9 @@ msgstr "Software"
 
 #: app/views/promotions/show.html.haml:7
 msgid ""
-"Some promotion changeset modifications have not finished processing, are you "
-"sure you want to leave the page?  By leaving you may lose some modifications."
+"Some promotion changeset modifications have not finished processing, are you"
+" sure you want to leave the page?  By leaving you may lose some "
+"modifications."
 msgstr ""
 "Algunas modificaciones de promoción de Changeset no han terminado de "
 "procesarse, ¿está seguro de que desea salir de la página? Al salir puede "
@@ -3835,9 +3812,8 @@ msgid "Start Time"
 msgstr "Hora de inicio"
 
 #: app/controllers/changesets_controller.rb:218
-#, fuzzy
 msgid "Started promotion of '%s' to %s environment"
-msgstr "No se encontró repositorio '%s' en este entorno."
+msgstr "Iniciada promoción de '%s' a %s entorno"
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
@@ -3863,9 +3839,8 @@ msgid "Subscription manifest upload for provider '%{name}' failed."
 msgstr "Falló carga de manifiesto de suscripción para proveedor '%{name}'."
 
 #: app/controllers/providers_controller.rb:74
-#, fuzzy
 msgid "Subscription manifest uploaded successfully for provider '%{name}'."
-msgstr "Falló carga de manifiesto de suscripción para proveedor '%{name}'."
+msgstr "Manifiesto de suscripción cargada con éxito para proveedor '%{name}'."
 
 #: app/controllers/providers_controller.rb:72
 msgid ""
@@ -3873,9 +3848,10 @@ msgid ""
 "enable the repositories you want to sync by selecting 'Enable Repositories' "
 "and selecting individual repositories to be enabled."
 msgstr ""
-"Manifiesto de suscripción cargado con éxito para el proveedor '%{name}'. Por "
-"favor habilite los repositorios que desea sincronizar, seleccione 'Habilitar "
-"repositorios' y los repositorios individuales que van a ser activados."
+"Manifiesto de suscripción cargado con éxito para el proveedor '%{name}'. Por"
+" favor habilite los repositorios que desea sincronizar, seleccione "
+"'Habilitar repositorios' y los repositorios individuales que van a ser "
+"activados."
 
 #: lib/navigation/systems.rb:68 lib/navigation/organization.rb:42
 msgid "Subscriptions"
@@ -3894,14 +3870,12 @@ msgid "Subscriptions are not Current"
 msgstr "Suscripciones no son actuales"
 
 #: app/controllers/activation_keys_controller.rb:101
-#, fuzzy
 msgid "Subscriptions successfully added to Activation Key '%s'."
-msgstr "No se puede borrar organización '%s'."
+msgstr "Suscripciones añadidas con éxito a la llave de activación '%s'."
 
 #: app/controllers/activation_keys_controller.rb:125
-#, fuzzy
 msgid "Subscriptions successfully removed from Activation Key '%s'."
-msgstr "No se puede borrar organización '%s'."
+msgstr "Suscripciones retiradas exitosamente de la llave de activación '%'"
 
 #: app/helpers/dashboard_helper.rb:53 app/views/dashboard/_sync.haml:27
 msgid "Success"
@@ -3909,16 +3883,15 @@ msgstr "Éxito"
 
 #: app/models/changeset.rb:298
 msgid "Successfully promoted changeset '%s'."
-msgstr ""
+msgstr "Changeset promovido con éxito '%'s."
 
 #: app/models/user.rb:453
-#, fuzzy
 msgid "Successfully removed organization '%s'."
-msgstr "No se puede borrar organización '%s'."
+msgstr "Organización retirada con éxito '%'."
 
 #: app/controllers/filters_controller.rb:166
 msgid "Sucessfully updated '%s' package filter."
-msgstr ""
+msgstr "Filtro de paquetes '%' actualizado con éxito."
 
 #: app/views/system_events/_details.html.haml:10
 msgid "Summary"
@@ -3930,16 +3903,15 @@ msgstr "Resumen:"
 
 #: app/models/permission.rb:166
 msgid "Super Admin"
-msgstr ""
+msgstr "Súper admin"
 
 #: app/models/permission.rb:191
-#, fuzzy
 msgid "Super Admin permission"
-msgstr "Añadir permisos "
+msgstr "Permiso de súper admin"
 
 #: app/models/role.rb:206
 msgid "Super administrator with all access."
-msgstr ""
+msgstr "Súper admin con todo el acceso"
 
 #: app/views/providers/redhat/_subscription_details.html.haml:7
 #: app/views/subscriptions/index.html.haml:16
@@ -3960,11 +3932,11 @@ msgstr "Vista general de sincronización"
 
 #: app/controllers/sync_plans_controller.rb:140
 msgid "Sync Plan '%s' was created."
-msgstr ""
+msgstr "Plan de sincronización '%' ha sido creado."
 
 #: app/controllers/sync_plans_controller.rb:86
 msgid "Sync Plan '%s' was updated."
-msgstr ""
+msgstr "Plan de sincronización '%' ha sido actualizado."
 
 #: app/controllers/sync_plans_controller.rb:47
 #: lib/navigation/content_management.rb:104
@@ -3995,7 +3967,7 @@ msgstr "Sincronización completa."
 
 #: app/controllers/sync_plans_controller.rb:111
 msgid "Sync plan '%s' was deleted."
-msgstr ""
+msgstr "Plan de sincronización '%s' ha sido borrado."
 
 #: app/controllers/api/products_controller.rb:76
 msgid "Synchronization plan assigned."
@@ -4015,14 +3987,12 @@ msgid "System"
 msgstr "Sistema"
 
 #: app/controllers/systems_controller.rb:94
-#, fuzzy
 msgid "System '%s' was created."
-msgstr "Suscripciones de sistemas actualizados."
+msgstr "Sistema '%s' ha sido creado."
 
 #: app/controllers/systems_controller.rb:217
-#, fuzzy
 msgid "System '%s' was updated."
-msgstr "Suscripciones de sistemas actualizados."
+msgstr "Sistema '%s' ha sido actualizado."
 
 #: app/views/systems/_subs.html.haml:6
 msgid "System Current Subscription(s)"
@@ -4055,9 +4025,8 @@ msgid "System Template"
 msgstr "Plantilla del sistema"
 
 #: app/controllers/system_templates_controller.rb:259
-#, fuzzy
 msgid "System Template '%s' was created."
-msgstr "No hay plantillas de sistema definidas actualmente"
+msgstr "Plantilla de sistema '%s ' ha sido creada"
 
 #: app/controllers/system_templates_controller.rb:78
 #: app/helpers/breadcrumb_helper.rb:140 app/models/resource_type.rb:92
@@ -4072,8 +4041,8 @@ msgstr "Plantillas de sistema"
 #: app/views/system_templates/index.html.haml:40
 msgid ""
 "System Templates allow you to create a template for what a system should "
-"look like.  This includes what products are subscribed and what packages are "
-"installed."
+"look like.  This includes what products are subscribed and what packages are"
+" installed."
 msgstr ""
 "Las plantillas del sistema le permiten crear una plantilla para que el "
 "sistema sea similar. Incluye los  productos suscritos y los paquetes "
@@ -4110,30 +4079,28 @@ msgid "Template"
 msgstr "Plantilla"
 
 #: app/controllers/system_templates_controller.rb:195
-#, fuzzy
 msgid "Template %s has been updated successfully"
-msgstr "Usuario actualizado con éxito."
+msgstr "Plantilla %s ha sido actualizada con éxito"
 
 #: app/controllers/system_templates_controller.rb:207
-#, fuzzy
 msgid "Template %s updated successfully."
-msgstr "Usuario actualizado con éxito."
+msgstr "Plantilla %s ha sido actualizada con éxito."
 
 #: app/controllers/system_templates_controller.rb:285
-#, fuzzy
 msgid ""
-"Template '%s' has been updated successfully, however you have removed either "
-"a product or repository that contained the selected distribution for this "
+"Template '%s' has been updated successfully, however you have removed either"
+" a product or repository that contained the selected distribution for this "
 "template.  Please select another distribution to ensure a working system "
 "template."
 msgstr ""
-"La distribución seleccionada para esta plantilla. Por favor seleccione otra "
-"distribución para garantizar una plantilla de sistema de trabajo."
+"Plantilla '%s' ha sido actualizada con éxito, sin embargo usted ha retirado "
+"un producto o un repositorio que contenía la distribución seleccionada para "
+"esta plantilla. Por favor seleccione otra distribución para garantizar una "
+"plantilla de sistema de trabajo."
 
 #: app/controllers/system_templates_controller.rb:217
-#, fuzzy
 msgid "Template '%s' was deleted."
-msgstr "No se puede exportar la plantilla"
+msgstr "Plantilla '%s' ha sido borrada."
 
 #: app/models/system_template.rb:21
 msgid "Template can have parent templates only from the same environment"
@@ -4220,8 +4187,8 @@ msgid ""
 "permission is one that cuts across all organizations."
 msgstr ""
 "Actualmente no hay permisos globales para este rol. Por favor haga clic en "
-"Añadir permisos en la barra de acción de abajo y añada un permiso global. Un "
-"permiso global es el que afecta a todos las organizaciones."
+"Añadir permisos en la barra de acción de abajo y añada un permiso global. Un"
+" permiso global es el que afecta a todos las organizaciones."
 
 #: app/views/roles/index.html.haml:8
 msgid ""
@@ -4271,6 +4238,8 @@ msgid ""
 "There is already an active sync process for the '%s' repository. Please try "
 "again later"
 msgstr ""
+"Ya existe un proceso de sincronización activo para el repositorio '%'. Por "
+"favor intente de nuevo más tarde."
 
 #: app/controllers/sync_schedules_controller.rb:80
 msgid "There must be at least one plan selected"
@@ -4289,9 +4258,12 @@ msgid ""
 "There were errors with one of the syncs: %s in repository: %s. See the log "
 "for more details."
 msgstr ""
+"Hubo errores con una de las sincronizaciones: %s en repositorio: %s. Vea el "
+"registro  para obtener mayor información."
 
 #: app/views/gpg_keys/_products_repos.html.haml:17
-msgid "This GPG Key is not currently assigned to any products or repositories."
+msgid ""
+"This GPG Key is not currently assigned to any products or repositories."
 msgstr ""
 "La llave GPG no está asignada actualmente a ningún producto o repositorio."
 
@@ -4323,13 +4295,13 @@ msgstr "Título "
 
 #: app/views/common/_panel.html.haml:14
 msgid ""
-"To view the details of an item on the left, simply click on a single row.<br/"
-"><br/>To select multiple rows, hold the Control Key and click multiple rows."
-"<br/><br/>If you don't need this help anymore, please click the close button "
-"in the top right of this box."
+"To view the details of an item on the left, simply click on a single "
+"row.<br/><br/>To select multiple rows, hold the Control Key and click "
+"multiple rows.<br/><br/>If you don't need this help anymore, please click "
+"the close button in the top right of this box."
 msgstr ""
-"Para ver información sobre un elemento a la izquierda, haga clic en una sola "
-"hilera.<br/><br/>Para seleccionar múltiples hileras, mantenga la tecla de "
+"Para ver información sobre un elemento a la izquierda, haga clic en una sola"
+" hilera.<br/><br/>Para seleccionar múltiples hileras, mantenga la tecla de "
 "control y haga clic en múltiples hileras.<br/><br/>Si ya no necesita este "
 "ejemplo, por favor haga clic en el botón de cerrar en la parte superior de "
 "esta caja. "
@@ -4369,7 +4341,7 @@ msgstr "UUID"
 
 #: app/models/system_template.rb:138
 msgid "Uebercert for %s has not been generated."
-msgstr ""
+msgstr "Uebercert para %s no ha sido generado."
 
 #: app/models/activation_key.rb:90
 msgid "Unable to determine quantity for pool %s"
@@ -4377,7 +4349,8 @@ msgstr "No se puede determinar la cantidad para grupo %s"
 
 #: app/controllers/providers_controller.rb:119
 msgid "Unable to retrieve subscription history for provider '%{name}."
-msgstr "No se puede recuperar historia de suscripción para proveedor '%{name}."
+msgstr ""
+"No se puede recuperar historia de suscripción para proveedor '%{name}."
 
 #: app/controllers/providers_controller.rb:105
 msgid "Unable to retrieve subscription manifest for provider '%{name}."
@@ -4386,7 +4359,8 @@ msgstr ""
 
 #: app/controllers/system_packages_controller.rb:86
 msgid "Uninstall of Package Groups '%{p}' scheduled for System '%{s}'."
-msgstr "Desinstalar grupos de paquetes '%{p}' programados para sistema '%{s}'."
+msgstr ""
+"Desinstalar grupos de paquetes '%{p}' programados para sistema '%{s}'."
 
 #: app/controllers/system_packages_controller.rb:68
 #: app/controllers/system_packages_controller.rb:76
@@ -4399,9 +4373,8 @@ msgid "Unknown"
 msgstr "Desconocidos "
 
 #: app/controllers/api/systems_controller.rb:215
-#, fuzzy
 msgid "Unknown repository label"
-msgstr "No hay repositorios disponibles."
+msgstr "Etiqueta de repositorio desconocida"
 
 #: app/views/providers/redhat/_subscription_details.html.haml:29
 #: app/views/systems/_subs.html.haml:96
@@ -4478,7 +4451,7 @@ msgstr "Usuario"
 
 #: app/controllers/users_controller.rb:289
 msgid "User '%s' was deleted."
-msgstr ""
+msgstr "Usuario '%' ha sido borrado."
 
 #: app/views/notices/show.html.haml:13
 msgid "User Notifications"
@@ -4564,8 +4537,8 @@ msgid ""
 "WARNING: This will override any GPG keys already associated with a "
 "repository within this product"
 msgstr ""
-"ADVERTENCIA: Esto sobrescribirá las llaves GPG que ya estén asociadas con un "
-"repositorio dentro de este producto"
+"ADVERTENCIA: Esto sobrescribirá las llaves GPG que ya estén asociadas con un"
+" repositorio dentro de este producto"
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
@@ -4590,31 +4563,31 @@ msgid "You can synchronize repositories only in library environment'"
 msgstr "Puede sincronizar repositorios únicamente en el entorno de biblioteca"
 
 #: app/controllers/application_controller.rb:511
-#, fuzzy
 msgid ""
 "You current organization is no longer valid. It is possible that either the "
 "organization has been deleted or your permissions revoked, please log back "
 "in to continue."
 msgstr ""
-"Su organización actual y no es válida. Es posible que la organización haya "
-"sido borrada, por favor ingrese de nuevo y continúe."
+"Su organización actual ya no es válida. Es posible que la organización haya "
+"sido borrada o que sus permisos hayan sido revocados, por favor regístrese "
+"de nuevo para continuar."
 
 #: app/controllers/failed_authentication_controller.rb:28
 msgid ""
-"You do not have valid credentials to access this system. Please contact your "
-"administrator."
+"You do not have valid credentials to access this system. Please contact your"
+" administrator."
 msgstr ""
 "No tiene credenciales válidas para acceder a este sistema. Por favor "
 "contacte a su administrador."
 
 #: app/controllers/failed_authentication_controller.rb:25
-#, fuzzy
 msgid ""
-"You have entered an incorrect username/password combination, or your account "
-"may currently be disabled. Please try again or contact your administrator."
+"You have entered an incorrect username/password combination, or your account"
+" may currently be disabled. Please try again or contact your administrator."
 msgstr ""
-"Ha ingresado un nombre de usuario incorrecto, la combinación de contraseña o "
-"cuenta inhabilitada, por favor intente de nuevo."
+"Ha ingresado una combinación de nombre de usuario y contraseña incorrectos o"
+" su cuenta puede estar inhabilitada actualmente. Por favor intente de nuevo "
+"o contacte a sus administrador."
 
 #: app/views/roles/_self_role_edit.html.haml:31
 msgid "You have no assigned roles."
@@ -4625,8 +4598,8 @@ msgid ""
 "You have selected all resource types; this will grant full access to the "
 "organization. Press the Cancel button to select an individual resource type."
 msgstr ""
-"Ha seleccionado todos los tipos de recursos; esto le otorgará total acceso a "
-"la organización. Presione el botón de cancelar para seleccionar un tipo de "
+"Ha seleccionado todos los tipos de recursos; esto le otorgará total acceso a"
+" la organización. Presione el botón de cancelar para seleccionar un tipo de "
 "recurso individual. "
 
 #: app/views/common/404.html.haml:4
@@ -4688,9 +4661,8 @@ msgid "all packages update failed"
 msgstr "Falló la actualización de todos los paquetes "
 
 #: app/models/kt_environment.rb:368
-#, fuzzy
 msgid "can not be updated"
-msgstr "No se puede exportar la plantilla"
+msgstr "No se puede actualizar"
 
 #: app/models/katello_url_format_validator.rb:50
 #: app/models/katello_name_format_validator.rb:20
@@ -4709,9 +4681,8 @@ msgstr "No puede contener caracteres diferentes a los alfanuméricos,'_', '-'."
 
 #: app/models/katello_description_format_validator.rb:17
 #: app/models/katello_name_format_validator.rb:26
-#, fuzzy
 msgid "cannot contain more than %s characters"
-msgstr "Debe tener por lo menos 5 caracteres."
+msgstr "No puede contener más de %s caracteres"
 
 #: app/views/promotions/show.html.haml:7
 msgid "currently editing this promotion changeset"
@@ -4719,12 +4690,11 @@ msgstr "Actualmente modificando esta Promoción de Changeset"
 
 #: app/models/sync_plan.rb:28
 msgid "daily"
-msgstr "a diario"
+msgstr "A diario"
 
 #: app/views/promotions/show.html.haml:177
-#, fuzzy
 msgid "displayed"
-msgstr "Visualizar"
+msgstr "Desplegada"
 
 #: app/models/kt_environment.rb:29
 msgid "environment can only have one child"
@@ -4736,11 +4706,11 @@ msgstr "Se requiere entorno"
 
 #: app/models/sync_plan.rb:27
 msgid "hourly"
-msgstr "por hora"
+msgstr "Por hora"
 
 #: app/models/activation_key.rb:43
 msgid "id: %s doesn't exist "
-msgstr ""
+msgstr "id: %s no existe"
 
 #: app/models/system_task.rb:105 app/models/system_task.rb:106
 msgid "installing errata..."
@@ -4798,7 +4768,7 @@ msgstr "Debe ser único dentro del alcance de una organización"
 
 #: app/models/environment_product.rb:17
 msgid "must be unique within one environment"
-msgstr "Debe ser única dentro del entorno"
+msgstr "Debe ser único dentro del entorno"
 
 #: app/models/kt_environment.rb:89 app/models/gpg_key.rb:33
 msgid "must be unique within one organization"
@@ -4809,9 +4779,8 @@ msgid "must contain 'Library'"
 msgstr "Debe contener 'biblioteca'"
 
 #: app/models/katello_name_format_validator.rb:27
-#, fuzzy
 msgid "must contain at least %s characters"
-msgstr "Debe tener por lo menos 5 caracteres."
+msgstr "Debe contener por lo menos %s caracteres"
 
 #: app/models/no_trailing_space_validator.rb:20
 msgid "must not contain leading or trailing white spaces."
@@ -4860,9 +4829,8 @@ msgid "repoids"
 msgstr "repoids"
 
 #: app/views/promotions/show.html.haml:180
-#, fuzzy
 msgid "results."
-msgstr "resultados"
+msgstr "Resultados."
 
 #: app/controllers/sync_management_controller.rb:243
 msgid "sync did not complete successfully"
@@ -4880,8 +4848,8 @@ msgstr "Plantilla"
 msgid ""
 "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr ""
-"Los siguientes atributos no pueden ser actualizados para el proveedor de Red "
-"Hat: [ %s ]"
+"Los siguientes atributos no pueden ser actualizados para el proveedor de Red"
+" Hat: [ %s ]"
 
 #: app/models/system_task.rb:77 app/models/system_task.rb:78
 msgid "updating package group..."
@@ -4905,23 +4873,4 @@ msgstr "Vista"
 
 #: app/helpers/sync_schedules_helper.rb:19 app/models/sync_plan.rb:29
 msgid "weekly"
-msgstr "Semanalmente"
-
-#~ msgid "Application Life Cycle Management"
-#~ msgstr "Administración del ciclo de vida de la aplicación"
-
-#~ msgid "Changelog"
-#~ msgstr "Changelog"
-
-#~ msgid "Edit Repository"
-#~ msgstr "Modificar Repositorio"
-
-#~ msgid "Promotion of changeset '%{name}' failed."
-#~ msgstr "Promoción de Changeset '%{name}'  falló"
-
-#~ msgid ""
-#~ "You currently do not have any permissions that grant access to an "
-#~ "organization.  Please contact your system administrator to receive access."
-#~ msgstr ""
-#~ "Actualmente no tiene permisos que otorgan acceso a una organización. Por "
-#~ "favor contacte a su administrador del sistema para recibir acceso."
+msgstr "Semanal"

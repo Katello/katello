@@ -50,6 +50,14 @@ class OrganizationsController < ApplicationController
     }
   end
 
+  def param_rules
+    {
+      :create =>[:name, :description, :envname, :envdescription],
+      :update => {:organization  => [:description]}
+    }
+  end
+
+
   def section_id
     'orgs'
   end
@@ -79,8 +87,10 @@ class OrganizationsController < ApplicationController
         @new_env = nil
       end
 
+      org_created = false
       @organization = Organization.new(:name => params[:name], :description => params[:description], :cp_key => params[:name].tr(' ', '_'))
       @organization.save!
+      org_created = true
 
       if @new_env
         @new_env.organization = @organization
@@ -89,7 +99,7 @@ class OrganizationsController < ApplicationController
       end
       notice [_("Organization '%s' was created.") % @organization["name"]]
     rescue Exception => error
-      notice(error, {:level => :error, :include_class_name => KTEnvironment::ERROR_CLASS_NAME})
+      notice(error, {:level => :error, :include_class_name => org_created ? KTEnvironment::ERROR_CLASS_NAME : Organization.name})
       Rails.logger.error error.backtrace.join("\n")
       #rollback creation of the org if the org creation passed but the environment was not created
       if @organization && @organization.id #it is saved to the db
@@ -223,6 +233,7 @@ class OrganizationsController < ApplicationController
                :col => ['name'],
                :titles => [_('Name')],
                :create => _('Organization'),
+               :create_label => _('+ New Organization'),
                :name => controller_display_name,
                :accessor => :cp_key,
                :ajax_load  => true,

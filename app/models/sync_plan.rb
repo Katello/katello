@@ -18,7 +18,7 @@ class SyncPlan < ActiveRecord::Base
                 :display_attrs=>[:name, :sync_date, :description, :interval]
 
   mapping do
-    indexes :name, :type => 'string', :analyzer => :keyword
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
     indexes :sync_date, :type=>'date'
   end
@@ -45,6 +45,11 @@ class SyncPlan < ActiveRecord::Base
 
   scope :readable, lambda { |org| ::Provider.any_readable?(org)? where(:organization_id => org.id ) : where("0 = 1") }
 
+  before_save :reassign_sync_plan_to_products
+
+  def reassign_sync_plan_to_products
+    self.products.each &:save # triggers orchestration in products
+  end
 
   def validate_sync_date
     errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?

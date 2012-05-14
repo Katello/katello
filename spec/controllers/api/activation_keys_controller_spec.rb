@@ -40,7 +40,7 @@ describe Api::ActivationKeysController do
     before { ActivationKey.should_receive(:find).once.with(123).and_return(@activation_key) }
 
     specify { get :show, :id => 123 }
-    specify { put :update, :id => 123 }
+    specify { put :update, :id => 123, :activation_key => {:description => "genius"} }
     specify { delete :destroy, :id => 123 }
   end
 
@@ -57,7 +57,7 @@ describe Api::ActivationKeysController do
     end
 
     specify { get :index, :environment_id => 123 }
-    specify { post :create, :environment_id => 123 }
+    specify { post :create, :environment_id => 123, :activation_key=> {:description => "gah"} }
   end
 
   it "before_filter :find_environment should return 404 if environment wasn't found" do
@@ -129,9 +129,21 @@ describe Api::ActivationKeysController do
 
     it "should return created key" do
       ActivationKey.stub!(:create!).and_return(@activation_key)
-      post :create, :environment_id => 123
+      post :create, :environment_id => 123, :activation_key=> {:name=>"egypt", :description => "gah"}
 
       response.body.should == @activation_key.to_json
+    end
+
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = {:environment_id => 123,
+                   :activation_key =>
+                      {:bad_foo => "mwahahaha",
+                       :name => "Gpg Key",
+                       :description => "This is the key string" }
+        }.with_indifferent_access
+        post :create, bad_req
+      end
     end
   end
 
@@ -155,6 +167,18 @@ describe Api::ActivationKeysController do
     it "should return updated key" do
       put :update, :id => 123, :activation_key => {:name => 'blah'}
       response.body.should == @activation_key.to_json
+    end
+
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = {:id => 123,
+                   :activation_key =>
+                      {:bad_foo => "mwahahaha",
+                       :name => "Gpg Key",
+                       :description => "This is the key string" }
+        }.with_indifferent_access
+        put :update, bad_req
+      end
     end
   end
 

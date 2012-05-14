@@ -20,7 +20,8 @@ describe OrganizationsController do
 
   module OrgControllerTest
     ORG_ID = 1
-    ORGANIZATION = {:name => "organization_name", :description => "organization_description", :cp_key => "organization_name", :envname => "organization_env"}
+    ORGANIZATION = {:name => "organization_name", :description => "organization_description", :envdescription=>"foo", :envname => "organization_env"}
+    ORGANIZATION_UPDATE = { :description => "organization_description"}
   end
 
   describe "rules" do
@@ -59,7 +60,7 @@ describe OrganizationsController do
       end
       let(:action) {:update}
       let(:req) do
-        put 'update', :id => @organization.id, :organization => OrgControllerTest::ORGANIZATION
+        put 'update', :id => @organization.id, :organization => OrgControllerTest::ORGANIZATION_UPDATE
       end
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:update, :organizations,nil, @organization) }
@@ -116,7 +117,14 @@ describe OrganizationsController do
         post 'create', { :name => "", :description => "" }
         response.should_not be_success
       end
-      
+
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = {:name => "multi word organization", :description => "spaced out organization", :envname => "first-env"}
+          bad_req[:bad_foo] = "mwahaha"
+          post :create, bad_req
+        end
+      end
     end
     
   end
@@ -224,21 +232,33 @@ describe OrganizationsController do
       
       it "should call katello org update api" do
         @organization.should_receive(:update_attributes!).once
-        put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION
+        put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
         response.should be_success
       end
       
       it "should generate a success notice" do
         controller.should_receive(:notice) 
-        put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION
+        put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
       end
       
       it "should not redirect from edit view" do
-        put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION
+        put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
         response.should_not be_redirect
       end
     end
-    
+    describe "with invalid params" do
+      before do
+        @organization = new_test_org
+      end
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = {:id => @organization.id, :organization => {:description =>"grand" }}
+          bad_req[:bad_foo] = "mwahaha"
+          put :update, bad_req
+        end
+      end
+    end
+
     describe "exception is thrown in katello api" do
       before(:each) do
         @organization = new_test_org

@@ -12,7 +12,7 @@
 
 require 'spec_helper.rb'
 
-describe Api::ProvidersController do
+describe Api::ProvidersController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 
@@ -47,11 +47,7 @@ describe Api::ProvidersController do
       :name => provider_name,
       :description => "a description",
       :repository_url => "https://some.url",
-      :provider_type => Provider::REDHAT,
-      :login_credential_attributes => {
-          :username => 'username',
-          :password => 'password'
-      }
+      :provider_type => Provider::CUSTOM,
     }
   end
 
@@ -90,6 +86,17 @@ describe Api::ProvidersController do
       Provider.should_receive(:create!).and_return(Provider.new)
       req
     end
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = {:organization_id => @organization.cp_key,
+                   :provider =>
+                      {:bad_foo => "mwahahaha",
+                       :name => "Provider Key",
+                       :description => "This is the key string" }
+        }.with_indifferent_access
+        post :create, bad_req
+      end
+    end
   end
 
   describe "update a provider" do
@@ -105,6 +112,17 @@ describe Api::ProvidersController do
       @provider.should_receive(:update_attributes!).once
       
       req
+    end
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = {:id => 123,
+                   :provider =>
+                      {:bad_foo => "mwahahaha",
+                       :name => "prov Key",
+                       :description => "This is the key string" }
+        }.with_indifferent_access
+        put :update, bad_req
+      end
     end
   end
 
@@ -168,14 +186,36 @@ describe Api::ProvidersController do
       @temp_file.stub(:close)
       @temp_file.stub(:write)
       @temp_file.stub(:path).and_return("/a/b/c")
-      
+
       File.stub(:new).and_return(@temp_file)
     end
-      
+
     it "should call Provider#import_manifest" do
       Provider.should_receive(:find).with(@organization.redhat_provider.id).and_return(@organization.redhat_provider)
       @organization.redhat_provider.should_receive(:import_manifest).once
       req
+    end
+  end
+
+  describe "refresh products" do
+
+    let(:action) { :refresh_products }
+    let(:req) { post :refresh_products, { :id => @organization.redhat_provider.id  } }
+    let(:authorized_user) { user_with_write_permissions }
+    let(:unauthorized_user) { user_without_write_permissions }
+    it_should_behave_like "protected action"
+
+    it "should refresh all the engineering products of the provider" do
+      Provider.should_receive(:find).with(@organization.redhat_provider.id).and_return(@organization.redhat_provider)
+      @organization.redhat_provider.should_receive(:refresh_products).once
+      req
+    end
+
+    it "should fail for no-red-hat provider" do
+      Provider.should_receive(:find).with(@organization.redhat_provider.id).and_return(@provider)
+      @organization.redhat_provider.should_not_receive(:refresh_products)
+      req
+      response.should_not be_success
     end
   end
 

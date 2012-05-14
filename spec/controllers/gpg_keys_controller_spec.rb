@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe GpgKeysController do
+describe GpgKeysController, :katello => true do
 
   include LoginHelperMethods
   include LocaleHelperMethods
@@ -192,6 +192,14 @@ describe GpgKeysController do
         post :create, GPGKeyControllerTest::GPGKEY_INVALID
         response.should_not be_success
       end
+
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = @gpg_key_params_pasted
+          bad_req[:gpg_key][:bad_foo] = "mwahaha"
+          post :create, bad_req
+        end
+      end
     end
     
     describe "with inclusive search parameters" do
@@ -318,6 +326,14 @@ describe GpgKeysController do
         it "should be unsuccessful" do
           put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME_INVALID
           response.should_not be_success
+        end
+
+        it_should_behave_like "bad request"  do
+          let(:req) do
+            bad_req = {:id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_CONTENT}
+            bad_req[:gpg_key][:bad_foo] = "mwahaha"
+            put :update, bad_req
+          end
         end
       end
     end

@@ -54,6 +54,13 @@ class ActivationKeysController < ApplicationController
     }
   end
 
+  def param_rules
+    {
+      :create => {:activation_key => [:name, :description, :environment_id, :system_template_id]},
+      :update => {:activation_key  => [:name, :description,:environment_id, :system_template_id]}
+    }
+  end
+
   def items
     render_panel_direct(ActivationKey, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
         {:default_field => :name, :filter=>{:organization_id=>[current_organization.id]}})
@@ -264,7 +271,8 @@ class ActivationKeysController < ApplicationController
       :title => _('Activation Keys'),
       :col => ['name'],
       :titles => [_('Name')],
-      :create => _('Key'), 
+      :create => _('Key'),
+      :create_label => _('+ New Key'),
       :name => controller_display_name,
       :ajax_load  => true,
       :ajax_scroll => items_activation_keys_path(),

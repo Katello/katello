@@ -1,7 +1,8 @@
 = javascript do
-  :javascript
+  :plain
     localize({
-      "noDefaultEnv": '#{escape_javascript(_("No default environment. Select an organization to choose from available environments."))}'
+      "noDefaultEnv": '#{escape_javascript(_("No default environment. Select an organization to choose from available environments."))}',
+      "password_match": '#{escape_javascript(_('The passwords do not match'))}',
     });
     env_select.original_env_id = '';
     env_select.ajax_params={};

@@ -189,11 +189,11 @@ KT.roles.permissionWidget = function(){
 
             current_stage = 'resource_type';
 
-	        for( item in flow ){
-                if( flow.hasOwnProperty(item) && item !== current_stage ){
-                    flow[item].container.hide();
+            KT.utils.each(flow, function(item, key){
+                if( key !== current_stage ){
+                    item.container.hide();
                 }
-            }
+            });
 
             progress_bar.setProgress(25);
 
@@ -260,21 +260,20 @@ KT.roles.permissionWidget = function(){
                 html            = "";
 
             types_select.empty();
-            for( type in types ){
-                if( types.hasOwnProperty(type) ){
-                    if( type !== "all" ){
-                        if( current_organization.split('_')[0] === 'organization' ){
-                            if( !types[type].global ){
-                                html += '<option value="' + type + '">' + types[type].name + '</option>';
-                            }
-                        } else {
-                            html += '<option value="' + type + '">' + types[type].name + '</option>';
+            
+            KT.utils.each(types, function(type, key){
+                if( key !== "all" ){
+                    if( current_organization.split('_')[0] === 'organization' ){
+                        if( !type.global ){
+                            html += '<option value="' + key + '">' + type.name + '</option>';
                         }
                     } else {
-                        html += '<option class="hidden" value="all">' + i18n.all + '</option>';
+                        html += '<option value="' + key + '">' + type.name + '</option>';
                     }
+                } else {
+                    html += '<option class="hidden" value="all">' + i18n.all + '</option>';
                 }
-            }
+            });
 
             types_select.append(html);
         },
@@ -404,9 +403,9 @@ KT.roles.permissionWidget = function(){
                 button.addClass("highlighted");
                 set_types(current_organization);
 
-				for( item in flow ){
-					flow[item].container.show();
-				}
+                KT.utils.each(flow, function(item, key){
+					item.container.show();
+				});
 
 				flow['resource_type'].input.val(permission.type);
 				flow['details'].input.val(permission.name);
@@ -795,13 +794,11 @@ var roleActions = (function($){
 	                    delete roles_breadcrumb[id];
                     	roles_breadcrumb[current_organization].full_access = false;
 
-                    	for( item in roles_breadcrumb ){
-                    		if( roles_breadcrumb.hasOwnProperty(item) ){
-                    			if( item.split('_')[0] === 'permission' && item.split('_')[1] === id.split('_')[1] && roles_breadcrumb[item].type === 'all'){
-                    				roles_breadcrumb[current_organization].full_access = true;
-                    			}
-                    		}
-                    	}
+                        KT.utils.each(roles_breadcrumb, function(item, key){
+                            if( key.split('_')[0] === 'permission' && key.split('_')[1] === id.split('_')[1] && item.type === 'all'){
+                                roles_breadcrumb[current_organization].full_access = true;
+                            }
+                    	});
                     } else {
                 		delete roles_breadcrumb[id];
                 	}
@@ -853,9 +850,52 @@ var roleActions = (function($){
                     edit_user(element, true);
                 } else if( element.hasClass('remove_user') ){
                     edit_user(element, false);
-                }
+                } 
             }
         },
+        add_group = function(element, val, role_id){
+            var submit_data = { group : val };  
+                $.ajax({
+                    type     : "POST",
+                    url      : KT.routes.create_role_ldap_groups_path(role_id),
+                    cache    : false,
+                    data     : $.param(submit_data),
+                    dataType : 'json',
+                    success  : function(data){
+                        element.removeClass('disabled');
+                        $.extend(roles_breadcrumb, data);
+                        KT.roles.tree.rerender_content();
+                     },
+                     error 	: function(){
+                        element.removeClass('disabled');
+                        KT.roles.tree.rerender_content();
+                     }
+                  });
+        },
+        ldapGroupAdd = function(element, val, role_id){
+            element.addClass('disabled');
+            add_group(element, val, role_id);
+        },
+        remove_group = function(element, role_id, group_id){
+            $.ajax({
+                 type     : "DELETE",
+                 url      : KT.routes.destroy_role_ldap_group_path(role_id, group_id),
+                 cache    : false,
+                 success  : function(data){
+                      element.removeClass('disabled');
+                      delete roles_breadcrumb['ldap_group_' + group_id];
+                      KT.roles.tree.rerender_content();
+                 },
+                 error 	: function(){
+                      element.removeClass('disabled');
+                      KT.roles.tree.rerender_content();
+                 }
+            });
+        },
+        ldapGroupRemove = function(element, role_id, group_id){
+            element.addClass('disabled');
+            remove_group(element, role_id, group_id);
+        },	
         removeRole = function(button){
             button.addClass('disabled');
             $.ajax({
@@ -863,19 +903,20 @@ var roleActions = (function($){
                 url: button.attr('data-url'),
                 cache: false,
                 success: function(data){
-                    // Generally a bad idea - trusting implicility the data being returned from the server
-                    // This conforms with how other 'removes' on the site work - relying on a partial template
-                    // to render and return the proper actions for a delete
-                    eval(data);
+                     // Generally a bad idea - trusting implicility the data being returned from the server
+                     // This conforms with how other 'removes' on the site work - relying on a partial template
+                     // to render and return the proper actions for a delete
+                     eval(data);
                 }
-            });
-        };
-
+           });
+     };
     return {
         getPermissionDetails    :  getPermissionDetails,
         setCurrentCrumb         :  setCurrentCrumb,
         savePermission          :  savePermission,
         handleContentAddRemove  :  handleContentAddRemove,
+        ldapGroupAdd 		:  ldapGroupAdd,
+        ldapGroupRemove  	:  ldapGroupRemove,
         setCurrentOrganization  :  setCurrentOrganization,
         getCurrentOrganization  :  getCurrentOrganization,
         removeRole              :  removeRole,
@@ -911,13 +952,11 @@ var templateLibrary = (function($){
         list = function(items, type, options){
             var html = '<ul class="filterable">',
                 options = options ? options : {};
-            for( item in items){
-                if( items.hasOwnProperty(item) ){
-                    if( item.split("_")[0] === type ){
-                        html += listItem(item, items[item].name, false, false, options.no_slide);
-                    }
+            KT.utils.each(items, function(item, key){
+                if( key.split("_")[0] === type ){
+                    html += listItem(key, item.name, false, false, options.no_slide);
                 }
-            }
+            });
             html += '</ul>';
             return html;
         },
@@ -928,29 +967,53 @@ var templateLibrary = (function($){
 
             html += listItem('global', items['global'].name, items['global'].count, false);
 
-            for( item in items){
-                if( items.hasOwnProperty(item) ){
-                    if( item.split("_")[0] === type ){
-                        full_access = items[item].full_access ? i18n.full_access : false;
-                        html += listItem(item, items[item].name, items[item].count, full_access, options.no_slide);
-                    }
+            KT.utils.each(items, function(item, key){
+                if( key.split("_")[0] === type ){
+                    full_access = item.full_access ? i18n.full_access : false;
+                    html += listItem(key, item.name, item.count, full_access, options.no_slide);
                 }
-            }
+            });
             html += '</ul>';
             return html;
+        },
+        ldapGroupsList = function(ldap_groups,options) {
+            var html = "";
+            if (permissions.update_roles) {
+              html += '<ul><li class="content_input_item"><form id="add_ldap_group_form">';
+              html += '<input id="add_ldap_group_input" type="text" size="33"><form>  ';
+              html += '<a id="add_ldap_group" class="fr st_button ">' + i18n.add_plus + '</a>';
+              html += '<input id="add_ldap_group_input_id" type="hidden">';
+              html += ' </li></ul>';
+            }
+            html +=  '<ul class="filterable">';
+            for( item in ldap_groups){
+              if( item.split("_")[0] === "ldap") {
+              html += ldapGroupsListItem(ldap_groups[item].id, ldap_groups[item].name, options.show_button);
+                count += 1;
+              }
+              }
+            return html + "</ul>";
+        },
+        ldapGroupsListItem = function(group_id, name, showButton) {
+            var anchor = "";
+            if ( showButton ) {
+                anchor = '<a ' + 'class="fr remove_ldap_group remove_group st_button"'
+                               + 'data-type="group" data-id="' + group_id + '">';
+                anchor += i18n.remove + "</a>";
+            }
+            return '<li >' + anchor + '<div class="simple_link" id="' + group_id + '"><span class="sort_attr">'  + name + '</span></div></li>';
         },
         permissionsList = function(permissions, organization_id, options){
             var html = '<ul class="filterable">',
             	count = 0;
 
-            for( item in permissions){
-                if( permissions.hasOwnProperty(item) ){
-                    if( item.split("_")[0] === "permission" && permissions[item].organization === 'organization_' + organization_id ){
-                        html += permissionsListItem(item, permissions[item].name, options.show_button);
-                        count += 1;
-                    }
+            KT.utils.each(permissions, function(item, key){
+                if( key.split("_")[0] === "permission" && permissions[key].organization === 'organization_' + organization_id ){
+                    html += permissionsListItem(key, item.name, options.show_button);
+                    count += 1;
                 }
-            }
+            });
+
             if( count === 0 ){
             	html += '<li class="no_slide no_hover">' + i18n.no_permissions + '</li>';
             }
@@ -979,7 +1042,7 @@ var templateLibrary = (function($){
             html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.verbs_colon + '</label><ul>'
 
             if( permission.verbs === 'all'){
-		html += '<li>' + i18n.all + '</li>';
+		            html += '<li>' + i18n.all + '</li>';
             } else {
 	            length = permission.verbs.length;
 	            for( i=0; i < length; i += 1){
@@ -990,7 +1053,7 @@ var templateLibrary = (function($){
 
             html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.on_colon + '</label><ul>';
             if( permission.tags === 'all' ){
-		html += '<li>' + i18n.all + '</li>';
+		            html += '<li>' + i18n.all + '</li>';
             } else {
 	            length = permission.tags.length;
 	            for( i=0; i < length; i += 1){
@@ -1024,15 +1087,13 @@ var templateLibrary = (function($){
         usersList = function(users, options){
             var html = '<ul class="filterable">',
                 user = undefined;
-
-            for( item in users){
-                if( users.hasOwnProperty(item) ){
-                    user = item.split("_");
-                    if( user[0] === "user" ){
-                        html += usersListItem(item, users[item].name, users[item].has_role, options.no_slide, options.show_button);
-                    }
+    
+            KT.utils.each(users, function(user, key){
+                username = key.split("_");
+                if( username[0] === "user" ){
+                    html += usersListItem(key, user.name, user.has_role, options.no_slide, options.show_button);
                 }
-            }
+            });
             html += '</ul>';
             return html;
         },
@@ -1040,14 +1101,12 @@ var templateLibrary = (function($){
             var html = '<ul class="filterable">',
             	count = 0;
 
-            for( item in globals ){
-                if( globals.hasOwnProperty(item) ){
-                    if( item.split("_")[0] === "permission" && item.split("_")[1] === 'global' ){
-                        html += permissionsListItem(item, globals[item].name, options.show_button);
-                        count += 1;
-                    }
+            KT.utils.each(globals, function(item, key){
+                if( key.split("_")[0] === "permission" && key.split("_")[1] === 'global' ){
+                    html += permissionsListItem(key, item.name, options.show_button);
+                    count += 1;
                 }
-            }
+            });
             if( count === 0 ){
             	html += '<li class="no_slide no_hover">' + i18n.no_global_permissions + '</li>';
             }
@@ -1060,6 +1119,7 @@ var templateLibrary = (function($){
         organizationsList   :    organizationsList,
         permissionsList     :    permissionsList,
         usersList           :    usersList,
+        ldapGroupsList      :    ldapGroupsList,
         globalsList         :    globalsList,
         permissionItem      :    permissionItem
     }
@@ -1080,6 +1140,13 @@ var rolesRenderer = (function($){
 
                 options.no_slide = true;
                 render_cb(templateLibrary.usersList(roles_breadcrumb, options));
+            } else if( hash === 'role_ldap_groups' ){
+                if (permissions.create_roles || permissions.update_roles) {
+                    options.show_button = true;
+                }
+                
+                options.no_slide = true;
+                render_cb(templateLibrary.ldapGroupsList(roles_breadcrumb, options));
             } else if( hash === 'global' ) {
                 if ((!roles_breadcrumb.roles.locked) && (permissions.create_roles || permissions.update_roles)) {
                     options.show_button = true;
@@ -1233,6 +1300,19 @@ var pageActions = (function($){
                 roleActions.handleContentAddRemove($(this));
             });
 
+            $('#add_ldap_group').live('click', function(){
+                if( $(this).hasClass('disabled') ){
+                    return false;
+                }
+                roleActions.ldapGroupAdd($(this), $("#add_ldap_group_input").val(), $('#role_id').val());
+            });
+            
+            $('.remove_ldap_group').live('click', function(){ 
+                if( $(this).hasClass('disabled') ){
+                    return false;
+                }
+                roleActions.ldapGroupRemove($(this), $("#role_id").val(), $(this).data('id'));
+            });
 
             $('#remove_role').live('click', function(){
                 var button = $(this);

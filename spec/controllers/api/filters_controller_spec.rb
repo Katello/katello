@@ -13,7 +13,7 @@
 require 'spec_helper.rb'
 include OrchestrationHelper
 
-describe Api::FiltersController do
+describe Api::FiltersController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods
@@ -47,13 +47,20 @@ describe Api::FiltersController do
 
     it "should create a filter" do
       Filter.should_receive(:create!).once.with(hash_including(
-          :pulp_id => pulp_id,
+          :name => pulp_id,
           :organization => @organization,
           :description => description,
           :package_list => package_list)).and_return({})
 
       post :create, :organization_id => @organization.cp_key, :name => pulp_id, :description => description, :package_list => package_list
     end
+
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        post :create, :bad_foo => "ss", :organization_id => @organization.cp_key, :name => pulp_id, :description => description, :package_list => package_list
+      end
+    end
+
   end
 
   context "list filters" do
@@ -65,19 +72,19 @@ describe Api::FiltersController do
 
   context "show filter" do
     it "should find filter" do
-      get :show, :organization_id => @organization.cp_key, :id => @filter.pulp_id
+      get :show, :organization_id => @organization.cp_key, :id => @filter.name
       assigns(:filter).should == @filter
     end
   end
 
   context "delete filter" do
     it "should find filter" do
-      delete :destroy, :organization_id => @organization.cp_key, :id => @filter.pulp_id
+      delete :destroy, :organization_id => @organization.cp_key, :id => @filter.name
       assigns(:filter).should == @filter
     end
 
     it "should delete filter" do
-      delete :destroy, :organization_id => @organization.cp_key, :id => @filter.pulp_id
+      delete :destroy, :organization_id => @organization.cp_key, :id => @filter.name
       Filter.where(:id => @filter.id).should be_empty
     end
   end
@@ -94,7 +101,7 @@ describe Api::FiltersController do
     end
 
     it "should find filters" do
-      Filter.should_receive(:where).once.with(hash_including(:pulp_id => [@filter.name]))
+      Filter.should_receive(:where).once.with(hash_including(:name => [@filter.name], :organization_id => @organization.id))
       put :update_product_filters, :organization_id => @organization.cp_key, :product_id => product_id, :filters => [@filter.name]
     end
 

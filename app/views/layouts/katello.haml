@@ -8,6 +8,12 @@
   = include_stylesheets controller.section_id
   = yield :stylesheets
  
+= content_for(:head) do
+  = csrf_meta_tag
+  / [if lt IE 9]
+    = include_javascripts  :html5
+  / [if IE]
+    = include_stylesheets :ie, :embed_assets => false
 
 = content_for(:body_tag) do
   - if controller.respond_to?(:section_id)
@@ -30,20 +36,18 @@
   = render :partial => "common/footer"
 
 = content_for(:extra) do
-  = include_javascripts  :common
-  = render :partial => 'common/config'
-
-  / [if lt IE 9]
-    = include_javascripts  :html5
-
-  = render :partial => 'common/ajax_notices'
-  = render :partial => 'common/notification'
-  = render :partial => "common/common_i18n"
-  = include_editable_i18n
-  = yield :javascripts
+  = include_javascripts :common
+  %script{ :type => "text/javascript" }
+    -if protect_against_forgery?
+      :plain
+        var AUTH_TOKEN = #{form_authenticity_token.inspect};
+    = render :partial => "common/common_i18n"
+    = render :partial => 'common/config'
+    = render :partial => 'common/ajax_notices'
+    = render :partial => 'common/notification'
+    = yield :inline_javascript
   
-  = csrf_meta_tag
-  = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery?
+  = yield :javascripts
 
 = render :partial => 'common/header'
 

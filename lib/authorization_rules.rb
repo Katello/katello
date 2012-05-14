@@ -13,6 +13,7 @@
 module AuthorizationRules
   def self.included(base)
     base.class_eval do
+      before_filter :params_match
       before_filter :authorize
     end
   end
@@ -34,6 +35,52 @@ module AuthorizationRules
   def rules
     raise Errors::SecurityViolation,"Rules not defined for  #{current_user.username} for #{params[:controller]}/#{params[:action]}"
   end
+
+# authorize the user for the requested action
+  def params_match(ctrl = params[:controller], action = self.action_name)
+    logger.debug "Checking  params  for #{ctrl}/#{action}"
+
+    allowed = false
+    rule_set = param_rules.with_indifferent_access
+
+    return true unless rule_set[action]
+    rule = rule_set[action]
+    if Proc === rule
+      bad_params = rule.call
+    elsif Array === rule
+      bad_params = check_array_params(rule, params)
+    elsif Hash === rule
+      bad_params = check_hash_params(rule, params)
+    end
+    return true if bad_params.empty?
+    raise Errors::BadParameters.new(bad_params, params)
+  end
+
+  def check_hash_params(rule, params)
+    rule = rule.with_indifferent_access
+    params = params.with_indifferent_access
+    rule.keys.collect do |k|
+      if params[k]
+        keys = params[k].keys - rule[k].collect { |r| r.to_s }
+        if keys.empty?
+          nil
+        else
+          {k => keys}
+        end
+      end
+    end.compact
+  end
+
+  def check_array_params(rule, params)
+    (params.keys - ["_method", "controller", "action", "commit", "authenticity_token", "utf8", "search"] - rule.collect { |r| r.to_s })
+  end
+
+  def param_rules
+    {}
+  end
+
+
+
 
 end
 

@@ -34,6 +34,13 @@ class Api::RolesController < Api::ApiController
      }
   end
 
+  def param_rules
+     {
+       :create => {:role => [:name, :description]},
+       :update => {:role => [:name, :description]},
+     }
+  end
+
   def index
     render :json => (Role.readable.non_self.where query_params).to_json
   end

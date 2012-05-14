@@ -74,14 +74,14 @@ describe SystemsController do
           let(:unauthorized_user) do
             user_without_permissions
           end
-          
+
           let(:before_success) do
             controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
               search_options[:filter][:environment_id].should include(@environment.id)
               controller.stub(:render)
             }
           end
-          
+
           it_should_behave_like "protected action"
         end
 
@@ -143,15 +143,16 @@ describe SystemsController do
 
       controller.stub!(:notice)
       controller.stub(:search_validate).and_return(false)
-      
+
       Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+      Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Candlepin::Consumer.stub!(:update).and_return(true)
 
       Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Pulp::Consumer.stub!(:update).and_return(true)
     end
 
-    describe "viewing systems" do      
+    describe "viewing systems" do
       before (:each) do
         100.times{|a| System.create!(:name=>"bar#{a}", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})}
         @systems = System.select(:id).where(:environment_id => @environment.id).all.collect{|s| s.id}
@@ -223,13 +224,19 @@ describe SystemsController do
 
     describe 'updating a system' do
       before (:each) do
-        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""}, :serviceLevel => nil)
       end
 
       it "should update the system name" do
-        put :update, { :id => @system.id, :system => { :name=> "foo" }}
+        put :update, { :id => @system.id, :system => { :name => "foo" }}
         response.should be_success
         assigns[:system].name.should == "foo"
+      end
+
+      it "should update the system release version" do
+        put :update, { :id => @system.id, :system => { :releaseVer => "6Server" }}
+        response.should be_success
+        assigns[:system].releaseVer.should == "6Server"
       end
 
       # The params to #update_subscriptions are entirely wrong here. The only reason the test
@@ -245,6 +252,19 @@ describe SystemsController do
         response.should_not be_success
         System.where(:name=>invalid_name).should be_empty
       end
+
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          put :update, { :id => @system.id, :system => { :bad_foo => "1900", :name=> "foo" }}
+        end
+
+      end
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          put :update, { :id => @system.id, :autoheal => false, :bad_foo => "ugh"}
+        end
+      end
+
     end
 
 
@@ -323,6 +343,13 @@ describe SystemsController do
                        :system_type=>{:virtualized=>'virtual'}}
         response.should be_success
         response.should contain '{"no_match":true}'
+      end
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          post :create, {:system=>{:bad_foo=> true,:name=>"sys1", :environment_id=>@env2.id, :sockets=>2},
+                         :arch=>{:arch_id=>1},
+                         :system_type=>{:virtualized=>'virtual'}}
+        end
       end
     end
 

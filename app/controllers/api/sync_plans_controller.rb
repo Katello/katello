@@ -29,6 +29,13 @@ class Api::SyncPlansController < Api::ApiController
     }
   end
 
+  def param_rules
+    {
+      :create => {:sync_plan  => [:name, :description, :sync_date, :interval]},
+      :update =>  {:sync_plan  => [:name, :description, :sync_date, :interval]}
+    }
+  end
+
   def index
     query_params.delete :organization_id
     render :json => @organization.sync_plans.where(query_params).to_json

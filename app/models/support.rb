@@ -20,4 +20,16 @@ module Support
     yield
     Time.now - a
   end
+
+  def Support.scrub(params, &block_to_match)
+    params.keys.each do |key|
+      if Hash === params[key]
+        scrub(params[key], &block_to_match)
+      elsif block_to_match.call(key, params[key])
+         params[key]="[FILTERED]"
+      end
+    end
+    params
+  end
+
 end

@@ -1,29 +1,29 @@
 - if flash[:error]
-  :javascript
+  :plain
     $(document).ready(function(){
       notices.displayNotice("error", '#{ escape_javascript(flash[:error]) }');
     });
 
 - if flash[:warning]
-  :javascript
+  :plain
     $(document).ready(function(){
       notices.displayNotice("warning", '#{ escape_javascript(flash[:warning]) }');
     });
 
 - if flash[:success]
-  :javascript
+  :plain
     $(document).ready(function(){
       notices.displayNotice("success", '#{ escape_javascript(flash[:success]) }');
     });
 
 - if flash[:message]
-  :javascript
+  :plain
     $(document).ready(function(){
       notices.displayNotice("", '#{ escape_javascript(flash[:message]) }');
     });
 
 - if flash[:notice]
-  :javascript
+  :plain
     $(document).ready(function(){
       notices.displayNotice("", '#{ escape_javascript(flash[:notice]) }');
     });

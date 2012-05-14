@@ -30,7 +30,13 @@ class Repository < ActiveRecord::Base
   include Katello::Notices
 
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{:except=>[:pulp_repo_facts, :groupid, :environment_product_id]}
+                :json=>{:except=>[:pulp_repo_facts, :groupid, :feed_cert, :environment_product_id]}
+
+  mapping do
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
+
 
   after_save :update_related_index
 
@@ -105,7 +111,7 @@ class Repository < ActiveRecord::Base
 
   def extended_index_attrs
     {:environment=>self.environment.name, :environment_id=>self.environment.id,
-     :product=>self.product.name, :product_id=> self.product.id}
+     :product=>self.product.name, :product_id=> self.product.id, :name_sort=>self.name}
   end
 
   def update_related_index
@@ -113,9 +119,12 @@ class Repository < ActiveRecord::Base
   end
 
   def sync_complete task
+    user = task.user
     if task.state == 'finished'
-      notice N_("Repository '%s' finished syncing successfully.") % [self.name], {:level=>:success, :synchronous_request => false}
+      notice _("Repository '%s' finished syncing successfully.") % [self.name],
+             {:level=>:success, :synchronous_request => false, :user=>user} if user
     elsif task.state == 'error'
+
       details = ''
       log_details = []
       if(!task.progress.error_details.nil? and !task.progress.error_details.empty?)
@@ -125,8 +134,8 @@ class Repository < ActiveRecord::Base
         end
       end
       Rails.logger.error("*** Sync error: " +  log_details.to_json)
-      notice N_("There were errors syncing repository '%s'.  See notices page for more details.") % [self.name], 
-                  {:level=>:error, :synchronous_request => false, :details => details}
+      notice _("There were errors syncing repository '%s'.  See notices page for more details.") % [self.name],
+                  {:level=>:error, :synchronous_request => false, :details => details, :user=>user} if user
     end
   end
 
@@ -138,12 +147,62 @@ class Repository < ActiveRecord::Base
     end if !pkgs.empty?
   end
 
+  def update_packages_index
+    # for each of the packages in the repo, unassociate the repo from the package
+    pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
+    pulp_id = self.pulp_id
+
+    Tire.index Glue::Pulp::Package.index do
+      create :settings => Glue::Pulp::Package.index_settings, :mappings => Glue::Pulp::Package.index_mapping
+
+      import pkgs do |documents|
+        documents.each do |document|
+          if document["repoids"].length > 1
+            # if there is more than 1 repo associated w/ the pkg, remove this repo
+            document["repoids"].delete(pulp_id)
+          end
+        end
+      end
+
+    end if !pkgs.empty?
+
+    # now, for any package that only had this repo asscociated with it, remove the package from the index
+    repoids = "repoids:#{pulp_id}"
+    Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_package/_query?q=#{repoids}"
+    Tire.index('katello_package').refresh
+  end
+
   def index_errata
     errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
     Tire.index Glue::Pulp::Errata.index do
       create :settings => Glue::Pulp::Errata.index_settings, :mappings => Glue::Pulp::Errata.index_mapping
       import errata
     end if !errata.empty?
+  end
+
+  def update_errata_index
+    # for each of the errata in the repo, unassociate the repo from the errata
+    errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
+    pulp_id = self.pulp_id
+
+    Tire.index Glue::Pulp::Errata.index do
+      create :settings => Glue::Pulp::Errata.index_settings, :mappings => Glue::Pulp::Errata.index_mapping
+
+      import errata do |documents|
+        documents.each do |document|
+          if document["repoids"].length > 1
+            # if there is more than 1 repo associated w/ the errata, remove this repo
+            document["repoids"].delete(pulp_id)
+          end
+        end
+      end
+
+    end if !errata.empty?
+
+    # now, for any errata that only had this repo asscociated with it, remove the errata from the index
+    repoids = "repoids:#{pulp_id}"
+    Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_errata/_query?q=#{repoids}"
+    Tire.index('katello_errata').refresh
   end
 
   def gpg_key_name=(name)
@@ -158,6 +217,7 @@ class Repository < ActiveRecord::Base
     ret = super
     ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
     ret["package_count"] = package_count rescue nil
+    ret["last_sync"] = last_sync rescue nil
     ret
   end
 

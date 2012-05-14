@@ -86,7 +86,7 @@ describe "activation_keys/_edit.html.haml" do
       view.content_for(:content).should have_selector("input#activation_key_environment_id", :count => 1)
     end
 
-    it "renders a box to display the products in the environment" do
+    it "renders a box to display the products in the environment", :katello => true do
       view.content_for(:content).should have_selector("div.productsbox", :count => 1)
     end
 

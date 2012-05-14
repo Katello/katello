@@ -59,11 +59,16 @@ class ApplicationController < ActionController::Base
     org_not_found_error(exception)
   end
 
-
+  rescue_from Errors::BadParameters do |exception|
+      execute_rescue(exception, lambda{|exception| render_bad_parameters(exception)})
+  end
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller
   include AuthorizationRules
   include Menu
+
+  before_filter :verify_ldap
+
   def section_id
     'generic'
   end
@@ -143,6 +148,11 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+   def verify_ldap
+    u = current_user
+    u.verify_ldap_roles if (AppConfig.ldap_roles && u != nil)
+  end
 
   def require_org
     unless session && current_organization
@@ -248,6 +258,24 @@ class ApplicationController < ActionController::Base
     User.current = nil
   end
 
+  # render bad params
+  def render_bad_parameters(exception = nil)
+    if exception
+        logger.error _("Rendering 400:") + " #{exception.message}"
+        notice _("Invalid parameters sent in the request for this operation. Please contact a system administrator."), {:level => :error, :details => exception.message}
+    end
+    respond_to do |format|
+      #format.html { render :template => "common/400", :layout => "katello", :status => 400,
+      #                          :locals=>{:error=>exception} }
+      format.html { render :template => "common/400", :layout => !request.xhr?, :status => 400 }
+      format.atom { head 400 }
+      format.xml  { head 400 }
+      format.json { head 400 }
+    end
+    User.current = nil
+  end
+
+
   # take care of 500 pages too
   def render_error(exception = nil)
     if exception
@@ -332,7 +360,6 @@ class ApplicationController < ActionController::Base
       query { string search}
       filter :terms, :id=>[id]
     end
-    print results.inspect
     results.total > 0
   end
 
@@ -544,8 +571,10 @@ class ApplicationController < ActionController::Base
   # This assumes that the input follows a syntax similar to:
   #   "{\"displayMessage\":\"Import is older than existing data\"}"
   def parse_display_message input
-    if input.include? 'displayMessage'
-      return JSON.parse(input)['displayMessage']
+    unless input.nil?
+      if input.include? 'displayMessage'
+        return JSON.parse(input)['displayMessage']
+      end
     end
     input
   end

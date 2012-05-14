@@ -35,7 +35,11 @@ class Api::OrganizationsController < Api::ApiController
       :destroy => delete_test,
     }
   end
-
+  def param_rules
+    {
+      :update => {:organization  => [:name, :description]}
+    }
+  end
 
   def index
     render :json => (Organization.readable.where query_params).to_json
