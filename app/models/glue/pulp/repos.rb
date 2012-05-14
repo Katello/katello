@@ -76,14 +76,14 @@ module Glue::Pulp::Repos
   def refresh_content(repo)
     old_content = repo.content
     old_content_repos = Pulp::Repository.all(Glue::Pulp::Repos.content_groupid(old_content))
-    remove_content_by_id repo.content.id
+    remove_content_by_id(repo.content.id)
     Candlepin::Content.destroy(repo.content.id)
     new_content = create_content(repo)
-    old_content_repos.each{|r|
+    old_content_repos.each do |r|
       Pulp::Repository.update(r['id'].to_s,
                   :addgrp => Glue::Pulp::Repos.content_groupid(new_content),
                   :rmgrp => Glue::Pulp::Repos.content_groupid(old_content))
-    }
+    end
   end
 
   # repo path for custom product repos (RH repo paths are derived from
