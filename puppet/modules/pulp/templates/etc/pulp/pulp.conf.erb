@@ -14,6 +14,7 @@ key_url: /pulp/gpg
 ks_url: /pulp/ks
 default_login: <%= scope.lookupvar("pulp::params::pulp_user_name") %> 
 default_password: <%= scope.lookupvar("pulp::params::pulp_user_pass") %>
+post_sync_url = <%= "https://localhost/#{scope.lookupvar('katello::params::deployment_url')}/api/repositories/sync_complete" %>
 
 # Messaging options.
 #
@@ -56,7 +57,7 @@ consumer_cert_expiration: 3650
 # Full path to the CA certificate used to sign the Pulp server's SSL certificate.
 # Consumers and CDS instances will use this to verify the Pulp server's SSL
 # certificate during the SSL handshake.
-# ssl_ca_certificate:
+ssl_ca_certificate: <%= scope.lookupvar("pulp::params::ssl_certificate_ca_file") %>
 
 oauth_key: <%= scope.lookupvar("pulp::params::oauth_key") %>
 oauth_secret: <%= scope.lookupvar("pulp::params::oauth_secret") %>

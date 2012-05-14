@@ -54,34 +54,35 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
 <RefSect1><Title>Description</Title>
 
     <para>The &KATELLOSSLTOOL; (<command>katello-ssl-tool</command>) is used to
-    generate and maintain RHN SSL keys and certificates. It also will generate
-    RPMs for use in deploying these keys and certificates. The tool is geared
-    for use in an RHN context, but can be useful outside of RHN.</para>
+      generate and maintain Katello SSL keys and certificates. It also will
+      generate RPMs for use in deploying these keys and certificates. The tool
+      is geared for use in an Katello context, but can be useful outside of
+      Katello.</para>
 
     <para>Working with <command>openssl</command> directly can be tedious and
-    trying. This tool aims to make the process relatively simple. We limit the
-    scope of using <command>openssl</command> to how we use it in RHN: securing
-    web applications.</para>
+      trying. This tool aims to make the process relatively simple. We limit
+      the scope of using <command>openssl</command> to how we use it in Katello
+      securing web applications.</para>
 
-    <para>The RHN context of this document is in support of RHN Satellite, but
-    all holds true for RHN Proxy as well, so keep that in mind. The most
-    current RHN Satellite Servers use <emphasis>/root/ssl-build</emphasis> as
-    the default build directory. Older RHN Satellites and Proxies used the
-    <emphasis>/etc/sysconfig/rhn/ssl</emphasis> directory, and *very* old
-    installations used <emphasis>/etc/sysconfig/rhn</emphasis>.</para>
+    <para>Katello installer use <emphasis>/root/ssl-build</emphasis> as the
+      default build directory. We highly recommend to keep this directory for
+      custom-generated certs as well.</para>
+
+    <para>This tool was originally written for Spacewalk project
+      and Katello installer makes use only of several options.</para>
 
     <para>The basic process of SSL key/certificate/RPM generation using this
-    tool: (<emphasis>step 1</emphasis>) generate a CA SSL key pair(set) and
-    public RPM, (<emphasis>step 2</emphasis>) create web server SSL key
-    pair(set) and RPM (and tar archive).</para>
+      tool: (<emphasis>step 1</emphasis>) generate a CA SSL key pair(set) and
+      public RPM, (<emphasis>step 2</emphasis>) create web server SSL key
+      pair(set) and RPM (and tar archive).</para>
 
     <para><emphasis>Build directory structure</emphasis>: <command>--dir
-    <replaceable>BUILD_DIR</replaceable></command> is used with nearly all
-    commandline options.
-    <emphasis><replaceable>BUILD_DIR</replaceable></emphasis> marks the top of
-    the build tree; all CA files and RPMs land there.  Server SSL key
-    pairs(sets) are FQDN specific and so we build them in
-    <emphasis><replaceable>BUILD_DIR/MACHINE_NAME</replaceable></emphasis>.</para>
+        <replaceable>BUILD_DIR</replaceable></command> is used with nearly all
+      commandline options.
+      <emphasis><replaceable>BUILD_DIR</replaceable></emphasis> marks the top
+      of the build tree; all CA files and RPMs land there.  Server SSL key
+      pairs(sets) are FQDN specific and so we build them in
+      <emphasis><replaceable>BUILD_DIR/MACHINE_NAME</replaceable></emphasis>.</para>
 
     <para><simplelist>
         <member><msgtext>
@@ -98,9 +99,9 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
             CA password is lost or forgotten (DON'T DO THAT!). The default
             validity window for the CA is from now until 2038. The CA public
             certificate is what get's distributed to clients of the web-app
-            (RHN Satellite/Proxy).</para>
+            (Katello).</para>
 
-            <para>In the RHN Satellite/Proxy context, the organization acts as
+            <para>In the Katello context, the organization acts as
             their own Certificate Authority, but these steps can be skipped if
             intending to use of an outside authority (This is not officially
             supported by Red Hat).</para>
@@ -129,7 +130,7 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
             <replaceable>...</replaceable> ]</command></para>
 
             <para>This step is done more frequently (generally), especially if
-            more than one RHN server is being deployed (--set-hostname is
+            more than one Katello server is being deployed (--set-hostname is
             different for each server). The default validity window for the CA
             is from now until 2038. All clients using the CA SSL public
             certificate that signed the new web server SSL certificate will
@@ -137,8 +138,7 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
             generated.</para>
 
             <para>The web server SSL key and certificate are used solely by the
-            web application server (apache on an RHN Proxy or Satellite Server
-            for example).</para>
+            web application server (apache on an Katello for example).</para>
 
             </listitem>
         </varlistentry></variablelist>
@@ -151,16 +151,16 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
 
                 <para>The <command>--gen-ca</command> process generates an RPM
                 that contains the public CA certificate. It needs to be
-                deployed to any clients making SSL connections to an RHN server
-                (RHN Satellite or Proxy). This is generally done by making the
+                deployed to any clients making SSL connections to an Katello server
+                (Katello). This is generally done by making the
                 RPM available in the <emphasis>/var/www/html/pub</emphasis>
                 directory. It is also a good idea to copy the CA certificate
-                itself in that directory: RHN-ORG-TRUSTED-CA-CERT.</para>
+                itself in that directory: Katello-ORG-TRUSTED-CA-CERT.</para>
 
                 <para>The <command>--gen-server</command> process generates an
                 RPM that contains the <emphasis>server.key</emphasis> and
-                <emphasis>server.crt</emphasis> files needed to secure your RHN
-                server (RHN Satellite or RHN Proxy). It needs to be installed
+                <emphasis>server.crt</emphasis> files needed to secure your Katello
+                server (Katello). It needs to be installed
                 on the appropriate server. That server then needs to have it's
                 <emphasis>httpd</emphasis> processes restarted
                 <command>/sbin/service httpd restart</command>.</para>
@@ -193,7 +193,7 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
             <para>generate a web server's SSL private key: <command>--gen-server --key-only <replaceable>...</replaceable></command></para>
             <para>generate a web server's SSL certificate request: <command>--gen-server --cert-req-only <replaceable>...</replaceable></command></para>
             <para>generate/sign a web server's SSL certificate: <command>--gen-server --cert-only <replaceable>...</replaceable></command></para>
-            <para>generate a web server's private RPM (and tar archive used for RHN Proxy installations): <command>--gen-server --rpm-only <replaceable>...</replaceable></command></para>
+            <para>generate a web server's private RPM (and tar archive used for Katello installations): <command>--gen-server --rpm-only <replaceable>...</replaceable></command></para>
 
             </listitem>
         </varlistentry></variablelist>
@@ -202,7 +202,7 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
         <member><msgtext>
         <variablelist><varlistentry>
 
-            <term>Using a 3rd party CA (rarely done in the RHN context):</term>
+            <term>Using a 3rd party CA (rarely done in the Katello context):</term>
 
             <listitem>
             <para></para>
@@ -213,7 +213,7 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
             <emphasis>KATELLO-TRUSTED-SSL-CERT</emphasis>; and then run
             <command>--gen-ca --dir BUILD_DIR --rpm-only</command> to package
             that certificate in an expected manner ready for client deployment.
-            NOTE: this has not been tested by RHN personnell. See further
+            NOTE: this has not been tested by Katello personnell. See further
             instructions in <emphasis>step 2</emphasis>.</para>
 
             <para><emphasis>Web server's SSL key pair(set):</emphasis> Usually,
@@ -375,7 +375,7 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
                 <term>--rpm-packager</term>
                 <listitem>
                     <para>(rarely used) packager of the generated RPM, such as
-                    "RHN Admin &lt;rhn-admin@example.com&gt;".</para>
+                    "Katello Admin &lt;rhn-admin@example.com&gt;".</para>
                 </listitem>
                 </varlistentry>
                 <varlistentry>
@@ -500,15 +500,14 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
                 <term>--set-hostname=<replaceable>HOSTNAME</replaceable></term>
                 <listitem>
                     <para>set the hostname (FQDN: fully qualified domain name)
-                    of the RHN Satellite or RHN Proxy (default: build machine's
-                    hostname).</para>
+                    of the Katello (default: build machine's hostname).</para>
                 </listitem>
                 </varlistentry>
                 <varlistentry>
                 <term>--set-cname=<replaceable>HOSTNAME</replaceable></term>
                 <listitem>
                     <para>set the cname alias (FQDN: fully qualified domain name)
-                    of the RHN Satellite or RHN Proxy. This will generate certificate
+                    of the Katello. This will generate certificate
                     with multiple hostnames. Can be specified multiple times.
                     </para>
                 </listitem>
@@ -563,7 +562,7 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
                 <listitem>
                     <para>(rarely changed) name of archive (tarball) of the web
                     server's SSL key set and CA SSL public certificate that is
-                    used solely by the hosted RHN Proxy installation
+                    not used in Katello installation
                     routines (the base filename, not filename-version-release.tar).</para>
                 </listitem>
                 </varlistentry>
@@ -571,7 +570,7 @@ Generate and maintain SSL keys, certificates and deployment RPMs.
                 <term>--rpm-packager</term>
                 <listitem>
                     <para>(rarely used) packager of the generated RPM, such as
-                    "RHN Admin &lt;rhn-admin@example.com&gt;".</para>
+                    "Katello Admin &lt;rhn-admin@example.com&gt;".</para>
                 </listitem>
                 </varlistentry>
                 <varlistentry>

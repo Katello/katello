@@ -16,6 +16,7 @@ class postgres::config {
       notify  => Service["postgresql"],
       require => Exec["InitDB"];
   }
+
   exec { "InitDB":
     command => $postgres::params::password ? {
       ""      => "/usr/bin/initdb ${postgres::params::home}//data -E UTF8",

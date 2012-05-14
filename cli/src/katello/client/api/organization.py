@@ -48,9 +48,9 @@ class OrganizationAPI(KatelloAPI):
         org = self.server.GET(path)[1]
         return org
 
-    def uebercert(self, name):
+    def uebercert(self, name, regenerate=False):
         path = "/api/organizations/%s/uebercert" % u_str(name)
-        return self.server.GET(path)[1]
+        return self.server.GET(path, {'regenerate':regenerate})[1]
 
     def pools(self, name):
         path = "/api/owners/%s/pools" % u_str(name)

@@ -29,8 +29,6 @@ module Glue::Candlepin::Pool
         }
 
       alias_method :poolName, :productName
-      alias_method :expires, :endDate
-      alias_method :expires_as_datetime, :endDate_as_datetime
     end
   end
 

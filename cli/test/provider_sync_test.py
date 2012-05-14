@@ -6,6 +6,7 @@ import test_data
 
 import katello.client.core.provider
 from katello.client.core.provider import Sync
+from katello.client.api.utils import ApiDataError
 
 try:
     import json
@@ -44,8 +45,8 @@ class SyncTest(unittest.TestCase):
         katello.client.core.provider.get_provider.assert_called_once_with(self.ORGANIZATION, self.PROVIDER)
 
     def test_returns_with_error_when_no_provider_found(self):
-        katello.client.core.provider.get_provider.return_value = None
-        self.assertEqual(self.sync_action.sync_provider(self.PROVIDER, self.ORGANIZATION), os.EX_DATAERR)
+        katello.client.core.provider.get_provider.side_effect = ApiDataError()
+        self.assertRaises(ApiDataError, self.sync_action.sync_provider, [self.PROVIDER, self.ORGANIZATION], {})
 
     def test_calls_sync_api(self):
         self.sync_action.sync_provider(self.PROVIDER, self.ORGANIZATION)

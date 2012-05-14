@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.3
+Version:       0.2.14
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,27 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.14-1
+- 767925 - search packages command in CLI/API
+
+* Tue Apr 24 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.13-1
+- katello-cli, katello - setting default environment for user
+
+* Thu Apr 19 2012 Ivan Necas <inecas@redhat.com> 0.2.12-1
+- cli-test-rhsmcerd - don't check the output of rhsmcertd restart
+
+* Tue Apr 10 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.11-1
+- slas - all cli options --service_level renamed to --servicelevel
+
+* Fri Apr 06 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.10-1
+- slas - system tests
+- slas - fake manifest products with service_level
+* Tue Mar 27 2012 Ivan Necas <inecas@redhat.com> 0.2.7-1
+- periodic build
+
+* Thu Mar 15 2012 Ivan Necas <inecas@redhat.com> 0.2.4-1
+- periodic build
+
 * Fri Mar 09 2012 Mike McCune <mmccune@redhat.com> 0.2.3-1
 - periodic rebuild
 * Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.2.1-1

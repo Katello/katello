@@ -15,7 +15,7 @@ NameVirtualHost *:443
 
   # Performance related configurations
   AddOutputFilterByType DEFLATE text/html text/css application/x-javascript application/javascript
-
+  KeepAlive On
   Timeout 5400
   ProxyTimeout 5400
 
@@ -29,6 +29,11 @@ NameVirtualHost *:443
   Alias /<%= scope.lookupvar("katello::params::deployment_url") %>/images "/usr/share/katello/public/images"
   Alias /<%= scope.lookupvar("katello::params::deployment_url") %>/fonts "/usr/share/katello/public/fonts"
   Alias /<%= scope.lookupvar("katello::params::deployment_url") %>/javascripts "/usr/share/katello/public/javascripts"
+
+  ExpiresActive On
+  <Directory "/usr/share/katello/public/">
+    ExpiresDefault "access plus 1 year"
+  </Directory>
 
   ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %>/assets !
   ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %>/images !

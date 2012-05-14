@@ -58,5 +58,5 @@ class FilterAddTest(CLIActionTestCase):
         self.assertEqual(['f1', 'f2', 'f3'], self.action.parse_packages(" f1, f2 ,f3 "))
 
     def test_it_uses_filter_create_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.create.assert_called_once_with(self.ORG, self.NAME, self.DESCRIPTION, [self.FILTER1, self.FILTER2, self.FILTER3])

@@ -19,7 +19,7 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        0.2.3
+Version:        0.2.4
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
@@ -38,6 +38,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  checkpolicy, selinux-policy-devel, hardlink
 BuildRequires:  policycoreutils >= %{POLICYCOREUTILSVER}
+BuildRequires:  /usr/bin/pod2man
 BuildArch:      noarch
 
 %if "%{selinux_policyver}" != ""
@@ -69,6 +70,10 @@ do
     make NAME=${selinuxvariant} -f /usr/share/selinux/devel/Makefile clean
 done
 
+# Build man pages
+/usr/bin/pod2man --name=katello-selinux-enable -c "Katello Reference" --section=1 --release=%{version} katello-selinux-enable.pod katello-selinux-enable.man1
+
+
 %install
 rm -rf %{buildroot}
 
@@ -91,6 +96,10 @@ install -p -m 644 %{modulename}.if \
 # Install %{name}-enable which will be called in %posttrans
 install -d %{buildroot}%{_sbindir}
 install -p -m 755 %{name}-enable %{buildroot}%{_sbindir}/%{name}-enable
+
+# Install man pages
+install -d -m 0755 %{buildroot}%{_mandir}/man1
+install -m 0644 katello-selinux-enable.man1 %{buildroot}%{_mandir}/man1/katello-selinux-enable.1
 
 %clean
 rm -rf %{buildroot}
@@ -120,11 +129,16 @@ fi
 %files
 %defattr(-,root,root,0755)
 %doc %{modulename}.fc %{modulename}.if %{modulename}.te
-%{_datadir}/selinux/*/%{modulename}.pp.bz2
+%attr(0600,root,root) %{_datadir}/selinux/*/%{modulename}.pp.bz2
 %{_datadir}/selinux/devel/include/%{moduletype}/%{modulename}.if
+%{_mandir}/man1/katello-selinux-enable.1*
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 
 %changelog
+* Mon Mar 26 2012 Martin Bačovský <mbacovsk@redhat.com> 0.2.4-1
+- 805124 - security review of world-readabl fils (mbacovsk@redhat.com)
+- 803761 - adding man page for selinux-enable (lzap+git@redhat.com)
+
 * Mon Mar 12 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.3-1
 - 801752 - Errors installing katello-selinux
 

@@ -1,16 +1,9 @@
 = include_javascripts :treetable
--# = javascript :system_subscriptions
-.grid_8
+
+%div
   %h5
     = form_tag system_path(@system), :id=>"autoheal_form", :method=>"put", :remote=>true do
       #{_("System Current Subscription(s)")}
-      - if editable
-        - autoheal_class = ""
-      - else
-        - autoheal_class = "disabled"
-      %span.fr{:style => "font-weight: normal; font-size: 90%;font-family: 'Overpass'', Interstate, sans-serif;", :class => autoheal_class}
-        = check_box_tag "autoheal", value=@system.autoheal, @system.autoheal
-        #{_("Auto-heal")}
   = form_tag update_subscriptions_system_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
     -#= hidden_field_tag "commit", "unsubscribe"
     .tree
@@ -22,7 +15,8 @@
             %th #{_("SLA")}
             %th #{_("Contract")}
             %th #{_("Quantity")}
-            %th #{_("Expires")}
+            %th #{_("Start")}
+            %th #{_("End")}
         %tbody
           - if consumed_entitlements.length > 0
             - for entitlement in consumed_entitlements
@@ -38,7 +32,8 @@
                 %td{:style => "padding-top:9px;"} #{entitlement.contractNumber}
                 %td{:style => "padding-top:9px;"}
                   = entitlement.quantity < 0 ? 1 : entitlement.quantity
-                %td{:style => "padding-top:9px;"} #{format_time entitlement.expires}
+                %td{:style => "padding-top:9px;"} #{format_time entitlement.startDate}
+                %td{:style => "padding-top:9px;"} #{format_time entitlement.endDate}
               - entitlement.providedProducts.each do |product|
                 %tr{:class => "child-of-#{entitlement.entitlementId} " + cycle_class}
                   %td{:colspan=>7}
@@ -56,7 +51,7 @@
         .actions
           %a{:class=>'dialogbutton button disabled', :id=>"fake_unsub_submit"} #{_('Unsubscribe')}
           = submit_tag _('Unsubscribe'), :class => 'update_subscriptions submit dialogbutton', :id=>"unsub_submit"
-.grid_8
+%div
   %h5
     = form_tag update_preference_user_path(current_user, :preference => :subscriptions_match_system), :id=>"matchsystem_form", :method=>"put", :remote=>false do
       #{_("Available Subscriptions")}
@@ -74,8 +69,8 @@
             %th #{_("SLA")}
             %th #{_("Sockets")}
             %th #{_("Quantity")}
-            -# %th #{_("Total")}
-            %th #{_("Expires")}
+            %th #{_("Start")}
+            %th #{_("End")}
         %tbody
           - if avail_subs.length > 0
             - for sub in avail_subs
@@ -87,7 +82,7 @@
                     = check_box_tag "system[#{sub.poolId}]", false
                   &nbsp;
                   #{sub.poolName}
-                %td{:style => "padding-top:9px;"} #{sub.sla}
+                %td{:style => "padding-top:9px;"} #{sub.supportLevel}
                 %td{:style => "padding-top:9px;"} #{sub.sockets}
                 - if sub.multiEntitlement
                   %td
@@ -101,9 +96,8 @@
                     -else
                       %div{:class=>"ui-nonspinner-label"} 0 of #{sub.quantity - sub.consumed}
                     = hidden_field_tag "spinner[#{sub.poolId}]", 0, :class => "ui-nonspinner"
-                -# %td{:style => "padding-top:9px;"}
-                -#   = sub.quantity < 0 ? '' : sub.quantity
-                %td{:style => "padding-top:9px;"} #{format_time sub.expires}
+                %td{:style => "padding-top:9px;"} #{format_time sub.startDate}
+                %td{:style => "padding-top:9px;"} #{format_time sub.endDate}
               - sub.providedProducts.each do |product|
                 %tr{:class => "child-of-#{sub.poolId} " + cycle_class}
                   %td{:colspan=>6}

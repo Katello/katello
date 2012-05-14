@@ -21,8 +21,9 @@ from optparse import OptionValueError
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit, format_task_errors
-from katello.client.api.utils import get_organization, get_environment, get_changeset, get_template, get_repo, get_product
+from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
+from katello.client.utils import printer
 from katello.client.utils.encoding import u_str
 
 Config()
@@ -54,23 +55,18 @@ class List(ChangesetAction):
         verbose = self.get_option('verbose')
 
         env = get_environment(orgName, envName)
-        if env == None:
-            return os.EX_DATAERR
-
         changesets = self.api.changesets(orgName, env['id'])
-        for cs in changesets:
-            cs['updated_at'] = format_date(cs['updated_at'])
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('updated_at')
-        self.printer.addColumn('state')
-        self.printer.addColumn('environment_id')
-        self.printer.addColumn('environment_name')
-        if verbose: self.printer.addColumn('description', multiline=True)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('updated_at', formatter=format_date)
+        self.printer.add_column('state')
+        self.printer.add_column('environment_id')
+        self.printer.add_column('environment_name')
+        if verbose: self.printer.add_column('description', multiline=True)
 
-        self.printer.setHeader(_("Changeset List"))
-        self.printer.printItems(changesets)
+        self.printer.set_header(_("Changeset List"))
+        self.printer.print_items(changesets)
         return os.EX_OK
 
 
@@ -104,10 +100,7 @@ class Info(ChangesetAction):
         displayDeps = self.has_option('deps')
 
         cset = get_changeset(orgName, envName, csName)
-        if cset == None:
-            return os.EX_DATAERR
 
-        cset['updated_at'] = format_date(cset['updated_at'])
         cset['environment_name'] = envName
 
         cset["errata"] = self.format_item_list("display_name", cset["errata"])
@@ -119,23 +112,24 @@ class Info(ChangesetAction):
         if displayDeps:
             cset["dependencies"] = self.get_dependencies(cset["id"])
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('updated_at')
-        self.printer.addColumn('state')
-        self.printer.addColumn('environment_id')
-        self.printer.addColumn('environment_name')
-        self.printer.addColumn('errata', multiline=True, show_in_grep=False)
-        self.printer.addColumn('products', multiline=True, show_in_grep=False)
-        self.printer.addColumn('packages', multiline=True, show_in_grep=False)
-        self.printer.addColumn('repositories', multiline=True, show_in_grep=False)
-        self.printer.addColumn('system_templates', multiline=True, show_in_grep=False)
-        self.printer.addColumn('distributions', multiline=True, show_in_grep=False)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('updated_at', formatter=format_date)
+        self.printer.add_column('state')
+        self.printer.add_column('environment_id')
+        self.printer.add_column('environment_name')
+        self.printer.add_column('errata', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('products', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('packages', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('repositories', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('system_templates', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('distributions', multiline=True, show_with=printer.VerboseStrategy)
         if displayDeps:
-            self.printer.addColumn('dependencies', multiline=True, show_in_grep=False)
+            self.printer.add_column('dependencies', multiline=True, show_with=printer.VerboseStrategy)
 
-        self.printer.setHeader(_("Changeset Info"))
-        self.printer.printItem(cset)
+        self.printer.set_header(_("Changeset Info"))
+        self.printer.print_item(cset)
 
         return os.EX_OK
 
@@ -166,12 +160,11 @@ class Create(ChangesetAction):
         csDescription = self.get_option('description')
 
         env = get_environment(orgName, envName)
-        if env != None:
-            cset = self.api.create(orgName, env["id"], csName, csDescription)
-            if is_valid_record(cset):
-                print _("Successfully created changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
-            else:
-                print _("Could not create changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
+        cset = self.api.create(orgName, env["id"], csName, csDescription)
+        test_record(cset,
+            _("Successfully created changeset [ %s ] for environment [ %s ]") % (csName, env["name"]),
+            _("Could not create changeset [ %s ] for environment [ %s ]") % (csName, env["name"])
+        )
 
         return os.EX_OK
 
@@ -191,37 +184,27 @@ class UpdateContent(ChangesetAction):
             return patch
 
     class PatchItemBuilder(object):
-        def __init__(self, orgName, envName):
-            self.orgName = orgName
-            self.envName = envName
-
-            self.orgId = get_organization(orgName)['id']
-            self.envId = get_environment(orgName, envName)['id']
-            self.priorEnvId = get_environment(orgName, envName)['prior_id']
-            self.priorEnvName = get_environment(orgName, envName)['prior']
+        def __init__(self, org_name, env_name):
+            self.org_name = org_name
+            self.env_name = env_name
+            self.prior_env_name = get_environment(org_name, env_name)['prior']
 
 
         def product_id(self, options):
             if 'product' in options:
-                prodName = options['product']
+                prod_name = options['product']
             else:
-                prodName = options['name']
+                prod_name = options['name']
 
-            prod = get_product(self.orgName, prodName)
-            if prod == None:
-                system_exit(os.EX_DATAERR)
+            prod = get_product(self.org_name, prod_name)
             return prod['id']
 
         def repo_id(self, options):
-            repo = get_repo(self.orgName, options['product'], options['name'], self.priorEnvName)
-            if repo == None:
-                system_exit(os.EX_DATAERR)
+            repo = get_repo(self.org_name, options['product'], options['name'], self.prior_env_name)
             return repo['id']
 
         def template_id(self, options):
-            tpl = get_template(self.orgName, self.priorEnvName, options['name'])
-            if tpl == None:
-                system_exit(os.EX_DATAERR)
+            tpl = get_template(self.org_name, self.prior_env_name, options['name'])
             return tpl['id']
 
 
@@ -327,6 +310,10 @@ class UpdateContent(ChangesetAction):
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
+        self.parser.add_option('--description', dest='description',
+                               help=_("changeset description"))
+        self.parser.add_option('--new_name', dest='new_name',
+                               help=_("new changeset name"))
         self.parser.add_option('--add_product', dest='add_product', type="string",
                                action="callback", callback=self.store_item,
                                help=_("product to add to the changeset"))
@@ -372,11 +359,12 @@ class UpdateContent(ChangesetAction):
         csName = self.get_option('name')
         orgName = self.get_option('org')
         envName = self.get_option('env')
+        csNewName = self.get_option('new_name')
+        csDescription = self.get_option('description')
 
         cset = get_changeset(orgName, envName, csName)
-        if cset == None:
-            return os.EX_DATAERR
 
+        self.update(cset["id"], csNewName, csDescription)
         addPatch = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName), items)
         removePatch = self.PatchBuilder.build_patch('remove', self.RemovePatchItemBuilder(orgName, envName), items)
         self.update_content(cset["id"], addPatch, self.api.add_content)
@@ -384,6 +372,10 @@ class UpdateContent(ChangesetAction):
 
         print _("Successfully updated changeset [ %s ]") % csName
         return os.EX_OK
+
+
+    def update(self, csId, newName, description):
+        self.api.update(csId, newName, description)
 
 
     def update_content(self, csId, patch, updateMethod):
@@ -415,8 +407,6 @@ class Delete(ChangesetAction):
         envName = self.get_option('env')
 
         cset = get_changeset(orgName, envName, csName)
-        if cset == None:
-            return os.EX_DATAERR
 
         msg = self.api.delete(cset["id"])
         print msg
@@ -446,8 +436,6 @@ class Promote(ChangesetAction):
         envName = self.get_option('env')
 
         cset = get_changeset(orgName, envName, csName)
-        if cset == None:
-            return os.EX_DATAERR
 
         task = self.api.promote(cset["id"])
         task = AsyncTask(task)

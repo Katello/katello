@@ -17,7 +17,7 @@ class ActivationKey < ActiveRecord::Base
   index_options :extended_json=>:extended_json, :display_attrs=>[:name, :description, :environment, :template]
 
   mapping do
-    indexes :name, :type => 'string', :analyzer => :keyword
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 
@@ -32,16 +32,28 @@ class ActivationKey < ActiveRecord::Base
 
   scope :readable, lambda {|org| ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")}
 
+  after_find :validate_pools
 
   validates :name, :presence => true, :katello_name_format => true, :length => { :maximum => 255 }
   validates_uniqueness_of :name, :scope => :organization_id
   validates :description, :katello_description_format => true
   validates :environment, :presence => true
   validate :environment_exists
+  validate :system_template_exists
   validate :environment_not_library
 
+  def system_template_exists
+    if system_template && system_template.environment != self.environment
+      errors.add(:system_template, _("name: %s doesn't exist ") % system_template.name)
+    end
+  end
+
   def environment_exists
-    errors.add(:environment, _("id: %s doesn't exist ") % environment_id) if environment.nil?
+    if environment.nil?
+      errors.add(:environment, _("id: %s doesn't exist ") % environment_id)
+    elsif environment.organization != self.organization
+      errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
+    end
   end
 
   def environment_not_library
@@ -180,4 +192,23 @@ class ActivationKey < ActiveRecord::Base
     to_ret
   end
 
+  private
+
+  def validate_pools
+    obsolete_pools = []
+    self.pools.each do |pool|
+      begin
+        # This will hit candlepin; if it fails that means the
+        # pool is no longer accessible.
+        pool.productName
+      rescue
+        obsolete_pools << pool
+      end
+    end
+    updated_pools = self.pools - obsolete_pools
+    if self.pools != updated_pools
+      self.pools = updated_pools
+      self.save!
+    end
+  end
 end

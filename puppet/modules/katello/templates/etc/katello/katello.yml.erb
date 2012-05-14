@@ -22,9 +22,12 @@
 common:
   ldap:
     host: <%= scope.lookupvar("katello::params::ldap_server") %>
+    encryption: <%= scope.lookupvar("katello::params::ldap_encryption") %>
     base: <%= scope.lookupvar("katello::params::ldap_basedn") %>
+    group_base: <%= scope.lookupvar("katello::params::ldap_groups_basedn") %>
 
-  warden: database
+  warden:  <%= scope.lookupvar("katello::params::auth_method") %>
+  ldap_roles: <%= scope.lookupvar("katello::params::ldap_roles") %>
   use_cp: true
   use_pulp: <%= scope.lookupvar("katello::params::deployment") == 'katello' %>
   rest_client_timeout: 120
@@ -34,6 +37,10 @@ common:
   port:
 
   password_reset_expiration: 120
+
+  #Allowed log levels: 'debug', 'info', 'warn', 'error', 'fatal'
+  #log_level: warn
+  #log_level_sql: fatal
 
 #setup how often you want
 #your notifications to be checked

@@ -1,0 +1,13 @@
+- collection.each do |erratum|
+  %li.no_slide.block{:id => erratum.id, "data-ajax_url" => erratum_path(erratum.id)}
+    - if @promotable_errata.include?(erratum.id)
+      - if @product
+        %a{:class => "fr content_add_remove remove_errata st_button", "data-display_name"=> erratum.title, "data-id" => erratum.id, "data-type" => "errata", "data-product_id"=> "#{[@product.id].to_json}", :id => "add_remove_errata_#{erratum.id}"}
+      - else
+        %a{:class => "fr content_add_remove remove_errata st_button", "data-display_name"=> erratum.title, "data-id" => erratum.id, "data-type" => "errata", "data-product_id"=> "#{escape_javascript(erratum.product_ids.to_json)}", :id => "add_remove_errata_#{erratum.id}"}
+    - elsif !@not_promotable.include?(erratum.id)
+      .fr.promoted
+        = _("Promoted")
+    .simple_link
+      %span
+        = errata_title(erratum)

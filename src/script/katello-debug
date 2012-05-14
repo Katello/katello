@@ -125,10 +125,15 @@ end
 output = `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
 output = `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
 output = `sed -i -e 's/^\\(.*secret\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
+output = `sed -i -e 's/^\\(.*password\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
 output = `sed -i -e 's/^\\(\\s*oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/katello/katello.yml')}`
 output = `sed -i -e 's/^\\(\\s*password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/katello/katello.yml')}`
 output = `sed -i -e 's/\\(keystorePass=\\)\\(\\S*\\)/\\1 "***************"/' #{File.join(target_dir, '/etc/tomcat6/server.xml')}`
 output = `sed -i -e 's/\\(truststorePass=\\)\\(\\S*\\)/\\1 "***************"/' #{File.join(target_dir, '/etc/tomcat6/server.xml')}`
+output = `find #{target_dir} -name "*katello-configure.conf" -type f -exec sed -i -e 's/\\(\\(password\\|pass\\)\\s[^=]*=\\)\\(.*\\)$/\\1 ***************/' {} \\;`
+output = `find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e 's/echo password/echo *********/' {} \\;`
+output = `find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e "s/\\(password => '\\)[^']*'/\\1*********'/g" {} \\;`
+output = `find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e "s/\\(PASSWORD '\\)[^']*'/\\1*********'/g" {} \\;`
 
 # Pick qpidd messages from syslog
 FileUtils.mkdir_p(File.join(target_dir, '/var/log'))
@@ -136,6 +141,9 @@ output = `cat /var/log/messages|grep qpidd > #{File.join(target_dir, "/var/log/q
 
 # Create certificates report
 output = `katello-debug-certificates >> #{File.join(target_dir, "certificates")}`
+
+# Add list of ssl-build dir
+output = `find /root/ssl-build -ls | sort -k 11 > #{File.join(target_dir, "ssl_build_dir")}`
 
 # Below are custom system calls to get more info
 ouput = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug|qpid" >> #{File.join(target_dir, "packages")}`

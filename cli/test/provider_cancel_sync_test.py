@@ -7,7 +7,7 @@ import test_data
 
 import katello.client.core.provider
 from katello.client.core.provider import CancelSync
-
+from katello.client.api.utils import ApiDataError
 
 
 class ProviderCancelSyncTest(CLIActionTestCase):
@@ -34,16 +34,16 @@ class ProviderCancelSyncTest(CLIActionTestCase):
 
 
     def test_it_finds_the_provider(self):
-        self.action.run()
+        self.run_action()
         self.module.get_provider.assert_called_once_with(self.ORG['name'], self.PROV['name'])
 
     def test_it_returns_with_error_when_no_provider_found(self):
-        self.module.get_provider.return_value =  None
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_provider').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
     def test_it_calls_cancel_sync_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.cancel_sync.assert_called_once_with(self.PROV['id'])
 
     def test_returns_ok(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)

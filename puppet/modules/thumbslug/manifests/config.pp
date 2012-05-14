@@ -7,6 +7,7 @@ class thumbslug::config {
 
   file { "/etc/thumbslug/thumbslug.conf":
     content => template("thumbslug/etc/thumbslug/thumbslug.conf.erb"),
+    require => Class["certs::config"],
     notify  => Service["thumbslug"];
   }
 }

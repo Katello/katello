@@ -25,6 +25,7 @@ module ApplicationHelper
     url_for params.merge(extra_params)
   end
 
+
   def link_to_authorized(*args, &block)
 
     if block_given?
@@ -96,6 +97,7 @@ module ApplicationHelper
              :name => options[:name],
              :create => options[:create],
              :enable_create => enable_create,
+             :create_label => options[:create_label] || nil,
              :enable_sort => enable_sort,
              :columns => options[:col],
              :titles => options[:titles],
@@ -131,14 +133,6 @@ module ApplicationHelper
              :accessor=>options[:accessor] }
   end
 
-  def include_common_i18n
-    render :partial => "common/common_i18n"
-  end
-
-  def include_editable_i18n
-    render :partial=> "common/edit_i18n"
-  end
- 
   def notification_polling_time
     time  = AppConfig.notification && AppConfig.notification.polling_seconds
     return time.to_i  * 1000 if time

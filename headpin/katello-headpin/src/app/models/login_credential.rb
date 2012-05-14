@@ -1,0 +1,31 @@
+#
+# Copyright 2011 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+class LoginCredential < ActiveRecord::Base
+  include Authorization
+
+  belongs_to :provider
+  validates_presence_of :password
+  validates :username, :uniqueness => true, :presence => true, :username => true
+
+  def mask_password
+    masked = ""
+    unless self.password.nil?
+      masked = self.password
+
+      # mask the characters of the password to be a black dot
+      # this is used when displaying the password within forms
+      masked.gsub(/./, "&#9679;")
+    end
+  end
+end
+

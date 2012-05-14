@@ -47,5 +47,5 @@ class FilterDeleteTest(CLIActionTestCase):
         self.restore_mocks()
 
     def test_it_uses_filter_delete_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.delete.assert_called_once_with(self.ORG, self.FILTER)

@@ -5,7 +5,7 @@ from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
 
 import katello.client.core.repo
 from katello.client.core.repo import Sync
-from katello.client.core.utils import SystemExitRequest
+from katello.client.api.utils import ApiDataError
 
 try:
     import json
@@ -80,32 +80,31 @@ class SynchronizeTestWithRepoId(CLIActionTestCase):
 
     def test_finds_repo_by_id(self):
         self.mock_options(self.OPTIONS_WITH_ID)
-        self.action.run()
+        self.run_action()
         self.action.api.repo.assert_called_once_with(self.REPO_ID)
 
     def test_finds_repo_by_name(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
-        self.action.run()
+        self.run_action()
         self.module.get_repo.assert_called_once()
 
     def test_returns_with_error_when_no_repo_found(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
-        self.module.get_repo.return_value =  None
-        ex = self.assertRaisesException(SystemExitRequest, self.action.run)
-        self.assertEqual(ex.args[0], os.EX_DATAERR)
+        self.mock(self.module, 'get_repo').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
 
     def test_calls_sync_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.sync.assert_called_once_with(self.REPO_ID)
 
     def test_waits_for_sync(self):
-        self.action.run()
+        self.run_action()
         self.module.run_async_task_with_status.assert_called_once()
 
     def test_returns_ok_when_sync_was_successful(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)
 
     def test_returns_error_if_sync_failed(self):
         self.mock(self.action.api, 'sync', self.SYNC_RESULT_WITH_ERROR)
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.run_action(os.EX_DATAERR)

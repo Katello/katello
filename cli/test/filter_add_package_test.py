@@ -54,9 +54,9 @@ class FilterAddTest(CLIActionTestCase):
         self.restore_mocks()
 
     def test_it_calls_filter_info_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.info.assert_called_once_with(self.ORG, self.NAME)
 
     def test_it_calls_filter_update_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.update_packages.assert_called_once_with(self.ORG, self.NAME, [self.FILTER2, self.FILTER3, self.FILTER1])

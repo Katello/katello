@@ -321,6 +321,9 @@ class EnabledReport:
         """
         enabled = []
         for r in yb.repos.listEnabled():
+            if not r.repofile:
+                continue
+
             fn = os.path.basename(r.repofile)
             if fn != repofn:
                 continue
