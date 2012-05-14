@@ -12,7 +12,7 @@
 
 require 'rubygems'
 require 'rest_client'
-require 'http_resource'
+require_dependency 'http_resource'
 
 module Pulp
 

@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'rest_client'
-require 'http_resource'
+require_dependency 'http_resource'
 
 module CDN
 

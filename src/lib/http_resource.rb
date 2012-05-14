@@ -13,7 +13,7 @@
 require 'rubygems'
 require 'oauth'
 require 'cgi'
-require 'resource_permissions'
+require_dependency 'resource_permissions'
 
 class RestClientException < RuntimeError
   attr_reader :service_code, :code

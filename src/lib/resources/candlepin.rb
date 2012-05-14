@@ -12,8 +12,8 @@
 
 require 'rubygems'
 require 'rest_client'
-require 'resource_permissions'
-require 'http_resource'
+require_dependency 'resource_permissions'
+require_dependency 'http_resource'
 
 module Candlepin
 
