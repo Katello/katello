@@ -19,8 +19,8 @@ class UserRoleListTest(CLIActionTestCase):
         self.mock(self.action.api, 'roles', test_data.USER_ROLES[0])
 
     def test_finds_roles(self):
-        self.action.run()
+        self.run_action()
         self.action.api.roles.assert_called_once()
 
     def test_returns_ok(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)

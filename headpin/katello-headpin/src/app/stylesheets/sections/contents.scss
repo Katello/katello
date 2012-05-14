@@ -1,0 +1,468 @@
+@import "katello";
+
+
+
+#contents {
+  .locked_breadcrumb {
+    background-color: $tree-locked-breadcrumb_color;
+    color: $black_color;
+  }
+  .locked {
+    outline: 2px solid gray;
+  }
+  #list_actions {
+    margin-top: 28px;
+  }
+  #plan_description {
+    word-wrap: break-word;
+  }
+  #promote_changeset {
+      width: 112px; //hack to make all 4 buttons line up properly with the main panel.
+                   // The issue is that the full panel is 448 pixes wide, and with 4 buttons, there are
+                   //  3  vertical 1 px seperators (borders), and 448-3 isn't divisible by 4.  We come up 1 px short
+  }
+  
+  .filter_warning_icon {
+        width: 16px;
+        @include action-icon($warning_icon_triangle);
+        margin-right: 4px;
+        margin-top: 1px;
+  }
+
+
+  #edit_changeset_icon {
+    @include action-icon($edit_icon_black);
+  }
+  #review_changeset_icon {
+    @include action-icon($comp_icon_black);
+  }
+  #delete_changeset_icon {
+    @include action-icon($circle_x_icon_black);
+  }
+  #promote_changeset_icon {
+    @include action-icon($play_icon_black);
+  }
+
+  #edit_template_icon {
+    @include action-icon($edit_icon_black);
+  }
+  #add_template_icon {
+   @include action-icon($circle_x_icon_black);
+  }
+  #remove_template_icon {
+    @include action-icon($circle_x_icon_black);
+  }
+  #save_template_icon {
+    @include action-icon($gears_icon_black);
+  }
+  #download_template_icon {
+    @include action-icon($download_icon_grey);
+    &:hover {
+        @include action-icon($download_icon_black);
+    }
+  }
+
+  .warning {
+    ul {
+      margin-left: 15px;
+      list-style-type: circle;
+    }
+  }
+
+  #changeset_edit {
+    width: 448px;
+    background-color: white;
+    border-top: 1px solid $tree-border_color;
+  }
+
+  #changeset_status {
+    border: 1px solid $tree-border_color;
+    margin-top: -1px;
+  }
+  #content_tree {
+    .sliding_container {
+
+      .activeItem {
+        background-color: $tree-item-background-hover_color;
+        border-top-color: $tree-item-border-hover_color;
+        border-bottom-color: $tree-item-border-hover_color;
+        color: $tree-item-hover_color;
+        
+        a {
+          color: $tree-breadcrumb_color;
+          background: inherit;
+        }
+      }
+    }
+  }
+  #changeset_tree {
+    $cs-width: 450px;
+    $cs-height: 420px;
+    width: $cs-width;
+    position: relative;
+    #changeset_status { text-align: center; }
+    .tree_breadcrumb { border: none; }  
+    #cslist {
+      min-height: $cs-height;
+
+      .slider {
+        overflow: auto;
+        height: $cs-height;
+        min-height: $cs-height;
+                 
+        .changeset_status {
+          font-size: 80%;
+          margin-right: 5px;
+          
+          .progressbar {
+            width: 20px;
+            float: left;
+            height: 22px;
+            margin-top: 3px;
+            margin-right: 3px;
+          }
+          .ui-progressbar {
+            height: 13px;
+          }
+        }
+        .being_promoted { color: $changeset-promoting_color; font-weight: 600; }
+        .locked_icon { margin-right: 4px; }
+      }
+      .locked {
+        outline: 2px solid gray;
+      }
+
+    }
+    .locked_breadcrumb_filter {
+      @extend breadcrumb_filter;
+      background-color: $tree-locked-breadcrumb_color;
+      color: $black_color;
+      border: 1px solid $tree-border_color;
+      border-bottom: none;
+    }
+    #changeset_users { 
+      background-color: $lightkprimary_color;
+      margin-bottom: 5px;
+      display: block;
+    }
+  }
+  
+  .right_tree {
+    float: right;
+    width: 450px;
+    h2 {
+      margin-bottom: 0;
+    }
+  }
+  .promoted {
+     font-size: 11px;           
+     font-style: italic;     
+     line-height: 30px;      
+     text-align: center;     
+     width: 71px;   
+     @include opacity(.7);
+  }
+  .product_arch {
+    font-size: 11px;
+    display: inline;
+  }
+  .custom-product-sprite {
+    @include product-sprite;
+    background: $custom_product_icon;
+  }
+  .rh-product-sprite {
+    @include product-sprite;
+    background: $rh_product_icon;
+  }
+  .progress {
+    height: 16px;
+    display: inline-block !important;
+    left: 0;
+    margin-right: 4px;
+    width: 100px;
+    border: 1px solid $border-color;
+  }
+  .cancel {
+    position: absolute;
+    right: 0;
+    top: 2px;
+  }
+  .products {
+    position: relative;
+    input[type="checkbox"],input[type="radio"] {
+      margin: 3px;
+      float: left;
+    }
+    ul {
+      margin: 0;
+      padding: 0 !important;
+      position: relative;
+      li {
+        margin: 0;
+        padding: 0 !important;
+        clear: both;
+        position: relative;
+        min-height: 20px;
+        height: 20px;
+        input[type="checkbox"], .products input[type="radio"] {
+          margin-right: 23px;
+        }
+      }
+    }
+    div{
+        position: relative;
+        min-height: 20px;
+        display:inline;
+    }
+    .repo div{
+      padding-top: 3px;
+    }
+    .max_width {
+      word-wrap:break-word;
+      max-width: 120px;
+    }
+  }
+  #plans {
+    .left {
+        margin-left: 20px;
+
+    }
+    .block {
+      @extend .block;
+      padding:  6px 16px 6px 17px;
+      width: 405px;
+      height: 17px;
+      &.active {
+        background-color: $listhover_color;
+        color: $white_color;
+        
+        .arrow-right {
+          border-top: 15px solid transparent;
+          border-bottom: 15px solid transparent;
+          border-right: 15px solid $listhover_color;
+          border-left: none;
+          height: 0;
+          margin: 0;
+          position: absolute;
+          left: -15px;
+          top: -1px;
+          width: 0;
+          z-index: 220;
+        }
+        &:hover {
+            background-color: darken($kselected_color, 10%);
+            .arrow-right { border-right-color:darken($kselected_color, 10%); }
+        }
+      }
+    }
+  }
+
+
+  #system_templates{
+    .slider {
+      label {
+        font-weight: normal;
+        color: $text_color;
+      }
+    }
+  }
+
+
+  .slide_up_container {
+    height: 250px;
+    width: 448px;
+    overflow: auto;
+    .validation_error { color: red; font-weight: 500; }
+    h2 {
+      margin-left: 5px;
+    }
+    .permission_add_container {
+      float: none;
+      width: 90%;
+      margin: 10px auto;
+
+      label {
+        width: 100px;
+      }
+      select, input, textarea {
+        margin-left: 15px;
+      }
+    }
+
+    span { margin-left: 85px; word-wrap: break-word; }
+
+    #permission_button_bar {
+      width: 90%;
+      margin: 0 auto;
+    }
+  }
+
+  #template_tree {
+    $template-height: 420px;
+    $template-width: 450px;
+    width: $template-width;
+     .slider {
+        overflow: auto;
+        height: $template-height;
+        min-height: $template-height;
+     }
+
+
+  }
+
+  .content_input_item {
+    &:hover {
+      background-color: #FFF;
+      border-top-color: #FFF;
+      border-bottom-color: #FFF;
+    }
+    form {
+      margin-top: 4px;
+      margin-left: 20px;
+      .error {
+        border-size: 2px;
+        border-color: $error_color;
+      }
+
+    }
+
+  }
+
+  #changeset_history_tabs {
+    .cs_history_tab {
+      height: 200px;
+    }
+    
+    .cs_history_entry {
+      margin-left: 30px;
+    }
+  }
+
+
+  #system_template_promotion_tabs {
+    .system_templates_tab {
+      height: 200px;
+    }
+  }
+
+
+  #package_filter {
+    table {
+      margin-bottom: 20px;
+    }
+
+    label {
+      color: $text_color;
+      font-weight: normal;
+    }
+
+    #select_container {
+
+
+      .centered {
+        display:inline;
+       height: 19px;
+       vertical-align:centered;
+      }
+    }
+    .chzn-container {
+      margin-right: 4px;
+    }
+
+    #product_list {
+
+      max-height: 200px;
+      overflow: scroll;
+      border: 0 solid black !important;
+      margin-bottom: 10px;
+
+      .product_list {
+        width: 100%;
+      }
+
+      .repos_list {
+        display: inline-block;
+      }
+      .no_padding {
+        padding-right: 0;
+        padding-left: 0;
+
+      }
+      
+      .product_entry {
+        .small_col {
+          width: 20px;
+          height: 16px;
+          margin-left: auto;
+          margin-right: auto;
+          display: inline-block;
+          position: relative;
+          vertical-align: top;
+        }
+        input, select {
+          margin: 2px;
+        }
+        .repo {
+          padding-left: 20px;
+        }
+        .large_col {
+          display: inline-block;
+        }
+        .options {
+          display: none;
+        }
+        .collapsed {
+          background: $arrow_min_img;
+          margin-right: 4px;
+        }
+        .expanded {
+          margin-right: 4px;
+          background: $arrow_max_img;
+        }
+      }
+
+
+    }
+  }
+
+
+  //Sync management page
+  #products_table {
+    .expander{
+      margin-right: 4px;
+    }
+    input[type="checkbox"] {
+        margin-top: 1px;
+        margin-right: 3px;
+    }
+    label {
+      font-weight: normal;
+      color: $text_color;
+    }
+  }
+  .promotions {
+    .left {
+      #new {
+        width: 16em !important;
+      }
+    }
+  }
+}
+
+.cs_content {
+    ul {
+        margin-left: 8px;
+    }
+}
+
+#upload_button {
+    margin: 2px 0 0 10px;
+}
+
+#force_checkbox {
+    margin: 2px 0 0 10px;
+}
+
+.ui-tabs-panel {
+    min-height: 300px;
+}

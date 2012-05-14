@@ -8,6 +8,6 @@ define sqlexec($username, $password, $database, $sql, $sqlcheck, $logfile) {
     path        => $path,
     timeout     => 600,
     unless      => "psql -U $username $database -c $sqlcheck",
-    require     => Class["postgres::service"],
+    require     => Exec["wait-for-postgresql"],
   }
 }

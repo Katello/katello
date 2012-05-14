@@ -65,4 +65,38 @@ module SystemsHelper
     end
   end
 
+  def system_releasevers_edit system
+    vers = {}
+    system.available_releases.each { |ver|
+      vers[ver] = ver
+    }
+
+    vers[""] = ""
+    vers["selected"] = system[:releaseVer]
+
+    return vers.to_json
+  end
+
+  def system_servicelevel system
+    _("Auto-subscribe %s, %s") % [
+        system.autoheal ? _("On") : _("Off"),
+        system.serviceLevel == '' ? _("No Service Level Preference") : (_("Service Level %s") % system.serviceLevel)
+    ]
+  end
+
+  def system_servicelevel_edit system
+    levels = {}
+    system.organization.service_levels.each { |level|
+      levels["1#{level}"] = _("Auto-subscribe On, Service Level %s") % level
+      levels["0#{level}"] = _("Auto-subscribe Off, Service Level %s") % level
+    }
+
+    levels['1'] = _("Auto-subscribe On, No Service Level Preference")
+    levels['0'] = _("Auto-subscribe Off, No Service Level Preference")
+
+    levels["selected"] = system_servicelevel(system)
+
+    return levels.to_json
+  end
+
 end

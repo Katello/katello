@@ -1,0 +1,35 @@
+.modalbox
+  %h2 #{_('Login Information')}
+
+  %h3
+    = _('I remembered my login credentials.')
+    = link_to("Go to log in.", root_path)
+
+  - if !@ldap
+    %h3 #{_('Password Unknown')}
+    .katello_form
+      %p #{_('If you do not know your password, enter your login and email address below and instructions on resetting your password will be sent to you.')}
+      = form_tag password_resets_path, :method => :post, :remote => true do
+        %fieldset
+          = label_tag :username, _('Username:')
+          = text_field_tag :username, params[:username]
+        %fieldset
+          = label_tag :email, _('Email Address:')
+          = text_field_tag :email, params[:email]
+
+        = submit_tag _('Reset Password'), :class => 'submit dialogbutton'
+
+    %h3 #{_('Login Unknown')}
+    .katello_form
+      %p #{_("If you do not know your login, please enter your email address below and your login will be sent to you.")}
+      = form_tag email_logins_password_resets_path, :method => :get, :remote => true do
+        %fieldset
+          = label_tag :email, _('Email Address:')
+          = text_field_tag :email, params[:email]
+
+        = submit_tag _('Send Login'), :class => 'submit dialogbutton'
+
+  - else
+    %h3 #{_('Login or Password Unknown')}
+    %p #{_('Please contact your LDAP administrator to find your username or reset your password.')}
+

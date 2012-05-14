@@ -7,7 +7,7 @@ import test_data
 
 import katello.client.core.product
 from katello.client.core.product import AddRemoveFilter
-
+from katello.client.api.utils import ApiDataError
 
 
 class RequiredCLIOptionsTest(object):
@@ -71,17 +71,15 @@ class ProductAddRemoveFilterTest(object):
 
 
     def test_it_returns_with_error_if_no_product_was_found(self):
-        self.module.get_product.return_value = None
-        self.action.run()
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_product').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
     def test_it_returns_with_error_if_filter_was_not_found(self):
-        self.module.get_filter.return_value = None
-        self.action.run()
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_filter').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
     def test_it_retrieves_all_product_filters(self):
-        self.action.run()
+        self.run_action()
         self.action.api.filters.assert_called_once_with(self.ORG['name'], self.PROD['id'])
 
 
@@ -90,7 +88,7 @@ class ProductAddFilterTest(ProductAddRemoveFilterTest, CLIActionTestCase):
 
     def test_it_calls_update_api(self):
         filters = [f['name'] for f in self.FILTERS + [self.FILTER]]
-        self.action.run()
+        self.run_action()
         self.action.api.update_filters.assert_called_once_with(self.ORG['name'], self.PROD['id'], filters)
 
 
@@ -99,5 +97,5 @@ class ProductRemoveFilterTest(ProductAddRemoveFilterTest, CLIActionTestCase):
 
     def test_it_calls_update_api(self):
         filters = [f['name'] for f in self.FILTERS if f['name'] != self.FILTER['name']]
-        self.action.run()
+        self.run_action()
         self.action.api.update_filters.assert_called_once_with(self.ORG['name'], self.PROD['id'], filters)

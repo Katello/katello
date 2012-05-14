@@ -13,7 +13,7 @@ test_success "errata list by product, repo, and type" errata list --org="$TEST_O
 test_success "errata list by type" errata list --org="$TEST_ORG" --type="enhancements"
 test_success "errata list by severity" errata list --org="$TEST_ORG" --severity="critical"
 test_success "errata list by product and type" errata list --org="$TEST_ORG" --product="$FEWUPS_PRODUCT" --type="enhancements"
-ERRATA_ID=$($CMD errata list --repo_id $REPO_ID -g | tail -n1 | awk '{print $1}')
+ERRATA_ID=$($CMD errata list --repo_id "$REPO_ID" -g | tail -n1 | awk '{print $1}')
 if [ "x$ERRATA_ID" != "x" ]; then
-  test_success "errata info" errata info --repo_id $REPO_ID --id "$ERRATA_ID"
+  test_success "errata info" errata info --repo_id "$REPO_ID" --id "$ERRATA_ID"
 fi

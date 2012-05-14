@@ -1,5 +1,10 @@
 class apache2::config {
 
+  exec { "add-apache-user-to-katello-group":
+        command => "usermod -a -G katello apache",
+        path => "/usr/sbin"
+  }
+
   # support RHEL5/RHEL6 only
   file{
     "/etc/httpd/conf/httpd.conf":

@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.12
+Version:       0.2.32
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,6 +89,69 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.32-1
+- Fixed addColumn to match new name
+- Fixing various LDAP issues from the last pull request
+- Loading group roles from ldap
+- 767925 - search packages command in CLI/API
+
+* Tue Apr 24 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.31-1
+- katello-cli, katello - setting default environment for user
+
+* Thu Apr 19 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.30-1
+- cli - fixed wrong formatters used for product and repo last sync time
+
+* Thu Apr 19 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.29-1
+- periodic-build
+* Wed Apr 18 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.28-1
+- 812842 - complete removal of skipping None values in verbose print strategy
+- 741595 - uebercert POST/GET/DELETE - either support or delete the calls from
+  CLI
+
+* Tue Apr 17 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.27-1
+- 812842 - fix for cli printer skipping values that are evaluated as False
+- 798918 - Headpin cli unregister doesn't have environment option
+
+* Fri Apr 13 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.26-1
+- cli - documentation strings for printer
+- cli - output formatters in printer
+- cli - fix for method set_output_mode removed from Printer
+- cli - printer refactored to enable more output modes
+- cli - printer class moved out from utils.py into separate file
+
+* Thu Apr 12 2012 Ivan Necas <inecas@redhat.com> 0.2.25-1
+- cp-releasever - release as a scalar value in API system json
+- 769302 - CLI `system register` needs enhancement
+
+* Wed Apr 11 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.24-1
+- 713153 - RFE: include IP information in consumers/systems related API calls.
+- 768243 - Error msg needs to be improved
+
+* Tue Apr 10 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.23-1
+- slas - all cli options --service_level renamed to --servicelevel
+
+* Fri Apr 06 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.22-1
+- slas - field for SLA in hash export of consumer renamed We used service_level
+  but subscription-manager requires serviceLevel and checks for it's presence.
+* Wed Apr 04 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.21-1
+- 798649 - RFE - Better listing of products and repos
+
+* Mon Apr 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.20-1
+- cleanup - removing unused imports and variables
+- 744199 - cli now reports all errors to stderr
+
+* Tue Mar 27 2012 Ivan Necas <inecas@redhat.com> 0.2.18-1
+- periodic-build
+
+* Mon Mar 26 2012 Ivan Necas <inecas@redhat.com> 0.2.16-1
+- periodic build
+
+* Mon Mar 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.14-1
+- 803441 - fix cli unit test for org subscriptions
+
+* Thu Mar 15 2012 Ivan Necas <inecas@redhat.com> 0.2.13-1
+- priodic build
+
 * Tue Mar 13 2012 Ivan Necas <inecas@redhat.com> 0.2.12-1
 - periodic build
 

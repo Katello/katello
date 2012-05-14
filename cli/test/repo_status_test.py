@@ -7,8 +7,7 @@ import test_data
 
 import katello.client.core.repo
 from katello.client.core.repo import Status
-from katello.client.core.utils import SystemExitRequest
-
+from katello.client.api.utils import ApiDataError
 
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
@@ -75,29 +74,28 @@ class RepoStatusTest(CLIActionTestCase):
 
     def test_finds_repo_by_id(self):
         self.mock_options(self.OPTIONS_WITH_ID)
-        self.action.run()
+        self.run_action()
         self.action.api.repo.assert_called_once_with(self.REPO['id'])
 
     def test_finds_repo_by_name(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
-        self.action.run()
+        self.run_action()
         self.module.get_repo.assert_called_once_with(self.ORG['name'], self.PROD['name'], self.REPO['name'], self.ENV['name'], False)
 
     def test_returns_with_error_when_no_repo_found(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
-        self.module.get_repo.return_value =  None
-        ex = self.assertRaisesException(SystemExitRequest, self.action.run)
-        self.assertEqual(ex.args[0], os.EX_DATAERR)
+        self.mock(self.module, 'get_repo').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
 
     def test_it_calls_last_sync_status_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.last_sync_status.assert_called_once_with(self.REPO['id'])
 
     def test_it_does_not_set_progress_for_not_running_sync(self):
-        self.action.run()
+        self.run_action()
         self.assertRaises(KeyError, lambda: self.repo['progress'] )
 
     def test_it_sets_progress_for_running_sync(self):
         self.mock(self.action.api, 'last_sync_status', test_data.SYNC_RUNNING_RESULT)
-        self.action.run()
+        self.run_action()
         self.assertTrue(isinstance(self.repo['progress'], str))

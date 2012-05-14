@@ -20,11 +20,14 @@ class UserAPI(KatelloAPI):
     """
     Connection class to access User Data
     """
-    def create(self, name, pw, email, disabled):
+    def create(self, name, pw, email, disabled, default_environment):
         userdata = {"username": name,
-                "password": pw,
-                "email": email,
-                "disabled": disabled}
+                    "password": pw,
+                    "email": email,
+                    "disabled": disabled}
+        if default_environment is not None:
+            userdata.update(default_environment_id=default_environment['id'])
+
         path = "/api/users/"
         return self.server.POST(path, userdata)[1]
 
@@ -32,11 +35,17 @@ class UserAPI(KatelloAPI):
         path = "/api/users/%s" % u_str(user_id)
         return self.server.DELETE(path)[1]
 
-    def update(self, user_id, pw, email, disabled):
+    def update(self, user_id, pw, email, disabled, default_environment):
         userdata = {}
         userdata = self.update_dict(userdata, "password", pw)
         userdata = self.update_dict(userdata, "email", email)
         userdata = self.update_dict(userdata, "disabled", disabled)
+
+        if default_environment is None:
+            userdata.update(default_environment_id=None)                        # pylint: disable=E1101
+        elif default_environment is not False:
+            userdata.update(default_environment_id=default_environment['id'])   # pylint: disable=E1101
+
         path = "/api/users/%s" % u_str(user_id)
         return self.server.PUT(path, {"user": userdata})[1]
 
@@ -56,6 +65,11 @@ class UserAPI(KatelloAPI):
             return users[0]
         else:
             return None
+
+    def sync_ldap_roles(self):
+        path = "/api/users/sync_ldap_roles/"
+        return self.server.GET(path)[1]
+
 
     def assign_role(self, user_id, role_id):
         path = "/api/users/%s/roles" % u_str(user_id)

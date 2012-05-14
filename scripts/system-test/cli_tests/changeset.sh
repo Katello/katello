@@ -32,6 +32,9 @@ test_success "changeset remove package"  changeset update  --org="$TEST_ORG" --e
 test_success "changeset remove erratum"  changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --remove_erratum="RHEA-2010:9984"
 test_success "changeset remove repo"     changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --remove_repo="$REPO_NAME"
 
+test_success "changeset update" changeset update --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --new_name="new_$CS_NAME" --description="updated description"
+
+
 #promote template with product and package
 PROM_TEMPLATE_NAME="promotion_test_tpl_$RAND"
 test_success "template create" template create --name="$PROM_TEMPLATE_NAME" --description="template description" --org="$TEST_ORG"

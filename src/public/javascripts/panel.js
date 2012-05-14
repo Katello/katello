@@ -664,6 +664,7 @@ KT.panel.list = (function () {
         current_items_count = 0,
         results_items_count = 0,
         search,
+        list_section = $('#list section'),
         
         update_counts = function (current, total, results, clear) {
             if (clear) {
@@ -681,15 +682,23 @@ KT.panel.list = (function () {
             $('#total_results_count').html(results_items_count);
         },
         last_child = function () {
-            return $("#list section").children().last();
+            return list_section.children().last();
         },
         first_child = function () {
-            return $("#list section").children().first();
+            return list_section.children().first();
         },
         append = function (html) {
-            $('#list section').append($(html).hide().fadeIn(function () {
-                $(this).addClass("add", 250, function () {
-                    $(this).removeClass("add", 250);
+            list_section.append($(html).hide().fadeIn(function () {
+                list_section.addClass("add", 250, function () {
+                    list_section.removeClass("add", 250);
+                });
+            }));
+            return false;
+        },
+        prepend = function (html) {
+            list_section.prepend($(html).hide().fadeIn(function () {
+                list_section.addClass("add", 250, function () {
+                    list_section.removeClass("add", 250);
                 });
             }));
             return false;
@@ -708,11 +717,11 @@ KT.panel.list = (function () {
             var list_elem = $("#list");
 
             list_elem.find('.spinner').hide();
-            list_elem.find('section').html(html).show();
+            list_section.html(html).show();
         },
         full_spinner = function() {
             var list_elem = $("#list");
-            list_elem.find('section').empty();
+            list_section.empty();
             list_elem.find('.spinner').show();
         },
         refresh = function (id, url, success_cb) {
@@ -808,7 +817,7 @@ KT.panel.list = (function () {
                 update_counts(0, 0, 1);
             }
             else {
-                append(data);
+                prepend(data);
                 KT.panel.closePanel($('#panel'));
                 id = first_child().attr("id");
                 $.bbq.pushState({

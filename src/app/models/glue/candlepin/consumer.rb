@@ -23,7 +23,7 @@ module Glue::Candlepin::Consumer
       before_save :save_candlepin_orchestration
       before_destroy :destroy_candlepin_orchestration
 
-      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts, :autoheal,
+      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts, :autoheal, :releaseVer, :serviceLevel,
         :initializer => lambda {
                           if uuid
                             consumer_json = Candlepin::Consumer.get(uuid)
@@ -71,6 +71,12 @@ module Glue::Candlepin::Consumer
       end
     end
 
+    def serializable_hash(options={})
+      hash = super(options)
+      hash = hash.merge(:serviceLevel => self.serviceLevel)
+      hash
+    end
+
     def validate_cp_consumer
       if new_record?
         validates_inclusion_of :cp_type, :in => %w( system hypervisor)
@@ -85,7 +91,9 @@ module Glue::Candlepin::Consumer
                                                  self.name, self.cp_type,
                                                  self.facts,
                                                  self.installedProducts,
-                                                 self.autoheal)
+                                                 self.autoheal,
+                                                 self.releaseVer,
+                                                 self.serviceLevel)
 
       load_from_cp(consumer_json)
     rescue => e
@@ -102,7 +110,7 @@ module Glue::Candlepin::Consumer
 
     def update_candlepin_consumer
       Rails.logger.debug "Updating consumer in candlepin: #{name}"
-      Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal)
+      Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal, @releaseVer, self.serviceLevel)
     rescue => e
       Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -169,7 +177,7 @@ module Glue::Candlepin::Consumer
     end
 
     def to_json
-      super(:methods => [:href, :facts, :idCert, :owner, :autoheal])
+      super(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release])
     end
 
     def convert_from_cp_fields(cp_json)
@@ -201,7 +209,7 @@ module Glue::Candlepin::Consumer
     end
 
     def ip
-      facts.keys().grep(/eth.*ipaddr/).collect { |k| facts[k]}.first
+      facts['network.ipv4_address']
     end
 
     def kernel
@@ -263,6 +271,14 @@ module Glue::Candlepin::Consumer
       Time.parse(item)
     end
 
+    def release
+      if self.releaseVer.is_a? Hash
+         self.releaseVer["releaseVer"]
+      else
+        self.releaseVer
+      end
+    end
+
     def available_pools_full listall=false
 
       # The available pools can be constrained to match the system (number of sockets, etc.), or
@@ -275,11 +291,14 @@ module Glue::Candlepin::Consumer
       avail_pools = pools.collect {|pool|
         sockets = ""
         multiEntitlement = false
+        supportLevel = ""
         pool["productAttributes"].each do |attr|
-          if attr["name"] == "socket_limit"
+          if attr["name"] == "sockets"
             sockets = attr["value"]
           elsif attr["name"] == "multi-entitlement"
             multiEntitlement = true
+          elsif attr["name"] == "support_level"
+            supportLevel = attr["value"]
           end
         end
 
@@ -293,10 +312,12 @@ module Glue::Candlepin::Consumer
 
         OpenStruct.new(:poolId => pool["id"],
                        :poolName => pool["productName"],
-                       :expires => Date.parse(pool["endDate"]),
+                       :endDate => Date.parse(pool["endDate"]),
+                       :startDate => Date.parse(pool["startDate"]),
                        :consumed => pool["consumed"],
                        :quantity => pool["quantity"],
                        :sockets => sockets,
+                       :supportLevel => supportLevel,
                        :multiEntitlement => multiEntitlement,
                        :providedProducts => providedProducts)
       }
@@ -310,10 +331,12 @@ module Glue::Candlepin::Consumer
         pool = self.get_pool entitlement["pool"]["id"]
 
         sla = ""
+        sockets = ""
         pool["productAttributes"].each do |attr|
           if attr["name"] == "support_level"
             sla = attr["value"]
-            break
+          elsif attr["name"] == "sockets"
+            sockets = attr["value"]
           end
         end
 
@@ -337,10 +360,12 @@ module Glue::Candlepin::Consumer
         OpenStruct.new(:entitlementId => entitlement["id"],
                        :serials => serials,
                        :poolName => pool["productName"],
-                       :expires => Date.parse(pool["endDate"]),
                        :consumed => pool["consumed"],
                        :quantity => quantity,
                        :sla => sla,
+                       :sockets => sockets,
+                       :endDate => Date.parse(pool["endDate"]),
+                       :startDate => Date.parse(pool["startDate"]),
                        :contractNumber => pool["contractNumber"],
                        :providedProducts => providedProducts)
       }
@@ -352,7 +377,7 @@ module Glue::Candlepin::Consumer
       return self.compliance['compliant'] == true
     end
 
-    # As a convenience and common terminology 
+    # As a convenience and common terminology
     def compliance_color
       return 'green' if self.compliant?
       return 'yellow' if self.compliance['partiallyCompliantProducts'].length > 0 && self.compliance['nonCompliantProducts'].length == 0
@@ -373,6 +398,12 @@ module Glue::Candlepin::Consumer
   end
 
   module ClassMethods
+
+    def all_by_pool(pool_id)
+      entitlements = Candlepin::Entitlement.get
+      system_uuids = entitlements.delete_if{|ent| ent["pool"]["id"] != pool_id }.map{|ent| ent["consumer"]["uuid"]}
+      return where(:uuid => system_uuids)
+    end
 
     def create_hypervisor(environment_id, hypervisor_json)
       hypervisor = Hypervisor.new(:environment_id => environment_id)

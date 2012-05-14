@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+# vim: ts=2:sw=2:et:
 
 require 'optparse'
 require 'fcntl'
@@ -307,7 +308,7 @@ ssl_ca_password_file_option = _get_valid_option_value('ssl_ca_password_file', de
 mandatory.each do |key, mand|
 	if (not final_options.has_key?(key) and mandatory[key]) or
 	(not final_options[key].nil? and not final_options[key].to_s() =~ Regexp.new(regex[key]))
-		final_options[key] = _request_option_interactively(titles[key], regex[key], default_options[key], _is_option_true(non_interactive_option))
+    final_options[key] = _request_option_interactively(titles[key], regex[key], _get_valid_option_value(key, default_options, final_options), _is_option_true(non_interactive_option))
 		if not default_options_order.include?(key)
 			default_options_order.push(key)
 		end
@@ -334,6 +335,20 @@ if show_resulting_answer_file
 	end
 	exit
 end
+
+# Set the deployment to be the relative url
+url_root = final_options['deployment'].nil? ? default_options['deployment'] : final_options['deployment']
+# Don't let a headpin user install in katello/cfse mode
+if url_root == 'katello' || url_root == 'cfse'
+  if %x[rpm -qa katello-headpin] != ''
+    $stderr.puts "You have attempted to set up #{url_root} with katello-headpin installed."
+    $stderr.puts "Please consult the documentation or use a valid --deployment flag."
+    exit_with :default_option_error
+  end
+end
+
+ENV['RAILS_RELATIVE_URL_ROOT'] = "/" + url_root
+
 
 # handle ca password separately, because we do not want
 # to store it into the katello-configure.conf

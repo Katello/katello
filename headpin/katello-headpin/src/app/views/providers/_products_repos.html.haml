@@ -1,0 +1,50 @@
+= javascript :products_repos
+
+= content_for :title do
+  #{@provider.name}
+
+= content_for :remove_item do
+  - if @provider.deletable?
+    = link_to _("Remove Provider"), {:action => "destroy", :controller => "providers"}, :method => :delete, :confirm => _('Are you sure you want to delete this provider?'), :class => "remove_item", :remote=>true
+
+= content_for :navigation do
+  = render_menu(1..2, custom_provider_navigation)
+
+= content_for :content do
+  #products_repos
+    .grid_9
+      = help_tip_button('product_repos-help')
+      = help_tip(_("On Products & Repositories you can add your own Products and Repositories to your Provider.  " + |
+                 "This allows you to synchronize content from any remote repository to this server.  Simply " + | 
+                 "add a Product and then setup one or more repositories to add to this Provider.  This feature is only " + |
+                 "available for Custom Providers."), 'product_repos-help') |
+  
+    .grid_9#products
+      %input{ :type => "hidden", :id=> "provider_id", :name => "provider_id", :value => @provider.id }
+
+      -if editable
+        .button.subpanel_element{"data-url"=>new_provider_product_path(@provider.id)}
+          = _("Add Product")
+        
+      -@products.each do |product|
+        - cssclass = cycle("", "alt")
+        %ul.fl.clear{:class=>cssclass}
+          %li
+            .grid_1.ra
+              = image_tag('icons/expander-expanded.png', :alt => _('Expanded'))
+            .grid_7.editable.subpanel_element{"data-url"=>edit_provider_product_path(@provider.id, product.id)}
+              .multiline
+                %label #{_("Product")}:
+                &nbsp;#{product.name}
+  
+            %ul.fl.clear{:class=>cssclass}
+              -product.repos(product.organization.library).each do |repo|
+                %li{:class=>'repo'}
+                  .grid_7.prefix_1.editable.subpanel_element{"data-url"=>edit_provider_product_repository_path(@provider.id, product.id, repo.id)}
+                    .multiline{:style => 'padding-left:2px'}
+                      %label #{_("Repository")}:
+                      &nbsp;#{repo.name}
+              .prefix_1
+                - if editable
+                  .button.subpanel_element{"data-url"=>new_provider_product_repository_path(@provider.id, product.id)}
+                    #{_("Add Repository")}

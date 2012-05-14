@@ -42,5 +42,5 @@ class FilterListTest(CLIActionTestCase):
         self.restore_mocks()
 
     def test_it_uses_filter_list_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.filters.assert_called_once_with(self.ORG)

@@ -6,7 +6,7 @@ import test_data
 
 import katello.client.core.template
 from katello.client.core.template import Delete
-
+from katello.client.api.utils import ApiDataError
 
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
@@ -56,16 +56,16 @@ class TemplateInfoTest(CLIActionTestCase):
         self.mock(self.action.api, 'delete')
 
     def test_it_finds_the_template(self):
-        self.action.run()
+        self.run_action()
         self.module.get_template.assert_called_once_with(self.ORG['name'], self.ENV['name'], self.TPL['name'])
 
     def test_it_returns_error_when_template_not_found(self):
-        self.mock(self.module, 'get_template', None)
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_template').side_effect = ApiDataError
+        self.run_action(os.EX_DATAERR)
 
     def test_it_returns_success_when_template_found(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)
 
     def test_it_calls_delete_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.delete.assert_called_once_with(self.TPL['id'])

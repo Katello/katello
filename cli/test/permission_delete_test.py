@@ -7,7 +7,7 @@ import test_data
 
 import katello.client.core.permission
 from katello.client.core.permission import Delete
-
+from katello.client.api.utils import ApiDataError
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #required: name, user_role
@@ -48,24 +48,24 @@ class PermissionDeleteTest(CLIActionTestCase):
         self.mock(self.action.api, 'delete')
 
     def test_it_finds_role(self):
-        self.action.run()
+        self.run_action()
         self.module.get_role.assert_called_once_with(self.ROLE['name'])
 
     def test_returns_error_when_role_not_found(self):
-        self.mock(self.module, 'get_role')
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_role').side_effect = ApiDataError
+        self.run_action(os.EX_DATAERR)
 
     def test_it_finds_permission(self):
-        self.action.run()
+        self.run_action()
         self.module.get_permission.assert_called_once_with(self.ROLE['name'], self.PERM['name'])
 
     def test_returns_error_when_permission_not_found(self):
-        self.mock(self.module, 'get_permission')
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_permission').side_effect = ApiDataError
+        self.run_action(os.EX_DATAERR)
 
     def test_it_deletes_permission(self):
-        self.action.run()
+        self.run_action()
         self.action.api.delete.assert_called_once_with(self.ROLE['id'], self.PERM['id'])
 
     def test_returns_ok(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)

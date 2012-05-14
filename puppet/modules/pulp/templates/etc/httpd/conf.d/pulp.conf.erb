@@ -20,7 +20,7 @@ AddType application/x-x509-ca-cert .crt
 
 # Example ssl cert and key files to get you started.
 # This MUST match /etc/pulp/pulp.conf [security] 'cacert'.
-SSLCACertificateFile <%= scope.lookupvar("pulp::params::ssl_certificate_file") %>
+SSLCACertificateFile <%= scope.lookupvar("pulp::params::ssl_certificate_ca_file") %>
 
 # allow older yum clients to connect, see bz 647828
 SSLInsecureRenegotiation on

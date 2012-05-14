@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.12
+Version:        0.2.19
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -18,27 +18,38 @@ Requires:       katello-certs-tools
 Requires:       nss-tools openssl
 Requires:       policycoreutils-python
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
+BuildRequires:  findutils puppet >= 2.6.6
 
 BuildArch: noarch
 
 %description
-Provides katello-configure script which configures Katello installation.
+Provides katello-configure script which configures Katello installation and
+katello-upgrade which handles upgrades between versions.
 
 %prep
 %setup -q
 
 %build
+#check syntax for all puppet scripts
+find -name '*.pp' | xargs -n 1 -t puppet --parseonly
+
 #check for puppet erb syntax errors
 find modules/ -name \*erb | xargs aux/check_erb
 
+#build katello-configure man page
 THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/; s/\s+CLI_OPTIONS/$C/; s/^CLI_OPTIONS_LONG/$X/; print; next } ($t, $l, $v, $d) = /^#\s*(.+?\n)(.+\n)?(\S+)\s*=\s*(.*?)\n+$/s; $l =~ s/^#\s*//gm; $l = $t if not $l; ($o = $v) =~ s/_/-/g; $x .= qq/=item --$o=<\U$v\E>\n\n$l\nThe default value is "$d".\n\n/; $C .= "\n        [ --$o=<\U$v\E> ]"; $X = $x if eof' default-answer-file man/katello-configure.pod \
-	| /usr/bin/pod2man --name=%{name} --official --section=1 --release=%{version} - man/katello-configure.man1
+	| /usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} - man/katello-configure.man1
+
+#build katello-upgrade man page
+sed -e 's/THE_VERSION/%version/g' man/katello-upgrade.pod | /usr/bin/pod2man --name=katello-upgrade -c "Katello Reference" --section=1 --release=%{version} - man/katello-upgrade.man1
+
 
 %install
 rm -rf %{buildroot}
 #prepare dir structure
 install -d -m 0755 %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
+install -m 0755 bin/katello-upgrade %{buildroot}%{_sbindir}
 install -d -m 0755 %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{homedir}/puppet/modules
 cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
@@ -48,17 +59,59 @@ install -m 0644 default-answer-file %{buildroot}%{homedir}
 install -m 0644 options-format-file %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/katello-configure.man1 %{buildroot}%{_mandir}/man1/katello-configure.1
+install -m 0644 man/katello-upgrade.man1 %{buildroot}%{_mandir}/man1/katello-upgrade.1
+install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts
+cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%{homedir}
+%{homedir}/
 %{_sbindir}/katello-configure
+%{_sbindir}/katello-upgrade
 %{_mandir}/man1/katello-configure.1*
+%{_mandir}/man1/katello-upgrade.1*
+
 
 %changelog
+* Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.19-1
+- Set the rails relative url in the installer based on the deployment option
+- Installer updates upgrade history to record upgrades already included in the
+  build
+- upgrade script introduced
+- Loading group roles from ldap
+- First verision of Katello upgrade script
+- 811011 - adding keep alive and expires
+
+* Fri Apr 06 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.18-1
+- puppet - adding pulp migration logging
+
+* Mon Apr 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.17-1
+- 794778 - option ssl_ca_certificate is set for pulp V1
+- 768399 - deployment configure values are checked
+- 805436 - Parametrize Candlepin db credentials, keystore and postgre passwords
+
+* Mon Mar 26 2012 Martin Bačovský <mbacovsk@redhat.com> 0.2.16-1
+- 805124 - Security review of world-readable files (mbacovsk@redhat.com)
+- 804127 - adding configurable log property (jsherril@redhat.com)
+- 806028 - postgres sysvinit script workaround (lzap+git@redhat.com)
+- 802454 - adding support for pulp post-sync request (jsherril@redhat.com)
+- fixing header in the configure man page (lzap+git@redhat.com)
+
+* Tue Mar 20 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.15-1
+- 802346 - wait for postgres to come up in puppet
+
+* Mon Mar 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.14-1
+- Revert "802346 - wait for postgres to come up in puppet"
+
+* Mon Mar 19 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.13-1
+- 802346 - adding puppet syntax check to the spec
+- 802346 - wait for postgres to come up in puppet
+- Revert "802346 - wait until PostgreSQL accepts connections"
+- 802252 - adding missing Ruby build dependency
+
 * Mon Mar 12 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.12-1
 - 802346 - wait until PostgreSQL accepts connections
 - pchalupa's public key
@@ -210,7 +263,7 @@ rm -rf %{buildroot}
 - 767812 - compress our javascript and CSS
 
 * Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.37-1
-- system engine build 
+- system engine build
 
 * Tue Dec 13 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.36-1
 - 767139 - Puppet sometimes fails on RHEL 6.1
@@ -291,7 +344,7 @@ rm -rf %{buildroot}
 - 755048 - set pulp host using fqdn (inecas@redhat.com)
 
 * Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.15-1
-- 
+-
 
 * Wed Nov 16 2011 Ivan Necas <inecas@redhat.com> 0.1.14-1
 - cdn-proxy - fix typo in Puppet manifest (inecas@redhat.com)
@@ -319,7 +372,7 @@ rm -rf %{buildroot}
   (bbuckingham@redhat.com)
 
 * Wed Nov 09 2011 Shannon Hughes <shughes@redhat.com> 0.1.12-1
-- 
+-
 
 * Wed Nov 09 2011 Clifford Perry <cperry@redhat.com> 0.1.11-1
 - Expose HTTP Proxy configuration within the katello-configure installation
@@ -410,7 +463,7 @@ rm -rf %{buildroot}
 - added ssh public key for hudson job
 
 * Mon Sep 19 2011 Mike McCune <mmccune@redhat.com> 0.1.2-1
-- Correcting previous tag that was pushed improperly 
+- Correcting previous tag that was pushed improperly
 * Wed Sep 14 2011 Mike McCune <mmccune@redhat.com> 0.1.1-1
 - new package built with tito
 
