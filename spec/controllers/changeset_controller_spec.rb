@@ -210,7 +210,7 @@ describe ChangesetsController, :katello => true do
       let(:unauthorized_user) do
         user_without_permissions
       end
-      
+
       let(:before_success) do
         controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
           filter_coll = {}
