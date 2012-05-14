@@ -8,6 +8,14 @@
   = include_stylesheets controller.section_id
   = yield :stylesheets
  
+
+= content_for(:body_tag) do
+  - if controller.respond_to?(:section_id)
+    - section_id = controller.section_id
+  - else
+    - section_id = "generic"
+  %body{:id => section_id}
+
 = content_for(:content) do   
   - if not current_user
     #formwindow
