@@ -19,6 +19,7 @@ require 'base64'
 class ApplicationController < ActionController::Base
   layout 'katello'
   include Katello::Notices
+  include Profiling
   clear_helpers
 
   helper "converge-ui/translation"
