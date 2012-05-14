@@ -22,6 +22,12 @@ class PasswordResetsController < ApplicationController
   def section_id
     "loginpage"
   end
+  def param_rules
+    {
+      :create =>[:username, :email],
+      :update => {:user  => [:password]}
+    }
+  end
 
   def new
     @ldap = AppConfig.warden == 'ldap'

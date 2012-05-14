@@ -12,7 +12,7 @@
 
 require 'spec_helper.rb'
 
-describe Api::TemplatesController do
+describe Api::TemplatesController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 
@@ -51,6 +51,8 @@ describe Api::TemplatesController do
     }
   end
   let(:new_tpl_name) {"changed_"+TEMPLATE_NAME}
+
+
 
   describe "rules" do
     let(:user_with_read_permissions) do
@@ -173,6 +175,17 @@ describe Api::TemplatesController do
 
 
     describe "create" do
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = {:organization_id => @organization.name,
+                     :template =>
+                        {:bad_foo => "mwahahaha",
+                         :name => "Gpg Key",
+                         :description => "This is the key string" }
+          }.with_indifferent_access
+          post :create, bad_req
+        end
+      end
 
       it "should fail when creating in non-library environment" do
         post 'create', :template => to_create, :environment_id => @environment.id
@@ -222,6 +235,19 @@ describe Api::TemplatesController do
         tpl_clone.name.should == new_tpl_name
         response.should be_success
       end
+
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = {:id => TEMPLATE_ID,
+                     :template =>
+                        {:bad_foo => "mwahahaha",
+                         :name => "Gpg Key",
+                         :description => "This is the key string" }
+          }.with_indifferent_access
+          put :update, bad_req
+        end
+      end
+
     end
 
     describe "destroy" do

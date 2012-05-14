@@ -27,11 +27,19 @@ module Glue::Candlepin::Owner
           :format => { :with => /^[\w-]*$/ }
 
       lazy_accessor :events, :initializer => lambda { Candlepin::Owner.events(cp_key) }
+      lazy_accessor :service_levels, :initializer => lambda { Candlepin::Owner.service_levels(cp_key) }
       lazy_accessor :debug_cert, :initializer => lambda { load_debug_cert}
     end
   end
 
   module InstanceMethods
+
+    def serializable_hash(options={})
+      hash = super(options)
+      hash = hash.merge(:service_levels => self.service_levels)
+      hash
+    end
+
     def set_owner
       Rails.logger.debug _("Creating an owner in candlepin: %s") % name
       Candlepin::Owner.create(cp_key, name)
@@ -47,10 +55,15 @@ module Glue::Candlepin::Owner
       Rails.logger.error _("Failed to delete candlepin owner %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
-        
+
     def del_environments
       Rails.logger.debug _("All environments for owner %s in candlepin") % name
-      self.environments.destroy_all
+      #need to destroy environments in the proper order to not leave orphans
+      self.promotion_paths.each{|path|
+        path.reverse.each{|env|
+          env.reload.destroy #if we do not reload, the environment may think its successor still exists
+        }
+      }
       self.library.destroy
       self.library = nil
       return true
@@ -68,7 +81,7 @@ module Glue::Candlepin::Owner
     end
 
     #we must delete all systems as part of org deletion explicitly, otherwise the consumers in
-    #  candlepin will be deleted before destroy is called on the Organization object 
+    #  candlepin will be deleted before destroy is called on the Organization object
     def del_systems
       Rails.logger.debug _("All Systems for owner %s in candlepin") % name
       System.joins(:environment).where("environments.organization_id = :org_id", :org_id=>self.id).each do |sys|

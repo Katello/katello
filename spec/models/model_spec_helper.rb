@@ -139,4 +139,10 @@ EOKEY
     Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
   end
 
+  def disable_cdn
+    CDN::CdnResource.stub(:ca_file => "#{Rails.root}/config/candlepin-ca.crt")
+    OpenSSL::X509::Certificate.stub(:new).and_return(&:to_s)
+    OpenSSL::PKey::RSA.stub(:new).and_return(&:to_s)
+  end
+
 end

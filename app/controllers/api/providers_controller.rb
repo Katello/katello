@@ -16,7 +16,7 @@ require 'rest_client'
 class Api::ProvidersController < Api::ApiController
 
   before_filter :find_organization, :only => [:index, :create]
-  before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :import_manifest, :product_create]
+  before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :refresh_products, :import_manifest, :product_create]
   before_filter :authorize
 
   def rules
@@ -36,10 +36,17 @@ class Api::ProvidersController < Api::ApiController
       :products => read_test,
       :import_manifest => edit_test,
       :import_products => edit_test,
+      :refresh_products => edit_test,
       :product_create => edit_test,
     }
   end
 
+  def param_rules
+    {
+      :create => {:provider  => [:name, :description, :provider_type, :repository_url]},
+      :update => {:provider  => [:name, :description, :repository_url]}
+    }
+  end
 
   def index
     query_params.delete(:organization_id)
@@ -89,8 +96,13 @@ class Api::ProvidersController < Api::ApiController
 
     @provider.import_manifest File.expand_path(temp_file.path), :force => params[:force]
     render :text => "Manifest imported", :status => 200
-    rescue => e
-      raise HttpErrors::ApiError, _("Manifest import for provider [ %s ] failed") % @provider.name
+  end
+
+  def refresh_products
+    raise HttpErrors::BadRequest, _("It is not allowed to refresh products for custom provider.") unless @provider.redhat_provider?
+
+    @provider.refresh_products
+    render :text => _("Products refreshed from CDN"), :status => 200
   end
 
   def import_products

@@ -31,10 +31,22 @@ describe PackagesController do
         Glue::Pulp::Package.should_receive(:name_search).once.and_return(["a", "aa"])
       end
 
-      it 'should call pulp' do
+      it 'should succeed' do
         get :auto_complete_library, :term => "a"
         response.should be_success
       end
     end
 
-end
+    describe "get validate name library" do 
+      before (:each) do
+        Glue::Pulp::Package.should_receive(:search).once.and_return([{}])
+      end
+
+      it 'should succeed' do
+        get :validate_name_library, :term => "a"
+        response.should be_success
+      end
+  
+    end
+
+end 

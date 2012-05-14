@@ -1,17 +1,16 @@
-= stylesheet :tipsy
 
-= javascript :env_select, :tipsy_custom
+= javascript
 -# Add env selector and Set the flag appropriately to indicate if there is one
 -if defined? envsys
   -if envsys == true
     = javascript do
-      :javascript
+      :plain
         $(document).ready(function() {
             env_select.envsys = true
         });
   -else
     = javascript do
-      :javascript
+      :plain
         $(document).ready(function() {
             env_select.envsys = false
         });
@@ -19,7 +18,7 @@
     = environment_selector(:library_clickable=>false, :accessible_envs=>accessible_envs,  :url_proc => lambda {|a| environments_systems_path(:env_id =>a[:environment].id )})
 -else
   = javascript do
-    :javascript
+    :plain
       $(document).ready(function() {
           env_select.envsys = false
       });
@@ -27,11 +26,11 @@
 .grid_16#main
   = two_panel(@systems, @panel_options)
 
-= javascript :edit, :multiselect, :system, :treetable
+= javascript :multiselect, :system, :treetable
 
 -if defined? envsys
   = javascript do
-    :javascript
+    :plain
       $(document).ready(function() {
           env_select.env_changed_callback('#{@environment.id}');
           env_select.click_callback = function(env_id) {

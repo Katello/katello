@@ -15,6 +15,26 @@
 KT.panel.list.registerPage('filters', { create : 'new_filter' });
 
 $(document).ready(function() {
+    var edit_func = function(){
+        $(".edit_name").each(function(){
+            $(this).editable($(this).data("url"), {
+                type        :  'text',
+                width       :  250,
+                method      :  'PUT',
+                name        :  $(this).attr('name'),
+                cancel      :  i18n.cancel,
+                submit      :  i18n.save,
+                indicator   :  i18n.saving,
+                tooltip     :  i18n.clickToEdit,
+                placeholder :  i18n.clickToEdit,
+                submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
+                onsuccess   :  function(data){
+                    var id = $('#filter_id');
+                    list.refresh(id.val(), id.data('ajax_url'))
+                }
+            });
+        })
+    };
 
     $("#container").delegate("#remove_packages", 'click', function(e){
         KT.filters.remove_packages();
@@ -41,6 +61,7 @@ $(document).ready(function() {
     KT.panel.set_expand_cb(function(){
         KT.package_input.register_autocomplete();
         KT.product_input.register();
+        edit_func();
     });
 
     
@@ -156,7 +177,7 @@ KT.product_input = (function(){
                 list.hide(); //hide list and re-render message
                 search.hide();
                 KT.filter_renderer.render_product_message(prod_id, true);
-                if (filter.products.indexOf(prod_id) === -1){
+                if (KT.utils.indexOf(filter.products, prod_id) === -1){
                     filter.products.push(prod_id); //add product to filter
                 }
                 //remove product from repos and cache it
@@ -349,8 +370,8 @@ KT.filter_renderer = (function(){
     single_product = function(prod_id) {
         var filter = KT.filters.get_current_filter();
         var repos = [];
-        var editable = Object.keys(KT.editable_products).indexOf(prod_id + "") > -1;
-        if (filter.products.indexOf(prod_id) > -1){
+        var editable = KT.utils.indexOf(Object.keys(KT.editable_products), prod_id + "") > -1;
+        if (KT.utils.indexOf(filter.products, prod_id) > -1){
             //render the cached repos if we want to
             if (KT.filters.get_repo_cache()[prod_id]){
                 repos = KT.filters.get_repo_cache()[prod_id];
@@ -538,7 +559,7 @@ KT.filters = (function(){
         }
     },
     pop_product = function(prod_id){
-      var index = current_filter.products.indexOf(parseInt(prod_id, 10));
+      var index = KT.utils.indexOf(current_filter.products, parseInt(prod_id, 10));
         if (index > -1) {
             current_filter.products.splice(index, 1);
         }
@@ -548,7 +569,7 @@ KT.filters = (function(){
         var repos = current_filter.repos[parseInt(prod_id, 10)],
         index;
         if(repos) {
-            index = repos.indexOf(parseInt(repo_id, 10));
+            index = KT.utils.indexOf(repos, parseInt(repo_id, 10));
             repos.splice(index, 1);
         }
 
@@ -568,7 +589,7 @@ KT.filters = (function(){
             current_filter.repos[prod_id] = [];
         }
 
-        if (current_filter.repos[prod_id].indexOf(repo_id) === -1) {
+        if (KT.utils.indexOf(current_filter.repos[prod_id], repo_id) === -1) {
             current_filter.repos[prod_id].push(repo_id);
             if (bump_up){
                 KT.filter_renderer.render_single_product(prod_id);

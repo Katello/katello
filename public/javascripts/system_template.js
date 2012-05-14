@@ -856,11 +856,11 @@ KT.package_actions = (function() {
     verify_add_package = function(name, name_id, cleanup_cb){
         $.ajax({
             type: "GET",
-            url: KT.routes.auto_complete_library_packages_path(),
+            url: KT.routes.validate_name_library_packages_path(),
             data: {term:name},
             cache: false,
             success: function(data){
-                if ($.inArray(name, data) > -1) {
+                if (data > 0) {
                     KT.templates.add_package(name);
                 }
                 else {
@@ -1179,6 +1179,7 @@ KT.template_download = {
 KT.editable = {
     setup_editable_name : function(id, success) {
         $('.edit_template_name').each(function() {
+            $(this).editable('destroy');
             $(this).editable(KT.common.rootURL() + "/system_templates/" + id, {
                 type        :  'text',
                 width       :  250,
@@ -1199,6 +1200,7 @@ KT.editable = {
     },
     setup_editable_description : function(id, success) {
         $('.edit_template_description').each(function() {
+            $(this).editable('destroy');
             $(this).editable(KT.common.rootURL() + "/system_templates/" + id, {
                 type        :  'textarea',
                 rows        :  6,

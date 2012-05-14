@@ -22,7 +22,7 @@ class Task
   end
 
   def status=s
-    if Queue::STATUS.include?(s)
+    if Glue::Queue::STATUS.include?(s)
       update_ts
       @status = s
     else

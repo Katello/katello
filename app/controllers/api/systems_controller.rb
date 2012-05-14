@@ -20,7 +20,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_environment_by_name, :only => [:hypervisors_update]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
-                                        :unsubscribe, :subscriptions, :pools, :enabled_repos]
+                                        :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases]
   before_filter :find_task, :only => [:task_show]
   before_filter :authorize, :except => :activate
 
@@ -56,6 +56,7 @@ class Api::SystemsController < Api::ApiController
       :unsubscribe => edit_system,
       :subscriptions => read_system,
       :pools => read_system,
+      :releases => read_system,
       :activate => register_system,
       :tasks => index_systems,
       :task_show => read_system,
@@ -64,7 +65,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def create
-    system = System.create!(params.merge({:environment => @environment}))
+    system = System.create!(params.merge({:environment => @environment, :serviceLevel => params[:service_level]}))
     render :json => system.to_json
   end
 
@@ -75,8 +76,10 @@ class Api::SystemsController < Api::ApiController
 
   # used for registering with activation keys
   def activate
+    # Activation keys are userless by definition so use the internal generic user
+    # Set it before calling find_activation_keys to allow communication with candlepin
+    User.current = User.hidden.first
     activation_keys = find_activation_keys
-    User.current = activation_keys.first.user
     system = System.new(params.except(:activation_keys))
     # we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
     activation_keys.reverse_each {|ak| ak.apply_to_system(system) }
@@ -109,30 +112,18 @@ class Api::SystemsController < Api::ApiController
   end
 
   def update
-    # not sure if this is the best way to do this...
-    @system.description = params[:description] if params[:description]
-    @system.name = params[:name] if params[:name]
-    @system.location = params[:location] if params[:location]
-    @system.facts = params[:facts] if params.has_key?(:facts)
-    @system.guestIds = params[:guestIds] if params.has_key?(:guestIds)
-    @system.installedProducts = params[:installedProducts] if params.has_key?(:installedProducts)
-
-    @system.save!
+    @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel))
     render :json => @system.to_json
   end
 
   def index
     # expected parameters
     expected_params = params.slice('name')
-    error_msg = "No systems found" if expected_params.empty?
-    error_msg = "Couldn't find system '#{expected_params[:name]}'" unless expected_params.empty?
-    unless @environment.nil?
-      systems = @environment.systems.readable(@organization).where(expected_params)
-      raise HttpErrors::NotFound, _(error_msg + " in environment '#{@environment.name}'") if systems.empty?
-    else
-      systems = @organization.systems.readable(@organization).where(expected_params)
-      raise HttpErrors::NotFound, _(error_msg + " in organization '#{@organization.name}'") if systems.empty?
-    end
+
+    systems = (@environment.nil?) ? @organization.systems : @environment.systems
+    systems = systems.all_by_pool(params['pool_id']) if params['pool_id']
+    systems = systems.readable(@organization).where(expected_params)
+
     render :json => systems.to_json
   end
 
@@ -150,6 +141,10 @@ class Api::SystemsController < Api::ApiController
     render :json => { :pools => @system.available_pools_full(listall) }
   end
 
+  def releases
+    render :json => { :releases => @system.available_releases }
+  end
+
   def package_profile
     render :json => @system.package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
   end
@@ -159,8 +154,10 @@ class Api::SystemsController < Api::ApiController
   end
 
   def upload_package_profile
-    raise HttpErrors::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
-    @system.upload_package_profile(params[:_json])
+    if AppConfig.katello?
+      raise HttpErrors::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
+      @system.upload_package_profile(params[:_json])
+    end
     render :json => @system.to_json
   end
 
@@ -315,13 +312,16 @@ class Api::SystemsController < Api::ApiController
     if @environment
       @organization = @environment.organization
     else
-      raise _("You have not set a default organization and environment on the user #{current_user.username}.")
+      raise HttpErrors::NotFound, _("You have not set a default organization and environment on the user #{current_user.username}.")
     end
   end
 
   def find_system
-    @system = System.first(:conditions => {:uuid => params[:id]})
-    raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'") if @system.nil?
+    @system = System.first(:conditions => { :uuid => params[:id] })
+    if @system.nil?
+      Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
+      raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'")
+    end
     @system
   end
 

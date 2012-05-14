@@ -13,7 +13,7 @@
 require 'spec_helper'
 require 'helpers/repo_test_data'
 
-describe Glue::Pulp::Repo do
+describe Glue::Pulp::Repo, :katello => true do
 
     let(:to_create_custom) do
     {
@@ -23,8 +23,6 @@ describe Glue::Pulp::Repo do
       :provider_type => Provider::CUSTOM
     }
     end
-
-
 
   before :each do
     disable_repo_orchestration
@@ -37,11 +35,19 @@ describe Glue::Pulp::Repo do
       p.organization = @organization
     end
 
+    
+
     @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
     ep = EnvironmentProduct.find_or_create(@organization.library, @product1)
     RepoTestData::REPO_PROPERTIES.merge!(:environment_product => ep)
 
     @repo = Repository.create!(RepoTestData::REPO_PROPERTIES)
+
+    @rh_product =  Product.create!({:cp_id => "rh_product1_id", :name=> "rh_product1", :productContent => [], 
+                                    :provider => @organization.redhat_provider, :environments => [@organization.library]})
+    ep2 = EnvironmentProduct.find_or_create(@organization.library, @rh_product)
+    @rh_repo = Repository.create!(:name=>"red hat repo", :environment_product=>ep2, :pulp_id=>"redhat_pulp_id", :uri=>"http://redhat.com/cdn/content")
+
   end
 
   context "Create & destroy a repo" do
@@ -57,9 +63,25 @@ describe Glue::Pulp::Repo do
       @repo.create_pulp_repo
     end
 
-    it "should call the Pulp's delete api on destroy" do
+    it "should call  Pulp and candlepin's delete api on destroy for custom providers" do
+      @repo.stub(:update_packages_index).and_return
+      @repo.stub(:update_errata_index).and_return
+      @repo.stub(:content_id).and_return("124321323")
+      Candlepin::Product.should_receive(:remove_content)
+      Candlepin::Content.should_receive(:destroy)
       Pulp::Repository.should_receive(:destroy).with(RepoTestData::REPO_ID)
-      @repo.destroy_repo
+      @repo.destroy
+    end
+
+    it "should only call Pulp's repo delete api on destroy for redhat providers" do
+      @rh_repo.stub(:update_packages_index).and_return
+      @rh_repo.stub(:update_errata_index).and_return
+      @rh_repo.stub(:content_id).and_return("124321323")
+      Pulp::Repository.stub(:find).and_return({:groupid=>["product:123", "env:123", "org:123"]})
+      Candlepin::Product.should_receive(:remove_content)
+      Candlepin::Content.should_not_receive(:destroy)
+      Pulp::Repository.should_receive(:destroy).with(@rh_repo.pulp_id)
+      @rh_repo.destroy
     end
   end
 
@@ -138,7 +160,6 @@ describe Glue::Pulp::Repo do
 
     it "should call pulp synchronization api" do
       @repo.stub(:async).and_return(@repo)
-      @repo.should_receive(:after_sync)
       Pulp::Repository.should_receive(:sync).with(RepoTestData::REPO_ID).and_return({})
       task = mock()
       task.stub(:save!)
@@ -199,6 +220,69 @@ describe Glue::Pulp::Repo do
         @repo.sync_start.should == nil
         @repo.sync_finish.should == nil
       end
+    end
+
+    context "should properly sort sync status" do
+      before(:each) do
+        @finished = {
+          "start_time" => "2012-03-09T12:50:18-05:00",
+          "finish_time" => "2012-03-09T13:03:00-05:00",
+          "state" => "finished"
+        }
+        @finished_2 = {
+          "start_time" => "2012-03-09T14:50:18-05:00",
+          "finish_time" => "2012-03-09T16:03:00-08:00",
+          "state" => "finished"
+        }
+        @running = {
+          "start_time" => "2012-03-09T12:50:18-05:00",
+          "finish_time" => nil,
+          "state" => "running"
+        }
+        @scheduled = {
+          "start_time" => nil,
+          "finish_time" => nil,
+          "state" => "waiting",
+          "scheduler" => "interval"
+        }
+      end
+    
+      it "for a single running status" do
+        @repo.sort_sync_status([@running]).should == [@running]
+      end
+      
+      it "for a single scheduled status" do
+        @repo.sort_sync_status([@scheduled]).should == [@scheduled]
+      end
+      
+      it "for a single finished status" do
+        @repo.sort_sync_status([@finished]).should == [@finished]
+      end
+
+      it "for a running status and complete status" do
+        @repo.sort_sync_status([@finished, @running]).should == [@running, @finished]
+      end
+      
+      it "for a running status and a scheduled status" do
+        @repo.sort_sync_status([@scheduled, @running]).should == [@running, @scheduled]
+      end
+      
+      it "for a finished status and a scheduled status" do
+        @repo.sort_sync_status([@scheduled, @finished]).should == [@finished, @scheduled]
+      end
+
+      it "for two finished and a scheduled status" do
+        @repo.sort_sync_status([@finished_2, @scheduled, @finished]).should == [@finished_2, @finished, @scheduled]
+      end
+      
+      it "for a finished, running and a scheduled status" do
+        @repo.sort_sync_status([@scheduled, @running, @finished]).should == [@running, @finished, @scheduled]
+      end
+
+      it "for two finished, running and a scheduled status" do
+        @repo.sort_sync_status([@finished_2, @scheduled, @running, @finished]).should == [@running, @finished_2, @finished, @scheduled]
+      end
+
     end
 
     context "cancelling" do

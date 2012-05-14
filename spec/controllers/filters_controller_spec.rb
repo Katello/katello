@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FiltersController do
+describe FiltersController, :katello => true do
 
   include LoginHelperMethods
   include LocaleHelperMethods
@@ -57,7 +57,7 @@ describe FiltersController do
         controller.should_receive(:notice)
         post :create, :filter => {:name=>"testfilter"}
         response.should be_success
-        Filter.where(:pulp_id=>"testfilter").first.pulp_id.should == "testfilter"
+        Filter.where(:name=>"testfilter").first.name.should == "testfilter"
       end
 
       it "posts to create a filter should not be sucessful if no name" do
@@ -66,7 +66,25 @@ describe FiltersController do
         response.should_not be_success
       end
 
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          post :create, :filter => {:name=>"testfilter", :bad_foo =>"lame"}
+        end
+      end
     end
+
+    describe 'show a filter' do
+      it 'should return succesfully for a valid filter' do
+        get :show, :id=>@filter.id
+        response.should be_success
+      end
+
+      it 'should return succesfully for a valid filter' do
+        get :show, :id=>-1
+        response.should_not  be_success
+      end
+    end
+
 
     describe "edit a filter" do
       it "should recieve a valid filter for edit" do
@@ -121,6 +139,12 @@ describe FiltersController do
       it "should not allow updating of description of bad id" do
         post :update, :id=> -1, :filter=>{:description=>"TestDescription"}
         response.should_not be_success
+      end
+
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          post :update, :id=> @filter, :filter=>{:description=>"TestDescription", :bad_foo =>"lame"}
+        end
       end
     end
 

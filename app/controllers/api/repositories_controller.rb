@@ -10,9 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/pulp'
+require 'resources/pulp' if AppConfig.katello?
 
 class Api::RepositoriesController < Api::ApiController
+  include KatelloUrlHelper
   respond_to :json
   before_filter :find_repository, :only => [:show, :update, :destroy, :package_groups, :package_group_categories, :enable, :gpg_key_content]
   before_filter :find_organization, :only => [:create, :discovery]
@@ -20,6 +21,11 @@ class Api::RepositoriesController < Api::ApiController
 
   before_filter :authorize
   skip_filter   :set_locale, :require_user, :thread_locals, :authorize, :only => [:gpg_key_content]
+
+  skip_before_filter :authorize, :only=>[:sync_complete]
+  skip_before_filter :require_org, :only=>[:sync_complete]
+  skip_before_filter :require_user, :only => [:sync_complete]
+
 
   def rules
     edit_product_test = lambda{@product.editable?}
@@ -38,7 +44,15 @@ class Api::RepositoriesController < Api::ApiController
     }
   end
 
+  def param_rules
+    {
+      :update => {:repository  => [:gpg_key_name]}
+    }
+  end
+
   def create
+    raise HttpErrors::BadRequest, _('Invalid Url') if !kurl_valid?(params[:url])
+
     if params[:gpg_key_name].present?
       gpg = GpgKey.readable(@product.organization).find_by_name!(params[:gpg_key_name])
     elsif params[:gpg_key_name].nil?
@@ -76,6 +90,32 @@ class Api::RepositoriesController < Api::ApiController
     else
       render :text => _("Repository '#{@repository.name}' disabled."), :status => 200
     end
+  end
+
+  #This function is used by pulp for post sync actions
+  # it is not authenticated, but does not accept requests unless
+  # they have been sent from localhost.  Since we go through apache
+  # HTTP_X_FORWARDED_FOR header should be set with original IP
+  # Pulp blocks during the execution of this call, so *DO NOT* try to
+  # talk back to pulp within it.  Save that for the delayed job
+  # pulp doesn't send correct headers'
+  def sync_complete
+    remote_ip = request.remote_ip
+    forwarded = request.env["HTTP_X_FORWARDED_FOR"]
+
+    if forwarded && ! ['127.0.0.1', '::1'].include?(forwarded)
+      Rails.logger.error("Attempt to access sync_complete from forwarded address #{forwarded}")
+      raise  Errors::SecurityViolation
+    end
+
+    User.current = User.hidden.first
+
+    args = ActiveSupport::JSON.decode(request.body.read).with_indifferent_access
+    repo = Repository.where(:pulp_id =>args[:repo_id]).first
+    raise _("Could not find repository #{repo.name}") if repo.nil?
+    Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
+    repo.async(:organization=>repo.environment.organization).after_sync(args[:task_id])
+    render :text=>""
   end
 
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side

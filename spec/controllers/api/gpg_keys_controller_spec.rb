@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe Api::GpgKeysController do
+describe Api::GpgKeysController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 
@@ -74,18 +74,31 @@ describe Api::GpgKeysController do
     end
   end
 
-
   describe "create gpg key" do
-    let(:req_params) do
-      {:organization_id => @organization.name, :gpg_key => {:name => "Gpg Key", :content => "This is the key string" }}.with_indifferent_access
-    end
-    let(:req) { post :create, req_params }
-    let(:action) { :create }
-    it_should_behave_like "protected action"
+    describe "good request" do
+      let(:req) { post :create, req_params }
+      let(:action) {:create}
+      let(:req_params) do
+        {:organization_id => @organization.name, :gpg_key => {:name => "Gpg Key", :content => "This is the key string" }}.with_indifferent_access
+      end
+      it_should_behave_like "protected action"
 
-    it "returns JSON with created key" do
-      req
-      JSON.parse(response.body).slice(*%w[name content]).should == req_params[:gpg_key]
+      it "returns JSON with created key" do
+        req
+        JSON.parse(response.body).slice(*%w[name content]).should == req_params[:gpg_key]
+      end
+    end
+
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = {:organization_id => @organization.name,
+                   :gpg_key =>
+                      {:bad_foo => "mwahahaha",
+                       :name => "Gpg Key",
+                       :content => "This is the key string" }
+        }.with_indifferent_access
+        post :create, bad_req
+      end
     end
   end
 

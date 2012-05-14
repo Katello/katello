@@ -8,10 +8,10 @@
 .grid_16#main
   = two_panel(@filters, @panel_options)
 
-= javascript :edit, :form, :filters
+= javascript :filters
 
 = javascript do
-  :javascript
+  :plain
 
     KT.products = $.parseJSON('#{escape_javascript(@product_hash.to_json)}');
     KT.editable_products = $.parseJSON('#{escape_javascript(@product_hash.reject{|key,val|!val[:editable]}.to_json)}');

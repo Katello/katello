@@ -13,9 +13,8 @@
 class Api::EnvironmentsController < Api::ApiController
   respond_to :json
   before_filter :find_organization, :only => [:index, :create]
-  before_filter :find_environment, :only => [:show, :update, :destroy, :repositories]
+  before_filter :find_environment, :only => [:show, :update, :destroy, :repositories, :releases]
   before_filter :authorize
-
   def rules
     index_rule = lambda{@organization.readable? || @organization.any_systems_registerable?}
     manage_rule = lambda{@organization.environments_manageable?}
@@ -26,9 +25,21 @@ class Api::EnvironmentsController < Api::ApiController
       :create => manage_rule,
       :update => manage_rule,
       :destroy => manage_rule,
-      :repositories => view_rule
+      :repositories => view_rule,
+      :releases => view_rule
     }
   end
+
+
+  def param_rules
+    manage_match =  {:environment =>  ["name", "description", "prior" ]}
+
+    {
+      :create =>manage_match,
+      :update => manage_match
+    }
+  end
+
 
   def index
     query_params[:organization_id] = @organization.id
@@ -42,6 +53,7 @@ class Api::EnvironmentsController < Api::ApiController
   def create
     environment = KTEnvironment.new(params[:environment])
     @organization.environments << environment
+    raise ActiveRecord::RecordInvalid.new(environment) unless environment.valid?
     @organization.save!
     render :json => environment
   end
@@ -68,6 +80,11 @@ class Api::EnvironmentsController < Api::ApiController
   def repositories
     render :json => @environment.products.all_readable(@organization).collect { |p| p.repos(@environment, query_params[:include_disabled]) }.flatten
   end
+
+  def releases
+    render :json => { :releases => @environment.available_releases }
+  end
+
 
   protected
 

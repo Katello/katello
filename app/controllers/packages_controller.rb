@@ -12,7 +12,7 @@
 
 class PackagesController < ApplicationController
 
-  before_filter :lookup_package, :except=>[:auto_complete_library]
+  before_filter :lookup_package, :except=>[:auto_complete_library, :validate_name_library]
   before_filter :authorize
 
   def rules
@@ -30,7 +30,8 @@ class PackagesController < ApplicationController
       :filelist => view,
       :changelog => view,
       :dependencies => view,
-      :auto_complete_library=>search
+      :auto_complete_library=>search,
+      :validate_name_library=>search
     }
   end
 
@@ -53,6 +54,11 @@ class PackagesController < ApplicationController
   def auto_complete_library
     name = params[:term]
     render :json=>Glue::Pulp::Package.name_search(name)
+  end
+
+  def validate_name_library
+    name = params[:term]
+    render :json=>Glue::Pulp::Package.search("name:#{name}", 0, 1).count 
   end
 
   private

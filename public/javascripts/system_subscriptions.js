@@ -37,4 +37,36 @@ $(document).ready(function() {
     clickableNodeNames: true,
     onNodeShow: function(){$.sparkline_display_visible()}
   });
+
+    // Auto-subscribe with service level used in systems/_subscriptions.html.haml
+    $('.edit_select_system_servicelevel').each(function(){
+        var common_settings = {
+                method          :  'PUT',
+                cancel          :  i18n.cancel,
+                submit          :  i18n.save,
+                indicator       :  i18n.saving,
+                tooltip         :  i18n.clickToEdit,
+                placeholder     :  i18n.systemSelectAutosubscribe,
+                submitdata      :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
+                onerror         :  function(settings, original, xhr) {
+                    original.reset();
+                    $("#notification").replaceWith(xhr.responseText);
+                    notices.checkNotices();
+                }
+        };
+        var element = $(this),
+            settings = {
+                type            :  'select',
+                name            :  element.attr('name'),
+                data            :  element.data('options'),
+                onsuccess       :  function(result, status, xhr){
+                    console.log(xhr.responseText);
+                    element.select(xhr.responseText);
+                    notices.checkNotices();
+                }
+            };
+        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+    });
+
+
 });

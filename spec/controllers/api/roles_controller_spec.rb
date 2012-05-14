@@ -76,6 +76,14 @@ describe Api::RolesController do
         Role.should_receive(:create!).with(role_params)
         req
     end
+    describe "with invalid params" do
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = {:role => {:bad_foo => "mwahaha"}.merge(role_params)}
+          post :create, bad_req
+        end
+      end
+    end
   end
 
   describe "update role" do
@@ -105,6 +113,15 @@ describe Api::RolesController do
       @role.should_receive(:save!)
       req
     end
+    describe "with invalid params" do
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = {:id => role_id, :role => {:bad_foo => "mwahaha"}.merge(role_params)}
+          put :update, bad_req
+        end
+      end
+    end
+
   end
 
   describe "destroy role" do

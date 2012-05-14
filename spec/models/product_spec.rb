@@ -15,7 +15,7 @@ require 'helpers/product_test_data'
 require 'helpers/repo_test_data'
 
 
-describe Product do
+describe Product, :katello => true do
 
   include OrchestrationHelper
   include AuthorizationHelperMethods
@@ -33,9 +33,7 @@ describe Product do
     end
 
     CDN::CdnVarSubstitutor.stub(:new => @substitutor_mock)
-    CDN::CdnResource.stub(:ca_file => "#{Rails.root}/config/candlepin-ca.crt")
-    OpenSSL::X509::Certificate.stub(:new).and_return(&:to_s)
-    OpenSSL::PKey::RSA.stub(:new).and_return(&:to_s)
+    disable_cdn
 
     ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider, :environments => [@organization.library]})
     ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider, :environments => [@organization.library]})
@@ -320,8 +318,8 @@ describe Product do
       @environment1 = KTEnvironment.create!(:name => 'dev', :library => false, :prior => @organization.library, :organization => @organization)
       @environment2 = KTEnvironment.create!(:name => 'prod', :library => false, :prior => @environment1, :organization => @organization)
 
-      @filter1 = Filter.create!(:pulp_id => FILTER1_ID, :package_list => PACKAGE_LIST_1, :organization => @organization)
-      @filter2 = Filter.create!(:pulp_id => FILTER2_ID, :package_list => PACKAGE_LIST_2, :organization => @organization)
+      @filter1 = Filter.create!(:name => FILTER1_ID, :package_list => PACKAGE_LIST_1, :organization => @organization)
+      @filter2 = Filter.create!(:name => FILTER2_ID, :package_list => PACKAGE_LIST_2, :organization => @organization)
 
       Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
       Candlepin::Content.stub!(:create).and_return({:id => ProductTestData::PRODUCT_WITH_CONTENT[:productContent][0].content.id})

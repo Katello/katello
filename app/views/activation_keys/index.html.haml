@@ -14,10 +14,10 @@
   = two_panel(@activation_keys, @panel_options)
   %div#environment_edit_dialog
 
-= javascript :env_select, :edit, :activation_key
+= javascript :activation_key
 
 = javascript do
-  :javascript
+  :plain
     localize({
       "noTemplate": '#{no_template}',
       "update_template": '#{escape_javascript(_('Select a System Template'))}'

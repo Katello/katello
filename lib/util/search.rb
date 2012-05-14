@@ -13,6 +13,16 @@
 module Katello
   module Search
 
+    def self.custom_analzyers
+      {
+        "kt_name_analyzer" => {
+          "type"      => "custom",
+          "tokenizer" => "keyword",
+          "filter"    => ["lowercase", "asciifolding"]
+        }
+      }
+    end
+
     # Filter the search input, escaping unsupported lucene syntax (e.g. usage of - operator)
     def self.filter_input search
       unless search.nil?

@@ -11,9 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Filter < ActiveRecord::Base
-  
-  
-  include Glue::Pulp::Filter if (AppConfig.use_cp and AppConfig.use_pulp)
+  include Glue::Pulp::Filter if AppConfig.katello?
   include Glue
   include Authorization
   include IndexedModel
@@ -23,20 +21,22 @@ class Filter < ActiveRecord::Base
                 :json=>{:except=>[:pulp_id, :package_list]}
 
   mapping do
-    indexes :name, :type => 'string', :analyzer => :keyword
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 
   validates :pulp_id, :presence => true
   validates_presence_of :organization_id, :message => N_("Name cannot be blank.")
-  validates_uniqueness_of :pulp_id, :scope => :organization_id, :message => N_("Name must be unique within one organization")
+  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("Name must be unique within one organization")
+  validates_uniqueness_of :pulp_id, :message=> N_("Pulp identifier must be unique.")
 
   belongs_to :organization
   has_and_belongs_to_many :products, :uniq => true
   has_and_belongs_to_many :repositories, :uniq => true
 
-  alias_attribute :name, :pulp_id
-
+  before_validation(:on=>:create) do
+    self.pulp_id ||= "#{self.organization.cp_key}-#{self.name}-#{SecureRandom.hex(4)}"
+  end
 
 
   READ_PERM_VERBS = [:read, :create, :delete]

@@ -30,16 +30,16 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
                         "type"      => "edgeNGram",
                         "side"      => "front",
                         "min_gram"  => 1,
-                        "max_gram"  => 10
+                        "max_gram"  => 30
                     }
                 },
                 "analyzer" => {
-                    "name_analyzer" => {
+                    "autcomplete_name_analyzer" => {
                         "type"      => "custom",
                         "tokenizer" => "keyword",
                         "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
                     }
-                }
+                }.merge(Katello::Search::custom_analzyers)
             }
         }
     }
@@ -49,10 +49,11 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     {
       :package => {
         :properties => {
-          :name          => { :type=> 'string', :analyzer=>'name_analyzer'},
-          :nvrea         => { :type=> 'string', :analyzer=>'keyword'},
+          :name          => { :type=> 'string', :analyzer=>:kt_name_analyzer},
+          :name_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
+          :nvrea         => { :type=> 'string', :analyzer=>:kt_name_analyzer},
           :nvrea_sort    => { :type => 'string', :index=> :not_analyzed },
-          :repoids       => { :type=> 'string', :analyzer=>'keyword'}
+          :repoids       => { :type=> 'string', :index=>:not_analyzed}
         }
       }
     }
@@ -66,7 +67,8 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     {
       "_type" => :package,
       "nvrea_sort" => nvrea.downcase,
-      "nvrea" => nvrea
+      "nvrea" => nvrea,
+      "name_autocomplete" => name
     }
   end
 
@@ -75,7 +77,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     start = 0
 
     query = Katello::Search::filter_input query
-    query = "name:#{query}"
+    query = "name_autocomplete:#{query}"
 
     search = Tire.search self.index do
       fields [:name]
@@ -97,22 +99,15 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
 
   def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"]
     return [] if !Tire.index(self.index).exists?
-    all_rows = false
 
-    if query.blank?
-      all_rows = true
-    else
-      query = Katello::Search::filter_input query
-      query_down = query.downcase
-      query = "nvrea:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
-    end
+    all_rows = query.blank? #if blank, get all rows
 
     search = Tire.search self.index do
       query do
         if all_rows
           all
         else
-          string query
+          string query, {:default_field=>'nvrea'}
         end
       end
 

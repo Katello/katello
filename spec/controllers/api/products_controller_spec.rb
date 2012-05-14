@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe Api::ProductsController do
+describe Api::ProductsController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include ProductHelperMethods
@@ -84,6 +84,8 @@ describe Api::ProductsController do
     it { should be_success }
   end
 
+
+
   describe "update product" do
     let(:gpg_key) { GpgKey.create!(:name => "Gpg key", :content => "100", :organization => @organization) }
 
@@ -98,6 +100,18 @@ describe Api::ProductsController do
     let(:authorized_user) { user_with_update_permissions }
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
+
+     it_should_behave_like "bad request" do
+      let(:req) do
+        bad_req = {:id => @product.cp_id,
+                   :organization_id => @organization.cp_key,
+                   :product => {:bad_param => "100",
+                                :gpg_key_name => gpg_key.name,
+                                :description => "another description" }
+        }.with_indifferent_access
+        put :update, bad_req
+      end
+     end
 
     context "custom product" do
       subject { req }

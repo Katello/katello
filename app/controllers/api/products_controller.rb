@@ -34,6 +34,12 @@ class Api::ProductsController < Api::ApiController
     }
   end
 
+  def param_rules
+    {
+        :update => {:product => [:description, :gpg_key_name, :recursive]}
+    }
+  end
+
   def show
     render :json => @product.to_json
   end

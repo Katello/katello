@@ -1,9 +1,6 @@
-= javascript :notices
-
 - if current_user
-  = javascript do
-    :javascript
-      $(document).ready(function(){
-        notices.setup_notices(#{notification_polling_time});
-        notices.addNotices($.parseJSON( "#{escape_javascript(get_new_notices.to_json)}"   ));
-      });
+  :plain
+    $(document).ready(function(){
+      notices.setup_notices(#{notification_polling_time});
+      notices.addNotices($.parseJSON( "#{escape_javascript(get_new_notices.to_json)}"   ));
+    });

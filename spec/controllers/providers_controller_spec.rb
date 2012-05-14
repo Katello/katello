@@ -23,7 +23,7 @@ describe ProvidersController do
     login_user
     set_default_locale
     controller.stub!(:notice)
-
+    controller.stub(:validate_search).and_return(true)
     @org = new_test_org
     current_organization=@org
 
@@ -66,7 +66,25 @@ describe ProvidersController do
 
   end
 
-  describe "rules" do
+  describe "should be able to create a custom provider", :katello => true do
+    before do
+      disable_product_orchestration
+      controller.stub(:search_validate).and_return(true)
+    end
+    it "should work on a good request" do
+      name = "prov"
+      desc = "desc"
+      post :create, :provider => {:name => name, :description => desc }
+      response.should be_success
+      Provider.where(:name => name, :organization_id => @organization.id).should_not be_empty
+    end
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        post :create, :provider => {:name => "name", :bad_description => "desc" }
+      end
+    end
+  end
+  describe "rules", :katello => true do
     before (:each) do
       @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)

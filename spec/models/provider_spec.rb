@@ -114,6 +114,94 @@ describe Provider do
     end
   end
 
+  describe "products refresh", :katello => true do
+
+    def product_content(name)
+      Glue::Candlepin::ProductContent.new(
+        "content" => {
+        "name" => name,
+        "id" => name.hash,
+        "type" => "yum",
+        "label" => name,
+        "vendor" => "redhat",
+        "contentUrl" => "/released-extra/#{name}/$releasever/os/rpms",
+        "gpgUrl" => "/some/gpg/url/",
+          "updated" => "2011-01-04T18:47:47.219+0000",
+          "created" => "2011-01-04T18:47:47.219+0000"},
+        "enabled" => true,
+        "flexEntitlement" => 0,
+        "physicalEntitlement" => 0
+      )
+    end
+
+    def create_product_with_content(product_name, releases)
+      product = @provider.products.create!(:name => product_name, :cp_id => product_name.hash) do |product|
+        product.environments << @organization.library
+      end
+
+      product.productContent = [product_content(product_name)]
+      product.productContent.each do |product_content|
+        releases.each do |release|
+          version = CDN::Utils.parse_version(release)
+          repo_name = "#{product_content.content.name} #{release}"
+          Repository.create!(:environment_product => EnvironmentProduct.find_or_create(product.organization.library, product),
+                             :cp_label => product_content.content.label,
+                             :name => repo_name,
+                             :pulp_id => product.repo_id(repo_name),
+                             :major => version[:major],
+                             :minor => version[:minor])
+        end
+      end
+      product
+    end
+
+    def set_upstream_releases(product, releases)
+      Thread.current[:cdn_var_substitutor_cache] ||= {}
+      cache = Thread.current[:cdn_var_substitutor_cache]
+      product.productContent.each do |product_content|
+        prefix_with_vars = product_content.content.contentUrl[/^.*\$[^\/]+/]
+        cache[prefix_with_vars] = {}
+        releases.each do |release|
+          prefix_without_vars = prefix_with_vars.sub("$releasever", release)
+          cache[prefix_with_vars][{"releasever" => release}] = prefix_without_vars
+        end
+      end
+    end
+
+    before do
+      disable_org_orchestration
+      disable_product_orchestration
+      disable_cdn
+      @organization = Organization.create!(:name =>"org10026", :cp_key => "org10026_key")
+      @provider = @organization.redhat_provider
+
+      @product_without_change = create_product_with_content("product-without-change", ["1.0", "1.1"])
+      set_upstream_releases(@product_without_change, ["1.0", "1.1"])
+
+      @product_with_change = create_product_with_content("product-with-change", ["1.0"])
+      set_upstream_releases(@product_with_change, ["1.0", "1.1"])
+
+      @provider.stub_chain(:products, :engineering).and_return([@product_without_change, @product_with_change])
+    end
+
+    after do
+      Thread.current[:cdn_var_substitutor_cache] = nil
+    end
+
+    it "should create repositories that were added in CDN" do
+      @organization.library.repositories(true).map(&:name).sort.should == ["product-with-change 1.0",
+                                                                           "product-without-change 1.0",
+                                                                           "product-without-change 1.1"]
+      @provider.refresh_products
+      @organization.library.repositories(true).map(&:name).sort.should == ["product-with-change 1.0",
+                                                                           "product-with-change 1.1",
+                                                                           "product-without-change 1.0",
+                                                                           "product-without-change 1.1"]
+    end
+
+  end
+
+
   context "sync provider" do
     before(:each) do
       @provider = Provider.create(to_create_custom) do |p|

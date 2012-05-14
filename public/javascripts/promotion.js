@@ -1277,14 +1277,14 @@ var templateLibrary = (function(){
         },
         changesetsList = function(changesets){
             var html = '<ul class="filterable">';
-            for( item in changesets){
+            $.each(changesets, function(item){
                 if( changesets.hasOwnProperty(item) ){
                     //do the search filter here
                     if( item.split("_")[0] === "changeset" ){
                         html += changesetsListItem(item, changesets[item].name);
                     }
                 }
-            }
+            });
             html += '</ul>';
             return html;
         },

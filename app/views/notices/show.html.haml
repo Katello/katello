@@ -1,5 +1,4 @@
-= stylesheet :fancyqueries
-= javascript :notices_list, :fancyqueries
+= javascript :notices_list
 
 
 %div#dialog_content{:style => "word-wrap: break-word;"}
@@ -40,5 +39,5 @@
             %td #{notice.created_at}
             %td #{notice.level}
             %td
-              %div.details-icon
+              %div.details-icon.fr
               = "#{notice.text}".html_safe

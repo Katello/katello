@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'ruby-debug'
 
-describe SyncPlansController do
+describe SyncPlansController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
@@ -104,6 +104,13 @@ describe SyncPlansController do
         response.should_not be_success
       end
 
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_params = plan_create
+          bad_params[:sync_plan][:bad_foo] = "gah"
+          post :create, bad_params
+        end
+      end
     end
 
     describe "Delete a SyncPlan" do
@@ -183,6 +190,16 @@ describe SyncPlansController do
         put :update, :id => @plan.id, :sync_plan => {:name => ''}
         response.should_not be_success
       end
+
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_params =  {:id => @plan.id, :sync_plan => {:name => '122'}}
+          bad_params[:sync_plan][:bad_foo] = "gah"
+          post :create, bad_params
+        end
+      end
+
+
     end
   end
 end

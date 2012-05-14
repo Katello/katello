@@ -57,6 +57,14 @@ describe PasswordResetsController do
       post :create, @params
       response.should be_success
     end
+
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = @params
+        bad_req[:bad_foo] = "mwahaha"
+        post :create, bad_req
+      end
+    end
   end
 
   describe "GET edit" do
@@ -97,6 +105,15 @@ describe PasswordResetsController do
       controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
       put :update, @params
     end
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = @params
+        bad_req[:user][:bad_foo] = "mwahaha"
+        put :update, bad_req
+      end
+    end
+
+
   end
 
   describe "GET email_logins" do

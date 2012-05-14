@@ -47,16 +47,23 @@ describe RolesController do
       Role.where(:name=>RolesControllerTest::ROLE[:name]).should_not be_empty
     end
     
-    it "should error if no name" do
-      post 'create', {:role => {}}
-      response.should_not be_success
-    end
+    describe "with invalid params" do
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = {:role => {:bad_foo => "mwahaha"}.merge(RolesControllerTest::ROLE)}
+          post :create, bad_req
+        end
+      end
+      it "should error if no name" do
+        post 'create', {:role => {}}
+        response.should_not be_success
+      end
 
-    it "should error if blank name" do
-      post 'create', {:role => { :name=> "" }}
-      response.should_not be_success
+      it "should error if blank name" do
+        post 'create', {:role => { :name=> "" }}
+        response.should_not be_success
+      end
     end
-    
   end
   
   describe "update a role" do
@@ -85,6 +92,23 @@ describe RolesController do
       put 'update', { :id => @role.id, :update_users => { :adding => "false", :user_id => @user.id }}
       response.should be_success
       assigns[:role].users.should_not include @user
+    end
+
+    describe "with invalid params" do
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = {:role => {:description => "lame"}, :id=>@role.id}
+          bad_req[:role][:bad_foo] = "mwahahahaha"
+          put 'update', bad_req
+        end
+      end
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = {:update_users => {:adding => "false", :user_id => @user.id }, :id=>@role.id}
+          bad_req[:update_users][:bad_foo] = "mwahahahaha"
+          put 'update', bad_req
+        end
+      end
     end
 
 =begin
@@ -181,7 +205,6 @@ describe RolesController do
   end
 
   describe "create permission" do
-    
     before (:each) do
       @organization = new_test_org
       @role = Role.create!(:name=>"TestRole")
@@ -200,7 +223,22 @@ describe RolesController do
       response.should be_success
       assigns[:role].permissions.should include Permission.where(:name => "New Perm")[0]    
     end
-    
+
+    describe "with bad requests" do
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          put 'create_permission', { :role_id => @role.id, :name=> "New Perm",
+                                     :permission => {:organization_id =>@organization.id, :bad_foo => "xyz"}}.with_indifferent_access
+        end
+      end
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          put 'create_permission', { :role_id => @role.id, :name=> "New Perm",
+                                     :permission => {:organization_id =>@organization.id,
+                                                     :resource_type_attributes => {:bad_foo => "xyz", :name => 'all' }}}.with_indifferent_access
+        end
+      end
+    end
   end
 
   describe 'destroy permission' do
@@ -257,7 +295,22 @@ describe RolesController do
       response.should be_success
       Permission.find(@perm.id).all_tags.should == true
     end
-    
+
+    describe "with bad requests" do
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          put "update_permission", { :role_id => @role.id, :permission_id => @perm.id,
+                                     :permission => {:name=> "New Perm",  :bad_foo => "xyz"}}
+        end
+      end
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          put "update_permission", { :role_id => @role.id, :permission_id => @perm.id,
+                                     :permission => {:name=> "New Perm",
+                                                     :resource_type_attributes => {:bad_foo => "xyz", :name => 'all' }}}
+        end
+      end
+    end
   end
    
   describe 'getting verbs and tags' do

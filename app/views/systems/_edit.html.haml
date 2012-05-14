@@ -1,4 +1,10 @@
-= javascript :edit_helpers
+= javascript do
+  :plain
+    localize({
+        "systemReleaseVerDefault": '#{escape_javascript(_("System Default"))}'
+    });
+
+= javascript :edit_helpers, :system_edit
 = render :partial => "system_tupane_header_nav"
 
 = content_for :content do
@@ -35,6 +41,11 @@
         .grid_2.ra.fieldset
           = label :release, :release, _("Release")
         .grid_5.la #{system.kernel}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :releaseVer, :releaseVer, _("Release Version")
+        .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever" if editable), 'data-url' => system_path(system.id), 'data-options' => system_releasevers_edit(system)}
+          = system.release
       %fieldset
         .grid_2.ra.fieldset
           = label :arch, :arch, _("Arch")

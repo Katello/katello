@@ -34,14 +34,15 @@ describe ActivationKeysController do
     @organization = new_test_org
     @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.library.id, :organization => @organization)
     @environment_2 = KTEnvironment.create!(:name => 'prod', :prior => @environment_1.id, :organization => @organization)
-    @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1)
-    @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1)
+    @system_template_1 = AppConfig.katello? ? SystemTemplate.create!(:name => 'template1', :environment => @environment_1) : nil
+    @system_template_2 = AppConfig.katello? ? SystemTemplate.create!(:name => 'template2', :environment => @environment_1) : nil
     @a_key = ActivationKey.create!(:name => "another test key", :organization => @organization, :environment => @environment_1)
     @subscription = KTPool.create!(:cp_id => "Test Subscription",
                                           :key_pools => [KeyPool.create!(:activation_key => @a_key)])
 
     @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id,
-                                         :system_template_id => @system_template_1.id}}
+                                         :system_template_id => @system_template_1.id}} if AppConfig.katello?
+    @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id}} unless AppConfig.katello?
   end
 
 
@@ -154,7 +155,7 @@ describe ActivationKeysController do
         assigns[:activation_key].name.should eq(@akey_params[:activation_key][:name])
         assigns[:activation_key].description.should eq(@akey_params[:activation_key][:description])
         assigns[:activation_key].environment_id.should eq(@akey_params[:activation_key][:environment_id])
-        assigns[:activation_key].system_template_id.should eq(@akey_params[:activation_key][:system_template_id])
+        assigns[:activation_key].system_template_id.should eq(@akey_params[:activation_key][:system_template_id]) unless AppConfig.katello?
       end
 
       it "renders list item partial for 2 pane" do
@@ -170,6 +171,13 @@ describe ActivationKeysController do
       it "should be successful" do
         post :create, @akey_params
         response.should be_success
+      end
+      it_should_behave_like "bad request"  do
+        let(:req) do
+          bad_req = @akey_params
+          bad_req[:activation_key][:bad_foo] = "mwahaha"
+          post :create, bad_req
+        end
       end
     end
 
@@ -215,7 +223,7 @@ describe ActivationKeysController do
           assigns[:activation_key].environment_id.should eq(@environment_2.id)
         end
 
-        it "should update requested field - system template" do
+        it "should update requested field - system template", :katello => true do
           put :update, :id => @a_key.id, :activation_key => {:system_template_id => @system_template_2.id}
           assigns[:activation_key].system_template_id.should eq(@system_template_2.id)
         end
@@ -263,6 +271,12 @@ describe ActivationKeysController do
       end
 
       describe "with invalid params" do
+        it_should_behave_like "bad request"  do
+          let(:req) do
+            bad_req = {:id => @a_key.id, :activation_key => {:name => "bar", :bad_foo => "hahaha"}}
+            put :update, bad_req
+          end
+        end
         it "should generate an error notice" do
           controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_NAME_INVALID

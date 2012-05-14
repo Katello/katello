@@ -23,6 +23,21 @@ class Api::RootController < Api::ApiController
     # provide some fake paths that does not exist (but rhsm is checking it's existance)
     api_root_routes << { :href => '/api/packages/', :rel => 'packages' }
 
+    # katello only APIs
+    katello_only = ["/api/templates/",
+                    "/api/changesets/",
+                    "/api/repositories/",
+                    "/api/packages/",
+                    "/api/errata/",
+                    "/api/disributions/",
+                    "/api/tasks/",
+                    "/api/gpg_keys/"
+                    ]
+
+    # filter out katello-only apis from headpin resource list
+    if !AppConfig.katello?
+      api_root_routes = api_root_routes.select { |api| !katello_only.include?(api[:href]) }
+    end
     render :json => api_root_routes
   end
 

@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
@@ -22,7 +22,7 @@ msgstr "内容"
 
 #: app/views/promotions/show.html.haml:97
 msgid " Promotion Changesets"
-msgstr ""
+msgstr "推广更改集"
 
 #: app/views/layouts/_footer.haml:6
 msgid " Red Hat, Inc."
@@ -177,18 +177,16 @@ msgid "%s (%s other packages) update timed out"
 msgstr "%s（%s 其它软件包）更新超时"
 
 #: app/controllers/systems_controller.rb:265
-#, fuzzy
 msgid "%s Removed Successfully"
-msgstr "成功创建。"
+msgstr "成功删除 %s"
 
 #: app/controllers/systems_controller.rb:253
-#, fuzzy
 msgid "%s Systems Removed Successfully"
-msgstr "成功创建。"
+msgstr "成功删除 %s 系统"
 
 #: app/views/layouts/_footer.haml:8
 msgid "%s Version: %s"
-msgstr ""
+msgstr "%s 版本：%s"
 
 #: app/helpers/translation_helper.rb:15
 #: app/views/providers/redhat/_import_history.html.haml:14
@@ -312,19 +310,18 @@ msgid "%s package update timed out"
 msgstr "%s 软件包更新超时"
 
 #: app/controllers/sync_management_controller.rb:238
-#, fuzzy
 msgid "%s product was synced successfully"
-msgstr "成功更新用户。"
+msgstr "已成功同步 %s 产品"
 
 #: app/controllers/sync_management_controller.rb:234
 msgid "%s product was synced successfully with errors. See log for details"
-msgstr ""
+msgstr "成功同步 %s 产品，但有出错信息，详情请查看日志。"
 
 #: app/controllers/providers_controller.rb:82
 msgid ""
 "%{newline}If you are uploading an older manifest, you can use the Force "
 "checkbox to overwrite existing data."
-msgstr ""
+msgstr "%{newline} 如果您要上传旧的清单，您可以选择 Force 选择框覆盖现有数据。"
 
 #: app/controllers/providers_controller.rb:79
 #: app/controllers/providers_controller.rb:106
@@ -334,7 +331,7 @@ msgstr "%{newline}Reason: %{reason}"
 
 #: app/controllers/repositories_controller.rb:125
 msgid "%{repo} (Product: %{product})"
-msgstr ""
+msgstr "%{repo} (Product: %{product})"
 
 #: app/controllers/gpg_keys_controller.rb:97
 #: app/controllers/organizations_controller.rb:109
@@ -346,7 +343,7 @@ msgstr ""
 #: app/controllers/users_controller.rb:127
 #: app/controllers/roles_controller.rb:94
 msgid "'%s' did not meet the current search criteria and is not being shown."
-msgstr ""
+msgstr "'%s' 不满足当前搜索要求，因此没有显示。"
 
 #: app/controllers/gpg_keys_controller.rb:119
 #: app/controllers/organizations_controller.rb:130
@@ -358,9 +355,8 @@ msgstr ""
 #: app/controllers/users_controller.rb:150
 #: app/controllers/users_controller.rb:275
 #: app/controllers/roles_controller.rb:120
-#, fuzzy
 msgid "'%s' no longer matches the current search criteria."
-msgstr "没有符合您搜索标准的事件。"
+msgstr "'%s' 不再与当前搜索标准匹配。"
 
 #: app/views/filters/index.html.haml:15
 msgid "(%X of %Y repositories selected)"
@@ -396,7 +392,7 @@ msgstr "+ 新建"
 #: app/views/promotions/show.html.haml:163
 #: app/views/promotions/show.html.haml:167
 msgid "+ New Promotion Changeset"
-msgstr ""
+msgstr "+ 新推广更改集"
 
 #: app/views/system_templates/index.html.haml:106
 msgid "+ New Template"
@@ -426,17 +422,13 @@ msgstr "<< 前一个"
 msgid ""
 "A request has been received by Katello server '%s' to retrieve the logins "
 "for email '%s'. The following is a list of those logins:"
-msgstr ""
-"Katello 服务器 '%s' 已收到为电子邮件 '%s' 查询登录的请求。以下是那些登录的列"
-"表："
+msgstr "Katello 服务器 '%s' 已收到为电子邮件 '%s' 查询登录的请求。以下是那些登录的列表："
 
 #: app/views/user_mailer/password_reset.text.haml:1
 msgid ""
-"A request has been received to reset the Katello password for user '%s'.  In "
-"order to reset this password, click the URL below."
-msgstr ""
-"已收到为用户 '%s' 重新设定 Katello 密码的请求。要重新锁定这个密码，请点击下面"
-"的 URL。"
+"A request has been received to reset the Katello password for user '%s'.  In"
+" order to reset this password, click the URL below."
+msgstr "已收到为用户 '%s' 重新设定 Katello 密码的请求。要重新锁定这个密码，请点击下面的 URL。"
 
 #: app/controllers/activation_keys_controller.rb:264
 #: app/models/resource_type.rb:94 lib/navigation/systems.rb:51
@@ -449,9 +441,7 @@ msgid ""
 "system during system registration.  This includes things such as, default "
 "environment to assign to the system, subscriptions to allocate to the "
 "system, system template to apply to the system...etc."
-msgstr ""
-"激活码提供一组可在系统注册过程中使用的功能。其中包括为该系统默认分配的环境、"
-"为该系统默认分配的订阅、应用到该系统的系统模板等等。"
+msgstr "激活码提供一组可在系统注册过程中使用的功能。其中包括为该系统默认分配的环境、为该系统默认分配的订阅、应用到该系统的系统模板等等。"
 
 #: app/views/activation_keys/index.html.haml:9
 msgid ""
@@ -459,15 +449,15 @@ msgid ""
 "system during system registration.  This includes things such as, default "
 "environment to assign to the system, subscriptions to allocate to the "
 "system...etc."
-msgstr ""
+msgstr "激活码提供可在系统注册时在系统中使用的一组特征。这包括为该系统分配的默认环境、分配给系统的订阅等。"
 
 #: app/controllers/activation_keys_controller.rb:175
 msgid "Activation key '%s' was created."
-msgstr ""
+msgstr "已生成激活码 '%s'。"
 
 #: app/controllers/activation_keys_controller.rb:203
 msgid "Activation key '%s' was updated."
-msgstr ""
+msgstr "已更新激活码 '%s'。"
 
 #: app/views/filters/_packages.html.haml:24
 #: app/views/common/_common_i18n.html.haml:3
@@ -484,7 +474,7 @@ msgstr "添加"
 
 #: app/views/common/_common_i18n.html.haml:3
 msgid "Add All"
-msgstr ""
+msgstr "添加所有"
 
 #: app/views/roles/index.html.haml:8
 msgid "Add Global Permission"
@@ -528,7 +518,7 @@ msgstr "添加软件包超时"
 
 #: app/views/filters/_packages.html.haml:21
 msgid "Add Packages"
-msgstr ""
+msgstr "添加软件包"
 
 #: app/views/roles/_edit.html.haml:94 app/views/roles/index.html.haml:8
 #: app/views/roles/_permissions.html.haml:6
@@ -613,9 +603,8 @@ msgid "Administration"
 msgstr "管理"
 
 #: app/models/role.rb:191
-#, fuzzy
 msgid "Administrator"
-msgstr "管理"
+msgstr "管理员"
 
 #: app/views/errata/_show.html.haml:12
 msgid "Advisory"
@@ -640,25 +629,25 @@ msgstr "所有库"
 
 #: app/models/glue/candlepin/owner.rb:73
 msgid "All Systems for owner %s in candlepin"
-msgstr ""
+msgstr "candlepin 中拥有者 %s 的所有系统"
 
 #: app/models/glue/candlepin/owner.rb:52
 msgid "All environments for owner %s in candlepin"
-msgstr ""
+msgstr "candlepin 中拥有者 %s 的所有环境"
 
 #: app/models/glue/candlepin/owner.rb:63
 msgid "All providers for owner %s in candlepin"
-msgstr ""
+msgstr "candlepin 中拥有者 %s 的所有供应商"
 
 #: app/controllers/products_controller.rb:76
 msgid "All repository GPG keys for Product '%s' were updated."
-msgstr ""
+msgstr "已更新产品 '%s' 的所有库 GPG 密钥。"
 
 #: app/views/promotions/show.html.haml:153
 msgid ""
 "An environment does not exist to promote content to.  If you would like to "
 "manage promotion changesets and content, please create a new environment."
-msgstr ""
+msgstr "要推广内容的环境不存在。如果您要管理推广更改集和内容，请生成新环境。"
 
 #: app/views/system_templates/index.html.haml:117
 msgid ""
@@ -670,7 +659,7 @@ msgstr "与该服务器沟通时出错，请刷新该页面并查询当前系统
 msgid ""
 "An error has occured when communicating with the server, please refresh the "
 "page to retrieve the current promotion changeset."
-msgstr ""
+msgstr "与该服务器沟通时出错，请刷新该页面并查询当前推广更改集。"
 
 #: app/views/roles/index.html.haml:8
 msgid "Applied"
@@ -775,7 +764,7 @@ msgstr "至少需要有一个产品或者库方可导出 TDL"
 
 #: app/views/systems/_subs.html.haml:9
 msgid "Auto-heal"
-msgstr ""
+msgstr "自动修复"
 
 #: app/views/dashboard/index.html.haml:10
 msgid "Available Errata"
@@ -797,7 +786,7 @@ msgstr "开始"
 
 #: app/views/users/_edit_form.html.haml:78
 msgid "Browser Default Locale"
-msgstr ""
+msgstr "浏览器默认位置"
 
 #: app/views/packages/_show.html.haml:64
 msgid "Build Date"
@@ -817,7 +806,7 @@ msgstr "CDN 载入出错：没有找到 %s"
 
 #: app/controllers/api/environments_controller.rb:51
 msgid "Can't update Library environment"
-msgstr ""
+msgstr "无法更新 Library 环境"
 
 #: app/views/sync_management/index.html.haml:5
 #: app/views/common/_edit_i18n.html.haml:4
@@ -836,9 +825,8 @@ msgid "Cancel Review"
 msgstr "取消浏览"
 
 #: app/controllers/sync_management_controller.rb:26
-#, fuzzy
 msgid "Cancelled."
-msgstr "已取消。"
+msgstr "取消的。"
 
 #: app/models/system_task.rb:115
 msgid "Candlepin Event"
@@ -854,7 +842,7 @@ msgstr "无法更改锁定角色的名称或者描述。"
 
 #: app/models/activation_key.rb:47
 msgid "Cannot create activation keys in Library environment "
-msgstr ""
+msgstr "无法在 Llibrary 环境中生成激活码"
 
 #: app/models/user.rb:108
 msgid "Cannot delete currently logged user"
@@ -862,13 +850,13 @@ msgstr "无法删除当前登录的用户"
 
 #: app/models/role.rb:229 app/models/user.rb:577
 msgid ""
-"Cannot dissociate user '%s' from '%s' role. Need at least one user in the '%"
-"s' role."
-msgstr ""
+"Cannot dissociate user '%s' from '%s' role. Need at least one user in the "
+"'%s' role."
+msgstr "无法取消用户 '%s' 的 '%s' 角色关联。至少需要一个用户处于 '%s' 角色。"
 
 #: app/controllers/api/templates_controller.rb:107
 msgid "Cannot export templates for the Library environment."
-msgstr ""
+msgstr "无法为 Library 环境导出模板"
 
 #: app/controllers/system_templates_controller.rb:297
 msgid "Cannot modify a template that is another environment"
@@ -878,15 +866,16 @@ msgstr "无法修改是另一个环境的模板"
 msgid ""
 "Cannot promote the changeset '%s' while another changeset (%s) is being "
 "promoted."
-msgstr ""
+msgstr "在推广另一个更改集（%s）时无法推广更改集 '%s'。"
 
 #: app/models/changeset.rb:116
-msgid "Cannot promote the changset '%s' because it is not in the review phase."
-msgstr ""
+msgid ""
+"Cannot promote the changset '%s' because it is not in the review phase."
+msgstr "无法推广更改集 '%s'，因为它处于审核阶段。"
 
 #: app/models/system.rb:17
 msgid "Cannot register a system with 'Library' environment "
-msgstr ""
+msgstr "无法注册使用 ‘Library’ 注册系统"
 
 #: app/models/permission.rb:46
 msgid "Cannot specify a tag if all_tags is selected."
@@ -902,7 +891,7 @@ msgstr "没有 all_tags 和 all_verbs 则无法指定 all_types"
 
 #: app/controllers/api/templates_controller.rb:98
 msgid "Cannot validate templates for the Library environment."
-msgstr ""
+msgstr "无法为该 Library 环境验证模板。"
 
 #: app/views/password_resets/edit.html.haml:18
 msgid "Change Password"
@@ -1002,12 +991,11 @@ msgstr "关闭角色详情"
 
 #: app/views/common/_env_select.html.haml:11
 msgid "Collapse"
-msgstr "崩溃"
+msgstr "隐藏"
 
 #: app/views/sync_management/index.html.haml:22
-#, fuzzy
 msgid "Collapse All"
-msgstr "崩溃"
+msgstr "隐藏所有"
 
 #: app/views/password_resets/edit.html.haml:28
 msgid "Confirm Password:"
@@ -1040,7 +1028,7 @@ msgstr "内容管理"
 
 #: lib/navigation/content_management.rb:56
 msgid "Content Providers"
-msgstr ""
+msgstr "内容供应商"
 
 #: app/views/changesets/_edit.html.haml:32
 #: app/views/system_templates/_promotion_details.html.haml:13
@@ -1066,20 +1054,17 @@ msgid "Couldn't find environment '%s'"
 msgstr "无法找到环境 '%s'"
 
 #: app/controllers/environments_controller.rb:133
-#, fuzzy
 msgid "Couldn't find environment with ID=%d"
-msgstr "无法找到环境 '%s'"
+msgstr "无法找到 ID=%d 的环境"
 
 #: app/controllers/environments_controller.rb:125
-#, fuzzy
 msgid "Couldn't find organization '%d'"
-msgstr "无法删除机构 ‘ %s’。"
+msgstr "无法找到机构 '%d'"
 
 #: app/controllers/organizations_controller.rb:204
 #: app/controllers/organizations_controller.rb:215
-#, fuzzy
 msgid "Couldn't find organization with ID=%s"
-msgstr "无法删除机构 ‘ %s’。"
+msgstr "无法找到 ID=%d 的机构"
 
 #: app/controllers/api/activation_keys_controller.rb:68
 msgid "Couldn't find pool '%s' in activation_key '%s'"
@@ -1090,9 +1075,8 @@ msgid "Couldn't find provider '%s'"
 msgstr "无法找到供应商 '%s'"
 
 #: app/controllers/repositories_controller.rb:159
-#, fuzzy
 msgid "Couldn't find repository with ID=%s"
-msgstr "无法找到供应商 '%s'"
+msgstr "无法找到 ID=%d 的库"
 
 #: app/controllers/api/sync_controller.rb:69
 msgid "Couldn't find subject of synchronization"
@@ -1106,7 +1090,7 @@ msgstr "创建"
 
 #: app/views/environments/_new.html.haml:2
 msgid "Create Application Life Cycle Management Environment"
-msgstr ""
+msgstr "创建应用程序生命周期管理环境"
 
 #: app/views/products/_new.html.haml:2
 msgid "Create Product"
@@ -1122,11 +1106,11 @@ msgstr "已创建（UTC）"
 
 #: app/models/glue/candlepin/environment.rb:29
 msgid "Creating an environment in candlepin: %s"
-msgstr ""
+msgstr "在 candlepin 中创建环境：%s"
 
 #: app/models/glue/candlepin/owner.rb:36
 msgid "Creating an owner in candlepin: %s"
-msgstr ""
+msgstr "在 candlepin 中创建拥有者：%s"
 
 #: app/views/layouts/_allowed_orgs.html.haml:3
 msgid "Current Organization"
@@ -1138,9 +1122,8 @@ msgid "Current Subscriptions"
 msgstr "当前订阅"
 
 #: lib/navigation/content_management.rb:76
-#, fuzzy
 msgid "Custom Content Providers"
-msgstr "管理员提供者"
+msgstr "自定义内容供应商"
 
 #: lib/navigation/dashboard.rb:17
 msgid "Dashboard"
@@ -1202,11 +1185,11 @@ msgstr "已删除供应商 [ %s ]"
 
 #: app/models/glue/candlepin/environment.rb:37
 msgid "Deleteing environment in candlepin: %s"
-msgstr ""
+msgstr "在 candlepin 中删除环境：%s"
 
 #: app/models/glue/candlepin/owner.rb:44
 msgid "Deleting owner in candlepin: %s"
-msgstr ""
+msgstr "在 candlepin 中删除拥有者：%s"
 
 #: app/helpers/breadcrumb_helper.rb:62 app/views/promotions/show.html.haml:7
 #: lib/navigation/content_management.rb:167
@@ -1280,14 +1263,12 @@ msgid "Distribution"
 msgstr "发行本"
 
 #: app/models/changeset_distribution.rb:20
-#, fuzzy
 msgid "Distribution '%s' does not belong to the specified product!"
-msgstr "没有在这个模板中找到发行本 '%s'。"
+msgstr "发行本 '%s' 不属于指定的产品！"
 
 #: app/models/system_template_distribution.rb:19
-#, fuzzy
 msgid "Distribution '%s' not found in the '%s' environment"
-msgstr "没有在这个模板中找到发行本 '%s'。"
+msgstr "在 '%s' 环境中没有找到发行本 '%s' "
 
 #: app/models/system_template.rb:313
 msgid "Distribution '%s' not found in this template."
@@ -1335,10 +1316,12 @@ msgstr "勘误"
 
 #: app/views/activation_keys/_edit.html.haml:28
 msgid ""
-"Edit Activation Key enables you to modify the selected activation key.  This "
-"key may be used during system registration.  For example, <BR/><BR/"
-">subscription-manager register --org %s --activationkey %s"
+"Edit Activation Key enables you to modify the selected activation key.  This"
+" key may be used during system registration.  For example, <BR/><BR"
+"/>subscription-manager register --org %s --activationkey %s"
 msgstr ""
+"编辑激活码可让您修改所选激活码。可在系统注册过程中使用这个密钥。例如：<BR/><BR/>subscription-manager register "
+"--org %s --activationkey %s"
 
 #: app/views/promotions/show.html.haml:7
 #: app/views/promotions/show.html.haml:137
@@ -1440,17 +1423,16 @@ msgid "Environment"
 msgstr "环境"
 
 #: app/controllers/environments_controller.rb:73
-#, fuzzy
 msgid "Environment '%s' was created."
-msgstr "所需环境"
+msgstr "已创建环境 '%s'。"
 
 #: app/controllers/environments_controller.rb:103
 msgid "Environment '%s' was deleted."
-msgstr ""
+msgstr "已删除环境 '%s'。"
 
 #: app/controllers/environments_controller.rb:95
 msgid "Environment '%s' was updated."
-msgstr ""
+msgstr "已更新环境 '%s'。"
 
 #: app/views/organizations/_edit.html.haml:26
 msgid "Environment Promotion Paths"
@@ -1495,7 +1477,7 @@ msgstr "勘误"
 
 #: app/models/changeset_erratum.rb:20
 msgid "Erratum '%s' doesn't belong to the specified product!"
-msgstr ""
+msgstr "勘误 '%s' 不属于指定的产品！"
 
 #: app/views/sync_management/index.html.haml:5
 #: app/views/common/_common_i18n.html.haml:3 app/views/dashboard/_sync.haml:23
@@ -1512,7 +1494,7 @@ msgstr "删除供应商 [ %s ] 时出错：%s"
 
 #: app/views/common/500.html.haml:10
 msgid "Error:"
-msgstr ""
+msgstr "错误："
 
 #: app/views/system_events/_events.html.haml:27
 msgid "Event"
@@ -1532,20 +1514,19 @@ msgstr "导出 TDL 时必须只有一个发行本"
 #: app/views/changesets/_content_type.html.haml:7
 #: app/views/activation_keys/_subscriptions.html.haml:22
 msgid "Expand"
-msgstr "扩展"
+msgstr "展开"
 
 #: app/views/sync_management/index.html.haml:25
-#, fuzzy
 msgid "Expand All"
-msgstr "扩展"
+msgstr "展开所有"
 
 #: app/views/subscriptions/index.html.haml:51
 msgid "Expand/Contract All"
-msgstr "全部扩展/合同"
+msgstr "展开/压缩所有"
 
 #: app/controllers/api/systems_controller.rb:207
 msgid "Expected attribute is missing:"
-msgstr ""
+msgstr " 缺少所需属性："
 
 #: app/views/providers/redhat/_subscription_details.html.haml:10
 #: app/views/systems/_subs.html.haml:21 app/views/systems/_subs.html.haml:74
@@ -1562,45 +1543,44 @@ msgid "Facts"
 msgstr "详情"
 
 #: app/helpers/dashboard_helper.rb:57
-#, fuzzy
 msgid "Failed"
-msgstr "文件"
+msgstr "失败的"
 
 #: app/models/glue/candlepin/environment.rb:32
 msgid "Failed to create candlepin environment %s"
-msgstr ""
+msgstr "创建 candlepin 环境 %s 失败"
 
 #: app/models/glue/candlepin/owner.rb:39
 msgid "Failed to create candlepin owner %s"
-msgstr ""
+msgstr "创建 candlepin 拥有者 %s 失败"
 
 #: app/models/glue/candlepin/owner.rb:58
 msgid "Failed to delete all environments for owner %s in candlepin:"
-msgstr ""
+msgstr "删除 candlepin 中拥有者 %s 的所有环境失败："
 
 #: app/models/glue/candlepin/owner.rb:66
 msgid "Failed to delete all providers for owner %s in candlepin: %s"
-msgstr ""
+msgstr "删除 candlepin 中拥有者 %s 的所有供应商失败：%s"
 
 #: app/models/glue/candlepin/owner.rb:78
 msgid "Failed to delete all systems for owner %s in candlepin: %s"
-msgstr ""
+msgstr "删除 candlepin 中拥有者 %s 的所有系统失败：%s"
 
 #: app/models/glue/candlepin/environment.rb:40
 msgid "Failed to delete candlepin environment %s"
-msgstr ""
+msgstr "删除 candlepin 环境 %s 失败"
 
 #: app/models/glue/candlepin/owner.rb:47
 msgid "Failed to delete candlepin owner %s"
-msgstr ""
+msgstr "删除 candlepin 拥有者 %s 失败"
 
 #: app/models/user.rb:458
 msgid "Failed to delete organization '%s'. Check notices for more details. "
-msgstr ""
+msgstr "删除机构 '%s' 失败。详情请查看注释。"
 
 #: app/models/changeset.rb:308
 msgid "Failed to promote changeset '%s'. Check notices for more details"
-msgstr ""
+msgstr "推广更改集 '%s' 失败。详情请查看注释。"
 
 #: app/views/distributions/_filelist.html.haml:14
 msgid "File"
@@ -1621,9 +1601,8 @@ msgid "Filter"
 msgstr "过滤器"
 
 #: app/controllers/filters_controller.rb:104
-#, fuzzy
 msgid "Filter %s created successfully."
-msgstr "成功创建。"
+msgstr "已成功创建过滤器 %s。"
 
 #: app/views/system_events/_events.html.haml:18
 msgid "Filter on loaded Events..."
@@ -1650,7 +1629,7 @@ msgstr "过滤器"
 
 #: app/controllers/api/filters_controller.rb:111
 msgid "Filters can be stored only in Library repositories."
-msgstr ""
+msgstr "只能在 Library 库中保存过滤器。"
 
 #: app/views/systems/errata/_index.html.haml:5
 msgid "Finished"
@@ -1658,7 +1637,7 @@ msgstr "已完成"
 
 #: app/views/providers/redhat/show.html.haml:31
 msgid "Force"
-msgstr ""
+msgstr "强制"
 
 #: app/views/user_sessions/new.html.haml:17
 msgid "Forgotten username or password?"
@@ -1682,15 +1661,15 @@ msgstr "GPG 密钥"
 
 #: app/controllers/gpg_keys_controller.rb:92
 msgid "GPG Key '%s' was created."
-msgstr ""
+msgstr "已创建 GPG 密钥 '%s'。"
 
 #: app/controllers/gpg_keys_controller.rb:136
 msgid "GPG Key '%s' was deleted."
-msgstr ""
+msgstr "已删除 GPG 密钥 '%s'。"
 
 #: app/controllers/gpg_keys_controller.rb:116
 msgid "GPG Key '%s' was updated."
-msgstr ""
+msgstr "已更新 GPG 密钥 '%s'。"
 
 #: app/views/systems/_subscription_details.html.haml:4
 msgid "GPG Key URL: "
@@ -1698,11 +1677,11 @@ msgstr "GPG 密钥 URL："
 
 #: app/views/gpg_keys/_products_repos.html.haml:21
 msgid "GPG Key assigned at the Product Level for"
-msgstr ""
+msgstr "在产品级为其分配的 GPG 密钥"
 
 #: app/views/gpg_keys/_products_repos.html.haml:36
 msgid "GPG Key assigned at the Repository Level for"
-msgstr ""
+msgstr "在库级为其分配的 GPG 密钥"
 
 #: app/controllers/gpg_keys_controller.rb:165
 #: lib/navigation/content_management.rb:157
@@ -1716,8 +1695,7 @@ msgid ""
 "either a product or repository, a GPG key that has been created here can be "
 "associated with the given entity."
 msgstr ""
-"您可以直接上传密钥或者在创建后执行复制和粘贴保存 GPG 密钥。访问供应商页面并选"
-"择产品或者库，在这里创建的 GPG 密钥就会与给定的实体关联。"
+"您可以直接上传密钥或者在创建后执行复制和粘贴保存 GPG 密钥。访问供应商页面并选择产品或者库，在这里创建的 GPG 密钥就会与给定的实体关联。"
 
 #: app/helpers/breadcrumb_helper.rb:246
 msgid "Global Permissions"
@@ -1767,7 +1745,7 @@ msgstr "主机和虚拟机信息"
 
 #: app/helpers/systems_helper.rb:62
 msgid "Hypervisor"
-msgstr ""
+msgstr "管理程序（Hypervisor）"
 
 #: app/models/hypervisor.rb:22
 msgid "Hypervisor does not support this action"
@@ -1775,15 +1753,15 @@ msgstr "管理程序（Hypervisor）不支持这个动作"
 
 #: app/controllers/system_errata_controller.rb:38
 msgid "Hypervisors do not have errata"
-msgstr ""
+msgstr "管理程序没有勘误"
 
 #: app/controllers/system_packages_controller.rb:118
 msgid "Hypervisors do not have packages"
-msgstr ""
+msgstr "管理程序没有软件包"
 
 #: app/controllers/systems_controller.rb:194
 msgid "Hypervisors do not have software products"
-msgstr ""
+msgstr "管理程序没有软件产品"
 
 #: app/views/password_resets/new.html.haml:5
 msgid "I remembered my login credentials."
@@ -1807,25 +1785,21 @@ msgstr "Id / 链接"
 
 #: app/views/user_mailer/password_reset.text.haml:5
 msgid ""
-"If you did not request this password to be reset, just ignore this email and "
-"the password will continue to stay the same."
+"If you did not request this password to be reset, just ignore this email and"
+" the password will continue to stay the same."
 msgstr "如果您没有要求重新设置这个密码，请忽略这封电子邮件，同时密码保持不变。"
 
 #: app/views/password_resets/new.html.haml:23
 msgid ""
 "If you do not know your login, please enter your email address below and "
 "your login will be sent to you."
-msgstr ""
-"如果您不知道您的登录，请在下面输入您的电子邮件地址，我们会为您发送您的登录信"
-"息。"
+msgstr "如果您不知道您的登录，请在下面输入您的电子邮件地址，我们会为您发送您的登录信息。"
 
 #: app/views/password_resets/new.html.haml:10
 msgid ""
 "If you do not know your password, enter your login and email address below "
 "and instructions on resetting your password will be sent to you."
-msgstr ""
-"如果您不知道您的密码，请在下面输入您的登录电子邮件地址，我们会为您发送重新设"
-"定密码的步骤。"
+msgstr "如果您不知道您的密码，请在下面输入您的登录电子邮件地址，我们会为您发送重新设定密码的步骤。"
 
 #: app/views/providers/redhat/show.html.haml:51
 msgid "Import History"
@@ -1837,15 +1811,15 @@ msgstr "导入时间"
 
 #: app/views/dashboard/_errata.haml:14
 msgid "Info"
-msgstr ""
+msgstr "信息"
 
 #: app/views/organizations/_new.html.haml:22
 msgid "Initial Application Life Cycle Management Environment"
-msgstr ""
+msgstr "初始应用程序生命周期管理环境"
 
 #: app/models/system.rb:200
 msgid "Initial Registration Params"
-msgstr ""
+msgstr "起始注册参数"
 
 #: app/views/users/_edit_form.html.haml:28
 msgid "Inline Help Enabled:"
@@ -1885,10 +1859,9 @@ msgstr "无效 Url"
 
 #: app/models/resource_type.rb:41
 msgid ""
-"Invalid resource type '%{resource_type}'. Resource Types can be one of '%"
-"{possible_types}'"
-msgstr ""
-"无效资源类型 '%{resource_type}'。资源类型可为 '%{possible_types}' 之一。"
+"Invalid resource type '%{resource_type}'. Resource Types can be one of "
+"'%{possible_types}'"
+msgstr "无效资源类型 '%{resource_type}'。资源类型可为 '%{possible_types}' 之一。"
 
 #: app/controllers/changesets_controller.rb:144
 msgid "Invalid state"
@@ -1898,9 +1871,7 @@ msgstr "无效状态"
 msgid ""
 "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be "
 "one of %{possible_verbs}"
-msgstr ""
-"无效动词 '%{verb}'。用于资源类型 '%{resource_type}' 的动词可以是 %"
-"{possible_verbs} 之一"
+msgstr "无效动词 '%{verb}'。用于资源类型 '%{resource_type}' 的动词可以是 %{possible_verbs} 之一"
 
 #: app/views/errata/_show.html.haml:30
 msgid "Issued"
@@ -1916,11 +1887,11 @@ msgstr "不允许为自定义供应商导入清单。"
 
 #: app/controllers/api/products_controller.rb:42
 msgid "It is not allowed to update a Red Hat product."
-msgstr ""
+msgstr "不允许更新红帽产品。"
 
 #: app/controllers/api/repositories_controller.rb:56
 msgid "It is not allowed to update a Red Hat repository."
-msgstr ""
+msgstr "不允许更新红帽库。"
 
 #: app/mailers/user_mailer.rb:41
 msgid "Katello Logins"
@@ -1945,7 +1916,7 @@ msgstr "上次引导"
 
 #: app/controllers/systems_controller.rb:302
 msgid "Last Checked In"
-msgstr ""
+msgstr "上次登录"
 
 #: app/views/dashboard/_systems.html.haml:19
 msgid "Last Checked in Date"
@@ -1962,11 +1933,11 @@ msgstr "等级"
 #: app/controllers/environments_controller.rb:90
 #: app/models/kt_environment.rb:114 app/views/organizations/_edit.html.haml:36
 msgid "Library"
-msgstr ""
+msgstr "Library"
 
 #: app/models/changeset.rb:15
 msgid "Library environment cannot contain a changeset!"
-msgstr ""
+msgstr "LIbrary 环境不包含更改集！"
 
 #: app/views/packages/_show.html.haml:70
 msgid "License"
@@ -1985,9 +1956,7 @@ msgid ""
 "Listed below are the subscriptions information. If you have a subscription "
 "manifest you may upload it below. This manifest may be obtained by visiting "
 "the Red Hat Customer Portal or by contacting your support representative."
-msgstr ""
-"以下列出的是订阅信息。如果您有订阅清单，请上传到下面的列表中。您可以访问红帽"
-"客户门户网站或者联络您的支持代表获得这个清单。"
+msgstr "以下列出的是订阅信息。如果您有订阅清单，请上传到下面的列表中。您可以访问红帽客户门户网站或者联络您的支持代表获得这个清单。"
 
 #: app/views/systems/errata/_items.html.haml:14
 #: app/views/layouts/_header.haml:8
@@ -2005,7 +1974,7 @@ msgstr "载入权限"
 #: app/views/promotions/show.html.haml:7
 #: app/views/promotions/show.html.haml:110
 msgid "Loading Promotion Changeset"
-msgstr ""
+msgstr "载入推广更改集"
 
 #: app/views/roles/index.html.haml:8
 msgid "Loading Role"
@@ -2058,7 +2027,7 @@ msgstr "为供应商 [ %s ] 导入清单失败"
 
 #: app/views/systems/_subs.html.haml:61
 msgid "Match System"
-msgstr ""
+msgstr "匹配系统"
 
 #: app/views/providers/redhat/_import_history.html.haml:3
 #: app/views/organizations/_events.html.haml:16
@@ -2228,11 +2197,11 @@ msgstr "新系统"
 
 #: app/controllers/api/templates_controller.rb:49
 msgid "New templates can be created only in a Library environment"
-msgstr ""
+msgstr "只有在 Library 环境中才能生成新模板"
 
 #: app/controllers/api/templates_controller.rb:80
 msgid "New templates can be imported only into a Library environment"
-msgstr ""
+msgstr "只能将新模板导入 Library 环境"
 
 #: app/views/roles/_edit.html.haml:82
 msgid "Next >>"
@@ -2245,7 +2214,7 @@ msgstr "无"
 
 #: app/helpers/users_helper.rb:32
 msgid "No Default Organization"
-msgstr ""
+msgstr "没有默认机构"
 
 #: app/views/subscriptions/index.html.haml:8
 msgid "No Subscriptions Available"
@@ -2287,7 +2256,7 @@ msgstr "没有可用发行本。"
 
 #: app/views/promotions/show.html.haml:7
 msgid "No distributions exist in this promotion changeset."
-msgstr ""
+msgstr "在这个推广更改集中没有发行本。"
 
 #: app/views/organizations/_edit.html.haml:45
 msgid ""
@@ -2319,7 +2288,7 @@ msgstr "没有勘误可用。"
 
 #: app/views/promotions/show.html.haml:7
 msgid "No errata exist in this promotion changeset."
-msgstr ""
+msgstr "在这个推广更改集中没有勘误。"
 
 #: app/models/errors.rb:52
 msgid "No errors"
@@ -2352,15 +2321,15 @@ msgstr "没有用于推广的软件包"
 
 #: app/views/promotions/show.html.haml:7
 msgid "No packages exist in this promotion changeset."
-msgstr ""
+msgstr "在这个推广更改集中没有软件包。"
 
 #: app/views/system_templates/_product_packages.html.haml:3
 msgid "No packages found."
-msgstr ""
+msgstr "没有找到软件包。"
 
 #: app/models/system_task.rb:304
 msgid "No packages removed"
-msgstr "没有删除进入并"
+msgstr "没有删除软件包"
 
 #: app/models/system_task.rb:302
 msgid "No packages updated"
@@ -2373,16 +2342,14 @@ msgstr "没有产品"
 
 #: app/views/promotions/show.html.haml:7
 msgid "No products exist in the promotion changeset."
-msgstr ""
+msgstr "在这个推广更改集中没有产品。"
 
 #: app/views/system_templates/index.html.haml:6
-#, fuzzy
 msgid ""
 "No products or repositories are currently associated with this system "
 "template.  Please add either a product or repository that contains "
 "distributions in order to select a distribution."
-msgstr ""
-"目前没有与这个系统模板关联的产品。请关联一个包含发行本的产品以便选择发行本。"
+msgstr "目前没有与这个系统模板关联的产品或库。请添加一个包含发行本的产品或库以便选择发行本。"
 
 #: app/views/filters/index.html.haml:15
 msgid "No products or repositories are currently associated."
@@ -2406,7 +2373,7 @@ msgstr "没有库可用。"
 
 #: app/views/promotions/show.html.haml:7
 msgid "No repositories exist in this promotion changeset."
-msgstr ""
+msgstr "在这个推广更改集中没有程序库。"
 
 #: app/views/providers/redhat/_subscription_details.html.haml:53
 msgid "No subscriptions have been imported."
@@ -2434,11 +2401,10 @@ msgid "None defined for this Organization."
 msgstr "没有为这个机构定义。"
 
 #: app/views/system_templates/index.html.haml:6
-#, fuzzy
 msgid ""
 "None of the associated products or repositories contain distributions, "
 "please add a product or repository that contains at least one distribution."
-msgstr "没有任何关联的产品包含发行本，请选择一个至少包含一个发行本的产品。"
+msgstr "没有任何关联的产品或库包含发行本，请添加一个至少包含一个发行本的产品或库。"
 
 #: app/views/errata/_show.html.haml:78
 msgid "None."
@@ -2453,9 +2419,8 @@ msgid "Not enough entitlements in pools (%d), required: %d, available: %d"
 msgstr "池（%d）中没有足够的授权，要求：%d，可用：%d"
 
 #: app/controllers/api/errors_controller.rb:19
-#, fuzzy
 msgid "Not found"
-msgstr "没有找到系统。"
+msgstr "未找到"
 
 #: app/views/organizations/_new.html.haml:34
 msgid "Note: This will be set as your initial default environment."
@@ -2487,15 +2452,13 @@ msgstr "确定"
 
 #: app/views/providers/_products_repos.html.haml:17
 msgid ""
-"On Products & Repositories you can add your own Products and Repositories to "
-"your Provider.  This allows you to synchronize content from any remote "
+"On Products & Repositories you can add your own Products and Repositories to"
+" your Provider.  This allows you to synchronize content from any remote "
 "repository to this server.  Simply add a Product and then setup one or more "
 "repositories to add to this Provider.  This feature is only available for "
 "Custom Providers."
 msgstr ""
-"在产品和库中您可为您的供应商添加您自己的产品和库。这可让您将任意远程库中的内"
-"容与这个服务器同步。只要添加产品，然后在这个供应商中添加一个或者多个库即可。"
-"这个功能只适用于自定义供应商。"
+"在产品和库中您可为您的供应商添加您自己的产品和库。这可让您将任意远程库中的内容与这个服务器同步。只要添加产品，然后在这个供应商中添加一个或者多个库即可。这个功能只适用于自定义供应商。"
 
 #: app/views/roles/_edit.html.haml:66 app/views/roles/index.html.haml:8
 msgid "On:"
@@ -2520,7 +2483,7 @@ msgstr "一个或者多个软件包名称无效。"
 
 #: app/models/search_favorite.rb:25
 msgid "Only %s favorites may be created."
-msgstr ""
+msgstr "只能创建 %s 收藏夹。"
 
 #: app/models/provider.rb:54
 msgid "Only one Red Hat provider permitted for an Organization"
@@ -2532,7 +2495,7 @@ msgstr "只显示同步的。"
 
 #: app/helpers/branding_helper.rb:23
 msgid "Open Source Subscription Management"
-msgstr ""
+msgstr "开源订阅管理"
 
 #: app/helpers/branding_helper.rb:21
 msgid "Open Source Systems Management"
@@ -2543,11 +2506,10 @@ msgid "Organization"
 msgstr "机构"
 
 #: app/controllers/organizations_controller.rb:72
-#, fuzzy
 msgid ""
 "Organization '%s' already exists and either has been scheduled for deletion "
 "or failed deletion."
-msgstr "已为机构 '%s' 调度背景删除。"
+msgstr "机构 '%s' 已存在，且已为删除或失败的删除调度该机构。"
 
 #: app/controllers/organizations_controller.rb:153
 msgid "Organization '%s' has been scheduled for background deletion."
@@ -2556,14 +2518,12 @@ msgstr "已为机构 '%s' 调度背景删除。"
 #: app/controllers/organizations_controller.rb:90
 #: app/controllers/organizations_controller.rb:103
 #: app/controllers/organizations_controller.rb:108
-#, fuzzy
 msgid "Organization '%s' was created."
-msgstr "机构"
+msgstr "已创建机构 '%s'。"
 
 #: app/controllers/organizations_controller.rb:127
-#, fuzzy
 msgid "Organization '%s' was updated."
-msgstr "机构"
+msgstr "已更新机构 '%s'。"
 
 #: app/controllers/organizations_controller.rb:222
 #: app/models/resource_type.rb:91 lib/navigation/organization.rb:23
@@ -2575,9 +2535,7 @@ msgid ""
 "Organizations allow content and systems to be separated by logical "
 "divisions.  To edit the environments within an organization, click on that "
 "organization and then click on the desired environment."
-msgstr ""
-"机构可根据逻辑分隔内容和系统。要在机构中编辑环境，请点击该机构，然后点击所需"
-"环境即可。"
+msgstr "机构可根据逻辑分隔内容和系统。要在机构中编辑环境，请点击该机构，然后点击所需环境即可。"
 
 #: app/views/promotions/show.html.haml:7
 #: app/views/errata/_packages.html.haml:17
@@ -2585,37 +2543,32 @@ msgid "Package"
 msgstr "软件包"
 
 #: app/models/changeset_package.rb:19
-#, fuzzy
 msgid "Package '%s' doesn't belong to the specified product!"
-msgstr "没有在这个环境中找到产品 '%s'。"
+msgstr "软件包 '%s' 不属于指定的产品！"
 
 #: app/models/system_template_package.rb:17
-#, fuzzy
 msgid "Package '%s' is already present in the template"
-msgstr "该模板中已经有产品 '%s'。"
+msgstr "该模板中已经有软件包 '%s'。"
 
 #: app/models/system_template_package.rb:32
-#, fuzzy
 msgid "Package '%s' not found in the %s environment"
-msgstr "没有在这个环境中找到产品 '%s'。"
+msgstr "没有在这个环境中找到软件包 '%s'。"
 
 #: app/models/changeset.rb:245 app/models/changeset.rb:254
-#, fuzzy
 msgid "Package '%s' was not found in the source environment."
-msgstr "没有在这个环境中找到产品 '%s'。"
+msgstr "没有在这个源环境中找到软件包 '%s'。"
 
 #: app/views/promotions/show.html.haml:80
 msgid "Package Dependencies"
 msgstr "软件包相依性"
 
 #: app/controllers/filters_controller.rb:198
-#, fuzzy
 msgid "Package Filter %s deleted."
-msgstr "软件包过滤器"
+msgstr "已删除软件包过滤器 %s。"
 
 #: app/controllers/filters_controller.rb:80
 msgid "Package Filter '%s' has been updated."
-msgstr ""
+msgstr "已更新软件包过滤器 '%s'。"
 
 #: app/controllers/filters_controller.rb:220
 #: lib/navigation/content_management.rb:148
@@ -2626,12 +2579,10 @@ msgstr "软件包过滤器"
 msgid ""
 "Package Filters allow you to blacklist packages from being promoted into "
 "subsequent environments. Simply create a filter and add either a package "
-"name or regular expression to the filter.  You can associate the filter with "
-"entire products or individual repositories within any product."
+"name or regular expression to the filter.  You can associate the filter with"
+" entire products or individual repositories within any product."
 msgstr ""
-"软件包过滤器可让您将软件包放入黑名单以防止将其推广到后面的环境中。只要创建一"
-"个过滤器并在该过滤器中添加软件包名称或者正则表达式即可。您可以将该过滤器与整"
-"个产品关联，也可将其与任意产品中的独立库关联。"
+"软件包过滤器可让您将软件包放入黑名单以防止将其推广到后面的环境中。只要创建一个过滤器并在该过滤器中添加软件包名称或者正则表达式即可。您可以将该过滤器与整个产品关联，也可将其与任意产品中的独立库关联。"
 
 #: app/views/packages/_show.html.haml:76
 msgid "Package Group"
@@ -2678,7 +2629,7 @@ msgstr "%s 调度的软件包安装"
 
 #: app/views/filters/_packages.html.haml:17
 msgid "Package Name"
-msgstr ""
+msgstr "软件包名称"
 
 #: app/models/system_task.rb:47
 msgid "Package Remove"
@@ -2701,27 +2652,24 @@ msgid "Package Update scheduled by %s"
 msgstr "%s 调度的软件包更新"
 
 #: app/models/system_template_pack_group.rb:18
-#, fuzzy
 msgid "Package group '%s' not found in the %s environment"
-msgstr "没有在这个环境中找到产品 '%s'。"
+msgstr "没有在 %s 环境中找到软件包组 '%s'。"
 
 #: app/models/system_template.rb:290
 msgid "Package group '%s' not found in this template."
 msgstr "没有在这个模板中找到软件包组 '%s'。"
 
 #: app/models/system_template_pg_category.rb:17
-#, fuzzy
 msgid "Package group category '%s' not found in the %s environment"
-msgstr "没有在这个模板中找到分类 '%s'。"
+msgstr "没有在 %s 环境中找到软件包组目录 '%s'"
 
 #: app/models/system_template.rb:302
 msgid "Package group category '%s' not found in this template."
 msgstr "没有在这个模板中找到分类 '%s'。"
 
 #: app/models/changeset.rb:251
-#, fuzzy
 msgid "Package has to be specified by its nvre."
-msgstr "%s 调度的软件包更新"
+msgstr "已根据其 nvre 指定软件包。"
 
 #: app/helpers/breadcrumb_helper.rb:50 app/helpers/breadcrumb_helper.rb:156
 #: app/helpers/breadcrumb_helper.rb:380 app/helpers/breadcrumb_helper.rb:401
@@ -2753,9 +2701,8 @@ msgid "Partial Products"
 msgstr "部分产品"
 
 #: app/views/user_sessions/new.html.haml:11
-#, fuzzy
 msgid "Password"
-msgstr "密码："
+msgstr "密码"
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
@@ -2793,24 +2740,22 @@ msgid "Permission"
 msgstr "权限"
 
 #: app/controllers/roles_controller.rb:219
-#, fuzzy
 msgid "Permission '%s' was created."
-msgstr "这个角色的权限。"
+msgstr "已创建权限 '%s'。"
 
 #: app/controllers/roles_controller.rb:239
-#, fuzzy
 msgid "Permission '%s' was removed."
-msgstr "这个角色的权限。"
+msgstr "已删除权限 '%s'。"
 
 #: app/controllers/roles_controller.rb:196
 msgid "Permission '%s' was updated."
-msgstr ""
+msgstr "已更新权限 '%s'。"
 
 #: app/controllers/application_controller.rb:113
 msgid ""
 "Permission Denied. User '%s' does not have permissions to access "
 "organization '%s'."
-msgstr ""
+msgstr "权限被拒绝。用户 '%s' 没有访问机构 '%s' 的权限。"
 
 #: app/views/roles/_edit.html.haml:52 app/views/roles/index.html.haml:8
 msgid "Permission For:"
@@ -2842,13 +2787,12 @@ msgid "Plan"
 msgstr "计划"
 
 #: app/controllers/sync_schedules_controller.rb:39
-#, fuzzy
 msgid "Plan Name"
-msgstr "名称"
+msgstr "计划名称"
 
 #: app/controllers/api/subscriptions_controller.rb:45
 msgid "Please provide entitlement id"
-msgstr ""
+msgstr "请提供授权 id"
 
 #: app/controllers/api/systems_controller.rb:94
 #: app/controllers/api/subscriptions_controller.rb:38
@@ -2861,7 +2805,7 @@ msgstr "请提供池 id"
 
 #: app/controllers/api/subscriptions_controller.rb:57
 msgid "Please provide serial id"
-msgstr ""
+msgstr "请提供序列 id"
 
 #: app/views/common/403.html.haml:5
 msgid "Please request the required privileges from an administrator."
@@ -2869,18 +2813,15 @@ msgstr "请向管理员申请所需特权。"
 
 #: app/views/roles/index.html.haml:8
 msgid ""
-"Please select Permissions to view and add permissions for this role or Users "
-"to see current users with this role."
-msgstr ""
-"请选择授权为这个局色或者用户查看和添加权限，以便查看使用这个角色的当前用户。"
+"Please select Permissions to view and add permissions for this role or Users"
+" to see current users with this role."
+msgstr "请选择授权为这个局色或者用户查看和添加权限，以便查看使用这个角色的当前用户。"
 
 #: app/views/roles/index.html.haml:8
 msgid ""
 "Please select Permissions to view permissions for this role or Users to see "
 "current users with this role."
-msgstr ""
-"请选择权限以便查看这个角色的权限，或者选项用户以便查看目前使用这个角色的用"
-"户。"
+msgstr "请选择权限以便查看这个角色的权限，或者选项用户以便查看目前使用这个角色的用户。"
 
 #: app/models/activation_key.rb:87
 msgid "Pool %s has no product associated"
@@ -2897,7 +2838,7 @@ msgstr "上一个环境"
 
 #: app/views/promotions/show.html.haml:72
 msgid "Processing promotion changeset modifications, please wait."
-msgstr ""
+msgstr "正在处理推广更改集修改，请稍侯。"
 
 #: app/views/sync_management/index.html.haml:43
 #: app/views/filters/_products.html.haml:22
@@ -2909,16 +2850,15 @@ msgstr ""
 #: app/views/subscriptions/index.html.haml:13
 #: app/views/dashboard/_errata.haml:12
 msgid "Product"
-msgstr "产品"
+msgstr "更改集为空"
 
 #: app/controllers/products_controller.rb:51
 msgid "Product '%s' created."
-msgstr ""
+msgstr "已创建产品 '%s'。"
 
 #: app/models/changeset.rb:137
-#, fuzzy
 msgid "Product '%s' hasn't any repositories"
-msgstr "产品和库"
+msgstr "产品 '%s' 没有任何库"
 
 #: app/models/system_template.rb:243 app/models/system_template.rb:260
 msgid "Product '%s' is already present in the template."
@@ -2931,11 +2871,11 @@ msgstr "没有在这个环境中找到产品 '%s'。"
 
 #: app/controllers/products_controller.rb:101
 msgid "Product '%s' removed."
-msgstr ""
+msgstr "已删除产品 '%s'。"
 
 #: app/controllers/products_controller.rb:79
 msgid "Product '%s' was updated."
-msgstr ""
+msgstr "已更新产品 '%s'。"
 
 #: app/views/systems/_subs.html.haml:43 app/views/systems/_subs.html.haml:108
 msgid "Product Name: "
@@ -3009,32 +2949,29 @@ msgid "Promoting..."
 msgstr "推广中......"
 
 #: app/controllers/changesets_controller.rb:109
-#, fuzzy
 msgid "Promotion Changeset '%s' was created."
-msgstr "在环境中推广更改集"
+msgstr "已创建更改集 '%s'。"
 
 #: app/controllers/changesets_controller.rb:209
-#, fuzzy
 msgid "Promotion Changeset '%s' was deleted."
-msgstr "在环境中推广更改集"
+msgstr "已删除更改集 '%s'。"
 
 #: app/views/promotions/show.html.haml:116
 msgid "Promotion Changeset Details"
-msgstr ""
+msgstr "推广更改集详情"
 
 #: lib/navigation/content_management.rb:139
 msgid "Promotion Changeset History"
-msgstr ""
+msgstr "推广更改集历史记录"
 
 #: app/views/promotions/show.html.haml:7
-#, fuzzy
 msgid "Promotion Changeset is empty."
-msgstr "在环境中推广更改集"
+msgstr "推广更改集为空。"
 
 #: app/views/promotions/show.html.haml:149
 #: app/views/promotions/show.html.haml:152
 msgid "Promotion Changesets"
-msgstr ""
+msgstr "推广更改集"
 
 #: app/views/changesets/_edit.html.haml:25
 msgid "Promotion Date:"
@@ -3061,6 +2998,7 @@ msgid ""
 "may promote other types of content. Once you have created a change set, "
 "click the \"Promote\" button to commit it to the next environment."
 msgstr ""
+"推广可让您将内容从一个环境推广到推广路径的下一个环境中。您创建推广更改集后，点击一个或者多个产品旁的“添加”即可将其添加到推广更改集中。如果产品已存在与下一个环境中。您可以推广其他类型的内容。生成更改组后，点击“推广（Promotion）”按钮将其提交到下一个环境中。"
 
 #: app/controllers/providers_controller.rb:245
 msgid "Provider"
@@ -3068,15 +3006,15 @@ msgstr "供应商"
 
 #: app/controllers/providers_controller.rb:157
 msgid "Provider '%s' was created."
-msgstr ""
+msgstr "已创建供应商 '%s'。"
 
 #: app/controllers/providers_controller.rb:177
 msgid "Provider '%s' was deleted."
-msgstr ""
+msgstr "已删除供应商 '%s'。"
 
 #: app/controllers/providers_controller.rb:204
 msgid "Provider '%s' was updated."
-msgstr ""
+msgstr "已更新供应商 '%s'。"
 
 #: app/views/products/_edit.html.haml:4
 msgid "Provider: "
@@ -3093,8 +3031,8 @@ msgid ""
 "your paid content or it could simply be a local yum repository providing a "
 "few yum repos."
 msgstr ""
-"供应商会提供很多类型的内容，比如软件包、勘误、kickstart 树以及安装磁盘映像。"
-"供应商可以为您提供付费的内容，或者只是一个包含几个 yum 库的本地 yum 库。"
+"供应商会提供很多类型的内容，比如软件包、勘误、kickstart 树以及安装磁盘映像。供应商可以为您提供付费的内容，或者只是一个包含几个 yum "
+"库的本地 yum 库。"
 
 #: app/views/packages/_dependencies.html.haml:21
 msgid "Provides"
@@ -3110,115 +3048,103 @@ msgstr "排队的"
 
 #: app/models/permission.rb:158 app/models/activation_key.rb:147
 msgid "Read Activation Keys"
-msgstr "读取激活码"
+msgstr "查看激活码"
 
 #: app/models/permission.rb:183
-#, fuzzy
 msgid "Read Activation Keys permission"
-msgstr "读取激活码"
+msgstr "查看激活码授权"
 
 #: app/models/kt_environment.rb:343
 msgid "Read Changesets in Environment"
-msgstr "读取环境中的更改集"
+msgstr "查看环境中的更改集"
 
 #: app/models/kt_environment.rb:338
 msgid "Read Environment Contents"
-msgstr "读取环境事件"
+msgstr "查看环境内容"
 
 #: app/models/permission.rb:152
-#, fuzzy
 msgid "Read Environments"
-msgstr "环境"
+msgstr "查看环境"
 
 #: app/models/permission.rb:177
-#, fuzzy
 msgid "Read Environments permission"
-msgstr "读取环境事件"
+msgstr "查看环境权限"
 
 #: app/models/role.rb:193
 msgid "Read Everything"
-msgstr ""
+msgstr "查看所有"
 
 #: app/models/permission.rb:160
-#, fuzzy
 msgid "Read Filters"
-msgstr "读取软件包过滤器"
+msgstr "查看过滤器"
 
 #: app/models/permission.rb:185
-#, fuzzy
 msgid "Read Filters permission"
-msgstr "编辑授权"
+msgstr "查看过滤器权限"
 
 #: app/models/organization.rb:129
 msgid "Read Organization"
-msgstr "读取机构"
+msgstr "查看机构"
 
 #: app/models/permission.rb:150
-#, fuzzy
 msgid "Read Organizations"
-msgstr "读取机构"
+msgstr "查看机构"
 
 #: app/models/permission.rb:175
-#, fuzzy
 msgid "Read Organizations permission"
-msgstr "读取机构"
+msgstr "查看机构权限"
 
 #: app/models/filter.rb:66
 msgid "Read Package Filters"
-msgstr "读取软件包过滤器"
+msgstr "查看软件包过滤器"
 
 #: app/models/permission.rb:156 app/models/provider.rb:126
 msgid "Read Providers"
-msgstr "读取供应商"
+msgstr "查看供应商"
 
 #: app/models/permission.rb:181
-#, fuzzy
 msgid "Read Providers permission"
-msgstr "读取供应商"
+msgstr "查看供应商权限"
 
 #: app/models/permission.rb:164 app/models/role.rb:172
 msgid "Read Roles"
-msgstr "读取角色"
+msgstr "查看角色"
 
 #: app/models/permission.rb:189
-#, fuzzy
 msgid "Read Roles permission"
-msgstr "添加全局权限"
+msgstr "查看角色权限"
 
 #: app/models/permission.rb:154 app/models/system_template.rb:392
 msgid "Read System Templates"
-msgstr "读取系统模板"
+msgstr "查看系统模板"
 
 #: app/models/permission.rb:179
-#, fuzzy
 msgid "Read System Templates permission"
-msgstr "读取系统模板"
+msgstr "查看系统模板权限"
 
 #: app/models/organization.rb:130
 msgid "Read Systems"
-msgstr "读取系统"
+msgstr "查看系统"
 
 #: app/models/kt_environment.rb:339
 msgid "Read Systems in Environment"
-msgstr "读取环境中的系统"
+msgstr "查看环境中的系统"
 
 #: app/models/permission.rb:162 app/models/user.rb:355
 msgid "Read Users"
-msgstr "读取用户"
+msgstr "查看用户"
 
 #: app/models/permission.rb:187
-#, fuzzy
 msgid "Read Users permission"
-msgstr "读取用户"
+msgstr "查看用户权限"
 
 #: app/models/role.rb:208
-#, fuzzy
 msgid "Read only role."
-msgstr "读取角色"
+msgstr "只查看角色。"
 
 #: lib/navigation/content_management.rb:67
 msgid "Red Hat Content Provider"
-msgstr ""
+msgstr "红帽内容供应商"
 
 #: app/views/providers/redhat/show.html.haml:14
 msgid "Red Hat Provider Details"
@@ -3246,7 +3172,7 @@ msgstr "发行本"
 
 #: app/views/user_sessions/new.html.haml:15
 msgid "Remember me"
-msgstr ""
+msgstr "记住我"
 
 #: app/views/common/_common_i18n.html.haml:3
 #: app/views/promotions/show.html.haml:7
@@ -3268,7 +3194,7 @@ msgstr "删除激活密钥"
 
 #: app/views/common/_common_i18n.html.haml:3
 msgid "Remove All"
-msgstr ""
+msgstr "删除全部"
 
 #: app/views/environments/_edit.html.haml:9
 msgid "Remove Environment"
@@ -3412,7 +3338,7 @@ msgstr "库"
 
 #: app/controllers/api/repositories_controller.rb:62
 msgid "Repositories can be deleted only in Library environment."
-msgstr ""
+msgstr "只有在 Library 环境中才能删除库。"
 
 #: app/views/promotions/show.html.haml:7
 #: app/views/providers/_products_repos.html.haml:46
@@ -3421,35 +3347,32 @@ msgid "Repository"
 msgstr "库"
 
 #: app/controllers/repositories_controller.rb:67
-#, fuzzy
 msgid "Repository '%s' created."
-msgstr "库 Url"
+msgstr "已创建库 '%s'。"
 
 #: app/models/system_template.rb:321 app/models/system_template.rb:332
 msgid "Repository '%s' is already present in the template."
-msgstr ""
+msgstr "在该模板中已有库 '%s'。"
 
 #: app/models/system_template.rb:320 app/models/system_template.rb:331
 msgid "Repository '%s' not found in this environment."
-msgstr ""
+msgstr "没有在这个环境中找到库 '%s'。"
 
 #: app/models/system_template.rb:338
 msgid "Repository '%s' not found in this template."
-msgstr ""
+msgstr "没有在这个模板中找到库 '%s'。"
 
 #: app/controllers/repositories_controller.rb:107
-#, fuzzy
 msgid "Repository '%s' removed."
-msgstr "库 Url"
+msgstr "已删除库 '%s'。"
 
 #: app/controllers/repositories_controller.rb:82
 msgid "Repository '%s' updated."
-msgstr ""
+msgstr "已更新库 '%s'。"
 
 #: app/views/repositories/_edit.html.haml:13
-#, fuzzy
 msgid "Repository Details"
-msgstr "库 Url"
+msgstr "库详情"
 
 #: app/views/providers/redhat/show.html.haml:17
 msgid "Repository Url"
@@ -3460,31 +3383,30 @@ msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "无法禁用库，因为它已经被推广。"
 
 #: app/models/changeset_distribution.rb:21
-#, fuzzy
 msgid ""
 "Repository of the distribution '%s' has not been promoted into the target "
 "environment!"
-msgstr "没有在这个模板中找到发行本 '%s'。"
+msgstr "还没有将发行本 '%s' 的库推广至目标环境！"
 
 #: app/models/changeset_erratum.rb:21
 msgid ""
 "Repository of the erratum '%s' has not been promoted into the target "
 "environment!"
-msgstr ""
+msgstr "还没有将勘误 '%s' 的库推广至目标环境！"
 
 #: app/models/changeset_package.rb:20
-#, fuzzy
 msgid ""
 "Repository of the package '%s' has not been promoted into the target "
 "environment!"
-msgstr "没有在这个环境中找到产品 '%s'。"
+msgstr "还没有将软件包 '%s' 的库推广至目标环境！"
 
 #: app/views/system_events/_details.html.haml:16
 msgid "Request"
 msgstr "请求"
 
 #: app/controllers/password_resets_controller.rb:101
-msgid "Request received has either an invalid or expired token.  Token: '%{t}'"
+msgid ""
+"Request received has either an invalid or expired token.  Token: '%{t}'"
 msgstr "收到的请求包含无效或者过期令牌。令牌：'%{t}'"
 
 #: app/views/packages/_dependencies.html.haml:13
@@ -3515,15 +3437,15 @@ msgstr "角色"
 
 #: app/controllers/roles_controller.rb:89
 msgid "Role '%s' was created."
-msgstr ""
+msgstr "已创建角色 '%s'。"
 
 #: app/controllers/roles_controller.rb:140
 msgid "Role '%s' was deleted."
-msgstr ""
+msgstr "已删除角色 '%s'。"
 
 #: app/controllers/roles_controller.rb:117
 msgid "Role '%s' was updated."
-msgstr ""
+msgstr "已更新角色 '%s'。"
 
 #: app/views/roles/_edit.html.haml:31
 msgid "Role Details"
@@ -3537,7 +3459,7 @@ msgstr "角色"
 
 #: app/controllers/errors_controller.rb:20
 msgid "Route does not exist:"
-msgstr ""
+msgstr "路由不存在："
 
 #: app/views/systems/errata/_index.html.haml:57
 msgid "Run"
@@ -3630,7 +3552,7 @@ msgstr "对于当前的内容搜索不可用"
 
 #: app/views/common/_panel.html.haml:50 app/views/common/_panel.html.haml:54
 msgid "Search..."
-msgstr ""
+msgstr "搜索中......"
 
 #: app/views/sync_management/index.html.haml:33
 msgid "Select All"
@@ -3709,9 +3631,10 @@ msgstr "软件"
 
 #: app/views/promotions/show.html.haml:7
 msgid ""
-"Some promotion changeset modifications have not finished processing, are you "
-"sure you want to leave the page?  By leaving you may lose some modifications."
-msgstr ""
+"Some promotion changeset modifications have not finished processing, are you"
+" sure you want to leave the page?  By leaving you may lose some "
+"modifications."
+msgstr "有些推广更改集修改还没有处理完毕，您确定要离开本页面吗？如果离开您会丢失一些修改信息。"
 
 #: app/views/common/500.html.haml:4
 msgid ""
@@ -3743,7 +3666,7 @@ msgstr "起始时间"
 
 #: app/controllers/changesets_controller.rb:218
 msgid "Started promotion of '%s' to %s environment"
-msgstr ""
+msgstr "开始将 '%s' 推广至 %s 环境"
 
 #: app/views/password_resets/edit.html.haml:5
 #: app/views/users/_edit_form.html.haml:3
@@ -3769,18 +3692,15 @@ msgid "Subscription manifest upload for provider '%{name}' failed."
 msgstr "为供应商 '%{name}' 上传订阅清单失败。"
 
 #: app/controllers/providers_controller.rb:74
-#, fuzzy
 msgid "Subscription manifest uploaded successfully for provider '%{name}'."
-msgstr "为供应商 '%{name}' 上传订阅清单失败。"
+msgstr "成功为供应商 '%{name}' 上传订阅清单。"
 
 #: app/controllers/providers_controller.rb:72
 msgid ""
 "Subscription manifest uploaded successfully for provider '%{name}'. Please "
 "enable the repositories you want to sync by selecting 'Enable Repositories' "
 "and selecting individual repositories to be enabled."
-msgstr ""
-"成功为供应商 '%{name}' 上传订阅清单。请选择‘启用库’并选择要启用的独立库启用要"
-"同步的库。"
+msgstr "成功为供应商 '%{name}' 上传订阅清单。请选择‘启用库’并选择要启用的独立库启用要同步的库。"
 
 #: lib/navigation/systems.rb:68 lib/navigation/organization.rb:42
 msgid "Subscriptions"
@@ -3799,14 +3719,12 @@ msgid "Subscriptions are not Current"
 msgstr "订阅不是最新的"
 
 #: app/controllers/activation_keys_controller.rb:101
-#, fuzzy
 msgid "Subscriptions successfully added to Activation Key '%s'."
-msgstr "无法删除机构 ‘ %s’。"
+msgstr "在激活码 '%s' 中成功添加订阅。"
 
 #: app/controllers/activation_keys_controller.rb:125
-#, fuzzy
 msgid "Subscriptions successfully removed from Activation Key '%s'."
-msgstr "无法删除机构 ‘ %s’。"
+msgstr "从激活码 '%s' 中成功删除订阅。"
 
 #: app/helpers/dashboard_helper.rb:53 app/views/dashboard/_sync.haml:27
 msgid "Success"
@@ -3814,16 +3732,15 @@ msgstr "成功"
 
 #: app/models/changeset.rb:298
 msgid "Successfully promoted changeset '%s'."
-msgstr ""
+msgstr "成功推广的更改集 '%s'。"
 
 #: app/models/user.rb:453
-#, fuzzy
 msgid "Successfully removed organization '%s'."
-msgstr "无法删除机构 ‘ %s’。"
+msgstr "成功删除的机构 '%s'。"
 
 #: app/controllers/filters_controller.rb:166
 msgid "Sucessfully updated '%s' package filter."
-msgstr ""
+msgstr "成功更新的软件包过滤器 '%s'。"
 
 #: app/views/system_events/_details.html.haml:10
 msgid "Summary"
@@ -3835,16 +3752,15 @@ msgstr "小结："
 
 #: app/models/permission.rb:166
 msgid "Super Admin"
-msgstr ""
+msgstr "超级管理员"
 
 #: app/models/permission.rb:191
-#, fuzzy
 msgid "Super Admin permission"
-msgstr "添加权限"
+msgstr "超级管理员权限"
 
 #: app/models/role.rb:206
 msgid "Super administrator with all access."
-msgstr ""
+msgstr "拥有所有访问的超级管理员。"
 
 #: app/views/providers/redhat/_subscription_details.html.haml:7
 #: app/views/subscriptions/index.html.haml:16
@@ -3865,11 +3781,11 @@ msgstr "同步概述"
 
 #: app/controllers/sync_plans_controller.rb:140
 msgid "Sync Plan '%s' was created."
-msgstr ""
+msgstr "已创建同步计划 '%s'。"
 
 #: app/controllers/sync_plans_controller.rb:86
 msgid "Sync Plan '%s' was updated."
-msgstr ""
+msgstr "已更新同步计划 '%s'。"
 
 #: app/controllers/sync_plans_controller.rb:47
 #: lib/navigation/content_management.rb:104
@@ -3900,15 +3816,15 @@ msgstr "同步完成。"
 
 #: app/controllers/sync_plans_controller.rb:111
 msgid "Sync plan '%s' was deleted."
-msgstr ""
+msgstr "已删除同步计划 '%s'。"
 
 #: app/controllers/api/products_controller.rb:76
 msgid "Synchronization plan assigned."
-msgstr ""
+msgstr "已分配同步计划。"
 
 #: app/controllers/api/products_controller.rb:82
 msgid "Synchronization plan removed."
-msgstr ""
+msgstr "已删除同步计划。"
 
 #: app/views/sync_management/index.html.haml:57
 msgid "Synchronize Now"
@@ -3920,14 +3836,12 @@ msgid "System"
 msgstr "系统"
 
 #: app/controllers/systems_controller.rb:94
-#, fuzzy
 msgid "System '%s' was created."
-msgstr "已更新系统订阅。"
+msgstr "已创建系统 '%s'。"
 
 #: app/controllers/systems_controller.rb:217
-#, fuzzy
 msgid "System '%s' was updated."
-msgstr "已更新系统订阅。"
+msgstr "已更新系统 '%s'。"
 
 #: app/views/systems/_subs.html.haml:6
 msgid "System Current Subscription(s)"
@@ -3960,9 +3874,8 @@ msgid "System Template"
 msgstr "系统模板"
 
 #: app/controllers/system_templates_controller.rb:259
-#, fuzzy
 msgid "System Template '%s' was created."
-msgstr "目前没有定义任何系统模板"
+msgstr "已创建系统模板 '%s'。"
 
 #: app/controllers/system_templates_controller.rb:78
 #: app/helpers/breadcrumb_helper.rb:140 app/models/resource_type.rb:92
@@ -3977,11 +3890,9 @@ msgstr "系统模板"
 #: app/views/system_templates/index.html.haml:40
 msgid ""
 "System Templates allow you to create a template for what a system should "
-"look like.  This includes what products are subscribed and what packages are "
-"installed."
-msgstr ""
-"系统模板可让您创建一个系统所应呈现内容的模板。这包括应订阅什么产品以及安装什"
-"么软件包。"
+"look like.  This includes what products are subscribed and what packages are"
+" installed."
+msgstr "系统模板可让您创建一个系统所应呈现内容的模板。这包括应订阅什么产品以及安装什么软件包。"
 
 #: app/views/systems/_edit.html.haml:71
 msgid "System Type"
@@ -4014,28 +3925,24 @@ msgid "Template"
 msgstr "模板"
 
 #: app/controllers/system_templates_controller.rb:195
-#, fuzzy
 msgid "Template %s has been updated successfully"
-msgstr "成功更新用户。"
+msgstr "已成功更新模板 %s"
 
 #: app/controllers/system_templates_controller.rb:207
-#, fuzzy
 msgid "Template %s updated successfully."
-msgstr "成功更新用户。"
+msgstr "已成功更新模板 %s。"
 
 #: app/controllers/system_templates_controller.rb:285
-#, fuzzy
 msgid ""
-"Template '%s' has been updated successfully, however you have removed either "
-"a product or repository that contained the selected distribution for this "
+"Template '%s' has been updated successfully, however you have removed either"
+" a product or repository that contained the selected distribution for this "
 "template.  Please select another distribution to ensure a working system "
 "template."
-msgstr "包含为这个模板所选的发行本。请选择另一个发行本以保证系统模板正常工作。"
+msgstr "已成功更新模板 '%s'，但您已删除包含为这个模板所选发行本的产品或库。请选择另一个发行本以保证系统模板可正常工作。"
 
 #: app/controllers/system_templates_controller.rb:217
-#, fuzzy
 msgid "Template '%s' was deleted."
-msgstr "无法导入模板"
+msgstr "已删除模板 '%s'。"
 
 #: app/models/system_template.rb:21
 msgid "Template can have parent templates only from the same environment"
@@ -4060,7 +3967,7 @@ msgstr "模板"
 #: app/controllers/api/templates_content_controller.rb:130
 #: app/controllers/api/templates_controller.rb:59
 msgid "Templates can be updated only in a Library environment"
-msgstr ""
+msgstr "只有在 Library 环境中才能更新模板"
 
 #: app/models/organization.rb:73 app/views/organizations/_edit.html.haml:11
 msgid ""
@@ -4111,27 +4018,23 @@ msgid ""
 "There are currently no Global permissions for this role.  Please click Add "
 "Permission in the action bar below to add a Global permission.  A Global "
 "permission is one that cuts across all organizations."
-msgstr ""
-"目前这个角色没有全局权限。请在下面的动作栏中点击添加权限以便添加全局权限。全"
-"局权限是可在所有机构中使用的权限。"
+msgstr "目前这个角色没有全局权限。请在下面的动作栏中点击添加权限以便添加全局权限。全局权限是可在所有机构中使用的权限。"
 
 #: app/views/roles/index.html.haml:8
 msgid ""
 "There are currently no permissions for this organization.  Please click Add "
 "Permission in the action bar below to add a permission to this organization."
-msgstr ""
-"目前这个机构没有任何权限。请在下面的动作栏中点击添加权限以便为这个机构添加权"
-"限。"
+msgstr "目前这个机构没有任何权限。请在下面的动作栏中点击添加权限以便为这个机构添加权限。"
 
 #: app/views/sync_management/index.html.haml:54
 msgid ""
 "There are no custom products or repositories enabled. Try enabling via "
 "Content Providers."
-msgstr ""
+msgstr "没有启用任何自定义产品或库。请尝试使用内容供应商（Content Provider）启用。"
 
 #: app/views/dashboard/_errata.haml:3
 msgid "There are no errata that need to be applied to registered systems."
-msgstr ""
+msgstr "不需要在注册系统中应用任何勘误。"
 
 #: app/views/system_events/_events.html.haml:35
 msgid "There are no events to display."
@@ -4159,7 +4062,7 @@ msgstr "产品 [ %s ] 中已经有库使用名称 [ %s ]"
 msgid ""
 "There is already an active sync process for the '%s' repository. Please try "
 "again later"
-msgstr ""
+msgstr "'%s' 库已有活跃的同步进程。请稍后再试。"
 
 #: app/controllers/sync_schedules_controller.rb:80
 msgid "There must be at least one plan selected"
@@ -4171,17 +4074,18 @@ msgstr "必须至少选择一个产品"
 
 #: app/views/common/_common_i18n.html.haml:3
 msgid "There was an error retrieving that row:"
-msgstr ""
+msgstr "检索那一列时出错："
 
 #: app/controllers/sync_management_controller.rb:155
 msgid ""
 "There were errors with one of the syncs: %s in repository: %s. See the log "
 "for more details."
-msgstr ""
+msgstr "同步之一出错：%s 在库中：%s。详情请查看日志。"
 
 #: app/views/gpg_keys/_products_repos.html.haml:17
-msgid "This GPG Key is not currently assigned to any products or repositories."
-msgstr ""
+msgid ""
+"This GPG Key is not currently assigned to any products or repositories."
+msgstr "这个 GPG 密钥目前没有分配给任何产品或库。"
 
 #: app/controllers/api/system_packages_controller.rb:99
 msgid "This action doesn't support pacakge groups"
@@ -4193,7 +4097,7 @@ msgstr "这个更改集中没有任何内容。"
 
 #: app/views/promotions/show.html.haml:7
 msgid "This promotion changeset is currently being promoted."
-msgstr ""
+msgstr "目前已推广这个推广更改集。"
 
 #: app/views/system_templates/_promotion_details.html.haml:16
 msgid "This template contains no content."
@@ -4211,14 +4115,13 @@ msgstr "标题"
 
 #: app/views/common/_panel.html.haml:14
 msgid ""
-"To view the details of an item on the left, simply click on a single row.<br/"
-"><br/>To select multiple rows, hold the Control Key and click multiple rows."
-"<br/><br/>If you don't need this help anymore, please click the close button "
-"in the top right of this box."
+"To view the details of an item on the left, simply click on a single "
+"row.<br/><br/>To select multiple rows, hold the Control Key and click "
+"multiple rows.<br/><br/>If you don't need this help anymore, please click "
+"the close button in the top right of this box."
 msgstr ""
-"要查看左侧项目详情，只要点击一行即可。<br/><br/>要选择多行，请按住 Control 键"
-"盘，并点击多行。<br/><br/>如果您不再需要这个帮助，请点击这个框右上角的关闭按"
-"钮。"
+"要查看左侧项目详情，只要点击一行即可。<br/><br/>要选择多行，请按住 Control "
+"键盘，并点击多行。<br/><br/>如果您不再需要这个帮助，请点击这个框右上角的关闭按钮。"
 
 #: app/views/dashboard/_subscriptions.haml:41
 msgid "Total Systems"
@@ -4255,7 +4158,7 @@ msgstr "UUID"
 
 #: app/models/system_template.rb:138
 msgid "Uebercert for %s has not been generated."
-msgstr ""
+msgstr "没有为 %s 生成 Uebercert。"
 
 #: app/models/activation_key.rb:90
 msgid "Unable to determine quantity for pool %s"
@@ -4284,15 +4187,14 @@ msgid "Unknown"
 msgstr "未知"
 
 #: app/controllers/api/systems_controller.rb:215
-#, fuzzy
 msgid "Unknown repository label"
-msgstr "没有库可用。"
+msgstr "未知库标签"
 
 #: app/views/providers/redhat/_subscription_details.html.haml:29
 #: app/views/systems/_subs.html.haml:96
 #: app/views/subscriptions/index.html.haml:39
 msgid "Unlimited"
-msgstr "无限"
+msgstr "已删除角色 '%s'。"
 
 #: app/views/systems/_subs.html.haml:53 app/views/systems/_subs.html.haml:54
 msgid "Unsubscribe"
@@ -4363,7 +4265,7 @@ msgstr "用户"
 
 #: app/controllers/users_controller.rb:289
 msgid "User '%s' was deleted."
-msgstr ""
+msgstr "已删除用户 '%s'。"
 
 #: app/views/notices/show.html.haml:13
 msgid "User Notifications"
@@ -4468,40 +4370,36 @@ msgstr "没有授权您执行这个动作。"
 
 #: app/controllers/api/sync_controller.rb:97
 msgid "You can synchronize repositories only in library environment'"
-msgstr ""
+msgstr "您只能在 library 环境中同步库"
 
 #: app/controllers/application_controller.rb:511
-#, fuzzy
 msgid ""
 "You current organization is no longer valid. It is possible that either the "
 "organization has been deleted or your permissions revoked, please log back "
 "in to continue."
-msgstr "您的当前机构不再有效。可能是已将该机构删除，请重新登录以便继续操作。"
+msgstr "您的当前机构不再有效。可能是已将该机构删除，或者您的权限已被取消。请重新登录以便继续操作。"
 
 #: app/controllers/failed_authentication_controller.rb:28
 msgid ""
-"You do not have valid credentials to access this system. Please contact your "
-"administrator."
+"You do not have valid credentials to access this system. Please contact your"
+" administrator."
 msgstr "您还没有可访问这个系统的有效证书。请联络管理员。"
 
 #: app/controllers/failed_authentication_controller.rb:25
-#, fuzzy
 msgid ""
-"You have entered an incorrect username/password combination, or your account "
-"may currently be disabled. Please try again or contact your administrator."
-msgstr "您输入了错误的用户名、密码组合，或者该帐户已被禁用，请再试一次。"
+"You have entered an incorrect username/password combination, or your account"
+" may currently be disabled. Please try again or contact your administrator."
+msgstr "您输入了错误的用户名/密码组合，或者该帐户目前已被禁用，请再试一次或联络您的管理员。"
 
 #: app/views/roles/_self_role_edit.html.haml:31
 msgid "You have no assigned roles."
-msgstr ""
+msgstr "还没有为您分配角色。"
 
 #: app/views/roles/index.html.haml:8
 msgid ""
 "You have selected all resource types; this will grant full access to the "
 "organization. Press the Cancel button to select an individual resource type."
-msgstr ""
-"您选择了所有资源类型；这可让您对该机构有完全访问授权。按取消按钮选择单独的资"
-"源类型。"
+msgstr "您选择了所有资源类型；这可让您对该机构有完全访问授权。按取消按钮选择单独的资源类型。"
 
 #: app/views/common/404.html.haml:4
 msgid "You may have mistyped the address or the page may have moved."
@@ -4530,7 +4428,7 @@ msgstr "您必须至少选择一个 verb。"
 
 #: config/initializers/app_config.rb:99
 msgid "You must specify host in %s for %s to work properly"
-msgstr ""
+msgstr "您必须在 %s 中为 %s 指定主机方可正常工作"
 
 #: app/views/systems/_new.html.haml:57
 msgid ""
@@ -4557,9 +4455,8 @@ msgid "all packages update failed"
 msgstr "所有软件包更新失败"
 
 #: app/models/kt_environment.rb:368
-#, fuzzy
 msgid "can not be updated"
-msgstr "无法导入模板"
+msgstr "无法更新"
 
 #: app/models/katello_url_format_validator.rb:50
 #: app/models/katello_name_format_validator.rb:20
@@ -4577,20 +4474,19 @@ msgstr "不能包含字母、数字、'_'、'-' 之外的字符。"
 #: app/models/katello_description_format_validator.rb:17
 #: app/models/katello_name_format_validator.rb:26
 msgid "cannot contain more than %s characters"
-msgstr ""
+msgstr "字符数不能超过 %s"
 
 #: app/views/promotions/show.html.haml:7
 msgid "currently editing this promotion changeset"
-msgstr ""
+msgstr "目前正在编辑这个推广更改集"
 
 #: app/models/sync_plan.rb:28
 msgid "daily"
-msgstr ""
+msgstr "每日"
 
 #: app/views/promotions/show.html.haml:177
-#, fuzzy
 msgid "displayed"
-msgstr "显示"
+msgstr "显示的"
 
 #: app/models/kt_environment.rb:29
 msgid "environment can only have one child"
@@ -4602,11 +4498,11 @@ msgstr "所需环境"
 
 #: app/models/sync_plan.rb:27
 msgid "hourly"
-msgstr ""
+msgstr "每小时"
 
 #: app/models/activation_key.rb:43
 msgid "id: %s doesn't exist "
-msgstr ""
+msgstr "id: %s 不存在"
 
 #: app/models/system_task.rb:105 app/models/system_task.rb:106
 msgid "installing errata..."
@@ -4648,7 +4544,7 @@ msgstr "太长"
 
 #: app/models/ping.rb:65
 msgid "katello-jobs service not running"
-msgstr ""
+msgstr "katello-jobs 服务没有运行"
 
 #: app/views/errata/_show.html.haml:70
 msgid "link"
@@ -4656,7 +4552,7 @@ msgstr "链接"
 
 #: app/models/user.rb:65
 msgid "must be at least 5 characters."
-msgstr ""
+msgstr "必须至少有 5 个字符。"
 
 #: app/models/permission.rb:26
 msgid "must be unique within an organization scope"
@@ -4672,11 +4568,11 @@ msgstr "在一个机构中必须是唯一的"
 
 #: app/models/product.rb:15
 msgid "must contain 'Library'"
-msgstr ""
+msgstr "必须包含 'Library'"
 
 #: app/models/katello_name_format_validator.rb:27
 msgid "must contain at least %s characters"
-msgstr ""
+msgstr "必须至少有 %s 个字符。"
 
 #: app/models/no_trailing_space_validator.rb:20
 msgid "must not contain leading or trailing white spaces."
@@ -4722,12 +4618,11 @@ msgstr "删除软件包......"
 
 #: app/controllers/api/packages_controller.rb:50
 msgid "repoids"
-msgstr ""
+msgstr "repoids"
 
 #: app/views/promotions/show.html.haml:180
-#, fuzzy
 msgid "results."
-msgstr "结果"
+msgstr "结果。"
 
 #: app/controllers/sync_management_controller.rb:243
 msgid "sync did not complete successfully"
@@ -4769,17 +4664,3 @@ msgstr "查看中"
 #: app/helpers/sync_schedules_helper.rb:19 app/models/sync_plan.rb:29
 msgid "weekly"
 msgstr "每周"
-
-#~ msgid "Changelog"
-#~ msgstr "更改日志"
-
-#~ msgid "Edit Repository"
-#~ msgstr "编辑库"
-
-#~ msgid "Promotion of changeset '%{name}' failed."
-#~ msgstr "推广更改集 '%{name}' 失败。"
-
-#~ msgid ""
-#~ "You currently do not have any permissions that grant access to an "
-#~ "organization.  Please contact your system administrator to receive access."
-#~ msgstr "目前您没有任何访问机构的授权。请联络您的系统管理员以便接受访问。"

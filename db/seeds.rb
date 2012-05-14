@@ -35,6 +35,17 @@ unless user_admin
 end
 raise "Unable to create admin user: #{format_errors user_admin}" if user_admin.nil? or user_admin.errors.size > 0
 
+unless hidden_user = User.hidden.first
+  hidden_user = User.new(
+    :roles => [],
+    :username => "hidden-#{Password.generate_random_string(6)}",
+    :password => Password.generate_random_string(25),
+    :email => Password.generate_random_string(10),
+    :hidden=>true)
+  hidden_user.save!
+end
+raise "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? or hidden_user.errors.size > 0
+
 # create the default org = "admin" if none exist
 first_org = Organization.find_or_create_by_name(:name => "ACME_Corporation", :description => "ACME Corporation Organization", :cp_key => 'ACME_Corporation')
 raise "Unable to create first org: #{format_errors first_org}" if first_org and first_org.errors.size > 0
