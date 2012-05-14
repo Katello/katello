@@ -240,7 +240,7 @@ module Glue::Pulp::Repos
       Katello::PackageUtils.find_latest_packages packs
     end
 
-    def has_erratum? id
+    def has_erratum? env, id
       self.repos(env).each do |repo|
         return true if repo.has_erratum? id
       end
@@ -321,8 +321,8 @@ module Glue::Pulp::Repos
     end
 
     def sync_size
-      self.repos(library).inject(0) { |sum, v| 
-        sum + v.sync_status.progress.total_size 
+      self.repos(library).inject(0) { |sum, v|
+        sum + v.sync_status.progress.total_size
       }
     end
 

@@ -24,7 +24,7 @@ class SystemsController < ApplicationController
   before_filter :find_environment, :only => [:environments, :new]
   before_filter :authorize
 
-  before_filter :setup_options, :only => [:index, :items, :environments]
+  before_filter :setup_options, :only => [:index, :items, :create, :environments]
 
   # two pane columns and mapping for sortable fields
   COLUMNS = {'name' => 'name_sort', 'lastCheckin' => 'lastCheckin'}
