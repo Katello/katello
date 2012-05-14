@@ -432,6 +432,24 @@ class Register(SystemAction):
             _("Could not register system [ %s ]") % name
         )
 
+class RemoveDeletion(SystemAction):
+
+    description = _("remove a deletion record for hypervisor")
+
+    def setup_parser(self):
+        self.parser.add_option("--uuid", dest="uuid",
+                       help=_("hypervisor uuid (required"))
+
+    def check_options(self):
+        self.require_option('uuid')
+
+    def run(self):
+        uuid = self.get_option('uuid')
+        self.api.remove_consumer_deletion_record(uuid)
+        print _("Successfully removed deletion record for hypervisor with uuid [ %s ]") % uuid
+        return os.EX_OK
+
+
 class Unregister(SystemAction):
 
     description = _('unregister a system')

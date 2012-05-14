@@ -77,18 +77,6 @@ class katello::config {
     },
   }
 
-  common::simple_replace { "org_description":
-      file => "/usr/share/katello/db/seeds.rb",
-      pattern => "ACME Corporation Organization",
-      replacement => "$katello::params::org_name Organization",
-      before => Exec["katello_seed_db"],
-      require => $katello::params::deployment ? {
-                'katello' => [ Class["candlepin::service"], Class["pulp::service"], Common::Simple_replace["org_name"]  ],
-                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"], Common::Simple_replace["org_name"] ],
-                default => [],
-    },
-  }
-
   common::simple_replace { "primary_user_pass":
       file => "/usr/share/katello/db/seeds.rb",
       pattern => "password => 'admin'",
@@ -139,7 +127,6 @@ class katello::config {
                   File["${katello::params::config_dir}/katello.yml"],
                   Postgres::Createdb[$katello::params::db_name],
                   Common::Simple_replace["org_name"],
-                  Common::Simple_replace["org_description"],
                   Common::Simple_replace["primary_user_name"],
                   Common::Simple_replace["primary_user_pass"],
                   Common::Simple_replace["primary_user_email"]
@@ -151,7 +138,6 @@ class katello::config {
                   File["${katello::params::config_dir}/katello.yml"],
                   Postgres::Createdb[$katello::params::db_name],
                   Common::Simple_replace["org_name"],
-                  Common::Simple_replace["org_description"],
                   Common::Simple_replace["primary_user_name"],
                   Common::Simple_replace["primary_user_pass"],
                   Common::Simple_replace["primary_user_email"]

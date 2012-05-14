@@ -157,3 +157,7 @@ class SystemAPI(KatelloAPI):
         }
         path = "/api/systems/%s/system_groups/" % system_id
         return self.server.DELETE(path, data)[1]
+
+    def remove_consumer_deletion_record(self, uuid):
+        path = "/api/consumers/%s/deletionrecord" % uuid
+        return self.server.DELETE(path)[1]
