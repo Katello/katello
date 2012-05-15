@@ -39,6 +39,17 @@ class SystemGroup < ActiveRecord::Base
   has_many :systems, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group,
            :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
 
+  # we use db_environments to host the data, but all input, output
+  #  should go through 'environments' accessor and getter (defined below)
+  #  db_environment(id)s accessors are marked private to help stop usage
+  #  we do this as we need to maintain the integrity of systems
+  #  and environments associated with a group, and none of the other solutions
+  #  allow us to do this.
+  has_many :environment_system_groups, :dependent =>:destroy
+  has_many :db_environments, {:through=>:environment_system_groups, :source=>:environment,
+                    :class_name => 'KTEnvironment', :foreign_key=>:environment_id}
+  before_save :save_system_environments
+
   validates :pulp_id, :presence => true
   validates :name, :presence => true, :katello_name_format => true
   validates_presence_of :organization_id, :message => N_("Organization cannot be blank.")
@@ -153,7 +164,34 @@ class SystemGroup < ActiveRecord::Base
     raise _("Group membership cannot be changed while locked.") if self.locked
   end
 
+
+  def environments
+    @cached_environments ||= db_environments
+  end
+
+  def environments=(values)
+    @cached_environments = values
+  end
+
+
   private
+
+  #make hidden db_environments accessors private to discourage use
+  SystemGroup.send(:private, :db_environments)
+  SystemGroup.send(:private, :db_environment_ids)
+
+  def save_system_environments
+    if @cached_environments #there was an env modification
+      if !@cached_environments.empty?
+        sys_envs = self.systems.collect{|s| s.environment_id}.uniq
+        group_envs = @cached_environments.collect{|e| e.id}
+        if (sys_envs  - group_envs).length > 0
+          raise _("Could not modify environments. System group membership does not match new environment association.")
+        end
+      end
+      self.db_environments = self.environments
+    end
+  end
 
   def add_pulp_consumer_group record
     lock_check
