@@ -66,19 +66,9 @@ describe Api::EnvironmentsController do
     end
   end
 
-
-  describe "get a listing of environments" do
-
-    let(:action) {:index }
-    let(:req) { get 'index', :organization_id => "1" }
-    let(:authorized_user) { user_with_read_permissions }
-    let(:unauthorized_user) { user_without_read_permissions }
-    it_should_behave_like "protected action"
-  end
-
   describe "search a list of environments" do
-    let(:action) {:search }
-    let(:req) { get 'search', {:organization_id => "1", :name=>"foo"} }
+    let(:action) {:index}
+    let(:req) { get 'index', {:organization_id => "1", :name=>"foo"} }
 
     it 'should call katello environment find api' do
       KTEnvironment.should_receive(:where).once
