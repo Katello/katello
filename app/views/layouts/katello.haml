@@ -22,7 +22,9 @@
     - section_id = "generic"
   %body{:id => section_id}
 
-= content_for(:content) do   
+= content_for(:content) do
+  .hidden#remove
+    = render_menu(1..3)
   - if not current_user
     #formwindow
       = yield
