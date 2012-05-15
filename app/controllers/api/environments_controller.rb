@@ -20,6 +20,10 @@ class Api::EnvironmentsController < Api::ApiController
     view_rule = lambda{@organization.readable?}
 
     index_rule = lambda {true}
+    # Note: index_rule is always true.
+    # Instead we are simply going to filter out the inaccessible environments
+    # from the environment list we return. Look at the index method to
+    # figure out how that rule is applied.
 
     {
       :index => index_rule,
