@@ -30,15 +30,15 @@ KT.menu = (function(){
   return {
     menuSetup: function(){
       //set some useful vars
-      var topLevel = $('nav.tab_nav li.top_level');
-      var activeSubnav = $('nav.tab_nav .second_level').filter(".selected").parent();
-      var secondLevel = $('nav.tab_nav .second_level').parent();
+      var topLevel = $('#appnav li.top_level');
+      var secondLevel = $('#maincontent .top_level').find('ul');
+      var activeSubnav = secondLevel.find(".selected").first().parent();
       var subnav = $('#subnav');
 
       var activeTab = topLevel.filter('.selected:visible');
 
       //hide the secondlevel before prepending it to subnav
-      secondLevel.hide();
+      secondLevel.not(activeSubnav).hide();
       //set the current tab to active so we can check it later
       activeTab.addClass('active');
       activeTab = topLevel.filter('.active');
@@ -98,14 +98,14 @@ KT.menu = (function(){
       });
     },
     thirdLevelNavSetup : function(){
-        var children = $('.third_level:first-child');
+        var children = $('#subnav .third_level:first-child');
 
         $.each(children, function(i, item) {
             KT.menu.hoverMenu(item);
         });
     },
     hoverMenu : function(element, options){
-	    var child = $(element);
+	      var child = $(element);
         var li = child.parent().parent();
         var ul = child.parent();
         var options = options || {};
@@ -113,6 +113,7 @@ KT.menu = (function(){
         if( options.top ){
         	ul.css('top', options.top);
         }
+        //append the arrow icon to all menus with a third level
         if(li.find(".arrow_icon_menu").length === 0) {
             li.prepend($('<div class="arrow_icon_menu"></div>'));
         }
