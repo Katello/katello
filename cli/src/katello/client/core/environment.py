@@ -51,7 +51,7 @@ class List(EnvironmentAction):
                        help=_("organization name eg: foo.example.com (required)"))
 
     def check_options(self):
-        self.require_option('org')
+        self.validator.require('org')
 
     def run(self):
         orgName = self.get_option('org')
@@ -80,8 +80,7 @@ class Info(EnvironmentAction):
                        help=_("environment name eg: foo.example.com (required)"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.validator.require(('org', 'name'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -117,9 +116,7 @@ class Create(EnvironmentAction):
 
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_option('prior')
+        self.validator.require(('org', 'name', 'prior'))
 
 
     def run(self):
@@ -156,8 +153,7 @@ class Update(EnvironmentAction):
 
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.validator.require(('org', 'name'))
 
 
     def run(self):
@@ -189,8 +185,7 @@ class Delete(EnvironmentAction):
                                help=_("organization name eg: foo.example.com (required)"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
 
     def run(self):

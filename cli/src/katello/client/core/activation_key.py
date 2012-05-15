@@ -55,7 +55,7 @@ class List(ActivationKeyAction):
                                help=_("environment name eg: dev (default: Library)"))
 
     def check_options(self):
-        self.require_option('org')
+        self.validator.require('org')
 
     def run(self):
         envName = self.get_option('env')
@@ -100,8 +100,7 @@ class Info(ActivationKeyAction):
                                help=_("name of organization (required)"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -145,9 +144,7 @@ class Create(ActivationKeyAction):
                                help=_("template name eg: servers"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        self.require_option('env')
+        self.validator.require(('name', 'org', 'env'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -196,8 +193,7 @@ class Update(ActivationKeyAction):
                                help=_("remove a pool from the activation key"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -251,8 +247,7 @@ class Delete(ActivationKeyAction):
                                help=_("name of organization (required)"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         orgName = self.get_option('org')

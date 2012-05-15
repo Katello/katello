@@ -24,7 +24,7 @@ class List(PackageGroupAction):
                         help=_("repository id, string value (required)"))
 
     def check_options(self):
-        self.require_option('repo_id')
+        self.validator.require('repo_id')
 
     def run(self):
         repoid = self.get_option('repo_id')
@@ -55,8 +55,7 @@ class Info(PackageGroupAction):
                         help=_("package group id, string value (required)"))
 
     def check_options(self):
-        self.require_option('repo_id')
-        self.require_option('id')
+        self.validator.require(('repo_id', 'id'))
 
     def run(self):
         groupid = self.get_option('id')
@@ -89,7 +88,7 @@ class CategoryList(PackageGroupAction):
                         help=_("repository id, string value (required)"))
 
     def check_options(self):
-        self.require_option('repo_id')
+        self.validator.require('repo_id')
 
     def run(self):
         repoid = self.get_option('repo_id')
@@ -119,8 +118,7 @@ class CategoryInfo(PackageGroupAction):
                         help=_("package group category id, string value (required)"))
 
     def check_options(self):
-        self.require_option('repo_id')
-        self.require_option('id')
+        self.validator.require(('repo_id', 'id'))
 
     def run(self):
         categoryId = self.get_option('id')

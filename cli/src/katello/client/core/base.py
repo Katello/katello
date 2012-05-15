@@ -24,6 +24,7 @@ from katello.client.config import Config
 from katello.client.api.utils import ApiDataError
 from katello.client.core.utils import parse_tokens, SystemExitRequest
 from katello.client.utils.printer import Printer, GrepStrategy, VerboseStrategy
+from katello.client.utils.option_validator import OptionValidator
 from katello.client.utils.encoding import u_str, u_obj
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
@@ -168,20 +169,9 @@ class Action(object):
         self.name = None
         self.opts = None
         self.args = None
-        self.optErrors = []
         self.printer = None
 
-        self.parser = OptionParser(option_class=KatelloOption)
-        self.parser.add_option('-g', dest='grep',
-                        action="store_true",
-                        help=_("grep friendly output"))
-        self.parser.add_option('-v', dest='verbose',
-                        action="store_true",
-                        help=_("verbose, more structured output"))
-        self.parser.add_option('-d', dest='delimiter',
-                        default="",
-                        help=_("column delimiter in grep friendly output, works only with option -g"))
-        self.setup_parser()
+        self.create_parser()
 
     @property
     def usage(self):
@@ -204,6 +194,22 @@ class Action(object):
         return _('no description available')
 
 
+    def create_parser(self):
+        self.parser = OptionParser(option_class=KatelloOption)
+        self.parser.add_option('-g', dest='grep',
+                        action="store_true",
+                        help=_("grep friendly output"))
+        self.parser.add_option('-v', dest='verbose',
+                        action="store_true",
+                        help=_("verbose, more structured output"))
+        self.parser.add_option('-d', dest='delimiter',
+                        default="",
+                        help=_("column delimiter in grep friendly output, works only with option -g"))
+
+        self.setup_parser()
+        return self.parser
+
+
     def get_option(self, opt_dest):
         """
         Get an option from opts or from the config file
@@ -213,13 +219,6 @@ class Action(object):
         @return: value of the option or None if the option is no present
         """
         attr = getattr(self.opts, opt_dest, None)
-        if not attr:
-            option = self.parser.get_option_by_dest(opt_dest)
-            if option != None:
-                opt_name = option.get_name()
-                if Config.parser.has_option('options', opt_name):
-                    attr = Config.parser.get('options', opt_name)
-
         return u_obj(attr)
 
 
@@ -230,94 +229,16 @@ class Action(object):
         @param opt: name of option to check
         @return True if the option was set, otherwise False
         """
-        return self.get_option(opt) != None
-
-    def get_option_string(self, opt_dest):
-        opt = self.parser.get_option_by_dest(opt_dest)
-        if opt != None:
-            flag = opt.get_opt_string()
-        else:
-            flag = '--' + opt_dest
-
-        return flag
+        return (not self.get_option(opt) is None)
 
 
-    def require_option(self, opt_dest):
-        """
-        Add option error if an option is not present.
-        @type opt_dest: str
-        @param opt: name of option or option destination to check
-        """
-        if (not self.option_specified(opt_dest)):
-            flag = self.get_option_string(opt_dest)
-            self.add_option_error(_('Option %s is required; please see --help') % flag)
-
-        return
-
-    def reject_option(self, opt_dest, *opt_collisions):
-        """
-        Add option error if an option is present.
-        @type opt_dest: str
-        @param opt: name of option or option destination to check
-        """
-        if (self.option_specified(opt_dest)):
-            flag = self.get_option_string(opt_dest)
-            self.add_option_error(_('Option %s is colliding with %s; please see --help') % (flag, ', '.join(opt_collisions)))
-
-        return
-
-
-    def require_one_of_options(self, *opt_dests):
-        """
-        Add option error if one of the options is not present.
-        @type opt_dests: str
-        @param opt_dests: name of option or option destination to check
-        """
-
-        flags = []
-        param_count = 0
-
-        for opt_dest in opt_dests:
-            if self.option_specified(opt_dest):
-                param_count += 1
-            flag = self.get_option_string(opt_dest)
-            flags.append(flag)
-
-        if not param_count == 1:
-            self.add_option_error(_('One of %s is required; please see --help') % ', '.join(flags))
-
-        return
-
-    def require_at_least_one_of_options(self, *opt_dests):
-        """
-        Add option error if no one of the options is present
-        @type opt_dests: str
-        @param opt_dests: name of option or options destination to check
-        """
-        param_count = 0
-        flags = []
-
-        for opt_dest in opt_dests:
-            if self.option_specified(opt_dest):
-                param_count +=1
-            flag = self.get_option_string(opt_dest)
-            flags.append(flag)
-
-        if not param_count > 0:
-            self.add_option_error(_('At least one of %s is required; please see --help') % ', '.join(flags))
-
-        return
-
-    def option_specified(self, opt):
-        return self.has_option(opt) and self.get_option(opt) != ""
-
-    def add_option_error(self, errorMsg):
+    def add_option_error(self, error_msg):
         """
         Add option error to the error stack
         @type errorMsg: str
         @param errorMsg: error message
         """
-        self.optErrors.append(errorMsg)
+        self.validator.opt_errors.append(error_msg)
 
 
     def setup_parser(self):
@@ -350,22 +271,31 @@ class Action(object):
         else:
             return None
 
+    def load_saved_options(self):
+        for opt_name, opt_value in Config.parser.items('options'):
+            opt = self.parser.get_option_by_name(opt_name)
+            if not opt is None:
+                self.parser.set_default(opt.get_dest(), opt_value)
+
     def process_options(self, args):
         """
         This method setups up the parser, parses the arguments, checks options
         and prints argument errors.
         """
+
+        self.load_saved_options()
         self.opts, self.args = self.parser.parse_args(args)
 
+        self.validator = OptionValidator(self.parser, self.opts, self.args)
         self.printer = Printer(self.__print_strategy())
 
-        self.optErrors = []
         self.check_options()
-        if len(self.optErrors) > 0:
-            if len(self.optErrors) == 1:
-                self.parser.error(self.optErrors[0])
+
+        if len(self.validator.opt_errors) > 0:
+            if len(self.validator.opt_errors) == 1:
+                self.parser.error(self.validator.opt_errors[0])
             else:
-                self.parser.error(self.optErrors)
+                self.parser.error(self.validator.opt_errors)
 
     # this method exists so that an action can run like a command
     # it supports having single name actions (e.g. katello shell)
@@ -465,3 +395,6 @@ class KatelloOption(Option):
 
     def get_name(self):
         return self.get_opt_string().lstrip('-')
+
+    def get_dest(self):
+        return self.dest

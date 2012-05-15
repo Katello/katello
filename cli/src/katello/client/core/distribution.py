@@ -53,10 +53,8 @@ class List(DistributionAction):
                       help=_("product name eg: fedora-14"))
 
     def check_options(self):
-        if not self.has_option('repo_id'):
-            self.require_option('repo')
-            self.require_option('org')
-            self.require_option('product')
+        if not self.validator.exists('repo_id'):
+            self.validator.require(('repo', 'org', 'product'))
 
     def run(self):
         repoId   = self.get_option('repo_id')
@@ -95,8 +93,7 @@ class Info(DistributionAction):
                                help=_("distribution id eg: ks-rh-noarch (required)"))
 
     def check_options(self):
-        self.require_option('repo_id')
-        self.require_option('id')
+        self.validator.require(('repo_id', 'id'))
 
     def run(self):
         repoId  = self.get_option('repo_id')

@@ -65,9 +65,7 @@ class Create(PermissionAction):
         self.parser.add_option('--tags', dest='tags', help=_("tags for the permission"), default="")
 
     def check_options(self):
-        self.require_option('user_role')
-        self.require_option('name')
-        self.require_option('scope')
+        self.validator.require(('user_role', 'name', 'scope'))
 
     def tag_name_to_id_map(self, org_name, scope):
         permissions = self.getAvailablePermissions(org_name, scope)
@@ -123,8 +121,7 @@ class Delete(PermissionAction):
         self.parser.add_option('--name', dest='name',help=_("permission name (required)"))
 
     def check_options(self):
-        self.require_option('user_role')
-        self.require_option('name')
+        self.validator.require(('user_role', 'name'))
 
     def run(self):
         role_name = self.get_option('user_role')
@@ -146,7 +143,7 @@ class List(PermissionAction):
         self.parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
 
     def check_options(self):
-        self.require_option('user_role')
+        self.validator.require('user_role')
 
     def format_verbs(self, verbs):
         return [v['verb'] for v in verbs]

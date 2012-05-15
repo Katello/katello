@@ -84,10 +84,8 @@ class SingleRepoAction(RepoAction):
             self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
 
     def check_repo_select_options(self):
-        if not self.has_option('id'):
-            self.require_option('name')
-            self.require_option('org')
-            self.require_option('product')
+        if not self.validator.exists('id'):
+            self.validator.require(('name', 'org', 'product'))
 
     def get_repo(self, includeDisabled=False):
         repoId   = self.get_option('id')
@@ -130,10 +128,7 @@ class Create(RepoAction):
                                help=_("Don't assign a GPG key to the repository."))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_option('url')
-        self.require_option('prod')
+        self.validator.require(('name', 'org', 'prod', 'url'))
 
     def run(self):
         name     = self.get_option('name')
@@ -166,10 +161,7 @@ class Discovery(RepoAction):
                                help=_("product name (required)"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_option('url')
-        self.require_option('prod')
+        self.validator.require(('name', 'org', 'prod', 'url'))
 
     def run(self):
         name     = self.get_option('name')
@@ -419,7 +411,7 @@ class List(RepoAction):
             help=_("list also disabled repositories"))
 
     def check_options(self):
-        self.require_option('org')
+        self.validator.require('org')
 
     def run(self):
         orgName = self.get_option('org')
@@ -517,7 +509,7 @@ class AddRemoveFilter(SingleRepoAction):
 
     def check_options(self):
         self.check_repo_select_options()
-        self.require_option('filter')
+        self.validator.require('filter')
 
     def run(self):
         filter_name  = self.get_option('filter')

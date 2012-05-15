@@ -68,7 +68,7 @@ class Create(OrganizationAction):
                                help=_("consumer description eg: foo's organization"))
 
     def check_options(self):
-        self.require_option('name')
+        self.validator.require('name')
 
     def run(self):
         name        = self.get_option('name')
@@ -93,7 +93,7 @@ class Info(OrganizationAction):
                                help=_("organization name eg: foo.example.com (required)"))
 
     def check_options(self):
-        self.require_option('name')
+        self.validator.require('name')
 
     def run(self):
         name = self.get_option('name')
@@ -121,7 +121,7 @@ class Delete(OrganizationAction):
                                help=_("organization name eg: foo.example.com (required)"))
 
     def check_options(self):
-        self.require_option('name')
+        self.validator.require('name')
 
     def run(self):
         name = self.get_option('name')
@@ -152,7 +152,7 @@ class Update(OrganizationAction):
                                help=_("consumer description eg: foo's organization"))
 
     def check_options(self):
-        self.require_option('name')
+        self.validator.require('name')
 
     def run(self):
         name        = self.get_option('name')
@@ -175,7 +175,7 @@ class GenerateDebugCert(OrganizationAction):
                                help=_("regenerate the certificate"))
 
     def check_options(self):
-        self.require_option('name')
+        self.validator.require('name')
 
     def run(self):
         name = self.get_option('name')
@@ -205,7 +205,7 @@ class ShowSubscriptions(OrganizationAction):
                                help=_("organization name eg: foo.example.com (required)"))
 
     def check_options(self):
-        self.require_option('name')
+        self.validator.require('name')
 
     def run(self):
         name = self.get_option('name')

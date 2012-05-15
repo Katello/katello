@@ -46,8 +46,7 @@ class List(ChangesetAction):
                                help=_("environment name (required)"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('env')
+        self.validator.require(('org', 'env'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -82,9 +81,7 @@ class Info(ChangesetAction):
                                help=_("will display dependent packages"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_option('env')
+        self.validator.require(('org', 'name', 'env'))
 
     def format_item_list(self, key, items):
         return "\n".join([i[key] for i in items])
@@ -149,9 +146,7 @@ class Create(ChangesetAction):
                                help=_("changeset description"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_option('env')
+        self.validator.require(('org', 'name', 'env'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -346,10 +341,7 @@ class UpdateContent(ChangesetAction):
             self.items['remove_' + ct] = []
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        self.require_option('env')
-
+        self.validator.require(('name', 'org', 'env'))
 
     def run(self):
         #reset stored patch items (neccessary for shell mode)
@@ -397,9 +389,7 @@ class Delete(ChangesetAction):
                                help=_("environment name (required)"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        self.require_option('env')
+        self.validator.require(('name', 'org', 'env'))
 
     def run(self):
         csName = self.get_option('name')
@@ -426,9 +416,7 @@ class Promote(ChangesetAction):
                                help=_("environment name (required)"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        self.require_option('env')
+        self.validator.require(('name', 'org', 'env'))
 
     def run(self):
         csName = self.get_option('name')

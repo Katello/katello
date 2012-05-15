@@ -66,7 +66,7 @@ class Create(UserRoleAction):
         self.parser.add_option('--description', dest='desc', help=_("role description"))
 
     def check_options(self):
-        self.require_option('name')
+        self.validator.require('name')
 
     def run(self):
         name = self.get_option('name')
@@ -90,7 +90,7 @@ class Info(UserRoleAction):
         self.parser.add_option('--permission_details', dest='perm_details', action='store_true', help=_("print details about each of role's permissions"))
 
     def check_options(self):
-        self.require_option('name')
+        self.validator.require('name')
 
     def getPermissions(self, roleId):
         permApi = PermissionAPI()
@@ -141,7 +141,7 @@ class Delete(UserRoleAction):
         self.parser.add_option('--name', dest='name', help=_("user role name (required)"))
 
     def check_options(self):
-        self.require_option('name')
+        self.validator.require('name')
 
     def run(self):
         name = self.get_option('name')
@@ -165,9 +165,8 @@ class Update(UserRoleAction):
         self.parser.add_option('--description', dest='desc', help=_("role description"))
 
     def check_options(self):
-        self.require_option('name')
-        if not self.has_option('new_name') and not self.has_option('desc'):
-            self.add_option_error(_("Provide at least one parameter to update the user role"))
+        self.validator.require('name')
+        self.validator.require_at_least_one_of(('new_name', 'desc'))
 
     def run(self):
         name = self.get_option('name')
@@ -191,8 +190,7 @@ class AddLdapGroup(UserRoleAction):
         self.parser.add_option('--group_name', dest='group_name', help=_("new LDAP group name (required)"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('group_name')
+        self.validator.require(('name', 'group_name'))
 
     def run(self):
         name = self.get_option('name')
@@ -215,8 +213,7 @@ class RemoveLdapGroup(UserRoleAction):
         self.parser.add_option('--group_name', dest='group_name', help=_("LDAP group name to be removed (required)"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('group_name')
+        self.validator.require(('name', 'group_name'))
 
     def run(self):
         name = self.get_option('name')

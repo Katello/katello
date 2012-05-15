@@ -48,8 +48,8 @@ class SingleProviderAction(ProviderAction):
                                help=_("name of organization (required)"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require('name')
+        self.validator.require('org')
 
 
 
@@ -64,7 +64,7 @@ class List(ProviderAction):
                                help=_("organization name (required)"))
 
     def check_options(self):
-        self.require_option('org')
+        self.validator.require('org')
 
     def run(self):
         orgName = self.get_option('org')
@@ -141,16 +141,15 @@ class Update(ProviderAction):
 
     def check_options(self):
 
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
-        if self.has_option('url'):
+        if self.validator.exists('url'):
             url = self.get_option('url')
             url_parsed = urlparse(url)
             if not url_parsed.scheme in ["http","https"]:                       # pylint: disable=E1101
-                self.add_option_error(_('Option --url has to start with http:// or https://'))
+                self.validator.add_option_error(_('Option --url has to start with http:// or https://'))
             elif not url_parsed.netloc:                                         # pylint: disable=E1101
-                self.add_option_error(_('Option --url is not in a valid format'))
+                self.validator.add_option_error(_('Option --url is not in a valid format'))
 
 
     def create(self, name, orgName, description, url):
@@ -287,7 +286,7 @@ class ImportManifest(SingleProviderAction):
 
     def check_options(self):
         super(ImportManifest, self).check_options()
-        self.require_option('file')
+        self.validator.require('file')
 
 
     def run(self):

@@ -72,12 +72,8 @@ class Create(UserAction):
                                help=_("user's default environment name"))
 
     def check_options(self):
-        self.require_option('username')
-        self.require_option('password')
-        self.require_option('email')
-        if self.option_specified('default_organization') or self.option_specified('default_environment'):
-            self.require_option('default_organization')
-            self.require_option('default_environment')
+        self.validator.require(('username', 'password', 'email'))
+        self.validator.require_all_or_none(('default_organization', 'default_environment'))
 
     def run(self):
         username = self.get_option('username')
@@ -108,7 +104,7 @@ class Info(UserAction):
         self.parser.add_option('--username', dest='username', help=_("user name (required)"))
 
     def check_options(self):
-        self.require_option('username')
+        self.validator.require('username')
 
     def run(self):
         username = self.get_option('username')
@@ -136,7 +132,7 @@ class Delete(UserAction):
         self.parser.add_option('--username', dest='username', help=_("user name (required)"))
 
     def check_options(self):
-        self.require_option('username')
+        self.validator.require('username')
 
     def run(self):
         username = self.get_option('username')
@@ -166,16 +162,14 @@ class Update(UserAction):
                                help=_("user's default environment is None"))
 
     def check_options(self):
-        self.require_option('username')
-        self.require_at_least_one_of_options('password','email','disabled','default_organization','default_environment',
-                                         'no_default_environment')
-        if self.option_specified('default_organization') or self.option_specified('default_environment'):
-            self.require_option('default_organization')
-            self.require_option('default_environment')
-            self.reject_option('no_default_environment', 'default_organization', 'default_environment')
-        if self.option_specified('no_default_environment'):
-            self.reject_option('default_organization', 'no_default_environment')
-            self.reject_option('default_environment', 'no_default_environment')
+        self.validator.require('username')
+        self.validator.require_at_least_one_of((
+            'password', 'email', 'disabled',
+            'default_organization', 'default_environment',
+            'no_default_environment'))
+
+        self.validator.require_all_or_none(('default_organization', 'default_environment'))
+        self.validator.mutually_exclude(('default_organization', 'default_environment'), 'no_default_environment')
 
     def run(self):
         username = self.get_option('username')
@@ -209,7 +203,7 @@ class ListRoles(UserAction):
         self.parser.add_option('--username', dest='username', help=_("user name (required)"))
 
     def check_options(self):
-        self.require_option('username')
+        self.validator.require('username')
 
     def run(self):
         username = self.get_option('username')
@@ -261,8 +255,7 @@ class AssignRole(UserAction):
         self.parser.add_option('--role', dest='role', help=_("user role (required)"))
 
     def check_options(self):
-        self.require_option('username')
-        self.require_option('role')
+        self.validator.require(('username', 'role'))
 
     def run(self):
         userName = self.get_option('username')

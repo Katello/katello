@@ -44,8 +44,7 @@ class Remember(ClientAction):
                        help=_("value to be store under specified option (required)"))
 
     def check_options(self):
-        self.require_option('option')
-        self.require_option('value')
+        self.validator.require(('option', 'value'))
 
     def run(self):
         option = self.opts.option
@@ -76,7 +75,7 @@ class Forget(ClientAction):
                        help=_("name of the option to be deleted (required)"))
 
     def check_options(self):
-        self.require_option('option')
+        self.validator.require('option')
 
     def run(self):
         option = self.opts.option

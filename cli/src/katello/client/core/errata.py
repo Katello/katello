@@ -60,10 +60,10 @@ class List(ErrataAction):
                       help=_("filter errata by severity"))
 
     def check_options(self):
-        if not self.has_option('repo_id'):
-            self.require_option('org')
-        if self.has_option('repo'):
-            self.require_option('product')
+        if not self.validator.exists('repo_id'):
+            self.validator.require('org')
+        if self.validator.exists('repo'):
+            self.validator.require(('org', 'product'))
 
     def run(self):
         repo_id   = self.get_option('repo_id')
@@ -105,8 +105,7 @@ class SystemErrata(ErrataAction):
                                    help=_("system name (required)"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.validator.require(('org', 'name'))
 
     def run(self):
         systemApi = SystemAPI()
@@ -146,11 +145,9 @@ class Info(ErrataAction):
                       help=_("product name eg: fedora-14"))
 
     def check_options(self):
-        self.require_option('id')
-        if not self.has_option('repo_id'):
-            self.require_option('repo')
-            self.require_option('org')
-            self.require_option('product')
+        self.validator.require('id')
+        if not self.validator.exists('repo_id'):
+            self.validator.require(('repo', 'org', 'product'))
 
     def run(self):
         errId    = self.get_option('id')

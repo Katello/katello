@@ -42,7 +42,7 @@ class List(FilterAction):
                        help=_("organization name (required)"))
 
     def check_options(self):
-        self.require_option('org')
+        self.validator.require('org')
 
     def run(self):
         org = self.get_option('org')
@@ -72,8 +72,7 @@ class Create(FilterAction):
 
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.validator.require(('org', 'name'))
 
     def run(self):
         org = self.get_option('org')
@@ -101,8 +100,7 @@ class Delete(FilterAction):
                       help=_("filter name (required)"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.validator.require(('org', 'name'))
 
     def run(self):
         org = self.get_option('org')
@@ -122,8 +120,7 @@ class Info(FilterAction):
                      help=_("filter name (required)"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.validator.require(('org', 'name'))
 
     def run(self):
         org = self.get_option('org')
@@ -154,9 +151,7 @@ class AddPackage(FilterAction):
                        help=_("package id (required)"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_option('package_id')
+        self.validator.require(('org', 'name', 'package_id'))
 
     def run(self):
         org = self.get_option('org')
@@ -181,9 +176,7 @@ class RemovePackage(FilterAction):
                        help=_("package id (required)"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_option('package_id')
+        self.validator.require(('org', 'name', 'package_id'))
 
     def run(self):
         org = self.get_option('org')

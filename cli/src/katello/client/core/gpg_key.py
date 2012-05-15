@@ -65,7 +65,7 @@ class List(GpgKeyAction):
                                help=_("name of organization (required)"))
 
     def check_options(self):
-        self.require_option('org')
+        self.validator.require('org')
 
     def run(self):
         orgName = self.get_option('org')
@@ -95,8 +95,7 @@ class Info(GpgKeyAction):
                                help=_("name of organization (required)"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         keyName = self.get_option('name')
@@ -135,8 +134,7 @@ class Create(GpgKeyAction):
                                  specified, standard input will be used"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -172,8 +170,7 @@ class Update(GpgKeyAction):
 
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -209,8 +206,7 @@ class Delete(GpgKeyAction):
                                help=_("name of organization (required)"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         keyName = self.get_option('name')

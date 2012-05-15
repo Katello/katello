@@ -56,7 +56,7 @@ class List(TemplateAction):
                                help=_("environment name eg: dev (default: Library)"))
 
     def check_options(self):
-        self.require_option('org')
+        self.validator.require('org')
 
     def run(self):
         envName = self.get_option('env')
@@ -93,8 +93,7 @@ class Info(TemplateAction):
                                help=_("environment name eg: dev (default: Library)"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         tplName = self.get_option('name')
@@ -160,8 +159,7 @@ class Import(TemplateAction):
 
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('file')
+        self.validator.require(('org', 'file'))
 
 
     def run(self):
@@ -205,10 +203,7 @@ class Export(TemplateAction):
 
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_option('file')
-        self.require_option('env')
+        self.validator.require(('name', 'org', 'file', 'env'))
 
     def run(self):
         tplName = self.get_option('name')
@@ -254,8 +249,7 @@ class Create(TemplateAction):
 
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
 
     def run(self):
@@ -348,12 +342,11 @@ class Update(TemplateAction):
 
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
         #check for missing values
         for k, v in self.items['add_parameters'].iteritems():
-            if v == None:
+            if v is None:
                 self.add_option_error(_("missing value for parameter '%s'") % k)
 
     def resetParameters(self):
@@ -495,8 +488,7 @@ class Delete(TemplateAction):
                                help=_("environment name eg: foo.example.com (default: Library)"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         tplName = self.get_option('name')

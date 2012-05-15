@@ -62,8 +62,8 @@ class SingleProductAction(ProductAction):
             self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
 
     def check_product_select_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.validator.require('org')
+        self.validator.require('name')
 
 
 # product actions ------------------------------------------------------------
@@ -80,7 +80,7 @@ class SetSyncPlan(SingleProductAction):
 
     def check_options(self):
         self.check_product_select_options()
-        self.require_option('plan')
+        self.validator.require('plan')
 
     def run(self):
         orgName  = self.get_option('org')
@@ -123,10 +123,8 @@ class List(ProductAction):
         self.parser.add_option('--provider', dest='prov',
                        help=_("provider name, lists provider's product in the Library"))
 
-
     def check_options(self):
-        self.require_option('org')
-
+        self.validator.require('org')
 
     def run(self):
         org_name = self.get_option('org')
@@ -244,7 +242,7 @@ class Promote(SingleProductAction):
 
     def check_options(self):
         self.check_product_select_options()
-        self.require_option('env')
+        self.validator.require('env')
 
     def run(self):
         orgName     = self.get_option('org')
@@ -310,9 +308,7 @@ class Create(ProductAction):
 
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('prov')
-        self.require_option('name')
+        self.validator.require(('org', 'prov', 'name'))
 
     def run(self):
         provName    = self.get_option('prov')
@@ -437,7 +433,7 @@ class AddRemoveFilter(SingleProductAction):
 
     def check_options(self):
         self.check_product_select_options()
-        self.require_option('filter')
+        self.validator.require('filter')
 
     def run(self):
         org_name     = self.get_option('org')

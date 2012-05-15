@@ -56,11 +56,9 @@ class Info(PackageAction):
 
 
     def check_options(self):
-        self.require_option('id')
-        if not self.has_option('repo_id'):
-            self.require_option('repo')
-            self.require_option('org')
-            self.require_option('product')
+        self.validator.require('id')
+        if not self.validator.exists('repo_id'):
+            self.validator.require(('repo', 'org', 'product'))
 
     def run(self):
         packId   = self.get_option('id')
@@ -110,10 +108,8 @@ class List(PackageAction):
                       help=_("product name eg: fedora-14"))
 
     def check_options(self):
-        if not self.has_option('repo_id'):
-            self.require_option('repo')
-            self.require_option('org')
-            self.require_option('product')
+        if not self.validator.exists('repo_id'):
+            self.validator.require(('repo', 'org', 'product'))
 
     def run(self):
         repoId = self.get_repo_id()
@@ -160,7 +156,7 @@ class Search(List):
 
     def check_options(self):
         super(Search, self).check_options()
-        self.require_option('query')
+        self.validator.require('query')
 
     def run(self):
         repoId = self.get_repo_id()

@@ -55,7 +55,7 @@ class List(SystemAction):
                        help=_("pool id to filter systems by subscriptions"))
 
     def check_options(self):
-        self.require_option('org')
+        self.validator.require('org')
 
     def get_systems(self, org_name, env_name, pool_id):
         query = {'pool_id': pool_id} if pool_id else {}
@@ -97,8 +97,7 @@ class Info(SystemAction):
                        help=_("environment name"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -163,11 +162,11 @@ class InstalledPackages(SystemAction):
                        help=_("package groups to be removed remotely from the system, group names are separated with comma"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        remote_options = [self.get_option(option) for option in ['install', 'remove', 'update', 'install_groups', 'remove_groups']]
-        if len([1 for o in remote_options if o]) > 1:
-            self.add_option_error(_('You can specify at most one install/remove/update action per call'))
+        self.validator.require(('name', 'org'))
+
+        remote_actions = ('install', 'remove', 'update', 'install_groups', 'remove_groups')
+        self.validator.require_at_most_one_of(remote_actions,
+            message=_('You can specify at most one install/remove/update action per call'))
 
 
     def run(self):
@@ -251,7 +250,7 @@ class TasksList(SystemAction):
                        help=_("environment name"))
 
     def check_options(self):
-        self.require_option('org')
+        self.validator.require('org')
 
     def run(self):
         org_name = self.get_option('org')
@@ -287,7 +286,7 @@ class TaskInfo(SystemAction):
                        help=_("UUID of the task"))
 
     def check_options(self):
-        self.require_option('id')
+        self.validator.require('id')
 
     def run(self):
         uuid = self.get_option('id')
@@ -321,8 +320,8 @@ class Releases(SystemAction):
                        help=_("environment name eg: development"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_one_of_options('name', 'environment')
+        self.validator.require('org')
+        self.validator.require_one_of(('name', 'environment'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -357,8 +356,7 @@ class Facts(SystemAction):
                        help=_("environment name"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -399,16 +397,11 @@ class Register(SystemAction):
                                help=_("system facts"))
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        if not self.option_specified('activationkey'):
-            self.require_option('environment')
-        elif self.option_specified('environment'):
-            self.add_option_error(_('Option %s can not be specified with %s') % ("--environment", "--activationkey"))
-
+        self.validator.require(('name', 'org'))
+        self.validator.require_all_or_none(('activationkey', 'environment'))
 
     def require_credentials(self):
-        if self.option_specified('activationkey'):
+        if self.validator.exists('activationkey'):
             return False
         else:
             return super
@@ -463,8 +456,7 @@ class Unregister(SystemAction):
                                help=_("environment name eg: development"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         name = self.get_option('name')
@@ -498,9 +490,7 @@ class Subscribe(SystemAction):
                 help=_("quantity (default: 1)"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_option('pool')
+        self.validator.require(('name', 'org', 'pool'))
 
     def run(self):
         name = self.get_option('name')
@@ -526,8 +516,7 @@ class Subscriptions(SystemAction):
                 help=_("show available subscriptions"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         name = self.get_option('name')
@@ -609,9 +598,8 @@ class Unsubscribe(SystemAction):
                                help=_("unsubscribe from all currently subscribed certificates (either entitlement or serial or all is required)"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_one_of_options('entitlement', 'serial', 'all')
+        self.validator.require(('name', 'org'))
+        self.validator.require_one_of(('entitlement', 'serial', 'all'))
 
     def run(self):
         name = self.get_option('name')
@@ -656,8 +644,7 @@ class Update(SystemAction):
                        help=_("service level agreement"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -700,7 +687,7 @@ class Report(SystemAction):
              help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
 
     def check_options(self):
-        self.require_option('org')
+        self.validator.require('org')
 
     def run(self):
         orgId = self.get_option('org')
