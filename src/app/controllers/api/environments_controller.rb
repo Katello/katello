@@ -12,20 +12,18 @@
 
 class Api::EnvironmentsController < Api::ApiController
   respond_to :json
-  before_filter :find_organization, :only => [:index, :search, :create]
+  before_filter :find_organization, :only => [:index, :create]
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories, :releases]
-  before_filter :find_environments, :only => [:search]
+  before_filter :find_environments, :only => [:index]
   before_filter :authorize
   def rules
-    index_rule = lambda{@organization.readable? || @organization.any_systems_registerable?}
     manage_rule = lambda{@organization.environments_manageable?}
     view_rule = lambda{@organization.readable?}
 
-    search_rule = lambda {true}
+    index_rule = lambda {true}
 
     {
       :index => index_rule,
-      :search => search_rule,
       :show => view_rule,
       :create => manage_rule,
       :update => manage_rule,
@@ -38,8 +36,10 @@ class Api::EnvironmentsController < Api::ApiController
   def find_environments
     query_params[:organization_id] = @organization.id
     @environments = KTEnvironment.where query_params
-    @environments.delete_if do |env|
-      !env.any_operation_readable?
+    unless @organization.readable? || @organization.any_systems_registerable?
+      @environments.delete_if do |env|
+        !env.any_operation_readable?
+      end
     end
   end
 
@@ -49,15 +49,12 @@ class Api::EnvironmentsController < Api::ApiController
     {
       :create =>manage_match,
       :update => manage_match,
-      :search => [:name, :library, :id, :organization_id]
+      :index => [:name, :library, :id, :organization_id]
     }
   end
 
-  def search
-    render :json => (@environments).to_json
-  end
   def index
-    render :json => (@organization.environments).to_json
+    render :json => (@environments).to_json
   end
 
   def show

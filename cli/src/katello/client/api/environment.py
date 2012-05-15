@@ -32,7 +32,7 @@ class EnvironmentAPI(KatelloAPI):
 
 
     def environment_by_name(self, orgId, envName):
-        path = "/api/organizations/%s/environments/search" % (orgId)
+        path = "/api/organizations/%s/environments/" % (orgId)
         envs = self.server.GET(path, {"name": envName})[1]
         if len(envs) > 0:
             return envs[0]
@@ -40,7 +40,7 @@ class EnvironmentAPI(KatelloAPI):
             return None
 
     def library_by_org(self, orgId):
-        path = "/api/organizations/%s/environments/search" % (orgId)
+        path = "/api/organizations/%s/environments/" % (orgId)
         envs = self.server.GET(path, {"library": "true"})[1]
         if len(envs) > 0:
             return envs[0]
