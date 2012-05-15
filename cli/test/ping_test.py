@@ -11,7 +11,7 @@ from katello.client.core.ping import Status
 
 
 
-class ProductListTest(CLIActionTestCase):
+class PingTest(CLIActionTestCase):
 
 
     def setUp(self):

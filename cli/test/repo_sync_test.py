@@ -14,29 +14,19 @@ except ImportError:
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #repo is defined by either (org, product, repo_name) or repo_id
-    def setUp(self):
-        self.set_action(Sync())
-        self.mock_options()
+    action = Sync()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['synchronize', '--name=repo1', '--product=product1'])
+    disallowed_options = [
+        ('--name=repo1', '--product=product1'),
+        ('--org=ACME', '--name=repo1'),
+        ('--org=ACME', '--product=product1'),
+        (),
+    ]
 
-    def test_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['synchronize', '--org=ACME', '--name=repo1', ])
-
-    def test_missing_repo_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['synchronize', '--org=ACME', '--product=product1'])
-
-    def test_missing_repo_id_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['synchronize'])
-
-    def test_no_error_if_required_options_provided(self):
-        self.action.process_options(['synchronize', '--org=ACME', '--name=repo1', '--product=product1'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_required_repo_id_provided(self):
-        self.action.process_options(['synchronize', '--id=repo_id1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=repo1', '--product=product1'),
+        ('--id=repo_id1', ),
+    ]
 
 
 

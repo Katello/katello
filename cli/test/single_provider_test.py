@@ -14,16 +14,14 @@ except ImportError:
 
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
-    def setUp(self):
-        self.set_action(SingleProviderAction())
-        self.mock_options()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['some_action', '--name=provider'])
+    action = SingleProviderAction()
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['some_action', '--org=ACME'])
+    disallowed_options = [
+        ('--name=provider', ),
+        ('--org=ACME', ),
+    ]
 
-    def test_no_error_if_required_options_provided(self):
-        self.action.process_options(['some_action', '--org=ACME', '--name=provider'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=provider', ),
+    ]

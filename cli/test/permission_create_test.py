@@ -12,22 +12,18 @@ from katello.client.api.utils import ApiDataError
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #required: name, user_role, scope
     #optional: description, org, tags, verbs
-    def setUp(self):
-        self.set_action(Create())
-        self.mock_options()
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--user_role=role1', '--scope=environments'])
+    action = Create()
 
-    def test_missing_role_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--name=perm1', '--scope=environments'])
+    disallowed_options = [
+        ('--user_role=role1', '--scope=environments'),
+        ('--name=perm1', '--scope=environments'),
+        ('--name=perm1', '--user_role=role1')
+    ]
 
-    def test_missing_scope_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--name=perm1', '--user_role=role1'])
-
-    def test_no_error_if_required_params_provided(self):
-        self.action.process_options( ['create', '--name=perm1', '--user_role=role1', '--scope=environments'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--name=perm1', '--user_role=role1', '--scope=environments')
+    ]
 
 
 class PermissionCreateTest(CLIActionTestCase):

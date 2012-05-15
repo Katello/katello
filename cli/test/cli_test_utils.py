@@ -1,13 +1,29 @@
 import unittest
 import os
+import sys
 from copy import deepcopy
 from mock import Mock
 
 import katello.client.core.utils
 from katello.client.core.utils import SystemExitRequest
 from katello.client.api.utils import ApiDataError
+from katello.client.i18n_optparse import OptionParserExitError
+
+
+class ColoredAssertionError(AssertionError):
+
+    RED = '\033[31m'
+    RESET = '\033[0;0m'
+
+    def __init__(self, message):
+        if sys.stderr.isatty():
+            message = self.RED+message+self.RESET
+        super(ColoredAssertionError, self).__init__(message)
+
 
 class CLITestCase(unittest.TestCase):
+
+    failureException = ColoredAssertionError
 
     _mocked_props = {}
     action = None
@@ -54,15 +70,54 @@ class CLITestCase(unittest.TestCase):
         else:
             raise self.failureException("{0} not raised".format(expected))
 
+
 class CLIOptionTestCase(CLITestCase):
 
+    allowed_options = []
+    disallowed_options = []
 
     def mock_options(self):
         self.mock(self.action, 'get_option').side_effect = self.mocked_get_option
 
+    def mock_parser(self):
+        self.mock(self.action.parser, 'print_help')
+        self.mock(self.action.parser, 'error').side_effect = OptionParserExitError
+
     def mocked_get_option(self, opt, default=None):
         return getattr(self.action.opts, opt, default)
 
+    def assert_options_allowed(self, *options):
+        if not self.options_pass(*options):
+            self.fail("\nCombination of options (%s) was expected to be ALLOWED in action %s." % (', '.join(options), self.__get_action_name()))
+
+    def assert_options_disallowed(self, *options):
+        if self.options_pass(*options):
+            self.fail("\nCombination of options (%s) was expected NOT to be allowed in action %s." % (', '.join(options), self.__get_action_name()))
+
+    def options_pass(self, *options):
+        self.mock(self.action, 'load_saved_options')
+        try:
+            self.action.process_options(list(options))
+            return True
+        except OptionParserExitError:
+            return False
+
+    def test_options(self):
+        if self.__get_class_name(self) == "CLIOptionTestCase":
+            return
+        self.mock_parser()
+        self.mock_options()
+        for options in self.allowed_options:
+            self.assert_options_allowed(*options)
+        for options in self.disallowed_options:
+            self.assert_options_disallowed(*options)
+
+    def __get_class_name(self, obj):
+        name = str(obj.__class__)
+        return name[name.rfind('.')+1:name.rfind('\'')]
+
+    def __get_action_name(self):
+        return self.__get_class_name(self.action)
 
 
 class CLIActionTestCase(CLITestCase):
