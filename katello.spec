@@ -106,7 +106,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui
+BuildRequires:  converge-ui-devel
 
 %description common
 Common bits for all Katello instances
@@ -158,7 +158,7 @@ Katello connection classes for the Candlepin backend
 %build
 
 #copy converge-ui
-cp -R /usr/share/converge-ui ./vendor/
+cp -R /usr/share/converge-ui-devel ./vendor/
 
 #configure Bundler
 rm -f Gemfile.lock
