@@ -14,7 +14,6 @@ class Api::EnvironmentsController < Api::ApiController
   respond_to :json
   before_filter :find_organization, :only => [:index, :create]
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories, :releases]
-  before_filter :find_environments, :only => [:index]
   before_filter :authorize
   def rules
     manage_rule = lambda{@organization.environments_manageable?}
@@ -33,15 +32,6 @@ class Api::EnvironmentsController < Api::ApiController
     }
   end
 
-  def find_environments
-    query_params[:organization_id] = @organization.id
-    @environments = KTEnvironment.where query_params
-    unless @organization.readable? || @organization.any_systems_registerable?
-      @environments.delete_if do |env|
-        !env.any_operation_readable?
-      end
-    end
-  end
 
   def param_rules
     manage_match =  {:environment =>  ["name", "description", "prior" ]}
@@ -54,7 +44,14 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   def index
-    render :json => (@environments).to_json
+    query_params[:organization_id] = @organization.id
+     environments = KTEnvironment.where query_params
+     unless @organization.readable? || @organization.any_systems_registerable?
+       environments.delete_if do |env|
+         !env.any_operation_readable?
+       end
+     end
+    render :json => (environments).to_json
   end
 
   def show
