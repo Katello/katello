@@ -18,6 +18,8 @@ class SystemSystemGroup < ActiveRecord::Base
   belongs_to :system_group
 
   validate :validate_max_systems_not_exceeded
+  validate :validate_system_environments
+
   def validate_max_systems_not_exceeded
     if new_record?
       system_group = SystemGroup.find(self.system_group_id)
@@ -26,4 +28,12 @@ class SystemSystemGroup < ActiveRecord::Base
       end
     end
   end
+
+  def validate_system_environments
+    envs = system_group.environments
+    if !envs.empty? && !envs.include?(system.environment)
+      errors.add :base, _("System's environment not compatible with the group #{system_group.name}.'")
+    end
+  end
+
 end

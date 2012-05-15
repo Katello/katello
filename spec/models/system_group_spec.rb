@@ -135,4 +135,102 @@ describe SystemGroup do
 
   end
 
+
+  context "changing environments" do
+    it "should allow an environment to be set" do
+      @group.environments = [@environment]
+      @group.save!
+      SystemGroup.find(@group.id).environments.should include @environment
+    end
+
+    it "should allow an environment to be appended to" do
+      @group.environments << @environment
+      @group.save!
+      SystemGroup.find(@group.id).environments.should include @environment
+    end
+
+    it "should not allow access to db_environments" do
+      @group.environments << @environment
+      @group.save!
+      lambda{@group.db_environments}.should raise_exception
+    end
+    it "should not allow access to db_environment_ids" do
+      @group.environments << @environment
+      @group.save!
+      lambda{@group.db_environment_ids}.should raise_exception
+    end
+  end
+
+  context "systems should respect environments" do
+    before :each do
+      @environment2 = KTEnvironment.create!(:name=>"DEV2", :prior=>@org.library, :organization=>@org)
+    end
+
+    it "should allow any system to be added to a group without environments" do
+      @group.systems = [@system]
+      @group.save!
+      @group.reload.systems.should include @system
+    end
+
+    it "should allow a system to be added to a group with that systems environment" do
+      @group.environments = [@environment]
+      @group.systems = [@system]
+      @group.save!
+      @group.reload.systems.should include @system
+    end
+
+    it "should not allow a system to be added to a group with that systems environment" do
+      @group.environments = [@environment2]
+      @group.save!
+      @group.reload.environments.should include @environment2
+      lambda{ @group.systems = [@system]
+              @group.save! }.should raise_exception
+      SystemGroup.find(@group.id).systems.should_not include @system
+    end
+  end
+
+  context "environments should respect systems" do
+    before :each do
+      @environment2 = KTEnvironment.create!(:name=>"DEV2", :prior=>@org.library, :organization=>@org)
+      @group.systems = [@system]
+      @group.save!
+    end
+    it "should allow an environment to be added if its systems are in it'" do
+      @group.environments = [@environment]
+      @group.save!
+      SystemGroup.find(@group.id).systems.should include @system
+      SystemGroup.find(@group.id).environments.should include @environment
+    end
+
+    it "should allow an environment to be removed if it means there are no more environments'" do
+      @group.environments = [@environment]
+      @group.save!
+      @group.environments = []
+      @group.save!
+      SystemGroup.find(@group.id).systems.should include @system
+      SystemGroup.find(@group.id).environments.should == []
+    end
+
+    it "should not allow an environment to be added if its systems are not in it" do
+      lambda{ @group.environments = [@environment2]
+              @group.save!}.should raise_exception
+      SystemGroup.find(@group.id).systems.should include @system
+      SystemGroup.find(@group.id).environments.should_not include @environment2
+    end
+
+    it "should not allow an environment to be removed if its systems are only in it" do
+      @group.environments = [@environment2, @environment]
+      @group.save!
+      @group = SystemGroup.find(@group.id)
+      @group.environments.should include @environment
+      @group.environments.should include @environment2
+      lambda{
+        @group.environments = [@environment2]
+        @group.save!
+      }.should raise_exception
+    end
+
+  end
+
+
 end
