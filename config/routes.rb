@@ -425,7 +425,6 @@ Src::Application.routes.draw do
       end
 
       resources :environments do
-        get :search, :on => :collection, :action => :search
         get :repositories, :on => :member
         resources :changesets, :only => [:index, :create]
       end
