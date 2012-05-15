@@ -158,7 +158,7 @@ Katello connection classes for the Candlepin backend
 %build
 
 #copy converge-ui
-cp -R /usr/share/converge-ui-devel ./vendor/
+cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
 
 #configure Bundler
 rm -f Gemfile.lock
