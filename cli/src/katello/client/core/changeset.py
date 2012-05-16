@@ -39,14 +39,14 @@ class ChangesetAction(Action):
 class List(ChangesetAction):
     description = _('list new changesets of an environment')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
 
-    def check_options(self):
-        self.validator.require(('org', 'env'))
+    def check_options(self, validator):
+        validator.require(('org', 'env'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -73,15 +73,15 @@ class List(ChangesetAction):
 class Info(ChangesetAction):
     description = _('detailed information about a changeset')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org', help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env', help=_("environment name (required)"))
-        self.parser.add_option('--name', dest='name', help=_("changeset name (required)"))
-        self.parser.add_option('--dependencies', dest='deps', action='store_true',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org', help=_("name of organization (required)"))
+        parser.add_option('--environment', dest='env', help=_("environment name (required)"))
+        parser.add_option('--name', dest='name', help=_("changeset name (required)"))
+        parser.add_option('--dependencies', dest='deps', action='store_true',
                                help=_("will display dependent packages"))
 
-    def check_options(self):
-        self.validator.require(('org', 'name', 'env'))
+    def check_options(self, validator):
+        validator.require(('org', 'name', 'env'))
 
     def format_item_list(self, key, items):
         return "\n".join([i[key] for i in items])
@@ -135,18 +135,18 @@ class Info(ChangesetAction):
 class Create(ChangesetAction):
     description = _('create a new changeset for an environment')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
-        self.parser.add_option('--description', dest='description',
+        parser.add_option('--description', dest='description',
                                help=_("changeset description"))
 
-    def check_options(self):
-        self.validator.require(('org', 'name', 'env'))
+    def check_options(self, validator):
+        validator.require(('org', 'name', 'env'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -298,38 +298,38 @@ class UpdateContent(ChangesetAction):
     def store_item(self, option, opt_str, value, parser):
         self.items[option.dest].append({"name": u_str(value)})
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
-        self.parser.add_option('--description', dest='description',
+        parser.add_option('--description', dest='description',
                                help=_("changeset description"))
-        self.parser.add_option('--new_name', dest='new_name',
+        parser.add_option('--new_name', dest='new_name',
                                help=_("new changeset name"))
-        self.parser.add_option('--add_product', dest='add_product', type="string",
+        parser.add_option('--add_product', dest='add_product', type="string",
                                action="callback", callback=self.store_item,
                                help=_("product to add to the changeset"))
-        self.parser.add_option('--remove_product', dest='remove_product', type="string",
+        parser.add_option('--remove_product', dest='remove_product', type="string",
                                action="callback", callback=self.store_item,
                                help=_("product to remove from the changeset"))
-        self.parser.add_option('--add_template', dest='add_template', type="string",
+        parser.add_option('--add_template', dest='add_template', type="string",
                                action="callback", callback=self.store_item,
                                help=_("name of a template to be added to the changeset"))
-        self.parser.add_option('--remove_template', dest='remove_template', type="string",
+        parser.add_option('--remove_template', dest='remove_template', type="string",
                                action="callback", callback=self.store_item,
                                help=_("name of a template to be removed from the changeset"))
-        self.parser.add_option('--from_product', dest='from_product',
+        parser.add_option('--from_product', dest='from_product',
                                action="callback", callback=self.store_from_product, type="string",
                                help=_("determines product from which the packages/errata/repositories are picked"))
 
         for ct in self.productDependentContent:
-            self.parser.add_option('--add_' + ct, dest='add_' + ct,
+            parser.add_option('--add_' + ct, dest='add_' + ct,
                                    action="callback", callback=self.store_item_with_product, type="string",
                                    help=_(ct + " to add to the changeset"))
-            self.parser.add_option('--remove_' + ct, dest='remove_' + ct,
+            parser.add_option('--remove_' + ct, dest='remove_' + ct,
                                    action="callback", callback=self.store_item_with_product, type="string",
                                    help=_(ct + " to remove from the changeset"))
         self.reset_items()
@@ -340,8 +340,8 @@ class UpdateContent(ChangesetAction):
             self.items['add_' + ct] = []
             self.items['remove_' + ct] = []
 
-    def check_options(self):
-        self.validator.require(('name', 'org', 'env'))
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'env'))
 
     def run(self):
         #reset stored patch items (neccessary for shell mode)
@@ -380,16 +380,16 @@ class UpdateContent(ChangesetAction):
 class Delete(ChangesetAction):
     description = _('deletes a changeset')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
 
-    def check_options(self):
-        self.validator.require(('name', 'org', 'env'))
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'env'))
 
     def run(self):
         csName = self.get_option('name')
@@ -407,16 +407,16 @@ class Delete(ChangesetAction):
 class Promote(ChangesetAction):
     description = _('promotes a changeset to the next environment')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
 
-    def check_options(self):
-        self.validator.require(('name', 'org', 'env'))
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'env'))
 
     def run(self):
         csName = self.get_option('name')

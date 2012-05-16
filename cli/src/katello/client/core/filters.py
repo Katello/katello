@@ -37,12 +37,12 @@ class FilterAction(Action):
 class List(FilterAction):
     description = _('list all filters')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name (required)"))
 
-    def check_options(self):
-        self.validator.require('org')
+    def check_options(self, validator):
+        validator.require('org')
 
     def run(self):
         org = self.get_option('org')
@@ -60,19 +60,19 @@ class List(FilterAction):
 class Create(FilterAction):
     description = _('create a filter')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                    help=_("organization name (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                       help=_("filter name (required)"))
-        self.parser.add_option('--description', dest='description',
+        parser.add_option('--description', dest='description',
                     help=_("description"))
-        self.parser.add_option('--packages', dest='packages',
+        parser.add_option('--packages', dest='packages',
                     help=_("comma-separated list of package names/nvres"))
 
 
-    def check_options(self):
-        self.validator.require(('org', 'name'))
+    def check_options(self, validator):
+        validator.require(('org', 'name'))
 
     def run(self):
         org = self.get_option('org')
@@ -93,14 +93,14 @@ class Create(FilterAction):
 class Delete(FilterAction):
     description = _('delete a filter')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                    help=_("organization name (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                       help=_("filter name (required)"))
 
-    def check_options(self):
-        self.validator.require(('org', 'name'))
+    def check_options(self, validator):
+        validator.require(('org', 'name'))
 
     def run(self):
         org = self.get_option('org')
@@ -113,14 +113,14 @@ class Delete(FilterAction):
 class Info(FilterAction):
     description = _('filter info')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                      help=_("filter name (required)"))
 
-    def check_options(self):
-        self.validator.require(('org', 'name'))
+    def check_options(self, validator):
+        validator.require(('org', 'name'))
 
     def run(self):
         org = self.get_option('org')
@@ -142,16 +142,16 @@ class Info(FilterAction):
 class AddPackage(FilterAction):
     description = _('Add a package to filter')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                      help=_("filter name (required)"))
-        self.parser.add_option('--package', dest='package_id',
+        parser.add_option('--package', dest='package_id',
                        help=_("package id (required)"))
 
-    def check_options(self):
-        self.validator.require(('org', 'name', 'package_id'))
+    def check_options(self, validator):
+        validator.require(('org', 'name', 'package_id'))
 
     def run(self):
         org = self.get_option('org')
@@ -167,16 +167,16 @@ class AddPackage(FilterAction):
 class RemovePackage(FilterAction):
     description = _('Remove a package from filter')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                      help=_("filter name (required)"))
-        self.parser.add_option('--package', dest='package_id',
+        parser.add_option('--package', dest='package_id',
                        help=_("package id (required)"))
 
-    def check_options(self):
-        self.validator.require(('org', 'name', 'package_id'))
+    def check_options(self, validator):
+        validator.require(('org', 'name', 'package_id'))
 
     def run(self):
         org = self.get_option('org')

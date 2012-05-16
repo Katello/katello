@@ -71,17 +71,11 @@ class CLIOptionTestCase(CLITestCase):
     allowed_options = []
     disallowed_options = []
 
-
-    def mock_options(self):
-        self.mock(self.action, 'get_option').side_effect = self.mocked_get_option
-
-    def mock_parser(self):
-        self.mock(self.action.parser, 'print_help')
-        self.mock(self.action.parser, 'error').side_effect = OptionParserExitError
-
-    def mocked_get_option(self, opt, default=None):
-        return getattr(self.action.opts, opt, default)
-
+    def get_silent_parser(self):
+        parser = self.action.create_parser()
+        self.mock(parser, 'print_help')
+        self.mock(parser, 'error').side_effect = OptionParserExitError
+        return parser
 
     def assert_options_allowed(self, *options):
         if not self.__options_pass(*options):
@@ -92,9 +86,8 @@ class CLIOptionTestCase(CLITestCase):
             self.fail("\nCombination of options (%s) was expected NOT to be allowed in action %s." % (', '.join(options), self.__get_action_name()))
 
     def __options_pass(self, *options):
-        self.mock(self.action, 'load_saved_options')
         try:
-            self.action.process_options(list(options))
+            self.action.process_options(self.get_silent_parser(), list(options))
             return True
         except OptionParserExitError:
             return False
@@ -102,8 +95,6 @@ class CLIOptionTestCase(CLITestCase):
     def test_options(self):
         if self.__get_class_name(self) == "CLIOptionTestCase":
             return
-        self.mock_parser()
-        self.mock_options()
         for options in self.allowed_options:
             self.assert_options_allowed(*options)
         for options in self.disallowed_options:
@@ -121,13 +112,16 @@ class CLIActionTestCase(CLITestCase):
 
     _options = {}
 
-    def mock_printer(self):
-        printer = self.mock(self.action, 'printer')
+    def get_silent_printer(self):
+        printer = self.action.create_printer(None)
         printer.set_header = Mock()
         printer.add_column = Mock()
         printer.print_item = Mock()
         printer.print_items = Mock()
         return printer
+
+    def mock_printer(self):
+        self.mock(self.action, 'printer', self.get_silent_printer())
 
     def mock_options(self, options):
         self.mock(self.action, 'get_option').side_effect = self.mocked_get_option

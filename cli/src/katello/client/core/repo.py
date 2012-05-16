@@ -69,23 +69,23 @@ class SingleRepoAction(RepoAction):
 
     select_by_env = False
 
-    def setup_parser(self):
-        self.set_repo_select_options(self.select_by_env)
+    def setup_parser(self, parser):
+        self.set_repo_select_options(parser, self.select_by_env)
 
-    def check_options(self):
-        self.check_repo_select_options()
+    def check_options(self, validator):
+        self.check_repo_select_options(validator)
 
-    def set_repo_select_options(self, select_by_env=True):
-        self.parser.add_option('--id', dest='id', help=_("repository id"))
-        self.parser.add_option('--name', dest='name', help=_("repository name"))
-        self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--product', dest='product', help=_("product name eg: fedora-14"))
+    def set_repo_select_options(self, parser, select_by_env=True):
+        parser.add_option('--id', dest='id', help=_("repository id"))
+        parser.add_option('--name', dest='name', help=_("repository name"))
+        parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com"))
+        parser.add_option('--product', dest='product', help=_("product name eg: fedora-14"))
         if select_by_env:
-            self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
+            parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
 
-    def check_repo_select_options(self):
-        if not self.validator.exists('id'):
-            self.validator.require(('name', 'org', 'product'))
+    def check_repo_select_options(self, validator):
+        if not validator.exists('id'):
+            validator.require(('name', 'org', 'product'))
 
     def get_repo(self, includeDisabled=False):
         repoId   = self.get_option('id')
@@ -113,22 +113,22 @@ class Create(RepoAction):
 
     description = _('create a repository at a specified URL')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                help=_("repository name to assign (required)"))
-        self.parser.add_option("--url", dest="url",
+        parser.add_option("--url", dest="url",
                                help=_("url path to the repository (required)"))
-        self.parser.add_option('--product', dest='prod',
+        parser.add_option('--product', dest='prod',
                                help=_("product name (required)"))
-        self.parser.add_option('--gpgkey', dest='gpgkey',
+        parser.add_option('--gpgkey', dest='gpgkey',
                                help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
-        self.parser.add_option('--nogpgkey', action='store_true',
+        parser.add_option('--nogpgkey', action='store_true',
                                help=_("Don't assign a GPG key to the repository."))
 
-    def check_options(self):
-        self.validator.require(('name', 'org', 'prod', 'url'))
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'prod', 'url'))
 
     def run(self):
         name     = self.get_option('name')
@@ -148,20 +148,20 @@ class Discovery(RepoAction):
 
     description = _('discovery repositories contained within a URL')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                help=_("repository name prefix to add to all the discovered repositories (required)"))
-        self.parser.add_option("--url", dest="url",
+        parser.add_option("--url", dest="url",
                                help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
-        self.parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
+        parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
                                help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
-        self.parser.add_option('--product', dest='prod',
+        parser.add_option('--product', dest='prod',
                                help=_("product name (required)"))
 
-    def check_options(self):
-        self.validator.require(('name', 'org', 'prod', 'url'))
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'prod', 'url'))
 
     def run(self):
         name     = self.get_option('name')
@@ -321,11 +321,11 @@ class Update(SingleRepoAction):
     description = _('updates repository attributes')
     select_by_env = True
 
-    def setup_parser(self):
-        super(Update, self).setup_parser()
-        self.parser.add_option('--gpgkey', dest='gpgkey',
+    def setup_parser(self, parser):
+        super(Update, self).setup_parser(parser)
+        parser.add_option('--gpgkey', dest='gpgkey',
                                help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
-        self.parser.add_option('--nogpgkey', action='store_true',
+        parser.add_option('--nogpgkey', action='store_true',
                                help=_("Don't assign a GPG key to the repository."))
 
     def run(self):
@@ -400,18 +400,18 @@ class List(RepoAction):
 
     description = _('list repos within an organization')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
             help=_("organization name eg: ACME_Corporation (required)"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
             help=_("environment name eg: production (default: Library)"))
-        self.parser.add_option('--product', dest='product',
+        parser.add_option('--product', dest='product',
             help=_("product name eg: fedora-14"))
-        self.parser.add_option('--include_disabled', action="store_true", dest='disabled',
+        parser.add_option('--include_disabled', action="store_true", dest='disabled',
             help=_("list also disabled repositories"))
 
-    def check_options(self):
-        self.validator.require('org')
+    def check_options(self, validator):
+        validator.require('org')
 
     def run(self):
         orgName = self.get_option('org')
@@ -468,9 +468,9 @@ class ListFilters(SingleRepoAction):
     description = _('list filters of a repository')
     select_by_env = False
 
-    def setup_parser(self):
-        super(ListFilters, self).setup_parser()
-        self.parser.add_option('--inherit', dest='inherit', action="store_true", default=False,
+    def setup_parser(self, parser):
+        super(ListFilters, self).setup_parser(parser)
+        parser.add_option('--inherit', dest='inherit', action="store_true", default=False,
             help=_("prints also filters assigned to repository's product."))
 
     def run(self):
@@ -503,13 +503,13 @@ class AddRemoveFilter(SingleRepoAction):
         super(AddRemoveFilter, self).__init__()
         self.addition = addition
 
-    def setup_parser(self):
-        self.set_repo_select_options(False)
-        self.parser.add_option('--filter', dest='filter', help=_("filter name (required)"))
+    def setup_parser(self, parser):
+        self.set_repo_select_options(parser, False)
+        parser.add_option('--filter', dest='filter', help=_("filter name (required)"))
 
-    def check_options(self):
-        self.check_repo_select_options()
-        self.validator.require('filter')
+    def check_options(self, validator):
+        self.check_repo_select_options(validator)
+        validator.require('filter')
 
     def run(self):
         filter_name  = self.get_option('filter')

@@ -40,21 +40,21 @@ class List(DistributionAction):
 
     description = _('list distributions in a repository')
 
-    def setup_parser(self):
-        self.parser.add_option('--repo_id', dest='repo_id',
+    def setup_parser(self, parser):
+        parser.add_option('--repo_id', dest='repo_id',
                       help=_("repository id"))
-        self.parser.add_option('--repo', dest='repo',
+        parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                       help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
                       help=_("environment name eg: production (default: Library)"))
-        self.parser.add_option('--product', dest='product',
+        parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
 
-    def check_options(self):
-        if not self.validator.exists('repo_id'):
-            self.validator.require(('repo', 'org', 'product'))
+    def check_options(self, validator):
+        if not validator.exists('repo_id'):
+            validator.require(('repo', 'org', 'product'))
 
     def run(self):
         repoId   = self.get_option('repo_id')
@@ -85,15 +85,15 @@ class Info(DistributionAction):
 
     description = _('list information about a distribution')
 
-    def setup_parser(self):
+    def setup_parser(self, parser):
         # always provide --id option for create, even on registered clients
-        self.parser.add_option('--repo_id', dest='repo_id',
+        parser.add_option('--repo_id', dest='repo_id',
                       help=_("repository id (required)"))
-        self.parser.add_option('--id', dest='id',
+        parser.add_option('--id', dest='id',
                                help=_("distribution id eg: ks-rh-noarch (required)"))
 
-    def check_options(self):
-        self.validator.require(('repo_id', 'id'))
+    def check_options(self, validator):
+        validator.require(('repo_id', 'id'))
 
     def run(self):
         repoId  = self.get_option('repo_id')

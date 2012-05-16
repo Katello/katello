@@ -41,29 +41,29 @@ class List(ErrataAction):
 
     description = _('list all errata for a repo')
 
-    def setup_parser(self):
-        self.parser.add_option('--repo_id', dest='repo_id',
+    def setup_parser(self, parser):
+        parser.add_option('--repo_id', dest='repo_id',
                       help=_("repository id"))
-        self.parser.add_option('--repo', dest='repo',
+        parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                       help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
                       help=_("environment name eg: production (default: Library)"))
-        self.parser.add_option('--product', dest='product',
+        parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
 
 
-        self.parser.add_option('--type', dest='type',
+        parser.add_option('--type', dest='type',
                       help=_("filter errata by type eg: enhancements"))
-        self.parser.add_option('--severity', dest='severity',
+        parser.add_option('--severity', dest='severity',
                       help=_("filter errata by severity"))
 
-    def check_options(self):
-        if not self.validator.exists('repo_id'):
-            self.validator.require('org')
-        if self.validator.exists('repo'):
-            self.validator.require(('org', 'product'))
+    def check_options(self, validator):
+        if not validator.exists('repo_id'):
+            validator.require('org')
+        if validator.exists('repo'):
+            validator.require(('org', 'product'))
 
     def run(self):
         repo_id   = self.get_option('repo_id')
@@ -98,14 +98,14 @@ class List(ErrataAction):
 class SystemErrata(ErrataAction):
     description = _("list errata for a system")
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                    help=_("system name (required)"))
 
-    def check_options(self):
-        self.validator.require(('org', 'name'))
+    def check_options(self, validator):
+        validator.require(('org', 'name'))
 
     def run(self):
         systemApi = SystemAPI()
@@ -130,24 +130,24 @@ class Info(ErrataAction):
 
     description = _('information about an errata')
 
-    def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
+    def setup_parser(self, parser):
+        parser.add_option('--id', dest='id',
                                help=_("errata id, string value (required)"))
-        self.parser.add_option('--repo_id', dest='repo_id',
+        parser.add_option('--repo_id', dest='repo_id',
                       help=_("repository id"))
-        self.parser.add_option('--repo', dest='repo',
+        parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                       help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
                       help=_("environment name eg: production (default: Library)"))
-        self.parser.add_option('--product', dest='product',
+        parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
 
-    def check_options(self):
-        self.validator.require('id')
-        if not self.validator.exists('repo_id'):
-            self.validator.require(('repo', 'org', 'product'))
+    def check_options(self, validator):
+        validator.require('id')
+        if not validator.exists('repo_id'):
+            validator.require(('repo', 'org', 'product'))
 
     def run(self):
         errId    = self.get_option('id')

@@ -46,12 +46,12 @@ class List(EnvironmentAction):
 
     description = _('list known environments')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
 
-    def check_options(self):
-        self.validator.require('org')
+    def check_options(self, validator):
+        validator.require('org')
 
     def run(self):
         orgName = self.get_option('org')
@@ -73,14 +73,14 @@ class Info(EnvironmentAction):
 
     description = _('list a specific environment')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                        help=_("environment name eg: foo.example.com (required)"))
 
-    def check_options(self):
-        self.validator.require(('org', 'name'))
+    def check_options(self, validator):
+        validator.require(('org', 'name'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -104,19 +104,19 @@ class Create(EnvironmentAction):
 
     description = _('create an environment')
 
-    def setup_parser(self):
-        self.parser.add_option("--description", dest="description",
+    def setup_parser(self, parser):
+        parser.add_option("--description", dest="description",
                                help=_("environment description eg: foo's environment"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                help=_("environment name (required)"))
-        self.parser.add_option('--prior', dest='prior',
+        parser.add_option('--prior', dest='prior',
                                help=_("name of prior environment (required)"))
 
 
-    def check_options(self):
-        self.validator.require(('org', 'name', 'prior'))
+    def check_options(self, validator):
+        validator.require(('org', 'name', 'prior'))
 
 
     def run(self):
@@ -141,19 +141,19 @@ class Update(EnvironmentAction):
     description =  _('update an environment')
 
 
-    def setup_parser(self):
-        self.parser.add_option("--description", dest="description",
+    def setup_parser(self, parser):
+        parser.add_option("--description", dest="description",
                                help=_("environment description eg: foo's environment"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--prior', dest='prior',
+        parser.add_option('--prior', dest='prior',
                                help=_("name of prior environment"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                help=_("environment name (required)"))
 
 
-    def check_options(self):
-        self.validator.require(('org', 'name'))
+    def check_options(self, validator):
+        validator.require(('org', 'name'))
 
 
     def run(self):
@@ -178,14 +178,14 @@ class Delete(EnvironmentAction):
 
     description = _('delete an environment')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("environment name eg: foo.example.com (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
 
-    def check_options(self):
-        self.validator.require(('name', 'org'))
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
 
     def run(self):

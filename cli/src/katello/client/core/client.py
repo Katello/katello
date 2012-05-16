@@ -37,14 +37,14 @@ class Remember(ClientAction):
 
     description = _('save an option to the client config')
 
-    def setup_parser(self):
-        self.parser.add_option('--option', dest='option',
+    def setup_parser(self, parser):
+        parser.add_option('--option', dest='option',
                        help=_("name of the option to be saved (e.g. org, environment, provider, etc) (required)"))
-        self.parser.add_option('--value', dest='value',
+        parser.add_option('--value', dest='value',
                        help=_("value to be store under specified option (required)"))
 
-    def check_options(self):
-        self.validator.require(('option', 'value'))
+    def check_options(self, validator):
+        validator.require(('option', 'value'))
 
     def run(self):
         option = self.opts.option
@@ -70,12 +70,12 @@ class Forget(ClientAction):
 
     description = _('remove an option from the client config')
 
-    def setup_parser(self):
-        self.parser.add_option('--option', dest='option',
+    def setup_parser(self, parser):
+        parser.add_option('--option', dest='option',
                        help=_("name of the option to be deleted (required)"))
 
-    def check_options(self):
-        self.validator.require('option')
+    def check_options(self, validator):
+        validator.require('option')
 
     def run(self):
         option = self.opts.option
@@ -94,10 +94,10 @@ class SavedOptions(ClientAction):
 
     description = _('list options saved in the client config')
 
-    def setup_parser(self):
+    def setup_parser(self, parser):
         pass
 
-    def check_options(self):
+    def check_options(self, validator):
         pass
 
     def run(self):

@@ -60,12 +60,12 @@ class List(GpgKeyAction):
 
     description = _('list all GPG keys')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
 
-    def check_options(self):
-        self.validator.require('org')
+    def check_options(self, validator):
+        validator.require('org')
 
     def run(self):
         orgName = self.get_option('org')
@@ -88,14 +88,14 @@ class Info(GpgKeyAction):
 
     description = _('show information about a gpg key')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
 
-    def check_options(self):
-        self.validator.require(('name', 'org'))
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         keyName = self.get_option('name')
@@ -124,17 +124,17 @@ class Create(GpgKeyAction):
 
     description = _('create a gpg key')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--file', dest='file',
+        parser.add_option('--file', dest='file',
                                help=_("file with public GPG key, if not\
                                  specified, standard input will be used"))
 
-    def check_options(self):
-        self.validator.require(('name', 'org'))
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -156,21 +156,21 @@ class Update(GpgKeyAction):
 
     description = _('update an activation key')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--new_name', dest='new_name',
+        parser.add_option('--new_name', dest='new_name',
                               help=_("new template name"))
-        self.parser.add_option('--file', dest='file',
+        parser.add_option('--file', dest='file',
                                help=_("file with public GPG key"))
-        self.parser.add_option('--new_content', dest='new_content', action='store_true',
+        parser.add_option('--new_content', dest='new_content', action='store_true',
                                help=_("prompt for new content of the key"))
 
 
-    def check_options(self):
-        self.validator.require(('name', 'org'))
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -199,14 +199,14 @@ class Delete(GpgKeyAction):
 
     description = _('delete an gpg key')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
 
-    def check_options(self):
-        self.validator.require(('name', 'org'))
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         keyName = self.get_option('name')
