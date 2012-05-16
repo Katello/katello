@@ -614,6 +614,48 @@ module Pulp
         self.post "#{path(id)}delete_consumer/", consumer_id.to_json, self.default_headers
       end
 
+      def install_packages id, package_names
+        url = path(id) + "installpackages/"
+        attrs = {:packagenames => package_names}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def uninstall_packages id, package_names
+        url = path(id) + "uninstallpackages/"
+        attrs = {:packagenames => package_names}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def update_packages id, package_names
+        url = path(id) + "updatepackages/"
+        attrs = {:packagenames => package_names}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def install_package_groups id, package_groups
+        url = path(id) + "installpackagegroups/"
+        attrs = {:grpids => package_groups}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def uninstall_package_groups id, package_groups
+        url = path(id) + "uninstallpackagegroups/"
+        attrs = {:grpids => package_groups}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def install_errata id, errata_ids
+        url = path(id) + "installerrata/"
+        attrs = { :errataids => errata_ids }
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
       def path(id=nil)
         groups = self.path_with_prefix("/consumergroups/")
         id.nil? ? groups : groups + "#{id}/"
