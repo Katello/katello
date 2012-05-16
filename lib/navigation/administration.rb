@@ -42,7 +42,7 @@ module Navigation
 
     def menu_administration
       {:key => :admin,
-       :name => _("Administration"),
+       :name => _("Administer"),
         :url => :sub_level,
         :options => {:class=>'operations top_level', "data-menu"=>"operations"},
         :if => :sub_level,
