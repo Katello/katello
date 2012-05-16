@@ -33,6 +33,7 @@ describe Api::TasksController do
     @task.stub(:organization).and_return(@organization)
     @task.stub(:to_json).and_return({})
     @task.stub(:refresh).and_return({})
+    @task.stub(:user).and_return({})
     TaskStatus.stub(:where).and_return(@task)
     TaskStatus.stub!(:find_by_uuid).and_return(@task)
   end
