@@ -250,6 +250,74 @@ describe Api::SystemGroupsController do
        end
      end
 
+     describe "POST add environment" do
+       let(:action) {:add_environments}
+       let(:req) { post :add_environments, :id=>@group.id, :organization_id=>@org.cp_key,
+                        :system_group=>{:environment_ids=>[@environment.id]}}
+       let(:authorized_user) do
+         user_with_permissions { |u| u.can(:update, :system_groups, @group.id, @org) }
+       end
+       let(:unauthorized_user) do
+         user_without_permissions
+       end
+       it_should_behave_like "protected action"
+
+       it "should actually add an environment" do
+         post :add_environments, :organization_id=>@org.cp_key, :id=>@group.id,
+              :system_group=>{:environment_ids=>[@environment.id]}
+
+         response.should be_success
+         SystemGroup.find(@group.id).environments.should include @environment
+       end
+
+
+       describe "POST remove environment" do
+         let(:action) {:remove_environments}
+         let(:req) { post :remove_environments, :id=>@group.id, :organization_id=>@org.cp_key,
+                          :system_group=>{:environment_ids=>[@environment.id]}}
+         let(:authorized_user) do
+           user_with_permissions { |u| u.can(:update, :system_groups, @group.id, @org) }
+         end
+         let(:unauthorized_user) do
+           user_without_permissions
+         end
+         it_should_behave_like "protected action"
+
+         it "should actually remove an environment" do
+           @group.environments = [@environment]
+           @group.save!
+           post :remove_environments, :organization_id=>@org.cp_key, :id=>@group.id,
+                :system_group=>{:environment_ids=>[@environment.id]}
+
+           response.should be_success
+           SystemGroup.find(@group.id).environments.should_not include @environment
+         end
+       end
+
+       describe "POST clear environment" do
+         let(:action) {:clear_environments}
+         let(:req) { post :clear_environments, :id=>@group.id, :organization_id=>@org.cp_key}
+         let(:authorized_user) do
+           user_with_permissions { |u| u.can(:update, :system_groups, @group.id, @org) }
+         end
+         let(:unauthorized_user) do
+           user_without_permissions
+         end
+         it_should_behave_like "protected action"
+
+         it "should actually clear an environment" do
+           @group.environments = [@environment]
+           @group.save!
+           post :clear_environments, :organization_id=>@org.cp_key, :id=>@group.id
+           response.should be_success
+           SystemGroup.find(@group.id).environments.should == []
+         end
+       end
+
+
+     end
+
+
 
      describe "DELETE" do
        let(:action) {:destroy}

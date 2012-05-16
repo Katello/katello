@@ -13,8 +13,11 @@
 class Api::SystemGroupsController < Api::ApiController
 
   before_filter :find_group, :only => [:show, :update, :destroy, :lock, :unlock,
-                                       :add_systems, :remove_systems, :systems]
-  before_filter :find_organization, :only => [:index, :create]
+                                       :add_systems, :remove_systems, :systems, :add_environments,
+                                       :remove_environments, :clear_environments]
+  before_filter :find_organization, :only => [:index, :create, :add_environments, :remove_environments]
+  before_filter :find_environments, :only => [:add_environments, :remove_environments]
+
   before_filter :authorize
 
   def rules
@@ -33,7 +36,10 @@ class Api::SystemGroupsController < Api::ApiController
       :add_systems  => edit_perm,
       :remove_systems => edit_perm,
       :lock        => locking_perm,
-      :unlock      => locking_perm
+      :unlock      => locking_perm,
+      :add_environments  => edit_perm,
+      :remove_environments => edit_perm,
+      :clear_environments => edit_perm
     }
   end
 
@@ -42,7 +48,9 @@ class Api::SystemGroupsController < Api::ApiController
       :create => {:system_group=>[:name, :description, :system_ids, :max_systems]},
       :update =>  {:system_group=>[:name, :description, :system_ids, :max_systems]},
       :add_systems => {:system_group=>[:system_ids]},
-      :remove_systems => {:system_group=>[:system_ids]}
+      :remove_systems => {:system_group=>[:system_ids]},
+      :add_environments => {:system_group=>[:environment_ids]},
+      :remove_environments => {:system_group=>[:environment_ids]}
     }
   end
 
@@ -55,7 +63,8 @@ class Api::SystemGroupsController < Api::ApiController
   end
 
   def show
-    render :json => @group
+    envs = @group.environments.collect{|e| {:name=>e.name, :id=>e.id}}
+    render :json => @group.as_json.merge({:environments=>envs})
   end
 
   def update
@@ -65,7 +74,7 @@ class Api::SystemGroupsController < Api::ApiController
     end
     @group.attributes = grp_param.slice(:name, :description, :system_ids)
     @group.save!
-    render :json => @group
+    show
   end
 
   def systems
@@ -87,6 +96,25 @@ class Api::SystemGroupsController < Api::ApiController
     @group.save!
     systems
   end
+
+  def add_environments
+    @group.environments = (@group.environments + @environments).uniq
+    @group.save!
+    show
+  end
+
+  def remove_environments
+    @group.environments = @group.environments - @environments
+    @group.save!
+    show
+  end
+
+  def clear_environments
+    @group.environments = []
+    @group.save!
+    show
+  end
+
 
   def  lock
     @group.locked = true
@@ -122,6 +150,10 @@ class Api::SystemGroupsController < Api::ApiController
   def find_group
     @group = SystemGroup.where(:id=>params[:id]).first
     raise HttpErrors::NotFound, _("Couldn't find system group '#{params[:id]}'") if @group.nil?
+  end
+
+  def find_environments
+    @environments = KTEnvironment.where(:id=>params[:system_group][:environment_ids]).where(:organization_id=>@organization)
   end
 
   def system_uuids_to_ids  ids
