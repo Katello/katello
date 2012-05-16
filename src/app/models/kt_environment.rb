@@ -285,12 +285,15 @@ class KTEnvironment < ActiveRecord::Base
     User.allowed_to?(CONTENTS_READABLE, :environments, ids, org, true)
   end
 
-
   def viewable_for_promotions?
     return false if !AppConfig.katello?
     User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, self.id, self.organization)
   end
 
+  def any_operation_readable?
+    return false if !AppConfig.katello?
+    User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) || self.organization.systems_readable?
+  end
 
   def changesets_promotable?
     return false if !AppConfig.katello?
