@@ -49,6 +49,7 @@ BuildArch:      noarch
 Summary:        Common bits for all Katello instances
 Requires:       httpd
 Requires:       mod_ssl
+Requires:       mod_authz_ldap
 Requires:       openssl
 Requires:       elasticsearch
 Requires:       rubygems
@@ -121,6 +122,11 @@ Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp
 Requires:       candlepin-tomcat6
+# the following backend engine deps are required by <katello-configure>
+Requires:       mongodb mongodb-server
+Requires:       qpid-cpp-server qpid-cpp-client qpid-cpp-client-ssl qpid-cpp-server-ssl
+# </katello-configure>
+
 
 %description all
 This is the Katello meta-package.  If you want to install Katello and all
