@@ -13,31 +13,33 @@
 
 class ChangesetErratumValidator < ActiveModel::Validator
   def validate(record)
-    from_env = record.changeset.environment.prior
-    to_env   = record.changeset.environment
-    product = Product.find(record.product_id)
+    record.errors[:base] << _("Erratum '%s' doesn't belong to the specified product!") %
+        record.errata_id and return if record.repositories.empty?
+    record.errors[:base] << _("Repository of the erratum '%s' has not been promoted into the target environment!") %
+        record.errata_id and return if record.promotable_repositories.empty?
 
-    record.errors[:base] << _("Erratum '%s' doesn't belong to the specified product!") % record.errata_id and return if record.repositories.empty?
-    record.errors[:base] << _("Repository of the erratum '%s' has not been promoted into the target environment!") % record.errata_id and return if record.promotable_repositories.empty?
-
-    unfiltered_repositories = record.promotable_repositories.delete_if {|repo| record.blocked_by_filters?((repo.filters + repo.product.filters).uniq)}
-    record.errors[:base] << _("Filters assigned to repository or product of erratum '%s' block it from promotion!") % record.errata_id and return if unfiltered_repositories.empty?
+    unfiltered_repositories = record.promotable_repositories.delete_if do |repo|
+      record.blocked_by_filters?((repo.filters + repo.product.filters).uniq)
+    end
+    record.errors[:base] << _("Filters assigned to repository or product of erratum '%s' block it from promotion!") %
+        record.errata_id and return if unfiltered_repositories.empty?
   end
 end
 
 class ChangesetErratum < ActiveRecord::Base
   include Authorization
 
-  belongs_to :changeset, :inverse_of=>:errata
+  belongs_to :changeset, :inverse_of => :errata
   belongs_to :product
   validates :display_name, :length => { :maximum => 255 }
+  validates :errata_id, :uniqueness => { :scope => :changeset_id }
   validates_with ChangesetErratumValidator
 
   def repositories
     return @repos if not @repos.nil?
 
     from_env = self.changeset.environment.prior
-    @repos = []
+    @repos   = []
 
     self.product.repos(from_env).each do |repo|
       @repos << repo if repo.has_erratum? self.errata_id
@@ -56,12 +58,12 @@ class ChangesetErratum < ActiveRecord::Base
   end
 
   def blocked_by_filters? filters
-    package_filters = filters.map{|f| f.package_list}.flatten(1).uniq
+    package_filters = filters.map { |f| f.package_list }.flatten(1).uniq
     package_filters.each do |filter|
-        re = Regexp.new(filter)
-        if erratum_pacakges.any? {|pack| re =~ pack["filename"] }
-            return true
-        end
+      re = Regexp.new(filter)
+      if erratum_pacakges.any? { |pack| re =~ pack["filename"] }
+        return true
+      end
     end
     return false
   end
@@ -73,7 +75,7 @@ class ChangesetErratum < ActiveRecord::Base
 
   private
   def erratum_pacakges
-    Glue::Pulp::Errata::find(self.errata_id).pkglist.map{|list| list["packages"]}.flatten(1).uniq
+    Glue::Pulp::Errata::find(self.errata_id).pkglist.map { |list| list["packages"] }.flatten(1).uniq
   end
 
 end

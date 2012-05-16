@@ -14,13 +14,18 @@
 KT.system = KT.system || {};
 
 KT.system.errata = function() {
-    var system_errata_container = $('#system_errata'),
-    	system_id = system_errata_container.data('system_id'),
-    	table_body = system_errata_container.find('tbody'),
-    	load_more = $('#load_more_errata'),
+    var system_errata_container = undefined,
+        system_id = undefined,
+        table_body = undefined,
+        load_more = undefined,
         task_list = {},
         actions_updater,
         init = function(editable){
+            system_errata_container = $('#system_errata');
+            system_id = system_errata_container.data('system_id');
+            table_body = system_errata_container.find('tbody');
+            load_more = $('#load_more_errata');
+
             register_events();
 
             // Not all users have permission to interact with errata; those that don't
