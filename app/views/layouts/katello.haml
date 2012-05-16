@@ -22,13 +22,13 @@
     - section_id = "generic"
   %body{:id => section_id}
 
-= content_for(:content) do   
+= content_for(:content) do
   - if not current_user
     #formwindow
       = yield
   - else
     %nav.subnav#subnav
-      = render_menu(2..3)
+      = render_main_sub_menu
     .inner.container_16
       = yield
 
