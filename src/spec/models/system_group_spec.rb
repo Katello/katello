@@ -137,6 +137,12 @@ describe SystemGroup do
 
 
   context "changing environments" do
+    before :each do
+      @environment2 = KTEnvironment.create!(:name=>"DEV2", :prior=>@org.library, :organization=>@org)
+      @akey = ActivationKey.create!(:name => "somekey", :description => 'adesc', :organization => @org,
+                                        :environment => @environment)
+    end
+
     it "should allow an environment to be set" do
       @group.environments = [@environment]
       @group.save!
@@ -158,6 +164,33 @@ describe SystemGroup do
       @group.environments << @environment
       @group.save!
       lambda{@group.db_environment_ids}.should raise_exception
+    end
+
+    it "should allow environment to be set if activation key has same environment" do
+      @akey.system_groups << @group
+      @akey.save!
+      @group.environments << @environment
+      @group.save!
+      SystemGroup.find(@group.id).environments.should include @environment
+    end
+
+    it "should not allow environment to be set if activation key has different environment" do
+      @akey.system_groups << @group
+      @akey.save!
+      @group = SystemGroup.find(@group.id)
+      lambda{
+        @group.environments << @environment2
+        @group.save!  }.should raise_exception
+
+      SystemGroup.find(@group.id).environments.should_not include @environment2
+    end
+
+    it "should allow environment to be set to [] if activation key has an environment" do
+      @akey.system_groups << @group
+      @akey.save!
+      @group.environments = []
+      @group.save!
+      SystemGroup.find(@group.id).environments.should_not include @environment
     end
   end
 
@@ -213,6 +246,13 @@ describe SystemGroup do
 
     it "should not allow an environment to be added if its systems are not in it" do
       lambda{ @group.environments = [@environment2]
+              @group.save!}.should raise_exception
+      SystemGroup.find(@group.id).systems.should include @system
+      SystemGroup.find(@group.id).environments.should_not include @environment2
+    end
+
+    it "should not allow an environment to be added via append if its systems are not in it" do
+      lambda{ @group.environments << @environment2
               @group.save!}.should raise_exception
       SystemGroup.find(@group.id).systems.should include @system
       SystemGroup.find(@group.id).environments.should_not include @environment2

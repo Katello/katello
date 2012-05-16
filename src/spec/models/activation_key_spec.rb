@@ -12,6 +12,7 @@
 
 require 'spec_helper'
 include OrchestrationHelper
+include SystemHelperMethods
 
 describe ActivationKey do
 
@@ -20,6 +21,8 @@ describe ActivationKey do
 
   before(:each) do
     disable_org_orchestration
+    disable_consumer_group_orchestration
+
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.library.id, :organization => @organization)
     @environment_2 = KTEnvironment.create!(:name => 'test', :prior => @environment_1.id, :organization => @organization)
@@ -117,6 +120,27 @@ describe ActivationKey do
       b.system_template_id.should == @system_template_2.id
     end
   end
+
+  describe "adding systems groups" do
+    before(:each) do
+      @group = SystemGroup.create!(:name=>"TestSystemGroup", :organization=>@organization)
+    end
+
+    it "should add groups" do
+      @akey.system_groups << @group
+      @akey.save!
+      ActivationKey.find(@akey.id).system_groups.should include @group
+    end
+
+    it "Should not allow groups to be added that conflict with the environment" do
+      @group.environments = [@environment_2]
+      @group.save!
+      lambda{@akey.system_groups << @group
+             @akey.save!}.should raise_exception
+    end
+  end
+
+
 
   describe "pools in a activation key" do
 

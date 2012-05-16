@@ -166,11 +166,19 @@ class SystemGroup < ActiveRecord::Base
 
 
   def environments
-    @cached_environments ||= db_environments
+    @cached_environments ||= db_environments.all #.all to ensure we don't refer to the AR relation
   end
 
   def environments=(values)
     @cached_environments = values
+  end
+
+  def environment_key_conflicts
+    if self.environments.empty?
+      []
+    else
+      self.activation_keys.select{|k| !self.environments.include?(k.environment)}
+    end
   end
 
 
@@ -183,10 +191,17 @@ class SystemGroup < ActiveRecord::Base
   def save_system_environments
     if @cached_environments #there was an env modification
       if !@cached_environments.empty?
+        #verify that systems match modified environments
         sys_envs = self.systems.collect{|s| s.environment_id}.uniq
         group_envs = @cached_environments.collect{|e| e.id}
         if (sys_envs  - group_envs).length > 0
           raise _("Could not modify environments. System group membership does not match new environment association.")
+        end
+
+        #verify that keys match modified environments
+        keys = self.environment_key_conflicts
+        if !keys.empty?
+          raise _("Could not modify environments.  One or more associated activation keys (%s) would become invalid.") % keys.collect{|k| k.name}.join(',')
         end
       end
       self.db_environments = self.environments
