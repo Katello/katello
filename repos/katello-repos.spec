@@ -1,6 +1,6 @@
 
 Name:           katello-repos
-Version:        0.2.2
+Version:        0.2.4
 Release:        1%{?dist}
 Summary:        Definition of yum repositories for Katello
 
@@ -66,6 +66,13 @@ rm -rf %{buildroot}
 %{_sysconfdir}/yum.repos.d/pulp-testing.repo
 
 %changelog
+* Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.4-1
+- putting releasever instead of 6Server
+
+* Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.3-1
+- repos - testing rpm now has katello testing repo file
+- repos - fixing name of katello repos
+
 * Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.2-1
 - correcting pulp testing repofile url
 

@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.34
+Version:        0.2.35
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -367,6 +367,39 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.35-1
+- adding the ability to pass in 'development' as your env
+- 817848 - Adding dry-run to candlepin proxy routes
+- 818689 - update spec test when activating system with activation key to check
+  for hidden user
+- 818689 - set the current user before attempting to access activation keys to
+  allow communication with candlepin
+- Fix for subscriptions SLA level switcher to fit correctly.
+- 818711 - use cache of release versions from CDN
+- 818711 - pull release versions from CDN
+- Fixed sorting in ssl-build dir listing
+- Added list of ssl-build dir to katello-debug output
+- 818370 - support dots in package name in nvrea
+- 808172 - Added code to show version information for katello cli
+- 818159 - Error when promoting changeset
+- remove test.rake from rpm package
+- 807291, 817634 - bit of code clean up
+- 807291, 817634 - activation key now validates pools when loaded
+- 796972 - changed '+New Something' to single string for translation, and
+  clarified the 'total' string
+- 796972 - made a single string for translators to work with in several cases
+- 817658, 812417 - i686 systems arch displayed as i686 instead of blank
+- 809827: katello-reset-dbs should be aware of the deployemnt type
+- system-release-version - default landing page is now subscriptions when
+  selecting a system
+- 772831 - proper way to determine IP address is through fact
+  network.ipv4_address
+- Merge branch 'master' into system-release-version
+- system-release-version - cleaning up system subscriptions tab content and ui
+- systems - spec tests for listing systems for a pool_id
+- systems - api for listing systems for a pool_id
+- add both auto-subscribe on and off options to choice list with service level
+
 * Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.34-1
 - Do not reference logical-insight unless it is configured
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #name: Example script 1
-#apply: headpin
+#apply: katello headpin
 #description: Empty bash script
 
 # TODO

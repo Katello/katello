@@ -20,7 +20,7 @@ class SystemsController < ApplicationController
   before_filter :find_environment, :only => [:environments, :new]
   before_filter :authorize
 
-  before_filter :setup_options, :only => [:index, :items, :environments]
+  before_filter :setup_options, :only => [:index, :items, :create, :environments]
 
   # two pane columns and mapping for sortable fields
   COLUMNS = {'name' => 'name_sort', 'lastCheckin' => 'lastCheckin'}
@@ -221,7 +221,14 @@ class SystemsController < ApplicationController
   end
 
   def edit
-     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?, :name=>controller_display_name}
+    begin
+      releases = @system.available_releases
+    rescue Exception => e
+      # Don't pepper user with notices if there is an error fetching release versions, but do log them
+      Rails.logger.error e.to_str
+      releases = []
+    end
+    render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?, :releases=>releases, :name=>controller_display_name}
   end
 
   def update

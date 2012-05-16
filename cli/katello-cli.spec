@@ -12,13 +12,14 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 %define base_name katello
+%define katello_requires python-iniparse python-simplejson python-kerberos m2crypto PyXML
 
 Name:          %{base_name}-cli
 Summary:       Client package for managing application life-cycle for Linux systems
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.32
+Version:       0.2.33
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -35,13 +36,12 @@ for Linux systems
 Summary:       Common Katello client bits
 Group:         Applications/System
 License:       GPLv2
-Requires:      python-iniparse
-Requires:      python-simplejson
-Requires:      m2crypto
-Requires:      python-kerberos
-Requires:      PyXML
+Requires:      %{katello_requires}
 BuildRequires: python2-devel
 BuildRequires: gettext
+BuildRequires: /usr/bin/pod2man
+BuildRequires: %{katello_requires}
+
 BuildArch:     noarch
 
 %description common
@@ -51,6 +51,13 @@ Common classes for katello clients
 %setup -q
 
 %build
+# generate usage docs and incorporate it into the man page
+pushd man
+PYTHONPATH=../src python ../src/katello/client/utils/usage.py >katello-usage.txt
+sed -e '/^THE_USAGE/{r katello-usage.txt' -e 'd}' katello.pod |\
+    sed -e 's/THE_VERSION/%{version}/g' |\
+    /usr/bin/pod2man --name=katello -c "Katello Reference" --section=1 --release=%{version} - katello.man1
+popd
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -71,6 +78,8 @@ install -pm 0644 src/%{base_name}/client/api/*.py $RPM_BUILD_ROOT%{python_siteli
 install -pm 0644 src/%{base_name}/client/cli/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/cli/
 install -pm 0644 src/%{base_name}/client/core/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/core/
 install -pm 0644 src/%{base_name}/client/utils/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/utils/
+install -d -m 0755 %{buildroot}%{_mandir}/man1
+install -m 0644 man/%{base_name}.man1 %{buildroot}%{_mandir}/man1/%{base_name}.1
 
 
 %clean
@@ -81,7 +90,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
 %doc README LICENSE
-#%{_mandir}/man8/%{base_name}.8*
+%{_mandir}/man1/%{base_name}.1*
 
 %files common
 %defattr(-,root,root)
@@ -89,6 +98,24 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.33-1
+- cli - pep8 fixes - code reidentation - trailing spaces removal - unused
+  imports removed
+- cli - fixes in unit tests
+- cli - removal of redundant code
+- task list cli - print part refactored Duplicit lines removed and changed to
+  use new style printer.
+- cli - new method for testing success of a record creation
+- cli - api util methods changed to raise exceptions instead of returning None
+  when a record was not found. This allows us to remove the ubiquitous checks
+  for None value from action bodies.
+- systems cli - actions use new api util method get_system
+- systems cli - method get_environment moved out from system api class
+- Added cli tests for ldap_roles
+- Added mocks for ldap_group api call
+- 808172 - Added code to show version information for katello cli
+- systems - cli for listing systems for a pool_id
+
 * Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.32-1
 - Fixed addColumn to match new name
 - Fixing various LDAP issues from the last pull request
