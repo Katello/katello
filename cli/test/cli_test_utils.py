@@ -20,38 +20,41 @@ class ColoredAssertionError(AssertionError):
             message = self.RED+message+self.RESET
         super(ColoredAssertionError, self).__init__(message)
 
+class EasyMock(object):
 
-class CLITestCase(unittest.TestCase):
-
-    failureException = ColoredAssertionError
-
-    _mocked_props = {}
-    action = None
-    module = None
-
-
-    def mock_from_module(self, property_name, return_value=None):
-        return self.mock(self.module, property_name, return_value)
+    __mocked_props = {}
 
     def mock(self, obj, property_name, return_value=None):
         #backup methods
-        prop = getattr(obj, property_name)
-        if not isinstance(prop, Mock):
-            key = str(obj) + "#" + property_name
-            #save only the original function, not mocks when it's called for second time on the same obj#property
-            if not key in self._mocked_props:
-                self._mocked_props[key] = (obj, prop, property_name)
-
+        self.backup_property(obj, property_name)
         #mock the function
         m = Mock()
         m.return_value = deepcopy(return_value)
         setattr(obj, property_name, m)
-
         return m
 
+    def backup_property(self, obj, property_name):
+        prop = getattr(obj, property_name)
+        if not isinstance(prop, Mock):
+            key = self.get_property_hash(obj, property_name)
+            #save only the original function, not mocks when it's called for second time on the same obj#property
+            if not key in self.__mocked_props:
+                self.__mocked_props[key] = (obj, prop, property_name)
+
+    def get_property_hash(self, obj, property_name):
+        return str(obj) + "#" + property_name
+
     def restore_mocks(self):
-        for key, (obj, prop, prop_name) in self._mocked_props.iteritems():
+        for key, (obj, prop, prop_name) in self.__mocked_props.iteritems():
             setattr(obj, prop_name, prop)
+
+
+class CLITestCase(unittest.TestCase, EasyMock):
+
+    failureException = ColoredAssertionError
+
+    action = None
+    module = None
 
     def set_action(self, action):
         self.action = action
@@ -62,19 +65,12 @@ class CLITestCase(unittest.TestCase):
     def tearDown(self):
         self.restore_mocks()
 
-    def assertRaisesException(self, expected, test_case, *args, **kvargs):
-        try:
-            test_case(*args, **kvargs)
-        except expected, e:
-            return e
-        else:
-            raise self.failureException("{0} not raised".format(expected))
-
 
 class CLIOptionTestCase(CLITestCase):
 
     allowed_options = []
     disallowed_options = []
+
 
     def mock_options(self):
         self.mock(self.action, 'get_option').side_effect = self.mocked_get_option
@@ -86,15 +82,16 @@ class CLIOptionTestCase(CLITestCase):
     def mocked_get_option(self, opt, default=None):
         return getattr(self.action.opts, opt, default)
 
+
     def assert_options_allowed(self, *options):
-        if not self.options_pass(*options):
+        if not self.__options_pass(*options):
             self.fail("\nCombination of options (%s) was expected to be ALLOWED in action %s." % (', '.join(options), self.__get_action_name()))
 
     def assert_options_disallowed(self, *options):
-        if self.options_pass(*options):
+        if self.__options_pass(*options):
             self.fail("\nCombination of options (%s) was expected NOT to be allowed in action %s." % (', '.join(options), self.__get_action_name()))
 
-    def options_pass(self, *options):
+    def __options_pass(self, *options):
         self.mock(self.action, 'load_saved_options')
         try:
             self.action.process_options(list(options))
