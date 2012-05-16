@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.20
+Version:        0.2.21
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -76,6 +76,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 16 2012 Mike McCune <mmccune@redhat.com> 0.2.21-1
+- 817933 part deux - also going to read these from katello-configure bin
+  (jomara@redhat.com)
+- 818679 - making some of the LDAP comments for katello-configure more helpful
+  (jomara@redhat.com)
+- 795869 - Fixing org name in katello-configure to accept spaces but still
+  create a proper candlepin key (jomara@redhat.com)
+
 * Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.20-1
 - 820273 - removed change to example script
 - 820273 - correct example and real upgrade scripts
