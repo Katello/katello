@@ -398,10 +398,10 @@ class Register(SystemAction):
 
     def check_options(self):
         self.validator.require(('name', 'org'))
-        self.validator.require_all_or_none(('activationkey', 'environment'))
+        self.validator.require_at_most_one_of(('activationkey', 'environment'))
 
     def require_credentials(self):
-        if self.validator.exists('activationkey'):
+        if self.has_option('activationkey'):
             return False
         else:
             return super
