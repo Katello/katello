@@ -22,8 +22,8 @@ describe Api::PuppetclassesController, :katello => true do
   # TODO disabled until Foreman is integrated
   #describe "GET 'index'" do
     #it "should be successful" do
-      #puppet_class = Foreman::Puppetclass.new
-      #Foreman::Puppetclass.should_receive(:new).once.and_return(puppet_class)
+      #puppet_class = Resources::Foreman::Puppetclass.new
+      #Resources::Foreman::Puppetclass.should_receive(:new).once.and_return(puppet_class)
       #puppet_class.should_receive(:list).once.and_return([])
       #get 'index', :format => :json
       #response.should be_success

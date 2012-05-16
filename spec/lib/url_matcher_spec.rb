@@ -12,30 +12,28 @@
 
 require 'spec_helper'
 
-require 'util/url_matcher'
-
-describe UrlMatcher do
+describe Util::UrlMatcher do
 
   it "should accept empty string and array" do
-    m = UrlMatcher.match('', [])
+    m = Util::UrlMatcher.match('', [])
     m[0].should be_nil
     m.size.should equal(1)
   end
 
   it "should not match different paths" do
-    m = UrlMatcher.match('/asdf', ['/abcd'])
+    m = Util::UrlMatcher.match('/asdf', ['/abcd'])
     m[0].should be_nil
     m.size.should equal(1)
   end
 
   it "should accept /" do
-    m = UrlMatcher.match('/', ['/'])
+    m = Util::UrlMatcher.match('/', ['/'])
     m[0].should match('/')
     m.size.should equal(1)
   end
 
   it "should accept /x/y/z" do
-    m = UrlMatcher.match('/80/01/15', ['/:year/:month/:day'])
+    m = Util::UrlMatcher.match('/80/01/15', ['/:year/:month/:day'])
     m[0].should match('/:year/:month/:day')
     m[1].should match('80')
     m[2].should match('01')
@@ -43,7 +41,7 @@ describe UrlMatcher do
   end
 
   it "should match fist always" do
-    m = UrlMatcher.match('/80/01/15', ['/:a/:b/:c', '/:year/:month/:day'])
+    m = Util::UrlMatcher.match('/80/01/15', ['/:a/:b/:c', '/:year/:month/:day'])
     m[0].should match('/:a/:b/:c')
     m[1].should match('80')
     m[2].should match('01')
