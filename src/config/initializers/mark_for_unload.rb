@@ -6,6 +6,6 @@
 #
 # This does not affect production environment where no reloading happens.
 %w[
-  Candlepin Pulp Foreman HttpResource ResourcePermissions
+  Candlepin Pulp Foreman CDN HttpResource ResourcePermissions UrlMatcher
 ].each {|c| ActiveSupport::Dependencies.mark_for_unload(c) }
 
