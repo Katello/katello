@@ -10,10 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'rubygems'
 require 'oauth'
 require 'cgi'
-require 'resource_permissions'
 
 class RestClientException < RuntimeError
   attr_reader :service_code, :code

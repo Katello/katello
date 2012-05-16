@@ -32,11 +32,11 @@ describe Api::SubscriptionsController do
     set_default_locale
     disable_org_orchestration
 
-    Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Candlepin::Consumer.stub!(:update).and_return(true)
+    Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Pulp::Consumer.stub!(:update).and_return(true)
+    Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Pulp::Consumer.stub!(:update).and_return(true)
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.library.id, :organization => @organization)
@@ -58,24 +58,24 @@ describe Api::SubscriptionsController do
 
     context "subscribes" do
       it "to one pool" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).once.with(@system.uuid, "poolidXYZ", 1)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).once.with(@system.uuid, "poolidXYZ", 1)
         post :create, :system_id => @system.id, :pool => "poolidXYZ", :quantity => 1
       end
     end
 
     context "unsubscribes" do
       it "from one pool" do
-        Candlepin::Consumer.should_receive(:remove_entitlement).once.with(@system.uuid, "poolidXYZ")
+        Resources::Candlepin::Consumer.should_receive(:remove_entitlement).once.with(@system.uuid, "poolidXYZ")
         post :destroy, :system_id => @system.id, :id => "poolidXYZ"
       end
 
       it "from one pool by serial" do
-        Candlepin::Consumer.should_receive(:remove_certificate).once.with(@system.uuid, "serialidXYZ")
+        Resources::Candlepin::Consumer.should_receive(:remove_certificate).once.with(@system.uuid, "serialidXYZ")
         post :destroy_by_serial, :system_id => @system.id, :serial_id => "serialidXYZ"
       end
 
       it "from all pools" do
-        Candlepin::Consumer.should_receive(:remove_entitlements).once.with(@system.uuid)
+        Resources::Candlepin::Consumer.should_receive(:remove_entitlements).once.with(@system.uuid)
         post :destroy_all, :system_id => @system.id
       end
     end
@@ -93,7 +93,7 @@ describe Api::SubscriptionsController do
       end
 
       it "should retrieve Consumer's errata from pulp" do
-        Candlepin::Consumer.should_receive(:entitlements).once.with(uuid).and_return([])
+        Resources::Candlepin::Consumer.should_receive(:entitlements).once.with(uuid).and_return([])
         get :index, :system_id => @system.uuid
       end
     end

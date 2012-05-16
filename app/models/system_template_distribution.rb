@@ -25,7 +25,7 @@ class SystemTemplateDistribution < ActiveRecord::Base
   validates_with DistributionValidator
 
   def load_backend_attributes
-    @distribution_glue ||= Glue::Pulp::Distribution.new(Pulp::Distribution.find(self.distribution_pulp_id))
+    @distribution_glue ||= Glue::Pulp::Distribution.new(Resources::Pulp::Distribution.find(self.distribution_pulp_id))
     raise Errors::NotFound.new(_("Distribution '%s' was not found in Pulp.") % distribution_pulp_id) if @distribution_glue.nil?
   end
 

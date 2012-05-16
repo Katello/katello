@@ -10,150 +10,150 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'rubygems'
-require 'rest_client'
 require 'cgi'
-require 'http_resource'
 
-module Foreman
+module Resources
 
-  module REST
-    def get
-      JSON.parse(super(path(), :accept => :json).body)
-    end
-  end
+  module Foreman
 
-  class ForemanResource
-    attr_reader :url
-
-    def initialize options = {}
-      @url = AppConfig.foreman.url || raise("no foreman url was given")
-      @resource = RestClient::Resource.new url
-    end
-
-    def get(path, headers={})
-      set_username_password
-      @resource[path].get headers
-    end
-
-    def post(path, params = {})
-      set_username_password
-      @resource[path].post headers
-    end
-
-    def opts
-      {:url => url, :username => User.current.username, :password => User.current.password}
-    end
-
-    # Encode url element if its not nil. This helper method is used mainly in resource path methods.
-    #
-    # @param [String] element to encode
-    # @return [String] encoded element or nil
-    def url_encode(element)
-      CGI::escape element unless element.nil?
-    end
-
-    def set_username_password
-      @resource.options[:user] = User.current.username || raise("no foreman username was given")
-      @resource.options[:password] = User.current.password || raise("no foreman password was given")
-    end
-  end
-
-  class Host < ForemanResource
-    include Foreman::REST
-    attr_reader :uuid
-
-    def initialize options = {}
-      super options
-      # if no uuid is assign, we return all uuid's
-      @uuid = options[:uuid]
-    end
-
-    def list
-      get.collect do |uuid|
-        Host.new(opts.merge({:uuid => uuid}))
+    module REST
+      def get
+        JSON.parse(super(path(), :accept => :json).body)
       end
     end
 
-    def path
-      "/hosts"
-    end
+    class ForemanResource
+      attr_reader :url
 
-  end
+      def initialize options = {}
+        @url = AppConfig.foreman.url || raise("no foreman url was given")
+        @resource = RestClient::Resource.new url
+      end
 
-  class Facts < ForemanResource
-    include Foreman::REST
-    attr_reader :uuid, :values
+      def get(path, headers={})
+        set_username_password
+        @resource[path].get headers
+      end
 
-    def initialize options = {}
-      super options
-      @uuid = options[:uuid]
-      raise "no uuid was given" unless @uuid
-      @values = get[uuid]
-    end
+      def post(path, params = {})
+        set_username_password
+        @resource[path].post headers
+      end
 
-    def [](key)
-      @values[key]
-    end
+      def opts
+        {:url => url, :username => User.current.username, :password => User.current.password}
+      end
 
-    def path
-      "/hosts/#{uuid}/facts"
-    end
+      # Encode url element if its not nil. This helper method is used mainly in resource path methods.
+      #
+      # @param [String] element to encode
+      # @return [String] encoded element or nil
+      def url_encode(element)
+        CGI::escape element unless element.nil?
+      end
 
-  end
-
-  class Environment < ForemanResource
-    include Foreman::REST
-    attr_reader :name
-
-    def initialize options = {}
-      super options
-      @name = options[:name]
-    end
-
-    def list
-      get.collect do |json|
-        json["environment"]["name"]
+      def set_username_password
+        @resource.options[:user] = User.current.username || raise("no foreman username was given")
+        @resource.options[:password] = User.current.password || raise("no foreman password was given")
       end
     end
 
-    def nodes
-      return nil unless name
-      get["environment"]["hosts"].collect do |json|
-        Host.new(opts.merge({:uuid => json["name"]}))
+    class Host < ForemanResource
+      include Foreman::REST
+      attr_reader :uuid
+
+      def initialize options = {}
+        super options
+        # if no uuid is assign, we return all uuid's
+        @uuid = options[:uuid]
       end
-    end
 
-    def path
-      "/environments/#{url_encode name}"
-    end
-  end
-
-  class Puppetclass < ForemanResource
-    include Foreman::REST
-    attr_reader :name, :id, :module
-
-    def initialize(options = {})
-      super(options)
-      @name = options[:name]
-      @module = options[:module]
-      @id = options[:id]
-    end
-
-    # returns a hash of modules and their respective classes
-    def list
-      hash = {}
-      get.each_pair do |pmodule, pclasses|
-        hash[pmodule] = pclasses.collect do |klass|
-          {:module => pmodule, :name => klass["puppetclass"]["name"], :id => klass["puppetclass"]["id"]}
+      def list
+        get.collect do |uuid|
+          Host.new(opts.merge({:uuid => uuid}))
         end
       end
-      return hash
+
+      def path
+        "/hosts"
+      end
+
     end
 
-    def path
-      "/puppetclasses/#{url_encode name}"
+    class Facts < ForemanResource
+      include Foreman::REST
+      attr_reader :uuid, :values
+
+      def initialize options = {}
+        super options
+        @uuid = options[:uuid]
+        raise "no uuid was given" unless @uuid
+        @values = get[uuid]
+      end
+
+      def [](key)
+        @values[key]
+      end
+
+      def path
+        "/hosts/#{uuid}/facts"
+      end
+
     end
+
+    class Environment < ForemanResource
+      include Foreman::REST
+      attr_reader :name
+
+      def initialize options = {}
+        super options
+        @name = options[:name]
+      end
+
+      def list
+        get.collect do |json|
+          json["environment"]["name"]
+        end
+      end
+
+      def nodes
+        return nil unless name
+        get["environment"]["hosts"].collect do |json|
+          Host.new(opts.merge({:uuid => json["name"]}))
+        end
+      end
+
+      def path
+        "/environments/#{url_encode name}"
+      end
+    end
+
+    class Puppetclass < ForemanResource
+      include Foreman::REST
+      attr_reader :name, :id, :module
+
+      def initialize(options = {})
+        super(options)
+        @name = options[:name]
+        @module = options[:module]
+        @id = options[:id]
+      end
+
+      # returns a hash of modules and their respective classes
+      def list
+        hash = {}
+        get.each_pair do |pmodule, pclasses|
+          hash[pmodule] = pclasses.collect do |klass|
+            {:module => pmodule, :name => klass["puppetclass"]["name"], :id => klass["puppetclass"]["id"]}
+          end
+        end
+        return hash
+      end
+
+      def path
+        "/puppetclasses/#{url_encode name}"
+      end
+    end
+
   end
-
 end

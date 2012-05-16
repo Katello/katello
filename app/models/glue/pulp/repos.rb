@@ -10,12 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'http_resource'
-require 'resources/pulp'
-require 'resources/candlepin'
-require 'resources/cdn'
 require 'openssl'
-
 
 module Glue::Pulp::Repos
 
@@ -75,12 +70,12 @@ module Glue::Pulp::Repos
   #   then sets the content_id in pulp for each repository that needs updating
   def refresh_content(repo)
     old_content = repo.content
-    old_content_repos = Pulp::Repository.all(Glue::Pulp::Repos.content_groupid(old_content))
+    old_content_repos = Resources::Pulp::Repository.all(Glue::Pulp::Repos.content_groupid(old_content))
     remove_content_by_id(repo.content.id)
-    Candlepin::Content.destroy(repo.content.id)
+    Resources::Candlepin::Content.destroy(repo.content.id)
     new_content = create_content(repo)
     old_content_repos.each do |r|
-      Pulp::Repository.update(r['id'].to_s,
+      Resources::Pulp::Repository.update(r['id'].to_s,
                   :addgrp => Glue::Pulp::Repos.content_groupid(new_content),
                   :rmgrp => Glue::Pulp::Repos.content_groupid(old_content))
     end
@@ -140,7 +135,7 @@ module Glue::Pulp::Repos
   end
 
   def self.prepopulate! products, environment, repos=[]
-    items = Pulp::Repository.all(["env:#{environment.id}"])
+    items = Resources::Pulp::Repository.all(["env:#{environment.id}"])
     full_repos = {}
     items.each {|item| full_repos[item["id"]] = item }
 
@@ -390,7 +385,7 @@ module Glue::Pulp::Repos
           :gpg_key => gpg
       )
       content = create_content(repo)
-      Pulp::Repository.update(repo.pulp_id, :addgrp => Glue::Pulp::Repos.content_groupid(content))
+      Resources::Pulp::Repository.update(repo.pulp_id, :addgrp => Glue::Pulp::Repos.content_groupid(content))
       repo.update_attributes!(:cp_label => content.label)
       repo
     end
@@ -405,19 +400,19 @@ module Glue::Pulp::Repos
 
     def set_repos
       content_urls = self.productContent.map { |pc| pc.content.contentUrl }
-      cdn_var_substitutor = CDN::CdnVarSubstitutor.new(self.provider[:repository_url],
+      cdn_var_substitutor = Resources::CDN::CdnVarSubstitutor.new(self.provider[:repository_url],
                                                        :ssl_client_cert => OpenSSL::X509::Certificate.new(self.certificate),
                                                        :ssl_client_key => OpenSSL::PKey::RSA.new(self.key))
       cdn_var_substitutor.precalculate(content_urls)
 
       self.productContent.collect do |pc|
-        ca = File.read(CDN::CdnResource.ca_file)
+        ca = File.read(Resources::CDN::CdnResource.ca_file)
 
         cdn_var_substitutor.substitute_vars(pc.content.contentUrl).each do |(substitutions, path)|
           feed_url = repo_url(path)
           arch = substitutions["basearch"] || "noarch"
           repo_name = [pc.content.name, substitutions.sort_by {|k,_| k.to_s}.map(&:last)].flatten.compact.join(" ").gsub(/[^a-z0-9\-\._ ]/i,"")
-          version = CDN::Utils.parse_version(substitutions["releasever"])
+          version = Resources::CDN::Utils.parse_version(substitutions["releasever"])
 
           begin
             env_prod = EnvironmentProduct.find_or_create(self.organization.library, self)
@@ -479,7 +474,7 @@ module Glue::Pulp::Repos
       #end
       #
       #changed_content.each do |pc|
-      #  Pulp::Repository.update(repo_id(pc.content.name), {
+      #  Resources::Pulp::Repository.update(repo_id(pc.content.name), {
       #    :feed => repo_url(pc.content.contentUrl)
       #  })
       #end

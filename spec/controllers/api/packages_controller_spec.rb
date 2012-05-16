@@ -47,7 +47,7 @@ describe Api::PackagesController, :katello => true do
 
     @repo.stub(:packages).and_return([])
     package = { 'repoids' => [ repo_id ] }
-    Pulp::Package.stub(:find).and_return(package)
+    Resources::Pulp::Package.stub(:find).and_return(package)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
@@ -102,7 +102,7 @@ describe Api::PackagesController, :katello => true do
 
     describe "show a package" do
       it "should call pulp find package api" do
-        Pulp::Package.should_receive(:find).once.with(1)
+        Resources::Pulp::Package.should_receive(:find).once.with(1)
         get 'show', :id => 1, :repository_id => repo_id
       end
     end
