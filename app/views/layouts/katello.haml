@@ -23,8 +23,6 @@
   %body{:id => section_id}
 
 = content_for(:content) do
-  .hidden#remove
-    = render_main_menu
   - if not current_user
     #formwindow
       = yield
