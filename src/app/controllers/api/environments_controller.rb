@@ -16,9 +16,15 @@ class Api::EnvironmentsController < Api::ApiController
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories, :releases]
   before_filter :authorize
   def rules
-    index_rule = lambda{@organization.readable? || @organization.any_systems_registerable?}
     manage_rule = lambda{@organization.environments_manageable?}
     view_rule = lambda{@organization.readable?}
+
+    index_rule = lambda {true}
+    # Note: index_rule is always true.
+    # Instead we are simply going to filter out the inaccessible environments
+    # from the environment list we return. Look at the index method to
+    # figure out how that rule is applied.
+
     {
       :index => index_rule,
       :show => view_rule,
@@ -36,14 +42,20 @@ class Api::EnvironmentsController < Api::ApiController
 
     {
       :create =>manage_match,
-      :update => manage_match
+      :update => manage_match,
+      :index => [:name, :library, :id, :organization_id]
     }
   end
 
-
   def index
     query_params[:organization_id] = @organization.id
-    render :json => (KTEnvironment.where query_params).to_json
+     environments = KTEnvironment.where query_params
+     unless @organization.readable? || @organization.any_systems_registerable?
+       environments.delete_if do |env|
+         !env.any_operation_readable?
+       end
+     end
+    render :json => (environments).to_json
   end
 
   def show
