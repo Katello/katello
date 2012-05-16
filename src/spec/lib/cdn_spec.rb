@@ -1,7 +1,6 @@
 require 'spec_helper'
-require 'resources/cdn'
 
-describe CDN::CdnVarSubstitutor do
+describe Resources::CDN::CdnVarSubstitutor do
 
   let(:provider_url) { "https://cdn.redhat.com" }
   let(:path_with_variables) { "/content/dist/rhel/server/5/$releasever/$basearch/os" }
@@ -11,7 +10,7 @@ describe CDN::CdnVarSubstitutor do
   end
 
   subject do
-    CDN::CdnVarSubstitutor.new(provider_url, connect_options)
+    Resources::CDN::CdnVarSubstitutor.new(provider_url, connect_options)
   end
 
   it "should substitute all variables with values in listings" do
@@ -64,7 +63,7 @@ describe CDN::CdnVarSubstitutor do
   end
 
 
-  it "should handle error codes from CDN" do
+  it "should handle error codes from Resources::CDN" do
     stub_forbidden_cdn_requests
     lambda { subject.substitute_vars(path_with_variables) }.should raise_error Errors::SecurityViolation
   end
@@ -73,9 +72,9 @@ describe CDN::CdnVarSubstitutor do
     stub_successful_cdn_requests(["6","61"],["i386", "x86_64"])
 
     @net_mock.should_receive(:start).exactly(3).times
-    CDN::CdnVarSubstitutor.with_cache do
-      CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
-      CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
+    Resources::CDN::CdnVarSubstitutor.with_cache do
+      Resources::CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
+      Resources::CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
     end
   end
 
@@ -83,10 +82,10 @@ describe CDN::CdnVarSubstitutor do
     stub_successful_cdn_requests(["6","61"],["i386", "x86_64"])
 
     @net_mock.should_receive(:start).exactly(6).times
-    CDN::CdnVarSubstitutor.with_cache do
-      CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
+    Resources::CDN::CdnVarSubstitutor.with_cache do
+      Resources::CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
     end
-    CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
+    Resources::CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
   end
 
 

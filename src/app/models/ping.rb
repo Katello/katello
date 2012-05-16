@@ -13,8 +13,6 @@
 #:nocov:
 
 require 'rest_client'
-require 'resources/pulp' if AppConfig.katello?
-require 'resources/candlepin'
 
 class Ping
   class << self
@@ -65,13 +63,13 @@ class Ping
       # pulp - ping with oauth
       if AppConfig.katello?
         exception_watch(result[:status][:pulp_auth]) do
-          Pulp::PulpPing.ping
+          Resources::Pulp::PulpPing.ping
         end
       end
 
       # candlepin - ping with oauth
       exception_watch(result[:status][:candlepin_auth]) do
-        Candlepin::CandlepinPing.ping
+        Resources::Candlepin::CandlepinPing.ping
       end
 
       exception_watch(result[:status][:katello_jobs]) do
