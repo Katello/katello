@@ -22,7 +22,7 @@ class Api::TasksController < Api::ApiController
     test = lambda do
         # at the end of organization deletion, there is no organization, so we
         # check if the user has the rights to see the task.
-      if User.current == @task.user
+      if @task && User.current == @task.user
         true
       elsif @organization
         Provider.any_readable?(@organization) || @organization.systems_readable?
