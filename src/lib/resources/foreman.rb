@@ -13,7 +13,7 @@
 require 'rubygems'
 require 'rest_client'
 require 'cgi'
-require 'http_resource'
+require_dependency 'http_resource'
 
 module Foreman
 

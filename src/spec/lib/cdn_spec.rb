@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'resources/cdn'
+require_dependency 'resources/cdn'
 
 describe CDN::CdnVarSubstitutor do
 

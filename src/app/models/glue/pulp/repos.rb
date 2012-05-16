@@ -10,10 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'http_resource'
-require 'resources/pulp'
-require 'resources/candlepin'
-require 'resources/cdn'
+require_dependency 'http_resource'
+require_dependency 'resources/pulp'
+require_dependency 'resources/candlepin'
+require_dependency 'resources/cdn'
 require 'openssl'
 
 
