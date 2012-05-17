@@ -507,6 +507,7 @@ Src::Application.routes.draw do
     end
 
     resources :environments, :only => [:show, :update, :destroy] do
+      match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :systems, :only => [:create, :index] do
         get :report, :on => :collection
       end
