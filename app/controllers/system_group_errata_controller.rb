@@ -10,9 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class SystemErrataController < ApplicationController
+class SystemGroupErrataController < ApplicationController
 
-  before_filter :find_system, :only =>[:install, :index, :items, :status]
+  helper SystemErrataHelper
+
+  before_filter :find_group, :only =>[:install, :index, :items, :status]
   before_filter :authorize
 
   def section_id
@@ -20,29 +22,20 @@ class SystemErrataController < ApplicationController
   end
 
   def rules
-    edit_system = lambda{System.find(params[:system_id]).editable?}
-    read_system = lambda{System.find(params[:system_id]).readable?}
-
+    edit_group = lambda{SystemGroup.find(params[:system_group_id]).editable?}
+    read_group = lambda{SystemGroup.find(params[:system_group_id]).readable?}
     {
-      :index => read_system,
-      :items => read_system,
-      :install => edit_system,
-      :status => edit_system
+      :index => read_group,
+      :items => read_group,
+      :install => edit_group,
+      :status => edit_group
     }
   end
 
   def index
-    if @system.class == Hypervisor
-      render :partial=>"systems/hypervisor", :layout=>"tupane_layout",
-             :locals=>{:system=>@system,
-                       :message=>_("Hypervisors do not have errata")}
-      return
-    end
-
     offset = current_user.page_size
-
-    render :partial=>"systems/errata/index", :layout => "tupane_layout", :locals=>{:system=>@system, 
-                                                                          :editable => @system.editable?, :offset => offset}
+    render :partial=>"system_groups/errata/index", :layout => "tupane_layout",
+           :locals=>{:system=>@group, :editable => @group.editable?, :offset => offset}
   end
 
   def items
@@ -52,7 +45,7 @@ class SystemErrataController < ApplicationController
     chunk_size = current_user.page_size
     errata, total_count, results_count = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type, errata_state)
         
-    rendered_html = render_to_string(:partial=>"systems/errata/items", :locals => { :errata => errata, :editable => @system.editable? })
+    rendered_html = render_to_string(:partial=>"systems/errata/items", :locals => { :errata => errata, :editable => @group.editable? })
 
     render :json => {:html => rendered_html,
                       :results_count => results_count,
@@ -62,10 +55,10 @@ class SystemErrataController < ApplicationController
 
   def install
     errata_ids = params[:errata_ids]
-    task = @system.install_errata(errata_ids)
+    job = @group.install_errata(errata_ids)
     
     notice _("Errata scheduled for install.")
-    render :text => task.task_status.uuid
+    render :text => job.pulp_id
   rescue Exception => error
     errors error
     Rails.logger.error error.backtrace.join("\n")
@@ -74,13 +67,14 @@ class SystemErrataController < ApplicationController
 
   def status
     if params[:uuid]
-      statuses = @system.tasks.where(:uuid => params[:uuid], :task_type => [:errata_install])
+      jobs = @group.refreshed_jobs.joins(:task_statuses).where(
+          'jobs.pulp_id' => params[:uuid], 'task_statuses.task_type' => [:errata_install])
     else
-      statuses = @system.tasks.where(:task_type => [:errata_install], :state => [:waiting, :running])
+      jobs = @group.refreshed_jobs.joins(:task_statuses).where(
+          'task_statuses.task_type' => [:errata_install], 'task_statuses.state' => [:waiting, :running])
     end
-    render :json => statuses
+    render :json => jobs.to_json(:include => :task_statuses)
   end
-
 
   private
 
@@ -92,7 +86,17 @@ class SystemErrataController < ApplicationController
     errata_state = errata_state || "outstanding"
     filter_type = filter_type || "All"    
 
-    errata_list = @system.errata
+    errata_hash = {} # {id => erratum}
+    errata_list = [] # [erratum]
+
+    # build a hash of all errata across all systems in the group
+    @group.systems.each do |system|
+      errata = system.errata
+      errata.each do |erratum|
+        errata_hash[erratum.id] = erratum
+      end
+    end
+    errata_list = errata_hash.values
     total_errata_count = errata_list.length
 
     errata_list = filter_by_type(errata_list, filter_type)
@@ -101,16 +105,16 @@ class SystemErrataController < ApplicationController
     filtered_errata_count = errata_list.length
 
     errata_list = errata_list.sort { |a,b|
-      a.id.downcase <=> b.id.downcase 
+      a.id.downcase <=> b.id.downcase
     }
-    
+
     errata_list = errata_list[start...finish]
 
     return errata_list, total_errata_count, filtered_errata_count
   end
 
-  def find_system
-    @system = System.find(params[:system_id])
+  def find_group
+    @group = SystemGroup.find(params[:system_group_id])
   end
 
 end
