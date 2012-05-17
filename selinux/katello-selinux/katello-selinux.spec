@@ -19,7 +19,7 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        0.2.4
+Version:        0.2.5
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
@@ -139,6 +139,9 @@ fi
 %{_sysconfdir}/katello/secure
 
 %changelog
+* Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.5-1
+- encryption - plain text passwords encryption
+
 * Mon Mar 26 2012 Martin Bačovský <mbacovsk@redhat.com> 0.2.4-1
 - 805124 - security review of world-readabl fils (mbacovsk@redhat.com)
 - 803761 - adding man page for selinux-enable (lzap+git@redhat.com)
