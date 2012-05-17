@@ -52,6 +52,10 @@ class SystemGroupsController < ApplicationController
      }
   end
 
+  def section_id
+    'systems'
+  end
+
   def index
     render "index"
   end
@@ -154,7 +158,7 @@ class SystemGroupsController < ApplicationController
         :enable_create=> SystemGroup.creatable?(current_organization),
         :initial_action=>:systems,
         :ajax_load=>true,
-        :search_class=>Filter
+        :search_class=>SystemGroup
     }
   end
 
