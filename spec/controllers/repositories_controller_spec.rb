@@ -40,7 +40,7 @@ describe RepositoriesController, :katello => true do
     describe "GET Edit" do
       before do
         Product.stub!(:find).and_return(@product)
-        Pulp::Repository.stub!(:find).and_return(@repository)
+        Resources::Pulp::Repository.stub!(:find).and_return(@repository)
       end
       let(:action) {:edit}
       let(:req) { get :edit, :provider_id => @provider.id, :product_id => @product.id, :id => @repository.id}
@@ -63,7 +63,7 @@ describe RepositoriesController, :katello => true do
       @gpg = GpgKey.create!(:name => "foo", :organization => @organization, :content => "222")
       @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       controller.stub!(:current_organization).and_return(@org)
-      Candlepin::Content.stub(:create => {:id => "123"})
+      Resources::Candlepin::Content.stub(:create => {:id => "123"})
     end
       let(:invalidrepo) do
         {

@@ -241,13 +241,13 @@ describe KTEnvironment do
       it "should add content not already promoted" do
         already_promoted_content("123", "456")
         newly_promoted_content("123", "456", "789", "10")
-        Candlepin::Environment.should_receive(:add_content).with(@environment.id, Set.new(["789", "10"]))
+        Resources::Candlepin::Environment.should_receive(:add_content).with(@environment.id, Set.new(["789", "10"]))
         @environment.update_cp_content
       end
 
       def already_promoted_content(*content_ids)
         @already_promoted_content_ids = content_ids
-        Candlepin::Environment.stub(:find).and_return(
+        Resources::Candlepin::Environment.stub(:find).and_return(
           {:environmentContent => @already_promoted_content_ids.map {|id| {:contentId => id}}})
       end
 
