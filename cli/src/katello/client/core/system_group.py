@@ -359,7 +359,7 @@ class AddSystems(SystemGroupAction):
 
 class RemoveSystems(SystemGroupAction):
 
-    description = _('remove systems to a system group')
+    description = _('remove systems from a system group')
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
@@ -389,7 +389,7 @@ class RemoveSystems(SystemGroupAction):
         systems = self.api.remove_systems(org_name, system_group["id"], system_ids)
 
         if systems != None:
-            print _("Successfully remove systems to system group [ %s ]") % system_group['name']
+            print _("Successfully removed systems from system group [ %s ]") % system_group['name']
             return os.EX_OK
         else:
             return os.EX_DATAERR
