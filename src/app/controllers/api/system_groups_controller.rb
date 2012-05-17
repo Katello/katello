@@ -63,7 +63,7 @@ class Api::SystemGroupsController < Api::ApiController
     if grp_param[:system_ids]
       grp_param[:system_ids] = system_uuids_to_ids(grp_param[:system_ids])
     end
-    @group.attributes = grp_param.slice(:name, :description, :system_ids)
+    @group.attributes = grp_param.slice(:name, :description, :system_ids, :max_systems)
     @group.save!
     render :json => @group
   end
