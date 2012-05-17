@@ -15,13 +15,12 @@
 #
 
 import os
-import sys
 from gettext import gettext as _
 
 from katello.client.api.environment import EnvironmentAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import test_record
 from katello.client.api.utils import get_environment
 
 Config()
@@ -59,14 +58,14 @@ class List(EnvironmentAction):
 
         envs = self.api.environments_by_org(orgName)
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('organization', _('Org'))
-        self.printer.addColumn('prior', _('Prior Environment'))
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('organization', _('Org'))
+        self.printer.add_column('prior', _('Prior Environment'))
 
-        self.printer.setHeader(_("Environment List"))
-        self.printer.printItems(envs)
+        self.printer.set_header(_("Environment List"))
+        self.printer.print_items(envs)
         return os.EX_OK
 
 
@@ -89,18 +88,17 @@ class Info(EnvironmentAction):
         envName = self.get_option('name')
 
         env = get_environment(orgName, envName)
-        if env != None:
-            self.printer.addColumn('id')
-            self.printer.addColumn('name')
-            self.printer.addColumn('description', multiline=True)
-            self.printer.addColumn('organization', _('Org'))
-            self.printer.addColumn('prior', _('Prior Environment'))
 
-            self.printer.setHeader(_("Environment Info"))
-            self.printer.printItem(env)
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('organization', _('Org'))
+        self.printer.add_column('prior', _('Prior Environment'))
+
+        self.printer.set_header(_("Environment Info"))
+        self.printer.print_item(env)
+        return os.EX_OK
+
 
 
 class Create(EnvironmentAction):
@@ -134,12 +132,10 @@ class Create(EnvironmentAction):
         priorId = self.get_prior_id(orgName, priorName)
 
         env = self.api.create(orgName, name, description, priorId)
-        if is_valid_record(env):
-            print _("Successfully created environment [ %s ]") % env['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create environment [ %s ]") % env['name']
-            return os.EX_DATAERR
+        test_record(env,
+            _("Successfully created environment [ %s ]") % name,
+            _("Could not create environment [ %s ]") % name
+        )
 
 
 class Update(EnvironmentAction):
@@ -171,16 +167,15 @@ class Update(EnvironmentAction):
         priorName   = self.get_option('prior')
 
         env = get_environment(orgName, envName)
-        if env != None:
-            if priorName != None:
-                priorId = self.get_prior_id(orgName, priorName)
-            else:
-                priorId = None
-            env = self.api.update(orgName, env["id"], envName, description, priorId)
-            print _("Successfully updated environment [ %s ]") % env['name']
-            return os.EX_OK
+
+        if priorName != None:
+            priorId = self.get_prior_id(orgName, priorName)
         else:
-            return os.EX_DATAERR
+            priorId = None
+        env = self.api.update(orgName, env["id"], envName, description, priorId)
+        print _("Successfully updated environment [ %s ]") % env['name']
+        return os.EX_OK
+
 
 
 class Delete(EnvironmentAction):
@@ -203,12 +198,11 @@ class Delete(EnvironmentAction):
         envName     = self.get_option('name')
 
         env = get_environment(orgName, envName)
-        if env != None:
-            self.api.delete(orgName, env["id"])
-            print _("Successfully deleted environment [ %s ]") % envName
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
+
+        self.api.delete(orgName, env["id"])
+        print _("Successfully deleted environment [ %s ]") % envName
+        return os.EX_OK
+
 
 
 # environment command ------------------------------------------------------------

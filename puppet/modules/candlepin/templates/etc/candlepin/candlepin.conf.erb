@@ -5,6 +5,7 @@ jpa.config.hibernate.connection.url=jdbc:postgresql:<%= scope.lookupvar("candlep
 jpa.config.hibernate.hbm2ddl.auto=validate
 jpa.config.hibernate.connection.username=<%= scope.lookupvar("candlepin::params::db_user") %>
 jpa.config.hibernate.connection.password=<%= scope.lookupvar("candlepin::params::db_pass") %>
+candlepin.consumer_system_name_pattern = .+
 candlepin.environment_content_filtering=<%= scope.lookupvar("candlepin::params::env_filtering_enabled") %>
 <% if scope.lookupvar("candlepin::params::katello_oauth_key") != "" -%>
 module.config.katello=org.candlepin.katello.KatelloModule

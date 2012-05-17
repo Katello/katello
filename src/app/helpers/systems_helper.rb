@@ -65,9 +65,9 @@ module SystemsHelper
     end
   end
 
-  def system_releasevers_edit system
+  def system_releasevers_edit system, releases
     vers = {}
-    system.available_releases.each { |ver|
+    releases.each { |ver|
       vers[ver] = ver
     }
 
@@ -78,25 +78,21 @@ module SystemsHelper
   end
 
   def system_servicelevel system
-    if system.autoheal
-      if system.serviceLevel == ""
-        _("Auto-subscribe On, No Service Level Preference")
-      else
-        _("Auto-subscribe On, Service Level %s") % system.serviceLevel
-      end
-    else
-      _("Auto-subscribe Off")
-    end
+    _("Auto-subscribe %s, %s") % [
+        system.autoheal ? _("On") : _("Off"),
+        system.serviceLevel == '' ? _("No Service Level Preference") : (_("Service Level %s") % system.serviceLevel)
+    ]
   end
 
   def system_servicelevel_edit system
     levels = {}
     system.organization.service_levels.each { |level|
-      levels[level] = _("Auto-subscribe On, Service Level %s") % level
+      levels["1#{level}"] = _("Auto-subscribe On, Service Level %s") % level
+      levels["0#{level}"] = _("Auto-subscribe Off, Service Level %s") % level
     }
 
-    levels["Auto-subscribe On"] = _("Auto-subscribe On, No Service Level Preference")
-    levels["Auto-subscribe Off"] = _("Auto-subscribe Off")
+    levels['1'] = _("Auto-subscribe On, No Service Level Preference")
+    levels['0'] = _("Auto-subscribe Off, No Service Level Preference")
 
     levels["selected"] = system_servicelevel(system)
 

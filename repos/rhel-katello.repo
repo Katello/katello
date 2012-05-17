@@ -1,15 +1,15 @@
 # Place this file in your /etc/yum.repos.d/ directory
 
 [katello]
-name=integrates together a series of open source systems management tools
-baseurl=http://repos.fedorapeople.org/repos/katello/katello/6Server/x86_64/
+name=Katello Stable
+baseurl=http://repos.fedorapeople.org/repos/katello/katello/$releasever/x86_64/
 enabled=1
 skip_if_unavailable=1
 gpgcheck=0
 
 [katello-source]
-name=integrates together a series of open source systems management tools - Source
-baseurl=http://repos.fedorapeople.org/repos/katello/katello/6Server/SRPMS
+name=Katello Stable Source
+baseurl=http://repos.fedorapeople.org/repos/katello/katello/$releasever/SRPMS
 enabled=0
 skip_if_unavailable=1
 gpgcheck=0

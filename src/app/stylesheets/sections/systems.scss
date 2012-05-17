@@ -3,6 +3,7 @@
 #systems {
   table {
     margin-bottom: 4px;
+    width: 100%;
   }
   .tall {
     @extend .block;
@@ -92,30 +93,40 @@
     font-family: $headlinefont;
     color: #747474;
     font-size: 14px;
-    height: 72px;
+    height: auto;
     .subs_text {
         margin: 8px 0 2px 8px;
         padding: 0px;
         float: left;
         height: 30px;
-        width: 390px;
+        width: 89%;
+        border-bottom: 1px dotted $border_color;
     }
     .subs_servicelevel {
-        margin: 0px 0 2px 8px;
-        padding: 0px;
+        margin: 6px 0 2px 8px;
+        padding: 6px 0px 0px 0px;
+        background-position: 98% 7px;
         float: left;
         height: 30px;
-        width: 390px
+        width: 98%;
     }
     .subs_shadow {
-      height: 72px;
+      height: 36px;
+    }
+    .subs_icon_wrapper {
+      height:36px;
+      width: 36px;
+      float: left;
+      @include box-shadow(1px, 1px, 4px, #888);
+      @include border-bottom-r-radius(5px);
+      padding: 0 4px 4px 0;
     }
     .subs_icon {
       height: 23px;
       width: 25px;
       background: $status_icons_green;
       float: left;
-      margin: 25px 8px;
+      margin: 8px 8px;
       &.green {
        background: $status_icons_green;
       }

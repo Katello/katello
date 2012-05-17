@@ -11,9 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Filter < ActiveRecord::Base
-
-
-  include Glue::Pulp::Filter if (AppConfig.use_cp and AppConfig.use_pulp)
+  include Glue::Pulp::Filter if AppConfig.katello?
   include Glue
   include Authorization
   include IndexedModel

@@ -34,5 +34,5 @@ class CreateUebercertTest(CLIActionTestCase):
         self.restore_mocks()
 
     def test_generates_uebercert_in_cp(self):
-        self.action.run()
-        self.action.api.uebercert.assert_called_once_with(self.NAME)
+        self.run_action()
+        self.action.api.uebercert.assert_called_once_with(self.NAME, None)

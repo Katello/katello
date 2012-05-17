@@ -10,25 +10,29 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/pulp'
-
 class Api::PackagesController < Api::ApiController
   respond_to :json
 
   before_filter :find_repository
-  before_filter :find_package, :except => [:index]
+  before_filter :find_package, :only => [:show]
   before_filter :authorize
 
   def rules
     readable = lambda{ @repo.environment.contents_readable? and @repo.product.readable? }
     {
       :index => readable,
+      :search => readable,
       :show => readable,
     }
   end
 
   def index
     render :json => @repo.packages
+  end
+
+  def search
+    packages = Glue::Pulp::Package.search(params[:search], 0, 0, [@repo.pulp_id])
+    render :json => packages.to_a
   end
 
   def show
@@ -44,7 +48,7 @@ class Api::PackagesController < Api::ApiController
   end
 
   def find_package
-    @package = Pulp::Package.find(params[:id])
+    @package = Resources::Pulp::Package.find(params[:id])
     raise HttpErrors::NotFound, _("Package with id '#{params[:id]}' not found") if @package.nil?
     # and check ownership of it
     raise HttpErrors::NotFound, _("Package '#{params[:id]}' not found within the repository") unless @package['repoids'].include? @repo.pulp_id

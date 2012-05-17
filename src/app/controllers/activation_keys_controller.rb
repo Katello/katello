@@ -271,7 +271,8 @@ class ActivationKeysController < ApplicationController
       :title => _('Activation Keys'),
       :col => ['name'],
       :titles => [_('Name')],
-      :create => _('Key'), 
+      :create => _('Key'),
+      :create_label => _('+ New Key'),
       :name => controller_display_name,
       :ajax_load  => true,
       :ajax_scroll => items_activation_keys_path(),
@@ -330,7 +331,7 @@ class ActivationKeysController < ApplicationController
     all_pools = {}
 
     # TODO: should be current_organization.pools (see pool.rb for attributes)
-    cp_pools = Candlepin::Owner.pools current_organization.cp_key
+    cp_pools = Resources::Candlepin::Owner.pools current_organization.cp_key
     cp_pools.each do |pool|
       p = OpenStruct.new
       p.poolId = pool['id']

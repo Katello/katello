@@ -15,7 +15,6 @@
 #
 
 import os
-import sys
 from gettext import gettext as _
 from urlparse import urlparse
 
@@ -23,11 +22,11 @@ from katello.client.api.provider import ProviderAPI
 from katello.client.server import ServerRequestError
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask, format_sync_errors
+from katello.client.core.utils import test_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask, format_sync_errors, system_exit
 from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.core.utils import ProgressBar
 from katello.client.api.utils import get_provider
-
+from katello.client.utils import printer
 
 Config()
 
@@ -72,15 +71,15 @@ class List(ProviderAction):
 
         provs = self.api.providers_by_org(orgName)
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('provider_type', 'Type')
-        self.printer.addColumn('repository_url', 'Url')
-        #self.printer.addColumn('organization_id', 'Org Id')
-        self.printer.addColumn('description', multiline=True)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('provider_type', 'Type')
+        self.printer.add_column('repository_url', 'Url')
+        #self.printer.add_column('organization_id', 'Org Id')
+        self.printer.add_column('description', multiline=True)
 
-        self.printer.setHeader(_("Provider List"))
-        self.printer.printItems(provs)
+        self.printer.set_header(_("Provider List"))
+        self.printer.print_items(provs)
         return os.EX_OK
 
 
@@ -94,19 +93,18 @@ class Info(SingleProviderAction):
         orgName  = self.get_option('org')
 
         prov = get_provider(orgName, provName)
-        if prov != None:
-            self.printer.addColumn('id')
-            self.printer.addColumn('name')
-            self.printer.addColumn('provider_type', 'Type')
-            self.printer.addColumn('repository_url', 'Url')
-            self.printer.addColumn('organization_id', 'Org Id')
-            self.printer.addColumn('description', multiline=True)
 
-            self.printer.setHeader(_("Provider Information"))
-            self.printer.printItem(prov)
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('provider_type', 'Type')
+        self.printer.add_column('repository_url', 'Url')
+        self.printer.add_column('organization_id', 'Org Id')
+        self.printer.add_column('description', multiline=True)
+
+        self.printer.set_header(_("Provider Information"))
+        self.printer.print_item(prov)
+        return os.EX_OK
+
 
 
 # ==============================================================================
@@ -157,24 +155,16 @@ class Update(ProviderAction):
 
     def create(self, name, orgName, description, url):
         prov = self.api.create(name, orgName, description, "Custom", url)
-        if is_valid_record(prov):
-            print _("Successfully created provider [ %s ]") % prov['name']
-            return True
-        else:
-            print >> sys.stderr, _("Could not create provider [ %s ]") % prov['name']
-            return False
+        test_record(prov,
+            _("Successfully created provider [ %s ]") % name,
+            _("Could not create provider [ %s ]") % name
+        )
 
 
     def update(self, name, orgName, newName, description, url):
-
         prov = get_provider(orgName, name)
-        if prov != None:
-            prov = self.api.update(prov["id"], newName, description, url)
-            print _("Successfully updated provider [ %s ]") % prov['name']
-            return True
-        else:
-            return False
-
+        prov = self.api.update(prov["id"], newName, description, url)
+        system_exit(os.EX_OK, _("Successfully updated provider [ %s ]") % prov['name'])
 
     def run(self):
         name        = self.get_option('name')
@@ -184,13 +174,9 @@ class Update(ProviderAction):
         url         = self.get_option('url')
 
         if self._create:
-            if not self.create(name, orgName, description, url):
-                return os.EX_DATAERR
+            self.create(name, orgName, description, url)
         else:
-            if not self.update(name, orgName, newName, description, url):
-                return os.EX_DATAERR
-
-        return os.EX_OK
+            self.update(name, orgName, newName, description, url)
 
 
 # ==============================================================================
@@ -203,12 +189,10 @@ class Delete(SingleProviderAction):
         orgName  = self.get_option('org')
 
         prov = get_provider(orgName, provName)
-        if prov != None:
-            msg = self.api.delete(prov["id"])
-            print msg
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
+
+        msg = self.api.delete(prov["id"])
+        print msg
+        return os.EX_OK
 
 
 # ==============================================================================
@@ -223,8 +207,6 @@ class Sync(SingleProviderAction):
 
     def sync_provider(self, providerName, orgName):
         prov = get_provider(orgName, providerName)
-        if prov == None:
-            return os.EX_DATAERR
 
         task = AsyncTask(self.api.sync(prov["id"]))
         run_async_task_with_status(task, ProgressBar())
@@ -250,8 +232,6 @@ class CancelSync(SingleProviderAction):
         orgName  = self.get_option('org')
 
         prov = get_provider(orgName, provName)
-        if prov == None:
-            return os.EX_DATAERR
 
         msg = self.api.cancel_sync(prov["id"])
         print msg
@@ -269,30 +249,25 @@ class Status(SingleProviderAction):
         orgName  = self.get_option('org')
 
         prov = get_provider(orgName, provName)
-        if prov == None:
-            return os.EX_DATAERR
 
         task = AsyncTask(self.api.last_sync_status(prov['id']))
-
-        prov['last_sync'] = format_sync_time(prov['last_sync'])
-        prov['sync_state'] = format_sync_state(prov['sync_state'])
 
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
-            prov['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+            prov['progress'] = (_("%d%% done (%d of %d packages downloaded)") % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
 
         #TODO: last errors?
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
 
-        self.printer.addColumn('last_sync')
-        self.printer.addColumn('sync_state')
-        self.printer.addColumn('progress', show_in_grep=False)
+        self.printer.add_column('last_sync', formatter=format_sync_time)
+        self.printer.add_column('sync_state', formatter=format_sync_state)
+        self.printer.add_column('progress', show_with=printer.VerboseStrategy)
 
-        self.printer.setHeader(_("Provider Status"))
-        self.printer.printItem(prov)
+        self.printer.set_header(_("Provider Status"))
+        self.printer.print_item(prov)
         return os.EX_OK
 
 
@@ -324,23 +299,20 @@ class ImportManifest(SingleProviderAction):
         try:
             f = open(get_abs_path(manifestPath))
         except:
-            print _("File %s does not exist" % manifestPath)
-            return os.EX_IOERR
+            system_exit(os.EX_IOERR, _("File %s does not exist" % manifestPath))
 
         prov = get_provider(orgName, provName)
-        if prov != None:
-            try:
-                response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f, force), message=_("Importing manifest, please wait... "))
-            except ServerRequestError, re:
-                if re.args[0] == 400 and "displayMessage" in re.args[1] and re.args[1]["displayMessage"] == "Import is older than existing data":
-                    re.args[1]["displayMessage"] = "Import is older then existing data, please try with --force option to import manifest."
-                raise re
-            f.close()
-            print response
-            return os.EX_OK
-        else:
-            f.close()
-            return os.EX_DATAERR
+
+        try:
+            response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f, force), message=_("Importing manifest, please wait... "))
+        except ServerRequestError, re:
+            if re.args[0] == 400 and "displayMessage" in re.args[1] and re.args[1]["displayMessage"] == "Import is older than existing data":
+                re.args[1]["displayMessage"] = "Import is older then existing data, please try with --force option to import manifest."
+            raise re
+        f.close()
+        print response
+        return os.EX_OK
+
 
 # ------------------------------------------------------------------------------
 class RefreshProducts(SingleProviderAction):
@@ -352,8 +324,6 @@ class RefreshProducts(SingleProviderAction):
         orgName  = self.get_option('org')
 
         prov = get_provider(orgName, provName)
-        if prov == None:
-            return os.EX_DATAERR
 
         self.api.refresh_products(prov["id"])
         print _("Provider successfully refreshed [ %s ]") % prov['name']

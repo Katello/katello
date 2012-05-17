@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'lib/authorization_rules'
 
-describe Api::RepositoriesController do
+describe Api::RepositoriesController, :katello => true do
   include OrchestrationHelper
   include LoginHelperMethods
   include AuthorizationHelperMethods
@@ -38,10 +38,10 @@ describe Api::RepositoriesController do
       ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :pulp_id=>"1")
       Repository.stub(:find).and_return(@repository)
-      Pulp::Repository.stub(:start_discovery).and_return({})
+      Resources::Pulp::Repository.stub(:start_discovery).and_return({})
       PulpSyncStatus.stub(:using_pulp_task).and_return(task_stub)
-      Pulp::PackageGroup.stub(:all => {})
-      Pulp::PackageGroupCategory.stub(:all => {})
+      Resources::Pulp::PackageGroup.stub(:all => {})
+      Resources::Pulp::PackageGroupCategory.stub(:all => {})
     end
     describe "for create" do
       let(:action) {:create}
@@ -273,7 +273,7 @@ describe Api::RepositoriesController do
     end
 
     describe "repository discovery" do
-      it "should call Pulp::Proxy.post" do
+      it "should call Resources::Pulp::Proxy.post" do
         url  = "http://url.org"
         type = "yum"
 
@@ -304,8 +304,8 @@ describe Api::RepositoriesController do
     end
 
     describe "repository discovery" do
-      it "should call Pulp::Proxy.post" do
-        Pulp::Repository.should_receive(:start_discovery).with(url, type).once.and_return({})
+      it "should call Resources::Pulp::Proxy.post" do
+        Resources::Pulp::Repository.should_receive(:start_discovery).with(url, type).once.and_return({})
         PulpSyncStatus.should_receive(:using_pulp_task).with({}).and_return(task_stub)
         Organization.stub!(:first).and_return(@organization)
 
@@ -361,10 +361,10 @@ describe Api::RepositoriesController do
       before do
           @repo = Repository.new(:pulp_id=>"123", :id=>"123")
           Repository.stub(:find).and_return(@repo)
-          Pulp::PackageGroup.stub(:all => {})
+          Resources::Pulp::PackageGroup.stub(:all => {})
       end
       it "should call Pulp layer" do
-        Pulp::PackageGroup.should_receive(:all).with("123")
+        Resources::Pulp::PackageGroup.should_receive(:all).with("123")
         subject
       end
       it { should be_success }
@@ -376,10 +376,10 @@ describe Api::RepositoriesController do
       before do
           @repo = Repository.new(:pulp_id=>"123", :id=>"123")
           Repository.stub(:find).and_return(@repo)
-          Pulp::PackageGroupCategory.stub(:all => {})
+          Resources::Pulp::PackageGroupCategory.stub(:all => {})
       end
       it "should call Pulp layer" do
-        Pulp::PackageGroupCategory.should_receive(:all).with("123")
+        Resources::Pulp::PackageGroupCategory.should_receive(:all).with("123")
         subject
       end
       it { should be_success }

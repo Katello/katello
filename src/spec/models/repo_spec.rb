@@ -13,7 +13,7 @@
 require 'spec_helper'
 require 'helpers/repo_test_data'
 
-describe Glue::Pulp::Repo do
+describe Glue::Pulp::Repo, :katello => true do
 
     let(:to_create_custom) do
     {
@@ -23,8 +23,6 @@ describe Glue::Pulp::Repo do
       :provider_type => Provider::CUSTOM
     }
     end
-
-
 
   before :each do
     disable_repo_orchestration
@@ -37,16 +35,24 @@ describe Glue::Pulp::Repo do
       p.organization = @organization
     end
 
+    
+
     @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
     ep = EnvironmentProduct.find_or_create(@organization.library, @product1)
     RepoTestData::REPO_PROPERTIES.merge!(:environment_product => ep)
 
     @repo = Repository.create!(RepoTestData::REPO_PROPERTIES)
+
+    @rh_product =  Product.create!({:cp_id => "rh_product1_id", :name=> "rh_product1", :productContent => [], 
+                                    :provider => @organization.redhat_provider, :environments => [@organization.library]})
+    ep2 = EnvironmentProduct.find_or_create(@organization.library, @rh_product)
+    @rh_repo = Repository.create!(:name=>"red hat repo", :environment_product=>ep2, :pulp_id=>"redhat_pulp_id", :uri=>"http://redhat.com/cdn/content")
+
   end
 
   context "Create & destroy a repo" do
     it "should create the repo with correct properties" do
-      Pulp::Repository.should_receive(:create).with do |props|
+      Resources::Pulp::Repository.should_receive(:create).with do |props|
         props[:id].should == RepoTestData::REPO_PROPERTIES[:pulp_id]
         props[:name].should == RepoTestData::REPO_PROPERTIES[:name]
         props[:groupid].should == RepoTestData::REPO_PROPERTIES[:groupid]
@@ -57,17 +63,31 @@ describe Glue::Pulp::Repo do
       @repo.create_pulp_repo
     end
 
-    it "should call the Pulp's delete api on destroy" do
+    it "should call  Pulp and candlepin's delete api on destroy for custom providers" do
       @repo.stub(:update_packages_index).and_return
       @repo.stub(:update_errata_index).and_return
-      Pulp::Repository.should_receive(:destroy).with(RepoTestData::REPO_ID)
-      @repo.destroy_repo
+      @repo.stub(:content_id).and_return("124321323")
+      Resources::Candlepin::Product.should_receive(:remove_content)
+      Resources::Candlepin::Content.should_receive(:destroy)
+      Resources::Pulp::Repository.should_receive(:destroy).with(RepoTestData::REPO_ID)
+      @repo.destroy
+    end
+
+    it "should only call Pulp's repo delete api on destroy for redhat providers" do
+      @rh_repo.stub(:update_packages_index).and_return
+      @rh_repo.stub(:update_errata_index).and_return
+      @rh_repo.stub(:content_id).and_return("124321323")
+      Resources::Pulp::Repository.stub(:find).and_return({:groupid=>["product:123", "env:123", "org:123"]})
+      Resources::Candlepin::Product.should_receive(:remove_content)
+      Resources::Candlepin::Content.should_not_receive(:destroy)
+      Resources::Pulp::Repository.should_receive(:destroy).with(@rh_repo.pulp_id)
+      @rh_repo.destroy
     end
   end
 
   context "Finding a repo" do
     it "should call Pulp's find api'" do
-      Pulp::Repository.should_receive(:find).with(RepoTestData::REPO_ID)
+      Resources::Pulp::Repository.should_receive(:find).with(RepoTestData::REPO_ID)
       Repository.find_by_pulp_id(RepoTestData::REPO_ID).feed
     end
 
@@ -81,14 +101,14 @@ describe Glue::Pulp::Repo do
 
   context "Find packages" do
     it "should find all packages in the repo" do
-      Pulp::Repository.should_receive(:packages).once.with(RepoTestData::REPO_ID)
+      Resources::Pulp::Repository.should_receive(:packages).once.with(RepoTestData::REPO_ID)
       packs = @repo.packages
       packs.length.should == RepoTestData::REPO_PACKAGES.length
     end
 
     it "called for second time should use the cached values" do
       @repo.packages
-      Pulp::Repository.should_not_receive(:packages).with(RepoTestData::REPO_ID, {})
+      Resources::Pulp::Repository.should_not_receive(:packages).with(RepoTestData::REPO_ID, {})
       @repo.packages
     end
 
@@ -100,14 +120,14 @@ describe Glue::Pulp::Repo do
 
   context "Find errata" do
     it "should find all errata in the repo" do
-      Pulp::Repository.should_receive(:errata).once.with(RepoTestData::REPO_ID)
+      Resources::Pulp::Repository.should_receive(:errata).once.with(RepoTestData::REPO_ID)
       errata = @repo.errata
       errata.length.should == RepoTestData::REPO_ERRATA.length
     end
 
     it "called for second time should use the cached values" do
       @repo.errata
-      Pulp::Repository.should_not_receive(:errata).with(RepoTestData::REPO_ID)
+      Resources::Pulp::Repository.should_not_receive(:errata).with(RepoTestData::REPO_ID)
       @repo.errata
     end
 
@@ -119,14 +139,14 @@ describe Glue::Pulp::Repo do
 
   context "Find distributions" do
     it "should find all distributions in the repo" do
-      Pulp::Repository.should_receive(:distributions).once.with(RepoTestData::REPO_ID)
+      Resources::Pulp::Repository.should_receive(:distributions).once.with(RepoTestData::REPO_ID)
       dists = @repo.distributions
       dists.length.should == RepoTestData::REPO_DISTRIBUTIONS.length
     end
 
     it "called for second time should use the cached values" do
       @repo.distributions
-      Pulp::Repository.should_not_receive(:distributions).with(RepoTestData::REPO_ID)
+      Resources::Pulp::Repository.should_not_receive(:distributions).with(RepoTestData::REPO_ID)
       @repo.distributions
     end
 
@@ -140,7 +160,7 @@ describe Glue::Pulp::Repo do
 
     it "should call pulp synchronization api" do
       @repo.stub(:async).and_return(@repo)
-      Pulp::Repository.should_receive(:sync).with(RepoTestData::REPO_ID).and_return({})
+      Resources::Pulp::Repository.should_receive(:sync).with(RepoTestData::REPO_ID).and_return({})
       task = mock()
       task.stub(:save!)
       PulpSyncStatus.should_receive(:using_pulp_task).and_return(task)
@@ -150,17 +170,17 @@ describe Glue::Pulp::Repo do
     context "status returned by synced?" do
 
       it "should be false for repos that have never been synced" do
-        Pulp::Repository.stub(:sync_history).and_return([])
+        Resources::Pulp::Repository.stub(:sync_history).and_return([])
         @repo.synced?.should == false
       end
 
       it "should be false for repos whose last sync failed" do
-        Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::UNSUCCESSFULL_SYNC_HISTORY)
+        Resources::Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::UNSUCCESSFULL_SYNC_HISTORY)
         @repo.synced?.should == false
       end
 
       it "should be true for repos with last successfull sync in sync history" do
-        Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::SUCCESSFULL_SYNC_HISTORY)
+        Resources::Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::SUCCESSFULL_SYNC_HISTORY)
         @repo.synced?.should == true
       end
     end
@@ -168,7 +188,7 @@ describe Glue::Pulp::Repo do
     context "status returned by sync_status" do
 
       it "should be status of the last synchronization" do
-        Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::SUCCESSFULL_SYNC_HISTORY)
+        Resources::Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::SUCCESSFULL_SYNC_HISTORY)
         returned_status = @repo.sync_status
 
         last_status = ::PulpSyncStatus.using_pulp_task(RepoTestData::SUCCESSFULL_SYNC_HISTORY[0])
@@ -182,7 +202,7 @@ describe Glue::Pulp::Repo do
     context "state returned by sync_state" do
 
       it "should be the same as state of the last synchronization status" do
-        Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::SUCCESSFULL_SYNC_HISTORY)
+        Resources::Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::SUCCESSFULL_SYNC_HISTORY)
         @repo.sync_state.should == RepoTestData::SUCCESSFULL_SYNC_HISTORY[0][:state]
       end
     end
@@ -190,13 +210,13 @@ describe Glue::Pulp::Repo do
     context "should return correct synchronization times" do
 
       it "for already synced repo" do
-        Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::SUCCESSFULL_SYNC_HISTORY)
+        Resources::Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::SUCCESSFULL_SYNC_HISTORY)
         @repo.sync_start.to_s.should == RepoTestData::LAST_SUCC_SYNC_START
         @repo.sync_finish.to_s.should == RepoTestData::LAST_SUCC_SYNC_FINISH
       end
 
       it "for repo that has never been synced" do
-        Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return([])
+        Resources::Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return([])
         @repo.sync_start.should == nil
         @repo.sync_finish.should == nil
       end
@@ -268,20 +288,20 @@ describe Glue::Pulp::Repo do
     context "cancelling" do
 
       it "should call Pulp's cancel api if the sync history is not empty" do
-        Pulp::Repository.stub(:sync_status) do
+        Resources::Pulp::Repository.stub(:sync_status) do
           raise
         end
-        Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::SUCCESSFULL_SYNC_HISTORY)
-        Pulp::Task.should_receive(:cancel).with(RepoTestData::SUCCESSFULL_SYNC_HISTORY[0]["id"])
+        Resources::Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::SUCCESSFULL_SYNC_HISTORY)
+        Resources::Pulp::Task.should_receive(:cancel).with(RepoTestData::SUCCESSFULL_SYNC_HISTORY[0]["id"])
         @repo.cancel_sync
       end
 
       it "should not call Pulp's cancel api if the sync history is empty" do
-        Pulp::Repository.stub(:sync_status) do
+        Resources::Pulp::Repository.stub(:sync_status) do
           raise
         end
-        Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return([])
-        Pulp::Task.should_not_receive(:cancel)
+        Resources::Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return([])
+        Resources::Pulp::Task.should_not_receive(:cancel)
         @repo.cancel_sync
       end
 
@@ -318,8 +338,8 @@ describe Glue::Pulp::Repo do
   context "Repo promote" do
 
     before :each do
-      Pulp::Repository.stub(:packages).and_return([])
-      Pulp::Repository.stub(:errata).and_return([])
+      Resources::Pulp::Repository.stub(:packages).and_return([])
+      Resources::Pulp::Repository.stub(:errata).and_return([])
 
       @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod", :prior=>@organization.library)
       @from_env = @to_env.prior
@@ -359,7 +379,7 @@ describe Glue::Pulp::Repo do
     end
 
     it "should clone the repo" do
-      Pulp::Repository.should_receive(:clone_repo).with do |repo, cloned|
+      Resources::Pulp::Repository.should_receive(:clone_repo).with do |repo, cloned|
         repo.should == @repo
         cloned.name.should == RepoTestData::CLONED_PROPERTIES[:name]
 
@@ -393,7 +413,7 @@ describe Glue::Pulp::Repo do
     end
 
     it "should set relative path correctly" do
-      Pulp::Repository.should_receive(:clone_repo).with do |repo, cloned|
+      Resources::Pulp::Repository.should_receive(:clone_repo).with do |repo, cloned|
         cloned.relative_path.should == "#{@repo.organization.name}/#{@to_env.name}#{@content_path}"
         true
       end
@@ -402,9 +422,9 @@ describe Glue::Pulp::Repo do
   end
 
   describe "#package_groups" do
-    before { Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups) }
+    before { Resources::Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups) }
     it "should call pulp layer" do
-      Pulp::PackageGroup.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:pulp_id])
+      Resources::Pulp::PackageGroup.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:pulp_id])
       @repo.package_groups
     end
 
@@ -415,9 +435,9 @@ describe Glue::Pulp::Repo do
   end
 
   describe "#package_group_categories" do
-    before { Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories) }
+    before { Resources::Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories) }
     it "should call pulp layer" do
-      Pulp::PackageGroupCategory.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:pulp_id])
+      Resources::Pulp::PackageGroupCategory.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:pulp_id])
       @repo.package_group_categories
     end
 

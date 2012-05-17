@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe SystemTemplatesController do
+describe SystemTemplatesController, :katello => true do
 
   include LoginHelperMethods
   include LocaleHelperMethods
@@ -48,10 +48,10 @@ describe SystemTemplatesController do
 
     describe "GET download" do
       describe "with valid template id" do
-        before { ::Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => "", :key => "" }) }
+        before { ::Resources::Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => "", :key => "" }) }
         it "sends xml export of template" do
           @system_template_1.stub(:repositories).and_return([Repository.new(:name=>"FOOREPO", :pulp_id=>"anid")])
-          Pulp::Distribution.stub(:find).and_return({})
+          Resources::Pulp::Distribution.stub(:find).and_return({})
           @system_template_1.stub(:distributions).and_return([SystemTemplateDistribution.new({:distribution_pulp_id=>"FOO"})])
           SystemTemplate.stub(:find).and_return(@system_template_1)
           SystemTemplate.stub(:where).and_return([@system_template_1])

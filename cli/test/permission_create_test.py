@@ -7,7 +7,7 @@ import test_data
 
 import katello.client.core.permission
 from katello.client.core.permission import Create
-
+from katello.client.api.utils import ApiDataError
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #required: name, user_role, scope
@@ -85,28 +85,28 @@ class PermissionCreateTest(CLIActionTestCase):
     def test_it_finds_role(self):
         self.mock(self.action, 'split_options', [])
         self.mock(self.action, 'tags_to_ids', [])
-        self.action.run()
+        self.run_action()
         self.module.get_role.assert_called_once_with(self.ROLE['name'])
 
     def test_it_returns_error_when_role_not_found(self):
         self.mock(self.action, 'split_options', [])
         self.mock(self.action, 'tags_to_ids', [])
-        self.mock(self.module, 'get_role')
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.mock(self.module, 'get_role').side_effect = ApiDataError
+        self.run_action(os.EX_DATAERR)
 
     def test_it_creates_permission(self):
         self.mock_options(self.FULL_OPTIONS)
         self.mock(self.action, 'tags_to_ids', ['1', '2'])
-        self.action.run()
+        self.run_action()
         self.action.api.create.assert_called_once_with(self.ROLE['id'], self.PERMISSION['name'], self.PERMISSION['description'], self.PERMISSION['resource_type']['name'], ['v1', 'v2'], ['1', '2'], None)
 
     def test_returns_error_when_permission_not_created(self):
         self.mock(self.action, 'split_options', [])
         self.mock(self.action, 'tags_to_ids', [])
         self.mock(self.action.api, 'create', {})
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
+        self.run_action(os.EX_DATAERR)
 
     def test_returns_ok(self):
         self.mock(self.action, 'split_options', [])
         self.mock(self.action, 'tags_to_ids', [])
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)

@@ -22,9 +22,10 @@ from optparse import OptionValueError
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, system_exit
+from katello.client.core.utils import test_record, get_abs_path, run_spinner_in_bg, system_exit
 from katello.client.api.utils import get_library, get_environment, get_template, get_product, get_repo
 from katello.client.utils.encoding import u_str
+from katello.client.utils import printer
 
 Config()
 
@@ -62,22 +63,19 @@ class List(TemplateAction):
         orgName = self.get_option('org')
 
         environment = get_environment(orgName, envName)
-
-        if not environment:
-            return os.EX_DATAERR
         templates = self.api.templates(environment["id"])
 
         if not templates:
             print _("No templates found in environment [ %s ]") % environment["name"]
             return os.EX_OK
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('environment_id')
-        self.printer.addColumn('parent_id')
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('environment_id')
+        self.printer.add_column('parent_id')
 
-        self.printer.setHeader(_("Template List"))
-        self.printer.printItems(templates)
+        self.printer.set_header(_("Template List"))
+        self.printer.print_items(templates)
         return os.EX_OK
 
 
@@ -104,8 +102,6 @@ class Info(TemplateAction):
         envName = self.get_option('env')
 
         template = get_template(orgName, envName, tplName)
-        if template == None:
-            return os.EX_DATAERR
 
         template["products"]     = [p["name"] for p in template["products"]]
         template["repositories"] = [r["name"] for r in template["repositories"]]
@@ -114,22 +110,22 @@ class Info(TemplateAction):
         template["package_groups"] = [p["name"] for p in template["package_groups"]]
         template["package_group_categories"] = [p["name"] for p in template["pg_categories"]]
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.addColumn('revision', show_in_grep=False)
-        self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('environment_id')
-        self.printer.addColumn('parent_id')
-        self.printer.addColumn('errata', multiline=True, show_in_grep=False)
-        self.printer.addColumn('products', multiline=True, show_in_grep=False)
-        self.printer.addColumn('repositories', multiline=True, show_in_grep=False)
-        self.printer.addColumn('packages', multiline=True, show_in_grep=False)
-        self.printer.addColumn('parameters', multiline=True, show_in_grep=False)
-        self.printer.addColumn('package_groups', multiline=True, show_in_grep=False)
-        self.printer.addColumn('package_group_categories', multiline=True, show_in_grep=False)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.add_column('revision', show_with=printer.VerboseStrategy)
+        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('environment_id')
+        self.printer.add_column('parent_id')
+        self.printer.add_column('errata', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('products', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('repositories', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('packages', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('parameters', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('package_groups', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('package_group_categories', multiline=True, show_with=printer.VerboseStrategy)
 
-        self.printer.setHeader(_("Template Info"))
-        self.printer.printItem(template)
+        self.printer.set_header(_("Template Info"))
+        self.printer.print_item(template)
         return os.EX_OK
 
 
@@ -174,8 +170,6 @@ class Import(TemplateAction):
         tplPath = self.get_option('file')
 
         env = get_library(orgName)
-        if env == None:
-            return os.EX_DATAERR
 
         try:
             f = self.open_file(tplPath)
@@ -224,8 +218,6 @@ class Export(TemplateAction):
         tplPath = self.get_option('file')
 
         template = get_template(orgName, envName, tplName)
-        if not template:
-            return os.EX_DATAERR
 
         try:
             f = self.open_file(tplPath)
@@ -273,21 +265,18 @@ class Create(TemplateAction):
         parentName = self.get_option('parent')
 
         env = get_library(orgName)
-        if env != None:
-            if parentName != None:
-                parentId = self.get_parent_id(orgName, env['name'], parentName)
-            else:
-                parentId = None
 
-            template = self.api.create(env["id"], name, desc, parentId)
-            if is_valid_record(template):
-                print _("Successfully created template [ %s ]") % template['name']
-                return os.EX_OK
-            else:
-                print >> sys.stderr, _("Could not create template [ %s ]") % name
-                return os.EX_DATAERR
+        if parentName != None:
+            parentId = self.get_parent_id(orgName, env['name'], parentName)
         else:
-            return os.EX_DATAERR
+            parentId = None
+
+        template = self.api.create(env["id"], name, desc, parentId)
+        test_record(template,
+            _("Successfully created template [ %s ]") % name,
+            _("Could not create template [ %s ]") % name
+        )
+
 
 
 # ==============================================================================
@@ -418,22 +407,18 @@ class Update(TemplateAction):
         content = self.getContent()
 
         env = get_library(orgName)
-        if env == None:
-            return os.EX_DATAERR
-
         template = get_template(orgName, env["name"], tplName)
-        if template != None:
-            if parentName != None:
-                parentId = self.get_parent_id(orgName, env["name"], parentName)
-            else:
-                parentId = None
 
-            run_spinner_in_bg(self.updateTemplate, [template["id"], newName, desc, parentId], _("Updating the template, please wait... "))
-            run_spinner_in_bg(self.updateContent,  [template["id"], content], _("Updating the template, please wait... "))
-            print _("Successfully updated template [ %s ]") % template['name']
-            return os.EX_OK
+        if parentName != None:
+            parentId = self.get_parent_id(orgName, env["name"], parentName)
         else:
-            return os.EX_DATAERR
+            parentId = None
+
+        run_spinner_in_bg(self.updateTemplate, [template["id"], newName, desc, parentId], _("Updating the template, please wait... "))
+        run_spinner_in_bg(self.updateContent,  [template["id"], content], _("Updating the template, please wait... "))
+        print _("Successfully updated template [ %s ]") % template['name']
+        return os.EX_OK
+
 
 
     def productNamesToIds(self, orgName, productNames):
@@ -519,12 +504,9 @@ class Delete(TemplateAction):
         envName = self.get_option('env')
 
         template = get_template(orgName, envName, tplName)
-        if template != None:
-            msg = self.api.delete(template["id"])
-            print msg
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
+        msg = self.api.delete(template["id"])
+        print msg
+        return os.EX_OK
 
 
 # provider command =============================================================

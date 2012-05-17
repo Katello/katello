@@ -13,7 +13,7 @@
 require 'spec_helper'
 include OrchestrationHelper
 
-describe Api::SyncController do
+describe Api::SyncController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
@@ -156,8 +156,8 @@ describe Api::SyncController do
       before(:each) do
         #@organization = Organization.create!(:name => "organization", :cp_key => "123")
         
-        Pulp::Repository.stub(:sync).with("1").and_return(async_task_1)
-        Pulp::Repository.stub(:sync).with("2").and_return(async_task_2)
+        Resources::Pulp::Repository.stub(:sync).with("1").and_return(async_task_1)
+        Resources::Pulp::Repository.stub(:sync).with("2").and_return(async_task_2)
         #@syncable = mock()
         #@syncable.stub!(:organization).and_return(@organization)
 

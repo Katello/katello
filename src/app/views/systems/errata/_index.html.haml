@@ -1,18 +1,18 @@
-= javascript :filtertable, :system_errata
+= javascript :filtertable
 = javascript do
   -if editable
-    :javascript
+    :plain
       $(document).ready(function() {
         KT.system.errata.init(true);
       });
   -else
-    :javascript
+    :plain
       $(document).ready(function() {
         KT.system.errata.init(false);
       });
 
 = javascript do
-  :javascript
+  :plain
     localize({
       "x_of_y_errata" : function(x,y,z){ return '#{_("Viewing %X of %Y results (%Z Total Errata)")}'.replace("%X", x).replace("%Y", y).replace("%Z", z); },
       "errata_installing" : '#{_("Installing")}',

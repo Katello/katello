@@ -54,12 +54,12 @@ class UserRoleUpdateTest(CLIActionTestCase):
         self.mock(self.action.api, 'update', self.ROLE)
 
     def test_finds_role(self):
-        self.action.run()
+        self.run_action()
         self.action.api.roles.assert_called_once_with({'name': self.ROLE['name']})
 
     def test_it_updates_role(self):
-        self.action.run()
+        self.run_action()
         self.action.api.update.assert_called_once_with(self.ROLE['id'] , self.NEW_NAME, self.ROLE['description'])
 
     def test_returns_ok(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)

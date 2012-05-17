@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.11
+Version:       0.2.16
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,23 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.16-1
+- product status cli - fix for key error Formatting moved to printer that
+  checks whether the key exist prior to printing it.
+
+* Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.15-1
+- systems - more cli system tests - test for listing available subscriptions
+  for a system - test for listing systems for a pool id
+
+* Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.14-1
+- 767925 - search packages command in CLI/API
+
+* Tue Apr 24 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.13-1
+- katello-cli, katello - setting default environment for user
+
+* Thu Apr 19 2012 Ivan Necas <inecas@redhat.com> 0.2.12-1
+- cli-test-rhsmcerd - don't check the output of rhsmcertd restart
+
 * Tue Apr 10 2012 Tomas Strachota <tstrachota@redhat.com> 0.2.11-1
 - slas - all cli options --service_level renamed to --servicelevel
 

@@ -7,7 +7,7 @@ import test_data
 
 import katello.client.core.user
 from katello.client.core.user import AssignRole
-
+from katello.client.api.utils import ApiDataError
 
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
@@ -51,24 +51,24 @@ class UserRoleDeleteTest(CLIActionTestCase):
         self.mock(self.module, 'get_user', self.USER)
 
     def test_it_finds_user(self):
-        self.action.run()
+        self.run_action()
         self.module.get_user.assert_called_once_with(self.USER['username'])
 
     def test_it_finds_role(self):
-        self.action.run()
+        self.run_action()
         self.action.role_api.role_by_name.assert_called_once_with(self.ROLE['name'])
 
     def test_returns_error_when_user_not_found(self):
-        self.mock(self.module, 'get_user', None)
-        self.assertNotEqual(self.action.run(), os.EX_OK)
+        self.mock(self.module, 'get_user').side_effect = ApiDataError
+        self.run_action(os.EX_DATAERR)
 
     def test_returns_error_when_role_not_found(self):
         self.mock(self.action.role_api, 'role_by_name', None)
-        self.assertNotEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_DATAERR)
 
     def test_it_calls_update_role(self):
         self.mock(self.action, 'update_role')
-        self.action.run()
+        self.run_action()
         self.action.update_role.assert_called_once_with(self.USER['id'], self.ROLE['id'])
 
     def test_it_assigns_role(self):
@@ -82,4 +82,4 @@ class UserRoleDeleteTest(CLIActionTestCase):
         self.action.api.unassign_role.assert_called_once_with(1, 2)
 
     def test_returns_ok(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
+        self.run_action(os.EX_OK)

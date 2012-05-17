@@ -1,5 +1,5 @@
 = javascript do
-  :javascript
+  :plain
     localize({
         "systemReleaseVerDefault": '#{escape_javascript(_("System Default"))}'
     });
@@ -44,8 +44,8 @@
       %fieldset
         .grid_2.ra.fieldset
           = label :releaseVer, :releaseVer, _("Release Version")
-        .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever" if editable), 'data-url' => system_path(system.id), 'data-options' => system_releasevers_edit(system)}
-          = system.releaseVer
+        .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever" if editable), 'data-url' => system_path(system.id), 'data-options' => system_releasevers_edit(system, releases)}
+          = system.release
       %fieldset
         .grid_2.ra.fieldset
           = label :arch, :arch, _("Arch")

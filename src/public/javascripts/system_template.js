@@ -1179,6 +1179,7 @@ KT.template_download = {
 KT.editable = {
     setup_editable_name : function(id, success) {
         $('.edit_template_name').each(function() {
+            $(this).editable('destroy');
             $(this).editable(KT.common.rootURL() + "/system_templates/" + id, {
                 type        :  'text',
                 width       :  250,
@@ -1199,6 +1200,7 @@ KT.editable = {
     },
     setup_editable_description : function(id, success) {
         $('.edit_template_description').each(function() {
+            $(this).editable('destroy');
             $(this).editable(KT.common.rootURL() + "/system_templates/" + id, {
                 type        :  'textarea',
                 rows        :  6,

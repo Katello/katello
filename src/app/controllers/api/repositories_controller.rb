@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/pulp'
-
 class Api::RepositoriesController < Api::ApiController
   include KatelloUrlHelper
   respond_to :json
@@ -120,7 +118,7 @@ class Api::RepositoriesController < Api::ApiController
 
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
   def discovery
-    pulp_task = Pulp::Repository.start_discovery(params[:url], params[:type])
+    pulp_task = Resources::Pulp::Repository.start_discovery(params[:url], params[:type])
     task = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = @organization}
     task.save!
     render :json => task

@@ -45,7 +45,7 @@ class SubscriptionsListTest(CLIActionTestCase):
         self.restore_mocks()
 
     def test_it_finds_all_pools_for_organization(self):
-        self.action.run()
+        self.run_action()
         self.action.api.pools.assert_called_once_with(test_data.ORGS[0]["cp_key"])
 
     def test_extract_sla_from_product(self):

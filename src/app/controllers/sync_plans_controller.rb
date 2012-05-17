@@ -48,6 +48,7 @@ class SyncPlansController < ApplicationController
                  :col =>  ['name', 'interval'],
                   :titles => [_('Name'), _("Interval") ],
                  :create => _('Plan'),
+                 :create_label => _('+ New Plan'),
                  :name => controller_display_name,
                  :ajax_load => true,
                  :ajax_scroll => items_sync_plans_path(),

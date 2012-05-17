@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe Api::ProductsController do
+describe Api::ProductsController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include ProductHelperMethods
@@ -27,8 +27,8 @@ describe Api::ProductsController do
     disable_product_orchestration
     disable_user_orchestration
 
-    Pulp::Repository.stub(:packages).and_return([])
-    Pulp::Repository.stub(:errata).and_return([])
+    Resources::Pulp::Repository.stub(:packages).and_return([])
+    Resources::Pulp::Repository.stub(:errata).and_return([])
 
     @organization = new_test_org
     @environment = KTEnvironment.create!(:name=> "foo123", :organization => @organization, :prior =>@organization.library)
@@ -61,7 +61,7 @@ describe Api::ProductsController do
     Product.stub!(:select).and_return(@products)
     @product.stub(:repos).and_return(@repositories)
     @product.stub(:sync_state => ::PulpSyncStatus::Status::NOT_SYNCED)
-    Pulp::Repository.stub(:sync_history => [])
+    Resources::Pulp::Repository.stub(:sync_history => [])
 
 
     @request.env["HTTP_ACCEPT"] = "application/json"
@@ -70,7 +70,7 @@ describe Api::ProductsController do
 
   describe "show product" do
     before do
-      Pulp::Repository.stub(:find).and_return(RepoTestData::REPO_PROPERTIES)
+      Resources::Pulp::Repository.stub(:find).and_return(RepoTestData::REPO_PROPERTIES)
     end
 
     let(:action) { :show }
@@ -90,7 +90,7 @@ describe Api::ProductsController do
     let(:gpg_key) { GpgKey.create!(:name => "Gpg key", :content => "100", :organization => @organization) }
 
     before do
-      Pulp::Repository.stub(:find).and_return(RepoTestData::REPO_PROPERTIES)
+      Resources::Pulp::Repository.stub(:find).and_return(RepoTestData::REPO_PROPERTIES)
       Product.stub(:find_by_cp_id).with(@product.cp_id).and_return(@product)
       @product.stub(:update_attributes! => true)
     end

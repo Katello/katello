@@ -35,8 +35,7 @@ unless user_admin
 end
 raise "Unable to create admin user: #{format_errors user_admin}" if user_admin.nil? or user_admin.errors.size > 0
 
-hidden_user = nil
-unless User.hidden.first
+unless hidden_user = User.hidden.first
   hidden_user = User.new(
     :roles => [],
     :username => "hidden-#{Password.generate_random_string(6)}",
@@ -47,8 +46,11 @@ unless User.hidden.first
 end
 raise "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? or hidden_user.errors.size > 0
 
+first_org_name = "ACME_Corporation"
+first_org_desc = first_org_name + " Organization"
+first_org_cp_key = first_org_name.gsub(' ', '_')
 # create the default org = "admin" if none exist
-first_org = Organization.find_or_create_by_name(:name => "ACME_Corporation", :description => "ACME Corporation Organization", :cp_key => 'ACME_Corporation')
+first_org = Organization.find_or_create_by_name(:name => first_org_name, :description => first_org_desc, :cp_key => first_org_cp_key)
 raise "Unable to create first org: #{format_errors first_org}" if first_org and first_org.errors.size > 0
 raise "Are you sure you cleared candlepin?! Unable to create first org!" if first_org.environments.nil?
 

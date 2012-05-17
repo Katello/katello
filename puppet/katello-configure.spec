@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.18
+Version:        0.2.22
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -23,7 +23,8 @@ BuildRequires:  findutils puppet >= 2.6.6
 BuildArch: noarch
 
 %description
-Provides katello-configure script which configures Katello installation.
+Provides katello-configure script which configures Katello installation and
+katello-upgrade which handles upgrades between versions.
 
 %prep
 %setup -q
@@ -35,14 +36,25 @@ find -name '*.pp' | xargs -n 1 -t puppet --parseonly
 #check for puppet erb syntax errors
 find modules/ -name \*erb | xargs aux/check_erb
 
+#build katello-configure man page
 THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/; s/\s+CLI_OPTIONS/$C/; s/^CLI_OPTIONS_LONG/$X/; print; next } ($t, $l, $v, $d) = /^#\s*(.+?\n)(.+\n)?(\S+)\s*=\s*(.*?)\n+$/s; $l =~ s/^#\s*//gm; $l = $t if not $l; ($o = $v) =~ s/_/-/g; $x .= qq/=item --$o=<\U$v\E>\n\n$l\nThe default value is "$d".\n\n/; $C .= "\n        [ --$o=<\U$v\E> ]"; $X = $x if eof' default-answer-file man/katello-configure.pod \
 	| /usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} - man/katello-configure.man1
+
+#build katello-upgrade man page
+sed -e 's/THE_VERSION/%version/g' man/katello-upgrade.pod | /usr/bin/pod2man --name=katello-upgrade -c "Katello Reference" --section=1 --release=%{version} - man/katello-upgrade.man1
+
+#build katello-passwd man page
+THE_VERSION=%version sed -i "s/THE_VERSION/$THE_VERSION/g" man/katello-passwd.pod bin/katello-passwd
+/usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} man/katello-passwd.pod man/katello-passwd.man1
+
 
 %install
 rm -rf %{buildroot}
 #prepare dir structure
 install -d -m 0755 %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
+install -m 0755 bin/katello-upgrade %{buildroot}%{_sbindir}
+install -m 0755 bin/katello-passwd %{buildroot}%{_sbindir}
 install -d -m 0755 %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{homedir}/puppet/modules
 cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
@@ -52,17 +64,62 @@ install -m 0644 default-answer-file %{buildroot}%{homedir}
 install -m 0644 options-format-file %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/katello-configure.man1 %{buildroot}%{_mandir}/man1/katello-configure.1
+install -m 0644 man/katello-upgrade.man1 %{buildroot}%{_mandir}/man1/katello-upgrade.1
+install -m 0644 man/katello-passwd.man1 %{buildroot}%{_mandir}/man1/katello-passwd.1
+install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts
+cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%{homedir}
+%{homedir}/
 %{_sbindir}/katello-configure
+%{_sbindir}/katello-upgrade
+%{_sbindir}/katello-passwd
 %{_mandir}/man1/katello-configure.1*
+%{_mandir}/man1/katello-upgrade.1*
+%{_mandir}/man1/katello-passwd.1*
+
 
 %changelog
+* Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.22-1
+- encryption - plain text passwords encryption
+
+* Wed May 16 2012 Mike McCune <mmccune@redhat.com> 0.2.21-1
+- 817933 part deux - also going to read these from katello-configure bin
+  (jomara@redhat.com)
+- 818679 - making some of the LDAP comments for katello-configure more helpful
+  (jomara@redhat.com)
+- 795869 - Fixing org name in katello-configure to accept spaces but still
+  create a proper candlepin key (jomara@redhat.com)
+
+* Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.20-1
+- 820273 - removed change to example script
+- 820273 - correct example and real upgrade scripts
+- Adding back db_user & db_name to cpsetup call
+- Pass the keystore/truststore password into cpsetup
+- 816188 - installer minimum is 2 thins now
+- Modify the installation and upgrade process for the candlepin usage of
+  liquibase.
+- 809823 - Blocking katello-configure from installing katello if headpin is
+  installed
+- 799979 - updated candlepin option to allow any characters in system name
+- upgrade script - moving it all back to the package katello-configure
+- upgrade script - man page
+- upgrade script - subscripts being filtered accoring to a deployment at
+  runtime
+- upgrade script - logging
+* Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.19-1
+- Set the rails relative url in the installer based on the deployment option
+- Installer updates upgrade history to record upgrades already included in the
+  build
+- upgrade script introduced
+- Loading group roles from ldap
+- First verision of Katello upgrade script
+- 811011 - adding keep alive and expires
+
 * Fri Apr 06 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.18-1
 - puppet - adding pulp migration logging
 
@@ -241,7 +298,7 @@ rm -rf %{buildroot}
 - 767812 - compress our javascript and CSS
 
 * Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.37-1
-- system engine build 
+- system engine build
 
 * Tue Dec 13 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.36-1
 - 767139 - Puppet sometimes fails on RHEL 6.1
@@ -322,7 +379,7 @@ rm -rf %{buildroot}
 - 755048 - set pulp host using fqdn (inecas@redhat.com)
 
 * Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.15-1
-- 
+-
 
 * Wed Nov 16 2011 Ivan Necas <inecas@redhat.com> 0.1.14-1
 - cdn-proxy - fix typo in Puppet manifest (inecas@redhat.com)
@@ -350,7 +407,7 @@ rm -rf %{buildroot}
   (bbuckingham@redhat.com)
 
 * Wed Nov 09 2011 Shannon Hughes <shughes@redhat.com> 0.1.12-1
-- 
+-
 
 * Wed Nov 09 2011 Clifford Perry <cperry@redhat.com> 0.1.11-1
 - Expose HTTP Proxy configuration within the katello-configure installation
@@ -441,7 +498,7 @@ rm -rf %{buildroot}
 - added ssh public key for hudson job
 
 * Mon Sep 19 2011 Mike McCune <mmccune@redhat.com> 0.1.2-1
-- Correcting previous tag that was pushed improperly 
+- Correcting previous tag that was pushed improperly
 * Wed Sep 14 2011 Mike McCune <mmccune@redhat.com> 0.1.1-1
 - new package built with tito
 

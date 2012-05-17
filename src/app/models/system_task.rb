@@ -197,7 +197,7 @@ class SystemTask < ActiveRecord::Base
     def refresh(ids)
       unless ids.nil? || ids.empty?
         uuids = TaskStatus.select(:uuid).where(:id => ids).collect{|t| t.uuid}
-        ret = Pulp::Task.find(uuids)
+        ret = Resources::Pulp::Task.find(uuids)
         ret.each do |pulp_task|
           PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task["id"]))
         end

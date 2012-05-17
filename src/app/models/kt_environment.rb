@@ -275,6 +275,7 @@ class KTEnvironment < ActiveRecord::Base
   }
 
   def self.any_viewable_for_promotions? org
+    return false if !AppConfig.katello?
     User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.environment_ids, org, true)
   end
 
@@ -284,30 +285,38 @@ class KTEnvironment < ActiveRecord::Base
     User.allowed_to?(CONTENTS_READABLE, :environments, ids, org, true)
   end
 
-
   def viewable_for_promotions?
+    return false if !AppConfig.katello?
     User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, self.id, self.organization)
   end
 
+  def any_operation_readable?
+    return false if !AppConfig.katello?
+    User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) || self.organization.systems_readable?
+  end
 
   def changesets_promotable?
+    return false if !AppConfig.katello?
     User.allowed_to?([:promote_changesets], :environments, self.id,
                               self.organization)
   end
 
   CHANGE_SETS_READABLE = [:manage_changesets, :read_changesets, :promote_changesets]
   def changesets_readable?
+    return false if !AppConfig.katello?
     User.allowed_to?(CHANGE_SETS_READABLE, :environments,
                               self.id, self.organization)
   end
 
   def changesets_manageable?
+    return false if !AppConfig.katello?
     User.allowed_to?([:manage_changesets], :environments, self.id,
                               self.organization)
   end
 
   CONTENTS_READABLE = [:read_contents]
   def contents_readable?
+    return false if !AppConfig.katello?
     User.allowed_to?(CONTENTS_READABLE, :environments, self.id,
                               self.organization)
   end
@@ -345,7 +354,8 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def self.list_verbs global = false
-    {
+    if AppConfig.katello?
+      {
       :read_contents => _("Read Environment Contents"),
       :read_systems => _("Read Systems in Environment"),
       :register_systems =>_("Register Systems in Environment"),
@@ -354,11 +364,24 @@ class KTEnvironment < ActiveRecord::Base
       :read_changesets => _("Read Changesets in Environment"),
       :manage_changesets => _("Administer Changesets in Environment"),
       :promote_changesets => _("Promote Changesets in Environment")
-    }.with_indifferent_access
+      }.with_indifferent_access
+    else
+      {
+      :read_contents => _("Read Environment Contents"),
+      :read_systems => _("Read Systems in Environment"),
+      :register_systems =>_("Register Systems in Environment"),
+      :update_systems => _("Modify Systems in Environment"),
+      :delete_systems => _("Remove Systems in Environment"),
+      }.with_indifferent_access
+    end
   end
 
   def self.read_verbs
-    [:read_contents, :read_changesets, :read_systems]
+    if AppConfig.katello?
+      [:read_contents, :read_changesets, :read_systems]
+    else
+      [:read_contents, :read_systems]
+    end
   end
 
 
@@ -387,7 +410,7 @@ class KTEnvironment < ActiveRecord::Base
     if AppConfig.katello?
       self.repositories.enabled.map(&:minor).compact.uniq.sort
     else
-      self.organization.library.repositories.map(&:minor).compact.uniq.sort
+      self.organization.redhat_provider.available_releases
     end
   end
 

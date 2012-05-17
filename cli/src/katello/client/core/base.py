@@ -21,7 +21,9 @@ from M2Crypto import SSL
 from socket import error as SocketError
 
 from katello.client.config import Config
-from katello.client.core.utils import system_exit, parse_tokens, Printer, SystemExitRequest
+from katello.client.api.utils import ApiDataError
+from katello.client.core.utils import parse_tokens, SystemExitRequest
+from katello.client.utils.printer import Printer, GrepStrategy, VerboseStrategy
 from katello.client.utils.encoding import u_str, u_obj
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
@@ -178,7 +180,7 @@ class Action(object):
                         help=_("verbose, more structured output"))
         self.parser.add_option('-d', dest='delimiter',
                         default="",
-                        help=_("grep friendly output column delimiter"))
+                        help=_("column delimiter in grep friendly output, works only with option -g"))
         self.setup_parser()
 
     @property
@@ -252,6 +254,19 @@ class Action(object):
 
         return
 
+    def reject_option(self, opt_dest, *opt_collisions):
+        """
+        Add option error if an option is present.
+        @type opt_dest: str
+        @param opt: name of option or option destination to check
+        """
+        if (self.option_specified(opt_dest)):
+            flag = self.get_option_string(opt_dest)
+            self.add_option_error(_('Option %s is colliding with %s; please see --help') % (flag, ', '.join(opt_collisions)))
+
+        return
+
+
     def require_one_of_options(self, *opt_dests):
         """
         Add option error if one of the options is not present.
@@ -273,6 +288,25 @@ class Action(object):
 
         return
 
+    def require_at_least_one_of_options(self, *opt_dests):
+        """
+        Add option error if no one of the options is present
+        @type opt_dests: str
+        @param opt_dests: name of option or options destination to check
+        """
+        param_count = 0
+        flags = []
+
+        for opt_dest in opt_dests:
+            if self.option_specified(opt_dest):
+                param_count +=1
+            flag = self.get_option_string(opt_dest)
+            flags.append(flag)
+
+        if not param_count > 0:
+            self.add_option_error(_('At least one of %s is required; please see --help') % ', '.join(flags))
+
+        return
 
     def option_specified(self, opt):
         return self.has_option(opt) and self.get_option(opt) != ""
@@ -308,14 +342,13 @@ class Action(object):
         """
         return
 
-    def output_mode(self):
+    def __print_strategy(self):
         if (self.has_option('grep') or (Config.parser.has_option('interface', 'force_grep_friendly') and Config.parser.get('interface', 'force_grep_friendly').lower() == 'true')):
-            return Printer.OUTPUT_FORCE_GREP
+            return GrepStrategy(delimiter=self.get_option('delimiter'))
         elif (self.has_option('verbose') or (Config.parser.has_option('interface', 'force_verbose') and Config.parser.get('interface', 'force_verbose').lower() == 'true')):
-            return Printer.OUTPUT_FORCE_VERBOSE
+            return VerboseStrategy()
         else:
-            return  Printer.OUTPUT_FORCE_NONE
-
+            return None
 
     def process_options(self, args):
         """
@@ -324,7 +357,7 @@ class Action(object):
         """
         self.opts, self.args = self.parser.parse_args(args)
 
-        self.printer = Printer(self.output_mode(), self.get_option('delimiter'))
+        self.printer = Printer(self.__print_strategy())
 
         self.optErrors = []
         self.check_options()
@@ -395,6 +428,10 @@ class Action(object):
 
         except OptionParserExitError, opee:
             return opee.args[0]
+
+        except ApiDataError, ade:
+            print >> sys.stderr, ade.args[0]
+            return os.EX_DATAERR
 
         except SystemExitRequest, ser:
             msg = "\n".join(ser.args[1]).strip()

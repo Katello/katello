@@ -752,6 +752,7 @@ POOL = {
     "key": "ACME_Corporation"
   }
 }
+VERSION_INFO = "Foo 10000"
 
 PING_STATUS = {
     'result': 'failed',

@@ -21,6 +21,11 @@ class katello::config {
     require => [ Postgres::Createuser[$katello::params::db_user], File["${katello::params::log_base}"] ],
   }
 
+  exec { "generate-passphrase":
+    command => "/usr/share/katello/script/katello-generate-passphrase",
+    creates => "/etc/katello/secure/passphrase"
+  }
+
   file {
     "${katello::params::config_dir}/thin.yml":
       content => template("katello/${katello::params::config_dir}/thin.yml.erb"),
@@ -32,7 +37,8 @@ class katello::config {
       content => template("katello/${katello::params::config_dir}/katello.yml.erb"),
       owner   => $katello::params::user,
       group   => $katello::params::group,
-      mode    => "600";
+      mode    => "600",
+      require => [ Exec["generate-passphrase"] ];
 
     "/etc/sysconfig/katello":
       content => template("katello/etc/sysconfig/katello.erb"),
@@ -73,18 +79,6 @@ class katello::config {
       require => $katello::params::deployment ? {
                 'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
                 'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
-                default => [],
-    },
-  }
-
-  common::simple_replace { "org_description":
-      file => "/usr/share/katello/db/seeds.rb",
-      pattern => "ACME Corporation Organization",
-      replacement => "$katello::params::org_name Organization",
-      before => Exec["katello_seed_db"],
-      require => $katello::params::deployment ? {
-                'katello' => [ Class["candlepin::service"], Class["pulp::service"], Common::Simple_replace["org_name"]  ],
-                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"], Common::Simple_replace["org_name"] ],
                 default => [],
     },
   }
@@ -139,7 +133,6 @@ class katello::config {
                   File["${katello::params::config_dir}/katello.yml"],
                   Postgres::Createdb[$katello::params::db_name],
                   Common::Simple_replace["org_name"],
-                  Common::Simple_replace["org_description"],
                   Common::Simple_replace["primary_user_name"],
                   Common::Simple_replace["primary_user_pass"],
                   Common::Simple_replace["primary_user_email"]
@@ -151,7 +144,6 @@ class katello::config {
                   File["${katello::params::config_dir}/katello.yml"],
                   Postgres::Createdb[$katello::params::db_name],
                   Common::Simple_replace["org_name"],
-                  Common::Simple_replace["org_description"],
                   Common::Simple_replace["primary_user_name"],
                   Common::Simple_replace["primary_user_pass"],
                   Common::Simple_replace["primary_user_email"]
@@ -186,6 +178,12 @@ class katello::config {
                 'headpin' => [ Exec["katello_migrate_db"], File["${katello::params::log_base}"] ],
                 default => [],
     },
+  }
+
+  exec {"update_upgrade_history":
+    command => "ls ${katello::params::katello_upgrade_scripts_dir} > ${katello::params::katello_upgrade_history_file}",
+    path    => "/bin",
+    before  => Class["katello::service"],
   }
 
   # Headpin does not care about pulp

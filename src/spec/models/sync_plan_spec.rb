@@ -1,7 +1,7 @@
 require 'spec_helper'
 include OrchestrationHelper
 
-describe SyncPlan do
+describe SyncPlan, :katello => true do
 
   describe "SyncPlan should" do
     before(:each) do

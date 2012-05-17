@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe SyncManagementController do
+describe SyncManagementController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods
@@ -28,7 +28,7 @@ describe SyncManagementController do
 
   describe "GET 'index'" do
     before (:each) do
-      Pulp::Repository.stub(:all).and_return([])
+      Resources::Pulp::Repository.stub(:all).and_return([])
       setup_current_organization
       @library = KTEnvironment.new
       @mock_org.stub!(:library).and_return(@library)

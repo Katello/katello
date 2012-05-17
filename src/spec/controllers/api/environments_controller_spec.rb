@@ -44,6 +44,7 @@ describe Api::EnvironmentsController do
   describe "create an environment" do
     before(:each) do
       KTEnvironment.should_receive(:new).once.and_return(@environment)
+      @environment.should_receive(:valid?).and_return(true)
       @org.should_receive(:save!).once
     end
 
@@ -65,20 +66,16 @@ describe Api::EnvironmentsController do
     end
   end
 
+  describe "search a list of environments" do
+    let(:action) {:index}
+    let(:req) { get 'index', {:organization_id => "1", :name=>"foo"} }
 
-  describe "get a listing of environments" do
-
-    let(:action) {:index }
-    let(:req) { get 'index', :organization_id => "1" }
-    let(:authorized_user) { user_with_read_permissions }
-    let(:unauthorized_user) { user_without_read_permissions }
-    it_should_behave_like "protected action"
-
-    it 'should call kalpana environment find api' do
+    it 'should call katello environment find api' do
       KTEnvironment.should_receive(:where).once
       req
     end
   end
+
 
   describe "show a environment" do
 

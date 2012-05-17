@@ -13,6 +13,7 @@
 require 'spec_helper.rb'
 require 'helpers/system_test_data.rb'
 include OrchestrationHelper
+include SystemHelperMethods
 
 describe Api::SystemsController do
   include LoginHelperMethods
@@ -50,11 +51,11 @@ describe Api::SystemsController do
     set_default_locale
     disable_org_orchestration
 
-    Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Candlepin::Consumer.stub!(:update).and_return(true)
+    Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Pulp::Consumer.stub!(:update).and_return(true)
+    Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Pulp::Consumer.stub!(:update).and_return(true)
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.library.id, :organization => @organization)
@@ -131,9 +132,9 @@ describe Api::SystemsController do
           @controller.stub(:find_activation_keys).and_return([@activation_key_1,@activation_key_2])
         end
 
-        it "uses user credentials of the user associated with the first activation key" do
+        it "uses user credentials of the hidden user" do
           User.should_receive("current=").at_least(:once)
-          User.should_receive("current=").with(@activation_key_1.user).once
+          User.should_receive("current=").with(User.hidden.first).once
           post :activate, :organization_id => @organization.cp_key, :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
         end
 
@@ -163,7 +164,7 @@ describe Api::SystemsController do
   end
 
   it "returns 410 for deleted systems" do
-    Candlepin::Consumer.should_receive(:get).and_return do
+    Resources::Candlepin::Consumer.should_receive(:get).and_return do
       raise RestClient::Gone.new(
                 mock(:response, :code => 410, :body =>
                     '{"displayMessage":"Consumer 83705a61-8968-444f-9253-caefbc0e9995 has been deleted",' +
@@ -203,14 +204,19 @@ describe Api::SystemsController do
 
 
   describe "list systems" do
+
+    let(:uuid_1) {"abc"}
+    let(:uuid_2) {"def"}
+    let(:uuid_3) {"ghi"}
+
     before(:each) do
       @environment_2 = KTEnvironment.new(:name => 'test_2', :prior => @environment_1, :organization => @organization)
       @environment_2.save!
 
-      @system_1 = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts)
-      @system_2 = System.create!(:name => 'test2', :environment => @environment_2, :cp_type => 'system', :facts => facts)
-      
-      Candlepin::Consumer.stub(:get => SystemTestData.host)
+      @system_1 = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid_1)
+      @system_2 = create_system(:name => 'test2', :environment => @environment_2, :cp_type => 'system', :facts => facts, :uuid => uuid_2)
+
+      Resources::Candlepin::Consumer.stub(:get => SystemTestData.host)
     end
 
     let(:action) { :index }
@@ -220,6 +226,7 @@ describe Api::SystemsController do
     it_should_behave_like "protected action"
 
     it "requires either organization_id, owner, or environment_id" do
+      login_user.stub(:default_environment).and_return(nil)
       get :index
       response.code.should == "404"
     end
@@ -239,9 +246,43 @@ describe Api::SystemsController do
       response.body.should == [@system_1].to_json
     end
 
+
+
+    context "with pool_id" do
+
+      let(:pool_id) {"POOL_ID_123456"}
+
+      before :each do
+        Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid_3})
+        @system_3 = System.create!(:name => 'test3', :environment => @environment_2, :cp_type => 'system', :facts => facts)
+
+        Resources::Candlepin::Entitlement.stub(:get).and_return([
+          {"pool" => {"id" => pool_id}, "consumer" => {"uuid" => @system_1.uuid}},
+          {"pool" => {"id" => pool_id}, "consumer" => {"uuid" => @system_3.uuid}}
+        ])
+      end
+
+      it "should show all systems in the organization that are subscribed to a pool" do
+        get :index, :organization_id => @organization.cp_key, :pool_id => pool_id
+        returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
+        expected_uuids = [@system_1.uuid, @system_3.uuid]
+
+        returned_uuids.should == expected_uuids
+      end
+
+      it "should show only systems in the environment that are subscribed to a pool" do
+        get :index, :environment_id => @environment_2.id, :pool_id => pool_id
+        returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
+        expected_uuids = [@system_3.uuid]
+
+        returned_uuids.should == expected_uuids
+      end
+
+    end
+
   end
 
-  describe "upload package profile" do
+  describe "upload package profile", :katello => true do
 
     before(:each) do
       @sys = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
@@ -258,7 +299,7 @@ describe Api::SystemsController do
       it_should_behave_like "protected action"
 
       it "successfully with update permissions" do
-        Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
+        Resources::Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
         put :upload_package_profile, :id => uuid, :_json => package_profile
         response.body.should == @sys.to_json
       end
@@ -270,7 +311,7 @@ describe Api::SystemsController do
       it_should_behave_like "protected action"
 
       it "successfully with register permissions" do
-        Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
+        Resources::Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
         put :upload_package_profile, :id => uuid, :_json => package_profile
         response.body.should == @sys.to_json
       end
@@ -301,7 +342,7 @@ describe Api::SystemsController do
   describe "update a system" do
     before(:each) do
       @sys = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
-      Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid})
+      Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid})
       System.stub!(:first).and_return(@sys)
     end
 
@@ -312,21 +353,21 @@ describe Api::SystemsController do
     it_should_behave_like "protected action"
 
     it "should change the name" do
-      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true)
+      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true) if AppConfig.katello?
       post :update, :id => uuid, :name => "foo_name"
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the description" do
-      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, "redkin is awesome.").and_return(true)
+      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, "redkin is awesome.").and_return(true) if AppConfig.katello?
       post :update, :id => uuid, :description => "redkin is awesome."
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the location" do
-      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true)
+      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true) if AppConfig.katello?
       post :update, :id => uuid, :location => "never-neverland"
       response.body.should == @sys.to_json
       response.should be_success
@@ -335,7 +376,7 @@ describe Api::SystemsController do
     it "should update installed products" do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil).and_return(true)
       post :update, :id => uuid, :installedProducts => installed_products
       response.body.should == @sys.to_json
       response.should be_success
@@ -344,7 +385,7 @@ describe Api::SystemsController do
     it "should update releaseVer" do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, "1.1", nil).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, "1.1", nil).and_return(true)
       post :update, :id => uuid, :releaseVer => "1.1"
       response.body.should == @sys.to_json
       response.should be_success
@@ -353,7 +394,7 @@ describe Api::SystemsController do
     it "should update service level agreement" do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, nil, "SLA").and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, nil, "SLA").and_return(true)
       post :update, :id => uuid, :serviceLevel => "SLA"
       response.body.should == @sys.to_json
       response.should be_success
@@ -379,7 +420,7 @@ describe Api::SystemsController do
     end
 
     it "should retrieve Consumer's errata from pulp" do
-      Pulp::Consumer.should_receive(:errata).once.with(uuid).and_return([])
+      Resources::Pulp::Consumer.should_receive(:errata).once.with(uuid).and_return([])
       get :errata, :id => @system.uuid
     end
   end
@@ -403,13 +444,13 @@ describe Api::SystemsController do
 
     it "should retrieve avaialble pools from Candlepin" do
       #@system.should_receive(:available_pools_full).once.and_return([])
-      Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
+      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
       get :pools, :id => @system.uuid
     end
 
     it "should retrieve available pools from Candlepin" do
       #@system.should_receive(:available_pools_full).once.and_return([])
-      Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, true).and_return([])
+      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, true).and_return([])
       get :pools, :id => @system.uuid, :listall => true
     end
   end
@@ -433,7 +474,7 @@ describe Api::SystemsController do
     end
   end
 
-  describe "update enabled_repos" do
+  describe "update enabled_repos" , :katello => true do
     before do
       User.stub(:consumer? => true)
       @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
@@ -456,44 +497,44 @@ describe Api::SystemsController do
     let(:enabled_repos_empty) { { "repos" => [] } }
 
     it "should not bind any" do
-      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'a' => '', 'b' => ''})
+      Resources::Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'a' => '', 'b' => ''})
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind one" do
-      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'a' => ''})
-      Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'b').once
+      Resources::Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'a' => ''})
+      Resources::Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'b').once
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind two" do
-      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({})
-      Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'a').once
-      Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'b').once
+      Resources::Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({})
+      Resources::Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'a').once
+      Resources::Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'b').once
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind one and unbind one" do
-      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'b' => '', 'c' => ''})
-      Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'a').once
-      Pulp::Consumer.should_receive(:unbind).with(@system.uuid, 'c').once
+      Resources::Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'b' => '', 'c' => ''})
+      Resources::Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'a').once
+      Resources::Pulp::Consumer.should_receive(:unbind).with(@system.uuid, 'c').once
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should unbind two" do
-      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'a' => '', 'b' => ''})
-      Pulp::Consumer.should_receive(:unbind).with(@system.uuid, 'a').once
-      Pulp::Consumer.should_receive(:unbind).with(@system.uuid, 'b').once
+      Resources::Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'a' => '', 'b' => ''})
+      Resources::Pulp::Consumer.should_receive(:unbind).with(@system.uuid, 'a').once
+      Resources::Pulp::Consumer.should_receive(:unbind).with(@system.uuid, 'b').once
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
       response.status.should == 200
     end
 
     it "should do nothing" do
-      Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({})
+      Resources::Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({})
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
       response.status.should == 200
     end

@@ -15,15 +15,14 @@
 #
 
 import os
-import sys
 from gettext import gettext as _
 
 from katello.client.api.user import UserAPI
 from katello.client.api.user_role import UserRoleAPI
-from katello.client.api.utils import get_user
+from katello.client.api.utils import get_user, get_environment
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, convert_to_mime_type, attachment_file_name, save_report
+from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
 
 Config()
 
@@ -45,13 +44,15 @@ class List(UserAction):
     def run(self):
         users = self.api.users()
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('username')
-        self.printer.addColumn('email')
-        self.printer.addColumn('disabled')
+        self.printer.add_column('id')
+        self.printer.add_column('username')
+        self.printer.add_column('email')
+        self.printer.add_column('disabled')
+        self.printer.add_column('default_organization')
+        self.printer.add_column('default_environment')
 
-        self.printer.setHeader(_("User List"))
-        self.printer.printItems(users)
+        self.printer.set_header(_("User List"))
+        self.printer.print_items(users)
         return os.EX_OK
 
 # ------------------------------------------------------------------------------
@@ -65,24 +66,37 @@ class Create(UserAction):
         self.parser.add_option('--password', dest='password', help=_("initial password (required)"))
         self.parser.add_option('--email', dest='email', help=_("email (required)"))
         self.parser.add_option("--disabled", dest="disabled", type="bool", help=_("disabled account (default is 'false')"), default=False)
+        self.parser.add_option('--default_organization', dest='default_organization',
+                               help=_("user's default organization name"))
+        self.parser.add_option('--default_environment', dest='default_environment',
+                               help=_("user's default environment name"))
 
     def check_options(self):
         self.require_option('username')
         self.require_option('password')
         self.require_option('email')
+        if self.option_specified('default_organization') or self.option_specified('default_environment'):
+            self.require_option('default_organization')
+            self.require_option('default_environment')
 
     def run(self):
         username = self.get_option('username')
         password = self.get_option('password')
         email = self.get_option('email')
         disabled = self.get_option('disabled')
+        default_organization = self.get_option('default_organization')
+        default_environment = self.get_option('default_environment')
 
-        user = self.api.create(username, password, email, disabled)
-        if is_valid_record(user):
-            print _("Successfully created user [ %s ]") % user['username']
+        if default_environment is not None:
+            environment = get_environment(default_organization, default_environment)
         else:
-            print >> sys.stderr, _("Could not create user [ %s ]") % user['username']
-        return os.EX_OK
+            environment = None
+
+        user = self.api.create(username, password, email, disabled, environment)
+        test_record(user,
+            _("Successfully created user [ %s ]") % username,
+            _("Could not create user [ %s ]") % username
+        )
 
 # ------------------------------------------------------------------------------
 
@@ -100,16 +114,16 @@ class Info(UserAction):
         username = self.get_option('username')
 
         user = get_user(username)
-        if user == None:
-            return os.EX_DATAERR
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('username')
-        self.printer.addColumn('email')
-        self.printer.addColumn('disabled')
+        self.printer.add_column('id')
+        self.printer.add_column('username')
+        self.printer.add_column('email')
+        self.printer.add_column('disabled')
+        self.printer.add_column('default_organization')
+        self.printer.add_column('default_environment')
 
-        self.printer.setHeader(_("User Information"))
-        self.printer.printItem(user)
+        self.printer.set_header(_("User Information"))
+        self.printer.print_item(user)
         return os.EX_OK
 
 # ------------------------------------------------------------------------------
@@ -128,8 +142,6 @@ class Delete(UserAction):
         username = self.get_option('username')
 
         user = get_user(username)
-        if user == None:
-            return os.EX_DATAERR
 
         self.api.delete(user['id'])
         print _("Successfully deleted user [ %s ]") % username
@@ -145,26 +157,45 @@ class Update(UserAction):
         self.parser.add_option('--username', dest='username', help=_("user name (required)"))
         self.parser.add_option('--password', dest='password', help=_("initial password"))
         self.parser.add_option('--email', dest='email', help=_("email"))
-        self.parser.add_option("--disabled", dest="disabled", help=_("disabled account (default is 'false')"), default=False)
+        self.parser.add_option("--disabled", dest="disabled", help=_("disabled account"))
+        self.parser.add_option('--default_organization', dest='default_organization',
+                               help=_("user's default organization name"))
+        self.parser.add_option('--default_environment', dest='default_environment',
+                               help=_("user's default environment name"))
+        self.parser.add_option('--no_default_environment', dest='no_default_environment', action="store_true",
+                               help=_("user's default environment is None"))
 
     def check_options(self):
         self.require_option('username')
+        self.require_at_least_one_of_options('password','email','disabled','default_organization','default_environment',
+                                         'no_default_environment')
+        if self.option_specified('default_organization') or self.option_specified('default_environment'):
+            self.require_option('default_organization')
+            self.require_option('default_environment')
+            self.reject_option('no_default_environment', 'default_organization', 'default_environment')
+        if self.option_specified('no_default_environment'):
+            self.reject_option('default_organization', 'no_default_environment')
+            self.reject_option('default_environment', 'no_default_environment')
 
     def run(self):
         username = self.get_option('username')
         password = self.get_option('password')
         email = self.get_option('email')
         disabled = self.get_option('disabled')
+        default_organization = self.get_option('default_organization')
+        default_environment = self.get_option('default_environment')
+        no_default_environment = self.get_option('no_default_environment')
+
+        if no_default_environment is True:
+            environment = None
+        elif default_environment is not None:
+            environment = get_environment(default_organization, default_environment)
+        else:
+            environment = False
 
         user = get_user(username)
-        if user == None:
-            return os.EX_DATAERR
 
-        if password == None and email == None and disabled == None:
-            print _("Provide at least one parameter to update user [ %s ]") % username
-            return os.EX_DATAERR
-
-        user = self.api.update(user['id'], password, email, disabled)
+        user = self.api.update(user['id'], password, email, disabled, environment)
         print _("Successfully updated user [ %s ]") % username
         return os.EX_OK
 
@@ -184,17 +215,28 @@ class ListRoles(UserAction):
         username = self.get_option('username')
 
         user = get_user(username)
-        if user == None:
-            return os.EX_DATAERR
 
         roles = self.api.roles(user['id'])
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-        self.printer.setHeader(_("User Role List"))
-        self.printer.printItems(roles)
+        self.printer.add_column('id')
+        self.printer.add_column('name')
+        self.printer.set_header(_("User Role List"))
+        self.printer.print_items(roles)
         return os.EX_OK
 
+
+# ------------------------------------------------------------------------------
+
+class SyncLdapRoles(UserAction):
+
+    description = _("synchronise roles with LDAP groups")
+
+    def run(self):
+        msg = self.api.sync_ldap_roles()
+        print msg
+        return os.EX_OK
+
+# ------------------------------------------------------------------------------
 
 class AssignRole(UserAction):
 
@@ -227,8 +269,6 @@ class AssignRole(UserAction):
         roleName = self.get_option('role')
 
         user = get_user(userName)
-        if user == None:
-            return os.EX_DATAERR
 
         role = self.role_api.role_by_name(roleName)
         if role == None:

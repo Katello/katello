@@ -88,6 +88,7 @@ class SystemTemplatesController < ApplicationController
                  :col => ["name"],
                  :titles => [_('Name') ],
                  :create => _('Template'),
+                 :create_label => _('+ New Template'),
                  :name => _('template'),
                  :create => _('Template'),
                  :ajax_scroll => items_system_templates_path(),
@@ -267,7 +268,7 @@ class SystemTemplatesController < ApplicationController
 
   def auto_complete_package
     name = params[:name]
-    render :json=>Pulp::Package.name_search(name).sort.uniq[0..19]
+    render :json=> Resources::Pulp::Package.name_search(name).sort.uniq[0..19]
   end
 
   def create

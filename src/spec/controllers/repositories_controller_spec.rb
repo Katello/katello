@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'ruby-debug'
 
-describe RepositoriesController do
+describe RepositoriesController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
@@ -40,7 +40,7 @@ describe RepositoriesController do
     describe "GET Edit" do
       before do
         Product.stub!(:find).and_return(@product)
-        Pulp::Repository.stub!(:find).and_return(@repository)
+        Resources::Pulp::Repository.stub!(:find).and_return(@repository)
       end
       let(:action) {:edit}
       let(:req) { get :edit, :provider_id => @provider.id, :product_id => @product.id, :id => @repository.id}
@@ -63,7 +63,7 @@ describe RepositoriesController do
       @gpg = GpgKey.create!(:name => "foo", :organization => @organization, :content => "222")
       @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       controller.stub!(:current_organization).and_return(@org)
-      Candlepin::Content.stub(:create => {:id => "123"})
+      Resources::Candlepin::Content.stub(:create => {:id => "123"})
     end
       let(:invalidrepo) do
         {
@@ -104,8 +104,17 @@ describe RepositoriesController do
 
     context "Test update gpg" do
       before do
+
+
         @repo = Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
                                  :name=>"newname#{rand 10**6}", :url => "http://fedorahosted org")
+
+        product = @repo.product
+        Repository.stub(:find).and_return(@repo)
+        @repo.stub(:content).and_return(OpenStruct.new(:gpgUrl=>""))
+        product.should_receive(:refresh_content)
+        @repo.stub(:product).and_return(product)
+
         put :update_gpg_key, { :product_id => @product.id,
                               :provider_id => @product.provider.id,
                                 :id => @repo.id,

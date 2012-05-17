@@ -287,6 +287,14 @@ Src::Application.routes.draw do
       get :auto_complete_search
       get :items
     end
+    resources :ldap_groups, :only => [] do
+      member do 
+		delete "destroy" => "roles#destroy_ldap_group", :as => "destroy"
+      end
+      collection do
+		post "create" => "roles#create_ldap_group", :as => "create"
+      end
+    end
   end
   match '/roles/:organization_id/resource_type/verbs_and_scopes' => 'roles#verbs_and_scopes', :via=>:get, :as=>'verbs_and_scopes'
 
@@ -328,7 +336,13 @@ Src::Application.routes.draw do
     end
     match '/' => 'root#resource_list'
 
-    resources :systems, :only => [:show, :destroy, :create, :index, :update] do
+    # Headpin does not support system creation
+    if AppConfig.katello?
+      onlies = [:show, :destroy, :create, :index, :update]
+    else
+      onlies = [:show, :destroy, :index, :update]
+    end
+    resources :systems, :only => onlies do
       member do
         get :packages, :action => :package_profile
         get :errata
@@ -472,7 +486,9 @@ Src::Application.routes.draw do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end
-      resources :packages
+      resources :packages do
+        get :search, :on => :collection
+      end
       resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
       resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
       resources :filters, :only => [] do
@@ -491,6 +507,7 @@ Src::Application.routes.draw do
     end
 
     resources :environments, :only => [:show, :update, :destroy] do
+      match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :systems, :only => [:create, :index] do
         get :report, :on => :collection
       end
@@ -518,6 +535,7 @@ Src::Application.routes.draw do
 
     resources :users do
       get :report, :on => :collection
+      get :sync_ldap_roles, :on => :collection
       resources :roles, :controller => :users do
        post   :index, :on => :collection, :action => :add_role
        delete :destroy, :on => :member, :action => :remove_role
@@ -527,13 +545,14 @@ Src::Application.routes.draw do
     resources :roles do
       get :available_verbs, :on => :collection, :action => :available_verbs
       resources :permissions, :only => [:index, :show, :create, :destroy]
+      resources :ldap_groups, :controller => :role_ldap_groups , :only => [:create, :destroy, :index]
     end
 
 
     resources :tasks, :only => [:show]
 
     match "/status"  => "ping#status", :via => :get
-
+    match "/version"  => "ping#version", :via => :get 
     # some paths conflicts with rhsm
     scope 'katello' do
 
@@ -562,8 +581,10 @@ Src::Application.routes.draw do
     match '/consumers/:id/entitlements' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:id/entitlements' => 'candlepin_proxies#post', :via => :post
     match '/consumers/:id/entitlements' => 'candlepin_proxies#delete', :via => :delete
+    match '/consumers/:id/entitlements/dry-run' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:id/owner' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:consumer_id/certificates/:id' => 'candlepin_proxies#delete', :via => :delete
+    match '/consumers/:id/deletionrecord' => 'candlepin_proxies#delete', :via => :delete
     match '/pools' => 'candlepin_proxies#get', :via => :get
     match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get
     match '/subscriptions' => 'candlepin_proxies#post', :via => :post

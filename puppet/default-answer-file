@@ -37,6 +37,12 @@ db_user = katellouser
 # Katello database password.
 db_password = katellopw
 
+# Candlepin database user
+candlepin_db_user = candlepin
+
+# Candlepin database name
+candlepin_db_name = candlepin
+
 # Deployment Type
 deployment = katello
 
@@ -88,4 +94,20 @@ nss_db_dir = /etc/pki/katello/nssdb
 # PKCS12 password file path
 ssl_pk12_password_file = /etc/katello/pk12_password-file
 
+# Authentication method (database, ldap)
+auth_method = database
 
+# LDAP server hostname
+ldap_server = localhost
+
+# encryption method used in communication with LDAP server (<empty>, start_tls)
+ldap_encryption = 
+
+# Base DN for users accounts
+ldap_users_basedn = ou=People,dc=company,dc=com
+
+# Base DN for users groups
+ldap_groups_basedn = ou=Groups,dc=company,dc=com
+
+# Use LDAP for roles membership definition (true, false)
+ldap_roles = false

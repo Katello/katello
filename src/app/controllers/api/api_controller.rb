@@ -39,6 +39,8 @@ class Api::ApiController < ActionController::Base
   include Katello::ThreadSession::Controller
   include AuthorizationRules
 
+  before_filter :verify_ldap
+
   def set_locale
     hal = request.env['HTTP_ACCEPT_LANGUAGE']
     I18n.locale = hal.nil? ? 'en' : hal.scan(/^[a-z]{2}/).first
@@ -90,6 +92,11 @@ class Api::ApiController < ActionController::Base
   end
 
   private
+
+   def verify_ldap
+    u = current_user
+    u.verify_ldap_roles if (AppConfig.ldap_roles && u != nil)
+  end
 
   def require_user
     params[:auth_username], params[:auth_password] = user_name_and_password(request) unless request.authorization.blank?

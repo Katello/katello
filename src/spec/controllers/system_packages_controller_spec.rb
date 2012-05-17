@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe SystemPackagesController do
+describe SystemPackagesController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include SystemHelperMethods
@@ -31,11 +31,11 @@ describe SystemPackagesController do
 
       controller.stub!(:notice)
 
-      Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Candlepin::Consumer.stub!(:update).and_return(true)
+      Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+      Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-      Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Pulp::Consumer.stub!(:update).and_return(true)
+      Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+      Resources::Pulp::Consumer.stub!(:update).and_return(true)
     end
 
     describe "viewing packages" do
@@ -48,8 +48,8 @@ describe SystemPackagesController do
         before (:each) do
           @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
 
-          Pulp::Consumer.stub!(:installed_packages).and_return([])
-          Candlepin::Consumer.stub!(:events).and_return([])
+          Resources::Pulp::Consumer.stub!(:installed_packages).and_return([])
+          Resources::Candlepin::Consumer.stub!(:events).and_return([])
         end
 
         it "should show packages" do

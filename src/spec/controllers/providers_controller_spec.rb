@@ -43,7 +43,7 @@ describe ProvidersController do
       @provider.stub(:name).and_return("RH_Provider")
       @provider.stub(:owner_imports).and_return([])
 
-      Candlepin::Owner.stub!(:pools).and_return({})
+      Resources::Candlepin::Owner.stub!(:pools).and_return({})
     end
 
     it "should update a provider subscription" do
@@ -66,7 +66,7 @@ describe ProvidersController do
 
   end
 
-  describe "should be able to create a custom provider" do
+  describe "should be able to create a custom provider", :katello => true do
     before do
       disable_product_orchestration
       controller.stub(:search_validate).and_return(true)
@@ -84,7 +84,7 @@ describe ProvidersController do
       end
     end
   end
-  describe "rules" do
+  describe "rules", :katello => true do
     before (:each) do
       @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)

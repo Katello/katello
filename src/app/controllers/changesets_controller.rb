@@ -161,34 +161,37 @@ class ChangesetsController < ApplicationController
     if params.has_key? :data
       params[:data].each do |item|
         adding = item["adding"]
-        type = item["type"]
-        id = item["item_id"] #id of item being added/removed
-        name = item["item_name"] #display of item being added/removed
-        pid = item["product_id"]
+        type   = item["type"]
+        id     = item["item_id"]   #id of item being added/removed
+        name   = item["item_name"] #display of item being added/removed
+        pid    = item["product_id"]
         case type
           when "template"
-            @changeset.system_templates << SystemTemplate.where(:id => id) if adding
-            @changeset.system_templates.delete SystemTemplate.find(id) if !adding
+            @changeset.add_template! SystemTemplate.find(id) if adding
+            @changeset.remove_template! SystemTemplate.find(id) if !adding
+
           when "product"
-            @changeset.products << Product.where(:id => id) if adding
-            @changeset.products.delete Product.find(id) if !adding
+            @changeset.add_product! Product.find(id) if adding
+            @changeset.remove_product! Product.find(id) if !adding
+
           when "errata"
-            @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name,
-                                                :product_id => pid, :changeset => @changeset) if adding
-            ChangesetErratum.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
+            product = Product.find pid
+            @changeset.add_erratum! id, product if adding
+            @changeset.remove_erratum! id, product if !adding
+
           when "package"
-            @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :product_id => pid,
-                                                :changeset => @changeset) if adding
-            ChangesetPackage.destroy_all(:package_id =>id, :changeset_id => @changeset.id) if !adding
+            product = Product.find pid
+            @changeset.add_package! name, product if adding
+            @changeset.remove_package! name, product if !adding
 
           when "repo"
-              @changeset.repos << Repository.find(id) if adding
-              @changeset.repos.delete(Repository.find(id)) if !adding
+            @changeset.add_repository! Repository.find(id) if adding
+            @changeset.remove_repository! Repository.find(id) if !adding
 
           when "distribution"
-              @changeset.distributions << ChangesetDistribution.new(:distribution_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
-              ChangesetDistribution.destroy_all(:distribution_id =>id, :changeset_id => @changeset.id) if !adding
-
+            product = Product.find pid
+            @changeset.add_distribution! id, product if adding
+            @changeset.remove_distribution! id, product if !adding
         end
       end
       @changeset.updated_at = Time.now
@@ -285,6 +288,7 @@ class ChangesetsController < ApplicationController
                  :col => ['name'],
                  :titles => [_('Name')],
                  :enable_create => false,
+                 :create_label => _('+ New Changeset'),
                  :name => controller_display_name,
                  :accessor => :id,
                  :ajax_load => true,

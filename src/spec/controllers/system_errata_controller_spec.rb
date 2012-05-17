@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe SystemErrataController do
+describe SystemErrataController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include SystemHelperMethods
@@ -32,11 +32,11 @@ describe SystemErrataController do
       controller.stub!(:errors)
       controller.stub!(:notice)
 
-      Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Candlepin::Consumer.stub!(:update).and_return(true)
+      Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+      Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-      Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Pulp::Consumer.stub!(:update).and_return(true)
+      Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+      Resources::Pulp::Consumer.stub!(:update).and_return(true)
     end
 
     describe "viewing systems" do
@@ -60,7 +60,7 @@ describe SystemErrataController do
             to_ret << errata
           }
 
-          Pulp::Consumer.stub!(:errata).and_return(to_ret)
+          Resources::Pulp::Consumer.stub!(:errata).and_return(to_ret)
         end
         
         describe 'on initial load' do

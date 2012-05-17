@@ -29,15 +29,15 @@ describe SystemEventsController do
       #controller.stub!(:errors)
       #controller.stub!(:notice)
 
-      Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Candlepin::Consumer.stub!(:update).and_return(true)
-      Candlepin::Consumer.stub!(:events).and_return([])
+      Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+      Resources::Candlepin::Consumer.stub!(:update).and_return(true)
+      Resources::Candlepin::Consumer.stub!(:events).and_return([])
 
-      Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Pulp::Consumer.stub!(:update).and_return(true)
+      Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+      Resources::Pulp::Consumer.stub!(:update).and_return(true)
     end
 
-    describe "system tasks" do
+    describe "system tasks", :katello => true do
       before do
         @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
       end

@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/candlepin'
-
 module Glue::Candlepin::Product
 
   def self.included(base)
@@ -20,13 +18,13 @@ module Glue::Candlepin::Product
 
     base.class_eval do
       lazy_accessor :productContent, :multiplier, :href, :attrs,
-        :initializer => lambda { convert_from_cp_fields(Candlepin::Product.get(cp_id)[0]) }
+        :initializer => lambda { convert_from_cp_fields(Resources::Candlepin::Product.get(cp_id)[0]) }
       # Entitlement Certificate for this product
       lazy_accessor :certificate,
-        :initializer => lambda { Candlepin::Product.certificate(cp_id) },
+        :initializer => lambda { Resources::Candlepin::Product.certificate(cp_id) },
         :unless => lambda { cp_id.nil? }
       # Entitlement Key for this product
-      lazy_accessor :key, :initializer => lambda { Candlepin::Product.key(cp_id) }, :unless => lambda { cp_id.nil? }
+      lazy_accessor :key, :initializer => lambda { Resources::Candlepin::Product.key(cp_id) }, :unless => lambda { cp_id.nil? }
 
       before_save :save_product_orchestration
       before_destroy :destroy_product_orchestration
@@ -136,17 +134,17 @@ module Glue::Candlepin::Product
     end
 
     def add_content content
-      Candlepin::Product.add_content self.cp_id, content.content.id, true
+      Resources::Candlepin::Product.add_content self.cp_id, content.content.id, true
       self.productContent << content
     end
 
     def remove_content_by_id content_id
-      Candlepin::Product.remove_content cp_id, content_id
+      Resources::Candlepin::Product.remove_content cp_id, content_id
     end
 
     def set_product
       Rails.logger.debug "Creating a product in candlepin: #{name}"
-      json = Candlepin::Product.create({
+      json = Resources::Candlepin::Product.create({
         :name => self.name,
         :multiplier => self.multiplier || 1,
         :attributes => self.attrs || [] # name collision with ActiveRecord
@@ -160,7 +158,7 @@ module Glue::Candlepin::Product
     def del_product
       return true unless no_other_assignment?
       Rails.logger.debug "Deleting product in candlepin: #{name}"
-      Candlepin::Product.destroy self.cp_id
+      Resources::Candlepin::Product.destroy self.cp_id
       true
     rescue => e
       Rails.logger.error "Failed to delete candlepin product #{name}: #{e}, #{e.backtrace.join("\n")}"
@@ -172,7 +170,7 @@ module Glue::Candlepin::Product
       self.productContent.each do |pc|
         Rails.logger.debug "Creating content in candlepin: #{pc.content.name}"
         #TODO: use json returned from cp to populate productContent
-        new_content = Candlepin::Content.create pc.content
+        new_content = Resources::Candlepin::Content.create pc.content
         pc.content.id = new_content[:id]
       end
     rescue => e
@@ -183,7 +181,7 @@ module Glue::Candlepin::Product
     def del_content
       self.productContent.each do |pc|
         Rails.logger.debug "Deleting content in candlepin: #{pc.content.name}"
-        Candlepin::Content.destroy(pc.content.id)
+        Resources::Candlepin::Content.destroy(pc.content.id)
       end
     rescue => e
       Rails.logger.error "Failed to delete content for product #{name} in candlepin: #{e}, #{e.backtrace.join("\n")}"
@@ -215,17 +213,17 @@ module Glue::Candlepin::Product
 
       deleted_content_ids.each do |content_id|
         Rails.logger.debug "deleting content #{content_id}"
-        Candlepin::Product.remove_content cp_id, content_id
-        Candlepin::Content.destroy(content_id)
+        Resources::Candlepin::Product.remove_content cp_id, content_id
+        Resources::Candlepin::Content.destroy(content_id)
       end
 
       added_content.each do |pc|
         Rails.logger.debug "creating content #{pc.content.name}"
-        new_content = Candlepin::Content.create pc.content
+        new_content = Resources::Candlepin::Content.create pc.content
         pc.content.id = new_content[:id] # candlepin generates id for new content
 
         Rails.logger.debug "adding content #{pc.content.id}"
-        Candlepin::Product.add_content cp_id, pc.content.id, pc.enabled
+        Resources::Candlepin::Product.add_content cp_id, pc.content.id, pc.enabled
       end
     end
 
@@ -233,7 +231,7 @@ module Glue::Candlepin::Product
       # we create unlimited subscriptions only for generic yum providers
       if self.provider and self.provider.yum_repo?
         Rails.logger.debug "Creating unlimited subscription for product #{name} in candlepin"
-        Candlepin::Product.create_unlimited_subscription self.organization.cp_key, self.cp_id
+        Resources::Candlepin::Product.create_unlimited_subscription self.organization.cp_key, self.cp_id
       end
       true
     rescue => e
@@ -250,9 +248,9 @@ module Glue::Candlepin::Product
 
     def del_pools
       Rails.logger.debug "Deleting pools for product #{name} in candlepin"
-      Candlepin::Product.pools(organization.cp_key, self.cp_id).each do |pool|
+      Resources::Candlepin::Product.pools(organization.cp_key, self.cp_id).each do |pool|
         KTPool.find_all_by_cp_id(pool['id']).each(&:destroy)
-        Candlepin::Pool.destroy(pool['id'])
+        Resources::Candlepin::Pool.destroy(pool['id'])
       end
       true
     rescue => e
@@ -262,7 +260,7 @@ module Glue::Candlepin::Product
 
     def del_subscriptions
       Rails.logger.debug "Deleting subscriptions for product #{name} in candlepin"
-      job = Candlepin::Product.delete_subscriptions self.organization.cp_key, self.cp_id
+      job = Resources::Candlepin::Product.delete_subscriptions self.organization.cp_key, self.cp_id
       wait_for_job(job) if job
       true
     rescue => e
@@ -273,7 +271,7 @@ module Glue::Candlepin::Product
     # preventing of going into race-condition described in BZ_788932 by waiting
     # for each job to finish before proceeding.
     def wait_for_job(job)
-      while Candlepin::Job.not_finished?(Candlepin::Job.get(job[:id]))
+      while Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job[:id]))
         sleep 0.5
       end
     end

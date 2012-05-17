@@ -26,7 +26,7 @@ end
 
 class Product < ActiveRecord::Base
   include Glue::Candlepin::Product if AppConfig.use_cp
-  include Glue::Pulp::Repos if (AppConfig.use_cp and AppConfig.use_pulp)
+  include Glue::Pulp::Repos if AppConfig.katello?
   include Glue if AppConfig.use_cp
   include Authorization
   include AsyncOrchestration
@@ -100,15 +100,18 @@ class Product < ActiveRecord::Base
   def serializable_hash(options={})
     options = {} if options == nil
 
-
     hash = super(options.merge(:except => [:cp_id, :id]))
-    hash = hash.merge(:sync_state => self.sync_state,
-                      :last_sync => self.last_sync,
-                      :productContent => self.productContent,
+    hash = hash.merge(:productContent => self.productContent,
                       :multiplier => self.multiplier,
                       :attributes => self.attrs,
                       :id => self.cp_id)
-    hash = hash.merge(:sync_plan_name => self.sync_plan ? self.sync_plan.name : nil)
+    if AppConfig.katello?
+      hash = hash.merge({
+        :sync_plan_name => self.sync_plan ? self.sync_plan.name : nil,
+        :sync_state => self.sync_state,
+        :last_sync => self.last_sync
+      })
+    end
     hash
   end
 

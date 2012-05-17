@@ -16,7 +16,7 @@ require 'helpers/repo_helper_methods'
 
 include OrchestrationHelper
 
-describe SystemTemplate do
+describe SystemTemplate, :katello => true do
 
   before(:each) do
     disable_org_orchestration
@@ -413,7 +413,7 @@ describe SystemTemplate do
     })}
 
     before :each do
-      Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups)
+      Resources::Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups)
       stub_repos([repo])
     end
 
@@ -468,7 +468,7 @@ describe SystemTemplate do
     })}
 
     before :each do
-      Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories)
+      Resources::Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories)
       stub_repos([repo])
     end
 
@@ -519,7 +519,7 @@ describe SystemTemplate do
     })}
 
     before :each do
-      Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
+      Resources::Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
       stub_repos([repo])
     end
 
@@ -558,11 +558,11 @@ describe SystemTemplate do
 
     let(:distribution) { RepoTestData.repo_distributions["id"] }
 
-    describe "repositories and distributions" do
+    describe "repositories and distributions", :katello => true do
       before do
         disable_repo_orchestration
-        Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
-        Pulp::Distribution.stub(:find => RepoTestData.repo_distributions)
+        Resources::Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
+        Resources::Pulp::Distribution.stub(:find => RepoTestData.repo_distributions)
         stub_repos([Repository.new(RepoTestData::REPO_PROPERTIES)])
         @prod1.stub(:repos => [Repository.new(RepoTestData::REPO_PROPERTIES)])
 

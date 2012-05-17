@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.30
+Version:        0.2.36
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -121,6 +121,11 @@ Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp
 Requires:       candlepin-tomcat6
+# the following backend engine deps are required by <katello-configure>
+Requires:       mongodb mongodb-server
+Requires:       qpid-cpp-server qpid-cpp-client qpid-cpp-client-ssl qpid-cpp-server-ssl
+# </katello-configure>
+
 
 %description all
 This is the Katello meta-package.  If you want to install Katello and all
@@ -225,6 +230,11 @@ ln -sv %{datadir}/tmp %{buildroot}%{homedir}/tmp
 #create symlink for Gemfile.lock (it's being regenerated each start)
 ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
+#create symlinks for important scripts
+mkdir -p %{buildroot}%{_bindir}
+ln -sv %{homedir}/script/katello-debug %{buildroot}%{_bindir}/katello-debug
+ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
+
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
 
@@ -237,6 +247,9 @@ rm -rf %{buildroot}%{homedir}/%{name}.spec
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
+
+#remove development tasks
+rm %{buildroot}%{homedir}/lib/tasks/test.rake
 
 #branding
 if [ -d branding ] ; then
@@ -277,6 +290,7 @@ fi
 %files
 %attr(600, katello, katello)
 %defattr(-,root,root)
+%{_bindir}/katello-*
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -359,6 +373,128 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.36-1
+- encryption - fix problems with logger not being initialized
+- encryption - fix running in development environment
+- reduce usage of require for code in lib dir
+- 797412 - Unit test fix that should ve gone with the previous commit
+- 819941 - missing dependencies in katello-all (common)
+- 797412 - Added a comment to explain why index rule is set to true
+- 797412 - Removed an unnecessary filter since only one controller call was
+  using it.
+- 797412 - Moved back search to index method
+- 797412 - Fixed environment search call in the cli
+- system errata - mv js to load on index
+- encryption - plain text passwords encryption
+- 821010 - catch and log errors fetching release versions from cdn
+- product model - returned last_sync and sync_state fields back to json export
+  They were removed with headpin merge but cli uses them.
+- adding better example output
+- removing root requirement so you can keep your files owned by your user
+- 814118 - fixing issue where updating gpg key did not refresh cp content
+- restores the ability to use the -f force flag.  previous commit broke it
+- Merge pull request #102 from mccun934/reset-dbs-dev-mode
+- removing the old 'clear-all' script and moving to just one script
+- 812891 - Adding hypervisor record deletion to katello cli
+- Merge pull request #94 from jsomara/795869
+- systems - fix error on UI create
+- 795869 - Fixing org name in katello-configure to accept spaces but still
+  create a proper candlepin key
+- 783402 - It is possible to add a template to a change set twice
+- refactoring - removing duplicate method definition
+
+* Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.35-1
+- adding the ability to pass in 'development' as your env
+- 817848 - Adding dry-run to candlepin proxy routes
+- 818689 - update spec test when activating system with activation key to check
+  for hidden user
+- 818689 - set the current user before attempting to access activation keys to
+  allow communication with candlepin
+- Fix for subscriptions SLA level switcher to fit correctly.
+- 818711 - use cache of release versions from CDN
+- 818711 - pull release versions from CDN
+- Fixed sorting in ssl-build dir listing
+- Added list of ssl-build dir to katello-debug output
+- 818370 - support dots in package name in nvrea
+- 808172 - Added code to show version information for katello cli
+- 818159 - Error when promoting changeset
+- remove test.rake from rpm package
+- 807291, 817634 - bit of code clean up
+- 807291, 817634 - activation key now validates pools when loaded
+- 796972 - changed '+New Something' to single string for translation, and
+  clarified the 'total' string
+- 796972 - made a single string for translators to work with in several cases
+- 817658, 812417 - i686 systems arch displayed as i686 instead of blank
+- 809827: katello-reset-dbs should be aware of the deployemnt type
+- system-release-version - default landing page is now subscriptions when
+  selecting a system
+- 772831 - proper way to determine IP address is through fact
+  network.ipv4_address
+- Merge branch 'master' into system-release-version
+- system-release-version - cleaning up system subscriptions tab content and ui
+- systems - spec tests for listing systems for a pool_id
+- systems - api for listing systems for a pool_id
+- add both auto-subscribe on and off options to choice list with service level
+
+* Fri Apr 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.34-1
+- Do not reference logical-insight unless it is configured
+
+* Wed Apr 25 2012 Jordan OMara <jomara@redhat.com> 0.2.33-1
+- Merge pull request #33 from ehelms/master (mmccune@redhat.com)
+- Merge pull request #37 from jsomara/ldap-rebase (jrist@redhat.com)
+- Merge pull request #36 from thomasmckay/system-release-version
+  (jrist@redhat.com)
+- Reverting User.all => User.visible as per ehelms+jsherrill
+  (jomara@redhat.com)
+- Adding destroy_ldap_group to before filter to prevent extraneous loading. Thx
+  jrist + bbuck! (jomara@redhat.com)
+- Fixing various LDAP issues from the last pull request (mbacovsk@redhat.com)
+- Loading group roles from ldap (jomara@redhat.com)
+- katello - fix broken unit test (pchalupa@redhat.com)
+- Adds logical-insight Gem for development and moves the logical insight code
+  to an initializer so that it can be turned on and off via config file.
+  (ehelms@redhat.com)
+- jenkins build failure for test that crosses katello/headpin boundary
+  (thomasmckay@redhat.com)
+- cleaning up use of AppConfig.katello? (thomasmckay@redhat.com)
+- Merge pull request #23 from iNecas/bz767925 (lzap@seznam.cz)
+- incorrect display of release version in system details tab
+  (thomasmckay@redhat.com)
+- 767925 - search packages command in CLI/API (inecas@redhat.com)
+
+* Tue Apr 24 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.32-1
+- reverted katello.yml back to katello master version
+- removed reference to headpin in client.conf and katello.yml
+- fixed headpin-specific variation of available releases spec test
+- fenced spec tests 
+- 766647 - duplicate env creation - better error message needed
+- katello-cli, katello - setting default environment for user
+- 812263 - keep the original tomcat server.xml when resetting dbs
+- Fixes issue on Roles page loading the edit panel where a javascript ordering
+  problem caused the role details to not show properly.
+- 813427 - do not delete repos from Red Hat Providers
+- Fixes issue with CSRF meta tag being out of place and notifications not being
+  in the proper script tag resulting from moving all inline javascript to a
+  single script tag.
+- 814063 - warning message for all possible urls
+- 814063 - katello now returns warning when not configured
+- 814063 - unable to restart httpd
+- 810232 - system templates - fix issue editing multiple templates
+
+* Wed Apr 18 2012 Petr Chalupa <pchalupa@redhat.com> 0.2.31-1
+- 810378 - adding search for repos on promotion page
+- Changes the way inline javascript declarations are handled such that they are
+  all injected into one universal script tag.
+- 741595 - uebercert POST/GET/DELETE - either support or delete the calls from
+  CLI
+- boot - default conf was never loaded
+- added a script to restore a katello backup that was made with the matching
+  backup script
+- 803428 - repos - do not pass candlepin a gpgurl, if no gpgkey is defined
+- 812346 - fixing org deletion envrionment error
+- added basic backup script to handle backup part of
+  https://fedorahosted.org/katello/wiki/GuideServerBackups
+
 * Thu Apr 12 2012 Ivan Necas <inecas@redhat.com> 0.2.30-1
 - cp-releasever - release as a scalar value in API system json
 - removing bail out check for env-selector
