@@ -422,8 +422,10 @@ class Register(SystemAction):
         sla = self.get_option('sla')
         facts = dict(self.get_option('fact') or {})
 
-        environment = get_environment(org, environment_name)
-        system = self.api.register(name, org, environment['id'], activation_keys, 'system', release, sla, facts=facts)
+        environment_id = None
+        if environment_name is not None:
+            environment_id = get_environment(org, environment_name)['id']
+        system = self.api.register(name, org, environment_id, activation_keys, 'system', release, sla, facts=facts)
 
         test_record(system,
             _("Successfully registered system [ %s ]") % name,
