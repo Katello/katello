@@ -461,9 +461,6 @@ Src::Application.routes.draw do
           get :systems
           post :add_systems
           post :remove_systems
-          post :add_environments
-          post :remove_environments
-          post :clear_environments
         end
       end
 
