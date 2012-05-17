@@ -231,6 +231,11 @@ ln -sv %{datadir}/tmp %{buildroot}%{homedir}/tmp
 #create symlink for Gemfile.lock (it's being regenerated each start)
 ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
+#create symlinks for important scripts
+mkdir -p %{buildroot}%{_bindir}
+ln -sv %{homedir}/script/katello-debug %{buildroot}%{_bindir}/katello-debug
+ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
+
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
 
@@ -286,6 +291,7 @@ fi
 %files
 %attr(600, katello, katello)
 %defattr(-,root,root)
+%{_bindir}/katello-*
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
