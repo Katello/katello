@@ -19,7 +19,7 @@ Summary:       Client package for managing a katello-headpin installation
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.18
+Version:       0.1.19
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -58,6 +58,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.19-1
+- 812891 - Adding hypervisor record deletion to katello cli
+- 772850 - provider status is not relevant to headpin since repos are not
+  sync'ed
+
 * Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.18-1
 - Added version information for headpin
 
