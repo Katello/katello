@@ -3,10 +3,15 @@
 @import "grid";
 @import "text";
 @import "mixins";
-@import "colors";
 @import "sprites";
 @import "icons";
 @import "look";
+
+@import "converge-ui/colors";
+@import "converge-ui/shell";
+@import "converge-ui/header";
+@import "converge-ui/footer";
+@import "converge-ui/media";
 
 @import "widgets/multiselect";
 @import "widgets/_chosen";
@@ -14,9 +19,6 @@
 @import "widgets/scrollpane";
 @import "widgets/env_select";
 
-
-html {}
-body { background:  $body_background_img; }
 pre  { text-indent: 18px; }
 
 strong { font-weight: bold; }
@@ -54,7 +56,7 @@ hr { color: $border_color; }
 .la { text-align: left; } /* text align left */
 .ra { text-align: right; } /* text align right */
 .role-alt { color: #888;}
-.ca { text-align: center; } /* text align right */
+.ca { text-align: center; } /* text align center */
 .fr { float: right; } /* float  right */
 .fl { float: left; } /* float left */
 .fc { display: inline-block; margin: 0 auto; } /* "float", center */
@@ -503,13 +505,13 @@ fieldset {
         position: absolute;
         width: 230px;
         height: 18px;
-        left: 25px;
+        left: 10px;
     }
     #orgfilter {
         margin-bottom: 33px;
     }
     #orgfilter_input {
-        width: 230px;
+        width: 218px;
         margin-bottom: 3px;
     }
     .filter_button {
@@ -519,33 +521,6 @@ fieldset {
     }
 }
 
-/*footer*/
-footer {
-  font-size: 95%;
-  margin: 20px 0 0;
-  padding: 20px 10px 10px 10px;
-  display: block;
-  background: $footer_shade_img;
-  ul {
-    display: block;
-    padding: 10px 10px 0 0;
-    min-height: 50px;
-    width: 99%;
-    li {
-      &:first-child {
-        float: left;
-      }
-      display: block;
-      float: right;
-      margin-left: 1em;
-    }
-  }
-
-  &.fixed {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-  }
-}
 #toTop {
   display:none;
   text-decoration:none;
@@ -684,6 +659,7 @@ footer {
   width:  100%;
   margin:0 auto;
   min-height:600px;
+  position: relative;
     /* right side of 2 pane below the sliding pane */
     .right {
         float:right;
@@ -1240,93 +1216,92 @@ footer {
 /* switcher Container (default to float:right) */
 #switcherContainer {
   position: absolute;
-  margin-top: 4px;
-}
-
-/* switcher Button */
- #switcherButton {
   display: inline-block;
-  float: right;
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  position: relative;
-  z-index: 30;
-  cursor: pointer;
-  div:first-child {
-    padding: 7px 12px 4px 10px;
-    display: block;
-    float: left; }
-  .arrow_icon {
-    height: 11px;
-    width: 9px;
-    top: 10px;
-    right: 10px;
-    position: relative;
-    background: $arrow_icon;
-    float: right;
-  }
-  &.active {
-    @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
-    @include border-bottom-lr-radius(0);
+  left: 218px;
+  top: 22px;
+
+  /* switcher Button */
+   #switcherButton {
+    cursor: pointer;
+
+    div:first-child {
+      padding: 7px 12px 4px 10px;
+      display: block;
+      float: left; }
     .arrow_icon {
-      background-position: 0 -11px;
+      height: 11px;
+      width: 9px;
+      top: 10px;
+      right: 10px;
+      position: relative;
+      background: $arrow_icon;
+      float: right;
+    }
+    &.active {
+      @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
+      @include border-bottom-lr-radius(0);
+      .arrow_icon {
+        background-position: 0 -11px;
+      }
+    }
+    &:hover {
+      @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
+      text-decoration: none;
     }
   }
-  &:hover {
-    @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
-    text-decoration: underline;
-  }
-}
 
-/* switcher Box */
-#switcherBox {
-  position: absolute;
-  top: 30px;
-  left: 0;
-  display: none;
-  z-index: 2000;
-  a {
-    color: $black_color !important;
+  /* switcher Box */
+  #switcherBox {
+    position: absolute;
+    top: 17px;
+    left: 0px;
+    display: none;
+    z-index: 2000;
+    a {
+      color: $black_color !important;
+    }
   }
-}
 
-/* switcher Form */
-#switcherForm {
-  width: 248px;
-  border: 1px solid $orgbox_color;
-  @include border-trbrbl-radius(3px);
-  @include box-shadow(2px, 2px, 2px, rgba(0,0,0,0.4));
-  margin-top: -1px;
-  background-color: $orgbox_color;
-  padding: 6px;
-  fieldset {
-    margin: 0 0 12px 0;
-    display: block;
-    border: 0;
-    padding: 0;
-  }
-  a {
-      @include border-radius(3px);
-      width: 90%;
-      padding: 3%;
-      &:hover {
-        color: $white_color !important;
-        background-color: $listhover_color;
-      }
-      &.selected {
-         background-color: $lightkprimary_color;
-      }
-  }
-}
+  /* switcher Form */
+  #switcherForm {
+    width: 248px;
+    border: 1px solid $orgbox_color;
+    @include border-trbrbl-radius(3px);
+    @include box-shadow(2px, 2px, 2px, rgba(0,0,0,0.4));
+    margin-top: -1px;
+    background-color: $orgbox_color;
+    padding: 6px;
+    fieldset {
+      margin: 0 0 12px 0;
+      display: block;
+      border: 0;
+      padding: 0;
+    }
+    a {
+        @include border-radius(3px);
+        width: 100%;
+        padding: 3%;
+        text-align: left;
 
-#orgbox {
-  background: $white_color;
-  @include border-radius(3px);
-  padding: 10px 13px;
-  margin: 0;
-  height: 220px;
-  overflow-y: auto;
-  width: 223px;
+        &:hover {
+          color: $white_color !important;
+          background-color: $listhover_color;
+        }
+        &.selected {
+           background-color: $lightkprimary_color;
+        }
+    }
+  }
+
+  #orgbox {
+    background: $white_color;
+    @include border-radius(3px);
+    padding: 10px 10px;
+    margin: 0;
+    height: 220px;
+    overflow-y: auto;
+    width: 230px;
+  }
 }
 
 .productsbox {
@@ -1410,3 +1385,9 @@ footer {
     padding-top: 0;
     padding-bottom: 0;
 }
+
+.versioning {
+  position: relative;
+  bottom: -18px;
+}
+
