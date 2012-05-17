@@ -49,7 +49,6 @@ BuildArch:      noarch
 Summary:        Common bits for all Katello instances
 Requires:       httpd
 Requires:       mod_ssl
-Requires:       mod_authz_ldap
 Requires:       openssl
 Requires:       elasticsearch
 Requires:       rubygems
