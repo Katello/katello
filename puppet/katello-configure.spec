@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.21
+Version:        0.2.22
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.22-1
+- encryption - plain text passwords encryption
+
 * Wed May 16 2012 Mike McCune <mmccune@redhat.com> 0.2.21-1
 - 817933 part deux - also going to read these from katello-configure bin
   (jomara@redhat.com)
