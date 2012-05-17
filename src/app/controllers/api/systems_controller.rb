@@ -64,6 +64,8 @@ class Api::SystemsController < Api::ApiController
     }
   end
 
+  # this method is called from katello cli client and it does not work with activation keys
+  # for activation keys there is method activate (see custom routes)
   def create
     system = System.create!(params.merge({:environment => @environment, :serviceLevel => params[:service_level]}))
     render :json => system.to_json
