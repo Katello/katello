@@ -101,6 +101,9 @@ install -p -m 755 %{name}-enable %{buildroot}%{_sbindir}/%{name}-enable
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 katello-selinux-enable.man1 %{buildroot}%{_mandir}/man1/katello-selinux-enable.1
 
+# Install secure (extra protected) directory
+install -d %{buildroot}%{_sysconfdir}/katello/secure
+
 %clean
 rm -rf %{buildroot}
 
@@ -111,7 +114,7 @@ fi
 
 %posttrans
 if /usr/sbin/selinuxenabled ; then
-  /sbin/restorecon -rvvi /var/lib/katello /var/log/katello
+  /sbin/restorecon -rvvi /var/lib/katello /var/log/katello /usr/share/katello /etc/katello /usr/sbin/katello-*
 fi
 
 %postun
@@ -124,7 +127,7 @@ if [ $1 -eq 0 ]; then
     done
 fi
 
-/sbin/restorecon -rvvi /var/lib/katello /var/log/katello
+/sbin/restorecon -rvvi /var/lib/katello /var/log/katello /usr/share/katello /etc/katello /usr/sbin/katello-*
 
 %files
 %defattr(-,root,root,0755)
@@ -133,6 +136,7 @@ fi
 %{_datadir}/selinux/devel/include/%{moduletype}/%{modulename}.if
 %{_mandir}/man1/katello-selinux-enable.1*
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
+%{_sysconfdir}/katello/secure
 
 %changelog
 * Mon Mar 26 2012 Martin Bačovský <mbacovsk@redhat.com> 0.2.4-1
