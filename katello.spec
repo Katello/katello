@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.35
+Version:        0.2.36
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -374,6 +374,36 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.36-1
+- encryption - fix problems with logger not being initialized
+- encryption - fix running in development environment
+- reduce usage of require for code in lib dir
+- 797412 - Unit test fix that should ve gone with the previous commit
+- 819941 - missing dependencies in katello-all (common)
+- 797412 - Added a comment to explain why index rule is set to true
+- 797412 - Removed an unnecessary filter since only one controller call was
+  using it.
+- 797412 - Moved back search to index method
+- 797412 - Fixed environment search call in the cli
+- system errata - mv js to load on index
+- encryption - plain text passwords encryption
+- 821010 - catch and log errors fetching release versions from cdn
+- product model - returned last_sync and sync_state fields back to json export
+  They were removed with headpin merge but cli uses them.
+- adding better example output
+- removing root requirement so you can keep your files owned by your user
+- 814118 - fixing issue where updating gpg key did not refresh cp content
+- restores the ability to use the -f force flag.  previous commit broke it
+- Merge pull request #102 from mccun934/reset-dbs-dev-mode
+- removing the old 'clear-all' script and moving to just one script
+- 812891 - Adding hypervisor record deletion to katello cli
+- Merge pull request #94 from jsomara/795869
+- systems - fix error on UI create
+- 795869 - Fixing org name in katello-configure to accept spaces but still
+  create a proper candlepin key
+- 783402 - It is possible to add a template to a change set twice
+- refactoring - removing duplicate method definition
+
 * Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.35-1
 - adding the ability to pass in 'development' as your env
 - 817848 - Adding dry-run to candlepin proxy routes
