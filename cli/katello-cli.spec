@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.33
+Version:       0.2.34
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -98,6 +98,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.34-1
+- cli_man - katello(1) man page and generator
+- Changing wording for hypervisor deletion record delete
+- 812891 - Adding hypervisor record deletion to katello cli
+- product status cli - fix for key error Formatting moved to printer that
+  checks whether the key exist prior to printing it.
+
 * Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.33-1
 - cli - pep8 fixes - code reidentation - trailing spaces removal - unused
   imports removed
