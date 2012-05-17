@@ -1,6 +1,6 @@
 class apache2::install {
   package { "httpd": ensure => installed}
-  package { [ "mod_ssl" , "mod_authz_ldap" ]:
+  package { [ "mod_ssl" ]:
     ensure => present, require => Package["httpd"],
     notify => Service["httpd"]
   }
