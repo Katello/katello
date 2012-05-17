@@ -62,7 +62,11 @@ KT.system_groups = (function(){
             type: "POST",
             url: checkbox.attr("data-url"),
             data: options,
-            cache: false
+            cache: false,
+            success:function(){
+                var id = $('#system_group_id');
+                list.refresh(id.val(), id.data('ajax_url'))
+            }
         });
         return false;
     },

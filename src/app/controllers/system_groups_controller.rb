@@ -93,7 +93,7 @@ class SystemGroupsController < ApplicationController
   end
 
   def show
-    render :partial => "common/list_update", :locals=>{:item=>@group, :accessor=>"id", :columns=>['name']}
+    render :partial => "system_groups/list_group", :locals=>{:item=>@group, :accessor=>"id", :name=>controller_display_name}
   end
 
   def update
@@ -157,6 +157,7 @@ class SystemGroupsController < ApplicationController
         :ajax_scroll=>items_system_groups_path(),
         :enable_create=> SystemGroup.creatable?(current_organization),
         :initial_action=>:systems,
+        :list_partial => 'system_groups/list_groups',
         :ajax_load=>true,
         :search_class=>SystemGroup
     }
