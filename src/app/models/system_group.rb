@@ -39,6 +39,8 @@ class SystemGroup < ActiveRecord::Base
   has_many :systems, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group,
            :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
 
+  has_many :jobs, :as => :job_owner
+
   # we use db_environments to host the data, but all input, output
   #  should go through 'environments' accessor and getter (defined below)
   #  db_environment(id)s accessors are marked private to help stop usage
@@ -153,6 +155,40 @@ class SystemGroup < ActiveRecord::Base
     [:create]
   end
 
+  def install_packages packages
+    pulp_job = self.install_package(packages)
+    job_id = save_job(pulp_job, :package_install, :packages, packages)
+  end
+
+  def uninstall_packages packages
+    pulp_job = self.uninstall_package(packages)
+    job_id = save_job(pulp_job, :package_remove, :packages, packages)
+  end
+
+  def update_packages packages=nil
+    # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
+    pulp_job = self.update_package(packages)
+    job_id = save_job(pulp_job, :package_update, :packages, packages)
+  end
+
+  def install_package_groups groups
+    pulp_job = self.install_package_group(groups)
+    job_id = save_job(pulp_job, :package_group_install, :groups, groups)
+  end
+
+  def uninstall_package_groups groups
+    pulp_job = self.uninstall_package_group(groups)
+    job_id = save_job(pulp_job, :package_group_remove, :groups, groups)
+  end
+
+  def install_errata errata_ids
+    pulp_job = self.install_consumer_errata(errata_ids)
+    job_id = save_job(pulp_job, :errata_install, :errata_ids, errata_ids)
+  end
+
+  def refreshed_jobs
+    Job.refresh_for_owner(self)
+  end
 
   def extended_index_attrs
     {:name_sort=>name.downcase, :name_autocomplete=>self.name,
@@ -216,6 +252,12 @@ class SystemGroup < ActiveRecord::Base
   def remove_pulp_consumer_group record
     lock_check
     self.del_consumers([record.uuid])
+  end
+
+  def save_job pulp_job, job_type, parameters_type, parameters
+    job = Job.create!(:pulp_id => pulp_job[:id], :job_owner => self)
+    job.create_tasks(self, pulp_job[:tasks], job_type, parameters_type => parameters)
+    job
   end
 
   def self.items org, verbs

@@ -162,6 +162,19 @@ module Navigation
           :if => lambda{@group},
           :options => {:class=>"navigation_element"}
         },
+#        { :key => :content,
+#          :name =>_("Content"),
+#          :url => lambda{system_group_errata_path(@group.id)},
+#          :if => lambda{@group},
+#          :options => {:class=>"navigation_element"},
+#          :items => system_groups_content_subnav
+#        },
+        { :key => :errata,
+          :name =>_("Errata"),
+          :url => lambda{system_group_errata_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"navigation_element"},
+        },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{edit_system_group_path(@group.id)},
@@ -171,6 +184,22 @@ module Navigation
       ]
     end
 
+    def system_groups_content_subnav
+      [
+#        { :key => :packages,
+#          :name =>_("Packages"),
+#          :url => lambda{packages_system_system_packages_path(@system.id)},
+#          :if => lambda{@system},
+#          :options => {:class=>"third_level navigation_element"}
+#        },
+        { :key => :errata,
+          :name =>_("Errata"),
+          :url => lambda{system_group_errata_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"third_level navigation_element"},
+        }
+      ]
+    end
 
     def activation_keys_navigation
       [

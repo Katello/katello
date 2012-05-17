@@ -64,6 +64,59 @@ module Glue::Pulp::ConsumerGroup
       raise e
     end
 
+    def install_package packages
+      Rails.logger.debug "Scheduling package install for consumer group #{self.pulp_id}"
+      # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
+      response = Pulp::ConsumerGroup.install_packages(self.pulp_id, packages)
+    rescue => e
+      Rails.logger.error "Failed to schedule package install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def uninstall_package packages
+      Rails.logger.debug "Scheduling package uninstall for consumer group #{self.pulp_id}"
+      # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
+      response = Pulp::ConsumerGroup.uninstall_packages(self.pulp_id, packages)
+    rescue => e
+      Rails.logger.error "Failed to schedule package uninstall for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def update_package packages
+      Rails.logger.debug "Scheduling package update for consumer #{self.name}"
+      # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
+      response = Pulp::ConsumerGroup.update_packages(self.pulp_id, packages)
+    rescue => e
+      Rails.logger.error "Failed to schedule package update for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def install_package_group groups
+      Rails.logger.debug "Scheduling package group install for consumer group #{self.pulp_id}"
+      # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
+      response = Pulp::ConsumerGroup.install_package_groups(self.pulp_id, groups)
+    rescue => e
+      Rails.logger.error "Failed to schedule package group install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def uninstall_package_group groups
+      Rails.logger.debug "Scheduling package group uninstall for consumer group #{self.pulp_id}"
+      # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
+      response = Pulp::ConsumerGroup.uninstall_package_groups(self.pulp_id, groups)
+    rescue => e
+      Rails.logger.error "Failed to schedule package group uninstall for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def install_consumer_errata errata_ids
+      Rails.logger.debug "Scheduling errata install for consumer group #{self.pulp_id}"
+      # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
+      response = Pulp::ConsumerGroup.install_errata(self.pulp_id, errata_ids)
+    rescue => e
+      Rails.logger.error "Failed to schedule errata install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
 
     def destroy_consumer_group_orch
       pre_queue.create(:name => "delete pulp consumer group: #{self.pulp_id}", :priority => 3, :action => [self, :del_pulp_consumer_group])

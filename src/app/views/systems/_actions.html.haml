@@ -33,9 +33,9 @@
 .panel_action{:class=>"disabled", 'data-id'=>"systems_package_action"}
   .package_icon.fl
   = radio_button_tag :systems_action, :packages, false, :disabled => 'disabled'
-  = label_tag _('Package(s)')
+  = label_tag _('Package')
   = radio_button_tag :systems_action, :package_groups, false, :disabled => 'disabled'
-  = label_tag _('Package Group(s)')
+  = label_tag _('Package Group')
   %div
     - help_text = _("Enter Package or Group Name(s)...")
     %input{:type=>'text', :id=>'packages_input', :disabled => 'disabled', :size=>'25', :placeholder => help_text, :title => help_text}
