@@ -447,7 +447,6 @@ class ApplicationController < ActionController::Base
     options[:total_count] ||= results.empty? ? 0 : results.total
     options[:total_results] = total
     options[:collection] = results
-    
     @items = results
 
     if options[:list_partial]
