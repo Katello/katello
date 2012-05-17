@@ -80,14 +80,13 @@ class Create(SystemGroupAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--max_systems', dest='max_systems',
-                               help=_("maximum number of systems in this group (enter -1 for unlimited) (required)"))
+                               help=_("maximum number of systems in this group"))
         self.parser.add_option('--description', dest='description',
                                help=_("system group description"))
 
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
-        self.require_option('max_systems')
 
     def run(self):
         org_name = self.get_option('org')
