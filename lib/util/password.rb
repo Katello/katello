@@ -45,7 +45,7 @@ module Password
     passphrase = File.open('/etc/katello/secure/passphrase', 'rb') { |f| f.read }.chomp if passphrase.nil?
     '$1$' + [ Password.aes_encrypt(text, passphrase) ].pack('m0').gsub("\n", '') # for Ruby 1.8
   rescue Exception => e
-    if defined?(Rails)
+    if defined?(Rails) && Rails.logger
       Rails.logger.warn "Unable to encrypt password: #{e}"
     else
       STDERR.puts "Unable to encrypt password: #{e}".chomp
@@ -58,7 +58,7 @@ module Password
     return text unless text.start_with? '$1$' # password is plain
     Password.aes_decrypt(text[3..-1].unpack('m0')[0], passphrase)
   rescue Exception => e
-    if defined?(Rails)
+    if defined?(Rails) && Rails.logger
       Rails.logger.warn "Unable to decrypt password, returning encrypted version #{e}"
     else
       STDERR.puts "Unable to decrypt password, returning encrypted version #{e}".chomp
