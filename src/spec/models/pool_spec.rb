@@ -17,7 +17,7 @@ describe KTPool do
   context "Find pool by organization and id" do
     let(:pool_id) { ProductTestData::POOLS[:id] }
     before do
-      Candlepin::Pool.should_receive(:find).with(pool_id).and_return(ProductTestData::POOLS)
+      Resources::Candlepin::Pool.should_receive(:find).with(pool_id).and_return(ProductTestData::POOLS)
     end
     it "should return pool that is in the organization" do
       create_org_from_cp_owner(ProductTestData::POOLS[:owner])

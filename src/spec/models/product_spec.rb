@@ -26,13 +26,13 @@ describe Product, :katello => true do
 
     @organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
     @provider     = @organization.redhat_provider
-    @substitutor_mock = CDN::CdnVarSubstitutor.new("https://cdn.redhat.com", {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123"})
+    @substitutor_mock = Resources::CDN::CdnVarSubstitutor.new("https://cdn.redhat.com", {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123"})
     @substitutor_mock.stub!(:precalculate).and_return do |paths|
       # we pretend, that all paths are substituted to themseves
       @substitutor_mock.instance_variable_set("@substitutions", Hash.new {|h,k| {{} => k} })
     end
 
-    CDN::CdnVarSubstitutor.stub(:new => @substitutor_mock)
+    Resources::CDN::CdnVarSubstitutor.stub(:new => @substitutor_mock)
     disable_cdn
 
     ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider, :environments => [@organization.library]})
@@ -62,9 +62,9 @@ describe Product, :katello => true do
 
     context "candlepin orchestration" do
       before do
-        Candlepin::Product.stub!(:certificate).and_return("")
-        Candlepin::Product.stub!(:key).and_return("")
-        Pulp::Repository.stub!(:create).and_return([])
+        Resources::Candlepin::Product.stub!(:certificate).and_return("")
+        Resources::Candlepin::Product.stub!(:key).and_return("")
+        Resources::Pulp::Repository.stub!(:create).and_return([])
       end
 
       context "with attributes" do
@@ -76,7 +76,7 @@ describe Product, :katello => true do
               :name => ProductTestData::PRODUCT_WITH_ATTRS[:name]
           }
 
-          Candlepin::Product.should_receive(:create).once.with(hash_including(expected_product)).and_return({:id => 1})
+          Resources::Candlepin::Product.should_receive(:create).once.with(hash_including(expected_product)).and_return({:id => 1})
           product = Product.create!(ProductTestData::PRODUCT_WITH_ATTRS)
           product.organization.should_not be_nil
         end
@@ -87,8 +87,8 @@ describe Product, :katello => true do
 
   context "lazily-loaded attributes" do
     before(:each) do
-      Candlepin::Product.stub!(:get).and_return([ProductTestData::SIMPLE_PRODUCT.merge(:attributes => [])])
-      Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+      Resources::Candlepin::Product.stub!(:get).and_return([ProductTestData::SIMPLE_PRODUCT.merge(:attributes => [])])
+      Resources::Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
       @p = Product.create!({
         :name => ProductTestData::PRODUCT_NAME,
         :id => ProductTestData::PRODUCT_ID,
@@ -99,7 +99,7 @@ describe Product, :katello => true do
     end
 
     it "should retrieve Product from candlepin" do
-      Candlepin::Product.should_receive(:get).once.with(ProductTestData::PRODUCT_ID).and_return([ProductTestData::SIMPLE_PRODUCT])
+      Resources::Candlepin::Product.should_receive(:get).once.with(ProductTestData::PRODUCT_ID).and_return([ProductTestData::SIMPLE_PRODUCT])
       @p.multiplier
     end
 
@@ -108,7 +108,7 @@ describe Product, :katello => true do
     end
 
     it "should replace 'attributes' with 'attrs'" do
-      Candlepin::Product.stub!(:get).and_return([ProductTestData::SIMPLE_PRODUCT.merge(:attributes => [{:name => 'blah'}])])
+      Resources::Candlepin::Product.stub!(:get).and_return([ProductTestData::SIMPLE_PRODUCT.merge(:attributes => [{:name => 'blah'}])])
       @p.attrs.should_not be_nil
     end
 
@@ -118,18 +118,18 @@ describe Product, :katello => true do
       end
 
       it "should have the value of 'arch' attribute" do
-        Candlepin::Product.stub!(:get).and_return([ProductTestData::SIMPLE_PRODUCT.merge(:attributes => [{:name => 'arch', :value => 'i386'}])])
+        Resources::Candlepin::Product.stub!(:get).and_return([ProductTestData::SIMPLE_PRODUCT.merge(:attributes => [{:name => 'arch', :value => 'i386'}])])
         @p.arch.should == 'i386'
       end
     end
 
     it "should receive valid certificate" do
-      Candlepin::Product.stub!(:certificate).and_return("---SOME CERT---")
+      Resources::Candlepin::Product.stub!(:certificate).and_return("---SOME CERT---")
       @p.certificate.should == "---SOME CERT---"
     end
 
     it "should receive valid key from candlepin" do
-      Candlepin::Product.stub!(:key).and_return("---SOME KEY---")
+      Resources::Candlepin::Product.stub!(:key).and_return("---SOME KEY---")
       @p.key.should == "---SOME KEY---"
     end
   end
@@ -163,7 +163,7 @@ describe Product, :katello => true do
 
     context "repo id" do
       before do
-        Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+        Resources::Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
 
@@ -178,9 +178,9 @@ describe Product, :katello => true do
 
     describe "add repo" do
       before(:each) do
-        Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
-        Candlepin::Content.stub!(:create).and_return({:id => "123"})
-        Pulp::Repository.stub!(:update).and_return({:id => "123"})
+        Resources::Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+        Resources::Candlepin::Content.stub!(:create).and_return({:id => "123"})
+        Resources::Pulp::Repository.stub!(:update).and_return({:id => "123"})
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
 
@@ -198,9 +198,9 @@ describe Product, :katello => true do
 
     context "when importing product from candlepin" do
       before do
-        Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
-        Candlepin::Product.stub!(:remove_content).and_return({})
-        Candlepin::Content.stub!(:create).and_return({:id => "123"})
+        Resources::Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+        Resources::Candlepin::Product.stub!(:remove_content).and_return({})
+        Resources::Candlepin::Content.stub!(:create).and_return({:id => "123"})
 
         #@p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
         #@key = EnvironmentProduct.find_or_create(@organization.library, @p)
@@ -321,8 +321,8 @@ describe Product, :katello => true do
       @filter1 = Filter.create!(:name => FILTER1_ID, :package_list => PACKAGE_LIST_1, :organization => @organization)
       @filter2 = Filter.create!(:name => FILTER2_ID, :package_list => PACKAGE_LIST_2, :organization => @organization)
 
-      Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
-      Candlepin::Content.stub!(:create).and_return({:id => ProductTestData::PRODUCT_WITH_CONTENT[:productContent][0].content.id})
+      Resources::Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+      Resources::Candlepin::Content.stub!(:create).and_return({:id => ProductTestData::PRODUCT_WITH_CONTENT[:productContent][0].content.id})
 
       @product = Product.create!(ProductTestData::PRODUCT_WITH_CONTENT)
 
@@ -367,19 +367,19 @@ describe Product, :katello => true do
 
     context "adding to a product being promoted" do
       before(:each) do
-        Pulp::Repository.stub(:packages).and_return([])
-        Pulp::Repository.stub(:errata).and_return([])
+        Resources::Pulp::Repository.stub(:packages).and_return([])
+        Resources::Pulp::Repository.stub(:errata).and_return([])
 
         @product.filters += [@filter1, @filter2]
       end
 
       it "should get applied during repositories cloning" do
-        Pulp::Repository.should_receive(:clone_repo).once.with(anything, anything, anything, @product.filters.collect(&:pulp_id)).and_return([])
+        Resources::Pulp::Repository.should_receive(:clone_repo).once.with(anything, anything, anything, @product.filters.collect(&:pulp_id)).and_return([])
         @product.promote @organization.library, @environment1
       end
 
       it "should get applied to the first environment only" do
-        Pulp::Repository.should_receive(:clone_repo).once.with(anything, anything, anything, []).and_return([])
+        Resources::Pulp::Repository.should_receive(:clone_repo).once.with(anything, anything, anything, []).and_return([])
         @product.promote @environment1, @environment2
       end
     end
@@ -487,8 +487,8 @@ describe Product, :katello => true do
 
     context "resetting product gpg work across multiple environments" do
       before do
-        Pulp::Repository.stub(:packages).and_return([])
-        Pulp::Repository.stub(:errata).and_return([])
+        Resources::Pulp::Repository.stub(:packages).and_return([])
+        Resources::Pulp::Repository.stub(:errata).and_return([])
 
         @env = KTEnvironment.create!(:name => "new_repo", :organization =>@organization, :prior=>@organization.library)
         @new_repo = promote(@repo, @env)

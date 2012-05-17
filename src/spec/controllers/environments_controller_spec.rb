@@ -88,7 +88,7 @@ describe EnvironmentsController do
       set_default_locale
       controller.stub!(:notice)
 
-      #Candlepin::Owner.stub!(:merge_to).and_return @org
+      #Resources::Candlepin::Owner.stub!(:merge_to).and_return @org
       @env = mock(KTEnvironment, EnvControllerTest::ENVIRONMENT)
       @env.stub!(:successor).and_return("")
 

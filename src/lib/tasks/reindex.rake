@@ -15,7 +15,7 @@ task :reindex=>["environment", "clear_search_indices"]  do
 
   print "Re-indexing Repositories\n"
   
-  #pulp_repos = Pulp::Repository.all
+  #pulp_repos = Resources::Pulp::Repository.all
   #repos = Repository.all
   #repos.each{|r| r.populate_from pulp_repos}
 
