@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require_dependency "resources/pulp"
-
 class Glue::Pulp::Distribution
   attr_accessor :id, :description, :files, :family, :variant, :version, :url, :arch
 
@@ -25,7 +23,7 @@ class Glue::Pulp::Distribution
   end
 
   def self.find id
-    Glue::Pulp::Distribution.new(Pulp::Distribution.find(id))
+    Glue::Pulp::Distribution.new(Resources::Pulp::Distribution.find(id))
   end
   
 end

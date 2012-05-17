@@ -331,7 +331,7 @@ class ActivationKeysController < ApplicationController
     all_pools = {}
 
     # TODO: should be current_organization.pools (see pool.rb for attributes)
-    cp_pools = Candlepin::Owner.pools current_organization.cp_key
+    cp_pools = Resources::Candlepin::Owner.pools current_organization.cp_key
     cp_pools.each do |pool|
       p = OpenStruct.new
       p.poolId = pool['id']

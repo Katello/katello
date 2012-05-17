@@ -268,7 +268,7 @@ class SystemTemplatesController < ApplicationController
 
   def auto_complete_package
     name = params[:name]
-    render :json=>Pulp::Package.name_search(name).sort.uniq[0..19]
+    render :json=> Resources::Pulp::Package.name_search(name).sort.uniq[0..19]
   end
 
   def create

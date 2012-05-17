@@ -10,14 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require_dependency "resources/pulp"
 require "util/search"
 
 class Glue::Pulp::Package < Glue::Pulp::SimplePackage
   attr_accessor :id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description, :size, :buildhost, :repoids
 
   def self.find id
-    package_attrs = Pulp::Package.find(id)
+    package_attrs = Resources::Pulp::Package.find(id)
     Glue::Pulp::Package.new(package_attrs) if not package_attrs.nil?
   end
 

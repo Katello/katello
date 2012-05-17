@@ -21,14 +21,14 @@ class SubscriptionsController < ApplicationController
 
 
   def index
-    all_subs = Candlepin::Owner.pools current_organization.cp_key
+    all_subs = Resources::Candlepin::Owner.pools current_organization.cp_key
     @subscriptions = reformat_subscriptions(all_subs)
   end
 
   # Reformat the subscriptions from our API to a format that the headpin HAML expects
   def reformat_subscriptions(all_subs)
     subscriptions = []
-    org_stats = Candlepin::Owner.statistics current_organization.cp_key
+    org_stats = Resources::Candlepin::Owner.statistics current_organization.cp_key
     converted_stats = []
     org_stats.each do |stat|
       converted_stats << OpenStruct.new(stat)

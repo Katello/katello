@@ -281,7 +281,7 @@ class ProvidersController < ApplicationController
     # TODO: See subscriptions_controller#reformat_subscriptions for a better(?) OpenStruct implementation
 
     @provider = current_organization.redhat_provider
-    all_subs = Candlepin::Owner.pools @provider.organization.cp_key
+    all_subs = Resources::Candlepin::Owner.pools @provider.organization.cp_key
     # We default to none imported until we can properly poll Candlepin for status of the import
     @grouped_subscriptions = {}
     all_subs.each do |sub|

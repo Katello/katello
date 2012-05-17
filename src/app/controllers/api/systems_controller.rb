@@ -150,7 +150,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def errata
-    render :json => Pulp::Consumer.errata(@system.uuid)
+    render :json => Resources::Pulp::Consumer.errata(@system.uuid)
   end
 
   def upload_package_profile
@@ -319,7 +319,7 @@ class Api::SystemsController < Api::ApiController
   def find_system
     @system = System.first(:conditions => { :uuid => params[:id] })
     if @system.nil?
-      Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
+      Resources::Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
       raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'")
     end
     @system
