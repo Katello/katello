@@ -3,4 +3,4 @@
     -if item.locked
       %span{:class => "lock_icon fl"}
     %span
-      = item.name
+      = "#{item.name} (#{item.systems.count})"
