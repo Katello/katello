@@ -9,7 +9,6 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-require 'resources/pulp'
 
 module Glue::Pulp::Repo
   def self.included(base)
@@ -26,7 +25,7 @@ module Glue::Pulp::Repo
       lazy_accessor :pulp_repo_facts,
                     :initializer => lambda {
                       if pulp_id
-                        Pulp::Repository.find(pulp_id)
+                        Resources::Pulp::Repository.find(pulp_id)
                       end
                     }
       lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source, :package_count,
@@ -124,7 +123,7 @@ module Glue::Pulp::Repo
         :cert => self.feed_cert,
         :key => self.feed_key
     }
-    Pulp::Repository.create({
+    Resources::Pulp::Repository.create({
         :id => self.pulp_id,
         :name => self.name,
         :relative_path => self.relative_path,
@@ -184,7 +183,7 @@ module Glue::Pulp::Repo
   end
 
   def clone_repo
-    self.clone_response = [Pulp::Repository.clone_repo(clone_from, self, "parent", cloned_filters)]
+    self.clone_response = [Resources::Pulp::Repository.clone_repo(clone_from, self, "parent", cloned_filters)]
   end
 
   def populate_from repos_map
@@ -196,7 +195,7 @@ module Glue::Pulp::Repo
   def destroy_repo
     self.update_packages_index
     self.update_errata_index
-    Pulp::Repository.destroy(self.pulp_id)
+    Resources::Pulp::Repository.destroy(self.pulp_id)
     true
   end
 
@@ -205,7 +204,7 @@ module Glue::Pulp::Repo
     if other_repos_with_same_product_and_content.empty?
       self.product.remove_content_by_id self.content_id
       if other_repos_with_same_content.empty? && !self.product.provider.redhat_provider?
-        Candlepin::Content.destroy(self.content_id)
+        Resources::Candlepin::Content.destroy(self.content_id)
       end
     end
 
@@ -215,12 +214,12 @@ module Glue::Pulp::Repo
   def other_repos_with_same_product_and_content
     product_group_id = Glue::Pulp::Repos.product_groupid(self.product_id)
     content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
-    Pulp::Repository.all([content_group_id, product_group_id]).map{|r| r['id']} - [self.pulp_id]
+    Resources::Pulp::Repository.all([content_group_id, product_group_id]).map{|r| r['id']} - [self.pulp_id]
   end
 
   def other_repos_with_same_content
     content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
-    Pulp::Repository.all([content_group_id]).map{|r| r['id']} - [self.pulp_id]
+    Resources::Pulp::Repository.all([content_group_id]).map{|r| r['id']} - [self.pulp_id]
   end
 
   def destroy_repo_orchestration
@@ -234,7 +233,7 @@ module Glue::Pulp::Repo
 
   def packages
     if @repo_packages.nil?
-      self.packages = Pulp::Repository.packages(self.pulp_id)
+      self.packages = Resources::Pulp::Repository.packages(self.pulp_id)
     end
     @repo_packages
   end
@@ -248,7 +247,7 @@ module Glue::Pulp::Repo
 
   def errata
     if @repo_errata.nil?
-       self.errata = Pulp::Repository.errata(self.pulp_id)
+       self.errata = Resources::Pulp::Repository.errata(self.pulp_id)
     end
     @repo_errata
   end
@@ -262,7 +261,7 @@ module Glue::Pulp::Repo
 
   def distributions
     if @repo_distributions.nil?
-      self.distributions = Pulp::Repository.distributions(self.pulp_id)
+      self.distributions = Resources::Pulp::Repository.distributions(self.pulp_id)
     end
     @repo_distributions
   end
@@ -282,7 +281,7 @@ module Glue::Pulp::Repo
   end
 
   def package_groups search_args = {}
-    groups = ::Pulp::PackageGroup.all self.pulp_id
+    groups = ::Resources::Pulp::PackageGroup.all self.pulp_id
     unless search_args.empty?
       groups.delete_if do |group_id, group_attrs|
         search_args.any?{ |attr,value| group_attrs[attr] != value }
@@ -292,7 +291,7 @@ module Glue::Pulp::Repo
   end
 
   def package_group_categories search_args = {}
-    categories = ::Pulp::PackageGroupCategory.all self.pulp_id
+    categories = ::Resources::Pulp::PackageGroupCategory.all self.pulp_id
     unless search_args.empty?
       categories.delete_if do |category_id, category_attrs|
         search_args.any?{ |attr,value| category_attrs[attr] != value }
@@ -323,13 +322,13 @@ module Glue::Pulp::Repo
 
   def set_sync_schedule schedule
     if self.sync_state == "waiting"
-        Pulp::Task.destroy(self.sync_status.uuid)
+        Resources::Pulp::Task.destroy(self.sync_status.uuid)
     end
 
     if schedule
-        Pulp::Repository.update_schedule(self.pulp_id, schedule)
+        Resources::Pulp::Repository.update_schedule(self.pulp_id, schedule)
     else
-        Pulp::Repository.delete_schedule(self.pulp_id)
+        Resources::Pulp::Repository.delete_schedule(self.pulp_id)
     end
   end
 
@@ -341,15 +340,15 @@ module Glue::Pulp::Repo
   end
 
   def find_packages_by_name name
-    Pulp::Repository.packages_by_name self.pulp_id, name
+    Resources::Pulp::Repository.packages_by_name self.pulp_id, name
   end
 
   def find_packages_by_nvre name, version, release, epoch
-    Pulp::Repository.packages_by_nvre self.pulp_id, name, version, release, epoch
+    Resources::Pulp::Repository.packages_by_nvre self.pulp_id, name, version, release, epoch
   end
 
   def find_latest_packages_by_name name
-    Katello::PackageUtils.find_latest_packages(Pulp::Repository.packages_by_name(self.pulp_id, name))
+    Katello::PackageUtils.find_latest_packages(Resources::Pulp::Repository.packages_by_name(self.pulp_id, name))
   end
 
   def has_erratum? id
@@ -360,14 +359,14 @@ module Glue::Pulp::Repo
   end
 
   def sync
-    pulp_task = Pulp::Repository.sync(self.pulp_id)
+    pulp_task = Resources::Pulp::Repository.sync(self.pulp_id)
     task = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = self.environment.organization}
     task.save!
     return [task]
   end
 
   def after_sync pulp_task_id
-    pulp_tasks =  Pulp::Task.find([pulp_task_id])
+    pulp_tasks =  Resources::Pulp::Task.find([pulp_task_id])
 
     if pulp_tasks.empty?
       Rails.logger.error("Sync_complete called for #{pulp_task_id}, but no task found.")
@@ -398,15 +397,15 @@ module Glue::Pulp::Repo
   end
 
   def add_packages pkg_id_list
-    Pulp::Repository.add_packages self.pulp_id,  pkg_id_list
+    Resources::Pulp::Repository.add_packages self.pulp_id,  pkg_id_list
   end
 
   def add_errata errata_id_list
-    Pulp::Repository.add_errata self.pulp_id,  errata_id_list
+    Resources::Pulp::Repository.add_errata self.pulp_id,  errata_id_list
   end
 
   def add_distribution distribution_id
-    Pulp::Repository.add_distribution self.pulp_id,  distribution_id
+    Resources::Pulp::Repository.add_distribution self.pulp_id,  distribution_id
   end
 
   def cancel_sync
@@ -414,7 +413,7 @@ module Glue::Pulp::Repo
     history = self.sync_status
     return if history.nil? || history.state == ::PulpSyncStatus::Status::NOT_SYNCED
 
-    Pulp::Task.cancel(history.uuid)
+    Resources::Pulp::Task.cancel(history.uuid)
   end
 
   def sync_finish
@@ -468,20 +467,20 @@ module Glue::Pulp::Repo
 
   def content
     if not self.content_id.nil?
-      Glue::Candlepin::Content.new(::Candlepin::Content.get(self.content_id))
+      Glue::Candlepin::Content.new(::Resources::Candlepin::Content.get(self.content_id))
     end
   end
 
   def set_filters filter_ids
-    ::Pulp::Repository.add_filters self.pulp_id, filter_ids
+    ::Resources::Pulp::Repository.add_filters self.pulp_id, filter_ids
   end
 
   def del_filters filter_ids
-    ::Pulp::Repository.remove_filters self.pulp_id, filter_ids
+    ::Resources::Pulp::Repository.remove_filters self.pulp_id, filter_ids
   end
 
   def generate_metadata
-    ::Pulp::Repository.generate_metadata(self.pulp_id)
+    ::Resources::Pulp::Repository.generate_metadata(self.pulp_id)
   end
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
@@ -528,13 +527,13 @@ module Glue::Pulp::Repo
 
   def _get_most_recent_sync_status()
     begin
-      history = Pulp::Repository.sync_status(pulp_id)
+      history = Resources::Pulp::Repository.sync_status(pulp_id)
 
       if history.nil? or history.empty?
-        history = Pulp::Repository.sync_history(pulp_id)
+        history = Resources::Pulp::Repository.sync_history(pulp_id)
       end
     rescue
-        history = Pulp::Repository.sync_history(pulp_id)
+        history = Resources::Pulp::Repository.sync_history(pulp_id)
     end
 
     if history.nil? or history.empty?
