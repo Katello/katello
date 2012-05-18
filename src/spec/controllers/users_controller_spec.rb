@@ -22,7 +22,7 @@ describe UsersController do
 
   before(:each) do
     disable_user_orchestration
-    login_user
+    login_user :mock=>false
     set_default_locale
     controller.stub(:search_validate).and_return(true)
   end
@@ -86,7 +86,7 @@ describe UsersController do
       @user.username = "foo-user"
       @user.password = "password"
       @user.email = "foo-user@somewhere.com"
-      @user.save 
+      @user.save! 
       allow 'Test', ["create", "read","delete"], "product", ["RHEL-4", "RHEL-5","Cluster","ClusterStorage","Fedora"]
     end    
     
