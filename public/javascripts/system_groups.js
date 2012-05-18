@@ -28,21 +28,59 @@ KT.sg_table = (function(){
         var tbody =  $("#systems_table").find("tbody");
         tbody.prepend(html);
         tbody.find(".empty_row").hide();
-
+        recalc_rows();
+        KT.system_groups.refresh_list_item();
     },
-    remove_system = function(id){
+    remove_system = function(ids){
         var table = $("#systems_table"),
             rows;
-        table.find("tr[data-id=" + id +"]").remove();
+        $.each(ids, function(index, value){
+            table.find("tr[data-id=" + value +"]").remove();
+        });
+        //show the empty message if there are no entries
         rows = table.find('tbody').find('tr').not('.empty_row');
         if(rows.length === 0){
             table.find(".empty_row").show();
         }
+        recalc_rows();
+        KT.system_groups.refresh_list_item();
+    },
+    recalc_rows = function(){
+        /*
+         * ensures that there are minimum number of rows in the table
+         * for aesthetics
+         */
+        var min_rows = 13,
+            tbody = $("#systems_table").find("tbody"),
+            rows,
+            missing;
+
+        tbody.find('.stub').remove();
+        rows = tbody.find('tr').not('.empty_row');
+        missing = min_rows - rows.length;
+        if (missing > 0){
+            for(var i = 0; i < missing; i++){
+                tbody.append("<tr class='stub'><td><br></td><td></td></tr>");
+            }
+        }
+        rows = tbody.find('tr').not('.empty_row').not('.stub');
+        var alt = 1;
+        rows.each(function(index, value){
+            if(alt % 2 == 0){
+                $(value).addClass('alt')
+            }
+            else {
+                $(value).removeClass('alt')
+            }
+            alt++;
+        });
+
     };
 
     return {
         add_system: add_system,
-        remove_system: remove_system
+        remove_system: remove_system,
+        recalc_rows: recalc_rows
     };
 }());
 
@@ -64,11 +102,14 @@ KT.system_groups = (function(){
             data: options,
             cache: false,
             success:function(){
-                var id = $('#system_group_id');
-                list.refresh(id.val(), id.data('ajax_url'))
+                refresh_list_item();
             }
         });
         return false;
+    },
+    refresh_list_item = function(){
+        var id = $('#system_group_id');
+        list.refresh(id.val(), id.data('ajax_url'))
     },
     quota_setup = function() {
         // quota_setup is used for both the 'new' and 'edit' panes.  While the logic is nearly the same
@@ -150,10 +191,7 @@ KT.system_groups = (function(){
                 tooltip     :  i18n.clickToEdit,
                 placeholder :  i18n.clickToEdit,
                 submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
-                onsuccess   :  function(data){
-                    var id = $('#system_group_id');
-                    list.refresh(id.val(), id.data('ajax_url'))
-                }
+                onsuccess   :  refresh_list_item
             });
         });
         pane.find(".edit_max_systems").each(function(){
@@ -190,9 +228,17 @@ KT.system_groups = (function(){
         if (pane.length === 0){
             return;
         }
-        pane.find('#systems_table').delegate('.remove_system', 'click', function(){
-            remove_system($(this).data('id'), $(this));
+        KT.sg_table.recalc_rows();
+        $('#remove_systems').click(function(){
+            var sys_ids = $('.system_checkbox:checked').map(function(){
+                return $(this).data('id');
+            }).get();
+            if(sys_ids.length > 0){
+                remove_systems(sys_ids, $(this));
+            }
+
         });
+
         current_system_input = KT.auto_complete_box({
             values:       KT.routes.auto_complete_systems_path(),
             input_id:     "add_system_input",
@@ -206,7 +252,7 @@ KT.system_groups = (function(){
         var grp_id = $("#system_group_systems").data('id'),
         add_funct = function(id){
             if(id){
-                submit_change(grp_id, id, true,
+                submit_change(grp_id, [id], true,
                     function(content){
                         KT.sg_table.add_system(content);
                         $("#add_system_input").val('');
@@ -245,21 +291,34 @@ KT.system_groups = (function(){
         }
 
     },
-    remove_system = function(id, link){
-        var grp_id = $("#system_group_systems").data('id');
-        link.replaceWith('<img class="remove_spinner fr" src="' + KT.common.spinner_path() + '" data-id="'+id+'">');
-        submit_change(grp_id, id, false,
-            function(){KT.sg_table.remove_system(id);},
+    remove_systems = function(sys_ids, btn){
+        var grp_id = $("#system_group_systems").data('id'),
+            cleanup;
+
+        btn.attr('disabled', 'true');
+        $('.system_checkbox').attr('disabled', 'true');
+
+        cleanup = function(){
+            btn.removeAttr('disabled');
+            $('.system_checkbox').removeAttr('disabled');
+        };
+
+
+
+
+        submit_change(grp_id, sys_ids, false,
             function(){
-                // error_cb - error returned from the server, replace spinner with the original remove link
-                var spinner = $('img[data-id="'+id+'"]');
-                spinner.replaceWith(link);
+                KT.sg_table.remove_system(sys_ids);
+                cleanup();
+            },
+            function(){
+                cleanup();
             });
     },
-    submit_change = function(grp_id, sys_id, add, cb, error_cb){
+    submit_change = function(grp_id, sys_ids, add, cb, error_cb){
       var url = add ? KT.routes.add_systems_system_group_path(grp_id) :
                         KT.routes.remove_systems_system_group_path(grp_id);
-      $.post(url, {'system_ids':[sys_id]}, cb).error(error_cb);
+      $.post(url, {'system_ids':sys_ids}, cb).error(error_cb);
     };
 
     return {
@@ -267,7 +326,8 @@ KT.system_groups = (function(){
         new_setup: new_setup,
         details_setup: details_setup,
         systems_setup: systems_setup,
-        add_system : add_system
+        add_system : add_system,
+        refresh_list_item: refresh_list_item
     }
 })();
 

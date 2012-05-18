@@ -10,7 +10,8 @@
   = render_menu(1..2, system_groups_navigation)
 
 = content_for :content do
-  #system_group_systems.grid_8{'data-id'=>@group.id}
+  #system_group_systems.grid_9{'data-id'=>@group.id}
+    %input#system_group_id{:name => @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
     %form#system_form
       -if editable && !@group.locked
         %table.list
@@ -32,11 +33,18 @@
           %tr
             %th
               = _("Name")
+            %th
+              = _("Added")
         %tbody
-          %tr.empty_row{:class=>(:hidden if !@systems.empty?)}
+          %tr.empty_row{:class=>(:hidden if !@system_joins.empty?)}
             %td
               = _("No systems currently exist in this system group.")
-          = render :partial=>'system_item', :collection=>@systems, :as=>:system
+            %td
+          = render :partial=>'system_item', :collection=>@system_joins, :as=>:system
 
+
+= content_for :footer do
+  .grid_9
+    %input#remove_systems.fr.button{:type=>:button, :value=>_("Remove Selected")}
 
 

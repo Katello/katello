@@ -3,6 +3,7 @@ class CreateSystemSystemGroups < ActiveRecord::Migration
     create_table :system_system_groups do |t|
       t.references :system
       t.references :system_group
+      t.timestamps
     end    
   end
 
