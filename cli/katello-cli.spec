@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.34
+Version:       0.2.35
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -98,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.35-1
+- cli registration regression with aks
+
 * Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.34-1
 - cli_man - katello(1) man page and generator
 - Changing wording for hypervisor deletion record delete
