@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.22
+Version:        0.2.23
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.23-1
+- removing mod_authz_ldap from dependencies
+
 * Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.22-1
 - encryption - plain text passwords encryption
 
