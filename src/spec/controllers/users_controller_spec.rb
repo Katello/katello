@@ -36,7 +36,7 @@ describe UsersController do
     end
 
     it "should create a user correctly" do
-      name = "foo-user"
+      name = "foo-user-1"
       post 'create', {:user => {:username=>name, :password=>"password1234", :email=>"#{name}@somewhere.com", :env_id => @environment.id}}
       response.should be_success
       User.where(:username=>name).should_not be_empty
@@ -82,11 +82,6 @@ describe UsersController do
       controller.stub!(:notice)
       controller.stub!(:escape_html)
 
-      @user = User.new
-      @user.username = "foo-user"
-      @user.password = "password"
-      @user.email = "foo-user@somewhere.com"
-      @user.save! 
       allow 'Test', ["create", "read","delete"], "product", ["RHEL-4", "RHEL-5","Cluster","ClusterStorage","Fedora"]
     end    
     
@@ -145,15 +140,7 @@ describe UsersController do
   describe "set helptips" do
     
     before(:each) do
-      @user = User.new
-      @user.username = "foo-user"
-      @user.password = "password"
-      @user.email = "foo-user@somewhere.com"
-      @user.helptips_enabled = true
-      @user.save!
       @user.stub(:allowed_to?).and_return true
-
-      login_user :user => @user
     end    
     
     it "should enable and disable a helptip if user's helptips are enabled" do
