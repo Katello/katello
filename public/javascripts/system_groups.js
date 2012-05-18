@@ -50,7 +50,7 @@ KT.sg_table = (function(){
          * ensures that there are minimum number of rows in the table
          * for aesthetics
          */
-        var min_rows = 13,
+        var min_rows = 12,
             tbody = $("#systems_table").find("tbody"),
             rows,
             missing;
@@ -236,7 +236,6 @@ KT.system_groups = (function(){
             if(sys_ids.length > 0){
                 remove_systems(sys_ids, $(this));
             }
-
         });
 
         current_system_input = KT.auto_complete_box({
