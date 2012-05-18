@@ -1,7 +1,7 @@
 
-%tr{'data-id'=>system.id, :class=> cycle("", "alt")}
+%tr{'data-id'=>system.system.id, :class=> cycle("", "alt")}
   %td
-    = system.name
-    - if @group.editable? && !@group.locked
-      %a.fr.st_button.remove_system{'data-id'=>system.id}
-        = _("Remove")
+    %input.system_checkbox{:type=>:checkbox, 'data-id'=>system.system.id ,:disabled=>('disabled' if @group.locked || !@group.editable?)}
+    = system.system.name
+  %td
+    = system.created_at

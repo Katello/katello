@@ -164,7 +164,7 @@ class SystemGroupsController < ApplicationController
   end
 
   def systems
-    @systems = @group.systems.sort_by{|a| a.name}
+    @system_joins = @group.system_system_groups.sort_by{|a| a.system.name}
     render :partial => "systems", :layout => "tupane_layout",
            :locals => {:filter => @group, :editable=>@group.editable?,
                                 :name=>controller_display_name}
@@ -172,10 +172,11 @@ class SystemGroupsController < ApplicationController
 
   def add_systems
     ids = params[:system_ids].collect{|s| s.to_i} - @group.system_ids #ignore dups
-    @systems = System.readable(current_organization).where(:id=>ids)
-    @group.system_ids = (@group.system_ids + @systems.collect{|s| s.id}).uniq
+    systems = System.readable(current_organization).where(:id=>ids)
+    @group.system_ids = (@group.system_ids + systems.collect{|s| s.id}).uniq
     @group.save!
-    render :partial=>'system_item', :collection=>@systems, :as=>:system,
+    system_joins = @group.system_system_groups.where(:system_id=>ids)
+    render :partial=>'system_item', :collection=>system_joins, :as=>:system,
            :locals=>{:editable=>@group.editable?}
   end
 
