@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.35
+Version:       0.2.36
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 
@@ -108,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.36-1
+- rpm review - katello-cli review preparation
+
 * Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.35-1
 - cli registration regression with aks
 
