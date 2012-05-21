@@ -299,8 +299,8 @@ describe Api::ActivationKeysController do
       ids = [@system_group_1.id, @system_group_2.id]
       post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.id, :activation_key => { :system_group_ids => ids }
       response.should be_success
-      @activation_key.system_group_ids.should include(@system_group_1.id)
-      @activation_key.system_group_ids.should include(@system_group_2.id)
+      ActivationKey.find(@activation_key.id).system_group_ids.should include(@system_group_1.id)
+      ActivationKey.find(@activation_key.id).system_group_ids.should include(@system_group_2.id)
     end
 
   end
