@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.37
+Version:        0.2.38
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -378,6 +378,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon May 21 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.38-1
+- Fixes failing users controller spec tests.
+- Fixes for failing spec tests as part of the merge of new UI changes.
+- 822069 - Making candlepin proxy DELETE return a body for sub-man consumer
+  delete methods
+
 * Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.37-1
 - removing mod_authz_ldap from dependencies
 - cli registration regression with aks
