@@ -10,19 +10,16 @@ from katello.client.core.filters import Info
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
 
-    def setUp(self):
-        self.set_action(Info())
-        self.mock_options()
+    action = Info()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['info', '--name=filter1'])
+    disallowed_options = [
+        ('--name=filter1', ),
+        ('--org=ACME', )
+    ]
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['info', '--org=ACME'])
-
-    def test_no_error_if_org_and_name_provided(self):
-        self.action.process_options(['info', '--org=ACME', '--name=filter1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=filter1')
+    ]
 
 
 class FilterAddTest(CLIActionTestCase):

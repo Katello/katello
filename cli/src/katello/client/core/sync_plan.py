@@ -54,11 +54,11 @@ class List(SyncPlanAction):
 
     description = _('list known sync_plans')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com (required)"))
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com (required)"))
 
-    def check_options(self):
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require('org')
 
     def run(self):
         org_name = self.get_option('org')
@@ -80,13 +80,12 @@ class Info(SyncPlanAction):
 
     description = _('print info about a sync plan')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
-        self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
+        parser.add_option('--org', dest='org', help=_("organization name (required)"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -97,7 +96,7 @@ class Info(SyncPlanAction):
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('description', multiline=True)
-        self.printer.add_column('start_date', formatter=format_date)
+        self.printer.add_column('sync_date', formatter=format_date)
         self.printer.add_column('interval')
 
         self.printer.set_header(_("Sync Plan Info"))
@@ -110,21 +109,18 @@ class Create(SyncPlanAction):
 
     description = _('create a synchronization plan')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
-        self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
-        self.parser.add_option("--description", dest="description", help=_("plan description"))
-        self.parser.add_option('--interval', dest='interval',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
+        parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        parser.add_option("--description", dest="description", help=_("plan description"))
+        parser.add_option('--interval', dest='interval',
             help=_("interval of recurring synchronizations (choices: [%s], default: none)") % ', '.join(self.interval_choices),
             default='none', choices=self.interval_choices)
-        self.parser.add_option("--date", dest="date", help=_("date of first synchronization (required, format: YYYY-MM-DD)"))
-        self.parser.add_option("--time", dest="time", help=_("time of first synchronization (format: HH:MM:SS, default: 00:00:00)"), default="00:00:00")
+        parser.add_option("--date", dest="date", help=_("date of first synchronization (required, format: YYYY-MM-DD)"))
+        parser.add_option("--time", dest="time", help=_("time of first synchronization (format: HH:MM:SS, default: 00:00:00)"), default="00:00:00")
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_option('date')
-        pass
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'date'))
 
     def run(self):
         name        = self.get_option('name')
@@ -147,22 +143,20 @@ class Update(SyncPlanAction):
 
     description =  _('update a sync plan')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
-        self.parser.add_option('--new_name', dest='new_name', help=_("new sync plan name"))
-        self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
-        self.parser.add_option("--description", dest="description", help=_("plan description"))
-        self.parser.add_option('--interval', dest='interval',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
+        parser.add_option('--new_name', dest='new_name', help=_("new sync plan name"))
+        parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        parser.add_option("--description", dest="description", help=_("plan description"))
+        parser.add_option('--interval', dest='interval',
             help=_("interval of recurring synchronizations (choices: [%s], default: none)") % ', '.join(self.interval_choices),
             default='none', choices=self.interval_choices)
-        self.parser.add_option("--date", dest="date", help=_("date of first synchronization (format: YYYY-MM-DD)"))
-        self.parser.add_option("--time", dest="time", help=_("time of first synchronization (format: HH:MM:SS)"))
+        parser.add_option("--date", dest="date", help=_("date of first synchronization (format: YYYY-MM-DD)"))
+        parser.add_option("--time", dest="time", help=_("time of first synchronization (format: HH:MM:SS)"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        if not (self.has_option('date') and self.has_option('time')):
-            self.add_option_error(_('You have to specify both --date and --time'))
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
+        validator.require_all_or_none(('date', 'time'))
 
     def run(self):
         name        = self.get_option('name')
@@ -189,13 +183,12 @@ class Delete(SyncPlanAction):
 
     description = _('delete a sync plan')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
-        self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
+        parser.add_option('--org', dest='org', help=_("organization name (required)"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')

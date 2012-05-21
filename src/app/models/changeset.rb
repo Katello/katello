@@ -581,7 +581,7 @@ class Changeset < ActiveRecord::Base
     from_repo_ids     = from_repos.map { |r| r.pulp_id }
     @next_env_pkg_ids ||= package_ids(to_repos)
 
-    resolved_deps = Pulp::Package.dep_solve(package_names, from_repo_ids)['resolved']
+    resolved_deps = Resources::Pulp::Package.dep_solve(package_names, from_repo_ids)['resolved']
     resolved_deps = resolved_deps.values.flatten(1)
     resolved_deps = resolved_deps.reject { |dep| not @next_env_pkg_ids.index(dep['id']).nil? }
     resolved_deps

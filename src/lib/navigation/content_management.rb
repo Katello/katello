@@ -56,7 +56,7 @@ module Navigation
        :name =>_("Content Providers"),
        :url => :sub_level,
        :if => :sub_level,
-       :options => {:class=>'content second_level', "data-menu"=>"content"},
+       :options => {:class=>'content second_level parent', "data-menu"=>"content", "data-dropdown"=>"providers"},
        :items => AppConfig.katello? ? [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg] : [menu_custom_providers, menu_redhat_providers]
       }
 
@@ -67,7 +67,7 @@ module Navigation
         :name =>_("Red Hat Content Provider"),
         :url => redhat_provider_providers_path,
         :if => lambda{current_organization && current_organization.readable?},
-        :options => {:class=>"third_level"}
+        :options => {:class=>"third_level", "data-dropdown"=>"providers"}
       }
     end
 
@@ -76,7 +76,7 @@ module Navigation
         :name =>_("Custom Content Providers"),
         :url => providers_path,
         :if => lambda{AppConfig.katello? && current_organization && Provider.any_readable?(current_organization())},
-        :options => {:class=>"third_level"}
+        :options => {:class=>"third_level", "data-dropdown"=>"providers"}
       }
     end
 
@@ -85,7 +85,7 @@ module Navigation
        :name =>_("Sync Management"),
        :items => lambda{[menu_sync_status, menu_sync_plan, menu_sync_schedule]},
        :if => lambda{AppConfig.katello? && (current_organization.syncable? || Provider.any_readable?(current_organization))},
-       :options => {:class=>'content second_level', "data-menu"=>"content"}
+       :options => {:class=>'content second_level parent', "data-menu"=>"content", "data-dropdown"=>"sync"}
       }
 
     end
@@ -94,7 +94,7 @@ module Navigation
       {:key => :sync_status,
         :name =>_("Sync Status"),
         :url => sync_management_index_path(),
-        :options => {:class=>"third_level"}
+        :options => {:class=>"third_level", "data-dropdown"=>"sync"}
       }
     end
 
@@ -103,7 +103,7 @@ module Navigation
       {:key => :sync_plans,
         :name =>_("Sync Plans"),
         :url => sync_plans_path(),
-        :options => {:class=>"third_level"}
+        :options => {:class=>"third_level", "data-dropdown"=>"sync"}
       }
     end
 
@@ -111,7 +111,7 @@ module Navigation
       {:key => :sync_schedule,
         :name =>_("Sync Schedule"),
         :url => sync_schedules_index_path(),
-        :options => {:class=>"third_level"}
+        :options => {:class=>"third_level", "data-dropdown"=>"sync"}
       }
     end
 
@@ -148,7 +148,7 @@ module Navigation
         :name => _("Package Filters"),
         :url => filters_path,
         :if => lambda {Filter.any_readable?(current_organization)},
-        :options => {:class=>"third_level"}
+        :options => {:class=>"third_level", "data-dropdown"=>"providers"}
        }
     end
 
@@ -157,7 +157,7 @@ module Navigation
         :name => _("GPG Keys"),
         :url => gpg_keys_path,
         :if => lambda {GpgKey.any_readable?(current_organization)},
-        :options => {:class=>"third_level"}
+        :options => {:class=>"third_level", "data-dropdown"=>"providers"}
        }
     end
 

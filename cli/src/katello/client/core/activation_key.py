@@ -49,14 +49,14 @@ class List(ActivationKeyAction):
 
     description = _('list all activation keys')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
                                help=_("environment name eg: dev (default: Library)"))
 
-    def check_options(self):
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require('org')
 
     def run(self):
         envName = self.get_option('env')
@@ -94,15 +94,14 @@ class Info(ActivationKeyAction):
 
     description = _('show information about an activation key')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -133,22 +132,20 @@ class Create(ActivationKeyAction):
 
     description = _('create an activation key')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
                                help=_("environment name eg: dev (required)"))
-        self.parser.add_option('--description', dest='description',
+        parser.add_option('--description', dest='description',
                                help=_("activation key description"))
-        self.parser.add_option('--template', dest='template',
+        parser.add_option('--template', dest='template',
                                help=_("template name eg: servers"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        self.require_option('env')
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'env'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -177,28 +174,27 @@ class Update(ActivationKeyAction):
 
     description = _('update an activation key')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
                                help=_("new environment name eg: dev"))
-        self.parser.add_option('--new_name', dest='new_name',
+        parser.add_option('--new_name', dest='new_name',
                               help=_("new template name"))
-        self.parser.add_option('--description', dest='description',
+        parser.add_option('--description', dest='description',
                                help=_("new description"))
-        self.parser.add_option('--template', dest='template',
+        parser.add_option('--template', dest='template',
                                help=_("new template name eg: servers"))
 
-        self.parser.add_option('--add_subscription', dest='add_poolid', action='append',
+        parser.add_option('--add_subscription', dest='add_poolid', action='append',
                                help=_("add a pool to the activation key"))
-        self.parser.add_option('--remove_subscription', dest='remove_poolid', action='append',
+        parser.add_option('--remove_subscription', dest='remove_poolid', action='append',
                                help=_("remove a pool from the activation key"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -245,15 +241,14 @@ class Delete(ActivationKeyAction):
 
     description = _('delete an activation key')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         orgName = self.get_option('org')

@@ -9,19 +9,17 @@ import katello.client.core.user_role
 from katello.client.core.user_role import AddLdapGroup
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
-    def setUp(self):
-        self.set_action(AddLdapGroup())
-        self.mock_options()
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_ldap_group', '--group_name=test'])
+    action = AddLdapGroup()
 
-    def test_missing_group_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_ladp_group', '--name=role1'])
+    disallowed_options = [
+        ('--group_name=test'),
+        ('--name=role1'),
+    ]
 
-    def test_no_error_if_name_and_group_name_provided(self):
-        self.action.process_options(['add_ldap_group', '--name=role1', '--group_name=test'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--name=role1', '--group_name=test'),
+    ]
 
 
 class UserRoleAddLdapGroupTest(CLIActionTestCase):
@@ -39,7 +37,7 @@ class UserRoleAddLdapGroupTest(CLIActionTestCase):
         self.mock_printer()
 
         self.mock_options(self.OPTIONS)
-        
+
         self.mock(self.action.api, 'roles', [self.ROLE])
         self.mock(self.action.api, 'add_ldap_group', [])
 

@@ -10,14 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/candlepin'
-
 class Glue::Candlepin::OwnerInfo
 
 
 
   def initialize(organization)
-      @info = Candlepin::OwnerInfo.find(organization.cp_key)
+      @info = Resources::Candlepin::OwnerInfo.find(organization.cp_key)
   end
 
 

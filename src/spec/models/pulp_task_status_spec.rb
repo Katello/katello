@@ -72,11 +72,11 @@ describe PulpTaskStatus do
         end
         @t.save!
 
-        Pulp::Task.stub(:find).and_return([updated_pulp_task])
+        Resources::Pulp::Task.stub(:find).and_return([updated_pulp_task])
       end
 
       it "should fetch data from pulp" do
-        Pulp::Task.should_receive(:find).once.with([@t.uuid]).and_return([updated_pulp_task])
+        Resources::Pulp::Task.should_receive(:find).once.with([@t.uuid]).and_return([updated_pulp_task])
         @t.refresh
       end
 

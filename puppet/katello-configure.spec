@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.20
+Version:        0.2.24
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -43,6 +43,10 @@ THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/;
 #build katello-upgrade man page
 sed -e 's/THE_VERSION/%version/g' man/katello-upgrade.pod | /usr/bin/pod2man --name=katello-upgrade -c "Katello Reference" --section=1 --release=%{version} - man/katello-upgrade.man1
 
+#build katello-passwd man page
+THE_VERSION=%version sed -i "s/THE_VERSION/$THE_VERSION/g" man/katello-passwd.pod bin/katello-passwd
+/usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} man/katello-passwd.pod man/katello-passwd.man1
+
 
 %install
 rm -rf %{buildroot}
@@ -50,6 +54,7 @@ rm -rf %{buildroot}
 install -d -m 0755 %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-upgrade %{buildroot}%{_sbindir}
+install -m 0755 bin/katello-passwd %{buildroot}%{_sbindir}
 install -d -m 0755 %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{homedir}/puppet/modules
 cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
@@ -60,6 +65,7 @@ install -m 0644 options-format-file %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/katello-configure.man1 %{buildroot}%{_mandir}/man1/katello-configure.1
 install -m 0644 man/katello-upgrade.man1 %{buildroot}%{_mandir}/man1/katello-upgrade.1
+install -m 0644 man/katello-passwd.man1 %{buildroot}%{_mandir}/man1/katello-passwd.1
 install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts
 cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
@@ -71,11 +77,30 @@ rm -rf %{buildroot}
 %{homedir}/
 %{_sbindir}/katello-configure
 %{_sbindir}/katello-upgrade
+%{_sbindir}/katello-passwd
 %{_mandir}/man1/katello-configure.1*
 %{_mandir}/man1/katello-upgrade.1*
+%{_mandir}/man1/katello-passwd.1*
 
 
 %changelog
+* Mon May 21 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.24-1
+- Add exit_with to reconfigure attempt.
+
+* Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.23-1
+- removing mod_authz_ldap from dependencies
+
+* Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.22-1
+- encryption - plain text passwords encryption
+
+* Wed May 16 2012 Mike McCune <mmccune@redhat.com> 0.2.21-1
+- 817933 part deux - also going to read these from katello-configure bin
+  (jomara@redhat.com)
+- 818679 - making some of the LDAP comments for katello-configure more helpful
+  (jomara@redhat.com)
+- 795869 - Fixing org name in katello-configure to accept spaces but still
+  create a proper candlepin key (jomara@redhat.com)
+
 * Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.20-1
 - 820273 - removed change to example script
 - 820273 - correct example and real upgrade scripts

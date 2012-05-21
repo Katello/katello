@@ -2,7 +2,8 @@ import unittest
 from mock import Mock
 import os
 
-from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
+#from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
+import cli_test_utils
 import test_data
 
 import katello.client.core.filters
@@ -10,21 +11,19 @@ from katello.client.core.filters import List
 
 
 
-class RequiredCLIOptionsTests(CLIOptionTestCase):
+class RequiredCLIOptionsTests(cli_test_utils.CLIOptionTestCase):
 
-    def setUp(self):
-        self.set_action(List())
-        self.mock_options()
+    action = List()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['list', '--name=product_1'])
+    disallowed_options = [
+        ('--name=product_1', )
+    ]
 
-    def test_no_error_if_org_and_product_provided(self):
-        self.action.process_options(['list', '--org=ACME'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', )
+    ]
 
-
-class FilterListTest(CLIActionTestCase):
+class FilterListTest(cli_test_utils.CLIActionTestCase):
 
     ORG = 'some_org'
     OPTIONS = {'org':ORG}

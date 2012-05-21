@@ -9,19 +9,17 @@ import katello.client.core.user_role
 from katello.client.core.user_role import RemoveLdapGroup
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
-    def setUp(self):
-        self.set_action(RemoveLdapGroup())
-        self.mock_options()
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['remove_ldap_group', '--group_name=test'])
+    action = RemoveLdapGroup()
 
-    def test_missing_group_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['remove_ladp_group', '--name=role1'])
+    disallowed_options = [
+        ('--group_name=test', ),
+        ('--name=role1', ),
+    ]
 
-    def test_no_error_if_name_and_group_name_provided(self):
-        self.action.process_options(['remove_ldap_group', '--name=role1', '--group_name=test'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--name=role1', '--group_name=test'),
+    ]
 
 
 class UserRoleRemoveLdapGroupTest(CLIActionTestCase):

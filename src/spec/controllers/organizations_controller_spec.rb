@@ -283,7 +283,7 @@ describe OrganizationsController do
       new_test_org
     end
     it "should download" do
-      Candlepin::Owner.should_receive(:get_ueber_cert).once.and_return(:cert => "uber",:key=>"ueber")
+      Resources::Candlepin::Owner.should_receive(:get_ueber_cert).once.and_return(:cert => "uber",:key=>"ueber")
       get :download_debug_certificate, :id => @organization.id.to_s
       response.should be_success
     end

@@ -49,21 +49,20 @@ class SingleProductAction(ProductAction):
 
     select_by_env = False
 
-    def setup_parser(self):
-        self.set_product_select_options(self.select_by_env)
+    def setup_parser(self, parser):
+        self.set_product_select_options(parser, self.select_by_env)
 
-    def check_options(self):
-        self.check_product_select_options()
+    def check_options(self, validator):
+        self.check_product_select_options(validator)
 
-    def set_product_select_options(self, select_by_env=True):
-        self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name', help=_("product name (required)"))
+    def set_product_select_options(self, parser, select_by_env=True):
+        parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com (required)"))
+        parser.add_option('--name', dest='name', help=_("product name (required)"))
         if select_by_env:
-            self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
+            parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
 
-    def check_product_select_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    def check_product_select_options(self, validator):
+        validator.require(('org', 'name'))
 
 
 # product actions ------------------------------------------------------------
@@ -74,13 +73,13 @@ class SetSyncPlan(SingleProductAction):
     description = _('set a synchronization plan')
     select_by_env = False
 
-    def setup_parser(self):
-        self.set_product_select_options(self.select_by_env)
-        self.parser.add_option('--plan', dest='plan', help=_("synchronization plan name (required)"))
+    def setup_parser(self, parser):
+        self.set_product_select_options(parser, self.select_by_env)
+        parser.add_option('--plan', dest='plan', help=_("synchronization plan name (required)"))
 
-    def check_options(self):
-        self.check_product_select_options()
-        self.require_option('plan')
+    def check_options(self, validator):
+        self.check_product_select_options(validator)
+        validator.require('plan')
 
     def run(self):
         orgName  = self.get_option('org')
@@ -115,18 +114,16 @@ class List(ProductAction):
 
     description = _('list known products')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--environment', dest='env',
+        parser.add_option('--environment', dest='env',
                        help=_('environment name eg: production (default: Library)'))
-        self.parser.add_option('--provider', dest='prov',
+        parser.add_option('--provider', dest='prov',
                        help=_("provider name, lists provider's product in the Library"))
 
-
-    def check_options(self):
-        self.require_option('org')
-
+    def check_options(self, validator):
+        validator.require('org')
 
     def run(self):
         org_name = self.get_option('org')
@@ -242,9 +239,9 @@ class Promote(SingleProductAction):
     description = _('promote a product to an environment\n(creates a temporary changeset with the product and promotes it)')
     select_by_env = True
 
-    def check_options(self):
-        self.check_product_select_options()
-        self.require_option('env')
+    def check_options(self, validator):
+        self.check_product_select_options(validator)
+        validator.require('env')
 
     def run(self):
         orgName     = self.get_option('org')
@@ -290,29 +287,27 @@ class Create(ProductAction):
 
     description = _('create new product to a custom provider')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--provider', dest='prov',
+        parser.add_option('--provider', dest='prov',
                                help=_("provider name (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                help=_("product name (required)"))
-        self.parser.add_option("--description", dest="description",
+        parser.add_option("--description", dest="description",
                                help=_("product description"))
-        self.parser.add_option("--url", dest="url",
+        parser.add_option("--url", dest="url",
                                help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
-        self.parser.add_option("--nodisc", action="store_true", dest="nodiscovery",
+        parser.add_option("--nodisc", action="store_true", dest="nodiscovery",
                                help=_("skip repository discovery"))
-        self.parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
+        parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
                                help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
-        self.parser.add_option("--gpgkey", dest="gpgkey",
+        parser.add_option("--gpgkey", dest="gpgkey",
                                help=_("assign a gpg key; this key will be used for every new repository unless gpgkey or nogpgkey is specified for the repo"))
 
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('prov')
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require(('org', 'prov', 'name'))
 
     def run(self):
         provName    = self.get_option('prov')
@@ -349,19 +344,19 @@ class Update(SingleProductAction):
 
     description = _('update a product\'s attributes')
 
-    def setup_parser(self):
-        self.set_product_select_options(False)
-        self.parser.add_option('--description', dest='description',
+    def setup_parser(self, parser):
+        self.set_product_select_options(parser, False)
+        parser.add_option('--description', dest='description',
                               help=_("change description of the product"))
-        self.parser.add_option('--gpgkey', dest='gpgkey',
+        parser.add_option('--gpgkey', dest='gpgkey',
                               help=_("assign a gpgkey to the product"))
-        self.parser.add_option('--nogpgkey', dest='nogpgkey', action="store_true",
+        parser.add_option('--nogpgkey', dest='nogpgkey', action="store_true",
                               help=_("assign a gpgkey to the product"))
-        self.parser.add_option('--recursive', action="store_true", dest='recursive',
+        parser.add_option('--recursive', action="store_true", dest='recursive',
                               help=_("assign the gpgpkey also to the product's repositories"))
 
-    def check_options(self):
-        self.check_product_select_options()
+    def check_options(self, validator):
+        self.check_product_select_options(validator)
 
     def run(self):
         orgName     = self.get_option('org')
@@ -431,13 +426,13 @@ class AddRemoveFilter(SingleProductAction):
         super(AddRemoveFilter, self).__init__()
         self.addition = addition
 
-    def setup_parser(self):
-        self.set_product_select_options(False)
-        self.parser.add_option('--filter', dest='filter', help=_("filter name (required)"))
+    def setup_parser(self, parser):
+        self.set_product_select_options(parser, False)
+        parser.add_option('--filter', dest='filter', help=_("filter name (required)"))
 
-    def check_options(self):
-        self.check_product_select_options()
-        self.require_option('filter')
+    def check_options(self, validator):
+        self.check_product_select_options(validator)
+        validator.require('filter')
 
     def run(self):
         org_name     = self.get_option('org')

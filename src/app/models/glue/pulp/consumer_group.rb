@@ -19,7 +19,7 @@ module Glue::Pulp::ConsumerGroup
     base.send :include, LazyAccessor
 
     base.class_eval do
-      lazy_accessor  :consumerids, :initializer => lambda { Pulp::ConsumerGroup.find(pulp_id) }
+      lazy_accessor  :consumerids, :initializer => lambda { Resources::Pulp::ConsumerGroup.find(pulp_id) }
 
       before_save :save_consumer_group_orch
       before_destroy :destroy_consumer_group_orch
@@ -30,7 +30,7 @@ module Glue::Pulp::ConsumerGroup
 
     def set_pulp_consumer_group
       Rails.logger.debug "creating pulp consumer group '#{self.pulp_id}'"
-      Pulp::ConsumerGroup.create :id => self.pulp_id, :description=>self.description, :consumerids=>(consumerids || [])
+      Resources::Pulp::ConsumerGroup.create :id => self.pulp_id, :description=>self.description, :consumerids=>(consumerids || [])
     rescue => e
       Rails.logger.error "Failed to create pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -38,7 +38,7 @@ module Glue::Pulp::ConsumerGroup
 
     def del_pulp_consumer_group
       Rails.logger.debug "deleting pulp consumer group '#{self.pulp_id}'"
-      Pulp::ConsumerGroup.destroy self.pulp_id
+      Resources::Pulp::ConsumerGroup.destroy self.pulp_id
     rescue => e
       Rails.logger.error "Failed to delete pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -47,7 +47,7 @@ module Glue::Pulp::ConsumerGroup
     def add_consumers id_list
       Rails.logger.debug "adding consumers to pulp consumer group '#{self.pulp_id}'"
       id_list.each{|consumer|
-        Pulp::ConsumerGroup.add_consumer(pulp_id, consumer)
+        Resources::Pulp::ConsumerGroup.add_consumer(pulp_id, consumer)
       }
     rescue => e
       Rails.logger.error "Failed to add consumers to pulp consumer group  #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
@@ -57,7 +57,7 @@ module Glue::Pulp::ConsumerGroup
     def del_consumers id_list
       Rails.logger.debug "removing consumers from pulp consumer group '#{self.pulp_id}'"
       id_list.each{|consumer|
-        Pulp::ConsumerGroup.delete_consumer(pulp_id, consumer)
+        Resources::Pulp::ConsumerGroup.delete_consumer(pulp_id, consumer)
       }
     rescue => e
       Rails.logger.error "Failed to remove consumers from consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
@@ -67,7 +67,7 @@ module Glue::Pulp::ConsumerGroup
     def install_package packages
       Rails.logger.debug "Scheduling package install for consumer group #{self.pulp_id}"
       # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      response = Pulp::ConsumerGroup.install_packages(self.pulp_id, packages)
+      response = Resources::Pulp::ConsumerGroup.install_packages(self.pulp_id, packages)
     rescue => e
       Rails.logger.error "Failed to schedule package install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -76,7 +76,7 @@ module Glue::Pulp::ConsumerGroup
     def uninstall_package packages
       Rails.logger.debug "Scheduling package uninstall for consumer group #{self.pulp_id}"
       # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      response = Pulp::ConsumerGroup.uninstall_packages(self.pulp_id, packages)
+      response = Resources::Pulp::ConsumerGroup.uninstall_packages(self.pulp_id, packages)
     rescue => e
       Rails.logger.error "Failed to schedule package uninstall for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -85,7 +85,7 @@ module Glue::Pulp::ConsumerGroup
     def update_package packages
       Rails.logger.debug "Scheduling package update for consumer #{self.name}"
       # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      response = Pulp::ConsumerGroup.update_packages(self.pulp_id, packages)
+      response = Resources::Pulp::ConsumerGroup.update_packages(self.pulp_id, packages)
     rescue => e
       Rails.logger.error "Failed to schedule package update for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -94,7 +94,7 @@ module Glue::Pulp::ConsumerGroup
     def install_package_group groups
       Rails.logger.debug "Scheduling package group install for consumer group #{self.pulp_id}"
       # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      response = Pulp::ConsumerGroup.install_package_groups(self.pulp_id, groups)
+      response = Resources::Pulp::ConsumerGroup.install_package_groups(self.pulp_id, groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -103,7 +103,7 @@ module Glue::Pulp::ConsumerGroup
     def uninstall_package_group groups
       Rails.logger.debug "Scheduling package group uninstall for consumer group #{self.pulp_id}"
       # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      response = Pulp::ConsumerGroup.uninstall_package_groups(self.pulp_id, groups)
+      response = Resources::Pulp::ConsumerGroup.uninstall_package_groups(self.pulp_id, groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group uninstall for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -112,7 +112,7 @@ module Glue::Pulp::ConsumerGroup
     def install_consumer_errata errata_ids
       Rails.logger.debug "Scheduling errata install for consumer group #{self.pulp_id}"
       # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      response = Pulp::ConsumerGroup.install_errata(self.pulp_id, errata_ids)
+      response = Resources::Pulp::ConsumerGroup.install_errata(self.pulp_id, errata_ids)
     rescue => e
       Rails.logger.error "Failed to schedule errata install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e

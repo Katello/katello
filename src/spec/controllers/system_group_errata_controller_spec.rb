@@ -30,11 +30,11 @@ describe SystemGroupErrataController, :katello => true do
       @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
       @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@org.library, :organization=>@org)
 
-      Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Candlepin::Consumer.stub!(:update).and_return(true)
+      Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+      Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-      Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Pulp::Consumer.stub!(:update).and_return(true)
+      Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+      Resources::Pulp::Consumer.stub!(:update).and_return(true)
 
       @group = SystemGroup.new(:name=>"test_group", :organization=>@org)
       @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
@@ -55,7 +55,7 @@ describe SystemGroupErrataController, :katello => true do
             errata["release"] = "Red Hat Enterprise Linux 6.0"
             to_ret << errata
           }
-          Pulp::Consumer.stub!(:errata).and_return(to_ret)
+          Resources::Pulp::Consumer.stub!(:errata).and_return(to_ret)
         end
 
         describe 'on initial load' do

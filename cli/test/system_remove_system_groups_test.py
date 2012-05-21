@@ -9,12 +9,12 @@ from katello.client.core.system import RemoveSystemGroups
 from katello.client.api.system_group import SystemGroupAPI
 
 
-class RequiredCLIOptionsTests(CLIOptionTestCase):
+class RequiredCLIOptionsTests(CLIActionTestCase):
     #requires: organization, name
 
     def setUp(self):
         self.set_action(RemoveSystemGroups())
-        self.mock_options()
+        self.mock_options({})
 
     def test_missing_org_generates_error(self):
         self.assertRaises(Exception, self.action.process_options, ['remove_system_groups', '--name=system_1', '--system_groups=Bob,SystemGroup1'])

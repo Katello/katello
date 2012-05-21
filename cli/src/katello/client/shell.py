@@ -224,7 +224,7 @@ class KatelloShell(Cmd):
         actionName = parts[1]
         action = self.admin_cli.get_command(cmdName).get_action(actionName)
 
-        params = action.parser.get_long_options()
+        params = action.create_parser().get_long_options()
 
         return [a for a in params if a.startswith(text)]
 

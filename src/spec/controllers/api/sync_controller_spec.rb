@@ -156,8 +156,8 @@ describe Api::SyncController, :katello => true do
       before(:each) do
         #@organization = Organization.create!(:name => "organization", :cp_key => "123")
         
-        Pulp::Repository.stub(:sync).with("1").and_return(async_task_1)
-        Pulp::Repository.stub(:sync).with("2").and_return(async_task_2)
+        Resources::Pulp::Repository.stub(:sync).with("1").and_return(async_task_1)
+        Resources::Pulp::Repository.stub(:sync).with("2").and_return(async_task_2)
         #@syncable = mock()
         #@syncable.stub!(:organization).and_return(@organization)
 

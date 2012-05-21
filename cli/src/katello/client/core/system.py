@@ -47,16 +47,16 @@ class List(SystemAction):
 
     description = _('list systems within an organization')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--environment', dest='environment',
+        parser.add_option('--environment', dest='environment',
                        help=_("environment name eg: development"))
-        self.parser.add_option('--pool', dest='pool_id',
+        parser.add_option('--pool', dest='pool_id',
                        help=_("pool id to filter systems by subscriptions"))
 
-    def check_options(self):
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require('org')
 
     def get_systems(self, org_name, env_name, pool_id):
         query = {'pool_id': pool_id} if pool_id else {}
@@ -90,17 +90,16 @@ class Info(SystemAction):
 
     description = _('display a system within an organization')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                        help=_("system name (required)"))
-        self.parser.add_option('--environment', dest='environment',
+        parser.add_option('--environment', dest='environment',
                        help=_("environment name"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -146,30 +145,30 @@ class InstalledPackages(SystemAction):
 
     description = _('display and manipulate with the installed packages of a system')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                        help=_("system name (required)"))
-        self.parser.add_option('--environment', dest='environment',
+        parser.add_option('--environment', dest='environment',
                        help=_("environment name"))
-        self.parser.add_option('--install', dest='install',
+        parser.add_option('--install', dest='install',
                        help=_("packages to be installed remotely on the system, package names are separated with comma"))
-        self.parser.add_option('--remove', dest='remove',
+        parser.add_option('--remove', dest='remove',
                        help=_("packages to be removed remotely from the system, package names are separated with comma"))
-        self.parser.add_option('--update', dest='update',
+        parser.add_option('--update', dest='update',
                        help=_("packages to be updated on the system, use --all to update all packages, package names are separated with comma"))
-        self.parser.add_option('--install_groups', dest='install_groups',
+        parser.add_option('--install_groups', dest='install_groups',
                        help=_("package groups to be installed remotely on the system, group names are separated with comma"))
-        self.parser.add_option('--remove_groups', dest='remove_groups',
+        parser.add_option('--remove_groups', dest='remove_groups',
                        help=_("package groups to be removed remotely from the system, group names are separated with comma"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        remote_options = [self.get_option(option) for option in ['install', 'remove', 'update', 'install_groups', 'remove_groups']]
-        if len([1 for o in remote_options if o]) > 1:
-            self.add_option_error(_('You can specify at most one install/remove/update action per call'))
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
+
+        remote_actions = ('install', 'remove', 'update', 'install_groups', 'remove_groups')
+        validator.require_at_most_one_of(remote_actions,
+            message=_('You can specify at most one install/remove/update action per call'))
 
 
     def run(self):
@@ -244,16 +243,16 @@ class TasksList(SystemAction):
 
     description = _('display status of remote tasks')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                        help=_("system name"))
-        self.parser.add_option('--environment', dest='environment',
+        parser.add_option('--environment', dest='environment',
                        help=_("environment name"))
 
-    def check_options(self):
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require('org')
 
     def run(self):
         org_name = self.get_option('org')
@@ -284,12 +283,12 @@ class TaskInfo(SystemAction):
 
     description = _('display status of remote task')
 
-    def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
+    def setup_parser(self, parser):
+        parser.add_option('--id', dest='id',
                        help=_("UUID of the task"))
 
-    def check_options(self):
-        self.require_option('id')
+    def check_options(self, validator):
+        validator.require('id')
 
     def run(self):
         uuid = self.get_option('id')
@@ -314,17 +313,17 @@ class Releases(SystemAction):
 
     description = _('list releases available for the system')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                        help=_("system name (if not specified, list all releases in the environment)"))
-        self.parser.add_option('--environment', dest='environment',
+        parser.add_option('--environment', dest='environment',
                        help=_("environment name eg: development"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_one_of_options('name', 'environment')
+    def check_options(self, validator):
+        validator.require('org')
+        validator.require_one_of(('name', 'environment'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -350,17 +349,16 @@ class Facts(SystemAction):
 
     description = _('display a the hardware facts of a system')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                        help=_("system name (required)"))
-        self.parser.add_option('--environment', dest='environment',
+        parser.add_option('--environment', dest='environment',
                        help=_("environment name"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -389,28 +387,23 @@ class Register(SystemAction):
 
     description = _('register a system')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name', help=_("system name (required)"))
-        self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
-        self.parser.add_option('--environment', dest='environment', help=_("environment name eg: development"))
-        self.parser.add_option('--servicelevel', dest='sla', help=_("service level agreement"))
-        self.parser.add_option('--activationkey', dest='activationkey',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("system name (required)"))
+        parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        parser.add_option('--environment', dest='environment', help=_("environment name eg: development"))
+        parser.add_option('--servicelevel', dest='sla', help=_("service level agreement"))
+        parser.add_option('--activationkey', dest='activationkey',
             help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
-        self.parser.add_option('--release', dest='release', help=_("values of $releasever for the system"))
-        self.parser.add_option('--fact', dest='fact', action='append', nargs=2, metavar="KEY VALUE",
+        parser.add_option('--release', dest='release', help=_("values of $releasever for the system"))
+        parser.add_option('--fact', dest='fact', action='append', nargs=2, metavar="KEY VALUE",
                                help=_("system facts"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        if not self.option_specified('activationkey'):
-            self.require_option('environment')
-        elif self.option_specified('environment'):
-            self.add_option_error(_('Option %s can not be specified with %s') % ("--environment", "--activationkey"))
-
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
+        validator.require_at_most_one_of(('activationkey', 'environment'))
 
     def require_credentials(self):
-        if self.option_specified('activationkey'):
+        if self.has_option('activationkey'):
             return False
         else:
             return super
@@ -424,8 +417,10 @@ class Register(SystemAction):
         sla = self.get_option('sla')
         facts = dict(self.get_option('fact') or {})
 
-        environment = get_environment(org, environment_name)
-        system = self.api.register(name, org, environment['id'], activation_keys, 'system', release, sla, facts=facts)
+        environment_id = None
+        if environment_name is not None:
+            environment_id = get_environment(org, environment_name)['id']
+        system = self.api.register(name, org, environment_id, activation_keys, 'system', release, sla, facts=facts)
 
         test_record(system,
             _("Successfully registered system [ %s ]") % name,
@@ -436,11 +431,11 @@ class RemoveDeletion(SystemAction):
 
     description = _("remove a deletion record for hypervisor")
 
-    def setup_parser(self):
-        self.parser.add_option("--uuid", dest="uuid",
+    def setup_parser(self, parser):
+        parser.add_option("--uuid", dest="uuid",
                        help=_("hypervisor uuid (required"))
 
-    def check_options(self):
+    def check_options(self, validator):
         self.require_option('uuid')
 
     def run(self):
@@ -454,17 +449,16 @@ class Unregister(SystemAction):
 
     description = _('unregister a system')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
-        self.parser.add_option('--environment', dest='environment',
+        parser.add_option('--environment', dest='environment',
                                help=_("environment name eg: development"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         name = self.get_option('name')
@@ -487,20 +481,18 @@ class Subscribe(SystemAction):
 
     description = _('subscribe a system to certificate')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                 help=_("organization name (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                 help=_("system name (required)"))
-        self.parser.add_option('--pool', dest='pool',
+        parser.add_option('--pool', dest='pool',
                 help=_("certificate serial to unsubscribe (required)"))
-        self.parser.add_option('--quantity', dest='quantity',
+        parser.add_option('--quantity', dest='quantity',
                 help=_("quantity (default: 1)"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_option('pool')
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'pool'))
 
     def run(self):
         name = self.get_option('name')
@@ -518,16 +510,15 @@ class Subscriptions(SystemAction):
 
     description = _('list subscriptions for a system')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
-        self.parser.add_option('--name', dest='name', help=_("system name (required)"))
-        self.parser.add_option('--available', dest='available',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        parser.add_option('--name', dest='name', help=_("system name (required)"))
+        parser.add_option('--available', dest='available',
                 action="store_true", default=False,
                 help=_("show available subscriptions"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         name = self.get_option('name')
@@ -596,22 +587,21 @@ class Unsubscribe(SystemAction):
 
     description = _('unsubscribe a system from certificate')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
-        self.parser.add_option('--entitlement', dest='entitlement',
+        parser.add_option('--entitlement', dest='entitlement',
                                help=_("entitlement id to unsubscribe from (either entitlement or serial or all is required)"))
-        self.parser.add_option('--serial', dest='serial',
+        parser.add_option('--serial', dest='serial',
                                help=_("serial id of a certificate to unsubscribe from (either entitlement or serial or all is required)"))
-        self.parser.add_option('--all', dest='all', action="store_true", default=None,
+        parser.add_option('--all', dest='all', action="store_true", default=None,
                                help=_("unsubscribe from all currently subscribed certificates (either entitlement or serial or all is required)"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
-        self.require_one_of_options('entitlement', 'serial', 'all')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
+        validator.require_one_of(('entitlement', 'serial', 'all'))
 
     def run(self):
         name = self.get_option('name')
@@ -636,28 +626,27 @@ class Update(SystemAction):
 
     description = _('update a system')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_('organization name (required)'))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                        help=_('system name (required)'))
-        self.parser.add_option('--environment', dest='environment',
+        parser.add_option('--environment', dest='environment',
                        help=_("environment name"))
 
-        self.parser.add_option('--new_name', dest='new_name',
+        parser.add_option('--new_name', dest='new_name',
                        help=_('a new name for the system'))
-        self.parser.add_option('--description', dest='description',
+        parser.add_option('--description', dest='description',
                        help=_('a description of the system'))
-        self.parser.add_option('--location', dest='location',
+        parser.add_option('--location', dest='location',
                        help=_("location of the system"))
-        self.parser.add_option('--release', dest='release',
+        parser.add_option('--release', dest='release',
                        help=_("value of $releasever for the system"))
-        self.parser.add_option('--servicelevel', dest='sla',
+        parser.add_option('--servicelevel', dest='sla',
                        help=_("service level agreement"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -691,16 +680,16 @@ class Report(SystemAction):
 
     description = _('systems report')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                     help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--environment', dest='environment',
+        parser.add_option('--environment', dest='environment',
                     help=_("environment name eg: development"))
-        self.parser.add_option('--format', dest='format',
+        parser.add_option('--format', dest='format',
              help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
 
-    def check_options(self):
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require('org')
 
     def run(self):
         orgId = self.get_option('org')

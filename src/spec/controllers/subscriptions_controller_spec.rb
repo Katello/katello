@@ -30,8 +30,8 @@ describe SubscriptionsController do
       login_user
       set_default_locale
       setup_current_organization(new_test_org)
-      Candlepin::Owner.stub!(:pools).and_return([ProductTestData::POOLS])
-      Candlepin::Owner.stub!(:statistics).and_return([])
+      Resources::Candlepin::Owner.stub!(:pools).and_return([ProductTestData::POOLS])
+      Resources::Candlepin::Owner.stub!(:statistics).and_return([])
 
 
       @product = MemoStruct.new

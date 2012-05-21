@@ -11,29 +11,19 @@ from katello.client.api.utils import ApiDataError
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #repo is defined by either (org, product, repo_name) or repo_id
-    def setUp(self):
-        self.set_action(Delete())
-        self.mock_options()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['delete', '--name=repo1', '--product=product1'])
+    action = Delete()
 
-    def test_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['delete', '--org=ACME', '--name=repo1', ])
+    disallowed_options = [
+        ('--name=repo1', '--product=product1'),
+        ('--org=ACME', '--name=repo1'),
+        (),
+    ]
 
-    def test_missing_repo_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['delete', '--org=ACME', '--product=product1'])
-
-    def test_missing_repo_id_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['delete'])
-
-    def test_no_error_if_required_options_provided(self):
-        self.action.process_options(['delete', '--org=ACME', '--name=repo1', '--product=product1'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_required_repo_id_provided(self):
-        self.action.process_options(['delete', '--id=repo_id1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=repo1', '--product=product1'),
+        ('--id=repo_id1', )
+    ]
 
 
 class DeleteTest(CLIActionTestCase):

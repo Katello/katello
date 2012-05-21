@@ -19,12 +19,12 @@ class List(PackageGroupAction):
 
     description = _('list available package groups')
 
-    def setup_parser(self):
-        self.parser.add_option("--repo_id", dest="repo_id",
+    def setup_parser(self, parser):
+        parser.add_option("--repo_id", dest="repo_id",
                         help=_("repository id, string value (required)"))
 
-    def check_options(self):
-        self.require_option('repo_id')
+    def check_options(self, validator):
+        validator.require('repo_id')
 
     def run(self):
         repoid = self.get_option('repo_id')
@@ -48,15 +48,14 @@ class Info(PackageGroupAction):
     name = "info"
     description = _('lookup information for a package group')
 
-    def setup_parser(self):
-        self.parser.add_option("--repo_id", dest="repo_id",
+    def setup_parser(self, parser):
+        parser.add_option("--repo_id", dest="repo_id",
                         help=_("repository id, string value (required)"))
-        self.parser.add_option("--id", dest="id",
+        parser.add_option("--id", dest="id",
                         help=_("package group id, string value (required)"))
 
-    def check_options(self):
-        self.require_option('repo_id')
-        self.require_option('id')
+    def check_options(self, validator):
+        validator.require(('repo_id', 'id'))
 
     def run(self):
         groupid = self.get_option('id')
@@ -84,12 +83,12 @@ class CategoryList(PackageGroupAction):
 
     description = _('list available package groups categories')
 
-    def setup_parser(self):
-        self.parser.add_option("--repo_id", dest="repo_id",
+    def setup_parser(self, parser):
+        parser.add_option("--repo_id", dest="repo_id",
                         help=_("repository id, string value (required)"))
 
-    def check_options(self):
-        self.require_option('repo_id')
+    def check_options(self, validator):
+        validator.require('repo_id')
 
     def run(self):
         repoid = self.get_option('repo_id')
@@ -112,15 +111,14 @@ class CategoryInfo(PackageGroupAction):
     name = "info"
     description = _('lookup information for a package group')
 
-    def setup_parser(self):
-        self.parser.add_option("--repo_id", dest="repo_id",
+    def setup_parser(self, parser):
+        parser.add_option("--repo_id", dest="repo_id",
                         help=_("repository id, string value (required)"))
-        self.parser.add_option("--id", dest="id",
+        parser.add_option("--id", dest="id",
                         help=_("package group category id, string value (required)"))
 
-    def check_options(self):
-        self.require_option('repo_id')
-        self.require_option('id')
+    def check_options(self, validator):
+        validator.require(('repo_id', 'id'))
 
     def run(self):
         categoryId = self.get_option('id')

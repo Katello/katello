@@ -388,6 +388,7 @@ Dir.chdir '/root'
 # check if puppet was already executed
 if File.exists? '/var/lib/katello/db_seed_done'
   $stderr.puts "WARNING: Katello was already configured, reconfiguration is NOT supported yet"
+  exit_with :general
 end
 
 # perform check-up

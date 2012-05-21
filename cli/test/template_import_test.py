@@ -13,19 +13,16 @@ from katello.client.core.template import Import
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: organization, file
 
-    def setUp(self):
-        self.set_action(Import())
-        self.mock_options()
+    action = Import()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['import', '--file=/a/b/c/template.import'])
+    disallowed_options = [
+        ('--file=/a/b/c/template.import', ),
+        ('--org=ACME', ),
+    ]
 
-    def test_missing_file_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['import', '--org=ACME'])
-
-    def test_no_error_if_org_and_file_provided(self):
-        self.action.process_options(['import', '--org=ACME', '--file=/a/b/c/template.import'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--file=/a/b/c/template.import'),
+    ]
 
 
 

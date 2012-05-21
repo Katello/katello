@@ -42,9 +42,10 @@ set -x
 make -f /usr/share/selinux/devel/Makefile || exit
 /usr/sbin/semodule -i katello.pp
 
-# Fixing the file context on katello
+# fix the file contexts
 /sbin/restorecon -F -R -v katello
-# Fixing the file context on /var/log/katello
 /sbin/restorecon -F -R -v /var/log/katello
-# Fixing the file context on /var/lib/katello
 /sbin/restorecon -F -R -v /var/lib/katello
+/sbin/restorecon -F -R -v /usr/share/katello
+/sbin/restorecon -F -R -v /etc/katello
+/sbin/restorecon -F -R -v /usr/sbin/katello-*

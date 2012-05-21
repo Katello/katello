@@ -12,32 +12,25 @@ from katello.client.api.utils import ApiDataError
 
 class RequiredCLIOptionsTest(object):
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_filters', '--name=product_1', '--filter=filter_1'])
+    disallowed_options = [
+        ('--name=product_1', '--filter=filter_1'),
+        ('--org=ACME', '--filter=filter_1'),
+        ('--org=ACME', '--name=product_1')
+    ]
 
-    def test_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_filters', '--org=ACME', '--filter=filter_1'])
-
-    def test_missing_filter_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_filters', '--org=ACME', '--name=product_1'])
-
-    def test_no_error_if_org_and_product_provided(self):
-        self.action.process_options(['add_filters', '--org=ACME', '--name=product_1', '--filter=filter1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=product_1', '--filter=filter1')
+    ]
 
 
 class AddRequiredCLIOptionsTest(RequiredCLIOptionsTest, CLIOptionTestCase):
     #repo is defined by either (org, product, repo_name, env name) or repo_id
-    def setUp(self):
-        self.set_action(AddRemoveFilter(True))
-        self.mock_options()
+    action = AddRemoveFilter(True)
 
 
 class RemoveRequiredCLIOptionsTest(RequiredCLIOptionsTest, CLIOptionTestCase):
     #repo is defined by either (org, product, repo_name, env name) or repo_id
-    def setUp(self):
-        self.set_action(AddRemoveFilter(False))
-        self.mock_options()
+    action = AddRemoveFilter(False)
 
 
 

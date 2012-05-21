@@ -43,7 +43,7 @@ describe ProvidersController do
       @provider.stub(:name).and_return("RH_Provider")
       @provider.stub(:owner_imports).and_return([])
 
-      Candlepin::Owner.stub!(:pools).and_return({})
+      Resources::Candlepin::Owner.stub!(:pools).and_return({})
     end
 
     it "should update a provider subscription" do

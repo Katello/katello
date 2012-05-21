@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/pulp' if AppConfig.katello?
-
 class Api::PackagesController < Api::ApiController
   respond_to :json
 
@@ -50,7 +48,7 @@ class Api::PackagesController < Api::ApiController
   end
 
   def find_package
-    @package = Pulp::Package.find(params[:id])
+    @package = Resources::Pulp::Package.find(params[:id])
     raise HttpErrors::NotFound, _("Package with id '#{params[:id]}' not found") if @package.nil?
     # and check ownership of it
     raise HttpErrors::NotFound, _("Package '#{params[:id]}' not found within the repository") unless @package['repoids'].include? @repo.pulp_id
