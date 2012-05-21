@@ -11,16 +11,16 @@ from katello.client.api.utils import ApiDataError
 
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
-    def setUp(self):
-        self.set_action(Promote())
-        self.mock_options()
 
-    def test_missing_environment_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['promote', '--org=ACME', '--name=product_1'])
+    action = Promote()
 
-    def test_no_error_if_org_and_product_provided(self):
-        self.action.process_options(['promote', '--org=ACME', '--name=product_1', '--environment=env_1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    disallowed_options = [
+        ('--org=ACME', '--name=product_1'),
+    ]
+
+    allowed_options = [
+        ('--org=ACME', '--name=product_1', '--environment=env_1')
+    ]
 
 
 class ProductPromoteTest(CLIActionTestCase):

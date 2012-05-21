@@ -12,23 +12,17 @@ from katello.client.core.user_role import Update
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #required: name
     #optional: description
-    def setUp(self):
-        self.set_action(Update())
-        self.mock_options()
+    action = Update()
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['update'])
+    disallowed_options = [
+        (),
+        ('--name=role1', ),
+    ]
 
-    def test_missing_at_least_one_set_parameter_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['update', '--name=role1'])
-
-    def test_no_error_if_new_name_provided(self):
-        self.action.process_options(['update', '--name=role1', '--new_name=desc1_2'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_desc_provided(self):
-        self.action.process_options(['update', '--name=role1', '--description=desc1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--name=role1', '--new_name=desc1_2'),
+        ('--name=role1', '--description=desc1'),
+    ]
 
 
 class UserRoleUpdateTest(CLIActionTestCase):

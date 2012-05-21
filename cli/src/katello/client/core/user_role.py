@@ -61,12 +61,12 @@ class Create(UserRoleAction):
 
     description = _('create user role')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',help=_("role name (required)"))
-        self.parser.add_option('--description', dest='desc', help=_("role description"))
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',help=_("role name (required)"))
+        parser.add_option('--description', dest='desc', help=_("role description"))
 
-    def check_options(self):
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require('name')
 
     def run(self):
         name = self.get_option('name')
@@ -85,12 +85,12 @@ class Info(UserRoleAction):
 
     description = _('list information about user role')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name', help=_("user role name (required)"))
-        self.parser.add_option('--permission_details', dest='perm_details', action='store_true', help=_("print details about each of role's permissions"))
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("user role name (required)"))
+        parser.add_option('--permission_details', dest='perm_details', action='store_true', help=_("print details about each of role's permissions"))
 
-    def check_options(self):
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require('name')
 
     def getPermissions(self, roleId):
         permApi = PermissionAPI()
@@ -137,11 +137,11 @@ class Delete(UserRoleAction):
 
     description = _('delete a user role')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name', help=_("user role name (required)"))
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("user role name (required)"))
 
-    def check_options(self):
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require('name')
 
     def run(self):
         name = self.get_option('name')
@@ -159,15 +159,14 @@ class Update(UserRoleAction):
 
     description = _('update a role')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name', help=_("user role name (required)"))
-        self.parser.add_option('--new_name', dest='new_name', help=_("new user role name"))
-        self.parser.add_option('--description', dest='desc', help=_("role description"))
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("user role name (required)"))
+        parser.add_option('--new_name', dest='new_name', help=_("new user role name"))
+        parser.add_option('--description', dest='desc', help=_("role description"))
 
-    def check_options(self):
-        self.require_option('name')
-        if not self.has_option('new_name') and not self.has_option('desc'):
-            self.add_option_error(_("Provide at least one parameter to update the user role"))
+    def check_options(self, validator):
+        validator.require('name')
+        validator.require_at_least_one_of(('new_name', 'desc'))
 
     def run(self):
         name = self.get_option('name')
@@ -186,13 +185,12 @@ class AddLdapGroup(UserRoleAction):
 
     description = _('assign LDAP group to a role')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name', help=_("user role name (required)"))
-        self.parser.add_option('--group_name', dest='group_name', help=_("new LDAP group name (required)"))
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("user role name (required)"))
+        parser.add_option('--group_name', dest='group_name', help=_("new LDAP group name (required)"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('group_name')
+    def check_options(self, validator):
+        validator.require(('name', 'group_name'))
 
     def run(self):
         name = self.get_option('name')
@@ -210,13 +208,12 @@ class RemoveLdapGroup(UserRoleAction):
 
     description = _('remove LDAP group assigned to a role')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name', help=_("user role name (required)"))
-        self.parser.add_option('--group_name', dest='group_name', help=_("LDAP group name to be removed (required)"))
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("user role name (required)"))
+        parser.add_option('--group_name', dest='group_name', help=_("LDAP group name to be removed (required)"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('group_name')
+    def check_options(self, validator):
+        validator.require(('name', 'group_name'))
 
     def run(self):
         name = self.get_option('name')

@@ -12,16 +12,15 @@ from katello.client.core.user_role import Delete
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #takes only name of the role
-    def setUp(self):
-        self.set_action(Delete())
-        self.mock_options()
+    action = Delete()
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['delete'])
+    disallowed_options = [
+        (),
+    ]
 
-    def test_no_error_if_name_provided(self):
-        self.action.process_options(['delete', '--name=role1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--name=role1', ),
+    ]
 
 
 
