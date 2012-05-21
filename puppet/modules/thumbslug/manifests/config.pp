@@ -1,8 +1,8 @@
 class thumbslug::config {
 
-  exec { "add-thumbslug-user-to-katello-group":
-        command => "usermod -a -G katello thumbslug",
-        path => "/usr/sbin"
+  user { 'thumbslug':
+        ensure => present,
+        groups => ['katello']
   }
 
   file { "/etc/thumbslug/thumbslug.conf":
