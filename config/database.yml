@@ -1,4 +1,7 @@
-<% config = YAML.load_file('/etc/katello/katello.yml') rescue nil
+<%
+  require 'util/password'
+
+  config = YAML.load_file('/etc/katello/katello.yml') rescue nil
   def find_db(config, env)
     db = nil
     if config
@@ -8,8 +11,11 @@
         db = config['common']['database']
       end
     end
-    return db.collect {|k,v| "  #{k}: #{v}"}.sort.join("\n") if db
-    nil
+    # d3crypt password
+    if db
+      db['password'] = Password.decrypt(db['password'])
+      return db.collect {|k,v| "  #{k}: #{v}"}.sort.join("\n")
+    end
   end
 %>
 

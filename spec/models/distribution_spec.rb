@@ -21,7 +21,7 @@ describe Glue::Pulp::Distribution do
   context "Find distribution" do
     it "should call pulp find distribution api" do
       
-      Pulp::Distribution.should_receive(:find).once.with('1')
+      Resources::Pulp::Distribution.should_receive(:find).once.with('1')
       Glue::Pulp::Distribution.find('1')
     end
     
@@ -36,5 +36,5 @@ end
 
 
 def disable_distribution_orchestration
-  Pulp::Distribution.stub(:find).and_return({})
+  Resources::Pulp::Distribution.stub(:find).and_return({})
 end

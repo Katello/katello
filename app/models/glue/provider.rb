@@ -10,9 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require_dependency 'resources/candlepin'
-require 'resources/cdn'
-
 module Glue::Provider
 
   def self.included(base)
@@ -159,11 +156,11 @@ module Glue::Provider
     end
 
     def owner_import zip_file_path, options
-      Candlepin::Owner.import self.organization.cp_key, zip_file_path, options
+      Resources::Candlepin::Owner.import self.organization.cp_key, zip_file_path, options
     end
 
     def owner_imports
-      Candlepin::Owner.imports self.organization.cp_key
+      Resources::Candlepin::Owner.imports self.organization.cp_key
     end
 
     def queue_import_manifest zip_file_path, options
@@ -173,11 +170,11 @@ module Glue::Provider
 
     def import_products_from_cp
       product_existing_in_katello_ids = self.organization.library.products.all(:select => "cp_id").map(&:cp_id)
-      CDN::CdnVarSubstitutor.with_cache do
+      Resources::CDN::CdnVarSubstitutor.with_cache do
         marketing_to_enginnering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
           engineering_product_ids = engineering_product_ids.uniq
           added_eng_products = (engineering_product_ids - product_existing_in_katello_ids).map do |id|
-            Candlepin::Product.get(id)[0]
+            Resources::Candlepin::Product.get(id)[0]
           end
           added_eng_products.each do |product_attrs|
             Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
@@ -189,7 +186,7 @@ module Glue::Provider
 
           unless product_existing_in_katello_ids.include?(marketing_product_id)
             engineering_product_in_katello_ids = self.organization.library.products.where(:cp_id => engineering_product_ids).map(&:id)
-            Glue::Candlepin::Product.import_marketing_from_cp(Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
+            Glue::Candlepin::Product.import_marketing_from_cp(Resources::Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
               p.provider = self
               p.environments << self.organization.library
             end
@@ -215,7 +212,7 @@ module Glue::Provider
     # model)
     def marketing_to_enginnering_product_ids_mapping
       mapping = {}
-      pools = Candlepin::Owner.pools self.organization.cp_key
+      pools = Resources::Candlepin::Owner.pools self.organization.cp_key
       pools.each do |pool|
         mapping[pool[:productId]] ||= []
         if pool[:providedProducts]
@@ -227,16 +224,16 @@ module Glue::Provider
     end
 
     def get_all_product_ids
-      Candlepin::Product.all.map{ |p| p['id'] }
+      Resources::Candlepin::Product.all.map{ |p| p['id'] }
     end
 
     def get_assigned_content_ids
-      ids = Candlepin::Product.all.collect{ |p| p['productContent'] }.flatten(1).collect{ |content| content['content']['id'] }
+      ids = Resources::Candlepin::Product.all.collect{ |p| p['productContent'] }.flatten(1).collect{ |content| content['content']['id'] }
       ids
     end
 
     def get_all_content_ids
-      ids = Candlepin::Content.all.map{ |c| c['id'] }
+      ids = Resources::Candlepin::Content.all.map{ |c| c['id'] }
       ids
     end
   end

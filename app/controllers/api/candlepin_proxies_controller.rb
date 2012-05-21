@@ -10,24 +10,24 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/candlepin'
-
 class Api::CandlepinProxiesController < Api::ProxiesController
 
   skip_before_filter :authorize # ok - proxy is consumer only
 
   def get
-    r = ::Candlepin::Proxy.get(@request_path)
+    r = ::Resources::Candlepin::Proxy.get(@request_path)
     Rails.logger.debug r if AppConfig.debug_cp_proxy
     render :text => r, :content_type => :json
   end
 
   def delete
-    head ::Candlepin::Proxy.delete(@request_path).code.to_i
+    r = ::Resources::Candlepin::Proxy.delete(@request_path).code.to_i
+    Rails.logger.debug r if AppConfig.debug_cp_proxy
+    render :text => r, :content_type => :json
   end
 
   def post
-    r = ::Candlepin::Proxy.post(@request_path, @request_body)
+    r = ::Resources::Candlepin::Proxy.post(@request_path, @request_body)
     Rails.logger.debug r if AppConfig.debug_cp_proxy
     render :text => r, :content_type => :json
   end

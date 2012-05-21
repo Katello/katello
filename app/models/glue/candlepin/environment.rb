@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/candlepin'
 require 'set'
 
 module Glue::Candlepin::Environment
@@ -27,7 +26,7 @@ module Glue::Candlepin::Environment
   module InstanceMethods
     def set_environment
       Rails.logger.info _("Creating an environment in candlepin: %s") % name
-      Candlepin::Environment.create(self.organization.cp_key, id, name.gsub(/[^-\w]/,"_"), description)
+      Resources::Candlepin::Environment.create(self.organization.cp_key, id, name.gsub(/[^-\w]/,"_"), description)
     rescue => e
       Rails.logger.error _("Failed to create candlepin environment %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -35,7 +34,7 @@ module Glue::Candlepin::Environment
 
     def del_environment
       Rails.logger.info _("Deleteing environment in candlepin: %s") % name
-      Candlepin::Environment.destroy(id)
+      Resources::Candlepin::Environment.destroy(id)
     rescue => e
       Rails.logger.error _("Failed to delete candlepin environment %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -54,7 +53,7 @@ module Glue::Candlepin::Environment
 
     def update_cp_content
       new_content_ids = all_env_content_ids - saved_env_content_ids
-      Candlepin::Environment.add_content(self.id, new_content_ids)
+      Resources::Candlepin::Environment.add_content(self.id, new_content_ids)
     end
 
     protected
@@ -66,7 +65,7 @@ module Glue::Candlepin::Environment
     end
 
     def saved_env_content_ids
-      Candlepin::Environment.find(self.id)[:environmentContent].map do |content|
+      Resources::Candlepin::Environment.find(self.id)[:environmentContent].map do |content|
         content[:contentId]
       end
     end

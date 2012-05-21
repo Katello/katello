@@ -29,8 +29,8 @@ describe SystemGroup do
     @group = SystemGroup.create!(:name=>"TestSystemGroup", :organization=>@org)
 
     setup_system_creation
-    Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Candlepin::Consumer.stub!(:update).and_return(true)
+    Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.stub!(:update).and_return(true)
     @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@org.library, :organization=>@org)
     @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
   end
@@ -38,7 +38,7 @@ describe SystemGroup do
   context "create should" do
 
     it "should create succesfully with an org" do
-      Pulp::ConsumerGroup.should_receive(:create).and_return({})
+      Resources::Pulp::ConsumerGroup.should_receive(:create).and_return({})
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.pulp_id.should_not == nil
     end
@@ -61,7 +61,7 @@ describe SystemGroup do
 
   context "delete should" do
     it "should delete a group successfully" do
-      Pulp::ConsumerGroup.should_receive(:destroy).and_return(200)
+      Resources::Pulp::ConsumerGroup.should_receive(:destroy).and_return(200)
       @group.destroy
       SystemGroup.where(:name=>@group.name).count.should == 0
     end
@@ -78,20 +78,20 @@ describe SystemGroup do
 
   context "changing consumer ids"  do
     it "should contact pulp if new ids are added" do
-      Pulp::ConsumerGroup.should_receive(:add_consumer).twice
+      Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).twice
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumerids=>[:a, :b])
       grp.consumerids = [:a, :b, :c, :d]
       grp.save!
     end
     it "should contact pulp if new ids are removed" do
-      Pulp::ConsumerGroup.should_receive(:delete_consumer).twice
+      Resources::Pulp::ConsumerGroup.should_receive(:delete_consumer).twice
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumerids=>[:a, :b])
       grp.consumerids = []
       grp.save!
     end
     it "should contact pulp if new ids are added and removed" do
-      Pulp::ConsumerGroup.should_receive(:add_consumer).twice
-      Pulp::ConsumerGroup.should_receive(:delete_consumer).twice
+      Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).twice
+      Resources::Pulp::ConsumerGroup.should_receive(:delete_consumer).twice
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumerids=>[:a, :b])
       grp.consumerids = [:c, :d]
       grp.save!
@@ -100,14 +100,14 @@ describe SystemGroup do
 
   context "changing systems" do
     it "should call out to pulp when adding" do
-      Pulp::ConsumerGroup.should_receive(:add_consumer).once
+      Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.systems << @system
       grp.save!
     end
     it "should call out to pulp when removing" do
-      Pulp::ConsumerGroup.should_receive(:add_consumer).once
-      Pulp::ConsumerGroup.should_receive(:delete_consumer).once
+      Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).once
+      Resources::Pulp::ConsumerGroup.should_receive(:delete_consumer).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :systems=>[@system])
       grp.systems = grp.systems - [@system]
       grp.save!

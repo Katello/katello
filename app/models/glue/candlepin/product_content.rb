@@ -20,12 +20,12 @@ class Glue::Candlepin::ProductContent
   end
 
   def create
-    created = Candlepin::Content.create @content
+    created = Resources::Candlepin::Content.create @content
     @content.id = created[:id]
   end
 
   def destroy
-    Candlepin::Content.destroy(@content.id)
+    Resources::Candlepin::Content.destroy(@content.id)
   end
 
 end

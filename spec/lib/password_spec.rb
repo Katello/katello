@@ -45,4 +45,19 @@ describe Password do
     Password.check('cba', db).should be_false
   end
 
+  it "should encrypt and decrypt empty string" do
+    # writes some messages to STDERR but works as expected
+    encrypted = Password.encrypt('')
+    Password.decrypt(encrypted).should == ''
+  end
+
+  it "should encrypt and decrypt 'a' string" do
+    encrypted = Password.encrypt('a', 'test')
+    Password.decrypt(encrypted, 'test').should == 'a'
+  end
+
+  it "should encrypt and decrypt very long string" do
+    encrypted = Password.encrypt('a' * 999, 'test')
+    Password.decrypt(encrypted, 'test').should == 'a' * 999
+  end
 end

@@ -19,12 +19,35 @@ module Menu
     base.send :include, Navigation
     base.class_eval do
       helper_method :render_menu
+      helper_method :render_sublevel_menu
+      helper_method :render_main_menu
+      helper_method :render_main_sub_menu
     end
   end
-  def render_menu(level, items = nil)
+  def render_menu(level, items = nil, prune = true)
     items ||= menu_main
-    prune_menu(items)
+    prune_menu(items) if prune
     render_navigation(:items=>items, :expand_all=>true, :level => level)
+  end
+
+  def render_main_menu()
+    prune = @main_nav.nil?
+    @main_nav ||= menu_main
+    render_menu(1, @main_nav, prune)
+  end
+
+  def render_main_sub_menu()
+    prune = @main_nav.nil?
+    @main_nav ||= menu_main
+    render_sublevel_menu(@main_nav, prune)
+  end
+
+  def render_sublevel_menu(items = nil, prune = true)
+    items ||= menu_main
+    prune_menu(items) if prune
+    items.collect do |top_level|
+      render_navigation(:items => top_level[:items], :expand_all=>true) if top_level[:items]
+    end.compact.join("").html_safe
   end
 
 
