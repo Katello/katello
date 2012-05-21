@@ -35,8 +35,8 @@ describe SystemGroupsController do
       @org = @org.reload
       setup_current_organization(@org)
       setup_system_creation
-      Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Candlepin::Consumer.stub!(:update).and_return(true)
+      Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+      Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
       @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
 

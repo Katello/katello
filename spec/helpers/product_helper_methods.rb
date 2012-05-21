@@ -38,7 +38,7 @@ module ProductHelperMethods
   def promote repo, environment
     disable_product_orchestration
     repo.stub!(:pulp_repo_facts).and_return({:clone_ids => []})
-    Pulp::Repository.stub!(:clone_repo).and_return({})
+    Resources::Pulp::Repository.stub!(:clone_repo).and_return({})
     Glue::Pulp::Repos.stub!(:groupid).and_return([])
     repo.stub(:content => {:id => "123"})
     repo.promote(environment.prior, environment)

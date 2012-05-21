@@ -427,7 +427,7 @@ KT.panel = (function ($) {
 
             top_position = left_panel.offset().top;
             offset = offset ? offset : 10;
-            offset += $('#maincontent').offset().left;
+            offset += $('#maincontent .maincontent').offset().left;
             offset -= scrollX;
 
             if (jQPanel.length > 0) {
@@ -461,7 +461,7 @@ KT.panel = (function ($) {
             var scrollX = KT.common.scrollLeft();
 
             offset = offset ? offset : 10;
-            offset += $('#maincontent').offset().left;
+            offset += $('#maincontent .maincontent').offset().left;
             offset -= scrollX;
 
             if (jQPanel.length > 0) {

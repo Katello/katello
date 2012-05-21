@@ -146,7 +146,7 @@ class OrganizationsController < ApplicationController
       notice error, {:level => :error}
 
       respond_to do |format|
-        format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
+        format.js { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
       end
     end
   end

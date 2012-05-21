@@ -58,10 +58,10 @@ describe System do
                          :installedProducts => installed_products,
                          :serviceLevel => nil)
 
-    Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Candlepin::Consumer.stub!(:update).and_return(true)
+    Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
   end
 
   context "system in invalid state should not be valid" do
@@ -73,8 +73,8 @@ describe System do
   end
 
   it "registers system in candlepin and pulp on create" do
-    Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if AppConfig.katello?
+    Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if AppConfig.katello?
     @system.save!
   end
 
@@ -84,8 +84,8 @@ describe System do
     }
 
     it "should delete consumer in candlepin and pulp" do
-      Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
-      Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true) if AppConfig.katello?
+      Resources::Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
+      Resources::Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true) if AppConfig.katello?
       @system.destroy
     end
   end
@@ -93,8 +93,8 @@ describe System do
   context "regenerate identity certificates" do
     before { @system.uuid = uuid }
 
-    it "should call Candlepin::Consumer.regenerate_identity_certificates" do
-      Candlepin::Consumer.should_receive(:regenerate_identity_certificates).once.with(uuid).and_return(true)
+    it "should call Resources::Candlepin::Consumer.regenerate_identity_certificates" do
+      Resources::Candlepin::Consumer.should_receive(:regenerate_identity_certificates).once.with(uuid).and_return(true)
       @system.regenerate_identity_certificates
     end
   end
@@ -102,9 +102,9 @@ describe System do
   context "subscribe an entitlement" do
     before { @system.uuid = uuid }
 
-    it "should call Candlepin::Consumer.consume_entitlement" do
+    it "should call Resources::Candlepin::Consumer.consume_entitlement" do
       pool_id = "foo"
-      Candlepin::Consumer.should_receive(:consume_entitlement).once.with(uuid,pool_id,nil).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:consume_entitlement).once.with(uuid,pool_id,nil).and_return(true)
       @system.subscribe pool_id
     end
   end
@@ -112,8 +112,8 @@ describe System do
   context "unsubscribe an entitlement" do
     before { @system.uuid = uuid }
     entitlement_id = "foo"
-    it "should call Candlepin::Consumer.remove_entitlement" do
-      Candlepin::Consumer.should_receive(:remove_entitlement).once.with(uuid, entitlement_id).and_return(true)
+    it "should call Resources::Candlepin::Consumer.remove_entitlement" do
+      Resources::Candlepin::Consumer.should_receive(:remove_entitlement).once.with(uuid, entitlement_id).and_return(true)
       @system.unsubscribe entitlement_id
     end
   end
@@ -121,9 +121,9 @@ describe System do
   context "unsubscribe an certificate by serial" do
     before { @system.uuid = uuid }
 
-    it "should call Candlepin::Consumer.remove_certificate" do
+    it "should call Resources::Candlepin::Consumer.remove_certificate" do
       serial_id = "foo"
-      Candlepin::Consumer.should_receive(:remove_certificate).once.with(uuid,serial_id).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:remove_certificate).once.with(uuid,serial_id).and_return(true)
       @system.unsubscribe_by_serial serial_id
     end
   end
@@ -131,8 +131,8 @@ describe System do
   context "unsubscribe all entitlements" do
     before { @system.uuid = uuid }
 
-    it "should call Candlepin::Consumer.remove_entitlements" do
-      Candlepin::Consumer.should_receive(:remove_entitlements).once.with(uuid).and_return(true)
+    it "should call Resources::Candlepin::Consumer.remove_entitlements" do
+      Resources::Candlepin::Consumer.should_receive(:remove_entitlements).once.with(uuid).and_return(true)
       @system.unsubscribe_all
     end
   end
@@ -142,17 +142,17 @@ describe System do
       @system.save!
     end
 
-    it "should give facts to Candlepin::Consumer" do
+    it "should give facts to Resources::Candlepin::Consumer" do
       @system.facts = facts
       @system.installedProducts = nil # simulate it's not loaded in memory
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil, nil, nil, nil).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil, nil, nil, nil).and_return(true)
       @system.save!
     end
 
-    it "should give installeProducts to Candlepin::Consumer" do
+    it "should give installeProducts to Resources::Candlepin::Consumer" do
       @system.installedProducts = installed_products
       @system.facts = nil # simulate it's not loaded in memory
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil).and_return(true)
       @system.save!
     end
   end
@@ -171,13 +171,13 @@ describe System do
       before(:each) do
         @system.uuid = uuid
         @system.save
-        Candlepin::Consumer.stub!(:get).and_return({:href => href, :uuid => uuid})
-        Candlepin::Consumer.stub!(:entitlements).and_return({})
-        Candlepin::Consumer.stub!(:available_pools).and_return([])
+        Resources::Candlepin::Consumer.stub!(:get).and_return({:href => href, :uuid => uuid})
+        Resources::Candlepin::Consumer.stub!(:entitlements).and_return({})
+        Resources::Candlepin::Consumer.stub!(:available_pools).and_return([])
       end
 
       it "should access candlepin if uninialized" do
-        Candlepin::Consumer.should_receive(:get).once.with(uuid).and_return({:href => href, :uuid => uuid})
+        Resources::Candlepin::Consumer.should_receive(:get).once.with(uuid).and_return({:href => href, :uuid => uuid})
         @system.href
       end
 
@@ -186,7 +186,7 @@ describe System do
       specify { @system.cp_type.should == cp_type }
 
       it "should access candlepin if entitlements is uninialized" do
-        Candlepin::Consumer.should_receive(:entitlements).once.with(uuid).and_return({})
+        Resources::Candlepin::Consumer.should_receive(:entitlements).once.with(uuid).and_return({})
         @system.entitlements
       end
 
@@ -196,8 +196,8 @@ describe System do
           @system.entitlements = entitlements
           @system.save
 
-          Candlepin::Consumer.should_not_receive(:get)
-          Candlepin::Consumer.should_not_receive(:entitlements)
+          Resources::Candlepin::Consumer.should_not_receive(:get)
+          Resources::Candlepin::Consumer.should_not_receive(:entitlements)
         end
 
         specify { @system.href.should == href; }
@@ -205,8 +205,8 @@ describe System do
       end
 
       it "should access candlepin if pools is uninialized" do
-        Candlepin::Consumer.should_receive(:entitlements).once.with(uuid).and_return([{"pool" => {"id" => 100}}])
-        Candlepin::Pool.should_receive(:find).once.and_return({})
+        Resources::Candlepin::Consumer.should_receive(:entitlements).once.with(uuid).and_return([{"pool" => {"id" => 100}}])
+        Resources::Candlepin::Pool.should_receive(:find).once.and_return({})
         @system.pools
       end
 
@@ -214,9 +214,9 @@ describe System do
         before(:each) do
           @system.href = href
           @system.pools = {}
-          Candlepin::Consumer.should_not_receive(:get)
-          Candlepin::Consumer.should_not_receive(:entitlements)
-          Candlepin::Pool.should_not_receive(:find)
+          Resources::Candlepin::Consumer.should_not_receive(:get)
+          Resources::Candlepin::Consumer.should_not_receive(:entitlements)
+          Resources::Candlepin::Pool.should_not_receive(:find)
         end
 
         specify { @system.href.should == href }
@@ -224,15 +224,15 @@ describe System do
       end
 
       it "should access candlepin if available_pools is uninitialized" do
-        Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
+        Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
         @system.available_pools
       end
 
       context "shouldn't access candlepin available_pools if initialized" do
         before(:each) do
           @system.available_pools = available_pools
-          Candlepin::Consumer.should_not_receive(:get)
-          Candlepin::Consumer.should_not_receive(:available_pools)
+          Resources::Candlepin::Consumer.should_not_receive(:get)
+          Resources::Candlepin::Consumer.should_not_receive(:available_pools)
         end
         specify { @system.available_pools.should == available_pools }
       end
@@ -240,14 +240,14 @@ describe System do
     end
 
     context "shouldn't access candlepin if new record" do
-      before(:each) { Candlepin::Consumer.should_not_receive(:get) }
+      before(:each) { Resources::Candlepin::Consumer.should_not_receive(:get) }
       specify { @system.href.should be_nil }
     end
   end
 
   context "pulp attributes", :katello => true do
     it "should update package-profile" do
-      Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
+      Resources::Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
       @system.upload_package_profile(package_profile)
     end
   end
@@ -308,7 +308,7 @@ describe System do
       @system_2 = create_system(common_attrs.merge(:name => "sys_2", :uuid => "sys_2_uuid"))
       @system_3 = create_system(common_attrs.merge(:name => "sys_3", :uuid => "sys_3_uuid"))
 
-      Candlepin::Entitlement.stub(:get).and_return([
+      Resources::Candlepin::Entitlement.stub(:get).and_return([
         {"pool" => {"id" => pool_id_1}, "consumer" => {"uuid" => @system_1.uuid}},
         {"pool" => {"id" => pool_id_1}, "consumer" => {"uuid" => @system_2.uuid}},
         {"pool" => {"id" => pool_id_2}, "consumer" => {"uuid" => @system_2.uuid}},
@@ -331,20 +331,20 @@ describe System do
 
     # TODO: Unsure how to test this after making :host, :guests use lazy_accessor
     pending "guest system" do
-      before { Candlepin::Consumer.stub(:host => nil, :guests => []) }
+      before { Resources::Candlepin::Consumer.stub(:host => nil, :guests => []) }
 
       it "should get host system" do
-        Candlepin::Consumer.should_receive(:host).with(@system.uuid).and_return(SystemTestData.host)
+        Resources::Candlepin::Consumer.should_receive(:host).with(@system.uuid).and_return(SystemTestData.host)
         @system.host.name.should == SystemTestData.host["name"]
       end
     end
 
     # TODO: Unsure how to test this after making :host, :guests use lazy_accessor
     pending "host system" do
-      before { Candlepin::Consumer.stub(:host => nil, :guests => []) }
+      before { Resources::Candlepin::Consumer.stub(:host => nil, :guests => []) }
 
       it "should get guest systems" do
-        Candlepin::Consumer.should_receive(:guests).with(@system.uuid).and_return(SystemTestData.guests)
+        Resources::Candlepin::Consumer.should_receive(:guests).with(@system.uuid).and_return(SystemTestData.guests)
         guests = @system.guests
         guests.should have(1).system
         guests.first.name.should == SystemTestData.guests.first["name"]
@@ -353,7 +353,7 @@ describe System do
 
     context "guest without host (before running virt-who)" do
       it "should return no host" do
-        Candlepin::CandlepinResource.stub(:default_headers => {}, :get => MemoStruct.new(:code => 204, :body => ""))
+        Resources::Candlepin::CandlepinResource.stub(:default_headers => {}, :get => MemoStruct.new(:code => 204, :body => ""))
         @system.host.should_not be
       end
     end

@@ -263,7 +263,7 @@ class ActivationKeysController < ApplicationController
       notice error, {:level => :error}
 
       respond_to do |format|
-        format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
+        format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
       end
     end
   end
@@ -369,7 +369,7 @@ class ActivationKeysController < ApplicationController
     all_pools = {}
 
     # TODO: should be current_organization.pools (see pool.rb for attributes)
-    cp_pools = Candlepin::Owner.pools current_organization.cp_key
+    cp_pools = Resources::Candlepin::Owner.pools current_organization.cp_key
     cp_pools.each do |pool|
       p = OpenStruct.new
       p.poolId = pool['id']

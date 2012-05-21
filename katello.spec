@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.35
+Version:        0.2.38
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -106,6 +106,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
+BuildRequires:  converge-ui-devel
 
 %description common
 Common bits for all Katello instances
@@ -121,6 +122,11 @@ Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp
 Requires:       candlepin-tomcat6
+# the following backend engine deps are required by <katello-configure>
+Requires:       mongodb mongodb-server
+Requires:       qpid-cpp-server qpid-cpp-client qpid-cpp-client-ssl qpid-cpp-server-ssl
+# </katello-configure>
+
 
 %description all
 This is the Katello meta-package.  If you want to install Katello and all
@@ -155,6 +161,10 @@ Katello connection classes for the Candlepin backend
 %setup -q
 
 %build
+
+#copy converge-ui
+cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
+
 #configure Bundler
 rm -f Gemfile.lock
 sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
@@ -225,6 +235,11 @@ ln -sv %{datadir}/tmp %{buildroot}%{homedir}/tmp
 #create symlink for Gemfile.lock (it's being regenerated each start)
 ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
+#create symlinks for important scripts
+mkdir -p %{buildroot}%{_bindir}
+ln -sv %{homedir}/script/katello-debug %{buildroot}%{_bindir}/katello-debug
+ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
+
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
 
@@ -280,6 +295,7 @@ fi
 %files
 %attr(600, katello, katello)
 %defattr(-,root,root)
+%{_bindir}/katello-*
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -362,6 +378,92 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon May 21 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.38-1
+- Fixes failing users controller spec tests.
+- Fixes for failing spec tests as part of the merge of new UI changes.
+- 822069 - Making candlepin proxy DELETE return a body for sub-man consumer
+  delete methods
+
+* Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.37-1
+- removing mod_authz_ldap from dependencies
+- cli registration regression with aks
+- Updates converge-ui for styling fix.
+- Updates converge-ui for latest bug fixes and tagged version.
+- Updates to latest converge-ui for bug fixes.
+- Fixed hover menu setup.
+- Patch to render sub menu main
+- Updating the version of converge-ui.
+- Fix for import path change.
+- Updates to spec file for changes in converge-ui-devel.
+- Hacky fix to show submenus on hover.
+- Updates to include missing body tag id for each major section. Updates
+  converge-ui.
+- Fixes another issue with panel sliding out incorrectly due to changes in left
+  offsets.
+- Updates converge-ui.
+- Adds changes to footer to bring i18n text into project and out of converge-
+  ui.
+- Fix for panel opening and closing in the wrong spot:    Due to the panel
+  being relative to the container #maincontent   instead of being relative to
+  the container #maincontent.maincontent
+- Fix for a very minor typo in the CSS.
+- IE Stickyfooter hack.
+- Changes to accomodate more stuff from UXD.
+- UI Remodel - Adds updates to widget styling.
+- UI Remodel - Cleans up footer and adds styling to conform versioning into
+  footer.
+- UI Remodel - Updates the footer section and maincontent to new look.
+- UI Remodel - Update to converge-ui.
+- UI Remodel - Updates to header layout and new logo.
+- UI Remodel - Updates converge-ui and adjusts some placement of tupane
+  entities with new look.
+- UI Remodel - Switched symlinks to converge-ui instead of lib to adopt a
+  pattern of namespacing that will be consistent across implementations.
+- UI Remodel - Adds updated version of converge-ui.  Switches default submodule
+  config to read-only repository.
+- adding converge-ui to build process
+- UI Remodel - Moves jquery ui out of assets and updates configuration.
+- UI Remodel - Typo fix for layout name.
+- UI Remodel - Large UI change to use new shell and header from the converge-ui
+  layouts.  Changes to scss to include new scss and modify existing to
+  accomodate new shell.  Some re-organization of assets.
+- UI Remodel - Removes all jquery plugins and updates paths to point at library
+  of plugins in central asset repo.
+- UI Remodel - Adds first symlink to javascript libraries coming from UI
+  library.
+- UI Remodel - Adding initial commit of a git submodule that contains common UI
+  elements.
+
+* Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.36-1
+- encryption - fix problems with logger not being initialized
+- encryption - fix running in development environment
+- reduce usage of require for code in lib dir
+- 797412 - Unit test fix that should ve gone with the previous commit
+- 819941 - missing dependencies in katello-all (common)
+- 797412 - Added a comment to explain why index rule is set to true
+- 797412 - Removed an unnecessary filter since only one controller call was
+  using it.
+- 797412 - Moved back search to index method
+- 797412 - Fixed environment search call in the cli
+- system errata - mv js to load on index
+- encryption - plain text passwords encryption
+- 821010 - catch and log errors fetching release versions from cdn
+- product model - returned last_sync and sync_state fields back to json export
+  They were removed with headpin merge but cli uses them.
+- adding better example output
+- removing root requirement so you can keep your files owned by your user
+- 814118 - fixing issue where updating gpg key did not refresh cp content
+- restores the ability to use the -f force flag.  previous commit broke it
+- Merge pull request #102 from mccun934/reset-dbs-dev-mode
+- removing the old 'clear-all' script and moving to just one script
+- 812891 - Adding hypervisor record deletion to katello cli
+- Merge pull request #94 from jsomara/795869
+- systems - fix error on UI create
+- 795869 - Fixing org name in katello-configure to accept spaces but still
+  create a proper candlepin key
+- 783402 - It is possible to add a template to a change set twice
+- refactoring - removing duplicate method definition
+
 * Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.35-1
 - adding the ability to pass in 'development' as your env
 - 817848 - Adding dry-run to candlepin proxy routes
