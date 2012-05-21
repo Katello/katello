@@ -109,6 +109,13 @@ class OptionParser(_OptionParser):
         return None
 
 
+    def get_option_by_name(self, name):
+        for opt in ['--'+name, '-'+name]:
+            if self.has_option(opt):
+                return self.get_option(opt)
+        return None
+
+
     def get_options(self):
         return self._long_opt.keys() + self._short_opt.keys()
 

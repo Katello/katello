@@ -12,6 +12,12 @@ from katello.client.api.utils import ApiDataError
 
 class RequiredCLIOptionsTest(object):
 
+    disallowed_options = [
+    ]
+
+    allowed_options = [
+    ]
+
     def test_missing_org_generates_error(self):
         self.assertRaises(Exception, self.action.process_options, ['add_filter', '--name=repo1', '--product=product1', '--filter=f1'])
 
@@ -38,16 +44,12 @@ class RequiredCLIOptionsTest(object):
 
 class AddRequiredCLIOptionsTest(RequiredCLIOptionsTest, CLIOptionTestCase):
     #repo is defined by either (org, product, repo_name, env name) or repo_id
-    def setUp(self):
-        self.set_action(AddRemoveFilter(True))
-        self.mock_options()
+    action = AddRemoveFilter(True)
 
 
 class RemoveRequiredCLIOptionsTest(RequiredCLIOptionsTest, CLIOptionTestCase):
     #repo is defined by either (org, product, repo_name, env name) or repo_id
-    def setUp(self):
-        self.set_action(AddRemoveFilter(False))
-        self.mock_options()
+    action = AddRemoveFilter(False)
 
 
 class RepoAddRemoveFilterTest(object):

@@ -38,10 +38,10 @@ class Status(PingAction):
 
     description = _('get the status of the katello server')
 
-    def setup_parser(self):
+    def setup_parser(self, parser):
         return 0
 
-    def check_options(self):
+    def check_options(self, validator):
         return 0
 
     def run(self):

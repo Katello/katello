@@ -60,15 +60,15 @@ class Create(OrganizationAction):
 
     description = _('create an organization')
 
-    def setup_parser(self):
+    def setup_parser(self, parser):
         # always provide --id option for create, even on registered clients
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option("--description", dest="description",
+        parser.add_option("--description", dest="description",
                                help=_("consumer description eg: foo's organization"))
 
-    def check_options(self):
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require('name')
 
     def run(self):
         name        = self.get_option('name')
@@ -87,13 +87,13 @@ class Info(OrganizationAction):
 
     description = _('list information about an organization')
 
-    def setup_parser(self):
+    def setup_parser(self, parser):
         # always provide --id option for create, even on registered clients
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                help=_("organization name eg: foo.example.com (required)"))
 
-    def check_options(self):
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require('name')
 
     def run(self):
         name = self.get_option('name')
@@ -115,13 +115,13 @@ class Delete(OrganizationAction):
 
     description = _('delete an organization')
 
-    def setup_parser(self):
+    def setup_parser(self, parser):
         # always provide --id option for create, even on registered clients
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                help=_("organization name eg: foo.example.com (required)"))
 
-    def check_options(self):
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require('name')
 
     def run(self):
         name = self.get_option('name')
@@ -144,15 +144,15 @@ class Update(OrganizationAction):
 
     description = _('update an organization')
 
-    def setup_parser(self):
+    def setup_parser(self, parser):
         # always provide --id option for create, even on registered clients
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                                help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option("--description", dest="description",
+        parser.add_option("--description", dest="description",
                                help=_("consumer description eg: foo's organization"))
 
-    def check_options(self):
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require('name')
 
     def run(self):
         name        = self.get_option('name')
@@ -168,14 +168,14 @@ class GenerateDebugCert(OrganizationAction):
 
     description = _('generate and show ueber certificate')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option("--regenerate", dest="regenerate", action="store_true",
+        parser.add_option("--regenerate", dest="regenerate", action="store_true",
                                help=_("regenerate the certificate"))
 
-    def check_options(self):
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require('name')
 
     def run(self):
         name = self.get_option('name')
@@ -200,12 +200,12 @@ class ShowSubscriptions(OrganizationAction):
         super(ShowSubscriptions, self).__init__()
         self.productApi = ProductAPI()
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("organization name eg: foo.example.com (required)"))
 
-    def check_options(self):
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require('name')
 
     def run(self):
         name = self.get_option('name')

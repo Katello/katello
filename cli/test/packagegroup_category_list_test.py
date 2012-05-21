@@ -8,16 +8,16 @@ import katello.client.core.packagegroup
 from katello.client.core.packagegroup import CategoryList
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
-    def setUp(self):
-        self.set_action(CategoryList())
-        self.mock_options()
 
-    def test_missing_repoid_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['category_list'])
+    action = CategoryList()
 
-    def test_no_error_if_required_options_provided(self):
-        self.action.process_options(['list', '--repo_id=123'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    disallowed_options = [
+        ()
+    ]
+
+    allowed_options = [
+        ('--repo_id=123', )
+    ]
 
 
 class PackageGroupCategoryListTest(CLIActionTestCase):

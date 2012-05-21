@@ -61,23 +61,19 @@ class Create(UserAction):
 
     description = _('create user')
 
-    def setup_parser(self):
-        self.parser.add_option('--username', dest='username', help=_("user name (required)"))
-        self.parser.add_option('--password', dest='password', help=_("initial password (required)"))
-        self.parser.add_option('--email', dest='email', help=_("email (required)"))
-        self.parser.add_option("--disabled", dest="disabled", type="bool", help=_("disabled account (default is 'false')"), default=False)
-        self.parser.add_option('--default_organization', dest='default_organization',
+    def setup_parser(self, parser):
+        parser.add_option('--username', dest='username', help=_("user name (required)"))
+        parser.add_option('--password', dest='password', help=_("initial password (required)"))
+        parser.add_option('--email', dest='email', help=_("email (required)"))
+        parser.add_option("--disabled", dest="disabled", type="bool", help=_("disabled account (default is 'false')"), default=False)
+        parser.add_option('--default_organization', dest='default_organization',
                                help=_("user's default organization name"))
-        self.parser.add_option('--default_environment', dest='default_environment',
+        parser.add_option('--default_environment', dest='default_environment',
                                help=_("user's default environment name"))
 
-    def check_options(self):
-        self.require_option('username')
-        self.require_option('password')
-        self.require_option('email')
-        if self.option_specified('default_organization') or self.option_specified('default_environment'):
-            self.require_option('default_organization')
-            self.require_option('default_environment')
+    def check_options(self, validator):
+        validator.require(('username', 'password', 'email'))
+        validator.require_all_or_none(('default_organization', 'default_environment'))
 
     def run(self):
         username = self.get_option('username')
@@ -104,11 +100,11 @@ class Info(UserAction):
 
     description = _('list information about user')
 
-    def setup_parser(self):
-        self.parser.add_option('--username', dest='username', help=_("user name (required)"))
+    def setup_parser(self, parser):
+        parser.add_option('--username', dest='username', help=_("user name (required)"))
 
-    def check_options(self):
-        self.require_option('username')
+    def check_options(self, validator):
+        validator.require('username')
 
     def run(self):
         username = self.get_option('username')
@@ -132,11 +128,11 @@ class Delete(UserAction):
 
     description = _('delete user')
 
-    def setup_parser(self):
-        self.parser.add_option('--username', dest='username', help=_("user name (required)"))
+    def setup_parser(self, parser):
+        parser.add_option('--username', dest='username', help=_("user name (required)"))
 
-    def check_options(self):
-        self.require_option('username')
+    def check_options(self, validator):
+        validator.require('username')
 
     def run(self):
         username = self.get_option('username')
@@ -153,29 +149,27 @@ class Update(UserAction):
 
     description = _('update an user')
 
-    def setup_parser(self):
-        self.parser.add_option('--username', dest='username', help=_("user name (required)"))
-        self.parser.add_option('--password', dest='password', help=_("initial password"))
-        self.parser.add_option('--email', dest='email', help=_("email"))
-        self.parser.add_option("--disabled", dest="disabled", help=_("disabled account"))
-        self.parser.add_option('--default_organization', dest='default_organization',
+    def setup_parser(self, parser):
+        parser.add_option('--username', dest='username', help=_("user name (required)"))
+        parser.add_option('--password', dest='password', help=_("initial password"))
+        parser.add_option('--email', dest='email', help=_("email"))
+        parser.add_option("--disabled", dest="disabled", help=_("disabled account"))
+        parser.add_option('--default_organization', dest='default_organization',
                                help=_("user's default organization name"))
-        self.parser.add_option('--default_environment', dest='default_environment',
+        parser.add_option('--default_environment', dest='default_environment',
                                help=_("user's default environment name"))
-        self.parser.add_option('--no_default_environment', dest='no_default_environment', action="store_true",
+        parser.add_option('--no_default_environment', dest='no_default_environment', action="store_true",
                                help=_("user's default environment is None"))
 
-    def check_options(self):
-        self.require_option('username')
-        self.require_at_least_one_of_options('password','email','disabled','default_organization','default_environment',
-                                         'no_default_environment')
-        if self.option_specified('default_organization') or self.option_specified('default_environment'):
-            self.require_option('default_organization')
-            self.require_option('default_environment')
-            self.reject_option('no_default_environment', 'default_organization', 'default_environment')
-        if self.option_specified('no_default_environment'):
-            self.reject_option('default_organization', 'no_default_environment')
-            self.reject_option('default_environment', 'no_default_environment')
+    def check_options(self, validator):
+        validator.require('username')
+        validator.require_at_least_one_of((
+            'password', 'email', 'disabled',
+            'default_organization', 'default_environment',
+            'no_default_environment'))
+
+        validator.require_all_or_none(('default_organization', 'default_environment'))
+        validator.mutually_exclude(('default_organization', 'default_environment'), 'no_default_environment')
 
     def run(self):
         username = self.get_option('username')
@@ -205,11 +199,11 @@ class ListRoles(UserAction):
 
     description = _("list user's roles")
 
-    def setup_parser(self):
-        self.parser.add_option('--username', dest='username', help=_("user name (required)"))
+    def setup_parser(self, parser):
+        parser.add_option('--username', dest='username', help=_("user name (required)"))
 
-    def check_options(self):
-        self.require_option('username')
+    def check_options(self, validator):
+        validator.require('username')
 
     def run(self):
         username = self.get_option('username')
@@ -256,13 +250,12 @@ class AssignRole(UserAction):
 
         self.__assign = assign
 
-    def setup_parser(self):
-        self.parser.add_option('--username', dest='username', help=_("user name (required)"))
-        self.parser.add_option('--role', dest='role', help=_("user role (required)"))
+    def setup_parser(self, parser):
+        parser.add_option('--username', dest='username', help=_("user name (required)"))
+        parser.add_option('--role', dest='role', help=_("user role (required)"))
 
-    def check_options(self):
-        self.require_option('username')
-        self.require_option('role')
+    def check_options(self, validator):
+        validator.require(('username', 'role'))
 
     def run(self):
         userName = self.get_option('username')
@@ -290,8 +283,8 @@ class Report(UserAction):
 
     description = _('user report')
 
-    def setup_parser(self):
-        self.parser.add_option('--format', dest='format', help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
+    def setup_parser(self, parser):
+        parser.add_option('--format', dest='format', help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
 
     def run(self):
         format = self.get_option('format')

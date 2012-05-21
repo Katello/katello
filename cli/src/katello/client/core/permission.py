@@ -55,19 +55,17 @@ class Create(PermissionAction):
 
     description = _('create a permission for a user role')
 
-    def setup_parser(self):
-        self.parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
-        self.parser.add_option('--name', dest='name',help=_("permission name (required)"))
-        self.parser.add_option('--description', dest='desc', help=_("permission description"))
-        self.parser.add_option('--org', dest='org', help=_("organization name"))
-        self.parser.add_option('--scope', dest='scope', help=_("scope of the permisson (required)"))
-        self.parser.add_option('--verbs', dest='verbs', help=_("verbs for the permission"), default="")
-        self.parser.add_option('--tags', dest='tags', help=_("tags for the permission"), default="")
+    def setup_parser(self, parser):
+        parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
+        parser.add_option('--name', dest='name',help=_("permission name (required)"))
+        parser.add_option('--description', dest='desc', help=_("permission description"))
+        parser.add_option('--org', dest='org', help=_("organization name"))
+        parser.add_option('--scope', dest='scope', help=_("scope of the permisson (required)"))
+        parser.add_option('--verbs', dest='verbs', help=_("verbs for the permission"), default="")
+        parser.add_option('--tags', dest='tags', help=_("tags for the permission"), default="")
 
-    def check_options(self):
-        self.require_option('user_role')
-        self.require_option('name')
-        self.require_option('scope')
+    def check_options(self, validator):
+        validator.require(('user_role', 'name', 'scope'))
 
     def tag_name_to_id_map(self, org_name, scope):
         permissions = self.getAvailablePermissions(org_name, scope)
@@ -118,13 +116,12 @@ class Delete(PermissionAction):
 
     description = _('delete a permission')
 
-    def setup_parser(self):
-        self.parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
-        self.parser.add_option('--name', dest='name',help=_("permission name (required)"))
+    def setup_parser(self, parser):
+        parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
+        parser.add_option('--name', dest='name',help=_("permission name (required)"))
 
-    def check_options(self):
-        self.require_option('user_role')
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require(('user_role', 'name'))
 
     def run(self):
         role_name = self.get_option('user_role')
@@ -142,11 +139,11 @@ class List(PermissionAction):
 
     description = _('list permissions for a user role')
 
-    def setup_parser(self):
-        self.parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
+    def setup_parser(self, parser):
+        parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
 
-    def check_options(self):
-        self.require_option('user_role')
+    def check_options(self, validator):
+        validator.require('user_role')
 
     def format_verbs(self, verbs):
         return [v['verb'] for v in verbs]
@@ -177,9 +174,9 @@ class ListAvailableVerbs(PermissionAction):
     description = _('list available scopes, verbs and tags that can be set in a permission')
     grep_mode = False
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com,\nlists organization specific verbs"))
-        self.parser.add_option('--scope', dest='scope', help=_("filter listed results by scope"))
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com,\nlists organization specific verbs"))
+        parser.add_option('--scope', dest='scope', help=_("filter listed results by scope"))
 
     def run(self):
         scope = self.get_option('scope')
