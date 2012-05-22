@@ -209,6 +209,10 @@ cp -R .bundle * %{buildroot}%{homedir}
 install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
+#copy cron scripts to be scheduled daily
+install -d -m0755 %{buildroot}%{_sysconfdir}/cron.daily
+install -m 755 script/katello-refresh-cdn %{buildroot}%{_sysconfdir}/cron.daily/katello-refresh-cdn
+
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
@@ -351,6 +355,7 @@ fi
 %files glue-pulp
 %{homedir}/app/models/glue/pulp
 %{homedir}/lib/resources/pulp.rb
+%config(missingok) %{_sysconfdir}/cron.daily/katello-refresh-cdn
 
 %files glue-candlepin
 %{homedir}/app/models/glue/candlepin
