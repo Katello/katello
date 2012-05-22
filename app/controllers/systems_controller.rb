@@ -439,6 +439,11 @@ class SystemsController < ApplicationController
     successful_systems = []
     failed_systems = []
 
+    if params[:packages].blank? and params[:groups].blank?
+      notice _("Systems Bulk Action: No package or package group names have been provided."), {:level => :error}
+      render :nothing => true and return
+    end
+
     if !params[:packages].blank?
       @systems.each do |system|
         begin
@@ -502,6 +507,11 @@ class SystemsController < ApplicationController
     successful_systems = []
     failed_systems = []
 
+    if params[:packages].blank? and params[:groups].blank?
+      notice _("Systems Bulk Action: No package or package group names have been provided."), {:level => :error}
+      render :nothing => true and return
+    end
+
     if !params[:packages].blank?
       @systems.each do |system|
         begin
@@ -532,7 +542,10 @@ class SystemsController < ApplicationController
     successful_systems = []
     failed_systems = []
 
-    if !params[:errata].blank?
+    if params[:errata].blank?
+      notice _("Systems Bulk Action: No errata IDs have been provided."), {:level => :error}
+      render :nothing => true and return
+    else
       @systems.each do |system|
         begin
           system.install_errata params[:errata]
