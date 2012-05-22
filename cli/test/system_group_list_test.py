@@ -12,16 +12,15 @@ from katello.client.core.system_group import List
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: organization
 
-    def setUp(self):
-        self.set_action(List())
-        self.mock_options()
+    action = List()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['list', ''])
+    disallowed_options = [
+        ()
+    ]
 
-    def test_no_error_if_org_provided(self):
-        self.action.process_options(['list', '--org=ACME'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME',)
+    ]
 
 
 class SystemGroupListTest(CLIActionTestCase):

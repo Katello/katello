@@ -12,22 +12,18 @@ from katello.client.api.system_group import SystemGroupAPI
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: organization, name
 
-    def setUp(self):
-        self.set_action(AddSystemGroup())
-        self.mock_options()
+    action = AddSystemGroup()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_system_group', '--name=system_1', '--system_group=Group1'])
+    disallowed_options = [
+        (),
+        ('--org=ACME',),
+        ('--name=system_group_1',),
+        ('--system_groupds=SysG1')
+    ]
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_system_group', '--org=ACME', '--system_group=SysG1'])
-
-    def test_missing_system_groups_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_system_group', '--org=ACME', '--name=system_1'])
-
-    def test_no_error_if_org_and_name_and_system_groups_provided(self):
-        self.action.process_options(['add_system_group', '--org=ACME', '--name=system_1', '--system_group=SysG1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=system_group_1', '--system_group=SysG2')
+    ]
 
 
 class ActivationKeyAddSystemGroupGroupsTest(CLIActionTestCase):

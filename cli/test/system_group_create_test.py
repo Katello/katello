@@ -10,20 +10,26 @@ from katello.client.core.system_group import Create
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: organization, name
+    #optional: maximum systems, description
 
-    def setUp(self):
-        self.set_action(Create())
-        self.mock_options()
+    action = Create()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--name=system_group_1'])
+    disallowed_options = [
+        (),
+        ('--org=ACME', ),
+        ('--name=system_group_1',),
+        ('--description="This is a system group"'),
+        ('--max_systems=35'),
+        ('--org=ACME', '--max_systems=35'),
+        ('--org=ACME', '-description="This is a system group"'),
+    ]
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME'])
-
-    def test_no_error_if_org_and_name_provided(self):
-        self.action.process_options(['create', '--org=ACME', '--name=system_group_1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=system'),
+        ('--org=ACME', '--name=system', '--max_systems=6'),
+        ('--org=ACME', '--name=system', '--description="This is a desc"'),
+        ('--org=ACME', '--name=system', '--description="This is a desc"', '--max_systems=6')
+    ]
 
 
 class SystemGroupCreateTest(CLIActionTestCase):

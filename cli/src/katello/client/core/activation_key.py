@@ -270,18 +270,16 @@ class AddSystemGroup(ActivationKeyAction):
 
     description = _('add system group to an activation key')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--system_group', dest='system_group_name',
+        parser.add_option('--system_group', dest='system_group_name',
                               help=_("system group name (required)"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        self.require_option('system_group_name')
+    def check_options(self, validator):
+        validator.require(('org', 'name', 'system_group_name'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -315,18 +313,16 @@ class RemoveSystemGroup(ActivationKeyAction):
 
     description = _('remove system groups to a system')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--system_group', dest='system_group_name',
+        parser.add_option('--system_group', dest='system_group_name',
                               help=_("system group name (required)"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        self.require_option('system_group_name')
+    def check_options(self, validator):
+        validator.require(('org', 'name', 'system_group_name'))
 
     def run(self):
         org_name = self.get_option('org')

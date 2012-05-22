@@ -9,24 +9,23 @@ from katello.client.core.system_group import AddSystems
 
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
-    #requires: organization, name
+    #requires: organization, name, system uuids
 
-    def setUp(self):
-        self.set_action(AddSystems())
-        self.mock_options()
+    action = AddSystems()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_systems', '--name=system_group_1', '--system_uuids=34-453sa,agt754ad'])
+    disallowed_options = [
+        (),
+        ('--org=ACME', ),
+        ('--name=system_group_1',),
+        ('--system_uuids=345'),
+        ('--org=ACME', '--name=system_group_1'),
+        ('--org=ACME', '--system_uuids=345'),
+        ('--name=system_group_1', '--system_uuids=456')
+    ]
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_systems', '--org=ACME', '--system_uuids=34-453sa, agt754ad'])
-
-    def test_missing_system_uuids_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_systems', '--org=ACME', '--name=system_group_1'])
-
-    def test_no_error_if_org_and_name_and_system_uuids_provided(self):
-        self.action.process_options(['add_systems', '--org=ACME', '--name=system_group_1', '--system_uuids=34-453sa,agt754ad'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=system', '--system_uuids=4948857'),
+    ]
 
 
 class SystemGroupAddSystemsTest(CLIActionTestCase):

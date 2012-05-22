@@ -11,19 +11,17 @@ from katello.client.core.system_group import Lock
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: organization, name
 
-    def setUp(self):
-        self.set_action(Lock())
-        self.mock_options()
+    action = Lock()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['lock', '--name=system_group_1'])
+    disallowed_options = [
+        (),
+        ('--org=ACME', ),
+        ('--name=system_group_1'),
+    ]
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['lock', '--org=ACME'])
-
-    def test_no_error_if_org_and_name_provided(self):
-        self.action.process_options(['lock', '--org=ACME', '--name=system_group_1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=system_group_1'),
+    ]
 
 
 class SystemGroupLockTest(CLIActionTestCase):

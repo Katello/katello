@@ -45,12 +45,12 @@ class List(SystemGroupAction):
 
     description = _('list system groups within an organization')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
 
-    def check_options(self):
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require(('org',))
 
     def run(self):
         org_name = self.get_option('org')
@@ -74,19 +74,18 @@ class Create(SystemGroupAction):
 
     description = _('create a system group')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("system group name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--max_systems', dest='max_systems',
+        parser.add_option('--max_systems', dest='max_systems',
                                help=_("maximum number of systems in this group"))
-        self.parser.add_option('--description', dest='description',
+        parser.add_option('--description', dest='description',
                                help=_("system group description"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -108,15 +107,14 @@ class Info(SystemGroupAction):
 
     description = _('display a system group within an organization')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                        help=_("system group name (required)"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -145,21 +143,20 @@ class Update(SystemGroupAction):
 
     description = _('update a system group')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("system group name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--new_name', dest='new_name',
+        parser.add_option('--new_name', dest='new_name',
                               help=_("new system group name"))
-        self.parser.add_option('--max_systems', dest='max_systems',
+        parser.add_option('--max_systems', dest='max_systems',
                                help=_("maximum number of systems in this group (enter -1 for unlimited)"))
-        self.parser.add_option('--description', dest='new_description',
+        parser.add_option('--description', dest='new_description',
                                help=_("new description"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -186,15 +183,14 @@ class Delete(SystemGroupAction):
 
     description = _('delete a system group')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("system group name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -217,15 +213,14 @@ class Systems(SystemGroupAction):
 
     description = _('display the systems in a system group')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                        help=_("system group name (required)"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -256,15 +251,14 @@ class Lock(SystemGroupAction):
 
     description = _('lock a system group')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                        help=_("system group name (required)"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -289,15 +283,14 @@ class Unlock(SystemGroupAction):
 
     description = _('unlock a system group')
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
+        parser.add_option('--name', dest='name',
                        help=_("system group name (required)"))
 
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -322,18 +315,16 @@ class AddSystems(SystemGroupAction):
 
     description = _('add systems to a system group')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("system group name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--system_uuids', dest='system_uuids',
+        parser.add_option('--system_uuids', dest='system_uuids',
                               help=_("list of system uuids (required)"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        self.require_option('system_uuids')
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'system_uuids'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -360,18 +351,16 @@ class RemoveSystems(SystemGroupAction):
 
     description = _('remove systems from a system group')
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("system group name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--system_uuids', dest='system_uuids',
+        parser.add_option('--system_uuids', dest='system_uuids',
                               help=_("list of system uuids (required)"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        self.require_option('system_uuids')
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'system_uuids'))
 
     def run(self):
         org_name = self.get_option('org')
