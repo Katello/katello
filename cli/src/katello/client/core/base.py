@@ -116,10 +116,10 @@ class Command(object):
         return self._actions.get(name, None)
 
     def create_parser(self):
-        parser = OptionParser(option_class=KatelloOption)
-        parser.disable_interspersed_args()
-        parser.set_usage(self.usage)
-        return parser
+        self.parser = OptionParser(option_class=KatelloOption)
+        self.parser.disable_interspersed_args()
+        self.parser.set_usage(self.usage)
+        return self.parser
 
     def process_options(self, parser, args):
         if not args:
@@ -263,6 +263,8 @@ class Action(object):
             return None
 
     def load_saved_options(self, parser):
+        if not Config.parser.has_section('options'):
+            return
         for opt_name, opt_value in Config.parser.items('options'):
             opt = parser.get_option_by_name(opt_name)
             if not opt is None:
