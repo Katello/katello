@@ -116,10 +116,10 @@ class Command(object):
         return self._actions.get(name, None)
 
     def create_parser(self):
-        parser = OptionParser(option_class=KatelloOption)
-        parser.disable_interspersed_args()
-        parser.set_usage(self.usage)
-        return parser
+        self.parser = OptionParser(option_class=KatelloOption)
+        self.parser.disable_interspersed_args()
+        self.parser.set_usage(self.usage)
+        return self.parser
 
     def process_options(self, parser, args):
         if not args:
