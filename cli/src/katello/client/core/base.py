@@ -263,6 +263,8 @@ class Action(object):
             return None
 
     def load_saved_options(self, parser):
+        if not Config.parser.has_section('options'):
+            return
         for opt_name, opt_value in Config.parser.items('options'):
             opt = parser.get_option_by_name(opt_name)
             if not opt is None:
