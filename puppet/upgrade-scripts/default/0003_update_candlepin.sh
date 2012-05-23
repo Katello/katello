@@ -7,6 +7,11 @@
 
 CANDLEPIN_HOME=${CANDLEPIN_HOME:-/usr/share/candlepin}
 
+# remove hornetq extraneous files for certain candlepin upgrades
+rm -rf /var/lib/candlepin/hornetq/bindings
+rm -rf /var/lib/candlepin/hornetq/journal
+rm -rf /var/lib/candlepin/hornetq/largemsgs
+
 pushd $CANDLEPIN_HOME >/dev/null
 ./cpdb --update 2>&1
 ret_code=$?
