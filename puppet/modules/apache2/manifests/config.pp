@@ -1,8 +1,8 @@
 class apache2::config {
 
-  exec { "add-apache-user-to-katello-group":
-        command => "usermod -a -G katello apache",
-        path => "/usr/sbin"
+  user { 'apache':
+        ensure => present,
+        groups => ['katello']
   }
 
   # support RHEL5/RHEL6 only
