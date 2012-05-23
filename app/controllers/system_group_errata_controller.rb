@@ -61,7 +61,6 @@ class SystemGroupErrataController < ApplicationController
     render :text => job.pulp_id
   rescue Exception => error
     errors error
-    Rails.logger.error error.backtrace.join("\n")
     render :text => error, :status => :bad_request
   end
 
