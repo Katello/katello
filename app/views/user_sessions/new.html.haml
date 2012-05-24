@@ -1,19 +1,23 @@
-= javascript :login
+= content_for(:login_logo) do
+  = image_tag("logo.png", :alt => _('Katello Logo'))
 
-.modalbox
-  %h2 #{_('Log In')}
-  .katello_form
-    = form_tag user_session_path, :id=>:login_form, :method => "post" do
-      %fieldset
-        = label_tag :username, _('Username')
-        = text_field_tag :username, params[:username]
-      %fieldset
-        = label_tag :password, _('Password')
-        = password_field_tag :password, params[:password]
-      %div.indented
-        = check_box_tag :remember_me
-        = label_tag :remember_me, _('Remember me')
-      - if !@ldap
-        %div.indented
-          = link_to _("Forgotten username or password?"), new_password_reset_path
-      = submit_tag _('Log In'), :class => 'submit dialogbutton'
+= content_for(:title) do
+  = project_name
+  = "-"
+  = default_title
+
+= content_for(:head) do
+  = csrf_meta_tag
+  / [if lt IE 9]
+    = include_javascripts  :html5
+  / [if IE]
+    = include_stylesheets :ie, :embed_assets => false
+
+= content_for(:stylesheets) do
+  = include_stylesheets :loginpage
+
+= content_for(:extra) do
+  %script{ :type => "text/javascript" }
+    -if protect_against_forgery?
+      :plain
+        var AUTH_TOKEN = #{form_authenticity_token.inspect};
