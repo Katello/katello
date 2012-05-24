@@ -14,8 +14,12 @@
 class SystemsController < ApplicationController
   include SystemsHelper
 
-  before_filter :find_system, :except =>[:index, :items, :environments, :bulk_destroy, :new, :create]
-  before_filter :find_systems, :only=>[:bulk_destroy]
+  before_filter :find_system, :except =>[:index, :items, :environments, :new, :create, :bulk_destroy,
+                                         :bulk_content_install, :bulk_content_update, :bulk_content_remove,
+                                         :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group,
+                                         :auto_complete]
+  before_filter :find_systems, :only=>[:bulk_destroy, :bulk_content_install, :bulk_content_update, :bulk_content_remove,
+                                       :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group]
 
   before_filter :find_environment, :only => [:environments, :new]
   before_filter :authorize
@@ -32,6 +36,7 @@ class SystemsController < ApplicationController
     any_readable = lambda{current_organization && System.any_readable?(current_organization)}
     delete_systems = lambda{@system.deletable?}
     bulk_delete_systems = lambda{@systems.collect{|s| false unless s.deletable?}.compact.empty?}
+    bulk_edit_systems = lambda{@systems.collect{|s| false unless s.editable?}.compact.empty?}
     register_system = lambda { current_organization && System.registerable?(@environment, current_organization) }
     items_test = lambda do
       if params[:env_id]
@@ -55,8 +60,18 @@ class SystemsController < ApplicationController
       :edit => read_system,
       :show => read_system,
       :facts => read_system,
+      :auto_complete => any_readable,
       :destroy=> delete_systems,
-      :bulk_destroy => bulk_delete_systems
+      :bulk_destroy => bulk_delete_systems,
+      :bulk_add_system_group => bulk_edit_systems,
+      :bulk_remove_system_group => bulk_edit_systems,
+      :bulk_content_install => bulk_edit_systems,
+      :bulk_content_update => bulk_edit_systems,
+      :bulk_content_remove => bulk_edit_systems,
+      :bulk_errata_install => bulk_edit_systems,
+      :system_groups => read_system,
+      :add_system_groups => edit_system,
+      :remove_system_groups => edit_system
     }
   end
 
@@ -73,7 +88,6 @@ class SystemsController < ApplicationController
         :update => update_check
     }
   end
-
 
   def new
     @system = System.new
@@ -129,6 +143,7 @@ class SystemsController < ApplicationController
   end
 
   def index
+    @system_groups = SystemGroup.where(:organization_id => current_organization).where(:locked=>false).order(:name)
   end
 
   def environments
@@ -157,12 +172,28 @@ class SystemsController < ApplicationController
       find_environment
       filters = {:environment_id=>[params[:env_id]]}
     else
-      filters = {:environment_id=> KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
+      filters = readable_filters
     end
     render_panel_direct(System, @panel_options, search, params[:offset], order,
                         {:default_field => :name, :filter=>filters, :load=>true})
 
   end
+
+  def auto_complete
+    query = Katello::Search::filter_input query
+    query = "name_autocomplete:#{params[:term]}"
+    org = current_organization
+    env_ids = KTEnvironment.systems_readable(org).collect{|item| item.id}
+    filters = readable_filters
+    systems = System.search do
+      query do
+        string query
+      end
+      filter :terms, filters
+    end
+    render :json=>systems.map{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
+  end
+
 
   def split_order order
     if order
@@ -293,17 +324,6 @@ class SystemsController < ApplicationController
     render :partial => 'facts', :layout => "tupane_layout"
   end
 
-  def bulk_destroy
-    @systems.each{|sys|
-      sys.destroy
-    }
-    notice _("%s Systems Removed Successfully") % @systems.length
-    render :text=>""
-  rescue Exception => e
-    notice e, {:level => :error}
-    render :text=>e, :status=>500
-  end
-
   def destroy
     id = params[:id]
     system = find_system
@@ -320,11 +340,282 @@ class SystemsController < ApplicationController
     render :text=>e, :status=>500
   end
 
+  def bulk_destroy
+    @systems.each{|sys|
+      sys.destroy
+    }
+    notice _("%s Systems Removed Successfully") % @systems.length
+    render :text=>""
+  rescue Exception => e
+    notice e, {:level => :error}
+    render :text=>e, :status=>500
+  end
 
+  def bulk_add_system_group
+    successful_systems = []
+    failed_systems = []
+
+    unless params[:group_ids].blank?
+      @system_groups = SystemGroup.where(:id=>params[:group_ids])
+
+      # perform some pre-validation of the request
+      # e.g. are any of the groups not editable, locked or will their membership be exceeded by the request?
+      invalid_perms = []
+      group_locked = []
+      max_systems_exceeded = []
+      @system_groups.each do |system_group|
+        if !system_group.editable?
+          invalid_perms.push(system_group.name)
+        elsif system_group.locked
+          group_locked.push(system_group.name)
+        elsif (system_group.max_systems != SystemGroup::UNLIMITED_SYSTEMS) and ((system_group.systems.length + @systems.length) > system_group.max_systems)
+          max_systems_exceeded.push(system_group.name)
+        end
+      end
+      if !invalid_perms.empty?
+        raise _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
+      elsif !group_locked.empty?
+        raise _("System Group membership cannot be changed for locked group(s): %s") % group_locked.join(', ')
+      elsif !max_systems_exceeded.empty?
+        raise _("System Group maximum number of systems exceeded for group(s): %s") % max_systems_exceeded.join(', ')
+      end
+
+      @systems.each do |system|
+        begin
+          system.system_group_ids = (system.system_group_ids + @system_groups.collect{|g| g.id}).uniq
+          system.save!
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+      action = _("Systems Bulk Action: Add to system group(s): %s") % @system_groups.collect{|g| g.name}.join(', ')
+      notice_bulk_action action, successful_systems, failed_systems
+    end
+
+    render :nothing => true
+  end
+
+  def bulk_remove_system_group
+    successful_systems = []
+    failed_systems = []
+
+    unless params[:group_ids].blank?
+      @system_groups = SystemGroup.where(:id=>params[:group_ids])
+
+      # does the user have permission to modify the requested system groups?
+      invalid_perms = []
+      group_locked = []
+      @system_groups.each do |system_group|
+        if !system_group.editable?
+          invalid_perms.push(system_group.name)
+        elsif system_group.locked
+          group_locked.push(system_group.name)
+        end
+      end
+      if !invalid_perms.empty?
+        raise _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
+      elsif !group_locked.empty?
+        raise _("System Group membership cannot be changed for locked group(s): %s") % group_locked.join(', ')
+      end
+
+      @systems.each do |system|
+        begin
+          system.system_group_ids = (system.system_group_ids - @system_groups.collect{|g| g.id}).uniq
+          system.save!
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+      action = _("Systems Bulk Action: Remove from system group(s): %s") % @system_groups.collect{|g| g.name}.join(', ')
+      notice_bulk_action action, successful_systems, failed_systems
+    end
+
+    render :nothing => true
+  end
+
+  def bulk_content_install
+    successful_systems = []
+    failed_systems = []
+
+    if params[:packages].blank? and params[:groups].blank?
+      notice _("Systems Bulk Action: No package or package group names have been provided."), {:level => :error}
+      render :nothing => true and return
+    end
+
+    if !params[:packages].blank?
+      @systems.each do |system|
+        begin
+          system.install_packages params[:packages]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+      action_text = _("Systems Bulk Action: Schedule install of package(s): %s") % params[:packages].join(', ')
+
+    elsif !params[:groups].blank?
+      @systems.each do |system|
+        begin
+          system.install_package_groups params[:groups]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+      action_text = _("Systems Bulk Action: Schedule install of package group(s): %s") % params[:groups].join(', ')
+    end
+
+    notice_bulk_action action_text, successful_systems, failed_systems
+    render :nothing => true
+  end
+
+  def bulk_content_update
+    successful_systems = []
+    failed_systems = []
+
+    if !params[:groups].blank?
+      @systems.each do |system|
+        begin
+          system.install_package_groups params[:groups]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+      action_text = _("Systems Bulk Action: Schedule update of package group(s): %s") % params[:groups].join(', ')
+    else
+      @systems.each do |system|
+        begin
+          system.update_packages params[:packages]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+      params[:packages].blank? ?
+        action_text = _("Systems Bulk Action: Schedule update of all packages") :
+        action_text = _("Systems Bulk Action: Schedule update of package(s): %s") % params[:packages].join(', ')
+    end
+
+    notice_bulk_action action_text, successful_systems, failed_systems
+    render :nothing => true
+  end
+
+  def bulk_content_remove
+    successful_systems = []
+    failed_systems = []
+
+    if params[:packages].blank? and params[:groups].blank?
+      notice _("Systems Bulk Action: No package or package group names have been provided."), {:level => :error}
+      render :nothing => true and return
+    end
+
+    if !params[:packages].blank?
+      @systems.each do |system|
+        begin
+          system.uninstall_packages params[:packages]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+      action_text = _("Systems Bulk Action: Schedule uninstall of package(s): %s") % params[:packages].join(', ')
+    elsif !params[:groups].blank?
+      @systems.each do |system|
+        begin
+          system.uninstall_package_groups params[:groups]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+      action_text = _("Systems Bulk Action: Schedule uninstall of package group(s): %s") % params[:groups].join(', ')
+    end
+
+    notice_bulk_action action_text, successful_systems, failed_systems
+    render :nothing => true
+  end
+
+  def bulk_errata_install
+    successful_systems = []
+    failed_systems = []
+
+    if params[:errata].blank?
+      notice _("Systems Bulk Action: No errata IDs have been provided."), {:level => :error}
+      render :nothing => true and return
+    else
+      @systems.each do |system|
+        begin
+          system.install_errata params[:errata]
+          successful_systems.push(system.name)
+        rescue Exception => error
+          failed_systems.push(system.name)
+        end
+      end
+    end
+
+    action = _("Systems Bulk Action: Schedule install of errata(s): %s") % params[:errata].join(', ')
+    notice_bulk_action action, successful_systems, failed_systems
+    render :nothing => true
+  end
+
+  def system_groups
+    # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
+    @system_groups = SystemGroup.where(:organization_id=>current_organization).where(:locked=>false).
+        where('max_systems < ?', @system.system_groups.length).order(:name) - @system.system_groups
+    render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>@system.editable?}
+  end
+
+  def add_system_groups
+    unless params[:group_ids].blank?
+      ids = params[:group_ids].collect{|g| g.to_i} - @system.system_group_ids #ignore dups
+      @system_groups = SystemGroup.where(:id=>ids)
+      @system.system_group_ids = (@system.system_group_ids + @system_groups.collect{|g| g.id}).uniq
+      @system.save!
+    end
+    notice _("System '%s' was updated.") % @system["name"]
+    render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}} and return
+  rescue Exception => e
+    notice e, {:level => :error}
+    render :text=>e, :status=>500
+  end
+
+  def remove_system_groups
+    system_groups = SystemGroup.where(:id=>params[:group_ids]).collect{|g| g.id}
+    @system.system_group_ids = (@system.system_group_ids - system_groups).uniq
+    @system.save!
+
+    notice _("System '%s' was updated.") % @system["name"]
+    render :nothing => true
+  rescue Exception => e
+    notice e, {:level => :error}
+    render :text=>e, :status=>500
+  end
 
   private
 
   include SortColumnList
+
+  def notice_bulk_action action, successful_systems, failed_systems
+    # generate a notice for a bulk action
+
+    success_msg = _("Successful for system(s): ")
+    failure_msg = _("Failed for system(s):")
+    newline = '<br />'
+
+    if failed_systems.empty?
+      notice (action + newline + success_msg + successful_systems.join(', '))
+    else
+      if successful_systems.empty?
+        notice((action + newline + failure_msg + failed_systems.join(', ')), {:level => :error})
+      else
+        notice((action + newline + success_msg + successful_systems.join(', ') + newline + failure_msg + failed_systems.join(',')),
+               {:level => :error})
+      end
+    end
+  end
 
   def find_environment
     if current_organization
@@ -357,7 +648,7 @@ class SystemsController < ApplicationController
       :list_partial => 'systems/list_systems',
       :ajax_load  => true,
       :ajax_scroll => items_systems_path(),
-      :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil,
+      :actions => System.any_deletable?(@environment, current_organization) ? 'actions' : nil,
       :initial_action => :subscriptions,
       :search_class=>System,
       :disable_create=> current_organization.environments.length == 0 ? "At least one environment is required to create or register systems in your current organization." : false
@@ -388,6 +679,14 @@ class SystemsController < ApplicationController
 
   def controller_display_name
     return 'system'
+  end
+
+  #array constructing a filter
+  # to filter readable systems that can be
+  # passed to search
+  def readable_filters
+    {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id},
+     :system_group_ids=>SystemGroup.systems_readable(current_organization).collect{|item| item.id}}
   end
 
   def search_filter

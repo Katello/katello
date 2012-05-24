@@ -351,13 +351,15 @@ class ApplicationController < ActionController::Base
   end
 
   #verify if the specific object with the given id, matches a given search string
-  def search_validate(obj_class, id, search)
+  def search_validate(obj_class, id, search, default=:name)
     obj_class.index.refresh
     search = '*' if search.nil? || search == ''
     search = Katello::Search::filter_input search
+    query_options = {}
+    query_options[:default_field] = default if default
 
     results = obj_class.search do
-      query { string search}
+      query { string search, query_options}
       filter :terms, :id=>[id]
     end
     results.total > 0
@@ -445,7 +447,6 @@ class ApplicationController < ActionController::Base
     options[:total_count] ||= results.empty? ? 0 : results.total
     options[:total_results] = total
     options[:collection] = results
-    
     @items = results
 
     if options[:list_partial]

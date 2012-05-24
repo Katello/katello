@@ -29,6 +29,8 @@ describe Api::PermissionsController do
   let(:perm_id) { 456 }
 
   before (:each) do
+    disable_org_orchestration
+    @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     @role = Role.new(:name => "test_role", :description=> "role description")
     @perm = Permission.new(:name => "permission_x", :description => "permission description", :role => @role)
     Role.stub(:find).with(role_id).and_return(@role)
@@ -72,7 +74,7 @@ describe Api::PermissionsController do
     let(:perm_name) { 'permission_y' }
     let(:perm_desc) { 'permission_y description' }
     let(:resource_type) { 'environments' }
-    let(:perm_params) { {:name => perm_name, :description => perm_desc, 'type' => resource_type, 'verbs' => [], 'tags' => [], :role_id => role_id} }
+    let(:perm_params) { {:organization_id=>@org.cp_key, :name => perm_name, :description => perm_desc, 'type' => resource_type, 'verbs' => [], 'tags' => [], :role_id => role_id} }
     let(:action) { :create }
     let(:req) { post :create, perm_params }
     let(:authorized_user) { user_with_create_permissions }
@@ -93,7 +95,8 @@ describe Api::PermissionsController do
             :name => perm_name,
             :description => perm_desc,
             :role => @role,
-            :resource_type => @resource_type
+            :resource_type => @resource_type,
+            :organization=>@org
         }
 
         Permission.should_receive(:create!).with(hash_including(expected_params))
