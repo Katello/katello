@@ -83,11 +83,15 @@ class SystemGroup < ActiveRecord::Base
     items(org, [:update])
   }
   scope :systems_readable, lambda{|org|
-    if  org.systems_readable?
-      where(:organization_id => org)
-    else
       SystemGroup.items(org, SYSTEM_READ_PERMS)
-    end
+  }
+
+  scope :systems_editable, lambda{|org|
+      SystemGroup.items(org, [:update_systems])
+  }
+
+  scope :systems_deletable, lambda{|org|
+      SystemGroup.items(org, [:delete_systems])
   }
 
   def self.creatable? org
