@@ -108,7 +108,7 @@ KT.systems_page = function() {
     },
     registerActions = function() {
         var removeSystem = $(".panel_action[data-id=remove_systems]"),
-            package = $(".panel_action[data-id=systems_package_action]"),
+            pkg = $(".panel_action[data-id=systems_package_action]"),
             errata = $(".panel_action[data-id=systems_errata_action]"),
             system_group = $(".panel_action[data-id=systems_system_groups_action]");
 
@@ -141,7 +141,7 @@ KT.systems_page = function() {
                     $('#systems_action_packages').attr('disabled', true);
                     $('#systems_action_package_groups').attr('disabled', true);
                     $('.request_action.package').attr('disabled', true);
-                    package.find('.validation_error').hide();
+                    pkg.find('.validation_error').hide();
                 },
                 valid_input_cb: function(request_action) {
                     // If the user hasn't provided the necessary inputs, generate an error
@@ -149,8 +149,8 @@ KT.systems_page = function() {
                         content_type_selected = $("input[name=systems_action]:checked"),
                         content_id = content_type_selected.attr('id'),
                         content_input = $.trim($('#packages_input').val()),
-                        content_error = package.find('.validation_error'),
-                        confirmation_text = package.find('.confirmation_text');
+                        content_error = pkg.find('.validation_error'),
+                        confirmation_text = pkg.find('.confirmation_text');
 
                     if (content_type_selected.length === 0) {
                         // an content type hasn't been selected
