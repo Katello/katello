@@ -121,6 +121,8 @@ class List(ProductAction):
                        help=_('environment name eg: production (default: Library)'))
         parser.add_option('--provider', dest='prov',
                        help=_("provider name, lists provider's product in the Library"))
+        parser.add_option('--all', dest='all', action='store_true',
+                       help=_("list marketing products (hidden by default)"))
 
     def check_options(self, validator):
         validator.require('org')
@@ -129,6 +131,7 @@ class List(ProductAction):
         org_name = self.get_option('org')
         env_name = self.get_option('env')
         prov_name = self.get_option('prov')
+        all = self.get_option('all')
 
         self.printer.add_column('id')
         self.printer.add_column('name')
@@ -149,6 +152,15 @@ class List(ProductAction):
 
             self.printer.set_header(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
             prods = self.api.products_by_env(env['id'])
+
+        # hide marketing products by default
+        if not all:
+            def isMarketingProduct(p):
+                try:
+                    return not p["marketing_product"]
+                except:
+                    return True
+            prods = filter(isMarketingProduct, prods)
 
         self.printer.print_items(prods)
         return os.EX_OK
