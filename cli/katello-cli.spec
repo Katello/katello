@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.36
+Version:       0.2.37
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 
@@ -108,6 +108,24 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.37-1
+- 824069 - adding new parameter --all to cli product list
+- cli - workaround for error when action was not found This commit fixes error
+  "object has no attribute 'parser'" appearing after attempt to call a non-
+  existing action. The error is gone but classes Command and KatelloCLI need
+  more cleanup. There's redundant code and they touch each other's
+  responsibility.
+- cli - fix for missing section 'options' client.conf Some versions of
+  OptionParser throw error when you try to iterate items from non-existing
+  section.
+- cli validator - complete unit tests
+- cli - validator and parser moved from class to local variables This helps the
+  code to be more testable.
+- cli - fix for wrong param validation in system register
+- cli - CLITestCase divided into two classes
+- cli - unit tests for required options simplified
+- cli - methods for validation extracted from cli Action
+
 * Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.36-1
 - rpm review - katello-cli review preparation
 
