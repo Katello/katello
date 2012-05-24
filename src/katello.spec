@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.36
+Version:        0.2.39
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -106,6 +106,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
+BuildRequires:  converge-ui-devel
 
 %description common
 Common bits for all Katello instances
@@ -160,6 +161,10 @@ Katello connection classes for the Candlepin backend
 %setup -q
 
 %build
+
+#copy converge-ui
+cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
+
 #configure Bundler
 rm -f Gemfile.lock
 sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
@@ -326,8 +331,8 @@ fi
 %defattr(-,root,root)
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
-%config %{_sysconfdir}/%{name}/thin.yml
-%config %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%config(noreplace) %{_sysconfdir}/%{name}/thin.yml
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config %{_sysconfdir}/logrotate.d/%{name}-jobs
@@ -373,6 +378,68 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu May 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.39-1
+- 824069 - adding marketing_product flag to product
+- 806353 - The time selector widget on the Sync Plans page will no longer get
+  stuck on the page and prevent clicking of the save button.
+- 821528 - fixing %%config on httpd.conf for RPM upgrades
+
+* Mon May 21 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.38-1
+- Fixes failing users controller spec tests.
+- Fixes for failing spec tests as part of the merge of new UI changes.
+- 822069 - Making candlepin proxy DELETE return a body for sub-man consumer
+  delete methods
+
+* Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.37-1
+- removing mod_authz_ldap from dependencies
+- cli registration regression with aks
+- Updates converge-ui for styling fix.
+- Updates converge-ui for latest bug fixes and tagged version.
+- Updates to latest converge-ui for bug fixes.
+- Fixed hover menu setup.
+- Patch to render sub menu main
+- Updating the version of converge-ui.
+- Fix for import path change.
+- Updates to spec file for changes in converge-ui-devel.
+- Hacky fix to show submenus on hover.
+- Updates to include missing body tag id for each major section. Updates
+  converge-ui.
+- Fixes another issue with panel sliding out incorrectly due to changes in left
+  offsets.
+- Updates converge-ui.
+- Adds changes to footer to bring i18n text into project and out of converge-
+  ui.
+- Fix for panel opening and closing in the wrong spot:    Due to the panel
+  being relative to the container #maincontent   instead of being relative to
+  the container #maincontent.maincontent
+- Fix for a very minor typo in the CSS.
+- IE Stickyfooter hack.
+- Changes to accomodate more stuff from UXD.
+- UI Remodel - Adds updates to widget styling.
+- UI Remodel - Cleans up footer and adds styling to conform versioning into
+  footer.
+- UI Remodel - Updates the footer section and maincontent to new look.
+- UI Remodel - Update to converge-ui.
+- UI Remodel - Updates to header layout and new logo.
+- UI Remodel - Updates converge-ui and adjusts some placement of tupane
+  entities with new look.
+- UI Remodel - Switched symlinks to converge-ui instead of lib to adopt a
+  pattern of namespacing that will be consistent across implementations.
+- UI Remodel - Adds updated version of converge-ui.  Switches default submodule
+  config to read-only repository.
+- adding converge-ui to build process
+- UI Remodel - Moves jquery ui out of assets and updates configuration.
+- UI Remodel - Typo fix for layout name.
+- UI Remodel - Large UI change to use new shell and header from the converge-ui
+  layouts.  Changes to scss to include new scss and modify existing to
+  accomodate new shell.  Some re-organization of assets.
+- UI Remodel - Removes all jquery plugins and updates paths to point at library
+  of plugins in central asset repo.
+- UI Remodel - Adds first symlink to javascript libraries coming from UI
+  library.
+- UI Remodel - Adding initial commit of a git submodule that contains common UI
+  elements.
+
 * Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.36-1
 - encryption - fix problems with logger not being initialized
 - encryption - fix running in development environment

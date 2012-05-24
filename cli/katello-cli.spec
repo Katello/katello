@@ -19,9 +19,11 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.34
+Version:       0.2.37
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
+
+# we need to keep RHEL compatibility
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:      %{base_name}-cli-common
@@ -29,8 +31,8 @@ BuildArch:     noarch
 
 
 %description
-Provides a client package for managing application life-cycle
-for Linux systems
+Provides a client package for managing application life-cycle for 
+Linux systems with Katello
 
 %package common
 Summary:       Common Katello client bits
@@ -57,6 +59,8 @@ PYTHONPATH=../src python ../src/katello/client/utils/usage.py >katello-usage.txt
 sed -e '/^THE_USAGE/{r katello-usage.txt' -e 'd}' katello.pod |\
     sed -e 's/THE_VERSION/%{version}/g' |\
     /usr/bin/pod2man --name=katello -c "Katello Reference" --section=1 --release=%{version} - katello.man1
+sed -e 's/THE_VERSION/%{version}/g' katello-debug-certificates.pod |\
+/usr/bin/pod2man --name=katello -c "Katello Reference" --section=1 --release=%{version} - katello-debug-certificates.man1
 popd
 
 %install
@@ -80,8 +84,13 @@ install -pm 0644 src/%{base_name}/client/core/*.py $RPM_BUILD_ROOT%{python_sitel
 install -pm 0644 src/%{base_name}/client/utils/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/utils/
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/%{base_name}.man1 %{buildroot}%{_mandir}/man1/%{base_name}.1
+install -m 0644 man/%{base_name}-debug-certificates.man1 %{buildroot}%{_mandir}/man1/%{base_name}-debug-certificates.1
+
+# several scripts are executable
+chmod 755 $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/main.py
 
 
+# we need to keep RHEL compatibility
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -91,6 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
 %doc README LICENSE
 %{_mandir}/man1/%{base_name}.1*
+%{_mandir}/man1/%{base_name}-debug-certificates.1*
 
 %files common
 %defattr(-,root,root)
@@ -98,6 +108,30 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.37-1
+- 824069 - adding new parameter --all to cli product list
+- cli - workaround for error when action was not found This commit fixes error
+  "object has no attribute 'parser'" appearing after attempt to call a non-
+  existing action. The error is gone but classes Command and KatelloCLI need
+  more cleanup. There's redundant code and they touch each other's
+  responsibility.
+- cli - fix for missing section 'options' client.conf Some versions of
+  OptionParser throw error when you try to iterate items from non-existing
+  section.
+- cli validator - complete unit tests
+- cli - validator and parser moved from class to local variables This helps the
+  code to be more testable.
+- cli - fix for wrong param validation in system register
+- cli - CLITestCase divided into two classes
+- cli - unit tests for required options simplified
+- cli - methods for validation extracted from cli Action
+
+* Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.36-1
+- rpm review - katello-cli review preparation
+
+* Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.35-1
+- cli registration regression with aks
+
 * Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.34-1
 - cli_man - katello(1) man page and generator
 - Changing wording for hypervisor deletion record delete
@@ -307,9 +341,6 @@ rm -rf $RPM_BUILD_ROOT
   (tstrachota@redhat.com)
 - template export - disabled exporting templates from Locker envs
   (tstrachota@redhat.com)
-
-* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.13-1
-- 
 
 * Tue Nov 15 2011 Shannon Hughes <shughes@redhat.com> 0.1.12-1
 - Merge branch 'master' into password_reset (bbuckingham@redhat.com)

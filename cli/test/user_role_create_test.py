@@ -12,20 +12,17 @@ from katello.client.core.user_role import Create
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #required: name
     #optional: description
-    def setUp(self):
-        self.set_action(Create())
-        self.mock_options()
+    action = Create()
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create'])
+    disallowed_options = [
+        (),
+    ]
 
-    def test_no_error_if_name_provided(self):
-        self.action.process_options(['create', '--name=role1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--name=role1', ),
+        ('--name=role1', '--description=desc1'),
+    ]
 
-    def test_no_error_if_name_and_desc_provided(self):
-        self.action.process_options(['create', '--name=role1', '--description=desc1'])
-        self.assertEqual(len(self.action.optErrors), 0)
 
 
 class UserRoleCreateTest(CLIActionTestCase):

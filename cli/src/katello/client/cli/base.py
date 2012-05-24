@@ -228,7 +228,7 @@ class KatelloCLI(object):
             # process command and action options before setup_credentials
             # to catch errors before accessing Kerberos
             command_args = args[1:]
-            command.process_options(command_args)
+            command.process_options(command.create_parser(), command_args)
             self.setup_server()
             action = command.extract_action(command_args)
             if not action or action.require_credentials():

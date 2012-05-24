@@ -274,8 +274,8 @@ class SystemsController < ApplicationController
     rescue Exception => error
       notice error.to_s, {:level => :error, :persist => false}
       respond_to do |format|
-        format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
-        format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
+        format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
+        format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
       end
     end
   end

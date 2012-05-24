@@ -13,43 +13,25 @@ from katello.client.core.errata import List
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
 
-    def setUp(self):
-        self.set_action(List())
-        self.mock_options()
+    action = List()
 
-    def test_repo_with_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['--repo=repo-123', '--product=product-123'])
 
-    def test_repo_with_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['--repo=repo-123', '--org=org-123'])
+    disallowed_options = [
+        ('--repo=repo-123', '--product=product-123'),
+        ('--repo=repo-123', '--org=org-123'),
+        ('--product=product-123', ),
+        (),
+    ]
 
-    def test_product_with_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['--product=product-123'])
+    allowed_options = [
+        ('--repo=repo-123', '--product=product-123', '--org=org-123'),
+        ('--repo_id=repo-123', ),
+        ('--org=org-123', ),
+        ('--org=org-123', '--environment=env-123', '--product=product-123'),
+        ('--type=enhancements', '--org=org-123'),
+        ('--severity=critical', '--org=org-123'),
+    ]
 
-    def test_repo_id_neither_org_provided_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, [])
-
-    def test_no_error_if_all_required_provided(self):
-        self.action.process_options(['--repo=repo-123', '--product=product-123', '--org=org-123'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_repo_id(self):
-        self.action.process_options(['--repo_id=repo-123'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_org_provided(self):
-        self.action.process_options(['--org=org-123'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_org_environment_and_product(self):
-        self.action.process_options(['--org=org-123', '--environment=env-123', '--product=product-123'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_accept_type_filter(self):
-        self.action.process_options(['--type=enhancements', '--org=org-123'])
-        self.assertEqual(len(self.action.optErrors), 0)
-        self.action.process_options(['--severity=critical', '--org=org-123'])
-        self.assertEqual(len(self.action.optErrors), 0)
 
 class ErrataListTest(CLIActionTestCase):
 

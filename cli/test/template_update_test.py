@@ -13,19 +13,16 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: organization, name
     #optional: NONE
 
-    def setUp(self):
-        self.set_action(Update())
-        self.mock_options()
+    action = Update()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['update', '--name=template_1'])
+    disallowed_options = [
+        ('--name=template_1', ),
+        ('--org=ACME', ),
+    ]
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['update', '--org=ACME'])
-
-    def test_no_error_if_org_and_name_provided(self):
-        self.action.process_options(['list', '--org=ACME', '--name=template_1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=template_1'),
+    ]
 
 
 class TemplateUpdateTest(CLIActionTestCase):

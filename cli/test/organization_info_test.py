@@ -11,16 +11,16 @@ from katello.client.core.organization import Info
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #required: name
-    def setUp(self):
-        self.set_action(Info())
-        self.mock_options()
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['info'])
+    action = Info()
 
-    def test_no_error_if_name_provided(self):
-        self.action.process_options(['info', '--name=role1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    disallowed_options = [
+        ()
+    ]
+
+    allowed_options = [
+        ('--name=role1', )
+    ]
 
 
 class OrgInfoTest(CLIActionTestCase):
