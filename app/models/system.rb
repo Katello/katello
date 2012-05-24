@@ -216,7 +216,7 @@ class System < ActiveRecord::Base
     {:facts=>self.facts, :organization_id=>self.organization.id,
      :name_sort=>name.downcase, :name_autocomplete=>self.name,
      :system_group=>self.system_groups.collect{|g| g.name},
-     :system_group_ids=>self.system_groups.collect{|g| g.id}
+     :system_group_ids=>self.system_group_ids
     }
   end
 
