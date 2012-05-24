@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.38
+Version:        0.2.39
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -378,6 +378,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu May 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.39-1
+- 824069 - adding marketing_product flag to product
+- 806353 - The time selector widget on the Sync Plans page will no longer get
+  stuck on the page and prevent clicking of the save button.
+- 821528 - fixing %%config on httpd.conf for RPM upgrades
+
 * Mon May 21 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.38-1
 - Fixes failing users controller spec tests.
 - Fixes for failing spec tests as part of the merge of new UI changes.
