@@ -321,7 +321,7 @@ class AddSystems(SystemGroupAction):
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         parser.add_option('--system_uuids', dest='system_uuids',
-                              help=_("list of system uuids (required)"))
+                              help=_("comma separated list of system uuids (required)"))
 
     def check_options(self, validator):
         validator.require(('name', 'org', 'system_uuids'))
@@ -357,7 +357,7 @@ class RemoveSystems(SystemGroupAction):
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         parser.add_option('--system_uuids', dest='system_uuids',
-                              help=_("list of system uuids (required)"))
+                              help=_("comma separated list of system uuids (required)"))
 
     def check_options(self, validator):
         validator.require(('name', 'org', 'system_uuids'))

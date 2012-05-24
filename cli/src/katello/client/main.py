@@ -190,8 +190,8 @@ def setup_admin(admin):
     system_cmd.add_action('tasks', system.TasksList())
     system_cmd.add_action('task', system.TaskInfo())
     system_cmd.add_action('releases', system.Releases())
-    system_cmd.add_action('add_system_groups', system.AddSystemGroups())
-    system_cmd.add_action('remove_system_groups', system.RemoveSystemGroups())
+    system_cmd.add_action('add_to_groups', system.AddSystemGroups())
+    system_cmd.add_action('remove_from_groups', system.RemoveSystemGroups())
     system_cmd.add_action('remove_deletion', system.RemoveDeletion())
     admin.add_command('system', system_cmd)
 

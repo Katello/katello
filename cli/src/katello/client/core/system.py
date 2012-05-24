@@ -720,7 +720,7 @@ class AddSystemGroups(SystemAction):
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         parser.add_option('--system_groups', dest='system_group_names',
-                              help=_("list of system groups (required)"))
+                              help=_("comma separated list of system group names (required)"))
 
     def check_options(self, validator):
         validator.require(('org', 'name', 'system_group_names'))
@@ -763,7 +763,7 @@ class RemoveSystemGroups(SystemAction):
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         parser.add_option('--system_groups', dest='system_group_names',
-                              help=_("list of system groups (required)"))
+                              help=_("comma separated list of system group names (required)"))
 
     def check_options(self, validator):
         validator.require(('org', 'name', 'system_group_names'))
