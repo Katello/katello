@@ -588,6 +588,79 @@ module Resources
       end
     end
 
+  class ConsumerGroup < PulpResource
+    class << self
+      def create attrs
+        response = self.post path, attrs.to_json, self.default_headers
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def destroy id
+        self.delete(path(id), self.default_headers).code.to_i
+      end
+
+      def find id
+        response = self.get path(id), self.default_headers
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def add_consumer id, consumer_id
+        self.post "#{path(id)}add_consumer/", consumer_id.to_json, self.default_headers
+      end
+
+      def delete_consumer id, consumer_id
+        self.post "#{path(id)}delete_consumer/", consumer_id.to_json, self.default_headers
+      end
+
+      def install_packages id, package_names
+        url = path(id) + "installpackages/"
+        attrs = {:packagenames => package_names}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def uninstall_packages id, package_names
+        url = path(id) + "uninstallpackages/"
+        attrs = {:packagenames => package_names}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def update_packages id, package_names
+        url = path(id) + "updatepackages/"
+        attrs = {:packagenames => package_names}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def install_package_groups id, package_groups
+        url = path(id) + "installpackagegroups/"
+        attrs = {:grpids => package_groups}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def uninstall_package_groups id, package_groups
+        url = path(id) + "uninstallpackagegroups/"
+        attrs = {:grpids => package_groups}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def install_errata id, errata_ids
+        url = path(id) + "installerrata/"
+        attrs = { :errataids => errata_ids }
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def path(id=nil)
+        groups = self.path_with_prefix("/consumergroups/")
+        id.nil? ? groups : groups + "#{id}/"
+      end
+    end
+  end
+
     class Filter < PulpResource
       class << self
         def create attrs

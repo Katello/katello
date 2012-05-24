@@ -353,6 +353,388 @@ describe SystemsController do
       end
     end
 
+    describe "system groups" do
+      before (:each) do
+        @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+
+        disable_consumer_group_orchestration
+        @group1 = SystemGroup.create!(:name=>"test_group1", :organization=>@organization)
+        @group2 = SystemGroup.create!(:name=>"test_group2", :organization=>@organization)
+      end
+
+      describe "listing/viewing" do
+        it "retrieves the system groups to display" do
+          SystemGroup.should_receive(:where).with(:organization_id => @organization)
+          get :system_groups, :id => @system.id
+        end
+
+        it "renders the system_group partial" do
+          get :system_groups, :id => @system.id
+          response.should render_template(:partial => "_system_groups")
+        end
+
+        it "should be successful" do
+          get :system_groups, :id => @system.id
+          response.should be_success
+        end
+      end
+
+      describe "add system groups" do
+        it "should add the system to the groups provided" do
+          assert System.find(@system.id).system_groups.size == 0
+          assert SystemGroup.find(@group1.id).systems.size == 0
+          assert SystemGroup.find(@group2.id).systems.size == 0
+          put :add_system_groups, {:id => @system.id, :group_ids => [@group1.id, @group2.id]}
+          assert System.find(@system.id).system_groups.size == 2
+          assert SystemGroup.find(@group1.id).systems.size == 1
+          assert SystemGroup.find(@group2.id).systems.size == 1
+          response.should be_success
+        end
+
+        it "should generate a notice on success" do
+          controller.should_receive(:notice)
+          put :add_system_groups, {:id => @system.id, :group_ids => [@group1.id, @group2.id]}
+        end
+
+        it "should generate an error notice, if the group is locked" do
+          @group1.locked = true
+          @group1.save!
+          controller.should_receive(:notice).with(anything, hash_including(:level => :error))
+          put :add_system_groups, {:id => @system.id, :group_ids => [@group1.id]}
+          response.should_not be_success
+        end
+
+        it "should generate an error notice, if the group has reached max membership" do
+          @system1 = System.create!(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+          @group1.max_systems = 1
+          @group1.systems << @system1
+          @group1.save!
+          controller.should_receive(:notice).with(anything, hash_including(:level => :error))
+          put :add_system_groups, {:id => @system.id, :group_ids => [@group1.id]}
+          response.should_not be_success
+        end
+      end
+
+      describe "remove system groups" do
+        before (:each) do
+          @system.system_groups << [@group1, @group2]
+          @system.save!
+        end
+
+        it "should remove the system from the groups provided" do
+          assert System.find(@system.id).system_groups.size == 2
+          assert SystemGroup.find(@group1.id).systems.size == 1
+          assert SystemGroup.find(@group2.id).systems.size == 1
+          put :remove_system_groups, {:id => @system.id, :group_ids => [@group1.id, @group2.id]}
+          assert System.find(@system.id).system_groups.size == 0
+          assert SystemGroup.find(@group1.id).systems.size == 0
+          assert SystemGroup.find(@group2.id).systems.size == 0
+          response.should be_success
+        end
+
+        it "should generate a notice on success" do
+          controller.should_receive(:notice)
+          put :remove_system_groups, {:id => @system.id, :group_ids => [@group1.id]}
+        end
+
+        it "should generate an error notice, if the group is locked" do
+          @group1.locked = true
+          @group1.save!
+          controller.should_receive(:notice).with(anything, hash_including(:level => :error))
+          put :remove_system_groups, {:id => @system.id, :group_ids => [@group1.id]}
+          response.should_not be_success
+        end
+      end
+    end
+
+    describe "bulk actions" do
+      describe "add system group" do
+        before (:each) do
+          @system1 = System.create!(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+          @system2 = System.create!(:name=>"system2", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+
+          disable_consumer_group_orchestration
+          @group1 = SystemGroup.create!(:name=>"test_group1", :organization=>@organization)
+          @group2 = SystemGroup.create!(:name=>"test_group2", :organization=>@organization)
+        end
+
+        it "should add the list of systems to the groups provided" do
+          assert System.find(@system1.id).system_groups.size == 0
+          assert System.find(@system2.id).system_groups.size == 0
+          assert SystemGroup.find(@group1.id).systems.size == 0
+          assert SystemGroup.find(@group2.id).systems.size == 0
+          put :bulk_add_system_group, {:ids => [@system1.id, @system2.id], :group_ids => [@group1.id, @group2.id]}
+          assert System.find(@system1.id).system_groups.size == 2
+          assert System.find(@system2.id).system_groups.size == 2
+          assert SystemGroup.find(@group1.id).systems.size == 2
+          assert SystemGroup.find(@group2.id).systems.size == 2
+          response.should be_success
+        end
+
+        it "should generate a notice on success" do
+          controller.should_receive(:notice)
+          put :bulk_add_system_group, {:ids => [@system1.id, @system2.id], :group_ids => [@group1.id, @group2.id]}
+        end
+
+        it "should generate an error notice, if the group is locked" do
+          @group1.locked = true
+          @group1.save!
+          controller.should_receive(:notice).with(anything, hash_including(:level => :error))
+          put :bulk_add_system_group, {:ids => [@system1.id], :group_ids => [@group1.id]}
+          response.should_not be_success
+        end
+
+        it "should generate an error notice, if the group has reached max membership" do
+          @group1.max_systems = 1
+          @group1.systems << @system1
+          @group1.save!
+          controller.should_receive(:notice).with(anything, hash_including(:level => :error))
+          put :bulk_add_system_group, {:ids => [@system2.id], :group_ids => [@group1.id]}
+          response.should_not be_success
+        end
+      end
+
+      describe "remove system group" do
+        before (:each) do
+          @system1 = System.create!(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+          @system2 = System.create!(:name=>"system2", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+
+          disable_consumer_group_orchestration
+          @group1 = SystemGroup.new(:name=>"test_group1", :organization=>@organization)
+          @group1.systems << [@system1, @system2]
+          @group1.save!
+          @group2 = SystemGroup.new(:name=>"test_group2", :organization=>@organization)
+          @group2.systems << [@system1, @system2]
+          @group2.save!
+        end
+
+        it "should remove the list of systems from the groups provided" do
+          assert System.find(@system1.id).system_groups.size == 2
+          assert System.find(@system2.id).system_groups.size == 2
+          assert SystemGroup.find(@group1.id).systems.size == 2
+          assert SystemGroup.find(@group2.id).systems.size == 2
+          put :bulk_remove_system_group, {:ids => [@system1.id, @system2.id], :group_ids => [@group1.id, @group2.id]}
+          assert System.find(@system1.id).system_groups.size == 0
+          assert System.find(@system2.id).system_groups.size == 0
+          assert SystemGroup.find(@group1.id).systems.size == 0
+          assert SystemGroup.find(@group2.id).systems.size == 0
+          response.should be_success
+        end
+
+        it "should generate a notice on success" do
+          controller.should_receive(:notice)
+          put :bulk_remove_system_group, {:ids => [@system1.id], :group_ids => [@group1.id]}
+        end
+
+        it "should generate an error notice, if the group is locked" do
+          @group1.locked = true
+          @group1.save!
+          controller.should_receive(:notice).with(anything, hash_including(:level => :error))
+          put :bulk_remove_system_group, {:ids => [@system1.id], :group_ids => [@group1.id]}
+          response.should_not be_success
+        end
+      end
+
+      describe 'package actions' do
+        before (:each) do
+          @system1 = System.create!(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+          @system2 = System.create!(:name=>"system2", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+          System.stub(:find).and_return([@system1, @system2])
+        end
+
+        describe 'add packages' do
+          pending 'should support receiving list of package names' do
+            @system1.should_receive(:install_packages).with(["pkg1", "pkg2", "pkg3"])
+            @system2.should_receive(:install_packages).with(["pkg1", "pkg2", "pkg3"])
+            put :bulk_content_install, :ids => [@system1.id], :packages => ["pkg1", "pkg2", "pkg3"]
+            response.should be_success
+          end
+
+          pending 'should generate a notice on success' do
+            controller.should_receive(:notice)
+            @system1.stub!(:install_packages)
+            put :bulk_content_install, :ids => [@system1.id], :packages => ["pkg1"]
+            response.should be_success
+          end
+
+          it 'should generate an error notice, if no package names provided' do
+            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            @system1.should_not_receive(:install_packages)
+            put :bulk_content_install, :ids => [@system1.id], :packages => []
+            response.should be_success
+          end
+
+          it 'should return an error notice, if no packages structure provided' do
+            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            @system.should_not_receive(:install_packages)
+            put :bulk_content_install, :ids => [@system1.id]
+            response.should be_success
+          end
+        end
+
+        describe 'add package groups' do
+          pending 'should support receiving list of group names' do
+            @system1.should_receive(:install_package_groups).with(["grp1", "grp2", "grp3"])
+            @system2.should_receive(:install_package_groups).with(["grp1", "grp2", "grp3"])
+            put :bulk_content_install, :ids => [@system1.id], :groups => ["grp1", "grp2", "grp3"]
+            response.should be_success
+          end
+
+          pending 'should generate a notice on success' do
+            controller.should_receive(:notice)
+            @system1.stub!(:install_package_groups)
+            put :bulk_content_install, :ids => [@system1.id], :groups => ["grp1"]
+            response.should be_success
+          end
+
+          it 'should generate an error notice, if no group names provided' do
+            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            @system1.should_not_receive(:install_package_groups)
+            put :bulk_content_install, :ids => [@system1.id], :groups => []
+            response.should be_success
+          end
+
+          it 'should return an error notice, if no groups structure provided' do
+            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            @system.should_not_receive(:install_package_groups)
+            put :bulk_content_install, :ids => [@system1.id]
+            response.should be_success
+          end
+        end
+
+        describe 'update packages' do
+          pending 'should support receiving list of package names' do
+            @system1.should_receive(:update_packages).with(["pkg1", "pkg2", "pkg3"])
+            @system2.should_receive(:update_packages).with(["pkg1", "pkg2", "pkg3"])
+            put :bulk_content_update, :ids => [@system1.id], :packages => ["pkg1", "pkg2", "pkg3"]
+            response.should be_success
+          end
+
+          pending 'should support receiving an empty list to support update-all' do
+            @system1.should_receive(:update_packages).with([])
+            @system2.should_receive(:update_packages).with([])
+            put :bulk_content_update, :ids => [@system1.id], :packages => []
+            response.should be_success
+          end
+
+          pending 'should generate a notice on success' do
+            controller.should_receive(:notice)
+            @system1.stub!(:update_packages)
+            put :bulk_content_update, :ids => [@system1.id], :packages => ["pkg1"]
+            response.should be_success
+          end
+        end
+
+        describe 'update package groups' do
+          pending 'should support receiving list of group names' do
+            @system1.should_receive(:install_package_groups).with(["grp1", "grp2", "grp3"])
+            @system2.should_receive(:install_package_groups).with(["grp1", "grp2", "grp3"])
+            put :bulk_content_update, :ids => [@system1.id], :groups => ["grp1", "grp2", "grp3"]
+            response.should be_success
+          end
+
+          pending 'should generate a notice on success' do
+            controller.should_receive(:notice)
+            @system1.stub!(:install_package_groups)
+            put :bulk_content_update, :ids => [@system1.id], :groups => ["grp1"]
+            response.should be_success
+          end
+        end
+
+        describe 'remove packages' do
+          pending 'should support receiving list of package names' do
+            @system1.should_receive(:uninstall_packages).with(["pkg1", "pkg2", "pkg3"])
+            @system2.should_receive(:uninstall_packages).with(["pkg1", "pkg2", "pkg3"])
+            put :bulk_content_remove, :ids => [@system1.id], :packages => ["pkg1", "pkg2", "pkg3"]
+            response.should be_success
+          end
+
+          pending 'should generate a notice on success' do
+            controller.should_receive(:notice)
+            @system1.stub!(:uninstall_packages)
+            put :bulk_content_remove, :ids => [@system1.id], :packages => ["pkg1"]
+            response.should be_success
+          end
+
+          it 'should generate an error notice, if no package names provided' do
+            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            @system1.should_not_receive(:uninstall_packages)
+            put :bulk_content_remove, :ids => [@system1.id], :packages => []
+            response.should be_success
+          end
+
+          it 'should return an error notice, if no packages structure provided' do
+            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            @system.should_not_receive(:uninstall_packages)
+            put :bulk_content_remove, :ids => [@system1.id]
+            response.should be_success
+          end
+        end
+
+        describe 'remove package groups' do
+          pending 'should support receiving list of group names' do
+            @system1.should_receive(:uninstall_packages_groups).with(["grp1", "grp2", "grp3"])
+            @system2.should_receive(:uninstall_packages_groups).with(["grp1", "grp2", "grp3"])
+            put :bulk_content_remove, :ids => [@system1.id], :groups => ["grp1", "grp2", "grp3"]
+            response.should be_success
+          end
+
+          pending 'should generate a notice on success' do
+            controller.should_receive(:notice)
+            @system1.stub!(:uninstall_packages_groups)
+            put :bulk_content_remove, :ids => [@system1.id], :groups => ["grp1"]
+            response.should be_success
+          end
+
+          it 'should generate an error notice, if no group names provided' do
+            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            @system1.should_not_receive(:uninstall_packages_groups)
+            put :bulk_content_remove, :ids => [@system1.id], :groups => []
+            response.should be_success
+          end
+
+          it 'should return an error notice, if no groups structure provided' do
+            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            @system.should_not_receive(:uninstall_packages_groups)
+            put :bulk_content_remove, :ids => [@system1.id]
+            response.should be_success
+          end
+        end
+
+        describe 'install errata' do
+          pending 'should support receiving list of errata' do
+            @system1.should_receive(:install_errata).with(["errata1", "errata2", "errata3"])
+            @system2.should_receive(:install_errata).with(["errata1", "errata2", "errata3"])
+            put :bulk_errata_install, :ids => [@system1.id], :errata => ["errata1", "errata2", "errata3"]
+            response.should be_success
+          end
+
+          pending 'should generate a notice on success' do
+            controller.should_receive(:notice)
+            @system1.stub!(:install_errata)
+            put :bulk_errata_install, :ids => [@system1.id], :errata => ["errata1"]
+            response.should be_success
+          end
+
+          it 'should generate an error notice, if no errata provided' do
+            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            @system1.should_not_receive(:install_errata)
+            put :bulk_errata_install, :ids => [@system1.id], :errata => []
+            response.should be_success
+          end
+
+          it 'should return an error notice, if no errata structure provided' do
+            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            @system.should_not_receive(:install_errata)
+            put :bulk_errata_install, :ids => [@system1.id]
+            response.should be_success
+          end
+        end
+
+      end
+
+    end
+
   end
 
 end

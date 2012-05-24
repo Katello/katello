@@ -1,5 +1,5 @@
 -errata.each do |e|
-  %tr{ :id => "system_errata_#{e.id}" }
+  %tr{ :id => "errata_#{e.id}" }
     - if editable
       %td
         = check_box_tag "errata_checkbox", e.id

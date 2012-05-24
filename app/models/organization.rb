@@ -41,6 +41,7 @@ class Organization < ActiveRecord::Base
   has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
   has_many :sync_plans, :dependent => :destroy, :inverse_of => :organization
+  has_many :system_groups, :dependent => :destroy, :inverse_of => :organization
 
   attr_accessor :statistics
 
@@ -114,6 +115,10 @@ class Organization < ActiveRecord::Base
 
   def systems_readable?
     User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
+  end
+
+  def systems_deletable?
+    User.allowed_to?([:delete_systems], :organizations, nil, self)
   end
 
   def systems_registerable?
