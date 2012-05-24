@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.24
+Version:        0.2.25
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -84,6 +84,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.25-1
+- 821532 - Removing extraneous hornetq files to fix candlepin upgrades
+- 824362 - workaround for mongodb/systemd Fedora bug
+- Adding users to katello group the puppet way
+
 * Mon May 21 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.24-1
 - Add exit_with to reconfigure attempt.
 
