@@ -24,21 +24,8 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     {
         "index" => {
             "analysis" => {
-                "filter" => {
-                    "ngram_filter"  => {
-                        "type"      => "edgeNGram",
-                        "side"      => "front",
-                        "min_gram"  => 1,
-                        "max_gram"  => 30
-                    }
-                },
-                "analyzer" => {
-                    "autcomplete_name_analyzer" => {
-                        "type"      => "custom",
-                        "tokenizer" => "keyword",
-                        "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
-                    }
-                }.merge(Katello::Search::custom_analzyers)
+                "filter" => Katello::Search::custom_filters,
+                "analyzer" =>Katello::Search::custom_analyzers
             }
         }
     }

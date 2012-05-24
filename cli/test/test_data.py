@@ -205,7 +205,7 @@ PRODUCTS = [
 
 COMMON_ASYNC_RESULT_SUCCESS = [
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": "{\"errors\":[None,None]}",
     "created_at": None,
     "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
     "updated_at": None,
@@ -274,7 +274,7 @@ SYNC_RESULT_WITHOUT_ERROR = [
     "start_time": "2011-08-25T14:42:16Z"
   },
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": "{\"errors\":[None,None]}",
     "created_at": None,
     "uuid": "6d523975-cf28-11e0-b196-f0def13c24e5",
     "updated_at": None,
@@ -960,3 +960,120 @@ FILTERS = [
     "organization_id": 1
   }
 ]
+
+SYSTEM_GROUPS = [
+    {
+        "description" : "This is my first system group.",
+        "updated_at" : "2012-04-26T19:59:46Z",
+        "pulp_id" : "ACME_Corporation-Test System Group 1-0cdaf879",
+        "locked" : False,
+        "created_at" : "2012-04-26T19:59:23Z",
+        "name" : "Test System Group 1",
+        "id" : 1,
+        "organization_id" : 1
+    },
+    {
+        "description" : "This is another system group.",
+        "updated_at" : "2012-04-26T19:59:46Z",
+        "pulp_id" : "ACME_Corporation-Test System Group 3-0adcf897",
+        "locked" : False,
+        "created_at" : "2012-04-27T19:59:23Z",
+        "name" : "Test System Group 2",
+        "id" : 2,
+        "organization_id" : 1
+    }
+]
+
+SYSTEMS = [
+  {
+    "guests": [
+
+    ],
+    "created_at": "2012-04-26T20:00:38Z",
+    "serviceLevel": "",
+    "name": "FakeSystem345",
+    "description": "Initial Registration Params",
+    "location": "None",
+    "updated_at": "2012-04-26T20:00:38Z",
+    "id": 1,
+    "environment": {
+      "created_at": "2012-04-20T14:01:22Z",
+      "name": "Dev",
+      "description": "",
+      "updated_at": "2012-04-20T14:01:22Z",
+      "prior_id": 1,
+      "organization": "ACME_Corporation",
+      "id": 5,
+      "library": False,
+      "organization_id": 1,
+      "prior": "Library"
+    },
+    "uuid": "d49f6d91-0bb3-43f0-9881-dc051fa818c7",
+    "activation_key": [
+
+    ],
+    "environment_id": 5,
+    "system_template_id": None
+  },
+  {
+    "guests": [
+    ],
+    "created_at": "2012-04-30T19:05:14Z",
+    "serviceLevel": "",
+    "name": "Winterfell",
+    "description": "Initial Registration Params",
+    "location": "None",
+    "updated_at": "2012-04-30T19:05:14Z",
+    "id": 2,
+    "environment": {
+      "created_at": "2012-04-20T14:01:22Z",
+      "name": "Dev",
+      "description": "",
+      "updated_at": "2012-04-20T14:01:22Z",
+      "prior_id": 1,
+      "organization": "ACME_Corporation",
+      "id": 5,
+      "library": False,
+      "organization_id": 1,
+      "prior": "Library"
+    },
+    "uuid": "92eb02a6-0d33-4f89-885c-55aebedaf0e1",
+    "activation_key": [
+
+    ],
+    "environment_id": 5,
+    "system_template_id": None
+  }
+]
+
+ACTIVATION_KEYS = [
+  {
+    "user_id": 1,
+    "created_at": "2012-05-03T17:19:49Z",
+    "name": "Test Key 1",
+    "updated_at": "2012-05-03T17:19:49Z",
+    "description": "This is my first activation key.",
+    "pools": [
+
+    ],
+    "id": 1,
+    "organization_id": 1,
+    "system_template_id": None,
+    "environment_id": 5
+  },
+  {
+    "user_id": 1,
+    "created_at": "2012-05-03T17:19:49Z",
+    "name": "For The Horde",
+    "updated_at": "2012-05-03T17:19:49Z",
+    "description": "Activation Key for testing.",
+    "pools": [
+
+    ],
+    "id": 2,
+    "organization_id": 1,
+    "system_template_id": None,
+    "environment_id": 5
+  }
+]
+                                

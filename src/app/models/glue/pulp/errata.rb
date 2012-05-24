@@ -70,14 +70,14 @@ class Glue::Pulp::Errata
                         "min_gram"  => 3,
                         "max_gram"  => 40
                     }
-                },
+                }.merge(Katello::Search::custom_filters),
                 "analyzer" => {
                     "title_analyzer" => {
                         "type"      => "custom",
                         "tokenizer" => "keyword",
                         "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
                     }
-                }.merge(Katello::Search::custom_analzyers)
+                }.merge(Katello::Search::custom_analyzers)
             }
         }
     }

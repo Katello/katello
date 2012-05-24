@@ -51,7 +51,8 @@ from katello.client.core import (
   changeset,
   client,
   filters,
-  gpg_key
+  gpg_key,
+  system_group
 )
 
 def setup_admin(admin):
@@ -61,6 +62,8 @@ def setup_admin(admin):
     akey_cmd.add_action('list', activation_key.List())
     akey_cmd.add_action('update', activation_key.Update())
     akey_cmd.add_action('delete', activation_key.Delete())
+    akey_cmd.add_action('add_system_group', activation_key.AddSystemGroup())
+    akey_cmd.add_action('remove_system_group', activation_key.RemoveSystemGroup())
     admin.add_command('activation_key', akey_cmd)
 
     env_cmd = environment.Environment()
@@ -187,8 +190,23 @@ def setup_admin(admin):
     system_cmd.add_action('tasks', system.TasksList())
     system_cmd.add_action('task', system.TaskInfo())
     system_cmd.add_action('releases', system.Releases())
+    system_cmd.add_action('add_to_groups', system.AddSystemGroups())
+    system_cmd.add_action('remove_from_groups', system.RemoveSystemGroups())
     system_cmd.add_action('remove_deletion', system.RemoveDeletion())
     admin.add_command('system', system_cmd)
+
+    system_group_cmd = system_group.SystemGroup()
+    system_group_cmd.add_action('list', system_group.List())
+    system_group_cmd.add_action('info', system_group.Info())
+    system_group_cmd.add_action('systems', system_group.Systems())
+    system_group_cmd.add_action('add_systems', system_group.AddSystems())
+    system_group_cmd.add_action('remove_systems', system_group.RemoveSystems())
+    system_group_cmd.add_action('lock', system_group.Lock())
+    system_group_cmd.add_action('unlock', system_group.Unlock())
+    system_group_cmd.add_action('create', system_group.Create())
+    system_group_cmd.add_action('update', system_group.Update())
+    system_group_cmd.add_action('delete', system_group.Delete())
+    admin.add_command('system_group', system_group_cmd)
 
     sync_plan_cmd = sync_plan.SyncPlan()
     sync_plan_cmd.add_action('create', sync_plan.Create())

@@ -20,7 +20,8 @@ module IndexedModel
         #Shared analyzers.  If you need a model-specific analyzer for some reason,
         #  we'll need to refactor this to support that.
         settings :analysis => {
-                    "analyzer" => Katello::Search.custom_analzyers
+                    :filter => Katello::Search.custom_filters,
+                    :analyzer => Katello::Search.custom_analyzers
                   }
 
         def self.index_import list
@@ -41,9 +42,60 @@ module IndexedModel
       #  :display_attrs  - list of attributes to display as searchable
       ##
       def self.index_options options={}
-          self.class_index_options = options
+        self.class_index_options = options
       end
 
+      # If this object (e.g. system_group) is updated or deleted and another model (e.g. system) has an
+      # association (e.g. has_many) to it, we need to update the related indexes on that model (e.g system)
+      #   relation - the association for the other model
+      #   attribute - the attribute on the current model, which if changes needs to trigger the index update
+      def self.update_related_indexes relation, attribute
+        after_save lambda{|record| reindex_on_update(relation, attribute)}
+        before_destroy lambda{|record| save_indexed_relation(relation)}
+        after_destroy lambda{|record| reindex_relation}
+      end
+
+      # If this model (e.g. system_group) has an association (e.g. has_many) to another model (e.g. system)
+      # and objects (e.g. systems) are added or removed for that association, we need to update the related
+      # indexes on that model.
+      def self.update_association_indexes
+        { :after_add => :reindex_on_association_change, :after_remove => :reindex_on_association_change }
+      end
+
+      def reindex_on_association_change record
+        record.update_index if record.respond_to? :update_index
+      end
+
+      def reindex_on_update relation, attribute
+        # If the specified attribute (e.g. name) on the current model has changed, update the related indexes
+        if self.send("#{attribute}_changed?")
+          related_objects = self.send(relation)
+          update_related_objects related_objects
+        end
+      end
+
+      def save_indexed_relation relation
+        # If an object (e.g. system_group) is being deleted and another object (e.g. system) has a model
+        # relationship (e.g. has_many :through) with it, we need to update the indexes on that other model.
+        # Unfortunately, in order to do that, the update needs to be performed after this object is destroyed
+        # (i.e. after_destroy); however, at that point, the object (e.g. system_group) no longer references
+        # the other (e.g. system).
+        #
+        # Temporarily save a list of the related objects that need indexes updated, for use in the 'after_destroy'.
+        @related_objects = self.send(relation)
+      end
+
+      def reindex_relation
+        update_related_objects @related_objects
+      end
+
+      def update_related_objects objects
+        unless objects.blank?
+          objects.each do |object|
+            object.update_index if object.respond_to? :update_index
+          end
+        end
+      end
 
       def self.use_index_of(model)
         if !Rails.env.test?
@@ -53,9 +105,6 @@ module IndexedModel
       end
     end
   end
-
-
-
 
   #mocked methods for testing
   if Rails.env.test?
