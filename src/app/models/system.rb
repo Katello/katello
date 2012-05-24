@@ -180,15 +180,15 @@ class System < ActiveRecord::Base
   end
 
   def readable?
-    environment.systems_readable? || self.system_groups.any?{|g| g.systems_readable?}
+    environment.systems_readable? || !SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
   end
 
   def editable?
-    environment.systems_editable?  || self.system_groups.any?{|g| g.systems_editable?}
+    environment.systems_editable?  || !SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
   end
 
   def deletable?
-    environment.systems_deletable? || self.system_groups.any?{|g| g.systems_deletable?}
+    environment.systems_deletable? || !SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
   end
 
   #TODO these two functions are somewhat poorly written and need to be redone
