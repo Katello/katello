@@ -109,7 +109,7 @@ class Api::FiltersController < Api::ApiController
   end
 
   def find_organization
-    if not super
+    if not find_optional_organization
       @organization = @repository.organization
     end
     @organization

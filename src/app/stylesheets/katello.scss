@@ -337,6 +337,13 @@ table {
     }
 }
 
+.lock_icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  background: $locked_icon;
+}
+
 .action {
   background: $search_icon_white;
   
@@ -665,7 +672,6 @@ fieldset {
         float:right;
         width:448px;
         min-height: 300px;
-        height: 300px;
         padding: 20px;
         border: 1px solid $border_color;
         @include border-right-radius(5px);
@@ -691,6 +697,14 @@ fieldset {
               .actions {
                   float: right;
               }
+            }
+            input[type="text"], .ui-multiselect {
+              margin-left: 20px;
+            }
+            .validation_error {
+              padding-left: 20px;
+              color: $validation_error_color;
+              font-weight: 600;
             }
         }
         #select-result {
