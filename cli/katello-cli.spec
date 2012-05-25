@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.37
+Version:       0.2.38
 Release:       1%{?dist}
 
 # Upstream uses tito rpm helper utility. To get the particular version from
@@ -112,6 +112,36 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 25 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.38-1
+- 822926 - katello-cli package fedora review
+- Fixed typo s/fing/find. Fixes BZ #824749.
+- system groups - Updates for help text around options that take lists and
+  command naming for adding groups to a system.
+- 795525 - renaming cli column name 'subscriptions'
+- system groups - Updates the system groups CLI work to be consistent with re-
+  factoring work.
+- system groups - merge conflict
+- system groups - Updates to not require max_systems on creation in CLI.
+- Two minor tweaks to output strings for removing systems from a system group.
+- system groups - Adds the maximum systems paramter for CLI create/update.
+- system groups - Cleans up CLI code to fit re-factoring changes from master.
+- system groups - Adds CLI support for add/remove of a system group from an
+  activation key.
+- system groups - Clean up CLI code around adding systems to a system group
+- system group - Adds CLI/API support for adding and removing system groups
+  from a system
+- system groups - Adds support for removing systems from a system group in CLI.
+- system groups - Adds support for adding systems to a system group in the CLI
+- Adds system group basic update support for the CLI
+- system group - Adds system group delete to CLI.
+- system group - Adds system group creation support to CLI.
+- system group - Adds support for locking and unlocking a system group in the
+  CLI
+- system groups - Adds CLI support for listing systems in a system group.
+- system groups - Adds ability to view info of single system group from CLI.
+- system-groups - Adds CLI system group basics and calls to list system groups
+  for a given organization.
+
 * Thu May 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.37-1
 - 824069 - adding new parameter --all to cli product list
 - cli - workaround for error when action was not found This commit fixes error
