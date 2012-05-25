@@ -42,6 +42,8 @@ module Errors
 
   class ConflictException < StandardError; end
 
+  class UsageLimitExhaustedException < StandardError; end
+
   class CurrentOrganizationNotFoundException < ActiveRecord::RecordNotFound; end
 
   class UnsupportedActionException < StandardError
