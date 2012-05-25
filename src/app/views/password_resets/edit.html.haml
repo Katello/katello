@@ -1,38 +1,23 @@
-= javascript :password
+= content_for(:login_logo) do
+  = image_tag("logo.png", :alt => _('Katello Logo'))
 
-= javascript do
-  :plain
-    //what button should be disabled when passwords don't match
+= content_for(:title) do
+  = project_name
+  = "-"
+  = default_title
 
-    localize({
-      "password_match": '#{escape_javascript(_("The passwords do not match"))}',
-      "very_weak": '#{escape_javascript(_("Very Weak"))}',
-      "weak": '#{escape_javascript(_("Weak"))}',
-      "good": '#{escape_javascript(_("Good"))}',
-      "strong": '#{escape_javascript(_("Strong"))}',
-      "meterText": '#{escape_javascript(_("Password Strength"))}',
-      "usernameMatch": '#{escape_javascript(_("The password should not contain the username."))}'
-    });
+= content_for(:head) do
+  = csrf_meta_tag
+  / [if lt IE 9]
+    = include_javascripts  :html5
+  / [if IE]
+    = include_stylesheets :ie, :embed_assets => false
 
-.modalbox
-  %h2 #{_('Change Password')}
+= content_for(:stylesheets) do
+  = include_stylesheets :loginpage
 
-  %fieldset.fl.clear
-    .grid_3.ra
-      = label :user, :password, _("Password:")
-    .grid_5.la
-      = text_field :user, :password, :id=>"password_field", :value=>"", :type=>"password"
-
-  %fieldset.fl.clear
-    .grid_3.ra
-      = label :user, :username, _("Confirm Password:")
-    .grid_5.la
-      = text_field :user, :username, :id=>"confirm_field", :value=>"", :type=>"password"
-  .grid_5.la.prefix_2
-    #password_conflict
-
-  .grid_5.la.prefix_3
-    #save_password.verify_password.button{'data-url'=>password_reset_path(@user.password_reset_token)}
-      #{_("Save")}
-  .grid_5.la.prefix_3
-    #password_conflict
+= content_for(:extra) do
+  %script{ :type => "text/javascript" }
+    -if protect_against_forgery?
+      :plain
+        var AUTH_TOKEN = #{form_authenticity_token.inspect};

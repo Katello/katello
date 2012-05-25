@@ -1,35 +1,27 @@
-.modalbox
-  %h2 #{_('Login Information')}
+= content_for(:stylesheets) do
+  = include_stylesheets :common
+  = include_stylesheets :loginpage
 
-  %h3
-    = _('I remembered my login credentials.')
-    = link_to("Go to log in.", root_path)
+= content_for(:javascript) do
+  = include_javascripts :common
 
-  - if !@ldap
-    %h3 #{_('Password Unknown')}
-    .katello_form
-      %p #{_('If you do not know your password, enter your login and email address below and instructions on resetting your password will be sent to you.')}
-      = form_tag password_resets_path, :method => :post, :remote => true do
-        %fieldset
-          = label_tag :username, _('Username:')
-          = text_field_tag :username, params[:username]
-        %fieldset
-          = label_tag :email, _('Email Address:')
-          = text_field_tag :email, params[:email]
+= content_for(:login_logo) do
+  = image_tag("logo.png", :alt => _('Katello Logo'))
 
-        = submit_tag _('Reset Password'), :class => 'submit dialogbutton'
+= content_for(:title) do
+  = project_name
+  = "-"
+  = default_title
 
-    %h3 #{_('Login Unknown')}
-    .katello_form
-      %p #{_("If you do not know your login, please enter your email address below and your login will be sent to you.")}
-      = form_tag email_logins_password_resets_path, :method => :get, :remote => true do
-        %fieldset
-          = label_tag :email, _('Email Address:')
-          = text_field_tag :email, params[:email]
+= content_for(:head) do
+  = csrf_meta_tag
+  / [if lt IE 9]
+    = include_javascripts  :html5
+  / [if IE]
+    = include_stylesheets :ie, :embed_assets => false
 
-        = submit_tag _('Send Login'), :class => 'submit dialogbutton'
-
-  - else
-    %h3 #{_('Login or Password Unknown')}
-    %p #{_('Please contact your LDAP administrator to find your username or reset your password.')}
-
+= content_for(:extra) do
+  %script{ :type => "text/javascript" }
+    -if protect_against_forgery?
+      :plain
+        var AUTH_TOKEN = #{form_authenticity_token.inspect};

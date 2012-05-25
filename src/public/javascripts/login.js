@@ -12,14 +12,9 @@
 */
 
 
-
 $(document).ready(function() {
 
-
    $('#login_form').live('submit', function(e) {
-
-      //var button = $(this).find('input[type|="submit"]');
-      // button.attr("disabled","disabled");
       if (window.location.hash != "") {
            $('<input>').attr({
                 type: 'hidden',
@@ -28,10 +23,6 @@ $(document).ready(function() {
                 value: window.location.hash
             }).appendTo(this);
       }
-
    });
-
-    $("input[type='text']:first", document.forms[0]).focus();
-    
     
 });
