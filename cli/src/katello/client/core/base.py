@@ -114,7 +114,7 @@ class Action(object):
     def create_validator(self, parser, opts, args):
         return OptionValidator(parser, opts, args)
 
-    def get_option(self, opt_dest):
+    def get_option(self, opt_dest, default=None):
         """
         Get an option from opts or from the config file
         Options from opts take precedence.
@@ -122,7 +122,7 @@ class Action(object):
         @param opt: name of option to get
         @return: value of the option or None if the option is no present
         """
-        attr = getattr(self.opts, opt_dest, None)
+        attr = getattr(self.opts, opt_dest, default)
         return u_obj(attr)
 
     def has_option(self, opt):
