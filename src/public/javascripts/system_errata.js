@@ -39,12 +39,14 @@ KT.system.errata = function() {
                 install_url = KT.routes.install_system_errata_path(id);
                 status_url = KT.routes.status_system_errata_path(id);
                 update_function = update_status_for_system;
+                KT.tipsy.custom.tooltip($('.tipsy-icon.errata-info'));
             } else {
                 // errata_for === 'system_group'
                 items_url = KT.routes.items_system_group_errata_path(id);
                 install_url = KT.routes.install_system_group_errata_path(id);
                 status_url = KT.routes.status_system_group_errata_path(id);
                 update_function = update_status_for_group;
+                KT.tipsy.custom.tooltip($('.tipsy-icon.systems, .tipsy-icon.errata-info'));
             }
 
             register_events();
@@ -64,7 +66,6 @@ KT.system.errata = function() {
     		$('#errata_state_radio_outstanding').bind('change', fetch_errata);
             $('#run_errata_button').bind('click', add_errata);
     		load_more.bind('click', { clear_items : false }, fetch_errata);
-            KT.tipsy.custom.errata_tooltip();
     	},
         init_status_check = function(){
             var timeout = 8000;
@@ -98,7 +99,6 @@ KT.system.errata = function() {
     		}).success(function(data){
     			insert_data(data, !clear_items);
     			show_spinner(false);
-
     		});
     	},
     	get_current_filter = function(){
