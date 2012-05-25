@@ -43,9 +43,11 @@ class SystemGroupErrataController < ApplicationController
     filter_type = params[:filter_type] if params[:filter_type]
     errata_state = params[:errata_state] if params[:errata_state]
     chunk_size = current_user.page_size
-    errata, total_count, results_count = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type, errata_state)
+    errata, errata_systems, total_count, results_count = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type, errata_state)
         
-    rendered_html = render_to_string(:partial=>"systems/errata/items", :locals => { :errata => errata, :editable => @group.editable? })
+    rendered_html = render_to_string(:partial=>"systems/errata/items", :locals => { :errata => errata,
+                                                                                    :errata_systems => errata_systems,
+                                                                                    :editable => @group.editable? })
 
     render :json => {:html => rendered_html,
                       :results_count => results_count,
@@ -87,12 +89,15 @@ class SystemGroupErrataController < ApplicationController
 
     errata_hash = {} # {id => erratum}
     errata_list = [] # [erratum]
+    errata_system_hash = {} # {id => [system_name]}
 
     # build a hash of all errata across all systems in the group
     @group.systems.each do |system|
       errata = system.errata
       errata.each do |erratum|
         errata_hash[erratum.id] = erratum
+        errata_system_hash[erratum.id] ||= []
+        errata_system_hash[erratum.id] << system.name
       end
     end
     errata_list = errata_hash.values
@@ -109,7 +114,7 @@ class SystemGroupErrataController < ApplicationController
 
     errata_list = errata_list[start...finish]
 
-    return errata_list, total_errata_count, filtered_errata_count
+    return errata_list, errata_system_hash, total_errata_count, filtered_errata_count
   end
 
   def find_group
