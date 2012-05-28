@@ -100,8 +100,8 @@ chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 rm -rf %{buildroot}
 
 %files 
-%{_bindir}/%{base_name}
-%{_bindir}/%{base_name}-debug-certificates
+%attr(755,root,root) %{_bindir}/%{base_name}
+%attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
 %config(noreplace) %{_sysconfdir}/%{base_name}/client.conf
 %doc README LICENSE
 %{_mandir}/man1/%{base_name}.1*
