@@ -52,10 +52,11 @@ from katello.client.core import (
   client,
   filters,
   gpg_key,
-  system_group
+  system_group,
+  admin
 )
 
-def setup_admin(admin):
+def setup_admin(katello_cmd):
     akey_cmd = activation_key.ActivationKey()
     akey_cmd.add_action('create', activation_key.Create())
     akey_cmd.add_action('info', activation_key.Info())
@@ -64,7 +65,7 @@ def setup_admin(admin):
     akey_cmd.add_action('delete', activation_key.Delete())
     akey_cmd.add_action('add_system_group', activation_key.AddSystemGroup())
     akey_cmd.add_action('remove_system_group', activation_key.RemoveSystemGroup())
-    admin.add_command('activation_key', akey_cmd)
+    katello_cmd.add_command('activation_key', akey_cmd)
 
     env_cmd = environment.Environment()
     env_cmd.add_action('create', environment.Create())
@@ -72,7 +73,7 @@ def setup_admin(admin):
     env_cmd.add_action('list', environment.List())
     env_cmd.add_action('update', environment.Update())
     env_cmd.add_action('delete', environment.Delete())
-    admin.add_command('environment', env_cmd)
+    katello_cmd.add_command('environment', env_cmd)
 
     org_cmd = organization.Organization()
     org_cmd.add_action('create', organization.Create())
@@ -82,7 +83,7 @@ def setup_admin(admin):
     org_cmd.add_action('delete', organization.Delete())
     org_cmd.add_action('uebercert', organization.GenerateDebugCert())
     org_cmd.add_action('subscriptions', organization.ShowSubscriptions())
-    admin.add_command('org', org_cmd)
+    katello_cmd.add_command('org', org_cmd)
 
     user_cmd = user.User()
     user_cmd.add_action('create', user.Create())
@@ -95,7 +96,7 @@ def setup_admin(admin):
     user_cmd.add_action('unassign_role', user.AssignRole(False))
     user_cmd.add_action('list_roles', user.ListRoles())
     user_cmd.add_action('sync_ldap_roles', user.SyncLdapRoles())
-    admin.add_command('user', user_cmd)
+    katello_cmd.add_command('user', user_cmd)
 
     user_role_cmd = user_role.UserRole()
     user_role_cmd.add_action('create', user_role.Create())
@@ -105,17 +106,17 @@ def setup_admin(admin):
     user_role_cmd.add_action('add_ldap_group', user_role.AddLdapGroup())
     user_role_cmd.add_action('remove_ldap_group', user_role.RemoveLdapGroup())
     user_role_cmd.add_action('delete', user_role.Delete())
-    admin.add_command('user_role', user_role_cmd)
+    katello_cmd.add_command('user_role', user_role_cmd)
 
     permission_cmd = permission.Permission()
     permission_cmd.add_action('create', permission.Create())
     permission_cmd.add_action('list', permission.List())
     permission_cmd.add_action('delete', permission.Delete())
     permission_cmd.add_action('available_verbs', permission.ListAvailableVerbs())
-    admin.add_command('permission', permission_cmd)
+    katello_cmd.add_command('permission', permission_cmd)
 
-    admin.add_command('ping', ping.Status())
-    admin.add_command('version', version.Info())
+    katello_cmd.add_command('ping', ping.Status())
+    katello_cmd.add_command('version', version.Info())
 
     prod_cmd = product.Product()
     prod_cmd.add_action('create', product.Create())
@@ -131,7 +132,7 @@ def setup_admin(admin):
     prod_cmd.add_action('remove_filter', product.AddRemoveFilter(False))
     prod_cmd.add_action('set_plan', product.SetSyncPlan())
     prod_cmd.add_action('remove_plan', product.RemoveSyncPlan())
-    admin.add_command('product', prod_cmd)
+    katello_cmd.add_command('product', prod_cmd)
 
     repo_cmd = repo.Repo()
     repo_cmd.add_action('create', repo.Create())
@@ -149,31 +150,31 @@ def setup_admin(admin):
     repo_cmd.add_action('add_filter', repo.AddRemoveFilter(True))
     repo_cmd.add_action('remove_filter', repo.AddRemoveFilter(False))
 
-    admin.add_command('repo', repo_cmd)
+    katello_cmd.add_command('repo', repo_cmd)
 
     package_group_cmd = packagegroup.PackageGroup()
     package_group_cmd.add_action('list', packagegroup.List())
     package_group_cmd.add_action('info', packagegroup.Info())
     package_group_cmd.add_action('category_list', packagegroup.CategoryList())
     package_group_cmd.add_action('category_info', packagegroup.CategoryInfo())
-    admin.add_command('package_group',package_group_cmd)
+    katello_cmd.add_command('package_group',package_group_cmd)
 
     dist_cmd = distribution.Distribution()
     dist_cmd.add_action('info', distribution.Info())
     dist_cmd.add_action('list', distribution.List())
-    admin.add_command('distribution', dist_cmd)
+    katello_cmd.add_command('distribution', dist_cmd)
 
     pack_cmd = package.Package()
     pack_cmd.add_action('info', package.Info())
     pack_cmd.add_action('list', package.List())
     pack_cmd.add_action('search', package.Search())
-    admin.add_command('package', pack_cmd)
+    katello_cmd.add_command('package', pack_cmd)
 
     errata_cmd = errata.Errata()
     errata_cmd.add_action('list', errata.List())
     errata_cmd.add_action('info', errata.Info())
     errata_cmd.add_action('system', errata.SystemErrata())
-    admin.add_command('errata', errata_cmd)
+    katello_cmd.add_command('errata', errata_cmd)
 
     system_cmd = system.System()
     system_cmd.add_action('list', system.List())
@@ -193,7 +194,7 @@ def setup_admin(admin):
     system_cmd.add_action('add_to_groups', system.AddSystemGroups())
     system_cmd.add_action('remove_from_groups', system.RemoveSystemGroups())
     system_cmd.add_action('remove_deletion', system.RemoveDeletion())
-    admin.add_command('system', system_cmd)
+    katello_cmd.add_command('system', system_cmd)
 
     system_group_cmd = system_group.SystemGroup()
     system_group_cmd.add_action('list', system_group.List())
@@ -206,7 +207,7 @@ def setup_admin(admin):
     system_group_cmd.add_action('create', system_group.Create())
     system_group_cmd.add_action('update', system_group.Update())
     system_group_cmd.add_action('delete', system_group.Delete())
-    admin.add_command('system_group', system_group_cmd)
+    katello_cmd.add_command('system_group', system_group_cmd)
 
     sync_plan_cmd = sync_plan.SyncPlan()
     sync_plan_cmd.add_action('create', sync_plan.Create())
@@ -214,7 +215,7 @@ def setup_admin(admin):
     sync_plan_cmd.add_action('list', sync_plan.List())
     sync_plan_cmd.add_action('update', sync_plan.Update())
     sync_plan_cmd.add_action('delete', sync_plan.Delete())
-    admin.add_command('sync_plan', sync_plan_cmd)
+    katello_cmd.add_command('sync_plan', sync_plan_cmd)
 
     template_cmd = template.Template()
     template_cmd.add_action('create', template.Create())
@@ -224,9 +225,9 @@ def setup_admin(admin):
     template_cmd.add_action('info', template.Info())
     template_cmd.add_action('update', template.Update())
     template_cmd.add_action('delete', template.Delete())
-    admin.add_command('template', template_cmd)
+    katello_cmd.add_command('template', template_cmd)
 
-    admin.add_command('shell', shell_command.ShellAction(admin))
+    katello_cmd.add_command('shell', shell_command.ShellAction(katello_cmd))
 
     prov_cmd = provider.Provider()
     prov_cmd.add_action('create', provider.Update(create=True))
@@ -239,7 +240,7 @@ def setup_admin(admin):
     prov_cmd.add_action('status', provider.Status())
     prov_cmd.add_action('import_manifest', provider.ImportManifest())
     prov_cmd.add_action('refresh_products', provider.RefreshProducts())
-    admin.add_command('provider', prov_cmd)
+    katello_cmd.add_command('provider', prov_cmd)
 
     cset_cmd = changeset.Changeset()
     cset_cmd.add_action('create', changeset.Create())
@@ -248,13 +249,13 @@ def setup_admin(admin):
     cset_cmd.add_action('update', changeset.UpdateContent())
     cset_cmd.add_action('delete', changeset.Delete())
     cset_cmd.add_action('promote', changeset.Promote())
-    admin.add_command('changeset', cset_cmd)
+    katello_cmd.add_command('changeset', cset_cmd)
 
     client_cmd = client.Client()
     client_cmd.add_action('remember', client.Remember())
     client_cmd.add_action('forget', client.Forget())
     client_cmd.add_action('saved_options', client.SavedOptions())
-    admin.add_command('client', client_cmd)
+    katello_cmd.add_command('client', client_cmd)
 
     filter_cmd = filters.Filter()
     filter_cmd.add_action('create', filters.Create())
@@ -263,7 +264,7 @@ def setup_admin(admin):
     filter_cmd.add_action('delete', filters.Delete())
     filter_cmd.add_action('add_package', filters.AddPackage())
     filter_cmd.add_action('remove_package', filters.RemovePackage())
-    admin.add_command('filter', filter_cmd)
+    katello_cmd.add_command('filter', filter_cmd)
 
     gpgkey_cmd = gpg_key.GpgKey()
     gpgkey_cmd.add_action('create', gpg_key.Create())
@@ -271,4 +272,9 @@ def setup_admin(admin):
     gpgkey_cmd.add_action('list', gpg_key.List())
     gpgkey_cmd.add_action('update', gpg_key.Update())
     gpgkey_cmd.add_action('delete', gpg_key.Delete())
-    admin.add_command('gpg_key', gpgkey_cmd)
+    katello_cmd.add_command('gpg_key', gpgkey_cmd)
+
+    admin_cmd = admin.Admin()
+    admin_cmd.add_action('crl_regen', admin.CrlRegen())
+    katello_cmd.add_command('admin', admin_cmd)
+
