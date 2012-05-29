@@ -29,6 +29,10 @@ class SystemGroupAPI(KatelloAPI):
         path = "/api/organizations/%s/system_groups/%s" % (org_id, system_group_id)
         return self.server.GET(path, query)[1]
 
+    def system_group_history(self, org_id, system_group_id, query={}):
+        path = "/api/organizations/%s/system_groups/%s/history" % (org_id, system_group_id)
+        return self.server.GET(path, query)[1]
+
     def system_group_by_name(self, org_id, system_group_name, query={}):
         path = "/api/organizations/%s/system_groups/" % org_id
         system_group = self.server.GET(path, {"name": system_group_name})[1]

@@ -134,9 +134,95 @@ class Info(SystemGroupAction):
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('locked')
 
-        self.printer.printItem(system_group)
+        self.printer.print_item(system_group)
 
         return os.EX_OK
+
+
+class History(SystemGroupAction):
+
+    description = _('display a system group within an organization')
+
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        parser.add_option('--name', dest='name',
+                       help=_("system group name (required)"))
+
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        system_group_name = self.get_option('name')
+        # info is always grep friendly
+
+        self.printer.set_header(_("System Group History For [ %s ]") % (system_group_name))
+
+        system_group = get_system_group(org_name, system_group_name)
+
+        if not system_group:
+            return os.EX_DATAERR
+
+
+        # get list of jobs 
+        history = self.api.system_group_history(org_name, system_group['id'])
+
+        for job in history:
+            job['tasks'] = len(job['tasks'])
+            params = ""
+            for key, value in job['parameters'].items():
+                params += key + ": " + (', ').join(value) + "\n"
+            job['parameters'] = params
+
+
+        self.printer.add_column('id')
+        self.printer.add_column('task_type', name='Type')
+        self.printer.add_column('parameters', multiline=True)
+        self.printer.add_column('tasks')
+        self.printer.print_items(history)
+
+        return os.EX_OK
+
+class HistoryTasks(SystemGroupAction):
+    description = _('display job information including individual system tasks')
+
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        parser.add_option('--name', dest='name',
+                       help=_("system group name (required)"))
+        parser.add_option('--job_id', dest='job_id',
+                       help=_("Job ID"))
+
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'job_id'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        system_group_name = self.get_option('name')
+        job_id = self.get_option('job_id')
+        # info is always grep friendly
+
+        self.printer.set_header(_("System Group Job tasks For [ %s ]") % (system_group_name))
+
+        system_group = get_system_group(org_name, system_group_name)
+
+        # get list of jobs 
+        history = self.api.system_group_history(org_name, system_group['id'], {'job_id':job_id})
+        if len(history) == 0:
+            print >> sys.stderr, _("Could not find job [ %s ] for system group [ %s ]") % (job_id, system_group_name)
+            return os.EX_DATAERR
+
+        tasks = history[0]['tasks']
+
+        self.printer.add_column('id', name='task id')
+        self.printer.add_column('uuid', name='system uuid')
+        self.printer.add_column('state',)
+        self.printer.add_column('progress')
+        self.printer.add_column('start_time')
+        self.printer.add_column('finish_time')
+        self.printer.print_items(tasks)
 
 
 class Update(SystemGroupAction):
