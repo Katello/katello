@@ -19,6 +19,7 @@ from gettext import gettext as _
 from katello.client.i18n_optparse import OptionParser, OptionParserExitError
 from M2Crypto import SSL
 from socket import error as SocketError
+from urlparse import urlparse
 
 from katello.client.config import Config
 from katello.client.api.utils import ApiDataError
@@ -383,14 +384,49 @@ class Action(object):
 
 def check_bool(option, opt, value):
     if value.lower() in ["true","false"]:
-        return value.lower()
+        return (value.lower() == "true")
     else:
         raise OptionValueError(_("option %s: invalid boolean value: %r") % (opt, value))
 
+def check_list(option, opt, value):
+    if not option.delimiter:
+        delimiter = ","
+    else:
+        delimiter = option.delimiter
+
+    if not value.strip():
+        return []
+    return [item.strip() for item in value.split(delimiter)]
+
+def check_url(option, opt, value):
+    if not option.schemes:
+        schemes = ["http","https"]
+    else:
+        schemes = option.schemes
+
+    url_parsed = urlparse(value)
+    if not url_parsed.scheme in schemes:                                 # pylint: disable=E1101
+        formatted_schemes = " or ".join([s+"://" for s in schemes])
+        raise OptionValueError(_('option %s: has to start with %s') % (opt, formatted_schemes))
+    elif not url_parsed.netloc:                                          # pylint: disable=E1101
+        raise OptionValueError(_('option %s: invalid format') % (opt))
+    return value
+
 class KatelloOption(Option):
-    TYPES = Option.TYPES + ("bool",)
     TYPE_CHECKER = copy(Option.TYPE_CHECKER)
+    TYPES = copy(Option.TYPES)
+    ATTRS = copy(Option.ATTRS)
+
     TYPE_CHECKER["bool"] = check_bool
+    TYPES = TYPES + ("bool", )
+
+    TYPE_CHECKER["list"] = check_list
+    TYPES += ("list", )
+    ATTRS += ["delimiter", ]
+
+    TYPE_CHECKER["url"] = check_url
+    TYPES += ("url", )
+    ATTRS += ["schemes", ]
 
     def get_name(self):
         return self.get_opt_string().lstrip('-')
