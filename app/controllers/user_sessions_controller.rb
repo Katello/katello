@@ -30,8 +30,8 @@ class UserSessionsController < ApplicationController
       login_user
     else
       @ldap = AppConfig.warden == 'ldap'
+      render :layout => "converge-ui/login_layout"
     end
-    render :layout => "converge-ui/login_layout"
   end
 
   def create
