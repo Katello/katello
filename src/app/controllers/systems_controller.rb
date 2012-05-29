@@ -150,6 +150,8 @@ class SystemsController < ApplicationController
     accesible_envs = KTEnvironment.systems_readable(current_organization)
 
     begin
+      @system_groups = SystemGroup.where(:organization_id => current_organization).where(:locked=>false).order(:name)
+
       @systems = []
       setup_environment_selector(current_organization, accesible_envs)
       if @environment
