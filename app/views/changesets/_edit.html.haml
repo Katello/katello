@@ -61,7 +61,8 @@
                                                               :type_string=>_("Packages")}
                 = render :partial=>"content_type", :locals=>{:items=>@changeset.errata.where(:product_id=>prod.id).collect{|i| i.display_name},
                                                               :type_string=>_("Errata")}
-                = render :partial=>"content_type", :locals=>{:items=>@changeset.find_repos(prod).collect{|i| i.display_name},
+                = render :partial=>"content_type",
+                    :locals=>{:items=>@changeset.repos.in_product(prod).all.collect{|i| i.name},
                                                               :type_string=>_("Repositories")}
                 = render :partial=>"content_type", :locals=>{:items=>@changeset.distributions.where(:product_id=>prod.id).collect{|i| i.display_name},
                                                               :type_string=>_("Distributions")}
