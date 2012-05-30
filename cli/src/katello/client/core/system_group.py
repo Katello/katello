@@ -119,7 +119,6 @@ class Info(SystemGroupAction):
     def run(self):
         org_name = self.get_option('org')
         system_group_name = self.get_option('name')
-        # info is always grep friendly
 
         self.printer.set_header(_("System Group Information For Org [ %s ]") % (org_name))
 
@@ -141,7 +140,7 @@ class Info(SystemGroupAction):
 
 class History(SystemGroupAction):
 
-    description = _('display a system group within an organization')
+    description = _('display the list of jobs for the specified system group.')
 
     def setup_parser(self, parser):
         parser.add_option('--org', dest='org',
@@ -155,7 +154,6 @@ class History(SystemGroupAction):
     def run(self):
         org_name = self.get_option('org')
         system_group_name = self.get_option('name')
-        # info is always grep friendly
 
         self.printer.set_header(_("System Group History For [ %s ]") % (system_group_name))
 
@@ -193,7 +191,7 @@ class HistoryTasks(SystemGroupAction):
         parser.add_option('--name', dest='name',
                        help=_("system group name (required)"))
         parser.add_option('--job_id', dest='job_id',
-                       help=_("Job ID"))
+                       help=_("Job ID to list tasks for (required)"))
 
     def check_options(self, validator):
         validator.require(('name', 'org', 'job_id'))
