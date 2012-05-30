@@ -682,7 +682,7 @@ Src::Application.routes.draw do
 
     end
 
-    # support for rhsm --------------------------------------------------------
+    # subscription-manager support
     match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
     match '/hypervisors' => 'systems#hypervisors_update', :via => :post
     resources :consumers, :controller => 'systems'
@@ -693,9 +693,6 @@ Src::Application.routes.draw do
     match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
     match '/users/:username/owners' => 'users#list_owners', :via => :get
-
-    # proxies -------------------
-      # candlepin proxy ---------
     match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:id/certificates/serials' => 'candlepin_proxies#get', :via => :get
@@ -709,8 +706,6 @@ Src::Application.routes.draw do
     match '/pools' => 'candlepin_proxies#get', :via => :get
     match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get
     match '/subscriptions' => 'candlepin_proxies#post', :via => :post
-
-      # pulp proxy --------------
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
