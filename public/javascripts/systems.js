@@ -17,7 +17,7 @@
  *
  */
 KT.panel.set_expand_cb(function(){
-	KT.menu.hoverMenu('#panel .third_level:first-child', { top : '75px' });
+	KT.menu.hoverMenu('#panel .menu_parent', { top : '75px' });
 });
 
 

@@ -40,7 +40,7 @@ KT.auto_complete_box = function(params) {
         var add_btn = $("#" + settings.add_btn_id);
 
         add_btn.addClass("working");
-        add_btn.html("<img  src='images/spinner.gif'>");
+        add_btn.html("<img  src='images/embed/icons/spinner.gif'>");
         input.attr("disabled", "disabled");
         input.autocomplete('disable');
         input.autocomplete('close');

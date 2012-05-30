@@ -43,11 +43,11 @@ KT.menu = (function(){
       activeTab = topLevel.filter('.active');
 
       //append the arrow icon to all menus with a third level
-      parents = $('li.parent');
+      var parents = $('li.menu_parent');
       parents.prepend($('<div class="arrow_icon_menu"></div>'));
       parents.each(function(i, a_parent){
-        this_parent = $(a_parent);
-        parent_menu_name = this_parent.data('dropdown');
+        var this_parent = $(a_parent);
+        var parent_menu_name = this_parent.data('dropdown');
         $("li[dropdown='" + parent_menu_name +"']").first().parent().appendTo(this_parent);
         KT.menu.hoverMenu(a_parent);
       });
@@ -105,6 +105,8 @@ KT.menu = (function(){
         
       if( options.top ){
         ul.css('top', options.top);
+        //append the arrow icon to all menus with a third level
+        li.prepend($('<div class="arrow_icon_menu"></div>'));
       }
 
       li.hoverIntent(

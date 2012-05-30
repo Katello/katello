@@ -80,5 +80,4 @@ $(document).ready(function() {
        convention: 12
      });
   });
-
 });
