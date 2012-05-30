@@ -26,3 +26,6 @@ uniq-po:
 
 cover:
 	nosetests --with-coverage --cover-package=katello --cover-html --cover-inclusive .
+
+test:
+	nosetests -s
