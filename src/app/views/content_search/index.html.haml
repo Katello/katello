@@ -1,3 +1,17 @@
 = javascript :content_search
+= stylesheet :content_search
 
+
+= javascript do
+  :plain
+    KT.available_environments = $.parseJSON('#{escape_javascript(environments.to_json)}');
+
+%span
+  to the left
+%span#my_env_selector.path_button
+  = _('Add Environment')
+%span
+  to the right
+%div
+  And even some stuffffffffff beeeeeeeelow
 

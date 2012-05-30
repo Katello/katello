@@ -1,0 +1,138 @@
+@import "mixins";
+@import "converge-ui/colors";
+
+//temporarily putting this here to speed development
+//TODO Move to env_select.scss
+
+
+
+.path_button {
+  position: relative;
+}
+
+//If the selector is not inline, we add a background color
+.hover_selector {
+  background: $white_color;
+  border-color: $border_color;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.path_selector {
+  width: 400px;
+  padding: 10px;
+
+  position: absolute;
+  z-index: 100;
+  top: 100%;
+
+  ul {
+    list-style: none;
+    overflow: hidden;
+    max-height: 30px;
+    position: relative;
+    margin-bottom: 5px;
+  }
+
+  li {
+      float: left;
+      margin-left: 0;
+      white-space: nowrap;
+
+
+      &:first-child {
+        @include crumb-nohover;
+        a {
+          padding-left: 6px;
+          @include border-left-radius(5px);
+        }
+      }
+      &:nth-child(n) {
+        @include crumb-nohover;
+        a {
+
+          background: $breadcrumbbg_color;
+          &:after { border-left-color: $breadcrumbbg_color; }
+        }
+      }
+      &:last-child {
+        @include crumb-nohover;
+        a {
+          overflow: hidden;
+          padding-right: 10px;
+          @include border-right-radius(5px);
+          &:before {
+            content: None;
+          }
+
+          &:hover {
+            color: $white_color;
+            background: $listhover_color !important;
+          }
+          &:after {
+            border: 0;
+            border-left: 0px solid $breadcrumbbg_color;
+            &:hover { border-left-color: $listhover_color !important; }
+          }
+        }
+      }
+  }
+  a {
+    color: $black_color;
+    text-decoration: none;
+    padding: 4px 0 4px 20px;
+    position: relative;
+    background: $breadcrumbbg_color;                    //fallback color
+    display: block;
+
+    div {
+      overflow: hidden;
+    }
+
+    input {
+      margin-right: 3px;
+    }
+
+    &:hover {
+      background: $listhover_color !important;
+      color: $white_color;
+      //@include _text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
+      &:after { border-left-color: $listhover_color !important; }
+    }
+    &.active {
+      background: $kselected_color;
+      color: white;
+      &:after { border-left-color: $kselected_color };
+      &:hover:after { border-left-color: $listhover_color !important; }
+    }
+    &:after {
+      content: " ";
+      display: block;
+      width: 0;
+      height: 0;
+      border-top: 30px solid transparent;            //Go big on the size, and let overflow hide
+      border-bottom: 30px solid transparent;
+      border-left: 15px solid $breadcrumbbg_color;
+      position: absolute;
+      top: 50%;
+      margin-top: -30px;
+      left: 100%;
+      z-index: 102;
+    }
+    &:before {
+      content: " ";
+      display: block;
+      width: 0;
+      height: 0;
+      border-top: 30px solid transparent;            //Go big on the size, and let overflow hide
+      border-bottom: 30px solid transparent;
+      border-left: 15px solid white;
+      position: absolute;
+      top: 50%;
+      margin-top: -30px;
+      margin-left: 1px;
+      left: 100%;
+      z-index: 101;
+    }
+ }
+}

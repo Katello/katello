@@ -19,9 +19,18 @@ class ContentSearchController < ApplicationController
     }
   end
 
-
   def index
-
+    render :index, :locals=>{:environments=>my_environments}
   end
+
+  def my_environments
+    paths = current_organization.promotion_paths
+    library = {:id=>current_organization.library.id, :name=>[current_organization.library.name]}
+    paths.collect do |path|
+      [library] + path.collect{|e| {:id=>e.id, :name=>e.name, :select=>true} }
+    end
+  end
+
+
 
 end
