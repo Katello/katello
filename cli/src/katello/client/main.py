@@ -199,6 +199,8 @@ def setup_admin(katello_cmd):
     system_group_cmd = system_group.SystemGroup()
     system_group_cmd.add_action('list', system_group.List())
     system_group_cmd.add_action('info', system_group.Info())
+    system_group_cmd.add_action('job_history', system_group.History())
+    system_group_cmd.add_action('job_tasks', system_group.HistoryTasks())
     system_group_cmd.add_action('systems', system_group.Systems())
     system_group_cmd.add_action('add_systems', system_group.AddSystems())
     system_group_cmd.add_action('remove_systems', system_group.RemoveSystems())

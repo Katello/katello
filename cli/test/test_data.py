@@ -984,6 +984,37 @@ SYSTEM_GROUPS = [
     }
 ]
 
+SYSTEM_GROUP_HISTORY = [
+  {
+    "task_type": "package_install",
+    "created_at": "2012-05-22T20:04:15Z",
+    "parameters": {
+      "packages": [
+        "foo"
+      ]
+    },
+    "tasks": [
+      {
+        "result": {
+          "errors": [
+            "('c8574ddd-b2f8-41f9-b47a-cedeb3c670ad', 0)",
+            "RequestTimeout('c8574ddd-b2f8-41f9-b47a-cedeb3c670ad', 0)"
+          ]
+        },
+        "uuid": "4e2f2dde-a449-11e1-9dbe-0019b90d1d4e",
+        "progress": None,
+        "id": 4,
+        "finish_time": "2012-05-22T20:04:25Z",
+        "state": "error",
+        "start_time": "2012-05-22T20:04:14Z"
+      }
+    ],
+    "id": 1
+  }
+]
+
+
+
 SYSTEMS = [
   {
     "guests": [

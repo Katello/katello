@@ -463,9 +463,10 @@ Src::Application.routes.draw do
 
       resources :system_groups, :except => [:new, :edit] do
         member do
+          get :systems
+          get :history
           post :lock
           post :unlock
-          get :systems
           post :add_systems
           post :remove_systems
         end
