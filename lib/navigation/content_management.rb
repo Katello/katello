@@ -56,7 +56,7 @@ module Navigation
        :name =>_("Content Providers"),
        :url => :sub_level,
        :if => :sub_level,
-       :options => {:class=>'content second_level parent', "data-menu"=>"content", "data-dropdown"=>"providers"},
+       :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"providers"},
        :items => AppConfig.katello? ? [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg] : [menu_custom_providers, menu_redhat_providers]
       }
 
@@ -85,7 +85,7 @@ module Navigation
        :name =>_("Sync Management"),
        :items => lambda{[menu_sync_status, menu_sync_plan, menu_sync_schedule]},
        :if => lambda{AppConfig.katello? && (current_organization.syncable? || Provider.any_readable?(current_organization))},
-       :options => {:class=>'content second_level parent', "data-menu"=>"content", "data-dropdown"=>"sync"}
+       :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"sync"}
       }
 
     end

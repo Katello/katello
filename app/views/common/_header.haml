@@ -1,6 +1,5 @@
 = content_for(:logo) do
-  = link_to dashboard_index_path, :class => 'logo' do
-    = image_tag("logo.png", :alt => _('Katello Logo'))
+  = link_to AppConfig.app_name.upcase, dashboard_index_path, :title=>AppConfig.app_name.upcase, :class => "logo"
 
 = content_for(:header_title_2) do
   = AppConfig.app_name.upcase
@@ -14,7 +13,7 @@
   - if current_user
     - if current_organization
       = link_to current_user.username, "#{users_path(:id => current_user, :only => true)}#panel=user_#{current_user.id}", :class => "header-widget"
-      = link_to current_user.user_notices.length, notices_path, :id => 'unread_notices', :title => _('System Notifications'), :class => "header-widget"
+      = link_to current_user.user_notices.length, notices_path, :id => "unread_notices", :title => _("System Notifications"), :class => "header-widget"
       = link_to _("Logout"), logout_path, :method=>"POST", :class => "header-widget"
 
 = content_for(:extra_header) do
