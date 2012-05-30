@@ -21,6 +21,10 @@ Src::Application.routes.draw do
     end
   end
 
+  resources :content_search, :only=>[:index] do
+
+  end
+
   resources :activation_keys do
     collection do
       get :auto_complete_search
