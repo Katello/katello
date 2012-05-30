@@ -48,6 +48,10 @@ class Repository < ActiveRecord::Base
   validates :enabled, :repo_disablement => true, :on => [:update]
   belongs_to :gpg_key, :inverse_of => :repositories
 
+  def self.in_product(product)
+    joins(:environment_product).where(:environment_products => { :product_id => product })
+  end
+
   def product
     self.environment_product.product
   end
