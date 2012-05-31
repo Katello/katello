@@ -145,21 +145,21 @@ describe ActivationKey do
   describe "pools in a activation key" do
 
     it "should map 2way pool to keys" do
-      s = KTPool.create!(:cp_id  => 'abc123')
+      s = Pool.create!(:cp_id  => 'abc123')
       @akey.pools = [s]
       @akey.pools.first.cp_id.should == 'abc123'
       s.activation_keys.first.name.should == aname
     end
 
     it "should assign multiple pools to keys" do
-      s = KTPool.create!(:cp_id  => 'abc123')
-      s2 = KTPool.create!(:cp_id  => 'def123')
+      s = Pool.create!(:cp_id  => 'abc123')
+      s2 = Pool.create!(:cp_id  => 'def123')
       @akey.pools = [s,s2]
       @akey.pools.last.cp_id.should == 'def123'
     end
 
     it "should include pools details in json output" do
-      pool = KTPool.create!(:cp_id  => 'abc123')
+      pool = Pool.create!(:cp_id  => 'abc123')
       @akey.pools << pool
       pool.reload
       @akey.as_json[:pools].should == [ { :cp_id => pool.cp_id } ]
@@ -207,7 +207,7 @@ describe ActivationKey do
       @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"}, :uuid => "uuid-uuid")
       @system.should_receive(:sockets).and_return(sockets)
       dates.each_pair do |k,v|
-        pool = KTPool.create!(:cp_id => k)
+        pool = Pool.create!(:cp_id => k)
         @akey.key_pools.create!(:pool_id  => pool.id)
       end
     end
