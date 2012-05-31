@@ -22,6 +22,12 @@
  *      initial_select (true)  -  Allow the library to be selected
  *      inline (false)     -    Add all the paths inline, instead of a hidable panel
  *      select_mode (none)     -  selection mode ('single', 'none', 'multi')
+ *      link_first (true)      -  if select_mode is not none, all the first nodes
+ *                                in the path are 'linked' so checking one checks all
+ *      button_text (none)     - if set, a button is rendered with the specified text,
+ *                                 clicking the button generates a message
+ *      button_event (path_#{name})    - if button exists, clicking it will trigger this event
+ *
  */
 KT.path_select = function(div_id, name, environments, options_in){
 
@@ -33,16 +39,31 @@ KT.path_select = function(div_id, name, environments, options_in){
         init = function(){
             div = $('#' + KT.common.escapeId(div_id));
             paths_id = "path_select_" + name;
-            options.library_select = options_in.library_select || true;
-            options.inline = options_in.inline || false;
-            options.select_mode = options_in.select_mode || 'none';
+            options.library_select = default_opt(options_in.library_select, true);
+            options.inline = default_opt(options_in.inline, false);
+            options.select_mode = default_opt(options_in.select_mode, 'none');
+            options.button_text = default_opt(options_in.button_text, undefined);
+            options.button_event = default_opt(options_in.button_event, ('paths_' + name));
+            options.link_first = default_opt(options_in.link_first, true);
 
-            div.append(KT.env_select_template.selector(environments, paths_id));
+
+
+            div.append(KT.path_select_template.selector(environments, paths_id, options.button_text));
             path_selector = $("#" + paths_id);
-            path_selector.find('input').hide();
+            path_selector.find('.node_select').hide();
 
             if(options.select_mode !== 'none'){
                 setup_input_hover();
+            }
+
+            if(options.button_text){
+                path_selector.find('form').submit(function(e){
+                    e.preventDefault();
+                    if(!options.inline) {
+                        path_selector.hide();
+                    }
+                    $(document).trigger(options.button_event, get_selected());
+                });
             }
 
             if(!options.inline){
@@ -59,24 +80,38 @@ KT.path_select = function(div_id, name, environments, options_in){
             scroll_obj = KT.env_select_scroll({});
             recalc_scroll();
         },
+        default_opt = function(attribute, default_value){
+            return attribute === undefined ? default_value : attribute;
+        },
         setup_input_hover = function(){
 
             var anchors = path_selector.find('li');//.find('a');
 
             anchors.hover(function(){
-                            var input = $(this).find('input');
+                            var input = $(this).find('.node_select');
                             if (!input.is(':visible')){
                                 input.fadeIn(200);
                             }
                         },
                         function(){
-                            var input = $(this).find('input');
+                            var input = $(this).find('.node_select');
                                 if(!input.is(":checked")){
                                    input.fadeOut(200);
                                 }
                         }
 
             );
+        },
+        get_selected = function(){
+            var selected = path_selector.find('input:checked'),
+                to_ret = {};
+
+            KT.utils.each(selected, function(item){
+                item = $(item);
+                to_ret[item.data('node_id')] = {text:item.parent().text(),
+                                                next_id:item.data('next_node_id')};
+            });
+            return to_ret;
         },
         recalc_scroll = function(){
            if(!options.inline){
@@ -87,6 +122,9 @@ KT.path_select = function(div_id, name, environments, options_in){
            else {
                scroll_obj.bind('#' + KT.common.escapeId(paths_id));
            }
+        },
+        get_event = function(){
+            return options.button_event;
         };
 
 
@@ -95,41 +133,49 @@ KT.path_select = function(div_id, name, environments, options_in){
 
 
     return {
-
-
+        get_selected: get_selected,
+        get_event : get_event
     };
 };
 
 
-KT.env_select_template = {
-    selector : function(paths, new_div_id){
-        var html = '<div id="' + new_div_id + '" class="path_selector">';
-        html += KT.env_select_template.paths(paths);
-        html += '</div>';
+KT.path_select_template = {
+    selector : function(paths, div_id, button_text){
+        var html = '<div id="' + div_id + '" class="path_selector"><form>';
+        html += KT.path_select_template.paths(paths);
+        if(button_text){
+            html += KT.path_select_template.button(button_text);
+        }
+        html += '</form></div>';
         return html;
+    },
+    button : function(text){
+        return '<input type="submit" class="button" value="' + text + '">';
     },
     paths : function(paths){
         var html ='';
 
         KT.utils.each(paths, function(item){
-            html += KT.env_select_template.path(item);
+            html += KT.path_select_template.path(item);
         });
         return html ;
     },
     path : function(path){
         var html = '';
         html += '<ul>';
-        KT.utils.each(path, function(env){
-            html+= KT.env_select_template.environment(env);
-        });
+        for(var i = 0; i < path.length; i++){
+            html += KT.path_select_template.path_node(path[i], path[i+1]);
+        }
         html += '</ul>';
         return html;
     },
-    environment : function(env){
+    path_node: function(node, next){
         var html = '',
-            input = env.select ? '<input type="checkbox">' : '';
+            next_node =  next  ? ('data-next_node_id="' + next.id + '"') : '',
+            input = node.select ? '<input class="node_select" type="checkbox" ' + next_node +' data-node_id="' + node.id + '">' : '';
 
-        html += '<li data-env_id="' + env.id + '">'+ '<a><div>' + input + env.name + '</div></a></li>';
+
+        html += '<li data-node_id="' + node.id + '">'+ '<a><div>' + input + node.name + '</div></a></li>';
         return html;
     }
 };
