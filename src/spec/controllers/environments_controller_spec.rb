@@ -23,7 +23,8 @@ describe EnvironmentsController do
     NEW_ENV_NAME = "another_environment_name"
     
     ENVIRONMENT = {:id => 2, :name => ENV_NAME, :description => nil, :prior => nil, :path => []}
-    LIBRARY = {:id => 1, :name => "Library", :description => nil, :prior => nil, :path => []}
+    LIBRARY = {:id => 1, :name => 'Library', :description => nil, :prior => nil, :path => [],
+               :display_name => 'Library'}
     UPDATED_ENVIRONMENT = {:id => 3, :name => NEW_ENV_NAME, :description => nil, :prior => nil, :path => []}
     EMPTY_ENVIRONMENT = {:name => "", :description => "", :prior => nil}
     
@@ -197,7 +198,7 @@ describe EnvironmentsController do
 
       describe "exception is thrown in katello api" do
         before(:each) do
-          @env.stub(:update_attributes).and_raise(Exception)
+          @env.stub(:update_attributes).and_raise(StandardError)
           @env.stub(:save!)
         end
 

@@ -323,7 +323,7 @@ class Changeset < ActiveRecord::Base
     message = _("Successfully promoted changeset '%s'.") % self.name
     notice message, { :synchronous_request => false, :request_type => "changesets___promote" }
 
-  rescue Exception => e
+  rescue => e
 
     self.state = Changeset::FAILED
     self.save!

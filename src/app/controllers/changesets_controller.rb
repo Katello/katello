@@ -115,7 +115,7 @@ class ChangesetsController < ApplicationController
         'id' => @changeset.id,
         'changeset' => simplify_changeset(@changeset)
       }
-    rescue Exception => error
+    rescue => error
       Rails.logger.error error.to_s
       notice error, {:level => :error}
       render :json=>error, :status=>:bad_request
@@ -240,7 +240,7 @@ class ChangesetsController < ApplicationController
       notice _("Started promotion of '%s' to %s environment") % [@changeset.name, @environment.name]
     end
     render :json=>to_ret
-  rescue Exception => e
+  rescue => e
     notice "Failed to promote: #{e.to_s}", {:level => :error}
     render :text=>e.to_s, :status=>500
   end
@@ -276,7 +276,7 @@ class ChangesetsController < ApplicationController
   def find_changeset
     begin
       @changeset = Changeset.find(params[:id])
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error}
       execute_after_filters
       render :text=>error.to_s, :status=>:bad_request

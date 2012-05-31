@@ -101,7 +101,7 @@ class SyncManagementController < ApplicationController
         repo = Repository.find(id)
         progress = format_sync_progress(repo.sync_status, repo)
         collected.push(progress)
-      rescue Exception => e
+      rescue => e
         notice e.to_s, {:level => :error} # debugging and skip for now
         next 
       end

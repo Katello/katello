@@ -52,7 +52,7 @@ class ProductsController < ApplicationController
       notice _("Product '%s' created.") % product_params[:name]
       render :nothing => true
 
-    rescue Exception => error
+    rescue => error
       Rails.logger.error error.to_s
       notice error, {:level => :error}
       render :text => error, :status => :bad_request
@@ -88,7 +88,7 @@ class ProductsController < ApplicationController
         format.html { render :text => escape_html(result) }
       end
 
-    rescue Exception => e
+    rescue => e
       notice e.to_s, {:level => :error}
 
       respond_to do |format|
@@ -102,7 +102,7 @@ class ProductsController < ApplicationController
     begin
       @product.destroy
       notice _("Product '%s' removed.") % @product[:name]
-    rescue Exception => error
+    rescue => error
       Rails.logger.error error.to_s
       notice error.to_s, {:level => :error}
     end
@@ -115,7 +115,7 @@ class ProductsController < ApplicationController
     begin
       @provider = @product.provider if @product  #don't trust the provider_id coming in if we don't need it
       @provider ||= Provider.find(params[:provider_id])
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
@@ -125,7 +125,7 @@ class ProductsController < ApplicationController
   def find_product
     begin
       @product = Product.find(params[:id])
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request

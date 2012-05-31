@@ -114,7 +114,7 @@ module Resources
           self.proxy_user = AppConfig.cdn_proxy.user
           self.proxy_password = AppConfig.cdn_proxy.password
         end
-      rescue Exception => e
+      rescue => e
         Rails.logger.error "Could not parse cdn_proxy:"
         Rails.logger.error e.to_s
       end

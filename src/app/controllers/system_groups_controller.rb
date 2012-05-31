@@ -81,7 +81,7 @@ class SystemGroupsController < ApplicationController
       end
     end
 
-  rescue Exception=> e
+  rescue => e
     notice e, {:level => :error}
     render :text=>e, :status=>500
   end
@@ -118,7 +118,7 @@ class SystemGroupsController < ApplicationController
     end
 
     render :text=>to_ret
-  rescue Exception=>e
+  rescue => e
     notice e, {:level => :error}
     render :text=>e, :status=>500
   end
@@ -136,7 +136,7 @@ class SystemGroupsController < ApplicationController
     @group.destroy
     notice _("System Group %s deleted.") % @group.name
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
-  rescue Exception => e
+  rescue => e
     notice e, {:level => :error}
     render :text=>e, :status=>500
   end

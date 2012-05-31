@@ -114,7 +114,7 @@ class ActivationKeysController < ApplicationController
       notice _("Subscriptions successfully added to Activation Key '%s'.") % @activation_key.name
       render :partial => "available_subscriptions_update.js.haml"
 
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error}
       render :nothing => true
     end
@@ -138,7 +138,7 @@ class ActivationKeysController < ApplicationController
       notice _("Subscriptions successfully removed from Activation Key '%s'.") % @activation_key.name
       render :partial => "applied_subscriptions_update.js.haml"
 
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error}
       render :nothing => true
     end
@@ -159,7 +159,7 @@ class ActivationKeysController < ApplicationController
     end
     notice _("Activation key '%s' was updated.") % @activation_key["name"]
     render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}, :editable=>ActivationKey.manageable?(current_organization)} and return
-  rescue Exception => e
+  rescue => e
     notice e, {:level => :error}
     render :text=>e, :status=>500
   end
@@ -171,7 +171,7 @@ class ActivationKeysController < ApplicationController
 
     notice _("Activation key '%s' was updated.") % @activation_key["name"]
     render :nothing => true
-  rescue Exception => e
+  rescue => e
     notice e, {:level => :error}
     render :text=>e, :status=>500
   end
@@ -225,7 +225,7 @@ class ActivationKeysController < ApplicationController
       notice _("'%s' did not meet the current search criteria and is not being shown.") % @activation_key["name"], { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     end
-  rescue Exception => error
+  rescue => error
     Rails.logger.error error.to_s
     notice error, {:level => :error}
     render :text => error, :status => :bad_request
@@ -259,7 +259,7 @@ class ActivationKeysController < ApplicationController
 
       render :text => escape_html(result)
 
-    rescue Exception => error
+    rescue => error
       notice error, {:level => :error}
 
       respond_to do |format|
@@ -278,7 +278,7 @@ class ActivationKeysController < ApplicationController
       else
         raise
       end
-    rescue Exception => e
+    rescue => e
       notice e.to_s, {:level => :error}
     end
   end
@@ -288,7 +288,7 @@ class ActivationKeysController < ApplicationController
   def find_activation_key
     begin
       @activation_key = ActivationKey.find(params[:id])
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error}
 
       # flash_to_headers is an after_filter executed on the application controller;

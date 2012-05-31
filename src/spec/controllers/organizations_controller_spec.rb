@@ -202,7 +202,7 @@ describe OrganizationsController do
     describe "exception is thrown in katello api" do
       before (:each) do
         @organization = new_test_org
-        @organization.stub!(:destroy).and_raise(Exception)
+        @organization.stub!(:destroy).and_raise(StandardError)
         Organization.stub!(:first).and_return(@organization)
       end
       
@@ -262,7 +262,7 @@ describe OrganizationsController do
     describe "exception is thrown in katello api" do
       before(:each) do
         @organization = new_test_org
-        @organization.stub!(:update).and_raise(Exception)
+        @organization.stub!(:update).and_raise(StandardError)
         Organization.stub!(:first).and_return(@organization)
       end
       

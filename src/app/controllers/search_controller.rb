@@ -59,7 +59,7 @@ class SearchController < ApplicationController
           end
         end
       end
-    rescue Exception => error
+    rescue => error
       Rails.logger.error error.to_s
       notice error.to_s, {:level => :error}
     end
@@ -71,7 +71,7 @@ class SearchController < ApplicationController
   def destroy_favorite
     begin
       current_user.search_favorites.destroy(params[:id])
-    rescue Exception => error
+    rescue => error
       Rails.logger.error error.to_s
       notice error.to_s, {:level => :error}
     end

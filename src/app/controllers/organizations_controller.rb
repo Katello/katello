@@ -98,7 +98,7 @@ class OrganizationsController < ApplicationController
         @new_env.save!
       end
       notice [_("Organization '%s' was created.") % @organization["name"]]
-    rescue Exception => error
+    rescue => error
       notice(error, {:level => :error, :include_class_name => org_created ? KTEnvironment::ERROR_CLASS_NAME : Organization.name})
       Rails.logger.error error.backtrace.join("\n")
       #rollback creation of the org if the org creation passed but the environment was not created
@@ -142,7 +142,7 @@ class OrganizationsController < ApplicationController
 
       render :text => escape_html(result)
 
-    rescue Exception => error
+    rescue => error
       notice error, {:level => :error}
 
       respond_to do |format|
@@ -162,7 +162,7 @@ class OrganizationsController < ApplicationController
     current_user.destroy_organization_async(@organization)
     notice _("Organization '%s' has been scheduled for background deletion.") % @organization.name
     render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
-  rescue Exception => error
+  rescue => error
     notice error.to_s, {:level => :error}
     render :text=> error.to_s, :status=>:bad_request and return
   end
@@ -210,7 +210,7 @@ class OrganizationsController < ApplicationController
     begin
       @organization = Organization.first(:conditions => {:cp_key => params[:id]})
       raise if @organization.nil?
-    rescue Exception => error
+    rescue => error
       notice _("Couldn't find organization with ID=%s") % params[:id], {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
@@ -221,7 +221,7 @@ class OrganizationsController < ApplicationController
     begin
       @organization = Organization.find(params[:id])
       raise if @organization.nil?
-    rescue Exception => error
+    rescue => error
       notice _("Couldn't find organization with ID=%s") % params[:id], {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request

@@ -47,7 +47,7 @@ class TaskStatus < ActiveRecord::Base
         else
           Rails.logger.debug "Task #{status.task_type} (#{status.id}) #{status.state}" if status.id
         end
-      rescue Exception => e
+      rescue => e
           Rails.logger.debug "Unable to report status change" # minor error
       end
     end

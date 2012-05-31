@@ -35,7 +35,7 @@ class NoticesController < ApplicationController
       @notices = render_panel_direct(Notice, {}, params[:search], 0, [sort_column, sort_direction],
             {:filter=>{:user_ids=>[current_user.id]}, :skip_render=>true, :page_size=>100})
       retain_search_history
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error, :persist => false}
       @notices = current_user.notices
     end
@@ -66,7 +66,7 @@ class NoticesController < ApplicationController
         format.html { render :text => escape_html(notice.details)}
       end
 
-    rescue Exception => e
+    rescue => e
       notice e.to_s, {:level => :error}
 
       respond_to do |format|
@@ -96,7 +96,7 @@ class NoticesController < ApplicationController
       end
       render :partial => "delete_all"
 
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error}
       render :text => error, :status => :bad_request
     end
