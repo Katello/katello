@@ -87,24 +87,21 @@ class Pool < ActiveRecord::Base
     "#{AppConfig.elastic_index}_pool"
   end
 
+  # If the pool_json is passed in, then candlepin is not hit again to fetch it. This is for the case where
+  # prior to this call the pool was already fetched.
   def self.find_pool(cp_id, pool_json=nil)
     pool_json = Resources::Candlepin::Pool.find(cp_id) if !pool_json
     Pool.new(pool_json) if not pool_json.nil?
   end
 
-  def self.index_pools cp_pools
-    pools = []
-    json_pools = cp_pools.collect{ |cp_pool|
-      pool = self.find_pool(cp_pool['id'], cp_pool)
-      pools << pool
+  def self.index_pools pools
+    json_pools = pools.collect{ |pool|
       pool.as_json.merge(pool.index_options)
     }
     Tire.index self.index do
       create :settings => Pool.index_settings, :mappings => Pool.index_mapping
       import json_pools
     end if !json_pools.empty?
-
-    pools
   end
 
   def self.search org_key, query, start, page_size, sort=[:name_sort, "ASC"]
