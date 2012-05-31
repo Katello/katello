@@ -493,7 +493,7 @@ class User < ActiveRecord::Base
     org.destroy
     message = _("Successfully removed organization '%s'.") % name
     notice message, { :synchronous_request => false, :request_type => "organization__delete" }
-  rescue Exception => e
+  rescue => e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
     error_text = _("Failed to delete organization '%s'. Check notices for more details. ") % name

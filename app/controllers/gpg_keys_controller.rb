@@ -104,7 +104,7 @@ class GpgKeysController < ApplicationController
       notice _("'%s' did not meet the current search criteria and is not being shown.") % @gpg_key["name"], { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     end
-  rescue Exception => error
+  rescue => error
     Rails.logger.error error.to_s
     return_error = notice(error, {:level => :error})
     render :json => return_error.to_json, :status => :bad_request
@@ -128,7 +128,7 @@ class GpgKeysController < ApplicationController
 
     render :text => escape_html(gpg_key_params.values.first)
 
-  rescue Exception => error
+  rescue => error
     Rails.logger.error error.to_s
     return_error = notice(error, {:level => :error, :synchronous_request => false})
   
@@ -144,7 +144,7 @@ class GpgKeysController < ApplicationController
       else
         raise
       end
-    rescue Exception => e
+    rescue => e
       notice e, {:level => :error}
     end
   end
@@ -154,7 +154,7 @@ class GpgKeysController < ApplicationController
   def find_gpg_key
     begin
       @gpg_key = GpgKey.find(params[:id])
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error}
 
       # flash_to_headers is an after_filter executed on the application controller;

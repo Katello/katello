@@ -66,7 +66,7 @@ class SystemErrataController < ApplicationController
     
     notice _("Errata scheduled for install.")
     render :text => task.task_status.uuid
-  rescue Exception => error
+  rescue => error
     errors error
     render :text => error, :status => :bad_request
   end

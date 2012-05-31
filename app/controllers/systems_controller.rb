@@ -130,7 +130,7 @@ class SystemsController < ApplicationController
         end
       end
 
-    rescue Exception => error
+    rescue => error
       if error.respond_to?('response')
         display_message = error.response.include?('displayMessage') ? JSON.parse(error.response)['displayMessage'] : error.to_s
         notice display_message, {:level => :error}
@@ -161,7 +161,7 @@ class SystemsController < ApplicationController
       end
       
       render :index, :locals=>{:envsys => true, :accessible_envs=> accesible_envs}
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error, :persist => false}
       render :index, :status=>:bad_request
     end
@@ -230,7 +230,7 @@ class SystemsController < ApplicationController
         notice _("System subscriptions updated.")
 
       end
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error, :persist => false}
       render :nothing => true, :status => :bad_request
     end
@@ -256,7 +256,7 @@ class SystemsController < ApplicationController
   def edit
     begin
       releases = @system.available_releases
-    rescue Exception => e
+    rescue => e
       # Don't pepper user with notices if there is an error fetching release versions, but do log them
       Rails.logger.error e.to_str
       releases = []
@@ -304,7 +304,7 @@ class SystemsController < ApplicationController
         }
         format.js
       end
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error, :persist => false}
       respond_to do |format|
         format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -337,7 +337,7 @@ class SystemsController < ApplicationController
     end
     notice "", {:level => :error, :list_items => system.errors.to_a}
     render :text => @system.errors, :status=>:ok
-  rescue Exception => e
+  rescue => e
     notice e, {:level => :error}
     render :text=>e, :status=>500
   end
@@ -348,7 +348,7 @@ class SystemsController < ApplicationController
     }
     notice _("%s Systems Removed Successfully") % @systems.length
     render :text=>""
-  rescue Exception => e
+  rescue => e
     notice e, {:level => :error}
     render :text=>e, :status=>500
   end
@@ -387,7 +387,7 @@ class SystemsController < ApplicationController
           system.system_group_ids = (system.system_group_ids + @system_groups.collect{|g| g.id}).uniq
           system.save!
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -426,7 +426,7 @@ class SystemsController < ApplicationController
           system.system_group_ids = (system.system_group_ids - @system_groups.collect{|g| g.id}).uniq
           system.save!
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -451,7 +451,7 @@ class SystemsController < ApplicationController
         begin
           system.install_packages params[:packages]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -462,7 +462,7 @@ class SystemsController < ApplicationController
         begin
           system.install_package_groups params[:groups]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -482,7 +482,7 @@ class SystemsController < ApplicationController
         begin
           system.install_package_groups params[:groups]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -492,7 +492,7 @@ class SystemsController < ApplicationController
         begin
           system.update_packages params[:packages]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -519,7 +519,7 @@ class SystemsController < ApplicationController
         begin
           system.uninstall_packages params[:packages]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -529,7 +529,7 @@ class SystemsController < ApplicationController
         begin
           system.uninstall_package_groups params[:groups]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -552,7 +552,7 @@ class SystemsController < ApplicationController
         begin
           system.install_errata params[:errata]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -579,7 +579,7 @@ class SystemsController < ApplicationController
     end
     notice _("System '%s' was updated.") % @system["name"]
     render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}} and return
-  rescue Exception => e
+  rescue => e
     notice e, {:level => :error}
     render :text=>e, :status=>500
   end
@@ -591,7 +591,7 @@ class SystemsController < ApplicationController
 
     notice _("System '%s' was updated.") % @system["name"]
     render :nothing => true
-  rescue Exception => e
+  rescue => e
     notice e, {:level => :error}
     render :text=>e, :status=>500
   end

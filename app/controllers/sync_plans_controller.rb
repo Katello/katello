@@ -92,7 +92,7 @@ class SyncPlansController < ApplicationController
         format.html { render :text => escape_html(result) }
       end
 
-      rescue Exception => e
+      rescue => e
         notice e.to_s, {:level => :error}
 
         respond_to do |format|
@@ -114,7 +114,7 @@ class SyncPlansController < ApplicationController
     begin
       @plan.destroy
       notice N_("Sync plan '%s' was deleted.") % @plan[:name]
-    rescue Exception => e
+    rescue => e
       notice e.to_s, {:level => :error}
     end
     render :partial => "common/list_remove", :locals => {:id=>@id, :name=>controller_display_name}
@@ -156,7 +156,7 @@ class SyncPlansController < ApplicationController
         notice _("'%s' did not meet the current search criteria and is not being shown.") % @plan["name"], { :level => 'message', :synchronous_request => false }
         render :json => { :no_match => true }
       end
-    rescue Exception => e
+    rescue => e
       Rails.logger.error e.to_s
       notice e, {:level => :error}
       render :text => e, :status => :bad_request
@@ -168,7 +168,7 @@ class SyncPlansController < ApplicationController
   def get_plan
     begin
       @plan = SyncPlan.find(params[:id])
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request

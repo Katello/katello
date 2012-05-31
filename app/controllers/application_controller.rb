@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
 
   # this is always in the top
   # order of these are important.
-  rescue_from Exception do |exception|
+  rescue_from StandardError do |exception|
     execute_rescue(exception, lambda{ |exception| render_error(exception)})
   end
 
@@ -120,7 +120,7 @@ class ApplicationController < ActionController::Base
         end
       end
       return @current_org
-    rescue Exception => error
+    rescue => error
       log_exception error
       session.delete(:current_organization_id)
       raise Errors::CurrentOrganizationNotFoundException.new error.to_s
@@ -306,7 +306,7 @@ class ApplicationController < ActionController::Base
           histories.first.update_attribute(:updated_at, Time.now)
         end
       end
-    rescue Exception => error
+    rescue => error
       log_exception(error)
     end
   end
@@ -510,7 +510,7 @@ class ApplicationController < ActionController::Base
   # for use with:   around_filter :catch_exceptions
   def catch_exceptions
     yield
-  rescue Exception => error
+  rescue => error
     notice error, {:level => :error}
     #render :text => error, :status => :bad_request
     render_error(error)

@@ -64,7 +64,7 @@ class PasswordResetsController < ApplicationController
       notice _("Password has been reset for user '%{s}'." % {:s => @user.username}), {:persist => false}
       render :text => ""
 
-    rescue Exception => e
+    rescue => e
       notice e.to_s, {:level => :error, :persist => false}
       render :text => e.to_s, :status => :bad_request
     end
@@ -86,7 +86,7 @@ class PasswordResetsController < ApplicationController
     begin
       @user = User.find_by_username_and_email!(params[:username], params[:email])
       User.current = @user
-    rescue Exception => error
+    rescue => error
       Rails.logger.error error.to_s
     end
   end
@@ -95,7 +95,7 @@ class PasswordResetsController < ApplicationController
     begin
       @users = User.where(:email => params[:email])
       User.current = @users.first
-    rescue Exception => error
+    rescue => error
       Rails.logger.error error.to_s
     end
   end
@@ -104,7 +104,7 @@ class PasswordResetsController < ApplicationController
     begin
       @user = User.find_by_password_reset_token!(params[:id])
       User.current = @user
-    rescue Exception => error
+    rescue => error
       notice _("Request received has either an invalid or expired token.  Token: '%{t}'" % {:t => params[:id]}), {:level => :error, :persist => false}
       redirect_to root_url
       execute_after_filters

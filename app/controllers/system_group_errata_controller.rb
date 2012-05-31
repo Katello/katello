@@ -61,7 +61,7 @@ class SystemGroupErrataController < ApplicationController
     
     notice _("Errata scheduled for install.")
     render :text => job.pulp_id
-  rescue Exception => error
+  rescue => error
     errors error
     render :text => error, :status => :bad_request
   end
