@@ -85,30 +85,59 @@ KT.path_select = function(div_id, name, environments, options_in){
         },
         setup_input_actions = function(){
             var anchors = path_selector.find('li');
-            anchors.hover(function(){
-                            var input = $(this).find('.node_select');
-                            if (!input.is(':visible')){
-                                input.fadeIn(200);
-                            }
-                        },
-                        function(){
-                            var input = $(this).find('.node_select');
-                                if(!input.is(":checked")){
-                                   input.fadeOut(200);
-                                }
+            anchors.hover(
+                function(){
+                    var input = $(this).find('.node_select');
+                    if (!input.is(':visible')){
+                        input.show();
+                    }
+                },
+                function(){
+                    var input = $(this).find('.node_select');
+                        if(!input.is(":checked")){
+                           input.hide();
                         }
+                }
             );
-            if(options.link_first){
-                var first_nodes = path_selector.find('ul').find('li:first');
-                first_nodes.find('input:checkbox').change(function(){
+
+            var nodes = path_selector.find('.node_select');
+            var first_nodes = path_selector.find('ul').find('li:first');
+            var on_select = function(select_elem){
+                select_nodes(select_elem);
+                if(options.select_mode === 'single'){
+                    nodes.attr('disabled', 'disabled');
+                    select_elem.removeAttr('disabled');
+                }
+                if(options.link_first && select_elem.parents('li').is(':first-child')){
+                    select_nodes(first_nodes.find('input:checkbox').not(':checked'))
+                }
+            };
+            var on_deselect = function(select_elem){
+                unselect_nodes(select_elem);
+                if(options.select_mode === 'single'){
+                    nodes.removeAttr('disabled');
+                }
+                if(options.link_first && select_elem.parents('li').is(':first-child')){
+                    unselect_nodes(first_nodes.find('input:checkbox:checked'));
+                }
+            };
+            nodes.change(function(){
                     if ($(this).is(':checked')){
-                        first_nodes.find('input:checkbox').not(':checked').attr('checked', 'checked').show();
+                        on_select($(this));
                     }
                     else {
-                        first_nodes.find('input:checkbox:checked').removeAttr('checked').hide();
+                        on_deselect($(this));
                     }
-                });
-            }
+            });
+
+        },
+        select_nodes = function(checkbox_list){
+            checkbox_list.attr('checked', 'checked').show();
+            checkbox_list.parents('a').addClass('active');
+        },
+        unselect_nodes = function(checkbox_list){
+            checkbox_list.removeAttr('checked').hide();
+            checkbox_list.parents('a').removeClass('active');
         },
         get_selected = function(){
             var selected = path_selector.find('input:checked'),
@@ -180,7 +209,8 @@ KT.path_select_template = {
     path_node: function(node, next){
         var html = '',
             next_node =  next  ? ('data-next_node_id="' + next.id + '"') : '',
-            input = node.select ? '<input class="node_select" type="checkbox" ' + next_node +' data-node_id="' + node.id + '">' : '';
+            input = node.select ? '<span class="checkbox_holder"><input class="node_select" type="checkbox" ' +
+                next_node +' data-node_id="' + node.id + '"></span>' : '';
 
 
         html += '<li data-node_id="' + node.id + '">'+ '<a><div>' + input + node.name + '</div></a></li>';

@@ -4,7 +4,7 @@ KT.env_select_scroll = function(options) {
 
 
     var anchor_padding = 20, //amount of padding each anchor has
-        min_size = 30,
+        min_size = 40,
         min_size_selected = 75,
         px_per_sec = 400,
         freq = 20;
