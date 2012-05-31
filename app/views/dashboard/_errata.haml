@@ -28,7 +28,7 @@
                 .col_3.one-line-ellipsis
                   #{errata_product_names(errata, repos)}
                 .col_4
-                  %span.details-icon.errata-info{ "data-title" => errata.title, "data-issued" => errata.issued, "data-description" => errata.description, "data-id" => errata.id, "data-packages" => errata.pkglist.to_json, "data-reference_url" => (errata.references[0] ? errata.references[0]["href"] : "") }
+                  %span.tipsy-icon.info.errata-info{ "data-title" => errata.title, "data-issued" => errata.issued, "data-description" => errata.description, "data-id" => errata.id, "data-packages" => errata.pkglist.to_json, "data-reference_url" => (errata.references[0] ? errata.references[0]["href"] : "") }
               %div.system_list
                 .subheader
                   .col_1

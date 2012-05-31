@@ -21,7 +21,6 @@ class ActivationKey < ActiveRecord::Base
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 
-
   belongs_to :organization
   belongs_to :environment, :class_name => "KTEnvironment"
   belongs_to :user
@@ -29,6 +28,9 @@ class ActivationKey < ActiveRecord::Base
 
   has_many :key_pools
   has_many :pools, :class_name => "KTPool", :through => :key_pools
+
+  has_many :key_system_groups, :dependent => :destroy
+  has_many :system_groups, :through => :key_system_groups
 
   scope :readable, lambda {|org| ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")}
 
@@ -41,6 +43,7 @@ class ActivationKey < ActiveRecord::Base
   validate :environment_exists
   validate :system_template_exists
   validate :environment_not_library
+  validate :environment_key_conflict
 
   def system_template_exists
     if system_template && system_template.environment != self.environment
@@ -58,6 +61,14 @@ class ActivationKey < ActiveRecord::Base
 
   def environment_not_library
     errors.add(:base, _("Cannot create activation keys in Library environment ")) if environment and  environment.library?
+  end
+
+  def environment_key_conflict
+    conflicts = self.system_groups.select{|g| !g.environments.empty? && !g.environments.include?(self.environment)}
+    names = conflicts.join(",")
+    if !conflicts.empty?
+      errors.add(:environment, _("The selected system groups (%s) are not compatible with the selected environment.") % names)
+    end
   end
 
   # sets up system when registering with this activation key

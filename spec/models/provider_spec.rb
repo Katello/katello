@@ -111,6 +111,33 @@ describe Provider do
         end
         @provider.import_products_from_cp
       end
+
+      context "there was a RH product that is not included in the latest manifest" do
+
+        before do
+          Glue::Candlepin::Product.stub(:import_from_cp => [], :import_marketing_from_cp => true)
+
+          @rh_product = Product.create!({:cp_id => "rh_product_id", :name=> "rh_product", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+          @custom_provider = Provider.create!({
+            :name => 'test_provider',
+            :repository_url => 'https://something.net',
+            :provider_type => Provider::CUSTOM,
+            :organization => @organization
+          })
+          @custom_product = Product.create!({:cp_id => "custom_product_id", :name=> "custom_product", :productContent => [], :provider => @custom_provider, :environments => [@organization.library]})
+        end
+
+        it "should be removed from the Katello products"  do
+          @provider.import_products_from_cp
+          Product.find_by_id(@rh_product.id).should_not be
+        end
+
+        it "should keep non-RH products" do
+          @provider.import_products_from_cp
+          Product.find_by_id(@custom_product.id).should be
+        end
+
+      end
     end
   end
 

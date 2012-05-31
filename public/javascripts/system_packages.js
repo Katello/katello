@@ -32,7 +32,7 @@ KT.package_action_types = function() {
     };
 }();
 
-KT.packages = function() {
+KT.system_packages = function() {
     var system_id = $('.packages').attr('data-system_id'),
     retrievingNewContent = true,
     total_packages = $('.packages').attr('data-total_packages'),
@@ -95,7 +95,7 @@ KT.packages = function() {
             add_content_button.bind('keypress', function(event) {
                 if( event.which === 13) {
                     event.preventDefault();
-                    KT.packages.addContent(event);
+                    KT.system_packages.addContent(event);
                 }
             });
 
@@ -107,7 +107,7 @@ KT.packages = function() {
             remove_content_button.bind('keypress', function(event) {
                 if( event.which === 13) {
                     event.preventDefault();
-                    KT.packages.removeContent(event);
+                    KT.system_packages.removeContent(event);
                 }
             });
             remove_content_button.removeAttr('disabled');
@@ -194,7 +194,7 @@ KT.packages = function() {
         var dataScrollURL = more_button.attr("data-scroll_url");
         var reverse = parseInt(more_button.attr("data-offset"), 10);
 
-        dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&pkg_order=" + KT.packages.sortOrder() + "&";
+        dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&pkg_order=" + KT.system_packages.sortOrder() + "&";
         spinner.fadeIn();
         list.find('tbody > tr.package').empty().remove();
         $.ajax({
@@ -467,7 +467,7 @@ KT.packages = function() {
     addContent = function(data) {
         data.preventDefault();
 
-        var selected_action = $("input[@name=perform_action]:checked").attr('id'),
+        var selected_action = $("input[name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
             content_array = content_string.split(/ *, */),
             validation_error = undefined;
@@ -565,7 +565,7 @@ KT.packages = function() {
     removeContent = function(data) {
         data.preventDefault();
 
-        var selected_action = $("input[@name=perform_action]:checked").attr('id'),
+        var selected_action = $("input[name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
             content_array = content_string.split(/ *, */),
             validation_error = undefined;
@@ -733,7 +733,7 @@ KT.packages = function() {
         var validation_error = undefined;
 
         // validate the package list format
-        if ((content_type === KT.package_action_types.PKG) && !valid_package_list_format(content)) {
+        if ((content_type === KT.package_action_types.PKG) && !KT.packages.valid_package_list_format(content)) {
             validation_error = i18n.validation_error_name_format;
 
         // validate that no actions pending on same package or group
@@ -770,25 +770,8 @@ KT.packages = function() {
     		input.removeClass('validation_error_input');
     		error_message.hide();
     	}
-    },
-    valid_package_list_format = function(packages){
-    	var length = packages.length;
-    		
-    	for (var i = 0; i < length; i += 1){
-    		if( !valid_package_name(packages[i]) ){
-    			return false;
-    		}
-    	}
-    	
-    	return true;
-    },
-    valid_package_name = function(package_name){
-    	var is_match = package_name.match(/[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/);
-    	
-    	return is_match === null ? true : false;
     };
-    
-    
+
     return {
         morePackages: morePackages,
         sortOrder: sortOrder,
@@ -803,5 +786,5 @@ KT.packages = function() {
 }();
 
 $(document).ready(function() {
-    KT.packages.initPackages();
+    KT.system_packages.initPackages();
 });

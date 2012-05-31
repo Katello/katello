@@ -12,6 +12,9 @@
 */
 
 KT.panel.list.registerPage('activation_keys', { create : 'new_activation_key' });
+KT.panel.set_expand_cb(function() {
+    KT.system_groups_pane.register_multiselect();
+});
 
 $(document).ready(function() {
 
@@ -73,6 +76,8 @@ $(document).ready(function() {
              });
          }
      });
+
+    KT.system_groups_pane.register_events();
 });
 
 KT.activation_key = (function($) {

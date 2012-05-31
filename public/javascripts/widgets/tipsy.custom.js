@@ -1,21 +1,21 @@
 KT.tipsy = KT.tipsy || {};
 
 KT.tipsy.custom = (function(){
-    var errata_tooltip = function(){
-         $('.errata-info').tipsy({ 
-            gravity: 'e', live : true, html : true, title : KT.tipsy.templates.errata, 
-            hoverable : true, delayOut : 250, opacity : 1, delayIn : 300, className : 'errata_tooltip',
-            stickyClick : function(element, state){ 
-                if (state === 'on'){
-                    $(element).addClass('details-icon-hover').removeClass('details-icon');
-                } else {
-                    $(element).addClass('details-icon').removeClass('details-icon-hover');
-                }
-            },
-            afterShow : function(){
-                $('.details_container').addClass('scroll-pane');
-                KT.common.jscroll_init($('.scroll-pane'));
-            }});
+    var tooltip = function(element) {
+        element.tipsy({
+           gravity: 'e', live : true, html : true, title : KT.tipsy.templates.dynamic,
+           hoverable : true, delayOut : 250, opacity : 1, delayIn : 300, className : 'tooltip',
+           stickyClick : function(element, state){
+               if (state === 'on'){
+                   $(element).addClass('tipsy-hover').removeClass('tipsy-nohover');
+               } else {
+                   $(element).addClass('tipsy-nohover').removeClass('tipsy-hover');
+               }
+           },
+           afterShow : function(){
+               $('.details_container').addClass('scroll-pane');
+               KT.common.jscroll_init($('.scroll-pane'));
+           }});
     },
     disable_details_tooltip = function(element) {
         element.replaceWith('<span class="details-icon-nohover"></span>');
@@ -34,7 +34,7 @@ KT.tipsy.custom = (function(){
 
         $('.system_content_action').tipsy({
            gravity: 'e', live : true, html : true, title : KT.tipsy.templates.table_template,
-           hoverable : true, delayOut : 250, opacity : 1, delayIn : 300, className : 'table_tooltip',
+           hoverable : true, delayOut : 250, opacity : 1, delayIn : 300, className : 'tooltip',
            afterShow : function(){
                $('.details_container').addClass('scroll-pane');
                KT.common.jscroll_init($('.scroll-pane'));
@@ -49,7 +49,7 @@ KT.tipsy.custom = (function(){
            }});
     };
     return {
-        errata_tooltip           : errata_tooltip,
+        tooltip                  : tooltip,
         disable_details_tooltip  : disable_details_tooltip,
         promotion_filter_tooltip : promotion_filter_tooltip,
         system_packages_tooltips : system_packages_tooltip
@@ -57,9 +57,43 @@ KT.tipsy.custom = (function(){
 })();
 
 KT.tipsy.templates = (function(){
-    var errata = function(){
+    var dynamic = function() {
+      // The dynamic function will determine the template to use for rendering the tipsy based on the type of element.
+      // Currently, this is assumed to be either errata-info or a simple list.
+      var html, element = $(this);
+      if (element.hasClass('errata-info')) {
+          html = errata(element);
+      } else {
+          html = list(element);
+      }
+      return html;
+    },
+    list = function(element) {
+        // The list template assumes that the data shown in the template is essentially a simple list of items.
+        // The items are pulled from the data-list attribute associated with the tipsy element.
         var html = '<div class="details_container">',
-            element = $(this),
+            items_list = [],
+            generate_list = function(){
+                var items_list = element.data('list'),
+                    i = 0,
+                    length = items_list.length,
+                    html = "";
+
+                for(i; i < length; i += 1){
+                    html += "<li>" + items_list[i] + '</li>';
+                }
+                return html;
+            };
+
+        items_list = generate_list();
+
+        html += '<div class="item-container"><ul style="margin:0 0 0 4px;" class="la">' + items_list + '</ul></div>';
+        html += '</div>';
+
+        return html;
+    },
+    errata = function(element){
+        var html = '<div class="details_container">',
             packages_list = [],
             generate_packages = function(){
                 var packages = element.data('packages')[0]["packages"],
@@ -146,7 +180,7 @@ KT.tipsy.templates = (function(){
     };
 
     return {
-        errata            : errata,
+        dynamic           : dynamic,
         promotion_filters : promotion_filters,
         table_template    : table_template
     };
