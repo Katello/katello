@@ -11,7 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.package_action_types = function() {
+KT.package_action_types = (function() {
     return {
         PKG : "pkg",
         PKG_INSTALL : "pkg_install",
@@ -22,9 +22,9 @@ KT.package_action_types = function() {
         PKG_GRP_UPDATE : "pkg_grp_update",
         PKG_GRP_REMOVE : "pkg_grp_remove"
     };
-}();
+})();
 
-KT.package_actions = function() {
+KT.package_actions = (function() {
     var packages_container = undefined,
     content_add_url = undefined,
     content_update_url = undefined,
@@ -299,5 +299,5 @@ KT.package_actions = function() {
         removeContent: removeContent,
         updateContent: updateContent
     }
-}();
+})();
 
