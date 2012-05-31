@@ -12,6 +12,8 @@
 
 class SystemPackagesController < ApplicationController
 
+  require 'util/package_util'
+
   before_filter :find_system
   before_filter :authorize
 
@@ -36,7 +38,7 @@ class SystemPackagesController < ApplicationController
   def add
     if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
-      packages = validate_package_list_format(params[:packages])
+      packages = Katello::PackageUtils.validate_package_list_format(params[:packages])
       
       if packages
         task = @system.install_packages packages
@@ -69,7 +71,7 @@ class SystemPackagesController < ApplicationController
 
     elsif !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
-      packages = validate_package_list_format(params[:packages])
+      packages = Katello::PackageUtils.validate_package_list_format(params[:packages])
       
       if packages
         task = @system.uninstall_packages packages
@@ -209,25 +211,4 @@ class SystemPackagesController < ApplicationController
       last = systems.length if last > systems.length
       systems[offset...last]
   end
-  
-  def valid_package_characters
-    /[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/
-  end
-  
-  def validate_package_list_format packages
-    packages = packages.split(/ *, */ )
-
-    packages.each{ |package_name|
-      if not valid_package_name_format(package_name).nil?
-        return false
-      end
-    }
-    
-    return packages
-  end
-  
-  def valid_package_name_format package
-    return (package =~ valid_package_characters)
-  end
-
 end
