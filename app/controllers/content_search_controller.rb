@@ -25,7 +25,7 @@ class ContentSearchController < ApplicationController
 
   def my_environments
     paths = current_organization.promotion_paths
-    library = {:id=>current_organization.library.id, :name=>[current_organization.library.name]}
+    library = {:id=>current_organization.library.id, :name=>[current_organization.library.name], :select=>true}
     paths.collect do |path|
       [library] + path.collect{|e| {:id=>e.id, :name=>e.name, :select=>true} }
     end
