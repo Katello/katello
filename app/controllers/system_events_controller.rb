@@ -40,7 +40,7 @@ class SystemEventsController < ApplicationController
   def show
     # details
     task = @system.tasks.where("#{TaskStatus.table_name}.id" => params[:id]).first
-    task_template = SystemTask::TYPES[task.task_type]
+    task_template = TaskStatus::TYPES[task.task_type]
     type = task_template[:name]
     if task_template[:user_message]
       user_message = task_template[:user_message] % task.user.username
