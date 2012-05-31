@@ -50,10 +50,10 @@ KT.path_select = function(div_id, name, environments, options_in){
 
             div.append(KT.path_select_template.selector(environments, paths_id, options.button_text));
             path_selector = $("#" + paths_id);
-            path_selector.find('.node_select').hide();
+            path_selector.find('.node_select').not(':checked').hide();
 
             if(options.select_mode !== 'none'){
-                setup_input_hover();
+                setup_input_actions();
             }
 
             if(options.button_text){
@@ -83,10 +83,8 @@ KT.path_select = function(div_id, name, environments, options_in){
         default_opt = function(attribute, default_value){
             return attribute === undefined ? default_value : attribute;
         },
-        setup_input_hover = function(){
-
-            var anchors = path_selector.find('li');//.find('a');
-
+        setup_input_actions = function(){
+            var anchors = path_selector.find('li');
             anchors.hover(function(){
                             var input = $(this).find('.node_select');
                             if (!input.is(':visible')){
@@ -99,8 +97,18 @@ KT.path_select = function(div_id, name, environments, options_in){
                                    input.fadeOut(200);
                                 }
                         }
-
             );
+            if(options.link_first){
+                var first_nodes = path_selector.find('ul').find('li:first');
+                first_nodes.find('input:checkbox').change(function(){
+                    if ($(this).is(':checked')){
+                        first_nodes.find('input:checkbox').not(':checked').attr('checked', 'checked').show();
+                    }
+                    else {
+                        first_nodes.find('input:checkbox:checked').removeAttr('checked').hide();
+                    }
+                });
+            }
         },
         get_selected = function(){
             var selected = path_selector.find('input:checked'),
