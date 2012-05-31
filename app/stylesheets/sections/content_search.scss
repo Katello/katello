@@ -13,6 +13,8 @@ $comparison_grid_filter-width: 150px;
 $widget_border-color: #B5B5B5;
 
 
+.no_border { border: none !important; }
+
 #browse_box {
   width: $browse_box-width;
   height: $browse_box-height;
@@ -32,6 +34,17 @@ $widget_border-color: #B5B5B5;
   
   #filters {
     height: $browse_box-height - $browse_box_header-height;
+
+    fieldset {
+      margin: 20px 5px;
+
+      div {
+        border: 1px solid $widget_border-color;
+        padding: 8px 2px;
+
+        .auto_complete_input { width: 94px; }
+      }
+    }
   }
 }
 
