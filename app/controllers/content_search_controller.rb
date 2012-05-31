@@ -31,6 +31,6 @@ class ContentSearchController < ApplicationController
     end
   end
 
-
+  private
 
 end
