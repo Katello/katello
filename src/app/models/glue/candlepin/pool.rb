@@ -18,21 +18,22 @@ module Glue::Candlepin::Pool
     base.send :extend, ClassMethods
 
     base.class_eval do
-      lazy_accessor :productName, :productId, :startDate, :endDate, :consumed, :quantity, :attrs, :owner,
+      lazy_accessor :poolDerived, :productName, :consumed, :quantity, :supportLevel, :supportType,
+        :startDate, :endDate, :attrs, :owner, :productId, :accountNumber, :contractNumber,
+        :sourcePoolId, :hostId, :virtOnly, :virtLimit,
+        :arch, :sockets, :description, :productFamily, :variant, :providedProducts,
         :initializer => lambda {
           json = Resources::Candlepin::Pool.find(cp_id)
           # symbol "attributes" is reserved by Rails and cannot be used
           json['attrs'] = json['attributes']
           json
         }
-
-      alias_method :poolName, :productName
     end
   end
 
   module ClassMethods
     def find_by_organization_and_id(organization, pool_id)
-      pool = KTPool.find_by_cp_id(pool_id) || KTPool.new(Resources::Candlepin::Pool.find(pool_id))
+      pool = Pool.find_by_cp_id(pool_id) || Pool.new(Resources::Candlepin::Pool.find(pool_id))
       if pool.organization == organization
         return pool
       end
@@ -45,25 +46,66 @@ module Glue::Candlepin::Pool
       if not attrs.nil? and attrs.member? 'id'
         # initializing from candlepin json
         @productName = attrs["productName"]
-        @startDate = attrs["startDate"]
-        @endDate = attrs["endDate"]
+        @startDate = Date.parse(attrs["startDate"])
+        @endDate = Date.parse(attrs["endDate"])
         @consumed = attrs["consumed"]
         @quantity = attrs["quantity"]
         @attrs = attrs["attributes"]
         @owner = attrs["owner"]
         @productId = attrs["productId"]
+        @cp_id = attrs['id']
+        @accountNumber = attrs['accountNumber']
+        @contractNumber = attrs['contractNumber']
+        @providedProducts = attrs['providedProducts']
+
+        @sourcePoolId = nil
+        @hostId = nil
+        @virtOnly = false
+        @poolDerived = false
+        attrs['attributes'].each do |attr|
+          if attr['name'] == 'source_pool_id'
+            @sourcePoolId = attr['value']
+          elsif attr['name'] == 'requires_host'
+            @hostId = attr['value']
+          elsif attr['name'] == 'virt_only'
+            @virtOnly = attr['value'] == 'true' ? true : false
+          elsif attr['name'] == 'pool_derived'
+            @poolDerived = attr['value'] == 'true' ? true : false
+          end
+        end
+
+        @virtLimit = 0
+        @supportType = ""
+        @arch = ""
+        @supportLevel = ""
+        @sockets = 0
+        @description = ""
+        @productFamily = ""
+        @variant = ""
+        attrs['productAttributes'].each do |attr|
+          if attr['name'] == 'virt_limit'
+            @virtLimit = attr['value'].to_i
+          elsif attr['name'] == 'support_type'
+            @supportType = attr['value']
+          elsif attr['name'] == 'arch'
+            @arch = attr['value']
+          elsif attr['name'] == 'support_level'
+            @supportLevel = attr['value']
+          elsif attr['name'] == 'sockets'
+            @sockets = attr['value'].to_i
+          elsif attr['name'] == 'description'
+            @description = attr['value']
+          elsif attr['name'] == 'product_family'
+            @productFamily = attr['value']
+          elsif attr['name'] == 'variant'
+            @variant = attr['value']
+          end
+        end
+
         super(:cp_id => attrs['id'])
       else
         super
       end
-    end
-
-    def startDate_as_datetime
-      DateTime.parse(startDate)
-    end
-
-    def endDate_as_datetime
-      DateTime.parse(endDate)
     end
 
     def organization
