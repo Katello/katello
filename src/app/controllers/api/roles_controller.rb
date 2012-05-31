@@ -13,7 +13,7 @@
 class Api::RolesController < Api::ApiController
 
   before_filter :find_role, :only => [:show, :update, :destroy]
-  before_filter :find_organization, :only => [:available_verbs]
+  before_filter :find_optional_organization, :only => [:available_verbs]
   before_filter :authorize
   respond_to :json
 
@@ -66,7 +66,7 @@ class Api::RolesController < Api::ApiController
 
   def available_verbs
     details= {}
- 
+
     orgId = @organization ? @organization.id : nil
 
     ResourceType::TYPES.each do |type, value|
@@ -77,7 +77,7 @@ class Api::RolesController < Api::ApiController
       details[type][:global] = value["global"]
       details[type][:name] = value["name"]
     end
-    
+
     render :json => details
   end
 
@@ -85,7 +85,7 @@ class Api::RolesController < Api::ApiController
   def find_role
     @role = Role.find(params[:id])
     raise HttpErrors::NotFound, _("Couldn't find user role '#{params[:id]}'") if @role.nil?
-    @role 
+    @role
   end
 
 end

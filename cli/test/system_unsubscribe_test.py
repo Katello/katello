@@ -10,33 +10,20 @@ from katello.client.core.system import Unsubscribe
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: organization, system's name, one of (serial, entitlement, all)
 
-    def setUp(self):
-        self.set_action(Unsubscribe())
-        self.mock_options()
+    action = Unsubscribe()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['unsubscribe'])
+    disallowed_options = [
+        (),
+        ('--org=ACME', ),
+        ('--org=ACME', '--name=system', ),
+        ('--org=ACME', '--name=system', '--all', '--serial=1', '--entitlement=1'),
+    ]
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['unsubscribe', '--org=ACME'])
-
-    def test_missing_serial_or_ent_or_all_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['unsubscribe', '--org=ACME', '--name=system'])
-
-    def test_multiple_of_serial_entitlement_all_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['unsubscribe', '--org=ACME', '--name=system', '--all', '--serial=1', '--entitlement=1'])
-
-    def test_no_error_if_org_and_name_and_all_provided(self):
-        self.action.process_options(['subscriptions', '--org=ACME', '--name=system', '--all'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_org_and_name_and_serial_provided(self):
-        self.action.process_options(['subscriptions', '--org=ACME', '--name=system', '--serial=1'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_org_and_name_and_entitlement_provided(self):
-        self.action.process_options(['subscriptions', '--org=ACME', '--name=system', '--entitlement=1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=system', '--all'),
+        ('--org=ACME', '--name=system', '--serial=1'),
+        ('--org=ACME', '--name=system', '--entitlement=1'),
+    ]
 
 
 class SystemUnsubscribeTest(CLIActionTestCase):

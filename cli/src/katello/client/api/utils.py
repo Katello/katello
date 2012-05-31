@@ -27,6 +27,7 @@ from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.api.filter import FilterAPI
+from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.system import SystemAPI
 
 
@@ -128,7 +129,7 @@ def get_user(userName):
     user_api = UserAPI()
     user = user_api.user_by_name(userName)
     if user == None:
-        raise ApiDataError(_("Could not fing user [ %s ]") % (userName))
+        raise ApiDataError(_("Could not find user [ %s ]") % (userName))
     return user
 
 def get_role(name):
@@ -162,6 +163,14 @@ def get_filter(org_name, name):
     if filter == None:
         raise ApiDataError(_("Cannot find filter [ %s ]") % (name))
     return filter
+
+def get_system_group(org_name, system_group_name):
+    system_group_api = SystemGroupAPI()
+
+    system_group = system_group_api.system_group_by_name(org_name, system_group_name)
+    if system_group == None:
+        raise ApiDataError(_("Could not find system group [ %s ] within organization [ %s ]") % (system_group_name, org_name))
+    return system_group
 
 def get_system(org_name, sys_name, env_name=None):
     system_api = SystemAPI()

@@ -7,16 +7,17 @@ import katello.client.core.repo
 from katello.client.core.organization import GenerateDebugCert
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
-    def setUp(self):
-        self.set_action(GenerateDebugCert())
-        self.mock_options()
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['uebercert'])
+    action = GenerateDebugCert()
 
-    def test_no_error_if_required_options_provided(self):
-        self.action.process_options(['uebercert', '--name=org'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    disallowed_options = [
+        (),
+    ]
+
+    allowed_options = [
+        ('uebercert', '--name=org'),
+    ]
+
 
 class CreateUebercertTest(CLIActionTestCase):
     NAME = 'ORG'

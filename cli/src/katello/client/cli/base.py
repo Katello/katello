@@ -25,7 +25,7 @@ from katello.client.utils.encoding import u_str
 
 from katello.client.api.version import VersionAPI
 from katello.client.config import Config
-from katello.client.logutil import getLogger
+from katello.client.logutil import getLogger, logfile
 from katello.client import server
 
 
@@ -184,7 +184,7 @@ class KatelloCLI(object):
 
     def error(self, exception, errorMsg = None):
         msg = errorMsg if errorMsg else u_str(exception)
-        print >> sys.stderr, "error: %s (more in the log file)" % msg
+        print >> sys.stderr, "error: %s (more in the log file %s)" % (msg, logfile())
         _log.error(u_str(exception))
         _log.error(format_exc(exception))
 
@@ -228,7 +228,7 @@ class KatelloCLI(object):
             # process command and action options before setup_credentials
             # to catch errors before accessing Kerberos
             command_args = args[1:]
-            command.process_options(command_args)
+            command.process_options(command.create_parser(), command_args)
             self.setup_server()
             action = command.extract_action(command_args)
             if not action or action.require_credentials():

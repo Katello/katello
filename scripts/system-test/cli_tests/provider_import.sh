@@ -16,6 +16,7 @@ MANIFEST_AK1=$(nospace "manifest_ak1_$RAND")
 MANIFEST_AK2=$(nospace "manifest_ak2_$RAND")
 CS1_NAME="changeset_manifest_$RAND"
 MANIFEST_PATH="$TESTDIR/fake-manifest-syncable.zip"
+MANIFEST_REIMPORT_PATH="$TESTDIR/fake-manifest-syncable-without-nature.zip"
 MANIFEST_REPO_URL="http://inecas.fedorapeople.org/fakerepos/cds/"
 MANIFEST_EPROD="Zoo Enterprise"
 MANIFEST_PROD="Zoo Enterprise 247"
@@ -73,4 +74,6 @@ if sm_present; then
 else
   skip_test_success "rhsm registration" "subscription-manager command not found"
 fi
+
+test_success "reimport manifest" provider import_manifest --name "Red Hat" --org "$MANIFEST_ORG" --file "$MANIFEST_REIMPORT_PATH" --force
 test_success "org delete for manifest" org delete --name="$MANIFEST_ORG"

@@ -17,7 +17,8 @@ class ActivationKeysController < ApplicationController
   before_filter :require_user
   before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy,
                                                 :available_subscriptions, :applied_subscriptions,
-                                                :add_subscriptions, :remove_subscriptions]
+                                                :add_subscriptions, :remove_subscriptions,
+                                                :system_groups, :add_system_groups, :remove_system_groups]
   before_filter :find_environment, :only => [:edit]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
   before_filter :panel_options, :only => [:index, :items]
@@ -50,6 +51,10 @@ class ActivationKeysController < ApplicationController
       :add_subscriptions => manage_test,
       :remove_subscriptions => manage_test,
 
+      :system_groups => read_test,
+      :add_system_groups => manage_test,
+      :remove_system_groups => manage_test,
+
       :destroy => manage_test
     }
   end
@@ -57,7 +62,8 @@ class ActivationKeysController < ApplicationController
   def param_rules
     {
       :create => {:activation_key => [:name, :description, :environment_id, :system_template_id]},
-      :update => {:activation_key  => [:name, :description,:environment_id, :system_template_id]}
+      :update => {:activation_key  => [:name, :description,:environment_id, :system_template_id]},
+      :update_system_groups => {:activation_key => [:system_group_ids]}
     }
   end
 
@@ -136,6 +142,38 @@ class ActivationKeysController < ApplicationController
       notice error.to_s, {:level => :error}
       render :nothing => true
     end
+  end
+
+  def system_groups
+    # retrieve the available groups that aren't currently assigned to the key
+    @system_groups = SystemGroup.where(:organization_id=>current_organization).order(:name) - @activation_key.system_groups
+    render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>ActivationKey.manageable?(current_organization)}
+  end
+
+  def add_system_groups
+    unless params[:group_ids].blank?
+      ids = params[:group_ids].collect{|g| g.to_i} - @activation_key.system_group_ids #ignore dups
+      @system_groups = SystemGroup.where(:id=>ids)
+      @activation_key.system_group_ids = (@activation_key.system_group_ids + @system_groups.collect{|g| g.id}).uniq
+      @activation_key.save!
+    end
+    notice _("Activation key '%s' was updated.") % @activation_key["name"]
+    render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}, :editable=>ActivationKey.manageable?(current_organization)} and return
+  rescue Exception => e
+    notice e, {:level => :error}
+    render :text=>e, :status=>500
+  end
+
+  def remove_system_groups
+    system_groups = SystemGroup.where(:id=>params[:group_ids]).collect{|g| g.id}
+    @activation_key.system_group_ids = (@activation_key.system_group_ids - system_groups).uniq
+    @activation_key.save!
+
+    notice _("Activation key '%s' was updated.") % @activation_key["name"]
+    render :nothing => true
+  rescue Exception => e
+    notice e, {:level => :error}
+    render :text=>e, :status=>500
   end
 
   def new
@@ -225,7 +263,7 @@ class ActivationKeysController < ApplicationController
       notice error, {:level => :error}
 
       respond_to do |format|
-        format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
+        format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
       end
     end
   end

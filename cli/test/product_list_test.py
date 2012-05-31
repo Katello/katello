@@ -12,25 +12,17 @@ from katello.client.core.product import List
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
 
-    def setUp(self):
-        self.set_action(List())
-        self.mock_options()
+    action = List()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['synchronize', '--environment=env'])
+    disallowed_options = [
+        ('--environment=env', ),
+    ]
 
-    def test_no_error_if_org_provided(self):
-        self.action.process_options(['list', '--org=ACME'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_org_and_env_provided(self):
-        self.action.process_options(['list', '--org=ACME', '--environment=env'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_org_and_provider_provided(self):
-        self.action.process_options(['list', '--org=ACME', '--provider=prov'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
+    allowed_options = [
+        ('--org=ACME', ),
+        ('--org=ACME', '--environment=env'),
+        ('--org=ACME', '--provider=prov')
+    ]
 
 
 class ProductListTest(CLIActionTestCase):

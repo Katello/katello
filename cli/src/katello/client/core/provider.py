@@ -41,15 +41,15 @@ class ProviderAction(Action):
 
 class SingleProviderAction(ProviderAction):
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("provider name (required)"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
 
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require('name')
+        validator.require('org')
 
 
 
@@ -59,12 +59,12 @@ class List(ProviderAction):
     description = _('list all known providers')
 
 
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
                                help=_("organization name (required)"))
 
-    def check_options(self):
-        self.require_option('org')
+    def check_options(self, validator):
+        validator.require('org')
 
     def run(self):
         orgName = self.get_option('org')
@@ -124,33 +124,32 @@ class Update(ProviderAction):
 
 
 
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
                                help=_("provider name (required)"))
-        self.parser.add_option("--description", dest="description",
+        parser.add_option("--description", dest="description",
                                help=_("provider description"))
-        self.parser.add_option("--url", dest="url",
+        parser.add_option("--url", dest="url",
                                help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
-        self.parser.add_option('--org', dest='org',
+        parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
 
         if not self._create:
-            self.parser.add_option('--new_name', dest='new_name',
+            parser.add_option('--new_name', dest='new_name',
                                   help=_("provider name"))
 
 
-    def check_options(self):
+    def check_options(self, validator):
 
-        self.require_option('name')
-        self.require_option('org')
+        validator.require(('name', 'org'))
 
-        if self.has_option('url'):
+        if validator.exists('url'):
             url = self.get_option('url')
             url_parsed = urlparse(url)
             if not url_parsed.scheme in ["http","https"]:                       # pylint: disable=E1101
-                self.add_option_error(_('Option --url has to start with http:// or https://'))
+                validator.add_option_error(_('Option --url has to start with http:// or https://'))
             elif not url_parsed.netloc:                                         # pylint: disable=E1101
-                self.add_option_error(_('Option --url is not in a valid format'))
+                validator.add_option_error(_('Option --url is not in a valid format'))
 
 
     def create(self, name, orgName, description, url):
@@ -277,17 +276,17 @@ class ImportManifest(SingleProviderAction):
     description = _('import a manifest file')
 
 
-    def setup_parser(self):
-        super(ImportManifest, self).setup_parser()
-        self.parser.add_option("--file", dest="file",
+    def setup_parser(self, parser):
+        super(ImportManifest, self).setup_parser(parser)
+        parser.add_option("--file", dest="file",
                                help=_("path to the manifest file (required)"))
-        self.parser.add_option("--force", dest="force", action="store_true",
+        parser.add_option("--force", dest="force", action="store_true",
                                help=_("force reimporting the manifest"))
 
 
-    def check_options(self):
-        super(ImportManifest, self).check_options()
-        self.require_option('file')
+    def check_options(self, validator):
+        super(ImportManifest, self).check_options(validator)
+        validator.require('file')
 
 
     def run(self):

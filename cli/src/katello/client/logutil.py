@@ -52,13 +52,16 @@ def __logdir():
     else:
         return os.path.expanduser(USRDIR)
 
+def logfile():
+   return os.path.join(__logdir(), LOGFILE)
+
 def getLogger(name):
     global handler
     logdir = __logdir()
     if not os.path.exists(logdir):
         os.mkdir(logdir)
     if handler is None:
-        path = os.path.join(logdir, LOGFILE)
+        path = logfile()
         handler = RotatingFileHandler(path, maxBytes=0x100000, backupCount=5)
         handler.setFormatter(Formatter(FMT))
         root.setLevel(logging.INFO)

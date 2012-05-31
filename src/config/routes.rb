@@ -1,5 +1,26 @@
 Src::Application.routes.draw do
 
+  resources :system_groups do
+    collection do
+      get :items
+      get :auto_complete
+      get :validate_name
+    end
+    member do
+      get :systems
+      post :add_systems
+      post :remove_systems
+      post :lock
+    end
+    resources :errata, :controller => "system_group_errata", :only => [:index, :update] do
+      collection do
+        get :items
+        post :install
+        get :status
+      end
+    end
+  end
+
   resources :activation_keys do
     collection do
       get :auto_complete_search
@@ -11,7 +32,12 @@ Src::Application.routes.draw do
       get :available_subscriptions
       post :remove_subscriptions
       post :add_subscriptions
+
       post :update
+
+      get :system_groups
+      put :add_system_groups
+      put :remove_system_groups
     end
   end
 
@@ -95,13 +121,22 @@ Src::Application.routes.draw do
       get :products
       get :more_products
       get :facts
+      get :system_groups
+      put :add_system_groups
+      put :remove_system_groups
     end
     collection do
-      get :auto_complete_search
+      get :auto_complete
       get :items
       get :env_items
       get :environments
       delete :bulk_destroy
+      post :bulk_add_system_group
+      post :bulk_remove_system_group
+      post :bulk_content_install
+      post :bulk_content_update
+      post :bulk_content_remove
+      post :bulk_errata_install
     end
   end
   resources :operations, :only => [:index]  do
@@ -349,6 +384,8 @@ Src::Application.routes.draw do
         get :pools
         get :releases
         put :enabled_repos
+        post :system_groups, :action => :add_system_groups
+        delete :system_groups, :action => :remove_system_groups
       end
       collection do
         match "/tasks/:id" => "systems#task_show", :via => :get
@@ -424,6 +461,17 @@ Src::Application.routes.draw do
         end
       end
 
+      resources :system_groups, :except => [:new, :edit] do
+        member do
+          get :systems
+          get :history
+          post :lock
+          post :unlock
+          post :add_systems
+          post :remove_systems
+        end
+      end
+
       resources :environments do
         get :repositories, :on => :member
         resources :changesets, :only => [:index, :create]
@@ -439,7 +487,12 @@ Src::Application.routes.draw do
         end
       end
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
-      resources :activation_keys, :only => [:index]
+      resources :activation_keys, :only => [:index] do
+        member do
+          post :system_groups, :action => :add_system_groups
+          delete :system_groups, :action => :remove_system_groups
+        end
+      end
       resources :repositories, :only => [] do
         post :discovery, :on => :collection
       end
@@ -548,8 +601,9 @@ Src::Application.routes.draw do
       resources :ldap_groups, :controller => :role_ldap_groups , :only => [:create, :destroy, :index]
     end
 
-
     resources :tasks, :only => [:show]
+
+    resources :crls, :only => [:index]
 
     match "/status"  => "ping#status", :via => :get
     match "/version"  => "ping#version", :via => :get 

@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.37
+Version:        0.2.39
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -209,6 +209,10 @@ cp -R .bundle * %{buildroot}%{homedir}
 install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
+#copy cron scripts to be scheduled daily
+install -d -m0755 %{buildroot}%{_sysconfdir}/cron.daily
+install -m 755 script/katello-refresh-cdn %{buildroot}%{_sysconfdir}/cron.daily/katello-refresh-cdn
+
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
@@ -331,8 +335,8 @@ fi
 %defattr(-,root,root)
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
-%config %{_sysconfdir}/%{name}/thin.yml
-%config %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%config(noreplace) %{_sysconfdir}/%{name}/thin.yml
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config %{_sysconfdir}/logrotate.d/%{name}-jobs
@@ -351,6 +355,7 @@ fi
 %files glue-pulp
 %{homedir}/app/models/glue/pulp
 %{homedir}/lib/resources/pulp.rb
+%config(missingok) %{_sysconfdir}/cron.daily/katello-refresh-cdn
 
 %files glue-candlepin
 %{homedir}/app/models/glue/candlepin
@@ -378,6 +383,18 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu May 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.39-1
+- 824069 - adding marketing_product flag to product
+- 806353 - The time selector widget on the Sync Plans page will no longer get
+  stuck on the page and prevent clicking of the save button.
+- 821528 - fixing %%config on httpd.conf for RPM upgrades
+
+* Mon May 21 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.38-1
+- Fixes failing users controller spec tests.
+- Fixes for failing spec tests as part of the merge of new UI changes.
+- 822069 - Making candlepin proxy DELETE return a body for sub-man consumer
+  delete methods
+
 * Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.37-1
 - removing mod_authz_ldap from dependencies
 - cli registration regression with aks

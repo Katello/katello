@@ -12,20 +12,16 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: organization
     #optional: environment (defaults to Library)
 
-    def setUp(self):
-        self.set_action(Report())
-        self.mock_options()
+    action = Report()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['report'])
+    disallowed_options = [
+        (),
+    ]
 
-    def test_no_error_if_org_provided(self):
-        self.action.process_options(['report', '--org=ACME'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_org_and_env_provided(self):
-        self.action.process_options(['list', '--org=ACME', '--environment=dev'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', ),
+        ('--org=ACME', '--environment=dev'),
+    ]
 
 class SystemReportTest(CLIActionTestCase):
 

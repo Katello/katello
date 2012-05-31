@@ -16,7 +16,8 @@ class Api::ActivationKeysController < Api::ApiController
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :find_environment, :only => [:index, :create]
   before_filter :find_organization, :only => [:index]
-  before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool]
+  before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool, 
+                                                :add_system_groups, :remove_system_groups]
   before_filter :find_pool, :only => [:add_pool, :remove_pool]
 
   def rules
@@ -29,7 +30,9 @@ class Api::ActivationKeysController < Api::ApiController
       :update => manage_test,
       :add_pool => manage_test,
       :remove_pool => manage_test,
-      :destroy => manage_test
+      :destroy => manage_test,
+      :add_system_groups => manage_test,
+      :remove_system_groups => manage_test
     }
   end
 
@@ -83,6 +86,21 @@ class Api::ActivationKeysController < Api::ApiController
     @activation_key.destroy
    render :text => _("Deleted activation key '#{params[:id]}'"), :status => 204
   end
+
+  def add_system_groups
+    ids = params[:activation_key][:system_group_ids]
+    @activation_key.system_group_ids = (@activation_key.system_group_ids + ids).uniq
+    @activation_key.save!
+    render :json => @activation_key.to_json
+  end
+
+  def remove_system_groups
+    ids = params[:activation_key][:system_group_ids]
+    @activation_key.system_group_ids = (@activation_key.system_group_ids - ids).uniq
+    @activation_key.save!
+    render :json => @activation_key.to_json
+  end
+
 
   def find_organization
     return unless params.has_key?(:organization_id)

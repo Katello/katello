@@ -15,6 +15,7 @@ module Navigation
       base.class_eval do
         helper_method :systems_navigation
         helper_method :activation_keys_navigation
+        helper_method :system_groups_navigation
       end
     end
     def menu_systems
@@ -22,10 +23,9 @@ module Navigation
        :name => _("Systems"),
         :url => :sub_level,
         :options => {:class=>'systems top_level', "data-menu"=>"systems"},
-        :items=> [ menu_systems_org_list, menu_systems_environments_list, menu_activation_keys]
+        :items=> [ menu_systems_org_list, menu_systems_environments_list, menu_system_groups, menu_activation_keys]
       }
     end
-
 
     def menu_systems_org_list
       {:key => :registered,
@@ -45,12 +45,20 @@ module Navigation
       }
     end
 
-
     def menu_activation_keys
        {:key => :activation_keys,
         :name => _("Activation Keys"),
         :url => activation_keys_path,
         :if => lambda {current_organization && ActivationKey.readable?(current_organization())},
+        :options => {:class=>'systems second_level', "data-menu"=>"systems"}
+       }
+    end
+
+    def menu_system_groups
+       {:key => :system_groups,
+        :name => _("System Groups"),
+        :url => system_groups_path,
+        :if => lambda {current_organization && SystemGroup.any_readable?(current_organization())},
         :options => {:class=>'systems second_level', "data-menu"=>"systems"}
        }
     end
@@ -70,26 +78,20 @@ module Navigation
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         },
-        { :key => :products,
-          :name =>_("Software"),
+        { :key => :content,
+          :name =>_("Content"),
           :url => lambda{products_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"navigation_element"},
+          :items => systems_content_subnav
         }
       ]
-      a << { :key => :packages,
-          :name =>_("Packages"),
-          :url => lambda{packages_system_system_packages_path(@system.id)},
+      a << { :key => :system_groups,
+          :name =>_("System Groups"),
+          :url => lambda{system_groups_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
-        } if AppConfig.katello?
-      a << { :key => :errata,
-          :name =>_("Errata"),
-          :url => lambda{system_errata_path(@system.id)},
-          :if => lambda{@system},
-          :options => {:class=>"navigation_element"},
-        } if AppConfig.katello?
-      a
+        } if AppConfig.katello?          
     end
 
     def systems_subnav
@@ -115,6 +117,77 @@ module Navigation
       ]
     end
 
+    def systems_content_subnav
+      a = [
+        { :key => :products,
+          :name =>_("Software"),
+          :url => lambda{products_system_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"third_level navigation_element"}
+        }
+      ]
+      a << { :key => :packages,
+          :name =>_("Packages"),
+          :url => lambda{packages_system_system_packages_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"third_level navigation_element"}
+        } if AppConfig.katello?
+      a << { :key => :errata,
+          :name =>_("Errata"),
+          :url => lambda{system_errata_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"third_level navigation_element"},
+        } if AppConfig.katello?
+    end
+
+    def system_groups_navigation
+      [
+        {
+          :key => :systems,
+          :name => _('Systems'),
+          :url => lambda{systems_system_group_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"navigation_element"}
+        },
+#        { :key => :content,
+#          :name =>_("Content"),
+#          :url => lambda{system_group_errata_path(@group.id)},
+#          :if => lambda{@group},
+#          :options => {:class=>"navigation_element"},
+#          :items => system_groups_content_subnav
+#        },
+        { :key => :errata,
+          :name =>_("Errata"),
+          :url => lambda{system_group_errata_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"navigation_element"},
+        },
+        { :key => :details,
+          :name =>_("Details"),
+          :url => lambda{edit_system_group_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
+
+    def system_groups_content_subnav
+      [
+#        { :key => :packages,
+#          :name =>_("Packages"),
+#          :url => lambda{packages_system_system_packages_path(@system.id)},
+#          :if => lambda{@system},
+#          :options => {:class=>"third_level navigation_element"}
+#        },
+        { :key => :errata,
+          :name =>_("Errata"),
+          :url => lambda{system_group_errata_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"third_level navigation_element"},
+        }
+      ]
+    end
+
     def activation_keys_navigation
       [
         { :key => :applied_subscriptions,
@@ -126,6 +199,12 @@ module Navigation
         { :key => :available_subscriptions,
           :name =>_("Available Subscriptions"),
           :url => lambda{available_subscriptions_activation_key_path(@activation_key.id)},
+          :if => lambda{@activation_key},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :system_groups,
+          :name =>_("System Groups"),
+          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class=>"navigation_element"}
         },

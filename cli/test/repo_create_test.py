@@ -7,25 +7,19 @@ import katello.client.core.repo
 from katello.client.core.repo import Discovery
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
-    def setUp(self):
-        self.set_action(Discovery())
-        self.mock_options()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--name=repo1', '--url=http://localhost', '--product=product1'])
+    action = Discovery()
 
-    def test_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--name=repo1', '--url=http://localhost'])
+    disallowed_options = [
+        ('--name=repo1', '--url=http://localhost', '--product=product1'),
+        ('--org=ACME', '--name=repo1', '--url=http://localhost'),
+        ('--org=ACME', '--url=http://localhost', '--product=product1'),
+        ('--org=ACME', '--name=repo1', '--product=product1')
+    ]
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--url=http://localhost', '--product=product1'])
-
-    def test_missing_url_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--name=repo1', '--product=product1'])
-
-    def test_no_error_if_required_options_provided(self):
-        self.action.process_options(['create', '--org=ACME', '--name=repo1', '--url=http://localhost', '--product=product1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=repo1', '--url=http://localhost', '--product=product1')
+    ]
 
 
 class RepoDiscoveryTest(CLIActionTestCase):

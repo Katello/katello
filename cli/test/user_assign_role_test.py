@@ -12,19 +12,17 @@ from katello.client.api.utils import ApiDataError
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #takes username and role, both required
-    def setUp(self):
-        self.set_action(AssignRole())
-        self.mock_options()
 
-    def test_missing_role_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['assign_role', '--username=user1'])
+    action = AssignRole()
 
-    def test_missing_username_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['assign_role', '--role=role1'])
+    disallowed_options = [
+        ('--username=user1', ),
+        ('--role=role1', ),
+    ]
 
-    def test_no_error_if_name_provided(self):
-        self.action.process_options(['assign_role', '--username=user1', '--role=role1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--username=user1', '--role=role1'),
+    ]
 
 
 
