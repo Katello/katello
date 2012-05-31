@@ -18,6 +18,6 @@ task :seed_with_logging => ["db:seed"] do
 end
 
 desc "task to perform steps required for katello to work"
-task :setup => ["check_db_config", "clear_search_indices", "db:migrate:reset", "seed_with_logging"] do
+task :setup => ['environment', "check_db_config", "clear_search_indices", "db:migrate:reset", "seed_with_logging"] do
   puts "Database sucessfully recreated in #{Rails.env}"
 end
