@@ -141,7 +141,7 @@ module IndexedModel
       to_ret.merge!(self.send(self.class.class_index_options[:extended_json]))
     end
 
-    to_ret
+    to_ret.to_json
   end
 
 end
