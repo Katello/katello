@@ -110,8 +110,6 @@ class Server(object):
         """
         raise NotImplementedError('base server class method called')
 
-    def has_credentials_set(self):
-        raise NotImplementedError('base server class method called')
 
     # request methods ---------------------------------------------------------
 
@@ -435,9 +433,6 @@ class KatelloServer(Server):
         else:
             raise RuntimeError(_("Couldn't authenticate via kerberos"))
 
-    def has_credentials_set(self):
-        return 'Authorization' in self.headers or \
-                None not in (self.__certfile, self.__keyfile)
 
     # request methods ---------------------------------------------------------
 

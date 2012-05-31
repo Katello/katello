@@ -15,6 +15,7 @@
 # in this software or its documentation.
 #
 
+import os
 import sys
 import codecs
 
@@ -34,5 +35,6 @@ from katello.client.main import setup_admin
 if __name__ == "__main__":
     admin = AdminCLI()
     setup_admin(admin)
-    sys.exit(admin.main())
+    command_name = os.path.basename(sys.argv[0])
+    sys.exit(admin.main(sys.argv[1:], [command_name]))
 
