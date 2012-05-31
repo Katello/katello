@@ -172,6 +172,27 @@
     height: 16px;
     margin-right: 4px;
   }
+  .package_icon {
+    display: inline;
+    background: $package_icon_black;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+  .erratum_icon {
+    display: inline;
+    background: $erratum_icon_black;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+  .system_group_icon {
+    display: inline;
+    background: $system_group_icon_black;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
   .summary {
     background-color: $white_color;
     @include border-radius(5px);
@@ -231,7 +252,7 @@
     }
   }
   
-  #system_errata_header {
+  #errata_header {
     margin: 0 20px 10px 20px;
   
     h5 { 
@@ -250,7 +271,7 @@
     span { margin-right: 15px; }
   }
   
-  #system_errata {
+  #errata_container {
     .errata_status_text { margin-left: 5px; padding: 1px; }
     .grid_4{ margin-left: 0; margin-right: 0; }
   }
@@ -258,4 +279,21 @@
   #load_more_errata {
     margin-left: 20px;
   }
+
+}
+
+#system_group_systems{
+    .st_button {
+      padding: 0;
+      margins: 0;
+    }
+    .input_error {
+      border-color: $error_color;
+    }
+    .remove_spinner{
+      margin-right: 30px;
+    }
+    .stub {
+      @include no-select;
+    }
 }

@@ -87,6 +87,8 @@ EOKEY
     Resources::Candlepin::Product.stub!(:add_content).and_return(true)
     Resources::Candlepin::Product.stub!(:create).and_return({:id => 1})
     Resources::Candlepin::Product.stub!(:create_unlimited_subscription).and_return(true)
+    Resources::Candlepin::Product.stub!(:pools).and_return([])
+    Resources::Candlepin::Product.stub!(:delete_subscriptions).and_return(nil)
 
     Resources::Candlepin::Content.stub!(:create).and_return(true)
 
@@ -115,6 +117,10 @@ EOKEY
     Resources::Candlepin::Environment.stub!(:add_content).and_return({})
   end
 
+  def disable_system_orchestration
+    Resources::Candlepin::Consumer.stub(:get).and_return({})
+  end
+
   def disable_user_orchestration
     Resources::Pulp::User.stub!(:create).and_return({})
     Resources::Pulp::User.stub!(:destroy).and_return(200)
@@ -126,6 +132,14 @@ EOKEY
     Resources::Pulp::Filter.stub!(:create).and_return({})
     Resources::Pulp::Filter.stub!(:destroy).and_return(200)
     Resources::Pulp::Filter.stub(:find).and_return({})
+  end
+
+  def disable_consumer_group_orchestration
+    Resources::Pulp::ConsumerGroup.stub!(:create).and_return({})
+    Resources::Pulp::ConsumerGroup.stub!(:destroy).and_return(200)
+    Resources::Pulp::ConsumerGroup.stub(:find).and_return({})
+    Resources::Pulp::ConsumerGroup.stub!(:add_consumer).and_return(200)
+    Resources::Pulp::ConsumerGroup.stub!(:delete_consumer).and_return(200)
   end
 
   def disable_repo_orchestration
