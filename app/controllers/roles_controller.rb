@@ -124,7 +124,7 @@ class RolesController < ApplicationController
       notice _("'%s' did not meet the current search criteria and is not being shown.") % @role["name"], { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     end
-  rescue Exception => error
+  rescue => error
     notice error, {:level => :error}
     render :json=>error.to_s, :status=>:bad_request
   end
@@ -152,7 +152,7 @@ class RolesController < ApplicationController
         
         render :json=>params[:role]
       end
-    rescue Exception => error
+    rescue => error
       notice error, {:level => :error}
       respond_to do |format|
         format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -173,7 +173,7 @@ class RolesController < ApplicationController
       else
         raise
       end
-    rescue Exception => error
+    rescue => error
       notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
@@ -226,7 +226,7 @@ class RolesController < ApplicationController
     add_permission_bc(to_return, @permission, false)
     notice _("Permission '%s' was updated.") % @permission.name
     render :json => to_return
-  rescue Exception => error
+  rescue => error
       notice error, {:level => :error}
       render :json=>@permission.errors, :status=>:bad_request
   end
@@ -249,7 +249,7 @@ class RolesController < ApplicationController
       add_permission_bc(to_return, @perm, false)
       notice _("Permission '%s' was created.") % @perm.name
       render :json => to_return
-    rescue Exception => error
+    rescue => error
       notice error, {:level => :error}
       render :json=>@role.errors, :status=>:bad_request
     end
@@ -278,7 +278,7 @@ class RolesController < ApplicationController
     add_group_to_bc(to_return, @group)
     notice _("LDAP Group '%s' was created.") % @group.ldap_group
     render :json => to_return
-  rescue Exception => error
+  rescue => error
     notice error, {:level => :error}
     render :json=>@group.errors, :status=>:bad_request
   end
@@ -295,7 +295,7 @@ class RolesController < ApplicationController
   def find_role
     @role =  Role.find(params[:role_id]) if params.has_key? :role_id
     @role =  Role.find(params[:id]) unless params.has_key? :role_id
-  rescue Exception => error
+  rescue => error
     render :text=>errors.to_s, :status=>:bad_request and return false
   end
 

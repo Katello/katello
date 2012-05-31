@@ -283,7 +283,7 @@ class UsersController < ApplicationController
     end
     notice "", { :level => :error, :list_items => @user.errors.to_a }
     render :text => @user.errors, :status => :ok
-  rescue Exception => error
+  rescue => error
     notice "", { :level => :error, :list_items => @user.errors.to_a }
     render :json => @user.errors, :status => :bad_request
   end

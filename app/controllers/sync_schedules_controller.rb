@@ -78,7 +78,7 @@ class SyncSchedulesController < ApplicationController
       end
       notice N_("Sync Plans applied successfully.")
 
-    rescue Exception => error
+    rescue => error
       # note missing product is caught in find products before filter
       notice _("There must be at least one plan selected"), {:level => :error}
     end
@@ -93,7 +93,7 @@ class SyncSchedulesController < ApplicationController
       data = JSON.parse(params[:data]).with_indifferent_access
       product_ids =  data[:products].collect{ |i| i.to_i}
       @products = Product.find(product_ids)
-    rescue Exception => error
+    rescue => error
       execute_after_filters
       notice _("There must be at least one product selected"), {:level => :error}
       redirect_to(:controller => :sync_schedules, :action =>:index)

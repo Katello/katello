@@ -62,7 +62,7 @@ class RepositoriesController < ApplicationController
       notice _("Repository '%s' created.") % repo_params[:name]
       render :nothing => true
 
-    rescue Exception => error
+    rescue => error
       log_exception error
       notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
@@ -81,7 +81,7 @@ class RepositoriesController < ApplicationController
       @repository.gpg_key = gpg
       @repository.save!
       notice _("Repository '%s' updated.") % @repository.name
-    rescue Exception => error
+    rescue => error
       log_exception error
       notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
@@ -94,7 +94,7 @@ class RepositoriesController < ApplicationController
       @repository.enabled = params[:repo] == "1"
       @repository.save!
       render :json => @repository.id
-    rescue Exception => error
+    rescue => error
       log_exception error
       notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
@@ -134,7 +134,7 @@ class RepositoriesController < ApplicationController
   def find_provider
     begin
       @provider = Provider.find(params[:provider_id])
-    rescue Exception => error
+    rescue => error
       log_exception error
       notice error.to_s, {:level => :error}
       execute_after_filters
@@ -145,7 +145,7 @@ class RepositoriesController < ApplicationController
   def find_product
     begin
       @product = Product.find(params[:product_id])
-    rescue Exception => error
+    rescue => error
       log_exception error
       notice error.to_s, {:level => :error}
       execute_after_filters
@@ -156,7 +156,7 @@ class RepositoriesController < ApplicationController
   def find_repository
     begin
       @repository = Repository.find(params[:id])
-    rescue Exception => error
+    rescue => error
       log_exception error
       notice _("Couldn't find repository with ID=%s") % params[:id], {:level => :error}
       execute_after_filters

@@ -81,7 +81,7 @@ class ProvidersController < ApplicationController
           notice _("Subscription manifest uploaded successfully for provider '%{name}'." % {:name => @provider.name}), {:synchronous_request => false}
         end
 
-      rescue Exception => error
+      rescue => error
         if error.respond_to?(:response)
           display_message = parse_display_message(error.response)
         elsif error.message
@@ -118,7 +118,7 @@ class ProvidersController < ApplicationController
     @grouped_subscriptions = []
     begin
       setup_subs
-    rescue Exception => error
+    rescue => error
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription manifest for provider '%{name}." % {:name => @provider.name})
       error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
@@ -131,7 +131,7 @@ class ProvidersController < ApplicationController
 
     begin
       @statuses = @provider.owner_imports
-    rescue Exception => error
+    rescue => error
       @statuses = []
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription history for provider '%{name}." % {:name => @provider.name})
@@ -179,7 +179,7 @@ class ProvidersController < ApplicationController
         notice _("'%s' did not meet the current search criteria and is not being shown.") % @provider["name"], { :level => 'message', :synchronous_request => false }
         render :json => { :no_match => true }
       end
-    rescue Exception => error
+    rescue => error
       Rails.logger.error error.to_s
       notice error, {:level => :error}
       render :text => error, :status => :bad_request
@@ -197,7 +197,7 @@ class ProvidersController < ApplicationController
       else
         raise
       end
-    rescue Exception => e
+    rescue => e
       notice e.to_s, {:level => :error}
     end
   end
@@ -228,7 +228,7 @@ class ProvidersController < ApplicationController
         format.html { render :text => escape_html(result) }
       end
 
-    rescue Exception => e
+    rescue => e
       notice e.to_s, {:level => :error}
 
       respond_to do |format|
@@ -243,7 +243,7 @@ class ProvidersController < ApplicationController
   def find_provider
     begin
       @provider = Provider.find(params[:id])
-    rescue Exception => error
+    rescue => error
       notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request

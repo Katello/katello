@@ -218,7 +218,7 @@ class SystemTemplatesController < ApplicationController
     notice _("Template %s updated successfully.") % @template.name
     render :text=>result
 
-  rescue Exception => e
+  rescue => e
     notice e, {:level => :error}
     render :text=>e, :status=>:bad_request
   end
@@ -227,7 +227,7 @@ class SystemTemplatesController < ApplicationController
       @template.destroy
       notice _("Template '%s' was deleted.") % @template.name
       render :partial => "common/list_remove", :locals => {:id => @template.id, :name=>"details"}
-  rescue Exception => e
+  rescue => e
       notice e.to_s, {:level => :error}
       render :text=> e, :status=>:bad_request
   end
@@ -279,7 +279,7 @@ class SystemTemplatesController < ApplicationController
     notice _("System Template '%s' was created.") % @template.name
     render :json=>{:name=>@template.name, :id=>@template.id}
 
-  rescue Exception => e
+  rescue => e
     notice e, {:level => :error}
     render :text => e, :status => :bad_request
   end
@@ -315,7 +315,7 @@ class SystemTemplatesController < ApplicationController
   def find_template
     find_read_only_template
     raise _("Cannot modify a template that is another environment") if !@template.environment.library?
-  rescue Exception => e
+  rescue => e
     notice e, {:level => :error}
     render :text=>e, :status=>400 and return false
   end
