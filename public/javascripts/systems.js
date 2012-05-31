@@ -408,28 +408,6 @@ KT.systems_page = function() {
   }
 }();
 
-KT.packages = function() {
-    var valid_package_list_format = function(packages){
-        var length = packages.length;
-
-        for (var i = 0; i < length; i += 1){
-            if( !valid_package_name(packages[i]) ){
-                return false;
-            }
-        }
-        return true;
-    },
-    valid_package_name = function(package_name){
-        var is_match = package_name.match(/[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/);
-
-        return is_match === null ? true : false;
-    };
-return {
-        valid_package_list_format : valid_package_list_format,
-        valid_package_name : valid_package_name
-    }
-}();
-
 KT.subs = function() {
     var unsubSetup = function(){
         var unsubform = $('#unsubscribe');
