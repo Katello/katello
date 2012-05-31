@@ -1,2 +1,87 @@
 @import "mixins";
 @import "converge-ui/colors";
+
+$browse_box-width: 200px;
+$browse_box-height: 600px;
+$browse_box_header-height: 40px;
+
+$comparison_grid-width: 920px - $browse_box-width;
+$comparison_grid_header-height: 50px;
+$comparison_grid-height: 600px;
+$comparison_grid_filter-width: 150px;
+
+$widget_border-color: #B5B5B5;
+
+
+#browse_box {
+  width: $browse_box-width;
+  height: $browse_box-height;
+  float: left;
+  border: 1px solid $widget_border-color;
+  margin-bottom: 20px;
+  margin-left: 10px;
+
+  header {
+    height: $browse_box_header-height;
+    border-bottom: 1px solid $widget_border-color;
+    
+    h2 {
+      padding: 0;
+    }
+  }
+  
+  #filters {
+    height: $browse_box-height - $browse_box_header-height;
+  }
+}
+
+#comparison_grid {
+  width: $comparison_grid-width;
+  height: $comparison_grid-height;
+  float: right;
+  border: 1px solid $widget_border-color;
+  margin-bottom: 20px;
+  margin-right: 10px;
+  position: relative;
+
+  header {
+    height: $comparison_grid_header-height;
+    border-bottom: 1px solid $widget_border-color;
+    position: relative;
+
+    aside {
+      width: $comparison_grid_filter-width;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    #column_headers {
+      width: $comparison_grid-width - $comparison_grid_filter-width - 1;
+      height: $comparison_grid_header-height - 10px;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      border: 1px solid $widget_border-color;
+      border-right: none;
+      border-bottom: none;
+    }
+  }
+  
+  section {
+    height: $comparison_grid-height - $comparison_grid_header-height;
+    
+    #grid_items {
+      width: $comparison_grid_filter-width;
+      border-right: 1px solid $widget_border-color;
+      height: $comparison_grid-height - $comparison_grid_header-height;
+      float: left;
+    }
+
+    #grid_content {
+      width: $comparison_grid-width - $comparison_grid_filter-width - 1;
+      height: $comparison_grid-height - $comparison_grid_header-height;
+      float: left;
+    }
+  }
+}
