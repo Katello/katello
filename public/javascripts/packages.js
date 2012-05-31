@@ -27,7 +27,7 @@ KT.packages = function() {
 
         return is_match === null ? true : false;
     };
-return {
+    return {
         valid_package_list_format : valid_package_list_format,
         valid_package_name : valid_package_name
     }
