@@ -20,7 +20,17 @@ class SubscriptionsController < ApplicationController
 
 
   def index
-    # Get an organizations pools, updating elastic-search along the way
-    @subscriptions = Pool.index_pools(Resources::Candlepin::Owner.pools(current_organization.cp_key))
+    # Raw candlepin pools
+    cp_pools = Resources::Candlepin::Owner.pools(current_organization.cp_key)
+    if cp_pools
+      # Pool objects
+      @subscriptions = cp_pools.collect {|cp_pool| Pool.find_pool(cp_pool['id'], cp_pool)}
+      # Index pools
+      Pool.index_pools(@subscriptions) if @subscriptions.length > 0
+    else
+      @subscriptions = []
+    end
+
+    @subscriptions
   end
 end
