@@ -16,13 +16,12 @@
   border-color: $border_color;
   border-width: 2px;
   border-style: solid;
+  position: absolute;
 }
 
 .path_selector {
   width: 400px;
-  padding: 10px;
-
-  position: absolute;
+  padding: 15px;
   z-index: 100;
   top: 100%;
 
@@ -53,11 +52,6 @@
       }
       &:nth-child(n) {
         @include crumb-nohover;
-        a {
-
-          background: $breadcrumbbg_color;
-          &:after { border-left-color: $breadcrumbbg_color; }
-        }
       }
       &:last-child {
         @include crumb-nohover;
@@ -89,6 +83,12 @@
     background: $breadcrumbbg_color;                    //fallback color
     display: block;
 
+    .checkbox_holder {
+      float: left;
+      margin-top: 1px;
+      display: inline-block;
+      width: 13px;
+    }
     div {
       overflow: hidden;
     }
