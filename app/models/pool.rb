@@ -14,20 +14,24 @@ require 'util/search'
 
 class Pool < ActiveRecord::Base
   include Glue::Candlepin::Pool
-  include IndexedModel
 
   set_table_name "pools"
   has_many :key_pools, :foreign_key => "pool_id", :dependent => :destroy
   has_many :activation_keys, :through => :key_pools
 
+  # ActivationKey includes the Pool's json in its own'
   def as_json(*args)
     {:cp_id => self.cp_id}
   end
 
-  index_options :extended_json => :extended_json,
-      :display_attrs => ['name', 'sla', 'start', 'end', 'consumed', 'product', 'account', 'contract', 'virtual']
+  # Most ActiveRecord models that need to be indexed do so through including IndexedModel. Since not all Pool
+  # objects are persisted, this could lead to confusion and unnecessary overhead. (Only Pools referenced by
+  # ActivationKeys are stored.) The methods below are the infrastructure for indexing the Pool objects.
+  def display_attrs
+    ['name', 'sla', 'start', 'end', 'consumed', 'product', 'account', 'contract', 'virtual']
+  end
 
-  def extended_json
+  def index_options
     {
       "_type"     => :pool,
       "id"        => @cp_id,
@@ -93,7 +97,7 @@ class Pool < ActiveRecord::Base
     json_pools = cp_pools.collect{ |cp_pool|
       pool = self.find_pool(cp_pool['id'], cp_pool)
       pools << pool
-      pool.to_indexed_json
+      pool.as_json.merge(pool.index_options)
     }
     Tire.index self.index do
       create :settings => Pool.index_settings, :mappings => Pool.index_mapping
