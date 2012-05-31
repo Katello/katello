@@ -42,7 +42,7 @@ class SystemPackagesController < ApplicationController
         task = @system.install_packages packages
         notice _("Install of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
       else
-        notice _("One or more errors found in Package names '%{s}'." % {:s => @system['name']}), {:level => :error}
+        notice _("One or more errors found in Package names '%{s}'." % {:s => params[:packages]}), {:level => :error}
         render :text => '' and return
       end
 
@@ -53,7 +53,7 @@ class SystemPackagesController < ApplicationController
       notice _("Install of Package Groups '%{g}' scheduled for System '%{s}'." % {:s => @system['name'], :g => params[:groups]})
 
     else
-      notice _("Empty request received to install Packages or Package Groups System '%{s}'." % {:s => @system['name']}), {:level => :error}
+      notice _("Empty request received to install Packages or Package Groups for System '%{s}'." % {:s => @system['name']}), {:level => :error}
       render :text => '' and return
     end
 
@@ -75,7 +75,7 @@ class SystemPackagesController < ApplicationController
         task = @system.uninstall_packages packages
         notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
       else
-        notice _("One or more errors found in Package names '%{s}'." % {:s => @system['name']}), {:level => :error}
+        notice _("One or more errors found in Package names '%{s}'." % {:s => params[:packages]}), {:level => :error}
         render :text => '' and return        
       end
 
@@ -86,7 +86,7 @@ class SystemPackagesController < ApplicationController
       notice _("Uninstall of Package Groups '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => groups.join(',')})
 
     else
-      notice _("Empty request received to install Packages or Package Groups System '%{s}'." % {:s => @system['name']}), {:level => :error}
+      notice _("Empty request received to uninstall Packages or Package Groups for System '%{s}'." % {:s => @system['name']}), {:level => :error}
       render :text => '' and return
     end
 
