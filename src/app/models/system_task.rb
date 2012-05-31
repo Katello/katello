@@ -131,7 +131,7 @@ class SystemTask < ActiveRecord::Base
 
   # non self methods
   def humanize_type
-    TYPES[task_status.task_type][:name]
+    TaskStatus::TYPES[task_status.task_type][:name]
   end
 
   def humanize_parameters
