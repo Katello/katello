@@ -43,6 +43,7 @@ module Katello
     # Filter the search input, escaping unsupported lucene syntax (e.g. usage of - operator)
     def self.filter_input search
       unless search.nil?
+        search = search.gsub('^', "\\^")
         search = search.gsub('-', "\\-")
         search = search.gsub(':', "\\:")
       end
