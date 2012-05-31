@@ -86,7 +86,7 @@ $(document).ready(function() {
     });
 });
 
-KT.systems_page = function() {
+KT.systems_page = (function() {
     var system_group_widget = undefined,
     env_change = function(env_id, element) {
       var url = element.attr("data-url");
@@ -406,9 +406,9 @@ KT.systems_page = function() {
       registerActions : registerActions,
       system_group_setup: system_group_setup
   }
-}();
+})();
 
-KT.subs = function() {
+KT.subs = (function() {
     var unsubSetup = function(){
         var unsubform = $('#unsubscribe');
         var unsubbutton = $('#unsub_submit');
@@ -546,4 +546,4 @@ KT.subs = function() {
         autohealSetup: autohealSetup,
         matchsystemSetup: matchsystemSetup
     }
-}();
+})();
