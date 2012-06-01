@@ -27,6 +27,7 @@
  *      button_text (none)     - if set, a button is rendered with the specified text,
  *                                 clicking the button generates a message
  *      button_event (path_#{name})    - if button exists, clicking it will trigger this event
+ *      expand (true)           -  enable/disable the expanding of path nodes (disable for debugging)
  *
  */
 KT.path_select = function(div_id, name, environments, options_in){
@@ -45,7 +46,7 @@ KT.path_select = function(div_id, name, environments, options_in){
             options.button_text = default_opt(options_in.button_text, undefined);
             options.button_event = default_opt(options_in.button_event, ('paths_' + name));
             options.link_first = default_opt(options_in.link_first, true);
-
+            options.expand = default_opt(options_in.expand, true);
 
 
             div.append(KT.path_select_template.selector(environments, paths_id, options.button_text));
@@ -151,6 +152,9 @@ KT.path_select = function(div_id, name, environments, options_in){
             return to_ret;
         },
         recalc_scroll = function(){
+           if(!options.expand){
+               return false;
+           }
            if(!options.inline){
                path_selector.show();
                scroll_obj.bind('#' + KT.common.escapeId(paths_id));
