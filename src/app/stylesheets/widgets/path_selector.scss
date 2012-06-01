@@ -16,15 +16,18 @@
   border-color: $border_color;
   border-width: 2px;
   border-style: solid;
+  position: absolute;
 }
 
 .path_selector {
   width: 400px;
-  padding: 10px;
-
-  position: absolute;
+  padding: 15px;
   z-index: 100;
   top: 100%;
+
+  .button {
+    float: right;
+  }
 
   ul {
     list-style: none;
@@ -42,22 +45,17 @@
 
       &:first-child {
         @include crumb-nohover;
-        a {
+        label {
           padding-left: 6px;
           @include border-left-radius(5px);
         }
       }
       &:nth-child(n) {
         @include crumb-nohover;
-        a {
-
-          background: $breadcrumbbg_color;
-          &:after { border-left-color: $breadcrumbbg_color; }
-        }
       }
       &:last-child {
         @include crumb-nohover;
-        a {
+        label {
           overflow: hidden;
           padding-right: 10px;
           @include border-right-radius(5px);
@@ -77,7 +75,7 @@
         }
       }
   }
-  a {
+  label {
     color: $black_color;
     text-decoration: none;
     padding: 4px 0 4px 20px;
@@ -85,13 +83,20 @@
     background: $breadcrumbbg_color;                    //fallback color
     display: block;
 
+    .checkbox_holder {
+      float: left;
+      margin-right: 3px;
+      padding-top: 1px;
+      display: inline-block;
+      width: 13px;
+      input {
+        float: left;
+      }
+    }
     div {
       overflow: hidden;
     }
 
-    input {
-      margin-right: 3px;
-    }
 
     &:hover {
       background: $listhover_color !important;
