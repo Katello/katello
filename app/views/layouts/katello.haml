@@ -6,7 +6,7 @@
 = content_for(:stylesheets) do
   = include_stylesheets :common
   = include_stylesheets controller.section_id
-  = yield :stylesheets
+  = yield :stylesheet
  
 = content_for(:head) do
   = csrf_meta_tag
