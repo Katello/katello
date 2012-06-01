@@ -12,6 +12,7 @@
 
 require 'spec_helper'
 include OrchestrationHelper
+include SystemHelperMethods
 
 describe ActivationKey do
 
@@ -20,6 +21,8 @@ describe ActivationKey do
 
   before(:each) do
     disable_org_orchestration
+    disable_consumer_group_orchestration
+
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.library.id, :organization => @organization)
     @environment_2 = KTEnvironment.create!(:name => 'test', :prior => @environment_1.id, :organization => @organization)
@@ -118,6 +121,27 @@ describe ActivationKey do
     end
   end
 
+  describe "adding systems groups" do
+    before(:each) do
+      @group = SystemGroup.create!(:name=>"TestSystemGroup", :organization=>@organization)
+    end
+
+    it "should add groups" do
+      @akey.system_groups << @group
+      @akey.save!
+      ActivationKey.find(@akey.id).system_groups.should include @group
+    end
+
+    it "Should not allow groups to be added that conflict with the environment" do
+      @group.environments = [@environment_2]
+      @group.save!
+      lambda{@akey.system_groups << @group
+             @akey.save!}.should raise_exception
+    end
+  end
+
+
+
   describe "pools in a activation key" do
 
     it "should map 2way pool to keys" do
@@ -145,8 +169,8 @@ describe ActivationKey do
   describe "#apply_to_system" do
 
     before(:each) do
-      Pulp::Consumer.stub!(:create).and_return({:uuid => "1234", :owner => {:key => "1234"}})
-      Candlepin::Consumer.stub!(:create).and_return({:uuid => "1234", :owner => {:key => "1234"}})
+      Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => "1234", :owner => {:key => "1234"}})
+      Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => "1234", :owner => {:key => "1234"}})
       @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
     end
 
@@ -171,7 +195,7 @@ describe ActivationKey do
   describe "#subscribe_system" do
 
     before(:each) do
-      Candlepin::Pool.stub!(:find) do |x|
+      Resources::Candlepin::Pool.stub!(:find) do |x|
         {
           :productName => "Blah Server OS",
           :productId => dates[x][:productId],
@@ -213,7 +237,7 @@ describe ActivationKey do
       let(:sockets) { 1 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "a", 1)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "a", 1)
         @akey.pools.size.should == 1
         @akey.subscribe_system(@system)
       end
@@ -239,7 +263,7 @@ describe ActivationKey do
       let(:sockets) { 1 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "b", 1)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "b", 1)
         @akey.pools.size.should == 2
         @akey.subscribe_system(@system)
       end
@@ -271,7 +295,7 @@ describe ActivationKey do
       let(:sockets) { 1 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "a", 1)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "a", 1)
         @akey.pools.size.should == 3
         @akey.subscribe_system(@system)
       end
@@ -298,8 +322,8 @@ describe ActivationKey do
       let(:sockets) { 1 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 1)
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 1)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 1)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 1)
         @akey.subscribe_system(@system)
       end
     end
@@ -325,8 +349,8 @@ describe ActivationKey do
       let(:sockets) { 8 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 5)
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 3)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 5)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 3)
         @akey.subscribe_system(@system)
       end
     end
@@ -352,7 +376,7 @@ describe ActivationKey do
       let(:sockets) { 1 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 1)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 1)
         @akey.subscribe_system(@system)
       end
     end
@@ -378,7 +402,7 @@ describe ActivationKey do
       let(:sockets) { 1 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 1)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 1)
         @akey.subscribe_system(@system)
       end
     end
@@ -454,7 +478,7 @@ describe ActivationKey do
       let(:sockets) { 2 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 2)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 2)
         @akey.subscribe_system(@system)
       end
     end
@@ -505,8 +529,8 @@ describe ActivationKey do
       let(:sockets) { 2 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 2).and_return([ { "id" => "ent1" } ])
-        Candlepin::Consumer.should_receive(:remove_entitlement).with(@system.uuid, "ent1")
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 2).and_return([ { "id" => "ent1" } ])
+        Resources::Candlepin::Consumer.should_receive(:remove_entitlement).with(@system.uuid, "ent1")
         lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough entitlements/)
       end
     end
@@ -532,8 +556,8 @@ describe ActivationKey do
       let(:sockets) { 2 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 1)
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 1)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 1)
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 1)
         @akey.subscribe_system(@system)
       end
     end

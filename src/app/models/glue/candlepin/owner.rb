@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/candlepin'
-
 module Glue::Candlepin::Owner
 
   def self.included(base)
@@ -26,8 +24,8 @@ module Glue::Candlepin::Owner
           :presence => true,
           :format => { :with => /^[\w-]*$/ }
 
-      lazy_accessor :events, :initializer => lambda { Candlepin::Owner.events(cp_key) }
-      lazy_accessor :service_levels, :initializer => lambda { Candlepin::Owner.service_levels(cp_key) }
+      lazy_accessor :events, :initializer => lambda { Resources::Candlepin::Owner.events(cp_key) }
+      lazy_accessor :service_levels, :initializer => lambda { Resources::Candlepin::Owner.service_levels(cp_key) }
       lazy_accessor :debug_cert, :initializer => lambda { load_debug_cert}
     end
   end
@@ -42,7 +40,7 @@ module Glue::Candlepin::Owner
 
     def set_owner
       Rails.logger.debug _("Creating an owner in candlepin: %s") % name
-      Candlepin::Owner.create(cp_key, name)
+      Resources::Candlepin::Owner.create(cp_key, name)
     rescue => e
       Rails.logger.error _("Failed to create candlepin owner %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -50,7 +48,7 @@ module Glue::Candlepin::Owner
 
     def del_owner
       Rails.logger.debug _("Deleting owner in candlepin: %s") % name
-      Candlepin::Owner.destroy(cp_key)
+      Resources::Candlepin::Owner.destroy(cp_key)
     rescue => e
       Rails.logger.error _("Failed to delete candlepin owner %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -112,20 +110,20 @@ module Glue::Candlepin::Owner
 
     def pools consumer_uuid = nil
       if consumer_uuid
-        pools = Candlepin::Owner.pools self.cp_key, { :consumer => consumer_uuid }
+        pools = Resources::Candlepin::Owner.pools self.cp_key, { :consumer => consumer_uuid }
       else
-        pools = Candlepin::Owner.pools self.cp_key
+        pools = Resources::Candlepin::Owner.pools self.cp_key
       end
       pools.collect { |p| KTPool.new p }
     end
 
     def generate_debug_cert
-      Candlepin::Owner.generate_ueber_cert(cp_key)
+      Resources::Candlepin::Owner.generate_ueber_cert(cp_key)
     end
 
     def load_debug_cert
       begin
-        return Candlepin::Owner.get_ueber_cert(cp_key)
+        return Resources::Candlepin::Owner.get_ueber_cert(cp_key)
       rescue RestClient::ResourceNotFound =>  e
         return generate_debug_cert
       end

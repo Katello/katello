@@ -11,16 +11,24 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-%define base_name katello
+%global base_name katello
+%global katello_requires python-iniparse python-simplejson python-kerberos m2crypto PyXML
 
 Name:          %{base_name}-cli
 Summary:       Client package for managing application life-cycle for Linux systems
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.33
+Version:       0.2.38
 Release:       1%{?dist}
+
+# Upstream uses tito rpm helper utility. To get the particular version from
+# git, do the following commands:
+#   git clone git://github.com/Katello/katello.git && cd cli
+#   tito build --tgz --offline --tag=%{name}-%{version}-1
 Source0:       %{name}-%{version}.tar.gz
+
+# we need to keep RHEL compatibility
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:      %{base_name}-cli-common
@@ -28,20 +36,19 @@ BuildArch:     noarch
 
 
 %description
-Provides a client package for managing application life-cycle
-for Linux systems
+Provides a client package for managing application life-cycle for 
+Linux systems with Katello
 
 %package common
 Summary:       Common Katello client bits
 Group:         Applications/System
 License:       GPLv2
-Requires:      python-iniparse
-Requires:      python-simplejson
-Requires:      m2crypto
-Requires:      python-kerberos
-Requires:      PyXML
+Requires:      %{katello_requires}
 BuildRequires: python2-devel
 BuildRequires: gettext
+BuildRequires: /usr/bin/pod2man
+BuildRequires: %{katello_requires}
+
 BuildArch:     noarch
 
 %description common
@@ -51,44 +58,121 @@ Common classes for katello clients
 %setup -q
 
 %build
+# generate usage docs and incorporate it into the man page
+pushd man
+PYTHONPATH=../src python ../src/katello/client/utils/usage.py >katello-usage.txt
+sed -e '/^THE_USAGE/{r katello-usage.txt' -e 'd}' katello.pod |\
+    sed -e 's/THE_VERSION/%{version}/g' |\
+    /usr/bin/pod2man --name=katello -c "Katello Reference" --section=1 --release=%{version} - katello.man1
+sed -e 's/THE_VERSION/%{version}/g' katello-debug-certificates.pod |\
+/usr/bin/pod2man --name=katello -c "Katello Reference" --section=1 --release=%{version} - katello-debug-certificates.man1
+popd
 
 %install
-rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_bindir}/
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/
-install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}
-install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client
-install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/api
-install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/cli
-install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/core
-install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/utils
-install -pm 0644 bin/%{base_name} $RPM_BUILD_ROOT%{_bindir}/%{base_name}
-install -pm 0644 bin/%{base_name}-debug-certificates $RPM_BUILD_ROOT%{_bindir}/%{base_name}-debug-certificates
-install -pm 0644 etc/client.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/client.conf
-install -pm 0644 src/%{base_name}/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/
-install -pm 0644 src/%{base_name}/client/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/
-install -pm 0644 src/%{base_name}/client/api/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/api/
-install -pm 0644 src/%{base_name}/client/cli/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/cli/
-install -pm 0644 src/%{base_name}/client/core/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/core/
-install -pm 0644 src/%{base_name}/client/utils/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/utils/
+rm -rf %{buildroot}
+install -d %{buildroot}%{_bindir}/
+install -d %{buildroot}%{_sysconfdir}/%{base_name}/
+install -d %{buildroot}%{python_sitelib}/%{base_name}
+install -d %{buildroot}%{python_sitelib}/%{base_name}/client
+install -d %{buildroot}%{python_sitelib}/%{base_name}/client/api
+install -d %{buildroot}%{python_sitelib}/%{base_name}/client/cli
+install -d %{buildroot}%{python_sitelib}/%{base_name}/client/core
+install -d %{buildroot}%{python_sitelib}/%{base_name}/client/utils
+install -pm 0644 bin/%{base_name} %{buildroot}%{_bindir}/%{base_name}
+install -pm 0644 bin/%{base_name}-debug-certificates %{buildroot}%{_bindir}/%{base_name}-debug-certificates
+install -pm 0644 etc/client.conf %{buildroot}%{_sysconfdir}/%{base_name}/client.conf
+install -pm 0644 src/%{base_name}/*.py %{buildroot}%{python_sitelib}/%{base_name}/
+install -pm 0644 src/%{base_name}/client/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/
+install -pm 0644 src/%{base_name}/client/api/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/api/
+install -pm 0644 src/%{base_name}/client/cli/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/cli/
+install -pm 0644 src/%{base_name}/client/core/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/core/
+install -pm 0644 src/%{base_name}/client/utils/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/utils/
+install -d -m 0755 %{buildroot}%{_mandir}/man1
+install -m 0644 man/%{base_name}.man1 %{buildroot}%{_mandir}/man1/%{base_name}.1
+install -m 0644 man/%{base_name}-debug-certificates.man1 %{buildroot}%{_mandir}/man1/%{base_name}-debug-certificates.1
+
+# several scripts are executable
+chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 
 
+# we need to keep RHEL compatibility
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files 
 %attr(755,root,root) %{_bindir}/%{base_name}
 %attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
+%config(noreplace) %{_sysconfdir}/%{base_name}/client.conf
 %doc README LICENSE
-#%{_mandir}/man8/%{base_name}.8*
+%{_mandir}/man1/%{base_name}.1*
+%{_mandir}/man1/%{base_name}-debug-certificates.1*
 
 %files common
-%defattr(-,root,root)
 %{python_sitelib}/%{base_name}/
 
 
 %changelog
+* Fri May 25 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.38-1
+- 822926 - katello-cli package fedora review
+- Fixed typo s/fing/find. Fixes BZ #824749.
+- system groups - Updates for help text around options that take lists and
+  command naming for adding groups to a system.
+- 795525 - renaming cli column name 'subscriptions'
+- system groups - Updates the system groups CLI work to be consistent with re-
+  factoring work.
+- system groups - merge conflict
+- system groups - Updates to not require max_systems on creation in CLI.
+- Two minor tweaks to output strings for removing systems from a system group.
+- system groups - Adds the maximum systems paramter for CLI create/update.
+- system groups - Cleans up CLI code to fit re-factoring changes from master.
+- system groups - Adds CLI support for add/remove of a system group from an
+  activation key.
+- system groups - Clean up CLI code around adding systems to a system group
+- system group - Adds CLI/API support for adding and removing system groups
+  from a system
+- system groups - Adds support for removing systems from a system group in CLI.
+- system groups - Adds support for adding systems to a system group in the CLI
+- Adds system group basic update support for the CLI
+- system group - Adds system group delete to CLI.
+- system group - Adds system group creation support to CLI.
+- system group - Adds support for locking and unlocking a system group in the
+  CLI
+- system groups - Adds CLI support for listing systems in a system group.
+- system groups - Adds ability to view info of single system group from CLI.
+- system-groups - Adds CLI system group basics and calls to list system groups
+  for a given organization.
+
+* Thu May 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.37-1
+- 824069 - adding new parameter --all to cli product list
+- cli - workaround for error when action was not found This commit fixes error
+  "object has no attribute 'parser'" appearing after attempt to call a non-
+  existing action. The error is gone but classes Command and KatelloCLI need
+  more cleanup. There's redundant code and they touch each other's
+  responsibility.
+- cli - fix for missing section 'options' client.conf Some versions of
+  OptionParser throw error when you try to iterate items from non-existing
+  section.
+- cli validator - complete unit tests
+- cli - validator and parser moved from class to local variables This helps the
+  code to be more testable.
+- cli - fix for wrong param validation in system register
+- cli - CLITestCase divided into two classes
+- cli - unit tests for required options simplified
+- cli - methods for validation extracted from cli Action
+
+* Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.36-1
+- rpm review - katello-cli review preparation
+
+* Fri May 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.35-1
+- cli registration regression with aks
+
+* Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.34-1
+- cli_man - katello(1) man page and generator
+- Changing wording for hypervisor deletion record delete
+- 812891 - Adding hypervisor record deletion to katello cli
+- product status cli - fix for key error Formatting moved to printer that
+  checks whether the key exist prior to printing it.
+
 * Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.33-1
 - cli - pep8 fixes - code reidentation - trailing spaces removal - unused
   imports removed
@@ -291,9 +375,6 @@ rm -rf $RPM_BUILD_ROOT
   (tstrachota@redhat.com)
 - template export - disabled exporting templates from Locker envs
   (tstrachota@redhat.com)
-
-* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.13-1
-- 
 
 * Tue Nov 15 2011 Shannon Hughes <shughes@redhat.com> 0.1.12-1
 - Merge branch 'master' into password_reset (bbuckingham@redhat.com)

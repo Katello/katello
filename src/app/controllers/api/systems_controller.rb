@@ -20,7 +20,8 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_environment_by_name, :only => [:hypervisors_update]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
-                                        :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases]
+                                        :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
+                                        :add_system_groups, :remove_system_groups]
   before_filter :find_task, :only => [:task_show]
   before_filter :authorize, :except => :activate
 
@@ -60,10 +61,14 @@ class Api::SystemsController < Api::ApiController
       :activate => register_system,
       :tasks => index_systems,
       :task_show => read_system,
-      :enabled_repos => consumer_only
+      :enabled_repos => consumer_only,
+      :add_system_groups => edit_system,
+      :remove_system_groups => edit_system
     }
   end
 
+  # this method is called from katello cli client and it does not work with activation keys
+  # for activation keys there is method activate (see custom routes)
   def create
     system = System.create!(params.merge({:environment => @environment, :serviceLevel => params[:service_level]}))
     render :json => system.to_json
@@ -84,7 +89,13 @@ class Api::SystemsController < Api::ApiController
     # we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
     activation_keys.reverse_each {|ak| ak.apply_to_system(system) }
     system.save!
-    activation_keys.each {|ak| ak.subscribe_system(system) }
+    activation_keys.each do |ak|
+      ak.subscribe_system(system)
+      ak.system_groups.each do |group|
+        group.system_ids = (group.system_ids + [system.id]).uniq
+        group.save!
+      end
+    end
     render :json => system.to_json
   end
 
@@ -150,7 +161,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def errata
-    render :json => Pulp::Consumer.errata(@system.uuid)
+    render :json => Resources::Pulp::Consumer.errata(@system.uuid)
   end
 
   def upload_package_profile
@@ -257,6 +268,20 @@ class Api::SystemsController < Api::ApiController
     render :json => result.to_json
   end
 
+  def add_system_groups
+    ids = params[:system][:system_group_ids]
+    @system.system_group_ids = (@system.system_group_ids + ids).uniq
+    @system.save!
+    render :json => @system.to_json
+  end
+
+  def remove_system_groups
+    ids = params[:system][:system_group_ids]
+    @system.system_group_ids = (@system.system_group_ids - ids).uniq
+    @system.save!
+    render :json => @system.to_json
+  end
+
   protected
 
   def find_organization
@@ -319,7 +344,7 @@ class Api::SystemsController < Api::ApiController
   def find_system
     @system = System.first(:conditions => { :uuid => params[:id] })
     if @system.nil?
-      Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
+      Resources::Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
       raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'")
     end
     @system

@@ -10,14 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require_dependency "resources/pulp"
 require "util/search"
 
 class Glue::Pulp::Package < Glue::Pulp::SimplePackage
   attr_accessor :id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description, :size, :buildhost, :repoids
 
   def self.find id
-    package_attrs = Pulp::Package.find(id)
+    package_attrs = Resources::Pulp::Package.find(id)
     Glue::Pulp::Package.new(package_attrs) if not package_attrs.nil?
   end
 
@@ -25,21 +24,8 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     {
         "index" => {
             "analysis" => {
-                "filter" => {
-                    "ngram_filter"  => {
-                        "type"      => "edgeNGram",
-                        "side"      => "front",
-                        "min_gram"  => 1,
-                        "max_gram"  => 30
-                    }
-                },
-                "analyzer" => {
-                    "autcomplete_name_analyzer" => {
-                        "type"      => "custom",
-                        "tokenizer" => "keyword",
-                        "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
-                    }
-                }.merge(Katello::Search::custom_analzyers)
+                "filter" => Katello::Search::custom_filters,
+                "analyzer" =>Katello::Search::custom_analyzers
             }
         }
     }
@@ -77,6 +63,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     start = 0
 
     query = Katello::Search::filter_input query
+    query = "*" if query == ""
     query = "name_autocomplete:#{query}"
 
     search = Tire.search self.index do
@@ -89,6 +76,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
         filter :terms, :repoids => repoids
       end
     end
+
     to_ret = []
     search.results.each{|pkg|
        to_ret << pkg.name if !to_ret.include?(pkg.name)

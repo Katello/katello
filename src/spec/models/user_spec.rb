@@ -75,12 +75,12 @@ describe User do
       before(:each) { disable_user_orchestration }
 
       it "should call pulp user create api during user creation" do
-        Pulp::User.should_receive(:create).once.with(hash_including(:login => USERNAME, :name => USERNAME)).and_return({})
+        Resources::Pulp::User.should_receive(:create).once.with(hash_including(:login => USERNAME, :name => USERNAME)).and_return({})
         User.create!(to_create_simple)
       end
 
       it "should call pulp role api during user creation" do
-        Pulp::Roles.should_receive(:add).once.with("super-users", USERNAME).and_return(true)
+        Resources::Pulp::Roles.should_receive(:add).once.with("super-users", USERNAME).and_return(true)
         User.create!(to_create_simple)
       end
     end
@@ -96,12 +96,12 @@ describe User do
       end
 
       it "should call pulp user delete api during user deletion" do
-        Pulp::User.should_receive(:destroy).once.with(USERNAME).and_return(200)
+        Resources::Pulp::User.should_receive(:destroy).once.with(USERNAME).and_return(200)
         @user.destroy
       end
 
       it "should call pulp role api during user deletion" do
-        Pulp::Roles.should_receive(:remove).once.with("super-users", USERNAME).and_return(true)
+        Resources::Pulp::Roles.should_receive(:remove).once.with("super-users", USERNAME).and_return(true)
         @user.destroy
       end
     end

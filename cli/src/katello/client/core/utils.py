@@ -131,6 +131,8 @@ def format_date(date, to_format="%Y/%m/%d %H:%M:%S"):
     @param date: arguments for the function
     @return string, formatted date
     """
+    if not date:
+        return ""
     t = iso8601.parse(date)
     return time.strftime(to_format, time.localtime(t))
 

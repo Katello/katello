@@ -93,6 +93,7 @@ class ResourceType < ActiveRecord::Base
         :system_templates => {:model=>SystemTemplate, :name=>_("System Templates"), :global=>false},
         :environments => {:model => KTEnvironment, :name => _("Environments"), :global=>false},
         :activation_keys => { :model => ActivationKey, :name => _("Activation Keys"), :global=>false},
+        :system_groups => {:model => SystemGroup, :name=>_("System Groups"), :global=>false},
         :providers => { :model => Provider, :name => _("Providers"), :global=>false},
         :filters => { :model => Filter, :name => _("Filters"), :global => false},
         :users => { :model => User, :name => _("Users"), :global=>true},

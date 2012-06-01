@@ -142,6 +142,22 @@ class SystemAPI(KatelloAPI):
         to_return = self.server.GET(path, customHeaders={"Accept": format})
         return (to_return[1], to_return[2])
 
+    def add_system_groups(self, system_id, system_group_ids):
+        data = { 'system' : {
+                    'system_group_ids' : system_group_ids
+            }
+        }
+        path = "/api/systems/%s/system_groups/" % system_id
+        return self.server.POST(path, data)[1]
+
+    def remove_system_groups(self, system_id, system_group_ids):
+        data = { 'system' : {
+                    'system_group_ids' : system_group_ids
+            }
+        }
+        path = "/api/systems/%s/system_groups/" % system_id
+        return self.server.DELETE(path, data)[1]
+
     def remove_consumer_deletion_record(self, uuid):
         path = "/api/consumers/%s/deletionrecord" % uuid
         return self.server.DELETE(path)[1]

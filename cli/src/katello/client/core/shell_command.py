@@ -34,7 +34,7 @@ class ShellAction(Action):
         super(ShellAction, self).__init__()
         self.admin = cli
 
-    def setup_parser(self):
+    def setup_parser(self, parser):
         return 0
 
     def run(self):

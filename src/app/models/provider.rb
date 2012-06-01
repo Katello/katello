@@ -208,19 +208,23 @@ class Provider < ActiveRecord::Base
 
   def available_releases
     releases = []
-    CDN::CdnVarSubstitutor.with_cache do
-      self.products.engineering.each do |product|
-        cdn_var_substitutor = CDN::CdnVarSubstitutor.new(product.provider[:repository_url],
-                                                         :ssl_client_cert => OpenSSL::X509::Certificate.new(product.certificate),
-                                                         :ssl_client_key => OpenSSL::PKey::RSA.new(product.key))
-        product.productContent.each do |pc|
-          if url_to_releases = pc.content.contentUrl[/^.*\$releasever/]
-            cdn_var_substitutor.substitute_vars(url_to_releases).each do |(substitutions, path)|
-              releases << CDN::Utils.parse_version(substitutions['releasever'])[:minor]
+    begin
+      Resources::CDN::CdnVarSubstitutor.with_cache do
+        self.products.engineering.each do |product|
+          cdn_var_substitutor = Resources::CDN::CdnVarSubstitutor.new(product.provider[:repository_url],
+                                                           :ssl_client_cert => OpenSSL::X509::Certificate.new(product.certificate),
+                                                           :ssl_client_key => OpenSSL::PKey::RSA.new(product.key))
+          product.productContent.each do |pc|
+            if url_to_releases = pc.content.contentUrl[/^.*\$releasever/]
+              cdn_var_substitutor.substitute_vars(url_to_releases).each do |(substitutions, path)|
+                releases << Resources::CDN::Utils.parse_version(substitutions['releasever'])[:minor]
+              end
             end
           end
         end
       end
+    rescue Exception => e
+      raise _("Unable to retrieve release versions from Repository URL %s. Error message: %s") % [self.repository_url, e.to_str]
     end
     releases.uniq.sort
   end

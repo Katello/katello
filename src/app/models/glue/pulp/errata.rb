@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require_dependency "resources/pulp"
 require 'set'
 require 'util/search'
 
@@ -27,11 +26,11 @@ class Glue::Pulp::Errata
   end
 
   def self.errata_by_consumer(repos)
-    Pulp::Consumer.errata_by_consumer(repos)
+    Resources::Pulp::Consumer.errata_by_consumer(repos)
   end
 
   def self.find(id)
-    erratum_attrs = Pulp::Errata.find(id)
+    erratum_attrs = Resources::Pulp::Errata.find(id)
     Glue::Pulp::Errata.new(erratum_attrs) if not erratum_attrs.nil?
   end
 
@@ -41,7 +40,7 @@ class Glue::Pulp::Errata
     filter_for_errata = filter.except(*filter_for_repo.keys)
 
     repos = repos_for_filter(filter_for_repo)
-    repos.each {|repo| errata.concat(Pulp::Repository.errata(repo.pulp_id, filter_for_errata)) }
+    repos.each {|repo| errata.concat(Resources::Pulp::Repository.errata(repo.pulp_id, filter_for_errata)) }
     errata
   end
 
@@ -71,14 +70,14 @@ class Glue::Pulp::Errata
                         "min_gram"  => 3,
                         "max_gram"  => 40
                     }
-                },
+                }.merge(Katello::Search::custom_filters),
                 "analyzer" => {
                     "title_analyzer" => {
                         "type"      => "custom",
                         "tokenizer" => "keyword",
                         "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
                     }
-                }.merge(Katello::Search::custom_analzyers)
+                }.merge(Katello::Search::custom_analyzers)
             }
         }
     }

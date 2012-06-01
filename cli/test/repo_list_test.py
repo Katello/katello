@@ -17,33 +17,19 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     # org product environment
     # + include_disabled
 
-    def setUp(self):
-        self.set_action(List())
-        self.mock_options()
+    action = List()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['list', '--environment=env'])
+    disallowed_options = [
+        ('--environment=env', )
+    ]
 
-    def test_no_error_if_org_provided(self):
-        self.action.process_options(['list', '--org=ACME'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_org_and_env_provided(self):
-        self.action.process_options(['list', '--org=ACME', '--environment=env'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_org_and_product_provided(self):
-        self.action.process_options(['list', '--org=ACME', '--product=prod'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_org_product_and_env_provided(self):
-        self.action.process_options(['list', '--org=ACME', '--product=prod', '--environment=env'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
-    def test_no_error_if_org_product_and_disabled_provided(self):
-        self.action.process_options(['list', '--org=ACME', '--product=prod', '--include_disabled'])
-        self.assertEqual(len(self.action.optErrors), 0)
-
+    allowed_options = [
+        ('--org=ACME', ),
+        ('--org=ACME', '--environment=env'),
+        ('--org=ACME', '--product=prod'),
+        ('--org=ACME', '--product=prod', '--environment=env'),
+        ('--org=ACME', '--product=prod', '--include_disabled'),
+    ]
 
 class RepoListTest(CLIActionTestCase):
 

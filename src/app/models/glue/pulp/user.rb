@@ -10,14 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require_dependency "resources/pulp"
-
 module Glue::Pulp::User
   def self.included(base)
     base.send :include, InstanceMethods
     base.send :include, LazyAccessor
     base.class_eval do
-      lazy_accessor :login, :name, :initializer => lambda { Pulp::User.find(self.username) }
+      lazy_accessor :login, :name, :initializer => lambda { Resources::Pulp::User.find(self.username) }
 
       before_save :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
@@ -37,7 +35,7 @@ module Glue::Pulp::User
     end
 
     def set_pulp_user
-      Pulp::User.create(:login => self.username, :name => self.username, :password => Password.generate_random_string(16))
+      Resources::Pulp::User.create(:login => self.username, :name => self.username, :password => Password.generate_random_string(16))
     rescue RestClient::ExceptionWithResponse => e
       if e.http_code == 409
         Rails.logger.info "pulp user #{self.username}: already exists. continuing"
@@ -52,19 +50,19 @@ module Glue::Pulp::User
     end
 
     def set_super_user_role
-      Pulp::Roles.add "super-users", self.username
+      Resources::Pulp::Roles.add "super-users", self.username
       true #assume everything is ok unless there was an exception thrown
     end
 
     def del_pulp_user
-      Pulp::User.destroy(self.username)
+      Resources::Pulp::User.destroy(self.username)
     rescue => e
       Rails.logger.error "Failed to delete pulp user #{self.username}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def del_super_admin_role
-      Pulp::Roles.remove "super-users", self.username
+      Resources::Pulp::Roles.remove "super-users", self.username
       true #assume everything is ok unless there was an exception thrown
     end
 

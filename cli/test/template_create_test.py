@@ -12,19 +12,16 @@ from katello.client.api.utils import ApiDataError
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: name, organization
 
-    def setUp(self):
-        self.set_action(Create())
-        self.mock_options()
+    action = Create()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--name=template_1'])
+    disallowed_options = [
+        ('--name=template_1', ),
+        ('--org=ACME', ),
+    ]
 
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME'])
-
-    def test_no_error_if_org_and_name_provided(self):
-        self.action.process_options(['create', '--org=ACME', '--name=template_1'])
-        self.assertEqual(len(self.action.optErrors), 0)
+    allowed_options = [
+        ('--org=ACME', '--name=template_1'),
+    ]
 
 
 class TemplateCreateTest(CLIActionTestCase):
