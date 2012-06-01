@@ -16,15 +16,22 @@ KT.comparison_grid = function(){
         num_columns = 0,
         num_rows = 0;
 
-    var add_row = function(){
+    var add_row = function(name){
+            add_row_header(name);
+            $('#grid_content').append(templates.row(num_columns));
         },
         add_row_header = function(name) {
             $('#grid_items').append(templates.row_header(name));
             num_rows += 1;
         },
-        add_column = function() {
-            if( num_rows > 0 ){
-            }
+        add_column = function(name, data) {
+            var i;
+
+            add_column_header(name);
+
+            $('.grid_row').each(function(index){
+                $(this).append(templates.cell(data[index]));
+            })
         },
         add_column_header = function(name) {
             $(templates.column_header(name)).insertBefore('.column_header:last');
@@ -40,7 +47,19 @@ KT.comparison_grid = function(){
 };
 
 KT.comparison_grid.templates = (function() {
-    var row = function() {
+    var cell = function(data) {
+            return '<span>' + data + '</span>';
+        },
+        row = function(num_columns) {
+            var i,
+                html ='<div class="grid_row">';
+
+            for(i = 0; i < num_columns; i += 1){
+                html += cell(i);
+            }
+            html += '</div>';            
+
+            return html;
         },
         row_header = function(name) {
             var html = '<li class="row_header">';
@@ -58,6 +77,8 @@ KT.comparison_grid.templates = (function() {
         };
 
     return {
+        cell            : cell,
+        row             : row,
         column_header   : column_header,
         row_header      : row_header
     }
