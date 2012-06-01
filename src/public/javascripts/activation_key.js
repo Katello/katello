@@ -170,9 +170,9 @@ KT.activation_key = (function($) {
         // toggle the expand/collapse arrow
         var arrow = data.find('img');
         if(arrow.attr("src").indexOf("collapsed") === -1){
-            arrow.attr("src", "images/icons/expander-collapsed.png");
+            arrow.attr("src", "images/embed/icons/expander-collapsed.png");
         } else {
-            arrow.attr("src", "images/icons/expander-expanded.png");
+            arrow.attr("src", "images/embed/icons/expander-expanded.png");
         }
     },
     toggle_family_checkboxes = function(data, checked) {

@@ -492,17 +492,17 @@ KT.system_packages = function() {
                                 if ($.trim($(this).html()) === pkg_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
-                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_package);
                                 }
                             });
                             // if row already existed... skip...
                             if (already_exists === false) {
                                 if (add_row_shading) {
                                     add_row_shading = false;
-                                    packages_top.prepend('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                                    packages_top.prepend('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_package + '</td></tr>');
                                 } else {
                                     add_row_shading = true;
-                                    packages_top.prepend('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                                    packages_top.prepend('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_package + '</td></tr>');
                                 }
                             }
                         }
@@ -536,17 +536,17 @@ KT.system_packages = function() {
                                 if ($.trim($(this).html()) === group_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
-                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_group);
                                 }
                             });
                             // if row already existed... skip...
                             if (already_exists === false) {
                                 if (add_row_shading) {
                                     add_row_shading = false;
-                                    packages_top.prepend('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                                    packages_top.prepend('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_group + '</td></tr>');
                                 } else {
                                     add_row_shading = true;
-                                    packages_top.prepend('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                                    packages_top.prepend('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_group + '</td></tr>');
                                 }
                             }
                         }
@@ -590,17 +590,17 @@ KT.system_packages = function() {
                                 if ($.trim($(this).html()) === pkg_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
-                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_package);
                                 }
                             });
                             // if row already existed... skip...
                             if (already_exists === false) {
                                 if (add_row_shading) {
                                     add_row_shading = false;
-                                    packages_top.prepend('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                                    packages_top.prepend('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_package + '</td></tr>');
                                 } else {
                                     add_row_shading = true;
-                                    packages_top.prepend('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                                    packages_top.prepend('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_package + '</td></tr>');
                                 }
                             }
                         }
@@ -634,17 +634,17 @@ KT.system_packages = function() {
                                 if ($.trim($(this).html()) === group_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
-                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_group);
                                 }
                             });
                             // if row already existed... skip...
                             if (already_exists === false) {
                                 if (add_row_shading) {
                                     add_row_shading = false;
-                                    packages_top.prepend('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                                    packages_top.prepend('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_group + '</td></tr>');
                                 } else {
                                     add_row_shading = true;
-                                    packages_top.prepend('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                                    packages_top.prepend('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_group + '</td></tr>');
                                 }
                             }
                         }
@@ -671,7 +671,7 @@ KT.system_packages = function() {
                 $(':checkbox:checked').each( function() {
                     var pkg = $(this).closest('.package');
                     pkg.attr('data-uuid', data);
-                    pkg.find('.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
+                    pkg.find('.package_action_status').html('<img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_package);
                 });
                 monitorStatus(data, KT.package_action_types.PKG_REMOVE);
 
@@ -693,7 +693,7 @@ KT.system_packages = function() {
                 $(':checkbox:checked').each( function() {
                     var pkg = $(this).closest('.package');
                     pkg.attr('data-uuid', data);
-                    pkg.find('.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.updating_package);
+                    pkg.find('.package_action_status').html('<img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.updating_package);
                 });
                 monitorStatus(data, KT.package_action_types.PKG_UPDATE);
 
