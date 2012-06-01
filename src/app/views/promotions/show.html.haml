@@ -81,7 +81,7 @@
 
 #wait_dialog{:style=>"display: none"}
   = _("Processing promotion changeset modifications, please wait.")
-  = image_tag ("spinner.gif")
+  .spinner
 
 
 
@@ -119,7 +119,7 @@
               #tree_loading.slider.tree_loading
                 .text
                   = _("Loading Promotion Changeset")
-                  = image_tag ("spinner.gif")
+                  .spinner
               .slider_one.has_content.slider.will_have_content
               .slider_two.no_content.slider
           #changeset_edit.slide_up_container
@@ -196,9 +196,9 @@
       .sliding_container
         #list.list.sliding_list{"data-page_size"=>current_user.page_size}
           .slider_one.has_content.slider
-            = image_tag("spinner.gif")
+            .spinner
           .slider_two.no_content.slider
-            = image_tag("spinner.gif")
+            .spinner
 
 
 #conflict-dialog{:style=>"display: none"}
