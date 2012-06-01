@@ -19,7 +19,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.2.14
+Version:        0.2.15
 Release:        1%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -82,7 +82,7 @@ cp -r spec/ build/
 cp -r vendor/ build/
 
 # pull in converge-ui
-cp -R /usr/share/converge-ui-devel ./vendor/converge-ui
+cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
 
 #pull in branding if present
 if [ -d branding ] ; then
@@ -220,6 +220,9 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Fri Jun 01 2012 Jordan OMara <jomara@redhat.com> 0.2.15-1
+- minor headpin spec fix 
+
 * Fri Jun 01 2012 Jordan OMara <jomara@redhat.com> 0.2.14-1
 - Fixing headpin spec for converge ui (jomara@redhat.com)
 
