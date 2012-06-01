@@ -19,7 +19,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.2.13
+Version:        0.2.14
 Release:        1%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -220,6 +220,9 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Fri Jun 01 2012 Jordan OMara <jomara@redhat.com> 0.2.14-1
+- Fixing headpin spec for converge ui (jomara@redhat.com)
+
 * Fri Jun 01 2012 Jordan OMara <jomara@redhat.com> 0.2.13-1
 - new package built with tito
 
