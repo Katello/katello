@@ -31,9 +31,9 @@ $(document).ready(function() {
 
     var arrow = $(this).parent().find('img');
     if(arrow.attr("src").indexOf("collapsed") === -1){
-      arrow.attr("src", KT.common.rootURL() + "images/icons/expander-collapsed.png");
+      arrow.attr("src", KT.common.rootURL() + "images/embed/icons/expander-collapsed.png");
     } else {
-      arrow.attr("src", KT.common.rootURL() + "images/icons/expander-expanded.png");
+      arrow.attr("src", KT.common.rootURL() + "images/embed/icons/expander-expanded.png");
     }
     return false;
   });

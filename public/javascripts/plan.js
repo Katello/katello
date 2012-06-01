@@ -14,7 +14,6 @@
 KT.panel.list.registerPage('sync_plans', { create : 'new_sync_plan' });
 
 $(document).ready(function() {
-
   $.editable.addInputType( 'datepicker', {
 
     /* create input element */
@@ -46,10 +45,9 @@ $(document).ready(function() {
       };
       input.datepicker(datepicker);
     }
-  } );
+  });
 
   $.editable.addInputType( 'timepicker', {
-
     /* create input element */
     element: function( settings, original ) {
       var form = $( this ), input = $( '<input data-change="false"/>' );
@@ -66,19 +64,18 @@ $(document).ready(function() {
       input.timepickr({convention: 12})
       .click();
     }
-  } );
+  });
+  //set the date picker and time picker to only initialize on callback of the panel expansion
+  KT.panel.set_expand_cb(function(){
+      $("#datepicker").datepicker({
+          changeMonth: true,
+          changeYear: true
+      });
 
-
-    KT.panel.set_expand_cb(function(){
-        $("#datepicker").datepicker({
-            changeMonth: true,
-            changeYear: true
-        });
-
-         $("#timepicker").timepickr({
-            convention: 12,
-            trigger: "focus"
-         });
-    });
+       $("#timepicker").timepickr({
+          convention: 12,
+          trigger: "focus"
+       });
+  });
 
 });
