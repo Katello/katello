@@ -68,17 +68,17 @@ $(document).ready(function() {
     }
   } );
 
-  $("#datepicker").live('mousedown', function() {
-     $(this).datepicker({
-       changeMonth: true,
-       changeYear: true
-     });
-  });
 
-  $("#timepicker").live('mousedown', function() {
-     $(this).timepickr({
-       convention: 12
-     });
-  });
+    KT.panel.set_expand_cb(function(){
+        $("#datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true
+        });
+
+         $("#timepicker").timepickr({
+            convention: 12,
+            trigger: "focus"
+         });
+    });
 
 });

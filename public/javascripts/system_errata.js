@@ -14,13 +14,41 @@
 KT.system = KT.system || {};
 
 KT.system.errata = function() {
-    var system_errata_container = $('#system_errata'),
-    	system_id = system_errata_container.data('system_id'),
-    	table_body = system_errata_container.find('tbody'),
-    	load_more = $('#load_more_errata'),
+    var errata_container = undefined,
+        table_body = undefined,
+        load_more = undefined,
         task_list = {},
         actions_updater,
-        init = function(editable){
+        items_url = undefined,
+        install_url = undefined,
+        status_url = undefined,
+        errata_for = undefined,
+        update_function = undefined,
+
+        init = function(editable, page){
+            errata_container = $('#errata_container');
+            table_body = errata_container.find('tbody');
+            load_more = $('#load_more_errata');
+
+            // This component is shared by the systems and system groups pages; however, some of the behavior is
+            // different depending on the page.  For example, the URLs to interact with the server.
+            errata_for = page;
+            var id = errata_container.data('parent_id');
+            if (page === 'system') {
+                items_url = KT.routes.items_system_errata_path(id);
+                install_url = KT.routes.install_system_errata_path(id);
+                status_url = KT.routes.status_system_errata_path(id);
+                update_function = update_status_for_system;
+                KT.tipsy.custom.tooltip($('.tipsy-icon.errata-info'));
+            } else {
+                // errata_for === 'system_group'
+                items_url = KT.routes.items_system_group_errata_path(id);
+                install_url = KT.routes.install_system_group_errata_path(id);
+                status_url = KT.routes.status_system_group_errata_path(id);
+                update_function = update_status_for_group;
+                KT.tipsy.custom.tooltip($('.tipsy-icon.systems, .tipsy-icon.errata-info'));
+            }
+
             register_events();
 
             // Not all users have permission to interact with errata; those that don't
@@ -38,19 +66,18 @@ KT.system.errata = function() {
     		$('#errata_state_radio_outstanding').bind('change', fetch_errata);
             $('#run_errata_button').bind('click', add_errata);
     		load_more.bind('click', { clear_items : false }, fetch_errata);
-            KT.tipsy.custom.errata_tooltip();
     	},
         init_status_check = function(){
             var timeout = 8000;
 
-            actions_updater = $.PeriodicalUpdater(KT.routes.status_system_errata_path(system_id), {
+            actions_updater = $.PeriodicalUpdater(status_url, {
                 method: 'get',
                 type: 'json',
                 data: function() {return {uuid: Object.keys(task_list)};},
                 global: false,
                 minTimeout: timeout,
                 maxTimeout: timeout
-            }, update_status);
+            }, update_function);
         },
     	fetch_errata = function(event){
     		var type = get_current_filter(),
@@ -67,12 +94,11 @@ KT.system.errata = function() {
 
             $.ajax({
     			method	: 'get',
-    			url		: KT.routes.items_system_errata_path(system_id),
+    			url		: items_url,
     			data	: { filter_type : type, offset : offset, errata_state : state }
     		}).success(function(data){
     			insert_data(data, !clear_items);
     			show_spinner(false);
-
     		});
     	},
     	get_current_filter = function(){
@@ -91,7 +117,7 @@ KT.system.errata = function() {
     		}
     	},
         add_errata = function(){
-            var selected_errata = $('#system_errata').find(':checkbox:checked'),
+            var selected_errata = errata_container.find(':checkbox:checked'),
                 errata_ids = [],
                 params = {};
 
@@ -109,7 +135,7 @@ KT.system.errata = function() {
             params = $.param(params);
 
             $.ajax({
-                url : KT.routes.install_system_errata_path(system_id),
+                url : install_url,
                 type : 'POST',
                 data : params
             }).success(function(data){
@@ -119,7 +145,7 @@ KT.system.errata = function() {
                 task_list[data] = errata_ids;
             });
         },
-        update_status = function(data){
+        update_status_for_system = function(data){
             var i = 0, length = data.length,
                 task;
 
@@ -133,6 +159,42 @@ KT.system.errata = function() {
                         task_list[task['uuid']] = task['parameters']['errata_ids'];
                         set_status(task['parameters']['errata_ids'], 'installing');
                     }
+                }
+            }
+
+            if( Object.keys(task_list).length === 0 ){
+                actions_updater.stop();
+            }
+        },
+        update_status_for_group = function(data){
+            var i = 0, num_jobs = data.length, job, num_tasks, task;
+
+            for(i; i < num_jobs; i += 1){
+                job = data[i];
+                num_tasks = job.task_statuses.length;
+                var j = 0, running = 0, error = 0;
+                for(j; j < num_tasks; j += 1){
+                    task = job.task_statuses[j];
+                    if ((task.state === 'waiting') || (task.state === 'running')) {
+                        running += 1;
+                    } else if (task.state === 'error') {
+                        error += 1;
+                    }
+                }
+                if (running > 0) {
+                    // still have a task running... status should remain installing
+                    if( !task_list.hasOwnProperty(job.pulp_id) ){
+                        task_list[job.pulp_id] = job.task_statuses[0]['parameters']['errata_ids'];
+                        set_status(job.task_statuses[0]['parameters']['errata_ids'], 'installing');
+                    }
+                } else if (error > 0) {
+                    // no tasks are still running, but at least 1 error was encountered
+                    set_status(task_list[job.pulp_id], 'failed');
+                    delete task_list[job.pulp_id];
+                } else {
+                    // looks like all tasks completed...
+                    set_status(task_list[job.pulp_id], 'finished');
+                    delete task_list[job.pulp_id];
                 }
             }
 
@@ -159,7 +221,7 @@ KT.system.errata = function() {
                 results_count = data["results_count"];
     		
     		$('#loaded_summary').data('current_count', current_count),
-    		$('#loaded_summary').html(i18n.x_of_y_errata(current_count, results_count, total_count));
+    		$('#loaded_summary').html(i18n.x_of_y(current_count, results_count, total_count));
     		
     		if( current_count === results_count ){
     			load_more.hide();
@@ -184,11 +246,14 @@ KT.system.errata = function() {
                 errata_row = rows[i];
 
                 if( status === 'installing' ){
-                    errata_row.find('.errata_status_text').html(i18n.errata_installing);
+                    errata_row.find('.errata_status_text').html(i18n.installing);
                     errata_row.find('img').show();
                 } else if( status === 'finished' ){
                     errata_row.find('img').hide();
-                    errata_row.find('.errata_status_text').html(i18n.errata_install_finished);
+                    errata_row.find('.errata_status_text').html(i18n.install_finished);
+                } else if ( status === 'failed' ) {
+                    errata_row.find('img').hide();
+                    errata_row.find('.errata_status_text').html(i18n.install_error)
                 }
                 errata_row.find('.errata_status').show();
             }
@@ -199,7 +264,7 @@ KT.system.errata = function() {
                 rows = [];
 
             for( i; i < length; i += 1){
-                rows.push($('#system_errata_' + KT.common.escapeId(errata_ids[i])));
+                rows.push($('#errata_' + KT.common.escapeId(errata_ids[i])));
             }
 
             return rows;

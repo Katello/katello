@@ -16,8 +16,8 @@ require 'models/model_spec_helper'
 describe Organization do
 
   before(:each) do
-    Candlepin::Owner.stub!(:create_user).and_return(true)
-    Candlepin::Owner.should_receive(:create).at_least(:once).and_return({})
+    Resources::Candlepin::Owner.stub!(:create_user).and_return(true)
+    Resources::Candlepin::Owner.should_receive(:create).at_least(:once).and_return({})
     disable_env_orchestration
     @organization = Organization.create(:name => 'test_organization', :cp_key => 'test_organization')
   end
@@ -59,7 +59,7 @@ describe Organization do
 
   context "delete an organization" do
     before do
-      Candlepin::Owner.should_receive(:destroy).at_least(:once).and_return({})
+      Resources::Candlepin::Owner.should_receive(:destroy).at_least(:once).and_return({})
     end
 
     it "can delete the org" do

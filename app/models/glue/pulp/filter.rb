@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "resources/pulp"
-
 module Glue::Pulp::Filter
 
   def self.included(base)
@@ -19,7 +17,7 @@ module Glue::Pulp::Filter
     base.send :include, LazyAccessor
 
     base.class_eval do
-      lazy_accessor :description, :package_list, :initializer => lambda { Pulp::Filter.find(pulp_id) }
+      lazy_accessor :description, :package_list, :initializer => lambda { Resources::Pulp::Filter.find(pulp_id) }
 
       before_save :save_filter_orchestration
       before_destroy :destroy_filter_orchestration
@@ -30,7 +28,7 @@ module Glue::Pulp::Filter
 
     def set_pulp_filter
       Rails.logger.debug "creating pulp filter '#{self.pulp_id}'"
-      Pulp::Filter.create :id => self.pulp_id, :type => "blacklist", :package_list => self.package_list, :description => self.description
+      Resources::Pulp::Filter.create :id => self.pulp_id, :type => "blacklist", :package_list => self.package_list, :description => self.description
     rescue => e
       Rails.logger.error "Failed to create pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -38,7 +36,7 @@ module Glue::Pulp::Filter
 
     def del_pulp_filter
       Rails.logger.debug "deleting pulp filter '#{self.pulp_id}'"
-      Pulp::Filter.destroy self.pulp_id
+      Resources::Pulp::Filter.destroy self.pulp_id
     rescue => e
       Rails.logger.error "Failed to delete pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -46,7 +44,7 @@ module Glue::Pulp::Filter
 
     def set_packages package_list
       Rails.logger.debug "adding packages to pulp filter '#{self.pulp_id}'"
-      Pulp::Filter.add_packages pulp_id, package_list
+      Resources::Pulp::Filter.add_packages pulp_id, package_list
     rescue => e
       Rails.logger.error "Failed to add packages to pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -54,7 +52,7 @@ module Glue::Pulp::Filter
 
     def del_packages package_list
       Rails.logger.debug "removing packages to pulp filter '#{self.pulp_id}'"
-      Pulp::Filter.remove_packages pulp_id, package_list
+      Resources::Pulp::Filter.remove_packages pulp_id, package_list
     rescue => e
       Rails.logger.error "Failed to remove packages from pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e

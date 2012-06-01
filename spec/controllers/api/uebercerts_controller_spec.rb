@@ -41,7 +41,7 @@ describe Api::UebercertsController do
 
   context "show" do
     before do
-      Candlepin::Owner.stub!(:get_ueber_cert).and_return({})
+      Resources::Candlepin::Owner.stub!(:get_ueber_cert).and_return({})
       disable_authorization_rules
     end
 

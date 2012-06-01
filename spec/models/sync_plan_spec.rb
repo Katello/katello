@@ -71,7 +71,7 @@ describe SyncPlan, :katello => true do
 
       #updating plan
       @plan.sync_date += 1
-      @plan.products.first.should_receive(:setup_sync_schedule).and_return(true)
+      @plan.products.to_a.first.should_receive(:setup_sync_schedule).and_return(true)
       lambda { @plan.save! }.should_not raise_exception
     end
   end

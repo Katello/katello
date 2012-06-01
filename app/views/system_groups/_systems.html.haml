@@ -1,0 +1,50 @@
+
+= content_for :title do
+  #{@group.name}
+
+= content_for :remove_item do
+  - if @group.deletable?
+    = link_to _("Remove System Group"), {:action => "destroy", :controller => "system_groups"}, :method => :delete, :confirm => _('Are you sure you want to delete this group?'), :class => "remove_item", :remote=>true
+
+= content_for :navigation do
+  = render_menu(1..2, system_groups_navigation)
+
+= content_for :content do
+  #system_group_systems.grid_9{'data-id'=>@group.id}
+    %input#system_group_id{:name => @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
+    %form#system_form
+      -if editable && !@group.locked
+        %table.list
+          %thead
+            %th
+              -#%span.fr.details-icon.tipsy{"data-help" => _('This allows you to search for systems and add them to the selected system group.')}
+              -##{_("Add Systems")}
+
+          %tbody
+            %tr.no_sort.not_filtered
+              %td
+                %div
+                  - help_text = _("Enter system name...")
+                  %input#add_system_input_id{:type=>'hidden'}
+                  %input{:type=>'text', :id=>'add_system_input', :size=>'30', :placeholder => help_text, :title => help_text, :tabindex => auto_tab_index}
+                  %input#add_system.button{:style => 'padding-left: 10px;', :value=>_("Add"), :type=>:button, :tabindex => auto_tab_index}
+      %table#systems_table.filter_table.list
+        %thead.header
+          %tr
+            %th
+              = _("Name")
+            %th
+              = _("Added")
+        %tbody
+          %tr.empty_row{:class=>(:hidden if !@system_joins.empty?)}
+            %td
+              = _("No systems currently exist in this system group.")
+            %td
+          = render :partial=>'system_item', :collection=>@system_joins, :as=>:system
+
+
+= content_for :footer do
+  .grid_9
+    %input#remove_systems.fr.button{:type=>:button, :value=>_("Remove Selected")}
+
+

@@ -508,6 +508,10 @@ class User < ActiveRecord::Base
     super(options).merge 'default_organization' => default_environment.try(:organization).try(:name),
                          'default_environment'  => default_environment.try(:name)
   end
+
+  def has_superadmin_role?
+    roles.any? { |r| r.superadmin? }
+  end
  
   # verify the user is in the groups we are think they are in
   # if not, reset them

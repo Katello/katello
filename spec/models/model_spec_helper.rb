@@ -83,64 +83,78 @@ EOKEY
 
 
   def disable_product_orchestration
-    Candlepin::Product.stub!(:get).and_return([{:productContent => []}])
-    Candlepin::Product.stub!(:add_content).and_return(true)
-    Candlepin::Product.stub!(:create).and_return({:id => 1})
-    Candlepin::Product.stub!(:create_unlimited_subscription).and_return(true)
+    Resources::Candlepin::Product.stub!(:get).and_return([{:productContent => []}])
+    Resources::Candlepin::Product.stub!(:add_content).and_return(true)
+    Resources::Candlepin::Product.stub!(:create).and_return({:id => 1})
+    Resources::Candlepin::Product.stub!(:create_unlimited_subscription).and_return(true)
+    Resources::Candlepin::Product.stub!(:pools).and_return([])
+    Resources::Candlepin::Product.stub!(:delete_subscriptions).and_return(nil)
 
-    Candlepin::Content.stub!(:create).and_return(true)
+    Resources::Candlepin::Content.stub!(:create).and_return(true)
 
     # pulp orchestration
-    Candlepin::Product.stub!(:certificate).and_return("")
-    Candlepin::Product.stub!(:key).and_return("")
-    Pulp::Repository.stub!(:create).and_return([])
-    Pulp::Repository.stub!(:update_schedule).and_return(true)
-    Pulp::Repository.stub!(:delete_schedule).and_return(true)
-    Pulp::Repository.stub!(:all).and_return([])
-    Pulp::Repository.stub!(:update).and_return([])
+    Resources::Candlepin::Product.stub!(:certificate).and_return("")
+    Resources::Candlepin::Product.stub!(:key).and_return("")
+    Resources::Pulp::Repository.stub!(:create).and_return([])
+    Resources::Pulp::Repository.stub!(:update_schedule).and_return(true)
+    Resources::Pulp::Repository.stub!(:delete_schedule).and_return(true)
+    Resources::Pulp::Repository.stub!(:all).and_return([])
+    Resources::Pulp::Repository.stub!(:update).and_return([])
   end
 
   def disable_org_orchestration
-    Candlepin::Owner.stub!(:create).and_return({})
-    Candlepin::Owner.stub!(:create_user).and_return(true)
-    Candlepin::Owner.stub!(:destroy)
-    Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => CERT, :key => KEY })
+    Resources::Candlepin::Owner.stub!(:create).and_return({})
+    Resources::Candlepin::Owner.stub!(:create_user).and_return(true)
+    Resources::Candlepin::Owner.stub!(:destroy)
+    Resources::Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => CERT, :key => KEY })
     disable_env_orchestration # env is orchestrated with org - we disable this as well
   end
 
   def disable_env_orchestration
-    Candlepin::Environment.stub!(:create).and_return({})
-    Candlepin::Environment.stub!(:destroy).and_return({})
-    Candlepin::Environment.stub!(:find).and_return({:environmentContent => []})
-    Candlepin::Environment.stub!(:add_content).and_return({})
+    Resources::Candlepin::Environment.stub!(:create).and_return({})
+    Resources::Candlepin::Environment.stub!(:destroy).and_return({})
+    Resources::Candlepin::Environment.stub!(:find).and_return({:environmentContent => []})
+    Resources::Candlepin::Environment.stub!(:add_content).and_return({})
+  end
+
+  def disable_system_orchestration
+    Resources::Candlepin::Consumer.stub(:get).and_return({})
   end
 
   def disable_user_orchestration
-    Pulp::User.stub!(:create).and_return({})
-    Pulp::User.stub!(:destroy).and_return(200)
-    Pulp::Roles.stub!(:add).and_return(true)
-    Pulp::Roles.stub!(:remove).and_return(true)
+    Resources::Pulp::User.stub!(:create).and_return({})
+    Resources::Pulp::User.stub!(:destroy).and_return(200)
+    Resources::Pulp::Roles.stub!(:add).and_return(true)
+    Resources::Pulp::Roles.stub!(:remove).and_return(true)
   end
 
   def disable_filter_orchestration
-    Pulp::Filter.stub!(:create).and_return({})
-    Pulp::Filter.stub!(:destroy).and_return(200)
-    Pulp::Filter.stub(:find).and_return({})
+    Resources::Pulp::Filter.stub!(:create).and_return({})
+    Resources::Pulp::Filter.stub!(:destroy).and_return(200)
+    Resources::Pulp::Filter.stub(:find).and_return({})
+  end
+
+  def disable_consumer_group_orchestration
+    Resources::Pulp::ConsumerGroup.stub!(:create).and_return({})
+    Resources::Pulp::ConsumerGroup.stub!(:destroy).and_return(200)
+    Resources::Pulp::ConsumerGroup.stub(:find).and_return({})
+    Resources::Pulp::ConsumerGroup.stub!(:add_consumer).and_return(200)
+    Resources::Pulp::ConsumerGroup.stub!(:delete_consumer).and_return(200)
   end
 
   def disable_repo_orchestration
-    Pulp::Repository.stub(:sync_history).and_return([])
-    Pulp::Task.stub!(:destroy).and_return({})
+    Resources::Pulp::Repository.stub(:sync_history).and_return([])
+    Resources::Pulp::Task.stub!(:destroy).and_return({})
 
-    Pulp::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
-    Pulp::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
-    Pulp::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
-    Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
-    Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
+    Resources::Pulp::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
+    Resources::Pulp::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
+    Resources::Pulp::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
+    Resources::Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
+    Resources::Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
   end
 
   def disable_cdn
-    CDN::CdnResource.stub(:ca_file => "#{Rails.root}/config/candlepin-ca.crt")
+    Resources::CDN::CdnResource.stub(:ca_file => "#{Rails.root}/config/candlepin-ca.crt")
     OpenSSL::X509::Certificate.stub(:new).and_return(&:to_s)
     OpenSSL::PKey::RSA.stub(:new).and_return(&:to_s)
   end

@@ -19,11 +19,11 @@ describe Hypervisor do
     let(:hypervisor_record) { Hypervisor.find_by_uuid(new_hypervisor_attrs[:uuid]) }
 
     before do
-      Candlepin::Consumer.stub(:register_hypervisors).with(virt_who_params).and_return({"created" => [new_hypervisor_attrs]}.with_indifferent_access)
+      Resources::Candlepin::Consumer.stub(:register_hypervisors).with(virt_who_params).and_return({"created" => [new_hypervisor_attrs]}.with_indifferent_access)
     end
 
     it "should call cp" do
-      Candlepin::Consumer.should_receive(:register_hypervisors).with(virt_who_params)
+      Resources::Candlepin::Consumer.should_receive(:register_hypervisors).with(virt_who_params)
       System.register_hypervisors(@environment, virt_who_params)
     end
 
@@ -33,7 +33,7 @@ describe Hypervisor do
     end
 
     it "should not create candlepin consumer" do
-      Candlepin::Consumer.should_not_receive(:create)
+      Resources::Candlepin::Consumer.should_not_receive(:create)
       System.register_hypervisors(@environment, virt_who_params)
     end
 
