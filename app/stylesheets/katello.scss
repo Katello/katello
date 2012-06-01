@@ -1,17 +1,17 @@
 @charset "UTF-8";
 @import "compass";
 @import "grid";
-@import "text";
-@import "mixins";
-@import "sprites";
-@import "icons";
 @import "look";
 
+@import "converge-ui/text";
+@import "converge-ui/mixins";
+@import "converge-ui/sprites";
+@import "converge-ui/icons";
 @import "converge-ui/colors";
-@import "converge-ui/shell";
 @import "converge-ui/header";
 @import "converge-ui/footer";
 @import "converge-ui/media";
+@import "converge-ui/shell";
 
 @import "widgets/multiselect";
 @import "widgets/_chosen";
@@ -638,13 +638,14 @@ fieldset {
 }
 
 .spinner {
+  margin: 0 auto;
   margin-top: 30%;
   height: 16px;
+  width: 16px;
   display: block;
-  /*display: none;*/
   position: relative;
   z-index: 1000;
-  padding-left: 47%;
+  background: $spinner_img;
 }
 
 /* editable icon for in place editing */
@@ -739,9 +740,8 @@ fieldset {
       min-height:500px;
       position:relative;
       z-index: 100;
-
       h2 {
-          margin-bottom: 0;
+          margin-bottom: 8px;
       }
       #new {
           border-bottom: 0 none;
@@ -774,6 +774,9 @@ fieldset {
                 }
               }
           }
+      }
+      #heading_title {
+        font-weight: bold;
       }
        /* search forms */
       .search {

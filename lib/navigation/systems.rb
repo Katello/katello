@@ -69,7 +69,7 @@ module Navigation
           :name =>_("Details"),
           :url => lambda{edit_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"navigation_element"},
+          :options => {:class=>"navigation_element menu_parent"},
           :items => systems_subnav
         },
         { :key => :subscriptions,
