@@ -1,56 +1,13 @@
 @charset "UTF-8";
-@import "text";
-@import "mixins";
 @import "compass";
+@import "converge-ui/text";
 @import "converge-ui/colors";
-@import "sprites";
+@import "converge-ui/icons";
+@import "converge-ui/sprites";
+@import "converge-ui/mixins";
 
 nav {
-  &.tab_nav { /* main tabs navigation */
-    display: block;
-    font-weight: bold;
-    font-family: $headlinefont;
-    font-size: 125%;
-    &>ul {
-      display: block;
-      position: absolute;
-      bottom: 0;
-
-      &>li {
-        display: inline-block;
-        margin: 0 4px 0 0;
-        padding: 0;
-        color: #888;
-        background-color: #ddd;
-        background: -moz-linear-gradient(top, $white_color, #ddd 2px, #ddd 70%, lighten($stroke_color, 10%));
-        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(lighten($stroke_color,10%)), color-stop(.01, #ddd), color-stop(.7,#ddd));
-        border: 1px solid $stroke_color;
-
-        &.selected {
-          background: $white_color;
-          padding-bottom: 1px;
-          border-bottom: none;
-
-          &>a {
-            color: $tabon_color;
-            @include no-text-shadow();
-          }
-        }
-        &>a {
-          display: block;
-          padding: 9px 18px;
-          text-decoration: none;
-          color: $taboff_color;
-          @include _text-shadow($white_color,0,1px,0);
-
-          &:hover {
-            color: lighten($kselected_color,10%);
-          }
-        }
-      }
-    }
-  }
-  &.subnav, nav.tab_nav ul li ul { /* subnavigation */
+  &.subnav { /* subnavigation */
     display: block;
     font-family: $headlinefont;
     font-size: 115%;
@@ -128,7 +85,7 @@ nav {
           background: $subnav_shadow_img;
           background-position: 0 14px;
           background-color: $white_color;
-          @include box-shadow(2px 2px 2px rgba(0,0,0,0.4));
+          @include box-shadow(2px, 2px, 2px, rgba(0,0,0,0.4));
           z-index: 101;
           top: 34px;
           height: 35px;
@@ -180,7 +137,7 @@ nav {
           font-family: $screenfont;
           text-transform: none;
           font-weight: normal;
-          color: black;
+          color: $black_color;
           display: block;
           padding: 6px 12px; margin-right: 10px;
 
@@ -194,13 +151,3 @@ nav {
     }
   }
 } /*end nav*/
-
-/*nav.tab_nav ul li ul li a {*/
-    /*display: none;*/
-/*}*/
-nav.tab_nav ul li ul {
-    display: none;
-}
-/*nav.tab_nav ul li ul li a {*/
-    /*display: none;*/
-/*}*/

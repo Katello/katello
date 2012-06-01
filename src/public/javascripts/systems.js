@@ -12,8 +12,7 @@
 */
 
 KT.panel.set_expand_cb(function(){
-    var children = $('#panel .third_level:first-child');
-
+    var children = $('#panel .menu_parent');
     $.each(children, function(i, item) {
         KT.menu.hoverMenu(item, { top : '75px' });
     });
