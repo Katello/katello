@@ -118,7 +118,7 @@ KT.path_select = function(div_id, name, environments, options_in){
                     nodes.removeAttr('disabled');
                 }
                 if(options.link_first && select_elem.parents('li').is(':first-child')){
-                    unselect_nodes(first_nodes.find('input:checkbox:checked'));
+                    unselect_nodes(first_nodes.find('input:checkbox:checked').hide());
                 }
             };
             nodes.change(function(){
@@ -136,7 +136,7 @@ KT.path_select = function(div_id, name, environments, options_in){
             checkbox_list.parents('a').addClass('active');
         },
         unselect_nodes = function(checkbox_list){
-            checkbox_list.removeAttr('checked').hide();
+            checkbox_list.removeAttr('checked');
             checkbox_list.parents('a').removeClass('active');
         },
         get_selected = function(){
@@ -162,16 +162,27 @@ KT.path_select = function(div_id, name, environments, options_in){
         },
         get_event = function(){
             return options.button_event;
-        };
-
-
+        },
+        clear_selected = function(){
+            unselect_nodes(path_selector.find('input:checked').hide());
+        },
+        select = function(id, next_id){
+           var nodes = path_selector.find('input:checkbox[data-node_id=' + id + ']');
+           if(nodes.length > 1 && !options.link_first){
+               nodes.and('[data-next_node_id=' + next_id + ']').click();
+           }
+           else{
+               nodes.click();
+           }
+        }
 
     init();
 
-
     return {
         get_selected: get_selected,
-        get_event : get_event
+        get_event : get_event,
+        clear_selected: clear_selected,
+        select:select 
     };
 };
 
