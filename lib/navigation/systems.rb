@@ -149,18 +149,12 @@ module Navigation
           :if => lambda{@group},
           :options => {:class=>"navigation_element"}
         },
-#        { :key => :content,
-#          :name =>_("Content"),
-#          :url => lambda{system_group_errata_path(@group.id)},
-#          :if => lambda{@group},
-#          :options => {:class=>"navigation_element"},
-#          :items => system_groups_content_subnav
-#        },
-        { :key => :errata,
-          :name =>_("Errata"),
-          :url => lambda{system_group_errata_path(@group.id)},
+        { :key => :content,
+          :name =>_("Content"),
+          :url => lambda{system_group_packages_path(@group.id)},
           :if => lambda{@group},
-          :options => {:class=>"navigation_element"},
+          :options => {:class=>"navigation_element menu_parent"},
+          :items => system_groups_content_subnav
         },
         { :key => :details,
           :name =>_("Details"),
@@ -173,12 +167,12 @@ module Navigation
 
     def system_groups_content_subnav
       [
-#        { :key => :packages,
-#          :name =>_("Packages"),
-#          :url => lambda{packages_system_system_packages_path(@system.id)},
-#          :if => lambda{@system},
-#          :options => {:class=>"third_level navigation_element"}
-#        },
+        { :key => :packages,
+          :name =>_("Packages"),
+          :url => lambda{system_group_packages_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"third_level navigation_element"},
+        },
         { :key => :errata,
           :name =>_("Errata"),
           :url => lambda{system_group_errata_path(@group.id)},
