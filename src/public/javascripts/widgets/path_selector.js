@@ -133,11 +133,11 @@ KT.path_select = function(div_id, name, environments, options_in){
         },
         select_nodes = function(checkbox_list){
             checkbox_list.attr('checked', 'checked').show();
-            checkbox_list.parents('a').addClass('active');
+            checkbox_list.parents('label').addClass('active');
         },
         unselect_nodes = function(checkbox_list){
             checkbox_list.removeAttr('checked');
-            checkbox_list.parents('a').removeClass('active');
+            checkbox_list.parents('label').removeClass('active');
         },
         get_selected = function(){
             var selected = path_selector.find('input:checked'),
@@ -223,8 +223,7 @@ KT.path_select_template = {
             input = node.select ? '<span class="checkbox_holder"><input class="node_select" type="checkbox" ' +
                 next_node +' data-node_id="' + node.id + '"></span>' : '';
 
-
-        html += '<li data-node_id="' + node.id + '">'+ '<a><div>' + input + node.name + '</div></a></li>';
+        html += '<li data-node_id="' + node.id + '">'+ '<label><div>' + input +  node.name +  '</div></label></li>';
         return html;
     }
 };

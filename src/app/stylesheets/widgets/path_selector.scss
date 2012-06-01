@@ -45,7 +45,7 @@
 
       &:first-child {
         @include crumb-nohover;
-        a {
+        label {
           padding-left: 6px;
           @include border-left-radius(5px);
         }
@@ -55,7 +55,7 @@
       }
       &:last-child {
         @include crumb-nohover;
-        a {
+        label {
           overflow: hidden;
           padding-right: 10px;
           @include border-right-radius(5px);
@@ -75,7 +75,7 @@
         }
       }
   }
-  a {
+  label {
     color: $black_color;
     text-decoration: none;
     padding: 4px 0 4px 20px;
@@ -86,7 +86,7 @@
     .checkbox_holder {
       float: left;
       margin-right: 3px;
-      margin-top: 1px;
+      padding-top: 1px;
       display: inline-block;
       width: 13px;
     }
@@ -94,9 +94,6 @@
       overflow: hidden;
     }
 
-    input {
-      margin-right: 3px;
-    }
 
     &:hover {
       background: $listhover_color !important;
