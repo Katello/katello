@@ -4,7 +4,7 @@ KT.env_select_scroll = function(options) {
 
 
     var anchor_padding = 20, //amount of padding each anchor has
-        min_size = 30,
+        min_size = 40,
         min_size_selected = 75,
         px_per_sec = 400,
         freq = 20;
@@ -18,7 +18,7 @@ KT.env_select_scroll = function(options) {
             var trail = $(this),
                 cont_width = $(this).width(),
                 combined_width = 0,
-                anchors = trail.find("a"),
+                anchors = trail.find("a, label"),
                 my_min_size_selected = min_size_selected;
             anchors.unbind("mouseout").unbind("mouseover").width('auto');
             
@@ -97,7 +97,7 @@ KT.env_select_scroll = function(options) {
                         var width = anchor.width();
                         if (width < total_width) {
                             clear_out();
-                            anchor.width(width+chunk_size);
+                            anchor.width((width+chunk_size));
                         }
                         else {
                             clear_over();

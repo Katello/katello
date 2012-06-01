@@ -15,6 +15,8 @@
 
 $(document).ready(function() {
 
+    KT.my_env_select = KT.path_select('my_env_selector', 'env', KT.available_environments,
+        {select_mode:'multi', button_text:"Go", link_first: true});
 
-    var env_select = KT.path_select('my_env_selector', 'env', KT.available_environments, {select_mode:'multi'})
+    $(document).bind(KT.my_env_select.get_event(), function(event, foo){console.log(foo)});
 });
