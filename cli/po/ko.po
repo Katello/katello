@@ -9,90 +9,2788 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-02 10:11-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-05-24 11:07-0400\n"
+"Last-Translator: eukim <eukim@fedoraproject.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"X-Generator: Zanata 1.5.0\n"
 
-#: ../src/katello/client/api/utils.py:36
+#: ../src/katello/client/server.py:420
+#, python-format
+msgid "certificate file %s does not exist or cannot be read"
+msgstr "인증서 파일 %s이 존재하지 않거나 읽을 수 없음 "
+
+#: ../src/katello/client/server.py:423
+#, python-format
+msgid "key file %s does not exist or cannot be read"
+msgstr "키 파일 %s이 존재하지 않거나 읽을 수 없음 "
+
+#: ../src/katello/client/server.py:436
+msgid "Couldn't authenticate via kerberos"
+msgstr "커베로스를 통해 인증할 수 없음 "
+
+#: ../src/katello/client/cli/base.py:119
+msgid "prints version information"
+msgstr "버전 정보 표시 "
+
+#: ../src/katello/client/cli/base.py:120
+msgid "Katello User Account Credentials"
+msgstr "Katello 사용자 계정 인증서 "
+
+#: ../src/katello/client/cli/base.py:122
+msgid "account username"
+msgstr "계정 사용자 이름 "
+
+#: ../src/katello/client/cli/base.py:124
+msgid "account password"
+msgstr "계정 암호 "
+
+#: ../src/katello/client/cli/base.py:131
+msgid "Katello Server Information"
+msgstr "Katello 서버 정보 "
+
+#: ../src/katello/client/cli/base.py:134
+#, python-format
+msgid "katello server host name (default: %s)"
+msgstr "katello 서버 호스트 이름 (디폴트: %s)"
+
+#: ../src/katello/client/cli/base.py:200
+msgid "Invalid command; please see --help"
+msgstr "잘못된 명령; --help를 참조하십시오 "
+
+#: ../src/katello/client/cli/base.py:224
+msgid "No command given; please see --help"
+msgstr "주어진 명령이 없음; --help를 참조하십시오 "
+
+#: ../src/katello/client/api/utils.py:46
 #, python-format
 msgid "Could not find organization [ %s ]"
 msgstr "조직 [ %s ]을 찾을 수 없음 "
 
-#: ../src/katello/client/api/utils.py:51
+#: ../src/katello/client/api/utils.py:61
 #, python-format
 msgid "Could not find environment [ %s ] within organization [ %s ]"
 msgstr "조직 [ %s ] 내에서 환경 [ %s ]을 찾을 수 없음 "
 
-#: ../src/katello/client/api/utils.py:64
+#: ../src/katello/client/api/utils.py:75
 #, python-format
 msgid "Could not find product [ %s ] within organization [ %s ]"
 msgstr "조직 [ %s ]에서 제품 [ %s ]을 찾을 수 없음 "
 
-#: ../src/katello/client/api/utils.py:84
+#: ../src/katello/client/api/utils.py:91
 #, python-format
 msgid ""
 "Could not find repository [ %s ] within organization [ %s ], product [ %s ] "
 "and environment [ %s ]"
 msgstr "조직 [ %s ], 제품 [ %s ], 환경 [ %s ]에서 리포지터리 [ %s ]를 찾을 수 없음 "
 
-#: ../src/katello/client/api/utils.py:93
+#: ../src/katello/client/api/utils.py:101
 #, python-format
 msgid "Could not find provider [ %s ] within organization [ %s ]"
 msgstr "조직 [ %s ]에서 공급자 [ %s ]를 찾을 수 없음 "
 
-#: ../src/katello/client/api/utils.py:106
+#: ../src/katello/client/api/utils.py:112
 #, python-format
 msgid "Could not find template [ %s ] within environment [ %s ]"
 msgstr "환경 [ %s ]에서 템플릿 [ %s ]을 찾을 수 없음 "
 
-#: ../src/katello/client/api/utils.py:119
+#: ../src/katello/client/api/utils.py:123
 #, python-format
 msgid "Could not find changeset [ %s ] within environment [ %s ]"
 msgstr "환경 [ %s ]에서 변경 집합 [ %s ]을 찾을 수 없음 "
 
-#: ../src/katello/client/api/utils.py:126
+#: ../src/katello/client/api/utils.py:131
 #, python-format
 msgid "Could not fing user [ %s ]"
 msgstr "사용자 [ %s ]를 찾을 수 없음 "
 
-#: ../src/katello/client/api/utils.py:133
+#: ../src/katello/client/api/utils.py:138
 #: ../src/katello/client/core/user_role.py:39
 #, python-format
 msgid "Cannot find user role [ %s ]"
 msgstr "사용자 역할 [ %s ]을 찾을 수 없음 "
 
-#: ../src/katello/client/api/utils.py:140
+#: ../src/katello/client/api/utils.py:145
 #, python-format
 msgid "Cannot find sync plan [ %s ]"
 msgstr "동기화 계획 [ %s ]을 찾을 수 없음 "
 
-#: ../src/katello/client/api/utils.py:152
+#: ../src/katello/client/api/utils.py:155
 #, python-format
 msgid "Cannot find permission [ %s ] for user role [ %s ]"
 msgstr "사용자 역할 [ %s ]의 권한을 찾을 수 없음 "
 
-#: ../src/katello/client/api/utils.py:159
+#: ../src/katello/client/api/utils.py:163
 #, python-format
 msgid "Cannot find filter [ %s ]"
 msgstr "필터 [ %s ]를 찾을 수 없음 "
 
-#: ../src/katello/client/server.py:411
+#: ../src/katello/client/api/utils.py:171
 #, python-format
-msgid "certificate file %s does not exist or cannot be read"
-msgstr "인증서 파일 %s이 존재하지 않거나 읽을 수 없음 "
+msgid "Could not find System [ %s ] in Org [ %s ]"
+msgstr "조직 [ %s ]에서 시스템 [ %s ]을 찾을 수 없음 "
 
-#: ../src/katello/client/server.py:414
+#: ../src/katello/client/api/utils.py:173
 #, python-format
-msgid "key file %s does not exist or cannot be read"
-msgstr "키 파일 %s이 존재하지 않거나 읽을 수 없음 "
+msgid "Found ambiguous Systems [ %s ] in Environment [ %s ] in Org [ %s ]"
+msgstr "조직 [ %s ]의 환경 [ %s ]에서 불명확한 시스템 [ %s ]을 찾음 "
 
-#: ../src/katello/client/server.py:427
-msgid "Couldn't authenticate via kerberos"
-msgstr "커베로스를 통해 인증할 수 없음 "
+#: ../src/katello/client/api/utils.py:179
+#, python-format
+msgid "Could not find System [ %s ] in Environment [ %s ] in Org [ %s ]"
+msgstr "조직 [ %s ]의 환경 [ %s ]에서 시스템 [ %s ]을 찾을 수 없음 "
+
+#: ../src/katello/client/api/utils.py:182
+#, python-format
+msgid ""
+"Found ambiguous Systems [ %s ] in Org [ %s ], you have to specify the "
+"environment"
+msgstr "조직 [ %s ]에서 불명확한 시스템 [ %s ]을 찾았습니다, 환경을 지정하십시오."
+
+#: ../src/katello/client/utils/printer.py:144
+msgid "name"
+msgstr "이름 "
+
+#: ../src/katello/client/core/organization.py:44
+msgid "list all known organizations"
+msgstr "모든 알려진 조직 목록 보기 "
+
+#: ../src/katello/client/core/organization.py:53
+msgid "Organization List"
+msgstr "조직 목록 "
+
+#: ../src/katello/client/core/organization.py:61
+msgid "create an organization"
+msgstr "조직 생성 "
+
+#: ../src/katello/client/core/organization.py:66
+#: ../src/katello/client/core/organization.py:93
+#: ../src/katello/client/core/organization.py:121
+#: ../src/katello/client/core/organization.py:150
+#: ../src/katello/client/core/organization.py:173
+#: ../src/katello/client/core/organization.py:205
+#: ../src/katello/client/core/product.py:59
+#: ../src/katello/client/core/product.py:120
+#: ../src/katello/client/core/product.py:295
+#: ../src/katello/client/core/system.py:51
+#: ../src/katello/client/core/system.py:93
+#: ../src/katello/client/core/system.py:149
+#: ../src/katello/client/core/system.py:247
+#: ../src/katello/client/core/system.py:317
+#: ../src/katello/client/core/system.py:353
+#: ../src/katello/client/core/system.py:694
+#: ../src/katello/client/core/environment.py:51
+#: ../src/katello/client/core/environment.py:78
+#: ../src/katello/client/core/environment.py:112
+#: ../src/katello/client/core/environment.py:151
+#: ../src/katello/client/core/environment.py:189
+#: ../src/katello/client/core/sync_plan.py:58
+#: ../src/katello/client/core/repo.py:120
+#: ../src/katello/client/core/repo.py:158
+msgid "organization name eg: foo.example.com (required)"
+msgstr "조직 이름 예: foo.example.com (필수 사항) "
+
+#: ../src/katello/client/core/organization.py:68
+#: ../src/katello/client/core/organization.py:152
+msgid "consumer description eg: foo's organization"
+msgstr "컨슈머 설명 예: foo의 조직 "
+
+#: ../src/katello/client/core/organization.py:79
+#, python-format
+msgid "Successfully created org [ %s ]"
+msgstr "조직 [ %s ]이 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/organization.py:80
+#, python-format
+msgid "Could not create org [ %s ]"
+msgstr "조직 [ %s ]을 생성할 수 없음 "
+
+#: ../src/katello/client/core/organization.py:88
+msgid "list information about an organization"
+msgstr "조직 정보 목록 보기 "
+
+#: ../src/katello/client/core/organization.py:106
+msgid "Available Service Levels"
+msgstr "사용 가능한 서비스 수준 "
+
+#: ../src/katello/client/core/organization.py:108
+msgid "Organization Information"
+msgstr "조직 정보 "
+
+#: ../src/katello/client/core/organization.py:116
+msgid "delete an organization"
+msgstr "조직 삭제 "
+
+#: ../src/katello/client/core/organization.py:132
+msgid "Deleting the organization, please wait... "
+msgstr "조직 삭제 중, 잠시만 기다리십시오..."
+
+#: ../src/katello/client/core/organization.py:135
+#, python-format
+msgid "Successfully deleted org [ %s ]"
+msgstr "조직 [ %s ]이 성공적으로 삭제됨 "
+
+#: ../src/katello/client/core/organization.py:138
+#, python-format
+msgid "Organization [ %s ] deletion failed: %s"
+msgstr "조직 [ %s ] 삭제 실패함: %s"
+
+#: ../src/katello/client/core/organization.py:145
+msgid "update an organization"
+msgstr "조직 업데이트 "
+
+#: ../src/katello/client/core/organization.py:162
+#, python-format
+msgid "Successfully updated org [ %s ]"
+msgstr "조직 [ %s ]이 성공적으로 업데이트됨 "
+
+#: ../src/katello/client/core/organization.py:169
+msgid "generate and show ueber certificate"
+msgstr "ueber 인증서 생성 및 보기 "
+
+#: ../src/katello/client/core/organization.py:175
+msgid "regenerate the certificate"
+msgstr "인증서 다시 생성 "
+
+#: ../src/katello/client/core/organization.py:188
+msgid "Organization Uebercert"
+msgstr "조직의 ueber 인증서 "
+
+#: ../src/katello/client/core/organization.py:197
+msgid "show subscriptions"
+msgstr "서브스크립션 보기 "
+
+#: ../src/katello/client/core/organization.py:228
+msgid "Organization's Subscriptions"
+msgstr "조직의 서브스크립션 "
+
+#: ../src/katello/client/core/organization.py:257
+msgid "organization specific actions in the katello server"
+msgstr "katello 서버에서 조직의 특정 동작 "
+
+#: ../src/katello/client/core/product.py:60
+#: ../src/katello/client/core/product.py:299
+#: ../src/katello/client/core/repo.py:126
+#: ../src/katello/client/core/repo.py:166
+msgid "product name (required)"
+msgstr "제품 이름 (필수 사항) "
+
+#: ../src/katello/client/core/product.py:62
+#: ../src/katello/client/core/product.py:122
+#: ../src/katello/client/core/distribution.py:51
+#: ../src/katello/client/core/package.py:53
+#: ../src/katello/client/core/package.py:108
+#: ../src/katello/client/core/errata.py:52
+#: ../src/katello/client/core/errata.py:144
+#: ../src/katello/client/core/repo.py:84
+#: ../src/katello/client/core/repo.py:415
+msgid "environment name eg: production (default: Library)"
+msgstr "환경 이름 예: production (디폴트: Library) "
+
+#: ../src/katello/client/core/product.py:74
+msgid "set a synchronization plan"
+msgstr "동기화 계획 설정 "
+
+#: ../src/katello/client/core/product.py:79
+msgid "synchronization plan name (required)"
+msgstr "동기화 계획 이름 (필수 사항) "
+
+#: ../src/katello/client/core/product.py:101
+msgid "unset a synchronization plan"
+msgstr "동기화 계획 설정 해제 "
+
+#: ../src/katello/client/core/product.py:116
+msgid "list known products"
+msgstr "알려진 제품 목록 보기 "
+
+#: ../src/katello/client/core/product.py:124
+msgid "provider name, lists provider's product in the Library"
+msgstr "공급자 이름, Library에 있는 공급자의 제품 목록 보기 "
+
+#: ../src/katello/client/core/product.py:142
+#: ../src/katello/client/core/repo.py:320
+msgid "GPG key"
+msgstr "GPG 키  "
+
+#: ../src/katello/client/core/product.py:147
+#, python-format
+msgid "Product List For Provider %s"
+msgstr "공급자 %s에 대한 제품 목록 "
+
+#: ../src/katello/client/core/product.py:153
+#, python-format
+msgid "Product List For Organization %s, Environment '%s'"
+msgstr "조직 %s, 환경 %s에 대한 제품 목록 "
+
+#: ../src/katello/client/core/product.py:163
+msgid "synchronize a product"
+msgstr "제품 동기화 "
+
+#: ../src/katello/client/core/product.py:179
+#, python-format
+msgid "Product [ %s ] failed to sync: %s"
+msgstr "제품 [ %s ] 동기화 실패: %s"
+
+#: ../src/katello/client/core/product.py:182
+#, python-format
+msgid "Product [ %s ] synchronization cancelled"
+msgstr "제품 [ %s ] 동기화가 취소됨 "
+
+#: ../src/katello/client/core/product.py:185
+#, python-format
+msgid "Product [ %s ] synchronized"
+msgstr "제품 [ %s ]이 동기화됨 "
+
+#: ../src/katello/client/core/product.py:191
+#: ../src/katello/client/core/provider.py:228
+msgid "cancel currently running synchronization"
+msgstr "현재 실행되고 있는 동기화가 취소됨 "
+
+#: ../src/katello/client/core/product.py:208
+msgid "status of product's synchronization"
+msgstr "제품의 동기화 상태 "
+
+#: ../src/katello/client/core/product.py:234
+msgid "Product Status"
+msgstr "제품 상태 "
+
+#: ../src/katello/client/core/product.py:242
+msgid ""
+"promote a product to an environment\n"
+"(creates a temporary changeset with the product and promotes it)"
+msgstr ""
+"제품 환경 승격 \n"
+"(제품에 임시적인 변경 집합을 생성하고 이를 승격함) "
+
+#: ../src/katello/client/core/product.py:265
+msgid "Promoting the product, please wait... "
+msgstr "제품 승격 중, 잠시만 기다리십시오..."
+
+#: ../src/katello/client/core/product.py:268
+#, python-format
+msgid "Product [ %s ] promoted to environment [ %s ] "
+msgstr "제품 [ %s ]이 환경 [ %s ]으로 승격됨 "
+
+#: ../src/katello/client/core/product.py:271
+#, python-format
+msgid "Product [ %s ] promotion failed: %s"
+msgstr "제품 [ %s ] 승격 실패: %s"
+
+#: ../src/katello/client/core/product.py:291
+msgid "create new product to a custom provider"
+msgstr "사용자 지정 공급자에 새 제품 생성 "
+
+#: ../src/katello/client/core/product.py:297
+#: ../src/katello/client/core/provider.py:46
+#: ../src/katello/client/core/provider.py:129
+msgid "provider name (required)"
+msgstr "공급자 이름 (필수 사항) "
+
+#: ../src/katello/client/core/product.py:301
+msgid "product description"
+msgstr "제품 설명 "
+
+#: ../src/katello/client/core/product.py:303
+#: ../src/katello/client/core/provider.py:133
+msgid ""
+"repository url eg: "
+"http://download.fedoraproject.org/pub/fedora/linux/releases/"
+msgstr ""
+"리포지터리 url 예: http://download.fedoraproject.org/pub/fedora/linux/releases/"
+
+#: ../src/katello/client/core/product.py:305
+msgid "skip repository discovery"
+msgstr "리포지터리 검색 생략 "
+
+#: ../src/katello/client/core/product.py:307
+#: ../src/katello/client/core/repo.py:164
+msgid ""
+"assume yes; automatically create candidate repositories for discovered urls "
+"(optional)"
+msgstr "yes라고 가정; 검색된 url에 대해 후보 리포지터리를 자동으로 생성 (옵션) "
+
+#: ../src/katello/client/core/product.py:309
+msgid ""
+"assign a gpg key; this key will be used for every new repository unless "
+"gpgkey or nogpgkey is specified for the repo"
+msgstr ""
+"gpg 키 할당; 리포지터리에 gpgkey 또는 nogpgkey가 지정되어 있지 않을 경우 이 키는 모든 새로운 리포지터리에 사용됩니다 "
+
+#: ../src/katello/client/core/product.py:334
+#, python-format
+msgid "Successfully created product [ %s ]"
+msgstr "제품 [ %s ]이 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/product.py:341
+#: ../src/katello/client/core/repo.py:182
+#, python-format
+msgid "Repository Urls discovered @ [%s]"
+msgstr "검색된 리포지터리 Url @ [% s] "
+
+#: ../src/katello/client/core/product.py:350
+msgid "update a product's attributes"
+msgstr "제품의 속성 업데이트 "
+
+#: ../src/katello/client/core/product.py:355
+msgid "change description of the product"
+msgstr "제품 설명 변경 "
+
+#: ../src/katello/client/core/product.py:357
+#: ../src/katello/client/core/product.py:359
+msgid "assign a gpgkey to the product"
+msgstr "제품에 gpgkey 할당 "
+
+#: ../src/katello/client/core/product.py:361
+msgid "assign the gpgpkey also to the product's repositories"
+msgstr "제품의 리포지터리에 gpgkey 할당 "
+
+#: ../src/katello/client/core/product.py:378
+#, python-format
+msgid "Successfully updated product [ %s ]"
+msgstr "제품 [ %s ]이 성공적으로 업데이트됨 "
+
+#: ../src/katello/client/core/product.py:384
+msgid "delete a product and its content"
+msgstr "제품 및 컨텐츠 삭제 "
+
+#: ../src/katello/client/core/product.py:399
+msgid "list filters of a product"
+msgstr "제품의 필터 목록 보기 "
+
+#: ../src/katello/client/core/product.py:410
+msgid "Product Filters"
+msgstr "제품 필터 "
+
+#: ../src/katello/client/core/product.py:425
+msgid "add a filter to a product"
+msgstr "제품에 필터 추가 "
+
+#: ../src/katello/client/core/product.py:427
+msgid "remove a filter from a product"
+msgstr "제품에서 필터 제거 "
+
+#: ../src/katello/client/core/product.py:436
+#: ../src/katello/client/core/filters.py:67
+#: ../src/katello/client/core/filters.py:101
+#: ../src/katello/client/core/filters.py:122
+#: ../src/katello/client/core/filters.py:152
+#: ../src/katello/client/core/filters.py:179
+#: ../src/katello/client/core/repo.py:516
+msgid "filter name (required)"
+msgstr "필터 이름 (필수 사항) "
+
+#: ../src/katello/client/core/product.py:458
+#, python-format
+msgid "Added filter [ %s ] to product [ %s ]"
+msgstr "제품 [ %s ]에 필터 [ %s ]이(가) 추가됨 "
+
+#: ../src/katello/client/core/product.py:461
+#, python-format
+msgid "Removed filter [ %s ] to product [ %s ]"
+msgstr "제품 [ %s ]에 필터 [ %s ]이(가) 제거됨 "
+
+#: ../src/katello/client/core/product.py:472
+msgid "product specific actions in the katello server"
+msgstr "katello 서버에서 제품의 특정 동작 "
+
+#: ../src/katello/client/core/system.py:47
+msgid "list systems within an organization"
+msgstr "조직에 있는 시스템 목록 보기 "
+
+#: ../src/katello/client/core/system.py:53
+#: ../src/katello/client/core/system.py:321
+#: ../src/katello/client/core/system.py:393
+#: ../src/katello/client/core/system.py:461
+#: ../src/katello/client/core/system.py:696
+msgid "environment name eg: development"
+msgstr "환경 이름 예: development "
+
+#: ../src/katello/client/core/system.py:55
+msgid "pool id to filter systems by subscriptions"
+msgstr "서브스크립션에 따라 시스템을 필터링하기 위한 풀 ID "
+
+#: ../src/katello/client/core/system.py:76
+#, python-format
+msgid "Systems List For Org [ %s ]"
+msgstr "조직 [ %s ]의 시스템 목록 "
+
+#: ../src/katello/client/core/system.py:78
+#, python-format
+msgid "Systems List For Environment [ %s ] in Org [ %s ]"
+msgstr "조직 [ %s ]에 있는 환경 [ %s ]의 시스템 목록 "
+
+#: ../src/katello/client/core/system.py:82
+#: ../src/katello/client/core/system.py:134
+msgid "Service Level"
+msgstr "서비스 수준 "
+
+#: ../src/katello/client/core/system.py:89
+msgid "display a system within an organization"
+msgstr "조직에 있는 시스템 표시 "
+
+#: ../src/katello/client/core/system.py:95
+#: ../src/katello/client/core/system.py:151
+#: ../src/katello/client/core/system.py:355
+#: ../src/katello/client/core/system.py:391
+#: ../src/katello/client/core/system.py:459
+#: ../src/katello/client/core/system.py:492
+#: ../src/katello/client/core/system.py:521
+#: ../src/katello/client/core/system.py:601
+#: ../src/katello/client/core/system.py:641
+#: ../src/katello/client/core/errata.py:105
+msgid "system name (required)"
+msgstr "시스템 이름 (필수 사항) "
+
+#: ../src/katello/client/core/system.py:97
+#: ../src/katello/client/core/system.py:153
+#: ../src/katello/client/core/system.py:251
+#: ../src/katello/client/core/system.py:357
+#: ../src/katello/client/core/system.py:643
+msgid "environment name"
+msgstr "환경 이름 "
+
+#: ../src/katello/client/core/system.py:109
+#, python-format
+msgid "System Information For Org [ %s ]"
+msgstr "조직 [ %s ]의 시스템 정보 "
+
+#: ../src/katello/client/core/system.py:111
+#, python-format
+msgid "System Information For Environment [ %s ] in Org [ %s ]"
+msgstr "조직 [ %s ]에 있는 환경의 시스템 정보 "
+
+#: ../src/katello/client/core/system.py:145
+msgid "display and manipulate with the installed packages of a system"
+msgstr "시스템에 설치된 패키지 표시 및 처리 "
+
+#: ../src/katello/client/core/system.py:155
+msgid ""
+"packages to be installed remotely on the system, package names are separated"
+" with comma"
+msgstr "시스템에 원격으로 설치된 패키지입니다, 패키지 이름은 콤마로 구분됩니다 "
+
+#: ../src/katello/client/core/system.py:157
+msgid ""
+"packages to be removed remotely from the system, package names are separated"
+" with comma"
+msgstr "시스템에서 원격으로 제거된 패키지입니다, 패키지 이름은 콤마로 구분됩니다 "
+
+#: ../src/katello/client/core/system.py:159
+msgid ""
+"packages to be updated on the system, use --all to update all packages, "
+"package names are separated with comma"
+msgstr "시스템에서 업데이트할 패키지입니다, 을 사용하여 모든 패키지를 업데이트합니다, 패키지 이름은 콤마로 구분됩니다 "
+
+#: ../src/katello/client/core/system.py:161
+msgid ""
+"package groups to be installed remotely on the system, group names are "
+"separated with comma"
+msgstr "시스템에 원격으로 설치된 패키지 그룹입니다, 그룹 이름은 콤마로 구분됩니다 "
+
+#: ../src/katello/client/core/system.py:163
+msgid ""
+"package groups to be removed remotely from the system, group names are "
+"separated with comma"
+msgstr "시스템에서 원격으로 제거된 패키지 그룹입니다, 그룹 이름은 콤마로 구분됩니다 "
+
+#: ../src/katello/client/core/system.py:170
+msgid "You can specify at most one install/remove/update action per call"
+msgstr "호출 당 최대 하나의 설치/제거/업데이트 작업을 지정할 수 있습니다 "
+
+#: ../src/katello/client/core/system.py:189
+#, python-format
+msgid "Package Information for System [ %s ] in Org [ %s ]"
+msgstr "조직 [ %s ]에 있는 시스템 [ %s ]의 패키지 정보 "
+
+#: ../src/katello/client/core/system.py:191
+#, python-format
+msgid ""
+"Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]"
+msgstr "조직 [ %s ]에 있는 환경 [ %s ]의 시스템에 대한 패키지 정보 "
+
+#: ../src/katello/client/core/system.py:213
+#, python-format
+msgid "Performing remote action [ %s ]... "
+msgstr "원격 동작 [ %s ] 실행 중..."
+
+#: ../src/katello/client/core/system.py:217
+msgid "Remote action finished:"
+msgstr "원격 동작이 완료됨: "
+
+#: ../src/katello/client/core/system.py:221
+msgid "Remote action failed:"
+msgstr "원격 동작이 실패함: "
+
+#: ../src/katello/client/core/system.py:243
+msgid "display status of remote tasks"
+msgstr "원격 작업의 상태 표시 "
+
+#: ../src/katello/client/core/system.py:249
+msgid "system name"
+msgstr "시스템 이름 "
+
+#: ../src/katello/client/core/system.py:261
+msgid "Remote tasks"
+msgstr "원격 작업 "
+
+#: ../src/katello/client/core/system.py:269
+msgid "Task id"
+msgstr "작업 ID "
+
+#: ../src/katello/client/core/system.py:270
+#: ../src/katello/client/core/system.py:300
+msgid "System"
+msgstr "시스템 "
+
+#: ../src/katello/client/core/system.py:271
+#: ../src/katello/client/core/system.py:301
+msgid "Action"
+msgstr "동작 "
+
+#: ../src/katello/client/core/system.py:272
+#: ../src/katello/client/core/system.py:302
+msgid "Started"
+msgstr "시작됨 "
+
+#: ../src/katello/client/core/system.py:273
+#: ../src/katello/client/core/system.py:303
+#: ../src/katello/client/core/repo.py:37
+msgid "Finished"
+msgstr "완료됨 "
+
+#: ../src/katello/client/core/system.py:274
+#: ../src/katello/client/core/system.py:304
+msgid "Status"
+msgstr "상태"
+
+#: ../src/katello/client/core/system.py:275
+#: ../src/katello/client/core/system.py:305
+msgid "Result"
+msgstr "결과 "
+
+#: ../src/katello/client/core/system.py:283
+msgid "display status of remote task"
+msgstr "원격 작업 상태 표시 "
+
+#: ../src/katello/client/core/system.py:287
+msgid "UUID of the task"
+msgstr "작업의 UUID "
+
+#: ../src/katello/client/core/system.py:295
+msgid "Remote task"
+msgstr "원격 작업 "
+
+#: ../src/katello/client/core/system.py:313
+msgid "list releases available for the system"
+msgstr "시스템에서 사용 가능한 릴리즈 목록 "
+
+#: ../src/katello/client/core/system.py:319
+msgid "system name (if not specified, list all releases in the environment)"
+msgstr "시스템 이름 (지정하지 않은 경우 환경에 있는 모든 릴리즈가 나열됨)"
+
+#: ../src/katello/client/core/system.py:341
+msgid "Available releases"
+msgstr "사용 가능한 릴리즈 "
+
+#: ../src/katello/client/core/system.py:349
+msgid "display a the hardware facts of a system"
+msgstr "시스템의 하드웨어 정보 표시 "
+
+#: ../src/katello/client/core/system.py:369
+#, python-format
+msgid "System Facts For System [ %s ] in Org [ %s ]"
+msgstr "조직 [ %s ]에 있는 시스템 [ %s ]의 시스템 정보 "
+
+#: ../src/katello/client/core/system.py:371
+#, python-format
+msgid "System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]"
+msgstr "조직 [ %s ]에 있는 환경 [ %s ]의 시스템 [ %s ]에 대한 시스템 정보 "
+
+#: ../src/katello/client/core/system.py:388
+msgid "register a system"
+msgstr "시스템 등록 "
+
+#: ../src/katello/client/core/system.py:392
+#: ../src/katello/client/core/system.py:457
+#: ../src/katello/client/core/system.py:490
+#: ../src/katello/client/core/system.py:520
+#: ../src/katello/client/core/system.py:599
+#: ../src/katello/client/core/system.py:639
+#: ../src/katello/client/core/filters.py:42
+#: ../src/katello/client/core/filters.py:65
+#: ../src/katello/client/core/filters.py:99
+#: ../src/katello/client/core/filters.py:120
+#: ../src/katello/client/core/filters.py:150
+#: ../src/katello/client/core/filters.py:177
+#: ../src/katello/client/core/provider.py:64
+#: ../src/katello/client/core/sync_plan.py:85
+#: ../src/katello/client/core/sync_plan.py:115
+#: ../src/katello/client/core/sync_plan.py:153
+#: ../src/katello/client/core/sync_plan.py:194
+#: ../src/katello/client/core/errata.py:103
+msgid "organization name (required)"
+msgstr "조직 이름 (필수 사항) "
+
+#: ../src/katello/client/core/system.py:394
+#: ../src/katello/client/core/system.py:654
+msgid "service level agreement"
+msgstr "서비스 수준 계약서 "
+
+#: ../src/katello/client/core/system.py:396
+msgid ""
+"activation key, more keys are separated with comma e.g. "
+"--activationkey=key1,key2"
+msgstr "활성화 키, 여러 키는 콤마로 구분함. 예: --activationkey=key1,key2"
+
+#: ../src/katello/client/core/system.py:397
+msgid "values of $releasever for the system"
+msgstr "시스템의 $releasever 값 "
+
+#: ../src/katello/client/core/system.py:399
+msgid "system facts"
+msgstr "시스템 정보 "
+
+#: ../src/katello/client/core/system.py:407
+#, python-format
+msgid "Option %s can not be specified with %s"
+msgstr "옵션 %s은 %s로 지정할 수 없음 "
+
+#: ../src/katello/client/core/system.py:429
+#, python-format
+msgid "Successfully registered system [ %s ]"
+msgstr "시스템 [ %s ]을 성공적으로 등록함 "
+
+#: ../src/katello/client/core/system.py:430
+#, python-format
+msgid "Could not register system [ %s ]"
+msgstr "시스템 [ %s ]을 등록할 수 없음 "
+
+#: ../src/katello/client/core/system.py:435
+msgid "remove a deletion record for hypervisor"
+msgstr "하이퍼바이저의 삭제 기록 제거 "
+
+#: ../src/katello/client/core/system.py:439
+msgid "hypervisor uuid (required"
+msgstr "하이퍼바이저 uuid (필수 사항) "
+
+#: ../src/katello/client/core/system.py:447
+#, python-format
+msgid "Successfully removed deletion record for hypervisor with uuid [ %s ]"
+msgstr "uuid [ %s ]의 하이퍼바이저 삭제 기록이 성공적으로 제거되었습니다 "
+
+#: ../src/katello/client/core/system.py:453
+msgid "unregister a system"
+msgstr "시스템 등록 해제 "
+
+#: ../src/katello/client/core/system.py:481
+#, python-format
+msgid "Successfully unregistered System [ %s ]"
+msgstr "시스템 [ %s ]을 성공적으로 등록 해제함 "
+
+#: ../src/katello/client/core/system.py:486
+msgid "subscribe a system to certificate"
+msgstr "시스템을 인증서에 등록 "
+
+#: ../src/katello/client/core/system.py:494
+msgid "certificate serial to unsubscribe (required)"
+msgstr "등록 해제를 위한 인증서 일련 변호 (필수 사항) "
+
+#: ../src/katello/client/core/system.py:496
+msgid "quantity (default: 1)"
+msgstr "수량 (디폴트: 1) "
+
+#: ../src/katello/client/core/system.py:512
+#, python-format
+msgid "Successfully subscribed System [ %s ]"
+msgstr "시스템 [ %s ]을 성공적으로 등록함 "
+
+#: ../src/katello/client/core/system.py:517
+msgid "list subscriptions for a system"
+msgstr "시스템의 서브스크립션 목록 보기 "
+
+#: ../src/katello/client/core/system.py:524
+msgid "show available subscriptions"
+msgstr "사용 가능한 서브스크립션 보기 "
+
+#: ../src/katello/client/core/system.py:542
+#, python-format
+msgid "No Subscriptions found for System [ %s ] in Org [ %s ]"
+msgstr "조직 [ %s ]에서 시스템 [ %s ]에 대한 서브스크립션을 찾을 수 없음 "
+
+#: ../src/katello/client/core/system.py:554
+#, python-format
+msgid "Current Subscriptions for System [ %s ]"
+msgstr "시스템 [ %s ]의 현재 서브스크립션 "
+
+#: ../src/katello/client/core/system.py:556
+msgid "Serial Id"
+msgstr "시리얼 ID "
+
+#: ../src/katello/client/core/system.py:563
+#: ../src/katello/client/core/system.py:588
+msgid "Provided products"
+msgstr "제공되는 제품 "
+
+#: ../src/katello/client/core/system.py:570
+#, python-format
+msgid "No Pools found for System [ %s ] in Org [ %s ]"
+msgstr "조직 [ %s ]에서 시스템 [ %s ]에 대한 풀을 찾을 수 없음 "
+
+#: ../src/katello/client/core/system.py:580
+#, python-format
+msgid "Available Subscriptions for System [ %s ]"
+msgstr "시스템 [ %s ]의 사용 가능한 서브스크립션 "
+
+#: ../src/katello/client/core/system.py:595
+msgid "unsubscribe a system from certificate"
+msgstr "인증서에서 시스템을 등록 해제 "
+
+#: ../src/katello/client/core/system.py:603
+msgid ""
+"entitlement id to unsubscribe from (either entitlement or serial or all is "
+"required)"
+msgstr "등록 해제할 인타이틀먼트 ID (인타이틀먼트 또는 시리얼 중 하나 또는 두 가지 모두 필요할 수 있음)"
+
+#: ../src/katello/client/core/system.py:605
+msgid ""
+"serial id of a certificate to unsubscribe from (either entitlement or serial"
+" or all is required)"
+msgstr "등록 해제할 인증서의 시리얼 ID (인타이틀먼트 또는 시리얼 중 하나 또는 두 가지 모두 필요할 수 있음) "
+
+#: ../src/katello/client/core/system.py:607
+msgid ""
+"unsubscribe from all currently subscribed certificates (either entitlement "
+"or serial or all is required)"
+msgstr "현재 등록된 모든 인증서에서 등록 해제 (인타이틀먼트 또는 시리얼 중 하나 또는 두 가지 모두 필요할 수 있음)"
+
+#: ../src/katello/client/core/system.py:629
+#, python-format
+msgid "Successfully unsubscribed System [ %s ]"
+msgstr "시스템 [ %s ]이 성공적으로 등록 해제됨 "
+
+#: ../src/katello/client/core/system.py:635
+msgid "update a system"
+msgstr "시스템 업데이트 "
+
+#: ../src/katello/client/core/system.py:646
+msgid "a new name for the system"
+msgstr "시스템의 새 이름 "
+
+#: ../src/katello/client/core/system.py:648
+msgid "a description of the system"
+msgstr "시스템 설명 "
+
+#: ../src/katello/client/core/system.py:650
+msgid "location of the system"
+msgstr "시스템 위치 "
+
+#: ../src/katello/client/core/system.py:652
+msgid "value of $releasever for the system"
+msgstr "시스템의 $releasever 값 "
+
+#: ../src/katello/client/core/system.py:683
+#, python-format
+msgid "Successfully updated system [ %s ]"
+msgstr "시스템 [ %s ]이 성공적으로 업데이트됨 "
+
+#: ../src/katello/client/core/system.py:684
+#, python-format
+msgid "Could not update system [ %s ]"
+msgstr "시스템 [ %s ]을 업데이트할 수 없음 "
+
+#: ../src/katello/client/core/system.py:690
+msgid "systems report"
+msgstr "시스템 보고 "
+
+#: ../src/katello/client/core/system.py:698
+#: ../src/katello/client/core/user.py:294
+msgid ""
+"report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"
+msgstr "보고 형식 (사용 가능한 값: 'html', 'text' (디폴트), 'csv', 'pdf')"
+
+#: ../src/katello/client/core/system.py:724
+msgid "system specific actions in the katello server"
+msgstr "katello 서버에서 시스템의 특정 동작 "
+
+#: ../src/katello/client/core/filters.py:38
+msgid "list all filters"
+msgstr "모든 필터 목록 보기 "
+
+#: ../src/katello/client/core/filters.py:55
+msgid "Filter List"
+msgstr "필터 목록 "
+
+#: ../src/katello/client/core/filters.py:61
+msgid "create a filter"
+msgstr "필터 생성 "
+
+#: ../src/katello/client/core/filters.py:69
+msgid "description"
+msgstr "설명 "
+
+#: ../src/katello/client/core/filters.py:71
+msgid "comma-separated list of package names/nvres"
+msgstr "콤마로 구분된 패키지 이름/nvre 목록 "
+
+#: ../src/katello/client/core/filters.py:87
+#, python-format
+msgid "Successfully created filter [ %s ]"
+msgstr "필터 [ %s ]이(가) 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/filters.py:88
+#, python-format
+msgid "Could not create filter [ %s ]"
+msgstr "필터 [ %s ]을(를) 생성할 수 없음 "
+
+#: ../src/katello/client/core/filters.py:95
+msgid "delete a filter"
+msgstr "필터 삭제 "
+
+#: ../src/katello/client/core/filters.py:112
+#, python-format
+msgid "Successfully deleted filter [ %s ]"
+msgstr "필터 [ %s ]이(가) 성공적으로 삭제됨 "
+
+#: ../src/katello/client/core/filters.py:116
+msgid "filter info"
+msgstr "필터 정보 "
+
+#: ../src/katello/client/core/filters.py:138
+msgid "Filter Information"
+msgstr "필터 정보 "
+
+#: ../src/katello/client/core/filters.py:146
+msgid "Add a package to filter"
+msgstr "필터에 패키지 추가 "
+
+#: ../src/katello/client/core/filters.py:154
+#: ../src/katello/client/core/filters.py:181
+msgid "package id (required)"
+msgstr "패키지 ID (필수 사항) "
+
+#: ../src/katello/client/core/filters.py:169
+#, python-format
+msgid "Successfully added package [ %s ] to filter [ %s ]"
+msgstr "필터 [ %s ]에 패키지 [ %s ]를 성공적으로 추가함 "
+
+#: ../src/katello/client/core/filters.py:173
+msgid "Remove a package from filter"
+msgstr "필터에서 패키지 제거 "
+
+#: ../src/katello/client/core/filters.py:199
+#, python-format
+msgid "Successfully removed package [ %s ] from filter [ %s ]"
+msgstr "필터 [ %s ]에서 패키지 [ %s ]를 성공적으로 제거함"
+
+#: ../src/katello/client/core/filters.py:205
+msgid "filter specific actions in the katello server"
+msgstr "katello 서버에서 필터의 특정 동작 "
+
+#: ../src/katello/client/core/distribution.py:41
+msgid "list distributions in a repository"
+msgstr "리포지터리에 있는 배포 버전 목록 보기 "
+
+#: ../src/katello/client/core/distribution.py:45
+#: ../src/katello/client/core/package.py:47
+#: ../src/katello/client/core/package.py:102
+#: ../src/katello/client/core/errata.py:46
+#: ../src/katello/client/core/errata.py:138
+#: ../src/katello/client/core/repo.py:79
+msgid "repository id"
+msgstr "리포지터리 id"
+
+#: ../src/katello/client/core/distribution.py:47
+#: ../src/katello/client/core/package.py:49
+#: ../src/katello/client/core/package.py:104
+#: ../src/katello/client/core/errata.py:48
+#: ../src/katello/client/core/errata.py:140
+#: ../src/katello/client/core/repo.py:80
+msgid "repository name"
+msgstr "리포지터리 이름 "
+
+#: ../src/katello/client/core/distribution.py:49
+#: ../src/katello/client/core/package.py:51
+#: ../src/katello/client/core/package.py:106
+#: ../src/katello/client/core/errata.py:50
+#: ../src/katello/client/core/errata.py:142
+#: ../src/katello/client/core/repo.py:81
+msgid "organization name eg: foo.example.com"
+msgstr "조직 이름 예: foo.example.com"
+
+#: ../src/katello/client/core/distribution.py:53
+#: ../src/katello/client/core/package.py:55
+#: ../src/katello/client/core/package.py:110
+#: ../src/katello/client/core/errata.py:54
+#: ../src/katello/client/core/errata.py:146
+#: ../src/katello/client/core/repo.py:82
+#: ../src/katello/client/core/repo.py:417
+msgid "product name eg: fedora-14"
+msgstr "제품 이름 예: fedora-14"
+
+#: ../src/katello/client/core/distribution.py:76
+#, python-format
+msgid "Distribution List For Repo %s"
+msgstr "리포지터리 %s에 대한 배포 목록 "
+
+#: ../src/katello/client/core/distribution.py:88
+msgid "list information about a distribution"
+msgstr "배포 버전에 관한 정보 목록 보기 "
+
+#: ../src/katello/client/core/distribution.py:93
+msgid "repository id (required)"
+msgstr "리포지터리 id (필수 사항) "
+
+#: ../src/katello/client/core/distribution.py:95
+msgid "distribution id eg: ks-rh-noarch (required)"
+msgstr "배포 ID 예: ks-rh-noarch (필수 사항) "
+
+#: ../src/katello/client/core/distribution.py:114
+msgid "Distribution Information"
+msgstr "배포 정보 "
+
+#: ../src/katello/client/core/distribution.py:124
+#: ../src/katello/client/core/repo.py:552
+msgid "repo specific actions in the katello server"
+msgstr "katello 서버에서 리포지터리의 특정 동작 "
+
+#: ../src/katello/client/core/ping.py:39
+msgid "get the status of the katello server"
+msgstr " katello 서버의 상태 획득 "
+
+#: ../src/katello/client/core/ping.py:58
+msgid "Katello Status"
+msgstr "Katello 상태 "
+
+#: ../src/katello/client/core/ping.py:122
+msgid "Check the status of the server"
+msgstr "서버 상태 확인 "
+
+#: ../src/katello/client/core/package.py:40
+msgid "list information about a package"
+msgstr "패키지에 관한 정보 목록 보기 "
+
+#: ../src/katello/client/core/package.py:45
+msgid "package id, string value (required)"
+msgstr "패키지 ID, 문자열 값 (필수 사항) "
+
+#: ../src/katello/client/core/package.py:91
+msgid "Package Information"
+msgstr "패키지 정보 "
+
+#: ../src/katello/client/core/package.py:98
+msgid "list packages in a repository"
+msgstr "리포지터리에 있는 패키지 목록 보기 "
+
+#: ../src/katello/client/core/package.py:123
+#, python-format
+msgid "Package List For Repo %s"
+msgstr "리포지터리 %s에 대한 패키지 목록 "
+
+#: ../src/katello/client/core/package.py:154
+msgid "search packages in a repository"
+msgstr "리포지터리에 있는 패키지 검색 "
+
+#: ../src/katello/client/core/package.py:159
+msgid ""
+"query string for searching packages, e.g. "
+"'kernel*','kernel-3.3.0-4.el6.x86_64'"
+msgstr "패키지 검색을 위한 쿼리 문자열, 예: 'kernel*','kernel-3.3.0-4.el6.x86_64'"
+
+#: ../src/katello/client/core/package.py:170
+#, python-format
+msgid "Package List For Repo %s and Query %s"
+msgstr "리포지터리 %s 및 쿼리 %s 의 패키지 목록 "
+
+#: ../src/katello/client/core/package.py:181
+msgid "package specific actions in the katello server"
+msgstr "katello 서버에서 패키지의 특정 동작 "
+
+#: ../src/katello/client/core/base.py:95
+#: ../src/katello/client/core/base.py:204
+msgid "no description available"
+msgstr "사용 가능한 설명이 없음 "
+
+#: ../src/katello/client/core/base.py:123
+msgid "no action given: please see --help"
+msgstr "동작이 주어지지 않음: --help 참조 "
+
+#: ../src/katello/client/core/base.py:130
+msgid "invalid action: please see --help"
+msgstr "잘못된 동작: --help 참조 "
+
+#: ../src/katello/client/core/base.py:177
+msgid "grep friendly output"
+msgstr "grep 출력 결과 "
+
+#: ../src/katello/client/core/base.py:180
+msgid "verbose, more structured output"
+msgstr "상세하고 보다 구조화된 출력 결과 "
+
+#: ../src/katello/client/core/base.py:183
+msgid "column delimiter in grep friendly output, works only with option -g"
+msgstr "grep 출력 결과에서 컬럼 구분 기호, -g 옵션을 선택한 경우에만 작동함 "
+
+#: ../src/katello/client/core/base.py:253
+#, python-format
+msgid "Option %s is required; please see --help"
+msgstr "옵션 %s이 필요함; --help 참조 "
+
+#: ../src/katello/client/core/base.py:265
+#, python-format
+msgid "Option %s is colliding with %s; please see --help"
+msgstr "옵션 %s이 %s와 충돌함: --help 참조 "
+
+#: ../src/katello/client/core/base.py:287
+#, python-format
+msgid "One of %s is required; please see --help"
+msgstr "%s 중 하나가 필요함; --help 참조 "
+
+#: ../src/katello/client/core/base.py:307
+#, python-format
+msgid "At least one of %s is required; please see --help"
+msgstr "최소 %s 중 하나가 필요함; --help 참조 "
+
+#: ../src/katello/client/core/base.py:386
+msgid "error: operation failed"
+msgstr "오류: 작업 실패함 "
+
+#: ../src/katello/client/core/base.py:403
+msgid ""
+"ERROR: The server hostname you have configured in /etc/katello/client.conf "
+"does not match the"
+msgstr "오류: /etc/katello/client.conf에서 설정한 서버 호스트 이름이 다음과 일치하지 않음 "
+
+#: ../src/katello/client/core/base.py:404
+msgid "hostname returned from the katello server you are connecting to.  "
+msgstr "연결하려는 katello 서버에서 반환된 호스트 이름 "
+
+#: ../src/katello/client/core/base.py:406
+#, python-format
+msgid "You have: [%s] configured but got: [%s] from the server."
+msgstr "[%s]이 설정되어 있으나 서버에서 [%s]을 갖고 있음. "
+
+#: ../src/katello/client/core/base.py:408
+msgid "Please correct the host in the /etc/katello/client.conf file"
+msgstr "/etc/katello/client.conf 파일에 있는 호스트를 올바르게 수정하십시오. "
+
+#: ../src/katello/client/core/base.py:420
+msgid "Invalid credentials or unable to authenticate"
+msgstr "잘못된 인증서 또는 인증할 수 없음 "
+
+#: ../src/katello/client/core/base.py:459
+#, python-format
+msgid "option %s: invalid boolean value: %r"
+msgstr "옵션 %s: 잘못된 부울 값: %r"
+
+#: ../src/katello/client/core/user.py:42
+msgid "list all known users"
+msgstr "모든 알려진 사용자 목록 보기 "
+
+#: ../src/katello/client/core/user.py:54
+msgid "User List"
+msgstr "사용자 목록 "
+
+#: ../src/katello/client/core/user.py:62
+msgid "create user"
+msgstr "사용자 생성 "
+
+#: ../src/katello/client/core/user.py:65
+#: ../src/katello/client/core/user.py:108
+#: ../src/katello/client/core/user.py:136
+#: ../src/katello/client/core/user.py:157
+#: ../src/katello/client/core/user.py:209
+#: ../src/katello/client/core/user.py:260
+msgid "user name (required)"
+msgstr "사용자 이름 (필수 사항) "
+
+#: ../src/katello/client/core/user.py:66
+msgid "initial password (required)"
+msgstr "초기 암호 (필수 사항) "
+
+#: ../src/katello/client/core/user.py:67
+msgid "email (required)"
+msgstr "이메일 (필수 사항) "
+
+#: ../src/katello/client/core/user.py:68
+msgid "disabled account (default is 'false')"
+msgstr "비활성화된 계정 (디폴트는 'false'임) "
+
+#: ../src/katello/client/core/user.py:70
+#: ../src/katello/client/core/user.py:162
+msgid "user's default organization name"
+msgstr "사용자의 디폴트 조직 이름 "
+
+#: ../src/katello/client/core/user.py:72
+#: ../src/katello/client/core/user.py:164
+msgid "user's default environment name"
+msgstr "사용자의 디폴트 환경 이름 "
+
+#: ../src/katello/client/core/user.py:97
+#, python-format
+msgid "Successfully created user [ %s ]"
+msgstr "사용자 [ %s ]가 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/user.py:98
+#, python-format
+msgid "Could not create user [ %s ]"
+msgstr "사용자 [ %s ]를 생성할 수 없음 "
+
+#: ../src/katello/client/core/user.py:105
+msgid "list information about user"
+msgstr "사용자 정보 목로 보기 "
+
+#: ../src/katello/client/core/user.py:125
+msgid "User Information"
+msgstr "사용자 정보 "
+
+#: ../src/katello/client/core/user.py:133
+msgid "delete user"
+msgstr "사용자 삭제 "
+
+#: ../src/katello/client/core/user.py:147
+#, python-format
+msgid "Successfully deleted user [ %s ]"
+msgstr "사용자 [ %s ]가 성공적으로 삭제되었습니다 "
+
+#: ../src/katello/client/core/user.py:154
+msgid "update an user"
+msgstr "사용자 업데이트 "
+
+#: ../src/katello/client/core/user.py:158
+msgid "initial password"
+msgstr "초기 암호 "
+
+#: ../src/katello/client/core/user.py:159
+msgid "email"
+msgstr "이메일 "
+
+#: ../src/katello/client/core/user.py:160
+msgid "disabled account"
+msgstr "비활성화된 계정 "
+
+#: ../src/katello/client/core/user.py:166
+msgid "user's default environment is None"
+msgstr "사용자의 디폴트 환경이 없습니다 "
+
+#: ../src/katello/client/core/user.py:199
+#, python-format
+msgid "Successfully updated user [ %s ]"
+msgstr "사용자 [ %s ]가 성공적으로 업데이트되었습니다 "
+
+#: ../src/katello/client/core/user.py:206
+msgid "list user's roles"
+msgstr "사용자 역할 목록 보기 "
+
+#: ../src/katello/client/core/user.py:223
+#: ../src/katello/client/core/user_role.py:54
+msgid "User Role List"
+msgstr "사용자 역할 목록 "
+
+#: ../src/katello/client/core/user.py:232
+msgid "synchronise roles with LDAP groups"
+msgstr "역할을 LDAP 그룹과 동기화함 "
+
+#: ../src/katello/client/core/user.py:246
+msgid "assign role to a user"
+msgstr "사용자에게 역할 할당 "
+
+#: ../src/katello/client/core/user.py:248
+msgid "unassign role to a user"
+msgstr "사용자에게 역할 할당 해제 "
+
+#: ../src/katello/client/core/user.py:261
+msgid "user role (required)"
+msgstr "사용자 역할 (필수 사항) "
+
+#: ../src/katello/client/core/user.py:275
+#, python-format
+msgid "Role [ %s ] not found"
+msgstr "사용자 [ %s ]을(를) 찾을 수 없음 "
+
+#: ../src/katello/client/core/user.py:291
+msgid "user report"
+msgstr "사용자 보고 "
+
+#: ../src/katello/client/core/user.py:312
+msgid "user specific actions in the katello server"
+msgstr "katello 서버에서 실행되는 사용자의 특정 동작 "
+
+#: ../src/katello/client/core/gpg_key.py:41
+msgid "Enter content of the GPG key (finish input with CTRL+D):"
+msgstr "GPG 키 내용을 입력 (CTRL+D로 입력 종료): "
+
+#: ../src/katello/client/core/gpg_key.py:61
+msgid "list all GPG keys"
+msgstr "모든 GPG 키 목록 보기 "
+
+#: ../src/katello/client/core/gpg_key.py:65
+#: ../src/katello/client/core/gpg_key.py:95
+#: ../src/katello/client/core/gpg_key.py:132
+#: ../src/katello/client/core/gpg_key.py:165
+#: ../src/katello/client/core/gpg_key.py:209
+#: ../src/katello/client/core/activation_key.py:53
+#: ../src/katello/client/core/activation_key.py:100
+#: ../src/katello/client/core/activation_key.py:139
+#: ../src/katello/client/core/activation_key.py:183
+#: ../src/katello/client/core/activation_key.py:251
+#: ../src/katello/client/core/changeset.py:44
+#: ../src/katello/client/core/changeset.py:78
+#: ../src/katello/client/core/changeset.py:143
+#: ../src/katello/client/core/changeset.py:310
+#: ../src/katello/client/core/changeset.py:395
+#: ../src/katello/client/core/changeset.py:424
+#: ../src/katello/client/core/provider.py:48
+#: ../src/katello/client/core/provider.py:135
+#: ../src/katello/client/core/template.py:91
+#: ../src/katello/client/core/template.py:155
+#: ../src/katello/client/core/template.py:198
+#: ../src/katello/client/core/template.py:251
+#: ../src/katello/client/core/template.py:316
+#: ../src/katello/client/core/template.py:493
+msgid "name of organization (required)"
+msgstr "조직 이름 (필수 사항) "
+
+#: ../src/katello/client/core/gpg_key.py:76
+#, python-format
+msgid "No gpg keys found in organization [ %s ]"
+msgstr "조직 [ %s ]에서 gpg 키를 찾을 수 없음 "
+
+#: ../src/katello/client/core/gpg_key.py:82
+msgid "Gpg Key List"
+msgstr "Gpg 키 목록 "
+
+#: ../src/katello/client/core/gpg_key.py:89
+msgid "show information about a gpg key"
+msgstr "gpg 키에 대한 정보 표시 "
+
+#: ../src/katello/client/core/gpg_key.py:93
+#: ../src/katello/client/core/gpg_key.py:130
+#: ../src/katello/client/core/gpg_key.py:163
+#: ../src/katello/client/core/gpg_key.py:207
+#: ../src/katello/client/core/activation_key.py:98
+#: ../src/katello/client/core/activation_key.py:137
+#: ../src/katello/client/core/activation_key.py:181
+#: ../src/katello/client/core/activation_key.py:249
+msgid "activation key name (required)"
+msgstr "활성키 이름 (필수 사항) "
+
+#: ../src/katello/client/core/gpg_key.py:105
+#: ../src/katello/client/core/gpg_key.py:191
+#: ../src/katello/client/core/gpg_key.py:220
+#, python-format
+msgid "Could not find gpg key [ %s ]"
+msgstr "gpg 키 [ %s ]를 찾을 수 없음 "
+
+#: ../src/katello/client/core/gpg_key.py:117
+msgid "Repositories"
+msgstr "리포지터리 "
+
+#: ../src/katello/client/core/gpg_key.py:119
+msgid "Gpg Key Info"
+msgstr "Gpg 키 정보 "
+
+#: ../src/katello/client/core/gpg_key.py:126
+msgid "create a gpg key"
+msgstr "gpg 키 생성 "
+
+#: ../src/katello/client/core/gpg_key.py:134
+msgid ""
+"file with public GPG key, if not                                 specified, "
+"standard input will be used"
+msgstr "공개 GPG 키를 갖는 파일을 지정하지 않으면 표준 입력이 사용됩니다 "
+
+#: ../src/katello/client/core/gpg_key.py:152
+#, python-format
+msgid "Successfully created gpg key [ %s ]"
+msgstr "gpg 키 [ %s ]가 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/gpg_key.py:153
+#, python-format
+msgid "Could not create gpg key [ %s ]"
+msgstr "gpg 키 [ %s ]를 생성할 수 없음 "
+
+#: ../src/katello/client/core/gpg_key.py:159
+#: ../src/katello/client/core/activation_key.py:177
+msgid "update an activation key"
+msgstr "활성키 업데이트 "
+
+#: ../src/katello/client/core/gpg_key.py:167
+#: ../src/katello/client/core/activation_key.py:187
+#: ../src/katello/client/core/template.py:317
+msgid "new template name"
+msgstr "새 템플릿 이름 "
+
+#: ../src/katello/client/core/gpg_key.py:169
+msgid "file with public GPG key"
+msgstr "공개 GPG 키를 갖는 파일 "
+
+#: ../src/katello/client/core/gpg_key.py:171
+msgid "prompt for new content of the key"
+msgstr "키의 새로운 내용을 입력하라는 프롬프트 "
+
+#: ../src/katello/client/core/gpg_key.py:196
+#, python-format
+msgid "Successfully updated gpg key [ %s ]"
+msgstr "gpg 키 [ %s ]가 성공적으로 업데이트됨 "
+
+#: ../src/katello/client/core/gpg_key.py:197
+#, python-format
+msgid "Could not updated gpg key [ %s ]"
+msgstr "gpg 키 [ %s ]를 업데이트할 수 없음 "
+
+#: ../src/katello/client/core/gpg_key.py:203
+msgid "delete an gpg key"
+msgstr "gpg 키 삭제 "
+
+#: ../src/katello/client/core/gpg_key.py:224
+#, python-format
+msgid "Successfully deleted gpg key [ %s ]"
+msgstr "gpg 키 [ %s ]가 성공적으로 삭제됨 "
+
+#: ../src/katello/client/core/gpg_key.py:228
+msgid "GPG key specific actions in the katello server"
+msgstr "katello 서버에서 GPG 키의 특정 동작 "
+
+#: ../src/katello/client/core/activation_key.py:49
+msgid "list all activation keys"
+msgstr "모든 활성키 목록 보기 "
+
+#: ../src/katello/client/core/activation_key.py:55
+#: ../src/katello/client/core/template.py:56
+#: ../src/katello/client/core/template.py:93
+msgid "environment name eg: dev (default: Library)"
+msgstr "환경 이름 예: dev (디폴트: Library)"
+
+#: ../src/katello/client/core/activation_key.py:68
+#, python-format
+msgid "No keys found in organization [ %s ]"
+msgstr "조직 [ %s ]에서 키를 찾을 수 없음 "
+
+#: ../src/katello/client/core/activation_key.py:70
+#, python-format
+msgid "No keys found in organization [ %s ] environment [ %s ]"
+msgstr "조직 [ %s ] 환경 [ %s ]에서 키를 찾을 수 없음 "
+
+#: ../src/katello/client/core/activation_key.py:80
+msgid "Activation Key List"
+msgstr "활성키 목록"
+
+#: ../src/katello/client/core/activation_key.py:94
+msgid "show information about an activation key"
+msgstr "활성키에 대한 정보 표시"
+
+#: ../src/katello/client/core/activation_key.py:114
+#, python-format
+msgid "Could not find activation key [ %s ]"
+msgstr "활성키 [ %s ]를 찾을 수 없음 "
+
+#: ../src/katello/client/core/activation_key.py:126
+msgid "Activation Key Info"
+msgstr "활성키 정보 "
+
+#: ../src/katello/client/core/activation_key.py:133
+msgid "create an activation key"
+msgstr "활성키 생성 "
+
+#: ../src/katello/client/core/activation_key.py:141
+msgid "environment name eg: dev (required)"
+msgstr "환경 이름 예: dev (필수 사항) "
+
+#: ../src/katello/client/core/activation_key.py:143
+msgid "activation key description"
+msgstr "활성키 설명"
+
+#: ../src/katello/client/core/activation_key.py:145
+msgid "template name eg: servers"
+msgstr "템플릿 이름 예: servers "
+
+#: ../src/katello/client/core/activation_key.py:164
+#: ../src/katello/client/core/activation_key.py:227
+#, python-format
+msgid "Could not find template [ %s ]"
+msgstr "템플릿 [ %s ]을 찾을 수 없음 "
+
+#: ../src/katello/client/core/activation_key.py:169
+#, python-format
+msgid "Successfully created activation key [ %s ]"
+msgstr "활성키 [ %s ]가 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/activation_key.py:170
+#, python-format
+msgid "Could not create activation key [ %s ]"
+msgstr "활성키 [ %s ]를 생성할 수 없음 "
+
+#: ../src/katello/client/core/activation_key.py:185
+msgid "new environment name eg: dev"
+msgstr "새 환경 이름 예: dev"
+
+#: ../src/katello/client/core/activation_key.py:189
+msgid "new description"
+msgstr "새 설명 "
+
+#: ../src/katello/client/core/activation_key.py:191
+msgid "new template name eg: servers"
+msgstr "새 템플릿 이름 예: servers"
+
+#: ../src/katello/client/core/activation_key.py:194
+msgid "add a pool to the activation key"
+msgstr "활성키에 풀 추가 "
+
+#: ../src/katello/client/core/activation_key.py:196
+msgid "remove a pool from the activation key"
+msgstr "활성키에서 풀 제거 "
+
+#: ../src/katello/client/core/activation_key.py:237
+#, python-format
+msgid "Successfully updated activation key [ %s ]"
+msgstr "활성키 [ %s ]가 성공적으로 업데이트됨"
+
+#: ../src/katello/client/core/activation_key.py:245
+msgid "delete an activation key"
+msgstr "활성키 삭제 "
+
+#: ../src/katello/client/core/activation_key.py:269
+#, python-format
+msgid "Successfully deleted activation key [ %s ]"
+msgstr "활성키 [ %s ]가 성공적으로 삭제됨 "
+
+#: ../src/katello/client/core/activation_key.py:273
+msgid "activation key specific actions in the katello server"
+msgstr "katello 서버에서 활성키의 특정 동작 "
+
+#: ../src/katello/client/core/packagegroup.py:20
+msgid "list available package groups"
+msgstr "사용 가능한 패키지 그룹 목록 보기 "
+
+#: ../src/katello/client/core/packagegroup.py:24
+#: ../src/katello/client/core/packagegroup.py:53
+#: ../src/katello/client/core/packagegroup.py:89
+#: ../src/katello/client/core/packagegroup.py:117
+msgid "repository id, string value (required)"
+msgstr "리포지터리 id, 문자열 값 (필수 사항) "
+
+#: ../src/katello/client/core/packagegroup.py:34
+#, python-format
+msgid "No package groups found in repo [%s]"
+msgstr "리포지터리 [%s]에서 검색된 패키지 그룹이 없음 "
+
+#: ../src/katello/client/core/packagegroup.py:35
+#: ../src/katello/client/core/packagegroup.py:71
+msgid "Package Group Information"
+msgstr "패키지 그룹 정보 "
+
+#: ../src/katello/client/core/packagegroup.py:49
+#: ../src/katello/client/core/packagegroup.py:113
+msgid "lookup information for a package group"
+msgstr "패키지 그룹에 대한 정보 검색 "
+
+#: ../src/katello/client/core/packagegroup.py:55
+msgid "package group id, string value (required)"
+msgstr "패키지 그룹 ID, 문자열 값 (필수 사항) "
+
+#: ../src/katello/client/core/packagegroup.py:67
+#, python-format
+msgid "Package group [%s] not found in repo [%s]"
+msgstr "패키지 그룹 [%s]을 리포지터리 [%s]에서 찾을 수 없음  "
+
+#: ../src/katello/client/core/packagegroup.py:85
+msgid "list available package groups categories"
+msgstr "사용 가능한 패키지 그룹 카테고리 목록 보기 "
+
+#: ../src/katello/client/core/packagegroup.py:99
+#, python-format
+msgid "No package group categories found in repo [%s]"
+msgstr "리포지터리 [%s]에 패키지 그룹 카테고리를 찾을 수 없음 "
+
+#: ../src/katello/client/core/packagegroup.py:100
+msgid "Package Group Cateogory Information"
+msgstr "패키지 그룹 카테고리 정보 "
+
+#: ../src/katello/client/core/packagegroup.py:119
+msgid "package group category id, string value (required)"
+msgstr "패키지 그룹 카테고리 ID, 문자열 값 (필수 사항) "
+
+#: ../src/katello/client/core/packagegroup.py:131
+#, python-format
+msgid "Package group category [%s] not found in repo [%s]"
+msgstr "패키지 그룹 카테고리 [%s]를 리포지터리 [%s]에서 찾을 수 없음 "
+
+#: ../src/katello/client/core/packagegroup.py:133
+msgid "Package Group Category Information"
+msgstr "패키지 그룹 카테고리 정보 "
+
+#: ../src/katello/client/core/packagegroup.py:143
+msgid "package group specific actions in the katello server"
+msgstr "katello 서버에서 패키지 그룹의 특정 동작 "
+
+#: ../src/katello/client/core/changeset.py:40
+msgid "list new changesets of an environment"
+msgstr "환경의 새 변경 집합 목록 보기 "
+
+#: ../src/katello/client/core/changeset.py:46
+#: ../src/katello/client/core/changeset.py:79
+#: ../src/katello/client/core/changeset.py:145
+#: ../src/katello/client/core/changeset.py:312
+#: ../src/katello/client/core/changeset.py:397
+#: ../src/katello/client/core/changeset.py:426
+#: ../src/katello/client/core/environment.py:114
+#: ../src/katello/client/core/environment.py:155
+msgid "environment name (required)"
+msgstr "환경 이름 (필수 사항) "
+
+#: ../src/katello/client/core/changeset.py:68
+msgid "Changeset List"
+msgstr "변경 집합 목록 "
+
+#: ../src/katello/client/core/changeset.py:75
+msgid "detailed information about a changeset"
+msgstr "변경 집합에 관한 상세 정보 "
+
+#: ../src/katello/client/core/changeset.py:80
+#: ../src/katello/client/core/changeset.py:147
+#: ../src/katello/client/core/changeset.py:308
+#: ../src/katello/client/core/changeset.py:393
+#: ../src/katello/client/core/changeset.py:422
+msgid "changeset name (required)"
+msgstr "변경 집합 이름 (필수 사항) "
+
+#: ../src/katello/client/core/changeset.py:82
+msgid "will display dependent packages"
+msgstr "의존 패키지를 표시함 "
+
+#: ../src/katello/client/core/changeset.py:131
+msgid "Changeset Info"
+msgstr "변경 집합 정보 "
+
+#: ../src/katello/client/core/changeset.py:139
+msgid "create a new changeset for an environment"
+msgstr "환경의 새 변경 집합 생성 "
+
+#: ../src/katello/client/core/changeset.py:149
+#: ../src/katello/client/core/changeset.py:314
+msgid "changeset description"
+msgstr "변경 집합 설명 "
+
+#: ../src/katello/client/core/changeset.py:165
+#, python-format
+msgid "Successfully created changeset [ %s ] for environment [ %s ]"
+msgstr "환경 [ %s ]에 대해 변경 집합 [ %s ]이 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/changeset.py:166
+#, python-format
+msgid "Could not create changeset [ %s ] for environment [ %s ]"
+msgstr "환경 [ %s ]에 대해 변경 집합 [ %s ]을 생성할 수 없음 "
+
+#: ../src/katello/client/core/changeset.py:286
+msgid "updates content of a changeset"
+msgstr "변경 집합 컨텐츠 업데이트 "
+
+#: ../src/katello/client/core/changeset.py:299
+#: ../src/katello/client/core/template.py:310
+#, python-format
+msgid "%s must be preceded by %s"
+msgstr "%s 앞에 %s를 지정해야 함 "
+
+#: ../src/katello/client/core/changeset.py:316
+msgid "new changeset name"
+msgstr "새 변경 집합 이름 "
+
+#: ../src/katello/client/core/changeset.py:319
+msgid "product to add to the changeset"
+msgstr "변경 집합에 추가할 제품 "
+
+#: ../src/katello/client/core/changeset.py:322
+msgid "product to remove from the changeset"
+msgstr "변경 집합에서 삭제할 제품 "
+
+#: ../src/katello/client/core/changeset.py:325
+msgid "name of a template to be added to the changeset"
+msgstr "변경 집합에 추가된 템플릿 이름 "
+
+#: ../src/katello/client/core/changeset.py:328
+msgid "name of a template to be removed from the changeset"
+msgstr "변경 집합에서 삭제된 템플릿 이름 "
+
+#: ../src/katello/client/core/changeset.py:331
+msgid ""
+"determines product from which the packages/errata/repositories are picked"
+msgstr "패키지/에라타/리포지터리를 선택하는 제품을 결정 "
+
+#: ../src/katello/client/core/changeset.py:336
+msgid " to add to the changeset"
+msgstr "변경 집합에 추가 "
+
+#: ../src/katello/client/core/changeset.py:339
+msgid " to remove from the changeset"
+msgstr "변경 집합에서 삭제 "
+
+#: ../src/katello/client/core/changeset.py:373
+#, python-format
+msgid "Successfully updated changeset [ %s ]"
+msgstr "변경 집합 [ %s ]이 성공적으로 업데이트됨 "
+
+#: ../src/katello/client/core/changeset.py:389
+msgid "deletes a changeset"
+msgstr "변경 집합 삭제 "
+
+#: ../src/katello/client/core/changeset.py:418
+msgid "promotes a changeset to the next environment"
+msgstr "변경 집합을 다음 환경에 승격함 "
+
+#: ../src/katello/client/core/changeset.py:443
+msgid "Promoting the changeset, please wait... "
+msgstr "변경 집합을 승격하는 중, 잠시만 기다리십시오..."
+
+#: ../src/katello/client/core/changeset.py:446
+#, python-format
+msgid "Changeset [ %s ] promoted"
+msgstr "변경 집합 [ %s ]이 승격됨 "
+
+#: ../src/katello/client/core/changeset.py:449
+#, python-format
+msgid "Changeset [ %s ] promotion failed: %s"
+msgstr "변경 집합 [ %s ] 승격 실패: %s"
+
+#: ../src/katello/client/core/changeset.py:455
+msgid "changeset specific actions in the katello server"
+msgstr "katello 서버에서 변경 집합의 특정 동작  "
+
+#: ../src/katello/client/core/provider.py:59
+msgid "list all known providers"
+msgstr "모든 알려진 공급자 목록 보기 "
+
+#: ../src/katello/client/core/provider.py:81
+msgid "Provider List"
+msgstr "공급자 목록 "
+
+#: ../src/katello/client/core/provider.py:89
+msgid "list information about a provider"
+msgstr "공급자에 대한 정보 목록 보기 "
+
+#: ../src/katello/client/core/provider.py:104
+msgid "Provider Information"
+msgstr "공급자 정보 "
+
+#: ../src/katello/client/core/provider.py:116
+msgid "create a provider"
+msgstr "공급자 생성 "
+
+#: ../src/katello/client/core/provider.py:118
+msgid "update a provider"
+msgstr "공급자 업데이트 "
+
+#: ../src/katello/client/core/provider.py:131
+#: ../src/katello/client/core/template.py:159
+msgid "provider description"
+msgstr "공급자 설명 "
+
+#: ../src/katello/client/core/provider.py:139
+msgid "provider name"
+msgstr "공급자 이름 "
+
+#. pylint: disable=E1101
+#: ../src/katello/client/core/provider.py:151
+msgid "Option --url has to start with http:// or https://"
+msgstr "옵션 --url은 http:// 또는 https://로 시작해야 합니다. "
+
+#. pylint: disable=E1101
+#: ../src/katello/client/core/provider.py:153
+msgid "Option --url is not in a valid format"
+msgstr "옵션 -url이 유효한 형식으로 되어 있지 않습니다 "
+
+#: ../src/katello/client/core/provider.py:159
+#, python-format
+msgid "Successfully created provider [ %s ]"
+msgstr "공급자 [ %s ]가 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/provider.py:160
+#, python-format
+msgid "Could not create provider [ %s ]"
+msgstr "공급자 [ %s ]를 생성할 수 없음 "
+
+#: ../src/katello/client/core/provider.py:167
+#, python-format
+msgid "Successfully updated provider [ %s ]"
+msgstr "공급자 [ %s ]가 성공적으로 업데이트됨 "
+
+#: ../src/katello/client/core/provider.py:185
+msgid "delete a provider"
+msgstr "공급자 삭제 "
+
+#: ../src/katello/client/core/provider.py:201
+msgid "synchronize a provider"
+msgstr "공급자 동기화 "
+
+#: ../src/katello/client/core/provider.py:216
+#, python-format
+msgid "Provider [ %s ] failed to sync: %s"
+msgstr "공급자 [ %s ] 동기화 실패: %s"
+
+#: ../src/katello/client/core/provider.py:219
+#, python-format
+msgid "Provider [ %s ] synchronization cancelled"
+msgstr "공급자 [ %s ] 동기화가 취소됨 "
+
+#: ../src/katello/client/core/provider.py:222
+#, python-format
+msgid "Provider [ %s ] synchronized"
+msgstr "공급자 [ %s ]가 동기화됨 "
+
+#: ../src/katello/client/core/provider.py:245
+msgid "status of provider's synchronization"
+msgstr "공급자의 동기화 상태 "
+
+#: ../src/katello/client/core/provider.py:258
+#, python-format
+msgid "%d%% done (%d of %d packages downloaded)"
+msgstr "%d%% 완료 (%d 개의 패키지 중 %d 개가 다운로드됨)"
+
+#: ../src/katello/client/core/provider.py:269
+msgid "Provider Status"
+msgstr "공급자 상태 "
+
+#: ../src/katello/client/core/provider.py:277
+msgid "import a manifest file"
+msgstr "매니페스트 파일 가져오기 "
+
+#: ../src/katello/client/core/provider.py:283
+msgid "path to the manifest file (required)"
+msgstr "매니페스트 파일로의 경로 (필수 사항) "
+
+#: ../src/katello/client/core/provider.py:285
+msgid "force reimporting the manifest"
+msgstr "매니페스트를 강제로 다시 가져오기 "
+
+#: ../src/katello/client/core/provider.py:302
+#: ../src/katello/client/core/template.py:177
+#, python-format
+msgid "File %s does not exist"
+msgstr "파일 %s이 존재하지 않음 "
+
+#: ../src/katello/client/core/provider.py:307
+msgid "Importing manifest, please wait... "
+msgstr "매니페스트 파일을 가져오는 중, 잠시만 기다리십시오..."
+
+#: ../src/katello/client/core/provider.py:320
+msgid "refresh provider's products repositories"
+msgstr "공급자의 제품 리포지터리를 새로 고침 "
+
+#: ../src/katello/client/core/provider.py:329
+#, python-format
+msgid "Provider successfully refreshed [ %s ]"
+msgstr "공급자가 성공적으로 새로 고침됨 [ %s ]"
+
+#: ../src/katello/client/core/provider.py:336
+msgid "provider specific actions in the katello server"
+msgstr "katello 서버에서 공급자의 특정 동작 "
+
+#: ../src/katello/client/core/environment.py:47
+msgid "list known environments"
+msgstr "알려진 환경 목록 보기 "
+
+#: ../src/katello/client/core/environment.py:64
+#: ../src/katello/client/core/environment.py:95
+msgid "Org"
+msgstr "조직 "
+
+#: ../src/katello/client/core/environment.py:65
+#: ../src/katello/client/core/environment.py:96
+msgid "Prior Environment"
+msgstr "이전 환경 "
+
+#: ../src/katello/client/core/environment.py:67
+msgid "Environment List"
+msgstr "환경 목록 "
+
+#: ../src/katello/client/core/environment.py:74
+msgid "list a specific environment"
+msgstr "특정 환경 목록 보기 "
+
+#: ../src/katello/client/core/environment.py:80
+#: ../src/katello/client/core/environment.py:187
+msgid "environment name eg: foo.example.com (required)"
+msgstr "환경 이름 예: foo.example.com (필수 사항) "
+
+#: ../src/katello/client/core/environment.py:98
+msgid "Environment Info"
+msgstr "환경 정보 "
+
+#: ../src/katello/client/core/environment.py:106
+msgid "create an environment"
+msgstr "환경 생성 "
+
+#: ../src/katello/client/core/environment.py:110
+#: ../src/katello/client/core/environment.py:149
+msgid "environment description eg: foo's environment"
+msgstr "환경 설명 예: foo 환경 "
+
+#: ../src/katello/client/core/environment.py:116
+msgid "name of prior environment (required)"
+msgstr "이전 환경 이름 (필수 사항) "
+
+#: ../src/katello/client/core/environment.py:136
+#, python-format
+msgid "Successfully created environment [ %s ]"
+msgstr "환경 [ %s ]이 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/environment.py:137
+#, python-format
+msgid "Could not create environment [ %s ]"
+msgstr "환경 [ %s ]을 생성할 수 없음 "
+
+#: ../src/katello/client/core/environment.py:144
+msgid "update an environment"
+msgstr "환경 업데이트 "
+
+#: ../src/katello/client/core/environment.py:153
+msgid "name of prior environment"
+msgstr "이전 환경 이름 "
+
+#: ../src/katello/client/core/environment.py:176
+#, python-format
+msgid "Successfully updated environment [ %s ]"
+msgstr "환경 [ %s ]이 성공적으로 업데이트됨 "
+
+#: ../src/katello/client/core/environment.py:183
+msgid "delete an environment"
+msgstr "환경 삭제 "
+
+#: ../src/katello/client/core/environment.py:203
+#, python-format
+msgid "Successfully deleted environment [ %s ]"
+msgstr "환경 [ %s ]이 성공적으로 삭제됨 "
+
+#: ../src/katello/client/core/environment.py:212
+msgid "environment specific actions in the katello server"
+msgstr "katello 서버 환경의 특정 동작  "
+
+#: ../src/katello/client/core/client.py:38
+msgid "save an option to the client config"
+msgstr "클라이언트 config에 옵션을 저장 "
+
+#: ../src/katello/client/core/client.py:42
+msgid ""
+"name of the option to be saved (e.g. org, environment, provider, etc) "
+"(required)"
+msgstr "저장될 옵션 이름 (예: 조직, 환경, 공급자 등) (필수 사항) "
+
+#: ../src/katello/client/core/client.py:44
+msgid "value to be store under specified option (required)"
+msgstr "특정 옵션에 저장될 값 (필수 사항) "
+
+#: ../src/katello/client/core/client.py:63
+msgid "Successfully "
+msgstr "성공 "
+
+#: ../src/katello/client/core/client.py:65
+#, python-format
+msgid "Unsuccessfully remembered option [ %s ]"
+msgstr "옵션 [ %s ]에 대해 기억 기능을 성공적으로 실행하지 못함 "
+
+#: ../src/katello/client/core/client.py:72
+msgid "remove an option from the client config"
+msgstr "클라이언트 config에서 옵션을 삭제 "
+
+#: ../src/katello/client/core/client.py:76
+msgid "name of the option to be deleted (required)"
+msgstr "삭제될 옵션 이름 (필수 사항) "
+
+#: ../src/katello/client/core/client.py:87
+#, python-format
+msgid "Successfully forgot option [ %s ]"
+msgstr "옵션 [ %s ]에 대해 잊기 기능을 성공적으로 실행함 "
+
+#: ../src/katello/client/core/client.py:89
+#, python-format
+msgid "Unsuccessfully forgot option [ %s ]"
+msgstr "옵션 [ %s ]에 대해 잊기 기능을 성공적으로 실행하지 못함 "
+
+#: ../src/katello/client/core/client.py:96
+msgid "list options saved in the client config"
+msgstr "클라이언트 config에 저장된 옵션 목록 보기 "
+
+#: ../src/katello/client/core/client.py:105
+msgid "Saved Options"
+msgstr "저장된 옵션 "
+
+#: ../src/katello/client/core/client.py:120
+msgid "client specific actions in the katello server"
+msgstr "katello 서버에서 클라이언트의 특정 동작 "
+
+#: ../src/katello/client/core/template.py:50
+msgid "list all templates"
+msgstr "모든 템플릿 목록 보기 "
+
+#: ../src/katello/client/core/template.py:54
+msgid "name of organization (required if specifying environment)"
+msgstr "조직 이름 (환경을 지정할 경우 필요) "
+
+#: ../src/katello/client/core/template.py:69
+#, python-format
+msgid "No templates found in environment [ %s ]"
+msgstr "환경 [ %s ]에서 템플릿을 찾을 수 없음 "
+
+#: ../src/katello/client/core/template.py:77
+msgid "Template List"
+msgstr "템플릿 목록 "
+
+#: ../src/katello/client/core/template.py:85
+msgid "list information about a template"
+msgstr "템플릿에 관한 정보 목록 보기 "
+
+#: ../src/katello/client/core/template.py:89
+#: ../src/katello/client/core/template.py:196
+#: ../src/katello/client/core/template.py:247
+#: ../src/katello/client/core/template.py:314
+#: ../src/katello/client/core/template.py:491
+msgid "template name (required)"
+msgstr "템플릿 이름 (필수 사항) "
+
+#: ../src/katello/client/core/template.py:127
+msgid "Template Info"
+msgstr "템플릿 정보 "
+
+#: ../src/katello/client/core/template.py:150
+msgid "create a template file and import data"
+msgstr "템플릿 파일을 생성하고 데이터를 가져옴 "
+
+#: ../src/katello/client/core/template.py:157
+#: ../src/katello/client/core/template.py:202
+msgid "path to the template file (required)"
+msgstr "템플릿 파일로의 경로 (필수 사항) "
+
+#: ../src/katello/client/core/template.py:180
+msgid "Importing template, please wait... "
+msgstr "템플릿을 가져오는 중, 잠시만 기다리십시오..."
+
+#: ../src/katello/client/core/template.py:191
+msgid "export the template into the file"
+msgstr "템플릿을 파일로 내보내기 "
+
+#: ../src/katello/client/core/template.py:200
+msgid "environment name eg: dev"
+msgstr "환경 이름 예: dev"
+
+#: ../src/katello/client/core/template.py:204
+#, python-format
+msgid "format of the export, possible values: %s, default: json"
+msgstr "내보내기 형식, 가능한 값: %s, 디폴트: json"
+
+#: ../src/katello/client/core/template.py:225
+#, python-format
+msgid "Could not create file %s"
+msgstr "파일 %s을(를) 생성할 수 없음 "
+
+#: ../src/katello/client/core/template.py:229
+msgid "Exporting template, please wait... "
+msgstr "템플릿을 내보내는 중, 잠시만 기다리십시오..."
+
+#: ../src/katello/client/core/template.py:232
+#, python-format
+msgid "Template was exported successfully to file %s"
+msgstr "템플릿을 성공적으로 파일 %s로 내보내기함  "
+
+#: ../src/katello/client/core/template.py:242
+msgid "create an empty template file"
+msgstr "빈 템플릿 파일 생성 "
+
+#: ../src/katello/client/core/template.py:249
+#: ../src/katello/client/core/template.py:315
+msgid "name of the parent template"
+msgstr "부모 템플릿 이름 "
+
+#: ../src/katello/client/core/template.py:253
+#: ../src/katello/client/core/template.py:318
+msgid "template description"
+msgstr "템플릿 설명 "
+
+#: ../src/katello/client/core/template.py:276
+#, python-format
+msgid "Successfully created template [ %s ]"
+msgstr "템플릿 [ %s ]을 성공적으로 생성함 "
+
+#: ../src/katello/client/core/template.py:277
+#, python-format
+msgid "Could not create template [ %s ]"
+msgstr "템플릿 [ %s ]을 생성할 수 없음 "
+
+#: ../src/katello/client/core/template.py:285
+msgid "updates name and description of a template"
+msgstr "템플릿 이름 및 설명 업데이트 "
+
+#: ../src/katello/client/core/template.py:299
+#, python-format
+msgid "each %s must be preceeded by %s"
+msgstr "각각의 %s 앞에 %s을 지정해야 함 "
+
+#. bz 799149
+#. self.parser.add_option('--add_product', dest='add_products',
+#. action="append", help=_("name of the product"))
+#. self.parser.add_option('--remove_product', dest='remove_products',
+#. action="append", help=_("name of the product"))
+#: ../src/katello/client/core/template.py:324
+#: ../src/katello/client/core/template.py:325
+msgid "name or nvre of the product (epoch:name-rel.ease-ver.sio.n)"
+msgstr "제품 이름 또는 nvre (epoch:name-rel.ease-ver.sio.n)"
+
+#: ../src/katello/client/core/template.py:328
+#, python-format
+msgid "name of the parameter, %s must follow"
+msgstr "매개 변수 이름, %s이 뒤따라야 함 "
+
+#: ../src/katello/client/core/template.py:329
+msgid "value of the parameter"
+msgstr "매개 변수 값 "
+
+#: ../src/katello/client/core/template.py:330
+msgid "name of the parameter"
+msgstr "매개 변수 이름 "
+
+#: ../src/katello/client/core/template.py:332
+#: ../src/katello/client/core/template.py:333
+msgid "name of the package group"
+msgstr "패키지 그룹 이름 "
+
+#: ../src/katello/client/core/template.py:335
+#: ../src/katello/client/core/template.py:336
+msgid "name of the package group category"
+msgstr "패키지 그룹 카테고리 이름 "
+
+#: ../src/katello/client/core/template.py:338
+#: ../src/katello/client/core/template.py:339
+msgid "distribution id"
+msgstr "배포 ID"
+
+#: ../src/katello/client/core/template.py:342
+msgid "determines product from which the repositories are picked"
+msgstr "리포지터리 선택 대상 제품을 지정 "
+
+#: ../src/katello/client/core/template.py:344
+msgid "repository to be added to the template"
+msgstr "템플릿에 추가될 리포지터리 "
+
+#: ../src/katello/client/core/template.py:346
+msgid "repository to be removed from the template"
+msgstr "템플릿에서 제거될 리포지터리 "
+
+#: ../src/katello/client/core/template.py:357
+#, python-format
+msgid "missing value for parameter '%s'"
+msgstr "매개 변수 '%s'에 대해 누락된 값 "
+
+#: ../src/katello/client/core/template.py:417
+#: ../src/katello/client/core/template.py:418
+msgid "Updating the template, please wait... "
+msgstr "템플릿 업데이트 중, 잠시만 기다리십시오..."
+
+#: ../src/katello/client/core/template.py:419
+#, python-format
+msgid "Successfully updated template [ %s ]"
+msgstr "템플릿 [ %s ]을 성공적으로 업데이트함 "
+
+#: ../src/katello/client/core/template.py:487
+msgid "deletes a template"
+msgstr "템플릿 삭제 "
+
+#: ../src/katello/client/core/template.py:495
+msgid "environment name eg: foo.example.com (default: Library)"
+msgstr "환경 이름 예: foo.example.com (디폴트: Library)"
+
+#: ../src/katello/client/core/template.py:516
+msgid "template specific actions in the katello server"
+msgstr "katello 서버에서 템플릿의 특정 동작 "
+
+#: ../src/katello/client/core/shell_command.py:30
+msgid "run the cli as a shell"
+msgstr "쉘로 cli를 실행 "
+
+#: ../src/katello/client/core/sync_plan.py:55
+msgid "list known sync_plans"
+msgstr "알려진 sync_plans 목록 보기 "
+
+#: ../src/katello/client/core/sync_plan.py:74
+msgid "Sync Plan List"
+msgstr "동기화 계획 목록 "
+
+#: ../src/katello/client/core/sync_plan.py:81
+msgid "print info about a sync plan"
+msgstr "동기화 계획에 관한 정보 출력 "
+
+#: ../src/katello/client/core/sync_plan.py:84
+#: ../src/katello/client/core/sync_plan.py:114
+#: ../src/katello/client/core/sync_plan.py:151
+#: ../src/katello/client/core/sync_plan.py:193
+msgid "name of the sync plan (required)"
+msgstr "동기화 계획 이름 (필수 사항) "
+
+#: ../src/katello/client/core/sync_plan.py:103
+msgid "Sync Plan Info"
+msgstr "동기화 계획 정보 "
+
+#: ../src/katello/client/core/sync_plan.py:111
+msgid "create a synchronization plan"
+msgstr "동기화 계획 생성 "
+
+#: ../src/katello/client/core/sync_plan.py:116
+#: ../src/katello/client/core/sync_plan.py:154
+msgid "plan description"
+msgstr "계획 설명 "
+
+#: ../src/katello/client/core/sync_plan.py:118
+#: ../src/katello/client/core/sync_plan.py:156
+#, python-format
+msgid "interval of recurring synchronizations (choices: [%s], default: none)"
+msgstr "동기화 반복 간격 (선택: [%s], 디폴트: 없음)"
+
+#: ../src/katello/client/core/sync_plan.py:120
+msgid "date of first synchronization (required, format: YYYY-MM-DD)"
+msgstr "처음 동기화 날짜 (필수 사항, 형식: YYYY-MM-DD)"
+
+#: ../src/katello/client/core/sync_plan.py:121
+msgid "time of first synchronization (format: HH:MM:SS, default: 00:00:00)"
+msgstr "처음 동기화 시간 (형식: HH:MM:SS, 디폴트: 00:00:00) "
+
+#: ../src/katello/client/core/sync_plan.py:141
+#, python-format
+msgid "Successfully created synchronization plan [ %s ]"
+msgstr "동기화 계획 [ %s ]이 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/sync_plan.py:142
+#, python-format
+msgid "Could not create synchronization plan [ %s ]"
+msgstr "동기화 계획 [ %s ]을 생성할 수 없음 "
+
+#: ../src/katello/client/core/sync_plan.py:148
+msgid "update a sync plan"
+msgstr "동기화 계획 업데이트 "
+
+#: ../src/katello/client/core/sync_plan.py:152
+msgid "new sync plan name"
+msgstr "새 동기화 계획 이름 "
+
+#: ../src/katello/client/core/sync_plan.py:158
+msgid "date of first synchronization (format: YYYY-MM-DD)"
+msgstr "처음 동기화 날짜 (형식: YYYY-MM-DD)"
+
+#: ../src/katello/client/core/sync_plan.py:159
+msgid "time of first synchronization (format: HH:MM:SS)"
+msgstr "처음 동기화 시간 (형식: HH:MM:SS)"
+
+#: ../src/katello/client/core/sync_plan.py:165
+msgid "You have to specify both --date and --time"
+msgstr "--date와 --time 모두를 지정해야 함 "
+
+#: ../src/katello/client/core/sync_plan.py:184
+#, python-format
+msgid "Successfully updated sync plan [ %s ]"
+msgstr "동기화 계획 [ %s ]이 성공적으로 업데이트됨 "
+
+#: ../src/katello/client/core/sync_plan.py:190
+msgid "delete a sync plan"
+msgstr "동기화 계획 삭제 "
+
+#: ../src/katello/client/core/sync_plan.py:207
+#, python-format
+msgid "Successfully deleted sync plan [ %s ]"
+msgstr "동기화 계획 [ %s ]이 성공적으로 삭제됨 "
+
+#: ../src/katello/client/core/sync_plan.py:215
+msgid "synchronization plan specific actions in the katello server"
+msgstr "katello 서버에 있는 동기화 계획의 특정 동작 "
+
+#: ../src/katello/client/core/version.py:39
+msgid "get the version of the katello server"
+msgstr "katello 서버의 버전을 가져옴 "
+
+#: ../src/katello/client/core/version.py:54
+msgid "Check the version of the server"
+msgstr "서버 버전 확인 "
+
+#: ../src/katello/client/core/permission.py:56
+msgid "create a permission for a user role"
+msgstr "사용자 역할에 대한 권한 생성 "
+
+#: ../src/katello/client/core/permission.py:59
+#: ../src/katello/client/core/permission.py:122
+#: ../src/katello/client/core/permission.py:146
+#: ../src/katello/client/core/user_role.py:65
+msgid "role name (required)"
+msgstr "역할 이름 (필수 사항) "
+
+#: ../src/katello/client/core/permission.py:60
+#: ../src/katello/client/core/permission.py:123
+msgid "permission name (required)"
+msgstr "권한 이름 (필수 사항) "
+
+#: ../src/katello/client/core/permission.py:61
+msgid "permission description"
+msgstr "권한 설명 "
+
+#: ../src/katello/client/core/permission.py:62
+msgid "organization name"
+msgstr "조직 이름 "
+
+#: ../src/katello/client/core/permission.py:63
+msgid "scope of the permisson (required)"
+msgstr "권한 범위 (필수 사항) "
+
+#: ../src/katello/client/core/permission.py:64
+msgid "verbs for the permission"
+msgstr "권한 동사 "
+
+#: ../src/katello/client/core/permission.py:65
+msgid "tags for the permission"
+msgstr "권한 태그 "
+
+#: ../src/katello/client/core/permission.py:81
+#, python-format
+msgid "Invalid scope [ %s ]"
+msgstr "잘못된 범위 [ %s ]"
+
+#: ../src/katello/client/core/permission.py:88
+#, python-format
+msgid "Could not find tag [ %s ] in scope of [ %s ]"
+msgstr "[ %s ] 범위에서 태그 [ %s ]을 찾을 수 없음 "
+
+#: ../src/katello/client/core/permission.py:112
+#, python-format
+msgid "Successfully created permission [ %s ] for user role [ %s ]"
+msgstr "사용자 역할 [ %s ]의 권한 [ %s ]이 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/permission.py:113
+#, python-format
+msgid "Could not create permission [ %s ]"
+msgstr "권한 [ %s ]을 생성할 수 없음 "
+
+#: ../src/katello/client/core/permission.py:119
+msgid "delete a permission"
+msgstr "권한 삭제 "
+
+#: ../src/katello/client/core/permission.py:137
+#, python-format
+msgid "Successfully deleted permission [ %s ] for role [ %s ]"
+msgstr "역할 [ %s ]의 권한 [ %s ]이 성공적으로 삭제됨 "
+
+#: ../src/katello/client/core/permission.py:143
+msgid "list permissions for a user role"
+msgstr "사용자 역할의 권한 목록 보기 "
+
+#: ../src/katello/client/core/permission.py:170
+msgid "Permission List"
+msgstr "권한 목록 "
+
+#: ../src/katello/client/core/permission.py:177
+msgid "list available scopes, verbs and tags that can be set in a permission"
+msgstr "권한에 설정할 수 있는 사용 가능한 범위, 동사, 태그 목록 보기 "
+
+#: ../src/katello/client/core/permission.py:181
+msgid ""
+"organization name eg: foo.example.com,\n"
+"lists organization specific verbs"
+msgstr ""
+"조직 이름 예: foo.example.com, \n"
+"조직의 특정 동사 목록 보기 "
+
+#: ../src/katello/client/core/permission.py:182
+msgid "filter listed results by scope"
+msgstr "범위에 따라 나열된 결과를 필터링하기 "
+
+#: ../src/katello/client/core/permission.py:200
+#, python-format
+msgid "Available verbs and tags for permission scope %s"
+msgstr "권한 범위 %s의 사용 가능한 동사 및 태그 "
+
+#: ../src/katello/client/core/permission.py:202
+msgid "Available verbs"
+msgstr "사용 가능한 동사 "
+
+#: ../src/katello/client/core/permission.py:221
+msgid "None"
+msgstr "없음 "
+
+#: ../src/katello/client/core/permission.py:259
+msgid "permission pecific actions in the katello server"
+msgstr "katello 서버에서 권한의 특정 동작 "
+
+#: ../src/katello/client/core/errata.py:42
+msgid "list all errata for a repo"
+msgstr "리포지터리의 모든 에라타 목록 보기 "
+
+#: ../src/katello/client/core/errata.py:58
+msgid "filter errata by type eg: enhancements"
+msgstr "유형에 따라 에라타 필터링하기 예: 기능 강화 "
+
+#: ../src/katello/client/core/errata.py:60
+msgid "filter errata by severity"
+msgstr "중요도에 따라 에라타 필터링하기 "
+
+#: ../src/katello/client/core/errata.py:94
+msgid "Errata List"
+msgstr "에라타 목록 "
+
+#: ../src/katello/client/core/errata.py:99
+msgid "list errata for a system"
+msgstr "시스템의 에라타 목록 보기 "
+
+#: ../src/katello/client/core/errata.py:125
+#, python-format
+msgid "Errata for system %s in organization %s"
+msgstr "조직 %s에서 시스템 %s에 대한 에라타 "
+
+#: ../src/katello/client/core/errata.py:132
+msgid "information about an errata"
+msgstr "에라타에 관한 정보 "
+
+#: ../src/katello/client/core/errata.py:136
+msgid "errata id, string value (required)"
+msgstr "에라타 ID, 문자열 값 (필수 사항) "
+
+#: ../src/katello/client/core/errata.py:185
+msgid "Errata Information"
+msgstr "에라타 정보 "
+
+#: ../src/katello/client/core/errata.py:194
+msgid "errata specific actions in the katello server"
+msgstr "katello 서버에서 에라타의 특정 동작 "
+
+#: ../src/katello/client/core/repo.py:34
+msgid "Waiting"
+msgstr "대기 중 "
+
+#: ../src/katello/client/core/repo.py:35
+msgid "Running"
+msgstr "실행 중 "
+
+#: ../src/katello/client/core/repo.py:36
+msgid "Error"
+msgstr "오류 "
+
+#: ../src/katello/client/core/repo.py:38
+msgid "Cancelled"
+msgstr "취소됨 "
+
+#: ../src/katello/client/core/repo.py:39
+msgid "Canceled"
+msgstr "취소됨 "
+
+#: ../src/katello/client/core/repo.py:40
+msgid "Timed out"
+msgstr "시간 초과됨 "
+
+#: ../src/katello/client/core/repo.py:41
+msgid "Not synced"
+msgstr "동기화되지 않음 "
+
+#: ../src/katello/client/core/repo.py:116
+msgid "create a repository at a specified URL"
+msgstr "지정된 URL에 리포지터리 생성 "
+
+#: ../src/katello/client/core/repo.py:122
+msgid "repository name to assign (required)"
+msgstr "할당할 리포지터리 이름 (필수 사항) "
+
+#: ../src/katello/client/core/repo.py:124
+msgid "url path to the repository (required)"
+msgstr "리포지터리로의 url 경로 (필수 사항) "
+
+#: ../src/katello/client/core/repo.py:128
+#: ../src/katello/client/core/repo.py:335
+msgid ""
+"GPG key to be assigned to the repository; by default, the product's GPG key "
+"will be used."
+msgstr "리포지터리에 할당된 GPG 키; 디폴트로 제품의 GPG 키가 사용됩니다. "
+
+#: ../src/katello/client/core/repo.py:130
+#: ../src/katello/client/core/repo.py:337
+msgid "Don't assign a GPG key to the repository."
+msgstr "리포지터리에 GPG 키를 할당하지 않습니다. "
+
+#: ../src/katello/client/core/repo.py:148
+#: ../src/katello/client/core/repo.py:253
+#, python-format
+msgid "Successfully created repository [ %s ]"
+msgstr "리포지터리 [ %s ]가 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/repo.py:154
+msgid "discovery repositories contained within a URL"
+msgstr "URL에 들어 있는 검색 리포지터리 "
+
+#: ../src/katello/client/core/repo.py:160
+msgid ""
+"repository name prefix to add to all the discovered repositories (required)"
+msgstr "검색된 모든 리포지터리에 추가할 리포지터리 이름 접두사 (필수 사항) "
+
+#: ../src/katello/client/core/repo.py:162
+msgid ""
+"root url to perform discovery of repositories eg: "
+"http://porkchop.devel.redhat.com/ (required)"
+msgstr ""
+"리포지터리 검색을 실행하기 위한 root url 예: http://porkchop.devel.redhat.com/ (필수 사항) "
+
+#: ../src/katello/client/core/repo.py:192
+msgid "Discovering repository urls, this could take some time..."
+msgstr "리포지터리 url을 검색 중입니다. 이는 시간이 다소 소요될 수 있습니다. "
+
+#: ../src/katello/client/core/repo.py:196
+#, python-format
+msgid "Error: %s"
+msgstr "오류: %s"
+
+#: ../src/katello/client/core/repo.py:216
+msgid ""
+"\n"
+"Select urls for which candidate repos should be created; use `y` to confirm (h for help):"
+msgstr "후보 리포지터리가 생성되어야 하는 url을 선택합니다; `y`를 사용하여 확인합니다 (도움말의 경우 h 사용): "
+
+#: ../src/katello/client/core/repo.py:226
+msgid "Operation aborted upon user request."
+msgstr "사용자 요청에 따라 작업을 중지했습니다. "
+
+#: ../src/katello/client/core/repo.py:275
+msgid "status information about a repository"
+msgstr "리포지터리에 대한 상태 정보 "
+
+#: ../src/katello/client/core/repo.py:298
+msgid "Repository Status"
+msgstr "리포지터리 상태 "
+
+#: ../src/katello/client/core/repo.py:305
+msgid "information about a repository"
+msgstr "리포지터리에 대한 정보 "
+
+#: ../src/katello/client/core/repo.py:319
+msgid "Progress"
+msgstr "진행 상태 "
+
+#: ../src/katello/client/core/repo.py:322
+#, python-format
+msgid "Information About Repo %s"
+msgstr "리포지터리 %s에 대한 정보 "
+
+#: ../src/katello/client/core/repo.py:329
+msgid "updates repository attributes"
+msgstr "리포지터리 속성 업데이트 "
+
+#: ../src/katello/client/core/repo.py:345
+#, python-format
+msgid "Successfully updated repository [ %s ]"
+msgstr "리포지터리 [ %s ]가 성공적으로 업데이트됨 "
+
+#: ../src/katello/client/core/repo.py:351
+msgid "synchronize a repository"
+msgstr "리포지터리 동기화 "
+
+#: ../src/katello/client/core/repo.py:361
+#, python-format
+msgid "Repo [ %s ] synced"
+msgstr "리포지터리 [ %s ]가 동기화됨 "
+
+#: ../src/katello/client/core/repo.py:364
+#, python-format
+msgid "Repo [ %s ] synchronization cancelled"
+msgstr "리포지터리 [ %s ] 동기화가 취소됨 "
+
+#: ../src/katello/client/core/repo.py:367
+#, python-format
+msgid "Repo [ %s ] failed to sync: %s"
+msgstr "리포지터리 [ %s ] 동기화 실패: %s"
+
+#: ../src/katello/client/core/repo.py:373
+msgid "cancel currently running synchronization of a repository"
+msgstr "현재 실행되고 있는 리포지터리 동기화가 취소됨 "
+
+#: ../src/katello/client/core/repo.py:388
+msgid "enable a repository"
+msgstr "리포지터리 활성화 "
+
+#: ../src/katello/client/core/repo.py:390
+msgid "disable a repository"
+msgstr "리포지터리 비활성화 "
+
+#: ../src/katello/client/core/repo.py:409
+msgid "list repos within an organization"
+msgstr "조직의 리포지터리 목록 보기 "
+
+#: ../src/katello/client/core/repo.py:413
+msgid "organization name eg: ACME_Corporation (required)"
+msgstr "조직 이름 예: ACME_Corporation (필수 사항) "
+
+#: ../src/katello/client/core/repo.py:419
+msgid "list also disabled repositories"
+msgstr "비활성화된 리포지터리 목록 보기 "
+
+#: ../src/katello/client/core/repo.py:439
+#, python-format
+msgid "Repo List For Org %s Environment %s Product %s"
+msgstr "조직 %s 환경 %s 제품 %s에 대한 리포지터리 목록 "
+
+#: ../src/katello/client/core/repo.py:446
+#, python-format
+msgid "Repo List for Product %s in Org %s "
+msgstr "조직 %s에 있는 제품 %s에 대한 리포지터리 목록 "
+
+#: ../src/katello/client/core/repo.py:453
+#, python-format
+msgid "Repo List For Org %s Environment %s"
+msgstr "조직 %s 환경 %s에 대한 리포지터리 목록 "
+
+#: ../src/katello/client/core/repo.py:463
+msgid "delete a repository"
+msgstr "리포지터리 삭제 "
+
+#: ../src/katello/client/core/repo.py:476
+msgid "list filters of a repository"
+msgstr "리포지터리 필터 목록 보기 "
+
+#: ../src/katello/client/core/repo.py:482
+msgid "prints also filters assigned to repository's product."
+msgstr "리포지터리의 제품에 할당된 필터 인쇄 "
+
+#: ../src/katello/client/core/repo.py:492
+msgid "Repository Filters"
+msgstr "리포지터리 필터 "
+
+#: ../src/katello/client/core/repo.py:506
+msgid "add a filter to a repository"
+msgstr "리포지터리에 필터 추가 "
+
+#: ../src/katello/client/core/repo.py:508
+msgid "remove a filter from a repository"
+msgstr "리포지터리에서 필터 제거 "
+
+#: ../src/katello/client/core/repo.py:538
+#, python-format
+msgid "Added filter [ %s ] to repository [ %s ]"
+msgstr "리포지터리 [ %s ]에 필터 [ %s ]이(가) 추가됨 "
+
+#: ../src/katello/client/core/repo.py:541
+#, python-format
+msgid "Removed filter [ %s ] to repository [ %s ]"
+msgstr "리포지터리 [ %s ]에 필터 [ %s ]이(가) 제거됨 "
+
+#: ../src/katello/client/core/user_role.py:46
+msgid "list all known user roles"
+msgstr "모든 알려진 사용자 역할 목록 보기 "
+
+#: ../src/katello/client/core/user_role.py:62
+msgid "create user role"
+msgstr "사용자 역할 생성 "
+
+#: ../src/katello/client/core/user_role.py:66
+#: ../src/katello/client/core/user_role.py:165
+msgid "role description"
+msgstr "역할 설명 "
+
+#: ../src/katello/client/core/user_role.py:77
+#, python-format
+msgid "Successfully created user role [ %s ]"
+msgstr "사용자 역할 [ %s ]이 성공적으로 생성됨 "
+
+#: ../src/katello/client/core/user_role.py:78
+#, python-format
+msgid "Could not create user role [ %s ]"
+msgstr "사용자 역할 [ %s ]을 생성할 수 없음 "
+
+#: ../src/katello/client/core/user_role.py:86
+msgid "list information about user role"
+msgstr "사용자 역할에 관한 정보 목록 보기 "
+
+#: ../src/katello/client/core/user_role.py:89
+#: ../src/katello/client/core/user_role.py:141
+#: ../src/katello/client/core/user_role.py:163
+#: ../src/katello/client/core/user_role.py:190
+#: ../src/katello/client/core/user_role.py:214
+msgid "user role name (required)"
+msgstr "사용자 역할 이름 (필수 사항) "
+
+#: ../src/katello/client/core/user_role.py:90
+msgid "print details about each of role's permissions"
+msgstr "각 역할의 권한 정보를 출력 "
+
+#: ../src/katello/client/core/user_role.py:109
+#, python-format
+msgid ""
+"%s\n"
+"\tfor: %s\n"
+"\tverbs: %s\n"
+"\ton: %s"
+msgstr ""
+"%s¶\n"
+"for: %s¶\n"
+"verbs: %s¶\n"
+"on: %s"
+
+#: ../src/katello/client/core/user_role.py:130
+msgid "User Role Information"
+msgstr "사용자 역할 정보 "
+
+#: ../src/katello/client/core/user_role.py:138
+msgid "delete a user role"
+msgstr "사용자 역할 삭제 "
+
+#: ../src/katello/client/core/user_role.py:152
+#, python-format
+msgid "Successfully deleted user role [ %s ]"
+msgstr "사용자 역할 [ %s ]이(가) 성공적으로 삭제됨 "
+
+#: ../src/katello/client/core/user_role.py:160
+msgid "update a role"
+msgstr "역할 업데이트 "
+
+#: ../src/katello/client/core/user_role.py:164
+msgid "new user role name"
+msgstr "새 사용자 역할 이름 "
+
+#: ../src/katello/client/core/user_role.py:170
+msgid "Provide at least one parameter to update the user role"
+msgstr "사용자 역할을 업데이트하기 위해 최소 하나의 매개 변수가 필요함 "
+
+#: ../src/katello/client/core/user_role.py:180
+#, python-format
+msgid "Successfully updated user role [ %s ]"
+msgstr "사용자 역할 [ %s ]이(가) 성공적으로 업데이트됨 "
+
+#: ../src/katello/client/core/user_role.py:187
+msgid "assign LDAP group to a role"
+msgstr "역할에 LDAP 그룹 할당 "
+
+#: ../src/katello/client/core/user_role.py:191
+msgid "new LDAP group name (required)"
+msgstr "새 LDAP 그룹 이름 (필수 사항) "
+
+#: ../src/katello/client/core/user_role.py:204
+#, python-format
+msgid "Successfully added LDAP group [ %s ] to the user role [ %s ]"
+msgstr "사용자 역할 [ %s ]에 성공적으로 LDAP 그룹 [ %s ]을 추가함 "
+
+#: ../src/katello/client/core/user_role.py:211
+msgid "remove LDAP group assigned to a role"
+msgstr "역할에 할당된 LDAP 그룹 제거 "
+
+#: ../src/katello/client/core/user_role.py:215
+msgid "LDAP group name to be removed (required)"
+msgstr "제거된 LDAP 그룹 이름 (필수 사항) "
+
+#: ../src/katello/client/core/user_role.py:228
+#, python-format
+msgid "Successfully removed LDAP group [ %s ] from the user role [ %s ]"
+msgstr "사용자 역할 [ %s ]에서 성공적으로 삭제된 LDAP 그룹 [ %s ]"
+
+#: ../src/katello/client/core/user_role.py:235
+msgid "user role specific actions in the katello server"
+msgstr "katello 서버에서 사용자 역할의 특정 동작 "
+
+#: ../src/katello/client/core/datetime_formatter.py:45
+msgid "Time format is invalid. Required: HH:MM:SS[+HH:MM]"
+msgstr "시간 형식이 잘못되어 있습니다. HH:MM:SS[+HH:MM] 형식으로 하십시오. "
+
+#: ../src/katello/client/core/datetime_formatter.py:47
+msgid "Date format is invalid. Required: YYYY-MM-DD"
+msgstr "날짜 형식이 잘못되어 있습니다. YYYY-MM-DD 형식으로 하십시오. "
 
 #. These are a bunch of strings that are marked for translation in optparse,
 #. but not actually translated anywhere. Mark them for translation here,
@@ -175,2507 +2873,3 @@ msgstr "도움말 메세지를 보여준 후 종료 "
 #: ../src/katello/client/i18n_optparse.py:68
 msgid "show program's version number and exit"
 msgstr "프로그램의 버전 번호를 보여준 후 종료 "
-
-#: ../src/katello/client/core/user_role.py:46
-msgid "list all known user roles"
-msgstr "모든 알려진 사용자 역할 목록 보기 "
-
-#: ../src/katello/client/core/user_role.py:54
-#: ../src/katello/client/core/user.py:193
-msgid "User Role List"
-msgstr "사용자 역할 목록 "
-
-#: ../src/katello/client/core/user_role.py:62
-msgid "create user role"
-msgstr "사용자 역할 생성 "
-
-#: ../src/katello/client/core/user_role.py:65
-#: ../src/katello/client/core/permission.py:58
-#: ../src/katello/client/core/permission.py:125
-#: ../src/katello/client/core/permission.py:153
-msgid "role name (required)"
-msgstr "역할 이름 (필수 사항) "
-
-#: ../src/katello/client/core/user_role.py:66
-#: ../src/katello/client/core/user_role.py:158
-msgid "role description"
-msgstr "역할 설명 "
-
-#: ../src/katello/client/core/user_role.py:77
-#, python-format
-msgid "Successfully created user role [ %s ]"
-msgstr "사용자 역할 [ %s ]이 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/user_role.py:80
-#, python-format
-msgid "Could not create user role [ %s ]"
-msgstr "사용자 역할 [ %s ]을 생성할 수 없음 "
-
-#: ../src/katello/client/core/user_role.py:87
-msgid "list information about user role"
-msgstr "사용자 역할에 관한 정보 목록 보기 "
-
-#: ../src/katello/client/core/user_role.py:90
-#: ../src/katello/client/core/user_role.py:134
-#: ../src/katello/client/core/user_role.py:156
-msgid "user role name (required)"
-msgstr "사용자 역할 이름 (필수 사항) "
-
-#: ../src/katello/client/core/user_role.py:91
-msgid "print details about each of role's permissions"
-msgstr "각 역할의 권한 정보를 출력 "
-
-#: ../src/katello/client/core/user_role.py:105
-#, python-format
-msgid ""
-"%s\n"
-"\tfor: %s\n"
-"\tverbs: %s\n"
-"\ton: %s"
-msgstr ""
-"%s¶\n"
-"for: %s¶\n"
-"verbs: %s¶\n"
-"on: %s"
-
-#: ../src/katello/client/core/user_role.py:123
-msgid "User Role Information"
-msgstr "사용자 역할 정보 "
-
-#: ../src/katello/client/core/user_role.py:131
-msgid "delete a user role"
-msgstr "사용자 역할 삭제 "
-
-#: ../src/katello/client/core/user_role.py:145
-#, python-format
-msgid "Successfully deleted user role [ %s ]"
-msgstr "사용자 역할 [ %s ]이(가) 성공적으로 삭제됨 "
-
-#: ../src/katello/client/core/user_role.py:153
-msgid "update a role"
-msgstr "역할 업데이트 "
-
-#: ../src/katello/client/core/user_role.py:157
-msgid "new user role name"
-msgstr "새 사용자 역할 이름 "
-
-#: ../src/katello/client/core/user_role.py:163
-msgid "Provide at least one parameter to update the user role"
-msgstr "사용자 역할을 업데이트하기 위해 최소 하나의 매개 변수가 필요함 "
-
-#: ../src/katello/client/core/user_role.py:173
-#, python-format
-msgid "Successfully updated user role [ %s ]"
-msgstr "사용자 역할 [ %s ]이(가) 성공적으로 업데이트됨 "
-
-#: ../src/katello/client/core/user_role.py:180
-msgid "user role specific actions in the katello server"
-msgstr "katello 서버에서 사용자 역할의 특정 동작 "
-
-#: ../src/katello/client/core/filters.py:38
-msgid "list all filters"
-msgstr "모든 필터 목록 보기 "
-
-#: ../src/katello/client/core/filters.py:42
-#: ../src/katello/client/core/filters.py:65
-#: ../src/katello/client/core/filters.py:101
-#: ../src/katello/client/core/filters.py:122
-#: ../src/katello/client/core/filters.py:153
-#: ../src/katello/client/core/filters.py:180
-#: ../src/katello/client/core/system.py:374
-#: ../src/katello/client/core/system.py:415
-#: ../src/katello/client/core/system.py:441
-#: ../src/katello/client/core/system.py:474
-#: ../src/katello/client/core/system.py:558
-#: ../src/katello/client/core/system.py:600
-#: ../src/katello/client/core/provider.py:63
-#: ../src/katello/client/core/sync_plan.py:87
-#: ../src/katello/client/core/sync_plan.py:120
-#: ../src/katello/client/core/sync_plan.py:160
-#: ../src/katello/client/core/sync_plan.py:203
-#: ../src/katello/client/core/errata.py:110
-msgid "organization name (required)"
-msgstr "조직 이름 (필수 사항) "
-
-#: ../src/katello/client/core/filters.py:55
-msgid "Filter List"
-msgstr "필터 목록 "
-
-#: ../src/katello/client/core/filters.py:61
-msgid "create a filter"
-msgstr "필터 생성 "
-
-#: ../src/katello/client/core/filters.py:67
-#: ../src/katello/client/core/filters.py:103
-#: ../src/katello/client/core/filters.py:124
-#: ../src/katello/client/core/filters.py:155
-#: ../src/katello/client/core/filters.py:182
-#: ../src/katello/client/core/repo.py:525
-#: ../src/katello/client/core/product.py:469
-msgid "filter name (required)"
-msgstr "필터 이름 (필수 사항) "
-
-#: ../src/katello/client/core/filters.py:69
-msgid "description"
-msgstr "설명 "
-
-#: ../src/katello/client/core/filters.py:71
-msgid "comma-separated list of package names/nvres"
-msgstr "콤마로 구분된 패키지 이름/nvre 목록 "
-
-#: ../src/katello/client/core/filters.py:87
-#, python-format
-msgid "Successfully created filter [ %s ]"
-msgstr "필터 [ %s ]이(가) 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/filters.py:89
-#, python-format
-msgid "Could not create filter [ %s ]"
-msgstr "필터 [ %s ]을(를) 생성할 수 없음 "
-
-#: ../src/katello/client/core/filters.py:97
-msgid "delete a filter"
-msgstr "필터 삭제 "
-
-#: ../src/katello/client/core/filters.py:114
-#, python-format
-msgid "Successfully deleted filter [ %s ]"
-msgstr "필터 [ %s ]이(가) 성공적으로 삭제됨 "
-
-#: ../src/katello/client/core/filters.py:118
-msgid "filter info"
-msgstr "필터 정보 "
-
-#: ../src/katello/client/core/filters.py:141
-msgid "Filter Information"
-msgstr "필터 정보 "
-
-#: ../src/katello/client/core/filters.py:149
-msgid "Add a package to filter"
-msgstr "필터에 패키지 추가 "
-
-#: ../src/katello/client/core/filters.py:157
-#: ../src/katello/client/core/filters.py:184
-msgid "package id (required)"
-msgstr "패키지 ID (필수 사항) "
-
-#: ../src/katello/client/core/filters.py:172
-#, python-format
-msgid "Successfully added package [ %s ] to filter [ %s ]"
-msgstr "필터 [ %s ]에 패키지 [ %s ]를 성공적으로 추가함 "
-
-#: ../src/katello/client/core/filters.py:176
-msgid "Remove a package from filter"
-msgstr "필터에서 패키지 제거 "
-
-#: ../src/katello/client/core/filters.py:202
-#, python-format
-msgid "Successfully removed package [ %s ] from filter [ %s ]"
-msgstr "필터 [ %s ]에서 패키지 [ %s ]를 성공적으로 제거함"
-
-#: ../src/katello/client/core/filters.py:208
-msgid "filter specific actions in the katello server"
-msgstr "katello 서버에서 필터의 특정 동작 "
-
-#: ../src/katello/client/core/user.py:42
-msgid "list all known users"
-msgstr "모든 알려진 사용자 목록 보기 "
-
-#: ../src/katello/client/core/user.py:52
-msgid "User List"
-msgstr "사용자 목록 "
-
-#: ../src/katello/client/core/user.py:60
-msgid "create user"
-msgstr "사용자 생성 "
-
-#: ../src/katello/client/core/user.py:63 ../src/katello/client/core/user.py:93
-#: ../src/katello/client/core/user.py:121
-#: ../src/katello/client/core/user.py:144
-#: ../src/katello/client/core/user.py:177
-#: ../src/katello/client/core/user.py:217
-msgid "user name (required)"
-msgstr "사용자 이름 (필수 사항) "
-
-#: ../src/katello/client/core/user.py:64
-msgid "initial password (required)"
-msgstr "초기 암호 (필수 사항) "
-
-#: ../src/katello/client/core/user.py:65
-msgid "email (required)"
-msgstr "이메일 (필수 사항) "
-
-#: ../src/katello/client/core/user.py:66
-#: ../src/katello/client/core/user.py:147
-msgid "disabled account (default is 'false')"
-msgstr "비활성화된 계정 (디폴트는 'false'임) "
-
-#: ../src/katello/client/core/user.py:81
-#, python-format
-msgid "Successfully created user [ %s ]"
-msgstr "사용자 [ %s ]가 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/user.py:83
-#, python-format
-msgid "Could not create user [ %s ]"
-msgstr "사용자 [ %s ]를 생성할 수 없음 "
-
-#: ../src/katello/client/core/user.py:90
-msgid "list information about user"
-msgstr "사용자 정보 목로 보기 "
-
-#: ../src/katello/client/core/user.py:110
-msgid "User Information"
-msgstr "사용자 정보 "
-
-#: ../src/katello/client/core/user.py:118
-msgid "delete user"
-msgstr "사용자 삭제 "
-
-#: ../src/katello/client/core/user.py:134
-#, python-format
-msgid "Successfully deleted user [ %s ]"
-msgstr "사용자 [ %s ]가 성공적으로 삭제되었습니다 "
-
-#: ../src/katello/client/core/user.py:141
-msgid "update an user"
-msgstr "사용자 업데이트 "
-
-#: ../src/katello/client/core/user.py:145
-msgid "initial password"
-msgstr "초기 암호 "
-
-#: ../src/katello/client/core/user.py:146
-msgid "email"
-msgstr "이메일 "
-
-#: ../src/katello/client/core/user.py:163
-#, python-format
-msgid "Provide at least one parameter to update user [ %s ]"
-msgstr "사용자 [ %s ]를 업데이트하기 위해 최소 하나의 매개 변수가 필요함 "
-
-#: ../src/katello/client/core/user.py:167
-#, python-format
-msgid "Successfully updated user [ %s ]"
-msgstr "사용자 [ %s ]가 성공적으로 업데이트되었습니다 "
-
-#: ../src/katello/client/core/user.py:174
-msgid "list user's roles"
-msgstr "사용자 역할 목록 보기 "
-
-#: ../src/katello/client/core/user.py:203
-msgid "assign role to a user"
-msgstr "사용자에게 역할 할당 "
-
-#: ../src/katello/client/core/user.py:205
-msgid "unassign role to a user"
-msgstr "사용자에게 역할 할당 해제 "
-
-#: ../src/katello/client/core/user.py:218
-msgid "user role (required)"
-msgstr "사용자 역할 (필수 사항) "
-
-#: ../src/katello/client/core/user.py:234
-#, python-format
-msgid "Role [ %s ] not found"
-msgstr "사용자 [ %s ]을(를) 찾을 수 없음 "
-
-#: ../src/katello/client/core/user.py:250
-msgid "user report"
-msgstr "사용자 보고 "
-
-#: ../src/katello/client/core/user.py:253
-#: ../src/katello/client/core/system.py:659
-msgid ""
-"report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"
-msgstr "보고 형식 (사용 가능한 값: 'html', 'text' (디폴트), 'csv', 'pdf')"
-
-#: ../src/katello/client/core/user.py:271
-msgid "user specific actions in the katello server"
-msgstr "katello 서버에서 실행되는 사용자의 특정 동작 "
-
-#: ../src/katello/client/core/environment.py:47
-msgid "list known environments"
-msgstr "알려진 환경 목록 보기 "
-
-#: ../src/katello/client/core/environment.py:51
-#: ../src/katello/client/core/environment.py:78
-#: ../src/katello/client/core/environment.py:113
-#: ../src/katello/client/core/environment.py:154
-#: ../src/katello/client/core/environment.py:196
-#: ../src/katello/client/core/system.py:46
-#: ../src/katello/client/core/system.py:82
-#: ../src/katello/client/core/system.py:142
-#: ../src/katello/client/core/system.py:250
-#: ../src/katello/client/core/system.py:327
-#: ../src/katello/client/core/system.py:655
-#: ../src/katello/client/core/repo.py:123
-#: ../src/katello/client/core/repo.py:166
-#: ../src/katello/client/core/product.py:59
-#: ../src/katello/client/core/product.py:127
-#: ../src/katello/client/core/product.py:320
-#: ../src/katello/client/core/sync_plan.py:58
-#: ../src/katello/client/core/organization.py:64
-#: ../src/katello/client/core/organization.py:93
-#: ../src/katello/client/core/organization.py:120
-#: ../src/katello/client/core/organization.py:149
-#: ../src/katello/client/core/organization.py:172
-#: ../src/katello/client/core/organization.py:201
-msgid "organization name eg: foo.example.com (required)"
-msgstr "조직 이름 예: foo.example.com (필수 사항) "
-
-#: ../src/katello/client/core/environment.py:64
-#: ../src/katello/client/core/environment.py:95
-msgid "Org"
-msgstr "조직 "
-
-#: ../src/katello/client/core/environment.py:65
-#: ../src/katello/client/core/environment.py:96
-msgid "Prior Environment"
-msgstr "이전 환경 "
-
-#: ../src/katello/client/core/environment.py:67
-msgid "Environment List"
-msgstr "환경 목록 "
-
-#: ../src/katello/client/core/environment.py:74
-msgid "list a specific environment"
-msgstr "특정 환경 목록 보기 "
-
-#: ../src/katello/client/core/environment.py:80
-#: ../src/katello/client/core/environment.py:194
-msgid "environment name eg: foo.example.com (required)"
-msgstr "환경 이름 예: foo.example.com (필수 사항) "
-
-#: ../src/katello/client/core/environment.py:98
-msgid "Environment Info"
-msgstr "환경 정보 "
-
-#: ../src/katello/client/core/environment.py:107
-msgid "create an environment"
-msgstr "환경 생성 "
-
-#: ../src/katello/client/core/environment.py:111
-#: ../src/katello/client/core/environment.py:152
-msgid "environment description eg: foo's environment"
-msgstr "환경 설명 예: foo 환경 "
-
-#: ../src/katello/client/core/environment.py:115
-#: ../src/katello/client/core/environment.py:160
-#: ../src/katello/client/core/changeset.py:47
-#: ../src/katello/client/core/changeset.py:85
-#: ../src/katello/client/core/changeset.py:153
-#: ../src/katello/client/core/changeset.py:337
-#: ../src/katello/client/core/changeset.py:415
-#: ../src/katello/client/core/changeset.py:447
-msgid "environment name (required)"
-msgstr "환경 이름 (필수 사항) "
-
-#: ../src/katello/client/core/environment.py:117
-msgid "name of prior environment (required)"
-msgstr "이전 환경 이름 (필수 사항) "
-
-#: ../src/katello/client/core/environment.py:137
-#, python-format
-msgid "Successfully created environment [ %s ]"
-msgstr "환경 [ %s ]이 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/environment.py:140
-#, python-format
-msgid "Could not create environment [ %s ]"
-msgstr "환경 [ %s ]을 생성할 수 없음 "
-
-#: ../src/katello/client/core/environment.py:147
-msgid "update an environment"
-msgstr "환경 업데이트 "
-
-#: ../src/katello/client/core/environment.py:156
-msgid "new environment name"
-msgstr "새 환경 이름 "
-
-#: ../src/katello/client/core/environment.py:158
-msgid "name of prior environment"
-msgstr "이전 환경 이름 "
-
-#: ../src/katello/client/core/environment.py:182
-#, python-format
-msgid "Successfully updated environment [ %s ]"
-msgstr "환경 [ %s ]이 성공적으로 업데이트됨 "
-
-#: ../src/katello/client/core/environment.py:190
-msgid "delete an environment"
-msgstr "환경 삭제 "
-
-#: ../src/katello/client/core/environment.py:210
-#, python-format
-msgid "Successfully deleted environment [ %s ]"
-msgstr "환경 [ %s ]이 성공적으로 삭제됨 "
-
-#: ../src/katello/client/core/environment.py:220
-msgid "environment specific actions in the katello server"
-msgstr "katello 서버 환경의 특정 동작  "
-
-#: ../src/katello/client/core/changeset.py:41
-msgid "list new changesets of an environment"
-msgstr "환경의 새 변경 집합 목록 보기 "
-
-#: ../src/katello/client/core/changeset.py:45
-#: ../src/katello/client/core/changeset.py:84
-#: ../src/katello/client/core/changeset.py:151
-#: ../src/katello/client/core/changeset.py:335
-#: ../src/katello/client/core/changeset.py:413
-#: ../src/katello/client/core/changeset.py:445
-#: ../src/katello/client/core/activation_key.py:51
-#: ../src/katello/client/core/activation_key.py:102
-#: ../src/katello/client/core/activation_key.py:142
-#: ../src/katello/client/core/activation_key.py:189
-#: ../src/katello/client/core/activation_key.py:259
-#: ../src/katello/client/core/provider.py:47
-#: ../src/katello/client/core/provider.py:135
-#: ../src/katello/client/core/template.py:98
-#: ../src/katello/client/core/template.py:164
-#: ../src/katello/client/core/template.py:209
-#: ../src/katello/client/core/template.py:264
-#: ../src/katello/client/core/template.py:332
-#: ../src/katello/client/core/template.py:516
-#: ../src/katello/client/core/gpg_key.py:63
-#: ../src/katello/client/core/gpg_key.py:93
-#: ../src/katello/client/core/gpg_key.py:130
-#: ../src/katello/client/core/gpg_key.py:167
-#: ../src/katello/client/core/gpg_key.py:214
-msgid "name of organization (required)"
-msgstr "조직 이름 (필수 사항) "
-
-#: ../src/katello/client/core/changeset.py:73
-msgid "Changeset List"
-msgstr "변경 집합 목록 "
-
-#: ../src/katello/client/core/changeset.py:81
-msgid "detailed information about a changeset"
-msgstr "변경 집합에 관한 상세 정보 "
-
-#: ../src/katello/client/core/changeset.py:86
-#: ../src/katello/client/core/changeset.py:155
-#: ../src/katello/client/core/changeset.py:333
-#: ../src/katello/client/core/changeset.py:411
-#: ../src/katello/client/core/changeset.py:443
-msgid "changeset name (required)"
-msgstr "변경 집합 이름 (필수 사항) "
-
-#: ../src/katello/client/core/changeset.py:87
-msgid "will display dependent packages"
-msgstr "의존 패키지를 표시함 "
-
-#: ../src/katello/client/core/changeset.py:138
-msgid "Changeset Info"
-msgstr "변경 집합 정보 "
-
-#: ../src/katello/client/core/changeset.py:147
-msgid "create a new changeset for an environment"
-msgstr "환경의 새 변경 집합 생성 "
-
-#: ../src/katello/client/core/changeset.py:172
-#, python-format
-msgid "Successfully created changeset [ %s ] for environment [ %s ]"
-msgstr "환경 [ %s ]에 대해 변경 집합 [ %s ]이 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/changeset.py:174
-#, python-format
-msgid "Could not create changeset [ %s ] for environment [ %s ]"
-msgstr "환경 [ %s ]에 대해 변경 집합 [ %s ]을 생성할 수 없음 "
-
-#: ../src/katello/client/core/changeset.py:311
-msgid "updates content of a changeset"
-msgstr "변경 집합 컨텐츠 업데이트 "
-
-#: ../src/katello/client/core/changeset.py:324
-#: ../src/katello/client/core/template.py:326
-#, python-format
-msgid "%s must be preceded by %s"
-msgstr "%s 앞에 %s를 지정해야 함 "
-
-#: ../src/katello/client/core/changeset.py:340
-msgid "product to add to the changeset"
-msgstr "변경 집합에 추가할 제품 "
-
-#: ../src/katello/client/core/changeset.py:343
-msgid "product to remove from the changeset"
-msgstr "변경 집합에서 삭제할 제품 "
-
-#: ../src/katello/client/core/changeset.py:346
-msgid "name of a template to be added to the changeset"
-msgstr "변경 집합에 추가된 템플릿 이름 "
-
-#: ../src/katello/client/core/changeset.py:349
-msgid "name of a template to be removed from the changeset"
-msgstr "변경 집합에서 삭제된 템플릿 이름 "
-
-#: ../src/katello/client/core/changeset.py:352
-msgid ""
-"determines product from which the packages/errata/repositories are picked"
-msgstr "패키지/에라타/리포지터리를 선택하는 제품을 결정 "
-
-#: ../src/katello/client/core/changeset.py:357
-msgid " to add to the changeset"
-msgstr "변경 집합에 추가 "
-
-#: ../src/katello/client/core/changeset.py:360
-msgid " to remove from the changeset"
-msgstr "변경 집합에서 삭제 "
-
-#: ../src/katello/client/core/changeset.py:393
-#, python-format
-msgid "Successfully updated changeset [ %s ]"
-msgstr "변경 집합 [ %s ]이 성공적으로 업데이트됨 "
-
-#: ../src/katello/client/core/changeset.py:407
-msgid "deletes a changeset"
-msgstr "변경 집합 삭제 "
-
-#: ../src/katello/client/core/changeset.py:439
-msgid "promotes a changeset to the next environment"
-msgstr "변경 집합을 다음 환경에 승격함 "
-
-#: ../src/katello/client/core/changeset.py:466
-msgid "Promoting the changeset, please wait... "
-msgstr "변경 집합을 승격하는 중, 잠시만 기다리십시오..."
-
-#: ../src/katello/client/core/changeset.py:469
-#, python-format
-msgid "Changeset [ %s ] promoted"
-msgstr "변경 집합 [ %s ]이 승격됨 "
-
-#: ../src/katello/client/core/changeset.py:472
-#, python-format
-msgid "Changeset [ %s ] promotion failed: %s"
-msgstr "변경 집합 [ %s ] 승격 실패: %s"
-
-#: ../src/katello/client/core/changeset.py:478
-msgid "changeset specific actions in the katello server"
-msgstr "katello 서버에서 변경 집합의 특정 동작  "
-
-#: ../src/katello/client/core/datetime_formatter.py:45
-msgid "Time format is invalid. Required: HH:MM:SS[+HH:MM]"
-msgstr "시간 형식이 잘못되어 있습니다. HH:MM:SS[+HH:MM] 형식으로 하십시오. "
-
-#: ../src/katello/client/core/datetime_formatter.py:47
-msgid "Date format is invalid. Required: YYYY-MM-DD"
-msgstr "날짜 형식이 잘못되어 있습니다. YYYY-MM-DD 형식으로 하십시오. "
-
-#: ../src/katello/client/core/system.py:42
-msgid "list systems within an organization"
-msgstr "조직에 있는 시스템 목록 보기 "
-
-#: ../src/katello/client/core/system.py:48
-#: ../src/katello/client/core/system.py:376
-#: ../src/katello/client/core/system.py:657
-msgid "environment name eg: development"
-msgstr "환경 이름 예: development "
-
-#: ../src/katello/client/core/system.py:66
-#, python-format
-msgid "Systems List For Org [ %s ]"
-msgstr "조직 [ %s ]의 시스템 목록 "
-
-#: ../src/katello/client/core/system.py:68
-#, python-format
-msgid "Systems List For Environment [ %s ] in Org [ %s ]"
-msgstr "조직 [ %s ]에 있는 환경 [ %s ]의 시스템 목록 "
-
-#: ../src/katello/client/core/system.py:78
-msgid "display a system within an organization"
-msgstr "조직에 있는 시스템 표시 "
-
-#: ../src/katello/client/core/system.py:84
-#: ../src/katello/client/core/system.py:144
-#: ../src/katello/client/core/system.py:329
-#: ../src/katello/client/core/system.py:372
-#: ../src/katello/client/core/system.py:417
-#: ../src/katello/client/core/system.py:443
-#: ../src/katello/client/core/system.py:476
-#: ../src/katello/client/core/system.py:560
-#: ../src/katello/client/core/system.py:602
-#: ../src/katello/client/core/errata.py:112
-msgid "system name (required)"
-msgstr "시스템 이름 (필수 사항) "
-
-#: ../src/katello/client/core/system.py:86
-#: ../src/katello/client/core/system.py:146
-#: ../src/katello/client/core/system.py:254
-#: ../src/katello/client/core/system.py:331
-#: ../src/katello/client/core/system.py:604
-msgid "environment name"
-msgstr "환경 이름 "
-
-#: ../src/katello/client/core/system.py:99
-#, python-format
-msgid "System Information For Org [ %s ]"
-msgstr "조직 [ %s ]의 시스템 정보 "
-
-#: ../src/katello/client/core/system.py:102
-#, python-format
-msgid "System Information For Environment [ %s ] in Org [ %s ]"
-msgstr "조직 [ %s ]에 있는 환경의 시스템 정보 "
-
-#: ../src/katello/client/core/system.py:138
-msgid "display and manipulate with the installed packages of a system"
-msgstr "시스템에 설치된 패키지 표시 및 처리 "
-
-#: ../src/katello/client/core/system.py:148
-msgid ""
-"packages to be installed remotely on the system, package names are separated"
-" with comma"
-msgstr "시스템에 원격으로 설치된 패키지입니다, 패키지 이름은 콤마로 구분됩니다 "
-
-#: ../src/katello/client/core/system.py:150
-msgid ""
-"packages to be removed remotely from the system, package names are separated"
-" with comma"
-msgstr "시스템에서 원격으로 제거된 패키지입니다, 패키지 이름은 콤마로 구분됩니다 "
-
-#: ../src/katello/client/core/system.py:152
-msgid ""
-"packages to be updated on the system, use --all to update all packages, "
-"package names are separated with comma"
-msgstr "시스템에서 업데이트할 패키지입니다, 을 사용하여 모든 패키지를 업데이트합니다, 패키지 이름은 콤마로 구분됩니다 "
-
-#: ../src/katello/client/core/system.py:154
-msgid ""
-"package groups to be installed remotely on the system, group names are "
-"separated with comma"
-msgstr "시스템에 원격으로 설치된 패키지 그룹입니다, 그룹 이름은 콤마로 구분됩니다 "
-
-#: ../src/katello/client/core/system.py:156
-msgid ""
-"package groups to be removed remotely from the system, group names are "
-"separated with comma"
-msgstr "시스템에서 원격으로 제거된 패키지 그룹입니다, 그룹 이름은 콤마로 구분됩니다 "
-
-#: ../src/katello/client/core/system.py:163
-msgid "You can specify at most one install/remove/update action per call"
-msgstr "호출 당 최대 하나의 설치/제거/업데이트 작업을 지정할 수 있습니다 "
-
-#: ../src/katello/client/core/system.py:182
-#, python-format
-msgid "Package Information for System [ %s ] in Org [ %s ]"
-msgstr "조직 [ %s ]에 있는 시스템 [ %s ]의 패키지 정보 "
-
-#: ../src/katello/client/core/system.py:185
-#, python-format
-msgid ""
-"Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]"
-msgstr "조직 [ %s ]에 있는 환경 [ %s ]의 시스템에 대한 패키지 정보 "
-
-#: ../src/katello/client/core/system.py:210
-#, python-format
-msgid "Performing remote action [ %s ]... "
-msgstr "원격 동작 [ %s ] 실행 중..."
-
-#: ../src/katello/client/core/system.py:214
-msgid "Remote action finished:"
-msgstr "원격 동작이 완료됨: "
-
-#: ../src/katello/client/core/system.py:218
-msgid "Remote action failed:"
-msgstr "원격 동작이 실패함: "
-
-#: ../src/katello/client/core/system.py:246
-msgid "display status of remote tasks"
-msgstr "원격 작업의 상태 표시 "
-
-#: ../src/katello/client/core/system.py:252
-msgid "system name"
-msgstr "시스템 이름 "
-
-#: ../src/katello/client/core/system.py:265
-msgid "Remote tasks"
-msgstr "원격 작업 "
-
-#: ../src/katello/client/core/system.py:274
-#: ../src/katello/client/core/system.py:282
-#: ../src/katello/client/core/system.py:309
-msgid "System"
-msgstr "시스템 "
-
-#: ../src/katello/client/core/system.py:275
-#: ../src/katello/client/core/system.py:283
-#: ../src/katello/client/core/system.py:310
-msgid "Action"
-msgstr "동작 "
-
-#: ../src/katello/client/core/system.py:276
-#: ../src/katello/client/core/system.py:311
-msgid "Started"
-msgstr "시작됨 "
-
-#: ../src/katello/client/core/system.py:277
-#: ../src/katello/client/core/system.py:312
-#: ../src/katello/client/core/repo.py:37
-msgid "Finished"
-msgstr "완료됨 "
-
-#: ../src/katello/client/core/system.py:278
-#: ../src/katello/client/core/system.py:284
-#: ../src/katello/client/core/system.py:313
-msgid "Status"
-msgstr "상태"
-
-#: ../src/katello/client/core/system.py:279
-#: ../src/katello/client/core/system.py:314
-msgid "Result"
-msgstr "결과 "
-
-#: ../src/katello/client/core/system.py:281
-msgid "Task id"
-msgstr "작업 ID "
-
-#: ../src/katello/client/core/system.py:292
-msgid "display status of remote task"
-msgstr "원격 작업 상태 표시 "
-
-#: ../src/katello/client/core/system.py:296
-msgid "UUID of the task"
-msgstr "작업의 UUID "
-
-#: ../src/katello/client/core/system.py:304
-msgid "Remote task"
-msgstr "원격 작업 "
-
-#: ../src/katello/client/core/system.py:323
-msgid "display a the hardware facts of a system"
-msgstr "시스템의 하드웨어 정보 표시 "
-
-#: ../src/katello/client/core/system.py:344
-#, python-format
-msgid "System Facts For System [ %s ] in Org [ %s ]"
-msgstr "조직 [ %s ]에 있는 시스템 [ %s ]의 시스템 정보 "
-
-#: ../src/katello/client/core/system.py:347
-#, python-format
-msgid "System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]"
-msgstr "조직 [ %s ]에 있는 환경 [ %s ]의 시스템 [ %s ]에 대한 시스템 정보 "
-
-#: ../src/katello/client/core/system.py:368
-msgid "register a system"
-msgstr "시스템 등록 "
-
-#: ../src/katello/client/core/system.py:378
-msgid ""
-"activation key, more keys are separated with comma e.g. "
-"--activationkey=key1,key2"
-msgstr "활성화 키, 여러 키는 콤마로 구분함. 예: --activationkey=key1,key2"
-
-#: ../src/katello/client/core/system.py:386
-#, python-format
-msgid "Option %s can not be specified with %s"
-msgstr "옵션 %s은 %s로 지정할 수 없음 "
-
-#: ../src/katello/client/core/system.py:404
-#, python-format
-msgid "Successfully registered system [ %s ]"
-msgstr "시스템 [ %s ]을 성공적으로 등록함 "
-
-#: ../src/katello/client/core/system.py:406
-#, python-format
-msgid "Could not register system [ %s ]"
-msgstr "시스템 [ %s ]을 등록할 수 없음 "
-
-#: ../src/katello/client/core/system.py:411
-msgid "unregister a system"
-msgstr "시스템 등록 해제 "
-
-#: ../src/katello/client/core/system.py:428
-#: ../src/katello/client/core/system.py:461
-#: ../src/katello/client/core/system.py:493
-#: ../src/katello/client/core/system.py:581
-#, python-format
-msgid "Could not find System [ %s ] in Org [ %s ]"
-msgstr "조직 [ %s ]에서 시스템 [ %s ]을 찾을 수 없음 "
-
-#: ../src/katello/client/core/system.py:432
-#, python-format
-msgid "Successfully unregistered System [ %s ]"
-msgstr "시스템 [ %s ]을 성공적으로 등록 해제함 "
-
-#: ../src/katello/client/core/system.py:437
-msgid "subscribe a system to certificate"
-msgstr "시스템을 인증서에 등록 "
-
-#: ../src/katello/client/core/system.py:445
-msgid "certificate serial to unsubscribe (required)"
-msgstr "등록 해제를 위한 인증서 일련 변호 (필수 사항) "
-
-#: ../src/katello/client/core/system.py:447
-msgid "quantity (default: 1)"
-msgstr "수량 (디폴트: 1) "
-
-#: ../src/katello/client/core/system.py:465
-#, python-format
-msgid "Successfully subscribed System [ %s ]"
-msgstr "시스템 [ %s ]을 성공적으로 등록함 "
-
-#: ../src/katello/client/core/system.py:470
-msgid "list subscriptions for a system"
-msgstr "시스템의 서브스크립션 목록 보기 "
-
-#: ../src/katello/client/core/system.py:479
-msgid "show available subscriptions"
-msgstr "사용 가능한 서브스크립션 보기 "
-
-#: ../src/katello/client/core/system.py:501
-#, python-format
-msgid "No Subscriptions found for System [ %s ] in Org [ %s ]"
-msgstr "조직 [ %s ]에서 시스템 [ %s ]에 대한 서브스크립션을 찾을 수 없음 "
-
-#: ../src/katello/client/core/system.py:513
-#, python-format
-msgid "Current Subscriptions for System [ %s ]"
-msgstr "시스템 [ %s ]의 현재 서브스크립션 "
-
-#: ../src/katello/client/core/system.py:515
-msgid "Serial Id"
-msgstr "시리얼 ID "
-
-#: ../src/katello/client/core/system.py:522
-#: ../src/katello/client/core/system.py:547
-msgid "Provided products"
-msgstr "제공되는 제품 "
-
-#: ../src/katello/client/core/system.py:529
-#, python-format
-msgid "No Pools found for System [ %s ] in Org [ %s ]"
-msgstr "조직 [ %s ]에서 시스템 [ %s ]에 대한 풀을 찾을 수 없음 "
-
-#: ../src/katello/client/core/system.py:539
-#, python-format
-msgid "Available Subscriptions for System [ %s ]"
-msgstr "시스템 [ %s ]의 사용 가능한 서브스크립션 "
-
-#: ../src/katello/client/core/system.py:554
-msgid "unsubscribe a system from certificate"
-msgstr "인증서에서 시스템을 등록 해제 "
-
-#: ../src/katello/client/core/system.py:562
-msgid ""
-"entitlement id to unsubscribe from (either entitlement or serial or all is "
-"required)"
-msgstr "등록 해제할 인타이틀먼트 ID (인타이틀먼트 또는 시리얼 중 하나 또는 두 가지 모두 필요할 수 있음)"
-
-#: ../src/katello/client/core/system.py:564
-msgid ""
-"serial id of a certificate to unsubscribe from (either entitlement or serial"
-" or all is required)"
-msgstr "등록 해제할 인증서의 시리얼 ID (인타이틀먼트 또는 시리얼 중 하나 또는 두 가지 모두 필요할 수 있음) "
-
-#: ../src/katello/client/core/system.py:566
-msgid ""
-"unsubscribe from all currently subscribed certificates (either entitlement "
-"or serial or all is required)"
-msgstr "현재 등록된 모든 인증서에서 등록 해제 (인타이틀먼트 또는 시리얼 중 하나 또는 두 가지 모두 필요할 수 있음)"
-
-#: ../src/katello/client/core/system.py:590
-#, python-format
-msgid "Successfully unsubscribed System [ %s ]"
-msgstr "시스템 [ %s ]이 성공적으로 등록 해제됨 "
-
-#: ../src/katello/client/core/system.py:596
-msgid "update a system"
-msgstr "시스템 업데이트 "
-
-#: ../src/katello/client/core/system.py:607
-msgid "a new name for the system"
-msgstr "시스템의 새 이름 "
-
-#: ../src/katello/client/core/system.py:609
-msgid "a description of the system"
-msgstr "시스템 설명 "
-
-#: ../src/katello/client/core/system.py:611
-msgid "location of the system"
-msgstr "시스템 위치 "
-
-#: ../src/katello/client/core/system.py:643
-#, python-format
-msgid "Successfully updated system [ %s ]"
-msgstr "시스템 [ %s ]이 성공적으로 업데이트됨 "
-
-#: ../src/katello/client/core/system.py:645
-#, python-format
-msgid "Could not update system [ %s ]"
-msgstr "시스템 [ %s ]을 업데이트할 수 없음 "
-
-#: ../src/katello/client/core/system.py:651
-msgid "systems report"
-msgstr "시스템 보고 "
-
-#: ../src/katello/client/core/system.py:685
-msgid "system specific actions in the katello server"
-msgstr "katello 서버에서 시스템의 특정 동작 "
-
-#: ../src/katello/client/core/shell_command.py:30
-msgid "run the cli as a shell"
-msgstr "쉘로 cli를 실행 "
-
-#: ../src/katello/client/core/package.py:39
-msgid "list information about a package"
-msgstr "패키지에 관한 정보 목록 보기 "
-
-#: ../src/katello/client/core/package.py:44
-msgid "package id, string value (required)"
-msgstr "패키지 ID, 문자열 값 (필수 사항) "
-
-#: ../src/katello/client/core/package.py:46
-#: ../src/katello/client/core/package.py:103
-#: ../src/katello/client/core/repo.py:80
-#: ../src/katello/client/core/distribution.py:44
-#: ../src/katello/client/core/errata.py:45
-#: ../src/katello/client/core/errata.py:147
-msgid "repository id"
-msgstr "리포지터리 id"
-
-#: ../src/katello/client/core/package.py:48
-#: ../src/katello/client/core/package.py:105
-#: ../src/katello/client/core/repo.py:81
-#: ../src/katello/client/core/distribution.py:46
-#: ../src/katello/client/core/errata.py:47
-#: ../src/katello/client/core/errata.py:149
-msgid "repository name"
-msgstr "리포지터리 이름 "
-
-#: ../src/katello/client/core/package.py:50
-#: ../src/katello/client/core/package.py:107
-#: ../src/katello/client/core/repo.py:82
-#: ../src/katello/client/core/distribution.py:48
-#: ../src/katello/client/core/errata.py:49
-#: ../src/katello/client/core/errata.py:151
-msgid "organization name eg: foo.example.com"
-msgstr "조직 이름 예: foo.example.com"
-
-#: ../src/katello/client/core/package.py:52
-#: ../src/katello/client/core/package.py:109
-#: ../src/katello/client/core/repo.py:85
-#: ../src/katello/client/core/repo.py:427
-#: ../src/katello/client/core/distribution.py:50
-#: ../src/katello/client/core/product.py:62
-#: ../src/katello/client/core/product.py:129
-#: ../src/katello/client/core/errata.py:51
-#: ../src/katello/client/core/errata.py:153
-msgid "environment name eg: production (default: Library)"
-msgstr "환경 이름 예: production (디폴트: Library) "
-
-#: ../src/katello/client/core/package.py:54
-#: ../src/katello/client/core/package.py:111
-#: ../src/katello/client/core/repo.py:83
-#: ../src/katello/client/core/repo.py:429
-#: ../src/katello/client/core/distribution.py:52
-#: ../src/katello/client/core/errata.py:53
-#: ../src/katello/client/core/errata.py:155
-msgid "product name eg: fedora-14"
-msgstr "제품 이름 예: fedora-14"
-
-#: ../src/katello/client/core/package.py:92
-msgid "Package Information"
-msgstr "패키지 정보 "
-
-#: ../src/katello/client/core/package.py:99
-msgid "list packages in a repository"
-msgstr "리포지터리에 있는 패키지 목록 보기 "
-
-#: ../src/katello/client/core/package.py:138
-#, python-format
-msgid "Package List For Repo %s"
-msgstr "리포지터리 %s에 대한 패키지 목록 "
-
-#: ../src/katello/client/core/package.py:152
-msgid "package specific actions in the katello server"
-msgstr "katello 서버에서 패키지의 특정 동작 "
-
-#: ../src/katello/client/core/permission.py:55
-msgid "create a permission for a user role"
-msgstr "사용자 역할에 대한 권한 생성 "
-
-#: ../src/katello/client/core/permission.py:59
-#: ../src/katello/client/core/permission.py:126
-msgid "permission name (required)"
-msgstr "권한 이름 (필수 사항) "
-
-#: ../src/katello/client/core/permission.py:60
-msgid "permission description"
-msgstr "권한 설명 "
-
-#: ../src/katello/client/core/permission.py:61
-msgid "organization name"
-msgstr "조직 이름 "
-
-#: ../src/katello/client/core/permission.py:62
-msgid "scope of the permisson (required)"
-msgstr "권한 범위 (필수 사항) "
-
-#: ../src/katello/client/core/permission.py:63
-msgid "verbs for the permission"
-msgstr "권한 동사 "
-
-#: ../src/katello/client/core/permission.py:64
-msgid "tags for the permission"
-msgstr "권한 태그 "
-
-#: ../src/katello/client/core/permission.py:80
-#, python-format
-msgid "Invalid scope [ %s ]"
-msgstr "잘못된 범위 [ %s ]"
-
-#: ../src/katello/client/core/permission.py:87
-#, python-format
-msgid "Could not find tag [ %s ] in scope of [ %s ]"
-msgstr "[ %s ] 범위에서 태그 [ %s ]을 찾을 수 없음 "
-
-#: ../src/katello/client/core/permission.py:113
-#, python-format
-msgid "Successfully created permission [ %s ] for user role [ %s ]"
-msgstr "사용자 역할 [ %s ]의 권한 [ %s ]이 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/permission.py:116
-#, python-format
-msgid "Could not create permission [ %s ]"
-msgstr "권한 [ %s ]을 생성할 수 없음 "
-
-#: ../src/katello/client/core/permission.py:122
-msgid "delete a permission"
-msgstr "권한 삭제 "
-
-#: ../src/katello/client/core/permission.py:144
-#, python-format
-msgid "Successfully deleted permission [ %s ] for role [ %s ]"
-msgstr "역할 [ %s ]의 권한 [ %s ]이 성공적으로 삭제됨 "
-
-#: ../src/katello/client/core/permission.py:150
-msgid "list permissions for a user role"
-msgstr "사용자 역할의 권한 목록 보기 "
-
-#: ../src/katello/client/core/permission.py:188
-msgid "Permission List"
-msgstr "권한 목록 "
-
-#: ../src/katello/client/core/permission.py:195
-msgid "list available scopes, verbs and tags that can be set in a permission"
-msgstr "권한에 설정할 수 있는 사용 가능한 범위, 동사, 태그 목록 보기 "
-
-#: ../src/katello/client/core/permission.py:198
-msgid ""
-"organization name eg: foo.example.com,\n"
-"lists organization specific verbs"
-msgstr ""
-"조직 이름 예: foo.example.com, \n"
-"조직의 특정 동사 목록 보기 "
-
-#: ../src/katello/client/core/permission.py:199
-msgid "filter listed results by scope"
-msgstr "범위에 따라 나열된 결과를 필터링하기 "
-
-#: ../src/katello/client/core/permission.py:217
-#, python-format
-msgid "Available verbs and tags for permission scope %s"
-msgstr "권한 범위 %s의 사용 가능한 동사 및 태그 "
-
-#: ../src/katello/client/core/permission.py:219
-msgid "Available verbs"
-msgstr "사용 가능한 동사 "
-
-#: ../src/katello/client/core/permission.py:234
-msgid "None"
-msgstr "없음 "
-
-#: ../src/katello/client/core/permission.py:272
-msgid "permission pecific actions in the katello server"
-msgstr "katello 서버에서 권한의 특정 동작 "
-
-#: ../src/katello/client/core/activation_key.py:47
-msgid "list all activation keys"
-msgstr "모든 활성키 목록 보기 "
-
-#: ../src/katello/client/core/activation_key.py:53
-#: ../src/katello/client/core/template.py:60
-#: ../src/katello/client/core/template.py:100
-msgid "environment name eg: dev (default: Library)"
-msgstr "환경 이름 예: dev (디폴트: Library)"
-
-#: ../src/katello/client/core/activation_key.py:66
-#, python-format
-msgid "No keys found in organization [ %s ]"
-msgstr "조직 [ %s ]에서 키를 찾을 수 없음 "
-
-#: ../src/katello/client/core/activation_key.py:68
-#, python-format
-msgid "No keys found in organization [ %s ] environment [ %s ]"
-msgstr "조직 [ %s ] 환경 [ %s ]에서 키를 찾을 수 없음 "
-
-#: ../src/katello/client/core/activation_key.py:78
-msgid "Activation Key List"
-msgstr "활성키 목록"
-
-#: ../src/katello/client/core/activation_key.py:96
-msgid "show information about an activation key"
-msgstr "활성키에 대한 정보 표시"
-
-#: ../src/katello/client/core/activation_key.py:100
-#: ../src/katello/client/core/activation_key.py:140
-#: ../src/katello/client/core/activation_key.py:187
-#: ../src/katello/client/core/activation_key.py:257
-#: ../src/katello/client/core/gpg_key.py:91
-#: ../src/katello/client/core/gpg_key.py:128
-#: ../src/katello/client/core/gpg_key.py:165
-#: ../src/katello/client/core/gpg_key.py:212
-msgid "activation key name (required)"
-msgstr "활성키 이름 (필수 사항) "
-
-#: ../src/katello/client/core/activation_key.py:117
-#, python-format
-msgid "Could not find activation key [ %s ]"
-msgstr "활성키 [ %s ]를 찾을 수 없음 "
-
-#: ../src/katello/client/core/activation_key.py:129
-msgid "Activation Key Info"
-msgstr "활성키 정보 "
-
-#: ../src/katello/client/core/activation_key.py:136
-msgid "create an activation key"
-msgstr "활성키 생성 "
-
-#: ../src/katello/client/core/activation_key.py:144
-msgid "environment name eg: dev (required)"
-msgstr "환경 이름 예: dev (필수 사항) "
-
-#: ../src/katello/client/core/activation_key.py:146
-msgid "activation key description"
-msgstr "활성키 설명"
-
-#: ../src/katello/client/core/activation_key.py:148
-msgid "template name eg: servers"
-msgstr "템플릿 이름 예: servers "
-
-#: ../src/katello/client/core/activation_key.py:168
-#: ../src/katello/client/core/activation_key.py:235
-#, python-format
-msgid "Could not find template [ %s ]"
-msgstr "템플릿 [ %s ]을 찾을 수 없음 "
-
-#: ../src/katello/client/core/activation_key.py:173
-#, python-format
-msgid "Successfully created activation key [ %s ]"
-msgstr "활성키 [ %s ]가 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/activation_key.py:176
-#, python-format
-msgid "Could not create activation key [ %s ]"
-msgstr "활성키 [ %s ]를 생성할 수 없음 "
-
-#: ../src/katello/client/core/activation_key.py:183
-#: ../src/katello/client/core/gpg_key.py:161
-msgid "update an activation key"
-msgstr "활성키 업데이트 "
-
-#: ../src/katello/client/core/activation_key.py:191
-msgid "new environment name eg: dev"
-msgstr "새 환경 이름 예: dev"
-
-#: ../src/katello/client/core/activation_key.py:193
-#: ../src/katello/client/core/template.py:333
-#: ../src/katello/client/core/gpg_key.py:169
-msgid "new template name"
-msgstr "새 템플릿 이름 "
-
-#: ../src/katello/client/core/activation_key.py:195
-msgid "new description"
-msgstr "새 설명 "
-
-#: ../src/katello/client/core/activation_key.py:197
-msgid "new template name eg: servers"
-msgstr "새 템플릿 이름 예: servers"
-
-#: ../src/katello/client/core/activation_key.py:200
-msgid "add a pool to the activation key"
-msgstr "활성키에 풀 추가 "
-
-#: ../src/katello/client/core/activation_key.py:202
-msgid "remove a pool from the activation key"
-msgstr "활성키에서 풀 제거 "
-
-#: ../src/katello/client/core/activation_key.py:245
-#, python-format
-msgid "Successfully updated activation key [ %s ]"
-msgstr "활성키 [ %s ]가 성공적으로 업데이트됨"
-
-#: ../src/katello/client/core/activation_key.py:253
-msgid "delete an activation key"
-msgstr "활성키 삭제 "
-
-#: ../src/katello/client/core/activation_key.py:277
-#, python-format
-msgid "Successfully deleted activation key [ %s ]"
-msgstr "활성키 [ %s ]가 성공적으로 삭제됨 "
-
-#: ../src/katello/client/core/activation_key.py:281
-msgid "activation key specific actions in the katello server"
-msgstr "katello 서버에서 활성키의 특정 동작 "
-
-#: ../src/katello/client/core/repo.py:34
-msgid "Waiting"
-msgstr "대기 중 "
-
-#: ../src/katello/client/core/repo.py:35
-msgid "Running"
-msgstr "실행 중 "
-
-#: ../src/katello/client/core/repo.py:36
-msgid "Error"
-msgstr "오류 "
-
-#: ../src/katello/client/core/repo.py:38
-msgid "Cancelled"
-msgstr "취소됨 "
-
-#: ../src/katello/client/core/repo.py:39
-msgid "Canceled"
-msgstr "취소됨 "
-
-#: ../src/katello/client/core/repo.py:40
-msgid "Timed out"
-msgstr "시간 초과됨 "
-
-#: ../src/katello/client/core/repo.py:41
-msgid "Not synced"
-msgstr "동기화되지 않음 "
-
-#: ../src/katello/client/core/repo.py:119
-msgid "create a repository at a specified URL"
-msgstr "지정된 URL에 리포지터리 생성 "
-
-#: ../src/katello/client/core/repo.py:125
-msgid "repository name to assign (required)"
-msgstr "할당할 리포지터리 이름 (필수 사항) "
-
-#: ../src/katello/client/core/repo.py:127
-msgid "url path to the repository (required)"
-msgstr "리포지터리로의 url 경로 (필수 사항) "
-
-#: ../src/katello/client/core/repo.py:129
-#: ../src/katello/client/core/repo.py:174
-#: ../src/katello/client/core/product.py:60
-#: ../src/katello/client/core/product.py:324
-msgid "product name (required)"
-msgstr "제품 이름 (필수 사항) "
-
-#: ../src/katello/client/core/repo.py:131
-#: ../src/katello/client/core/repo.py:347
-msgid ""
-"GPG key to be assigned to the repository; by default, the product's GPG key "
-"will be used."
-msgstr "리포지터리에 할당된 GPG 키; 디폴트로 제품의 GPG 키가 사용됩니다. "
-
-#: ../src/katello/client/core/repo.py:133
-#: ../src/katello/client/core/repo.py:349
-msgid "Don't assign a GPG key to the repository."
-msgstr "리포지터리에 GPG 키를 할당하지 않습니다. "
-
-#: ../src/katello/client/core/repo.py:153
-#: ../src/katello/client/core/repo.py:261
-#, python-format
-msgid "Successfully created repository [ %s ]"
-msgstr "리포지터리 [ %s ]가 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/repo.py:155
-#, python-format
-msgid "No product [ %s ] found"
-msgstr "제품 [ %s ]을 찾을 수 없음 "
-
-#: ../src/katello/client/core/repo.py:162
-msgid "discovery repositories contained within a URL"
-msgstr "URL에 들어 있는 검색 리포지터리 "
-
-#: ../src/katello/client/core/repo.py:168
-msgid ""
-"repository name prefix to add to all the discovered repositories (required)"
-msgstr "검색된 모든 리포지터리에 추가할 리포지터리 이름 접두사 (필수 사항) "
-
-#: ../src/katello/client/core/repo.py:170
-msgid ""
-"root url to perform discovery of repositories eg: "
-"http://porkchop.devel.redhat.com/ (required)"
-msgstr ""
-"리포지터리 검색을 실행하기 위한 root url 예: http://porkchop.devel.redhat.com/ (필수 사항) "
-
-#: ../src/katello/client/core/repo.py:172
-#: ../src/katello/client/core/product.py:332
-msgid ""
-"assume yes; automatically create candidate repositories for discovered urls "
-"(optional)"
-msgstr "yes라고 가정; 검색된 url에 대해 후보 리포지터리를 자동으로 생성 (옵션) "
-
-#: ../src/katello/client/core/repo.py:190
-#: ../src/katello/client/core/product.py:368
-#, python-format
-msgid "Repository Urls discovered @ [%s]"
-msgstr "검색된 리포지터리 Url @ [% s] "
-
-#: ../src/katello/client/core/repo.py:200
-msgid "Discovering repository urls, this could take some time..."
-msgstr "리포지터리 url을 검색 중입니다. 이는 시간이 다소 소요될 수 있습니다. "
-
-#: ../src/katello/client/core/repo.py:204
-#, python-format
-msgid "Error: %s"
-msgstr "오류: %s"
-
-#: ../src/katello/client/core/repo.py:224
-msgid ""
-"\n"
-"Select urls for which candidate repos should be created; use `y` to confirm (h for help):"
-msgstr "후보 리포지터리가 생성되어야 하는 url을 선택합니다; `y`를 사용하여 확인합니다 (도움말의 경우 h 사용): "
-
-#: ../src/katello/client/core/repo.py:234
-msgid "Operation aborted upon user request."
-msgstr "사용자 요청에 따라 작업을 중지했습니다. "
-
-#: ../src/katello/client/core/repo.py:283
-msgid "status information about a repository"
-msgstr "리포지터리에 대한 상태 정보 "
-
-#: ../src/katello/client/core/repo.py:308
-msgid "Repository Status"
-msgstr "리포지터리 상태 "
-
-#: ../src/katello/client/core/repo.py:315
-msgid "information about a repository"
-msgstr "리포지터리에 대한 정보 "
-
-#: ../src/katello/client/core/repo.py:331
-msgid "Progress"
-msgstr "진행 상태 "
-
-#: ../src/katello/client/core/repo.py:332
-#: ../src/katello/client/core/product.py:148
-msgid "GPG key"
-msgstr "GPG 키  "
-
-#: ../src/katello/client/core/repo.py:334
-#, python-format
-msgid "Information About Repo %s"
-msgstr "리포지터리 %s에 대한 정보 "
-
-#: ../src/katello/client/core/repo.py:341
-msgid "updates repository attributes"
-msgstr "리포지터리 속성 업데이트 "
-
-#: ../src/katello/client/core/repo.py:357
-#, python-format
-msgid "Successfully updated repository [ %s ]"
-msgstr "리포지터리 [ %s ]가 성공적으로 업데이트됨 "
-
-#: ../src/katello/client/core/repo.py:363
-msgid "synchronize a repository"
-msgstr "리포지터리 동기화 "
-
-#: ../src/katello/client/core/repo.py:373
-#, python-format
-msgid "Repo [ %s ] synced"
-msgstr "리포지터리 [ %s ]가 동기화됨 "
-
-#: ../src/katello/client/core/repo.py:376
-#, python-format
-msgid "Repo [ %s ] synchronization cancelled"
-msgstr "리포지터리 [ %s ] 동기화가 취소됨 "
-
-#: ../src/katello/client/core/repo.py:379
-#, python-format
-msgid "Repo [ %s ] failed to sync: %s"
-msgstr "리포지터리 [ %s ] 동기화 실패: %s"
-
-#: ../src/katello/client/core/repo.py:385
-msgid "cancel currently running synchronization of a repository"
-msgstr "현재 실행되고 있는 리포지터리 동기화가 취소됨 "
-
-#: ../src/katello/client/core/repo.py:400
-msgid "enable a repository"
-msgstr "리포지터리 활성화 "
-
-#: ../src/katello/client/core/repo.py:402
-msgid "disable a repository"
-msgstr "리포지터리 비활성화 "
-
-#: ../src/katello/client/core/repo.py:421
-msgid "list repos within an organization"
-msgstr "조직의 리포지터리 목록 보기 "
-
-#: ../src/katello/client/core/repo.py:425
-msgid "organization name eg: ACME_Corporation (required)"
-msgstr "조직 이름 예: ACME_Corporation (필수 사항) "
-
-#: ../src/katello/client/core/repo.py:431
-msgid "list also disabled repositories"
-msgstr "비활성화된 리포지터리 목록 보기 "
-
-#: ../src/katello/client/core/repo.py:450
-#, python-format
-msgid "Repo List For Org %s Environment %s Product %s"
-msgstr "조직 %s 환경 %s 제품 %s에 대한 리포지터리 목록 "
-
-#: ../src/katello/client/core/repo.py:456
-#, python-format
-msgid "Repo List for Product %s in Org %s "
-msgstr "조직 %s에 있는 제품 %s에 대한 리포지터리 목록 "
-
-#: ../src/katello/client/core/repo.py:464
-#, python-format
-msgid "Repo List For Org %s Environment %s"
-msgstr "조직 %s 환경 %s에 대한 리포지터리 목록 "
-
-#: ../src/katello/client/core/repo.py:473
-msgid "delete a repository"
-msgstr "리포지터리 삭제 "
-
-#: ../src/katello/client/core/repo.py:486
-msgid "list filters of a repository"
-msgstr "리포지터리 필터 목록 보기 "
-
-#: ../src/katello/client/core/repo.py:491
-msgid "prints also filters assigned to repository's product."
-msgstr "리포지터리의 제품에 할당된 필터 인쇄 "
-
-#: ../src/katello/client/core/repo.py:501
-msgid "Repository Filters"
-msgstr "리포지터리 필터 "
-
-#: ../src/katello/client/core/repo.py:515
-msgid "add a filter to a repository"
-msgstr "리포지터리에 필터 추가 "
-
-#: ../src/katello/client/core/repo.py:517
-msgid "remove a filter from a repository"
-msgstr "리포지터리에서 필터 제거 "
-
-#: ../src/katello/client/core/repo.py:548
-#, python-format
-msgid "Added filter [ %s ] to repository [ %s ]"
-msgstr "리포지터리 [ %s ]에 필터 [ %s ]이(가) 추가됨 "
-
-#: ../src/katello/client/core/repo.py:551
-#, python-format
-msgid "Removed filter [ %s ] to repository [ %s ]"
-msgstr "리포지터리 [ %s ]에 필터 [ %s ]이(가) 제거됨 "
-
-#: ../src/katello/client/core/repo.py:562
-#: ../src/katello/client/core/distribution.py:126
-msgid "repo specific actions in the katello server"
-msgstr "katello 서버에서 리포지터리의 특정 동작 "
-
-#: ../src/katello/client/core/distribution.py:40
-msgid "list distributions in a repository"
-msgstr "리포지터리에 있는 배포 버전 목록 보기 "
-
-#: ../src/katello/client/core/distribution.py:78
-#, python-format
-msgid "Distribution List For Repo %s"
-msgstr "리포지터리 %s에 대한 배포 목록 "
-
-#: ../src/katello/client/core/distribution.py:90
-msgid "list information about a distribution"
-msgstr "배포 버전에 관한 정보 목록 보기 "
-
-#: ../src/katello/client/core/distribution.py:95
-msgid "repository id (required)"
-msgstr "리포지터리 id (필수 사항) "
-
-#: ../src/katello/client/core/distribution.py:97
-msgid "distribution id eg: ks-rh-noarch (required)"
-msgstr "배포 ID 예: ks-rh-noarch (필수 사항) "
-
-#: ../src/katello/client/core/distribution.py:116
-msgid "Distribution Information"
-msgstr "배포 정보 "
-
-#: ../src/katello/client/core/packagegroup.py:20
-msgid "list available package groups"
-msgstr "사용 가능한 패키지 그룹 목록 보기 "
-
-#: ../src/katello/client/core/packagegroup.py:24
-#: ../src/katello/client/core/packagegroup.py:53
-#: ../src/katello/client/core/packagegroup.py:87
-#: ../src/katello/client/core/packagegroup.py:115
-msgid "repository id, string value (required)"
-msgstr "리포지터리 id, 문자열 값 (필수 사항) "
-
-#: ../src/katello/client/core/packagegroup.py:34
-#, python-format
-msgid "No package groups found in repo [%s]"
-msgstr "리포지터리 [%s]에서 검색된 패키지 그룹이 없음 "
-
-#: ../src/katello/client/core/packagegroup.py:35
-#: ../src/katello/client/core/packagegroup.py:69
-msgid "Package Group Information"
-msgstr "패키지 그룹 정보 "
-
-#: ../src/katello/client/core/packagegroup.py:49
-#: ../src/katello/client/core/packagegroup.py:111
-msgid "lookup information for a package group"
-msgstr "패키지 그룹에 대한 정보 검색 "
-
-#: ../src/katello/client/core/packagegroup.py:55
-msgid "package group id, string value (required)"
-msgstr "패키지 그룹 ID, 문자열 값 (필수 사항) "
-
-#: ../src/katello/client/core/packagegroup.py:67
-#, python-format
-msgid "Package group [%s] not found in repo [%s]"
-msgstr "패키지 그룹 [%s]을 리포지터리 [%s]에서 찾을 수 없음  "
-
-#: ../src/katello/client/core/packagegroup.py:83
-msgid "list available package groups categories"
-msgstr "사용 가능한 패키지 그룹 카테고리 목록 보기 "
-
-#: ../src/katello/client/core/packagegroup.py:97
-#, python-format
-msgid "No package group categories found in repo [%s]"
-msgstr "리포지터리 [%s]에 패키지 그룹 카테고리를 찾을 수 없음 "
-
-#: ../src/katello/client/core/packagegroup.py:98
-msgid "Package Group Cateogory Information"
-msgstr "패키지 그룹 카테고리 정보 "
-
-#: ../src/katello/client/core/packagegroup.py:117
-msgid "package group category id, string value (required)"
-msgstr "패키지 그룹 카테고리 ID, 문자열 값 (필수 사항) "
-
-#: ../src/katello/client/core/packagegroup.py:129
-#, python-format
-msgid "Package group category [%s] not found in repo [%s]"
-msgstr "패키지 그룹 카테고리 [%s]를 리포지터리 [%s]에서 찾을 수 없음 "
-
-#: ../src/katello/client/core/packagegroup.py:131
-msgid "Package Group Category Information"
-msgstr "패키지 그룹 카테고리 정보 "
-
-#: ../src/katello/client/core/packagegroup.py:141
-msgid "package group specific actions in the katello server"
-msgstr "katello 서버에서 패키지 그룹의 특정 동작 "
-
-#: ../src/katello/client/core/product.py:74
-msgid "set a synchronization plan"
-msgstr "동기화 계획 설정 "
-
-#: ../src/katello/client/core/product.py:79
-msgid "synchronization plan name (required)"
-msgstr "동기화 계획 이름 (필수 사항) "
-
-#: ../src/katello/client/core/product.py:106
-msgid "unset a synchronization plan"
-msgstr "동기화 계획 설정 해제 "
-
-#: ../src/katello/client/core/product.py:123
-msgid "list known products"
-msgstr "알려진 제품 목록 보기 "
-
-#: ../src/katello/client/core/product.py:131
-msgid "provider name, lists provider's product in the Library"
-msgstr "공급자 이름, Library에 있는 공급자의 제품 목록 보기 "
-
-#: ../src/katello/client/core/product.py:155
-#, python-format
-msgid "Product List For Provider %s"
-msgstr "공급자 %s에 대한 제품 목록 "
-
-#: ../src/katello/client/core/product.py:163
-#, python-format
-msgid "Product List For Organization %s, Environment '%s'"
-msgstr "조직 %s, 환경 %s에 대한 제품 목록 "
-
-#: ../src/katello/client/core/product.py:173
-msgid "synchronize a product"
-msgstr "제품 동기화 "
-
-#: ../src/katello/client/core/product.py:189
-#, python-format
-msgid "Product [ %s ] failed to sync: %s"
-msgstr "제품 [ %s ] 동기화 실패: %s"
-
-#: ../src/katello/client/core/product.py:192
-#, python-format
-msgid "Product [ %s ] synchronization cancelled"
-msgstr "제품 [ %s ] 동기화가 취소됨 "
-
-#: ../src/katello/client/core/product.py:195
-#, python-format
-msgid "Product [ %s ] synchronized"
-msgstr "제품 [ %s ]이 동기화됨 "
-
-#: ../src/katello/client/core/product.py:201
-#: ../src/katello/client/core/provider.py:245
-msgid "cancel currently running synchronization"
-msgstr "현재 실행되고 있는 동기화가 취소됨 "
-
-#: ../src/katello/client/core/product.py:220
-msgid "status of product's synchronization"
-msgstr "제품의 동기화 상태 "
-
-#: ../src/katello/client/core/product.py:251
-msgid "Product Status"
-msgstr "제품 상태 "
-
-#: ../src/katello/client/core/product.py:259
-msgid ""
-"promote a product to an environment\n"
-"(creates a temporary changeset with the product and promotes it)"
-msgstr ""
-"제품 환경 승격 \n"
-"(제품에 임시적인 변경 집합을 생성하고 이를 승격함) "
-
-#: ../src/katello/client/core/product.py:287
-msgid "Promoting the product, please wait... "
-msgstr "제품 승격 중, 잠시만 기다리십시오..."
-
-#: ../src/katello/client/core/product.py:290
-#, python-format
-msgid "Product [ %s ] promoted to environment [ %s ] "
-msgstr "제품 [ %s ]이 환경 [ %s ]으로 승격됨 "
-
-#: ../src/katello/client/core/product.py:293
-#, python-format
-msgid "Product [ %s ] promotion failed: %s"
-msgstr "제품 [ %s ] 승격 실패: %s"
-
-#: ../src/katello/client/core/product.py:316
-msgid "create new product to a custom provider"
-msgstr "사용자 지정 공급자에 새 제품 생성 "
-
-#: ../src/katello/client/core/product.py:322
-#: ../src/katello/client/core/provider.py:45
-#: ../src/katello/client/core/provider.py:129
-msgid "provider name (required)"
-msgstr "공급자 이름 (필수 사항) "
-
-#: ../src/katello/client/core/product.py:326
-msgid "product description"
-msgstr "제품 설명 "
-
-#: ../src/katello/client/core/product.py:328
-#: ../src/katello/client/core/provider.py:133
-msgid ""
-"repository url eg: "
-"http://download.fedoraproject.org/pub/fedora/linux/releases/"
-msgstr ""
-"리포지터리 url 예: http://download.fedoraproject.org/pub/fedora/linux/releases/"
-
-#: ../src/katello/client/core/product.py:330
-msgid "skip repository discovery"
-msgstr "리포지터리 검색 생략 "
-
-#: ../src/katello/client/core/product.py:334
-msgid ""
-"assign a gpg key; this key will be used for every new repository unless "
-"gpgkey or nogpgkey is specified for the repo"
-msgstr ""
-"gpg 키 할당; 리포지터리에 gpgkey 또는 nogpgkey가 지정되어 있지 않을 경우 이 키는 모든 새로운 리포지터리에 사용됩니다 "
-
-#: ../src/katello/client/core/product.py:361
-#, python-format
-msgid "Successfully created product [ %s ]"
-msgstr "제품 [ %s ]이 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/product.py:377
-msgid "update a product's attributes"
-msgstr "제품의 속성 업데이트 "
-
-#: ../src/katello/client/core/product.py:382
-msgid "change description of the product"
-msgstr "제품 설명 변경 "
-
-#: ../src/katello/client/core/product.py:384
-#: ../src/katello/client/core/product.py:386
-msgid "assign a gpgkey to the product"
-msgstr "제품에 gpgkey 할당 "
-
-#: ../src/katello/client/core/product.py:388
-msgid "assign the gpgpkey also to the product's repositories"
-msgstr "제품의 리포지터리에 gpgkey 할당 "
-
-#: ../src/katello/client/core/product.py:407
-#, python-format
-msgid "Successfully updated product [ %s ]"
-msgstr "제품 [ %s ]이 성공적으로 업데이트됨 "
-
-#: ../src/katello/client/core/product.py:413
-msgid "delete a product and its content"
-msgstr "제품 및 컨텐츠 삭제 "
-
-#: ../src/katello/client/core/product.py:430
-msgid "list filters of a product"
-msgstr "제품의 필터 목록 보기 "
-
-#: ../src/katello/client/core/product.py:443
-msgid "Product Filters"
-msgstr "제품 필터 "
-
-#: ../src/katello/client/core/product.py:458
-msgid "add a filter to a product"
-msgstr "제품에 필터 추가 "
-
-#: ../src/katello/client/core/product.py:460
-msgid "remove a filter from a product"
-msgstr "제품에서 필터 제거 "
-
-#: ../src/katello/client/core/product.py:495
-#, python-format
-msgid "Added filter [ %s ] to product [ %s ]"
-msgstr "제품 [ %s ]에 필터 [ %s ]이(가) 추가됨 "
-
-#: ../src/katello/client/core/product.py:498
-#, python-format
-msgid "Removed filter [ %s ] to product [ %s ]"
-msgstr "제품 [ %s ]에 필터 [ %s ]이(가) 제거됨 "
-
-#: ../src/katello/client/core/product.py:509
-msgid "product specific actions in the katello server"
-msgstr "katello 서버에서 제품의 특정 동작 "
-
-#: ../src/katello/client/core/base.py:94
-#: ../src/katello/client/core/base.py:203
-msgid "no description available"
-msgstr "사용 가능한 설명이 없음 "
-
-#: ../src/katello/client/core/base.py:122
-msgid "no action given: please see --help"
-msgstr "동작이 주어지지 않음: --help 참조 "
-
-#: ../src/katello/client/core/base.py:129
-msgid "invalid action: please see --help"
-msgstr "잘못된 동작: --help 참조 "
-
-#: ../src/katello/client/core/base.py:176
-msgid "grep friendly output"
-msgstr "grep 출력 결과 "
-
-#: ../src/katello/client/core/base.py:179
-msgid "verbose, more structured output"
-msgstr "상세하고 보다 구조화된 출력 결과 "
-
-#: ../src/katello/client/core/base.py:182
-msgid "grep friendly output column delimiter"
-msgstr "grep 출력 열 구분 기호 "
-
-#: ../src/katello/client/core/base.py:247
-#, python-format
-msgid "Option %s is required; please see --help"
-msgstr "옵션 %s이 필요함; --help 참조 "
-
-#: ../src/katello/client/core/base.py:268
-#, python-format
-msgid "One of %s is required; please see --help"
-msgstr "%s 중 하나가 필요함; --help 참조 "
-
-#: ../src/katello/client/core/base.py:348
-msgid "error: operation failed"
-msgstr "오류: 작업 실패함 "
-
-#: ../src/katello/client/core/base.py:365
-msgid ""
-"ERROR: The server hostname you have configured in /etc/katello/client.conf "
-"does not match the"
-msgstr "오류: /etc/katello/client.conf에서 설정한 서버 호스트 이름이 다음과 일치하지 않음 "
-
-#: ../src/katello/client/core/base.py:366
-msgid "hostname returned from the katello server you are connecting to.  "
-msgstr "연결하려는 katello 서버에서 반환된 호스트 이름 "
-
-#: ../src/katello/client/core/base.py:368
-#, python-format
-msgid "You have: [%s] configured but got: [%s] from the server."
-msgstr "[%s]이 설정되어 있으나 서버에서 [%s]을 갖고 있음. "
-
-#: ../src/katello/client/core/base.py:370
-msgid "Please correct the host in the /etc/katello/client.conf file"
-msgstr "/etc/katello/client.conf 파일에 있는 호스트를 올바르게 수정하십시오. "
-
-#: ../src/katello/client/core/base.py:379
-msgid "Invalid credentials or unable to authenticate"
-msgstr "잘못된 인증서 또는 인증할 수 없음 "
-
-#: ../src/katello/client/core/base.py:414
-#, python-format
-msgid "option %s: invalid boolean value: %r"
-msgstr "옵션 %s: 잘못된 부울 값: %r"
-
-#: ../src/katello/client/core/provider.py:58
-msgid "list all known providers"
-msgstr "모든 알려진 공급자 목록 보기 "
-
-#: ../src/katello/client/core/provider.py:80
-msgid "Provider List"
-msgstr "공급자 목록 "
-
-#: ../src/katello/client/core/provider.py:88
-msgid "list information about a provider"
-msgstr "공급자에 대한 정보 목록 보기 "
-
-#: ../src/katello/client/core/provider.py:103
-msgid "Provider Information"
-msgstr "공급자 정보 "
-
-#: ../src/katello/client/core/provider.py:116
-msgid "create a provider"
-msgstr "공급자 생성 "
-
-#: ../src/katello/client/core/provider.py:118
-msgid "update a provider"
-msgstr "공급자 업데이트 "
-
-#: ../src/katello/client/core/provider.py:131
-#: ../src/katello/client/core/template.py:168
-msgid "provider description"
-msgstr "공급자 설명 "
-
-#: ../src/katello/client/core/provider.py:139
-msgid "provider name"
-msgstr "공급자 이름 "
-
-#. pylint: disable=E1101
-#: ../src/katello/client/core/provider.py:151
-msgid "Option --url has to start with http:// or https://"
-msgstr "옵션 --url은 http:// 또는 https://로 시작해야 합니다. "
-
-#. pylint: disable=E1101
-#: ../src/katello/client/core/provider.py:153
-msgid "Option --url is not in a valid format"
-msgstr "옵션 -url이 유효한 형식으로 되어 있지 않습니다 "
-
-#: ../src/katello/client/core/provider.py:159
-#, python-format
-msgid "Successfully created provider [ %s ]"
-msgstr "공급자 [ %s ]가 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/provider.py:162
-#, python-format
-msgid "Could not create provider [ %s ]"
-msgstr "공급자 [ %s ]를 생성할 수 없음 "
-
-#: ../src/katello/client/core/provider.py:171
-#, python-format
-msgid "Successfully updated provider [ %s ]"
-msgstr "공급자 [ %s ]가 성공적으로 업데이트됨 "
-
-#: ../src/katello/client/core/provider.py:198
-msgid "delete a provider"
-msgstr "공급자 삭제 "
-
-#: ../src/katello/client/core/provider.py:216
-msgid "synchronize a provider"
-msgstr "공급자 동기화 "
-
-#: ../src/katello/client/core/provider.py:233
-#, python-format
-msgid "Provider [ %s ] failed to sync: %s"
-msgstr "공급자 [ %s ] 동기화 실패: %s"
-
-#: ../src/katello/client/core/provider.py:236
-#, python-format
-msgid "Provider [ %s ] synchronization cancelled"
-msgstr "공급자 [ %s ] 동기화가 취소됨 "
-
-#: ../src/katello/client/core/provider.py:239
-#, python-format
-msgid "Provider [ %s ] synchronized"
-msgstr "공급자 [ %s ]가 동기화됨 "
-
-#: ../src/katello/client/core/provider.py:264
-msgid "status of provider's synchronization"
-msgstr "공급자의 동기화 상태 "
-
-#: ../src/katello/client/core/provider.py:293
-msgid "Provider Status"
-msgstr "공급자 상태 "
-
-#: ../src/katello/client/core/provider.py:301
-msgid "import a manifest file"
-msgstr "매니페스트 파일 가져오기 "
-
-#: ../src/katello/client/core/provider.py:307
-msgid "path to the manifest file (required)"
-msgstr "매니페스트 파일로의 경로 (필수 사항) "
-
-#: ../src/katello/client/core/provider.py:309
-msgid "force reimporting the manifest"
-msgstr "매니페스트를 강제로 다시 가져오기 "
-
-#: ../src/katello/client/core/provider.py:326
-#: ../src/katello/client/core/template.py:188
-#, python-format
-msgid "File %s does not exist"
-msgstr "파일 %s이 존재하지 않음 "
-
-#: ../src/katello/client/core/provider.py:331
-msgid "Importing manifest, please wait... "
-msgstr "매니페스트 파일을 가져오는 중, 잠시만 기다리십시오..."
-
-#: ../src/katello/client/core/provider.py:343
-msgid "provider specific actions in the katello server"
-msgstr "katello 서버에서 공급자의 특정 동작 "
-
-#: ../src/katello/client/core/template.py:54
-msgid "list all templates"
-msgstr "모든 템플릿 목록 보기 "
-
-#: ../src/katello/client/core/template.py:58
-msgid "name of organization (required if specifying environment)"
-msgstr "조직 이름 (환경을 지정할 경우 필요) "
-
-#: ../src/katello/client/core/template.py:76
-#, python-format
-msgid "No templates found in environment [ %s ]"
-msgstr "환경 [ %s ]에서 템플릿을 찾을 수 없음 "
-
-#: ../src/katello/client/core/template.py:84
-msgid "Template List"
-msgstr "템플릿 목록 "
-
-#: ../src/katello/client/core/template.py:92
-msgid "list information about a template"
-msgstr "템플릿에 관한 정보 목록 보기 "
-
-#: ../src/katello/client/core/template.py:96
-#: ../src/katello/client/core/template.py:207
-#: ../src/katello/client/core/template.py:260
-#: ../src/katello/client/core/template.py:330
-#: ../src/katello/client/core/template.py:514
-msgid "template name (required)"
-msgstr "템플릿 이름 (필수 사항) "
-
-#: ../src/katello/client/core/template.py:136
-msgid "Template Info"
-msgstr "템플릿 정보 "
-
-#: ../src/katello/client/core/template.py:159
-msgid "create a template file and import data"
-msgstr "템플릿 파일을 생성하고 데이터를 가져옴 "
-
-#: ../src/katello/client/core/template.py:166
-#: ../src/katello/client/core/template.py:213
-msgid "path to the template file (required)"
-msgstr "템플릿 파일로의 경로 (필수 사항) "
-
-#: ../src/katello/client/core/template.py:191
-msgid "Importing template, please wait... "
-msgstr "템플릿을 가져오는 중, 잠시만 기다리십시오..."
-
-#: ../src/katello/client/core/template.py:202
-msgid "export the template into the file"
-msgstr "템플릿을 파일로 내보내기 "
-
-#: ../src/katello/client/core/template.py:211
-msgid "environment name eg: dev"
-msgstr "환경 이름 예: dev"
-
-#: ../src/katello/client/core/template.py:215
-#, python-format
-msgid "format of the export, possible values: %s, default: json"
-msgstr "내보내기 형식, 가능한 값: %s, 디폴트: json"
-
-#: ../src/katello/client/core/template.py:238
-#, python-format
-msgid "Could not create file %s"
-msgstr "파일 %s을(를) 생성할 수 없음 "
-
-#: ../src/katello/client/core/template.py:242
-msgid "Exporting template, please wait... "
-msgstr "템플릿을 내보내는 중, 잠시만 기다리십시오..."
-
-#: ../src/katello/client/core/template.py:245
-#, python-format
-msgid "Template was exported successfully to file %s"
-msgstr "템플릿을 성공적으로 파일 %s로 내보내기함  "
-
-#: ../src/katello/client/core/template.py:255
-msgid "create an empty template file"
-msgstr "빈 템플릿 파일 생성 "
-
-#: ../src/katello/client/core/template.py:262
-#: ../src/katello/client/core/template.py:331
-msgid "name of the parent template"
-msgstr "부모 템플릿 이름 "
-
-#: ../src/katello/client/core/template.py:266
-#: ../src/katello/client/core/template.py:334
-msgid "template description"
-msgstr "템플릿 설명 "
-
-#: ../src/katello/client/core/template.py:289
-#, python-format
-msgid "Successfully created template [ %s ]"
-msgstr "템플릿 [ %s ]을 성공적으로 생성함 "
-
-#: ../src/katello/client/core/template.py:292
-#, python-format
-msgid "Could not create template [ %s ]"
-msgstr "템플릿 [ %s ]을 생성할 수 없음 "
-
-#: ../src/katello/client/core/template.py:301
-msgid "updates name and description of a template"
-msgstr "템플릿 이름 및 설명 업데이트 "
-
-#: ../src/katello/client/core/template.py:315
-#, python-format
-msgid "each %s must be preceeded by %s"
-msgstr "각각의 %s 앞에 %s을 지정해야 함 "
-
-#: ../src/katello/client/core/template.py:336
-#: ../src/katello/client/core/template.py:337
-msgid "name of the product"
-msgstr "제품 이름 "
-
-#: ../src/katello/client/core/template.py:339
-#: ../src/katello/client/core/template.py:340
-msgid "name or nvre of the product (epoch:name-rel.ease-ver.sio.n)"
-msgstr "제품 이름 또는 nvre (epoch:name-rel.ease-ver.sio.n)"
-
-#: ../src/katello/client/core/template.py:343
-#, python-format
-msgid "name of the parameter, %s must follow"
-msgstr "매개 변수 이름, %s이 뒤따라야 함 "
-
-#: ../src/katello/client/core/template.py:344
-msgid "value of the parameter"
-msgstr "매개 변수 값 "
-
-#: ../src/katello/client/core/template.py:345
-msgid "name of the parameter"
-msgstr "매개 변수 이름 "
-
-#: ../src/katello/client/core/template.py:347
-#: ../src/katello/client/core/template.py:348
-msgid "name of the package group"
-msgstr "패키지 그룹 이름 "
-
-#: ../src/katello/client/core/template.py:350
-#: ../src/katello/client/core/template.py:351
-msgid "name of the package group category"
-msgstr "패키지 그룹 카테고리 이름 "
-
-#: ../src/katello/client/core/template.py:353
-#: ../src/katello/client/core/template.py:354
-msgid "distribution id"
-msgstr "배포 ID"
-
-#: ../src/katello/client/core/template.py:357
-msgid "determines product from which the repositories are picked"
-msgstr "선포지터리 선택 대상 제품을 지정 "
-
-#: ../src/katello/client/core/template.py:359
-msgid "repository to be added to the template"
-msgstr "템플릿에 추가될 리포지터리 "
-
-#: ../src/katello/client/core/template.py:361
-msgid "repository to be removed from the template"
-msgstr "템플릿에서 제거될 리포지터리 "
-
-#: ../src/katello/client/core/template.py:372
-#, python-format
-msgid "missing value for parameter '%s'"
-msgstr "매개 변수 '%s'에 대해 누락된 값 "
-
-#: ../src/katello/client/core/template.py:435
-#: ../src/katello/client/core/template.py:436
-msgid "Updating the template, please wait... "
-msgstr "템플릿 업데이트 중, 잠시만 기다리십시오..."
-
-#: ../src/katello/client/core/template.py:437
-#, python-format
-msgid "Successfully updated template [ %s ]"
-msgstr "템플릿 [ %s ]을 성공적으로 업데이트함 "
-
-#: ../src/katello/client/core/template.py:510
-msgid "deletes a template"
-msgstr "템플릿 삭제 "
-
-#: ../src/katello/client/core/template.py:518
-msgid "environment name eg: foo.example.com (default: Library)"
-msgstr "환경 이름 예: foo.example.com (디폴트: Library)"
-
-#: ../src/katello/client/core/template.py:542
-msgid "template specific actions in the katello server"
-msgstr "katello 서버에서 템플릿의 특정 동작 "
-
-#: ../src/katello/client/core/gpg_key.py:39
-msgid "Enter content of the GPG key (finish input with CTRL+D):"
-msgstr "GPG 키 내용을 입력 (CTRL+D로 입력 종료): "
-
-#: ../src/katello/client/core/gpg_key.py:59
-msgid "list all GPG keys"
-msgstr "모든 GPG 키 목록 보기 "
-
-#: ../src/katello/client/core/gpg_key.py:74
-#, python-format
-msgid "No gpg keys found in organization [ %s ]"
-msgstr "조직 [ %s ]에서 gpg 키를 찾을 수 없음 "
-
-#: ../src/katello/client/core/gpg_key.py:80
-msgid "Gpg Key List"
-msgstr "Gpg 키 목록 "
-
-#: ../src/katello/client/core/gpg_key.py:87
-msgid "show information about a gpg key"
-msgstr "gpg 키에 대한 정보 표시 "
-
-#: ../src/katello/client/core/gpg_key.py:103
-#: ../src/katello/client/core/gpg_key.py:193
-#: ../src/katello/client/core/gpg_key.py:225
-#, python-format
-msgid "Could not find gpg key [ %s ]"
-msgstr "gpg 키 [ %s ]를 찾을 수 없음 "
-
-#: ../src/katello/client/core/gpg_key.py:115
-msgid "Repositories"
-msgstr "리포지터리 "
-
-#: ../src/katello/client/core/gpg_key.py:117
-msgid "Gpg Key Info"
-msgstr "Gpg 키 정보 "
-
-#: ../src/katello/client/core/gpg_key.py:124
-msgid "create a gpg key"
-msgstr "gpg 키 생성 "
-
-#: ../src/katello/client/core/gpg_key.py:132
-msgid ""
-"file with public GPG key, if not                                 specified, "
-"standard input will be used"
-msgstr "공개 GPG 키를 갖는 파일을 지정하지 않으면 표준 입력이 사용됩니다 "
-
-#: ../src/katello/client/core/gpg_key.py:151
-#, python-format
-msgid "Successfully created gpg key [ %s ]"
-msgstr "gpg 키 [ %s ]가 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/gpg_key.py:154
-#, python-format
-msgid "Could not create gpg key [ %s ]"
-msgstr "gpg 키 [ %s ]를 생성할 수 없음 "
-
-#: ../src/katello/client/core/gpg_key.py:171
-msgid "file with public GPG key"
-msgstr "공개 GPG 키를 갖는 파일 "
-
-#: ../src/katello/client/core/gpg_key.py:173
-msgid "prompt for new content of the key"
-msgstr "키의 새로운 내용을 입력하라는 프롬프트 "
-
-#: ../src/katello/client/core/gpg_key.py:198
-#, python-format
-msgid "Successfully updated gpg key [ %s ]"
-msgstr "gpg 키 [ %s ]가 성공적으로 업데이트됨 "
-
-#: ../src/katello/client/core/gpg_key.py:201
-#, python-format
-msgid "Could not updated gpg key [ %s ]"
-msgstr "gpg 키 [ %s ]를 업데이트할 수 없음 "
-
-#: ../src/katello/client/core/gpg_key.py:208
-msgid "delete an gpg key"
-msgstr "gpg 키 삭제 "
-
-#: ../src/katello/client/core/gpg_key.py:229
-#, python-format
-msgid "Successfully deleted gpg key [ %s ]"
-msgstr "gpg 키 [ %s ]가 성공적으로 삭제됨 "
-
-#: ../src/katello/client/core/gpg_key.py:233
-msgid "GPG key specific actions in the katello server"
-msgstr "katello 서버에서 GPG 키의 특정 동작 "
-
-#: ../src/katello/client/core/client.py:37
-msgid "save an option to the client config"
-msgstr "클라이언트 config에 옵션을 저장 "
-
-#: ../src/katello/client/core/client.py:41
-msgid ""
-"name of the option to be saved (e.g. org, environment, provider, etc) "
-"(required)"
-msgstr "저장될 옵션 이름 (예: 조직, 환경, 공급자 등) (필수 사항) "
-
-#: ../src/katello/client/core/client.py:43
-msgid "value to be store under specified option (required)"
-msgstr "특정 옵션에 저장될 값 (필수 사항) "
-
-#: ../src/katello/client/core/client.py:71
-msgid "remove an option from the client config"
-msgstr "클라이언트 config에서 옵션을 삭제 "
-
-#: ../src/katello/client/core/client.py:75
-msgid "name of the option to be deleted (required)"
-msgstr "삭제될 옵션 이름 (필수 사항) "
-
-#: ../src/katello/client/core/client.py:95
-msgid "list options saved in the client config"
-msgstr "클라이언트 config에 저장된 옵션 목록 보기 "
-
-#: ../src/katello/client/core/client.py:104
-msgid "Saved Options"
-msgstr "저장된 옵션 "
-
-#: ../src/katello/client/core/client.py:122
-msgid "client specific actions in the katello server"
-msgstr "katello 서버에서 클라이언트의 특정 동작 "
-
-#: ../src/katello/client/core/ping.py:39
-msgid "get the status of the katello server"
-msgstr " katello 서버의 상태 획득 "
-
-#: ../src/katello/client/core/ping.py:58
-msgid "Katello Status"
-msgstr "Katello 상태 "
-
-#: ../src/katello/client/core/ping.py:122
-msgid "Check the status of the server"
-msgstr "서버 상태 확인 "
-
-#: ../src/katello/client/core/sync_plan.py:55
-msgid "list known sync_plans"
-msgstr "알려진 sync_plans 목록 보기 "
-
-#: ../src/katello/client/core/sync_plan.py:76
-msgid "Sync Plan List"
-msgstr "동기화 계획 목록 "
-
-#: ../src/katello/client/core/sync_plan.py:83
-msgid "print info about a sync plan"
-msgstr "동기화 계획에 관한 정보 출력 "
-
-#: ../src/katello/client/core/sync_plan.py:86
-#: ../src/katello/client/core/sync_plan.py:119
-#: ../src/katello/client/core/sync_plan.py:158
-#: ../src/katello/client/core/sync_plan.py:202
-msgid "name of the sync plan (required)"
-msgstr "동기화 계획 이름 (필수 사항) "
-
-#: ../src/katello/client/core/sync_plan.py:108
-msgid "Sync Plan Info"
-msgstr "동기화 계획 정보 "
-
-#: ../src/katello/client/core/sync_plan.py:116
-msgid "create a synchronization plan"
-msgstr "동기화 계획 생성 "
-
-#: ../src/katello/client/core/sync_plan.py:121
-#: ../src/katello/client/core/sync_plan.py:161
-msgid "plan description"
-msgstr "계획 설명 "
-
-#: ../src/katello/client/core/sync_plan.py:123
-#: ../src/katello/client/core/sync_plan.py:163
-#, python-format
-msgid "interval of recurring synchronizations (choices: [%s], default: none)"
-msgstr "동기화 반복 간격 (선택: [%s], 디폴트: 없음)"
-
-#: ../src/katello/client/core/sync_plan.py:125
-msgid "date of first synchronization (required, format: YYYY-MM-DD)"
-msgstr "처음 동기화 날짜 (필수 사항, 형식: YYYY-MM-DD)"
-
-#: ../src/katello/client/core/sync_plan.py:126
-msgid "time of first synchronization (format: HH:MM:SS, default: 00:00:00)"
-msgstr "처음 동기화 시간 (형식: HH:MM:SS, 디폴트: 00:00:00) "
-
-#: ../src/katello/client/core/sync_plan.py:146
-#, python-format
-msgid "Successfully created synchronization plan [ %s ]"
-msgstr "동기화 계획 [ %s ]이 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/sync_plan.py:149
-#, python-format
-msgid "Could not create synchronization plan [ %s ]"
-msgstr "동기화 계획 [ %s ]을 생성할 수 없음 "
-
-#: ../src/katello/client/core/sync_plan.py:155
-msgid "update a sync plan"
-msgstr "동기화 계획 업데이트 "
-
-#: ../src/katello/client/core/sync_plan.py:159
-msgid "new sync plan name"
-msgstr "새 동기화 계획 이름 "
-
-#: ../src/katello/client/core/sync_plan.py:165
-msgid "date of first synchronization (format: YYYY-MM-DD)"
-msgstr "처음 동기화 날짜 (형식: YYYY-MM-DD)"
-
-#: ../src/katello/client/core/sync_plan.py:166
-msgid "time of first synchronization (format: HH:MM:SS)"
-msgstr "처음 동기화 시간 (형식: HH:MM:SS)"
-
-#: ../src/katello/client/core/sync_plan.py:172
-msgid "You have to specify both --date and --time"
-msgstr "--date와 --time 모두를 지정해야 함 "
-
-#: ../src/katello/client/core/sync_plan.py:193
-#, python-format
-msgid "Successfully updated sync plan [ %s ]"
-msgstr "동기화 계획 [ %s ]이 성공적으로 업데이트됨 "
-
-#: ../src/katello/client/core/sync_plan.py:199
-msgid "delete a sync plan"
-msgstr "동기화 계획 삭제 "
-
-#: ../src/katello/client/core/sync_plan.py:218
-#, python-format
-msgid "Successfully deleted sync plan [ %s ]"
-msgstr "동기화 계획 [ %s ]이 성공적으로 삭제됨 "
-
-#: ../src/katello/client/core/sync_plan.py:226
-msgid "synchronization plan specific actions in the katello server"
-msgstr "katello 서버에 있는 동기화 계획의 특정 동작 "
-
-#: ../src/katello/client/core/errata.py:41
-msgid "list all errata for a repo"
-msgstr "리포지터리의 모든 에라타 목록 보기 "
-
-#: ../src/katello/client/core/errata.py:57
-msgid "filter errata by type eg: enhancements"
-msgstr "유형에 따라 에라타 필터링하기 예: 기능 강화 "
-
-#: ../src/katello/client/core/errata.py:59
-msgid "filter errata by severity"
-msgstr "중요도에 따라 에라타 필터링하기 "
-
-#: ../src/katello/client/core/errata.py:101
-msgid "Errata List"
-msgstr "에라타 목록 "
-
-#: ../src/katello/client/core/errata.py:106
-msgid "list errata for a system"
-msgstr "시스템의 에라타 목록 보기 "
-
-#: ../src/katello/client/core/errata.py:134
-#, python-format
-msgid "Errata for system %s in organization %s"
-msgstr "조직 %s에서 시스템 %s에 대한 에라타 "
-
-#: ../src/katello/client/core/errata.py:141
-msgid "information about an errata"
-msgstr "에라타에 관한 정보 "
-
-#: ../src/katello/client/core/errata.py:145
-msgid "errata id, string value (required)"
-msgstr "에라타 ID, 문자열 값 (필수 사항) "
-
-#: ../src/katello/client/core/errata.py:196
-msgid "Errata Information"
-msgstr "에라타 정보 "
-
-#: ../src/katello/client/core/errata.py:205
-msgid "errata specific actions in the katello server"
-msgstr "katello 서버에서 에라타의 특정 동작 "
-
-#: ../src/katello/client/core/organization.py:42
-msgid "list all known organizations"
-msgstr "모든 알려진 조직 목록 보기 "
-
-#: ../src/katello/client/core/organization.py:51
-msgid "Organization List"
-msgstr "조직 목록 "
-
-#: ../src/katello/client/core/organization.py:59
-msgid "create an organization"
-msgstr "조직 생성 "
-
-#: ../src/katello/client/core/organization.py:66
-#: ../src/katello/client/core/organization.py:151
-msgid "consumer description eg: foo's organization"
-msgstr "컨슈머 설명 예: foo의 조직 "
-
-#: ../src/katello/client/core/organization.py:77
-#, python-format
-msgid "Successfully created org [ %s ]"
-msgstr "조직 [ %s ]이 성공적으로 생성됨 "
-
-#: ../src/katello/client/core/organization.py:80
-#, python-format
-msgid "Could not create org [ %s ]"
-msgstr "조직 [ %s ]을 생성할 수 없음 "
-
-#: ../src/katello/client/core/organization.py:88
-msgid "list information about an organization"
-msgstr "조직 정보 목록 보기 "
-
-#: ../src/katello/client/core/organization.py:107
-msgid "Organization Information"
-msgstr "조직 정보 "
-
-#: ../src/katello/client/core/organization.py:115
-msgid "delete an organization"
-msgstr "조직 삭제 "
-
-#: ../src/katello/client/core/organization.py:131
-msgid "Deleting the organization, please wait... "
-msgstr "조직 삭제 중, 잠시만 기다리십시오..."
-
-#: ../src/katello/client/core/organization.py:134
-#, python-format
-msgid "Successfully deleted org [ %s ]"
-msgstr "조직 [ %s ]이 성공적으로 삭제됨 "
-
-#: ../src/katello/client/core/organization.py:137
-#, python-format
-msgid "Organization [ %s ] deletion failed: %s"
-msgstr "조직 [ %s ] 삭제 실패함: %s"
-
-#: ../src/katello/client/core/organization.py:144
-msgid "update an organization"
-msgstr "조직 업데이트 "
-
-#: ../src/katello/client/core/organization.py:161
-#, python-format
-msgid "Successfully updated org [ %s ]"
-msgstr "조직 [ %s ]이 성공적으로 업데이트됨 "
-
-#: ../src/katello/client/core/organization.py:168
-msgid "generate and show ueber certificate"
-msgstr "ueber 인증서 생성 및 보기 "
-
-#: ../src/katello/client/core/organization.py:184
-msgid "Organization Uebercert"
-msgstr "조직의 ueber 인증서 "
-
-#: ../src/katello/client/core/organization.py:193
-msgid "show subscriptions"
-msgstr "서브스크립션 보기 "
-
-#: ../src/katello/client/core/organization.py:223
-msgid "Organization's Subscriptions"
-msgstr "조직의 서브스크립션 "
-
-#: ../src/katello/client/core/organization.py:252
-msgid "organization specific actions in the katello server"
-msgstr "katello 서버에서 조직의 특정 동작 "
-
-#: ../src/katello/client/cli/base.py:116
-msgid "Katello User Account Credentials"
-msgstr "Katello 사용자 계정 인증서 "
-
-#: ../src/katello/client/cli/base.py:118
-msgid "account username"
-msgstr "계정 사용자 이름 "
-
-#: ../src/katello/client/cli/base.py:120
-msgid "account password"
-msgstr "계정 암호 "
-
-#: ../src/katello/client/cli/base.py:127
-msgid "Katello Server Information"
-msgstr "Katello 서버 정보 "
-
-#: ../src/katello/client/cli/base.py:130
-#, python-format
-msgid "katello server host name (default: %s)"
-msgstr "katello 서버 호스트 이름 (디폴트: %s)"
-
-#: ../src/katello/client/cli/base.py:196
-msgid "Invalid command; please see --help"
-msgstr "잘못된 명령; --help를 참조하십시오 "
-
-#: ../src/katello/client/cli/base.py:213
-msgid "No command given; please see --help"
-msgstr "주어진 명령이 없음; --help를 참조하십시오 "
