@@ -47,7 +47,7 @@ describe Provider do
     before(:each) do
       Glue::Candlepin::ProductContent.stub(:create)
       Glue::Candlepin::ProductContent.stub(:new)
-      Candlepin::Product.stub!(:create).and_return({:id => "product_id"})
+      Resources::Candlepin::Product.stub!(:create).and_return({:id => "product_id"})
       @provider = Provider.new({
         :name => 'test_provider',
         :repository_url => 'https://something.net',
@@ -92,8 +92,8 @@ describe Provider do
           product
       end
       before do
-        Candlepin::Owner.stub(:pools).and_return([ProductTestData::POOLS])
-        Candlepin::Product.stub(:get).and_return do |id|
+        Resources::Candlepin::Owner.stub(:pools).and_return([ProductTestData::POOLS])
+        Resources::Candlepin::Product.stub(:get).and_return do |id|
           case id
                  when "rhel6-server" then [marketing_product_attrs]
                  when "20" then [eng_product_attrs]
@@ -110,6 +110,33 @@ describe Provider do
           product_ids.should == [eng_product_after_import.id]
         end
         @provider.import_products_from_cp
+      end
+
+      context "there was a RH product that is not included in the latest manifest" do
+
+        before do
+          Glue::Candlepin::Product.stub(:import_from_cp => [], :import_marketing_from_cp => true)
+
+          @rh_product = Product.create!({:cp_id => "rh_product_id", :name=> "rh_product", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+          @custom_provider = Provider.create!({
+            :name => 'test_provider',
+            :repository_url => 'https://something.net',
+            :provider_type => Provider::CUSTOM,
+            :organization => @organization
+          })
+          @custom_product = Product.create!({:cp_id => "custom_product_id", :name=> "custom_product", :productContent => [], :provider => @custom_provider, :environments => [@organization.library]})
+        end
+
+        it "should be removed from the Katello products"  do
+          @provider.import_products_from_cp
+          Product.find_by_id(@rh_product.id).should_not be
+        end
+
+        it "should keep non-RH products" do
+          @provider.import_products_from_cp
+          Product.find_by_id(@custom_product.id).should be
+        end
+
       end
     end
   end
@@ -142,7 +169,7 @@ describe Provider do
       product.productContent = [product_content(product_name)]
       product.productContent.each do |product_content|
         releases.each do |release|
-          version = CDN::Utils.parse_version(release)
+          version = Resources::CDN::Utils.parse_version(release)
           repo_name = "#{product_content.content.name} #{release}"
           Repository.create!(:environment_product => EnvironmentProduct.find_or_create(product.organization.library, product),
                              :cp_label => product_content.content.label,

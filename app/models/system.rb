@@ -26,10 +26,9 @@ class System < ActiveRecord::Base
   include AsyncOrchestration
   include IndexedModel
 
-  
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
-                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin]
+                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, :system_group]
 
   mapping   :dynamic_templates =>[{"fact_string" => {
                           :path_match => "facts.*",
@@ -42,11 +41,13 @@ class System < ActiveRecord::Base
     indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
     indexes :lastCheckin, :type=>'date'
-
+    indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
     indexes :facts, :path=>"just_name" do
     end
 
   end
+
+  update_related_indexes :system_groups, :name
 
   acts_as_reportable
 
@@ -57,6 +58,9 @@ class System < ActiveRecord::Base
 
   has_many :system_activation_keys, :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
+
+  has_many :system_system_groups, :dependent => :destroy
+  has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
 
   validates :environment, :presence => true, :non_library_environment => true
   validates :name, :presence => true, :no_trailing_space => true
@@ -158,58 +162,79 @@ class System < ActiveRecord::Base
 
   def self.any_readable? org
     org.systems_readable? ||
-        User.allowed_to?(KTEnvironment::SYSTEMS_READABLE, :environments, org.environment_ids, org, true)
+        KTEnvironment.systems_readable(org).count > 0 ||
+        SystemGroup.systems_readable(org).count > 0
   end
 
   def self.readable org
       raise "scope requires an organization" if org.nil?
       if org.systems_readable?
-         where(:environment_id => org.environment_ids) #list all systems in an org 
+         where(:environment_id => org.environment_ids) #list all systems in an org
       else #just list for environments the user can access
-        where("systems.environment_id in (#{User.allowed_tags_sql(KTEnvironment::SYSTEMS_READABLE, :environments, org)})")
+        where_clause = "systems.environment_id in (#{KTEnvironment.systems_readable(org).select(:id).to_sql})"
+        where_clause += " or "
+        where_clause += "system_system_groups.system_group_id in (#{SystemGroup.systems_readable(org).select(:id).to_sql})"
+        joins("left outer join system_system_groups on systems.id =
+                                    system_system_groups.system_id").where(where_clause)
       end    
   end
 
   def readable?
-    environment.systems_readable?
+    environment.systems_readable? || !SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
   end
 
   def editable?
-    environment.systems_editable?
+    environment.systems_editable?  || !SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
   end
 
   def deletable?
-    environment.systems_deletable?
+    environment.systems_deletable? || !SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
   end
 
-  def self.deletable? env, org
-    org ||= env.organization if env
-    ret = false
-    ret ||= User.allowed_to?([:delete_systems], :organizations, nil, org) if org
-    ret ||= User.allowed_to?([:delete_systems], :environments, env.id, org) if env
-    ret
+  #TODO these two functions are somewhat poorly written and need to be redone
+  def self.any_deletable? env, org
+    if env
+      env.systems_deletable? || org.system_groups.any?{|g| g.systems_deletable?}
+    else
+      org.systems_deletable? || org.system_groups.any?{|g| g.systems_deletable?}
+    end
   end
 
   def self.registerable? env, org
-    org ||= env.organization if env
-    ret = false
-    ret ||= User.allowed_to?([:register_systems], :organizations, nil, org) if org
-    ret ||= User.allowed_to?([:register_systems], :environments, env.id, org) if env
-    ret
+    if env
+      env.systems_registerable?
+    else
+      org.systems_registerable?
+    end
   end
 
   def tasks
     SystemTask.refresh_for_system(self)
   end
 
-
-
   def extended_index_attrs
-    {:facts=>self.facts, :organization_id=>self.organization.id, :name_sort=>name.downcase}
+    {:facts=>self.facts, :organization_id=>self.organization.id,
+     :name_sort=>name.downcase, :name_autocomplete=>self.name,
+     :system_group=>self.system_groups.collect{|g| g.name},
+     :system_group_ids=>self.system_group_ids
+    }
   end
 
-
   private
+    def add_pulp_consumer_group record
+      group_lock_check(record)
+      record.add_consumers([self.uuid])
+    end
+
+    def remove_pulp_consumer_group record
+      group_lock_check(record)
+      record.del_consumers([self.uuid])
+    end
+
+    def group_lock_check record
+      raise _("Group membership cannot be changed while locked.") if record.locked
+    end
+
     def save_system_task pulp_task, task_type, parameters_type, parameters
       SystemTask.make(self, pulp_task, task_type, parameters_type => parameters)
     end

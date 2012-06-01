@@ -12,7 +12,7 @@
 
 class Api::TasksController < Api::ApiController
   respond_to :json
-  before_filter :find_organization
+  before_filter :find_organization, :only=>[:index]
   before_filter :find_task, :only => [:show]
 
   before_filter :authorize
@@ -20,12 +20,14 @@ class Api::TasksController < Api::ApiController
   def rules
     # tasks are used in: synchronization, promotion, packages updating, organizatino deletion
     test = lambda do
-      if @organization
-        Provider.any_readable?(@organization) || @organization.systems_readable?
-      else
         # at the end of organization deletion, there is no organization, so we
         # check if the user has the rights to see the task.
-        User.current == @task.user
+      if @task && User.current == @task.user
+        true
+      elsif @organization
+        Provider.any_readable?(@organization) || @organization.systems_readable?
+      else
+        false
       end
     end
     { 

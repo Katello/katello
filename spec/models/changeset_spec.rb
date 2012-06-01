@@ -422,7 +422,7 @@ describe Changeset, :katello => true do
             :nvrea      => 'some_nvrea')
         @changeset.state = Changeset::REVIEW
 
-        Pulp::Package.stub(:dep_solve).and_return({ })
+        Resources::Pulp::Package.stub(:dep_solve).and_return({ })
 
         @clone.should_receive(:add_packages).once.with([@pack.id])
 

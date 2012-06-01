@@ -444,7 +444,7 @@ KT.filters = (function(){
         $('input[id^=filter_save]').attr("disabled", false);
 
     },
-    add_package = function(name, cleanup_cb){
+    add_package = function(name, item_id, cleanup_cb){
         var input = $("#package_input");
 
         //verify the package isn't already displayed

@@ -1,11 +1,10 @@
 / orgbox Starts Here
 #switcherContainer
-  %a#switcherButton{:href => "#"}
-    %div #{current_organization.name}
-    .arrow_icon
+  %a.header-widget#switcherButton{:href => "#"}
+    #{current_organization.name}
   %div{:style => "clear:both"}
   #switcherBox
-    #switcherForm
+    #switcherForm.org
       #orgfilter
         %form.filter
           %input{ :name => "f", :type => "input", :placeholder => _("Filter..."), :id=>"orgfilter_input"}

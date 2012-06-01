@@ -68,7 +68,6 @@ class SystemErrataController < ApplicationController
     render :text => task.task_status.uuid
   rescue Exception => error
     errors error
-    Rails.logger.error error.backtrace.join("\n")
     render :text => error, :status => :bad_request
   end
 
@@ -85,6 +84,7 @@ class SystemErrataController < ApplicationController
   private
 
   include SortColumnList
+  include ErrataModule
 
   def get_errata start, finish, filter_type="All", errata_state="outstanding"
     types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
@@ -106,42 +106,6 @@ class SystemErrataController < ApplicationController
     errata_list = errata_list[start...finish]
 
     return errata_list, total_errata_count, filtered_errata_count
-  end
-
-  def filter_by_type errata_list, filter_type
-    filtered_list = []
-    
-    if filter_type != "All"
-      pulp_filter_type = get_pulp_filter_type(filter_type)
-      
-      errata_list.each{ |errata| 
-        if errata.type == pulp_filter_type
-          filtered_list << errata
-        end
-      }
-    else
-      filtered_list = errata_list
-    end
-    
-    return filtered_list
-  end
-
-  def get_pulp_filter_type filter_type
-    if filter_type == "Bug"
-      return Glue::Pulp::Errata::BUGZILLA
-    elsif filter_type == "Enhancement"
-      return Glue::Pulp::Errata::ENHANCEMENT
-    elsif filter_type == "Security"
-      return Glue::Pulp::Errata::SECURITY
-    end
-  end
-
-  def filter_by_state errata_list, errata_state
-    if errata_state == "applied"
-      return []
-    else
-      return errata_list
-    end
   end
 
   def find_system

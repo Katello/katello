@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/candlepin'
-
 module Glue::Candlepin::Consumer
 
   def self.included(base)
@@ -26,24 +24,24 @@ module Glue::Candlepin::Consumer
       lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts, :autoheal, :releaseVer, :serviceLevel,
         :initializer => lambda {
                           if uuid
-                            consumer_json = Candlepin::Consumer.get(uuid)
+                            consumer_json = Resources::Candlepin::Consumer.get(uuid)
                             convert_from_cp_fields(consumer_json)
                           end
                         }
-      lazy_accessor :entitlements, :initializer => lambda { Candlepin::Consumer.entitlements(uuid) }
-      lazy_accessor :pools, :initializer => lambda { entitlements.collect { |ent| Candlepin::Pool.find ent["pool"]["id"]} }
-      lazy_accessor :available_pools, :initializer => lambda { Candlepin::Consumer.available_pools(uuid, false) }
-      lazy_accessor :all_available_pools, :initializer => lambda { Candlepin::Consumer.available_pools(uuid, true) }
+      lazy_accessor :entitlements, :initializer => lambda { Resources::Candlepin::Consumer.entitlements(uuid) }
+      lazy_accessor :pools, :initializer => lambda { entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"]} }
+      lazy_accessor :available_pools, :initializer => lambda { Resources::Candlepin::Consumer.available_pools(uuid, false) }
+      lazy_accessor :all_available_pools, :initializer => lambda { Resources::Candlepin::Consumer.available_pools(uuid, true) }
       lazy_accessor :host, :initializer => lambda {
-        host_attributes = Candlepin::Consumer.host(self.uuid)
+        host_attributes = Resources::Candlepin::Consumer.host(self.uuid)
         System.new(host_attributes) if host_attributes
       }
       lazy_accessor :guests, :initializer => lambda {
-        guests_attributes = Candlepin::Consumer.guests(self.uuid)
+        guests_attributes = Resources::Candlepin::Consumer.guests(self.uuid)
         guests_attributes.map { |attr| System.new(attr) }
       }
-      lazy_accessor :compliance, :initializer => lambda { Candlepin::Consumer.compliance(uuid) }
-      lazy_accessor :events, :initializer => lambda { Candlepin::Consumer.events(uuid) }
+      lazy_accessor :compliance, :initializer => lambda { Resources::Candlepin::Consumer.compliance(uuid) }
+      lazy_accessor :events, :initializer => lambda { Resources::Candlepin::Consumer.events(uuid) }
 
       validate :validate_cp_consumer
     end
@@ -86,7 +84,7 @@ module Glue::Candlepin::Consumer
 
     def set_candlepin_consumer
       Rails.logger.debug "Creating a consumer in candlepin: #{name}"
-      consumer_json = Candlepin::Consumer.create(self.environment_id,
+      consumer_json = Resources::Candlepin::Consumer.create(self.environment_id,
                                                  self.organization.cp_key,
                                                  self.name, self.cp_type,
                                                  self.facts,
@@ -110,7 +108,7 @@ module Glue::Candlepin::Consumer
 
     def update_candlepin_consumer
       Rails.logger.debug "Updating consumer in candlepin: #{name}"
-      Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal, @releaseVer, self.serviceLevel)
+      Resources::Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal, @releaseVer, self.serviceLevel)
     rescue => e
       Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -118,7 +116,7 @@ module Glue::Candlepin::Consumer
 
     def del_candlepin_consumer
       Rails.logger.debug "Deleting consumer in candlepin: #{name}"
-      Candlepin::Consumer.destroy(self.uuid)
+      Resources::Candlepin::Consumer.destroy(self.uuid)
     rescue => e
       Rails.logger.error "Failed to delete candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -126,14 +124,14 @@ module Glue::Candlepin::Consumer
 
     def regenerate_identity_certificates
       Rails.logger.debug "Regenerating consumer identity certificates: #{name}"
-      Candlepin::Consumer.regenerate_identity_certificates(self.uuid)
+      Resources::Candlepin::Consumer.regenerate_identity_certificates(self.uuid)
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
     end
 
     def get_pool id
-      Candlepin::Pool.find id
+      Resources::Candlepin::Pool.find id
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
@@ -141,7 +139,7 @@ module Glue::Candlepin::Consumer
 
     def subscribe pool, quantity = nil
       Rails.logger.debug "Subscribing to pool '#{pool}' for : #{name}"
-      Candlepin::Consumer.consume_entitlement self.uuid, pool, quantity
+      Resources::Candlepin::Consumer.consume_entitlement self.uuid, pool, quantity
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
@@ -149,11 +147,11 @@ module Glue::Candlepin::Consumer
 
     def unsubscribe entitlement
       Rails.logger.debug "Unsubscribing from entitlement '#{entitlement}' for : #{name}"
-      Candlepin::Consumer.remove_entitlement self.uuid, entitlement
+      Resources::Candlepin::Consumer.remove_entitlement self.uuid, entitlement
       #ents = self.entitlements.collect {|ent| ent["id"] if ent["pool"]["id"] == pool}.compact
       #raise ArgumentError, "Not subscribed to the pool #{pool}" if ents.count < 1
       #ents.each { |ent|
-      #  Candlepin::Consumer.remove_entitlement self.uuid, ent
+      #  Resources::Candlepin::Consumer.remove_entitlement self.uuid, ent
       #}
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
@@ -162,7 +160,7 @@ module Glue::Candlepin::Consumer
 
     def unsubscribe_by_serial serial
       Rails.logger.debug "Unsubscribing from certificate '#{serial}' for : #{name}"
-      Candlepin::Consumer.remove_certificate self.uuid, serial
+      Resources::Candlepin::Consumer.remove_certificate self.uuid, serial
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
@@ -170,7 +168,7 @@ module Glue::Candlepin::Consumer
 
     def unsubscribe_all
       Rails.logger.debug "Unsubscribing from all entitlements for : #{name}"
-      Candlepin::Consumer.remove_entitlements self.uuid
+      Resources::Candlepin::Consumer.remove_entitlements self.uuid
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
@@ -400,7 +398,7 @@ module Glue::Candlepin::Consumer
   module ClassMethods
 
     def all_by_pool(pool_id)
-      entitlements = Candlepin::Entitlement.get
+      entitlements = Resources::Candlepin::Entitlement.get
       system_uuids = entitlements.delete_if{|ent| ent["pool"]["id"] != pool_id }.map{|ent| ent["consumer"]["uuid"]}
       return where(:uuid => system_uuids)
     end
@@ -416,7 +414,7 @@ module Glue::Candlepin::Consumer
     end
 
     def register_hypervisors(environment, hypervisors_attrs)
-      consumers_attrs = Candlepin::Consumer.register_hypervisors(hypervisors_attrs)
+      consumers_attrs = Resources::Candlepin::Consumer.register_hypervisors(hypervisors_attrs)
       created = consumers_attrs[:created].map do |hypervisor_attrs|
         System.create_hypervisor(environment.id, hypervisor_attrs)
       end

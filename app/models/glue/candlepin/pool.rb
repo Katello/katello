@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/candlepin'
-
 module Glue::Candlepin::Pool
 
   def self.included(base)
@@ -22,7 +20,7 @@ module Glue::Candlepin::Pool
     base.class_eval do
       lazy_accessor :productName, :productId, :startDate, :endDate, :consumed, :quantity, :attrs, :owner,
         :initializer => lambda {
-          json = Candlepin::Pool.find(cp_id)
+          json = Resources::Candlepin::Pool.find(cp_id)
           # symbol "attributes" is reserved by Rails and cannot be used
           json['attrs'] = json['attributes']
           json
@@ -34,7 +32,7 @@ module Glue::Candlepin::Pool
 
   module ClassMethods
     def find_by_organization_and_id(organization, pool_id)
-      pool = KTPool.find_by_cp_id(pool_id) || KTPool.new(Candlepin::Pool.find(pool_id))
+      pool = KTPool.find_by_cp_id(pool_id) || KTPool.new(Resources::Candlepin::Pool.find(pool_id))
       if pool.organization == organization
         return pool
       end
