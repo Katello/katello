@@ -51,6 +51,7 @@ BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
 BuildRequires:  converge-ui-devel
+
 %description
 A subscription management only version of katello
 
@@ -58,6 +59,9 @@ A subscription management only version of katello
 %setup -q
 
 %build
+# pull in converge-ui
+cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
+
 mkdir build
 
 # katello files are copied over in gen_changes
@@ -80,9 +84,6 @@ cp README build/
 cp -r script/ build/
 cp -r spec/ build/
 cp -r vendor/ build/
-
-# pull in converge-ui
-cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
 
 #pull in branding if present
 if [ -d branding ] ; then
