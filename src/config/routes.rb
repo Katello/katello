@@ -12,7 +12,15 @@ Src::Application.routes.draw do
       post :remove_systems
       post :lock
     end
-    resources :errata, :controller => "system_group_errata", :only => [:index, :update] do
+    resources :packages, :controller => "system_group_packages", :only => [:index] do
+      collection do
+        put :add
+        put :remove
+        put :update
+        get :status
+      end
+    end
+    resources :errata, :controller => "system_group_errata", :only => [:index] do
       collection do
         get :items
         post :install
