@@ -60,7 +60,6 @@ class KatelloShell(Cmd):
 
     def __init__(self, admin_cli):
         self.admin_cli = admin_cli
-
         try:
             self.prompt = Config.parser.get('shell', 'prompt') + ' '
         except:
@@ -112,21 +111,33 @@ class KatelloShell(Cmd):
 
 
     def precmd(self, line):
+        # preprocess the line
         line = line.strip()
         line = self.__history_preprocess(line)
         return line
 
 
+    def postcmd(self, stop, line):
+        # always stay in the command loop (we call sys.exit from exit commands)
+        return False
+
+
     def __history_preprocess(self, line):
+        # history search commands start with !
         if not line.startswith('!'):
             return line
 
         command = line.split()[0]
         if re.match('^!$', command):
+            # single ! repeats last command
             new_line = self.__history_try_repeat_nth(-1)
         elif re.match('^!-?[0-9]+$', command):
+            # !<int> repeats n-th command from history
+            # negative numbers can be used for reversed indexing
             new_line = self.__history_try_repeat_nth(command[1:])
         else:
+            # !<string> searches for last command starting with the string
+            # and repeats it
             new_line = self.__history_try_search(command[1:])
 
         # remove the '!*' line from the history
@@ -135,6 +146,7 @@ class KatelloShell(Cmd):
             print new_line
             return new_line
         return line
+
 
     def __history_try_repeat_nth(self, n):
         try:
@@ -157,10 +169,16 @@ class KatelloShell(Cmd):
 
 
     def parseline(self, line):
+        """
+        Parses a line to command and arguments.
+        For our uses we copy name of the command to arguments so that
+        the man command knows what subcommands to run.
+        """
         cmd, arg, line = Cmd.parseline(self, line)
         if (cmd in self.admin_cli.get_command_names()) and (arg != None):
             arg = cmd + " " + arg
         return cmd, arg, line
+
 
     def __complete(self, text, line_parts, with_params=False):
         cmd =  self.__get_command(line_parts)
@@ -169,6 +187,10 @@ class KatelloShell(Cmd):
 
 
     def __get_possible_completions(self, cmd, with_params=False):
+        """
+        Return all possible subcommands and options that can be used to complete
+        strings after a command cmd.
+        """
         completions = []
         if isinstance(cmd, CommandContainer):
             completions += cmd.get_command_names()
@@ -178,6 +200,10 @@ class KatelloShell(Cmd):
 
 
     def __get_command(self, names):
+        """
+        Return instance of last command used on the line. Names represent
+        list of commands on the line.
+        """
         cmd = self.admin_cli
         for name in names:
             if isinstance(cmd, CommandContainer):

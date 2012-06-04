@@ -17,7 +17,6 @@ import os
 import sys
 from traceback import format_exc
 from gettext import gettext as _
-from kerberos import GSSError
 from optparse import OptionGroup, SUPPRESS_HELP
 from katello.client.i18n_optparse import OptionParser, OptionParserExitError
 from katello.client.core.utils import parse_tokens
@@ -30,6 +29,7 @@ from katello.client.config import Config
 from katello.client.logutil import getLogger, logfile
 from katello.client import server
 
+from katello.client.server import BasicAuthentication, SSLAuthentication, KerberosAuthentication, NoAuthentication
 
 Config()
 _log = getLogger(__name__)
@@ -44,7 +44,6 @@ class KatelloError(Exception):
     """
     User-friendly exception wrapper (used for stderr output).
     """
-
     def __init__(self, message, exception):
         self.message = message
         self.exception = exception
@@ -60,24 +59,17 @@ class KatelloCLI(Command):
 
     def __init__(self):
         super(KatelloCLI, self).__init__()
-
-        self.name = os.path.basename(sys.argv[0])
         self._server = None
-
         self._username = None
         self._password = None
-
         self._certfile = None
-        self._keyfile  = None
-
-
+        self._keyfile = None
 
     def setup_parser(self, parser):
         """
         Add options to the command line parser.
         @note: this method may be overridden to define new options
         """
-
         parser.add_option("-v", "--version", action="store_true", default=False,
                                     dest="version",  help=_('prints version information'))
 
@@ -123,7 +115,6 @@ class KatelloCLI(Command):
         """
         Setup up request credentials with the active server.
         """
-
         self._username = self._username or self.opts.username
         self._password = self._password or self.opts.password
 
@@ -131,13 +122,12 @@ class KatelloCLI(Command):
         self._keyfile = self._keyfile or self.opts.keyfile
 
         if None not in (self._username, self._password):
-            self._server.set_basic_auth_credentials(self._username,
-                                                    self._password)
-        elif None not in (self.opts.certfile, self.opts.keyfile):
-            self._server.set_ssl_credentials(self.opts.certfile,
-                                                self.opts.keyfile)
+            self._server.set_auth_method(BasicAuthentication(self._username, self._password))
+        elif None not in (self._certfile, self._keyfile):
+            self._server.set_auth_method(SSLAuthentication(self._certfile, self._keyfile))
         else:
-            self._server.set_kerberos_auth()
+            #self._server.set_auth_method(KerberosAuthentication(self.opts.host))
+            self._server.set_auth_method(NoAuthentication())
 
     def error(self, exception, errorMsg = None):
         msg = errorMsg if errorMsg else u_str(exception)
@@ -151,65 +141,18 @@ class KatelloCLI(Command):
 
     def main(self, args, command_name=None, parent_usage=None):
         try:
-            return super(KatelloCLI, self).main(args, command_name, parent_usage)
+            ret_code = super(KatelloCLI, self).main(args, command_name, parent_usage)
+            return ret_code if ret_code else os.EX_OK
 
         except OptionParserExitError, opee:
             return opee.args[0]
 
-        #except KatelloError, ex:
-            #self.error(ex, ex.message)
-            #return 1
+        except KatelloError, ex:
+            self.error(ex, ex.message)
+            return 1
 
-        #except Exception, ex:
-            ## for all the errors see ~/.katello/client.log or /var/log/katello/client.log
-            #self.error(ex)
-            #return 1
+        except Exception, ex:
+            # for all the errors see ~/.katello/client.log or /var/log/katello/client.log
+            self.error(ex)
+            return 1
 
-
-    #def main(self, args=sys.argv[1:]):
-        #"""
-        #Run this command.
-        #@type args: list of str's
-        #@param args: command line arguments
-        #"""
-        #if type(args) == str:
-            #args = parse_tokens(args)
-
-        #try:
-            #self.setup_parser()
-            #self.opts, args = self.parser.parse_args(args)
-
-            #if self.opts.version:
-                #self.setup_server()
-                #self.setup_credentials()
-                #api = VersionAPI()
-                #print api.version_formatted()
-                #return
-
-            #if not args:
-                #self.parser.error(_('No command given; please see --help'))
-
-            #command = self.extract_command(args)
-
-            ## process command and action options before setup_credentials
-            ## to catch errors before accessing Kerberos
-            #command_args = args[1:]
-            #command.process_options(command.create_parser(), command_args)
-            #self.setup_server()
-            #action = command.extract_action(command_args)
-            #if not action or action.require_credentials():
-                #self.setup_credentials()
-
-            #return command.main(command_args)
-
-        #except OptionParserExitError, opee:
-            #return opee.args[0]
-
-        #except KatelloError, ex:
-            #self.error(ex, ex.message)
-            #return 1
-
-        #except Exception, ex:
-            ## for all the errors see ~/.katello/client.log or /var/log/katello/client.log
-            #self.error(ex)
-            #return 1

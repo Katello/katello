@@ -15,6 +15,7 @@
 
 import base64
 import kerberos
+from kerberos import GSSError
 import httplib
 import locale
 import os
@@ -41,6 +42,94 @@ def set_active_server(server):
     global active_server
     assert isinstance(server, Server)
     active_server = server
+
+# authentication strategies ---------------------------------------------------
+
+class AuthenticationStrategy:
+
+    _log = getLogger('katello')
+
+    def _get_connection(self, host, port, protocol):
+        if protocol == "https":
+            return httplib.HTTPSConnection(host, port)
+        else:
+            return httplib.HTTPConnection(host, port)
+
+    def set_headers(self, headers):
+        return headers
+
+    def connect(self, host, port, protocol):
+        return self._get_connection(host, port, protocol)
+
+class NoAuthentication(AuthenticationStrategy):
+
+    def connect(self, host, port, protocol):
+        self._log.debug('making noauth %s connection' % protocol)
+        return self._get_connection(host, port, protocol)
+
+class BasicAuthentication(AuthenticationStrategy):
+
+    def __init__(self, username, password):
+        self.__username = username
+        self.__password = password
+
+    def set_headers(self, headers):
+        raw = ':'.join((self.__username, self.__password))
+        encoded = base64.encodestring(raw)[:-1]
+        headers['Authorization'] = 'Basic ' + encoded
+        return headers
+
+    def connect(self, host, port, protocol):
+        self._log.debug('making basic %s connection with: %s, %s' % (protocol, self.__username, self.__password))
+        return self._get_connection(host, port, protocol)
+
+
+class SSLAuthentication(AuthenticationStrategy):
+
+    def __init__(self, certfile, keyfile):
+        self.__certfile = certfile
+        self.__keyfile = keyfile
+        self.__check_cert_and_key()
+
+    def __check_cert_and_key(self):
+        if not os.access(self.__certfile, os.R_OK):
+            raise RuntimeError(_('certificate file %s does not exist or cannot be read')
+                               % self.__certfile)
+        if not os.access(self.__keyfile, os.R_OK):
+            raise RuntimeError(_('key file %s does not exist or cannot be read')
+                               % self.__keyfile)
+
+    def connect(self, host, port, protocol):
+        if protocol != "https":
+            raise RuntimeError(_("can't authenticate via certificate when not using https connection"))
+        ssl_context = SSL.Context('sslv3')
+        ssl_context.load_cert(self.__certfile, self.__keyfile)
+        self._log.debug('making SSL connection with: %s, %s' % (self.__certfile, self.__keyfile))
+        return httpslib.HTTPSConnection(host, port, ssl_context=ssl_context)
+
+
+class KerberosAuthentication(AuthenticationStrategy):
+
+    def __init__(self, host):
+        self.__host = host
+
+    def set_headers(self, headers):
+        _, ctx = kerberos.authGSSClientInit("HTTP@" + self.__host, \
+            gssflags=kerberos.GSS_C_DELEG_FLAG|kerberos.GSS_C_MUTUAL_FLAG|kerberos.GSS_C_SEQUENCE_FLAG)
+        kerberos.authGSSClientStep(ctx, '')
+        self.__tgt = kerberos.authGSSClientResponse(ctx)
+
+        if self.__tgt:
+            headers['Authorization'] = 'Negotiate %s' % self.__tgt
+            return headers
+        else:
+            raise RuntimeError(_("Couldn't authenticate via kerberos"))
+
+
+    def connect(self, host, port, protocol):
+        self._log.debug('making %s https connection with' % protocol)
+        self._get_connection(host, port, protocol)
+
 
 # base server class -----------------------------------------------------------
 
@@ -71,6 +160,7 @@ class Server(object):
     @ivar path_prefix: mount point of the katello api (/katello/api)
     @ivar headers: dictionary of http headers to send in requests
     """
+    auth_method = NoAuthentication()
 
     def __init__(self, host, port=80, protocol='http', path_prefix=''):
         assert protocol in ('http', 'https')
@@ -82,34 +172,8 @@ class Server(object):
         self.headers = {}
 
     # credentials setters -----------------------------------------------------
-
-    def set_basic_auth_credentials(self, username, password):
-        """
-        Set username and password credentials for http basic auth
-        @type username: str
-        @param username: username
-        @type password: str
-        @param password: password
-        """
-        raise NotImplementedError('base server class method called')
-
-    def set_ssl_credentials(self, certfile, keyfile):
-        """
-        Set ssl certificate and public key credentials
-        @type certfile: str
-        @param certfile: absolute path to the certificate file
-        @type keyfile: str
-        @param keyfile: absolute path to the public key file
-        @raise RuntimeError: if either of the files cannot be found or read
-        """
-        raise NotImplementedError('base server class method called')
-
-    def set_kerberos_auth(self):
-        """
-        Set kerberos authentication
-        """
-        raise NotImplementedError('base server class method called')
-
+    def set_auth_method(self, auth_method):
+        self.auth_method = auth_method
 
     # request methods ---------------------------------------------------------
 
@@ -203,35 +267,23 @@ class KatelloServer(Server):
 
         self._log = getLogger('katello')
 
-        self.__certfile = None
-        self.__keyfile = None
-
-        self.set_basic_auth_credentials("admin", "admin")
-
     # protected server connection methods -------------------------------------
-
-    def _http_connection(self):
-        return httplib.HTTPConnection(self.host, self.port)
-
-    def _https_connection(self):
-        # make sure that passed in username and password overrides cert/key auth
-        if None in (self.__certfile, self.__keyfile) or \
-                'Authorization' in self.headers:
-            return httplib.HTTPSConnection(self.host, self.port)
-        ssl_context = SSL.Context('sslv3')
-        ssl_context.load_cert(self.__certfile, self.__keyfile)
-        self._log.debug('making connection with: %s, %s' %
-            (self.__certfile, self.__keyfile))
-        return httpslib.HTTPSConnection(self.host,
-                                        self.port,
-                                        ssl_context=ssl_context)
 
     def _connect(self):
         # make an appropriate connection to the server and cache it
-        if self.protocol == 'http':
-            return self._http_connection()
-        else:
-            return self._https_connection()
+        return self.auth_method.connect(self.host, self.port, self.protocol)
+
+    def _set_auth_headers(self):
+        try:
+            self.auth_method.set_headers(self.headers)
+        except GSSError, e:
+            #TODO
+            raise Exception("Missing credentials and unable to authenticate using Kerberos", e)
+            #raise KatelloError("Missing credentials and unable to authenticate using Kerberos", e)
+        except Exception, e:
+            #TODO
+            raise Exception("Invalid credentials or unable to authenticate", e)
+            #raise KatelloError("Invalid credentials or unable to authenticate", e)
 
     # protected request utilities ---------------------------------------------
 
@@ -252,7 +304,7 @@ class KatelloServer(Server):
         return path
 
 
-    def _request(self, method, path, queries={}, body=None, multipart=False, customHeaders={}):
+    def _request(self, method, path, queries={}, body=None, multipart=False, custom_headers={}):
         # make a request to the server and return the response
         connection = self._connect()
         url = self._build_url(path, queries)
@@ -261,10 +313,11 @@ class KatelloServer(Server):
 
         self.headers['content-type']   = content_type
         self.headers['content-length'] = str(len(body) if body else 0)
+        self._set_auth_headers()
 
         self._log.debug('sending %s request to %s' % (method, url))
 
-        connection.request(method, url, body=body, headers=dict(self.headers.items() + customHeaders.items()))
+        connection.request(method, url, body=body, headers=dict(self.headers.items() + custom_headers.items()))
         return self._process_response(connection.getresponse())
 
 
@@ -333,7 +386,7 @@ class KatelloServer(Server):
             #flatten dictionaries
             result = []
             for (subKey, value) in data.items():
-                if key == None:
+                if key is None:
                     name = str(subKey)
                 else:
                     name = str(key)+'['+str(subKey)+']'
@@ -344,7 +397,7 @@ class KatelloServer(Server):
             #flatten lists and tuples
             result = []
             for value in data:
-                if key == None:
+                if key is None:
                     name = str(key)
                 else:
                     name = str(key)+'[]'
@@ -406,47 +459,19 @@ class KatelloServer(Server):
         return mimetypes.guess_type(filename)[0] or 'application/octet-stream'
 
 
-    # credentials setters -----------------------------------------------------
-
-    def set_basic_auth_credentials(self, username, password):
-        raw = ':'.join((username, password))
-        encoded = base64.encodestring(raw)[:-1]
-        self.headers['Authorization'] = 'Basic ' + encoded
-
-    def set_ssl_credentials(self, certfile, keyfile):
-        if not os.access(certfile, os.R_OK):
-            raise RuntimeError(_('certificate file %s does not exist or cannot be read')
-                               % certfile)
-        if not os.access(keyfile, os.R_OK):
-            raise RuntimeError(_('key file %s does not exist or cannot be read')
-                               % keyfile)
-        self.__certfile = certfile
-        self.__keyfile = keyfile
-
-    def set_kerberos_auth(self):
-        _, ctx = kerberos.authGSSClientInit("HTTP@" + self.host, gssflags=kerberos.GSS_C_DELEG_FLAG|kerberos.GSS_C_MUTUAL_FLAG|kerberos.GSS_C_SEQUENCE_FLAG)
-        kerberos.authGSSClientStep(ctx, '')
-        self.__tgt = kerberos.authGSSClientResponse(ctx)
-
-        if self.__tgt:
-            self.headers['Authorization'] = 'Negotiate %s' % self.__tgt
-        else:
-            raise RuntimeError(_("Couldn't authenticate via kerberos"))
-
-
     # request methods ---------------------------------------------------------
 
     def DELETE(self, path, body=None):
         return self._request('DELETE', path, body=body)
 
-    def GET(self, path, queries={}, customHeaders={}):
-        return self._request('GET', path, queries, customHeaders=customHeaders)
+    def GET(self, path, queries={}, custom_headers={}):
+        return self._request('GET', path, queries, custom_headers=custom_headers)
 
     def HEAD(self, path):
         return self._request('HEAD', path)
 
-    def POST(self, path, body=None, multipart=False, customHeaders={}):
-        return self._request('POST', path, body=body, multipart=multipart, customHeaders=customHeaders)
+    def POST(self, path, body=None, multipart=False, custom_headers={}):
+        return self._request('POST', path, body=body, multipart=multipart, custom_headers=custom_headers)
 
-    def PUT(self, path, body, multipart=False, customHeaders={}):
-        return self._request('PUT', path, body=body, multipart=multipart, customHeaders=customHeaders)
+    def PUT(self, path, body, multipart=False, custom_headers={}):
+        return self._request('PUT', path, body=body, multipart=multipart, custom_headers=custom_headers)

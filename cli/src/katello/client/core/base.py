@@ -158,12 +158,10 @@ class BaseAction(object):
 
     def error(self, error_msg):
         error_msg = u_str(error_msg)
+        error_msg = error_msg if error_msg else _('operation failed')
+
         _log.error("error: %s" % error_msg)
-        if error_msg == '':
-            msg = _('error: operation failed')
-        else:
-            msg = error_msg
-        print >> sys.stderr, msg
+        print >> sys.stderr, error_msg
 
 
     def process_options(self, parser, args):
