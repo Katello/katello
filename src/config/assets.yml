@@ -1,4 +1,4 @@
-embed_assets: on
+embed_assets: datauri
 javascript_compressor: yui
 compress_assets: on
 gzip_assets: on
@@ -48,6 +48,9 @@ javascripts:
     - public/javascripts/excanvas.js
   activation_key:
     - public/javascripts/activation_key.js
+    - public/javascripts/system_groups_pane.js
+    - public/javascripts/converge-ui/jquery/plugins/jquery.multiselect.js
+    - public/javascripts/converge-ui/jquery/plugins/jquery.multiselect.filter.js
   activation_key_edit:
     - public/javascripts/activation_key_edit.js
   activation_key_subscriptions:
@@ -91,10 +94,20 @@ javascripts:
     - public/javascripts/systems.js
     - public/javascripts/converge-ui/lib/jquery/plugins/ui.spinner.js
     - public/javascripts/system_errata.js
+    - public/javascripts/system_groups_pane.js
+    - public/javascripts/jquery/plugins/jquery.sortElements.js
+    - public/javascripts/jquery/plugins/ui.spinner.js
+    - public/javascripts/auto_complete.js
+    - public/javascripts/converge-ui/jquery/plugins/jquery.multiselect.js
+    - public/javascripts/converge-ui/jquery/plugins/jquery.multiselect.filter.js
   system_edit:
     - public/javascripts/system_edit.js
   system_events:
     - public/javascripts/system_events.js
+  system_groups:
+    - public/javascripts/system_groups.js
+    - public/javascripts/system_errata.js
+    - public/javascripts/auto_complete.js
   system_subscriptions:
     - public/javascripts/system_subscriptions.js
   system_packages:
@@ -170,8 +183,8 @@ stylesheets:
     - public/stylesheets/jquery.treeTable.css
     - public/stylesheets/jquery.jscrollpane.css
     - public/stylesheets/jquery.tipsy.css
-    - public/stylesheets/compiled/sections/menu.css
     - public/stylesheets/compiled/katello.css
+    - public/stylesheets/compiled/sections/menu.css
     - public/stylesheets/compiled/fancyqueries.css
     - public/stylesheets/compiled/widgets/tipsy_custom.css
   ie:
@@ -181,6 +194,8 @@ stylesheets:
   systems:
     - public/stylesheets/compiled/sections/systems.css
     - public/stylesheets/ui.spinner.css
+    - public/stylesheets/jquery.multiselect.css
+    - public/stylesheets/jquery.multiselect.filter.css
   orgs:
     - public/stylesheets/compiled/sections/orgs.css
   operations:

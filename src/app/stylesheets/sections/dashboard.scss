@@ -1,4 +1,9 @@
-@import "katello";
+@charset "UTF-8";
+@import "compass";
+@import "converge-ui/text";
+@import "converge-ui/colors";
+@import "converge-ui/icons";
+@import "converge-ui/mixins";
 
 /* box for "errors" on the custom 500 error page */
 .dash {
@@ -396,22 +401,15 @@
           margin-bottom: -5px;
           margin-top: 0;
         }
-
       }
       .loading {
         position: absolute;
         width: 100%;
         height: inherit;
-        .text {
-          margin-left: auto;
-          margin-right: auto;
-          top: 50%;
-          width: 20%;
-        }
-
       }
-
-
+  .spinner {
+    margin-top: 15%;
+  }
 }
 .dropbutton {
     height: 16px;

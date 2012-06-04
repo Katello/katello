@@ -218,7 +218,7 @@ class ShowSubscriptions(OrganizationAction):
         if not self.has_option('grep'):
             self.printer.set_strategy(VerboseStrategy())
 
-        self.printer.add_column('productName')
+        self.printer.add_column('productName', name='Subscription')
         self.printer.add_column('consumed')
         self.printer.add_column('contractNumber', show_with=printer.VerboseStrategy)
         self.printer.add_column('sla', show_with=printer.VerboseStrategy)

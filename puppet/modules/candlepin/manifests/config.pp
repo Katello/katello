@@ -1,8 +1,8 @@
 class candlepin::config {
 
-  exec { "add-tomcat-user-to-katello-group":
-        command => "usermod -a -G katello tomcat",
-        path => "/usr/sbin",
+  user { 'tomcat':
+        ensure => present,
+        groups => ['katello'],
         before => Exec["cpsetup"]
   }
 

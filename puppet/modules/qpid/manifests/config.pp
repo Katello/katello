@@ -1,9 +1,8 @@
 class qpid::config {
 
-  exec { "add-qpidd-user-to-katello-group":
-        command => "usermod -a -G katello qpidd",
-        path => "/usr/sbin",
-        before => [Class["qpid::service"]],
+  user { 'qpidd':
+        ensure => present,
+        groups => ['katello']
   }
 
   file { "/etc/qpidd.conf":

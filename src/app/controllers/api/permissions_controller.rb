@@ -13,7 +13,7 @@
 class Api::PermissionsController < Api::ApiController
 
   before_filter :find_role, :only => [:index, :create]
-  before_filter :find_organization, :only => [:create]
+  before_filter :find_optional_organization, :only => [:create]
   before_filter :find_permission, :only => [:destroy, :show]
   before_filter :authorize
   respond_to :json

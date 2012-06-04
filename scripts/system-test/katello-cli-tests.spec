@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.16
+Version:       0.2.17
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 01 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.17-1
+- cli - None check in date_formatter + enabled system test for deleting filters
+- 821644 - cli admin crl_regen command - unit and system test
+- 823890 - delete products that were removed from new manifest
+
 * Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.16-1
 - product status cli - fix for key error Formatting moved to printer that
   checks whether the key exist prior to printing it.
