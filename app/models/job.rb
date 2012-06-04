@@ -69,7 +69,6 @@ class Job < ActiveRecord::Base
     tasks
   end
 
-
   def as_json(options)
     first_task = self.task_statuses.first
     #check for first task
@@ -101,4 +100,36 @@ class Job < ActiveRecord::Base
     end
   end
 
+  def status_message
+    # for the type of job, look at the first task... for now, the type is always assumed to be
+    # the same for all tasks in the job
+    first_task = self.task_statuses.first
+    details = TaskStatus::TYPES[first_task.task_type]
+    message = details[:event_messages][self.state].first
+  end
+
+  def state
+    # determine the overall status of the job by evaluating the status of it's tasks
+    # - running (aka installing), if 1 or more tasks are waiting or running
+    # - error, if waiting+running is 0 and at least 1 error has occurred
+    # - finished, otherwise...
+    running = 0
+    error = 0
+    self.task_statuses.each do |task|
+      if task.state == TaskStatus::Status::WAITING.to_s or task.state == TaskStatus::Status::RUNNING.to_s
+        running += 1
+      elsif task.state == TaskStatus::Status::ERROR.to_s
+        error += 1
+      end
+    end
+
+    state = :finished  # assume the job is finished, by default
+    if (running > 0)
+      state = :running
+    elsif (error > 0)
+      state = :error
+    end
+
+    state
+  end
 end
