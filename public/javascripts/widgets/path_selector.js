@@ -37,6 +37,7 @@ KT.path_select = function(div_id, name, environments, options_in){
         paths_id,
         path_selector,
         options = {},
+        utils = KT.utils,
         init = function(){
             div = $('#' + KT.common.escapeId(div_id));
             paths_id = "path_select_" + name;
@@ -142,14 +143,17 @@ KT.path_select = function(div_id, name, environments, options_in){
         },
         get_selected = function(){
             var selected = path_selector.find('input:checked'),
-                to_ret = [];
+                to_ret = {};
 
             KT.utils.each(selected, function(item){
                 item = $(item);
-                to_ret.push({id: item.data('node_id'), text:item.data('node_name'),
-                            next_id:item.data('next_node_id')});
+                to_ret[item.data('node_id')] = { 'id' : item.data('node_id'), name:item.data('node_name'),
+                            next_id:item.data('next_node_id')};
             });
             return to_ret;
+        },
+        get_paths = function(){
+            return utils.flatten(environments);
         },
         recalc_scroll = function(){
            if(!options.expand){
@@ -183,6 +187,7 @@ KT.path_select = function(div_id, name, environments, options_in){
     init();
 
     return {
+        get_paths   : get_paths,
         get_selected: get_selected,
         get_event : get_event,
         clear_selected: clear_selected,

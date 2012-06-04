@@ -13,41 +13,66 @@
 
 KT.comparison_grid = function(){
     var templates = KT.comparison_grid.templates,
-        num_columns = 0,
+        utils = KT.utils,
+        columns = {},
         num_rows = 0;
 
     var add_row = function(name){
             add_row_header(name);
-            $('#grid_content').append(templates.row(num_columns));
+            $('#grid_content').append(templates.row(utils.size(columns)));
+            num_rows += 1;
         },
         add_row_header = function(name) {
             $('#grid_items').append(templates.row_header(name));
-            num_rows += 1;
         },
-        add_column = function(name, data) {
-            var i;
+        add_column = function(id, to_display, previous_column_id, data) {
+            var i, column;
 
-            add_column_header(name);
+            add_column_header(id, to_display);
 
-            $('.grid_row').each(function(index){
-                $(this).append(templates.cell(data[index]));
-            })
+            //$('.grid_row').each(function(index){
+                //$(this).append(templates.cell(data));
+            //});
+
+            columns[id] = { 'id' : id, 'to_display' : to_display, 'data' : data };
         },
-        add_column_header = function(name) {
-            $(templates.column_header(name)).insertBefore('.column_header:last');
-            num_columns += 1;
+        add_column_header = function(id, to_display) {
+            $(templates.column_header(id, to_display)).insertBefore('.column_header:last');
+        },
+        add_columns = function(data){
+            var i,
+                length = data.length;
+
+            for(i = 0; i < length; i += 1){
+                add_column(data[i]['id'], data[i]['name']);
+            }
+        },
+        show_columns = function(data){
+            var i, id,
+                length = data.length;
+
+            utils.each(columns, function(value, key){
+                if( data[key] ){
+                    $('#column_' + key).show();
+                } else {
+                    $('#column_' + key).hide();
+                }
+            });
         };
 
     return {
         add_row             : add_row,
+        add_row_header      : add_row_header,
         add_column          : add_column,
+        add_columns         : add_columns,
         add_column_header   : add_column_header,
-        add_row_header      : add_row_header
+        show_columns        : show_columns
     }
 };
 
 KT.comparison_grid.templates = (function() {
     var cell = function(data) {
+            data = data || "";
             return '<span>' + data + '</span>';
         },
         row = function(num_columns) {
@@ -69,9 +94,9 @@ KT.comparison_grid.templates = (function() {
         },
         column = function() {
         },
-        column_header = function(name) {
-            var html = '<li class="column_header">';
-            html += name;
+        column_header = function(id, to_display) {
+            var html = '<li data-id="' + id  + '" id="column_' + id + '" class="column_header hidden">';
+            html += to_display;
             html += '</li>';
             return html;
         };
