@@ -15,11 +15,12 @@ KT.comparison_grid = function(){
     var templates = KT.comparison_grid.templates,
         utils = KT.utils,
         columns = {},
+        num_columns_shown = 0,
         num_rows = 0;
 
     var add_row = function(name){
             add_row_header(name);
-            $('#grid_content').append(templates.row(utils.size(columns)));
+            $('#grid_content').append(templates.row(num_columns_shown));
             num_rows += 1;
         },
         add_row_header = function(name) {
@@ -29,11 +30,6 @@ KT.comparison_grid = function(){
             var i, column;
 
             add_column_header(id, to_display);
-
-            //$('.grid_row').each(function(index){
-                //$(this).append(templates.cell(data));
-            //});
-
             columns[id] = { 'id' : id, 'to_display' : to_display, 'data' : data };
         },
         add_column_header = function(id, to_display) {
@@ -51,9 +47,12 @@ KT.comparison_grid = function(){
             var i, id,
                 length = data.length;
 
+            num_columns_shown = 0;
+
             utils.each(columns, function(value, key){
                 if( data[key] ){
                     $('#column_' + key).show();
+                    num_columns_shown += 1;
                 } else {
                     $('#column_' + key).hide();
                 }
@@ -72,8 +71,8 @@ KT.comparison_grid = function(){
 
 KT.comparison_grid.templates = (function() {
     var cell = function(data) {
-            data = data || "";
-            return '<span>' + data + '</span>';
+            data = data === undefined ? "" : data;
+            return '<span class="grid_cell">' + data + '</span>';
         },
         row = function(num_columns) {
             var i,
