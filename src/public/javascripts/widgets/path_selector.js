@@ -63,7 +63,7 @@ KT.path_select = function(div_id, name, environments, options_in){
                     if(!options.inline) {
                         path_selector.hide();
                     }
-                    $(document).trigger(options.button_event, get_selected());
+                    $(document).trigger(options.button_event, [get_selected()]);
                 });
             }
 
@@ -142,12 +142,12 @@ KT.path_select = function(div_id, name, environments, options_in){
         },
         get_selected = function(){
             var selected = path_selector.find('input:checked'),
-                to_ret = {};
+                to_ret = [];
 
             KT.utils.each(selected, function(item){
                 item = $(item);
-                to_ret[item.data('node_id')] = {text:item.parent().text(),
-                                                next_id:item.data('next_node_id')};
+                to_ret.push({id: item.data('node_id'), text:item.data('node_name'),
+                            next_id:item.data('next_node_id')});
             });
             return to_ret;
         },
@@ -225,7 +225,7 @@ KT.path_select_template = {
         var html = '',
             next_node =  next  ? ('data-next_node_id="' + next.id + '"') : '',
             input = node.select ? '<span class="checkbox_holder"><input class="node_select" type="checkbox" ' +
-                next_node +' data-node_id="' + node.id + '"></span>' : '';
+                next_node +' data-node_id="' + node.id + '" data-node_name="' + node.name + '"></span>' : '';
 
         html += '<li data-node_id="' + node.id + '">'+ '<label><div>' + input +  node.name +  '</div></label></li>';
         return html;
