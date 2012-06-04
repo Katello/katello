@@ -30,6 +30,11 @@ $(document).ready(function() {
     var search = KT.content_search();
      
     comparison_grid = KT.comparison_grid();
+    comparison_grid.add_columns(KT.my_env_select.get_paths());
+
+    $(document).bind(KT.my_env_select.get_event(), function(event, environments) {
+        comparison_grid.show_columns(environments);
+    });
 });
 
 
