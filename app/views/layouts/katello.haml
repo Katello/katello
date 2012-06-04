@@ -3,24 +3,17 @@
   = "-"
   = default_title
 
-= content_for(:stylesheets) do
+= content_for(:stylesheets_block) do
   = include_stylesheets :common
   = include_stylesheets controller.section_id
   = yield :stylesheets
- 
+
 = content_for(:head) do
   = csrf_meta_tag
   / [if lt IE 9]
     = include_javascripts  :html5
   / [if IE]
     = include_stylesheets :ie, :embed_assets => false
-
-= content_for(:body_tag) do
-  - if controller.respond_to?(:section_id)
-    - section_id = controller.section_id
-  - else
-    - section_id = "generic"
-  %body{:id => section_id}
 
 = content_for(:content) do
   - if not current_user
@@ -35,7 +28,7 @@
 = content_for(:footer) do
   = render :partial => "common/footer"
 
-= content_for(:extra) do
+= content_for(:javascripts_block) do
   = include_javascripts :common
   %script{ :type => "text/javascript" }
     -if protect_against_forgery?
@@ -46,7 +39,7 @@
     = render :partial => 'common/ajax_notices'
     = render :partial => 'common/notification'
     = yield :inline_javascript
-  
+
   = yield :javascripts
 
 = render :partial => 'common/header'

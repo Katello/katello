@@ -13,19 +13,37 @@
 module Katello
   module Search
 
-    def self.custom_analzyers
+    def self.custom_analyzers
       {
         "kt_name_analyzer" => {
           "type"      => "custom",
           "tokenizer" => "keyword",
           "filter"    => ["lowercase", "asciifolding"]
+        },
+        "autcomplete_name_analyzer" => {
+            "type"      => "custom",
+            "tokenizer" => "keyword",
+            "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
         }
       }
     end
 
+    def self.custom_filters
+      {
+          "ngram_filter"  => {
+              "type"      => "edgeNGram",
+              "side"      => "front",
+              "min_gram"  => 1,
+              "max_gram"  => 30
+          }
+      }
+    end
+
+
     # Filter the search input, escaping unsupported lucene syntax (e.g. usage of - operator)
     def self.filter_input search
       unless search.nil?
+        search = search.gsub('^', "\\^")
         search = search.gsub('-', "\\-")
         search = search.gsub(':', "\\:")
       end

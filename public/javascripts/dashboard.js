@@ -172,5 +172,5 @@ $(window).load(function() {
     $(".loading").each(function(){
        KT.dashboard.widgetReload($(this))
     });
-    KT.tipsy.custom.errata_tooltip();
+    KT.tipsy.custom.tooltip($('.tipsy-icon.errata-info'));
 });

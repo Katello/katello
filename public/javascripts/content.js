@@ -104,17 +104,22 @@ KT.content_actions = (function(){
         return syncing;
     },
     cancelSync = function(repo_id){
-        $.ajax({
-          type: 'DELETE',
-          url: KT.routes.sync_management_path(repo_id),
-          dataType: 'json',
-          success: function(data) {
-            removeSyncing(repo_id);
-            KT.content.cancelRepo(repo_id);
-          },
-          error: function(data) {
-          }
-        });
+        var button = $("#repo-" + repo_id).find(".result .cancel_sync");
+
+        if( !$(button).hasClass('disabled') ){
+            button.addClass('disabled');
+
+            $.ajax({
+              type: 'DELETE',
+              url: KT.routes.sync_management_path(repo_id),
+              dataType: 'json',
+              success: function(data) {
+              },
+              error: function(data) {
+                    button.removeClass('disabled');
+              }
+            });
+        }
     },
     startUpdater = function(){
         if (syncing.length ===0){
@@ -192,26 +197,6 @@ KT.content = (function(){
             var element = $("#repo-" + repo_id);
             element.find(".result").html(state);
             fadeUpdate(element.find(".duration"), duration);
-        },
-        cancelRepo = function(repo_id){
-            var repo = $("#repo-" + repo_id);
-            var prod_id = repo.attr("data-product_id");
-            var repos = [];
-            fadeUpdate(repo.find(".result"), i18n.cancelled);
-            $.each(KT.content_actions.getSyncing(), function(index, tmp_repo){
-                if (prod_id === $("#repo-" + tmp_repo).attr("data-product_id")){
-                    repos.push(tmp_repo);
-                }
-            });
-
-            //if no more repos are syncing of this product, update product to be complete
-            if(repos.length === 0){
-                $("#product-" + prod_id).find(".result").html("");
-            }
-            else {
-                //else do nothing and wait for next status update.
-            }
-
         },
         update_item = function(element, starttime, duration, progress, display_size, packages, size) {
             var pg = element.find(".progress"),
@@ -323,7 +308,6 @@ KT.content = (function(){
         };
     
     return {
-        cancelRepo: cancelRepo,
         updateProduct: updateProduct,
         updateRepo: updateRepo,
         finishRepo: finishRepo,

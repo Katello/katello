@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.38
+Version:        0.2.40
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -209,6 +209,10 @@ cp -R .bundle * %{buildroot}%{homedir}
 install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
+#copy cron scripts to be scheduled daily
+install -d -m0755 %{buildroot}%{_sysconfdir}/cron.daily
+install -m 755 script/katello-refresh-cdn %{buildroot}%{_sysconfdir}/cron.daily/katello-refresh-cdn
+
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
@@ -351,6 +355,7 @@ fi
 %files glue-pulp
 %{homedir}/app/models/glue/pulp
 %{homedir}/lib/resources/pulp.rb
+%config(missingok) %{_sysconfdir}/cron.daily/katello-refresh-cdn
 
 %files glue-candlepin
 %{homedir}/app/models/glue/candlepin
@@ -378,6 +383,168 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jun 01 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.40-1
+- 815308 - escaping character '^' for elastic searches
+- white-space formatting
+- 807288 - changeset history tab raising undefined method
+- 822672 - Making rake setup set the URL_ROOT correctly for headpin
+- katello - fix config loading in rake setup
+- katello, unit-test - fix model/sync_plan_spec
+- 826249 - system by environment page generates error
+- permissions/roles api - fix for organization_id required always
+- system groups - adding history api
+- 821644 - cli admin crl_regen command - unit and system test
+- 805956 - daily cron script for checking for new content on CDN
+- system groups - errata - show systems errata associated with
+- system groups - fix jslint error on systems.js
+- 822069 - Additional fix - left integer in return body
+- 753128 - Ensures that status updates to the sync management page are driven
+  solely by data returned from the server.
+- system groups - improving permissions on systems check of system_group
+- system groups - update index for group ids in the system model
+- 823890 - delete products that were removed from new manifest
+- system groups - removing multiselect widgets
+- converge-ui - updated to pull in the new jquery widgets for multiselect
+- system groups - minor mods for pull request comments
+- system groups - fix scss - regression during refactoring to share between
+  systems and groups
+- system groups - prepend Resources:: to Pulp call ... fix for recent master
+  merge
+- system groups - fixes regression from past merge of headpin flags
+- system groups - spec tests for new systems controller actions
+- system groups - generate error notice if no pkg, pkg grp or errata are
+  provided
+- system groups - fixing spec test in api
+- system groups - merge conflict
+- system groups - initial specs for errata controller
+- system groups - replacing add link with button
+- system groups - making system group systems tab conform more to the mockups
+- system groups - adding count
+- system groups - Adds missing param for max_systems on system group creation.
+- system groups - adding locked groups from system pages
+- system groups - adding missing partials
+- system groups - adding locked icon to locked groups
+- system groups - minor chg to labels based on sprint review feedback
+- system groups - initial UI code to support errata install for groups
+- system groups - initial model/glue/resources to support system group actions
+- Revert "system groups - adding environment api calls and tests"
+- system groups - adding environment api calls and tests
+- system groups - adding activation key validation for environments <-> system
+  groups
+- system groups - adding environment model to system groups
+- system groups - fix broken spec on api system groups controller
+- system groups - fix failed activation key specs/tests
+- system groups - only list groups w/ available capacity on systems page
+- system group - add group name to the validation error
+- system groups - update add/remove system to handle errors
+- auto_complete - update to js to allow users to reset the input
+- system groups - validate max systems during a system bulk action
+- system groups - validation updates for max systems
+- system groups - Adds the maximum systems paramter for CLI create/update.
+- system groups - fixing scope issue on systems autocomplete
+- system groups - add some basic validations on max_systems
+- system-groups - model - rename max_members to max_systems
+- systems - fix broken systmes page after merge
+- system groups - add model and ui to provision max systems for a group
+- system groups - fixing create due to recent merge
+- system groups - fixing broken systems page after merge
+- system group - Adds support for a system that is registering via activation
+  keys to be placed into the system groups associated with those activation
+  keys
+- system groups - adding more system permission spec tests
+- system groups - fixing some broken spec tests
+- system groups - update akey system groups to use the new multiselect
+- system groups - fixing query issues that reduced system visibility
+- system groups - fix the usage of group locking in systems controller
+- system groups - fix the locked field on controller and minor fix on notices
+- system groups - update Systems Bulk Action for Groups to use the multiselect
+  widget
+- system groups - fixing some wrongly-named methods
+- system groups - adding a few more missing model level role access and tests
+- system groups - permissions: deletion and UI membership
+- system groups - making api honor system visibility for add/remove systems
+- system groups - converting ui to only add/remove systems to a group for
+  readable systems
+- system groups - moving locking in ui from update action to lock action
+- system groups - adding api permission tests
+- system groups - Adds API support for adding system groups to an activation
+  key
+- system groups - unit test fix
+- system groups - adding perms to api controller
+- system groups - adding spec tests for UI permissions
+- system group - Adds CLI/API support for adding and removing system groups
+  from a system
+- system groups - fixing broken create due to perms
+- system groups - update Systems->System Groups to use the multiselect widget
+- multiselect - introduce new jquery widget for supporting multiselect
+- system groups - implementing UI controller and view permissions
+- system groups - adding initial permissions
+- system groups - updates to Systems->System Groups based on UI mockup
+- autocomplete.js - update to support comma-separated input
+- system groups - Adds support for adding systems to a system group in the CLI
+- fixing some broken unit tests caused by change to find_org in api controllers
+- system group - Adds support for locking and unlocking a system group in the
+  CLI
+- system groups - unit test fix
+- system groups - Adds CLI support for listing systems in a system group.
+- system groups - Adds ability to view info of single system group from CLI.
+- system groups - adding add/remove systems, lock/unlock and controller tests
+  for api
+- system groups - add search by system and by group, plus generic index update
+- system groups - adding query support for group index
+- system groups - moving routes under organization for api
+- system groups - adding initial api controller actions
+- api - modifying find_organization in api controller to error if org_id not
+  provided
+- system groups - improving locking notification from UI
+- i18n-ifying locked group message
+- system groups - making lock control system add/remove
+- systems - update view confirmation text to support i18n translations
+- systems - update system group bulk action to check availability of group
+  before 'add'
+- making spinner appear when removing system grouops
+- system groups - making add/remove buttons uniform with the rest of the app
+- removing unneeded print
+- few system group fixes
+- system groups - adding more controller tests and checking in missing template
+- system groups - fixing issue where description would not update
+- initial system group systems page
+- systems - disable pkg and group radio buttons when no system is selected
+- systems - update icon for bulk remove action
+- systems - update bulk actions to be completely disabled, unless system
+  selected
+- systems - add auto-complete to system group bulk action and update icons
+- systems - update icons based on uxd input
+- fixing filters.js to conform to the new auto_complete_box api
+- adding newest changes to autocomplete box
+- navigation - remove duplicate definition for system groups
+- adding systems group systems page and auto complete
+- system groups - add to systems navigation
+- systems - update notices to support i18n translations
+- system groups - add bulk action to the systems page to add/remove groups
+- system groups - add ability to assign system group to a system
+- system groups - adding an AR model relationship for system <-> system groups
+- systems - consolidate software/packages/errata under content navigation
+- system bulk actions - rework the pkg and group actions based on mockups
+- adding system group locked flag and UI controls
+- system groups - adding activation key controller specs
+- system groups - enable associating groups to an activation key
+- adding new files needed for system group UI
+- adding system group controller tests
+- adding tupane CRUD for system groups
+- fixing issue with group creation
+- adding glue layer for system groups
+- system bulk actions - UI/controller... changes to support additional actions
+- system bulk actions - add new routes and initial controller actions
+- adding pulp orchestration for system groups
+- adding base system group model for active record
+
+* Thu May 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.39-1
+- 824069 - adding marketing_product flag to product
+- 806353 - The time selector widget on the Sync Plans page will no longer get
+  stuck on the page and prevent clicking of the save button.
+- 821528 - fixing %%config on httpd.conf for RPM upgrades
+
 * Mon May 21 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.38-1
 - Fixes failing users controller spec tests.
 - Fixes for failing spec tests as part of the merge of new UI changes.
