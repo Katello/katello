@@ -118,7 +118,7 @@ class Create(RepoAction):
                                help=_("organization name eg: foo.example.com (required)"))
         parser.add_option('--name', dest='name',
                                help=_("repository name to assign (required)"))
-        parser.add_option("--url", dest="url",
+        parser.add_option("--url", dest="url", type="url",
                                help=_("url path to the repository (required)"))
         parser.add_option('--product', dest='prod',
                                help=_("product name (required)"))
@@ -153,7 +153,7 @@ class Discovery(RepoAction):
                                help=_("organization name eg: foo.example.com (required)"))
         parser.add_option('--name', dest='name',
                                help=_("repository name prefix to add to all the discovered repositories (required)"))
-        parser.add_option("--url", dest="url",
+        parser.add_option("--url", dest="url", type="url",
                                help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
                                help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
@@ -175,8 +175,7 @@ class Discovery(RepoAction):
         selectedurls = self.select_repositories(repourls, assumeyes)
 
         prod = get_product(orgName, prodName)
-        if prod != None:
-            self.create_repositories(orgName, prod["id"], name, selectedurls)
+        self.create_repositories(orgName, prod["id"], name, selectedurls)
 
         return os.EX_OK
 

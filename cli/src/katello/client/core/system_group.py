@@ -404,7 +404,7 @@ class AddSystems(SystemGroupAction):
                                help=_("system group name (required)"))
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        parser.add_option('--system_uuids', dest='system_uuids',
+        parser.add_option('--system_uuids', dest='system_uuids', type="list",
                               help=_("comma separated list of system uuids (required)"))
 
     def check_options(self, validator):
@@ -419,8 +419,6 @@ class AddSystems(SystemGroupAction):
 
         if system_group is None:
             return os.EX_DATAERR
-
-        system_ids = [uuid for uuid in system_ids.split(',')]
 
         systems = self.api.add_systems(org_name, system_group["id"], system_ids)
 
@@ -440,7 +438,7 @@ class RemoveSystems(SystemGroupAction):
                                help=_("system group name (required)"))
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        parser.add_option('--system_uuids', dest='system_uuids',
+        parser.add_option('--system_uuids', dest='system_uuids', type="list",
                               help=_("comma separated list of system uuids (required)"))
 
     def check_options(self, validator):
@@ -455,8 +453,6 @@ class RemoveSystems(SystemGroupAction):
 
         if system_group is None:
             return os.EX_DATAERR
-
-        system_ids = [uuid for uuid in system_ids.split(',')]
 
         systems = self.api.remove_systems(org_name, system_group["id"], system_ids)
 

@@ -152,15 +152,15 @@ class InstalledPackages(SystemAction):
                        help=_("system name (required)"))
         parser.add_option('--environment', dest='environment',
                        help=_("environment name"))
-        parser.add_option('--install', dest='install',
+        parser.add_option('--install', dest='install', type="list",
                        help=_("packages to be installed remotely on the system, package names are separated with comma"))
-        parser.add_option('--remove', dest='remove',
+        parser.add_option('--remove', dest='remove', type="list",
                        help=_("packages to be removed remotely from the system, package names are separated with comma"))
-        parser.add_option('--update', dest='update',
+        parser.add_option('--update', dest='update', type="list",
                        help=_("packages to be updated on the system, use --all to update all packages, package names are separated with comma"))
-        parser.add_option('--install_groups', dest='install_groups',
+        parser.add_option('--install_groups', dest='install_groups', type="list",
                        help=_("package groups to be installed remotely on the system, group names are separated with comma"))
-        parser.add_option('--remove_groups', dest='remove_groups',
+        parser.add_option('--remove_groups', dest='remove_groups', type="list",
                        help=_("package groups to be removed remotely from the system, group names are separated with comma"))
 
     def check_options(self, validator):
@@ -182,7 +182,6 @@ class InstalledPackages(SystemAction):
         update = self.get_option('update')
         install_groups = self.get_option('install_groups')
         remove_groups = self.get_option('remove_groups')
-        packages_separator = ","
 
         task = None
 
@@ -195,19 +194,19 @@ class InstalledPackages(SystemAction):
         system_id = system['uuid']
 
         if install:
-            task = self.api.install_packages(system_id, install.split(packages_separator))
+            task = self.api.install_packages(system_id, install)
         if remove:
-            task = self.api.remove_packages(system_id, remove.split(packages_separator))
+            task = self.api.remove_packages(system_id, remove)
         if update:
             if update == '--all':
                 update_packages = []
             else:
-                update_packages = update.split(packages_separator)
+                update_packages = update
             task = self.api.update_packages(system_id, update_packages)
         if install_groups:
-            task = self.api.install_package_groups(system_id, install_groups.split(packages_separator))
+            task = self.api.install_package_groups(system_id, install_groups)
         if remove_groups:
-            task = self.api.remove_package_groups(system_id, remove_groups.split(packages_separator))
+            task = self.api.remove_package_groups(system_id, remove_groups)
 
         if task:
             uuid = task["uuid"]
@@ -743,7 +742,7 @@ class AddSystemGroups(SystemAction):
             return os.EX_DATAERR
 
         system_group_ids = [group["id"] for group in system_groups]
-        
+
         system = self.api.add_system_groups(system["uuid"], system_group_ids)
 
         if system != None:
@@ -786,7 +785,7 @@ class RemoveSystemGroups(SystemAction):
             return os.EX_DATAERR
 
         system_group_ids = [group["id"] for group in system_groups]
-        
+
         system = self.api.remove_system_groups(system["uuid"], system_group_ids)
 
         if system != None:
