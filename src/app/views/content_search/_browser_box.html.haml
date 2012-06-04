@@ -3,3 +3,40 @@
     %h2
       = _("Browse")
   %section#filters
+    %fieldset.primary
+      = label_tag :content, _("Content")
+      %div.no_border
+        = select_tag :content, options_for_select(content_types)
+    %fieldset.primary
+      = label_tag :products, _("Products")
+      %div
+        = radio_button_tag :products, :auto_complete, true
+        = text_field_tag :auto_complete, "", :class => "auto_complete_input"
+        %a.button{ :id => "add_product" }
+          = _("Add")
+        %ul
+          %li
+            = _("All Products")
+    %fieldset.primary
+      = label_tag :repos, _("Repos")
+      %div
+        = radio_button_tag :repos, :auto_complete, true
+        = text_field_tag :auto_complete, "", :class => "auto_complete_input"
+        %a.button{ :id => "add_repo" }
+          = _("Add")
+        %ul
+          %li
+            = _("All Repos")
+    %fieldset.primary
+      = label_tag :packages, _("Packages")
+      %div
+        = radio_button_tag :packages, :search, true
+        = text_field_tag :search
+      %div
+        = radio_button_tag :packages, :auto_complete, false
+        = text_field_tag :auto_complete, "", :class => "auto_complete_input"
+        %a.button{ :id => "add_package" }
+          = _("Add")
+        %ul
+          %li
+            = _("All Packages")
