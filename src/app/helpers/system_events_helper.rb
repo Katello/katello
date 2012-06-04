@@ -12,7 +12,7 @@
 
 module SystemEventsHelper
   def generate_event_types
-    SystemTask::TYPES.to_json
+    TaskStatus::TYPES.to_json
   end
 
   def status_message(task)

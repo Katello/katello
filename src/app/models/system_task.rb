@@ -14,120 +14,9 @@ class SystemTask < ActiveRecord::Base
   belongs_to :system
   belongs_to :task_status
 
-  TYPES = {
-      #package tasks
-     :package_install => {
-          :english_name =>N_("Package Install"),
-          :type => :package,
-          :event_messages => {
-              :running => [N_('installing package...'),N_('installing packages...')],
-              :waiting => [N_('installing package...'),N_('installing packages...')],
-              :finished => [N_('%s package install'), N_('%s (%s other packages) install.')],
-              :error=> [N_('%s package install failed'), N_('%s (%s other packages) install failed')],
-              :cancelled => [N_('%s package install cancelled'), N_('%s (%s other packages) install cancelled')],
-              :timed_out =>[N_('%s package install timed out'), N_('%s (%s other packages) install timed out')],
-          },
-         :user_message => _('Package Install scheduled by %s')
-
-      },
-      :package_update => {
-          :english_name =>N_("Package Update"),
-          :type => :package,
-          :event_messages => {
-              :running => [N_('updating package...'), N_('updating packages...')],
-              :waiting => [N_('updating package...'), N_('updating packages...')],
-              :finished =>[ N_('%s package update'), N_('%s (%s other packages) update')],
-              :error => [N_('%s package update failed'), N_('%s (%s other packages) update failed')],
-              :cancelled =>[N_('%s package update cancelled'), N_('%s (%s other packages) update cancelled')],
-              :timed_out =>[N_('%s package update timed out'), N_('%s (%s other packages) update timed out')],
-          },
-          :user_message => _('Package Update scheduled by %s')
-      },
-      :package_remove => {
-          :english_name =>N_("Package Remove"),
-          :type => :package,
-          :event_messages => {
-              :running => [N_('removing package...'), N_('removing packages...')],
-              :waiting => [N_('removing package...'), N_('removing packages...')],
-              :finished => [N_('%s package removal'), N_('%s (%s other packages) removal')],
-              :error => [N_('%s package remove failed'), N_('%s (%s other packages) remove failed')],
-              :cancelled => [N_('%s package remove cancelled'), N_('%s (%s other packages) remove cancelled')],
-              :timed_out => [N_('%s package remove timed out'), N_('%s (%s other packages) remove timed out')],
-          },
-          :user_message => _('Package Remove scheduled by %s')
-      },
-      #package group tasks
-      :package_group_install => {
-          :english_name =>N_("Package Group Install"),
-          :type => :package_group,
-          :event_messages => {
-              :running => [N_('installing package group...'),N_('installing package groups...')],
-              :waiting => [N_('installing package group...'),N_('installing package groups...')],
-              :finished => [N_('%s package group install'), N_('%s (%s other package groups) install')],
-              :error=> [N_('%s package group install failed'), N_('%s (%s other package groups) install failed')],
-              :cancelled => [N_('%s package group install cancelled'), N_('%s (%s other package groups) install cancelled')],
-              :timed_out =>[N_('%s package group install timed out'), N_('%s (%s other package groups) install timed out')],
-          },
-          :user_message => _('Package Group Install scheduled by %s')
-      },
-      :package_group_update => {
-          :english_name =>N_("Package Group Update"),
-          :type => :package_group,
-          :event_messages => {
-              :running => [N_('updating package group...'), N_('updating package groups...')],
-              :waiting => [N_('updating package group...'), N_('updating package groups...')],
-              :finished =>[ N_('%s package group update'), N_('%s (%s other package groups) update')],
-              :error => [N_('%s package group update failed'), N_('%s (%s other package groups) update failed')],
-              :cancelled =>[N_('%s package group update cancelled'), N_('%s (%s other package groups) update cancelled')],
-              :timed_out =>[N_('%s package group update timed out'), N_('%s (%s other package groups) update timed out')],
-
-          },
-          :user_message => _('Package Group Update scheduled by %s')
-      },
-      :package_group_remove => {
-          :english_name =>N_("Package Group Remove"),
-          :type => :package_group,
-          :event_messages => {
-              :running => [N_('removing package group...'), N_('removing package groups...')],
-              :waiting => [N_('removing package group...'), N_('removing package groups...')],
-              :finished => [N_('%s package group removal'), N_('%s (%s other package groups) removal')],
-              :error => [N_('%s package group remove failed'), N_('%s (%s other package groups) remove failed')],
-              :cancelled => [N_('%s package group remove cancelled'), N_('%s (%s other package groups) remove cancelled')],
-              :timed_out => [N_('%s package group remove timed out'), N_('%s (%s other package groups) remove timed out')],
-
-          },
-          :user_message => _('Package Group Remove scheduled by %s')
-      },
-      :errata_install => {
-          :english_name =>N_("Errata Install"),
-          :type => :errata,
-          :event_messages => {
-              :running => [N_('installing erratum...'),N_('installing errata...')],
-              :waiting => [N_('installing erratum...'),N_('installing errata...')],
-              :finished => [N_('%s erratum install'), N_('%s (%s other errata) install.')],
-              :error=> [N_('%s erratum install failed'), N_('%s (%s other errata) install failed')],
-              :cancelled => [N_('%s erratum install cancelled'), N_('%s (%s other errata) install cancelled')],
-              :timed_out =>[N_('%s erratum install timed out'), N_('%s (%s other errata) install timed out')],
-          },
-         :user_message => _('Errata Install scheduled by %s')
-      },
-      :candlepin_event => {
-          :english_name =>N_("Candlepin Event"),
-          :type => :candlepin_event,
-          :event_messages => {
-          },
-          :user_message => nil
-      },
-  }.with_indifferent_access
-
-  TYPES.each_pair do |name, value|
-    value[:name] = _(value[:english_name])
-  end
-
-
   class << self
     def pending_message_for task
-      details = SystemTask::TYPES[task.task_type]
+      details = TaskStatus::TYPES[task.task_type]
       case details[:type]
         when :package
           p = task.parameters[:packages]
@@ -159,7 +48,7 @@ class SystemTask < ActiveRecord::Base
       end
     end
     def message_for task
-      details = SystemTask::TYPES[task.task_type]
+      details = TaskStatus::TYPES[task.task_type]
       case details[:type]
         when :package
           p = task.parameters[:packages]
@@ -179,17 +68,17 @@ class SystemTask < ActiveRecord::Base
             return ""
           end
           msg = details[:event_messages][task.state]
-          return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
+          return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
         when :candlepin_event
           return task.result
         when :package_group
           p = task.parameters[:groups]
           msg = details[:event_messages][task.state]
-          return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
+          return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
         when :errata
           p = task.parameters[:errata_ids]
           msg = details[:event_messages][task.state]
-          return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
+          return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
 
       end
     end
@@ -242,7 +131,7 @@ class SystemTask < ActiveRecord::Base
 
   # non self methods
   def humanize_type
-    TYPES[task_status.task_type][:name]
+    TaskStatus::TYPES[task_status.task_type][:name]
   end
 
   def humanize_parameters

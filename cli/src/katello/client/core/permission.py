@@ -61,8 +61,8 @@ class Create(PermissionAction):
         parser.add_option('--description', dest='desc', help=_("permission description"))
         parser.add_option('--org', dest='org', help=_("organization name"))
         parser.add_option('--scope', dest='scope', help=_("scope of the permisson (required)"))
-        parser.add_option('--verbs', dest='verbs', help=_("verbs for the permission"), default="")
-        parser.add_option('--tags', dest='tags', help=_("tags for the permission"), default="")
+        parser.add_option('--verbs', dest='verbs', type="list", help=_("verbs for the permission"), default="")
+        parser.add_option('--tags', dest='tags', type="list", help=_("tags for the permission"), default="")
 
     def check_options(self, validator):
         validator.require(('user_role', 'name', 'scope'))
@@ -85,12 +85,6 @@ class Create(PermissionAction):
         except KeyError, e:
             system_exit(os.EX_DATAERR, _("Could not find tag [ %s ] in scope of [ %s ]") % (e[0], scope))
 
-    def split_options(self, opts):
-        if opts == "":
-            return []
-        else:
-            return opts.split(",")
-
 
     def run(self):
         role_name = self.get_option('user_role')
@@ -98,8 +92,8 @@ class Create(PermissionAction):
         desc = self.get_option('desc')
         org_name = self.get_option('org')
         scope = self.get_option('scope')
-        verbs = self.split_options(self.get_option('verbs'))
-        tags = self.split_options(self.get_option('tags'))
+        verbs = self.get_option('verbs')
+        tags = self.get_option('tags')
 
         tag_ids = self.tags_to_ids(tags, org_name, scope)
 

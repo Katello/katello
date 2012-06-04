@@ -36,9 +36,7 @@ class EnvironmentAction(Action):
 
     def get_prior_id(self, orgName, priorName):
         prior = get_environment(orgName, priorName)
-        if prior != None:
-            return prior["id"]
-        return None
+        return prior["id"]
 
 # environment actions ------------------------------------------------------------
 

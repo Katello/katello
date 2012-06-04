@@ -308,7 +308,7 @@ class Create(ProductAction):
                                help=_("product name (required)"))
         parser.add_option("--description", dest="description",
                                help=_("product description"))
-        parser.add_option("--url", dest="url",
+        parser.add_option("--url", dest="url", type="url",
                                help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
         parser.add_option("--nodisc", action="store_true", dest="nodiscovery",
                                help=_("skip repository discovery"))

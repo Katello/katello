@@ -429,10 +429,7 @@ class Update(TemplateAction):
         ids = []
         for rec in repos:
             repo = get_repo(orgName, rec['product'], rec['name'])
-            if repo != None:
-                ids.append(repo['id'])
-            else:
-                system_exit(os.EX_DATAERR)
+            ids.append(repo['id'])
         return ids
 
 
