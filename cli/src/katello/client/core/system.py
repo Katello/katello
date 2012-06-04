@@ -401,11 +401,6 @@ class Register(SystemAction):
         validator.require(('name', 'org'))
         validator.require_at_most_one_of(('activationkey', 'environment'))
 
-    def require_credentials(self):
-        if self.has_option('activationkey'):
-            return False
-        else:
-            return super
 
     def run(self):
         name = self.get_option('name')

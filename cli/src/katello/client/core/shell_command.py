@@ -28,18 +28,16 @@ Config()
 class ShellAction(Action):
 
     description = _('run the cli as a shell')
-    name = "shell"
 
     def __init__(self, cli):
         super(ShellAction, self).__init__()
         self.admin = cli
 
     def setup_parser(self, parser):
-        return 0
+        pass
 
     def run(self):
-        self.admin.usage_line = '[cmd] <options>'
-        self.admin.remove_command(ShellAction.name)
+        self.admin.remove_command("shell")
         shell = KatelloShell(self.admin)
         shell.cmdloop()
 

@@ -62,10 +62,7 @@ class KatelloCLI(Command):
         super(KatelloCLI, self).__init__()
 
         self.name = os.path.basename(sys.argv[0])
-        self.opts = None
         self._server = None
-
-        self.usage_line = 'Usage: %s <options> <command>' % self.name
 
         self._username = None
         self._password = None
@@ -73,26 +70,6 @@ class KatelloCLI(Command):
         self._certfile = None
         self._keyfile  = None
 
-    #def usage(self, command_path=None):
-        #"""
-        #Usage string.
-        #@rtype: str
-        #@return: command's usage string
-        #"""
-        #lines = [self.usage_line, 'Supported Commands:']
-        #for name in sorted(self.get_subcommand_names()):
-            #lines += self.__build_command_usage_lines(name, self.get_subcommand(name))
-        #return '\n'.join(lines)
-
-    #def __build_command_usage_lines(self, name, command):
-        #lines = []
-        #desc_lines = command.description.split("\n")
-
-        #lines.append('\t%-14s %s' % (name, desc_lines.pop(0)) )
-        #for l in desc_lines:
-            #lines.append('\t%-14s %s' % (" ", l) )
-
-        #return lines
 
 
     def setup_parser(self, parser):
@@ -172,9 +149,9 @@ class KatelloCLI(Command):
         self.setup_server()
         self.setup_credentials()
 
-    def main(self, args, command_path=None):
+    def main(self, args, command_name=None, parent_usage=None):
         try:
-            return super(KatelloCLI, self).main(args, command_path)
+            return super(KatelloCLI, self).main(args, command_name, parent_usage)
 
         except OptionParserExitError, opee:
             return opee.args[0]

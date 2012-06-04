@@ -29,6 +29,7 @@ import sys
 from cmd import Cmd
 
 from katello.client.config import Config
+from katello.client.core.base import Command, CommandContainer
 from katello.client.core.utils import parse_tokens
 
 Config()
@@ -37,19 +38,27 @@ class KatelloShell(Cmd):
 
     # maximum length of history file
     HISTORY_LENGTH = 1024
+    BUILTIN_COMMANDS = ("help", "quit", "exit")
 
     cmdqueue = []
     completekey = 'tab'
     stdout = sys.stdout
-    current_line = ''
 
     # do nothing on an empty line
     emptyline = lambda self: None
 
+    @property
+    def history_file(self):
+        conf_dir = Config.USER_DIR
+        try:
+            if not os.path.isdir(conf_dir):
+                os.mkdir(conf_dir, 0700)
+        except OSError:
+            logging.error('Could not create directory %s' % conf_dir)
+        return os.path.join(conf_dir, 'history')
+
+
     def __init__(self, admin_cli):
-        self.session = ''
-        self.username = ''
-        self.server = ''
         self.admin_cli = admin_cli
 
         try:
@@ -57,208 +66,137 @@ class KatelloShell(Cmd):
         except:
             self.prompt = 'katello> '
 
-        self.conf_dir = Config.USER_DIR
-
-        try:
-            if not os.path.isdir(self.conf_dir):
-                os.mkdir(self.conf_dir, 0700)
-        except OSError:
-            logging.error('Could not create directory %s' % self.conf_dir)
-
-        self.history_file = os.path.join(self.conf_dir, 'history')
-
         try:
             # don't split on hyphens during tab completion (important for completing parameters)
             newdelims = readline.get_completer_delims()
             newdelims = re.sub('-', '', newdelims)
             readline.set_completer_delims(newdelims)
 
-
             if (Config.parser.get('shell', 'nohistory').lower() != 'true'):
-                try:
-                    if os.path.isfile(self.history_file):
-                        readline.read_history_file(self.history_file)
-
-                    readline.set_history_length(self.HISTORY_LENGTH)
-
-                    # always write the history file on exit
-                    atexit.register(readline.write_history_file,
-                                    self.history_file)
-                except IOError:
-                    logging.error('Could not read history file')
+                self.__init_history()
         except Exception:
             pass
+        self.__init_commands()
 
-        for cmd in admin_cli.command_names():
-            setattr(self, "do_" + cmd, self.admin_cli.main)
 
-    def do_quit(self, args):
-        sys.exit(0)
+    def __init_history(self):
+        try:
+            readline.read_history_file(self.history_file)
+            readline.set_history_length(self.HISTORY_LENGTH)
+            # always write the history file on exit
+            atexit.register(readline.write_history_file, self.history_file)
+        except IOError:
+            logging.error('Could not read history file')
+
+
+    def __init_commands(self):
+        # add commans to shell to avoid unknown syntax errors
+        for cmd in self.admin_cli.get_command_names():
+            setattr(self, "do_"+cmd, self.admin_cli.main)
+        # add builtin commands into cli command - needed for correct completion
+        for name in self.BUILTIN_COMMANDS:
+            self.admin_cli.add_command(name, Command())
+        # set exit aliases
+        setattr(self, "do_quit", self.do_exit)
+        setattr(self, "do_EOF", self.do_exit)
+        setattr(self, "do_eof", self.do_exit)
+
 
     def do_exit(self, args):
+        self.remove_last_history_item()
         sys.exit(0)
 
-    # handle commands that exit the shell
+
+    def do_help(self, str_args):
+        self.admin_cli.main("--help")
+
+
     def precmd(self, line):
-        # remove leading/trailing whitespace
-        line = re.sub('^\s+|\s+$', '', line)
-
-        # don't do anything on empty lines
-        if line == '':
-            return ''
-
-        # terminate the shell
-        if re.match('quit|exit|eof', line, re.I):
-            return "quit"
-
-        line  = line.strip()
-        parts = parse_tokens(line)
+        line = line.strip()
+        line = self.__history_preprocess(line)
+        return line
 
 
-        if len(parts):
-            command = parts[0]
-        else:
-            return ''
-
-        if len(parts[1:]):
-            args = ' '.join(parts[1:])
-        else:
-            args = ''
-
-        # print the help message if the user passes '--help'
-        line_parts = line.split("\"")
-        for i in range(0, len(line_parts), 2):
-            if re.search('--help', line_parts[i]) or re.search('-h', line_parts[i]):
-                return 'help %s' % line
-
-        # should we look for an item in the history?
-        if command[0] != '!' or len(command) < 2:
+    def __history_preprocess(self, line):
+        if not line.startswith('!'):
             return line
+
+        command = line.split()[0]
+        if re.match('^!$', command):
+            new_line = self.__history_try_repeat_nth(-1)
+        elif re.match('^!-?[0-9]+$', command):
+            new_line = self.__history_try_repeat_nth(command[1:])
+        else:
+            new_line = self.__history_try_search(command[1:])
 
         # remove the '!*' line from the history
-        self.remove_last_history_item()
+        if new_line:
+            self.replace_last_history_item(new_line)
+            print new_line
+            return new_line
+        return line
 
-        history_match = False
-
-        if command[1] == '!':
-            # repeat the last command
-            line = readline.get_history_item(readline.get_current_history_length())
-            if line:
-                history_match = True
-            else:
-                logging.warning('%s: event not found' % command)
-                return ''
-
-        # attempt to find a numbered history item
-        if not history_match:
-            try:
-                number = int(command[1:])
-                line = readline.get_history_item(number)
-                if line:
-                    history_match = True
-            except IndexError:
-                pass
-            except ValueError:
-                pass
-
-        # attempt to match the beginning of the string with a history item
-        if not history_match:
-            history_range = range(1, readline.get_current_history_length())
-            history_range.reverse()
-
-            for i in history_range:
-                item = readline.get_history_item(i)
-                if re.match(command[1:], item):
-                    line = item
-                    history_match = True
-                    break
-
-        # append the arguments to the substituted command
-        if history_match:
-
-            # terminate the shell
-            if re.match('quit|exit|eof', line, re.I):
-                print line
-                return "quit"
-
-            line += ' %s' % args
-
-            readline.add_history(line)
-            print line
-            return line
-        else:
-            logging.warning('%s: event not found' % command)
+    def __history_try_repeat_nth(self, n):
+        try:
+            n = int(n)
+            if n < 0:
+                n = readline.get_current_history_length()+n
+            return readline.get_history_item(n)
+        except:
+            logging.warning('%sth command from history not found' % n)
             return ''
+
+
+    def __history_try_search(self, text):
+        history_range = range(readline.get_current_history_length(), 1, -1)
+        for i in history_range:
+            item = readline.get_history_item(i)
+            if item.startswith(text):
+                return item
+        return ''
+
 
     def parseline(self, line):
         cmd, arg, line = Cmd.parseline(self, line)
-        if (cmd in self.admin_cli.command_names()) and (arg != None):
+        if (cmd in self.admin_cli.get_command_names()) and (arg != None):
             arg = cmd + " " + arg
         return cmd, arg, line
 
-    def postcmd(self, stop, line):
-        if stop:
-            return (line == "quit")
-        else:
-            return stop
+    def __complete(self, text, line_parts, with_params=False):
+        cmd =  self.__get_command(line_parts)
+        completions = self.__get_possible_completions(cmd, with_params)
+        return [a for a in completions if a.startswith(text)]
 
-    def do_help(self, strArgs):
-        if strArgs:
-            args = strArgs.split()
-            cmd = self.admin_cli.get_command(args[0])
-            if not cmd:
-                print("Invalid Command %s") % args[0]
-                return
 
-            if len(args) > 1:
-                cmd.main(args[1]+" --help")
-            else:
-                cmd.main("--help")
+    def __get_possible_completions(self, cmd, with_params=False):
+        completions = []
+        if isinstance(cmd, CommandContainer):
+            completions += cmd.get_command_names()
+        if with_params:
+            completions += cmd.create_parser().get_long_options()
+        return completions
 
-        else:
-            self.admin_cli.main("--help")
 
-    def completeparams(self, text, line, *ignored):
-        parts = parse_tokens(line)
-        cmdName    = parts[0]
-        actionName = parts[1]
-        action = self.admin_cli.get_command(cmdName).get_action(actionName)
-
-        params = action.create_parser().get_long_options()
-
-        return [a for a in params if a.startswith(text)]
-
-    def completecommands(self, text, line, *ignored):
-        cmdName = line.split()[0]
-        actions = self.admin_cli.get_command(cmdName).action_names()
-        return [a for a in actions if a.startswith(text)]
-
-    def completenames(self, text, *ignored):
-        commands = self.admin_cli.command_names() + ["help", "quit", "exit"]
-        return [a for a in commands if a.startswith(text)]
+    def __get_command(self, names):
+        cmd = self.admin_cli
+        for name in names:
+            if isinstance(cmd, CommandContainer):
+                if name in cmd.get_command_names():
+                    cmd = cmd.get_command(name)
+        return cmd
 
 
     def complete(self, text, state):
-        """Return the next possible completion for 'text'.
-
-        If a command has not been entered, then complete against command list.
-        Otherwise try to call complete_<command> to get list of completions.
+        """
+        Return the next possible completion for 'text'.
         """
         if state == 0:
-            origline = readline.get_line_buffer()
-            line = origline.lstrip()
-            stripped = len(origline) - len(line)
-            begidx = readline.get_begidx() - stripped
-            endidx = readline.get_endidx() - stripped
-
-            wordCnt = len(line[:begidx].split())
-
-            if wordCnt <= 0:
-                self.completion_matches = self.completenames(text, line, begidx, endidx)
-            elif wordCnt == 1:
-                self.completion_matches = self.completecommands(text, line, begidx, endidx)
+            line = readline.get_line_buffer().lstrip()
+            line_parts = parse_tokens(line)
+            if len(line_parts) <= 1:
+                self.completion_matches = self.__complete(text, line_parts, with_params=False)
             else:
-                self.completion_matches = self.completeparams(text, line, begidx, endidx)
+                self.completion_matches = self.__complete(text, line_parts, with_params=True)
 
         try:
             return self.completion_matches[state]
@@ -268,6 +206,10 @@ class KatelloShell(Cmd):
 
     def remove_last_history_item(self):
         last = readline.get_current_history_length() - 1
-
         if last >= 0:
             readline.remove_history_item(last)
+
+
+    def replace_last_history_item(self, replace_with):
+        self.remove_last_history_item()
+        readline.add_history(replace_with)

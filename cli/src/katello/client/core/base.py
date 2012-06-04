@@ -47,102 +47,28 @@ _log = getLogger(__name__)
 # everything the CLI can do.
 
 
-class Command(object):
+class CommandContainer(object):
 
     def __init__(self):
         self.__subcommands = {}
-        self.opts = None
-        self.args = None
 
-    def usage(self, command_path):
-        """
-        Usage string.
-        @rtype: str
-        @return: command's usage string
-        """
-        if command_path:
-            usage_line = " <options> ".join(command_path)
-        else:
-            usage_line = ""
-        usage_line += " <command>"
-        lines = [usage_line, 'Supported Commands:']
-        for name in sorted(self.get_subcommand_names()):
-            lines += self.__build_command_usage_lines(name, self.get_subcommand(name))
-        return '\n'.join(lines)
-
-    def __build_command_usage_lines(self, name, command):
-        lines = []
-        desc_lines = command.description.split("\n")
-
-        lines.append('\t%-14s %s' % (name, desc_lines.pop(0)) )
-        for l in desc_lines:
-            lines.append('\t%-14s %s' % (" ", l) )
-
-        return lines
-
-
-    def add_subcommand(self, name, command):
+    def add_command(self, name, command):
         self.__subcommands[name] = command
 
-    def get_subcommand_names(self):
+    def remove_command(self, name):
+        del self.__subcommands[name]
+
+    def get_command_names(self):
         return self.__subcommands.keys()
 
-    def get_subcommand(self, name):
+    def get_command(self, name):
         if name in self.__subcommands:
             return self.__subcommands[name]
         raise Exception("Command not found")
 
-    def create_parser(self, command_path=None):
-        parser = OptionParser(option_class=KatelloOption)
-        parser.disable_interspersed_args()
-        parser.set_usage(self.usage(command_path))
-        self.setup_parser(parser)
-        return parser
 
 
-    def setup_parser(self, parser):
-        """
-        Add custom options to the parser
-        @note: this method should be overridden to add per-action options
-        """
-        pass
-
-    def process_options(self, parser, args):
-        self.opts, self.args = parser.parse_args(args)
-
-
-    def _extract_command(self, parser, args):
-        #import pdb
-        #pdb.set_trace()
-        if not args:
-            parser.error(_('no action given: please see --help'))
-
-        try:
-            command = self.get_subcommand(args[0])
-            return command
-        except:
-            parser.error(_('invalid action: please see --help'))
-            return None
-
-    def run(self):
-        pass
-
-    def main(self, args, command_path=None):
-        if type(args) == str:
-            args = parse_tokens(args)
-
-        parser = self.create_parser(command_path)
-        self.process_options(parser, args)
-        if command_path is not None:
-            command_path.append(self.args[0])
-        self.run()
-        return self._extract_command(parser, self.args).main(self.args[1:], command_path)
-
-
-
-# base action class -----------------------------------------------------------
-
-class Action(object):
+class BaseAction(object):
     """
     Action class representing a single action for a cli command
     @ivar name: action's name
@@ -151,25 +77,26 @@ class Action(object):
     @ivar args: arguments returned from parsing command line
     """
 
-    def __init__(self):
-        self.cmd = None
-        self.name = None
-        self.opts = None
-        self.args = None
-        self.printer = None
+    opts = None
+    args = None
+    takes_options = True
 
-    def usage(self, command_path = None):
+    def _get_usage_line(self, command_name, parent_usage):
+        first_line = parent_usage or ""
+        first_line += " "
+        first_line += command_name or ""
+        if self.takes_options:
+            first_line += " <options>"
+        return first_line
+
+    def usage(self, command_name=None, parent_usage=None):
         """
         Usage string.
         @rtype: str
         @return: command's usage string
         """
-        if command_path:
-            usage_line = " <options> ".join(command_path)
-        else:
-            usage_line = ""
-        usage_line += " <options>"
-        return usage_line
+        return "Usage: "+self._get_usage_line(command_name, parent_usage)
+
 
     @property
     def description(self):
@@ -178,26 +105,14 @@ class Action(object):
         """
         return _('no description available')
 
-    def create_parser(self, command_path=None):
+    def create_parser(self, command_name=None, parent_usage=None):
         parser = OptionParser(option_class=KatelloOption)
-        parser.add_option('-g', dest='grep',
-                        action="store_true",
-                        help=_("grep friendly output"))
-        parser.add_option('-v', dest='verbose',
-                        action="store_true",
-                        help=_("verbose, more structured output"))
-        parser.add_option('-d', dest='delimiter',
-                        default="",
-                        help=_("column delimiter in grep friendly output, works only with option -g"))
-        parser.set_usage(self.usage(command_path))
         self.setup_parser(parser)
+        parser.set_usage(self.usage(command_name, parent_usage))
         return parser
 
     def create_validator(self, parser, opts, args):
         return OptionValidator(parser, opts, args)
-
-    def create_printer(self, strategy):
-        return Printer(strategy)
 
     def get_option(self, opt_dest):
         """
@@ -224,7 +139,7 @@ class Action(object):
         Add custom options to the parser
         @note: this method should be overridden to add per-action options
         """
-        pass
+        self.takes_options = False
 
     def run(self):
         """
@@ -232,7 +147,7 @@ class Action(object):
         @note: override this method to implement the actoin's functionality
         @raise NotImplementedError: if this method is not overridden
         """
-        raise NotImplementedError('Base class method called')
+        pass
 
     def check_options(self, validator):
         """
@@ -240,6 +155,132 @@ class Action(object):
         @note: this method should be overridden to check for required options
         """
         return
+
+    def error(self, error_msg):
+        error_msg = u_str(error_msg)
+        _log.error("error: %s" % error_msg)
+        if error_msg == '':
+            msg = _('error: operation failed')
+        else:
+            msg = error_msg
+        print >> sys.stderr, msg
+
+
+    def process_options(self, parser, args):
+        self.opts, self.args = parser.parse_args(args)
+
+        validator = self.create_validator(parser, self.opts, self.args)
+        self.check_options(validator)
+        self.__process_option_errors(parser, validator.opt_errors)
+
+    def __process_option_errors(self, parser, errors):
+        if len(errors) == 1:
+            parser.error(errors[0])
+        elif len(errors) > 0:
+            parser.error(errors)
+
+
+    def main(self, args, command_name=None, parent_usage=None):
+        """
+        Main execution of the action
+        This method setups up the parser, parses the arguments, and calls run()
+        in a try/except block, handling RestlibExceptions and general errors
+        @warning: this method should only be overridden with care
+        """
+        parser = self.create_parser(command_name, parent_usage)
+        self.process_options(parser, args)
+        return self.run()
+
+
+
+class Command(CommandContainer, BaseAction):
+
+    def usage(self, command_name=None, parent_usage=None):
+        """
+        Usage string.
+        @rtype: str
+        @return: command's usage string
+        """
+        first_line = "Usage: "+self._get_usage_line(command_name, parent_usage)
+        if len(self.get_command_names()) > 0:
+            first_line += " <command>"
+
+        lines = [first_line, 'Supported Commands:']
+        for name in sorted(self.get_command_names()):
+            lines += self.__build_command_usage_lines(name, self.get_command(name))
+        return '\n'.join(lines)
+
+    def __build_command_usage_lines(self, name, command):
+        lines = []
+        desc_lines = command.description.split("\n")
+
+        lines.append('\t%-14s %s' % (name, desc_lines.pop(0)) )
+        for l in desc_lines:
+            lines.append('\t%-14s %s' % (" ", l) )
+
+        return lines
+
+    def create_parser(self, command_name=None, parent_usage=None):
+        parser = super(Command, self).create_parser(command_name, parent_usage)
+        parser.disable_interspersed_args()
+        return parser
+
+    def _extract_command(self, parser, args):
+        if not args:
+            parser.error(_('no action given: please see --help'))
+        try:
+            command = self.get_command(args[0])
+            return command
+        except:
+            parser.error(_('invalid action: please see --help'))
+            return None
+
+
+    def main(self, args, command_name=None, parent_usage=None):
+        if type(args) == str:
+            args = parse_tokens(args)
+
+        parser = self.create_parser(command_name, parent_usage)
+        self.process_options(parser, args)
+
+        self.run()
+        subcommand = self._extract_command(parser, self.args)
+
+        return subcommand.main(self.args[1:], self.args[0], self._get_usage_line(command_name, parent_usage))
+
+
+
+# base action class -----------------------------------------------------------
+
+class Action(BaseAction):
+    """
+    Action class representing a single action for a cli command
+    @ivar name: action's name
+    @ivar parser: optparse.OptionParser instance
+    @ivar opts: options returned from parsing command line
+    @ivar args: arguments returned from parsing command line
+    """
+
+    def __init__(self):
+        super(Action, self).__init__()
+        self.printer = None
+
+
+    def create_parser(self, command_name=None, parent_usage=None):
+        parser = super(Action, self).create_parser(command_name, parent_usage)
+        parser.add_option('-g', dest='grep',
+                        action="store_true",
+                        help=_("grep friendly output"))
+        parser.add_option('-v', dest='verbose',
+                        action="store_true",
+                        help=_("verbose, more structured output"))
+        parser.add_option('-d', dest='delimiter',
+                        default="",
+                        help=_("column delimiter in grep friendly output, works only with option -g"))
+        return parser
+
+    def create_printer(self, strategy):
+        return Printer(strategy)
 
     def __print_strategy(self):
         if (self.has_option('grep') or (Config.parser.has_option('interface', 'force_grep_friendly') and Config.parser.get('interface', 'force_grep_friendly').lower() == 'true')):
@@ -257,52 +298,16 @@ class Action(object):
             if not opt is None:
                 parser.set_default(opt.get_dest(), opt_value)
 
-    def extract_action(self, args):
-        """
-        this method exists so that an action can run like a command
-        it supports having single name actions (e.g. katello shell)
-        """
-        pass
 
-    def require_credentials(self):
-        """
-        if True, credentials are required when calling the command.
-        @note: this method should be overriden, if credentials should not be checked for action
-        """
-        return True
-
-    def error(self, error_msg):
-        error_msg = u_str(error_msg)
-        _log.error("error: %s" % error_msg)
-        if error_msg == '':
-            msg = _('error: operation failed')
-        else:
-            msg = error_msg
-        print >> sys.stderr, msg
-
-
-    def setup_action(self, args, command_path=None):
-        parser = self.create_parser(command_path)
+    def setup_action(self, args, command_name=None, parent_usage=None):
+        parser = self.create_parser(command_name, parent_usage)
         self.load_saved_options(parser)
         self.process_options(parser, args)
 
         self.printer = self.create_printer(self.__print_strategy())
 
-    def process_options(self, parser, args):
-        self.opts, self.args = parser.parse_args(args)
 
-        validator = self.create_validator(parser, self.opts, self.args)
-        self.check_options(validator)
-        self.__process_option_errors(parser, validator.opt_errors)
-
-    def __process_option_errors(self, parser, errors):
-        if len(errors) == 1:
-            parser.error(errors[0])
-        elif len(errors) > 0:
-            parser.error(errors)
-
-
-    def main(self, args, command_path=None):
+    def main(self, args, command_name=None, parent_usage=None):
         """
         Main execution of the action
         This method setups up the parser, parses the arguments, and calls run()
@@ -310,7 +315,7 @@ class Action(object):
         @warning: this method should only be overridden with care
         """
         try:
-            self.setup_action(args, command_path)
+            self.setup_action(args, command_name, parent_usage)
             return self.run()
 
         except SSL.Checker.WrongHost, wh:
@@ -363,6 +368,11 @@ class Action(object):
             return os.EX_NOUSER
 
         print ''
+
+
+
+
+
 
 # optparse type extenstions --------------------------------------------------
 
