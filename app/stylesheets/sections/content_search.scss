@@ -82,7 +82,13 @@ $widget_border-color: #B5B5B5;
 
       .column_header {
         float: left;
-        padding: 10px;
+        width: 40px;
+        line-height: 40px;
+        text-align: center;
+
+        &:last-child {
+          width: 120px;
+        }
       }
     }
   }
@@ -106,6 +112,17 @@ $widget_border-color: #B5B5B5;
       width: $comparison_grid-width - $comparison_grid_filter-width - 1;
       height: $comparison_grid-height - $comparison_grid_header-height;
       float: left;
+
+      .grid_row {
+        height: 40px;
+      }
+
+      .grid_cell {
+        width: 40px;
+        display: inline-block;
+        line-height: 40px;
+        text-align: center;
+      }
     }
   }
 }
