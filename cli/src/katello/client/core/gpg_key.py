@@ -73,24 +73,24 @@ class List(GpgKeyAction):
         gpg_keys = self.api.gpg_keys_by_organization(orgName)
 
         if not gpg_keys:
-            print _("No gpg keys found in organization [ %s ]") % orgName
+            print _("No GPG keys found in organization [ %s ]") % orgName
 
             return os.EX_OK
 
         self.printer.add_column('name')
 
-        self.printer.set_header(_("Gpg Key List"))
+        self.printer.set_header(_("GPG Key List"))
         self.printer.print_items(gpg_keys)
         return os.EX_OK
 
 
 class Info(GpgKeyAction):
 
-    description = _('show information about a gpg key')
+    description = _('show information about a GPG key')
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
-                               help=_("activation key name (required)"))
+                               help=_("GPG key name (required)"))
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
 
@@ -101,7 +101,7 @@ class Info(GpgKeyAction):
         keyName = self.get_option('name')
         key_id = self.get_key_id()
         if not key_id:
-            print >> sys.stderr, _("Could not find gpg key [ %s ]") % keyName
+            print >> sys.stderr, _("Could not find GPG key [ %s ]") % keyName
             return os.EX_DATAERR
 
         key = self.api.gpg_key(key_id)
@@ -115,18 +115,18 @@ class Info(GpgKeyAction):
         self.printer.add_column('products', multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('repos', multiline=True, show_with=printer.VerboseStrategy, name=_("Repositories"))
 
-        self.printer.set_header(_("Gpg Key Info"))
+        self.printer.set_header(_("GPG Key Info"))
         self.printer.print_item(key)
         return os.EX_OK
 
 
 class Create(GpgKeyAction):
 
-    description = _('create a gpg key')
+    description = _('create a GPG key')
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
-                               help=_("activation key name (required)"))
+                               help=_("GPG key name (required)"))
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         parser.add_option('--file', dest='file',
@@ -147,18 +147,18 @@ class Create(GpgKeyAction):
 
         key = self.api.create(orgName, keyName, content)
         test_record(key,
-            _("Successfully created gpg key [ %s ]") % keyName,
-            _("Could not create gpg key [ %s ]") % keyName
+            _("Successfully created GPG key [ %s ]") % keyName,
+            _("Could not create GPG key [ %s ]") % keyName
         )
 
 
 class Update(GpgKeyAction):
 
-    description = _('update an activation key')
+    description = _('update a GPG key')
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
-                               help=_("activation key name (required)"))
+                               help=_("GPG key name (required)"))
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         parser.add_option('--new_name', dest='new_name',
@@ -185,23 +185,23 @@ class Update(GpgKeyAction):
 
         key_id = self.get_key_id()
         if not key_id:
-            print >> sys.stderr, _("Could not find gpg key [ %s ]") % keyName
+            print >> sys.stderr, _("Could not find GPG key [ %s ]") % keyName
             return os.EX_DATAERR
 
         key = self.api.update(key_id, newKeyName, content)
         test_record(key,
-            _("Successfully updated gpg key [ %s ]") % keyName,
-            _("Could not updated gpg key [ %s ]") % keyName
+            _("Successfully updated GPG key [ %s ]") % keyName,
+            _("Could not updated GPG key [ %s ]") % keyName
         )
 
 
 class Delete(GpgKeyAction):
 
-    description = _('delete an gpg key')
+    description = _('delete a GPG key')
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
-                               help=_("activation key name (required)"))
+                               help=_("GPG key name (required)"))
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
 
@@ -213,11 +213,11 @@ class Delete(GpgKeyAction):
 
         key_id = self.get_key_id()
         if not key_id:
-            print >> sys.stderr, _("Could not find gpg key [ %s ]") % keyName
+            print >> sys.stderr, _("Could not find GPG key [ %s ]") % keyName
             return os.EX_DATAERR
 
         self.api.delete(key_id)
-        print _("Successfully deleted gpg key [ %s ]") % keyName
+        print _("Successfully deleted GPG key [ %s ]") % keyName
         return os.EX_OK
 
 class GpgKey(Command):
