@@ -129,7 +129,7 @@ class Update(ProviderAction):
                                help=_("provider name (required)"))
         parser.add_option("--description", dest="description",
                                help=_("provider description"))
-        parser.add_option("--url", dest="url",
+        parser.add_option("--url", dest="url", type="url",
                                help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
@@ -140,16 +140,7 @@ class Update(ProviderAction):
 
 
     def check_options(self, validator):
-
         validator.require(('name', 'org'))
-
-        if validator.exists('url'):
-            url = self.get_option('url')
-            url_parsed = urlparse(url)
-            if not url_parsed.scheme in ["http","https"]:                       # pylint: disable=E1101
-                validator.add_option_error(_('Option --url has to start with http:// or https://'))
-            elif not url_parsed.netloc:                                         # pylint: disable=E1101
-                validator.add_option_error(_('Option --url is not in a valid format'))
 
 
     def create(self, name, orgName, description, url):
