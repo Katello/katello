@@ -3,26 +3,18 @@
   -if editable
     :plain
       $(document).ready(function() {
-        KT.system.errata.init(true);
+        KT.system.errata.init(true, 'system');
       });
   -else
     :plain
       $(document).ready(function() {
-        KT.system.errata.init(false);
-      });
-
-= javascript do
-  :plain
-    localize({
-      "x_of_y_errata" : function(x,y,z){ return '#{_("Viewing %X of %Y results (%Z Total Errata)")}'.replace("%X", x).replace("%Y", y).replace("%Z", z); },
-      "errata_installing" : '#{_("Installing")}',
-      "errata_install_finished" : '#{_("Finished")}'
+        KT.system.errata.init(false, 'system');
       });
 
 = render :partial => "systems/system_tupane_header_nav"
 
 = content_for :header do
-  #system_errata_header.clear
+  #errata_header.clear
     %h5.fl
       #{_("Display")}
     %span
@@ -38,7 +30,7 @@
           #{_("Applied")}
 
 = content_for :content do
-  #system_errata{ "data-system_id" => @system.id }
+  #errata_container{ "data-parent_id" => @system.id }
     %table.filter_table.ajaxScroll
       %thead
         - if editable
@@ -51,11 +43,11 @@
         %th
           #{_("TITLE")}
         %th
-          #{_("INFO")}
+          #{_("DETAILS")}
       %tbody
         -#= render :partial => "systems/errata/items", :locals => { :errata => errata, :editable => editable }
     #list-spinner
-      = image_tag("spinner.gif", :class=>"ajax_scroll")
+      = image_tag("embed/icons/spinner.gif", :class=>"ajax_scroll")
 
 = content_for :footer do
   %a#load_more_errata{"data-scroll_url"=>url_for(system_errata_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl", "style" => "display:none"} #{_("Load %{n} More" % {:n => offset})}

@@ -396,6 +396,9 @@ KT.panel = (function ($) {
             });
             return to_ret;
         },
+        numSelected = function() {
+            return $('.block.active').length;
+        },
         openSubPanel = function (url) {
             var thisPanel = $('#subpanel');
             thisPanel.animate({
@@ -538,15 +541,24 @@ KT.panel = (function ($) {
           KT.panel.panelAjax(active, active.attr("data-ajax_url"), $('#panel'), false);
         },
         actions = (function(){
-            var action_list = {};
+            var action_list = {},
+                current_request_action = undefined;
 
             var registerDefaultActions = function() {
                 var actions = $(".panel_action");
                 actions.each(function(index){
                     var action = $(this);
                     var options = action.find(".options");
-                    action.find("a").click(function() {
-                        if (!action.hasClass("disabled")) {
+                    action.find(".request_action").click(function() {
+                        var params = action_list[action.attr("data-id")],
+                            valid = true;
+
+                        current_request_action = $(this);
+                        if(params.valid_input_cb) {
+                            // Has the user provided valid input for the request?
+                            valid = params.valid_input_cb(current_request_action);
+                        }
+                        if (valid && !action.hasClass("disabled")) {
                             options.slideDown('fast');
                         }
                     });
@@ -571,10 +583,9 @@ KT.panel = (function ($) {
                         };
 
                         if ($(this).hasClass("disabled")){return}
-                        action.find("input").addClass("disabled");
 
                         if(params.ajax_cb) {
-                            params.ajax_cb(getSelected());
+                            params.ajax_cb(getSelected(), current_request_action, options);
                         }
                         else {
                             $.ajax({
@@ -585,6 +596,9 @@ KT.panel = (function ($) {
                                 success: success,
                                 error: error
                             });
+                        }
+                        if (getSelected() === 0) {
+                            action.find("input").addClass("disabled");
                         }
                     });
                 });
@@ -598,8 +612,10 @@ KT.panel = (function ($) {
                  *    url      //URL for ajax call
                  *    method   //METHOD for ajax call
                  *    unselected_action // true if the action is 'doable' even if
-                 *    ajax_cb(id_list, success_cb, error_cb)  //To manually do the ajax call yourself
-                 *
+                 *    ajax_cb(id_list, request_action, options, success_cb, error_cb)  //To manually do the ajax call yourself
+                 *    valid_input_cb() // to validate the input for the request... return true if valid; otherwise, false
+                 *    enable_cb()  // callback to provide custom initialization logic when 1 or more elements are selected
+                 *    disable_cb() // callback to provide custom logic when all elements are cleared (i.e. select none)
                  */
               action_list[name] = params;
             },
@@ -609,9 +625,15 @@ KT.panel = (function ($) {
                     var div = $("[data-id=" + name + "]");
                     if (num > 0) {
                         div.removeClass("disabled");
+                        if (params.enable_cb) {
+                            params.enable_cb();
+                        }
                     }
                     else {
                         div.addClass("disabled");
+                        if (params.disable_cb) {
+                            params.disable_cb();
+                        }
                     }
                   }
               });
@@ -642,6 +664,7 @@ KT.panel = (function ($) {
             switch_content_cb = callBack;
         },
         select_item: select_item,
+        numSelected: numSelected,
         search_started: search_started,
         openSubPanel: openSubPanel,
         updateResult: updateResult,
