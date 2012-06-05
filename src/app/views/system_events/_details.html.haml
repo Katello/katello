@@ -15,13 +15,13 @@
     .grid_7
       %h5 #{_("Request")}
     .grid_7.la
-      = status_message(task)
+      = task.message_for
 
   %fieldset
     .grid_7
       %h5 #{_("Parameters")}
     .grid_7.la
-      = system_task.humanize_parameters
+      = task.humanize_parameters
 
   %fieldset
     .grid_7

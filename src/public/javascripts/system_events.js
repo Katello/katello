@@ -56,21 +56,21 @@ KT.events = function() {
             var node = undefined,
                 msg = undefined;
             if(!status["pending?"]) {
-                node = $('.event_name[data-pending-task-id=' + status['id'] + ']');
+                node = $('.event_name[data-pending-event-id=' + status['id'] + ']');
                 if(node !== undefined) {
                     node.parent().html(status["status_html"]);
                 }
             }
         });
-        if ($('.event_name[data-pending-task-id]').length === 0) {
+        if ($('.event_name[data-pending-event-id]').length === 0) {
             actions_updater.stop();
         }
     },
     startUpdater = function () {
         var timeout = 8000,
             pending_items = [];
-        $('.event_name[data-pending-task-id]').each(function(i) {
-            pending_items[i] = $(this).data("pending-task-id");
+        $('.event_name[data-pending-event-id]').each(function(i) {
+            pending_items[i] = $(this).data("pending-event-id");
         });
         if(pending_items.length > 0) {
             actions_updater = $.PeriodicalUpdater(KT.routes.status_system_events_path(system_id), {
@@ -100,7 +100,7 @@ KT.events = function() {
             }
 
             updateLoadedSummary();
-            if($('.event_name[data-pending-task-id]').length > 0) {
+            if($('.event_name[data-pending-event-id]').length > 0) {
                 startUpdater();
             }
 
@@ -130,22 +130,17 @@ KT.events = function() {
                     }
                 });
             });
-
         }
-
-
-
-
     },
     updateLoadedSummary = function() {
         var more_size = page_size;
         total_loaded = $('tr.tasks').length;
-        loaded_summary.html(i18n.x_of_y_events(total_loaded, total_events));
+        loaded_summary.html(i18n.x_of_y(total_loaded, total_events));
 
         if(more_size > (total_events - total_loaded)) {
            more_size = total_events - total_loaded;
         }
-        more_button.text(i18n.x_more_events(more_size));
+        more_button.text(i18n.x_more(more_size));
     };
     return {
         initEvents: initEvents

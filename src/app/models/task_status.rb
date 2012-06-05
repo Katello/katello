@@ -94,7 +94,6 @@ class TaskStatus < ActiveRecord::Base
     ret
   end
 
-
   def initialize(attrs = nil)
     unless attrs.nil?
       # only keep keys for which we have db columns
@@ -106,7 +105,6 @@ class TaskStatus < ActiveRecord::Base
     super(attrs)
   end
 
-
   def finished?
     ((self.state != TaskStatus::Status::WAITING.to_s) && (self.state != TaskStatus::Status::RUNNING.to_s)) 
   end
@@ -114,7 +112,6 @@ class TaskStatus < ActiveRecord::Base
   def error?
     (self.state == TaskStatus::Status::ERROR.to_s)
   end
-
 
   def refresh
     self
@@ -140,6 +137,89 @@ class TaskStatus < ActiveRecord::Base
   # used by search  to filter tasks by systems :)
   def system_filter_clause
     {:system_ids => system_ids}
+  end
+
+  def pending_message_for
+    # Retrieve a text message that may be rendered for a 'pending' task's status.  This is used in various places,
+    # such as System Event history.
+    details = TaskStatus::TYPES[self.task_type]
+    case details[:type]
+      when :package
+        p = self.parameters[:packages]
+        unless p && p.length > 0
+          if "package_update" == self.task_type
+            return _("all packages")
+          end
+          return ""
+        end
+        if p.length == 1
+          return p.first
+        else
+          return  _("%s (%s other packages)") % [p.first, p.length - 1]
+        end
+      when :package_group
+        p = self.parameters[:groups]
+        if p.length == 1
+          return p.first
+        else
+          return  _("%s (%s other package groups)") % [p.first, p.length - 1]
+        end
+      when :errata
+        p = self.parameters[:errata_ids]
+        if p.length == 1
+          return p.first
+        else
+          return  _("%s (%s other errata)") % [p.first, p.length - 1]
+        end
+    end
+  end
+
+  def message_for
+    # Retrieve a text message that may be rendered for a task's status.  This is used in various places,
+    # such as System Event history.
+    details = TaskStatus::TYPES[self.task_type]
+    case details[:type]
+      when :package
+        p = self.parameters[:packages]
+        unless p && p.length > 0
+          if "package_update" == self.task_type
+            case self.state
+              when "running"
+                return "updating"
+              when "waiting"
+                return "updating"
+              when "error"
+                return _("all packages update failed")
+              else
+                return _("all packages update")
+            end
+          end
+          return ""
+        end
+        msg = details[:event_messages][self.state]
+        return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
+      when :candlepin_event
+        return self.result
+      when :package_group
+        p = self.parameters[:groups]
+        msg = details[:event_messages][self.state]
+        return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
+      when :errata
+        p = self.parameters[:errata_ids]
+        msg = details[:event_messages][self.state]
+        return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
+    end
+  end
+
+  def humanize_parameters
+    humanized_parameters = []
+    if packages = self.parameters[:packages]
+      humanized_parameters.concat(packages)
+    end
+    if groups = self.parameters[:groups]
+      humanized_parameters.concat(groups.map {|g| g =~ /^@/ ? g : "@#{g}"})
+    end
+    humanized_parameters.join(", ")
   end
 
   protected
