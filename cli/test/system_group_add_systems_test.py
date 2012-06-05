@@ -36,7 +36,7 @@ class SystemGroupAddSystemsTest(CLIActionTestCase):
     OPTIONS = {
         'org': ORG['name'],
         'name': SYSTEM_GROUP['name'],
-        'system_uuids' : 'fgadg3943-daf323,34ad5-34ad3-h6ddss4'
+        'system_uuids' : ['fgadg3943-daf323','34ad5-34ad3-h6ddss4']
     }
 
     def setUp(self):
@@ -50,9 +50,8 @@ class SystemGroupAddSystemsTest(CLIActionTestCase):
         self.mock(self.module, 'get_system_group', self.SYSTEM_GROUP)
 
     def test_it_calls_system_group_add_systems_api(self):
-        ids = [id for id in self.OPTIONS['system_uuids'].split(',')]
         self.action.run()
-        self.action.api.add_systems.assert_called_once_with(self.OPTIONS['org'], self.SYSTEM_GROUP['id'], ids)
+        self.action.api.add_systems.assert_called_once_with(self.OPTIONS['org'], self.SYSTEM_GROUP['id'], self.OPTIONS['system_uuids'])
 
     def test_it_returns_error_when_adding_failed(self):
         self.mock(self.action.api, 'add_systems', None)
