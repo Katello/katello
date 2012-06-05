@@ -38,6 +38,8 @@ gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 gem 'ruport', '>=1.6.3'
 gem 'acts_as_reportable', '>=1.1.1'
 
+gem "apipie-rails"
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
@@ -59,6 +61,7 @@ gem 'acts_as_reportable', '>=1.1.1'
 
 group :test, :development do
   # To use debugger
+  gem 'redcarpet'
   gem 'ruby-debug'
   gem 'ZenTest', '>= 4.4.0'
   gem 'rspec-rails', '>= 2.0.0'
