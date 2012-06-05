@@ -1,11 +1,3 @@
-= javascript do
-  :plain
-    localize({
-      "x_of_y_events" : function(x,y){ return '#{escape_javascript(_("(Loaded %X of %Y Total)"))}'.replace("%X", x).replace("%Y", y); },
-      "x_more_events" : function(x){ return '#{escape_javascript(_("(Load %X More)"))}'.replace("%X", x); }
-      });
-
-
 = javascript :filtertable, :system_events
 
 = render :partial => "systems/system_tupane_header_nav"

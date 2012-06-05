@@ -15,74 +15,6 @@ class SystemTask < ActiveRecord::Base
   belongs_to :task_status
 
   class << self
-    def pending_message_for task
-      details = TaskStatus::TYPES[task.task_type]
-      case details[:type]
-        when :package
-          p = task.parameters[:packages]
-          unless p && p.length > 0
-            if "package_update" == task.task_type
-              return _("all packages")
-            end
-            return ""
-          end
-          if p.length == 1
-            return p.first
-          else
-            return  _("%s (%s other packages)") % [p.first, p.length - 1]
-          end
-        when :package_group
-          p = task.parameters[:groups]
-          if p.length == 1
-            return p.first
-          else
-            return  _("%s (%s other package groups)") % [p.first, p.length - 1]
-          end
-        when :errata
-          p = task.parameters[:errata_ids]
-          if p.length == 1
-            return p.first
-          else
-            return  _("%s (%s other errata)") % [p.first, p.length - 1]
-          end
-      end
-    end
-    def message_for task
-      details = TaskStatus::TYPES[task.task_type]
-      case details[:type]
-        when :package
-          p = task.parameters[:packages]
-          unless p && p.length > 0
-            if "package_update" == task.task_type
-              case task.state
-                when "running"
-                  return "updating"
-                when "waiting"
-                  return "updating"
-                when "error"
-                  return _("all packages update failed")
-                else
-                  return _("all packages update")
-              end
-            end
-            return ""
-          end
-          msg = details[:event_messages][task.state]
-          return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
-        when :candlepin_event
-          return task.result
-        when :package_group
-          p = task.parameters[:groups]
-          msg = details[:event_messages][task.state]
-          return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
-        when :errata
-          p = task.parameters[:errata_ids]
-          msg = details[:event_messages][task.state]
-          return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
-
-      end
-    end
-
     def refresh(ids)
       unless ids.nil? || ids.empty?
         uuids = TaskStatus.select(:uuid).where(:id => ids).collect{|t| t.uuid}
@@ -132,18 +64,6 @@ class SystemTask < ActiveRecord::Base
   # non self methods
   def humanize_type
     TaskStatus::TYPES[task_status.task_type][:name]
-  end
-
-  def humanize_parameters
-    humanized_parameters = []
-    parameters = task_status.parameters
-    if packages = parameters[:packages]
-      humanized_parameters.concat(packages)
-    end
-    if groups = parameters[:groups]
-      humanized_parameters.concat(groups.map {|g| g =~ /^@/ ? g : "@#{g}"})
-    end
-    humanized_parameters.join(", ")
   end
 
   def description
