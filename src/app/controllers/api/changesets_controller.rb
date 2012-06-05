@@ -32,16 +32,27 @@ class Api::ChangesetsController < Api::ApiController
 
   respond_to :json
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/environments/:environment_id/changesets", "List changesets"
+  param :name, :undef
   def index
     render :json => Changeset.select("changesets.*, environments.name AS environment_name").
         joins(:environment).where(params.slice(:name, :environment_id))
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/changesets/:id", "Show a changeset"
   def show
     render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos, :system_templates,
                                                     :distributions])
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/changesets/:id", "Update a changeset"
+  param :changeset, Hash do
+    param :description, :undef
+    param :name, :undef
+  end
   def update
     @changeset.attributes = params[:changeset].slice(:name, :description)
     @changeset.save!
@@ -53,6 +64,12 @@ class Api::ChangesetsController < Api::ApiController
     render :json => @changeset.calc_dependencies.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/organizations/:organization_id/environments/:environment_id/changesets", "Create a changeset"
+  param :changeset, Hash do
+    param :description, :undef, :allow_nil => true
+    param :name, :undef
+  end
   def create
     @changeset             = Changeset.new(params[:changeset])
     @changeset.environment = @environment
@@ -61,6 +78,8 @@ class Api::ChangesetsController < Api::ApiController
     render :json => @changeset
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/changesets/:id/promote"
   def promote
     @changeset.state = Changeset::REVIEW
     @changeset.save!

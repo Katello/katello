@@ -48,6 +48,13 @@ class Api::RepositoriesController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/repositories", "Create a repository"
+  param :gpg_key_name, :undef
+  param :name, :undef
+  param :organization_id, :identifier
+  param :product_id, :number
+  param :url, :undef
   def create
     raise HttpErrors::BadRequest, _('Invalid Url') if !kurl_valid?(params[:url])
 
@@ -60,16 +67,25 @@ class Api::RepositoriesController < Api::ApiController
     render :json => content
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/repositories/:id", "Show a repository"
   def show
     render :json => @repository.to_hash
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/repositories/:id", "Update a repository"
+  param :repository, Hash do
+    param :gpg_key_name, :undef
+  end
   def update
     raise HttpErrors::BadRequest, _("It is not allowed to update a Red Hat repository.") if @repository.redhat?
     @repository.update_attributes!(params[:repository].slice(:gpg_key_name))
     render :json => @repository.to_hash
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/repositories/:id", "Destroy a repository"
   def destroy
     raise HttpErrors::BadRequest, _("Repositories can be deleted only in Library environment.") if not @repository.environment.library?
 
@@ -77,6 +93,9 @@ class Api::RepositoriesController < Api::ApiController
     render :text => _("Deleted repository '#{params[:id]}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/repositories/:id/enable"
+  param :enable, :bool
   def enable
     raise HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if not @repository.redhat?
 
@@ -117,6 +136,10 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/organizations/:organization_id/repositories/discovery"
+  param :type, :undef
+  param :url, :undef
   def discovery
     pulp_task = Resources::Pulp::Repository.start_discovery(params[:url], params[:type])
     task = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = @organization}
@@ -124,6 +147,9 @@ class Api::RepositoriesController < Api::ApiController
     render :json => task
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/repositories/:id/package_groups"
+  param :group_id, :identifier
   def package_groups
     #translate group_id to id in search params (conflict with repo id used for routing)
     search_attrs = params.slice(:name)
@@ -132,6 +158,9 @@ class Api::RepositoriesController < Api::ApiController
     render :json => @repository.package_groups(search_attrs)
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/repositories/:id/package_group_categories"
+  param :category_id, :identifier
   def package_group_categories
     #translate category_id to id in search params (conflict with repo id used for routing)
     search_attrs = params.slice(:name)

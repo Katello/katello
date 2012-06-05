@@ -14,6 +14,8 @@ class Api::PingController < Api::ApiController
 
   skip_before_filter :authorize # ok - anyone authenticated can ask for status
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/ping", "List ping"
   def index
     render :json => Ping.ping().to_json and return
   end

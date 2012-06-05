@@ -19,6 +19,8 @@ class Api::CrlsController < Api::ApiController
     { :index => superadmin_test }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/crls", "List crls"
   def index
     render :text => ::Resources::Candlepin::Proxy.get('/crl')
   end

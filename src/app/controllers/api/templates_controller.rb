@@ -44,15 +44,28 @@ class Api::TemplatesController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/environments/:environment_id/templates", "List templates"
+  param :name, :undef
   def index
     tpls = @environment.system_templates.where(params.slice(:name))
     render :json => tpls.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/templates/:id", "Show a template"
   def show
     render :json => @template.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/templates", "Create a template"
+  param :environment_id, :number
+  param :template, Hash do
+    param :description, :undef
+    param :name, :undef
+    param :parent_id, :number
+  end
   def create
     raise HttpErrors::BadRequest, _("New templates can be created only in a Library environment") if not @environment.library?
 
@@ -63,6 +76,12 @@ class Api::TemplatesController < Api::ApiController
     render :json => @template.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/templates/:id", "Update a template"
+  param :template, Hash do
+    param :description, :undef
+    param :name, :undef
+  end
   def update
     raise HttpErrors::BadRequest, _("Templates can be updated only in a Library environment") if not @template.environment.library?
 
@@ -102,6 +121,8 @@ class Api::TemplatesController < Api::ApiController
     render :text => _("Template imported"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/templates/:id/validate"
   def validate
     raise HttpErrors::BadRequest, _("Cannot validate templates for the Library environment.") if @template.environment.library?
 
@@ -111,6 +132,8 @@ class Api::TemplatesController < Api::ApiController
     end
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/templates/:id/export"
   def export
     raise HttpErrors::BadRequest, _("Cannot export templates for the Library environment.") if @template.environment.library?
 

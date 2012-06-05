@@ -11,6 +11,34 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Api::EnvironmentsController < Api::ApiController
+  resource_description do
+    description <<-EOS
+      # Description
+
+      An environment is a basic organization structure that groups systems,
+      products, repositories, templates etc.  Every system belongs to one environment
+      and it's isolated inside so that it can see only content that is in its
+      environment.
+
+      ## Chains
+
+      Environments are ordered into chains and their content (propducts,
+      repositories, tempaltes, packages) can be moved to an environment only from its
+      prior environment. You can have for example chain like:
+
+          Library -> Development -> Testing -> Production
+
+      Each change in an environment is done through a changeset in an action
+      called promotion.
+
+      ## Library
+
+      Library is a special environment that has no ascendant: all the content
+      starts in this environment. More chains can start from the library environment but
+      no further branching of a chain is enabled.
+    EOS
+  end
+
   respond_to :json
   before_filter :find_organization, :only => [:index, :create]
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories, :releases]
@@ -47,6 +75,11 @@ class Api::EnvironmentsController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/environments", "List environments in an organization"
+  api :GET, "/owners/:organization_id/environments", "List environments for RHSM"
+  param :library, :undef, :desc => "set true if you want to see only library environment"
+  param :name, :undef, :desc => "filter only environments with this name"
   def index
     query_params[:organization_id] = @organization.id
      environments = KTEnvironment.where query_params
@@ -62,6 +95,15 @@ class Api::EnvironmentsController < Api::ApiController
     render :json => @environment
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/organizations/:organization_id/environments", "Create an environment in an organization"
+  param :environment, Hash do
+    param :name, :undef
+    param :prior, :undef, :desc => <<-DESC
+id of an environment that is prior the new environment in the chain, it has to be
+either library or an envrionment at the end of the chain
+    DESC
+  end
   def create
     environment = KTEnvironment.new(params[:environment])
     @organization.environments << environment
@@ -70,6 +112,13 @@ class Api::EnvironmentsController < Api::ApiController
     render :json => environment
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/environments/:id", "Update an environment"
+  api :PUT, "/organizations/:organization_id/environments/:id", "Update an environment in an organization"
+  param :environment, Hash do
+    param :description, :undef
+    param :name, :undef
+  end
   def update
     if @environment.library?
       raise HttpErrors::BadRequest, _("Can't update Library environment")
@@ -79,6 +128,9 @@ class Api::EnvironmentsController < Api::ApiController
     end
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/environments/:id", "Destroy an environment"
+  api :DELETE, "/organizations/:organization_id/environments/:id", "Destroy an environment in an organization"
   def destroy
     if @environment.confirm_last_env
       @environment.destroy
@@ -89,6 +141,9 @@ class Api::EnvironmentsController < Api::ApiController
     end
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/environments/:id/repositories", "List repositories available in the environment"
+  param :include_disabled, :undef, :desc => "set to true if you want to see also disabled repositories"
   def repositories
     render :json => @environment.products.all_readable(@organization).collect { |p| p.repos(@environment, query_params[:include_disabled]) }.flatten
   end

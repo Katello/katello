@@ -28,6 +28,10 @@ class Api::SystemPackagesController < Api::ApiController
   end
 
   # install packages remotely
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/systems/:system_id/packages", "Create a system package"
+  param :groups, :undef
+  param :packages, :undef
   def create
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -43,6 +47,9 @@ class Api::SystemPackagesController < Api::ApiController
   end
 
   # update packages remotely
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/systems/:system_id/packages", "Update a system package"
+  param :packages, :undef
   def update
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -52,6 +59,10 @@ class Api::SystemPackagesController < Api::ApiController
   end
 
   # uninstall packages remotely
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/systems/:system_id/packages", "Destroy a system package"
+  param :groups, :undef
+  param :packages, :undef
   def destroy
     if params[:packages]
       packages = validate_package_list_format(params[:packages])

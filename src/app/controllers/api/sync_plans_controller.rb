@@ -36,6 +36,9 @@ class Api::SyncPlansController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/sync_plans", "List sync plans"
+  param :name, :undef
   def index
     query_params.delete :organization_id
     render :json => @organization.sync_plans.where(query_params).to_json
@@ -45,16 +48,31 @@ class Api::SyncPlansController < Api::ApiController
     render :json => @plan.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/organizations/:organization_id/sync_plans", "Create a sync plan"
+  param :sync_plan, Hash do
+    param :description, :undef
+    param :interval, :undef
+    param :name, :undef
+    param :sync_date, :undef
+  end
   def create
     sync_date = params[:sync_plan][:sync_date]
     if not sync_date.kind_of? Time
         raise _("Date format is incorrect.")
     end
 
-    params[:sync_plan][:organization] = @organization
-    render :json => SyncPlan.create!(params[:sync_plan]).to_json
+    render :json => SyncPlan.create!(params[:sync_plan].merge(:organization => @organization)).to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/organizations/:organization_id/sync_plans/:id", "Update a sync plan"
+  param :sync_plan, Hash do
+    param :description, :undef
+    param :interval, :undef
+    param :name, :undef
+    param :sync_date, :undef
+  end
   def update
     sync_date = params[:sync_plan][:sync_date]
     if not sync_date.nil? and not sync_date.kind_of? Time
@@ -67,6 +85,8 @@ class Api::SyncPlansController < Api::ApiController
     render :json => @plan
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/organizations/:organization_id/sync_plans/:id", "Destroy a sync plan"
   def destroy
     @plan.destroy
     render :text => _("Deleted sync plan '#{params[:id]}'"), :status => 200

@@ -33,6 +33,10 @@ class Api::SubscriptionsController < Api::ApiController
     render :json => { :entitlements => @system.consumed_entitlements }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/systems/:system_id/subscriptions", "Create a subscription"
+  param :pool, :undef
+  param :quantity, :undef
   def create
     expected_params = params.with_indifferent_access.slice(:pool, :quantity)
     raise HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2

@@ -69,6 +69,14 @@ class Api::SystemsController < Api::ApiController
 
   # this method is called from katello cli client and it does not work with activation keys
   # for activation keys there is method activate (see custom routes)
+  api :POST, "/consumers", "Create a system"
+  api :POST, "/environments/:environment_id/consumers", "Create a system"
+  api :POST, "/environments/:environment_id/systems", "Create a system"
+  api :POST, "/systems", "Create a system"
+  param :facts, Hash
+  param :installedProducts, Array
+  param :name, :undef
+  param :type, :undef
   def create
     system = System.create!(params.merge({:environment => @environment, :serviceLevel => params[:service_level]}))
     render :json => system.to_json
@@ -80,6 +88,17 @@ class Api::SystemsController < Api::ApiController
   end
 
   # used for registering with activation keys
+  api :POST, "/consumers"
+  api :POST, "/environments/:environment_id/systems"
+  api :POST, "/organizations/:organization_id/systems"
+  param :activation_keys, :undef
+  param :cp_type, :undef
+  param :facts, Hash
+  param :installedProducts, Array
+  param :name, :undef
+  param :owner, :undef
+  param :serviceLevel, :undef, :allow_nil => true
+  param :type, :undef
   def activate
     # Activation keys are userless by definition so use the internal generic user
     # Set it before calling find_activation_keys to allow communication with candlepin
@@ -117,16 +136,34 @@ class Api::SystemsController < Api::ApiController
     render :json => @system.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/consumers/:id"
   def regenerate_identity_certificates
     @system.regenerate_identity_certificates
     render :json => @system.to_json
   end
 
+  api :PUT, "/consumers/:id", "Update a system"
+  api :PUT, "/systems/:id", "Update a system"
+  param :description, :undef
+  param :facts, Hash
+  param :location, :undef
+  param :name, :undef
+  param :releaseVer, :undef
+  param :serviceLevel, :undef
   def update
     @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel))
     render :json => @system.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/consumers", "List systems"
+  api :GET, "/environments/:environment_id/consumers", "List systems"
+  api :GET, "/environments/:environment_id/systems", "List systems"
+  api :GET, "/organizations/:organization_id/systems", "List systems"
+  api :GET, "/systems", "List systems"
+  param :name, :undef
+  param :pool_id, :identifier
   def index
     # expected parameters
     expected_params = params.slice('name')
@@ -138,24 +175,37 @@ class Api::SystemsController < Api::ApiController
     render :json => systems.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/consumers/:id", "Show a system"
+  api :GET, "/systems/:id", "Show a system"
+  error :code => 410
   def show
     render :json => @system.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/consumers/:id", "Destroy a system"
+  api :DELETE, "/systems/:id", "Destroy a system"
   def destroy
     @system.destroy
     render :text => _("Deleted system '#{params[:id]}'"), :status => 204
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/systems/:id/pools"
   def pools
     listall = (params.has_key?(:listall) ? true : false)
     render :json => { :pools => @system.available_pools_full(listall) }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/systems/:id/releases"
   def releases
     render :json => { :releases => @system.available_releases }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/systems/:id/packages"
   def package_profile
     render :json => @system.package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
   end
@@ -164,6 +214,10 @@ class Api::SystemsController < Api::ApiController
     render :json => Resources::Pulp::Consumer.errata(@system.uuid)
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/consumers/:id/packages"
+  api :PUT, "/consumers/:id/profile"
+  param :_json, :undef
   def upload_package_profile
     if AppConfig.katello?
       raise HttpErrors::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
@@ -232,11 +286,18 @@ class Api::SystemsController < Api::ApiController
     render :json => @tasks.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/systems/tasks/:id"
   def task_show
     @task.task_status.refresh
     render :json => @task.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/systems/:id/enabled_repos"
+  param :enabled_repos, Hash do
+    param :repos, :undef
+  end
   def enabled_repos
     repos = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
     update_labels = repos['repos'].collect{ |r| r['repositoryid']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))

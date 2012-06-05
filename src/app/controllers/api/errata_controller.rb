@@ -27,6 +27,14 @@ class Api::ErrataController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/errata", "List errata"
+  api :GET, "/repositories/:repository_id/errata", "List errata"
+  param :environment_id, :number
+  param :product_id, :number
+  param :repoid, :number
+  param :severity, :undef
+  param :type, :undef
   def index
     filter = params.slice(:repoid, :product_id, :environment_id, :type, :severity).symbolize_keys
     unless filter[:repoid] or filter[:environment_id]
@@ -35,6 +43,8 @@ class Api::ErrataController < Api::ApiController
     render :json => Glue::Pulp::Errata.filter(filter)
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/repositories/:repository_id/errata/:id", "Show an erratum"
   def show
     render :json => @erratum
   end

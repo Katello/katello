@@ -47,10 +47,17 @@ class Api::FiltersController < Api::ApiController
      }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/filters", "List filters"
   def index
     render :json => @organization.filters.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/organizations/:organization_id/filters", "Create a filter"
+  param :description, :undef
+  param :name, :undef
+  param :package_list, :undef
   def create
     @filter = Filter.create!(:name => params[:name],
       :organization => @organization,
@@ -60,6 +67,9 @@ class Api::FiltersController < Api::ApiController
     render :json => @filter.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/organizations/:organization_id/filters/:id", "Update a filter"
+  param :packages, :undef
   def update
     @filter.package_list = params[:packages] unless params[:packages].nil?
     @filter.save!
@@ -67,19 +77,28 @@ class Api::FiltersController < Api::ApiController
     render :json => @filter.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/filters/:id", "Show a filter"
   def show
     render :json => @filter.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/organizations/:organization_id/filters/:id", "Destroy a filter"
   def destroy
     @filter.destroy
     render :text => _("Deleted filter '#{params[:id]}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/organizations/:organization_id/products/:product_id/filters"
   def list_product_filters
     render :json => @product.filters.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/organizations/:organization_id/products/:product_id/filters"
+  param :filters, :undef
   def update_product_filters
     deleted_filters = @product.filters - @filters
     added_filters = @filters - @product.filters
@@ -90,6 +109,9 @@ class Api::FiltersController < Api::ApiController
     render :json => @product.filters.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/repositories/:repository_id/filters"
+  param :inherit, :undef
   def list_repository_filters
     filters = @repository.filters
     filters += @repository.product.filters if query_params[:inherit]
@@ -97,6 +119,9 @@ class Api::FiltersController < Api::ApiController
     render :json => filters.uniq.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :PUT, "/repositories/:repository_id/filters"
+  param :filters, :undef
   def update_repository_filters
     deleted_filters = @repository.filters - @filters
     added_filters = @filters - @repository.filters

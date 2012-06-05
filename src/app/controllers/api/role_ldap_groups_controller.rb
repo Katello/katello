@@ -37,6 +37,8 @@ class Api::RoleLdapGroupsController < Api::ApiController
     render :text => _("Removed LDAP group '%s'") % params[:id], :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/roles/:role_id/ldap_groups", "List role ldap groups"
   def index
     render :json => @role.ldap_group_roles.where(query_params).to_json()
   end

@@ -25,10 +25,14 @@ class Api::DistributionsController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/repositories/:repository_id/distributions", "List distributions"
   def index
     render :json => @repo.distributions
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/repositories/:repository_id/distributions/:id", "Show a distribution"
   def show
     dist = Glue::Pulp::Distribution.find(params[:id])
     render :json => dist

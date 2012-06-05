@@ -51,54 +51,80 @@ class Api::TemplatesContentController < Api::ApiController
   #  render :text => _("Removed product '#{params[:id]}'"), :status => 200
   #end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/templates/:template_id/packages"
+  param :name, :undef
+  error :code => 400
   def add_package
     @template.add_package(params[:name])
     @template.save!
     render :text => _("Added package '#{params[:name]}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/templates/:template_id/packages/:id"
   def remove_package
     @template.remove_package(params[:id])
     @template.save!
     render :text => _("Removed package '#{params[:id]}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/templates/:template_id/parameters"
+  param :name, :undef
+  param :value, :undef
   def add_parameter
     @template.set_parameter(params[:name], params[:value])
     @template.save!
     render :text => _("Parameter '#{params[:name]}': '#{params[:value]}' was set"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/templates/:template_id/parameters/:id"
   def remove_parameter
     @template.remove_parameter(params[:id])
     @template.save!
     render :text => _("Removed parameter '#{params[:id]}'"), :status => 200
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/templates/:template_id/package_groups"
+  param :name, :undef
   def add_package_group
     @template.add_package_group(params[:name])
     @template.save!
     render :text => _("Added package group '#{params[:name]}'")
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/templates/:template_id/package_groups/:id"
   def remove_package_group
     @template.remove_package_group(params[:id])
     @template.save!
     render :text => _("Removed package group '#{params[:id]}'")
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/templates/:template_id/package_group_categories"
+  param :name, :undef
+  error :code => 400
   def add_package_group_category
     @template.add_pg_category(params[:name])
     @template.save!
     render :text => _("Added package group category '#{params[:name]}'")
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/templates/:template_id/package_group_categories/:id"
   def remove_package_group_category
     @template.remove_pg_category(params[:id])
     @template.save!
     render :text => _("Removed package group category '#{params[:id]}'")
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/templates/:template_id/distributions"
+  param :id, :identifier
   def add_distribution
     @template.add_distribution(params[:id])
     @template.save!
@@ -111,6 +137,9 @@ class Api::TemplatesContentController < Api::ApiController
     render :text => _("Removed distribution '#{params[:id]}'")
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/templates/:template_id/repositories"
+  param :id, :number
   def add_repo
     @template.add_repo(params[:id])
     @template.save!

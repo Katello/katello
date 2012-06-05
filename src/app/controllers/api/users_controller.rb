@@ -47,6 +47,10 @@ class Api::UsersController < Api::ApiController
     }
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/users", "List users"
+  api :GET, "/users/:user_id/roles", "List users"
+  param :username, :undef
   def index
     render :json => (User.readable.where query_params).to_json
   end
@@ -55,6 +59,13 @@ class Api::UsersController < Api::ApiController
     render :json => @user
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :POST, "/users", "Create an user"
+  api :POST, "/users/:user_id/roles", "Create an user"
+  param :disabled, :bool
+  param :email, :undef
+  param :password, :undef
+  param :username, :undef
   def create
     # warning - request already contains "username" and "password" (logged user)
     user = User.create!(:username => params[:username],
@@ -77,6 +88,9 @@ class Api::UsersController < Api::ApiController
     render :json => @user.to_json
   end
 
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :DELETE, "/users/:id", "Destroy an user"
+  api :DELETE, "/users/:user_id/roles/:id", "Destroy an user"
   def destroy
     @user.destroy
     render :text => _("Deleted user '#{params[:id]}'"), :status => 200
@@ -122,6 +136,8 @@ class Api::UsersController < Api::ApiController
   end
 
   # rhsm
+  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
+  api :GET, "/users/:username/owners"
   def list_owners
     orgs = @user.allowed_organizations
     # rhsm expects owner (Candlepin format)
