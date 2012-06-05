@@ -12,6 +12,13 @@ Src::Application.routes.draw do
       post :remove_systems
       post :lock
     end
+    resources :events, :controller => "system_group_events", :only => [:index, :show] do
+      collection do
+        get :status
+        get :more_items
+        get :items
+      end
+    end
     resources :packages, :controller => "system_group_packages", :only => [:index] do
       collection do
         put :add
