@@ -160,7 +160,25 @@ module Navigation
           :name =>_("Details"),
           :url => lambda{edit_system_group_path(@group.id)},
           :if => lambda{@group},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"navigation_element menu_parent"},
+          :items => system_groups_subnav
+        }
+      ]
+    end
+
+    def system_groups_subnav
+      [
+        { :key => :system_group_info,
+          :name =>_("System Group Info"),
+          :url => lambda{edit_system_group_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"third_level navigation_element"},
+        },
+        { :key => :events,
+          :name =>_("Events"),
+          :url => lambda{system_group_events_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"third_level navigation_element"}
         }
       ]
     end

@@ -1,0 +1,28 @@
+- if include_tr
+  - cssclass = cycle("alt", "")
+  <tr class = "#{cssclass} tasks">
+
+%td.event_name{"data-pending-event-id" => (t.id if t.pending?)}
+  - if t.pending?
+    .spinner
+  - else
+    %span.icon_wrap.fl.status_icons
+      %span.fl{:class=>(t.state=="error" ? "error_icon" : "check_icon")}
+        &nbsp;&nbsp;
+
+  %a.event_status.subpanel_element
+    -# TODO: this needs to be the name of the system.... and should probably be a tipsy vs a link... where the tipsy is added after the request is completed and provides additional details on the specific outcome...
+    - if t.pending?
+      = t.pending_message_for
+    - else
+      = t.message_for
+
+%td.event_date
+  - if t.pending?
+    .spinner
+    = t.message_for
+  - else
+    = t.finish_time
+
+- if include_tr
+  </tr>
