@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li>
+    <a href='../../apidoc.html'>Katello</a>
+    <span class='divider'>/</span>
+  </li>
+  <li>
+    <a href='../../apidoc/products.html'>Products</a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>set_sync_plan</li>
+</ul>
+
+  <div class='page-header'>
+    <h1>
+      POST /api/organizations/:organization_id/products/:id/sync_plan<br>
+      <small></small>
+    </h1>
+  </div>
+
+<div>
+  
+
+    <h2>Examples</h2>
+      <pre>POST /api/organizations/org_2d4c613/products/1338879369155/sync_plan
+{
+  &quot;plan_id&quot;: 17
+}
+200
+Synchronization plan assigned.</pre>
+
+
+    <h2>Params</h2>
+    <table class='table'>
+      <thead>
+        <tr>
+          <th>Param name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>plan_id </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: number.
+    </td>
+  </tr>
+
+  
+
+      </tbody>
+    </table>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li><a href='../apidoc.html'>Katello</a><span class='divider'>/</span></li>
+  <li class='active'>Users</li>
+</ul>
+
+<div class='page-header'>
+  <h1>
+    Users<br>
+    <small></small>
+  </h1>
+</div>
+
+
+
+<div class='accordion' id='accordion'>
+  
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/users/index.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/users
+          </a><br>
+          <small>List users</small>
+        </h2>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/users/:user_id/roles
+          </a><br>
+          <small>List users</small>
+        </h2>
+    </div>
+    
+    <div id='description-index' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/users/?username=user_2d4c613
+200
+[
+  {
+    &quot;username&quot;: &quot;user_2d4c613&quot;,
+    &quot;email&quot;: &quot;user_2d4c613@somewhere.com&quot;,
+    &quot;id&quot;: 12,
+    &quot;default_environment&quot;: null,
+    &quot;page_size&quot;: 25,
+    &quot;password&quot;: &quot;c23d7ae95537315fe62cdf15d0d9ac2395d6c80c748f1f9221ac8eef5e991d727aa4e038a8a39aa1e4a534b5a9de51dc9c5bfc9c04b0d23a0971ab6f493be19eGICH4YfM6CHIOEDQY3q80cEAHYVe0leuhc3UmU0lQIpU65cDXHoTHzgp63Zy8GwE&quot;,
+    &quot;password_reset_token&quot;: null,
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+    &quot;hidden&quot;: false,
+    &quot;preferences&quot;: {},
+    &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+    &quot;disabled&quot;: false,
+    &quot;default_organization&quot;: null,
+    &quot;password_reset_sent_at&quot;: null,
+    &quot;own_role_id&quot;: 30,
+    &quot;helptips_enabled&quot;: true
+  }
+]</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>username </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/users/create.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/users
+          </a><br>
+          <small>Create an user</small>
+        </h2>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/users/:user_id/roles
+          </a><br>
+          <small>Create an user</small>
+        </h2>
+    </div>
+    
+    <div id='description-create' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>POST /api/users/
+{
+  &quot;username&quot;: &quot;user_2d4c613&quot;,
+  &quot;email&quot;: &quot;user_2d4c613@somewhere.com&quot;,
+  &quot;password&quot;: &quot;password&quot;,
+  &quot;disabled&quot;: false
+}
+200
+{
+  &quot;username&quot;: &quot;user_2d4c613&quot;,
+  &quot;email&quot;: &quot;user_2d4c613@somewhere.com&quot;,
+  &quot;id&quot;: 12,
+  &quot;default_environment&quot;: null,
+  &quot;page_size&quot;: 25,
+  &quot;password&quot;: &quot;c23d7ae95537315fe62cdf15d0d9ac2395d6c80c748f1f9221ac8eef5e991d727aa4e038a8a39aa1e4a534b5a9de51dc9c5bfc9c04b0d23a0971ab6f493be19eGICH4YfM6CHIOEDQY3q80cEAHYVe0leuhc3UmU0lQIpU65cDXHoTHzgp63Zy8GwE&quot;,
+  &quot;password_reset_token&quot;: null,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+  &quot;hidden&quot;: false,
+  &quot;preferences&quot;: {},
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+  &quot;disabled&quot;: false,
+  &quot;default_organization&quot;: null,
+  &quot;password_reset_sent_at&quot;: null,
+  &quot;own_role_id&quot;: 30,
+  &quot;helptips_enabled&quot;: true
+}</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>disabled </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: boolean
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>email </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>password </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>username </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/users/destroy.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-destroy'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/users/:id
+          </a><br>
+          <small>Destroy an user</small>
+        </h2>
+        <h2>
+          <a href='#description-destroy'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/users/:user_id/roles/:id
+          </a><br>
+          <small>Destroy an user</small>
+        </h2>
+    </div>
+    
+    <div id='description-destroy' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>DELETE /api/users/12
+200
+Deleted user '12'</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/users/list_owners.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-list_owners'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/users/:username/owners
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-list_owners' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/users/admin/owners
+200
+[
+  {
+    &quot;displayName&quot;: &quot;ACME_Corporation&quot;,
+    &quot;key&quot;: &quot;ACME_Corporation&quot;
+  },
+  {
+    &quot;displayName&quot;: &quot;org_2d4c613&quot;,
+    &quot;key&quot;: &quot;org_2d4c613&quot;
+  },
+  {
+    &quot;displayName&quot;: &quot;org_rhsm_2d4c613&quot;,
+    &quot;key&quot;: &quot;org_rhsm_2d4c613&quot;
+  }
+]</pre>
+
+    </div>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

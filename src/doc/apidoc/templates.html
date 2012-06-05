@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li><a href='../apidoc.html'>Katello</a><span class='divider'>/</span></li>
+  <li class='active'>Templates</li>
+</ul>
+
+<div class='page-header'>
+  <h1>
+    Templates<br>
+    <small></small>
+  </h1>
+</div>
+
+
+
+<div class='accordion' id='accordion'>
+  
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates/index.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/environments/:environment_id/templates
+          </a><br>
+          <small>List templates</small>
+        </h2>
+    </div>
+    
+    <div id='description-index' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/environments/72/templates/?name=promotion_test_tpl_2d4c613
+200
+[
+  {
+    &quot;name&quot;: &quot;promotion_test_tpl_2d4c613&quot;,
+    &quot;environment_id&quot;: 72,
+    &quot;id&quot;: 41,
+    &quot;created_at&quot;: &quot;2012-06-05T06:57:33Z&quot;,
+    &quot;description&quot;: &quot;template description&quot;,
+    &quot;revision&quot;: 1,
+    &quot;parameters_json&quot;: &quot;{}&quot;,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:57:33Z&quot;,
+    &quot;parent_id&quot;: null
+  }
+]</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>name </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates/show.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-show'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/templates/:id
+          </a><br>
+          <small>Show a template</small>
+        </h2>
+    </div>
+    
+    <div id='description-show' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/templates/41
+200
+{
+  &quot;packages&quot;: [],
+  &quot;name&quot;: &quot;promotion_test_tpl_2d4c613&quot;,
+  &quot;environment_id&quot;: 72,
+  &quot;id&quot;: 41,
+  &quot;package_groups&quot;: [],
+  &quot;created_at&quot;: &quot;2012-06-05T06:57:33Z&quot;,
+  &quot;products&quot;: [],
+  &quot;description&quot;: &quot;template description&quot;,
+  &quot;revision&quot;: 1,
+  &quot;parameters_json&quot;: &quot;{}&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:57:33Z&quot;,
+  &quot;pg_categories&quot;: [],
+  &quot;repositories&quot;: [],
+  &quot;parameters&quot;: {},
+  &quot;parent_id&quot;: null
+}</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates/create.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/templates
+          </a><br>
+          <small>Create a template</small>
+        </h2>
+    </div>
+    
+    <div id='description-create' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>POST /api/templates/
+{
+  &quot;environment_id&quot;: 72,
+  &quot;template&quot;: {
+    &quot;name&quot;: &quot;promotion_test_tpl_2d4c613&quot;,
+    &quot;description&quot;: &quot;template description&quot;
+  }
+}
+200
+{
+  &quot;packages&quot;: [],
+  &quot;name&quot;: &quot;promotion_test_tpl_2d4c613&quot;,
+  &quot;environment_id&quot;: 72,
+  &quot;id&quot;: 41,
+  &quot;package_groups&quot;: [],
+  &quot;created_at&quot;: &quot;2012-06-05T06:57:33Z&quot;,
+  &quot;products&quot;: [],
+  &quot;description&quot;: &quot;template description&quot;,
+  &quot;revision&quot;: 1,
+  &quot;parameters_json&quot;: &quot;{}&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:57:33Z&quot;,
+  &quot;pg_categories&quot;: [],
+  &quot;repositories&quot;: [],
+  &quot;parameters&quot;: {},
+  &quot;parent_id&quot;: null
+}</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>environment_id </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: number.
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>template </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: Hash
+    </td>
+  </tr>
+
+    <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>template[description] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>template[name] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>template[parent_id] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: number.
+    </td>
+  </tr>
+
+  
+
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates/update.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-update'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            PUT /api/templates/:id
+          </a><br>
+          <small>Update a template</small>
+        </h2>
+    </div>
+    
+    <div id='description-update' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>PUT /api/templates/41
+{
+  &quot;template&quot;: {}
+}
+200
+{
+  &quot;packages&quot;: [],
+  &quot;name&quot;: &quot;promotion_test_tpl_2d4c613&quot;,
+  &quot;environment_id&quot;: 72,
+  &quot;id&quot;: 41,
+  &quot;package_groups&quot;: [],
+  &quot;created_at&quot;: &quot;2012-06-05T06:57:33Z&quot;,
+  &quot;products&quot;: [],
+  &quot;description&quot;: &quot;template description&quot;,
+  &quot;revision&quot;: 1,
+  &quot;parameters_json&quot;: &quot;{}&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:57:33Z&quot;,
+  &quot;pg_categories&quot;: [],
+  &quot;repositories&quot;: [],
+  &quot;parameters&quot;: {},
+  &quot;parent_id&quot;: null
+}</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>template </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: Hash
+    </td>
+  </tr>
+
+    <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>template[description] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>template[name] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates/validate.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-validate'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/templates/:id/validate
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-validate' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/templates/45/validate
+200
+OK</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates/export.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-export'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/templates/:id/export
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-export' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/templates/45/export
+200
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;template&gt;&lt;name&gt;template_2d4c613&lt;/name&gt;&lt;os&gt;&lt;name&gt;Test Family&lt;/name&gt;&lt;version&gt;16&lt;/version&gt;&lt;arch&gt;x86_64&lt;/arch&gt;&lt;install type=&quot;url&quot;&gt;&lt;url&gt;&lt;/url&gt;&lt;/install&gt;&lt;rootpw&gt;redhat&lt;/rootpw&gt;&lt;/os&gt;&lt;description&gt;template description&lt;/description&gt;&lt;packages&gt;&lt;package name=&quot;cheetah&quot;/&gt;&lt;package name=&quot;lion&quot;/&gt;&lt;package name=&quot;@mammal&quot;/&gt;&lt;/packages&gt;&lt;repositories&gt;&lt;repository name=&quot;repo_2d4c613&quot;&gt;&lt;url&gt;https://localhost/pulp/repos/org_2d4c613/env_2d4c613/custom/fewups_product_2d4c613/repo_2d4c613/&lt;/url&gt;&lt;persisted&gt;No&lt;/persisted&gt;&lt;clientcert&gt;-----BEGIN CERTIFICATE-----
+MIIF2TCCBUKgAwIBAgIIKWvr37b3g+wwDQYJKoZIhvcNAQEFBQAwRDEjMCEGA1UE
+AwwaZGhjcC0yNy0xOTAuYnJxLnJlZGhhdC5jb20xCzAJBgNVBAYTAlVTMRAwDgYD
+VQQHDAdSYWxlaWdoMCAXDTEyMDYwNTA2NTYwN1oYDzIxMTIwNjA1MDY1NjA3WjAr
+MSkwJwYDVQQDEyA0MDI4ZmE4MTM3YTg5ODhlMDEzN2JiNmRkN2Y5MDQzZjCCASIw
+DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALr2rgqp/XNevI4K94JudikRtH9f
+bDURzV5dTdSHWFZXSufECIklwbtfVxigjhg/YCYRPc0+NxqoN7B/L1DyJF9IoUeZ
+9qUT090KM5JpIz005Vj526a/T/6h/MTEulebc+p+qWfhKRjmP6RMoHhWUcmPeVc2
+4CBowOQOOJj543tgV4KEJ7OxcYv4bG80uuAMZ/XDn8td6SgvwsbizOAJFK47pzia
+Z2AjM4Y/jm0T78fDhy+b+4vJfpAUbfcU/SUDgxhqVqHN9uUhrbR2TCaGFvIHvcXT
+q5mLSK6KrRFfVNHNESc+2nXPmn3EWUCIjv6CWNXvarYMY2vkspghvsLhjyUCAwEA
+AaOCA2UwggNhMBEGCWCGSAGG+EIBAQQEAwIFoDALBgNVHQ8EBAMCBLAwdAYDVR0j
+BG0wa4AUYKETDd/WtSLgy31ehY4jIAZocyKhSKRGMEQxIzAhBgNVBAMMGmRoY3At
+MjctMTkwLmJycS5yZWRoYXQuY29tMQswCQYDVQQGEwJVUzEQMA4GA1UEBwwHUmFs
+ZWlnaIIJAIH8PxVgpSaMMB0GA1UdDgQWBBTWtw3l5BrNTahj10V1bTHmHiVeoDAT
+BgNVHSUEDDAKBggrBgEFBQcDAjAvBhArBgEEAZIICQGm+9u3rzwBBBsMGW9yZ18y
+ZDRjNjEzX3VlYmVyX3Byb2R1Y3QwFgYQKwYBBAGSCAkBpvvbt688AwQCDAAwFgYQ
+KwYBBAGSCAkBpvvbt688AgQCDAAwGQYQKwYBBAGSCAkCpvvbt69CAQQFDAN5dW0w
+JAYRKwYBBAGSCAkCpvvbt69CAQEEDwwNdWViZXJfY29udGVudDAyBhErBgEEAZII
+CQKm+9u3r0IBAgQdDBsxMzM4ODc5MzY3MTAwX3VlYmVyX2NvbnRlbnQwHQYRKwYB
+BAGSCAkCpvvbt69CAQUECAwGQ3VzdG9tMCMGESsGAQQBkggJAqb727evQgEGBA4M
+DC9vcmdfMmQ0YzYxMzAXBhErBgEEAZIICQKm+9u3r0IBBwQCDAAwGAYRKwYBBAGS
+CAkCpvvbt69CAQgEAwwBMTApBgorBgEEAZIICQQBBBsMGW9yZ18yZDRjNjEzX3Vl
+YmVyX3Byb2R1Y3QwMAYKKwYBBAGSCAkEAgQiDCA0MDI4ZmE4MTM3YTg5ODhlMDEz
+N2JiNmRkN2QzMDQzYzAdBgorBgEEAZIICQQDBA8MDTEzMzg4NzkzNjcxMDAwEQYK
+KwYBBAGSCAkEBQQDDAExMCQGCisGAQQBkggJBAYEFgwUMjAxMi0wNi0wNVQwNjo1
+NjowN1owJAYKKwYBBAGSCAkEBwQWDBQyMTEyLTA2LTA1VDA2OjU2OjA3WjARBgor
+BgEEAZIICQQMBAMMATAwEQYKKwYBBAGSCAkEDgQDDAEwMBEGCisGAQQBkggJBAsE
+AwwBMTA0BgorBgEEAZIICQUBBCYMJGJmZWI4MWVkLTgyYWMtNGYzYy1iZWUyLTNm
+MmM2ZDY1ZjdmZDANBgkqhkiG9w0BAQUFAAOBgQBDqdVUhEnyJ2/1eKvEmSTAfncM
+2zNr/qZ3qKqxzuwU0GH/JhIAJdQ7QROsvxLn6ZOT3G9Gjfq5PK5fAJF7lWXIiHJR
+7voob7+BQKXjXrW4SDvpzAuepx1/WjfhRruBlo0H/q+l7sGniPWDhGyoBHtqD1i6
+3XIGP0/9DveJ6b9P8A==
+-----END CERTIFICATE-----
+&lt;/clientcert&gt;&lt;clientkey&gt;-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAuvauCqn9c168jgr3gm52KRG0f19sNRHNXl1N1IdYVldK58QI
+iSXBu19XGKCOGD9gJhE9zT43Gqg3sH8vUPIkX0ihR5n2pRPT3QozkmkjPTTlWPnb
+pr9P/qH8xMS6V5tz6n6pZ+EpGOY/pEygeFZRyY95VzbgIGjA5A44mPnje2BXgoQn
+s7Fxi/hsbzS64Axn9cOfy13pKC/CxuLM4AkUrjunOJpnYCMzhj+ObRPvx8OHL5v7
+i8l+kBRt9xT9JQODGGpWoc325SGttHZMJoYW8ge9xdOrmYtIroqtEV9U0c0RJz7a
+dc+afcRZQIiO/oJY1e9qtgxja+SymCG+wuGPJQIDAQABAoIBAH1MLq2E6Q+1kOYc
+4W1vPA8gB3hJagpS6PBx1WQ2ZHRQwil7DkFjpWc+aO9fQntrlbNNYL65EFL0I4ZM
+Zlh4PvoAgd2riElvdVAwswlPHse5OG8d3B/vHNxIkU8JjNyDmPaxdjThCBrgzAv/
+MpgTOXK8jZRueVwe+A6enT2gUtzuNy9qh+lx4Q7ynMdaT/00ruF9kXcb1nYpY2W8
+LqOCrB9rgDEcWA3n/Tcgqp3yH4jvFQ196q32vfoUW/926Y5Zex6QJwLEt2x6nzqx
+gWz5bN/G/YE0g2rm/Tk+uAYYSPHDtdTVYRnKZk6MlBfFi5YRX71Rl2ZaIUxU7p1W
+3uLdwI0CgYEA+ljOawIs3UdT+BvtjWkSSS9JnM1waJbcvONl/83/+QzfEc0jBbJ2
+YxLspgJ/nWYXDQmBXirxZVo7aHBfMYjX+YXQ8BCcJVsmckgJbAOyOPvkaP1JHis7
+d2euATO5bsB5TmkzWT0Kmz54OqKa9C1d2uzoMwZhxm/viUF4yvVzQt8CgYEAvy94
+Y39u/KeFgAMOzofS4BxKBlJrBNBYMhGtGFTsXneFHkvRyeqef5bHu6Gac2OKh/uS
+j71uAvmfy6SYGSid7vqsiGKsA9VPf6Jk76wjxdjhBdnGw7vmfjwVzVu5x61E0YPK
+zqMI1I1+wVDStZQa7Zs+M2cIWIGu1tOclqaLUnsCgYB3sZoPo5ybt4y4JXIwmDn7
+77X8WGUUPH0Reo+7/FwUUUkeE7xY7viXaebngG5PbQ48V30Y7uM3mCqrRn7dChZo
+4MgC344odiotna+Tizjc8eJFKESbPgRSlKmnPXm9MB1PlhDM69h0XSvSrQf1EvO6
+xmZGbxi0bbRTJZCBSVVwdQKBgC/vhw/rc7iFiEOAgMXn6Eeo0Calo4+hbXugUvY2
+1M0aypW+DOvDl9oFxC6XZlJoMuPFgAnqRRsZ26cDrd8g//hbgcbwdpC/ex9VaFlv
+n8iLiGAfKmcJRdGA3zaOORaHqymdEcydtCkXESEHUs2UROwucHoS61TFr0DN7gUX
+3PbhAoGAcah/4vv3keUoFvwM4oTHFfmQ3TB6Oenih0+f7FSnnUEWikrCYZ4+M3Kr
+KriPLplp8g5SXC0dzEbKvYSWh2E+BP3w5JsByd9kTpBB5YiP51LKXzDS1FNKbp+c
+F0CMbV6ElVUwuJZnI58LqfqqB6pSNpVdp1HzLNf9tcszcE47xJ0=
+-----END RSA PRIVATE KEY-----
+&lt;/clientkey&gt;&lt;/repository&gt;&lt;/repositories&gt;&lt;/template&gt;</pre>
+
+    </div>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li>
+    <a href='../../apidoc.html'>Katello</a>
+    <span class='divider'>/</span>
+  </li>
+  <li>
+    <a href='../../apidoc/users.html'>Users</a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>index</li>
+</ul>
+
+  <div class='page-header'>
+    <h1>
+      GET /api/users<br>
+      <small>List users</small>
+    </h1>
+  </div>
+  <div class='page-header'>
+    <h1>
+      GET /api/users/:user_id/roles<br>
+      <small>List users</small>
+    </h1>
+  </div>
+
+<div>
+  
+
+    <h2>Examples</h2>
+      <pre>GET /api/users/?username=user_2d4c613
+200
+[
+  {
+    &quot;username&quot;: &quot;user_2d4c613&quot;,
+    &quot;email&quot;: &quot;user_2d4c613@somewhere.com&quot;,
+    &quot;id&quot;: 12,
+    &quot;default_environment&quot;: null,
+    &quot;page_size&quot;: 25,
+    &quot;password&quot;: &quot;c23d7ae95537315fe62cdf15d0d9ac2395d6c80c748f1f9221ac8eef5e991d727aa4e038a8a39aa1e4a534b5a9de51dc9c5bfc9c04b0d23a0971ab6f493be19eGICH4YfM6CHIOEDQY3q80cEAHYVe0leuhc3UmU0lQIpU65cDXHoTHzgp63Zy8GwE&quot;,
+    &quot;password_reset_token&quot;: null,
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+    &quot;hidden&quot;: false,
+    &quot;preferences&quot;: {},
+    &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+    &quot;disabled&quot;: false,
+    &quot;default_organization&quot;: null,
+    &quot;password_reset_sent_at&quot;: null,
+    &quot;own_role_id&quot;: 30,
+    &quot;helptips_enabled&quot;: true
+  }
+]</pre>
+
+
+    <h2>Params</h2>
+    <table class='table'>
+      <thead>
+        <tr>
+          <th>Param name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>username </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+      </tbody>
+    </table>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

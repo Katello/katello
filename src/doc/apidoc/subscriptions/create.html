@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li>
+    <a href='../../apidoc.html'>Katello</a>
+    <span class='divider'>/</span>
+  </li>
+  <li>
+    <a href='../../apidoc/subscriptions.html'>Subscriptions</a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>create</li>
+</ul>
+
+  <div class='page-header'>
+    <h1>
+      POST /api/systems/:system_id/subscriptions<br>
+      <small>Create a subscription</small>
+    </h1>
+  </div>
+
+<div>
+  
+
+    <h2>Examples</h2>
+      <pre>POST /api/systems/1a77416e-0b8e-4528-8ca8-0c37751ed05c/subscriptions
+{
+  &quot;pool&quot;: &quot;4028fa8137a8988e0137bb6de0610443&quot;,
+  &quot;quantity&quot;: 1
+}
+200
+{
+  &quot;name&quot;: &quot;admin_system_2d4c613&quot;,
+  &quot;system_template_id&quot;: null,
+  &quot;environment_id&quot;: 73,
+  &quot;id&quot;: 108,
+  &quot;href&quot;: &quot;/consumers/1a77416e-0b8e-4528-8ca8-0c37751ed05c&quot;,
+  &quot;autoheal&quot;: true,
+  &quot;environment&quot;: {
+    &quot;name&quot;: &quot;env 2d4c613&quot;,
+    &quot;prior&quot;: &quot;Library&quot;,
+    &quot;id&quot;: 73,
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:07Z&quot;,
+    &quot;organization&quot;: &quot;org_2d4c613&quot;,
+    &quot;description&quot;: null,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:56:07Z&quot;,
+    &quot;organization_id&quot;: 28,
+    &quot;library&quot;: false,
+    &quot;prior_id&quot;: 72
+  },
+  &quot;owner&quot;: {
+    &quot;id&quot;: &quot;4028fa8137a8988e0137bb6dd5ad043b&quot;,
+    &quot;href&quot;: &quot;/owners/org_2d4c613&quot;,
+    &quot;displayName&quot;: &quot;org_2d4c613&quot;,
+    &quot;key&quot;: &quot;org_2d4c613&quot;
+  },
+  &quot;created_at&quot;: &quot;2012-06-05T07:04:13Z&quot;,
+  &quot;description&quot;: &quot;Initial Registration Params&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T07:04:13Z&quot;,
+  &quot;serviceLevel&quot;: &quot;&quot;,
+  &quot;uuid&quot;: &quot;1a77416e-0b8e-4528-8ca8-0c37751ed05c&quot;,
+  &quot;idCert&quot;: {
+    &quot;created&quot;: &quot;2012-06-05T07:04:12.907+0000&quot;,
+    &quot;updated&quot;: &quot;2012-06-05T07:04:12.907+0000&quot;,
+    &quot;id&quot;: &quot;4028fa8137a8988e0137bb75416b04a0&quot;,
+    &quot;serial&quot;: {
+      &quot;created&quot;: &quot;2012-06-05T07:04:12.521+0000&quot;,
+      &quot;expiration&quot;: &quot;2013-06-05T07:04:12.521+0000&quot;,
+      &quot;updated&quot;: &quot;2012-06-05T07:04:12.521+0000&quot;,
+      &quot;id&quot;: 6908558797110134919,
+      &quot;collected&quot;: false,
+      &quot;serial&quot;: 6908558797110134919,
+      &quot;revoked&quot;: false
+    },
+    &quot;key&quot;: &quot;-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAiicooEp3uOxQ5FGNVwu+qva+BWQu5rPPxp3mhWyrpLiFzaU8\nOkf3SUa7VdrToMAVrkNW7JCcKoxvBIoMQlR8xRPcxJZ2Ns/WwZRZ/ShlVnMbIpW9\n40zTzICZF5y70mbtJgyD74kH3eRkna9adAEyQ8R2FHTEQkK37GRmeidw9/BplMvm\noRxGx04u+Kbp7E0G9ReaEhLvjIATd4M1cJXUrTEp+bkTIUU5ypjvnOcNF4Houv2a\nRa+Aqfqez7pX7Civ5DEaZM9lOmcVQWwebPY8V/jKqpowCF1O2ZnN/v4aAGgrThpu\n4QQvwWOhrGjbxe2gq8J1RwVtMeL9avqhCyFPaQIDAQABAoIBADhqs1l575gx0Prc\nHtb8MdnJN2ImPkzyAxh95OR5s0JqJCINpyG5v89JtjjiSufraS8nyriCeXOas79r\nzIPN0sH8UXxqYU4S5AVbWsBaHcAG837VHZ1UA24Q2fPdionqhE+0brCEChVgLoKC\nWHLlBizMbtf9syPH8Sn0+jBKKQTmqZFj6KGXigEcDKc75m7WiGIzitov8Gs+IgnR\numZu5eauBAoSYPdn2nmJySuDbTJ662Z6W/t43zPV+4o08DoIf9IlCd1lvF6q+phf\nMz5fvQnp3FDgROQj0R0WzQfRJge3pG71ThVMpicJEpGvbdPotCNnRk/wz3nXtNi6\nMYvwuXECgYEA4A/HENEBwANYZwikci3dp+WJep1L0nLqofhlPgVPa0PWHPEZhfwg\nCFo+BNwEzwl2WkfdWqm+3CY9LLkobxl42V7ytvKQXwKm/Q5zaxolk4bw/JCMncWf\nLelghFH6ZoPNgiguaYmI35SdC8U4zb4jeja5yV5bIMA5CzDQ0oBCd3UCgYEAndh9\n8W7g+ZocWeTZ3ZloVDw3iTRp9aZ6PI1hoV3j3/qxnvGzUC1Q3r3rOV51jZLDuwyx\nIcHKuACROwcUNK/SzRK/JhlR7/lotjAuKlmzzl094staPZfSD4VF+uEdn/vsYHu3\niO2COYRzUAUvWgPc3BqblwQPOqy6jgZngFWH7aUCgYEA2Z0ZRvDn1TiqjG9tX+PC\nCwY5TxgkgwHPdn5Mvj7kEpbxBmz30BS+e75By/BwzzAufaKcjyib0S9mbOBsL/M6\nV0wLSbouk8h8rPxzBst/QVhnB7XQjI9aeXnXnswL+bL7TvV9lkzY3eV13e+vqsuH\no3QxXy1ALn/jJ0ZDGp8tbt0CgYEAl5pUNGwbVoCHFGvyOJ1cD/OaH4Sg9JhFtRzR\nlWwZLomYyaE5aRttHdJpNzubSjOZHHFvO43mx118H6aH6Kaqn96Oiugsw4DX6oxR\n+skXInB5vPc1IA1OayvE79YBXyRWfsC0oaYEunuVSVkBhsJJAXno0F3Mxr0ZnMlX\n5XHA0SUCgYBHZv7qDSTaOPpUAPg6ORZ56OItBVqBbjF1qoAaXIpETqOva8nSceLY\nCgE24SGpuJkEElqoBv+Co0/v9mt87FTQDxwuJiWm4SVEtDM2Z82Ffp8QRi+d46l7\nCaiZY3ZFYmxz5LyILLQegMZD3lunqj6fdTO12Vd3eJJkC92gTKZhRA==\n-----END RSA PRIVATE KEY-----\n&quot;,
+    &quot;cert&quot;: &quot;-----BEGIN CERTIFICATE-----\nMIIDcDCCAtmgAwIBAgIIX+Ahn3OmSIcwDQYJKoZIhvcNAQEFBQAwRDEjMCEGA1UE\nAwwaZGhjcC0yNy0xOTAuYnJxLnJlZGhhdC5jb20xCzAJBgNVBAYTAlVTMRAwDgYD\nVQQHDAdSYWxlaWdoMB4XDTEyMDYwNTA3MDQxMloXDTEzMDYwNTA3MDQxMlowLzEt\nMCsGA1UEAxMkMWE3NzQxNmUtMGI4ZS00NTI4LThjYTgtMGMzNzc1MWVkMDVjMIIB\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiicooEp3uOxQ5FGNVwu+qva+\nBWQu5rPPxp3mhWyrpLiFzaU8Okf3SUa7VdrToMAVrkNW7JCcKoxvBIoMQlR8xRPc\nxJZ2Ns/WwZRZ/ShlVnMbIpW940zTzICZF5y70mbtJgyD74kH3eRkna9adAEyQ8R2\nFHTEQkK37GRmeidw9/BplMvmoRxGx04u+Kbp7E0G9ReaEhLvjIATd4M1cJXUrTEp\n+bkTIUU5ypjvnOcNF4Houv2aRa+Aqfqez7pX7Civ5DEaZM9lOmcVQWwebPY8V/jK\nqpowCF1O2ZnN/v4aAGgrThpu4QQvwWOhrGjbxe2gq8J1RwVtMeL9avqhCyFPaQID\nAQABo4H7MIH4MBEGCWCGSAGG+EIBAQQEAwIFoDALBgNVHQ8EBAMCBLAwdAYDVR0j\nBG0wa4AUYKETDd/WtSLgy31ehY4jIAZocyKhSKRGMEQxIzAhBgNVBAMMGmRoY3At\nMjctMTkwLmJycS5yZWRoYXQuY29tMQswCQYDVQQGEwJVUzEQMA4GA1UEBwwHUmFs\nZWlnaIIJAIH8PxVgpSaMMB0GA1UdDgQWBBTW53ItbGNu87pym08x1AqfvQdi+DAT\nBgNVHSUEDDAKBggrBgEFBQcDAjAsBgNVHREEJTAjpCEwHzEdMBsGA1UEAwwUYWRt\naW5fc3lzdGVtXzJkNGM2MTMwDQYJKoZIhvcNAQEFBQADgYEAtgkcWcHfmU0M+pvh\n8hBuj7u0hTeeeErzsizwn/2vJNotUDhaAedC6g+HT9t1mVaod/XwwHS6n2KY8cLI\n9MAmbS8WDWlK1IdxDV/mX6Vj7zI/zFQSVRTXYnJC5V0OKeJ46XTS0TXINCikmutm\nAavVJvtWXR/+w6PHamhVq0Cn/NY=\n-----END CERTIFICATE-----\n&quot;
+  },
+  &quot;location&quot;: &quot;None&quot;,
+  &quot;ipv4_address&quot;: null,
+  &quot;activation_key&quot;: [],
+  &quot;release&quot;: &quot;&quot;,
+  &quot;guests&quot;: [],
+  &quot;facts&quot;: {
+    &quot;cpu.cpu_socket(s)&quot;: &quot;1&quot;,
+    &quot;distribution.name&quot;: &quot;Unknown&quot;
+  }
+}</pre>
+
+
+    <h2>Params</h2>
+    <table class='table'>
+      <thead>
+        <tr>
+          <th>Param name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>pool </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>quantity </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+      </tbody>
+    </table>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

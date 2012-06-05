@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li>
+    <a href='../../apidoc.html'>Katello</a>
+    <span class='divider'>/</span>
+  </li>
+  <li>
+    <a href='../../apidoc/systems.html'>Systems</a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>index</li>
+</ul>
+
+  <div class='page-header'>
+    <h1>
+      GET /api/consumers<br>
+      <small>List systems</small>
+    </h1>
+  </div>
+  <div class='page-header'>
+    <h1>
+      GET /api/environments/:environment_id/consumers<br>
+      <small>List systems</small>
+    </h1>
+  </div>
+  <div class='page-header'>
+    <h1>
+      GET /api/environments/:environment_id/systems<br>
+      <small>List systems</small>
+    </h1>
+  </div>
+  <div class='page-header'>
+    <h1>
+      GET /api/organizations/:organization_id/systems<br>
+      <small>List systems</small>
+    </h1>
+  </div>
+  <div class='page-header'>
+    <h1>
+      GET /api/systems<br>
+      <small>List systems</small>
+    </h1>
+  </div>
+
+<div>
+  
+
+    <h2>Examples</h2>
+      <pre>GET /api/organizations/org_2d4c613/systems?name=katello.example.com_2d4c613
+200
+[
+  {
+    &quot;name&quot;: &quot;katello.example.com_2d4c613&quot;,
+    &quot;system_template_id&quot;: null,
+    &quot;environment_id&quot;: 73,
+    &quot;id&quot;: 99,
+    &quot;environment&quot;: {
+      &quot;name&quot;: &quot;env 2d4c613&quot;,
+      &quot;prior&quot;: &quot;Library&quot;,
+      &quot;id&quot;: 73,
+      &quot;created_at&quot;: &quot;2012-06-05T06:56:07Z&quot;,
+      &quot;organization&quot;: &quot;org_2d4c613&quot;,
+      &quot;description&quot;: null,
+      &quot;updated_at&quot;: &quot;2012-06-05T06:56:07Z&quot;,
+      &quot;organization_id&quot;: 28,
+      &quot;library&quot;: false,
+      &quot;prior_id&quot;: 72
+    },
+    &quot;created_at&quot;: &quot;2012-06-05T06:58:31Z&quot;,
+    &quot;description&quot;: &quot;Initial Registration Params&quot;,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:58:31Z&quot;,
+    &quot;serviceLevel&quot;: &quot;&quot;,
+    &quot;uuid&quot;: &quot;987968ea-0ecc-471d-98e3-9e4592db3172&quot;,
+    &quot;location&quot;: &quot;None&quot;,
+    &quot;ipv4_address&quot;: &quot;192.168.122.1&quot;,
+    &quot;activation_key&quot;: [],
+    &quot;guests&quot;: []
+  }
+]</pre>
+
+
+    <h2>Params</h2>
+    <table class='table'>
+      <thead>
+        <tr>
+          <th>Param name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>name </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>pool_id </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: string from 2 to 128 characters containting only alphanumeric characters, space, '_', '-' with no leading or trailing space..
+    </td>
+  </tr>
+
+  
+
+      </tbody>
+    </table>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

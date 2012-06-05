@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li><a href='../apidoc.html'>Katello</a><span class='divider'>/</span></li>
+  <li class='active'>Environments</li>
+</ul>
+
+<div class='page-header'>
+  <h1>
+    Environments<br>
+    <small></small>
+  </h1>
+</div>
+
+
+  <div><h1>Description</h1>
+
+<p>An environment is a basic organization structure that groups systems,
+products, repositories, templates etc.  Every system belongs to one environment
+and it&#39;s isolated inside so that it can see only content that is in its
+environment.</p>
+
+<h2>Chains</h2>
+
+<p>Environments are ordered into chains and their content (propducts,
+repositories, tempaltes, packages) can be moved to an environment only from its
+prior environment. You can have for example chain like:</p>
+
+<pre><code>Library -&gt; Development -&gt; Testing -&gt; Production
+</code></pre>
+
+<p>Each change in an environment is done through a changeset in an action
+called promotion.</p>
+
+<h2>Library</h2>
+
+<p>Library is a special environment that has no ascendant: all the content
+starts in this environment. More chains can start from the library environment but
+no further branching of a chain is enabled.</p>
+</div>
+
+<div class='accordion' id='accordion'>
+  
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/environments/index.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/organizations/:organization_id/environments
+          </a><br>
+          <small>List environments in an organization</small>
+        </h2>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/owners/:organization_id/environments
+          </a><br>
+          <small>List environments for RHSM</small>
+        </h2>
+    </div>
+    
+    <div id='description-index' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/organizations/org_2d4c613/environments/?name=Library
+200
+[
+  {
+    &quot;name&quot;: &quot;Library&quot;,
+    &quot;prior&quot;: null,
+    &quot;id&quot;: 72,
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+    &quot;organization&quot;: &quot;org_2d4c613&quot;,
+    &quot;description&quot;: null,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+    &quot;organization_id&quot;: 28,
+    &quot;library&quot;: true,
+    &quot;prior_id&quot;: null
+  }
+]</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>library </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      <p>set true if you want to see only library environment</p>
+
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>name </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      <p>filter only environments with this name</p>
+
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/environments/create.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/organizations/:organization_id/environments
+          </a><br>
+          <small>Create an environment in an organization</small>
+        </h2>
+    </div>
+    
+    <div id='description-create' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>POST /api/organizations/org_2d4c613/environments/
+{
+  &quot;environment&quot;: {
+    &quot;name&quot;: &quot;env 2d4c613&quot;,
+    &quot;prior&quot;: 72
+  }
+}
+200
+{
+  &quot;name&quot;: &quot;env 2d4c613&quot;,
+  &quot;prior&quot;: &quot;Library&quot;,
+  &quot;id&quot;: 73,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:07Z&quot;,
+  &quot;organization&quot;: &quot;org_2d4c613&quot;,
+  &quot;description&quot;: null,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:07Z&quot;,
+  &quot;organization_id&quot;: 28,
+  &quot;library&quot;: false,
+  &quot;prior_id&quot;: 72
+}</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>environment </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: Hash
+    </td>
+  </tr>
+
+    <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>environment[name] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>environment[prior] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      <p>id of an environment that is prior the new environment in the chain, it has to be
+either library or an envrionment at the end of the chain</p>
+
+    </td>
+  </tr>
+
+  
+
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/environments/update.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-update'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            PUT /api/environments/:id
+          </a><br>
+          <small>Update an environment</small>
+        </h2>
+        <h2>
+          <a href='#description-update'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            PUT /api/organizations/:organization_id/environments/:id
+          </a><br>
+          <small>Update an environment in an organization</small>
+        </h2>
+    </div>
+    
+    <div id='description-update' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>PUT /api/organizations/org_2d4c613/environments/75
+{
+  &quot;environment&quot;: {
+    &quot;name&quot;: &quot;tstenv_2d4c613&quot;,
+    &quot;description&quot;: &quot;Test environment&quot;
+  }
+}
+200
+{
+  &quot;name&quot;: &quot;tstenv_2d4c613&quot;,
+  &quot;prior&quot;: &quot;Library&quot;,
+  &quot;id&quot;: 75,
+  &quot;created_at&quot;: &quot;2012-06-05T06:57:53Z&quot;,
+  &quot;organization&quot;: &quot;org_2d4c613&quot;,
+  &quot;description&quot;: &quot;Test environment&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:57:54Z&quot;,
+  &quot;organization_id&quot;: 28,
+  &quot;library&quot;: false,
+  &quot;prior_id&quot;: 72
+}</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>environment </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: Hash
+    </td>
+  </tr>
+
+    <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>environment[description] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>environment[name] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/environments/destroy.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-destroy'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/environments/:id
+          </a><br>
+          <small>Destroy an environment</small>
+        </h2>
+        <h2>
+          <a href='#description-destroy'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/organizations/:organization_id/environments/:id
+          </a><br>
+          <small>Destroy an environment in an organization</small>
+        </h2>
+    </div>
+    
+    <div id='description-destroy' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>DELETE /api/organizations/org_2d4c613/environments/75
+200
+Deleted environment '75'</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/environments/repositories.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-repositories'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/organizations/:organization_id/environments/:id/repositories
+          </a><br>
+          <small>List repositories available in the environment</small>
+        </h2>
+    </div>
+    
+    <div id='description-repositories' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/organizations/org_2d4c613/environments/72/repositories?include_disabled=False
+200
+[
+  {
+    &quot;last_sync&quot;: null,
+    &quot;name&quot;: &quot;fewups_product_2d4c613_fakerepos_zoo5&quot;,
+    &quot;environment_product_id&quot;: 84,
+    &quot;enabled&quot;: true,
+    &quot;id&quot;: 749,
+    &quot;major&quot;: null,
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:13Z&quot;,
+    &quot;cp_label&quot;: &quot;org_2d4c613_fewups_product_2d4c613_fewups_product_2d4c613_fakerepos_zoo5&quot;,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:56:13Z&quot;,
+    &quot;package_count&quot;: 0,
+    &quot;gpg_key_id&quot;: null,
+    &quot;minor&quot;: null,
+    &quot;gpg_key_name&quot;: &quot;&quot;,
+    &quot;pulp_id&quot;: &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;
+  },
+  {
+    &quot;last_sync&quot;: null,
+    &quot;name&quot;: &quot;repo_2d4c613&quot;,
+    &quot;environment_product_id&quot;: 84,
+    &quot;enabled&quot;: true,
+    &quot;id&quot;: 750,
+    &quot;major&quot;: null,
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:15Z&quot;,
+    &quot;cp_label&quot;: &quot;org_2d4c613_fewups_product_2d4c613_repo_2d4c613&quot;,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:56:15Z&quot;,
+    &quot;package_count&quot;: 0,
+    &quot;gpg_key_id&quot;: null,
+    &quot;minor&quot;: null,
+    &quot;gpg_key_name&quot;: &quot;&quot;,
+    &quot;pulp_id&quot;: &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
+  }
+]</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>include_disabled </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      <p>set to true if you want to see also disabled repositories</p>
+
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li><a href='../apidoc.html'>Katello</a><span class='divider'>/</span></li>
+  <li class='active'>Changesets</li>
+</ul>
+
+<div class='page-header'>
+  <h1>
+    Changesets<br>
+    <small></small>
+  </h1>
+</div>
+
+
+
+<div class='accordion' id='accordion'>
+  
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/changesets/index.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/organizations/:organization_id/environments/:environment_id/changesets
+          </a><br>
+          <small>List changesets</small>
+        </h2>
+    </div>
+    
+    <div id='description-index' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/organizations/org_2d4c613/environments/73/changesets/?name=changeset_2d4c613
+200
+[
+  {
+    &quot;name&quot;: &quot;changeset_2d4c613&quot;,
+    &quot;environment_id&quot;: 73,
+    &quot;id&quot;: 50,
+    &quot;environment_name&quot;: &quot;env 2d4c613&quot;,
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
+    &quot;description&quot;: null,
+    &quot;state&quot;: &quot;new&quot;,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
+    &quot;promotion_date&quot;: null,
+    &quot;task_status_id&quot;: null
+  }
+]</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>name </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/changesets/show.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-show'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/changesets/:id
+          </a><br>
+          <small>Show a changeset</small>
+        </h2>
+    </div>
+    
+    <div id='description-show' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/changesets/50
+200
+{
+  &quot;packages&quot;: [],
+  &quot;name&quot;: &quot;changeset_2d4c613&quot;,
+  &quot;environment_id&quot;: 73,
+  &quot;id&quot;: 50,
+  &quot;errata&quot;: [],
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
+  &quot;products&quot;: [],
+  &quot;description&quot;: null,
+  &quot;distributions&quot;: [],
+  &quot;state&quot;: &quot;new&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
+  &quot;repos&quot;: [],
+  &quot;promotion_date&quot;: null,
+  &quot;task_status_id&quot;: null,
+  &quot;system_templates&quot;: []
+}</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/changesets/update.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-update'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            PUT /api/changesets/:id
+          </a><br>
+          <small>Update a changeset</small>
+        </h2>
+    </div>
+    
+    <div id='description-update' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>PUT /api/changesets/50
+{
+  &quot;changeset&quot;: {}
+}
+200
+{
+  &quot;name&quot;: &quot;changeset_2d4c613&quot;,
+  &quot;environment_id&quot;: 73,
+  &quot;id&quot;: 50,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
+  &quot;description&quot;: null,
+  &quot;state&quot;: &quot;new&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
+  &quot;promotion_date&quot;: null,
+  &quot;task_status_id&quot;: null
+}</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>changeset </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: Hash
+    </td>
+  </tr>
+
+    <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>changeset[description] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>changeset[name] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/changesets/create.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/organizations/:organization_id/environments/:environment_id/changesets
+          </a><br>
+          <small>Create a changeset</small>
+        </h2>
+    </div>
+    
+    <div id='description-create' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>POST /api/organizations/org_2d4c613/environments/73/changesets/
+{
+  &quot;changeset&quot;: {
+    &quot;name&quot;: &quot;changeset_2d4c613&quot;,
+    &quot;description&quot;: null
+  }
+}
+200
+{
+  &quot;name&quot;: &quot;changeset_2d4c613&quot;,
+  &quot;environment_id&quot;: 73,
+  &quot;id&quot;: 50,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
+  &quot;description&quot;: null,
+  &quot;state&quot;: &quot;new&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
+  &quot;promotion_date&quot;: null,
+  &quot;task_status_id&quot;: null
+}</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>changeset </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: Hash
+    </td>
+  </tr>
+
+    <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>changeset[description] </strong><br>
+      <small>
+        optional
+        , nil allowed
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>changeset[name] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/changesets/promote.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-promote'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/changesets/:id/promote
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-promote' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>POST /api/changesets/50/promote
+202
+{
+  &quot;task_type&quot;: &quot;TaskStatus&quot;,
+  &quot;user_id&quot;: 1,
+  &quot;id&quot;: 209,
+  &quot;start_time&quot;: null,
+  &quot;prefix&quot;: &quot;api/changesets&quot;,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:32Z&quot;,
+  &quot;finish_time&quot;: null,
+  &quot;result&quot;: null,
+  &quot;progress&quot;: null,
+  &quot;template&quot;: &quot;promote&quot;,
+  &quot;state&quot;: &quot;waiting&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:32Z&quot;,
+  &quot;organization_id&quot;: 28,
+  &quot;uuid&quot;: &quot;10cb1bee-7e3c-4b99-a7ee-85f2e6177294&quot;,
+  &quot;status&quot;: 202,
+  &quot;parameters&quot;: null,
+  &quot;pending?&quot;: true
+}</pre>
+
+    </div>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

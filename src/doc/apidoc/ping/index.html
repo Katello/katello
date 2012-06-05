@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li>
+    <a href='../../apidoc.html'>Katello</a>
+    <span class='divider'>/</span>
+  </li>
+  <li>
+    <a href='../../apidoc/ping.html'>Ping</a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>index</li>
+</ul>
+
+  <div class='page-header'>
+    <h1>
+      GET /api/ping<br>
+      <small>List ping</small>
+    </h1>
+  </div>
+
+<div>
+  
+
+    <h2>Examples</h2>
+      <pre>GET /api/ping/
+200
+{
+  &quot;result&quot;: &quot;fail&quot;,
+  &quot;status&quot;: {
+    &quot;elasticsearch&quot;: {
+      &quot;duration_ms&quot;: &quot;83&quot;,
+      &quot;result&quot;: &quot;ok&quot;
+    },
+    &quot;candlepin&quot;: {
+      &quot;duration_ms&quot;: &quot;11&quot;,
+      &quot;result&quot;: &quot;ok&quot;
+    },
+    &quot;pulp&quot;: {
+      &quot;duration_ms&quot;: &quot;34&quot;,
+      &quot;result&quot;: &quot;ok&quot;
+    },
+    &quot;candlepin_auth&quot;: {
+      &quot;duration_ms&quot;: &quot;16&quot;,
+      &quot;result&quot;: &quot;ok&quot;
+    },
+    &quot;katello_jobs&quot;: {
+      &quot;message&quot;: &quot;katello-jobs service not running&quot;,
+      &quot;result&quot;: &quot;fail&quot;
+    },
+    &quot;pulp_auth&quot;: {
+      &quot;duration_ms&quot;: &quot;38&quot;,
+      &quot;result&quot;: &quot;ok&quot;
+    }
+  }
+}</pre>
+
+
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

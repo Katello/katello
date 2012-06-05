@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li>
+    <a href='../../apidoc.html'>Katello</a>
+    <span class='divider'>/</span>
+  </li>
+  <li>
+    <a href='../../apidoc/sync.html'>Sync</a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>index</li>
+</ul>
+
+  <div class='page-header'>
+    <h1>
+      GET /api/organizations/:organization_id/products/:product_id/sync<br>
+      <small>List sync</small>
+    </h1>
+  </div>
+  <div class='page-header'>
+    <h1>
+      GET /api/providers/:provider_id/sync<br>
+      <small>List sync</small>
+    </h1>
+  </div>
+  <div class='page-header'>
+    <h1>
+      GET /api/repositories/:repository_id/sync<br>
+      <small>List sync</small>
+    </h1>
+  </div>
+
+<div>
+  
+
+    <h2>Examples</h2>
+      <pre>GET /api/repositories/750/sync
+200
+{
+  &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
+  &quot;user_id&quot;: 1,
+  &quot;id&quot;: 208,
+  &quot;start_time&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+  &quot;prefix&quot;: &quot;api/sync&quot;,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+  &quot;finish_time&quot;: &quot;2012-06-05T06:56:28Z&quot;,
+  &quot;result&quot;: true,
+  &quot;progress&quot;: {
+    &quot;error_details&quot;: [],
+    &quot;size_left&quot;: 0,
+    &quot;step&quot;: &quot;Running Createrepo&quot;,
+    &quot;total_count&quot;: 8,
+    &quot;total_size&quot;: 17872,
+    &quot;items_left&quot;: 0
+  },
+  &quot;template&quot;: &quot;index&quot;,
+  &quot;state&quot;: &quot;finished&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:57:41Z&quot;,
+  &quot;organization_id&quot;: 28,
+  &quot;uuid&quot;: &quot;8d952805-aedb-11e1-87e1-f0def16f6678&quot;,
+  &quot;parameters&quot;: null,
+  &quot;pending?&quot;: false
+}</pre>
+
+
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li><a href='../apidoc.html'>Katello</a><span class='divider'>/</span></li>
+  <li class='active'>Systems</li>
+</ul>
+
+<div class='page-header'>
+  <h1>
+    Systems<br>
+    <small></small>
+  </h1>
+</div>
+
+
+
+<div class='accordion' id='accordion'>
+  
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/create.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/consumers
+          </a><br>
+          <small>Create a system</small>
+        </h2>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/environments/:environment_id/consumers
+          </a><br>
+          <small>Create a system</small>
+        </h2>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/environments/:environment_id/systems
+          </a><br>
+          <small>Create a system</small>
+        </h2>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/systems
+          </a><br>
+          <small>Create a system</small>
+        </h2>
+    </div>
+    
+    <div id='description-create' class='collapse accordion-body'>
+      
+      
+
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>facts </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: Hash
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>installedProducts </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: Array
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>name </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>type </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/activate.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-activate'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/consumers
+          </a><br>
+          <small></small>
+        </h2>
+        <h2>
+          <a href='#description-activate'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/environments/:environment_id/systems
+          </a><br>
+          <small></small>
+        </h2>
+        <h2>
+          <a href='#description-activate'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/organizations/:organization_id/systems
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-activate' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>POST /api/environments/77/systems
+{
+  &quot;name&quot;: &quot;katello.example.com_2d4c613&quot;,
+  &quot;serviceLevel&quot;: &quot;SELF-SUPPORT&quot;,
+  &quot;cp_type&quot;: &quot;system&quot;,
+  &quot;facts&quot;: {
+    &quot;cpu.cpu_socket(s)&quot;: &quot;1&quot;,
+    &quot;distribution.name&quot;: &quot;Unknown&quot;
+  }
+}
+200
+{
+  &quot;name&quot;: &quot;katello.example.com_2d4c613&quot;,
+  &quot;system_template_id&quot;: null,
+  &quot;environment_id&quot;: 77,
+  &quot;id&quot;: 100,
+  &quot;href&quot;: &quot;/consumers/4334eb6a-fe68-432f-a4c4-182ff9121c58&quot;,
+  &quot;autoheal&quot;: true,
+  &quot;environment&quot;: {
+    &quot;name&quot;: &quot;env_manifest_2d4c613&quot;,
+    &quot;prior&quot;: &quot;Library&quot;,
+    &quot;id&quot;: 77,
+    &quot;created_at&quot;: &quot;2012-06-05T07:00:04Z&quot;,
+    &quot;organization&quot;: &quot;org_manifest_2d4c613&quot;,
+    &quot;description&quot;: null,
+    &quot;updated_at&quot;: &quot;2012-06-05T07:00:04Z&quot;,
+    &quot;organization_id&quot;: 29,
+    &quot;library&quot;: false,
+    &quot;prior_id&quot;: 76
+  },
+  &quot;owner&quot;: {
+    &quot;id&quot;: &quot;4028fa8137a8988e0137bb717406044d&quot;,
+    &quot;href&quot;: &quot;/owners/org_manifest_2d4c613&quot;,
+    &quot;displayName&quot;: &quot;org_manifest_2d4c613&quot;,
+    &quot;key&quot;: &quot;org_manifest_2d4c613&quot;
+  },
+  &quot;created_at&quot;: &quot;2012-06-05T07:01:23Z&quot;,
+  &quot;description&quot;: &quot;Initial Registration Params&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T07:01:23Z&quot;,
+  &quot;serviceLevel&quot;: &quot;&quot;,
+  &quot;uuid&quot;: &quot;4334eb6a-fe68-432f-a4c4-182ff9121c58&quot;,
+  &quot;idCert&quot;: {
+    &quot;created&quot;: &quot;2012-06-05T07:01:23.275+0000&quot;,
+    &quot;updated&quot;: &quot;2012-06-05T07:01:23.275+0000&quot;,
+    &quot;id&quot;: &quot;4028fa8137a8988e0137bb72aacb0466&quot;,
+    &quot;serial&quot;: {
+      &quot;created&quot;: &quot;2012-06-05T07:01:22.990+0000&quot;,
+      &quot;expiration&quot;: &quot;2013-06-05T07:01:22.990+0000&quot;,
+      &quot;updated&quot;: &quot;2012-06-05T07:01:22.990+0000&quot;,
+      &quot;id&quot;: 7581335018913142817,
+      &quot;collected&quot;: false,
+      &quot;serial&quot;: 7581335018913142817,
+      &quot;revoked&quot;: false
+    },
+    &quot;key&quot;: &quot;-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAkpIy6cVxIZJ4bUyt0dq2q4MfwJtjGAeRo62L/tfKNCCPGSgw\ncd7ETgLrJhvMR5FpSNkwOrhKK9reNHmnORUMtjsH2CPmjUyu1626EIt0y4XObCMU\nh7+rIp6j1I7xmYG2tjGTszh2Q7dZdvih7EpEnVxqf04XkzSvBUJKqDJpXjZhBhEB\nHgkJtpK8oqvMSv+5S/mcv9ifEBNpXsSLxrcerhwj8wL6lsg6xR9g339EUNhIwfdi\nRk2bjYzWcKdnaJ+8vrEaYPcCjlu02U+O1AOB0CsUO0N0NdaT3Zc2vwHIfOdIOQpe\nKQtOykcMwEA1ELX/AQixq4a1+e5pvDE0xlfJNwIDAQABAoIBAC0uV/dr34XDys+W\ndXZc/zY7g0wyGgfMPX7A/oieKDyNVM8iblyLmOObTrU+mGfvUQ8dtBpFuMdv/lMa\ntQuJi5OY+sALwQQJgVQGv3ZeJrCeHJWE8s0trilL0aCyN5NkQthCzA7Q9tPE7xUX\na4KVGjWPyVxYzDeaY+ExICZc89IQZZl3ox6EF4+XlQ1JsXI2WdK6b9IJAZxbJ+nr\njcFV7QJ/Cc6S0DOxWPXiTpuZuXaBpdLqf06I0R+TGz1xhgHJNkjcxXWB2X2aTkic\nKZEsCBJcuAeoFWIdGiIAiYRgcUX/aWUWsaObQ/RsglS/vPwSFrZkF/yZqAJrzah/\nhKieR2ECgYEAzKte9BoQQ0aN8jESpYoeDbdyV6Vqq4eXqcN88xA3pWVVrkMJnUeY\nSRlzINcXzNcvMyGyD+gZw31fiAuOCvjWUCT9dlr/w6JDkppGdOxfv60HUL+vV+pA\nHZKADhZIjCTqk+lVxb3Qf3q1Ihq7OZHtMxBYiTZiRp0TmIQYCzixdr8CgYEAt1Ss\nXcj0niUC4b/M64AUVR44HRQ8Lhx7l82ErgQUfgSs28CxeqA+QU+u7iw8hTvvB6EG\n7AQG41YZJbxzQ2fQNyybj1BO/9+NMwMq1PPCW7EU4bag8l+t7XJqeIGrQBBON+qh\n4dyu94+iQQDITKyxssR6WQ8Cq0Zm/nrQb4bFA4kCgYBRtYjvAwjDEwPQUO8Uz5M3\n/qjTfOKdIEDYMYdMsojEqzQNog3QkKinZlWkIrsJuE7LpwQjfZHrjb353kMS9kz5\nKgtWmPXK8Jjxik3emA+Rwk5NWnlyK771D2u4NAU6jfJooprvmtwGSMLPnsRoM23z\nGO9/uAp8DnGoTfQbZsLSmQKBgFZIJ4dMGLSFPsH4fv0nHmqg+k/VQi2BgjmDpDox\n+WMF2ETkf6Ly39nlIrM9Zo5eErVId/WEP6mmz9cOxkCnDzuoZt4gMc4C7HVhvDrV\nLlfxE57XURBBL55dBvcIMAzKn8V5TA78yewBUZ++Ooa7kDZOejaH9f2d+MM0Ef0r\nNHXhAoGBAMSLbP8Leu4uMSFLuqiAnUnyyrxqS76Hi//5naCctDZbgG6QQOtCOZLU\n0Ed6SrZttXB236exNRkJ3mSDuplrj5f77Ocg1219zFNR4GlhZxpgfpgCGArM1htL\nlgKTkUW4WOQ5J2gs6CLva3RWoM14ZYChDGjg17sOg918pXwvafq7\n-----END RSA PRIVATE KEY-----\n&quot;,
+    &quot;cert&quot;: &quot;-----BEGIN CERTIFICATE-----\nMIIDgDCCAumgAwIBAgIIaTZQCDWMGCEwDQYJKoZIhvcNAQEFBQAwRDEjMCEGA1UE\nAwwaZGhjcC0yNy0xOTAuYnJxLnJlZGhhdC5jb20xCzAJBgNVBAYTAlVTMRAwDgYD\nVQQHDAdSYWxlaWdoMB4XDTEyMDYwNTA3MDEyMloXDTEzMDYwNTA3MDEyMlowLzEt\nMCsGA1UEAxMkNDMzNGViNmEtZmU2OC00MzJmLWE0YzQtMTgyZmY5MTIxYzU4MIIB\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkpIy6cVxIZJ4bUyt0dq2q4Mf\nwJtjGAeRo62L/tfKNCCPGSgwcd7ETgLrJhvMR5FpSNkwOrhKK9reNHmnORUMtjsH\n2CPmjUyu1626EIt0y4XObCMUh7+rIp6j1I7xmYG2tjGTszh2Q7dZdvih7EpEnVxq\nf04XkzSvBUJKqDJpXjZhBhEBHgkJtpK8oqvMSv+5S/mcv9ifEBNpXsSLxrcerhwj\n8wL6lsg6xR9g339EUNhIwfdiRk2bjYzWcKdnaJ+8vrEaYPcCjlu02U+O1AOB0CsU\nO0N0NdaT3Zc2vwHIfOdIOQpeKQtOykcMwEA1ELX/AQixq4a1+e5pvDE0xlfJNwID\nAQABo4IBCjCCAQYwEQYJYIZIAYb4QgEBBAQDAgWgMAsGA1UdDwQEAwIEsDB0BgNV\nHSMEbTBrgBRgoRMN39a1IuDLfV6FjiMgBmhzIqFIpEYwRDEjMCEGA1UEAwwaZGhj\ncC0yNy0xOTAuYnJxLnJlZGhhdC5jb20xCzAJBgNVBAYTAlVTMRAwDgYDVQQHDAdS\nYWxlaWdoggkAgfw/FWClJowwHQYDVR0OBBYEFJ/A62MujG+PzNwqpUbvCbxDrGlx\nMBMGA1UdJQQMMAoGCCsGAQUFBwMCMDoGA1UdEQQzMDGkLzAtMSswKQYDVQQDDCJk\naGNwLTI3LTE5MC5icnEucmVkaGF0LmNvbV8yZDRjNjEzMA0GCSqGSIb3DQEBBQUA\nA4GBAC5JRj47rNJyUYarREHX630M+v6G3LNKUxcGqhmcQM9oGkzJNXno/4m8zLfX\no5C9yKut6dWRZToCzkzN1G40+f7dkyu0wCH7X9swyorxxv300Q9rRdWzDlHXFXJ1\nyf47BuEpNoLXWh2TZOwKFnZr5c6pyB8OiXJbfwO8a1tgw6v/\n-----END CERTIFICATE-----\n&quot;
+  },
+  &quot;location&quot;: &quot;None&quot;,
+  &quot;ipv4_address&quot;: null,
+  &quot;activation_key&quot;: [],
+  &quot;release&quot;: &quot;&quot;,
+  &quot;guests&quot;: [],
+  &quot;facts&quot;: {
+    &quot;cpu.cpu_socket(s)&quot;: &quot;1&quot;,
+    &quot;distribution.name&quot;: &quot;Unknown&quot;
+  }
+}</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>activation_keys </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>cp_type </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>facts </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: Hash
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>installedProducts </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: Array
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>name </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>owner </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>serviceLevel </strong><br>
+      <small>
+        optional
+        , nil allowed
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>type </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/regenerate_identity_certificates.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-regenerate_identity_certificates'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/consumers/:id
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-regenerate_identity_certificates' class='collapse accordion-body'>
+      
+      
+
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/update.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-update'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            PUT /api/consumers/:id
+          </a><br>
+          <small>Update a system</small>
+        </h2>
+        <h2>
+          <a href='#description-update'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            PUT /api/systems/:id
+          </a><br>
+          <small>Update a system</small>
+        </h2>
+    </div>
+    
+    <div id='description-update' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>PUT /api/systems/4334eb6a-fe68-432f-a4c4-182ff9121c58
+{
+  &quot;serviceLevel&quot;: &quot;SELF-SUPPORT&quot;
+}
+200
+{
+  &quot;name&quot;: &quot;katello.example.com_2d4c613&quot;,
+  &quot;system_template_id&quot;: null,
+  &quot;environment_id&quot;: 77,
+  &quot;id&quot;: 100,
+  &quot;href&quot;: &quot;/consumers/4334eb6a-fe68-432f-a4c4-182ff9121c58&quot;,
+  &quot;autoheal&quot;: true,
+  &quot;environment&quot;: {
+    &quot;name&quot;: &quot;env_manifest_2d4c613&quot;,
+    &quot;prior&quot;: &quot;Library&quot;,
+    &quot;id&quot;: 77,
+    &quot;created_at&quot;: &quot;2012-06-05T07:00:04Z&quot;,
+    &quot;organization&quot;: &quot;org_manifest_2d4c613&quot;,
+    &quot;description&quot;: null,
+    &quot;updated_at&quot;: &quot;2012-06-05T07:00:04Z&quot;,
+    &quot;organization_id&quot;: 29,
+    &quot;library&quot;: false,
+    &quot;prior_id&quot;: 76
+  },
+  &quot;owner&quot;: {
+    &quot;id&quot;: &quot;4028fa8137a8988e0137bb717406044d&quot;,
+    &quot;href&quot;: &quot;/owners/org_manifest_2d4c613&quot;,
+    &quot;displayName&quot;: &quot;org_manifest_2d4c613&quot;,
+    &quot;key&quot;: &quot;org_manifest_2d4c613&quot;
+  },
+  &quot;created_at&quot;: &quot;2012-06-05T07:01:23Z&quot;,
+  &quot;description&quot;: &quot;Initial Registration Params&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T07:01:23Z&quot;,
+  &quot;serviceLevel&quot;: &quot;SELF-SUPPORT&quot;,
+  &quot;uuid&quot;: &quot;4334eb6a-fe68-432f-a4c4-182ff9121c58&quot;,
+  &quot;idCert&quot;: {
+    &quot;created&quot;: &quot;2012-06-05T07:01:23.275+0000&quot;,
+    &quot;updated&quot;: &quot;2012-06-05T07:01:23.275+0000&quot;,
+    &quot;id&quot;: &quot;4028fa8137a8988e0137bb72aacb0466&quot;,
+    &quot;serial&quot;: {
+      &quot;created&quot;: &quot;2012-06-05T07:01:22.990+0000&quot;,
+      &quot;expiration&quot;: &quot;2013-06-05T07:01:22.990+0000&quot;,
+      &quot;updated&quot;: &quot;2012-06-05T07:01:22.990+0000&quot;,
+      &quot;id&quot;: 7581335018913142817,
+      &quot;collected&quot;: false,
+      &quot;serial&quot;: 7581335018913142817,
+      &quot;revoked&quot;: false
+    },
+    &quot;key&quot;: &quot;-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAkpIy6cVxIZJ4bUyt0dq2q4MfwJtjGAeRo62L/tfKNCCPGSgw\ncd7ETgLrJhvMR5FpSNkwOrhKK9reNHmnORUMtjsH2CPmjUyu1626EIt0y4XObCMU\nh7+rIp6j1I7xmYG2tjGTszh2Q7dZdvih7EpEnVxqf04XkzSvBUJKqDJpXjZhBhEB\nHgkJtpK8oqvMSv+5S/mcv9ifEBNpXsSLxrcerhwj8wL6lsg6xR9g339EUNhIwfdi\nRk2bjYzWcKdnaJ+8vrEaYPcCjlu02U+O1AOB0CsUO0N0NdaT3Zc2vwHIfOdIOQpe\nKQtOykcMwEA1ELX/AQixq4a1+e5pvDE0xlfJNwIDAQABAoIBAC0uV/dr34XDys+W\ndXZc/zY7g0wyGgfMPX7A/oieKDyNVM8iblyLmOObTrU+mGfvUQ8dtBpFuMdv/lMa\ntQuJi5OY+sALwQQJgVQGv3ZeJrCeHJWE8s0trilL0aCyN5NkQthCzA7Q9tPE7xUX\na4KVGjWPyVxYzDeaY+ExICZc89IQZZl3ox6EF4+XlQ1JsXI2WdK6b9IJAZxbJ+nr\njcFV7QJ/Cc6S0DOxWPXiTpuZuXaBpdLqf06I0R+TGz1xhgHJNkjcxXWB2X2aTkic\nKZEsCBJcuAeoFWIdGiIAiYRgcUX/aWUWsaObQ/RsglS/vPwSFrZkF/yZqAJrzah/\nhKieR2ECgYEAzKte9BoQQ0aN8jESpYoeDbdyV6Vqq4eXqcN88xA3pWVVrkMJnUeY\nSRlzINcXzNcvMyGyD+gZw31fiAuOCvjWUCT9dlr/w6JDkppGdOxfv60HUL+vV+pA\nHZKADhZIjCTqk+lVxb3Qf3q1Ihq7OZHtMxBYiTZiRp0TmIQYCzixdr8CgYEAt1Ss\nXcj0niUC4b/M64AUVR44HRQ8Lhx7l82ErgQUfgSs28CxeqA+QU+u7iw8hTvvB6EG\n7AQG41YZJbxzQ2fQNyybj1BO/9+NMwMq1PPCW7EU4bag8l+t7XJqeIGrQBBON+qh\n4dyu94+iQQDITKyxssR6WQ8Cq0Zm/nrQb4bFA4kCgYBRtYjvAwjDEwPQUO8Uz5M3\n/qjTfOKdIEDYMYdMsojEqzQNog3QkKinZlWkIrsJuE7LpwQjfZHrjb353kMS9kz5\nKgtWmPXK8Jjxik3emA+Rwk5NWnlyK771D2u4NAU6jfJooprvmtwGSMLPnsRoM23z\nGO9/uAp8DnGoTfQbZsLSmQKBgFZIJ4dMGLSFPsH4fv0nHmqg+k/VQi2BgjmDpDox\n+WMF2ETkf6Ly39nlIrM9Zo5eErVId/WEP6mmz9cOxkCnDzuoZt4gMc4C7HVhvDrV\nLlfxE57XURBBL55dBvcIMAzKn8V5TA78yewBUZ++Ooa7kDZOejaH9f2d+MM0Ef0r\nNHXhAoGBAMSLbP8Leu4uMSFLuqiAnUnyyrxqS76Hi//5naCctDZbgG6QQOtCOZLU\n0Ed6SrZttXB236exNRkJ3mSDuplrj5f77Ocg1219zFNR4GlhZxpgfpgCGArM1htL\nlgKTkUW4WOQ5J2gs6CLva3RWoM14ZYChDGjg17sOg918pXwvafq7\n-----END RSA PRIVATE KEY-----\n&quot;,
+    &quot;cert&quot;: &quot;-----BEGIN CERTIFICATE-----\nMIIDgDCCAumgAwIBAgIIaTZQCDWMGCEwDQYJKoZIhvcNAQEFBQAwRDEjMCEGA1UE\nAwwaZGhjcC0yNy0xOTAuYnJxLnJlZGhhdC5jb20xCzAJBgNVBAYTAlVTMRAwDgYD\nVQQHDAdSYWxlaWdoMB4XDTEyMDYwNTA3MDEyMloXDTEzMDYwNTA3MDEyMlowLzEt\nMCsGA1UEAxMkNDMzNGViNmEtZmU2OC00MzJmLWE0YzQtMTgyZmY5MTIxYzU4MIIB\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkpIy6cVxIZJ4bUyt0dq2q4Mf\nwJtjGAeRo62L/tfKNCCPGSgwcd7ETgLrJhvMR5FpSNkwOrhKK9reNHmnORUMtjsH\n2CPmjUyu1626EIt0y4XObCMUh7+rIp6j1I7xmYG2tjGTszh2Q7dZdvih7EpEnVxq\nf04XkzSvBUJKqDJpXjZhBhEBHgkJtpK8oqvMSv+5S/mcv9ifEBNpXsSLxrcerhwj\n8wL6lsg6xR9g339EUNhIwfdiRk2bjYzWcKdnaJ+8vrEaYPcCjlu02U+O1AOB0CsU\nO0N0NdaT3Zc2vwHIfOdIOQpeKQtOykcMwEA1ELX/AQixq4a1+e5pvDE0xlfJNwID\nAQABo4IBCjCCAQYwEQYJYIZIAYb4QgEBBAQDAgWgMAsGA1UdDwQEAwIEsDB0BgNV\nHSMEbTBrgBRgoRMN39a1IuDLfV6FjiMgBmhzIqFIpEYwRDEjMCEGA1UEAwwaZGhj\ncC0yNy0xOTAuYnJxLnJlZGhhdC5jb20xCzAJBgNVBAYTAlVTMRAwDgYDVQQHDAdS\nYWxlaWdoggkAgfw/FWClJowwHQYDVR0OBBYEFJ/A62MujG+PzNwqpUbvCbxDrGlx\nMBMGA1UdJQQMMAoGCCsGAQUFBwMCMDoGA1UdEQQzMDGkLzAtMSswKQYDVQQDDCJk\naGNwLTI3LTE5MC5icnEucmVkaGF0LmNvbV8yZDRjNjEzMA0GCSqGSIb3DQEBBQUA\nA4GBAC5JRj47rNJyUYarREHX630M+v6G3LNKUxcGqhmcQM9oGkzJNXno/4m8zLfX\no5C9yKut6dWRZToCzkzN1G40+f7dkyu0wCH7X9swyorxxv300Q9rRdWzDlHXFXJ1\nyf47BuEpNoLXWh2TZOwKFnZr5c6pyB8OiXJbfwO8a1tgw6v/\n-----END CERTIFICATE-----\n&quot;
+  },
+  &quot;location&quot;: &quot;None&quot;,
+  &quot;ipv4_address&quot;: null,
+  &quot;activation_key&quot;: [],
+  &quot;release&quot;: &quot;&quot;,
+  &quot;guests&quot;: [],
+  &quot;facts&quot;: {
+    &quot;cpu.cpu_socket(s)&quot;: &quot;1&quot;,
+    &quot;distribution.name&quot;: &quot;Unknown&quot;
+  }
+}</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>description </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>facts </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: Hash
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>location </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>name </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>releaseVer </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>serviceLevel </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/index.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/consumers
+          </a><br>
+          <small>List systems</small>
+        </h2>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/environments/:environment_id/consumers
+          </a><br>
+          <small>List systems</small>
+        </h2>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/environments/:environment_id/systems
+          </a><br>
+          <small>List systems</small>
+        </h2>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/organizations/:organization_id/systems
+          </a><br>
+          <small>List systems</small>
+        </h2>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/systems
+          </a><br>
+          <small>List systems</small>
+        </h2>
+    </div>
+    
+    <div id='description-index' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/organizations/org_2d4c613/systems?name=katello.example.com_2d4c613
+200
+[
+  {
+    &quot;name&quot;: &quot;katello.example.com_2d4c613&quot;,
+    &quot;system_template_id&quot;: null,
+    &quot;environment_id&quot;: 73,
+    &quot;id&quot;: 99,
+    &quot;environment&quot;: {
+      &quot;name&quot;: &quot;env 2d4c613&quot;,
+      &quot;prior&quot;: &quot;Library&quot;,
+      &quot;id&quot;: 73,
+      &quot;created_at&quot;: &quot;2012-06-05T06:56:07Z&quot;,
+      &quot;organization&quot;: &quot;org_2d4c613&quot;,
+      &quot;description&quot;: null,
+      &quot;updated_at&quot;: &quot;2012-06-05T06:56:07Z&quot;,
+      &quot;organization_id&quot;: 28,
+      &quot;library&quot;: false,
+      &quot;prior_id&quot;: 72
+    },
+    &quot;created_at&quot;: &quot;2012-06-05T06:58:31Z&quot;,
+    &quot;description&quot;: &quot;Initial Registration Params&quot;,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:58:31Z&quot;,
+    &quot;serviceLevel&quot;: &quot;&quot;,
+    &quot;uuid&quot;: &quot;987968ea-0ecc-471d-98e3-9e4592db3172&quot;,
+    &quot;location&quot;: &quot;None&quot;,
+    &quot;ipv4_address&quot;: &quot;192.168.122.1&quot;,
+    &quot;activation_key&quot;: [],
+    &quot;guests&quot;: []
+  }
+]</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>name </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>pool_id </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: string from 2 to 128 characters containting only alphanumeric characters, space, '_', '-' with no leading or trailing space..
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/show.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-show'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/consumers/:id
+          </a><br>
+          <small>Show a system</small>
+        </h2>
+        <h2>
+          <a href='#description-show'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/systems/:id
+          </a><br>
+          <small>Show a system</small>
+        </h2>
+    </div>
+    
+    <div id='description-show' class='collapse accordion-body'>
+      
+      
+        <h3>Errors</h3>
+          410
+          
+          <br>
+
+        <h3>Examples</h3>
+          <pre>GET /api/systems/4334eb6a-fe68-432f-a4c4-182ff9121c58
+200
+{
+  &quot;name&quot;: &quot;katello.example.com_2d4c613&quot;,
+  &quot;system_template_id&quot;: null,
+  &quot;environment_id&quot;: 77,
+  &quot;id&quot;: 100,
+  &quot;href&quot;: &quot;/consumers/4334eb6a-fe68-432f-a4c4-182ff9121c58&quot;,
+  &quot;autoheal&quot;: true,
+  &quot;environment&quot;: {
+    &quot;name&quot;: &quot;env_manifest_2d4c613&quot;,
+    &quot;prior&quot;: &quot;Library&quot;,
+    &quot;id&quot;: 77,
+    &quot;created_at&quot;: &quot;2012-06-05T07:00:04Z&quot;,
+    &quot;organization&quot;: &quot;org_manifest_2d4c613&quot;,
+    &quot;description&quot;: null,
+    &quot;updated_at&quot;: &quot;2012-06-05T07:00:04Z&quot;,
+    &quot;organization_id&quot;: 29,
+    &quot;library&quot;: false,
+    &quot;prior_id&quot;: 76
+  },
+  &quot;owner&quot;: {
+    &quot;id&quot;: &quot;4028fa8137a8988e0137bb717406044d&quot;,
+    &quot;href&quot;: &quot;/owners/org_manifest_2d4c613&quot;,
+    &quot;displayName&quot;: &quot;org_manifest_2d4c613&quot;,
+    &quot;key&quot;: &quot;org_manifest_2d4c613&quot;
+  },
+  &quot;created_at&quot;: &quot;2012-06-05T07:01:23Z&quot;,
+  &quot;description&quot;: &quot;Initial Registration Params&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T07:01:23Z&quot;,
+  &quot;serviceLevel&quot;: &quot;&quot;,
+  &quot;uuid&quot;: &quot;4334eb6a-fe68-432f-a4c4-182ff9121c58&quot;,
+  &quot;idCert&quot;: {
+    &quot;created&quot;: &quot;2012-06-05T07:01:23.275+0000&quot;,
+    &quot;updated&quot;: &quot;2012-06-05T07:01:23.275+0000&quot;,
+    &quot;id&quot;: &quot;4028fa8137a8988e0137bb72aacb0466&quot;,
+    &quot;serial&quot;: {
+      &quot;created&quot;: &quot;2012-06-05T07:01:22.990+0000&quot;,
+      &quot;expiration&quot;: &quot;2013-06-05T07:01:22.990+0000&quot;,
+      &quot;updated&quot;: &quot;2012-06-05T07:01:22.990+0000&quot;,
+      &quot;id&quot;: 7581335018913142817,
+      &quot;collected&quot;: false,
+      &quot;serial&quot;: 7581335018913142817,
+      &quot;revoked&quot;: false
+    },
+    &quot;key&quot;: &quot;-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAkpIy6cVxIZJ4bUyt0dq2q4MfwJtjGAeRo62L/tfKNCCPGSgw\ncd7ETgLrJhvMR5FpSNkwOrhKK9reNHmnORUMtjsH2CPmjUyu1626EIt0y4XObCMU\nh7+rIp6j1I7xmYG2tjGTszh2Q7dZdvih7EpEnVxqf04XkzSvBUJKqDJpXjZhBhEB\nHgkJtpK8oqvMSv+5S/mcv9ifEBNpXsSLxrcerhwj8wL6lsg6xR9g339EUNhIwfdi\nRk2bjYzWcKdnaJ+8vrEaYPcCjlu02U+O1AOB0CsUO0N0NdaT3Zc2vwHIfOdIOQpe\nKQtOykcMwEA1ELX/AQixq4a1+e5pvDE0xlfJNwIDAQABAoIBAC0uV/dr34XDys+W\ndXZc/zY7g0wyGgfMPX7A/oieKDyNVM8iblyLmOObTrU+mGfvUQ8dtBpFuMdv/lMa\ntQuJi5OY+sALwQQJgVQGv3ZeJrCeHJWE8s0trilL0aCyN5NkQthCzA7Q9tPE7xUX\na4KVGjWPyVxYzDeaY+ExICZc89IQZZl3ox6EF4+XlQ1JsXI2WdK6b9IJAZxbJ+nr\njcFV7QJ/Cc6S0DOxWPXiTpuZuXaBpdLqf06I0R+TGz1xhgHJNkjcxXWB2X2aTkic\nKZEsCBJcuAeoFWIdGiIAiYRgcUX/aWUWsaObQ/RsglS/vPwSFrZkF/yZqAJrzah/\nhKieR2ECgYEAzKte9BoQQ0aN8jESpYoeDbdyV6Vqq4eXqcN88xA3pWVVrkMJnUeY\nSRlzINcXzNcvMyGyD+gZw31fiAuOCvjWUCT9dlr/w6JDkppGdOxfv60HUL+vV+pA\nHZKADhZIjCTqk+lVxb3Qf3q1Ihq7OZHtMxBYiTZiRp0TmIQYCzixdr8CgYEAt1Ss\nXcj0niUC4b/M64AUVR44HRQ8Lhx7l82ErgQUfgSs28CxeqA+QU+u7iw8hTvvB6EG\n7AQG41YZJbxzQ2fQNyybj1BO/9+NMwMq1PPCW7EU4bag8l+t7XJqeIGrQBBON+qh\n4dyu94+iQQDITKyxssR6WQ8Cq0Zm/nrQb4bFA4kCgYBRtYjvAwjDEwPQUO8Uz5M3\n/qjTfOKdIEDYMYdMsojEqzQNog3QkKinZlWkIrsJuE7LpwQjfZHrjb353kMS9kz5\nKgtWmPXK8Jjxik3emA+Rwk5NWnlyK771D2u4NAU6jfJooprvmtwGSMLPnsRoM23z\nGO9/uAp8DnGoTfQbZsLSmQKBgFZIJ4dMGLSFPsH4fv0nHmqg+k/VQi2BgjmDpDox\n+WMF2ETkf6Ly39nlIrM9Zo5eErVId/WEP6mmz9cOxkCnDzuoZt4gMc4C7HVhvDrV\nLlfxE57XURBBL55dBvcIMAzKn8V5TA78yewBUZ++Ooa7kDZOejaH9f2d+MM0Ef0r\nNHXhAoGBAMSLbP8Leu4uMSFLuqiAnUnyyrxqS76Hi//5naCctDZbgG6QQOtCOZLU\n0Ed6SrZttXB236exNRkJ3mSDuplrj5f77Ocg1219zFNR4GlhZxpgfpgCGArM1htL\nlgKTkUW4WOQ5J2gs6CLva3RWoM14ZYChDGjg17sOg918pXwvafq7\n-----END RSA PRIVATE KEY-----\n&quot;,
+    &quot;cert&quot;: &quot;-----BEGIN CERTIFICATE-----\nMIIDgDCCAumgAwIBAgIIaTZQCDWMGCEwDQYJKoZIhvcNAQEFBQAwRDEjMCEGA1UE\nAwwaZGhjcC0yNy0xOTAuYnJxLnJlZGhhdC5jb20xCzAJBgNVBAYTAlVTMRAwDgYD\nVQQHDAdSYWxlaWdoMB4XDTEyMDYwNTA3MDEyMloXDTEzMDYwNTA3MDEyMlowLzEt\nMCsGA1UEAxMkNDMzNGViNmEtZmU2OC00MzJmLWE0YzQtMTgyZmY5MTIxYzU4MIIB\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkpIy6cVxIZJ4bUyt0dq2q4Mf\nwJtjGAeRo62L/tfKNCCPGSgwcd7ETgLrJhvMR5FpSNkwOrhKK9reNHmnORUMtjsH\n2CPmjUyu1626EIt0y4XObCMUh7+rIp6j1I7xmYG2tjGTszh2Q7dZdvih7EpEnVxq\nf04XkzSvBUJKqDJpXjZhBhEBHgkJtpK8oqvMSv+5S/mcv9ifEBNpXsSLxrcerhwj\n8wL6lsg6xR9g339EUNhIwfdiRk2bjYzWcKdnaJ+8vrEaYPcCjlu02U+O1AOB0CsU\nO0N0NdaT3Zc2vwHIfOdIOQpeKQtOykcMwEA1ELX/AQixq4a1+e5pvDE0xlfJNwID\nAQABo4IBCjCCAQYwEQYJYIZIAYb4QgEBBAQDAgWgMAsGA1UdDwQEAwIEsDB0BgNV\nHSMEbTBrgBRgoRMN39a1IuDLfV6FjiMgBmhzIqFIpEYwRDEjMCEGA1UEAwwaZGhj\ncC0yNy0xOTAuYnJxLnJlZGhhdC5jb20xCzAJBgNVBAYTAlVTMRAwDgYDVQQHDAdS\nYWxlaWdoggkAgfw/FWClJowwHQYDVR0OBBYEFJ/A62MujG+PzNwqpUbvCbxDrGlx\nMBMGA1UdJQQMMAoGCCsGAQUFBwMCMDoGA1UdEQQzMDGkLzAtMSswKQYDVQQDDCJk\naGNwLTI3LTE5MC5icnEucmVkaGF0LmNvbV8yZDRjNjEzMA0GCSqGSIb3DQEBBQUA\nA4GBAC5JRj47rNJyUYarREHX630M+v6G3LNKUxcGqhmcQM9oGkzJNXno/4m8zLfX\no5C9yKut6dWRZToCzkzN1G40+f7dkyu0wCH7X9swyorxxv300Q9rRdWzDlHXFXJ1\nyf47BuEpNoLXWh2TZOwKFnZr5c6pyB8OiXJbfwO8a1tgw6v/\n-----END CERTIFICATE-----\n&quot;
+  },
+  &quot;location&quot;: &quot;None&quot;,
+  &quot;ipv4_address&quot;: null,
+  &quot;activation_key&quot;: [],
+  &quot;release&quot;: &quot;&quot;,
+  &quot;guests&quot;: [],
+  &quot;facts&quot;: {
+    &quot;cpu.cpu_socket(s)&quot;: &quot;1&quot;,
+    &quot;distribution.name&quot;: &quot;Unknown&quot;
+  }
+}</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/destroy.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-destroy'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/consumers/:id
+          </a><br>
+          <small>Destroy a system</small>
+        </h2>
+        <h2>
+          <a href='#description-destroy'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/systems/:id
+          </a><br>
+          <small>Destroy a system</small>
+        </h2>
+    </div>
+    
+    <div id='description-destroy' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>DELETE /api/consumers/987968ea-0ecc-471d-98e3-9e4592db3172
+204</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/pools.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-pools'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/systems/:id/pools
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-pools' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/systems/1a77416e-0b8e-4528-8ca8-0c37751ed05c/pools
+200
+{
+  &quot;pools&quot;: [
+    {
+      &quot;endDate&quot;: &quot;2042-05-29&quot;,
+      &quot;quantity&quot;: -1,
+      &quot;supportLevel&quot;: &quot;&quot;,
+      &quot;consumed&quot;: 0,
+      &quot;multiEntitlement&quot;: false,
+      &quot;startDate&quot;: &quot;2012-06-05&quot;,
+      &quot;providedProducts&quot;: [],
+      &quot;poolId&quot;: &quot;4028fa8137a8988e0137bb6de0610443&quot;,
+      &quot;poolName&quot;: &quot;fewups_product_2d4c613&quot;,
+      &quot;sockets&quot;: &quot;&quot;
+    }
+  ]
+}</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/releases.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-releases'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/systems/:id/releases
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-releases' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/systems/1a77416e-0b8e-4528-8ca8-0c37751ed05c/releases
+200
+{
+  &quot;releases&quot;: []
+}</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/package_profile.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-package_profile'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/systems/:id/packages
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-package_profile' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/systems/1a77416e-0b8e-4528-8ca8-0c37751ed05c/packages
+200
+[
+
+]</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/upload_package_profile.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-upload_package_profile'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            PUT /api/consumers/:id/packages
+          </a><br>
+          <small></small>
+        </h2>
+        <h2>
+          <a href='#description-upload_package_profile'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            PUT /api/consumers/:id/profile
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-upload_package_profile' class='collapse accordion-body'>
+      
+      
+
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>_json </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/task_show.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-task_show'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/systems/tasks/:id
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-task_show' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/systems/tasks/df20fb14-aedb-11e1-9e4d-f0def16f6678
+200
+{
+  &quot;task_type&quot;: &quot;package_install&quot;,
+  &quot;user_id&quot;: 1,
+  &quot;id&quot;: 215,
+  &quot;start_time&quot;: null,
+  &quot;result_description&quot;: &quot;&quot;,
+  &quot;created_at&quot;: &quot;2012-06-05T06:58:36Z&quot;,
+  &quot;finish_time&quot;: null,
+  &quot;except&quot;: {
+    &quot;task_type&quot;: &quot;package_install&quot;,
+    &quot;user_id&quot;: 1,
+    &quot;id&quot;: 215,
+    &quot;start_time&quot;: null,
+    &quot;created_at&quot;: &quot;2012-06-05T06:58:36Z&quot;,
+    &quot;finish_time&quot;: null,
+    &quot;except&quot;: &quot;id&quot;,
+    &quot;result&quot;: {
+      &quot;errors&quot;: [
+        null,
+        null
+      ]
+    },
+    &quot;progress&quot;: null,
+    &quot;state&quot;: &quot;running&quot;,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:58:37Z&quot;,
+    &quot;organization_id&quot;: 28,
+    &quot;uuid&quot;: &quot;df20fb14-aedb-11e1-9e4d-f0def16f6678&quot;,
+    &quot;parameters&quot;: {
+      &quot;packages&quot;: [
+        &quot;cheetah&quot;
+      ]
+    },
+    &quot;pending?&quot;: true
+  },
+  &quot;description&quot;: &quot;Package Install: cheetah&quot;,
+  &quot;result&quot;: {
+    &quot;errors&quot;: [
+      null,
+      null
+    ]
+  },
+  &quot;progress&quot;: null,
+  &quot;state&quot;: &quot;running&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:58:37Z&quot;,
+  &quot;organization_id&quot;: 28,
+  &quot;uuid&quot;: &quot;df20fb14-aedb-11e1-9e4d-f0def16f6678&quot;,
+  &quot;parameters&quot;: {
+    &quot;packages&quot;: [
+      &quot;cheetah&quot;
+    ]
+  },
+  &quot;system_name&quot;: &quot;katello.example.com_2d4c613&quot;,
+  &quot;pending?&quot;: true
+}</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/systems/enabled_repos.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-enabled_repos'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            PUT /api/systems/:id/enabled_repos
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-enabled_repos' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>PUT /api/systems/987968ea-0ecc-471d-98e3-9e4592db3172/enabled_repos
+{
+  &quot;enabled_repos&quot;: {
+    &quot;repos&quot;: []
+  }
+}
+200
+{
+  &quot;unknown_labels&quot;: [],
+  &quot;error_ids&quot;: [],
+  &quot;result&quot;: &quot;ok&quot;,
+  &quot;processed_ids&quot;: []
+}</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>enabled_repos </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: Hash
+    </td>
+  </tr>
+
+    <tr style='background-color:rgb(250,250,250);'>
+    <td>
+      <strong>enabled_repos[repos] </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+
+          </tbody>
+        </table>
+    </div>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

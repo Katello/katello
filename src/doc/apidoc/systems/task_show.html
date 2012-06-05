@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li>
+    <a href='../../apidoc.html'>Katello</a>
+    <span class='divider'>/</span>
+  </li>
+  <li>
+    <a href='../../apidoc/systems.html'>Systems</a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>task_show</li>
+</ul>
+
+  <div class='page-header'>
+    <h1>
+      GET /api/systems/tasks/:id<br>
+      <small></small>
+    </h1>
+  </div>
+
+<div>
+  
+
+    <h2>Examples</h2>
+      <pre>GET /api/systems/tasks/df20fb14-aedb-11e1-9e4d-f0def16f6678
+200
+{
+  &quot;task_type&quot;: &quot;package_install&quot;,
+  &quot;user_id&quot;: 1,
+  &quot;id&quot;: 215,
+  &quot;start_time&quot;: null,
+  &quot;result_description&quot;: &quot;&quot;,
+  &quot;created_at&quot;: &quot;2012-06-05T06:58:36Z&quot;,
+  &quot;finish_time&quot;: null,
+  &quot;except&quot;: {
+    &quot;task_type&quot;: &quot;package_install&quot;,
+    &quot;user_id&quot;: 1,
+    &quot;id&quot;: 215,
+    &quot;start_time&quot;: null,
+    &quot;created_at&quot;: &quot;2012-06-05T06:58:36Z&quot;,
+    &quot;finish_time&quot;: null,
+    &quot;except&quot;: &quot;id&quot;,
+    &quot;result&quot;: {
+      &quot;errors&quot;: [
+        null,
+        null
+      ]
+    },
+    &quot;progress&quot;: null,
+    &quot;state&quot;: &quot;running&quot;,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:58:37Z&quot;,
+    &quot;organization_id&quot;: 28,
+    &quot;uuid&quot;: &quot;df20fb14-aedb-11e1-9e4d-f0def16f6678&quot;,
+    &quot;parameters&quot;: {
+      &quot;packages&quot;: [
+        &quot;cheetah&quot;
+      ]
+    },
+    &quot;pending?&quot;: true
+  },
+  &quot;description&quot;: &quot;Package Install: cheetah&quot;,
+  &quot;result&quot;: {
+    &quot;errors&quot;: [
+      null,
+      null
+    ]
+  },
+  &quot;progress&quot;: null,
+  &quot;state&quot;: &quot;running&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:58:37Z&quot;,
+  &quot;organization_id&quot;: 28,
+  &quot;uuid&quot;: &quot;df20fb14-aedb-11e1-9e4d-f0def16f6678&quot;,
+  &quot;parameters&quot;: {
+    &quot;packages&quot;: [
+      &quot;cheetah&quot;
+    ]
+  },
+  &quot;system_name&quot;: &quot;katello.example.com_2d4c613&quot;,
+  &quot;pending?&quot;: true
+}</pre>
+
+
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

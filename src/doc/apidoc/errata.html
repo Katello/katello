@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li><a href='../apidoc.html'>Katello</a><span class='divider'>/</span></li>
+  <li class='active'>Errata</li>
+</ul>
+
+<div class='page-header'>
+  <h1>
+    Errata<br>
+    <small></small>
+  </h1>
+</div>
+
+
+
+<div class='accordion' id='accordion'>
+  
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/errata/index.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/errata
+          </a><br>
+          <small>List errata</small>
+        </h2>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/repositories/:repository_id/errata
+          </a><br>
+          <small>List errata</small>
+        </h2>
+    </div>
+    
+    <div id='description-index' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/errata?environment_id=72
+200
+[
+  {
+    &quot;type&quot;: &quot;security&quot;,
+    &quot;id&quot;: &quot;RHEA-2010:0001&quot;,
+    &quot;title&quot;: &quot;Empty errata&quot;,
+    &quot;repoids&quot;: [
+      &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
+    ],
+    &quot;severity&quot;: &quot;&quot;,
+    &quot;_id&quot;: &quot;RHEA-2010:0001&quot;
+  },
+  {
+    &quot;type&quot;: &quot;security&quot;,
+    &quot;id&quot;: &quot;RHEA-2010:0002&quot;,
+    &quot;title&quot;: &quot;One package errata&quot;,
+    &quot;repoids&quot;: [
+      &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
+    ],
+    &quot;severity&quot;: &quot;&quot;,
+    &quot;_id&quot;: &quot;RHEA-2010:0002&quot;
+  },
+  {
+    &quot;type&quot;: &quot;security&quot;,
+    &quot;id&quot;: &quot;RHEA-2010:0001&quot;,
+    &quot;title&quot;: &quot;Empty errata&quot;,
+    &quot;repoids&quot;: [
+      &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
+    ],
+    &quot;severity&quot;: &quot;&quot;,
+    &quot;_id&quot;: &quot;RHEA-2010:0001&quot;
+  },
+  {
+    &quot;type&quot;: &quot;security&quot;,
+    &quot;id&quot;: &quot;RHEA-2010:0002&quot;,
+    &quot;title&quot;: &quot;One package errata&quot;,
+    &quot;repoids&quot;: [
+      &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
+    ],
+    &quot;severity&quot;: &quot;&quot;,
+    &quot;_id&quot;: &quot;RHEA-2010:0002&quot;
+  }
+]</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>environment_id </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: number.
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>product_id </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: number.
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>repoid </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: number.
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>severity </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>type </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/errata/show.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-show'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/repositories/:repository_id/errata/:id
+          </a><br>
+          <small>Show an erratum</small>
+        </h2>
+    </div>
+    
+    <div id='description-show' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/repositories/750/errata/RHEA-2010:0002/
+200
+{
+  &quot;type&quot;: &quot;security&quot;,
+  &quot;_ns&quot;: &quot;errata&quot;,
+  &quot;updated&quot;: &quot;&quot;,
+  &quot;id&quot;: &quot;RHEA-2010:0002&quot;,
+  &quot;issued&quot;: &quot;2010-01-01 01:01:01&quot;,
+  &quot;title&quot;: &quot;One package errata&quot;,
+  &quot;reboot_suggested&quot;: false,
+  &quot;description&quot;: &quot;One package errata&quot;,
+  &quot;immutable&quot;: true,
+  &quot;rights&quot;: &quot;&quot;,
+  &quot;pushcount&quot;: 1,
+  &quot;status&quot;: &quot;stable&quot;,
+  &quot;references&quot;: [],
+  &quot;repoids&quot;: [
+    &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+    &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
+    &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+    &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
+  ],
+  &quot;from_str&quot;: &quot;lzap+pub@redhat.com&quot;,
+  &quot;summary&quot;: &quot;&quot;,
+  &quot;pkglist&quot;: [
+    {
+      &quot;packages&quot;: [
+        {
+          &quot;name&quot;: &quot;elephant&quot;,
+          &quot;epoch&quot;: null,
+          &quot;arch&quot;: &quot;noarch&quot;,
+          &quot;filename&quot;: &quot;elephant-0.3-0.8.noarch.rpm&quot;,
+          &quot;src&quot;: &quot;http://www.fedoraproject.org&quot;,
+          &quot;release&quot;: &quot;0.8&quot;,
+          &quot;version&quot;: &quot;0.3&quot;
+        }
+      ],
+      &quot;name&quot;: &quot;1&quot;,
+      &quot;short&quot;: &quot;&quot;
+    }
+  ],
+  &quot;release&quot;: &quot;1&quot;,
+  &quot;solution&quot;: &quot;&quot;,
+  &quot;severity&quot;: &quot;&quot;,
+  &quot;version&quot;: &quot;1&quot;,
+  &quot;_id&quot;: &quot;RHEA-2010:0002&quot;,
+  &quot;repo_defined&quot;: true
+}</pre>
+
+    </div>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

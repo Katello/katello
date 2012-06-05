@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li>
+    <a href='../../apidoc.html'>Katello</a>
+    <span class='divider'>/</span>
+  </li>
+  <li>
+    <a href='../../apidoc/systems.html'>Systems</a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>pools</li>
+</ul>
+
+  <div class='page-header'>
+    <h1>
+      GET /api/systems/:id/pools<br>
+      <small></small>
+    </h1>
+  </div>
+
+<div>
+  
+
+    <h2>Examples</h2>
+      <pre>GET /api/systems/1a77416e-0b8e-4528-8ca8-0c37751ed05c/pools
+200
+{
+  &quot;pools&quot;: [
+    {
+      &quot;endDate&quot;: &quot;2042-05-29&quot;,
+      &quot;quantity&quot;: -1,
+      &quot;supportLevel&quot;: &quot;&quot;,
+      &quot;consumed&quot;: 0,
+      &quot;multiEntitlement&quot;: false,
+      &quot;startDate&quot;: &quot;2012-06-05&quot;,
+      &quot;providedProducts&quot;: [],
+      &quot;poolId&quot;: &quot;4028fa8137a8988e0137bb6de0610443&quot;,
+      &quot;poolName&quot;: &quot;fewups_product_2d4c613&quot;,
+      &quot;sockets&quot;: &quot;&quot;
+    }
+  ]
+}</pre>
+
+
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

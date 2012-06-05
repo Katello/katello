@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li>
+    <a href='../../apidoc.html'>Katello</a>
+    <span class='divider'>/</span>
+  </li>
+  <li>
+    <a href='../../apidoc/errata.html'>Errata</a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>index</li>
+</ul>
+
+  <div class='page-header'>
+    <h1>
+      GET /api/errata<br>
+      <small>List errata</small>
+    </h1>
+  </div>
+  <div class='page-header'>
+    <h1>
+      GET /api/repositories/:repository_id/errata<br>
+      <small>List errata</small>
+    </h1>
+  </div>
+
+<div>
+  
+
+    <h2>Examples</h2>
+      <pre>GET /api/errata?environment_id=72
+200
+[
+  {
+    &quot;type&quot;: &quot;security&quot;,
+    &quot;id&quot;: &quot;RHEA-2010:0001&quot;,
+    &quot;title&quot;: &quot;Empty errata&quot;,
+    &quot;repoids&quot;: [
+      &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
+    ],
+    &quot;severity&quot;: &quot;&quot;,
+    &quot;_id&quot;: &quot;RHEA-2010:0001&quot;
+  },
+  {
+    &quot;type&quot;: &quot;security&quot;,
+    &quot;id&quot;: &quot;RHEA-2010:0002&quot;,
+    &quot;title&quot;: &quot;One package errata&quot;,
+    &quot;repoids&quot;: [
+      &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
+    ],
+    &quot;severity&quot;: &quot;&quot;,
+    &quot;_id&quot;: &quot;RHEA-2010:0002&quot;
+  },
+  {
+    &quot;type&quot;: &quot;security&quot;,
+    &quot;id&quot;: &quot;RHEA-2010:0001&quot;,
+    &quot;title&quot;: &quot;Empty errata&quot;,
+    &quot;repoids&quot;: [
+      &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
+    ],
+    &quot;severity&quot;: &quot;&quot;,
+    &quot;_id&quot;: &quot;RHEA-2010:0001&quot;
+  },
+  {
+    &quot;type&quot;: &quot;security&quot;,
+    &quot;id&quot;: &quot;RHEA-2010:0002&quot;,
+    &quot;title&quot;: &quot;One package errata&quot;,
+    &quot;repoids&quot;: [
+      &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+      &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
+    ],
+    &quot;severity&quot;: &quot;&quot;,
+    &quot;_id&quot;: &quot;RHEA-2010:0002&quot;
+  }
+]</pre>
+
+
+    <h2>Params</h2>
+    <table class='table'>
+      <thead>
+        <tr>
+          <th>Param name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>environment_id </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: number.
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>product_id </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: number.
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>repoid </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: number.
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>severity </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>type </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+      </tbody>
+    </table>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

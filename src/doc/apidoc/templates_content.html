@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li><a href='../apidoc.html'>Katello</a><span class='divider'>/</span></li>
+  <li class='active'>Templates content</li>
+</ul>
+
+<div class='page-header'>
+  <h1>
+    Templates content<br>
+    <small></small>
+  </h1>
+</div>
+
+
+
+<div class='accordion' id='accordion'>
+  
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates_content/add_package.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-add_package'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/templates/:template_id/packages
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-add_package' class='collapse accordion-body'>
+      
+      
+        <h3>Errors</h3>
+          400
+          
+          <br>
+
+        <h3>Examples</h3>
+          <pre>POST /api/templates/41/packages/
+{
+  &quot;name&quot;: &quot;cheetah&quot;
+}
+200
+Added package 'cheetah'</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>name </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates_content/remove_package.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-remove_package'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/templates/:template_id/packages/:id
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-remove_package' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>DELETE /api/templates/43/packages/cheetah/
+200
+Removed package 'cheetah'</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates_content/add_parameter.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-add_parameter'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/templates/:template_id/parameters
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-add_parameter' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>POST /api/templates/43/parameters/
+{
+  &quot;name&quot;: &quot;attr&quot;,
+  &quot;value&quot;: &quot;X&quot;
+}
+200
+Parameter 'attr': 'X' was set</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>name </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+  <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>value </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates_content/remove_parameter.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-remove_parameter'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/templates/:template_id/parameters/:id
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-remove_parameter' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>DELETE /api/templates/43/parameters/attr/
+200
+Removed parameter 'attr'</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates_content/add_package_group.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-add_package_group'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/templates/:template_id/package_groups
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-add_package_group' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>POST /api/templates/43/package_groups/
+{
+  &quot;name&quot;: &quot;mammal&quot;
+}
+200
+Added package group 'mammal'</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>name </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates_content/remove_package_group.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-remove_package_group'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/templates/:template_id/package_groups/:id
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-remove_package_group' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>DELETE /api/templates/43/package_groups/mammal/
+200
+Removed package group 'mammal'</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates_content/add_package_group_category.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-add_package_group_category'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/templates/:template_id/package_group_categories
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-add_package_group_category' class='collapse accordion-body'>
+      
+      
+        <h3>Errors</h3>
+          400
+          
+          <br>
+
+        <h3>Examples</h3>
+          <pre>POST /api/templates/43/package_group_categories/
+{
+  &quot;name&quot;: &quot;all&quot;
+}
+200
+Added package group category 'all'</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>name </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates_content/remove_package_group_category.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-remove_package_group_category'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/templates/:template_id/package_group_categories/:id
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-remove_package_group_category' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>DELETE /api/templates/43/package_group_categories/all/
+200
+Removed package group category 'all'</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates_content/add_distribution.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-add_distribution'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/templates/:template_id/distributions
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-add_distribution' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>POST /api/templates/43/distributions/
+{
+  &quot;id&quot;: &quot;ks-Test Family-TestVariant-16-x86_64&quot;
+}
+200
+Added distribution 'ks-Test Family-TestVariant-16-x86_64'</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>id </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: string from 2 to 128 characters containting only alphanumeric characters, space, '_', '-' with no leading or trailing space..
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/templates_content/add_repo.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-add_repo'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/templates/:template_id/repositories
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-add_repo' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>POST /api/templates/43/repositories/
+{
+  &quot;id&quot;: 750
+}
+200
+Added repository '750'</pre>
+
+        <h3>Params</h3>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Param name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>id </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: number.
+    </td>
+  </tr>
+
+  
+
+          </tbody>
+        </table>
+    </div>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li>
+    <a href='../../apidoc.html'>Katello</a>
+    <span class='divider'>/</span>
+  </li>
+  <li>
+    <a href='../../apidoc/repositories.html'>Repositories</a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>package_groups</li>
+</ul>
+
+  <div class='page-header'>
+    <h1>
+      GET /api/repositories/:id/package_groups<br>
+      <small></small>
+    </h1>
+  </div>
+
+<div>
+  
+
+    <h2>Examples</h2>
+      <pre>GET /api/repositories/750/package_groups
+200
+[
+  {
+    &quot;name&quot;: &quot;mammal&quot;,
+    &quot;optional_package_names&quot;: [],
+    &quot;id&quot;: &quot;mammal&quot;,
+    &quot;translated_name&quot;: {},
+    &quot;default_package_names&quot;: [],
+    &quot;display_order&quot;: 1024,
+    &quot;default&quot;: true,
+    &quot;description&quot;: &quot;&quot;,
+    &quot;immutable&quot;: true,
+    &quot;langonly&quot;: null,
+    &quot;conditional_package_names&quot;: {},
+    &quot;mandatory_package_names&quot;: [
+      &quot;elephant,giraffe,cheetah,lion,monkey,penguin,squirrel,walrus&quot;,
+      &quot;penguin&quot;
+    ],
+    &quot;user_visible&quot;: true,
+    &quot;translated_description&quot;: {},
+    &quot;_id&quot;: &quot;mammal&quot;,
+    &quot;repo_defined&quot;: true
+  },
+  {
+    &quot;name&quot;: &quot;bird&quot;,
+    &quot;optional_package_names&quot;: [],
+    &quot;id&quot;: &quot;bird&quot;,
+    &quot;translated_name&quot;: {},
+    &quot;default_package_names&quot;: [],
+    &quot;display_order&quot;: 1024,
+    &quot;default&quot;: true,
+    &quot;description&quot;: &quot;&quot;,
+    &quot;immutable&quot;: true,
+    &quot;langonly&quot;: null,
+    &quot;conditional_package_names&quot;: {},
+    &quot;mandatory_package_names&quot;: [
+      &quot;penguin&quot;
+    ],
+    &quot;user_visible&quot;: true,
+    &quot;translated_description&quot;: {},
+    &quot;_id&quot;: &quot;bird&quot;,
+    &quot;repo_defined&quot;: true
+  }
+]</pre>
+
+
+    <h2>Params</h2>
+    <table class='table'>
+      <thead>
+        <tr>
+          <th>Param name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr style='background-color:rgb(255,255,255);'>
+    <td>
+      <strong>group_id </strong><br>
+      <small>
+        optional
+        
+      </small>
+    </td>
+    <td>
+      
+        <br>
+        Value: string from 2 to 128 characters containting only alphanumeric characters, space, '_', '-' with no leading or trailing space..
+    </td>
+  </tr>
+
+  
+
+      </tbody>
+    </table>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

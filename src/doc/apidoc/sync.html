@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li><a href='../apidoc.html'>Katello</a><span class='divider'>/</span></li>
+  <li class='active'>Sync</li>
+</ul>
+
+<div class='page-header'>
+  <h1>
+    Sync<br>
+    <small></small>
+  </h1>
+</div>
+
+
+
+<div class='accordion' id='accordion'>
+  
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/sync/index.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/organizations/:organization_id/products/:product_id/sync
+          </a><br>
+          <small>List sync</small>
+        </h2>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/providers/:provider_id/sync
+          </a><br>
+          <small>List sync</small>
+        </h2>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/repositories/:repository_id/sync
+          </a><br>
+          <small>List sync</small>
+        </h2>
+    </div>
+    
+    <div id='description-index' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>GET /api/repositories/750/sync
+200
+{
+  &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
+  &quot;user_id&quot;: 1,
+  &quot;id&quot;: 208,
+  &quot;start_time&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+  &quot;prefix&quot;: &quot;api/sync&quot;,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+  &quot;finish_time&quot;: &quot;2012-06-05T06:56:28Z&quot;,
+  &quot;result&quot;: true,
+  &quot;progress&quot;: {
+    &quot;error_details&quot;: [],
+    &quot;size_left&quot;: 0,
+    &quot;step&quot;: &quot;Running Createrepo&quot;,
+    &quot;total_count&quot;: 8,
+    &quot;total_size&quot;: 17872,
+    &quot;items_left&quot;: 0
+  },
+  &quot;template&quot;: &quot;index&quot;,
+  &quot;state&quot;: &quot;finished&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:57:41Z&quot;,
+  &quot;organization_id&quot;: 28,
+  &quot;uuid&quot;: &quot;8d952805-aedb-11e1-87e1-f0def16f6678&quot;,
+  &quot;parameters&quot;: null,
+  &quot;pending?&quot;: false
+}</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/sync/create.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/organizations/:organization_id/products/:product_id/sync
+          </a><br>
+          <small>Create a sync</small>
+        </h2>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/providers/:provider_id/sync
+          </a><br>
+          <small>Create a sync</small>
+        </h2>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/repositories/:repository_id/sync
+          </a><br>
+          <small>Create a sync</small>
+        </h2>
+    </div>
+    
+    <div id='description-create' class='collapse accordion-body'>
+      
+      
+
+        <h3>Examples</h3>
+          <pre>POST /api/organizations/org_2d4c613/products/1338879369155/sync
+202
+[
+  {
+    &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
+    &quot;user_id&quot;: 1,
+    &quot;id&quot;: 207,
+    &quot;start_time&quot;: null,
+    &quot;prefix&quot;: &quot;api/sync&quot;,
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+    &quot;finish_time&quot;: null,
+    &quot;result&quot;: {
+      &quot;errors&quot;: [
+        null,
+        null
+      ]
+    },
+    &quot;progress&quot;: {
+      &quot;size_left&quot;: 0,
+      &quot;total_count&quot;: 0,
+      &quot;total_size&quot;: 0,
+      &quot;items_left&quot;: 0
+    },
+    &quot;template&quot;: &quot;create&quot;,
+    &quot;state&quot;: &quot;waiting&quot;,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+    &quot;organization_id&quot;: 28,
+    &quot;uuid&quot;: &quot;8d6a9ed7-aedb-11e1-86cb-f0def16f6678&quot;,
+    &quot;status&quot;: 202,
+    &quot;parameters&quot;: null,
+    &quot;pending?&quot;: true
+  },
+  {
+    &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
+    &quot;user_id&quot;: 1,
+    &quot;id&quot;: 208,
+    &quot;start_time&quot;: null,
+    &quot;prefix&quot;: &quot;api/sync&quot;,
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+    &quot;finish_time&quot;: null,
+    &quot;result&quot;: {
+      &quot;errors&quot;: [
+        null,
+        null
+      ]
+    },
+    &quot;progress&quot;: {
+      &quot;size_left&quot;: 0,
+      &quot;total_count&quot;: 0,
+      &quot;total_size&quot;: 0,
+      &quot;items_left&quot;: 0
+    },
+    &quot;template&quot;: &quot;create&quot;,
+    &quot;state&quot;: &quot;waiting&quot;,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+    &quot;organization_id&quot;: 28,
+    &quot;uuid&quot;: &quot;8d952805-aedb-11e1-87e1-f0def16f6678&quot;,
+    &quot;status&quot;: 202,
+    &quot;parameters&quot;: null,
+    &quot;pending?&quot;: true
+  }
+]</pre>
+
+    </div>
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>

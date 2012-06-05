@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/application.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/prettify.css"/>
+    <link type="text/css" rel="stylesheet" 
+          href="../../apidoc/stylesheets/bundled/bootstrap-responsive.min.css"/>
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">      
+      <div id='container'>
+        <ul class='breadcrumb'>
+  <li>
+    <a href='../../apidoc.html'>Katello</a>
+    <span class='divider'>/</span>
+  </li>
+  <li>
+    <a href='../../apidoc/tasks.html'>Tasks</a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>show</li>
+</ul>
+
+  <div class='page-header'>
+    <h1>
+      GET /api/tasks/:id<br>
+      <small>Show a task</small>
+    </h1>
+  </div>
+
+<div>
+  
+
+    <h2>Examples</h2>
+      <pre>GET /api/tasks/87b5346b-aedb-11e1-a161-f0def16f6678
+200
+{
+  &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
+  &quot;user_id&quot;: 1,
+  &quot;id&quot;: 206,
+  &quot;start_time&quot;: null,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:09Z&quot;,
+  &quot;finish_time&quot;: null,
+  &quot;except&quot;: &quot;id&quot;,
+  &quot;result&quot;: {
+    &quot;errors&quot;: [
+      null,
+      null
+    ]
+  },
+  &quot;progress&quot;: {
+    &quot;error_details&quot;: [],
+    &quot;size_left&quot;: 0,
+    &quot;step&quot;: 0,
+    &quot;total_count&quot;: 0,
+    &quot;total_size&quot;: 0,
+    &quot;items_left&quot;: 0
+  },
+  &quot;state&quot;: &quot;running&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:10Z&quot;,
+  &quot;organization_id&quot;: 28,
+  &quot;uuid&quot;: &quot;87b5346b-aedb-11e1-a161-f0def16f6678&quot;,
+  &quot;parameters&quot;: null,
+  &quot;pending?&quot;: true
+}</pre>
+
+
+</div>
+
+
+      </div>
+    </div>
+    <hr>
+    <footer>  Copyright © 2012 Red Hat, Inc.
+</footer>
+  </div>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/jquery-1.7.2.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/bootstrap-collapse.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/bundled/prettify.js"></script>
+    <script type="text/javascript" 
+            src="../../apidoc/javascripts/restapi.js"></script>
+</body>
+</html>
