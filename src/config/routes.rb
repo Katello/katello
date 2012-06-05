@@ -1,5 +1,7 @@
 Src::Application.routes.draw do
 
+  restapi
+
   resources :system_groups do
     collection do
       get :items
