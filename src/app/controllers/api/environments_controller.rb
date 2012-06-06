@@ -91,6 +91,8 @@ class Api::EnvironmentsController < Api::ApiController
     render :json => (environments).to_json
   end
 
+  api :GET, "/environments/:id", "Show an environment"
+  api :GET, "/organizations/:organization_id/environments/:id", "Show an environment"
   def show
     render :json => @environment
   end
@@ -104,6 +106,7 @@ id of an environment that is prior the new environment in the chain, it has to b
 either library or an envrionment at the end of the chain
     DESC
   end
+  api :POST, "/organizations/:organization_id/environments", "Create an environment in an organization"
   def create
     environment = KTEnvironment.new(params[:environment])
     @organization.environments << environment
@@ -148,6 +151,7 @@ either library or an envrionment at the end of the chain
     render :json => @environment.products.all_readable(@organization).collect { |p| p.repos(@environment, query_params[:include_disabled]) }.flatten
   end
 
+  api :GET, "/environments/:id/releases"
   def releases
     render :json => { :releases => @environment.available_releases }
   end

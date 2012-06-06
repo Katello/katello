@@ -27,11 +27,13 @@ class Api::RoleLdapGroupsController < Api::ApiController
     }
   end
 
+  api :POST, "/roles/:role_id/ldap_groups", "Create a role ldap group"
   def create
     @role.add_ldap_group(params[:name])
     render :text => _("Added LDAP group '%s'") % params[:name], :status => 200
   end
 
+  api :DELETE, "/roles/:role_id/ldap_groups/:id", "Destroy a role ldap group"
   def destroy
     @role.remove_ldap_group(params[:id])
     render :text => _("Removed LDAP group '%s'") % params[:id], :status => 200

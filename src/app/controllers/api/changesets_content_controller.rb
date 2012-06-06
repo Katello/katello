@@ -135,12 +135,14 @@ class Api::ChangesetsContentController < Api::ApiController
                          :not_found => _("Template '#{params[:id]}' not found in the changeset")
   end
 
+  api :POST, "/changesets/:changeset_id/distributions"
   def add_distribution
     product = Product.find_by_cp_id!(params[:product_id])
     @changeset.add_distribution!(params[:distribution_id], product)
     render :text => _("Added distribution '#{params[:distribution_id]}'")
   end
 
+  api :DELETE, "/changesets/:changeset_id/distributions/:id"
   def remove_distribution
     product = Product.find_by_cp_id!(params[:product_id])
     render_after_removal @changeset.remove_distribution!(params[:id], product),

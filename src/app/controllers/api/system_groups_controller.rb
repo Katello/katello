@@ -50,15 +50,18 @@ class Api::SystemGroupsController < Api::ApiController
 
   respond_to :json
 
+  api :GET, "/organizations/:organization_id/system_groups", "List system groups"
   def index
     query_params.delete(:organization_id)
     render :json => SystemGroup.readable(@organization).where(query_params)
   end
 
+  api :GET, "/organizations/:organization_id/system_groups/:id", "Show a system group"
   def show
     render :json => @group
   end
 
+  api :PUT, "/organizations/:organization_id/system_groups/:id", "Update a system group"
   def update
     grp_param = params[:system_group]
     if grp_param[:system_ids]
@@ -69,10 +72,12 @@ class Api::SystemGroupsController < Api::ApiController
     render :json => @group
   end
 
+  api :GET, "/organizations/:organization_id/system_groups/:id/systems"
   def systems
     render :json => @group.systems.collect{|sys| {:id=>sys.uuid, :name=>sys.name}}
   end
 
+  api :POST, "/organizations/:organization_id/system_groups/:id/add_systems"
   def add_systems
     ids = system_uuids_to_ids(params[:system_group][:system_ids])
     @systems = System.readable(@group.organization).where(:id=>ids)
@@ -81,6 +86,7 @@ class Api::SystemGroupsController < Api::ApiController
     systems
   end
 
+  api :POST, "/organizations/:organization_id/system_groups/:id/remove_systems"
   def remove_systems
     ids = system_uuids_to_ids(params[:system_group][:system_ids])
     system_ids = System.readable(@group.organization).where(:id=>ids).collect{|s| s.id}
@@ -89,6 +95,7 @@ class Api::SystemGroupsController < Api::ApiController
     systems
   end
 
+  api :GET, "/organizations/:organization_id/system_groups/:id/history"
   def history
     if params[:job_id]
       jobs = @group.jobs.where(:id=>params[:job_id])
@@ -111,6 +118,7 @@ class Api::SystemGroupsController < Api::ApiController
     render :json => @group
   end
 
+  api :POST, "/organizations/:organization_id/system_groups", "Create a system group"
   def create
     grp_param = params[:system_group]
     if grp_param[:system_ids]
@@ -123,6 +131,7 @@ class Api::SystemGroupsController < Api::ApiController
   end
 
 
+  api :DELETE, "/organizations/:organization_id/system_groups/:id", "Destroy a system group"
   def destroy
     @group.destroy
     render :text => _("Deleted system group '#{params[:id]}'"), :status => 200

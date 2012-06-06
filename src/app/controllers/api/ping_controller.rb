@@ -20,10 +20,12 @@ class Api::PingController < Api::ApiController
     render :json => Ping.ping().to_json and return
   end
 
+  api :GET, "/status"
   def status
     render :json => {:version => "katello/#{AppConfig.katello_version}", :result => true}
   end
 
+  api :GET, "/version"
   def version
     render :json => {:name => AppConfig.app_name, :version => AppConfig.katello_version}
   end

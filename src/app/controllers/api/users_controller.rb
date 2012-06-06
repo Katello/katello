@@ -55,6 +55,8 @@ class Api::UsersController < Api::ApiController
     render :json => (User.readable.where query_params).to_json
   end
 
+  api :GET, "/users/:id", "Show an user"
+  api :GET, "/users/:user_id/roles/:id", "Show an user"
   def show
     render :json => @user
   end
@@ -77,6 +79,8 @@ class Api::UsersController < Api::ApiController
     render :json => user.to_json
   end
 
+  api :PUT, "/users/:id", "Update an user"
+  api :PUT, "/users/:user_id/roles/:id", "Update an user"
   def update
     user_params = params[:user].reject { |k, _| k == 'default_environment_id' }
     @user.update_attributes!(user_params)
@@ -96,16 +100,19 @@ class Api::UsersController < Api::ApiController
     render :text => _("Deleted user '#{params[:id]}'"), :status => 200
   end
 
+  api :GET, "/users/:user_id/roles"
   def list_roles
     @user.set_ldap_roles if AppConfig.ldap_roles
     render :json => @user.roles.non_self.to_json
   end
 
+  api :GET, "/users/sync_ldap_roles"
   def sync_ldap_roles
     User.all.each { |user| user.set_ldap_roles }
     render :text => _("Roles for all users were synchronised with LDAP groups"), :status => 200
   end 
 
+  api :POST, "/users/:user_id/roles"
   def add_role
     role = Role.find(params[:role_id])
     @user.roles << role
@@ -113,6 +120,7 @@ class Api::UsersController < Api::ApiController
     render :text => _("User '#{@user.username}' assigned to role '#{role.name}'"), :status => 200
   end
 
+  api :DELETE, "/users/:user_id/roles/:id"
   def remove_role
     role = Role.find(params[:id])
     @user.roles.delete(role)
@@ -121,6 +129,7 @@ class Api::UsersController < Api::ApiController
 
   end
 
+  api :GET, "/users/report"
   def report
     users_report = User.report_table(:all,
                                      :only    => [:username, :created_at, :updated_at],

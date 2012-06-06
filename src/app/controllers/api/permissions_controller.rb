@@ -45,6 +45,7 @@ class Api::PermissionsController < Api::ApiController
     render :json => @role.permissions.where(query_params).to_json()
   end
 
+  api :GET, "/roles/:role_id/permissions/:id", "Show a permission"
   def show
     render :json => @permission.to_json()
   end

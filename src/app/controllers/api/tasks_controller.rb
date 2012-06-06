@@ -36,6 +36,7 @@ class Api::TasksController < Api::ApiController
     }
   end
 
+  api :GET, "/organizations/:organization_id/tasks", "List tasks"
   def index
     render :json => TaskStatus.where(:organization_id => @organization).to_json(:except => :id)
   end

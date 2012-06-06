@@ -45,6 +45,9 @@ class Api::SyncController < Api::ApiController
     render :json => to_return, :status => 202
   end
 
+  api :DELETE, "/organizations/:organization_id/products/:product_id/sync"
+  api :DELETE, "/providers/:provider_id/sync"
+  api :DELETE, "/repositories/:repository_id/sync"
   def cancel
     if @obj.sync_state.to_s == PulpSyncStatus::Status::RUNNING.to_s
       @obj.cancel_sync

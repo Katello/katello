@@ -56,6 +56,7 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => ActivationKey.where(query_params)
   end
 
+  api :GET, "/activation_keys/:id", "Show an activation key"
   def show
     render :json => @activation_key
   end
@@ -76,16 +77,19 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => created
   end
 
+  api :PUT, "/activation_keys/:id", "Update an activation key"
   def update
     @activation_key.update_attributes!(params[:activation_key])
     render :json => ActivationKey.find(@activation_key.id)
   end
 
+  api :POST, "/activation_keys/:id/pools"
   def add_pool
     @activation_key.key_pools.create(:pool => @pool) unless @activation_key.pools.include?(@pool)
     render :json => @activation_key
   end
 
+  api :DELETE, "/activation_keys/:id/pools/:poolid"
   def remove_pool
     unless @activation_key.pools.include?(@pool)
       raise HttpErrors::NotFound, _("Couldn't find pool '%s' in activation_key '%s'") % [@pool.cp_id, @activation_key.name]
@@ -101,6 +105,7 @@ class Api::ActivationKeysController < Api::ApiController
    render :text => _("Deleted activation key '#{params[:id]}'"), :status => 204
   end
 
+  api :POST, "/organizations/:organization_id/activation_keys/:id/system_groups"
   def add_system_groups
     ids = params[:activation_key][:system_group_ids]
     @activation_key.system_group_ids = (@activation_key.system_group_ids + ids).uniq
@@ -108,6 +113,7 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => @activation_key.to_json
   end
 
+  api :DELETE, "/organizations/:organization_id/activation_keys/:id/system_groups"
   def remove_system_groups
     ids = params[:activation_key][:system_group_ids]
     @activation_key.system_group_ids = (@activation_key.system_group_ids - ids).uniq

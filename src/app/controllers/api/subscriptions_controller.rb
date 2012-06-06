@@ -29,6 +29,7 @@ class Api::SubscriptionsController < Api::ApiController
     }
   end
 
+  api :GET, "/systems/:system_id/subscriptions", "List subscriptions"
   def index
     render :json => { :entitlements => @system.consumed_entitlements }
   end
@@ -44,6 +45,7 @@ class Api::SubscriptionsController < Api::ApiController
     render :json => @system.to_json
   end
 
+  api :DELETE, "/systems/:system_id/subscriptions/:id", "Destroy a subscription"
   def destroy
     expected_params = params.with_indifferent_access.slice(:id)
     raise HttpErrors::BadRequest, _("Please provide entitlement id") if expected_params.count != 1
@@ -51,11 +53,13 @@ class Api::SubscriptionsController < Api::ApiController
     render :json => @system.to_json
   end
 
+  api :DELETE, "/systems/:system_id/subscriptions"
   def destroy_all
     @system.unsubscribe_all
     render :json => @system.to_json
   end
 
+  api :DELETE, "/systems/:system_id/subscriptions/serials/:serial_id"
   def destroy_by_serial
     expected_params = params.with_indifferent_access.slice(:serial_id)
     raise HttpErrors::BadRequest, _("Please provide serial id") if expected_params.count != 1

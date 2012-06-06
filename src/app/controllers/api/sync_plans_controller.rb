@@ -44,6 +44,7 @@ class Api::SyncPlansController < Api::ApiController
     render :json => @organization.sync_plans.where(query_params).to_json
   end
 
+  api :GET, "/organizations/:organization_id/sync_plans/:id", "Show a sync plan"
   def show
     render :json => @plan.to_json
   end

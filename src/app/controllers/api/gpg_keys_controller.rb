@@ -87,6 +87,7 @@ class Api::GpgKeysController < Api::ApiController
   # I've amended REST best practices(e.g. not using the show action) as we don't want to
   # authenticate, authorize etc, trying to distinquse between a yum request and normal api request
   # might not always be 100% bullet proof, and its more important that yum can fetch the key.
+  api :GET, "/gpg_keys/:id/content"
   def content
     @gpg_key.content.present? ? render(:text => @gpg_key.content, :layout => false) : head(404)
   end

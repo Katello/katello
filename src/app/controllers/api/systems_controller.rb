@@ -82,6 +82,7 @@ class Api::SystemsController < Api::ApiController
     render :json => system.to_json
   end
 
+  api :POST, "/hypervisors"
   def hypervisors_update
     cp_response, hypervisors = System.register_hypervisors(@environment, params.except(:controller, :action))
     render :json => cp_response
@@ -210,6 +211,7 @@ class Api::SystemsController < Api::ApiController
     render :json => @system.package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
   end
 
+  api :GET, "/systems/:id/errata"
   def errata
     render :json => Resources::Pulp::Consumer.errata(@system.uuid)
   end
@@ -226,6 +228,8 @@ class Api::SystemsController < Api::ApiController
     render :json => @system.to_json
   end
 
+  api :GET, "/environments/:environment_id/systems/report"
+  api :GET, "/organizations/:organization_id/systems/report"
   def report
     data = @environment.nil? ? @organization.systems.readable(@organization) : @environment.systems.readable(@organization)
 
@@ -274,6 +278,7 @@ class Api::SystemsController < Api::ApiController
     end
   end
 
+  api :GET, "/organizations/:organization_id/systems/tasks"
   def tasks
     @tasks = SystemTask.joins(:system,:task_status).where(:"task_statuses.organization_id" => @organization.id)
     if @environment
@@ -329,6 +334,7 @@ class Api::SystemsController < Api::ApiController
     render :json => result.to_json
   end
 
+  api :POST, "/systems/:id/system_groups"
   def add_system_groups
     ids = params[:system][:system_group_ids]
     @system.system_group_ids = (@system.system_group_ids + ids).uniq
@@ -336,6 +342,7 @@ class Api::SystemsController < Api::ApiController
     render :json => @system.to_json
   end
 
+  api :DELETE, "/systems/:id/system_groups"
   def remove_system_groups
     ids = params[:system][:system_group_ids]
     @system.system_group_ids = (@system.system_group_ids - ids).uniq

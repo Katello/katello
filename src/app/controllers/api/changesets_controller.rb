@@ -60,6 +60,7 @@ class Api::ChangesetsController < Api::ApiController
     render :json => @changeset
   end
 
+  api :GET, "/changesets/:id/dependencies"
   def dependencies
     render :json => @changeset.calc_dependencies.to_json
   end
@@ -87,6 +88,7 @@ class Api::ChangesetsController < Api::ApiController
     render :json => async_job, :status => 202
   end
 
+  api :DELETE, "/changesets/:id", "Destroy a changeset"
   def destroy
     @changeset.destroy
     render :text => _("Deleted changeset '#{params[:id]}'"), :status => 200

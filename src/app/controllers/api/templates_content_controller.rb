@@ -39,12 +39,14 @@ class Api::TemplatesContentController < Api::ApiController
   end
 
   # adding a products reults in an unusable tempalte bz 799149
+  api :POST, "/templates/:template_id/products"
   #def add_product
   #  @template.add_product_by_cpid(params[:id])
   #  @template.save!
   #  render :text => _("Added product '#{params[:id]}'"), :status => 200
   #end
   #
+  api :DELETE, "/templates/:template_id/products/:id"
   #def remove_product
   #  @template.remove_product_by_cpid(params[:id])
   #  @template.save!
@@ -131,6 +133,7 @@ class Api::TemplatesContentController < Api::ApiController
     render :text => _("Added distribution '#{params[:id]}'")
   end
 
+  api :DELETE, "/templates/:template_id/distributions/:id"
   def remove_distribution
     @template.remove_distribution(params[:id])
     @template.save!
@@ -146,6 +149,7 @@ class Api::TemplatesContentController < Api::ApiController
     render :text => _("Added repository '#{params[:id]}'"), :status => 200
   end
 
+  api :DELETE, "/templates/:template_id/repositories/:id"
   def remove_repo
     @template.remove_repo(params[:id])
     @template.save!

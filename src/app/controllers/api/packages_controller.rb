@@ -26,15 +26,18 @@ class Api::PackagesController < Api::ApiController
     }
   end
 
+  api :GET, "/repositories/:repository_id/packages", "List packages"
   def index
     render :json => @repo.packages
   end
 
+  api :GET, "/repositories/:repository_id/packages/search"
   def search
     packages = Glue::Pulp::Package.search(params[:search], 0, 0, [@repo.pulp_id])
     render :json => packages.to_a
   end
 
+  api :GET, "/repositories/:repository_id/packages/:id", "Show a package"
   def show
     render :json => @package
   end

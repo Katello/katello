@@ -53,6 +53,7 @@ class Api::ProvidersController < Api::ApiController
     render :json => (Provider.readable(@organization).where query_params).to_json
   end
 
+  api :GET, "/providers/:id", "Show a provider"
   def show
     render :json => @provider.to_json
   end
@@ -127,6 +128,7 @@ class Api::ProvidersController < Api::ApiController
     render :text => _("Products refreshed from CDN"), :status => 200
   end
 
+  api :POST, "/providers/:id/import_products"
   def import_products
     results = params[:products].collect do |p|
       to_create = Product.new(p) do |product|

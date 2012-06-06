@@ -98,11 +98,13 @@ class Api::TemplatesController < Api::ApiController
     render :json => @template
   end
 
+  api :DELETE, "/templates/:id", "Destroy a template"
   def destroy
     @template.destroy
     render :text => _("Deleted system template '#{@template.name}'"), :status => 200
   end
 
+  api :POST, "/templates/import"
   def import
     raise HttpErrors::BadRequest, _("New templates can be imported only into a Library environment") if not @environment.library?
 

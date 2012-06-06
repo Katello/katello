@@ -172,6 +172,7 @@ class Api::RepositoriesController < Api::ApiController
   # returns the content of a repo gpg key, used directly by yum
   # we don't want to authenticate, authorize etc, trying to distinquse between a yum request and normal api request
   # might not always be 100% bullet proof, and its more important that yum can fetch the key.
+  api :GET, "/repositories/:id/gpg_key_content"
   def gpg_key_content
     if @repository.gpg_key && @repository.gpg_key.content.present?
       render(:text => @repository.gpg_key.content, :layout => false) 

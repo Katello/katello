@@ -48,6 +48,7 @@ class Api::RolesController < Api::ApiController
     render :json => (Role.readable.non_self.where query_params).to_json
   end
 
+  api :GET, "/roles/:id", "Show a role"
   def show
     render :json => @role
   end
