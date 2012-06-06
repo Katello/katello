@@ -59,27 +59,27 @@
         <h3>Examples</h3>
           <pre>POST /api/repositories/
 {
+  &quot;url&quot;: &quot;http://lzap.fedorapeople.org/fakerepos/zoo5&quot;,
   &quot;name&quot;: &quot;fewups_product_2d4c613_fakerepos_zoo5&quot;,
-  &quot;product_id&quot;: &quot;1338879369155&quot;,
   &quot;organization_id&quot;: &quot;org_2d4c613&quot;,
-  &quot;url&quot;: &quot;http://lzap.fedorapeople.org/fakerepos/zoo5&quot;
+  &quot;product_id&quot;: &quot;1338879369155&quot;
 }
 200
 {
-  &quot;last_sync&quot;: null,
-  &quot;name&quot;: &quot;fewups_product_2d4c613_fakerepos_zoo5&quot;,
-  &quot;environment_product_id&quot;: 84,
-  &quot;enabled&quot;: true,
-  &quot;id&quot;: 749,
-  &quot;major&quot;: null,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:13Z&quot;,
-  &quot;cp_label&quot;: &quot;org_2d4c613_fewups_product_2d4c613_fewups_product_2d4c613_fakerepos_zoo5&quot;,
   &quot;updated_at&quot;: &quot;2012-06-05T06:56:13Z&quot;,
-  &quot;package_count&quot;: 0,
+  &quot;environment_product_id&quot;: 84,
   &quot;gpg_key_id&quot;: null,
-  &quot;minor&quot;: null,
+  &quot;name&quot;: &quot;fewups_product_2d4c613_fakerepos_zoo5&quot;,
   &quot;gpg_key_name&quot;: &quot;&quot;,
-  &quot;pulp_id&quot;: &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;
+  &quot;pulp_id&quot;: &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+  &quot;last_sync&quot;: null,
+  &quot;id&quot;: 749,
+  &quot;cp_label&quot;: &quot;org_2d4c613_fewups_product_2d4c613_fewups_product_2d4c613_fakerepos_zoo5&quot;,
+  &quot;enabled&quot;: true,
+  &quot;package_count&quot;: 0,
+  &quot;minor&quot;: null,
+  &quot;major&quot;: null,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:13Z&quot;
 }</pre>
 
         <h3>Params</h3>
@@ -193,64 +193,64 @@
           <pre>GET /api/repositories/750/
 200
 {
-  &quot;packages&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/packages/&quot;,
-  &quot;last_sync&quot;: &quot;2012-06-05T08:56:28+02:00&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:15Z&quot;,
   &quot;environment_product_id&quot;: 84,
-  &quot;name&quot;: &quot;repo_2d4c613&quot;,
-  &quot;enabled&quot;: true,
-  &quot;feed_cert&quot;: null,
-  &quot;next_scheduled_time&quot;: null,
-  &quot;sync_options&quot;: {},
-  &quot;consumer_cert&quot;: null,
-  &quot;publish&quot;: true,
-  &quot;keys&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/keys/&quot;,
-  &quot;id&quot;: 750,
-  &quot;major&quot;: null,
-  &quot;uri_ref&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/&quot;,
-  &quot;relative_path&quot;: &quot;org_2d4c613/Library/custom/fewups_product_2d4c613/repo_2d4c613&quot;,
+  &quot;arch&quot;: &quot;noarch&quot;,
+  &quot;filters&quot;: [],
   &quot;distribution&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/distribution/&quot;,
-  &quot;errata&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/errata/&quot;,
-  &quot;preserve_metadata&quot;: false,
-  &quot;consumer_ca&quot;: null,
-  &quot;files&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/files/&quot;,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:15Z&quot;,
+  &quot;gpg_key_id&quot;: null,
+  &quot;source&quot;: {
+    &quot;url&quot;: &quot;http://lzap.fedorapeople.org/fakerepos/zoo5/&quot;,
+    &quot;type&quot;: &quot;remote&quot;
+  },
+  &quot;uri&quot;: &quot;https://localhost/pulp/repos/org_2d4c613/Library/custom/fewups_product_2d4c613/repo_2d4c613/&quot;,
+  &quot;name&quot;: &quot;repo_2d4c613&quot;,
   &quot;clone_ids&quot;: [
     &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
   ],
-  &quot;files_count&quot;: 77,
-  &quot;checksum_type&quot;: &quot;sha256&quot;,
-  &quot;cp_label&quot;: &quot;org_2d4c613_fewups_product_2d4c613_repo_2d4c613&quot;,
+  &quot;gpg_key_name&quot;: &quot;&quot;,
+  &quot;publish&quot;: true,
+  &quot;packagegroups&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/packagegroups/&quot;,
   &quot;comps&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/comps/&quot;,
-  &quot;packagegroupcategories&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/packagegroupcategories/&quot;,
-  &quot;notes&quot;: {},
-  &quot;updated_at&quot;: &quot;2012-06-05T06:56:15Z&quot;,
   &quot;content_types&quot;: &quot;yum&quot;,
-  &quot;sync_state&quot;: &quot;finished&quot;,
-  &quot;sync_schedule&quot;: null,
-  &quot;arch&quot;: &quot;noarch&quot;,
+  &quot;preserve_metadata&quot;: false,
+  &quot;consumer_ca&quot;: null,
+  &quot;pulp_id&quot;: &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
+  &quot;uri_ref&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/&quot;,
+  &quot;last_sync&quot;: &quot;2012-06-05T08:56:28+02:00&quot;,
+  &quot;id&quot;: 750,
+  &quot;cp_label&quot;: &quot;org_2d4c613_fewups_product_2d4c613_repo_2d4c613&quot;,
+  &quot;errata&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/errata/&quot;,
   &quot;distributionid&quot;: [
     &quot;ks-Test Family-TestVariant-16-x86_64&quot;
   ],
+  &quot;relative_path&quot;: &quot;org_2d4c613/Library/custom/fewups_product_2d4c613/repo_2d4c613&quot;,
+  &quot;checksum_type&quot;: &quot;sha256&quot;,
+  &quot;files&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/files/&quot;,
+  &quot;enabled&quot;: true,
+  &quot;files_count&quot;: 77,
   &quot;package_count&quot;: 8,
-  &quot;gpg_key_id&quot;: null,
-  &quot;minor&quot;: null,
-  &quot;uri&quot;: &quot;https://localhost/pulp/repos/org_2d4c613/Library/custom/fewups_product_2d4c613/repo_2d4c613/&quot;,
-  &quot;packagegroups&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/packagegroups/&quot;,
-  &quot;filters&quot;: [],
+  &quot;sync_state&quot;: &quot;finished&quot;,
+  &quot;next_scheduled_time&quot;: null,
+  &quot;packagegroupcategories&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/packagegroupcategories/&quot;,
+  &quot;_id&quot;: &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
   &quot;feed_ca&quot;: null,
+  &quot;sync_schedule&quot;: null,
+  &quot;packages&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/packages/&quot;,
+  &quot;notes&quot;: {},
   &quot;groupid&quot;: [
     &quot;product:1338879369155&quot;,
     &quot;env:72&quot;,
     &quot;org:28&quot;,
     &quot;content:1338879375666&quot;
   ],
-  &quot;source&quot;: {
-    &quot;type&quot;: &quot;remote&quot;,
-    &quot;url&quot;: &quot;http://lzap.fedorapeople.org/fakerepos/zoo5/&quot;
-  },
-  &quot;gpg_key_name&quot;: &quot;&quot;,
-  &quot;pulp_id&quot;: &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
-  &quot;_id&quot;: &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
+  &quot;minor&quot;: null,
+  &quot;sync_options&quot;: {},
+  &quot;consumer_cert&quot;: null,
+  &quot;keys&quot;: &quot;/pulp/api/repositories/org_2d4c613-fewups_product_2d4c613-repo_2d4c613/keys/&quot;,
+  &quot;major&quot;: null,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:15Z&quot;,
+  &quot;feed_cert&quot;: null
 }</pre>
 
     </div>
@@ -283,60 +283,60 @@
 }
 200
 {
-  &quot;packages&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/packages/&quot;,
-  &quot;last_sync&quot;: null,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:58:19Z&quot;,
   &quot;environment_product_id&quot;: 86,
-  &quot;name&quot;: &quot;GPG-repo-2-2d4c613&quot;,
-  &quot;enabled&quot;: true,
-  &quot;feed_cert&quot;: null,
-  &quot;next_scheduled_time&quot;: null,
-  &quot;sync_options&quot;: {},
-  &quot;consumer_cert&quot;: null,
-  &quot;publish&quot;: true,
-  &quot;keys&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/keys/&quot;,
-  &quot;id&quot;: 754,
-  &quot;major&quot;: null,
-  &quot;uri_ref&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/&quot;,
-  &quot;relative_path&quot;: &quot;org_2d4c613/Library/custom/GPG-product-2d4c613/GPG-repo-2-2d4c613&quot;,
+  &quot;arch&quot;: &quot;noarch&quot;,
+  &quot;filters&quot;: [],
   &quot;distribution&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/distribution/&quot;,
-  &quot;errata&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/errata/&quot;,
+  &quot;gpg_key_id&quot;: 17,
+  &quot;source&quot;: {
+    &quot;url&quot;: &quot;http://inecas.fedorapeople.org/fakerepos/zoo&quot;,
+    &quot;type&quot;: &quot;remote&quot;
+  },
+  &quot;uri&quot;: &quot;https://localhost/pulp/repos/org_2d4c613/Library/custom/GPG-product-2d4c613/GPG-repo-2-2d4c613/&quot;,
+  &quot;name&quot;: &quot;GPG-repo-2-2d4c613&quot;,
+  &quot;clone_ids&quot;: [],
+  &quot;gpg_key_name&quot;: &quot;Dummy-Package-Generator&quot;,
+  &quot;publish&quot;: true,
+  &quot;packagegroups&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/packagegroups/&quot;,
+  &quot;comps&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/comps/&quot;,
+  &quot;content_types&quot;: &quot;yum&quot;,
   &quot;preserve_metadata&quot;: false,
   &quot;consumer_ca&quot;: null,
-  &quot;files&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/files/&quot;,
-  &quot;created_at&quot;: &quot;2012-06-05T06:58:17Z&quot;,
-  &quot;clone_ids&quot;: [],
-  &quot;files_count&quot;: 80,
-  &quot;checksum_type&quot;: &quot;sha256&quot;,
+  &quot;pulp_id&quot;: &quot;org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613&quot;,
+  &quot;uri_ref&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/&quot;,
+  &quot;last_sync&quot;: null,
+  &quot;id&quot;: 754,
   &quot;cp_label&quot;: &quot;org_2d4c613_GPG-product-2d4c613_GPG-repo-2-2d4c613&quot;,
-  &quot;comps&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/comps/&quot;,
-  &quot;packagegroupcategories&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/packagegroupcategories/&quot;,
-  &quot;notes&quot;: {},
-  &quot;updated_at&quot;: &quot;2012-06-05T06:58:19Z&quot;,
-  &quot;content_types&quot;: &quot;yum&quot;,
-  &quot;sync_state&quot;: &quot;not_synced&quot;,
-  &quot;sync_schedule&quot;: null,
-  &quot;arch&quot;: &quot;noarch&quot;,
+  &quot;errata&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/errata/&quot;,
   &quot;distributionid&quot;: [],
+  &quot;relative_path&quot;: &quot;org_2d4c613/Library/custom/GPG-product-2d4c613/GPG-repo-2-2d4c613&quot;,
+  &quot;checksum_type&quot;: &quot;sha256&quot;,
+  &quot;files&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/files/&quot;,
+  &quot;enabled&quot;: true,
+  &quot;files_count&quot;: 80,
   &quot;package_count&quot;: 0,
-  &quot;gpg_key_id&quot;: 17,
-  &quot;minor&quot;: null,
-  &quot;uri&quot;: &quot;https://localhost/pulp/repos/org_2d4c613/Library/custom/GPG-product-2d4c613/GPG-repo-2-2d4c613/&quot;,
-  &quot;packagegroups&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/packagegroups/&quot;,
-  &quot;filters&quot;: [],
+  &quot;sync_state&quot;: &quot;not_synced&quot;,
+  &quot;next_scheduled_time&quot;: null,
+  &quot;packagegroupcategories&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/packagegroupcategories/&quot;,
+  &quot;_id&quot;: &quot;org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613&quot;,
   &quot;feed_ca&quot;: null,
+  &quot;sync_schedule&quot;: null,
+  &quot;packages&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/packages/&quot;,
+  &quot;notes&quot;: {},
   &quot;groupid&quot;: [
     &quot;product:1338879493373&quot;,
     &quot;env:72&quot;,
     &quot;org:28&quot;,
     &quot;content:1338879497579&quot;
   ],
-  &quot;source&quot;: {
-    &quot;type&quot;: &quot;remote&quot;,
-    &quot;url&quot;: &quot;http://inecas.fedorapeople.org/fakerepos/zoo&quot;
-  },
-  &quot;gpg_key_name&quot;: &quot;Dummy-Package-Generator&quot;,
-  &quot;pulp_id&quot;: &quot;org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613&quot;,
-  &quot;_id&quot;: &quot;org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613&quot;
+  &quot;minor&quot;: null,
+  &quot;sync_options&quot;: {},
+  &quot;consumer_cert&quot;: null,
+  &quot;keys&quot;: &quot;/pulp/api/repositories/org_2d4c613-GPG-product-2d4c613-GPG-repo-2-2d4c613/keys/&quot;,
+  &quot;major&quot;: null,
+  &quot;created_at&quot;: &quot;2012-06-05T06:58:17Z&quot;,
+  &quot;feed_cert&quot;: null
 }</pre>
 
         <h3>Params</h3>
@@ -488,37 +488,37 @@ Repository 'Zoo Enterprise x86_64 16' enabled.</pre>
         <h3>Examples</h3>
           <pre>POST /api/organizations/org_2d4c613/repositories/discovery
 {
-  &quot;type&quot;: &quot;yum&quot;,
-  &quot;url&quot;: &quot;http://lzap.fedorapeople.org/fakerepos/zoo5/&quot;
+  &quot;url&quot;: &quot;http://lzap.fedorapeople.org/fakerepos/zoo5/&quot;,
+  &quot;type&quot;: &quot;yum&quot;
 }
 200
 {
-  &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
-  &quot;user_id&quot;: 1,
-  &quot;id&quot;: 206,
-  &quot;start_time&quot;: null,
-  &quot;prefix&quot;: &quot;api/repositories&quot;,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:09Z&quot;,
+  &quot;state&quot;: &quot;waiting&quot;,
   &quot;finish_time&quot;: null,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:09Z&quot;,
+  &quot;progress&quot;: {
+    &quot;total_count&quot;: 0,
+    &quot;total_size&quot;: 0,
+    &quot;size_left&quot;: 0,
+    &quot;items_left&quot;: 0
+  },
+  &quot;user_id&quot;: 1,
+  &quot;organization_id&quot;: 28,
+  &quot;parameters&quot;: null,
+  &quot;uuid&quot;: &quot;87b5346b-aedb-11e1-a161-f0def16f6678&quot;,
+  &quot;id&quot;: 206,
+  &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
+  &quot;start_time&quot;: null,
+  &quot;pending?&quot;: true,
+  &quot;prefix&quot;: &quot;api/repositories&quot;,
   &quot;result&quot;: {
     &quot;errors&quot;: [
       null,
       null
     ]
   },
-  &quot;progress&quot;: {
-    &quot;size_left&quot;: 0,
-    &quot;total_count&quot;: 0,
-    &quot;total_size&quot;: 0,
-    &quot;items_left&quot;: 0
-  },
-  &quot;template&quot;: &quot;discovery&quot;,
-  &quot;state&quot;: &quot;waiting&quot;,
-  &quot;updated_at&quot;: &quot;2012-06-05T06:56:09Z&quot;,
-  &quot;organization_id&quot;: 28,
-  &quot;uuid&quot;: &quot;87b5346b-aedb-11e1-a161-f0def16f6678&quot;,
-  &quot;parameters&quot;: null,
-  &quot;pending?&quot;: true
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:09Z&quot;,
+  &quot;template&quot;: &quot;discovery&quot;
 }</pre>
 
         <h3>Params</h3>
@@ -587,45 +587,45 @@ Repository 'Zoo Enterprise x86_64 16' enabled.</pre>
 200
 [
   {
+    &quot;translated_description&quot;: {},
+    &quot;langonly&quot;: null,
     &quot;name&quot;: &quot;mammal&quot;,
-    &quot;optional_package_names&quot;: [],
-    &quot;id&quot;: &quot;mammal&quot;,
     &quot;translated_name&quot;: {},
-    &quot;default_package_names&quot;: [],
+    &quot;user_visible&quot;: true,
+    &quot;immutable&quot;: true,
     &quot;display_order&quot;: 1024,
     &quot;default&quot;: true,
-    &quot;description&quot;: &quot;&quot;,
-    &quot;immutable&quot;: true,
-    &quot;langonly&quot;: null,
-    &quot;conditional_package_names&quot;: {},
     &quot;mandatory_package_names&quot;: [
       &quot;elephant,giraffe,cheetah,lion,monkey,penguin,squirrel,walrus&quot;,
       &quot;penguin&quot;
     ],
-    &quot;user_visible&quot;: true,
-    &quot;translated_description&quot;: {},
+    &quot;id&quot;: &quot;mammal&quot;,
+    &quot;optional_package_names&quot;: [],
+    &quot;description&quot;: &quot;&quot;,
     &quot;_id&quot;: &quot;mammal&quot;,
-    &quot;repo_defined&quot;: true
+    &quot;repo_defined&quot;: true,
+    &quot;conditional_package_names&quot;: {},
+    &quot;default_package_names&quot;: []
   },
   {
+    &quot;translated_description&quot;: {},
+    &quot;langonly&quot;: null,
     &quot;name&quot;: &quot;bird&quot;,
-    &quot;optional_package_names&quot;: [],
-    &quot;id&quot;: &quot;bird&quot;,
     &quot;translated_name&quot;: {},
-    &quot;default_package_names&quot;: [],
+    &quot;user_visible&quot;: true,
+    &quot;immutable&quot;: true,
     &quot;display_order&quot;: 1024,
     &quot;default&quot;: true,
-    &quot;description&quot;: &quot;&quot;,
-    &quot;immutable&quot;: true,
-    &quot;langonly&quot;: null,
-    &quot;conditional_package_names&quot;: {},
     &quot;mandatory_package_names&quot;: [
       &quot;penguin&quot;
     ],
-    &quot;user_visible&quot;: true,
-    &quot;translated_description&quot;: {},
+    &quot;id&quot;: &quot;bird&quot;,
+    &quot;optional_package_names&quot;: [],
+    &quot;description&quot;: &quot;&quot;,
     &quot;_id&quot;: &quot;bird&quot;,
-    &quot;repo_defined&quot;: true
+    &quot;repo_defined&quot;: true,
+    &quot;conditional_package_names&quot;: {},
+    &quot;default_package_names&quot;: []
   }
 ]</pre>
 
@@ -683,17 +683,17 @@ Repository 'Zoo Enterprise x86_64 16' enabled.</pre>
 200
 [
   {
+    &quot;translated_description&quot;: {},
     &quot;name&quot;: &quot;all&quot;,
-    &quot;id&quot;: &quot;all&quot;,
     &quot;translated_name&quot;: {},
-    &quot;display_order&quot;: 99,
-    &quot;description&quot;: null,
     &quot;immutable&quot;: true,
+    &quot;display_order&quot;: 99,
     &quot;packagegroupids&quot;: [
       &quot;mammal&quot;,
       &quot;bird&quot;
     ],
-    &quot;translated_description&quot;: {},
+    &quot;id&quot;: &quot;all&quot;,
+    &quot;description&quot;: null,
     &quot;_id&quot;: &quot;all&quot;,
     &quot;repo_defined&quot;: true
   }
@@ -727,6 +727,28 @@ Repository 'Zoo Enterprise x86_64 16' enabled.</pre>
 
           </tbody>
         </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/repositories/gpg_key_content.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-gpg_key_content'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/repositories/:id/gpg_key_content
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-gpg_key_content' class='collapse accordion-body'>
+      
+      
+
+
     </div>
 </div>
 

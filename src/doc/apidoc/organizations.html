@@ -61,24 +61,24 @@
 200
 [
   {
+    &quot;updated_at&quot;: &quot;2012-06-01T15:10:22Z&quot;,
+    &quot;cp_key&quot;: &quot;ACME_Corporation&quot;,
     &quot;name&quot;: &quot;ACME_Corporation&quot;,
     &quot;service_levels&quot;: [],
     &quot;id&quot;: 1,
-    &quot;cp_key&quot;: &quot;ACME_Corporation&quot;,
-    &quot;task_id&quot;: null,
-    &quot;created_at&quot;: &quot;2012-06-01T15:10:22Z&quot;,
     &quot;description&quot;: &quot;ACME_Corporation Organization&quot;,
-    &quot;updated_at&quot;: &quot;2012-06-01T15:10:22Z&quot;
+    &quot;task_id&quot;: null,
+    &quot;created_at&quot;: &quot;2012-06-01T15:10:22Z&quot;
   },
   {
+    &quot;updated_at&quot;: &quot;2012-06-05T06:59:49Z&quot;,
+    &quot;cp_key&quot;: &quot;org_2d4c613&quot;,
     &quot;name&quot;: &quot;org_2d4c613&quot;,
     &quot;service_levels&quot;: [],
     &quot;id&quot;: 28,
-    &quot;cp_key&quot;: &quot;org_2d4c613&quot;,
-    &quot;task_id&quot;: null,
-    &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
     &quot;description&quot;: &quot;org description 2&quot;,
-    &quot;updated_at&quot;: &quot;2012-06-05T06:59:49Z&quot;
+    &quot;task_id&quot;: null,
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;
   }
 ]</pre>
 
@@ -107,14 +107,14 @@
           <pre>GET /api/organizations/org_2d4c613
 200
 {
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+  &quot;cp_key&quot;: &quot;org_2d4c613&quot;,
   &quot;name&quot;: &quot;org_2d4c613&quot;,
   &quot;service_levels&quot;: [],
   &quot;id&quot;: 28,
-  &quot;cp_key&quot;: &quot;org_2d4c613&quot;,
-  &quot;task_id&quot;: null,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
   &quot;description&quot;: &quot;org description&quot;,
-  &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;
+  &quot;task_id&quot;: null,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;
 }</pre>
 
     </div>
@@ -146,14 +146,14 @@
 }
 200
 {
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+  &quot;cp_key&quot;: &quot;org_2d4c613&quot;,
   &quot;name&quot;: &quot;org_2d4c613&quot;,
   &quot;service_levels&quot;: [],
   &quot;id&quot;: 28,
-  &quot;cp_key&quot;: &quot;org_2d4c613&quot;,
-  &quot;task_id&quot;: null,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
   &quot;description&quot;: &quot;org description&quot;,
-  &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;
+  &quot;task_id&quot;: null,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;
 }</pre>
 
         <h3>Params</h3>
@@ -294,23 +294,23 @@ true</pre>
           <pre>DELETE /api/organizations/org_manifest_2d4c613
 202
 {
-  &quot;task_type&quot;: &quot;TaskStatus&quot;,
-  &quot;user_id&quot;: 1,
-  &quot;id&quot;: 222,
-  &quot;start_time&quot;: null,
-  &quot;prefix&quot;: &quot;api/organizations&quot;,
-  &quot;created_at&quot;: &quot;2012-06-05T07:02:08Z&quot;,
-  &quot;finish_time&quot;: null,
-  &quot;result&quot;: null,
-  &quot;progress&quot;: null,
-  &quot;template&quot;: &quot;destroy&quot;,
   &quot;state&quot;: &quot;waiting&quot;,
+  &quot;finish_time&quot;: null,
   &quot;updated_at&quot;: &quot;2012-06-05T07:02:08Z&quot;,
+  &quot;progress&quot;: null,
+  &quot;user_id&quot;: 1,
   &quot;organization_id&quot;: 29,
-  &quot;uuid&quot;: &quot;a81db5bd-fb46-48ec-89db-c327ac7fa449&quot;,
-  &quot;status&quot;: 202,
   &quot;parameters&quot;: null,
-  &quot;pending?&quot;: true
+  &quot;uuid&quot;: &quot;a81db5bd-fb46-48ec-89db-c327ac7fa449&quot;,
+  &quot;id&quot;: 222,
+  &quot;task_type&quot;: &quot;TaskStatus&quot;,
+  &quot;start_time&quot;: null,
+  &quot;pending?&quot;: true,
+  &quot;prefix&quot;: &quot;api/organizations&quot;,
+  &quot;result&quot;: null,
+  &quot;status&quot;: 202,
+  &quot;created_at&quot;: &quot;2012-06-05T07:02:08Z&quot;,
+  &quot;template&quot;: &quot;destroy&quot;
 }</pre>
 
     </div>

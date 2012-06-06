@@ -54,6 +54,10 @@
             <td width='60%'>List activation keys</td>
           </tr>
           <tr>
+            <td><a href='./apidoc/activation_keys/show.html'>GET /api/activation_keys/:id</a></td>
+            <td width='60%'>Show an activation key</td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/activation_keys/create.html'>POST /api/activation_keys</a></td>
             <td width='60%'>Create an activation key</td>
           </tr>
@@ -62,8 +66,28 @@
             <td width='60%'>Create an activation key</td>
           </tr>
           <tr>
+            <td><a href='./apidoc/activation_keys/update.html'>PUT /api/activation_keys/:id</a></td>
+            <td width='60%'>Update an activation key</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/activation_keys/add_pool.html'>POST /api/activation_keys/:id/pools</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/activation_keys/remove_pool.html'>DELETE /api/activation_keys/:id/pools/:poolid</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/activation_keys/destroy.html'>DELETE /api/activation_keys/:id</a></td>
             <td width='60%'>Destroy an activation key</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/activation_keys/add_system_groups.html'>POST /api/organizations/:organization_id/activation_keys/:id/system_groups</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/activation_keys/remove_system_groups.html'>DELETE /api/organizations/:organization_id/activation_keys/:id/system_groups</a></td>
+            <td width='60%'></td>
           </tr>
     </tbody>
   </table>
@@ -92,12 +116,20 @@
             <td width='60%'>Update a changeset</td>
           </tr>
           <tr>
+            <td><a href='./apidoc/changesets/dependencies.html'>GET /api/changesets/:id/dependencies</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/changesets/create.html'>POST /api/organizations/:organization_id/environments/:environment_id/changesets</a></td>
             <td width='60%'>Create a changeset</td>
           </tr>
           <tr>
             <td><a href='./apidoc/changesets/promote.html'>POST /api/changesets/:id/promote</a></td>
             <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/changesets/destroy.html'>DELETE /api/changesets/:id</a></td>
+            <td width='60%'>Destroy a changeset</td>
           </tr>
     </tbody>
   </table>
@@ -151,6 +183,14 @@
           </tr>
           <tr>
             <td><a href='./apidoc/changesets_content/remove_template.html'>DELETE /api/changesets/:changeset_id/templates/:id</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/changesets_content/add_distribution.html'>POST /api/changesets/:changeset_id/distributions</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/changesets_content/remove_distribution.html'>DELETE /api/changesets/:changeset_id/distributions/:id</a></td>
             <td width='60%'></td>
           </tr>
     </tbody>
@@ -216,6 +256,18 @@
             <td width='60%'>List environments for RHSM</td>
           </tr>
           <tr>
+            <td><a href='./apidoc/environments/show.html'>GET /api/environments/:id</a></td>
+            <td width='60%'>Show an environment</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/environments/show.html'>GET /api/organizations/:organization_id/environments/:id</a></td>
+            <td width='60%'>Show an environment</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/environments/create.html'>POST /api/organizations/:organization_id/environments</a></td>
+            <td width='60%'>Create an environment in an organization</td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/environments/create.html'>POST /api/organizations/:organization_id/environments</a></td>
             <td width='60%'>Create an environment in an organization</td>
           </tr>
@@ -238,6 +290,10 @@
           <tr>
             <td><a href='./apidoc/environments/repositories.html'>GET /api/organizations/:organization_id/environments/:id/repositories</a></td>
             <td width='60%'>List repositories available in the environment</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/environments/releases.html'>GET /api/environments/:id/releases</a></td>
+            <td width='60%'></td>
           </tr>
     </tbody>
   </table>
@@ -349,6 +405,10 @@
             <td><a href='./apidoc/gpg_keys/destroy.html'>DELETE /api/gpg_keys/:id</a></td>
             <td width='60%'>Destroy a gpg key</td>
           </tr>
+          <tr>
+            <td><a href='./apidoc/gpg_keys/content.html'>GET /api/gpg_keys/:id/content</a></td>
+            <td width='60%'></td>
+          </tr>
     </tbody>
   </table>
   <h2>
@@ -386,6 +446,32 @@
     </tbody>
   </table>
   <h2>
+    <a href='./apidoc/packages.html'>Packages</a><br>
+    <small></small>
+  </h2>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td><a href='./apidoc/packages/index.html'>GET /api/repositories/:repository_id/packages</a></td>
+            <td width='60%'>List packages</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/packages/search.html'>GET /api/repositories/:repository_id/packages/search</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/packages/show.html'>GET /api/repositories/:repository_id/packages/:id</a></td>
+            <td width='60%'>Show a package</td>
+          </tr>
+    </tbody>
+  </table>
+  <h2>
     <a href='./apidoc/permissions.html'>Permissions</a><br>
     <small></small>
   </h2>
@@ -400,6 +486,10 @@
           <tr>
             <td><a href='./apidoc/permissions/index.html'>GET /api/roles/:role_id/permissions</a></td>
             <td width='60%'>List permissions</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/permissions/show.html'>GET /api/roles/:role_id/permissions/:id</a></td>
+            <td width='60%'>Show a permission</td>
           </tr>
           <tr>
             <td><a href='./apidoc/permissions/create.html'>POST /api/roles/:role_id/permissions</a></td>
@@ -426,6 +516,14 @@
           <tr>
             <td><a href='./apidoc/ping/index.html'>GET /api/ping</a></td>
             <td width='60%'>List ping</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/ping/status.html'>GET /api/status</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/ping/version.html'>GET /api/version</a></td>
+            <td width='60%'></td>
           </tr>
     </tbody>
   </table>
@@ -500,6 +598,10 @@
             <td width='60%'>List providers</td>
           </tr>
           <tr>
+            <td><a href='./apidoc/providers/show.html'>GET /api/providers/:id</a></td>
+            <td width='60%'>Show a provider</td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/providers/create.html'>POST /api/providers</a></td>
             <td width='60%'>Create a provider</td>
           </tr>
@@ -521,6 +623,10 @@
           </tr>
           <tr>
             <td><a href='./apidoc/providers/refresh_products.html'>POST /api/providers/:id/refresh_products</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/providers/import_products.html'>POST /api/providers/:id/import_products</a></td>
             <td width='60%'></td>
           </tr>
           <tr>
@@ -573,6 +679,10 @@
             <td><a href='./apidoc/repositories/package_group_categories.html'>GET /api/repositories/:id/package_group_categories</a></td>
             <td width='60%'></td>
           </tr>
+          <tr>
+            <td><a href='./apidoc/repositories/gpg_key_content.html'>GET /api/repositories/:id/gpg_key_content</a></td>
+            <td width='60%'></td>
+          </tr>
     </tbody>
   </table>
   <h2>
@@ -587,6 +697,14 @@
       </tr>
     </thead>
     <tbody>
+          <tr>
+            <td><a href='./apidoc/role_ldap_groups/create.html'>POST /api/roles/:role_id/ldap_groups</a></td>
+            <td width='60%'>Create a role ldap group</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/role_ldap_groups/destroy.html'>DELETE /api/roles/:role_id/ldap_groups/:id</a></td>
+            <td width='60%'>Destroy a role ldap group</td>
+          </tr>
           <tr>
             <td><a href='./apidoc/role_ldap_groups/index.html'>GET /api/roles/:role_id/ldap_groups</a></td>
             <td width='60%'>List role ldap groups</td>
@@ -610,6 +728,10 @@
             <td width='60%'>List roles</td>
           </tr>
           <tr>
+            <td><a href='./apidoc/roles/show.html'>GET /api/roles/:id</a></td>
+            <td width='60%'>Show a role</td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/roles/create.html'>POST /api/roles</a></td>
             <td width='60%'>Create a role</td>
           </tr>
@@ -628,6 +750,24 @@
     </tbody>
   </table>
   <h2>
+    <a href='./apidoc/status.html'>Status</a><br>
+    <small></small>
+  </h2>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td><a href='./apidoc/status/memory.html'>GET /api/status/memory</a></td>
+            <td width='60%'></td>
+          </tr>
+    </tbody>
+  </table>
+  <h2>
     <a href='./apidoc/subscriptions.html'>Subscriptions</a><br>
     <small></small>
   </h2>
@@ -640,8 +780,24 @@
     </thead>
     <tbody>
           <tr>
+            <td><a href='./apidoc/subscriptions/index.html'>GET /api/systems/:system_id/subscriptions</a></td>
+            <td width='60%'>List subscriptions</td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/subscriptions/create.html'>POST /api/systems/:system_id/subscriptions</a></td>
             <td width='60%'>Create a subscription</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/subscriptions/destroy.html'>DELETE /api/systems/:system_id/subscriptions/:id</a></td>
+            <td width='60%'>Destroy a subscription</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/subscriptions/destroy_all.html'>DELETE /api/systems/:system_id/subscriptions</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/subscriptions/destroy_by_serial.html'>DELETE /api/systems/:system_id/subscriptions/serials/:serial_id</a></td>
+            <td width='60%'></td>
           </tr>
     </tbody>
   </table>
@@ -681,6 +837,18 @@
             <td><a href='./apidoc/sync/create.html'>POST /api/repositories/:repository_id/sync</a></td>
             <td width='60%'>Create a sync</td>
           </tr>
+          <tr>
+            <td><a href='./apidoc/sync/cancel.html'>DELETE /api/organizations/:organization_id/products/:product_id/sync</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/sync/cancel.html'>DELETE /api/providers/:provider_id/sync</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/sync/cancel.html'>DELETE /api/repositories/:repository_id/sync</a></td>
+            <td width='60%'></td>
+          </tr>
     </tbody>
   </table>
   <h2>
@@ -700,6 +868,10 @@
             <td width='60%'>List sync plans</td>
           </tr>
           <tr>
+            <td><a href='./apidoc/sync_plans/show.html'>GET /api/organizations/:organization_id/sync_plans/:id</a></td>
+            <td width='60%'>Show a sync plan</td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/sync_plans/create.html'>POST /api/organizations/:organization_id/sync_plans</a></td>
             <td width='60%'>Create a sync plan</td>
           </tr>
@@ -710,6 +882,56 @@
           <tr>
             <td><a href='./apidoc/sync_plans/destroy.html'>DELETE /api/organizations/:organization_id/sync_plans/:id</a></td>
             <td width='60%'>Destroy a sync plan</td>
+          </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a href='./apidoc/system_groups.html'>System groups</a><br>
+    <small></small>
+  </h2>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td><a href='./apidoc/system_groups/index.html'>GET /api/organizations/:organization_id/system_groups</a></td>
+            <td width='60%'>List system groups</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/system_groups/show.html'>GET /api/organizations/:organization_id/system_groups/:id</a></td>
+            <td width='60%'>Show a system group</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/system_groups/update.html'>PUT /api/organizations/:organization_id/system_groups/:id</a></td>
+            <td width='60%'>Update a system group</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/system_groups/systems.html'>GET /api/organizations/:organization_id/system_groups/:id/systems</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/system_groups/add_systems.html'>POST /api/organizations/:organization_id/system_groups/:id/add_systems</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/system_groups/remove_systems.html'>POST /api/organizations/:organization_id/system_groups/:id/remove_systems</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/system_groups/history.html'>GET /api/organizations/:organization_id/system_groups/:id/history</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/system_groups/create.html'>POST /api/organizations/:organization_id/system_groups</a></td>
+            <td width='60%'>Create a system group</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/system_groups/destroy.html'>DELETE /api/organizations/:organization_id/system_groups/:id</a></td>
+            <td width='60%'>Destroy a system group</td>
           </tr>
     </tbody>
   </table>
@@ -766,6 +988,10 @@
           <tr>
             <td><a href='./apidoc/systems/create.html'>POST /api/systems</a></td>
             <td width='60%'>Create a system</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/systems/hypervisors_update.html'>POST /api/hypervisors</a></td>
+            <td width='60%'></td>
           </tr>
           <tr>
             <td><a href='./apidoc/systems/activate.html'>POST /api/consumers</a></td>
@@ -840,6 +1066,10 @@
             <td width='60%'></td>
           </tr>
           <tr>
+            <td><a href='./apidoc/systems/errata.html'>GET /api/systems/:id/errata</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/systems/upload_package_profile.html'>PUT /api/consumers/:id/packages</a></td>
             <td width='60%'></td>
           </tr>
@@ -848,11 +1078,31 @@
             <td width='60%'></td>
           </tr>
           <tr>
+            <td><a href='./apidoc/systems/report.html'>GET /api/environments/:environment_id/systems/report</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/systems/report.html'>GET /api/organizations/:organization_id/systems/report</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/systems/tasks.html'>GET /api/organizations/:organization_id/systems/tasks</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/systems/task_show.html'>GET /api/systems/tasks/:id</a></td>
             <td width='60%'></td>
           </tr>
           <tr>
             <td><a href='./apidoc/systems/enabled_repos.html'>PUT /api/systems/:id/enabled_repos</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/systems/add_system_groups.html'>POST /api/systems/:id/system_groups</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/systems/remove_system_groups.html'>DELETE /api/systems/:id/system_groups</a></td>
             <td width='60%'></td>
           </tr>
     </tbody>
@@ -869,6 +1119,10 @@
       </tr>
     </thead>
     <tbody>
+          <tr>
+            <td><a href='./apidoc/tasks/index.html'>GET /api/organizations/:organization_id/tasks</a></td>
+            <td width='60%'>List tasks</td>
+          </tr>
           <tr>
             <td><a href='./apidoc/tasks/show.html'>GET /api/tasks/:id</a></td>
             <td width='60%'>Show a task</td>
@@ -904,6 +1158,14 @@
             <td width='60%'>Update a template</td>
           </tr>
           <tr>
+            <td><a href='./apidoc/templates/destroy.html'>DELETE /api/templates/:id</a></td>
+            <td width='60%'>Destroy a template</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/templates/import.html'>POST /api/templates/import</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/templates/validate.html'>GET /api/templates/:id/validate</a></td>
             <td width='60%'></td>
           </tr>
@@ -925,6 +1187,14 @@
       </tr>
     </thead>
     <tbody>
+          <tr>
+            <td><a href='./apidoc/templates_content/add_package.html'>POST /api/templates/:template_id/products</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/templates_content/add_package.html'>DELETE /api/templates/:template_id/products/:id</a></td>
+            <td width='60%'></td>
+          </tr>
           <tr>
             <td><a href='./apidoc/templates_content/add_package.html'>POST /api/templates/:template_id/packages</a></td>
             <td width='60%'></td>
@@ -962,7 +1232,15 @@
             <td width='60%'></td>
           </tr>
           <tr>
+            <td><a href='./apidoc/templates_content/remove_distribution.html'>DELETE /api/templates/:template_id/distributions/:id</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/templates_content/add_repo.html'>POST /api/templates/:template_id/repositories</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/templates_content/remove_repo.html'>DELETE /api/templates/:template_id/repositories/:id</a></td>
             <td width='60%'></td>
           </tr>
     </tbody>
@@ -1006,6 +1284,14 @@
             <td width='60%'>List users</td>
           </tr>
           <tr>
+            <td><a href='./apidoc/users/show.html'>GET /api/users/:id</a></td>
+            <td width='60%'>Show an user</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/users/show.html'>GET /api/users/:user_id/roles/:id</a></td>
+            <td width='60%'>Show an user</td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/users/create.html'>POST /api/users</a></td>
             <td width='60%'>Create an user</td>
           </tr>
@@ -1014,12 +1300,40 @@
             <td width='60%'>Create an user</td>
           </tr>
           <tr>
+            <td><a href='./apidoc/users/update.html'>PUT /api/users/:id</a></td>
+            <td width='60%'>Update an user</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/users/update.html'>PUT /api/users/:user_id/roles/:id</a></td>
+            <td width='60%'>Update an user</td>
+          </tr>
+          <tr>
             <td><a href='./apidoc/users/destroy.html'>DELETE /api/users/:id</a></td>
             <td width='60%'>Destroy an user</td>
           </tr>
           <tr>
             <td><a href='./apidoc/users/destroy.html'>DELETE /api/users/:user_id/roles/:id</a></td>
             <td width='60%'>Destroy an user</td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/users/list_roles.html'>GET /api/users/:user_id/roles</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/users/sync_ldap_roles.html'>GET /api/users/sync_ldap_roles</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/users/add_role.html'>POST /api/users/:user_id/roles</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/users/remove_role.html'>DELETE /api/users/:user_id/roles/:id</a></td>
+            <td width='60%'></td>
+          </tr>
+          <tr>
+            <td><a href='./apidoc/users/report.html'>GET /api/users/report</a></td>
+            <td width='60%'></td>
           </tr>
           <tr>
             <td><a href='./apidoc/users/list_owners.html'>GET /api/users/:username/owners</a></td>

@@ -70,22 +70,22 @@
 200
 [
   {
-    &quot;username&quot;: &quot;user_2d4c613&quot;,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+    &quot;helptips_enabled&quot;: true,
+    &quot;own_role_id&quot;: 30,
+    &quot;hidden&quot;: false,
+    &quot;password&quot;: &quot;c23d7ae95537315fe62cdf15d0d9ac2395d6c80c748f1f9221ac8eef5e991d727aa4e038a8a39aa1e4a534b5a9de51dc9c5bfc9c04b0d23a0971ab6f493be19eGICH4YfM6CHIOEDQY3q80cEAHYVe0leuhc3UmU0lQIpU65cDXHoTHzgp63Zy8GwE&quot;,
     &quot;email&quot;: &quot;user_2d4c613@somewhere.com&quot;,
+    &quot;default_organization&quot;: null,
+    &quot;username&quot;: &quot;user_2d4c613&quot;,
+    &quot;password_reset_sent_at&quot;: null,
     &quot;id&quot;: 12,
     &quot;default_environment&quot;: null,
     &quot;page_size&quot;: 25,
-    &quot;password&quot;: &quot;c23d7ae95537315fe62cdf15d0d9ac2395d6c80c748f1f9221ac8eef5e991d727aa4e038a8a39aa1e4a534b5a9de51dc9c5bfc9c04b0d23a0971ab6f493be19eGICH4YfM6CHIOEDQY3q80cEAHYVe0leuhc3UmU0lQIpU65cDXHoTHzgp63Zy8GwE&quot;,
-    &quot;password_reset_token&quot;: null,
-    &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
-    &quot;hidden&quot;: false,
-    &quot;preferences&quot;: {},
-    &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
     &quot;disabled&quot;: false,
-    &quot;default_organization&quot;: null,
-    &quot;password_reset_sent_at&quot;: null,
-    &quot;own_role_id&quot;: 30,
-    &quot;helptips_enabled&quot;: true
+    &quot;password_reset_token&quot;: null,
+    &quot;preferences&quot;: {},
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;
   }
 ]</pre>
 
@@ -115,6 +115,37 @@
 
           </tbody>
         </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/users/show.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-show'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/users/:id
+          </a><br>
+          <small>Show an user</small>
+        </h2>
+        <h2>
+          <a href='#description-show'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/users/:user_id/roles/:id
+          </a><br>
+          <small>Show an user</small>
+        </h2>
+    </div>
+    
+    <div id='description-show' class='collapse accordion-body'>
+      
+      
+
+
     </div>
     <hr>
     <div class='pull-right small'>
@@ -148,29 +179,29 @@
         <h3>Examples</h3>
           <pre>POST /api/users/
 {
-  &quot;username&quot;: &quot;user_2d4c613&quot;,
-  &quot;email&quot;: &quot;user_2d4c613@somewhere.com&quot;,
   &quot;password&quot;: &quot;password&quot;,
+  &quot;email&quot;: &quot;user_2d4c613@somewhere.com&quot;,
+  &quot;username&quot;: &quot;user_2d4c613&quot;,
   &quot;disabled&quot;: false
 }
 200
 {
-  &quot;username&quot;: &quot;user_2d4c613&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+  &quot;helptips_enabled&quot;: true,
+  &quot;own_role_id&quot;: 30,
+  &quot;hidden&quot;: false,
+  &quot;password&quot;: &quot;c23d7ae95537315fe62cdf15d0d9ac2395d6c80c748f1f9221ac8eef5e991d727aa4e038a8a39aa1e4a534b5a9de51dc9c5bfc9c04b0d23a0971ab6f493be19eGICH4YfM6CHIOEDQY3q80cEAHYVe0leuhc3UmU0lQIpU65cDXHoTHzgp63Zy8GwE&quot;,
   &quot;email&quot;: &quot;user_2d4c613@somewhere.com&quot;,
+  &quot;default_organization&quot;: null,
+  &quot;username&quot;: &quot;user_2d4c613&quot;,
+  &quot;password_reset_sent_at&quot;: null,
   &quot;id&quot;: 12,
   &quot;default_environment&quot;: null,
   &quot;page_size&quot;: 25,
-  &quot;password&quot;: &quot;c23d7ae95537315fe62cdf15d0d9ac2395d6c80c748f1f9221ac8eef5e991d727aa4e038a8a39aa1e4a534b5a9de51dc9c5bfc9c04b0d23a0971ab6f493be19eGICH4YfM6CHIOEDQY3q80cEAHYVe0leuhc3UmU0lQIpU65cDXHoTHzgp63Zy8GwE&quot;,
-  &quot;password_reset_token&quot;: null,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
-  &quot;hidden&quot;: false,
-  &quot;preferences&quot;: {},
-  &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
   &quot;disabled&quot;: false,
-  &quot;default_organization&quot;: null,
-  &quot;password_reset_sent_at&quot;: null,
-  &quot;own_role_id&quot;: 30,
-  &quot;helptips_enabled&quot;: true
+  &quot;password_reset_token&quot;: null,
+  &quot;preferences&quot;: {},
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;
 }</pre>
 
         <h3>Params</h3>
@@ -246,6 +277,37 @@
     </div>
     <hr>
     <div class='pull-right small'>
+      <a href='../apidoc/users/update.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-update'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            PUT /api/users/:id
+          </a><br>
+          <small>Update an user</small>
+        </h2>
+        <h2>
+          <a href='#description-update'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            PUT /api/users/:user_id/roles/:id
+          </a><br>
+          <small>Update an user</small>
+        </h2>
+    </div>
+    
+    <div id='description-update' class='collapse accordion-body'>
+      
+      
+
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
       <a href='../apidoc/users/destroy.html'> >>> </a>
     </div>
     <div>
@@ -281,6 +343,116 @@ Deleted user '12'</pre>
     </div>
     <hr>
     <div class='pull-right small'>
+      <a href='../apidoc/users/list_roles.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-list_roles'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/users/:user_id/roles
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-list_roles' class='collapse accordion-body'>
+      
+      
+
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/users/sync_ldap_roles.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-sync_ldap_roles'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/users/sync_ldap_roles
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-sync_ldap_roles' class='collapse accordion-body'>
+      
+      
+
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/users/add_role.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-add_role'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/users/:user_id/roles
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-add_role' class='collapse accordion-body'>
+      
+      
+
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/users/remove_role.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-remove_role'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/users/:user_id/roles/:id
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-remove_role' class='collapse accordion-body'>
+      
+      
+
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/users/report.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-report'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/users/report
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-report' class='collapse accordion-body'>
+      
+      
+
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
       <a href='../apidoc/users/list_owners.html'> >>> </a>
     </div>
     <div>
@@ -304,16 +476,16 @@ Deleted user '12'</pre>
 200
 [
   {
-    &quot;displayName&quot;: &quot;ACME_Corporation&quot;,
-    &quot;key&quot;: &quot;ACME_Corporation&quot;
+    &quot;key&quot;: &quot;ACME_Corporation&quot;,
+    &quot;displayName&quot;: &quot;ACME_Corporation&quot;
   },
   {
-    &quot;displayName&quot;: &quot;org_2d4c613&quot;,
-    &quot;key&quot;: &quot;org_2d4c613&quot;
+    &quot;key&quot;: &quot;org_2d4c613&quot;,
+    &quot;displayName&quot;: &quot;org_2d4c613&quot;
   },
   {
-    &quot;displayName&quot;: &quot;org_rhsm_2d4c613&quot;,
-    &quot;key&quot;: &quot;org_rhsm_2d4c613&quot;
+    &quot;key&quot;: &quot;org_rhsm_2d4c613&quot;,
+    &quot;displayName&quot;: &quot;org_rhsm_2d4c613&quot;
   }
 ]</pre>
 

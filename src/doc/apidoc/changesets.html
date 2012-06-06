@@ -61,16 +61,16 @@
 200
 [
   {
-    &quot;name&quot;: &quot;changeset_2d4c613&quot;,
-    &quot;environment_id&quot;: 73,
-    &quot;id&quot;: 50,
-    &quot;environment_name&quot;: &quot;env 2d4c613&quot;,
-    &quot;created_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
-    &quot;description&quot;: null,
     &quot;state&quot;: &quot;new&quot;,
     &quot;updated_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
+    &quot;environment_id&quot;: 73,
+    &quot;name&quot;: &quot;changeset_2d4c613&quot;,
+    &quot;environment_name&quot;: &quot;env 2d4c613&quot;,
+    &quot;id&quot;: 50,
+    &quot;task_status_id&quot;: null,
+    &quot;description&quot;: null,
     &quot;promotion_date&quot;: null,
-    &quot;task_status_id&quot;: null
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:30Z&quot;
   }
 ]</pre>
 
@@ -125,21 +125,21 @@
           <pre>GET /api/changesets/50
 200
 {
-  &quot;packages&quot;: [],
-  &quot;name&quot;: &quot;changeset_2d4c613&quot;,
-  &quot;environment_id&quot;: 73,
-  &quot;id&quot;: 50,
-  &quot;errata&quot;: [],
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
-  &quot;products&quot;: [],
-  &quot;description&quot;: null,
-  &quot;distributions&quot;: [],
   &quot;state&quot;: &quot;new&quot;,
   &quot;updated_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
+  &quot;system_templates&quot;: [],
+  &quot;distributions&quot;: [],
+  &quot;environment_id&quot;: 73,
+  &quot;name&quot;: &quot;changeset_2d4c613&quot;,
   &quot;repos&quot;: [],
-  &quot;promotion_date&quot;: null,
+  &quot;id&quot;: 50,
+  &quot;errata&quot;: [],
   &quot;task_status_id&quot;: null,
-  &quot;system_templates&quot;: []
+  &quot;description&quot;: null,
+  &quot;promotion_date&quot;: null,
+  &quot;packages&quot;: [],
+  &quot;products&quot;: [],
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:30Z&quot;
 }</pre>
 
     </div>
@@ -170,15 +170,15 @@
 }
 200
 {
-  &quot;name&quot;: &quot;changeset_2d4c613&quot;,
-  &quot;environment_id&quot;: 73,
-  &quot;id&quot;: 50,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
-  &quot;description&quot;: null,
   &quot;state&quot;: &quot;new&quot;,
   &quot;updated_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
+  &quot;environment_id&quot;: 73,
+  &quot;name&quot;: &quot;changeset_2d4c613&quot;,
+  &quot;id&quot;: 50,
+  &quot;task_status_id&quot;: null,
+  &quot;description&quot;: null,
   &quot;promotion_date&quot;: null,
-  &quot;task_status_id&quot;: null
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:30Z&quot;
 }</pre>
 
         <h3>Params</h3>
@@ -240,6 +240,28 @@
     </div>
     <hr>
     <div class='pull-right small'>
+      <a href='../apidoc/changesets/dependencies.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-dependencies'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/changesets/:id/dependencies
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-dependencies' class='collapse accordion-body'>
+      
+      
+
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
       <a href='../apidoc/changesets/create.html'> >>> </a>
     </div>
     <div>
@@ -268,15 +290,15 @@
 }
 200
 {
-  &quot;name&quot;: &quot;changeset_2d4c613&quot;,
-  &quot;environment_id&quot;: 73,
-  &quot;id&quot;: 50,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
-  &quot;description&quot;: null,
   &quot;state&quot;: &quot;new&quot;,
   &quot;updated_at&quot;: &quot;2012-06-05T06:56:30Z&quot;,
+  &quot;environment_id&quot;: 73,
+  &quot;name&quot;: &quot;changeset_2d4c613&quot;,
+  &quot;id&quot;: 50,
+  &quot;task_status_id&quot;: null,
+  &quot;description&quot;: null,
   &quot;promotion_date&quot;: null,
-  &quot;task_status_id&quot;: null
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:30Z&quot;
 }</pre>
 
         <h3>Params</h3>
@@ -360,24 +382,46 @@
           <pre>POST /api/changesets/50/promote
 202
 {
-  &quot;task_type&quot;: &quot;TaskStatus&quot;,
-  &quot;user_id&quot;: 1,
-  &quot;id&quot;: 209,
-  &quot;start_time&quot;: null,
-  &quot;prefix&quot;: &quot;api/changesets&quot;,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:32Z&quot;,
-  &quot;finish_time&quot;: null,
-  &quot;result&quot;: null,
-  &quot;progress&quot;: null,
-  &quot;template&quot;: &quot;promote&quot;,
   &quot;state&quot;: &quot;waiting&quot;,
+  &quot;finish_time&quot;: null,
   &quot;updated_at&quot;: &quot;2012-06-05T06:56:32Z&quot;,
+  &quot;progress&quot;: null,
+  &quot;user_id&quot;: 1,
   &quot;organization_id&quot;: 28,
-  &quot;uuid&quot;: &quot;10cb1bee-7e3c-4b99-a7ee-85f2e6177294&quot;,
-  &quot;status&quot;: 202,
   &quot;parameters&quot;: null,
-  &quot;pending?&quot;: true
+  &quot;uuid&quot;: &quot;10cb1bee-7e3c-4b99-a7ee-85f2e6177294&quot;,
+  &quot;id&quot;: 209,
+  &quot;task_type&quot;: &quot;TaskStatus&quot;,
+  &quot;start_time&quot;: null,
+  &quot;pending?&quot;: true,
+  &quot;prefix&quot;: &quot;api/changesets&quot;,
+  &quot;result&quot;: null,
+  &quot;status&quot;: 202,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:32Z&quot;,
+  &quot;template&quot;: &quot;promote&quot;
 }</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/changesets/destroy.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-destroy'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/changesets/:id
+          </a><br>
+          <small>Destroy a changeset</small>
+        </h2>
+    </div>
+    
+    <div id='description-destroy' class='collapse accordion-body'>
+      
+      
+
 
     </div>
 </div>

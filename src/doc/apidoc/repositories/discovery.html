@@ -45,37 +45,37 @@
     <h2>Examples</h2>
       <pre>POST /api/organizations/org_2d4c613/repositories/discovery
 {
-  &quot;type&quot;: &quot;yum&quot;,
-  &quot;url&quot;: &quot;http://lzap.fedorapeople.org/fakerepos/zoo5/&quot;
+  &quot;url&quot;: &quot;http://lzap.fedorapeople.org/fakerepos/zoo5/&quot;,
+  &quot;type&quot;: &quot;yum&quot;
 }
 200
 {
-  &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
-  &quot;user_id&quot;: 1,
-  &quot;id&quot;: 206,
-  &quot;start_time&quot;: null,
-  &quot;prefix&quot;: &quot;api/repositories&quot;,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:09Z&quot;,
+  &quot;state&quot;: &quot;waiting&quot;,
   &quot;finish_time&quot;: null,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:09Z&quot;,
+  &quot;progress&quot;: {
+    &quot;total_count&quot;: 0,
+    &quot;total_size&quot;: 0,
+    &quot;size_left&quot;: 0,
+    &quot;items_left&quot;: 0
+  },
+  &quot;user_id&quot;: 1,
+  &quot;organization_id&quot;: 28,
+  &quot;parameters&quot;: null,
+  &quot;uuid&quot;: &quot;87b5346b-aedb-11e1-a161-f0def16f6678&quot;,
+  &quot;id&quot;: 206,
+  &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
+  &quot;start_time&quot;: null,
+  &quot;pending?&quot;: true,
+  &quot;prefix&quot;: &quot;api/repositories&quot;,
   &quot;result&quot;: {
     &quot;errors&quot;: [
       null,
       null
     ]
   },
-  &quot;progress&quot;: {
-    &quot;size_left&quot;: 0,
-    &quot;total_count&quot;: 0,
-    &quot;total_size&quot;: 0,
-    &quot;items_left&quot;: 0
-  },
-  &quot;template&quot;: &quot;discovery&quot;,
-  &quot;state&quot;: &quot;waiting&quot;,
-  &quot;updated_at&quot;: &quot;2012-06-05T06:56:09Z&quot;,
-  &quot;organization_id&quot;: 28,
-  &quot;uuid&quot;: &quot;87b5346b-aedb-11e1-a161-f0def16f6678&quot;,
-  &quot;parameters&quot;: null,
-  &quot;pending?&quot;: true
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:09Z&quot;,
+  &quot;template&quot;: &quot;discovery&quot;
 }</pre>
 
 

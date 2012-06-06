@@ -38,6 +38,28 @@
   
     <hr>
     <div class='pull-right small'>
+      <a href='../apidoc/tasks/index.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-index'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/organizations/:organization_id/tasks
+          </a><br>
+          <small>List tasks</small>
+        </h2>
+    </div>
+    
+    <div id='description-index' class='collapse accordion-body'>
+      
+      
+
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
       <a href='../apidoc/tasks/show.html'> >>> </a>
     </div>
     <div>
@@ -60,33 +82,33 @@
           <pre>GET /api/tasks/87b5346b-aedb-11e1-a161-f0def16f6678
 200
 {
-  &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
-  &quot;user_id&quot;: 1,
-  &quot;id&quot;: 206,
-  &quot;start_time&quot;: null,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:09Z&quot;,
+  &quot;state&quot;: &quot;running&quot;,
   &quot;finish_time&quot;: null,
-  &quot;except&quot;: &quot;id&quot;,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:56:10Z&quot;,
+  &quot;progress&quot;: {
+    &quot;step&quot;: 0,
+    &quot;total_count&quot;: 0,
+    &quot;total_size&quot;: 0,
+    &quot;size_left&quot;: 0,
+    &quot;items_left&quot;: 0,
+    &quot;error_details&quot;: []
+  },
+  &quot;user_id&quot;: 1,
+  &quot;organization_id&quot;: 28,
+  &quot;parameters&quot;: null,
+  &quot;uuid&quot;: &quot;87b5346b-aedb-11e1-a161-f0def16f6678&quot;,
+  &quot;id&quot;: 206,
+  &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
+  &quot;start_time&quot;: null,
+  &quot;pending?&quot;: true,
   &quot;result&quot;: {
     &quot;errors&quot;: [
       null,
       null
     ]
   },
-  &quot;progress&quot;: {
-    &quot;error_details&quot;: [],
-    &quot;size_left&quot;: 0,
-    &quot;step&quot;: 0,
-    &quot;total_count&quot;: 0,
-    &quot;total_size&quot;: 0,
-    &quot;items_left&quot;: 0
-  },
-  &quot;state&quot;: &quot;running&quot;,
-  &quot;updated_at&quot;: &quot;2012-06-05T06:56:10Z&quot;,
-  &quot;organization_id&quot;: 28,
-  &quot;uuid&quot;: &quot;87b5346b-aedb-11e1-a161-f0def16f6678&quot;,
-  &quot;parameters&quot;: null,
-  &quot;pending?&quot;: true
+  &quot;except&quot;: &quot;id&quot;,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:09Z&quot;
 }</pre>
 
     </div>

@@ -57,70 +57,70 @@
     <h2>Examples</h2>
       <pre>POST /api/environments/77/systems
 {
-  &quot;name&quot;: &quot;katello.example.com_2d4c613&quot;,
-  &quot;serviceLevel&quot;: &quot;SELF-SUPPORT&quot;,
-  &quot;cp_type&quot;: &quot;system&quot;,
   &quot;facts&quot;: {
     &quot;cpu.cpu_socket(s)&quot;: &quot;1&quot;,
     &quot;distribution.name&quot;: &quot;Unknown&quot;
-  }
+  },
+  &quot;name&quot;: &quot;katello.example.com_2d4c613&quot;,
+  &quot;serviceLevel&quot;: &quot;SELF-SUPPORT&quot;,
+  &quot;cp_type&quot;: &quot;system&quot;
 }
 200
 {
-  &quot;name&quot;: &quot;katello.example.com_2d4c613&quot;,
-  &quot;system_template_id&quot;: null,
-  &quot;environment_id&quot;: 77,
-  &quot;id&quot;: 100,
-  &quot;href&quot;: &quot;/consumers/4334eb6a-fe68-432f-a4c4-182ff9121c58&quot;,
-  &quot;autoheal&quot;: true,
-  &quot;environment&quot;: {
-    &quot;name&quot;: &quot;env_manifest_2d4c613&quot;,
-    &quot;prior&quot;: &quot;Library&quot;,
-    &quot;id&quot;: 77,
-    &quot;created_at&quot;: &quot;2012-06-05T07:00:04Z&quot;,
-    &quot;organization&quot;: &quot;org_manifest_2d4c613&quot;,
-    &quot;description&quot;: null,
-    &quot;updated_at&quot;: &quot;2012-06-05T07:00:04Z&quot;,
-    &quot;organization_id&quot;: 29,
-    &quot;library&quot;: false,
-    &quot;prior_id&quot;: 76
-  },
-  &quot;owner&quot;: {
-    &quot;id&quot;: &quot;4028fa8137a8988e0137bb717406044d&quot;,
-    &quot;href&quot;: &quot;/owners/org_manifest_2d4c613&quot;,
-    &quot;displayName&quot;: &quot;org_manifest_2d4c613&quot;,
-    &quot;key&quot;: &quot;org_manifest_2d4c613&quot;
-  },
-  &quot;created_at&quot;: &quot;2012-06-05T07:01:23Z&quot;,
-  &quot;description&quot;: &quot;Initial Registration Params&quot;,
   &quot;updated_at&quot;: &quot;2012-06-05T07:01:23Z&quot;,
-  &quot;serviceLevel&quot;: &quot;&quot;,
-  &quot;uuid&quot;: &quot;4334eb6a-fe68-432f-a4c4-182ff9121c58&quot;,
-  &quot;idCert&quot;: {
-    &quot;created&quot;: &quot;2012-06-05T07:01:23.275+0000&quot;,
-    &quot;updated&quot;: &quot;2012-06-05T07:01:23.275+0000&quot;,
-    &quot;id&quot;: &quot;4028fa8137a8988e0137bb72aacb0466&quot;,
-    &quot;serial&quot;: {
-      &quot;created&quot;: &quot;2012-06-05T07:01:22.990+0000&quot;,
-      &quot;expiration&quot;: &quot;2013-06-05T07:01:22.990+0000&quot;,
-      &quot;updated&quot;: &quot;2012-06-05T07:01:22.990+0000&quot;,
-      &quot;id&quot;: 7581335018913142817,
-      &quot;collected&quot;: false,
-      &quot;serial&quot;: 7581335018913142817,
-      &quot;revoked&quot;: false
-    },
-    &quot;key&quot;: &quot;-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAkpIy6cVxIZJ4bUyt0dq2q4MfwJtjGAeRo62L/tfKNCCPGSgw\ncd7ETgLrJhvMR5FpSNkwOrhKK9reNHmnORUMtjsH2CPmjUyu1626EIt0y4XObCMU\nh7+rIp6j1I7xmYG2tjGTszh2Q7dZdvih7EpEnVxqf04XkzSvBUJKqDJpXjZhBhEB\nHgkJtpK8oqvMSv+5S/mcv9ifEBNpXsSLxrcerhwj8wL6lsg6xR9g339EUNhIwfdi\nRk2bjYzWcKdnaJ+8vrEaYPcCjlu02U+O1AOB0CsUO0N0NdaT3Zc2vwHIfOdIOQpe\nKQtOykcMwEA1ELX/AQixq4a1+e5pvDE0xlfJNwIDAQABAoIBAC0uV/dr34XDys+W\ndXZc/zY7g0wyGgfMPX7A/oieKDyNVM8iblyLmOObTrU+mGfvUQ8dtBpFuMdv/lMa\ntQuJi5OY+sALwQQJgVQGv3ZeJrCeHJWE8s0trilL0aCyN5NkQthCzA7Q9tPE7xUX\na4KVGjWPyVxYzDeaY+ExICZc89IQZZl3ox6EF4+XlQ1JsXI2WdK6b9IJAZxbJ+nr\njcFV7QJ/Cc6S0DOxWPXiTpuZuXaBpdLqf06I0R+TGz1xhgHJNkjcxXWB2X2aTkic\nKZEsCBJcuAeoFWIdGiIAiYRgcUX/aWUWsaObQ/RsglS/vPwSFrZkF/yZqAJrzah/\nhKieR2ECgYEAzKte9BoQQ0aN8jESpYoeDbdyV6Vqq4eXqcN88xA3pWVVrkMJnUeY\nSRlzINcXzNcvMyGyD+gZw31fiAuOCvjWUCT9dlr/w6JDkppGdOxfv60HUL+vV+pA\nHZKADhZIjCTqk+lVxb3Qf3q1Ihq7OZHtMxBYiTZiRp0TmIQYCzixdr8CgYEAt1Ss\nXcj0niUC4b/M64AUVR44HRQ8Lhx7l82ErgQUfgSs28CxeqA+QU+u7iw8hTvvB6EG\n7AQG41YZJbxzQ2fQNyybj1BO/9+NMwMq1PPCW7EU4bag8l+t7XJqeIGrQBBON+qh\n4dyu94+iQQDITKyxssR6WQ8Cq0Zm/nrQb4bFA4kCgYBRtYjvAwjDEwPQUO8Uz5M3\n/qjTfOKdIEDYMYdMsojEqzQNog3QkKinZlWkIrsJuE7LpwQjfZHrjb353kMS9kz5\nKgtWmPXK8Jjxik3emA+Rwk5NWnlyK771D2u4NAU6jfJooprvmtwGSMLPnsRoM23z\nGO9/uAp8DnGoTfQbZsLSmQKBgFZIJ4dMGLSFPsH4fv0nHmqg+k/VQi2BgjmDpDox\n+WMF2ETkf6Ly39nlIrM9Zo5eErVId/WEP6mmz9cOxkCnDzuoZt4gMc4C7HVhvDrV\nLlfxE57XURBBL55dBvcIMAzKn8V5TA78yewBUZ++Ooa7kDZOejaH9f2d+MM0Ef0r\nNHXhAoGBAMSLbP8Leu4uMSFLuqiAnUnyyrxqS76Hi//5naCctDZbgG6QQOtCOZLU\n0Ed6SrZttXB236exNRkJ3mSDuplrj5f77Ocg1219zFNR4GlhZxpgfpgCGArM1htL\nlgKTkUW4WOQ5J2gs6CLva3RWoM14ZYChDGjg17sOg918pXwvafq7\n-----END RSA PRIVATE KEY-----\n&quot;,
-    &quot;cert&quot;: &quot;-----BEGIN CERTIFICATE-----\nMIIDgDCCAumgAwIBAgIIaTZQCDWMGCEwDQYJKoZIhvcNAQEFBQAwRDEjMCEGA1UE\nAwwaZGhjcC0yNy0xOTAuYnJxLnJlZGhhdC5jb20xCzAJBgNVBAYTAlVTMRAwDgYD\nVQQHDAdSYWxlaWdoMB4XDTEyMDYwNTA3MDEyMloXDTEzMDYwNTA3MDEyMlowLzEt\nMCsGA1UEAxMkNDMzNGViNmEtZmU2OC00MzJmLWE0YzQtMTgyZmY5MTIxYzU4MIIB\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkpIy6cVxIZJ4bUyt0dq2q4Mf\nwJtjGAeRo62L/tfKNCCPGSgwcd7ETgLrJhvMR5FpSNkwOrhKK9reNHmnORUMtjsH\n2CPmjUyu1626EIt0y4XObCMUh7+rIp6j1I7xmYG2tjGTszh2Q7dZdvih7EpEnVxq\nf04XkzSvBUJKqDJpXjZhBhEBHgkJtpK8oqvMSv+5S/mcv9ifEBNpXsSLxrcerhwj\n8wL6lsg6xR9g339EUNhIwfdiRk2bjYzWcKdnaJ+8vrEaYPcCjlu02U+O1AOB0CsU\nO0N0NdaT3Zc2vwHIfOdIOQpeKQtOykcMwEA1ELX/AQixq4a1+e5pvDE0xlfJNwID\nAQABo4IBCjCCAQYwEQYJYIZIAYb4QgEBBAQDAgWgMAsGA1UdDwQEAwIEsDB0BgNV\nHSMEbTBrgBRgoRMN39a1IuDLfV6FjiMgBmhzIqFIpEYwRDEjMCEGA1UEAwwaZGhj\ncC0yNy0xOTAuYnJxLnJlZGhhdC5jb20xCzAJBgNVBAYTAlVTMRAwDgYDVQQHDAdS\nYWxlaWdoggkAgfw/FWClJowwHQYDVR0OBBYEFJ/A62MujG+PzNwqpUbvCbxDrGlx\nMBMGA1UdJQQMMAoGCCsGAQUFBwMCMDoGA1UdEQQzMDGkLzAtMSswKQYDVQQDDCJk\naGNwLTI3LTE5MC5icnEucmVkaGF0LmNvbV8yZDRjNjEzMA0GCSqGSIb3DQEBBQUA\nA4GBAC5JRj47rNJyUYarREHX630M+v6G3LNKUxcGqhmcQM9oGkzJNXno/4m8zLfX\no5C9yKut6dWRZToCzkzN1G40+f7dkyu0wCH7X9swyorxxv300Q9rRdWzDlHXFXJ1\nyf47BuEpNoLXWh2TZOwKFnZr5c6pyB8OiXJbfwO8a1tgw6v/\n-----END CERTIFICATE-----\n&quot;
-  },
-  &quot;location&quot;: &quot;None&quot;,
-  &quot;ipv4_address&quot;: null,
-  &quot;activation_key&quot;: [],
-  &quot;release&quot;: &quot;&quot;,
-  &quot;guests&quot;: [],
+  &quot;system_template_id&quot;: null,
   &quot;facts&quot;: {
     &quot;cpu.cpu_socket(s)&quot;: &quot;1&quot;,
     &quot;distribution.name&quot;: &quot;Unknown&quot;
-  }
+  },
+  &quot;idCert&quot;: {
+    &quot;updated&quot;: &quot;2012-06-05T07:01:23.275+0000&quot;,
+    &quot;cert&quot;: &quot;-----BEGIN CERTIFICATE-----\nMIIDgDCCAumgAwIBAgIIaTZQCDWMGCEwDQYJKoZIhvcNAQEFBQAwRDEjMCEGA1UE\nAwwaZGhjcC0yNy0xOTAuYnJxLnJlZGhhdC5jb20xCzAJBgNVBAYTAlVTMRAwDgYD\nVQQHDAdSYWxlaWdoMB4XDTEyMDYwNTA3MDEyMloXDTEzMDYwNTA3MDEyMlowLzEt\nMCsGA1UEAxMkNDMzNGViNmEtZmU2OC00MzJmLWE0YzQtMTgyZmY5MTIxYzU4MIIB\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkpIy6cVxIZJ4bUyt0dq2q4Mf\nwJtjGAeRo62L/tfKNCCPGSgwcd7ETgLrJhvMR5FpSNkwOrhKK9reNHmnORUMtjsH\n2CPmjUyu1626EIt0y4XObCMUh7+rIp6j1I7xmYG2tjGTszh2Q7dZdvih7EpEnVxq\nf04XkzSvBUJKqDJpXjZhBhEBHgkJtpK8oqvMSv+5S/mcv9ifEBNpXsSLxrcerhwj\n8wL6lsg6xR9g339EUNhIwfdiRk2bjYzWcKdnaJ+8vrEaYPcCjlu02U+O1AOB0CsU\nO0N0NdaT3Zc2vwHIfOdIOQpeKQtOykcMwEA1ELX/AQixq4a1+e5pvDE0xlfJNwID\nAQABo4IBCjCCAQYwEQYJYIZIAYb4QgEBBAQDAgWgMAsGA1UdDwQEAwIEsDB0BgNV\nHSMEbTBrgBRgoRMN39a1IuDLfV6FjiMgBmhzIqFIpEYwRDEjMCEGA1UEAwwaZGhj\ncC0yNy0xOTAuYnJxLnJlZGhhdC5jb20xCzAJBgNVBAYTAlVTMRAwDgYDVQQHDAdS\nYWxlaWdoggkAgfw/FWClJowwHQYDVR0OBBYEFJ/A62MujG+PzNwqpUbvCbxDrGlx\nMBMGA1UdJQQMMAoGCCsGAQUFBwMCMDoGA1UdEQQzMDGkLzAtMSswKQYDVQQDDCJk\naGNwLTI3LTE5MC5icnEucmVkaGF0LmNvbV8yZDRjNjEzMA0GCSqGSIb3DQEBBQUA\nA4GBAC5JRj47rNJyUYarREHX630M+v6G3LNKUxcGqhmcQM9oGkzJNXno/4m8zLfX\no5C9yKut6dWRZToCzkzN1G40+f7dkyu0wCH7X9swyorxxv300Q9rRdWzDlHXFXJ1\nyf47BuEpNoLXWh2TZOwKFnZr5c6pyB8OiXJbfwO8a1tgw6v/\n-----END CERTIFICATE-----\n&quot;,
+    &quot;id&quot;: &quot;4028fa8137a8988e0137bb72aacb0466&quot;,
+    &quot;key&quot;: &quot;-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAkpIy6cVxIZJ4bUyt0dq2q4MfwJtjGAeRo62L/tfKNCCPGSgw\ncd7ETgLrJhvMR5FpSNkwOrhKK9reNHmnORUMtjsH2CPmjUyu1626EIt0y4XObCMU\nh7+rIp6j1I7xmYG2tjGTszh2Q7dZdvih7EpEnVxqf04XkzSvBUJKqDJpXjZhBhEB\nHgkJtpK8oqvMSv+5S/mcv9ifEBNpXsSLxrcerhwj8wL6lsg6xR9g339EUNhIwfdi\nRk2bjYzWcKdnaJ+8vrEaYPcCjlu02U+O1AOB0CsUO0N0NdaT3Zc2vwHIfOdIOQpe\nKQtOykcMwEA1ELX/AQixq4a1+e5pvDE0xlfJNwIDAQABAoIBAC0uV/dr34XDys+W\ndXZc/zY7g0wyGgfMPX7A/oieKDyNVM8iblyLmOObTrU+mGfvUQ8dtBpFuMdv/lMa\ntQuJi5OY+sALwQQJgVQGv3ZeJrCeHJWE8s0trilL0aCyN5NkQthCzA7Q9tPE7xUX\na4KVGjWPyVxYzDeaY+ExICZc89IQZZl3ox6EF4+XlQ1JsXI2WdK6b9IJAZxbJ+nr\njcFV7QJ/Cc6S0DOxWPXiTpuZuXaBpdLqf06I0R+TGz1xhgHJNkjcxXWB2X2aTkic\nKZEsCBJcuAeoFWIdGiIAiYRgcUX/aWUWsaObQ/RsglS/vPwSFrZkF/yZqAJrzah/\nhKieR2ECgYEAzKte9BoQQ0aN8jESpYoeDbdyV6Vqq4eXqcN88xA3pWVVrkMJnUeY\nSRlzINcXzNcvMyGyD+gZw31fiAuOCvjWUCT9dlr/w6JDkppGdOxfv60HUL+vV+pA\nHZKADhZIjCTqk+lVxb3Qf3q1Ihq7OZHtMxBYiTZiRp0TmIQYCzixdr8CgYEAt1Ss\nXcj0niUC4b/M64AUVR44HRQ8Lhx7l82ErgQUfgSs28CxeqA+QU+u7iw8hTvvB6EG\n7AQG41YZJbxzQ2fQNyybj1BO/9+NMwMq1PPCW7EU4bag8l+t7XJqeIGrQBBON+qh\n4dyu94+iQQDITKyxssR6WQ8Cq0Zm/nrQb4bFA4kCgYBRtYjvAwjDEwPQUO8Uz5M3\n/qjTfOKdIEDYMYdMsojEqzQNog3QkKinZlWkIrsJuE7LpwQjfZHrjb353kMS9kz5\nKgtWmPXK8Jjxik3emA+Rwk5NWnlyK771D2u4NAU6jfJooprvmtwGSMLPnsRoM23z\nGO9/uAp8DnGoTfQbZsLSmQKBgFZIJ4dMGLSFPsH4fv0nHmqg+k/VQi2BgjmDpDox\n+WMF2ETkf6Ly39nlIrM9Zo5eErVId/WEP6mmz9cOxkCnDzuoZt4gMc4C7HVhvDrV\nLlfxE57XURBBL55dBvcIMAzKn8V5TA78yewBUZ++Ooa7kDZOejaH9f2d+MM0Ef0r\nNHXhAoGBAMSLbP8Leu4uMSFLuqiAnUnyyrxqS76Hi//5naCctDZbgG6QQOtCOZLU\n0Ed6SrZttXB236exNRkJ3mSDuplrj5f77Ocg1219zFNR4GlhZxpgfpgCGArM1htL\nlgKTkUW4WOQ5J2gs6CLva3RWoM14ZYChDGjg17sOg918pXwvafq7\n-----END RSA PRIVATE KEY-----\n&quot;,
+    &quot;created&quot;: &quot;2012-06-05T07:01:23.275+0000&quot;,
+    &quot;serial&quot;: {
+      &quot;revoked&quot;: false,
+      &quot;updated&quot;: &quot;2012-06-05T07:01:22.990+0000&quot;,
+      &quot;collected&quot;: false,
+      &quot;id&quot;: 7581335018913142817,
+      &quot;expiration&quot;: &quot;2013-06-05T07:01:22.990+0000&quot;,
+      &quot;created&quot;: &quot;2012-06-05T07:01:22.990+0000&quot;,
+      &quot;serial&quot;: 7581335018913142817
+    }
+  },
+  &quot;environment_id&quot;: 77,
+  &quot;name&quot;: &quot;katello.example.com_2d4c613&quot;,
+  &quot;release&quot;: &quot;&quot;,
+  &quot;guests&quot;: [],
+  &quot;serviceLevel&quot;: &quot;&quot;,
+  &quot;autoheal&quot;: true,
+  &quot;uuid&quot;: &quot;4334eb6a-fe68-432f-a4c4-182ff9121c58&quot;,
+  &quot;environment&quot;: {
+    &quot;updated_at&quot;: &quot;2012-06-05T07:00:04Z&quot;,
+    &quot;organization&quot;: &quot;org_manifest_2d4c613&quot;,
+    &quot;prior&quot;: &quot;Library&quot;,
+    &quot;name&quot;: &quot;env_manifest_2d4c613&quot;,
+    &quot;organization_id&quot;: 29,
+    &quot;id&quot;: 77,
+    &quot;prior_id&quot;: 76,
+    &quot;description&quot;: null,
+    &quot;library&quot;: false,
+    &quot;created_at&quot;: &quot;2012-06-05T07:00:04Z&quot;
+  },
+  &quot;owner&quot;: {
+    &quot;id&quot;: &quot;4028fa8137a8988e0137bb717406044d&quot;,
+    &quot;key&quot;: &quot;org_manifest_2d4c613&quot;,
+    &quot;displayName&quot;: &quot;org_manifest_2d4c613&quot;,
+    &quot;href&quot;: &quot;/owners/org_manifest_2d4c613&quot;
+  },
+  &quot;id&quot;: 100,
+  &quot;description&quot;: &quot;Initial Registration Params&quot;,
+  &quot;ipv4_address&quot;: null,
+  &quot;activation_key&quot;: [],
+  &quot;location&quot;: &quot;None&quot;,
+  &quot;href&quot;: &quot;/consumers/4334eb6a-fe68-432f-a4c4-182ff9121c58&quot;,
+  &quot;created_at&quot;: &quot;2012-06-05T07:01:23Z&quot;
 }</pre>
 
 

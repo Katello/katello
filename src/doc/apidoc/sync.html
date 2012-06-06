@@ -78,29 +78,29 @@
           <pre>GET /api/repositories/750/sync
 200
 {
-  &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
-  &quot;user_id&quot;: 1,
-  &quot;id&quot;: 208,
-  &quot;start_time&quot;: &quot;2012-06-05T06:56:19Z&quot;,
-  &quot;prefix&quot;: &quot;api/sync&quot;,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+  &quot;state&quot;: &quot;finished&quot;,
   &quot;finish_time&quot;: &quot;2012-06-05T06:56:28Z&quot;,
-  &quot;result&quot;: true,
+  &quot;updated_at&quot;: &quot;2012-06-05T06:57:41Z&quot;,
   &quot;progress&quot;: {
-    &quot;error_details&quot;: [],
-    &quot;size_left&quot;: 0,
     &quot;step&quot;: &quot;Running Createrepo&quot;,
     &quot;total_count&quot;: 8,
     &quot;total_size&quot;: 17872,
-    &quot;items_left&quot;: 0
+    &quot;size_left&quot;: 0,
+    &quot;items_left&quot;: 0,
+    &quot;error_details&quot;: []
   },
-  &quot;template&quot;: &quot;index&quot;,
-  &quot;state&quot;: &quot;finished&quot;,
-  &quot;updated_at&quot;: &quot;2012-06-05T06:57:41Z&quot;,
+  &quot;user_id&quot;: 1,
   &quot;organization_id&quot;: 28,
-  &quot;uuid&quot;: &quot;8d952805-aedb-11e1-87e1-f0def16f6678&quot;,
   &quot;parameters&quot;: null,
-  &quot;pending?&quot;: false
+  &quot;uuid&quot;: &quot;8d952805-aedb-11e1-87e1-f0def16f6678&quot;,
+  &quot;id&quot;: 208,
+  &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
+  &quot;start_time&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+  &quot;pending?&quot;: false,
+  &quot;prefix&quot;: &quot;api/sync&quot;,
+  &quot;result&quot;: true,
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+  &quot;template&quot;: &quot;index&quot;
 }</pre>
 
     </div>
@@ -147,64 +147,104 @@
 202
 [
   {
-    &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
-    &quot;user_id&quot;: 1,
-    &quot;id&quot;: 207,
-    &quot;start_time&quot;: null,
-    &quot;prefix&quot;: &quot;api/sync&quot;,
-    &quot;created_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+    &quot;state&quot;: &quot;waiting&quot;,
     &quot;finish_time&quot;: null,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+    &quot;progress&quot;: {
+      &quot;total_count&quot;: 0,
+      &quot;total_size&quot;: 0,
+      &quot;size_left&quot;: 0,
+      &quot;items_left&quot;: 0
+    },
+    &quot;user_id&quot;: 1,
+    &quot;organization_id&quot;: 28,
+    &quot;parameters&quot;: null,
+    &quot;uuid&quot;: &quot;8d6a9ed7-aedb-11e1-86cb-f0def16f6678&quot;,
+    &quot;id&quot;: 207,
+    &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
+    &quot;start_time&quot;: null,
+    &quot;pending?&quot;: true,
+    &quot;prefix&quot;: &quot;api/sync&quot;,
     &quot;result&quot;: {
       &quot;errors&quot;: [
         null,
         null
       ]
     },
-    &quot;progress&quot;: {
-      &quot;size_left&quot;: 0,
-      &quot;total_count&quot;: 0,
-      &quot;total_size&quot;: 0,
-      &quot;items_left&quot;: 0
-    },
-    &quot;template&quot;: &quot;create&quot;,
-    &quot;state&quot;: &quot;waiting&quot;,
-    &quot;updated_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
-    &quot;organization_id&quot;: 28,
-    &quot;uuid&quot;: &quot;8d6a9ed7-aedb-11e1-86cb-f0def16f6678&quot;,
     &quot;status&quot;: 202,
-    &quot;parameters&quot;: null,
-    &quot;pending?&quot;: true
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+    &quot;template&quot;: &quot;create&quot;
   },
   {
-    &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
-    &quot;user_id&quot;: 1,
-    &quot;id&quot;: 208,
-    &quot;start_time&quot;: null,
-    &quot;prefix&quot;: &quot;api/sync&quot;,
-    &quot;created_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+    &quot;state&quot;: &quot;waiting&quot;,
     &quot;finish_time&quot;: null,
+    &quot;updated_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+    &quot;progress&quot;: {
+      &quot;total_count&quot;: 0,
+      &quot;total_size&quot;: 0,
+      &quot;size_left&quot;: 0,
+      &quot;items_left&quot;: 0
+    },
+    &quot;user_id&quot;: 1,
+    &quot;organization_id&quot;: 28,
+    &quot;parameters&quot;: null,
+    &quot;uuid&quot;: &quot;8d952805-aedb-11e1-87e1-f0def16f6678&quot;,
+    &quot;id&quot;: 208,
+    &quot;task_type&quot;: &quot;PulpSyncStatus&quot;,
+    &quot;start_time&quot;: null,
+    &quot;pending?&quot;: true,
+    &quot;prefix&quot;: &quot;api/sync&quot;,
     &quot;result&quot;: {
       &quot;errors&quot;: [
         null,
         null
       ]
     },
-    &quot;progress&quot;: {
-      &quot;size_left&quot;: 0,
-      &quot;total_count&quot;: 0,
-      &quot;total_size&quot;: 0,
-      &quot;items_left&quot;: 0
-    },
-    &quot;template&quot;: &quot;create&quot;,
-    &quot;state&quot;: &quot;waiting&quot;,
-    &quot;updated_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
-    &quot;organization_id&quot;: 28,
-    &quot;uuid&quot;: &quot;8d952805-aedb-11e1-87e1-f0def16f6678&quot;,
     &quot;status&quot;: 202,
-    &quot;parameters&quot;: null,
-    &quot;pending?&quot;: true
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:19Z&quot;,
+    &quot;template&quot;: &quot;create&quot;
   }
 ]</pre>
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/sync/cancel.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-cancel'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/organizations/:organization_id/products/:product_id/sync
+          </a><br>
+          <small></small>
+        </h2>
+        <h2>
+          <a href='#description-cancel'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/providers/:provider_id/sync
+          </a><br>
+          <small></small>
+        </h2>
+        <h2>
+          <a href='#description-cancel'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/repositories/:repository_id/sync
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-cancel' class='collapse accordion-body'>
+      
+      
+
 
     </div>
 </div>

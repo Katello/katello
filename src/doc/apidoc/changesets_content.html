@@ -245,8 +245,8 @@ Added package 'monkey-0.3-0.8.noarch.rpm'</pre>
         <h3>Examples</h3>
           <pre>DELETE /api/changesets/51/packages/monkey-0.3-0.8.noarch.rpm/
 {
-  &quot;product_id&quot;: &quot;1338879369155&quot;,
-  &quot;content_id&quot;: &quot;monkey-0.3-0.8.noarch.rpm&quot;
+  &quot;content_id&quot;: &quot;monkey-0.3-0.8.noarch.rpm&quot;,
+  &quot;product_id&quot;: &quot;1338879369155&quot;
 }
 200
 Package 'monkey-0.3-0.8.noarch.rpm' not found in the changeset</pre>
@@ -389,8 +389,8 @@ Added erratum 'RHEA-2010:0001'</pre>
         <h3>Examples</h3>
           <pre>DELETE /api/changesets/51/errata/RHEA-2010:9984/
 {
-  &quot;product_id&quot;: &quot;1338879369155&quot;,
-  &quot;content_id&quot;: &quot;RHEA-2010:9984&quot;
+  &quot;content_id&quot;: &quot;RHEA-2010:9984&quot;,
+  &quot;product_id&quot;: &quot;1338879369155&quot;
 }
 200
 Erratum 'RHEA-2010:9984' not found in the changeset</pre>
@@ -535,8 +535,8 @@ Added repository 'repo_2d4c613'</pre>
         <h3>Examples</h3>
           <pre>DELETE /api/changesets/51/repositories/750/
 {
-  &quot;product_id&quot;: &quot;1338879369155&quot;,
-  &quot;content_id&quot;: 750
+  &quot;content_id&quot;: 750,
+  &quot;product_id&quot;: &quot;1338879369155&quot;
 }
 200
 Removed repository'750'</pre>
@@ -699,6 +699,50 @@ Removed template '41'</pre>
 
           </tbody>
         </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/changesets_content/add_distribution.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-add_distribution'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/changesets/:changeset_id/distributions
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-add_distribution' class='collapse accordion-body'>
+      
+      
+
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/changesets_content/remove_distribution.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-remove_distribution'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            DELETE /api/changesets/:changeset_id/distributions/:id
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-remove_distribution' class='collapse accordion-body'>
+      
+      
+
+
     </div>
 </div>
 

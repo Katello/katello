@@ -70,8 +70,6 @@
 200
 [
   {
-    &quot;type&quot;: &quot;security&quot;,
-    &quot;id&quot;: &quot;RHEA-2010:0001&quot;,
     &quot;title&quot;: &quot;Empty errata&quot;,
     &quot;repoids&quot;: [
       &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
@@ -79,12 +77,12 @@
       &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
       &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
     ],
+    &quot;id&quot;: &quot;RHEA-2010:0001&quot;,
     &quot;severity&quot;: &quot;&quot;,
-    &quot;_id&quot;: &quot;RHEA-2010:0001&quot;
+    &quot;_id&quot;: &quot;RHEA-2010:0001&quot;,
+    &quot;type&quot;: &quot;security&quot;
   },
   {
-    &quot;type&quot;: &quot;security&quot;,
-    &quot;id&quot;: &quot;RHEA-2010:0002&quot;,
     &quot;title&quot;: &quot;One package errata&quot;,
     &quot;repoids&quot;: [
       &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
@@ -92,12 +90,12 @@
       &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
       &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
     ],
+    &quot;id&quot;: &quot;RHEA-2010:0002&quot;,
     &quot;severity&quot;: &quot;&quot;,
-    &quot;_id&quot;: &quot;RHEA-2010:0002&quot;
+    &quot;_id&quot;: &quot;RHEA-2010:0002&quot;,
+    &quot;type&quot;: &quot;security&quot;
   },
   {
-    &quot;type&quot;: &quot;security&quot;,
-    &quot;id&quot;: &quot;RHEA-2010:0001&quot;,
     &quot;title&quot;: &quot;Empty errata&quot;,
     &quot;repoids&quot;: [
       &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
@@ -105,12 +103,12 @@
       &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
       &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
     ],
+    &quot;id&quot;: &quot;RHEA-2010:0001&quot;,
     &quot;severity&quot;: &quot;&quot;,
-    &quot;_id&quot;: &quot;RHEA-2010:0001&quot;
+    &quot;_id&quot;: &quot;RHEA-2010:0001&quot;,
+    &quot;type&quot;: &quot;security&quot;
   },
   {
-    &quot;type&quot;: &quot;security&quot;,
-    &quot;id&quot;: &quot;RHEA-2010:0002&quot;,
     &quot;title&quot;: &quot;One package errata&quot;,
     &quot;repoids&quot;: [
       &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
@@ -118,8 +116,10 @@
       &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
       &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
     ],
+    &quot;id&quot;: &quot;RHEA-2010:0002&quot;,
     &quot;severity&quot;: &quot;&quot;,
-    &quot;_id&quot;: &quot;RHEA-2010:0002&quot;
+    &quot;_id&quot;: &quot;RHEA-2010:0002&quot;,
+    &quot;type&quot;: &quot;security&quot;
   }
 ]</pre>
 
@@ -236,50 +236,50 @@
           <pre>GET /api/repositories/750/errata/RHEA-2010:0002/
 200
 {
-  &quot;type&quot;: &quot;security&quot;,
-  &quot;_ns&quot;: &quot;errata&quot;,
-  &quot;updated&quot;: &quot;&quot;,
-  &quot;id&quot;: &quot;RHEA-2010:0002&quot;,
   &quot;issued&quot;: &quot;2010-01-01 01:01:01&quot;,
-  &quot;title&quot;: &quot;One package errata&quot;,
-  &quot;reboot_suggested&quot;: false,
-  &quot;description&quot;: &quot;One package errata&quot;,
-  &quot;immutable&quot;: true,
-  &quot;rights&quot;: &quot;&quot;,
+  &quot;_ns&quot;: &quot;errata&quot;,
+  &quot;from_str&quot;: &quot;lzap+pub@redhat.com&quot;,
+  &quot;summary&quot;: &quot;&quot;,
+  &quot;release&quot;: &quot;1&quot;,
+  &quot;updated&quot;: &quot;&quot;,
   &quot;pushcount&quot;: 1,
-  &quot;status&quot;: &quot;stable&quot;,
-  &quot;references&quot;: [],
+  &quot;immutable&quot;: true,
+  &quot;title&quot;: &quot;One package errata&quot;,
   &quot;repoids&quot;: [
     &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
     &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
     &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
     &quot;org_2d4c613-env_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
   ],
-  &quot;from_str&quot;: &quot;lzap+pub@redhat.com&quot;,
-  &quot;summary&quot;: &quot;&quot;,
+  &quot;id&quot;: &quot;RHEA-2010:0002&quot;,
+  &quot;references&quot;: [],
+  &quot;reboot_suggested&quot;: false,
+  &quot;severity&quot;: &quot;&quot;,
+  &quot;description&quot;: &quot;One package errata&quot;,
+  &quot;_id&quot;: &quot;RHEA-2010:0002&quot;,
+  &quot;repo_defined&quot;: true,
+  &quot;type&quot;: &quot;security&quot;,
+  &quot;solution&quot;: &quot;&quot;,
+  &quot;status&quot;: &quot;stable&quot;,
+  &quot;rights&quot;: &quot;&quot;,
+  &quot;version&quot;: &quot;1&quot;,
   &quot;pkglist&quot;: [
     {
+      &quot;name&quot;: &quot;1&quot;,
+      &quot;short&quot;: &quot;&quot;,
       &quot;packages&quot;: [
         {
-          &quot;name&quot;: &quot;elephant&quot;,
           &quot;epoch&quot;: null,
-          &quot;arch&quot;: &quot;noarch&quot;,
-          &quot;filename&quot;: &quot;elephant-0.3-0.8.noarch.rpm&quot;,
           &quot;src&quot;: &quot;http://www.fedoraproject.org&quot;,
+          &quot;arch&quot;: &quot;noarch&quot;,
+          &quot;name&quot;: &quot;elephant&quot;,
           &quot;release&quot;: &quot;0.8&quot;,
+          &quot;filename&quot;: &quot;elephant-0.3-0.8.noarch.rpm&quot;,
           &quot;version&quot;: &quot;0.3&quot;
         }
-      ],
-      &quot;name&quot;: &quot;1&quot;,
-      &quot;short&quot;: &quot;&quot;
+      ]
     }
-  ],
-  &quot;release&quot;: &quot;1&quot;,
-  &quot;solution&quot;: &quot;&quot;,
-  &quot;severity&quot;: &quot;&quot;,
-  &quot;version&quot;: &quot;1&quot;,
-  &quot;_id&quot;: &quot;RHEA-2010:0002&quot;,
-  &quot;repo_defined&quot;: true
+  ]
 }</pre>
 
     </div>

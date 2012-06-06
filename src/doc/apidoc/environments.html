@@ -95,16 +95,16 @@ no further branching of a chain is enabled.</p>
 200
 [
   {
-    &quot;name&quot;: &quot;Library&quot;,
-    &quot;prior&quot;: null,
-    &quot;id&quot;: 72,
-    &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
-    &quot;organization&quot;: &quot;org_2d4c613&quot;,
-    &quot;description&quot;: null,
     &quot;updated_at&quot;: &quot;2012-06-05T06:56:06Z&quot;,
+    &quot;organization&quot;: &quot;org_2d4c613&quot;,
+    &quot;prior&quot;: null,
+    &quot;name&quot;: &quot;Library&quot;,
     &quot;organization_id&quot;: 28,
+    &quot;id&quot;: 72,
+    &quot;prior_id&quot;: null,
+    &quot;description&quot;: null,
     &quot;library&quot;: true,
-    &quot;prior_id&quot;: null
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:06Z&quot;
   }
 ]</pre>
 
@@ -153,9 +153,49 @@ no further branching of a chain is enabled.</p>
     </div>
     <hr>
     <div class='pull-right small'>
+      <a href='../apidoc/environments/show.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-show'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/environments/:id
+          </a><br>
+          <small>Show an environment</small>
+        </h2>
+        <h2>
+          <a href='#description-show'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/organizations/:organization_id/environments/:id
+          </a><br>
+          <small>Show an environment</small>
+        </h2>
+    </div>
+    
+    <div id='description-show' class='collapse accordion-body'>
+      
+      
+
+
+    </div>
+    <hr>
+    <div class='pull-right small'>
       <a href='../apidoc/environments/create.html'> >>> </a>
     </div>
     <div>
+        <h2>
+          <a href='#description-create'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            POST /api/organizations/:organization_id/environments
+          </a><br>
+          <small>Create an environment in an organization</small>
+        </h2>
         <h2>
           <a href='#description-create'
            class='accordion-toggle'
@@ -175,22 +215,22 @@ no further branching of a chain is enabled.</p>
           <pre>POST /api/organizations/org_2d4c613/environments/
 {
   &quot;environment&quot;: {
-    &quot;name&quot;: &quot;env 2d4c613&quot;,
-    &quot;prior&quot;: 72
+    &quot;prior&quot;: 72,
+    &quot;name&quot;: &quot;env 2d4c613&quot;
   }
 }
 200
 {
-  &quot;name&quot;: &quot;env 2d4c613&quot;,
-  &quot;prior&quot;: &quot;Library&quot;,
-  &quot;id&quot;: 73,
-  &quot;created_at&quot;: &quot;2012-06-05T06:56:07Z&quot;,
-  &quot;organization&quot;: &quot;org_2d4c613&quot;,
-  &quot;description&quot;: null,
   &quot;updated_at&quot;: &quot;2012-06-05T06:56:07Z&quot;,
+  &quot;organization&quot;: &quot;org_2d4c613&quot;,
+  &quot;prior&quot;: &quot;Library&quot;,
+  &quot;name&quot;: &quot;env 2d4c613&quot;,
   &quot;organization_id&quot;: 28,
+  &quot;id&quot;: 73,
+  &quot;prior_id&quot;: 72,
+  &quot;description&quot;: null,
   &quot;library&quot;: false,
-  &quot;prior_id&quot;: 72
+  &quot;created_at&quot;: &quot;2012-06-05T06:56:07Z&quot;
 }</pre>
 
         <h3>Params</h3>
@@ -291,16 +331,16 @@ either library or an envrionment at the end of the chain</p>
 }
 200
 {
-  &quot;name&quot;: &quot;tstenv_2d4c613&quot;,
-  &quot;prior&quot;: &quot;Library&quot;,
-  &quot;id&quot;: 75,
-  &quot;created_at&quot;: &quot;2012-06-05T06:57:53Z&quot;,
-  &quot;organization&quot;: &quot;org_2d4c613&quot;,
-  &quot;description&quot;: &quot;Test environment&quot;,
   &quot;updated_at&quot;: &quot;2012-06-05T06:57:54Z&quot;,
+  &quot;organization&quot;: &quot;org_2d4c613&quot;,
+  &quot;prior&quot;: &quot;Library&quot;,
+  &quot;name&quot;: &quot;tstenv_2d4c613&quot;,
   &quot;organization_id&quot;: 28,
+  &quot;id&quot;: 75,
+  &quot;prior_id&quot;: 72,
+  &quot;description&quot;: &quot;Test environment&quot;,
   &quot;library&quot;: false,
-  &quot;prior_id&quot;: 72
+  &quot;created_at&quot;: &quot;2012-06-05T06:57:53Z&quot;
 }</pre>
 
         <h3>Params</h3>
@@ -420,36 +460,36 @@ Deleted environment '75'</pre>
 200
 [
   {
-    &quot;last_sync&quot;: null,
-    &quot;name&quot;: &quot;fewups_product_2d4c613_fakerepos_zoo5&quot;,
-    &quot;environment_product_id&quot;: 84,
-    &quot;enabled&quot;: true,
-    &quot;id&quot;: 749,
-    &quot;major&quot;: null,
-    &quot;created_at&quot;: &quot;2012-06-05T06:56:13Z&quot;,
-    &quot;cp_label&quot;: &quot;org_2d4c613_fewups_product_2d4c613_fewups_product_2d4c613_fakerepos_zoo5&quot;,
     &quot;updated_at&quot;: &quot;2012-06-05T06:56:13Z&quot;,
-    &quot;package_count&quot;: 0,
+    &quot;environment_product_id&quot;: 84,
     &quot;gpg_key_id&quot;: null,
-    &quot;minor&quot;: null,
+    &quot;name&quot;: &quot;fewups_product_2d4c613_fakerepos_zoo5&quot;,
     &quot;gpg_key_name&quot;: &quot;&quot;,
-    &quot;pulp_id&quot;: &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;
+    &quot;pulp_id&quot;: &quot;org_2d4c613-fewups_product_2d4c613-fewups_product_2d4c613_fakerepos_zoo5&quot;,
+    &quot;last_sync&quot;: null,
+    &quot;id&quot;: 749,
+    &quot;cp_label&quot;: &quot;org_2d4c613_fewups_product_2d4c613_fewups_product_2d4c613_fakerepos_zoo5&quot;,
+    &quot;enabled&quot;: true,
+    &quot;package_count&quot;: 0,
+    &quot;minor&quot;: null,
+    &quot;major&quot;: null,
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:13Z&quot;
   },
   {
-    &quot;last_sync&quot;: null,
-    &quot;name&quot;: &quot;repo_2d4c613&quot;,
-    &quot;environment_product_id&quot;: 84,
-    &quot;enabled&quot;: true,
-    &quot;id&quot;: 750,
-    &quot;major&quot;: null,
-    &quot;created_at&quot;: &quot;2012-06-05T06:56:15Z&quot;,
-    &quot;cp_label&quot;: &quot;org_2d4c613_fewups_product_2d4c613_repo_2d4c613&quot;,
     &quot;updated_at&quot;: &quot;2012-06-05T06:56:15Z&quot;,
-    &quot;package_count&quot;: 0,
+    &quot;environment_product_id&quot;: 84,
     &quot;gpg_key_id&quot;: null,
-    &quot;minor&quot;: null,
+    &quot;name&quot;: &quot;repo_2d4c613&quot;,
     &quot;gpg_key_name&quot;: &quot;&quot;,
-    &quot;pulp_id&quot;: &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;
+    &quot;pulp_id&quot;: &quot;org_2d4c613-fewups_product_2d4c613-repo_2d4c613&quot;,
+    &quot;last_sync&quot;: null,
+    &quot;id&quot;: 750,
+    &quot;cp_label&quot;: &quot;org_2d4c613_fewups_product_2d4c613_repo_2d4c613&quot;,
+    &quot;enabled&quot;: true,
+    &quot;package_count&quot;: 0,
+    &quot;minor&quot;: null,
+    &quot;major&quot;: null,
+    &quot;created_at&quot;: &quot;2012-06-05T06:56:15Z&quot;
   }
 ]</pre>
 
@@ -480,6 +520,28 @@ Deleted environment '75'</pre>
 
           </tbody>
         </table>
+    </div>
+    <hr>
+    <div class='pull-right small'>
+      <a href='../apidoc/environments/releases.html'> >>> </a>
+    </div>
+    <div>
+        <h2>
+          <a href='#description-releases'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#accordion'>
+            GET /api/environments/:id/releases
+          </a><br>
+          <small></small>
+        </h2>
+    </div>
+    
+    <div id='description-releases' class='collapse accordion-body'>
+      
+      
+
+
     </div>
 </div>
 
