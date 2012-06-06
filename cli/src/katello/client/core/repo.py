@@ -22,7 +22,7 @@ from katello.client import constants
 from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
 from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_sync_errors
 from katello.client.core.utils import ProgressBar
@@ -52,7 +52,7 @@ def format_sync_state(state):
 
 # base action ----------------------------------------------------------------
 
-class RepoAction(Action):
+class RepoAction(BaseAction):
 
     def __init__(self):
         super(RepoAction, self).__init__()

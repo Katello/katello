@@ -18,13 +18,13 @@ from gettext import gettext as _
 
 from katello.client.api.version import VersionAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 
 Config()
 
 # base ping action --------------------------------------------------------
 
-class VersionAction(Action):
+class VersionAction(BaseAction):
 
     def __init__(self):
         super(VersionAction, self).__init__()

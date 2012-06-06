@@ -19,13 +19,13 @@ from gettext import gettext as _
 
 from katello.client.config import Config
 from katello.client.shell import KatelloShell
-from katello.client.core.base import Action
+from katello.client.core.base import BaseAction
 
 Config()
 
 # shell action ------------------------------------------------------------
 
-class ShellAction(Action):
+class ShellAction(BaseAction):
 
     description = _('run the cli as a shell')
 

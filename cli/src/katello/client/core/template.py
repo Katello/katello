@@ -21,7 +21,7 @@ from optparse import OptionValueError
 
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, get_abs_path, run_spinner_in_bg, system_exit
 from katello.client.api.utils import get_library, get_environment, get_template, get_product, get_repo
 from katello.client.utils.encoding import u_str
@@ -31,7 +31,7 @@ Config()
 
 
 # base template action =========================================================
-class TemplateAction(Action):
+class TemplateAction(BaseAction):
 
     def __init__(self):
         super(TemplateAction, self).__init__()

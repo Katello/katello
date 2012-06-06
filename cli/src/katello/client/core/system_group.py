@@ -17,7 +17,7 @@ import sys
 from gettext import gettext as _
 
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
 from katello.client.core.utils import is_valid_record
@@ -32,7 +32,7 @@ class SystemGroup(Command):
     description = _('system group specific actions in the katello server')
 
 
-class SystemGroupAction(Action):
+class SystemGroupAction(BaseAction):
 
     def __init__(self):
         super(SystemGroupAction, self).__init__()

@@ -18,13 +18,13 @@ from gettext import gettext as _
 
 from katello.client.api.ping import PingAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 
 Config()
 
 # base ping action --------------------------------------------------------
 
-class PingAction(Action):
+class PingAction(BaseAction):
 
     def __init__(self):
         super(PingAction, self).__init__()
@@ -38,16 +38,10 @@ class Status(PingAction):
 
     description = _('get the status of the katello server')
 
-    def setup_parser(self, parser):
-        return 0
-
-    def check_options(self, validator):
-        return 0
 
     def run(self):
 
         status = self.api.ping()
-
 
         self.printer.add_column('status')
         self.printer.add_column('service')
@@ -114,9 +108,3 @@ class Status(PingAction):
 
         return detail
 
-
-# ping command ------------------------------------------------------------
-
-class Ping(Command):
-
-    description = _('Check the status of the server')

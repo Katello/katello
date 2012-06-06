@@ -68,7 +68,7 @@ class CommandContainer(object):
 
 
 
-class BaseAction(object):
+class Action(object):
     """
     Action class representing a single action for a cli command
     @ivar name: action's name
@@ -191,7 +191,7 @@ class BaseAction(object):
 
 
 
-class Command(CommandContainer, BaseAction):
+class Command(CommandContainer, Action):
 
     def usage(self, command_name=None, parent_usage=None):
         """
@@ -250,7 +250,7 @@ class Command(CommandContainer, BaseAction):
 
 # base action class -----------------------------------------------------------
 
-class Action(BaseAction):
+class BaseAction(Action):
     """
     Action class representing a single action for a cli command
     @ivar name: action's name
@@ -260,12 +260,12 @@ class Action(BaseAction):
     """
 
     def __init__(self):
-        super(Action, self).__init__()
+        super(BaseAction, self).__init__()
         self.printer = None
 
 
     def create_parser(self, command_name=None, parent_usage=None):
-        parser = super(Action, self).create_parser(command_name, parent_usage)
+        parser = super(BaseAction, self).create_parser(command_name, parent_usage)
         parser.add_option('-g', dest='grep',
                         action="store_true",
                         help=_("grep friendly output"))

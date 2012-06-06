@@ -19,13 +19,13 @@ import sys
 from gettext import gettext as _
 
 from katello.client.api.gpg_key import GpgKeyAPI
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, get_abs_path
 from katello.client.utils import printer
 
 from sys import stdin
 
-class GpgKeyAction(Action):
+class GpgKeyAction(BaseAction):
 
     def __init__(self):
         super(GpgKeyAction, self).__init__()
