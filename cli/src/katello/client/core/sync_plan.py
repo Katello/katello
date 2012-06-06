@@ -68,7 +68,7 @@ class List(SyncPlanAction):
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('description', multiline=True)
-        self.printer.add_column('start_date', formatter=format_date)
+        self.printer.add_column('sync_date', name=_("Start date"), formatter=format_date)
         self.printer.add_column('interval')
 
         self.printer.set_header(_("Sync Plan List"))
@@ -96,7 +96,7 @@ class Info(SyncPlanAction):
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('description', multiline=True)
-        self.printer.add_column('sync_date', formatter=format_date)
+        self.printer.add_column('sync_date', name=_("Start date"), formatter=format_date)
         self.printer.add_column('interval')
 
         self.printer.set_header(_("Sync Plan Info"))
