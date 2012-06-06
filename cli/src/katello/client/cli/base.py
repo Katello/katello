@@ -155,4 +155,3 @@ class KatelloCLI(Command):
             # for all the errors see ~/.katello/client.log or /var/log/katello/client.log
             self.error(ex)
             return 1
-

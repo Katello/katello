@@ -430,7 +430,7 @@ class RemoveDeletion(SystemAction):
                        help=_("hypervisor uuid (required"))
 
     def check_options(self, validator):
-        self.require_option('uuid')
+        validator.require_option('uuid')
 
     def run(self):
         uuid = self.get_option('uuid')

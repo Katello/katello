@@ -107,4 +107,3 @@ class Status(PingAction):
             detail["duration"] = detail["duration_ms"] + "ms"
 
         return detail
-

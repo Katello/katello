@@ -278,4 +278,3 @@ def setup_admin(katello_cmd):
     admin_cmd = admin.Admin()
     admin_cmd.add_command('crl_regen', admin.CrlRegen())
     katello_cmd.add_command('admin', admin_cmd)
-

@@ -72,4 +72,4 @@ class SystemGroupUnlockTest(CLIActionTestCase):
 
     def test_it_prints_the_system_group_unlock_success_message(self):
         self.action.run()
-        self.action.printer.print_items.assert_called_once()   
+        self.action.printer.print_items.assert_called_once()

@@ -46,4 +46,4 @@ class SystemGroupHistoryTest(CLIActionTestCase):
     def test_it_prints_the_system_groups(self):
         self.action.run()
         expected = [dict(test_data.SYSTEM_GROUP_HISTORY[0].items() + {'tasks': 1, 'parameters': 'packages: foo\n'}.items())]
-        self.action.printer.print_items.assert_called_once_with(expected) 
+        self.action.printer.print_items.assert_called_once_with(expected)
