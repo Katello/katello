@@ -22,7 +22,7 @@ from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_environment, get_system
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
 from katello.client.utils.printer import VerboseStrategy
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_date
@@ -34,7 +34,7 @@ Config()
 
 # base system action --------------------------------------------------------
 
-class SystemAction(Action):
+class SystemAction(BaseAction):
 
     def __init__(self):
         super(SystemAction, self).__init__()
@@ -401,11 +401,6 @@ class Register(SystemAction):
         validator.require(('name', 'org'))
         validator.require_at_most_one_of(('activationkey', 'environment'))
 
-    def require_credentials(self):
-        if self.has_option('activationkey'):
-            return False
-        else:
-            return super
 
     def run(self):
         name = self.get_option('name')
@@ -435,7 +430,7 @@ class RemoveDeletion(SystemAction):
                        help=_("hypervisor uuid (required"))
 
     def check_options(self, validator):
-        self.require_option('uuid')
+        validator.require_option('uuid')
 
     def run(self):
         uuid = self.get_option('uuid')

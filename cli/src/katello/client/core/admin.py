@@ -20,13 +20,13 @@ from gettext import gettext as _
 
 from katello.client.api.admin import AdminAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 
 Config()
 
 # base user action -----------------------------------------------------
 
-class AdminAction(Action):
+class AdminAction(BaseAction):
 
     def __init__(self):
         super(AdminAction, self).__init__()

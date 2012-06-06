@@ -24,7 +24,7 @@ from katello.client.api.repo import RepoAPI
 from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan, get_filter
 from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
@@ -36,7 +36,7 @@ Config()
 
 # base product action --------------------------------------------------------
 
-class ProductAction(Action):
+class ProductAction(BaseAction):
 
     def __init__(self):
         super(ProductAction, self).__init__()

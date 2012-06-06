@@ -53,7 +53,7 @@ def __logdir():
         return os.path.expanduser(USRDIR)
 
 def logfile():
-   return os.path.join(__logdir(), LOGFILE)
+    return os.path.join(__logdir(), LOGFILE)
 
 def getLogger(name):
     global handler
