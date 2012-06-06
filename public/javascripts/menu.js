@@ -100,13 +100,15 @@ KT.menu = (function(){
     },
     hoverMenu : function(element, options){
       var li = $(element);
+      if (!(li.children().first().hasClass('arrow_icon_menu'))){
+        //append the arrow icon to all menus with a third level
+        li.prepend($('<div class="arrow_icon_menu"></div>'));
+      }
       var ul = li.find('ul');
       var options = options || {};
         
       if( options.top ){
         ul.css('top', options.top);
-        //append the arrow icon to all menus with a third level
-        li.prepend($('<div class="arrow_icon_menu"></div>'));
       }
 
       li.hoverIntent(
