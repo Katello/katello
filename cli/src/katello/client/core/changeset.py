@@ -20,7 +20,7 @@ from optparse import OptionValueError
 
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
 from katello.client.utils import printer
@@ -30,7 +30,7 @@ Config()
 
 
 # base changeset action ========================================================
-class ChangesetAction(Action):
+class ChangesetAction(BaseAction):
     def __init__(self):
         super(ChangesetAction, self).__init__()
         self.api = ChangesetAPI()

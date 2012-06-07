@@ -17,7 +17,7 @@ import sys
 from gettext import gettext as _
 
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
 from katello.client.core.utils import is_valid_record
@@ -32,7 +32,7 @@ class SystemGroup(Command):
     description = _('system group specific actions in the katello server')
 
 
-class SystemGroupAction(Action):
+class SystemGroupAction(BaseAction):
 
     def __init__(self):
         super(SystemGroupAction, self).__init__()
@@ -163,7 +163,7 @@ class History(SystemGroupAction):
             return os.EX_DATAERR
 
 
-        # get list of jobs 
+        # get list of jobs
         history = self.api.system_group_history(org_name, system_group['id'])
 
         for job in history:
@@ -206,7 +206,7 @@ class HistoryTasks(SystemGroupAction):
 
         system_group = get_system_group(org_name, system_group_name)
 
-        # get list of jobs 
+        # get list of jobs
         history = self.api.system_group_history(org_name, system_group['id'], {'job_id':job_id})
         if len(history) == 0:
             print >> sys.stderr, _("Could not find job [ %s ] for system group [ %s ]") % (job_id, system_group_name)
@@ -404,7 +404,7 @@ class AddSystems(SystemGroupAction):
                                help=_("system group name (required)"))
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        parser.add_option('--system_uuids', dest='system_uuids',
+        parser.add_option('--system_uuids', dest='system_uuids', type="list",
                               help=_("comma separated list of system uuids (required)"))
 
     def check_options(self, validator):
@@ -419,8 +419,6 @@ class AddSystems(SystemGroupAction):
 
         if system_group is None:
             return os.EX_DATAERR
-
-        system_ids = [uuid for uuid in system_ids.split(',')]
 
         systems = self.api.add_systems(org_name, system_group["id"], system_ids)
 
@@ -440,7 +438,7 @@ class RemoveSystems(SystemGroupAction):
                                help=_("system group name (required)"))
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        parser.add_option('--system_uuids', dest='system_uuids',
+        parser.add_option('--system_uuids', dest='system_uuids', type="list",
                               help=_("comma separated list of system uuids (required)"))
 
     def check_options(self, validator):
@@ -455,8 +453,6 @@ class RemoveSystems(SystemGroupAction):
 
         if system_group is None:
             return os.EX_DATAERR
-
-        system_ids = [uuid for uuid in system_ids.split(',')]
 
         systems = self.api.remove_systems(org_name, system_group["id"], system_ids)
 

@@ -65,15 +65,15 @@ class ActivationKeyAPI(KatelloAPI):
         return self.server.DELETE(path)[1]
 
     def add_system_group(self, org_name, activation_key_id, system_group_id):
-        data = { 'activation_key' : 
+        data = { 'activation_key' :
             { 'system_group_ids' : [system_group_id] }
-        }   
+        }
         path = "/api/organizations/%s/activation_keys/%s/system_groups/" % (org_name, activation_key_id)
         return self.server.POST(path, data)[1]
 
     def remove_system_group(self, org_name, activation_key_id, system_group_id):
-        data = { 'activation_key' : 
+        data = { 'activation_key' :
             { 'system_group_ids' : [system_group_id] }
-        }   
+        }
         path = "/api/organizations/%s/activation_keys/%s/system_groups/" % (org_name, activation_key_id)
         return self.server.DELETE(path, data)[1]

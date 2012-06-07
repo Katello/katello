@@ -18,14 +18,14 @@ import os
 from gettext import gettext as _
 
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.utils.encoding import u_str
 
 Config()
 
 # base system action --------------------------------------------------------
 
-class ClientAction(Action):
+class ClientAction(BaseAction):
 
     def __init__(self):
         super(ClientAction, self).__init__()

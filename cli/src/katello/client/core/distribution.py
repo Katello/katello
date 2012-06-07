@@ -19,7 +19,7 @@ from gettext import gettext as _
 
 from katello.client.api.distribution import DistributionAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo
 from katello.client.utils import printer
 
@@ -27,7 +27,7 @@ Config()
 
 # base action ----------------------------------------------------------------
 
-class DistributionAction(Action):
+class DistributionAction(BaseAction):
 
     def __init__(self):
         super(DistributionAction, self).__init__()
