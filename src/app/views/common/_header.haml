@@ -13,8 +13,8 @@
 
 = content_for(:widgets) do
   = hidden_field_tag 'get_notices_url', nil, 'data-url' => notices_get_new_path
-  = render_admin_menu
   - if current_user
+    = render_admin_menu
     - if current_organization
       = link_to current_user.username, "#{users_path(:id => current_user, :only => true)}#panel=user_#{current_user.id}", :class => "header-widget"
   - if current_user
