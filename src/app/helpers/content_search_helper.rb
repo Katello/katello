@@ -5,7 +5,7 @@ module ContentSearchHelper
       [ _("Products"), "products"],
       [ _("Repos"), "repos"],
       [ _("Packages"), "packages"],
-      [ _("Packages"), "errata"]
+      [ _("Errata"), "errata"]
     ]
   end
 
