@@ -19,4 +19,163 @@ $(document).ready(function() {
         {select_mode:'multi', button_text:"Go", link_first: true});
 
     $(document).bind(KT.my_env_select.get_event(), function(event, foo){console.log(foo)});
+
+
+
+    KT.widgets = {repos:{id:"repos_selector", autocomplete:'repo_autocomplete_list'},
+                    packages:{id:"packages_selector", search:'package_search'},
+                    products:{id:"products_selector"},
+                    errata:{id:"errata_selector", search:'errata_search'}};
+
+    KT.mapping = {products:['products'], repos:['products', 'repos'], packages:['products', 'repos', 'packages'],
+        errata:['products', 'repos', 'errata']};
+
+    var search = KT.content_search();
+     
+
 });
+
+
+KT.content_search = function(){
+    var browse_box;
+    var init = function(){
+        browse_box = KT.widget.browse_box("content_selector", KT.widgets, KT.mapping);
+        $(document).bind(browse_box.get_event(), submit);
+
+    };
+    var submit = function(e, search_params){
+        var urls = {errata:KT.routes.errata_content_search_index_path(),
+                    products:KT.routes.products_content_search_index_path()};
+        if (urls[search_params.content_type] ){
+            $.ajax({
+                type: 'POST',
+                contentType:"application/json",
+                url: urls[search_params.content_type],
+                data: JSON.stringify(search_params),
+                success: handle_response
+            })
+        }  
+    },
+    handle_response = function(data){
+        console.log(data);
+    };
+
+
+    init();
+    return {
+
+    }
+};
+
+
+
+
+/**
+ *
+ */ 
+KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
+
+
+    var container,
+        ac_obj,
+        ac_input,
+        search_input,
+    init = function(){
+        container = $('#' + container_id);
+        setup_search(search_id);
+        setup_autocomplete(autocomplete_id)
+    },
+    setup_search = function(search_id){
+        if (search_id){
+            search_input = $('#' + search_id).find('input:text');
+        }
+    },
+    setup_autocomplete = function(auto_id){
+       if (!auto_id) {
+          return;
+       }       
+       var ac_container = $("#" + auto_id);
+       ac_obj = KT.auto_complete_box({values:ac_container.data('url'),
+                                      input: ac_container.find('input:text')});
+
+    },
+    get_results = function(){
+        if(search_input){
+            return {'search': search_input.val() };
+        }
+        else{
+           return {};   
+        }
+    }
+
+    init();
+    return {
+      get_results: get_results
+    };
+};
+
+
+/**
+ * Browse Box object
+ * @param selector_id   -  id of selector for different widgets
+ * @param widgets       -  list of hashes of widgets.  Format:
+ *                             name {id: dom_id
+ *                               object: object }
+ * @param mapping       -  selector value to widget mapping
+ *
+ */
+KT.widget.browse_box = function(selector_id, widgets, mapping){
+
+    var selector,
+        event_name, 
+        init = function(){
+            event_name = 'browse_box_' + selector_id;
+            selector = $("#" + selector_id).find('select');
+            selector.change(function(){
+                change_selection($(this).val());
+            });
+            selector.change();
+            selector.parents('form').submit(function(e){
+                 e.preventDefault();
+                 submit(selector.val());
+            });
+            KT.utils.each(widgets, function(widget, key){
+                widget.finder = KT.widget.finder_box(widget.id, widget.search, widget.autocomplete);
+            });
+        },
+        submit = function(content_type){
+            var needed = mapping[content_type],
+                query = {};
+            KT.utils.each(needed, function(value, index){
+                var type_search = {};
+                query[value] = widgets[value].finder.get_results();
+            });
+            query.content_type = content_type;
+            $(document).trigger(event_name, query);
+        },
+        change_selection = function(selected){
+            var needed = mapping[selected],
+                element;
+
+            KT.utils.each(widgets, function(value, key){
+                element = $('#' + value.id);
+                if (KT.utils.include(needed, key)){
+                    element.show();
+                }
+                else {
+                    //clear data
+                    element.hide();
+                }
+            });
+        };
+      
+
+    init();
+    return {
+        change_selection: change_selection,
+        get_event: function(){return event_name;}
+    }
+};
+
+
+
