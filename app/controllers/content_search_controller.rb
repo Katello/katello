@@ -37,9 +37,12 @@ class ContentSearchController < ApplicationController
 
   def products
     products = current_organization.products.collect do |p|
-       p_list = []
-       p_list << p.name
-       p.environments.each{|e| p_list << e.id}
+       p_list = {}
+
+
+       p_list['id'] = p.id
+       p_list['name'] = p.name
+       p_list['cols'] = p.environment_ids
        p_list
     end
     render :json=>products
