@@ -43,7 +43,7 @@ class PermissionCreateTest(CLIActionTestCase):
         'name': PERMISSION['name'],
         'user_role': ROLE['name'],
         'scope': PERMISSION['resource_type']['name'],
-        'verbs': 'v1,v2',
+        'verbs': ['v1', 'v2'],
         'tags': 't1,t2'
     }
 
@@ -56,10 +56,6 @@ class PermissionCreateTest(CLIActionTestCase):
 
         self.mock(self.action.api, 'create', self.PERMISSION)
         self.mock(self.module, 'get_role', self.ROLE)
-
-    def test_it_splits_comma_separated_options(self):
-        self.assertEqual(self.action.split_options(''), [])
-        self.assertEqual(self.action.split_options('A,B,C'), ['A', 'B', 'C'])
 
     def test_it_converts_tags_to_ids(self):
         self.mock(self.action, 'tag_name_to_id_map', {'t1': '1', 't2': '2'})
@@ -79,13 +75,11 @@ class PermissionCreateTest(CLIActionTestCase):
         self.assertEqual(self.action.tag_name_to_id_map('org', 'environments'), {'env1': '1', 'env2': '2'})
 
     def test_it_finds_role(self):
-        self.mock(self.action, 'split_options', [])
         self.mock(self.action, 'tags_to_ids', [])
         self.run_action()
         self.module.get_role.assert_called_once_with(self.ROLE['name'])
 
     def test_it_returns_error_when_role_not_found(self):
-        self.mock(self.action, 'split_options', [])
         self.mock(self.action, 'tags_to_ids', [])
         self.mock(self.module, 'get_role').side_effect = ApiDataError
         self.run_action(os.EX_DATAERR)
@@ -97,12 +91,10 @@ class PermissionCreateTest(CLIActionTestCase):
         self.action.api.create.assert_called_once_with(self.ROLE['id'], self.PERMISSION['name'], self.PERMISSION['description'], self.PERMISSION['resource_type']['name'], ['v1', 'v2'], ['1', '2'], None)
 
     def test_returns_error_when_permission_not_created(self):
-        self.mock(self.action, 'split_options', [])
         self.mock(self.action, 'tags_to_ids', [])
         self.mock(self.action.api, 'create', {})
         self.run_action(os.EX_DATAERR)
 
     def test_returns_ok(self):
-        self.mock(self.action, 'split_options', [])
         self.mock(self.action, 'tags_to_ids', [])
         self.run_action(os.EX_OK)

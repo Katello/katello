@@ -11,6 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class TaskStatus < ActiveRecord::Base
+
+  require 'util/task_status'
+  include Katello::TaskStatusUtil
+
   serialize :result
   serialize :progress
   serialize :parameters, Hash
@@ -83,7 +87,7 @@ class TaskStatus < ActiveRecord::Base
     if task_type
       tt = task_type
       unless system_tasks.nil? ||  system_tasks.empty?
-        tt = SystemTask::TYPES[task_type][:english_name]
+        tt = TaskStatus::TYPES[task_type][:english_name]
       end
       ret[:status] +=" #{tt}"
     end

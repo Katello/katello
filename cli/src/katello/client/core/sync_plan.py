@@ -19,7 +19,7 @@ from gettext import gettext as _
 
 from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, format_date, system_exit
 from katello.client.core.datetime_formatter import DateTimeFormatter, DateTimeFormatException
 from katello.client.api.utils import get_sync_plan
@@ -29,7 +29,7 @@ Config()
 
 # base sync_plan action --------------------------------------------------------
 
-class SyncPlanAction(Action):
+class SyncPlanAction(BaseAction):
 
     interval_choices = ['none', 'hourly', 'daily', 'weekly']
 
