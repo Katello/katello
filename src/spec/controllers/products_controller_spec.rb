@@ -65,6 +65,21 @@ describe ProductsController, :katello => true do
     end
   end
 
+  describe "get auto_complete_product" do
+    before (:each) do
+      set_default_locale
+      login_user
+      Product.should_receive(:any_readable?).once.and_return(true)
+      Product.should_receive(:search).once.and_return([OpenStruct.new(:name => "a", :id =>100)])
+    end
+
+    it 'should succeed' do
+      get :auto_complete, :term => "a"
+      response.should be_success
+    end
+  end
+
+
   describe "gpg" do
     before do
       disable_product_orchestration
@@ -104,6 +119,5 @@ describe ProductsController, :katello => true do
       subject{Product.find(@product.id)}
       its(:gpg_key){should == @gpg}
     end
-
   end
 end
