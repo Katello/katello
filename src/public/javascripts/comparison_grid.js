@@ -18,13 +18,49 @@ KT.comparison_grid = function(){
         num_columns_shown = 0,
         num_rows = 0;
 
-    var add_row = function(name){
+    var init = function(){
+            KT.comparison_grid.events.init(this);
+        },
+        add_row = function(name, cell_data){
+            var cells = [],
+                i = 0, length = utils.size(columns);
+            
+            for(col in columns){
+                display = utils.include(cell_data, parseInt(col)) ? true : false;
+                cells.push({ 'display' : display, 'id' : col });
+            }
+
             add_row_header(name);
-            $('#grid_content').append(templates.row(num_columns_shown));
+            $('#grid_content').append(templates.row(utils.size(columns), cells));
+            
             num_rows += 1;
         },
         add_row_header = function(name) {
             $('#grid_items').append(templates.row_header(name));
+        },
+        add_rows = function(data, append) {
+            var i = 0, length = data.length;
+
+            append = (append === undefined) ? true : append;
+
+            if( !append ){
+                $('#grid_content').html("");
+                $('#grid_items').html("");
+            }
+
+            for(i = 0; i < length; i++){
+                add_row(data[i]['name'], data[i]['cols']);
+            }
+
+            for(col in columns){
+                if( columns.hasOwnProperty(col) ){
+                    if( columns[col]['shown'] ){
+                        $('.cell_' + col).show();
+                    } else {
+                        $('.cell_' + col).hide();
+                    }
+                }
+            }
         },
         add_column = function(id, to_display, previous_column_id, data) {
             var i, column;
@@ -52,15 +88,21 @@ KT.comparison_grid = function(){
             utils.each(columns, function(value, key){
                 if( data[key] ){
                     $('#column_' + key).show();
+                    columns[key]['shown'] = true;
                     num_columns_shown += 1;
+                    $('.cell_' + key).show();
                 } else {
+                    columns[key]['shown'] = false;
                     $('#column_' + key).hide();
+                    $('.cell_' + key).hide();
                 }
             });
         };
 
     return {
+        init                : init,
         add_row             : add_row,
+        add_rows            : add_rows,
         add_row_header      : add_row_header,
         add_column          : add_column,
         add_columns         : add_columns,
@@ -69,17 +111,33 @@ KT.comparison_grid = function(){
     }
 };
 
+KT.comparison_grid.events = (function() {
+    var grid,
+
+        init = function(grid_instance) {
+            grid = grid_instance;
+
+            $(document).bind('draw.comparison_grid', function(event, data){
+                grid.add_rows(data, false);
+            });
+        };
+
+    return {
+        init : init
+    };
+})();
+
 KT.comparison_grid.templates = (function() {
     var cell = function(data) {
-            data = data === undefined ? "" : data;
-            return '<span class="grid_cell">' + data + '</span>';
+            var display = data['display'] ? "x" : "";
+            return '<span class="grid_cell cell_' + data['id'] + '">' + display + '</span>';
         },
-        row = function(num_columns) {
+        row = function(num_columns, cell_data) {
             var i,
                 html ='<div class="grid_row">';
 
             for(i = 0; i < num_columns; i += 1){
-                html += cell(i);
+                html += cell(cell_data[i]);
             }
             html += '</div>';            
 
