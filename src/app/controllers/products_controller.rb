@@ -13,7 +13,6 @@
 class ProductsController < ApplicationController
   respond_to :html, :js
 
-
   before_filter :find_product, :only => [:edit, :update, :destroy]
   before_filter :find_provider, :only => [:new, :create, :edit, :update, :destroy]
   before_filter :authorize
@@ -21,12 +20,15 @@ class ProductsController < ApplicationController
   def rules
     read_test = lambda{@provider.readable?}
     edit_test = lambda{@provider.editable?}
+    auto_complete_test = lambda {Product.any_readable?(current_organization)}
+
     {
       :new => edit_test,
       :create => edit_test,
       :edit =>read_test,
       :update => edit_test,
       :destroy => edit_test,
+      :auto_complete=>  auto_complete_test
     }
   end
 
@@ -108,6 +110,20 @@ class ProductsController < ApplicationController
     end
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@product.provider_id)}
   end
+
+  def auto_complete
+    query = "name_autocomplete:#{params[:term]}"
+    org = current_organization
+    products = Product.search do
+      query do
+        string query
+      end
+      filter :term, {:organization_id => org.id}
+    end
+    render :json=>products.collect{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
+  end
+
+
 
   protected
 
