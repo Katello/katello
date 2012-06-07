@@ -20,7 +20,7 @@ from gettext import gettext as _
 from katello.client.api.errata import ErrataAPI
 from katello.client.api.system import SystemAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo, get_environment, get_product
 from katello.client.utils.encoding import u_str
 
@@ -28,7 +28,7 @@ Config()
 
 # base package action --------------------------------------------------------
 
-class ErrataAction(Action):
+class ErrataAction(BaseAction):
 
     def __init__(self):
         super(ErrataAction, self).__init__()

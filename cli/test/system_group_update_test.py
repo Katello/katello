@@ -55,8 +55,8 @@ class SystemGroupUpdateTest(CLIActionTestCase):
 
     def test_it_calls_system_group_update_api(self):
         self.action.run()
-        self.action.api.update.assert_called_once_with(self.OPTIONS['org'], self.OPTIONS['id'], 
-                                                        self.OPTIONS["new_name"], self.OPTIONS['new_description'], 
+        self.action.api.update.assert_called_once_with(self.OPTIONS['org'], self.OPTIONS['id'],
+                                                        self.OPTIONS["new_name"], self.OPTIONS['new_description'],
                                                         self.OPTIONS['max_systems'])
 
     def test_it_calls_system_group_update_name_api(self):

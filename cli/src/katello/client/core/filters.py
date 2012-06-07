@@ -19,14 +19,14 @@ from gettext import gettext as _
 
 from katello.client.api.filter import FilterAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 
 Config()
 
 # -----------------------------------------------------------------
 
-class FilterAction(Action):
+class FilterAction(BaseAction):
 
     def __init__(self):
         super(FilterAction, self).__init__()

@@ -22,4 +22,3 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     allowed_options = [
         ('--org=ACME', '--name=product_1'),
     ]
-

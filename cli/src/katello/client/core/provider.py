@@ -21,7 +21,7 @@ from urlparse import urlparse
 from katello.client.api.provider import ProviderAPI
 from katello.client.server import ServerRequestError
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask, format_sync_errors, system_exit
 from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.core.utils import ProgressBar
@@ -32,7 +32,7 @@ Config()
 
 
 # base provider action =========================================================
-class ProviderAction(Action):
+class ProviderAction(BaseAction):
 
     def __init__(self):
         super(ProviderAction, self).__init__()

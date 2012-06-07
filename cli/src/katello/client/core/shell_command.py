@@ -19,27 +19,25 @@ from gettext import gettext as _
 
 from katello.client.config import Config
 from katello.client.shell import KatelloShell
-from katello.client.core.base import Action
+from katello.client.core.base import BaseAction
 
 Config()
 
 # shell action ------------------------------------------------------------
 
-class ShellAction(Action):
+class ShellAction(BaseAction):
 
     description = _('run the cli as a shell')
-    name = "shell"
 
     def __init__(self, cli):
         super(ShellAction, self).__init__()
         self.admin = cli
 
     def setup_parser(self, parser):
-        return 0
+        pass
 
     def run(self):
-        self.admin.usage_line = '[cmd] <options>'
-        self.admin.remove_command(ShellAction.name)
+        self.admin.remove_command("shell")
         shell = KatelloShell(self.admin)
         shell.cmdloop()
 
