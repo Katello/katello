@@ -28,12 +28,15 @@ class TaskStatus < ActiveRecord::Base
   end
   include IndexedModel
   include Authorization
+
   belongs_to :organization
   belongs_to :user
-  before_save :setup_task_type
 
-  has_many :system_tasks
-  has_many :systems, :through => :system_tasks 
+  belongs_to :task_owner, :polymorphic => true
+  # adding belongs_to :system allows us to perform joins with the owning system, if there is one
+  belongs_to :system, :foreign_key => :task_owner_id, :class_name => "System"
+
+  before_save :setup_task_type
 
   before_save do |status|
     unless status.user
@@ -57,8 +60,7 @@ class TaskStatus < ActiveRecord::Base
     end
   end
 
-  index_options :json=>{:only=> [:parameters, :result,
-                     :organization_id, :system_ids, :start_time, :finish_time ]},
+  index_options :json=>{:only=> [:parameters, :result, :organization_id, :start_time, :finish_time ]},
                 :extended_json=>:extended_index_attrs
 
   mapping do
@@ -86,7 +88,7 @@ class TaskStatus < ActiveRecord::Base
 
     if task_type
       tt = task_type
-      unless system_tasks.nil? ||  system_tasks.empty?
+      if !task_owner_type.blank? and task_owner_type == 'System'
         tt = TaskStatus::TYPES[task_type][:english_name]
       end
       ret[:status] +=" #{tt}"
@@ -103,6 +105,10 @@ class TaskStatus < ActiveRecord::Base
     end
 
     super(attrs)
+  end
+
+  def pending?
+    self.state.to_s == "waiting" || self.state.to_s == "running"
   end
 
   def finished?
@@ -125,18 +131,23 @@ class TaskStatus < ActiveRecord::Base
     PulpTaskStatus.refresh(self)
   end
 
-  def pending?
-    self.state.to_s == "waiting" || self.state.to_s == "running"
-  end
-
   def as_json(options = {})
     json = super :methods => :pending?
     json.merge(options) if options
+
+    if (task_owner_type == 'System')
+      methods = [:description, :result_description]
+      json.merge!(super(:only=>methods, :methods => methods))
+      json[:system_name] = task_owner.name
+    end
+
+    json
   end
 
   # used by search  to filter tasks by systems :)
   def system_filter_clause
-    {:system_ids => system_ids}
+    system_id = task_owner_id if (task_owner_type and task_owner_type == 'System')
+    {:system_id => system_id}
   end
 
   def pending_message_for
@@ -211,6 +222,10 @@ class TaskStatus < ActiveRecord::Base
     end
   end
 
+  def humanize_type
+    TaskStatus::TYPES[self.task_type][:name]
+  end
+
   def humanize_parameters
     humanized_parameters = []
     if packages = self.parameters[:packages]
@@ -222,11 +237,130 @@ class TaskStatus < ActiveRecord::Base
     humanized_parameters.join(", ")
   end
 
+  def description
+    ret = ""
+    ret << humanize_type << ": "
+    ret << humanize_parameters
+  end
+
+  def result_description
+    case self.state.to_s
+    when "finished"
+      success_description
+    when "error"
+      error_description
+    else ""
+    end
+  end
+
+  def success_description
+    ret = ""
+    task_type = self.task_type.to_s
+    result = self.result
+    if task_type =~ /^package_group/
+      action = task_type.include?("remove") ? :removed : :installed
+      ret << packages_change_description(result, action)
+    elsif self.task_type.to_s == "package_remove"
+      ret << packages_change_description(result, :removed)
+    else
+      if result[:installed]
+        ret << packages_change_description(result[:installed], :installed)
+      end
+      if result[:updated]
+        ret << packages_change_description(result[:updated], :updated)
+      end
+    end
+    ret
+  end
+
+  def error_description
+    errors, stacktrace = self.result[:errors]
+    return "" unless errors
+
+    # Handle not very friendly Pulp message
+    if errors =~ /^\(.*\)$/
+      stacktrace.last.split(":").first
+    elsif errors =~ /^\[.*,.*\]$/m
+      errors.split(",").map do |error|
+        error.gsub(/^\W+|\W+$/,"")
+      end.join("\n")
+    else
+      errors
+    end
+  rescue
+    self.result[:errors].join(' ').to_s
+  end
+
+  def self.refresh_for_system(sid)
+    query = TaskStatus.select(:id).where(:task_owner_type => 'System').where(:task_owner_id => sid)
+    ids = query.where(:state => [:waiting, :running]).collect {|row| row[:id]}
+    refresh(ids)
+    statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
+
+    # Since Candlepin events are not recorded as tasks, fetch them for this system and add them
+    # here. The alternative to this lazy loading of Candlepin tasks would be to have each API
+    # call that Katello passes through to Candlepin record the task explicitly.
+    system = System.find(sid)
+    system.events.each {|event|
+      event_status = {:id => event[:id], :state => event[:type],
+                     :start_time => event[:timestamp], :finish_time => event[:timestamp],
+                     :progress => "100", :result => event[:messageText]}
+      # Find or create task
+      task = statuses.where("#{TaskStatus.table_name}.uuid" => event_status[:id]).first
+      task ||= TaskStatus.make(system, event_status, :candlepin_event, :event => event)
+    }
+
+    statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
+  end
+
+  def self.refresh(ids)
+    unless ids.nil? || ids.empty?
+      uuids = TaskStatus.select(:uuid).where(:id => ids).collect{|t| t.uuid}
+      ret = Resources::Pulp::Task.find(uuids)
+      ret.each do |pulp_task|
+        PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task["id"]))
+      end
+    end
+  end
+
+  def self.make system, pulp_task, task_type, parameters
+    task_status = PulpTaskStatus.new(
+       :organization => system.organization,
+       :task_owner => system,
+       :task_type => task_type,
+       :parameters => parameters,
+       :systems => [system]
+    )
+    task_status.merge_pulp_task!(pulp_task)
+    task_status.save!
+    task_status
+  end
+
   protected
   def setup_task_type
     unless self.task_type
       self.task_type = self.class().name
     end
+  end
+
+  def packages_change_description(data, action)
+    ret = ""
+    packages = (data[:resolved] + data[:deps])
+    if packages.empty?
+      case action
+      when :updated
+        ret << _("No packages updated")
+      when :removed
+        ret << _("No packages removed")
+      else
+        ret << _("No new packages installed")
+      end
+    else
+      ret << packages.map do |package_attrs|
+        package_attrs[:qname]
+      end.join("\n")
+    end
+    ret
   end
 
 end
