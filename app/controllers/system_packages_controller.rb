@@ -12,6 +12,8 @@
 
 class SystemPackagesController < ApplicationController
 
+  require 'util/package_util'
+
   before_filter :find_system
   before_filter :authorize
 
@@ -36,13 +38,13 @@ class SystemPackagesController < ApplicationController
   def add
     if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
-      packages = validate_package_list_format(params[:packages])
+      packages = Katello::PackageUtils.validate_package_list_format(params[:packages])
       
       if packages
         task = @system.install_packages packages
         notice _("Install of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
       else
-        notice _("One or more errors found in Package names '%{s}'." % {:s => @system['name']}), {:level => :error}
+        notice _("One or more errors found in Package names '%{s}'." % {:s => params[:packages]}), {:level => :error}
         render :text => '' and return
       end
 
@@ -53,7 +55,7 @@ class SystemPackagesController < ApplicationController
       notice _("Install of Package Groups '%{g}' scheduled for System '%{s}'." % {:s => @system['name'], :g => params[:groups]})
 
     else
-      notice _("Empty request received to install Packages or Package Groups System '%{s}'." % {:s => @system['name']}), {:level => :error}
+      notice _("Empty request received to install Packages or Package Groups for System '%{s}'." % {:s => @system['name']}), {:level => :error}
       render :text => '' and return
     end
 
@@ -69,13 +71,13 @@ class SystemPackagesController < ApplicationController
 
     elsif !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
-      packages = validate_package_list_format(params[:packages])
+      packages = Katello::PackageUtils.validate_package_list_format(params[:packages])
       
       if packages
         task = @system.uninstall_packages packages
         notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
       else
-        notice _("One or more errors found in Package names '%{s}'." % {:s => @system['name']}), {:level => :error}
+        notice _("One or more errors found in Package names '%{s}'." % {:s => params[:packages]}), {:level => :error}
         render :text => '' and return        
       end
 
@@ -86,7 +88,7 @@ class SystemPackagesController < ApplicationController
       notice _("Uninstall of Package Groups '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => groups.join(',')})
 
     else
-      notice _("Empty request received to install Packages or Package Groups System '%{s}'." % {:s => @system['name']}), {:level => :error}
+      notice _("Empty request received to uninstall Packages or Package Groups for System '%{s}'." % {:s => @system['name']}), {:level => :error}
       render :text => '' and return
     end
 
@@ -209,25 +211,4 @@ class SystemPackagesController < ApplicationController
       last = systems.length if last > systems.length
       systems[offset...last]
   end
-  
-  def valid_package_characters
-    /[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/
-  end
-  
-  def validate_package_list_format packages
-    packages = packages.split(/ *, */ )
-
-    packages.each{ |package_name|
-      if not valid_package_name_format(package_name).nil?
-        return false
-      end
-    }
-    
-    return packages
-  end
-  
-  def valid_package_name_format package
-    return (package =~ valid_package_characters)
-  end
-
 end
