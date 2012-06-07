@@ -21,8 +21,11 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :content_search, :only=>[:index] do
-
+  resources :content_search do
+      collection do 
+        post :errata
+        post :products
+      end
   end
 
   resources :activation_keys do
