@@ -22,6 +22,7 @@ module Menu
       helper_method :render_sublevel_menu
       helper_method :render_main_menu
       helper_method :render_main_sub_menu
+      helper_method :render_admin_menu
     end
   end
   def render_menu(level, items = nil, prune = true)
@@ -34,6 +35,10 @@ module Menu
     prune = @main_nav.nil?
     @main_nav ||= menu_main
     render_menu(1, @main_nav, prune)
+  end
+
+  def render_admin_menu()
+    render_menu(1, admin_main) #this should work?
   end
 
   def render_main_sub_menu()
