@@ -31,7 +31,7 @@ class PasswordResetsController < ApplicationController
 
   def new
     @ldap = AppConfig.warden == 'ldap'
-    render :layout => "converge-ui/password_reset_layout"
+    render "common/user_session", :layout => "converge-ui/password_reset_layout"
   end
 
   def create
@@ -48,7 +48,7 @@ class PasswordResetsController < ApplicationController
       notice _("Password reset token has expired for user '%{s}'." % {:s => @user.username}), {:level => :error, :persist => false}
       redirect_to new_password_reset_path
     else
-      render :layout => "converge-ui/change_password_layout"
+      render "common/user_session", :layout => "converge-ui/change_password_layout"
     end
   end
 
