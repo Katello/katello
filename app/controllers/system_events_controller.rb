@@ -18,7 +18,6 @@ class SystemEventsController < ApplicationController
     'systems'
   end
 
-
   def rules
     read_system = lambda{@system.readable?}
 
@@ -31,10 +30,8 @@ class SystemEventsController < ApplicationController
     }
   end
 
-
   def index
-    render :partial=>"events", :layout => "tupane_layout", :locals=>{:system => @system,
-                                                                :tasks => tasks}
+    render :partial=>"events", :layout => "tupane_layout", :locals=>{:system => @system, :tasks => tasks}
   end
 
   def show
@@ -48,8 +45,7 @@ class SystemEventsController < ApplicationController
       user_message = task_template[:english_name]
     end
     render :partial=>"details", :layout => "tupane_layout", :locals=>{:type => type, :user_message => user_message,
-                                                  :system => @system, :task =>task,
-                                                  :system_task => find_system_task(task, @system) }
+                                                                      :system => @system, :task =>task}
   end
 
   def status
@@ -99,16 +95,6 @@ class SystemEventsController < ApplicationController
   def find_system
     @system = System.find(params[:system_id])
   end
-
-  helper_method :find_system_task
-  def find_system_task task, system = nil
-    if system
-      SystemTask.where(:task_status_id =>  task, :system_id => system).first
-    else
-      SystemTask.where(:task_status_id =>  task).first
-    end
-  end
-
 
   helper_method :tasks
   def tasks(page_size = current_user.page_size)
