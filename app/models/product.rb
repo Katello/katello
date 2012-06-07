@@ -30,6 +30,18 @@ class Product < ActiveRecord::Base
   include Glue if AppConfig.use_cp
   include Authorization
   include AsyncOrchestration
+  include IndexedModel
+
+  index_options :extended_json=>:extended_index_attrs,
+                  :json=>{:only => [:name, :description]},
+                  :display_attrs=>[:name, :description]
+
+  mapping do
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+    indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
+    indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
+  end
 
   validates_with ProductNameUniquenessValidator
 
@@ -61,6 +73,13 @@ class Product < ActiveRecord::Base
   scope :engineering, where(:type => "Product")
 
   after_save :update_related_index
+
+  def extended_index_attrs
+    {:name_sort=>name.downcase, :name_autocomplete=>self.name,
+    :organization_id => organization.id
+    }
+  end
+
 
   def initialize(attrs = nil)
 
