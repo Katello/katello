@@ -13,6 +13,8 @@
 module Katello
   module Search
 
+    DISABLED_LUCENE_SPECIAL_CHARS = ['-', ':']
+
     def self.custom_analyzers
       {
         "kt_name_analyzer" => {
@@ -39,15 +41,13 @@ module Katello
       }
     end
 
-
     # Filter the search input, escaping unsupported lucene syntax (e.g. usage of - operator)
     def self.filter_input search
-      unless search.nil?
-        search = search.gsub('^', "\\^")
-        search = search.gsub('-', "\\-")
-        search = search.gsub(':', "\\:")
+      return nil if search.nil?
+      DISABLED_LUCENE_SPECIAL_CHARS.each do |chr|
+        search = search.gsub(chr, '\\'+chr)
       end
-      search
+      return search
     end
 
   end
