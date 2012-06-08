@@ -11,7 +11,7 @@
     = image_tag("embed/icons/spinner.gif")
   - else
     %span.icon_wrap.fl.status_icons
-      %span.fl{:class=>(job_details[:state] == "error" ? "error_icon" : "check_icon")}
+      %span.fl{:class=>(job_details[:state] == :error ? "error_icon" : "check_icon")}
         &nbsp;&nbsp;
   %a.event_status.subpanel_element{"data-url"=>system_group_event_path(group.id, job.id)}
     - if job_pending
@@ -27,5 +27,6 @@
 
 - if include_tr
   </tr>
+
 
 
