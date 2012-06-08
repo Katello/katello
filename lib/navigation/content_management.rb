@@ -46,7 +46,7 @@ module Navigation
         :url => :sub_level,
         :options => {:class=>'content top_level', "data-menu"=>"content"},
         :if => lambda{current_organization},
-        :items=> [ menu_providers, menu_sync_management, menu_system_templates, menu_promotions, menu_changeset]
+        :items=> [ menu_providers, menu_content_search, menu_sync_management, menu_system_templates, menu_promotions, menu_changeset]
       }
     end
 
@@ -89,6 +89,19 @@ module Navigation
       }
 
     end
+
+    def menu_content_search
+      {:key => :content_search,
+       :name =>_("Content Search"),
+       :if => lambda{AppConfig.katello? && (current_organization.syncable? || Provider.any_readable?(current_organization))},
+       :options => {:class=>'content second_level', "data-menu"=>"content"},
+       :url =>content_search_index_path,
+
+      }
+
+
+    end
+
 
     def menu_sync_status
       {:key => :sync_status,
