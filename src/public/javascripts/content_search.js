@@ -23,8 +23,8 @@ $(document).ready(function() {
 
 
     KT.widgets = {repos:{id:"repos_selector", autocomplete:'repo_autocomplete_list'},
-                    packages:{id:"packages_selector", search:'package_search'},
-                    products:{id:"products_selector"},
+                    packages:{id:"packages_selector"},
+                    products:{id:"products_selector", autocomplete:'product_autocomplete_list'},
                     errata:{id:"errata_selector", search:'errata_search'}};
 
     KT.mapping = {products:['products'], repos:['products', 'repos'], packages:['products', 'repos', 'packages'],
@@ -54,10 +54,12 @@ KT.content_search = function(){
                 data: JSON.stringify(search_params),
                 success: handle_response
             })
-        }  
+        }
+        else{
+            console.log(search_params);
+        }
     },
     handle_response = function(data){
-        console.log(data);
     };
 
 
@@ -78,7 +80,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
 
     var container,
         ac_obj,
-        ac_input,
+        ac_container,
         search_input,
     init = function(){
         container = $('#' + container_id);
@@ -94,19 +96,53 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
        if (!auto_id) {
           return;
        }       
-       var ac_container = $("#" + auto_id);
-       ac_obj = KT.auto_complete_box({values:ac_container.data('url'),
-                                      input: ac_container.find('input:text')});
+       ac_container = $("#" + auto_id);
+       ac_container.delegate('.remove', 'click', function(){
+          $(this).parent().remove();
+          if (ac_container.find('li').not('.all').length === 0){
+            ac_container.find('.all').show();
+          }
+       });
+
+       ac_obj = KT.auto_complete_box(
+           {values:ac_container.data('url'),
+            input: ac_container.find('input:text'),
+            add_btn: ac_container.find('.button'),
+            add_text: i18n.add,
+            selected_input: ac_container.find('.hidden_selection'),
+            add_cb: function(item, id, cleanup){
+              auto_select(item, id);
+              cleanup();
+            }
+       });
+
+    },
+    auto_select = function(name, id){
+        if(!id){
+            return;
+        }
+        var list = ac_container.find('ul');
+        list.find('.all').hide();
+        if (ac_container.find('li[data-id=' + id + ']').length === 0){
+            list.prepend('<li data-id="' + id + '">' + name + '<a class="remove">-</a></li>');
+        }
 
     },
     get_results = function(){
         if(search_input){
             return {'search': search_input.val() };
         }
-        else{
-           return {};   
+        else if(ac_obj){
+           var ids = [];
+           KT.utils.each(ac_container.find('li').not('.all'), function(item, index){
+               ids.push($(item).data('id'));
+           });
+           return {autocomplete: ids};
         }
-    }
+        else {
+            return {}
+        }
+    };
 
     init();
     return {
