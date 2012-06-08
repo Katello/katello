@@ -51,8 +51,15 @@ class Job < ActiveRecord::Base
     # create an array of task status objects
     tasks = []
     pulp_tasks.each do |task|
+      # if the task was returned with a UUID belonging to a system, associate that system with the task
+      if !task[:args].blank?
+        uuid = task[:args].first
+        system = System.where(:uuid => uuid).first
+      end
+
       task_status = PulpTaskStatus.new(
           :organization => owner.organization,
+          :task_owner => system,
           :task_type => task_type,
           :parameters => parameters
       )
