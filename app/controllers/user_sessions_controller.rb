@@ -29,7 +29,7 @@ class UserSessionsController < ApplicationController
       # credentials 
       login_user
     else
-      @ldap = AppConfig.warden == 'ldap'
+      @disable_password_recovery = AppConfig.warden == 'ldap'
       render "common/user_session", :layout => "converge-ui/login_layout"
     end
   end
