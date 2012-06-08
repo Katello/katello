@@ -69,14 +69,7 @@ class Pool < ActiveRecord::Base
     {
         "index" => {
             "analysis" => {
-                "filter" => {
-                    "ngram_filter"  => {
-                        "type"      => "edgeNGram",
-                        "side"      => "front",
-                        "min_gram"  => 1,
-                        "max_gram"  => 30
-                    }
-                },
+                "filter" => Katello:Search::custom_filters,
                 "analyzer" => Katello::Search::custom_analyzers
             }
         }
