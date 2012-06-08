@@ -63,14 +63,15 @@ module Glue::Candlepin::Pool
         @virtOnly = false
         @poolDerived = false
         attrs['attributes'].each do |attr|
-          if attr['name'] == 'source_pool_id'
-            @sourcePoolId = attr['value']
-          elsif attr['name'] == 'requires_host'
-            @hostId = attr['value']
-          elsif attr['name'] == 'virt_only'
-            @virtOnly = attr['value'] == 'true' ? true : false
-          elsif attr['name'] == 'pool_derived'
-            @poolDerived = attr['value'] == 'true' ? true : false
+          case attr['name']
+            when 'source_pool_id'
+              @sourcePoolId = attr['value']
+            when 'requires_host'
+              @hostId = attr['value']
+            when 'virt_only'
+              @virtOnly = attr['value'] == 'true' ? true : false
+            when 'pool_derived'
+              @poolDerived = attr['value'] == 'true' ? true : false
           end
         end
 
@@ -83,22 +84,23 @@ module Glue::Candlepin::Pool
         @productFamily = ""
         @variant = ""
         attrs['productAttributes'].each do |attr|
-          if attr['name'] == 'virt_limit'
-            @virtLimit = attr['value'].to_i
-          elsif attr['name'] == 'support_type'
-            @supportType = attr['value']
-          elsif attr['name'] == 'arch'
-            @arch = attr['value']
-          elsif attr['name'] == 'support_level'
-            @supportLevel = attr['value']
-          elsif attr['name'] == 'sockets'
-            @sockets = attr['value'].to_i
-          elsif attr['name'] == 'description'
-            @description = attr['value']
-          elsif attr['name'] == 'product_family'
-            @productFamily = attr['value']
-          elsif attr['name'] == 'variant'
-            @variant = attr['value']
+          case attr['name']
+            when 'virt_limit'
+              @virtLimit = attr['value'].to_i
+            when 'support_type'
+              @supportType = attr['value']
+            when 'arch'
+              @arch = attr['value']
+            when 'support_level'
+              @supportLevel = attr['value']
+            when 'sockets'
+              @sockets = attr['value'].to_i
+            when 'description'
+              @description = attr['value']
+            when 'product_family'
+              @productFamily = attr['value']
+            when 'variant'
+              @variant = attr['value']
           end
         end
 
