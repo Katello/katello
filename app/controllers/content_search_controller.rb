@@ -37,7 +37,7 @@ class ContentSearchController < ApplicationController
 
   def products
 
-    ids = params[:products][:autocomplete] if params[:products]
+    ids = params[:products][:autocomplete].collect{|p|p["id"]} if params[:products]
     if ids && !ids.empty?
       products = current_organization.products.where(:id=>ids)
     else
