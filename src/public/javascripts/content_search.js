@@ -18,9 +18,13 @@ $(document).ready(function() {
     KT.my_env_select = KT.path_select('my_env_selector', 'env', KT.available_environments,
         {select_mode:'multi', button_text:"Go", link_first: true});
 
-    $(document).bind(KT.my_env_select.get_event(), function(event, foo){console.log(foo)});
+    comparison_grid = KT.comparison_grid();
+    comparison_grid.init();
+    comparison_grid.add_columns(KT.my_env_select.get_paths());
 
-
+    $(document).bind(KT.my_env_select.get_event(), function(event, environments) {
+        comparison_grid.show_columns(environments);
+    });
 
     KT.widgets = {repos:{id:"repos_selector", autocomplete:'repo_autocomplete_list'},
                     packages:{id:"packages_selector"},
@@ -31,8 +35,6 @@ $(document).ready(function() {
         errata:['products', 'repos', 'errata']};
 
     var search = KT.content_search();
-     
-
 });
 
 
@@ -60,6 +62,7 @@ KT.content_search = function(){
         }
     },
     handle_response = function(data){
+        $(document).trigger('draw.comparison_grid', [data]);
     };
 
 

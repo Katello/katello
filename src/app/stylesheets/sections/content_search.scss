@@ -9,6 +9,7 @@ $comparison_grid-width: 920px - $browse_box-width;
 $comparison_grid_header-height: 50px;
 $comparison_grid-height: 600px;
 $comparison_grid_filter-width: 150px;
+$comparison_grid_row-height: 30px;
 
 $widget_border-color: #B5B5B5;
 
@@ -78,6 +79,17 @@ $widget_border-color: #B5B5B5;
       border: 1px solid $widget_border-color;
       border-right: none;
       border-bottom: none;
+
+      .column_header {
+        float: left;
+        width: 40px;
+        line-height: 40px;
+        text-align: center;
+
+        &:last-child {
+          width: 120px;
+        }
+      }
     }
   }
   
@@ -89,12 +101,28 @@ $widget_border-color: #B5B5B5;
       border-right: 1px solid $widget_border-color;
       height: $comparison_grid-height - $comparison_grid_header-height;
       float: left;
+
+      .row_header {
+        width: $comparison_grid_filter-width - 20;
+        padding: 10px 10px;
+      }
     }
 
     #grid_content {
       width: $comparison_grid-width - $comparison_grid_filter-width - 1;
       height: $comparison_grid-height - $comparison_grid_header-height;
       float: left;
+
+      .grid_row {
+        height: 40px;
+      }
+
+      .grid_cell {
+        width: 40px;
+        display: inline-block;
+        line-height: 40px;
+        text-align: center;
+      }
     }
   }
 }

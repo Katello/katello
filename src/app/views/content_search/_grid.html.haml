@@ -2,10 +2,10 @@
   %header
     %aside
       "Filter goes here"
-    %div#column_headers
-      .grid_column
-        %span#my_env_selector.path_button
-          = _('Add Environment')
+    %ul#column_headers
+      %li.column_header#my_env_selector
+        %span.path_button
+          = _('Add Environment(s)')
   %section
-    #grid_items
+    %ul#grid_items
     #grid_content
