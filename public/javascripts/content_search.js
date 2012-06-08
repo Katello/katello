@@ -41,14 +41,28 @@ $(document).ready(function() {
 KT.content_search = function(){
     var browse_box;
     var init = function(){
-        browse_box = KT.widget.browse_box("content_selector", KT.widgets, KT.mapping);
-        $(document).bind(browse_box.get_event(), submit);
-
+        var initial_search = $.bbq.getState('search');
+        browse_box = KT.widget.browse_box("content_selector", KT.widgets, KT.mapping, initial_search);
+        $(document).bind(browse_box.get_event(), search_initiated);
+        $(window).bind('hashchange.search', do_search);
+        if(initial_search){
+            browse_box.trigger_search();
+        }
     };
-    var submit = function(e, search_params){
+    var search_initiated = function(e, search_params){
+        var old =  $.param.fragment();
+        $.bbq.pushState({search:search_params});
+        if(old === $.param.fragment()){
+            do_search();
+        }
+        
+    },
+    do_search = function(){
         var urls = {errata:KT.routes.errata_content_search_index_path(),
                     products:KT.routes.products_content_search_index_path()};
+        var search_params = $.bbq.getState('search');
         if (urls[search_params.content_type] ){
+             
             $.ajax({
                 type: 'POST',
                 contentType:"application/json",
@@ -127,7 +141,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
         var list = ac_container.find('ul');
         list.find('.all').hide();
         if (ac_container.find('li[data-id=' + id + ']').length === 0){
-            list.prepend('<li data-id="' + id + '">' + name + '<a class="remove">-</a></li>');
+            list.prepend('<li data-name="'+ name + '" data-id="' + id + '">' + name + '<a class="remove">-</a></li>');
         }
 
     },
@@ -138,18 +152,33 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
         else if(ac_obj){
            var ids = [];
            KT.utils.each(ac_container.find('li').not('.all'), function(item, index){
-               ids.push($(item).data('id'));
+               ids.push({id:[$(item).data('id')], name: $(item).data('name')});
            });
            return {autocomplete: ids};
         }
         else {
             return {}
         }
+    },
+    set_results = function(results){
+        if(!results){
+            return;
+        }
+        if(search_input && results.search){
+            search_input.val(results.search);
+        }
+        else if(ac_container && results.autocomplete){
+            KT.utils.each(results.autocomplete, function(item, index){
+                auto_select(item.name, item.id);
+            });
+        }
     };
+    
 
     init();
     return {
-      get_results: get_results
+      get_results: get_results,
+      set_results: set_results
     };
 };
 
@@ -163,7 +192,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
  * @param mapping       -  selector value to widget mapping
  *
  */
-KT.widget.browse_box = function(selector_id, widgets, mapping){
+KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
 
     var selector,
         event_name, 
@@ -173,15 +202,26 @@ KT.widget.browse_box = function(selector_id, widgets, mapping){
             selector.change(function(){
                 change_selection($(this).val());
             });
-            selector.change();
+            KT.utils.each(widgets, function(widget, key){
+                widget.finder = KT.widget.finder_box(widget.id, widget.search, widget.autocomplete);
+            });
+
             selector.parents('form').submit(function(e){
                  e.preventDefault();
                  submit(selector.val());
             });
-            KT.utils.each(widgets, function(widget, key){
-                widget.finder = KT.widget.finder_box(widget.id, widget.search, widget.autocomplete);
-            });
+
+            if (initial_values && initial_values.content_type){
+                selector.val(initial_values.content_type);
+                KT.utils.each(widgets, function(widget, key){
+                    widget.finder.set_results(initial_values[key])
+                });
+            }
+            selector.change();
         },
+        trigger_search = function(){
+            selector.parents('form').submit();
+        }
         submit = function(content_type){
             var needed = mapping[content_type],
                 query = {};
@@ -212,6 +252,7 @@ KT.widget.browse_box = function(selector_id, widgets, mapping){
     init();
     return {
         change_selection: change_selection,
+        trigger_search : trigger_search,
         get_event: function(){return event_name;}
     }
 };
