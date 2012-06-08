@@ -17,29 +17,42 @@ KT.auto_complete_box = function(params) {
         default_text: undefined, //default text to go into the search box if desired
         comma_separated_input: false,
         input_id: undefined,
+        input: undefined,
         selected_input_id: undefined,
+        selected_input: undefined,
         form_id: undefined,
         add_btn_id: undefined,
+        add_btn: undefined,
         add_text: i18n.add_plus,
         add_cb: function(item, item_id, cb){cb();}
     };
     $.extend( settings, params );
     
     var add_item_from_input = function(e) {
-        var item = $("#" + settings.input_id).attr("value"),
-            item_id = $("#" + settings.selected_input_id).val(),
-            add_btn = $("#" + settings.add_btn_id);
+        var item = get_input().attr("value"),
+            item_id = get_selected_input().val();
+
         
         e.preventDefault();
         if (item.length === 0 || item === settings.default_text){
                 return;
         }
-        add_btn.addClass("working");
+            get_add_btn().addClass("working");
         add_item_base(item, item_id, true);
     },
+    get_input = function(){
+        return settings.input || $("#" + settings.input_id);
+    },
+    get_selected_input = function(){
+        return settings.selected_input || $("#" + settings.selected_input_id);
+    },
+    get_add_btn = function(){
+        return settings.add_btn || $("#" + settings.add_btn_id);
+    },
     add_item_base = function(item, item_id, focus) {
-        var input = $("#" + settings.input_id),
-            add_btn = $("#" + settings.add_btn_id);
+        var input = get_input(),
+            add_btn = get_add_btn();
+
         input.removeClass("input_error");
         add_btn.addClass("working");
         add_btn.html("<img src='images/spinner.gif'>");
@@ -54,14 +67,14 @@ KT.auto_complete_box = function(params) {
         settings.add_cb(item, item_id, function(){
             reset_input();
             if (focus) {
-                $('#' + settings.input_id).focus();
+                get_input().focus();
             }
         });
     },
     reset_input = function() {
         //re-lookup all items, since a redraw may have happened
-        var input = $("#" + settings.input_id),
-            add_btn = $("#" + settings.add_btn_id);
+        var input = get_input(),
+            add_btn = get_add_btn();
         add_btn.removeClass('working');
         if (add_btn.text() === "") {
             add_btn.html(settings.add_text);
@@ -73,7 +86,7 @@ KT.auto_complete_box = function(params) {
         add_item_base(item, item_id, false);
     },
     error = function() {
-        var input = $("#" + settings.input_id);
+        var input = get_input();
         input.addClass("input_error");
     },
     split = function(val) {
@@ -84,9 +97,9 @@ KT.auto_complete_box = function(params) {
     };
 
     //initialization
-    var input = $("#" + settings.input_id),
+    var input = get_input(),
         form = $("#" + settings.form_id),
-        add_btn = $("#" + settings.add_btn_id);
+        add_btn = get_add_btn();
 
     if (settings.default_text) {
         input.val(settings.default_text);
@@ -106,11 +119,11 @@ KT.auto_complete_box = function(params) {
         input.autocomplete({
             source: settings.values,
             search: function(){
-                $("#" + settings.selected_input_id).val('');
+                get_selected_input().val('');
             },
             select: function (event, ui) {
-                $("#" + settings.input_id).val(ui.item.value);
-                $("#" + settings.selected_input_id).val(ui.item.id);
+                get_input().val(ui.item.value);
+                get_selected_input().val(ui.item.id);
                 return false;
             }
         });
@@ -145,7 +158,6 @@ KT.auto_complete_box = function(params) {
             }
         });
     }
-
     add_btn.bind('click', add_item_from_input);
     form.submit(add_item_from_input);
 
