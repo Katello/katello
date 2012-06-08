@@ -10,12 +10,9 @@
       %span.fl{:class=>(t.state=="error" ? "error_icon" : "check_icon")}
         &nbsp;&nbsp;
 
-  %a.event_status.subpanel_element
-    -# TODO: this needs to be the name of the system.... and should probably be a tipsy vs a link... where the tipsy is added after the request is completed and provides additional details on the specific outcome...
-    - if t.pending?
-      = t.pending_message_for
-    - else
-      = t.message_for
+  .event_status
+    = t.system.name
+    %span.tipsy-icon.info.task-info{"data-result" => t.result_description}
 
 %td.event_date
   - if t.pending?
