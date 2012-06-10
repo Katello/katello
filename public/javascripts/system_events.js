@@ -18,8 +18,7 @@
 
 KT.events = function() {
 
-    var system_id = $('.events').attr('data-system_id'),
-    total_events = 0,
+    var total_events = 0,
     total_loaded = 0,
     actions_updater = undefined,
     loaded_summary = $('#loaded_summary'),
@@ -55,6 +54,7 @@ KT.events = function() {
         $.each(data, function(index, status) {
             var node = undefined,
                 msg = undefined;
+
             if(!status["pending?"]) {
                 node = $('.event_name[data-pending-event-id=' + status['id'] + ']');
                 if(node !== undefined) {
@@ -73,7 +73,7 @@ KT.events = function() {
             pending_items[i] = $(this).data("pending-event-id");
         });
         if(pending_items.length > 0) {
-            actions_updater = $.PeriodicalUpdater(KT.routes.status_system_events_path(system_id), {
+            actions_updater = $.PeriodicalUpdater($('.events').data('url'), {
                 method: 'get',
                 type: 'json',
                 data: function() {return {id: pending_items};},
