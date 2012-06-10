@@ -15,6 +15,7 @@ KT.system_group = KT.system_group || {};
 KT.system_group.events = (function (){
     var init = function() {
         KT.tipsy.custom.tooltip('.tipsy-icon.task-info');
+        KT.events.initEvents();
     };
     return {
         init: init

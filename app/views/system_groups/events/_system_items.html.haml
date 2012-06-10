@@ -2,17 +2,18 @@
   - cssclass = cycle("alt", "")
   <tr class = "#{cssclass} tasks">
 
-%td.event_name{"data-pending-event-id" => (t.id if t.pending?)}
+%td.event_name{"data-pending-task-id" => (t.id if t.pending?)}
   - if t.pending?
     = image_tag("embed/icons/spinner.gif")
+    = t.system.name
+
   - else
     %span.icon_wrap.fl.status_icons
       %span.fl{:class=>(t.state=="error" ? "error_icon" : "check_icon")}
         &nbsp;&nbsp;
-
-  .event_status
-    = t.system.name
-    %span.tipsy-icon.info.task-info{"data-result" => t.result_description}
+    .event_status
+      = t.system.name
+      %span.tipsy-icon.info.task-info{"data-result" => t.result_description}
 
 %td.event_date
   - if t.pending?

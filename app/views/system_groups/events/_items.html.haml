@@ -6,7 +6,7 @@
 - job_messages = job.messages
 - job_pending = job_details[:state] == :running
 
-%td.event_name{"data-pending-event-id" => (job.id if job_pending)}
+%td.event_name{"data-pending-job-id" => (job.id if job_pending)}
   - if job_pending
     = image_tag("embed/icons/spinner.gif")
   - else

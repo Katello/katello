@@ -2,7 +2,7 @@
   - cssclass = cycle("alt", "")
   <tr class = "#{cssclass} tasks">
 
-%td.event_name{"data-pending-event-id" => (t.id if t.pending?)}
+%td.event_name{"data-pending-task-id" => (t.id if t.pending?)}
   - if t.pending?
     = image_tag("embed/icons/spinner.gif")
   - else
