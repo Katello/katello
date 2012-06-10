@@ -41,15 +41,26 @@ class SystemGroupEventsController < ApplicationController
 
   def status
     # retrieve the status for the actions initiated by the client
-    statuses = []
-    @group.jobs.where(:id => params[:id]).collect do |status|
-      statuses.push({
+    statuses = {:jobs => [], :tasks => []}
+
+    @group.refreshed_jobs.where(:id => params[:job_id]).collect do |status|
+      statuses[:jobs] << {
         :id => status.id,
         :pending? => status.pending?,
         :status_html => render_to_string(:template => 'system_groups/events/_items.html.haml', :layout => false,
                                          :locals => {:include_tr => false, :group => @group, :job => status})
-      })
+      }
     end
+
+    TaskStatus.where(:id => params[:task_id]).collect do |status|
+      statuses[:tasks] << {
+        :id => status.id,
+        :pending? => status.pending?,
+        :status_html => render_to_string(:template => 'system_groups/events/_system_items.html.haml', :layout => false,
+                                         :locals => {:include_tr => false, :t => status})
+      }
+    end
+
     render :json => statuses
   end
 

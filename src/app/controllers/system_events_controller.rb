@@ -50,14 +50,14 @@ class SystemEventsController < ApplicationController
 
   def status
     # retrieve the status for the actions initiated by the client
-    statuses = []
-    @system.tasks.where(:id => params[:id]).collect do |status|
-      statuses.push({
+    statuses = {:tasks => []}
+    @system.tasks.where(:id => params[:task_id]).collect do |status|
+      statuses[:tasks] << {
         :id => status.id,
         :pending? => status.pending?,
         :status_html => render_to_string(:template => 'system_events/_event_items.html.haml', :layout => false,
                                          :locals => {:include_tr => false, :system => @system, :t => status})
-      })
+      }
     end
     render :json => statuses
   end
@@ -76,7 +76,6 @@ class SystemEventsController < ApplicationController
     else
       render :nothing => true
     end
-
   end
 
   def items

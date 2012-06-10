@@ -51,39 +51,67 @@ KT.events = function() {
     },
     updateStatus = function(data) {
         // For each action that the user has initiated, update the status.
-        $.each(data, function(index, status) {
-            var node = undefined,
-                msg = undefined;
+        var jobs = data["jobs"],
+            tasks = data["tasks"];
 
-            if(!status["pending?"]) {
-                node = $('.event_name[data-pending-event-id=' + status['id'] + ']');
-                if(node !== undefined) {
-                    node.parent().html(status["status_html"]);
+        if (tasks) {
+            $.each(tasks, function(index, status) {
+                var node = undefined,
+                    msg = undefined;
+
+                if(!status["pending?"]) {
+                    node = $('.event_name[data-pending-task-id=' + status['id'] + ']');
+                    if(node !== undefined) {
+                        node.parent().html(status["status_html"]);
+                    }
                 }
-            }
-        });
-        if ($('.event_name[data-pending-event-id]').length === 0) {
+            });
+        }
+
+        if (jobs) {
+            $.each(jobs, function(index, status) {
+                var node = undefined,
+                    msg = undefined;
+
+                if(!status["pending?"]) {
+                    node = $('.event_name[data-pending-job-id=' + status['id'] + ']');
+                    if(node !== undefined) {
+                        node.parent().html(status["status_html"]);
+                    }
+                }
+            });
+        }
+
+        if(($('.event_name[data-pending-task-id]').length === 0) && ($('.event_name[data-pending-job-id]').length === 0)) {
             actions_updater.stop();
         }
     },
     startUpdater = function () {
         var timeout = 8000,
-            pending_items = [];
-        $('.event_name[data-pending-event-id]').each(function(i) {
-            pending_items[i] = $(this).data("pending-event-id");
+            pending_jobs = [],
+            pending_tasks = [];
+
+        $('.event_name[data-pending-job-id]').each(function(i) {
+            pending_jobs[i] = $(this).data("pending-job-id");
         });
-        if(pending_items.length > 0) {
+        $('.event_name[data-pending-task-id]').each(function(i) {
+            pending_tasks[i] = $(this).data("pending-task-id");
+        });
+
+        if(pending_jobs.length > 0 || pending_tasks.length > 0) {
+            if (actions_updater !== undefined) {
+                actions_updater.stop();
+            }
             actions_updater = $.PeriodicalUpdater($('.events').data('url'), {
                 method: 'get',
                 type: 'json',
-                data: function() {return {id: pending_items};},
+                data: function() {return {task_id: pending_tasks, job_id: pending_jobs};},
                 global: false,
                 minTimeout: timeout,
                 maxTimeout: timeout
             }, updateStatus);
         }
     },
-
     initEvents = function() {
         total_events = $('.events').data('total_events');
         if(total_events !== undefined) {
@@ -100,7 +128,7 @@ KT.events = function() {
             }
 
             updateLoadedSummary();
-            if($('.event_name[data-pending-event-id]').length > 0) {
+            if(($('.event_name[data-pending-task-id]').length > 0) || ($('.event_name[data-pending-job-id]').length > 0)) {
                 startUpdater();
             }
 
