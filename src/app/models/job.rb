@@ -99,6 +99,7 @@ class Job < ActiveRecord::Base
       }
       return {
           :id=>self.id,
+          :pulp_id=>self.pulp_id,
           :created_at=>first_task.created_at,
           :task_type=>first_task.task_type,
           :parameters=>first_task.parameters,
@@ -164,6 +165,10 @@ class Job < ActiveRecord::Base
 
   def finish_time
     finish_time = self.task_statuses.order('finish_time DESC').last.finish_time
+  end
+
+  def pending?
+    self.state == :running || self.state == :waiting
   end
 
   def state

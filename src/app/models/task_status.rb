@@ -279,7 +279,11 @@ class TaskStatus < ActiveRecord::Base
 
     # Handle not very friendly Pulp message
     if errors =~ /^\(.*\)$/
-      stacktrace.last.split(":").first
+      if stacktrace.class == Array
+        stacktrace.last.split(":").first
+      else
+        stacktrace.split("(").first
+      end
     elsif errors =~ /^\[.*,.*\]$/m
       errors.split(",").map do |error|
         error.gsub(/^\W+|\W+$/,"")
