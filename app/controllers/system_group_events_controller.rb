@@ -40,7 +40,17 @@ class SystemGroupEventsController < ApplicationController
   end
 
   def status
-    # TODO - add logic
+    # retrieve the status for the actions initiated by the client
+    statuses = []
+    @group.jobs.where(:id => params[:id]).collect do |status|
+      statuses.push({
+        :id => status.id,
+        :pending? => status.pending?,
+        :status_html => render_to_string(:template => 'system_groups/events/_items.html.haml', :layout => false,
+                                         :locals => {:include_tr => false, :group => @group, :job => status})
+      })
+    end
+    render :json => statuses
   end
 
   def more_items

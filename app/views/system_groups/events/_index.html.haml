@@ -10,7 +10,7 @@
       %button.filter_button#event_filter_button #{('Filter')}
       %br.clear
 
-    %table.filter_table.events.ajaxScroll{'data-id' => group.id, 'data-total_events' => total_events_length}
+    %table.filter_table.events.ajaxScroll{'data-url' => status_system_group_events_path(group.id), 'data-total_events' => total_events_length}
       %thead
         %th
           %a#event_sort{"data-sort"=>"asc", :class=>"ascending"}
