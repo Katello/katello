@@ -20,11 +20,11 @@
           %th= _('End Date')
         %tbody
           - @subscriptions.each do |sub|
-            - new_group = sub.productId
+            - new_group = sub.product_id
             - if (new_group != group)
-              - group = sub.productId
+              - group = sub.product_id
               %tr{:id => group}
-                %td= sub.productName
+                %td= sub.product_name
                 %td
                 %td
                 %td
@@ -33,18 +33,18 @@
                 %td
                 %td
             %tr{:class => "child-of-#{group}", :id => sub.cp_id}
-              %td= sub.productName
+              %td= sub.product_name
               %td
                 - if sub.quantity < 0
                   = _('Unlimited')
                 - else
                   = "#{sub.consumed} of #{sub.quantity}"
-              %td=sub.contractNumber or ""
-              %td=sub.supportLevel or ""
+              %td=sub.contract_number or ""
+              %td=sub.support_level or ""
               %td=sub.arch
-              %td=sub.virtOnly ? _("Virtual") : _("Physical")
-              %td=l sub.startDate
-              %td=l sub.endDate
+              %td=sub.virt_only ? _("Virtual") : _("Physical")
+              %td=l sub.start_date
+              %td=l sub.end_date
       .actions
         .grid_3
           %a{ :href => "#", :id=>"toggle_all", :class=>"fl" }
