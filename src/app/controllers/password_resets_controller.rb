@@ -22,19 +22,12 @@ class PasswordResetsController < ApplicationController
   def section_id
     "loginpage"
   end
+
   def param_rules
     {
       :create =>[:username, :email],
       :update => {:user  => [:password]}
     }
-  end
-
-  def new
-    if AppConfig.warden == 'ldap'
-      redirect_to user_sessions_path
-    else
-      render "common/user_session", :layout => "converge-ui/password_reset_layout"
-    end
   end
 
   def create
