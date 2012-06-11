@@ -1234,35 +1234,37 @@ fieldset {
 #switcherContainer {
   position: absolute;
   display: inline-block;
-  left: 218px;
-  top: 22px;
-
+  left: 184px;
+  bottom: 6px;
+  width: 165px;
+  height: 22px;
+  @include button_color;
+  @include border-radius(3px);
   /* switcher Button */
    #switcherButton {
     cursor: pointer;
-
-    div:first-child {
-      padding: 7px 12px 4px 10px;
-      display: block;
-      float: left; }
-    .arrow_icon {
+    width: 159px;
+    height: 22px;
+    padding: 2px 6px 2px 6px;
+    text-align: left;
+    width: 100%;
+    .arrow_icon_menu {
       height: 11px;
-      width: 9px;
-      top: 10px;
-      right: 10px;
-      position: relative;
-      background: $arrow_icon;
+      width: 13px;
+      background: $arrow_icon_menu;
       float: right;
+      margin: 6px 4px 0 0;
+      &:hover {
+       background: $arrow_icon_menu_hover;
+      }
     }
     &.active {
-      @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
       @include border-bottom-lr-radius(0);
       .arrow_icon {
         background-position: 0 -11px;
       }
     }
     &:hover {
-      @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
       text-decoration: none;
     }
   }
@@ -1270,7 +1272,7 @@ fieldset {
   /* switcher Box */
   #switcherBox {
     position: absolute;
-    top: 17px;
+    top: 23px;
     left: 0px;
     display: none;
     z-index: 2000;
@@ -1282,11 +1284,11 @@ fieldset {
   /* switcher Form */
   #switcherForm {
     width: 248px;
-    border: 1px solid $orgbox_color;
-    @include border-trbrbl-radius(3px);
+    border: 1px solid transparent;
+    @include border-radius(2px);
     @include box-shadow(2px, 2px, 2px, rgba(0,0,0,0.4));
     margin-top: -1px;
-    background-color: $orgbox_color;
+    @include button_color;
     padding: 6px;
     fieldset {
       margin: 0 0 12px 0;
@@ -1408,3 +1410,7 @@ fieldset {
   bottom: -18px;
 }
 
+/* override the header.scss from converge-ui */
+#appnav {
+  left: 352px !important;
+}
