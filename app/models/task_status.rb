@@ -60,7 +60,7 @@ class TaskStatus < ActiveRecord::Base
     end
   end
 
-  index_options :json=>{:only=> [:parameters, :result, :organization_id, :start_time, :finish_time ]},
+  index_options :json=>{:only=> [:parameters, :result, :organization_id, :start_time, :finish_time, :task_owner_id, :task_owner_type ]},
                 :extended_json=>:extended_index_attrs
 
   mapping do
