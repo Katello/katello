@@ -76,9 +76,10 @@ class ProvidersController < ApplicationController
         force_update = params[:force_import] == "1" ? "true" : "false"
         @provider.import_manifest(File.expand_path(temp_file.path), { :force => force_update })
         if AppConfig.katello?
-          notice _("Subscription manifest uploaded successfully for provider '%{name}'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled." % {:name => @provider.name}), {:synchronous_request => false}
+          notice _("Subscription manifest uploaded successfully for provider '%s'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled.") % @provider.name, {:synchronous_request => false}
         else
-          notice _("Subscription manifest uploaded successfully for provider '%{name}'." % {:name => @provider.name}), {:synchronous_request => false}
+          notice _("Subscription manifest uploaded successfully for provider '%s'.") % @provider.name,
+                 {:synchronous_request => false}
         end
 
       rescue Exception => error
@@ -90,15 +91,14 @@ class ProvidersController < ApplicationController
           display_message = ""
         end
 
-        error_text = _("Subscription manifest upload for provider '%{name}' failed." % {:name => @provider.name})
-        error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+        error_texts = [
+            _("Subscription manifest upload for provider '%s' failed.") % @provider.name,
+            (_("Reason: %s") % display_message unless display_message.blank?),
+            (_("If you are uploading an older manifest, you can use the Force checkbox to overwrite " +
+                   "existing data.") if force_update == "false")
+        ].compact
 
-        # In some cases, force_update will allow the manifest to be uploaded when it normally would not
-        if force_update == "false"
-          error_text += _("%{newline}If you are uploading an older manifest, you can use the Force checkbox to overwrite existing data." % { :newline => "<br />"})
-        end
-
-        notice error_text, {:level => :error, :details => pp_exception(error)}
+        notice error_texts.join('<br />'), {:level => :error, :details => pp_exception(error)}
 
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error
@@ -120,8 +120,8 @@ class ProvidersController < ApplicationController
       setup_subs
     rescue Exception => error
       display_message = parse_display_message(error.response)
-      error_text = _("Unable to retrieve subscription manifest for provider '%{name}." % {:name => @provider.name})
-      error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+      error_text = _("Unable to retrieve subscription manifest for provider '%s'.") % @provider.name
+      error_text += "<br />" + _("Reason: %s") % display_message unless display_message.blank?
       notice error_text, {:level => :error, :synchronous_request => false}
       Rails.logger.error "Error fetching subscriptions from Candlepin"
       Rails.logger.error error
@@ -134,8 +134,8 @@ class ProvidersController < ApplicationController
     rescue Exception => error
       @statuses = []
       display_message = parse_display_message(error.response)
-      error_text = _("Unable to retrieve subscription history for provider '%{name}." % {:name => @provider.name})
-      error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+      error_text = _("Unable to retrieve subscription history for provider '%s'.") % @provider.name
+      error_text += "<br />" + _("Reason: %s") % display_message unless display_message.blank?
       notice error_text, {:level => :error, :synchronous_request => false}
       Rails.logger.error "Error fetching subscription history from Candlepin"
       Rails.logger.error error
