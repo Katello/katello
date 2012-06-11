@@ -51,16 +51,16 @@ describe SystemEventsController do
         end
 
         specify "status call does the right thing" do
-          get :status, :system_id => @system.id, :id => @task.id
+          get :status, :system_id => @system.id, :task_id => @task.id
           response.should be_success
-          JSON.parse(response.body).first["id"].should == @task.id
+          JSON.parse(response.body)["tasks"].first["id"].should == @task.id
         end
 
         specify "status call does the right thing for multi tasks" do
           task1 = @system.install_packages(["baz"])
-          get :status, :system_id => @system.id, :id => [@task.id, task1.id]
+          get :status, :system_id => @system.id, :task_id => [@task.id, task1.id]
           response.should be_success
-          JSON.parse(response.body).collect{|item| item['id']}.sort.should == [@task.id, task1.id].sort
+          JSON.parse(response.body)["tasks"].collect{|item| item['id']}.sort.should == [@task.id, task1.id].sort
         end
 
       end
