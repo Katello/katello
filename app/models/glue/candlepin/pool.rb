@@ -18,10 +18,10 @@ module Glue::Candlepin::Pool
     base.send :extend, ClassMethods
 
     base.class_eval do
-      lazy_accessor :poolDerived, :productName, :consumed, :quantity, :supportLevel, :supportType,
-        :startDate, :endDate, :attrs, :owner, :productId, :accountNumber, :contractNumber,
-        :sourcePoolId, :hostId, :virtOnly, :virtLimit,
-        :arch, :sockets, :description, :productFamily, :variant, :providedProducts,
+      lazy_accessor :pool_derived, :product_name, :consumed, :quantity, :support_level, :support_type,
+        :start_date, :end_date, :attrs, :owner, :product_id, :account_number, :contract_number,
+        :source_pool_id, :host_id, :virt_only, :virt_limit,
+        :arch, :sockets, :description, :product_family, :variant, :provided_products,
         :initializer => lambda {
           json = Resources::Candlepin::Pool.find(cp_id)
           # symbol "attributes" is reserved by Rails and cannot be used
@@ -45,64 +45,64 @@ module Glue::Candlepin::Pool
     def initialize(attrs = nil)
       if not attrs.nil? and attrs.member? 'id'
         # initializing from candlepin json
-        @productName = attrs["productName"]
-        @startDate = Date.parse(attrs["startDate"])
-        @endDate = Date.parse(attrs["endDate"])
+        @product_name = attrs["productName"]
+        @start_date = Date.parse(attrs["startDate"])
+        @end_date = Date.parse(attrs["endDate"])
         @consumed = attrs["consumed"]
         @quantity = attrs["quantity"]
         @attrs = attrs["attributes"]
         @owner = attrs["owner"]
-        @productId = attrs["productId"]
+        @product_id = attrs["productId"]
         @cp_id = attrs['id']
-        @accountNumber = attrs['accountNumber']
-        @contractNumber = attrs['contractNumber']
-        @providedProducts = attrs['providedProducts']
+        @account_number = attrs['accountNumber']
+        @contract_number = attrs['contractNumber']
+        @provided_products = attrs['providedProducts']
 
-        @sourcePoolId = nil
-        @hostId = nil
-        @virtOnly = false
-        @poolDerived = false
+        @source_pool_id = nil
+        @host_id = nil
+        @virt_only = false
+        @pool_derived = false
         attrs['attributes'].each do |attr|
           case attr['name']
             when 'source_pool_id'
-              @sourcePoolId = attr['value']
+              @source_pool_id = attr['value']
             when 'requires_host'
-              @hostId = attr['value']
+              @host_id = attr['value']
             when 'virt_only'
-              @virtOnly = attr['value'] == 'true' ? true : false
+              @virt_only = attr['value'] == 'true' ? true : false
             when 'pool_derived'
-              @poolDerived = attr['value'] == 'true' ? true : false
+              @pool_derived = attr['value'] == 'true' ? true : false
           end
-        end
+        end if attrs['attributes']
 
-        @virtLimit = 0
-        @supportType = ""
+        @virt_limit = 0
+        @support_type = ""
         @arch = ""
-        @supportLevel = ""
+        @support_level = ""
         @sockets = 0
         @description = ""
-        @productFamily = ""
+        @product_family = ""
         @variant = ""
         attrs['productAttributes'].each do |attr|
           case attr['name']
             when 'virt_limit'
-              @virtLimit = attr['value'].to_i
+              @virt_limit = attr['value'].to_i
             when 'support_type'
-              @supportType = attr['value']
+              @support_type = attr['value']
             when 'arch'
               @arch = attr['value']
             when 'support_level'
-              @supportLevel = attr['value']
+              @support_level = attr['value']
             when 'sockets'
               @sockets = attr['value'].to_i
             when 'description'
               @description = attr['value']
             when 'product_family'
-              @productFamily = attr['value']
+              @product_family = attr['value']
             when 'variant'
               @variant = attr['value']
           end
-        end
+        end if attrs['productAttributes']
 
         super(:cp_id => attrs['id'])
       else
