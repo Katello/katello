@@ -35,15 +35,15 @@ class Pool < ActiveRecord::Base
     {
       "_type"     => :pool,
       "id"        => @cp_id,
-      "name"      => @productName,
-      "name_sort" => @productName,
-      "start"     => @startDate,
-      "end"       => @endDate,
-      "product"   => @productId,
-      "account"   => @accountNumber,
-      "contract"  => @contractNumber,
-      "sla"       => @supportLevel,
-      "virtual"   => @virtOnly,
+      "name"      => @product_name,
+      "name_sort" => @product_name,
+      "start"     => @start_date,
+      "end"       => @end_date,
+      "product"   => @product_id,
+      "account"   => @account_number,
+      "contract"  => @contract_number,
+      "sla"       => @support_level,
+      "virtual"   => @virt_only,
       "org"       => @owner["key"]
     }
   end
@@ -69,7 +69,7 @@ class Pool < ActiveRecord::Base
     {
         "index" => {
             "analysis" => {
-                "filter" => Katello:Search::custom_filters,
+                "filter" => Katello::Search::custom_filters,
                 "analyzer" => Katello::Search::custom_analyzers
             }
         }
