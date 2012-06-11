@@ -38,7 +38,9 @@ module Menu
   end
 
   def render_admin_menu()
-    render_menu(1, admin_main) #this should work?
+    items = admin_main
+    prune_menu(items)
+    render_navigation(:items=>items, :expand_all=>true) unless items.empty?
   end
 
   def render_main_sub_menu()
