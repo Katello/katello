@@ -1,6 +1,6 @@
 - if include_tr
   - cssclass = cycle("alt", "")
-  <tr class = "#{cssclass} tasks">
+  <tr class = "#{cssclass}">
 
 %td.event_name{"data-pending-task-id" => (t.id if t.pending?)}
   - if t.pending?
