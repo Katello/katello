@@ -324,6 +324,8 @@ class Changeset < ActiveRecord::Base
     notice message, { :synchronous_request => false, :request_type => "changesets___promote" }
 
   rescue => e
+    # catch any exception - we have to serve any failure in the promotion
+    # it is reraised later
 
     self.state = Changeset::FAILED
     self.save!
