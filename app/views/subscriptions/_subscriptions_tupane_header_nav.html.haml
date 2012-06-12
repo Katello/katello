@@ -1,0 +1,5 @@
+= content_for :title do
+  #{@subscription.product_name}
+
+= content_for :navigation do
+  = render_menu(1..2, subscriptions_navigation)
