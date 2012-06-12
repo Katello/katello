@@ -110,6 +110,7 @@ module ApplicationHelper
              :ajax_scroll =>options[:ajax_scroll],
              :search_env =>options[:search_env],
              :initial_action=>options[:initial_action] || :edit,
+             :initial_state=>options[:initial_state] || false,
              :actions=>options[:actions],
              :search_class=>options[:search_class],
              :disable_create=>options[:disable_create] || false}

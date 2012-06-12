@@ -20,6 +20,8 @@ module Navigation
         helper_method :promotion_distribution_navigation
         helper_method :package_filter_navigation
         helper_method :gpg_keys_navigation
+        helper_method :subscriptions_navigation
+        helper_method :new_subscription_navigation
       end
     end
 
@@ -45,7 +47,7 @@ module Navigation
       {:key => :subscriptions,
        :name =>_("Subscriptions"),
        :url => subscriptions_path,
-       :items => lambda{[menu_activation_keys, menu_import_history]},
+       :items => lambda{[menu_subscriptions_list, menu_activation_keys, menu_import_history]},
        :if => lambda{current_organization},
        :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"subscriptions"}
       }
@@ -74,7 +76,7 @@ module Navigation
       {
         :key => :import_history,
         :name => _("Import History"),
-        :url => redhat_provider_providers_path,
+        :url => lambda {history_subscriptions_path},
         :if => lambda{current_organization && current_organization.readable?},
         :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
       }
@@ -86,7 +88,8 @@ module Navigation
         :url => :sub_level,
         :options => {:class=>'content top_level', "data-menu"=>"content"},
         :if => lambda{current_organization},
-        :items=> [ menu_subscriptions, menu_providers, menu_sync_management, menu_system_templates, menu_promotions]
+        :items=> AppConfig.katello? ? [ menu_subscriptions, menu_providers, menu_sync_management, menu_system_templates, menu_promotions] :
+            [ menu_subscriptions, menu_system_templates]
       }
     end
 
@@ -96,7 +99,7 @@ module Navigation
        :url => :sub_level,
        :if => :sub_level,
        :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"repositories"},
-       :items => AppConfig.katello? ? [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg] : [menu_custom_providers, menu_redhat_providers]
+       :items => [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg]
       }
 
     end
@@ -282,7 +285,7 @@ module Navigation
         }
       ]
     end
-    
+
     def gpg_keys_navigation
       [
         { :key => :products_repositories,
@@ -329,5 +332,44 @@ module Navigation
       ]
     end
 
+    def subscriptions_navigation
+      [
+        { :key => :details,
+          :name =>_("Details"),
+          :url => lambda{edit_subscription_path(@subscription.cp_id)},
+          :if => lambda{@subscription},
+          :options => {:class=>"panel_link"},
+        },
+        { :key => :products,
+          :name =>_("Products"),
+          :url => lambda{products_subscription_path(@subscription.cp_id)},
+          :if => lambda{@subscription},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :consumers,
+          :name =>_("Consumers"),
+          :url => lambda{consumers_subscription_path(@subscription.cp_id)},
+          :if => lambda{@subscription},
+          :options => {:class=>"panel_link"}
+        }
+      ]
+    end
+
+    def new_subscription_navigation
+      [
+        { :key => :upload,
+          :name =>_("Import"),
+          :url => new_subscription_path,
+          :if => lambda{current_organization && current_organization.readable?},
+          :options => {:class=>"panel_link"},
+        },
+        { :key => :history,
+          :name =>_("History"),
+          :url => history_items_subscriptions_path,
+          :if => lambda{current_organization && current_organization.readable?},
+          :options => {:class=>"panel_link"}
+        }
+      ]
+    end
   end
 end
