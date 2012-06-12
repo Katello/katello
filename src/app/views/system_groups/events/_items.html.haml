@@ -2,7 +2,7 @@
   - shading = cycle("", "alt")
   <tr class = "#{shading} tasks">
 
-- job_details = job.details
+- job_details = job.as_json
 - job_messages = job.messages
 - job_pending = job_details[:state] == :running
 
