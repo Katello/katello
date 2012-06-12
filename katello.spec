@@ -315,6 +315,7 @@ fi
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
 %{homedir}/lib/glue/*.rb
+%{homedir}/lib/monkeys/*.rb
 %{homedir}/lib/navigation
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
