@@ -125,7 +125,7 @@ class Api::ActivationKeysController < Api::ApiController
   end
 
   def find_pool
-    @pool = KTPool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
+    @pool = Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
   end
 
   def verify_presence_of_organization_or_environment
