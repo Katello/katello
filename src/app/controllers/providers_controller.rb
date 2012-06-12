@@ -16,7 +16,7 @@ class ProvidersController < ApplicationController
 
   before_filter :find_rh_provider, :only => [:redhat_provider,:update_redhat_provider]
 
-  before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy]
+  before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy, :import_progress]
   before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
@@ -44,6 +44,7 @@ class ProvidersController < ApplicationController
       :update => edit_test,
       :destroy => delete_test,
       :products_repos => read_test,
+      :import_progress => edit_test,
 
       :redhat_provider =>read_test,
       :update_redhat_provider => edit_test
@@ -84,11 +85,21 @@ class ProvidersController < ApplicationController
     end
   end
 
+  def import_progress
+    progress = if @provider.task_status && @provider.task_status.progress
+                 @provider.task_status.progress
+               else
+                 "finished"
+               end
+    to_ret = {'progress' => progress}
+    render :json=>to_ret
+  end
+
   def redhat_provider
     # We default to none imported until we can properly poll Candlepin for status of the import
     @grouped_subscriptions = []
     begin
-      setup_subs
+      find_subscriptions
     rescue Exception => error
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription manifest for provider '%s'.") % @provider.name
@@ -246,6 +257,33 @@ class ProvidersController < ApplicationController
 
   def search_filter
     @filter = {:organization_id => current_organization}
+  end
+
+  def find_subscriptions
+    @provider = current_organization.redhat_provider
+    cp_pools = Candlepin::Owner.pools current_organization.cp_key
+    subscriptions = Pool.index_pools cp_pools
+
+    @grouped_subscriptions = []
+    subscriptions.each { |sub|
+      # Derived pools are not displayed here
+      if sub.pool_derived
+        next
+      end
+
+      # Only Red Hat provider subscriptions are shown
+      p = Product.where(:cp_id => sub.product_id).first
+      if p && p.provider_id == @provider.id
+        @grouped_subscriptions << sub
+      end
+      #Product.where(:cp_id => sub.product_id).each { |product|
+      #  if product && product.provider_id == @provider.id
+      #    @grouped_subscriptions << sub
+      #  end
+      #}
+    }
+
+    @grouped_subscriptions
   end
 
   def setup_subs

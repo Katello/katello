@@ -187,6 +187,7 @@ module Glue::Provider
       else
         display_message = ""
       end
+      display_message = ApplicationController.parse_display_message(display_message)
 
       if options[:notify]
         error_texts = [

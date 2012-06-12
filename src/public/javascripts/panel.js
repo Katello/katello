@@ -742,6 +742,9 @@ KT.panel.list = (function () {
             list_elem.find('.spinner').hide();
             list_section.html(html).show();
         },
+        refresh_list = function() {
+            search.refresh_search();
+        },
         full_spinner = function() {
             var list_elem = $("#list");
             list_section.empty();
@@ -861,6 +864,7 @@ KT.panel.list = (function () {
         replace_list    : replace_list,
         update_counts   : update_counts,
         full_spinner    : full_spinner,
-        current_count   :  current_count
+        current_count   : current_count,
+        refresh_list    : refresh_list
     };
 })();
