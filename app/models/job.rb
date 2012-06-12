@@ -12,6 +12,7 @@
 
 class Job < ActiveRecord::Base
   include Glue
+  include IndexedModel
   include Authorization
   include AsyncOrchestration
 
@@ -19,6 +20,20 @@ class Job < ActiveRecord::Base
 
   has_many :job_tasks, :dependent => :destroy
   has_many :task_statuses, :through => :job_tasks
+
+  index_options :json=>{:only=> [:job_owner_id, :job_owner_type]},
+                :extended_json=>:extended_index_attrs
+
+  def extended_index_attrs
+    ret = {}
+
+    first_task = self.task_statuses.first
+    unless first_task.nil?
+      ret[:username] = first_task.user.username
+      ret[:parameters] = first_task.parameters
+    end
+    ret
+  end
 
   class << self
     def refresh_tasks(ids)
@@ -38,9 +53,16 @@ class Job < ActiveRecord::Base
           'INNER JOIN job_tasks ON job_tasks.task_status_id = task_statuses.id').joins(
           'INNER JOIN jobs ON jobs.id = job_tasks.job_id')
 
-      # refresh those tasks to get latest status
       ids = tasks.collect{|row| row[:id]}
+
+      # retrieve the jobs associated with those tasks
+      jobs = Job.where('task_statuses.id' => ids).joins(:task_statuses)
+
+      # refresh the tasks via pulp
       refresh_tasks(ids)
+
+      # update the elasticsearch index for the associated jobs
+      Job.index_import(jobs)
 
       # retrieve the jobs for the current owner (e.g. system group)
       query = Job.where(:job_owner_id => owner.id, :job_owner_type => owner.class.name)
@@ -76,7 +98,7 @@ class Job < ActiveRecord::Base
     tasks
   end
 
-  def as_json(options)
+  def as_json(options = {})
     first_task = self.task_statuses.first
     #check for first task
     if first_task.nil?

@@ -81,7 +81,19 @@ class SystemGroupEventsController < ApplicationController
   end
 
   def items
-    # TODO - add logic
+    render_proc = lambda do |items, options|
+      if items && !items.empty?
+        render_to_string(:partial => 'system_groups/events/more_items', :locals => {:cycle_extra => false, :group => @group, :jobs=> items})
+      else
+        "<tr><td>" + _("No events matching your search criteria.") + "</td></tr>"
+      end
+    end
+    search = params[:search]
+    render_panel_direct(Job, {:no_search_history => true,:render_list_proc => render_proc},
+                        search, params[:offset], [:id, 'desc'],
+                        :filter => {:job_owner_id => [@group.id], :task_owner_type => SystemGroup.class.name},
+                        :load => true,
+                        :simple_query => "#{search}" )
   end
 
   protected
