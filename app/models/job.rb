@@ -125,41 +125,6 @@ class Job < ActiveRecord::Base
           :created_at=>first_task.created_at,
           :task_type=>first_task.task_type,
           :parameters=>first_task.parameters,
-          :tasks=>tasks
-      }
-    end
-  end
-
-  def details
-    # Return a hash containing details associated with the job.  Since a job in Pulp consists of a job id and
-    # a set of tasks and in our case all tasks associated with the job have several common characteristics (e.g.
-    # type, parameters...etc), this method gives a way to provide details on the job, but hiding that underlying
-    # structure.
-    first_task = self.task_statuses.first
-    #check for first task
-    if first_task.nil?
-      return {:id=>self.id}
-    else
-      #since this is a collection of tasks, where
-      # the type and parameters will all be the same
-      #  lets not return them in each task object, but instead
-      #  put them in the job
-      tasks = self.task_statuses.collect{|t|
-        {
-            :id=>t.id,
-            :result=>t.result,
-            :progress=>t.progress,
-            :state=>t.state,
-            :uuid=>t.uuid,
-            :start_time=>t.start_time,
-            :finish_time=>t.finish_time
-        }
-      }
-      return {
-          :id=>self.id,
-          :created_at=>first_task.created_at,
-          :task_type=>first_task.task_type,
-          :parameters=>first_task.parameters,
           :tasks=>tasks,
 
           :state=>self.state,
