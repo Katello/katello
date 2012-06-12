@@ -145,21 +145,21 @@ describe ActivationKey do
   describe "pools in a activation key" do
 
     it "should map 2way pool to keys" do
-      s = KTPool.create!(:cp_id  => 'abc123')
+      s = Pool.create!(:cp_id  => 'abc123')
       @akey.pools = [s]
       @akey.pools.first.cp_id.should == 'abc123'
       s.activation_keys.first.name.should == aname
     end
 
     it "should assign multiple pools to keys" do
-      s = KTPool.create!(:cp_id  => 'abc123')
-      s2 = KTPool.create!(:cp_id  => 'def123')
+      s = Pool.create!(:cp_id  => 'abc123')
+      s2 = Pool.create!(:cp_id  => 'def123')
       @akey.pools = [s,s2]
       @akey.pools.last.cp_id.should == 'def123'
     end
 
     it "should include pools details in json output" do
-      pool = KTPool.create!(:cp_id  => 'abc123')
+      pool = Pool.create!(:cp_id  => 'abc123')
       @akey.pools << pool
       pool.reload
       @akey.as_json[:pools].should == [ { :cp_id => pool.cp_id } ]
@@ -197,9 +197,9 @@ describe ActivationKey do
     before(:each) do
       Resources::Candlepin::Pool.stub!(:find) do |x|
         {
-          :productName => "Blah Server OS",
-          :productId => dates[x][:productId],
-          :startDate => dates[x][:startDate],
+          :product_name => "Blah Server OS",
+          :product_id => dates[x][:product_id],
+          :start_date => dates[x][:start_date],
           :quantity => dates[x][:quantity],
           :consumed => dates[x][:consumed],
         }
@@ -207,7 +207,7 @@ describe ActivationKey do
       @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"}, :uuid => "uuid-uuid")
       @system.should_receive(:sockets).and_return(sockets)
       dates.each_pair do |k,v|
-        pool = KTPool.create!(:cp_id => k)
+        pool = Pool.create!(:cp_id => k)
         @akey.key_pools.create!(:pool_id  => pool.id)
       end
     end
@@ -227,8 +227,8 @@ describe ActivationKey do
       let(:dates) do
         {
           "a" => {
-            :productId => "A",
-            :startDate => "2011-02-11T11:11:11.111+0000",
+            :product_id => "A",
+            :start_date => Date.parse("2011-02-11T11:11:11.111+0000"),
             :quantity => 10,
             :consumed => 0,
           }
@@ -247,14 +247,14 @@ describe ActivationKey do
       let(:dates) do
         {
           "a" => {
-            :productId => "A",
-            :startDate => "2011-01-02T11:11:11.111+0000",
+            :product_id => "A",
+            :start_date => Date.parse("2011-01-02T11:11:11.111+0000"),
             :quantity => 10,
             :consumed => 0,
           },
           "b" => {
-            :productId => "A",
-            :startDate => "2011-01-01T11:11:11.111+0000", # older
+            :product_id => "A",
+            :start_date => Date.parse("2011-01-01T11:11:11.111+0000"), # older
             :quantity => 10,
             :consumed => 0,
           }
@@ -273,20 +273,20 @@ describe ActivationKey do
       let(:dates) do
         {
           "b" => {
-            :productId => "A",
-            :startDate => "2011-01-11T11:11:11.111+0000",
+            :product_id => "A",
+            :start_date => Date.parse("2011-01-11T11:11:11.111+0000"),
             :quantity => 10,
             :consumed => 0,
           },
           "c" => {
-            :productId => "A",
-            :startDate => "2011-01-11T11:11:11.111+0000",
+            :product_id => "A",
+            :start_date => Date.parse("2011-01-11T11:11:11.111+0000"),
             :quantity => 10,
             :consumed => 0,
           },
           "a" => {
-            :productId => "A",
-            :startDate => "2011-01-11T11:11:11.111+0000",
+            :product_id => "A",
+            :start_date => Date.parse("2011-01-11T11:11:11.111+0000"),
             :quantity => 10,
             :consumed => 0,
           }
@@ -306,14 +306,14 @@ describe ActivationKey do
       let(:dates) do
         {
           "pool 1" => {
-            :productId => "product 1",
-            :startDate => "2011-01-11T11:11:11.111+0000",
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-11T11:11:11.111+0000"),
             :quantity => 5,
             :consumed => 0,
           },
           "pool 2" => {
-            :productId => "product 2",
-            :startDate => "2011-01-11T11:11:11.111+0000",
+            :product_id => "product 2",
+            :start_date => Date.parse("2011-01-11T11:11:11.111+0000"),
             :quantity => 5,
             :consumed => 0,
           },
@@ -333,14 +333,14 @@ describe ActivationKey do
       let(:dates) do
         {
           "pool 1" => {
-            :productId => "product 1",
-            :startDate => "2011-01-02T00:00:00.000+0000",
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-02T00:00:00.000+0000"),
             :quantity => 5,
             :consumed => 0,
           },
           "pool 2" => {
-            :productId => "product 1",
-            :startDate => "2011-01-01T00:00:00.000+0000", # older
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"), # older
             :quantity => 5,
             :consumed => 0,
           },
@@ -360,14 +360,14 @@ describe ActivationKey do
       let(:dates) do
         {
           "pool 1" => {
-            :productId => "product 1",
-            :startDate => "2011-01-02T00:00:00.000+0000",
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-02T00:00:00.000+0000"),
             :quantity => 5,
             :consumed => 0,
           },
           "pool 2" => {
-            :productId => "product 1",
-            :startDate => "2011-01-01T00:00:00.000+0000", # older
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"), # older
             :quantity => 5,
             :consumed => 0,
           },
@@ -386,14 +386,14 @@ describe ActivationKey do
       let(:dates) do
         {
           "pool 1" => {
-            :productId => "product 1",
-            :startDate => "2011-01-01T00:00:00.000+0000",
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"),
             :quantity => 5,
             :consumed => 0,
           },
           "pool 2" => {
-            :productId => "product 1",
-            :startDate => "2011-01-01T00:00:00.000+0000",
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"),
             :quantity => 5,
             :consumed => 0,
           },
@@ -412,14 +412,14 @@ describe ActivationKey do
       let(:dates) do
         {
           "pool 1" => {
-            :productId => "product 1",
-            :startDate => "2011-01-01T00:00:00.000+0000",
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"),
             :quantity => 0,
             :consumed => 0,
           },
           "pool 2" => {
-            :productId => "product 2",
-            :startDate => "2011-01-01T00:00:00.000+0000",
+            :product_id => "product 2",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"),
             :quantity => 2,
             :consumed => 0,
           },
@@ -437,14 +437,14 @@ describe ActivationKey do
       let(:dates) do
         {
           "pool 1" => {
-            :productId => "product 1",
-            :startDate => "2011-01-01T00:00:00.000+0000",
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"),
             :quantity => 99,
             :consumed => 99,
           },
           "pool 2" => {
-            :productId => "product 2",
-            :startDate => "2011-01-01T00:00:00.000+0000",
+            :product_id => "product 2",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"),
             :quantity => 2,
             :consumed => 0,
           },
@@ -462,14 +462,14 @@ describe ActivationKey do
       let(:dates) do
         {
           "pool 1" => {
-            :productId => "product 1",
-            :startDate => "2011-01-01T00:00:00.000+0000",
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"),
             :quantity => 5, # 0 remaining
             :consumed => 5,
           },
           "pool 2" => {
-            :productId => "product 1",
-            :startDate => "2011-01-01T00:00:00.000+0000",
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"),
             :quantity => 5, # 2 remaining
             :consumed => 3,
           },
@@ -488,14 +488,14 @@ describe ActivationKey do
       let(:dates) do
         {
           "pool 1" => {
-            :productId => "product 1",
-            :startDate => "2011-01-01T00:00:00.000+0000", # older
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"), # older
             :quantity => 1,
             :consumed => 0,
           },
           "pool 2" => {
-            :productId => "product 2",
-            :startDate => "2011-01-02T00:00:00.000+0000",
+            :product_id => "product 2",
+            :start_date => Date.parse("2011-01-02T00:00:00.000+0000"),
             :quantity => 2, # 1 remaining
             :consumed => 1,
           },
@@ -513,14 +513,14 @@ describe ActivationKey do
       let(:dates) do
         {
           "pool 1" => {
-            :productId => "product 1",
-            :startDate => "2011-01-01T00:00:00.000+0000", # older
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"), # older
             :quantity => 2,
             :consumed => 0,
           },
           "pool 2" => {
-            :productId => "product 2",
-            :startDate => "2011-01-02T00:00:00.000+0000",
+            :product_id => "product 2",
+            :start_date => Date.parse("2011-01-02T00:00:00.000+0000"),
             :quantity => 2, # 1 remaining
             :consumed => 1,
           },
@@ -540,14 +540,14 @@ describe ActivationKey do
       let(:dates) do
         {
           "pool 1" => {
-            :productId => "product 1",
-            :startDate => "2011-01-01T00:00:00.000+0000", # same date
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"), # same date
             :quantity => 5, # 1 remaining
             :consumed => 4,
           },
           "pool 2" => {
-            :productId => "product 1",
-            :startDate => "2011-01-01T00:00:00.000+0000", # same date
+            :product_id => "product 1",
+            :start_date => Date.parse("2011-01-01T00:00:00.000+0000"), # same date
             :quantity => 5, # 1 remaining
             :consumed => 4,
           },
