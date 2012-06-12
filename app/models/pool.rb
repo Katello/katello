@@ -27,7 +27,7 @@ class Pool < ActiveRecord::Base
   # Most ActiveRecord models that need to be indexed do so through including IndexedModel. Since not all Pool
   # objects are persisted, this could lead to confusion and unnecessary overhead. (Only Pools referenced by
   # ActivationKeys are stored.) The methods below are the infrastructure for indexing the Pool objects.
-  def display_attrs
+  def self.display_attributes
     ['name', 'sla', 'start', 'end', 'consumed', 'product', 'account', 'contract', 'virtual']
   end
 
@@ -37,14 +37,22 @@ class Pool < ActiveRecord::Base
       "id"        => @cp_id,
       "name"      => @product_name,
       "name_sort" => @product_name,
+      "product_name"=> @product_name,
       "start"     => @start_date,
       "end"       => @end_date,
       "product"   => @product_id,
+      "product_id"=> @product_id,
       "account"   => @account_number,
       "contract"  => @contract_number,
       "sla"       => @support_level,
+      "support_level"=> @support_level,
       "virtual"   => @virt_only,
-      "org"       => @owner["key"]
+      "org"       => @owner["key"],
+      "consumed"  => @consumed,
+      "quantity"  => @quantity,
+      "pool_derived" => @pool_derived,
+      "derived"   => @pool_derived,
+      "provider_id"=> provider_id
     }
   end
 
@@ -54,12 +62,19 @@ class Pool < ActiveRecord::Base
         :properties => {
           :name         => {:type=>'string', :analyzer=>:kt_name_analyzer},
           :name_sort    => {:type=>'string', :index=>:not_analyzed},
+          :product_name => {:type=>'string', :index=>:not_analyzed},
           :all          => {:type=>'string'},
           :begin        => {:type=>'date'},
           :end          => {:type=>'date'},
           :sockets      => {:type=>'long'},
           :sla          => {:type=>'string'},
-          :org          => {:type=>'string', :index=>:not_analyzed}
+          :support_level=> {:type=>'string', :index=>:not_analyzed},
+          :org          => {:type=>'string', :index=>:not_analyzed},
+          :quantity     => {:type=>'long'},
+          :consumed     => {:type=>'long'},
+          :pool_derived => {:type=>'boolean', :index=>:not_analyzed},
+          :derived      => {:type=>'boolean'},
+          :provider_id  => {:type=>'long', :index=>:not_analyzed}
         }
       }
     }
@@ -97,7 +112,7 @@ class Pool < ActiveRecord::Base
     end if !json_pools.empty?
   end
 
-  def self.search org_key, query, start, page_size, sort=[:name_sort, "ASC"]
+  def self.search query, start, page_size, filters={}, sort=[:name_sort, "ASC"]
     return [] if !Tire.index(self.index).exists?
 
     all_rows = query.blank? #if blank, get all rows
@@ -117,8 +132,11 @@ class Pool < ActiveRecord::Base
        from start
       end
 
-      if org_key
-        filter :term, 'org'=>org_key
+      if filters.has_key?(:org)
+        filter :term, :org=>filters[:org]
+      end
+      if filters.has_key?(:provider_id)
+        filter :term, :provider_id=>filters[:provider_id]
       end
 
       sort { by sort[0], sort[1] } unless !all_rows
@@ -127,5 +145,14 @@ class Pool < ActiveRecord::Base
   rescue
     return []
   end
+
+  # Some fields are are not native to the Candlepin object but are useful for searching
+  def provider_id
+    @cp_provider_id
+  end
+  def provider_id= cp_id
+    @cp_provider_id = cp_id
+  end
+
 
 end

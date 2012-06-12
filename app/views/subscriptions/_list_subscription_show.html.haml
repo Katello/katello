@@ -1,0 +1,14 @@
+%div
+  %div{:class=>'column_1'}
+    .status_icon{:class => "#{item.pool_derived ? 'yellow' : 'green'}"}
+    %div.one-line-ellipsis{:style=>"padding-top: 2px; font-weight: bold;"}
+      = item.product_name
+%div
+  %div{:class=>'column_2'}
+    - if item.quantity < 0
+      = _("Consumed: Unlimited")
+    - else
+      = _("Consumed: %d of %d") % [item.consumed, item.quantity]
+  %div{:class=>'column_2'}
+    = _("SLA: %s") % item.support_level
+.arrow-right
