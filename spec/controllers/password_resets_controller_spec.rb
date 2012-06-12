@@ -30,14 +30,6 @@ describe PasswordResetsController do
                            :password_reset_sent_at => @testuser_password_reset_sent_at)
   end
 
-  describe "GET new" do
-    it "successfully renders password reset request page" do
-      get :new
-      response.should render_template(:new)
-      response.should be_success
-    end
-  end
-
   describe "POST create" do
     before (:each) do
       @params = {:username => @testuser_username, :email => @testuser_email}
@@ -64,18 +56,6 @@ describe PasswordResetsController do
         bad_req[:bad_foo] = "mwahaha"
         post :create, bad_req
       end
-    end
-  end
-
-  describe "GET edit" do
-    before (:each) do
-      User.stub!(:find_by_password_reset_token!).and_return(@testuser)
-    end
-
-    it "successfully renders password reset edit page" do
-      get :edit, :id => @testuser_password_reset_token
-      response.should render_template(:edit)
-      response.should be_success
     end
   end
 
