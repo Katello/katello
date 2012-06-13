@@ -14,6 +14,7 @@
 # in this software or its documentation.
 #
 
+import os
 from gettext import gettext as _
 
 from katello.client.api.version import VersionAPI
@@ -45,7 +46,8 @@ class Info(VersionAction):
         return 0
 
     def run(self):
-        return self.api.version_formatted()
+        print self.api.version_formatted()
+        return os.EX_OK
 
 
 # ping command ------------------------------------------------------------
