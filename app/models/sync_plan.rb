@@ -48,7 +48,11 @@ class SyncPlan < ActiveRecord::Base
   before_save :reassign_sync_plan_to_products
 
   def reassign_sync_plan_to_products
-    self.products.each &:save # triggers orchestration in products
+    # triggers orchestration in products
+    self.products.each do |product|
+      product.sync_plan = self # assign current updated sync_plan, don't let products to load sync_plan again
+      product.save!
+    end
   end
 
   def validate_sync_date
