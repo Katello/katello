@@ -96,7 +96,8 @@ class ActivationKey < ActiveRecord::Base
       end
     end
     total = result.inject{|sum,x| sum + x }
-    raise _("Not enough entitlements in pools (%d), required: %d, available: %d" % [entitlements.size, amount, total]) if amount != total
+    raise _("Not enough entitlements in pools (%d), required: %d, available: %d") %
+              [entitlements.size, amount, total] if amount != total
     result
   end
 
@@ -108,19 +109,19 @@ class ActivationKey < ActiveRecord::Base
       # {"productId" => { "poolId_1" => [start_date, entitlements_left], "poolId_2" => ... } }
       products = {}
       self.pools.each do |pool|
-        raise _("Pool %s has no product associated" % pool.cp_id) unless pool.product_id
+        raise _("Pool %s has no product associated") % pool.cp_id unless pool.product_id
         products[pool.product_id] = {} unless products.key? pool.product_id
         quantity = pool.quantity == -1 ? 999_999_999 : pool.quantity
-        raise _("Unable to determine quantity for pool %s" % pool.cp_id) if quantity.nil?
+        raise _("Unable to determine quantity for pool %s") % pool.cp_id if quantity.nil?
         left = quantity - pool.consumed
-        raise _("Number of consumed entitlements exceeded quantity for %s" % pool.cp_id) if left < 0
+        raise _("Number of consumed entitlements exceeded quantity for %s") % pool.cp_id if left < 0
         products[pool.product_id][pool.cp_id] = [pool.start_date, left]
       end
 
       # for each product consumer "allocate" amount of entitlements
       allocate = system.sockets.to_i
       Rails.logger.debug "Number of sockets for registration: #{allocate}"
-      raise _("Number of sockets must be higher than 0 for system %s" % system.name) if allocate.nil? or allocate <= 0
+      raise _("Number of sockets must be higher than 0 for system %s") % system.name if allocate.nil? or allocate <= 0
       #puts products.inspect
       products.each do |product_id, pools|
         # create two arrays - pool ids and remaining entitlements
