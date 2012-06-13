@@ -37,8 +37,8 @@ class ContentSearchController < ApplicationController
 
   def products
 
-    ids = params[:products][:autocomplete].collect{|p|p["id"]} if params[:products]
-    if ids && !ids.empty?
+    ids = product_ids 
+    if !ids.empty?
       products = current_organization.products.where(:id=>ids)
     else
       products = current_organization.products
@@ -53,5 +53,24 @@ class ContentSearchController < ApplicationController
     end
     render :json=>products
   end
+
+
+
+
+  private
+
+  def product_ids 
+    ids = params[:products][:autocomplete].collect{|p|p["id"]} if params[:products]
+    ids || []
+  end
+
+  def repo_ids
+    ids = params[:repos][:autocomplete].collect{|p|p["id"]} if params[:repos]
+    ids || [] 
+  end
+
+  
+
+
 
 end
