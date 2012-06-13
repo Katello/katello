@@ -28,7 +28,7 @@ module Navigation
 
   module MainMenu
    def menu_main
-    [ menu_dashboard, menu_contents, menu_systems, menu_organization ]
+    [ menu_dashboard, menu_contents, menu_systems ]
    end
   end
 

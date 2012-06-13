@@ -244,7 +244,7 @@ KT.common = (function() {
         },
         orgSwitcherSetup : function() {
             //org switcher
-            var button = $('#switcherButton');
+            var button = $('#switcherContainer');
             var box = $('#switcherBox');
             var form = $('#switcherForm');
             var orgbox = $('#orgbox');

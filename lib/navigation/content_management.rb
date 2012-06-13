@@ -42,7 +42,7 @@ module Navigation
 
     def menu_contents
       {:key => :content,
-       :name => _("Content Management"),
+       :name => _("Content"),
         :url => :sub_level,
         :options => {:class=>'content top_level', "data-menu"=>"content"},
         :if => lambda{current_organization},

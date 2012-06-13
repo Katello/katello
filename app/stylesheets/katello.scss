@@ -49,7 +49,7 @@ strong { font-weight: bold; }
 .hidden { display: none; }
 .outlined { outline: 2px solid $kselected_color; }
 .alt { background-color: lighten($lightgrey_color, 35%) !important; }
-.clickable { cursor: pointer; cursor: hand; }
+.clickable { cursor: pointer; cursor: hand; }                                l
 .light_text { color: $lightgrey_color; }
 hr { color: $border_color; }
 
@@ -1234,11 +1234,11 @@ fieldset {
 #switcherContainer {
   position: absolute;
   display: inline-block;
-  left: 184px;
+  left: 182px;
   bottom: 6px;
   width: 165px;
   height: 22px;
-  @include button_color;
+  @include switcher-button_color;
   @include border-radius(3px);
   /* switcher Button */
    #switcherButton {
@@ -1248,31 +1248,31 @@ fieldset {
     padding: 2px 6px 2px 6px;
     text-align: left;
     width: 100%;
-    .arrow_icon_menu {
-      height: 11px;
-      width: 13px;
-      background: $arrow_icon_menu;
-      float: right;
-      margin: 6px 4px 0 0;
-      &:hover {
-       background: $arrow_icon_menu_hover;
-      }
-    }
-    &.active {
-      @include border-bottom-lr-radius(0);
-      .arrow_icon {
-        background-position: 0 -11px;
-      }
-    }
-    &:hover {
-      text-decoration: none;
+  }
+  &.active {
+    @include border-bottom-lr-radius(0);
+    @include switcher-button-active_color;
+    .arrow_icon {
+      background-position: 0 -11px;
     }
   }
-
+  &:hover {
+    text-decoration: none;
+  }
+  .arrow_icon_menu {
+    height: 11px;
+    width: 13px;
+    background: $arrow_icon_menu;
+    float: right;
+    margin: 6px 4px 0 0;
+    &:hover {
+     background: $arrow_icon_menu_hover;
+    }
+  }
   /* switcher Box */
   #switcherBox {
     position: absolute;
-    top: 23px;
+    top: 22px;
     left: 0px;
     display: none;
     z-index: 2000;
@@ -1284,11 +1284,11 @@ fieldset {
   /* switcher Form */
   #switcherForm {
     width: 248px;
-    border: 1px solid transparent;
+    border: 0 none;
     @include border-radius(2px);
     @include box-shadow(2px, 2px, 2px, rgba(0,0,0,0.4));
     margin-top: -1px;
-    @include button_color;
+    @include switcher-form_color;
     padding: 6px;
     fieldset {
       margin: 0 0 12px 0;
