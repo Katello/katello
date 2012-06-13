@@ -20,7 +20,7 @@ from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
-from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import test_record
 
 
 Config()
@@ -56,16 +56,12 @@ class List(SystemGroupAction):
         org_name = self.get_option('org')
 
         system_groups = self.api.system_groups(org_name)
-
-        self.printer.set_header(_("System Groups List For Org [ %s ]") % org_name)
-
         if system_groups is None:
             return os.EX_DATAERR
 
+        self.printer.set_header(_("System Groups List For Org [ %s ]") % org_name)
         self.printer.add_column('id')
         self.printer.add_column('name')
-
-        self.printer._grep = True
         self.printer.print_items(system_groups)
         return os.EX_OK
 
@@ -95,12 +91,10 @@ class Create(SystemGroupAction):
 
         system_group = self.api.create(org_name, name, description, max_systems)
 
-        if is_valid_record(system_group):
-            print _("Successfully created system group [ %s ]") % system_group['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create system group [ %s ]") % name
-            return os.EX_DATAERR
+        test_record(system_group,
+            _("Successfully created system group [ %s ]") % system_group['name'],
+            _("Could not create system group [ %s ]") % name
+        )
 
 
 class Info(SystemGroupAction):
@@ -124,9 +118,6 @@ class Info(SystemGroupAction):
 
         # get system details
         system_group = get_system_group(org_name, system_group_name)
-
-        if not system_group:
-            return os.EX_DATAERR
 
         self.printer.add_column('id')
         self.printer.add_column('name')
@@ -158,10 +149,6 @@ class History(SystemGroupAction):
         self.printer.set_header(_("System Group History For [ %s ]") % (system_group_name))
 
         system_group = get_system_group(org_name, system_group_name)
-
-        if not system_group:
-            return os.EX_DATAERR
-
 
         # get list of jobs
         history = self.api.system_group_history(org_name, system_group['id'])
@@ -200,7 +187,6 @@ class HistoryTasks(SystemGroupAction):
         org_name = self.get_option('org')
         system_group_name = self.get_option('name')
         job_id = self.get_option('job_id')
-        # info is always grep friendly
 
         self.printer.set_header(_("System Group Job tasks For [ %s ]") % (system_group_name))
 
@@ -251,8 +237,6 @@ class Update(SystemGroupAction):
 
         system_group = get_system_group(org_name, name)
 
-        if system_group is None:
-            return os.EX_DATAERR
 
         system_group = self.api.update(org_name, system_group["id"], new_name, new_description, max_systems)
 
@@ -281,11 +265,8 @@ class Delete(SystemGroupAction):
         name = self.get_option('name')
 
         system_group = get_system_group(org_name, name)
-        if not system_group:
-            return os.EX_DATAERR
 
         message = self.api.delete(org_name, system_group["id"])
-
         if message != None:
             print message
             return os.EX_OK
@@ -309,23 +290,17 @@ class Systems(SystemGroupAction):
     def run(self):
         org_name = self.get_option('org')
         system_group_name = self.get_option('name')
-        # info is always grep friendly
 
         # get system details
         system_group = get_system_group(org_name, system_group_name)
-        if not system_group:
-            return os.EX_DATAERR
 
         systems = self.api.system_group_systems(org_name, system_group["id"])
-
         if systems is None:
             return os.EX_DATAERR
 
         self.printer.set_header(_("Systems within System Group [ %s ] For Org [ %s ]") % (system_group["name"], org_name))
-
         self.printer.add_column('id')
         self.printer.add_column('name')
-
         self.printer.print_items(systems)
 
         return os.EX_OK
@@ -347,13 +322,9 @@ class Lock(SystemGroupAction):
     def run(self):
         org_name = self.get_option('org')
         system_group_name = self.get_option('name')
-        # info is always grep friendly
 
         # get system details
         system_group = get_system_group(org_name, system_group_name)
-        if not system_group:
-            return os.EX_DATAERR
-
         system_group = self.api.lock(org_name, system_group["id"])
 
         if system_group != None:
@@ -379,13 +350,9 @@ class Unlock(SystemGroupAction):
     def run(self):
         org_name = self.get_option('org')
         system_group_name = self.get_option('name')
-        # info is always grep friendly
 
         # get system details
         system_group = get_system_group(org_name, system_group_name)
-        if not system_group:
-            return os.EX_DATAERR
-
         system_group = self.api.unlock(org_name, system_group["id"])
 
         if system_group != None:
@@ -417,9 +384,6 @@ class AddSystems(SystemGroupAction):
 
         system_group = get_system_group(org_name, name)
 
-        if system_group is None:
-            return os.EX_DATAERR
-
         systems = self.api.add_systems(org_name, system_group["id"], system_ids)
 
         if systems != None:
@@ -450,9 +414,6 @@ class RemoveSystems(SystemGroupAction):
         system_ids = self.get_option('system_uuids')
 
         system_group = get_system_group(org_name, name)
-
-        if system_group is None:
-            return os.EX_DATAERR
 
         systems = self.api.remove_systems(org_name, system_group["id"], system_ids)
 
