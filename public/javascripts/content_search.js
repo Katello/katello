@@ -27,9 +27,9 @@ $(document).ready(function() {
     });
 
     KT.widgets = {repos:{id:"repos_selector", autocomplete:'repo_autocomplete_list', search:'repo_search'},
-                    packages:{id:"packages_selector"},
-                    products:{id:"products_selector", autocomplete:'product_autocomplete_list'},
-                    errata:{id:"errata_selector", search:'errata_search'}};
+                  packages:{id:"packages_selector"},
+                  products:{id:"products_selector", autocomplete:'product_autocomplete_list'},
+                  errata:{id:"errata_selector", search:'errata_search'}};
 
     KT.mapping = {products:['products'], repos:['products', 'repos'], packages:['products', 'repos', 'packages'],
         errata:['products', 'repos', 'errata']};
@@ -59,6 +59,7 @@ KT.content_search = function(){
     },
     do_search = function(){
         var urls = {errata:KT.routes.errata_content_search_index_path(),
+                    repos:KT.routes.repos_content_search_index_path(),
                     products:KT.routes.products_content_search_index_path()};
         var search_params = $.bbq.getState('search');
         if (urls[search_params.content_type] ){
@@ -157,6 +158,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
         }
         ac_container.find('input:text').removeAttr('disabled');
         ac_container.find('.button').removeAttr('disabled');
+        ac_container.find('ul').removeClass('disabled');
     },
     auto_select = function(name, id){
         if(!id){
@@ -176,7 +178,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
         else if(ac_obj){
            var ids = [];
            utils.each(ac_container.find('li').not('.all'), function(item, index){
-               ids.push({id:[$(item).data('id')], name: $(item).data('name')});
+               ids.push({id:$(item).data('id'), name: $(item).data('name')});
            });
            return {autocomplete: ids};
         }
