@@ -139,7 +139,7 @@ class EnvironmentsController < ApplicationController
       env_id = (params[:id].blank? ? nil : params[:id]) || params[:env_id]
       @environment = KTEnvironment.find env_id
     rescue Exception => error
-      notice _("Couldn't find environment with ID=%d" % env_id, {:level => :error})
+      notice _("Couldn't find environment with ID=%d") % env_id, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end
