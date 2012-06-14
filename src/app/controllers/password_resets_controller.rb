@@ -22,15 +22,12 @@ class PasswordResetsController < ApplicationController
   def section_id
     "loginpage"
   end
+
   def param_rules
     {
       :create =>[:username, :email],
       :update => {:user  => [:password]}
     }
-  end
-
-  def new
-    @ldap = AppConfig.warden == 'ldap'
   end
 
   def create
@@ -47,6 +44,8 @@ class PasswordResetsController < ApplicationController
       notice _("Password reset token has expired for user '%{s}'.") % { :s => @user.username },
              { :level => :error, :persist => false }
       redirect_to new_password_reset_path
+    else
+      render "common/user_session", :layout => "converge-ui/change_password_layout"
     end
   end
 
