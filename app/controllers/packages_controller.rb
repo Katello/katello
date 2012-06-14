@@ -70,7 +70,7 @@ class PackagesController < ApplicationController
   def lookup_package
     @package_id = params[:id]
     @package = Glue::Pulp::Package.find @package_id
-    raise(_("Unable to find package %s" % @package_id)) if @package.nil?
+    raise _("Unable to find package %s")% @package_id if @package.nil?
   end
 
 end
