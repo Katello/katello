@@ -1,11 +1,19 @@
 %article#comparison_grid
-  %header
-    %aside
-      "Filter goes here"
-    %ul#column_headers
-      %li.column_header#my_env_selector
-        %span.path_button
-          = _('Add Environment(s)')
+  #grid_header
+    %header
+      %h1.fl
+        = _("Search Results")
+      %div.fr
+        %label
+          = _("View")
+        %select
+    %div
+      %aside
+        "Filter goes here"
+      %ul#column_headers
+        %li.column_header#my_env_selector
+          %span.path_button
+            = _('Add Environment(s)')
   %section
     %ul#grid_items
     #grid_content
