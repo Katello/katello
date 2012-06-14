@@ -222,6 +222,7 @@ KT.system_groups = (function(){
             });
         });
         quota_setup();
+        pane.find('.systems_count').bind('click', go_to_systems_pane);
     },
     systems_setup = function(){
         var pane = $("#system_group_systems");
@@ -245,6 +246,21 @@ KT.system_groups = (function(){
             add_btn_id:   "add_system",
             selected_input_id: 'add_system_input_id',
             add_cb:       add_system
+        });
+    },
+    go_to_systems_pane = function(e){
+        e.preventDefault();
+        var url = $('.systems_count').attr('href');
+        $.ajax({
+            cache: 'false',
+            type: 'GET',
+            url: url,
+            dataType: 'html',
+            success: function(data) {
+                $(".panel-content").html(data);
+                KT.system_groups.systems_setup();
+                KT.panel.panelResize($('#panel_main'), false);
+            }
         });
     },
     add_system = function(string, item_id, cb){
