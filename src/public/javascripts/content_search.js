@@ -15,6 +15,8 @@
 
 $(document).ready(function() {
 
+    var envs = $.bbq.getState('environments');
+
     KT.my_env_select = KT.path_select('my_env_selector', 'env', KT.available_environments,
         {select_mode:'multi', button_text:"Go", link_first: true});
 
@@ -22,9 +24,10 @@ $(document).ready(function() {
     comparison_grid.init();
     comparison_grid.add_columns(KT.my_env_select.get_paths());
 
-    $(document).bind(KT.my_env_select.get_event(), function(event, environments) {
-        comparison_grid.show_columns(environments);
-    });
+    if (envs !== undefined) {
+        comparison_grid.show_columns(envs);
+    }
+
 
     KT.widgets = {repos:{id:"repos_selector", autocomplete:'repo_autocomplete_list', search:'repo_search'},
                   packages:{id:"packages_selector"},
@@ -32,36 +35,52 @@ $(document).ready(function() {
                   errata:{id:"errata_selector", search:'errata_search'}};
 
     KT.mapping = {products:['products'], repos:['products', 'repos'], packages:['products', 'repos', 'packages'],
-        errata:['products', 'repos', 'errata']};
+                    errata:['products', 'repos', 'errata']};
 
     var search = KT.content_search();
+
+    $(document).bind(KT.my_env_select.get_event(), function(event, environments) {
+        $.bbq.pushState({environments:environments});
+        comparison_grid.show_columns(environments);
+    });
+
+
+
+
 });
 
 
 KT.content_search = function(){
-    var browse_box;
+    var browse_box, old_search_params;
     var init = function(){
         var initial_search = $.bbq.getState('search');
         browse_box = KT.widget.browse_box("content_selector", KT.widgets, KT.mapping, initial_search);
         $(document).bind(browse_box.get_event(), search_initiated);
-        $(window).bind('hashchange.search', do_search);
+        bind_search_event();
         if(initial_search){
             browse_box.trigger_search();
         }
-    };
-    var search_initiated = function(e, search_params){
-        var old =  $.param.fragment();
-        $.bbq.pushState({search:search_params});
-        if(old === $.param.fragment()){
-            do_search();
-        }
-        
     },
-    do_search = function(){
+    search_initiated = function(e, search_params){
+        $.bbq.pushState({search:search_params});
+        if(KT.utils.isEqual(old_search_params, $.bbq.getState("search"))){
+            do_search(search_params);
+        }
+    },
+    bind_search_event = function(){
+        $(window).bind('hashchange.search', function(event) {
+            var search_params = event.getState('search');
+            if (search_params &&  !KT.utils.isEqual(old_search_params, search_params)) {
+                old_search_params = search_params;
+                do_search(search_params);
+            }
+        });
+    },
+    do_search = function(search_params){
         var urls = {errata:KT.routes.errata_content_search_index_path(),
                     repos:KT.routes.repos_content_search_index_path(),
                     products:KT.routes.products_content_search_index_path()};
-        var search_params = $.bbq.getState('search');
+
         if (urls[search_params.content_type] ){
              
             $.ajax({
@@ -83,7 +102,6 @@ KT.content_search = function(){
 
     init();
     return {
-
     }
 };
 
