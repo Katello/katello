@@ -36,60 +36,62 @@ class ContentSearchController < ApplicationController
   end
 
   def products
-
     ids = param_product_ids 
     if !ids.empty?
       products = current_organization.products.where(:id=>ids)
     else
       products = current_organization.products
     end
-    products = products.collect do |p|
-       p_list = {}
-
-       p_list['id'] = p.id
-       p_list['name'] = p.name
-       p_list['cols'] = p.environment_ids
-       p_list
-    end
-    render :json=>products
+    render :json=>product_rows(products)
   end
 
   def repos
     
     repo_ids = process_repo_params
     product_ids = param_product_ids
-   
-    print repo_ids.inspect
-     
-    if repo_ids.is_a? Array
+
+    if repo_ids.is_a? Array #repos were auto_completed
         repos = Repository.readable(current_organization.library).where(:id=>repo_ids)
 
-    elsif repo_ids
+    elsif repo_ids #repos were searched
       readable = Repository.readable(current_organization.library).collect{|r| r.id}
-      repos = Repository.search do
+      repos = Repository.search :load=>true do
         query {string repo_ids, {:default_field=>'name'}}
         filter "and", [
             {:terms => {:id => readable}},
             {:terms => {:enabled => [true]}}
         ]
       end
-   
-    elsif !product_ids.empty? 
+    elsif !product_ids.empty? #products were autocompleted
         repos = []
         Product.readable(current_organization).where(:id=>product_ids).each do |p|
           repos = repos + Repository.readable_for_product(current_organization.library, p)
         end
-    else 
+    else #get all
         repos = Repository.readable(current_organization.library)
     end
-    repos = repos.collect do |r| 
-        {:id=>r.id, :name=>r.name, :cols=>[current_organization.library.id]}
-    end
-    render :json=>repos
+
+    products = repos.collect{|r| r.product}.uniq
+    render :json=>(product_rows(products) + repo_rows(repos))
   end
 
 
   private
+
+
+  def repo_rows repos
+    repos.collect do |repo|
+        all_repos = repo.other_repos_with_same_product_and_content + [repo.pulp_id]
+        env_ids = Repository.where(:pulp_id=>all_repos).collect{|r| r.environment.id}
+        {:id=>"repo_#{repo.id}", :parent_id=>"product_#{repo.product.id}", :name=>repo.name, :cols=>env_ids}
+    end
+  end
+
+  def product_rows products
+    products.collect do |p|
+       {:id=>"product_#{p.id}", :name=>p.name, :cols=>p.environment_ids}
+    end
+  end
 
   def param_product_ids 
     ids = params[:products][:autocomplete].collect{|p|p["id"]} if params[:products]
