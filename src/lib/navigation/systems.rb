@@ -103,7 +103,7 @@ module Navigation
           :options => {:class=>"third_level navigation_element"},
         },
         { :key => :events,
-          :name =>_("Events"),
+          :name =>_("Events History"),
           :url => lambda{system_events_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level navigation_element"},
@@ -175,7 +175,7 @@ module Navigation
           :options => {:class=>"third_level navigation_element"},
         },
         { :key => :events,
-          :name =>_("Events"),
+          :name =>_("Events History"),
           :url => lambda{system_group_events_path(@group.id)},
           :if => lambda{@group},
           :options => {:class=>"third_level navigation_element"}
