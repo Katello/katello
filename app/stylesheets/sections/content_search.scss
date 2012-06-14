@@ -1,15 +1,20 @@
 @import "mixins";
 @import "converge-ui/colors";
 
-$browse_box-width: 200px;
+$browse_box-width: 230px;
 $browse_box-height: 600px;
 $browse_box_header-height: 40px;
+$browse_box-margin-top: 25px;
 
-$comparison_grid-width: 920px - $browse_box-width;
-$comparison_grid_header-height: 50px;
+$comparison_grid-width: 688px;
+$comparison_grid_header_h1-height:  45px;
+$comparison_grid_column_header-height:  35px;
+$comparison_grid_header-height: $comparison_grid_header_h1-height + $comparison_grid_column_header-height;
 $comparison_grid-height: 600px;
 $comparison_grid_filter-width: 150px;
 $comparison_grid_row-height: 30px;
+$comparison_grid_column-width: 100px;
+$comparison_grid-margin-top: $browse_box_header-height + $browse_box-margin-top;
 
 $widget_border-color: #B5B5B5;
 
@@ -21,8 +26,10 @@ $widget_border-color: #B5B5B5;
   height: $browse_box-height;
   float: left;
   border: 1px solid $widget_border-color;
-  margin-bottom: 20px;
-  margin-left: 10px;
+  margin-bottom: 50px;
+  margin-left: 15px;
+  margin-right: 12px;
+  margin-top: $browse_box-margin-top;
 
   header {
     height: $browse_box_header-height;
@@ -30,6 +37,7 @@ $widget_border-color: #B5B5B5;
     
     h2 {
       padding: 0;
+      margin: 0;
     }
   }
   
@@ -55,13 +63,23 @@ $widget_border-color: #B5B5B5;
   float: right;
   border: 1px solid $widget_border-color;
   margin-bottom: 20px;
-  margin-right: 10px;
+  margin-right: 15px;
+  margin-top: $comparison_grid-margin-top;
   position: relative;
 
-  header {
+  #grid_header {
     height: $comparison_grid_header-height;
     border-bottom: 1px solid $widget_border-color;
     position: relative;
+
+    header {
+      height: $comparison_grid_header_h1-height;
+
+      h1 { 
+        padding: 0 0 17px 17px;
+        font-size: 18px;
+      }
+    }
 
     aside {
       width: $comparison_grid_filter-width;
@@ -72,7 +90,7 @@ $widget_border-color: #B5B5B5;
 
     #column_headers {
       width: $comparison_grid-width - $comparison_grid_filter-width - 1;
-      height: $comparison_grid_header-height - 10px;
+      height: $comparison_grid_column_header-height;
       position: absolute;
       bottom: 0;
       right: 0;
@@ -82,8 +100,8 @@ $widget_border-color: #B5B5B5;
 
       .column_header {
         float: left;
-        width: 40px;
-        line-height: 40px;
+        width: $comparison_grid_column-width;
+        line-height: $comparison_grid_column_header-height;
         text-align: center;
 
         &:last-child {
