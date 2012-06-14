@@ -220,6 +220,10 @@ class SystemGroup < ActiveRecord::Base
     end
   end
 
+  def total_systems
+    systems.length
+  end
+
   private
 
   #make hidden db_environments accessors private to discourage use
