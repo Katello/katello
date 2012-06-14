@@ -164,7 +164,7 @@ class UpgradeQueue
   end
 
   def find_upgrade_scripts(path, starting_from = nil)
-    scripts = Dir.glob(path+'*').sort
+    scripts = Dir.glob(path+'*').select{|f| File.executable?(f)}.sort
     if not starting_from.nil?
       scripts = scripts.delete_if {|script| (script <= path+starting_from)}
     end
