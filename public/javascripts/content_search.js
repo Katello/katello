@@ -62,26 +62,24 @@ KT.content_search = function(){
         }
     },
     search_initiated = function(e, search_params){
-        var old =  $.param.fragment();
         $.bbq.pushState({search:search_params});
-        if(old === $.param.fragment()){
-            do_search();
+        if(KT.utils.isEqual(old_search_params, $.bbq.getState("search"))){
+            do_search(search_params);
         }
-        
     },
     bind_search_event = function(){
         $(window).bind('hashchange.search', function(event) {
             var search_params = event.getState('search');
-            if (search_params && (!old_search_params || !KT.utils.isEqual(old_search_params, search_params))) {
-                do_search();
+            if (search_params &&  !KT.utils.isEqual(old_search_params, search_params)) {
+                old_search_params = search_params;
+                do_search(search_params);
             }
         });
     },
-    do_search = function(){
+    do_search = function(search_params){
         var urls = {errata:KT.routes.errata_content_search_index_path(),
                     products:KT.routes.products_content_search_index_path()};
-        var search_params = $.bbq.getState('search');
-        old_search_params = search_params;
+
         if (urls[search_params.content_type] ){
              
             $.ajax({
