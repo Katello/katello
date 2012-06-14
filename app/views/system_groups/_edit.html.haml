@@ -42,8 +42,8 @@
         %fieldset.fl.clear
           .grid_2.ra
             %label #{_("Total")}:
-          .grid_5.la
-            = link_to(@group.systems.length, systems_system_group_path(@group.id), :class => 'systems_count')
+          .grid_5.la.panel_link
+            = link_to(@group.systems.length, systems_system_group_path(@group.id))
 
         %fieldset.fl.clear
           .grid_2.ra

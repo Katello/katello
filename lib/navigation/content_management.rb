@@ -29,13 +29,13 @@ module Navigation
           :url => (@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id),
           :if => lambda{!@provider.nil? && @provider.readable? &&
                         !@provider.new_record? && !@provider.has_subscriptions?},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         },
         { :key => :edit_custom_providers,
           :name =>_("Details"),
           :url => (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id),
           :if => lambda{!@provider.nil? && @provider.readable? && !@provider.new_record?},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         }
       ]
     end
@@ -167,13 +167,13 @@ module Navigation
           :name =>_("Dependencies"),
           :url => lambda{dependencies_package_path(@package.id)},
           :if => lambda{@package},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{package_path(@package.id)},
           :if => lambda{@package},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         }
       ]
     end
@@ -184,13 +184,13 @@ module Navigation
           :name =>_("Packages"),
           :url => lambda{packages_erratum_path(@errata.id)},
           :if => lambda{@errata},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{erratum_path(@errata.id)},
           :if => lambda{@errata},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         }
       ]
     end
@@ -201,13 +201,13 @@ module Navigation
           :name =>_("Filelist"),
           :url => lambda{filelist_repository_distribution_path(@repo.id, URI::escape(@distribution.id))},
           :if => lambda{@distribution},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{repository_distribution_path(@repo.id, URI::escape(@distribution.id))},
           :if => lambda{@distribution},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         }
       ]
     end
@@ -218,19 +218,19 @@ module Navigation
           :name =>_("Filtered Packages"),
           :url => lambda{packages_filter_path(@filter.id)},
           :if => lambda{@filter},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         },
         { :key => :products,
           :name =>_("Products and Repositories"),
           :url => lambda{products_filter_path(@filter.id)},
           :if => lambda{@filter},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{edit_filter_path(@filter.id)},
           :if => lambda{@filter},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         }
       ]
     end
@@ -241,13 +241,13 @@ module Navigation
           :name =>_("Products and Repositories"),
           :url => lambda{products_repos_gpg_key_path(@gpg_key.id)},
           :if =>lambda{@gpg_key},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{edit_gpg_key_path(@gpg_key.id)},
           :if => lambda{@gpg_key},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         }
       ]
     end

@@ -23,19 +23,19 @@ module Navigation
           :name =>_("Environments"),
           :url => lambda{edit_environment_user_path(@user.id)},
           :if => lambda {@user},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         },
         { :key => :roles,
           :name =>_("Roles"),
           :url => lambda{edit_role_path(@user.own_role_id)},
           :if => lambda{@user},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{edit_user_path(@user.id)},
           :if => lambda{@user},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         }
       ]
     end
