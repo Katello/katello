@@ -4,14 +4,20 @@
       %h1.fl
         = _("Search Results")
       %div.fr
-        %label
-          = _("View")
-        %select
+        -#%label
+          -#= _("View")
+        -#%select
     %div
       %aside
         "Filter goes here"
-      %ul#column_headers
-        %li.column_header#my_env_selector
+      %div#column_headers_container
+        #left_slide_arrow.hidden
+          = "T"
+        #right_slide_arrow.hidden
+          = "T"
+        #column_headers_window
+          %ul#column_headers
+        .column_header#grid_env_selector
           %span.path_button
             = _('Add Environment(s)')
   %section

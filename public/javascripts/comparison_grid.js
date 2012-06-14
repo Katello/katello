@@ -69,7 +69,9 @@ KT.comparison_grid = function(){
             columns[id] = { 'id' : id, 'to_display' : to_display, 'data' : data };
         },
         add_column_header = function(id, to_display) {
-            $(templates.column_header(id, to_display)).insertBefore('.column_header:last');
+            var column_headers = $('#column_headers');
+
+            column_headers.append(templates.column_header(id, to_display));
         },
         add_columns = function(data){
             var i,
@@ -87,6 +89,7 @@ KT.comparison_grid = function(){
 
             utils.each(columns, function(value, key){
                 if( data[key] ){
+                    $('#column_headers').width($('#column_headers').width() + 101);
                     $('#column_' + key).show();
                     columns[key]['shown'] = true;
                     num_columns_shown += 1;
@@ -152,7 +155,7 @@ KT.comparison_grid.templates = (function() {
         column = function() {
         },
         column_header = function(id, to_display) {
-            var html = '<li data-id="' + id  + '" id="column_' + id + '" class="column_header hidden">';
+            var html = '<li data-id="' + id  + '" id="column_' + id + '" class="one-line-ellipsis column_header hidden">';
             html += to_display;
             html += '</li>';
             return html;
