@@ -37,7 +37,7 @@ class ContentSearchController < ApplicationController
 
   def products
 
-    ids = product_ids 
+    ids = param_product_ids 
     if !ids.empty?
       products = current_organization.products.where(:id=>ids)
     else
@@ -54,19 +54,58 @@ class ContentSearchController < ApplicationController
     render :json=>products
   end
 
+  def repos
+    
+    repo_ids = process_repo_params
+    product_ids = param_product_ids
+   
+    print repo_ids.inspect
+     
+    if repo_ids.is_a? Array
+        repos = Repository.readable(current_organization.library).where(:id=>repo_ids)
 
+    elsif repo_ids
+      readable = Repository.readable(current_organization.library).collect{|r| r.id}
+      repos = Repository.search do
+        query {string repo_ids, {:default_field=>'name'}}
+        filter "and", [
+            {:terms => {:id => readable}},
+            {:terms => {:enabled => [true]}}
+        ]
+      end
+   
+    elsif !product_ids.empty? 
+        repos = []
+        Product.readable(current_organization).where(:id=>product_ids).each do |p|
+          repos = repos + Repository.readable_for_product(current_organization.library, p)
+        end
+    else 
+        repos = Repository.readable(current_organization.library)
+    end
+    repos = repos.collect do |r| 
+        {:id=>r.id, :name=>r.name, :cols=>[current_organization.library.id]}
+    end
+    render :json=>repos
+  end
 
 
   private
 
-  def product_ids 
+  def param_product_ids 
     ids = params[:products][:autocomplete].collect{|p|p["id"]} if params[:products]
     ids || []
   end
 
-  def repo_ids
-    ids = params[:repos][:autocomplete].collect{|p|p["id"]} if params[:repos]
-    ids || [] 
+  def process_repo_params
+    ids = params[:repos][:autocomplete].collect{|p|p["id"]} if params[:repos] && params[:repos][:autocomplete]
+    search = params[:repos][:search] if params[:repos] && params[:repos][:search]
+    if search && !search.empty?
+        return search
+    elsif ids && !ids.empty?
+        return ids
+    else
+        return nil
+    end
   end
 
   
