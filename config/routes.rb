@@ -365,7 +365,7 @@ Src::Application.routes.draw do
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
-  resources :password_resets, :only => [:new, :create, :edit, :update] do
+  resources :password_resets, :only => [:create, :edit, :update] do
     collection do
       get :email_logins
     end

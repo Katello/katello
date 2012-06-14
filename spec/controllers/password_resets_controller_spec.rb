@@ -96,6 +96,18 @@ describe PasswordResetsController do
 
   end
 
+  describe "GET edit" do  
+    before (:each) do
+      User.stub!(:find_by_password_reset_token!).and_return(@testuser)
+    end
+
+    it "successfully renders password reset edit page" do
+      get :edit, :id => @testuser_password_reset_token
+      response.should render_template("common/user_session", "layouts/converge-ui/change_password_layout")
+      response.should be_success
+    end
+  end
+
   describe "GET email_logins" do
     before (:each) do
       @params = {:email => @testuser_email}
