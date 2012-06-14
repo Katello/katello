@@ -51,13 +51,13 @@ module Navigation
           :name =>_("Details"),
           :url => lambda{edit_organization_path(@organization.cp_key)},
           :if => lambda{@organization},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         },
         { :key => :history,
           :name =>_("History"),
           :url => lambda{events_organization_path(@organization.cp_key)},
           :if => lambda{@organization},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"panel_link"}
         }
       ]
     end

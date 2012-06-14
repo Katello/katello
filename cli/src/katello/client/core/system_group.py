@@ -123,6 +123,7 @@ class Info(SystemGroupAction):
         self.printer.add_column('name')
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('locked')
+        self.printer.add_column('total_systems')
 
         self.printer.print_item(system_group)
 
