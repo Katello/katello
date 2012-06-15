@@ -105,7 +105,7 @@
                                                               :group_tasks => group_tasks, :packages => packages}
 
       #list-spinner
-        = image_tag("spinner.gif", :class=>"ajax_scroll")
+        = image_tag("embed/icons/spinner.gif", :class=>"ajax_scroll")
 
   - else
     %p #{_("There are no packages to display.")}
@@ -113,7 +113,10 @@
 = content_for :footer do
   - if packages.length > 0
     .grid_8
-      %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(more_packages_system_system_packages_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl", :tabindex => auto_tab_index} #{_("Load %{n} More" % {:n => offset})}
+      %a#more{:style => "padding-left: 20px;",
+          "data-scroll_url"=>url_for(more_packages_system_system_packages_path(@system.id)),
+          "data-page_size"=>current_user.page_size, "data-offset"=>offset,
+          :class=>"fl", :tabindex => auto_tab_index} #{_("Load %{n} More") % {:n => offset}}
       %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
         -##{"%{n} Loaded of %{t} Total" % {:n => offset, :t => total_packages}}
 

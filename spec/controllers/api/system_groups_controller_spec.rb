@@ -81,6 +81,26 @@ describe Api::SystemGroupsController do
        end
      end
 
+     describe "GET history" do
+      let(:action) {:history}
+      let(:req) { get :history, :id=>@group.id, :organization_id=>@org.cp_key}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+
+       it "should return successfully" do
+         get :history, :id=>@group.id, :organization_id=>@org.cp_key
+         response.should be_success
+         assigns(:group).id.should == @group.id
+       end
+     end
+
+
 
      describe "POST create" do
        let(:action) {:create}

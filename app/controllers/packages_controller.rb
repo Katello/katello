@@ -38,35 +38,39 @@ class PackagesController < ApplicationController
 	def show
 		render :partial=>"show", :layout => "tupane_layout"
 	end
-	
+
 	def filelist
         render :partial=>"filelist", :layout => "tupane_layout"
 	end
-	
+
 	def changelog
         render :partial=>"changelog", :layout => "tupane_layout"
-	end 
-	
+	end
+
   def dependencies
       render :partial=>"dependencies", :layout => "tupane_layout"
-  end 	
+  end
 
   def auto_complete_library
-    name = params[:term]
-    render :json=>Glue::Pulp::Package.name_search(name)
+    begin
+        packages = Glue::Pulp::Package.name_search(params[:term])
+    rescue Tire::Search::SearchRequestFailed
+        packages = []
+    end
+    render :json => packages
   end
 
   def validate_name_library
     name = params[:term]
-    render :json=>Glue::Pulp::Package.search("name:#{name}", 0, 1).count 
+    render :json=>Glue::Pulp::Package.search("name:#{name}", 0, 1).count
   end
 
   private
 
   def lookup_package
-    @package_id = params[:id] 
+    @package_id = params[:id]
     @package = Glue::Pulp::Package.find @package_id
-    raise(_("Unable to find package %s" % @package_id)) if @package.nil?
+    raise _("Unable to find package %s")% @package_id if @package.nil?
   end
 
 end

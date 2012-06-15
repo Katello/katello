@@ -27,7 +27,7 @@ class ActivationKey < ActiveRecord::Base
   belongs_to :system_template
 
   has_many :key_pools
-  has_many :pools, :class_name => "KTPool", :through => :key_pools
+  has_many :pools, :class_name => "Pool", :through => :key_pools
 
   has_many :key_system_groups, :dependent => :destroy
   has_many :system_groups, :through => :key_system_groups
@@ -96,7 +96,8 @@ class ActivationKey < ActiveRecord::Base
       end
     end
     total = result.inject{|sum,x| sum + x }
-    raise _("Not enough entitlements in pools (%d), required: %d, available: %d" % [entitlements.size, amount, total]) if amount != total
+    raise _("Not enough entitlements in pools (%d), required: %d, available: %d") %
+              [entitlements.size, amount, total] if amount != total
     result
   end
 
@@ -108,21 +109,21 @@ class ActivationKey < ActiveRecord::Base
       # {"productId" => { "poolId_1" => [start_date, entitlements_left], "poolId_2" => ... } }
       products = {}
       self.pools.each do |pool|
-        raise _("Pool %s has no product associated" % pool.cp_id) unless pool.productId
-        products[pool.productId] = {} unless products.key? pool.productId
+        raise _("Pool %s has no product associated") % pool.cp_id unless pool.product_id
+        products[pool.product_id] = {} unless products.key? pool.product_id
         quantity = pool.quantity == -1 ? 999_999_999 : pool.quantity
-        raise _("Unable to determine quantity for pool %s" % pool.cp_id) if quantity.nil?
+        raise _("Unable to determine quantity for pool %s") % pool.cp_id if quantity.nil?
         left = quantity - pool.consumed
-        raise _("Number of consumed entitlements exceeded quantity for %s" % pool.cp_id) if left < 0
-        products[pool.productId][pool.cp_id] = [pool.startDate_as_datetime, left]
+        raise _("Number of consumed entitlements exceeded quantity for %s") % pool.cp_id if left < 0
+        products[pool.product_id][pool.cp_id] = [pool.start_date, left]
       end
 
       # for each product consumer "allocate" amount of entitlements
       allocate = system.sockets.to_i
       Rails.logger.debug "Number of sockets for registration: #{allocate}"
-      raise _("Number of sockets must be higher than 0 for system %s" % system.name) if allocate.nil? or allocate <= 0
+      raise _("Number of sockets must be higher than 0 for system %s") % system.name if allocate.nil? or allocate <= 0
       #puts products.inspect
-      products.each do |productId, pools|
+      products.each do |product_id, pools|
         # create two arrays - pool ids and remaining entitlements
         # subscription order is with most recent start or with the least pool number available
         pools_a = pools.to_a.sort { |a,b| (a[1][0] <=> b[1][0]).nonzero? || (a[0] <=> b[0]) }
@@ -136,7 +137,7 @@ class ActivationKey < ActiveRecord::Base
         Rails.logger.debug "Autosubscribing pools: #{pools_ids.inspect} with amounts: #{to_consume.inspect}"
         pools_ids.each do |poolId|
           amount = to_consume[i]
-          Rails.logger.debug "Subscribing #{system.name} to product: #{productId}, amount: #{amount}"
+          Rails.logger.debug "Subscribing #{system.name} to product: #{product_id}, amount: #{amount}"
           if amount > 0
             entitlements_array = system.subscribe(poolId, amount)
             # store for possible rollback
@@ -211,7 +212,7 @@ class ActivationKey < ActiveRecord::Base
       begin
         # This will hit candlepin; if it fails that means the
         # pool is no longer accessible.
-        pool.productName
+        pool.product_name
       rescue
         obsolete_pools << pool
       end
