@@ -103,7 +103,7 @@ module Navigation
           :options => {:class=>"third_level panel_link"},
         },
         { :key => :events,
-          :name =>_("Events"),
+          :name =>_("Events History"),
           :url => lambda{system_events_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level panel_link"},
@@ -149,36 +149,48 @@ module Navigation
           :if => lambda{@group},
           :options => {:class=>"panel_link"}
         },
-#        { :key => :content,
-#          :name =>_("Content"),
-#          :url => lambda{system_group_errata_path(@group.id)},
-#          :if => lambda{@group},
-#          :options => {:class=>"panel_link"},
-#          :items => system_groups_content_subnav
-#        },
-        { :key => :errata,
-          :name =>_("Errata"),
-          :url => lambda{system_group_errata_path(@group.id)},
+        { :key => :content,
+          :name =>_("Content"),
+          :url => lambda{system_group_packages_path(@group.id)},
           :if => lambda{@group},
-          :options => {:class=>"panel_link"},
+          :options => {:class=>"panel_link menu_parent"},
+          :items => system_groups_content_subnav
         },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{edit_system_group_path(@group.id)},
           :if => lambda{@group},
-          :options => {:class=>"panel_link"}
+          :options => {:class=>"panel_link menu_parent"},
+          :items => system_groups_subnav
+        }
+      ]
+    end
+
+    def system_groups_subnav
+      [
+        { :key => :system_group_info,
+          :name =>_("System Group Info"),
+          :url => lambda{edit_system_group_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"third_level panel_link"},
+        },
+        { :key => :events,
+          :name =>_("Events History"),
+          :url => lambda{system_group_events_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"third_level panel_link"}
         }
       ]
     end
 
     def system_groups_content_subnav
       [
-#        { :key => :packages,
-#          :name =>_("Packages"),
-#          :url => lambda{packages_system_system_packages_path(@system.id)},
-#          :if => lambda{@system},
-#          :options => {:class=>"third_level panel_link"}
-#        },
+        { :key => :packages,
+          :name =>_("Packages"),
+          :url => lambda{system_group_packages_path(@group.id)},
+          :if => lambda{@group},
+          :options => {:class=>"third_level panel_link"},
+        },
         { :key => :errata,
           :name =>_("Errata"),
           :url => lambda{system_group_errata_path(@group.id)},
