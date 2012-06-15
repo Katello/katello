@@ -21,12 +21,14 @@
               = _("All Products")
       %fieldset.primary#repos_selector
         = label_tag :repos, _("Repos")
+        #repo_search
+          = radio_button_tag :repos, :search_radio, true
+          = text_field_tag :repo_search_input, nil, :placeholder=>_('Search repositories')
         %div#repo_autocomplete_list{'data-url'=>auto_complete_library_repositories_path}
-          = radio_button_tag :repos, :auto_complete, true
+          = radio_button_tag :repos, :auto_complete_radio, true
           %input.hidden_selection{:type=>:hidden}
-          = text_field_tag :repo_auto_complete, "", :class => "auto_complete_input"
-          %a.button{ :id => "add_repo" }
-            = _("Add")
+          = text_field_tag :repo_auto_complete, nil, :class => "auto_complete_input", :placeholder=>_('Auto-complete repository')
+          %input.button{:type=>:button, :value=>_("Add"), :id => "add_repo"}
           %ul
             %li.all
               = _("All Repos")

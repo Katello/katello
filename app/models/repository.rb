@@ -94,6 +94,16 @@ class Repository < ActiveRecord::Base
     end
   }
 
+  scope :readable_for_product, lambda{|env, prod|
+    if env.contents_readable?
+      joins(:environment_product).where("environment_products.environment_id" => env.id).where(
+                                'environment_products.product_id'=>prod.id)
+    else
+      #none readable
+      where("1=0")
+    end
+  }
+
   scope :editable_in_library, lambda {|org|
     joins(:environment_product).
         where("environment_products.environment_id" => org.library.id).

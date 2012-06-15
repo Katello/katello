@@ -29,10 +29,10 @@ $(document).ready(function() {
     }
 
 
-    KT.widgets = {repos:{id:"repos_selector", autocomplete:'repo_autocomplete_list'},
-                    packages:{id:"packages_selector"},
-                    products:{id:"products_selector", autocomplete:'product_autocomplete_list'},
-                    errata:{id:"errata_selector", search:'errata_search'}};
+    KT.widgets = {repos:{id:"repos_selector", autocomplete:'repo_autocomplete_list', search:'repo_search'},
+                  packages:{id:"packages_selector"},
+                  products:{id:"products_selector", autocomplete:'product_autocomplete_list'},
+                  errata:{id:"errata_selector", search:'errata_search'}};
 
     KT.mapping = {products:['products'], repos:['products', 'repos'], packages:['products', 'repos', 'packages'],
                     errata:['products', 'repos', 'errata']};
@@ -78,6 +78,7 @@ KT.content_search = function(){
     },
     do_search = function(search_params){
         var urls = {errata:KT.routes.errata_content_search_index_path(),
+                    repos:KT.routes.repos_content_search_index_path(),
                     products:KT.routes.products_content_search_index_path()};
 
         if (urls[search_params.content_type] ){
@@ -114,17 +115,25 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
 
 
     var container,
+        utils = KT.utils,
         ac_obj,
         ac_container,
+        search_container,
         search_input,
     init = function(){
         container = $('#' + container_id);
         setup_search(search_id);
         setup_autocomplete(autocomplete_id)
+        if(search_id && autocomplete_id){
+            //if we have both, select one
+            search_container.find('input:radio').click();
+        }
     },
     setup_search = function(search_id){
         if (search_id){
-            search_input = $('#' + search_id).find('input:text');
+            search_container = $('#' + search_id);
+            search_input = search_container.find('input:text');
+            search_container.find('input:radio').change(radio_search_select);
         }
     },
     setup_autocomplete = function(auto_id){
@@ -138,6 +147,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
             ac_container.find('.all').show();
           }
        });
+       ac_container.find('input:radio').change(radio_auto_select);
 
        ac_obj = KT.auto_complete_box(
            {values:ac_container.data('url'),
@@ -152,6 +162,22 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
        });
 
     },
+    radio_search_select = function(){
+        if(ac_container){
+            ac_container.find('input:text').attr('disabled', 'disabled');
+            ac_container.find('.button').attr('disabled', 'disabled');
+            ac_container.find('ul').addClass('disabled');
+        }    
+        search_input.removeAttr('disabled');
+    },
+    radio_auto_select = function(){
+        if(search_input){
+            search_input.attr('disabled', 'disabled');
+        }
+        ac_container.find('input:text').removeAttr('disabled');
+        ac_container.find('.button').removeAttr('disabled');
+        ac_container.find('ul').removeClass('disabled');
+    },
     auto_select = function(name, id){
         if(!id){
             return;
@@ -164,13 +190,13 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
 
     },
     get_results = function(){
-        if(search_input){
+        if(search_input && !search_input.attr('disabled')){
             return {'search': search_input.val() };
         }
         else if(ac_obj){
            var ids = [];
-           KT.utils.each(ac_container.find('li').not('.all'), function(item, index){
-               ids.push({id:[$(item).data('id')], name: $(item).data('name')});
+           utils.each(ac_container.find('li').not('.all'), function(item, index){
+               ids.push({id:$(item).data('id'), name: $(item).data('name')});
            });
            return {autocomplete: ids};
         }
@@ -186,7 +212,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
             search_input.val(results.search);
         }
         else if(ac_container && results.autocomplete){
-            KT.utils.each(results.autocomplete, function(item, index){
+            utils.each(results.autocomplete, function(item, index){
                 auto_select(item.name, item.id);
             });
         }
@@ -213,6 +239,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
 KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
 
     var selector,
+        utils = KT.utils,
         event_name, 
         init = function(){
             event_name = 'browse_box_' + selector_id;
@@ -220,7 +247,7 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
             selector.change(function(){
                 change_selection($(this).val());
             });
-            KT.utils.each(widgets, function(widget, key){
+            utils.each(widgets, function(widget, key){
                 widget.finder = KT.widget.finder_box(widget.id, widget.search, widget.autocomplete);
             });
 
@@ -231,7 +258,7 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
 
             if (initial_values && initial_values.content_type){
                 selector.val(initial_values.content_type);
-                KT.utils.each(widgets, function(widget, key){
+                utils.each(widgets, function(widget, key){
                     widget.finder.set_results(initial_values[key])
                 });
             }
@@ -243,7 +270,7 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
         submit = function(content_type){
             var needed = mapping[content_type],
                 query = {};
-            KT.utils.each(needed, function(value, index){
+            utils.each(needed, function(value, index){
                 var type_search = {};
                 query[value] = widgets[value].finder.get_results();
             });
@@ -254,9 +281,9 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
             var needed = mapping[selected],
                 element;
 
-            KT.utils.each(widgets, function(value, key){
+            utils.each(widgets, function(value, key){
                 element = $('#' + value.id);
-                if (KT.utils.include(needed, key)){
+                if (utils.include(needed, key)){
                     element.show();
                 }
                 else {
