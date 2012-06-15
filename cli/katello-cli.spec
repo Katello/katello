@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.38
+Version:       0.2.39
 Release:       1%{?dist}
 
 # Upstream uses tito rpm helper utility. To get the particular version from
@@ -112,6 +112,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 01 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.39-1
+- system grops - a few fixes for history cli
+- cli - None check in date_formatter + enabled system test for deleting filters
+- system groups - adding group history to cli
+- cli - adding log file location to traceback error
+- 821644 - cli admin crl_regen command - unit and system test
+- 822926 - katello-cli package fedora review - fix
+
 * Fri May 25 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.38-1
 - 822926 - katello-cli package fedora review
 - Fixed typo s/fing/find. Fixes BZ #824749.

@@ -48,8 +48,8 @@ describe Api::SystemPackagesController do
   describe "install package" do
 
     before do
-      @system_task = stub_system_task(:package_install, :packages => packages)
-      @system.stub(:install_packages => @system_task)
+      @task_status = stub_task_status(:package_install, :packages => packages)
+      @system.stub(:install_packages)
     end
 
     let(:action) { :create }
@@ -71,8 +71,8 @@ describe Api::SystemPackagesController do
   describe "install package group" do
 
     before do
-      @system_task = stub_system_task(:package_group_install, :groups => package_groups)
-      @system.stub(:install_package_groups => @system_task)
+      @task_status = stub_task_status(:package_group_install, :groups => package_groups)
+      @system.stub(:install_package_groups)
     end
 
     subject { post :create, :organization_id => @organization.name, :system_id => @system.uuid, :groups => package_groups }
@@ -89,8 +89,8 @@ describe Api::SystemPackagesController do
   describe "remove package" do
 
     before do
-      @system_task = stub_system_task(:package_remove, :packages => packages)
-      @system.stub(:uninstall_packages => @system_task)
+      @task_status = stub_task_status(:package_remove, :packages => packages)
+      @system.stub(:uninstall_packages)
     end
 
     let(:action) { :destroy }
@@ -112,8 +112,8 @@ describe Api::SystemPackagesController do
   describe "remove package group" do
 
     before do
-      @system_task = stub_system_task(:package_group_remove, :groups => package_groups)
-      @system.stub(:uninstall_package_groups => @system_task)
+      @task_status = stub_task_status(:package_group_remove, :groups => package_groups)
+      @system.stub(:uninstall_package_groups)
     end
 
     subject { delete :destroy, :organization_id => @organization.name, :system_id => @system.uuid, :groups => package_groups }
@@ -130,8 +130,8 @@ describe Api::SystemPackagesController do
   describe "update package" do
 
     before do
-      @system_task = stub_system_task(:package_update, :packages => packages)
-      @system.stub(:update_packages => @system_task)
+      @task_status = stub_task_status(:package_update, :packages => packages)
+      @system.stub(:update_packages)
     end
 
     let(:action) { :create }
@@ -151,7 +151,7 @@ describe Api::SystemPackagesController do
   end
 
 
-  def stub_system_task(task_type, parameters, status = "running", result = {:errors => []})
+  def stub_task_status(task_type, parameters, status = "running", result = {:errors => []})
       task_status = TaskStatus.create(:organization_id => @organization.id,
                         :task_type => task_type,
                         :parameters => parameters,

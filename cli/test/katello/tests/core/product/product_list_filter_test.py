@@ -1,0 +1,45 @@
+import unittest
+from mock import Mock
+import os
+
+from katello.tests.core.action_test_utils import CLIActionTestCase
+
+from katello.tests.core.organization import organization_data
+from katello.tests.core.product import product_data
+
+import katello.client.core.product
+from katello.client.core.product import ListFilters
+from katello.client.api.utils import ApiDataError
+
+
+class ProductListFiltersTest(CLIActionTestCase):
+
+    ORG = organization_data.ORGS[0]
+    PROD = product_data.PRODUCTS[0]
+
+    OPTIONS = {
+        'org': ORG['name'],
+        'name': PROD['name']
+    }
+
+    def setUp(self):
+        self.set_action(ListFilters())
+        self.set_module(katello.client.core.product)
+        self.mock_printer()
+
+        self.mock_options(self.OPTIONS)
+
+        self.mock(self.action.api, 'filters')
+        self.mock(self.module, 'get_product', self.PROD)
+
+
+    def tearDown(self):
+        self.restore_mocks()
+
+    def test_it_returns_with_error_if_no_product_was_found(self):
+        self.mock(self.module, 'get_product').side_effect = ApiDataError()
+        self.run_action(os.EX_DATAERR)
+
+    def test_it_uses_product_list_filter_api(self):
+        self.run_action()
+        self.action.api.filters.assert_called_once_with(self.ORG['name'], self.PROD['id'])

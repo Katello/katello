@@ -18,6 +18,10 @@ class UserSessionsController < ApplicationController
 
   skip_before_filter :authorize # ok - need to skip all methods
 
+  def section_id
+    "loginpage"
+  end  
+  
   def new
     if !request.env['HTTP_X_FORWARDED_USER'].blank?
       # if we received the X-Forwarded-User, the user must have logged in via SSO; therefore,
@@ -25,14 +29,11 @@ class UserSessionsController < ApplicationController
       # credentials 
       login_user
     else
-      @ldap = AppConfig.warden == 'ldap'
+      @disable_password_recovery = AppConfig.warden == 'ldap'
+      render "common/user_session", :layout => "converge-ui/login_layout"
     end
   end
 
-  def section_id
-    "loginpage"
-  end  
-  
   def create
     login_user
   end

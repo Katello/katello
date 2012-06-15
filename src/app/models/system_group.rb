@@ -161,33 +161,33 @@ class SystemGroup < ActiveRecord::Base
 
   def install_packages packages
     pulp_job = self.install_package(packages)
-    job_id = save_job(pulp_job, :package_install, :packages, packages)
+    job = save_job(pulp_job, :package_install, :packages, packages)
   end
 
   def uninstall_packages packages
     pulp_job = self.uninstall_package(packages)
-    job_id = save_job(pulp_job, :package_remove, :packages, packages)
+    job = save_job(pulp_job, :package_remove, :packages, packages)
   end
 
   def update_packages packages=nil
     # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
     pulp_job = self.update_package(packages)
-    job_id = save_job(pulp_job, :package_update, :packages, packages)
+    job = save_job(pulp_job, :package_update, :packages, packages)
   end
 
   def install_package_groups groups
     pulp_job = self.install_package_group(groups)
-    job_id = save_job(pulp_job, :package_group_install, :groups, groups)
+    job = save_job(pulp_job, :package_group_install, :groups, groups)
   end
 
   def uninstall_package_groups groups
     pulp_job = self.uninstall_package_group(groups)
-    job_id = save_job(pulp_job, :package_group_remove, :groups, groups)
+    job = save_job(pulp_job, :package_group_remove, :groups, groups)
   end
 
   def install_errata errata_ids
     pulp_job = self.install_consumer_errata(errata_ids)
-    job_id = save_job(pulp_job, :errata_install, :errata_ids, errata_ids)
+    job = save_job(pulp_job, :errata_install, :errata_ids, errata_ids)
   end
 
   def refreshed_jobs
@@ -203,7 +203,6 @@ class SystemGroup < ActiveRecord::Base
   def lock_check
     raise _("Group membership cannot be changed while locked.") if self.locked
   end
-
 
   def environments
     @cached_environments ||= db_environments.all #.all to ensure we don't refer to the AR relation
@@ -221,6 +220,9 @@ class SystemGroup < ActiveRecord::Base
     end
   end
 
+  def total_systems
+    systems.length
+  end
 
   private
 

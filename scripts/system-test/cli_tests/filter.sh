@@ -9,4 +9,4 @@ test_success "filter create" filter create --org="$TEST_ORG" --name="$FILTER2" -
 test_success "filter info" filter info --org="$TEST_ORG" --name="$FILTER2"
 test_success "filter add_package" filter add_package --org="$TEST_ORG" --name="$FILTER2" --package="package5"
 test_success "filter remove_package" filter remove_package --org="$TEST_ORG" --name="$FILTER2" --package="package4"
-todo "filter delete" filter delete --org="$TEST_ORG" --name="$FILTER2"
+test_success "filter delete" filter delete --org="$TEST_ORG" --name="$FILTER2"
