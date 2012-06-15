@@ -22,7 +22,7 @@
                 = image_tag('embed/icons/expander-collapsed.png', :alt => _('Expand'))
 
               = check_box_tag "family[#{product_family_name}]", false, false, :class => :family_checkbox
-              %strong #{product_family_name} #{_("(%{n} Types)" % {:n =>num_subscriptions_per_family})}
+              %strong #{product_family_name} #{_("(%{n} Types)") % {:n =>num_subscriptions_per_family}}
 
         - if num_subscriptions_per_family > 0
           - subscriptions.each do |subscription|

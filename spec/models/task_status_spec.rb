@@ -1,7 +1,7 @@
 
 require 'spec_helper'
 
-describe SystemTask do
+describe TaskStatus do
   let(:package_groups) { ["@mammals", "FTP Server"] }
   let(:packages) { %w[cheetah penguin] }
   let(:result) { {:errors => [] } }
@@ -10,14 +10,13 @@ describe SystemTask do
   let(:parameters) { {} }
 
   subject do
-    system_task = SystemTask.new
-    system_task.system = System.new(:name => "test.example.com")
-    system_task.task_status = TaskStatus.new(:task_type => task_type,
+    system = System.new(:name => "test.example.com")
+    task_status = TaskStatus.new(:task_type => task_type,
                                              :parameters => parameters,
                                              :result => result,
                                              :state => state,
-                                             :uuid => "1234")
-    system_task
+                                             :uuid => "1234",
+                                             :task_owner => system)
   end
 
   its(:as_json) { should have_key(:description) }

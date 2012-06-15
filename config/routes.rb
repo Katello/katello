@@ -12,6 +12,13 @@ Src::Application.routes.draw do
       post :remove_systems
       post :lock
     end
+    resources :events, :controller => "system_group_events", :only => [:index, :show] do
+      collection do
+        get :status
+        get :more_items
+        get :items
+      end
+    end
     resources :packages, :controller => "system_group_packages", :only => [:index] do
       collection do
         put :add
@@ -365,7 +372,7 @@ Src::Application.routes.draw do
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
-  resources :password_resets, :only => [:new, :create, :edit, :update] do
+  resources :password_resets, :only => [:create, :edit, :update] do
     collection do
       get :email_logins
     end
