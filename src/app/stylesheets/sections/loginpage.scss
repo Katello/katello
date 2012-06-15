@@ -1,40 +1,6 @@
-@import "compass";
-@import "converge-ui/colors";
+$login_base-color: #006F8F;
 
-#loginpage {
-  .modalbox {
-    margin: 130px auto;
-    @include box-shadow(rgba(0, 0, 0, 0.6), 0,1px,5px);
-    width: 550px;
-    overflow: hidden;
-    h2 {
-      background-color: $formheadbg_color;
-      color: $formheadfg_color;
-      text-transform: uppercase;
-      font-size: 120%;
-      padding: 10px;
-    }
-    h3 {
-      background-color: $formheadbg_color;
-      color: $formheadfg_color;
-      font-size: 120%;
-      padding-left: 20px;
-    }
-    .katello_form {
-      margin: 40px;
-      overflow: hidden;
-    }
-    .errorExplanation {
-      h2 {
-        text-transform: none;
-      }
-    }
-  }
-  
-  #content {
-    background: none;
-  }
-  #maincontent {
-    background: 0 none;
-  }
-}
+$login_background_top-color: darken(rgba(0, 157, 204, 1), 4%) !default;
+$login_background_bottom-color: darken(rgba(0, 111, 143, 1), 4%) !default;
+
+@import "converge-ui/login";

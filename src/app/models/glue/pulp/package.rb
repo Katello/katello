@@ -63,7 +63,8 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     start = 0
 
     query = Katello::Search::filter_input query
-    query = "name_autocomplete:#{query}"
+    query = "*" if query == ""
+    query = "name_autocomplete:(#{query})"
 
     search = Tire.search self.index do
       fields [:name]
@@ -75,6 +76,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
         filter :terms, :repoids => repoids
       end
     end
+
     to_ret = []
     search.results.each{|pkg|
        to_ret << pkg.name if !to_ret.include?(pkg.name)

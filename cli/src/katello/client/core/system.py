@@ -22,7 +22,7 @@ from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_environment, get_system
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
 from katello.client.utils.printer import VerboseStrategy
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_date
@@ -34,7 +34,7 @@ Config()
 
 # base system action --------------------------------------------------------
 
-class SystemAction(Action):
+class SystemAction(BaseAction):
 
     def __init__(self):
         super(SystemAction, self).__init__()
@@ -152,15 +152,15 @@ class InstalledPackages(SystemAction):
                        help=_("system name (required)"))
         parser.add_option('--environment', dest='environment',
                        help=_("environment name"))
-        parser.add_option('--install', dest='install',
+        parser.add_option('--install', dest='install', type="list",
                        help=_("packages to be installed remotely on the system, package names are separated with comma"))
-        parser.add_option('--remove', dest='remove',
+        parser.add_option('--remove', dest='remove', type="list",
                        help=_("packages to be removed remotely from the system, package names are separated with comma"))
-        parser.add_option('--update', dest='update',
+        parser.add_option('--update', dest='update', type="list",
                        help=_("packages to be updated on the system, use --all to update all packages, package names are separated with comma"))
-        parser.add_option('--install_groups', dest='install_groups',
+        parser.add_option('--install_groups', dest='install_groups', type="list",
                        help=_("package groups to be installed remotely on the system, group names are separated with comma"))
-        parser.add_option('--remove_groups', dest='remove_groups',
+        parser.add_option('--remove_groups', dest='remove_groups', type="list",
                        help=_("package groups to be removed remotely from the system, group names are separated with comma"))
 
     def check_options(self, validator):
@@ -182,7 +182,6 @@ class InstalledPackages(SystemAction):
         update = self.get_option('update')
         install_groups = self.get_option('install_groups')
         remove_groups = self.get_option('remove_groups')
-        packages_separator = ","
 
         task = None
 
@@ -195,19 +194,19 @@ class InstalledPackages(SystemAction):
         system_id = system['uuid']
 
         if install:
-            task = self.api.install_packages(system_id, install.split(packages_separator))
+            task = self.api.install_packages(system_id, install)
         if remove:
-            task = self.api.remove_packages(system_id, remove.split(packages_separator))
+            task = self.api.remove_packages(system_id, remove)
         if update:
             if update == '--all':
                 update_packages = []
             else:
-                update_packages = update.split(packages_separator)
+                update_packages = update
             task = self.api.update_packages(system_id, update_packages)
         if install_groups:
-            task = self.api.install_package_groups(system_id, install_groups.split(packages_separator))
+            task = self.api.install_package_groups(system_id, install_groups)
         if remove_groups:
-            task = self.api.remove_package_groups(system_id, remove_groups.split(packages_separator))
+            task = self.api.remove_package_groups(system_id, remove_groups)
 
         if task:
             uuid = task["uuid"]
@@ -402,11 +401,6 @@ class Register(SystemAction):
         validator.require(('name', 'org'))
         validator.require_at_most_one_of(('activationkey', 'environment'))
 
-    def require_credentials(self):
-        if self.has_option('activationkey'):
-            return False
-        else:
-            return super
 
     def run(self):
         name = self.get_option('name')
@@ -436,7 +430,7 @@ class RemoveDeletion(SystemAction):
                        help=_("hypervisor uuid (required"))
 
     def check_options(self, validator):
-        self.require_option('uuid')
+        validator.require_option('uuid')
 
     def run(self):
         uuid = self.get_option('uuid')
@@ -743,7 +737,7 @@ class AddSystemGroups(SystemAction):
             return os.EX_DATAERR
 
         system_group_ids = [group["id"] for group in system_groups]
-        
+
         system = self.api.add_system_groups(system["uuid"], system_group_ids)
 
         if system != None:
@@ -786,7 +780,7 @@ class RemoveSystemGroups(SystemAction):
             return os.EX_DATAERR
 
         system_group_ids = [group["id"] for group in system_groups]
-        
+
         system = self.api.remove_system_groups(system["uuid"], system_group_ids)
 
         if system != None:

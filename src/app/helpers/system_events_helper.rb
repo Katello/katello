@@ -11,15 +11,4 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module SystemEventsHelper
-  def generate_event_types
-    SystemTask::TYPES.to_json
-  end
-
-  def status_message(task)
-    SystemTask.message_for task
-  end
-
-  def pending_status_message(task)
-    SystemTask.pending_message_for task
-  end
 end

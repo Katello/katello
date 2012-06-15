@@ -21,13 +21,13 @@ from gettext import gettext as _
 from katello.client.api.activation_key import ActivationKeyAPI
 from katello.client.api.template import TemplateAPI
 from katello.client.api.system_group import SystemGroupAPI
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 from katello.client.utils import printer
 from katello.client.api.utils import get_environment, get_organization
 from katello.client.cli.base import OptionException
 
-class ActivationKeyAction(Action):
+class ActivationKeyAction(BaseAction):
 
     def __init__(self):
         super(ActivationKeyAction, self).__init__()

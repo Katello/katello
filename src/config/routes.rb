@@ -12,7 +12,22 @@ Src::Application.routes.draw do
       post :remove_systems
       post :lock
     end
-    resources :errata, :controller => "system_group_errata", :only => [:index, :update] do
+    resources :events, :controller => "system_group_events", :only => [:index, :show] do
+      collection do
+        get :status
+        get :more_items
+        get :items
+      end
+    end
+    resources :packages, :controller => "system_group_packages", :only => [:index] do
+      collection do
+        put :add
+        put :remove
+        put :update
+        get :status
+      end
+    end
+    resources :errata, :controller => "system_group_errata", :only => [:index] do
       collection do
         get :items
         post :install
@@ -368,7 +383,7 @@ Src::Application.routes.draw do
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
-  resources :password_resets, :only => [:new, :create, :edit, :update] do
+  resources :password_resets, :only => [:create, :edit, :update] do
     collection do
       get :email_logins
     end
@@ -474,9 +489,10 @@ Src::Application.routes.draw do
 
       resources :system_groups, :except => [:new, :edit] do
         member do
+          get :systems
+          get :history
           post :lock
           post :unlock
-          get :systems
           post :add_systems
           post :remove_systems
         end
@@ -611,8 +627,9 @@ Src::Application.routes.draw do
       resources :ldap_groups, :controller => :role_ldap_groups , :only => [:create, :destroy, :index]
     end
 
-
     resources :tasks, :only => [:show]
+
+    resources :crls, :only => [:index]
 
     match "/status"  => "ping#status", :via => :get
     match "/version"  => "ping#version", :via => :get 

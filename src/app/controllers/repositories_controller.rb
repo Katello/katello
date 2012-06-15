@@ -124,7 +124,7 @@ class RepositoriesController < ApplicationController
     end
 
     render :json => repos.map{|repo|
-      label = _("%{repo} (Product: %{product})" % {:repo => repo.name, :product => repo.product})
+      label = _("%{repo} (Product: %{product})") % {:repo => repo.name, :product => repo.product}
       {:id => repo.id, :label => label, :value => repo.name}
     }
   end

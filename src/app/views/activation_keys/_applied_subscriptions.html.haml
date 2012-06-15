@@ -29,9 +29,8 @@
         = render :partial => "subscriptions", :locals => {:product_families => applied_subs}
 
         - if editable
-          .actions
-            = link_to _("Add Subscriptions ▸"), available_subscriptions_activation_key_path(@activation_key),
-              :class => 'add_subs', :id => "go_to_available_subscriptions"
+          .actions.panel_link
+            = link_to(_("Add Subscriptions ▸"), available_subscriptions_activation_key_path(@activation_key))
 
             - if applied_subs.length > 0
               = submit_tag _('Remove'), :class => 'submit dialogbutton', :id=>"subscription_submit_button", :style => 'display:none;'
