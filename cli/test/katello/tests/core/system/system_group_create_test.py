@@ -55,13 +55,6 @@ class SystemGroupCreateTest(CLIActionTestCase):
         self.mock(self.action.api, 'create', self.SYSTEM_GROUP)
 
     def test_it_calls_system_group_create_api(self):
-        self.action.run()
+        self.run_action()
         self.action.api.create.assert_called_once_with(self.OPTIONS['org'], self.OPTIONS['name'],
                                                         self.OPTIONS['description'], self.OPTIONS['max_systems'])
-
-    def test_it_returns_error_when_creation_failed(self):
-        self.mock(self.action.api, 'create', {})
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
-
-    def test_it_success_on_successful_creation(self):
-        self.assertEqual(self.action.run(), os.EX_OK)
