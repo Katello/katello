@@ -53,7 +53,7 @@ class Job < ActiveRecord::Base
           'INNER JOIN job_tasks ON job_tasks.task_status_id = task_statuses.id').joins(
           'INNER JOIN jobs ON jobs.id = job_tasks.job_id')
 
-      ids = tasks.collect{|row| row[:id]}
+      ids = tasks.select('task_statuses.id').collect{|row| row[:id]}
 
       # retrieve the jobs associated with those tasks
       jobs = Job.where('task_statuses.id' => ids).joins(:task_statuses)
