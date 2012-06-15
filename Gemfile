@@ -5,7 +5,7 @@ source 'http://repos.fedorapeople.org/repos/katello/gems/'
 gem 'rails', '3.0.10'
 gem 'thin', '>=1.2.11'
 
-gem 'tire'
+gem 'tire' , '>= 0.3.0', '< 0.4'
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
 gem 'jammit'
@@ -15,14 +15,14 @@ gem 'rails_warden'
 gem 'net-ldap'
 gem 'oauth'
 
-gem 'delayed_job', '>= 2.1.4'
+gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
 gem 'uuidtools'
 
 # Stuff for view/display/frontend
 gem 'haml', '>= 3.1.2'
 gem 'haml-rails'
-gem 'compass', '>= 0.11.5'
+gem 'compass', '>= 0.11.5', '< 0.12'
 gem 'compass-960-plugin', '>= 0.10.4'
 gem 'simple-navigation', '3.3.4'
 # Stuff for i18n
