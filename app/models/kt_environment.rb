@@ -156,7 +156,8 @@ class KTEnvironment < ActiveRecord::Base
     return true unless self.organization
 
     return true if successor.nil?
-    errors.add(:base, _("Environment %s has a successor.  Only the last environment on a path can be deleted" % self.name))
+    errors.add :base,
+               _("Environment %s has a successor.  Only the last environment on a path can be deleted") % self.name
     return false
   end
 
