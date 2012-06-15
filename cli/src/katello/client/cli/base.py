@@ -71,17 +71,17 @@ class KatelloCLI(Command):
         @note: this method may be overridden to define new options
         """
         parser.add_option("-v", "--version", action="store_true", default=False,
-                                    dest="version",  help=_('prints version information'))
+                                dest="version",  help=_('prints version information'))
 
         credentials = OptionGroup(parser, _('Katello User Account Credentials'))
         credentials.add_option('-u', '--username', dest='username',
-                               default=None, help=_('account username'))
+                                default=None, help=_('account username'))
         credentials.add_option('-p', '--password', dest='password',
-                               default=None, help=_('account password'))
+                                default=None, help=_('account password'))
         credentials.add_option('--cert-file', dest='certfile',
-                               default=None, help=SUPPRESS_HELP)
+                                default=None, help=SUPPRESS_HELP)
         credentials.add_option('--key-file', dest='keyfile',
-                               default=None, help=SUPPRESS_HELP)
+                                default=None, help=SUPPRESS_HELP)
         parser.add_option_group(credentials)
 
         server = OptionGroup(parser, _('Katello Server Information'))
@@ -138,6 +138,8 @@ class KatelloCLI(Command):
     def run(self):
         self.setup_server()
         self.setup_credentials()
+        if self.get_option('version'):
+            self.args = ["version"]
 
     def main(self, args, command_name=None, parent_usage=None):
         try:

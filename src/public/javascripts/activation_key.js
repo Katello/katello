@@ -43,11 +43,6 @@ $(document).ready(function() {
         KT.activation_key.highlight_system_templates(false);
     });
 
-    $('#go_to_available_subscriptions').live('click', function(e) {
-        e.preventDefault();
-        KT.activation_key.go_to_available_subscriptions();
-    });
-
     $('.clickable.product_family').live('click', function() {
         KT.activation_key.toggle_family($(this));
     });
@@ -105,19 +100,6 @@ KT.activation_key = (function($) {
         });
 
         subbutton.unbind('click').click(disableSubmit);
-    },
-    go_to_available_subscriptions = function() {
-        var url = $('#go_to_available_subscriptions').attr('href');
-        $.ajax({
-            cache: 'false',
-            type: 'GET',
-            url: url,
-            dataType: 'html',
-            success: function(data) {
-                $(".panel-content").html(data);
-                KT.panel.panelResize($('#panel_main'), false);
-            }
-        });
     },
     initialize_edit = function() {
         reset_env_select();
@@ -290,7 +272,6 @@ KT.activation_key = (function($) {
     };
     return {
         subscription_setup: subscription_setup,
-        go_to_available_subscriptions: go_to_available_subscriptions,
         initialize_edit: initialize_edit,
         reset_env_select: reset_env_select,
         save_key: save_key,

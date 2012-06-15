@@ -56,7 +56,7 @@ class Api::SystemGroupsController < Api::ApiController
   end
 
   def show
-    render :json => @group
+    render :json => @group.to_json(:methods => :total_systems)
   end
 
   def update
