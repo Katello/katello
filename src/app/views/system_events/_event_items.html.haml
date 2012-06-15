@@ -13,15 +13,15 @@
 
   %a.event_status.subpanel_element{"data-url"=>system_event_path(system.id, t.id)}
     - if t.pending?
-      = t.pending_message_for
+      = t.pending_message
     - else
-      = t.message_for
+      = t.message
 
 
 %td.event_date
   - if t.pending?
     = image_tag("embed/icons/spinner.gif")
-    = t.message_for
+    = t.message
   - else
     = format_time(t.finish_time)
 

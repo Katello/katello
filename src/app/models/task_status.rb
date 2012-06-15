@@ -150,7 +150,7 @@ class TaskStatus < ActiveRecord::Base
     {:system_id => system_id}
   end
 
-  def pending_message_for
+  def pending_message
     # Retrieve a text message that may be rendered for a 'pending' task's status.  This is used in various places,
     # such as System Event history.
     details = TaskStatus::TYPES[self.task_type]
@@ -185,7 +185,7 @@ class TaskStatus < ActiveRecord::Base
     end
   end
 
-  def message_for
+  def message
     # Retrieve a text message that may be rendered for a task's status.  This is used in various places,
     # such as System Event history.
     details = TaskStatus::TYPES[self.task_type]
