@@ -221,19 +221,23 @@ class Api::SystemsController < Api::ApiController
   end
 
   def tasks
-    @tasks = SystemTask.joins(:system,:task_status).where(:"task_statuses.organization_id" => @organization.id)
+    query = TaskStatus.joins(:system).where(:"task_statuses.organization_id" => @organization.id)
     if @environment
-      @tasks = @tasks.where(:"system.environment_id" => @environment.id)
+      query = query.where(:"systems.environment_id" => @environment.id)
     end
     if params[:system_name]
-      @tasks = @tasks.where(:"system.name" => params[:system_name])
+      query = query.where(:"systems.name" => params[:system_name])
     end
-    @tasks.each {|t| t.task_status.refresh }
+
+    task_ids = query.select('task_statuses.id')
+    TaskStatus.refresh(task_ids)
+
+    @tasks = TaskStatus.where(:id => task_ids)
     render :json => @tasks.to_json
   end
 
   def task_show
-    @task.task_status.refresh
+    @task.refresh
     render :json => @task.to_json
   end
 
@@ -368,9 +372,9 @@ class Api::SystemsController < Api::ApiController
   end
 
   def find_task
-    @task = SystemTask.joins(:task_status).where(:"task_statuses.uuid" => params[:id]).first
+    @task = TaskStatus.where(:uuid => params[:id]).first
     raise ActiveRecord::RecordNotFound.new unless @task
-    @system = @task.system
+    @system = @task.task_owner
   end
 
 end

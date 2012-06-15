@@ -12,8 +12,7 @@
 */
 
 KT.panel.set_expand_cb(function(){
-    var children = $('#panel .third_level:first-child');
-
+    var children = $('#panel .menu_parent');
     $.each(children, function(i, item) {
         KT.menu.hoverMenu(item, { top : '75px' });
     });
@@ -86,7 +85,7 @@ $(document).ready(function() {
     });
 });
 
-KT.systems_page = function() {
+KT.systems_page = (function() {
     var system_group_widget = undefined,
     env_change = function(env_id, element) {
       var url = element.attr("data-url");
@@ -406,31 +405,9 @@ KT.systems_page = function() {
       registerActions : registerActions,
       system_group_setup: system_group_setup
   }
-}();
+})();
 
-KT.packages = function() {
-    var valid_package_list_format = function(packages){
-        var length = packages.length;
-
-        for (var i = 0; i < length; i += 1){
-            if( !valid_package_name(packages[i]) ){
-                return false;
-            }
-        }
-        return true;
-    },
-    valid_package_name = function(package_name){
-        var is_match = package_name.match(/[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/);
-
-        return is_match === null ? true : false;
-    };
-return {
-        valid_package_list_format : valid_package_list_format,
-        valid_package_name : valid_package_name
-    }
-}();
-
-KT.subs = function() {
+KT.subs = (function() {
     var unsubSetup = function(){
         var unsubform = $('#unsubscribe');
         var unsubbutton = $('#unsub_submit');
@@ -568,4 +545,4 @@ KT.subs = function() {
         autohealSetup: autohealSetup,
         matchsystemSetup: matchsystemSetup
     }
-}();
+})();

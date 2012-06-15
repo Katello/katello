@@ -117,5 +117,26 @@ module Katello
       result
     end
 
+    def self.validate_package_list_format packages
+      # validate the format of the comma-separated package list provided
+      packages = packages.split(/ *, */ )
+
+      packages.each{ |package_name|
+        if not valid_package_name_format(package_name).nil?
+          return false
+        end
+      }
+
+      return packages
+    end
+
+    def self.valid_package_name_format package
+      return (package =~ valid_package_characters)
+    end
+
+    def self.valid_package_characters
+      /[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/
+    end
+
   end
 end

@@ -16,6 +16,11 @@ KT.panel.list.registerPage('system_groups', { create : 'new_system_group' });
 
 $(document).ready(function() {
     KT.panel.set_expand_cb(function(){
+        var children = $('#panel .menu_parent');
+        $.each(children, function(i, item) {
+            KT.menu.hoverMenu(item, { top : '75px' });
+        });
+
         KT.system_groups.new_setup();
         KT.system_groups.details_setup();
         KT.system_groups.systems_setup();

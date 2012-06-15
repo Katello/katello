@@ -2,7 +2,7 @@
   %div{:class => 'column_2'}
     .product
       .status_icon{:class => "#{item.send('compliance_color')}"}
-    %div.one-line-ellipsis#heading_title{:style => "padding-top: 2px;"}
+    %div.one-line-ellipsis#heading_title
       = item.send('name')
   %div{:class => 'column_2'}
     = get_checkin(item)

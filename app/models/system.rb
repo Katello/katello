@@ -54,7 +54,7 @@ class System < ActiveRecord::Base
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
   belongs_to :system_template
 
-  has_many :system_tasks, :dependent => :destroy
+  has_many :task_statuses, :as => :task_owner
 
   has_many :system_activation_keys, :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
@@ -112,33 +112,33 @@ class System < ActiveRecord::Base
 
   def install_packages packages
     pulp_task = self.install_package(packages)
-    system_task = save_system_task(pulp_task, :package_install, :packages, packages)
+    task_status = save_task_status(pulp_task, :package_install, :packages, packages)
   end
 
   def uninstall_packages packages
     pulp_task = self.uninstall_package(packages)
-    system_task = save_system_task(pulp_task, :package_remove, :packages, packages)
+    task_status = save_task_status(pulp_task, :package_remove, :packages, packages)
   end
 
   def update_packages packages=nil
     # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
     pulp_task = self.update_package(packages)
-    system_task = save_system_task(pulp_task, :package_update, :packages, packages)
+    task_status = save_task_status(pulp_task, :package_update, :packages, packages)
   end
 
   def install_package_groups groups
     pulp_task = self.install_package_group(groups)
-    system_task = save_system_task(pulp_task, :package_group_install, :groups, groups)
+    task_status = save_task_status(pulp_task, :package_group_install, :groups, groups)
   end
 
   def uninstall_package_groups groups
     pulp_task = self.uninstall_package_group(groups)
-    system_task = save_system_task(pulp_task, :package_group_remove, :groups, groups)
+    task_status = save_task_status(pulp_task, :package_group_remove, :groups, groups)
   end
 
   def install_errata errata_ids
     pulp_task = self.install_consumer_errata(errata_ids)
-    system_task = save_system_task(pulp_task, :errata_install, :errata_ids, errata_ids)
+    task_status = save_task_status(pulp_task, :errata_install, :errata_ids, errata_ids)
   end
 
   # returns list of virtual permission tags for the current user
@@ -209,7 +209,7 @@ class System < ActiveRecord::Base
   end
 
   def tasks
-    SystemTask.refresh_for_system(self)
+    TaskStatus.refresh_for_system(self)
   end
 
   def extended_index_attrs
@@ -235,8 +235,8 @@ class System < ActiveRecord::Base
       raise _("Group membership cannot be changed while locked.") if record.locked
     end
 
-    def save_system_task pulp_task, task_type, parameters_type, parameters
-      SystemTask.make(self, pulp_task, task_type, parameters_type => parameters)
+    def save_task_status pulp_task, task_type, parameters_type, parameters
+      TaskStatus.make(self, pulp_task, task_type, parameters_type => parameters)
     end
 
     def fill_defaults

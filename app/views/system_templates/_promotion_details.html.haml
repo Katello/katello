@@ -5,9 +5,20 @@
 
 = content_for :content do
   .clear
-  %fieldset.grid_5
-    %label #{_("Name")}:
-    = template.name
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Name")}:
+    .grid_5.la
+      = template.name
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Description")}:
+    .grid_5.la
+      = template.description
+
+
   #system_template_promotion_tabs
     .grid_5
       %h5 #{_("Contents:")}

@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import "converge-ui/colors";
+@import "converge-ui/base";
 
 /* GENERIC TEXT ENTRIES */
 input, textarea {
@@ -8,7 +8,7 @@ input, textarea {
   /* -webkit-box-shadow: inset $x $y $blur $color; breaks on border-radius */
   border: 1px solid #aaaaaa;
   background-color: #f0f0f0;
-  background: #f0f0f0 url(../../images/input-bg.png) repeat-x 0 0;
+  background: $input_background_img;
   padding: 4px;
   margin: 0; 
 
@@ -43,7 +43,7 @@ input, textarea {
     background-position: 0 0;
     border: none;
     padding: 0; 
-    background: url(../../images/icons/icon_search.png) no-repeat 0 0;
+    background: $icon_search_grey;
 
     &:hover {
       box-shadow: none;
@@ -94,8 +94,8 @@ input, textarea {
       height: 6px;
       top: 10px;
       left: 3px;
-      margin-top: -1px;
-      background: url(../../images/icons/icon_menu_arrow.gif) no-repeat 0 0;
+      margin-top: 1px;
+      background: $icon_menu_arrow;
     }
 
     &:active {
