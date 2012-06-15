@@ -14,17 +14,18 @@
 # in this software or its documentation.
 #
 
+import os
 from gettext import gettext as _
 
 from katello.client.api.version import VersionAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 
 Config()
 
 # base ping action --------------------------------------------------------
 
-class VersionAction(Action):
+class VersionAction(BaseAction):
 
     def __init__(self):
         super(VersionAction, self).__init__()
@@ -45,7 +46,8 @@ class Info(VersionAction):
         return 0
 
     def run(self):
-        return self.api.version_formatted()
+        print self.api.version_formatted()
+        return os.EX_OK
 
 
 # ping command ------------------------------------------------------------

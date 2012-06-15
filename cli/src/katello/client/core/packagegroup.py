@@ -3,13 +3,13 @@ from gettext import gettext as _
 
 from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import system_exit
 
 Config()
 
 
-class PackageGroupAction(Action):
+class PackageGroupAction(BaseAction):
 
     def __init__(self):
         super(PackageGroupAction, self).__init__()

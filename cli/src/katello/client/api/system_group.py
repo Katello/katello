@@ -80,7 +80,7 @@ class SystemGroupAPI(KatelloAPI):
         return self.server.DELETE(path)[1]
 
     def add_systems(self, org_id, system_group_id, system_ids):
-        data = { 
+        data = {
             "system_group" : {
                 "system_ids": system_ids,
             }
@@ -90,7 +90,7 @@ class SystemGroupAPI(KatelloAPI):
         return self.server.POST(path, data)[1]
 
     def remove_systems(self, org_id, system_group_id, system_ids):
-        data = { 
+        data = {
             "system_group" : {
                 "system_ids": system_ids,
             }
