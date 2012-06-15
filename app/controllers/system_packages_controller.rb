@@ -62,7 +62,7 @@ class SystemPackagesController < ApplicationController
       render :text => '' and return
     end
 
-    render :text => task.task_status.uuid
+    render :text => task.uuid
   end
 
   def remove
@@ -99,7 +99,7 @@ class SystemPackagesController < ApplicationController
       render :text => '' and return
     end
 
-    render :text => task.task_status.uuid
+    render :text => task.uuid
   end
 
   def update
@@ -118,7 +118,7 @@ class SystemPackagesController < ApplicationController
                  {:s => @system['name'], :p => params[:package]}
     end
 
-    render :text => task.task_status.uuid
+    render :text => task.uuid
   end
 
   def packages
