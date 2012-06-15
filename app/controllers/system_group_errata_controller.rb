@@ -74,7 +74,7 @@ class SystemGroupErrataController < ApplicationController
       jobs = @group.refreshed_jobs.joins(:task_statuses).where(
           'task_statuses.task_type' => [:errata_install], 'task_statuses.state' => [:waiting, :running])
     end
-    render :json => jobs.to_json(:include => :task_statuses)
+    render :json => jobs
   end
 
   private

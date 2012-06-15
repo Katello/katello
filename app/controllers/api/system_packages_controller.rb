@@ -32,13 +32,13 @@ class Api::SystemPackagesController < Api::ApiController
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
       task = @system.install_packages(packages)
-      render :json => task.task_status, :status => 202
+      render :json => task, :status => 202
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
       task = @system.install_package_groups(groups)
-      render :json => task.task_status, :status => 202
+      render :json => task, :status => 202
     end
   end
 
@@ -47,7 +47,7 @@ class Api::SystemPackagesController < Api::ApiController
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
       task = @system.update_packages(packages)
-      render :json => task.task_status, :status => 202
+      render :json => task, :status => 202
     end
   end
 
@@ -56,13 +56,13 @@ class Api::SystemPackagesController < Api::ApiController
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
       task = @system.uninstall_packages(packages)
-      render :json => task.task_status, :status => 202
+      render :json => task, :status => 202
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
       task = @system.uninstall_package_groups(groups)
-      render :json => task.task_status, :status => 202
+      render :json => task, :status => 202
     end
   end
 

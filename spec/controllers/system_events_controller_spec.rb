@@ -26,9 +26,6 @@ describe SystemEventsController do
       @organization = setup_system_creation
       @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id, :organization => @organization)
 
-      #controller.stub!(:errors)
-      #controller.stub!(:notice)
-
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)
       Resources::Candlepin::Consumer.stub!(:events).and_return([])
@@ -45,7 +42,7 @@ describe SystemEventsController do
         before do
           User.current = @user
           stub_consumer_packages_install(pulp_task_without_error)
-          @task = @system.install_packages("foo, bar, bazz, geez")
+          @task = @system.install_packages(["foo", "bar", "bazz", "geez"])
 
         end
         specify "index call does the right thing" do
@@ -54,16 +51,16 @@ describe SystemEventsController do
         end
 
         specify "status call does the right thing" do
-          get :status, :system_id => @system.id, :id => @task.task_status.id
+          get :status, :system_id => @system.id, :task_id => @task.id
           response.should be_success
-          JSON.parse(response.body).first["id"].should == @task.task_status.id
+          JSON.parse(response.body)["tasks"].first["id"].should == @task.id
         end
 
         specify "status call does the right thing for multi tasks" do
-          task1 = @system.install_packages("baz")
-          get :status, :system_id => @system.id, :id => [@task.task_status.id, task1.task_status.id]
+          task1 = @system.install_packages(["baz"])
+          get :status, :system_id => @system.id, :task_id => [@task.id, task1.id]
           response.should be_success
-          JSON.parse(response.body).collect{|item| item['id']}.sort.should == [@task.task_status.id, task1.task_status.id].sort
+          JSON.parse(response.body)["tasks"].collect{|item| item['id']}.sort.should == [@task.id, task1.id].sort
         end
 
       end

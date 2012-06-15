@@ -3,15 +3,8 @@
 @import "grid";
 @import "look";
 
-@import "converge-ui/text";
-@import "converge-ui/mixins";
-@import "converge-ui/sprites";
-@import "converge-ui/icons";
-@import "converge-ui/colors";
-@import "converge-ui/header";
-@import "converge-ui/footer";
-@import "converge-ui/media";
 @import "converge-ui/shell";
+@import "converge-ui/media";
 
 @import "widgets/multiselect";
 @import "widgets/_chosen";
@@ -49,7 +42,7 @@ strong { font-weight: bold; }
 .hidden { display: none; }
 .outlined { outline: 2px solid $kselected_color; }
 .alt { background-color: lighten($lightgrey_color, 35%) !important; }
-.clickable { cursor: pointer; cursor: hand; }                                l
+.clickable { cursor: pointer; cursor: hand; }
 .light_text { color: $lightgrey_color; }
 hr { color: $border_color; }
 
@@ -689,7 +682,7 @@ fieldset {
             .options {
               display: none;
               @include border-radius(5px);
-              @include box-shadow(rgba(0,0,0,0.4), 2px, 2px, 2px);
+              @include box-shadow(rgba(0,0,0,0.4) 2px 2px 2px);
               background-color: white;
               border: 1px solid $border_color;
               padding: 15px;
@@ -1234,45 +1227,43 @@ fieldset {
 #switcherContainer {
   position: absolute;
   display: inline-block;
-  left: 182px;
-  bottom: 6px;
-  width: 165px;
-  height: 22px;
-  @include switcher-button_color;
-  @include border-radius(3px);
+  left: 218px;
+  top: 22px;
+
   /* switcher Button */
    #switcherButton {
     cursor: pointer;
-    width: 159px;
-    height: 22px;
-    padding: 2px 6px 2px 6px;
-    text-align: left;
-    width: 100%;
-  }
-  &.active {
-    @include border-bottom-lr-radius(0);
-    @include switcher-button-active_color;
+
+    div:first-child {
+      padding: 7px 12px 4px 10px;
+      display: block;
+      float: left; }
     .arrow_icon {
-      background-position: 0 -11px;
+      height: 11px;
+      width: 9px;
+      top: 10px;
+      right: 10px;
+      position: relative;
+      background: $arrow_icon;
+      float: right;
     }
-  }
-  &:hover {
-    text-decoration: none;
-  }
-  .arrow_icon_menu {
-    height: 11px;
-    width: 13px;
-    background: $arrow_icon_menu;
-    float: right;
-    margin: 6px 4px 0 0;
+    &.active {
+      @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
+      @include border-bottom-lr-radius(0);
+      .arrow_icon {
+        background-position: 0 -11px;
+      }
+    }
     &:hover {
-     background: $arrow_icon_menu_hover;
+      @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
+      text-decoration: none;
     }
   }
+
   /* switcher Box */
   #switcherBox {
     position: absolute;
-    top: 22px;
+    top: 17px;
     left: 0px;
     display: none;
     z-index: 2000;
@@ -1284,11 +1275,11 @@ fieldset {
   /* switcher Form */
   #switcherForm {
     width: 248px;
-    border: 0 none;
-    @include border-radius(2px);
+    border: 1px solid $orgbox_color;
+    @include border-trbrbl-radius(3px);
     @include box-shadow(2px, 2px, 2px, rgba(0,0,0,0.4));
     margin-top: -1px;
-    @include switcher-form_color;
+    background-color: $orgbox_color;
     padding: 6px;
     fieldset {
       margin: 0 0 12px 0;
@@ -1410,7 +1401,3 @@ fieldset {
   bottom: -18px;
 }
 
-/* override the header.scss from converge-ui */
-#appnav {
-  left: 352px !important;
-}

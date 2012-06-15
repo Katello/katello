@@ -15,17 +15,17 @@
     .grid_7
       %h5 #{_("Request")}
     .grid_7.la
-      = status_message(task)
+      = task.message
 
   %fieldset
     .grid_7
       %h5 #{_("Parameters")}
     .grid_7.la
-      = system_task.humanize_parameters
+      = task.humanize_parameters
 
   %fieldset
     .grid_7
       %h5 #{_("Result")}
     .grid_7.multiline
-      = system_task.result_description
+      = task.result_description
   
