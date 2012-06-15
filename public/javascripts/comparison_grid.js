@@ -104,9 +104,9 @@ KT.comparison_grid = function(){
             });
 
             if( num_columns_shown > 3 ){
-                controls.horizontal_scroll.show(true);            
+                controls.horizontal_scroll.show();            
             } else {
-                controls.horizontal_scroll.show(false);
+                controls.horizontal_scroll.hide();
             }
         };
 
