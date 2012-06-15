@@ -101,7 +101,7 @@ $(document).ready(function () {
     // below helps to facilitate that by binding to the click event for a navigation
     // element with the specified id, sending a request to the server using the link
     // selected and then replacing the content of the pane with the response.
-    $('.navigation_element > a').live('click', function () {
+    $('.panel_link > a').live('click', function () {
         // if a view is a pane within a panel
         $.ajax({
             cache: 'false',
