@@ -88,7 +88,7 @@ class TaskStatus < ActiveRecord::Base
 
     if task_type
       tt = task_type
-      if !task_owner_type.blank? and task_owner_type == 'System'
+      if (System.class.name == task_owner_type)
         tt = TaskStatus::TYPES[task_type][:english_name]
       end
       ret[:status] +=" #{tt}"
@@ -135,7 +135,7 @@ class TaskStatus < ActiveRecord::Base
     json = super :methods => :pending?
     json.merge(options) if options
 
-    if (task_owner_type == 'System')
+    if ('System' == task_owner_type)
       methods = [:description, :result_description]
       json.merge!(super(:only=>methods, :methods => methods))
       json[:system_name] = task_owner.name
@@ -146,7 +146,7 @@ class TaskStatus < ActiveRecord::Base
 
   # used by search  to filter tasks by systems :)
   def system_filter_clause
-    system_id = task_owner_id if (task_owner_type and task_owner_type == 'System')
+    system_id = task_owner_id if (task_owner_type == 'System')
     {:system_id => system_id}
   end
 
