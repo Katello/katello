@@ -64,6 +64,14 @@ module Resources
       end
 
       def get(path, headers={})
+        # emulate what happens for an HTTP get, but with file://
+        if @uri.scheme == "file"
+          fs_path = @uri.path + path
+          Rails.logger.debug "CDN: Requesting local path #{fs_path}"
+          # if this fails, let the error bubble up so the user sees it
+          return File.read(fs_path)
+        end
+        
         path = File.join(@uri.request_uri,path)
         Rails.logger.debug "CDN: Requesting path #{path}"
         req = Net::HTTP::Get.new(path)
