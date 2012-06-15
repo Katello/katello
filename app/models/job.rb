@@ -191,11 +191,11 @@ class Job < ActiveRecord::Base
   private
 
   def pending_action_message(task)
-    task.pending_message_for
+    task.pending_message
   end
 
   def requested_action_message(task)
-    task.message_for
+    task.message
   end
 
   def parameters_message(task)
