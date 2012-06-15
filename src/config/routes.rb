@@ -40,6 +40,7 @@ Src::Application.routes.draw do
       collection do 
         post :errata
         post :products
+        post :repos
       end
   end
 
