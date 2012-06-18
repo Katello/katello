@@ -1316,8 +1316,11 @@ var pageActions = (function($){
 
             $('#remove_role').live('click', function(){
                 var button = $(this);
-                KT.common.customConfirm(button.attr('data-confirm-text'), function(){
-                    roleActions.removeRole(button);
+                KT.common.customConfirm({
+                    message: button.attr('data-confirm-text'),
+                    yes_callback: function(){
+                        roleActions.removeRole(button);
+                    }
                 });
             });
 
@@ -1326,9 +1329,12 @@ var pageActions = (function($){
             	event.preventDefault();
 
             	if( event.which === 13 ){
-	                KT.common.customConfirm(button.attr('data-confirm-text'), function(){
-	                    roleActions.removeRole(button);
-	                });
+	                KT.common.customConfirm({
+                        message: button.attr('data-confirm-text'),
+                        yes_callback: function(){
+	                        roleActions.removeRole(button);
+	                    }
+                    });
             	}
             });
 
