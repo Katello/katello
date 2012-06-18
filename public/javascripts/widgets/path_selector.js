@@ -19,7 +19,6 @@
  *                         each path being an array of hashes
  *                          containing  'id', 'name', 'selectable' (optional)
  * @param options_in
- *      initial_select (true)  -  Allow the library to be selected
  *      inline (false)     -    Add all the paths inline, instead of a hidable panel
  *      select_mode (none)     -  selection mode ('single', 'none', 'multi')
  *      link_first (true)      -  if select_mode is not none, all the first nodes
@@ -107,7 +106,11 @@ KT.path_select = function(div_id, name, environments, options_in){
             return attribute === undefined ? default_value : attribute;
         },
         setup_input_actions = function(){
-            var anchors = path_selector.find('li');
+            var anchors = path_selector.find('li'),
+                nodes = path_selector.find('.node_select'),
+                first_nodes = path_selector.find('ul').find('li:first'),
+                on_select, on_deselect;
+
             anchors.hover(
                 function(){
                     var input = $(this).find('.node_select');
@@ -123,9 +126,8 @@ KT.path_select = function(div_id, name, environments, options_in){
                 }
             );
 
-            var nodes = path_selector.find('.node_select');
-            var first_nodes = path_selector.find('ul').find('li:first');
-            var on_select = function(select_elem){
+
+            on_select = function(select_elem){
                 select_nodes(select_elem);
                 if(options.select_mode === 'single'){
                     nodes.attr('disabled', 'disabled');
@@ -135,7 +137,7 @@ KT.path_select = function(div_id, name, environments, options_in){
                     select_nodes(first_nodes.find('input:checkbox').not(':checked'))
                 }
             };
-            var on_deselect = function(select_elem){
+            on_deselect = function(select_elem){
                 unselect_nodes(select_elem);
                 if(options.select_mode === 'single'){
                     nodes.removeAttr('disabled');
@@ -201,9 +203,9 @@ KT.path_select = function(div_id, name, environments, options_in){
                nodes.and('[data-next_node_id=' + next_id + ']').click();
            }
            else{
-               nodes.click();
+               nodes.first().click();
            }
-        }
+        };
 
     init();
 
