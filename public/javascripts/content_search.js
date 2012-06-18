@@ -26,6 +26,7 @@ $(document).ready(function() {
 
     if (envs !== undefined) {
         comparison_grid.show_columns(envs);
+        KT.my_env_select.reposition();
     }
 
 
@@ -42,6 +43,7 @@ $(document).ready(function() {
     $(document).bind(KT.my_env_select.get_event(), function(event, environments) {
         $.bbq.pushState({environments:environments});
         comparison_grid.show_columns(environments);
+        KT.my_env_select.reposition();
     });
 
 
