@@ -981,18 +981,21 @@ var registerEvents = function(){
             return false;
         }
         var id = promotion_page.get_changeset().id;
-        KT.common.customConfirm(button.attr('data-confirm-text'), function(){
-            button.addClass('disabled');
-            $.ajax({
-                type: "DELETE",
-                url: button.attr('data-url') + '/' + id,
-                cache: false,
-                success: function(data){
-                    delete changeset_breadcrumb['changeset_' + id];
-                    promotion_page.set_changeset('changesets');
-                    promotion_page.get_changeset_tree().render_content('changesets');
-                }
-            });
+        KT.common.customConfirm({
+            message: button.attr('data-confirm-text'),
+            yes_callback: function(){
+                button.addClass('disabled');
+                $.ajax({
+                    type: "DELETE",
+                    url: button.attr('data-url') + '/' + id,
+                    cache: false,
+                    success: function(data){
+                        delete changeset_breadcrumb['changeset_' + id];
+                        promotion_page.set_changeset('changesets');
+                        promotion_page.get_changeset_tree().render_content('changesets');
+                    }
+                });
+            }
         });
         return true;
     });
