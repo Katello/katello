@@ -2,7 +2,9 @@
 
 .grid_16
   = help_tip_button
-  = help_tip(_("System Groups allow you to do stuff...")) |
+  = help_tip(_("System Groups allow you to create groups consisting of multiple systems and then use those groups " + |
+               "to manage the systems.  This includes performing actions such as package and package group  " + |
+               "installations, updates and removals as well as errata installations.")) |
 
 .grid_16#main
   = two_panel(@groups, @panel_options)

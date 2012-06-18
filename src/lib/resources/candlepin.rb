@@ -514,11 +514,11 @@ module Resources
         end
 
         def certificate id
-          self._certificate_and_key(id)["cert"]
+          self._certificate_and_key(id).try :[], 'cert'
         end
 
         def key id
-          self._certificate_and_key(id)["key"]
+          self._certificate_and_key(id).try :[], 'key'
         end
 
         def destroy product_id

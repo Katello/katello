@@ -21,33 +21,39 @@ from katello.client.config import Config
 Config.PATH = os.path.join(os.path.dirname(__file__), "../../../../etc/client.conf")
 
 from katello.client.main import setup_admin
+from katello.client.core.base import CommandContainer
 
-
-# helper class to collect commands and actions
-class ParamsCollector():
-    commands = {}
-    def add_command(self, command_name, command):
-        self.commands[command_name] = command
 
 class UsageGenerator:
     def __init__(self):
-        self.__collector = ParamsCollector()
+        self.__collector = CommandContainer()
 
     def collector(self):
         return self.__collector
 
+    def _print_subcommands_for(self, cmd):
+        if not isinstance(cmd, CommandContainer):
+            return
+        for subcommand_name in iter(sorted(cmd.get_command_names())):
+            print "    %s - %s" % (subcommand_name, cmd.get_command(subcommand_name).description)
+
+
+    def _process_subcommands_for(self, cmd, parent_name):
+
+        for subcommand_name in iter(sorted(cmd.get_command_names())):
+            subcmd = cmd.get_command(subcommand_name)
+
+            if not isinstance(subcmd, CommandContainer):
+                continue
+            print "\n  Command '%s %s':" % (parent_name, subcommand_name)
+            self._print_subcommands_for(subcmd)
+            self._process_subcommands_for(subcmd, parent_name+" "+subcommand_name)
+
     def print_usage(self):
         print "  Possible commands:"
-        for command in iter(sorted(self.__collector.commands.iteritems())):
-            print "    " + command[0] + " - " + command[1].description
-        for command in iter(sorted(self.__collector.commands.iteritems())):
-            print "\n  Command 'katello %s':" % command[0]
-            try:
-                for name in command[1]._action_order:
-                    action = command[1]._actions[name]
-                    print "    %s - %s" % (action.name, action.description)
-            except AttributeError:
-                print "    no actions available"
+        self._print_subcommands_for(self.__collector)
+        self._process_subcommands_for(self.__collector, "katello")
+
 
 if __name__ == "__main__":
     usage_gen = UsageGenerator()

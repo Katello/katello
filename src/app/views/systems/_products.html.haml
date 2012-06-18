@@ -18,6 +18,6 @@
               #{p['productName']}
     %a#products_more{"data-scroll_url"=>url_for(more_products_system_path()), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
     #list-spinner
-      = image_tag("spinner.gif", :class=>"ajax_scroll")
+      = image_tag("embed/icons/spinner.gif", :class=>"ajax_scroll")
   - else
     %p There are no products to display.

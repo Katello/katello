@@ -14,12 +14,14 @@
 KT.comparison_grid = function(){
     var templates = KT.comparison_grid.templates,
         utils = KT.utils,
+        controls,
         columns = {},
         num_columns_shown = 0,
         num_rows = 0;
 
     var init = function(){
-            KT.comparison_grid.events.init(this);
+            events = KT.comparison_grid.events(this);
+            controls = KT.comparison_grid.controls(this);
         },
         add_row = function(name, cell_data){
             var cells = [],
@@ -100,35 +102,101 @@ KT.comparison_grid = function(){
                     $('.cell_' + key).hide();
                 }
             });
+
+            if( num_columns_shown > 3 ){
+                controls.horizontal_scroll.show();            
+            } else {
+                controls.horizontal_scroll.hide();
+            }
         };
 
     return {
-        init                : init,
-        add_row             : add_row,
-        add_rows            : add_rows,
-        add_row_header      : add_row_header,
-        add_column          : add_column,
-        add_columns         : add_columns,
-        add_column_header   : add_column_header,
-        show_columns        : show_columns
+        init                    : init,
+        add_row                 : add_row,
+        add_rows                : add_rows,
+        add_row_header          : add_row_header,
+        add_column              : add_column,
+        add_columns             : add_columns,
+        add_column_header       : add_column_header,
+        show_columns            : show_columns,
+        get_num_columns_shown   : function(){ return num_columns_shown; }
     }
 };
 
-KT.comparison_grid.events = (function() {
-    var grid,
+KT.comparison_grid.controls = function(grid) {
+    var horizontal_scroll = (function() {
+            var right_arrow = $('#right_slide_arrow'),
+                left_arrow  = $('#left_slide_arrow'),
 
-        init = function(grid_instance) {
-            grid = grid_instance;
+                show = function() {
+                    right_arrow.show();
+                    left_arrow.show();
+                },
+                hide = function() {
+                    right_arrow.hide();
+                    left_arrow.hide();
+                },
+                slide_left = function() {
+                    var position = '-=101',
+                        current_position = $('#column_headers').position().left,
+                        stop_position = -((grid.get_num_columns_shown() - 3) * 101);
+                    
+                    if( stop_position < current_position && current_position <= 0 ){
+                        left_arrow.addClass('disabled');
+                        $('#column_headers').animate({ 'left' : position }, 'slow',
+                        function(){ 
+                            left_arrow.removeClass('disabled');
+                        });
+                    }
+                },
+                slide_right = function() {
+                    var position = '+=101',
+                        current_position = $('#column_headers').position().left,
+                        stop_position = -((grid.get_num_columns_shown() - 3) * 101);
 
+                    if( stop_position <= current_position && current_position < 0 ){
+                        right_arrow.addClass('disabled');
+                        $('#column_headers').animate({ 'left' : position }, 'slow',
+                        function(){ 
+                            right_arrow.removeClass('disabled');
+                        });
+                    }
+                };
+            
+            left_arrow.live('click', function(){ 
+                if( !left_arrow.hasClass('disabled') ){
+                    slide_left();
+                }
+            });
+            right_arrow.live('click', function(){
+                if( !right_arrow.hasClass('disabled') ){
+                    slide_right();
+                }
+            });
+
+            return {
+                show : show,
+                hide : hide
+            }
+        }());
+
+    return {
+        horizontal_scroll : horizontal_scroll
+    }
+};
+
+KT.comparison_grid.events = function(grid) {
+    var init = function() {
             $(document).bind('draw.comparison_grid', function(event, data){
                 grid.add_rows(data, false);
             });
+
         };
 
     return {
         init : init
     };
-})();
+};
 
 KT.comparison_grid.templates = (function() {
     var cell = function(data) {

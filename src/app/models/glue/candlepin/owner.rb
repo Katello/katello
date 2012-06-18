@@ -114,7 +114,7 @@ module Glue::Candlepin::Owner
       else
         pools = Resources::Candlepin::Owner.pools self.cp_key
       end
-      pools.collect { |p| KTPool.new p }
+      pools.collect { |p| Pool.new p }
     end
 
     def generate_debug_cert
