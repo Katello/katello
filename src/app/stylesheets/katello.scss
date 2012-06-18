@@ -1,16 +1,9 @@
 @charset "UTF-8";
 @import "compass";
 @import "grid";
-@import "text";
-@import "mixins";
-@import "sprites";
-@import "icons";
 @import "look";
 
-@import "converge-ui/colors";
 @import "converge-ui/shell";
-@import "converge-ui/header";
-@import "converge-ui/footer";
 @import "converge-ui/media";
 
 @import "widgets/multiselect";
@@ -638,13 +631,14 @@ fieldset {
 }
 
 .spinner {
+  margin: 0 auto;
   margin-top: 30%;
   height: 16px;
+  width: 16px;
   display: block;
-  /*display: none;*/
   position: relative;
   z-index: 1000;
-  padding-left: 47%;
+  background: $spinner_img;
 }
 
 /* editable icon for in place editing */
@@ -688,7 +682,7 @@ fieldset {
             .options {
               display: none;
               @include border-radius(5px);
-              @include box-shadow(rgba(0,0,0,0.4), 2px, 2px, 2px);
+              @include box-shadow(rgba(0,0,0,0.4) 2px 2px 2px);
               background-color: white;
               border: 1px solid $border_color;
               padding: 15px;
@@ -739,9 +733,8 @@ fieldset {
       min-height:500px;
       position:relative;
       z-index: 100;
-
       h2 {
-          margin-bottom: 0;
+          margin-bottom: 8px;
       }
       #new {
           border-bottom: 0 none;
@@ -774,6 +767,9 @@ fieldset {
                 }
               }
           }
+      }
+      #heading_title {
+        font-weight: bold;
       }
        /* search forms */
       .search {
@@ -1398,10 +1394,5 @@ fieldset {
 .ui-button-text-only .ui-button-text {
     padding-top: 0;
     padding-bottom: 0;
-}
-
-.versioning {
-  position: relative;
-  bottom: -18px;
 }
 

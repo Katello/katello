@@ -150,6 +150,8 @@ class SystemsController < ApplicationController
     accesible_envs = KTEnvironment.systems_readable(current_organization)
 
     begin
+      @system_groups = SystemGroup.where(:organization_id => current_organization).where(:locked=>false).order(:name)
+
       @systems = []
       setup_environment_selector(current_organization, accesible_envs)
       if @environment
@@ -651,7 +653,7 @@ class SystemsController < ApplicationController
       :actions => System.any_deletable?(@environment, current_organization) ? 'actions' : nil,
       :initial_action => :subscriptions,
       :search_class=>System,
-      :disable_create=> current_organization.environments.length == 0 ? "At least one environment is required to create or register systems in your current organization." : false
+      :disable_create=> current_organization.environments.length == 0 ? _("At least one environment is required to create or register systems in your current organization.") : false
     }
   end
 

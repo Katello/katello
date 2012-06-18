@@ -590,9 +590,6 @@ KT.template_renderer = function() {
     };
 }();
 
-
-
-
 KT.product_actions = (function() {
     var current_input = undefined,
     
@@ -638,7 +635,7 @@ KT.product_actions = (function() {
             }
             else {
                 //need to add
-                btn.html("<img  src='images/spinner.gif'>");
+                btn.html("<img  src='images/embed/icons/spinner.gif'>");
                 current_input.manually_add(name, KT.product_hash[name]);
             }
         });
@@ -730,7 +727,7 @@ KT.repo_actions = (function() {
             }
             else {
                 //need to add
-                btn.html("<img  src='images/spinner.gif'>");
+                btn.html("<img  src='images/embed/icons/spinner.gif'>");
                 current_input.manually_add(name, id);
             }
         });
@@ -803,7 +800,7 @@ KT.package_actions = (function() {
             }
             else {
                 //need to add
-                btn.html("<img  src='images/spinner.gif'>");
+                btn.html("<img  src='images/embed/icons/spinner.gif'>");
                 current_input.manually_add(name);
             }
         });
@@ -868,7 +865,7 @@ KT.package_group_actions = (function() {
             }
             else {
                 //need to add
-                btn.html("<img  src='images/spinner.gif'>");
+                btn.html("<img  src='images/embed/icons/spinner.gif'>");
                 current_input.manually_add(name);
             }
         });
@@ -1125,7 +1122,7 @@ KT.editable = {
 };
 
 $(document).ready(function() {
-
+    $('.left').resizable('destroy');
     var buttons =KT.templates.buttons;
     buttons.edit = $("#edit_template");
     buttons.remove = $("#remove_template");

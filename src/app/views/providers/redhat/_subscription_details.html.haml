@@ -16,7 +16,7 @@
             %tr{:id => "#{group_name}", :class => cycle_class}
               %td
                 -# The group's name is just the product name of the first element in array
-                = sub_group[0]["productName"]
+                = sub_group[0]["product_name"]
               %td{:colspan => 7}
             - sub_class = "child-of-#{group_name}"
           - else

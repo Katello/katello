@@ -63,14 +63,11 @@ class Config(object):
 
         Config.parser = ConfigParser.RawConfigParser()
 
-        # read global configuration first
-        Config.parser.readfp(open(Config.PATH, 'r'), Config.PATH)
+        # read global config, user config, user options if it exists
+        read_config_files = Config.parser.read([Config.PATH, Config.USER, Config.USER_OPTIONS])
 
-        # read user config if it exists
-        Config.parser.read(Config.USER)
-
-        # read user options if it exists
-        Config.parser.read(Config.USER_OPTIONS)
+        if not read_config_files:
+            raise Exception('No config file was found')
 
         if Config.parser.has_section("DEFAULT"):
             raise Exception('Default section in configuration is not supported')

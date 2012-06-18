@@ -59,15 +59,15 @@ class TemplateAPI(KatelloAPI):
         return self.server.POST(path, tplData, multipart=True)[1]
 
     def validate_tpl(self, tplId, format):
-        customHeaders = {'Accept': TemplateAPI.format_content_type[format]}
+        custom_headers = {'Accept': TemplateAPI.format_content_type[format]}
         path = "/api/templates/%s/validate" % tplId
-        response = self.server.GET(path, customHeaders=customHeaders)[1]
+        response = self.server.GET(path, custom_headers=custom_headers)[1]
         return response
 
     def export_tpl(self, tplId, format):
-        customHeaders = {'Accept': TemplateAPI.format_content_type[format]}
+        custom_headers = {'Accept': TemplateAPI.format_content_type[format]}
         path = "/api/templates/%s/export" % tplId
-        response = self.server.GET(path, customHeaders=customHeaders)[1]
+        response = self.server.GET(path, custom_headers=custom_headers)[1]
         if isinstance(response, dict):
             response = json.dumps(response)
         return response

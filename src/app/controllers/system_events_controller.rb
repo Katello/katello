@@ -18,7 +18,6 @@ class SystemEventsController < ApplicationController
     'systems'
   end
 
-
   def rules
     read_system = lambda{@system.readable?}
 
@@ -31,16 +30,14 @@ class SystemEventsController < ApplicationController
     }
   end
 
-
   def index
-    render :partial=>"events", :layout => "tupane_layout", :locals=>{:system => @system,
-                                                                :tasks => tasks}
+    render :partial=>"events", :layout => "tupane_layout", :locals=>{:system => @system, :tasks => tasks}
   end
 
   def show
     # details
     task = @system.tasks.where("#{TaskStatus.table_name}.id" => params[:id]).first
-    task_template = SystemTask::TYPES[task.task_type]
+    task_template = TaskStatus::TYPES[task.task_type]
     type = task_template[:name]
     if task_template[:user_message]
       user_message = task_template[:user_message] % task.user.username
@@ -48,16 +45,19 @@ class SystemEventsController < ApplicationController
       user_message = task_template[:english_name]
     end
     render :partial=>"details", :layout => "tupane_layout", :locals=>{:type => type, :user_message => user_message,
-                                                  :system => @system, :task =>task,
-                                                  :system_task => find_system_task(task, @system) }
+                                                                      :system => @system, :task =>task}
   end
 
   def status
-    # retrieve the status for the package actions initiated by the client
-    statuses = @system.tasks.where(:id => params[:id]).collect do |status|
-      status_html = render_to_string(:template => 'system_events/_event_items.html.haml',
-                                        :layout => false, :locals => {:include_tr => false, :system => @system, :t => status})
-      status.as_json(:status_html => status_html)
+    # retrieve the status for the actions initiated by the client
+    statuses = {:tasks => []}
+    @system.tasks.where(:id => params[:task_id]).collect do |status|
+      statuses[:tasks] << {
+        :id => status.id,
+        :pending? => status.pending?,
+        :status_html => render_to_string(:template => 'system_events/_event_items.html.haml', :layout => false,
+                                         :locals => {:include_tr => false, :system => @system, :t => status})
+      }
     end
     render :json => statuses
   end
@@ -76,7 +76,6 @@ class SystemEventsController < ApplicationController
     else
       render :nothing => true
     end
-
   end
 
   def items
@@ -90,7 +89,7 @@ class SystemEventsController < ApplicationController
     search = params[:search]
     render_panel_direct(TaskStatus, {:no_search_history => true,:render_list_proc => render_proc},
                         search, params[:offset], [:finish_time, 'desc'],
-                        :filter => {:system_ids => [@system.id]},
+                        :filter => {:task_owner_id => [@system.id], :task_owner_type => System.class.name},
                         :load => true,
                         :simple_query => "status:#{search} OR #{search}" )
   end
@@ -99,16 +98,6 @@ class SystemEventsController < ApplicationController
   def find_system
     @system = System.find(params[:system_id])
   end
-
-  helper_method :find_system_task
-  def find_system_task task, system = nil
-    if system
-      SystemTask.where(:task_status_id =>  task, :system_id => system).first
-    else
-      SystemTask.where(:task_status_id =>  task).first
-    end
-  end
-
 
   helper_method :tasks
   def tasks(page_size = current_user.page_size)
