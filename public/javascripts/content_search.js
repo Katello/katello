@@ -16,19 +16,28 @@
 $(document).ready(function() {
 
     var envs = $.bbq.getState('environments');
+    if(!envs && KT.available_environments[0]){
+        envs = [KT.available_environments[0][0]] ;
+    }
 
     KT.my_env_select = KT.path_select('grid_env_selector', 'env', KT.available_environments,
         {select_mode:'multi', button_text:"Go", link_first: true});
 
-    comparison_grid = KT.comparison_grid();
+    var comparison_grid = KT.comparison_grid();
     comparison_grid.init();
     comparison_grid.add_columns(KT.my_env_select.get_paths());
 
-    if (envs !== undefined) {
-        comparison_grid.show_columns(envs);
+    if (envs) {
+        var env_obj = {};
+        KT.utils.each(envs, function(env){
+            env_obj[env.id] = env;
+        });
+        comparison_grid.show_columns(env_obj);
+        KT.utils.each(envs, function(env){
+            KT.my_env_select.select(env.id)
+        });
         KT.my_env_select.reposition();
     }
-
 
     KT.widgets = {repos:{id:"repos_selector", autocomplete:'repo_autocomplete_list', search:'repo_search'},
                   packages:{id:"packages_selector"},
@@ -41,14 +50,10 @@ $(document).ready(function() {
     var search = KT.content_search();
 
     $(document).bind(KT.my_env_select.get_event(), function(event, environments) {
-        $.bbq.pushState({environments:environments});
+        $.bbq.pushState({environments:KT.utils.values(environments)});
         comparison_grid.show_columns(environments);
         KT.my_env_select.reposition();
     });
-
-
-
-
 });
 
 
@@ -64,16 +69,19 @@ KT.content_search = function(){
         }
     },
     search_initiated = function(e, search_params){
+        var old_params = $.bbq.getState('search');
         $.bbq.pushState({search:search_params});
-        if(KT.utils.isEqual(old_search_params, $.bbq.getState("search"))){
+        search_params =  $.bbq.getState("search"); //refresh params, to get trim empty entries
+        //A search was forced, but if everything was equal, nothing would happen, so force it
+        if(KT.utils.isEqual(old_params, search_params)){
             do_search(search_params);
         }
     },
     bind_search_event = function(){
         $(window).bind('hashchange.search', function(event) {
-            var search_params = event.getState('search');
+            var search_params = $.bbq.getState('search');
             if (search_params &&  !KT.utils.isEqual(old_search_params, search_params)) {
-                old_search_params = search_params;
+
                 do_search(search_params);
             }
         });
@@ -82,9 +90,9 @@ KT.content_search = function(){
         var urls = {errata:KT.routes.errata_content_search_index_path(),
                     repos:KT.routes.repos_content_search_index_path(),
                     products:KT.routes.products_content_search_index_path()};
-
+        old_search_params = $.bbq.getState('search');
         if (urls[search_params.content_type] ){
-             
+
             $.ajax({
                 type: 'POST',
                 contentType:"application/json",
@@ -267,8 +275,8 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
             selector.change();
         },
         trigger_search = function(){
-            selector.parents('form').submit();
-        }
+            submit(selector.val());
+        },
         submit = function(content_type){
             var needed = mapping[content_type],
                 query = {};
