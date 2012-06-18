@@ -188,12 +188,12 @@ describe Api::ActivationKeysController do
     before(:each) do
       @environment = KTEnvironment.create!(:organization => @organization, :name => "Dev", :prior => @organization.library)
       @activation_key = ActivationKey.create!(:name => 'activation key', :organization => @organization, :environment => @environment)
-      @pool_in_activation_key = Pool.create!(:cp_id => "pool-123")
-      @pool_not_in_activation_key = Pool.create!(:cp_id => "pool-456")
+      @pool_in_activation_key = ::Pool.create!(:cp_id => "pool-123")
+      @pool_not_in_activation_key = ::Pool.create!(:cp_id => "pool-456")
 
       KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => @pool_in_activation_key.id)
       ActivationKey.stub!(:find).and_return(@activation_key)
-      Pool.stub(:find_by_organization_and_id).and_return do |org,poolid|
+      ::Pool.stub(:find_by_organization_and_id).and_return do |org,poolid|
        case poolid
        when "pool-123" then @pool_in_activation_key
        when "pool-456" then @pool_not_in_activation_key
@@ -218,7 +218,7 @@ describe Api::ActivationKeysController do
       end
 
       it "should not add a pool that is already in the activation key" do
-        Pool.stub(:find_by_organization_and_id => @pool_in_activation_key)
+        ::Pool.stub(:find_by_organization_and_id => @pool_in_activation_key)
         req
         @activation_key.pools.should include(@pool_in_activation_key)
         @activation_key.pools.should have(1).pool

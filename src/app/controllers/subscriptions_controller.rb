@@ -24,9 +24,9 @@ class SubscriptionsController < ApplicationController
     cp_pools = Resources::Candlepin::Owner.pools(current_organization.cp_key)
     if cp_pools
       # Pool objects
-      @subscriptions = cp_pools.collect {|cp_pool| Pool.find_pool(cp_pool['id'], cp_pool)}
+      @subscriptions = cp_pools.collect {|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
       # Index pools
-      Pool.index_pools(@subscriptions) if @subscriptions.length > 0
+      ::Pool.index_pools(@subscriptions) if @subscriptions.length > 0
     else
       @subscriptions = []
     end
