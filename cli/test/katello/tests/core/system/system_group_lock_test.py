@@ -49,10 +49,6 @@ class SystemGroupLockTest(CLIActionTestCase):
         self.action.run()
         self.module.get_system_group.assert_called_once_with(self.OPTIONS['org'], self.SYSTEM_GROUP['name'])
 
-    def test_it_returns_error_when_system_group_not_found(self):
-        self.mock(self.module, 'get_system_group', None)
-        self.assertEqual(self.action.run(), os.EX_DATAERR)
-
     def test_it_returns_success_when_system_group_found(self):
         self.assertEqual(self.action.run(), os.EX_OK)
 
