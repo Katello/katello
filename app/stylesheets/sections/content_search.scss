@@ -9,7 +9,7 @@ $comparison_grid-width: 688px;
 $comparison_grid_header_h1-height:  45px;
 $comparison_grid_column_header-height:  35px;
 $comparison_grid_header-height: $comparison_grid_header_h1-height + $comparison_grid_column_header-height;
-$comparison_grid-height: 600px;
+$comparison_grid-height: 350px;
 $comparison_grid_filter-width: 190px;
 $comparison_grid_row-height: 30px;
 $comparison_grid_column-width: 100px;
@@ -17,9 +17,11 @@ $comparison_grid-margin-top: $browse_box_header-height + $browse_box-margin-top;
 
 $environment_selector-width: 146px;
 
-$widget_border-color: #B5B5B5;
+$widget_border-color: #D7D7D7;
+$widget_background-color: #F9F8F8;
 
 $comparison_grid-border-color: #D7D7D7;
+$comparison_grid_column_header-background: #FFF;
 
 .no_border { border: none !important; }
 
@@ -32,6 +34,9 @@ $comparison_grid-border-color: #D7D7D7;
   margin-left: 15px;
   margin-right: 12px;
   margin-top: $browse_box-margin-top;
+  @include border-radius(3px);
+  background-color: $widget_background-color;
+  @include background-image(linear-gradient(top, rgba(255, 255, 255, 0) 40%, $login_base-color 120%));
 
   header {
     height: $browse_box_header-height;
@@ -61,12 +66,15 @@ $comparison_grid-border-color: #D7D7D7;
 
 #comparison_grid {
   width: $comparison_grid-width;
-  height: $comparison_grid-height;
+  min-height: $comparison_grid-height;
   float: left;
   border: 1px solid $comparison_grid-border-color;
   margin-bottom: 20px;
   margin-top: $comparison_grid-margin-top;
   position: relative;
+  @include border-radius(3px);
+  background-color: $widget_background-color;
+  @include background-image(linear-gradient(top, rgba(255, 255, 255, 0) 40%, $login_base-color 120%));
 
   #grid_header {
     height: $comparison_grid_header-height;
@@ -104,16 +112,18 @@ $comparison_grid-border-color: #D7D7D7;
         left: 0;
         z-index: 1;
         width: 20px;
-        background: red;
         line-height: $comparison_grid_column_header-height;
+        border-right: 1px solid $widget_border-color;
+        background: #FFF;
       }
       #right_slide_arrow { 
         position: absolute;
         right: 0;
         z-index: 1;
         width: 20px;
-        background: red;
         line-height: $comparison_grid_column_header-height;
+        border-left: 1px solid $widget_border-color;
+        background: #FFF;
       }
 
       #column_headers_window {
@@ -137,6 +147,7 @@ $comparison_grid-border-color: #D7D7D7;
         text-align: center;
         border-right: 1px solid $comparison_grid-border-color;
         font-size: 12px;
+        background: $comparison_grid_column_header-background;
       }
 
       #grid_env_selector {
@@ -155,6 +166,7 @@ $comparison_grid-border-color: #D7D7D7;
       border-right: 1px solid $comparison_grid-border-color;
       height: $comparison_grid-height - $comparison_grid_header-height;
       float: left;
+      background: #FFF;
 
       .row_header {
         width: $comparison_grid_filter-width - 20;
@@ -166,6 +178,7 @@ $comparison_grid-border-color: #D7D7D7;
       width: $comparison_grid-width - $comparison_grid_filter-width - 1;
       height: $comparison_grid-height - $comparison_grid_header-height;
       float: left;
+      background: #FFF;
 
       .grid_row {
         height: 40px;
