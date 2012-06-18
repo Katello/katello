@@ -50,7 +50,7 @@ KT.path_select = function(div_id, name, environments, options_in){
             options.expand = default_opt(options_in.expand, true);
 
 
-            div.append(KT.path_select_template.selector(environments, paths_id, options.button_text));
+            $(div).append(KT.path_select_template.selector(environments, paths_id, options.button_text));
             path_selector = $("#" + paths_id);
             path_selector.find('.node_select').not(':checked').hide();
 
@@ -81,6 +81,27 @@ KT.path_select = function(div_id, name, environments, options_in){
             }
             scroll_obj = KT.env_select_scroll({});
             recalc_scroll();
+            reposition();
+        },
+        reposition = function(){
+            var margin = 10,
+                window_width, selector_width, button_start, pos, top;
+
+            if(options.inline){
+                return false;
+            }
+            window_width = $(window).width();
+            selector_width = path_selector.outerWidth()  ;
+            button_start = div.offset().left;
+
+            if(button_start + selector_width + margin > window_width){
+                pos = window_width - (selector_width + margin);
+                pos = pos - button_start;
+            }
+            else{
+                pos = 0;
+            }
+            path_selector.css('left', pos + 'px');
         },
         default_opt = function(attribute, default_value){
             return attribute === undefined ? default_value : attribute;
@@ -191,7 +212,8 @@ KT.path_select = function(div_id, name, environments, options_in){
         get_selected: get_selected,
         get_event : get_event,
         clear_selected: clear_selected,
-        select:select 
+        select:select,
+        reposition: reposition
     };
 };
 
