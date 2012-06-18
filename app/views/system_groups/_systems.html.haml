@@ -1,3 +1,15 @@
+= javascript do
+  -if systems_deletable
+    :plain
+      $(document).ready(function() {
+        KT.system_groups.systems_setup(true);
+      });
+  -else
+    :plain
+      $(document).ready(function() {
+        KT.system_groups.systems_setup(false);
+      });
+
 = render :partial => "system_groups/tupane_header"
 
 = content_for :content do
