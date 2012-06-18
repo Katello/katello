@@ -13,7 +13,7 @@
 class SystemGroupsController < ApplicationController
 
   before_filter :panel_options, :only=>[:index, :items, :create]
-  before_filter :find_group, :only=>[:edit, :update, :destroy, :systems, :lock,
+  before_filter :find_group, :only=>[:edit, :update, :destroy, :destroy_systems, :systems, :lock,
                                      :show, :add_systems, :remove_systems]
   before_filter :authorize
   def rules
@@ -22,6 +22,7 @@ class SystemGroupsController < ApplicationController
     edit_perm = lambda{@group.editable?}
     create_perm = lambda{SystemGroup.creatable?(current_organization)}
     destroy_perm = lambda{@group.deletable?}
+    destroy_systems_perm = lambda{@group.systems_deletable?}
     lock_perm = lambda{@group.locking?}
     {
         :index=>any_readable,
@@ -32,6 +33,7 @@ class SystemGroupsController < ApplicationController
         :systems => read_perm,
         :update=>edit_perm,
         :destroy=>destroy_perm,
+        :destroy_systems=>destroy_systems_perm,
         :show=>read_perm,
         :auto_complete=>any_readable,
         :add_systems=> edit_perm,
@@ -40,7 +42,6 @@ class SystemGroupsController < ApplicationController
         :lock=>lock_perm,
         :unlock=>lock_perm
     }
-
   end
 
   def param_rules
@@ -86,10 +87,10 @@ class SystemGroupsController < ApplicationController
     render :text=>e, :status=>500
   end
 
-
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:filter => @group, :editable=>@group.editable?,
-                                                                       :name=>controller_display_name}
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:filter => @group, :name=>controller_display_name,
+                                                                       :editable=>@group.editable?
+                                                                       }
   end
 
   def show
@@ -123,7 +124,6 @@ class SystemGroupsController < ApplicationController
     render :text=>e, :status=>500
   end
 
-
   def lock
     @group.locked = params[:system_group][:locked] == 'true'
     @group.save!
@@ -131,11 +131,29 @@ class SystemGroupsController < ApplicationController
     render :text=>""
   end
 
-
   def destroy
     @group.destroy
     notice _("System Group %s deleted.") % @group.name
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+  rescue Exception => e
+    notice e, {:level => :error}
+    render :text=>e, :status=>500
+  end
+
+  def destroy_systems
+    # this will destroy both the systems contained within the group as well as the group itself
+    system_names = []
+    @group.systems.each do |system|
+      system_names.push(system.name)
+      system.destroy
+    end
+    @group.destroy
+
+    notice((_("Deleted System Group %{s} and it's %{n} systems.") % {:s => @group.name, :n =>system_names.length.to_s}),
+           {:details => system_names.join("\n")})
+
+    render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+
   rescue Exception => e
     notice e, {:level => :error}
     render :text=>e, :status=>500
@@ -166,8 +184,8 @@ class SystemGroupsController < ApplicationController
   def systems
     @system_joins = @group.system_system_groups.sort_by{|a| a.system.name}
     render :partial => "systems", :layout => "tupane_layout",
-           :locals => {:filter => @group, :editable=>@group.editable?,
-                                :name=>controller_display_name}
+           :locals => {:filter => @group, :name=>controller_display_name, :editable=>@group.editable?,
+                       :systems_deletable=>@group.systems_deletable?}
   end
 
   def add_systems
