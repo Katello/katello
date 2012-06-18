@@ -28,4 +28,4 @@ cover:
 	nosetests --with-coverage --cover-package=katello --cover-html --cover-inclusive .
 
 test:
-	nosetests -s
+	cd test && nosetests
