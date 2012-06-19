@@ -12,7 +12,7 @@
 
 class PackagesController < ApplicationController
 
-  before_filter :lookup_package, :except=>[:auto_complete_library, :validate_name_library]
+  before_filter :lookup_package, :except=>[:auto_complete_library, :auto_complete_nvrea_library, :validate_name_library]
   before_filter :authorize
 
   def rules
@@ -31,6 +31,7 @@ class PackagesController < ApplicationController
       :changelog => view,
       :dependencies => view,
       :auto_complete_library=>search,
+      :auto_complete_nvrea_library=>search,
       :validate_name_library=>search
     }
   end
@@ -53,12 +54,24 @@ class PackagesController < ApplicationController
 
   def auto_complete_library
     begin
-        packages = Glue::Pulp::Package.name_search(params[:term])
+        repos = current_organization.library.repositories.collect{|r| r.pulp_id}
+        packages = Glue::Pulp::Package.autocomplete_name(params[:term], repos)
     rescue Tire::Search::SearchRequestFailed
         packages = []
     end
     render :json => packages
   end
+
+  def auto_complete_nvrea_library
+    begin
+        repos = current_organization.library.repositories.collect{|r| r.pulp_id}
+        packages = Glue::Pulp::Package.autocomplete_nvrea(params[:term], repos)
+    rescue Tire::Search::SearchRequestFailed
+        packages = []
+    end
+    render :json => packages.collect{|p| {:label=>p.nvrea, :id=>p.id}}
+  end
+
 
   def validate_name_library
     name = params[:term]
