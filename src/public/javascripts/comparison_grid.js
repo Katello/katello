@@ -23,22 +23,32 @@ KT.comparison_grid = function(){
             events = KT.comparison_grid.events(this).init();
             controls = KT.comparison_grid.controls(this);
         },
-        add_row = function(name, cell_data){
+        add_row = function(id, name, cell_data, parent_id){
             var cells = [],
-                i = 0, length = utils.size(columns);
+                i = 0, length = utils.size(columns),
+                row_level = parent_id ? 2 : 1;
             
             for(col in columns){
                 display = utils.include(cell_data, parseInt(col)) ? true : false;
                 cells.push({ 'display' : display, 'id' : col });
             }
 
-            add_row_header(name);
-            $('#grid_content').append(templates.row(utils.size(columns), cells));
+            add_row_header(id, name, parent_id, row_level);
+
+            if( parent_id ){
+                $('#grid_content').find('#grid_row_' + parent_id).after(templates.row(id, utils.size(columns), cells, row_level));
+            } else {
+                $('#grid_content').append(templates.row(id, utils.size(columns), cells, row_level));
+            }
             
             num_rows += 1;
         },
-        add_row_header = function(name) {
-            $('#grid_items').append(templates.row_header(name));
+        add_row_header = function(id, name, parent_id, row_level) {
+            if( parent_id ){
+                $('#grid_items').find('#row_header_' + parent_id).after(templates.row_header(id, name, row_level));
+            } else {
+                $('#grid_items').append(templates.row_header(id, name, row_level));
+            }
         },
         add_rows = function(data, append) {
             var i = 0, length = data.length;
@@ -51,7 +61,7 @@ KT.comparison_grid = function(){
             }
 
             for(i = 0; i < length; i++){
-                add_row(data[i]['name'], data[i]['cols']);
+                add_row(data[i]['id'], data[i]['name'], data[i]['cols'], data[i]['parent_id']);
             }
 
             for(col in columns){
@@ -143,7 +153,7 @@ KT.comparison_grid.controls = function(grid) {
                 slide_left = function() {
                     var position = '-=100',
                         current_position = $('#column_headers').position().left,
-                        stop_position = -((grid.get_num_columns_shown() - 4) * 100);
+                        stop_position = -((grid.get_num_columns_shown() - 5) * 100);
                     
                     if( stop_position < current_position && current_position <= 0 ){
                         left_arrow.addClass('disabled');
@@ -217,9 +227,9 @@ KT.comparison_grid.templates = (function() {
             var display = data['display'] ? '<span class="dot-icon-black"></span>' : "";
             return '<div class="grid_cell cell_' + data['id'] + '">' + display + '</div>';
         },
-        row = function(num_columns, cell_data) {
+        row = function(id, num_columns, cell_data, row_level) {
             var i,
-                html ='<div class="grid_row grid_row_level_1">';
+                html ='<div id="grid_row_' + id  + '" class="grid_row grid_row_level_' + row_level + '">';
 
             for(i = 0; i < num_columns; i += 1){
                 html += cell(cell_data[i]);
@@ -228,8 +238,8 @@ KT.comparison_grid.templates = (function() {
 
             return html;
         },
-        row_header = function(name) {
-            var html = '<li class="row_header grid_row_level_1">';
+        row_header = function(id, name, row_level) {
+            var html = '<li id="row_header_' + id + '" class="row_header grid_row_level_' + row_level + '">';
             html += name;
             html += '</li>';
             return html;
@@ -249,4 +259,4 @@ KT.comparison_grid.templates = (function() {
         column_header   : column_header,
         row_header      : row_header
     }
-})();
+}());
