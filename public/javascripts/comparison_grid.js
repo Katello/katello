@@ -206,12 +206,12 @@ KT.comparison_grid.events = function(grid) {
 
 KT.comparison_grid.templates = (function() {
     var cell = function(data) {
-            var display = data['display'] ? "x" : "";
+            var display = data['display'] ? '<span class="dot-icon-black"></span>' : "";
             return '<div class="grid_cell cell_' + data['id'] + '">' + display + '</div>';
         },
         row = function(num_columns, cell_data) {
             var i,
-                html ='<div class="grid_row">';
+                html ='<div class="grid_row grid_row_level_1">';
 
             for(i = 0; i < num_columns; i += 1){
                 html += cell(cell_data[i]);
@@ -221,7 +221,7 @@ KT.comparison_grid.templates = (function() {
             return html;
         },
         row_header = function(name) {
-            var html = '<li class="row_header">';
+            var html = '<li class="row_header grid_row_level_1">';
             html += name;
             html += '</li>';
             return html;
