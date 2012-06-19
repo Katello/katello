@@ -37,6 +37,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
         :properties => {
           :name          => { :type=> 'string', :analyzer=>:kt_name_analyzer},
           :name_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
+          :nvrea_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
           :nvrea         => { :type=> 'string', :analyzer=>:kt_name_analyzer},
           :nvrea_sort    => { :type => 'string', :index=> :not_analyzed },
           :repoids       => { :type=> 'string', :index=>:not_analyzed}
@@ -54,13 +55,16 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
       "_type" => :package,
       "nvrea_sort" => nvrea.downcase,
       "nvrea" => nvrea,
+      "nvrea_autocomplete" => nvrea,
       "name_autocomplete" => name
     }
   end
 
-  def self.name_search query, repoids=nil, number=15
+
+
+
+  def self.autocomplete_name query, repoids=nil, number=15
     return [] if !Tire.index(self.index).exists?
-    start = 0
 
     query = Katello::Search::filter_input query
     query = "*" if query == ""
@@ -84,6 +88,30 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     }
     return to_ret
   end
+
+  def self.autocomplete_nvrea query, repoids=nil, number=15
+     return [] if !Tire.index(self.index).exists?
+
+     query = Katello::Search::filter_input query
+     query = "*" if query == ""
+     query = "name_autocomplete:(#{query})"
+
+     search = Tire.search self.index do
+       fields [:nvrea]
+       query do
+         string query
+       end
+       size number
+
+       if repoids
+         filter :terms, :repoids => repoids
+       end
+     end
+
+     search.results
+   end
+
+
 
   def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"]
     return [] if !Tire.index(self.index).exists?
@@ -124,5 +152,8 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
       import pkgs
     end if !pkgs.empty?
   end
+
+
+
 
 end
