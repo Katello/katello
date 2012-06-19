@@ -21,11 +21,19 @@ module Glue::Provider
 
   module InstanceMethods
 
-    def import_manifest zip_file_path, options = {}
-      options.assert_valid_keys(:force)
-      Rails.logger.debug "Importing manifest for provider #{name}"
-      queue_import_manifest zip_file_path, options
-      self.save!
+    def import_manifest zip_file_path, options = { }
+      options = { :async => false, :notify => false }.merge options
+      options.assert_valid_keys(:force, :async, :notify)
+
+      self.task_status
+
+      ret = if options[:async]
+              self.task_status = async(:organization => self.organization).queue_import_manifest zip_file_path, options
+              self.save!
+            else
+              queue_import_manifest zip_file_path, options
+            end
+      return ret
     end
 
     def sync
@@ -164,8 +172,27 @@ module Glue::Provider
     end
 
     def queue_import_manifest zip_file_path, options
-      pre_queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}", :priority => 3, :action => [self, :owner_import, zip_file_path, options])
-      pre_queue.create(:name => "import of products in manifest #{zip_file_path}",                       :priority => 5, :action => [self, :import_products_from_cp])
+      Rails.logger.debug "Importing manifest for provider #{name}"
+      pre_queue.create(:name     => "import manifest #{zip_file_path} for owner: #{self.organization.name}",
+                       :priority => 3, :action => [self, :owner_import, zip_file_path, options])
+      pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
+                       :priority => 5, :action => [self, :import_products_from_cp])
+
+      self.task_status = nil
+      self.save!
+
+      if options[:notify]
+        message = if AppConfig.katello?
+                    "Subscription manifest uploaded successfully for provider '%s'. " +
+                        "Please enable the repositories you want to sync by selecting 'Enable Repositories' and " +
+                        "selecting individual repositories to be enabled."
+                  else
+                    "Subscription manifest uploaded successfully for provider '%s'."
+                  end
+        notice _(message) % self.name,
+               :synchronous_request => false, :request_type => 'providers__update_redhat_provider'
+      end
+      return true
     end
 
     def import_products_from_cp
