@@ -1,7 +1,7 @@
 %article#comparison_grid
   #grid_header
     %header
-      %h1.fl
+      %h2.fl
         = _("Search Results")
       %div.fr
         -#%label
@@ -9,17 +9,18 @@
         -#%select
     %div
       %aside
-        "Filter goes here"
+        -#"Filter goes here"
       %div#column_headers_container
         #left_slide_arrow.hidden
-          = "<"
+          %span.left_arrow-icon-black
         #right_slide_arrow.hidden
-          = ">"
+          %span.right_arrow-icon-black
         #column_headers_window
           %ul#column_headers
         .column_header#grid_env_selector
           %span.path_button
-            = _('Add Environment(s)')
+            = _('Add Env(s)')
   %section
     %ul#grid_items
-    #grid_content
+    #grid_content_window
+      #grid_content
