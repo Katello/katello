@@ -74,13 +74,8 @@ class ProvidersController < ApplicationController
         temp_file.close
         # force must be a string value
         force_update = params[:force_import] == "1" ? "true" : "false"
-        @provider.import_manifest(File.expand_path(temp_file.path), { :force => force_update })
-        if AppConfig.katello?
-          notice _("Subscription manifest uploaded successfully for provider '%s'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled.") % @provider.name, {:synchronous_request => false}
-        else
-          notice _("Subscription manifest uploaded successfully for provider '%s'.") % @provider.name,
-                 {:synchronous_request => false}
-        end
+        @provider.import_manifest File.expand_path(temp_file.path), :force => force_update, :async => true,
+                                  :notify => true
 
       rescue Exception => error
         if error.respond_to?(:response)
