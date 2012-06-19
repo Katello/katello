@@ -149,9 +149,10 @@ KT.comparison_grid.controls = function(grid) {
                         left_arrow.addClass('disabled');
                         $('#grid_content').animate({ 'left' : position }, 'slow');
                         $('#column_headers').animate({ 'left' : position }, 'slow',
-                        function(){ 
-                            left_arrow.removeClass('disabled');
-                        });
+                            function() {
+                                left_arrow.removeClass('disabled');
+                            }
+                        );
                     }
                 },
                 slide_right = function() {
@@ -163,22 +164,29 @@ KT.comparison_grid.controls = function(grid) {
                         right_arrow.addClass('disabled');
                         $('#grid_content').animate({ 'left' : position }, 'slow');
                         $('#column_headers').animate({ 'left' : position }, 'slow',
-                        function(){ 
-                            right_arrow.removeClass('disabled');
-                        });
+                            function() {
+                                right_arrow.removeClass('disabled');
+                            }
+                        );
                     }
                 };
             
-            left_arrow.live('click', function(){ 
-                if( !left_arrow.hasClass('disabled') ){
-                    slide_left();
-                }
-            });
-            right_arrow.live('click', function(){
-                if( !right_arrow.hasClass('disabled') ){
-                    slide_right();
-                }
-            });
+            left_arrow.live('hover', 
+                function(){ 
+                    if( !left_arrow.hasClass('disabled') ){
+                        slide_left();
+                    }
+                },
+                function(){}
+            );
+            right_arrow.live('hover', 
+                function(){
+                    if( !right_arrow.hasClass('disabled') ){
+                        slide_right();
+                    }
+                },
+                function() {}
+            );
 
             return {
                 show : show,
