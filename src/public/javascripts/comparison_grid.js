@@ -153,7 +153,7 @@ KT.comparison_grid.controls = function(grid) {
                 slide_left = function() {
                     var position = '-=100',
                         current_position = $('#column_headers').position().left,
-                        stop_position = -((grid.get_num_columns_shown() - 5) * 100);
+                        stop_position = -((grid.get_num_columns_shown() - 4) * 100);
                     
                     if( stop_position < current_position && current_position <= 0 ){
                         left_arrow.addClass('disabled');
