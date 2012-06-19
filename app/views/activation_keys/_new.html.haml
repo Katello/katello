@@ -1,3 +1,16 @@
+= javascript do
+  :plain
+    function usage_limit_toggle() {
+      var tb = $("#usage_limit_textbox");
+      if ($('#usage_limit_checkbox').is(":checked")) {
+        tb.val('');
+        tb.attr("disabled", true);
+      } else {
+        tb.val('');
+        tb.removeAttr('disabled');
+      }
+    }
+
 = content_for :title do
   #{_("New Activation Key")}
 
@@ -36,6 +49,15 @@
             %label #{_("System Template")}:
           .grid_7.la
             = select_tag 'activation_key[system_template_id]', options_for_select(@system_template_labels, @selected_template)
+
+      %fieldset
+        .grid_2.ra
+          %label #{_("Usage Limit")}:
+        .grid_7.la
+          = number_field_tag 'activation_key[usage_limit]', params[:usage_limit], :size => "4", :tabindex => auto_tab_index, :min => 1, :id => :usage_limit_textbox, :disabled => true
+          %label
+            %input{:type => "checkbox", :checked => 'checked', :id => :usage_limit_checkbox, :onclick => 'usage_limit_toggle()'}
+            = _("Unlimited")
 
       .grid_9.ra
         = button_to _("Save"), {:action => "create", :controller => "activation_keys"}, :method => :post, :id => :save_key, :tabindex => auto_tab_index
