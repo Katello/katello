@@ -242,6 +242,20 @@ $comparison_grid_column_header-background: #FFF;
           border-right: 1px solid $comparison_grid_border-color;
           float: left;
           padding: 0 5px;
+          position: relative;
+        }
+
+        .grid_cell_hover {
+          width: $comparison_grid_column-width;
+          height: $comparison_grid_row-height;
+          line-height: $comparison_grid_row-height;
+          text-align: center;
+          color: #FFF;
+          padding: 0 5px;
+          background: rgba(0, 0, 0, 0.6);
+          position: absolute;
+          left: 0;
+          top: 0;
         }
       }
     }

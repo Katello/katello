@@ -29,13 +29,19 @@ KT.comparison_grid = function(){
             grid_content_el = $('#grid_content');
         },
         add_row = function(id, name, cell_data, parent_id){
-            var cells = [],
+            var cells = [], display,
                 i = 0, length = utils.size(columns),
-                row_level = parent_id ? 2 : 1;
+                row_level = parent_id ? 2 : 1,
+                cell_columns = KT.utils.keys(cell_data);
             
             for(col in columns){
-                display = utils.include(cell_data, parseInt(col)) ? true : false;
-                cells.push({ 'display' : display, 'id' : col });
+                in_column = utils.include(cell_columns, col) ? true : false;
+                
+                if( in_column ){
+                    cells.push({ 'in_column' : in_column, 'display' : cell_data[col]['display'], 'id' : col, 'hover' : cell_data[col]['hover'] });
+                } else {
+                    cells.push({ 'in_column' : in_column, 'id' : col });
+                }
             }
 
             add_row_header(id, name, parent_id, row_level);
@@ -241,7 +247,22 @@ KT.comparison_grid.events = function(grid) {
             $(document).bind('draw.comparison_grid', function(event, data){
                 grid.add_rows(data, false);
             });
+            cell_hover();
+        },
+        cell_hover = function() {
+            $('.grid_cell').live('hover', function(event){
+                if( $(this).data('hover') ){
+                    if( event.type === 'mouseenter' ){
+                        $(this).find('.grid_cell_hover').show();
+                        console.log('hover cell');  
+                    } 
 
+                    if( event.type === 'mouseleave' ){
+                        $(this).find('.grid_cell_hover').hide();
+                        console.log('hover cell');        
+                    }
+                }
+            });
         };
 
     return {
@@ -251,8 +272,31 @@ KT.comparison_grid.events = function(grid) {
 
 KT.comparison_grid.templates = (function() {
     var cell = function(data) {
-            var display = data['display'] ? '<span class="dot-icon-black"></span>' : "--";
-            return '<div class="grid_cell cell_' + data['id'] + '">' + display + '</div>';
+            var display,                
+                hover = data['hover'] ? data['hover'] : "",
+                html = "";
+
+            if( data['in_column'] ){
+                if( data['display'] ){
+                    display = data['display'];
+                } else {
+                    display = '<span class="dot-icon-black"></span>';
+                }
+            } else {
+                 display = "<span>--</span>";
+            }
+
+            if( hover !== "" ){
+                html += '<div class="grid_cell cell_' + data['id'] + '" data-hover=true>';
+            } else {
+                html += '<div class="grid_cell cell_' + data['id'] + '">';
+            }
+
+            html += display; 
+            html += '<span class="hidden grid_cell_hover">' + hover + '</span>';
+            html += '</div>';
+
+            return html;
         },
         row = function(id, num_columns, cell_data, row_level) {
             var i,
