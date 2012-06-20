@@ -17,11 +17,16 @@ KT.comparison_grid = function(){
         controls,
         columns = {},
         num_columns_shown = 0,
-        num_rows = 0;
+        num_rows = 0,
+        grid_row_headers_el,
+        grid_content_el,
+        max_visible_columns = 5;
 
     var init = function(){
             events = KT.comparison_grid.events(this).init();
             controls = KT.comparison_grid.controls(this);
+            grid_row_headers_el = $('#grid_row_headers');
+            grid_content_el = $('#grid_content');
         },
         add_row = function(id, name, cell_data, parent_id){
             var cells = [],
@@ -36,18 +41,18 @@ KT.comparison_grid = function(){
             add_row_header(id, name, parent_id, row_level);
 
             if( parent_id ){
-                $('#grid_content').find('#grid_row_' + parent_id).after(templates.row(id, utils.size(columns), cells, row_level));
+                grid_content_el.find('#grid_row_' + parent_id).after(templates.row(id, utils.size(columns), cells, row_level));
             } else {
-                $('#grid_content').append(templates.row(id, utils.size(columns), cells, row_level));
+                grid_content_el.append(templates.row(id, utils.size(columns), cells, row_level));
             }
             
             num_rows += 1;
         },
         add_row_header = function(id, name, parent_id, row_level) {
             if( parent_id ){
-                $('#grid_items').find('#row_header_' + parent_id).after(templates.row_header(id, name, row_level));
+                grid_row_headers_el.find('#row_header_' + parent_id).after(templates.row_header(id, name, row_level));
             } else {
-                $('#grid_items').append(templates.row_header(id, name, row_level));
+                grid_row_headers_el.append(templates.row_header(id, name, row_level));
             }
         },
         add_rows = function(data, append) {
@@ -56,8 +61,8 @@ KT.comparison_grid = function(){
             append = (append === undefined) ? true : append;
 
             if( !append ){
-                $('#grid_content').html("");
-                $('#grid_items').html("");
+                grid_content_el.html("");
+                grid_row_headers_el.html("");
             }
 
             for(i = 0; i < length; i++){
@@ -115,9 +120,9 @@ KT.comparison_grid = function(){
                 }
             });
 
-            if( num_columns_shown > 4 ){
+            if( num_columns_shown > max_visible_columns ){
                 controls.horizontal_scroll.show();            
-                $('#column_headers_window').width(400);
+                $('#column_headers_window').width(100 * max_visible_columns);
             } else {
                 controls.horizontal_scroll.hide();
                 $('#column_headers_window').width(num_columns_shown * 100);
@@ -133,14 +138,17 @@ KT.comparison_grid = function(){
         add_columns             : add_columns,
         add_column_header       : add_column_header,
         show_columns            : show_columns,
-        get_num_columns_shown   : function(){ return num_columns_shown; }
+        get_num_columns_shown   : function(){ return num_columns_shown; },
+        get_max_visible_columns : function(){ return max_visible_columns; }
     }
 };
 
 KT.comparison_grid.controls = function(grid) {
     var horizontal_scroll = (function() {
             var right_arrow = $('#right_slide_arrow'),
+                right_arrow_trigger = right_arrow.find('.slide_trigger'),
                 left_arrow  = $('#left_slide_arrow'),
+                left_arrow_trigger = left_arrow.find('.slide_trigger'),
 
                 show = function() {
                     right_arrow.show();
@@ -150,17 +158,34 @@ KT.comparison_grid.controls = function(grid) {
                     right_arrow.hide();
                     left_arrow.hide();
                 },
+                set_arrow_states = function() {
+                    var current_position = $('#column_headers').position().left,
+                        stop_position = -((grid.get_num_columns_shown() - grid.get_max_visible_columns()) * 100);
+                    
+                    if( current_position === 0 ){
+                        right_arrow.find('span').addClass('disabled');
+                        left_arrow.find('span').removeClass('disabled');
+                    } else if( stop_position === current_position ) {
+                        left_arrow.find('span').addClass('disabled');
+                        right_arrow.find('span').removeClass('disabled');
+                    } else {
+                        right_arrow.find('span').removeClass('disabled');
+                        left_arrow.find('span').removeClass('disabled');
+                    }
+                },
                 slide_left = function() {
                     var position = '-=100',
                         current_position = $('#column_headers').position().left,
-                        stop_position = -((grid.get_num_columns_shown() - 4) * 100);
+                        stop_position = -((grid.get_num_columns_shown() - grid.get_max_visible_columns()) * 100);
                     
                     if( stop_position < current_position && current_position <= 0 ){
-                        left_arrow.addClass('disabled');
+                        left_arrow.find('span').addClass('disabled');
                         $('#grid_content').animate({ 'left' : position }, 'slow');
                         $('#column_headers').animate({ 'left' : position }, 'slow',
                             function() {
-                                left_arrow.removeClass('disabled');
+                                left_arrow.find('span').removeClass('disabled');
+                                set_arrow_states();
+                                left_arrow.trigger('mouseover');
                             }
                         );
                     }
@@ -168,34 +193,36 @@ KT.comparison_grid.controls = function(grid) {
                 slide_right = function() {
                     var position = '+=100',
                         current_position = $('#column_headers').position().left,
-                        stop_position = -((grid.get_num_columns_shown() - 4) * 100);
+                        stop_position = -((grid.get_num_columns_shown() - grid.get_max_visible_columns()) * 100);
 
                     if( stop_position <= current_position && current_position < 0 ){
-                        right_arrow.addClass('disabled');
+                        right_arrow.find('span').addClass('disabled');
                         $('#grid_content').animate({ 'left' : position }, 'slow');
                         $('#column_headers').animate({ 'left' : position }, 'slow',
                             function() {
-                                right_arrow.removeClass('disabled');
+                                right_arrow.find('span').removeClass('disabled');
+                                set_arrow_states();
+                                right_arrow_trigger.trigger('hover');
                             }
                         );
                     }
                 };
             
-            left_arrow.live('hover', 
+            left_arrow_trigger.hover(
                 function(){ 
-                    if( !left_arrow.hasClass('disabled') ){
+                    if( !left_arrow.find('span').hasClass('disabled') ){
                         slide_left();
                     }
                 },
                 function(){}
             );
-            right_arrow.live('hover', 
+            right_arrow_trigger.hover(
                 function(){
-                    if( !right_arrow.hasClass('disabled') ){
+                    if( !right_arrow.find('span').hasClass('disabled') ){
                         slide_right();
                     }
                 },
-                function() {}
+                function(){}
             );
 
             return {
@@ -224,7 +251,7 @@ KT.comparison_grid.events = function(grid) {
 
 KT.comparison_grid.templates = (function() {
     var cell = function(data) {
-            var display = data['display'] ? '<span class="dot-icon-black"></span>' : "";
+            var display = data['display'] ? '<span class="dot-icon-black"></span>' : "--";
             return '<div class="grid_cell cell_' + data['id'] + '">' + display + '</div>';
         },
         row = function(id, num_columns, cell_data, row_level) {
