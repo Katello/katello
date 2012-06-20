@@ -82,14 +82,21 @@ class ContentSearchController < ApplicationController
   def repo_rows repos
     repos.collect do |repo|
         all_repos = repo.other_repos_with_same_product_and_content + [repo.pulp_id]
-        env_ids = Repository.where(:pulp_id=>all_repos).collect{|r| r.environment.id}
-        {:id=>"repo_#{repo.id}", :parent_id=>"product_#{repo.product.id}", :name=>repo.name, :cols=>env_ids}
+        cols = {}
+        Repository.where(:pulp_id=>all_repos).each do |r|
+          cols[r.environment.id] = {:hover => r.package_count}
+        end
+        {:id=>"repo_#{repo.id}", :parent_id=>"product_#{repo.product.id}", :name=>repo.name, :cols=>cols}
     end
   end
 
   def product_rows products
     products.collect do |p|
-       {:id=>"product_#{p.id}", :name=>p.name, :cols=>p.environment_ids}
+      cols = {}
+      p.environments.collect do |env|
+        cols[env.id] = {:display => p.total_package_count(env)}
+      end
+       {:id=>"product_#{p.id}", :name=>p.name, :cols=>cols}
     end
   end
 
