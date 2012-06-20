@@ -199,6 +199,7 @@ and then run katello-configure to configure everything.
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
+%{homedir}/lib/monkeys
 %{homedir}/lib/navigation
 %{homedir}/lib/resources
 %{homedir}/lib/tasks
