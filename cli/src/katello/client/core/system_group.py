@@ -257,6 +257,8 @@ class Delete(SystemGroupAction):
                                help=_("system group name (required)"))
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
+        parser.add_option('--delete_systems', dest='delete_systems', action='store_true',
+                               default=False, help=_("delete the systems along with the system group (optional)"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -264,10 +266,11 @@ class Delete(SystemGroupAction):
     def run(self):
         org_name = self.get_option('org')
         name = self.get_option('name')
+        delete_systems = self.get_option('delete_systems')
 
         system_group = get_system_group(org_name, name)
 
-        message = self.api.delete(org_name, system_group["id"])
+        message = self.api.delete(org_name, system_group["id"], delete_systems)
         if message != None:
             print message
             return os.EX_OK
