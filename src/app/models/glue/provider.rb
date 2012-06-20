@@ -183,13 +183,13 @@ module Glue::Provider
 
       if options[:notify]
         message = if AppConfig.katello?
-                    "Subscription manifest uploaded successfully for provider '%s'. " +
+                    _("Subscription manifest uploaded successfully for provider '%s'. " +
                         "Please enable the repositories you want to sync by selecting 'Enable Repositories' and " +
-                        "selecting individual repositories to be enabled."
+                        "selecting individual repositories to be enabled.")
                   else
-                    "Subscription manifest uploaded successfully for provider '%s'."
+                    _("Subscription manifest uploaded successfully for provider '%s'.")
                   end
-        notice _(message) % self.name,
+        notice message % self.name,
                :synchronous_request => false, :request_type => 'providers__update_redhat_provider'
       end
       return true
