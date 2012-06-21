@@ -265,7 +265,6 @@ KT.comparison_grid.controls = function(grid) {
                             function() {
                                 left_arrow.find('span').removeClass('disabled');
                                 set_arrow_states();
-                                left_arrow.trigger('mouseover');
                             }
                         );
                     }
@@ -282,27 +281,43 @@ KT.comparison_grid.controls = function(grid) {
                             function() {
                                 right_arrow.find('span').removeClass('disabled');
                                 set_arrow_states();
-                                right_arrow_trigger.trigger('hover');
                             }
                         );
                     }
                 };
             
-            left_arrow_trigger.hover(
+            left_arrow_trigger.click(
                 function(){ 
                     if( !left_arrow.find('span').hasClass('disabled') ){
                         slide_left();
                     }
+                }
+            ).hover(
+                function(){
+                    if( !left_arrow.find('span').hasClass('disabled') ){
+                        left_arrow.addClass('slide_arrow_hover');
+                    }
                 },
-                function(){}
+                function(){ 
+                    left_arrow.removeClass('slide_arrow_hover');
+                }
             );
-            right_arrow_trigger.hover(
+
+            right_arrow_trigger.click(
                 function(){
                     if( !right_arrow.find('span').hasClass('disabled') ){
                         slide_right();
                     }
+                }
+            ).hover(
+                function(){
+                    if( !right_arrow.find('span').hasClass('disabled') ){
+                        right_arrow.addClass('slide_arrow_hover');
+                    }
                 },
-                function(){}
+                function(){ 
+                    right_arrow.removeClass('slide_arrow_hover');
+                }
             );
 
             return {
