@@ -81,6 +81,15 @@ $comparison_grid_column_header-background: #FFF;
   @include background-image(linear-gradient(top, rgba(255, 255, 255, 0) 40%, $login_base-color 120%));
   font-family: $screenfont;
 
+  #grid_loading_screen {
+    position: absolute;
+    top: 0;
+    z-index: 10;
+    width: $comparison_grid-width;
+    min-height: $comparison_grid-height;
+    background: rgba(0, 0, 0, 0.8);
+  }
+
   #grid_header {
     height: $comparison_grid_header-height;
     border-bottom: 1px solid $comparison_grid-border-color;
