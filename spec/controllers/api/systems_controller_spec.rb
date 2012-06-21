@@ -378,21 +378,21 @@ describe Api::SystemsController do
 
     it "should change the name" do
       Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true) if AppConfig.katello?
-      post :update, :id => uuid, :name => "foo_name"
+      put :update, :id => uuid, :name => "foo_name"
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the description" do
       Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, "redkin is awesome.").and_return(true) if AppConfig.katello?
-      post :update, :id => uuid, :description => "redkin is awesome."
+      put :update, :id => uuid, :description => "redkin is awesome."
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the location" do
       Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true) if AppConfig.katello?
-      post :update, :id => uuid, :location => "never-neverland"
+      put :update, :id => uuid, :location => "never-neverland"
       response.body.should == @sys.to_json
       response.should be_success
     end
@@ -401,7 +401,7 @@ describe Api::SystemsController do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil, anything).and_return(true)
-      post :update, :id => uuid, :installedProducts => installed_products
+      put :update, :id => uuid, :installedProducts => installed_products
       response.body.should == @sys.to_json
       response.should be_success
     end
@@ -410,7 +410,7 @@ describe Api::SystemsController do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, "1.1", nil, anything).and_return(true)
-      post :update, :id => uuid, :releaseVer => "1.1"
+      put :update, :id => uuid, :releaseVer => "1.1"
       response.body.should == @sys.to_json
       response.should be_success
     end
@@ -419,7 +419,7 @@ describe Api::SystemsController do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, nil, "SLA", anything).and_return(true)
-      post :update, :id => uuid, :serviceLevel => "SLA"
+      put :update, :id => uuid, :serviceLevel => "SLA"
       response.body.should == @sys.to_json
       response.should be_success
     end
