@@ -123,7 +123,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def update
-    @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel))
+    @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel, :environment_id))
     render :json => @system.to_json
   end
 
