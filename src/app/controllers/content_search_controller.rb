@@ -13,9 +13,18 @@
 class ContentSearchController < ApplicationController
 
 
-  def authorize
+  def rules
+    contents_test = lambda{true}
+
+
     {
-        :index => lambda{true}
+        :index => lambda{true},
+        :errata => contents_test,
+        :products => contents_test,
+        :repos => contents_test,
+        :my_environments => contents_test,
+
+
     }
   end
 
@@ -74,7 +83,6 @@ class ContentSearchController < ApplicationController
     products = repos.collect{|r| r.product}.uniq
     render :json=>(product_rows(products) + repo_rows(repos))
   end
-
 
   private
 
