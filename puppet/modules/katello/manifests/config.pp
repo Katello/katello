@@ -21,11 +21,6 @@ class katello::config {
     require => [ Postgres::Createuser[$katello::params::db_user], File["${katello::params::log_base}"] ],
   }
 
-  exec { "generate-passphrase":
-    command => "/usr/share/katello/script/katello-generate-passphrase",
-    creates => "/etc/katello/secure/passphrase"
-  }
-
   file {
     "${katello::params::config_dir}/thin.yml":
       content => template("katello/${katello::params::config_dir}/thin.yml.erb"),
@@ -37,15 +32,14 @@ class katello::config {
       content => template("katello/${katello::params::config_dir}/katello.yml.erb"),
       owner   => $katello::params::user,
       group   => $katello::params::group,
-      mode    => "600",
-      require => [ Exec["generate-passphrase"] ];
+      mode    => "600";
 
     "/etc/sysconfig/katello":
       content => template("katello/etc/sysconfig/katello.erb"),
       owner   => "root",
       group   => "root",
       mode    => "644";
-    
+
     "/etc/katello/client.conf":
       content => template("katello/etc/katello/client.conf.erb"),
       owner   => "root",
