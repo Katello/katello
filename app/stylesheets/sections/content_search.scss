@@ -114,33 +114,31 @@ $comparison_grid_column_header-background: #FFF;
       border-right: none;
       border-bottom: none;
 
-      #left_slide_arrow {
+      .slide_arrow {
         position: absolute;
-        left: 0;
-        z-index: 1;
-        width: 20px;
+        z-index: 2;
+        width: 16px;
         line-height: $comparison_grid_column_header-height;
         height: $comparison_grid_column_header-height;
-        border-right: 1px solid $widget-border-color;
         background: #FFF;
+      }
+      .slide_arrow_hover {  background: $widget-background-color; }
+
+      #left_slide_arrow {
+        left: 0;
+        border-right: 1px solid $widget-border-color;
       }
 
       #right_slide_arrow { 
-        position: absolute;
-        right: 24px;
-        z-index: 1;
-        width: 20px;
-        line-height: $comparison_grid_column_header-height;
-        height: $comparison_grid_column_header-height;
+        right: 22px;
         border-left: 1px solid $widget-border-color;
-        background: #FFF;
       }
 
       .slide_trigger {
         position: absolute;
         right: 0;
-        z-index: 2;
-        width: 20px;
+        z-index: 3;
+        width: 16px;
         line-height: $comparison_grid_column_header-height;
         height: $comparison_grid_column_header-height;
         background: transparent;
@@ -175,12 +173,12 @@ $comparison_grid_column_header-background: #FFF;
         width: 20px;
         position: absolute;
         right: -1px;
-        z-index: 1;
-        padding: 0 2px;
+        z-index: 2;
+        padding: 0 1px;
         background: #FFF;
         line-height: $comparison_grid_column_header-height;
         height: $comparison_grid_column_header-height;
-        border-left: 1px solid $widget-border-color;
+        border-left: 1px dotted $widget-border-color;
         border-right: 1px solid $widget-border-color;
       }
     }
@@ -204,8 +202,9 @@ $comparison_grid_column_header-background: #FFF;
       }
 
       .grid_row_level_2 {
-        padding-left: 8px;
-        padding-right: 8px;
+        padding-left: 25px;
+        padding-right: 25px;
+        width: $comparison_grid_filter-width - 50;
       }
     }
 
