@@ -146,6 +146,17 @@ describe Api::ActivationKeysController do
         post :create, bad_req
       end
     end
+
+    it_should_behave_like "bad request"  do
+      let(:req) do
+        bad_req = {:environment_id => 1,
+                   :activation_key =>
+                      {:name => "Gpg Key",
+                       :usage_limit => "-666" }
+        }.with_indifferent_access
+        post :create, bad_req
+      end
+    end
   end
 
   context "update an activation key" do
