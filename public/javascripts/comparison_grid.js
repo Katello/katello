@@ -153,6 +153,9 @@ KT.comparison_grid = function(){
                 controls.horizontal_scroll.hide();
                 $('#column_headers_window').width(num_columns_shown * 100);
             }
+        },
+        set_loading = function(){
+            grid_content_el.find('#loading_screen').show();
         };
 
     return {
@@ -161,6 +164,7 @@ KT.comparison_grid = function(){
         add_columns             : add_columns,
         show_columns            : show_columns,
         collapse_rows           : collapse_rows,
+        set_loading             : set_loading,
         get_num_columns_shown   : function(){ return num_columns_shown; },
         get_max_visible_columns : function(){ return max_visible_columns; }
     }
@@ -335,7 +339,13 @@ KT.comparison_grid.events = function(grid) {
     var init = function() {
             $(document).bind('draw.comparison_grid', function(event, data){
                 grid.add_rows(data, false);
+                grid.set_loading(false);
             });
+
+            $(document).bind('loading.comparison_grid', function(event, data){
+                grid.set_loading(true);
+            });
+
             cell_hover();
             collapseable_rows();
         },
