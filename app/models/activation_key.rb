@@ -47,12 +47,9 @@ class ActivationKey < ActiveRecord::Base
   validate :environment_not_library
   validate :environment_key_conflict
   validates_each :usage_limit do |record, attr, value|
-    unless value.nil?
-      record.errors[attr] << _("must be higher than 1 or unlimited") if value < -1 or value == 0
-      if value > 0
-        # we don't let users to set usage limit lower than current usage
-        record.errors[attr] << _("must be higher than current usage (%s)" % record.usage_count) if value < record.usage_count
-      end
+    if not value.nil? and (value < -1 or value == 0 or value < record.usage_count)
+      # we don't let users to set usage limit lower than current usage
+      record.errors[attr] << _("must be higher than current usage (%s) or unlimited" % record.usage_count)
     end
   end
 
