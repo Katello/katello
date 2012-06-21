@@ -365,6 +365,7 @@ describe Api::SystemsController do
   describe "update a system" do
     before(:each) do
       @sys = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
+      @environment_2 = KTEnvironment.create!(:name => 'test_2', :prior => @organization.library.id, :organization => @organization)
       Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid})
       System.stub!(:first).and_return(@sys)
     end
@@ -399,7 +400,7 @@ describe Api::SystemsController do
     it "should update installed products" do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
-      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil, anything).and_return(true)
       post :update, :id => uuid, :installedProducts => installed_products
       response.body.should == @sys.to_json
       response.should be_success
@@ -408,7 +409,7 @@ describe Api::SystemsController do
     it "should update releaseVer" do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
-      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, "1.1", nil).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, "1.1", nil, anything).and_return(true)
       post :update, :id => uuid, :releaseVer => "1.1"
       response.body.should == @sys.to_json
       response.should be_success
@@ -417,8 +418,17 @@ describe Api::SystemsController do
     it "should update service level agreement" do
       @sys.facts = nil
       @sys.stub(:guest => 'false', :guests => [])
-      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, nil, "SLA").and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, nil, "SLA", anything).and_return(true)
       post :update, :id => uuid, :serviceLevel => "SLA"
+      response.body.should == @sys.to_json
+      response.should be_success
+    end
+
+    it "should update environment" do
+      @sys.facts = nil
+      @sys.stub(:guest => 'false', :guests => [], :environment => @environment_2)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, nil, nil, nil, nil, @environment_2.id).and_return(true)
+      put :update, :id => uuid, :environment_id => @environment_2.id 
       response.body.should == @sys.to_json
       response.should be_success
     end
