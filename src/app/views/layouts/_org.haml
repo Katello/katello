@@ -1,9 +1,9 @@
 / orgbox Starts Here
 #switcherContainer.clickable
-  %a#switcherButton{:href => "#"}
-    #{current_organization.name}
-  .arrow_icon_menu
-  %div{:style => "clear:both"}
+  %a#switcherButton{:href => "#", :title=>"#{current_organization.name}"}
+    .one-line-ellipsis
+      #{current_organization.name}
+    .arrow_icon_menu
   #switcherBox
     #switcherForm.org
       #orgfilter
@@ -13,4 +13,7 @@
       #orgbox{"data-url"=>allowed_orgs_user_session_path}
         /Orgs pulled from above data-url dynamically each click.
         .spinner
+      %a#manage_orgs{:href=>organizations_path()}
+        #{_("Manage Organizations")}
+        .gears_icon
 / orgbox Ends Here

@@ -79,7 +79,11 @@ class UserSessionsController < ApplicationController
       setup_current_organization
       # notice the user
       notice _("Login Successful")
-      redirect_to dashboard_index_url
+      if current_organization
+        redirect_to dashboard_index_url
+      else
+        redirect_to organizations_url
+      end
     end
   end
 
