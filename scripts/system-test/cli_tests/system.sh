@@ -29,7 +29,6 @@ test_success "system update description" system update --org="$TEST_ORG" --name=
 test_success "system update location" system update --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --location="The Grid"
 test_success "system update release" system update --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --release="6.2"
 test_success "system unregister" system unregister --name="$SYSTEM_NAME_ADMIN" --org="$TEST_ORG"
-test_success "system unregister" system unregister --name="$SYSTEM_NAME_ADMIN_2" --org="$TEST_ORG"
 
 test_success "activation key create" activation_key create --name="$ACTIVATION_KEY_NAME_1" --description="key description" --environment="$TEST_ENV" --org="$TEST_ORG"
 test_success "activation key create" activation_key create --name="$ACTIVATION_KEY_NAME_2" --description="key description" --environment="$TEST_ENV" --org="$TEST_ORG"
@@ -37,7 +36,6 @@ test_success "system register with activation key" system register --name="$SYST
 test_success "system unregister" system unregister --name="$SYSTEM_NAME_ADMIN" --org="$TEST_ORG"
 test_success "system register with activation keys" system register --name="$SYSTEM_NAME_ADMIN" --org="$TEST_ORG" --activationkey="$ACTIVATION_KEY_NAME_1,$ACTIVATION_KEY_NAME_2"
 test_success "system unregister" system unregister --name="$SYSTEM_NAME_ADMIN" --org="$TEST_ORG"
-test_success "system unregister" system unregister --name="$SYSTEM_NAME_ADMIN_2" --org="$TEST_ORG"
 
 test_success "limited ak create" activation_key create --name="$ACTIVATION_KEY_NAME_3" --description="key description" --environment="$TEST_ENV" --org="$TEST_ORG" --limit=1
 test_success "system register with limited ak" system register --name="$SYSTEM_NAME_ADMIN" --org="$TEST_ORG" --activationkey="$ACTIVATION_KEY_NAME_3"
