@@ -134,10 +134,10 @@ KT.comparison_grid = function(){
 
             if( column_selector === false ){
                 $('#column_selector').hide();
-                $('#right_slide_arrow').css({ right : '-1px' });
+                $('.slide_arrow[data-arrow_direction="right"]').css({ right : '-1px' });
             } else {
                 $('#column_selector').show();
-                $('#right_slide_arrow').css({ right : '21px' });
+                $('.slide_arrow[data-arrow_direction="right"]').css({ right : '21px' });
             }
         },
         show_columns = function(data){
@@ -244,10 +244,12 @@ KT.comparison_grid.rows = function(){
 
 KT.comparison_grid.controls = function(grid) {
     var horizontal_scroll = (function() {
-            var right_arrow = $('#right_slide_arrow'),
+            var right_arrow = $('.slide_arrow[data-arrow_direction="right"]'),
                 right_arrow_trigger = right_arrow.find('.slide_trigger'),
-                left_arrow  = $('#left_slide_arrow'),
+                left_arrow  = $('.slide_arrow[data-arrow_direction="left"]'),
                 left_arrow_trigger = left_arrow.find('.slide_trigger'),
+                arrow  = $('.slide_arrow'),
+                arrow_trigger = arrow.find('.slide_trigger'),
 
                 show = function() {
                     right_arrow.show();
@@ -257,14 +259,17 @@ KT.comparison_grid.controls = function(grid) {
                     right_arrow.hide();
                     left_arrow.hide();
                 },
+                current_position = function(){
+                    return $('#column_headers').position().left;
+                },
+                stop_position = function(){
+                    return -((grid.get_num_columns_shown() - grid.get_max_visible_columns()) * 100);
+                },
                 set_arrow_states = function() {
-                    var current_position = $('#column_headers').position().left,
-                        stop_position = -((grid.get_num_columns_shown() - grid.get_max_visible_columns()) * 100);
-                    
-                    if( current_position === 0 ){
+                    if( current_position() === 0 ){
                         right_arrow.find('span').addClass('disabled');
                         left_arrow.find('span').removeClass('disabled');
-                    } else if( stop_position === current_position ) {
+                    } else if( stop_position() === current_position() ) {
                         left_arrow.find('span').addClass('disabled');
                         right_arrow.find('span').removeClass('disabled');
                     } else {
@@ -272,43 +277,34 @@ KT.comparison_grid.controls = function(grid) {
                         left_arrow.find('span').removeClass('disabled');
                     }
                 },
-                slide_left = function() {
-                    var position = '-=100',
-                        current_position = $('#column_headers').position().left,
-                        stop_position = -((grid.get_num_columns_shown() - grid.get_max_visible_columns()) * 100);
+                slide = function(direction) {
+                    var position = (direction === 'left') ? '-=100' : '+=100';
                     
-                    if( stop_position < current_position && current_position <= 0 ){
-                        left_arrow.find('span').addClass('disabled');
-                        $('#grid_content').animate({ 'left' : position }, 'slow');
-                        $('#column_headers').animate({ 'left' : position }, 'slow',
-                            function() {
-                                left_arrow.find('span').removeClass('disabled');
-                                set_arrow_states();
-                            }
-                        );
-                    }
-                },
-                slide_right = function() {
-                    var position = '+=100',
-                        current_position = $('#column_headers').position().left,
-                        stop_position = -((grid.get_num_columns_shown() - grid.get_max_visible_columns()) * 100);
-
-                    if( stop_position <= current_position && current_position < 0 ){
-                        right_arrow.find('span').addClass('disabled');
-                        $('#grid_content').animate({ 'left' : position }, 'slow');
-                        $('#column_headers').animate({ 'left' : position }, 'slow',
-                            function() {
-                                right_arrow.find('span').removeClass('disabled');
-                                set_arrow_states();
-                            }
-                        );
-                    }
+                    $('#grid_content').animate({ 'left' : position }, 'slow');
+                    $('#column_headers').animate({ 'left' : position }, 'slow',
+                        function() {
+                            set_arrow_states();
+                        }
+                    );
                 };
             
-            left_arrow_trigger.click(
+            arrow_trigger.click(
                 function(){ 
-                    if( !left_arrow.find('span').hasClass('disabled') ){
-                        slide_left();
+                    var slide_arrow = $(this).parent(),
+                        direction = slide_arrow.data('arrow_direction');
+    
+                    if( !slide_arrow.find('span').hasClass('disabled') ){
+                        slide_arrow.find('span').addClass('disabled');
+
+                        if( direction === "left" ){
+                            if( stop_position() < current_position() && current_position() <= 0 ){
+                                slide(direction);
+                            }
+                        } else if( direction === "right" ){
+                            if( stop_position() <= current_position() && current_position() < 0 ){
+                                slide(direction);
+                            }
+                        }
                     }
                 }
             ).hover(
@@ -325,7 +321,10 @@ KT.comparison_grid.controls = function(grid) {
             right_arrow_trigger.click(
                 function(){
                     if( !right_arrow.find('span').hasClass('disabled') ){
-                        slide_right();
+                        arrow.filter('[data-arrow_direction="right"]').find('span').addClass('disabled');
+                        if( stop_position() <= current_position() && current_position() < 0 ){
+                            slide('right');
+                        }
                     }
                 }
             ).hover(

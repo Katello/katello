@@ -131,19 +131,19 @@ $comparison_grid_column_header-background: #FFF;
         line-height: $comparison_grid_column_header-height;
         height: $comparison_grid_column_header-height;
         background: #FFF;
+        
+        &[data-arrow_direction='left'] {
+          left: 0;
+          border-right: 1px solid $widget-border-color;
+        }
+
+        &[data-arrow_direction='right'] { 
+          right: 21px;
+          border-left: 1px solid $widget-border-color;
+          border-right: 1px solid $widget-border-color;
+        }
       }
       .slide_arrow_hover {  background: $widget-background-color; }
-
-      #left_slide_arrow {
-        left: 0;
-        border-right: 1px solid $widget-border-color;
-      }
-
-      #right_slide_arrow { 
-        right: 21px;
-        border-left: 1px solid $widget-border-color;
-        border-right: 1px solid $widget-border-color;
-      }
 
       .slide_trigger {
         position: absolute;
