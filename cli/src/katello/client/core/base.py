@@ -122,7 +122,9 @@ class Action(object):
         @param opt: name of option to get
         @return: value of the option or None if the option is no present
         """
-        attr = getattr(self.opts, opt_dest, default)
+        attr = getattr(self.opts, opt_dest, None)
+        if not default is None and attr is None:
+            attr = default
         return u_obj(attr)
 
     def has_option(self, opt):

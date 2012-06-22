@@ -40,7 +40,7 @@ $(document).ready(function() {
                                 'value="' + settings.value + 
                                 '" style="width:' + width + 'px;">');
             $(this).append(input);
-            if (settings.unlimited != undefined) {
+            if (settings.unlimited !== undefined) {
               var label = jQuery('&nbsp; <label><input type="checkbox" value=""/>&nbsp; ' + i18n.unlimited + '</label>');
               $(this).append(label);
               var unlimited = label.find("input");
@@ -49,7 +49,7 @@ $(document).ready(function() {
                       $(input).val('');
                       $(input).attr("disabled", true);
                   } else {
-                      $(input).val(settings.value);
+                      $(input).val('');
                       $(input).removeAttr('disabled');
                   }
               });
@@ -63,7 +63,7 @@ $(document).ready(function() {
             text_input.val(string);
             if (settings.unlimited != undefined) {
                 var check_input = $('input', this).last();
-                if (string == settings.unlimited || string == i18n.unlimited) {
+                if (string === settings.unlimited || string === i18n.unlimited) {
                     text_input.val('');
                     check_input.attr('checked', 'checked');
                     text_input.attr("disabled", true);
@@ -77,7 +77,7 @@ $(document).ready(function() {
         submit  : function(settings, original) {
             if (settings.unlimited != undefined) {
                 var text_input = $('input', this).first();
-                if (text_input.val() == '')
+                if (text_input.val() === '')
                     text_input.val(settings.unlimited);
             }
         },
@@ -176,7 +176,7 @@ $(document).ready(function() {
             onsuccess       :  function(result, status, xhr){
                 element.css('background-image', settings.image);
                 if ($(this).data('unlimited') != undefined) {
-                    if (result == $(this).data('unlimited'))
+                    if (result === $(this).data('unlimited'))
                         element.html(i18n.unlimited);
                     else
                         element.html(result);
