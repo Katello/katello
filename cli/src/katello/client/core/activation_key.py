@@ -72,9 +72,16 @@ class List(ActivationKeyAction):
 
             return os.EX_OK
 
+        for k in keys:
+            if k['usage_limit'] is None:
+                k['usage'] = str(k['usage_count'])
+            else:
+                k['usage'] = str(k['usage_count']) + '/' + str(k['usage_limit'])
+
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('description', multiline=True)
+        self.printer.add_column('usage')
         self.printer.add_column('environment_id')
         self.printer.add_column('system_template_id')
 
@@ -119,6 +126,7 @@ class Info(ActivationKeyAction):
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('description', multiline=True)
+        self.printer.add_column('usage_limit', value_formatter=lambda x: "unlimited" if x == -1 else x)
         self.printer.add_column('environment_id')
         self.printer.add_column('system_template_id')
         self.printer.add_column('pools', multiline=True, show_with=printer.VerboseStrategy)
@@ -143,6 +151,8 @@ class Create(ActivationKeyAction):
                                help=_("activation key description"))
         parser.add_option('--template', dest='template',
                                help=_("template name eg: servers"))
+        parser.add_option('--limit', dest='usage_limit',
+                               help=_("usage limit (unlimited by default)"))
 
     def check_options(self, validator):
         validator.require(('name', 'org', 'env'))
@@ -153,6 +163,7 @@ class Create(ActivationKeyAction):
         keyName = self.get_option('name')
         keyDescription = self.get_option('description')
         templateName = self.get_option('template')
+        usageLimit = self.get_option('usage_limit', -1)
 
         environment = get_environment(orgName, envName)
 
@@ -162,7 +173,7 @@ class Create(ActivationKeyAction):
             print >> sys.stderr, _("Could not find template [ %s ]") % templateName
             return os.EX_DATAERR
 
-        key = self.api.create(environment['id'], keyName, keyDescription, templateId)
+        key = self.api.create(environment['id'], keyName, keyDescription, usageLimit, templateId)
         test_record(key,
             _("Successfully created activation key [ %s ]") % keyName,
             _("Could not create activation key [ %s ]") % keyName
@@ -187,6 +198,8 @@ class Update(ActivationKeyAction):
                                help=_("new description"))
         parser.add_option('--template', dest='template',
                                help=_("new template name eg: servers"))
+        parser.add_option('--limit', dest='usage_limit',
+                               help=_("usage limit (set -1 for no limit)"))
 
         parser.add_option('--add_subscription', dest='add_poolid', action='append',
                                help=_("add a pool to the activation key"))
@@ -203,6 +216,7 @@ class Update(ActivationKeyAction):
         newKeyName = self.get_option('new_name')
         keyDescription = self.get_option('description')
         templateName = self.get_option('template')
+        usageLimit = self.get_option('usage_limit')
         add_poolids = self.get_option('add_poolid') or []
         remove_poolids = self.get_option('remove_poolid') or []
 
@@ -223,7 +237,7 @@ class Update(ActivationKeyAction):
         except OptionException:
             print >> sys.stderr, _("Could not find template [ %s ]") % (templateName)
             return os.EX_DATAERR
-        key = self.api.update(key['id'], environment['id'] if environment != None else None, newKeyName, keyDescription, templateId)
+        key = self.api.update(key['id'], environment['id'] if environment != None else None, newKeyName, keyDescription, templateId, usageLimit)
 
         for poolid in add_poolids:
             self.api.add_pool(key['id'], poolid)
