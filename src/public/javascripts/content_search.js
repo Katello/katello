@@ -38,11 +38,11 @@ KT.content_search = function(paths){
         if(!initial_envs && paths[0]){
             initial_envs = [paths[0][0]] ;
         }
-        env_select = KT.path_select('grid_env_selector', 'env', paths,
+        env_select = KT.path_select('column_selector', 'env', paths,
             {select_mode:'multi', button_text:"Go", link_first: true});
 
         comparison_grid.init();
-        comparison_grid.add_columns(env_select.get_paths());
+        comparison_grid.set_columns(env_select.get_paths());
 
         browse_box = KT.widget.browse_box("content_selector", KT.widgets, KT.mapping, initial_search);
         $(document).bind(browse_box.get_event(), search_initiated);

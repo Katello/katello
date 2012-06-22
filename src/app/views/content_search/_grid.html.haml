@@ -11,16 +11,22 @@
       %aside
         -#"Filter goes here"
       %div#column_headers_container
-        #left_slide_arrow.hidden
+        .slide_arrow.hidden{ 'data-arrow_direction' => 'left' }
+          .slide_trigger
           %span.left_arrow-icon-black
-        #right_slide_arrow.hidden
-          %span.right_arrow-icon-black
+        .slide_arrow.hidden{ 'data-arrow_direction' => 'right' }
+          .slide_trigger
+          %span.right_arrow-icon-black.disabled
+        #column_selector
+          %span.path_button.add_env-icon-black
         #column_headers_window
           %ul#column_headers
-        .column_header#grid_env_selector
-          %span.path_button
-            = _('Add Env(s)')
   %section
-    %ul#grid_items
+    %ul#grid_row_headers
     #grid_content_window
       #grid_content
+    #grid_loading_screen.hidden
+      .large_white_spinner
+  %footer
+    %div.fl
+    %ul.fl
