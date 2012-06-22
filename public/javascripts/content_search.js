@@ -94,7 +94,8 @@ KT.content_search = function(paths){
     do_search = function(search_params){
         var urls = {errata:KT.routes.errata_content_search_index_path(),
                     repos:KT.routes.repos_content_search_index_path(),
-                    products:KT.routes.products_content_search_index_path()};
+                    products:KT.routes.products_content_search_index_path(),
+                    packages:KT.routes.packages_content_search_index_path()};
         old_search_params = $.bbq.getState('search');
         if (urls[search_params.content_type] ){
 
