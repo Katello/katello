@@ -10,16 +10,17 @@ $comparison_grid_header_h2-height:  45px;
 $comparison_grid_column_header-height:  35px;
 $comparison_grid_header-height: $comparison_grid_header_h2-height + $comparison_grid_column_header-height;
 $comparison_grid-height: 350px;
-$comparison_grid_filter-width: 190px;
+$comparison_grid_filter-width: 190px - 2px;
 $comparison_grid_row-height: 30px;
 $comparison_grid_column-width: 100px - 10px - 1px;
 $comparison_grid_row-height: 35px;
 $comparison_grid-margin-top: $browse_box_header-height + $browse_box-margin-top;
+$comparison_grid_footer-height: 45px;
 
 $environment_selector-width: 97px;
 
-$widget_border-color: #D7D7D7;
-$widget_background-color: #F9F8F8;
+$widget-border-color: #D7D7D7;
+$widget-background-color: #F9F8F8;
 
 $comparison_grid-border-color: #D7D7D7;
 $comparison_grid_column_header-background: #FFF;
@@ -36,7 +37,7 @@ $comparison_grid_column_header-background: #FFF;
   margin-right: 12px;
   margin-top: $browse_box-margin-top;
   @include border-radius(3px);
-  background-color: $widget_background-color;
+  background-color: $widget-background-color;
   @include background-image(linear-gradient(top, rgba(255, 255, 255, 0) 40%, $login_base-color 120%));
 
   header {
@@ -77,13 +78,22 @@ $comparison_grid_column_header-background: #FFF;
   margin-top: $comparison_grid-margin-top;
   position: relative;
   @include border-radius(3px);
-  background-color: $widget_background-color;
+  background-color: $widget-background-color;
   @include background-image(linear-gradient(top, rgba(255, 255, 255, 0) 40%, $login_base-color 120%));
   font-family: $screenfont;
 
+  #grid_loading_screen {
+    position: absolute;
+    top: 0;
+    z-index: 10;
+    width: $comparison_grid-width;
+    min-height: $comparison_grid-height;
+    background: rgba(0, 0, 0, 0.8);
+  }
+
   #grid_header {
     height: $comparison_grid_header-height;
-    border-bottom: 1px solid $comparison_grid-border-color;
+    border-bottom: 2px solid $comparison_grid-border-color;
     position: relative;
 
     header {
@@ -105,7 +115,7 @@ $comparison_grid_column_header-background: #FFF;
     }
 
     #column_headers_container {
-      width: $comparison_grid-width - $comparison_grid_filter-width - 1;
+      width: $comparison_grid-width - $comparison_grid_filter-width - 1px;
       height: $comparison_grid_column_header-height;
       position: absolute;
       bottom: 0;
@@ -114,25 +124,35 @@ $comparison_grid_column_header-background: #FFF;
       border-right: none;
       border-bottom: none;
 
-      #left_slide_arrow {
+      .slide_arrow {
         position: absolute;
-        left: 0;
-        z-index: 1;
-        width: 20px;
+        z-index: 2;
+        width: 16px;
         line-height: $comparison_grid_column_header-height;
         height: $comparison_grid_column_header-height;
-        border-right: 1px solid $widget_border-color;
         background: #FFF;
+        
+        &[data-arrow_direction='left'] {
+          left: 0;
+          border-right: 1px solid $widget-border-color;
+        }
+
+        &[data-arrow_direction='right'] { 
+          right: 21px;
+          border-left: 1px solid $widget-border-color;
+          border-right: 1px solid $widget-border-color;
+        }
       }
-      #right_slide_arrow { 
+      .slide_arrow_hover {  background: $widget-background-color; }
+
+      .slide_trigger {
         position: absolute;
         right: 0;
-        z-index: 1;
-        width: 20px;
+        z-index: 3;
+        width: 16px;
         line-height: $comparison_grid_column_header-height;
         height: $comparison_grid_column_header-height;
-        border-left: 1px solid $widget_border-color;
-        background: #FFF;
+        background: transparent;
       }
 
       #column_headers_window {
@@ -160,12 +180,17 @@ $comparison_grid_column_header-background: #FFF;
         padding: 0 5px;
       }
 
-      #grid_env_selector {
-        width: $environment_selector-width - 1;
-        position: relative;
-        float: left;
-        padding: 0;
+      #column_selector {
+        width: 20px;
+        position: absolute;
+        right: -1px;
+        z-index: 2;
+        padding: 0 1px;
         background: #FFF;
+        line-height: $comparison_grid_column_header-height;
+        height: $comparison_grid_column_header-height;
+        border-left: 1px dotted $widget-border-color;
+        border-right: 1px solid $widget-border-color;
       }
     }
   }
@@ -173,7 +198,7 @@ $comparison_grid_column_header-background: #FFF;
   section {
     height: $comparison_grid-height - $comparison_grid_header-height;
     
-    #grid_items {
+    #grid_row_headers {
       width: $comparison_grid_filter-width;
       border-right: 1px solid $comparison_grid-border-color;
       height: $comparison_grid-height - $comparison_grid_header-height;
@@ -181,10 +206,16 @@ $comparison_grid_column_header-background: #FFF;
       background: #FFF;
 
       .row_header {
-        width: $comparison_grid_filter-width - 20;
-        padding: 10px 10px;
+        width: $comparison_grid_filter-width - 6;
+        padding: 10px 3px;
         border-bottom: 1px solid $comparison_grid_border-color;
         height: $comparison_grid_row-height - 20;
+      }
+
+      .grid_row_level_2 {
+        padding-left: 25px;
+        padding-right: 25px;
+        width: $comparison_grid_filter-width - 50;
       }
     }
 
@@ -226,8 +257,44 @@ $comparison_grid_column_header-background: #FFF;
           border-right: 1px solid $comparison_grid_border-color;
           float: left;
           padding: 0 5px;
+          position: relative;
+        }
+
+        .grid_cell_hover {
+          width: $comparison_grid_column-width;
+          height: $comparison_grid_row-height;
+          line-height: $comparison_grid_row-height;
+          text-align: center;
+          color: #FFF;
+          padding: 0 5px;
+          background: rgba(0, 0, 0, 0.6);
+          position: absolute;
+          left: 0;
+          top: 0;
         }
       }
     }
+  }
+
+  footer {
+    height: $comparison_grid_footer-height;
+    min-height: 0;
+    background: $widget-background-color;
+    border-top: 1px solid $widget-border-color;
+    margin: 0;
+
+    div {
+      width: $comparison_grid_filter-width;
+      border-right: 1px solid $widget-border-color;
+      height: $comparison_grid_footer-height;
+      background: $widget-border-color;
+    }
+
+    ul {
+      width: $comparison_grid-width - $comparison_grid_filter-width - 1;
+      height: $comparison_grid_footer-height;
+      margin: 0;
+    }
+
   }
 }
