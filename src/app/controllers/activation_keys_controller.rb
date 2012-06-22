@@ -61,8 +61,8 @@ class ActivationKeysController < ApplicationController
 
   def param_rules
     {
-      :create => {:activation_key => [:name, :description, :environment_id, :system_template_id]},
-      :update => {:activation_key  => [:name, :description,:environment_id, :system_template_id]},
+      :create => {:activation_key => [:name, :description, :environment_id, :system_template_id, :usage_limit]},
+      :update => {:activation_key  => [:name, :description,:environment_id, :system_template_id, :usage_limit]},
       :update_system_groups => {:activation_key => [:system_group_ids]}
     }
   end

@@ -29,10 +29,11 @@ class ActivationKeyAPI(KatelloAPI):
         path = "/api/activation_keys/%s/" % keyId
         return self.server.GET(path)[1]
 
-    def create(self, envId, name, description, templateId=None):
+    def create(self, envId, name, description, usage_limit = -1, templateId=None):
         keyData = {
             "name": name,
-            "description": description
+            "description": description,
+            "usage_limit": usage_limit
         }
 
         if templateId != None:
@@ -41,12 +42,13 @@ class ActivationKeyAPI(KatelloAPI):
         path = "/api/environments/%s/activation_keys/" % envId
         return self.server.POST(path, {'activation_key': keyData})[1]
 
-    def update(self, keyId, environmentId, name, description, templateId):
+    def update(self, keyId, environmentId, name, description, templateId, usage_limit):
         keyData = {}
         keyData = self.update_dict(keyData, "environment_id", environmentId)
         keyData = self.update_dict(keyData, "name", name)
         keyData = self.update_dict(keyData, "description", description)
         keyData = self.update_dict(keyData, "system_template_id", templateId)
+        keyData = self.update_dict(keyData, "usage_limit", usage_limit)
 
         path = "/api/activation_keys/%s/" % keyId
         return self.server.PUT(path, {'activation_key': keyData})[1]
