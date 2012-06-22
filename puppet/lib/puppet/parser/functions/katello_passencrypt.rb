@@ -9,9 +9,9 @@ rescue LoadError
 end
 
 module Puppet::Parser::Functions
-    system("/usr/share/katello/script/katello-generate-passphrase")
+  system("/usr/share/katello/script/katello-generate-passphrase")
 
-    newfunction(:katello_passencrypt, :type => :rvalue) do |args|
+  newfunction(:katello_passencrypt, :type => :rvalue) do |args|
       return Password.encrypt(args[0])
   end
 
