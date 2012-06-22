@@ -93,7 +93,7 @@ $comparison_grid_column_header-background: #FFF;
 
   #grid_header {
     height: $comparison_grid_header-height;
-    border-bottom: 2px solid $comparison_grid-border-color;
+    border-bottom: 3px solid $comparison_grid-border-color;
     position: relative;
 
     header {
@@ -201,7 +201,7 @@ $comparison_grid_column_header-background: #FFF;
     #grid_row_headers {
       width: $comparison_grid_filter-width;
       border-right: 1px solid $comparison_grid-border-color;
-      height: $comparison_grid-height - $comparison_grid_header-height;
+      min-height: $comparison_grid-height - $comparison_grid_header-height;
       float: left;
       background: #FFF;
 
@@ -213,9 +213,21 @@ $comparison_grid_column_header-background: #FFF;
       }
 
       .grid_row_level_2 {
+        padding-left: 9px;
+        padding-right: 9px;
+        width: $comparison_grid_filter-width - 18;
+        max-height: 45px;
+      }
+
+      .grid_row_level_3 {
         padding-left: 25px;
         padding-right: 25px;
         width: $comparison_grid_filter-width - 50;
+        max-height: 45px;
+      }
+
+      span { 
+        vertical-align: bottom; 
       }
     }
 
@@ -227,11 +239,17 @@ $comparison_grid_column_header-background: #FFF;
     .grid_row_level_2 {
       background: #dcedfb;
       font-size: 10px;
+      max-height: 45px;
+    }
+
+    .grid_row_level_3 {
+      font-size: 11px;
+      max-height: 45px;
     }
 
     #grid_content_window {
       width: $comparison_grid-width - $comparison_grid_filter-width - 1;
-      height: $comparison_grid-height - $comparison_grid_header-height;
+      min-height: $comparison_grid-height - $comparison_grid_header-height;
       float: left;
       background: #FFF;
       overflow: hidden;
@@ -274,6 +292,10 @@ $comparison_grid_column_header-background: #FFF;
         }
       }
     }
+  }
+
+  span {
+    word-wrap: break-word;
   }
 
   footer {
