@@ -23,7 +23,7 @@ class ContentSearchController < ApplicationController
         :products => contents_test,
         :repos => contents_test,
         :my_environments => contents_test,
-
+        :packages=>contents_test
 
     }
   end
@@ -56,7 +56,7 @@ class ContentSearchController < ApplicationController
 
   def repos
     
-    repo_ids = process_repo_params
+    repo_ids = process_params :repos
     product_ids = param_product_ids
 
     if repo_ids.is_a? Array #repos were auto_completed
@@ -64,13 +64,7 @@ class ContentSearchController < ApplicationController
 
     elsif repo_ids #repos were searched
       readable = Repository.readable(current_organization.library).collect{|r| r.id}
-      repos = Repository.search :load=>true do
-        query {string repo_ids, {:default_field=>'name'}}
-        filter "and", [
-            {:terms => {:id => readable}},
-            {:terms => {:enabled => [true]}}
-        ]
-      end
+      repos = repo_search(repo_ids, readable)
     elsif !product_ids.empty? #products were autocompleted
         repos = []
         Product.readable(current_organization).where(:id=>product_ids).each do |p|
@@ -82,6 +76,43 @@ class ContentSearchController < ApplicationController
 
     products = repos.collect{|r| r.product}.uniq
     render :json=>(product_rows(products) + repo_rows(repos))
+  end
+
+  def packages
+    repo_ids_in = process_params :repos
+    product_ids_in = param_product_ids
+    package_ids_in = process_params :packages
+
+    repo_ids = nil
+
+
+    if repo_ids_in.is_a? Array
+      repo_ids = repo_ids_in
+    elsif repo_ids_in
+      readable = Repository.readable(current_organization.library).collect{|r| r.id}
+      repo_ids = repo_search(repo_ids, readable).collect{|r| r.id}
+    else
+      if !product_ids_in.empty?
+        products = Product.readable(current_organization).where(:id=>product_ids_in)
+      else
+        products = Product.readable(current_organization)
+      end
+      repo_ids = []
+      products.each do |p|
+        repo_ids = repo_ids + Repository.readable_for_product(current_organization.library, p).collect{|r| r.id}
+      end
+    end
+
+    product_repo_map = {}
+
+    Repository.where(:id=>repo_ids).each do |r|
+      product_repo_map[r.product.id] ||= []
+      product_repo_map[r.product.id] << r.id
+    end
+
+    rows = []
+    product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_package_count(p_id, repo_ids, package_ids_in) || [])}
+    render :json=>rows
   end
 
   private
@@ -113,9 +144,9 @@ class ContentSearchController < ApplicationController
     ids || []
   end
 
-  def process_repo_params
-    ids = params[:repos][:autocomplete].collect{|p|p["id"]} if params[:repos] && params[:repos][:autocomplete]
-    search = params[:repos][:search] if params[:repos] && params[:repos][:search]
+  def process_params type
+    ids = params[type][:autocomplete].collect{|p|p["id"]} if params[type] && params[type][:autocomplete]
+    search = params[type][:search] if params[type] && params[type][:search]
     if search && !search.empty?
         return search
     elsif ids && !ids.empty?
@@ -125,8 +156,87 @@ class ContentSearchController < ApplicationController
     end
   end
 
+  def repo_search term, readable_list
+    Repository.search :load=>true do
+      query {string term, {:default_field=>'name'}}
+      filter "and", [
+          {:terms => {:id => readable_list}},
+          {:terms => {:enabled => [true]}}
+      ]
+    end
+  end
+
+
+  def spanned_product_package_count product_id, repo_ids, pkg_search
+    rows = []
+    product = Product.find(product_id)
+    pkg_rows = []
+    product_envs = {}
+    product_envs.default = 0
+
+    repo_ids.each do |repo_id|
+      repo = Repository.find(repo_id)
+      repo_span = spanned_repo_package_count(repo, pkg_search)
+      if repo_span
+        rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}", :parent_id=>"product_#{product_id}"}
+        repo_span[:repo_cols].values.each do |span|
+          product_envs[span[:id]] += span[:display]
+        end
+        pkg_rows += repo_span[:pkg_rows]
+      end
+    end
+    cols = {}
+    product_envs.each{|env_id, count| cols[env_id] = {:id=>env_id, :display=>count}}
+    if rows.empty?
+      return nil
+    else
+      return [{:name=>product.name, :id=>"product_#{product_id}", :cols=>cols}] + rows + pkg_rows
+    end
+  end
+
+  #Given a repo and a pkg_search (id array or hash),
+  #  return a array of {:id=>env_id, :display=>search.total}
+  def spanned_repo_package_count repo, pkg_search
+
+    spanning_repos = [repo.pulp_id] + repo.other_repos_with_same_product_and_content 
+    spanning_repos = Repository.where(:pulp_id=>spanning_repos)
+    to_ret = {}
+    library_packages = []
+
+    spanning_repos.each do |repo|
+      search = Tire.search Glue::Pulp::Package.index do
+        query do
+          if pkg_search.is_a?(Array) || pkg_search.nil?
+            all
+          else
+            string pkg_search, {:default_field=>'nvrea'}
+          end
+        end
+
+        if  pkg_search.is_a? Array
+          filter :terms, :id => pkg_search
+        end
+        filter :terms, :repoids => [repo.pulp_id]
+      end
+      results = search.results
+      library_packages = search.results if repo.environment.library?
+      return nil if repo.environment.library? && results.total == 0
+      to_ret[repo.environment_id] = {:id=>repo.environment_id, :display=>results.total}
+    end
+    {:pkg_rows=>spanning_package_rows(library_packages, repo, spanning_repos), :repo_cols=>to_ret}
+  end
   
-
-
-
+  def spanning_package_rows(pkgs, parent_repo, repos)
+    to_ret = [] 
+    for pkg in pkgs:
+        row = {:id=>"package_#{pkg.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{}, :name=>pkg.nvrea}
+        repos.each do |repo|
+          if pkg.repoids.include? repo.pulp_id 
+              row[:cols][repo.environment_id] = {:id=>repo.environment_id}
+          end
+        end 
+        to_ret << row
+     end
+     to_ret
+  end 
 end

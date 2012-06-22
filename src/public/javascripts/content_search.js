@@ -16,7 +16,7 @@
 $(document).ready(function() {
 
     KT.widgets = {repos:{id:"repos_selector", autocomplete:'repo_autocomplete_list', search:'repo_search'},
-                  packages:{id:"packages_selector"},
+                  packages:{id:"packages_selector", autocomplete:'package_autocomplete_list', search:'package_search'},
                   products:{id:"products_selector", autocomplete:'product_autocomplete_list'},
                   errata:{id:"errata_selector", search:'errata_search'}};
 
@@ -94,7 +94,8 @@ KT.content_search = function(paths){
     do_search = function(search_params){
         var urls = {errata:KT.routes.errata_content_search_index_path(),
                     repos:KT.routes.repos_content_search_index_path(),
-                    products:KT.routes.products_content_search_index_path()};
+                    products:KT.routes.products_content_search_index_path(),
+                    packages:KT.routes.packages_content_search_index_path()};
         old_search_params = $.bbq.getState('search');
         if (urls[search_params.content_type] ){
 
