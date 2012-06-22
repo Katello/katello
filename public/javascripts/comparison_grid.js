@@ -31,6 +31,9 @@ KT.comparison_grid = function(){
             grid_row_headers_el = $('#grid_row_headers');
             grid_content_el = $('#grid_content');
         },
+        save_state = function() {
+            
+        },
         add_row = function(id, name, cell_data, parent_id){
             var cells = [], insert,
                 row_level,
@@ -124,10 +127,18 @@ KT.comparison_grid = function(){
 
             column_headers.append(templates.column_header(id, to_display));
         },
-        add_columns = function(data){
+        set_columns = function(data, column_selector){
             utils.each(data, function(col) {
                 add_column(col['id'], col['name']);
             });
+
+            if( column_selector === false ){
+                $('#column_selector').hide();
+                $('#right_slide_arrow').css({ right : '-1px' });
+            } else {
+                $('#column_selector').show();
+                $('#right_slide_arrow').css({ right : '21px' });
+            }
         },
         show_columns = function(data){
             num_columns_shown = 0;
@@ -154,14 +165,18 @@ KT.comparison_grid = function(){
                 $('#column_headers_window').width(num_columns_shown * 100);
             }
         },
-        set_loading = function(){
-            grid_content_el.find('#loading_screen').show();
+        set_loading = function(show){
+            if( show ){
+                grid_content_el.find('#loading_screen').show();
+            } else {
+                grid_content_el.find('#loading_screen').hide();
+            }
         };
 
     return {
         init                    : init,
         add_rows                : add_rows,
-        add_columns             : add_columns,
+        set_columns             : set_columns,
         show_columns            : show_columns,
         collapse_rows           : collapse_rows,
         set_loading             : set_loading,
