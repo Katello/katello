@@ -28,6 +28,7 @@ test_success "system update name" system update --org="$TEST_ORG" --name="$SYSTE
 test_success "system update description" system update --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --description="This is a description of a system. It's a great description"
 test_success "system update location" system update --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --location="The Grid"
 test_success "system update release" system update --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --release="6.2"
+test_success "system update environment" system update --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --new_environment="$TEST_ENV_2"
 test_success "system unregister" system unregister --name="$SYSTEM_NAME_ADMIN" --org="$TEST_ORG"
 
 test_success "activation key create" activation_key create --name="$ACTIVATION_KEY_NAME_1" --description="key description" --environment="$TEST_ENV" --org="$TEST_ORG"
