@@ -66,45 +66,16 @@ class ProvidersController < ApplicationController
   def update_redhat_provider
     if !params[:provider].blank? and params[:provider].has_key? :contents
       temp_file = nil
-      begin
-        dir = "#{Rails.root}/tmp"
-        Dir.mkdir(dir) unless File.directory? dir
-        temp_file = File.new(File.join(dir, "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
-        temp_file.write params[:provider][:contents].read
-        temp_file.close
-        # force must be a string value
-        force_update = params[:force_import] == "1" ? "true" : "false"
-        @provider.import_manifest(File.expand_path(temp_file.path), { :force => force_update })
-        if AppConfig.katello?
-          notice _("Subscription manifest uploaded successfully for provider '%s'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled.") % @provider.name, {:synchronous_request => false}
-        else
-          notice _("Subscription manifest uploaded successfully for provider '%s'.") % @provider.name,
-                 {:synchronous_request => false}
-        end
+      dir       = "#{Rails.root}/tmp"
+      Dir.mkdir(dir) unless File.directory? dir
+      temp_file = File.new(File.join(dir, "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
+      temp_file.write params[:provider][:contents].read
+      temp_file.close
+      # force must be a string value
+      force_update = params[:force_import] == "1" ? "true" : "false"
+      @provider.import_manifest File.expand_path(temp_file.path),
+                                :force => force_update, :async => true, :notify => true
 
-      rescue Exception => error
-        if error.respond_to?(:response)
-          display_message = parse_display_message(error.response)
-        elsif error.message
-          display_message = error.message
-        else
-          display_message = ""
-        end
-
-        error_texts = [
-            _("Subscription manifest upload for provider '%s' failed.") % @provider.name,
-            (_("Reason: %s") % display_message unless display_message.blank?),
-            (_("If you are uploading an older manifest, you can use the Force checkbox to overwrite " +
-                   "existing data.") if force_update == "false")
-        ].compact
-
-        notice error_texts.join('<br />'), {:level => :error, :details => pp_exception(error)}
-
-        Rails.logger.error "error uploading subscriptions."
-        Rails.logger.error error
-        Rails.logger.error error.backtrace.join("\n")
-        # Fall-through even on error so that the import history is refreshed
-      end
       redhat_provider
     else
       # user didn't provide a manifest to upload

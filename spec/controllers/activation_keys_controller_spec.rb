@@ -37,7 +37,7 @@ describe ActivationKeysController do
     @system_template_1 = AppConfig.katello? ? SystemTemplate.create!(:name => 'template1', :environment => @environment_1) : nil
     @system_template_2 = AppConfig.katello? ? SystemTemplate.create!(:name => 'template2', :environment => @environment_1) : nil
     @a_key = ActivationKey.create!(:name => "another test key", :organization => @organization, :environment => @environment_1)
-    @subscription = Pool.create!(:cp_id => "Test Subscription",
+    @subscription = ::Pool.create!(:cp_id => "Test Subscription",
                                           :key_pools => [KeyPool.create!(:activation_key => @a_key)])
 
     @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id,
