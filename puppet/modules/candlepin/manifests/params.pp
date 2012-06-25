@@ -14,15 +14,15 @@ class candlepin::params {
   $katello_oauth_secret = $katello::params::oauth_secret
 
   case $katello::params::deployment {
-      'headpin' : {
-        require "thumbslug::params"
-        $thumbslug_oauth_key = "thumbslug"
-        $thumbslug_oauth_secret = $thumbslug::params::oauth_secret
-        $env_filtering_enabled = "false"
-      }
-      default : {
-		$env_filtering_enabled = "true"
-	  }
+    'headpin' : {
+      require "thumbslug::params"
+      $thumbslug_oauth_key = "thumbslug"
+      $thumbslug_oauth_secret = $thumbslug::params::oauth_secret
+      $env_filtering_enabled = "false"
+    }
+    default : {
+      $env_filtering_enabled = "true"
+    }
   }
 
 }
