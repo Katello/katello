@@ -22,29 +22,29 @@
           = label :user, :username, _("Username:")
         .grid_5.la
           = text_field :user, :username, :id=>"username_field", :tabindex => auto_tab_index
+      - if !@ldap
+        %fieldset.fl.clear
+          .grid_2.ra
+            = label :user, :username, _("Password:")
+          .grid_5.la
+            = text_field :user, :password, :id=>"password_field", :type=>"password", :tabindex => auto_tab_index
 
-      %fieldset.fl.clear
-        .grid_2.ra
-          = label :user, :username, _("Password:")
-        .grid_5.la
-          = text_field :user, :password, :id=>"password_field", :type=>"password", :tabindex => auto_tab_index
-
-      %fieldset.fl.clear
-        .grid_2.ra
-          = label :user, :username, _("Confirm:")
-        .grid_5.la
-          = text_field :user, :password, :id=>"confirm_field", :type=>"password", :tabindex => auto_tab_index
-        .grid_2.ra
-        .grid_5.la
+        %fieldset.fl.clear
+          .grid_2.ra
+            = label :user, :username, _("Confirm:")
+          .grid_5.la
+            = text_field :user, :password, :id=>"confirm_field", :type=>"password", :tabindex => auto_tab_index
+          .grid_2.ra
+          .grid_5.la
+            #password_conflict
+        .grid_5.la.prefix_2
           #password_conflict
-      .grid_5.la.prefix_2
-        #password_conflict
 
-      %fieldset.fl.clear
-        .grid_2.ra
-          = label :user, :email, _("Email Address:")
-        .grid_5.la
-          = text_field :user, :email, :id=>"email_field", :tabindex => auto_tab_index
+        %fieldset.fl.clear
+          .grid_2.ra
+            = label :user, :email, _("Email Address:")
+          .grid_5.la
+            = text_field :user, :email, :id=>"email_field", :tabindex => auto_tab_index
 
       %fieldset.fl.clear
         .grid_2.ra

@@ -10,6 +10,7 @@ Src::Application.routes.draw do
       get :systems
       post :add_systems
       post :remove_systems
+      delete :destroy_systems
       post :lock
     end
     resources :events, :controller => "system_group_events", :only => [:index, :show] do
@@ -484,6 +485,7 @@ Src::Application.routes.draw do
           post :unlock
           post :add_systems
           post :remove_systems
+          delete :destroy_systems
         end
       end
 

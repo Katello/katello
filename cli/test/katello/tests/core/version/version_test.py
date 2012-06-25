@@ -9,7 +9,6 @@ import katello.client.core.version
 from katello.client.core.version import Info
 
 
-
 class VersionTest(CLIActionTestCase):
 
     def setUp(self):
@@ -20,6 +19,3 @@ class VersionTest(CLIActionTestCase):
     def test_calls_the_api(self):
         self.run_action()
         self.action.api.version_formatted.assert_called_once()
-
-    def test_call_returns_correct_value(self):
-        self.assertEqual(self.action.run(), version_data.VERSION_INFO)

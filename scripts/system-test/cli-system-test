@@ -54,6 +54,7 @@ while [ $# -gt 0 ]; do
             printf " -b,--nobase     no base tests\n"
             printf " -c,--nocleanup  no base cleanup tests\n"
             printf " -d,--disabled   run disabled tests as well\n"
+            printf " --logfile       file to capture the xml log output\n"
             printf " -s, --shell     runs tests in the shell mode\n"
             printf " -p, --ping      checks whether the server is ready\n"
             printf " --rand-prefix   prefixes random hash with given value\n"
@@ -92,6 +93,10 @@ while [ $# -gt 0 ]; do
         "-s"|"--shell")
             SHELL_MODE=1
             ;;
+        "--logfile")
+            shift
+            LOGFILE=$1
+            ;;
         "all")
             TEST_ALL=1
             ;;
@@ -122,6 +127,42 @@ else
         fi
     done
 fi
+
+
+function log_test_result() {
+    test_results=("${test_results[@]}" "$1")
+    test_names=("${test_names[@]}" "$2")
+    test_output=("${test_output[@]}" "$3")
+    test_suits=("${test_suits[@]}" "$current_suite")
+}
+
+function summarize_log() {
+    if [ "$LOGFILE" == "" ]; then
+        return
+    fi
+
+    printf "" > "$LOGFILE"
+    printf '<?xml version="1.0" encoding="UTF-8"?>\n' >> "$LOGFILE"
+    printf '<testsuite hostname="%s" name="%s" tests="%s" failures="%s" timestamp="%s" time="0.0" errors="0">\n'\
+    "$(hostname)" "" "$test_cnt" "$failed_cnt" "$(date "+%d %b %Y %H:%M:%S %Z")" >> "$LOGFILE"
+
+    for ((i = 0; i < ${#test_results[@]}; i++)); do
+        printf '\t<testcase name="%s" time="0.0" classname="cli.system_tests.%s"' "${test_names[$i]}" "${test_suits[$i]}" >> "$LOGFILE"
+        if [ ${test_results[$i]} -eq 0 ]; then
+            # failed tests
+            printf ' >\n' >> "$LOGFILE"
+            printf '\t\t<failure message="%s failed">\n' "${test_names[$i]}" >> "$LOGFILE"
+            printf '\t\t<![CDATA[%s]]>\n' "${test_output[$i]}" >> "$LOGFILE"
+            printf '\t\t</failure>\n' >> "$LOGFILE"
+            printf '\t</testcase>\n' >> "$LOGFILE"
+        else
+            # passed tests
+            printf ' />\n' >> "$LOGFILE"
+        fi
+
+    done
+    echo "</testsuite>" >> "$LOGFILE"
+}
 
 function msg_status() {
     printf "%-40s" "$1"
@@ -183,6 +224,7 @@ function test_cmd() {
             msg_status "$test_name" "${txtgrn}OK${txtrst}"
         fi
     fi
+    log_test_result "$status" "$test_name" "$result"
     let test_cnt+=1
 }
 
@@ -270,11 +312,11 @@ function require() {
 }
 
 function header() {
+    current_suite="$(echo "$1" | sed -e 's/\s/_/g' )"
     echo "----------------------------------------------"
     echo "Test suite $1"
     echo "----------------------------------------------"
 }
-
 
 [ $NO_BASE -eq 0 ] && . $TEST_DIR/_base_setup.sh
 for t in $required_tests; do
@@ -282,4 +324,5 @@ for t in $required_tests; do
 done
 [ $NO_BASE -eq 0 ] && [ $NO_CLEANUP -eq 0 ] && . $TEST_DIR/_base_cleanup.sh
 
+summarize_log
 summarize
