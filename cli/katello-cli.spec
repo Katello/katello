@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.40
+Version:       0.2.41
 Release:       1%{?dist}
 
 # Upstream uses tito rpm helper utility. To get the particular version from
@@ -112,6 +112,16 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 25 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.41-1
+- ulimit - brad's review
+- BZ 825262: support for moving systems between environments from CLI
+- ulimit - fixing cli makefile for unit tests
+- ulimit - backend api and cli
+- system groups - cli/api - provide user option to delete systems when deleting
+  group
+- cli - updated makefile and readme to mirror the latest changes in cli
+  unittests.
+
 * Mon Jun 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.40-1
 - Updates for broken cli unit tests that were a result of re-factoring work
   previously done.
