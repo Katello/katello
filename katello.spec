@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.41
+Version:        0.2.42
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -384,6 +384,33 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jun 25 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.42-1
+- katello - async manifest import, missing notices
+- ulimit - brad's review
+- ulimit - optimizing usage validator
+- changed 'update' tests to use 'put' instead of 'post'
+- BZ 825262: support for moving systems between environments from CLI
+- ulimit - fix for system tests
+- ulimit - adding unit tests
+- ulimit - new jeditable component "number"
+- ulimit - frontend changes
+- ulimit - backend api and cli
+- ulimit - adding migration
+- Merge pull request #224 from bbuckingham/fork-group_delete_systems
+- katello - fix gettext wrappers
+- system groups - cli/api - provide user option to delete systems when deleting
+  group
+- katello - asynchronous manifest import in UI
+- Merge pull request #213 from jsomara/819002
+- system groups - ui - provide user option to delete systems when deleting
+  group
+- customConfirm - add more settings and refactor current usage
+- katello, unit - fixing broken unit test
+- katello, unit - correcting supported versions of rspec for monkey patch
+- Make sure to reference ::Pool when using the model class
+- 819002 - Removing password & email validation for user creation in LDAP mode
+- system groups - update views to use _tupane_header partial
+
 * Mon Jun 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.41-1
 - Fixes box-shadow declaration that was causing a compass deprecation warning.
 - Updates SCSS importing for missing mixins.
