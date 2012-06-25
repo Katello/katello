@@ -183,7 +183,9 @@ class ContentSearchController < ApplicationController
       repo = Repository.find(repo_id)
       repo_span = spanned_repo_packages(repo, pkg_search)
       if repo_span
-        rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}", :parent_id=>"product_#{product_id}"}
+        rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}",
+                 :parent_id=>"product_#{product_id}", :current_rows =>repo_span[:pkg_rows].length,
+                 :total_rows=>repo_span[:sub_total], :extend_url=>""}
         repo_span[:repo_cols].values.each do |span|
           product_envs[span[:id]] += span[:display]
         end
@@ -207,6 +209,7 @@ class ContentSearchController < ApplicationController
     spanning_repos = Repository.where(:pulp_id=>spanning_repos)
     to_ret = {}
     library_packages = []
+    library_total = 0
 
     spanning_repos.each do |repo|
       search = Tire.search Glue::Pulp::Package.index do
@@ -226,11 +229,15 @@ class ContentSearchController < ApplicationController
         filter :terms, :repoids => [repo.pulp_id]
       end
       results = search.results
-      library_packages = search.results if repo.environment.library?
-      return nil if repo.environment.library? && results.total == 0
+      if repo.environment.library?
+        library_packages = results
+        library_total = results.total
+        return nil if library_total == 0
+      end
       to_ret[repo.environment_id] = {:id=>repo.environment_id, :display=>results.total}
     end
-    {:pkg_rows=>spanning_package_rows(library_packages, repo, spanning_repos), :repo_cols=>to_ret}
+    {:pkg_rows=>spanning_package_rows(library_packages, repo, spanning_repos),
+     :repo_cols=>to_ret, :sub_total=>library_total}
   end
   
   def spanning_package_rows(pkgs, parent_repo, spanned_repos)
