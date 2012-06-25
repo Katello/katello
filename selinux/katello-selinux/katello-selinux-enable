@@ -11,9 +11,5 @@ do
 _EOF
 done
 
-# Separate transaction for AMQP port (it is missing in 6.2 GOLD policy)
-semanage port -l | grep amqp_port_t | grep tcp | grep 5671 >/dev/null || \
-  /usr/sbin/semanage port -a -t amqp_port_t -p tcp 5671
-
 # TODO this should go to extra script (and should be called from SPEC too)
 /sbin/restorecon -rvvi /var/lib/katello /var/log/katello /usr/share/katello /etc/katello /usr/sbin/katello-*
