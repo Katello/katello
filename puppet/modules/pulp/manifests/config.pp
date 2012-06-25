@@ -30,7 +30,11 @@ class pulp::config {
     creates     => "/var/lib/pulp/init.flag",
     path        => "/bin:/usr/bin",
     before      => Class["pulp::service"],
-    require     => [Class["mongodb::service"], File["/etc/pulp/pulp.conf"]],
+    require     => [
+      File["${katello::params::log_base}"],
+      Class["mongodb::service"],
+      File["/etc/pulp/pulp.conf"],
+      ],
   }
 
   exec { "set candlepin crl file":
