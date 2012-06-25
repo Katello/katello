@@ -39,7 +39,6 @@ describe SystemGroupsController do
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
       @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
-
   end
 
 
@@ -57,8 +56,8 @@ describe SystemGroupsController do
       let(:unauthorized_user) do
         user_without_permissions
       end
-      it_should_behave_like "protected action" 
-      
+      it_should_behave_like "protected action"
+
       it "requests filters using search criteria" do
         get :index
         response.should be_success
@@ -273,7 +272,7 @@ describe SystemGroupsController do
     end
 
 
-    describe "DELETE" do
+    describe "DELETE destroy" do
       let(:action) {:destroy}
       let(:req) { delete :destroy, :id=>@group.id}
       let(:authorized_user) do
@@ -293,10 +292,33 @@ describe SystemGroupsController do
       end
     end
 
+
+    describe "DELETE destroy_systems" do
+      let(:action) {:destroy_systems}
+      let(:req) { delete :destroy_systems, :id=>@group.id}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:delete_systems, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+
+      it "should complete successfully" do
+        @group.systems  = [@system]
+        @group.save
+
+        System.stub(:find).and_return([@system])
+        @system.should_receive(:destroy)
+        controller.stub(:render)
+
+        delete :destroy_systems, :id=>@group.id
+        response.should be_success
+        SystemGroup.where(:name=>@group.name).first.should be_nil
+      end
+    end
+
   end
-
-
-
-
 
 end

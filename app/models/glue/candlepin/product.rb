@@ -249,7 +249,7 @@ module Glue::Candlepin::Product
     def del_pools
       Rails.logger.debug "Deleting pools for product #{name} in candlepin"
       Resources::Candlepin::Product.pools(organization.cp_key, self.cp_id).each do |pool|
-        Pool.find_all_by_cp_id(pool['id']).each(&:destroy)
+        ::Pool.find_all_by_cp_id(pool['id']).each(&:destroy)
         Resources::Candlepin::Pool.destroy(pool['id'])
       end
       true
