@@ -1,9 +1,9 @@
 class candlepin::config {
 
   user { 'tomcat':
-        ensure => present,
-        groups => ['katello'],
-        before => Exec["cpsetup"]
+    ensure => present,
+    groups => ['katello'],
+    before => Exec["cpsetup"]
   }
 
   postgres::createuser { $candlepin::params::db_user:
@@ -21,10 +21,11 @@ class candlepin::config {
     notify  => Service["tomcat6"];
   }
 
+  # TODO fix "sudo" in candlepin and remove me
   common::line { "allow_cpsetup_to_execute_sudo_HACK":
-      file => "/etc/sudoers",
-      line    => "Defaults:root !requiretty",
-      before => Exec["cpsetup"];
+    file => "/etc/sudoers",
+    line    => "Defaults:root !requiretty",
+    before => Exec["cpsetup"];
   }
 
   # this does not really work if you use a password
