@@ -82,9 +82,7 @@ class ContentSearchController < ApplicationController
     repo_ids_in = process_params :repos
     product_ids_in = param_product_ids
     package_ids_in = process_params :packages
-
     repo_ids = nil
-
 
     if repo_ids_in.is_a? Array
       repo_ids = repo_ids_in
@@ -111,9 +109,17 @@ class ContentSearchController < ApplicationController
     end
 
     rows = []
-    product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_package_count(p_id, repo_ids, package_ids_in) || [])}
+    product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_packages(p_id, repo_ids, package_ids_in) || [])}
     render :json=>rows
   end
+
+  #similar to :packages, but only returns package rows with an offset for a specific repo
+  def packages_items
+    repo = Repository.where(:id=>params[:repo_id])
+    pkgs = spanned_repo_packages(repo, process_params(:packages), params[:offset]) || {:pkg_rows=>[]}
+    render :json=>pkgs
+  end
+
 
   private
 
@@ -166,7 +172,7 @@ class ContentSearchController < ApplicationController
   end
 
 
-  def spanned_product_package_count product_id, repo_ids, pkg_search
+  def spanned_product_packages product_id, repo_ids, pkg_search
     rows = []
     product = Product.find(product_id)
     pkg_rows = []
@@ -175,7 +181,7 @@ class ContentSearchController < ApplicationController
 
     repo_ids.each do |repo_id|
       repo = Repository.find(repo_id)
-      repo_span = spanned_repo_package_count(repo, pkg_search)
+      repo_span = spanned_repo_packages(repo, pkg_search)
       if repo_span
         rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}", :parent_id=>"product_#{product_id}"}
         repo_span[:repo_cols].values.each do |span|
@@ -195,7 +201,7 @@ class ContentSearchController < ApplicationController
 
   #Given a repo and a pkg_search (id array or hash),
   #  return a array of {:id=>env_id, :display=>search.total}
-  def spanned_repo_package_count repo, pkg_search
+  def spanned_repo_packages repo, pkg_search, offset=0
     #library must be first, so subtract it from instance ids
     spanning_repos = [repo.pulp_id] + (repo.environmental_instance_ids - [repo.pulp_id])
     spanning_repos = Repository.where(:pulp_id=>spanning_repos)
@@ -212,6 +218,8 @@ class ContentSearchController < ApplicationController
           end
         end
 
+        from offset
+
         if  pkg_search.is_a? Array
           filter :terms, :id => pkg_search
         end
@@ -225,11 +233,11 @@ class ContentSearchController < ApplicationController
     {:pkg_rows=>spanning_package_rows(library_packages, repo, spanning_repos), :repo_cols=>to_ret}
   end
   
-  def spanning_package_rows(pkgs, parent_repo, repos)
+  def spanning_package_rows(pkgs, parent_repo, spanned_repos)
     to_ret = [] 
     for pkg in pkgs:
         row = {:id=>"package_#{pkg.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{}, :name=>pkg.nvrea}
-        repos.each do |repo|
+        spanned_repos.each do |repo|
           if pkg.repoids.include? repo.pulp_id 
               row[:cols][repo.environment_id] = {:id=>repo.environment_id}
           end
