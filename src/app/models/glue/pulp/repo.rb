@@ -217,6 +217,13 @@ module Glue::Pulp::Repo
     Resources::Pulp::Repository.all([content_group_id, product_group_id]).map{|r| r['id']} - [self.pulp_id]
   end
 
+  def library_instance
+    env_group_id = Glue::Pulp::Repos.env_groupid(self.organization.library)
+    product_group_id = Glue::Pulp::Repos.product_groupid(self.product_id)
+    content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
+    Resources::Pulp::Repository.all([content_group_id, product_group_id, env_group_id]).map{|r| r['id']}
+  end
+
   def other_repos_with_same_content
     content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
     Resources::Pulp::Repository.all([content_group_id]).map{|r| r['id']} - [self.pulp_id]

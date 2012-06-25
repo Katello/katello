@@ -117,10 +117,9 @@ class ContentSearchController < ApplicationController
 
   private
 
-
   def repo_rows repos
     repos.collect do |repo|
-        all_repos = repo.other_repos_with_same_product_and_content + [repo.pulp_id]
+        all_repos = repo.environmental_instance_ids
         cols = {}
         Repository.where(:pulp_id=>all_repos).each do |r|
           cols[r.environment.id] = {:hover => r.package_count}
@@ -197,8 +196,8 @@ class ContentSearchController < ApplicationController
   #Given a repo and a pkg_search (id array or hash),
   #  return a array of {:id=>env_id, :display=>search.total}
   def spanned_repo_package_count repo, pkg_search
-
-    spanning_repos = [repo.pulp_id] + repo.other_repos_with_same_product_and_content 
+    #library must be first, so subtract it from instance ids
+    spanning_repos = [repo.pulp_id] + (repo.environmental_instance_ids - [repo.pulp_id])
     spanning_repos = Repository.where(:pulp_id=>spanning_repos)
     to_ret = {}
     library_packages = []
