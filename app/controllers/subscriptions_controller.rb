@@ -18,6 +18,9 @@ class SubscriptionsController < ApplicationController
     }
   end
 
+  def section_id
+    'orgs'
+  end
 
   def index
     # Raw candlepin pools
