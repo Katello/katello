@@ -1,7 +1,6 @@
 class postgres::config {
 
   file {
-
     "${postgres::params::home}/data/postgresql.conf":
       content => template("postgres/postgresql.conf.erb"),
       owner   => $postgres::params::user,

@@ -7,13 +7,12 @@ class katello::install {
 
   # Headpin does not care about pulp
   case $katello::params::deployment {
-      'katello': {
-            include pulp::install
-            include qpid::install
-      }
-      default : {}
+    'katello': {
+      include pulp::install
+      include qpid::install
+    }
+    default : {}
   }
-
 
   $os_type = $operatingsystem ? {
     "Fedora" => "fedora-${operatingsystemrelease}",
@@ -26,6 +25,7 @@ class katello::install {
     enabled  => "1",
     gpgcheck => "0"
   }
+
   yumrepo { "fedora-katello-source":
     descr    => 'integrates together a series of open source systems management tools',
     baseurl  => "http://repos.fedorapeople.org/repos/katello/katello/$os_type/\$basearch/SRPMS",
@@ -46,6 +46,7 @@ class katello::install {
     },
     ensure  => installed
   }
+
   Class["katello::install"] -> File["${katello::params::log_base}"]
   Class["katello::install"] -> File["${katello::params::config_dir}/thin.yml"]
   Class["katello::install"] -> File["${katello::params::config_dir}/katello.yml"]

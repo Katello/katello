@@ -1,11 +1,11 @@
 class pulp::config {
 
-  # assuming sharing certificates with candlepin on the same machine
-  # if certificates needs to be distributed, please fix the following.
   file {
     "/var/lib/pulp/packages":
       ensure => directory,
-      owner => "apache", group => "apache", mode => 0755,
+      owner => "apache",
+      group => "apache",
+      mode => 0755,
       before => Class["pulp::service"];
     "/etc/pulp/pulp.conf":
       content => template("pulp/etc/pulp/pulp.conf.erb"),
@@ -38,8 +38,8 @@ class pulp::config {
   }
 
   exec { "set candlepin crl file":
-      command =>  "/usr/bin/openssl x509 -in '$pulp::params::ssl_certificate_file' -hash -noout | /usr/bin/xargs -I{} /bin/ln -sf '$candlepin::params::crl_file' '$pulp::params::crl_location/{}.r0'",
-      require => Class["candlepin::config"],
+    command =>  "/usr/bin/openssl x509 -in '$pulp::params::ssl_certificate_file' -hash -noout | /usr/bin/xargs -I{} /bin/ln -sf '$candlepin::params::crl_file' '$pulp::params::crl_location/{}.r0'",
+    require => Class["candlepin::config"],
   }
 
 }

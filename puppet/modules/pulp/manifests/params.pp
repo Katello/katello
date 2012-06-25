@@ -1,8 +1,5 @@
 class pulp::params {
 
-  #$ssl_certificate_file     = "/etc/pki/tls/certs/katello.crt"
-  #$ssl_certificate_key_file = "/etc/pki/tls/private/katello.key"
-  #$ssl_certificate_ca_file  = "/usr/share/katello/KATELLO-TRUSTED-SSL-CERT"
   $ssl_certificate_file     = "/etc/candlepin/certs/candlepin-ca.crt"
   $ssl_certificate_key_file = "/etc/candlepin/certs/candlepin-ca.key"
   $ssl_certificate_ca_file  = $ssl_certificate_file

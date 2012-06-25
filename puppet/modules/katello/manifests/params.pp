@@ -29,7 +29,6 @@ class katello::params {
       }
   }
 
-
   # HTTP Proxy settings (currently used by pulp)
   $proxy_url = katello_config_value('proxy_url')
   $proxy_port = katello_config_value('proxy_port')
@@ -53,9 +52,6 @@ class katello::params {
   $katello_upgrade_history_file = "/var/lib/katello/upgrade-history"
 
   # SSL settings
-  #$ssl_certificate_file     = "/etc/pki/tls/certs/httpd-ssl.crt"
-  #$ssl_certificate_key_file = "/etc/pki/tls/private/httpd-ssl.key"
-  #$ssl_certificate_ca_file  = "/usr/share/katello/KATELLO-TRUSTED-SSL-CERT"
   $ssl_certificate_file     = "/etc/candlepin/certs/candlepin-ca.crt"
   $ssl_certificate_key_file = "/etc/candlepin/certs/candlepin-ca.key"
   $ssl_certificate_ca_file  = $ssl_certificate_file

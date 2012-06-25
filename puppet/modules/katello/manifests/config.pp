@@ -205,11 +205,11 @@ class katello::config {
 
   # Headpin does not care about pulp
   case $katello::params::deployment {
-      'katello': {
-          Class["candlepin::config"] -> File["/etc/pulp/pulp.conf"]
-          Class["candlepin::config"] -> File["/etc/pulp/repo_auth.conf"]
-          Class["candlepin::config"] -> File["/etc/pki/pulp/content/pulp-global-repo.ca"]
-      }
-      default : {}
+    'katello': {
+      Class["candlepin::config"] -> File["/etc/pulp/pulp.conf"]
+      Class["candlepin::config"] -> File["/etc/pulp/repo_auth.conf"]
+      Class["candlepin::config"] -> File["/etc/pki/pulp/content/pulp-global-repo.ca"]
+    }
+    default : {}
   }
 }

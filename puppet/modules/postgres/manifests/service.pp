@@ -8,7 +8,10 @@ class postgres::service {
   }
 
   service { "postgresql":
-    ensure  => running, enable => true, hasstatus => true, hasrestart => true,
+    ensure  => running,
+    enable => true,
+    hasstatus => true,
+    hasrestart => true,
     notify  => Exec['wait-for-postgresql'],
     require => [Exec['fix-pgsysvinit'], Class["postgres::config"]],
   }
