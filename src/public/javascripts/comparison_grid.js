@@ -76,17 +76,27 @@ KT.comparison_grid = function(){
             grid_row_headers_el.find('#row_header_' + id).prepend(templates.collapse_arrow);
         },
         collapse_rows = function(id, collapse){
-            var parent_row_header = $('#row_header_' + id);
+            var parent_row_header = $('#row_header_' + id),
+
+                show = function(id, should_show){
+                    var child_rows = rows.get_children(id);                    
+
+                    utils.each(child_rows, function(child){
+                        if( should_show ){
+                            $('#grid_row_' + child).hide();
+                            $('#row_header_' + child).hide();
+                        } else {
+                            $('#grid_row_' + child).show();
+                            $('#row_header_' + child).show();
+                        }
+                    });
+
+                    if( rows.get_children(child_rows[0]) !== undefined ){
+                        show(child_rows[0], should_show);
+                    }
+                };
         
-            utils.each(rows.get_children(id), function(child){
-                if( collapse ){
-                    $('#grid_row_' + child).hide();
-                    $('#row_header_' + child).hide();
-                } else {
-                    $('#grid_row_' + child).show();
-                    $('#row_header_' + child).show();
-                }
-            });
+            show(id, collapse);
 
             if( collapse ){
                 parent_row_header.find('.down_arrow-icon-black').hide()
@@ -116,7 +126,11 @@ KT.comparison_grid = function(){
                 }
             });
             
-            $('.grid_row').css('width', utils.size(columns) * 100);
+            if( utils.size(columns) > max_visible_columns ){
+                $('.grid_row').css('width', utils.size(columns) * 100);
+            } else {
+                $('.grid_row').css('width', 500);
+            }
         },
         add_column = function(id, to_display, previous_column_id, data) {
             add_column_header(id, to_display);
@@ -217,7 +231,7 @@ KT.comparison_grid.rows = function(){
                 rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 'parent_id' : parent_id };
 
                 parent = get_parent(id);
-                if( parent['child_id'] === undefined ){
+                if( parent['child_ids'] === undefined ){
                     parent['child_ids'] = [id];
                     return { 'first_child' : true };
                 } else {
@@ -403,7 +417,7 @@ KT.comparison_grid.templates = (function() {
                 if( data['display'] !== undefined ){
                     display = data['display'];
                 } else {
-                    display = '<span class="dot-icon-black"></span>';
+                    display = '<i class="dot-icon-black" />';
                 }
             } else {
                  display = "<span>--</span>";
@@ -433,7 +447,7 @@ KT.comparison_grid.templates = (function() {
             return html;
         },
         row_header = function(id, name, row_level) {
-            var html = '<li data-id="' + id + '" id="row_header_' + id + '" class="row_header grid_row_level_' + row_level + '">';
+            var html = '<li data-id="' + id + '" id="row_header_' + id + '" class="one-line-ellipsis row_header grid_row_level_' + row_level + '">';
             html += '<span>' + name + '</span>';
             html += '</li>';
             return html;
@@ -447,7 +461,7 @@ KT.comparison_grid.templates = (function() {
             return html;
         },
         collapse_arrow = function(){
-            return '<span class="down_arrow-icon-black"></span><span class="right_arrow-icon-black" style="display:none;"></span>';
+            return '<i class="down_arrow-icon-black"/><i class="right_arrow-icon-black" style="display:none;"/>';
         };
 
     return {
