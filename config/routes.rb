@@ -41,6 +41,7 @@ Src::Application.routes.draw do
         post :errata
         post :products
         post :packages
+        post :packages_items
         post :repos
         get :repo_packages
         get :repo_errata
