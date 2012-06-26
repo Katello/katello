@@ -46,6 +46,8 @@ Src::Application.routes.draw do
         post :repos
         get :repo_packages
         get :repo_errata
+        get :repo_compare_packages
+        get :repo_compare_errata
       end
   end
 
