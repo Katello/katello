@@ -347,10 +347,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def pp_exception(exception)
-    "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
-  end
-
   #verify if the specific object with the given id, matches a given search string
   def search_validate(obj_class, id, search, default=:name)
     obj_class.index.refresh
