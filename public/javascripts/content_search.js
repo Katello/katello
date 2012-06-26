@@ -24,20 +24,28 @@ $(document).ready(function() {
                     errata:['products', 'repos', 'errata']};
 
     var search = KT.content_search(KT.available_environments);
-
 });
 
 
-KT.content_search = function(paths){
-    var browse_box, old_search_params, env_select, comparison_grid;
-    var init = function(){
-        var initial_search = $.bbq.getState('search'),
-            initial_envs = $.bbq.getState('environments');
+KT.content_search = function(paths_in){
+    var browse_box, old_search_params, env_select, comparison_grid, paths,
+    subgrids = {
+        repo_packages:{url:KT.routes.repo_packages_content_search_index_path(),
+                       cols:{description:{id:'description', name:i18n.description}}
+                      }
+    },
+    search_urls = {errata:KT.routes.errata_content_search_index_path(),
+                        repos:KT.routes.repos_content_search_index_path(),
+                        products:KT.routes.products_content_search_index_path(),
+                        packages:KT.routes.packages_content_search_index_path()
+    };
 
+    var init = function(){
+        var initial_search = $.bbq.getState('search');
+
+        paths = paths_in;
         comparison_grid = KT.comparison_grid();
-        if(!initial_envs && paths[0]){
-            initial_envs = [paths[0][0]] ;
-        }
+
         env_select = KT.path_select('column_selector', 'env', paths,
             {select_mode:'multi', button_text:"Go", link_first: true});
 
@@ -53,17 +61,24 @@ KT.content_search = function(paths){
             comparison_grid.show_columns(environments);
             env_select.reposition();
         });
+        bind_hover_events();
 
-        if (initial_envs) {
-            select_envs(initial_envs);
-        }
+        select_envs(get_initial_environments());
+
         if(initial_search){
-            browse_box.trigger_search();
+            search_initiated(initial_search);
         }
+    },
+    get_initial_environments = function(){
+        var initial_envs = $.bbq.getState('environments');
+        if(!initial_envs && paths[0]){
+            initial_envs = [paths[0][0]] ;
+        }
+        return initial_envs;
     },
     search_initiated = function(e, search_params){
         var old_params = $.bbq.getState('search');
-        $.bbq.pushState({search:search_params});
+        $.bbq.pushState({search:search_params, subgrid:{}}); //Clear the subgrid
         search_params =  $.bbq.getState("search"); //refresh params, to get trim empty entries
         //A search was forced, but if everything was equal, nothing would happen, so force it
         if(KT.utils.isEqual(old_params, search_params)){
@@ -84,28 +99,45 @@ KT.content_search = function(paths){
     },
     bind_search_event = function(){
         $(window).bind('hashchange.search', function(event) {
+            console.log("bar");
             var search_params = $.bbq.getState('search');
-            if (search_params &&  !KT.utils.isEqual(old_search_params, search_params)) {
-
+            if (!KT.utils.isEqual(old_search_params, search_params)) {
                 do_search(search_params);
             }
         });
     },
     do_search = function(search_params){
-        var urls = {errata:KT.routes.errata_content_search_index_path(),
-                    repos:KT.routes.repos_content_search_index_path(),
-                    products:KT.routes.products_content_search_index_path(),
-                    packages:KT.routes.packages_content_search_index_path()};
+        var url, subgrid;
         old_search_params = $.bbq.getState('search');
-        if (urls[search_params.content_type] ){
-
+        if (search_params === undefined){
+            handle_response([]);
+        }
+        else if(search_params.subgrid && subgrids[search_params.subgrid.type]){
+            subgrid = subgrids[search_params.subgrid.type]
+            $.ajax({
+                type: 'GET',
+                contentType:"application/json",
+                url: subgrid.url,
+                data: search_params.subgrid,
+                success: function(data){
+                    comparison_grid.set_columns(subgrid.cols);
+                    comparison_grid.show_columns(subgrid.cols);
+                    handle_response(data);
+                }
+            });
+        }
+        else if (search_urls[search_params.content_type] ){
             $.ajax({
                 type: 'POST',
                 contentType:"application/json",
-                url: urls[search_params.content_type],
+                url: search_urls[search_params.content_type],
                 data: JSON.stringify(search_params),
-                success: handle_response
-            })
+                success: function(data){
+                    comparison_grid.set_columns(env_select.get_paths());
+                    select_envs(get_initial_environments());
+                    handle_response(data);
+                }
+            });
         }
         else{
             console.log(search_params);
@@ -113,6 +145,14 @@ KT.content_search = function(paths){
     },
     handle_response = function(data){
         $(document).trigger('draw.comparison_grid', [data]);
+    },
+    bind_hover_events = function(){
+        var grid = $('#comparison_grid');
+        grid.delegate(".subgrid_link", 'click', function(){
+            var search = $.bbq.getState('search');
+            search.subgrid = $(this).data();
+            $.bbq.pushState({search:search});
+        });
     };
 
 
