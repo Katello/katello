@@ -51,7 +51,7 @@ class User < ActiveRecord::Base
   serialize :preferences, HashWithIndifferentAccess
 
   validates :username, :uniqueness => true, :presence => true, :username => true, :length => { :maximum => 255 }
-  validates_presence_of :email
+  validates :email, :presence => true, :if => :not_ldap_mode?
 
   # check if the role does not already exist for new username
   validates_each :username do |model, attr, value|
@@ -63,9 +63,15 @@ class User < ActiveRecord::Base
 
   # validate the password length before hashing
   validates_each :password do |model, attr, value|
-    if model.password_changed?
-      model.errors.add(attr, _("must be at least 5 characters.")) if value.length < 5
+    if AppConfig.warden != 'ldap'
+      if model.password_changed?
+        model.errors.add(attr, _("must be at least 5 characters.")) if value.length < 5
+      end
     end
+  end
+
+  def not_ldap_mode?
+    return AppConfig.warden != 'ldap'
   end
 
 #  validates_each :own_role do |model, attr, value|
@@ -88,7 +94,9 @@ class User < ActiveRecord::Base
 
 # hash the password before creating or updateing the record
   before_save do |u|
-    u.password = Password::update(u.password) if u.password.length != 192
+    if AppConfig.warden != 'ldap'
+      u.password = Password::update(u.password) if u.password.length != 192
+    end
     u.preferences=HashWithIndifferentAccess.new unless u.preferences
   end
 
@@ -156,7 +164,7 @@ class User < ActiveRecord::Base
   # an ldap user still needs a katello model
   def self.create_ldap_user!(username)
     # user gets a dummy password and email
-    User.create!(:username => username, :email => "#{username}@ldap.net", :password => 'ldapldap')
+    User.create!(:username => username)
   end
 
   # Returns true if for a given verbs, resource_type org combination

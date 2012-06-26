@@ -38,8 +38,8 @@ class Api::ActivationKeysController < Api::ApiController
 
   def param_rules
     {
-      :create => {:activation_key => [:name, :description, :system_template_id]},
-      :update => {:activation_key  => [:name, :description, :environment_id, :system_template_id]}
+      :create => {:activation_key => [:name, :description, :system_template_id, :usage_limit]},
+      :update => {:activation_key  => [:name, :description, :environment_id, :system_template_id, :usage_limit]}
     }
   end
 
@@ -125,7 +125,7 @@ class Api::ActivationKeysController < Api::ApiController
   end
 
   def find_pool
-    @pool = Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
+    @pool = ::Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
   end
 
   def verify_presence_of_organization_or_environment
