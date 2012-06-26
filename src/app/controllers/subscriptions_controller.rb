@@ -11,27 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 require 'ostruct'
 
-# TODO: subscriptions_controller rules - what roles to test?
-# DONE: subscriptions_controller param_rules
-# DONE: limit search to organization
-# DONE: display all relevant fields in Details page
-# DONE: replace OpenStruct w/ Pool model
-# DONE: remove unneeded fields in json before indexing
-# DONE: activation keys broken
-# DONE: links to subscriptions, systems, activation keys
-# DONE: third tab "consumers" (?) to list referenced systems, activation keys, etc.
 # TODO: index provided products fields for better search
-# TODO: spinner while manifest importing
 # TODO: start / end dates in left subscriptions list
-# DONE: where / when to force update search index? (currently on call to 'items' w/o search) <- leaving there
-# DONE: infinite scroll search not showing correct totals (working at all?)
-# DONE: prepend 'repo url' to products' Content Download URL on Products tab <- Does this make sense? The URL has $releasever and $basearch in it
-# DONE: limit subscriptions to red hat provider
-# TODO: add a 'Repositories' tab in addition to/replace of 'Products'? Could show/edit enabled
-# TODO: add name sorting in left list (how? using name_sort elastic search field?)
 # TODO: start date range not working?  start:2012-01-31 fails but start:"2012-01-31" works
-# DONE: in 'consumers' fence by roles what systems and activation keys are visible
-# TODO: since import is now async, the refresh of the left list doesn't make sense (since it won't have anything new in it until after import completes)
+
 
 class SubscriptionsController < ApplicationController
 
@@ -50,11 +33,11 @@ class SubscriptionsController < ApplicationController
     {
       :index => read_org,
       :items => read_org,
-      :show => lambda{true},
-      :edit => lambda{true},
-      :products => lambda{true},
-      :consumers => lambda{true},
-      :history => lambda{true},
+      :show => read_provider_test,
+      :edit => edit_provider_test,
+      :products => read_provider_test,
+      :consumers => read_provider_test,
+      :history => read_provider_test,
       :new => read_provider_test,
       :upload => edit_provider_test
     }
@@ -71,15 +54,12 @@ class SubscriptionsController < ApplicationController
   end
 
   def index
-    # TODO: temporary
-    #current_organization.redhat_provider.task_status = nil
-    #current_organization.redhat_provider.save!
-
-    # If no manifest imported yet, or the last attempt was a failure open the "new" panel
+    # If no manifest imported yet, one is currently being imported,
+    # or the last attempt was a failure open the "new" panel
     if @provider.editable?
       imports = current_organization.redhat_provider.owner_imports
       imports.sort! {|a,b| a['updated'] <=> b['updated']}
-      if imports.length == 0 || imports.last['status'] == 'FAILURE'
+      if imports.length == 0 || imports.last['status'] == 'FAILURE' || (@provider.task_status && @provider.task_status.progress)
         @panel_options[:initial_state] = {:panel => :new}
       end
     end
