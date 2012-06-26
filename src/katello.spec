@@ -352,6 +352,10 @@ fi
 %defattr(-, katello, katello)
 %{_localstatedir}/log/%{name}
 %{datadir}
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_sql.log
 
 %files glue-pulp
 %{homedir}/app/models/glue/pulp
