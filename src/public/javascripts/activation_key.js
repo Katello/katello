@@ -19,6 +19,7 @@ KT.panel.set_expand_cb(function() {
 $(document).ready(function() {
 
     KT.panel.set_expand_cb(function() {
+        KT.activation_key.initialize_new();
         KT.activation_key.initialize_edit();
     });
 
@@ -71,7 +72,7 @@ $(document).ready(function() {
              });
          }
      });
-
+    
     KT.system_groups_pane.register_events();
 });
 
@@ -100,6 +101,11 @@ KT.activation_key = (function($) {
         });
 
         subbutton.unbind('click').click(disableSubmit);
+    },
+    initialize_new = function() {
+        $('#usage_limit_checkbox').live('click', function() {
+            KT.activation_key.toggle_usage_limit($(this));
+        });
     },
     initialize_edit = function() {
         reset_env_select();
@@ -155,6 +161,16 @@ KT.activation_key = (function($) {
             arrow.attr("src", "images/embed/icons/expander-collapsed.png");
         } else {
             arrow.attr("src", "images/embed/icons/expander-expanded.png");
+        }
+    },
+    toggle_usage_limit = function(checkbox) {
+        var tb = $("#usage_limit_textbox");
+        if (checkbox.is(":checked")) {
+            tb.val('');
+            tb.attr("disabled", true);
+        } else {
+            tb.val('');
+            tb.removeAttr('disabled');
         }
     },
     toggle_family_checkboxes = function(data, checked) {
@@ -272,11 +288,13 @@ KT.activation_key = (function($) {
     };
     return {
         subscription_setup: subscription_setup,
+        initialize_new: initialize_new,
         initialize_edit: initialize_edit,
         reset_env_select: reset_env_select,
         save_key: save_key,
         cancel_key: cancel_key,
         toggle_family: toggle_family,
+        toggle_usage_limit: toggle_usage_limit,
         toggle_family_checkboxes: toggle_family_checkboxes,
         toggle_parent_checkbox: toggle_parent_checkbox,
         get_system_templates: get_system_templates,

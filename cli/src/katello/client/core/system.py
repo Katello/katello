@@ -18,6 +18,7 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.system import SystemAPI
+from katello.client.api.environment import EnvironmentAPI
 from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_environment, get_system
@@ -630,6 +631,8 @@ class Update(SystemAction):
 
         parser.add_option('--new_name', dest='new_name',
                        help=_('a new name for the system'))
+        parser.add_option('--new_environment', dest='new_environment',
+                       help=_('a new environment name for the system'))
         parser.add_option('--description', dest='description',
                        help=_('a description of the system'))
         parser.add_option('--location', dest='location',
@@ -647,12 +650,14 @@ class Update(SystemAction):
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
         new_name = self.get_option('new_name')
+        new_environment_name = self.get_option('new_environment')
         new_description = self.get_option('description')
         new_location = self.get_option('location')
         new_release = self.get_option('release')
         new_sla = self.get_option('sla')
 
         system = get_system(org_name, sys_name, env_name)
+        new_environment = get_environment(org_name, new_environment_name)
         system_uuid = system['uuid']
 
         updates = {}
@@ -661,7 +666,10 @@ class Update(SystemAction):
         if new_location: updates['location'] = new_location
         if new_release: updates['releaseVer'] = new_release
         if new_sla: updates['serviceLevel'] = new_sla
-
+        if new_environment_name:
+            new_environment = get_environment(org_name, new_environment_name)
+            updates['environment_id'] = new_environment['id']
+            
         response = self.api.update(system_uuid, updates)
 
         test_record(response,

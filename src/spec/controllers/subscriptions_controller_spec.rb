@@ -41,6 +41,7 @@ describe SubscriptionsController do
       @first = MemoStruct.new
       @first.first = @product
       Product.stub!(:where).and_return(@first)
+      Tire.stub(:index)
     end
 
     it 'should show all subscriptions' do
