@@ -11,20 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ContentSearchController < ApplicationController
-
+  before_filter :find_repo, :only => [:repo_packages, :repo_errata]
 
   def rules
     contents_test = lambda{true}
-
-
     {
         :index => lambda{true},
         :errata => contents_test,
         :products => contents_test,
         :repos => contents_test,
         :my_environments => contents_test,
-        :packages=>contents_test
-
+        :packages=>contents_test,
+        :repo_packages => contents_test,
+        :repo_errata => contents_test
     }
   end
 
@@ -113,6 +112,7 @@ class ContentSearchController < ApplicationController
     render :json=>rows
   end
 
+
   #similar to :packages, but only returns package rows with an offset for a specific repo
   def packages_items
     repo = Repository.where(:id=>params[:repo_id])
@@ -120,6 +120,32 @@ class ContentSearchController < ApplicationController
     render :json=>pkgs
   end
 
+
+  def repo_packages
+    packages = Glue::Pulp::Package.search('', params[:offset], current_user.page_size, [@repo.pulp_id])
+    rows = packages.collect do |pack|
+      {:name => pack.nvrea, :id => pack.id, :cols => {:description => {:display => pack.description}}}
+    end
+    render :json => rows
+  end
+
+  def repo_errata
+    errata = Glue::Pulp::Errata.search('', params[:offset], current_user.page_size, :repoids => [@repo.pulp_id])
+    rows = errata.collect do |e|
+      {:name => e.id, :id => e.id, :cols => {:title => {:display => e[:title]},
+                                             :type => {:display => e[:type]},
+                                              :issued => {:display => e[:issued]},
+                                              :description => {:display => e[:description]}}}
+    end
+    render :json => rows
+
+  end
+
+
+  private
+  def find_repo
+    @repo = Repository.find(params[:repo])
+  end
 
   private
 
