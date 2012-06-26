@@ -20,6 +20,7 @@ import time
 import threading
 from xml.utils import iso8601
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
+from katello.client.api.job import SystemGroupJobStatusAPI
 
 
 # server output validity ------------------------------------------------------
@@ -400,6 +401,68 @@ def progress(left, total):
     sizeTotal = float(total)
     return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal
 
+# Envelope around job structure
+class AsyncJob():
+
+    _jobs = []
+
+    def __init__(self, job):
+        if not isinstance(job, list):
+            self._jobs = [job]
+        else:
+            self._jobs = job
+
+    def status_api(self):
+        # In the future, this could be used for a generic JobStatusAPI; however, for now the only
+        # thing using the job APIs is System Groups.
+        # return JobStatusAPI()
+        return SystemGroupJobStatusAPI()
+
+    def update(self):
+        self._jobs = [self.status_api().status(j['id']) for j in self._jobs]
+
+    def is_running(self):
+        return (len(filter(self._subtask_is_running, self._jobs)) > 0)
+
+    def finished(self):
+        return not self.is_running()
+
+    def failed(self):
+        return (len(filter(lambda j: j['state'] in ('error', 'timed out'), self._jobs)) > 0)
+
+    def cancelled(self):
+        return (len(filter(lambda j: j['state'] in ('cancelled', 'canceled'), self._jobs)) > 0)
+
+    def succeeded(self):
+        return not (self.failed() or self.cancelled())
+
+    def _subtask_is_running(self, job):
+        return job['state'] not in ('finished', 'error', 'timed out', 'canceled', 'not_synced')
+
+    def get_hashes(self):
+        return self._jobs
+
+# SystemGroup representation for a job
+class SystemGroupAsyncJob(AsyncJob):
+    def __init__(self, org_id, system_group_id, job):
+        AsyncJob.__init__(self, job)
+        self.__org_id = org_id
+        self.__system_group_id = system_group_id
+
+    def status_api(self):
+        return SystemGroupJobStatusAPI(self.__org_id, self.__system_group_id)
+
+    def get_status_message(self):
+        return ", ".join([job["status_message"] for job in self._jobs])
+
+def wait_for_async_job(job):
+    if not isinstance(job, AsyncJob):
+        job = AsyncJob(job)
+
+    while job.is_running():
+        time.sleep(1)
+        job.update()
+    return job.get_hashes()
 
 def convert_to_mime_type(type, default=None):
     availableMimeTypes = {

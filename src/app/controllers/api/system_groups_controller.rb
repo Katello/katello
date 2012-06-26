@@ -92,12 +92,12 @@ class Api::SystemGroupsController < Api::ApiController
 
   def history
     if params[:job_id]
-      jobs = @group.jobs.where(:id=>params[:job_id])
+      job = @group.refreshed_jobs.where(:id => params[:job_id]).first
+      render :json => job
     else
-      jobs = @group.jobs
+      jobs = @group.refreshed_jobs
+      render :json => jobs
     end
-    render :json=> jobs
-
   end
 
   def  lock
