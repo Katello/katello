@@ -212,19 +212,4 @@ private
               :progress => progress
              }
   end
-
-  def send_notification(product, status)
-    if status.error_details.size > 0 then
-      notice _("%s product was synced successfully with errors. See log for details") % product.name,
-                                  {:details => status.error_details.join("\n"),:synchronous_request => false}
-      status.error_details.each { |d| Rails.logger.error("Sync error:" +  d[:error]) }
-    else
-      notice _("%s product was synced successfully") % product.name
-    end
-  end
-
-  def report_error(product)
-    notice product.name + ' ' + _("sync did not complete successfully"), {:level => :error, :synchronous_request => false}
-    Rails.logger.error product.name + " sync did not complete successfully"
-  end
 end
