@@ -358,9 +358,13 @@ module Glue::Pulp::Repo
     return false
   end
 
-  def sync
+  def sync(options = { })
     pulp_task = Resources::Pulp::Repository.sync(self.pulp_id)
-    task = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = self.environment.organization}
+    task      = PulpSyncStatus.using_pulp_task(pulp_task) do |t|
+      t.organization         = self.environment.organization
+      t.parameters ||= {}
+      t.parameters[:options] = options
+    end
     task.save!
     return [task]
   end
@@ -493,7 +497,7 @@ module Glue::Pulp::Repo
     }.flatten]
   end
 
-  def sort_sync_status statuses 
+  def sort_sync_status statuses
     statuses.sort!{|a,b|
       if a['finish_time'].nil? && b['finish_time'].nil?
         if a['start_time'].nil?
@@ -516,7 +520,7 @@ module Glue::Pulp::Repo
           1
         end
       else
-        b['finish_time'] <=> a['finish_time'] 
+        b['finish_time'] <=> a['finish_time']
       end
     }
 

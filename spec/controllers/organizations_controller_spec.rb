@@ -166,14 +166,14 @@ describe OrganizationsController do
       it 'should call katello organization destroy api if there are more than 1 organizations' do
         @controller.stub(:current_user).and_return(@user)
         Organization.stub!(:count).and_return(2)
-        @user.should_receive(:destroy_organization_async).with(@org).once.and_return(true)
+        OrganizationDestroyer.should_receive(:destroy).with(@org, :notify => true).once.and_return(true)
         delete 'destroy', :id => @org.id
         response.should be_success
       end
 
       it "should generate a success notice" do
         Organization.stub!(:count).and_return(2)
-        @user.should_receive(:destroy_organization_async).with(@org).once.and_return(true)
+        OrganizationDestroyer.should_receive(:destroy).with(@org, :notify => true).once.and_return(true)
         controller.should notify.success
         delete 'destroy', :id => @org.id
         response.should be_success
