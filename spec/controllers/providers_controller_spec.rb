@@ -56,7 +56,8 @@ describe ProvidersController do
     end
 
     it "should try to force a provider update" do
-      @provider.should_receive(:import_manifest).with(anything(), { :force => "true" }).and_return(true)
+      @provider.should_receive(:import_manifest).
+          with(anything(), :force => 'true', :async => true, :notify => true).and_return(true)
       @organization.stub(:redhat_provider).and_return(@provider)
       controller.stub!(:current_organization).and_return(@organization)
 
