@@ -191,7 +191,7 @@ private
     repos.each do |id|
       repo = Repository.find(id)
       begin
-        resp = repo.sync().first
+        resp = repo.sync(:notify => true).first
         collected.push({:id => id, :product_id=>repo.product.id, :state => resp[:state]})
       rescue RestClient::Conflict => e
         notify.error N_("There is already an active sync process for the '%s' repository. Please try again later") %
