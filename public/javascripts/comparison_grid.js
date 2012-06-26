@@ -17,7 +17,7 @@ KT.comparison_grid = function(){
     var templates = KT.comparison_grid.templates,
         utils = KT.utils,
         controls, events,
-        models,
+        models = KT.comparison_grid.models(this),
         num_columns_shown = 0,
         grid_row_headers_el,
         grid_content_el,
@@ -26,7 +26,6 @@ KT.comparison_grid = function(){
     var init = function(){
             events = KT.comparison_grid.events(this).init();
             controls = KT.comparison_grid.controls(this);
-            models = KT.comparison_grid.models(this);
             grid_row_headers_el = $('#grid_row_headers');
             grid_content_el = $('#grid_content');
         },
@@ -197,6 +196,8 @@ KT.comparison_grid = function(){
 
     return {
         init                    : init,
+        export_data             : models.export_data,
+        import_data             : models.import_data,
         add_rows                : add_rows,
         set_rows                : set_rows,
         set_columns             : set_columns,
