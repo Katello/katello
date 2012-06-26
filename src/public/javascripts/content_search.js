@@ -101,7 +101,6 @@ KT.content_search = function(paths_in){
     },
     bind_search_event = function(){
         $(window).bind('hashchange.search', function(event) {
-            console.log("bar");
             var search_params = $.bbq.getState('search');
             if (!utils.isEqual(old_search_params, search_params)) {
                 do_search(search_params);
