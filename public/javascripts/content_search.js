@@ -29,10 +29,20 @@ $(document).ready(function() {
 
 KT.content_search = function(paths_in){
     var browse_box, old_search_params, env_select, comparison_grid, paths,
+        cache = KT.content_search_cache,
+        utils = KT.utils,
     subgrids = {
         repo_packages:{url:KT.routes.repo_packages_content_search_index_path(),
-                       cols:{description:{id:'description', name:i18n.description}}
+                       cols:{description:{id:'description', name:i18n.description}},
+        repo_errata  :{url:KT.routes.repo_errata_content_search_index_path(),
+                       cols:{
+                           title : {id:'title', name:i18n.title},
+                           type  : {id:'type', name:i18n.type},
+                           severity : {id:'severity', name:i18n.severity},
+                           issued : {id:'issued', name:i18n.issued}
+                         }
                       }
+        }
     },
     search_urls = {errata:KT.routes.errata_content_search_index_path(),
                         repos:KT.routes.repos_content_search_index_path(),
@@ -42,25 +52,19 @@ KT.content_search = function(paths_in){
 
     var init = function(){
         var initial_search = $.bbq.getState('search');
-
         paths = paths_in;
-        comparison_grid = KT.comparison_grid();
-
         env_select = KT.path_select('column_selector', 'env', paths,
             {select_mode:'multi', button_text:"Go", link_first: true});
 
+        comparison_grid = KT.comparison_grid();
         comparison_grid.init();
         comparison_grid.set_columns(env_select.get_paths());
 
         browse_box = KT.widget.browse_box("content_selector", KT.widgets, KT.mapping, initial_search);
         $(document).bind(browse_box.get_event(), search_initiated);
-        bind_search_event();
 
-        $(document).bind(env_select.get_event(), function(event, environments) {
-            $.bbq.pushState({environments:KT.utils.values(environments)});
-            comparison_grid.show_columns(environments);
-            env_select.reposition();
-        });
+        bind_search_event();
+        bind_env_select_event();
         bind_hover_events();
 
         select_envs(get_initial_environments());
@@ -76,21 +80,18 @@ KT.content_search = function(paths_in){
         }
         return initial_envs;
     },
-    search_initiated = function(e, search_params){
+    search_initiated = function(e, search_params){ //'go' button was clicked
         var old_params = $.bbq.getState('search');
         $.bbq.pushState({search:search_params, subgrid:{}}); //Clear the subgrid
         search_params =  $.bbq.getState("search"); //refresh params, to get trim empty entries
         //A search was forced, but if everything was equal, nothing would happen, so force it
-        if(KT.utils.isEqual(old_params, search_params)){
+        if(utils.isEqual(old_params, search_params)){
             do_search(search_params);
         }
     },
-    /*
-        select environments manually, from a list of environment objects
-     */
     select_envs = function(environment_list){
         var env_obj = {};
-        KT.utils.each(environment_list, function(env){
+        utils.each(environment_list, function(env){
             env_obj[env.id] = env;
             env_select.select(env.id)
         });
@@ -101,19 +102,22 @@ KT.content_search = function(paths_in){
         $(window).bind('hashchange.search', function(event) {
             console.log("bar");
             var search_params = $.bbq.getState('search');
-            if (!KT.utils.isEqual(old_search_params, search_params)) {
+            if (!utils.isEqual(old_search_params, search_params)) {
                 do_search(search_params);
             }
         });
     },
     do_search = function(search_params){
-        var url, subgrid;
+        var url, subgrid, tmp_search;
         old_search_params = $.bbq.getState('search');
         if (search_params === undefined){
             handle_response([]);
         }
         else if(search_params.subgrid && subgrids[search_params.subgrid.type]){
-            subgrid = subgrids[search_params.subgrid.type]
+            subgrid = subgrids[search_params.subgrid.type];
+            tmp_search = utils.clone(search_params);
+            delete tmp_search['subgrid'];
+            cache.save_state(comparison_grid, tmp_search);
             $.ajax({
                 type: 'GET',
                 contentType:"application/json",
@@ -122,28 +126,33 @@ KT.content_search = function(paths_in){
                 success: function(data){
                     comparison_grid.set_columns(subgrid.cols);
                     comparison_grid.show_columns(subgrid.cols);
-                    handle_response(data);
+                    draw_grid(data);
                 }
             });
         }
         else if (search_urls[search_params.content_type] ){
-            $.ajax({
-                type: 'POST',
-                contentType:"application/json",
-                url: search_urls[search_params.content_type],
-                data: JSON.stringify(search_params),
-                success: function(data){
-                    comparison_grid.set_columns(env_select.get_paths());
-                    select_envs(get_initial_environments());
-                    handle_response(data);
-                }
-            });
+            if (cache.get_state(search_params)){
+                comparison_grid.import_data(cache.get_state(search_params));
+            }
+            else {
+                $.ajax({
+                    type: 'POST',
+                    contentType:"application/json",
+                    url: search_urls[search_params.content_type],
+                    data: JSON.stringify(search_params),
+                    success: function(data){
+                        comparison_grid.set_columns(env_select.get_paths());
+                        select_envs(get_initial_environments());
+                        draw_grid(data);
+                    }
+                });
+            }
         }
         else{
             console.log(search_params);
         }
     },
-    handle_response = function(data){
+    draw_grid = function(data){
         $(document).trigger('draw.comparison_grid', [data]);
     },
     bind_hover_events = function(){
@@ -153,6 +162,13 @@ KT.content_search = function(paths_in){
             search.subgrid = $(this).data();
             $.bbq.pushState({search:search});
         });
+    },
+    bind_env_select_event = function(){
+        $(document).bind(env_select.get_event(), function(event, environments) {
+            $.bbq.pushState({environments:utils.values(environments)});
+            comparison_grid.show_columns(environments);
+            env_select.reposition();
+        });
     };
 
 
@@ -160,6 +176,26 @@ KT.content_search = function(paths_in){
     return {
     }
 };
+
+/**
+ * Singleton for caching search data
+ */
+KT.content_search_cache = (function(){
+    var utils = KT.utils,
+        saved_search = undefined,
+        saved_data = undefined;
+
+    self.save_state = function(grid, search){
+        saved_search = search;
+        saved_data = grid.export_data();
+    };
+    self.get_state = function(search){
+        if(utils.isEqual(search, saved_search)){
+            return saved_data;
+        }
+    };
+    return self;
+}());
 
 
 

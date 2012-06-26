@@ -135,8 +135,9 @@ class ContentSearchController < ApplicationController
     rows = errata.collect do |e|
       {:name => e.id, :id => e.id, :cols => {:title => {:display => e[:title]},
                                              :type => {:display => e[:type]},
-                                              :issued => {:display => e[:issued]},
-                                              :description => {:display => e[:description]}}}
+                                              :issued => {:display => e[:issued]}
+                                            }
+      }
     end
     render :json => rows
 
