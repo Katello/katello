@@ -12,6 +12,7 @@
 
 class ContentSearchController < ApplicationController
   before_filter :find_repo, :only => [:repo_packages, :repo_errata]
+  before_filter :find_repos, :only => [:repo_compare_packages, :repo_compare_errata]
 
   def rules
     contents_test = lambda{true}
@@ -24,7 +25,9 @@ class ContentSearchController < ApplicationController
         :packages => contents_test,
         :packages_items => contents_test,
         :repo_packages => contents_test,
-        :repo_errata => contents_test
+        :repo_errata => contents_test,
+        :repo_compare_errata =>contents_test,
+        :repo_compare_packages =>contents_test
     }
   end
 
@@ -140,13 +143,53 @@ class ContentSearchController < ApplicationController
       }
     end
     render :json => rows
+  end
 
+
+  def repo_compare_packages
+    repo_compare_content true
+  end
+
+
+  def repo_compare_errata
+    repo_compare_content false
   end
 
 
   private
+
+  def repo_compare_content is_package
+    repo_map = {}
+    @repos.each do |r|
+      repo_map[r.pulp_id] = r
+    end
+    if is_package
+      packages = Glue::Pulp::Package.search('', params[:offset], current_user.page_size, repo_map.keys)
+    else
+      packages = Glue::Pulp::Errata.search('', params[:offset], current_user.page_size, :repoids =>  repo_map.keys)
+    end
+    rows = packages.collect do |pack|
+      cols = {}
+      (pack.repoids & repo_map.keys).each do |r|
+        cols[repo_map[r].id] = {}
+      end
+      name = pack.id
+      if is_package
+        name = pack.nvrea
+      end
+      {:name => name, :id => pack.id, :cols => cols}
+    end
+    render :json => rows
+
+
+  end
+
+  def find_repos
+    @repos = Repository.readable_in_org(current_organization).where(:id => params[:repos])
+  end
+
   def find_repo
-    @repo = Repository.find(params[:repo_id])
+    @repo = Repository.readable_in_org(current_organization).find(params[:repo_id])
   end
 
   private
