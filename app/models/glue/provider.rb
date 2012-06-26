@@ -177,22 +177,48 @@ module Glue::Provider
                        :priority => 3, :action => [self, :owner_import, zip_file_path, options])
       pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
                        :priority => 5, :action => [self, :import_products_from_cp])
+      self.save
 
-      self.task_status = nil
-      self.save!
+    rescue => error
+      if error.respond_to?(:response)
+        display_message = error.response # fix add parse displayMessage
+      elsif error.message
+        display_message = error.message
+      else
+        display_message = ""
+      end
 
+      if options[:notify]
+        error_texts = [
+            _("Subscription manifest upload for provider '%s' failed.") % self.name,
+            (_("Reason: %s") % display_message unless display_message.blank?),
+            (_("If you are uploading an older manifest, you can use the Force checkbox to overwrite " +
+                   "existing data.") if options[:force] == 'false')
+        ].compact
+
+        notice error_texts.join('<br />'),  :level => :error, :details => error.backtrace.join("\n"),
+               :synchronous_request => false, :request_type => 'providers__update_redhat_provider'
+      end
+
+      Rails.logger.error "error uploading subscriptions."
+      Rails.logger.error error
+      Rails.logger.error error.backtrace.join("\n")
+      raise error
+    else
       if options[:notify]
         message = if AppConfig.katello?
                     _("Subscription manifest uploaded successfully for provider '%s'. " +
-                        "Please enable the repositories you want to sync by selecting 'Enable Repositories' and " +
-                        "selecting individual repositories to be enabled.")
+                          "Please enable the repositories you want to sync by selecting 'Enable Repositories' and " +
+                          "selecting individual repositories to be enabled.")
                   else
                     _("Subscription manifest uploaded successfully for provider '%s'.")
                   end
         notice message % self.name,
                :synchronous_request => false, :request_type => 'providers__update_redhat_provider'
       end
-      return true
+    ensure
+      self.task_status = nil
+      self.save!
     end
 
     def import_products_from_cp
