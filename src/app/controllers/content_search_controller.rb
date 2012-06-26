@@ -21,7 +21,8 @@ class ContentSearchController < ApplicationController
         :products => contents_test,
         :repos => contents_test,
         :my_environments => contents_test,
-        :packages=>contents_test,
+        :packages => contents_test,
+        :packages_items => contents_test,
         :repo_packages => contents_test,
         :repo_errata => contents_test
     }
@@ -115,9 +116,9 @@ class ContentSearchController < ApplicationController
 
   #similar to :packages, but only returns package rows with an offset for a specific repo
   def packages_items
-    repo = Repository.where(:id=>params[:repo_id])
+    repo = Repository.where(:id=>params[:repo_id]).first
     pkgs = spanned_repo_packages(repo, process_params(:packages), params[:offset]) || {:pkg_rows=>[]}
-    render :json=>pkgs
+    render :json=>pkgs[:pkg_rows]
   end
 
 
@@ -144,7 +145,7 @@ class ContentSearchController < ApplicationController
 
   private
   def find_repo
-    @repo = Repository.find(params[:repo])
+    @repo = Repository.find(params[:repo_id])
   end
 
   private
@@ -154,10 +155,14 @@ class ContentSearchController < ApplicationController
         all_repos = repo.environmental_instance_ids
         cols = {}
         Repository.where(:pulp_id=>all_repos).each do |r|
-          cols[r.environment.id] = {:hover => r.package_count}
+          cols[r.environment.id] = {:hover => repo_hover_html(r)}
         end
         {:id=>"repo_#{repo.id}", :parent_id=>"product_#{repo.product.id}", :name=>repo.name, :cols=>cols}
     end
+  end
+
+  def repo_hover_html repo
+    render_to_string :partial=>'repo_hover', :locals=>{:repo=>repo}
   end
 
   def product_rows products

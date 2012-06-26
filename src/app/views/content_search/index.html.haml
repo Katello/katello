@@ -4,6 +4,9 @@
 = javascript do
   :plain
     KT.available_environments = $.parseJSON('#{escape_javascript(environments.to_json)}');
+    localize({
+      description: '#{escape_javascript(_("Description"))}'
+    })
 
 = render :partial => "browser_box"
 

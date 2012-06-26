@@ -257,6 +257,12 @@ class Repository < ActiveRecord::Base
     end.collect{|r| r.pulp_id}
   end
 
+  #ideally this would be an attribute like package_count
+  def errata_count
+    Glue::Pulp::Errata.search('', 0, 1, :repoids => [self.pulp_id]).total
+  end
+
+
   private
 
   def refresh_content
