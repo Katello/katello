@@ -79,7 +79,7 @@ class UserSessionsController < ApplicationController
       # notice the user
       notice _("Login Successful")
       if current_organization.nil?
-        redirect_to organizations_url
+        render :partial => "/user_sessions/interstitial.js.haml"
       else
         redirect_to dashboard_index_url
       end
