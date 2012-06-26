@@ -1,8 +1,14 @@
 / orgbox Starts Here
 #switcherContainer.clickable
-  %a#switcherButton{:href => "#", :title=>"#{current_organization.name}"}
+  -#- if (!(current_organization.name).nil?)
+  -#  %a#switcherButton{:href => "#", :title=>"#{current_organization.name}"}
+  -#    .one-line-ellipsis
+  -#      #{current_organization.name}
+  -#    .arrow_icon_menu
+  -#- else
+  %a#switcherButton{:href => "#", :title=>""}
     .one-line-ellipsis
-      #{current_organization.name}
+      #{_("Select an Organization:")}
     .arrow_icon_menu
   #switcherBox
     #switcherForm.org
