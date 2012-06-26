@@ -504,3 +504,47 @@ class Packages(SystemGroupAction):
                 return os.EX_DATAERR
 
         return os.EX_OK
+
+class Errata(SystemGroupAction):
+
+    description = _('install errata on systems in a system group')
+
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        parser.add_option('--name', dest='name',
+                       help=_("system group name (required)"))
+        parser.add_option('--install', dest='install', type="list",
+                       help=_("errata to be installed remotely on the systems, errata IDs separated with comma (required)"))
+
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'install'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        group_name = self.get_option('name')
+        install = self.get_option('install')
+
+        job = None
+
+        system_group = get_system_group(org_name, group_name)
+        system_group_id = system_group['id']
+
+        if install:
+            job = self.api.install_errata(org_name, system_group_id, install)
+
+        if job:
+            id = job["id"]
+            print (_("Performing remote action [ %s ]... ") % id)
+            job = SystemGroupAsyncJob(org_name, system_group_id, job)
+            run_spinner_in_bg(wait_for_async_job, [job])
+            if job.succeeded():
+                print _("Remote action finished:")
+                print job.get_status_message()
+                return os.EX_OK
+            else:
+                print _("Remote action failed:")
+                print job.get_status_message()
+                return os.EX_DATAERR
+
+        return os.EX_OK

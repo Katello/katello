@@ -209,6 +209,7 @@ def setup_admin(katello_cmd):
     system_group_cmd.add_command('update', system_group.Update())
     system_group_cmd.add_command('delete', system_group.Delete())
     system_group_cmd.add_command('packages', system_group.Packages())
+    system_group_cmd.add_command('errata', system_group.Errata())
     katello_cmd.add_command('system_group', system_group_cmd)
 
     sync_plan_cmd = sync_plan.SyncPlan()
