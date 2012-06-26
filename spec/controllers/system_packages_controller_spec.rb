@@ -29,8 +29,6 @@ describe SystemPackagesController, :katello => true do
       @environment = KTEnvironment.new(:name => 'test', :prior => @organization.library.id, :organization => @organization)
       @environment.save!
 
-      controller.stub!(:notice)
-
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
@@ -77,7 +75,7 @@ describe SystemPackagesController, :katello => true do
         end
 
         it 'should generate a notice on success' do
-          controller.should_receive(:notice)
+          controller.should notify.success
           @system.stub!(:install_packages).and_return(@task_status)
           put :add, :system_id => @system.id, :packages => "pkg1"
           response.should be_success
@@ -91,7 +89,7 @@ describe SystemPackagesController, :katello => true do
         end
 
         it 'should generate an error notice, if no package names provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @system.should_not_receive(:install_packages)
           put :add, :system_id => @system.id, :packages => ""
           response.should be_success
@@ -99,7 +97,7 @@ describe SystemPackagesController, :katello => true do
         end
 
         it 'should return an error notice, if no packages structure provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @system.should_not_receive(:install_packages)
           put :add, :system_id => @system.id
           response.should be_success
@@ -115,7 +113,7 @@ describe SystemPackagesController, :katello => true do
         end
 
         it 'should generate a notice on success' do
-          controller.should_receive(:notice)
+          controller.should notify.success
           @system.stub!(:install_package_groups).and_return(@task_status)
           put :add, :system_id => @system.id, :groups => "group 1"
           response.should be_success
@@ -129,7 +127,7 @@ describe SystemPackagesController, :katello => true do
         end
 
         it 'should generate an error notice, if no groups names provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @system.should_not_receive(:install_package_groups)
           put :add, :system_id => @system.id, :groups => ""
           response.should be_success
@@ -137,7 +135,7 @@ describe SystemPackagesController, :katello => true do
         end
 
         it 'should return an error notice, if no group structure provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @system.should_not_receive(:install_package_groups)
           put :add, :system_id => @system.id
           response.should be_success
@@ -159,7 +157,7 @@ describe SystemPackagesController, :katello => true do
         end
 
         it 'should generate a notice on success' do
-          controller.should_receive(:notice)
+          controller.should notify.success
           @system.stub!(:uninstall_packages).and_return(@task_status)
           put :remove, :system_id => @system.id, :packages => "pkg1"
           response.should be_success
@@ -173,7 +171,7 @@ describe SystemPackagesController, :katello => true do
         end
 
         it 'should generate an error notice, if no packages provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @system.should_not_receive(:uninstall_packages)
           put :remove, :system_id => @system.id, :packages => ""
           response.should be_success
@@ -181,7 +179,7 @@ describe SystemPackagesController, :katello => true do
         end
 
         it 'should return an error notice, if no packages structure provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @system.should_not_receive(:uninstall_packages)
           put :remove, :system_id => @system.id
           response.should be_success
@@ -197,7 +195,7 @@ describe SystemPackagesController, :katello => true do
         end
 
         it 'should generate a notice on success' do
-          controller.should_receive(:notice)
+          controller.should notify.success
           @system.stub!(:uninstall_package_groups).and_return(@task_status)
           put :remove, :system_id => @system.id, :groups => "group 1"
           response.should be_success
@@ -211,7 +209,7 @@ describe SystemPackagesController, :katello => true do
         end
 
         it 'should generate an error notice, if no group names provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @system.should_not_receive(:uninstall_package_groups)
           put :remove, :system_id => @system.id, :groups => ""
           response.should be_success
@@ -219,7 +217,7 @@ describe SystemPackagesController, :katello => true do
         end
 
         it 'should return an error notice, if no groups structure provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @system.should_not_receive(:uninstall_package_groups)
           put :remove, :system_id => @system.id
           response.should be_success
@@ -236,7 +234,7 @@ describe SystemPackagesController, :katello => true do
           end
 
           it 'should generate a notice on success' do
-            controller.should_receive(:notice)
+            controller.should notify.success
             @system.stub!(:update_packages).and_return(@task_status)
             put :update, :system_id => @system.id, :packages => {"pkg1" => 1}
             response.should be_success
@@ -258,7 +256,7 @@ describe SystemPackagesController, :katello => true do
           end
 
           it 'should generate a notice on success' do
-            controller.should_receive(:notice)
+            controller.should notify.success
             @system.stub!(:update_packages).and_return(@task_status)
             put :update, :system_id => @system.id
             response.should be_success

@@ -102,7 +102,7 @@ class SyncManagementController < ApplicationController
         progress = format_sync_progress(repo.sync_status, repo)
         collected.push(progress)
       rescue Exception => e
-        notice e.to_s, {:level => :error} # debugging and skip for now
+        notify.exception e # debugging and skip for now
         next 
       end
     end
@@ -194,7 +194,8 @@ private
         resp = repo.sync().first
         collected.push({:id => id, :product_id=>repo.product.id, :state => resp[:state]})
       rescue RestClient::Conflict => e
-        notice N_("There is already an active sync process for the '%s' repository. Please try again later") % repo.name, {:level => :error}
+        notify.error N_("There is already an active sync process for the '%s' repository. Please try again later") %
+                        repo.name
       end
     end
     collected

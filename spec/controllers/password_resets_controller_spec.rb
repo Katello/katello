@@ -45,7 +45,7 @@ describe PasswordResetsController do
     end
 
     it "should generate a notice to inform user of email sent" do
-      controller.should_receive(:notice)
+      controller.should notify.success
       post :create, @params
       response.should be_success
     end
@@ -75,14 +75,14 @@ describe PasswordResetsController do
     end
 
     it "should generate a notice" do
-      controller.should_receive(:notice)
+      controller.should notify.success
       put :update, @params
       response.should be_success
     end
 
     it "should generate an error notice, if exception raised" do
       @testuser.stub!(:update_attributes!).and_raise(Exception)
-      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+      controller.should notify.error
       put :update, @params
     end
     it_should_behave_like "bad request"  do
@@ -123,7 +123,7 @@ describe PasswordResetsController do
     end
 
     it "should generate a notice to inform user of email sent" do
-      controller.should_receive(:notice)
+      controller.should notify.success
       post :email_logins, @params
       response.should be_success
     end

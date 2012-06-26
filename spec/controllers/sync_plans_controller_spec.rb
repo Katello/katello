@@ -71,14 +71,14 @@ describe SyncPlansController, :katello => true do
     describe "Create a SyncPlan" do
 
       it "should create a plan successfully" do
-        controller.should_receive(:notice)
+        controller.should notify.success
         post :create, plan_create
         SyncPlan.first.should_not be_nil
         response.should be_success
       end
 
       it "should have a valid date" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         plan_create[:sync_plan].should_not be_nil
         data = plan_create
         data[:sync_plan][:plan_date] = '01/101/11'
@@ -88,7 +88,7 @@ describe SyncPlansController, :katello => true do
       end
 
       it "should have a unique name" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         SyncPlan.create!  :name => 'myplan', :interval => 'weekly', :sync_date => DateTime.now, :organization => controller.current_organization
         SyncPlan.first.should_not be_nil
         post :create, plan_create
@@ -96,7 +96,7 @@ describe SyncPlansController, :katello => true do
       end
 
       it "should not have a nil name" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         data = plan_create
         data[:sync_plan][:name] = ''
         post :create, data
@@ -118,7 +118,7 @@ describe SyncPlansController, :katello => true do
         plan = SyncPlan.create!  :name => 'myplan', :interval => 'weekly', :sync_date => DateTime.now, :organization => controller.current_organization
         controller.stub!(:render).and_return("") #ignore missing js partial
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:notice)
+        controller.should notify.success
         delete :destroy, :id => plan.id
       end
     end
@@ -130,63 +130,63 @@ describe SyncPlansController, :katello => true do
 
       it "should update a sync plan name successfully" do
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:notice)
+        controller.should notify.success
         put :update, :id => @plan.id, :sync_plan => {:name => 'yourplan'}
         response.should be_success
       end
 
       it "should update a sync plan interval successfully" do
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:notice)
+        controller.should notify.success
         put :update, :id => @plan.id, :sync_plan => {:interval => 'daily'}
         response.should be_success
       end
 
       it "should update interval to none successfully" do
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:notice)
+        controller.should notify.success
         put :update, :id => @plan.id, :sync_plan => {:interval => 'none'}
         response.should be_success
       end
 
       it "should update a sync plan description successfully" do
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:notice)
+        controller.should notify.success
         put :update, :id => @plan.id, :sync_plan => {:description => 'Would rather be fishing then writing tests'}
         response.should be_success
       end
 
       it "should update a sync time description successfully" do
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:notice)
+        controller.should notify.success
         put :update, :id => @plan.id, :sync_plan => {:time => '12:00 pm'}
         response.should be_success
       end
 
       it "should update a sync date description successfully" do
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:notice)
+        controller.should notify.success
         put :update, :id => @plan.id, :sync_plan => {:date => '11/11/11'}
         response.should be_success
       end
 
       it "should not update bad sync dates" do
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         put :update, :id => @plan.id, :sync_plan => {:date => '11/111111/11'}
         response.should_not be_success
       end
 
       it "should not update bad sync time" do
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         put :update, :id => @plan.id, :sync_plan => {:time => '30:00 pmm'}
         response.should_not be_success
       end
 
       it "should not update a blank name" do
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         put :update, :id => @plan.id, :sync_plan => {:name => ''}
         response.should_not be_success
       end
