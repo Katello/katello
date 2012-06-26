@@ -85,18 +85,25 @@ class Api::SystemsController < Api::ApiController
     # Set it before calling find_activation_keys to allow communication with candlepin
     User.current = User.hidden.first
     activation_keys = find_activation_keys
-    system = System.new(params.except(:activation_keys))
-    # we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
-    activation_keys.reverse_each {|ak| ak.apply_to_system(system) }
-    system.save!
-    activation_keys.each do |ak|
-      ak.subscribe_system(system)
-      ak.system_groups.each do |group|
-        group.system_ids = (group.system_ids + [system.id]).uniq
-        group.save!
+    ActiveRecord::Base.transaction do
+      # create new system entry
+      system = System.new(params.except(:activation_keys))
+
+      # register system - we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
+      activation_keys.reverse_each {|ak| ak.apply_to_system(system) }
+      system.save!
+
+      # subscribe system - if anything goes wrong subscriptions are deleted in Candlepin and exception is rethrown
+      activation_keys.each do |ak|
+        ak.subscribe_system(system)
+        ak.system_groups.each do |group|
+          group.system_ids = (group.system_ids + [system.id]).uniq
+          group.save!
+        end
       end
+
+      render :json => system.to_json
     end
-    render :json => system.to_json
   end
 
   def subscriptions
@@ -123,7 +130,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def update
-    @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel))
+    @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel, :environment_id))
     render :json => @system.to_json
   end
 

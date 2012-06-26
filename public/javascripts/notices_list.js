@@ -37,7 +37,7 @@ $(document).ready(function() {
         url: button.attr('data-url'),
         cache: false,
         success: function(data, status, xhr) {
-            $('#dialog_content').html('<pre>' + data + '</pre>').dialog('open');
+            $('#dialog_content').html('<pre style="text-indent:0;">' + data + '</pre>').dialog('open');
         },
         error: function(data, status, xhr) {
            alert("failure");

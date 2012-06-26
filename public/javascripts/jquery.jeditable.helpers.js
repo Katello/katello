@@ -34,17 +34,53 @@ $(document).ready(function() {
     $.editable.addInputType('number', {
        element  :   function(settings, original){
             var width = settings.width ? settings.width : '40',
-                input = jQuery('<input type="number" min="0"' +
+                input = jQuery('<input type="number" ' +
+                                'min="' + settings.min + '"' +
                                 'max="' + settings.max + '"' + 
                                 'value="' + settings.value + 
                                 '" style="width:' + width + 'px;">');
             $(this).append(input);
+            if (settings.unlimited !== undefined) {
+              var label = jQuery('&nbsp; <label><input type="checkbox" value=""/>&nbsp; ' + i18n.unlimited + '</label>');
+              $(this).append(label);
+              var unlimited = label.find("input");
+              $(unlimited).bind('click', function(){
+                  if($(unlimited).is(":checked")){
+                      $(input).val('');
+                      $(input).attr("disabled", true);
+                  } else {
+                      $(input).val('');
+                      $(input).removeAttr('disabled');
+                  }
+              });
+            }
             $(original).css('background-image', 'none');
             return(input);    
        },
-       content :    function(string, settings, original){
-           $(':input:first', this).val(settings.value);
-       }
+
+        content : function(string, settings, original) {
+            var text_input = $('input', this).first();
+            text_input.val(string);
+            if (settings.unlimited != undefined) {
+                var check_input = $('input', this).last();
+                if (string === settings.unlimited || string === i18n.unlimited) {
+                    text_input.val('');
+                    check_input.attr('checked', 'checked');
+                    text_input.attr("disabled", true);
+                } else {
+                    check_input.removeAttr('checked');
+                    text_input.removeAttr('disabled');
+                }
+            }
+        },
+
+        submit  : function(settings, original) {
+            if (settings.unlimited != undefined) {
+                var text_input = $('input', this).first();
+                if (text_input.val() === '')
+                    text_input.val(settings.unlimited);
+            }
+        },
     });
 
     $('.ajaxfileupload').each(function() {
@@ -130,13 +166,23 @@ $(document).ready(function() {
             value           :  $.trim($(this).html()),
             height          :  10,           
             width           :  35,       
+            onblur          :  'ignore',
             name            :  $(this).attr('name'),
-            max             :  $.trim($(this).parent().find('.available').html()),
+            min             :  $(this).data('min'),
+            max             :  $(this).data('max'),
+            unlimited       :  $(this).data('unlimited'),
             image           :  $(this).css('background-image'),
-            submitdata      :  {authenticity_token: AUTH_TOKEN, "subscription_id" : element.attr('id')},
+            submitdata      :  {authenticity_token: AUTH_TOKEN},
             onsuccess       :  function(result, status, xhr){
                 element.css('background-image', settings.image);
-                element.html(result);
+                if ($(this).data('unlimited') != undefined) {
+                    if (result === $(this).data('unlimited'))
+                        element.html(i18n.unlimited);
+                    else
+                        element.html(result);
+                } else {
+                    element.html(result);
+                }
             },
             onresetcomplete : function(settings, original){
                 element.css('background-image', settings.image);
