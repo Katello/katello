@@ -79,7 +79,7 @@ describe RepositoriesController, :katello => true do
     describe "Create a Repo" do
 
       it "should reject invalid urls" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         post :create, invalidrepo
         response.should_not be_success
       end

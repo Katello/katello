@@ -11,14 +11,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'util/threadsession'
-require 'util/notices'
 require 'util/search'
 require 'cgi'
 require 'base64'
 
 class ApplicationController < ActionController::Base
   layout 'katello'
-  include Katello::Notices
+  include Notifications::ControllerHelper
   clear_helpers
 
   helper "converge-ui/translation"
@@ -176,7 +175,7 @@ class ApplicationController < ActionController::Base
       return true
     else
       #user not logged
-      notice _("You must be logged in to access that page."), {:level => true, :persist => false}
+      notify.warning _("You must be logged in to access that page.")
 
       #save original uri and redirect to login page
       session[:original_uri] = request.fullpath
@@ -187,7 +186,7 @@ class ApplicationController < ActionController::Base
 
   def require_no_user
     if current_user
-      notice _("Welcome Back!") + ", " + current_user.username
+      notify.success _("Welcome Back!") + ", " + current_user.username
       execute_after_filters
       redirect_to dashboard_index_url
       return false
@@ -263,7 +262,9 @@ class ApplicationController < ActionController::Base
   def render_bad_parameters(exception = nil)
     if exception
         logger.error _("Rendering 400:") + " #{exception.message}"
-        notice _("Invalid parameters sent in the request for this operation. Please contact a system administrator."), {:level => :error, :details => exception.message}
+        notify.exception(
+            _("Invalid parameters sent in the request for this operation. Please contact a system administrator."),
+            exception)
     end
     respond_to do |format|
       #format.html { render :template => "common/400", :layout => "katello", :status => 400,
@@ -281,7 +282,7 @@ class ApplicationController < ActionController::Base
   def render_error(exception = nil)
     if exception
       logger.error _("Rendering 500:") + "#{exception.message}"
-      notice exception.to_s, {:level => :error}
+      notify.exception exception
     end
     respond_to do |format|
       format.html { render :template => "common/500", :layout => "katello", :status => 500,
@@ -508,7 +509,7 @@ class ApplicationController < ActionController::Base
   def catch_exceptions
     yield
   rescue Exception => error
-    notice error, {:level => :error}
+    notify.exception error
     #render :text => error, :status => :bad_request
     render_error(error)
   end
@@ -538,7 +539,7 @@ class ApplicationController < ActionController::Base
       execute_after_filters
       return false
     else
-      notice _("You must be logged in to access that page."), {:level => :error, :persist => false}
+      notify.warning _("You must be logged in to access that page.")
       execute_after_filters
       redirect_to new_user_session_url and return false
     end
@@ -548,7 +549,8 @@ class ApplicationController < ActionController::Base
     logger.error exception.message
     execute_after_filters
     logout
-    notice _("You current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue."),{:level => :error, :persist => false}
+    message = _("You current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue.")
+    notify.warning message
     redirect_to new_user_session_url and return false
   end
 

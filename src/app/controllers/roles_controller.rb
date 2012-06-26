@@ -116,16 +116,16 @@ class RolesController < ApplicationController
 
   def create
     @role = Role.create!(params[:role])
-    notice _("Role '%s' was created.") % @role.name
+    notify.success _("Role '%s' was created.") % @role.name
     
     if search_validate(Role, @role.id, params[:search])
       render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"], :name=>controller_display_name}
     else
-      notice _("'%s' did not meet the current search criteria and is not being shown.") % @role["name"], { :level => 'message', :synchronous_request => false }
+      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @role["name"]
       render :json => { :no_match => true }
     end
   rescue Exception => error
-    notice error, {:level => :error}
+    notify.exception error
     render :json=>error.to_s, :status=>:bad_request
   end
 
@@ -144,17 +144,17 @@ class RolesController < ApplicationController
         render :json => params[:update_users]
       else 
         @role.update_attributes!(params[:role])
-        notice _("Role '%s' was updated.") % @role.name
+        notify.success _("Role '%s' was updated.") % @role.name
         
         if not search_validate(Role, @role.id, params[:search])
-          notice _("'%s' no longer matches the current search criteria.") % @role["name"],
-                 { :level => :message, :synchronous_request => true }
+          notify.message _("'%s' no longer matches the current search criteria.") % @role["name"],
+                         :asynchronous => false
         end
         
         render :json=>params[:role]
       end
     rescue Exception => error
-      notice error, {:level => :error}
+      notify.exception error
       respond_to do |format|
         format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
         format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -168,14 +168,14 @@ class RolesController < ApplicationController
       #remove the user
       @role.destroy
       if @role.destroyed?
-        notice _("Role '%s' was deleted.") % @role[:name]
+        notify.success _("Role '%s' was deleted.") % @role[:name]
         #render and do the removal in one swoop!
         render :partial => "common/list_remove", :locals => {:id=>id, :name=>controller_display_name}
       else
         raise
       end
     rescue Exception => error
-      notice error, {:level => :error}
+      notify.exception error
       render :text=> error.to_s, :status=>:bad_request and return
     end
   end
@@ -225,10 +225,10 @@ class RolesController < ApplicationController
     @permission.update_attributes!(params[:permission])
     to_return = { :type => @permission.resource_type.name }
     add_permission_bc(to_return, @permission, false)
-    notice _("Permission '%s' was updated.") % @permission.name
+    notify.success _("Permission '%s' was updated.") % @permission.name
     render :json => to_return
   rescue Exception => error
-      notice error, {:level => :error}
+      notify.exception error
       render :json=>@permission.errors, :status=>:bad_request
   end
 
@@ -248,10 +248,10 @@ class RolesController < ApplicationController
       @perm = Permission.create! new_params
       to_return = { :type => @perm.resource_type.name }
       add_permission_bc(to_return, @perm, false)
-      notice _("Permission '%s' was created.") % @perm.name
+      notify.success _("Permission '%s' was created.") % @perm.name
       render :json => to_return
     rescue Exception => error
-      notice error, {:level => :error}
+      notify.exception error
       render :json=>@role.errors, :status=>:bad_request
     end
   end
@@ -268,7 +268,7 @@ class RolesController < ApplicationController
   def destroy_permission
     permission = Permission.find(params[:permission_id])
     permission.destroy
-    notice _("Permission '%s' was removed.") % permission.name
+    notify.success _("Permission '%s' was removed.") % permission.name
     render :json => params[:permission_id]
   end
 
@@ -277,10 +277,10 @@ class RolesController < ApplicationController
     @group = LdapGroupRole.create!(group_hash)
     to_return = { :group => @group.ldap_group }
     add_group_to_bc(to_return, @group)
-    notice _("LDAP Group '%s' was created.") % @group.ldap_group
+    notify.success _("LDAP Group '%s' was created.") % @group.ldap_group
     render :json => to_return
   rescue Exception => error
-    notice error, {:level => :error}
+    notify.exception error
     render :json=>@group.errors, :status=>:bad_request
   end
 
@@ -288,7 +288,7 @@ class RolesController < ApplicationController
     group = LdapGroupRole.find(params[:id])
     name = group.ldap_group
     group.destroy
-    notice _("LDAP Group Mapping for '%s' was removed.") % name 
+    notify.success _("LDAP Group Mapping for '%s' was removed.") % name
     render :json => params[:id]
   end
  
