@@ -234,7 +234,7 @@ class ChangesetsController < ApplicationController
     if  !messages.empty?
       to_ret[:warnings] = render_to_string(:partial=>'warning', :locals=>messages)
     else
-      @changeset.promote
+      @changeset.promote :notify => true, :async => true
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
       notify.success _("Started promotion of '%s' to %s environment") % [@changeset.name, @environment.name]
