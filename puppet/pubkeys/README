@@ -1,3 +1,13 @@
 Put your public ssh keys here and issue "make" to generate LIST file.
 
 There are used in our autoinstallation scripts for your convenience.
+To download keys use something like:
+
+LIST=$(mktemp)
+wget --timeout=30 --tries=5 "https://raw.github.com/Katello/katello/master/puppet/pubkeys/LIST" -O $LIST
+while read line
+do
+  wget --timeout=30 --tries=5 "https://raw.github.com/Katello/katello/master/puppet/pubkeys/$line" -O - >> ~/.ssh/authorized_keys
+done <$LIST
+rm -f $LIST
+
