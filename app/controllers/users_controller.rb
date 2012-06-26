@@ -107,6 +107,7 @@ class UsersController < ApplicationController
   def new
     @user         = User.new
     @organization = nil
+    @ldap = AppConfig.warden == 'ldap'
     render :partial => "new", :layout => "tupane_layout", :locals => { :user => @user, :accessible_envs => nil }
   end
 

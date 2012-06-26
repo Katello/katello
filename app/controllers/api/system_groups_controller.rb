@@ -12,7 +12,7 @@
 
 class Api::SystemGroupsController < Api::ApiController
 
-  before_filter :find_group, :only => [:show, :update, :destroy, :lock, :unlock,
+  before_filter :find_group, :only => [:show, :update, :destroy, :destroy_systems, :lock, :unlock,
                                        :add_systems, :remove_systems, :systems, :history, :job]
   before_filter :find_organization, :only => [:index, :create]
   before_filter :authorize
@@ -23,6 +23,7 @@ class Api::SystemGroupsController < Api::ApiController
     edit_perm = lambda{@group.editable?}
     create_perm = lambda{SystemGroup.creatable?(@organization)}
     destroy_perm = lambda{@group.deletable?}
+    destroy_systems_perm = lambda{@group.systems_deletable?}
     locking_perm = lambda{@group.locking?}
     { :index        => any_readable,
       :show         => read_perm,
@@ -30,6 +31,7 @@ class Api::SystemGroupsController < Api::ApiController
       :create       => create_perm,
       :update       => edit_perm,
       :destroy      => destroy_perm,
+      :destroy_systems => destroy_systems_perm,
       :add_systems  => edit_perm,
       :remove_systems => edit_perm,
       :lock        => locking_perm,
@@ -46,7 +48,6 @@ class Api::SystemGroupsController < Api::ApiController
       :remove_systems => {:system_group=>[:system_ids]}
     }
   end
-
 
   respond_to :json
 
@@ -122,10 +123,22 @@ class Api::SystemGroupsController < Api::ApiController
     render :json => @group
   end
 
-
   def destroy
     @group.destroy
     render :text => _("Deleted system group '#{params[:id]}'"), :status => 200
+  end
+
+  def destroy_systems
+    # this will destroy both the systems contained within the group as well as the group itself
+    system_names = []
+    @group.systems.each do |system|
+      system_names.push(system.name)
+      system.destroy
+    end
+    @group.destroy
+
+    result = _("Deleted system group '%{s}' and it's %{n} systems.") % {:s => @group.name, :n =>system_names.length.to_s}
+    render :text => result, :status => 200
   end
 
   private

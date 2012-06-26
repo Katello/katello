@@ -989,16 +989,19 @@ KT.actions =  (function(){
             if ( $(this).hasClass('disabled') || !KT.options.current_template ){
                 return false;
             }
-            KT.common.customConfirm($(this).attr('data-confirm-text'), function(){
-                $.ajax({
-                    type: "DELETE",
-                    url: KT.routes.system_template_path(options.current_template.id),
-                    cache: false,
-                    success: function(data){
-                        KT.templates.remove_template(options.current_template.id);
-                    },
-                    error: KT.templates.throw_error
-                });
+            KT.common.customConfirm({
+                message: $(this).attr('data-confirm-text'),
+                yes_callback: function(){
+                    $.ajax({
+                        type: "DELETE",
+                        url: KT.routes.system_template_path(options.current_template.id),
+                        cache: false,
+                        success: function(data){
+                            KT.templates.remove_template(options.current_template.id);
+                        },
+                        error: KT.templates.throw_error
+                    });
+                }
             });
             return false;
         });

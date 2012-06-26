@@ -145,21 +145,21 @@ describe ActivationKey do
   describe "pools in a activation key" do
 
     it "should map 2way pool to keys" do
-      s = Pool.create!(:cp_id  => 'abc123')
+      s = ::Pool.create!(:cp_id  => 'abc123')
       @akey.pools = [s]
       @akey.pools.first.cp_id.should == 'abc123'
       s.activation_keys.first.name.should == aname
     end
 
     it "should assign multiple pools to keys" do
-      s = Pool.create!(:cp_id  => 'abc123')
-      s2 = Pool.create!(:cp_id  => 'def123')
+      s = ::Pool.create!(:cp_id  => 'abc123')
+      s2 = ::Pool.create!(:cp_id  => 'def123')
       @akey.pools = [s,s2]
       @akey.pools.last.cp_id.should == 'def123'
     end
 
     it "should include pools details in json output" do
-      pool = Pool.create!(:cp_id  => 'abc123')
+      pool = ::Pool.create!(:cp_id  => 'abc123')
       @akey.pools << pool
       pool.reload
       @akey.as_json[:pools].should == [ { :cp_id => pool.cp_id } ]
@@ -172,6 +172,8 @@ describe ActivationKey do
       Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => "1234", :owner => {:key => "1234"}})
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => "1234", :owner => {:key => "1234"}})
       @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
+      @system2 = System.new(:name => "test2", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
+      @akey_limit1 = ActivationKey.create!(:name => "usage_limit_key1", :usage_limit => 1, :organization => @organization, :environment => @environment_1)
     end
 
     it "assignes environment to the system" do
@@ -188,6 +190,21 @@ describe ActivationKey do
       @akey.apply_to_system(@system)
       @system.save!
       @system.activation_keys.should include(@akey)
+    end
+
+    it "apply once for limit 1" do
+      @akey_limit1.apply_to_system(@system)
+      @system.save!
+      @system.activation_keys.should include(@akey_limit1)
+    end
+
+    it "not apply twice for limit 1" do
+      @akey_limit1.apply_to_system(@system)
+      @system.save!
+      @system.activation_keys.should include(@akey_limit1)
+      lambda {
+        @akey_limit1.apply_to_system(@system2)
+      }.should raise_exception
     end
 
   end
@@ -207,7 +224,7 @@ describe ActivationKey do
       @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"}, :uuid => "uuid-uuid")
       @system.should_receive(:sockets).and_return(sockets)
       dates.each_pair do |k,v|
-        pool = Pool.create!(:cp_id => k)
+        pool = ::Pool.create!(:cp_id => k)
         @akey.key_pools.create!(:pool_id  => pool.id)
       end
     end
