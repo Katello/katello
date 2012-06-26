@@ -87,8 +87,9 @@ $comparison_grid_column_header-background: #FFF;
     top: 0;
     z-index: 10;
     width: $comparison_grid-width;
-    min-height: $comparison_grid-height;
+    min-height: $comparison_grid-height + $comparison_grid_footer-height + 3;
     background: rgba(0, 0, 0, 0.8);
+    @include border-radius(3px);
   }
 
   #grid_header {
