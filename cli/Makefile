@@ -5,7 +5,7 @@ po/POTFILES.in:
 	# file per line, but we're lazy.
 	find ${SRC_DIR}/ -name "*.py" > po/POTFILES.in
 
-.PHONY: po/POTFILES.in
+.PHONY: po/POTFILES.in test cover
 
 gettext: po/POTFILES.in
 	# Extract strings from our source files. any comments on the line above
