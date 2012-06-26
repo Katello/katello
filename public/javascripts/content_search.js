@@ -29,7 +29,7 @@ $(document).ready(function() {
 
 
 KT.content_search = function(paths){
-    var browse_box, old_search_params, env_select, comparison_grid;
+    var browse_box, old_search_params, env_select;
     var init = function(){
         var initial_search = $.bbq.getState('search'),
             initial_envs = $.bbq.getState('environments');
@@ -42,7 +42,7 @@ KT.content_search = function(paths){
             {select_mode:'multi', button_text:"Go", link_first: true});
 
         comparison_grid.init();
-        comparison_grid.set_columns(env_select.get_paths());
+        comparison_grid.set_columns(env_select.get_paths(), true);
 
         browse_box = KT.widget.browse_box("content_selector", KT.widgets, KT.mapping, initial_search);
         $(document).bind(browse_box.get_event(), search_initiated);
@@ -99,6 +99,7 @@ KT.content_search = function(paths){
         old_search_params = $.bbq.getState('search');
         if (urls[search_params.content_type] ){
 
+            $(document).trigger('loading.comparison_grid');
             $.ajax({
                 type: 'POST',
                 contentType:"application/json",
@@ -112,7 +113,7 @@ KT.content_search = function(paths){
         }
     },
     handle_response = function(data){
-        $(document).trigger('draw.comparison_grid', [data]);
+        comparison_grid.set_rows(data);
     };
 
 
