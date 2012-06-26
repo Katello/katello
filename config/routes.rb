@@ -487,6 +487,8 @@ Src::Application.routes.draw do
           post :remove_systems
           delete :destroy_systems
         end
+
+        resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
       end
 
       resources :environments do
