@@ -453,14 +453,12 @@ class Packages(SystemGroupAction):
         validator.require(('name', 'org'))
 
         remote_actions = ('install', 'remove', 'update', 'install_groups', 'remove_groups', 'update_groups')
-        validator.require_at_most_one_of(remote_actions,
-            message=_('You can specify at most one install/remove/update action per call'))
+        validator.require_one_of(remote_actions)
 
 
     def run(self):
         org_name = self.get_option('org')
         group_name = self.get_option('name')
-        verbose = self.get_option('verbose')
 
         install = self.get_option('install')
         remove = self.get_option('remove')
@@ -504,18 +502,5 @@ class Packages(SystemGroupAction):
                 print _("Remote action failed:")
                 print job.get_status_message()
                 return os.EX_DATAERR
-
-        packages = self.api.packages(system_group_id)
-
-        self.printer.add_column('name', show_with=printer.VerboseStrategy)
-        self.printer.add_column('vendor', show_with=printer.VerboseStrategy)
-        self.printer.add_column('version', show_with=printer.VerboseStrategy)
-        self.printer.add_column('release', show_with=printer.VerboseStrategy)
-        self.printer.add_column('arch', show_with=printer.VerboseStrategy)
-        self.printer.add_column('name_version_release_arch',
-                    show_with=printer.GrepStrategy,
-                    item_formatter=lambda p: "%s-%s-%s.%s" % (p['name'], p['version'], p['release'], p['arch']))
-
-        self.printer.print_items(packages)
 
         return os.EX_OK
