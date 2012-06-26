@@ -34,6 +34,7 @@ class Api::ApiController < ActionController::Base
   rescue_from Errors::SecurityViolation, :with => proc { |e| render_exception(403, e) }
   rescue_from Errors::ConflictException, :with => proc { |e| render_exception(409, e) }
   rescue_from Errors::UnsupportedActionException, :with => proc { |e| render_exception(400, e) }
+  rescue_from Errors::UsageLimitExhaustedException, :with => proc { |e| render_exception_without_logging(409, e) }
 
   # support for session (thread-local) variables must be the last filter in this class
   include Katello::ThreadSession::Controller
@@ -162,13 +163,17 @@ class Api::ApiController < ActionController::Base
     end
   end
 
-  def render_exception(status_code, exception)
-    logger.error pp_exception(exception)
+  def render_exception_without_logging(status_code, exception)
     respond_to do |format|
       #json has to be displayMessage for older RHEL 5.7 subscription managers
       format.json { render :json => {:displayMessage => exception.message, :errors => [exception.message] }, :status => status_code }
       format.all  { render :text => exception.message, :status => status_code }
     end
+  end
+
+  def render_exception(status_code, exception)
+    logger.error pp_exception(exception)
+    render_exception_without_logging(status_code, exception)
   end
 
   def pp_exception(exception, options = { })

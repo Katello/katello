@@ -32,7 +32,8 @@ class SystemGroupDeleteTest(CLIActionTestCase):
 
     OPTIONS = {
         'org': ORG['name'],
-        'name': SYSTEM_GROUP['name']
+        'name': SYSTEM_GROUP['name'],
+        'delete_systems': False
     }
 
     def setUp(self):
@@ -47,7 +48,7 @@ class SystemGroupDeleteTest(CLIActionTestCase):
 
     def test_it_calls_system_group_delete_api(self):
         self.action.run()
-        self.action.api.delete.assert_called_once_with(self.OPTIONS['org'], self.SYSTEM_GROUP["id"])
+        self.action.api.delete.assert_called_once_with(self.OPTIONS['org'], self.SYSTEM_GROUP["id"], False)
 
     def test_it_returns_error_when_deletion_failed(self):
         self.mock(self.action.api, 'delete', None)

@@ -27,10 +27,12 @@ class ActivationKey < ActiveRecord::Base
   belongs_to :system_template
 
   has_many :key_pools
-  has_many :pools, :class_name => "Pool", :through => :key_pools
+  has_many :pools, :class_name => "::Pool", :through => :key_pools
 
   has_many :key_system_groups, :dependent => :destroy
   has_many :system_groups, :through => :key_system_groups
+
+  has_many :system_activation_keys, :dependent => :restrict
 
   scope :readable, lambda {|org| ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")}
 
@@ -44,6 +46,12 @@ class ActivationKey < ActiveRecord::Base
   validate :system_template_exists
   validate :environment_not_library
   validate :environment_key_conflict
+  validates_each :usage_limit do |record, attr, value|
+    if not value.nil? and (value < -1 or value == 0 or (value != -1 and value < record.usage_count))
+      # we don't let users to set usage limit lower than current usage
+      record.errors[attr] << _("must be higher than current usage (%s) or unlimited" % record.usage_count)
+    end
+  end
 
   def system_template_exists
     if system_template && system_template.environment != self.environment
@@ -71,8 +79,15 @@ class ActivationKey < ActiveRecord::Base
     end
   end
 
-  # sets up system when registering with this activation key
+  def usage_count
+    system_activation_keys.count
+  end
+
+  # sets up system when registering with this activation key - must be executed in a transaction
   def apply_to_system(system)
+    if not usage_limit.nil? and usage_limit != -1 and usage_count >= usage_limit
+      raise Errors::UsageLimitExhaustedException, _("Usage limit (%s) exhausted for activation key '%s'") % [usage_limit, name]
+    end
     system.environment_id = self.environment_id if self.environment_id
     system.system_template_id = self.system_template_id if self.system_template_id
     system.system_activation_keys.build(:activation_key => self)
@@ -123,7 +138,7 @@ class ActivationKey < ActiveRecord::Base
       Rails.logger.debug "Number of sockets for registration: #{allocate}"
       raise _("Number of sockets must be higher than 0 for system %s") % system.name if allocate.nil? or allocate <= 0
       #puts products.inspect
-      products.each do |product_id, pools|
+      products.each do |productId, pools|
         # create two arrays - pool ids and remaining entitlements
         # subscription order is with most recent start or with the least pool number available
         pools_a = pools.to_a.sort { |a,b| (a[1][0] <=> b[1][0]).nonzero? || (a[0] <=> b[0]) }
@@ -137,7 +152,7 @@ class ActivationKey < ActiveRecord::Base
         Rails.logger.debug "Autosubscribing pools: #{pools_ids.inspect} with amounts: #{to_consume.inspect}"
         pools_ids.each do |poolId|
           amount = to_consume[i]
-          Rails.logger.debug "Subscribing #{system.name} to product: #{product_id}, amount: #{amount}"
+          Rails.logger.debug "Subscribing #{system.name} to product: #{productId}, amount: #{amount}"
           if amount > 0
             entitlements_array = system.subscribe(poolId, amount)
             # store for possible rollback
@@ -195,6 +210,7 @@ class ActivationKey < ActiveRecord::Base
     ret[:pools] = pools.map do |pool|
       pool.as_json
     end
+    ret[:usage_count] = usage_count
     ret
   end
 

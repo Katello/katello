@@ -61,8 +61,8 @@ class ActivationKeysController < ApplicationController
 
   def param_rules
     {
-      :create => {:activation_key => [:name, :description, :environment_id, :system_template_id]},
-      :update => {:activation_key  => [:name, :description,:environment_id, :system_template_id]},
+      :create => {:activation_key => [:name, :description, :environment_id, :system_template_id, :usage_limit]},
+      :update => {:activation_key  => [:name, :description,:environment_id, :system_template_id, :usage_limit]},
       :update_system_groups => {:activation_key => [:system_group_ids]}
     }
   end
@@ -98,10 +98,10 @@ class ActivationKeysController < ApplicationController
     begin
       if params.has_key? :subscription_id
         params[:subscription_id].keys.each do |pool|
-          kt_pool = Pool.where(:cp_id => pool)[0]
+          kt_pool = ::Pool.where(:cp_id => pool)[0]
 
           if kt_pool.nil?
-            Pool.create!(:cp_id => pool, :key_pools => [KeyPool.create!(:activation_key => @activation_key)])
+            ::Pool.create!(:cp_id => pool, :key_pools => [KeyPool.create!(:activation_key => @activation_key)])
           else
             key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)[0]
 

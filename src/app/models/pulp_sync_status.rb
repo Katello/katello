@@ -70,7 +70,7 @@ class PulpSyncStatus < PulpTaskStatus
   end
 
   def correct_state
-    if [FINISHED].include?(self.state) && self.progress.error_details.length > 0
+    if [FINISHED].include?(self.state) && !self.progress.error_details.blank?
       self.state = ERROR
       self.save! if not self.new_record?
     end

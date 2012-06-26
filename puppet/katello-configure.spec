@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.25
+Version:        0.2.27
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -84,6 +84,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 25 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.27-1
+- BZ 825262: support for moving systems between environments from CLI
+
+* Mon Jun 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.26-1
+- katello-upgrade is looking only for scripts marked as executable
+- 824362 - puppet preallocates journal on F16+
+
 * Thu May 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.25-1
 - 821532 - Removing extraneous hornetq files to fix candlepin upgrades
 - 824362 - workaround for mongodb/systemd Fedora bug
