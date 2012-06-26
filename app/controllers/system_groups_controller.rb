@@ -68,10 +68,9 @@ class SystemGroupsController < ApplicationController
 
   def create
     @group = SystemGroup.create!(params[:system_group].merge({:organization_id=>current_organization.id}))
-    notice N_("System Group %s created successfully.") % @group.name
+    notify.success N_("System Group %s created successfully.") % @group.name
     if !search_validate(SystemGroup, @group.id, params[:search])
-      notice _("'%s' did not meet the current search criteria and is not being shown.") % @group.name,
-             { :level => 'message', :synchronous_request => false }
+      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @group.name
       render :json => { :no_match => true }
     else
       respond_to do |format|
@@ -83,7 +82,7 @@ class SystemGroupsController < ApplicationController
     end
 
   rescue Exception=> e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 
@@ -112,31 +111,32 @@ class SystemGroupsController < ApplicationController
     end
 
     @group.save!
-    notice _("System Group %s has been updated.") % @group.name
+    notify.success _("System Group %s has been updated.") % @group.name
 
     if not search_validate(SystemGroup, @group.id, params[:search])
-      notice _("'%s' no longer matches the current search criteria.") % @group["name"], { :level => :message, :synchronous_request => true }
+      notify.message _("'%s' no longer matches the current search criteria.") % @group["name"],
+                     :asynchronous => false
     end
 
     render :text=>to_ret
   rescue Exception=>e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 
   def lock
     @group.locked = params[:system_group][:locked] == 'true'
     @group.save!
-    notice _("System Group %s has been updated.") % @group.name
+    notify.success _("System Group %s has been updated.") % @group.name
     render :text=>""
   end
 
   def destroy
     @group.destroy
-    notice _("System Group %s deleted.") % @group.name
+    notify.success _("System Group %s deleted.") % @group.name
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
   rescue Exception => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 
@@ -149,13 +149,14 @@ class SystemGroupsController < ApplicationController
     end
     @group.destroy
 
-    notice((_("Deleted System Group %{s} and it's %{n} systems.") % {:s => @group.name, :n =>system_names.length.to_s}),
-           {:details => system_names.join("\n")})
+    notify.success _("Deleted System Group %{s} and it's %{n} systems.") %
+                       { :s => @group.name, :n => system_names.length.to_s },
+                   :details => system_names.join("\n")
 
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
 
   rescue Exception => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 

@@ -22,7 +22,6 @@ describe ProvidersController do
   before(:each) do
     login_user
     set_default_locale
-    controller.stub!(:notice)
     controller.stub(:validate_search).and_return(true)
     @org = new_test_org
     current_organization=@org

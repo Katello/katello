@@ -67,7 +67,7 @@ describe SyncSchedulesController, :katello => true do
 
     describe "POST 'apply'" do
       it "should receive a notice" do
-        controller.should_receive(:notice)
+        controller.should notify.success
         plans = [SyncPlan.first.id.to_s]
         products = [Product.first.id.to_s]
         post 'apply', {:data => {:plans=> plans, :products=> products}.to_json}

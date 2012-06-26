@@ -16,13 +16,11 @@ class NotInLibraryValidator < ActiveModel::Validator
   end
 end
 
-require 'util/notices'
 require 'util/package_util'
 
 class Changeset < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
-  include Katello::Notices
 
   include IndexedModel
   index_options :extended_json => :extended_index_attrs,
@@ -320,8 +318,8 @@ class Changeset < ActiveRecord::Base
 
     index_repo_content to_env
 
-    message = _("Successfully promoted changeset '%s'.") % self.name
-    notice message, { :synchronous_request => false, :request_type => "changesets___promote" }
+      message = _("Successfully promoted changeset '%s'.") % self.name
+      Notify.message message, :request_type => "changesets___promote"
 
   rescue Exception => e
 
@@ -329,11 +327,8 @@ class Changeset < ActiveRecord::Base
     self.save!
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
-    details    = e.message
-    error_text = _("Failed to promote changeset '%s'. Check notices for more details") % self.name
-    notice error_text, :details => details, :level => :error,
-           :synchronous_request => false, :request_type => "changesets___promote"
-
+      Notify.exception _("Failed to promote changeset '%s'. Check notices for more details") % self.name, e,
+                   :request_type => "changesets___promote"
     index_repo_content to_env
 
     raise e

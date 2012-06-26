@@ -196,8 +196,8 @@ module Glue::Provider
                    "existing data.") if options[:force] == 'false')
         ].compact
 
-        notice error_texts.join('<br />'),  :level => :error, :details => error.backtrace.join("\n"),
-               :synchronous_request => false, :request_type => 'providers__update_redhat_provider'
+        Notify.exception error_texts.join('<br />'), error,
+                         :asynchronous => true, :request_type => 'providers__update_redhat_provider'
       end
 
       Rails.logger.error "error uploading subscriptions."
@@ -213,8 +213,8 @@ module Glue::Provider
                   else
                     _("Subscription manifest uploaded successfully for provider '%s'.")
                   end
-        notice message % self.name,
-               :synchronous_request => false, :request_type => 'providers__update_redhat_provider'
+        Notify.success message % self.name,
+                       :asynchronous => true, :request_type => 'providers__update_redhat_provider'
       end
     ensure
       self.task_status = nil

@@ -49,13 +49,13 @@ class SystemGroupPackagesController < ApplicationController
     if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
       packages = Katello::PackageUtils.validate_package_list_format(params[:packages])
-      
+
       if packages
         job = @group.install_packages packages
-        notice _("Install of Packages '%{p}' scheduled for System Group '%{s}'.") %
-                   {'s' => @group['name'], 'p' => params[:packages]}
+        notify.success _("Install of Packages '%{p}' scheduled for System Group '%{s}'.") %
+                          {:s => @group['name'], :p => params[:packages]}
       else
-        notice _("One or more errors found in Package names '%{s}'.") % {:s => params[:packages]}, {:level => :error}
+        notify.error _("One or more errors found in Package names '%{s}'.") % {:s => params[:packages]}
         render :text => '' and return
       end
 
@@ -63,42 +63,43 @@ class SystemGroupPackagesController < ApplicationController
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       job = @group.install_package_groups groups
-      notice _("Install of Package Groups '%{g}' scheduled for System Group '%{s}'.") %
-                 {:s => @group['name'], :g => params[:groups]}
+      notify.success _("Install of Package Groups '%{g}' scheduled for System Group '%{s}'.") %
+                         { :s => @group['name'], :g => params[:groups] }
 
     else
-      notice _("Empty request received to install Packages or Package Groups for System Group '%s'.") %
-                 @group['name'], {:level => :error}
+      notify.error _("Empty request received to install Packages or Package Groups for System Group '%s'.") %
+                       @group['name']
       render :text => '' and return
     end
 
-    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.editable?, :job => job, :include_tr_shading => false}
+    render :partial => 'system_groups/packages/items',
+           :locals  => { :editable => @group.editable?, :job => job, :include_tr_shading => false }
   end
 
   def remove
     if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
       packages = Katello::PackageUtils.validate_package_list_format(params[:packages])
-      
+
       if packages
         job = @group.uninstall_packages packages
-        notice _("Uninstall of Packages '%{p}' scheduled for System Group '%{s}'.") %
-                   { :s => @group['name'], :p => params[:packages] }
+        notify.success _("Uninstall of Packages '%{p}' scheduled for System Group '%{s}'.") %
+                           { :s => @group['name'], :p => params[:packages] }
       else
-        notice _("One or more errors found in Package names '%s'.") % params[:packages], {:level => :error}
-        render :text => '' and return        
+        notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
+        render :text => '' and return
       end
 
     elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       job = @group.uninstall_package_groups groups
-      notice _("Uninstall of Package Groups '%{p}' scheduled for System Group '%{s}'.") %
-                 {:s => @group['name'], :p => groups.join(',')}
+      notify.success _("Uninstall of Package Groups '%{p}' scheduled for System Group '%{s}'.") %
+                         { :s => @group['name'], :p => groups.join(',') }
 
     else
-      notice _("Empty request received to uninstall Packages or Package Groups for System Group '%s'.") %
-                 @group['name'], {:level => :error}
+      notify.error _("Empty request received to uninstall Packages or Package Groups for System Group '%s'.") %
+                       @group['name']
       render :text => '' and return
     end
 
@@ -112,10 +113,10 @@ class SystemGroupPackagesController < ApplicationController
 
       if packages
         job = @group.update_packages packages
-        notice _("Update of Packages '%{p}' scheduled for System Group '%{s}'.") %
-                   {:s => @group['name'], :p => params[:packages]}
+        notify.success _("Update of Packages '%{p}' scheduled for System Group '%{s}'.") %
+                           { :s => @group['name'], :p => params[:packages] }
       else
-        notice _("One or more errors found in Package names '%s'.") % params[:packages], {:level => :error}
+        notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
         render :text => '' and return
       end
 
@@ -123,16 +124,17 @@ class SystemGroupPackagesController < ApplicationController
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       job = @group.install_package_groups groups
-      notice _("Update of Package Groups '%{p}' scheduled for System Group '%{s}'.") %
-                 {:s => @group['name'], :p => groups.join(',')}
+      notify.success _("Update of Package Groups '%{p}' scheduled for System Group '%{s}'.") %
+                         { :s => @group['name'], :p => groups.join(',') }
 
     else
-      notice _("Empty request received to update Packages or Package Groups for System Group '%s'.") %
-                 @group['name'], {:level => :error}
+      notify.error _("Empty request received to update Packages or Package Groups for System Group '%s'.") %
+                       @group['name']
       render :text => '' and return
     end
 
-    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.editable?, :job => job, :include_tr_shading => false}
+    render :partial => 'system_groups/packages/items',
+           :locals  => { :editable => @group.editable?, :job => job, :include_tr_shading => false }
   end
 
   def status

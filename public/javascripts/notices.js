@@ -66,7 +66,7 @@ var notices = (function() {
                 $('.jnotify-message ul').css({'list-style': 'disc',
                               'margin-left': '30px'});    
             } 
-            if( noticesParsed['notices'].length !== 0 ){
+            if( noticesParsed['notices'] && noticesParsed['notices'].length !== 0 ){
                 $.jnotify(generate_list(noticesParsed['notices']), options);
             }
         },

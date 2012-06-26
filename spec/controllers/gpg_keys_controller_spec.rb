@@ -80,7 +80,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid GPG Key id" do
       it "should generate an error notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         get :show, :id => 9999
       end
 
@@ -119,7 +119,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         get :edit, :id => 9999
       end
 
@@ -153,7 +153,7 @@ describe GpgKeysController, :katello => true do
         end
         
         it "should generate a success notice" do
-          controller.should_receive(:notice)
+          controller.should notify.success
           post :create, @gpg_key_params_pasted
         end
       end
@@ -176,7 +176,7 @@ describe GpgKeysController, :katello => true do
         end
         
         it "should generate a success notice" do
-          controller.should_receive(:notice)
+          controller.should notify.success
           post :create, @gpg_key_params_uploaded
         end
       end
@@ -184,7 +184,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid params" do
       it "should generate an error notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         post :create, GPGKeyControllerTest::GPGKEY_INVALID
       end
 
@@ -219,7 +219,7 @@ describe GpgKeysController, :katello => true do
       end
       
       it "should generate message notice" do
-        controller.should_receive(:notice)
+        controller.should notify.success
         post :create, @gpg_key_params_pasted, :search => 'name ~ Fake'
       end
     end
@@ -250,7 +250,7 @@ describe GpgKeysController, :katello => true do
         end
   
         it "should generate a success notice" do
-          controller.should_receive(:notice)
+          controller.should notify.success
           put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME
         end
   
@@ -271,7 +271,7 @@ describe GpgKeysController, :katello => true do
           end
     
           it "should generate a success notice" do
-            controller.should_receive(:notice)
+            controller.should notify.success
             put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_CONTENT
           end
     
@@ -301,7 +301,7 @@ describe GpgKeysController, :katello => true do
           end
     
           it "should generate a success notice" do
-            controller.should_receive(:notice)
+            controller.should notify.success
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
           end
     
@@ -319,7 +319,7 @@ describe GpgKeysController, :katello => true do
 
       describe "with invalid params" do
         it "should generate an error notice" do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.exception
           put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME_INVALID
         end
 
@@ -340,7 +340,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid GPG Key ID" do
       it "should generate an error notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         put :update, :id => 9999, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME
       end
 
@@ -352,7 +352,7 @@ describe GpgKeysController, :katello => true do
     
     describe "with inclusive search parameters" do
       it "should generate a single notice" do
-        controller.should_receive(:notice)
+        controller.should notify.success
         put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => 'name ~ Test'
       end
     end
@@ -360,7 +360,7 @@ describe GpgKeysController, :katello => true do
     describe "with exclusive search parameters" do
       it "should generate message notice" do
         controller.stub(:search_validate).and_return(false)
-        controller.should_receive(:notice).twice
+        controller.should notify(:success, :message)
         put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => 'name ~ Fake'
       end
     end
@@ -378,7 +378,7 @@ describe GpgKeysController, :katello => true do
       end
 
       it "should generate a success notice" do
-        controller.should_receive(:notice)
+        controller.should notify.success
         delete :destroy, :id => @gpg_key.id
       end
 
@@ -390,7 +390,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid GPG Key id" do
       it "should generate an error notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         delete :destroy, :id => 9999
       end
 
