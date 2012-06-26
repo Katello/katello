@@ -27,6 +27,7 @@ $(document).ready(function() {
 });
 
 
+
 KT.content_search = function(paths_in){
     var browse_box, old_search_params, env_select, comparison_grid, paths,
         cache = KT.content_search_cache,
@@ -58,7 +59,7 @@ KT.content_search = function(paths_in){
 
         comparison_grid = KT.comparison_grid();
         comparison_grid.init();
-        comparison_grid.set_columns(env_select.get_paths());
+        comparison_grid.set_columns(env_select.get_paths(), true);
 
         browse_box = KT.widget.browse_box("content_selector", KT.widgets, KT.mapping, initial_search);
         $(document).bind(browse_box.get_event(), search_initiated);
@@ -110,6 +111,7 @@ KT.content_search = function(paths_in){
     do_search = function(search_params){
         var url, subgrid, tmp_search;
         old_search_params = $.bbq.getState('search');
+
         if (search_params === undefined){
             handle_response([]);
         }
@@ -118,6 +120,7 @@ KT.content_search = function(paths_in){
             tmp_search = utils.clone(search_params);
             delete tmp_search['subgrid'];
             cache.save_state(comparison_grid, tmp_search);
+            $(document).trigger('loading.comparison_grid');
             $.ajax({
                 type: 'GET',
                 contentType:"application/json",
@@ -153,7 +156,7 @@ KT.content_search = function(paths_in){
         }
     },
     draw_grid = function(data){
-        $(document).trigger('draw.comparison_grid', [data]);
+        comparison_grid.set_rows(data);
     },
     bind_hover_events = function(){
         var grid = $('#comparison_grid');
