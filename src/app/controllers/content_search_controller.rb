@@ -22,7 +22,8 @@ class ContentSearchController < ApplicationController
         :products => contents_test,
         :repos => contents_test,
         :my_environments => contents_test,
-        :packages=>contents_test,
+        :packages => contents_test,
+        :packages_items => contents_test,
         :repo_packages => contents_test,
         :repo_errata => contents_test,
         :repo_compare_errata =>contents_test,
@@ -84,9 +85,7 @@ class ContentSearchController < ApplicationController
     repo_ids_in = process_params :repos
     product_ids_in = param_product_ids
     package_ids_in = process_params :packages
-
     repo_ids = nil
-
 
     if repo_ids_in.is_a? Array
       repo_ids = repo_ids_in
@@ -113,9 +112,18 @@ class ContentSearchController < ApplicationController
     end
 
     rows = []
-    product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_package_count(p_id, repo_ids, package_ids_in) || [])}
+    product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_packages(p_id, repo_ids, package_ids_in) || [])}
     render :json=>rows
   end
+
+
+  #similar to :packages, but only returns package rows with an offset for a specific repo
+  def packages_items
+    repo = Repository.where(:id=>params[:repo_id]).first
+    pkgs = spanned_repo_packages(repo, process_params(:packages), params[:offset]) || {:pkg_rows=>[]}
+    render :json=>pkgs[:pkg_rows]
+  end
+
 
   def repo_packages
     packages = Glue::Pulp::Package.search('', params[:offset], current_user.page_size, [@repo.pulp_id])
@@ -130,8 +138,9 @@ class ContentSearchController < ApplicationController
     rows = errata.collect do |e|
       {:name => e.id, :id => e.id, :cols => {:title => {:display => e[:title]},
                                              :type => {:display => e[:type]},
-                                              :issued => {:display => e[:issued]},
-                                              :description => {:display => e[:description]}}}
+                                              :issued => {:display => e[:issued]}
+                                            }
+      }
     end
     render :json => rows
   end
@@ -180,18 +189,24 @@ class ContentSearchController < ApplicationController
   end
 
   def find_repo
-    @repo = Repository.readable_in_org(current_organization).find(params[:repo])
+    @repo = Repository.readable_in_org(current_organization).find(params[:repo_id])
   end
+
+  private
 
   def repo_rows repos
     repos.collect do |repo|
-        all_repos = repo.other_repos_with_same_product_and_content + [repo.pulp_id]
+        all_repos = repo.environmental_instance_ids
         cols = {}
         Repository.where(:pulp_id=>all_repos).each do |r|
-          cols[r.environment.id] = {:hover => r.package_count}
+          cols[r.environment.id] = {:hover => repo_hover_html(r)}
         end
         {:id=>"repo_#{repo.id}", :parent_id=>"product_#{repo.product.id}", :name=>repo.name, :cols=>cols}
     end
+  end
+
+  def repo_hover_html repo
+    render_to_string :partial=>'repo_hover', :locals=>{:repo=>repo}
   end
 
   def product_rows products
@@ -232,7 +247,7 @@ class ContentSearchController < ApplicationController
   end
 
 
-  def spanned_product_package_count product_id, repo_ids, pkg_search
+  def spanned_product_packages product_id, repo_ids, pkg_search
     rows = []
     product = Product.find(product_id)
     pkg_rows = []
@@ -241,9 +256,11 @@ class ContentSearchController < ApplicationController
 
     repo_ids.each do |repo_id|
       repo = Repository.find(repo_id)
-      repo_span = spanned_repo_package_count(repo, pkg_search)
+      repo_span = spanned_repo_packages(repo, pkg_search)
       if repo_span
-        rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}", :parent_id=>"product_#{product_id}"}
+        rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}",
+                 :parent_id=>"product_#{product_id}", :current_rows =>repo_span[:pkg_rows].length,
+                 :total_rows=>repo_span[:sub_total], :extend_url=>""}
         repo_span[:repo_cols].values.each do |span|
           product_envs[span[:id]] += span[:display]
         end
@@ -261,12 +278,13 @@ class ContentSearchController < ApplicationController
 
   #Given a repo and a pkg_search (id array or hash),
   #  return a array of {:id=>env_id, :display=>search.total}
-  def spanned_repo_package_count repo, pkg_search
-
-    spanning_repos = [repo.pulp_id] + repo.other_repos_with_same_product_and_content 
+  def spanned_repo_packages repo, pkg_search, offset=0
+    #library must be first, so subtract it from instance ids
+    spanning_repos = [repo.pulp_id] + (repo.environmental_instance_ids - [repo.pulp_id])
     spanning_repos = Repository.where(:pulp_id=>spanning_repos)
     to_ret = {}
     library_packages = []
+    library_total = 0
 
     spanning_repos.each do |repo|
       search = Tire.search Glue::Pulp::Package.index do
@@ -278,24 +296,30 @@ class ContentSearchController < ApplicationController
           end
         end
 
+        from offset
+
         if  pkg_search.is_a? Array
           filter :terms, :id => pkg_search
         end
         filter :terms, :repoids => [repo.pulp_id]
       end
       results = search.results
-      library_packages = search.results if repo.environment.library?
-      return nil if repo.environment.library? && results.total == 0
+      if repo.environment.library?
+        library_packages = results
+        library_total = results.total
+        return nil if library_total == 0
+      end
       to_ret[repo.environment_id] = {:id=>repo.environment_id, :display=>results.total}
     end
-    {:pkg_rows=>spanning_package_rows(library_packages, repo, spanning_repos), :repo_cols=>to_ret}
+    {:pkg_rows=>spanning_package_rows(library_packages, repo, spanning_repos),
+     :repo_cols=>to_ret, :sub_total=>library_total}
   end
   
-  def spanning_package_rows(pkgs, parent_repo, repos)
+  def spanning_package_rows(pkgs, parent_repo, spanned_repos)
     to_ret = [] 
     for pkg in pkgs:
         row = {:id=>"package_#{pkg.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{}, :name=>pkg.nvrea}
-        repos.each do |repo|
+        spanned_repos.each do |repo|
           if pkg.repoids.include? repo.pulp_id 
               row[:cols][repo.environment_id] = {:id=>repo.environment_id}
           end

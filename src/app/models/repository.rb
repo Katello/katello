@@ -35,6 +35,7 @@ class Repository < ActiveRecord::Base
   mapping do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
+    indexes :library_id, :type=> 'string', :index => :not_analyzed
   end
 
 
@@ -126,7 +127,8 @@ class Repository < ActiveRecord::Base
 
   def extended_index_attrs
     {:environment=>self.environment.name, :environment_id=>self.environment.id,
-     :product=>self.product.name, :product_id=> self.product.id, :name_sort=>self.name}
+     :product=>self.product.name, :product_id=> self.product.id, :name_sort=>self.name,
+     :library_id=> self.library_instance.first}
   end
 
   def update_related_index
@@ -235,6 +237,31 @@ class Repository < ActiveRecord::Base
     ret["last_sync"] = last_sync rescue nil
     ret
   end
+
+  # returns other instances of this repo with the same library
+  # equivalent of repo#other_repos_with_same_product_and_content
+  # but without the pesty pulp call
+  def environmental_instance_ids
+    if self.environment.library?
+      repo = self
+    else
+      repo = self.library_instance
+    end
+
+    Repository.search do
+      size 10000
+      query do
+        all
+      end
+      filter :term, :library_id => repo.pulp_id
+    end.collect{|r| r.pulp_id}
+  end
+
+  #ideally this would be an attribute like package_count
+  def errata_count
+    Glue::Pulp::Errata.search('', 0, 1, :repoids => [self.pulp_id]).total
+  end
+
 
   private
 

@@ -24,58 +24,75 @@ $(document).ready(function() {
                     errata:['products', 'repos', 'errata']};
 
     var search = KT.content_search(KT.available_environments);
-
 });
 
 
-KT.content_search = function(paths){
-    var browse_box, old_search_params, env_select;
-    var init = function(){
-        var initial_search = $.bbq.getState('search'),
-            initial_envs = $.bbq.getState('environments');
 
-        comparison_grid = KT.comparison_grid();
-        if(!initial_envs && paths[0]){
-            initial_envs = [paths[0][0]] ;
+KT.content_search = function(paths_in){
+    var browse_box, old_search_params, env_select, comparison_grid, paths,
+        cache = KT.content_search_cache,
+        utils = KT.utils,
+    subgrids = {
+        repo_packages:{url:KT.routes.repo_packages_content_search_index_path(),
+                       cols:{description:{id:'description', name:i18n.description}},
+        repo_errata  :{url:KT.routes.repo_errata_content_search_index_path(),
+                       cols:{
+                           title : {id:'title', name:i18n.title},
+                           type  : {id:'type', name:i18n.type},
+                           severity : {id:'severity', name:i18n.severity},
+                           issued : {id:'issued', name:i18n.issued}
+                         }
+                      }
         }
+    },
+    search_urls = {errata:KT.routes.errata_content_search_index_path(),
+                        repos:KT.routes.repos_content_search_index_path(),
+                        products:KT.routes.products_content_search_index_path(),
+                        packages:KT.routes.packages_content_search_index_path()
+    };
+
+    var init = function(){
+        var initial_search = $.bbq.getState('search');
+        paths = paths_in;
         env_select = KT.path_select('column_selector', 'env', paths,
             {select_mode:'multi', button_text:"Go", link_first: true});
 
+        comparison_grid = KT.comparison_grid();
         comparison_grid.init();
         comparison_grid.set_columns(env_select.get_paths(), true);
 
         browse_box = KT.widget.browse_box("content_selector", KT.widgets, KT.mapping, initial_search);
         $(document).bind(browse_box.get_event(), search_initiated);
+
         bind_search_event();
+        bind_env_select_event();
+        bind_hover_events();
 
-        $(document).bind(env_select.get_event(), function(event, environments) {
-            $.bbq.pushState({environments:KT.utils.values(environments)});
-            comparison_grid.show_columns(environments);
-            env_select.reposition();
-        });
+        select_envs(get_initial_environments());
 
-        if (initial_envs) {
-            select_envs(initial_envs);
-        }
         if(initial_search){
-            browse_box.trigger_search();
+            search_initiated(initial_search);
         }
     },
-    search_initiated = function(e, search_params){
+    get_initial_environments = function(){
+        var initial_envs = $.bbq.getState('environments');
+        if(!initial_envs && paths[0]){
+            initial_envs = [paths[0][0]] ;
+        }
+        return initial_envs;
+    },
+    search_initiated = function(e, search_params){ //'go' button was clicked
         var old_params = $.bbq.getState('search');
-        $.bbq.pushState({search:search_params});
+        $.bbq.pushState({search:search_params, subgrid:{}}); //Clear the subgrid
         search_params =  $.bbq.getState("search"); //refresh params, to get trim empty entries
         //A search was forced, but if everything was equal, nothing would happen, so force it
-        if(KT.utils.isEqual(old_params, search_params)){
+        if(utils.isEqual(old_params, search_params)){
             do_search(search_params);
         }
     },
-    /*
-        select environments manually, from a list of environment objects
-     */
     select_envs = function(environment_list){
         var env_obj = {};
-        KT.utils.each(environment_list, function(env){
+        utils.each(environment_list, function(env){
             env_obj[env.id] = env;
             env_select.select(env.id)
         });
@@ -85,35 +102,75 @@ KT.content_search = function(paths){
     bind_search_event = function(){
         $(window).bind('hashchange.search', function(event) {
             var search_params = $.bbq.getState('search');
-            if (search_params &&  !KT.utils.isEqual(old_search_params, search_params)) {
-
+            if (!utils.isEqual(old_search_params, search_params)) {
                 do_search(search_params);
             }
         });
     },
     do_search = function(search_params){
-        var urls = {errata:KT.routes.errata_content_search_index_path(),
-                    repos:KT.routes.repos_content_search_index_path(),
-                    products:KT.routes.products_content_search_index_path(),
-                    packages:KT.routes.packages_content_search_index_path()};
+        var url, subgrid, tmp_search;
         old_search_params = $.bbq.getState('search');
-        if (urls[search_params.content_type] ){
 
+        if (search_params === undefined){
+            handle_response([]);
+        }
+        else if(search_params.subgrid && subgrids[search_params.subgrid.type]){
+            subgrid = subgrids[search_params.subgrid.type];
+            tmp_search = utils.clone(search_params);
+            delete tmp_search['subgrid'];
+            cache.save_state(comparison_grid, tmp_search);
             $(document).trigger('loading.comparison_grid');
             $.ajax({
-                type: 'POST',
+                type: 'GET',
                 contentType:"application/json",
-                url: urls[search_params.content_type],
-                data: JSON.stringify(search_params),
-                success: handle_response
-            })
+                url: subgrid.url,
+                data: search_params.subgrid,
+                success: function(data){
+                    comparison_grid.set_columns(subgrid.cols);
+                    comparison_grid.show_columns(subgrid.cols);
+                    draw_grid(data);
+                }
+            });
+        }
+        else if (search_urls[search_params.content_type] ){
+            if (cache.get_state(search_params)){
+                comparison_grid.import_data(cache.get_state(search_params));
+            }
+            else {
+                $.ajax({
+                    type: 'POST',
+                    contentType:"application/json",
+                    url: search_urls[search_params.content_type],
+                    data: JSON.stringify(search_params),
+                    success: function(data){
+                        comparison_grid.set_columns(env_select.get_paths());
+                        select_envs(get_initial_environments());
+                        draw_grid(data);
+                    }
+                });
+            }
         }
         else{
             console.log(search_params);
         }
     },
-    handle_response = function(data){
+    draw_grid = function(data){
         comparison_grid.set_rows(data);
+    },
+    bind_hover_events = function(){
+        var grid = $('#comparison_grid');
+        grid.delegate(".subgrid_link", 'click', function(){
+            var search = $.bbq.getState('search');
+            search.subgrid = $(this).data();
+            $.bbq.pushState({search:search});
+        });
+    },
+    bind_env_select_event = function(){
+        $(document).bind(env_select.get_event(), function(event, environments) {
+            $.bbq.pushState({environments:utils.values(environments)});
+            comparison_grid.show_columns(environments);
+            env_select.reposition();
+        });
     };
 
 
@@ -121,6 +178,26 @@ KT.content_search = function(paths){
     return {
     }
 };
+
+/**
+ * Singleton for caching search data
+ */
+KT.content_search_cache = (function(){
+    var utils = KT.utils,
+        saved_search = undefined,
+        saved_data = undefined;
+
+    self.save_state = function(grid, search){
+        saved_search = search;
+        saved_data = grid.export_data();
+    };
+    self.get_state = function(search){
+        if(utils.isEqual(search, saved_search)){
+            return saved_data;
+        }
+    };
+    return self;
+}());
 
 
 
