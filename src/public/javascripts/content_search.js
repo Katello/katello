@@ -29,12 +29,12 @@ $(document).ready(function() {
 
 
 KT.content_search = function(paths_in){
-    var browse_box, old_search_params, env_select, comparison_grid, paths,
+    var browse_box, old_search_params, env_select, paths,
         cache = KT.content_search_cache,
         utils = KT.utils,
     subgrids = {
         repo_packages:{url:KT.routes.repo_packages_content_search_index_path(),
-                       cols:{description:{id:'description', name:i18n.description}},
+                       cols:{description:{id:'description', name:i18n.description, span : "5"}},
         repo_errata  :{url:KT.routes.repo_errata_content_search_index_path(),
                        cols:{
                            title : {id:'title', name:i18n.title},
@@ -129,6 +129,7 @@ KT.content_search = function(paths_in){
                 data: search_params.subgrid,
                 success: function(data){
                     comparison_grid.set_columns(subgrid.cols);
+                    comparison_grid.set_mode("details");
                     comparison_grid.show_columns(subgrid.cols);
                     draw_grid(data);
                 }
@@ -148,6 +149,7 @@ KT.content_search = function(paths_in){
                     success: function(data){
                         comparison_grid.set_columns(env_select.get_paths());
                         select_envs(get_initial_environments());
+                        comparison_grid.set_mode("results");
                         draw_grid(data);
                     }
                 });
