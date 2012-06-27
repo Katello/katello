@@ -88,6 +88,17 @@ class katello::params {
   $pulp_url      = katello_pulp_url()
   $foreman_url   = "https://localhost/foreman"
 
+  # Foreman settings
+  if katello_config_value('use_foreman') == 'true' {
+    $use_foreman     = true
+  }
+
+  if katello_config_value('install_foreman') == 'true' {
+    $install_foreman = true
+  }
+  $foreman_start_port         = "5500"
+  $foreman_thin_process_count = $process_count
+
   # database reinitialization flag
   $reset_data = katello_config_value('reset_data')
 }

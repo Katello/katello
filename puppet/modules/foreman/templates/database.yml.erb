@@ -1,0 +1,7 @@
+production:
+  adapter: postgresql
+  username: <%= scope.lookupvar("foreman::db_user") %>
+  password: <%= scope.lookupvar("foreman::db_pass") %>
+  database: <%= scope.lookupvar("foreman::db_name") %>
+  host: localhost
+  encoding: UTF8
