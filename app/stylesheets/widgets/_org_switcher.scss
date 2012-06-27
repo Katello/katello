@@ -2,11 +2,11 @@
 @import "compass";
 @import "converge-ui/vars";
 /*-------switcher STARTS HERE -------*/
-
+$switcherformwidth: 165px !default;
 /* switcher Container (default to float:right) */
 #switcherContainer {
   display: inline-block;
-  width: 165px;
+  width: $switcherformwidth;
   height: 22px;
   margin-right: 5px;
   margin-top: 2px;
@@ -64,7 +64,7 @@
       color: $black_color !important;
     }
   }
-  $switcherformwidth: 165px;
+
   /* switcher Form */
   #switcherForm {
     width: $switcherformwidth;
@@ -117,7 +117,7 @@
     margin-left:8px;
   }
   #orgfilter_input {
-    width: $switcherformwidth - 21px;
+    width: $switcherformwidth - 16px;
     margin-bottom: 3px;
   }
   .filter_button {
@@ -130,7 +130,7 @@
     background: $white_color;
     @include border-radius(3px);
     padding: 0 0 10px 0;
-    margin: 0 0 8px 0;
+    margin: 0 0 5px 0;
     height: 100px;
     overflow-y: auto;
     overflow-x: hidden;
