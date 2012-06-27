@@ -169,6 +169,7 @@ input[type='submit'], button, .button {
   font-family: $screenfont; /* for some reason ff3.6 won't inherit from body */
   font-size: 10px;
   display: inline-block;
+  vertical-align: bottom;
   background: -moz-linear-gradient(top, #f9f9f9, #f0f0f0, #e5e5e5, #e9e9e9);
   background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9), color-stop(0.9, #e5e5e5), to(#e9e9e9));
   @include no-box-shadow;
@@ -176,7 +177,7 @@ input[type='submit'], button, .button {
   color: #221e1f;
   cursor: pointer;
   margin: 4px;
-  padding: 4px 12px;
+  padding: 4px 8px;
   @include border-radius(5px);
   @include _text-shadow($white_color, 0, 1px, 0);
   min-height: 14px;
