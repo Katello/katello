@@ -1,11 +1,26 @@
 class katello::config {
 
   # this should be required by all classes that need to log there (everytime $log_base is used)
+  # TODO this actually mangles file permissions - we should get rid of it (WHY we do this?)
   file { "${katello::params::log_base}":
     owner   => $katello::params::user,
     group   => $katello::params::group,
     mode    => 640,
     recurse => true;
+  }
+
+  # create Rails logs in advance to get correct owners and permissions
+  file {[
+    "${katello::params::log_base}/production.log",
+    "${katello::params::log_base}/production_sql.log",
+    "${katello::params::log_base}/production_delayed_jobs.log",
+    "${katello::params::log_base}/production_delayed_jobs_sql.log"]:
+      owner   => $katello::params::user,
+      group   => $katello::params::group,
+      content => "",
+      replace => false,
+      mode    => 640,
+      require => [ File["${katello::params::log_base}"] ];
   }
 
   postgres::createuser { $katello::params::db_user:
@@ -124,6 +139,8 @@ class katello::config {
                   Class["candlepin::service"], 
                   Class["pulp::service"], 
                   File["${katello::params::log_base}"], 
+                  File["${katello::params::log_base}/production.log"], 
+                  File["${katello::params::log_base}/production_sql.log"], 
                   File["${katello::params::config_dir}/katello.yml"],
                   Postgres::Createdb[$katello::params::db_name],
                   Common::Simple_replace["org_name"],
