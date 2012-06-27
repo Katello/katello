@@ -259,7 +259,8 @@ class Repository < ActiveRecord::Base
 
   #ideally this would be an attribute like package_count
   def errata_count
-    Glue::Pulp::Errata.search('', 0, 1, :repoids => [self.pulp_id]).total
+    results = Glue::Pulp::Errata.search('', 0, 1, :repoids => [self.pulp_id])
+    results.empty? ? 0 : results.total
   end
 
 
