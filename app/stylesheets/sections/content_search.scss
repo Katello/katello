@@ -12,7 +12,11 @@ $comparison_grid_header-height: $comparison_grid_header_h2-height + $comparison_
 $comparison_grid-height: 350px;
 $comparison_grid_filter-width: 190px - 2px;
 $comparison_grid_row-height: 30px;
-$comparison_grid_column-width: 100px - 10px - 1px;
+$comparison_grid_column_1-width: 100px - 10px - 1px;
+$comparison_grid_column_2-width: 200px - 10px - 1px;
+$comparison_grid_column_3-width: 300px - 10px - 1px;
+$comparison_grid_column_4-width: 400px - 10px - 1px;
+$comparison_grid_column_5-width: 500px - 10px - 1px;
 $comparison_grid_row-height: 35px;
 $comparison_grid-margin-top: $browse_box_header-height + $browse_box-margin-top;
 $comparison_grid_footer-height: 45px;
@@ -172,13 +176,18 @@ $comparison_grid_column_header-background: #FFF;
 
       .column_header {
         float: left;
-        width: $comparison_grid_column-width;
         line-height: $comparison_grid_column_header-height;
         text-align: center;
         border-right: 1px solid $comparison_grid-border-color;
         font-size: 12px;
         background: $comparison_grid_column_header-background;
         padding: 0 5px;
+        
+        &[data-span="1"] { width: $comparison_grid_column_1-width; }
+        &[data-span="2"] { width: $comparison_grid_column_2-width; }
+        &[data-span="3"] { width: $comparison_grid_column_3-width; }
+        &[data-span="4"] { width: $comparison_grid_column_4-width; }
+        &[data-span="5"] { width: $comparison_grid_column_5-width; }
       }
 
       #column_selector {
@@ -268,19 +277,23 @@ $comparison_grid_column_header-background: #FFF;
         }
 
         .grid_cell {
-          width: $comparison_grid_column-width;
           height: $comparison_grid_row-height;
           display: inline-block;
-          line-height: $comparison_grid_row-height;
+          line-height: 18px;
           text-align: center;
           border-right: 1px solid $comparison_grid_border-color;
           float: left;
           padding: 0 5px;
           position: relative;
+
+          &[data-span="1"] { width: $comparison_grid_column_1-width; }
+          &[data-span="2"] { width: $comparison_grid_column_2-width; }
+          &[data-span="3"] { width: $comparison_grid_column_3-width; }
+          &[data-span="4"] { width: $comparison_grid_column_4-width; }
+          &[data-span="5"] { width: $comparison_grid_column_5-width; }
         }
 
         .grid_cell_hover {
-          width: $comparison_grid_column-width;
           height: $comparison_grid_row-height;
           line-height: $comparison_grid_row-height;
           text-align: center;
@@ -290,6 +303,12 @@ $comparison_grid_column_header-background: #FFF;
           position: absolute;
           left: 0;
           top: 0;
+
+          &[data-span="1"] { width: $comparison_grid_column_1-width; }
+          &[data-span="2"] { width: $comparison_grid_column_2-width; }
+          &[data-span="3"] { width: $comparison_grid_column_3-width; }
+          &[data-span="4"] { width: $comparison_grid_column_4-width; }
+          &[data-span="5"] { width: $comparison_grid_column_5-width; }
         }
       }
     }
@@ -320,4 +339,8 @@ $comparison_grid_column_header-background: #FFF;
     }
 
   }
+}
+
+.hidden {
+  display: none;
 }
