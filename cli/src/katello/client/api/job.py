@@ -22,6 +22,5 @@ class SystemGroupJobStatusAPI(KatelloAPI):
         self.__system_group_id = system_group_id
         
     def status(self, jobId):
-        path = "/api/organizations/%s/system_groups/%s/history" % (self.__org_id, self.__system_group_id)
-        jobs = {"job_id" : jobId}
-        return self.server.GET(path, jobs)[1]
+        path = "/api/organizations/%s/system_groups/%s/history/%s" % (self.__org_id, self.__system_group_id, jobId)
+        return self.server.GET(path)[1]
