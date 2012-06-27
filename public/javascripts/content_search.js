@@ -92,6 +92,7 @@ KT.content_search = function(paths_in){
     },
     search_initiated = function(e, search_params){ //'go' button was clicked
         var old_params = $.bbq.getState('search');
+        KT.content_search_cache.clear_state();
         $.bbq.pushState({search:search_params, subgrid:{}, environments:get_initial_environments()}); //Clear the subgrid
         search_params =  $.bbq.getState("search"); //refresh params, to get trim empty entries
         //A search was forced, but if everything was equal, nothing would happen, so force it
@@ -121,7 +122,7 @@ KT.content_search = function(paths_in){
     do_search = function(search_params){
         var url, subgrid, tmp_search;
         old_search_params = $.bbq.getState('search');
-
+        
         if (search_params === undefined){
             handle_response([]);
         }
@@ -129,7 +130,6 @@ KT.content_search = function(paths_in){
             subgrid = subgrids[search_params.subgrid.type];
             tmp_search = utils.clone(search_params);
             delete tmp_search['subgrid'];
-            cache.save_state(comparison_grid, tmp_search);
             $(document).trigger('loading.comparison_grid');
             $.ajax({
                 type: 'GET',
@@ -163,6 +163,7 @@ KT.content_search = function(paths_in){
                         select_envs(get_initial_environments());
                         comparison_grid.set_mode("results");
                         draw_grid(data);
+                        cache.save_state(comparison_grid, search_params);
                     }
                 });
             }
@@ -237,6 +238,10 @@ KT.content_search_cache = (function(){
         if(utils.isEqual(search, saved_search)){
             return saved_data;
         }
+    },
+    self.clear_state = function(){
+        saved_search = undefined;
+        saved_data = undefined;
     };
     return self;
 }());
