@@ -401,7 +401,33 @@ def progress(left, total):
     sizeTotal = float(total)
     return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal
 
-# Envelope around job structure
+# Envelope around job structure.
+#
+# A job is essentially a container for a set of tasks.  For example,
+# in the case of a system group action, when an action is scheduled,
+# it will create 1 job and associate N tasks with that job (i.e. 1
+# task for each system in the group).
+#
+# The job as modelled here is essentially the overall status of a
+# given job.  The following is an example:
+#
+#  {'created_at': '2011-08-23T09:07:33Z',
+#   'id': '40'
+#   'pulp_id': 'b965b7de-733b-434c-a327-a18bbf22e796',
+#   'parameters': {:packages=>["xterm"]},
+#   'task_type': 'package_install',
+#   'tasks', [{
+#              'progress': '',
+#              'result': '',
+#              'finish_time': '',
+#              'start_time': '',
+#              'state': 'waiting',
+#              'id': '57',
+#              'uuid': 'f10f5978-c06b-11e1-9021-bc305ba6d5b4'
+#             }],
+#   'state', 'running',
+#   'status_message: 'Installing package...',
+#   'finish_time': ''}
 class AsyncJob():
 
     _jobs = []
