@@ -298,7 +298,6 @@ fi
 
 %files
 %attr(600, katello, katello)
-%defattr(-,root,root)
 %{_bindir}/katello-*
 %{homedir}/app/controllers
 %{homedir}/app/helpers
@@ -333,7 +332,6 @@ fi
 %{homedir}/Rakefile
 
 %files common
-%defattr(-,root,root)
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
