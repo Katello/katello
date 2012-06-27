@@ -86,11 +86,9 @@ class ProvidersController < ApplicationController
   end
 
   def import_progress
-    progress = if @provider.task_status && @provider.task_status.progress
-                 @provider.task_status.progress
-               else
-                 "finished"
-               end
+    # "Finished" is an arbitrary value here that is checked for in the javascript to see if polling for
+    # task progress should be done
+    progress = (@provider.task_status && @provider.task_status.progress) ? @provider.task_status.progress : "finished"
     to_ret = {'progress' => progress}
     render :json=>to_ret
   end
@@ -265,7 +263,7 @@ class ProvidersController < ApplicationController
     subscriptions = Pool.index_pools cp_pools
 
     @grouped_subscriptions = []
-    subscriptions.each { |sub|
+    subscriptions.each do |sub|
       # Derived pools are not displayed here
       if sub.pool_derived
         next
@@ -281,7 +279,7 @@ class ProvidersController < ApplicationController
       #    @grouped_subscriptions << sub
       #  end
       #}
-    }
+    end
 
     @grouped_subscriptions
   end
@@ -331,12 +329,12 @@ class ProvidersController < ApplicationController
         next
       end
 
-      Product.where(:cp_id => sub['productId']).each { |product|
+      Product.where(:cp_id => sub['productId']).each do |product|
         if product and product.provider == @provider
           @grouped_subscriptions[group_id] ||= []
           @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
         end
-      }
+      end
 =begin TODO: Should the bundled products be displayed too?
       if sub['providedProducts'].length > 0
         sub['providedProducts'].each do |cp_product|

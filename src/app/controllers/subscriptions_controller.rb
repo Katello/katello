@@ -139,7 +139,7 @@ class SubscriptionsController < ApplicationController
   def new
     begin
       @statuses = @provider.owner_imports
-    rescue Exception => error
+    rescue => error
       # quietly ignore
     end
     render :partial=>"new", :layout =>"tupane_layout", :locals=>{:provider=>@provider, :statuses=>@statuses, :name => controller_display_name}
@@ -148,7 +148,7 @@ class SubscriptionsController < ApplicationController
   def history
     begin
       @statuses = @provider.owner_imports
-    rescue Exception => error
+    rescue => error
       @statuses = []
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription history for provider '%{name}." % {:name => @provider.name})
@@ -178,7 +178,7 @@ class SubscriptionsController < ApplicationController
         force_update = params[:force_import] == "1" ? "true" : "false"
         @provider.import_manifest File.expand_path(temp_file.path), :force => force_update, :async => true,
                                   :notify => true
-      rescue Exception => error
+      rescue => error
         if error.respond_to?(:response)
           display_message = parse_display_message(error.response)
         elsif error.message
@@ -206,11 +206,9 @@ class SubscriptionsController < ApplicationController
       notice _("Subscription manifest must be specified on upload."), {:level => :error}
     end
 
-    progress = if @provider.task_status && @provider.task_status.progress
-                 @provider.task_status.progress
-               else
-                 "finished"
-               end
+    # "Finished" is an arbitrary value here that is checked for in the javascript to see if polling for
+    # task progress should be done
+    progress = (@provider.task_status && @provider.task_status.progress) ? @provider.task_status.progress : "finished"
     to_ret = {'progress' => progress}
     render :json=>to_ret
   end

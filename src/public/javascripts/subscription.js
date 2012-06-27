@@ -12,25 +12,26 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.subscription = function() {
-    var import_updater = undefined,
+KT.subscription = (function() {
+    var import_updater
     updateStatus = function(data) {
-        if(data["progress"] === "finished") {
+        if (data["progress"] === "finished") {
             notices.checkNotices();
-            if(import_updater) {
+            if (import_updater) {
                 import_updater.stop();
             }
             window.location = KT.routes.subscriptions_path();
         }
     },
     startUpdater = function() {
-        var timeout = 8000;
+        var timeout = 8000,
+            provider_id;
 
         notices.checkNotices();
 
         // When the import progress element is present, start the polling for success
-        var provider_id = $('.import_progress').attr("provider_id");
-        if(provider_id) {
+        provider_id = $('.import_progress').attr("provider_id");
+        if (provider_id) {
 
             if (import_updater !== undefined) {
                 import_updater.stop();
@@ -55,7 +56,7 @@ KT.subscription = function() {
         startUpdater: startUpdater,
         updateStatus: updateStatus
     };
-}();
+}());
 
 $(document).ready(function() {
 
@@ -66,17 +67,20 @@ $(document).ready(function() {
     KT.subscription.startUpdater();
 
     $('.edit_provider').live('submit', function(e) {
+        var ajax_handler;
+        var active;
+
         // disable submit to avoid duplicate clicks
         $('#provider_submit').val(i18n.uploading).attr("disabled", true);
         $('.edit_provider').attr("disabled", true);
 
-        var ajax_handler = function(data) {
-                        if(data["progress"] === "finished") {
+        ajax_handler = function(data) {
+                        if (data["progress"] === "finished") {
                             KT.subscription.updateStatus(data);
-                        }else {
+                        } else {
                             // Refresh the panel to pick up new history and show spinner while uploading
                             notices.checkNotices();
-                            var active = $('#new');
+                            active = $('#new');
                             KT.panel.panelAjax(active, active.attr("data-ajax_url"), $('#panel'), false);
                         }
                     };
