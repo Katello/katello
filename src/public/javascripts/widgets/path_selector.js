@@ -200,10 +200,10 @@ KT.path_select = function(div_id, name, environments, options_in){
         select = function(id, next_id){
            var nodes = path_selector.find('input:checkbox[data-node_id=' + id + ']');
            if(nodes.length > 1 && !options.link_first){
-               nodes.and('[data-next_node_id=' + next_id + ']').click();
+               nodes.and('[data-next_node_id=' + next_id + ']').not(':checked').click();
            }
            else{
-               nodes.first().click();
+               nodes.first().not(':checked').click();
            }
         };
 

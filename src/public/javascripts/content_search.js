@@ -83,7 +83,7 @@ KT.content_search = function(paths_in){
     },
     search_initiated = function(e, search_params){ //'go' button was clicked
         var old_params = $.bbq.getState('search');
-        $.bbq.pushState({search:search_params, subgrid:{}}); //Clear the subgrid
+        $.bbq.pushState({search:search_params, subgrid:{}, environments:get_initial_environments()}); //Clear the subgrid
         search_params =  $.bbq.getState("search"); //refresh params, to get trim empty entries
         //A search was forced, but if everything was equal, nothing would happen, so force it
         if(utils.isEqual(old_params, search_params)){
@@ -92,10 +92,12 @@ KT.content_search = function(paths_in){
     },
     select_envs = function(environment_list){
         var env_obj = {};
+
         utils.each(environment_list, function(env){
             env_obj[env.id] = env;
             env_select.select(env.id)
         });
+
         comparison_grid.show_columns(env_obj);
         env_select.reposition();
     },
@@ -137,6 +139,7 @@ KT.content_search = function(paths_in){
                 comparison_grid.import_data(cache.get_state(search_params));
             }
             else {
+                $(document).trigger('loading.comparison_grid');
                 $.ajax({
                     type: 'POST',
                     contentType:"application/json",
@@ -176,6 +179,7 @@ KT.content_search = function(paths_in){
 
     init();
     return {
+        //env_select: function(){return env_select}
     }
 };
 
