@@ -145,6 +145,8 @@ class katello::config {
                   Class["candlepin::service"], 
                   Class["pulp::service"], 
                   File["${katello::params::log_base}"], 
+                  File["${katello::params::log_base}/production.log"], 
+                  File["${katello::params::log_base}/production_sql.log"], 
                   File["${katello::params::config_dir}/katello.yml"],
                   Postgres::Createdb[$katello::params::db_name],
                   Common::Simple_replace["org_name"],
