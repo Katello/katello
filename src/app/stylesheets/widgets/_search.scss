@@ -1,6 +1,7 @@
 @charset "UTF-8";
 @import "compass";
 @import "converge-ui/vars";
+@import "converge-ui/mixins";
 
 /* search forms */
 
@@ -26,8 +27,7 @@
   input[type="input"] {
     float: right; /* webkit adds an extra padding and makes the widget narrower */
     width: 220px;
-    @include border-radius(16px);
-    padding-left: 10px;
+    padding-left: 4px;
   }
 }
 .search_button, .filter_button {
