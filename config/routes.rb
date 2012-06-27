@@ -481,6 +481,7 @@ Src::Application.routes.draw do
         member do
           get :systems
           get :history
+          match "/history/:job_id" => "system_groups#history_show", :via => :get
           post :lock
           post :unlock
           post :add_systems
@@ -489,7 +490,6 @@ Src::Application.routes.draw do
         end
 
         resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
-
         resource :errata, :action => [:create], :controller => :system_group_errata
       end
 
