@@ -29,7 +29,6 @@ EOF
   # retrieve the system's uuid for later use
   identity=$(sudo subscription-manager identity | grep -o -E "^Current identity is:.*")
   SYSTEM_UUID=${identity:21}
-  echo "SYSTEM_UUID = "$SYSTEM_UUID"
 
   echo "removing package "$INSTALL_PACKAGE" from the system"
   sudo yum remove -y "$INSTALL_PACKAGE" &> /dev/null
