@@ -29,7 +29,7 @@ $(document).ready(function() {
 
 
 KT.content_search = function(paths_in){
-    var browse_box, old_search_params, env_select, comparison_grid, paths,
+    var browse_box, old_search_params, env_select, paths,
         cache = KT.content_search_cache,
         utils = KT.utils,
     subgrids = {
@@ -129,6 +129,7 @@ KT.content_search = function(paths_in){
                 data: search_params.subgrid,
                 success: function(data){
                     comparison_grid.set_columns(subgrid.cols);
+                    comparison_grid.set_mode("details");
                     comparison_grid.show_columns(subgrid.cols);
                     draw_grid(data);
                 }

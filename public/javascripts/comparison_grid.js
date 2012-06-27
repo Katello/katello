@@ -190,10 +190,11 @@ KT.comparison_grid = function(){
                 $('#grid_loading_screen').hide();
             }
         },
-        setup_mode = function(){
-            var columns_to_show = {};
+        set_mode = function(mode){
+            var columns_to_show = {},
+                mode = (mode === undefined) ? models.mode : mode;
 
-            if( models.mode === 'results' ){
+            if( mode === 'results' ){
                 controls.column_selector.show();
                 utils.each(
                     utils.filter(models.columns, 
@@ -206,9 +207,10 @@ KT.comparison_grid = function(){
                     }
                 );
                 show_columns(columns_to_show);
-            } else if( models.mode === 'details' ){
+            } else if( mode === 'details' ){
                 controls.column_selector.hide();
                 show_columns(models.columns);
+                $('#grid_header').find('header h2').hide();
             }
         };
 
@@ -223,7 +225,7 @@ KT.comparison_grid = function(){
         show_columns            : show_columns,
         collapse_rows           : collapse_rows,
         set_loading             : set_loading,
-        setup_mode              : setup_mode,
+        set_mode                : set_mode,
         get_num_columns_shown   : function(){ return num_columns_shown; },
         get_max_visible_columns : function(){ return max_visible_columns; }
     };
@@ -449,7 +451,7 @@ KT.comparison_grid.events = function(grid) {
                 grid.set_loading(true);
                 grid.add_columns();
                 grid.add_rows();
-                grid.setup_mode();
+                grid.set_mode();
                 grid.set_loading(false);
             });
 
@@ -459,6 +461,7 @@ KT.comparison_grid.events = function(grid) {
 
             cell_hover();
             collapseable_rows();
+            details_view();
         },
         cell_hover = function() {
             $('.grid_cell').live('hover', function(event){
@@ -482,6 +485,12 @@ KT.comparison_grid.events = function(grid) {
                     grid.collapse_rows($(this).data('id'), true);
                     $(this).data('collapsed', true);
                 }
+            });
+        },
+        details_view = function() {
+            $('#return_to_results_btn').live('click', function() {
+                grid.set_loading(true);
+                $(document).trigger('return_to_results.comparison_grid');
             });
         };
 
