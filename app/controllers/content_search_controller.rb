@@ -212,6 +212,8 @@ class ContentSearchController < ApplicationController
     ids || []
   end
 
+  # given a search object as params, return the search for a particular type
+  #  this could either be a search string, or array of ids
   def process_params type
     ids = params[type][:autocomplete].collect{|p|p["id"]} if params[type] && params[type][:autocomplete]
     search = params[type][:search] if params[type] && params[type][:search]
