@@ -180,7 +180,7 @@ compass compile
 
 #generate Rails JS/CSS/... assets
 echo Generating Rails assets...
-jammit --config config/assets.yml -f
+LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
 
 
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
