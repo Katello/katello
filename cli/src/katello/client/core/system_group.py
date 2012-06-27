@@ -89,6 +89,9 @@ class Create(SystemGroupAction):
         description = self.get_option('description')
         max_systems = self.get_option('max_systems')
 
+        if max_systems == None:
+            max_systems = "-1"
+
         system_group = self.api.create(org_name, name, description, max_systems)
 
         test_record(system_group,
