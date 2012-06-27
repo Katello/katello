@@ -23,7 +23,7 @@ $(document).ready(function() {
     KT.mapping = {products:['products'], repos:['products', 'repos'], packages:['products', 'repos', 'packages'],
                     errata:['products', 'repos', 'errata']};
 
-    var search = KT.content_search(KT.available_environments);
+    search = KT.content_search(KT.available_environments);
 });
 
 
@@ -34,22 +34,30 @@ KT.content_search = function(paths_in){
         utils = KT.utils,
     subgrids = {
         repo_packages:{url:KT.routes.repo_packages_content_search_index_path(),
-                       cols:{description:{id:'description', name:i18n.description, span : "5"}},
+                       cols:{description:{id:'description', name:i18n.description, span : "5"}}
+
+        },
         repo_errata  :{url:KT.routes.repo_errata_content_search_index_path(),
                        cols:{
-                           title : {id:'title', name:i18n.title},
+                           title : {id:'title', name:i18n.title, span: "2"},
                            type  : {id:'type', name:i18n.type},
                            severity : {id:'severity', name:i18n.severity},
                            issued : {id:'issued', name:i18n.issued}
                          }
-                      }
         }
+
     },
     search_urls = {errata:KT.routes.errata_content_search_index_path(),
                         repos:KT.routes.repos_content_search_index_path(),
                         products:KT.routes.products_content_search_index_path(),
                         packages:KT.routes.packages_content_search_index_path()
-    };
+    },
+    subgrid_selector = [
+        {id:'repo_errata', name:i18n.errata},
+        {id:'repo_packages', name:i18n.packages}
+    ];
+
+
 
     var init = function(){
         var initial_search = $.bbq.getState('search');
@@ -67,6 +75,7 @@ KT.content_search = function(paths_in){
         bind_search_event();
         bind_env_select_event();
         bind_hover_events();
+        $(document).bind('return_to_results.comparison_grid', remove_subgrid);
 
         select_envs(get_initial_environments());
 
@@ -126,16 +135,19 @@ KT.content_search = function(paths_in){
                 type: 'GET',
                 contentType:"application/json",
                 url: subgrid.url,
+                cache: false,
                 data: search_params.subgrid,
                 success: function(data){
                     comparison_grid.set_columns(subgrid.cols);
                     comparison_grid.set_mode("details");
                     comparison_grid.show_columns(subgrid.cols);
+                    bind_subgrid_selector();
                     draw_grid(data);
                 }
             });
         }
         else if (search_urls[search_params.content_type] ){
+            unbind_subgrid_selector();
             if (cache.get_state(search_params)){
                 comparison_grid.import_data(cache.get_state(search_params));
             }
@@ -176,11 +188,35 @@ KT.content_search = function(paths_in){
             comparison_grid.show_columns(environments);
             env_select.reposition();
         });
+    },
+    bind_subgrid_selector = function(){
+        return;
+        grid.configure_selector(subgrid_selector);
+        $(document).bind("foo", change_subgrid_type)
+    },
+    unbind_subgrid_selector = function(){
+        return;
+        $(document).unbind("foo");
+    },
+    change_subgrid_type = function(type){
+        var search = $.bbq.getState('search');
+        if(search.subgrid){
+            search.subgrid.type = type;
+            $.bbq.pushState({search:search});
+        }
+    },
+    remove_subgrid = function(){
+        var search = $.bbq.getState('search');
+        if(search.subgrid){
+            delete search['subgrid'];
+            $.bbq.pushState({search:search});
+        }
     };
-
 
     init();
     return {
+        change_subgrid_type:change_subgrid_type,
+        remove_subgrid: remove_subgrid
         //env_select: function(){return env_select}
     }
 };
