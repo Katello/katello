@@ -19,7 +19,7 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        0.2.5
+Version:        0.2.6
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
@@ -139,6 +139,10 @@ fi
 %{_sysconfdir}/katello/secure
 
 %changelog
+* Wed Jun 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.6-1
+- 828533 - removing semanage port rule from installer
+- 828533 - changing to proper QPIDD SSL port
+
 * Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.5-1
 - encryption - plain text passwords encryption
 
