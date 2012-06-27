@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.42
+Version:        0.2.43
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -384,6 +384,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jun 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.43-1
+- Stupid extra space.
+- Fix for a missing 'fr' in a gradient.
+- More SCSS refactoring and a fix for converge-ui spec.
+- point Support link to irc channel #katello
+
 * Mon Jun 25 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.42-1
 - katello - async manifest import, missing notices
 - ulimit - brad's review
