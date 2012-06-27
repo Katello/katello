@@ -19,7 +19,8 @@
       #orgbox{"data-url"=>allowed_orgs_user_session_path}
         /Orgs pulled from above data-url dynamically each click.
         .spinner
-      %a#manage_orgs{:href=>organizations_path()}
-        #{_("Manage Organizations")}
-        .gears_icon
+      - if Organization.any_readable?
+        %a#manage_orgs{:href=>organizations_path()}
+          #{_("Manage Organizations")}
+          .gears_icon
 / orgbox Ends Here
