@@ -315,6 +315,11 @@ KT.common = (function() {
                 }
             });
         },
+        orgBoxRefresh : function (){
+          var orgbox = $('#orgbox');
+          var orgboxapi = orgbox.data('jsp');
+          orgboxapi.reinitialise();
+        },
         orgFilterSetup : function(){
             $('form.filter').submit(function(){
                 $('#orgfilter_input').change();
