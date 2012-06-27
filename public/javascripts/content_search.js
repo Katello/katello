@@ -34,7 +34,7 @@ KT.content_search = function(paths_in){
         utils = KT.utils,
     subgrids = {
         repo_packages:{url:KT.routes.repo_packages_content_search_index_path(),
-                       cols:{description:{id:'description', name:i18n.description}},
+                       cols:{description:{id:'description', name:i18n.description, span : "5"}},
         repo_errata  :{url:KT.routes.repo_errata_content_search_index_path(),
                        cols:{
                            title : {id:'title', name:i18n.title},
@@ -149,6 +149,7 @@ KT.content_search = function(paths_in){
                     success: function(data){
                         comparison_grid.set_columns(env_select.get_paths());
                         select_envs(get_initial_environments());
+                        comparison_grid.set_mode("results");
                         draw_grid(data);
                     }
                 });
