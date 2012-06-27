@@ -69,12 +69,13 @@ KT.comparison_grid = function(){
             grid_row_headers_el.find('#row_header_' + id).prepend(templates.collapse_arrow);
         },
         collapse_rows = function(id, collapse){
-            var parent_row_header = $('#row_header_' + id),
+            var parent_row_header = $('#row_header_' + KT.common.escapeId(id)),
 
                 show = function(id, should_show){
                     var child_rows = models.rows.get_children(id);                    
 
                     utils.each(child_rows, function(child){
+                        child = KT.common.escapeId(child);
                         if( should_show ){
                             $('#grid_row_' + child).hide();
                             $('#row_header_' + child).hide();
