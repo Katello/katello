@@ -87,41 +87,31 @@ class ContentSearchController < ApplicationController
     package_ids_in = process_params :packages
     repo_ids = nil
 
-    if repo_ids_in.is_a? Array
-      repo_ids = repo_ids_in
-    elsif repo_ids_in
-      readable = Repository.readable(current_organization.library).collect{|r| r.id}
-      repo_ids = repo_search(repo_ids, readable).collect{|r| r.id}
-    else
-      if !product_ids_in.empty?
-        products = Product.readable(current_organization).where(:id=>product_ids_in)
-      else
-        products = Product.readable(current_organization)
-      end
-      repo_ids = []
-      products.each do |p|
-        repo_ids = repo_ids + Repository.readable_for_product(current_organization.library, p).collect{|r| r.id}
-      end
-    end
-
-    product_repo_map = {}
-
-    Repository.where(:id=>repo_ids).each do |r|
-      product_repo_map[r.product.id] ||= []
-      product_repo_map[r.product.id] << r.id
-    end
+    product_repo_map = extract_repo_ids(product_ids_in, repo_ids_in)
 
     rows = []
-    product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_packages(p_id, repo_ids, package_ids_in) || [])}
+    product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_content(p_id, repo_ids, 'package', package_ids_in) || [])}
     render :json=>rows
   end
 
+  def errata
+    repo_ids_in = process_params :repos
+    product_ids_in = param_product_ids
+    package_ids_in = process_params :errata
+    repo_ids = nil
+
+    product_repo_map = extract_repo_ids(product_ids_in, repo_ids_in)
+
+    rows = []
+    product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_content(p_id, repo_ids, 'errata', package_ids_in) || [])}
+    render :json=>rows
+  end
 
   #similar to :packages, but only returns package rows with an offset for a specific repo
   def packages_items
     repo = Repository.where(:id=>params[:repo_id]).first
-    pkgs = spanned_repo_packages(repo, process_params(:packages), params[:offset]) || {:pkg_rows=>[]}
-    render :json=>pkgs[:pkg_rows]
+    pkgs = spanned_repo_content(repo, 'package', process_params(:packages), params[:offset]) || {:content_rows=>[]}
+    render :json=>pkgs[:content_rows]
   end
 
 
@@ -180,8 +170,6 @@ class ContentSearchController < ApplicationController
       {:name => name, :id => pack.id, :cols => cols}
     end
     render :json => rows
-
-
   end
 
   def find_repos
@@ -247,24 +235,54 @@ class ContentSearchController < ApplicationController
   end
 
 
-  def spanned_product_packages product_id, repo_ids, pkg_search
+  #Given a product_search, and a repo_search, return a
+  # product_id =>  [repo_ids]   hash
+  def extract_repo_ids product_ids, repo_search
+    repo_ids = []
+
+    if repo_search.is_a? Array
+      repo_ids = repo_search
+    elsif repo_search
+      readable = Repository.readable(current_organization.library).collect{|r| r.id}
+      repo_ids = repo_search(repo_search, readable).collect{|r| r.id}
+    else
+      if !product_ids.empty?
+        products = Product.readable(current_organization).where(:id=>product_ids_in)
+      else
+        products = Product.readable(current_organization)
+      end
+      products.each do |p|
+        repo_ids = repo_ids + Repository.readable_for_product(current_organization.library, p).collect{|r| r.id}
+      end
+    end
+
+    product_repo_map = {}
+
+    Repository.where(:id=>repo_ids).each do |r|
+      product_repo_map[r.product.id] ||= []
+      product_repo_map[r.product.id] << r.id
+    end
+    product_repo_map
+  end
+
+  def spanned_product_content product_id, repo_ids, content_type, search_obj
     rows = []
     product = Product.find(product_id)
-    pkg_rows = []
+    content_rows = []
     product_envs = {}
     product_envs.default = 0
 
     repo_ids.each do |repo_id|
       repo = Repository.find(repo_id)
-      repo_span = spanned_repo_packages(repo, pkg_search)
+      repo_span = spanned_repo_content(repo, content_type,  search_obj)
       if repo_span
         rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}",
-                 :parent_id=>"product_#{product_id}", :current_rows =>repo_span[:pkg_rows].length,
+                 :parent_id=>"product_#{product_id}", :current_rows =>repo_span[:content_rows].length,
                  :total_rows=>repo_span[:sub_total], :extend_url=>""}
         repo_span[:repo_cols].values.each do |span|
           product_envs[span[:id]] += span[:display]
         end
-        pkg_rows += repo_span[:pkg_rows]
+        content_rows += repo_span[:content_rows]
       end
     end
     cols = {}
@@ -272,55 +290,79 @@ class ContentSearchController < ApplicationController
     if rows.empty?
       return nil
     else
-      return [{:name=>product.name, :id=>"product_#{product_id}", :cols=>cols}] + rows + pkg_rows
+      return [{:name=>product.name, :id=>"product_#{product_id}", :cols=>cols}] + rows + content_rows
     end
   end
 
   #Given a repo and a pkg_search (id array or hash),
   #  return a array of {:id=>env_id, :display=>search.total}
-  def spanned_repo_packages repo, pkg_search, offset=0
+  #
+  #
+  def spanned_repo_content repo, content_type, content_search_obj, offset=0
     #library must be first, so subtract it from instance ids
     spanning_repos = [repo.pulp_id] + (repo.environmental_instance_ids - [repo.pulp_id])
     spanning_repos = Repository.where(:pulp_id=>spanning_repos)
     to_ret = {}
-    library_packages = []
+    library_content = []
     library_total = 0
-
+    content_attribute = content_type.to_sym == :package ? 'nvrea' : 'id'
     spanning_repos.each do |repo|
-      search = Tire.search Glue::Pulp::Package.index do
-        query do
-          if pkg_search.is_a?(Array) || pkg_search.nil?
-            all
-          else
-            string pkg_search, {:default_field=>'nvrea'}
-          end
-        end
+      content_class = content_type.to_sym == :package ? Glue::Pulp::Package : Glue::Pulp::Errata
 
-        from offset
-
-        if  pkg_search.is_a? Array
-          filter :terms, :id => pkg_search
-        end
-        filter :terms, :repoids => [repo.pulp_id]
-      end
-      results = search.results
+      results = repo_content_search(content_class, content_search_obj, repo, offset, content_attribute).results
       if repo.environment.library?
-        library_packages = results
+        library_content = results
         library_total = results.total
         return nil if library_total == 0
       end
       to_ret[repo.environment_id] = {:id=>repo.environment_id, :display=>results.total}
     end
-    {:pkg_rows=>spanning_package_rows(library_packages, repo, spanning_repos),
+
+    {:content_rows=>spanning_content_rows(library_content, content_type, content_attribute, repo, spanning_repos),
      :repo_cols=>to_ret, :sub_total=>library_total}
   end
-  
-  def spanning_package_rows(pkgs, parent_repo, spanned_repos)
+
+  # perform a content search (errata or package)
+  #
+  # content_class   either Glue::Pulp::Package or Glue::Pulp::Errata
+  # search_obj      eitehr a search string or array of ids
+  # repo            repo to search in
+  # offset          offset of the search
+  # default_field   default field to search if none specifiec
+  def repo_content_search( content_class, search_obj, repo, offset, default_field)
+    search = Tire.search content_class.index do
+      query do
+        if search_obj.is_a?(Array) || search_obj.nil?
+          all
+        else
+          string search_obj, {:default_field=>default_field}
+        end
+      end
+
+      from offset
+
+      if  search_obj.is_a? Array
+        filter :terms, :id => search_obj
+      end
+      filter :terms, :repoids => [repo.pulp_id]
+    end
+  end
+
+  # creates rows out of a list of content (Errata or package) for a particular
+  #     library repo and its spanning clones across environments
+  #
+  # content_list   list of package or errata items
+  # id_prefix      prefix for the rows (either 'package' or 'errata')
+  # name_attribute  what to display as the name of each item in the row.  Will be called on each object
+  # parent_repo    the library repo instance (or the parent row)
+  # spanned_repos  all other instances of repos across all environments
+  def spanning_content_rows(content_list, id_prefix, name_attribute, parent_repo, spanned_repos)
     to_ret = [] 
-    for pkg in pkgs:
-        row = {:id=>"package_#{pkg.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{}, :name=>pkg.nvrea}
+    for item in content_list:
+        row = {:id=>"#{id_prefix}_#{item.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{},
+               :name=>item.send(name_attribute)}
         spanned_repos.each do |repo|
-          if pkg.repoids.include? repo.pulp_id 
+          if item.repoids.include? repo.pulp_id
               row[:cols][repo.environment_id] = {:id=>repo.environment_id}
           end
         end 
