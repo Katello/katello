@@ -13,7 +13,7 @@
 class Api::SystemGroupsController < Api::ApiController
 
   before_filter :find_group, :only => [:show, :update, :destroy, :destroy_systems, :lock, :unlock,
-                                       :add_systems, :remove_systems, :systems, :history, :job]
+                                       :add_systems, :remove_systems, :systems, :history, :history_show]
   before_filter :find_organization, :only => [:index, :create]
   before_filter :authorize
 
@@ -34,9 +34,10 @@ class Api::SystemGroupsController < Api::ApiController
       :destroy_systems => destroy_systems_perm,
       :add_systems  => edit_perm,
       :remove_systems => edit_perm,
-      :lock        => locking_perm,
-      :unlock      => locking_perm,
-      :history     => read_perm
+      :lock         => locking_perm,
+      :unlock       => locking_perm,
+      :history      => read_perm,
+      :history_show => read_perm
     }
   end
 
@@ -91,13 +92,13 @@ class Api::SystemGroupsController < Api::ApiController
   end
 
   def history
-    if params[:job_id]
-      job = @group.refreshed_jobs.where(:id => params[:job_id]).first
-      render :json => job
-    else
-      jobs = @group.refreshed_jobs
-      render :json => jobs
-    end
+    jobs = @group.refreshed_jobs
+    render :json => jobs
+  end
+
+  def history_show
+    job = @group.refreshed_jobs.where(:id => params[:job_id]).first
+    render :json => job
   end
 
   def  lock
