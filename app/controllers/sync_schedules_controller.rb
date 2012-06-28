@@ -76,7 +76,7 @@ class SyncSchedulesController < ApplicationController
         end
         prod.save!
       end
-      notify.success N_("Sync Plans applied successfully.")
+      notify.success _("Sync Plans applied successfully.")
 
     rescue Exception => error
       # note missing product is caught in find products before filter

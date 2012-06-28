@@ -15,15 +15,14 @@ module Notifications
   class Notifier
     include Rails.application.routes.url_helpers
 
-    #def self.default_url_options
-
     attr_reader :controller
 
     def initialize(controller = nil)
       @controller = controller
     end
 
-
+    # generates error-notice based on invalid record, it's displayed as list, not persisted by default
+    # use only for invalid records with data inserted by user, don't use for InvalidRecord exception
     def invalid_record(record, options = { })
       options = { :level   => :error,
                   :send_as => 'validation_errors',
@@ -31,26 +30,31 @@ module Notifications
       notice(record.errors.full_messages.to_a, options)
     end
 
+    # generates success-notice
     def success(message, options = { })
       notice message, options
     end
 
+    # generates message-notice, asynchronous by default
     def message(message, options = { })
       options = { :level => :message, :asynchronous => true }.merge options
       notice message, options
     end
 
+    # generates warning-notice, not persisted by default
     def warning(message, options = { })
       options = { :level => :warning, :persist => false }.merge options
       notice message, options
     end
 
+    # generates error-notice
     def error(message, options = { })
       options = { :level => :error }.merge options
       notice message, options
     end
 
-    # @example how to call
+    # generates error-notice form exception, optionally adding a note
+    # @example
     #   exception(an_exception)
     #   exception("some note", an_exception)
     #   exception("some note", an_exception, :asynchronous => true) # options are optional
@@ -61,7 +65,7 @@ module Notifications
 
       case exception
         when ActiveRecord::RecordInvalid
-          invalid_record exception.record, options
+          invalid_record(exception.record, { :persist => true }.merge(options))
         else
           options = { :level   => :error,
                       :details => exception.backtrace.join("\n") }.merge options
@@ -74,15 +78,18 @@ module Notifications
 
     protected
 
+
     # Generate a notice:
     #
     # notices:              The text to include or Array of texts (nil values are dropped)
-    # options:             Optional hash containing various optional parameters.  This includes:
+    # options:              Optional hash containing various optional parameters. This includes:
     #
-    #   level:               The type of notice to be generated.  Supported values include:
+    #   level:               The type of notice to be generated. Supported values include:
     #                        :message, :success (Default), :warning, :error
     #
-    #   asynchronous:        false. if this notice is associated with an event where
+    #   asynchronous:        if notifier has controller default is false, if notifier has no controller
+    #                        (used form model) default is true.
+    #                        if this notice is associated with an event where
     #                        the user would expect to receive a response immediately
     #                        as part of a response. This typically applies for events
     #                        involving things such as create, update and delete.
@@ -90,10 +97,10 @@ module Notifications
     #                        IMPORTANT: If creating a synchronous request, the invocation of notice
     #                        must be from within a controller (i.e. not a model).
     #
-    #   persist:             true, if this notice should be stored via ActiveRecord.
-    #                        Note: this option only applies when synchronous_request is true.
+    #   persist:             default is true, if this notice should be stored via ActiveRecord.
+    #                        Note: this option only applies when asynchronous is false.
     #
-    #   details:             String containing additional details.  This would typically be to store
+    #   details:             String containing additional details. This would typically be to store
     #                        information such as a stack trace that is in addition to the notice text.
     #
     #   request_type:        String representing the request/action this notice is associated with.  In the case
