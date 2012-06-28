@@ -187,7 +187,7 @@ class ApplicationController < ActionController::Base
 
   def require_no_user
     if current_user
-      notice _("Welcome Back!") + ", " + current_user.username
+      notice _("Welcome Back") + ", " + current_user.username
       execute_after_filters
       redirect_to dashboard_index_url
       return false
