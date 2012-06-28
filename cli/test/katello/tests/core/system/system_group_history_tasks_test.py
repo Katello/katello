@@ -41,11 +41,11 @@ class SystemGroupHistoryTasksTest(CLIActionTestCase):
 
         self.mock_options(self.OPTIONS)
         self.mock(self.module, 'get_system_group', self.SYSTEM_GROUP)
-        self.mock(self.action.api, 'system_group_history', system_data.SYSTEM_GROUP_HISTORY)
+        self.mock(self.action.api, 'system_group_history', system_data.SYSTEM_GROUP_HISTORY[0])
 
     def test_it_calls_system_groups_api(self):
         self.action.run()
-        self.action.api.system_group_history.assert_called_once_with(self.OPTIONS['org'], system_data.SYSTEM_GROUPS[0]['id'], {'job_id':'1'})
+        self.action.api.system_group_history.assert_called_once_with(self.OPTIONS['org'], system_data.SYSTEM_GROUPS[0]['id'], self.OPTIONS['job_id'])
 
     def test_it_prints_the_system_groups(self):
         self.action.run()

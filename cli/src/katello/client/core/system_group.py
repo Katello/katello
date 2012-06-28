@@ -197,7 +197,7 @@ class HistoryTasks(SystemGroupAction):
         system_group = get_system_group(org_name, system_group_name)
 
         # get list of jobs
-        history = self.api.system_group_history(org_name, system_group['id'], {'job_id':job_id})
+        history = self.api.system_group_history(org_name, system_group['id'], job_id)
         if history == None:
             print >> sys.stderr, _("Could not find job [ %s ] for system group [ %s ]") % (job_id, system_group_name)
             return os.EX_DATAERR
