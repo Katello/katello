@@ -27,14 +27,13 @@ class SubscriptionsController < ApplicationController
   COLUMNS = {'name' => 'name_sort'}
 
   def rules
-    read_org = lambda{current_organization && current_organization.readable?}
     read_provider_test = lambda{@provider.readable?}
     edit_provider_test = lambda{@provider.editable?}
     {
-      :index => read_org,
-      :items => read_org,
+      :index => read_provider_test,
+      :items => read_provider_test,
       :show => read_provider_test,
-      :edit => edit_provider_test,
+      :edit => read_provider_test,  # Note: edit is the callback for sliding out right panel
       :products => read_provider_test,
       :consumers => read_provider_test,
       :history => read_provider_test,
