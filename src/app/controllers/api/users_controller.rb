@@ -47,27 +47,25 @@ class Api::UsersController < Api::ApiController
     }
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/users", "List users"
-  api :GET, "/users/:user_id/roles", "List users"
-  param :username, :undef
+  param :email, String, :desc => "filter by email"
+  param :disabled, :bool, :desc => "filter by disabled flag"
+  param :username, String, :desc => "filter by username"
   def index
     render :json => (User.readable.where query_params).to_json
   end
 
-  api :GET, "/users/:id", "Show an user"
-  api :GET, "/users/:user_id/roles/:id", "Show an user"
+  api :GET, "/users/:id", "Show a user"
   def show
     render :json => @user
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :POST, "/users", "Create an user"
-  api :POST, "/users/:user_id/roles", "Create an user"
   param :disabled, :bool
-  param :email, :undef
-  param :password, :undef
-  param :username, :undef
+  param :email, String, :required => true
+  param :password, String, :required => true
+  param :username, String, :required => true
+  param :default_environment_id, Integer
   def create
     # warning - request already contains "username" and "password" (logged user)
     user = User.create!(:username => params[:username],
@@ -80,7 +78,10 @@ class Api::UsersController < Api::ApiController
   end
 
   api :PUT, "/users/:id", "Update an user"
-  api :PUT, "/users/:user_id/roles/:id", "Update an user"
+  param :disabled, :bool
+  param :email, String
+  param :password, String
+  param :default_environment_id, Integer
   def update
     user_params = params[:user].reject { |k, _| k == 'default_environment_id' }
     @user.update_attributes!(user_params)
@@ -92,27 +93,26 @@ class Api::UsersController < Api::ApiController
     render :json => @user.to_json
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :DELETE, "/users/:id", "Destroy an user"
-  api :DELETE, "/users/:user_id/roles/:id", "Destroy an user"
   def destroy
     @user.destroy
     render :text => _("Deleted user '#{params[:id]}'"), :status => 200
   end
 
-  api :GET, "/users/:user_id/roles"
+  api :GET, "/users/:user_id/roles", "List roles assigned to a user"
   def list_roles
     @user.set_ldap_roles if AppConfig.ldap_roles
     render :json => @user.roles.non_self.to_json
   end
 
-  api :GET, "/users/sync_ldap_roles"
+  api :GET, "/users/sync_ldap_roles", "Synchronises roles for all users with LDAP groups"
   def sync_ldap_roles
     User.all.each { |user| user.set_ldap_roles }
     render :text => _("Roles for all users were synchronised with LDAP groups"), :status => 200
-  end 
+  end
 
-  api :POST, "/users/:user_id/roles"
+  api :POST, "/users/:user_id/roles", "Assign a role to a user"
+  param :role_id, Integer
   def add_role
     role = Role.find(params[:role_id])
     @user.roles << role
@@ -120,7 +120,7 @@ class Api::UsersController < Api::ApiController
     render :text => _("User '#{@user.username}' assigned to role '#{role.name}'"), :status => 200
   end
 
-  api :DELETE, "/users/:user_id/roles/:id"
+  api :DELETE, "/users/:user_id/roles/:id", "Remove user's role"
   def remove_role
     role = Role.find(params[:id])
     @user.roles.delete(role)
@@ -129,7 +129,8 @@ class Api::UsersController < Api::ApiController
 
   end
 
-  api :GET, "/users/report"
+  api :GET, "/users/report", "Reports all users in the system in a format according to 'Accept' headers.
+  Supported formats are plain text, html, csv, pdf"
   def report
     users_report = User.report_table(:all,
                                      :only    => [:username, :created_at, :updated_at],
@@ -168,3 +169,4 @@ class Api::UsersController < Api::ApiController
   end
 
 end
+
