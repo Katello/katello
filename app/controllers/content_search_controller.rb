@@ -253,7 +253,7 @@ class ContentSearchController < ApplicationController
         products = Product.readable(current_organization)
       end
       products.each do |p|
-        repo_ids = repo_ids + Repository.readable_for_product(current_organization.library, p).collect{|r| r.id}
+        repo_ids = repo_ids + Repository.enabled.readable_for_product(current_organization.library, p).collect{|r| r.id}
       end
     end
 
@@ -299,9 +299,9 @@ class ContentSearchController < ApplicationController
   #  return a array of {:id=>env_id, :display=>search.total}
   #
   #
-  def spanned_repo_content repo, content_type, content_search_obj, offset=0
+  def spanned_repo_content library_repo, content_type, content_search_obj, offset=0
     #library must be first, so subtract it from instance ids
-    spanning_repos = [repo.pulp_id] + (repo.environmental_instance_ids - [repo.pulp_id])
+    spanning_repos = [library_repo.pulp_id] + (library_repo.environmental_instance_ids - [library_repo.pulp_id])
     spanning_repos = Repository.where(:pulp_id=>spanning_repos)
     to_ret = {}
     library_content = []
@@ -319,7 +319,7 @@ class ContentSearchController < ApplicationController
       to_ret[repo.environment_id] = {:id=>repo.environment_id, :display=>results.total}
     end
 
-    {:content_rows=>spanning_content_rows(library_content, content_type, content_attribute, repo, spanning_repos),
+    {:content_rows=>spanning_content_rows(library_content, content_type, content_attribute, library_repo, spanning_repos),
      :repo_cols=>to_ret, :sub_total=>library_total}
   end
 
