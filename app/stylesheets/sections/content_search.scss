@@ -102,14 +102,22 @@ $comparison_grid_column_header-background: #FFF;
     position: relative;
 
     header {
-      height: $comparison_grid_header_h2-height;
+      height: $comparison_grid_header_h2-height - 8px;
+      padding-top: 8px;
 
       h2 { 
         padding: 0 0 0 17px;
         font-size: 18px;
-        line-height: $comparison_grid_header_h2-height;
         vertical-align: middle;
+
+        &[data-title="details"] { max-width: 350px; }
       }
+
+      #change_content_select {
+        margin-left: 35px;
+      }
+
+      .button { margin: 0 0 0 8px; }
     }
 
     aside {
@@ -177,13 +185,13 @@ $comparison_grid_column_header-background: #FFF;
       .column_header {
         float: left;
         line-height: $comparison_grid_column_header-height;
-        text-align: center;
+        text-align: left;
         border-right: 1px solid $comparison_grid-border-color;
         font-size: 12px;
         background: $comparison_grid_column_header-background;
         padding: 0 5px;
         
-        &[data-span="1"] { width: $comparison_grid_column_1-width; }
+        &[data-span="1"] { width: $comparison_grid_column_1-width; text-align: center; }
         &[data-span="2"] { width: $comparison_grid_column_2-width; }
         &[data-span="3"] { width: $comparison_grid_column_3-width; }
         &[data-span="4"] { width: $comparison_grid_column_4-width; }
@@ -277,16 +285,15 @@ $comparison_grid_column_header-background: #FFF;
         }
 
         .grid_cell {
-          height: $comparison_grid_row-height;
           display: inline-block;
-          line-height: 18px;
-          text-align: center;
+          text-align: left;
+          line-height: $comparison_grid_row-height;
           border-right: 1px solid $comparison_grid_border-color;
           float: left;
           padding: 0 5px;
           position: relative;
 
-          &[data-span="1"] { width: $comparison_grid_column_1-width; }
+          &[data-span="1"] { width: $comparison_grid_column_1-width; text-align: center; }
           &[data-span="2"] { width: $comparison_grid_column_2-width; }
           &[data-span="3"] { width: $comparison_grid_column_3-width; }
           &[data-span="4"] { width: $comparison_grid_column_4-width; }
@@ -295,7 +302,7 @@ $comparison_grid_column_header-background: #FFF;
 
         .grid_cell_hover {
           height: $comparison_grid_row-height;
-          line-height: $comparison_grid_row-height;
+          line-height: 18px;
           text-align: center;
           color: #FFF;
           padding: 0 5px;
