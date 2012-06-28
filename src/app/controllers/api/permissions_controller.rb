@@ -38,9 +38,12 @@ class Api::PermissionsController < Api::ApiController
      }
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :GET, "/roles/:role_id/permissions", "List permissions"
-  param :name, :undef
+
+  api :GET, "/roles/:role_id/permissions", "List permissions for a role"
+  param :name, String, :desc => "filter by name"
+  param :description, String, :desc => "filter by description"
+  param :all_verbs, :bool, :desc => "filter by all_verbs flag"
+  param :all_tags, :bool, :desc => "filter by all_flags flag"
   def index
     render :json => @role.permissions.where(query_params).to_json()
   end
@@ -50,14 +53,14 @@ class Api::PermissionsController < Api::ApiController
     render :json => @permission.to_json()
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :POST, "/roles/:role_id/permissions", "Create a permission"
-  param :description, Object, :allow_nil => true
-  param :name, :undef
+
+  api :POST, "/roles/:role_id/permissions", "Create a roles permission"
+  param :description, String, :allow_nil => true
+  param :name, String, :required => true
   param :organization_id, :identifier
-  param :tags, :undef
-  param :type, :undef
-  param :verbs, :undef
+  param :tags, Array, :desc => "array of tag ids"
+  param :type, String, :desc => "name of a resource or 'all'", :required => true
+  param :verbs, Array, :desc => "array of permission verbs"
   def create
     new_params = {
       :name => params[:name],
@@ -79,8 +82,8 @@ class Api::PermissionsController < Api::ApiController
     render :json => @permission.to_json()
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :DELETE, "/roles/:role_id/permissions/:id", "Destroy a permission"
+
+  api :DELETE, "/roles/:role_id/permissions/:id", "Destroy a roles permission"
   def destroy
     @permission.destroy
     render :text => _("Deleted permission '#{params[:id]}'"), :status => 200
