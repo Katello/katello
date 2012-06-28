@@ -59,10 +59,10 @@ class Job < ActiveRecord::Base
       jobs = Job.where('task_statuses.id' => ids).joins(:task_statuses)
 
       # refresh the tasks via pulp
-      refresh_tasks(ids)
+      refresh_tasks(ids) unless ids.empty?
 
       # update the elasticsearch index for the associated jobs
-      Job.index_import(jobs)
+      Job.index_import(jobs) unless jobs.empty?
 
       # retrieve the jobs for the current owner (e.g. system group)
       query = Job.where(:job_owner_id => owner.id, :job_owner_type => owner.class.name)
@@ -128,7 +128,8 @@ class Job < ActiveRecord::Base
           :tasks=>tasks,
 
           :state=>self.state,
-          :finish_time=>self.finish_time
+          :finish_time=>self.finish_time,
+          :status_message=>self.status_message
       }
     end
   end
