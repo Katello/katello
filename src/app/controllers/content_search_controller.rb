@@ -58,13 +58,11 @@ class ContentSearchController < ApplicationController
   end
 
   def repos
-    
     repo_ids = process_params :repos
     product_ids = param_product_ids
 
     if repo_ids.is_a? Array #repos were auto_completed
         repos = Repository.readable(current_organization.library).where(:id=>repo_ids)
-
     elsif repo_ids #repos were searched
       readable = Repository.readable(current_organization.library).collect{|r| r.id}
       repos = repo_search(repo_ids, readable)
@@ -85,10 +83,8 @@ class ContentSearchController < ApplicationController
     repo_ids_in = process_params :repos
     product_ids_in = param_product_ids
     package_ids_in = process_params :packages
-    repo_ids = nil
 
     product_repo_map = extract_repo_ids(product_ids_in, repo_ids_in)
-
     rows = []
     product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_content(p_id, repo_ids, 'package', package_ids_in) || [])}
     render :json=>rows
@@ -98,10 +94,8 @@ class ContentSearchController < ApplicationController
     repo_ids_in = process_params :repos
     product_ids_in = param_product_ids
     package_ids_in = process_params :errata
-    repo_ids = nil
 
     product_repo_map = extract_repo_ids(product_ids_in, repo_ids_in)
-
     rows = []
     product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_content(p_id, repo_ids, 'errata', package_ids_in) || [])}
     render :json=>rows
@@ -112,6 +106,13 @@ class ContentSearchController < ApplicationController
     repo = Repository.where(:id=>params[:repo_id]).first
     pkgs = spanned_repo_content(repo, 'package', process_params(:packages), params[:offset]) || {:content_rows=>[]}
     render :json=>pkgs[:content_rows]
+  end
+
+  #similar to :errata, but only returns errata rows with an offset for a specific repo
+  def errata_items
+    repo = Repository.where(:id=>params[:repo_id]).first
+    errata = spanned_repo_content(repo, 'errata', process_params(:errata), params[:offset]) || {:content_rows=>[]}
+    render :json=>errata[:content_rows]
   end
 
 
