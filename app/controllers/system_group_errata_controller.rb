@@ -88,7 +88,6 @@ class SystemGroupErrataController < ApplicationController
     filter_type = filter_type || "All"    
 
     errata_hash = {} # {id => erratum}
-    errata_list = [] # [erratum]
     errata_system_hash = {} # {id => [system_name]}
 
     # build a hash of all errata across all systems in the group

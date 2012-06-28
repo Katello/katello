@@ -490,7 +490,7 @@ Src::Application.routes.draw do
         end
 
         resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
-        resource :errata, :action => [:create], :controller => :system_group_errata
+        resources :errata, :only => [:index, :create], :controller => :system_group_errata
       end
 
       resources :environments do

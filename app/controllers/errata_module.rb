@@ -20,8 +20,14 @@ module ErrataModule
       pulp_filter_type = get_pulp_filter_type(filter_type)
 
       errata_list.each{ |erratum|
-        if erratum.type == pulp_filter_type
-          filtered_list << erratum
+        if erratum.class.name == "Glue::Pulp::Errata"
+          if erratum.type == pulp_filter_type
+            filtered_list << erratum
+          end
+        else
+          if erratum["type"] == pulp_filter_type
+            filtered_list << erratum
+          end
         end
       }
     else
@@ -31,12 +37,13 @@ module ErrataModule
     return filtered_list
   end
 
-  def get_pulp_filter_type filter_type
-    if filter_type == "Bug"
+  def get_pulp_filter_type type
+    filter_type = type.downcase
+    if filter_type == "bug"
       return Glue::Pulp::Errata::BUGZILLA
-    elsif filter_type == "Enhancement"
+    elsif filter_type == "enhancement"
       return Glue::Pulp::Errata::ENHANCEMENT
-    elsif filter_type == "Security"
+    elsif filter_type == "security"
       return Glue::Pulp::Errata::SECURITY
     end
   end
