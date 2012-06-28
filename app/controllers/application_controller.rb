@@ -186,7 +186,7 @@ class ApplicationController < ActionController::Base
 
   def require_no_user
     if current_user
-      notify.success _("Welcome Back!") + ", " + current_user.username
+      notify.success _("Welcome Back!") + ", " + current_user.username, :persist => false
       execute_after_filters
       redirect_to dashboard_index_url
       return false

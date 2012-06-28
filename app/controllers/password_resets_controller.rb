@@ -55,19 +55,21 @@ class PasswordResetsController < ApplicationController
       redirect_to new_password_reset_path and return
     end
 
-    begin
-      # update the password and reset the 'password reset token' so that it cannot be reused
-      params[:user][:password_reset_token] = nil
-      params[:user][:password_reset_sent_at] = nil
+    # update the password and reset the 'password reset token' so that it cannot be reused
+    params[:user][:password_reset_token]   = nil
+    params[:user][:password_reset_sent_at] = nil
 
-      @user.update_attributes!(params[:user])
+    if @user.update_attributes(params[:user])
       notify.success _("Password has been reset for user '%s'.") % @user.username, :persist => false
-      render :text => ""
-
-    rescue Exception => e
-      notify.error e, :persist => false
-      render :text => e.to_s, :status => :bad_request
+      render :nothing => true
+    else
+      notify.invalid_record @user
+      render :nothing => true
     end
+
+  rescue Exception => e
+    notify.exception e, :persist => false
+    render :text => e.to_s, :status => :bad_request
   end
 
   def email_logins
