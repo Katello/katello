@@ -41,8 +41,10 @@ class Api::OrganizationsController < Api::ApiController
     }
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/organizations", "List organizations"
+  param :name, String, :desc => "name for filtering"
+  param :cp_key, String, :desc => "cp_key for filtering"
+  param :description, String, :desc => "description"
   def index
     render :json => (Organization.readable.where query_params).to_json
   end
@@ -53,25 +55,22 @@ class Api::OrganizationsController < Api::ApiController
     render :json => @organization
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :POST, "/organizations", "Create an organization"
-  param :description, :undef
-  param :name, :undef
+  param :name, String, :desc => "name for the organization"
+  param :description, String, :desc => "description"
   def create
     render :json => Organization.create!(:name => params[:name], :description => params[:description], :cp_key => params[:name].tr(' ', '_')).to_json
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :PUT, "/organizations/:id", "Update an organization"
   param :organization, Hash do
-    param :description, :undef
+    param :description, String, :desc => "description"
   end
   def update
     render :json => @organization.update_attributes!(params[:organization]).to_json
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :DELETE, "/organizations/:id", "Destroy an organization"
+  api :DELETE, "/organizations/:id", "Destroy an organization. Asynchronous operation."
   def destroy
     async_job = current_user.destroy_organization_async(@organization)
     render :json => async_job, :status => 202
