@@ -173,6 +173,7 @@ def setup_admin(katello_cmd):
     errata_cmd.add_command('list', errata.List())
     errata_cmd.add_command('info', errata.Info())
     errata_cmd.add_command('system', errata.SystemErrata())
+    errata_cmd.add_command('system_group', errata.SystemGroupErrata())
     katello_cmd.add_command('errata', errata_cmd)
 
     system_cmd = system.System()

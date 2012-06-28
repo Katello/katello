@@ -19,10 +19,12 @@ from gettext import gettext as _
 
 from katello.client.api.errata import ErrataAPI
 from katello.client.api.system import SystemAPI
+from katello.client.api.system_group import SystemGroupAPI
 from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
-from katello.client.api.utils import get_repo, get_environment, get_product
+from katello.client.api.utils import get_repo, get_environment, get_product, get_system_group
 from katello.client.utils.encoding import u_str
+from katello.client.utils import printer
 
 Config()
 
@@ -125,6 +127,41 @@ class SystemErrata(ErrataAction):
         self.printer.print_items(errata)
 
         return os.EX_OK
+
+class SystemGroupErrata(ErrataAction):
+    description = _("list errata for a system group")
+
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        parser.add_option('--name', dest='name', help=_("system group name (required)"))
+        parser.add_option('--type', dest='type', help=_("filter errata by type eg: bug, enhancement or security"))
+
+    def check_options(self, validator):
+        validator.require(('org', 'name'))
+
+    def run(self):
+        systemGroupApi = SystemGroupAPI()
+
+        org_name = self.get_option('org')
+        group_name = self.get_option('name')
+        type = self.get_option('type')
+
+        system_group = get_system_group(org_name, group_name)
+        system_group_id = system_group['id']
+
+        errata = systemGroupApi.errata(org_name, system_group_id, type=type)
+
+        self.printer.add_column('id')
+        self.printer.add_column('title')
+        self.printer.add_column('type')
+        self.printer.add_column('systems', _('# Systems'), formatter=len)
+        self.printer.add_column('systems', multiline=True, show_with=printer.VerboseStrategy)
+
+        self.printer.set_header(_("Errata for system group %s in organization %s") % (group_name, org_name))
+        self.printer.print_items(errata)
+
+        return os.EX_OK
+
 
 class Info(ErrataAction):
 
