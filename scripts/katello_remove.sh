@@ -1,5 +1,5 @@
 service mongod stop; service pulp-server stop; service tomcat6 stop; service katello stop; service katello-jobs stop; service elasticsearch stop
-kill -9 `ps -aef | grep katello | grep -v grep | awk '{print $2}'`
+kill -9 `ps -aef | grep katello | grep -v $(basename $0) | grep -v grep | awk '{print $2}'`
 kill -9 `ps -aef | grep delayed_job | grep -v grep | awk '{print $2}'`
 
 yum erase -y `rpm -qa | grep candlepin` `rpm -qa | grep katello` `rpm -qa | grep ^pulp` `rpm -qa | grep mongo` `rpm -qa | grep postgre` `rpm -qa | grep httpd` `rpm -qa | grep ^mod_` puppet tomcat6 `rpm -qa | grep ^rubygem` ruby rubygems elasticsearch
