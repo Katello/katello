@@ -62,17 +62,17 @@ class ContentSearchController < ApplicationController
     product_ids = param_product_ids
 
     if repo_ids.is_a? Array #repos were auto_completed
-        repos = Repository.readable(current_organization.library).where(:id=>repo_ids)
+        repos = Repository.enabled.readable(current_organization.library).where(:id=>repo_ids)
     elsif repo_ids #repos were searched
-      readable = Repository.readable(current_organization.library).collect{|r| r.id}
+      readable = Repository.enabled.readable(current_organization.library).collect{|r| r.id}
       repos = repo_search(repo_ids, readable)
     elsif !product_ids.empty? #products were autocompleted
         repos = []
         Product.readable(current_organization).where(:id=>product_ids).each do |p|
-          repos = repos + Repository.readable_for_product(current_organization.library, p)
+          repos = repos + Repository.enabled.readable_for_product(current_organization.library, p)
         end
     else #get all
-        repos = Repository.readable(current_organization.library)
+        repos = Repository.enabled.readable(current_organization.library)
     end
 
     products = repos.collect{|r| r.product}.uniq
@@ -180,8 +180,6 @@ class ContentSearchController < ApplicationController
   def find_repo
     @repo = Repository.readable_in_org(current_organization).find(params[:repo_id])
   end
-
-  private
 
   def repo_rows repos
     repos.collect do |repo|
