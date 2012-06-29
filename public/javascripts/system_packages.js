@@ -244,8 +244,8 @@ KT.system_packages = function() {
     updateStatus = function(data) {
         // For each action that the user has initiated, update the status.
         $.each(data, function(index, status) {
-            var action = actions_in_progress[status["uuid"]],
-                action_row = $('tr[data-uuid="'+status["uuid"]+'"]'),
+            var action = actions_in_progress[status["id"]],
+                action_row = $('tr[data-pending-action-id="'+status["id"]+'"]'),
                 action_status_col = action_row.find('td.package_action_status');
 
             switch (status["state"]) {
@@ -257,23 +257,23 @@ KT.system_packages = function() {
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
                             action_status_col.html(i18n.adding_package_failed);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_UPDATE:
                             action_status_col.html(i18n.updating_package_failed);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_REMOVE:
                             action_status_col.html(i18n.removing_package_failed);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_GRP_INSTALL:
                             action_status_col.html(i18n.adding_group_failed);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                         case KT.package_action_types.PKG_GRP_REMOVE:
                             action_status_col.html(i18n.removing_group_failed);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                     }
                     break;
@@ -281,23 +281,23 @@ KT.system_packages = function() {
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
                             action_status_col.html(i18n.adding_package_success);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_UPDATE:
                             action_status_col.html(i18n.updating_package_success);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_REMOVE:
                             action_status_col.html(i18n.removing_package_success);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_GRP_INSTALL:
                             action_status_col.html(i18n.adding_group_success);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                         case KT.package_action_types.PKG_GRP_REMOVE:
                             action_status_col.html(i18n.removing_group_success);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                     }
                     break;
@@ -305,23 +305,23 @@ KT.system_packages = function() {
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
                             action_status_col.html(i18n.adding_package_canceled);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_UPDATE:
                             action_status_col.html(i18n.updating_package_canceled);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_REMOVE:
                             action_status_col.html(i18n.removing_package_canceled);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_GRP_INSTALL:
                             action_status_col.html(i18n.adding_group_canceled);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                         case KT.package_action_types.PKG_GRP_REMOVE:
                             action_status_col.html(i18n.removing_group_canceled);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                     }
                     break;
@@ -329,23 +329,23 @@ KT.system_packages = function() {
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
                             action_status_col.html(i18n.adding_package_timeout);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_UPDATE:
                             action_status_col.html(i18n.updating_package_timeout);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_REMOVE:
                             action_status_col.html(i18n.removing_package_timeout);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_GRP_INSTALL:
                             action_status_col.html(i18n.adding_group_timeout);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                         case KT.package_action_types.PKG_GRP_REMOVE:
                             action_status_col.html(i18n.removing_group_timeout);
-                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
+                            clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                     }
                     break;
@@ -373,7 +373,7 @@ KT.system_packages = function() {
         actions_updater = $.PeriodicalUpdater(KT.routes.status_system_system_packages_path(system_id), {
             method: 'get',
             type: 'json',
-            data: function() {return {uuid: Object.keys(actions_in_progress)};},
+            data: function() {return {id: Object.keys(actions_in_progress)};},
             global: false,
             minTimeout: timeout,
             maxTimeout: timeout
@@ -412,11 +412,11 @@ KT.system_packages = function() {
         }
 
         $('tr.content_package').each( function() {
-            actions_in_progress[$(this).attr('data-uuid')] = getActionType($(this));
+            actions_in_progress[$(this).attr('data-pending-action-id')] = getActionType($(this));
             packages_in_progress[$.trim($(this).find('td.package_name').html())] = true;
         });
         $('tr.content_group').each( function() {
-            actions_in_progress[$(this).attr('data-uuid')] = getActionType($(this));
+            actions_in_progress[$(this).attr('data-pending-action-id')] = getActionType($(this));
             packages_in_progress[$.trim($(this).find('td.package_name').html())] = true;
         });
 
@@ -491,7 +491,7 @@ KT.system_packages = function() {
                             $('tr.content_package').find('td.package_name').each( function() {
                                 if ($.trim($(this).html()) === pkg_name) {
                                     already_exists = true;
-                                    $(this).parent().attr('data-uuid', data);
+                                    $(this).parent().attr('data-pending-action-id', data);
                                     $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_package);
                                 }
                             });
@@ -499,10 +499,10 @@ KT.system_packages = function() {
                             if (already_exists === false) {
                                 if (add_row_shading) {
                                     add_row_shading = false;
-                                    packages_top.prepend('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                                    packages_top.prepend('<tr class="alt content_package" data-pending-action-id='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_package + '</td></tr>');
                                 } else {
                                     add_row_shading = true;
-                                    packages_top.prepend('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                                    packages_top.prepend('<tr class="content_package" data-pending-action-id='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_package + '</td></tr>');
                                 }
                             }
                         }
@@ -535,7 +535,7 @@ KT.system_packages = function() {
                             $('tr.content_group').find('td.package_name').each( function() {
                                 if ($.trim($(this).html()) === group_name) {
                                     already_exists = true;
-                                    $(this).parent().attr('data-uuid', data);
+                                    $(this).parent().attr('data-pending-action-id', data);
                                     $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_group);
                                 }
                             });
@@ -543,10 +543,10 @@ KT.system_packages = function() {
                             if (already_exists === false) {
                                 if (add_row_shading) {
                                     add_row_shading = false;
-                                    packages_top.prepend('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                                    packages_top.prepend('<tr class="alt content_group" data-pending-action-id='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_group + '</td></tr>');
                                 } else {
                                     add_row_shading = true;
-                                    packages_top.prepend('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                                    packages_top.prepend('<tr class="content_group" data-pending-action-id='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.adding_group + '</td></tr>');
                                 }
                             }
                         }
@@ -589,7 +589,7 @@ KT.system_packages = function() {
                             $('tr.content_package').find('td.package_name').each( function() {
                                 if ($.trim($(this).html()) === pkg_name) {
                                     already_exists = true;
-                                    $(this).parent().attr('data-uuid', data);
+                                    $(this).parent().attr('data-pending-action-id', data);
                                     $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_package);
                                 }
                             });
@@ -597,10 +597,10 @@ KT.system_packages = function() {
                             if (already_exists === false) {
                                 if (add_row_shading) {
                                     add_row_shading = false;
-                                    packages_top.prepend('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                                    packages_top.prepend('<tr class="alt content_package" data-pending-action-id='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_package + '</td></tr>');
                                 } else {
                                     add_row_shading = true;
-                                    packages_top.prepend('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                                    packages_top.prepend('<tr class="content_package" data-pending-action-id='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_package + '</td></tr>');
                                 }
                             }
                         }
@@ -633,7 +633,7 @@ KT.system_packages = function() {
                             $('tr.content_group').find('td.package_name').each( function() {
                                 if ($.trim($(this).html()) === group_name) {
                                     already_exists = true;
-                                    $(this).parent().attr('data-uuid', data);
+                                    $(this).parent().attr('data-pending-action-id', data);
                                     $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_group);
                                 }
                             });
@@ -641,10 +641,10 @@ KT.system_packages = function() {
                             if (already_exists === false) {
                                 if (add_row_shading) {
                                     add_row_shading = false;
-                                    packages_top.prepend('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                                    packages_top.prepend('<tr class="alt content_group" data-pending-action-id='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_group + '</td></tr>');
                                 } else {
                                     add_row_shading = true;
-                                    packages_top.prepend('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                                    packages_top.prepend('<tr class="content_group" data-pending-action-id='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_group + '</td></tr>');
                                 }
                             }
                         }
@@ -670,7 +670,7 @@ KT.system_packages = function() {
                 // locate the selected packages and update the status column to indicate the action being performed
                 $(':checkbox:checked').each( function() {
                     var pkg = $(this).closest('.package');
-                    pkg.attr('data-uuid', data);
+                    pkg.attr('data-pending-action-id', data);
                     pkg.find('.package_action_status').html('<img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.removing_package);
                 });
                 monitorStatus(data, KT.package_action_types.PKG_REMOVE);
@@ -692,7 +692,7 @@ KT.system_packages = function() {
                 // locate the selected packages and update the status column to indicate the action being performed
                 $(':checkbox:checked').each( function() {
                     var pkg = $(this).closest('.package');
-                    pkg.attr('data-uuid', data);
+                    pkg.attr('data-pending-action-id', data);
                     pkg.find('.package_action_status').html('<img style="padding-right:8px;" src="images/embed/icons/spinner.gif">' + i18n.updating_package);
                 });
                 monitorStatus(data, KT.package_action_types.PKG_UPDATE);
