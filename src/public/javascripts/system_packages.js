@@ -244,8 +244,9 @@ KT.system_packages = function() {
     updateStatus = function(data) {
         // For each action that the user has initiated, update the status.
         $.each(data, function(index, status) {
-            var action = actions_in_progress[status["id"]],
-                action_row = $('tr[data-pending-action-id="'+status["id"]+'"]'),
+            var event_id = status["id"],
+                action = actions_in_progress[event_id],
+                action_row = $('tr[data-pending-action-id="'+event_id+'"]'),
                 action_status_col = action_row.find('td.package_action_status');
 
             switch (status["state"]) {
@@ -256,23 +257,23 @@ KT.system_packages = function() {
                 case "error":
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
-                            action_status_col.html(i18n.adding_package_failed);
+                            action_status_col.html(get_status_block(event_id, i18n.adding_package_failed));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_UPDATE:
-                            action_status_col.html(i18n.updating_package_failed);
+                            action_status_col.html(get_status_block(event_id, i18n.updating_package_failed));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_REMOVE:
-                            action_status_col.html(i18n.removing_package_failed);
+                            action_status_col.html(get_status_block(event_id, i18n.removing_package_failed));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_GRP_INSTALL:
-                            action_status_col.html(i18n.adding_group_failed);
+                            action_status_col.html(get_status_block(event_id, i18n.adding_group_failed));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                         case KT.package_action_types.PKG_GRP_REMOVE:
-                            action_status_col.html(i18n.removing_group_failed);
+                            action_status_col.html(get_status_block(event_id, i18n.removing_group_failed));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                     }
@@ -280,23 +281,23 @@ KT.system_packages = function() {
                 case "finished":
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
-                            action_status_col.html(i18n.adding_package_success);
+                            action_status_col.html(get_status_block(event_id, i18n.adding_package_success));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_UPDATE:
-                            action_status_col.html(i18n.updating_package_success);
+                            action_status_col.html(get_status_block(event_id, i18n.updating_package_success));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_REMOVE:
-                            action_status_col.html(i18n.removing_package_success);
+                            action_status_col.html(get_status_block(event_id, i18n.removing_package_success));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_GRP_INSTALL:
-                            action_status_col.html(i18n.adding_group_success);
+                            action_status_col.html(get_status_block(event_id, i18n.adding_group_success));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                         case KT.package_action_types.PKG_GRP_REMOVE:
-                            action_status_col.html(i18n.removing_group_success);
+                            action_status_col.html(get_status_block(event_id, i18n.removing_group_success));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                     }
@@ -304,23 +305,23 @@ KT.system_packages = function() {
                 case "canceled":
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
-                            action_status_col.html(i18n.adding_package_canceled);
+                            action_status_col.html(get_status_block(event_id, i18n.adding_package_canceled));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_UPDATE:
-                            action_status_col.html(i18n.updating_package_canceled);
+                            action_status_col.html(get_status_block(event_id, i18n.updating_package_canceled));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_REMOVE:
-                            action_status_col.html(i18n.removing_package_canceled);
+                            action_status_col.html(get_status_block(event_id, i18n.removing_package_canceled));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_GRP_INSTALL:
-                            action_status_col.html(i18n.adding_group_canceled);
+                            action_status_col.html(get_status_block(event_id, i18n.adding_group_canceled));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                         case KT.package_action_types.PKG_GRP_REMOVE:
-                            action_status_col.html(i18n.removing_group_canceled);
+                            action_status_col.html(get_status_block(event_id, i18n.removing_group_canceled));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                     }
@@ -328,29 +329,35 @@ KT.system_packages = function() {
                 case "timed_out":
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
-                            action_status_col.html(i18n.adding_package_timeout);
+                            action_status_col.html(get_status_block(event_id, i18n.adding_package_timeout));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_UPDATE:
-                            action_status_col.html(i18n.updating_package_timeout);
+                            action_status_col.html(get_status_block(event_id, i18n.updating_package_timeout));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_REMOVE:
-                            action_status_col.html(i18n.removing_package_timeout);
+                            action_status_col.html(get_status_block(event_id, i18n.removing_package_timeout));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_GRP_INSTALL:
-                            action_status_col.html(i18n.adding_group_timeout);
+                            action_status_col.html(get_status_block(event_id, i18n.adding_group_timeout));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                         case KT.package_action_types.PKG_GRP_REMOVE:
-                            action_status_col.html(i18n.removing_group_timeout);
+                            action_status_col.html(get_status_block(event_id, i18n.removing_group_timeout));
                             clearAction(status["id"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                     }
                     break;
             }
         });
+    },
+    get_status_block = function(event_id, status){
+        var event_url = KT.routes.system_event_path(system_id, event_id);
+
+        var html = '<a data-url="' + event_url + '" class="subpanel_element">' + status + '</a>';
+        return html;
     },
     clearAction = function(action_id, content, content_type) {
         // clear/remove the details associated with the action....
