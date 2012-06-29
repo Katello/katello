@@ -48,16 +48,10 @@ class SubscriptionsController < ApplicationController
     }
   end
 
-  def section_id
-    'orgs'
-  end
-
   def index
     # If no manifest imported yet, one is currently being imported,
     # or the last attempt was a failure open the "new" panel
     if @provider.editable?
-      x = current_organization
-      y = current_organization.redhat_provider
       imports = current_organization.redhat_provider.owner_imports
       imports.sort! {|a,b| a['updated'] <=> b['updated']}
       if imports.length == 0 || imports.last['status'] == 'FAILURE' || (@provider.task_status && @provider.task_status.progress)
