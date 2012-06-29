@@ -29,7 +29,7 @@ KT.comparison_grid = function(){
             grid_row_headers_el = $('#grid_row_headers');
             grid_content_el = $('#grid_content');
         },
-        add_row = function(id, name, cell_data, parent_id){
+        add_row = function(id, name, cell_data, parent_id, comparable){
             var cells = [], insert,
                 row_level,
                 cell_columns = utils.keys(cell_data);
@@ -44,8 +44,8 @@ KT.comparison_grid = function(){
                 in_column = utils.include(cell_columns, key) ? true : false;
                 
                 if( in_column ){
-                    cells.push({ 'in_column' : in_column, 'display' : cell_data[key]['display'], 'span' : value['span'],
-                                'id' : key, 'hover' : cell_data[key]['hover'] });
+                    cells.push({'in_column' : in_column, 'display' : cell_data[key]['display'], 'span' : value['span'],
+                                'id' : key, 'hover' : cell_data[key]['hover'], 'comparable' : comparable });
                 } else {
                     cells.push({ 'in_column' : in_column, 'id' : key, 'span' : value['span'] });
                 }
@@ -114,7 +114,7 @@ KT.comparison_grid = function(){
             }
 
             utils.each(models.rows.get(), function(row, key) {
-                add_row(row['id'], row['name'], row['cells'], row['parent_id']);
+                add_row(row['id'], row['name'], row['cells'], row['parent_id'], row['comparable']);
             });
 
             utils.each(models.columns, function(column, key){
@@ -138,7 +138,7 @@ KT.comparison_grid = function(){
             models.rows.clear();
 
             utils.each(data, function(item) {
-                insert = models.rows.insert(item['id'], item['name'], item['cols'], item['parent_id']);
+                insert = models.rows.insert(item['id'], item['name'], item['cols'], item['parent_id'], item['comparable']);
             });
 
             add_rows(append);
@@ -329,11 +329,12 @@ KT.comparison_grid.models.rows = function(){
 
             return level;
         },
-        insert = function(id, name, cells, parent_id){
+        insert = function(id, name, cells, parent_id, comparable){
             var parent;
 
             if( parent_id ){
-                rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 'parent_id' : parent_id };
+                rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 
+                            'parent_id' : parent_id, 'comparable' : comparable };
 
                 parent = get_parent(id);
                 if( parent['child_ids'] === undefined ){
@@ -344,7 +345,7 @@ KT.comparison_grid.models.rows = function(){
                     return { 'first_child' : false };
                 }
             } else {
-                rows[id] = { 'id' : id, 'name' : name, 'cells' : cells};
+                rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 'comparabale' : comparable };
             }
 
             return {};
@@ -551,6 +552,13 @@ KT.comparison_grid.events = function(grid) {
             $('#change_content_select').find('select').live('change', function(){
                 $(document).trigger('change_details_content.comparison_grid', [$(this).val()]);
             });
+        },
+        comparable_cells = function(){
+            $('#compare_repos_btn').live('click', function(){
+                var selected = $('.grid_cell').find('input[type="checkbox"]:checked').val();
+
+                $(document).trigger('compare.comparison_grid', [selected]);
+            });
         };
 
     return {
@@ -575,7 +583,7 @@ KT.comparison_grid.templates = (function() {
             }
 
             if( hover !== "" ){
-                html += '<div data-span="' + data['span'] + '" class="one-line-ellipsis grid_cell cell_' + data['id'] + '" data-hover=true>';
+                html += '<div data-span="' + data['span'] + '" class="grid_cell cell_' + data['id'] + '" data-hover=true>';
             } else {
                 html += '<div data-span="' + data['span'] + '" class="grid_cell one-line-ellipsis cell_' + data['id'] + '">';
             }
@@ -583,6 +591,10 @@ KT.comparison_grid.templates = (function() {
             html += display; 
             if( hover !== "" ){
                 html += '<span class="hidden grid_cell_hover">' + hover + '</span>';
+            }
+
+            if( data['comparable'] && data['in_column'] ){
+                html += '<input type="checkbox" name="compare" value="" />';
             }
             html += '</div>';
 
