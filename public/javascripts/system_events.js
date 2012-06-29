@@ -128,9 +128,6 @@ KT.events = function() {
             }
 
             updateLoadedSummary();
-            if(($('.event_name[data-pending-task-id]').length > 0) || ($('.event_name[data-pending-job-id]').length > 0)) {
-                startUpdater();
-            }
 
             var  search_button = $('#event_filter_button'),
                     search_field = $('#event_search_filter'),
@@ -158,6 +155,9 @@ KT.events = function() {
                     }
                 });
             });
+        }
+        if(($('.event_name[data-pending-task-id]').length > 0) || ($('.event_name[data-pending-job-id]').length > 0)) {
+            startUpdater();
         }
     },
     updateLoadedSummary = function() {

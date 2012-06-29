@@ -1,3 +1,5 @@
+= javascript :system_events
+
 = javascript do
   -if editable
     :plain
@@ -29,6 +31,8 @@
           #{_("Applied")}
 
 = content_for :content do
+  %input.events{:type => "hidden", 'data-url' => status_system_group_events_path(@group.id)}
+
   #errata_container{ "data-parent_id" => @group.id }
     %table.filter_table.ajaxScroll
       %thead
