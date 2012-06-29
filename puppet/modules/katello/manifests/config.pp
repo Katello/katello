@@ -1,12 +1,10 @@
 class katello::config {
 
   # this should be required by all classes that need to log there (everytime $log_base is used)
-  # TODO this actually mangles file permissions - we should get rid of it (WHY we do this?)
   file { "${katello::params::log_base}":
     owner   => $katello::params::user,
     group   => $katello::params::group,
-    mode    => 640,
-    recurse => true;
+    mode    => 640;
   }
 
   # create Rails logs in advance to get correct owners and permissions
