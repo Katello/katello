@@ -448,6 +448,7 @@ class ApplicationController < ActionController::Base
     options[:total_count] ||= results.empty? ? 0 : results.total
     options[:total_results] = total
     options[:collection] = results
+    options[:columns] = options[:col]
     @items = results
 
     if options[:list_partial]
@@ -488,7 +489,7 @@ class ApplicationController < ActionController::Base
       items_offset = items_searched.limit(current_user.page_size).offset(start)
     else
       items_searched = @items
-      items_offset = items_searched[start.to_i..start.to_i+current_user.page_size]
+      items_offset = items_searched[start.to_i...start.to_i+current_user.page_size]
     end
 
     options[:total_results] = items_searched.count
@@ -572,7 +573,7 @@ class ApplicationController < ActionController::Base
   # (Note: this can be used to pull the displayMessage from a Candlepin exception.)
   # This assumes that the input follows a syntax similar to:
   #   "{\"displayMessage\":\"Import is older than existing data\"}"
-  def parse_display_message input
+  def self.parse_display_message input
     unless input.nil?
       if input.include? 'displayMessage'
         return JSON.parse(input)['displayMessage']

@@ -19,6 +19,8 @@ module Navigation
         helper_method :promotion_distribution_navigation
         helper_method :package_filter_navigation
         helper_method :gpg_keys_navigation
+        helper_method :subscriptions_navigation
+        helper_method :new_subscription_navigation
       end
     end
 
@@ -65,8 +67,8 @@ module Navigation
     def menu_redhat_providers
       {:key => :redhat_providers,
         :name =>_("Red Hat Content Provider"),
-        :url => redhat_provider_providers_path,
-        :if => lambda{current_organization && current_organization.readable?},
+        :url => subscriptions_path,
+        :if => lambda{current_organization && current_organization && current_organization.redhat_provider.readable?},
         :options => {:class=>"third_level", "data-dropdown"=>"providers"}
       }
     end
@@ -234,7 +236,7 @@ module Navigation
         }
       ]
     end
-    
+
     def gpg_keys_navigation
       [
         { :key => :products_repositories,
@@ -252,5 +254,44 @@ module Navigation
       ]
     end
 
+    def subscriptions_navigation
+      [
+        { :key => :details,
+          :name =>_("Details"),
+          :url => lambda{edit_subscription_path(@subscription.cp_id)},
+          :if => lambda{@subscription},
+          :options => {:class=>"panel_link"},
+        },
+        { :key => :products,
+          :name =>_("Products"),
+          :url => lambda{products_subscription_path(@subscription.cp_id)},
+          :if => lambda{@subscription},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :consumers,
+          :name =>_("Consumers"),
+          :url => lambda{consumers_subscription_path(@subscription.cp_id)},
+          :if => lambda{@subscription},
+          :options => {:class=>"panel_link"}
+        }
+      ]
+    end
+
+    def new_subscription_navigation
+      [
+        { :key => :upload,
+          :name =>_("Import"),
+          :url => lambda{new_subscription_path()},
+          :if => lambda{true},
+          :options => {:class=>"panel_link"},
+        },
+        { :key => :history,
+          :name =>_("History"),
+          :url => lambda{history_subscriptions_path()},
+          :if => lambda{true},
+          :options => {:class=>"panel_link"}
+        }
+      ]
+    end
   end
 end

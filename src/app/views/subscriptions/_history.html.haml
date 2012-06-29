@@ -1,0 +1,28 @@
+= javascript :edit_helpers, :provider_redhat
+
+= content_for :title do
+  #{_("Subscription Manifest")}
+
+= render :partial=>"subscriptions_tupane_header_new_nav"
+
+= content_for :content do
+  #subscription_history
+    .grid_10
+      = help_tip_button('subscriptions-history-help')
+      = help_tip(_("Listed below are the subscriptions information." + |
+                 " If you have a subscription manifest you may upload it below. " + |
+                 "This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."), 'subscriptions-help') |
+      %table
+        %thead
+          %th #{_("Message")}
+          %th #{_("Import Time")}
+        - if @statuses
+          %tbody
+            - @statuses.each do |status|
+              %tr{:class => cycle(nil, 'alt')}
+                %td{:style => "width: 70%;"}
+                  %span.icon_wrap.fl
+                    %span.fl{:class => (status["status"] == "FAILURE" ? "failure_icon" : "success_icon")}
+                  = status["statusMessage"]
+                %td
+                  = _("%s ago") % time_ago_in_words(status["created"])
