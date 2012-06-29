@@ -298,6 +298,14 @@ $comparison_grid_column_header-background: #FFF;
           &[data-span="3"] { width: $comparison_grid_column_3-width; }
           &[data-span="4"] { width: $comparison_grid_column_4-width; }
           &[data-span="5"] { width: $comparison_grid_column_5-width; }
+
+          input[type="checkbox"] {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            z-index: 5;
+          }
+        
         }
 
         .grid_cell_hover {
@@ -340,9 +348,9 @@ $comparison_grid_column_header-background: #FFF;
     }
 
     ul {
-      width: $comparison_grid-width - $comparison_grid_filter-width - 1;
-      height: $comparison_grid_footer-height;
-      margin: 0;
+      width: $comparison_grid-width - $comparison_grid_filter-width - 1 - 10;
+      height: $comparison_grid_footer-height - 10;
+      padding: 5px;
     }
 
   }
