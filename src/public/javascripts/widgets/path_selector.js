@@ -80,9 +80,20 @@ KT.path_select = function(div_id, name, environments, options_in){
             }
             scroll_obj = KT.env_select_scroll({});
             recalc_scroll();
-            reposition();
+            reposition_left();
         },
-        reposition = function(){
+        reposition_left = function(){
+            var selector_width, pos;
+
+            if(options.inline){
+                return false;
+            }
+            selector_width = path_selector.outerWidth()  ;
+            pos = div.outerWidth()  - selector_width;
+
+            path_selector.css('left', pos + 'px');
+        },
+        reposition_right = function(){
             var margin = 10,
                 window_width, selector_width, button_start, pos, top;
 
@@ -92,6 +103,8 @@ KT.path_select = function(div_id, name, environments, options_in){
             window_width = $(window).width();
             selector_width = path_selector.outerWidth()  ;
             button_start = div.offset().left;
+
+
 
             if(button_start + selector_width + margin > window_width){
                 pos = window_width - (selector_width + margin);
@@ -215,7 +228,7 @@ KT.path_select = function(div_id, name, environments, options_in){
         get_event : get_event,
         clear_selected: clear_selected,
         select:select,
-        reposition: reposition
+        reposition: reposition_left
     };
 };
 
