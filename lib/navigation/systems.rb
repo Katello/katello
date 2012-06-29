@@ -14,7 +14,6 @@ module Navigation
     def self.included(base)
       base.class_eval do
         helper_method :systems_navigation
-        helper_method :activation_keys_navigation
         helper_method :system_groups_navigation
       end
     end
@@ -23,7 +22,7 @@ module Navigation
        :name => _("Systems"),
         :url => :sub_level,
         :options => {:class=>'systems top_level', "data-menu"=>"systems"},
-        :items=> [ menu_systems_org_list, menu_systems_environments_list, menu_system_groups, menu_activation_keys]
+        :items=> [ menu_systems_org_list, menu_systems_environments_list, menu_system_groups]
       }
     end
 
@@ -43,15 +42,6 @@ module Navigation
        :if => lambda{current_organization && System.any_readable?(current_organization)},
        :options => {:class=>'systems second_level', "data-menu"=>"systems"}
       }
-    end
-
-    def menu_activation_keys
-       {:key => :activation_keys,
-        :name => _("Activation Keys"),
-        :url => activation_keys_path,
-        :if => lambda {current_organization && ActivationKey.readable?(current_organization())},
-        :options => {:class=>'systems second_level', "data-menu"=>"systems"}
-       }
     end
 
     def menu_system_groups
@@ -196,35 +186,6 @@ module Navigation
           :url => lambda{system_group_errata_path(@group.id)},
           :if => lambda{@group},
           :options => {:class=>"third_level panel_link"},
-        }
-      ]
-    end
-
-    def activation_keys_navigation
-      [
-        { :key => :applied_subscriptions,
-          :name =>_("Applied Subscriptions"),
-          :url => lambda{applied_subscriptions_activation_key_path(@activation_key.id)},
-          :if =>lambda{@activation_key},
-          :options => {:class=>"panel_link"}
-        },
-        { :key => :available_subscriptions,
-          :name =>_("Available Subscriptions"),
-          :url => lambda{available_subscriptions_activation_key_path(@activation_key.id)},
-          :if => lambda{@activation_key},
-          :options => {:class=>"panel_link"}
-        },
-        { :key => :system_groups,
-          :name =>_("System Groups"),
-          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
-          :if => lambda{@activation_key},
-          :options => {:class=>"panel_link"}
-        },
-        { :key => :details,
-          :name =>_("Details"),
-          :url => lambda{edit_activation_key_path(@activation_key.id)},
-          :if => lambda{@activation_key},
-          :options => {:class=>"panel_link"}
         }
       ]
     end

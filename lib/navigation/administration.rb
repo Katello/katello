@@ -69,5 +69,14 @@ module Navigation
       }
     end
 
+    def menu_orgs
+      {:key => :orgs,
+       :name => _("Manage Organizations"),
+       :url => organizations_path,
+       :if =>lambda {Organization.any_readable?},
+       :options => {:class=>'operations section_level', "data-menu"=>"operations"}
+      }
+    end
+
   end
 end
