@@ -63,7 +63,7 @@ KT.content_search = function(paths_in){
         var initial_search = $.bbq.getState('search');
         paths = paths_in;
         env_select = KT.path_select('column_selector', 'env', paths,
-            {select_mode:'multi', button_text:"Go", link_first: true});
+            {select_mode:'multi', link_first: true});
 
         comparison_grid = KT.comparison_grid();
         comparison_grid.init();
@@ -73,7 +73,7 @@ KT.content_search = function(paths_in){
         $(document).bind(browse_box.get_event(), search_initiated);
 
         bind_search_event();
-        bind_env_select_event();
+        bind_env_events();
         bind_hover_events();
         $(document).bind('return_to_results.comparison_grid', remove_subgrid);
 
@@ -183,8 +183,15 @@ KT.content_search = function(paths_in){
             $.bbq.pushState({search:search});
         });
     },
-    bind_env_select_event = function(){
-        $(document).bind(env_select.get_event(), function(event, environments) {
+    bind_env_events = function(){
+        //submit event
+        $(document).bind(env_select.get_submit_event(), function(event, environments) {
+           //if doing unique, or shared, research
+ 
+        });
+        //select event
+        $(document).bind(env_select.get_select_event(), function(event){
+            var environments = env_select.get_selected()
             $.bbq.pushState({environments:utils.values(environments)});
             comparison_grid.show_columns(environments);
             env_select.reposition();
