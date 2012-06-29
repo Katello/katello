@@ -18,12 +18,14 @@ module Navigation
       end
     end
     def menu_systems
-      {:key => :systems,
+      menu = {:key => :systems,
        :name => _("Systems"),
         :url => :sub_level,
         :options => {:class=>'systems top_level', "data-menu"=>"systems"},
-        :items=> [ menu_systems_org_list, menu_systems_environments_list, menu_system_groups]
+        :items=> [ menu_systems_org_list, menu_systems_environments_list]
       }
+      menu[:items] << menu_system_groups if AppConfig.katello?
+      menu
     end
 
     def menu_systems_org_list
