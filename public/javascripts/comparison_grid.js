@@ -32,7 +32,8 @@ KT.comparison_grid = function(){
         add_row = function(id, name, cell_data, parent_id, comparable){
             var cells = [], insert,
                 row_level,
-                cell_columns = utils.keys(cell_data);
+                cell_columns = utils.keys(cell_data),
+                sibling_rows;
  
             if( models.mode === "results" ){           
                 row_level = models.rows.get_nested_level(id);
@@ -54,7 +55,13 @@ KT.comparison_grid = function(){
             add_row_header(id, name, parent_id, row_level);
 
             if( parent_id ){
-                grid_content_el.find('#grid_row_' + parent_id).after(templates.row(id, utils.size(models.columns), cells, row_level));
+                sibling_rows = grid_content_el.find('[data-parent_id="' + parent_id + '"]')
+                
+                if( sibling_rows.length > 0 ){
+                    sibling_rows.after(templates.row(id, utils.size(models.columns), cells, row_level, parent_id));
+                } else {
+                    $('#grid_row_' + parent_id).after(templates.row(id, utils.size(models.columns), cells, row_level, parent_id));
+                }
             } else {
                 grid_content_el.append(templates.row(id, utils.size(models.columns), cells, row_level));
             }
@@ -63,9 +70,29 @@ KT.comparison_grid = function(){
                 add_row_collapse(id);
             }
         },
+        add_metadata_row = function(id, parent_id, page_size){
+
+            if( $('.load_row[data-id="' + id + '"]').length === 0 ){
+                add_row_header(id, '', parent_id, 3);
+
+                if( parent_id ){
+                    grid_content_el.find('[data-parent_id="' + parent_id + '"]').after(templates.load_more_row(id, page_size));
+                } else {
+                    grid_content_el.append(templates.load_more_row(id, page_size));
+                }
+            }
+        },
         add_row_header = function(id, name, parent_id, row_level) {
+            var sibling_rows;
+
             if( parent_id ){
-                grid_row_headers_el.find('#row_header_' + parent_id).after(templates.row_header(id, name, row_level));
+                sibling_rows = grid_row_headers_el.find('[data-parent_id="' + parent_id + '"]')
+                
+                if( sibling_rows.length > 0 ){
+                    sibling_rows.after(templates.row_header(id, name, row_level, parent_id));
+                } else {
+                    $('#row_header_' + parent_id).after(templates.row_header(id, name, row_level, parent_id));
+                }
             } else {
                 grid_row_headers_el.append(templates.row_header(id, name, row_level));
             }
@@ -82,7 +109,11 @@ KT.comparison_grid = function(){
             }
 
             utils.each(models.rows.get(), function(row, key) {
-                add_row(row['id'], row['name'], row['cells'], row['parent_id'], row['comparable']);
+                if( row['metadata'] ){
+                    add_metadata_row(row['id'], row['parent_id'], row['page_size']);
+                } else {
+                    add_row(row['id'], row['name'], row['cells'], row['parent_id'], row['comparable']);
+                }
             });
 
             utils.each(models.columns, function(column, key){
@@ -106,7 +137,11 @@ KT.comparison_grid = function(){
             models.rows.clear();
 
             utils.each(data, function(item) {
-                insert = models.rows.insert(item['id'], item['name'], item['cols'], item['parent_id'], item['comparable']);
+                if( item['metadata'] ){
+                    insert = models.rows.insert_metadata(item['id'], item['parent_id'], item['page_size'], item['current'], item['total'], item['data']);
+                } else {
+                    insert = models.rows.insert(item['id'], item['name'], item['cols'], item['parent_id'], item['comparable']);
+                }
             });
 
             add_rows(append);
@@ -315,8 +350,12 @@ KT.comparison_grid.models.rows = function(){
             } else {
                 rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 'comparabale' : comparable };
             }
-
+            
             return {};
+        },
+        insert_metadata = function(id, parent_id, page_size, current, total, data){
+            rows[id] = { 'id' : id, 'parent_id' : parent_id, 'data' : data, 'metadata' : true,
+                        'page_size' : page_size, 'current' : current, 'total' : total };
         };
 
     return {
@@ -324,6 +363,7 @@ KT.comparison_grid.models.rows = function(){
         set             : set,
         clear           : clear,
         insert          : insert,
+        insert_metadata : insert_metadata,
         get_parent      : get_parent,
         get_children    : get_children,
         has_children    : has_children,
@@ -539,6 +579,7 @@ KT.comparison_grid.events = function(grid) {
             cell_hover();
             details_view();
             change_details_content();
+            load_row_links();
         },
         cell_hover = function() {
             $('.grid_cell').live('hover', function(event){
@@ -570,6 +611,13 @@ KT.comparison_grid.events = function(grid) {
 
                 $(document).trigger('compare.comparison_grid', [selected]);
             });
+        },
+        load_row_links = function(){
+            $('.load_row_link').live('click', function(){
+                var id = $(this).data('id');
+
+                $(document).trigger('load_more.comparison_grid', [grid.models.rows.get(id)['data']])
+            });
         };
 
     return {
@@ -577,7 +625,7 @@ KT.comparison_grid.events = function(grid) {
     };
 };
 
-KT.comparison_grid.templates = (function() {
+KT.comparison_grid.templates = (function(i18n) {
     var cell = function(data) {
             var display,                
                 hover = data['hover'] ? data['hover'] : "",
@@ -611,9 +659,15 @@ KT.comparison_grid.templates = (function() {
 
             return html;
         },
-        row = function(id, num_columns, cell_data, row_level) {
+        row = function(id, num_columns, cell_data, row_level, parent_id) {
             var i,
-                html ='<div id="grid_row_' + id  + '" class="grid_row grid_row_level_' + row_level + '">';
+                html ='<div ';
+            
+            if( parent_id !== undefined ){
+                html += 'data-parent_id="' + parent_id + '" ';
+            }
+
+            html += 'id="grid_row_' + id  + '" class="grid_row grid_row_level_' + row_level + '">';
 
             for(i = 0; i < num_columns; i += 1){
                 html += cell(cell_data[i]);
@@ -622,8 +676,14 @@ KT.comparison_grid.templates = (function() {
 
             return html;
         },
-        row_header = function(id, name, row_level) {
-            var html = '<li data-id="' + id + '" id="row_header_' + id + '" class="one-line-ellipsis row_header grid_row_level_' + row_level + '">';
+        row_header = function(id, name, row_level, parent_id) {
+            var html = '<li data-id="' + id + '" id="row_header_' + id + '" class="one-line-ellipsis row_header grid_row_level_' + row_level + '" ';
+
+            if( parent_id !== undefined ){
+                html += 'data-parent_id="' + parent_id + '"';
+            }
+
+            html += '>';
             html += '<span>' + name + '</span>';
             html += '</li>';
             return html;
@@ -641,6 +701,15 @@ KT.comparison_grid.templates = (function() {
         },
         collapse_arrow = function(){
             return '<i class="down_arrow-icon-black"/><i class="right_arrow-icon-black" style="display:none;"/>';
+        },
+        load_more_row = function(id, load_size){
+            var html = '<div class="load_row grid_row" data-id="' + id + '">';
+                
+            html += '<a class="load_row_link" href="#" >' + i18n.show_more.replace('%P', load_size) + '</a>';
+            html += '<i class="down_arrow-icon-black"/>';
+            html += '</div>';
+
+            return html;
         };
 
     return {
@@ -648,6 +717,19 @@ KT.comparison_grid.templates = (function() {
         row             : row,
         column_header   : column_header,
         row_header      : row_header,
+        load_more_row   : load_more_row,
         collapse_arrow  : collapse_arrow
     }
-}());
+}(i18n));
+
+var test_data = [{"cols":{"1":{"display":25074}},"id":"product_1","name":"Linux"},{"cols":{"1":{"display":121},"2":{"display":121}},"id":"product_2","name":"Katello"},{"cols":{"1":{"hover":"<a class='subgrid_link' data-env_id='1' data-repo_id='1' data-type='repo_packages'>\n  Packages (25074)\n</a>\nErrata (0)\n"}},"parent_id":"product_1","id":"repo_1","name":"16 x86_64"},{"cols":{"1":{"hover":"<a class='subgrid_link' data-env_id='1' data-repo_id='2' data-type='repo_packages'>\n  Packages (121)\n</a>\nErrata (0)\n"},"2":{"hover":"<a class='subgrid_link' data-env_id='2' data-repo_id='3' data-type='repo_packages'>\n  Packages (121)\n</a>\nErrata (0)\n"}},"parent_id":"product_2","id":"repo_2","name":"Testing F16 x86_64"}, 
+    {
+        "metadata" : true, 
+        data : {}, 
+        "id" : "repo_test",
+        "parent_id" : "product_1",
+        "page_size" : 25,
+        "current" : 1,
+        "total" : 100
+    }
+];
