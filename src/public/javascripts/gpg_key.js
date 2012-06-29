@@ -23,6 +23,11 @@ $(document).ready(function(){
 	$('#upload_gpg_key').live('click', function(event){
 		KT.gpg_key.upload();
 	});
+
+	$('#upload_new_gpg_key').live('submit', function(e){
+    e.preventDefault();
+    KT.gpg_key.upload();
+	});
 	
 	$('#update_upload_gpg_key').live('click', function(event){
 		KT.gpg_key.upload_update();

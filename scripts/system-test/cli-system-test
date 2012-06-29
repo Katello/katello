@@ -128,12 +128,19 @@ else
     done
 fi
 
+function excape_xml() {
+    echo "$*" | sed -e 's/&/\&amp;/g'\
+        -e 's/</\&lt;/g'\
+        -e 's/>/\&gt;/g'\
+        -e 's/"/\&quot;/g'\
+        -e "s/'/\&apos;/g"
+}
 
 function log_test_result() {
-    test_results=("${test_results[@]}" "$1")
-    test_names=("${test_names[@]}" "$2")
+    test_results=("${test_results[@]}" "`excape_xml $1`")
+    test_names=("${test_names[@]}" "`excape_xml $2`")
     test_output=("${test_output[@]}" "$3")
-    test_suits=("${test_suits[@]}" "$current_suite")
+    test_suits=("${test_suits[@]}" "`excape_xml $current_suite`")
 }
 
 function summarize_log() {

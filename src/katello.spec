@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.42
+Version:        0.2.43
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -106,7 +106,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui-devel
+BuildRequires:  converge-ui-devel >= 0.7
 
 %description common
 Common bits for all Katello instances
@@ -180,7 +180,7 @@ compass compile
 
 #generate Rails JS/CSS/... assets
 echo Generating Rails assets...
-jammit --config config/assets.yml -f
+LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
 
 
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
@@ -352,6 +352,10 @@ fi
 %defattr(-, katello, katello)
 %{_localstatedir}/log/%{name}
 %{datadir}
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_sql.log
 
 %files glue-pulp
 %{homedir}/app/models/glue/pulp
@@ -384,6 +388,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jun 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.43-1
+- Stupid extra space.
+- Fix for a missing 'fr' in a gradient.
+- More SCSS refactoring and a fix for converge-ui spec.
+- point Support link to irc channel #katello
+
 * Mon Jun 25 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.42-1
 - katello - async manifest import, missing notices
 - ulimit - brad's review
