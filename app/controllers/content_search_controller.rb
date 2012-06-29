@@ -58,23 +58,21 @@ class ContentSearchController < ApplicationController
   end
 
   def repos
-    
     repo_ids = process_params :repos
     product_ids = param_product_ids
 
     if repo_ids.is_a? Array #repos were auto_completed
-        repos = Repository.readable(current_organization.library).where(:id=>repo_ids)
-
+        repos = Repository.enabled.readable(current_organization.library).where(:id=>repo_ids)
     elsif repo_ids #repos were searched
-      readable = Repository.readable(current_organization.library).collect{|r| r.id}
+      readable = Repository.enabled.readable(current_organization.library).collect{|r| r.id}
       repos = repo_search(repo_ids, readable)
     elsif !product_ids.empty? #products were autocompleted
         repos = []
         Product.readable(current_organization).where(:id=>product_ids).each do |p|
-          repos = repos + Repository.readable_for_product(current_organization.library, p)
+          repos = repos + Repository.enabled.readable_for_product(current_organization.library, p)
         end
     else #get all
-        repos = Repository.readable(current_organization.library)
+        repos = Repository.enabled.readable(current_organization.library)
     end
 
     products = repos.collect{|r| r.product}.uniq
@@ -85,10 +83,8 @@ class ContentSearchController < ApplicationController
     repo_ids_in = process_params :repos
     product_ids_in = param_product_ids
     package_ids_in = process_params :packages
-    repo_ids = nil
 
     product_repo_map = extract_repo_ids(product_ids_in, repo_ids_in)
-
     rows = []
     product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_content(p_id, repo_ids, 'package', package_ids_in) || [])}
     render :json=>rows
@@ -98,10 +94,8 @@ class ContentSearchController < ApplicationController
     repo_ids_in = process_params :repos
     product_ids_in = param_product_ids
     package_ids_in = process_params :errata
-    repo_ids = nil
 
     product_repo_map = extract_repo_ids(product_ids_in, repo_ids_in)
-
     rows = []
     product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_content(p_id, repo_ids, 'errata', package_ids_in) || [])}
     render :json=>rows
@@ -112,6 +106,13 @@ class ContentSearchController < ApplicationController
     repo = Repository.where(:id=>params[:repo_id]).first
     pkgs = spanned_repo_content(repo, 'package', process_params(:packages), params[:offset]) || {:content_rows=>[]}
     render :json=>pkgs[:content_rows]
+  end
+
+  #similar to :errata, but only returns errata rows with an offset for a specific repo
+  def errata_items
+    repo = Repository.where(:id=>params[:repo_id]).first
+    errata = spanned_repo_content(repo, 'errata', process_params(:errata), params[:offset]) || {:content_rows=>[]}
+    render :json=>errata[:content_rows]
   end
 
 
@@ -180,8 +181,6 @@ class ContentSearchController < ApplicationController
     @repo = Repository.readable_in_org(current_organization).find(params[:repo_id])
   end
 
-  private
-
   def repo_rows repos
     repos.collect do |repo|
         all_repos = repo.environmental_instance_ids
@@ -212,6 +211,8 @@ class ContentSearchController < ApplicationController
     ids || []
   end
 
+  # given a search object as params, return the search for a particular type
+  #  this could either be a search string, or array of ids
   def process_params type
     ids = params[type][:autocomplete].collect{|p|p["id"]} if params[type] && params[type][:autocomplete]
     search = params[type][:search] if params[type] && params[type][:search]
@@ -252,7 +253,7 @@ class ContentSearchController < ApplicationController
         products = Product.readable(current_organization)
       end
       products.each do |p|
-        repo_ids = repo_ids + Repository.readable_for_product(current_organization.library, p).collect{|r| r.id}
+        repo_ids = repo_ids + Repository.enabled.readable_for_product(current_organization.library, p).collect{|r| r.id}
       end
     end
 
@@ -298,9 +299,9 @@ class ContentSearchController < ApplicationController
   #  return a array of {:id=>env_id, :display=>search.total}
   #
   #
-  def spanned_repo_content repo, content_type, content_search_obj, offset=0
+  def spanned_repo_content library_repo, content_type, content_search_obj, offset=0
     #library must be first, so subtract it from instance ids
-    spanning_repos = [repo.pulp_id] + (repo.environmental_instance_ids - [repo.pulp_id])
+    spanning_repos = [library_repo.pulp_id] + (library_repo.environmental_instance_ids - [library_repo.pulp_id])
     spanning_repos = Repository.where(:pulp_id=>spanning_repos)
     to_ret = {}
     library_content = []
@@ -318,7 +319,7 @@ class ContentSearchController < ApplicationController
       to_ret[repo.environment_id] = {:id=>repo.environment_id, :display=>results.total}
     end
 
-    {:content_rows=>spanning_content_rows(library_content, content_type, content_attribute, repo, spanning_repos),
+    {:content_rows=>spanning_content_rows(library_content, content_type, content_attribute, library_repo, spanning_repos),
      :repo_cols=>to_ret, :sub_total=>library_total}
   end
 
