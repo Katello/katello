@@ -9,6 +9,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'util/errata'
+
 class Api::SystemGroupErrataController < Api::ApiController
   respond_to :json
 
@@ -53,7 +55,7 @@ class Api::SystemGroupErrataController < Api::ApiController
     end
   end
 
-  include ErrataModule
+  include Katello::Errata
 
   def get_errata filter_type="All"
     filter_type = filter_type || "All"
