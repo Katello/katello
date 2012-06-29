@@ -73,38 +73,6 @@ KT.comparison_grid = function(){
         add_row_collapse = function(id){
             grid_row_headers_el.find('#row_header_' + id).prepend(templates.collapse_arrow);
         },
-        collapse_rows = function(id, collapse){
-            var parent_row_header = $('#row_header_' + KT.common.escapeId(id)),
-
-                show = function(id, should_show){
-                    var child_rows = models.rows.get_children(id);                    
-
-                    utils.each(child_rows, function(child){
-                        child = KT.common.escapeId(child);
-                        if( should_show ){
-                            $('#grid_row_' + child).hide();
-                            $('#row_header_' + child).hide();
-                        } else {
-                            $('#grid_row_' + child).show();
-                            $('#row_header_' + child).show();
-                        }
-                    });
-
-                    if( models.rows.get_children(child_rows[0]) !== undefined ){
-                        show(child_rows[0], should_show);
-                    }
-                };
-        
-            show(id, collapse);
-
-            if( collapse ){
-                parent_row_header.find('.down_arrow-icon-black').hide()
-                parent_row_header.find('.right_arrow-icon-black').show();
-            } else {
-                parent_row_header.find('.down_arrow-icon-black').show()
-                parent_row_header.find('.right_arrow-icon-black').hide();
-            }
-        },
         add_rows = function(append) {
             append = (append === undefined) ? false : append;
 
@@ -237,6 +205,7 @@ KT.comparison_grid = function(){
 
     return {
         init                    : init,
+        models                  : models,
         export_data             : models.export_data,
         import_data             : models.import_data,
         add_rows                : add_rows,
@@ -244,7 +213,6 @@ KT.comparison_grid = function(){
         set_columns             : set_columns,
         add_columns             : add_columns,
         show_columns            : show_columns,
-        collapse_rows           : collapse_rows,
         set_loading             : set_loading,
         set_mode                : set_mode,
         set_content_select      : set_content_select,
@@ -490,11 +458,66 @@ KT.comparison_grid.controls = function(grid) {
                 show    : show,
                 hide    : hide
             };
-        }());
+        }()),
+
+        row_collapse = (function(){
+            var init = function(grid) {
+                    $('.row_header').live('click', function(){
+                        if( $(this).data('collapsed') ){
+                            expand($(this).data('id'), grid.models.rows);
+                            $(this).data('collapsed', false);
+                        } else {
+                            collapse($(this).data('id'), grid.models.rows);
+                            $(this).data('collapsed', true);
+                        }
+                    });
+                },
+                show = function(id, should_show, rows){
+                    var child_rows = rows.get_children(id);                    
+
+                    KT.utils.each(child_rows, function(child){
+                        child = KT.common.escapeId(child);
+                        if( should_show ){
+                            $('#grid_row_' + child).show();
+                            $('#row_header_' + child).show();
+                        } else {
+                            $('#grid_row_' + child).hide();
+                            $('#row_header_' + child).hide();
+                        }
+                    });
+
+                    if( rows.get_children(child_rows[0]) !== undefined ){
+                        show(child_rows[0], should_show);
+                    }
+                },
+                collapse = function(id, rows){
+                    var parent_row_header = $('#row_header_' + KT.common.escapeId(id));
+
+                    show(id, false, rows);
+
+                    parent_row_header.find('.down_arrow-icon-black').hide()
+                    parent_row_header.find('.right_arrow-icon-black').show();
+                },
+                expand = function(id, rows){
+                    var parent_row_header = $('#row_header_' + KT.common.escapeId(id));
+
+                    show(id, true, rows);
+
+                    parent_row_header.find('.down_arrow-icon-black').show()
+                    parent_row_header.find('.right_arrow-icon-black').hide();
+                };
+
+            return {
+                init        : init,
+                expand      : expand,
+                collapse    : collapse
+            };
+        }()).init(grid);
 
     return {
         horizontal_scroll       : horizontal_scroll,
         column_selector         : column_selector,
+        row_collapse            : row_collapse,
         change_content_select   : change_content_select
     }
 };
@@ -514,7 +537,6 @@ KT.comparison_grid.events = function(grid) {
             });
 
             cell_hover();
-            collapseable_rows();
             details_view();
             change_details_content();
         },
@@ -528,17 +550,6 @@ KT.comparison_grid.events = function(grid) {
                     if( event.type === 'mouseleave' ){
                         $(this).find('.grid_cell_hover').hide();
                     }
-                }
-            });
-        },
-        collapseable_rows = function() {
-            $('.row_header').live('click', function(){
-                if( $(this).data('collapsed') ){
-                    grid.collapse_rows($(this).data('id'), false);
-                    $(this).data('collapsed', false);
-                } else {
-                    grid.collapse_rows($(this).data('id'), true);
-                    $(this).data('collapsed', true);
                 }
             });
         },
