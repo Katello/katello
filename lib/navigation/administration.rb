@@ -44,9 +44,9 @@ module Navigation
       {:key => :admin,
        :name => _("Administer"),
         :url => :sub_level,
+        :items=> [ menu_users, menu_roles, menu_orgs],
         :options => {:class=>'operations header-widget fl menu_parent', "data-menu"=>"operations"},
-        :if => :sub_level,
-        :items=> [ menu_users, menu_roles]
+        :if => :sub_level
       }
     end
 
