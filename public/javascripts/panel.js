@@ -16,6 +16,10 @@ var subpanel = null;
 var subpanelSpacing = 55;
 var panelLeft = null;
 var count = 0;
+
+// Saves the state of the last subpanel viewed so selecting a new item from list will keep that subpanel open.
+var last_ajax_action;
+
 $(document).ready(function () {
     $('.left').resize(function () {
         var apanel = $('.panel');
@@ -45,14 +49,29 @@ $(document).ready(function () {
     var activeBlock = null;
     var activeBlockId = null;
     var ajax_url = null;
+    var panel_selected;
 
     $('.block').live('click', function (event) {
+        var subpanel_href,
+            subpanel_name;
+        var ajax_action;
+
         if (event.target.nodeName === "A" && event.target.className.match('content_add_remove')) {
             return false;
         } else {
             activeBlock = $(this);
             ajax_url = activeBlock.attr("data-ajax_url");
             activeBlockId = activeBlock.attr('id');
+            ajax_action = activeBlock.attr("data-ajax_action");
+
+            // If the panel is currently open, get the currently open tab
+            if (thisPanel.hasClass('opened')) {
+                subpanel_href = $('.panel_link.selected > a').attr('href');
+                if (subpanel_href) {
+                    last_ajax_action = subpanel_href.substr(subpanel_href.lastIndexOf('/') + 1);
+                }
+            }
+
             if(event.ctrlKey && !thisPanel.hasClass('opened') && !(event.target.id == "new") && !activeBlock.hasClass('active')) {
                 if (activeBlock.hasClass('active')) {
                     activeBlock.removeClass('active');
@@ -66,9 +85,19 @@ $(document).ready(function () {
                 if(activeBlock.hasClass('active') && thisPanel.hasClass('opened')){
                     KT.panel.closePanel(thisPanel);
                 } else {
-                    $.bbq.pushState({
-                        panel: activeBlockId
-                    });
+                    if (ajax_action && !last_ajax_action) {
+                        last_ajax_action = ajax_action;
+                    }
+                    if (last_ajax_action) {
+                        $.bbq.pushState({
+                            panel: activeBlockId,
+                            action: last_ajax_action
+                        });
+                    } else {
+                        $.bbq.pushState({
+                            panel: activeBlockId
+                        });
+                    }
                     activeBlock.find('.arrow-right').show();
                 }
             }
@@ -109,16 +138,36 @@ $(document).ready(function () {
             url: $(this).attr('href'),
             dataType: 'html',
             success: function (data) {
-            	var callbacks = KT.panel.get_expand_cb(),
-                	cb = function(){};
-            	
+                var callbacks = KT.panel.get_expand_cb(),
+                    cb = function(){};
+
                 thisPanel.find(".panel-content").html(data);
                 KT.common.jscroll_init($('.scroll-pane'));
-    			KT.common.jscroll_resize($('.jspPane'));
+                KT.common.jscroll_resize($('.jspPane'));
                 KT.panel.panelResize($('#panel_main'), false);
+
+                // Update the bbq
+                var activeBlock = $('#' + KT.common.escapeId(activeBlockId)),
+                    ajax_url = activeBlock.attr("data-ajax_url"),
+                    ajax_action = activeBlock.attr("data-ajax_action");
+
+                if (ajax_action) {
+                    // Replace old ajax_action with new
+                    ajax_action = this.url.substr(this.url.lastIndexOf('/') + 1);
+                    var bbq_panel = $.bbq.getState("panel");
+                    $.bbq.removeState("panel");
+                    $.bbq.removeState("action");
+                    $.bbq.pushState({
+                        panel: bbq_panel,
+                        action: ajax_action
+                    });
+                    // Set the new default action
+                    last_ajax_action = ajax_action;
+                }
+
                 
                 for( cb in callbacks ){
-                	callbacks[cb]();
+                    callbacks[cb]();
                 }
             }
         });
@@ -206,7 +255,20 @@ KT.panel = (function ($) {
         select_item = function (activeBlockId) {
             var activeBlock = $('#' + KT.common.escapeId(activeBlockId)),
                 ajax_url = activeBlock.attr("data-ajax_url"),
+                ajax_action = activeBlock.attr("data-ajax_action"),
+                full_ajax_url,
                 previousBlockId = null;
+
+            if (ajax_action) {
+                // Initialize the default action
+                if (!last_ajax_action) {
+                    last_ajax_action = ajax_action;
+                }
+                full_ajax_url = ajax_url + '/' + last_ajax_action;
+            } else {
+                full_ajax_url = ajax_url;
+            }
+
             thisPanel = $("#panel");
             subpanel = $('#subpanel');
             if (activeBlock.length) {
@@ -232,7 +294,7 @@ KT.panel = (function ($) {
                     }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
                     activeBlock.addClass('active');
                     previousBlockId = activeBlockId;
-                    panelAjax(activeBlockId, ajax_url, thisPanel, false);
+                    panelAjax(activeBlockId, full_ajax_url, thisPanel, false);
                 }
                 else if (thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId) {
                     switch_content_cb();
@@ -251,7 +313,7 @@ KT.panel = (function ($) {
                     activeBlock.addClass('active');
                     previousBlockId = activeBlockId;
                     thisPanel.removeClass('closed');
-                    panelAjax(activeBlockId, ajax_url, thisPanel, false);
+                    panelAjax(activeBlockId, full_ajax_url, thisPanel, false);
                 }
             }
         },
@@ -271,16 +333,16 @@ KT.panel = (function ($) {
                     pc.fadeIn(function () {
                         $(".panel-content :input:visible:enabled:first").focus();
                     });
-                    
+
                     KT.common.jscroll_init($('.scroll-pane'));
     				        KT.common.jscroll_resize($('.jspPane'));
-                    
+
                     if (isSubpanel) {
                         panelResize($('#subpanel_main'), isSubpanel);
                     } else {
                         panelResize($('#panel_main'), isSubpanel);
                     }
-                    
+
                     for( callback in expand_cb ){
                     	expand_cb[callback](name);
                     }
@@ -357,6 +419,7 @@ KT.panel = (function ($) {
                 content.html('');
                 position = KT.common.scrollTop();
                 $.bbq.removeState("panel");
+                $.bbq.removeState("action");
                 $(window).scrollTop(position);
                 updateResult();
                 contract_cb(name);
@@ -472,6 +535,9 @@ KT.panel = (function ($) {
         },
         search_started = function (event, promise) {
             var refresh = $.bbq.getState("panel");
+            if (!last_ajax_action) {
+                last_ajax_action = $.bbq.getState("action");
+            }
 
             if (refresh) {
                 if (promise) {
@@ -843,9 +909,17 @@ KT.panel.list = (function () {
                 prepend(data);
                 KT.panel.closePanel($('#panel'));
                 id = first_child().attr("id");
-                $.bbq.pushState({
-                    panel: id
-                });
+
+                if (last_ajax_action) {
+                    $.bbq.pushState({
+                        panel: id,
+                        action: last_ajax_action
+                    });
+                } else {
+                    $.bbq.pushState({
+                        panel: id
+                    });
+                }
                 KT.panel.select_item(id);
                 notices.checkNotices();
                 update_counts(1, 1, 1);
