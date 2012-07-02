@@ -44,9 +44,9 @@ module Navigation
       {:key => :admin,
        :name => _("Administer"),
         :url => :sub_level,
-        :options => {:class=>'operations top_level', "data-menu"=>"operations"},
-        :if => :sub_level,
-        :items=> [ menu_users, menu_roles]
+        :items=> [ menu_users, menu_roles, menu_orgs],
+        :options => {:class=>'operations header-widget fl menu_parent', "data-menu"=>"operations"},
+        :if => :sub_level
       }
     end
 
@@ -66,6 +66,15 @@ module Navigation
        :url => roles_path,
        :if =>lambda {Role.any_readable?},
        :options => {:class=>'operations second_level', "data-menu"=>"operations"}
+      }
+    end
+
+    def menu_orgs
+      {:key => :orgs,
+       :name => _("Manage Organizations"),
+       :url => organizations_path,
+       :if =>lambda {Organization.any_readable?},
+       :options => {:class=>'operations section_level', "data-menu"=>"operations"}
       }
     end
 

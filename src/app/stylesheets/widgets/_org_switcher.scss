@@ -1,0 +1,141 @@
+@charset "UTF-8";
+@import "compass";
+@import "converge-ui/vars";
+/*-------switcher STARTS HERE -------*/
+$switcherformwidth: 165px !default;
+/* switcher Container (default to float:right) */
+#switcherContainer {
+  display: inline-block;
+  width: $switcherformwidth;
+  height: 22px;
+  margin-right: 5px;
+  margin-top: 2px;
+  float: left;
+  @include switcher-button_color;
+  @include border-radius(3px);
+  /* switcher Button */
+   #switcherButton {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    width: 100%;
+    color: $font_color;
+    float: left;
+    margin: 2px 2px 0 8px;
+    text-decoration: none;
+    .arrow_icon_menu {
+     height: 11px;
+     width: 13px;
+     background: $arrow_icon_menu;
+     float: right;
+     margin: 4px 12px 0 0;
+     &:hover {
+      background: $arrow_icon_menu_hover;
+     }
+    }
+    &.active {
+      @include border-bottom-lr-radius(0);
+      .arrow_icon_menu {
+       background-position: -26px -11px;
+      }
+    }
+    .one-line-ellipsis {
+      max-width: 138px;
+      float: left;
+    }
+  }
+  &.active {
+    @include switcher-button-active_color;
+    @include border-bottom-lr-radius(0);
+  }
+  &:hover {
+    text-decoration: none;
+  }
+  /* switcher Box */
+  #switcherBox {
+    position: absolute;
+    top: 27px;
+    left: 6px;
+    display: none;
+    z-index: 2000;
+    @include border-radius(2px);
+    a {
+      color: $black_color !important;
+    }
+  }
+
+  /* switcher Form */
+  #switcherForm {
+    width: $switcherformwidth;
+    border: 0 none;
+    @include box-shadow(1px 4px 4px rgba(0, 0, 0, 0.4));
+    margin-top: -1px;
+    @include switcher-form_color;
+    @include border-trbrbl-radius(3px);
+    fieldset {
+      margin: 0 0 12px 0;
+      display: block;
+      border: 0;
+      padding: 0;
+    }
+    a {
+      width: 94%;
+      padding: 3%;
+      text-align: left;
+      text-decoration: none;
+      outline: 0 none;
+      @extend .one-line-ellipsis;
+      &:hover {
+        color: $font_color;
+        background-color: $listhover_color;
+      }
+      &.selected {
+         background-color: $lightkprimary_color;
+      }
+      &:last-child {
+        white-space: normal;
+      }
+    }
+    #orgfilter {
+      padding-top: 4px;
+    }
+    #manage_orgs {
+      padding: 1px;
+      margin: 6px 2px 2px 2px;
+      &:hover {
+        background-color: transparent;
+        .gears_icon {
+          background: $gears_icon_grey;
+        }
+      }
+    }
+  }
+  .filter {
+    position: relative;
+    width: $switcherformwidth - 11px;
+    height: 18px;
+    margin-left:8px;
+  }
+  #orgfilter_input {
+    width: $switcherformwidth - 16px;
+    margin-bottom: 3px;
+  }
+  .filter_button {
+    margin: 0;
+    top: 6px;
+    left: $switcherformwidth - 35px;
+  }
+
+  #orgbox {
+    background: $white_color;
+    @include border-radius(3px);
+    padding: 0;
+    margin: 10px 0 5px 0;
+    height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: $switcherformwidth;
+    max-width: $switcherformwidth;
+  }
+}
