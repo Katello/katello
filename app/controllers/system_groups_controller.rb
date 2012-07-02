@@ -12,9 +12,9 @@
 
 class SystemGroupsController < ApplicationController
 
-  before_filter :panel_options, :only=>[:index, :items, :create]
+  before_filter :panel_options, :only=>[:index, :items, :create, :copy]
   before_filter :find_group, :only=>[:edit, :update, :destroy, :destroy_systems, :systems, :lock,
-                                     :show, :add_systems, :remove_systems]
+                                     :show, :add_systems, :remove_systems, :copy]
   before_filter :authorize
   def rules
     any_readable = lambda{current_organization && SystemGroup.any_readable?(current_organization)}
@@ -29,6 +29,7 @@ class SystemGroupsController < ApplicationController
         :items=>any_readable,
         :new => create_perm,
         :create=>create_perm,
+        :copy=>create_perm,
         :edit=>read_perm,
         :systems => read_perm,
         :update=>edit_perm,
@@ -68,7 +69,7 @@ class SystemGroupsController < ApplicationController
 
   def create
     @group = SystemGroup.create!(params[:system_group].merge({:organization_id=>current_organization.id}))
-    notice N_("System Group %s created successfully.") % @group.name
+    notice _("System Group %s created successfully.") % @group.name
     if !search_validate(SystemGroup, @group.id, params[:search])
       notice _("'%s' did not meet the current search criteria and is not being shown.") % @group.name,
              { :level => 'message', :synchronous_request => false }
@@ -81,6 +82,28 @@ class SystemGroupsController < ApplicationController
         format.json {render :json => @group}
       end
     end
+
+  rescue Exception=> e
+    notice e, {:level => :error}
+    render :text=>e, :status=>500
+  end
+
+  def copy
+    new_group = SystemGroup.new
+    new_group.name = params[:name]
+    new_group.description = params[:description]
+    new_group.organization = @group.organization
+    new_group.max_systems = @group.max_systems
+    new_group.save!
+
+    new_group.systems = @group.systems
+    new_group.save!
+
+    notice _("System Group %{c} created successfully as a copy of system group %{s}.") % {:c => new_group.name, :s =>@group.name}
+
+    render :partial=>"common/list_item", :locals=>{:item=>new_group, :initial_action=>@panel_options[:initial_action],
+                                                   :accessor=>"id", :columns=>@panel_options[:col],
+                                                   :name=>controller_display_name}
 
   rescue Exception=> e
     notice e, {:level => :error}
