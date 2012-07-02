@@ -53,8 +53,8 @@ $(document).ready(function () {
 
     $('.block').live('click', function (event) {
         var subpanel_href,
-            subpanel_name;
-        var ajax_action;
+            subpanel_name,
+            ajax_action;
 
         if (event.target.nodeName === "A" && event.target.className.match('content_add_remove')) {
             return false;
