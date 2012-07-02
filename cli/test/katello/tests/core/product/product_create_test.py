@@ -16,7 +16,11 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     ]
 
     allowed_options = [
-        ('--org=ACME', '--provider=porkchop', '--name=product1')
+        ('--org=ACME', '--provider=porkchop', '--name=product1'),
+        ('--org=ACME', '--provider=porkchop', '--name=product1', '--url=http://localhost'),
+        ('--org=ACME', '--provider=porkchop', '--name=product1', '--url=https://localhost'),
+        ('--org=ACME', '--provider=porkchop', '--name=product1', '--url=ftp://localhost'),
+        ('--org=ACME', '--provider=porkchop', '--name=product1', '--url=file://localhost')
     ]
 
 
