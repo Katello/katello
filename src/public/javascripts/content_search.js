@@ -33,11 +33,15 @@ KT.content_search = function(paths_in){
         cache = KT.content_search_cache,
         utils = KT.utils,
     subgrids = {
-        repo_packages:{url:KT.routes.repo_packages_content_search_index_path(),
+        repo_packages:{id:'repo_packages',
+                       name:i18n.packages,
+                       url:KT.routes.repo_packages_content_search_index_path(),
                        cols:{description:{id:'description', name:i18n.description, span : "5"}}
 
         },
-        repo_errata  :{url:KT.routes.repo_errata_content_search_index_path(),
+        repo_errata  :{id:'repo_errata',
+                       name:i18n.errata,
+                       url:KT.routes.repo_errata_content_search_index_path(),
                        cols:{
                            title : {id:'title', name:i18n.title, span: "2"},
                            type  : {id:'type', name:i18n.type},
@@ -52,6 +56,10 @@ KT.content_search = function(paths_in){
                         products:KT.routes.products_content_search_index_path(),
                         packages:KT.routes.packages_content_search_index_path()
     },
+    more_results_urls = {
+        errata:   KT.routes.errata_items_content_search_index_path(),
+        packages: KT.routes.packages_items_content_search_index_path()
+    },
     subgrid_selector = [
         {id:'repo_errata', name:i18n.errata},
         {id:'repo_packages', name:i18n.packages}
@@ -63,7 +71,7 @@ KT.content_search = function(paths_in){
         var initial_search = $.bbq.getState('search');
         paths = paths_in;
         env_select = KT.path_select('column_selector', 'env', paths,
-            {select_mode:'multi', button_text:"Go", link_first: true});
+            {select_mode:'multi', link_first: true});
 
         comparison_grid = KT.comparison_grid();
         comparison_grid.init();
@@ -73,8 +81,11 @@ KT.content_search = function(paths_in){
         $(document).bind(browse_box.get_event(), search_initiated);
 
         bind_search_event();
-        bind_env_select_event();
+        bind_env_events();
         bind_hover_events();
+        bind_load_more_event();
+        bind_subgrid_selector();
+
         $(document).bind('return_to_results.comparison_grid', remove_subgrid);
 
         select_envs(get_initial_environments());
@@ -111,6 +122,23 @@ KT.content_search = function(paths_in){
         comparison_grid.show_columns(env_obj);
         env_select.reposition();
     },
+    bind_load_more_event = function(){
+      $(document).bind('load_more.comparison_grid', function(event){
+        var search = utils.extend($.bbq.getState('search'), event.cell_data);
+          search.offset = event.offset;
+
+        $.ajax({
+          type: 'POST',
+          contentType:"application/json",
+          url: more_results_urls[search.content_type],
+          cache: false,
+          data: JSON.stringify(search),
+          success: function(data){
+            $(document).trigger('show_more.comparison_grid', [data]);
+          }
+        })
+      });
+    },
     bind_search_event = function(){
         $(window).bind('hashchange.search', function(event) {
             var search_params = $.bbq.getState('search');
@@ -141,13 +169,16 @@ KT.content_search = function(paths_in){
                     comparison_grid.set_columns(subgrid.cols);
                     comparison_grid.set_mode("details");
                     comparison_grid.show_columns(subgrid.cols);
-                    bind_subgrid_selector();
+                    if (search_params.subgrid.type != 'compare'){
+                        comparison_grid.set_content_select(utils.values(subgrids));
+                    }
+
                     draw_grid(data);
                 }
             });
         }
         else if (search_urls[search_params.content_type] ){
-            unbind_subgrid_selector();
+
             if (cache.get_state(search_params)){
                 comparison_grid.import_data(cache.get_state(search_params));
             }
@@ -180,19 +211,26 @@ KT.content_search = function(paths_in){
             var search = $.bbq.getState('search');
             search.subgrid = $(this).data();
             $.bbq.pushState({search:search});
-        });
+        }, 'json');
     },
-    bind_env_select_event = function(){
-        $(document).bind(env_select.get_event(), function(event, environments) {
+    bind_env_events = function(){
+        //submit event
+        $(document).bind(env_select.get_submit_event(), function(event, environments) {
+           //if doing unique, or shared, research
+ 
+        });
+        //select event
+        $(document).bind(env_select.get_select_event(), function(event){
+            var environments = env_select.get_selected()
             $.bbq.pushState({environments:utils.values(environments)});
             comparison_grid.show_columns(environments);
             env_select.reposition();
         });
     },
     bind_subgrid_selector = function(){
-        return;
-        grid.configure_selector(subgrid_selector);
-        $(document).bind("foo", change_subgrid_type)
+        $(document).bind('change_details_content.comparison_grid', function(event){
+            change_subgrid_type(event.content_type);
+        });
     },
     unbind_subgrid_selector = function(){
         return;

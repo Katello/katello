@@ -25,7 +25,8 @@
  *                                in the path are 'linked' so checking one checks all
  *      button_text (none)     - if set, a button is rendered with the specified text,
  *                                 clicking the button generates a message
- *      button_event (path_#{name})    - if button exists, clicking it will trigger this event
+ *      submit_event (path_#{name})    - if button exists, clicking it will trigger this event
+ *                                       if no button and not inline, hovering out will trigger this event
  *      expand (true)           -  enable/disable the expanding of path nodes (disable for debugging)
  *
  */
@@ -43,8 +44,10 @@ KT.path_select = function(div_id, name, environments, options_in){
             options.library_select = default_opt(options_in.library_select, true);
             options.inline = default_opt(options_in.inline, false);
             options.select_mode = default_opt(options_in.select_mode, 'none');
+
             options.button_text = default_opt(options_in.button_text, undefined);
-            options.button_event = default_opt(options_in.button_event, ('paths_' + name));
+            options.submit_event = default_opt(options_in.submit_event, ('paths_' + name));
+            options.select_event = default_opt(options_in.select_event, ('selected_cell_' + name));
             options.link_first = default_opt(options_in.link_first, true);
             options.expand = default_opt(options_in.expand, true);
 
@@ -63,7 +66,7 @@ KT.path_select = function(div_id, name, environments, options_in){
                     if(!options.inline) {
                         path_selector.hide();
                     }
-                    $(document).trigger(options.button_event, [get_selected()]);
+                    $(document).trigger(options.submit_event, [get_selected()]);
                 });
             }
 
@@ -75,7 +78,7 @@ KT.path_select = function(div_id, name, environments, options_in){
                             over:function(){ path_selector.show(); },
                             timeout:500,
                             interval: 200,
-                            out:function(){ path_selector.hide(); }
+                            out:hover_out
                         });
             }
             scroll_obj = KT.env_select_scroll({});
@@ -93,6 +96,10 @@ KT.path_select = function(div_id, name, environments, options_in){
 
             path_selector.css('left', pos + 'px');
         },
+        hover_out = function(){
+            path_selector.hide();
+            $(document).trigger(options.submit_event, [get_selected()]);
+        }
         reposition_right = function(){
             var margin = 10,
                 window_width, selector_width, button_start, pos, top;
@@ -149,6 +156,7 @@ KT.path_select = function(div_id, name, environments, options_in){
                 if(options.link_first && select_elem.parents('li').is(':first-child')){
                     select_nodes(first_nodes.find('input:checkbox').not(':checked'))
                 }
+                $(document).trigger(options.select_event, [true, $(this).data('node_id'), $(this).data('next_node_id')]);
             };
             on_deselect = function(select_elem){
                 unselect_nodes(select_elem);
@@ -158,6 +166,7 @@ KT.path_select = function(div_id, name, environments, options_in){
                 if(options.link_first && select_elem.parents('li').is(':first-child')){
                     unselect_nodes(first_nodes.find('input:checkbox:checked').hide());
                 }
+                $(document).trigger(options.select_event, [false, $(this).data('node_id'), $(this).data('next_node_id')]);
             };
             nodes.change(function(){
                     if ($(this).is(':checked')){
@@ -204,8 +213,11 @@ KT.path_select = function(div_id, name, environments, options_in){
                scroll_obj.bind('#' + KT.common.escapeId(paths_id));
            }
         },
-        get_event = function(){
-            return options.button_event;
+        get_submit_event = function(){
+            return options.submit_event;
+        },
+        get_select_event = function(){
+            return options.select_event;
         },
         clear_selected = function(){
             unselect_nodes(path_selector.find('input:checked').hide());
@@ -225,7 +237,8 @@ KT.path_select = function(div_id, name, environments, options_in){
     return {
         get_paths   : get_paths,
         get_selected: get_selected,
-        get_event : get_event,
+        get_submit_event : get_submit_event,
+        get_select_event : get_select_event,
         clear_selected: clear_selected,
         select:select,
         reposition: reposition_left

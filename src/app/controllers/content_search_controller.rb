@@ -24,6 +24,7 @@ class ContentSearchController < ApplicationController
         :my_environments => contents_test,
         :packages => contents_test,
         :packages_items => contents_test,
+        :errata_items => contents_test,
         :repo_packages => contents_test,
         :repo_errata => contents_test,
         :repo_compare_errata =>contents_test,
@@ -105,14 +106,14 @@ class ContentSearchController < ApplicationController
   def packages_items
     repo = Repository.where(:id=>params[:repo_id]).first
     pkgs = spanned_repo_content(repo, 'package', process_params(:packages), params[:offset]) || {:content_rows=>[]}
-    render :json=>pkgs[:content_rows]
+    render :json=>(pkgs[:content_rows] + [metadata_row(pkgs[:total], params[:offset] + pkgs[:content_rows].length, repo)])
   end
 
   #similar to :errata, but only returns errata rows with an offset for a specific repo
   def errata_items
     repo = Repository.where(:id=>params[:repo_id]).first
     errata = spanned_repo_content(repo, 'errata', process_params(:errata), params[:offset]) || {:content_rows=>[]}
-    render :json=>errata[:content_rows]
+    render :json=>(errata[:content_rows] + [metadata_row(errata[:total], params[:offset] + errata[:content_rows].length, repo)])
   end
 
 
@@ -266,6 +267,13 @@ class ContentSearchController < ApplicationController
     product_repo_map
   end
 
+  def metadata_row(total_count, current_count, repo)
+    {:total=>total_count,  :current_count=>current_count, :page_size=>current_user.page_size,
+       :parent_id=>"repo_#{repo.id}", :data=>{:repo_id=>repo.id}, :id=>"repo_metadata_#{repo.id}",
+       :metadata=>true
+    }
+  end
+
   def spanned_product_content product_id, repo_ids, content_type, search_obj
     rows = []
     product = Product.find(product_id)
@@ -277,13 +285,15 @@ class ContentSearchController < ApplicationController
       repo = Repository.find(repo_id)
       repo_span = spanned_repo_content(repo, content_type,  search_obj)
       if repo_span
-        rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}",
-                 :parent_id=>"product_#{product_id}", :current_rows =>repo_span[:content_rows].length,
-                 :total_rows=>repo_span[:sub_total], :extend_url=>""}
+        rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}", 
+                 :parent_id=>"product_#{product_id}"}
         repo_span[:repo_cols].values.each do |span|
           product_envs[span[:id]] += span[:display]
         end
         content_rows += repo_span[:content_rows]
+        if repo_span[:total] > current_user.page_size
+          content_rows <<  metadata_row(repo_span[:total], current_user.page_size, repo)
+        end
       end
     end
     cols = {}
@@ -320,7 +330,7 @@ class ContentSearchController < ApplicationController
     end
 
     {:content_rows=>spanning_content_rows(library_content, content_type, content_attribute, library_repo, spanning_repos),
-     :repo_cols=>to_ret, :sub_total=>library_total}
+     :repo_cols=>to_ret, :total=>library_total}
   end
 
   # perform a content search (errata or package)
@@ -331,6 +341,7 @@ class ContentSearchController < ApplicationController
   # offset          offset of the search
   # default_field   default field to search if none specifiec
   def repo_content_search( content_class, search_obj, repo, offset, default_field)
+    user = current_user
     search = Tire.search content_class.index do
       query do
         if search_obj.is_a?(Array) || search_obj.nil?
@@ -340,6 +351,7 @@ class ContentSearchController < ApplicationController
         end
       end
 
+      size user.page_size
       from offset
 
       if  search_obj.is_a? Array
