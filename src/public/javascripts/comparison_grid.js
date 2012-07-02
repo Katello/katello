@@ -33,7 +33,8 @@ KT.comparison_grid = function(){
             var cells = [], insert,
                 row_level,
                 cell_columns = utils.keys(cell_data),
-                sibling_rows;
+                child_list,
+                has_children = models.rows.has_children(id);
  
             if( models.mode === "results" ){           
                 row_level = models.rows.get_nested_level(id);
@@ -52,49 +53,43 @@ KT.comparison_grid = function(){
                 }
             });
 
-            add_row_header(id, name, parent_id, row_level);
+            add_row_header(id, name, row_level, has_children, parent_id);
 
             if( parent_id ){
-                sibling_rows = grid_content_el.find('[data-parent_id="' + parent_id + '"]')
+                child_list = $('#child_list_' + parent_id);
                 
-                if( sibling_rows.length > 0 ){
-                    sibling_rows.after(templates.row(id, utils.size(models.columns), cells, row_level, parent_id));
-                } else {
-                    $('#grid_row_' + parent_id).after(templates.row(id, utils.size(models.columns), cells, row_level, parent_id));
-                }
+                child_list.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children, parent_id));
             } else {
-                grid_content_el.append(templates.row(id, utils.size(models.columns), cells, row_level));
+                grid_content_el.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children));
             }
 
-            if( models.rows.has_children(id) ){
+            if( has_children ){
                 add_row_collapse(id);
             }
         },
         add_metadata_row = function(id, parent_id, page_size){
+            var child_list;
 
             if( $('.load_row[data-id="' + id + '"]').length === 0 ){
-                add_row_header(id, '', parent_id, 3);
+                add_row_header(id, '', 3, false, parent_id);
 
                 if( parent_id ){
-                    grid_content_el.find('[data-parent_id="' + parent_id + '"]').after(templates.load_more_row(id, page_size));
+                    child_list = $('#child_list_' + parent_id);
+                    child_list.append(templates.load_more_row(id, page_size));
                 } else {
                     grid_content_el.append(templates.load_more_row(id, page_size));
                 }
             }
         },
-        add_row_header = function(id, name, parent_id, row_level) {
-            var sibling_rows;
+        add_row_header = function(id, name, row_level, has_children, parent_id) {
+            var child_list;
 
             if( parent_id ){
-                sibling_rows = grid_row_headers_el.find('[data-parent_id="' + parent_id + '"]')
+                child_list = $('#child_header_list_' + parent_id);
                 
-                if( sibling_rows.length > 0 ){
-                    sibling_rows.after(templates.row_header(id, name, row_level, parent_id));
-                } else {
-                    $('#row_header_' + parent_id).after(templates.row_header(id, name, row_level, parent_id));
-                }
+                child_list.append(templates.row_header(id, name, row_level, has_children, parent_id));
             } else {
-                grid_row_headers_el.append(templates.row_header(id, name, row_level));
+                grid_row_headers_el.append(templates.row_header(id, name, row_level, has_children, parent_id));
             }
         },
         add_row_collapse = function(id){
@@ -108,13 +103,23 @@ KT.comparison_grid = function(){
                 grid_row_headers_el.empty();
             }
 
-            utils.each(models.rows.get(), function(row, key) {
-                if( row['metadata'] ){
-                    add_metadata_row(row['id'], row['parent_id'], row['page_size']);
-                } else {
-                    add_row(row['id'], row['name'], row['cells'], row['parent_id'], row['comparable']);
-                }
-            });
+            if( append ){
+                utils.each(append, function(row, key) {
+                    if( row['metadata'] ){
+                        add_metadata_row(row['id'], row['parent_id'], row['page_size']);
+                    } else {
+                        add_row(row['id'], row['name'], row['cells'], row['parent_id'], row['comparable']);
+                    }
+                });
+            } else {
+                utils.each(models.rows.get(), function(row, key) {
+                    if( row['metadata'] ){
+                        add_metadata_row(row['id'], row['parent_id'], row['page_size']);
+                    } else {
+                        add_row(row['id'], row['name'], row['cells'], row['parent_id'], row['comparable']);
+                    }
+                });
+            }
 
             utils.each(models.columns, function(column, key){
                 if( column['shown'] ){
@@ -133,18 +138,32 @@ KT.comparison_grid = function(){
             
             set_loading(false);
         },
-        set_rows = function(data, append) {
-            models.rows.clear();
+        set_rows = function(data, initial) {
+            var append_rows, insert;
+
+            if( initial ){
+                models.rows.clear();
+            } else {
+                append_rows = []
+            }
 
             utils.each(data, function(item) {
                 if( item['metadata'] ){
                     insert = models.rows.insert_metadata(item['id'], item['parent_id'], item['page_size'], item['current'], item['total'], item['data']);
                 } else {
                     insert = models.rows.insert(item['id'], item['name'], item['cols'], item['parent_id'], item['comparable']);
+
+                    if( !initial ){
+                        append_rows.push(insert);
+                    }
                 }
             });
 
-            add_rows(append);
+            if( initial ){
+                add_rows();
+            } else {
+                add_rows(append_rows);
+            }
         },
         add_columns = function() {
             $('#column_headers').empty();
@@ -333,8 +352,6 @@ KT.comparison_grid.models.rows = function(){
             return level;
         },
         insert = function(id, name, cells, parent_id, comparable){
-            var parent;
-
             if( parent_id ){
                 rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 
                             'parent_id' : parent_id, 'comparable' : comparable };
@@ -342,16 +359,14 @@ KT.comparison_grid.models.rows = function(){
                 parent = get_parent(id);
                 if( parent['child_ids'] === undefined ){
                     parent['child_ids'] = [id];
-                    return { 'first_child' : true };
                 } else {
                     parent['child_ids'].push(id);
-                    return { 'first_child' : false };
                 }
             } else {
                 rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 'comparabale' : comparable };
             }
             
-            return {};
+            return rows[id];
         },
         insert_metadata = function(id, parent_id, page_size, current, total, data){
             rows[id] = { 'id' : id, 'parent_id' : parent_id, 'data' : data, 'metadata' : true,
@@ -502,7 +517,7 @@ KT.comparison_grid.controls = function(grid) {
 
         row_collapse = (function(){
             var init = function(grid) {
-                    $('.row_header').live('click', function(){
+                    $('.row_header[data-collapsed]').live('click', function(){
                         if( $(this).data('collapsed') ){
                             expand($(this).data('id'), grid.models.rows);
                             $(this).data('collapsed', false);
@@ -527,7 +542,7 @@ KT.comparison_grid.controls = function(grid) {
                     });
 
                     if( rows.get_children(child_rows[0]) !== undefined ){
-                        show(child_rows[0], should_show);
+                        show(child_rows[0], should_show, rows);
                     }
                 },
                 collapse = function(id, rows){
@@ -576,6 +591,10 @@ KT.comparison_grid.events = function(grid) {
                 grid.set_loading(true);
             });
 
+            $(document).bind('show_more.comparison_grid', function(event, data){
+                grid.set_rows(data);
+            });
+
             cell_hover();
             details_view();
             change_details_content();
@@ -602,21 +621,21 @@ KT.comparison_grid.events = function(grid) {
         },
         change_details_content = function() {
             $('#change_content_select').find('select').live('change', function(){
-                $(document).trigger('change_details_content.comparison_grid', [$(this).val()]);
+                $(document).trigger({ type : 'change_details_content.comparison_grid', content_type : $(this).val() });
             });
         },
         comparable_cells = function(){
             $('#compare_repos_btn').live('click', function(){
                 var selected = $('.grid_cell').find('input[type="checkbox"]:checked').val();
 
-                $(document).trigger('compare.comparison_grid', [selected]);
+                $(document).trigger({ type : 'compare.comparison_grid', selected : selected });
             });
         },
         load_row_links = function(){
             $('.load_row_link').live('click', function(){
                 var id = $(this).data('id');
 
-                $(document).trigger('load_more.comparison_grid', [grid.models.rows.get(id)['data']])
+                $(document).trigger({ type : 'load_more.comparison_grid', data : grid.models.rows.get(id)['data'] })
             });
         };
 
@@ -659,7 +678,7 @@ KT.comparison_grid.templates = (function(i18n) {
 
             return html;
         },
-        row = function(id, num_columns, cell_data, row_level, parent_id) {
+        row = function(id, num_columns, cell_data, row_level, has_children, parent_id) {
             var i,
                 html ='<div ';
             
@@ -667,25 +686,44 @@ KT.comparison_grid.templates = (function(i18n) {
                 html += 'data-parent_id="' + parent_id + '" ';
             }
 
-            html += 'id="grid_row_' + id  + '" class="grid_row grid_row_level_' + row_level + '">';
+            html += 'id="grid_row_' + id  + '" class="grid_row grid_row_level_' + row_level + '"'; 
+
+            if( has_children ){
+                html += ' collapsed="false"';
+            }
+
+            html += '>';
 
             for(i = 0; i < num_columns; i += 1){
                 html += cell(cell_data[i]);
             }
             html += '</div>';            
 
+            if( has_children ){
+                html += '<ul id="child_list_' + id + '"></ul>';
+            }
+
             return html;
         },
-        row_header = function(id, name, row_level, parent_id) {
+        row_header = function(id, name, row_level, has_children, parent_id) {
             var html = '<li data-id="' + id + '" id="row_header_' + id + '" class="one-line-ellipsis row_header grid_row_level_' + row_level + '" ';
 
             if( parent_id !== undefined ){
                 html += 'data-parent_id="' + parent_id + '"';
             }
+            
+            if( has_children ){
+                html += ' data-collapsed="false"';
+            }
 
             html += '>';
             html += '<span>' + name + '</span>';
             html += '</li>';
+
+            if( has_children ){
+                html += '<ul id="child_header_list_' + id + '"></ul>';
+            }
+    
             return html;
         },
         column = function() {
@@ -722,14 +760,4 @@ KT.comparison_grid.templates = (function(i18n) {
     }
 }(i18n));
 
-var test_data = [{"cols":{"1":{"display":25074}},"id":"product_1","name":"Linux"},{"cols":{"1":{"display":121},"2":{"display":121}},"id":"product_2","name":"Katello"},{"cols":{"1":{"hover":"<a class='subgrid_link' data-env_id='1' data-repo_id='1' data-type='repo_packages'>\n  Packages (25074)\n</a>\nErrata (0)\n"}},"parent_id":"product_1","id":"repo_1","name":"16 x86_64"},{"cols":{"1":{"hover":"<a class='subgrid_link' data-env_id='1' data-repo_id='2' data-type='repo_packages'>\n  Packages (121)\n</a>\nErrata (0)\n"},"2":{"hover":"<a class='subgrid_link' data-env_id='2' data-repo_id='3' data-type='repo_packages'>\n  Packages (121)\n</a>\nErrata (0)\n"}},"parent_id":"product_2","id":"repo_2","name":"Testing F16 x86_64"}, 
-    {
-        "metadata" : true, 
-        data : {}, 
-        "id" : "repo_test",
-        "parent_id" : "product_1",
-        "page_size" : 25,
-        "current" : 1,
-        "total" : 100
-    }
-];
+var base_test_data = [{"cols":{"1":{"id":1,"display":8},"2":{"id":2,"display":8}},"id":"product_1","name":"TestProduct"},{"parent_id":"product_1","cols":{"1":{"id":1,"display":8},"2":{"id":2,"display":8}},"id":"repo_5","name":"RealZoo"},{"parent_id":"repo_5","cols":{"1":{"id":1},"2":{"id":2}},"id":"package_362a37c2-53ec-462a-b700-fedbb74a8c1c","name":"squirrel-0.3-0.8.noarch"},{"parent_id":"repo_5","cols":{"1":{"id":1},"2":{"id":2}},"id":"package_8ff8c507-de0b-4e2f-a275-1df7cb5137aa","name":"monkey-0.3-0.8.noarch"},{"parent_id":"repo_5","cols":{"1":{"id":1},"2":{"id":2}},"id":"package_60ff9196-cf4e-4bba-9b02-06004403212d","name":"elephant-0.3-0.8.noarch"},{"parent_id":"repo_5","cols":{"1":{"id":1},"2":{"id":2}},"id":"package_1aadf3eb-fbbd-41c4-8ea0-13c356efb7e5","name":"giraffe-0.3-0.8.noarch"},{"parent_id":"repo_5","cols":{"1":{"id":1},"2":{"id":2}},"id":"package_a74c4bf4-9ffa-4080-bea7-dd2d575d1439","name":"walrus-0.3-0.8.noarch"},{"parent_id":"repo_5","cols":{"1":{"id":1},"2":{"id":2}},"id":"package_7837ae2e-feda-4e27-8c77-72502791cee5","name":"penguin-0.3-0.8.noarch"},{"parent_id":"repo_5","cols":{"1":{"id":1},"2":{"id":2}},"id":"package_30731359-7713-4f34-af5b-1ca5505587c3","name":"cheetah-0.3-0.8.noarch"},{"parent_id":"repo_5","cols":{"1":{"id":1},"2":{"id":2}},"id":"package_1cc74804-5e6d-4608-9ced-875ba26253af","name":"lion-0.3-0.8.noarch"},{"cols":{"1":{"id":1,"display":8238}},"id":"product_2","name":"Red Hat Enterprise Linux Server"},{"parent_id":"product_2","cols":{"1":{"id":1,"display":8238}},"id":"repo_85","name":"Red Hat Enterprise Linux 6 Server RPMs x86_64 6Server"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_8408fbc8-c18d-4979-afff-c9abdfcfc509","name":"apr-1.3.9-5.el6_2.i686"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_ab1d0ae3-e18e-4a6d-8a6c-453d8ca9f4ee","name":"apr-devel-1.3.9-3.el6.i686"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_c1b1f3ea-6fce-4ce8-a553-3619332eee37","name":"apr-devel-1.3.9-3.el6.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_ee1ab73d-96ac-4efe-a960-cc1df0b2878c","name":"apr-devel-1.3.9-5.el6_2.i686"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_233d3ed4-8612-411a-9e48-db6f7a4e20c9","name":"apr-devel-1.3.9-5.el6_2.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_7d4c82b6-a49f-4388-aa9c-0b1bb35ffe57","name":"apr-util-1.3.9-3.el6.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_9bb687d2-cde6-4cfe-891c-fe6534fcae98","name":"apr-util-devel-1.3.9-3.el6.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_0170dfa6-80e8-480f-b675-72624e175138","name":"apr-util-devel-1.3.9-3.el6_0.1.i686"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_6853e411-9359-4ed9-ac3e-8fd762421dcf","name":"apr-util-devel-1.3.9-3.el6_0.1.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_0a96c69c-6bba-458c-98b3-c2650d377969","name":"apr-util-ldap-1.3.9-3.el6.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_4868e337-6982-4665-afff-2e9351302ab9","name":"apr-util-ldap-1.3.9-3.el6_0.1.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_53ebf400-69a0-4779-9aa0-1dd09f92fd40","name":"arptables_jf-0.0.8-20.el6.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_8d12095b-7549-4fb5-aea7-bb1ace3f6edd","name":"arts-1.5.10-10.el6.i686"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_926a3322-080c-4a76-b4a2-d01d917d3318","name":"arts-devel-1.5.10-10.el6.i686"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_c104c8cc-7707-4199-92c0-bc92128d64b5","name":"at-3.1.10-42.el6.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_96b5b31c-3ee3-443b-bfeb-1b745fa07082","name":"at-3.1.10-43.el6.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_5b9b1d95-4da9-4f58-a4f4-545b63401cbf","name":"atlas-3.8.3-12.4.el6.i686"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_a9d3a382-e027-4709-83e4-868e8fee5720","name":"atlas-3.8.4-1.el6.i686"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_4f03f76c-aec5-4bbb-9de7-071730d420aa","name":"atlas-sse3-3.8.4-2.el6.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_4b32f71c-e0b1-4052-aaa4-ce07c5864e20","name":"audiofile-0.2.6-11.1.el6.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_2278f83f-9ec5-4b5c-bbb0-35646f065b84","name":"audispd-plugins-2.1.3-3.el6.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_1fc13efd-dc0b-42af-86d5-fbd7af7ae52b","name":"audit-2.1-5.el6.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_63c369bf-b6bd-4c97-a89e-00eea8373ef0","name":"audit-libs-2.0.4-1.el6.i686"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_59484bad-e444-4ee6-acab-9d7897dae01d","name":"audit-libs-2.1-5.el6.x86_64"},{"parent_id":"repo_85","cols":{"1":{"id":1}},"id":"package_d6121090-b5f5-4777-9b1a-936048a2e52e","name":"audit-libs-2.2-2.el6.i686"},{"parent_id":"repo_85","current_count":25,"id":"repo_metadata_85","metadata":true,"data":{"repo_id":85},"total":8238,"page_size":25}]

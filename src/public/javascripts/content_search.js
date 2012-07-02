@@ -172,7 +172,7 @@ KT.content_search = function(paths_in){
         }
     },
     draw_grid = function(data){
-        comparison_grid.set_rows(data);
+        comparison_grid.set_rows(data, true);
     },
     bind_hover_events = function(){
         var grid = $('#comparison_grid');
