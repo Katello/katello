@@ -43,12 +43,10 @@ class Api::ActivationKeysController < Api::ApiController
     }
   end
 
-
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/activation_keys", "List activation keys"
   api :GET, "/environments/:environment_id/activation_keys", "List activation keys"
   api :GET, "/organizations/:organization_id/activation_keys", "List activation keys"
-  param :name, :undef
+  param :name, :identifier, :desc => "lists by activation key name"
   def index
     query_params[:organization_id] = @organization.id unless @organization.nil?
     query_params[:environment_id] = @environment.id unless @environment.nil?
@@ -61,12 +59,11 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => @activation_key
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :POST, "/activation_keys", "Create an activation key"
   api :POST, "/environments/:environment_id/activation_keys", "Create an activation key"
   param :activation_key, Hash do
-    param :description, :undef, :allow_nil => true
-    param :name, :undef
+    param :name, :identifier, :desc => "activation key identifier (alphanum characters, space, - and _)"
+    param :description, String, :allow_nil => true
   end
   def create
     created = ActivationKey.create!(params[:activation_key]) do |ak|
@@ -83,13 +80,13 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => ActivationKey.find(@activation_key.id)
   end
 
-  api :POST, "/activation_keys/:id/pools"
+  api :POST, "/activation_keys/:id/pools", "Create an entitlement pool within an activation key"
   def add_pool
     @activation_key.key_pools.create(:pool => @pool) unless @activation_key.pools.include?(@pool)
     render :json => @activation_key
   end
 
-  api :DELETE, "/activation_keys/:id/pools/:poolid"
+  api :DELETE, "/activation_keys/:id/pools/:poolid", "Delete an entitlement pool within an activation key"
   def remove_pool
     unless @activation_key.pools.include?(@pool)
       raise HttpErrors::NotFound, _("Couldn't find pool '%s' in activation_key '%s'") % [@pool.cp_id, @activation_key.name]
@@ -98,7 +95,6 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => @activation_key
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :DELETE, "/activation_keys/:id", "Destroy an activation key"
   def destroy
     @activation_key.destroy
