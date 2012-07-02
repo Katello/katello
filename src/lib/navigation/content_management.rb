@@ -76,7 +76,7 @@ module Navigation
       {
         :key => :import_history,
         :name => _("Import History"),
-        :url => lambda {subscriptions_path + '#panel=new&panelpage=history'},
+        :url => lambda {history_subscriptions_path},
         :if => lambda{current_organization && current_organization.readable?},
         :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
       }
@@ -365,7 +365,7 @@ module Navigation
         },
         { :key => :history,
           :name =>_("History"),
-          :url => history_subscriptions_path,
+          :url => history_items_subscriptions_path,
           :if => lambda{current_organization && current_organization.readable?},
           :options => {:class=>"panel_link"}
         }

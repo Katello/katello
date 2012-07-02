@@ -73,8 +73,8 @@
                   = _("%s ago") % time_ago_in_words(status["created"])
           - if @statuses.length > 3
             %tr{:class => cycle(nil, 'alt')}
-              %td{:style => "width: 70%;"}
-                = link_to(_("More..."), root_path + "subscriptions#panel=new&panelpage=history")
+              %td.panel_link{:style => "width: 70%;"}
+                = link_to(_("More..."), subscriptions_path + "/history_items")
               %td
                 &nbsp;
 

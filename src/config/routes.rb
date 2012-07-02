@@ -101,6 +101,7 @@ Src::Application.routes.draw do
       get :items
       post :upload
       get :history
+      get :history_items
     end
   end
 

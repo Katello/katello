@@ -19,7 +19,7 @@ require 'ostruct'
 class SubscriptionsController < ApplicationController
 
   before_filter :find_provider
-  before_filter :find_subscription, :except=>[:index, :items, :new, :upload, :history]
+  before_filter :find_subscription, :except=>[:index, :items, :new, :upload, :history, :history_items]
   before_filter :authorize
   before_filter :setup_options, :only=>[:index, :items]
 
@@ -37,6 +37,7 @@ class SubscriptionsController < ApplicationController
       :products => read_provider_test,
       :consumers => read_provider_test,
       :history => read_provider_test,
+      :history_items=> read_provider_test,
       :new => read_provider_test,
       :upload => edit_provider_test
     }
@@ -144,6 +145,15 @@ class SubscriptionsController < ApplicationController
     begin
       @statuses = @provider.owner_imports
     rescue => error
+      # quietly ignore
+    end
+    render :template => "subscriptions/_history", :locals=>{:provider=>@provider, :statuses=>@statuses, :name => controller_display_name}
+  end
+
+  def history_items
+    begin
+      @statuses = @provider.owner_imports
+    rescue => error
       @statuses = []
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription history for provider '%{name}." % {:name => @provider.name})
@@ -152,11 +162,11 @@ class SubscriptionsController < ApplicationController
       Rails.logger.error "Error fetching subscription history from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
-      render :partial=>"history", :layout =>"tupane_layout", :status => :bad_request, :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
+      render :partial=>"history_items", :layout =>"tupane_layout", :status => :bad_request, :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
       return
     end
 
-    render :partial=>"history", :layout =>"tupane_layout", :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
+    render :partial=>"history_items", :layout =>"tupane_layout", :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
   end
 
 
