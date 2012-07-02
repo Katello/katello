@@ -88,12 +88,11 @@ $comparison_grid_column_header-background: #FFF;
 
   #grid_loading_screen {
     position: absolute;
-    top: 0;
+    top: $comparison_grid_header-height + 3;
     z-index: 10;
-    width: $comparison_grid-width;
-    min-height: $comparison_grid-height + $comparison_grid_footer-height + 3;
-    background: rgba(0, 0, 0, 0.8);
-    @include border-radius(3px);
+    width: $comparison_grid-width - $comparison_grid_filter-width - 1;
+    min-height: $comparison_grid-height - $comparison_grid_header-height;
+    background: rgba(255, 255, 255, 0.8);
   }
 
   #grid_header {
