@@ -918,6 +918,25 @@ fieldset {
     top: 9px;
     right: 20px;
   }
+  .pane_actions {
+    right: 82px;
+    position: absolute;
+    top: 9px;
+    .pane_action {
+      &:nth-of-type(odd){
+        margin: 0;
+        border-right: 2px solid $font_color;
+        padding: 1px 10px;
+      }
+
+      padding: 1px 10px;
+      color: darkRed;
+      &:hover {
+        color: red;
+      }
+    }
+  }
+
   .remove_item {
     color: darkRed;
     right: 82px;
