@@ -1,3 +1,3 @@
-.block.tall{:id => "#{name}_#{item.send(accessor)}", "data-ajax_url" => url_for(:action=> @panel_options[:initial_action], :id => item.send(accessor))}
+.block.tall{:id => "#{name}_#{item.send(accessor)}", "data-ajax_url" => "#{url_for(:controller=>controller.controller_name)}/#{item.send(accessor)}", "data-ajax_panelpage" => @panel_options[:initial_action]}
   = render :partial=>"systems/list_system_show", :locals=>{:item => item}
 
