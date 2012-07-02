@@ -164,6 +164,12 @@ class Product < ActiveRecord::Base
     result.length > 0 ? result.total : 0
   end
 
+  def total_errata_count env
+    repo_ids = self.repos(env).collect{|r| r.pulp_id}
+    results = Glue::Pulp::Errata.search('', 0, 1, :repoids => repo_ids)
+    results.empty? ? 0 : results.total
+  end
+
   def has_filters? env
     return false unless env == organization.library
     return true if filters.count > 0
