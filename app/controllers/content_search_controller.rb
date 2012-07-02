@@ -51,9 +51,9 @@ class ContentSearchController < ApplicationController
   def products
     ids = param_product_ids 
     if !ids.empty?
-      products = current_organization.products.where(:id=>ids)
+      products = current_organization.products.engineering.where(:id=>ids)
     else
-      products = current_organization.products
+      products = current_organization.products.engineering
     end
     render :json=>product_rows(products)
   end
@@ -184,7 +184,7 @@ class ContentSearchController < ApplicationController
 
   def repo_rows repos
     repos.collect do |repo|
-        all_repos = repo.environmental_instance_ids
+        all_repos = repo.environmental_instance_ids.collect{|r| r.pulp_id}
         cols = {}
         Repository.where(:pulp_id=>all_repos).each do |r|
           cols[r.environment.id] = {:hover => repo_hover_html(r)}
@@ -311,7 +311,7 @@ class ContentSearchController < ApplicationController
   #
   def spanned_repo_content library_repo, content_type, content_search_obj, offset=0
     #library must be first, so subtract it from instance ids
-    spanning_repos = [library_repo.pulp_id] + (library_repo.environmental_instance_ids - [library_repo.pulp_id])
+    spanning_repos = [library_repo.pulp_id] + (library_repo.environmental_instance_ids.collect{|r| r.pulp_id} - [library_repo.pulp_id])
     spanning_repos = Repository.where(:pulp_id=>spanning_repos)
     to_ret = {}
     library_content = []
