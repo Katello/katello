@@ -14,24 +14,64 @@
 require 'spec_helper.rb'
 include OrchestrationHelper
 
-describe Api::SystemGroupErrataController do
+describe Api::SystemGroupErrataController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods
+  include SystemHelperMethods
 
+  let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :system_groups, @group.id, @organization) } }
   let(:user_with_update_permissions) { user_with_permissions { |u| u.can(:update_systems, :system_groups, @group.id, @organization) } }
   let(:user_without_update_permissions) { user_without_permissions }
 
+  let(:uuid) { '1234' }
   let(:errata) { %w[RHBA-2012:0001 RHSA-2012:0002] }
 
   before(:each) do
-    login_user(:mock => false)
     set_default_locale
-    new_test_org
+    login_user(:mock => false)
 
     disable_consumer_group_orchestration
-    @group = SystemGroup.create!(:name=>"test_group", :organization=>@organization, :max_systems => 5)
+    setup_system_creation
+
+    @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@organization.library, :organization=>@organization)
+    @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+
+    @group = SystemGroup.new(:name=>"test_group", :organization=>@organization, :max_systems => 5)
+    @group.systems << @system
+    @group.save!
     SystemGroup.stub!(:find).and_return(@group)
+  end
+
+  describe "viewing errata" do
+    before (:each) do
+      types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
+
+      to_ret = []
+      5.times{ |num|
+        errata = {}
+        errata["id"] = "RHSA-2011-01-#{num}"
+        errata["type"] = types[rand(3)]
+        errata["release"] = "Red Hat Enterprise Linux 6.0"
+        to_ret << errata
+      }
+      Resources::Pulp::Consumer.stub!(:errata).and_return(to_ret)
+    end
+
+    let(:action) { :index }
+    let(:req) { get :index, :organization_id => @organization.name, :system_group_id => @group.id }
+    subject { req }
+    let(:authorized_user) { user_with_update_permissions }
+    let(:unauthorized_user) { user_without_update_permissions }
+
+    it_should_behave_like "protected action"
+
+    it { should be_successful }
+
+    it "should retrieve errata from pulp" do
+      Resources::Pulp::Consumer.should_receive(:errata)
+      subject
+    end
   end
 
   describe "install errata" do
