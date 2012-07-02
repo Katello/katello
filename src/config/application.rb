@@ -80,6 +80,9 @@ module Src
       config.action_mailer.default_url_options = {:host => host + ':' + port + prefix, :protocol => protocol}
     end
 
+    config.after_initialize do
+      require 'monkeys/fix_string_interpolate'
+    end
   end
 end
 

@@ -147,7 +147,8 @@ class RolesController < ApplicationController
         notice _("Role '%s' was updated.") % @role.name
         
         if not search_validate(Role, @role.id, params[:search])
-          notice _("'%s' no longer matches the current search criteria." % @role["name"]), { :level => :message, :synchronous_request => true }
+          notice _("'%s' no longer matches the current search criteria.") % @role["name"],
+                 { :level => :message, :synchronous_request => true }
         end
         
         render :json=>params[:role]

@@ -64,7 +64,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
 
     query = Katello::Search::filter_input query
     query = "*" if query == ""
-    query = "name_autocomplete:#{query}"
+    query = "name_autocomplete:(#{query})"
 
     search = Tire.search self.index do
       fields [:name]

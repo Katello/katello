@@ -29,9 +29,13 @@ class SystemGroupAPI(KatelloAPI):
         path = "/api/organizations/%s/system_groups/%s" % (org_id, system_group_id)
         return self.server.GET(path, query)[1]
 
-    def system_group_history(self, org_id, system_group_id, query={}):
-        path = "/api/organizations/%s/system_groups/%s/history" % (org_id, system_group_id)
-        return self.server.GET(path, query)[1]
+    def system_group_history(self, org_id, system_group_id, job_id=None):
+        if job_id == None:
+            path = "/api/organizations/%s/system_groups/%s/history" % (org_id, system_group_id)
+        else:
+            path = "/api/organizations/%s/system_groups/%s/history/%s" % (org_id, system_group_id, job_id)
+
+        return self.server.GET(path)[1]
 
     def system_group_by_name(self, org_id, system_group_name, query={}):
         path = "/api/organizations/%s/system_groups/" % org_id
@@ -75,12 +79,16 @@ class SystemGroupAPI(KatelloAPI):
         path = "/api/organizations/%s/system_groups/%s" % (org_id, system_group_id)
         return self.server.PUT(path, data)[1]
 
-    def delete(self, org_id, system_group_id):
-        path = "/api/organizations/%s/system_groups/%s" % (u_str(org_id), u_str(system_group_id))
+    def delete(self, org_id, system_group_id, delete_systems):
+        if delete_systems:
+            path = "/api/organizations/%s/system_groups/%s/destroy_systems" % (u_str(org_id), u_str(system_group_id))
+        else:
+            path = "/api/organizations/%s/system_groups/%s" % (u_str(org_id), u_str(system_group_id))
+
         return self.server.DELETE(path)[1]
 
     def add_systems(self, org_id, system_group_id, system_ids):
-        data = { 
+        data = {
             "system_group" : {
                 "system_ids": system_ids,
             }
@@ -90,7 +98,7 @@ class SystemGroupAPI(KatelloAPI):
         return self.server.POST(path, data)[1]
 
     def remove_systems(self, org_id, system_group_id, system_ids):
-        data = { 
+        data = {
             "system_group" : {
                 "system_ids": system_ids,
             }
@@ -98,3 +106,31 @@ class SystemGroupAPI(KatelloAPI):
 
         path = "/api/organizations/%s/system_groups/%s/remove_systems" % (org_id, system_group_id)
         return self.server.POST(path, data)[1]
+
+    def install_packages(self, org_id, system_group_id, packages):
+        path = "/api/organizations/%s/system_groups/%s/packages" % (org_id, system_group_id)
+        return self.server.POST(path, {"packages": packages})[1]
+
+    def update_packages(self, org_id, system_group_id, packages):
+        path = "/api/organizations/%s/system_groups/%s/packages" % (org_id, system_group_id)
+        return self.server.PUT(path, {"packages": packages})[1]
+
+    def remove_packages(self, org_id, system_group_id, packages):
+        path = "/api/organizations/%s/system_groups/%s/packages" % (org_id, system_group_id)
+        return self.server.DELETE(path, {"packages": packages})[1]
+
+    def install_package_groups(self, org_id, system_group_id, packages):
+        path = "/api/organizations/%s/system_groups/%s/packages" % (org_id, system_group_id)
+        return self.server.POST(path, {"groups": packages})[1]
+
+    def update_package_groups(self, org_id, system_group_id, packages):
+        path = "/api/organizations/%s/system_groups/%s/packages" % (org_id, system_group_id)
+        return self.server.PUT(path, {"groups": packages})[1]
+
+    def remove_package_groups(self, org_id, system_group_id, packages):
+        path = "/api/organizations/%s/system_groups/%s/packages" % (org_id, system_group_id)
+        return self.server.DELETE(path, {"groups": packages})[1]
+
+    def install_errata(self, org_id, system_group_id, errata):
+        path = "/api/organizations/%s/system_groups/%s/errata" % (org_id, system_group_id)
+        return self.server.POST(path, {"errata_ids": errata})[1]

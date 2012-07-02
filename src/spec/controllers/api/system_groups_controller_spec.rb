@@ -291,6 +291,33 @@ describe Api::SystemGroupsController do
        end
      end
 
+     describe "DELETE destroy_systems" do
+       let(:action) {:destroy_systems}
+       let(:req) { delete :destroy_systems, :id=>@group.id, :organization_id=>@org.cp_key}
+       let(:authorized_user) do
+         user_with_permissions { |u| u.can(:delete_systems, :system_groups, @group.id, @org) }
+       end
+       let(:unauthorized_user) do
+         user_without_permissions
+       end
+       it_should_behave_like "protected action"
+
+
+       it "should complete successfully" do
+         @group.systems  = [@system]
+         @group.save
+
+         System.stub(:find).and_return([@system])
+         @system.should_receive(:destroy)
+         controller.stub(:render)
+
+         delete :destroy_systems, :organization_id=>@org.cp_key, :id=>@group.id
+         response.should be_success
+         SystemGroup.where(:name=>@group.name).first.should be_nil
+       end
+     end
+
+
    end
 
 

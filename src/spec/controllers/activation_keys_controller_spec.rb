@@ -37,7 +37,7 @@ describe ActivationKeysController do
     @system_template_1 = AppConfig.katello? ? SystemTemplate.create!(:name => 'template1', :environment => @environment_1) : nil
     @system_template_2 = AppConfig.katello? ? SystemTemplate.create!(:name => 'template2', :environment => @environment_1) : nil
     @a_key = ActivationKey.create!(:name => "another test key", :organization => @organization, :environment => @environment_1)
-    @subscription = KTPool.create!(:cp_id => "Test Subscription",
+    @subscription = ::Pool.create!(:cp_id => "Test Subscription",
                                           :key_pools => [KeyPool.create!(:activation_key => @a_key)])
 
     @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id,
@@ -261,7 +261,7 @@ describe ActivationKeysController do
 
         it "should successfully add an already created subscription to an activation key" do
           controller.should_receive(:notice)
-          subscription = KTPool.create!(:cp_id => 'One Time Subscription')
+          subscription = Pool.create!(:cp_id => 'One Time Subscription')
           put :add_subscriptions, { :id => @a_key.id, :subscription_id => {"One Time Subscription" => "false"}}
           response.should be_success
           KeyPool.where(:activation_key_id => @a_key.id, :pool_id => subscription.id).should_not be_empty

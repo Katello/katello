@@ -1,0 +1,3 @@
+
+
+VERSION_INFO = "Foo 10000"

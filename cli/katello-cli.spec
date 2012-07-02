@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.39
+Version:       0.2.42
 Release:       1%{?dist}
 
 # Upstream uses tito rpm helper utility. To get the particular version from
@@ -112,6 +112,46 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.42-1
+- system groups - cli - fix broken test
+- system groups - cli - creating a group should default max systems to
+  unlimited
+- system groups - cli - add description to the AsyncJob
+- system groups - cli - split history in to 2 actions per review feedback
+- system groups - api/cli to support errata install
+- system groups - remove unused code from package action CLI
+- system groups - api/cli to support package and package group actions
+
+* Mon Jun 25 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.41-1
+- ulimit - brad's review
+- BZ 825262: support for moving systems between environments from CLI
+- ulimit - fixing cli makefile for unit tests
+- ulimit - backend api and cli
+- system groups - cli/api - provide user option to delete systems when deleting
+  group
+- cli - updated makefile and readme to mirror the latest changes in cli
+  unittests.
+
+* Mon Jun 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.40-1
+- Updates for broken cli unit tests that were a result of re-factoring work
+  previously done.
+- system groups - api - include total system count in system group info
+- system group cli - removed excess lines
+- cli - fix for printing version on -v option
+- cli unit tests - tests splitted into packages and modules
+- 822484 - cli - sync_plan list traceback
+- cli - pep8 fixes
+- cli - action base class renamed
+- cli - usage script modified to use command container
+- cli - auth methods extracted form server class
+- cli - fixed shell completion and line preprocessing
+- cli - katello cli turned to new-style command
+- cli - unittests fixed after introduction of new option types
+- cli - allow to use only user config file
+- 818726 - updated i18n translations
+- cli - new option types - url and list
+- 818726 - update to both ui and cli and zanata pushed
+
 * Fri Jun 01 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.39-1
 - system grops - a few fixes for history cli
 - cli - None check in date_formatter + enabled system test for deleting filters

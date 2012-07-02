@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.25
+Version:        0.2.29
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -84,6 +84,27 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.29-1
+- 834697 - explicitly disable qpid authentication
+
+* Wed Jun 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.28-1
+- 835152 - logs in advanced during installation fix
+- fix indention
+- 835152 - creating logs in advanced during installation
+- pubkeys - editing README with more details
+- pugkeys - adding pubkey list and Makefile
+- instead of hard setting stty, restore previous value
+- Fix indentation.
+- 828533 - changing to proper QPIDD SSL port
+- Change puppet config to generate encrypted db pass
+
+* Mon Jun 25 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.27-1
+- BZ 825262: support for moving systems between environments from CLI
+
+* Mon Jun 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.26-1
+- katello-upgrade is looking only for scripts marked as executable
+- 824362 - puppet preallocates journal on F16+
+
 * Thu May 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.25-1
 - 821532 - Removing extraneous hornetq files to fix candlepin upgrades
 - 824362 - workaround for mongodb/systemd Fedora bug

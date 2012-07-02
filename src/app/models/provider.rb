@@ -10,12 +10,16 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'util/notices'
+
 class Provider < ActiveRecord::Base
   include Glue::Provider
   include Glue
+  include AsyncOrchestration
   include Authorization
   include KatelloUrlHelper
   include IndexedModel
+  include Katello::Notices
 
   index_options :extended_json=>:extended_index_attrs,
                 :display_attrs=>[:name, :product, :repo, :description]
@@ -29,6 +33,7 @@ class Provider < ActiveRecord::Base
   CUSTOM = 'Custom'
   TYPES = [REDHAT, CUSTOM]
   belongs_to :organization
+  belongs_to :task_status
   has_many :products, :inverse_of => :provider
 
   validates :name, :presence => true, :katello_name_format => true
@@ -65,7 +70,7 @@ class Provider < ActiveRecord::Base
 
   def constraint_redhat_update
     if !new_record? && redhat_provider?
-      allowed_changes = %w[repository_url]
+      allowed_changes = %w(repository_url task_status_id)
       not_allowed_changes = changes.keys - allowed_changes
       unless not_allowed_changes.empty?
         errors.add(:base, _("the following attributes can not be updated for the Red Hat provider: [ %s ]") % not_allowed_changes.join(", "))

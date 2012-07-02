@@ -20,14 +20,14 @@ from gettext import gettext as _
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, system_exit
 
 Config()
 
 # base user action -----------------------------------------------------
 
-class UserRoleAction(Action):
+class UserRoleAction(BaseAction):
 
     def __init__(self):
         super(UserRoleAction, self).__init__()

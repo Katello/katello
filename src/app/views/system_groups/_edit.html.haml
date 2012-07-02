@@ -1,19 +1,13 @@
 = javascript :edit_helpers
 
-= content_for :title do
-  #{@group.name}
-
-= content_for :remove_item do
-  - if @group.deletable?
-    = link_to _("Remove System Group"), {:action => "destroy", :controller => "system_groups"}, :method => :delete, :confirm => _('Are you sure you want to delete this group?'), :class => "remove_item", :remote=>true
-
-= content_for :navigation do
-  = render_menu(1..2, system_groups_navigation)
+= render :partial => "system_groups/tupane_header"
 
 = content_for :content do
   #system_group_edit
     %input{:name=> @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
     .grid_8
+      %h5 #{_("System Group Info")}
+
       = form_for(@group, :html => {:multipart => true, :method => :put, :id => 'system_group_edit', :remote => true}, :url => system_group_path(@group)) do |f|
         %input#system_group_id{:name => @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
         %fieldset.fl.clear
@@ -35,9 +29,17 @@
             - else
               = @group.locked? ? 'Locked' : 'Unlocked'
 
+        %h5 #{_("System Properties")}
+
         %fieldset.fl.clear
-          .grid_4
-            %label #{_("Maximum Number of Systems")}:
+          .grid_2.ra
+            %label #{_("Total")}:
+          .grid_5.la.panel_link
+            = link_to(@group.systems.length, systems_system_group_path(@group.id))
+
+        %fieldset.fl.clear
+          .grid_2.ra
+            %label #{_("Maximum Limit")}:
           .grid_8.la
             - if @group.max_systems == -1
               .grid_2.ra

@@ -17,11 +17,11 @@ import sys
 from gettext import gettext as _
 
 from katello.client.config import Config
-from katello.client.core.base import Action, Command
+from katello.client.core.base import BaseAction, Command
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
-from katello.client.core.utils import is_valid_record
-
+from katello.client.core.utils import test_record
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_job, SystemGroupAsyncJob
 
 Config()
 
@@ -32,7 +32,7 @@ class SystemGroup(Command):
     description = _('system group specific actions in the katello server')
 
 
-class SystemGroupAction(Action):
+class SystemGroupAction(BaseAction):
 
     def __init__(self):
         super(SystemGroupAction, self).__init__()
@@ -56,16 +56,12 @@ class List(SystemGroupAction):
         org_name = self.get_option('org')
 
         system_groups = self.api.system_groups(org_name)
-
-        self.printer.set_header(_("System Groups List For Org [ %s ]") % org_name)
-
         if system_groups is None:
             return os.EX_DATAERR
 
+        self.printer.set_header(_("System Groups List For Org [ %s ]") % org_name)
         self.printer.add_column('id')
         self.printer.add_column('name')
-
-        self.printer._grep = True
         self.printer.print_items(system_groups)
         return os.EX_OK
 
@@ -93,14 +89,15 @@ class Create(SystemGroupAction):
         description = self.get_option('description')
         max_systems = self.get_option('max_systems')
 
+        if max_systems == None:
+            max_systems = "-1"
+
         system_group = self.api.create(org_name, name, description, max_systems)
 
-        if is_valid_record(system_group):
-            print _("Successfully created system group [ %s ]") % system_group['name']
-            return os.EX_OK
-        else:
-            print >> sys.stderr, _("Could not create system group [ %s ]") % name
-            return os.EX_DATAERR
+        test_record(system_group,
+            _("Successfully created system group [ %s ]") % system_group['name'],
+            _("Could not create system group [ %s ]") % name
+        )
 
 
 class Info(SystemGroupAction):
@@ -125,13 +122,11 @@ class Info(SystemGroupAction):
         # get system details
         system_group = get_system_group(org_name, system_group_name)
 
-        if not system_group:
-            return os.EX_DATAERR
-
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('locked')
+        self.printer.add_column('total_systems')
 
         self.printer.print_item(system_group)
 
@@ -159,11 +154,7 @@ class History(SystemGroupAction):
 
         system_group = get_system_group(org_name, system_group_name)
 
-        if not system_group:
-            return os.EX_DATAERR
-
-
-        # get list of jobs 
+        # get list of jobs
         history = self.api.system_group_history(org_name, system_group['id'])
 
         for job in history:
@@ -200,19 +191,18 @@ class HistoryTasks(SystemGroupAction):
         org_name = self.get_option('org')
         system_group_name = self.get_option('name')
         job_id = self.get_option('job_id')
-        # info is always grep friendly
 
         self.printer.set_header(_("System Group Job tasks For [ %s ]") % (system_group_name))
 
         system_group = get_system_group(org_name, system_group_name)
 
-        # get list of jobs 
-        history = self.api.system_group_history(org_name, system_group['id'], {'job_id':job_id})
-        if len(history) == 0:
+        # get list of jobs
+        history = self.api.system_group_history(org_name, system_group['id'], job_id)
+        if history == None:
             print >> sys.stderr, _("Could not find job [ %s ] for system group [ %s ]") % (job_id, system_group_name)
             return os.EX_DATAERR
 
-        tasks = history[0]['tasks']
+        tasks = history['tasks']
 
         self.printer.add_column('id', name='task id')
         self.printer.add_column('uuid', name='system uuid')
@@ -251,8 +241,6 @@ class Update(SystemGroupAction):
 
         system_group = get_system_group(org_name, name)
 
-        if system_group is None:
-            return os.EX_DATAERR
 
         system_group = self.api.update(org_name, system_group["id"], new_name, new_description, max_systems)
 
@@ -272,6 +260,8 @@ class Delete(SystemGroupAction):
                                help=_("system group name (required)"))
         parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
+        parser.add_option('--delete_systems', dest='delete_systems', action='store_true',
+                               default=False, help=_("delete the systems along with the system group (optional)"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -279,13 +269,11 @@ class Delete(SystemGroupAction):
     def run(self):
         org_name = self.get_option('org')
         name = self.get_option('name')
+        delete_systems = self.get_option('delete_systems')
 
         system_group = get_system_group(org_name, name)
-        if not system_group:
-            return os.EX_DATAERR
 
-        message = self.api.delete(org_name, system_group["id"])
-
+        message = self.api.delete(org_name, system_group["id"], delete_systems)
         if message != None:
             print message
             return os.EX_OK
@@ -309,23 +297,17 @@ class Systems(SystemGroupAction):
     def run(self):
         org_name = self.get_option('org')
         system_group_name = self.get_option('name')
-        # info is always grep friendly
 
         # get system details
         system_group = get_system_group(org_name, system_group_name)
-        if not system_group:
-            return os.EX_DATAERR
 
         systems = self.api.system_group_systems(org_name, system_group["id"])
-
         if systems is None:
             return os.EX_DATAERR
 
         self.printer.set_header(_("Systems within System Group [ %s ] For Org [ %s ]") % (system_group["name"], org_name))
-
         self.printer.add_column('id')
         self.printer.add_column('name')
-
         self.printer.print_items(systems)
 
         return os.EX_OK
@@ -347,13 +329,9 @@ class Lock(SystemGroupAction):
     def run(self):
         org_name = self.get_option('org')
         system_group_name = self.get_option('name')
-        # info is always grep friendly
 
         # get system details
         system_group = get_system_group(org_name, system_group_name)
-        if not system_group:
-            return os.EX_DATAERR
-
         system_group = self.api.lock(org_name, system_group["id"])
 
         if system_group != None:
@@ -379,13 +357,9 @@ class Unlock(SystemGroupAction):
     def run(self):
         org_name = self.get_option('org')
         system_group_name = self.get_option('name')
-        # info is always grep friendly
 
         # get system details
         system_group = get_system_group(org_name, system_group_name)
-        if not system_group:
-            return os.EX_DATAERR
-
         system_group = self.api.unlock(org_name, system_group["id"])
 
         if system_group != None:
@@ -416,9 +390,6 @@ class AddSystems(SystemGroupAction):
         system_ids = self.get_option('system_uuids')
 
         system_group = get_system_group(org_name, name)
-
-        if system_group is None:
-            return os.EX_DATAERR
 
         systems = self.api.add_systems(org_name, system_group["id"], system_ids)
 
@@ -451,9 +422,6 @@ class RemoveSystems(SystemGroupAction):
 
         system_group = get_system_group(org_name, name)
 
-        if system_group is None:
-            return os.EX_DATAERR
-
         systems = self.api.remove_systems(org_name, system_group["id"], system_ids)
 
         if systems != None:
@@ -461,3 +429,125 @@ class RemoveSystems(SystemGroupAction):
             return os.EX_OK
         else:
             return os.EX_DATAERR
+
+class Packages(SystemGroupAction):
+
+    description = _('manipulate the installed packages for systems in a system group')
+
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        parser.add_option('--name', dest='name',
+                       help=_("system group name (required)"))
+        parser.add_option('--install', dest='install', type="list",
+                       help=_("packages to be installed remotely on the systems, package names are separated with comma"))
+        parser.add_option('--remove', dest='remove', type="list",
+                       help=_("packages to be removed remotely from the systems, package names are separated with comma"))
+        parser.add_option('--update', dest='update', type="list",
+                       help=_("packages to be updated on the systems, use --all to update all packages, package names are separated with comma"))
+        parser.add_option('--install_groups', dest='install_groups', type="list",
+                       help=_("package groups to be installed remotely on the systems, group names are separated with comma"))
+        parser.add_option('--remove_groups', dest='remove_groups', type="list",
+                       help=_("package groups to be removed remotely from the systems, group names are separated with comma"))
+        parser.add_option('--update_groups', dest='update_groups', type="list",
+                       help=_("package groups to be updated remotely on the systems, group names are separated with comma"))
+
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
+
+        remote_actions = ('install', 'remove', 'update', 'install_groups', 'remove_groups', 'update_groups')
+        validator.require_one_of(remote_actions)
+
+
+    def run(self):
+        org_name = self.get_option('org')
+        group_name = self.get_option('name')
+
+        install = self.get_option('install')
+        remove = self.get_option('remove')
+        update = self.get_option('update')
+        install_groups = self.get_option('install_groups')
+        remove_groups = self.get_option('remove_groups')
+        update_groups = self.get_option('update_groups')
+
+        job = None
+
+        system_group = get_system_group(org_name, group_name)
+        system_group_id = system_group['id']
+
+        if install:
+            job = self.api.install_packages(org_name, system_group_id, install)
+        if remove:
+            job = self.api.remove_packages(org_name, system_group_id, remove)
+        if update:
+            if update == '--all':
+                update_packages = []
+            else:
+                update_packages = update
+            job = self.api.update_packages(org_name, system_group_id, update_packages)
+        if install_groups:
+            job = self.api.install_package_groups(org_name, system_group_id, install_groups)
+        if remove_groups:
+            job = self.api.remove_package_groups(org_name, system_group_id, remove_groups)
+        if update_groups:
+            job = self.api.update_package_groups(org_name, system_group_id, update_groups)
+
+        if job:
+            id = job["id"]
+            print (_("Performing remote action [ %s ]... ") % id)
+            job = SystemGroupAsyncJob(org_name, system_group_id, job)
+            run_spinner_in_bg(wait_for_async_job, [job])
+            if job.succeeded():
+                print _("Remote action finished:")
+                print job.get_status_message()
+                return os.EX_OK
+            else:
+                print _("Remote action failed:")
+                print job.get_status_message()
+                return os.EX_DATAERR
+
+        return os.EX_OK
+
+class Errata(SystemGroupAction):
+
+    description = _('install errata on systems in a system group')
+
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        parser.add_option('--name', dest='name',
+                       help=_("system group name (required)"))
+        parser.add_option('--install', dest='install', type="list",
+                       help=_("errata to be installed remotely on the systems, errata IDs separated with comma (required)"))
+
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'install'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        group_name = self.get_option('name')
+        install = self.get_option('install')
+
+        job = None
+
+        system_group = get_system_group(org_name, group_name)
+        system_group_id = system_group['id']
+
+        if install:
+            job = self.api.install_errata(org_name, system_group_id, install)
+
+        if job:
+            id = job["id"]
+            print (_("Performing remote action [ %s ]... ") % id)
+            job = SystemGroupAsyncJob(org_name, system_group_id, job)
+            run_spinner_in_bg(wait_for_async_job, [job])
+            if job.succeeded():
+                print _("Remote action finished:")
+                print job.get_status_message()
+                return os.EX_OK
+            else:
+                print _("Remote action failed:")
+                print job.get_status_message()
+                return os.EX_DATAERR
+
+        return os.EX_OK

@@ -4,7 +4,8 @@ jpa.config.hibernate.connection.driver_class=org.postgresql.Driver
 jpa.config.hibernate.connection.url=jdbc:postgresql:<%= scope.lookupvar("candlepin::params::db_name") %>
 jpa.config.hibernate.hbm2ddl.auto=validate
 jpa.config.hibernate.connection.username=<%= scope.lookupvar("candlepin::params::db_user") %>
-jpa.config.hibernate.connection.password=<%= scope.lookupvar("candlepin::params::db_pass") %>
+<% Puppet::Parser::Functions::function('katello_passencrypt') %>
+jpa.config.hibernate.connection.password=<%= scope.function_katello_passencrypt([scope.lookupvar("candlepin::params::db_pass")]) %>
 candlepin.consumer_system_name_pattern = .+
 candlepin.environment_content_filtering=<%= scope.lookupvar("candlepin::params::env_filtering_enabled") %>
 <% if scope.lookupvar("candlepin::params::katello_oauth_key") != "" -%>

@@ -22,8 +22,8 @@ class SystemGroupErrataController < ApplicationController
   end
 
   def rules
-    edit_group = lambda{SystemGroup.find(params[:system_group_id]).editable?}
-    read_group = lambda{SystemGroup.find(params[:system_group_id]).readable?}
+    edit_group = lambda{SystemGroup.find(params[:system_group_id]).systems_editable?}
+    read_group = lambda{SystemGroup.find(params[:system_group_id]).systems_readable?}
     {
       :index => read_group,
       :items => read_group,
@@ -35,7 +35,7 @@ class SystemGroupErrataController < ApplicationController
   def index
     offset = current_user.page_size
     render :partial=>"system_groups/errata/index", :layout => "tupane_layout",
-           :locals=>{:system=>@group, :editable => @group.editable?, :offset => offset}
+           :locals=>{:system=>@group, :editable => @group.systems_editable?, :offset => offset}
   end
 
   def items
@@ -47,7 +47,7 @@ class SystemGroupErrataController < ApplicationController
         
     rendered_html = render_to_string(:partial=>"systems/errata/items", :locals => { :errata => errata,
                                                                                     :errata_systems => errata_systems,
-                                                                                    :editable => @group.editable? })
+                                                                                    :editable => @group.systems_editable? })
 
     render :json => {:html => rendered_html,
                       :results_count => results_count,
@@ -74,7 +74,7 @@ class SystemGroupErrataController < ApplicationController
       jobs = @group.refreshed_jobs.joins(:task_statuses).where(
           'task_statuses.task_type' => [:errata_install], 'task_statuses.state' => [:waiting, :running])
     end
-    render :json => jobs.to_json(:include => :task_statuses)
+    render :json => jobs
   end
 
   private

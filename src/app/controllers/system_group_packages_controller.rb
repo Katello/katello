@@ -24,8 +24,8 @@ class SystemGroupPackagesController < ApplicationController
   end
 
   def rules
-    edit_group = lambda{SystemGroup.find(params[:system_group_id]).editable?}
-    read_group = lambda{SystemGroup.find(params[:system_group_id]).readable?}
+    edit_group = lambda{SystemGroup.find(params[:system_group_id]).systems_editable?}
+    read_group = lambda{SystemGroup.find(params[:system_group_id]).systems_readable?}
 
     {
       :index => read_group,
@@ -42,7 +42,7 @@ class SystemGroupPackagesController < ApplicationController
         'task_statuses.task_type' => actions, 'task_statuses.state' => [:waiting, :running])
 
     render :partial=>"system_groups/packages/index", :layout => "tupane_layout",
-           :locals=>{:jobs => jobs, :editable => @group.editable?}
+           :locals=>{:jobs => jobs, :editable => @group.systems_editable?}
   end
 
   def add
@@ -52,9 +52,10 @@ class SystemGroupPackagesController < ApplicationController
       
       if packages
         job = @group.install_packages packages
-        notice _("Install of Packages '%{p}' scheduled for System Group '%{s}'." % {:s => @group['name'], :p => params[:packages]})
+        notice _("Install of Packages '%{p}' scheduled for System Group '%{s}'.") %
+                   {'s' => @group['name'], 'p' => params[:packages]}
       else
-        notice _("One or more errors found in Package names '%{s}'." % {:s => params[:packages]}), {:level => :error}
+        notice _("One or more errors found in Package names '%{s}'.") % {:s => params[:packages]}, {:level => :error}
         render :text => '' and return
       end
 
@@ -62,14 +63,16 @@ class SystemGroupPackagesController < ApplicationController
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       job = @group.install_package_groups groups
-      notice _("Install of Package Groups '%{g}' scheduled for System Group '%{s}'." % {:s => @group['name'], :g => params[:groups]})
+      notice _("Install of Package Groups '%{g}' scheduled for System Group '%{s}'.") %
+                 {:s => @group['name'], :g => params[:groups]}
 
     else
-      notice _("Empty request received to install Packages or Package Groups for System Group '%{s}'." % {:s => @group['name']}), {:level => :error}
+      notice _("Empty request received to install Packages or Package Groups for System Group '%s'.") %
+                 @group['name'], {:level => :error}
       render :text => '' and return
     end
 
-    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.editable?, :job => job, :include_tr_shading => false}
+    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?, :job => job, :include_tr_shading => false}
   end
 
   def remove
@@ -79,9 +82,10 @@ class SystemGroupPackagesController < ApplicationController
       
       if packages
         job = @group.uninstall_packages packages
-        notice _("Uninstall of Packages '%{p}' scheduled for System Group '%{s}'." % {:s => @group['name'], :p => params[:packages]})
+        notice _("Uninstall of Packages '%{p}' scheduled for System Group '%{s}'.") %
+                   { :s => @group['name'], :p => params[:packages] }
       else
-        notice _("One or more errors found in Package names '%{s}'." % {:s => params[:packages]}), {:level => :error}
+        notice _("One or more errors found in Package names '%s'.") % params[:packages], {:level => :error}
         render :text => '' and return        
       end
 
@@ -89,14 +93,16 @@ class SystemGroupPackagesController < ApplicationController
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       job = @group.uninstall_package_groups groups
-      notice _("Uninstall of Package Groups '%{p}' scheduled for System Group '%{s}'." % {:s => @group['name'], :p => groups.join(',')})
+      notice _("Uninstall of Package Groups '%{p}' scheduled for System Group '%{s}'.") %
+                 {:s => @group['name'], :p => groups.join(',')}
 
     else
-      notice _("Empty request received to uninstall Packages or Package Groups for System Group '%{s}'." % {:s => @group['name']}), {:level => :error}
+      notice _("Empty request received to uninstall Packages or Package Groups for System Group '%s'.") %
+                 @group['name'], {:level => :error}
       render :text => '' and return
     end
 
-    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.editable?, :job => job, :include_tr_shading => false}
+    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?, :job => job, :include_tr_shading => false}
   end
 
   def update
@@ -106,9 +112,10 @@ class SystemGroupPackagesController < ApplicationController
 
       if packages
         job = @group.update_packages packages
-        notice _("Update of Packages '%{p}' scheduled for System Group '%{s}'." % {:s => @group['name'], :p => params[:packages]})
+        notice _("Update of Packages '%{p}' scheduled for System Group '%{s}'.") %
+                   {:s => @group['name'], :p => params[:packages]}
       else
-        notice _("One or more errors found in Package names '%{s}'." % {:s => params[:packages]}), {:level => :error}
+        notice _("One or more errors found in Package names '%s'.") % params[:packages], {:level => :error}
         render :text => '' and return
       end
 
@@ -116,14 +123,16 @@ class SystemGroupPackagesController < ApplicationController
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       job = @group.install_package_groups groups
-      notice _("Update of Package Groups '%{p}' scheduled for System Group '%{s}'." % {:s => @group['name'], :p => groups.join(',')})
+      notice _("Update of Package Groups '%{p}' scheduled for System Group '%{s}'.") %
+                 {:s => @group['name'], :p => groups.join(',')}
 
     else
-      notice _("Empty request received to update Packages or Package Groups for System Group '%{s}'." % {:s => @group['name']}), {:level => :error}
+      notice _("Empty request received to update Packages or Package Groups for System Group '%s'.") %
+                 @group['name'], {:level => :error}
       render :text => '' and return
     end
 
-    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.editable?, :job => job, :include_tr_shading => false}
+    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?, :job => job, :include_tr_shading => false}
   end
 
   def status

@@ -82,6 +82,7 @@ elsif ARGV.count > 0
 else
   # query method
   begin
+    stty_orig_val = %x( stty -g )
     system "stty -echo"
     print "Password: "; pass1 = $stdin.gets.chomp; puts "\n"
     print "Password (repeat): "; pass2 = $stdin.gets.chomp; puts "\n"
@@ -92,6 +93,6 @@ else
       exit 2
     end
   ensure
-    system "stty echo"
+    system("stty #{stty_orig_val}")
   end
 end

@@ -85,5 +85,5 @@ class UserAPI(KatelloAPI):
         return self.server.GET(path)[1]
 
     def report(self, format):
-        to_return = self.server.GET("/api/users/report", customHeaders={"Accept": format})
+        to_return = self.server.GET("/api/users/report", custom_headers={"Accept": format})
         return (to_return[1], to_return[2])

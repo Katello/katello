@@ -19,6 +19,7 @@ KT.panel.set_expand_cb(function() {
 $(document).ready(function() {
 
     KT.panel.set_expand_cb(function() {
+        KT.activation_key.initialize_new();
         KT.activation_key.initialize_edit();
     });
 
@@ -41,11 +42,6 @@ $(document).ready(function() {
 
     $('#activation_key_system_template_id').live('change', function() {
         KT.activation_key.highlight_system_templates(false);
-    });
-
-    $('#go_to_available_subscriptions').live('click', function(e) {
-        e.preventDefault();
-        KT.activation_key.go_to_available_subscriptions();
     });
 
     $('.clickable.product_family').live('click', function() {
@@ -76,7 +72,7 @@ $(document).ready(function() {
              });
          }
      });
-
+    
     KT.system_groups_pane.register_events();
 });
 
@@ -106,17 +102,9 @@ KT.activation_key = (function($) {
 
         subbutton.unbind('click').click(disableSubmit);
     },
-    go_to_available_subscriptions = function() {
-        var url = $('#go_to_available_subscriptions').attr('href');
-        $.ajax({
-            cache: 'false',
-            type: 'GET',
-            url: url,
-            dataType: 'html',
-            success: function(data) {
-                $(".panel-content").html(data);
-                KT.panel.panelResize($('#panel_main'), false);
-            }
+    initialize_new = function() {
+        $('#usage_limit_checkbox').live('click', function() {
+            KT.activation_key.toggle_usage_limit($(this));
         });
     },
     initialize_edit = function() {
@@ -173,6 +161,16 @@ KT.activation_key = (function($) {
             arrow.attr("src", "images/embed/icons/expander-collapsed.png");
         } else {
             arrow.attr("src", "images/embed/icons/expander-expanded.png");
+        }
+    },
+    toggle_usage_limit = function(checkbox) {
+        var tb = $("#usage_limit_textbox");
+        if (checkbox.is(":checked")) {
+            tb.val('');
+            tb.attr("disabled", true);
+        } else {
+            tb.val('');
+            tb.removeAttr('disabled');
         }
     },
     toggle_family_checkboxes = function(data, checked) {
@@ -290,12 +288,13 @@ KT.activation_key = (function($) {
     };
     return {
         subscription_setup: subscription_setup,
-        go_to_available_subscriptions: go_to_available_subscriptions,
+        initialize_new: initialize_new,
         initialize_edit: initialize_edit,
         reset_env_select: reset_env_select,
         save_key: save_key,
         cancel_key: cancel_key,
         toggle_family: toggle_family,
+        toggle_usage_limit: toggle_usage_limit,
         toggle_family_checkboxes: toggle_family_checkboxes,
         toggle_parent_checkbox: toggle_parent_checkbox,
         get_system_templates: get_system_templates,

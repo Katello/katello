@@ -1,9 +1,10 @@
 class candlepin::params {
   $db_user = katello_config_value('candlepin_db_user')
   $db_name = katello_config_value('candlepin_db_name')
-  
+
   # this comes from keystore
-  $db_pass = "candlepin"
+  $db_pass = katello_config_value('candlepin_db_password')
+
   # where to store output from cpsetup execution
   $cpsetup_log = "${katello::params::log_base}/katello-configure/cpsetup.log"
   $crl_file = "/var/lib/candlepin/candlepin-crl.crl"

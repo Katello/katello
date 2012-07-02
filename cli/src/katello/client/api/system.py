@@ -134,12 +134,12 @@ class SystemAPI(KatelloAPI):
 
     def report_by_org(self, orgId, format):
         path = "/api/organizations/%s/systems/report" % orgId
-        to_return = self.server.GET(path, customHeaders={"Accept": format})
+        to_return = self.server.GET(path, custom_headers={"Accept": format})
         return (to_return[1], to_return[2])
 
     def report_by_env(self, env_id, format):
         path = "/api/environments/%s/systems/report" % env_id
-        to_return = self.server.GET(path, customHeaders={"Accept": format})
+        to_return = self.server.GET(path, custom_headers={"Accept": format})
         return (to_return[1], to_return[2])
 
     def add_system_groups(self, system_id, system_group_ids):
