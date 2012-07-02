@@ -27,10 +27,12 @@ class ActivationKey < ActiveRecord::Base
   belongs_to :system_template
 
   has_many :key_pools
-  has_many :pools, :class_name => "KTPool", :through => :key_pools
+  has_many :pools, :class_name => "::Pool", :through => :key_pools
 
   has_many :key_system_groups, :dependent => :destroy
   has_many :system_groups, :through => :key_system_groups
+
+  has_many :system_activation_keys, :dependent => :restrict
 
   scope :readable, lambda {|org| ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")}
 
@@ -44,6 +46,12 @@ class ActivationKey < ActiveRecord::Base
   validate :system_template_exists
   validate :environment_not_library
   validate :environment_key_conflict
+  validates_each :usage_limit do |record, attr, value|
+    if not value.nil? and (value < -1 or value == 0 or (value != -1 and value < record.usage_count))
+      # we don't let users to set usage limit lower than current usage
+      record.errors[attr] << _("must be higher than current usage (%s) or unlimited" % record.usage_count)
+    end
+  end
 
   def system_template_exists
     if system_template && system_template.environment != self.environment
@@ -71,8 +79,15 @@ class ActivationKey < ActiveRecord::Base
     end
   end
 
-  # sets up system when registering with this activation key
+  def usage_count
+    system_activation_keys.count
+  end
+
+  # sets up system when registering with this activation key - must be executed in a transaction
   def apply_to_system(system)
+    if not usage_limit.nil? and usage_limit != -1 and usage_count >= usage_limit
+      raise Errors::UsageLimitExhaustedException, _("Usage limit (%s) exhausted for activation key '%s'") % [usage_limit, name]
+    end
     system.environment_id = self.environment_id if self.environment_id
     system.system_template_id = self.system_template_id if self.system_template_id
     system.system_activation_keys.build(:activation_key => self)
@@ -96,7 +111,8 @@ class ActivationKey < ActiveRecord::Base
       end
     end
     total = result.inject{|sum,x| sum + x }
-    raise _("Not enough entitlements in pools (%d), required: %d, available: %d" % [entitlements.size, amount, total]) if amount != total
+    raise _("Not enough entitlements in pools (%d), required: %d, available: %d") %
+              [entitlements.size, amount, total] if amount != total
     result
   end
 
@@ -108,19 +124,19 @@ class ActivationKey < ActiveRecord::Base
       # {"productId" => { "poolId_1" => [start_date, entitlements_left], "poolId_2" => ... } }
       products = {}
       self.pools.each do |pool|
-        raise _("Pool %s has no product associated" % pool.cp_id) unless pool.productId
-        products[pool.productId] = {} unless products.key? pool.productId
+        raise _("Pool %s has no product associated") % pool.cp_id unless pool.product_id
+        products[pool.product_id] = {} unless products.key? pool.product_id
         quantity = pool.quantity == -1 ? 999_999_999 : pool.quantity
-        raise _("Unable to determine quantity for pool %s" % pool.cp_id) if quantity.nil?
+        raise _("Unable to determine quantity for pool %s") % pool.cp_id if quantity.nil?
         left = quantity - pool.consumed
-        raise _("Number of consumed entitlements exceeded quantity for %s" % pool.cp_id) if left < 0
-        products[pool.productId][pool.cp_id] = [pool.startDate_as_datetime, left]
+        raise _("Number of consumed entitlements exceeded quantity for %s") % pool.cp_id if left < 0
+        products[pool.product_id][pool.cp_id] = [pool.start_date, left]
       end
 
       # for each product consumer "allocate" amount of entitlements
       allocate = system.sockets.to_i
       Rails.logger.debug "Number of sockets for registration: #{allocate}"
-      raise _("Number of sockets must be higher than 0 for system %s" % system.name) if allocate.nil? or allocate <= 0
+      raise _("Number of sockets must be higher than 0 for system %s") % system.name if allocate.nil? or allocate <= 0
       #puts products.inspect
       products.each do |productId, pools|
         # create two arrays - pool ids and remaining entitlements
@@ -194,6 +210,7 @@ class ActivationKey < ActiveRecord::Base
     ret[:pools] = pools.map do |pool|
       pool.as_json
     end
+    ret[:usage_count] = usage_count
     ret
   end
 
@@ -211,7 +228,7 @@ class ActivationKey < ActiveRecord::Base
       begin
         # This will hit candlepin; if it fails that means the
         # pool is no longer accessible.
-        pool.productName
+        pool.product_name
       rescue
         obsolete_pools << pool
       end

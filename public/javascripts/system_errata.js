@@ -171,10 +171,10 @@ KT.system.errata = function() {
 
             for(i; i < num_jobs; i += 1){
                 job = data[i];
-                num_tasks = job.task_statuses.length;
+                num_tasks = job.tasks.length;
                 var j = 0, running = 0, error = 0;
                 for(j; j < num_tasks; j += 1){
-                    task = job.task_statuses[j];
+                    task = job.tasks[j];
                     if ((task.state === 'waiting') || (task.state === 'running')) {
                         running += 1;
                     } else if (task.state === 'error') {
@@ -184,8 +184,8 @@ KT.system.errata = function() {
                 if (running > 0) {
                     // still have a task running... status should remain installing
                     if( !task_list.hasOwnProperty(job.pulp_id) ){
-                        task_list[job.pulp_id] = job.task_statuses[0]['parameters']['errata_ids'];
-                        set_status(job.task_statuses[0]['parameters']['errata_ids'], 'installing');
+                        task_list[job.pulp_id] = job['parameters']['errata_ids'];
+                        set_status(job['parameters']['errata_ids'], 'installing');
                     }
                 } else if (error > 0) {
                     // no tasks are still running, but at least 1 error was encountered
@@ -221,7 +221,7 @@ KT.system.errata = function() {
                 results_count = data["results_count"];
     		
     		$('#loaded_summary').data('current_count', current_count),
-    		$('#loaded_summary').html(i18n.x_of_y(current_count, results_count, total_count));
+    		$('#loaded_summary').html(i18n.x_of_y_total(current_count, results_count, total_count));
     		
     		if( current_count === results_count ){
     			load_more.hide();

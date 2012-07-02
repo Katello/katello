@@ -2,7 +2,7 @@ KT.tipsy = KT.tipsy || {};
 
 KT.tipsy.custom = (function(){
     var tooltip = function(element) {
-        element.tipsy({
+        $(element).tipsy({
            gravity: 'e', live : true, html : true, title : KT.tipsy.templates.dynamic,
            hoverable : true, delayOut : 250, opacity : 1, delayIn : 300, className : 'tooltip',
            stickyClick : function(element, state){
@@ -63,6 +63,8 @@ KT.tipsy.templates = (function(){
       var html, element = $(this);
       if (element.hasClass('errata-info')) {
           html = errata(element);
+      } else if (element.hasClass('task-info')) {
+          html = task(element);
       } else {
           html = list(element);
       }
@@ -118,6 +120,14 @@ KT.tipsy.templates = (function(){
         html += '<div class="item-container"><label class="fl" style="text-align:left;">Packages:</label>' + '<ul style="margin:0 0 0 4px;" class="la"><br/>' + packages_list + '</ul></div>';            
         html += '</div>';
 
+        return html;
+    },
+    task = function(element) {
+        var html = '<div class="details_container">';
+
+        html += '<div class="item-container"><label class="fl ra">Result:</label>' + '<p><br/>' + element.data('result') + '</p></div>';
+
+        html += '</div>';
         return html;
     },
     promotion_filters = function(){

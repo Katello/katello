@@ -12,8 +12,8 @@
 
 class Api::SystemGroupsController < Api::ApiController
 
-  before_filter :find_group, :only => [:show, :update, :destroy, :lock, :unlock,
-                                       :add_systems, :remove_systems, :systems, :history, :job]
+  before_filter :find_group, :only => [:show, :update, :destroy, :destroy_systems, :lock, :unlock,
+                                       :add_systems, :remove_systems, :systems, :history, :history_show]
   before_filter :find_organization, :only => [:index, :create]
   before_filter :authorize
 
@@ -23,6 +23,7 @@ class Api::SystemGroupsController < Api::ApiController
     edit_perm = lambda{@group.editable?}
     create_perm = lambda{SystemGroup.creatable?(@organization)}
     destroy_perm = lambda{@group.deletable?}
+    destroy_systems_perm = lambda{@group.systems_deletable?}
     locking_perm = lambda{@group.locking?}
     { :index        => any_readable,
       :show         => read_perm,
@@ -30,11 +31,13 @@ class Api::SystemGroupsController < Api::ApiController
       :create       => create_perm,
       :update       => edit_perm,
       :destroy      => destroy_perm,
+      :destroy_systems => destroy_systems_perm,
       :add_systems  => edit_perm,
       :remove_systems => edit_perm,
-      :lock        => locking_perm,
-      :unlock      => locking_perm,
-      :history     => read_perm
+      :lock         => locking_perm,
+      :unlock       => locking_perm,
+      :history      => read_perm,
+      :history_show => read_perm
     }
   end
 
@@ -47,7 +50,6 @@ class Api::SystemGroupsController < Api::ApiController
     }
   end
 
-
   respond_to :json
 
   def index
@@ -56,7 +58,7 @@ class Api::SystemGroupsController < Api::ApiController
   end
 
   def show
-    render :json => @group
+    render :json => @group.to_json(:methods => :total_systems)
   end
 
   def update
@@ -90,13 +92,13 @@ class Api::SystemGroupsController < Api::ApiController
   end
 
   def history
-    if params[:job_id]
-      jobs = @group.jobs.where(:id=>params[:job_id])
-    else
-      jobs = @group.jobs
-    end
-    render :json=> jobs
+    jobs = @group.refreshed_jobs
+    render :json => jobs
+  end
 
+  def history_show
+    job = @group.refreshed_jobs.where(:id => params[:job_id]).first
+    render :json => job
   end
 
   def  lock
@@ -122,10 +124,22 @@ class Api::SystemGroupsController < Api::ApiController
     render :json => @group
   end
 
-
   def destroy
     @group.destroy
     render :text => _("Deleted system group '#{params[:id]}'"), :status => 200
+  end
+
+  def destroy_systems
+    # this will destroy both the systems contained within the group as well as the group itself
+    system_names = []
+    @group.systems.each do |system|
+      system_names.push(system.name)
+      system.destroy
+    end
+    @group.destroy
+
+    result = _("Deleted system group '%{s}' and it's %{n} systems.") % {:s => @group.name, :n =>system_names.length.to_s}
+    render :text => result, :status => 200
   end
 
   private

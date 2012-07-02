@@ -131,14 +131,16 @@ $.rails.allowAction = function(element) {
     if (!message) { return true; }
 
     if ($.rails.fire(element, 'confirm')) {
-        KT.common.customConfirm(message, function() {
-            callback = $.rails.fire(element,
-                    'confirm:complete', [answer]);
-            if(callback) {
+        KT.common.customConfirm({
+            message: message,
+            yes_callback: function() {
+                callback = $.rails.fire(element, 'confirm:complete', [answer]);
+                if(callback) {
                     var oldAllowAction = $.rails.allowAction;
                     $.rails.allowAction = function() { return true; };
                     element.trigger('click');
                     $.rails.allowAction = oldAllowAction;
+                }
             }
         });
     }
@@ -176,13 +178,59 @@ KT.common = (function() {
         escapeId: function(myid) {
             return myid.replace(/([ #;&,.%+*~\':"!^$[\]()=>|\/])/g,'\\$1')
         },
-        customConfirm : function (message, yesCallback, noCallback) {
-          var html = "<div style='margin:20px;'><span class='status_confirm_icon'/><div style='margin-left: 24px; display:table;height:1%;'>" + message + "</div></div>";
-          var confirmTrue = new Boolean(true);
-          var confirmFalse = new Boolean(false),
-          	yesCallback = yesCallback || function(){},
-          	noCallback = noCallback || function(){};
-          
+        customConfirm : function (params) {
+          var settings = {
+              message: undefined,
+              warning_message: undefined,
+              yes_text: i18n.yes,
+              no_text: i18n.no,
+              yes_callback: function(){},
+              no_callback: function(){},
+              include_cancel: false
+          },
+          confirmTrue = new Boolean(true),
+          confirmFalse = new Boolean(false);
+
+          $.extend(settings, params);
+
+          var message = "<div style='margin:20px;'><span class='status_confirm_icon'/><div style='margin-left: 24px; display:table;height:1%;'>" + settings.message + "</div></div>",
+              warning_message = (settings.warning_message === undefined) ? undefined : "<div style='margin:20px;'><span class='status_warning_icon'/><div style='margin-left: 24px; display:table;height:1%;color:red;'>" + settings.warning_message + "</div></div>",
+              html = (warning_message === undefined) ? message : "<div>"+message+warning_message+"</div>",
+              buttons = {
+                "Yes": {
+                  click : function () {
+                    $(this).dialog("close");
+                    $(this).dialog("destroy");
+                    settings.yes_callback();
+                    return confirmTrue;
+                  },
+                  'class' : 'button',
+                  'text' : settings.yes_text
+                },
+                "No": {
+                  click:function () {
+                    $(this).dialog("close");
+                    $(this).dialog("destroy");
+                    settings.no_callback();
+                    return confirmFalse;
+                  },
+                  'class' : 'button',
+                  'text' : settings.no_text
+                }
+              };
+
+          if(settings.include_cancel === true) {
+              buttons["Cancel"] = {
+                click:function () {
+                  $(this).dialog("close");
+                  $(this).dialog("destroy");
+                  return confirmFalse;
+                },
+                'class' : 'button',
+                'text' : i18n.cancel
+              };
+          }
+
           $(html).dialog({
             closeOnEscape: true,
             open: function (event, ui) {
@@ -191,31 +239,10 @@ KT.common = (function() {
             },
             modal: true,
             resizable: false,
-            width: 400,
+            width: 450,
             title: i18n.confirmation,
             dialogClass: "confirmation",
-            buttons: {
-                "Yes": {
-                  click : function () {
-                    $(this).dialog("close");
-                    $(this).dialog("destroy");
-                    yesCallback();
-                    return confirmTrue;
-                  },
-                  'class' : 'button',
-                  'text' : i18n.yes
-                },
-                "No": {
-                  click:function () {
-                    $(this).dialog("close");
-                    $(this).dialog("destroy");
-                    noCallback();
-                    return confirmFalse;
-                  },
-                  'class' : 'button',
-                  'text' : i18n.no
-                }
-            }
+            buttons: buttons
           });
         },
         customAlert : function(message) {
@@ -414,5 +441,7 @@ $(window).ready(function(){
     });
 
     window.alert = function(message){KT.common.customAlert(message);return false;};
-    $.rails.confirm = function(message) { KT.common.customConfirm(message); return false;};
+    $.rails.confirm = function(message) {
+        KT.common.customConfirm({message: message}); return false;
+    };
 });

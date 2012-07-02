@@ -13,15 +13,7 @@
         KT.package_actions.init(false, 'system_group');
       });
 
-= content_for(:title) do
-  #{@group.name}
-
-= content_for(:remove_item) do
-  - if @group.deletable?
-    = link_to _("Remove System Group"), {:action => "destroy", :controller => "system_groups", :id => @group.id}, :method => :delete, :confirm => _('Are you sure you want to delete this group?'), :class => "remove_item", :remote=>true
-
-= content_for(:navigation) do
-  = render_menu(1..2, system_groups_navigation)
+= render :partial => "system_groups/tupane_header"
 
 = content_for :content do
 

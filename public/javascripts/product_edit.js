@@ -40,22 +40,23 @@ $(document).ready(function() {
 	            	data["selected"] = result;
 	            	element.html(data[result]);
 	            	if( result !== "" ){
-		            	KT.common.customConfirm(
-		            		i18n.productUpdateKeyConfirm + "<br/><br/>" + i18n.proudctUpdateKeyWarning,
-		            		function(){
+		            	KT.common.customConfirm({
+                            message: i18n.productUpdateKeyConfirm,
+                            warning_message: i18n.productUpdateKeyWarning,
+                            yes_callback: function(){
 		            			$.ajax({
 		            				type 	: 'PUT',
-		            				url		: element.data('url'), 
+		            				url		: element.data('url'),
 		            				data	: { 'product[gpg_all_repos]' : true },
 		            				success : function(data){
-		            					notices.checkNotices();					
+		            					notices.checkNotices();
 		            				}
 		            			});
 		            		},
-		            		function(){
+                            no_callback: function(){
 		            			notices.checkNotices();
 		            		}
-		            	);
+                        });
             		}
 	            }
         	};

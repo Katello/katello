@@ -1,20 +1,17 @@
 @charset "UTF-8";
 @import "compass";
+
+@import "converge-ui/media";
+@import "converge-ui/base";
+@import "converge-ui/shell";
+@import "katello_base";
+
 @import "grid";
 @import "look";
-
-@import "converge-ui/text";
-@import "converge-ui/mixins";
-@import "converge-ui/sprites";
-@import "converge-ui/icons";
-@import "converge-ui/colors";
-@import "converge-ui/header";
-@import "converge-ui/footer";
-@import "converge-ui/media";
-@import "converge-ui/shell";
+@import "menu";
 
 @import "widgets/multiselect";
-@import "widgets/_chosen";
+@import "widgets/chosen";
 @import "widgets/slidingtree";
 @import "widgets/scrollpane";
 @import "widgets/env_select";
@@ -57,8 +54,6 @@ hr { color: $border_color; }
 .ra { text-align: right; } /* text align right */
 .role-alt { color: #888;}
 .ca { text-align: center; } /* text align center */
-.fr { float: right; } /* float  right */
-.fl { float: left; } /* float left */
 .fc { display: inline-block; margin: 0 auto; } /* "float", center */
 .multiline{word-wrap: break-word;}
 
@@ -161,6 +156,11 @@ input:focus {
 }
 .status_alert_icon {
     background: $status_alert_icon;
+    @extend .status_exclamation_icon;
+}
+
+.status_warning_icon {
+    background: $warning_icon_triangle;
     @extend .status_exclamation_icon;
 }
 
@@ -689,7 +689,7 @@ fieldset {
             .options {
               display: none;
               @include border-radius(5px);
-              @include box-shadow(rgba(0,0,0,0.4), 2px, 2px, 2px);
+              @include box-shadow(rgba(0,0,0,0.4) 2px 2px 2px);
               background-color: white;
               border: 1px solid $border_color;
               padding: 15px;
@@ -1401,10 +1401,5 @@ fieldset {
 .ui-button-text-only .ui-button-text {
     padding-top: 0;
     padding-bottom: 0;
-}
-
-.versioning {
-  position: relative;
-  bottom: -18px;
 }
 

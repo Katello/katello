@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe KTPool do
+describe ::Pool do
 
   context "Find pool by organization and id" do
     let(:pool_id) { ProductTestData::POOLS[:id] }
@@ -21,12 +21,12 @@ describe KTPool do
     end
     it "should return pool that is in the organization" do
       create_org_from_cp_owner(ProductTestData::POOLS[:owner])
-      KTPool.find_by_organization_and_id(@organization, pool_id).cp_id.should == ProductTestData::POOLS[:id]
+      ::Pool.find_by_organization_and_id(@organization, pool_id).cp_id.should == ProductTestData::POOLS[:id]
     end
 
     it "should return nil if the pool doesn't belong to the organization" do
       create_org_from_cp_owner(:displayName => "Another Org", :key => "another_org")
-      KTPool.find_by_organization_and_id(@organization, pool_id).should be_nil
+      ::Pool.find_by_organization_and_id(@organization, pool_id).should be_nil
     end
   end
 

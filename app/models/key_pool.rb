@@ -15,5 +15,5 @@ class KeyPool < ActiveRecord::Base
   include Authorization
 
   belongs_to :activation_key
-  belongs_to :pool, :class_name => "KTPool"
+  belongs_to :pool, :class_name => "::Pool"
 end

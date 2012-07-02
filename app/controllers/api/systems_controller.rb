@@ -85,18 +85,25 @@ class Api::SystemsController < Api::ApiController
     # Set it before calling find_activation_keys to allow communication with candlepin
     User.current = User.hidden.first
     activation_keys = find_activation_keys
-    system = System.new(params.except(:activation_keys))
-    # we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
-    activation_keys.reverse_each {|ak| ak.apply_to_system(system) }
-    system.save!
-    activation_keys.each do |ak|
-      ak.subscribe_system(system)
-      ak.system_groups.each do |group|
-        group.system_ids = (group.system_ids + [system.id]).uniq
-        group.save!
+    ActiveRecord::Base.transaction do
+      # create new system entry
+      system = System.new(params.except(:activation_keys))
+
+      # register system - we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
+      activation_keys.reverse_each {|ak| ak.apply_to_system(system) }
+      system.save!
+
+      # subscribe system - if anything goes wrong subscriptions are deleted in Candlepin and exception is rethrown
+      activation_keys.each do |ak|
+        ak.subscribe_system(system)
+        ak.system_groups.each do |group|
+          group.system_ids = (group.system_ids + [system.id]).uniq
+          group.save!
+        end
       end
+
+      render :json => system.to_json
     end
-    render :json => system.to_json
   end
 
   def subscriptions
@@ -123,7 +130,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def update
-    @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel))
+    @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel, :environment_id))
     render :json => @system.to_json
   end
 
@@ -221,19 +228,23 @@ class Api::SystemsController < Api::ApiController
   end
 
   def tasks
-    @tasks = SystemTask.joins(:system,:task_status).where(:"task_statuses.organization_id" => @organization.id)
+    query = TaskStatus.joins(:system).where(:"task_statuses.organization_id" => @organization.id)
     if @environment
-      @tasks = @tasks.where(:"system.environment_id" => @environment.id)
+      query = query.where(:"systems.environment_id" => @environment.id)
     end
     if params[:system_name]
-      @tasks = @tasks.where(:"system.name" => params[:system_name])
+      query = query.where(:"systems.name" => params[:system_name])
     end
-    @tasks.each {|t| t.task_status.refresh }
+
+    task_ids = query.select('task_statuses.id')
+    TaskStatus.refresh(task_ids)
+
+    @tasks = TaskStatus.where(:id => task_ids)
     render :json => @tasks.to_json
   end
 
   def task_show
-    @task.task_status.refresh
+    @task.refresh
     render :json => @task.to_json
   end
 
@@ -368,9 +379,9 @@ class Api::SystemsController < Api::ApiController
   end
 
   def find_task
-    @task = SystemTask.joins(:task_status).where(:"task_statuses.uuid" => params[:id]).first
+    @task = TaskStatus.where(:uuid => params[:id]).first
     raise ActiveRecord::RecordNotFound.new unless @task
-    @system = @task.system
+    @system = @task.task_owner
   end
 
 end

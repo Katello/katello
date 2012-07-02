@@ -16,9 +16,14 @@ KT.panel.list.registerPage('system_groups', { create : 'new_system_group' });
 
 $(document).ready(function() {
     KT.panel.set_expand_cb(function(){
+        var children = $('#panel .menu_parent');
+        $.each(children, function(i, item) {
+            KT.menu.hoverMenu(item, { top : '75px' });
+        });
+
+        KT.system_groups.init();
         KT.system_groups.new_setup();
         KT.system_groups.details_setup();
-        KT.system_groups.systems_setup();
     });
 });
 
@@ -87,6 +92,7 @@ KT.sg_table = (function(){
 KT.system_groups = (function(){
     var current_system_input,
         current_max_systems = undefined,
+        systems_deletable = false,
     lockedChanged = function(){
         var checkbox = $(this),
         name = $(this).attr("name"),
@@ -166,6 +172,64 @@ KT.system_groups = (function(){
             }
         });
     },
+    init = function(){
+        $('.remove_item').bind('click', prompt_to_destroy_group);
+    },
+    prompt_to_destroy_group = function(e) {
+        e.preventDefault();
+        KT.common.customConfirm({
+            message: i18n.delete_system_group_confirm,
+            yes_callback: function(){
+                if (systems_deletable) {
+                    // User selected "Yes", ask if they also want to delete the systems
+                    prompt_to_destroy_systems();
+                } else {
+                    // User selected "No", they only want to delete the group
+                    destroy_group();
+                }
+            }
+        });
+        return false;
+    },
+    prompt_to_destroy_systems = function() {
+        KT.common.customConfirm({
+            message: i18n.delete_systems_confirm,
+            warning_message: i18n.delete_systems_warning,
+            yes_callback: function(){
+                // User selected "Yes"
+                destroy_systems_and_group();
+            },
+            no_callback: function(){
+                // User selected "No"
+                destroy_group();
+            },
+            no_text: i18n.delete_system_group_continue,
+            include_cancel: true
+        });
+        return false;
+    },
+    destroy_systems_and_group = function() {
+        var id = $('#system_group_id').attr('name');
+        $.ajax({
+            type: "DELETE",
+            url: KT.routes.destroy_systems_system_group_path(id),
+            cache: false,
+            success: function(data) {
+                eval(data);
+            }
+        });
+    },
+    destroy_group = function() {
+        var id = $('#system_group_id').attr('name');
+        $.ajax({
+            type: "DELETE",
+            url: KT.routes.system_group_path(id),
+            cache: false,
+            success: function(data) {
+                eval(data);
+            }
+        });
+    },
     new_setup = function(){
         var pane = $("#system_group_new");
         if (pane.length === 0){
@@ -223,11 +287,13 @@ KT.system_groups = (function(){
         });
         quota_setup();
     },
-    systems_setup = function(){
+    systems_setup = function(systems_deletable_perm){
         var pane = $("#system_group_systems");
         if (pane.length === 0){
             return;
         }
+        systems_deletable = systems_deletable_perm;
+
         KT.sg_table.recalc_rows();
         $('#remove_systems').click(function(){
             var sys_ids = $('.system_checkbox:checked').map(function(){
@@ -302,9 +368,6 @@ KT.system_groups = (function(){
             $('.system_checkbox').removeAttr('disabled');
         };
 
-
-
-
         submit_change(grp_id, sys_ids, false,
             function(){
                 KT.sg_table.remove_system(sys_ids);
@@ -322,6 +385,7 @@ KT.system_groups = (function(){
 
     return {
         lockedChanged: lockedChanged,
+        init: init,
         new_setup: new_setup,
         details_setup: details_setup,
         systems_setup: systems_setup,

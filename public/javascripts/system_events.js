@@ -18,8 +18,7 @@
 
 KT.events = function() {
 
-    var system_id = $('.events').attr('data-system_id'),
-    total_events = 0,
+    var total_events = 0,
     total_loaded = 0,
     actions_updater = undefined,
     loaded_summary = $('#loaded_summary'),
@@ -52,38 +51,67 @@ KT.events = function() {
     },
     updateStatus = function(data) {
         // For each action that the user has initiated, update the status.
-        $.each(data, function(index, status) {
-            var node = undefined,
-                msg = undefined;
-            if(!status["pending?"]) {
-                node = $('.event_name[data-pending-task-id=' + status['id'] + ']');
-                if(node !== undefined) {
-                    node.parent().html(status["status_html"]);
+        var jobs = data["jobs"],
+            tasks = data["tasks"];
+
+        if (tasks) {
+            $.each(tasks, function(index, status) {
+                var node = undefined,
+                    msg = undefined;
+
+                if(!status["pending?"]) {
+                    node = $('.event_name[data-pending-task-id=' + status['id'] + ']');
+                    if(node !== undefined) {
+                        node.parent().html(status["status_html"]);
+                    }
                 }
-            }
-        });
-        if ($('.event_name[data-pending-task-id]').length === 0) {
+            });
+        }
+
+        if (jobs) {
+            $.each(jobs, function(index, status) {
+                var node = undefined,
+                    msg = undefined;
+
+                if(!status["pending?"]) {
+                    node = $('.event_name[data-pending-job-id=' + status['id'] + ']');
+                    if(node !== undefined) {
+                        node.parent().html(status["status_html"]);
+                    }
+                }
+            });
+        }
+
+        if(($('.event_name[data-pending-task-id]').length === 0) && ($('.event_name[data-pending-job-id]').length === 0)) {
             actions_updater.stop();
         }
     },
     startUpdater = function () {
         var timeout = 8000,
-            pending_items = [];
-        $('.event_name[data-pending-task-id]').each(function(i) {
-            pending_items[i] = $(this).data("pending-task-id");
+            pending_jobs = [],
+            pending_tasks = [];
+
+        $('.event_name[data-pending-job-id]').each(function(i) {
+            pending_jobs[i] = $(this).data("pending-job-id");
         });
-        if(pending_items.length > 0) {
-            actions_updater = $.PeriodicalUpdater(KT.routes.status_system_events_path(system_id), {
+        $('.event_name[data-pending-task-id]').each(function(i) {
+            pending_tasks[i] = $(this).data("pending-task-id");
+        });
+
+        if(pending_jobs.length > 0 || pending_tasks.length > 0) {
+            if (actions_updater !== undefined) {
+                actions_updater.stop();
+            }
+            actions_updater = $.PeriodicalUpdater($('.events').data('url'), {
                 method: 'get',
                 type: 'json',
-                data: function() {return {id: pending_items};},
+                data: function() {return {task_id: pending_tasks, job_id: pending_jobs};},
                 global: false,
                 minTimeout: timeout,
                 maxTimeout: timeout
             }, updateStatus);
         }
     },
-
     initEvents = function() {
         total_events = $('.events').data('total_events');
         if(total_events !== undefined) {
@@ -100,7 +128,7 @@ KT.events = function() {
             }
 
             updateLoadedSummary();
-            if($('.event_name[data-pending-task-id]').length > 0) {
+            if(($('.event_name[data-pending-task-id]').length > 0) || ($('.event_name[data-pending-job-id]').length > 0)) {
                 startUpdater();
             }
 
@@ -130,22 +158,17 @@ KT.events = function() {
                     }
                 });
             });
-
         }
-
-
-
-
     },
     updateLoadedSummary = function() {
         var more_size = page_size;
         total_loaded = $('tr.tasks').length;
-        loaded_summary.html(i18n.x_of_y_events(total_loaded, total_events));
+        loaded_summary.html(i18n.x_of_y(total_loaded, total_events));
 
         if(more_size > (total_events - total_loaded)) {
            more_size = total_events - total_loaded;
         }
-        more_button.text(i18n.x_more_events(more_size));
+        more_button.text(i18n.x_more(more_size));
     };
     return {
         initEvents: initEvents
