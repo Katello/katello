@@ -80,8 +80,8 @@ KT.system_packages = function() {
         update_all_button.removeClass('disabled');
     },
     disableLinks = function() {
-        add_content_button.unbind('click, keypress');
-        remove_content_button.unbind('click, keypress');
+        add_content_button.unbind();
+        remove_content_button.unbind();
 
         add_content_button.attr('disabled', 'disabled');
         remove_content_button.attr('disabled', 'disabled');

@@ -20,19 +20,23 @@
   - if can_upload_rh_manifest?
     #subscription_manifest
       %h4 #{_("Upload Subscription Manifest")}
-      = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => redhat_provider_providers_path do |f|
-        .fl
-          = f.label :upload, _("Specify Local Manifest")
-          %br
-          = f.file_field :contents
-        #force_checkbox.fl
-          %br
-          = check_box_tag :force_import
-          = label_tag :force, _('Force')
-        #upload_button.fl
-          -#= f.submit _("Upload")
-          %br
-          = link_to _("Upload"), '#', :id => 'upload_submit'
+      - if @provider.task_status
+        = _("Import in progress.")
+      - else
+        = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest},
+                              :remote => true, :url => redhat_provider_providers_path do |f|
+          .fl
+            = f.label :upload, _("Specify Local Manifest")
+            %br
+            = f.file_field :contents
+          #force_checkbox.fl
+            %br
+            = check_box_tag :force_import
+            = label_tag :force, _('Force')
+          #upload_button.fl
+            -#= f.submit _("Upload")
+            %br
+            = link_to _("Upload"), '#', :id => 'upload_submit'
 
 
 .grid_16

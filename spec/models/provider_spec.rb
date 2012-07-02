@@ -79,6 +79,11 @@ describe Provider do
       @provider.import_manifest "path_to_manifest"
     end
 
+    it "should be async if :async => true is set" do
+      @provider.should_receive(:async).once.and_return(mock(:queue_import_manifest => nil))
+      @provider.import_manifest "path_to_manifest", :async => true
+    end
+
     describe "engineering and marketing product" do
       let(:eng_product_attrs) { ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "20", "name" => "Red Hat Enterprise Linux 6 Server SVC") }
       let(:marketing_product_attrs) { ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "rhel6-server", "name" => "Red Hat Enterprise Linux 6") }

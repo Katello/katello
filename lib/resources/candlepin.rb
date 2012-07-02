@@ -111,13 +111,14 @@ module Resources
           JSON.parse(response).with_indifferent_access
         end
 
-        def update(uuid, facts, guest_ids = nil, installedProducts = nil, autoheal = nil, releaseVer = nil, service_level=nil)
+        def update(uuid, facts, guest_ids = nil, installedProducts = nil, autoheal = nil, releaseVer = nil, service_level=nil, environment_id=nil)
           attrs = {:facts => facts,
                    :guestIds => guest_ids,
                    :releaseVer => releaseVer,
                    :installedProducts => installedProducts,
                    :autoheal => autoheal,
-                   :serviceLevel => service_level}.delete_if {|k,v| v.nil?}
+                   :serviceLevel => service_level,
+                   :environment => environment_id.nil? ? nil : {:id => environment_id} }.delete_if {|k,v| v.nil?}
           unless attrs.empty?
             response = self.put(path(uuid), attrs.to_json, self.default_headers).body
           else[]
@@ -514,11 +515,11 @@ module Resources
         end
 
         def certificate id
-          self._certificate_and_key(id)["cert"]
+          self._certificate_and_key(id).try :[], 'cert'
         end
 
         def key id
-          self._certificate_and_key(id)["key"]
+          self._certificate_and_key(id).try :[], 'key'
         end
 
         def destroy product_id

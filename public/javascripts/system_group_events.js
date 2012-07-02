@@ -10,28 +10,14 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
+KT.system_group = KT.system_group || {};
 
-
-
-$(document).ready(function() {
-
-
-   $('#login_form').live('submit', function(e) {
-
-      //var button = $(this).find('input[type|="submit"]');
-      // button.attr("disabled","disabled");
-      if (window.location.hash != "") {
-           $('<input>').attr({
-                type: 'hidden',
-                id: 'hash_anchor',
-                name: 'hash_anchor',
-                value: window.location.hash
-            }).appendTo(this);
-      }
-
-   });
-
-    $("input[type='text']:first", document.forms[0]).focus();
-    
-    
-});
+KT.system_group.events = (function (){
+    var init = function() {
+        KT.tipsy.custom.tooltip('.tipsy-icon.task-info');
+        KT.events.initEvents();
+    };
+    return {
+        init: init
+    };
+})();

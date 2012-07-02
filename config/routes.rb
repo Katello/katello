@@ -10,7 +10,15 @@ Src::Application.routes.draw do
       get :systems
       post :add_systems
       post :remove_systems
+      delete :destroy_systems
       post :lock
+    end
+    resources :events, :controller => "system_group_events", :only => [:index, :show] do
+      collection do
+        get :status
+        get :more_items
+        get :items
+      end
     end
     resources :packages, :controller => "system_group_packages", :only => [:index] do
       collection do
@@ -365,7 +373,7 @@ Src::Application.routes.draw do
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
-  resources :password_resets, :only => [:new, :create, :edit, :update] do
+  resources :password_resets, :only => [:create, :edit, :update] do
     collection do
       get :email_logins
     end
@@ -473,11 +481,16 @@ Src::Application.routes.draw do
         member do
           get :systems
           get :history
+          match "/history/:job_id" => "system_groups#history_show", :via => :get
           post :lock
           post :unlock
           post :add_systems
           post :remove_systems
+          delete :destroy_systems
         end
+
+        resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
+        resource :errata, :action => [:create], :controller => :system_group_errata
       end
 
       resources :environments do

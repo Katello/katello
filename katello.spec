@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.40
+Version:        0.2.44
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -106,7 +106,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui-devel
+BuildRequires:  converge-ui-devel >= 0.7
 
 %description common
 Common bits for all Katello instances
@@ -180,7 +180,7 @@ compass compile
 
 #generate Rails JS/CSS/... assets
 echo Generating Rails assets...
-jammit --config config/assets.yml -f
+LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
 
 
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
@@ -315,6 +315,7 @@ fi
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
 %{homedir}/lib/glue/*.rb
+%{homedir}/lib/monkeys/*.rb
 %{homedir}/lib/navigation
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
@@ -351,6 +352,10 @@ fi
 %defattr(-, katello, katello)
 %{_localstatedir}/log/%{name}
 %{datadir}
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_sql.log
 
 %files glue-pulp
 %{homedir}/app/models/glue/pulp
@@ -383,6 +388,157 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jul 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.44-1
+- 829437 - handle uploading GPG key when submitting with enter
+- Removed exclamation mark from welcome message, as it is followed by a comma
+  and the user name.
+- Fixing navigation for HEADPIN mode (system groups)
+- Band-aid commit to update submodule hash to latest due to addition of version
+  requirement in katello spec.
+- we should own log files
+- system groups - cli - split history in to 2 actions per review feedback
+- allow to run jammit on Fedora 17
+- require converge-ui-devel >- 0.7 for building
+- system groups - api/cli to support errata install
+- system groups - api/cli to support package and package group actions
+- system groups - fix the perms used in packages and errata controllers
+- 835322 - when creating new user, validate email
+
+* Wed Jun 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.43-1
+- Stupid extra space.
+- Fix for a missing 'fr' in a gradient.
+- More SCSS refactoring and a fix for converge-ui spec.
+- point Support link to irc channel #katello
+
+* Mon Jun 25 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.42-1
+- katello - async manifest import, missing notices
+- ulimit - brad's review
+- ulimit - optimizing usage validator
+- changed 'update' tests to use 'put' instead of 'post'
+- BZ 825262: support for moving systems between environments from CLI
+- ulimit - fix for system tests
+- ulimit - adding unit tests
+- ulimit - new jeditable component "number"
+- ulimit - frontend changes
+- ulimit - backend api and cli
+- ulimit - adding migration
+- Merge pull request #224 from bbuckingham/fork-group_delete_systems
+- katello - fix gettext wrappers
+- system groups - cli/api - provide user option to delete systems when deleting
+  group
+- katello - asynchronous manifest import in UI
+- Merge pull request #213 from jsomara/819002
+- system groups - ui - provide user option to delete systems when deleting
+  group
+- customConfirm - add more settings and refactor current usage
+- katello, unit - fixing broken unit test
+- katello, unit - correcting supported versions of rspec for monkey patch
+- Make sure to reference ::Pool when using the model class
+- 819002 - Removing password & email validation for user creation in LDAP mode
+- system groups - update views to use _tupane_header partial
+
+* Mon Jun 18 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.41-1
+- Fixes box-shadow declaration that was causing a compass deprecation warning.
+- Updates SCSS importing for missing mixins.
+- system groups - provide a more meaningful helptip on the index
+- Fix for Events to now be "Events History" - slightly more explicit.
+- katello - fix Gemfile versions
+- system groups - minor updates to job and task_status
+- task_status - rename method names based
+- activation keys - update subscriptions pane to use the panel_link
+- rename navigation_element as panel_link, use it for link on group pane
+- system groups - api - include total system count in system group info
+- system groups - add system count to Details page
+- Removes no longer used route and asset declaration. Adds back template
+  rendering test case for change password.
+- system groups - add missing escape_javascript to _common_i18n.html.haml
+- 830713 - broken gettext translations
+- Updates to latest converge-ui to incorporate most recent adjustments to sign-
+  on screens.
+- 828308 - Updating sync plan does not update associated product's (repo's)
+  sync schedule
+- system groups - remove 'details' on job since it is a dup of as_json
+- system groups - add few specs for events controller
+- Fixes for broken spec tests as a result of moving password recovery views.
+- system group - add some initial search support to group history
+- Updates converge-ui version.
+- Adds variables for upstream coloring and cleans up some unneeded converge-ui
+  pieces.
+- Clean-up of views that are no longer needed as a result of using converge-ui
+  layouts.
+- 827540 - system template - description to promotions view
+- subs-tupane - changed camelCase to under_score, fixed spec tests
+- subs-tupane - case statement instead of if/elsif, elasticsearch
+  index_settings tweak
+- subs-tupane: move some of the logic out of Pool.index_pools to the controller
+- subs-tupane: since not all pools are saved as activerecords, just those
+  referenced in activation keys, removed use of IndexedModel
+- subs-tupane: reverted a change to indexed_model.rb
+- subs-tupane: new Pool class in place of KTPool with relevant attributes, all
+  indexed for search
+- system events - fix specs related to changes in status retrieval
+- systems - events - update search to include task owner
+- system groups - remove tasks class from view
+- 830713 - broken gettext translations
+- system groups - support status updates on individual system tasks
+- system groups - event/job status updates
+- Updates to login to handle case when LDAP is enabled.
+- system groups - events - add a tipsy to show status of a task
+- system groups - when saving tasks for a job, associate system w/ the task
+- task status - clean up some of the status messages
+- 830176 - wrapped New System text w/ _()
+- system and group actions - replacing .spinner with use of image_tag
+- 815308 - traceback on package search
+- system packages - fix event binding
+- Updates pathing for some assets in converge-ui and bumps the version to
+  include recent login and re-factor work.
+- Adds a rake task that explicitly specifies the directories to look in for
+  translations.  This was done to add in and address translations living in the
+  dependent converge-ui project.
+- removal of system_tasks, replace with polymorphic assoc on task_statuses
+- Changes around using the user sessions layouts from converge-ui in order to
+  fit with new styling and to ensure consistent wiring of views to controller.
+- Adds font URL settings for compass to generate font-url's directly based off
+  the Relative Root Url.
+- Icons fix that is in converge-ui.
+- 829208 - fix importing manifest after creating custom product
+- Fixes for both extra arrows on menu in panel and for details icon
+  duplication.
+- UI Remodel - More updates to stylesheets to relfect changes in converge-ui
+  with regards to importing the proper scss files.
+- system groups - initial commit to introduce group events
+- system - minor refactors for code that will be shared for system groups
+- 823642 - nil checks in candlepin's product resource
+- system groups - update errata and packages partials to use new spinner
+  definition
+- system groups - update to have Content as 3rd level nav
+- Provides fix for updated yield blocks within converge-ui.
+- system - updating to support Content as 3rd level nav
+- Removed now unnecessary (and previously commented) code block.
+- Fix for previously pulled out auto_complete functionality.
+- 818726 - updated i18n translations
+- katello, unit tests - track creation line of mocks
+- Fix for appname in header on converge-ui.
+- js - minor updates based on pull request 166 feedback
+- system groups - UI - initial commit to enable pkg/group install/update/remove
+- system task - missed a change on the task status refactor
+- system groups - minor update to correctly reflect object being returned
+- packages - refactor js utilities for reuse
+- system tasks - refactor the task status for reuse in system groups...etc.
+- system packages - refactor few methods that will be reused for system groups
+- system package actions - fix text/parameters on some notices
+- 824944 - Fix for logout button missing.
+- Converge-UI and Katello SCSS and Image refactor.
+- UI Remodel - Updates to login and password reset/change screens to get the
+  converge-ui versions working.
+- UI Remodel - Updates converge-ui javascript paths to point to base javascript
+  directory and not just the lib.
+- UI Remodel - Adds working login screen and footer.
+- First pass integration of converge-ui login layout.  Styles the login screen
+  and allows for successful login.
+- Removing unused menu code.
+- 818726 - update to both ui and cli and zanata pushed
+
 * Fri Jun 01 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.40-1
 - 815308 - escaping character '^' for elastic searches
 - white-space formatting
