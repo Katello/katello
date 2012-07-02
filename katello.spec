@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.43
+Version:        0.2.44
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -388,6 +388,22 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jul 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.44-1
+- 829437 - handle uploading GPG key when submitting with enter
+- Removed exclamation mark from welcome message, as it is followed by a comma
+  and the user name.
+- Fixing navigation for HEADPIN mode (system groups)
+- Band-aid commit to update submodule hash to latest due to addition of version
+  requirement in katello spec.
+- we should own log files
+- system groups - cli - split history in to 2 actions per review feedback
+- allow to run jammit on Fedora 17
+- require converge-ui-devel >- 0.7 for building
+- system groups - api/cli to support errata install
+- system groups - api/cli to support package and package group actions
+- system groups - fix the perms used in packages and errata controllers
+- 835322 - when creating new user, validate email
+
 * Wed Jun 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.43-1
 - Stupid extra space.
 - Fix for a missing 'fr' in a gradient.
