@@ -272,6 +272,7 @@ KT.common = (function() {
         orgSwitcherSetup : function() {
             //org switcher
             var button = $('#switcherButton');
+            var container = $('#switcherContainer');
             var box = $('#switcherBox');
             var form = $('#switcherForm');
             var orgbox = $('#orgbox');
@@ -280,9 +281,12 @@ KT.common = (function() {
             button.click(function(switcher) {
                 box.fadeToggle('fast');
                 button.toggleClass('active');
+                container.toggleClass('active');
                 if(button.hasClass('active')){
                     if(!(box.hasClass('jspScrollable'))){
-                      orgbox.jScrollPane({ hideFocus: true });
+                      //the horizontalDragMaxWidth kills the horizontal scroll bar
+                      // (on purpose, since we have ellipsis...)
+                      orgbox.jScrollPane({ hideFocus: true, horizontalDragMaxWidth: 0 });
                       orgboxapi = orgbox.data('jsp');
                     }
                     $.ajax({
@@ -304,11 +308,17 @@ KT.common = (function() {
                 return false;
             });
             $(document).mouseup(function(switcher) {
-                if(!($(switcher.target).parent('#switcherButton').length > 0)) {
+                if(!($(switcher.target).parent('#switcherContainer').length > 0)) {
                     button.removeClass('active');
+                    container.removeClass('active');
                     box.fadeOut('fast');
                 }
             });
+        },
+        orgBoxRefresh : function (){
+          var orgbox = $('#orgbox');
+          var orgboxapi = orgbox.data('jsp');
+          orgboxapi.reinitialise();
         },
         orgFilterSetup : function(){
             $('form.filter').submit(function(){

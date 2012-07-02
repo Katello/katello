@@ -28,5 +28,9 @@
     = render :partial => 'common/ajax_notices'
     = render :partial => 'common/notification'
 
+= content_for(:interstitial) do
+  %h2 #{_("Choose an Organization")}
+  = render :partial => "/layouts/org"
+
 = content_for(:footer) do
   = render :partial => "common/footer"
