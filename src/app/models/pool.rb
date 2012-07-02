@@ -50,6 +50,8 @@ class Pool < ActiveRecord::Base
       "org"       => @owner["key"],
       "consumed"  => @consumed,
       "quantity"  => @quantity,
+      "pool_derived" => @pool_derived,
+      "derived"   => @pool_derived,
       "provider_id"=> provider_id
     }
   end
@@ -70,6 +72,8 @@ class Pool < ActiveRecord::Base
           :org          => {:type=>'string', :index=>:not_analyzed},
           :quantity     => {:type=>'long'},
           :consumed     => {:type=>'long'},
+          :pool_derived => {:type=>'boolean', :index=>:not_analyzed},
+          :derived      => {:type=>'boolean'},
           :provider_id  => {:type=>'long', :index=>:not_analyzed}
         }
       }
