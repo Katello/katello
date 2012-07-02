@@ -24,6 +24,7 @@ class ContentSearchController < ApplicationController
         :my_environments => contents_test,
         :packages => contents_test,
         :packages_items => contents_test,
+        :errata_items => contents_test,
         :repo_packages => contents_test,
         :repo_errata => contents_test,
         :repo_compare_errata =>contents_test,
@@ -105,7 +106,6 @@ class ContentSearchController < ApplicationController
   def packages_items
     repo = Repository.where(:id=>params[:repo_id]).first
     pkgs = spanned_repo_content(repo, 'package', process_params(:packages), params[:offset]) || {:content_rows=>[]}
-    
     render :json=>(pkgs[:content_rows] + [metadata_row(pkgs[:total], params[:offset] + pkgs[:content_rows].length, repo)])
   end
 

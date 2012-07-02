@@ -149,7 +149,7 @@ KT.comparison_grid = function(){
 
             utils.each(data, function(item) {
                 if( item['metadata'] ){
-                    insert = models.rows.insert_metadata(item['id'], item['parent_id'], item['page_size'], item['current'], item['total'], item['data']);
+                    insert = models.rows.insert_metadata(item['id'], item['parent_id'], item['page_size'], item['current_count'], item['total'], item['data']);
                 } else {
                     insert = models.rows.insert(item['id'], item['name'], item['cols'], item['parent_id'], item['comparable']);
 
@@ -558,7 +558,7 @@ KT.comparison_grid.controls = function(grid) {
 
                     show(id, true, rows);
 
-                    parent_row_header.find('.down_arrow-icon-black').show()
+                    parent_row_header.find('.down_arrow-icon-black').show();
                     parent_row_header.find('.right_arrow-icon-black').hide();
                 };
 
@@ -632,10 +632,10 @@ KT.comparison_grid.events = function(grid) {
             });
         },
         load_row_links = function(){
-            $('.load_row_link').live('click', function(){
-                var id = $(this).data('id');
-
-                $(document).trigger({ type : 'load_more.comparison_grid', data : grid.models.rows.get(id)['data'] })
+            $('.load_row_link').live('click', function(event){
+                var cell = grid.models.rows.get($(this).parent().data('id'));
+                event.preventDefault();
+                $(document).trigger({type:'load_more.comparison_grid', cell_data:cell['data'], offset:cell['current']});
             });
         };
 
@@ -743,7 +743,7 @@ KT.comparison_grid.templates = (function(i18n) {
         load_more_row = function(id, load_size){
             var html = '<div class="load_row grid_row" data-id="' + id + '">';
                 
-            html += '<a class="load_row_link" href="#" >' + i18n.show_more.replace('%P', load_size) + '</a>';
+            html += '<a class="load_row_link" href="" >' + i18n.show_more.replace('%P', load_size) + '</a>';
             html += '<i class="down_arrow-icon-black"/>';
             html += '</div>';
 
