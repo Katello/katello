@@ -449,11 +449,11 @@ module Glue::Pulp::Repo
   end
 
   def organization_id
-    (get_groupid_param 'org').to_i
+    self.organization.id
   end
 
   def environment_id
-    (get_groupid_param 'env').to_i
+    self.environment.id
   end
 
   def product_id

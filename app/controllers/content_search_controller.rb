@@ -184,7 +184,7 @@ class ContentSearchController < ApplicationController
 
   def repo_rows repos
     repos.collect do |repo|
-        all_repos = repo.environmental_instance_ids.collect{|r| r.pulp_id}
+        all_repos = repo.environmental_instances.collect{|r| r.pulp_id}
         cols = {}
         Repository.where(:pulp_id=>all_repos).each do |r|
           cols[r.environment.id] = {:hover => repo_hover_html(r)}
@@ -201,10 +201,14 @@ class ContentSearchController < ApplicationController
     products.collect do |p|
       cols = {}
       p.environments.collect do |env|
-        cols[env.id] = {:display => p.total_package_count(env)}
+        cols[env.id] = {:hover => product_hover_html(p, env)}
       end
        {:id=>"product_#{p.id}", :name=>p.name, :cols=>cols}
     end
+  end
+
+  def product_hover_html product, environment
+    render_to_string :partial=>'product_hover', :locals=>{:product=>product, :env=>environment}
   end
 
   def param_product_ids 
@@ -249,7 +253,7 @@ class ContentSearchController < ApplicationController
       repo_ids = repo_search(repo_search, readable).collect{|r| r.id}
     else
       if !product_ids.empty?
-        products = Product.readable(current_organization).where(:id=>product_ids_in)
+        products = Product.readable(current_organization).where(:id=>product_ids)
       else
         products = Product.readable(current_organization)
       end
@@ -311,8 +315,7 @@ class ContentSearchController < ApplicationController
   #
   def spanned_repo_content library_repo, content_type, content_search_obj, offset=0
     #library must be first, so subtract it from instance ids
-    spanning_repos = [library_repo.pulp_id] + (library_repo.environmental_instance_ids.collect{|r| r.pulp_id} - [library_repo.pulp_id])
-    spanning_repos = Repository.where(:pulp_id=>spanning_repos)
+    spanning_repos = [library_repo] + (library_repo.environmental_instances - [library_repo])
     to_ret = {}
     library_content = []
     library_total = 0
@@ -351,8 +354,11 @@ class ContentSearchController < ApplicationController
         end
       end
 
+      fields [:id, :name, :nvrea, :repoids]
+      sort { by "#{default_field}_sort", 'asc'}
       size user.page_size
       from offset
+
 
       if  search_obj.is_a? Array
         filter :terms, :id => search_obj

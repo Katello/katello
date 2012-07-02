@@ -239,7 +239,7 @@ class Repository < ActiveRecord::Base
 
   # returns other instances of this repo with the same library
   # equivalent of repo
-  def environmental_instance_ids
+  def environmental_instances
 
     if self.environment.library?
       repo = self
