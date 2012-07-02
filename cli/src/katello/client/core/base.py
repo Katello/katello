@@ -404,7 +404,7 @@ def check_url(option, opt, value):
     if not url_parsed.scheme in schemes:                                 # pylint: disable=E1101
         formatted_schemes = " or ".join([s+"://" for s in schemes])
         raise OptionValueError(_('option %s: has to start with %s') % (opt, formatted_schemes))
-    elif not url_parsed.netloc:                                          # pylint: disable=E1101
+    elif not url_parsed.netloc and not url_parsed.path:                  # pylint: disable=E1101
         raise OptionValueError(_('option %s: invalid format') % (opt))
     return value
 
