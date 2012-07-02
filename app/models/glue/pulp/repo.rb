@@ -145,11 +145,13 @@ module Glue::Pulp::Repo
     else
       #repo is not in the next environment yet, we have to clone it there
       key = EnvironmentProduct.find_or_create(to_env, self.product)
+      library = self.environment.library? ? self : self.library_instance
       clone = Repository.create!(:environment_product => key,
                                  :clone_from => self,
                                  :cloned_content => self.content,
                                  :cloned_filters => filters_to_clone,
-                                 :cp_label => self.cp_label)
+                                 :cp_label => self.cp_label,
+                                 :library_instance=>library)
 
       clone.index_packages
       clone.index_errata
@@ -215,13 +217,6 @@ module Glue::Pulp::Repo
     product_group_id = Glue::Pulp::Repos.product_groupid(self.product_id)
     content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
     Resources::Pulp::Repository.all([content_group_id, product_group_id]).map{|r| r['id']} - [self.pulp_id]
-  end
-
-  def library_instance
-    env_group_id = Glue::Pulp::Repos.env_groupid(self.organization.library)
-    product_group_id = Glue::Pulp::Repos.product_groupid(self.product_id)
-    content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
-    Resources::Pulp::Repository.all([content_group_id, product_group_id, env_group_id]).map{|r| r['id']}
   end
 
   def other_repos_with_same_content
