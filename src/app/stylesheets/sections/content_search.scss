@@ -31,6 +31,16 @@ $comparison_grid_column_header-background: #FFF;
 
 .no_border { border: none !important; }
 
+.content-tipsy {
+  ul {
+    list-style-type: disc;
+  }
+  .example {
+    margin-left: 6px;
+    margin-bottom: 6px;
+  }
+}
+
 #browse_box {
   width: $browse_box-width;
   height: $browse_box-height;
@@ -43,6 +53,18 @@ $comparison_grid_column_header-background: #FFF;
   @include border-radius(3px);
   background-color: $widget-background-color;
   @include background-image(linear-gradient(top, rgba(255, 255, 255, 0) 40%, $login_base-color 120%));
+
+
+  .help-icon {
+    background: $details_icon_grey;
+    @extend .errata_icon;
+    float: right;
+    &:hover { background: $details_icon_black; }
+    padding: 0px;
+    margin-left: 2px;
+    margin-top: 5px;
+  }
+
 
   header {
     height: $browse_box_header-height;

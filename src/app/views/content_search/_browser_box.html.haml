@@ -36,7 +36,33 @@
         = label_tag :packages, _("Packages")
         #package_search
           = radio_button_tag :packages, :search_packages, true
-          = text_field_tag :search, nil, :placeholder=>_('Search packages')
+          = text_field_tag :search, nil, :placeholder=>_('Search packages'), :size=>19
+          %span.help-icon
+            %span.hidden-text.hidden
+              .la.content-tipsy
+                = _('Example Searches:')
+                %div
+                %ul
+                  %li
+                    =_('Searching for an exact package:')
+                    .example
+                      kernel-2.6.32-220.2.1.el6.x86_64
+                  %li
+                    =_('Searching starting with kernel:')
+                    .example
+                      kernel*
+                  %li
+                    =_('Searching by exact name:')
+                    .example
+                      name:kernel
+                  %li
+                    =_('Searching by name and arch:')
+                    .example
+                      name:kernel AND arch:x86_64
+                  %li
+                    =('Search for all packages with a specific requires:')
+                    .example
+                      requires:sendmail
         %div#package_autocomplete_list{'data-url'=>auto_complete_nvrea_library_packages_path}
           = radio_button_tag :packages, :auto_complete_packages, true
           %input.hidden_selection{:type=>:hidden}
@@ -49,6 +75,30 @@
         = label_tag :errata, _("Errata")
         #errata_search
           = radio_button_tag :errata, :search, true
-          = text_field_tag :search
+          = text_field_tag :search, '', :size=>19, :placeholder=>_('Search Errata')
+          %span.help-icon
+            %span.hidden-text.hidden
+              .la.content-tipsy
+                = _('Example Searches:')
+                %div
+                %ul
+                  %li
+                    =_('Searching for an exact errata:')
+                    .example
+                      RHSA-2010:0858
+                  %li
+                    =_('Searching by type (bugfix, security, enhancement allowed):')
+                    .example
+                      type:security
+                  %li
+                    =_('Searching by type (critical, important, moderate, low allowed):')
+                    .example
+                      severity:critical
+                  %li
+                    =('Search for kernel in the title:')
+                    .example
+                      title:*kernel*
+
+
 
       %input#browse_button.fr.button{:type=>'submit', :value=>_('Go')}

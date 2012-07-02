@@ -73,6 +73,8 @@ KT.content_search = function(paths_in){
         env_select = KT.path_select('column_selector', 'env', paths,
             {select_mode:'multi', link_first: true});
 
+        init_tipsy();
+
         comparison_grid = KT.comparison_grid();
         comparison_grid.init();
         comparison_grid.set_columns(env_select.get_paths(), true);
@@ -249,6 +251,13 @@ KT.content_search = function(paths_in){
             delete search['subgrid'];
             $.bbq.pushState({search:search});
         }
+    },
+    init_tipsy = function(){
+        $('.help-icon').tipsy({html:true, gravity:'w', className:'content-tipsy',
+            title:function(){
+                return $(this).find('.hidden-text').html();
+            }
+        });
     };
 
     init();
