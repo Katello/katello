@@ -18,7 +18,7 @@ var panelLeft = null;
 var count = 0;
 
 // Saves the state of the last subpanel viewed so selecting a new item from list will keep that subpanel open.
-var last_ajax_action;
+var last_ajax_panelpage;
 
 $(document).ready(function () {
     $('.left').resize(function () {
@@ -54,7 +54,7 @@ $(document).ready(function () {
     $('.block').live('click', function (event) {
         var subpanel_href,
             subpanel_name,
-            ajax_action;
+            ajax_panelpage;
 
         if (event.target.nodeName === "A" && event.target.className.match('content_add_remove')) {
             return false;
@@ -62,13 +62,13 @@ $(document).ready(function () {
             activeBlock = $(this);
             ajax_url = activeBlock.attr("data-ajax_url");
             activeBlockId = activeBlock.attr('id');
-            ajax_action = activeBlock.attr("data-ajax_action");
+            ajax_panelpage = activeBlock.attr("data-ajax_panelpage");
 
             // If the panel is currently open, get the currently open tab
             if (thisPanel.hasClass('opened')) {
                 subpanel_href = $('.panel_link.selected > a').attr('href');
                 if (subpanel_href) {
-                    last_ajax_action = subpanel_href.substr(subpanel_href.lastIndexOf('/') + 1);
+                    last_ajax_panelpage = subpanel_href.substr(subpanel_href.lastIndexOf('/') + 1);
                 }
             }
 
@@ -85,13 +85,13 @@ $(document).ready(function () {
                 if(activeBlock.hasClass('active') && thisPanel.hasClass('opened')){
                     KT.panel.closePanel(thisPanel);
                 } else {
-                    if (ajax_action && !last_ajax_action) {
-                        last_ajax_action = ajax_action;
+                    if (ajax_panelpage && !last_ajax_panelpage) {
+                        last_ajax_panelpage = ajax_panelpage;
                     }
-                    if (last_ajax_action) {
+                    if (last_ajax_panelpage) {
                         $.bbq.pushState({
                             panel: activeBlockId,
-                            action: last_ajax_action
+                            panelpage: last_ajax_panelpage
                         });
                     } else {
                         $.bbq.pushState({
@@ -149,23 +149,22 @@ $(document).ready(function () {
                 // Update the bbq
                 var activeBlock = $('#' + KT.common.escapeId(activeBlockId)),
                     ajax_url = activeBlock.attr("data-ajax_url"),
-                    ajax_action = activeBlock.attr("data-ajax_action");
+                    ajax_panelpage = activeBlock.attr("data-ajax_panelpage");
 
-                if (ajax_action) {
-                    // Replace old ajax_action with new
-                    ajax_action = this.url.substr(this.url.lastIndexOf('/') + 1);
+                if (ajax_panelpage) {
+                    // Replace old ajax_panelpage with new
+                    ajax_panelpage = this.url.substr(this.url.lastIndexOf('/') + 1);
                     var bbq_panel = $.bbq.getState("panel");
                     $.bbq.removeState("panel");
-                    $.bbq.removeState("action");
+                    $.bbq.removeState("panelpage");
                     $.bbq.pushState({
                         panel: bbq_panel,
-                        action: ajax_action
+                        panelpage: ajax_panelpage
                     });
-                    // Set the new default action
-                    last_ajax_action = ajax_action;
+                    // Set the new default panelpage
+                    last_ajax_panelpage = ajax_panelpage;
                 }
 
-                
                 for( cb in callbacks ){
                     callbacks[cb]();
                 }
@@ -255,16 +254,16 @@ KT.panel = (function ($) {
         select_item = function (activeBlockId) {
             var activeBlock = $('#' + KT.common.escapeId(activeBlockId)),
                 ajax_url = activeBlock.attr("data-ajax_url"),
-                ajax_action = activeBlock.attr("data-ajax_action"),
+                ajax_panelpage = activeBlock.attr("data-ajax_panelpage"),
                 full_ajax_url,
                 previousBlockId = null;
 
-            if (ajax_action) {
-                // Initialize the default action
-                if (!last_ajax_action) {
-                    last_ajax_action = ajax_action;
+            if (ajax_panelpage) {
+                // Initialize the default panelpage
+                if (!last_ajax_panelpage) {
+                    last_ajax_panelpage = ajax_panelpage;
                 }
-                full_ajax_url = ajax_url + '/' + last_ajax_action;
+                full_ajax_url = ajax_url + '/' + last_ajax_panelpage;
             } else {
                 full_ajax_url = ajax_url;
             }
@@ -395,9 +394,9 @@ KT.panel = (function ($) {
                 subpanelnav = ($('#subpanel').find('nav').length > 0) ? $('#subpanel').find('nav').height() + 10 : 0;
                 height = height - subpanelSpacing * 2 - subpanelnav + subnav_spacing;
             }
-            
+
             paneljQ.height(height);
-            
+
             if (paneljQ.length > 0) {
                 paneljQ.data('jsp').reinitialise();
             }
@@ -419,7 +418,7 @@ KT.panel = (function ($) {
                 content.html('');
                 position = KT.common.scrollTop();
                 $.bbq.removeState("panel");
-                $.bbq.removeState("action");
+                $.bbq.removeState("panelpage");
                 $(window).scrollTop(position);
                 updateResult();
                 contract_cb(name);
@@ -535,8 +534,8 @@ KT.panel = (function ($) {
         },
         search_started = function (event, promise) {
             var refresh = $.bbq.getState("panel");
-            if (!last_ajax_action) {
-                last_ajax_action = $.bbq.getState("action");
+            if (!last_ajax_panelpage) {
+                last_ajax_panelpage = $.bbq.getState("panelpage");
             }
 
             if (refresh) {
@@ -910,10 +909,10 @@ KT.panel.list = (function () {
                 KT.panel.closePanel($('#panel'));
                 id = first_child().attr("id");
 
-                if (last_ajax_action) {
+                if (last_ajax_panelpage) {
                     $.bbq.pushState({
                         panel: id,
-                        action: last_ajax_action
+                        panelpage: last_ajax_panelpage
                     });
                 } else {
                     $.bbq.pushState({
