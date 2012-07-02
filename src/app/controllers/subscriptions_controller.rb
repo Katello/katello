@@ -49,12 +49,12 @@ class SubscriptionsController < ApplicationController
   end
 
   def index
-    # If no manifest imported yet, one is currently being imported,
-    # or the last attempt was a failure open the "new" panel
+    # If no manifest imported yet or one is currently being imported, open the "new" panel.
+    # Originally had intended to open the "new" panel when last import was an error, but this
+    # is too restrictive, preventing viewing of previously imported subscriptions.
     if @provider.editable?
       imports = current_organization.redhat_provider.owner_imports
-      imports.sort! {|a,b| a['updated'] <=> b['updated']}
-      if imports.length == 0 || imports.last['status'] == 'FAILURE' || (@provider.task_status && @provider.task_status.progress)
+      if imports.length == 0 || (@provider.task_status && @provider.task_status.progress)
         @panel_options[:initial_state] = {:panel => :new}
       end
     end
