@@ -8,7 +8,6 @@ gem 'thin', '>=1.2.11'
 gem 'tire' , '>= 0.3.0', '< 0.4'
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
-gem 'jammit'
 gem 'pg'
 # gem 'bson_ext', '>= 1.0.4'
 gem 'rails_warden'
@@ -56,6 +55,8 @@ gem 'acts_as_reportable', '>=1.1.1'
 # end
 
 group :test, :development do
+  gem 'jammit'
+
   # To use debugger
   gem 'ruby-debug'
   gem 'ZenTest', '>= 4.4.0'

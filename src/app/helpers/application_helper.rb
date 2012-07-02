@@ -278,5 +278,43 @@ module ApplicationHelper
     return link.respond_to?(:html_safe) ? link.html_safe : link
   end
 
+  unless defined? Jammit
+    # We don't need Jammit and all it's dependencies in the production mode.
+    # This should be all what's needed when running in production.
 
+    def include_stylesheets(*packages)
+      options = packages.extract_options!
+      if options[:embed_assets] == false
+        html = stylesheet_links(packages.map { |p| asset_url(p, :css) }, options)
+      else
+        datauri_tags = stylesheet_links(packages.map { |p| asset_url(p, :css, :datauri) }, options)
+        ie_tags = stylesheet_links(packages.map { |p| asset_url(p, :css) }, options)
+        html = ["<!--[if (!IE)|(gte IE 8)]><!-->",
+                datauri_tags,
+                "<!--<![endif]-->",
+                ie_tags,
+                "<!--[if lte IE 7]>",
+                "<![endif]-->"].join("\n")
+      end
+      html.html_safe
+    end
+
+    def include_javascripts(*packages)
+      options = packages.extract_options!
+      javascript_links(packages.map { |p| asset_url(p, :js) }, options).html_safe
+    end
+
+    def stylesheet_links(files, options)
+      files.map { |f| stylesheet_link_tag(f, options) }.join("\n")
+    end
+
+    def javascript_links(files, options)
+      files.map { |f| javascript_include_tag(f, options) }.join("\n")
+    end
+
+    def asset_url(package, extension, suffix = nil)
+      filename = "#{[package, suffix].compact.join("-")}.#{extension}"
+      "/assets/#{filename}"
+    end
+  end
 end
