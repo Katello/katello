@@ -35,6 +35,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     {
       :package => {
         :properties => {
+          :id            => {:type=>'string', :index=>:not_analyzed},
           :name          => { :type=> 'string', :analyzer=>:kt_name_analyzer},
           :name_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
           :nvrea_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
