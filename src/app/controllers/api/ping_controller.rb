@@ -14,18 +14,17 @@ class Api::PingController < Api::ApiController
 
   skip_before_filter :authorize # ok - anyone authenticated can ask for status
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :GET, "/ping", "List ping"
+  api :GET, "/ping", "Shows status of system and it's subcomponents"
   def index
     render :json => Ping.ping().to_json and return
   end
 
-  api :GET, "/status"
+  api :GET, "/status", "Shows version information"
   def status
     render :json => {:version => "katello/#{AppConfig.katello_version}", :result => true}
   end
 
-  api :GET, "/version"
+  api :GET, "/version", "Shows name and version information"
   def version
     render :json => {:name => AppConfig.app_name, :version => AppConfig.katello_version}
   end
