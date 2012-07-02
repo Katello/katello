@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.28
+Version:        0.2.29
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.29-1
+- 834697 - explicitly disable qpid authentication
+
 * Wed Jun 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.28-1
 - 835152 - logs in advanced during installation fix
 - fix indention
