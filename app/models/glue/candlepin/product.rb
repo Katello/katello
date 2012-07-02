@@ -53,7 +53,7 @@ module Glue::Candlepin::Product
     product.save!
 
   rescue => e
-    Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
+    Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}"
     raise e
   end
 
@@ -184,7 +184,7 @@ module Glue::Candlepin::Product
         Resources::Candlepin::Content.destroy(pc.content.id)
       end
     rescue => e
-      Rails.logger.error "Failed to delete content for product #{name} in candlepin: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error "Failed to delete content for product #{name} in candlepin"
       raise e
     end
 
@@ -200,7 +200,7 @@ module Glue::Candlepin::Product
       end
       true
     rescue => e
-      Rails.logger.error "Failed to remove content form a product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error "Failed to remove content form a product in candlepin #{name}."
       raise e
     end
 
