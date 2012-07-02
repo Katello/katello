@@ -122,7 +122,7 @@ class ContentSearchController < ApplicationController
     rows = packages.collect do |pack|
       {:name => pack.nvrea, :id => pack.id, :cols => {:description => {:display => pack.description}}}
     end
-    render :json => rows
+    render :json => { :rows => rows, :name => @repo.name }
   end
 
   def repo_errata
