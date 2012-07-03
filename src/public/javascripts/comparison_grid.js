@@ -211,7 +211,8 @@ KT.comparison_grid = function(){
             add_columns();
         },
         show_columns = function(data){
-            var previous_num_shown = num_columns_shown;
+            var last_visible,
+                previous_num_shown = num_columns_shown;
 
             num_columns_shown = 0;
 
@@ -231,6 +232,12 @@ KT.comparison_grid = function(){
             $('#column_headers').width(num_columns_shown * 100);
 
             if( num_columns_shown > max_visible_columns ){
+
+                if( previous_num_shown > num_columns_shown ){
+                    if( $('#column_headers').find(':not(:hidden)').last().position().left + 100 === -($('#column_headers').position().left) + 400 ){
+                        controls.horizontal_scroll.slide('right');
+                    }
+                }
                 controls.horizontal_scroll.show();            
                 $('#column_headers_window').width(100 * max_visible_columns);
             } else {
@@ -459,8 +466,8 @@ KT.comparison_grid.controls = function(grid) {
                 reset = function(){
                     var distance = $('#grid_content').css('left');
 
-                    $('#grid_content').animate({ 'left' : '-=' + distance }, 'slow');
-                    $('#column_headers').animate({ 'left' : '-=' + distance }, 'slow',
+                    $('#grid_content').animate({ 'left' : 0 }, 'fast');
+                    $('#column_headers').animate({ 'left' : 0 }, 'fast',
                         function() {
                             set_arrow_states();
                         }
@@ -482,8 +489,8 @@ KT.comparison_grid.controls = function(grid) {
                 slide = function(direction) {
                     var position = (direction === 'left') ? '-=100' : '+=100';
                     
-                    $('#grid_content').animate({ 'left' : position }, 'slow');
-                    $('#column_headers').animate({ 'left' : position }, 'slow',
+                    $('#grid_content').animate({ 'left' : position }, 'fast');
+                    $('#column_headers').animate({ 'left' : position }, 'fast',
                         function() {
                             set_arrow_states();
                         }
