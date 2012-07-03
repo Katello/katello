@@ -55,7 +55,7 @@ class ContentSearchController < ApplicationController
     else
       products = current_organization.products.engineering
     end
-    render :json=>product_rows(products)
+    render :json=>{:rows=>product_rows(products), :name=>_('Products')}
   end
 
   def repos
@@ -77,7 +77,7 @@ class ContentSearchController < ApplicationController
     end
 
     products = repos.collect{|r| r.product}.uniq
-    render :json=>(product_rows(products) + repo_rows(repos))
+    render :json=>{:rows=>(product_rows(products) + repo_rows(repos)), :name=>_('Repositories')}
   end
 
   def packages
@@ -88,7 +88,7 @@ class ContentSearchController < ApplicationController
     product_repo_map = extract_repo_ids(product_ids_in, repo_ids_in)
     rows = []
     product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_content(p_id, repo_ids, 'package', package_ids_in) || [])}
-    render :json=>rows
+    render :json=>{:rows=>rows, :name=>_('Packages')}
   end
 
   def errata
@@ -99,21 +99,21 @@ class ContentSearchController < ApplicationController
     product_repo_map = extract_repo_ids(product_ids_in, repo_ids_in)
     rows = []
     product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_content(p_id, repo_ids, 'errata', package_ids_in) || [])}
-    render :json=>rows
+    render :json=>{:rows=>rows, :name=>_('Errata')}
   end
 
   #similar to :packages, but only returns package rows with an offset for a specific repo
   def packages_items
     repo = Repository.where(:id=>params[:repo_id]).first
     pkgs = spanned_repo_content(repo, 'package', process_params(:packages), params[:offset]) || {:content_rows=>[]}
-    render :json=>(pkgs[:content_rows] + [metadata_row(pkgs[:total], params[:offset] + pkgs[:content_rows].length, repo, true)])
+    render :json=>{:rows=>(pkgs[:content_rows] + [metadata_row(pkgs[:total], params[:offset] + pkgs[:content_rows].length, repo, true)])}
   end
 
   #similar to :errata, but only returns errata rows with an offset for a specific repo
   def errata_items
     repo = Repository.where(:id=>params[:repo_id]).first
     errata = spanned_repo_content(repo, 'errata', process_params(:errata), params[:offset]) || {:content_rows=>[]}
-    render :json=>(errata[:content_rows] + [metadata_row(errata[:total], params[:offset] + errata[:content_rows].length, repo, true)])
+    render :json=>{:rows=>(errata[:content_rows] + [metadata_row(errata[:total], params[:offset] + errata[:content_rows].length, repo, true)])}
   end
 
 
@@ -123,7 +123,9 @@ class ContentSearchController < ApplicationController
     rows = packages.collect do |pack|
       {:name => pack.nvrea, :id => pack.id, :cols => {:description => {:display => pack.description}}}
     end
-    render :json => rows + [metadata_row(packages.total, offset.to_i + rows.length, @repo)]
+
+    rows += [metadata_row(packages.total, offset.to_i + rows.length, @repo)]
+    render :json => { :rows => rows, :name => @repo.name }
   end
 
   def repo_errata
@@ -136,7 +138,8 @@ class ContentSearchController < ApplicationController
                                             }
       }
     end
-    render :json => rows + [metadata_row(errata.total, offset.to_i + rows.length, @repo)]
+    rows += [metadata_row(errata.total, offset.to_i + rows.length, @repo)]
+    render :json => { :rows => rows, :name => @repo.name }
   end
 
 

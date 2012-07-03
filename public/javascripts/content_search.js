@@ -135,7 +135,7 @@ KT.content_search = function(paths_in){
         if (search.subgrid && search.subgrid.type){
             type = search.subgrid.type;
         }
-        console.log(type);
+
         data_out.offset = event.offset;
         if(more_results_urls[type].include_search){ 
             data_out = utils.extend(data_out, search);
@@ -149,7 +149,7 @@ KT.content_search = function(paths_in){
           cache: false,
           data: data_out,
           success: function(data){
-            $(document).trigger('show_more.comparison_grid', [data]);
+            $(document).trigger('show_more.comparison_grid', [data.rows]);
           }
         })
       });
@@ -184,11 +184,11 @@ KT.content_search = function(paths_in){
                     comparison_grid.set_columns(subgrid.cols);
                     comparison_grid.set_mode("details");
                     comparison_grid.show_columns(subgrid.cols);
-                    if (search_params.subgrid.type != 'compare'){
+                    if (search_params.subgrid.type !== 'compare'){
                         comparison_grid.set_content_select(utils.values(subgrids));
                     }
-
-                    draw_grid(data);
+                    comparison_grid.set_title(data.name);
+                    draw_grid(data.rows);
                 }
             });
         }
@@ -207,7 +207,8 @@ KT.content_search = function(paths_in){
                     success: function(data){
                         comparison_grid.set_columns(env_select.get_paths());
                         select_envs(get_initial_environments());
-                        draw_grid(data);
+                        comparison_grid.set_title(data.name);
+                        draw_grid(data.rows);
                         cache.save_state(comparison_grid, search_params);
                     }
                 });
