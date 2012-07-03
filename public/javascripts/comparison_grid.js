@@ -30,10 +30,9 @@ KT.comparison_grid = function(){
             grid_content_el = $('#grid_content');
         },
         add_row = function(id, name, cell_data, parent_id, comparable){
-            var cells = [], insert,
-                row_level,
-                cell_columns = utils.keys(cell_data),
+            var cells = [], row_level,
                 child_list,
+                cell_columns = utils.keys(cell_data),
                 has_children = models.rows.has_children(id);
  
             if( models.mode === "results" ){           
@@ -147,7 +146,10 @@ KT.comparison_grid = function(){
             } else {
                 $('.grid_row').css('width', 500);
             }
-            
+
+            $('.load_row').find('.spinner').css('visibility', 'hidden');
+            $('.load_row').find('a').removeClass('disabled');
+
             set_loading(false);
         },
         set_rows = function(data, initial) {
@@ -656,8 +658,12 @@ KT.comparison_grid.events = function(grid) {
         load_row_links = function(){
             $('.load_row_link').live('click', function(event){
                 var cell = grid.models.rows.get($(this).parent().data('id'));
-                event.preventDefault();
-                $(document).trigger({type : 'load_more.comparison_grid', cell_data : cell['data'], offset : cell['current']});
+                
+                if( !$(this).hasClass('disabled') ){
+                    $(this).addClass('disabled').parent().find('.spinner').css('visibility', 'visible');
+                    event.preventDefault();
+                    $(document).trigger({type : 'load_more.comparison_grid', cell_data : cell['data'], offset : cell['current']});
+                }
             });
         };
 
@@ -781,11 +787,14 @@ KT.comparison_grid.templates = (function(i18n) {
             return html;
         },
         load_more_row = function(id, load_size){
-            var html = '<div class="load_row grid_row" data-id="' + id + '">';
+            var html = $('<div/>', { 
+                            'class'     : 'load_row grid_row',
+                            'data-id'   : id,
+                        });
                 
-            html += '<a class="load_row_link" href="" >' + i18n.show_more.replace('%P', load_size) + '</a>';
-            html += '<i class="down_arrow-icon-black"/>';
-            html += '</div>';
+            html.append('<i class="spinner invisible" />');
+            html.append('<a class="load_row_link" href="" >' + i18n.show_more.replace('%P', load_size) + '</a>');
+            html.append('<i class="down_arrow-icon-black"/>');
 
             return html;
         },
