@@ -12,8 +12,6 @@
 
 require 'spec_helper'
 
-
-
 describe SystemGroupsController do
   include LoginHelperMethods
   include LocaleHelperMethods
@@ -203,33 +201,6 @@ describe SystemGroupsController do
       end
     end
 
-    describe "POST lock/unlock" do
-      let(:action) {:lock}
-      let(:req) { post :lock, :id=>@group.id }
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:locking, :system_groups, @group.id, @org) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-
-      it "should allow locked to be toggled on" do
-        post :lock, :id=>@group.id, :system_group=>{:locked=>"true"}
-        response.should be_success
-        SystemGroup.find(@group.id).locked.should == true
-      end
-
-      it "should allow locked to be toggled on" do
-        @group.locked = true
-        @group.save!
-        post :lock, :id=>@group.id, :system_group=>{:lock=>"false"}
-        response.should be_success
-        SystemGroup.find(@group.id).locked.should == false
-      end
-
-    end
-
 
     describe "POST add systems" do
       it "should allow adding of systems" do
@@ -248,7 +219,6 @@ describe SystemGroupsController do
         end
         it_should_behave_like "protected action"
     end
-
 
 
     describe "POST remove_systems" do

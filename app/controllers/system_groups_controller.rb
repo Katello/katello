@@ -13,7 +13,7 @@
 class SystemGroupsController < ApplicationController
 
   before_filter :panel_options, :only=>[:index, :items, :create]
-  before_filter :find_group, :only=>[:edit, :update, :destroy, :destroy_systems, :systems, :lock,
+  before_filter :find_group, :only=>[:edit, :update, :destroy, :destroy_systems, :systems,
                                      :show, :add_systems, :remove_systems]
   before_filter :authorize
   def rules
@@ -23,7 +23,6 @@ class SystemGroupsController < ApplicationController
     create_perm = lambda{SystemGroup.creatable?(current_organization)}
     destroy_perm = lambda{@group.deletable?}
     destroy_systems_perm = lambda{@group.systems_deletable?}
-    lock_perm = lambda{@group.locking?}
     {
         :index=>any_readable,
         :items=>any_readable,
@@ -38,16 +37,14 @@ class SystemGroupsController < ApplicationController
         :auto_complete=>any_readable,
         :add_systems=> edit_perm,
         :remove_systems=>edit_perm,
-        :validate_name=>any_readable,
-        :lock=>lock_perm,
-        :unlock=>lock_perm
+        :validate_name=>any_readable
     }
   end
 
   def param_rules
      {
        :create => {:system_group => [:name, :description, :max_systems]},
-       :update => {:system_group => [:name, :description, :max_systems, :locked]},
+       :update => {:system_group => [:name, :description, :max_systems]},
        :add_systems => [:system_ids, :id],
        :remove_systems => [:system_ids, :id]
      }
@@ -122,13 +119,6 @@ class SystemGroupsController < ApplicationController
   rescue Exception=>e
     notice e, {:level => :error}
     render :text=>e, :status=>500
-  end
-
-  def lock
-    @group.locked = params[:system_group][:locked] == 'true'
-    @group.save!
-    notice _("System Group %s has been updated.") % @group.name
-    render :text=>""
   end
 
   def destroy
@@ -214,7 +204,6 @@ class SystemGroupsController < ApplicationController
         string query
       end
       filter :term, {:organization_id => org.id}
-      filter :term, {:locked=>false}
       filter :terms, {:id=>SystemGroup.editable(org).collect{|g| g.id}}
     end
     render :json=>groups.map{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
