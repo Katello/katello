@@ -58,7 +58,11 @@ KT.comparison_grid = function(){
             if( parent_id ){
                 child_list = $('#child_list_' + parent_id);
                 
-                child_list.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children, parent_id));
+                if( child_list.find('.load_row').length > 0 ){
+                    child_list.find('.load_row').before(templates.row(id, utils.size(models.columns), cells, row_level, has_children, parent_id));
+                } else {
+                    child_list.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children, parent_id));
+                }
             } else {
                 grid_content_el.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children));
             }
@@ -67,7 +71,7 @@ KT.comparison_grid = function(){
             var child_list;
 
             if( $('.load_row[data-id="' + id + '"]').length === 0 ){
-                add_row_header(id, '', 3, false, parent_id);
+                add_metadata_row_header(id, parent_id);
 
                 if( parent_id ){
                     child_list = $('#child_list_' + parent_id);
@@ -77,13 +81,28 @@ KT.comparison_grid = function(){
                 }
             }
         },
+        add_metadata_row_header = function(id, parent_id) {
+            var child_list;
+
+            if( parent_id ){
+                child_list = $('#child_header_list_' + parent_id);
+                
+                child_list.append(templates.load_more_row_header(id, parent_id));
+            } else {
+                grid_row_headers_el.append(templates.load_more_row_header(id, parent_id));
+            }
+        },
         add_row_header = function(id, name, row_level, has_children, parent_id) {
             var child_list;
 
             if( parent_id ){
                 child_list = $('#child_header_list_' + parent_id);
                 
-                child_list.append(templates.row_header(id, name, row_level, has_children, parent_id));
+                if( child_list.find('.load_row_header').length > 0 ){
+                    child_list.find('.load_row_header').before(templates.row_header(id, name, row_level, has_children, parent_id));
+                } else {
+                    child_list.append(templates.row_header(id, name, row_level, has_children, parent_id));
+                }
             } else {
                 grid_row_headers_el.append(templates.row_header(id, name, row_level, has_children, parent_id));
             }
@@ -181,33 +200,39 @@ KT.comparison_grid = function(){
             add_columns();
         },
         show_columns = function(data){
+            var previous_num_shown = num_columns_shown;
+
             num_columns_shown = 0;
 
             utils.each(models.columns, function(value, key){
                 if( data[key] ){
-                    $('#column_headers').width($('#column_headers').width() + 100);
-                    $('#column_' + key).show();
                     models.columns[key]['shown'] = true;
                     num_columns_shown += models.columns[key]['span'];
                     $('.cell_' + key).show();
+                    $('#column_' + key).show();
+                    $('#column_' + key).animate({ width : 89 * models.columns[key]['span'] }, 500, function(){ });
+                    $('.cell_' + key).animate({ width : 89 * models.columns[key]['span'] }, 500, function(){ });
                 } else {
                     models.columns[key]['shown'] = false;
-                    $('#column_' + key).hide();
-                    $('.cell_' + key).hide();
+                    $('#column_' + key).animate({ width : 0 }, 500, function(){ $(this).hide() });
+                    $('.cell_' + key).animate({ width : 0 }, 500, function(){ $(this).hide() });
                 }
             });
+
+            $('#column_headers').width(num_columns_shown * 100);
 
             if( num_columns_shown > max_visible_columns ){
                 controls.horizontal_scroll.show();            
                 $('#column_headers_window').width(100 * max_visible_columns);
             } else {
+                controls.horizontal_scroll.reset();
                 controls.horizontal_scroll.hide();
                 $('#column_headers_window').width(num_columns_shown * 100);
             }
         },
         set_loading = function(show){
             if( show ){
-                $('#grid_loading_screen').show();
+                $('#grid_loading_screen').height($('#grid_content_window').height()).show();
             } else {
                 $('#grid_loading_screen').hide();
             }
@@ -420,6 +445,17 @@ KT.comparison_grid.controls = function(grid) {
                 stop_position = function(){
                     return -((grid.get_num_columns_shown() - grid.get_max_visible_columns()) * 100);
                 },
+                reset = function(){
+                    var distance = $('#grid_content').css('left');
+
+                    $('#grid_content').animate({ 'left' : '-=' + distance }, 'slow');
+                    $('#column_headers').animate({ 'left' : '-=' + distance }, 'slow',
+                        function() {
+                            set_arrow_states();
+                        }
+                    );
+
+                },
                 set_arrow_states = function() {
                     if( current_position() === 0 ){
                         right_arrow.find('span').addClass('disabled');
@@ -474,8 +510,10 @@ KT.comparison_grid.controls = function(grid) {
             );
 
             return {
-                show : show,
-                hide : hide
+                show    : show,
+                hide    : hide,
+                slide   : slide,
+                reset   : reset
             }
         }()),
 
@@ -619,7 +657,7 @@ KT.comparison_grid.events = function(grid) {
             $('.load_row_link').live('click', function(event){
                 var cell = grid.models.rows.get($(this).parent().data('id'));
                 event.preventDefault();
-                $(document).trigger({type:'load_more.comparison_grid', cell_data:cell['data'], offset:cell['current']});
+                $(document).trigger({type : 'load_more.comparison_grid', cell_data : cell['data'], offset : cell['current']});
             });
         };
 
@@ -694,8 +732,8 @@ KT.comparison_grid.templates = (function(i18n) {
         row_header = function(id, name, row_level, has_children, parent_id) {
             var html = $('<li/>', { 
                             'data-id'   : id,
-                            id          : 'row_header_' + id,
-                            class       : 'one-line-ellipsis row_header grid_row_level_' + row_level
+                            'id'        : 'row_header_' + id,
+                            'class'     : 'one-line-ellipsis row_header grid_row_level_' + row_level
                         });
 
             if( parent_id !== undefined ){
@@ -721,15 +759,14 @@ KT.comparison_grid.templates = (function(i18n) {
     
             return html;
         },
-        column = function() {
-        },
         column_header = function(id, to_display, span) {
-            var html = '';
+            var html = $('<li/>', {
+                    'id'        : 'column_' + id,
+                    'data-id'   : id,
+                    'data-span' : span,
+                    'class'     : 'one-line-ellipsis column_header hidden'
+                }).html(to_display);
  
-            html += '<li data-id="' + id  + '" id="column_' + id + '" data-span="' + span + '" class="one-line-ellipsis column_header hidden">';
-            html += to_display;
-            html += '</li>';
-
             return html;
         },
         collapse_arrow = function(options){
@@ -751,15 +788,28 @@ KT.comparison_grid.templates = (function(i18n) {
             html += '</div>';
 
             return html;
+        },
+        load_more_row_header = function(id, parent_id){
+            var html = $('<li/>', { 
+                            'data-id'   : id,
+                            'id'        : 'row_header_' + id,
+                            'class'     : 'one-line-ellipsis row_header load_row_header grid_row_level_3'
+                        });
+
+            if( parent_id !== undefined ){
+                html.attr('data-parent_id', parent_id);
+            }
+         
+            return html;   
         };
 
     return {
-        cell            : cell,
-        row             : row,
-        column_header   : column_header,
-        row_header      : row_header,
-        load_more_row   : load_more_row,
-        collapse_arrow  : collapse_arrow
+        cell                    : cell,
+        row                     : row,
+        row_header              : row_header,
+        column_header           : column_header,
+        load_more_row_header    : load_more_row_header,
+        load_more_row           : load_more_row
     }
 }(i18n));
 
