@@ -63,7 +63,13 @@ KT.comparison_grid = function(){
                     child_list.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children, parent_id));
                 }
             } else {
-                grid_content_el.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children));
+                if( grid_content_el.children('.load_row').length > 0 ) {
+                    grid_content_el.children('.load_row').before(templates.row(id, utils.size(models.columns), cells, row_level, has_children));
+                } else {
+                    grid_content_el.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children));
+                }
+
+                //grid_content_el.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children));
             }
         },
         add_metadata_row = function(id, parent_id, page_size, current, total){
@@ -108,7 +114,14 @@ KT.comparison_grid = function(){
                     child_list.append(templates.row_header(id, name, row_level, has_children, parent_id));
                 }
             } else {
-                grid_row_headers_el.append(templates.row_header(id, name, row_level, has_children, parent_id));
+
+                if( grid_row_headers_el.children('.load_row_header').length > 0 ) {
+                    grid_row_headers_el.children('.load_row_header').before(templates.row_header(id, name, row_level, has_children, parent_id));
+                } else {
+                    grid_row_headers_el.append(templates.row_header(id, name, row_level, has_children, parent_id));
+                }
+
+                //grid_row_headers_el.append(templates.row_header(id, name, row_level, has_children, parent_id));
             }
         },
         add_rows = function(append) {
