@@ -303,7 +303,7 @@ class ContentSearchController < ApplicationController
         end
         content_rows += repo_span[:content_rows]
         if repo_span[:total] > current_user.page_size
-          content_rows <<  metadata_row(repo_span[:total], current_user.page_size, repo)
+          content_rows <<  metadata_row(repo_span[:total], current_user.page_size, repo, true)
         end
       end
     end
