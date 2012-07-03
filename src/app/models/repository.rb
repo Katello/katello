@@ -35,7 +35,6 @@ class Repository < ActiveRecord::Base
   mapping do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
-    indexes :library_id, :type=> 'string', :index => :not_analyzed
   end
 
 
@@ -48,6 +47,7 @@ class Repository < ActiveRecord::Base
   validates :name, :presence => true
   validates :enabled, :repo_disablement => true, :on => [:update]
   belongs_to :gpg_key, :inverse_of => :repositories
+  belongs_to :library_instance, :class_name=>"Repository"
 
   def self.in_product(product)
     joins(:environment_product).where(:environment_products => { :product_id => product })
@@ -127,8 +127,7 @@ class Repository < ActiveRecord::Base
 
   def extended_index_attrs
     {:environment=>self.environment.name, :environment_id=>self.environment.id,
-     :product=>self.product.name, :product_id=> self.product.id, :name_sort=>self.name,
-     :library_id=> self.library_instance.first}
+     :product=>self.product.name, :product_id=> self.product.id, :name_sort=>self.name }
   end
 
   def update_related_index
@@ -239,22 +238,15 @@ class Repository < ActiveRecord::Base
   end
 
   # returns other instances of this repo with the same library
-  # equivalent of repo#other_repos_with_same_product_and_content
-  # but without the pesty pulp call
-  def environmental_instance_ids
+  # equivalent of repo
+  def environmental_instances
+
     if self.environment.library?
       repo = self
     else
       repo = self.library_instance
     end
-
-    Repository.search do
-      size 10000
-      query do
-        all
-      end
-      filter :term, :library_id => repo.pulp_id
-    end.collect{|r| r.pulp_id}
+    Repository.where(:library_instance_id=>repo.id) + [repo]
   end
 
   #ideally this would be an attribute like package_count
