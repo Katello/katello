@@ -1,0 +1,49 @@
+@charset "UTF-8";
+@import "compass";
+@import "converge-ui/vars";
+@import "converge-ui/mixins";
+
+/* search forms */
+
+.search, .filter {
+  position: absolute;
+  button {
+    position: absolute;
+    width: 16px; height: 16px;
+    text-indent: -4000em;
+    right: 10px; top: 50%;
+    margin: -8px 0 0;
+    background-position: 0 0;
+    border: none;
+    padding: 0;
+    &:hover {
+        @include no-box-shadow;
+    }
+  }
+  input[type="search"] {
+    float: right; /* webkit adds an extra padding and makes the widget narrower */
+    width: 220px;
+  }
+  input[type="input"] {
+    float: right; /* webkit adds an extra padding and makes the widget narrower */
+    width: 220px;
+    padding-left: 4px;
+  }
+}
+.search_button, .filter_button {
+    background: $search_icon_white;
+    position: relative;
+    width: 16px; height: 16px;
+    text-indent: -4000em;
+    margin: 6px 12px 3px 3px;
+    background-position: 0 0;
+    border: none;
+    padding: 0;
+    &:hover {
+        background-position: 0 -16px;
+    }
+}
+.filter_button {
+  left: -28px;
+  top: -2px;
+}

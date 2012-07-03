@@ -99,16 +99,8 @@ class ApplicationController < ActionController::Base
     logger.debug "Setting locale: #{I18n.locale}"
   end
 
-  def setup_current_organization
-    orgs = User.current.allowed_organizations
-    return nil if  orgs.nil? || orgs.empty?
-    self.current_organization = orgs.first if orgs
-  end
-
-
   def current_organization
     unless session[:current_organization_id]
-      setup_current_organization
       return nil unless session[:current_organization_id]
     end
     begin
@@ -187,7 +179,7 @@ class ApplicationController < ActionController::Base
 
   def require_no_user
     if current_user
-      notice _("Welcome Back!") + ", " + current_user.username
+      notice _("Welcome Back") + ", " + current_user.username
       execute_after_filters
       redirect_to dashboard_index_url
       return false

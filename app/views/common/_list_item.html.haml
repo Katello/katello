@@ -1,5 +1,5 @@
-- initial_action ||= :edit 
-.block{:id => "#{name}_#{item.send(accessor)}", "data-ajax_url" => url_for(:action=>initial_action, :id => item.send(accessor))}
+- initial_action ||= :edit
+.block{:id => "#{name}_#{item.send(accessor)}", "data-ajax_url" => "#{url_for(:controller=>controller.controller_name)}/#{item.send(accessor)}", "data-ajax_panelpage" => initial_action}
   - for col in columns
     .one-line-ellipsis{:class => 'column_' + columns.length.to_s, :title => item.send(col)}
       = item.send(col)

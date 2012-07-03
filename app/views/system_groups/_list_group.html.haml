@@ -1,4 +1,4 @@
-.block.tall{:id => "#{name}_#{item.send(accessor)}", "data-ajax_url" => url_for(:action=> :systems, :id => item.send(accessor))}
+.block.tall{:id => "#{name}_#{item.send(accessor)}", "data-ajax_url" => "#{url_for(:controller=>controller.controller_name)}/#{item.send(accessor)}", "data-ajax_panelpage" => :systems}
   %div{:class => "column_1"}
     -if item.locked
       %span{:class => "lock_icon fl"}
