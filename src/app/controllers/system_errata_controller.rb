@@ -67,15 +67,15 @@ class SystemErrataController < ApplicationController
     task = @system.install_errata(errata_ids)
     
     notice _("Errata scheduled for install.")
-    render :text => task.uuid
+    render :text => task.id
   rescue Exception => error
     errors error
     render :text => error, :status => :bad_request
   end
 
   def status
-    if params[:uuid]
-      statuses = @system.tasks.where(:uuid => params[:uuid], :task_type => [:errata_install])
+    if params[:id]
+      statuses = @system.tasks.where('task_statuses.id' => params[:id], :task_type => [:errata_install])
     else
       statuses = @system.tasks.where(:task_type => [:errata_install], :state => [:waiting, :running])
     end

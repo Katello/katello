@@ -62,7 +62,7 @@ class SystemPackagesController < ApplicationController
       render :text => '' and return
     end
 
-    render :text => task.uuid
+    render :text => task.id
   end
 
   def remove
@@ -99,7 +99,7 @@ class SystemPackagesController < ApplicationController
       render :text => '' and return
     end
 
-    render :text => task.uuid
+    render :text => task.id
   end
 
   def update
@@ -118,7 +118,7 @@ class SystemPackagesController < ApplicationController
                  {:s => @system['name'], :p => params[:package]}
     end
 
-    render :text => task.uuid
+    render :text => task.id
   end
 
   def packages
@@ -193,7 +193,7 @@ class SystemPackagesController < ApplicationController
 
   def status
     # retrieve the status for the package actions initiated by the client
-    statuses = @system.tasks.where(:uuid => params[:uuid],
+    statuses = @system.tasks.where(:id => params[:id],
                                    :task_type => [:package_install, :package_update, :package_remove,
                                                   :package_group_install, :package_group_remove])
     render :json => statuses
