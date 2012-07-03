@@ -62,16 +62,16 @@ class SystemGroupErrataController < ApplicationController
     job = @group.install_errata(errata_ids)
     
     notice _("Errata scheduled for install.")
-    render :text => job.pulp_id
+    render :text => job.id
   rescue Exception => error
     errors error
     render :text => error, :status => :bad_request
   end
 
   def status
-    if params[:uuid]
+    if params[:id]
       jobs = @group.refreshed_jobs.joins(:task_statuses).where(
-          'jobs.pulp_id' => params[:uuid], 'task_statuses.task_type' => [:errata_install])
+          'jobs.id' => params[:id], 'task_statuses.task_type' => [:errata_install])
     else
       jobs = @group.refreshed_jobs.joins(:task_statuses).where(
           'task_statuses.task_type' => [:errata_install], 'task_statuses.state' => [:waiting, :running])
