@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.41
+Version:       0.2.42
 Release:       1%{?dist}
 
 # Upstream uses tito rpm helper utility. To get the particular version from
@@ -112,6 +112,16 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.42-1
+- system groups - cli - fix broken test
+- system groups - cli - creating a group should default max systems to
+  unlimited
+- system groups - cli - add description to the AsyncJob
+- system groups - cli - split history in to 2 actions per review feedback
+- system groups - api/cli to support errata install
+- system groups - remove unused code from package action CLI
+- system groups - api/cli to support package and package group actions
+
 * Mon Jun 25 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.41-1
 - ulimit - brad's review
 - BZ 825262: support for moving systems between environments from CLI

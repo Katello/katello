@@ -16,10 +16,11 @@ class candlepin::config {
   file { "/etc/candlepin/candlepin.conf":
     content => template("candlepin/etc/candlepin/candlepin.conf.erb"),
     require => Exec["cpsetup"],
-    mode => '600',
-    owner => 'tomcat',
+    mode    => '600',
+    owner   => 'tomcat',
     notify  => Service["tomcat6"];
   }
+
   common::line { "allow_cpsetup_to_execute_sudo_HACK":
       file => "/etc/sudoers",
       line    => "Defaults:root !requiretty",

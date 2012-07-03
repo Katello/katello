@@ -501,12 +501,16 @@ Src::Application.routes.draw do
         member do
           get :systems
           get :history
+          match "/history/:job_id" => "system_groups#history_show", :via => :get
           post :lock
           post :unlock
           post :add_systems
           post :remove_systems
           delete :destroy_systems
         end
+
+        resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
+        resources :errata, :only => [:index, :create], :controller => :system_group_errata
       end
 
       resources :environments do

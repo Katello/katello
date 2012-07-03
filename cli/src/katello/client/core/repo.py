@@ -31,6 +31,8 @@ from katello.client.utils import printer
 
 Config()
 
+ALLOWED_REPO_URL_SCHEMES = ("http", "https", "ftp", "file") 
+
 SYNC_STATES = { 'waiting':     _("Waiting"),
                 'running':     _("Running"),
                 'error':       _("Error"),
@@ -118,7 +120,7 @@ class Create(RepoAction):
                                help=_("organization name eg: foo.example.com (required)"))
         parser.add_option('--name', dest='name',
                                help=_("repository name to assign (required)"))
-        parser.add_option("--url", dest="url", type="url",
+        parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
                                help=_("url path to the repository (required)"))
         parser.add_option('--product', dest='prod',
                                help=_("product name (required)"))
@@ -153,7 +155,7 @@ class Discovery(RepoAction):
                                help=_("organization name eg: foo.example.com (required)"))
         parser.add_option('--name', dest='name',
                                help=_("repository name prefix to add to all the discovered repositories (required)"))
-        parser.add_option("--url", dest="url", type="url",
+        parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
                                help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
                                help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))

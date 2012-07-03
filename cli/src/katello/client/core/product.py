@@ -21,7 +21,7 @@ import datetime
 from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
-from katello.client.core.repo import format_sync_state, format_sync_time
+from katello.client.core.repo import format_sync_state, format_sync_time, ALLOWED_REPO_URL_SCHEMES
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
@@ -308,7 +308,7 @@ class Create(ProductAction):
                                help=_("product name (required)"))
         parser.add_option("--description", dest="description",
                                help=_("product description"))
-        parser.add_option("--url", dest="url", type="url",
+        parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
                                help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
         parser.add_option("--nodisc", action="store_true", dest="nodiscovery",
                                help=_("skip repository discovery"))
