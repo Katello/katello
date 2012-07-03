@@ -124,7 +124,7 @@ class ContentSearchController < ApplicationController
       {:name => pack.nvrea, :id => pack.id, :cols => {:description => {:display => pack.description}}}
     end
 
-    rows += [metadata_row(packages.total, offset.to_i + rows.length, @repo)]
+    rows += [metadata_row(packages.total, offset.to_i + rows.length, @repo)] if packages.total > current_user.page_size
     render :json => { :rows => rows, :name => @repo.name }
   end
 
@@ -138,7 +138,7 @@ class ContentSearchController < ApplicationController
                                             }
       }
     end
-    rows += [metadata_row(errata.total, offset.to_i + rows.length, @repo)]
+    rows += [metadata_row(errata.total, offset.to_i + rows.length, @repo)] if errata.total > current_user.page_size
     render :json => { :rows => rows, :name => @repo.name }
   end
 
