@@ -51,11 +51,11 @@ class ContentSearchController < ApplicationController
   def products
     ids = param_product_ids 
     if !ids.empty?
-      products = current_organization.products.where(:id=>ids)
+      products = current_organization.products.engineering.where(:id=>ids)
     else
-      products = current_organization.products
+      products = current_organization.products.engineering
     end
-    render :json=>product_rows(products)
+    render :json=>{:rows=>product_rows(products), :name=>_('Products')}
   end
 
   def repos
@@ -77,7 +77,7 @@ class ContentSearchController < ApplicationController
     end
 
     products = repos.collect{|r| r.product}.uniq
-    render :json=>(product_rows(products) + repo_rows(repos))
+    render :json=>{:rows=>(product_rows(products) + repo_rows(repos)), :name=>_('Repositories')}
   end
 
   def packages
@@ -88,7 +88,7 @@ class ContentSearchController < ApplicationController
     product_repo_map = extract_repo_ids(product_ids_in, repo_ids_in)
     rows = []
     product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_content(p_id, repo_ids, 'package', package_ids_in) || [])}
-    render :json=>rows
+    render :json=>{:rows=>rows, :name=>_('Packages')}
   end
 
   def errata
@@ -99,34 +99,38 @@ class ContentSearchController < ApplicationController
     product_repo_map = extract_repo_ids(product_ids_in, repo_ids_in)
     rows = []
     product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_content(p_id, repo_ids, 'errata', package_ids_in) || [])}
-    render :json=>rows
+    render :json=>{:rows=>rows, :name=>_('Errata')}
   end
 
   #similar to :packages, but only returns package rows with an offset for a specific repo
   def packages_items
     repo = Repository.where(:id=>params[:repo_id]).first
     pkgs = spanned_repo_content(repo, 'package', process_params(:packages), params[:offset]) || {:content_rows=>[]}
-    render :json=>(pkgs[:content_rows] + [metadata_row(pkgs[:total], params[:offset] + pkgs[:content_rows].length, repo)])
+    render :json=>{:rows=>(pkgs[:content_rows] + [metadata_row(pkgs[:total], params[:offset] + pkgs[:content_rows].length, repo, true)])}
   end
 
   #similar to :errata, but only returns errata rows with an offset for a specific repo
   def errata_items
     repo = Repository.where(:id=>params[:repo_id]).first
     errata = spanned_repo_content(repo, 'errata', process_params(:errata), params[:offset]) || {:content_rows=>[]}
-    render :json=>(errata[:content_rows] + [metadata_row(errata[:total], params[:offset] + errata[:content_rows].length, repo)])
+    render :json=>{:rows=>(errata[:content_rows] + [metadata_row(errata[:total], params[:offset] + errata[:content_rows].length, repo, true)])}
   end
 
 
   def repo_packages
-    packages = Glue::Pulp::Package.search('', params[:offset], current_user.page_size, [@repo.pulp_id])
+    offset = params[:offset] || 0
+    packages = Glue::Pulp::Package.search('', offset, current_user.page_size, [@repo.pulp_id])
     rows = packages.collect do |pack|
       {:name => pack.nvrea, :id => pack.id, :cols => {:description => {:display => pack.description}}}
     end
+
+    rows += [metadata_row(packages.total, offset.to_i + rows.length, @repo)] if packages.total > current_user.page_size
     render :json => { :rows => rows, :name => @repo.name }
   end
 
   def repo_errata
-    errata = Glue::Pulp::Errata.search('', params[:offset], current_user.page_size, :repoids => [@repo.pulp_id])
+    offset = params[:offset] || 0
+    errata = Glue::Pulp::Errata.search('', offset, current_user.page_size, :repoids => [@repo.pulp_id])
     rows = errata.collect do |e|
       {:name => e.id, :id => e.id, :cols => {:title => {:display => e[:title]},
                                              :type => {:display => e[:type]},
@@ -134,7 +138,8 @@ class ContentSearchController < ApplicationController
                                             }
       }
     end
-    render :json => rows
+    rows += [metadata_row(errata.total, offset.to_i + rows.length, @repo)] if errata.total > current_user.page_size
+    render :json => { :rows => rows, :name => @repo.name }
   end
 
 
@@ -184,7 +189,7 @@ class ContentSearchController < ApplicationController
 
   def repo_rows repos
     repos.collect do |repo|
-        all_repos = repo.environmental_instance_ids
+        all_repos = repo.environmental_instances.collect{|r| r.pulp_id}
         cols = {}
         Repository.where(:pulp_id=>all_repos).each do |r|
           cols[r.environment.id] = {:hover => repo_hover_html(r)}
@@ -201,10 +206,14 @@ class ContentSearchController < ApplicationController
     products.collect do |p|
       cols = {}
       p.environments.collect do |env|
-        cols[env.id] = {:display => p.total_package_count(env)}
+        cols[env.id] = {:hover => product_hover_html(p, env)}
       end
        {:id=>"product_#{p.id}", :name=>p.name, :cols=>cols}
     end
+  end
+
+  def product_hover_html product, environment
+    render_to_string :partial=>'product_hover', :locals=>{:product=>product, :env=>environment}
   end
 
   def param_product_ids 
@@ -249,7 +258,7 @@ class ContentSearchController < ApplicationController
       repo_ids = repo_search(repo_search, readable).collect{|r| r.id}
     else
       if !product_ids.empty?
-        products = Product.readable(current_organization).where(:id=>product_ids_in)
+        products = Product.readable(current_organization).where(:id=>product_ids)
       else
         products = Product.readable(current_organization)
       end
@@ -267,11 +276,13 @@ class ContentSearchController < ApplicationController
     product_repo_map
   end
 
-  def metadata_row(total_count, current_count, repo)
-    {:total=>total_count,  :current_count=>current_count, :page_size=>current_user.page_size,
-       :parent_id=>"repo_#{repo.id}", :data=>{:repo_id=>repo.id}, :id=>"repo_metadata_#{repo.id}",
+  def metadata_row(total_count, current_count, repo, render_parent=false)
+    to_ret = {:total=>total_count,  :current_count=>current_count, :page_size=>current_user.page_size,
+       :data=>{:repo_id=>repo.id}, :id=>"repo_metadata_#{repo.id}",
        :metadata=>true
     }
+    to_ret[:parent_id] = "repo_#{repo.id}" if render_parent
+    to_ret
   end
 
   def spanned_product_content product_id, repo_ids, content_type, search_obj
@@ -292,7 +303,7 @@ class ContentSearchController < ApplicationController
         end
         content_rows += repo_span[:content_rows]
         if repo_span[:total] > current_user.page_size
-          content_rows <<  metadata_row(repo_span[:total], current_user.page_size, repo)
+          content_rows <<  metadata_row(repo_span[:total], current_user.page_size, repo, true)
         end
       end
     end
@@ -311,8 +322,7 @@ class ContentSearchController < ApplicationController
   #
   def spanned_repo_content library_repo, content_type, content_search_obj, offset=0
     #library must be first, so subtract it from instance ids
-    spanning_repos = [library_repo.pulp_id] + (library_repo.environmental_instance_ids - [library_repo.pulp_id])
-    spanning_repos = Repository.where(:pulp_id=>spanning_repos)
+    spanning_repos = [library_repo] + (library_repo.environmental_instances - [library_repo])
     to_ret = {}
     library_content = []
     library_total = 0
@@ -351,8 +361,11 @@ class ContentSearchController < ApplicationController
         end
       end
 
+      fields [:id, :name, :nvrea, :repoids]
+      sort { by "#{default_field}_sort", 'asc'}
       size user.page_size
       from offset
+
 
       if  search_obj.is_a? Array
         filter :terms, :id => search_obj

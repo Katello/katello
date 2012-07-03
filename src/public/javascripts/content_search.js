@@ -57,8 +57,10 @@ KT.content_search = function(paths_in){
                         packages:KT.routes.packages_content_search_index_path()
     },
     more_results_urls = {
-        errata:   KT.routes.errata_items_content_search_index_path(),
-        packages: KT.routes.packages_items_content_search_index_path()
+        errata:   {method:"POST", url:KT.routes.errata_items_content_search_index_path(), include_search:true},
+        packages: {method:"POST", url:KT.routes.packages_items_content_search_index_path(), include_search:true},
+        repo_packages:{method:"GET", url:KT.routes.repo_packages_content_search_index_path(), include_search:false},
+        repo_errata: {method:"GET", url:KT.routes.repo_errata_content_search_index_path(), include_search:false}
     },
     subgrid_selector = [
         {id:'repo_errata', name:i18n.errata},
@@ -72,6 +74,8 @@ KT.content_search = function(paths_in){
         paths = paths_in;
         env_select = KT.path_select('column_selector', 'env', paths,
             {select_mode:'multi', link_first: true});
+
+        init_tipsy();
 
         comparison_grid = KT.comparison_grid();
         comparison_grid.init();
@@ -124,17 +128,28 @@ KT.content_search = function(paths_in){
     },
     bind_load_more_event = function(){
       $(document).bind('load_more.comparison_grid', function(event){
-        var search = utils.extend($.bbq.getState('search'), event.cell_data);
-          search.offset = event.offset;
+        var search = $.bbq.getState('search'),
+            data_out = event.cell_data,
+            type = search.content_type;
+            ajax_type = undefined; 
+        if (search.subgrid && search.subgrid.type){
+            type = search.subgrid.type;
+        }
 
+        data_out.offset = event.offset;
+        if(more_results_urls[type].include_search){ 
+            data_out = utils.extend(data_out, search);
+            ajax_type = "application/json";
+            data_out = JSON.stringify(data_out);
+        }
         $.ajax({
-          type: 'POST',
-          contentType:"application/json",
-          url: more_results_urls[search.content_type],
+          type: more_results_urls[type].method,
+          contentType:ajax_type,
+          url: more_results_urls[type].url,
           cache: false,
-          data: JSON.stringify(search),
+          data: data_out,
           success: function(data){
-            $(document).trigger('show_more.comparison_grid', [data]);
+            $(document).trigger('show_more.comparison_grid', [data.rows]);
           }
         })
       });
@@ -170,7 +185,7 @@ KT.content_search = function(paths_in){
                     comparison_grid.set_mode("details");
                     comparison_grid.show_columns(subgrid.cols);
                     if (search_params.subgrid.type !== 'compare'){
-                        comparison_grid.set_content_select(utils.values(subgrids));
+                        comparison_grid.set_content_select(utils.values(subgrids), search_params.subgrid.type);
                     }
                     comparison_grid.set_title(data.name);
                     draw_grid(data.rows);
@@ -192,7 +207,9 @@ KT.content_search = function(paths_in){
                     success: function(data){
                         comparison_grid.set_columns(env_select.get_paths());
                         select_envs(get_initial_environments());
-                        draw_grid(data);
+                        comparison_grid.set_title(data.name);
+                        comparison_grid.set_mode("results");
+                        draw_grid(data.rows);
                         cache.save_state(comparison_grid, search_params);
                     }
                 });
@@ -249,6 +266,13 @@ KT.content_search = function(paths_in){
             delete search['subgrid'];
             $.bbq.pushState({search:search});
         }
+    },
+    init_tipsy = function(){
+        $('.help-icon').tipsy({html:true, gravity:'w', className:'content-tipsy',
+            title:function(){
+                return $(this).find('.hidden-text').html();
+            }
+        });
     };
 
     init();
