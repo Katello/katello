@@ -240,13 +240,12 @@ class Repository < ActiveRecord::Base
   # returns other instances of this repo with the same library
   # equivalent of repo
   def environmental_instances
-
     if self.environment.library?
       repo = self
     else
       repo = self.library_instance
     end
-    Repository.where(:library_instance_id=>repo.id) + [repo]
+    Repository.where("library_instance_id=%s or id=%s"  % [repo.id, repo.id] )
   end
 
   #ideally this would be an attribute like package_count
