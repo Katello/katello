@@ -65,7 +65,7 @@ $(document).ready(function () {
             ajax_panelpage = activeBlock.attr("data-ajax_panelpage");
 
             // If the panel is currently open, get the currently open tab
-            if (thisPanel.hasClass('opened') && $.bbq.getState("panel") != "new") {
+            if (thisPanel.hasClass('opened') && $.bbq.getState("panel") !== "new") {
                 subpanel_href = $('.panel_link.selected > a').attr('href');
                 if (subpanel_href) {
                     last_ajax_panelpage = subpanel_href.substr(subpanel_href.lastIndexOf('/') + 1);
@@ -85,7 +85,7 @@ $(document).ready(function () {
                 if(activeBlock.hasClass('active') && thisPanel.hasClass('opened')){
                     KT.panel.closePanel(thisPanel);
                 } else {
-                    if (ajax_panelpage && $.bbq.getState("panel") != "new" && !last_ajax_panelpage) {
+                    if (ajax_panelpage && $.bbq.getState("panel") !== "new" && !last_ajax_panelpage) {
                         last_ajax_panelpage = ajax_panelpage;
                     }
                     if (last_ajax_panelpage) {
