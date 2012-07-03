@@ -218,15 +218,13 @@ KT.comparison_grid = function(){
             utils.each(models.columns, function(value, key){
                 if( data[key] ){
                     models.columns[key]['shown'] = true;
-                    num_columns_shown += models.columns[key]['span'];
+                    num_columns_shown += parseInt(models.columns[key]['span'], 10);
                     $('.cell_' + key).show();
                     $('#column_' + key).show();
-                    $('#column_' + key).animate({ width : 89 * models.columns[key]['span'] }, 500, function(){ });
-                    $('.cell_' + key).animate({ width : 89 * models.columns[key]['span'] }, 500, function(){ });
                 } else {
                     models.columns[key]['shown'] = false;
-                    $('#column_' + key).animate({ width : 0 }, 500, function(){ $(this).hide() });
-                    $('.cell_' + key).animate({ width : 0 }, 500, function(){ $(this).hide() });
+                    $('#column_' + key).hide();
+                    $('.cell_' + key).hide();
                 }
             });
 
