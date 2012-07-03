@@ -66,7 +66,7 @@ KT.comparison_grid = function(){
                 grid_content_el.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children));
             }
         },
-        add_metadata_row = function(id, parent_id, page_size){
+        add_metadata_row = function(id, parent_id, page_size, current, total){
             var child_list;
 
             if( $('.load_row[data-id="' + id + '"]').length === 0 ){
@@ -74,9 +74,9 @@ KT.comparison_grid = function(){
 
                 if( parent_id ){
                     child_list = $('#child_list_' + parent_id);
-                    child_list.append(templates.load_more_row(id, page_size));
+                    child_list.append(templates.load_more_row(id, page_size, current, total));
                 } else {
-                    grid_content_el.append(templates.load_more_row(id, page_size));
+                    grid_content_el.append(templates.load_more_row(id, page_size, current, total));
                 }
             }
         },
@@ -90,6 +90,11 @@ KT.comparison_grid = function(){
             } else {
                 grid_row_headers_el.append(templates.load_more_row_header(id, parent_id));
             }
+        },
+        update_metadata_row = function(id, current, total){
+            var metadata_row = $('.load_row[data-id="' + id + '"]');
+
+            metadata_row.find('span').html(i18n.counts.replace('%C', current).replace('%T', total));
         },
         add_row_header = function(id, name, row_level, has_children, parent_id) {
             var child_list;
@@ -117,7 +122,7 @@ KT.comparison_grid = function(){
             if( append ){
                 utils.each(append, function(row, key) {
                     if( row['metadata'] ){
-                        add_metadata_row(row['id'], row['parent_id'], row['page_size']);
+                        update_metadata_row(row['id'], row['current'], row['total']);
                     } else {
                         add_row(row['id'], row['name'], row['cells'], row['parent_id'], row['comparable']);
                     }
@@ -125,7 +130,7 @@ KT.comparison_grid = function(){
             } else {
                 utils.each(models.rows.get(), function(row, key) {
                     if( row['metadata'] ){
-                        add_metadata_row(row['id'], row['parent_id'], row['page_size']);
+                        add_metadata_row(row['id'], row['parent_id'], row['page_size'], row['current'], row['total']);
                     } else {
                         add_row(row['id'], row['name'], row['cells'], row['parent_id'], row['comparable']);
                     }
@@ -164,6 +169,10 @@ KT.comparison_grid = function(){
             utils.each(data, function(item) {
                 if( item['metadata'] ){
                     insert = models.rows.insert_metadata(item['id'], item['parent_id'], item['page_size'], item['current_count'], item['total'], item['data']);
+
+                    if( !initial ){
+                        append_rows.push(insert);
+                    }
                 } else {
                     insert = models.rows.insert(item['id'], item['name'], item['cols'], item['parent_id'], item['comparable']);
 
@@ -391,6 +400,8 @@ KT.comparison_grid.models.rows = function(){
         insert_metadata = function(id, parent_id, page_size, current, total, data){
             rows[id] = { 'id' : id, 'parent_id' : parent_id, 'data' : data, 'metadata' : true,
                         'page_size' : page_size, 'current' : current, 'total' : total };
+
+            return rows[id];
         };
 
     return {
@@ -786,7 +797,7 @@ KT.comparison_grid.templates = (function(i18n) {
 
             return html;
         },
-        load_more_row = function(id, load_size){
+        load_more_row = function(id, load_size, current, total){
             var html = $('<div/>', { 
                             'class'     : 'load_row grid_row',
                             'data-id'   : id,
@@ -795,6 +806,7 @@ KT.comparison_grid.templates = (function(i18n) {
             html.append('<i class="spinner invisible" />');
             html.append('<a class="load_row_link" href="" >' + i18n.show_more.replace('%P', load_size) + '</a>');
             html.append('<i class="down_arrow-icon-black"/>');
+            html.append('<span>' + i18n.counts.replace('%C', current).replace('%T', total) + '</span>');
 
             return html;
         },
