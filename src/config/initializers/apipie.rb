@@ -88,7 +88,7 @@ end
 class BooleanValidator < Apipie::Validator::BaseValidator
 
   def validate(value)
-    %w[true false].include?(value.to_s)
+    %w[true false True False].include?(value.to_s)
   end
 
   def self.build(param_description, argument, options, block)
