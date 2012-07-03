@@ -15,19 +15,24 @@
 KT.subscription = (function() {
     var import_updater
     updateStatus = function(data) {
-        if (data["progress"] === "finished") {
+        if (data["progress"] === "finished" || data["progress"] === "error") {
             notices.checkNotices();
             if (import_updater) {
                 import_updater.stop();
             }
-            window.location = KT.routes.subscriptions_path();
+
+            // When "finished," reload the entire page. On "error," just update the new panel
+            if (data["progress"] === "finished") {
+                window.location = KT.routes.subscriptions_path();
+            } else {
+                active = $('#new');
+                KT.panel.panelAjax(active, active.attr("data-ajax_url"), $('#panel'), false);
+            }
         }
     },
     startUpdater = function() {
-        var timeout = 8000,
+        var timeout = 6000,
             provider_id;
-
-        notices.checkNotices();
 
         // When the import progress element is present, start the polling for success
         provider_id = $('.import_progress').attr("provider_id");
@@ -63,9 +68,6 @@ $(document).ready(function() {
     var options = { };
     KT.panel.list.registerPage('subscriptions', options);
 
-    // Initialize the polling for "upload in progress"
-    KT.subscription.startUpdater();
-
     $('.edit_provider').live('submit', function(e) {
         var ajax_handler;
         var active;
@@ -75,9 +77,13 @@ $(document).ready(function() {
         $('.edit_provider').attr("disabled", true);
 
         ajax_handler = function(data) {
-                        if (data["progress"] === "finished") {
+
+                        if (data["progress"] === "finished" || data["progress"] === "error") {
                             KT.subscription.updateStatus(data);
                         } else {
+                            // Initialize the polling for "upload in progress"
+                            KT.subscription.startUpdater();
+
                             // Refresh the panel to pick up new history and show spinner while uploading
                             notices.checkNotices();
                             active = $('#new');

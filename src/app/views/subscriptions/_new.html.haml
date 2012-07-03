@@ -24,7 +24,7 @@
     - if @provider.editable?
       .grid_10
         %h5 #{_("Upload Subscription Manifest")}
-      - if @provider.task_status && @provider.task_status.progress
+      - if !@provider.task_status.nil? && !@provider.task_status.finish_time
         .grid_10
           %fieldset
             .grid_2.ra.fieldset

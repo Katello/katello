@@ -54,8 +54,8 @@ class SubscriptionsController < ApplicationController
     # Originally had intended to open the "new" panel when last import was an error, but this
     # is too restrictive, preventing viewing of previously imported subscriptions.
     if @provider.editable?
-      imports = current_organization.redhat_provider.owner_imports
-      if imports.length == 0 || (@provider.task_status && @provider.task_status.progress)
+      imports = @provider.owner_imports
+      if imports.length == 0 || (!@provider.task_status.nil? && !@provider.task_status.finish_time)
         @panel_options[:initial_state] = {:panel => :new}
       end
     end
@@ -211,9 +211,8 @@ class SubscriptionsController < ApplicationController
       notice _("Subscription manifest must be specified on upload."), {:level => :error}
     end
 
-    # "Finished" is an arbitrary value here that is checked for in the javascript to see if polling for
-    # task progress should be done
-    progress = (@provider.task_status && @provider.task_status.progress) ? @provider.task_status.progress : "finished"
+    # "finished" is checked for in the javascript to see if polling for task progress should be done
+    progress = !@provider.task_status ? "finished" : @provider.task_status.state
     to_ret = {'progress' => progress}
     render :json=>to_ret
   end

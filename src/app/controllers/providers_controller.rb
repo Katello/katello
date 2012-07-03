@@ -64,9 +64,8 @@ class ProvidersController < ApplicationController
   end
 
   def import_progress
-    # "Finished" is an arbitrary value here that is checked for in the javascript to see if polling for
-    # task progress should be done
-    progress = (@provider.task_status && @provider.task_status.progress) ? @provider.task_status.progress : "finished"
+    # "finished" is checked for in the javascript to see if polling for task progress should be done
+    progress = !@provider.task_status ? "finished" : @provider.task_status.state
     to_ret = {'progress' => progress}
     render :json=>to_ret
   end
