@@ -2,7 +2,7 @@
 @import "compass";
 @import "converge-ui/vars";
 @import "converge-ui/mixins";
-
+$menu_width: 253px !default;
 nav {
   &.subnav { /* subnavigation */
     display: block;
@@ -33,7 +33,7 @@ nav {
         border-left: 1px solid $border_color;
         border-right: 1px solid $border_color;
         border-bottom: 1px solid $border_color;
-        width: 214px;
+        width: $menu_width;
       }
       li {
         display: inline-block;
@@ -41,12 +41,12 @@ nav {
         padding: 0;
         .third_level {
             display: block;
-            width: 214px;
+            width: $menu_width;
             height: auto;
             clear: both;
             border-bottom: 1px transparent;
             a{
-              width: 180px;
+              width: $menu_width - 33;
               &:hover {
                 background: lighten($kprimary_color, 45%);
                 color: lighten($kprimary_color, 10%);
@@ -82,7 +82,7 @@ nav {
           background: $subnav_shadow_img;
           background-position: 0 14px;
           background-color: $white_color;
-          @include box-shadow(2px, 2px, 2px, rgba(0,0,0,0.4));
+          @include box-shadow(2px 2px 2px rgba(0,0,0,0.4));
           z-index: 101;
           top: 34px;
           height: 35px;
