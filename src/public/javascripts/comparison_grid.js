@@ -30,10 +30,9 @@ KT.comparison_grid = function(){
             grid_content_el = $('#grid_content');
         },
         add_row = function(id, name, cell_data, parent_id, comparable){
-            var cells = [], insert,
-                row_level,
-                cell_columns = utils.keys(cell_data),
+            var cells = [], row_level,
                 child_list,
+                cell_columns = utils.keys(cell_data),
                 has_children = models.rows.has_children(id);
  
             if( models.mode === "results" ){           
@@ -58,28 +57,44 @@ KT.comparison_grid = function(){
             if( parent_id ){
                 child_list = $('#child_list_' + parent_id);
                 
-                child_list.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children, parent_id));
+                if( child_list.find('.load_row').length > 0 ){
+                    child_list.find('.load_row').before(templates.row(id, utils.size(models.columns), cells, row_level, has_children, parent_id));
+                } else {
+                    child_list.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children, parent_id));
+                }
             } else {
                 grid_content_el.append(templates.row(id, utils.size(models.columns), cells, row_level, has_children));
             }
-
-            if( has_children ){
-                add_row_collapse(id);
-            }
         },
-        add_metadata_row = function(id, parent_id, page_size){
+        add_metadata_row = function(id, parent_id, page_size, current, total){
             var child_list;
 
             if( $('.load_row[data-id="' + id + '"]').length === 0 ){
-                add_row_header(id, '', 3, false, parent_id);
+                add_metadata_row_header(id, parent_id);
 
                 if( parent_id ){
                     child_list = $('#child_list_' + parent_id);
-                    child_list.append(templates.load_more_row(id, page_size));
+                    child_list.append(templates.load_more_row(id, page_size, current, total));
                 } else {
-                    grid_content_el.append(templates.load_more_row(id, page_size));
+                    grid_content_el.append(templates.load_more_row(id, page_size, current, total));
                 }
             }
+        },
+        add_metadata_row_header = function(id, parent_id) {
+            var child_list;
+
+            if( parent_id ){
+                child_list = $('#child_header_list_' + parent_id);
+                
+                child_list.append(templates.load_more_row_header(id, parent_id));
+            } else {
+                grid_row_headers_el.append(templates.load_more_row_header(id, parent_id));
+            }
+        },
+        update_metadata_row = function(id, current, total){
+            var metadata_row = $('.load_row[data-id="' + id + '"]');
+
+            metadata_row.find('span').html(i18n.counts.replace('%C', current).replace('%T', total));
         },
         add_row_header = function(id, name, row_level, has_children, parent_id) {
             var child_list;
@@ -87,13 +102,14 @@ KT.comparison_grid = function(){
             if( parent_id ){
                 child_list = $('#child_header_list_' + parent_id);
                 
-                child_list.append(templates.row_header(id, name, row_level, has_children, parent_id));
+                if( child_list.find('.load_row_header').length > 0 ){
+                    child_list.find('.load_row_header').before(templates.row_header(id, name, row_level, has_children, parent_id));
+                } else {
+                    child_list.append(templates.row_header(id, name, row_level, has_children, parent_id));
+                }
             } else {
                 grid_row_headers_el.append(templates.row_header(id, name, row_level, has_children, parent_id));
             }
-        },
-        add_row_collapse = function(id){
-            grid_row_headers_el.find('#row_header_' + id).prepend(templates.collapse_arrow);
         },
         add_rows = function(append) {
             append = (append === undefined) ? false : append;
@@ -106,7 +122,7 @@ KT.comparison_grid = function(){
             if( append ){
                 utils.each(append, function(row, key) {
                     if( row['metadata'] ){
-                        add_metadata_row(row['id'], row['parent_id'], row['page_size']);
+                        update_metadata_row(row['id'], row['current'], row['total']);
                     } else {
                         add_row(row['id'], row['name'], row['cells'], row['parent_id'], row['comparable']);
                     }
@@ -114,7 +130,7 @@ KT.comparison_grid = function(){
             } else {
                 utils.each(models.rows.get(), function(row, key) {
                     if( row['metadata'] ){
-                        add_metadata_row(row['id'], row['parent_id'], row['page_size']);
+                        add_metadata_row(row['id'], row['parent_id'], row['page_size'], row['current'], row['total']);
                     } else {
                         add_row(row['id'], row['name'], row['cells'], row['parent_id'], row['comparable']);
                     }
@@ -135,7 +151,10 @@ KT.comparison_grid = function(){
             } else {
                 $('.grid_row').css('width', 500);
             }
-            
+
+            $('.load_row').find('.spinner').css('visibility', 'hidden');
+            $('.load_row').find('a').removeClass('disabled');
+
             set_loading(false);
         },
         set_rows = function(data, initial) {
@@ -150,6 +169,10 @@ KT.comparison_grid = function(){
             utils.each(data, function(item) {
                 if( item['metadata'] ){
                     insert = models.rows.insert_metadata(item['id'], item['parent_id'], item['page_size'], item['current_count'], item['total'], item['data']);
+
+                    if( !initial ){
+                        append_rows.push(insert);
+                    }
                 } else {
                     insert = models.rows.insert(item['id'], item['name'], item['cols'], item['parent_id'], item['comparable']);
 
@@ -188,15 +211,17 @@ KT.comparison_grid = function(){
             add_columns();
         },
         show_columns = function(data){
+            var last_visible,
+                previous_num_shown = num_columns_shown;
+
             num_columns_shown = 0;
 
             utils.each(models.columns, function(value, key){
                 if( data[key] ){
-                    $('#column_headers').width($('#column_headers').width() + 100);
-                    $('#column_' + key).show();
                     models.columns[key]['shown'] = true;
-                    num_columns_shown += models.columns[key]['span'];
+                    num_columns_shown += parseInt(models.columns[key]['span'], 10);
                     $('.cell_' + key).show();
+                    $('#column_' + key).show();
                 } else {
                     models.columns[key]['shown'] = false;
                     $('#column_' + key).hide();
@@ -204,17 +229,26 @@ KT.comparison_grid = function(){
                 }
             });
 
+            $('#column_headers').width(num_columns_shown * 100);
+
             if( num_columns_shown > max_visible_columns ){
+
+                if( previous_num_shown > num_columns_shown ){
+                    if( $('#column_headers').find(':not(:hidden)').last().position().left + 100 === -($('#column_headers').position().left) + 400 ){
+                        controls.horizontal_scroll.slide('right');
+                    }
+                }
                 controls.horizontal_scroll.show();            
                 $('#column_headers_window').width(100 * max_visible_columns);
             } else {
+                controls.horizontal_scroll.reset();
                 controls.horizontal_scroll.hide();
                 $('#column_headers_window').width(num_columns_shown * 100);
             }
         },
         set_loading = function(show){
             if( show ){
-                $('#grid_loading_screen').show();
+                $('#grid_loading_screen').height($('#grid_content_window').height()).show();
             } else {
                 $('#grid_loading_screen').hide();
             }
@@ -371,6 +405,8 @@ KT.comparison_grid.models.rows = function(){
         insert_metadata = function(id, parent_id, page_size, current, total, data){
             rows[id] = { 'id' : id, 'parent_id' : parent_id, 'data' : data, 'metadata' : true,
                         'page_size' : page_size, 'current' : current, 'total' : total };
+
+            return rows[id];
         };
 
     return {
@@ -427,6 +463,17 @@ KT.comparison_grid.controls = function(grid) {
                 stop_position = function(){
                     return -((grid.get_num_columns_shown() - grid.get_max_visible_columns()) * 100);
                 },
+                reset = function(){
+                    var distance = $('#grid_content').css('left');
+
+                    $('#grid_content').animate({ 'left' : 0 }, 'fast');
+                    $('#column_headers').animate({ 'left' : 0 }, 'fast',
+                        function() {
+                            set_arrow_states();
+                        }
+                    );
+
+                },
                 set_arrow_states = function() {
                     if( current_position() === 0 ){
                         right_arrow.find('span').addClass('disabled');
@@ -442,8 +489,8 @@ KT.comparison_grid.controls = function(grid) {
                 slide = function(direction) {
                     var position = (direction === 'left') ? '-=100' : '+=100';
                     
-                    $('#grid_content').animate({ 'left' : position }, 'slow');
-                    $('#column_headers').animate({ 'left' : position }, 'slow',
+                    $('#grid_content').animate({ 'left' : position }, 'fast');
+                    $('#column_headers').animate({ 'left' : position }, 'fast',
                         function() {
                             set_arrow_states();
                         }
@@ -481,8 +528,10 @@ KT.comparison_grid.controls = function(grid) {
             );
 
             return {
-                show : show,
-                hide : hide
+                show    : show,
+                hide    : hide,
+                slide   : slide,
+                reset   : reset
             }
         }()),
 
@@ -528,21 +577,12 @@ KT.comparison_grid.controls = function(grid) {
                     });
                 },
                 show = function(id, should_show, rows){
-                    var child_rows = rows.get_children(id);                    
-
-                    KT.utils.each(child_rows, function(child){
-                        child = KT.common.escapeId(child);
-                        if( should_show ){
-                            $('#grid_row_' + child).show();
-                            $('#row_header_' + child).show();
-                        } else {
-                            $('#grid_row_' + child).hide();
-                            $('#row_header_' + child).hide();
-                        }
-                    });
-
-                    if( rows.get_children(child_rows[0]) !== undefined ){
-                        show(child_rows[0], should_show, rows);
+                    if( should_show ){
+                        $('#child_list_' + id).show();
+                        $('#child_header_list_' + id).show();
+                    } else {
+                        $('#child_list_' + id).hide();
+                        $('#child_header_list_' + id).hide();
                     }
                 },
                 collapse = function(id, rows){
@@ -634,8 +674,12 @@ KT.comparison_grid.events = function(grid) {
         load_row_links = function(){
             $('.load_row_link').live('click', function(event){
                 var cell = grid.models.rows.get($(this).parent().data('id'));
-                event.preventDefault();
-                $(document).trigger({type:'load_more.comparison_grid', cell_data:cell['data'], offset:cell['current']});
+                
+                if( !$(this).hasClass('disabled') ){
+                    $(this).addClass('disabled').parent().find('.spinner').css('visibility', 'visible');
+                    event.preventDefault();
+                    $(document).trigger({type : 'load_more.comparison_grid', cell_data : cell['data'], offset : cell['current']});
+                }
             });
         };
 
@@ -680,83 +724,118 @@ KT.comparison_grid.templates = (function(i18n) {
         },
         row = function(id, num_columns, cell_data, row_level, has_children, parent_id) {
             var i,
-                html ='<div ';
+                html = $('<div/>', {
+                    id      : 'grid_row_' + id,
+                    class   : 'grid_row grid_row_level_' + row_level
+                });
             
             if( parent_id !== undefined ){
-                html += 'data-parent_id="' + parent_id + '" ';
+                html.attr('data-parent_id', parent_id);
             }
-
-            html += 'id="grid_row_' + id  + '" class="grid_row grid_row_level_' + row_level + '"'; 
 
             if( has_children ){
-                html += ' collapsed="false"';
+                html.attr('data-collapsed', "false");
             }
-
-            html += '>';
 
             for(i = 0; i < num_columns; i += 1){
-                html += cell(cell_data[i]);
+                html.append(cell(cell_data[i]));
             }
-            html += '</div>';            
 
             if( has_children ){
-                html += '<ul id="child_list_' + id + '"></ul>';
+                if( row_level !== 2 ){
+                    html = html.after($('<ul/>', { id : 'child_list_' + id }));
+                } else {
+                    html = html.after($('<ul/>', { id : 'child_list_' + id, class : 'hidden' }));
+                }   
             }
 
             return html;
         },
         row_header = function(id, name, row_level, has_children, parent_id) {
-            var html = '<li data-id="' + id + '" id="row_header_' + id + '" class="one-line-ellipsis row_header grid_row_level_' + row_level + '" ';
+            var html = $('<li/>', { 
+                            'data-id'   : id,
+                            'id'        : 'row_header_' + id,
+                            'class'     : 'one-line-ellipsis row_header grid_row_level_' + row_level
+                        });
 
             if( parent_id !== undefined ){
-                html += 'data-parent_id="' + parent_id + '"';
+                html.attr('data-parent_id', parent_id);
             }
             
             if( has_children ){
-                html += ' data-collapsed="false"';
             }
 
-            html += '>';
-            html += '<span>' + name + '</span>';
-            html += '</li>';
+            html.append('<span>' + name + '</span>');
 
             if( has_children ){
-                html += '<ul id="child_header_list_' + id + '"></ul>';
+                if( row_level === 2 ){
+                    html.prepend(collapse_arrow({ open : false }));
+                    html.attr('data-collapsed', "true");
+                    html = html.after($('<ul/>', { id : 'child_header_list_' + id, class : 'hidden' }));
+                } else {
+                    html.prepend(collapse_arrow({ open : true }));
+                    html.attr('data-collapsed', "false");
+                    html = html.after($('<ul/>', { id : 'child_header_list_' + id }));
+                }   
             }
     
             return html;
         },
-        column = function() {
-        },
         column_header = function(id, to_display, span) {
-            var html = '';
+            var html = $('<li/>', {
+                    'id'        : 'column_' + id,
+                    'data-id'   : id,
+                    'data-span' : span,
+                    'class'     : 'one-line-ellipsis column_header hidden'
+                }).html(to_display);
  
-            html += '<li data-id="' + id  + '" id="column_' + id + '" data-span="' + span + '" class="one-line-ellipsis column_header hidden">';
-            html += to_display;
-            html += '</li>';
+            return html;
+        },
+        collapse_arrow = function(options){
+            var html;
+
+            if( options['open'] ){
+                html = '<i class="down_arrow-icon-black"/><i class="right_arrow-icon-black" style="display:none;"/>';
+            } else {
+                html = '<i class="down_arrow-icon-black" style="display:none;" /><i class="right_arrow-icon-black" />';
+            }
 
             return html;
         },
-        collapse_arrow = function(){
-            return '<i class="down_arrow-icon-black"/><i class="right_arrow-icon-black" style="display:none;"/>';
-        },
-        load_more_row = function(id, load_size){
-            var html = '<div class="load_row grid_row" data-id="' + id + '">';
+        load_more_row = function(id, load_size, current, total){
+            var html = $('<div/>', { 
+                            'class'     : 'load_row grid_row',
+                            'data-id'   : id,
+                        });
                 
-            html += '<a class="load_row_link" href="" >' + i18n.show_more.replace('%P', load_size) + '</a>';
-            html += '<i class="down_arrow-icon-black"/>';
-            html += '</div>';
+            html.append('<i class="spinner invisible" />');
+            html.append('<a class="load_row_link" href="" >' + i18n.show_more.replace('%P', load_size) + '</a>');
+            html.append('<i class="down_arrow-icon-black"/>');
+            html.append('<span>' + i18n.counts.replace('%C', current).replace('%T', total) + '</span>');
 
             return html;
+        },
+        load_more_row_header = function(id, parent_id){
+            var html = $('<li/>', { 
+                            'data-id'   : id,
+                            'id'        : 'row_header_' + id,
+                            'class'     : 'one-line-ellipsis row_header load_row_header grid_row_level_3'
+                        });
+
+            if( parent_id !== undefined ){
+                html.attr('data-parent_id', parent_id);
+            }
+         
+            return html;   
         };
 
     return {
-        cell            : cell,
-        row             : row,
-        column_header   : column_header,
-        row_header      : row_header,
-        load_more_row   : load_more_row,
-        collapse_arrow  : collapse_arrow
+        cell                    : cell,
+        row                     : row,
+        row_header              : row_header,
+        column_header           : column_header,
+        load_more_row_header    : load_more_row_header,
+        load_more_row           : load_more_row
     }
 }(i18n));
 
