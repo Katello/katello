@@ -106,27 +106,29 @@ class ContentSearchController < ApplicationController
   def packages_items
     repo = Repository.where(:id=>params[:repo_id]).first
     pkgs = spanned_repo_content(repo, 'package', process_params(:packages), params[:offset]) || {:content_rows=>[]}
-    render :json=>(pkgs[:content_rows] + [metadata_row(pkgs[:total], params[:offset] + pkgs[:content_rows].length, repo)])
+    render :json=>(pkgs[:content_rows] + [metadata_row(pkgs[:total], params[:offset] + pkgs[:content_rows].length, repo, true)])
   end
 
   #similar to :errata, but only returns errata rows with an offset for a specific repo
   def errata_items
     repo = Repository.where(:id=>params[:repo_id]).first
     errata = spanned_repo_content(repo, 'errata', process_params(:errata), params[:offset]) || {:content_rows=>[]}
-    render :json=>(errata[:content_rows] + [metadata_row(errata[:total], params[:offset] + errata[:content_rows].length, repo)])
+    render :json=>(errata[:content_rows] + [metadata_row(errata[:total], params[:offset] + errata[:content_rows].length, repo, true)])
   end
 
 
   def repo_packages
-    packages = Glue::Pulp::Package.search('', params[:offset], current_user.page_size, [@repo.pulp_id])
+    offset = params[:offset] || 0
+    packages = Glue::Pulp::Package.search('', offset, current_user.page_size, [@repo.pulp_id])
     rows = packages.collect do |pack|
       {:name => pack.nvrea, :id => pack.id, :cols => {:description => {:display => pack.description}}}
     end
-    render :json => rows
+    render :json => rows + [metadata_row(packages.total, offset.to_i + rows.length, @repo)]
   end
 
   def repo_errata
-    errata = Glue::Pulp::Errata.search('', params[:offset], current_user.page_size, :repoids => [@repo.pulp_id])
+    offset = params[:offset] || 0
+    errata = Glue::Pulp::Errata.search('', offset, current_user.page_size, :repoids => [@repo.pulp_id])
     rows = errata.collect do |e|
       {:name => e.id, :id => e.id, :cols => {:title => {:display => e[:title]},
                                              :type => {:display => e[:type]},
@@ -134,7 +136,7 @@ class ContentSearchController < ApplicationController
                                             }
       }
     end
-    render :json => rows
+    render :json => rows + [metadata_row(errata.total, offset.to_i + rows.length, @repo)]
   end
 
 
@@ -271,11 +273,13 @@ class ContentSearchController < ApplicationController
     product_repo_map
   end
 
-  def metadata_row(total_count, current_count, repo)
-    {:total=>total_count,  :current_count=>current_count, :page_size=>current_user.page_size,
-       :parent_id=>"repo_#{repo.id}", :data=>{:repo_id=>repo.id}, :id=>"repo_metadata_#{repo.id}",
+  def metadata_row(total_count, current_count, repo, render_parent=false)
+    to_ret = {:total=>total_count,  :current_count=>current_count, :page_size=>current_user.page_size,
+       :data=>{:repo_id=>repo.id}, :id=>"repo_metadata_#{repo.id}",
        :metadata=>true
     }
+    to_ret[:parent_id] = "repo_#{repo.id}" if render_parent
+    to_ret
   end
 
   def spanned_product_content product_id, repo_ids, content_type, search_obj
