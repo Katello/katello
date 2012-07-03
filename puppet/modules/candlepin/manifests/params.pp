@@ -5,6 +5,9 @@ class candlepin::params {
   # this comes from keystore
   $db_pass = katello_config_value('candlepin_db_password')
 
+  # password for server.xml keystore
+  $tomcat_keystore_password = katello_create_read_password(katello_config_value('tomcat_keystore_password_file'))
+
   # where to store output from cpsetup execution
   $cpsetup_log = "${katello::params::log_base}/katello-configure/cpsetup.log"
   $crl_file = "/var/lib/candlepin/candlepin-crl.crl"
