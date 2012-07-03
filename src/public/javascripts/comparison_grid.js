@@ -297,8 +297,8 @@ KT.comparison_grid = function(){
                 controls.change_content_select.show();
             }
         },
-        set_content_select = function(options){
-            controls.change_content_select.set(options);
+        set_content_select = function(options, selected){
+            controls.change_content_select.set(options, selected);
         },
         set_title = function(title){
             $('#grid_header').find('header h2[data-title="details"]').html(title);
@@ -552,13 +552,17 @@ KT.comparison_grid.controls = function(grid) {
             var container = $('#change_content_select'),
                 selector = container.find('select'),
                 
-                set = function(options){
+                set = function(options, selected_id){
                     var html = "";
 
                     selector.empty();
 
                     KT.utils.each(options, function(option){ 
-                        html += '<option value="' + option['id'] + '">' + option['name'] + '</option>';
+                        html += '<option value="' + option['id'] + '"' ;
+                        if (option['id'] === selected_id){
+                            html += "selected=selected";
+                        }
+                        html += '>' + option['name'] + '</option>';
                     });
 
                     selector.append(html);
