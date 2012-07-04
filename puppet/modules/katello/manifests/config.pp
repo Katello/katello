@@ -84,54 +84,6 @@ class katello::config {
     },
   }
 
-  common::simple_replace { "org_name":
-      file => "/usr/share/katello/db/seeds.rb",
-      pattern => "ACME_Corporation",
-      replacement => "$katello::params::org_name",
-      before => Exec["katello_seed_db"],
-      require => $katello::params::deployment ? {
-                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
-                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
-                default => [],
-    },
-  }
-
-  common::simple_replace { "primary_user_pass":
-      file => "/usr/share/katello/db/seeds.rb",
-      pattern => "password => 'admin'",
-      replacement => "password => '$katello::params::user_pass'",
-      before => Exec["katello_seed_db"],
-      require => $katello::params::deployment ? {
-                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
-                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
-                default => [],
-    },
-  }
-
-  common::simple_replace { "primary_user_name":
-      file => "/usr/share/katello/db/seeds.rb",
-      pattern => "username => 'admin'",
-      replacement => "username => '$katello::params::user_name'",
-      before => Exec["katello_seed_db"],
-      require => $katello::params::deployment ? {
-                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
-                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
-                default => [],
-    },
-  }
-
-  common::simple_replace { "primary_user_email":
-      file => "/usr/share/katello/db/seeds.rb",
-      pattern => "email => 'root@localhost'",
-      replacement => "email => '$katello::params::user_email'",
-      before => Exec["katello_seed_db"],
-      require => $katello::params::deployment ? {
-                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
-                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
-                default => [],
-    },
-  }
-
   exec {"katello_db_printenv":
     cwd         => $katello::params::katello_dir,
     user        => $katello::params::user,
@@ -146,22 +98,14 @@ class katello::config {
                   File["${katello::params::log_base}/production.log"], 
                   File["${katello::params::log_base}/production_sql.log"], 
                   File["${katello::params::config_dir}/katello.yml"],
-                  Postgres::Createdb[$katello::params::db_name],
-                  Common::Simple_replace["org_name"],
-                  Common::Simple_replace["primary_user_name"],
-                  Common::Simple_replace["primary_user_pass"],
-                  Common::Simple_replace["primary_user_email"]
+                  Postgres::Createdb[$katello::params::db_name]
                 ],
                 'headpin' => [
                   Class["candlepin::service"],
                   Class["thumbslug::service"],
                   File["${katello::params::log_base}"],
                   File["${katello::params::config_dir}/katello.yml"],
-                  Postgres::Createdb[$katello::params::db_name],
-                  Common::Simple_replace["org_name"],
-                  Common::Simple_replace["primary_user_name"],
-                  Common::Simple_replace["primary_user_pass"],
-                  Common::Simple_replace["primary_user_email"]
+                  Postgres::Createdb[$katello::params::db_name]
                 ],
                 default => [],
     },
