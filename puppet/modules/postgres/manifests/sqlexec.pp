@@ -1,9 +1,9 @@
 # Base SQL exec
-define sqlexec($username, $password, $database, $sql, $sqlcheck, $logfile) {
+define sqlexec($username, $passfile, $database, $sql, $sqlcheck, $logfile) {
  exec{ "psql -h localhost --username=${username} $database -c \"${sql}\" >> $logfile 2>&1":
-    environment => $password ? {
-      "" => undef,
-      default => "PGPASSWORD=${password}"
+    environment => $passfile? {
+      "NONE" => undef,
+      default => "PGPASSFILE=${passfile}"
     },
     path        => $path,
     timeout     => 600,

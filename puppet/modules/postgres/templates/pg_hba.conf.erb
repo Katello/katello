@@ -67,13 +67,9 @@
 
 
 # TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
-
-# "local" is for Unix domain socket connections only
-<% if scope.lookupvar("postgres::params::password") != "" %>
+<% if scope.lookupvar("postgres::params::password_file") != "NONE" %>
 local   all         all                               password
-# IPv4 local connections:
 host    all         all         127.0.0.1/32          password
-# IPv6 local connections:
 host    all         all         ::1/128               password
 <% else %>
 local   all       all                               trust
