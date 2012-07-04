@@ -134,6 +134,7 @@ describe GpgKeysController, :katello => true do
     before :each do
       controller.stub(:search_validate).and_return(true)
     end
+
     describe "with valid params" do
       describe "that include a copy/pasted GPG Key" do
         it "should be successful" do
@@ -211,16 +212,20 @@ describe GpgKeysController, :katello => true do
     end
     
     describe "with exclusive search parameters" do
-      it "should return no match indicator" do
+      before :each do
         controller.stub(:search_validate).and_return(false)
+      end
+
+      it "should return no match indicator" do
         @gpg_key_params_pasted[:search] = 'name ~ Fake'
         post :create, @gpg_key_params_pasted
         response.body.should eq("{\"no_match\":true}")
       end
       
       it "should generate message notice" do
-        controller.should_receive(:notice)
-        post :create, @gpg_key_params_pasted, :search => 'name ~ Fake'
+        @gpg_key_params_pasted[:search] = 'name ~ Fake'
+        controller.should_receive(:notice).twice
+        post :create, @gpg_key_params_pasted
       end
     end
   end
