@@ -14,17 +14,17 @@
 KT.system = KT.system || {};
 
 KT.system.errata = function() {
-    var errata_container = undefined,
-        table_body = undefined,
-        load_more = undefined,
+    var errata_container,
+        table_body,
+        load_more,
         task_list = {},
         actions_updater,
-        parent_id = undefined,  // e.g. system id, system group id
-        items_url = undefined,
-        install_url = undefined,
-        status_url = undefined,
-        errata_for = undefined,
-        update_function = undefined,
+        parent_id,  // e.g. system id, system group id
+        items_url,
+        install_url,
+        status_url,
+        errata_for,
+        update_function,
 
         init = function(editable, page){
             errata_container = $('#errata_container');
@@ -152,7 +152,7 @@ KT.system.errata = function() {
             });
         },
         update_status_for_system = function(data){
-            var i = 0, length = data.length, task, url = undefined;
+            var i = 0, length = data.length, task, url;
 
             for(i; i < length; i += 1){
                 task = data[i];
@@ -177,7 +177,7 @@ KT.system.errata = function() {
             }
         },
         update_status_for_group = function(data){
-            var i = 0, num_jobs = data.length, job, num_tasks, task, url = undefined;
+            var i = 0, num_jobs = data.length, job, num_tasks, task, url;
 
             for(i; i < num_jobs; i += 1){
                 job = data[i];

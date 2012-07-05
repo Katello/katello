@@ -14,7 +14,7 @@
 
 KT.system_groups_pane = function() {
     var system_groups = $("#system_groups"),
-        multiselect_widget = undefined,
+        multiselect_widget,
 
     add_groups = function(e){
         var checked = $("#system_group").multiselect("getChecked"),
