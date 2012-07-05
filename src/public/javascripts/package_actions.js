@@ -25,20 +25,20 @@ KT.package_action_types = (function() {
 })();
 
 KT.package_actions = (function() {
-    var packages_container = undefined,
-    content_add_url = undefined,
-    content_update_url = undefined,
-    content_remove_url = undefined,
-    status_url = undefined,
-    packages_top = undefined,
-    content_form = undefined,
-    content_input = undefined,
-    add_content_button = undefined,
-    update_content_button = undefined,
-    remove_content_button = undefined,
-    error_message = undefined,
+    var packages_container,
+    content_add_url,
+    content_update_url,
+    content_remove_url,
+    status_url,
+    packages_top,
+    content_form,
+    content_input,
+    add_content_button,
+    update_content_button,
+    remove_content_button,
+    error_message,
     add_row_shading = true,
-    actions_updater = undefined,
+    actions_updater,
     actions_updater_running = false,
 
     disableContentButtons = function() {
@@ -150,8 +150,8 @@ KT.package_actions = (function() {
         var selected_action = $("input[name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
             content_array = content_string.split(/ *, */),
-            content = undefined;
-            validation_error = undefined;
+            content;
+            validation_error;
 
         if (selected_action == 'perform_action_packages') {
             validation_error = validate_action_requested(content_array, KT.package_action_types.PKG);
@@ -175,7 +175,7 @@ KT.package_actions = (function() {
                         // includes 1 row for each package or group included in the action.
                         if ($(element).is('tr')) {
                             var name = $(element).find('td').data('name'),
-                                existing = undefined;
+                                existing;
 
                             // check to see if there was an previous/existing action for the package or group
                             if ($(element).hasClass('package')) {
@@ -213,7 +213,7 @@ KT.package_actions = (function() {
     },
     validate_action_requested = function(content, content_type) {
         // validate the action being requested and return a validation error, if an error is found
-        var validation_error = undefined;
+        var validation_error;
 
         // validate the package list format
         if ((content_type === KT.package_action_types.PKG) && !KT.packages.valid_package_list_format(content)) {
