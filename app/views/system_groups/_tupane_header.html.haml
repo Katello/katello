@@ -2,9 +2,14 @@
   #{@group.name}
 
 = content_for :remove_item do
-  - if @group.deletable?
-    = link_to(_("Remove System Group"), {:action => "destroy", :controller => "system_groups", :id => @group.id},
-      {:class => "remove_item"})
+  .pane_actions
+    - if SystemGroup.creatable?(current_organization)
+      %a.pane_action.copy-tipsy{'data-url' => copy_system_group_path(@group.id)}
+        = _('Copy')
+
+    - if @group.deletable?
+      = link_to(_("Remove"), {:action => "destroy", :controller => "system_groups", :id => @group.id},
+        {:class => "pane_action remove"})
 
 = content_for :navigation do
   = render_menu(1..2, system_groups_navigation)

@@ -173,7 +173,7 @@ KT.system_groups = (function(){
         });
     },
     init = function(){
-        $('.remove_item').bind('click', prompt_to_destroy_group);
+        $('.pane_action.remove').bind('click', prompt_to_destroy_group);
     },
     prompt_to_destroy_group = function(e) {
         e.preventDefault();

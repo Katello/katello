@@ -7,6 +7,7 @@ Src::Application.routes.draw do
       get :validate_name
     end
     member do
+      post :copy
       get :systems
       post :add_systems
       post :remove_systems
