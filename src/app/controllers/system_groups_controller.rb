@@ -76,9 +76,8 @@ class SystemGroupsController < ApplicationController
       render :json => { :no_match => true }
     else
       respond_to do |format|
-        format.html {render :partial=>"common/list_item",
-                     :locals=>{:item=>@group, :initial_action=>@panel_options[:initial_action],
-                     :accessor=>"id", :columns=>@panel_options[:col], :name=>controller_display_name}}
+        format.html {render :partial => "system_groups/list_group", :locals=>{:item=>@group, :accessor=>"id",
+                                                                              :name=>controller_display_name}}
         format.json {render :json => @group}
       end
     end
@@ -101,9 +100,7 @@ class SystemGroupsController < ApplicationController
 
     notice _("System Group %s created successfully as a copy of system group %s.") % [new_group.name, @group.name]
 
-    render :partial=>"common/list_item", :locals=>{:item=>new_group, :initial_action=>@panel_options[:initial_action],
-                                                   :accessor=>"id", :columns=>@panel_options[:col],
-                                                   :name=>controller_display_name}
+    render :partial => "system_groups/list_group", :locals=>{:item=>new_group, :accessor=>"id", :name=>controller_display_name}
 
   rescue Exception=> e
     notice e, {:level => :error}
