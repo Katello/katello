@@ -78,6 +78,12 @@ group :test, :development do
   gem "js-routes", :require => 'js_routes'
 
   #needed for unit tests
+  #
+  #needed for syntax checking
+  gem 'libv8'
+  gem 'therubyracer'
+  gem 'jshintrb', '0.1.1'
+
 end
 
 group :development do
