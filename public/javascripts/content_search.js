@@ -62,10 +62,10 @@ KT.content_search = function(paths_in){
                        selector:['compare_packages', 'compare_errata']
         }
     },
-    search_urls = {errata:KT.routes.errata_content_search_index_path(),
-                        repos:KT.routes.repos_content_search_index_path(),
-                        products:KT.routes.products_content_search_index_path(),
-                        packages:KT.routes.packages_content_search_index_path()
+    search_pages = {errata:{url:KT.routes.errata_content_search_index_path()},
+                    repos:{url:KT.routes.repos_content_search_index_path(), comparable:true},
+                    products:{url:KT.routes.products_content_search_index_path()},
+                    packages:{url:KT.routes.packages_content_search_index_path()}
     },
     more_results_urls = {
         errata:   {method:"POST", url:KT.routes.errata_items_content_search_index_path(), include_search:true},
@@ -179,7 +179,7 @@ KT.content_search = function(paths_in){
         else if(search_params.subgrid && subgrids[search_params.subgrid.type]){
             subgrid_search(search_params);
         }
-        else if (search_urls[search_params.content_type] ){
+        else if (search_pages[search_params.content_type] ){
             main_search(search_params);
         }
         else{
@@ -187,6 +187,13 @@ KT.content_search = function(paths_in){
         }
     },
     main_search = function(search_params){
+        if (search_pages[search_params.content_type].comparable){
+            comparison_grid.controls.comparison.show();
+        }
+        else {
+            comparison_grid.controls.comparison.hide();
+        }
+
         if (cache.get_state(search_params)){
             comparison_grid.import_data(cache.get_state(search_params));
         }
@@ -195,7 +202,7 @@ KT.content_search = function(paths_in){
             $.ajax({
                 type: 'POST',
                 contentType:"application/json",
-                url: search_urls[search_params.content_type],
+                url: search_pages[search_params.content_type].url,
                 data: JSON.stringify(search_params),
                 success: function(data){
                     comparison_grid.set_columns(env_select.get_paths());
@@ -212,6 +219,7 @@ KT.content_search = function(paths_in){
         var type = search_params.subgrid.type,
             subgrid = subgrids[search_params.subgrid.type];
 
+        comparison_grid.controls.comparison.hide();
         $(document).trigger('loading.comparison_grid');
         $.ajax({
             type: 'GET',
