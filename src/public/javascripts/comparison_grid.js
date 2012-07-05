@@ -16,7 +16,8 @@ var KT = (KT === undefined) ? {} : KT;
 KT.comparison_grid = function(){
     var templates = KT.comparison_grid.templates,
         utils = KT.utils,
-        controls, events,
+        controls = KT.comparison_grid.controls(this),
+        events,
         models = KT.comparison_grid.models(),
         num_columns_shown = 0,
         grid_row_headers_el,
@@ -25,9 +26,9 @@ KT.comparison_grid = function(){
 
     var init = function(){
             events = KT.comparison_grid.events(this).init();
-            controls = KT.comparison_grid.controls(this);
             grid_row_headers_el = $('#grid_row_headers');
             grid_content_el = $('#grid_content');
+
         },
         add_row = function(id, name, cell_data, parent_id, comparable){
             var cells = [], row_level,
@@ -302,6 +303,7 @@ KT.comparison_grid = function(){
 
     return {
         init                    : init,
+        controls                : controls,
         models                  : models,
         export_data             : models.export_data,
         import_data             : models.import_data,
@@ -576,7 +578,18 @@ KT.comparison_grid.controls = function(grid) {
                 hide    : hide
             };
         }()),
-
+        comparison = (function(){
+            var show = function(){
+                    $('#compare_repos_btn').show();
+            },
+            hide = function(){
+                $('#compare_repos_btn').hide();
+            };
+            return {
+                show:show,
+                hide:hide
+            }
+        }()),
         row_collapse = (function(){
             var init = function(grid) {
                     $('.row_header[data-collapsed]').live('click', function(){
@@ -626,7 +639,8 @@ KT.comparison_grid.controls = function(grid) {
         horizontal_scroll       : horizontal_scroll,
         column_selector         : column_selector,
         row_collapse            : row_collapse,
-        change_content_select   : change_content_select
+        change_content_select   : change_content_select,
+        comparison              : comparison
     }
 };
 
