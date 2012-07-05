@@ -93,26 +93,6 @@ KT.system_groups = (function(){
     var current_system_input,
         current_max_systems = undefined,
         systems_deletable = false,
-    lockedChanged = function(){
-        var checkbox = $(this),
-        name = $(this).attr("name"),
-        options = {};
-        if (checkbox.attr("checked") !== undefined) {
-            options[name] = true;
-        } else {
-            options[name] = false;
-        }
-        $.ajax({
-            type: "POST",
-            url: checkbox.attr("data-url"),
-            data: options,
-            cache: false,
-            success:function(){
-                refresh_list_item();
-            }
-        });
-        return false;
-    },
     refresh_list_item = function(){
         var id = $('#system_group_id');
         list.refresh(id.val(), id.data('ajax_url'))
@@ -242,7 +222,6 @@ KT.system_groups = (function(){
         if (pane.length === 0){
             return;
         }
-        pane.find('#system_group_locked').bind('change', KT.system_groups.lockedChanged);
         pane.find(".edit_name").each(function(){
             $(this).editable($(this).data("url"), {
                 type        :  'text',
@@ -384,7 +363,6 @@ KT.system_groups = (function(){
     };
 
     return {
-        lockedChanged: lockedChanged,
         init: init,
         new_setup: new_setup,
         details_setup: details_setup,
