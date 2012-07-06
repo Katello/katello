@@ -50,9 +50,9 @@ KT.path_select = function(div_id, name, environments, options_in){
             options.select_event = default_opt(options_in.select_event, ('selected_cell_' + name));
             options.link_first = default_opt(options_in.link_first, true);
             options.expand = default_opt(options_in.expand, true);
+            options.footer = default_opt(options_in.footer, false);
 
-
-            $(div).append(KT.path_select_template.selector(environments, paths_id, options.button_text));
+            $(div).append(KT.path_select_template.selector(environments, paths_id, options.button_text, options.footer));
             path_selector = $("#" + paths_id);
             path_selector.find('.node_select').not(':checked').hide();
 
@@ -91,8 +91,8 @@ KT.path_select = function(div_id, name, environments, options_in){
             if(options.inline){
                 return false;
             }
-            selector_width = path_selector.outerWidth()  ;
-            pos = div.outerWidth()  - selector_width;
+            selector_width = path_selector.outerWidth();
+            pos = div.outerWidth()  - selector_width - 1;
 
             path_selector.css('left', pos + 'px');
         },
@@ -247,13 +247,19 @@ KT.path_select = function(div_id, name, environments, options_in){
 
 
 KT.path_select_template = {
-    selector : function(paths, div_id, button_text){
+    selector : function(paths, div_id, button_text, footer){
         var html = '<div id="' + div_id + '" class="path_selector"><form>';
         html += KT.path_select_template.paths(paths);
         if(button_text){
             html += KT.path_select_template.button(button_text);
         }
-        html += '</form></div>';
+        html += '</form>'
+        
+        if( footer ){
+            html += KT.path_select_template.footer();
+        }
+
+        html += '</div>';
         return html;
     },
     button : function(text){
@@ -283,6 +289,11 @@ KT.path_select_template = {
                 next_node +' data-node_id="' + node.id + '" data-node_name="' + node.name + '"></span>' : '';
 
         html += '<li data-node_id="' + node.id + '">'+ '<label><div>' + input +  node.name +  '</div></label></li>';
+        return html;
+    },
+    footer : function(){
+        var html = '<footer></footer>';
+
         return html;
     }
 };
