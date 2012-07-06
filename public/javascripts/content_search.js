@@ -79,7 +79,7 @@ KT.content_search = function(paths_in){
         var initial_search = $.bbq.getState('search');
         paths = paths_in;
         env_select = KT.path_select('column_selector', 'env', paths,
-            {select_mode:'multi', link_first: true});
+            {select_mode:'multi', link_first: true, footer: true });
 
         init_tipsy();
 
