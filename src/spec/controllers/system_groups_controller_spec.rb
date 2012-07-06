@@ -141,7 +141,6 @@ describe SystemGroupsController do
       end
     end
 
-
     describe "POST create" do
 
       let(:action) {:create}
@@ -174,6 +173,49 @@ describe SystemGroupsController do
       end
       it "should not allow a group to be created that already exists" do
         post :create, :system_group=>{:name=>@group.name, :description=>@group.description}
+        response.should_not be_success
+        SystemGroup.where(:name=>@group.name).count.should == 1
+      end
+    end
+
+    describe "POST copy" do
+      before(:each) do
+        @group.max_systems = 10
+        @group.systems = [@system]
+        @group.save
+      end
+
+      let(:action) {:copy}
+      let(:req) { post :copy, :id => @group.id}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:create, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+      it "should copy a group correctly" do
+        controller.should_receive(:notice)
+        post :copy, :id => @group.id, :name=>"foo", :description=>"describe"
+        response.should be_success
+        SystemGroup.where(:name=>"foo", :description=>"describe", :max_systems=>10).first.should_not be_nil
+      end
+      it "should copy without a description provided" do
+        controller.should_receive(:notice)
+        post :copy, :id => @group.id, :name=>"foo"
+        response.should be_success
+        SystemGroup.where(:name=>"foo", :max_systems=>10).first.should_not be_nil
+      end
+      it "should not copy a group without a name" do
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        post :copy, :id => @group.id, :description=>"describe"
+        response.should_not be_success
+        SystemGroup.where(:description=>"describe").first.should be_nil
+      end
+      it "should not allow a group to be copied with a name that already exists" do
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        post :copy, :id => @group.id, :name=>@group.name, :description=>"describe"
         response.should_not be_success
         SystemGroup.where(:name=>@group.name).count.should == 1
       end
