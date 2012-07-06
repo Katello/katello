@@ -238,7 +238,7 @@ KT.content_search = function(paths_in){
         });
         //select event
         $(document).bind(env_select.get_select_event(), function(event){
-            var environments = env_select.get_selected()
+            var environments = env_select.get_selected();
             $.bbq.pushState({environments:utils.values(environments)});
             comparison_grid.show_columns(environments);
             env_select.reposition();
