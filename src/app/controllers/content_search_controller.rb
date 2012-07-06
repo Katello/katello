@@ -375,8 +375,6 @@ class ContentSearchController < ApplicationController
 
     end
     to_ret = {}
-    library_content = []
-    library_total = 0
     content_attribute = content_type.to_sym == :package ? 'nvrea' : 'id'
     content_class = content_type.to_sym == :package ? Glue::Pulp::Package : Glue::Pulp::Errata
     content = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode).results
@@ -389,7 +387,7 @@ class ContentSearchController < ApplicationController
     end
 
     {:content_rows=>spanning_content_rows(content, content_type, content_attribute, library_repo, spanning_repos),
-     :repo_cols=>to_ret, :total=>library_total}
+     :repo_cols=>to_ret, :total=>content.total}
   end
 
 
