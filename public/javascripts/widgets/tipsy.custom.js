@@ -17,6 +17,12 @@ KT.tipsy.custom = (function(){
                KT.common.jscroll_init($('.scroll-pane'));
            }});
     },
+    copy_tooltip = function(element) {
+        $(element).tipsy({
+            gravity: 'n', trigger : 'manual', html : true, title : KT.tipsy.templates.copy_form,
+            delayOut : 250, opacity : 1, delayIn : 300, className : 'copy-tipsy'
+        });
+    },
     disable_details_tooltip = function(element) {
         element.replaceWith('<span class="details-icon-nohover"></span>');
     },
@@ -50,6 +56,7 @@ KT.tipsy.custom = (function(){
     };
     return {
         tooltip                  : tooltip,
+        copy_tooltip             : copy_tooltip,
         disable_details_tooltip  : disable_details_tooltip,
         promotion_filter_tooltip : promotion_filter_tooltip,
         system_packages_tooltips : system_packages_tooltip
@@ -130,6 +137,20 @@ KT.tipsy.templates = (function(){
         html += '</div>';
         return html;
     },
+    copy_form = function() {
+        var element = $(this),
+            html = '<div>';
+
+        html += '<form id="copy_form" data-url="' + element.data('url') + '">';
+        html += '<fieldset><div><label>' + i18n.name + '</label></div><div><input id="name_input" type="text" size="25" name="name"></div></fieldset>';
+        html += '<fieldset><div><label>' + i18n.description + '</label></div><div><textarea id="description_input" rows="1" cols="31" name="description"></textarea></div></fieldset>';
+        html += '<fieldset><div><label style="font-weight:normal;"><input id="do_not_open" type="checkbox" style="margin-right:10px;"/>' + i18n.do_not_open_copy + '</label></div></fieldset>';
+        html += '<input id="copy_button" type="submit" class="fr button" value="' + i18n.copy + '">';
+        html += '<input id="cancel_copy_button" type="button" class="fr button" value="' + i18n.cancel + '">';
+        html += '<form>';
+        html += '</div>';
+        return html;
+    }
     promotion_filters = function(){
         var element = $(this),
             tipsy_body ="",
@@ -191,6 +212,7 @@ KT.tipsy.templates = (function(){
 
     return {
         dynamic           : dynamic,
+        copy_form         : copy_form,
         promotion_filters : promotion_filters,
         table_template    : table_template
     };
