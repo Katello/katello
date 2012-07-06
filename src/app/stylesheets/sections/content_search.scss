@@ -1,7 +1,7 @@
 @import "converge-ui/base";
 
 $browse_box-width: 230px;
-$browse_box-height: 600px;
+$browse_box-height: 500px;
 $browse_box_header-height: 40px;
 $browse_box-margin-top: 25px;
 
@@ -43,7 +43,7 @@ $comparison_grid_column_header-background: #FFF;
 
 #browse_box {
   width: $browse_box-width;
-  height: $browse_box-height;
+  min-height: $browse_box-height;
   float: left;
   border: 1px solid $comparison_grid-border-color;
   margin-bottom: 50px;
@@ -63,6 +63,7 @@ $comparison_grid_column_header-background: #FFF;
     padding: 0px;
     margin-left: 2px;
     margin-top: 5px;
+    margin-right: 2px;
   }
 
 
@@ -75,21 +76,58 @@ $comparison_grid_column_header-background: #FFF;
         font-size: 18px;
         line-height: $browse_box_header-height;
         vertical-align: middle;
+        float: left;
+    }
+
+    aside { 
+      @include background-image(linear-gradient(#F7F7F7, #EEEEEE));
+      width: 38px;
+      border-left: 1px solid $widget-border-color;
+      height: $browse_box_header-height;
+      float: right;
     }
   }
   
   #filters {
-    height: $browse_box-height - $browse_box_header-height;
+    min-height: $browse_box-height - $browse_box_header-height - 5;
+    border: 2px solid $widget-border-color;
+
+    fieldset:first-child > div:nth-child(2) {
+      background: $widget-background-color;
+      padding: 0;
+    }
 
     fieldset {
-      margin: 20px 5px;
+      margin: 20px 6px 20px 8px;
+
+      .button { margin-left: 2px; }
+      input[type="radio"] { margin: 0 6px; }
+      input[type="text"] { 
+        border-width: 1px; 
+        width: 148px; 
+        border-color: $widget-border-color; 
+      }
+
+      div:nth-child(2) {
+        border: 1px solid $comparison_grid-border-color;
+        @include border-radius(3px 3px 0 0);
+        @include background-image(linear-gradient(#F7F7F7, #F9F9F9));
+        background: #FFF;
+
+      }
 
       div {
         border: 1px solid $comparison_grid-border-color;
-        padding: 8px 2px;
+        border-top: none;
+        padding: 8px 0 8px 0;
         background: #FFF;
 
-        .auto_complete_input { width: 94px; }
+        .auto_complete_input { width: 116px; }
+        ul { 
+          padding-left: 28px; 
+        
+          li { font-style: italic; }
+        }
       }
     }
   }
