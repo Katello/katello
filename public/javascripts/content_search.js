@@ -66,10 +66,10 @@ KT.content_search = function(paths_in){
                     {id:'shared', name:i18n.shared},
                     {id:'unique', name:i18n.unique}
                    ],
-    search_pages = {errata:{url:KT.routes.errata_content_search_index_path()},
+    search_pages = {errata:{url:KT.routes.errata_content_search_index_path(), modes:true},
                     repos:{url:KT.routes.repos_content_search_index_path(), comparable:true},
                     products:{url:KT.routes.products_content_search_index_path()},
-                    packages:{url:KT.routes.packages_content_search_index_path()}
+                    packages:{url:KT.routes.packages_content_search_index_path(), modes:true}
     },
     more_results_urls = {
         errata:   {method:"POST", url:KT.routes.errata_items_content_search_index_path(), include_search:true},
@@ -101,7 +101,7 @@ KT.content_search = function(paths_in){
         bind_env_events();
         bind_hover_events();
         bind_load_more_event();
-        bind_subgrid_selector();
+        bind_selectors();
         bind_repo_comparison();
 
         $(document).bind('return_to_results.comparison_grid', remove_subgrid);
@@ -213,10 +213,17 @@ KT.content_search = function(paths_in){
                 url: search_pages[search_params.content_type].url,
                 data: JSON.stringify(search_params),
                 success: function(data){
+                    var options = {};
+                    options.show_compare_btn = search_pages[search_params.content_type].comparable;
+                    if (search_pages[search_params.content_type].modes){
+                        options.right_selector = true;
+                        comparison_grid.set_right_select(search_modes, search_params.mode);
+                    }
+
                     comparison_grid.set_columns(env_select.get_paths());
                     select_envs(get_initial_environments());
                     comparison_grid.set_title(data.name);
-                    comparison_grid.set_mode("results", {show_compare_btn:search_pages[search_params.content_type].comparable});
+                    comparison_grid.set_mode("results", options);
                     draw_grid(data.rows);
                     cache.save_state(comparison_grid, search_params);
                 }
@@ -237,11 +244,11 @@ KT.content_search = function(paths_in){
             data: search_params.subgrid,
             success: function(data){
                 var cols = data.cols ? data.cols : subgrid.cols;
-                comparison_grid.set_mode("details");
+                comparison_grid.set_mode("details", {left_selector:true});
                 comparison_grid.set_columns(cols);
                 comparison_grid.show_columns(cols);
                 comparison_grid.set_title(data.name);
-                comparison_grid.set_content_select(subgrid_selector_items(type), type);
+                comparison_grid.set_left_select(subgrid_selector_items(type), type);
                 draw_grid(data.rows);
             }
         });
@@ -275,10 +282,14 @@ KT.content_search = function(paths_in){
         });
     },
     bind_env_events = function(){
+        var envs_changed = false;
         //submit event
         $(document).bind(env_select.get_submit_event(), function(event, environments) {
-           //if doing unique, or shared, research
- 
+            var search = $.bbq.getState('search');
+            if (envs_changed && search.mode && search.mode !== 'all'){
+                search_initiated(undefined, search);
+                envs_changed = false;
+            } 
         });
         //select event
         $(document).bind(env_select.get_select_event(), function(event){
@@ -286,12 +297,16 @@ KT.content_search = function(paths_in){
             comparison_grid.show_columns(environments);
             $.bbq.pushState({environments:environments});
             env_select.reposition();
+            envs_changed = true;
         });
     },
-    bind_subgrid_selector = function(){
-        $(document).bind('change_details_content.comparison_grid', function(event){
-            change_subgrid_type(event.content_type);
+    bind_selectors = function(){
+        $(document).bind('left_select.comparison_grid', function(event){
+            change_subgrid_type(event.value);
         });
+        $(document).bind('right_select.comparison_grid', function(event){
+            change_grid_mode(event.value);
+        });        
     },
     change_subgrid_type = function(type){
         var search = $.bbq.getState('search');
@@ -308,6 +323,7 @@ KT.content_search = function(paths_in){
         else {
             search.mode = mode;
         }
+        $.bbq.pushState({search:search});
     },
     remove_subgrid = function(){
         var search = $.bbq.getState('search');
@@ -348,20 +364,26 @@ KT.content_search_cache = (function(){
         saved_search = undefined,
         saved_data = undefined;
 
-    self.save_state = function(grid, search){
+    var save_state = function(grid, search){
         saved_search = search;
         saved_data = grid.export_data();
-    };
-    self.get_state = function(search){
+    },
+    get_state = function(search){
         if(utils.isEqual(search, saved_search)){
             return saved_data;
         }
     },
-    self.clear_state = function(){
+    clear_state = function(){
         saved_search = undefined;
         saved_data = undefined;
+    },
+    get_data = function(){ return saved_data};
+    return {
+      save_state: save_state,
+      get_state: get_state,
+      clear_state: clear_state,
+      get_data: get_data  
     };
-    return self;
 }());
 
 
