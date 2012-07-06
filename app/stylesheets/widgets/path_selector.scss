@@ -1,9 +1,11 @@
 @import "converge-ui/base";
+@import "converge-ui/colors";
 
 //temporarily putting this here to speed development
 //TODO Move to env_select.scss
 
-
+$widget-border-color: #D7D7D7;
+$widget-background-color: #F9F8F8;
 
 .path_button {
   position: relative;
@@ -12,18 +14,21 @@
 //If the selector is not inline, we add a background color
 .hover_selector {
   background: $white_color;
-  border-color: $border_color;
-  border-width: 2px;
+  border-color: $widget-border-color;
+  border-width: 1px;
   border-style: solid;
   position: absolute;
 }
 
 .path_selector {
   width: 400px;
-  padding: 15px;
   z-index: 100;
   top: 100%;
   line-height: 22px;
+  @include border-radius(0 0 4px 4px);
+
+  form { padding: 15px; }
+  footer { border-top: none !important; }
 
   .button {
     float: right;
@@ -32,9 +37,13 @@
   ul {
     list-style: none;
     overflow: hidden;
-    max-height: 30px;
+    max-height: 40px;
     position: relative;
     margin-bottom: 5px;
+    display: inline-block;
+    border: 1px solid $widget-border-color;
+    @include border-radius(3px);
+    @include box-shadow(0px 0px 15px $widget-border-color);
   }
 
   li {
@@ -47,7 +56,7 @@
         @include crumb-nohover;
         label {
           padding-left: 6px;
-          @include border-left-radius(5px);
+          @include border-left-radius(3px);
         }
       }
       &:nth-child(n) {
@@ -58,7 +67,7 @@
         label {
           overflow: hidden;
           padding-right: 10px;
-          @include border-right-radius(5px);
+          @include border-right-radius(3px);
           &:before {
             content: None;
           }
@@ -78,10 +87,13 @@
   label {
     color: $black_color;
     text-decoration: none;
-    padding: 4px 0 4px 20px;
+    padding: 6px 0 6px 20px;
     position: relative;
     background: $breadcrumbbg_color;                    //fallback color
     display: block;
+    font-weight: normal;
+    font-family: $headlinefont;
+    font-size: 14px;
 
     .checkbox_holder {
       float: left;
@@ -107,6 +119,7 @@
     &.active {
       background: $kselected_color;
       color: white;
+      @include text-shadow(1px 1px #000);
       &:after { border-left-color: $kselected_color };
       &:hover:after { border-left-color: $listhover_color !important; }
     }
@@ -131,7 +144,7 @@
       height: 0;
       border-top: 30px solid transparent;            //Go big on the size, and let overflow hide
       border-bottom: 30px solid transparent;
-      border-left: 15px solid white;
+      border-left: 15px solid $widget-border-color;
       position: absolute;
       top: 50%;
       margin-top: -30px;
