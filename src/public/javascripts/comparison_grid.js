@@ -42,11 +42,11 @@ KT.comparison_grid = function(){
             }
 
             utils.each(models.columns, function(col){
-                in_column = utils.include(cell_columns, col['id']) ? true : false;
+                in_column = utils.include(cell_columns, '' + col['id']) ? true : false;
                 
                 if( in_column ){
-                    cells.push({'in_column' : in_column, 'display' : cell_data[key]['display'], 'span' : col['span'],
-                                'id' : col['id'], 'hover' : cell_data[key]['hover'], 'comparable' : comparable, 'row_id' : id });
+                    cells.push({'in_column' : in_column, 'display' : cell_data[col['id']]['display'], 'span' : col['span'],
+                                'id' : col['id'], 'hover' : cell_data[col['id']]['hover'], 'comparable' : comparable, 'row_id' : id });
                 } else {
                     cells.push({ 'in_column' : in_column, 'id' : col['id'], 'span' : col['span'], 'row_id' : id });
                 }
