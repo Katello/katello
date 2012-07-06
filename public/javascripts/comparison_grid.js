@@ -16,7 +16,6 @@ var KT = (KT === undefined) ? {} : KT;
 KT.comparison_grid = function(){
     var templates = KT.comparison_grid.templates,
         utils = KT.utils,
-        controls = KT.comparison_grid.controls(this),
         events,
         models = KT.comparison_grid.models(),
         num_columns_shown = 0,
@@ -28,7 +27,7 @@ KT.comparison_grid = function(){
             events = KT.comparison_grid.events(this).init();
             grid_row_headers_el = $('#grid_row_headers');
             grid_content_el = $('#grid_content');
-
+            controls = KT.comparison_grid.controls(this);
         },
         add_row = function(id, name, cell_data, parent_id, comparable){
             var cells = [], row_level,
@@ -263,7 +262,7 @@ KT.comparison_grid = function(){
                 $('#grid_loading_screen').hide();
             }
         },
-        set_mode = function(mode){
+        set_mode = function(mode, options){
             var columns_to_show = {};
                 
             models.mode = (mode === undefined) ? models.mode : mode;
@@ -293,6 +292,14 @@ KT.comparison_grid = function(){
                 $('#grid_header').find('header .button').show();
                 controls.change_content_select.show();
             }
+            if(options){
+                if(options['show_compare_btn']){
+                    controls.comparison.show();
+                }
+                else{
+                    controls.comparison.hide();
+                }
+            }
         },
         set_content_select = function(options, selected){
             controls.change_content_select.set(options, selected);
@@ -303,7 +310,7 @@ KT.comparison_grid = function(){
 
     return {
         init                    : init,
-        controls                : controls,
+        controls                : function(){return controls;},
         models                  : models,
         export_data             : models.export_data,
         import_data             : models.import_data,
@@ -435,6 +442,7 @@ KT.comparison_grid.models.rows = function(){
 };
 
 KT.comparison_grid.controls = function(grid) {
+    console.log(grid);
     var column_selector = (function() {
         var hide = function() {
                 $('#column_selector').hide();
