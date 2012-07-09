@@ -69,6 +69,17 @@ class SystemGroupAPI(KatelloAPI):
         path = "/api/organizations/%s/system_groups/" % (org_id)
         return self.server.POST(path, data)[1]
 
+    def copy(self, org_id, system_group_id, new_name, description):
+        data = {
+            "system_group" : {
+                "new_name": new_name,
+                "description": description
+            }
+        }
+
+        path = "/api/organizations/%s/system_groups/%s/copy" % (org_id, system_group_id)
+        return self.server.POST(path, data)[1]
+
     def update(self, org_id, system_group_id, name, description, max_systems):
         data = {}
         data = self.update_dict(data, "name", name)

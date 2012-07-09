@@ -99,6 +99,37 @@ class Create(SystemGroupAction):
             _("Could not create system group [ %s ]") % name
         )
 
+class Copy(SystemGroupAction):
+
+    description = _('Copy a system group')
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
+                               help=_("original system group name.  source of the copy (required)"))
+        parser.add_option('--new_name', dest='new_name',
+                               help=_("new system group name.  destination of the copy (required)"))
+        parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        parser.add_option('--description', dest='description',
+                               help=_("system group description for new group"))
+
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'new_name'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        name = self.get_option('name')
+        new_name = self.get_option('new_name')
+        description = self.get_option('description')
+        
+        source_system_group = get_system_group(org_name, name)
+        new_system_group = self.api.copy(org_name, source_system_group["id"], new_name, description)
+
+        test_record(new_system_group,
+            _("Successfully copied system group [ %s ] to [ %s ]") % 
+                       (source_system_group['name'], new_system_group['name']),
+            _("Could not create system group [ %s ]") % name
+        )
 
 class Info(SystemGroupAction):
 

@@ -206,6 +206,7 @@ def setup_admin(katello_cmd):
     system_group_cmd.add_command('lock', system_group.Lock())
     system_group_cmd.add_command('unlock', system_group.Unlock())
     system_group_cmd.add_command('create', system_group.Create())
+    system_group_cmd.add_command('copy', system_group.Copy())
     system_group_cmd.add_command('update', system_group.Update())
     system_group_cmd.add_command('delete', system_group.Delete())
     system_group_cmd.add_command('packages', system_group.Packages())

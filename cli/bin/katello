@@ -29,6 +29,8 @@ if sys.getdefaultencoding() == 'ascii':
         sys.stderr = writer_class(sys.stderr)
 
 
+sys.path.append('/home/mmccune/devel/katello/cli/src')
+
 from katello.client.cli.admin import AdminCLI
 from katello.client.main import setup_admin
 
