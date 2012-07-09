@@ -12,7 +12,7 @@
 
 class Api::SystemGroupsController < Api::ApiController
 
-  before_filter :find_group, :only => [:show, :update, :destroy, :destroy_systems, :lock, :unlock,
+  before_filter :find_group, :only => [:copy, :show, :update, :destroy, :destroy_systems, :lock, :unlock,
                                        :add_systems, :remove_systems, :systems, :history, :history_show]
   before_filter :find_organization, :only => [:index, :create]
   before_filter :authorize
@@ -29,6 +29,7 @@ class Api::SystemGroupsController < Api::ApiController
       :show         => read_perm,
       :systems      => read_perm,
       :create       => create_perm,
+      :copy         => create_perm,
       :update       => edit_perm,
       :destroy      => destroy_perm,
       :destroy_systems => destroy_systems_perm,
@@ -44,6 +45,7 @@ class Api::SystemGroupsController < Api::ApiController
   def param_rules
     {
       :create => {:system_group=>[:name, :description, :system_ids, :max_systems]},
+      :copy => {:system_group=>[:new_name, :description]},
       :update =>  {:system_group=>[:name, :description, :system_ids, :max_systems]},
       :add_systems => {:system_group=>[:system_ids]},
       :remove_systems => {:system_group=>[:system_ids]}
@@ -122,6 +124,20 @@ class Api::SystemGroupsController < Api::ApiController
     @group.organization = @organization
     @group.save!
     render :json => @group
+  end
+
+  def copy
+    grp_param = params[:system_group]
+    new_group = SystemGroup.new
+    new_group.name = grp_param[:new_name]
+    new_group.description = grp_param[:description]
+    new_group.organization = @group.organization
+    new_group.max_systems = @group.max_systems
+    new_group.save!
+
+    new_group.systems = @group.systems
+    new_group.save!
+    render :json => new_group
   end
 
   def destroy

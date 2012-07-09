@@ -485,6 +485,7 @@ Src::Application.routes.draw do
           post :lock
           post :unlock
           post :add_systems
+          post :copy
           post :remove_systems
           delete :destroy_systems
         end

@@ -152,6 +152,58 @@ describe Api::SystemGroupsController do
        end
      end
 
+     describe "POST copy" do
+       let(:action) {:copy}
+       let(:req) { post :copy, :organization_id=>@org.cp_key}
+       let(:authorized_user) do
+         user_with_permissions { |u| u.can(:create, :system_groups, nil, @org) }
+       end
+       let(:unauthorized_user) do
+         user_without_permissions
+       end
+       it_should_behave_like "protected action"
+
+       it "should copy a group correctly" do
+         post :copy, :organization_id=>@org.cp_key, :id=>@group.id, :system_group=>{:name=>"foo", :new_name=>"new_name1", :description=>"describe22"}
+         puts "Response: #{response}"
+         response.should be_success
+         SystemGroup.where(:name=>"new_name1").first.should_not be_nil
+       end
+
+       #it "should not create a group without a name" do
+         #post :create, :organization_id=>@org.cp_key, :system_group=>{:description=>"describe", :max_systems => 5}
+         #response.should_not be_success
+         #SystemGroup.where(:description=>"describe").first.should be_nil
+       #end
+
+       #it "should allow creation of a group without specifying maximum systems" do
+         #post :create, :organization_id=>@org.cp_key, :system_group=>{:description=>"describe", :name => "foo"}
+         #response.should be_success
+         #SystemGroup.where(:max_systems=>"-1").count.should == 1
+       #end
+
+       #it "should allow creation of a group specifying maximum systems" do
+         #post :create, :organization_id=>@org.cp_key, :system_group=>{:description=>"describe", :name => "foo", :max_systems => "100"}
+         #response.should be_success
+         #SystemGroup.where(:max_systems=>"100").count.should == 1
+       #end
+
+       #it "should allow two groups with the same name in different orgs" do
+         #@org2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
+         ##setup_current_organization(@org2)
+         #post :create, :organization_id=>@org2.cp_key, :system_group=>{:name=>@group.name, :description=>@group.description}
+         #response.should be_success
+         #SystemGroup.where(:name=>@group.name).count.should == 2
+       #end
+
+       #it "should not allow a group to be created that already exists" do
+         #post :create, :organization_id=>@org.cp_key, :system_group=>{:name=>@group.name, :description=>@group.description}
+         #response.should_not be_success
+         #SystemGroup.where(:name=>@group.name).count.should == 1
+       #end
+     end
+
+
      describe "PUT update" do
        let(:action) {:update}
        let(:req) { put :update, :id=>@group.id, :organization_id=>@org.cp_key}
@@ -176,8 +228,6 @@ describe Api::SystemGroupsController do
          @group.reload.systems.should == [@system]
        end
      end
-
-
 
      describe "POST add systems" do
        let(:action) {:add_systems}
