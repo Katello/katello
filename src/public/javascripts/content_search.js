@@ -36,7 +36,8 @@ KT.content_search = function(paths_in){
         repo_packages:{id:'repo_packages',
                        name:i18n.packages,
                        url:KT.routes.repo_packages_content_search_index_path(),
-                       cols:{description:{id:'description', name:i18n.description, span : "5"}}
+                       cols:{description:{id:'description', name:i18n.description, span : "5"}},
+                       selector:['repo_packages', 'repo_errata']
 
         },
         repo_errata  :{id:'repo_errata',
@@ -47,26 +48,35 @@ KT.content_search = function(paths_in){
                            type  : {id:'type', name:i18n.type},
                            severity : {id:'severity', name:i18n.severity},
                            issued : {id:'issued', name:i18n.issued}
-                         }
+                         },
+                        selector:['repo_packages', 'repo_errata']
+        },
+        compare_packages:{id:'compare_packages',
+                           name:i18n.packages,
+                           url:KT.routes.repo_compare_packages_content_search_index_path(),
+                           selector:['compare_packages', 'compare_errata']
+        },
+        compare_errata:{id:'compare_errata',
+                       name:i18n.errata,
+                       url:KT.routes.repo_compare_errata_content_search_index_path(),
+                       selector:['compare_packages', 'compare_errata']
         }
-
     },
-    search_urls = {errata:KT.routes.errata_content_search_index_path(),
-                        repos:KT.routes.repos_content_search_index_path(),
-                        products:KT.routes.products_content_search_index_path(),
-                        packages:KT.routes.packages_content_search_index_path()
+    search_modes = [{id:'all', name:i18n.all},
+                    {id:'shared', name:i18n.shared},
+                    {id:'unique', name:i18n.unique}
+                   ],
+    search_pages = {errata:{url:KT.routes.errata_content_search_index_path(), modes:true},
+                    repos:{url:KT.routes.repos_content_search_index_path(), comparable:true},
+                    products:{url:KT.routes.products_content_search_index_path()},
+                    packages:{url:KT.routes.packages_content_search_index_path(), modes:true}
     },
     more_results_urls = {
         errata:   {method:"POST", url:KT.routes.errata_items_content_search_index_path(), include_search:true},
         packages: {method:"POST", url:KT.routes.packages_items_content_search_index_path(), include_search:true},
         repo_packages:{method:"GET", url:KT.routes.repo_packages_content_search_index_path(), include_search:false},
         repo_errata: {method:"GET", url:KT.routes.repo_errata_content_search_index_path(), include_search:false}
-    },
-    subgrid_selector = [
-        {id:'repo_errata', name:i18n.errata},
-        {id:'repo_packages', name:i18n.packages}
-    ];
-
+    };
 
 
     var init = function(){
@@ -79,20 +89,23 @@ KT.content_search = function(paths_in){
 
         comparison_grid = KT.comparison_grid();
         comparison_grid.init();
+        comparison_grid.controls = comparison_grid.controls();
         comparison_grid.set_columns(env_select.get_paths(), true);
 
         browse_box = KT.widget.browse_box("content_selector", KT.widgets, KT.mapping, initial_search);
         $(document).bind(browse_box.get_event(), search_initiated);
 
+        select_envs(get_initial_environments());
+
         bind_search_event();
         bind_env_events();
         bind_hover_events();
         bind_load_more_event();
-        bind_subgrid_selector();
+        bind_selectors();
+        bind_repo_comparison();
 
         $(document).bind('return_to_results.comparison_grid', remove_subgrid);
 
-        select_envs(get_initial_environments());
 
         if(initial_search){
             search_initiated(initial_search);
@@ -122,7 +135,6 @@ KT.content_search = function(paths_in){
             env_obj[env.id] = env;
             env_select.select(env.id)
         });
-
         comparison_grid.show_columns(env_obj);
         env_select.reposition();
     },
@@ -163,61 +175,83 @@ KT.content_search = function(paths_in){
         });
     },
     do_search = function(search_params){
-        var url, subgrid, tmp_search;
+
         old_search_params = $.bbq.getState('search');
         
         if (search_params === undefined){
-            handle_response([]);
+            draw_grid([]);
         }
         else if(search_params.subgrid && subgrids[search_params.subgrid.type]){
-            subgrid = subgrids[search_params.subgrid.type];
-            tmp_search = utils.clone(search_params);
-            delete tmp_search['subgrid'];
-            $(document).trigger('loading.comparison_grid');
-            $.ajax({
-                type: 'GET',
-                contentType:"application/json",
-                url: subgrid.url,
-                cache: false,
-                data: search_params.subgrid,
-                success: function(data){
-                    comparison_grid.set_columns(subgrid.cols);
-                    comparison_grid.set_mode("details");
-                    comparison_grid.show_columns(subgrid.cols);
-                    if (search_params.subgrid.type !== 'compare'){
-                        comparison_grid.set_content_select(utils.values(subgrids), search_params.subgrid.type);
-                    }
-                    comparison_grid.set_title(data.name);
-                    draw_grid(data.rows);
-                }
-            });
+            subgrid_search(search_params);
         }
-        else if (search_urls[search_params.content_type] ){
-
-            if (cache.get_state(search_params)){
-                comparison_grid.import_data(cache.get_state(search_params));
-            }
-            else {
-                $(document).trigger('loading.comparison_grid');
-                $.ajax({
-                    type: 'POST',
-                    contentType:"application/json",
-                    url: search_urls[search_params.content_type],
-                    data: JSON.stringify(search_params),
-                    success: function(data){
-                        comparison_grid.set_columns(env_select.get_paths());
-                        select_envs(get_initial_environments());
-                        comparison_grid.set_title(data.name);
-                        comparison_grid.set_mode("results");
-                        draw_grid(data.rows);
-                        cache.save_state(comparison_grid, search_params);
-                    }
-                });
-            }
+        else if (search_pages[search_params.content_type] ){
+            main_search(search_params);
         }
         else{
             console.log(search_params);
         }
+    },
+    main_search = function(search_params){
+        if (search_params.mode === undefined){
+            search_params.mode = search_modes[0].id;
+        }
+
+        search_params.environments = []
+        utils.each(get_initial_environments(), function(item){
+            search_params.environments.push(item.id);
+        });
+
+
+        if (cache.get_state(search_params)){
+            comparison_grid.import_data(cache.get_state(search_params));
+        }
+        else {
+            $(document).trigger('loading.comparison_grid');
+            $.ajax({
+                type: 'POST',
+                contentType:"application/json",
+                url: search_pages[search_params.content_type].url,
+                data: JSON.stringify(search_params),
+                success: function(data){
+                    var options = {};
+                    options.show_compare_btn = search_pages[search_params.content_type].comparable;
+                    if (search_pages[search_params.content_type].modes){
+                        options.right_selector = true;
+                        comparison_grid.set_right_select(search_modes, search_params.mode);
+                    }
+
+                    comparison_grid.set_columns(env_select.get_paths());
+                    select_envs(get_initial_environments());
+                    comparison_grid.set_title(data.name);
+                    comparison_grid.set_mode("results", options);
+                    draw_grid(data.rows);
+                    cache.save_state(comparison_grid, search_params);
+                }
+            });
+        }
+    },
+    subgrid_search = function(search_params){
+        var type = search_params.subgrid.type,
+            subgrid = subgrids[search_params.subgrid.type];
+
+        comparison_grid.controls.comparison.hide();
+        $(document).trigger('loading.comparison_grid');
+        $.ajax({
+            type: 'GET',
+            contentType:"application/json",
+            url: subgrid.url,
+            cache: false,
+            data: search_params.subgrid,
+            success: function(data){
+                var cols = data.cols ? data.cols : subgrid.cols;
+                comparison_grid.set_mode("details", {left_selector:true});
+                comparison_grid.set_columns(cols);
+                comparison_grid.show_columns(cols);
+                comparison_grid.set_title(data.name);
+                comparison_grid.set_left_select(subgrid_selector_items(type), type);
+                draw_grid(data.rows);
+            }
+        });
     },
     draw_grid = function(data){
         comparison_grid.set_rows(data, true);
@@ -230,28 +264,49 @@ KT.content_search = function(paths_in){
             $.bbq.pushState({search:search});
         }, 'json');
     },
+    bind_repo_comparison = function(){
+        $(document).bind('compare.comparison_grid', function(event){
+            var formatted = [],
+                search = $.bbq.getState('search');
+            if(event.selected.length  === 0){
+                return;
+            }
+            utils.each(event.selected, function(item){
+                formatted.push({env_id:item.col_id, repo_id:item.row_id.split('_')[1]})
+            });
+            search.subgrid = {
+                type: 'compare_packages',
+                repos: formatted
+            };
+            $.bbq.pushState({search:search});
+        });
+    },
     bind_env_events = function(){
+        var envs_changed = false;
         //submit event
         $(document).bind(env_select.get_submit_event(), function(event, environments) {
-           //if doing unique, or shared, research
- 
+            var search = $.bbq.getState('search');
+            if (envs_changed && search.mode && search.mode !== 'all'){
+                search_initiated(undefined, search);
+                envs_changed = false;
+            } 
         });
         //select event
         $(document).bind(env_select.get_select_event(), function(event){
             var environments = env_select.get_selected();
-            $.bbq.pushState({environments:utils.values(environments)});
             comparison_grid.show_columns(environments);
+            $.bbq.pushState({environments:environments});
             env_select.reposition();
+            envs_changed = true;
         });
     },
-    bind_subgrid_selector = function(){
-        $(document).bind('change_details_content.comparison_grid', function(event){
-            change_subgrid_type(event.content_type);
+    bind_selectors = function(){
+        $(document).bind('left_select.comparison_grid', function(event){
+            change_subgrid_type(event.value);
         });
-    },
-    unbind_subgrid_selector = function(){
-        return;
-        $(document).unbind("foo");
+        $(document).bind('right_select.comparison_grid', function(event){
+            change_grid_mode(event.value);
+        });        
     },
     change_subgrid_type = function(type){
         var search = $.bbq.getState('search');
@@ -259,6 +314,16 @@ KT.content_search = function(paths_in){
             search.subgrid.type = type;
             $.bbq.pushState({search:search});
         }
+    },
+    change_grid_mode = function(mode){
+        var search = $.bbq.getState('search');
+        if(search.subgrid){
+            search.subgrid.mode = mode;
+        }
+        else {
+            search.mode = mode;
+        }
+        $.bbq.pushState({search:search});
     },
     remove_subgrid = function(){
         var search = $.bbq.getState('search');
@@ -273,6 +338,14 @@ KT.content_search = function(paths_in){
                 return $(this).find('.hidden-text').html();
             }
         });
+    },
+    subgrid_selector_items = function(type) {
+        var to_ret = [],
+            items = subgrids[type].selector;
+        utils.each(items, function(item){
+            to_ret.push(subgrids[item]);
+        });
+        return to_ret;
     };
 
     init();
@@ -291,20 +364,26 @@ KT.content_search_cache = (function(){
         saved_search = undefined,
         saved_data = undefined;
 
-    self.save_state = function(grid, search){
+    var save_state = function(grid, search){
         saved_search = search;
         saved_data = grid.export_data();
-    };
-    self.get_state = function(search){
+    },
+    get_state = function(search){
         if(utils.isEqual(search, saved_search)){
             return saved_data;
         }
     },
-    self.clear_state = function(){
+    clear_state = function(){
         saved_search = undefined;
         saved_data = undefined;
+    },
+    get_data = function(){ return saved_data};
+    return {
+      save_state: save_state,
+      get_state: get_state,
+      clear_state: clear_state,
+      get_data: get_data  
     };
-    return self;
 }());
 
 

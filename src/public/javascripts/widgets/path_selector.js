@@ -189,16 +189,28 @@ KT.path_select = function(div_id, name, environments, options_in){
         get_selected = function(){
             var selected = path_selector.find('input:checked'),
                 to_ret = {};
-
             KT.utils.each(selected, function(item){
-                item = $(item);
-                to_ret[item.data('node_id')] = { 'id' : item.data('node_id'), name:item.data('node_name'),
-                            next_id:item.data('next_node_id')};
+                var data = $(item).data();
+                if(!options.link_first || to_ret[data.node_id] === undefined){
+                    to_ret[data.node_id] = { 'id' : data.node_id, name:data.node_name,
+                            next_id:data.next_node_id};
+                }
             });
             return to_ret;
         },
         get_paths = function(){
-            return utils.flatten(environments);
+            var flattened = utils.flatten(environments),
+                tmp_hash = {};
+            if (options.link_first){
+                KT.utils.each(flattened, function(item){
+                    tmp_hash[item.id] = item;
+                });
+                console.log(tmp_hash);
+                return KT.utils.values(tmp_hash);
+            }
+            else{
+                return flattened;
+            }
         },
         recalc_scroll = function(){
            if(!options.expand){
