@@ -1,12 +1,60 @@
 @charset "UTF-8";
 @import "compass";
-
+@import "compass/reset";
 $login_base-color: #006F8F;
 
 $login_background_top-color: darken(rgba(0, 157, 204, 1), 4%) !default;
 $login_background_bottom-color: darken(rgba(0, 111, 143, 1), 4%) !default;
 
+$switcherformwidth: 300px;
+
 @import "converge-ui/colors";
 @import "converge-ui/base";
 @import "converge-ui/login";
+@import "widgets/org_switcher";
+@import "widgets/search";
+@import "widgets/scrollpane";
 @import "katello_base";
+
+//spinner post-login
+.spinner {
+    margin-top: 1.8em;
+    left: 4.5em;
+    display: none;
+}
+//interstitial container
+#interstitial {
+  left: 360px;
+  .card {
+    padding-top: 6em;
+  }
+}
+//org switcher modifications
+#switcherContainer {
+  #switcherBox {
+    margin-left:0px;
+    top: 23px;
+    position: relative;
+    left: 0;
+  }
+  #orgbox {
+    margin-top: 32px;
+  }
+  #manage_orgs {
+    display: none;
+  }
+  .filter {
+    position: absolute;
+  }
+}
+//missing spinner
+.spinner {
+  margin: 0 auto;
+  margin-top: 30%;
+  height: 16px;
+  width: 16px;
+  display: block;
+  position: relative;
+  z-index: 1000;
+  background: $spinner_img;
+}

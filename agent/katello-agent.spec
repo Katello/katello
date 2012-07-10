@@ -1,7 +1,7 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 
 Name: katello-agent
-Version: 1.0.3
+Version: 1.0.4
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -45,6 +45,9 @@ rm -rf %{buildroot}
 %doc LICENSE
 
 %changelog
+* Wed Jun 27 2012 Lukas Zapletal <lzap+git@redhat.com> 1.0.4-1
+- 828533 - changing to proper QPIDD SSL port
+
 * Mon Mar 19 2012 Ivan Necas <inecas@redhat.com> 1.0.3-1
 - 770693 - handle repos without repofile in katello-agent (inecas@redhat.com)
 

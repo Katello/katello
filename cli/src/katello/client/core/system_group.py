@@ -21,7 +21,7 @@ from katello.client.core.base import BaseAction, Command
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
 from katello.client.core.utils import test_record
-
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_job, SystemGroupAsyncJob
 
 Config()
 
@@ -88,6 +88,9 @@ class Create(SystemGroupAction):
         name = self.get_option('name')
         description = self.get_option('description')
         max_systems = self.get_option('max_systems')
+
+        if max_systems == None:
+            max_systems = "-1"
 
         system_group = self.api.create(org_name, name, description, max_systems)
 
@@ -194,12 +197,12 @@ class HistoryTasks(SystemGroupAction):
         system_group = get_system_group(org_name, system_group_name)
 
         # get list of jobs
-        history = self.api.system_group_history(org_name, system_group['id'], {'job_id':job_id})
-        if len(history) == 0:
+        history = self.api.system_group_history(org_name, system_group['id'], job_id)
+        if history == None:
             print >> sys.stderr, _("Could not find job [ %s ] for system group [ %s ]") % (job_id, system_group_name)
             return os.EX_DATAERR
 
-        tasks = history[0]['tasks']
+        tasks = history['tasks']
 
         self.printer.add_column('id', name='task id')
         self.printer.add_column('uuid', name='system uuid')
@@ -426,3 +429,125 @@ class RemoveSystems(SystemGroupAction):
             return os.EX_OK
         else:
             return os.EX_DATAERR
+
+class Packages(SystemGroupAction):
+
+    description = _('manipulate the installed packages for systems in a system group')
+
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        parser.add_option('--name', dest='name',
+                       help=_("system group name (required)"))
+        parser.add_option('--install', dest='install', type="list",
+                       help=_("packages to be installed remotely on the systems, package names are separated with comma"))
+        parser.add_option('--remove', dest='remove', type="list",
+                       help=_("packages to be removed remotely from the systems, package names are separated with comma"))
+        parser.add_option('--update', dest='update', type="list",
+                       help=_("packages to be updated on the systems, use --all to update all packages, package names are separated with comma"))
+        parser.add_option('--install_groups', dest='install_groups', type="list",
+                       help=_("package groups to be installed remotely on the systems, group names are separated with comma"))
+        parser.add_option('--remove_groups', dest='remove_groups', type="list",
+                       help=_("package groups to be removed remotely from the systems, group names are separated with comma"))
+        parser.add_option('--update_groups', dest='update_groups', type="list",
+                       help=_("package groups to be updated remotely on the systems, group names are separated with comma"))
+
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
+
+        remote_actions = ('install', 'remove', 'update', 'install_groups', 'remove_groups', 'update_groups')
+        validator.require_one_of(remote_actions)
+
+
+    def run(self):
+        org_name = self.get_option('org')
+        group_name = self.get_option('name')
+
+        install = self.get_option('install')
+        remove = self.get_option('remove')
+        update = self.get_option('update')
+        install_groups = self.get_option('install_groups')
+        remove_groups = self.get_option('remove_groups')
+        update_groups = self.get_option('update_groups')
+
+        job = None
+
+        system_group = get_system_group(org_name, group_name)
+        system_group_id = system_group['id']
+
+        if install:
+            job = self.api.install_packages(org_name, system_group_id, install)
+        if remove:
+            job = self.api.remove_packages(org_name, system_group_id, remove)
+        if update:
+            if update == '--all':
+                update_packages = []
+            else:
+                update_packages = update
+            job = self.api.update_packages(org_name, system_group_id, update_packages)
+        if install_groups:
+            job = self.api.install_package_groups(org_name, system_group_id, install_groups)
+        if remove_groups:
+            job = self.api.remove_package_groups(org_name, system_group_id, remove_groups)
+        if update_groups:
+            job = self.api.update_package_groups(org_name, system_group_id, update_groups)
+
+        if job:
+            id = job["id"]
+            print (_("Performing remote action [ %s ]... ") % id)
+            job = SystemGroupAsyncJob(org_name, system_group_id, job)
+            run_spinner_in_bg(wait_for_async_job, [job])
+            if job.succeeded():
+                print _("Remote action finished:")
+                print job.get_status_message()
+                return os.EX_OK
+            else:
+                print _("Remote action failed:")
+                print job.get_status_message()
+                return os.EX_DATAERR
+
+        return os.EX_OK
+
+class Errata(SystemGroupAction):
+
+    description = _('install errata on systems in a system group')
+
+    def setup_parser(self, parser):
+        parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        parser.add_option('--name', dest='name',
+                       help=_("system group name (required)"))
+        parser.add_option('--install', dest='install', type="list",
+                       help=_("errata to be installed remotely on the systems, errata IDs separated with comma (required)"))
+
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'install'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        group_name = self.get_option('name')
+        install = self.get_option('install')
+
+        job = None
+
+        system_group = get_system_group(org_name, group_name)
+        system_group_id = system_group['id']
+
+        if install:
+            job = self.api.install_errata(org_name, system_group_id, install)
+
+        if job:
+            id = job["id"]
+            print (_("Performing remote action [ %s ]... ") % id)
+            job = SystemGroupAsyncJob(org_name, system_group_id, job)
+            run_spinner_in_bg(wait_for_async_job, [job])
+            if job.succeeded():
+                print _("Remote action finished:")
+                print job.get_status_message()
+                return os.EX_OK
+            else:
+                print _("Remote action failed:")
+                print job.get_status_message()
+                return os.EX_DATAERR
+
+        return os.EX_OK
