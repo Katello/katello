@@ -78,6 +78,7 @@ Requires:       rubygem(fssm)
 Requires:       rubygem(sass)
 Requires:       rubygem(chunky_png)
 Requires:       rubygem(tire)
+Requires:       rubygem(ldap_fluff)
 
 %if 0%{?rhel} == 6
 Requires:       redhat-logos >= 60.0.14
