@@ -19,7 +19,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.2.21
+Version:        0.2.22
 Release:        1%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -158,6 +158,7 @@ rm %{buildroot}%{homedir}/lib/tasks/test.rake
 rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
 rm %{buildroot}%{homedir}/lib/tasks/yard.rake
 rm %{buildroot}%{homedir}/lib/tasks/hudson.rake
+rm %{buildroot}%{homedir}/lib/tasks/jshint.rake
 
 #correct permissions
 find %{buildroot}%{homedir} -type d -print0 | xargs -0 chmod 755
@@ -222,6 +223,9 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Tue Jul 10 2012 Jordan OMara <jomara@redhat.com> 0.2.22-1
+- new package built with tito
+
 * Tue Jul 03 2012 Jordan OMara <jomara@redhat.com> 0.2.21-1
 - new build 
 
