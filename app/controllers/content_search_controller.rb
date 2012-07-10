@@ -447,7 +447,7 @@ class ContentSearchController < ApplicationController
   def spanning_content_rows(content_list, id_prefix, name_attribute, parent_repo, spanned_repos)
     to_ret = [] 
     for item in content_list:
-        row = {:id=>"#{id_prefix}_#{item.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{},
+        row = {:id=>"repo_#{parent_repo.id}_#{id_prefix}_#{item.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{},
                :name=>item.send(name_attribute)}
         spanned_repos.each do |repo|
           if item.repoids.include? repo.pulp_id
