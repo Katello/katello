@@ -151,6 +151,14 @@ EOKEY
     Resources::Pulp::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
     Resources::Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
     Resources::Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
+    Repository.instance_eval do
+      define_method(:index_packages) {
+      #do nothing
+      }
+      define_method(:index_errata) {
+            #do nothing
+      }
+    end
   end
 
   def disable_cdn
