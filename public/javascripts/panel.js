@@ -411,6 +411,7 @@ KT.panel = (function ($) {
                 content = jPanel.find('.panel-content'),
                 position;
             if (jPanel.hasClass("opened")) {
+                KT.panel.copy.hide_form();
                 $('.block.active').removeClass('active');
                 jPanel.animate({
                     left: 0,
@@ -808,6 +809,7 @@ KT.panel.copy = (function () {
     };
     return {
         initialize: initialize,
+        hide_form: hide_form,
         perform_copy: perform_copy
     };
 
