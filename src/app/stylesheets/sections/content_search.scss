@@ -92,12 +92,13 @@ $comparison_grid_column_header-background: #FFF;
     min-height: $browse_box-height - $browse_box_header-height - 5;
     border: 2px solid $widget-border-color;
 
-    fieldset:first-child > div:nth-child(2) {
-      background: $widget-background-color;
-      padding: 0;
+    fieldset:first-child {
+      margin: 20px 6px 20px 8px;
+
+      select { width: 210px; }
     }
 
-    fieldset {
+    fieldset:first-child ~fieldset {
       margin: 20px 6px 20px 8px;
 
       .button { margin-left: 2px; }
@@ -174,6 +175,14 @@ $comparison_grid_column_header-background: #FFF;
 
       #left_select {
         margin-left: 25px;
+      
+        select { width: 100px; }
+      }
+
+      #right_select {
+        margin-right: 8px;
+
+        select { width: 100px; }
       }
 
       .button { margin: 0 0 0 8px; }
@@ -420,8 +429,8 @@ $comparison_grid_column_header-background: #FFF;
 
     ul {
       width: $comparison_grid-width - $comparison_grid_filter-width - 1 - 10;
-      height: $comparison_grid_footer-height - 10;
-      padding: 5px;
+      height: $comparison_grid_footer-height - 20;
+      padding: 10px 5px;
     }
 
   }

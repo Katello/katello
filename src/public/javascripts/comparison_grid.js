@@ -422,6 +422,7 @@ KT.comparison_grid.models.rows = function(){
                             'parent_id' : parent_id, 'comparable' : comparable };
 
                 parent = get_parent(id);
+
                 if( parent['child_ids'] === undefined ){
                     parent['child_ids'] = [id];
                 } else {
@@ -583,6 +584,7 @@ KT.comparison_grid.controls = function(grid) {
                     });
 
                     selector.append(html);
+                    selector.chosen();
                 },
                 show = function(){
                     container.show();
