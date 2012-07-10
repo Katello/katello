@@ -146,8 +146,6 @@ class Glue::Pulp::Errata
     end
 
     return search.perform.results
-  rescue
-    return []
   end
 
   def self.index_errata errata_ids

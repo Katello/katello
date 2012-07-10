@@ -357,9 +357,6 @@ class ContentSearchController < ApplicationController
   #
   def spanned_repo_content library_repo, content_type, content_search_obj, offset=0, search_mode = :all, environments = []
     spanning_repos = library_repo.environmental_instances
-
-
-
     unless environments.nil? || environments.empty?
       spanning_repos.delete_if do |repo|
         !(environments.include? repo.environment)
@@ -372,7 +369,6 @@ class ContentSearchController < ApplicationController
         return nil if search_mode == :shared
         search_mode = :all
       end
-
     end
     to_ret = {}
     content_attribute = content_type.to_sym == :package ? 'nvrea' : 'id'
