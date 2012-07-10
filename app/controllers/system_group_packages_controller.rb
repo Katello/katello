@@ -24,8 +24,8 @@ class SystemGroupPackagesController < ApplicationController
   end
 
   def rules
-    edit_group = lambda{SystemGroup.find(params[:system_group_id]).editable?}
-    read_group = lambda{SystemGroup.find(params[:system_group_id]).readable?}
+    edit_group = lambda{SystemGroup.find(params[:system_group_id]).systems_editable?}
+    read_group = lambda{SystemGroup.find(params[:system_group_id]).systems_readable?}
 
     {
       :index => read_group,
@@ -42,7 +42,7 @@ class SystemGroupPackagesController < ApplicationController
         'task_statuses.task_type' => actions, 'task_statuses.state' => [:waiting, :running])
 
     render :partial=>"system_groups/packages/index", :layout => "tupane_layout",
-           :locals=>{:jobs => jobs, :editable => @group.editable?}
+           :locals=>{:jobs => jobs, :editable => @group.systems_editable?}
   end
 
   def add
@@ -73,7 +73,7 @@ class SystemGroupPackagesController < ApplicationController
     end
 
     render :partial => 'system_groups/packages/items',
-           :locals  => { :editable => @group.editable?, :job => job, :include_tr_shading => false }
+           :locals  => { :editable => @group.systems_editable?, :job => job, :include_tr_shading => false }
   end
 
   def remove
@@ -103,7 +103,7 @@ class SystemGroupPackagesController < ApplicationController
       render :text => '' and return
     end
 
-    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.editable?, :job => job, :include_tr_shading => false}
+    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?, :job => job, :include_tr_shading => false}
   end
 
   def update
@@ -134,7 +134,7 @@ class SystemGroupPackagesController < ApplicationController
     end
 
     render :partial => 'system_groups/packages/items',
-           :locals  => { :editable => @group.editable?, :job => job, :include_tr_shading => false }
+           :locals  => { :editable => @group.systems_editable?, :job => job, :include_tr_shading => false }
   end
 
   def status

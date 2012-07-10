@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'util/errata'
+
 class SystemGroupErrataController < ApplicationController
 
   helper SystemErrataHelper
@@ -22,8 +24,8 @@ class SystemGroupErrataController < ApplicationController
   end
 
   def rules
-    edit_group = lambda{SystemGroup.find(params[:system_group_id]).editable?}
-    read_group = lambda{SystemGroup.find(params[:system_group_id]).readable?}
+    edit_group = lambda{SystemGroup.find(params[:system_group_id]).systems_editable?}
+    read_group = lambda{SystemGroup.find(params[:system_group_id]).systems_readable?}
     {
       :index => read_group,
       :items => read_group,
@@ -35,7 +37,7 @@ class SystemGroupErrataController < ApplicationController
   def index
     offset = current_user.page_size
     render :partial=>"system_groups/errata/index", :layout => "tupane_layout",
-           :locals=>{:system=>@group, :editable => @group.editable?, :offset => offset}
+           :locals=>{:system=>@group, :editable => @group.systems_editable?, :offset => offset}
   end
 
   def items
@@ -47,7 +49,7 @@ class SystemGroupErrataController < ApplicationController
         
     rendered_html = render_to_string(:partial=>"systems/errata/items", :locals => { :errata => errata,
                                                                                     :errata_systems => errata_systems,
-                                                                                    :editable => @group.editable? })
+                                                                                    :editable => @group.systems_editable? })
 
     render :json => {:html => rendered_html,
                       :results_count => results_count,
@@ -80,7 +82,7 @@ class SystemGroupErrataController < ApplicationController
   private
 
   include SortColumnList
-  include ErrataModule
+  include Katello::Errata
 
   def get_errata start, finish, filter_type="All", errata_state="outstanding"
     types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
@@ -88,7 +90,6 @@ class SystemGroupErrataController < ApplicationController
     filter_type = filter_type || "All"    
 
     errata_hash = {} # {id => erratum}
-    errata_list = [] # [erratum]
     errata_system_hash = {} # {id => [system_name]}
 
     # build a hash of all errata across all systems in the group
