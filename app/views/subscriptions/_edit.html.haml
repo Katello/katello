@@ -68,7 +68,7 @@
       - if !@subscription.source_pool_id.nil?
         %fieldset
           .grid_2.ra.fieldset
-            =label :sourcepool, :sourcepool, _("Bonus From")
+            =label :sourcepool, :sourcepool, _("Virt Guest From")
           .grid_8.la
             = subscriptions_pool_link_helper(@subscription.source_pool_id)
       - if !@subscription.host_id.nil?
