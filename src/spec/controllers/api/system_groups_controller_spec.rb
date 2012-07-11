@@ -197,15 +197,6 @@ describe Api::SystemGroupsController do
          @group.reload.systems.should include @system
 
        end
-
-       it "should not allow addition if locked" do
-         @group.locked = true
-         @group.save!
-         post :add_systems, :organization_id=>@org.id, :id=>@group.id,
-              :system_group=>{:system_ids=>[@system.uuid]}
-         response.should_not be_success
-         @group.systems.should_not include @system
-       end
      end
 
      describe "POST remove systems" do
@@ -229,47 +220,6 @@ describe Api::SystemGroupsController do
        end
 
      end
-
-    describe "POST lock group" do
-      let(:action) {:lock}
-      let(:req) { post :lock, :id=>@group.id, :organization_id=>@org.cp_key}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:locking, :system_groups, @group.id, @org) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-
-      it "should allow locking" do
-        @group.locked = false
-        @group.save!
-        post :lock, :organization_id=>@org.id, :id=>@group.id
-        response.should be_success
-        @group.reload.locked.should == true
-      end
-    end
-
-     describe "POST unlock group" do
-       let(:action) {:unlock}
-       let(:req) { post :unlock, :id=>@group.id, :organization_id=>@org.cp_key}
-       let(:authorized_user) do
-         user_with_permissions { |u| u.can(:locking, :system_groups, @group.id, @org) }
-       end
-       let(:unauthorized_user) do
-         user_without_permissions
-       end
-       it_should_behave_like "protected action"
-
-       it "should allow unlocking" do
-         @group.locked = true
-         @group.save!
-         post :unlock, :organization_id=>@org.id, :id=>@group.id
-         response.should be_success
-         @group.reload.locked.should == false
-       end
-     end
-
 
      describe "DELETE" do
        let(:action) {:destroy}

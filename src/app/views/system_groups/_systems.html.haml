@@ -16,7 +16,7 @@
   #system_group_systems.grid_9{'data-id'=>@group.id}
     %input#system_group_id{:name => @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
     %form#system_form
-      -if editable && !@group.locked
+      -if editable
         %table.list
           %thead
             %th
