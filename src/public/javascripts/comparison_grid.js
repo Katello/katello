@@ -350,13 +350,13 @@ KT.comparison_grid.models = function() {
 
     self.export_data = function(type) {
         if( type === "columns" ){
-            return { columns : $.extend(true, {}, self.columns) };
+            return { columns : self.columns };
         } else if( type === "rows" ){
             return { rows : $.extend(true, {}, self.rows.get()) };
         } else if( type === "mode" ){
             return { mode : self.mode };
         } else {
-            return { columns : $.extend(true, {}, self.columns), 
+            return { columns : self.columns, 
                     rows : $.extend(true, {}, self.rows.get()), 
                     mode : self.mode };
         }
@@ -422,6 +422,7 @@ KT.comparison_grid.models.rows = function(){
                             'parent_id' : parent_id, 'comparable' : comparable };
 
                 parent = get_parent(id);
+
                 if( parent['child_ids'] === undefined ){
                     parent['child_ids'] = [id];
                 } else {
@@ -583,6 +584,7 @@ KT.comparison_grid.controls = function(grid) {
                     });
 
                     selector.append(html);
+                    selector.chosen();
                 },
                 show = function(){
                     container.show();
