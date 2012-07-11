@@ -19,7 +19,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.2.22
+Version:        0.2.23
 Release:        1%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -223,6 +223,10 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Wed Jul 11 2012 Jordan OMara <jomara@redhat.com> 0.2.23-1
+- Automatic commit of package [katello-headpin] release [0.2.22-1].
+  (jomara@redhat.com)
+
 * Tue Jul 10 2012 Jordan OMara <jomara@redhat.com> 0.2.22-1
 - new package built with tito
 
