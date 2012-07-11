@@ -224,6 +224,9 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Wed Jul 11 2012 Jordan OMara <jomara@redhat.com> 0.2.27-1
+- new package built with tito
+
 * Wed Jul 11 2012 Jordan OMara <jomara@redhat.com>
 - new package built with tito
 
