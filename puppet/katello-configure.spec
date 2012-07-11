@@ -31,7 +31,11 @@ katello-upgrade which handles upgrades between versions.
 
 %build
 #check syntax for all puppet scripts
+%if 0%{?rhel} || 0%{?fedora} < 17
 find -name '*.pp' | xargs -n 1 -t puppet --parseonly
+%else
+find -name '*.pp' | xargs -n 1 -t puppet parser validate
+%endif
 
 #check for puppet erb syntax errors
 find modules/ -name \*erb | xargs aux/check_erb

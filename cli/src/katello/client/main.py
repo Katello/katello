@@ -18,15 +18,6 @@
 import sys
 import codecs
 
-# Change encoding of output streams when no encoding is forced via $PYTHONIOENCODING
-# or setting in lib/python{version}/site-packages
-if sys.getdefaultencoding() == 'ascii':
-    writer_class = codecs.getwriter('utf-8')
-    if sys.stdout.encoding == None:
-        sys.stdout = writer_class(sys.stdout)
-    if sys.stderr.encoding == None:
-        sys.stderr = writer_class(sys.stderr)
-
 from katello.client.core import (
   activation_key,
   environment,

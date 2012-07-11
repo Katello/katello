@@ -43,6 +43,10 @@ class Product < ActiveRecord::Base
     indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
   end
 
+  def extended_index_attrs
+    {:name_sort => name.downcase}
+  end
+
   validates_with ProductNameUniquenessValidator
 
   has_many :environments, :class_name => "KTEnvironment", :uniq => true , :through => :environment_products  do

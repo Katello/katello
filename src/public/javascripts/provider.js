@@ -22,18 +22,6 @@ $(document).ready(function() {
     onNodeShow: function(){$.sparkline_display_visible()}
   });
 
-  $('#upload_button').live('submit', function(e) {
-    // disable submit to avoid duplicate clicks
-    $('input[id^=provider_submit]').attr("disabled", true);
-
-    e.preventDefault();
-    $(this).ajaxSubmit({success:subscription.successUpload});
-  });
-
-  $('form#edit_provider_2').live('submit', function(){
-    $('#provider_submit').val("Uploading...").attr("disabled", true);
-  });
-
   $('.repo_create').live('click', function(event) {
     var button = $(this);
     button.addClass("disabled");
@@ -67,29 +55,4 @@ var provider = (function() {
           	}
         }
     }
-})();
-
-var subscription = (function(){
-    return {
-        successUpload: function(data) {
-
-            if (data.length != 0) {
-                $(".panel-content").html(data);
-
-            } else {
-                // the response data came back empty.  this only occurs on an error, so do not replace the
-                // content of the pane...
-
-                // enable the submit, so user can try again
-                $('input[id^=provider_submit]').removeAttr("disabled");
-
-            }
-
-            notices.checkNotices();
-
-            // after file upload, the ajaxComplete isn't being called (which stops the spinners).
-            // as a result, we'll manually trigger the event.
-            $('#loading').trigger('ajaxComplete');
-        }
-    };
 })();
