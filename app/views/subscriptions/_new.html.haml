@@ -1,0 +1,87 @@
+= javascript :edit_helpers, :provider_redhat
+
+= content_for :title do
+  #{_("Subscription Manifest")}
+
+= render :partial=>"subscriptions_tupane_header_new_nav"
+
+= content_for :content do
+  #subscription
+    .grid_10
+      = help_tip_button('subscriptions-help')
+      = help_tip(_("If you have a subscription manifest you may upload it below. " + |
+                 "This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."), 'subscriptions-help') |
+
+    .grid_10
+      %h5 #{_("Red Hat Provider Details")}
+    .grid_10
+      %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{@provider.name}_#{@provider.id}"}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :red_hat_provider, :url, _("Repository Url")
+        .grid_7.la.fl#repo_url{'name' => 'provider[repository_url]',:class=>("editable edit_textfield" if @provider.editable?),  'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
+    .clear
+    - if @provider.editable?
+      .grid_10
+        %h5 #{_("Upload Subscription Manifest")}
+      - if @provider.import_task && !@provider.import_task.finished?
+        .grid_10
+          %fieldset
+            .grid_2.ra.fieldset
+              =label :upload, :upload, _("Manifest File")
+            .grid_8.la
+              .fl
+                %div.import_progress{:provider_id=>@provider.id}
+                  = image_tag("embed/icons/spinner.gif", {:class=>"fl"})
+                  .fl.import_progress_message
+                    = _("Import in progress (%s)") % @provider.import_task.state
+      - else
+        = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => upload_subscriptions_path do |f|
+          .grid_10
+            %fieldset
+              .grid_2.ra.fieldset
+                =label :upload, :upload, _("Manifest File")
+              .grid_8.la
+                .fl
+                  = f.file_field :contents
+            %fieldset
+              .grid_2.ra.fieldset
+                &nbsp;
+              .grid_8.la#force_checkbox
+                = check_box_tag :force_import
+                = label_tag :force, _('Force Override of Previous Import')
+            %fieldset
+              .grid_2.ra.fieldset
+                &nbsp;
+              .grid_8.la#upload_button
+                = f.submit _("Upload")
+
+    .grid_10
+      %h5 #{_("Upload History")}
+      %table
+        %thead
+          %th #{_("Message")}
+          %th #{_("Import Time")}
+        - if @statuses
+          %tbody
+            - @statuses[0..2].each do |status|
+              %tr{:class => cycle(nil, 'alt')}
+                %td{:style => "width: 70%;"}
+                  %span.icon_wrap.fl
+                    %span.fl{:class => (status["status"] == "FAILURE" ? "failure_icon" : "success_icon")}
+                  = status["statusMessage"]
+                %td
+                  = _("%s ago") % time_ago_in_words(status["created"])
+          - if @statuses.length > 3
+            %tr{:class => cycle(nil, 'alt')}
+              %td.panel_link{:style => "width: 70%;"}
+                = link_to(_("More..."), subscriptions_path + "/history_items")
+              %td
+                &nbsp;
+
+- if @provider.task_status
+  = javascript do
+    :plain
+      $(document).ready(function() {
+        KT.subscription.startUpdater();
+      });

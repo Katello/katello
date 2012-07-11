@@ -24,7 +24,7 @@ module Navigation
         :url => :sub_level,
         :options => {:class=>'organizations top_level', "data-menu"=>"organizations"},
         :if => lambda{current_organization() && Organization.any_readable?},
-        :items=> [ menu_org_list, menu_org_subscriptions]
+        :items=> [ menu_org_list ]
       }
     end
 
@@ -37,13 +37,6 @@ module Navigation
       }
     end
 
-    def menu_org_subscriptions
-      {:key => :subscriptions,
-       :name => _("Subscriptions"),
-       :url => subscriptions_path(),
-       :options => {:class=>'organizations second_level', "data-menu"=>"organizations"}
-      }
-    end
 
     def organization_navigation
       [

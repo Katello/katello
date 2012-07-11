@@ -91,7 +91,7 @@ KT.sg_table = (function(){
 
 KT.system_groups = (function(){
     var current_system_input,
-        current_max_systems = undefined,
+        current_max_systems,
         systems_deletable = false,
     lockedChanged = function(){
         var checkbox = $(this),
@@ -121,7 +121,7 @@ KT.system_groups = (function(){
         // quota_setup is used for both the 'new' and 'edit' panes.  While the logic is nearly the same
         // there are slight differences, since the 'edit' uses inline editing, but the 'new' does not.
         var unlimited = '-1',
-            initial_max = undefined;
+            initial_max;
 
         if ($('system_group_new').length > 0) {
             // user is creating a group
@@ -173,7 +173,7 @@ KT.system_groups = (function(){
         });
     },
     init = function(){
-        $('.remove_item').bind('click', prompt_to_destroy_group);
+        $('.pane_action.remove').bind('click', prompt_to_destroy_group);
     },
     prompt_to_destroy_group = function(e) {
         e.preventDefault();

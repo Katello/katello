@@ -5,6 +5,13 @@
     :plain
       KT.panel_search_autocomplete = $.parseJSON('#{escape_javascript(search_class.display_attributes.collect{|a| a.to_s + ":"}.to_json)}');
 
+= javascript do
+  - if initial_state != false
+    :plain
+      $(document).ready(function () {
+          $.bbq.pushState(#{initial_state.to_json});
+      });
+
 #container
   .right
     .helptip_area

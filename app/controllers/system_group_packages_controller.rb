@@ -52,10 +52,9 @@ class SystemGroupPackagesController < ApplicationController
       
       if packages
         job = @group.install_packages packages
-        notice _("Install of Packages '%{p}' scheduled for System Group '%{s}'.") %
-                   {'s' => @group['name'], 'p' => params[:packages]}
+        notice _("Install of Packages '%s' scheduled for System Group '%s'.") % [params[:packages], @group.name]
       else
-        notice _("One or more errors found in Package names '%{s}'.") % {:s => params[:packages]}, {:level => :error}
+        notice _("One or more errors found in Package names '%s'.") % params[:packages], {:level => :error}
         render :text => '' and return
       end
 
@@ -63,16 +62,16 @@ class SystemGroupPackagesController < ApplicationController
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       job = @group.install_package_groups groups
-      notice _("Install of Package Groups '%{g}' scheduled for System Group '%{s}'.") %
-                 {:s => @group['name'], :g => params[:groups]}
-
+      notice _("Install of Package Groups '%s' scheduled for System Group '%s'.") % [params[:groups], @group.name]
     else
       notice _("Empty request received to install Packages or Package Groups for System Group '%s'.") %
                  @group['name'], {:level => :error}
       render :text => '' and return
     end
 
-    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?, :job => job, :include_tr_shading => false}
+    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?,
+                                                                   :group_id => @group.id, :job => job,
+                                                                   :include_tr_shading => false}
   end
 
   def remove
@@ -82,8 +81,7 @@ class SystemGroupPackagesController < ApplicationController
       
       if packages
         job = @group.uninstall_packages packages
-        notice _("Uninstall of Packages '%{p}' scheduled for System Group '%{s}'.") %
-                   { :s => @group['name'], :p => params[:packages] }
+        notice _("Uninstall of Packages '%s' scheduled for System Group '%s'.") % [params[:packages], @group.name]
       else
         notice _("One or more errors found in Package names '%s'.") % params[:packages], {:level => :error}
         render :text => '' and return        
@@ -93,8 +91,7 @@ class SystemGroupPackagesController < ApplicationController
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       job = @group.uninstall_package_groups groups
-      notice _("Uninstall of Package Groups '%{p}' scheduled for System Group '%{s}'.") %
-                 {:s => @group['name'], :p => groups.join(',')}
+      notice _("Uninstall of Package Groups '%s' scheduled for System Group '%s'.") % [groups.join(','), @group.name]
 
     else
       notice _("Empty request received to uninstall Packages or Package Groups for System Group '%s'.") %
@@ -102,7 +99,9 @@ class SystemGroupPackagesController < ApplicationController
       render :text => '' and return
     end
 
-    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?, :job => job, :include_tr_shading => false}
+    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?,
+                                                                   :group_id => @group.id, :job => job,
+                                                                   :include_tr_shading => false}
   end
 
   def update
@@ -112,8 +111,7 @@ class SystemGroupPackagesController < ApplicationController
 
       if packages
         job = @group.update_packages packages
-        notice _("Update of Packages '%{p}' scheduled for System Group '%{s}'.") %
-                   {:s => @group['name'], :p => params[:packages]}
+        notice _("Update of Packages '%s' scheduled for System Group '%s'.") % [params[:packages], @group.name]
       else
         notice _("One or more errors found in Package names '%s'.") % params[:packages], {:level => :error}
         render :text => '' and return
@@ -123,8 +121,7 @@ class SystemGroupPackagesController < ApplicationController
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       job = @group.install_package_groups groups
-      notice _("Update of Package Groups '%{p}' scheduled for System Group '%{s}'.") %
-                 {:s => @group['name'], :p => groups.join(',')}
+      notice _("Update of Package Groups '%s' scheduled for System Group '%s'.") % [groups.join(','), @group.name]
 
     else
       notice _("Empty request received to update Packages or Package Groups for System Group '%s'.") %
@@ -132,18 +129,21 @@ class SystemGroupPackagesController < ApplicationController
       render :text => '' and return
     end
 
-    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?, :job => job, :include_tr_shading => false}
+    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?,
+                                                                   :group_id => @group.id, :job => job,
+                                                                   :include_tr_shading => false}
   end
 
   def status
     # retrieve the status for the actions initiated by the client
     response = []
-    jobs = @group.refreshed_jobs.where('jobs.pulp_id' => params[:id])
+    jobs = @group.refreshed_jobs.where('jobs.id' => params[:id])
     jobs.each do |job|
       status_html = render_to_string(:template => 'system_groups/packages/_status.html.haml', :layout => false,
-                                     :locals => {:id => job.pulp_id, :state => job.state, :status_message => job.status_message})
+                                     :locals => {:group_id => @group.id, :id => job.id, :state => job.state,
+                                                 :status_message => job.status_message})
 
-      response << {:id => job.pulp_id, :status_html => status_html}
+      response << {:id => job.id, :status_html => status_html}
     end
 
     render :json => response
