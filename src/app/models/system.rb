@@ -222,17 +222,11 @@ class System < ActiveRecord::Base
 
   private
     def add_pulp_consumer_group record
-      group_lock_check(record)
       record.add_consumers([self.uuid])
     end
 
     def remove_pulp_consumer_group record
-      group_lock_check(record)
       record.del_consumers([self.uuid])
-    end
-
-    def group_lock_check record
-      raise _("Group membership cannot be changed while locked.") if record.locked
     end
 
     def save_task_status pulp_task, task_type, parameters_type, parameters
