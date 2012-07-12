@@ -79,7 +79,7 @@ class katello::params {
 
   # OAUTH settings
   $oauth_key    = "katello"
-  $oauth_secret = regsubst(generate('/usr/bin/openssl', 'rand', '-base64', '24'), '^(.{24}).*', '\1')
+  $oauth_secret = katello_create_read_password(katello_config_value('oauth_token_file'))
 
   # Subsystems settings
   $candlepin_url = "https://localhost:8443/candlepin"
