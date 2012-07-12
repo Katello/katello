@@ -45,13 +45,15 @@ class katello::config {
       content => template("katello/${katello::params::config_dir}/katello.yml.erb"),
       owner   => $katello::params::user,
       group   => $katello::params::group,
-      mode    => "600";
+      mode    => "600",
+      notify  => Exec["reload-apache2"];
 
     "/etc/sysconfig/katello":
       content => template("katello/etc/sysconfig/katello.erb"),
       owner   => "root",
       group   => "root",
-      mode    => "644";
+      mode    => "644",
+      notify  => Exec["reload-apache2"];
 
     "/etc/katello/client.conf":
       content => template("katello/etc/katello/client.conf.erb"),

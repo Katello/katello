@@ -13,7 +13,7 @@ class candlepin::config {
     require => [ File["${katello::params::log_base}"] ],
   }
 
-  # we shoud notify tomcat6 but cpsetup does that for us
+  # TODO notify tomcat6 on change
   file { "/etc/candlepin/candlepin.conf":
     content => template("candlepin/etc/candlepin/candlepin.conf.erb"),
     mode    => '600',
@@ -27,6 +27,7 @@ class candlepin::config {
     before => Exec["cpsetup"];
   }
 
+  # TODO get rid of cpsetup and rewrite it in puppet now
   exec { "cpsetup":
     command => "/usr/share/candlepin/cpsetup -k ${candlepin::params::keystore_password} -s -u ${candlepin::params::db_user} -d ${candlepin::params::db_name} >> ${candlepin::params::cpsetup_log} 2>&1 && touch /var/lib/katello/cpsetup_done",
     timeout => 300, # 5 minutes timeout (cpsetup takes longer sometimes)

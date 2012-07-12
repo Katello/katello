@@ -97,6 +97,7 @@ class certs::config {
     command => "openssl pkcs12 -export -in /etc/candlepin/certs/candlepin-ca.crt -inkey /etc/candlepin/certs/candlepin-ca.key -out ${katello_keystore} -name tomcat -CAfile ${candlepin_pub_cert} -caname root -password \"file:${certs::params::keystore_password_file}\"",
     path => "/usr/bin",
     creates => $katello_keystore,
+    notify => Service["tomcat6"],
     require => [File[$certs::params::keystore_password_file], File[$katello_pki_dir], Exec["deploy-candlepin-certificate-to-cp"]]
   }
 
@@ -276,6 +277,7 @@ class certs::config {
         command => "openssl pkcs12 -in ${ssl_build_path}/$fqdn/$qpid_cert_name.crt -inkey ${ssl_build_path}/$fqdn/$qpid_cert_name.key -export -out '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -password 'file:${certs::params::ssl_pk12_password_file}'; pk12util -i '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -d '${nss_db_dir}' -w '${certs::params::ssl_pk12_password_file}' -k '${certs::params::nss_db_password_file}'",
         path    => "/usr/bin",
         require => [Exec["create-nss-db"], File[$nss_db_dir], File["${certs::params::ssl_pk12_password_file}"]],
+        notify => Service["qpidd"],
         before => Class["qpid::service"],
         refreshonly => true,
       }
@@ -297,11 +299,13 @@ class certs::config {
         before => Class["pulp::service"]
       }
 
+      # prepare certificate for pulp server
       exec { "strip-qpid-client-certificate":
         command => "cp ${ssl_build_path}/$fqdn/qpid-client.key /etc/pki/pulp/qpid_client_striped.crt; openssl x509 -in ${ssl_build_path}/$fqdn/qpid-client.crt >> /etc/pki/pulp/qpid_client_striped.crt",
         path => "/bin:/usr/bin",
         creates => "/etc/pki/pulp/qpid_client_striped.crt",
         require => Exec["deploy-ssl-qpid-client-certificate"],
+        notify  => Exec["reload-apache2"],
         before => Class["pulp::service"]
       }
 
