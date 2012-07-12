@@ -104,6 +104,12 @@ auth_method = database
 # LDAP server hostname
 ldap_server = localhost
 
+# LDAP server hostname
+ldap_port = 389
+
+# LDAP server type (:posix, :active_directory, :free_ipa)
+ldap_server_type = :posix
+
 # encryption method used in communication with LDAP server (<empty>, start_tls)
 ldap_encryption = 
 
@@ -115,3 +121,13 @@ ldap_groups_basedn = ou=Groups,dc=company,dc=com
 
 # Use LDAP for roles membership definition (true, false)
 ldap_roles = false
+
+# allow anonymous queries (true, false) for AD or FreeIPA
+ldap_anon_queries = false
+
+# service user & pass for non-anon queries (IPA, AD)
+ldap_service_user =
+ldap_service_pass =
+
+# domain for AD LDAP queries
+ldap_ad_domain =

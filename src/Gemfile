@@ -14,6 +14,7 @@ gem 'pg'
 gem 'rails_warden'
 gem 'net-ldap'
 gem 'oauth'
+gem 'ldap_fluff'
 
 gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
