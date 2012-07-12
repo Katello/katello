@@ -138,5 +138,19 @@ module Katello
       /[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/
     end
 
+    def self.setup_shared_unique_filter(repoids, search_mode, search_results)
+      repo_filter_ids = repoids.collect do |repo|
+            {:term => {:repoids => [repo]}}
+      end
+      case search_mode
+        when :shared
+          search_results.filter :and, repo_filter_ids
+        when :unique
+          search_results.filter :or, repo_filter_ids
+          search_results.filter :not, :filter => {:and => repo_filter_ids}
+        else
+          search_results.filter :or, repo_filter_ids
+      end
+    end
   end
 end

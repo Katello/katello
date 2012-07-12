@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require "util/search"
+require 'util/package_util'
 
 class Glue::Pulp::Package < Glue::Pulp::SimplePackage
   attr_accessor :id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description, :size, :buildhost, :repoids
@@ -114,12 +115,14 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
 
 
 
-  def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"]
+  def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"], search_mode = :all
     return [] if !Tire.index(self.index).exists?
 
     all_rows = query.blank? #if blank, get all rows
 
-    search = Tire.search self.index do
+    search = Tire::Search::Search.new(self.index)
+
+    search.instance_eval do
       query do
         if all_rows
           all
@@ -132,13 +135,14 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
        size page_size
        from start
       end
-      if repoids
-        filter :terms, :repoids => repoids
-      end
-
       sort { by sort[0], sort[1] } unless !all_rows
     end
-    return search.results
+
+    if repoids
+      Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
+    end
+
+    return search.perform.results
   rescue
     return []
   end
@@ -153,8 +157,4 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
       import pkgs
     end if !pkgs.empty?
   end
-
-
-
-
 end
