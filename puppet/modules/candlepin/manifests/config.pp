@@ -28,7 +28,7 @@ class candlepin::config {
   }
 
   exec { "cpsetup":
-    command => "/usr/share/candlepin/cpsetup -k ${candlepin::params::tomcat_keystore_password} -s -u ${candlepin::params::db_user} -d ${candlepin::params::db_name} >> ${candlepin::params::cpsetup_log} 2>&1 && touch /var/lib/katello/cpsetup_done",
+    command => "/usr/share/candlepin/cpsetup -k ${candlepin::params::keystore_password} -s -u ${candlepin::params::db_user} -d ${candlepin::params::db_name} >> ${candlepin::params::cpsetup_log} 2>&1 && touch /var/lib/katello/cpsetup_done",
     timeout => 300, # 5 minutes timeout (cpsetup takes longer sometimes)
     require => [
       File["${katello::params::log_base}"],
