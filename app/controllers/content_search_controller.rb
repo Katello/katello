@@ -9,7 +9,7 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-
+require 'util/package_util'
 class ContentSearchController < ApplicationController
   before_filter :find_repo, :only => [:repo_packages, :repo_errata]
   before_filter :find_repos, :only => [:repo_compare_packages, :repo_compare_errata]
@@ -166,9 +166,9 @@ class ContentSearchController < ApplicationController
       repo_map[r.pulp_id] = r
     end
     if is_package
-      packages = Glue::Pulp::Package.search('', params[:offset], current_user.page_size, repo_map.keys)
+      packages = Glue::Pulp::Package.search('', params[:offset], current_user.page_size, repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode())
     else
-      packages = Glue::Pulp::Errata.search('', params[:offset], current_user.page_size, :repoids =>  repo_map.keys)
+      packages = Glue::Pulp::Errata.search('', params[:offset], current_user.page_size, :repoids =>  repo_map.keys, :search_mode => process_search_mode)
     end
     rows = packages.collect do |pack|
       cols = {}
@@ -400,7 +400,8 @@ class ContentSearchController < ApplicationController
   # default_field   default field to search if none specifiec
   def  multi_repo_content_search( content_class, search_obj, repos, offset, default_field, search_mode = :all, in_repo = nil)
     user = current_user
-    search = Tire.search content_class.index do
+    search = Tire::Search::Search.new(content_class.index)
+    search.instance_eval do
       query do
         if search_obj.is_a?(Array) || search_obj.nil?
           all
@@ -412,27 +413,16 @@ class ContentSearchController < ApplicationController
       sort { by "#{default_field}_sort", 'asc'}
       size user.page_size
       from offset
-
       if  search_obj.is_a? Array
         filter :terms, :id => search_obj
-      end
-      repo_filter_ids = repos.collect do |repo|
-            {:term => {:repoids => [repo.pulp_id]}}
-      end
-
-      case search_mode
-        when :shared
-          filter :and, repo_filter_ids
-        when :unique
-          filter :or, repo_filter_ids
-          filter :not, :filter => {:and => repo_filter_ids}
-        else
-          filter :or, repo_filter_ids
       end
       if in_repo
         filter :terms, :repoids => [in_repo.pulp_id]
       end
     end
+    repoids = repos.collect{|r| r.pulp_id}
+    Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
+    search.perform
   end
 
 
