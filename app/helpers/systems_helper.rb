@@ -99,4 +99,8 @@ module SystemsHelper
     return levels.to_json
   end
 
+  def system_environment_name system
+    system.environment.name
+  end
+
 end
