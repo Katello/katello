@@ -27,7 +27,7 @@ class ActivationKeysController < ApplicationController
   respond_to :html, :js
 
   def section_id
-    'systems'
+    'contents'
   end
 
   def rules

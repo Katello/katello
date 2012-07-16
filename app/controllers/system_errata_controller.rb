@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'util/errata'
+
 class SystemErrataController < ApplicationController
 
   before_filter :find_system, :only =>[:install, :index, :items, :status]
@@ -65,15 +67,15 @@ class SystemErrataController < ApplicationController
     task = @system.install_errata(errata_ids)
     
     notice _("Errata scheduled for install.")
-    render :text => task.uuid
+    render :text => task.id
   rescue Exception => error
     errors error
     render :text => error, :status => :bad_request
   end
 
   def status
-    if params[:uuid]
-      statuses = @system.tasks.where(:uuid => params[:uuid], :task_type => [:errata_install])
+    if params[:id]
+      statuses = @system.tasks.where('task_statuses.id' => params[:id], :task_type => [:errata_install])
     else
       statuses = @system.tasks.where(:task_type => [:errata_install], :state => [:waiting, :running])
     end
@@ -84,7 +86,7 @@ class SystemErrataController < ApplicationController
   private
 
   include SortColumnList
-  include ErrataModule
+  include Katello::Errata
 
   def get_errata start, finish, filter_type="All", errata_state="outstanding"
     types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
