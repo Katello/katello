@@ -78,14 +78,6 @@ class certs::config {
   $katello_pki_dir = "/etc/pki/katello"
   $katello_keystore = "$katello_pki_dir/keystore"
 
-
-  file { "${certs::params::keystore_password_file}":
-    content => "${certs::params::keystore_password}",
-    owner => "root",
-    group => "tomcat",
-    mode => 640,
-  }
-
   file { $katello_pki_dir:
     owner => "root",
     group => "katello",
@@ -98,7 +90,7 @@ class certs::config {
     path => "/usr/bin",
     creates => $katello_keystore,
     notify => Service["tomcat6"],
-    require => [File[$certs::params::keystore_password_file], File[$katello_pki_dir], Exec["deploy-candlepin-certificate-to-cp"]]
+    require => [File[$katello_pki_dir], Exec["deploy-candlepin-certificate-to-cp"]]
   }
 
   file { $katello_keystore:

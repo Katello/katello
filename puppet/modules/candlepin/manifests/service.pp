@@ -4,11 +4,14 @@ class candlepin::service {
     enable => true,
     hasstatus => true,
     hasrestart => true,
-    require => Class["candlepin::config"]
+    require => [ Class["candlepin::config"], Class["postgres::service"] ]
   }
 
-  exec {"wait for candlepin":
+  exec { "cpinit":
+    # tomcat startup is slow - try multiple times
+    command => "/usr/bin/wget --timeout=30 --tries=5 --retry-connrefused --qO- http://localhost:8080/candlepin/admin/init && touch /var/lib/katello/cpinit_done",
     require => Service["tomcat6"],
-    command => "/usr/bin/wget --spider --tries 10 --retry-connrefused --no-check-certificate https://localhost:8443/candlepin/";
+    creates => "/var/lib/katello/cpinit_done",
+    before  => Class["apache2::service"]
   }
 }
