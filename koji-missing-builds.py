@@ -48,7 +48,7 @@ if opts.brew:
     mysession = koji.ClientSession("http://brewhub.devel.redhat.com/brewhub")
     distsuffix = 'sat'
 else:
-    mysession = koji.ClientSession("http://dhcp-37-226.lab.eng.brq.redhat.com/kojihub")
+    mysession = koji.ClientSession("http://koji-katello.lab.eng.brq.redhat.com/kojihub")
 
 rpmlist = mysession.getLatestRPMS(tag)
 nvrs = []
