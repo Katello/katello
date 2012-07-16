@@ -19,7 +19,8 @@ class pulp::params {
 
   #Initial pulp administrative user/pass is admin/random
   $pulp_user_name = $katello::params::user_name
-  $pulp_user_pass = regsubst(generate('/usr/bin/openssl', 'rand', '-base64', '24'), '^(.{24}).*', '\1')
+  $pulp_user_password_file = katello_config_value('pulp_user_password_file')
+  $pulp_user_pass = katello_create_read_password($pulp_user_password_file)
 
   #Pulp HTTP Proxy configuration
   $pulp_proxy_url = $katello::params::proxy_url

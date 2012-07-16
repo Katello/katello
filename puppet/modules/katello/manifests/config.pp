@@ -91,6 +91,7 @@ class katello::config {
     user        => $katello::params::user,
     environment => "RAILS_ENV=${katello::params::environment}",
     command     => "/usr/bin/env > ${katello::params::db_env_log}",
+    creates => "${katello::params::db_env_log}",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
                 'katello' => [
