@@ -54,6 +54,10 @@
         .grid_2.ra.fieldset
           = label :location, :location, _("Location")
         .grid_5.la#system_location{'name' => 'system[location]', :class=>("editable edit_textfield" if editable), 'data-url'=>system_path(system.id)} #{system[:location]}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :arch, :arch, _("Environment")
+        .grid_5.la #{system_environment_name system}
       
     .clear
     .grid_8
