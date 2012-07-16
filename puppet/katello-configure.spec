@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.29
+Version:        0.2.30
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -88,6 +88,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 16 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.30-1
+- ldap provided by ldap_fluff. Adds support for FreeIPA & Active Directory
+- fixes an incompatibility with newer puppet versions
+
 * Mon Jul 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.29-1
 - 834697 - explicitly disable qpid authentication
 
