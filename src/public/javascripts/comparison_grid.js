@@ -508,18 +508,18 @@ KT.comparison_grid.controls = function(grid) {
                 },
                 set_arrow_states = function() {
                     if( current_position() === 0 ){
-                        right_arrow.find('span').addClass('disabled');
-                        left_arrow.find('span').removeClass('disabled');
-                    } else if( stop_position() === current_position() ) {
                         left_arrow.find('span').addClass('disabled');
                         right_arrow.find('span').removeClass('disabled');
+                    } else if( stop_position() === current_position() ) {
+                        right_arrow.find('span').addClass('disabled');
+                        left_arrow.find('span').removeClass('disabled');
                     } else {
                         right_arrow.find('span').removeClass('disabled');
                         left_arrow.find('span').removeClass('disabled');
                     }
                 },
                 slide = function(direction) {
-                    var position = (direction === 'left') ? '-=100' : '+=100';
+                    var position = (direction === 'left') ? '+=100' : '-=100';
                     
                     $('#grid_content').animate({ 'left' : position }, 'fast');
                     $('#column_headers').animate({ 'left' : position }, 'fast',
@@ -537,11 +537,11 @@ KT.comparison_grid.controls = function(grid) {
                     if( !slide_arrow.find('span').hasClass('disabled') ){
                         slide_arrow.find('span').addClass('disabled');
 
-                        if( direction === "left" ){
+                        if( direction === "right" ){
                             if( stop_position() < current_position() && current_position() <= 0 ){
                                 slide(direction);
                             }
-                        } else if( direction === "right" ){
+                        } else if( direction === "left" ){
                             if( stop_position() <= current_position() && current_position() < 0 ){
                                 slide(direction);
                             }
