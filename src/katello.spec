@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.44
+Version:        0.2.45
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -391,6 +391,65 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jul 16 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.45-1
+- system_details - added display of environment to left list and details page
+- productid - fixed html for System / Subscriptions
+- ldap provided by ldap_fluff. Adds support for FreeIPA & Active Directory
+- Adds fencing around jshint for development environment only.
+- 811564_subs_match - change default user preference to 'false' for 'match
+  subscriptions to system'
+- 839005 - removed 'force' from upload manifest in UI
+- bonus_rename - changed Bonus From to Virt Guest From in System Details page
+- system groups - fix css for handling separator between copy and remove links
+- system groups - close 'copy' form when panel is closed
+- actkey_section - activation_keys_controller returning incorrect section_id
+- Merge remote-tracking branch 'upstream/master' into fork-group_remove_lock
+- Adds removal of two development tasks from spec file.
+- system groups - removing 'locked' feature from the javascript
+- system groups - remove initialization of variable to undefined
+- system groups - updating packages table header based on UXD input
+- system groups - include system count on panel for create and copy
+- system group - update pkgs controller notices to use %%s vs named params
+- subs-tupane - two pane subscriptions view
+- system groups - update notices to use %%s vs named params
+- 837136 - fixing promotions packages sometimes not loading
+- Fix for broken GPG Keys unit test.
+- system groups - removing the 'locked' feature from system groups UI/API/CLI
+- Updated hash for login fix.
+- Fix for spinner issues on login page.
+- system groups - copy - add spec tests
+- revert - accidental commit to development.rb
+- system groups - ui - add the ability to create a group based on copy of an
+  existing group
+- Katello-debug should pull in httpd logs and conf files
+- JSHint - Adds support for running JSHint in development via a rake task.
+- Updated hash for converge-ui to include pull request.
+- panelpage - rename BBQ from 'action' to 'panelpage'
+- panelpage - clean up var declaration
+- panelpage - maintain which tab of panel was last visible
+- Removed duplicate .versionining declaration.
+- Fixed menu for organizations in administer, tweak on org switcher.
+- Updated hash for lastest converge-ui.
+- Org switcher interstitial post-login.
+- errata module - moving it from controllers to lib
+- systems - update packages pane to support accessing task details on
+  completion
+- systems - fix specs due to uuid to id change for actions
+- system - update the packages UI to use task id vs uuid
+- system groups - update packages pane to support accessing job details
+- system groups - update errata pane to support accessing job details
+- system groups - api/cli - add ability to list errata by group
+- Additional params for the condition to check if manage orgs ability.
+- Added perm for org editablity.
+- Org switcher interstitial working minus scrolling in the switcher itself. :(
+- Changes to login to accomodate org switcher interstitial.
+- Redirect working.
+- Working on interstitial for Orgs!
+- Removing orgs from top level menu.
+- Org switcher movement and Administer button movement.
+- Check for current user.
+- Org Switcher initial changes.
+
 * Mon Jul 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.44-1
 - 829437 - handle uploading GPG key when submitting with enter
 - Removed exclamation mark from welcome message, as it is followed by a comma
