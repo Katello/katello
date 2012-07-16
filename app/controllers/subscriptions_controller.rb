@@ -192,7 +192,7 @@ class SubscriptionsController < ApplicationController
           display_message = ""
         end
 
-        notice @provider.import_error_message(display_message, force_update), {:level => :error, :details => pp_exception(error)}
+        notice @provider.import_error_message(display_message), {:level => :error, :details => pp_exception(error)}
 
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error

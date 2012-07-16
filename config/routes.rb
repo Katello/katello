@@ -12,7 +12,6 @@ Src::Application.routes.draw do
       post :add_systems
       post :remove_systems
       delete :destroy_systems
-      post :lock
     end
     resources :events, :controller => "system_group_events", :only => [:index, :show] do
       collection do
@@ -514,8 +513,6 @@ Src::Application.routes.draw do
           get :systems
           get :history
           match "/history/:job_id" => "system_groups#history_show", :via => :get
-          post :lock
-          post :unlock
           post :add_systems
           post :remove_systems
           delete :destroy_systems
