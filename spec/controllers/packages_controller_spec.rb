@@ -23,7 +23,7 @@ describe PackagesController do
     before (:each) do
       set_default_locale
       login_user
-
+      new_test_org
     end
 
     describe "get auto_complete_package" do
