@@ -14,7 +14,7 @@ class Api::SystemGroupsController < Api::ApiController
 
   before_filter :find_group, :only => [:copy, :show, :update, :destroy, :destroy_systems, :lock, :unlock,
                                        :add_systems, :remove_systems, :systems, :history, :history_show]
-  before_filter :find_organization, :only => [:index, :create]
+  before_filter :find_organization, :only => [:index, :create, :copy]
   before_filter :authorize
 
   def rules
@@ -127,6 +127,10 @@ class Api::SystemGroupsController < Api::ApiController
   end
 
   def copy
+    if @organization.id != @group.organization.id
+      raise HttpErrors::BadRequest, 
+        _("Can't copy System Groups to a different org: '#{@organization.id}' != '#{@group.organization.id}'")
+    end
     grp_param = params[:system_group]
     new_group = SystemGroup.new
     new_group.name = grp_param[:new_name]
