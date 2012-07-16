@@ -140,7 +140,10 @@ $(document).ready(function () {
             dataType: 'html',
             success: function (data) {
                 var callbacks = KT.panel.get_expand_cb(),
-                    cb = function(){};
+                    cb = function(){},
+                    activeBlock,
+                    ajax_url,
+                    ajax_panelpage;
 
                 thisPanel.find(".panel-content").html(data);
                 KT.common.jscroll_init($('.scroll-pane'));
@@ -148,9 +151,12 @@ $(document).ready(function () {
                 KT.panel.panelResize($('#panel_main'), false);
 
                 // Update the bbq
-                var activeBlock = $('#' + KT.common.escapeId(activeBlockId)),
-                    ajax_url = activeBlock.attr("data-ajax_url"),
-                    ajax_panelpage = activeBlock.attr("data-ajax_panelpage");
+                if (!activeBlockId) {
+                    activeBlockId = thisPanel.attr("id");
+                }
+                activeBlock = $('#' + KT.common.escapeId(activeBlockId));
+                ajax_url = activeBlock.attr("data-ajax_url");
+                ajax_panelpage = activeBlock.attr("data-ajax_panelpage");
 
                 if (ajax_panelpage) {
                     // Replace old ajax_panelpage with new
