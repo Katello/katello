@@ -128,7 +128,7 @@ class Copy(SystemGroupAction):
         test_record(new_system_group,
             _("Successfully copied system group [ %s ] to [ %s ]") % 
                        (source_system_group['name'], new_system_group['name']),
-            _("Could not create system group [ %s ]") % name
+            _("Could not create system group [ %s ]") % new_name
         )
 
 class Info(SystemGroupAction):
