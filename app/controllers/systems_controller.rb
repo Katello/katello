@@ -143,14 +143,14 @@ class SystemsController < ApplicationController
   end
 
   def index
-    @system_groups = SystemGroup.where(:organization_id => current_organization).where(:locked=>false).order(:name)
+    @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name)
   end
 
   def environments
     accesible_envs = KTEnvironment.systems_readable(current_organization)
 
     begin
-      @system_groups = SystemGroup.where(:organization_id => current_organization).where(:locked=>false).order(:name)
+      @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name)
 
       @systems = []
       setup_environment_selector(current_organization, accesible_envs)
@@ -361,23 +361,18 @@ class SystemsController < ApplicationController
       @system_groups = SystemGroup.where(:id=>params[:group_ids])
 
       # perform some pre-validation of the request
-      # e.g. are any of the groups not editable, locked or will their membership be exceeded by the request?
+      # e.g. are any of the groups not editable or will their membership be exceeded by the request?
       invalid_perms = []
-      group_locked = []
       max_systems_exceeded = []
       @system_groups.each do |system_group|
         if !system_group.editable?
           invalid_perms.push(system_group.name)
-        elsif system_group.locked
-          group_locked.push(system_group.name)
         elsif (system_group.max_systems != SystemGroup::UNLIMITED_SYSTEMS) and ((system_group.systems.length + @systems.length) > system_group.max_systems)
           max_systems_exceeded.push(system_group.name)
         end
       end
       if !invalid_perms.empty?
         raise _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
-      elsif !group_locked.empty?
-        raise _("System Group membership cannot be changed for locked group(s): %s") % group_locked.join(', ')
       elsif !max_systems_exceeded.empty?
         raise _("System Group maximum number of systems exceeded for group(s): %s") % max_systems_exceeded.join(', ')
       end
@@ -407,18 +402,13 @@ class SystemsController < ApplicationController
 
       # does the user have permission to modify the requested system groups?
       invalid_perms = []
-      group_locked = []
       @system_groups.each do |system_group|
         if !system_group.editable?
           invalid_perms.push(system_group.name)
-        elsif system_group.locked
-          group_locked.push(system_group.name)
         end
       end
       if !invalid_perms.empty?
         raise _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
-      elsif !group_locked.empty?
-        raise _("System Group membership cannot be changed for locked group(s): %s") % group_locked.join(', ')
       end
 
       @systems.each do |system|
@@ -565,7 +555,7 @@ class SystemsController < ApplicationController
 
   def system_groups
     # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
-    @system_groups = SystemGroup.where(:organization_id=>current_organization).where(:locked=>false).
+    @system_groups = SystemGroup.where(:organization_id=>current_organization).
         where('max_systems < ?', @system.system_groups.length).order(:name) - @system.system_groups
     render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>@system.editable?}
   end
