@@ -30,6 +30,19 @@ class Product < ActiveRecord::Base
   include Glue if AppConfig.use_cp
   include Authorization
   include AsyncOrchestration
+  include IndexedModel
+
+  index_options :extended_json=>:extended_index_attrs,
+                :json=>{:only=> [:name, :id]},
+                :display_attrs=>[:name, :id]
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
+
+  def extended_index_attrs
+    {:name_sort => name.downcase}
+  end
+
 
   validates_with ProductNameUniquenessValidator
 

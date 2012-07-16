@@ -156,7 +156,6 @@ class Info(SystemGroupAction):
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('description', multiline=True)
-        self.printer.add_column('locked')
         self.printer.add_column('total_systems')
 
         self.printer.print_item(system_group)
@@ -342,62 +341,6 @@ class Systems(SystemGroupAction):
         self.printer.print_items(systems)
 
         return os.EX_OK
-
-
-class Lock(SystemGroupAction):
-
-    description = _('lock a system group')
-
-    def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
-        parser.add_option('--name', dest='name',
-                       help=_("system group name (required)"))
-
-    def check_options(self, validator):
-        validator.require(('name', 'org'))
-
-    def run(self):
-        org_name = self.get_option('org')
-        system_group_name = self.get_option('name')
-
-        # get system details
-        system_group = get_system_group(org_name, system_group_name)
-        system_group = self.api.lock(org_name, system_group["id"])
-
-        if system_group != None:
-            print _("Successfully locked system group [ %s ]") % system_group['name']
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
-
-
-class Unlock(SystemGroupAction):
-
-    description = _('unlock a system group')
-
-    def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
-        parser.add_option('--name', dest='name',
-                       help=_("system group name (required)"))
-
-    def check_options(self, validator):
-        validator.require(('name', 'org'))
-
-    def run(self):
-        org_name = self.get_option('org')
-        system_group_name = self.get_option('name')
-
-        # get system details
-        system_group = get_system_group(org_name, system_group_name)
-        system_group = self.api.unlock(org_name, system_group["id"])
-
-        if system_group != None:
-            print _("Successfully unlocked system group [ %s ]") % system_group['name']
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
 
 
 class AddSystems(SystemGroupAction):

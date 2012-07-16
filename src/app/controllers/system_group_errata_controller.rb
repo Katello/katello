@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'util/errata'
+
 class SystemGroupErrataController < ApplicationController
 
   helper SystemErrataHelper
@@ -60,16 +62,16 @@ class SystemGroupErrataController < ApplicationController
     job = @group.install_errata(errata_ids)
     
     notice _("Errata scheduled for install.")
-    render :text => job.pulp_id
+    render :text => job.id
   rescue Exception => error
     errors error
     render :text => error, :status => :bad_request
   end
 
   def status
-    if params[:uuid]
+    if params[:id]
       jobs = @group.refreshed_jobs.joins(:task_statuses).where(
-          'jobs.pulp_id' => params[:uuid], 'task_statuses.task_type' => [:errata_install])
+          'jobs.id' => params[:id], 'task_statuses.task_type' => [:errata_install])
     else
       jobs = @group.refreshed_jobs.joins(:task_statuses).where(
           'task_statuses.task_type' => [:errata_install], 'task_statuses.state' => [:waiting, :running])
@@ -80,7 +82,7 @@ class SystemGroupErrataController < ApplicationController
   private
 
   include SortColumnList
-  include ErrataModule
+  include Katello::Errata
 
   def get_errata start, finish, filter_type="All", errata_state="outstanding"
     types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
@@ -88,7 +90,6 @@ class SystemGroupErrataController < ApplicationController
     filter_type = filter_type || "All"    
 
     errata_hash = {} # {id => erratum}
-    errata_list = [] # [erratum]
     errata_system_hash = {} # {id => [system_name]}
 
     # build a hash of all errata across all systems in the group

@@ -49,14 +49,6 @@ class SystemGroupAPI(KatelloAPI):
         path = "/api/organizations/%s/system_groups/%s/systems" % (org_id, system_group_id)
         return self.server.GET(path, query)[1]
 
-    def lock(self, org_id, system_group_id, query={}):
-        path = "/api/organizations/%s/system_groups/%s/lock" % (org_id, system_group_id)
-        return self.server.POST(path, query)[1]
-
-    def unlock(self, org_id, system_group_id, query={}):
-        path = "/api/organizations/%s/system_groups/%s/unlock" % (org_id, system_group_id)
-        return self.server.POST(path, query)[1]
-
     def create(self, org_id, name, description, max_systems):
         data = {
             "system_group" : {
@@ -141,6 +133,15 @@ class SystemGroupAPI(KatelloAPI):
     def remove_package_groups(self, org_id, system_group_id, packages):
         path = "/api/organizations/%s/system_groups/%s/packages" % (org_id, system_group_id)
         return self.server.DELETE(path, {"groups": packages})[1]
+
+    def errata(self, org_id, system_group_id, type=None):
+        path = "/api/organizations/%s/system_groups/%s/errata" % (org_id, system_group_id)
+
+        params = {}
+        if type is not None:
+            params['type'] = type
+
+        return self.server.GET(path, params)[1]
 
     def install_errata(self, org_id, system_group_id, errata):
         path = "/api/organizations/%s/system_groups/%s/errata" % (org_id, system_group_id)

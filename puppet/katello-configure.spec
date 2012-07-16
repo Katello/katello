@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.28
+Version:        0.2.30
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -31,7 +31,11 @@ katello-upgrade which handles upgrades between versions.
 
 %build
 #check syntax for all puppet scripts
+%if 0%{?rhel} || 0%{?fedora} < 17
 find -name '*.pp' | xargs -n 1 -t puppet --parseonly
+%else
+find -name '*.pp' | xargs -n 1 -t puppet parser validate
+%endif
 
 #check for puppet erb syntax errors
 find modules/ -name \*erb | xargs aux/check_erb
@@ -84,6 +88,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 16 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.30-1
+- ldap provided by ldap_fluff. Adds support for FreeIPA & Active Directory
+- fixes an incompatibility with newer puppet versions
+
+* Mon Jul 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.29-1
+- 834697 - explicitly disable qpid authentication
+
 * Wed Jun 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.28-1
 - 835152 - logs in advanced during installation fix
 - fix indention
