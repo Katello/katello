@@ -40,9 +40,11 @@ class pulp::config {
       ],
   }
 
-  exec { "set candlepin crl file":
-    command =>  "/usr/bin/openssl x509 -in '$pulp::params::ssl_certificate_file' -hash -noout | /usr/bin/xargs -I{} /bin/ln -sf '$candlepin::params::crl_file' '$pulp::params::crl_location/{}.r0'",
-    require => Class["candlepin::config"],
+  exec { "setup-crl-symlink":
+    command     => "/usr/bin/openssl x509 -in '$pulp::params::ssl_certificate_file' -hash -noout | /usr/bin/xargs -I{} /bin/ln -sf '$candlepin::params::crl_file' '$pulp::params::crl_location/{}.r0'",
+    subscribe   => File["/etc/candlepin/certs/candlepin-ca.crt"],
+    refreshonly => true,
+    require     => Class["candlepin::config"],
   }
 
 }

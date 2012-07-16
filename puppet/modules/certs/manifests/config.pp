@@ -7,7 +7,6 @@ class certs::config {
   $ssl_build_path = '/root/ssl-build'
   $ssl_tool_common = "--set-country '${certs::params::ssl_ca_country}' --set-state '${certs::params::ssl_ca_state}' --set-city '${certs::params::ssl_ca_city}' --set-org-unit '${certs::params::ssl_ca_org_unit}' --set-email '${certs::params::ssl_ca_email}'"
 
-  
   $katello_pub_cert_name = "KATELLO-TRUSTED-SSL-CERT"
   $katello_private_key_name = "KATELLO-PRIVATE-SSL-KEY"
   $katello_pub_cert = "/usr/share/katello/$katello_pub_cert_name"
@@ -50,29 +49,6 @@ class certs::config {
     owner  => "apache",
     group  => "apache",
     mode   => 755,
-  }
-
-  if (1==0) { #Katello CA is currently not used at all
-      exec { "generate-ssl-ca-certificate":
-        command => "katello-ssl-tool --gen-ca -p \"$(cat ${certs::params::ssl_ca_password_file})\" --set-country '${certs::params::ssl_ca_country}' --set-state '${certs::params::ssl_ca_state}' --set-city '${certs::params::ssl_ca_city}' --set-org '${certs::params::ssl_ca_org}' --set-org-unit '${certs::params::ssl_ca_org_unit}' --set-common-name '${certs::params::ssl_ca_cn}' --set-email '${certs::params::ssl_ca_email}' --ca-key '${katello_private_key_name}' --ca-cert '${katello_pub_cert_name}' --ca-cert-rpm katello-trusted-ssl-cert",
-        path => "/usr/bin:/bin",
-        creates => "$katello_private_key",
-        require => File["${certs::params::ssl_ca_password_file}"]
-      }
-
-      exec { "deploy-ssl-ca-certificate":
-        command => "rpm -qp /root/ssl-build/$(grep noarch.rpm /root/ssl-build/latest.txt) | xargs rpm -q; if [ $? -ne 0 ]; then rpm -Uvh --force /root/ssl-build/$(grep noarch.rpm /root/ssl-build/latest.txt); fi",
-        path => "/bin:/usr/bin",
-        #creates => $$katello_pub_cert,
-        require => Exec["generate-ssl-ca-certificate"],
-        notify => File["${katello_www_pub_dir}/${katello_pub_cert_name}"]
-      }
-
-      file { "${katello_www_pub_dir}/${katello_pub_cert_name}":
-        source => $katello_pub_cert,
-        #replace => true,
-        require => Exec["deploy-ssl-ca-certificate"]
-      }
   }
 
   $katello_pki_dir = "/etc/pki/katello"
@@ -142,7 +118,7 @@ class certs::config {
     cwd       => "${katello_www_pub_dir}",
     command   => "gen-rpm.sh --name '${candlepin_consumer_name}' --version 1.0 --release 1 --packager None --vendor None --group 'Applications/System' --summary '${candlepin_consumer_summary}' --description '${candlepin_consumer_description}' --post ${ssl_build_path}/rhsm-katello-reconfigure /etc/rhsm/ca/candlepin-local.pem:666=${ssl_build_path}/$candlepin_cert_name.crt && /sbin/restorecon ./*rpm",
     path      => "/usr/share/katello/certs:/usr/bin:/bin",
-    creates   => "${katello_www_pub_dir}/${candlepin_cert_name}-1.0-1.noarch.rpm",
+    creates   => "${katello_www_pub_dir}/${candlepin_consumer_name}-1.0-1.noarch.rpm",
     require   => [Exec["generate-candlepin-certificate"], File["${ssl_build_path}/rhsm-katello-reconfigure"]]
   }
 
@@ -253,23 +229,40 @@ class certs::config {
         before => Class["qpid::service"]
       }
 
-
-      # TODO - we should split this up into atomic actions and execute them only and only if input files change
-      # currently we regenerate the NSS db each run
       exec { "create-nss-db":
-        command => "/bin/rm -f ${nss_db_dir}/*; certutil -N -d '${nss_db_dir}' -f '${certs::params::nss_db_password_file}'; certutil -A -d '${nss_db_dir}' -n 'ca' -t 'TCu,Cu,Tuw' -a -i '${candlepin_pub_cert}'; certutil -A -d '${nss_db_dir}' -n 'broker' -t ',,' -a -i '${ssl_build_path}/$fqdn/$qpid_cert_name.crt'",
-        #; certutil -A -d '${nss_db_dir}' -n 'tomcat' -t ',,' -a -i '/etc/candlepin/certs/candlepin-ca.crt'",
+        command => "certutil -N -d '${nss_db_dir}' -f '${certs::params::nss_db_password_file}'",
         path    => "/usr/bin",
-        require => [Exec["deploy-ssl-qpid-broker-certificate"], Exec["deploy-candlepin-certificate-to-cp"], File["${certs::params::nss_db_password_file}"], File[$nss_db_dir], File["${certs::params::ssl_pk12_password_file}"]],
+        require => [File["${certs::params::nss_db_password_file}"], File[$nss_db_dir]],
+        before  => Class["qpid::service"],
+        creates => ["$nss_db_dir/cert8.db", "$nss_db_dir/key3.db", "$nss_db_dir/secmod.db"],
+        notify => [
+          Exec["add-candlepin-cert-to-nss-db"],
+          Exec["add-broker-cert-to-nss-db"],
+          Exec["add-private-key-to-nss-db"],
+          Service["qpidd"],
+        ];
+      }
+
+      exec { "add-candlepin-cert-to-nss-db":
+        command => "certutil -A -d '${nss_db_dir}' -n 'ca' -t 'TCu,Cu,Tuw' -a -i '${candlepin_pub_cert}'",
+        path    => "/usr/bin",
+        require => [Exec["create-nss-db"], Exec["deploy-candlepin-certificate-to-cp"]],
         before => Class["qpid::service"],
-        notify => Exec["add-private-key-to-nss-db"]
+        refreshonly => true,
+      }
+
+      exec { "add-broker-cert-to-nss-db":
+        command => "certutil -A -d '${nss_db_dir}' -n 'broker' -t ',,' -a -i '${ssl_build_path}/$fqdn/$qpid_cert_name.crt'",
+        path    => "/usr/bin",
+        require => [Exec["create-nss-db"], Exec["deploy-candlepin-certificate-to-cp"]],
+        before => Class["qpid::service"],
+        refreshonly => true,
       }
 
       exec { "add-private-key-to-nss-db":
         command => "openssl pkcs12 -in ${ssl_build_path}/$fqdn/$qpid_cert_name.crt -inkey ${ssl_build_path}/$fqdn/$qpid_cert_name.key -export -out '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -password 'file:${certs::params::ssl_pk12_password_file}'; pk12util -i '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -d '${nss_db_dir}' -w '${certs::params::ssl_pk12_password_file}' -k '${certs::params::nss_db_password_file}'",
         path    => "/usr/bin",
-        require => [Exec["create-nss-db"], File[$nss_db_dir], File["${certs::params::ssl_pk12_password_file}"]],
-        notify => Service["qpidd"],
+        require => [Exec["create-nss-db"], File["${certs::params::ssl_pk12_password_file}"]],
         before => Class["qpid::service"],
         refreshonly => true,
       }
