@@ -202,7 +202,7 @@ module Glue::Provider
         display_message = ApplicationController.parse_display_message(display_message)
 
         if options[:notify]
-          notice import_error_message(display_message, options[:force]),  :level => :error, :details => error.backtrace.join("\n"),
+          notice import_error_message(display_message),  :level => :error, :details => error.backtrace.join("\n"),
                  :synchronous_request => false, :request_type => 'providers__update_redhat_provider'
         end
 
@@ -253,12 +253,10 @@ module Glue::Provider
       pre_queue.create(:name => "delete products for provider: #{self.name}", :priority => 1, :action => [self, :del_products])
     end
 
-    def import_error_message display_message, force_update
+    def import_error_message display_message
       error_texts = [
           _("Subscription manifest upload for provider '%s' failed.") % self.name,
-          (_("Reason: %s") % display_message unless display_message.blank?),
-          (_("If you are uploading an older manifest, you can use the Force checkbox to overwrite " +
-                 "existing data.") if force_update == "false")
+          (_("Reason: %s") % display_message unless display_message.blank?)
       ].compact
       error_texts.join('<br />')
     end
