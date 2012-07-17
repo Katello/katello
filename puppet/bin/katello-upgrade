@@ -19,7 +19,7 @@ ERROR_CODES = {
   :unknown => 127,
 }
 
-BACKEND_SERVICES = ['katello', 'katello-jobs', 'tomcat6', 'pulp-server', 'thumbslug']
+BACKEND_SERVICES = ['katello', 'katello-jobs', 'tomcat6', 'pulp-server', 'thumbslug', 'httpd', 'elasticsearch']
 STDOUT_NAME = "stdout"
 
 # Terminate script with error code from ERROR_CODES hash
@@ -289,13 +289,7 @@ class UpgradeProcess
   def stop_services
     puts "We will stop the following services for the upgrade process:"
     puts "\t#{BACKEND_SERVICES.join(", ")}"
-    puts "PROCEED? Y/N"
-    answer = $stdin.gets.chomp
-    while ['Y','y','N','n'].index(answer) == nil
-      puts "Invalid input. Y/N?"
-      answer = $stdin.gets.chomp
-    end
-    if answer == 'Y' || answer == 'y'
+    if confirm("PROCEED?")
       BACKEND_SERVICES.each do |service|
         # service stop
         puts "Stopping: #{service}"
