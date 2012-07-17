@@ -1,0 +1,24 @@
+= javascript :edit_helpers, :provider_redhat
+
+.grid_8
+  #providers
+    %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{@provider.name}_#{@provider.id}"}
+    #provider
+      %h4 #{_("Import History")}
+
+#subscription_history
+  .grid_16
+    %table
+      %thead
+        %th #{_("Message")}
+        %th #{_("Import Time")}
+      - if @statuses
+        %tbody
+          - @statuses.each do |status|
+            %tr{:class => cycle(nil, 'alt')}
+              %td{:style => "width: 70%;"}
+                %span.icon_wrap.fl
+                  %span.fl{:class => (status["status"] == "FAILURE" ? "failure_icon" : "success_icon")}
+                = status["statusMessage"]
+              %td
+                = _("%s ago") % time_ago_in_words(status["created"])

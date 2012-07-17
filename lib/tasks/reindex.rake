@@ -1,7 +1,7 @@
 task :reindex=>["environment", "clear_search_indices"]  do
   User.current = User.first #set a user for orchestration
 
-  ignore_list = ["CpConsumerUser", "PulpSyncStatus", "PulpTaskStatus", "Hypervisor"]
+  ignore_list = ["CpConsumerUser", "PulpSyncStatus", "PulpTaskStatus", "Hypervisor", "Pool"]
 
   Dir.glob(RAILS_ROOT + '/app/models/*.rb').each { |file| require file }
   models = ActiveRecord::Base.subclasses.sort{|a,b| a.name <=> b.name}
@@ -14,7 +14,7 @@ task :reindex=>["environment", "clear_search_indices"]  do
 
 
   print "Re-indexing Repositories\n"
-  
+
   #pulp_repos = Resources::Pulp::Repository.all
   #repos = Repository.all
   #repos.each{|r| r.populate_from pulp_repos}
@@ -23,5 +23,14 @@ task :reindex=>["environment", "clear_search_indices"]  do
     repo.index_packages
     repo.index_errata
   }
+
+  print "Re-indexing Pools\n"
+  cp_pools = Resources::Candlepin::Pool.all
+  if cp_pools
+    # Pool objects
+    pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
+    # Index pools
+    ::Pool.index_pools(pools) if pools.length > 0
+  end
 
 end

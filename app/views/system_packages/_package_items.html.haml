@@ -8,7 +8,7 @@
     - unless t.parameters.nil? or t.parameters[:packages].nil?
       - t.parameters[:packages].each do |pkg_name|
 
-        %tr{:class => row_shading + ' content_package', 'data-uuid' => t.uuid}
+        %tr{:class => row_shading + ' content_package', 'data-pending-action-id' => t.id}
           %td
           %td.package_name
             #{pkg_name}
@@ -23,7 +23,7 @@
     - unless t.parameters.nil? or t.parameters[:groups].nil?
       - t.parameters[:groups].each do |group_name|
 
-        %tr{:class => row_shading + ' content_group', 'data-uuid' => t.uuid}
+        %tr{:class => row_shading + ' content_group', 'data-pending-action-id' => t.id}
           %td
           %td.package_name
             #{group_name}

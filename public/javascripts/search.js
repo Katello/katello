@@ -143,6 +143,10 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
         current_search = {};
         current_search[search_hash] = null;
     },
+    refresh_search = function() {
+        reset_current_search();
+        start_search({});
+    },
     setupSearch = function() {
         var button = form.find('button');
         button.click(function(){
@@ -362,7 +366,8 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
         search_event : search_event,
         extend_event : extend_event,
         search_bbq   : search_bbq,
-        set_url     : set_url
+        set_url      : set_url,
+        refresh_search : refresh_search
 	};
 
 };

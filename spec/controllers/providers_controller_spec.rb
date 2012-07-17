@@ -45,7 +45,8 @@ describe ProvidersController do
       Resources::Candlepin::Owner.stub!(:pools).and_return({})
     end
 
-    it "should update a provider subscription" do
+    # TODO: move to subscriptions controller tests
+    pending "should update a provider subscription" do
       @provider.should_receive(:import_manifest).and_return(true)
       @organization.stub(:redhat_provider).and_return(@provider)
       controller.stub!(:current_organization).and_return(@organization)
@@ -54,7 +55,8 @@ describe ProvidersController do
       response.should be_success
     end
 
-    it "should try to force a provider update" do
+    # TODO: move to subscriptions controller tests
+    pending "should try to force a provider update" do
       @provider.should_receive(:import_manifest).
           with(anything(), :force => 'true', :async => true, :notify => true).and_return(true)
       @organization.stub(:redhat_provider).and_return(@provider)

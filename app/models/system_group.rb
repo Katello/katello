@@ -27,7 +27,6 @@ class SystemGroup < ActiveRecord::Base
     indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
     indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
-    indexes :locked, :type=>'boolean'
   end
 
   update_related_indexes :systems, :name
@@ -126,10 +125,6 @@ class SystemGroup < ActiveRecord::Base
     User.allowed_to?([:delete, :create], :system_groups, self.id, self.organization)
   end
 
-  def locking?
-    User.allowed_to?([:locking], :system_groups, self.id, self.organization)
-  end
-
   def self.list_tags org_id
     SystemGroup.select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
@@ -144,7 +139,6 @@ class SystemGroup < ActiveRecord::Base
        :read => _("Read System Group"),
        :update => _("Modify System Group details and system membership"),
        :delete => _("Delete System Group"),
-       :locking => _("Lock/Unlock System Group"),
        :read_systems => _("Read Systems in System Group"),
        :update_systems => _("Modify Systems in System Group"),
        :delete_systems => _("Delete Systems in System Group")
@@ -200,10 +194,6 @@ class SystemGroup < ActiveRecord::Base
     }
   end
 
-  def lock_check
-    raise _("Group membership cannot be changed while locked.") if self.locked
-  end
-
   def environments
     @cached_environments ||= db_environments.all #.all to ensure we don't refer to the AR relation
   end
@@ -251,12 +241,10 @@ class SystemGroup < ActiveRecord::Base
   end
 
   def add_pulp_consumer_group record
-    lock_check
     self.add_consumers([record.uuid])
   end
 
   def remove_pulp_consumer_group record
-    lock_check
     self.del_consumers([record.uuid])
   end
 

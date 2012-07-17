@@ -65,7 +65,7 @@ $(document).ready(function () {
             ajax_panelpage = activeBlock.attr("data-ajax_panelpage");
 
             // If the panel is currently open, get the currently open tab
-            if (thisPanel.hasClass('opened')) {
+            if (thisPanel.hasClass('opened') && $.bbq.getState("panel") !== "new") {
                 subpanel_href = $('.panel_link.selected > a').attr('href');
                 if (subpanel_href) {
                     last_ajax_panelpage = subpanel_href.substr(subpanel_href.lastIndexOf('/') + 1);
@@ -85,7 +85,7 @@ $(document).ready(function () {
                 if(activeBlock.hasClass('active') && thisPanel.hasClass('opened')){
                     KT.panel.closePanel(thisPanel);
                 } else {
-                    if (ajax_panelpage && !last_ajax_panelpage) {
+                    if (ajax_panelpage && $.bbq.getState("panel") !== "new" && !last_ajax_panelpage) {
                         last_ajax_panelpage = ajax_panelpage;
                     }
                     if (last_ajax_panelpage) {
@@ -116,6 +116,7 @@ $(document).ready(function () {
         }
         return false;
     });
+
     $(window).resize(function () {
         KT.panel.panelResize($('#panel_main'), false);
         KT.panel.panelResize($('#subpanel_main'), true);
@@ -139,7 +140,10 @@ $(document).ready(function () {
             dataType: 'html',
             success: function (data) {
                 var callbacks = KT.panel.get_expand_cb(),
-                    cb = function(){};
+                    cb = function(){},
+                    activeBlock,
+                    ajax_url,
+                    ajax_panelpage;
 
                 thisPanel.find(".panel-content").html(data);
                 KT.common.jscroll_init($('.scroll-pane'));
@@ -147,9 +151,12 @@ $(document).ready(function () {
                 KT.panel.panelResize($('#panel_main'), false);
 
                 // Update the bbq
-                var activeBlock = $('#' + KT.common.escapeId(activeBlockId)),
-                    ajax_url = activeBlock.attr("data-ajax_url"),
-                    ajax_panelpage = activeBlock.attr("data-ajax_panelpage");
+                if (!activeBlockId) {
+                    activeBlockId = thisPanel.attr("id");
+                }
+                activeBlock = $('#' + KT.common.escapeId(activeBlockId));
+                ajax_url = activeBlock.attr("data-ajax_url");
+                ajax_panelpage = activeBlock.attr("data-ajax_panelpage");
 
                 if (ajax_panelpage) {
                     // Replace old ajax_panelpage with new
@@ -165,6 +172,8 @@ $(document).ready(function () {
                     last_ajax_panelpage = ajax_panelpage;
                 }
 
+                KT.panel.copy.initialize();
+                
                 for( cb in callbacks ){
                     callbacks[cb]();
                 }
@@ -342,6 +351,8 @@ KT.panel = (function ($) {
                         panelResize($('#panel_main'), isSubpanel);
                     }
 
+                    KT.panel.copy.initialize();
+
                     for( callback in expand_cb ){
                     	expand_cb[callback](name);
                     }
@@ -406,6 +417,7 @@ KT.panel = (function ($) {
                 content = jPanel.find('.panel-content'),
                 position;
             if (jPanel.hasClass("opened")) {
+                KT.panel.copy.hide_form();
                 $('.block.active').removeClass('active');
                 jPanel.animate({
                     left: 0,
@@ -574,6 +586,7 @@ KT.panel = (function ($) {
             $(document).bind('helptip-opened', function () {
                 handleScroll(jQPanel, offset);
             });
+
             panels_list.push(new_panel);
         },
         registerSubPanelSubmit = function(form_id, form_submit_id) {
@@ -747,6 +760,67 @@ KT.panel = (function ($) {
     };
 })(jQuery);
 
+KT.panel.copy = (function () {
+    var initialize = function() {
+        // This function will initialize the support for copy, if copy is defined for the pane.  In katello, one
+        // example of this can be found in app/views/system_groups/_tupane_header.html.haml.
+
+        var copy_link = $('.pane_action.copy-tipsy');
+        if(copy_link) {
+            var cancel_button = $('#cancel_copy_button'), copy_form = $('#copy_form');
+
+            KT.tipsy.custom.copy_tooltip(copy_link);
+
+            copy_link.die();
+            copy_link.live('click', show_form);
+
+            cancel_button.die();
+            cancel_button.live('click', hide_form);
+
+            copy_form.die();
+            copy_form.live('submit', perform_copy);
+        }
+    },
+    show_form = function() {
+        $('.pane_action.copy-tipsy').tipsy('show');
+    },
+    hide_form = function() {
+        $('.pane_action.copy-tipsy').tipsy('hide');
+    },
+    perform_copy = function(event) {
+        event.preventDefault();
+
+        var copy_form = $('#copy_form'), copy_button = $('#copy_button'), do_not_open = $('#do_not_open').is(':checked');
+        copy_button.attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: copy_form.data("url") + "?&authenticity_token=" + AUTH_TOKEN,
+            data: copy_form.serialize(),
+            cache: false,
+            success: function(data) {
+                $('.pane_action.copy-tipsy').tipsy('hide');
+
+                if (do_not_open) {
+                    list.add(data);
+                } else {
+                    KT.panel.list.createSuccess(data);
+                }
+            },
+            error: function(data) {
+                copy_button.removeAttr('disabled');
+            }
+        });
+        return false;
+    };
+    return {
+        initialize: initialize,
+        hide_form: hide_form,
+        perform_copy: perform_copy
+    };
+
+})(jQuery);
+
 KT.panel.list = (function () {
     var total_items_count = 0,
         current_items_count = 0,
@@ -806,6 +880,9 @@ KT.panel.list = (function () {
 
             list_elem.find('.spinner').hide();
             list_section.html(html).show();
+        },
+        refresh_list = function() {
+            search.refresh_search();
         },
         full_spinner = function() {
             var list_elem = $("#list");
@@ -934,6 +1011,7 @@ KT.panel.list = (function () {
         replace_list    : replace_list,
         update_counts   : update_counts,
         full_spinner    : full_spinner,
-        current_count   :  current_count
+        current_count   : current_count,
+        refresh_list    : refresh_list
     };
 })();

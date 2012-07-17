@@ -7,11 +7,11 @@ Src::Application.routes.draw do
       get :validate_name
     end
     member do
+      post :copy
       get :systems
       post :add_systems
       post :remove_systems
       delete :destroy_systems
-      post :lock
     end
     resources :events, :controller => "system_group_events", :only => [:index, :show] do
       collection do
@@ -91,7 +91,19 @@ Src::Application.routes.draw do
   match 'notices' => 'notices#show', :via => :get
   match 'notices' => 'notices#destroy_all', :via => :delete
 
-  resources :subscriptions, :only => [:index]
+  resources :subscriptions do
+    member do
+      get :edit
+      get :products
+      get :consumers
+    end
+    collection do
+      get :items
+      post :upload
+      get :history
+      get :history_items
+    end
+  end
 
   resources :dashboard, :only => [:index] do
     collection do
@@ -251,8 +263,7 @@ Src::Application.routes.draw do
     end
     member do
       get :products_repos
-#      get :subscriptions
-#     post :subscriptions, :action=>:update_subscriptions
+      get :import_progress
       get :schedule
     end
   end
@@ -482,8 +493,6 @@ Src::Application.routes.draw do
           get :systems
           get :history
           match "/history/:job_id" => "system_groups#history_show", :via => :get
-          post :lock
-          post :unlock
           post :add_systems
           post :remove_systems
           delete :destroy_systems

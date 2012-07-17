@@ -91,28 +91,8 @@ KT.sg_table = (function(){
 
 KT.system_groups = (function(){
     var current_system_input,
-        current_max_systems = undefined,
+        current_max_systems,
         systems_deletable = false,
-    lockedChanged = function(){
-        var checkbox = $(this),
-        name = $(this).attr("name"),
-        options = {};
-        if (checkbox.attr("checked") !== undefined) {
-            options[name] = true;
-        } else {
-            options[name] = false;
-        }
-        $.ajax({
-            type: "POST",
-            url: checkbox.attr("data-url"),
-            data: options,
-            cache: false,
-            success:function(){
-                refresh_list_item();
-            }
-        });
-        return false;
-    },
     refresh_list_item = function(){
         var id = $('#system_group_id');
         list.refresh(id.val(), id.data('ajax_url'))
@@ -121,7 +101,7 @@ KT.system_groups = (function(){
         // quota_setup is used for both the 'new' and 'edit' panes.  While the logic is nearly the same
         // there are slight differences, since the 'edit' uses inline editing, but the 'new' does not.
         var unlimited = '-1',
-            initial_max = undefined;
+            initial_max;
 
         if ($('system_group_new').length > 0) {
             // user is creating a group
@@ -173,7 +153,7 @@ KT.system_groups = (function(){
         });
     },
     init = function(){
-        $('.remove_item').bind('click', prompt_to_destroy_group);
+        $('.pane_action.remove').bind('click', prompt_to_destroy_group);
     },
     prompt_to_destroy_group = function(e) {
         e.preventDefault();
@@ -242,7 +222,6 @@ KT.system_groups = (function(){
         if (pane.length === 0){
             return;
         }
-        pane.find('#system_group_locked').bind('change', KT.system_groups.lockedChanged);
         pane.find(".edit_name").each(function(){
             $(this).editable($(this).data("url"), {
                 type        :  'text',
@@ -384,7 +363,6 @@ KT.system_groups = (function(){
     };
 
     return {
-        lockedChanged: lockedChanged,
         init: init,
         new_setup: new_setup,
         details_setup: details_setup,

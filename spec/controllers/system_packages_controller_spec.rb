@@ -64,7 +64,7 @@ describe SystemPackagesController, :katello => true do
         System.stub!(:find).and_return(@system)
 
         # mock task to be return when user invokes the 'action' on the model (e.g. install_packages)
-        @task_status = mock_model(TaskStatus, :uuid => "task_uuid_123")
+        @task_status = mock_model(TaskStatus, :id => "99")
       end
 
       describe 'add packages' do
@@ -85,7 +85,7 @@ describe SystemPackagesController, :katello => true do
           @system.stub!(:install_packages).and_return(@task_status)
           put :add, :system_id => @system.id, :packages => "pkg1"
           response.should be_success
-          response.should contain(@task_status.uuid)
+          response.should contain(@task_status.id)
         end
 
         it 'should generate an error notice, if no package names provided' do
@@ -93,7 +93,7 @@ describe SystemPackagesController, :katello => true do
           @system.should_not_receive(:install_packages)
           put :add, :system_id => @system.id, :packages => ""
           response.should be_success
-          response.should_not contain(@task_status.uuid)
+          response.should_not contain(@task_status.id)
         end
 
         it 'should return an error notice, if no packages structure provided' do
@@ -101,7 +101,7 @@ describe SystemPackagesController, :katello => true do
           @system.should_not_receive(:install_packages)
           put :add, :system_id => @system.id
           response.should be_success
-          response.should_not contain(@task_status.uuid)
+          response.should_not contain(@task_status.id)
         end
       end
 
@@ -123,7 +123,7 @@ describe SystemPackagesController, :katello => true do
           @system.stub!(:install_package_groups).and_return(@task_status)
           put :add, :system_id => @system.id, :groups => "group 1"
           response.should be_success
-          response.should contain(@task_status.uuid)
+          response.should contain(@task_status.id)
         end
 
         it 'should generate an error notice, if no groups names provided' do
@@ -131,7 +131,7 @@ describe SystemPackagesController, :katello => true do
           @system.should_not_receive(:install_package_groups)
           put :add, :system_id => @system.id, :groups => ""
           response.should be_success
-          response.should_not contain(@task_status.uuid)
+          response.should_not contain(@task_status.id)
         end
 
         it 'should return an error notice, if no group structure provided' do
@@ -139,7 +139,7 @@ describe SystemPackagesController, :katello => true do
           @system.should_not_receive(:install_package_groups)
           put :add, :system_id => @system.id
           response.should be_success
-          response.should_not contain(@task_status.uuid)
+          response.should_not contain(@task_status.id)
         end
       end
 
@@ -167,7 +167,7 @@ describe SystemPackagesController, :katello => true do
           @system.stub!(:uninstall_packages).and_return(@task_status)
           put :remove, :system_id => @system.id, :packages => "pkg1"
           response.should be_success
-          response.should contain(@task_status.uuid)
+          response.should contain(@task_status.id)
         end
 
         it 'should generate an error notice, if no packages provided' do
@@ -175,7 +175,7 @@ describe SystemPackagesController, :katello => true do
           @system.should_not_receive(:uninstall_packages)
           put :remove, :system_id => @system.id, :packages => ""
           response.should be_success
-          response.should_not contain(@task_status.uuid)
+          response.should_not contain(@task_status.id)
         end
 
         it 'should return an error notice, if no packages structure provided' do
@@ -183,7 +183,7 @@ describe SystemPackagesController, :katello => true do
           @system.should_not_receive(:uninstall_packages)
           put :remove, :system_id => @system.id
           response.should be_success
-          response.should_not contain(@task_status.uuid)
+          response.should_not contain(@task_status.id)
         end
       end
 
@@ -205,7 +205,7 @@ describe SystemPackagesController, :katello => true do
           @system.stub!(:uninstall_package_groups).and_return(@task_status)
           put :remove, :system_id => @system.id, :groups => "group 1"
           response.should be_success
-          response.should contain(@task_status.uuid)
+          response.should contain(@task_status.id)
         end
 
         it 'should generate an error notice, if no group names provided' do
@@ -213,7 +213,7 @@ describe SystemPackagesController, :katello => true do
           @system.should_not_receive(:uninstall_package_groups)
           put :remove, :system_id => @system.id, :groups => ""
           response.should be_success
-          response.should_not contain(@task_status.uuid)
+          response.should_not contain(@task_status.id)
         end
 
         it 'should return an error notice, if no groups structure provided' do
@@ -221,7 +221,7 @@ describe SystemPackagesController, :katello => true do
           @system.should_not_receive(:uninstall_package_groups)
           put :remove, :system_id => @system.id
           response.should be_success
-          response.should_not contain(@task_status.uuid)
+          response.should_not contain(@task_status.id)
         end
       end
 
@@ -244,7 +244,7 @@ describe SystemPackagesController, :katello => true do
             @system.stub!(:update_packages).and_return(@task_status)
             put :update, :system_id => @system.id, :packages => {"pkg1" => 1}
             response.should be_success
-            response.should contain(@task_status.uuid)
+            response.should contain(@task_status.id)
           end
         end
 
@@ -266,7 +266,7 @@ describe SystemPackagesController, :katello => true do
             @system.stub!(:update_packages).and_return(@task_status)
             put :update, :system_id => @system.id
             response.should be_success
-            response.should contain(@task_status.uuid)
+            response.should contain(@task_status.id)
           end
         end
       end
