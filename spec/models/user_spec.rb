@@ -36,16 +36,20 @@ describe User do
       @user = User.create_ldap_user!('testuser')
     end
 
+    after(:each) do
+      AppConfig.warden = 'database'
+    end
+
     it 'be able to create' do
       u = User.find_by_username('testuser')
       u.should_not be_nil
     end
-    
+
     it 'not have an email' do
       u = User.find_by_username('testuser')
       u.email.should be_nil
     end
-    
+
     it "have its own role" do
       #pending "implement own_role functionality"
       @user.own_role.should_not be_nil
