@@ -13,13 +13,21 @@
           #{_('Systems')}
 
       .scroll-pane
-        - for group in system_groups_list
-          .system_groups
-            .col_1
-              %a{:href => "#{generate_url(system_groups_path, {:id => group.id, :panel_page => "errata"}, "system_group")}"}
-                .status_icon.green
+        - current = 0
+        - critical, warning, ok = system_groups_list
 
-            .col_2.one-line-ellipsis
-              = link_to(group.name, generate_url(system_groups_path, {:id => group.id, :panel_page => "edit"}, "system_group"))
-            .col_3.one-line-ellipsis
-              = link_to(group.systems.length, generate_url(system_groups_path, {:id => group.id, :panel_page => "systems"}, "system_group"))
+        - for group in critical
+          - current += 1
+          - break if current > quantity
+          = render :partial => "system_group_item", :locals => {:group => group, :updates => :critical}
+
+        - for group in warning
+          - current += 1
+          - break if current > quantity
+          = render :partial => "system_group_item", :locals => {:group => group, :updates => :warning}
+
+        - for group in ok
+          - current += 1
+          - break if current > quantity
+          = render :partial => "system_group_item", :locals => {:group => group, :updates => :ok}
+
