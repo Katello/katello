@@ -9,7 +9,7 @@ class candlepin::params {
   $keystore_password = katello_create_read_password(katello_config_value('keystore_password_file'))
 
   # where to store output from cpsetup execution
-  $cpdb_log = "${katello::params::log_base}/katello-configure/cpdb.log"
+  $cpdb_log = "${katello::params::configure_log_base}/cpdb.log"
   $crl_file = "/var/lib/candlepin/candlepin-crl.crl"
 
   require "katello::params"

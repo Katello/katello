@@ -7,6 +7,7 @@ class postgres::service {
     command     => "sed -i 's/\"x\$pid\" != x/1 = 1/g' /etc/init.d/postgresql"
   }
 
+  # never require Service["postgresql"] but Class["postgres::service"] or Exec["wait-for-postgresql"]
   service { "postgresql":
     ensure  => running,
     enable => true,

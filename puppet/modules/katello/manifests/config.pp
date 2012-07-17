@@ -1,7 +1,11 @@
 class katello::config {
 
-  # this should be required by all classes that need to log there (everytime $log_base is used)
+  # this should be required by all classes that need to log there (one of these)
   file { "${katello::params::log_base}":
+    owner   => $katello::params::user,
+    group   => $katello::params::group,
+    mode    => 640;
+  "${katello::params::configure_log_base}":
     owner   => $katello::params::user,
     group   => $katello::params::group,
     mode    => 640;
@@ -24,14 +28,14 @@ class katello::config {
   postgres::createuser { $katello::params::db_user:
     passwd  => $katello::params::db_pass,
     roles => "CREATEDB",
-    logfile => "${katello::params::log_base}/katello-configure/create-postgresql-katello-user.log",
-    require => [ File["${katello::params::log_base}"] ],
+    logfile => "${katello::params::configure_log_base}/create-postgresql-katello-user.log",
+    require => [ Class["postgres::service"], File["${katello::params::configure_log_base}"] ],
   }
 
   postgres::createdb {$katello::params::db_name:
     owner   => $katello::params::db_user,
-    logfile => "${katello::params::log_base}/katello-configure/create-postgresql-katello-database.log",
-    require => [ Postgres::Createuser[$katello::params::db_user], File["${katello::params::log_base}"] ],
+    logfile => "${katello::params::configure_log_base}/create-postgresql-katello-database.log",
+    require => [ Postgres::Createuser[$katello::params::db_user], File["${katello::params::configure_log_base}"] ],
   }
 
   file {

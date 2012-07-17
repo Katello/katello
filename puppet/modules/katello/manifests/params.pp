@@ -43,9 +43,10 @@ class katello::params {
   $katello_dir = "/usr/share/katello"
   $environment = "production"
   $log_base    = "/var/log/katello"
-  $db_env_log  = "$log_base/katello-configure/db_env.log"
-  $migrate_log = "$log_base/katello-configure/db_migrate.log"
-  $seed_log    = "$log_base/katello-configure/db_seed.log"
+  $configure_log_base = "$log_base/katello-configure"
+  $db_env_log  = "$configure_log_base/db_env.log"
+  $migrate_log = "$configure_log_base/db_migrate.log"
+  $seed_log    = "$configure_log_base/db_seed.log"
 
   # katello upgrade settings
   $katello_upgrade_scripts_dir  = "/usr/share/katello/install/upgrade-scripts/upgrade/"
