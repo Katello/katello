@@ -63,7 +63,8 @@ describe Role do
  end
 
  context "read ldap roles" do
-   AppConfig.ldap_roles = true
+   before { AppConfig.ldap_roles = true }
+   after { AppConfig.ldap_roles = false }
    let(:organization) {Organization.create!(:name => "test_org", :cp_key =>"my_key")}
    let(:role) { Role.make_readonly_role("name", organization)}
    let(:ldap_role) { Role.make_readonly_role("ldap_role", organization)}
