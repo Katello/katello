@@ -14,7 +14,7 @@
         #product_autocomplete_list{'data-url'=>auto_complete_products_path}
           = radio_button_tag :products, :auto_complete, true
           %input.hidden_selection{:type=>:hidden}
-          = text_field_tag :product_auto_complete, "", :class => "auto_complete_input"
+          = text_field_tag :product_auto_complete, "", :class => "auto_complete_input", :placeholder=>_('Auto-complete Product')
           %a.button{ :id => "add_product" }
             = _("Add")
           %ul
