@@ -20,10 +20,6 @@ describe Role do
     disable_org_orchestration
   end
 
-  after do
-    AppConfig.ldap_roles = false
-  end
-
  context "test read only" do
    let(:organization) {Organization.create!(:name => "test_org", :cp_key =>"my_key")}
    let(:role) { Role.make_readonly_role("name", organization)}
