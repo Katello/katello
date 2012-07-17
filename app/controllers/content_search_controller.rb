@@ -79,6 +79,19 @@ class ContentSearchController < ApplicationController
         repos = Repository.enabled.readable(current_organization.library)
     end
 
+    envs = KTEnvironment.where(:id=>params[:environments])
+    if params[:mode] == 'shared'
+      repos = repos.select do |r|
+        repo_envs = r.environmental_instances.collect{|r| r.environment}
+        (envs - repo_envs).empty?
+      end
+    elsif params[:mode] == 'unique'
+      repos = repos.select do |r|
+        repo_envs = r.environmental_instances.collect{|r| r.environment}
+        !(envs - repo_envs ).empty?
+      end
+    end
+
     products = repos.collect{|r| r.product}.uniq
     render :json=>{:rows=>(product_rows(products) + repo_rows(repos)), :name=>_('Repositories')}
   end
