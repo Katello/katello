@@ -140,7 +140,10 @@ $(document).ready(function () {
             dataType: 'html',
             success: function (data) {
                 var callbacks = KT.panel.get_expand_cb(),
-                    cb = function(){};
+                    cb = function(){},
+                    activeBlock,
+                    ajax_url,
+                    ajax_panelpage;
 
                 thisPanel.find(".panel-content").html(data);
                 KT.common.jscroll_init($('.scroll-pane'));
@@ -148,9 +151,12 @@ $(document).ready(function () {
                 KT.panel.panelResize($('#panel_main'), false);
 
                 // Update the bbq
-                var activeBlock = $('#' + KT.common.escapeId(activeBlockId)),
-                    ajax_url = activeBlock.attr("data-ajax_url"),
-                    ajax_panelpage = activeBlock.attr("data-ajax_panelpage");
+                if (!activeBlockId) {
+                    activeBlockId = thisPanel.attr("id");
+                }
+                activeBlock = $('#' + KT.common.escapeId(activeBlockId));
+                ajax_url = activeBlock.attr("data-ajax_url");
+                ajax_panelpage = activeBlock.attr("data-ajax_panelpage");
 
                 if (ajax_panelpage) {
                     // Replace old ajax_panelpage with new
@@ -411,6 +417,7 @@ KT.panel = (function ($) {
                 content = jPanel.find('.panel-content'),
                 position;
             if (jPanel.hasClass("opened")) {
+                KT.panel.copy.hide_form();
                 $('.block.active').removeClass('active');
                 jPanel.animate({
                     left: 0,
@@ -609,7 +616,8 @@ KT.panel = (function ($) {
         },
         refreshPanel = function() {
           var active = $('#list').find('.active');
-          KT.panel.panelAjax(active, active.attr("data-ajax_url"), $('#panel'), false);
+          var full_ajax_url = active.attr("data-ajax_url") + '/' + active.attr("data-ajax_panelpage")
+          KT.panel.panelAjax(active, full_ajax_url, $('#panel'), false);
         },
         actions = (function(){
             var action_list = {},
@@ -808,6 +816,7 @@ KT.panel.copy = (function () {
     };
     return {
         initialize: initialize,
+        hide_form: hide_form,
         perform_copy: perform_copy
     };
 

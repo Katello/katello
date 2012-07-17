@@ -112,27 +112,6 @@ describe SystemGroup do
       grp.systems = grp.systems - [@system]
       grp.save!
     end
-
-    it "should not be allowed to add if locked" do
-      @group.locked = true
-      @group.save!
-      lambda{
-        @group.systems = [@system]
-        @group.save!
-      }.should raise_error
-    end
-
-    it "should not be allowed to remove if locked" do
-      @group.systems = [@system]
-      @group.save!
-      @group.locked = true
-      @group.save!
-      lambda{
-        @group.systems = []
-        @group.save!
-      }.should raise_error
-    end
-
   end
 
 
