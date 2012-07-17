@@ -45,11 +45,18 @@ class ContentSearchController < ApplicationController
   end
 
   def products
-    ids = param_product_ids 
+    ids = param_product_ids
     if !ids.empty?
       products = current_organization.products.engineering.where(:id=>ids)
     else
       products = current_organization.products.engineering
+    end
+
+    envs = KTEnvironment.where(:id=>params[:environments])
+    if params[:mode] == 'shared'
+      products = products.select{|p|  (envs - p.environments).empty? }
+    elsif params[:mode] == 'unique'
+      products = products.select{|p|  !(envs - p.environments ).empty?}
     end
     render :json=>{:rows=>product_rows(products), :name=>_('Products')}
   end
@@ -229,7 +236,7 @@ class ContentSearchController < ApplicationController
     render_to_string :partial=>'product_hover', :locals=>{:product=>product, :env=>environment}
   end
 
-  def param_product_ids 
+  def param_product_ids
     ids = params[:products][:autocomplete].collect{|p|p["id"]} if params[:products]
     ids || []
   end
