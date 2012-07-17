@@ -292,8 +292,7 @@ class UpgradeProcess
     if confirm("PROCEED?")
       BACKEND_SERVICES.each do |service|
         # service stop
-        puts "Stopping: #{service}"
-        `/sbin/service #{service} stop` unless is_stopped? service
+        puts `/sbin/service #{service} stop` unless is_stopped? service
       end
     else
       puts "Exiting. Please stop your services and try again"
