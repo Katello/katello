@@ -113,6 +113,7 @@ Src::Application.routes.draw do
       get :errata
       get :promotions
       get :systems
+      get :system_groups
       get :subscriptions
     end
   end

@@ -1,0 +1,25 @@
+#dashboard_system_groups.big_widget{"data-quantity"=>quantity}
+  - if system_groups_list.empty?
+    =_("No system groups found." )
+
+  - else
+    .list
+      .block_head.clear
+        .column_head.col_1
+          #{_("Updates")}
+        .column_head.col_2
+          #{_("Name")}
+        .column_head.col_3
+          #{_('Systems')}
+
+      .scroll-pane
+        - for group in system_groups_list
+          .system_groups
+            .col_1
+              %a{:href => "#{generate_url(system_groups_path, {:id => group.id, :panel_page => "errata"}, "system_group")}"}
+                .status_icon.green
+
+            .col_2.one-line-ellipsis
+              = link_to(group.name, generate_url(system_groups_path, {:id => group.id, :panel_page => "edit"}, "system_group"))
+            .col_3.one-line-ellipsis
+              = link_to(group.systems.length, generate_url(system_groups_path, {:id => group.id, :panel_page => "systems"}, "system_group"))
