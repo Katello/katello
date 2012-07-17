@@ -71,7 +71,7 @@ KT.content_search = function(paths_in){
                     {id:'unique', name:i18n.unique}
                    ],
     search_pages = {errata:{url:KT.routes.errata_content_search_index_path(), modes:true},
-                    repos:{url:KT.routes.repos_content_search_index_path(), comparable:true},
+                    repos:{url:KT.routes.repos_content_search_index_path(), modes:true, comparable:true},
                     products:{url:KT.routes.products_content_search_index_path(), modes:true},
                     packages:{url:KT.routes.packages_content_search_index_path(), modes:true}
     },
