@@ -15,10 +15,15 @@ describe Role do
   include OrchestrationHelper
   include AuthorizationHelperMethods
 
- before do
+  before do
     disable_user_orchestration
     disable_org_orchestration
- end
+  end
+
+  after do
+    AppConfig.ldap_roles = false
+  end
+
  context "test read only" do
    let(:organization) {Organization.create!(:name => "test_org", :cp_key =>"my_key")}
    let(:role) { Role.make_readonly_role("name", organization)}
@@ -63,7 +68,8 @@ describe Role do
  end
 
  context "read ldap roles" do
-   AppConfig.ldap_roles = true
+   before { AppConfig.ldap_roles = true }
+   after { AppConfig.ldap_roles = false }
    let(:organization) {Organization.create!(:name => "test_org", :cp_key =>"my_key")}
    let(:role) { Role.make_readonly_role("name", organization)}
    let(:ldap_role) { Role.make_readonly_role("ldap_role", organization)}
@@ -88,7 +94,7 @@ describe Role do
        (user.roles.size == 3).should be_true
      }
    end
-   
+
    context "verify ldap roles for a normal user" do
      specify {
        user = User.find_or_create_by_username(
@@ -138,7 +144,7 @@ describe Role do
        user.roles.include?(ldap_role).should be_false
      }
    end
-  end 
+  end
 
  context "checking locked roles" do
    context "create check" do
