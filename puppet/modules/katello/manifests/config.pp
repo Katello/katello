@@ -119,9 +119,30 @@ class katello::config {
     },
   }
 
+  if $katello::params::reset_data == 'YES' {
+    exec {"reset_katello_db":
+      command => "rm -f /var/lib/katello/db_seed_done; rm -f /var/lib/katello/db_migrate_done; service katello stop; service katello-jobs stop",
+      path    => "/sbin:/bin:/usr/bin",
+      before  => Exec["katello_migrate_db"],
+      notify  => Postgres::Dropdb["$katello::params::db_name"],
+    }
+    postgres::dropdb {$katello::params::db_name:
+      logfile => "${katello::params::configure_log_base}/drop-postgresql-katello-database.log",
+      require => [ Postgres::Createuser[$katello::params::db_user], File["${katello::params::configure_log_base}"] ],
+      before  => Exec["katello_migrate_db"],
+      refreshonly => true,
+      notify  => [
+        Postgres::Createdb[$katello::params::db_name],
+        Exec["katello_db_printenv"],
+        Exec["katello_migrate_db"],
+        Exec["katello_seed_db"],
+      ],
+    }
+  }
+
   exec {"katello_migrate_db":
     cwd         => $katello::params::katello_dir,
-    user        => $katello::params::user,
+    user        => "root",
     environment => "RAILS_ENV=${katello::params::environment}",
     command     => "/usr/bin/env rake db:migrate --trace --verbose > ${katello::params::migrate_log} 2>&1 && touch /var/lib/katello/db_migrate_done",
     creates => "/var/lib/katello/db_migrate_done",
@@ -135,7 +156,7 @@ class katello::config {
 
   exec {"katello_seed_db":
     cwd         => $katello::params::katello_dir,
-    user        => $katello::params::user,
+    user        => "root",
     environment => ["RAILS_ENV=${katello::params::environment}", "KATELLO_LOGGING=debug"],
     command     => "/usr/bin/env rake seed_with_logging --trace --verbose > ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/db_seed_done",
     creates => "/var/lib/katello/db_seed_done",

@@ -145,3 +145,9 @@ oauth_token_file = /etc/katello/oauth_token-file
 
 # Pulp user password file
 pulp_user_password_file = /etc/katello/pulp_user_password-file
+
+# Erases all databases. WARNING: This is dangerous option! Only value of 'YES' (uppercase) triggers the action. (This value is not remembered in katello-configure.conf).
+reset_data = NONE
+
+# Erases downloaded RPM packages from /var/lib/pulp/packages. Only value of 'YES' (uppercase) triggers the action. (This value is not remembered in katello-configure.conf).
+reset_cache = NONE

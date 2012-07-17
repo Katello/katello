@@ -62,11 +62,11 @@ class certs::config {
   }
 
   exec { "generate-ssl-keystore":
-    command => "openssl pkcs12 -export -in /etc/candlepin/certs/candlepin-ca.crt -inkey /etc/candlepin/certs/candlepin-ca.key -out ${katello_keystore} -name tomcat -CAfile ${candlepin_pub_cert} -caname root -password \"file:${certs::params::keystore_password_file}\"",
-    path => "/usr/bin",
-    creates => $katello_keystore,
-    notify => Service["tomcat6"],
-    require => [File[$katello_pki_dir], Exec["deploy-candlepin-certificate-to-cp"]]
+    command   => "openssl pkcs12 -export -in /etc/candlepin/certs/candlepin-ca.crt -inkey /etc/candlepin/certs/candlepin-ca.key -out ${katello_keystore} -name tomcat -CAfile ${candlepin_pub_cert} -caname root -password \"file:${certs::params::keystore_password_file}\"",
+    path      => "/usr/bin",
+    creates   => $katello_keystore,
+    notify    => Service["tomcat6"],
+    require   => [File[$katello_pki_dir], Exec["deploy-candlepin-certificate-to-cp"]]
   }
 
   file { $katello_keystore:

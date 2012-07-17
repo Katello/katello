@@ -86,4 +86,7 @@ class katello::params {
   $candlepin_url = "https://localhost:8443/candlepin"
   $pulp_url      = katello_pulp_url()
   $foreman_url   = "https://localhost/foreman"
+
+  # database reinitialization flag
+  $reset_data = katello_config_value('reset_data')
 }

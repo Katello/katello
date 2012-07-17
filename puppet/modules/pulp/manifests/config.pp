@@ -27,12 +27,32 @@ class pulp::config {
       target => $pulp::params::ssl_certificate_ca_file;
   }
 
+  if $pulp::params::reset_cache == 'YES' {
+    exec {"reset_pulp_cache":
+      command     => "rm -rf /var/lib/pulp/packages/*",
+      path        => "/sbin:/bin:/usr/bin",
+      before      => Exec["migrate_pulp_db"],
+      require     => [
+        File["/var/lib/pulp/packages"],
+        ],
+    }
+  }
+
+  if $pulp::params::reset_data == 'YES' {
+    exec {"reset_pulp_db":
+      command     => "rm -f /var/lib/pulp/init.flag; service httpd stop; rm -f /var/lib/mongodb/pulp_database*; rm -rf /var/lib/pulp/{distributions,published,repos}/*",
+      path        => "/sbin:/bin:/usr/bin",
+      before      => Exec["migrate_pulp_db"],
+    }
+  }
+
   exec {"migrate_pulp_db":
     # we need to give some time to mongo to start sockets (RHBZ 824405)
     command     => "sleep 5 && pulp-migrate >${katello::params::configure_log_base}/pulp_migrate.log 2>&1 && touch /var/lib/pulp/init.flag",
     creates     => "/var/lib/pulp/init.flag",
     path        => "/bin:/usr/bin",
     before      => Class["pulp::service"],
+    notify      => Exec["reload-apache2"],
     require     => [
       File["${katello::params::configure_log_base}"],
       Class["mongodb::service"],

@@ -40,6 +40,25 @@ class candlepin::config {
     group   => 'tomcat';
   }
 
+  if $candlepin::params::reset_data == 'YES' {
+    exec {"reset_candlepin_db":
+      command => "rm -f /var/lib/katello/cpdb_done; rm -f /var/lib/katello/cpinit_done; service tomcat6 stop",
+      path    => "/sbin:/bin:/usr/bin",
+      before  => Exec["cpdb"],
+      notify  => Postgres::Dropdb["$candlepin::params::db_name"],
+    }
+    postgres::dropdb {$candlepin::params::db_name:
+      logfile => "${katello::params::configure_log_base}/drop-postgresql-candlepin-database.log",
+      require => [ Postgres::Createuser[$candlepin::params::db_user], File["${katello::params::configure_log_base}"] ],
+      before  => Exec["cpdb"],
+      refreshonly => true,
+      notify  => [
+        Exec["cpdb"],
+        Exec["cpinit"],
+      ],
+    }
+  }
+
   exec { "cpdb":
     command => "/usr/share/candlepin/cpdb --create -u ${candlepin::params::db_user} -d ${candlepin::params::db_name} >> ${candlepin::params::cpdb_log} 2>&1 && touch /var/lib/katello/cpdb_done",
     require => [

@@ -1,6 +1,6 @@
 # Create a Postgres db
 define postgres::createdb($owner, $logfile) {
-  sqlexec{ $name:
+  sqlexec{ "createdb-$name":
     username => $postgres::params::user,
     passfile => $postgres::params::password_file,
     database => "postgres",

@@ -16,6 +16,9 @@ class candlepin::params {
   $katello_oauth_key = $katello::params::oauth_key
   $katello_oauth_secret = $katello::params::oauth_secret
 
+  # database reinitialization flag
+  $reset_data = katello_config_value('reset_data')
+
   case $katello::params::deployment {
     'headpin' : {
       require "thumbslug::params"

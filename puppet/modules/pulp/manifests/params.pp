@@ -27,4 +27,10 @@ class pulp::params {
   $pulp_proxy_port = $katello::params::proxy_port
   $pulp_proxy_user = $katello::params::proxy_user
   $pulp_proxy_pass = $katello::params::proxy_pass
+
+  #database reinitialization flag
+  $reset_data = katello_config_value('reset_data')
+  $reset_cache = katello_config_value('reset_cache')
+  debug("Option reset_data: $reset_data")
+  debug("Option reset_cache: $reset_cache")
 }

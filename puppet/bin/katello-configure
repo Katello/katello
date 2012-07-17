@@ -239,6 +239,8 @@ answer_file = nil
 show_resulting_answer_file = false
 begin
 	option_parser.banner = "Usage: #{$0} [options]"
+  option_parser.summary_width = 8
+  option_parser.summary_indent = ' ' * 2
 
 	default_options_order.each do |key|
 		option_parser.on('--' + key.gsub(/_/, '-') + '=' + key.upcase, String, titles[key]) do |value|
@@ -249,7 +251,7 @@ begin
 	option_parser.on_tail.on('--only-show-config', 'Print the resulting configuration and exit') do
 		show_resulting_answer_file = true
 	end
-	option_parser.on_tail.on('-h', '--help', 'Show this short summary') do
+	option_parser.on_tail.on('-h', '--help', 'Show this short summary (more in the man page)') do
 		puts option_parser
 		exit
 	end
@@ -363,6 +365,10 @@ rescue
 end
 final_options.delete('ssl_ca_password')
 default_options_order.delete('ssl_ca_password')
+final_options.delete('reset_data')
+default_options_order.delete('reset_data')
+final_options.delete('reset_cache')
+default_options_order.delete('reset_cache')
 
 # Prints a warning if FQDN is not set, returns error when
 # localhost or hostname cannot be resolved (/etc/hosts entry is missing).
