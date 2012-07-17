@@ -56,12 +56,14 @@ KT.content_search = function(paths_in){
         compare_packages:{id:'compare_packages',
                            name:i18n.packages,
                            url:KT.routes.repo_compare_packages_content_search_index_path(),
-                           selector:['compare_packages', 'compare_errata']
+                           selector:['compare_packages', 'compare_errata'],
+                           modes: true
         },
         compare_errata:{id:'compare_errata',
                        name:i18n.errata,
                        url:KT.routes.repo_compare_errata_content_search_index_path(),
-                       selector:['compare_packages', 'compare_errata']
+                       selector:['compare_packages', 'compare_errata'],
+                       modes: true
         }
     },
     search_modes = [{id:'all', name:i18n.all},
@@ -245,8 +247,14 @@ KT.content_search = function(paths_in){
             cache: false,
             data: search_params.subgrid,
             success: function(data){
+                var options = {left_selector:true};
+                if(subgrid.modes){
+                    options.right_selector = true;
+                    comparison_grid.set_right_select(search_modes, search_params.subgrid.mode);
+                }
+
                 var cols = data.cols ? data.cols : subgrid.cols;
-                comparison_grid.set_mode("details", {left_selector:true});
+                comparison_grid.set_mode("details", options);
                 comparison_grid.set_columns(cols);
                 comparison_grid.show_columns(cols);
                 comparison_grid.set_title(data.name);
