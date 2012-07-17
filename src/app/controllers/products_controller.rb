@@ -121,6 +121,8 @@ class ProductsController < ApplicationController
       filter :term, {:organization_id => org.id}
     end
     render :json=>products.collect{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
+  rescue Exception => error
+    render :json=>[]
   end
 
 
