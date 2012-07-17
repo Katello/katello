@@ -72,6 +72,10 @@ $(document).ready(function () {
                 }
             }
 
+            if (last_ajax_panelpage === "new") {
+                last_ajax_panelpage = undefined;
+            }
+
             if(event.ctrlKey && !thisPanel.hasClass('opened') && !(event.target.id == "new") && !activeBlock.hasClass('active')) {
                 if (activeBlock.hasClass('active')) {
                     activeBlock.removeClass('active');
@@ -94,6 +98,7 @@ $(document).ready(function () {
                             panelpage: last_ajax_panelpage
                         });
                     } else {
+                        $.bbq.removeState('panelpage');
                         $.bbq.pushState({
                             panel: activeBlockId
                         });
