@@ -64,6 +64,10 @@ module DashboardHelper
     System.readable(current_organization).limit(num)
   end
 
+  def system_groups_list num=quantity
+    SystemGroup.readable(current_organization).limit(num)
+  end
+
   def changeset_path_helper cs
       if cs.state === Changeset::PROMOTED
         changesets_path() + "#panel=changeset_#{cs.id}"
