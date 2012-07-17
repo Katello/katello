@@ -8,9 +8,9 @@ class candlepin::service {
   }
 
   exec { "cpinit":
-    # tomcat startup is slow - try multiple times
-    command => "/usr/bin/wget --timeout=30 --tries=5 --retry-connrefused --qO- http://localhost:8080/candlepin/admin/init && touch /var/lib/katello/cpinit_done",
-    require => Service["tomcat6"],
+    # tomcat startup is slow - try multiple times (the initialization service is idempotent)
+    command => "/usr/bin/wget --timeout=30 --tries=5 --retry-connrefused -qO- http://localhost:8080/candlepin/admin/init >${katello::params::configure_log_base}/cpinit.log 2>&1 && touch /var/lib/katello/cpinit_done",
+    require => [ Service["tomcat6"], File["${katello::params::configure_log_base}"] ],
     creates => "/var/lib/katello/cpinit_done",
     before  => Class["apache2::service"]
   }
