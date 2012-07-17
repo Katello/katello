@@ -1,5 +1,7 @@
 #dashboard_system_groups.big_widget{"data-quantity"=>quantity}
-  - if system_groups_list.empty?
+  - current = 0
+  - critical, warning, ok = SystemGroup.lists_by_updates_needed(current_organization)
+  - if critical.empty? and warning.empty? and ok.empty?
     =_("No system groups found." )
 
   - else
@@ -13,9 +15,6 @@
           #{_('Systems')}
 
       .scroll-pane
-        - current = 0
-        - critical, warning, ok = system_groups_list
-
         - for group in critical
           - current += 1
           - break if current > quantity

@@ -64,40 +64,6 @@ module DashboardHelper
     System.readable(current_organization).limit(num)
   end
 
-  def system_groups_list
-    groups_hash = {}
-    groups = SystemGroup.readable(current_organization)
-
-    # determine the state (critical/warning/ok) for each system group
-    #   - critical: indicates there is 1 or more security errata
-    #   - warning: indicates that there is 1 or more non-security errata
-    #   - ok: indicates that all systems in the group are up to date
-    groups.each do |group|
-      group_state = :ok
-
-      group.systems.each do |system|
-        system.errata.each do |erratum|
-          case erratum.type
-            when Glue::Pulp::Errata::SECURITY
-              # there is a critical errata, so stop searching...
-              group_state = :critical
-              break
-
-            when Glue::Pulp::Errata::BUGZILLA
-            when Glue::Pulp::Errata::ENHANCEMENT
-              # set state to warning, but continue searching...
-              group_state = :warning
-          end
-        end
-        break if group_state == :critical
-      end
-
-      groups_hash[group_state] ||= []
-      groups_hash[group_state] << group
-    end
-    return groups_hash[:critical].to_a, groups_hash[:warning].to_a, groups_hash[:ok].to_a
-  end
-
   def changeset_path_helper cs
       if cs.state === Changeset::PROMOTED
         changesets_path() + "#panel=changeset_#{cs.id}"
