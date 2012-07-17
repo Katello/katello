@@ -46,7 +46,7 @@
                       -#  = render :partial=>'subscription_details', :locals=>{:group => entitlement.entitlementId, :product_content => product_content}
           - else
             %tr
-              %td{:colspan=>6} #{_("The system is not currently consuming any subscriptions.")}
+              %td{:colspan=>7} #{_("The system is not currently consuming any subscriptions.")}
       - if editable && consumed_entitlements.length > 0
         .actions
           %a{:class=>'dialogbutton button disabled', :id=>"fake_unsub_submit"} #{_('Unsubscribe')}
@@ -100,7 +100,7 @@
                 %td{:style => "padding-top:9px;"} #{format_time sub.endDate}
               - sub.providedProducts.each do |product|
                 %tr{:class => "child-of-#{sub.poolId} " + cycle_class}
-                  %td{:colspan=>6}
+                  %td{:colspan=>7}
                     %ul
                       %li
                         = _("Product Name: ")
@@ -110,7 +110,7 @@
                       -#  = render :partial=>'subscription_details', :locals=>{:group => sub.poolId, :product_content => product_content}
           - else
             %tr
-              %td{:colspan=>6} #{_("There are no more subscriptions available.")}
+              %td{:colspan=>7} #{_("There are no more subscriptions available.")}
       - if editable && avail_subs.length > 0
         .actions
           = submit_tag _('Subscribe'), :class => 'submit dialogbutton', :id=>"sub_submit"

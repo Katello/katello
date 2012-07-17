@@ -231,6 +231,10 @@ class Provider < ActiveRecord::Base
     releases.uniq.sort
   end
 
+  def import_task
+    return task_status
+  end
+
   protected
 
    def sanitize_repository_url

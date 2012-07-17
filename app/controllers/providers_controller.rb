@@ -14,9 +14,9 @@
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
 
-  before_filter :find_rh_provider, :only => [:redhat_provider,:update_redhat_provider]
+  before_filter :find_rh_provider, :only => [:redhat_provider]
 
-  before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy]
+  before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy, :import_progress]
   before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
@@ -44,9 +44,9 @@ class ProvidersController < ApplicationController
       :update => edit_test,
       :destroy => delete_test,
       :products_repos => read_test,
+      :import_progress => edit_test,
 
       :redhat_provider =>read_test,
-      :update_redhat_provider => edit_test
     }
   end
 
@@ -63,32 +63,34 @@ class ProvidersController < ApplicationController
                                          :providers => @providers, :products => @products, :editable=>@provider.editable?}
   end
 
-  def update_redhat_provider
-    if !params[:provider].blank? and params[:provider].has_key? :contents
-      temp_file = nil
-      dir       = "#{Rails.root}/tmp"
-      Dir.mkdir(dir) unless File.directory? dir
-      temp_file = File.new(File.join(dir, "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
-      temp_file.write params[:provider][:contents].read
-      temp_file.close
-      # force must be a string value
-      force_update = params[:force_import] == "1" ? "true" : "false"
-      @provider.import_manifest File.expand_path(temp_file.path),
-                                :force => force_update, :async => true, :notify => true
-
-      redhat_provider
+  def import_progress
+    expire_page :action => :import_progress
+    # "finished" is checked for in the javascript to see if polling for task progress should be done
+    if @provider.import_task.nil?
+      to_ret = {'state' => 'finished'}
     else
       # user didn't provide a manifest to upload
       notify.error _("Subscription manifest must be specified on upload.")
       render :nothing => true
+      to_ret = @provider.import_task.to_json
     end
+
+    # Never cache these results since the user may close and re-open the "new" panel and no status would
+    # be available for checking
+    response.headers["Last-Modified"] = Time.now.httpdate
+    response.headers["Expires"] = "0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Cache-Control"] = 'no-store, no-cache, must-revalidate, max-age=0, pre-check=0, post-check=0'
+
+    render :json=>to_ret
   end
 
   def redhat_provider
+=begin
     # We default to none imported until we can properly poll Candlepin for status of the import
     @grouped_subscriptions = []
     begin
-      setup_subs
+      find_subscriptions
     rescue Exception => error
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription manifest for provider '%s'.") % @provider.name
@@ -113,7 +115,7 @@ class ProvidersController < ApplicationController
       Rails.logger.error error.backtrace.join("\n")
       render :template =>"providers/redhat/show", :status => :bad_request and return
     end
-
+=end
     render :template =>"providers/redhat/show"
   end
 
@@ -248,6 +250,34 @@ class ProvidersController < ApplicationController
     @filter = {:organization_id => current_organization}
   end
 
+=begin
+  def find_subscriptions
+    @provider = current_organization.redhat_provider
+    cp_pools = Candlepin::Owner.pools current_organization.cp_key
+    subscriptions = Pool.index_pools cp_pools
+
+    @grouped_subscriptions = []
+    subscriptions.each do |sub|
+      # Derived pools are not displayed here
+      if sub.pool_derived
+        next
+      end
+
+      # Only Red Hat provider subscriptions are shown
+      p = Product.where(:cp_id => sub.product_id).first
+      if p && p.provider_id == @provider.id
+        @grouped_subscriptions << sub
+      end
+      #Product.where(:cp_id => sub.product_id).each { |product|
+      #  if product && product.provider_id == @provider.id
+      #    @grouped_subscriptions << sub
+      #  end
+      #}
+    end
+
+    @grouped_subscriptions
+  end
+
   def setup_subs
     # TODO: See subscriptions_controller#reformat_subscriptions for a better(?) OpenStruct implementation
 
@@ -293,13 +323,13 @@ class ProvidersController < ApplicationController
         next
       end
 
-      Product.where(:cp_id => sub['productId']).each { |product|
+      Product.where(:cp_id => sub['productId']).each do |product|
         if product and product.provider == @provider
           @grouped_subscriptions[group_id] ||= []
           @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
         end
-      }
-=begin TODO: Should the bundled products be displayed too?
+      end
+x=begin TODO: Should the bundled products be displayed too?
       if sub['providedProducts'].length > 0
         sub['providedProducts'].each do |cp_product|
           product = Product.where(:cp_id => cp_product['productId']).first
@@ -315,7 +345,8 @@ class ProvidersController < ApplicationController
           @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
         end
       end
-=end
+x=end
     end
   end
+=end
 end

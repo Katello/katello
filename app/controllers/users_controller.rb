@@ -84,7 +84,7 @@ class UsersController < ApplicationController
                             :filter        => [{ :hidden => [false] }] })
     else
       users = [@user]
-      render_panel_items(users, @panel_options, nil, params[:offset])
+      render_panel_items(users, @panel_options, nil, "0")
     end
   end
 
