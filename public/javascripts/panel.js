@@ -610,7 +610,8 @@ KT.panel = (function ($) {
         },
         refreshPanel = function() {
           var active = $('#list').find('.active');
-          KT.panel.panelAjax(active, active.attr("data-ajax_url"), $('#panel'), false);
+          var full_ajax_url = active.attr("data-ajax_url") + '/' + active.attr("data-ajax_panelpage")
+          KT.panel.panelAjax(active, full_ajax_url, $('#panel'), false);
         },
         actions = (function(){
             var action_list = {},
