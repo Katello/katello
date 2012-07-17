@@ -51,6 +51,7 @@ $(document).ready(function () {
     var ajax_url = null;
     var panel_selected;
 
+
     $('.block').live('click', function (event) {
         var subpanel_href,
             subpanel_name,
@@ -66,9 +67,9 @@ $(document).ready(function () {
 
             // If the panel is currently open, get the currently open tab
             if (thisPanel.hasClass('opened') && $.bbq.getState("panel") !== "new") {
-                subpanel_href = $('.panel_link.selected > a').attr('href');
+                subpanel_href = $('.panel_link.selected > a').last().attr('href');
                 if (subpanel_href) {
-                    last_ajax_panelpage = subpanel_href.substr(subpanel_href.lastIndexOf('/') + 1);
+                    last_ajax_panelpage = KT.panel.extract_panelpage(subpanel_href);
                 }
             }
 
@@ -619,6 +620,16 @@ KT.panel = (function ($) {
           var full_ajax_url = active.attr("data-ajax_url") + '/' + active.attr("data-ajax_panelpage")
           KT.panel.panelAjax(active, full_ajax_url, $('#panel'), false);
         },
+        extract_panelpage = function(url) {
+            var a = document.createElement("a");
+            a.href = url;
+            var arr = a.pathname.split('/');
+            var panelpage = '';
+            for (var i = 4; i < arr.length; i += 1) {
+                panelpage += '/' + arr[i];
+            }
+            return panelpage.substr(1);
+        },
         actions = (function(){
             var action_list = {},
                 current_request_action = undefined;
@@ -757,7 +768,8 @@ KT.panel = (function ($) {
         queryParameters: queryParameters,
         refreshPanel : refreshPanel,
         actions: actions,
-        handleScroll : handleScroll
+        handleScroll : handleScroll,
+        extract_panelpage : extract_panelpage
     };
 })(jQuery);
 
