@@ -54,14 +54,12 @@ install -m 644 rhel-thumbslug.repo %{buildroot}%{_sysconfdir}/yum.repos.d/thumbs
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root)
 %{_sysconfdir}/yum.repos.d/candlepin.repo
 %{_sysconfdir}/yum.repos.d/katello.repo
 %{_sysconfdir}/yum.repos.d/pulp.repo
 %{_sysconfdir}/yum.repos.d/thumbslug.repo
 
 %files testing
-%defattr(-,root,root)
 %{_sysconfdir}/yum.repos.d/katello-testing.repo
 %{_sysconfdir}/yum.repos.d/pulp-testing.repo
 
