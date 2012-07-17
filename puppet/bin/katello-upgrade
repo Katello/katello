@@ -280,9 +280,30 @@ class UpgradeProcess
   def ensure_services_are_off
     BACKEND_SERVICES.each do |service|
       if !is_stopped? service
-        $stderr.puts "Service '%s' can not be running while katello-upgrade is in progress" % service
-        exit_with :general_error
+        puts "Service '%s' can not be running while katello-upgrade is in progress" % service
+        stop_services
       end
+    end
+  end
+
+  def stop_services
+    puts "We will stop the following services for the upgrade process:"
+    puts "\t#{BACKEND_SERVICES.join(", ")}"
+    puts "PROCEED? Y/N"
+    answer = $stdin.gets.chomp
+    while ['Y','y','N','n'].index(answer) == nil
+      puts "Invalid input. Y/N?"
+      answer = $stdin.gets.chomp
+    end
+    if answer == 'Y' || answer == 'y'
+      BACKEND_SERVICES.each do |service|
+        # service stop
+        puts "Stopping: #{service}"
+        `/sbin/service #{service} stop` unless is_stopped? service
+      end
+    else
+      puts "Exiting. Please stop your services and try again"
+      exit_with :general_error
     end
   end
 
