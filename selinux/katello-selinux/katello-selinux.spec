@@ -130,7 +130,6 @@ fi
 /sbin/restorecon -rvvi /var/lib/katello /var/log/katello /usr/share/katello /etc/katello /usr/sbin/katello-*
 
 %files
-%defattr(-,root,root,0755)
 %doc %{modulename}.fc %{modulename}.if %{modulename}.te
 %attr(0600,root,root) %{_datadir}/selinux/*/%{modulename}.pp.bz2
 %{_datadir}/selinux/devel/include/%{moduletype}/%{modulename}.if

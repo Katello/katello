@@ -67,6 +67,12 @@ class katello::config {
       group   => $katello::params::group,
       mode    => "600",
       notify  => Exec["reload-apache2"];
+
+    "/etc/ldap_fluff.yml":
+      content => template("katello/etc/ldap_fluff.yml.erb"),
+      owner   => $katello::params::user,
+      group   => $katello::params::group,
+      mode    => "600",
   }
 
   exec {"httpd-restart":
