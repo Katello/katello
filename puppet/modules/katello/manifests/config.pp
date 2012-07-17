@@ -84,6 +84,7 @@ class katello::config {
         'headpin' => [ File["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["thumbslug::service"] ],
          default  => [],
     },
+    refreshonly => true,
   }
 
   exec {"katello_db_printenv":
