@@ -326,7 +326,6 @@ rm -rf \$RPM_BUILD_ROOT
 `generate_section "$PREUN" preun`
 
 %files
-%defattr(-,root,root)
 `echo -e $filesect`
 EOF
 

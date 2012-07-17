@@ -39,7 +39,6 @@ cp src/katello/agent/katelloplugin.py %{buildroot}/%{_libdir}/gofer/plugins
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/gofer/plugins/katelloplugin.conf
 %{_libdir}/gofer/plugins/katelloplugin.*
 %doc LICENSE

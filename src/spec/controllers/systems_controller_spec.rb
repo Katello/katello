@@ -395,14 +395,6 @@ describe SystemsController do
           put :add_system_groups, {:id => @system.id, :group_ids => [@group1.id, @group2.id]}
         end
 
-        it "should generate an error notice, if the group is locked" do
-          @group1.locked = true
-          @group1.save!
-          controller.should notify.exception
-          put :add_system_groups, {:id => @system.id, :group_ids => [@group1.id]}
-          response.should_not be_success
-        end
-
         it "should generate an error notice, if the group has reached max membership" do
           @system1 = System.create!(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
           @group1.max_systems = 1
@@ -435,14 +427,6 @@ describe SystemsController do
           controller.should notify.success
           put :remove_system_groups, {:id => @system.id, :group_ids => [@group1.id]}
         end
-
-        it "should generate an error notice, if the group is locked" do
-          @group1.locked = true
-          @group1.save!
-          controller.should notify.exception
-          put :remove_system_groups, {:id => @system.id, :group_ids => [@group1.id]}
-          response.should_not be_success
-        end
       end
     end
 
@@ -473,14 +457,6 @@ describe SystemsController do
         it "should generate a notice on success" do
           controller.should notify.success
           put :bulk_add_system_group, {:ids => [@system1.id, @system2.id], :group_ids => [@group1.id, @group2.id]}
-        end
-
-        it "should generate an error notice, if the group is locked" do
-          @group1.locked = true
-          @group1.save!
-          controller.should notify.exception
-          put :bulk_add_system_group, {:ids => [@system1.id], :group_ids => [@group1.id]}
-          response.should_not be_success
         end
 
         it "should generate an error notice, if the group has reached max membership" do
@@ -523,14 +499,6 @@ describe SystemsController do
         it "should generate a notice on success" do
           controller.should notify.success
           put :bulk_remove_system_group, {:ids => [@system1.id], :group_ids => [@group1.id]}
-        end
-
-        it "should generate an error notice, if the group is locked" do
-          @group1.locked = true
-          @group1.save!
-          controller.should notify.exception
-          put :bulk_remove_system_group, {:ids => [@system1.id], :group_ids => [@group1.id]}
-          response.should_not be_success
         end
       end
 

@@ -1,6 +1,6 @@
 
 Name:           katello-repos
-Version:        0.2.4
+Version:        0.2.5
 Release:        1%{?dist}
 Summary:        Definition of yum repositories for Katello
 
@@ -54,18 +54,19 @@ install -m 644 rhel-thumbslug.repo %{buildroot}%{_sysconfdir}/yum.repos.d/thumbs
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root)
 %{_sysconfdir}/yum.repos.d/candlepin.repo
 %{_sysconfdir}/yum.repos.d/katello.repo
 %{_sysconfdir}/yum.repos.d/pulp.repo
 %{_sysconfdir}/yum.repos.d/thumbslug.repo
 
 %files testing
-%defattr(-,root,root)
 %{_sysconfdir}/yum.repos.d/katello-testing.repo
 %{_sysconfdir}/yum.repos.d/pulp-testing.repo
 
 %changelog
+* Mon Jul 16 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.5-1
+- correcting pulp testing URL in the repofile
+
 * Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.4-1
 - putting releasever instead of 6Server
 

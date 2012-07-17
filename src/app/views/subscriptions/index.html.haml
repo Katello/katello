@@ -1,51 +1,5 @@
-= javascript :treetable, :subscription
-
 
 .grid_16
-  %h3= _('Current Subscriptions')
-  .tree
-    - if @subscriptions.nil? || @subscriptions.empty?
-      %p= _('No Subscriptions Available')
-    - else
-      %table#subscriptionTable
-        - group = nil
-        %thead
-          %th= _('Product')
-          %th= _('Consumed')
-          %th= _('Contract')
-          %th= _('Support Level')
-          %th= _('Arch')
-          %th= _('Machine Type')
-          %th= _('Start Date')
-          %th= _('End Date')
-        %tbody
-          - @subscriptions.each do |sub|
-            - new_group = sub.product_id
-            - if (new_group != group)
-              - group = sub.product_id
-              %tr{:id => group}
-                %td= sub.product_name
-                %td
-                %td
-                %td
-                %td
-                %td
-                %td
-                %td
-            %tr{:class => "child-of-#{group}", :id => sub.cp_id}
-              %td= sub.product_name
-              %td
-                - if sub.quantity < 0
-                  = _('Unlimited')
-                - else
-                  = "#{sub.consumed} of #{sub.quantity}"
-              %td=sub.contract_number or ""
-              %td=sub.support_level or ""
-              %td=sub.arch
-              %td=sub.virt_only ? _("Virtual") : _("Physical")
-              %td=l sub.start_date
-              %td=l sub.end_date
-      .actions
-        .grid_3
-          %a{ :href => "#", :id=>"toggle_all", :class=>"fl" }
-            #{_("Expand/Contract All")}
+  = two_panel(@subscriptions, @panel_options)
+
+= javascript :multiselect, :subscription, :treetable

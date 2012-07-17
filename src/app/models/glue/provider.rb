@@ -172,57 +172,47 @@ module Glue::Provider
     end
 
     def queue_import_manifest zip_file_path, options
-      Rails.logger.debug "Importing manifest for provider #{name}"
-      pre_queue.create(:name     => "import manifest #{zip_file_path} for owner: #{self.organization.name}",
-                       :priority => 3, :action => [self, :owner_import, zip_file_path, options])
-      pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
-                       :priority => 5, :action => [self, :import_products_from_cp])
-      self.save
+      begin
+        Rails.logger.debug "Importing manifest for provider #{name}"
+        pre_queue.create(:name     => "import manifest #{zip_file_path} for owner: #{self.organization.name}",
+                         :priority => 3, :action => [self, :owner_import, zip_file_path, options])
+        pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
+                         :priority => 5, :action => [self, :import_products_from_cp])
+        self.save!
 
-    rescue => error
-      if error.respond_to?(:response)
-        display_message = error.response # fix add parse displayMessage
-      elsif error.message
-        display_message = error.message
-      else
-        display_message = ""
+        if options[:notify]
+          message = if AppConfig.katello?
+                      _("Subscription manifest uploaded successfully for provider '%s'. " +
+                            "Please enable the repositories you want to sync by selecting 'Enable Repositories' and " +
+                            "selecting individual repositories to be enabled.")
+                    else
+                      _("Subscription manifest uploaded successfully for provider '%s'.")
+                    end
+          Notify.success message % self.name, :request_type => 'providers__update_redhat_provider'
+        end
+      rescue => error
+        if error.respond_to?(:response)
+          display_message = error.response # fix add parse displayMessage
+        elsif error.message
+          display_message = error.message
+        else
+          display_message = ""
+        end
+        display_message = ApplicationController.parse_display_message(display_message)
+
+        if options[:notify]
+          Notify.exception import_error_message(display_message), error,
+                           :request_type => 'providers__update_redhat_provider'
+        end
+
+        Rails.logger.error "error uploading subscriptions."
+        Rails.logger.error error
+        Rails.logger.error error.backtrace.join("\n")
+        raise error
       end
-
-      if options[:notify]
-        error_texts = [
-            _("Subscription manifest upload for provider '%s' failed.") % self.name,
-            (_("Reason: %s") % display_message unless display_message.blank?),
-            (_("If you are uploading an older manifest, you can use the Force checkbox to overwrite " +
-                   "existing data.") if options[:force] == 'false')
-        ].compact
-
-        Notify.exception error_texts.join('<br />'), error,
-                         :asynchronous => true, :request_type => 'providers__update_redhat_provider'
-      end
-
-      Rails.logger.error "error uploading subscriptions."
-      Rails.logger.error error
-      Rails.logger.error error.backtrace.join("\n")
-      raise error
-    else
-      if options[:notify]
-        message = if AppConfig.katello?
-                    _("Subscription manifest uploaded successfully for provider '%s'. " +
-                          "Please enable the repositories you want to sync by selecting 'Enable Repositories' and " +
-                          "selecting individual repositories to be enabled.")
-                  else
-                    _("Subscription manifest uploaded successfully for provider '%s'.")
-                  end
-        Notify.success message % self.name,
-                       :asynchronous => true, :request_type => 'providers__update_redhat_provider'
-      end
-    ensure
-      self.task_status = nil
-      self.save!
     end
 
     def import_products_from_cp
-
       product_in_katello_ids = self.organization.library.products.all(:select => "cp_id").map(&:cp_id)
       products_in_candlepin_ids = []
       Resources::CDN::CdnVarSubstitutor.with_cache do
@@ -262,6 +252,13 @@ module Glue::Provider
       pre_queue.create(:name => "delete products for provider: #{self.name}", :priority => 1, :action => [self, :del_products])
     end
 
+    def import_error_message display_message
+      error_texts = [
+          _("Subscription manifest upload for provider '%s' failed.") % self.name,
+          (_("Reason: %s") % display_message unless display_message.blank?)
+      ].compact
+      error_texts.join('<br />')
+    end
 
     protected
 

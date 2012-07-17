@@ -67,10 +67,16 @@ class katello::params {
 
   # LDAP settings
   $ldap_server = katello_config_value('ldap_server')
+  $ldap_port = katello_config_value('ldap_port')
+  $ldap_server_type = katello_config_value('ldap_server_type')
   $ldap_encryption = katello_config_value('ldap_encryption')
   $ldap_users_basedn = katello_config_value('ldap_users_basedn')
   $ldap_groups_basedn = katello_config_value('ldap_groups_basedn')
   $ldap_roles = katello_config_value('ldap_roles')
+  $ldap_service_user = katello_config_value('ldap_service_user')
+  $ldap_service_pass = katello_config_value('ldap_service_pass')
+  $ldap_anon_queries = katello_config_value('ldap_anon_queries')
+  $ldap_ad_domain = katello_config_value('ldap_ad_domain')
 
   # auth method
   $auth_method = katello_config_value('auth_method') 
