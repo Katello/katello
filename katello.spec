@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.46
+Version:        0.2.47
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -398,6 +398,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jul 18 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.47-1
+- fixing build issue (msuchy@redhat.com)
+- a2x require /usr/bin/getopt (msuchy@redhat.com)
+
 * Wed Jul 18 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.46-1
 - do not copy files which we do not need/want (msuchy@redhat.com)
 - introduce katello-service for managing katello services (msuchy@redhat.com)
