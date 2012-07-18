@@ -30,7 +30,6 @@ describe ChangesetsController, :katello => true do
   before(:each) do
     login_user
     set_default_locale
-    controller.stub!(:notice)
 
     @org = new_test_org
 
@@ -98,7 +97,7 @@ describe ChangesetsController, :katello => true do
 
     describe 'with only an environment id' do
       it 'should create a changeset correctly and send a notification' do
-        controller.should_receive(:notice)
+        controller.should notify.success
         post 'create', {:name => "Changeset 7055", :env_id=>@env.id}
         response.should be_success
         Changeset.exists?(:name=>'Changeset 7055').should be_true
@@ -107,7 +106,7 @@ describe ChangesetsController, :katello => true do
 
     describe 'with a next environment id' do
       it 'should create a changeset correctly and send a notification' do
-        controller.should_receive(:notice)
+        controller.should notify.success
         post 'create', {:name => "Changeset 7055", :env_id=>@env.id, :next_env_id=>@next_env.id}
         response.should be_success
         Changeset.exists?(:name=>'Changeset 7055').should be_true
@@ -116,7 +115,7 @@ describe ChangesetsController, :katello => true do
 
     describe 'with a description' do
       it 'should create a changeset correctly and send a notification' do
-        controller.should_receive(:notice)
+        controller.should notify.success
         post 'create', {:name => "Changeset 7056", :description=> "FOO", :env_id=>@env.id}
         response.should be_success
         Changeset.exists?(:description=>'FOO').should be_true
@@ -124,13 +123,13 @@ describe ChangesetsController, :katello => true do
     end
 
     it 'should cause an error notification if name is left blank' do
-      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+      controller.should notify.exception
       post 'create', {:env_id => @env.id, :name => ''}
       response.should_not be_success
     end
 
     it 'should cause an exception if no environment id is present' do
-      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+      controller.should notify.exception
       post 'create', {:changesets => { :name => 'Test/Changeset 4.5'}}
       response.should_not be_success
     end
@@ -143,14 +142,14 @@ describe ChangesetsController, :katello => true do
     end
 
     it 'should successfully delete a changeset' do
-      controller.should_receive(:notice)
+      controller.should notify.success
       delete 'destroy', :id=>@changeset.id
       response.should be_success
       Changeset.exists?(:id=>@changeset.id).should be_false
     end
 
     it 'should raise an exception if no such changeset exists' do
-      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+      controller.should notify.exception
       delete 'destroy', :id=>20
       response.should_not be_success
       Changeset.exists?(:id=>@changeset.id).should be_true
