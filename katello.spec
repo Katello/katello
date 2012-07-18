@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.45
+Version:        0.2.46
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -396,6 +396,36 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jul 18 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.46-1
+- do not copy files which we do not need/want (msuchy@redhat.com)
+- introduce katello-service for managing katello services (msuchy@redhat.com)
+- system groups - move the listing of groups by updates needed to the model
+  (bbuckingham@redhat.com)
+- system group - fix accidental change on file header (bbuckingham@redhat.com)
+- system groups - update dashboard to account for critical/warning/up-to-date
+  (bbuckingham@redhat.com)
+- Removing the global after/do for role spec (jomara@redhat.com)
+- 840625 - Post 'import manifest' subscriptions return row:NotFound
+  (pajkycz@gmail.com)
+- system groups - add portlet to the dashboard for groups
+  (bbuckingham@redhat.com)
+- system groups - fix js syntax error (bbuckingham@redhat.com)
+- from petr; improving config setting in role test for ldap (jomara@redhat.com)
+- 840600 - Post creating new environment in headpin, webui returns row:NotFound
+  error (pajkycz@gmail.com)
+- katello - action profiling (pchalupa@redhat.com)
+- Fixing some ldap config issues that were polluting unrelated tests
+  (jomara@redhat.com)
+- katello - make jshintrb optional (pchalupa@redhat.com)
+- null_activeBlockId - fixed case where active block was not known
+  (thomasmckay@redhat.com)
+- katello - corrections after pull request review (pchalupa@redhat.com)
+- %%defattr is not needed since rpm 4.4 (msuchy@redhat.com)
+- 808437 - [RFE] Don't make notifications for CLI actions performed (and pop
+  them up in UI) (pchalupa@redhat.com)
+- katello - notifications cleanup (pchalupa@redhat.com)
+- katello - remove unused methods (pchalupa@redhat.com)
+
 * Mon Jul 16 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.45-1
 - system_details - added display of environment to left list and details page
 - productid - fixed html for System / Subscriptions
