@@ -393,7 +393,7 @@ describe Changeset, :katello => true do
         @prod.should_receive(:promote).once
         @changeset.should_receive(:index_repo_content).once
 
-        @changeset.promote(false)
+        @changeset.promote(:async => false)
       end
 
       it "should promote repositories" do
@@ -406,13 +406,13 @@ describe Changeset, :katello => true do
         @repo.should_receive(:promote).once
         @changeset.should_receive(:index_repo_content).once
 
-        @changeset.promote(false)
+        @changeset.promote(:async => false)
       end
 
       it "should update env content" do
         @changeset.state = Changeset::REVIEW
         @environment.should_receive(:update_cp_content)
-        @changeset.promote(false)
+        @changeset.promote(:async => false)
       end
 
       it "should promote packages" do
@@ -426,7 +426,7 @@ describe Changeset, :katello => true do
 
         @clone.should_receive(:add_packages).once.with([@pack.id])
 
-        @changeset.promote(false)
+        @changeset.promote(:async => false)
       end
 
       it "should promote errata" do
@@ -437,7 +437,7 @@ describe Changeset, :katello => true do
 
         @clone.should_receive(:add_errata).once.with([@err.id])
 
-        @changeset.promote(false)
+        @changeset.promote(:async => false)
       end
 
       it "should promote distributions" do
@@ -449,7 +449,7 @@ describe Changeset, :katello => true do
 
         @clone.should_receive(:add_distribution).once.with(@distribution.id)
 
-        @changeset.promote(false)
+        @changeset.promote(:async => false)
       end
 
       it "should regenerate metadata of changed repos" do
@@ -458,19 +458,19 @@ describe Changeset, :katello => true do
         PulpTaskStatus.stub(:wait_for_tasks)
         @changeset.state = Changeset::REVIEW
 
-        @changeset.promote(false)
+        @changeset.promote(:async => false)
       end
 
       it "should have correct state after successful promotion" do
         @changeset.state = Changeset::REVIEW
-        @changeset.promote(false)
+        @changeset.promote(:async => false)
         @changeset.state.should == Changeset::PROMOTED
       end
 
       it "should have correct state after unsuccessful promotion" do
         @changeset.state = Changeset::REVIEW
         @changeset.stub(:calc_and_save_dependencies).and_raise(Exception)
-        lambda { @changeset.promote(false) }.should raise_exception
+        lambda { @changeset.promote(:async => false) }.should raise_exception
         @changeset.state.should == Changeset::FAILED
       end
 
