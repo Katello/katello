@@ -144,7 +144,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
 
     return search.perform.results
   rescue Tire::Search::SearchRequestFailed => e
-    []
+    Support.array_with_total
   end
 
   def self.index_packages pkg_ids

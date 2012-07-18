@@ -2,7 +2,7 @@ module SearchHelperMethods
   def setup_search options = {}, &block
     unless block_given?
 
-      results = options[:results] || []
+      results = Support.array_with_total.concat(options[:results] || [])
 
       Tire::Search::Search.instance_eval do
         define_method(:perform) do
@@ -13,11 +13,6 @@ module SearchHelperMethods
           (data[:size].should == options[:size]) if options.has_key?(:size)
           (data[:sort].should == options[:sort] )if options.has_key?(:sort)
           (data[:from].should == options[:from] )if options.has_key?(:from)
-          Array.instance_eval do
-            define_method(:total) do
-              size
-            end
-          end
 
           #http://www.fngtps.com/2007/using-openstruct-as-mock-for-activerecord/
           OpenStruct.instance_eval do
