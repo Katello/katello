@@ -70,7 +70,7 @@
           .grid_2.ra.fieldset
             =label :sourcepool, :sourcepool, _("Virt Guest From")
           .grid_8.la
-            = subscriptions_pool_link_helper(@subscription.source_pool_id)
+            = subscriptions_pool_link_helper(@subscription.product_name, @subscription.source_pool_id, current_organization.redhat_provider.id, current_organization)
       - if !@subscription.host_id.nil?
         %fieldset
           .grid_2.ra.fieldset
