@@ -238,6 +238,7 @@ class certs::config {
         notify => [
           Exec["add-candlepin-cert-to-nss-db"],
           Exec["add-broker-cert-to-nss-db"],
+          Exec["generate-pfx-for-nss-db"],
           Exec["add-private-key-to-nss-db"],
           Service["qpidd"],
         ];
@@ -259,15 +260,23 @@ class certs::config {
         refreshonly => true,
       }
 
-      exec { "add-private-key-to-nss-db":
-        command => "openssl pkcs12 -in ${ssl_build_path}/$fqdn/$qpid_cert_name.crt -inkey ${ssl_build_path}/$fqdn/$qpid_cert_name.key -export -out '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -password 'file:${certs::params::ssl_pk12_password_file}'; pk12util -i '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -d '${nss_db_dir}' -w '${certs::params::ssl_pk12_password_file}' -k '${certs::params::nss_db_password_file}'",
+      exec { "generate-pfx-for-nss-db":
+        command => "openssl pkcs12 -in ${ssl_build_path}/$fqdn/$qpid_cert_name.crt -inkey ${ssl_build_path}/$fqdn/$qpid_cert_name.key -export -out '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -password 'file:${certs::params::ssl_pk12_password_file}'",
         path    => "/usr/bin",
         require => [Exec["create-nss-db"], File["${certs::params::ssl_pk12_password_file}"]],
         before => Class["qpid::service"],
         refreshonly => true,
       }
 
-    # qpid client certificates
+      exec { "add-private-key-to-nss-db":
+        command => "pk12util -i '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -d '${nss_db_dir}' -w '${certs::params::ssl_pk12_password_file}' -k '${certs::params::nss_db_password_file}'",
+        path    => "/usr/bin",
+        require => [Exec["create-nss-db"], Exec["generate-pfx-for-nss-db"]],
+        before => Class["qpid::service"],
+        refreshonly => true,
+      }
+
+      # qpid client certificates
       exec { "generate-ssl-qpid-client-certificate":
         cwd => '/root',
         command => "katello-ssl-tool --gen-server -p \"$(cat ${certs::params::candlepin_ca_password_file})\" --ca-cert '${candlepin_pub_cert}' --ca-key '${candlepin_private_key}' $ssl_tool_common --cert-expiration '${certs::params::ssl_cert_expiration}' --set-org 'pulp' --server-cert '${qpid_client_cert_name}.crt' --server-cert-req '${qpid_client_cert_name}.req' --set-email '' --server-key '${qpid_client_cert_name}.key' --server-tar 'katello-${qpid_client_cert_name}-key-pair' --server-rpm 'katello-${qpid_client_cert_name}-key-pair'",
