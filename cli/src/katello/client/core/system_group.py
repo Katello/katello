@@ -112,6 +112,9 @@ class Copy(SystemGroupAction):
                                help=_("name of organization (required)"))
         parser.add_option('--description', dest='description',
                                help=_("system group description for new group"))
+        parser.add_option('--max_systems', dest='max_systems',
+                               help=_("maximum number of systems in this group"))
+                               
 
     def check_options(self, validator):
         validator.require(('name', 'org', 'new_name'))
@@ -121,9 +124,10 @@ class Copy(SystemGroupAction):
         name = self.get_option('name')
         new_name = self.get_option('new_name')
         description = self.get_option('description')
+        max_systems = self.get_option('max_systems')
         
         source_system_group = get_system_group(org_name, name)
-        new_system_group = self.api.copy(org_name, source_system_group["id"], new_name, description)
+        new_system_group = self.api.copy(org_name, source_system_group["id"], new_name, description, max_systems)
 
         test_record(new_system_group,
             _("Successfully copied system group [ %s ] to [ %s ]") % 
