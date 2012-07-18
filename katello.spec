@@ -325,6 +325,7 @@ fi
 %{homedir}/lib/glue/*.rb
 %{homedir}/lib/monkeys/*.rb
 %{homedir}/lib/navigation
+%{homedir}/lib/notifications
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
