@@ -315,8 +315,8 @@ class Update(TemplateAction):
         #parser.add_option('--add_product', dest='add_products', action="append", help=_("name of the product"))
         #parser.add_option('--remove_product', dest='remove_products', action="append", help=_("name of the product"))
 
-        parser.add_option('--add_package', dest='add_packages', action="append", help=_("name or nvre of the product (epoch:name-rel.ease-ver.sio.n)"))
-        parser.add_option('--remove_package', dest='remove_packages', action="append", help=_("name or nvre of the product (epoch:name-rel.ease-ver.sio.n)"))
+        parser.add_option('--add_package', dest='add_packages', action="append", help=_("name of the package"))
+        parser.add_option('--remove_package', dest='remove_packages', action="append", help=_("name of the package"))
 
         parser.add_option('--add_parameter', dest='add_parameters', action="callback", callback=self.store_parameter_name, type="string",
                                 help=_("name of the parameter, %s must follow") % "--value")

@@ -151,6 +151,8 @@ EOKEY
     Resources::Pulp::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
     Resources::Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
     Resources::Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
+
+    Resources::Pulp::Package.stub(:name_search).and_return(RepoTestData::REPO_PACKAGES[0])
   end
 
   def disable_cdn
