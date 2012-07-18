@@ -41,6 +41,7 @@ Requires:        %{name}-glue-candlepin
 Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
 BuildRequires:   asciidoc
+BuildRequires:   /usr/bin/getopt
 
 %description
 Provides a package for managing application life-cycle for Linux systems.
