@@ -28,4 +28,15 @@ describe DashboardController do
     end
   end
 
+  describe "GET system_groups" do
+    it "should be successful" do
+      get 'system_groups'
+      response.should be_success
+    end
+
+    it "should render system groups partial" do
+      get 'system_groups'
+      response.should render_template(:partial => "_system_groups")
+    end
+  end
 end
