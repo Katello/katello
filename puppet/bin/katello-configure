@@ -11,7 +11,7 @@ $stdout.sync = true
 default_path = '/usr/share/katello/install/default-answer-file'
 options_format_path = '/usr/share/katello/install/options-format-file'
 result_config_path = '/etc/katello/katello-configure.conf'
-puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d 2>&1'
+puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v'
 log_parent_directory = '/var/log/katello'
 
 # error codes for exit_with function
@@ -237,6 +237,8 @@ options = {}
 option_parser = OptionParser.new
 answer_file = nil
 show_resulting_answer_file = false
+puppet_opts = ''
+nobars = false
 begin
 	option_parser.banner = "Usage: #{$0} [options]"
   option_parser.summary_width = 8
@@ -248,7 +250,13 @@ begin
 		end
 	end
 
-	option_parser.on_tail.on('--only-show-config', 'Print the resulting configuration and exit') do
+	option_parser.on_tail.on('-d', '--debug', 'Print more debugging information to the log file') do
+    puppet_opts = '-d'
+	end
+	option_parser.on_tail.on('-b', '--no-bars', 'Do not show progress bars and output puppet log instead') do
+		nobars = true
+	end
+	option_parser.on_tail.on('-c', '--only-show-config', 'Print the resulting configuration and exit') do
 		show_resulting_answer_file = true
 	end
 	option_parser.on_tail.on('-h', '--help', 'Show this short summary (more in the man page)') do
@@ -453,48 +461,52 @@ puppet_logfile = IO.open(IO::sysopen(puppet_logfile_filename, Fcntl::O_WRONLY | 
 puts "The top-level log file is [#{puppet_logfile_filename}]"
 seen_err = false
 begin
-	IO.popen(puppet_cmd, 'w+') do |f|
+	IO.popen("#{puppet_cmd} #{puppet_opts} 2>&1", 'w+') do |f|
 		f.puts "include katello"
 		f.close_write
 		processing_logfile = nil
 		t = nil
 		while line = f.gets do
-			puppet_logfile.syswrite(line)
-			puts "Got " + line if ENV['KATELLO_CONFIGURE_DEBUG']
-			if processing_logfile != nil
-				message = nil
-				if line =~ /notice:.*executed successfully/
-					t.kill
-					progress_final()
-					puts " ... OK"
-					processing_logfile = nil
-				elsif line =~ /err:/
-					t.kill
-					puts "\n  Failed, please check [#{processing_logfile}]"
-					processing_logfile = nil
-					seen_err = true
-				end
-			elsif line =~ /err:/
-				print line
-				seen_err = true
-			end
-			if line =~ /debug: Executing \'(.+)/
-				line_rest = $1
-				commands_by_logfiles.keys.each do |logfile|
-					if line_rest.index(logfile) != nil
-						processing_logfile = logfile
-						puts commands_by_logfiles[logfile][0]
-						progress_clear()
-						t = Thread.new do
-							while true do
-								sleep 1
-								progress_bar(logfile, commands_by_logfiles[logfile][1])
-							end
-						end
-						break
-					end
-				end
-			end
+      puppet_logfile.syswrite(line)
+      if nobars
+        puts line
+      else
+        puts "Got " + line if ENV['KATELLO_CONFIGURE_DEBUG']
+        if processing_logfile != nil
+          message = nil
+          if line =~ /notice:.*executed successfully/
+            t.kill
+            progress_final()
+            puts " ... OK"
+            processing_logfile = nil
+          elsif line =~ /err:/
+            t.kill
+            puts "\n  Failed, please check [#{processing_logfile}]"
+            processing_logfile = nil
+            seen_err = true
+          end
+        elsif line =~ /err:/
+          print line
+          seen_err = true
+        end
+        if line =~ /debug: Executing \'(.+)/
+          line_rest = $1
+          commands_by_logfiles.keys.each do |logfile|
+            if line_rest.index(logfile) != nil
+              processing_logfile = logfile
+              puts commands_by_logfiles[logfile][0]
+              progress_clear()
+              t = Thread.new do
+                while true do
+                  sleep 1
+                  progress_bar(logfile, commands_by_logfiles[logfile][1])
+                end
+              end
+              break
+            end
+          end
+        end
+      end
 		end
 	end
 rescue => e
