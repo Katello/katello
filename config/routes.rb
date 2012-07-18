@@ -495,6 +495,7 @@ Src::Application.routes.draw do
           get :history
           match "/history/:job_id" => "system_groups#history_show", :via => :get
           post :add_systems
+          post :copy
           post :remove_systems
           delete :destroy_systems
         end
