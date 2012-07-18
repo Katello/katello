@@ -5,6 +5,7 @@ require 'optparse'
 require 'fcntl'
 require 'fileutils'
 require 'socket'
+require 'tempfile'
 
 $stdout.sync = true
 
@@ -34,6 +35,14 @@ def exit_with(code = :unknown)
   exit code
 end
 
+# main dictionaries
+$default_options = {}
+$default_options_order = []
+$default_options_errors = ''
+$titles = {}
+$final_options = {}
+$temp_options = {}
+
 # Reading answer file, used both for the default answer file
 # and for user files. The structure of the answer file is
 #
@@ -47,7 +56,7 @@ def read_answer_file(filename)
 	error = ''
 	data = {}
 	data_order = []
-	titles = {}
+	$titles = {}
 	docs = {}
 	title = ''
 	synopsis = ''
@@ -70,7 +79,7 @@ def read_answer_file(filename)
 			data[$1] = $2
 			docs[$1] = synopsis
 			data_order.push $1
-			titles[$1] = title.gsub(/\.\s*$/, '')
+			$titles[$1] = title.gsub(/\.\s*$/, '')
 		else
 			error.concat "Unsupported config line format [#{line}] in file [#{filename}]\n"
 		end
@@ -78,7 +87,7 @@ def read_answer_file(filename)
 		synopsis = ''
 	end
 	file.close
-	return data, data_order, error, titles, docs
+	return data, data_order, error, $titles, docs
 end
 
 # Reading options format file, that describe what options are required
@@ -94,7 +103,7 @@ def read_options_format(filename)
 	mandatory = {}
 	regex = {}
 	data_order = []
-	titles = {}
+	$titles = {}
 	docs = {}
 	title = ''
 	synopsis = ''
@@ -118,7 +127,7 @@ def read_options_format(filename)
 			regex[$1] = $3
 			docs[$1] = synopsis
 			data_order.push $1
-			titles[$1] = title.gsub(/\.\s*$/, '')
+			$titles[$1] = title.gsub(/\.\s*$/, '')
 		else
 			error.concat "Unsupported config line format [#{line}] in file [#{filename}]\n"
 		end
@@ -126,7 +135,7 @@ def read_options_format(filename)
 		synopsis = ''
 	end
 	file.close
-	return mandatory, regex, data_order, error, titles, docs
+	return mandatory, regex, data_order, error, $titles, docs
 end
 
 def _get_valid_option_value(option, defaults, finals)
@@ -191,6 +200,16 @@ def _request_option_interactively(title, regex, default_value, non_interactive_v
 	end
 end
 
+# remove option from $final_options (and order) hashes (and optionally move
+# it to the temporary hash (used for dangerous options)
+def remove_option(name, move_to_temp = false)
+  if $final_options.has_key? name
+    $temp_options[name] = $final_options[name] if move_to_temp
+    $final_options.delete(name)
+    $default_options_order.delete(name)
+  end
+end
+
 $expected_progress_width = ENV['COLUMNS']
 if $expected_progress_width == nil
 	$expected_progress_width = 80
@@ -223,12 +242,8 @@ end
 # options that can be specified (that's why we parse the default
 # file first), as well as values that can be overwritten in user
 # answer file.
-default_options = {}
-default_options_order = []
-default_options_errors = ''
-titles = {}
 if File.file?(default_path)
-	default_options, default_options_order, default_options_errors, titles = read_answer_file(default_path)
+	$default_options, $default_options_order, $default_options_errors, $titles = read_answer_file(default_path)
 end
 
 # After having read the default option list, we parse the
@@ -244,8 +259,8 @@ begin
   option_parser.summary_width = 8
   option_parser.summary_indent = ' ' * 2
 
-	default_options_order.each do |key|
-		option_parser.on('--' + key.gsub(/_/, '-') + '=' + key.upcase, String, titles[key]) do |value|
+	$default_options_order.each do |key|
+		option_parser.on('--' + key.gsub(/_/, '-') + '=' + key.upcase, String, $titles[key]) do |value|
 			options[key] = value
 		end
 	end
@@ -273,19 +288,18 @@ end
 # We only warn about possible errors in the default answer
 # file here, to make it possible to use for example --help,
 # even if there are errors in the default file.
-if default_options_errors != ''
-	$stderr.puts default_options_errors
+if $default_options_errors != ''
+	$stderr.puts $default_options_errors
 	exit_with :default_option_error
 end
 
 # If there was an answer file specified, we parse it.
-final_options = {}
 if options['answer_file'] != nil
 	if not File.file?(options['answer_file'])
 		$stderr.puts "Answer file [#{options['answer_file']}] does seem to exist"
 		exit_with :answer_missing
 	end
-	final_options, __unused, error = read_answer_file(options['answer_file'])
+	$final_options, __unused, error = read_answer_file(options['answer_file'])
 	if error != ''
 		$stderr.puts error
 		exit_with :answer_parsing_error
@@ -294,8 +308,8 @@ if options['answer_file'] != nil
 	# The user answer file can only use (override) options that
 	# were already defined in the default answer file.
 	need_exit = false
-	final_options.keys.each do |key|
-		if not default_options.has_key?(key)
+	$final_options.keys.each do |key|
+		if not $default_options.has_key?(key)
 			$stderr.puts "Unknown option [#{key}] in answer file [#{options['answer_file']}]"
 			need_exit = true
 		end
@@ -307,48 +321,39 @@ end
 
 # The command line options take precedence over the user
 # answer file values.
-final_options.update(options)
-final_options.delete('answer_file')
+$final_options.update(options)
+$final_options.delete('answer_file')
 
 # read required parameter list and its format
 mandatory, regex, __unused_data_order, error, __unused_titles, __usused_docs = read_options_format(options_format_path)
 
-non_interactive_option = _get_valid_option_value('non_interactive', default_options, final_options)
-ssl_ca_password_file_option = _get_valid_option_value('ssl_ca_password_file', default_options, final_options)
+non_interactive_option = _get_valid_option_value('non_interactive', $default_options, $final_options)
+ssl_ca_password_file_option = _get_valid_option_value('ssl_ca_password_file', $default_options, $final_options)
 
 mandatory.each do |key, mand|
-	if (not final_options.has_key?(key) and mandatory[key]) or
-	(not final_options[key].nil? and not final_options[key].to_s() =~ Regexp.new(regex[key]))
-    final_options[key] = _request_option_interactively(titles[key], regex[key], _get_valid_option_value(key, default_options, final_options), _is_option_true(non_interactive_option))
-		if not default_options_order.include?(key)
-			default_options_order.push(key)
+	if (not $final_options.has_key?(key) and mandatory[key]) or
+	(not $final_options[key].nil? and not $final_options[key].to_s() =~ Regexp.new(regex[key]))
+    $final_options[key] = _request_option_interactively($titles[key], regex[key], _get_valid_option_value(key, $default_options, $final_options), _is_option_true(non_interactive_option))
+		if not $default_options_order.include?(key)
+			$default_options_order.push(key)
 		end
 	end
 end
 
-if default_options_errors != ''
-	$stderr.puts default_options_errors
+if $default_options_errors != ''
+	$stderr.puts $default_options_errors
 	exit 6
 end
 
 # We will only keep values that are different from the default ones.
-final_options.each do |key, value|
-	if default_options[key] == value
-		final_options.delete(key)
+$final_options.each do |key, value|
+	if $default_options[key] == value
+		$final_options.delete(key)
 	end
-end
-
-if show_resulting_answer_file
-	default_options_order.each do |key|
-		if final_options.has_key?(key)
-			puts key + ' = ' + final_options[key]
-		end
-	end
-	exit
 end
 
 # Set the deployment to be the relative url
-url_root = final_options['deployment'].nil? ? default_options['deployment'] : final_options['deployment']
+url_root = $final_options['deployment'].nil? ? $default_options['deployment'] : $final_options['deployment']
 # Don't let a headpin user install in katello/cfse mode
 if url_root == 'katello' || url_root == 'cfse'
   if %x[rpm -qa katello-headpin] != ''
@@ -360,23 +365,31 @@ end
 
 ENV['RAILS_RELATIVE_URL_ROOT'] = "/" + url_root
 
-
 # handle ca password separately, because we do not want
 # to store it into the katello-configure.conf
 begin
     File.open(ssl_ca_password_file_option, 'w') do |f|
-        f.write(_get_valid_option_value('ssl_ca_password', default_options, final_options))
+        f.write(_get_valid_option_value('ssl_ca_password', $default_options, $final_options))
     end
 rescue
     $stderr.puts "Failed to write to file [#{ssl_ca_password_file_option}]."
     exit 8
 end
-final_options.delete('ssl_ca_password')
-default_options_order.delete('ssl_ca_password')
-final_options.delete('reset_data')
-default_options_order.delete('reset_data')
-final_options.delete('reset_cache')
-default_options_order.delete('reset_cache')
+remove_option('ssl_ca_password')
+
+# reset options are too dangerous - not storing them in the result answer file
+# and moving them to the temporary file which is merged and then deleted
+remove_option('reset_data', true)
+remove_option('reset_cache', true)
+
+if show_resulting_answer_file
+	$default_options_order.each do |key|
+		if $final_options.has_key?(key)
+			puts key + ' = ' + $final_options[key]
+		end
+	end
+	exit
+end
 
 # Prints a warning if FQDN is not set, returns error when
 # localhost or hostname cannot be resolved (/etc/hosts entry is missing).
@@ -411,18 +424,29 @@ ENV['FACTER_fqdn'] = facter_hostname
 # start configuring
 puts 'Starting Katello configuration'
 
+puts $final_options.inspect
+puts $temp_options.inspect
+
 orig_umask = File.umask(077)
 begin
 	File.unlink(result_config_path)
 rescue
 end
 result_config = IO.open(IO::sysopen(result_config_path, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
-default_options_order.each do |key|
-	if final_options.has_key?(key)
-		result_config.syswrite('# ' + (titles[key] || key) + "\n" + key + ' = ' + final_options[key] + "\n\n")
+$default_options_order.each do |key|
+	if $final_options.has_key?(key)
+		result_config.syswrite('# ' + ($titles[key] || key) + "\n" + key + ' = ' + $final_options[key] + "\n\n")
 	end
 end
 result_config.close
+
+temp_config_path = '/dev/null'
+Tempfile.open("katello-configure-temp") do |temp_config|
+  temp_config_path = temp_config.path
+  $temp_options.each_pair do |key, value|
+    temp_config.syswrite("#{key}=#{value}\n")
+  end
+end
 File.umask(orig_umask)
 
 now = Time.now.strftime("%Y%m%d-%H%M%S")
@@ -445,6 +469,7 @@ FileUtils.ln_sf('katello-configure-' + now, log_directory_link)
 FileUtils.cp result_config_path, log_directory
 
 ENV['KATELLO_ANSWER_FILE'] = result_config_path
+ENV['KATELLO_TEMP_ANSWER_FILE'] = temp_config_path
 
 commands_by_logfiles = {
 	'/var/log/katello/katello-configure/cpsetup.log' => [ 'Candlepin setup', 276 ],
@@ -514,6 +539,9 @@ rescue => e
 	seen_err = true
 end
 puppet_logfile.close
+
+puts "cat #{temp_config_path}"
+puts `cat #{temp_config_path}`
 
 if seen_err
 	exit_with :error_executing_puppet
