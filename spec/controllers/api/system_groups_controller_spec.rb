@@ -164,18 +164,36 @@ describe Api::SystemGroupsController do
        it_should_behave_like "protected action"
 
        it "should create a group correctly" do
-         post :copy, :organization_id=>@org.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo", :description=>"describe"}
+         post :copy, :organization_id=>@org.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo", :description=>"describe", :max_systems=>1234}
          response.should be_success
-         SystemGroup.where(:name=>"foo").first.should_not be_nil
+         first = SystemGroup.where(:name=>"foo").first
+         first.should_not be_nil
+         first[:max_systems].should == 1234
        end
-       
+
+
+
        it "should not create 2 groups with the same name" do
          post :copy, :organization_id=>@org.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo2", :description=>"describe"}
          post :copy, :organization_id=>@org.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo2", :description=>"describe"}
          response.should_not be_success
          SystemGroup.where(:name=>"foo2").count.should == 1
        end
-       
+
+       it "should inherit fields from existing group unless specified in API call" do
+         post :copy, :organization_id=>@org.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo", :description=>"describe new", :max_systems=>1234}
+         response.should be_success
+         first = SystemGroup.where(:name=>"foo").first
+         first[:max_systems].should == 1234
+         first[:description].should == "describe new"
+
+         post :copy, :organization_id=>@org.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo2"}
+         response.should be_success
+         first = SystemGroup.where(:name=>"foo2").first
+         first[:max_systems].should == @group.max_systems
+         first[:description].should == @group.description
+       end
+
        it "should not let you copy one group to a different org" do
          @org2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
          post :copy, :organization_id=>@org2.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo2", :description=>"describe"}
