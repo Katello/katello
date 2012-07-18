@@ -118,7 +118,12 @@ KT.content_search = function(paths_in){
     get_initial_environments = function(){
         var initial_envs = $.bbq.getState('environments');
         if(!initial_envs && paths[0]){
-            initial_envs = [paths[0][0]] ;
+            KT.utils.each(paths[0], function(item){
+               if(item.select){
+                   initial_envs = [item];
+                   return false;
+               }
+            });
         }
         return initial_envs;
     },
@@ -296,7 +301,7 @@ KT.content_search = function(paths_in){
         //submit event
         $(document).bind(env_select.get_submit_event(), function(event, environments) {
             var search = $.bbq.getState('search');
-            if (envs_changed && search.mode && search.mode !== 'all'){
+            if (envs_changed && search && search.mode && search.mode !== 'all'){
                 search_initiated(undefined, search);
                 envs_changed = false;
             } 

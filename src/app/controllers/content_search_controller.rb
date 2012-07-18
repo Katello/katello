@@ -15,9 +15,9 @@ class ContentSearchController < ApplicationController
   before_filter :find_repos, :only => [:repo_compare_packages, :repo_compare_errata]
 
   def rules
-    contents_test = lambda{true}
+    contents_test = lambda{!KTEnvironment.content_readable(current_organization).empty?}
     {
-        :index => lambda{true},
+        :index => contents_test,
         :errata => contents_test,
         :products => contents_test,
         :repos => contents_test,
@@ -38,21 +38,24 @@ class ContentSearchController < ApplicationController
 
   def my_environments
     paths = current_organization.promotion_paths
-    library = {:id=>current_organization.library.id, :name=>current_organization.library.name, :select=>true}
-    paths.collect do |path|
-      [library] + path.collect{|e| {:id=>e.id, :name=>e.name, :select=>true} }
+    library = {:id=>current_organization.library.id, :name=>current_organization.library.name, :select=>current_organization.library.contents_readable?}
+    to_ret = []
+    paths.each do |path|
+      path = path.collect{|e| {:id=>e.id, :name=>e.name, :select=>e.contents_readable?} }
+      to_ret << [library] + path if path.any?{|e| e[:select]}
     end
+    to_ret
   end
 
   def products
     ids = param_product_ids
     if !ids.empty?
-      products = current_organization.products.engineering.where(:id=>ids)
+      products = current_organization.products.readable(current_organization).engineering.where(:id=>ids)
     else
-      products = current_organization.products.engineering
+      products = current_organization.products.readable(current_organization).engineering
     end
 
-    envs = KTEnvironment.where(:id=>params[:environments])
+    envs = process_env_ids
     if params[:mode] == 'shared'
       products = products.select{|p|  (envs - p.environments).empty? }
     elsif params[:mode] == 'unique'
@@ -66,20 +69,20 @@ class ContentSearchController < ApplicationController
     product_ids = param_product_ids
 
     if repo_ids.is_a? Array #repos were auto_completed
-        repos = Repository.enabled.readable(current_organization.library).where(:id=>repo_ids)
+        repos = Repository.enabled.libraries_content_readable(current_organization).where(:id=>repo_ids)
     elsif repo_ids #repos were searched
-      readable = Repository.enabled.readable(current_organization.library).collect{|r| r.id}
+      readable = Repository.enabled.libraries_content_readable(current_organization).collect{|r| r.id}
       repos = repo_search(repo_ids, readable)
     elsif !product_ids.empty? #products were autocompleted
         repos = []
         Product.readable(current_organization).where(:id=>product_ids).each do |p|
-          repos = repos + Repository.enabled.readable_for_product(current_organization.library, p)
+          repos = repos + Repository.enabled.libraries_content_readable(current_organization).product(p)
         end
     else #get all
-        repos = Repository.enabled.readable(current_organization.library)
+        repos = Repository.enabled.libraries_content_readable(current_organization)
     end
 
-    envs = KTEnvironment.where(:id=>params[:environments])
+    envs = process_env_ids
     if params[:mode] == 'shared'
       repos = repos.select do |r|
         repo_envs = r.environmental_instances.collect{|r| r.environment}
@@ -121,7 +124,7 @@ class ContentSearchController < ApplicationController
 
   #similar to :packages, but only returns package rows with an offset for a specific repo
   def packages_items
-    repo = Repository.where(:id=>params[:repo_id]).first
+    repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
     pkgs = spanned_repo_content(repo, 'package', process_params(:packages), params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
     meta = metadata_row(pkgs[:total], params[:offset] + pkgs[:content_rows].length,
                         {:repo_id=>repo.id}, repo.id, "repo_#{repo.id}")
@@ -130,7 +133,7 @@ class ContentSearchController < ApplicationController
 
   #similar to :errata, but only returns errata rows with an offset for a specific repo
   def errata_items
-    repo = Repository.where(:id=>params[:repo_id]).first
+    repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
     errata = spanned_repo_content(repo, 'errata', process_params(:errata), params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
     meta = metadata_row(errata[:total], params[:offset] + errata[:content_rows].length,
                         {:repo_id=>repo.id}, repo.id, "repo_#{repo.id}")
@@ -208,6 +211,11 @@ class ContentSearchController < ApplicationController
     render :json => {:rows=>rows, :cols=>cols}
   end
 
+
+  def find_environments
+    @envs = KTEnvironment.contents_readable(current_organization).where(:id=>params[:environemnts])
+  end
+
   def find_repos
     @repos = []
     params[:repos].values.each do |item|
@@ -221,11 +229,12 @@ class ContentSearchController < ApplicationController
   end
 
   def repo_rows repos
+    env_ids = KTEnvironment.content_readable(current_organization).collect{|e| e.id}
     repos.collect do |repo|
         all_repos = repo.environmental_instances.collect{|r| r.pulp_id}
         cols = {}
         Repository.where(:pulp_id=>all_repos).each do |r|
-          cols[r.environment.id] = {:hover => repo_hover_html(r)}
+          cols[r.environment.id] = {:hover => repo_hover_html(r)} if env_ids.include?(r.environment_id)
         end
         {:id=>"repo_#{repo.id}", :comparable=>true, :parent_id=>"product_#{repo.product.id}", :name=>repo.name, :cols=>cols}
     end
@@ -236,10 +245,11 @@ class ContentSearchController < ApplicationController
   end
 
   def product_rows products
+    env_ids = KTEnvironment.content_readable(current_organization).collect{|e| e.id}
     products.collect do |p|
       cols = {}
       p.environments.collect do |env|
-        cols[env.id] = {:hover => product_hover_html(p, env)}
+        cols[env.id] = {:hover => product_hover_html(p, env)} if env_ids.include?(env.id)
       end
        {:id=>"product_#{p.id}", :name=>p.name, :cols=>cols}
     end
@@ -307,7 +317,7 @@ class ContentSearchController < ApplicationController
     if repo_search_params.is_a? Array
       repo_ids = repo_search_params
     elsif repo_search_params
-      readable = Repository.readable(current_organization.library).select(:id).collect{|r| r.id}
+      readable = Repository.libraries_content_readable(current_organization).select(:id).collect{|r| r.id}
       repo_ids = repo_search(repo_search_params, readable).collect{|r| r.id}
     else
       if !product_ids.empty?
@@ -316,7 +326,7 @@ class ContentSearchController < ApplicationController
         products = Product.readable(current_organization)
       end
       products.each do |p|
-      repo_ids = repo_ids + Repository.enabled.readable_for_product(current_organization.library, p).select("#{Repository.table_name}.id").collect{|r| r.id}
+        repo_ids = repo_ids + Repository.enabled.libraries_content_readable(current_organization).in_product(p).select("#{Repository.table_name}.id").collect{|r| r.id}
       end
     end
 
@@ -345,6 +355,7 @@ class ContentSearchController < ApplicationController
     content_rows = []
     product_envs = {}
     product_envs.default = 0
+    accessible_env_ids = KTEnvironment.content_readable(current_organization).collect{|e| e.id}
 
     repo_ids.each do |repo_id|
       repo = Repository.find(repo_id)
@@ -363,7 +374,7 @@ class ContentSearchController < ApplicationController
       end
     end
     cols = {}
-    product_envs.each{|env_id, count| cols[env_id] = {:id=>env_id, :display=>count}}
+    product_envs.each{|env_id, count| cols[env_id] = {:id=>env_id, :display=>count} if accessible_env_ids.include?(env_id)}
     if rows.empty?
       return nil
     else
@@ -377,8 +388,7 @@ class ContentSearchController < ApplicationController
   #
   def spanned_repo_content library_repo, content_type, content_search_obj, offset=0, search_mode = :all, environments = []
     spanning_repos = library_repo.environmental_instances
-
-
+    accessible_env_ids = KTEnvironment.content_readable(current_organization).collect{|e| e.id}
 
     unless environments.nil? || environments.empty?
       spanning_repos.delete_if do |repo|
@@ -403,7 +413,7 @@ class ContentSearchController < ApplicationController
 
     spanning_repos.each do |repo|
       results = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode,repo).results
-      to_ret[repo.environment_id] = {:id=>repo.environment_id, :display=>results.total}
+      to_ret[repo.environment_id] = {:id=>repo.environment_id, :display=>results.total} if accessible_env_ids.include?(repo.environment_id)
     end
 
     {:content_rows=>spanning_content_rows(content, content_type, content_attribute, library_repo, spanning_repos),
@@ -455,13 +465,14 @@ class ContentSearchController < ApplicationController
   # parent_repo    the library repo instance (or the parent row)
   # spanned_repos  all other instances of repos across all environments
   def spanning_content_rows(content_list, id_prefix, name_attribute, parent_repo, spanned_repos)
+    env_ids = KTEnvironment.content_readable(current_organization).collect{|e| e.id}
     to_ret = [] 
     for item in content_list:
         row = {:id=>"repo_#{parent_repo.id}_#{id_prefix}_#{item.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{},
                :name=>item.send(name_attribute)}
         spanned_repos.each do |repo|
           if item.repoids.include? repo.pulp_id
-              row[:cols][repo.environment_id] = {:id=>repo.environment_id}
+              row[:cols][repo.environment_id] = {:id=>repo.environment_id} if env_ids.include?(repo.environment_id)
           end
         end 
         to_ret << row
