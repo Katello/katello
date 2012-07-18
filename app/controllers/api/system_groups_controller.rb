@@ -42,7 +42,7 @@ class Api::SystemGroupsController < Api::ApiController
   def param_rules
     {
       :create => {:system_group=>[:name, :description, :system_ids, :max_systems]},
-      :copy => {:system_group=>[:new_name, :description]},
+      :copy => {:system_group=>[:new_name, :description, :max_systems]},
       :update =>  {:system_group=>[:name, :description, :system_ids, :max_systems]},
       :add_systems => {:system_group=>[:system_ids]},
       :remove_systems => {:system_group=>[:system_ids]}
@@ -119,9 +119,19 @@ class Api::SystemGroupsController < Api::ApiController
     grp_param = params[:system_group]
     new_group = SystemGroup.new
     new_group.name = grp_param[:new_name]
-    new_group.description = grp_param[:description]
     new_group.organization = @group.organization
-    new_group.max_systems = @group.max_systems
+
+    # Check API params and if not set use the existing group
+    if grp_param[:description]
+      new_group.description = grp_param[:description]
+    else
+      new_group.description = @group.description
+    end
+    if grp_param[:max_systems]
+      new_group.max_systems = grp_param[:max_systems]
+    else
+      new_group.max_systems = @group.max_systems
+    end
     new_group.save!
 
     new_group.systems = @group.systems
