@@ -209,7 +209,7 @@ mkdir -p %{buildroot}/%{_mandir}/man8
 #copy the application to the target directory
 mkdir .bundle
 mv ./deploy/bundle-config .bundle/config
-cp -R .bundle * %{buildroot}%{homedir}
+cp -R .bundle Gemfile Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
@@ -256,11 +256,6 @@ ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
 
 #remove files which are not needed in the homedir
-rm -rf %{buildroot}%{homedir}/README
-rm -rf %{buildroot}%{homedir}/LICENSE
-rm -rf %{buildroot}%{homedir}/doc
-rm -rf %{buildroot}%{homedir}/deploy
-rm -rf %{buildroot}%{homedir}/%{name}.spec
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
