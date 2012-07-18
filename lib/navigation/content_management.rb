@@ -134,13 +134,10 @@ module Navigation
     def menu_content_search
       {:key => :content_search,
        :name =>_("Content Search"),
-       :if => lambda{AppConfig.katello? && (current_organization.syncable? || Provider.any_readable?(current_organization))},
+       :if => lambda{AppConfig.katello? && !KTEnvironment.content_readable(current_organization).empty?},
        :options => {:class=>'content second_level', "data-menu"=>"content"},
        :url =>content_search_index_path,
-
       }
-
-
     end
 
 
