@@ -147,7 +147,7 @@ class Glue::Pulp::Errata
 
     return search.perform.results
   rescue Tire::Search::SearchRequestFailed => e
-    []
+    Support.array_with_total
   end
 
   def self.index_errata errata_ids
