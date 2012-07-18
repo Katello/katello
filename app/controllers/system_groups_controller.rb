@@ -173,6 +173,7 @@ class SystemGroupsController < ApplicationController
 
   def items
     ids = SystemGroup.readable(current_organization).collect{|s| s.id}
+
     render_panel_direct(SystemGroup, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
       {:default_field => :name, :load=>true, :filter=>[{:id=>ids},{:organization_id=>[current_organization.id]}]})
   end
