@@ -560,15 +560,19 @@ class SystemsController < ApplicationController
   end
 
   def add_system_groups
-    unless params[:group_ids].blank?
+    if params[:group_ids].nil? or params[:group_ids].blank?
+      notify.error _('One or more system groups must be provided.')
+      render :nothing=>true, :status=>500
+    else
       ids = params[:group_ids].collect{|g| g.to_i} - @system.system_group_ids #ignore dups
       @system_groups = SystemGroup.where(:id=>ids)
       @system.system_group_ids = (@system.system_group_ids + @system_groups.collect{|g| g.id}).uniq
       @system.save!
+
+      notify.success _("System '%s' was updated.") % @system["name"]
+      render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}} and return
     end
-    notify.success _("System '%s' was updated.") % @system["name"]
-    render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}} and return
-  rescue Exception => e
+  rescue => e
     notify.exception e
     render :text=>e, :status=>500
   end
@@ -580,7 +584,7 @@ class SystemsController < ApplicationController
 
     notify.success _("System '%s' was updated.") % @system["name"]
     render :nothing => true
-  rescue Exception => e
+  rescue => e
     notify.exception e
     render :text=>e, :status=>500
   end
@@ -619,6 +623,10 @@ class SystemsController < ApplicationController
 
   def find_system
     @system = System.find(params[:id])
+  rescue => e
+    notify.exception e
+    execute_after_filters
+    render :text=>e, :status=>:bad_request
   end
 
   def find_systems
