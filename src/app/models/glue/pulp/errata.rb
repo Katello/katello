@@ -12,7 +12,7 @@
 
 require 'set'
 require 'util/search'
-
+require 'util/package_util'
 class Glue::Pulp::Errata
 
   SECURITY = "security"
@@ -90,6 +90,7 @@ class Glue::Pulp::Errata
           :repoids      => { :type => 'string', :index =>:not_analyzed},
           :id_sort      => { :type => 'string', :index => :not_analyzed},
           :id_title     => { :type => 'string', :analyzer =>:title_analyzer},
+          :id           => { :type => 'string', :analyzer =>:kt_name_analyzer},
           :product_ids  => { :type => 'integer', :analyzer =>:kt_name_analyzer},
           :severity     => { :type => 'string', :analyzer =>:kt_name_analyzer},
           :type         => { :type => 'string', :analyzer =>:kt_name_analyzer}
@@ -114,8 +115,8 @@ class Glue::Pulp::Errata
   def self.search query, start, page_size, filters={}, sort=[:id_sort, "DESC"]
     return [] if !Tire.index(self.index).exists?
     all_rows = query.blank?
-
-    search = Tire.search self.index do
+    search = Tire::Search::Search.new(self.index)
+    search.instance_eval do
       query do
         if all_rows
           all
@@ -128,9 +129,6 @@ class Glue::Pulp::Errata
        size page_size
        from start
       end
-      if filters.has_key?(:repoids)
-        filter :terms, :repoids => filters[:repoids]
-      end
       if filters.has_key?(:type)
         filter :term, :type => filters[:type]
       end
@@ -140,7 +138,14 @@ class Glue::Pulp::Errata
 
       sort { by sort[0], sort[1] } unless !all_rows
     end
-    return search.results
+
+    if filters.has_key?(:repoids)
+      search_mode = filters[:search_mode] || :all
+      repoids = filters[:repoids]
+      Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
+    end
+
+    return search.perform.results
   rescue
     return []
   end
