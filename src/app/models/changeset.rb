@@ -508,11 +508,11 @@ class Changeset < ActiveRecord::Base
     end
   end
 
-  def deletion_set?
+  def deletion?
     self.action_type == DELETION
   end
 
-  def promotion_set?
+  def promotion?
     self.action_type == PROMOTION
   end
 

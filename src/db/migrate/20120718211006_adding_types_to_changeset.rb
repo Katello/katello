@@ -5,6 +5,9 @@ class AddingTypesToChangeset < ActiveRecord::Migration
     Changeset.all.each do  |changeset|
       changeset.update_attributes!(:action_type => Changeset::PROMOTION)
     end
+    execute("UPDATE changesets
+             SET action_type = '#{Changeset::PROMOTION}'")
+
   end
 
   def self.down
