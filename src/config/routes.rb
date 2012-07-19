@@ -37,6 +37,21 @@ Src::Application.routes.draw do
     end
   end
 
+  resources :content_search do
+      collection do 
+        post :errata
+        post :products
+        post :packages
+        post :packages_items
+        post :errata_items
+        post :repos
+        get :repo_packages
+        get :repo_errata
+        get :repo_compare_packages
+        get :repo_compare_errata
+      end
+  end
+
   resources :activation_keys do
     collection do
       get :auto_complete_search
@@ -179,6 +194,7 @@ Src::Application.routes.draw do
     end
     collection do
       get :auto_complete_library
+      get :auto_complete_nvrea_library
       get :validate_name_library
     end
   end
@@ -189,7 +205,11 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :products, :only => [:new, :create, :edit,:update, :destroy]
+  resources :products, :only => [:new, :create, :edit,:update, :destroy] do
+    collection do
+       get :auto_complete
+    end
+  end
 
   resources :owners do
     member do
