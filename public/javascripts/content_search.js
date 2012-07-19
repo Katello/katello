@@ -119,9 +119,8 @@ KT.content_search = function(paths_in){
         var initial_envs = $.bbq.getState('environments');
         if(!initial_envs && paths[0]){
             KT.utils.each(paths[0], function(item){
-               if(item.select){
+               if(!initial_envs && item.select){
                    initial_envs = [item];
-                   return false;
                }
             });
         }
