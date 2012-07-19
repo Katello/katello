@@ -8,9 +8,11 @@
   - if AppConfig.katello? && current_organization && Repository.any_readable_in_org?(current_organization, true)
     = dashboard_ajax_entry(_("Available Errata"), "errata", errata_dashboard_index_path(), "big_widget", true)
   -#= dashboard_ajax_entry(_("System Overview"), "systems", systems_dashboard_index_path(), "big_widget", true)
+  - if AppConfig.katello? && current_organization && SystemGroup.any_readable?(current_organization)
+    = dashboard_ajax_entry(_("System Group Overview"), "system_groups", system_groups_dashboard_index_path(), "big_widget", true)
 
 .grid_7
-  - widget_class = AppConfig.katello? ? "small_widget" : "small_widget_headpin" 
+  - widget_class = AppConfig.katello? ? "small_widget" : "small_widget_headpin"
   = dashboard_ajax_entry(_("Latest Notifications"), "notices", notices_dashboard_index_path(), widget_class, true)
   - if AppConfig.katello?
     - if current_organization && KTEnvironment.any_viewable_for_promotions?(current_organization)
