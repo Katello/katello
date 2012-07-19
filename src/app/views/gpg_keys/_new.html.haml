@@ -3,33 +3,26 @@
 
 = content_for :content do
   .grid_10
-    = form_tag gpg_keys_path, :method => "post", :id => "upload_new_gpg_key" do
-      %fieldset
-        .grid_2.ra
-          %label #{_("Name")}:
-        .grid_7.la
-          = text_field_tag 'gpg_key[name]', '', :tabindex => auto_tab_index, :class => "grid_6"
-      %fieldset
-        .grid_2.ra
-          %label #{_("Upload")}:
-        .grid_3.la
-          = file_field_tag 'gpg_key[content_upload]', :id => "gpg_key_content_upload", :tabindex => auto_tab_index, :class => "grid_6"
+    = kt_form_for GpgKey.new, :html => {:id => "upload_new_gpg_key"} do |f|
+
+      = f.text_field :name, :label => _("Name"), :class => "grid_6"
+
+      = f.file_field :content_upload, :id => "gpg_key_content_upload", :label => _("Upload"), :class => "grid_6"
+
       %fieldset
         .grid_2.la.push_2
-          %input.button{ "type" => "button", :id => :upload_gpg_key, :tabindex => auto_tab_index, "value" => _("Upload") }
-        .grid_1.push_3.ra
-          %input.button{ "type" => "button", :id => :clear_upload_gpg_key, :disabled => "disabled", :tabindex => auto_tab_index, "value" => _("Clear") }
-      %fieldset
-        .grid_2.ra
-          %label #{_("or")}
-    = form_tag gpg_keys_path, :method => "post", :id => "new_gpg_key" do
-      %fieldset
-        .grid_2.ra
-          %label #{_("Paste GPG Key")}:
-        .grid_7.la
-          = text_area_tag 'gpg_key[content]', '', :id=> "gpg_key_content", :size => "40x15", :tabindex => auto_tab_index, :class => "grid_6"
-      %fieldset
-        .grid_2.la.push_2
-          %input.button{ "type" => "submit", :id => :save_gpg_key, :tabindex => auto_tab_index, "value" => _("Save") }
+          = submit_tag _("Upload"), :id => :upload_gpg_key, :tabindex => f.tabindex
         .grid_1.push_5
-          %input.button{ "type" => "button", :id => :clear_gpg_key,  :disabled => "disabled", :tabindex => auto_tab_index, "value" => _("Clear") }
+          = submit_tag _("Clear"), :id => :clear_upload_gpg_key, :disabled => true, :tabindex => f.tabindex
+
+      = f.field :or, :label => _("or")
+
+    = kt_form_for GpgKey.new, :html => {:id => "new_gpg_key"}, :tabindex => 5 do |f|
+
+      = f.text_area :content, :id=> "gpg_key_content", :size => "40x15", :label => _("Paste GPG Key"), :class => "grid_6"
+
+      %fieldset
+        .grid_2.la.push_2
+          = submit_tag _("Save"), :id => :save_gpg_key, :tabindex => f.tabindex
+        .grid_1.push_5
+          = submit_tag _("Clear"), :id => :clear_gpg_key,  :disabled => "disabled", :tabindex => f.tabindex

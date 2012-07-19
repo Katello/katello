@@ -52,7 +52,7 @@ class OrganizationsController < ApplicationController
 
   def param_rules
     {
-      :create =>[:name, :description, :envname, :envdescription],
+      :create => {:organization => [:name, :description], :environment => [:name, :description]},
       :update => {:organization  => [:description]}
     }
   end
@@ -74,21 +74,23 @@ class OrganizationsController < ApplicationController
 
   def create
     begin
-      cp_key = params[:name].tr(' ', '_')
+      org_params = params[:organization]
+      env_params = params[:environment]
+      cp_key = org_params[:name].tr(' ', '_')
       # org is being deleted
       if Organization.find_by_cp_key(cp_key).nil? && Organization.unscoped.find_by_cp_key(cp_key)
-        msg = _("Organization '%s' already exists and either has been scheduled for deletion or failed deletion.") % params[:name]
+        msg = _("Organization '%s' already exists and either has been scheduled for deletion or failed deletion.") % org_params[:name]
         raise msg
       end
 
-      if params[:envname] && params[:envname] != ''
-        @new_env = KTEnvironment.new(:name => params[:envname], :description => params[:envdescription])
+      if env_params[:name] && env_params[:name] != ''
+        @new_env = KTEnvironment.new(:name => env_params[:name], :description => env_params[:description])
       else
         @new_env = nil
       end
 
       org_created = false
-      @organization = Organization.new(:name => params[:name], :description => params[:description], :cp_key => params[:name].tr(' ', '_'))
+      @organization = Organization.new(:name => org_params[:name], :description => org_params[:description], :cp_key => cp_key)
       @organization.save!
       org_created = true
 

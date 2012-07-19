@@ -423,6 +423,15 @@ $(document).ready(function (){
   $(".tipsify").tipsy({ live : true, gravity: 's', fade: true, delayIn : 350 });
   $(".tipsify-west").tipsy({ gravity: 'w', hoverable : 'true' });
 
+  // Form inputs help tips 
+  $('form span.details-icon[data-help]').tipsy({
+    gravity: 'e', live : true, html : true, title : KT.tipsy.templates.table_template,
+    hoverable : true, delayOut : 250, opacity : 1, delayIn : 300, className : 'tooltip',
+    afterShow : function(){
+      $('.details_container').addClass('scroll-pane');
+      KT.common.jscroll_init($('.scroll-pane'));
+  }});
+
   KT.common.orgSwitcherSetup();
   KT.common.orgFilterSetup();
 });

@@ -390,8 +390,10 @@ table {
 /* generic */
 label {
   text-align: right;
-  font-weight: bold;
   color: $labelfg_color;
+  &.required {
+    font-weight: bold;
+  }
   &.header {
     text-align: left;
     font-weight: normal;

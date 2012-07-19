@@ -9,23 +9,12 @@
 = content_for :subcontent do
   .clear
     &nbsp;
-  = form_tag organization_environments_path(@organization.cp_key), :id=>"new_subpanel", :method => "post", :remote=>true do
-    %fieldset.clearfix
-      %b
-        %label.grid_2 #{_("Name")}:
-      .grid_5
-        = text_field_tag :name, params[:name], :class=>'grid_5', :tabindex => auto_tab_index
-    %fieldset.clearfix
-      %b
-        %label.grid_2
-          #{_("Description")}:
-      .grid_5
-        = text_area_tag :description, params[:description], :class=>'grid_5', :tabindex => auto_tab_index
-    %fieldset.clearfix
-      %b
-        %label.grid_2 #{_("Prior Environment")}:
-      .grid_5
-        = select_tag "prior", options_for_select(@env_labels, @selected), :tabindex => auto_tab_index
-    .grid_5.prefix_2
-      = submit_tag _("Create"), :class => 'fr subpanel_create', :tabindex => auto_tab_index, :disable_with => _("Creating...")
+  = kt_form_for KTEnvironment.new, :url => organization_environments_path(@organization.cp_key), :remote=>true, :html => {:id=>"new_subpanel"} do |f|
 
+    = f.text_field :name, :label => _("Name")
+
+    = f.text_area :description, :size => "40x5", :label => _("Description")
+
+    = f.select :prior, options_for_select(@env_labels, @selected), :label => _("Prior Environment")
+
+    = f.submit _("Create"), :disable_with => _("Creating..."), :class => 'subpanel_create'

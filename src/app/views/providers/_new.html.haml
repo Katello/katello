@@ -5,5 +5,5 @@
 
 = content_for :content do
   #provider
-    = form_for @provider, :html => {:method => :post}, :url => providers_path do |f|
+    = kt_form_for @provider do |f|
       = render :partial => 'form', :locals => { :form =>f }

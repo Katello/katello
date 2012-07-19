@@ -99,7 +99,7 @@ describe ChangesetsController, :katello => true do
     describe 'with only an environment id' do
       it 'should create a changeset correctly and send a notification' do
         controller.should_receive(:notice)
-        post 'create', {:name => "Changeset 7055", :env_id=>@env.id}
+        post 'create', {:changeset => {:name => "Changeset 7055"}, :env_id=>@env.id}
         response.should be_success
         Changeset.exists?(:name=>'Changeset 7055').should be_true
       end
@@ -108,7 +108,7 @@ describe ChangesetsController, :katello => true do
     describe 'with a next environment id' do
       it 'should create a changeset correctly and send a notification' do
         controller.should_receive(:notice)
-        post 'create', {:name => "Changeset 7055", :env_id=>@env.id, :next_env_id=>@next_env.id}
+        post 'create', {:changeset => {:name => "Changeset 7055"}, :env_id=>@env.id, :next_env_id=>@next_env.id}
         response.should be_success
         Changeset.exists?(:name=>'Changeset 7055').should be_true
       end
@@ -117,7 +117,7 @@ describe ChangesetsController, :katello => true do
     describe 'with a description' do
       it 'should create a changeset correctly and send a notification' do
         controller.should_receive(:notice)
-        post 'create', {:name => "Changeset 7056", :description=> "FOO", :env_id=>@env.id}
+        post 'create', {:changeset => {:name => "Changeset 7056", :description=> "FOO"}, :env_id=>@env.id}
         response.should be_success
         Changeset.exists?(:description=>'FOO').should be_true
       end

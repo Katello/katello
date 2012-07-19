@@ -280,5 +280,9 @@ module ApplicationHelper
     return link.respond_to?(:html_safe) ? link.html_safe : link
   end
 
+  def kt_form_for(object, options = {}, &block)
+    options[:builder] = KatelloFormBuilder
+    form_for(object, options, &block)
+  end
 
 end

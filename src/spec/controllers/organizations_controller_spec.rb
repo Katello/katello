@@ -20,8 +20,8 @@ describe OrganizationsController do
 
   module OrgControllerTest
     ORG_ID = 1
-    ORGANIZATION = {:name => "organization_name", :description => "organization_description", :envdescription=>"foo", :envname => "organization_env"}
-    ORGANIZATION_UPDATE = { :description => "organization_description"}
+    ORGANIZATION = {:organization => {:name => "organization_name", :description => "organization_description"}, :environment => {:description=>"foo", :name => "organization_env"}}
+    ORGANIZATION_UPDATE = {:description => "organization_description"}
   end
 
   describe "rules" do
@@ -54,8 +54,8 @@ describe OrganizationsController do
 
     describe "update org put" do
       before do
-        @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION)
-        @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
+        @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION[:organization])
+        @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:organization][:name])
         Organization.stub!(:first).and_return(@organization)
       end
       let(:action) {:update}
@@ -93,11 +93,12 @@ describe OrganizationsController do
         post 'create', OrgControllerTest::ORGANIZATION
         response.should_not redirect_to(:action => 'new')
         response.should be_success
-        assigns[:organization].name.should == OrgControllerTest::ORGANIZATION[:name]
+        assigns[:organization].name.should == OrgControllerTest::ORGANIZATION[:organization][:name]
       end
 
       it 'should create organization and account for spaces' do
-        post 'create', {:name => "multi word organization", :description => "spaced out organization", :envname => "first-env"}
+        post 'create', {:organization => {:name => "multi word organization",
+          :description => "spaced out organization"}, :environment => {:name => "first-env"}}
         response.should_not redirect_to(:action => 'new')
         response.should be_success
         assigns[:organization].name.should == "multi word organization"
@@ -225,8 +226,8 @@ describe OrganizationsController do
 
       before (:each) do
         @organization = new_test_org
-        @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION)
-        @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
+        @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION[:organization])
+        @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:organization][:name])
         Organization.stub!(:first).and_return(@organization)
       end
       
