@@ -59,12 +59,12 @@ class RepositoriesController < ApplicationController
       @product.add_repo(repo_params[:name], repo_params[:feed], 'yum', gpg)
       @product.save
 
-      notice _("Repository '%s' created.") % repo_params[:name]
+      notify.success _("Repository '%s' created.") % repo_params[:name]
       render :nothing => true
 
     rescue Exception => error
       log_exception error
-      notice error, {:level => :error}
+      notify.exception error
       render :text=> error.to_s, :status=>:bad_request and return
     end
   end
@@ -80,10 +80,10 @@ class RepositoriesController < ApplicationController
       end
       @repository.gpg_key = gpg
       @repository.save!
-      notice _("Repository '%s' updated.") % @repository.name
+      notify.success _("Repository '%s' updated.") % @repository.name
     rescue Exception => error
       log_exception error
-      notice error, {:level => :error}
+      notify.exception error
       render :text=> error.to_s, :status=>:bad_request and return
     end
     render :text => escape_html(result)
@@ -96,7 +96,7 @@ class RepositoriesController < ApplicationController
       render :json => @repository.id
     rescue Exception => error
       log_exception error
-      notice error, {:level => :error}
+      notify.exception error
       render :text=> error.to_s, :status=>:bad_request and return
     end
   end
@@ -105,7 +105,7 @@ class RepositoriesController < ApplicationController
     r = Repository.find(@repository[:id])
     name = r.name
     @product.delete_repo_by_id(@repository[:id])
-    notice _("Repository '%s' removed.") % name
+    notify.success _("Repository '%s' removed.") % name
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@provider.id)}
   end
 
@@ -136,7 +136,7 @@ class RepositoriesController < ApplicationController
       @provider = Provider.find(params[:provider_id])
     rescue Exception => error
       log_exception error
-      notice error.to_s, {:level => :error}
+      notify.exception error
       execute_after_filters
       render :text => error, :status => :bad_request
     end
@@ -147,7 +147,7 @@ class RepositoriesController < ApplicationController
       @product = Product.find(params[:product_id])
     rescue Exception => error
       log_exception error
-      notice error.to_s, {:level => :error}
+      notify.exception error
       execute_after_filters
       render :text => error, :status => :bad_request
     end
@@ -158,7 +158,7 @@ class RepositoriesController < ApplicationController
       @repository = Repository.find(params[:id])
     rescue Exception => error
       log_exception error
-      notice _("Couldn't find repository with ID=%s") % params[:id], {:level => :error}
+      notify.error _("Couldn't find repository with ID=%s") % params[:id]
       execute_after_filters
       render :text => error, :status => :bad_request
     end

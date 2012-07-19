@@ -12,45 +12,46 @@
 
 require 'spec_helper'
 
-describe ApplicationController do  
-  include LoginHelperMethods
-  include LocaleHelperMethods
-  
+
+describe Notifications do
+
   before (:each) do
-    set_default_locale
-    login_user :mock => false
-    
-    @notice_string = 'This is a single string notification.'
-    @notice_string_array = [@notice_string, @notice_string + '2', @notice_string + '3', @notice_string +'4']
+    @notice_string           = 'This is a single string notification.'
+    @notice_string_array     = [@notice_string, @notice_string + '2', @notice_string + '3', @notice_string +'4']
     @notice_validation_error = ActiveRecord::RecordInvalid.new(User.create())
-    @notice_runtime_error = RuntimeError.new()
+    @notice_standard_error   = StandardError.new()
+    @notice_standard_error.set_backtrace caller
   end
-  
+
+  let(:controller) { mock 'controller', :requested_action => 'a_controller___an_action', :flash => { },
+                          :notices_url                    => 'http://localhost:3000/katello/notices' }
+  let(:notifier) { Notifications::Notifier.new(controller) }
+
   describe 'create a notification that is asynchronous' do
     describe 'with the notice as a string' do
       it 'should generate a notice' do
-        controller.notice(@notice_string, { :synchronous_request => false})
+        notifier.message @notice_string
         Notice.count.should == 1
       end
     end
-    
+
     describe 'with the notice as an array' do
       it 'should generate a notice' do
-        controller.notice(@notice_string_array, { :synchronous_request => false})
+        notifier.message @notice_string_array
         Notice.count.should == 1
       end
     end
-    
+
     describe 'with the notice as an ActiveRecord::RecordInvalid exception' do
       it 'should generate a notice' do
-        controller.notice(@notice_validation_error, { :synchronous_request => false})
+        notifier.exception @notice_validation_error, :asynchronous => true, :persist => true
         Notice.count.should == 1
       end
     end
-    
+
     describe 'with the notice as a RuntimeError exception' do
       it 'should generate a notice' do
-        controller.notice(@notice_runtime_error, { :synchronous_request => false})
+        notifier.exception @notice_standard_error, :asynchronous => true
         Notice.count.should == 1
       end
     end
@@ -63,74 +64,53 @@ describe ApplicationController do
 
     describe 'with the notice as a string' do
       it 'should generate a notice' do
-        controller.notice(@notice_string)
+        notifier.success(@notice_string)
         Notice.count.should == 1
       end
     end
-    
+
     describe 'with the notice as an array' do
       it 'should generate a notice' do
-        controller.notice(@notice_string_array)
+        notifier.success(@notice_string_array)
         Notice.count.should == 1
       end
     end
-    
+
     describe 'with the notice as an ActiveRecord::RecordInvalid exception' do
       it 'should generate a notice' do
-        controller.notice(@notice_validation_error)
+        notifier.exception(@notice_validation_error, :persist => true)
         Notice.count.should == 1
       end
     end
-    
+
     describe 'with the notice as a RuntimeError exception' do
       it 'should generate a notice' do
-        controller.notice(@notice_runtime_error)
+        notifier.exception(@notice_standard_error)
         Notice.count.should == 1
       end
     end
-    
+
     describe 'and does not persist' do
       describe 'with the notice as a string' do
         it 'should generate a notice' do
-          controller.notice(@notice_string, { :persist => false})
-          Notice.count.should == 0
-        end
-      end
-      
-      describe 'with the notice as an array' do
-        it 'should generate a notice' do
-          controller.notice(@notice_string_array, { :persist => false})
-          Notice.count.should == 0
-        end
-      end
-      
-      describe 'with the notice as an ActiveRecord::RecordInvalid exception' do
-        it 'should generate a notice' do
-          controller.notice(@notice_validation_error, { :persist => false})
-          Notice.count.should == 0
-        end
-      end
-      
-      describe 'with the notice as a RuntimeError exception' do
-        it 'should generate a notice' do
-          controller.notice(@notice_runtime_error, { :persist => false})
+          notifier.success(@notice_string, { :persist => false })
           Notice.count.should == 0
         end
       end
     end
   end
-  
+
   describe 'create an errors notification' do
     before (:each) do
       User.stub!(:current).and_return(@user)
     end
 
     it 'should have the level set to :error' do
-      controller.notice(@notice_string, {:level => :error})
+      notifier.error(@notice_string)
       Notice.count.should == 1
       Notice.first.level.should == "error"
-      
+
     end
   end
-  
+
 end

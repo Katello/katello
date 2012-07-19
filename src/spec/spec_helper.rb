@@ -44,6 +44,7 @@ RSpec.configure do |config|
 #  config.include Rack::Test::Methods
 
   config.include Warden::Test::Helpers
+  config.include CustomMatchers
 
   config.after :all do
     Warden.test_reset!

@@ -54,14 +54,14 @@ describe FiltersController, :katello => true do
 
     describe "create filter" do
       it "posts to create a filter should be sucessful" do
-        controller.should_receive(:notice)
+        controller.should notify.success
         post :create, :filter => {:name=>"testfilter"}
         response.should be_success
         Filter.where(:name=>"testfilter").first.name.should == "testfilter"
       end
 
       it "posts to create a filter should not be sucessful if no name" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         post :create, :filter => {}
         response.should_not be_success
       end
@@ -93,7 +93,7 @@ describe FiltersController, :katello => true do
       end
 
       it "should not recieve a valid filter for edit a non-existant id" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         get :edit, :id=>-1
         response.should_not be_success
       end
@@ -106,7 +106,7 @@ describe FiltersController, :katello => true do
       end
 
       it "should not recieve a valid filter for edit a non-existant id" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         get :products, :id=>-1
         response.should_not be_success
       end
@@ -119,7 +119,7 @@ describe FiltersController, :katello => true do
       end
 
       it "should not recieve a valid filter for edit a non-existant id" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         get :packages, :id=>-1
         response.should_not be_success
       end
@@ -158,7 +158,7 @@ describe FiltersController, :katello => true do
     describe "delete a filter" do
       it "should be successful with a valid filter" do
         Filter.stub(:find).and_return @filter
-        controller.should_receive(:notice)
+        controller.should notify.success
         @filter.should_receive(:destroy)
         controller.stub(:render) #can't find common
         delete :destroy, :id=>@filter.id
@@ -166,7 +166,7 @@ describe FiltersController, :katello => true do
       end
       
       it "should not be successful with a valid filter" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         delete :destroy, :id=>-12343
         response.should_not be_success
       end
@@ -175,7 +175,7 @@ describe FiltersController, :katello => true do
 
     describe "Set products" do
       it "should allow for updating of products for a valid product" do
-        controller.should_receive(:notice)
+        controller.should notify.success
         post :update_products, :id=>@filter.id, :products=>[@product.id]
         response.should be_success
         assert !Filter.find(@filter.id).products.empty?
@@ -184,7 +184,7 @@ describe FiltersController, :katello => true do
       it "should allow for updating of products for a empty products" do
         @filter.products << @product
         @filter.save!
-        controller.should_receive(:notice)
+        controller.should notify.success
         post :update_products, :id=>@filter.id, :products=>[]
         response.should be_success
         assert Filter.find(@filter.id).products.empty?
@@ -197,7 +197,7 @@ describe FiltersController, :katello => true do
       end
 
       it "should not allow for updating of products for an invalid filter" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         post :update_products, :id=>"-1", :products=>[@product.id]
         response.should_not be_success
       end
@@ -213,7 +213,7 @@ describe FiltersController, :katello => true do
       it "should allow for updating of repos for a valid repo" do
         @repo.should_receive(:add_filters_orchestration).and_return({})
         @repo.should_not_receive(:remove_filters_orchestration)
-        controller.should_receive(:notice)
+        controller.should notify.success
         post :update_products, :id=>@filter.id, :repos=>{@repo.product.id => @repo.id}
         response.should be_success
         assert !Filter.find(@filter.id).repositories.empty?
@@ -223,7 +223,7 @@ describe FiltersController, :katello => true do
         @filter.repositories << @repo
         @filter.save!
         @repo.should_receive(:remove_filters_orchestration).and_return({})
-        controller.should_receive(:notice)
+        controller.should notify.success
         post :update_products, :id=>@filter.id, :repos=>[]
         response.should be_success
         assert Filter.find(@filter.id).repositories.empty?
@@ -240,7 +240,7 @@ describe FiltersController, :katello => true do
       it "should not allow for updating of repos for an invalid filter" do
         @repo.should_not_receive(:add_filters_orchestration)
         @repo.should_not_receive(:remove_filters_orchestration)
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         post :update_products, :id=>"-1", :repos=>{@repo.product.id => @repo.id}
         response.should_not be_success
       end

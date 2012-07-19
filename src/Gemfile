@@ -1,4 +1,3 @@
-
 #source "http://rubygems.org"
 source 'http://repos.fedorapeople.org/repos/katello/gems/'
 
@@ -77,6 +76,11 @@ group :test, :development do
 
   #needed to generate routes in javascript
   gem "js-routes", :require => 'js_routes'
+end
+
+group :profiling do
+  #needed for profiling
+  gem 'ruby-prof'
 end
 
 group :jshintrb do

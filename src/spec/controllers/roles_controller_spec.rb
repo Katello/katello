@@ -31,9 +31,7 @@ describe RolesController do
     @user = login_user(:mock=>false)
     set_default_locale
     
-    controller.stub!(:notice)
-    
-    @organization = new_test_org 
+    @organization = new_test_org
     controller.stub!(:current_organization).and_return(@organization)
     controller.stub(:search_validate).and_return(true)
     @admin = Role.create(RolesControllerTest::ADMIN)
@@ -211,14 +209,14 @@ describe RolesController do
     end
    
     it "should be successful" do
-      controller.should_receive(:notice)
+      controller.should notify.success
       put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'organizations' }, :name=> "New Perm"}}
       response.should be_success
       assigns[:role].permissions.should include Permission.where(:name => "New Perm")[0]
     end
     
     it "with all types set should be successful" do
-      controller.should_receive(:notice)
+      controller.should notify.success
       put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'all' }, :name=> "New Perm"}}
       response.should be_success
       assigns[:role].permissions.should include Permission.where(:name => "New Perm")[0]    
@@ -251,7 +249,7 @@ describe RolesController do
     end    
   
     it "should remove the permission from the role and delete it" do
-      controller.should_receive(:notice)
+      controller.should notify.success
       put "destroy_permission", { :role_id => @role.id, :permission_id => @perm.id}
       response.should be_success
       assigns[:role].permissions.should_not include @perm
@@ -269,28 +267,28 @@ describe RolesController do
     end    
     
     it 'should change the name of the permission' do
-      controller.should_receive(:notice)
+      controller.should notify.success
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :name => "New Named Perm"}}
       response.should be_success
       Permission.find(@perm.id).name.should == "New Named Perm"
     end
 
     it 'should change the description of the permission' do
-      controller.should_receive(:notice)
+      controller.should notify.success
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :description => "This is the new description."}}
       response.should be_success
       Permission.find(@perm.id).description.should == "This is the new description."
     end
 
     it 'should set all verbs' do
-      controller.should_receive(:notice)
+      controller.should notify.success
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :all_verbs => true }}
       response.should be_success
       Permission.find(@perm.id).all_verbs.should == true
     end
     
     it 'should set all tags' do
-      controller.should_receive(:notice)
+      controller.should notify.success
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :all_tags => true }}
       response.should be_success
       Permission.find(@perm.id).all_tags.should == true
