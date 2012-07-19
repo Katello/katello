@@ -65,7 +65,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
 
 
 
-  def self.autocomplete_name query, repoids=nil, number=15
+  def self.autocomplete_name query, repoids=nil, page_size=15
     return [] if !Tire.index(self.index).exists?
 
     query = Katello::Search::filter_input query
@@ -86,12 +86,12 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     to_ret = []
     search.results.each{|pkg|
        to_ret << pkg.name if !to_ret.include?(pkg.name)
-       break if to_ret.size == number
+       break if to_ret.size == page_size
     }
     return to_ret
   end
 
-  def self.autocomplete_nvrea query, repoids=nil, number=15
+  def self.autocomplete_nvrea query, repoids=nil, page_size=15
      return [] if !Tire.index(self.index).exists?
 
      query = Katello::Search::filter_input query
@@ -103,7 +103,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
        query do
          string query
        end
-       size number
+       size page_size
 
        if repoids
          filter :terms, :repoids => repoids
