@@ -39,6 +39,9 @@ class Changeset < ActiveRecord::Base
   STATES    = [NEW, REVIEW, PROMOTING, PROMOTED, FAILED]
 
 
+  PROMOTION = 'promotion'
+  DELETION = 'deletion'
+
   validates_inclusion_of :state,
                          :in          => STATES,
                          :allow_blank => false,
@@ -62,7 +65,6 @@ class Changeset < ActiveRecord::Base
   belongs_to :task_status
 
   before_save :uniquify_artifacts
-
   def key_for item
     "changeset_#{id}_#{item}"
   end
@@ -504,6 +506,14 @@ class Changeset < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def deletion_set?
+    self.action_type == DELETION
+  end
+
+  def promotion_set?
+    self.action_type == PROMOTION
   end
 
   def not_included_products
