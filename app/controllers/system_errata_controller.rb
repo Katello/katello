@@ -66,7 +66,7 @@ class SystemErrataController < ApplicationController
     errata_ids = params[:errata_ids]
     task = @system.install_errata(errata_ids)
     
-    notice _("Errata scheduled for install.")
+    notify.success _("Errata scheduled for install.")
     render :text => task.id
   rescue Exception => error
     errors error

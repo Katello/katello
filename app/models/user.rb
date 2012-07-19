@@ -13,13 +13,11 @@
 require 'ldap'
 require 'util/threadsession'
 require 'util/password'
-require 'util/notices'
 
 class User < ActiveRecord::Base
   include Glue::Pulp::User if AppConfig.katello?
   include Glue if AppConfig.use_cp
   include AsyncOrchestration
-  include Katello::Notices
   include IndexedModel
 
 
@@ -140,7 +138,7 @@ class User < ActiveRecord::Base
 
   before_save :default_systems_reg_permission_check
   before_save :own_role_included_in_roles
-  
+
   def self.authenticate!(username, password)
     u = User.where({ :username => username }).first
     # check if user exists
@@ -276,7 +274,7 @@ class User < ActiveRecord::Base
     end
   end
 
-    
+
   # Class method that has the same functionality as allowed_to? method but operates
   # on the current logged user. The class attribute User.current must be set!
   def self.allowed_to?(verb, resource_type, tags = nil, org = nil, any_tags = false)
@@ -486,32 +484,6 @@ class User < ActiveRecord::Base
     self.preferences[:user][:subscriptions_match_system] = flag
   end
 
-  #method to delete the passed in org.  Due to the way delayed job is impelemented
-  #  we must attached the job to a different instance or object, so we attach it to the current_user
-  def destroy_organization_async org
-    task        = self.async(:organization => org).destroy_organization(org.id)
-    org.task_id = task.id
-    org.save!
-    task
-  end
-
-  def destroy_organization org_id
-    org  = Organization.unscoped { Organization.find(org_id) }
-    name = org.name
-    org.destroy
-    message = _("Successfully removed organization '%s'.") % name
-    notice message, { :synchronous_request => false, :request_type => "organization__delete" }
-  rescue Exception => e
-    Rails.logger.error(e)
-    Rails.logger.error(e.backtrace.join("\n"))
-    error_text = _("Failed to delete organization '%s'. Check notices for more details. ") % name
-    details    = e.message
-    notice error_text,
-           :level        => :error, :details => details, :synchronous_request => false,
-           :request_type => "organization__delete"
-    raise
-  end
-
   def as_json(options)
     super(options).merge 'default_organization' => default_environment.try(:organization).try(:name),
                          'default_environment'  => default_environment.try(:name)
@@ -520,7 +492,7 @@ class User < ActiveRecord::Base
   def has_superadmin_role?
     roles.any? { |r| r.superadmin? }
   end
- 
+
   # verify the user is in the groups we are think they are in
   # if not, reset them
   def verify_ldap_roles
