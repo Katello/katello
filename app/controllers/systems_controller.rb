@@ -555,7 +555,11 @@ class SystemsController < ApplicationController
   def system_groups
     # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
     @system_groups = SystemGroup.where(:organization_id=>current_organization).
-        where('max_systems < ?', @system.system_groups.length).order(:name) - @system.system_groups
+        joins(:system_system_groups).
+        select("system_groups.id, system_groups.name").
+        group("system_groups.id, system_groups.name, system_groups.max_systems having count(system_system_groups.system_id) < system_groups.max_systems or system_groups.max_systems = -1").
+        order(:name) - @system.system_groups
+
     render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>@system.editable?}
   end
 
