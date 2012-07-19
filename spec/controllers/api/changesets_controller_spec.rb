@@ -141,7 +141,7 @@ describe Api::ChangesetsController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should call Changeset.promote asynchronously" do
-      @changeset.should_receive(:promote).with(true).once
+      @changeset.should_receive(:promote).once.with(:async => true)
       req
     end
   end

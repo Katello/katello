@@ -17,14 +17,12 @@ class DashboardController < ApplicationController
   before_filter :update_preferences_quantity , :except => [:index, :section_id]
   #before_filter :update_preferences_age , :except => [:index, :section_id]
 
-
   def index
   end
 
   def section_id
     'dashboard'
   end
-
 
   def sync
     render :partial=>"sync", :locals=>{:quantity=> quantity}
@@ -76,6 +74,10 @@ class DashboardController < ApplicationController
 
   def systems
     render :partial=>"systems", :locals=>{:quantity=>quantity}
+  end
+
+  def system_groups
+    render :partial=>"system_groups", :locals=>{:quantity=>quantity}
   end
 
   def subscriptions
