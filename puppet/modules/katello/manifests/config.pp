@@ -4,11 +4,12 @@ class katello::config {
   file { "${katello::params::log_base}":
     owner   => $katello::params::user,
     group   => $katello::params::group,
-    mode    => 640;
+    mode    => 750;
+  # this is a symlink when called via katello-configure
   "${katello::params::configure_log_base}":
     owner   => $katello::params::user,
     group   => $katello::params::group,
-    mode    => 640;
+    mode    => 750;
   }
 
   # create Rails logs in advance to get correct owners and permissions

@@ -43,6 +43,30 @@ $titles = {}
 $final_options = {}
 $temp_options = {}
 
+def detect_terminal_size
+  if (ENV['COLUMNS'] =~ /^\d+$/) && (ENV['LINES'] =~ /^\d+$/)
+    [ENV['COLUMNS'].to_i, ENV['LINES'].to_i]
+  elsif (RUBY_PLATFORM =~ /java/ || (!STDIN.tty? && ENV['TERM'])) && command_exists?('tput')
+    [`tput cols`.to_i, `tput lines`.to_i]
+  elsif STDIN.tty? && command_exists?('stty')
+    `stty size`.scan(/\d+/).map { |s| s.to_i }.reverse
+  else
+    [80, 25]
+  end
+rescue
+  [80, 25]
+end
+
+COLUMNS = detect_terminal_size[0]
+
+# Simple text wrapper for long lines (optparse does not handle long lines correctly)
+def word_wrap(text, line_width = COLUMNS, indent = ' ' * 11)
+  unstripped = text.split("\n").collect do |line|
+    line.length > line_width ? line.strip.gsub(/(.{1,#{line_width}})(\s+|$)/, "#{indent}\\1\n").rstrip : line.strip
+  end * "\n"
+  unstripped.lstrip # fist line must not be indented
+end
+
 # Reading answer file, used both for the default answer file
 # and for user files. The structure of the answer file is
 #
@@ -210,10 +234,7 @@ def remove_option(name, move_to_temp = false)
   end
 end
 
-$expected_progress_width = ENV['COLUMNS']
-if $expected_progress_width == nil
-	$expected_progress_width = 80
-end
+$expected_progress_width = COLUMNS
 $expected_progress_width -= 20
 $expected_progress_width = 5 if $expected_progress_width < 0
 $previous_progress = 0
@@ -260,7 +281,7 @@ begin
   option_parser.summary_indent = ' ' * 2
 
 	$default_options_order.each do |key|
-		option_parser.on('--' + key.gsub(/_/, '-') + '=' + key.upcase, String, $titles[key]) do |value|
+		option_parser.on('--' + key.gsub(/_/, '-') + '=' + key.upcase, String, word_wrap($titles[key])) do |value|
 			options[key] = value
 		end
 	end
@@ -423,10 +444,6 @@ ENV['FACTER_fqdn'] = facter_hostname
 
 # start configuring
 puts 'Starting Katello configuration'
-
-puts $final_options.inspect
-puts $temp_options.inspect
-
 orig_umask = File.umask(077)
 begin
 	File.unlink(result_config_path)
@@ -440,6 +457,7 @@ $default_options_order.each do |key|
 end
 result_config.close
 
+# additional temporary file which is also used (but deleted afterwards)
 temp_config_path = '/dev/null'
 Tempfile.open("katello-configure-temp") do |temp_config|
   temp_config_path = temp_config.path
@@ -462,10 +480,10 @@ if File.directory?(log_directory_link)
 	File.rename(log_directory_link, log_directory_link + '-backup-' + now)
 end
 
-# create with 777 mode - ownership and permissions will be changed in puppet (RHBZ 758712)
-FileUtils.mkdir_p(log_directory, :mode => 0777)
+FileUtils.mkdir_p(log_directory, :mode => 0775)
 FileUtils.ln_sf('katello-configure-' + now, log_directory_link)
-
+FileUtils.chown('katello', 'katello', log_directory)
+FileUtils.chown('katello', 'katello', log_directory_link)
 FileUtils.cp result_config_path, log_directory
 
 ENV['KATELLO_ANSWER_FILE'] = result_config_path
@@ -539,9 +557,6 @@ rescue => e
 	seen_err = true
 end
 puppet_logfile.close
-
-puts "cat #{temp_config_path}"
-puts `cat #{temp_config_path}`
 
 if seen_err
 	exit_with :error_executing_puppet
