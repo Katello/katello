@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.45
+Version:        0.2.47
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -40,6 +40,8 @@ Requires:        %{name}-glue-foreman
 Requires:        %{name}-glue-candlepin
 Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
+BuildRequires:   asciidoc
+BuildRequires:   /usr/bin/getopt
 
 %description
 Provides a package for managing application life-cycle for Linux systems.
@@ -188,6 +190,9 @@ LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
 echo Generating gettext files...
 ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
 
+#man pages
+a2x -d manpage -f manpage man/katello-service.8.asciidoc
+
 %install
 rm -rf %{buildroot}
 #prepare dir structure
@@ -197,6 +202,7 @@ install -d -m0755 %{buildroot}%{datadir}/tmp
 install -d -m0755 %{buildroot}%{datadir}/tmp/pids
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
+mkdir -p %{buildroot}/%{_mandir}/man8
 
 # clean the application directory before installing
 [ -d tmp ] && rm -rf tmp
@@ -204,7 +210,7 @@ install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 #copy the application to the target directory
 mkdir .bundle
 mv ./deploy/bundle-config .bundle/config
-cp -R .bundle * %{buildroot}%{homedir}
+cp -R .bundle Gemfile Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
@@ -229,6 +235,7 @@ install -Dp -m0644 %{confdir}/mapping.yml %{buildroot}%{_sysconfdir}/%{name}/
 ln -svf %{_sysconfdir}/%{name}/%{name}.yml %{buildroot}%{homedir}/config/%{name}.yml
 #ln -svf %{_sysconfdir}/%{name}/database.yml %{buildroot}%{homedir}/config/database.yml
 ln -svf %{_sysconfdir}/%{name}/environment.rb %{buildroot}%{homedir}/config/environments/production.rb
+install -p -m0644 etc/service-list %{buildroot}%{_sysconfdir}/%{name}/
 
 #create symlinks for some db/ files
 ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
@@ -244,16 +251,12 @@ ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 mkdir -p %{buildroot}%{_bindir}
 ln -sv %{homedir}/script/katello-debug %{buildroot}%{_bindir}/katello-debug
 ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
+ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
 
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
 
 #remove files which are not needed in the homedir
-rm -rf %{buildroot}%{homedir}/README
-rm -rf %{buildroot}%{homedir}/LICENSE
-rm -rf %{buildroot}%{homedir}/doc
-rm -rf %{buildroot}%{homedir}/deploy
-rm -rf %{buildroot}%{homedir}/%{name}.spec
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
@@ -281,6 +284,9 @@ find %{buildroot}%{homedir} -type f -print0 | xargs -0 chmod 644
 chmod +x %{buildroot}%{homedir}/script/*
 chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 
+# install man page
+install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
+
 %clean
 rm -rf %{buildroot}
 
@@ -301,7 +307,6 @@ fi
 
 %files
 %attr(600, katello, katello)
-%defattr(-,root,root)
 %{_bindir}/katello-*
 %{homedir}/app/controllers
 %{homedir}/app/helpers
@@ -320,6 +325,7 @@ fi
 %{homedir}/lib/glue/*.rb
 %{homedir}/lib/monkeys/*.rb
 %{homedir}/lib/navigation
+%{homedir}/lib/notifications
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
@@ -334,9 +340,10 @@ fi
 %{homedir}/Gemfile
 %{homedir}/Gemfile.lock
 %{homedir}/Rakefile
+%config(noreplace) %{_sysconfdir}/%{name}/service-list
+%{_mandir}/man8/katello-service.8*
 
 %files common
-%defattr(-,root,root)
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
@@ -391,6 +398,40 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jul 18 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.47-1
+- fixing build issue (msuchy@redhat.com)
+- a2x require /usr/bin/getopt (msuchy@redhat.com)
+
+* Wed Jul 18 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.46-1
+- do not copy files which we do not need/want (msuchy@redhat.com)
+- introduce katello-service for managing katello services (msuchy@redhat.com)
+- system groups - move the listing of groups by updates needed to the model
+  (bbuckingham@redhat.com)
+- system group - fix accidental change on file header (bbuckingham@redhat.com)
+- system groups - update dashboard to account for critical/warning/up-to-date
+  (bbuckingham@redhat.com)
+- Removing the global after/do for role spec (jomara@redhat.com)
+- 840625 - Post 'import manifest' subscriptions return row:NotFound
+  (pajkycz@gmail.com)
+- system groups - add portlet to the dashboard for groups
+  (bbuckingham@redhat.com)
+- system groups - fix js syntax error (bbuckingham@redhat.com)
+- from petr; improving config setting in role test for ldap (jomara@redhat.com)
+- 840600 - Post creating new environment in headpin, webui returns row:NotFound
+  error (pajkycz@gmail.com)
+- katello - action profiling (pchalupa@redhat.com)
+- Fixing some ldap config issues that were polluting unrelated tests
+  (jomara@redhat.com)
+- katello - make jshintrb optional (pchalupa@redhat.com)
+- null_activeBlockId - fixed case where active block was not known
+  (thomasmckay@redhat.com)
+- katello - corrections after pull request review (pchalupa@redhat.com)
+- %%defattr is not needed since rpm 4.4 (msuchy@redhat.com)
+- 808437 - [RFE] Don't make notifications for CLI actions performed (and pop
+  them up in UI) (pchalupa@redhat.com)
+- katello - notifications cleanup (pchalupa@redhat.com)
+- katello - remove unused methods (pchalupa@redhat.com)
+
 * Mon Jul 16 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.45-1
 - system_details - added display of environment to left list and details page
 - productid - fixed html for System / Subscriptions

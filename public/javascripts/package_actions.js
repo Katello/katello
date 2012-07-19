@@ -150,7 +150,7 @@ KT.package_actions = (function() {
         var selected_action = $("input[name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
             content_array = content_string.split(/ *, */),
-            content;
+            content,
             validation_error;
 
         if (selected_action == 'perform_action_packages') {
