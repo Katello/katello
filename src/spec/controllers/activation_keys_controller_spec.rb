@@ -94,7 +94,7 @@ describe ActivationKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         get :show, :id => 9999
       end
 
@@ -137,7 +137,7 @@ describe ActivationKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         get :edit, :id => 9999
       end
 
@@ -164,7 +164,7 @@ describe ActivationKeysController do
       end
 
       it "should generate a success notice" do
-        controller.should_receive(:notice)
+        controller.should notify.success
         post :create, @akey_params
       end
 
@@ -183,7 +183,7 @@ describe ActivationKeysController do
 
     describe "with invalid params" do
       it "should generate an error notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         post :create, AKeyControllerTest::AKEY_INVALID
       end
 
@@ -223,13 +223,13 @@ describe ActivationKeysController do
           assigns[:activation_key].environment_id.should eq(@environment_2.id)
         end
 
-        it "should update requested field - system template", :katello => true do
+        it "should update requested field - system template", :notifications => true do
           put :update, :id => @a_key.id, :activation_key => {:system_template_id => @system_template_2.id}
           assigns[:activation_key].system_template_id.should eq(@system_template_2.id)
         end
 
         it "should generate a success notice" do
-          controller.should_receive(:notice)
+          controller.should notify.success
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
         end
 
@@ -244,7 +244,7 @@ describe ActivationKeysController do
         end
 
         it "should successfully add a subscription" do
-          controller.should_receive(:notice)
+          controller.should notify.success
           put :add_subscriptions, { :id => @a_key.id, :subscription_id => {"abc123" => "false"} }
           response.should be_success
           @a_key.pools.where(:cp_id => "abc123").should_not be_empty
@@ -252,7 +252,7 @@ describe ActivationKeysController do
         end
 
         it "should successfully remove a subscription from the activation key" do
-          controller.should_receive(:notice)
+          controller.should notify.success
           put :remove_subscriptions, { :id => @a_key.id, :subscription_id => {"Test Subscription" => "false"}}
           response.should be_success
           KeyPool.where(:activation_key_id => @a_key.id, :pool_id => @subscription.id).count.should == 0
@@ -260,7 +260,7 @@ describe ActivationKeysController do
         end
 
         it "should successfully add an already created subscription to an activation key" do
-          controller.should_receive(:notice)
+          controller.should notify.success
           subscription = Pool.create!(:cp_id => 'One Time Subscription')
           put :add_subscriptions, { :id => @a_key.id, :subscription_id => {"One Time Subscription" => "false"}}
           response.should be_success
@@ -278,7 +278,7 @@ describe ActivationKeysController do
           end
         end
         it "should generate an error notice" do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.exception
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_NAME_INVALID
         end
 
@@ -291,7 +291,7 @@ describe ActivationKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         put :update, :id => 9999, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
       end
 
@@ -301,13 +301,13 @@ describe ActivationKeysController do
       end
 
       it "should be unsuccessful at adding a subscription" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         put :add_subscriptions, { :id => 999, :subscription_id => { "abc123" => "false"}}
         response.should_not be_success
       end
 
       it "should be unsuccessful at removing a subscription" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         put :remove_subscriptions, { :id => 999, :subscription_id => { "abc123" => "false"}}
         response.should_not be_success
       end
@@ -351,7 +351,7 @@ describe ActivationKeysController do
     end
 
     it "should generate a success notice" do
-      controller.should_receive(:notice)
+      controller.should notify.success
       put 'add_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
     end
 
@@ -377,7 +377,7 @@ describe ActivationKeysController do
     end
 
     it "should generate a success notice" do
-      controller.should_receive(:notice)
+      controller.should notify.success
       put 'remove_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
     end
 
@@ -399,7 +399,7 @@ describe ActivationKeysController do
       end
 
       it "should generate a success notice" do
-        controller.should_receive(:notice)
+        controller.should notify.success
         delete :destroy, :id => @a_key.id
       end
 
@@ -411,7 +411,7 @@ describe ActivationKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         delete :destroy, :id => 9999
       end
 

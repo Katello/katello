@@ -79,7 +79,7 @@ describe SearchController do
       # force an exception when creating the favorite
       controller.stub_chain(:current_user, :search_favorites, :create).and_raise(Exception)
 
-      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+      controller.should notify.exception
       post :create_favorite, {:favorite => @favoriteText}
     end
 
@@ -102,7 +102,7 @@ describe SearchController do
       # force an exception when creating the favorite
       controller.stub_chain(:current_user, :search_favorites, :destroy).and_raise(Exception)
 
-      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+      controller.should notify.exception
       post :destroy_favorite, {:id => 10}
     end
 

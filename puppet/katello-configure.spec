@@ -77,7 +77,6 @@ cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root)
 %{homedir}/
 %{_sbindir}/katello-configure
 %{_sbindir}/katello-upgrade

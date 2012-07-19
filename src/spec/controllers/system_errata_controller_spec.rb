@@ -30,7 +30,6 @@ describe SystemErrataController, :katello => true do
       @environment.save!
 
       controller.stub!(:errors)
-      controller.stub!(:notice)
 
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)
