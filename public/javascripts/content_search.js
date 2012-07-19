@@ -116,20 +116,38 @@ KT.content_search = function(paths_in){
         }
     },
     get_initial_environments = function(){
-        var initial_envs = $.bbq.getState('environments');
-        if(!initial_envs && paths[0]){
+        var env_ids = get_initial_environment_ids(),
+            to_ret = {};
+
+        KT.utils.each(paths, function(path){
+           KT.utils.each(path, function(env){
+              if(KT.utils.include(env_ids, env.id.toString())){
+                  to_ret[env.id] = env;
+              }
+           });
+        });
+        to_ret = KT.utils.values(to_ret);
+
+        return to_ret;
+    },
+    get_initial_environment_ids = function(){
+        var env_ids = $.bbq.getState('envs');
+        if(!env_ids && paths[0]){
             KT.utils.each(paths[0], function(item){
-               if(!initial_envs && item.select){
-                   initial_envs = [item];
+               if(!env_ids && item.select){
+                   env_ids = [item.id.toString()];
                }
             });
         }
-        return initial_envs;
+        else if(!env_ids) {
+            return [];
+        }
+        return env_ids;
     },
     search_initiated = function(e, search_params){ //'go' button was clicked
         var old_params = $.bbq.getState('search');
         KT.content_search_cache.clear_state();
-        $.bbq.pushState({search:search_params, subgrid:{}, environments:get_initial_environments()}); //Clear the subgrid
+        $.bbq.pushState({search:search_params, subgrid:{}, envs:get_initial_environment_ids()}); //Clear the subgrid
         search_params =  $.bbq.getState("search"); //refresh params, to get trim empty entries
         //A search was forced, but if everything was equal, nothing would happen, so force it
         if(utils.isEqual(old_params, search_params)){
@@ -307,9 +325,11 @@ KT.content_search = function(paths_in){
         });
         //select event
         $(document).bind(env_select.get_select_event(), function(event){
-            var environments = env_select.get_selected();
+            var environments = env_select.get_selected(),
+                env_ids = KT.utils.keys(environments);
+
             comparison_grid.show_columns(environments);
-            $.bbq.pushState({environments:environments});
+            $.bbq.pushState({envs:env_ids});
             env_select.reposition();
             envs_changed = true;
         });
@@ -365,8 +385,9 @@ KT.content_search = function(paths_in){
     init();
     return {
         change_subgrid_type:change_subgrid_type,
-        remove_subgrid: remove_subgrid
-        //env_select: function(){return env_select}
+        remove_subgrid: remove_subgrid,
+        get_initial_environments: get_initial_environments,
+        get_initial_environment_ids:get_initial_environment_ids
     }
 };
 
