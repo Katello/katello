@@ -463,7 +463,7 @@ KT.comparison_grid.controls = function(grid) {
             },
             show = function() {
                 $('#column_selector').show();
-                $('.slide_arrow[data-arrow_direction="right"]').css({ right : '21px' });
+                $('.slide_arrow[data-arrow_direction="right"]').css({ right : '25px' });
             };
 
             return {
@@ -816,14 +816,14 @@ KT.comparison_grid.templates = (function(i18n) {
             var html = $('<li/>', { 
                             'data-id'   : id,
                             'id'        : 'row_header_' + id,
-                            'class'     : 'one-line-ellipsis row_header grid_row_level_' + row_level
+                            'class'     : 'row_header grid_row_level_' + row_level
                         });
 
             if( parent_id !== undefined ){
                 html.attr('data-parent_id', parent_id);
             }
             
-            html.append('<span/>').html(name);
+            html.append($('<span/>', { 'class' : 'one-line-ellipsis'}).html(name));
 
             if( has_children ){
                 if( row_level === 2 ){

@@ -12,19 +12,18 @@ $comparison_grid_column_header-height:  35px;
 $comparison_grid_header-height: $comparison_grid_header_h2-height + $comparison_grid_column_header-height;
 $comparison_grid-height: 350px;
 $comparison_grid_filter-width: 190px - 2px;
-$comparison_grid_row-height: 30px;
 $comparison_grid_column_1-width: 100px - 10px - 1px;
 $comparison_grid_column_2-width: 200px - 10px - 1px;
 $comparison_grid_column_3-width: 300px - 10px - 1px;
 $comparison_grid_column_4-width: 400px - 10px - 1px;
 $comparison_grid_column_5-width: 500px - 10px - 1px;
-$comparison_grid_row-height: 35px;
-$comparison_grid-margin-top: $browse_box_header-height + $browse_box-margin-top;
+$comparison_grid_row-height: 32px;
+$comparison_grid-margin-top: $browse_box-margin-top;
 $comparison_grid_footer-height: 45px;
 
 $environment_selector-width: 97px;
 
-$widget-border-color: #D7D7D7;
+$widget-border-color: #C9C9C9;
 $widget-background-color: #F9F8F8;
 
 $comparison_grid-border-color: #D7D7D7;
@@ -82,9 +81,7 @@ $comparison_grid_column_header-background: #FFF;
   margin-right: 12px;
   margin-top: $browse_box-margin-top;
   @include border-radius(3px);
-  background-color: $widget-background-color;
-  @include background-image(linear-gradient(top, rgba(255, 255, 255, 0) 40%, $login_base-color 120%));
-
+  @include background-image(linear-gradient(top, #F9F9F9, #E4E4E4));
 
   .help-icon {
     background: $details_icon_grey;
@@ -92,11 +89,10 @@ $comparison_grid_column_header-background: #FFF;
     float: right;
     &:hover { background: $details_icon_black; }
     padding: 0px;
-    margin-left: 2px;
+    margin-left: 0;
     margin-top: 5px;
-    margin-right: 2px;
+    margin-right: 3px;
   }
-
 
   header {
     height: $browse_box_header-height;
@@ -108,13 +104,14 @@ $comparison_grid_column_header-background: #FFF;
         line-height: $browse_box_header-height;
         vertical-align: middle;
         float: left;
+        font-weight: normal;
     }
 
     aside { 
-      @include background-image(linear-gradient(#F7F7F7, #EEEEEE));
+      @include background-image(linear-gradient(#F1F1F1, #C9C9C9));
       width: 38px;
       border-left: 1px solid $widget-border-color;
-      height: $browse_box_header-height;
+      height: $browse_box_header-height + 1;
       float: right;
     }
   }
@@ -123,6 +120,8 @@ $comparison_grid_column_header-background: #FFF;
     min-height: $browse_box-height - $browse_box_header-height - 5;
     border: 2px solid $widget-border-color;
 
+    label { font-weight: normal; }
+
     fieldset:first-child {
       margin: 20px 6px 20px 8px;
 
@@ -130,14 +129,16 @@ $comparison_grid_column_header-background: #FFF;
     }
 
     fieldset:first-child ~fieldset {
-      margin: 20px 6px 20px 8px;
+      margin: 20px 6px 12px 8px;
 
       .button { margin-left: 2px; }
-      input[type="radio"] { margin: 0 6px; }
+      input[type="radio"] { margin: 0 0 0 6px; }
       input[type="text"] { 
         border-width: 1px; 
         width: 148px; 
         border-color: $widget-border-color; 
+        margin-left: 6px;
+        @include box-shadow(inset 0 0 1px rgba(0, 0, 0, 0.05));
       }
 
       div:nth-child(2) {
@@ -154,15 +155,26 @@ $comparison_grid_column_header-background: #FFF;
         padding: 8px 0 8px 0;
         background: #FFF;
 
-        .auto_complete_input { width: 116px; }
+        .auto_complete_input { width: 126px; }
         ul { 
-          padding-left: 28px; 
+          padding-left: 28px;
+          margin-top: 6px;
         
-          li { font-style: italic; }
+          li { 
+            font-style: italic; 
+            font-size: 10px;
+          }
         }
       }
     }
+
+    fieldset:nth-child(2) div {
+      .auto_complete_input { width: 148px !important; }
+      ul { padding-left: 6px !important; }
+    }
   }
+
+  #browse_button { margin: 0 8px 12px 0; }
 }
 
 #comparison_grid {
@@ -174,8 +186,7 @@ $comparison_grid_column_header-background: #FFF;
   margin-top: $comparison_grid-margin-top;
   position: relative;
   @include border-radius(3px);
-  background-color: $widget-background-color;
-  @include background-image(linear-gradient(top, rgba(255, 255, 255, 0) 40%, $login_base-color 120%));
+  @include background-image(linear-gradient(top, #F9F9F9, #E4E4E4));
   font-family: $screenfont;
 
   #grid_loading_screen {
@@ -189,7 +200,7 @@ $comparison_grid_column_header-background: #FFF;
 
   #grid_header {
     height: $comparison_grid_header-height;
-    border-bottom: 3px solid $comparison_grid-border-color;
+    border-bottom: 2px solid $widget-border-color;
     position: relative;
 
     header {
@@ -200,24 +211,27 @@ $comparison_grid_column_header-background: #FFF;
         padding: 0 0 0 17px;
         font-size: 18px;
         vertical-align: middle;
+        font-weight: normal;
 
         &[data-title="details"] { max-width: 350px; }
       }
 
       #left_select {
-        margin-left: 25px;
+        margin-left: 32px;
+        margin-top: 4px;
       
         select { width: 100px; }
       }
 
       #right_select {
         margin-right: 8px;
-
+        margin-top: 4px;
+      
         select { width: 100px; }
       }
 
       .button { margin: 0 0 0 8px; }
-      label { font-size: 14px; }
+      label { font-size: 12px; margin-right: 6px; font-weight: normal; }
     }
 
     aside {
@@ -303,12 +317,16 @@ $comparison_grid_column_header-background: #FFF;
         position: absolute;
         right: -1px;
         z-index: 2;
-        padding: 0 1px;
+        padding: 0 0 0 5px;
         background: #FFF;
         line-height: $comparison_grid_column_header-height;
         height: $comparison_grid_column_header-height;
         border-left: 1px dotted $widget-border-color;
         border-right: 1px solid $widget-border-color;
+
+        &:hover {
+          background: $widget-background-color;
+        }
       }
     }
   }
@@ -325,10 +343,16 @@ $comparison_grid_column_header-background: #FFF;
 
       .row_header {
         width: $comparison_grid_filter-width - 6;
-        padding: 10px 3px;
+        padding: 8px 3px;
         border-bottom: 1px solid $comparison_grid_border-color;
-        height: $comparison_grid_row-height - 20;
+        height: $comparison_grid_row-height - 16;
         vertical-align: bottom;
+        font-weight: bold;
+
+        span { 
+          display: inline-block;
+          width: 90%;
+        }
       }
 
       .grid_row_level_2 {
@@ -336,6 +360,7 @@ $comparison_grid_column_header-background: #FFF;
         padding-right: 9px;
         width: $comparison_grid_filter-width - 18;
         max-height: 45px;
+        font-weight: normal;
       }
 
       .grid_row_level_3 {
@@ -343,6 +368,7 @@ $comparison_grid_column_header-background: #FFF;
         padding-right: 25px;
         width: $comparison_grid_filter-width - 50;
         max-height: 45px;
+        font-weight: normal;
       }
 
       span { 
@@ -352,11 +378,11 @@ $comparison_grid_column_header-background: #FFF;
 
     .grid_row_level_1 {
       font-size: 11px;
-      @include background(linear-gradient(#A6CCEC, #93C1E8));
+      @include background(linear-gradient(#91CFED, #77C4E9));
     }
 
     .grid_row_level_2 {
-      background: #dcedfb;
+      background: #D4EEFC;
       font-size: 10px;
       max-height: 45px;
     }
@@ -425,10 +451,12 @@ $comparison_grid_column_header-background: #FFF;
           text-align: center;
           color: #FFF;
           padding: 0 5px;
-          background: rgba(0, 0, 0, 0.6);
+          background: #585E64;
           position: absolute;
           left: 0;
           top: 0;
+
+          a { color: #40D7FD; }
 
           &[data-span="1"] { width: $comparison_grid_column_1-width; }
           &[data-span="2"] { width: $comparison_grid_column_2-width; }
@@ -455,7 +483,6 @@ $comparison_grid_column_header-background: #FFF;
       width: $comparison_grid_filter-width;
       border-right: 1px solid $widget-border-color;
       height: $comparison_grid_footer-height;
-      background: $widget-border-color;
     }
 
     ul {
@@ -480,10 +507,7 @@ $comparison_grid_column_header-background: #FFF;
   .hidden {
     display: none;
   }
-
-  .button {
-    vertical-align: bottom;
-    padding: 4px 10px;
-  }
-
 }
+
+.down_arrow-icon-black { background-position-y: -18px; }
+.button { margin: 0; }
