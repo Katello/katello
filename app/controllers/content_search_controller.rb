@@ -71,7 +71,7 @@ class ContentSearchController < ApplicationController
     if repo_ids.is_a? Array #repos were auto_completed
         repos = Repository.enabled.libraries_content_readable(current_organization).where(:id=>repo_ids)
     elsif repo_ids #repos were searched
-      readable = Repository.enabled.libraries_content_readable(current_organization).collect{|r| r.id}
+      readable = Repository.enabled.libraries_content_readable(current_organization).pluck(:id)
       repos = repo_search(repo_ids, readable)
     elsif !product_ids.empty? #products were autocompleted
         repos = []
@@ -229,9 +229,9 @@ class ContentSearchController < ApplicationController
   end
 
   def repo_rows repos
-    env_ids = KTEnvironment.content_readable(current_organization).collect{|e| e.id}
+    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
     repos.collect do |repo|
-        all_repos = repo.environmental_instances.collect{|r| r.pulp_id}
+        all_repos = repo.environmental_instances.pluck(:pulp_id)
         cols = {}
         Repository.where(:pulp_id=>all_repos).each do |r|
           cols[r.environment.id] = {:hover => repo_hover_html(r)} if env_ids.include?(r.environment_id)
@@ -245,7 +245,7 @@ class ContentSearchController < ApplicationController
   end
 
   def product_rows products
-    env_ids = KTEnvironment.content_readable(current_organization).collect{|e| e.id}
+    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
     products.collect do |p|
       cols = {}
       p.environments.collect do |env|
@@ -317,7 +317,7 @@ class ContentSearchController < ApplicationController
     if repo_search_params.is_a? Array
       repo_ids = repo_search_params
     elsif repo_search_params
-      readable = Repository.libraries_content_readable(current_organization).select(:id).collect{|r| r.id}
+      readable = Repository.libraries_content_readable(current_organization).pluck(:id)
       repo_ids = repo_search(repo_search_params, readable).collect{|r| r.id}
     else
       if !product_ids.empty?
@@ -326,7 +326,7 @@ class ContentSearchController < ApplicationController
         products = Product.readable(current_organization)
       end
       products.each do |p|
-        repo_ids = repo_ids + Repository.enabled.libraries_content_readable(current_organization).in_product(p).select("#{Repository.table_name}.id").collect{|r| r.id}
+        repo_ids = repo_ids + Repository.enabled.libraries_content_readable(current_organization).in_product(p).pluck(:id)
       end
     end
 
@@ -355,7 +355,7 @@ class ContentSearchController < ApplicationController
     content_rows = []
     product_envs = {}
     product_envs.default = 0
-    accessible_env_ids = KTEnvironment.content_readable(current_organization).collect{|e| e.id}
+    accessible_env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
 
     repo_ids.each do |repo_id|
       repo = Repository.find(repo_id)
@@ -388,7 +388,7 @@ class ContentSearchController < ApplicationController
   #
   def spanned_repo_content library_repo, content_type, content_search_obj, offset=0, search_mode = :all, environments = []
     spanning_repos = library_repo.environmental_instances
-    accessible_env_ids = KTEnvironment.content_readable(current_organization).collect{|e| e.id}
+    accessible_env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
 
     unless environments.nil? || environments.empty?
       spanning_repos.delete_if do |repo|
@@ -465,7 +465,7 @@ class ContentSearchController < ApplicationController
   # parent_repo    the library repo instance (or the parent row)
   # spanned_repos  all other instances of repos across all environments
   def spanning_content_rows(content_list, id_prefix, name_attribute, parent_repo, spanned_repos)
-    env_ids = KTEnvironment.content_readable(current_organization).collect{|e| e.id}
+    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
     to_ret = [] 
     for item in content_list:
         row = {:id=>"repo_#{parent_repo.id}_#{id_prefix}_#{item.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{},
