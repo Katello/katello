@@ -26,7 +26,7 @@ describe EnvironmentsController do
     LIBRARY = {:id => 1, :name => 'Library', :description => nil, :prior => nil, :path => [],
                :display_name => 'Library'}
     UPDATED_ENVIRONMENT = {:id => 3, :name => NEW_ENV_NAME, :description => nil, :prior => nil, :path => []}
-    EMPTY_ENVIRONMENT = {:name => "", :description => "", :prior => nil}
+    EMPTY_ENVIRONMENT = {:name => "", :description => "", :prior => nil, :display_name => ''}
     
     ORG_ID = 1
     ORGANIZATION = {:id => 1, :name => "organization_name", :description => "organization_description", :cp_key=>"foo"}
@@ -87,7 +87,6 @@ describe EnvironmentsController do
     before (:each) do
       login_user
       set_default_locale
-      controller.stub!(:notice)
 
       #Resources::Candlepin::Owner.stub!(:merge_to).and_return @org
       @env = mock(KTEnvironment, EnvControllerTest::ENVIRONMENT)
@@ -186,7 +185,7 @@ describe EnvironmentsController do
         end
 
         it "should generate a success notice" do
-          controller.should_receive(:notice)
+          controller.should notify.success
           put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
         end
 
@@ -203,7 +202,7 @@ describe EnvironmentsController do
         end
 
         it "should generate an error notice" do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify(:exception, :exception) # TODO fix controller not to notify twice
           put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
         end
 

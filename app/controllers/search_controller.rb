@@ -61,7 +61,7 @@ class SearchController < ApplicationController
       end
     rescue => error
       Rails.logger.error error.to_s
-      notice error.to_s, {:level => :error}
+      notify.exception error
     end
 
     # return the search details after adding a new favorite
@@ -73,7 +73,7 @@ class SearchController < ApplicationController
       current_user.search_favorites.destroy(params[:id])
     rescue => error
       Rails.logger.error error.to_s
-      notice error.to_s, {:level => :error}
+      notify.exception error
     end
 
     # return the search details after removing the favorite

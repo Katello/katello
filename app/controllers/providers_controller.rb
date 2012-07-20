@@ -14,9 +14,9 @@
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
 
-  before_filter :find_rh_provider, :only => [:redhat_provider,:update_redhat_provider]
+  before_filter :find_rh_provider, :only => [:redhat_provider]
 
-  before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy]
+  before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy, :import_progress]
   before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
@@ -44,9 +44,9 @@ class ProvidersController < ApplicationController
       :update => edit_test,
       :destroy => delete_test,
       :products_repos => read_test,
+      :import_progress => edit_test,
 
       :redhat_provider =>read_test,
-      :update_redhat_provider => edit_test
     }
   end
 
@@ -63,37 +63,39 @@ class ProvidersController < ApplicationController
                                          :providers => @providers, :products => @products, :editable=>@provider.editable?}
   end
 
-  def update_redhat_provider
-    if !params[:provider].blank? and params[:provider].has_key? :contents
-      temp_file = nil
-      dir       = "#{Rails.root}/tmp"
-      Dir.mkdir(dir) unless File.directory? dir
-      temp_file = File.new(File.join(dir, "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
-      temp_file.write params[:provider][:contents].read
-      temp_file.close
-      # force must be a string value
-      force_update = params[:force_import] == "1" ? "true" : "false"
-      @provider.import_manifest File.expand_path(temp_file.path),
-                                :force => force_update, :async => true, :notify => true
-
-      redhat_provider
+  def import_progress
+    expire_page :action => :import_progress
+    # "finished" is checked for in the javascript to see if polling for task progress should be done
+    if @provider.import_task.nil?
+      to_ret = {'state' => 'finished'}
     else
       # user didn't provide a manifest to upload
-      notice _("Subscription manifest must be specified on upload."), {:level => :error}
+      notify.error _("Subscription manifest must be specified on upload.")
       render :nothing => true
+      to_ret = @provider.import_task.to_json
     end
+
+    # Never cache these results since the user may close and re-open the "new" panel and no status would
+    # be available for checking
+    response.headers["Last-Modified"] = Time.now.httpdate
+    response.headers["Expires"] = "0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Cache-Control"] = 'no-store, no-cache, must-revalidate, max-age=0, pre-check=0, post-check=0'
+
+    render :json=>to_ret
   end
 
   def redhat_provider
+=begin
     # We default to none imported until we can properly poll Candlepin for status of the import
     @grouped_subscriptions = []
     begin
-      setup_subs
+      find_subscriptions
     rescue => error
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription manifest for provider '%s'.") % @provider.name
       error_text += "<br />" + _("Reason: %s") % display_message unless display_message.blank?
-      notice error_text, {:level => :error, :synchronous_request => false}
+      notify.exception error_text, error, :asynchronous => true
       Rails.logger.error "Error fetching subscriptions from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
@@ -107,13 +109,13 @@ class ProvidersController < ApplicationController
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription history for provider '%s'.") % @provider.name
       error_text += "<br />" + _("Reason: %s") % display_message unless display_message.blank?
-      notice error_text, {:level => :error, :synchronous_request => false}
+      notify.exception error_text, error, :asynchronous => true
       Rails.logger.error "Error fetching subscription history from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
       render :template =>"providers/redhat/show", :status => :bad_request and return
     end
-
+=end
     render :template =>"providers/redhat/show"
   end
 
@@ -142,17 +144,17 @@ class ProvidersController < ApplicationController
     begin
       @provider = Provider.create! params[:provider].merge({:provider_type => Provider::CUSTOM,
                                                                     :organization => current_organization})
-      notice _("Provider '%s' was created.") % @provider['name']
+      notify.success _("Provider '%s' was created.") % @provider['name']
       
       if search_validate(Provider, @provider.id, params[:search])
         render :partial=>"common/list_item", :locals=>{:item=>@provider, :initial_action=>:products_repos, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
       else
-        notice _("'%s' did not meet the current search criteria and is not being shown.") % @provider["name"], { :level => 'message', :synchronous_request => false }
+        notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @provider["name"]
         render :json => { :no_match => true }
       end
     rescue => error
       Rails.logger.error error.to_s
-      notice error, {:level => :error}
+      notify.exception error
       render :text => error, :status => :bad_request
     end
   end
@@ -162,14 +164,14 @@ class ProvidersController < ApplicationController
     begin
       @provider.destroy
       if @provider.destroyed?
-        notice _("Provider '%s' was deleted.") % @provider[:name]
+        notify.success _("Provider '%s' was deleted.") % @provider[:name]
         #render and do the removal in one swoop!
         render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
       else
         raise
       end
     rescue => e
-      notice e.to_s, {:level => :error}
+      notify.exception e
     end
   end
 
@@ -189,10 +191,10 @@ class ProvidersController < ApplicationController
       updated_provider.provider_type = params[:provider][:provider_type] unless params[:provider][:provider_type].nil?
 
       updated_provider.save!
-      notice _("Provider '%s' was updated.") % updated_provider.name
+      notify.success _("Provider '%s' was updated.") % updated_provider.name
 
       if not search_validate(Provider, updated_provider.id, params[:search])       
-        notice _("'%s' no longer matches the current search criteria.") % updated_provider["name"], { :level => 'message', :synchronous_request => false }
+        notify.message _("'%s' no longer matches the current search criteria.") % updated_provider["name"]
       end
 
       respond_to do |format|
@@ -200,7 +202,7 @@ class ProvidersController < ApplicationController
       end
 
     rescue => e
-      notice e.to_s, {:level => :error}
+      notify.exception e
 
       respond_to do |format|
         format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -215,7 +217,7 @@ class ProvidersController < ApplicationController
     begin
       @provider = Provider.find(params[:id])
     rescue => error
-      notice error.to_s, {:level => :error}
+      notify.exception error
       execute_after_filters
       render :text => error, :status => :bad_request
     end
@@ -246,6 +248,34 @@ class ProvidersController < ApplicationController
 
   def search_filter
     @filter = {:organization_id => current_organization}
+  end
+
+=begin
+  def find_subscriptions
+    @provider = current_organization.redhat_provider
+    cp_pools = Candlepin::Owner.pools current_organization.cp_key
+    subscriptions = Pool.index_pools cp_pools
+
+    @grouped_subscriptions = []
+    subscriptions.each do |sub|
+      # Derived pools are not displayed here
+      if sub.pool_derived
+        next
+      end
+
+      # Only Red Hat provider subscriptions are shown
+      p = Product.where(:cp_id => sub.product_id).first
+      if p && p.provider_id == @provider.id
+        @grouped_subscriptions << sub
+      end
+      #Product.where(:cp_id => sub.product_id).each { |product|
+      #  if product && product.provider_id == @provider.id
+      #    @grouped_subscriptions << sub
+      #  end
+      #}
+    end
+
+    @grouped_subscriptions
   end
 
   def setup_subs
@@ -293,13 +323,13 @@ class ProvidersController < ApplicationController
         next
       end
 
-      Product.where(:cp_id => sub['productId']).each { |product|
+      Product.where(:cp_id => sub['productId']).each do |product|
         if product and product.provider == @provider
           @grouped_subscriptions[group_id] ||= []
           @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
         end
-      }
-=begin TODO: Should the bundled products be displayed too?
+      end
+x=begin TODO: Should the bundled products be displayed too?
       if sub['providedProducts'].length > 0
         sub['providedProducts'].each do |cp_product|
           product = Product.where(:cp_id => cp_product['productId']).first
@@ -315,7 +345,8 @@ class ProvidersController < ApplicationController
           @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
         end
       end
-=end
+x=end
     end
   end
+=end
 end

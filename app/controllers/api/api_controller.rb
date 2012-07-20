@@ -14,6 +14,7 @@ require 'util/threadsession'
 
 class Api::ApiController < ActionController::Base
   include ActionController::HttpAuthentication::Basic
+  include Profiling
 
   respond_to :json
   before_filter :set_locale

@@ -14,11 +14,14 @@ module Navigation
     def self.included(base)
       base.class_eval do
         helper_method :custom_provider_navigation
+        helper_method :activation_keys_navigation
         helper_method :promotion_packages_navigation
         helper_method :promotion_errata_navigation
         helper_method :promotion_distribution_navigation
         helper_method :package_filter_navigation
         helper_method :gpg_keys_navigation
+        helper_method :subscriptions_navigation
+        helper_method :new_subscription_navigation
       end
     end
 
@@ -40,43 +43,82 @@ module Navigation
       ]
     end
 
+    def menu_subscriptions
+      {:key => :subscriptions,
+       :name =>_("Subscriptions"),
+       :url => subscriptions_path,
+       :items => lambda{[menu_subscriptions_list, menu_activation_keys, menu_import_history]},
+       :if => lambda{current_organization},
+       :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"subscriptions"}
+      }
+    end
+
+    def menu_subscriptions_list
+      {:key => :subscriptions,
+       :name =>_("Red Hat Subscriptions"),
+       :url => subscriptions_path,
+       :if => lambda{current_organization},
+       :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
+      }
+    end
+
+    def menu_activation_keys
+      {
+        :key => :activation_keys,
+        :name => _("Activation Keys"),
+        :url => activation_keys_path,
+        :if => lambda {current_organization && ActivationKey.readable?(current_organization())},
+        :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
+      }
+    end
+
+    def menu_import_history
+      {
+        :key => :import_history,
+        :name => _("Import History"),
+        :url => lambda {history_subscriptions_path},
+        :if => lambda{current_organization && current_organization.readable?},
+        :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
+      }
+    end
+
     def menu_contents
       {:key => :content,
-       :name => _("Content Management"),
+       :name => _("Content"),
         :url => :sub_level,
         :options => {:class=>'content top_level', "data-menu"=>"content"},
         :if => lambda{current_organization},
-        :items=> [ menu_providers, menu_sync_management, menu_system_templates, menu_promotions, menu_changeset]
+        :items=> AppConfig.katello? ? [ menu_subscriptions, menu_providers, menu_sync_management, menu_content_search, menu_system_templates, menu_promotions] :
+            [ menu_subscriptions, menu_system_templates]
       }
     end
 
     def menu_providers
-
       {:key => :providers,
-       :name =>_("Content Providers"),
+       :name =>_("Repositories"),
        :url => :sub_level,
        :if => :sub_level,
-       :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"providers"},
-       :items => AppConfig.katello? ? [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg] : [menu_custom_providers, menu_redhat_providers]
+       :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"repositories"},
+       :items => [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg]
       }
 
     end
 
     def menu_redhat_providers
       {:key => :redhat_providers,
-        :name =>_("Red Hat Content Provider"),
+        :name =>_("Red Hat Repositories"),
         :url => redhat_provider_providers_path,
         :if => lambda{current_organization && current_organization.readable?},
-        :options => {:class=>"third_level", "data-dropdown"=>"providers"}
+        :options => {:class=>"third_level", "data-dropdown"=>"repositories"}
       }
     end
 
     def menu_custom_providers
       {:key => :custom_providers,
-        :name =>_("Custom Content Providers"),
+        :name =>_("Custom Content Repositories"),
         :url => providers_path,
         :if => lambda{AppConfig.katello? && current_organization && Provider.any_readable?(current_organization())},
-        :options => {:class=>"third_level", "data-dropdown"=>"providers"}
+        :options => {:class=>"third_level", "data-dropdown"=>"repositories"}
       }
     end
 
@@ -87,8 +129,20 @@ module Navigation
        :if => lambda{AppConfig.katello? && (current_organization.syncable? || Provider.any_readable?(current_organization))},
        :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"sync"}
       }
+    end
+
+    def menu_content_search
+      {:key => :content_search,
+       :name =>_("Content Search"),
+       :if => lambda{AppConfig.katello? && (current_organization.syncable? || Provider.any_readable?(current_organization))},
+       :options => {:class=>'content second_level', "data-menu"=>"content"},
+       :url =>content_search_index_path,
+
+      }
+
 
     end
+
 
     def menu_sync_status
       {:key => :sync_status,
@@ -126,29 +180,30 @@ module Navigation
     end
 
     def menu_promotions
+       {:key => :changeset_promotions,
+        :name => _("Changeset Promotions"),
+        :url => promotions_path,
+        :items => lambda{[menu_promotions_list, menu_changeset]},
+        :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
+        :options => {:highlights_on =>/\/promotions.*/ , :class=>'menu_parent content second_level', "data-menu"=>"content", "data-dropdown"=>"promotions"}
+       }
+    end
+
+    def menu_promotions_list
        {:key => :promotions,
         :name => _("Promotions"),
         :url => promotions_path,
         :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
-        :options => {:highlights_on =>/\/promotions.*/ , :class=>'content second_level', "data-menu"=>"content"}
+        :options => {:highlights_on =>/\/promotions.*/ , :class=>'content third_level', "data-dropdown"=>"promotions"}
        }
     end
 
     def menu_changeset
        {:key => :changeset,
-        :name => _("Promotion Changeset History"),
+        :name => _("Changeset Promotion History"),
         :url => changesets_path,
         :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
-        :options => {:class=>'content second_level', "data-menu"=>"content"}
-       }
-    end
-
-    def menu_filters
-       {:key => :filters,
-        :name => _("Package Filters"),
-        :url => filters_path,
-        :if => lambda {Filter.any_readable?(current_organization)},
-        :options => {:class=>"third_level", "data-dropdown"=>"providers"}
+        :options => {:class=>'content third_level', "data-dropdown"=>"promotions"}
        }
     end
 
@@ -157,7 +212,16 @@ module Navigation
         :name => _("GPG Keys"),
         :url => gpg_keys_path,
         :if => lambda {GpgKey.any_readable?(current_organization)},
-        :options => {:class=>"third_level", "data-dropdown"=>"providers"}
+        :options => {:class=>"third_level", "data-dropdown"=>"repositories"}
+       }
+    end
+
+    def menu_filters
+       {:key => :filters,
+        :name => _("Package Filters"),
+        :url => filters_path,
+        :if => lambda {Filter.any_readable?(current_organization)},
+        :options => {:class=>"third_level", "data-dropdown"=>"repositories"}
        }
     end
 
@@ -234,7 +298,7 @@ module Navigation
         }
       ]
     end
-    
+
     def gpg_keys_navigation
       [
         { :key => :products_repositories,
@@ -252,5 +316,73 @@ module Navigation
       ]
     end
 
+    def activation_keys_navigation
+      [
+        { :key => :applied_subscriptions,
+          :name =>_("Applied Subscriptions"),
+          :url => lambda{applied_subscriptions_activation_key_path(@activation_key.id)},
+          :if =>lambda{@activation_key},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :available_subscriptions,
+          :name =>_("Available Subscriptions"),
+          :url => lambda{available_subscriptions_activation_key_path(@activation_key.id)},
+          :if => lambda{@activation_key},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :system_groups,
+          :name =>_("System Groups"),
+          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
+          :if => lambda{@activation_key},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :details,
+          :name =>_("Details"),
+          :url => lambda{edit_activation_key_path(@activation_key.id)},
+          :if => lambda{@activation_key},
+          :options => {:class=>"panel_link"}
+        }
+      ]
+    end
+
+    def subscriptions_navigation
+      [
+        { :key => :details,
+          :name =>_("Details"),
+          :url => lambda{edit_subscription_path(@subscription.cp_id)},
+          :if => lambda{@subscription},
+          :options => {:class=>"panel_link"},
+        },
+        { :key => :products,
+          :name =>_("Products"),
+          :url => lambda{products_subscription_path(@subscription.cp_id)},
+          :if => lambda{@subscription},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :consumers,
+          :name =>_("Consumers"),
+          :url => lambda{consumers_subscription_path(@subscription.cp_id)},
+          :if => lambda{@subscription},
+          :options => {:class=>"panel_link"}
+        }
+      ]
+    end
+
+    def new_subscription_navigation
+      [
+        { :key => :upload,
+          :name =>_("Import"),
+          :url => new_subscription_path,
+          :if => lambda{current_organization && current_organization.readable?},
+          :options => {:class=>"panel_link"},
+        },
+        { :key => :history,
+          :name =>_("History"),
+          :url => history_items_subscriptions_path,
+          :if => lambda{current_organization && current_organization.readable?},
+          :options => {:class=>"panel_link"}
+        }
+      ]
+    end
   end
 end

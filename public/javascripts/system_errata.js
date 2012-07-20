@@ -14,16 +14,17 @@
 KT.system = KT.system || {};
 
 KT.system.errata = function() {
-    var errata_container = undefined,
-        table_body = undefined,
-        load_more = undefined,
+    var errata_container,
+        table_body,
+        load_more,
         task_list = {},
         actions_updater,
-        items_url = undefined,
-        install_url = undefined,
-        status_url = undefined,
-        errata_for = undefined,
-        update_function = undefined,
+        parent_id,  // e.g. system id, system group id
+        items_url,
+        install_url,
+        status_url,
+        errata_for,
+        update_function,
 
         init = function(editable, page){
             errata_container = $('#errata_container');
@@ -33,18 +34,18 @@ KT.system.errata = function() {
             // This component is shared by the systems and system groups pages; however, some of the behavior is
             // different depending on the page.  For example, the URLs to interact with the server.
             errata_for = page;
-            var id = errata_container.data('parent_id');
+            parent_id = errata_container.data('parent_id');
             if (page === 'system') {
-                items_url = KT.routes.items_system_errata_path(id);
-                install_url = KT.routes.install_system_errata_path(id);
-                status_url = KT.routes.status_system_errata_path(id);
+                items_url = KT.routes.items_system_errata_path(parent_id);
+                install_url = KT.routes.install_system_errata_path(parent_id);
+                status_url = KT.routes.status_system_errata_path(parent_id);
                 update_function = update_status_for_system;
                 KT.tipsy.custom.tooltip($('.tipsy-icon.errata-info'));
             } else {
                 // errata_for === 'system_group'
-                items_url = KT.routes.items_system_group_errata_path(id);
-                install_url = KT.routes.install_system_group_errata_path(id);
-                status_url = KT.routes.status_system_group_errata_path(id);
+                items_url = KT.routes.items_system_group_errata_path(parent_id);
+                install_url = KT.routes.install_system_group_errata_path(parent_id);
+                status_url = KT.routes.status_system_group_errata_path(parent_id);
                 update_function = update_status_for_group;
                 KT.tipsy.custom.tooltip($('.tipsy-icon.systems, .tipsy-icon.errata-info'));
             }
@@ -73,7 +74,7 @@ KT.system.errata = function() {
             actions_updater = $.PeriodicalUpdater(status_url, {
                 method: 'get',
                 type: 'json',
-                data: function() {return {uuid: Object.keys(task_list)};},
+                data: function() {return {id: Object.keys(task_list)};},
                 global: false,
                 minTimeout: timeout,
                 maxTimeout: timeout
@@ -143,22 +144,31 @@ KT.system.errata = function() {
                     actions_updater.restart();
                 }
                 task_list[data] = errata_ids;
+                if(errata_for === 'system') {
+                    set_status(errata_ids, 'installing', undefined);
+                } else {
+                    set_status(errata_ids, 'installing', KT.routes.system_group_event_path(parent_id, data));
+                }
             });
         },
         update_status_for_system = function(data){
-            var i = 0, length = data.length,
-                task;
+            var i = 0, length = data.length, task, url;
 
             for(i; i < length; i += 1){
                 task = data[i];
+                url = KT.routes.system_event_path(parent_id, task.id);
+
                 if( task['state'] === 'finished' ){
-                    set_status(task_list[task['uuid']], 'finished');
-                    delete task_list[task['uuid']];
+                    set_status(task_list[task['id']], 'finished', url);
+                    delete task_list[task['id']];
                 } else if( task['state'] === 'running' ){
-                    if( !task_list.hasOwnProperty(task['uuid']) ){
-                        task_list[task['uuid']] = task['parameters']['errata_ids'];
-                        set_status(task['parameters']['errata_ids'], 'installing');
+                    if( !task_list.hasOwnProperty(task['id']) ){
+                        task_list[task['id']] = task['parameters']['errata_ids'];
+                        set_status(task['parameters']['errata_ids'], 'installing', url);
                     }
+                } else if( task['state'] === 'error' ){
+                    set_status(task_list[task['id']], 'failed', url);
+                    delete task_list[task['id']];
                 }
             }
 
@@ -167,11 +177,13 @@ KT.system.errata = function() {
             }
         },
         update_status_for_group = function(data){
-            var i = 0, num_jobs = data.length, job, num_tasks, task;
+            var i = 0, num_jobs = data.length, job, num_tasks, task, url;
 
             for(i; i < num_jobs; i += 1){
                 job = data[i];
                 num_tasks = job.tasks.length;
+                url = KT.routes.system_group_event_path(parent_id, job.id);
+
                 var j = 0, running = 0, error = 0;
                 for(j; j < num_tasks; j += 1){
                     task = job.tasks[j];
@@ -183,18 +195,18 @@ KT.system.errata = function() {
                 }
                 if (running > 0) {
                     // still have a task running... status should remain installing
-                    if( !task_list.hasOwnProperty(job.pulp_id) ){
-                        task_list[job.pulp_id] = job['parameters']['errata_ids'];
-                        set_status(job['parameters']['errata_ids'], 'installing');
+                    if( !task_list.hasOwnProperty(job.id) ){
+                        task_list[job.id] = job['parameters']['errata_ids'];
+                        set_status(task_list[job.id], 'installing', url);
                     }
                 } else if (error > 0) {
                     // no tasks are still running, but at least 1 error was encountered
-                    set_status(task_list[job.pulp_id], 'failed');
-                    delete task_list[job.pulp_id];
+                    set_status(task_list[job.id], 'failed', url);
+                    delete task_list[job.id];
                 } else {
                     // looks like all tasks completed...
-                    set_status(task_list[job.pulp_id], 'finished');
-                    delete task_list[job.pulp_id];
+                    set_status(task_list[job.id], 'finished', url);
+                    delete task_list[job.id];
                 }
             }
 
@@ -236,7 +248,7 @@ KT.system.errata = function() {
 				$('#list-spinner').hide();
 			}	
     	},
-        set_status = function(errata_ids, status){
+        set_status = function(errata_ids, status, url){
             var rows = get_rows(errata_ids),
                 errata_row, i, length;
             
@@ -246,16 +258,24 @@ KT.system.errata = function() {
                 errata_row = rows[i];
 
                 if( status === 'installing' ){
-                    errata_row.find('.errata_status_text').html(i18n.installing);
+                    errata_row.find('.errata_status_text').html(get_status_block(i18n.installing, url));
                     errata_row.find('img').show();
                 } else if( status === 'finished' ){
                     errata_row.find('img').hide();
-                    errata_row.find('.errata_status_text').html(i18n.install_finished);
+                    errata_row.find('.errata_status_text').html(get_status_block(i18n.install_finished, url));
                 } else if ( status === 'failed' ) {
                     errata_row.find('img').hide();
-                    errata_row.find('.errata_status_text').html(i18n.install_error)
+                    errata_row.find('.errata_status_text').html(get_status_block(i18n.install_error, url));
                 }
                 errata_row.find('.errata_status').show();
+            }
+        },
+        get_status_block = function(status, url){
+            if(url === undefined) {
+                return status;
+            } else {
+                var html = '<a data-url="' + url + '" class="subpanel_element">' + status + '</a>';
+                return html;
             }
         },
         get_rows = function(errata_ids){

@@ -1,7 +1,7 @@
 
 %tr{'data-id'=>system.system.id, :class=> cycle("", "alt")}
   %td
-    %input.system_checkbox{:type=>:checkbox, 'data-id'=>system.system.id ,:disabled=>('disabled' if @group.locked || !@group.editable?)}
+    %input.system_checkbox{:type=>:checkbox, 'data-id'=>system.system.id ,:disabled=>('disabled' if !@group.editable?)}
     = system.system.name
   %td
     = system.created_at

@@ -16,6 +16,10 @@ var subpanel = null;
 var subpanelSpacing = 55;
 var panelLeft = null;
 var count = 0;
+
+// Saves the state of the last subpanel viewed so selecting a new item from list will keep that subpanel open.
+var last_ajax_panelpage;
+
 $(document).ready(function () {
     $('.left').resize(function () {
         var apanel = $('.panel');
@@ -45,14 +49,34 @@ $(document).ready(function () {
     var activeBlock = null;
     var activeBlockId = null;
     var ajax_url = null;
+    var panel_selected;
+
 
     $('.block').live('click', function (event) {
+        var subpanel_href,
+            subpanel_name,
+            ajax_panelpage;
+
         if (event.target.nodeName === "A" && event.target.className.match('content_add_remove')) {
             return false;
         } else {
             activeBlock = $(this);
             ajax_url = activeBlock.attr("data-ajax_url");
             activeBlockId = activeBlock.attr('id');
+            ajax_panelpage = activeBlock.attr("data-ajax_panelpage");
+
+            // If the panel is currently open, get the currently open tab
+            if (thisPanel.hasClass('opened') && $.bbq.getState("panel") !== "new") {
+                subpanel_href = $('.panel_link.selected > a').last().attr('href');
+                if (subpanel_href) {
+                    last_ajax_panelpage = KT.panel.extract_panelpage(subpanel_href);
+                }
+            }
+
+            if (last_ajax_panelpage === "new") {
+                last_ajax_panelpage = undefined;
+            }
+
             if(event.ctrlKey && !thisPanel.hasClass('opened') && !(event.target.id == "new") && !activeBlock.hasClass('active')) {
                 if (activeBlock.hasClass('active')) {
                     activeBlock.removeClass('active');
@@ -66,9 +90,20 @@ $(document).ready(function () {
                 if(activeBlock.hasClass('active') && thisPanel.hasClass('opened')){
                     KT.panel.closePanel(thisPanel);
                 } else {
-                    $.bbq.pushState({
-                        panel: activeBlockId
-                    });
+                    if (ajax_panelpage && $.bbq.getState("panel") !== "new" && !last_ajax_panelpage) {
+                        last_ajax_panelpage = ajax_panelpage;
+                    }
+                    if (last_ajax_panelpage) {
+                        $.bbq.pushState({
+                            panel: activeBlockId,
+                            panelpage: last_ajax_panelpage
+                        });
+                    } else {
+                        $.bbq.removeState('panelpage');
+                        $.bbq.pushState({
+                            panel: activeBlockId
+                        });
+                    }
                     activeBlock.find('.arrow-right').show();
                 }
             }
@@ -87,6 +122,7 @@ $(document).ready(function () {
         }
         return false;
     });
+
     $(window).resize(function () {
         KT.panel.panelResize($('#panel_main'), false);
         KT.panel.panelResize($('#subpanel_main'), true);
@@ -109,16 +145,43 @@ $(document).ready(function () {
             url: $(this).attr('href'),
             dataType: 'html',
             success: function (data) {
-            	var callbacks = KT.panel.get_expand_cb(),
-                	cb = function(){};
-            	
+                var callbacks = KT.panel.get_expand_cb(),
+                    cb = function(){},
+                    activeBlock,
+                    ajax_url,
+                    ajax_panelpage;
+
                 thisPanel.find(".panel-content").html(data);
                 KT.common.jscroll_init($('.scroll-pane'));
-    			KT.common.jscroll_resize($('.jspPane'));
+                KT.common.jscroll_resize($('.jspPane'));
                 KT.panel.panelResize($('#panel_main'), false);
+
+                // Update the bbq
+                if (!activeBlockId) {
+                    activeBlockId = thisPanel.attr("id");
+                }
+                activeBlock = $('#' + KT.common.escapeId(activeBlockId));
+                ajax_url = activeBlock.attr("data-ajax_url");
+                ajax_panelpage = activeBlock.attr("data-ajax_panelpage");
+
+                if (ajax_panelpage) {
+                    // Replace old ajax_panelpage with new
+                    ajax_panelpage = this.url.substr(this.url.lastIndexOf('/') + 1);
+                    var bbq_panel = $.bbq.getState("panel");
+                    $.bbq.removeState("panel");
+                    $.bbq.removeState("panelpage");
+                    $.bbq.pushState({
+                        panel: bbq_panel,
+                        panelpage: ajax_panelpage
+                    });
+                    // Set the new default panelpage
+                    last_ajax_panelpage = ajax_panelpage;
+                }
+
+                KT.panel.copy.initialize();
                 
                 for( cb in callbacks ){
-                	callbacks[cb]();
+                    callbacks[cb]();
                 }
             }
         });
@@ -206,7 +269,20 @@ KT.panel = (function ($) {
         select_item = function (activeBlockId) {
             var activeBlock = $('#' + KT.common.escapeId(activeBlockId)),
                 ajax_url = activeBlock.attr("data-ajax_url"),
+                ajax_panelpage = activeBlock.attr("data-ajax_panelpage"),
+                full_ajax_url,
                 previousBlockId = null;
+
+            if (ajax_panelpage) {
+                // Initialize the default panelpage
+                if (!last_ajax_panelpage) {
+                    last_ajax_panelpage = ajax_panelpage;
+                }
+                full_ajax_url = ajax_url + '/' + last_ajax_panelpage;
+            } else {
+                full_ajax_url = ajax_url;
+            }
+
             thisPanel = $("#panel");
             subpanel = $('#subpanel');
             if (activeBlock.length) {
@@ -232,7 +308,7 @@ KT.panel = (function ($) {
                     }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
                     activeBlock.addClass('active');
                     previousBlockId = activeBlockId;
-                    panelAjax(activeBlockId, ajax_url, thisPanel, false);
+                    panelAjax(activeBlockId, full_ajax_url, thisPanel, false);
                 }
                 else if (thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId) {
                     switch_content_cb();
@@ -251,7 +327,7 @@ KT.panel = (function ($) {
                     activeBlock.addClass('active');
                     previousBlockId = activeBlockId;
                     thisPanel.removeClass('closed');
-                    panelAjax(activeBlockId, ajax_url, thisPanel, false);
+                    panelAjax(activeBlockId, full_ajax_url, thisPanel, false);
                 }
             }
         },
@@ -271,16 +347,18 @@ KT.panel = (function ($) {
                     pc.fadeIn(function () {
                         $(".panel-content :input:visible:enabled:first").focus();
                     });
-                    
+
                     KT.common.jscroll_init($('.scroll-pane'));
     				        KT.common.jscroll_resize($('.jspPane'));
-                    
+
                     if (isSubpanel) {
                         panelResize($('#subpanel_main'), isSubpanel);
                     } else {
                         panelResize($('#panel_main'), isSubpanel);
                     }
-                    
+
+                    KT.panel.copy.initialize();
+
                     for( callback in expand_cb ){
                     	expand_cb[callback](name);
                     }
@@ -333,9 +411,9 @@ KT.panel = (function ($) {
                 subpanelnav = ($('#subpanel').find('nav').length > 0) ? $('#subpanel').find('nav').height() + 10 : 0;
                 height = height - subpanelSpacing * 2 - subpanelnav + subnav_spacing;
             }
-            
+
             paneljQ.height(height);
-            
+
             if (paneljQ.length > 0) {
                 paneljQ.data('jsp').reinitialise();
             }
@@ -345,6 +423,7 @@ KT.panel = (function ($) {
                 content = jPanel.find('.panel-content'),
                 position;
             if (jPanel.hasClass("opened")) {
+                KT.panel.copy.hide_form();
                 $('.block.active').removeClass('active');
                 jPanel.animate({
                     left: 0,
@@ -357,6 +436,7 @@ KT.panel = (function ($) {
                 content.html('');
                 position = KT.common.scrollTop();
                 $.bbq.removeState("panel");
+                $.bbq.removeState("panelpage");
                 $(window).scrollTop(position);
                 updateResult();
                 contract_cb(name);
@@ -472,6 +552,9 @@ KT.panel = (function ($) {
         },
         search_started = function (event, promise) {
             var refresh = $.bbq.getState("panel");
+            if (!last_ajax_panelpage) {
+                last_ajax_panelpage = $.bbq.getState("panelpage");
+            }
 
             if (refresh) {
                 if (promise) {
@@ -509,6 +592,7 @@ KT.panel = (function ($) {
             $(document).bind('helptip-opened', function () {
                 handleScroll(jQPanel, offset);
             });
+
             panels_list.push(new_panel);
         },
         registerSubPanelSubmit = function(form_id, form_submit_id) {
@@ -538,7 +622,18 @@ KT.panel = (function ($) {
         },
         refreshPanel = function() {
           var active = $('#list').find('.active');
-          KT.panel.panelAjax(active, active.attr("data-ajax_url"), $('#panel'), false);
+          var full_ajax_url = active.attr("data-ajax_url") + '/' + active.attr("data-ajax_panelpage")
+          KT.panel.panelAjax(active, full_ajax_url, $('#panel'), false);
+        },
+        extract_panelpage = function(url) {
+            var a = document.createElement("a");
+            a.href = url;
+            var arr = a.pathname.split('/');
+            var panelpage = '';
+            for (var i = 4; i < arr.length; i += 1) {
+                panelpage += '/' + arr[i];
+            }
+            return panelpage.substr(1);
         },
         actions = (function(){
             var action_list = {},
@@ -678,8 +773,70 @@ KT.panel = (function ($) {
         queryParameters: queryParameters,
         refreshPanel : refreshPanel,
         actions: actions,
-        handleScroll : handleScroll
+        handleScroll : handleScroll,
+        extract_panelpage : extract_panelpage
     };
+})(jQuery);
+
+KT.panel.copy = (function () {
+    var initialize = function() {
+        // This function will initialize the support for copy, if copy is defined for the pane.  In katello, one
+        // example of this can be found in app/views/system_groups/_tupane_header.html.haml.
+
+        var copy_link = $('.pane_action.copy-tipsy');
+        if(copy_link) {
+            var cancel_button = $('#cancel_copy_button'), copy_form = $('#copy_form');
+
+            KT.tipsy.custom.copy_tooltip(copy_link);
+
+            copy_link.die();
+            copy_link.live('click', show_form);
+
+            cancel_button.die();
+            cancel_button.live('click', hide_form);
+
+            copy_form.die();
+            copy_form.live('submit', perform_copy);
+        }
+    },
+    show_form = function() {
+        $('.pane_action.copy-tipsy').tipsy('show');
+    },
+    hide_form = function() {
+        $('.pane_action.copy-tipsy').tipsy('hide');
+    },
+    perform_copy = function(event) {
+        event.preventDefault();
+
+        var copy_form = $('#copy_form'), copy_button = $('#copy_button'), do_not_open = $('#do_not_open').is(':checked');
+        copy_button.attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: copy_form.data("url") + "?&authenticity_token=" + AUTH_TOKEN,
+            data: copy_form.serialize(),
+            cache: false,
+            success: function(data) {
+                $('.pane_action.copy-tipsy').tipsy('hide');
+
+                if (do_not_open) {
+                    list.add(data);
+                } else {
+                    KT.panel.list.createSuccess(data);
+                }
+            },
+            error: function(data) {
+                copy_button.removeAttr('disabled');
+            }
+        });
+        return false;
+    };
+    return {
+        initialize: initialize,
+        hide_form: hide_form,
+        perform_copy: perform_copy
+    };
+
 })(jQuery);
 
 KT.panel.list = (function () {
@@ -741,6 +898,9 @@ KT.panel.list = (function () {
 
             list_elem.find('.spinner').hide();
             list_section.html(html).show();
+        },
+        refresh_list = function() {
+            search.refresh_search();
         },
         full_spinner = function() {
             var list_elem = $("#list");
@@ -843,9 +1003,17 @@ KT.panel.list = (function () {
                 prepend(data);
                 KT.panel.closePanel($('#panel'));
                 id = first_child().attr("id");
-                $.bbq.pushState({
-                    panel: id
-                });
+
+                if (last_ajax_panelpage) {
+                    $.bbq.pushState({
+                        panel: id,
+                        panelpage: last_ajax_panelpage
+                    });
+                } else {
+                    $.bbq.pushState({
+                        panel: id
+                    });
+                }
                 KT.panel.select_item(id);
                 notices.checkNotices();
                 update_counts(1, 1, 1);
@@ -861,6 +1029,7 @@ KT.panel.list = (function () {
         replace_list    : replace_list,
         update_counts   : update_counts,
         full_spinner    : full_spinner,
-        current_count   :  current_count
+        current_count   : current_count,
+        refresh_list    : refresh_list
     };
 })();

@@ -36,13 +36,13 @@ class SyncPlansController < ApplicationController
       :create => manage_test,
     }
   end
-  
+
   def items
     render_panel_direct(SyncPlan, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
                         {:default_field => :name, :filter=>{:organization_id=>[current_organization.id]}})
-    
+
   end
-  
+
   def setup_options
     @panel_options = { :title => _('Sync Plans'),
                  :col =>  ['name', 'interval'],
@@ -58,7 +58,7 @@ class SyncPlansController < ApplicationController
 
   def edit
     render :partial => "edit", :layout => "tupane_layout",
-           :locals => {:plan=>@plan, :editable=> current_organization.syncable?, :name=>controller_display_name } 
+           :locals => {:plan=>@plan, :editable=> current_organization.syncable?, :name=>controller_display_name }
   end
 
   def update
@@ -82,10 +82,10 @@ class SyncPlansController < ApplicationController
       end
 
       updated_plan.save!
-      notice N_("Sync Plan '%s' was updated.") % updated_plan.name
+      notify.success N_("Sync Plan '%s' was updated.") % updated_plan.name
 
       if not search_validate(SyncPlan, updated_plan.id, params[:search])
-        notice _("'%s' no longer matches the current search criteria.") % updated_plan["name"], { :level => 'message', :synchronous_request => false }
+        notify.message _("'%s' no longer matches the current search criteria.") % updated_plan["name"]
       end
 
       respond_to do |format|
@@ -93,7 +93,7 @@ class SyncPlansController < ApplicationController
       end
 
       rescue => e
-        notice e.to_s, {:level => :error}
+        notify.exception e
 
         respond_to do |format|
           format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -113,9 +113,9 @@ class SyncPlansController < ApplicationController
     @id = @plan.id
     begin
       @plan.destroy
-      notice N_("Sync plan '%s' was deleted.") % @plan[:name]
+      notify.success N_("Sync plan '%s' was deleted.") % @plan[:name]
     rescue => e
-      notice e.to_s, {:level => :error}
+      notify.exception e
     end
     render :partial => "common/list_remove", :locals => {:id=>@id, :name=>controller_display_name}
   end
@@ -146,35 +146,35 @@ class SyncPlansController < ApplicationController
       rescue
         params[:sync_plan][:sync_date] = nil
       end
-      
+
       @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
-      notice N_("Sync Plan '%s' was created.") % @plan['name']
-      
+      notify.success N_("Sync Plan '%s' was created.") % @plan['name']
+
       if search_validate(SyncPlan, @plan.id, params[:search])
         render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
       else
-        notice _("'%s' did not meet the current search criteria and is not being shown.") % @plan["name"], { :level => 'message', :synchronous_request => false }
+        notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @plan["name"]
         render :json => { :no_match => true }
       end
     rescue => e
       Rails.logger.error e.to_s
-      notice e, {:level => :error}
+      notify.exception e
       render :text => e, :status => :bad_request
     end
   end
-  
+
   protected
   # pre filter for grabbing plan object
   def get_plan
     begin
       @plan = SyncPlan.find(params[:id])
     rescue => error
-      notice error.to_s, {:level => :error}
+      notify.exception error
       execute_after_filters
       render :text => error, :status => :bad_request
     end
   end
-      
+
   def controller_display_name
     return 'sync_plan'
   end

@@ -21,7 +21,6 @@ describe NoticesController do
     @user = login_user :mock => false
     set_default_locale
     controller.stub(:render_panel_direct).and_return([])
-    controller.stub!(:notice)
   end
   
   describe "viewing notices" do
