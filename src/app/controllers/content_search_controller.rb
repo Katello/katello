@@ -402,7 +402,6 @@ class ContentSearchController < ApplicationController
         return nil if search_mode == :shared
         search_mode = :all
       end
-
     end
     to_ret = {}
     content_attribute = content_type.to_sym == :package ? 'nvrea' : 'id'
