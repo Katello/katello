@@ -152,6 +152,57 @@ describe Api::SystemGroupsController do
        end
      end
 
+     describe "POST copy" do
+       let(:action) {:copy}
+       let(:req) { post :copy, :id=>@group.id, :organization_id=>@org.cp_key}
+       let(:authorized_user) do
+         user_with_permissions { |u| u.can(:create, :system_groups, nil, @org) }
+       end
+       let(:unauthorized_user) do
+         user_without_permissions
+       end
+       it_should_behave_like "protected action"
+
+       it "should create a group correctly" do
+         post :copy, :organization_id=>@org.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo", :description=>"describe", :max_systems=>1234}
+         response.should be_success
+         first = SystemGroup.where(:name=>"foo").first
+         first.should_not be_nil
+         first[:max_systems].should == 1234
+       end
+
+
+
+       it "should not create 2 groups with the same name" do
+         post :copy, :organization_id=>@org.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo2", :description=>"describe"}
+         post :copy, :organization_id=>@org.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo2", :description=>"describe"}
+         response.should_not be_success
+         SystemGroup.where(:name=>"foo2").count.should == 1
+       end
+
+       it "should inherit fields from existing group unless specified in API call" do
+         post :copy, :organization_id=>@org.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo", :description=>"describe new", :max_systems=>1234}
+         response.should be_success
+         first = SystemGroup.where(:name=>"foo").first
+         first[:max_systems].should == 1234
+         first[:description].should == "describe new"
+
+         post :copy, :organization_id=>@org.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo2"}
+         response.should be_success
+         first = SystemGroup.where(:name=>"foo2").first
+         first[:max_systems].should == @group.max_systems
+         first[:description].should == @group.description
+       end
+
+       it "should not let you copy one group to a different org" do
+         @org2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
+         post :copy, :organization_id=>@org2.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo2", :description=>"describe"}
+         response.should_not be_success
+         SystemGroup.where(:name=>"foo2").count.should == 0
+       end
+       
+     end
+
      describe "PUT update" do
        let(:action) {:update}
        let(:req) { put :update, :id=>@group.id, :organization_id=>@org.cp_key}
@@ -177,8 +228,6 @@ describe Api::SystemGroupsController do
        end
      end
 
-
-
      describe "POST add systems" do
        let(:action) {:add_systems}
        let(:req) { post :add_systems, :id=>@group.id, :organization_id=>@org.cp_key}
@@ -196,15 +245,6 @@ describe Api::SystemGroupsController do
          response.should be_success
          @group.reload.systems.should include @system
 
-       end
-
-       it "should not allow addition if locked" do
-         @group.locked = true
-         @group.save!
-         post :add_systems, :organization_id=>@org.id, :id=>@group.id,
-              :system_group=>{:system_ids=>[@system.uuid]}
-         response.should_not be_success
-         @group.systems.should_not include @system
        end
      end
 
@@ -229,47 +269,6 @@ describe Api::SystemGroupsController do
        end
 
      end
-
-    describe "POST lock group" do
-      let(:action) {:lock}
-      let(:req) { post :lock, :id=>@group.id, :organization_id=>@org.cp_key}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:locking, :system_groups, @group.id, @org) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-
-      it "should allow locking" do
-        @group.locked = false
-        @group.save!
-        post :lock, :organization_id=>@org.id, :id=>@group.id
-        response.should be_success
-        @group.reload.locked.should == true
-      end
-    end
-
-     describe "POST unlock group" do
-       let(:action) {:unlock}
-       let(:req) { post :unlock, :id=>@group.id, :organization_id=>@org.cp_key}
-       let(:authorized_user) do
-         user_with_permissions { |u| u.can(:locking, :system_groups, @group.id, @org) }
-       end
-       let(:unauthorized_user) do
-         user_without_permissions
-       end
-       it_should_behave_like "protected action"
-
-       it "should allow unlocking" do
-         @group.locked = true
-         @group.save!
-         post :unlock, :organization_id=>@org.id, :id=>@group.id
-         response.should be_success
-         @group.reload.locked.should == false
-       end
-     end
-
 
      describe "DELETE" do
        let(:action) {:destroy}

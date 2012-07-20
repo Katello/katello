@@ -395,7 +395,7 @@ KT.sliding_tree.list = function(parent, bcs, sliding_tree){
     var current_items = 0,
     replace_list = function(html, args){
         if (!args || args === sliding_tree.get_current_crumb()){
-            parent.children('.has_content').html(html);
+            parent.children('.will_have_content').html(html);
         }
     },
     append = function(html, args) {

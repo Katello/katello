@@ -1,11 +1,10 @@
-
 #source "http://rubygems.org"
 source 'http://repos.fedorapeople.org/repos/katello/gems/'
 
 gem 'rails', '3.0.10'
 gem 'thin', '>=1.2.11'
 
-gem 'tire' , '>= 0.3.0', '< 0.4'
+gem 'tire', '>= 0.3.0', '< 0.4'
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
 gem 'jammit'
@@ -14,6 +13,7 @@ gem 'pg'
 gem 'rails_warden'
 gem 'net-ldap'
 gem 'oauth'
+gem 'ldap_fluff'
 
 gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
@@ -68,16 +68,28 @@ group :test, :development do
 
   #needed  for documentation
   gem 'yard', '>= 0.5.3'
-  
+
   #needed by hudson
-  gem 'ci_reporter','>= 1.6.3'
+  gem 'ci_reporter', '>= 1.6.3'
   gem 'gettext', '>= 1.9.3', :require => false
   gem 'ruby_parser'
-  
+
   #needed to generate routes in javascript
   gem "js-routes", :require => 'js_routes'
+end
 
+group :profiling do
+  #needed for profiling
+  gem 'ruby-prof'
+end
+
+group :jshintrb do
   #needed for unit tests
+  #
+  #needed for syntax checking
+  gem 'libv8'
+  gem 'therubyracer'
+  gem 'jshintrb', '0.1.1'
 end
 
 group :development do

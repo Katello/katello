@@ -41,7 +41,7 @@ class UserSessionsController < ApplicationController
   def destroy
     logout
     self.current_organization = nil
-    notice _("Logout Successful"), {:persist => false}
+    notify.success _("Logout Successful"), :persist => false
     redirect_to root_url
   end
 
@@ -53,7 +53,7 @@ class UserSessionsController < ApplicationController
     orgs = current_user.allowed_organizations
     org = Organization.find(params[:org_id])
     if org.nil? or !orgs.include?(org)
-      notice "Invalid organization", {:level => :error}
+      notify.error _("Invalid organization")
       render :nothing => true
     else
       self.current_organization = org
@@ -76,10 +76,13 @@ class UserSessionsController < ApplicationController
       User.current = current_user
       # set ldap roles
       current_user.set_ldap_roles if AppConfig.ldap_roles
-      setup_current_organization
       # notice the user
-      notice _("Login Successful")
-      redirect_to dashboard_index_url
+      notify.success _("Login Successful")
+      if current_organization.nil?
+        render :partial => "/user_sessions/interstitial.js.haml"
+      else
+        redirect_to dashboard_index_url
+      end
     end
   end
 

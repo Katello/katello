@@ -36,7 +36,7 @@
     }
 
     #dashboard_subscriptions {
-      height: 170px;
+      height: $small_height;
       color: $font_color;
       .sub_count {
         font-family: $headlinefont;
@@ -56,7 +56,7 @@
       h4 {
         display: inline;
         margin-left: 10px;
-        margin-top: 11px;
+        margin-top: 8px;
       }
       h5 {
         display: inline;
@@ -72,7 +72,6 @@
           margin-top: 3px;
           width: 15px;
           height: 15px;
-
         }
         .red_icon {background: $status_icons_red_small;}
         .yellow_icon {background: $status_icons_yellow_small;}
@@ -95,15 +94,14 @@
             z-index: 1;
         }
       }
-
-
     }
+
     #dashboard_errata {
       .scroll-pane {
-        height: $big_height - 26;
+        height: $small_height - 26;
       }
       .list {
-        height: $big_height - 10;
+        height: $small_height - 10;
         min-height: inherit;
       }
 
@@ -114,7 +112,6 @@
           }
         }
       }
-
 
       .block_head {
         background-color: lighten($stroke_color,8%);
@@ -202,10 +199,9 @@
         margin-top: 2px;
         margin-right: 2px;
       }
-
     }
-    #dashboard_promotions {
 
+    #dashboard_promotions {
       h5 {
         display: inline;
       }
@@ -229,7 +225,6 @@
     }
 
     #dashboard_sync {
-
       h5 {
         display: inline;
       }
@@ -280,6 +275,7 @@
       }
 
     }
+
     #dashboard_systems {
         .icon {
           margin-left: 0px;
@@ -315,6 +311,88 @@
 
       }
     }
+
+    #dashboard_system_groups {
+      .scroll-pane {
+        height: $small_height - 26;
+      }
+      .list {
+        height: $small_height - 10;
+        min-height: inherit;
+      }
+
+      .jspPane {
+        .system_groups {
+          &:first-child {
+            padding-top: 4px;
+          }
+        }
+      }
+
+      .block_head {
+        background-color: lighten($stroke_color,8%);
+        display: block;
+        height: 1.3em;
+        color: $lightgrey_color;
+
+        .column_head {
+          margin-left: 2px;
+          float: left;
+          height: inherit;
+          min-height: inherit;
+          text-align: left;
+          font-size: 85%;
+          font-family: $headlinefont;
+          color: lighten($header_color,20%);
+          text-transform: uppercase;
+          white-space:nowrap;
+          border-right: 1px dotted darken($stroke_color,20%);
+          &:last-child {
+            border-right: 0 none;
+          }
+        }
+      }
+      .subheader {
+          font-weight: bold;
+          margin-top:5px;
+          font-size: 85%;
+          font-family: $headlinefont;
+          color: lighten($header_color,20%);
+          text-transform: uppercase;
+      }
+      .col_1 {
+        display: inline-block;
+        width: $big_width * .12;
+        padding-left: 2px;
+
+        .status_icon {
+          height: 15px;
+          width: 15px;
+          margin: auto;
+          background: $status_icons_green_small;
+          &.green {
+           background: $status_icons_green_small;
+          }
+          &.yellow {
+           background: $status_icons_yellow_small;
+          }
+          &.red {
+           background: $status_icons_red_small;
+          }
+        }
+      }
+      .col_2 {
+        display: inline-block;
+        width: $big_width * .5;
+        padding-left: 2px;
+      }
+      .col_3 {
+        display: inline-block;
+        width: $big_width * .15;
+        padding-left: 2px;
+      }
+    }
+
     .icon_wrap {
       padding-top: 10px;
       padding-bottom: 10px;
@@ -330,25 +408,21 @@
       @include action-icon($check_icon_black);
       margin-left: 0px;
     }
-
     .error_icon {
       width: 16px;
       @include action-icon($warning_icon_black);
       margin-left: 0px;
     }
-
     .gears_icon {
       width: 16px;
       @include action-icon($gears_icon_black);
       margin-left: 0px;
     }
-
     .clock_icon {
       width: 16px;
       @include action-icon($gears_icon_black);
       margin-left: 0px;
     }
-
     .small_widget {
         overflow: hidden;
         height: $small_height;
@@ -366,7 +440,6 @@
           font-size: 110%;
         }
       }
-
     .small_widget_headpin {
         overflow: hidden;
         height: 170px;
@@ -384,10 +457,9 @@
           font-size: 110%;
         }
       }
-
     .big_widget {
         overflow: hidden;
-        height: $big_height;
+        height: $small_height;
         width: $big_width;
         list-style: None;
         li {

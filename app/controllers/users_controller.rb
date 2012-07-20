@@ -84,7 +84,7 @@ class UsersController < ApplicationController
                             :filter        => [{ :hidden => [false] }] })
     else
       users = [@user]
-      render_panel_items(users, @panel_options, nil, params[:offset])
+      render_panel_items(users, @panel_options, nil, "0")
     end
   end
 
@@ -131,17 +131,16 @@ class UsersController < ApplicationController
       @user.save!
     end
 
-    notice @user.username + _(" created successfully.")
+    notify.success @user.username + _(" created successfully.")
     if search_validate(User, user.id, params[:search])
       render :partial => "common/list_item",
              :locals  => { :item => @user, :accessor => "id", :columns => ["username"], :name => controller_display_name }
     else
-      notice _("'%s' did not meet the current search criteria and is not being shown.") % @user["name"],
-             { :level => 'message', :synchronous_request => false }
+      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @user["name"]
       render :json => { :no_match => true }
     end
   rescue ActiveRecord::RecordNotSaved => error
-    notice error, { :level => :error }
+    notify.exception error
     #transaction, if something goes wrong with the creation of the permission, we will need to delete the user
     @user.destroy unless @user.new_record?
     render :json => @user.errors, :status => :bad_request
@@ -151,18 +150,17 @@ class UsersController < ApplicationController
     params[:user].delete :username
 
     if @user.update_attributes(params[:user])
-      notice _("User updated successfully.")
+      notify.success _("User updated successfully.")
       attr = params[:user].first.last if params[:user].first
       attr ||= ""
 
       if not search_validate(User, user.id, params[:search])
-        notice _("'%s' no longer matches the current search criteria.") % @user["name"],
-               { :level => 'message', :synchronous_request => false }
+        notify.message _("'%s' no longer matches the current search criteria.") % @user["name"]
       end
 
       render :text => attr and return
     end
-    notice "", { :level => :error, :list_items => @user.errors.to_a }
+    notify.invalid_record @user
     render :text => @user.errors, :status => :ok
   end
 
@@ -175,7 +173,7 @@ class UsersController < ApplicationController
       @user.default_locale = nil
     end
     @user.save!
-    notice _("User updated successfully.")
+    notify.success _("User updated successfully.")
     redirect_to "#{users_path(:id => @user)}#panel=user_#{@user.id}"
   end
 
@@ -230,7 +228,7 @@ class UsersController < ApplicationController
 
     if @user.default_environment.try(:id) == default_environment_id
       err_msg = N_("The default you supplied was the same as the old default.")
-      notice err_msg, { :level => :error }
+      notify.error err_msg
       render(:text => err_msg, :status => 400) and return
     end
 
@@ -242,7 +240,7 @@ class UsersController < ApplicationController
 
     @organization             = @environment.try :organization
 
-    notice _("User environment updated successfully.")
+    notify.success _("User environment updated successfully.")
 
     if @organization && @environment
       render :json => { :org => @organization.name, :env => @environment.name } and return
@@ -250,7 +248,7 @@ class UsersController < ApplicationController
     render :json => { :org => _("No default set for this user."), :env => _("No default set for this user.") } and return
 
   rescue ActiveRecord::RecordNotSaved => error
-    notice error.message, { :level => :error }
+    notify.exception error
     render :text => error.message, :status => 400
   end
 
@@ -261,15 +259,15 @@ class UsersController < ApplicationController
     params[:user][:role_ids] << @user.own_role.id
 
     if  @user.update_attributes(params[:user])
-      notice _("User updated successfully.")
+      notify.success _("User updated successfully.")
 
       if not search_validate(User, user.id, params[:search])
-        notice _("'%s' no longer matches the current search criteria.") % @user["name"], { :level => 'message', :synchronous_request => false }
+        notify.message _("'%s' no longer matches the current search criteria.") % @user["name"]
       end
 
       render :nothing => true and return
     end
-    notice "", { :level => :error, :list_items => @user.errors.to_a }
+    notify.invalid_record @user
     render :text => @user.errors, :status => :ok
   end
 
@@ -278,20 +276,20 @@ class UsersController < ApplicationController
     #remove the user
     @user.destroy
     if @user.destroyed?
-      notice _("User '%s' was deleted.") % @user[:username]
+      notify.success _("User '%s' was deleted.") % @user[:username]
       #render and do the removal in one swoop!
       render :partial => "common/list_remove", :locals => { :id => @id, :name => controller_display_name } and return
     end
-    notice "", { :level => :error, :list_items => @user.errors.to_a }
+    notify.invalid_record @user
     render :text => @user.errors, :status => :ok
   rescue => error
-    notice "", { :level => :error, :list_items => @user.errors.to_a }
+    notify.exception error
     render :json => @user.errors, :status => :bad_request
   end
 
   def clear_helptips
     @user.clear_helptips
-    notice _("Disabled help tips have been re-enabled.")
+    notify.success _("Disabled help tips have been re-enabled.")
     render :text => _("Cleared")
   end
 

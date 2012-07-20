@@ -89,19 +89,19 @@ class FiltersController < ApplicationController
     end
 
     if not search_validate(Filter, @filter.id, params[:search])
-      notice _("'%s' no longer matches the current search criteria.") % @filter["name"], { :level => 'message', :synchronous_request => false }
+      notify.message _("'%s' no longer matches the current search criteria.") % @filter["name"]
     end
 
     @filter.save!
-    notice _("Package Filter '%s' has been updated.") % @filter.name
+    notify.success _("Package Filter '%s' has been updated.") % @filter.name
 
-    if not search_validate(Filter, @filter.id, params[:search]) 
-      notice _("'%s' no longer matches the current search criteria.") % @filter["name"], { :level => :message, :synchronous_request => true }
+    if not search_validate(Filter, @filter.id, params[:search])
+      notify.message _("'%s' no longer matches the current search criteria.") % @filter["name"], :asynchronous => false
     end
 
     render :text=>to_ret
   rescue => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 
@@ -117,11 +117,10 @@ class FiltersController < ApplicationController
 
   def create
     @filter = Filter.create!(params[:filter].merge({:organization_id=>current_organization.id}))
-    notice N_("Filter %s created successfully.") % @filter.name
+    notify.success N_("Filter %s created successfully.") % @filter.name
     if !search_validate(Filter, @filter.id, params[:search])
 
-      notice _("'%s' did not meet the current search criteria and is not being shown.") % @filter.name,
-             { :level => 'message', :synchronous_request => false }
+      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @filter.name
       render :json => { :no_match => true }
     else
       render :partial=>"common/list_item", :locals=>{:item=>@filter, :initial_action=>"packages", :accessor=>"id",
@@ -129,7 +128,7 @@ class FiltersController < ApplicationController
     end
 
   rescue => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 
@@ -179,10 +178,10 @@ class FiltersController < ApplicationController
     @filter.save!
 
 
-    notice _("Sucessfully updated '%s' package filter.") % @filter.name
+    notify.success _("Sucessfully updated '%s' package filter.") % @filter.name
     render :text=>''
   rescue => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>'', :status=>500
   end
 
@@ -211,10 +210,10 @@ class FiltersController < ApplicationController
 
   def destroy
     @filter.destroy
-    notice _("Package Filter %s deleted.") % @filter.name
+    notify.success _("Package Filter %s deleted.") % @filter.name
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
   rescue => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 
@@ -227,7 +226,7 @@ class FiltersController < ApplicationController
   def find_filter
     @filter = Filter.find(params[:id])
   rescue => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500 and return false
   end
 

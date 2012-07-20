@@ -42,10 +42,10 @@ class SystemPackagesController < ApplicationController
       
       if packages
         task = @system.install_packages packages
-        notice _("Install of Packages '%{p}' scheduled for System '%{s}'.") %
-                   {:s => @system['name'], :p => params[:packages]}
+        notify.success _("Install of Packages '%{p}' scheduled for System '%{s}'.") %
+                           { :s => @system['name'], :p => params[:packages] }
       else
-        notice _("One or more errors found in Package names '%s'.") % params[:packages], {:level => :error}
+        notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
         render :text => '' and return
       end
 
@@ -53,16 +53,15 @@ class SystemPackagesController < ApplicationController
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       task = @system.install_package_groups groups
-      notice _("Install of Package Groups '%{g}' scheduled for System '%{s}'.") %
-                 {:s => @system['name'], :g => params[:groups]}
-
+      notify.success _("Install of Package Groups '%{g}' scheduled for System '%{s}'.") %
+                         { :s => @system['name'], :g => params[:groups] }
     else
-      notice _("Empty request received to install Packages or Package Groups for System '%s'.") %
-                 @system['name'], {:level => :error}
+      notify.error _("Empty request received to install Packages or Package Groups for System '%s'.") %
+                       @system['name']
       render :text => '' and return
     end
 
-    render :text => task.uuid
+    render :text => task.id
   end
 
   def remove
@@ -70,8 +69,8 @@ class SystemPackagesController < ApplicationController
       # user selected one or more packages from the list of installed packages
       packages = params[:package].keys
       task = @system.uninstall_packages packages
-      notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'.") %
-                 {:s => @system['name'], :p => packages.join(',')}
+      notify.success _("Uninstall of Packages '%{p}' scheduled for System '%{s}'.") %
+                         { :s => @system['name'], :p => packages.join(',') }
 
     elsif !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
@@ -79,27 +78,26 @@ class SystemPackagesController < ApplicationController
       
       if packages
         task = @system.uninstall_packages packages
-        notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'.") %
-                   {:s => @system['name'], :p => params[:packages]}
+        notify.success _("Uninstall of Packages '%{p}' scheduled for System '%{s}'.") %
+                           { :s => @system['name'], :p => params[:packages] }
       else
-        notice _("One or more errors found in Package names '%s'.") % params[:packages], {:level => :error}
-        render :text => '' and return        
+        notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
+        render :text => '' and return
       end
 
     elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       task = @system.uninstall_package_groups groups
-      notice _("Uninstall of Package Groups '%{p}' scheduled for System '%{s}'.") %
-                 {:s => @system['name'], :p => groups.join(',')}
-
+      notify.success _("Uninstall of Package Groups '%{p}' scheduled for System '%{s}'.") %
+                         { :s => @system['name'], :p => groups.join(',') }
     else
-      notice _("Empty request received to uninstall Packages or Package Groups for System '%s'.") % @system['name'],
-             :level => :error
+      notify.error _("Empty request received to uninstall Packages or Package Groups for System '%s'.") %
+                       @system['name']
       render :text => '' and return
     end
 
-    render :text => task.uuid
+    render :text => task.id
   end
 
   def update
@@ -112,13 +110,13 @@ class SystemPackagesController < ApplicationController
     task = @system.update_packages packages
 
     if packages.nil?
-      notice _("Update of all packages scheduled for System '%s'.") % @system['name']
+      notify.success _("Update of all packages scheduled for System '%s'.") % @system['name']
     else
-      notice _("Update of Packages '%{p}' scheduled for System '%{s}'.") %
-                 {:s => @system['name'], :p => params[:package]}
+      notify.success _("Update of Packages '%{p}' scheduled for System '%{s}'.") %
+                         { :s => @system['name'], :p => params[:package] }
     end
 
-    render :text => task.uuid
+    render :text => task.id
   end
 
   def packages
@@ -193,7 +191,7 @@ class SystemPackagesController < ApplicationController
 
   def status
     # retrieve the status for the package actions initiated by the client
-    statuses = @system.tasks.where(:uuid => params[:uuid],
+    statuses = @system.tasks.where(:id => params[:id],
                                    :task_type => [:package_install, :package_update, :package_remove,
                                                   :package_group_install, :package_group_remove])
     render :json => statuses

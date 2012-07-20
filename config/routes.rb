@@ -7,11 +7,11 @@ Src::Application.routes.draw do
       get :validate_name
     end
     member do
+      post :copy
       get :systems
       post :add_systems
       post :remove_systems
       delete :destroy_systems
-      post :lock
     end
     resources :events, :controller => "system_group_events", :only => [:index, :show] do
       collection do
@@ -35,6 +35,21 @@ Src::Application.routes.draw do
         get :status
       end
     end
+  end
+
+  resources :content_search do
+      collection do 
+        post :errata
+        post :products
+        post :packages
+        post :packages_items
+        post :errata_items
+        post :repos
+        get :repo_packages
+        get :repo_errata
+        get :repo_compare_packages
+        get :repo_compare_errata
+      end
   end
 
   resources :activation_keys do
@@ -91,7 +106,19 @@ Src::Application.routes.draw do
   match 'notices' => 'notices#show', :via => :get
   match 'notices' => 'notices#destroy_all', :via => :delete
 
-  resources :subscriptions, :only => [:index]
+  resources :subscriptions do
+    member do
+      get :edit
+      get :products
+      get :consumers
+    end
+    collection do
+      get :items
+      post :upload
+      get :history
+      get :history_items
+    end
+  end
 
   resources :dashboard, :only => [:index] do
     collection do
@@ -100,6 +127,7 @@ Src::Application.routes.draw do
       get :errata
       get :promotions
       get :systems
+      get :system_groups
       get :subscriptions
     end
   end
@@ -166,6 +194,7 @@ Src::Application.routes.draw do
     end
     collection do
       get :auto_complete_library
+      get :auto_complete_nvrea_library
       get :validate_name_library
     end
   end
@@ -176,7 +205,11 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :products, :only => [:new, :create, :edit,:update, :destroy]
+  resources :products, :only => [:new, :create, :edit,:update, :destroy] do
+    collection do
+       get :auto_complete
+    end
+  end
 
   resources :owners do
     member do
@@ -251,8 +284,7 @@ Src::Application.routes.draw do
     end
     member do
       get :products_repos
-#      get :subscriptions
-#     post :subscriptions, :action=>:update_subscriptions
+      get :import_progress
       get :schedule
     end
   end
@@ -482,15 +514,14 @@ Src::Application.routes.draw do
           get :systems
           get :history
           match "/history/:job_id" => "system_groups#history_show", :via => :get
-          post :lock
-          post :unlock
           post :add_systems
+          post :copy
           post :remove_systems
           delete :destroy_systems
         end
 
         resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
-        resource :errata, :action => [:create], :controller => :system_group_errata
+        resources :errata, :only => [:index, :create], :controller => :system_group_errata
       end
 
       resources :environments do

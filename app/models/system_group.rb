@@ -12,7 +12,6 @@
 
 class SystemGroup < ActiveRecord::Base
 
-
   include Glue::Pulp::ConsumerGroup if (AppConfig.use_pulp)
   include Glue
   include Authorization
@@ -27,7 +26,6 @@ class SystemGroup < ActiveRecord::Base
     indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
     indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
-    indexes :locked, :type=>'boolean'
   end
 
   update_related_indexes :systems, :name
@@ -126,10 +124,6 @@ class SystemGroup < ActiveRecord::Base
     User.allowed_to?([:delete, :create], :system_groups, self.id, self.organization)
   end
 
-  def locking?
-    User.allowed_to?([:locking], :system_groups, self.id, self.organization)
-  end
-
   def self.list_tags org_id
     SystemGroup.select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
@@ -144,7 +138,6 @@ class SystemGroup < ActiveRecord::Base
        :read => _("Read System Group"),
        :update => _("Modify System Group details and system membership"),
        :delete => _("Delete System Group"),
-       :locking => _("Lock/Unlock System Group"),
        :read_systems => _("Read Systems in System Group"),
        :update_systems => _("Modify Systems in System Group"),
        :delete_systems => _("Delete Systems in System Group")
@@ -200,10 +193,6 @@ class SystemGroup < ActiveRecord::Base
     }
   end
 
-  def lock_check
-    raise _("Group membership cannot be changed while locked.") if self.locked
-  end
-
   def environments
     @cached_environments ||= db_environments.all #.all to ensure we don't refer to the AR relation
   end
@@ -222,6 +211,42 @@ class SystemGroup < ActiveRecord::Base
 
   def total_systems
     systems.length
+  end
+
+  # Retrieve the list of accessible system groups in the organization specified, returning
+  # them in the following arrays:
+  #   critical: those groups that have 1 or more security errata that need to be applied
+  #   warning: those groups that have 1 or more non-security errata that need to be applied
+  #   ok: those groups that are completely up to date
+  def self.lists_by_updates_needed(organization)
+    groups_hash = {}
+    groups = SystemGroup.readable(organization)
+
+    # determine the state (critical/warning/ok) for each system group
+    groups.each do |group|
+      group_state = :ok
+
+      group.systems.each do |system|
+        system.errata.each do |erratum|
+          case erratum.type
+            when Glue::Pulp::Errata::SECURITY
+              # there is a critical errata, so stop searching...
+              group_state = :critical
+              break
+
+            when Glue::Pulp::Errata::BUGZILLA
+            when Glue::Pulp::Errata::ENHANCEMENT
+              # set state to warning, but continue searching...
+              group_state = :warning
+          end
+        end
+        break if group_state == :critical
+      end
+
+      groups_hash[group_state] ||= []
+      groups_hash[group_state] << group
+    end
+    return groups_hash[:critical].to_a, groups_hash[:warning].to_a, groups_hash[:ok].to_a
   end
 
   private
@@ -251,12 +276,10 @@ class SystemGroup < ActiveRecord::Base
   end
 
   def add_pulp_consumer_group record
-    lock_check
     self.add_consumers([record.uuid])
   end
 
   def remove_pulp_consumer_group record
-    lock_check
     self.del_consumers([record.uuid])
   end
 

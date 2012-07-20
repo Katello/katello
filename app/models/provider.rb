@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/notices'
-
 class Provider < ActiveRecord::Base
   include Glue::Provider
   include Glue
@@ -19,7 +17,6 @@ class Provider < ActiveRecord::Base
   include Authorization
   include KatelloUrlHelper
   include IndexedModel
-  include Katello::Notices
 
   index_options :extended_json=>:extended_index_attrs,
                 :display_attrs=>[:name, :product, :repo, :description]
@@ -232,6 +229,10 @@ class Provider < ActiveRecord::Base
       raise _("Unable to retrieve release versions from Repository URL %s. Error message: %s") % [self.repository_url, e.to_str]
     end
     releases.uniq.sort
+  end
+
+  def import_task
+    return task_status
   end
 
   protected
