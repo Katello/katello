@@ -15,12 +15,12 @@
       "added": '#{escape_javascript(_('Added:'))}',
       "removed": '#{escape_javascript(_('Removed:'))}',
       "remove": '#{escape_javascript(_('Remove'))}',
-      "loading": "#{escape_javascript(_('Loading Promotion Changeset'))}",
-      "no_products":"#{escape_javascript(_('No products exist in the promotion changeset.'))}",
-      "no_errata": "#{escape_javascript(_('No errata exist in this promotion changeset.'))}",
-      "no_package": "#{escape_javascript(_('No packages exist in this promotion changeset.'))}",
-      "no_repo": "#{escape_javascript(_('No repositories exist in this promotion changeset.'))}",
-      "no_distribution": "#{escape_javascript(_('No distributions exist in this promotion changeset.'))}",
+      "loading": "#{escape_javascript(_('Loading Changeset'))}",
+      "no_products":"#{escape_javascript(_('No products exist in this changeset.'))}",
+      "no_errata": "#{escape_javascript(_('No errata exist in this changeset.'))}",
+      "no_package": "#{escape_javascript(_('No packages exist in this changeset.'))}",
+      "no_repo": "#{escape_javascript(_('No repositories exist in this changeset.'))}",
+      "no_distribution": "#{escape_javascript(_('No distributions exist in this changeset.'))}",
       "no_system_templates":"#{escape_javascript(_('No system templates exist in the changeset.'))}",
       "errata": "#{escape_javascript(_("Errata"))}",
       "package": "#{escape_javascript(_("Packages"))}",
@@ -28,7 +28,7 @@
       "distribution": "#{escape_javascript(_('Distributions'))}",
       "system_templates": "#{escape_javascript(_('system templates'))}",
       "templates": '#{escape_javascript(_("System Templates"))}',
-      "viewing": '#{escape_javascript(_('currently editing this promotion changeset'))}',
+      "viewing": '#{escape_javascript(_('currently editing this changeset'))}',
       "review": '#{escape_javascript(_("Review"))}',
       "cancel_review": '#{escape_javascript(_("Cancel Review"))}',
       "promote": "#{escape_javascript(_('Promote to ')) + (@next_environment.nil? ? '' : @next_environment.name)}",
@@ -45,7 +45,7 @@
       "distribution_plural": "#{escape_javascript(_('Distributions'))}",
       "system_template_singular": "#{escape_javascript(_('System Template'))}",
       "system_template_plural": "#{escape_javascript(_('System Templates'))}",
-      "changeset_empty": '#{escape_javascript(_("Promotion Changeset is empty."))}',
+      "changeset_empty": '#{escape_javascript(_("Changeset is empty."))}',
       "summary": '#{escape_javascript(_("Summary:"))}',
       "loading_deps": '#{escape_javascript(_("Loading dependencies."))}',
       "dep_of": '#{escape_javascript(_("Dependency of "))}',
@@ -54,8 +54,8 @@
       "partial_product": '#{escape_javascript(_("Partial Products"))}',
       "edit_details": '#{escape_javascript(_("Edit Details"))}',
       'close_details': '#{escape_javascript(_("Close Details"))}',
-      "leave_page": '#{escape_javascript(_('Some promotion changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications.'))}',
-      "changeset_progress": '#{escape_javascript(_("This promotion changeset is currently being promoted."))}',
+      "leave_page": '#{escape_javascript(_('Some changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications.'))}',
+      "changeset_progress": '#{escape_javascript(_("This changeset is currently being applied."))}',
       "promoting": '#{escape_javascript(_("Promoting..."))}',
       "promoted": '#{escape_javascript(_("Promoted"))}',
       "promotion_failed": '#{escape_javascript(_("Promotion Failed"))}',
@@ -73,14 +73,14 @@
     });
 
 #error_dialog{:style=>"display: none"}
-  = _("An error has occured when communicating with the server, please refresh the page to retrieve the current promotion changeset.")
+  = _("An error has occured when communicating with the server, please refresh the page to retrieve the current changeset.")
 
 #warning_dialog{:style=>"display: none"}
   .warning
 
 
 #wait_dialog{:style=>"display: none"}
-  = _("Processing promotion changeset modifications, please wait.")
+  = _("Processing changeset modifications, please wait.")
   .spinner
 
 
@@ -105,7 +105,7 @@
     .right_tree.sliding_tree
       #changeset_tree
         - if read_changesets
-          %h2 #{@next_environment.name + _(" Promotion Changesets")}
+          %h2 #{@next_environment.name + _(" Changesets")}
           .breadcrumb_filter.fl.clear.clickable
             %form#filter_form.filter.clear
               %input{ :name => "filter", :type => "input", :placeholder => _("Filter..."), :id=>"filter_input"}
@@ -118,13 +118,13 @@
             #cslist.list.sliding_list{"data-page_size"=>current_user.page_size}
               #tree_loading.slider.tree_loading
                 .text
-                  = _("Loading Promotion Changeset")
+                  = _("Loading Changeset")
                   .spinner
               .slider_one.has_content.slider.will_have_content
               .slider_two.no_content.slider
           #changeset_edit.slide_up_container
             %h2
-              &nbsp; #{_("Promotion Changeset Details")}
+              &nbsp; #{_("Changeset Details")}
             .fieldset
               .grid_2.ra
                 %label #{_("Name:")}
@@ -157,10 +157,10 @@
                   = _('Promote')
           #changeset_users
         - elsif @next_environment
-          %h2 #{_("Promotion Changesets")}
-          = _("You do not have permissions to view promotion changesets for #{@next_environment.name}. Please contact your administrator to gain access.")
+          %h2 #{_("Changesets")}
+          = _("You do not have permissions to view changesets for #{@next_environment.name}. Please contact your administrator to gain access.")
         - else
-          %h2 #{_("Promotion Changesets")}
+          %h2 #{_("Changesets")}
           = _("An environment does not exist to promote content to.  If you would like to manage promotion changesets and content, please create a new environment.")
 
 
@@ -171,11 +171,11 @@
       - if @next_environment
         - if manage_changesets
           %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@next_environment.id}"}
-            #{_('+ New Promotion Changeset')}
+            #{_('+ New Changeset')}
             .arrow-right
         - elsif @environment.organization.environments_manageable? 
           %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}"}
-            #{_('+ New Promotion Changeset')}
+            #{_('+ New Changeset')}
             .arrow-right
       %h2 #{@environment.name + _(" Content")}
       .breadcrumb_search.clear.clickable
