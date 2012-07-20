@@ -286,11 +286,11 @@ KT.path_select_template = {
     },
     path : function(path){
         var html = '';
-        html += '<ul>';
+        html += '<div><ul>';
         for(var i = 0; i < path.length; i++){
             html += KT.path_select_template.path_node(path[i], path[i+1]);
         }
-        html += '</ul>';
+        html += '</ul></div>';
         return html;
     },
     path_node: function(node, next){
