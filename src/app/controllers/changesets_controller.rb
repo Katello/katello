@@ -99,13 +99,14 @@ class ChangesetsController < ApplicationController
   end
 
   def new
+    @changeset = Changeset.new
     render :partial=>"new", :layout => "tupane_layout"
   end
 
   def create
     begin
-      @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
-                                     :environment_id=>@environment.id)
+      @changeset = Changeset.create!(:name => params[:name], :description => params[:description],
+                                     :action_type => params[:action_type], :environment_id => @environment.id)
       notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
       bc = {}
       add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],

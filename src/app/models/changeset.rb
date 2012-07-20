@@ -40,7 +40,8 @@ class Changeset < ActiveRecord::Base
 
 
   PROMOTION = 'promotion'
-  DELETION = 'deletion'
+  DELETION  = 'deletion'
+  TYPES     = [PROMOTION, DELETION]
 
   validates_inclusion_of :state,
                          :in          => STATES,
