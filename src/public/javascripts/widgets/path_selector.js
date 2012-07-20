@@ -205,7 +205,6 @@ KT.path_select = function(div_id, name, environments, options_in){
                 KT.utils.each(flattened, function(item){
                     tmp_hash[item.id] = item;
                 });
-                console.log(tmp_hash);
                 return KT.utils.values(tmp_hash);
             }
             else{
