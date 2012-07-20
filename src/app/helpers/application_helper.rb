@@ -110,6 +110,7 @@ module ApplicationHelper
              :ajax_scroll =>options[:ajax_scroll],
              :search_env =>options[:search_env],
              :initial_action=>options[:initial_action] || :edit,
+             :initial_state=>options[:initial_state] || false,
              :actions=>options[:actions],
              :search_class=>options[:search_class],
              :disable_create=>options[:disable_create] || false}
@@ -197,8 +198,9 @@ module ApplicationHelper
     ""
   end
 
-  def generate_details_url(path, id, entity )
-     path + "?search=id%3D#{id}#panel=#{entity}_#{id}"
+  def generate_url(path, options, entity)
+    panel_page = options.has_key?(:panel_page) ? ("&panelpage=" + options[:panel_page]) : ""
+    path + "?list_search=id%3D#{options[:id]}#panel=#{entity}_#{options[:id]}" + panel_page
   end
 
   # used for jeditable fields

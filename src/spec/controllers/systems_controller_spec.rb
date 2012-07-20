@@ -141,7 +141,6 @@ describe SystemsController do
       @env2 = KTEnvironment.new(:name => 'env2', :prior => @env1.id, :organization => @organization)
       @env2.save!
 
-      controller.stub!(:notice)
       controller.stub(:search_validate).and_return(false)
 
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
@@ -186,7 +185,7 @@ describe SystemsController do
       end
 
       it "should throw an exception when the search parameters are invalid" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         get :items, :search => 1
         response.should_not be_success
       end
@@ -314,7 +313,7 @@ describe SystemsController do
         response.should render_template(:partial=>"_new")
         response.should render_template(:partial=>"_env_select")
 
-        controller.should_receive(:notice)
+        controller.should notify(:success, :message)
         post :create, {:system=>{:name=>"sys1", :environment_id=>@env1.id, :sockets=>2},
                        :arch=>{:arch_id=>1},
                        :system_type=>{:virtualized=>'virtual'}}
@@ -337,7 +336,7 @@ describe SystemsController do
         # The hidden env_id form field should have correct id
         response.should have_selector("input", :id=>'system_environment_id', :value=>"#{@env2.id}")
 
-        controller.should_receive(:notice)
+        controller.should notify(:success, :message)
         post :create, {:system=>{:name=>"sys1", :environment_id=>@env2.id, :sockets=>2},
                        :arch=>{:arch_id=>1},
                        :system_type=>{:virtualized=>'virtual'}}
@@ -392,16 +391,8 @@ describe SystemsController do
         end
 
         it "should generate a notice on success" do
-          controller.should_receive(:notice)
+          controller.should notify.success
           put :add_system_groups, {:id => @system.id, :group_ids => [@group1.id, @group2.id]}
-        end
-
-        it "should generate an error notice, if the group is locked" do
-          @group1.locked = true
-          @group1.save!
-          controller.should_receive(:notice).with(anything, hash_including(:level => :error))
-          put :add_system_groups, {:id => @system.id, :group_ids => [@group1.id]}
-          response.should_not be_success
         end
 
         it "should generate an error notice, if the group has reached max membership" do
@@ -409,7 +400,7 @@ describe SystemsController do
           @group1.max_systems = 1
           @group1.systems << @system1
           @group1.save!
-          controller.should_receive(:notice).with(anything, hash_including(:level => :error))
+          controller.should notify.exception
           put :add_system_groups, {:id => @system.id, :group_ids => [@group1.id]}
           response.should_not be_success
         end
@@ -433,16 +424,8 @@ describe SystemsController do
         end
 
         it "should generate a notice on success" do
-          controller.should_receive(:notice)
+          controller.should notify.success
           put :remove_system_groups, {:id => @system.id, :group_ids => [@group1.id]}
-        end
-
-        it "should generate an error notice, if the group is locked" do
-          @group1.locked = true
-          @group1.save!
-          controller.should_receive(:notice).with(anything, hash_including(:level => :error))
-          put :remove_system_groups, {:id => @system.id, :group_ids => [@group1.id]}
-          response.should_not be_success
         end
       end
     end
@@ -472,23 +455,15 @@ describe SystemsController do
         end
 
         it "should generate a notice on success" do
-          controller.should_receive(:notice)
+          controller.should notify.success
           put :bulk_add_system_group, {:ids => [@system1.id, @system2.id], :group_ids => [@group1.id, @group2.id]}
-        end
-
-        it "should generate an error notice, if the group is locked" do
-          @group1.locked = true
-          @group1.save!
-          controller.should_receive(:notice).with(anything, hash_including(:level => :error))
-          put :bulk_add_system_group, {:ids => [@system1.id], :group_ids => [@group1.id]}
-          response.should_not be_success
         end
 
         it "should generate an error notice, if the group has reached max membership" do
           @group1.max_systems = 1
           @group1.systems << @system1
           @group1.save!
-          controller.should_receive(:notice).with(anything, hash_including(:level => :error))
+          controller.should notify.exception
           put :bulk_add_system_group, {:ids => [@system2.id], :group_ids => [@group1.id]}
           response.should_not be_success
         end
@@ -522,16 +497,8 @@ describe SystemsController do
         end
 
         it "should generate a notice on success" do
-          controller.should_receive(:notice)
+          controller.should notify.success
           put :bulk_remove_system_group, {:ids => [@system1.id], :group_ids => [@group1.id]}
-        end
-
-        it "should generate an error notice, if the group is locked" do
-          @group1.locked = true
-          @group1.save!
-          controller.should_receive(:notice).with(anything, hash_including(:level => :error))
-          put :bulk_remove_system_group, {:ids => [@system1.id], :group_ids => [@group1.id]}
-          response.should_not be_success
         end
       end
 
@@ -551,21 +518,21 @@ describe SystemsController do
           end
 
           pending 'should generate a notice on success' do
-            controller.should_receive(:notice)
+            controller.should notify.success
             @system1.stub!(:install_packages)
             put :bulk_content_install, :ids => [@system1.id], :packages => ["pkg1"]
             response.should be_success
           end
 
           it 'should generate an error notice, if no package names provided' do
-            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            controller.should notify.error
             @system1.should_not_receive(:install_packages)
             put :bulk_content_install, :ids => [@system1.id], :packages => []
             response.should be_success
           end
 
           it 'should return an error notice, if no packages structure provided' do
-            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            controller.should notify.error
             @system.should_not_receive(:install_packages)
             put :bulk_content_install, :ids => [@system1.id]
             response.should be_success
@@ -581,21 +548,21 @@ describe SystemsController do
           end
 
           pending 'should generate a notice on success' do
-            controller.should_receive(:notice)
+            controller.should notify.success
             @system1.stub!(:install_package_groups)
             put :bulk_content_install, :ids => [@system1.id], :groups => ["grp1"]
             response.should be_success
           end
 
           it 'should generate an error notice, if no group names provided' do
-            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            controller.should notify.error
             @system1.should_not_receive(:install_package_groups)
             put :bulk_content_install, :ids => [@system1.id], :groups => []
             response.should be_success
           end
 
           it 'should return an error notice, if no groups structure provided' do
-            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            controller.should notify.error
             @system.should_not_receive(:install_package_groups)
             put :bulk_content_install, :ids => [@system1.id]
             response.should be_success
@@ -618,7 +585,7 @@ describe SystemsController do
           end
 
           pending 'should generate a notice on success' do
-            controller.should_receive(:notice)
+            controller.should notify.success
             @system1.stub!(:update_packages)
             put :bulk_content_update, :ids => [@system1.id], :packages => ["pkg1"]
             response.should be_success
@@ -634,7 +601,7 @@ describe SystemsController do
           end
 
           pending 'should generate a notice on success' do
-            controller.should_receive(:notice)
+            controller.should notify.success
             @system1.stub!(:install_package_groups)
             put :bulk_content_update, :ids => [@system1.id], :groups => ["grp1"]
             response.should be_success
@@ -650,21 +617,21 @@ describe SystemsController do
           end
 
           pending 'should generate a notice on success' do
-            controller.should_receive(:notice)
+            controller.should notify.success
             @system1.stub!(:uninstall_packages)
             put :bulk_content_remove, :ids => [@system1.id], :packages => ["pkg1"]
             response.should be_success
           end
 
           it 'should generate an error notice, if no package names provided' do
-            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            controller.should notify.error
             @system1.should_not_receive(:uninstall_packages)
             put :bulk_content_remove, :ids => [@system1.id], :packages => []
             response.should be_success
           end
 
           it 'should return an error notice, if no packages structure provided' do
-            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            controller.should notify.error
             @system.should_not_receive(:uninstall_packages)
             put :bulk_content_remove, :ids => [@system1.id]
             response.should be_success
@@ -680,21 +647,21 @@ describe SystemsController do
           end
 
           pending 'should generate a notice on success' do
-            controller.should_receive(:notice)
+            controller.should notify.success
             @system1.stub!(:uninstall_packages_groups)
             put :bulk_content_remove, :ids => [@system1.id], :groups => ["grp1"]
             response.should be_success
           end
 
           it 'should generate an error notice, if no group names provided' do
-            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            controller.should notify.error
             @system1.should_not_receive(:uninstall_packages_groups)
             put :bulk_content_remove, :ids => [@system1.id], :groups => []
             response.should be_success
           end
 
           it 'should return an error notice, if no groups structure provided' do
-            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            controller.should notify.error
             @system.should_not_receive(:uninstall_packages_groups)
             put :bulk_content_remove, :ids => [@system1.id]
             response.should be_success
@@ -710,21 +677,21 @@ describe SystemsController do
           end
 
           pending 'should generate a notice on success' do
-            controller.should_receive(:notice)
+            controller.should notify.success
             @system1.stub!(:install_errata)
             put :bulk_errata_install, :ids => [@system1.id], :errata => ["errata1"]
             response.should be_success
           end
 
           it 'should generate an error notice, if no errata provided' do
-            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            controller.should notify.error
             @system1.should_not_receive(:install_errata)
             put :bulk_errata_install, :ids => [@system1.id], :errata => []
             response.should be_success
           end
 
           it 'should return an error notice, if no errata structure provided' do
-            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+            controller.should notify.error
             @system.should_not_receive(:install_errata)
             put :bulk_errata_install, :ids => [@system1.id]
             response.should be_success

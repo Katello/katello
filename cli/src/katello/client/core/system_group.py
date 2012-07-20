@@ -99,6 +99,41 @@ class Create(SystemGroupAction):
             _("Could not create system group [ %s ]") % name
         )
 
+class Copy(SystemGroupAction):
+
+    description = _('Copy a system group')
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
+                               help=_("original system group name.  source of the copy (required)"))
+        parser.add_option('--new_name', dest='new_name',
+                               help=_("new system group name.  destination of the copy (required)"))
+        parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        parser.add_option('--description', dest='description',
+                               help=_("system group description for new group"))
+        parser.add_option('--max_systems', dest='max_systems',
+                               help=_("maximum number of systems in this group"))
+                               
+
+    def check_options(self, validator):
+        validator.require(('name', 'org', 'new_name'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        name = self.get_option('name')
+        new_name = self.get_option('new_name')
+        description = self.get_option('description')
+        max_systems = self.get_option('max_systems')
+        
+        source_system_group = get_system_group(org_name, name)
+        new_system_group = self.api.copy(org_name, source_system_group["id"], new_name, description, max_systems)
+
+        test_record(new_system_group,
+            _("Successfully copied system group [ %s ] to [ %s ]") % 
+                       (source_system_group['name'], new_system_group['name']),
+            _("Could not create system group [ %s ]") % new_name
+        )
 
 class Info(SystemGroupAction):
 
@@ -125,7 +160,6 @@ class Info(SystemGroupAction):
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('description', multiline=True)
-        self.printer.add_column('locked')
         self.printer.add_column('total_systems')
 
         self.printer.print_item(system_group)
@@ -311,62 +345,6 @@ class Systems(SystemGroupAction):
         self.printer.print_items(systems)
 
         return os.EX_OK
-
-
-class Lock(SystemGroupAction):
-
-    description = _('lock a system group')
-
-    def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
-        parser.add_option('--name', dest='name',
-                       help=_("system group name (required)"))
-
-    def check_options(self, validator):
-        validator.require(('name', 'org'))
-
-    def run(self):
-        org_name = self.get_option('org')
-        system_group_name = self.get_option('name')
-
-        # get system details
-        system_group = get_system_group(org_name, system_group_name)
-        system_group = self.api.lock(org_name, system_group["id"])
-
-        if system_group != None:
-            print _("Successfully locked system group [ %s ]") % system_group['name']
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
-
-
-class Unlock(SystemGroupAction):
-
-    description = _('unlock a system group')
-
-    def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
-        parser.add_option('--name', dest='name',
-                       help=_("system group name (required)"))
-
-    def check_options(self, validator):
-        validator.require(('name', 'org'))
-
-    def run(self):
-        org_name = self.get_option('org')
-        system_group_name = self.get_option('name')
-
-        # get system details
-        system_group = get_system_group(org_name, system_group_name)
-        system_group = self.api.unlock(org_name, system_group["id"])
-
-        if system_group != None:
-            print _("Successfully unlocked system group [ %s ]") % system_group['name']
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
 
 
 class AddSystems(SystemGroupAction):

@@ -1,0 +1,220 @@
+#!/bin/sh
+#
+# Copyright (c) 2012 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public License,
+# version 2 (GPLv2). There is NO WARRANTY for this software, express or
+# implied, including the implied warranties of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
+# along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+# Red Hat trademarks are not licensed under GPLv2. No permission is
+# granted to use or replicate Red Hat trademarks that are incorporated
+# in this software or its documentation.
+#
+
+if [ $EUID -ne 0 ]; then
+   echo -e "This script must be run as root!\n"
+   exit 1
+fi
+
+if [ -x /etc/init.d/tomcat6 -o -x /lib/systemd/system/tomcat6.service ]; then
+   TOMCAT="tomcat6"
+fi
+
+
+SERVICES="$TOMCAT httpd pulp-server thumbslug elasticsearch katello katello-jobs"
+if [ -f /etc/katello/service-list ] ; then
+   . /etc/katello/service-list
+fi
+
+. /etc/init.d/functions
+
+forward_services() {
+    ACTION="$1"
+
+    RET=0
+    E_STAT=0
+    for service in $SERVICES; do
+	if [ -e /etc/init.d/$service -o -e /lib/systemd/system/$service.service ]; then
+	    /sbin/service $service $ACTION
+            E_STAT=$?
+            if [ "$service" == "$TOMCAT" \
+                -a "$ACTION" == "start" \
+                -a "$WAIT_FOR_TOMCAT" == "1" ] ; then
+                if /usr/sbin/lsof /proc > /dev/null ; then
+                    echo "Waiting for tomcat to be ready ..."
+                    while [ -f "/var/run/$TOMCAT.pid" ] ; do
+                        /usr/sbin/lsof -t -i TCP:8009 -p $(cat /var/run/$TOMCAT.pid) > /dev/null && break
+                        sleep 1
+                    done
+                else
+                    echo "No lsof found, not waiting for tomcat."
+                fi
+            fi
+	fi
+        if [ $E_STAT -ne 0 ]; then
+            RET=$E_STAT
+	fi
+    done
+    return $RET
+}
+
+reverse_services() {
+    ACTION="$1"
+
+    RET=0
+    E_STAT=0
+    for service in $(echo $SERVICES | tac -s" "); do
+	if [ -e /etc/init.d/$service -o -e /lib/systemd/system/$service.service ]; then
+	    /sbin/service $service $ACTION
+            E_STAT=$?
+	fi
+        if [ $E_STAT -ne 0 ]; then
+            RET=$E_STAT
+	fi
+    done
+    return $RET
+}
+
+chkconfig() {
+    RET=0
+    E_STAT=0
+    for service in $SERVICES; do
+        if [ -e /etc/init.d/$service -o -e /lib/systemd/system/$service.service ]; then
+            /sbin/chkconfig $service "$@"
+            E_STAT=$?
+        fi
+        if [ $E_STAT -ne 0 ]; then
+            RET=$E_STAT
+        fi
+    done
+    return $RET
+}
+
+turn_on() {
+   echo "Enabling Katello services..."
+   chkconfig on "$@"
+   echo "Done"
+   return 0
+}
+
+turn_off() {
+   echo "Disabling Katello services..."
+   chkconfig off "$@"
+   echo "Done"
+   return 0
+}
+
+list() {
+   echo "Listing Katello services..."
+   chkconfig --list
+   echo "Done"
+   return 0
+}
+
+start() {
+        echo "Starting Katello services..."
+	forward_services start
+	echo "Done."
+        return 0
+}
+
+stop() {
+        echo "Shutting down Katello services..."
+	reverse_services stop
+	echo "Done."
+        return 0
+}
+
+status() {
+    forward_services status
+    return $?
+}
+
+ensure_httpd_down() {
+    COUNT=0
+    LIMIT=10
+
+    while [ "$(pidof httpd | wc -w)" -gt 0 ] && [ "$COUNT" -lt "$LIMIT" ]
+    do
+	sleep 1
+	((COUNT++))
+    done
+
+    if [ "$COUNT" -eq "$LIMIT" ]; then
+	killall -9 httpd
+	sleep 4
+    fi
+
+    return 0
+}
+
+OPTS=$(getopt --longoptions=exclude:,level:,no-wait-for-tomcat -n ${0##*/} -- e:l:T "$@")
+
+if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
+
+eval set -- "$OPTS"
+
+WAIT_FOR_TOMCAT=1
+while true ; do
+    case "$1" in
+        -e|--exclude)
+            EXCLUDE=$2
+            shift
+            # the space in "$SERVICE " is intentional, don't remove it
+            SERVICES=$(while read -d " " service ; do echo ${service/$EXCLUDE}; done <<<"$SERVICES ")
+            ;;
+        -l|--level)
+            LEVEL="--level $2"
+            shift
+            ;;
+        -T|--no-wait-for-tomcat)
+            WAIT_FOR_TOMCAT=0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Internal error [$1]!" >&2
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+case "$1" in
+    start)
+	start
+        ;;
+    stop)
+	stop
+        ;;
+    enable)
+        turn_on $LEVEL
+        ;;
+    disable)
+        turn_off $LEVEL
+        ;;
+    list)
+        list
+        ;;
+    status)
+	status
+        ;;
+    restart|reload)
+        stop
+        sleep 4
+
+        ensure_httpd_down
+
+        start
+        ;;
+    *)
+        echo "Usage: $(basename $0) {start|stop|status|reload|restart|enable|disable}"
+        exit 1
+        ;;
+esac
+exit $?

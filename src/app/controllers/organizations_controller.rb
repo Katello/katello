@@ -97,9 +97,9 @@ class OrganizationsController < ApplicationController
         @new_env.prior = @organization.library
         @new_env.save!
       end
-      notice [_("Organization '%s' was created.") % @organization["name"]]
+      notify.success _("Organization '%s' was created.") % @organization["name"]
     rescue => error
-      notice(error, {:level => :error, :include_class_name => org_created ? KTEnvironment::ERROR_CLASS_NAME : Organization.name})
+      notify.exception error
       Rails.logger.error error.backtrace.join("\n")
       #rollback creation of the org if the org creation passed but the environment was not created
       if @organization && @organization.id #it is saved to the db
@@ -110,13 +110,10 @@ class OrganizationsController < ApplicationController
     end
 
     if search_validate(Organization, @organization.id, params[:search])
-      collected = [_("Organization '%s' was created.") % @organization["name"]]
-      collected.push(_("Click on 'Add Environment' to create the first environment")) if @new_env.nil?
-      notice collected
+      notify.success _("Click on 'Add Environment' to create the first environment") if @new_env.nil?
       render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
     else
-      notice _("Organization '%s' was created.") % @organization["name"]
-      notice _("'%s' did not meet the current search criteria and is not being shown.") % @organization["name"], { :level => 'message', :synchronous_request => false }
+      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @organization["name"]
       render :json => { :no_match => true }
     end
   end
@@ -129,21 +126,22 @@ class OrganizationsController < ApplicationController
   def update
     result = ""
     begin
-      unless params[:organization][:description].nil?
+      if params[:organization].try :[], :description
         result = params[:organization][:description] = params[:organization][:description].gsub("\n",'')
       end
 
       @organization.update_attributes!(params[:organization])
-      notice _("Organization '%s' was updated.") % @organization["name"]
+      notify.success _("Organization '%s' was updated.") % @organization["name"]
 
       if not search_validate(Organization, @organization.id, params[:search])
-        notice _("'%s' no longer matches the current search criteria.") % @organization["name"], { :level => :message, :synchronous_request => true }
+        notify.message _("'%s' no longer matches the current search criteria.") % @organization["name"],
+                       :asynchronous => false
       end
 
       render :text => escape_html(result)
 
     rescue => error
-      notice error, {:level => :error}
+      notify.exception error
 
       respond_to do |format|
         format.js { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -154,16 +152,16 @@ class OrganizationsController < ApplicationController
   def destroy
     found_errors= @organization.validate_destroy(current_organization)
     if found_errors
-      notice found_errors, {:level => :error}
+      notify.error found_errors
       render :text=>found_errors[1], :status=>:bad_request and return
     end
 
     id = @organization.cp_key
-    current_user.destroy_organization_async(@organization)
-    notice _("Organization '%s' has been scheduled for background deletion.") % @organization.name
+    OrganizationDestroyer.destroy @organization, :notify => true
+    notify.success _("Organization '%s' has been scheduled for background deletion.") % @organization.name
     render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
   rescue => error
-    notice error.to_s, {:level => :error}
+    notify.exception error
     render :text=> error.to_s, :status=>:bad_request and return
   end
 
@@ -207,13 +205,11 @@ class OrganizationsController < ApplicationController
   protected
 
   def find_organization
-    begin
-      @organization = Organization.first(:conditions => {:cp_key => params[:id]})
-      raise if @organization.nil?
-    rescue => error
-      notice _("Couldn't find organization with ID=%s") % params[:id], {:level => :error}
+    @organization = Organization.first(:conditions => { :cp_key => params[:id].to_s }) or begin
+      message = _("Couldn't find organization with ID=%s") % params[:id]
+      notify.error message
       execute_after_filters
-      render :text => error, :status => :bad_request
+      render :text => message, :status => :bad_request
     end
   end
 
@@ -222,7 +218,7 @@ class OrganizationsController < ApplicationController
       @organization = Organization.find(params[:id])
       raise if @organization.nil?
     rescue => error
-      notice _("Couldn't find organization with ID=%s") % params[:id], {:level => :error}
+      notify.error _("Couldn't find organization with ID=%s") % params[:id]
       execute_after_filters
       render :text => error, :status => :bad_request
     end

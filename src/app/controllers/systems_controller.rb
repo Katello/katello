@@ -119,38 +119,36 @@ class SystemsController < ApplicationController
       saved = @system.save!
       #find the newly created system
       if saved
-        notice _("System '%s' was created.") % @system['name']
+        notify.success _("System '%s' was created.") % @system['name']
 
         if search_validate(System, @system.id, params[:search])
           render :partial=>"systems/list_systems",
             :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
         else
-          notice _("'%s' did not meet the current search criteria and is not being shown.") % @system["name"], { :level => 'message', :synchronous_request => false }
+          notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @system["name"]
           render :json => { :no_match => true }
         end
       end
 
     rescue => error
-      if error.respond_to?('response')
-        display_message = error.response.include?('displayMessage') ? JSON.parse(error.response)['displayMessage'] : error.to_s
-        notice display_message, {:level => :error}
-      else
-        notice error, {:level => :error}
-      end
+      display_message = if error.respond_to?('response') && error.response.include?('displayMessage')
+                           JSON.parse(error.response)['displayMessage']
+                        end
+      notify.exception *[display_message, error].compact
       Rails.logger.error error.backtrace.join("\n")
       render :text => error, :status => :bad_request
     end
   end
 
   def index
-    @system_groups = SystemGroup.where(:organization_id => current_organization).where(:locked=>false).order(:name)
+    @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name)
   end
 
   def environments
     accesible_envs = KTEnvironment.systems_readable(current_organization)
 
     begin
-      @system_groups = SystemGroup.where(:organization_id => current_organization).where(:locked=>false).order(:name)
+      @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name)
 
       @systems = []
       setup_environment_selector(current_organization, accesible_envs)
@@ -159,10 +157,10 @@ class SystemsController < ApplicationController
         # the auto_complete_search requests
         @panel_options[:search_env] = @environment.id
       end
-      
+
       render :index, :locals=>{:envsys => true, :accessible_envs=> accesible_envs}
     rescue => error
-      notice error.to_s, {:level => :error, :persist => false}
+      notify.exception error, :persist => false
       render :index, :status=>:bad_request
     end
   end
@@ -227,11 +225,11 @@ class SystemsController < ApplicationController
         render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
                                                     :consumed_subs => consumed_entitlements,
                                                     :editable=>@system.editable?}
-        notice _("System subscriptions updated.")
+        notify.success _("System subscriptions updated.")
 
       end
     rescue => error
-      notice error.to_s, {:level => :error, :persist => false}
+      notify.exception error, :persist => false
       render :nothing => true, :status => :bad_request
     end
   end
@@ -287,10 +285,11 @@ class SystemsController < ApplicationController
       end
 
       @system.update_attributes!(params[:system])
-      notice _("System '%s' was updated.") % @system["name"]
-      
+      notify.success _("System '%s' was updated.") % @system["name"]
+
       if not search_validate(System, @system.id, params[:search])
-        notice _("'%s' no longer matches the current search criteria.") % @system["name"], { :level => :message, :synchronous_request => true }
+        notify.message _("'%s' no longer matches the current search criteria.") % @system["name"],
+                       :asynchronous => false
       end
 
       respond_to do |format|
@@ -305,7 +304,7 @@ class SystemsController < ApplicationController
         format.js
       end
     rescue => error
-      notice error.to_s, {:level => :error, :persist => false}
+      notify.exception error, :persist => false
       respond_to do |format|
         format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
         format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -331,14 +330,14 @@ class SystemsController < ApplicationController
     system = find_system
     system.destroy
     if system.destroyed?
-      notice _("%s Removed Successfully") % system.name
+      notify.success _("%s Removed Successfully") % system.name
       #render and do the removal in one swoop!
       render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name} and return
     end
-    notice "", {:level => :error, :list_items => system.errors.to_a}
+    notify.invalid_record system
     render :text => @system.errors, :status=>:ok
   rescue => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 
@@ -346,10 +345,10 @@ class SystemsController < ApplicationController
     @systems.each{|sys|
       sys.destroy
     }
-    notice _("%s Systems Removed Successfully") % @systems.length
+    notify.success _("%s Systems Removed Successfully") % @systems.length
     render :text=>""
   rescue => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 
@@ -361,23 +360,18 @@ class SystemsController < ApplicationController
       @system_groups = SystemGroup.where(:id=>params[:group_ids])
 
       # perform some pre-validation of the request
-      # e.g. are any of the groups not editable, locked or will their membership be exceeded by the request?
+      # e.g. are any of the groups not editable or will their membership be exceeded by the request?
       invalid_perms = []
-      group_locked = []
       max_systems_exceeded = []
       @system_groups.each do |system_group|
         if !system_group.editable?
           invalid_perms.push(system_group.name)
-        elsif system_group.locked
-          group_locked.push(system_group.name)
         elsif (system_group.max_systems != SystemGroup::UNLIMITED_SYSTEMS) and ((system_group.systems.length + @systems.length) > system_group.max_systems)
           max_systems_exceeded.push(system_group.name)
         end
       end
       if !invalid_perms.empty?
         raise _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
-      elsif !group_locked.empty?
-        raise _("System Group membership cannot be changed for locked group(s): %s") % group_locked.join(', ')
       elsif !max_systems_exceeded.empty?
         raise _("System Group maximum number of systems exceeded for group(s): %s") % max_systems_exceeded.join(', ')
       end
@@ -392,7 +386,7 @@ class SystemsController < ApplicationController
         end
       end
       action = _("Systems Bulk Action: Add to system group(s): %s") % @system_groups.collect{|g| g.name}.join(', ')
-      notice_bulk_action action, successful_systems, failed_systems
+      notify_bulk_action action, successful_systems, failed_systems
     end
 
     render :nothing => true
@@ -407,18 +401,13 @@ class SystemsController < ApplicationController
 
       # does the user have permission to modify the requested system groups?
       invalid_perms = []
-      group_locked = []
       @system_groups.each do |system_group|
         if !system_group.editable?
           invalid_perms.push(system_group.name)
-        elsif system_group.locked
-          group_locked.push(system_group.name)
         end
       end
       if !invalid_perms.empty?
         raise _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
-      elsif !group_locked.empty?
-        raise _("System Group membership cannot be changed for locked group(s): %s") % group_locked.join(', ')
       end
 
       @systems.each do |system|
@@ -431,7 +420,7 @@ class SystemsController < ApplicationController
         end
       end
       action = _("Systems Bulk Action: Remove from system group(s): %s") % @system_groups.collect{|g| g.name}.join(', ')
-      notice_bulk_action action, successful_systems, failed_systems
+      notify_bulk_action action, successful_systems, failed_systems
     end
 
     render :nothing => true
@@ -442,7 +431,7 @@ class SystemsController < ApplicationController
     failed_systems = []
 
     if params[:packages].blank? and params[:groups].blank?
-      notice _("Systems Bulk Action: No package or package group names have been provided."), {:level => :error}
+      notify.error _("Systems Bulk Action: No package or package group names have been provided.")
       render :nothing => true and return
     end
 
@@ -469,7 +458,7 @@ class SystemsController < ApplicationController
       action_text = _("Systems Bulk Action: Schedule install of package group(s): %s") % params[:groups].join(', ')
     end
 
-    notice_bulk_action action_text, successful_systems, failed_systems
+    notify_bulk_action action_text, successful_systems, failed_systems
     render :nothing => true
   end
 
@@ -501,7 +490,7 @@ class SystemsController < ApplicationController
         action_text = _("Systems Bulk Action: Schedule update of package(s): %s") % params[:packages].join(', ')
     end
 
-    notice_bulk_action action_text, successful_systems, failed_systems
+    notify_bulk_action action_text, successful_systems, failed_systems
     render :nothing => true
   end
 
@@ -510,7 +499,7 @@ class SystemsController < ApplicationController
     failed_systems = []
 
     if params[:packages].blank? and params[:groups].blank?
-      notice _("Systems Bulk Action: No package or package group names have been provided."), {:level => :error}
+      notify.error _("Systems Bulk Action: No package or package group names have been provided.")
       render :nothing => true and return
     end
 
@@ -536,7 +525,7 @@ class SystemsController < ApplicationController
       action_text = _("Systems Bulk Action: Schedule uninstall of package group(s): %s") % params[:groups].join(', ')
     end
 
-    notice_bulk_action action_text, successful_systems, failed_systems
+    notify_bulk_action action_text, successful_systems, failed_systems
     render :nothing => true
   end
 
@@ -545,7 +534,7 @@ class SystemsController < ApplicationController
     failed_systems = []
 
     if params[:errata].blank?
-      notice _("Systems Bulk Action: No errata IDs have been provided."), {:level => :error}
+      notify.error _("Systems Bulk Action: No errata IDs have been provided.")
       render :nothing => true and return
     else
       @systems.each do |system|
@@ -559,13 +548,13 @@ class SystemsController < ApplicationController
     end
 
     action = _("Systems Bulk Action: Schedule install of errata(s): %s") % params[:errata].join(', ')
-    notice_bulk_action action, successful_systems, failed_systems
+    notify_bulk_action action, successful_systems, failed_systems
     render :nothing => true
   end
 
   def system_groups
     # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
-    @system_groups = SystemGroup.where(:organization_id=>current_organization).where(:locked=>false).
+    @system_groups = SystemGroup.where(:organization_id=>current_organization).
         where('max_systems < ?', @system.system_groups.length).order(:name) - @system.system_groups
     render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>@system.editable?}
   end
@@ -577,10 +566,10 @@ class SystemsController < ApplicationController
       @system.system_group_ids = (@system.system_group_ids + @system_groups.collect{|g| g.id}).uniq
       @system.save!
     end
-    notice _("System '%s' was updated.") % @system["name"]
+    notify.success _("System '%s' was updated.") % @system["name"]
     render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}} and return
   rescue => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 
@@ -589,10 +578,10 @@ class SystemsController < ApplicationController
     @system.system_group_ids = (@system.system_group_ids - system_groups).uniq
     @system.save!
 
-    notice _("System '%s' was updated.") % @system["name"]
+    notify.success _("System '%s' was updated.") % @system["name"]
     render :nothing => true
   rescue => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 
@@ -600,7 +589,7 @@ class SystemsController < ApplicationController
 
   include SortColumnList
 
-  def notice_bulk_action action, successful_systems, failed_systems
+  def notify_bulk_action action, successful_systems, failed_systems
     # generate a notice for a bulk action
 
     success_msg = _("Successful for system(s): ")
@@ -608,13 +597,13 @@ class SystemsController < ApplicationController
     newline = '<br />'
 
     if failed_systems.empty?
-      notice (action + newline + success_msg + successful_systems.join(', '))
+      notify.success action + newline + success_msg + successful_systems.join(', ')
     else
       if successful_systems.empty?
-        notice((action + newline + failure_msg + failed_systems.join(', ')), {:level => :error})
+        notify.error action + newline + failure_msg + failed_systems.join(', ')
       else
-        notice((action + newline + success_msg + successful_systems.join(', ') + newline + failure_msg + failed_systems.join(',')),
-               {:level => :error})
+        notify.error action + newline + success_msg + successful_systems.join(',') +
+                         newline + failure_msg + failed_systems.join(',')
       end
     end
   end
@@ -637,7 +626,7 @@ class SystemsController < ApplicationController
   end
 
   def setup_options
-    @panel_options = { 
+    @panel_options = {
       :title => _('Systems'),
       :col => ["name_sort", "lastCheckin"],
       :titles => [_("Name"), _("Last Checked In")],
@@ -687,8 +676,9 @@ class SystemsController < ApplicationController
   # to filter readable systems that can be
   # passed to search
   def readable_filters
-    {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id},
-     :system_group_ids=>SystemGroup.systems_readable(current_organization).collect{|item| item.id}}
+    filters = {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
+    filters[:system_group_ids] = SystemGroup.systems_readable(current_organization).collect{|item| item.id} if AppConfig.katello?
+    filters
   end
 
   def search_filter

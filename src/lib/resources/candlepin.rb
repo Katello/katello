@@ -388,6 +388,12 @@ module Resources
           self.delete(path(id), self.default_headers).code.to_i
         end
 
+        def all
+          pools_json = self.get(path, self.default_headers).body
+          JSON.parse(pools_json)
+        end
+
+
         def path id=nil
           "/candlepin/pools/#{id}"
         end

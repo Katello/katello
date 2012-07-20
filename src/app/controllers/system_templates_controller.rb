@@ -203,7 +203,7 @@ class SystemTemplatesController < ApplicationController
     distro_check @template
 
     @template.save!
-    notice _("Template %s has been updated successfully") % @template.name
+    notify.success _("Template %s has been updated successfully") % @template.name
     object()
   end
 
@@ -215,20 +215,20 @@ class SystemTemplatesController < ApplicationController
       result = @template.description = attrs[:description]
     end
     @template.save!
-    notice _("Template %s updated successfully.") % @template.name
+    notify.success _("Template %s updated successfully.") % @template.name
     render :text=>result
 
   rescue => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>:bad_request
   end
 
   def destroy
       @template.destroy
-      notice _("Template '%s' was deleted.") % @template.name
+      notify.success _("Template '%s' was deleted.") % @template.name
       render :partial => "common/list_remove", :locals => {:id => @template.id, :name=>"details"}
   rescue => e
-      notice e.to_s, {:level => :error}
+      notify.exception e
       render :text=> e, :status=>:bad_request
   end
 
@@ -241,7 +241,7 @@ class SystemTemplatesController < ApplicationController
     env_template.validate_tdl
     render :text=>""
   rescue Errors::TemplateValidationException => e
-    notice e.errors, {:level=>:error}
+    notify.exception e
     render :text=>"", :status=>500
   end
 
@@ -268,7 +268,7 @@ class SystemTemplatesController < ApplicationController
 
   def auto_complete_package
     name = params[:name]
-    render :json=> Resources::Pulp::Package.name_search(name).sort.uniq[0..19]
+    render :json=> Resources::Pulp::Package.autocomplete_name(name).sort.uniq[0..19]
   end
 
   def create
@@ -276,11 +276,11 @@ class SystemTemplatesController < ApplicationController
     obj_params[:environment_id] = current_organization.library.id
 
     @template = SystemTemplate.create!(obj_params)
-    notice _("System Template '%s' was created.") % @template.name
+    notify.success _("System Template '%s' was created.") % @template.name
     render :json=>{:name=>@template.name, :id=>@template.id}
 
   rescue => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text => e, :status => :bad_request
   end
   
@@ -302,9 +302,9 @@ class SystemTemplatesController < ApplicationController
       }
       #not found
       template.distributions = []
-      notice _("Template '%s' has been updated successfully, however you have removed either "+
-                   "a product or repository that contained the selected distribution for this template.  " +
-                   "Please select another distribution to ensure a working system template.") % @template.name, :level=>:warning
+      notify.warning _("Template '%s' has been updated successfully, however you have removed either "+
+                           "a product or repository that contained the selected distribution for this template.  " +
+                           "Please select another distribution to ensure a working system template.") % @template.name
     end
   end
 
@@ -316,7 +316,7 @@ class SystemTemplatesController < ApplicationController
     find_read_only_template
     raise _("Cannot modify a template that is another environment") if !@template.environment.library?
   rescue => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>400 and return false
   end
 

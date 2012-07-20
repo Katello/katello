@@ -97,7 +97,7 @@ describe Api::OrganizationsController do
 
    it 'should call organization destroy method' do
       Organization.should_receive(:first).once.with(:conditions => {:cp_key => "spec"}).and_return(@org)
-      @mock_user.should_receive(:destroy_organization_async).with(@org).once
+      OrganizationDestroyer.should_receive(:destroy).with(@org).once
       req
     end
   end
@@ -105,7 +105,7 @@ describe Api::OrganizationsController do
   describe "delete a organization" do
     it 'should call organization destroy method while accounting for spaces in search name' do
       Organization.should_receive(:first).once.with(:conditions => {:cp_key => "delete_org_with_spaces"}).and_return(@org)
-      @mock_user.should_receive(:destroy_organization_async).with(@org).once
+      OrganizationDestroyer.should_receive(:destroy).with(@org).once
       delete 'destroy', :id => "delete org with spaces"
     end
   end
