@@ -188,8 +188,7 @@ module Glue::Provider
                     else
                       _("Subscription manifest uploaded successfully for provider '%s'.")
                     end
-          notice message % self.name,
-                 :synchronous_request => false, :request_type => 'providers__update_redhat_provider'
+          Notify.success message % self.name, :request_type => 'providers__update_redhat_provider'
         end
       rescue => error
         if error.respond_to?(:response)
@@ -202,8 +201,8 @@ module Glue::Provider
         display_message = ApplicationController.parse_display_message(display_message)
 
         if options[:notify]
-          notice import_error_message(display_message),  :level => :error, :details => error.backtrace.join("\n"),
-                 :synchronous_request => false, :request_type => 'providers__update_redhat_provider'
+          Notify.exception import_error_message(display_message), error,
+                           :request_type => 'providers__update_redhat_provider'
         end
 
         Rails.logger.error "error uploading subscriptions."

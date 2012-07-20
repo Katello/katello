@@ -69,6 +69,9 @@ class ProvidersController < ApplicationController
     if @provider.import_task.nil?
       to_ret = {'state' => 'finished'}
     else
+      # user didn't provide a manifest to upload
+      notify.error _("Subscription manifest must be specified on upload.")
+      render :nothing => true
       to_ret = @provider.import_task.to_json
     end
 
@@ -92,7 +95,7 @@ class ProvidersController < ApplicationController
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription manifest for provider '%s'.") % @provider.name
       error_text += "<br />" + _("Reason: %s") % display_message unless display_message.blank?
-      notice error_text, {:level => :error, :synchronous_request => false}
+      notify.exception error_text, error, :asynchronous => true
       Rails.logger.error "Error fetching subscriptions from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
@@ -106,7 +109,7 @@ class ProvidersController < ApplicationController
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription history for provider '%s'.") % @provider.name
       error_text += "<br />" + _("Reason: %s") % display_message unless display_message.blank?
-      notice error_text, {:level => :error, :synchronous_request => false}
+      notify.exception error_text, error, :asynchronous => true
       Rails.logger.error "Error fetching subscription history from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
@@ -141,17 +144,17 @@ class ProvidersController < ApplicationController
     begin
       @provider = Provider.create! params[:provider].merge({:provider_type => Provider::CUSTOM,
                                                                     :organization => current_organization})
-      notice _("Provider '%s' was created.") % @provider['name']
+      notify.success _("Provider '%s' was created.") % @provider['name']
       
       if search_validate(Provider, @provider.id, params[:search])
         render :partial=>"common/list_item", :locals=>{:item=>@provider, :initial_action=>:products_repos, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
       else
-        notice _("'%s' did not meet the current search criteria and is not being shown.") % @provider["name"], { :level => 'message', :synchronous_request => false }
+        notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @provider["name"]
         render :json => { :no_match => true }
       end
     rescue Exception => error
       Rails.logger.error error.to_s
-      notice error, {:level => :error}
+      notify.exception error
       render :text => error, :status => :bad_request
     end
   end
@@ -161,14 +164,14 @@ class ProvidersController < ApplicationController
     begin
       @provider.destroy
       if @provider.destroyed?
-        notice _("Provider '%s' was deleted.") % @provider[:name]
+        notify.success _("Provider '%s' was deleted.") % @provider[:name]
         #render and do the removal in one swoop!
         render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
       else
         raise
       end
     rescue Exception => e
-      notice e.to_s, {:level => :error}
+      notify.exception e
     end
   end
 
@@ -188,10 +191,10 @@ class ProvidersController < ApplicationController
       updated_provider.provider_type = params[:provider][:provider_type] unless params[:provider][:provider_type].nil?
 
       updated_provider.save!
-      notice _("Provider '%s' was updated.") % updated_provider.name
+      notify.success _("Provider '%s' was updated.") % updated_provider.name
 
       if not search_validate(Provider, updated_provider.id, params[:search])       
-        notice _("'%s' no longer matches the current search criteria.") % updated_provider["name"], { :level => 'message', :synchronous_request => false }
+        notify.message _("'%s' no longer matches the current search criteria.") % updated_provider["name"]
       end
 
       respond_to do |format|
@@ -199,7 +202,7 @@ class ProvidersController < ApplicationController
       end
 
     rescue Exception => e
-      notice e.to_s, {:level => :error}
+      notify.exception e
 
       respond_to do |format|
         format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -214,7 +217,7 @@ class ProvidersController < ApplicationController
     begin
       @provider = Provider.find(params[:id])
     rescue Exception => error
-      notice error.to_s, {:level => :error}
+      notify.exception error
       execute_after_filters
       render :text => error, :status => :bad_request
     end

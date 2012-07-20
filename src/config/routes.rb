@@ -127,6 +127,7 @@ Src::Application.routes.draw do
       get :errata
       get :promotions
       get :systems
+      get :system_groups
       get :subscriptions
     end
   end
@@ -514,6 +515,7 @@ Src::Application.routes.draw do
           get :history
           match "/history/:job_id" => "system_groups#history_show", :via => :get
           post :add_systems
+          post :copy
           post :remove_systems
           delete :destroy_systems
         end

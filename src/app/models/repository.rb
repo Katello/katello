@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/notices'
-
 class RepoDisablementValidator < ActiveModel::Validator
   def validate(record)
     if record.redhat? && record.enabled_changed? && (!record.enabled?) && record.promoted?
@@ -27,7 +25,6 @@ class Repository < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
   include IndexedModel
-  include Katello::Notices
 
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:except=>[:pulp_repo_facts, :groupid, :feed_cert, :environment_product_id]}
@@ -85,14 +82,31 @@ class Repository < ActiveRecord::Base
   end
 
   scope :enabled, where(:enabled => true)
+  scope :in_product, lambda{|p|  joins(:environment_product).where("environment_products.product_id" => p.id)}
 
   scope :readable, lambda { |env|
+    prod_ids = ::Product.readable(env.organization).collect{|p| p.id}
     if env.contents_readable?
       joins(:environment_product).where("environment_products.environment_id" => env.id)
     else
       #none readable
       where("1=0")
     end
+  }
+
+  #NOTE:  this scope returns all library instances of repositories that have content readable
+  scope :libraries_content_readable, lambda {|org|
+    repos = Repository.content_readable(org)
+    lib_ids = []
+    repos.each{|r|  lib_ids << r.library_instance_id || r.id}
+    where(:id=>lib_ids)
+  }
+
+  scope :content_readable, lambda{|org|
+    prod_ids = ::Product.readable(org).collect{|p| p.id}
+    env_ids = KTEnvironment.content_readable(org)
+    joins(:environment_product).where("environment_products.product_id" => prod_ids).
+        where("environment_products.environment_id"=>env_ids)
   }
 
   scope :readable_for_product, lambda{|env, prod|
@@ -135,10 +149,11 @@ class Repository < ActiveRecord::Base
   end
 
   def sync_complete task
+    notify = task.parameters.try(:[], :options).try(:[], :notify)
     user = task.user
     if task.state == 'finished'
-      notice _("Repository '%s' finished syncing successfully.") % [self.name],
-             {:level=>:success, :synchronous_request => false, :user=>user} if user
+      Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
+                     :user => user if user && notify
     elsif task.state == 'error'
 
       details = ''
@@ -150,8 +165,8 @@ class Repository < ActiveRecord::Base
         end
       end
       Rails.logger.error("*** Sync error: " +  log_details.to_json)
-      notice _("There were errors syncing repository '%s'.  See notices page for more details.") % [self.name],
-                  {:level=>:error, :synchronous_request => false, :details => details, :user=>user} if user
+      Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
+                   :details => details, :user => user if user && notify
     end
   end
 

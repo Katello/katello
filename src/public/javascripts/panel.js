@@ -72,6 +72,10 @@ $(document).ready(function () {
                 }
             }
 
+            if (last_ajax_panelpage === "new") {
+                last_ajax_panelpage = undefined;
+            }
+
             if(event.ctrlKey && !thisPanel.hasClass('opened') && !(event.target.id == "new") && !activeBlock.hasClass('active')) {
                 if (activeBlock.hasClass('active')) {
                     activeBlock.removeClass('active');
@@ -94,6 +98,7 @@ $(document).ready(function () {
                             panelpage: last_ajax_panelpage
                         });
                     } else {
+                        $.bbq.removeState('panelpage');
                         $.bbq.pushState({
                             panel: activeBlockId
                         });
@@ -616,7 +621,8 @@ KT.panel = (function ($) {
         },
         refreshPanel = function() {
           var active = $('#list').find('.active');
-          KT.panel.panelAjax(active, active.attr("data-ajax_url"), $('#panel'), false);
+          var full_ajax_url = active.attr("data-ajax_url") + '/' + active.attr("data-ajax_panelpage")
+          KT.panel.panelAjax(active, full_ajax_url, $('#panel'), false);
         },
         actions = (function(){
             var action_list = {},
