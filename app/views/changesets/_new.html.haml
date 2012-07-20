@@ -10,11 +10,16 @@
           %label #{_("Name")}:
         .grid_4.la
           = text_field_tag :name, params[:name], :tabindex => auto_tab_index
-      %filedset
+      %fieldset
         .grid_2.ra
           %label #{_("Description")}:
         .grid_4.la
           = text_area_tag :description, nil, :tabindex => auto_tab_index
+      %fieldset
+        .grid_2.ra
+          %label #{_("Type")}:
+        .grid_4.la
+          = select_tag :action_type, options_for_select(Changeset::TYPES, @changeset.action_type), :tabindex => auto_tab_index, :style => "padding-right:5px;"
       .grid_5.ra
         .button#save_changeset_button{'data-url' => changesets_path, :tabindex => auto_tab_index}
           #{_("Save Changeset")}
