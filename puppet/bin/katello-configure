@@ -12,7 +12,7 @@ $stdout.sync = true
 default_path = '/usr/share/katello/install/default-answer-file'
 options_format_path = '/usr/share/katello/install/options-format-file'
 result_config_path = '/etc/katello/katello-configure.conf'
-puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v'
+puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d'
 log_parent_directory = '/var/log/katello'
 
 # error codes for exit_with function
@@ -273,8 +273,8 @@ options = {}
 option_parser = OptionParser.new
 answer_file = nil
 show_resulting_answer_file = false
-puppet_opts = ''
 nobars = false
+debug_stdout = false
 begin
 	option_parser.banner = "Usage: #{$0} [options]"
   option_parser.summary_width = 8
@@ -286,11 +286,11 @@ begin
 		end
 	end
 
-	option_parser.on_tail.on('-d', '--debug', 'Print more debugging information to the log file') do
-    puppet_opts = '-d'
-	end
 	option_parser.on_tail.on('-b', '--no-bars', 'Do not show progress bars and output puppet log instead') do
 		nobars = true
+	end
+	option_parser.on_tail.on('-d', '--debug', 'Print more debugging information to on the stdout (use with -b)') do
+    debug_stdout = true
 	end
 	option_parser.on_tail.on('-c', '--only-show-config', 'Print the resulting configuration and exit') do
 		show_resulting_answer_file = true
@@ -504,17 +504,21 @@ puppet_logfile = IO.open(IO::sysopen(puppet_logfile_filename, Fcntl::O_WRONLY | 
 puts "The top-level log file is [#{puppet_logfile_filename}]"
 seen_err = false
 begin
-	IO.popen("#{puppet_cmd} #{puppet_opts} 2>&1", 'w+') do |f|
+	IO.popen("#{puppet_cmd} 2>&1", 'w+') do |f|
 		f.puts "include katello"
 		f.close_write
 		processing_logfile = nil
 		t = nil
 		while line = f.gets do
-      puppet_logfile.syswrite(line)
+      puppet_logfile.syswrite(line.gsub(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/, ''))
+      puts "Got " + line if ENV['KATELLO_CONFIGURE_DEBUG']
       if nobars
-        puts line
+        if line =~ /debug:/
+          puts line if debug_stdout
+        else
+          puts line
+        end
       else
-        puts "Got " + line if ENV['KATELLO_CONFIGURE_DEBUG']
         if processing_logfile != nil
           message = nil
           if line =~ /notice:.*executed successfully/
