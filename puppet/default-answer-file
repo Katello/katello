@@ -1,4 +1,3 @@
-
 # Path of the answer file.
 answer_file =
 
@@ -121,14 +120,16 @@ ldap_groups_basedn = ou=Groups,dc=company,dc=com
 # Use LDAP for roles membership definition (true, false)
 ldap_roles = false
 
-# allow anonymous queries (true, false) for AD or FreeIPA
+# Allow anonymous queries (true, false) for AD or FreeIPA
 ldap_anon_queries = false
 
-# service user & pass for non-anon queries (IPA, AD)
+# Service username for non-anon queries (IPA, AD)
 ldap_service_user =
+
+# Service password for non-anon queries (IPA, AD)
 ldap_service_pass =
 
-# domain for AD LDAP queries
+# Domain for AD LDAP queries
 ldap_ad_domain =
 
 # ElasticSearch ES_MIN_MEM java heap setting
@@ -146,8 +147,13 @@ oauth_token_file = /etc/katello/oauth_token-file
 # Pulp user password file
 pulp_user_password_file = /etc/katello/pulp_user_password-file
 
-# Erases all databases. WARNING: This is dangerous option! Only value of 'YES' (uppercase) triggers the action. (This value is not remembered in katello-configure.conf).
+# Erases all databases.
+# WARNING: This is dangerous option! Only value of 'YES' (uppercase)
+# triggers the action. (This value is not remembered in
+# katello-configure.conf).
 reset_data = NONE
 
-# Erases downloaded RPM packages from /var/lib/pulp/packages. Only value of 'YES' (uppercase) triggers the action. (This value is not remembered in katello-configure.conf).
+# Erases downloaded RPM packages from /var/lib/pulp/packages.
+# Only value of 'YES' (uppercase) triggers the action. (This value 
+# is not remembered in katello-configure.conf).
 reset_cache = NONE
