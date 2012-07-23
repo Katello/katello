@@ -17,8 +17,6 @@ class SystemTemplatesController < ApplicationController
   before_filter :find_template, :only =>[:update, :edit, :destroy, :show, :download, :validate, :object, :update_content]
   before_filter :find_read_only_template, :only =>[:promotion_details]
 
-  #around_filter :catch_exceptions
-
   def section_id
     'contents'
   end

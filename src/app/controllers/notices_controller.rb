@@ -30,15 +30,10 @@ class NoticesController < ApplicationController
   end
 
   def show
-    begin
-      #currently doesn't handle pagination
-      @notices = render_panel_direct(Notice, {}, params[:search], 0, [sort_column, sort_direction],
-            {:filter=>{:user_ids=>[current_user.id]}, :skip_render=>true, :page_size=>100})
-      retain_search_history
-    rescue => error
-      notify.exception error, :persist => false
-      @notices = current_user.notices
-    end
+    #currently doesn't handle pagination
+    @notices = render_panel_direct(Notice, {}, params[:search], 0, [sort_column, sort_direction],
+          {:filter=>{:user_ids=>[current_user.id]}, :skip_render=>true, :page_size=>100})
+    retain_search_history
   end
 
   def get_new
@@ -58,22 +53,10 @@ class NoticesController < ApplicationController
   end
 
   def details
-    begin
-      # retrieve the details for the requested notice
-      notice = Notice.find(params[:id])
+    # retrieve the details for the requested notice
+    notice = Notice.find(params[:id])
 
-      respond_to do |format|
-        format.html { render :text => escape_html(notice.details)}
-      end
-
-    rescue => e
-      notify.exception e
-
-      respond_to do |format|
-        format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
-        format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
-      end
-    end
+    render :text => escape_html(notice.details)
   end
 
   def dismiss
@@ -82,24 +65,16 @@ class NoticesController < ApplicationController
     notice.users.delete(current_user)
     notice.destroy unless notice.users.any?
 
-    respond_to do |format|
-      format.json { render :json => "ok" }
-    end
+    render :json => "ok"
   end
 
   def destroy_all
-    begin
-      # destroy all notices for the user
-      for notice in current_user.notices
-        notice.users.delete(current_user)
-        notice.destroy unless notice.users.any?
-      end
-      render :partial => "delete_all"
-
-    rescue => error
-      notify.exception error
-      render :text => error, :status => :bad_request
+    # destroy all notices for the user
+    for notice in current_user.notices
+      notice.users.delete(current_user)
+      notice.destroy unless notice.users.any?
     end
+    render :partial => "delete_all"
   end
 
   private

@@ -38,7 +38,7 @@ class ActivationKey < ActiveRecord::Base
 
   after_find :validate_pools
 
-  validates :name, :presence => true, :katello_name_format => true, :length => { :maximum => 255 }
+  validates :name, :presence => true, :katello_name_format => true
   validates_uniqueness_of :name, :scope => :organization_id
   validates :description, :katello_description_format => true
   validates :environment, :presence => true

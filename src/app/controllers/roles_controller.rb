@@ -21,7 +21,7 @@ class RolesController < ApplicationController
   include AutoCompleteSearch
   include BreadcrumbHelper
   include RolesBreadcrumbs
-  
+
   def rules
     create_check = lambda{Role.creatable?}
     read_check = lambda{(@role && @role.self_role_for_user && @role.self_role_for_user.id == current_user.id) || Role.any_readable?}
@@ -117,72 +117,51 @@ class RolesController < ApplicationController
   def create
     @role = Role.create!(params[:role])
     notify.success _("Role '%s' was created.") % @role.name
-    
+
     if search_validate(Role, @role.id, params[:search])
       render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"], :name=>controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @role["name"]
       render :json => { :no_match => true }
     end
-  rescue => error
-    notify.exception error
-    render :json=>error.to_s, :status=>:bad_request
   end
 
   def update
     return if @role.name == "admin"
 
-    begin
-      if params[:update_users]
-        if params[:update_users][:adding] == "true"
-          @role.users << User.find(params[:update_users][:user_id])
-          @role.save!
-        else
-          @role.users.delete(User.find(params[:update_users][:user_id]))
-          @role.save!
-        end
-        render :json => params[:update_users]
-      else 
-        @role.update_attributes!(params[:role])
-        notify.success _("Role '%s' was updated.") % @role.name
-        
-        if not search_validate(Role, @role.id, params[:search])
-          notify.message _("'%s' no longer matches the current search criteria.") % @role["name"],
-                         :asynchronous => false
-        end
-        
-        render :json=>params[:role]
+    if params[:update_users]
+      if params[:update_users][:adding] == "true"
+        @role.users << User.find(params[:update_users][:user_id])
+        @role.save!
+      else
+        @role.users.delete(User.find(params[:update_users][:user_id]))
+        @role.save!
       end
-    rescue => error
-      notify.exception error
-      respond_to do |format|
-        format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
-        format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
+      render :json => params[:update_users]
+    else
+      @role.update_attributes!(params[:role])
+      notify.success _("Role '%s' was updated.") % @role.name
+
+      if not search_validate(Role, @role.id, params[:search])
+        notify.message _("'%s' no longer matches the current search criteria.") % @role["name"],
+                       :asynchronous => false
       end
+      render :json=>params[:role]
     end
   end
 
   def destroy
-    id = params[:id]
-    begin
-      #remove the user
-      @role.destroy
-      if @role.destroyed?
-        notify.success _("Role '%s' was deleted.") % @role[:name]
-        #render and do the removal in one swoop!
-        render :partial => "common/list_remove", :locals => {:id=>id, :name=>controller_display_name}
-      else
-        raise
-      end
-    rescue => error
-      notify.exception error
-      render :text=> error.to_s, :status=>:bad_request and return
+    #remove the user
+    if @role.destroy
+      notify.success _("Role '%s' was deleted.") % @role[:name]
+      #render and do the removal in one swoop!
+      render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
     end
   end
 
   def verbs_and_scopes
     details= {}
-    
+
     resource_types.each do |type, value|
       if !value["global"]
         details[type] = {}
@@ -194,18 +173,17 @@ class RolesController < ApplicationController
         details[type][:name] = value["name"]
       end
     end
-    
     render :json => details
   end
 
   def update_permission
     attributes = params[:permission]
     @permission = Permission.find(params[:permission_id])
-    
+
     if attributes.has_key?(:tag_names) and @permission.all_tags
       @permission.all_tags = false
     end
-    
+
     if attributes.has_key?(:verb_values) and @permission.all_verbs
       @permission.all_verbs = false
     end
@@ -227,10 +205,6 @@ class RolesController < ApplicationController
     add_permission_bc(to_return, @permission, false)
     notify.success _("Permission '%s' was updated.") % @permission.name
     render :json => to_return
-  rescue => error
-      notice error, {:level => :error}
-      notify.exception error
-      render :json=>@permission.errors, :status=>:bad_request
   end
 
   def create_permission
@@ -241,20 +215,15 @@ class RolesController < ApplicationController
       new_params[:all_tags] = true
       new_params[:all_verbs] = true
     end
-    
+
     new_params[:resource_type] = ResourceType.find_or_create_by_name(:name=>type_name)
     new_params.merge! params[:permission]
-    
-    begin
-      @perm = Permission.create! new_params
-      to_return = { :type => @perm.resource_type.name }
-      add_permission_bc(to_return, @perm, false)
-      notify.success _("Permission '%s' was created.") % @perm.name
-      render :json => to_return
-    rescue => error
-      notify.exception error
-      render :json=>@role.errors, :status=>:bad_request
-    end
+
+    @perm = Permission.create! new_params
+    to_return = { :type => @perm.resource_type.name }
+    add_permission_bc(to_return, @perm, false)
+    notify.success _("Permission '%s' was created.") % @perm.name
+    render :json => to_return
   end
 
   def show_permission
@@ -280,9 +249,6 @@ class RolesController < ApplicationController
     add_group_to_bc(to_return, @group)
     notify.success _("LDAP Group '%s' was created.") % @group.ldap_group
     render :json => to_return
-  rescue => error
-    notify.exception error
-    render :json=>@group.errors, :status=>:bad_request
   end
 
   def destroy_ldap_group
@@ -292,13 +258,11 @@ class RolesController < ApplicationController
     notify.success _("LDAP Group Mapping for '%s' was removed.") % name
     render :json => params[:id]
   end
- 
+
   private
+
   def find_role
-    @role =  Role.find(params[:role_id]) if params.has_key? :role_id
-    @role =  Role.find(params[:id]) unless params.has_key? :role_id
-  rescue => error
-    render :text=>errors.to_s, :status=>:bad_request and return false
+    @role =  Role.find(params[:role_id] || params[:id])
   end
 
   def resource_types

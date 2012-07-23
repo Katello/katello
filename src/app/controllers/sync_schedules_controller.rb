@@ -51,16 +51,11 @@ class SyncSchedulesController < ApplicationController
                  :hover_text_cb => :hover_format,
                  :enable_create => false,
                  :single_select => true}
-
-    respond_to do |format|
-      format.html # index.html.erb
-    end
   end
 
   def apply
     data = JSON.parse(params[:data]).with_indifferent_access
-    begin
-      raise if (data[:plans].empty?)
+    if data[:plans].present?
       # TODO it receives only one plan, but it collects many. Only the last one is assigned, see [1]
       selected_plans    = data[:plans].collect { |i| i.to_i }
       selected_products = data[:products].collect { |i| i.to_i }
@@ -77,27 +72,21 @@ class SyncSchedulesController < ApplicationController
         prod.save!
       end
       notify.success _("Sync Plans applied successfully.")
-
-    rescue => error
-      # note missing product is caught in find products before filter
-      notify.exception _("There must be at least one plan selected"), error
+    else
+      notify.error _("There must be at least one plan selected")
     end
-
     redirect_to(:controller => :sync_schedules, :action =>:index)
   end
 
   private
 
   def find_products
-    begin
-      data = JSON.parse(params[:data]).with_indifferent_access
-      product_ids =  data[:products].collect{ |i| i.to_i}
-      @products = Product.find(product_ids)
-    rescue => error
-      execute_after_filters
-      notify.exception _("There must be at least one product selected"), error
-      redirect_to(:controller => :sync_schedules, :action =>:index)
-    end
+    data = JSON.parse(params[:data]).with_indifferent_access
+    @products = Product.find(data[:products])
+  rescue ActiveRecord::RecordNotFound => error
+    execute_after_filters
+    notify.error _("There must be at least one product selected")
+    redirect_to(:controller => :sync_schedules, :action =>:index)
   end
 
 end

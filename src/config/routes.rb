@@ -341,7 +341,7 @@ Src::Application.routes.draw do
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
 
-  resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :show, :destroy, :auto_complete_search] do
+  resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :destroy] do
     member do
       put :name
       get :dependencies

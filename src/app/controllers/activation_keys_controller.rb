@@ -95,53 +95,41 @@ class ActivationKeysController < ApplicationController
   end
 
   def add_subscriptions
-    begin
-      if params.has_key? :subscription_id
-        params[:subscription_id].keys.each do |pool|
-          kt_pool = ::Pool.where(:cp_id => pool)[0]
+    if params.has_key? :subscription_id
+      params[:subscription_id].keys.each do |pool|
+        kt_pool = ::Pool.where(:cp_id => pool)[0]
 
-          if kt_pool.nil?
-            ::Pool.create!(:cp_id => pool, :key_pools => [KeyPool.create!(:activation_key => @activation_key)])
-          else
-            key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)[0]
+        if kt_pool.nil?
+          ::Pool.create!(:cp_id => pool, :key_pools => [KeyPool.create!(:activation_key => @activation_key)])
+        else
+          key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)[0]
 
-            if key_sub.nil?
-              KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)
-            end
+          if key_sub.nil?
+            KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)
           end
         end
       end
-      notify.success _("Subscriptions successfully added to Activation Key '%s'.") % @activation_key.name
-      render :partial => "available_subscriptions_update.js.haml"
-
-    rescue => error
-      notify.exception error
-      render :nothing => true
     end
+    notify.success _("Subscriptions successfully added to Activation Key '%s'.") % @activation_key.name
+    render :partial => "available_subscriptions_update.js.haml"
   end
 
   def remove_subscriptions
-    begin
-      if params.has_key? :subscription_id
-        params[:subscription_id].keys.each do |pool|
-          kt_pool = Pool.where(:cp_id => pool)[0]
+    if params.has_key? :subscription_id
+      params[:subscription_id].keys.each do |pool|
+        kt_pool = Pool.where(:cp_id => pool)[0]
 
-          if kt_pool
-            key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)[0]
+        if kt_pool
+          key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)[0]
 
-            if key_sub
-              key_sub.destroy
-            end
+          if key_sub
+            key_sub.destroy
           end
         end
       end
-      notify.success _("Subscriptions successfully removed from Activation Key '%s'.") % @activation_key.name
-      render :partial => "applied_subscriptions_update.js.haml"
-
-    rescue => error
-      notify.exception error
-      render :nothing => true
     end
+    notify.success _("Subscriptions successfully removed from Activation Key '%s'.") % @activation_key.name
+    render :partial => "applied_subscriptions_update.js.haml"
   end
 
   def system_groups
@@ -151,29 +139,30 @@ class ActivationKeysController < ApplicationController
   end
 
   def add_system_groups
-    unless params[:group_ids].blank?
+    if params[:group_ids].blank?
+      notify.error _("Please select at least one system group.")
+      render :nothing => true, :status => :unprocessable_entity
+    else
       ids = params[:group_ids].collect{|g| g.to_i} - @activation_key.system_group_ids #ignore dups
-      @system_groups = SystemGroup.where(:id=>ids)
+      @system_groups = SystemGroup.find(ids)
+
       @activation_key.system_group_ids = (@activation_key.system_group_ids + @system_groups.collect{|g| g.id}).uniq
       @activation_key.save!
+
+      notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
+      render :partial =>'system_group_items', 
+             :locals=>{:system_groups=>@system_groups, 
+             :editable=>ActivationKey.manageable?(current_organization)}
     end
-    notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
-    render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}, :editable=>ActivationKey.manageable?(current_organization)} and return
-  rescue => e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def remove_system_groups
-    system_groups = SystemGroup.where(:id=>params[:group_ids]).collect{|g| g.id}
+    system_groups = SystemGroup.find(params[:group_ids]).collect(&:id)
     @activation_key.system_group_ids = (@activation_key.system_group_ids - system_groups).uniq
     @activation_key.save!
 
     notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
     render :nothing => true
-  rescue => e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def new
@@ -222,83 +211,51 @@ class ActivationKeysController < ApplicationController
     if search_validate(ActivationKey, @activation_key.id, params[:search])
       render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
     else
-      notify.message _("'%s' did not meet the current search criteria and is not being shown.") %
-                         @activation_key["name"]
+      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @activation_key["name"]
       render :json => { :no_match => true }
     end
-  rescue => error
-    Rails.logger.error error.to_s
-    notify.exception error
-    render :text => error, :status => :bad_request
   end
 
   def update
     result = params[:activation_key].nil? ? "" : params[:activation_key].values.first
 
-    begin
-      unless params[:activation_key][:description].nil?
-        result = params[:activation_key][:description] = params[:activation_key][:description].gsub("\n",'')
-      end
-
-      if !params[:activation_key][:system_template_id].nil? and params[:activation_key][:system_template_id].blank?
-        params[:activation_key][:system_template_id] = nil
-      end
-
-      @activation_key.update_attributes!(params[:activation_key])
-
-      notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
-
-      unless params[:activation_key][:system_template_id].nil? or params[:activation_key][:system_template_id].blank?
-        # template is being updated.. so return template name vs id...
-        system_template = SystemTemplate.find(@activation_key.system_template_id)
-        result = system_template.name
-      end
-
-      if not search_validate(ActivationKey, @activation_key.id, params[:search])
-        notify.message _("'%s' no longer matches the current search criteria.") % @activation_key["name"]
-      end
-
-      render :text => escape_html(result)
-
-    rescue => error
-      notify.exception error
-
-      respond_to do |format|
-        format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
-      end
+    unless params[:activation_key][:description].nil?
+      result = params[:activation_key][:description] = params[:activation_key][:description].gsub("\n",'')
     end
+
+    if !params[:activation_key][:system_template_id].nil? and params[:activation_key][:system_template_id].blank?
+      params[:activation_key][:system_template_id] = nil
+    end
+
+    @activation_key.update_attributes!(params[:activation_key])
+
+    notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
+
+    unless params[:activation_key][:system_template_id].nil? or params[:activation_key][:system_template_id].blank?
+      # template is being updated.. so return template name vs id...
+      system_template = SystemTemplate.find(@activation_key.system_template_id)
+      result = system_template.name
+    end
+
+    if not search_validate(ActivationKey, @activation_key.id, params[:search])
+      notify.message _("'%s' no longer matches the current search criteria.") % @activation_key["name"]
+    end
+
+    render :text => escape_html(result)
   end
 
   def destroy
-    begin
-      @activation_key.destroy
-      if @activation_key.destroyed?
-        notify.success _("Activation key '#{@activation_key[:name]}' was deleted.")
-        #render and do the removal in one swoop!
-        render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
-      else
-        raise
-      end
-    rescue => e
-      notify.exception e
+    if @activation_key.destroy
+      notify.success _("Activation key '#{@activation_key[:name]}' was deleted.")
+      #render and do the removal in one swoop!
+      render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
     end
   end
 
   protected
 
   def find_activation_key
-    begin
-      @activation_key = ActivationKey.find(params[:id])
-    rescue => error
-      notify.exception error
-
-      # flash_to_headers is an after_filter executed on the application controller;
-      # however, a render from within a before_filter will halt the filter chain.
-      # as a result, we are explicitly executing it here.
-      flash_to_headers
-
-      render :text => error, :status => :bad_request
-    end
+    @activation_key = ActivationKey.find(params[:id])
   end
 
   def find_environment
