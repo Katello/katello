@@ -206,6 +206,29 @@ module Glue::Candlepin::Consumer
       facts["network.hostname"]
     end
 
+    # interface listings come in the form of
+    #
+    # net.interface.em1.ipv4_address
+    # net.interface.eth0.ipv4_broadcast
+    #
+    # there are multiple entries for each interface, but
+    # we only need the ipv4 address
+    def interfaces
+      interfaces = []
+      facts.keys.each do |key|
+        match = /net\.interface\.([^\.]*)/.match(key)
+        if match != nil && match[1] != nil
+          interfaces << match[1]
+        end
+      end
+      interface_set = []
+      interfaces.uniq.each do |interface|
+        addr = facts["net.interface.#{interface}.ipv4_address"]
+        interface_set << { :name => interface, :addr => addr } if addr != nil
+      end
+      interface_set
+    end
+
     def ip
       facts['network.ipv4_address']
     end

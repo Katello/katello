@@ -83,7 +83,8 @@ module Navigation
           :url => lambda{system_groups_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"panel_link"}
-        } if AppConfig.katello?          
+        } if AppConfig.katello?
+      a
     end
 
     def systems_subnav
