@@ -183,7 +183,7 @@ class ChangesetsController < ApplicationController
           when "package"
             product = Product.find pid
             @changeset.add_package! name, product if adding
-            @changeset.remove_package! name, product if !adding
+            @changeset.remove_package! id, product if !adding
 
           when "repo"
             @changeset.add_repository! Repository.find(id) if adding
