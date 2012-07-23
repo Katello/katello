@@ -35,12 +35,17 @@ def parse_url(url):
     elif ':' in host and (proto == 'https' or proto == 'http'):
         host, port = host.split(':')
     else:
-        print "Supported protocols are https or http"
+        sys.stderr.write("[ERROR] Supported protocols are https or http\n")
         sys.exit(-1)
 
     return(proto,host,path,port)
 
-def random_subscribe(org, system):
+def get_env_id(org, env):
+    envapi = EnvironmentAPI()
+
+    return envapi.environment_by_name(org, env)['id']
+
+def auto_subscribe(org, system):
     sysapi = SystemAPI()
     orgapi = OrganizationAPI()
     
@@ -55,15 +60,23 @@ def random_subscribe(org, system):
     return sysapi.subscribe(system_uuid, pool_id, 1)
 
 def create_subscribed_systems(org, env, sem):
-    #http://pastebin.test.redhat.com/98113
 
-    counter = 1
     sysapi = SystemAPI()
     envapi = EnvironmentAPI()
     
-    sem.acquire()
-    envid = envapi.environment_by_name(org, env)['id']
-    sem.release()
+    try:
+        sem.acquire()
+        envid = get_env_id(org, env)
+    except Exception, e:
+        try:
+            lockerid = get_env_id(org, "Library")
+            envapi.create(org, env, "Test Environment", lockerid)
+            envid = get_env_id(org, env)
+        except Exception, e:
+            sys.stderr.write("[Error] Failed to find and create requested environment.\n%s\n" % e)
+            sys.exit(-1)
+    finally:
+        sem.release()
     
     if opts.debug:
         print "===== Environment ID: %s" % envid
@@ -81,17 +94,17 @@ def create_subscribed_systems(org, env, sem):
         sem.acquire()
         sysapi.register(name, org, envid, [], 'system', None, None, facts)
     except server.ServerRequestError, e:
-        print("%s" % e[1]['displayMessage'])
+        sys.stderr.write("%s\n" % e[1]['displayMessage'])
     finally:
         sem.release()
     
     try:
         sem.acquire()
-        random_subscribe(org, name)
+        auto_subscribe(org, name)
         if opts.debug:
             print "===== Successfully subscribed %s" % name
     except server.ServerRequestError, e:
-        print("%s \n We will try %s more times to register this system" % (e[1]['displayMessage']))
+        sys.stderr.write("[Error] %s \n" % (e[1]['displayMessage']))
     finally:
         sem.release()
 
