@@ -7,11 +7,16 @@ import string
 import urlparse
 from multiprocessing import Process, BoundedSemaphore, Manager
 from multiprocessing import Pool
-from katello.client import server
-from katello.client.server import BasicAuthentication, SSLAuthentication
-from katello.client.api.system import SystemAPI
-from katello.client.api.environment import EnvironmentAPI
-from katello.client.api.organization import OrganizationAPI
+
+try:
+    from katello.client import server
+    from katello.client.server import BasicAuthentication, SSLAuthentication
+    from katello.client.api.system import SystemAPI
+    from katello.client.api.environment import EnvironmentAPI
+    from katello.client.api.organization import OrganizationAPI
+except ImportError, e:
+    sys.stderr.write('[Error] %s\n, katello-cli-common package is Required\n' % e)
+    sys.exit(-1)
 
 def random_string():
     """
@@ -22,6 +27,10 @@ def random_string():
     return "".join(random.choice(chars) for x in range(random.randint(4, 6)))
 
 def parse_url(url):
+    """
+    Parse the url passed in to obtain host, protocol, port, and path.
+    :param url: string
+    """
     p_url = urlparse.urlparse(url)
     proto = p_url.scheme
     host = p_url.netloc
@@ -35,17 +44,28 @@ def parse_url(url):
     elif ':' in host and (proto == 'https' or proto == 'http'):
         host, port = host.split(':')
     else:
-        sys.stderr.write("[ERROR] Supported protocols are https or http\n")
+        sys.stderr.write('[Error] Supported protocols are https or http\n')
         sys.exit(-1)
 
     return(proto,host,path,port)
 
 def get_env_id(org, env):
+    """
+    Returns the envid based on environment name, passed.
+    :param org: string
+    :param env: string
+    """
     envapi = EnvironmentAPI()
 
     return envapi.environment_by_name(org, env)['id']
 
 def auto_subscribe(org, system):
+    """
+    Will subscribe a system to an available pool.
+    Returns json for created system.
+    :param org: string
+    :param system: string
+    """
     sysapi = SystemAPI()
     orgapi = OrganizationAPI()
     
@@ -59,25 +79,15 @@ def auto_subscribe(org, system):
 
     return sysapi.subscribe(system_uuid, pool_id, 1)
 
-def create_subscribed_systems(org, env, sem):
-
+def create_subscribed_systems(org, envid, sem):
+    """
+    Registers a system, name is random into org and environment specified.
+    :param org: string
+    :param envid: string
+    """
     sysapi = SystemAPI()
-    envapi = EnvironmentAPI()
     
-    try:
-        sem.acquire()
-        envid = get_env_id(org, env)
-    except Exception, e:
-        try:
-            lockerid = get_env_id(org, "Library")
-            envapi.create(org, env, "Test Environment", lockerid)
-            envid = get_env_id(org, env)
-        except Exception, e:
-            sys.stderr.write("[Error] Failed to find and create requested environment.\n%s\n" % e)
-            sys.exit(-1)
-    finally:
-        sem.release()
-    
+        
     if opts.debug:
         print "===== Environment ID: %s" % envid
     
@@ -108,7 +118,31 @@ def create_subscribed_systems(org, env, sem):
     finally:
         sem.release()
 
+def process_environment(org, env):
+    """
+    Returns the envid.
+    :param org: string
+    :param env: string
+    """
+    envapi = EnvironmentAPI()
+    try:
+        envid = get_env_id(org, env)
+    except Exception, e:
+        try:
+            lockerid = get_env_id(org, "Library")
+            envapi.create(org, env, "Test Environment", lockerid)
+            envid = get_env_id(org, env)
+        except Exception, e:
+            sys.stderr.write('[Error] Failed to find and create requested environment.\n%s\n' % e)
+            sys.exit(-1)
+    return envid
+
+
 if __name__ == '__main__':
+    """
+    Parse the command line, create n number of randomly defined systems
+    using threads.
+    """
     p = OptionParser(usage="usage: %prog [options]", version="%prog 0.01")
     p.add_option('--url', dest='url', help='Fully qualified url for your katello server',
                  default='localhost')
@@ -126,22 +160,22 @@ if __name__ == '__main__':
                  help='Enable Debug', default=False)
 
     (opts, args) = p.parse_args()
-    
+
     proto, host, path, port = parse_url(opts.url)
     s = server.KatelloServer(host, port, proto, path)
     s.set_auth_method(BasicAuthentication(opts.username, opts.password))
     server.set_active_server(s)
-    
+
+    envid = process_environment(opts.org, opts.env)
+
     manager = Manager()
-    threads = []
     maxconnections = 4
-    sem = manager.BoundedSemaphore(maxconnections)
+    sem = manager.BoundedSemaphore(maxconnections) 
     pool = Pool(processes=maxconnections*2)
 
     for i in range(int(opts.maxsystems)):
         if opts.debug:
             print 'Starting thread: [%s] for loadig systems' % i
-        pool.apply_async(create_subscribed_systems, args=(opts.org, opts.env, sem))
+        pool.apply_async(create_subscribed_systems, args=(opts.org, envid, sem))
     pool.close()
     pool.join()
-    
