@@ -169,8 +169,10 @@ class katello::config {
     },
   }
 
+  # during first installation we mark all upgrade scripts as executed
   exec {"update_upgrade_history":
     command => "ls ${katello::params::katello_upgrade_scripts_dir} > ${katello::params::katello_upgrade_history_file}",
+    creates => "${katello::params::katello_upgrade_history_file}",
     path    => "/bin",
     before  => Class["katello::service"],
   }
