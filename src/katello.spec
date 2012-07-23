@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.47
+Version:        0.2.48
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -398,6 +398,194 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jul 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.48-1
+- gemfile - decreasing thin 1.2.11 requirement to 1.2.8
+- Fixed some unit test breakages caused by commit
+  f06bf0c5383dffef7ee2aea6597aaa06c4964ab9
+- Fencing more system groups code for systems page
+- system groups - fix query on systems -> system groups pane
+- master merge conflict fix
+- system groups - updates to validation of max_systems
+- system groups - API accepts max_systems and CLI unit tests
+- 839265 - system - generate proper error if user attempts to add groups w/o
+  providing any
+- system groups - close copy widget when switching objects or panes
+- Make third level navigation in panel sticky
+- master merge conflict
+- reverting to the same hash as I had originally
+- spec test fix
+- CS - Changes sliding aspect of grid to be more inuitive to a user's
+  experience such that clicking to slide right reveals more columns to the
+  right.
+- content browser - fixing migration script to properly propogate
+- system groups - removing local modifications not intended for upstream
+- system groups - unit tests and error conditions
+- content browser - fixing migration to migrate clone.library_instance_id
+  properly
+- Added server side code for Repo Compare Shared/Unique
+- Removes test data from code that prevents production asset compiling.
+- CS - Minor styling updates and a fix for packages with the same ID showing up
+  only once in the grid.
+- group copy cli and API first pass
+- CS - Fixes issue with data export for returning to results.
+- content  browser - adding search mode selector
+- CS - Styling updates for browse box.
+- content browser - fixing metadata ro wmissing
+- content browser - preparing for mode selector and other fixes
+- CS - Update to how columns are handled to produce logical pathing order
+  across browsers.
+- CS - Styling updates to environment selector widget.
+- merge conflict
+- content browser - adding show/hide support for compare button
+- Initial stab at the server side interaction of shared vs unique
+- content browser - intitial comparison wiring
+- CS - Proper hash from master merge.
+- CS - Changes for repository comparison checkboxes supplying column and row
+  id.
+- content browser - manually switching to results mode on search to fix some
+  oddities
+- content browser - making content selector show selected value
+- content browser - fixing issue with more rows showing up when not needed
+- content browser - fixing issue with more rows on repo contents
+- content browser - fixing issue where packages and errata were not including a
+  parent_row
+- content browser - fixing merge conflict and making all data returned as a
+  hash
+- CS - Fixes for empty space when last column is visible and another column is
+  removed from the visible set.
+- CS - Fixes messed up errata column headers.
+- content browser - adding more rows support for repo errata & packages
+- CS - Adds count updates on metadata row.
+- CS - Adds spinner and disabled load more link.
+- CS - Updates to load extra data above the load more row instead of underneath
+  it.
+- CS - Adjusts spinner location and look.
+- CS - Adds display of repository name when viewing repo details.
+- content browser - making package ids not analyzed in elastic search
+- content browser - some small performance improvements, adding hover on
+  products
+- content browser - adding tipsy for search help
+- adding a library_instance_id to the repository object
+- CS - Rows nested deeper than 2 levels will now be collapsed on initial draw.
+- CS - Cleanup for loading screen.
+- content browser - content selector and more rows wiring
+- jsroutes update
+- CS - RE-factor of how child rows are handled to support loading of more rows
+  in a cleaner manor.
+- CS - Adds initial support paginated loading of data via "show more" row.
+- content browser - improving user experience of selecting environments
+- initial untested pagination
+- CS - Cleanup around row collapse.
+- CS - Adds ability to enable checkboxes on individual cells.
+- content browser - making path selector not reserve checkbox space
+- CS - Adds ability to set a title in the details view, and specify a details
+  content selector.
+- content browser - fixing package/errata search issues
+- content browser - changing position of path selector
+- content browser - fixing nonenabled repos showing up
+- content browser - a few fixes
+- content browser - fixing 2 issues with grid caching
+- content browser - hooking up back button
+- CS - Adds support for allowing columns to span multiple column widths.
+- CS - Adds back to results button and associated generic event upon click.
+- content browser - fixing error when no errata exist
+- fixing path selector not maintaining selected environments
+- content browser - adding errata search
+- fixing issue with rows having odd characters in their names
+- fixing merge conflict
+- removing console.log statement
+- merge conflcit
+- CS - Updates to deep copy exported object states from the grid.
+- Added server side bindings for cs compare packages and errata calls
+- content browser - adding initial search caching support
+- CS - Exposes export/import functionality to instantiated grid objects.
+- CS - Adds seperated data layer for import/export of states.
+- fixing converge-ui hash
+- merge conflict
+- content browser - initial subgrid support initially just packages
+- routes update
+- jsroutes update
+- merge conflict
+- Added serverside code for package and repo contents
+- content browser - initial pkg pagination support
+- content browser - fixing some mistaken text labels
+- content browser - adding initial package pagination
+- content browser - adding library id to search index for respositories
+- CS - Fixes nesting collapse for multiple children.
+- content browser - having package search return packages
+- merge conflict
+- CS - Clean-up and refactoring.
+- CS - Adds basic footer to grid component.
+- CS - Makes environment selector a more generic feature of the grid.
+- CS - Adds loading screen for switching grid data.
+- CS - Updates to styling and adding hover states to sliding arrows.
+- CS - Adds generic row nesting with colllapse functionality attached to parent
+  rows.
+- CS - Adds hover support and custom display data for cells.
+- CS - Adjustments to sliding states of arrows.  Addition of new environment
+  selector icon.
+- initial package search
+- jsroutes update
+- Added some initial permissions stubs for search controller
+- Added code to render the product and repo search results in a new json
+  structure
+- content browser - adding autocomplete for packages
+- CS - Fix for hiding column.
+- CS - Updates to add first level row nesting support.
+- CS - Additional styling and addition of on hover state for scrolling.
+- Updated stylings and added icons for content search.
+- CS - Fixes up spacing for grids and cells.  Adds left and right sliding of
+  content area with column headers.
+- CS - Applying some base styling.
+- content browse - some style fixes
+- content-browser - initial selection of library environment
+- path selector - making path selector adjust horizontally based on available
+  space
+- Updates as a result of merging master and updating converge-ui.
+- Updates to git left and right arrows showing up only when more than 3
+  environments are present.
+- Adds structure and functionality for scrolling environments left and right in
+  the column headers.
+- CS - Adds the structure and building blocks for allowing environments to be
+  scrolled left to right when they overflow the header.
+- CS - Setting of margins and general spacings for grid and browse boxes.
+- Added smarts to only do the search call if necessary in content_search
+- Added bbq support for environments in the content_search page
+- content browser - adding product information for repos
+- content-browser - initial repo search
+- js routes update
+- content-browser - making browse box support search & autocomplete
+- Added a landing point for Content Search page under Content Management
+- content browser - adding bbq to main search
+- CFB - Wires up basic product search results to grid view to allow viewing of
+  products and marking with an 'x' which environments currently visible a
+  product is in.
+- CFB - Fix to set the line height in path selector and not inherit from parent
+  elements.
+- CFB - Adds some basic styling for cells and support for adding rows with new
+  column paradigm.
+- CFB - Changes the way columns are added to the grid structure and wires up
+  the environment selector to add/remove columns.
+- CFB - Adds support for adding new rows and new columns.
+- CFB - Wires up basic row/column adding within grid view.
+- content browser - product autocomplete and autocomplete list support
+- Added product search + Autocomplete for the content browser
+- content browser - changing return value of products
+- content browser - adding browse box logic, and initial search logic
+- updated js routes
+- environment selector - making return data ordered, and fixing returned name
+- fixing missing pixel
+- changing env selector to use a label instead of an anchor
+- minor path selector improvements and additional interface functions
+- environment selector - more improvements to selector
+- CFB - Adds selection and input elements for browse box as basic layout - no
+  functionality.
+- environment selector - add first environment linkage for selection
+- adding selectability to the path selector
+- CFB - Adds basic layouts for browse box and grid.
+- initial new environment selector
+- Initial content search boilerplate
+
 * Wed Jul 18 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.47-1
 - fixing build issue (msuchy@redhat.com)
 - a2x require /usr/bin/getopt (msuchy@redhat.com)
