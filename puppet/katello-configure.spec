@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.30
+Version:        0.2.31
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -87,6 +87,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.31-1
+- %%defattr is not needed since rpm 4.4
+
 * Mon Jul 16 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.30-1
 - ldap provided by ldap_fluff. Adds support for FreeIPA & Active Directory
 - fixes an incompatibility with newer puppet versions
