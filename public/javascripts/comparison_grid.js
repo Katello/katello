@@ -823,7 +823,7 @@ KT.comparison_grid.templates = (function(i18n) {
                 html.attr('data-parent_id', parent_id);
             }
             
-            html.append($('<span/>', { 'class' : 'one-line-ellipsis'}).html(name));
+            html.append($('<span/>', { 'class' : 'one-line-ellipsis', 'title' : KT.common.escapeId(name) }).html(name));
 
             if( has_children ){
                 if( row_level === 2 ){
