@@ -22,8 +22,6 @@ class ChangesetsController < ApplicationController
 
   after_filter :update_editors, :only => [:update]
 
-  #around_filter :catch_exceptions
-
   def rules
     read_perm = lambda{@environment.changesets_readable?}
     manage_perm = lambda{@environment.changesets_manageable?}
@@ -103,23 +101,17 @@ class ChangesetsController < ApplicationController
   end
 
   def create
-    begin
-      @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
-                                     :environment_id=>@environment.id)
-      notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
-      bc = {}
-      add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
-                      {:client_render => true}, {:is_new=>true})
-      render :json => {
-        'breadcrumb' => bc,
-        'id' => @changeset.id,
-        'changeset' => simplify_changeset(@changeset)
-      }
-    rescue => error
-      Rails.logger.error error.to_s
-      notify.exception error
-      render :json=>error, :status=>:bad_request
-    end
+    @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
+                                   :environment_id=>@environment.id)
+    notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
+    bc = {}
+    add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
+                    {:client_render => true}, {:is_new=>true})
+    render :json => {
+      'breadcrumb' => bc,
+      'id' => @changeset.id,
+      'changeset' => simplify_changeset(@changeset)
+    }
   end
 
   def update
@@ -274,13 +266,7 @@ class ChangesetsController < ApplicationController
   end
 
   def find_changeset
-    begin
-      @changeset = Changeset.find(params[:id])
-    rescue => error
-      notify.exception error
-      execute_after_filters
-      render :text=>error.to_s, :status=>:bad_request
-    end
+    @changeset = Changeset.find(params[:id])
   end
 
   def setup_options

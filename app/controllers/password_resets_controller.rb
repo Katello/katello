@@ -66,10 +66,6 @@ class PasswordResetsController < ApplicationController
       notify.invalid_record @user
       render :nothing => true
     end
-
-  rescue => e
-    notify.exception e, :persist => false
-    render :text => e.to_s, :status => :bad_request
   end
 
   def email_logins
@@ -85,32 +81,21 @@ class PasswordResetsController < ApplicationController
   protected
 
   def find_user_by_user_and_email
-    begin
-      @user = User.find_by_username_and_email!(params[:username], params[:email])
-      User.current = @user
-    rescue => error
-      Rails.logger.error error.to_s
-    end
+    @user = User.find_by_username_and_email!(params[:username], params[:email])
+    User.current = @user
   end
 
   def find_users_by_email
-    begin
-      @users = User.where(:email => params[:email])
-      User.current = @users.first
-    rescue => error
-      Rails.logger.error error.to_s
-    end
+    @user = User.find_by_email!(params[:email])
+    User.current = @user
   end
 
   def find_user_by_token
-    begin
-      @user = User.find_by_password_reset_token!(params[:id])
-      User.current = @user
-    rescue => error
-      notify.error _("Request received has either an invalid or expired token. Token: '%s'") % params[:id],
-                   :persist => false
-      redirect_to root_url
-      execute_after_filters
-    end
+    @user = User.find_by_password_reset_token!(params[:id])
+    User.current = @user
+  rescue ActiveRecord::RecordNotFound => error
+    notify.error _("Request received has either an invalid or expired token. Token: '%s'") % params[:id]
+    redirect_to root_url
+    execute_after_filters
   end
 end

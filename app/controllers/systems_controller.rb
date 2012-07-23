@@ -567,7 +567,7 @@ class SystemsController < ApplicationController
       @system.save!
     end
     notify.success _("System '%s' was updated.") % @system["name"]
-    render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}} and return
+    render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups} and return
   rescue => e
     notify.exception e
     render :text=>e, :status=>500

@@ -44,24 +44,20 @@ class SearchController < ApplicationController
   end
 
   def create_favorite
-    begin
-      # save in the user's search favorites
-      unless params[:favorite].nil? or params[:favorite].blank?
-        search_string = String.new(params[:favorite])
-        path = retrieve_path
 
-        # is the search string valid?  if not, don't save it...
-        if is_valid? path, search_string
-          favorites = current_user.search_favorites.where(:path => path, :params => params[:favorite])
-          if favorites.nil? or favorites.empty?
-            # user doesn't have this favorite stored, so save it
-            favorite = current_user.search_favorites.create!(:path => path, :params => params[:favorite])
-          end
+    # save in the user's search favorites
+    unless params[:favorite].nil? or params[:favorite].blank?
+      search_string = String.new(params[:favorite])
+      path = retrieve_path
+
+      # is the search string valid?  if not, don't save it...
+      if is_valid? path, search_string
+        favorites = current_user.search_favorites.where(:path => path, :params => params[:favorite])
+        if favorites.nil? or favorites.empty?
+          # user doesn't have this favorite stored, so save it
+          favorite = current_user.search_favorites.create!(:path => path, :params => params[:favorite])
         end
       end
-    rescue => error
-      Rails.logger.error error.to_s
-      notify.exception error
     end
 
     # return the search details after adding a new favorite
@@ -69,18 +65,13 @@ class SearchController < ApplicationController
   end
 
   def destroy_favorite
-    begin
-      current_user.search_favorites.destroy(params[:id])
-    rescue => error
-      Rails.logger.error error.to_s
-      notify.exception error
-    end
+    current_user.search_favorites.destroy(params[:id])
 
     # return the search details after removing the favorite
     show
   end
 
-  private 
+  private
 
   def retrieve_path
     # retrieve the 'path' from the referrer (e.g. /katello/organizations), leaving out info such as
