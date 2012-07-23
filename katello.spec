@@ -63,6 +63,7 @@ Requires:       rubygem(jammit)
 Requires:       rubygem(rails_warden)
 Requires:       rubygem(net-ldap)
 Requires:       rubygem(compass) >= 0.11.5
+Requires:       rubygem(compass) < 0.12
 Requires:       rubygem(compass-960-plugin) >= 0.10.4
 Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
@@ -79,7 +80,8 @@ Requires:       rubygem(thin)
 Requires:       rubygem(fssm)
 Requires:       rubygem(sass)
 Requires:       rubygem(chunky_png)
-Requires:       rubygem(tire)
+Requires:       rubygem(tire) >= 0.3.0
+Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
 
 %if 0%{?rhel} == 6
