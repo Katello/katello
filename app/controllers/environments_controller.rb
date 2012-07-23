@@ -19,8 +19,6 @@ class EnvironmentsController < ApplicationController
   before_filter :authorize
   before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates, :products]
 
-  around_filter :catch_exceptions
-
   def section_id
     'orgs'
   end
@@ -135,14 +133,7 @@ class EnvironmentsController < ApplicationController
   end
 
   def find_environment
-    begin
-      env_id = (params[:id].blank? ? nil : params[:id]) || params[:env_id]
-      @environment = KTEnvironment.find env_id
-    rescue => error
-      notify.error _("Couldn't find environment with ID=%d") % env_id
-      execute_after_filters
-      render :text => error, :status => :bad_request
-    end
+    @environment = KTEnvironment.find(params[:id] || params[:env_id])
   end
 
   def setup_new_edit_screen
