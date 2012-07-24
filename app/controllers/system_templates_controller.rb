@@ -215,19 +215,12 @@ class SystemTemplatesController < ApplicationController
     @template.save!
     notify.success _("Template %s updated successfully.") % @template.name
     render :text=>result
-
-  rescue => e
-    notify.exception e
-    render :text=>e, :status=>:bad_request
   end
 
   def destroy
-      @template.destroy
-      notify.success _("Template '%s' was deleted.") % @template.name
-      render :partial => "common/list_remove", :locals => {:id => @template.id, :name=>"details"}
-  rescue => e
-      notify.exception e
-      render :text=> e, :status=>:bad_request
+    @template.destroy
+    notify.success _("Template '%s' was deleted.") % @template.name
+    render :partial => "common/list_remove", :locals => {:id => @template.id, :name=>"details"}
   end
 
   def show
@@ -240,7 +233,7 @@ class SystemTemplatesController < ApplicationController
     render :text=>""
   rescue Errors::TemplateValidationException => e
     notify.exception e
-    render :text=>"", :status=>500
+    render :nothig => true, :status => :bad_request
   end
 
   def download
@@ -276,12 +269,8 @@ class SystemTemplatesController < ApplicationController
     @template = SystemTemplate.create!(obj_params)
     notify.success _("System Template '%s' was created.") % @template.name
     render :json=>{:name=>@template.name, :id=>@template.id}
-
-  rescue => e
-    notify.exception e
-    render :text => e, :status => :bad_request
   end
-  
+
   protected
 
   #verifies that the distro is in one of the template's products or repositories and gives a warning otherwise
@@ -312,10 +301,12 @@ class SystemTemplatesController < ApplicationController
 
   def find_template
     find_read_only_template
-    raise _("Cannot modify a template that is another environment") if !@template.environment.library?
-  rescue => e
-    notify.exception e
-    render :text=>e, :status=>400 and return false
+    if !@template.environment.library?
+      msg = _("Cannot modify a template that is another environment")
+      notify.error msg
+      render :text => msg, :status => :bad_request
+      return
+    end
   end
 
   def trim list

@@ -63,9 +63,6 @@ class SystemGroupErrataController < ApplicationController
     
     notify.success _("Errata scheduled for install.")
     render :text => job.id
-  rescue => error
-    errors error
-    render :text => error, :status => :bad_request
   end
 
   def status
