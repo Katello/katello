@@ -36,9 +36,9 @@
           %table#interface_table
             - system.interfaces.each do |interface|
               %tr
-                %td
+                %td.interface_name
                   = interface[:name]
-                %td
+                %td.interface_addr
                   = interface[:addr]
     .clear
     .grid_8
