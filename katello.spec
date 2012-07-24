@@ -40,6 +40,8 @@ Requires:        %{name}-glue-foreman
 Requires:        %{name}-glue-candlepin
 Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
+BuildRequires:   asciidoc
+BuildRequires:   /usr/bin/getopt
 
 %description
 Provides a package for managing application life-cycle for Linux systems.
@@ -190,6 +192,9 @@ LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
 echo Generating gettext files...
 ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
 
+#man pages
+a2x -d manpage -f manpage man/katello-service.8.asciidoc
+
 %install
 rm -rf %{buildroot}
 #prepare dir structure
@@ -199,6 +204,7 @@ install -d -m0755 %{buildroot}%{datadir}/tmp
 install -d -m0755 %{buildroot}%{datadir}/tmp/pids
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
+mkdir -p %{buildroot}/%{_mandir}/man8
 
 # clean the application directory before installing
 [ -d tmp ] && rm -rf tmp
@@ -206,7 +212,7 @@ install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 #copy the application to the target directory
 mkdir .bundle
 mv ./deploy/bundle-config .bundle/config
-cp -R .bundle * %{buildroot}%{homedir}
+cp -R .bundle Gemfile Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
@@ -231,6 +237,7 @@ install -Dp -m0644 %{confdir}/mapping.yml %{buildroot}%{_sysconfdir}/%{name}/
 ln -svf %{_sysconfdir}/%{name}/%{name}.yml %{buildroot}%{homedir}/config/%{name}.yml
 #ln -svf %{_sysconfdir}/%{name}/database.yml %{buildroot}%{homedir}/config/database.yml
 ln -svf %{_sysconfdir}/%{name}/environment.rb %{buildroot}%{homedir}/config/environments/production.rb
+install -p -m0644 etc/service-list %{buildroot}%{_sysconfdir}/%{name}/
 
 #create symlinks for some db/ files
 ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
@@ -246,16 +253,12 @@ ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 mkdir -p %{buildroot}%{_bindir}
 ln -sv %{homedir}/script/katello-debug %{buildroot}%{_bindir}/katello-debug
 ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
+ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
 
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
 
 #remove files which are not needed in the homedir
-rm -rf %{buildroot}%{homedir}/README
-rm -rf %{buildroot}%{homedir}/LICENSE
-rm -rf %{buildroot}%{homedir}/doc
-rm -rf %{buildroot}%{homedir}/deploy
-rm -rf %{buildroot}%{homedir}/%{name}.spec
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
@@ -283,6 +286,9 @@ find %{buildroot}%{homedir} -type f -print0 | xargs -0 chmod 644
 chmod +x %{buildroot}%{homedir}/script/*
 chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 
+# install man page
+install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
+
 %clean
 rm -rf %{buildroot}
 
@@ -303,7 +309,6 @@ fi
 
 %files
 %attr(600, katello, katello)
-%defattr(-,root,root)
 %{_bindir}/katello-*
 %{homedir}/app/controllers
 %{homedir}/app/helpers
@@ -322,6 +327,7 @@ fi
 %{homedir}/lib/glue/*.rb
 %{homedir}/lib/monkeys/*.rb
 %{homedir}/lib/navigation
+%{homedir}/lib/notifications
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
@@ -336,9 +342,10 @@ fi
 %{homedir}/Gemfile
 %{homedir}/Gemfile.lock
 %{homedir}/Rakefile
+%config(noreplace) %{_sysconfdir}/%{name}/service-list
+%{_mandir}/man8/katello-service.8*
 
 %files common
-%defattr(-,root,root)
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
@@ -4761,3 +4768,4 @@ fi
 
 * Tue Jun 14 2011 Mike McCune <mmccune@redhat.com> 0.1.46-1
 - initial changelog
+
