@@ -129,7 +129,7 @@ fi
 
 echo "Initializing Candlepin database"
 sudo /usr/share/candlepin/cpdb --drop --create
-sudo /usr/share/candlepin/cpsetup -s -k `cat /etc/katello/keystore_password-file`
+sudo /usr/share/candlepin/cpsetup -s -k `sudo cat /etc/katello/keystore_password-file`
 
 
 # cpsetup alters tomcat configuration, use the original
