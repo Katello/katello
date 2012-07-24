@@ -555,20 +555,28 @@ class SystemsController < ApplicationController
   def system_groups
     # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
     @system_groups = SystemGroup.where(:organization_id=>current_organization).
-        where('max_systems < ?', @system.system_groups.length).order(:name) - @system.system_groups
+        joins(:system_system_groups).
+        select("system_groups.id, system_groups.name").
+        group("system_groups.id, system_groups.name, system_groups.max_systems having count(system_system_groups.system_id) < system_groups.max_systems or system_groups.max_systems = -1").
+        order(:name) - @system.system_groups
+
     render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>@system.editable?}
   end
 
   def add_system_groups
-    unless params[:group_ids].blank?
+    if params[:group_ids].nil? or params[:group_ids].blank?
+      notify.error _('One or more system groups must be provided.')
+      render :nothing=>true, :status=>500
+    else
       ids = params[:group_ids].collect{|g| g.to_i} - @system.system_group_ids #ignore dups
       @system_groups = SystemGroup.where(:id=>ids)
       @system.system_group_ids = (@system.system_group_ids + @system_groups.collect{|g| g.id}).uniq
       @system.save!
+
+      notify.success _("System '%s' was updated.") % @system["name"]
+      render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}} and return
     end
-    notify.success _("System '%s' was updated.") % @system["name"]
-    render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}} and return
-  rescue Exception => e
+  rescue => e
     notify.exception e
     render :text=>e, :status=>500
   end
@@ -580,7 +588,7 @@ class SystemsController < ApplicationController
 
     notify.success _("System '%s' was updated.") % @system["name"]
     render :nothing => true
-  rescue Exception => e
+  rescue => e
     notify.exception e
     render :text=>e, :status=>500
   end
@@ -619,6 +627,10 @@ class SystemsController < ApplicationController
 
   def find_system
     @system = System.find(params[:id])
+  rescue => e
+    notify.exception e
+    execute_after_filters
+    render :text=>e, :status=>:bad_request
   end
 
   def find_systems
@@ -676,8 +688,9 @@ class SystemsController < ApplicationController
   # to filter readable systems that can be
   # passed to search
   def readable_filters
-    {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id},
-     :system_group_ids=>SystemGroup.systems_readable(current_organization).collect{|item| item.id}}
+    filters = {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
+    filters[:system_group_ids] = SystemGroup.systems_readable(current_organization).collect{|item| item.id} if AppConfig.katello?
+    filters
   end
 
   def search_filter

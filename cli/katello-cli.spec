@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.43
+Version:       0.2.44
 Release:       1%{?dist}
 
 # Upstream uses tito rpm helper utility. To get the particular version from
@@ -112,6 +112,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.44-1
+- system groups - API accepts max_systems and CLI unit tests
+- system groups - wrong variable name in error message
+- system groups - removing local modifications not intended for upstream
+- group copy cli and API first pass
+
 * Mon Jul 16 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.43-1
 - 798323 - remove double setting of UTF decoder
 - system groups - removing the 'locked' feature from system groups UI/API/CLI
