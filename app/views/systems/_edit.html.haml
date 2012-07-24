@@ -23,9 +23,28 @@
         .grid_5.la #{system.uuid}
     .clear
     .grid_8
-      %h5 #{_("System Properties")}      
+      %h5 #{_("Networking")}
+    .grid_8#system_info
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :hostname, :hostname, _("Hostname")
+        .grid_5.la #{system.hostname}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :interfaces, :interfaces, _("Interfaces")
+        .grid_5
+          %table#interface_table
+            - system.interfaces.each do |interface|
+              %tr
+                %td.interface_name
+                  = interface[:name]
+                %td.interface_addr
+                  = interface[:addr]
+    .clear
+    .grid_8
+      %h5 #{_("System Properties")}
     .grid_8#system_properties
-      %fieldset  
+      %fieldset
         .grid_2.ra.fieldset
           = label :system, :name, _("Name")
         .grid_5.la#system_name{'name' => 'system[name]', :class=>("editable edit_panel_element" if editable), 'data-url'=>system_path(system.id)} #{system[:name]}
@@ -58,7 +77,7 @@
         .grid_2.ra.fieldset
           = label :arch, :arch, _("Environment")
         .grid_5.la #{system_environment_name system}
-      
+
     .clear
     .grid_8
       %h5 #{_("System Events")}
@@ -71,7 +90,7 @@
       %fieldset
         .grid_2.ra.fieldset
           = label :registered_date, :registered_date, _("Registered")
-        .grid_5.la 
+        .grid_5.la
           = convert_time(system.created)
       %fieldset
         .grid_2.ra.fieldset

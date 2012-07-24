@@ -56,7 +56,7 @@ module Navigation
     end
 
     def systems_navigation
-      a = [
+      menu = [
         { :key => :general,
           :name =>_("Details"),
           :url => lambda{edit_system_path(@system.id)},
@@ -78,12 +78,13 @@ module Navigation
           :items => systems_content_subnav
         }
       ]
-      a << { :key => :system_groups,
+      menu << { :key => :system_groups,
           :name =>_("System Groups"),
           :url => lambda{system_groups_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"panel_link"}
-        } if AppConfig.katello?          
+        } if AppConfig.katello?
+      menu
     end
 
     def systems_subnav
@@ -110,7 +111,7 @@ module Navigation
     end
 
     def systems_content_subnav
-      a = [
+      menu = [
         { :key => :products,
           :name =>_("Software"),
           :url => lambda{products_system_path(@system.id)},
@@ -118,18 +119,19 @@ module Navigation
           :options => {:class=>"third_level panel_link"}
         }
       ]
-      a << { :key => :packages,
+      menu << { :key => :packages,
           :name =>_("Packages"),
           :url => lambda{packages_system_system_packages_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level panel_link"}
         } if AppConfig.katello?
-      a << { :key => :errata,
+      menu << { :key => :errata,
           :name =>_("Errata"),
           :url => lambda{system_errata_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level panel_link"},
         } if AppConfig.katello?
+      menu
     end
 
     def system_groups_navigation
