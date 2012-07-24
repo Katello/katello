@@ -102,7 +102,7 @@ compass compile
 
 #generate Rails JS/CSS/... assets
 echo Generating Rails assets...
-jammit --config config/assets.yml -f
+LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
 
 # remove glue-specific files
 rm -rf app/models/glue/*
