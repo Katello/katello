@@ -307,8 +307,10 @@ class ChangesetsController < ApplicationController
   #produce a simple datastructure of a changeset for the browser
   def simplify_changeset cs
 
-    to_ret = {:id=>cs.id.to_s, :name=>cs.name, :description=>cs.description, :timestamp =>cs.updated_at.to_i.to_s,
-              :system_templates => {},:products=>{}, :is_new => cs.state == Changeset::NEW, :state => cs.state}
+    to_ret = {:id=>cs.id.to_s, :name=>cs.name, :type=>cs.action_type, :description=>cs.description,
+              :timestamp =>cs.updated_at.to_i.to_s, :system_templates => {},:products=>{},
+              :is_new => cs.state == Changeset::NEW, :state => cs.state}
+
     cs.system_templates.each do |temp|
       to_ret[:system_templates][temp.id] = {:id=> temp.id, :name=>temp.name}
     end
