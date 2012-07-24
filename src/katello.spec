@@ -15,7 +15,7 @@
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir deploy/common
 
-Name:           katello.foo
+Name:           katello
 Version:        0.2.45
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
