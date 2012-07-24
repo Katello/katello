@@ -54,7 +54,7 @@ class Api::ChangesetsController < Api::ApiController
   end
 
   def create
-    @changeset             = Changeset.new(params[:changeset])
+    @changeset             = PromotionChangeset.new(params[:changeset])
     @changeset.environment = @environment
     @changeset.save!
 
