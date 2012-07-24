@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
   #   execute_rescue(exception, lambda{render_404})
   # end
 
-  rescue_from ActiveRecord::RecordInvalid do |e|
+  rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved  do |e|
     notify.exception e
     execute_after_filters
     respond_to do |f|
