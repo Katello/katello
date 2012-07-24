@@ -203,6 +203,7 @@ and then run katello-configure to configure everything.
 %{homedir}/lib/*.rb
 %{homedir}/lib/monkeys
 %{homedir}/lib/navigation
+%{homedir}/lib/notifications
 %{homedir}/lib/resources
 %{homedir}/lib/tasks
 %{homedir}/lib/util
