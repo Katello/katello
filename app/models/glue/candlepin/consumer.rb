@@ -217,7 +217,7 @@ module Glue::Candlepin::Consumer
       interfaces = []
       facts.keys.each do |key|
         match = /net\.interface\.([^\.]*)/.match(key)
-        if match != nil && match[1] != nil
+        if !match.nil? && !match[1].nil?
           interfaces << match[1]
         end
       end
