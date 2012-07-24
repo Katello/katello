@@ -66,7 +66,7 @@ class PromotionsController < ApplicationController
 
 
   def packages
-    product_id = params[:product_id]  
+    product_id = params[:product_id]
     repos = Product.find(product_id).repos(@environment)
     repo_ids = repos.collect{ |repo| repo.pulp_id }
     
