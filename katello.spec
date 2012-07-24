@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.48
+Version:        0.2.49
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -398,6 +398,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jul 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.49-1
+- rake - make rake compatible with 0.8.7
+- need a sudo in front of the cat so it can read the pass file
+
 * Mon Jul 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.48-1
 - gemfile - decreasing thin 1.2.11 requirement to 1.2.8
 - Fixed some unit test breakages caused by commit
