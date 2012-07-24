@@ -132,7 +132,10 @@
               .grid_2.ra
                 %label #{_("Description:")}
               .grid_4.la.editable.edit_description{'name' => 'description'}
-              
+              .grid_2.ra
+                %label #{_("Type:")}
+              .grid_4.la.edit_type{:style => "padding-top:2px;padding-left:2px;"}
+
           #changeset_status
           - if manage_changesets || promote_changesets
             #sliding_tree_actionbar.clickable
