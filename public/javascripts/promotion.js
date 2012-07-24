@@ -1093,6 +1093,7 @@ var changesetEdit = (function(){
         name_box = $('.edit_name_text'),
         edit_button = $('#edit_changeset > span'),
         description = $('.edit_description'),
+        type = $('.edit_type'),
         changeset = promotion_page.get_changeset(),
         animate_time = 500;
 
@@ -1107,9 +1108,9 @@ var changesetEdit = (function(){
             name_box.html(changeset.getName());
             edit_button.html(i18n.close_details);
             description.html(changeset.getDescription());
+            type.html(changeset.type());
             edit_button.parent().addClass("highlighted");
             after_function = setup_edit;
-
         }
         else {
             edit_button.html(i18n.edit_details);
