@@ -96,9 +96,9 @@ class Repository < ActiveRecord::Base
 
   #NOTE:  this scope returns all library instances of repositories that have content readable
   scope :libraries_content_readable, lambda {|org|
-    repos = Repository.content_readable(org)
+    repos = Repository.enabled.content_readable(org)
     lib_ids = []
-    repos.each{|r|  lib_ids << r.library_instance_id || r.id}
+    repos.each{|r|  lib_ids << (r.library_instance_id || r.id)}
     where(:id=>lib_ids)
   }
 
