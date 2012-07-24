@@ -19,7 +19,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.2.26
+Version:        0.2.27
 Release:        1%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -225,6 +225,9 @@ and then run katello-configure to configure everything.
 %post
 
 %changelog
+* Tue Jul 24 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.27-1
+- add notification dir (msuchy@redhat.com)
+
 * Tue Jul 24 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.26-1
 - allow to run jammit on Fedora 17 (msuchy@redhat.com)
 
