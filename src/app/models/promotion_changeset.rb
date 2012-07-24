@@ -367,5 +367,17 @@ class PromotionChangeset < Changeset
     end
     pkg_ids
   end
-  
+
+  def repos_to_be_promoted
+    repos = self.repos || []
+    repos += self.system_templates.map { |tpl| tpl.repos_to_be_promoted }.flatten(1)
+    return repos.uniq
+  end
+
+  def products_to_be_promoted
+    products = self.products || []
+    products += self.system_templates.map { |tpl| tpl.products_to_be_promoted }.flatten(1)
+    return products.uniq
+  end
+
 end
