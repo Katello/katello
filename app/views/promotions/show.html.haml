@@ -172,12 +172,8 @@
   
     #content_tree.left.sliding_tree
       - if @next_environment
-        - if manage_changesets
-          %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@next_environment.id}"}
-            #{_('+ New Changeset')}
-            .arrow-right
-        - elsif @environment.organization.environments_manageable? 
-          %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}"}
+        - if manage_changesets or @environment.organization.environments_manageable?
+          %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}&next_env_id=#{@next_environment.id}"}
             #{_('+ New Changeset')}
             .arrow-right
       %h2 #{@environment.name + _(" Content")}
