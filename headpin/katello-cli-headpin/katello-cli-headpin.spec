@@ -27,6 +27,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:      %{base_name}-cli-common
 BuildArch:     noarch
 
+Conflicts:     katello-cli
 
 %description
 Provides a client package for managing application life-cycle
