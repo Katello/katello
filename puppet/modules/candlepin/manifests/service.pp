@@ -1,18 +1,14 @@
 class candlepin::service {
-  # RHBZ 789288 - wait max. 30 secs until service port is avaiable
-  exec { "fix-tomcat-sysvinit":
-    path        => "/usr/bin:/bin",
-    onlyif      => "grep -q 'RHBZ 789288' /etc/init.d/tomcat6; test $? -ne 0",
-    command     => 'sed -i \'sXecho -n "Stopping ${TOMCAT_PROG}: "Xecho -n "Stopping ${TOMCAT_PROG}: "\n# RHBZ 789288 - wait max. 30 secs until service port is avaiable\nfor i in {1..10}; do netstat -ln | grep 8005 >/dev/null \&\& break; sleep 3; doneX\' /etc/init.d/tomcat6'
-  }
-
   service {"tomcat6":
     ensure     => running,
     enable     => true,
     hasstatus  => true,
     hasrestart => true,
-    stop       => 'sleep 10; /sbin/service tomcat6 stop', # workaround: if you run start and stop quickly stop will likely fail (RHBZ 842260)
-    require    => [ Exec["fix-tomcat-sysvinit"], Class["candlepin::config"], Class["postgres::service"] ]
+    start      => '/usr/sbin/service-wait tomcat6 start',
+    stop       => '/usr/sbin/service-wait tomcat6 stop',
+    restart    => '/usr/sbin/service-wait tomcat6 restart',
+    status     => '/usr/sbin/service-wait tomcat6 status',
+    require    => [ Class["candlepin::config"], Class["postgres::service"] ]
   }
 
   exec { "cpinit":
