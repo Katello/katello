@@ -516,12 +516,12 @@ var promotion_page = (function($){
                 disable_all(types);
             }
     
-            //Reset the review/promote/cancel button
+            //Reset the review/promote(or delete)/cancel button
 
             var cancel_btn = $("#review_cancel");
             var status = $('#changeset_status');
+            var action_btn = $('#promote_changeset');
 
-            
             if (current_changeset) {
                 status.show();
                 $("#sliding_tree_actionbar > div").removeClass("disabled");
@@ -530,6 +530,8 @@ var promotion_page = (function($){
                     $('#delete_changeset').addClass("disabled");
                     $('#review_changeset').addClass("disabled");
                 }
+
+                current_changeset.type() === "deletion" ? action_btn.find('span.text').html(i18n.action_delete) : action_btn.find('span.text').html(i18n.action_promote);
 
                 if (current_changeset.is_new() || current_changeset.state() === "failed") {
                     cancel_btn.hide();
@@ -579,9 +581,9 @@ var promotion_page = (function($){
 
                 cancel_btn.hide();
                 changesetEdit.close();
+                action_btn.find('span.text').html(i18n.action_promote);
 
                 $("#sliding_tree_actionbar > div").addClass("disabled");
-                
             }
 
             if (!permissions.manage_changesets) {
