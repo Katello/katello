@@ -40,7 +40,7 @@ class pulp::config {
 
   if $pulp::params::reset_data == 'YES' {
     exec {"reset_pulp_db":
-      command     => "rm -f /var/lib/pulp/init.flag; service httpd stop; rm -f /var/lib/mongodb/pulp_database*; rm -rf /var/lib/pulp/{distributions,published,repos}/*",
+      command     => "rm -f /var/lib/pulp/init.flag; service httpd stop; rm -f /var/lib/mongodb/pulp_database*; rm -rf /var/lib/pulp/{distributions,published,repos}/*; test 1 -eq 1",
       path        => "/sbin:/bin:/usr/bin",
       before      => Exec["migrate_pulp_db"],
     }

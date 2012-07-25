@@ -122,7 +122,7 @@ class katello::config {
 
   if $katello::params::reset_data == 'YES' {
     exec {"reset_katello_db":
-      command => "rm -f /var/lib/katello/db_seed_done; rm -f /var/lib/katello/db_migrate_done; service katello stop; service katello-jobs stop",
+      command => "rm -f /var/lib/katello/db_seed_done; rm -f /var/lib/katello/db_migrate_done; service katello stop; service katello-jobs stop; test 1 -eq 1",
       path    => "/sbin:/bin:/usr/bin",
       before  => Exec["katello_migrate_db"],
       notify  => Postgres::Dropdb["$katello::params::db_name"],

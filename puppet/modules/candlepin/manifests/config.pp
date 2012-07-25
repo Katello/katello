@@ -42,7 +42,7 @@ class candlepin::config {
 
   if $candlepin::params::reset_data == 'YES' {
     exec {"reset_candlepin_db":
-      command => "rm -f /var/lib/katello/cpdb_done; rm -f /var/lib/katello/cpinit_done; service tomcat6 stop",
+      command => "rm -f /var/lib/katello/cpdb_done; rm -f /var/lib/katello/cpinit_done; service tomcat6 stop; test 1 -eq 1",
       path    => "/sbin:/bin:/usr/bin",
       before  => Exec["cpdb"],
       notify  => Postgres::Dropdb["$candlepin::params::db_name"],
