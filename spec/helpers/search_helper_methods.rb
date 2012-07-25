@@ -1,15 +1,21 @@
 module SearchHelperMethods
   def setup_search options = {}, &block
-    unless block_given?
+    Tire::Index.instance_eval do
+      define_method(:exists?) do
+        true
+      end
 
-      results = Support.array_with_total.concat(options[:results] || [])
+    end
 
-      Tire::Search::Search.instance_eval do
-        define_method(:perform) do
+    results = Support.array_with_total.concat(options[:results] || [])
+
+    Tire::Search::Search.instance_eval do
+      define_method(:perform) do
+        unless block_given?
           data = to_hash
           (data[:fields].should == options[:fields]) if options.has_key?(:fields)
           (data[:query].should == options[:query]) if options.has_key?(:query)
-          (SearchHelperMethods.compare_filter_params(options[:filter], data[:filter]).should == true) if options.has_key?:filter 
+          (SearchHelperMethods.compare_filter_params(options[:filter], data[:filter]).should == true) if options.has_key?:filter
           (data[:size].should == options[:size]) if options.has_key?(:size)
           (data[:sort].should == options[:sort] )if options.has_key?(:sort)
           (data[:from].should == options[:from] )if options.has_key?(:from)
@@ -22,11 +28,12 @@ module SearchHelperMethods
           end
 
           OpenStruct.new(:results => results)
+        else
+          Tire::Search::Search.instance_eval(&block)
         end
       end
-    else
-      Tire::Search::Search.instance_eval(&block)
     end
+
   end
 
   def reset_search
