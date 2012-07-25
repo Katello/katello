@@ -113,6 +113,24 @@ describe ChangesetsController, :katello => true do
       end
     end
 
+    describe 'with a deletion type' do
+      it 'should create a changeset correctly and send a notification' do
+        controller.should notify.success
+        post 'create', {:name => "Changeset 7056", :description => "FOO", :action_type => Changeset::DELETION, :env_id => @env.id}
+        response.should be_success
+        Changeset.exists?(:action_type => Changeset::DELETION).should be_true
+      end
+    end
+
+    describe 'with a promotion type' do
+      it 'should create a changeset correctly and send a notification' do
+        controller.should notify.success
+        post 'create', {:name => "Changeset 7056", :description => "FOO", :action_type => Changeset::PROMOTION, :env_id => @env.id}
+        response.should be_success
+        Changeset.exists?(:action_type => Changeset::PROMOTION).should be_true
+      end
+    end
+
     describe 'with a description' do
       it 'should create a changeset correctly and send a notification' do
         controller.should notify.success

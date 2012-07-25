@@ -21,6 +21,11 @@
         = @changeset.description.blank? ? _("None") : @changeset.description
     .fieldset
       .grid_3.ra
+        %label #{_("Type:")}
+      .grid_6.la
+        = @changeset.action_type
+    .fieldset
+      .grid_3.ra
         %label #{_("Promoted By:")}
       .grid_6.la
         #{@changeset.task_status_id.nil? ? _("Unknown") : @changeset.task_status.user.username }

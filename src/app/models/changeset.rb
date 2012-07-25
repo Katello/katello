@@ -40,7 +40,8 @@ class Changeset < ActiveRecord::Base
 
 
   PROMOTION = 'promotion'
-  DELETION = 'deletion'
+  DELETION  = 'deletion'
+  TYPES     = [PROMOTION, DELETION]
 
   validates_inclusion_of :state,
                          :in          => STATES,
@@ -235,8 +236,8 @@ class Changeset < ActiveRecord::Base
     return deleted
   end
 
-  def remove_package! package_data, product
-    deleted = ChangesetPackage.destroy_all(:package_id => package_data[:id], :changeset_id => self.id,
+  def remove_package! package_id, product
+    deleted = ChangesetPackage.destroy_all(:package_id => package_id, :changeset_id => self.id,
                                            :product_id => product.id)
     save!
     return deleted
