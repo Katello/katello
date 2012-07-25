@@ -196,6 +196,7 @@ def setup_admin(katello_cmd):
     system_group_cmd.add_command('add_systems', system_group.AddSystems())
     system_group_cmd.add_command('remove_systems', system_group.RemoveSystems())
     system_group_cmd.add_command('create', system_group.Create())
+    system_group_cmd.add_command('copy', system_group.Copy())
     system_group_cmd.add_command('update', system_group.Update())
     system_group_cmd.add_command('delete', system_group.Delete())
     system_group_cmd.add_command('packages', system_group.Packages())

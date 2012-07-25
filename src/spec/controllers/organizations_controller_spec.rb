@@ -75,7 +75,6 @@ describe OrganizationsController do
   before (:each) do
     login_user
     set_default_locale
-    controller.stub!(:notice)
     controller.stub(:search_validate).and_return(true)
   end
   
@@ -105,7 +104,7 @@ describe OrganizationsController do
       end
 
       it 'should generate a success notice' do
-        controller.should_receive(:notice)
+        controller.should notify.success
         post 'create', OrgControllerTest::ORGANIZATION
         response.should be_success
       end      
@@ -113,7 +112,7 @@ describe OrganizationsController do
     
     describe 'with invalid paramaters' do
       it 'should generate an error notice' do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         post 'create', { :name => "", :description => "" }
         response.should_not be_success
       end
@@ -167,15 +166,15 @@ describe OrganizationsController do
       it 'should call katello organization destroy api if there are more than 1 organizations' do
         @controller.stub(:current_user).and_return(@user)
         Organization.stub!(:count).and_return(2)
-        @user.should_receive(:destroy_organization_async).with(@org).once.and_return(true)
+        OrganizationDestroyer.should_receive(:destroy).with(@org, :notify => true).once.and_return(true)
         delete 'destroy', :id => @org.id
         response.should be_success
       end
 
       it "should generate a success notice" do
         Organization.stub!(:count).and_return(2)
-        @user.should_receive(:destroy_organization_async).with(@org).once.and_return(true)
-        controller.should_receive(:notice)
+        OrganizationDestroyer.should_receive(:destroy).with(@org, :notify => true).once.and_return(true)
+        controller.should notify.success
         delete 'destroy', :id => @org.id
         response.should be_success
       end
@@ -193,7 +192,7 @@ describe OrganizationsController do
         Organization.stub!(:first).and_return(@organization)
       end
       it "should generate an errors notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.error
         delete 'destroy', :id => @organization.id
         response.should_not be_success
       end
@@ -207,7 +206,7 @@ describe OrganizationsController do
       end
       
       it "should generate an error notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.error
         delete 'destroy', :id =>  OrgControllerTest::ORG_ID
         response.should_not be_success
       end
@@ -237,7 +236,7 @@ describe OrganizationsController do
       end
       
       it "should generate a success notice" do
-        controller.should_receive(:notice) 
+        controller.should notify.success
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
       end
       
@@ -262,12 +261,12 @@ describe OrganizationsController do
     describe "exception is thrown in katello api" do
       before(:each) do
         @organization = new_test_org
-        @organization.stub!(:update).and_raise(Exception)
+        @organization.stub!(:update).and_raise(StandardError)
         Organization.stub!(:first).and_return(@organization)
       end
       
       it "should generate an error notice" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         put 'update', :id => OrgControllerTest::ORG_ID
       end
       

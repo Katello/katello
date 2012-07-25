@@ -158,7 +158,7 @@ class SubscriptionsController < ApplicationController
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription history for provider '%{name}." % {:name => @provider.name})
       error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
-      notice error_text, {:level => :error, :synchronous_request => false}
+      notify.exception error_text, error, :asynchronous => true
       Rails.logger.error "Error fetching subscription history from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
@@ -192,7 +192,7 @@ class SubscriptionsController < ApplicationController
           display_message = ""
         end
 
-        notice @provider.import_error_message(display_message), {:level => :error, :details => pp_exception(error)}
+        notify.exception @provider.import_error_message(display_message), error
 
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error
@@ -201,7 +201,7 @@ class SubscriptionsController < ApplicationController
       end
     else
       # user didn't provide a manifest to upload
-      notice _("Subscription manifest must be specified on upload."), {:level => :error}
+      notify.error _("Subscription manifest must be specified on upload.")
     end
 
 =begin
