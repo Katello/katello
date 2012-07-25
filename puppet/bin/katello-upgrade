@@ -278,10 +278,23 @@ class UpgradeProcess
   protected
 
   def ensure_services_are_off
+    stopped = true
     BACKEND_SERVICES.each do |service|
       if !is_stopped? service
         puts "Service '%s' can not be running while katello-upgrade is in progress" % service
+        stopped = false
+      end
+    end
+    if !stopped
+      print_line
+      if @options[:auto_stop]
         stop_services
+      else
+        puts "This script can be run in auto-stop mode with the -a / --auto-stop option to"
+        puts "disable services automatically."
+        puts "You may always use `service katello-service stop` to stop all the services"
+        puts ""
+        exit_service_stop
       end
     end
   end
@@ -296,9 +309,13 @@ class UpgradeProcess
         exit_with :general_error
       end
     else
-      puts "Exiting. Please stop your services and try again"
-      exit_with :general_error
+      exit_service_stop
     end
+  end
+
+  def exit_service_stop
+    puts "Exiting. Please stop your services and try again"
+    exit_with :general_error
   end
 
   def print_line(char="=", repeats=LINE_LEN)
@@ -412,6 +429,10 @@ def parse_options
 
     option_parser.on_tail.on('-y', '--assumeyes', 'Assume yes on confirmations') do
       opts[:assume_yes] = true
+    end
+
+    option_parser.on_tail.on('-a', '--autostop', 'Automatically stop services') do
+      opts[:auto_stop] = true
     end
 
     option_parser.on_tail.on('-d', '--dry-run', 'Prints the upgrade steps without modifying anything') do
