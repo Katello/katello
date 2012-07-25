@@ -95,21 +95,21 @@ describe ChangesetsController, :katello => true do
 
   describe 'creating a changeset' do
 
-    describe 'with only an environment id' do
+    describe 'with only environment ids' do
       it 'should create a changeset correctly and send a notification' do
         controller.should notify.success
-        post 'create', {:name => "Changeset 7055", :env_id=>@env.id}
+        post 'create', {:name => "Changeset 7055", :next_env_id => @next_env.id}
         response.should be_success
-        Changeset.exists?(:name=>'Changeset 7055').should be_true
+        Changeset.exists?(:name => 'Changeset 7055', :action_type => Changeset::PROMOTION).should be_true
       end
     end
 
     describe 'with a next environment id' do
       it 'should create a changeset correctly and send a notification' do
         controller.should notify.success
-        post 'create', {:name => "Changeset 7055", :env_id=>@env.id, :next_env_id=>@next_env.id}
+        post 'create', {:name => "Changeset 7055", :next_env_id => @next_env.id}
         response.should be_success
-        Changeset.exists?(:name=>'Changeset 7055').should be_true
+        Changeset.exists?(:name=>'Changeset 7055', :action_type => Changeset::PROMOTION).should be_true
       end
     end
 
@@ -125,7 +125,7 @@ describe ChangesetsController, :katello => true do
     describe 'with a promotion type' do
       it 'should create a changeset correctly and send a notification' do
         controller.should notify.success
-        post 'create', {:name => "Changeset 7056", :description => "FOO", :action_type => Changeset::PROMOTION, :env_id => @env.id}
+        post 'create', {:name => "Changeset 7056", :description => "FOO", :action_type => Changeset::PROMOTION, :env_id => @env.id, :next_env_id => @next_env.id}
         response.should be_success
         Changeset.exists?(:action_type => Changeset::PROMOTION).should be_true
       end
@@ -134,7 +134,7 @@ describe ChangesetsController, :katello => true do
     describe 'with a description' do
       it 'should create a changeset correctly and send a notification' do
         controller.should notify.success
-        post 'create', {:name => "Changeset 7056", :description=> "FOO", :env_id=>@env.id}
+        post 'create', {:name => "Changeset 7056", :description => "FOO", :next_env_id => @next_env.id}
         response.should be_success
         Changeset.exists?(:description=>'FOO').should be_true
       end
@@ -142,7 +142,7 @@ describe ChangesetsController, :katello => true do
 
     it 'should cause an error notification if name is left blank' do
       controller.should notify.exception
-      post 'create', {:env_id => @env.id, :name => ''}
+      post 'create', {:env_id => @env.id, :next_env_id => @next_env.id, :name => ''}
       response.should_not be_success
     end
 
@@ -209,7 +209,7 @@ describe ChangesetsController, :katello => true do
 
   end
 
- describe "rules" do
+  describe "rules" do
     before (:each) do
       @organization = new_test_org
       @env1 = @organization.library
@@ -274,6 +274,5 @@ describe ChangesetsController, :katello => true do
       it_should_behave_like "protected action"
     end
   end
-
 
 end
