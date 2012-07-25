@@ -72,7 +72,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Errors::BadParameters do |exception|
-      execute_rescue(exception, lambda{|exception| render_bad_parameters(exception)})
+    execute_rescue(exception, lambda{|exception| render_bad_parameters(exception)})
   end
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller

@@ -197,12 +197,15 @@ describe EnvironmentsController do
 
       describe "exception is thrown in katello api" do
         before(:each) do
-          @env.stub(:update_attributes).and_raise(StandardError)
+          errors = mock('errors')
+          @env.stub!(:errors).and_return(errors)
+          errors.stub!(:full_messages).and_return(['errors'])
+          @env.stub(:update_attributes).and_raise(ActiveRecord::RecordInvalid.new(@env))
           @env.stub(:save!)
         end
 
         it "should generate an error notice" do
-          controller.should notify(:exception, :exception) # TODO fix controller not to notify twice
+          controller.should notify.exception
           put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
         end
 

@@ -86,8 +86,8 @@ class PasswordResetsController < ApplicationController
   end
 
   def find_users_by_email
-    @user = User.find_by_email!(params[:email])
-    User.current = @user
+    @users = User.find_all_by_email(params[:email])
+    User.current = @users.first
   end
 
   def find_user_by_token
