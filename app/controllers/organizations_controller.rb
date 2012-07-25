@@ -172,7 +172,13 @@ class OrganizationsController < ApplicationController
   protected
 
   def find_organization
-    @organization = Organization.find_by_cp_key!(params[:id])
+    @organization = Organization.find_by_cp_key(params[:id].to_s)
+    if @organization.blank?
+      message = _("Couldn't find organization with ID=%s") % params[:id]
+      notify.error message
+      execute_after_filters
+      render :text => message, :status => :not_found and return false
+    end
   end
 
   def find_organization_by_id

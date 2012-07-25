@@ -57,7 +57,7 @@ class Organization < ActiveRecord::Base
     validate :unique_cp_key
 
     def create_cp_key
-      self.cp_key = (self.name||'').tr(' ', '_')
+      self.cp_key = self.name.tr(' ', '_') if self.cp_key.blank? && self.name.present?
     end
 
     def unique_cp_key

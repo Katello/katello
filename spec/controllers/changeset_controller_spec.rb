@@ -149,7 +149,7 @@ describe ChangesetsController, :katello => true do
     end
 
     it 'should raise an exception if no such changeset exists' do
-      controller.should notify.exception
+      controller.should notify.error
       delete 'destroy', :id=>20
       response.should_not be_success
       Changeset.exists?(:id=>@changeset.id).should be_true
