@@ -8,19 +8,13 @@ Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
 Source0:        %{name}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
+Provides:       katello-repos-testing = 0.2.7
+Obsoletes:      katello-repos-testing < 0.2.7
 
 %description
-Defines yum repositories for Katello and its subprojects, Candlepin and Pulp.
-
-%package testing
-Summary:        Definition of yum testing repositories for Katello
-
-%description testing
-Defines yum testing repositories for Katello and its subprojects,
-Candlepin and Pulp.
+Defines yum repositories for Katello and its sub projects, Candlepin and Pulp.
 
 %prep
 %setup -q
@@ -28,40 +22,24 @@ Candlepin and Pulp.
 %build
 
 %install
-rm -rf %{buildroot}
 #prepare dir structure
 install -d -m 0755 %{buildroot}%{_sysconfdir}/yum.repos.d
 
-%if 0%{?fedora}
-install -m 644 fedora-katello.repo %{buildroot}%{_sysconfdir}/yum.repos.d/katello.repo
-install -m 644 fedora-katello-testing.repo %{buildroot}%{_sysconfdir}/yum.repos.d/katello-testing.repo
-install -m 644 fedora-candlepin.repo %{buildroot}%{_sysconfdir}/yum.repos.d/candlepin.repo
-install -m 644 fedora-pulp.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp.repo
-install -m 644 fedora-pulp-testing.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp-testing.repo
-install -m 644 fedora-thumbslug.repo %{buildroot}%{_sysconfdir}/yum.repos.d/thumbslug.repo
-%endif
+# some sane default value
+%define reposubdir      RHEL
+# redefine on fedora
+%{?fedora: %define reposubdir      Fedora}
 
-%if 0%{?rhel}
-install -m 644 rhel-katello.repo %{buildroot}%{_sysconfdir}/yum.repos.d/katello.repo
-install -m 644 rhel-katello-testing.repo %{buildroot}%{_sysconfdir}/yum.repos.d/katello-testing.repo
-install -m 644 rhel-candlepin.repo %{buildroot}%{_sysconfdir}/yum.repos.d/candlepin.repo
-install -m 644 rhel-pulp.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp.repo
-install -m 644 rhel-pulp-testing.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp-testing.repo
-install -m 644 rhel-thumbslug.repo %{buildroot}%{_sysconfdir}/yum.repos.d/thumbslug.repo
-%endif
-
-%clean
-rm -rf %{buildroot}
+for repofile in katello.repo katello-pulp.repo katello-candlepin.repo; do
+    sed -i 's/@SUBDIR@/%{reposubdir}/' $repofile
+done
+ 
+install -m 644 katello.repo %{buildroot}%{_sysconfdir}/yum.repos.d/
+install -m 644 katello-candlepin.repo %{buildroot}%{_sysconfdir}/yum.repos.d/
+install -m 644 katello-pulp.repo %{buildroot}%{_sysconfdir}/yum.repos.d/
 
 %files
-%{_sysconfdir}/yum.repos.d/candlepin.repo
-%{_sysconfdir}/yum.repos.d/katello.repo
-%{_sysconfdir}/yum.repos.d/pulp.repo
-%{_sysconfdir}/yum.repos.d/thumbslug.repo
-
-%files testing
-%{_sysconfdir}/yum.repos.d/katello-testing.repo
-%{_sysconfdir}/yum.repos.d/pulp-testing.repo
+%{_sysconfdir}/yum.repos.d/*.repo
 
 %changelog
 * Tue Jul 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.6-1
