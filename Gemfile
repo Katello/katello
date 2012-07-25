@@ -1,8 +1,10 @@
 #source "http://rubygems.org"
 source 'http://repos.fedorapeople.org/repos/katello/gems/'
 
+# When adding new version requirement check out EPEL6 repository first
+# and use this version if possible. Also check Fedora version (usually higher).
 gem 'rails', '3.0.10'
-gem 'thin', '>=1.2.11'
+gem 'thin', '>=1.2.8'
 
 gem 'tire', '>= 0.3.0', '< 0.4'
 gem 'json'

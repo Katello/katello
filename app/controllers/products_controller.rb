@@ -13,7 +13,6 @@
 class ProductsController < ApplicationController
   respond_to :html, :js
 
-
   before_filter :find_product, :only => [:edit, :update, :destroy]
   before_filter :find_provider, :only => [:new, :create, :edit, :update, :destroy]
   before_filter :authorize
@@ -21,12 +20,15 @@ class ProductsController < ApplicationController
   def rules
     read_test = lambda{@provider.readable?}
     edit_test = lambda{@provider.editable?}
+    auto_complete_test = lambda {Product.any_readable?(current_organization)}
+
     {
       :new => edit_test,
       :create => edit_test,
       :edit =>read_test,
       :update => edit_test,
       :destroy => edit_test,
+      :auto_complete=>  auto_complete_test
     }
   end
 
@@ -49,12 +51,12 @@ class ProductsController < ApplicationController
       gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] and product_params[:gpg_key] != ""
       @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
 
-      notice _("Product '%s' created.") % product_params[:name]
+      notify.success _("Product '%s' created.") % product_params[:name]
       render :nothing => true
 
     rescue Exception => error
       Rails.logger.error error.to_s
-      notice error, {:level => :error}
+      notify.exception error
       render :text => error, :status => :bad_request
     end
   end
@@ -76,10 +78,10 @@ class ProductsController < ApplicationController
       end 
       
       if params[:product].has_key?(:gpg_all_repos)
-        notice _("All repository GPG keys for Product '%s' were updated.") % @product.name
+        notify.success _("All repository GPG keys for Product '%s' were updated.") % @product.name
         @product.reset_repo_gpgs!
       else
-        notice _("Product '%s' was updated.") % @product.name
+        notify.success _("Product '%s' was updated.") % @product.name
       end
       
       @product.save!
@@ -89,7 +91,7 @@ class ProductsController < ApplicationController
       end
 
     rescue Exception => e
-      notice e.to_s, {:level => :error}
+      notify.exception e
 
       respond_to do |format|
         format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -101,13 +103,29 @@ class ProductsController < ApplicationController
   def destroy
     begin
       @product.destroy
-      notice _("Product '%s' removed.") % @product[:name]
+      notify.success _("Product '%s' removed.") % @product[:name]
     rescue Exception => error
       Rails.logger.error error.to_s
-      notice error.to_s, {:level => :error}
+      notify.exception error
     end
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@product.provider_id)}
   end
+
+  def auto_complete
+    query = "name_autocomplete:#{params[:term]}"
+    org = current_organization
+    products = Product.search do
+      query do
+        string query
+      end
+      filter :term, {:organization_id => org.id}
+    end
+    render :json=>products.collect{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
+  rescue Tire::Search::SearchRequestFailed => e
+     render :json=>Support.array_with_total
+  end
+
+
 
   protected
 
@@ -116,7 +134,7 @@ class ProductsController < ApplicationController
       @provider = @product.provider if @product  #don't trust the provider_id coming in if we don't need it
       @provider ||= Provider.find(params[:provider_id])
     rescue Exception => error
-      notice error.to_s, {:level => :error}
+      notify.exception error
       execute_after_filters
       render :text => error, :status => :bad_request
     end
@@ -126,7 +144,7 @@ class ProductsController < ApplicationController
     begin
       @product = Product.find(params[:id])
     rescue Exception => error
-      notice error.to_s, {:level => :error}
+      notify.exception error
       execute_after_filters
       render :text => error, :status => :bad_request
     end

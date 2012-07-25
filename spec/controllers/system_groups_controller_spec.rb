@@ -196,25 +196,25 @@ describe SystemGroupsController do
       it_should_behave_like "protected action"
 
       it "should copy a group correctly" do
-        controller.should_receive(:notice)
+        controller.should notify.success
         post :copy, :id => @group.id, :name=>"foo", :description=>"describe"
         response.should be_success
         SystemGroup.where(:name=>"foo", :description=>"describe", :max_systems=>10).first.should_not be_nil
       end
       it "should copy without a description provided" do
-        controller.should_receive(:notice)
+        controller.should notify.success
         post :copy, :id => @group.id, :name=>"foo"
         response.should be_success
         SystemGroup.where(:name=>"foo", :max_systems=>10).first.should_not be_nil
       end
       it "should not copy a group without a name" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         post :copy, :id => @group.id, :description=>"describe"
         response.should_not be_success
         SystemGroup.where(:description=>"describe").first.should be_nil
       end
       it "should not allow a group to be copied with a name that already exists" do
-        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+        controller.should notify.exception
         post :copy, :id => @group.id, :name=>@group.name, :description=>"describe"
         response.should_not be_success
         SystemGroup.where(:name=>@group.name).count.should == 1

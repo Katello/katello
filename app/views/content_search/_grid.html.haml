@@ -1,0 +1,43 @@
+%article#comparison_grid
+  #grid_header
+    %header
+      %a.fl.button.hidden#return_to_results_btn
+        %i.left_arrow-icon-black
+        = _("Back to Results")
+      %h2.fl{ "data-title" => "results" }
+        = _("Search Results")
+      %div.fl.hidden#left_select
+        %label
+          = _("Show")
+        %select
+      %h2.hidden.fl.one-line-ellipsis{ "data-title" => "details" }
+      %div.fr.hidden#right_select
+        %label
+          = _("View")
+        %select
+    %div
+      %aside
+        -#"Filter goes here"
+      %div#column_headers_container
+        .slide_arrow.hidden{ 'data-arrow_direction' => 'left' }
+          .slide_trigger
+          %span.left_arrow-icon-black.disabled
+        .slide_arrow.hidden{ 'data-arrow_direction' => 'right' }
+          .slide_trigger
+          %span.right_arrow-icon-black
+        #column_selector
+          %span.path_button.add_env-icon-black
+        #column_headers_window
+          %ul#column_headers
+  %section
+    %ul#grid_row_headers
+    #grid_content_window
+      #grid_content
+    #grid_loading_screen.hidden
+      .large_white_spinner
+  %footer
+    %div.fl
+    %ul.fl
+      %li
+        %a.button#compare_repos_btn.hidden
+          = _("Compare Repos")
