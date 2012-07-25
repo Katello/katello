@@ -36,7 +36,7 @@ class NoticesController < ApplicationController
             {:filter=>{:user_ids=>[current_user.id]}, :skip_render=>true, :page_size=>100})
       retain_search_history
     rescue Exception => error
-      notice error.to_s, {:level => :error, :persist => false}
+      notify.exception error, :persist => false
       @notices = current_user.notices
     end
   end
@@ -67,7 +67,7 @@ class NoticesController < ApplicationController
       end
 
     rescue Exception => e
-      notice e.to_s, {:level => :error}
+      notify.exception e
 
       respond_to do |format|
         format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -97,7 +97,7 @@ class NoticesController < ApplicationController
       render :partial => "delete_all"
 
     rescue Exception => error
-      notice error.to_s, {:level => :error}
+      notify.exception error
       render :text => error, :status => :bad_request
     end
   end

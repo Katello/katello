@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require "util/search"
+require 'util/package_util'
 
 class Glue::Pulp::Package < Glue::Pulp::SimplePackage
   attr_accessor :id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description, :size, :buildhost, :repoids
@@ -35,8 +36,10 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     {
       :package => {
         :properties => {
+          :id            => {:type=>'string', :index=>:not_analyzed},
           :name          => { :type=> 'string', :analyzer=>:kt_name_analyzer},
           :name_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
+          :nvrea_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
           :nvrea         => { :type=> 'string', :analyzer=>:kt_name_analyzer},
           :nvrea_sort    => { :type => 'string', :index=> :not_analyzed },
           :repoids       => { :type=> 'string', :index=>:not_analyzed}
@@ -54,13 +57,16 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
       "_type" => :package,
       "nvrea_sort" => nvrea.downcase,
       "nvrea" => nvrea,
+      "nvrea_autocomplete" => nvrea,
       "name_autocomplete" => name
     }
   end
 
-  def self.name_search query, repoids=nil, number=15
+
+
+
+  def self.autocomplete_name query, repoids=nil, page_size=15
     return [] if !Tire.index(self.index).exists?
-    start = 0
 
     query = Katello::Search::filter_input query
     query = "*" if query == ""
@@ -80,17 +86,43 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     to_ret = []
     search.results.each{|pkg|
        to_ret << pkg.name if !to_ret.include?(pkg.name)
-       break if to_ret.size == number
+       break if to_ret.size == page_size
     }
     return to_ret
   end
 
-  def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"]
+  def self.autocomplete_nvrea query, repoids=nil, page_size=15
+     return [] if !Tire.index(self.index).exists?
+
+     query = Katello::Search::filter_input query
+     query = "*" if query == ""
+     query = "name_autocomplete:(#{query})"
+
+     search = Tire.search self.index do
+       fields [:nvrea]
+       query do
+         string query
+       end
+       size page_size
+
+       if repoids
+         filter :terms, :repoids => repoids
+       end
+     end
+
+     search.results
+   end
+
+
+
+  def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"], search_mode = :all
     return [] if !Tire.index(self.index).exists?
 
     all_rows = query.blank? #if blank, get all rows
 
-    search = Tire.search self.index do
+    search = Tire::Search::Search.new(self.index)
+
+    search.instance_eval do
       query do
         if all_rows
           all
@@ -103,15 +135,16 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
        size page_size
        from start
       end
-      if repoids
-        filter :terms, :repoids => repoids
-      end
-
       sort { by sort[0], sort[1] } unless !all_rows
     end
-    return search.results
-  rescue
-    return []
+
+    if repoids
+      Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
+    end
+
+    return search.perform.results
+  rescue Tire::Search::SearchRequestFailed => e
+    Support.array_with_total
   end
 
   def self.index_packages pkg_ids
@@ -124,5 +157,4 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
       import pkgs
     end if !pkgs.empty?
   end
-
 end

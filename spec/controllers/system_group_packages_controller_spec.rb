@@ -58,7 +58,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate a notice on success' do
-          controller.should_receive(:notice)
+          controller.should notify.success
           @group.stub!(:install_packages).and_return(@job)
           put :add, :system_group_id => @group.id, :packages => "pkg1"
           response.should be_success
@@ -72,7 +72,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate an error notice, if no package names provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:install_packages)
           put :add, :system_group_id => @group.id, :packages => ""
           response.should be_success
@@ -80,7 +80,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should return an error notice, if no packages structure provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:install_packages)
           put :add, :system_group_id => @group.id
           response.should be_success
@@ -96,7 +96,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate a notice on success' do
-          controller.should_receive(:notice)
+          controller.should notify.success
           @group.stub!(:install_package_groups).and_return(@job)
           put :add, :system_group_id => @group.id, :groups => "grp1"
           response.should be_success
@@ -110,7 +110,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate an error notice, if no package group names provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:install_package_groups)
           put :add, :system_group_id => @group.id, :groups => ""
           response.should be_success
@@ -118,7 +118,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should return an error notice, if no package group structure provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:install_package_groups)
           put :add, :system_group_id => @group.id
           response.should be_success
@@ -134,7 +134,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate a notice on success' do
-          controller.should_receive(:notice)
+          controller.should notify.success
           @group.stub!(:uninstall_packages).and_return(@job)
           put :remove, :system_group_id => @group.id, :packages => "pkg1"
           response.should be_success
@@ -148,7 +148,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate an error notice, if no package names provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:uninstall_packages)
           put :remove, :system_group_id => @group.id, :packages => ""
           response.should be_success
@@ -156,7 +156,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should return an error notice, if no packages structure provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:uninstall_packages)
           put :remove, :system_group_id => @group.id
           response.should be_success
@@ -172,7 +172,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate a notice on success' do
-          controller.should_receive(:notice)
+          controller.should notify.success
           @group.stub!(:uninstall_package_groups).and_return(@job)
           put :remove, :system_group_id => @group.id, :groups => "grp1"
           response.should be_success
@@ -186,7 +186,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate an error notice, if no package group names provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:uninstall_package_groups)
           put :remove, :system_group_id => @group.id, :groups => ""
           response.should be_success
@@ -194,7 +194,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should return an error notice, if no package group structure provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:uninstall_package_groups)
           put :remove, :system_group_id => @group.id
           response.should be_success
@@ -210,7 +210,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate a notice on success' do
-          controller.should_receive(:notice)
+          controller.should notify.success
           @group.stub!(:install_package_groups).and_return(@job)
           put :add, :system_group_id => @group.id, :groups => "grp1"
           response.should be_success
@@ -224,7 +224,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate an error notice, if no package group names provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:install_package_groups)
           put :add, :system_group_id => @group.id, :groups => ""
           response.should be_success
@@ -232,7 +232,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should return an error notice, if no package group structure provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:install_package_groups)
           put :add, :system_group_id => @group.id
           response.should be_success
@@ -248,7 +248,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate a notice on success' do
-          controller.should_receive(:notice)
+          controller.should notify.success
           @group.stub!(:update_packages).and_return(@job)
           put :update, :system_group_id => @group.id, :packages => "pkg1"
           response.should be_success
@@ -262,7 +262,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate an error notice, if no package names provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:update_packages)
           put :update, :system_group_id => @group.id, :packages => ""
           response.should be_success
@@ -270,7 +270,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should return an error notice, if no packages structure provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:update_packages)
           put :update, :system_group_id => @group.id
           response.should be_success
@@ -286,7 +286,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate a notice on success' do
-          controller.should_receive(:notice)
+          controller.should notify.success
           @group.stub!(:install_package_groups).and_return(@job)
           put :update, :system_group_id => @group.id, :groups => "grp1"
           response.should be_success
@@ -300,7 +300,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should generate an error notice, if no package group names provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:install_package_groups)
           put :update, :system_group_id => @group.id, :groups => ""
           response.should be_success
@@ -308,7 +308,7 @@ describe SystemGroupPackagesController, :katello => true do
         end
 
         it 'should return an error notice, if no package group structure provided' do
-          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
+          controller.should notify.error
           @group.should_not_receive(:install_package_groups)
           put :update, :system_group_id => @group.id
           response.should be_success
