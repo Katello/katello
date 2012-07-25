@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.49
+Version:        0.2.50
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -400,6 +400,42 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jul 25 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.50-1
+- unit test fix (jsherril@redhat.com)
+- More tweaks + a spec test (jomara@redhat.com)
+- fixing issue where repos only in library would show up (jsherril@redhat.com)
+- Style changes as per pull request comments (jomara@redhat.com)
+- Adding fresh copy of katello.spec due to bad merge (jsherril@redhat.com)
+- master merge conflict (jsherril@redhat.com)
+- 840531 - Fixes issue with inability to individually promote packages attached
+  to a system template or changeset that have more than a single dash in the
+  name. (ehelms@redhat.com)
+- fixing mistaken name change (jsherril@redhat.com)
+- 841691 - Moving interface display to DETAILS page and removing it from system
+  list (jomara@redhat.com)
+- put spec on pair with Gemfile (msuchy@redhat.com)
+- CS - properly handling search error (jsherril@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- CS - changing collect{} ids on active record queries to use pluck
+  (jsherril@redhat.com)
+- Adding pluck support to active record, new feature backported from 3.1
+  (jsherril@redhat.com)
+- CS - greatly condensing bbq for environments (jsherril@redhat.com)
+- CS - fixing initially selected environment (jsherril@redhat.com)
+- CS - fixing consistency with page_size arguments (jsherril@redhat.com)
+- CS - a few suggested fixes (jsherril@redhat.com)
+- Added a way to return 'empty search results', an array with 'total' attribute
+  (paji@redhat.com)
+- CS - implementing roles based access controls (jsherril@redhat.com)
+- Fixed an issue where the rescue in Packages and Errata search was catching
+  non bad query exceptions (paji@redhat.com)
+- Added unit tests to test differnt actions in content search (paji@redhat.com)
+- 841000 - fixing product autocomplete issues (jsherril@redhat.com)
+- CS - adding shared/unique modes to the repo search (jsherril@redhat.com)
+- CS - adding all/unique/shared selector to product search
+  (jsherril@redhat.com)
+- CS - adding mode switcher to repo comparison (jsherril@redhat.com)
+
 * Tue Jul 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.49-1
 - rake - make rake compatible with 0.8.7
 - need a sudo in front of the cat so it can read the pass file
