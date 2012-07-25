@@ -66,7 +66,7 @@ class PromotionsController < ApplicationController
 
 
   def packages
-    product_id = params[:product_id]  
+    product_id = params[:product_id]
     repos = Product.find(product_id).repos(@environment)
     repo_ids = repos.collect{ |repo| repo.pulp_id }
     
@@ -109,8 +109,6 @@ class PromotionsController < ApplicationController
       @not_promotable = @packages.collect{ |pack| pack.id }
     end
 
-
-
     if offset.to_i >  0
       options = {:list_partial => 'promotions/package_items'}
     else
@@ -125,7 +123,7 @@ class PromotionsController < ApplicationController
     @next_env_repos = []
     if @next_environment
       @product.repos(@next_environment).each{|repo|
-        @next_env_repos << repo.id
+        @next_env_repos << repo.pulp_id
       }
     end
 

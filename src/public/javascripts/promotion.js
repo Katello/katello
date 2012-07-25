@@ -456,14 +456,23 @@ var promotion_page = (function($){
                     } else {
                         $.each(subtypes, function(index, type){
                             var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
-                            buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type).show(); //reset all to 'add'
+                            buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type); //reset all to 'add'
                             if (product) {
                                 $.each(product[type], function(index, item) {
                                     $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + KT.common.escapeId(item.id + "") +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
                                 });
                             }
+                            if (current_changeset.type() === "deletion") {
+                                // show all add/remove links
+                                buttons.show();
+
+                            } else { // promotion changeset
+                                // show add/remove links for only promotable objects
+                                buttons.filter('[data-promotable="true"]').show();
+                            }
                         });
                     }
+
                 } else{
                   var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
 
@@ -719,6 +728,7 @@ var changeset_obj = function(data_struct) {
         templates = data_struct.system_templates,
         is_new = data_struct.is_new,
         state = data_struct.state,
+        type = data_struct.type,  // promotion, deletion...etc
         has_failed = false, // used to indicate if there was a previous failed promo attempt since the page loaded
         name = data_struct.name,
         description = data_struct.description;
@@ -790,6 +800,7 @@ var changeset_obj = function(data_struct) {
         getTemplates: function() {return templates;},
         is_new : function() {return is_new;},
         state : function() {return state;},
+        type : function() {return type;},
         has_failed : function() {return has_failed;},
         set_timestamp:function(ts) { timestamp = ts; },
         timestamp: function(){return timestamp;},
@@ -1082,6 +1093,7 @@ var changesetEdit = (function(){
         name_box = $('.edit_name_text'),
         edit_button = $('#edit_changeset > span'),
         description = $('.edit_description'),
+        type = $('.edit_type'),
         changeset = promotion_page.get_changeset(),
         animate_time = 500;
 
@@ -1096,9 +1108,9 @@ var changesetEdit = (function(){
             name_box.html(changeset.getName());
             edit_button.html(i18n.close_details);
             description.html(changeset.getDescription());
+            type.html(changeset.type());
             edit_button.parent().addClass("highlighted");
             after_function = setup_edit;
-
         }
         else {
             edit_button.html(i18n.edit_details);
@@ -1347,8 +1359,8 @@ var templateLibrary = (function(){
             var anchor = "", 
                 filter_repo_class = "";
             if ( showButton && permissions.manage_changesets){
-                anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"' +
-                                 'data-type="' + type + '" data-product_id="[' + product_id +  ']" data-id="' + id + '">';
+                anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"' + 'data-display_name="' + name +
+                                 '" data-type="' + type + '" data-product_id="[' + product_id +  ']" data-id="' + id + '">';
                             anchor += i18n.remove + "</a>";
             }
             if(type === "repo" && isFiltered) {
