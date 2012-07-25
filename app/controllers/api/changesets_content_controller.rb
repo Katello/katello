@@ -52,7 +52,7 @@ class Api::ChangesetsContentController < Api::ApiController
   end
 
   api :POST, "/changesets/:changeset_id/packages", "Add a package to a changeset"
-  param :name, :string, :desc => "The nvrea of the package to add"
+  param :name, String, :desc => "The nvrea of the package to add"
   param :product_id, :number, :desc => "The id of the product which contains the package"
   def add_package
     product = Product.find_by_cp_id!(params[:product_id])

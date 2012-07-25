@@ -33,7 +33,7 @@ class Api::ChangesetsController < Api::ApiController
   respond_to :json
 
   api :GET, "/organizations/:organization_id/environments/:environment_id/changesets", "List changesets in an environment"
-  param :name, :string, :desc => "An optional changeset name to filter upon"
+  param :name, String, :desc => "An optional changeset name to filter upon"
   def index
     render :json => Changeset.select("changesets.*, environments.name AS environment_name").
         joins(:environment).where(params.slice(:name, :environment_id))
@@ -47,8 +47,8 @@ class Api::ChangesetsController < Api::ApiController
 
   api :PUT, "/changesets/:id", "Update a changeset"
   param :changeset, Hash do
-    param :description, :string, :desc => "The description of the changeset"
-    param :name, :string, :desc => "The name of the changeset"
+    param :description, String, :desc => "The description of the changeset"
+    param :name, String, :desc => "The name of the changeset"
   end
   def update
     @changeset.attributes = params[:changeset].slice(:name, :description)
@@ -64,8 +64,8 @@ class Api::ChangesetsController < Api::ApiController
 
   api :POST, "/organizations/:organization_id/environments/:environment_id/changesets", "Create a changeset"
   param :changeset, Hash do
-    param :description, :string, :allow_nil => true, :desc => "The description of the changeset"
-    param :name, :string, :desc => "The name of the changeset"
+    param :description, String, :allow_nil => true, :desc => "The description of the changeset"
+    param :name, String, :desc => "The name of the changeset"
   end
   def create
     @changeset             = Changeset.new(params[:changeset])
