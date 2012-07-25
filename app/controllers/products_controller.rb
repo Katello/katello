@@ -77,7 +77,7 @@ class ProductsController < ApplicationController
 
     @product.save!
 
-    format.html { render :text => escape_html(result) }
+    render :text => escape_html(result)
   end
 
   def destroy
