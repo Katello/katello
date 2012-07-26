@@ -47,8 +47,7 @@ class pulp::config {
   }
 
   exec {"migrate_pulp_db":
-    # we need to give some time to mongo to start sockets (RHBZ 824405)
-    command     => "sleep 5 && pulp-migrate >${katello::params::configure_log_base}/pulp_migrate.log 2>&1 && touch /var/lib/pulp/init.flag",
+    command     => "pulp-migrate >${katello::params::configure_log_base}/pulp_migrate.log 2>&1 && touch /var/lib/pulp/init.flag",
     creates     => "/var/lib/pulp/init.flag",
     path        => "/bin:/usr/bin",
     before      => Class["pulp::service"],
