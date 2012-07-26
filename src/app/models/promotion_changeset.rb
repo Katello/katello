@@ -379,5 +379,4 @@ class PromotionChangeset < Changeset
     products += self.system_templates.map { |tpl| tpl.products_to_be_promoted }.flatten(1)
     return products.uniq
   end
-
 end

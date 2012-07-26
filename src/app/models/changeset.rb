@@ -307,104 +307,11 @@ class Changeset < ActiveRecord::Base
     self.class == PromotionChangeset
   end
   
-  def not_included_products
-    products_ids = []
-    products_ids += self.packages.map { |p| p.product.cp_id }
-    products_ids += self.errata.map { |e| e.product.cp_id }
-    products_ids -= self.products.collect { |p| p.cp_id }
-    products_ids.uniq.collect do |product_cp_id|
-      Product.find_by_cp_id(product_cp_id)
-    end
-  end
-
-  def not_included_repos product, environment
-    product_repos = product.repos(environment) - self.repos
-  end
-
-
-  def errata_for_dep_calc product
-    cs_errata = ChangesetErratum.where({ :changeset_id => self.id, :product_id => product.id })
-    cs_errata.collect do |err|
-      Glue::Pulp::Errata.find(err.errata_id)
-    end
-  end
-
-
-  def packages_for_dep_calc product
-    packages = []
-
-    cs_pacakges = ChangesetPackage.where({ :changeset_id => self.id, :product_id => product.id })
-    packages    += cs_pacakges.collect do |pack|
-      Glue::Pulp::Package.find(pack.package_id)
-    end
-
-    packages += errata_for_dep_calc(product).collect do |err|
-      err.included_packages
-    end.flatten(1)
-
-    packages
-  end
-
-
-  def calc_dependencies_for_product product
-    from_env = self.environment.prior
-    to_env   = self.environment
-
-    package_names = packages_for_dep_calc(product).map { |p| p.name }.uniq
-    return { } if package_names.empty?
-
-    from_repos = not_included_repos(product, from_env)
-    to_repos   = product.repos(to_env)
-
-    dependencies = calc_dependencies_for_packages package_names, from_repos, to_repos
-    dependencies
-  end
-
-  def calc_dependencies_for_packages package_names, from_repos, to_repos
-    all_deps   = []
-    deps       = []
-    to_resolve = package_names
-    while not to_resolve.empty?
-      all_deps += deps
-
-      deps = get_promotable_dependencies_for_packages to_resolve, from_repos, to_repos
-      deps = Katello::PackageUtils::filter_latest_packages_by_name deps
-
-      to_resolve = deps.map { |d| d['provides'] }.flatten(1).uniq -
-          all_deps.map { |d| d['provides'] }.flatten(1) -
-          package_names
-    end
-    all_deps
-  end
-
-
-  def package_ids repos
-    pkg_ids = []
-    repos.each do |repo|
-      pkg_ids += repo.packages.collect { |pkg| pkg.id }
-    end
-    pkg_ids
-  end
-
-  def build_dependencies product, dependencies
-    new_dependencies = []
-
-    dependencies.each do |dep|
-      new_dependencies << ChangesetDependency.new(:package_id    => dep['id'],
-                                                  :display_name  => dep['filename'],
-                                                  :product_id    => product.id,
-                                                  :dependency_of => '???',
-                                                  :changeset     => self)
-    end
-    new_dependencies
-  end
-
->>>>>>> Model update
   def find_repo repo_id, product_cpid
     product = find_product_by_cpid(product_cpid)
     product.repos(self.environment.prior).where("repositories.id" => repo_id).first
   end
-
+  
 
   def extended_index_attrs
     pkgs      = self.packages.collect { |pkg| pkg.display_name }
