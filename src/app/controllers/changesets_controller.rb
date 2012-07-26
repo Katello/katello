@@ -78,8 +78,6 @@ class ChangesetsController < ApplicationController
     'contents'
   end
 
-
-
   ####
   # Promotion methods
   ####
@@ -105,8 +103,15 @@ class ChangesetsController < ApplicationController
 
   def create
     begin
+      if params[:action_type].blank? or params[:action_type] == Changeset::PROMOTION
+        env_id = @next_environment.id
+        type = Changeset::PROMOTION
+      else
+        env_id = @environment.id
+        type = Changeset::DELETION
+      end
       @changeset = Changeset.create!(:name => params[:name], :description => params[:description],
-                                     :action_type => params[:action_type], :environment_id => @environment.id)
+                                     :action_type => type, :environment_id => env_id)
       notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
       bc = {}
       add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
@@ -216,7 +221,7 @@ class ChangesetsController < ApplicationController
 
   def promote
     messages = {}
-    if !params[:confirm] && @environment.prior.library?
+    if !params[:confirm] && @next_environment.prior.library?
       syncing = []
       errors = []
 
@@ -238,7 +243,7 @@ class ChangesetsController < ApplicationController
       @changeset.promote :notify => true, :async => true
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
-      notify.success _("Started promotion of '%s' to %s environment") % [@changeset.name, @environment.name]
+      notify.success _("Started promotion of '%s' to %s environment") % [@changeset.name, @next_environment.name]
     end
     render :json=>to_ret
   rescue Exception => e
@@ -253,7 +258,6 @@ class ChangesetsController < ApplicationController
     render :json=>to_ret
   end
 
-
   private
 
   def find_environment
@@ -265,6 +269,10 @@ class ChangesetsController < ApplicationController
       #didnt' find an environment, just do the first the user has access to
       list = KTEnvironment.changesets_readable(current_organization).where(:library=>false)
       @environment ||= list.first || current_organization.library
+    end
+
+    if params[:next_env_id]
+      @next_environment = KTEnvironment.find(params[:next_env_id])
     end
   end
 
