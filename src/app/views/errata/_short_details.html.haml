@@ -36,7 +36,8 @@
       = _("Packages:")
     %p
       &nbsp;
-    - @errata.pkglist[0][:packages].each do |p|
-      %p
-        = p[:filename]
+    - if @errata.pkglist[0]
+      - @errata.pkglist[0][:packages].each do |p|
+        %p
+          = p[:filename]
 
