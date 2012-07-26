@@ -220,15 +220,6 @@ KT.content_search = function(paths_in){
     main_search = function(search_params){
         var options = {};
         close_tipsy();
-        if (search_params.mode === undefined){
-            search_params.mode = search_modes[0].id;
-        }
-
-        search_params.environments = []
-        utils.each(get_initial_environments(), function(item){
-            search_params.environments.push(item.id);
-        });
-
 
         options.show_compare_btn = search_pages[search_params.content_type].comparable;
         if (cache.get_state(search_params)){
@@ -236,6 +227,16 @@ KT.content_search = function(paths_in){
             comparison_grid.set_mode("results", options);
         }
         else {
+
+            if (search_params.mode === undefined){
+                search_params.mode = search_modes[0].id;
+            }
+
+            search_params.environments = [];
+            utils.each(get_initial_environments(), function(item){
+                search_params.environments.push(item.id);
+            });
+
             $(document).trigger('loading.comparison_grid');
             $.ajax({
                 type: 'POST',
@@ -408,7 +409,7 @@ KT.content_search_cache = (function(){
         saved_data = undefined;
 
     var save_state = function(grid, search){
-        saved_search = search;
+        saved_search = $.extend(true, {}, search);
         saved_data = grid.export_data();
     },
     get_state = function(search){
