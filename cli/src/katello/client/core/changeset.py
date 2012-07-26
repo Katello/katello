@@ -58,6 +58,7 @@ class List(ChangesetAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
+        self.printer.add_column('type')
         self.printer.add_column('updated_at', formatter=format_date)
         self.printer.add_column('state')
         self.printer.add_column('environment_id')
@@ -111,6 +112,7 @@ class Info(ChangesetAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
+        self.printer.add_column('type')
         self.printer.add_column('description', multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('updated_at', formatter=format_date)
         self.printer.add_column('state')
@@ -144,6 +146,12 @@ class Create(ChangesetAction):
                                help=_("changeset name (required)"))
         parser.add_option('--description', dest='description',
                                help=_("changeset description"))
+        parser.add_option('--promotion', dest='type_promotion', action="store_true", default=False,
+                               help=_("changeset type promotion: pushes changes to the next environment [DEFAULT]"))
+        parser.add_option('--deletion', dest='type_deletion', action="store_true", default=False,
+                               help=_("changeset type deletion: deletes items in changeset from current environment"))
+
+
 
     def check_options(self, validator):
         validator.require(('org', 'name', 'env'))
@@ -153,9 +161,18 @@ class Create(ChangesetAction):
         envName = self.get_option('env')
         csName = self.get_option('name')
         csDescription = self.get_option('description')
+        csType = 'PROMOTION'
+
+        # Check for duplicate type flags
+        if self.get_option('type_promotion') and self.get_option('type_deletion'):
+            raise OptionValueError(_("specify either --promotion or --deletion but not both"))
+        if self.get_option('type_promotion'):
+            csType = 'PROMOTION'
+        elif self.get_option('type_deletion'):
+            csType = 'DELETION'
 
         env = get_environment(orgName, envName)
-        cset = self.api.create(orgName, env["id"], csName, csDescription)
+        cset = self.api.create(orgName, env["id"], csName, csType, csDescription)
         test_record(cset,
             _("Successfully created changeset [ %s ] for environment [ %s ]") % (csName, env["name"]),
             _("Could not create changeset [ %s ] for environment [ %s ]") % (csName, env["name"])
@@ -404,8 +421,8 @@ class Delete(ChangesetAction):
 
 
 # ==============================================================================
-class Promote(ChangesetAction):
-    description = _('promotes a changeset to the next environment')
+class Apply(ChangesetAction):
+    description = _('applies a changeset based on the type (promotion, deletion)')
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',

@@ -36,11 +36,12 @@ class ChangesetAPI(KatelloAPI):
         else:
             return None
 
-    def create(self, orgName, envId, name, description=None):
+    def create(self, orgName, envId, name, type, description=None):
         data = {
             "changeset": {
                 "name": name,
-                "description": description
+                "description": description,
+                "type": type
             }
         }
         path = "/api/organizations/%s/environments/%s/changesets/" % (orgName, envId)
@@ -63,8 +64,8 @@ class ChangesetAPI(KatelloAPI):
         deps = self.server.GET(path)[1]
         return deps
 
-    def promote(self, csId):
-        path = "/api/changesets/%s/promote" % (csId)
+    def apply(self, csId):
+        path = "/api/changesets/%s/apply" % (csId)
         return self.server.POST(path)[1]
 
     def update_content(self, csId, patch):
