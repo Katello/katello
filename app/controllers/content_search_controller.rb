@@ -161,7 +161,7 @@ class ContentSearchController < ApplicationController
     offset = params[:offset] || 0
     errata = Glue::Pulp::Errata.search('', offset, current_user.page_size, :repoids => [@repo.pulp_id])
     rows = errata.collect do |e|
-      {:name => e.id, :id => e.id, :cols => {:title => {:display => e[:title]},
+      {:name => errata_display(e), :id => e.id, :cols => {:title => {:display => e[:title]},
                                              :type => {:display => e[:type]},
                                              :severity => {:display => e[:severity]}
                                             }
@@ -201,9 +201,11 @@ class ContentSearchController < ApplicationController
       (pack.repoids & repo_map.keys).each do |r|
         cols[repo_map[r].id] = {}
       end
-      name = pack.id
+
       if is_package
         name = pack.nvrea
+      else
+        name = errata_display(pack)
       end
       {:name => name, :id => pack.id, :cols => cols}
     end
