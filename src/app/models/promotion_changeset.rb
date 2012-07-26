@@ -223,16 +223,6 @@ class PromotionChangeset < Changeset
     resolved_deps
   end
 
-
-  def affected_repos
-    repos = []
-    repos += self.packages.collect { |e| e.promotable_repositories }.flatten(1)
-    repos += self.errata.collect { |p| p.promotable_repositories }.flatten(1)
-    repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
-
-    repos.uniq
-  end
-
   def repos_to_be_promoted
     repos = self.repos || []
     repos += self.system_templates.map { |tpl| tpl.repos_to_be_promoted }.flatten(1)
@@ -244,4 +234,138 @@ class PromotionChangeset < Changeset
     products += self.system_templates.map { |tpl| tpl.products_to_be_promoted }.flatten(1)
     return products.uniq
   end
+  
+  def calc_dependencies
+    all_dependencies = []
+    not_included_products.each do |product|
+      dependencies     = calc_dependencies_for_product product
+      all_dependencies += build_dependencies(product, dependencies)
+    end
+    all_dependencies
+  end
+
+  def calc_and_save_dependencies
+    self.dependencies = self.calc_dependencies
+    self.save()
+  end
+
+  def errata_for_dep_calc product
+    cs_errata = ChangesetErratum.where({ :changeset_id => self.id, :product_id => product.id })
+    cs_errata.collect do |err|
+      Glue::Pulp::Errata.find(err.errata_id)
+    end
+  end
+
+
+  def packages_for_dep_calc product
+    packages = []
+
+    cs_pacakges = ChangesetPackage.where({ :changeset_id => self.id, :product_id => product.id })
+    packages    += cs_pacakges.collect do |pack|
+      Glue::Pulp::Package.find(pack.package_id)
+    end
+
+    packages += errata_for_dep_calc(product).collect do |err|
+      err.included_packages
+    end.flatten(1)
+
+    packages
+  end
+
+
+  def calc_dependencies_for_product product
+    from_env = self.environment.prior
+    to_env   = self.environment
+
+    package_names = packages_for_dep_calc(product).map { |p| p.name }.uniq
+    return { } if package_names.empty?
+
+    from_repos = not_included_repos(product, from_env)
+    to_repos   = product.repos(to_env)
+
+    dependencies = calc_dependencies_for_packages package_names, from_repos, to_repos
+    dependencies
+  end
+
+  def calc_dependencies_for_packages package_names, from_repos, to_repos
+    all_deps   = []
+    deps       = []
+    to_resolve = package_names
+    while not to_resolve.empty?
+      all_deps += deps
+
+      deps = get_promotable_dependencies_for_packages to_resolve, from_repos, to_repos
+      deps = Katello::PackageUtils::filter_latest_packages_by_name deps
+
+      to_resolve = deps.map { |d| d['provides'] }.flatten(1).uniq -
+          all_deps.map { |d| d['provides'] }.flatten(1) -
+          package_names
+    end
+    all_deps
+  end
+
+  def build_dependencies product, dependencies
+    new_dependencies = []
+
+    dependencies.each do |dep|
+      new_dependencies << ChangesetDependency.new(:package_id    => dep['id'],
+                                                  :display_name  => dep['filename'],
+                                                  :product_id    => product.id,
+                                                  :dependency_of => '???',
+                                                  :changeset     => self)
+    end
+    new_dependencies
+  end
+
+  def not_included_products
+    products_ids = []
+    products_ids += self.packages.map { |p| p.product.cp_id }
+    products_ids += self.errata.map { |e| e.product.cp_id }
+    products_ids -= self.products.collect { |p| p.cp_id }
+    products_ids.uniq.collect do |product_cp_id|
+      Product.find_by_cp_id(product_cp_id)
+    end
+  end
+
+  def not_included_repos product, environment
+    product_repos = product.repos(environment) - self.repos
+  end
+
+
+  def not_included_packages
+    self.packages.delete_if do |pack|
+      (products.uniq! or []).include? pack.product
+    end
+  end
+
+  def not_included_errata
+    self.errata.delete_if do |err|
+      (products.uniq! or []).include? err.product
+    end
+  end
+
+  def generate_metadata from_env, to_env
+    async_tasks = affected_repos.collect do |repo|
+      repo.get_clone(to_env).generate_metadata
+    end
+    async_tasks
+  end
+
+  def affected_repos
+    repos = []
+    repos += self.packages.collect { |e| e.promotable_repositories }.flatten(1)
+    repos += self.errata.collect { |p| p.promotable_repositories }.flatten(1)
+    repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
+
+    repos.uniq
+  end
+
+  def package_ids repos
+    pkg_ids = []
+    repos.each do |repo|
+      pkg_ids += repo.packages.collect { |pkg| pkg.id }
+    end
+    pkg_ids
+  end
+  
 end
