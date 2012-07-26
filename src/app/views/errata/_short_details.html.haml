@@ -1,0 +1,42 @@
+.details_container
+  .item-container
+    %label.fl.ra
+      ID
+    %p
+      = @errata.id
+  .item-container
+    %label.fl.ra
+      = _("Title: ")
+    %p
+      = @errata.title
+
+  .item-container
+    %label.fl.ra
+      =_("Issued: ")
+    %p
+      = @errata.issued
+
+  .item-container
+    %label.fl.ra
+      =_("References:")
+    %p
+      = @errata.references[0] ? @errata.references[0][:href] : ''
+
+  .item-container
+    %label.fl.ra
+      = _("Description:")
+    - @errata.description.split("\n\n").each do |p|
+      %p
+        = p
+      %p 
+        &nbsp;
+
+  .item-container
+    %label.fl.ra
+      = _("Packages:")
+    %p
+      &nbsp;
+    - @errata.pkglist[0][:packages].each do |p|
+      %p
+        = p[:filename]
+

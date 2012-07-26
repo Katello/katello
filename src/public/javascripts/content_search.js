@@ -188,6 +188,7 @@ KT.content_search = function(paths_in){
           data: data_out,
           success: function(data){
             $(document).trigger('show_more.comparison_grid', [data.rows]);
+            close_tipsy();
           }
         })
       });
@@ -218,6 +219,7 @@ KT.content_search = function(paths_in){
         }
     },
     main_search = function(search_params){
+        close_tipsy();
         if (search_params.mode === undefined){
             search_params.mode = search_modes[0].id;
         }
@@ -259,7 +261,7 @@ KT.content_search = function(paths_in){
     subgrid_search = function(search_params){
         var type = search_params.subgrid.type,
             subgrid = subgrids[search_params.subgrid.type];
-
+        close_tipsy();
         comparison_grid.controls.comparison.hide();
         $(document).trigger('loading.comparison_grid');
         $.ajax({
@@ -284,6 +286,9 @@ KT.content_search = function(paths_in){
                 draw_grid(data.rows);
             }
         });
+    },
+    close_tipsy = function(){
+      $(document).trigger("close.tipsy");
     },
     draw_grid = function(data){
         comparison_grid.set_rows(data, true);
@@ -372,6 +377,8 @@ KT.content_search = function(paths_in){
                 return $(this).find('.hidden-text').html();
             }
         });
+        KT.tipsy.custom.url_tooltip($('.tipsify-errata'), 'w');
+
     },
     subgrid_selector_items = function(type) {
         var to_ret = [],
