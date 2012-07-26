@@ -23,9 +23,9 @@ class ErrataController < ApplicationController
     }
     {
         :show => view,
-        :packages => view
+        :packages => view,
+        :short_details => view
     }
-
   end
 
   def show
@@ -35,7 +35,11 @@ class ErrataController < ApplicationController
   def packages
     render :partial=>"packages", :layout => "tupane_layout"
   end
-  
+
+  def short_details
+    render :partial=>"short_details"
+  end
+
   private
 
   
