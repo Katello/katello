@@ -43,7 +43,8 @@ from katello.client.core import (
   filters,
   gpg_key,
   system_group,
-  admin
+  admin,
+  architecture
 )
 
 def setup_admin(katello_cmd):
@@ -271,3 +272,12 @@ def setup_admin(katello_cmd):
     admin_cmd = admin.Admin()
     admin_cmd.add_command('crl_regen', admin.CrlRegen())
     katello_cmd.add_command('admin', admin_cmd)
+
+    architecture_cmd = architecture.Architecture()
+    architecture_cmd.add_command('list', architecture.List())
+    architecture_cmd.add_command('show', architecture.Show())
+    architecture_cmd.add_command('create', architecture.Create())
+    architecture_cmd.add_command('update', architecture.Update())
+    architecture_cmd.add_command('delete', architecture.Delete())
+    katello_cmd.add_command('architecture', architecture_cmd)
+
