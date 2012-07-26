@@ -58,15 +58,15 @@ KT.comparison_grid = function(){
                 child_list = $('#child_list_' + parent_id);
                 
                 if( child_list.find('.load_row').length > 0 ){
-                    child_list.find('.load_row').before(templates.row(id, models.columns.length, cells, row_level, has_children, parent_id));
+                    child_list.find('.load_row').before(templates.row(id, models.columns.length, cells, row_level, has_children, parent_id, name));
                 } else {
-                    child_list.append(templates.row(id, models.columns.length, cells, row_level, has_children, parent_id));
+                    child_list.append(templates.row(id, models.columns.length, cells, row_level, has_children, parent_id, name));
                 }
             } else {
                 if( grid_content_el.children('.load_row').length > 0 ) {
-                    grid_content_el.children('.load_row').before(templates.row(id, models.columns.length, cells, row_level, has_children));
+                    grid_content_el.children('.load_row').before(templates.row(id, models.columns.length, cells, row_level, has_children, name));
                 } else {
-                    grid_content_el.append(templates.row(id, models.columns.length, cells, row_level, has_children));
+                    grid_content_el.append(templates.row(id, models.columns.length, cells, row_level, has_children, name));
                 }
             }
         },
@@ -163,6 +163,10 @@ KT.comparison_grid = function(){
 
             $('.load_row').find('.spinner').css('visibility', 'hidden');
             $('.load_row').find('a').removeClass('disabled');
+
+            $('.three-line-ellipsis').trunk8({
+                lines   : 3
+            });
 
             set_loading(false);
         },
@@ -748,13 +752,17 @@ KT.comparison_grid.events = function(grid) {
 };
 
 KT.comparison_grid.templates = (function(i18n) {
-    var cell = function(data) {
+    var cell = function(data, row_height) {
             var display,                
                 hover = data['hover'] ? data['hover'] : false,
                 html = $('<div/>', { 
                             'data-span' : data['span'], 
                             'class'     : 'grid_cell cell_' + data['id'],
                         });
+
+            if( row_height ){
+                html.addClass(row_height);
+            }
 
             if( data['in_column'] ){
                 if( data['display'] !== undefined ){
@@ -770,7 +778,12 @@ KT.comparison_grid.templates = (function(i18n) {
 
             if( hover ){
                 html.attr('data-hover', true);
-                html.append($('<span/>', { 'class' : "hidden grid_cell_hover", 'html' : hover }));
+                
+                if( row_height ){
+                    html.append($('<span/>', { 'class' : "hidden grid_cell_hover " + row_height, 'html' : hover }));
+                } else {
+                    html.append($('<span/>', { 'class' : "hidden grid_cell_hover", 'html' : hover }));
+                }
             }
 
             if( data['comparable'] && data['in_column'] ){
@@ -783,7 +796,7 @@ KT.comparison_grid.templates = (function(i18n) {
 
             return html;
         },
-        row = function(id, num_columns, cell_data, row_level, has_children, parent_id) {
+        row = function(id, num_columns, cell_data, row_level, has_children, parent_id, name) {
             var i,
                 html = $('<div/>', {
                     'id'    : 'grid_row_' + id,
@@ -794,12 +807,31 @@ KT.comparison_grid.templates = (function(i18n) {
                 html.attr('data-parent_id', parent_id);
             }
 
-            if( has_children ){
-                html.attr('data-collapsed', "false");
+            if( row_level === 2 ){
+                if( name.length > 30 && name.length < 60 ){
+                    html.addClass('row_height_2');
+                    for(i = 0; i < num_columns; i += 1){
+                        html.append(cell(cell_data[i], 'row_height_2'));
+                    }
+
+                } else if( name.length >= 60 ){
+                    html.addClass('row_height_3');
+                    for(i = 0; i < num_columns; i += 1){
+                        html.append(cell(cell_data[i], 'row_height_3'));
+                    }
+                } else {
+                    for(i = 0; i < num_columns; i += 1){
+                        html.append(cell(cell_data[i]));
+                    }
+                }
+            } else {
+                for(i = 0; i < num_columns; i += 1){
+                    html.append(cell(cell_data[i]));
+                }
             }
 
-            for(i = 0; i < num_columns; i += 1){
-                html.append(cell(cell_data[i]));
+            if( has_children ){
+                html.attr('data-collapsed', "false");
             }
 
             if( has_children ){
@@ -823,7 +855,26 @@ KT.comparison_grid.templates = (function(i18n) {
                 html.attr('data-parent_id', parent_id);
             }
             
-            html.append($('<span/>', { 'class' : 'one-line-ellipsis', 'title' : KT.common.escapeId(name) }).html(name));
+            if( row_level === 2 ){
+                if( name.length > 30 && name.length < 60 ){
+                    html.addClass('row_height_2');
+                    html.append($('<span/>', { 'class' : 'tipsify', 'title' : name }).html(name));
+                } else if( name.length >= 60 && name.length < 90 ){
+                    html.addClass('row_height_3');
+                    html.append($('<span/>').html(name));
+                } else if( name.length > 90 ) {
+                    html.addClass('row_height_3');
+                    html.append($('<span/>', { 'class' : 'three-line-ellipsis tipsify', 'title' : name }).html(name));
+                } else {
+                    html.append($('<span/>').html(name));
+                }
+            } else {
+                if( (has_children && name.length > 26) || (parent_id && name.length > 28) ){
+                    html.append($('<span/>', { 'class' : 'one-line-ellipsis tipsify', 'title' : name }).html(name));
+                } else {
+                    html.append($('<span/>').html(name));
+                }
+            }
 
             if( has_children ){
                 if( row_level === 2 ){

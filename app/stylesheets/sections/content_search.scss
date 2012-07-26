@@ -343,6 +343,10 @@ $comparison_grid_column_header-background: #FFF;
       float: left;
       background: #FFF;
 
+      [class*="-icon-"] {
+        vertical-align: top;
+      }
+
       .row_header {
         width: $comparison_grid_filter-width - 6;
         padding: 8px 3px;
@@ -357,19 +361,24 @@ $comparison_grid_column_header-background: #FFF;
         }
       }
 
+      .row_height_2 {
+        height: 32px;
+      }
+      .row_height_3 {
+        height: 48px;
+      }
+
       .grid_row_level_2 {
         padding-left: 9px;
         padding-right: 9px;
         width: $comparison_grid_filter-width - 18;
-        max-height: 45px;
         font-weight: normal;
       }
 
       .grid_row_level_3 {
         padding-left: 25px;
-        padding-right: 25px;
-        width: $comparison_grid_filter-width - 50;
-        max-height: 45px;
+        padding-right: 10px;
+        width: $comparison_grid_filter-width - 35;
         font-weight: normal;
       }
 
@@ -386,12 +395,10 @@ $comparison_grid_column_header-background: #FFF;
     .grid_row_level_2 {
       background: #D4EEFC;
       font-size: 10px;
-      max-height: 45px;
     }
 
     .grid_row_level_3 {
       font-size: 11px;
-      max-height: 45px;
     }
 
     #grid_content_window {
@@ -411,6 +418,15 @@ $comparison_grid_column_header-background: #FFF;
           height: $comparison_grid_row-height;
           border-bottom: 1px solid $comparison_grid_border-color;
           width: $comparison_grid-width - $comparison_grid_filter-width - 1;
+        }
+
+        .row_height_2 {
+          height: 48px !important;
+          line-height: 48px !important;
+        }
+        .row_height_3 {
+          height: 64px !important;
+          line-height: 64px !important;
         }
 
         .load_row {
@@ -457,6 +473,15 @@ $comparison_grid_column_header-background: #FFF;
           position: absolute;
           left: 0;
           top: 0;
+
+          &.row_height_2 {
+            height: 48px !important;
+            line-height: 24px !important;
+          }
+          &.row_height_3 {
+            height: 64px !important;
+            line-height: 32px !important;
+          }
 
           a { color: #40D7FD; }
 
