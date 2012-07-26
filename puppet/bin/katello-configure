@@ -528,7 +528,7 @@ begin
             processing_logfile = nil
           elsif line =~ /err:/
             t.kill
-            puts "\n  Failed, please check [#{processing_logfile}]"
+            puts "\n  Failed, please check [#{processing_logfile}]\n  Report errors using # katello-debug tool."
             processing_logfile = nil
             seen_err = true
           end
