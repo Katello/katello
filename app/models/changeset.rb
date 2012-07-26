@@ -98,7 +98,7 @@ class Changeset < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
-  def account_type
+  def action_type
     return PROMOTION if PromotionChangeset === self
     DELETION
   end
