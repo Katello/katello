@@ -32,14 +32,44 @@ $comparison_grid_column_header-background: #FFF;
 .no_border { border: none !important; }
 
 .content-tipsy {
-  ul {
-    list-style-type: disc;
-  }
   .example {
     margin-left: 6px;
     margin-bottom: 6px;
   }
 }
+
+
+.tipsify-errata {
+  &:hover {
+    color: $kselected_color;
+  }
+}
+.tipsify-errata.tipsy-hover {
+  color: $kselected_color;
+  background-color: transparent;
+}
+.tipsify-errata.tipsy-nohover {
+  background-color: transparent;
+}
+
+.tipsy-inner{
+  .spinner {
+    //margin:10px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    margin-left: 70px;
+    margin-right: 70px;
+  }
+}
+
+.errata-icon {
+    @extend .errata_icon;
+    float: left;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 4px;
+}
+
 
 #browse_box {
   width: $browse_box-width;
