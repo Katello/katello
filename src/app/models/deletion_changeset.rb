@@ -15,7 +15,7 @@
 class DeletionChangeset < Changeset
   use_index_of Changeset
   
-  def delete(options = { })
+  def delete_from env(options = { })
     options = { :async => true, :notify => false }.merge options
 
     self.state == Changeset::REVIEW or
@@ -111,133 +111,123 @@ class DeletionChangeset < Changeset
 
 
   def delete_repos from_env
-    async_tasks = []
-    self.repos.each do |repo|
-      product = repo.product
-      next if (products.uniq! or []).include? product
-
-      async_tasks << repo.delete_from_env(from_env)
-    end
-    async_tasks.flatten(1)
+    # async_tasks = []
+    # self.repos.each do |repo|
+    #   product = repo.product
+    #   next if (products.uniq! or []).include? product
+    # 
+    #   async_tasks << repo.delete_from_env(from_env)
+    # end
+    # async_tasks.flatten(1)
   end
 
   def delete_packages from_env
     #repo->list of pkg_ids
-    pkgs_delete = { }
-
-    (not_included_packages + dependencies).each do |pkg|
-      product = pkg.product
-
-      product.repos(from_env).each do |repo|
-        if repo.is_cloned_in? to_env
-          clone = repo.get_clone to_env
-
-          if (repo.has_package? pkg.package_id) and (!clone.has_package? pkg.package_id)
-            pkgs_promote[clone] ||= []
-            pkgs_promote[clone] << pkg.package_id
-          end
-        end
-      end
-    end
-
-    pkgs_promote.each_pair do |repo, pkgs|
-      repo.add_packages(pkgs)
-      Glue::Pulp::Package.index_packages(pkgs)
-    end
+    # pkgs_delete = { }
+    # 
+    # (not_included_packages + dependencies).each do |pkg|
+    #   product = pkg.product
+    # 
+    #   product.repos(from_env).each do |repo|
+    #     if repo.is_cloned_in? to_env
+    #       clone = repo.get_clone to_env
+    # 
+    #       if (repo.has_package? pkg.package_id) and (!clone.has_package? pkg.package_id)
+    #         pkgs_promote[clone] ||= []
+    #         pkgs_promote[clone] << pkg.package_id
+    #       end
+    #     end
+    #   end
+    # end
+    # 
+    # pkgs_promote.each_pair do |repo, pkgs|
+    #   repo.add_packages(pkgs)
+    #   Glue::Pulp::Package.index_packages(pkgs)
+    # end
   end
 
 
   def delete_errata from_env, to_env
     #repo->list of errata_ids
-    errata_promote = { }
-
-    not_included_errata.each do |err|
-      product = err.product
-
-      product.repos(from_env).each do |repo|
-        if repo.is_cloned_in? to_env
-          clone             = repo.get_clone to_env
-          affecting_filters = (repo.filters + repo.product.filters).uniq
-
-          if repo.has_erratum? err.errata_id and !clone.has_erratum? err.errata_id and
-              !err.blocked_by_filters? affecting_filters
-            errata_promote[clone] ||= []
-            errata_promote[clone] << err.errata_id
-          end
-        end
-      end
-    end
-
-    errata_promote.each_pair do |repo, errata|
-      repo.add_errata(errata)
-      Glue::Pulp::Errata.index_errata(errata)
-    end
+    # errata_promote = { }
+    # 
+    # not_included_errata.each do |err|
+    #   product = err.product
+    # 
+    #   product.repos(from_env).each do |repo|
+    #     if repo.is_cloned_in? to_env
+    #       clone             = repo.get_clone to_env
+    #       affecting_filters = (repo.filters + repo.product.filters).uniq
+    # 
+    #       if repo.has_erratum? err.errata_id and !clone.has_erratum? err.errata_id and
+    #           !err.blocked_by_filters? affecting_filters
+    #         errata_promote[clone] ||= []
+    #         errata_promote[clone] << err.errata_id
+    #       end
+    #     end
+    #   end
+    # end
+    # 
+    # errata_promote.each_pair do |repo, errata|
+    #   repo.add_errata(errata)
+    #   Glue::Pulp::Errata.index_errata(errata)
+    # end
   end
 
 
   def delete_distributions from_env, to_env
     #repo->list of distribution_ids
-    distribution_promote = { }
-
-    for distro in self.distributions
-      product = distro.product
-
-      #skip distributions that have already been promoted with the products
-      next if (products.uniq! or []).include? product
-
-      product.repos(from_env).each do |repo|
-        clone = repo.get_clone to_env
-        next if clone.nil?
-
-        if repo.has_distribution? distro.distribution_id and
-            !clone.has_distribution? distro.distribution_id
-          distribution_promote[clone] = distro.distribution_id
-        end
-      end
-    end
-
-    distribution_promote.each_pair do |repo, distro|
-      repo.add_distribution(distro)
-    end
-  end
-
-  def get_promotable_dependencies_for_packages package_names, from_repos, to_repos
-    from_repo_ids     = from_repos.map { |r| r.pulp_id }
-    @next_env_pkg_ids ||= package_ids(to_repos)
-
-    resolved_deps = Resources::Pulp::Package.dep_solve(package_names, from_repo_ids)['resolved']
-    resolved_deps = resolved_deps.values.flatten(1)
-    resolved_deps = resolved_deps.reject { |dep| not @next_env_pkg_ids.index(dep['id']).nil? }
-    resolved_deps
+    # distribution_promote = { }
+    # 
+    # for distro in self.distributions
+    #   product = distro.product
+    # 
+    #   #skip distributions that have already been promoted with the products
+    #   next if (products.uniq! or []).include? product
+    # 
+    #   product.repos(from_env).each do |repo|
+    #     clone = repo.get_clone to_env
+    #     next if clone.nil?
+    # 
+    #     if repo.has_distribution? distro.distribution_id and
+    #         !clone.has_distribution? distro.distribution_id
+    #       distribution_promote[clone] = distro.distribution_id
+    #     end
+    #   end
+    # end
+    # 
+    # distribution_promote.each_pair do |repo, distro|
+    #   repo.add_distribution(distro)
+    # end
   end
 
 
-  def affected_repos
-    repos = []
-    repos += self.packages.collect { |e| e.promotable_repositories }.flatten(1)
-    repos += self.errata.collect { |p| p.promotable_repositories }.flatten(1)
-    repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
-
-    repos.uniq
-  end
-
-  def repos_to_be_promoted
-    repos = self.repos || []
-    repos += self.system_templates.map { |tpl| tpl.repos_to_be_promoted }.flatten(1)
-    return repos.uniq
-  end
-
-  def products_to_be_promoted
-    products = self.products || []
-    products += self.system_templates.map { |tpl| tpl.products_to_be_promoted }.flatten(1)
-    return products.uniq
-  end  
-  
-  def generate_metadata from_env
-    async_tasks = affected_repos.collect do |repo|
-      repo.get_clone(to_env).generate_metadata
-    end
-    async_tasks
-  end  
+  # def affected_repos
+  #   repos = []
+  #   repos += self.packages.collect { |e| e.promotable_repositories }.flatten(1)
+  #   repos += self.errata.collect { |p| p.promotable_repositories }.flatten(1)
+  #   repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
+  # 
+  #   repos.uniq
+  # end
+  # 
+  # def repos_to_be_promoted
+  #   repos = self.repos || []
+  #   repos += self.system_templates.map { |tpl| tpl.repos_to_be_promoted }.flatten(1)
+  #   return repos.uniq
+  # end
+  # 
+  # def products_to_be_promoted
+  #   products = self.products || []
+  #   products += self.system_templates.map { |tpl| tpl.products_to_be_promoted }.flatten(1)
+  #   return products.uniq
+  # end  
+  # 
+  # def generate_metadata from_env
+  #   async_tasks = affected_repos.collect do |repo|
+  #     repo.get_clone(to_env).generate_metadata
+  #   end
+  #   async_tasks
+  # end  
 
 end
