@@ -88,7 +88,7 @@ module Navigation
         :url => :sub_level,
         :options => {:class=>'content top_level', "data-menu"=>"content"},
         :if => lambda{current_organization},
-        :items=> AppConfig.katello? ? [ menu_subscriptions, menu_providers, menu_sync_management, menu_system_templates, menu_promotions] :
+        :items=> AppConfig.katello? ? [ menu_subscriptions, menu_providers, menu_sync_management, menu_system_templates, menu_changeset_management] :
             [ menu_subscriptions, menu_system_templates]
       }
     end
@@ -166,31 +166,31 @@ module Navigation
 
     end
 
-    def menu_promotions
-       {:key => :changeset_promotions,
-        :name => _("Changeset Promotions"),
+    def menu_changeset_management
+       {:key => :changeset_management,
+        :name => _("Changeset Management"),
         :url => promotions_path,
-        :items => lambda{[menu_promotions_list, menu_changeset]},
+        :items => lambda{[menu_changeset, menu_changeset_history]},
         :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
-        :options => {:highlights_on =>/\/promotions.*/ , :class=>'menu_parent content second_level', "data-menu"=>"content", "data-dropdown"=>"promotions"}
-       }
-    end
-
-    def menu_promotions_list
-       {:key => :promotions,
-        :name => _("Promotions"),
-        :url => promotions_path,
-        :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
-        :options => {:highlights_on =>/\/promotions.*/ , :class=>'content third_level', "data-dropdown"=>"promotions"}
+        :options => {:highlights_on =>/\/promotions.*/ , :class=>'menu_parent content second_level', "data-menu"=>"content", "data-dropdown"=>"changesets"}
        }
     end
 
     def menu_changeset
+       {:key => :changesets,
+        :name => _("Changesets"),
+        :url => promotions_path,
+        :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
+        :options => {:highlights_on =>/\/promotions.*/ , :class=>'content third_level', "data-dropdown"=>"changesets"}
+       }
+    end
+
+    def menu_changeset_history
        {:key => :changeset,
-        :name => _("Changeset Promotion History"),
+        :name => _("Changesets History"),
         :url => changesets_path,
         :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
-        :options => {:class=>'content third_level', "data-dropdown"=>"promotions"}
+        :options => {:class=>'content third_level', "data-dropdown"=>"changesets"}
        }
     end
 
