@@ -163,7 +163,7 @@ class ContentSearchController < ApplicationController
     rows = errata.collect do |e|
       {:name => e.id, :id => e.id, :cols => {:title => {:display => e[:title]},
                                              :type => {:display => e[:type]},
-                                              :issued => {:display => e[:issued]}
+                                             :severity => {:display => e[:severity]}
                                             }
       }
     end
