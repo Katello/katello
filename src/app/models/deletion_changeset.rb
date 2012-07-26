@@ -15,7 +15,7 @@
 class DeletionChangeset < Changeset
   use_index_of Changeset
   
-  def delete_from env(options = { })
+  def delete_from_env(options = { })
     options = { :async => true, :notify => false }.merge options
 
     self.state == Changeset::REVIEW or
