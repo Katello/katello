@@ -585,6 +585,7 @@ KT.comparison_grid.controls = function(grid) {
 
                     selector.append(html);
                     selector.chosen();
+                    selector.trigger("liszt:updated");
                 },
                 show = function(){
                     container.show();
