@@ -1,10 +1,9 @@
-@charset "UTF-8";
-@import "compass";
+@import "compass/reset";
+@import "converge-ui/composites/shell";
+@import "converge-ui/components/helpers";
 
-@import "converge-ui/media";
-@import "converge-ui/base";
-@import "converge-ui/shell";
 @import "katello_base";
+
 
 @import "grid";
 @import "look";
@@ -17,7 +16,7 @@
 @import "widgets/slidingtree";
 @import "widgets/scrollpane";
 @import "widgets/env_select";
-
+@import "katello_sprites";
 
 pre  { text-indent: 18px; }
 
@@ -200,14 +199,12 @@ input[type='submit'], button, .button {
     background: -moz-linear-gradient(top, #c2c3c0, #e4e5e4);
     background: -webkit-gradient(linear, left top, left bottom, from(#c2c3c0), to(#e4e5e4));
     @include no-box-shadow;
-    padding: 5px 12px 3px;
     text-decoration: none;
   }
   &:focus {
     text-decoration: none;
     color: #000;
     border-width: 2px;
-    padding: 3px 11px;
   }
   &.dialogbutton {
     float: right;
@@ -1284,4 +1281,14 @@ fieldset {
 #nav-container {
   background-color: #006B97;
   left: 26% !important;
+}
+header#header {
+  border-bottom: none;
+  margin-bottom: 6px;
+
+  &:after {
+    border-top: 5px solid #006B97;
+    height: 0;
+    bottom: -1px;
+  }
 }
