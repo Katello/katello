@@ -123,8 +123,6 @@ def get_changeset(orgName, envName, csName):
     if cset == None:
         raise ApiDataError(_("Could not find changeset [ %s ] within environment [ %s ]") %
             (csName, env["name"]))
-    # TODO: GET THIS FROM THE ACTUAL API
-    cset['type'] = 'promotion'
     return cset
 
 def get_user(userName):
