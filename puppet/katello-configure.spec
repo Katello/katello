@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.31
+Version:        0.2.32
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -87,6 +87,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 26 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.32-1
+- Making katello db migration upgrade script start backend services
+  (jsherril@redhat.com)
+- moving katello db migration to after pulp & candlepins (jsherril@redhat.com)
+
 * Mon Jul 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.31-1
 - %%defattr is not needed since rpm 4.4
 
