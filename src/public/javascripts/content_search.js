@@ -48,8 +48,7 @@ KT.content_search = function(paths_in){
                        cols:{
                            title : {id:'title', name:i18n.title, span: "2"},
                            type  : {id:'type', name:i18n.type},
-                           severity : {id:'severity', name:i18n.severity},
-                           issued : {id:'issued', name:i18n.issued}
+                           severity : {id:'severity', name:i18n.severity}
                          },
                         selector:['repo_packages', 'repo_errata']
         },
@@ -219,6 +218,7 @@ KT.content_search = function(paths_in){
         }
     },
     main_search = function(search_params){
+        var options = {};
         close_tipsy();
         if (search_params.mode === undefined){
             search_params.mode = search_modes[0].id;
@@ -230,8 +230,10 @@ KT.content_search = function(paths_in){
         });
 
 
+        options.show_compare_btn = search_pages[search_params.content_type].comparable;
         if (cache.get_state(search_params)){
             comparison_grid.import_data(cache.get_state(search_params));
+            comparison_grid.set_mode("results", options);
         }
         else {
             $(document).trigger('loading.comparison_grid');
@@ -241,11 +243,9 @@ KT.content_search = function(paths_in){
                 url: search_pages[search_params.content_type].url,
                 data: JSON.stringify(search_params),
                 success: function(data){
-                    var options = {};
-                    options.show_compare_btn = search_pages[search_params.content_type].comparable;
                     if (search_pages[search_params.content_type].modes){
                         options.right_selector = true;
-                        comparison_grid.set_right_select(search_modes, search_params.mode);
+                        comparison_grid.set_right_select(search_modes, search_params.mode || search_modes.first.id);
                     }
 
                     comparison_grid.set_columns(env_select.get_paths());
@@ -326,7 +326,8 @@ KT.content_search = function(paths_in){
             if (envs_changed && search && search.mode && search.mode !== 'all'){
                 search_initiated(undefined, search);
                 envs_changed = false;
-            } 
+            }
+            cache.save_state(comparison_grid, search);
         });
         //select event
         $(document).bind(env_select.get_select_event(), function(event){
