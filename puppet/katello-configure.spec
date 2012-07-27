@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.33
+Version:        0.2.34
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -87,6 +87,48 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.34-1
+- puppet - better help strings for reset options
+- puppet - when installer fails print info about katello-debug
+- puppet - adding mongod to the service-wait script
+- puppet - apache2/pulp reloading was not working with systemd
+- puppet - reset tasks must not return non-zero
+- puppet - adding service-wait wrapper script
+- 840595 - katello-configure --help optparse.rb error fix
+- puppet - remove color codes from puppet log file
+- puppet - upgrade scripts are marked only during first installation
+- puppet - tomcat6 had problems with restarts in headpin mode
+- puppet - reuse secret token also for headpin deployment
+- puppet - wrap long lines for optparse
+- puppet - introducing temp answer file for dangerous options
+- puppet - adding k-c options -d and -b
+- puppet - implementing reset_data and reset_cache options
+- puppet - split add-private-key-to-nss-db into two actions
+- puppet - adding logging to cpinit phase
+- puppet - create katello-configure subdir for logs
+- puppet - do not restart httpd everytime
+- puppet - use refreshonly for cert generation
+- puppet - do not rewrite pulp user pass everytime
+- puppet - remove generated string from all config headers
+- puppet - get rid of cpsetup and use dpdb directly
+- puppet - notify services when changing config files
+- puppet - do not regenerate oauth_secret every puppet run
+- puppet - use keystore_password_file for tomcat too
+- puppet - allowing users to set pgsql superuser password
+- puppet - cleaning up default answers file
+- puppet - not changing seeds.rb anymore with puppet
+- puppet - moving config_value function to rails context
+- puppet - adding warning comment to all configuration files
+- puppet - do not regenerate tomcat password everytime
+- puppet - adding elastic search parameters
+- puppet - removing log dir mangling
+- puppet - removing warning message
+- installer review - reformatting
+- installer review - adding missing log_base require
+- installer review - reformatting
+- installer review - introducing cpsetup_done file
+- installer review - reformatting
+
 * Fri Jul 27 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.33-1
 - Making auto-stop services optional (jomara@redhat.com)
 - Making the script call katello-system instead of individual system calls
