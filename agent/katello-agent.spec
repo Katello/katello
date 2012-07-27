@@ -8,7 +8,6 @@ Group:   Development/Languages
 License: LGPLv2
 URL:     https://fedorahosted.org/katello/
 Source0: %{name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: python2-devel
 BuildRequires: python-setuptools
@@ -28,15 +27,11 @@ pushd src
 popd
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_sysconfdir}/gofer/plugins
 mkdir -p %{buildroot}/%{_libdir}/gofer/plugins
 
 cp etc/gofer/plugins/katelloplugin.conf %{buildroot}/%{_sysconfdir}/gofer/plugins
 cp src/katello/agent/katelloplugin.py %{buildroot}/%{_libdir}/gofer/plugins
-
-%clean
-rm -rf %{buildroot}
 
 %files
 %config(noreplace) %{_sysconfdir}/gofer/plugins/katelloplugin.conf
