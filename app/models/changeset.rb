@@ -246,9 +246,9 @@ class Changeset < ActiveRecord::Base
 
   def env_to_verify_on_add_content
     if promotion?
-      @environment.prior
+      self.environment.prior
     else
-      @environment
+      self.environment
     end
   end
 
