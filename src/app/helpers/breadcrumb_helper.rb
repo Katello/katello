@@ -29,45 +29,54 @@ module ChangesetBreadcrumbs
     bc = {}
     add_crumb_node!(bc, "changesets", "", _("Changesets"), [], {:client_render => true})
 
-    @changesets.each{|cs|
-      cs_info = {:is_new=>cs.state == Changeset::NEW, :state=>cs.state}
-      if (cs.state == Changeset::PROMOTING)
-        prog = cs.task_status.progress
-        if prog
-          cs_info[:progress] =  cs.task_status.progress
-        else
-          cs_info[:progress] =  0
-        end
-      end
-      add_crumb_node!(bc, changeset_bc_id(cs), "", cs.name, ['changesets'],
-                    {:client_render => true}, cs_info)
+    @promotion_changesets.each{|cs|
+      process_cs cs, bc
+    } if @promotion_changesets
 
-      cs.involved_products.each{|product|
-        #product details
-        add_crumb_node!(bc, product_cs_bc_id(cs, product), "", product.name, ['changesets', changeset_bc_id(cs)],
-                      {:client_render => true})
-        #packages
-        add_crumb_node!(bc, packages_cs_bc_id(cs, product), "",  _("Packages"),
-                        ['changesets', changeset_bc_id(cs),product_cs_bc_id(cs, product)], {:client_render => true, :product_id => product.id})
+    @deletion_changesets.each{|cs|
+      process_cs cs, bc
+    } if @deletion_changesets
 
-        #errata
-        add_crumb_node!(bc, errata_cs_bc_id(cs, product), "",  _("Errata"),
-                        ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true, :product_id => product.id})
-
-        #repos
-        add_crumb_node!(bc, repos_cs_bc_id(cs, product), "",  _("Repositories"),
-                        ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true, :product_id => product.id})
-
-        #repos
-        add_crumb_node!(bc, deps_cs_bc_id(cs, product), "",  _("Dependencies"),
-                        ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
-
-        #distributions
-        add_crumb_node!(bc, distributions_cs_bc_id(cs, product), "",  _("Distributions"),
-                        ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
-      }
-    } if @changesets
     bc.to_json
+  end
+
+  def process_cs cs, bc
+    cs_info = {:is_new=>cs.state == Changeset::NEW, :state=>cs.state}
+    if (cs.state == Changeset::PROMOTING)
+      prog = cs.task_status.progress
+      if prog
+        cs_info[:progress] =  cs.task_status.progress
+      else
+        cs_info[:progress] =  0
+      end
+    end
+    add_crumb_node!(bc, changeset_bc_id(cs), "", cs.name, ['changesets'],
+                  {:client_render => true}, cs_info)
+
+    cs.involved_products.each{|product|
+      #product details
+      add_crumb_node!(bc, product_cs_bc_id(cs, product), "", product.name, ['changesets', changeset_bc_id(cs)],
+                    {:client_render => true})
+      #packages
+      add_crumb_node!(bc, packages_cs_bc_id(cs, product), "",  _("Packages"),
+                      ['changesets', changeset_bc_id(cs),product_cs_bc_id(cs, product)], {:client_render => true, :product_id => product.id})
+
+      #errata
+      add_crumb_node!(bc, errata_cs_bc_id(cs, product), "",  _("Errata"),
+                      ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true, :product_id => product.id})
+
+      #repos
+      add_crumb_node!(bc, repos_cs_bc_id(cs, product), "",  _("Repositories"),
+                      ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true, :product_id => product.id})
+
+      #repos
+      add_crumb_node!(bc, deps_cs_bc_id(cs, product), "",  _("Dependencies"),
+                      ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
+
+      #distributions
+      add_crumb_node!(bc, distributions_cs_bc_id(cs, product), "",  _("Distributions"),
+                      ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
+    }
   end
 
   def changeset_bc_id cs
