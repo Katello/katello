@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.44
+Version:       0.2.45
 Release:       1%{?dist}
 
 # Upstream uses tito rpm helper utility. To get the particular version from
@@ -112,6 +112,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul 25 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.45-1
+- 840531 - Fixes issue with inability to individually promote packages attached
+  to a system template or changeset that have more than a single dash in the
+  name. (ehelms@redhat.com)
+- 817845 - updating katello man page entry (adprice@redhat.com)
+
 * Mon Jul 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.44-1
 - system groups - API accepts max_systems and CLI unit tests
 - system groups - wrong variable name in error message

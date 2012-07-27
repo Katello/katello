@@ -4,6 +4,6 @@ class postgres::params {
   $uid      = "26"
   $gid      = "26"
   $home     = "/var/lib/pgsql"
-  $password = ""
-}
 
+  $password_file = katello_config_value('psql_password_file')
+}

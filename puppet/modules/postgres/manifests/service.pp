@@ -1,16 +1,17 @@
 class postgres::service {
 
-  # RHBZ 800534 for RHEL 6.x - pg sysvinit script return non-zero when PID is not created in 2 seconds
-  exec { "fix-pgsysvinit":
-    path        => "/usr/bin:/bin",
-    onlyif      => "grep '\"x\$pid\" != x' /etc/init.d/postgresql",
-    command     => "sed -i 's/\"x\$pid\" != x/1 = 1/g' /etc/init.d/postgresql"
-  }
-
+  # never require Service["postgresql"] but Class["postgres::service"] or Exec["wait-for-postgresql"]
   service { "postgresql":
-    ensure  => running, enable => true, hasstatus => true, hasrestart => true,
+    ensure  => running,
+    enable => true,
+    hasstatus => true,
+    hasrestart => true,
+    start      => '/usr/sbin/service-wait postgresql start',
+    stop       => '/usr/sbin/service-wait postgresql stop',
+    restart    => '/usr/sbin/service-wait postgresql restart',
+    status     => '/usr/sbin/service-wait postgresql status',
     notify  => Exec['wait-for-postgresql'],
-    require => [Exec['fix-pgsysvinit'], Class["postgres::config"]],
+    require => [Class["postgres::config"]],
   }
 
   # wait 30 seconds for postgresql daemon to accept connections and execute SQL commands or timeout when not running
