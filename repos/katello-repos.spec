@@ -1,6 +1,6 @@
 
 Name:           katello-repos
-Version:        0.2.7
+Version:        0.2.8
 Release:        1%{?dist}
 Summary:        Definition of yum repositories for Katello
 
@@ -42,6 +42,9 @@ install -m 644 katello-pulp.repo %{buildroot}%{_sysconfdir}/yum.repos.d/
 %{_sysconfdir}/yum.repos.d/*.repo
 
 %changelog
+* Fri Jul 27 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.8-1
+- fix typo in repo files (msuchy@redhat.com)
+
 * Thu Jul 26 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.7-1
 - refactor katello-repos (msuchy@redhat.com)
 
