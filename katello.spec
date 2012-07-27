@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.49
+Version:        0.2.52
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -111,7 +111,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui-devel >= 0.7
+BuildRequires:  converge-ui-devel >= 0.8.3
 
 %description common
 Common bits for all Katello instances
@@ -224,6 +224,7 @@ install -m 755 script/katello-refresh-cdn %{buildroot}%{_sysconfdir}/cron.daily/
 
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
 install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
@@ -251,9 +252,11 @@ ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
 #create symlinks for important scripts
 mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_sbindir}
 ln -sv %{homedir}/script/katello-debug %{buildroot}%{_bindir}/katello-debug
 ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
 ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
+ln -sv %{homedir}/script/service-wait %{buildroot}%{_sbindir}/service-wait
 
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
@@ -310,6 +313,7 @@ fi
 %files
 %attr(600, katello, katello)
 %{_bindir}/katello-*
+%{_sbindir}/service-wait
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -355,6 +359,7 @@ fi
 %config %{_sysconfdir}/logrotate.d/%{name}-jobs
 %config %{_sysconfdir}/%{name}/mapping.yml
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%config(noreplace) %{_sysconfdir}/sysconfig/service-wait
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
 %{_sysconfdir}/bash_completion.d/%{name}
@@ -362,7 +367,7 @@ fi
 %{homedir}/db/schema.rb
 
 %defattr(-, katello, katello)
-%{_localstatedir}/log/%{name}
+%attr(640, katello, katello) %{_localstatedir}/log/%{name}
 %{datadir}
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
@@ -400,6 +405,64 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.52-1
+- require recent converge-ui
+- 840609 - fencing SYSTEM GROUPS from activation keys nav
+- puppet - adding mongod to the service-wait script
+- puppet - adding service-wait wrapper script
+- puppet - introducing temp answer file for dangerous options
+- puppet - not changing seeds.rb anymore with puppet
+- puppet - moving config_value function to rails context
+- puppet - removing log dir mangling
+
+* Fri Jul 27 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.51-1
+- fix typo in repo files (msuchy@redhat.com)
+- Fixes active button state increasing the size of the button awkwardly.
+  (ehelms@redhat.com)
+- Updates the submodule hash to point to 0.8.3-1 of ConvergeUI.
+  (ehelms@redhat.com)
+- Updates to make integration of converge-ui's newest changes cleaner and
+  remove repetition of CSS styling in the browser. (ehelms@redhat.com)
+- Adds override on header for thick border to the left and right of tabs.
+  (ehelms@redhat.com)
+- Fixes for updates from ConvergeUI. (ehelms@redhat.com)
+
+* Wed Jul 25 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.50-1
+- unit test fix (jsherril@redhat.com)
+- More tweaks + a spec test (jomara@redhat.com)
+- fixing issue where repos only in library would show up (jsherril@redhat.com)
+- Style changes as per pull request comments (jomara@redhat.com)
+- Adding fresh copy of katello.spec due to bad merge (jsherril@redhat.com)
+- master merge conflict (jsherril@redhat.com)
+- 840531 - Fixes issue with inability to individually promote packages attached
+  to a system template or changeset that have more than a single dash in the
+  name. (ehelms@redhat.com)
+- fixing mistaken name change (jsherril@redhat.com)
+- 841691 - Moving interface display to DETAILS page and removing it from system
+  list (jomara@redhat.com)
+- put spec on pair with Gemfile (msuchy@redhat.com)
+- CS - properly handling search error (jsherril@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- CS - changing collect{} ids on active record queries to use pluck
+  (jsherril@redhat.com)
+- Adding pluck support to active record, new feature backported from 3.1
+  (jsherril@redhat.com)
+- CS - greatly condensing bbq for environments (jsherril@redhat.com)
+- CS - fixing initially selected environment (jsherril@redhat.com)
+- CS - fixing consistency with page_size arguments (jsherril@redhat.com)
+- CS - a few suggested fixes (jsherril@redhat.com)
+- Added a way to return 'empty search results', an array with 'total' attribute
+  (paji@redhat.com)
+- CS - implementing roles based access controls (jsherril@redhat.com)
+- Fixed an issue where the rescue in Packages and Errata search was catching
+  non bad query exceptions (paji@redhat.com)
+- Added unit tests to test differnt actions in content search (paji@redhat.com)
+- 841000 - fixing product autocomplete issues (jsherril@redhat.com)
+- CS - adding shared/unique modes to the repo search (jsherril@redhat.com)
+- CS - adding all/unique/shared selector to product search
+  (jsherril@redhat.com)
+- CS - adding mode switcher to repo comparison (jsherril@redhat.com)
+
 * Tue Jul 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.49-1
 - rake - make rake compatible with 0.8.7
 - need a sudo in front of the cat so it can read the pass file
