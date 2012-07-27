@@ -7,7 +7,7 @@ Summary:        Definition of yum repositories for Katello
 Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
-Source0:        %{name}-%{version}.tar.gz
+Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
 BuildArch:      noarch
 Provides:       katello-repos-testing = 0.2.7
