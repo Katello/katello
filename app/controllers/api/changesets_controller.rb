@@ -12,7 +12,7 @@
 
 class Api::ChangesetsController < Api::ApiController
 
-  before_filter :find_changeset, :only => [:show, :update, :destroy, :promote, :dependencies]
+  before_filter :find_changeset, :only => [:show, :update, :destroy, :promote, :apply, :dependencies]
   before_filter :find_environment
   before_filter :authorize
 
@@ -26,15 +26,24 @@ class Api::ChangesetsController < Api::ApiController
       :create       => manage_perm,
       :update       => manage_perm,
       :promote      => promote_perm,
+      :apply        => manage_perm,
       :destroy      => manage_perm,
     }
   end
 
   respond_to :json
 
+  # TODO: Figure out why we can't seem to return type
   def index
-    render :json => Changeset.select("changesets.*, environments.name AS environment_name").
+    changesets = Changeset.select("changesets.*, environments.name AS environment_name").
         joins(:environment).where(params.slice(:name, :environment_id))
+
+    transformed = []
+    changesets.each do |cs|
+      cs['action_type'] = cs.action_type
+      transformed.push(cs)
+    end
+    render :json => transformed
   end
 
   def show
@@ -54,19 +63,36 @@ class Api::ChangesetsController < Api::ApiController
   end
 
   def create
-    @changeset             = PromotionChangeset.new(params[:changeset])
+    csType = params[:changeset][:type]
+    if params[:changeset][:type] == 'PROMOTION'
+      @changeset = PromotionChangeset.new(params[:changeset])
+    elsif params[:changeset][:type] == 'DELETION'
+      @changeset = DeletionChangeset.new(params[:changeset])
+    else
+      raise HttpErrors::ApiError, _("Unknown changeset type, must be PROMOTION or DELETION: #{csType}")
+    end
+
     @changeset.environment = @environment
     @changeset.save!
 
     render :json => @changeset
   end
 
+  # DEPRICATED - TODO: Note this in the new API doc format
   def promote
     @changeset.state = Changeset::REVIEW
     @changeset.save!
-    async_job = @changeset.promote :async => true
+    async_job = @changeset.apply :async => true
     render :json => async_job, :status => 202
   end
+
+  def apply
+    @changeset.state = Changeset::REVIEW
+    @changeset.save!
+    async_job = @changeset.apply :async => true
+    render :json => async_job, :status => 202
+  end
+
 
   def destroy
     @changeset.destroy
