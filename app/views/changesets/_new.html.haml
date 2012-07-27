@@ -22,7 +22,7 @@
         .grid_4.la
           -# if the user is currently in the Library, only changesets of type 'promotion' are allowed
           - if @environment.library
-            #{@changeset.action_type}
+            #{Changeset::PROMOTION}
           - else
             = select_tag :action_type, options_for_select(Changeset::TYPES, @changeset.action_type), :tabindex => auto_tab_index, :style => "padding-right:5px;"
       .grid_5.ra
