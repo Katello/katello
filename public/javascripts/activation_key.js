@@ -13,6 +13,10 @@
 
 KT.panel.list.registerPage('activation_keys', { create : 'new_activation_key' });
 KT.panel.set_expand_cb(function() {
+    var children = $('#panel .menu_parent');
+    $.each(children, function(i, item) {
+        KT.menu.hoverMenu(item, { top : '75px' });
+    });
     KT.system_groups_pane.register_multiselect();
 });
 
