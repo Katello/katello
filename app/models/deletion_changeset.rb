@@ -50,19 +50,19 @@ class DeletionChangeset < Changeset
     update_progress! '10'
     from_env = self.environment
 
-    PulpTaskStatus::wait_for_tasks delete_products(from_env)
-    update_progress! '30'
-    PulpTaskStatus::wait_for_tasks delete_templates(from_env)
-    update_progress! '50'
-    PulpTaskStatus::wait_for_tasks delete_repos(from_env)
-    update_progress! '70'
-    from_env.update_cp_content
-    update_progress! '80'
+    # PulpTaskStatus::wait_for_tasks delete_products(from_env)
+    # update_progress! '30'
+    # PulpTaskStatus::wait_for_tasks delete_templates(from_env)
+    # update_progress! '50'
+    # PulpTaskStatus::wait_for_tasks delete_repos(from_env)
+    # update_progress! '70'
+    # from_env.update_cp_content
+    # update_progress! '80'
     delete_packages from_env
-    update_progress! '90'
-    delete_errata from_env
-    update_progress! '95'
-    delete_distributions from_env
+    # update_progress! '90'
+    # delete_errata from_env
+    # update_progress! '95'
+    # delete_distributions from_env
     update_progress! '100'
 
     PulpTaskStatus::wait_for_tasks generate_metadata from_env
@@ -102,10 +102,10 @@ class DeletionChangeset < Changeset
 
 
   def delete_products from_env
-    async_tasks = self.products.collect do |product|
-      product.delete_from_env from_env
-    end
-    async_tasks.flatten(1)
+    # async_tasks = self.products.collect do |product|
+    #   product.delete_from_env from_env
+    # end
+    # async_tasks.flatten(1)
   end
 
 
@@ -135,7 +135,7 @@ class DeletionChangeset < Changeset
       end
     end
     
-    pkgs_promote.each_pair do |repo, pkgs|
+    pkgs_delete.each_pair do |repo, pkgs|
       repo.delete_packages(pkgs)
       Glue::Pulp::Package.index_packages(pkgs)
     end
