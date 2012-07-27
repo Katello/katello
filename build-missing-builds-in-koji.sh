@@ -2,7 +2,7 @@
 
 
 TAGS="katello-nightly-rhel6 katello-nightly-fedora16 katello-nightly-fedora17"
-FEDORA_UPLOAD=0
+FEDORA_UPLOAD=1
 
 pushd . >/dev/null
 pushd `dirname $0`/.. >/dev/null
