@@ -1,5 +1,5 @@
 Name: katello-agent
-Version: 1.0.4
+Version: 1.0.5
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -39,6 +39,14 @@ cp src/katello/agent/katelloplugin.py %{buildroot}/%{_prefix}/lib/gofer/plugins
 %doc LICENSE
 
 %changelog
+* Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 1.0.5-1
+- macro python_sitelib is not used anywhere, removing
+- provide more descriptive description
+- put plugins into correct location
+- build root is not used since el6 (inclusive)
+- point URL to our wiki
+- %%defattr is not needed since rpm 4.4
+
 * Wed Jun 27 2012 Lukas Zapletal <lzap+git@redhat.com> 1.0.4-1
 - 828533 - changing to proper QPIDD SSL port
 
