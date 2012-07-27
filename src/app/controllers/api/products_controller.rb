@@ -40,17 +40,19 @@ class Api::ProductsController < Api::ApiController
     }
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/organizations/:organization_id/products/:id", "Show a product"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :id, :number, :desc => "product numeric identifier"
   def show
     render :json => @product.to_json
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :PUT, "/organizations/:organization_id/products/:id", "Update a product"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :id, :number, :desc => "product numeric identifier"
   param :product, Hash do
-    param :gpg_key_name, :undef
-    param :recursive, :bool
+    param :gpg_key_name, :identifier, :desc => "identifier of the gpg key"
+    param :recursive, :boolean, "set to true to recursive update gpg key"
   end
   def update
     raise HttpErrors::BadRequest, _("It is not allowed to update a Red Hat product.") if @product.redhat?
@@ -61,10 +63,11 @@ class Api::ProductsController < Api::ApiController
     render :json => @product.to_json
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/environments/:environment_id/products", "List products"
   api :GET, "/organizations/:organization_id/products", "List products"
-  param :name, :undef
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :environment_id, :identifier, :desc => "environment identifier"
+  param :name, :identifier, :desc => "product identifier"
   def index
     query_params.delete(:organization_id)
     query_params.delete(:environment_id)
@@ -79,34 +82,40 @@ class Api::ProductsController < Api::ApiController
     render :json => products.select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :DELETE, "/organizations/:organization_id/products/:id", "Destroy a product"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :id, :number, :desc => "product numeric identifier"
   def destroy
     @product.destroy
     render :text => _("Deleted product '#{params[:id]}'"), :status => 200
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/environments/:environment_id/products/:id/repositories"
   api :GET, "/organizations/:organization_id/products/:id/repositories"
   api :GET, "/organizations/:organization_id/products/:id/repositories"
-  param :include_disabled, :undef
-  param :name, :undef
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :environment_id, :identifier, :desc => "environment identifier"
+  param :id, :number, :desc => "product numeric identifier"
+  param :include_disabled, :boolean, :desc => "set to True if you want to list disabled repositories"
+  param :name, :identifier, :desc => "repository identifier"
   def repositories
     render :json => @product.repos(@environment, query_params[:include_disabled]).where(query_params.slice(:name))
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :POST, "/organizations/:organization_id/products/:id/sync_plan"
-  param :plan_id, :number
+  api :POST, "/organizations/:organization_id/products/:id/sync_plan", "Assign sync plan to product"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :id, :number, :desc => "product numeric identifier"
+  param :plan_id, :number, :desc => "Plan numeric identifier"
   def set_sync_plan
     @product.sync_plan = SyncPlan.find(params[:plan_id])
     @product.save!
     render :text => _("Synchronization plan assigned."), :status => 200
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :DELETE, "/organizations/:organization_id/products/:id/sync_plan"
+  api :DELETE, "/organizations/:organization_id/products/:id/sync_plan", "Delete assignment sync plan and product"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :id, :number, :desc => "product numeric identifier"
+  param :plan_id, :number, :desc => "Plan numeric identifier"
   def remove_sync_plan
     @product.sync_plan = nil
     @product.save!
