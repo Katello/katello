@@ -47,7 +47,7 @@ describe ChangesetsController, :katello => true do
 
   describe "viewing changesets" do
     before (:each) do
-      @changeset = Changeset.create(CSControllerTest::CHANGESET)
+      @changeset = PromotionChangeset.create(CSControllerTest::CHANGESET)
     end
 
     it "should show the changeset 2 pane list" do
@@ -118,7 +118,7 @@ describe ChangesetsController, :katello => true do
         controller.should notify.success
         post 'create', {:name => "Changeset 7056", :description => "FOO", :action_type => Changeset::DELETION, :env_id => @env.id}
         response.should be_success
-        Changeset.exists?(:action_type => Changeset::DELETION).should be_true
+        DeletionChangeset.exists?(:name => "Changeset 7056").should be_true
       end
     end
 
@@ -156,7 +156,7 @@ describe ChangesetsController, :katello => true do
 
   describe 'deleting a changeset' do
     before (:each) do
-      @changeset = Changeset.create(CSControllerTest::CHANGESET)
+      @changeset = PromotionChangeset.create(CSControllerTest::CHANGESET)
     end
 
     it 'should successfully delete a changeset' do
@@ -176,7 +176,7 @@ describe ChangesetsController, :katello => true do
 
   describe 'updating a changeset' do
     before (:each) do
-      @changeset = Changeset.create!(CSControllerTest::CHANGESET)
+      @changeset = PromotionChangeset.create!(CSControllerTest::CHANGESET)
     end
 
     it 'should successfully update a changeset' do
@@ -196,7 +196,7 @@ describe ChangesetsController, :katello => true do
 
   describe 'getting the dependencies of a changeset' do
     before (:each) do
-      @changeset = Changeset.create!(CSControllerTest::CHANGESET)
+      @changeset = PromotionChangeset.create!(CSControllerTest::CHANGESET)
 
     end
 
@@ -215,7 +215,7 @@ describe ChangesetsController, :katello => true do
       @env1 = @organization.library
       @env2 = KTEnvironment.create!(:name=>"FOO", :prior => @env1, :organization=>@organization)
       @env3 = KTEnvironment.create!(:name=>"FOO2", :prior => @env2, :organization=>@organization)
-      @cs = Changeset.create!(:name=>"FOO", :environment=>@env3, :state=>"promoted")
+      @cs = PromotionChangeset.create!(:name=>"FOO", :environment=>@env3, :state=>"promoted")
     end
 
     describe "GET index" do
@@ -257,7 +257,7 @@ describe ChangesetsController, :katello => true do
 
     describe "POST promote" do
       before do
-        @cs2 = Changeset.create(:name=>"FOO2", :environment=>@env2, :state=>"review")
+        @cs2 = PromotionChangeset.create(:name=>"FOO2", :environment=>@env2, :state=>"review")
       end
       let(:action) {:promote}
       let(:req) do

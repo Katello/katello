@@ -50,7 +50,7 @@ describe Api::ChangesetsContentController, :katello => true do
     @product  = mock(Product, { "name" => "prod", 'id' => 0 })
     @repo     = mock(Product, { "name" => "repo" })
 
-    @cs = Changeset.new(:name => "changeset", :environment => @environment, :id => changeset_id)
+    @cs = PromotionChangeset.new(:name => "changeset", :environment => @environment, :id => changeset_id)
     Changeset.stub(:find_by_id).and_return(@cs)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
