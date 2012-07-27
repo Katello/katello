@@ -442,17 +442,35 @@ class Apply(ChangesetAction):
 
         cset = get_changeset(orgName, envName, csName)
 
-        task = self.api.promote(cset["id"])
+        task = self.api.apply(cset["id"])
         task = AsyncTask(task)
 
-        run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the changeset, please wait... "))
+        run_spinner_in_bg(wait_for_async_task, [task], message=_("Applying the changeset, please wait... "))
 
         if task.succeeded():
-            print _("Changeset [ %s ] promoted" % csName)
+            print _("Changeset [ %s ] applied" % csName)
             return os.EX_OK
         else:
             print _("Changeset [ %s ] promotion failed: %s" % (csName, format_task_errors(task.errors())))
             return os.EX_DATAERR
+
+# ==============================================================================
+class Promote(Apply):
+    description = _('promotes a changeset to the next environment - DEPRECATED')
+
+    def run(self):
+        csName = self.get_option('name')
+        orgName = self.get_option('org')
+        envName = self.get_option('env')
+
+        # Block attempts to call this on deletion changesets, otherwise continue
+        cset = get_changeset(orgName, envName, csName)
+        if cset['type'] == 'DELETION':
+            print _("This is a deletion changeset and does not support promotion")
+            return os.EX_DATAERR
+
+        super(Promote, self).run()
+
 
 
 # changeset command ============================================================

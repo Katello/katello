@@ -243,6 +243,7 @@ def setup_admin(katello_cmd):
     cset_cmd.add_command('update', changeset.UpdateContent())
     cset_cmd.add_command('delete', changeset.Delete())
     cset_cmd.add_command('apply', changeset.Apply())
+    cset_cmd.add_command('promote', changeset.Promote())
     katello_cmd.add_command('changeset', cset_cmd)
 
     client_cmd = client.Client()
