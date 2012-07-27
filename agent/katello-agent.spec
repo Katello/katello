@@ -28,14 +28,14 @@ popd
 
 %install
 mkdir -p %{buildroot}/%{_sysconfdir}/gofer/plugins
-mkdir -p %{buildroot}/%{_libdir}/gofer/plugins
+mkdir -p %{buildroot}/%{_prefix}/lib/gofer/plugins
 
 cp etc/gofer/plugins/katelloplugin.conf %{buildroot}/%{_sysconfdir}/gofer/plugins
-cp src/katello/agent/katelloplugin.py %{buildroot}/%{_libdir}/gofer/plugins
+cp src/katello/agent/katelloplugin.py %{buildroot}/%{_prefix}/lib/gofer/plugins
 
 %files
 %config(noreplace) %{_sysconfdir}/gofer/plugins/katelloplugin.conf
-%{_libdir}/gofer/plugins/katelloplugin.*
+%{_prefix}/lib/gofer/plugins/katelloplugin.*
 %doc LICENSE
 
 %changelog
