@@ -40,54 +40,52 @@ class Api::GpgKeysController < Api::ApiController
     }
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/organizations/:organization_id/gpg_keys", "List gpg keys"
-  param :name, :undef
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :name, :identifier, :desc => "identifier of the gpg key"
   def index
     gpg_keys = @organization.gpg_keys.where(params.slice(:name))
     render :json => gpg_keys, :only => [:id, :name]
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/gpg_keys/:id", "Show a gpg key"
+  param :id, :number, :desc => "gpg key numeric identifier"
   def show
     render :json => @gpg_key, :details => true
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :POST, "/organizations/:organization_id/gpg_keys", "Create a gpg key"
+  param :organization_id, :identifier, :desc => "organization identifier"
   param :gpg_key, Hash do
-    param :content, :undef
-    param :name, :undef
+    param :name, :identifier, :desc => "identifier of the gpg key"
+    param :content, String, :desc => "public key block in DER encoding"
   end
   def create
     gpg_key = @organization.gpg_keys.create!(params[:gpg_key].slice(:name, :content))
     render :json => gpg_key
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :PUT, "/gpg_keys/:id", "Update a gpg key"
-  param :gpg_key, Hash do
-    param :content, :undef
-    param :name, :undef
-  end
+  see "gpg_keys#create"
   def update
     @gpg_key.update_attributes!(params[:gpg_key].slice(:name, :content))
     render :json => @gpg_key
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :DELETE, "/gpg_keys/:id", "Destroy a gpg key"
+  param :id, :number, :desc => "gpg key numeric identifier"
   def destroy
     @gpg_key.destroy
     render :text => _("Deleted GPG key '#{params[:id]}'"), :status => 204
   end
 
-  # returns the content of a repo gpg key, used directly by yum
-  # I've amended REST best practices(e.g. not using the show action) as we don't want to
-  # authenticate, authorize etc, trying to distinquse between a yum request and normal api request
-  # might not always be 100% bullet proof, and its more important that yum can fetch the key.
-  api :GET, "/gpg_keys/:id/content"
+  api :GET, "/gpg_keys/:id/content", :desc => <<-EOS
+Returns the content of a repo gpg key, used directly by yum
+We've amended REST best practices (e.g. not using the show action) as we don't want to
+authenticate, authorize etc, trying to distinquse between a yum request and normal api request
+might not always be 100% bullet proof, and its more important that yum can fetch the key.
+EOS
+  param :id, :number, :desc => "gpg key numeric identifier"
   def content
     @gpg_key.content.present? ? render(:text => @gpg_key.content, :layout => false) : head(404)
   end
