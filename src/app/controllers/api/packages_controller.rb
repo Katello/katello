@@ -27,17 +27,22 @@ class Api::PackagesController < Api::ApiController
   end
 
   api :GET, "/repositories/:repository_id/packages", "List packages"
+  param :repository_id, :number, :desc => "environment numeric identifier"
   def index
     render :json => @repo.packages
   end
 
   api :GET, "/repositories/:repository_id/packages/search"
+  param :repository_id, :number, :desc => "environment numeric identifier"
+  param :search, String, :desc => "search expression"
   def search
     packages = Glue::Pulp::Package.search(params[:search], 0, 0, [@repo.pulp_id])
     render :json => packages.to_a
   end
 
   api :GET, "/repositories/:repository_id/packages/:id", "Show a package"
+  param :repository_id, :number, :desc => "environment numeric identifier"
+  param :id, String, :desc => "package id"
   def show
     render :json => @package
   end
