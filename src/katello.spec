@@ -24,14 +24,7 @@ BuildArch:      noarch
 Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
-
-# How to create the source tarball:
-#
-# git clone git://git.fedorahosted.org/git/katello.git/
-# yum install tito
-# cd src/
-# tito build --tag katello-%{version}-%{release} --tgz
-Source0:        %{name}-%{version}.tar.gz
+Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:        %{name}-common

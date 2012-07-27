@@ -5,7 +5,7 @@ Summary: The Katello Agent
 Group:   Development/Languages
 License: LGPLv2
 URL:     https://fedorahosted.org/katello/
-Source0: %{name}-%{version}.tar.gz
+Source0: https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 BuildArch: noarch
 BuildRequires: python2-devel
 BuildRequires: python-setuptools
