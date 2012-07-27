@@ -122,27 +122,23 @@ class DeletionChangeset < Changeset
 
   def delete_packages from_env
     #repo->list of pkg_ids
-    # pkgs_delete = { }
-    # 
-    # (not_included_packages + dependencies).each do |pkg|
-    #   product = pkg.product
-    # 
-    #   product.repos(from_env).each do |repo|
-    #     if repo.is_cloned_in? to_env
-    #       clone = repo.get_clone to_env
-    # 
-    #       if (repo.has_package? pkg.package_id) and (!clone.has_package? pkg.package_id)
-    #         pkgs_promote[clone] ||= []
-    #         pkgs_promote[clone] << pkg.package_id
-    #       end
-    #     end
-    #   end
-    # end
-    # 
-    # pkgs_promote.each_pair do |repo, pkgs|
-    #   repo.add_packages(pkgs)
-    #   Glue::Pulp::Package.index_packages(pkgs)
-    # end
+    pkgs_delete = { }
+    
+    not_included_packages.each do |pkg|
+      product = pkg.product
+      product.repos(from_env).each do |repo|
+          if (repo.has_package? pkg.package_id)
+            pkgs_delete[repo] ||= []
+            pkgs_delete[repo] << pkg.package_id
+          end
+        end
+      end
+    end
+    
+    pkgs_promote.each_pair do |repo, pkgs|
+      repo.delete_packages(pkgs)
+      Glue::Pulp::Package.index_packages(pkgs)
+    end
   end
 
 
