@@ -75,11 +75,11 @@ class Api::EnvironmentsController < Api::ApiController
     }
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/organizations/:organization_id/environments", "List environments in an organization"
   api :GET, "/owners/:organization_id/environments", "List environments for RHSM"
-  param :library, :undef, :desc => "set true if you want to see only library environment"
-  param :name, :undef, :desc => "filter only environments with this name"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :library, :boolean, :desc => "set true if you want to see only library environment"
+  param :name, :identifier, :desc => "filter only environments with this identifier"
   def index
     query_params[:organization_id] = @organization.id
      environments = KTEnvironment.where query_params
@@ -93,16 +93,18 @@ class Api::EnvironmentsController < Api::ApiController
 
   api :GET, "/environments/:id", "Show an environment"
   api :GET, "/organizations/:organization_id/environments/:id", "Show an environment"
+  param :id, :identifier, :desc => "environment identifier"
+  param :organization_id, :identifier, :desc => "organization identifier"
   def show
     render :json => @environment
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :POST, "/organizations/:organization_id/environments", "Create an environment in an organization"
+  param :organization_id, :identifier, :desc => "organization identifier"
   param :environment, Hash do
-    param :name, :undef
-    param :prior, :undef, :desc => <<-DESC
-id of an environment that is prior the new environment in the chain, it has to be
+    param :name, :identifier, :desc => "name of the environment (identifier)"
+    param :prior, :identifier, :desc => <<-DESC
+identifier of an environment that is prior the new environment in the chain, it has to be
 either library or an envrionment at the end of the chain
     DESC
   end
@@ -115,13 +117,9 @@ either library or an envrionment at the end of the chain
     render :json => environment
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :PUT, "/environments/:id", "Update an environment"
   api :PUT, "/organizations/:organization_id/environments/:id", "Update an environment in an organization"
-  param :environment, Hash do
-    param :description, :undef
-    param :name, :undef
-  end
+  see "environments#create"
   def update
     if @environment.library?
       raise HttpErrors::BadRequest, _("Can't update Library environment")
@@ -131,9 +129,10 @@ either library or an envrionment at the end of the chain
     end
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :DELETE, "/environments/:id", "Destroy an environment"
   api :DELETE, "/organizations/:organization_id/environments/:id", "Destroy an environment in an organization"
+  param :id, :identifier, :desc => "environment identifier"
+  param :organization_id, :identifier, :desc => "organization identifier"
   def destroy
     if @environment.confirm_last_env
       @environment.destroy
@@ -144,14 +143,16 @@ either library or an envrionment at the end of the chain
     end
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/organizations/:organization_id/environments/:id/repositories", "List repositories available in the environment"
-  param :include_disabled, :undef, :desc => "set to true if you want to see also disabled repositories"
+  param :id, :identifier, :desc => "environment identifier"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :include_disabled, :boolean, :desc => "set to true if you want to see also disabled repositories"
   def repositories
     render :json => @environment.products.all_readable(@organization).collect { |p| p.repos(@environment, query_params[:include_disabled]) }.flatten
   end
 
-  api :GET, "/environments/:id/releases"
+  api :GET, "/environments/:id/releases", "List available releases for given environment"
+  param :id, :identifier, :desc => "environment identifier"
   def releases
     render :json => { :releases => @environment.available_releases }
   end
