@@ -28,7 +28,7 @@ class ChangesetsController < ApplicationController
     read_perm = lambda{@environment.changesets_readable?}
     manage_perm = lambda{@environment.changesets_manageable?}
     update_perm =  lambda {@environment.changesets_manageable? && update_artifacts_valid?}
-    promote_perm = lambda{@environment.changesets_promotable?}
+    apply_perm = lambda{@environment.changesets_promotable?}
     {
       :index => read_perm,
       :items => read_perm,
@@ -43,8 +43,8 @@ class ChangesetsController < ApplicationController
       :dependencies => read_perm,
       :object => read_perm,
       :auto_complete_search => read_perm,
-      :promote => promote_perm,
-      :promotion_progress => read_perm
+      :apply => apply_perm,
+      :status => read_perm
     }
   end
 
@@ -220,7 +220,7 @@ class ChangesetsController < ApplicationController
     render :text=>""
   end
 
-  def promote
+  def apply
     messages = {}
     if !params[:confirm] && @environment.prior.library?
       syncing = []
@@ -241,18 +241,23 @@ class ChangesetsController < ApplicationController
     if  !messages.empty?
       to_ret[:warnings] = render_to_string(:partial=>'warning', :locals=>messages)
     else
-      @changeset.promote :notify => true, :async => true
+      if @changeset.promotion?
+        @changeset.promote :notify => true, :async => true
+        notify.success _("Started content promotion to %s environment using '%s'") % [@environment.name, @changeset.name]
+      else
+        @changeset.delete_from_env :notify => true, :async => true
+        notify.success _("Started content deletion from %s environment using '%s'") % [@environment.name, @changeset.name]
+      end
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
-      notify.success _("Started promotion of '%s' to %s environment") % [@changeset.name, @environment.name]
     end
     render :json=>to_ret
   rescue Exception => e
-    notify.exception "Failed to promote.", e
+    notify.exception _("Failed to apply changeset."), e
     render :text=>e.to_s, :status=>500
   end
 
-  def promotion_progress
+  def status
     progress = @changeset.task_status.progress
     state = @changeset.state
     to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i}
