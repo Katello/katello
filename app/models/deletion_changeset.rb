@@ -127,11 +127,11 @@ class DeletionChangeset < Changeset
     not_included_packages.each do |pkg|
       product = pkg.product
       product.repos(from_env).each do |repo|
-          if (repo.has_package? pkg.package_id)
-            pkgs_delete[repo] ||= []
-            pkgs_delete[repo] << pkg.package_id
-          end
+        if (repo.has_package? pkg.package_id)
+          pkgs_delete[repo] ||= []
+          pkgs_delete[repo] << pkg.package_id
         end
+      
       end
     end
     
