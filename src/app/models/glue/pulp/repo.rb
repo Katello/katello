@@ -412,6 +412,18 @@ module Glue::Pulp::Repo
     Resources::Pulp::Repository.add_distribution self.pulp_id,  distribution_id
   end
 
+  def delete_packages pkg_id_list
+    Resources::Pulp::Repository.delete_packages self.pulp_id,  pkg_id_list
+  end
+
+  def delete_errata errata_id_list
+    Resources::Pulp::Repository.delete_errata self.pulp_id,  errata_id_list
+  end
+
+  def delete_distribution distribution_id
+    Resources::Pulp::Repository.delete_distribution self.pulp_id,  distribution_id
+  end
+
   def cancel_sync
     Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
     history = self.sync_status
