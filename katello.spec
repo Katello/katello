@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.50
+Version:        0.2.51
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -400,6 +400,18 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jul 27 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.51-1
+- fix typo in repo files (msuchy@redhat.com)
+- Fixes active button state increasing the size of the button awkwardly.
+  (ehelms@redhat.com)
+- Updates the submodule hash to point to 0.8.3-1 of ConvergeUI.
+  (ehelms@redhat.com)
+- Updates to make integration of converge-ui's newest changes cleaner and
+  remove repetition of CSS styling in the browser. (ehelms@redhat.com)
+- Adds override on header for thick border to the left and right of tabs.
+  (ehelms@redhat.com)
+- Fixes for updates from ConvergeUI. (ehelms@redhat.com)
+
 * Wed Jul 25 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.50-1
 - unit test fix (jsherril@redhat.com)
 - More tweaks + a spec test (jomara@redhat.com)
