@@ -317,33 +317,6 @@ class PromotionChangeset < Changeset
     new_dependencies
   end
 
-  def not_included_products
-    products_ids = []
-    products_ids += self.packages.map { |p| p.product.cp_id }
-    products_ids += self.errata.map { |e| e.product.cp_id }
-    products_ids -= self.products.collect { |p| p.cp_id }
-    products_ids.uniq.collect do |product_cp_id|
-      Product.find_by_cp_id(product_cp_id)
-    end
-  end
-
-  def not_included_repos product, environment
-    product_repos = product.repos(environment) - self.repos
-  end
-
-
-  def not_included_packages
-    self.packages.delete_if do |pack|
-      (products.uniq! or []).include? pack.product
-    end
-  end
-
-  def not_included_errata
-    self.errata.delete_if do |err|
-      (products.uniq! or []).include? err.product
-    end
-  end
-
   def generate_metadata from_env, to_env
     async_tasks = affected_repos.collect do |repo|
       repo.get_clone(to_env).generate_metadata
