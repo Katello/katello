@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.32
+Version:        0.2.33
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -87,6 +87,16 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 27 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.33-1
+- Making auto-stop services optional (jomara@redhat.com)
+- Making the script call katello-system instead of individual system calls
+  thanks to msuchys update (jomara@redhat.com)
+- 820280 : print output from service $ stop (jomara@redhat.com)
+- 820280 : katello-upgrad should also stop httpd & elasticsearch. Using confirm
+  method for input (jomara@redhat.com)
+- 820280 - katello-upgrade should stop the services it requires to be stopped
+  (jomara@redhat.com)
+
 * Thu Jul 26 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.32-1
 - Making katello db migration upgrade script start backend services
   (jsherril@redhat.com)
