@@ -29,7 +29,6 @@ class katello::params {
       }
   }
 
-
   # HTTP Proxy settings (currently used by pulp)
   $proxy_url = katello_config_value('proxy_url')
   $proxy_port = katello_config_value('proxy_port')
@@ -44,18 +43,16 @@ class katello::params {
   $katello_dir = "/usr/share/katello"
   $environment = "production"
   $log_base    = "/var/log/katello"
-  $db_env_log  = "$log_base/katello-configure/db_env.log"
-  $migrate_log = "$log_base/katello-configure/db_migrate.log"
-  $seed_log    = "$log_base/katello-configure/db_seed.log"
+  $configure_log_base = "$log_base/katello-configure"
+  $db_env_log  = "$configure_log_base/db_env.log"
+  $migrate_log = "$configure_log_base/db_migrate.log"
+  $seed_log    = "$configure_log_base/db_seed.log"
 
   # katello upgrade settings
   $katello_upgrade_scripts_dir  = "/usr/share/katello/install/upgrade-scripts/upgrade/"
   $katello_upgrade_history_file = "/var/lib/katello/upgrade-history"
 
   # SSL settings
-  #$ssl_certificate_file     = "/etc/pki/tls/certs/httpd-ssl.crt"
-  #$ssl_certificate_key_file = "/etc/pki/tls/private/httpd-ssl.key"
-  #$ssl_certificate_ca_file  = "/usr/share/katello/KATELLO-TRUSTED-SSL-CERT"
   $ssl_certificate_file     = "/etc/candlepin/certs/candlepin-ca.crt"
   $ssl_certificate_key_file = "/etc/candlepin/certs/candlepin-ca.key"
   $ssl_certificate_ca_file  = $ssl_certificate_file
@@ -83,10 +80,13 @@ class katello::params {
 
   # OAUTH settings
   $oauth_key    = "katello"
-  $oauth_secret = regsubst(generate('/usr/bin/openssl', 'rand', '-base64', '24'), '^(.{24}).*', '\1')
+  $oauth_secret = katello_create_read_password(katello_config_value('oauth_token_file'))
 
   # Subsystems settings
   $candlepin_url = "https://localhost:8443/candlepin"
   $pulp_url      = katello_pulp_url()
   $foreman_url   = "https://localhost/foreman"
+
+  # database reinitialization flag
+  $reset_data = katello_config_value('reset_data')
 }
