@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.51
+Version:        0.2.52
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -405,6 +405,16 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.52-1
+- require recent converge-ui
+- 840609 - fencing SYSTEM GROUPS from activation keys nav
+- puppet - adding mongod to the service-wait script
+- puppet - adding service-wait wrapper script
+- puppet - introducing temp answer file for dangerous options
+- puppet - not changing seeds.rb anymore with puppet
+- puppet - moving config_value function to rails context
+- puppet - removing log dir mangling
+
 * Fri Jul 27 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.51-1
 - fix typo in repo files (msuchy@redhat.com)
 - Fixes active button state increasing the size of the button awkwardly.
