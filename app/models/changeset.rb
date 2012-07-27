@@ -37,7 +37,7 @@ class Changeset < ActiveRecord::Base
   PROMOTING = 'promoting'
   DELETING = 'deleting'
   FAILED    = 'failed'
-  STATES    = [NEW, REVIEW, PROMOTING, PROMOTED, FAILED]
+  STATES    = [NEW, REVIEW, PROMOTING, PROMOTED, FAILED, DELETING]
 
 
   PROMOTION = 'promotion'
