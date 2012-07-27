@@ -46,7 +46,9 @@ class PromotionsController < ApplicationController
     @products = @products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
     Glue::Pulp::Repos.prepopulate! @products, @environment,[]
 
-    @changesets = @next_environment.working_changesets if (@next_environment && @next_environment.changesets_readable?)
+    @promotion_changesets = @next_environment.working_promotion_changesets if (@next_environment && @next_environment.changesets_readable?)
+    @deletion_changesets = @environment.working_deletion_changesets if (@environment && @environment.changesets_readable?)
+
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
 
