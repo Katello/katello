@@ -6,7 +6,7 @@ Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
 License: LGPLv2
-URL: https://fedorahosted.org/pulp/
+URL:     https://fedorahosted.org/katello/
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
