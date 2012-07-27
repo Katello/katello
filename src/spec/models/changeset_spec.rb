@@ -13,7 +13,7 @@ describe Changeset, :katello => true do
       @organization = Organization.create!(:name => 'candyroom', :cp_key => 'test_organization')
       @environment  = KTEnvironment.create!(:name         => 'julia', :prior => @organization.library,
                                             :organization => @organization)
-      @changeset    = Changeset.create!(:environment => @environment, :name => "foo-changeset")
+      @changeset    = PromotionChangeset.create!(:environment => @environment, :name => "foo-changeset")
     end
 
     it "changeset should not be null" do
