@@ -15,8 +15,10 @@ BuildRequires: rpm-python
 Requires: gofer >= 0.60
 Requires: gofer-package >= 0.60
 Requires: subscription-manager
+
 %description
-The Katello agent.
+Provides plugin for gofer, which allows communicating with Katello server
+and execute scheduled actions.
 
 %prep
 %setup -q
