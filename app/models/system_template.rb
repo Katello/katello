@@ -205,20 +205,13 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def add_package package_name
-    if pack_attrs = Katello::PackageUtils.parse_nvrea_nvre(package_name)
-      self.packages.create!(:package_name => pack_attrs[:name], :version => pack_attrs[:version], :release => pack_attrs[:release], :epoch => pack_attrs[:epoch], :arch => pack_attrs[:arch])
-    else
-      self.packages.create!(:package_name => package_name)
-    end
+    self.packages.create!(:package_name => package_name)
   end
 
 
   def remove_package package_name
-    if pack_attrs = Katello::PackageUtils.parse_nvrea_nvre(package_name)
-      package = self.packages.find(:first, :conditions => {:package_name => pack_attrs[:name], :version => pack_attrs[:version], :release => pack_attrs[:release], :epoch => pack_attrs[:epoch], :arch => pack_attrs[:arch]})
-    else
-      package = self.packages.find(:first, :conditions => {:package_name => package_name})
-    end
+    package = self.packages.find(:first, :conditions => {:package_name => package_name})
+
     self.packages.delete(package)
   end
 
