@@ -15,8 +15,6 @@ class Api::ErrorsController < Api::ApiController
   skip_before_filter :require_user
   skip_before_filter :authorize
 
-  description "Render 404 Not found page. Called internaly. It should be never call directly."
-  error :code => 404, :desc => "Not found."
   def render_404
     render :json => {:displayMessage => _("Not found"), :errors => [_("Not found")] }, :status => 404
   end
