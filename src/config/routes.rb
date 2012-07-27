@@ -1,6 +1,6 @@
 Src::Application.routes.draw do
 
-  restapi
+  apipie
 
   resources :system_groups do
     collection do
