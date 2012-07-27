@@ -118,7 +118,7 @@ describe ChangesetsController, :katello => true do
         controller.should notify.success
         post 'create', {:name => "Changeset 7056", :description => "FOO", :action_type => Changeset::DELETION, :env_id => @env.id}
         response.should be_success
-        Changeset.exists?(:action_type => Changeset::DELETION).should be_true
+        DeletionChangeset.exists?(:name => "Changeset 7056").should be_true
       end
     end
 
