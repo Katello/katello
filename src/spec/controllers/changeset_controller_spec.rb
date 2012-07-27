@@ -82,11 +82,11 @@ describe ChangesetsController, :katello => true do
       Changeset.find(@changeset.id).name.should == "newname"
     end
 
-    it "should be able to check the progress of a changeset being promoted" do
+    it "should be able to check the status of a changeset being promoted" do
 
       @changeset.task_status = TaskStatus.create!(:organization_id =>@org.id, :uuid=>"FOO", :progress=>"0", :user=> new_user)
       @changeset.save!
-      get :promotion_progress, :id=>@changeset.id
+      get :status, :id=>@changeset.id
       response.should be_success
       response.should contain('changeset_' + @changeset.id.to_s)
     end
@@ -100,7 +100,7 @@ describe ChangesetsController, :katello => true do
         controller.should notify.success
         post 'create', {:name => "Changeset 7055", :next_env_id => @next_env.id}
         response.should be_success
-        Changeset.exists?(:name => 'Changeset 7055', :action_type => Changeset::PROMOTION).should be_true
+        PromotionChangeset.exists?(:name => 'Changeset 7055').should be_true
       end
     end
 
@@ -109,7 +109,7 @@ describe ChangesetsController, :katello => true do
         controller.should notify.success
         post 'create', {:name => "Changeset 7055", :next_env_id => @next_env.id}
         response.should be_success
-        Changeset.exists?(:name=>'Changeset 7055', :action_type => Changeset::PROMOTION).should be_true
+        PromotionChangeset.exists?(:name=>'Changeset 7055').should be_true
       end
     end
 
@@ -127,7 +127,7 @@ describe ChangesetsController, :katello => true do
         controller.should notify.success
         post 'create', {:name => "Changeset 7056", :description => "FOO", :action_type => Changeset::PROMOTION, :env_id => @env.id, :next_env_id => @next_env.id}
         response.should be_success
-        Changeset.exists?(:action_type => Changeset::PROMOTION).should be_true
+        PromotionChangeset.exists?.should be_true
       end
     end
 
@@ -136,7 +136,7 @@ describe ChangesetsController, :katello => true do
         controller.should notify.success
         post 'create', {:name => "Changeset 7056", :description => "FOO", :next_env_id => @next_env.id}
         response.should be_success
-        Changeset.exists?(:description=>'FOO').should be_true
+        PromotionChangeset.exists?(:description=>'FOO').should be_true
       end
     end
 
@@ -255,13 +255,13 @@ describe ChangesetsController, :katello => true do
       it_should_behave_like "protected action"
     end
 
-    describe "POST promote" do
+    describe "POST apply" do
       before do
         @cs2 = PromotionChangeset.create(:name=>"FOO2", :environment=>@env2, :state=>"review")
       end
-      let(:action) {:promote}
+      let(:action) {:apply}
       let(:req) do
-        post 'promote', :id=>@cs2.id
+        post 'apply', :id=>@cs2.id
       end
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:promote_changesets, :environments, @env2.id, @organization) }
