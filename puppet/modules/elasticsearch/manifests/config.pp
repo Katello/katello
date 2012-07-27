@@ -1,21 +1,26 @@
 class elasticsearch::config {
-  file {
-    "/etc/elasticsearch/elasticsearch.yml":
-      content => template("elasticsearch/etc/elasticsearch/elasticsearch.yml.erb"),
+  file { "/etc/elasticsearch/elasticsearch.yml":
+    content => template("elasticsearch/etc/elasticsearch/elasticsearch.yml.erb"),
+    notify  => Service["elasticsearch"];
   }  
 
   file { "/var/run/elasticsearch":
      ensure => directory,
      mode => 644,
      owner => "elasticsearch",
-     group => "elasticsearch";
+     group => "elasticsearch",
   }
-  
-  # Set elasticsearch's heap sizes
-  exec { "/bin/sed -i '/#ES_MIN_MEM=/c ES_MIN_MEM=256m' /etc/sysconfig/elasticsearch":
-       unless => "/bin/grep -qFx 'ES_MIN_MEM=256m' /etc/sysconfig/elasticsearch"
+
+  file { "/etc/sysconfig/elasticsearch":
+    content => template("elasticsearch/etc/sysconfig/elasticsearch.erb"),
+    notify  => Service["elasticsearch"];
   }
-  exec { "/bin/sed -i '/#ES_MAX_MEM=/c ES_MAX_MEM=256m' /etc/sysconfig/elasticsearch":
-       unless => "/bin/grep -qFx 'ES_MAX_MEM=256m' /etc/sysconfig/elasticsearch"
+
+  if $elasticsearch::params::reset_data == 'YES' {
+    exec {"reset_elasticsearch_data":
+      command => "rm -rf /var/lib/elasticsearch/*",
+      path    => "/sbin:/bin:/usr/bin",
+      notify  => Service["elasticsearch"],
+    }
   }
 }
