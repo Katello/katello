@@ -103,9 +103,16 @@ class ChangesetsController < ApplicationController
 
   def create
     begin
-      env = params[:action_type] == Changeset::PROMOTION ? @next_environment: @environment
-      @changeset = Changeset.create_for(params[:action_type], :name => params[:name], :description => params[:description],
-                                      :environment_id => env.id)
+      if params[:action_type].blank? or params[:action_type] == Changeset::PROMOTION
+        env_id = @next_environment.id
+        type = Changeset::PROMOTION
+      else
+        env_id = @environment.id
+        type = Changeset::DELETION
+      end
+      @changeset = Changeset.create_for(type, :name => params[:name], :description => params[:description],
+                                        :environment_id => env_id)
+
       notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
       bc = {}
       add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
