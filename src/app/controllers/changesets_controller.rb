@@ -28,7 +28,7 @@ class ChangesetsController < ApplicationController
     read_perm = lambda{@environment.changesets_readable?}
     manage_perm = lambda{@environment.changesets_manageable?}
     update_perm =  lambda {@environment.changesets_manageable? && update_artifacts_valid?}
-    promote_perm = lambda{@environment.changesets_promotable?}
+    apply_perm = lambda{@environment.changesets_promotable?}
     {
       :index => read_perm,
       :items => read_perm,
@@ -43,8 +43,8 @@ class ChangesetsController < ApplicationController
       :dependencies => read_perm,
       :object => read_perm,
       :auto_complete_search => read_perm,
-      :promote => promote_perm,
-      :promotion_progress => read_perm
+      :apply => apply_perm,
+      :status => read_perm
     }
   end
 
@@ -84,9 +84,12 @@ class ChangesetsController < ApplicationController
 
   def dependencies
     to_ret = {}
-    @changeset.calc_dependencies.each do |dependency|
-      to_ret[dependency.product_id] ||= []
-      to_ret[dependency.product_id] << {:name=>dependency.display_name, :dep_of=>dependency.dependency_of}
+
+    if @changeset.promotion?
+      @changeset.calc_dependencies.each do |dependency|
+        to_ret[dependency.product_id] ||= []
+        to_ret[dependency.product_id] << {:name=>dependency.display_name, :dep_of=>dependency.dependency_of}
+      end
     end
 
     render :json=>to_ret
@@ -103,9 +106,16 @@ class ChangesetsController < ApplicationController
 
   def create
     begin
-      env = params[:action_type] == Changeset::PROMOTION ? @next_environment: @environment
-      @changeset = Changeset.create_for(params[:action_type], :name => params[:name], :description => params[:description],
-                                      :environment_id => env.id)
+      if params[:action_type].blank? or params[:action_type] == Changeset::PROMOTION
+        env_id = @next_environment.id
+        type = Changeset::PROMOTION
+      else
+        env_id = @environment.id
+        type = Changeset::DELETION
+      end
+      @changeset = Changeset.create_for(type, :name => params[:name], :description => params[:description],
+                                        :environment_id => env_id)
+
       notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
       bc = {}
       add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
@@ -213,9 +223,9 @@ class ChangesetsController < ApplicationController
     render :text=>""
   end
 
-  def promote
+  def apply
     messages = {}
-    if !params[:confirm] && @next_environment.prior.library?
+    if !params[:confirm] && @environment.prior.library?
       syncing = []
       errors = []
 
@@ -234,18 +244,23 @@ class ChangesetsController < ApplicationController
     if  !messages.empty?
       to_ret[:warnings] = render_to_string(:partial=>'warning', :locals=>messages)
     else
-      @changeset.promote :notify => true, :async => true
+      if @changeset.promotion?
+        @changeset.promote :notify => true, :async => true
+        notify.success _("Started content promotion to %s environment using '%s'") % [@environment.name, @changeset.name]
+      else
+        @changeset.delete_from_env :notify => true, :async => true
+        notify.success _("Started content deletion from %s environment using '%s'") % [@environment.name, @changeset.name]
+      end
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
-      notify.success _("Started promotion of '%s' to %s environment") % [@changeset.name, @next_environment.name]
     end
     render :json=>to_ret
   rescue Exception => e
-    notify.exception "Failed to promote.", e
+    notify.exception _("Failed to apply changeset."), e
     render :text=>e.to_s, :status=>500
   end
 
-  def promotion_progress
+  def status
     progress = @changeset.task_status.progress
     state = @changeset.state
     to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i}
