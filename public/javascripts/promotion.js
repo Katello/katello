@@ -901,7 +901,7 @@ var changeset_obj = function(data_struct) {
          }
          $.ajax({
             type: "POST",
-            url: KT.common.rootURL() + "changesets/" + id + "/promote",
+            url: KT.routes.apply_changeset_path(id),
             cache: false,
             data: data,
             success: function(data) {
@@ -1596,7 +1596,7 @@ var changesetStatusActions = (function($){
         },
         checkProgressTask = function(id){
             var timeout = 8000;
-            var updater = $.PeriodicalUpdater(KT.common.rootURL() + 'changesets/' + id + '/promotion_progress/', {
+            var updater = $.PeriodicalUpdater(KT.routes.status_changeset_path(id), {
                 method: 'GET',
                 type: 'JSON',
                 cache: false,

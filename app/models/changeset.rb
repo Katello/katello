@@ -103,6 +103,14 @@ class Changeset < ActiveRecord::Base
     DELETION
   end
 
+  def deletion?
+    self.class == DeletionChangeset
+  end
+
+  def promotion?
+    self.class == PromotionChangeset
+  end
+
   def self.create_for( acct_type, options)
     if PROMOTION == acct_type
       PromotionChangeset.create!(options)
@@ -299,14 +307,6 @@ class Changeset < ActiveRecord::Base
     end
   end
 
-  def deletion?
-    self.class == DeletionChangeset
-  end
-
-  def promotion?
-    self.class == PromotionChangeset
-  end
-  
   def find_repo repo_id, product_cpid
     product = find_product_by_cpid(product_cpid)
     product.repos(self.environment.prior).where("repositories.id" => repo_id).first

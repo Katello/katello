@@ -325,9 +325,9 @@ Src::Application.routes.draw do
     member do
       put :name
       get :dependencies
-      post :promote
+      post :apply
+      get :status
       get :object
-      get :promotion_progress
     end
     collection do
       get :auto_complete_search
@@ -536,6 +536,7 @@ Src::Application.routes.draw do
 
     resources :changesets, :only => [:show, :update, :destroy] do
       post :promote, :on => :member, :action => :promote
+      post :apply, :on => :member, :action => :apply
       get :dependencies, :on => :member, :action => :dependencies
       resources :products, :controller => :changesets_content do
         post   :index, :on => :collection, :action => :add_product

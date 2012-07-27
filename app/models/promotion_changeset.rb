@@ -15,7 +15,7 @@
 class PromotionChangeset < Changeset
   use_index_of Changeset
 
-  def promote(options = { })
+  def apply(options = { })
     options = { :async => true, :notify => false }.merge options
 
     self.state == Changeset::REVIEW or
