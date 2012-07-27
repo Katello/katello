@@ -1,5 +1,3 @@
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-
 Name: katello-agent
 Version: 1.0.4
 Release: 1%{?dist}
