@@ -224,6 +224,7 @@ install -m 755 script/katello-refresh-cdn %{buildroot}%{_sysconfdir}/cron.daily/
 
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
 install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
@@ -251,9 +252,11 @@ ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
 #create symlinks for important scripts
 mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_sbindir}
 ln -sv %{homedir}/script/katello-debug %{buildroot}%{_bindir}/katello-debug
 ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
 ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
+ln -sv %{homedir}/script/service-wait %{buildroot}%{_sbindir}/service-wait
 
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
@@ -310,6 +313,7 @@ fi
 %files
 %attr(600, katello, katello)
 %{_bindir}/katello-*
+%{_sbindir}/service-wait
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -355,6 +359,7 @@ fi
 %config %{_sysconfdir}/logrotate.d/%{name}-jobs
 %config %{_sysconfdir}/%{name}/mapping.yml
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%config(noreplace) %{_sysconfdir}/sysconfig/service-wait
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
 %{_sysconfdir}/bash_completion.d/%{name}
@@ -362,7 +367,7 @@ fi
 %{homedir}/db/schema.rb
 
 %defattr(-, katello, katello)
-%{_localstatedir}/log/%{name}
+%attr(640, katello, katello) %{_localstatedir}/log/%{name}
 %{datadir}
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
