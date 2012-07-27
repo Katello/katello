@@ -222,7 +222,7 @@ class ChangesetsController < ApplicationController
 
   def promote
     messages = {}
-    if !params[:confirm] && @next_environment.prior.library?
+    if !params[:confirm] && @environment.prior.library?
       syncing = []
       errors = []
 
@@ -244,7 +244,7 @@ class ChangesetsController < ApplicationController
       @changeset.promote :notify => true, :async => true
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
-      notify.success _("Started promotion of '%s' to %s environment") % [@changeset.name, @next_environment.name]
+      notify.success _("Started promotion of '%s' to %s environment") % [@changeset.name, @environment.name]
     end
     render :json=>to_ret
   rescue Exception => e
