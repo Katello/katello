@@ -59,10 +59,10 @@ class DeletionChangeset < Changeset
     # from_env.update_cp_content
     # update_progress! '80'
     delete_packages from_env
-    # update_progress! '90'
+    update_progress! '90'
     delete_errata from_env
-    # update_progress! '95'
-    # delete_distributions from_env
+    update_progress! '95'
+    delete_distributions from_env
     update_progress! '100'
 
     PulpTaskStatus::wait_for_tasks generate_metadata
@@ -162,41 +162,32 @@ class DeletionChangeset < Changeset
   end
 
 
-  def delete_distributions from_env, to_env
+  def delete_distributions from_env
     #repo->list of distribution_ids
-    # distribution_promote = { }
-    # 
-    # for distro in self.distributions
-    #   product = distro.product
-    # 
-    #   #skip distributions that have already been promoted with the products
-    #   next if (products.uniq! or []).include? product
-    # 
-    #   product.repos(from_env).each do |repo|
-    #     clone = repo.get_clone to_env
-    #     next if clone.nil?
-    # 
-    #     if repo.has_distribution? distro.distribution_id and
-    #         !clone.has_distribution? distro.distribution_id
-    #       distribution_promote[clone] = distro.distribution_id
-    #     end
-    #   end
-    # end
-    # 
-    # distribution_promote.each_pair do |repo, distro|
-    #   repo.add_distribution(distro)
-    # end
-  end
+    distribution_delete = { }
 
+    not_included_distribution.each do |distro|
+      product = distro.product
+      product.repos(from_env).each do |repo|
+        if repo.has_distribution? distro.distribution_id
+          distribution_delete[repo] = distro.distribution_id
+        end
+      end
+    end
+
+    distribution_delete.each_pair do |repo, distro|
+       repo.delete_distribution(distro)
+    end
+  end
 
   def affected_repos
     repos = []
     repos += self.packages.collect { |e| e.repositories }.flatten(1)
     repos += self.errata.collect { |e| e.repositories }.flatten(1)
-    # repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
+    repos += self.distributions.collect { |d| d.repositories }.flatten(1)
     repos.uniq
   end
-  # 
+
   # def repos_to_be_promoted
   #   repos = self.repos || []
   #   repos += self.system_templates.map { |tpl| tpl.repos_to_be_promoted }.flatten(1)
