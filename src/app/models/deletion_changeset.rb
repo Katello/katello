@@ -60,7 +60,7 @@ class DeletionChangeset < Changeset
     # update_progress! '80'
     delete_packages from_env
     # update_progress! '90'
-    # delete_errata from_env
+    delete_errata from_env
     # update_progress! '95'
     # delete_distributions from_env
     update_progress! '100'
@@ -131,7 +131,6 @@ class DeletionChangeset < Changeset
           pkgs_delete[repo] ||= []
           pkgs_delete[repo] << pkg.package_id
         end
-      
       end
     end
     
@@ -142,31 +141,24 @@ class DeletionChangeset < Changeset
   end
 
 
-  def delete_errata from_env, to_env
-    #repo->list of errata_ids
-    # errata_promote = { }
-    # 
-    # not_included_errata.each do |err|
-    #   product = err.product
-    # 
-    #   product.repos(from_env).each do |repo|
-    #     if repo.is_cloned_in? to_env
-    #       clone             = repo.get_clone to_env
-    #       affecting_filters = (repo.filters + repo.product.filters).uniq
-    # 
-    #       if repo.has_erratum? err.errata_id and !clone.has_erratum? err.errata_id and
-    #           !err.blocked_by_filters? affecting_filters
-    #         errata_promote[clone] ||= []
-    #         errata_promote[clone] << err.errata_id
-    #       end
-    #     end
-    #   end
-    # end
-    # 
-    # errata_promote.each_pair do |repo, errata|
-    #   repo.add_errata(errata)
-    #   Glue::Pulp::Errata.index_errata(errata)
-    # end
+  def delete_errata from_env
+    # repo->list of errata_ids
+    errata_delete = { }
+
+    not_included_errata.each do |errata|
+       product = errata.product
+       product.repos(from_env).each do |repo|
+         if repo.has_erratum? errata.errata_id
+           errata_delete[repo] ||= []
+           errata_delete[repo] << errata.errata_id
+         end
+       end
+    end
+
+    errata_delete.each_pair do |repo, errata|
+       repo.delete_errata(errata)
+       Glue::Pulp::Errata.index_errata(errata)
+    end
   end
 
 
@@ -200,7 +192,7 @@ class DeletionChangeset < Changeset
   def affected_repos
     repos = []
     repos += self.packages.collect { |e| e.repositories }.flatten(1)
-    # repos += self.errata.collect { |p| p.promotable_repositories }.flatten(1)
+    repos += self.errata.collect { |e| e.repositories }.flatten(1)
     # repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
     repos.uniq
   end
