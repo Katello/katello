@@ -246,7 +246,13 @@ module Resources
         end
 
         def delete_packages repo_id, pkg_id_list
-          add_delete_content("delete_package", :packageid, repo_id, pkg_id_list)
+          # we need to optimize this call
+          # need a faster way to get pulp 'package object'
+          # information.
+          packages = pkg_id_list.collect do |p|
+            Resources::Pulp::Package.find p
+          end
+          add_delete_content("delete_package", :package, repo_id, packages)
         end
 
 
@@ -265,9 +271,6 @@ module Resources
         def delete_distribution repo_id, errata_id_list
           add_delete_content("delete_distribution", :distributionid, repo_id, pkg_id_list)
         end
-
-
-
 
         def sync (repo_id, data = {})
           data[:limit] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
