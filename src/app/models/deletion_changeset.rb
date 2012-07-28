@@ -65,7 +65,7 @@ class DeletionChangeset < Changeset
     # delete_distributions from_env
     update_progress! '100'
 
-    PulpTaskStatus::wait_for_tasks generate_metadata from_env
+    PulpTaskStatus::wait_for_tasks generate_metadata
 
     self.promotion_date = Time.now
     self.state          = Changeset::DELETED
@@ -197,14 +197,13 @@ class DeletionChangeset < Changeset
   end
 
 
-  # def affected_repos
-  #   repos = []
-  #   repos += self.packages.collect { |e| e.promotable_repositories }.flatten(1)
-  #   repos += self.errata.collect { |p| p.promotable_repositories }.flatten(1)
-  #   repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
-  # 
-  #   repos.uniq
-  # end
+  def affected_repos
+    repos = []
+    repos += self.packages.collect { |e| e.repositories }.flatten(1)
+    # repos += self.errata.collect { |p| p.promotable_repositories }.flatten(1)
+    # repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
+    repos.uniq
+  end
   # 
   # def repos_to_be_promoted
   #   repos = self.repos || []
@@ -218,11 +217,11 @@ class DeletionChangeset < Changeset
   #   return products.uniq
   # end  
   # 
-  # def generate_metadata from_env
-  #   async_tasks = affected_repos.collect do |repo|
-  #     repo.get_clone(to_env).generate_metadata
-  #   end
-  #   async_tasks
-  # end  
+  def generate_metadata
+    async_tasks = affected_repos.collect do |repo|
+      repo.generate_metadata
+    end
+    async_tasks
+  end
 
 end
