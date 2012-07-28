@@ -340,7 +340,12 @@ class Changeset < ActiveRecord::Base
       (products.uniq! or []).include? err.product
     end
   end
-  
+
+  def not_included_distribution
+    self.distributions.delete_if do |distro|
+      (products.uniq! or []).include? distro.product
+    end
+  end
   def extended_index_attrs
     pkgs      = self.packages.collect { |pkg| pkg.display_name }
     errata    = self.errata.collect { |err| err.display_name }
