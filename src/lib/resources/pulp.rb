@@ -257,19 +257,19 @@ module Resources
 
 
         def add_errata repo_id, errata_id_list
-          add_delete_content("add_errata", :errataid, repo_id, pkg_id_list)
+          add_delete_content("add_errata", :errataid, repo_id, errata_id_list)
         end
 
         def delete_errata repo_id, errata_id_list
-          add_delete_content("delete_errata", :errataid, repo_id, pkg_id_list)
+          add_delete_content("delete_errata", :errataid, repo_id, errata_id_list)
         end
 
-        def add_distribution repo_id, errata_id_list
-          add_delete_content("add_distribution", :distributionid, repo_id, pkg_id_list)
+        def add_distribution repo_id, distro_id_list
+          add_delete_content("add_distribution", :distributionid, repo_id, distro_id_list)
         end
 
-        def delete_distribution repo_id, errata_id_list
-          add_delete_content("delete_distribution", :distributionid, repo_id, pkg_id_list)
+        def delete_distribution repo_id, distro_id_list
+          add_delete_content("remove_distribution", :distributionid, repo_id, distro_id_list)
         end
 
         def sync (repo_id, data = {})
