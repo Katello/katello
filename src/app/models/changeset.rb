@@ -347,12 +347,14 @@ class Changeset < ActiveRecord::Base
     end
   end
   def extended_index_attrs
+    type      = self.type == "PromotionChangeset" ? Changeset::PROMOTION : Changeset::DELETION
     pkgs      = self.packages.collect { |pkg| pkg.display_name }
     errata    = self.errata.collect { |err| err.display_name }
     products  = self.products.collect { |prod| prod.name }
     repos     = self.repos.collect { |repo| repo.name }
     templates = self.system_templates.collect { |t| t.name }
     { :name_sort       => self.name.downcase,
+      :type            => type,
       :package         => pkgs,
       :errata          => errata,
       :product         => products,
