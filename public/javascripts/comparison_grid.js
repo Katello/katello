@@ -33,7 +33,8 @@ KT.comparison_grid = function(){
             var cells = [], row_level,
                 child_list,
                 cell_columns = utils.keys(cell_data),
-                has_children = models.rows.has_children(id);
+                has_children = models.rows.has_children(id),
+                row_element;
  
             if( models.mode === "results" ){           
                 row_level = models.rows.get_nested_level(id);
@@ -54,19 +55,21 @@ KT.comparison_grid = function(){
 
             add_row_header(id, name, row_level, has_children, parent_id);
 
+            row_element = templates.row(id, models.columns.length, cells, row_level, has_children, parent_id, name);
+
             if( parent_id ){
                 child_list = $('#child_list_' + parent_id);
                 
                 if( child_list.find('.load_row').length > 0 ){
-                    child_list.find('.load_row').before(templates.row(id, models.columns.length, cells, row_level, has_children, parent_id, name));
+                    child_list.find('.load_row').before(row_element);
                 } else {
-                    child_list.append(templates.row(id, models.columns.length, cells, row_level, has_children, parent_id, name));
+                    child_list.append(row_element);
                 }
             } else {
                 if( grid_content_el.children('.load_row').length > 0 ) {
-                    grid_content_el.children('.load_row').before(templates.row(id, models.columns.length, cells, row_level, has_children, name));
+                    grid_content_el.children('.load_row').before(row_element);
                 } else {
-                    grid_content_el.append(templates.row(id, models.columns.length, cells, row_level, has_children, name));
+                    grid_content_el.append(row_element);
                 }
             }
         },
@@ -760,18 +763,14 @@ KT.comparison_grid.templates = (function(i18n) {
                             'class'     : 'grid_cell cell_' + data['id'],
                         });
 
-            if( row_height ){
-                html.addClass(row_height);
-            }
-
             if( data['in_column'] ){
                 if( data['display'] !== undefined ){
-                    display = '<div class="one-line-ellipsis">' + data['display'] + '</div>';
+                    display = '<div class="grid_cell_data one-line-ellipsis">' + data['display'] + '</div>';
                 } else {
                     display = '<i class="dot-icon-black" />';
                 }
             } else {
-                 display = "<span>--</span>";
+                 display = "<i>--</i>";
             }
 
             html.append(display);
@@ -824,6 +823,17 @@ KT.comparison_grid.templates = (function(i18n) {
                         html.append(cell(cell_data[i]));
                     }
                 }
+            } else if( row_level === 3 ){
+                if( name.length > 30 ){
+                    html.addClass('row_height_2');
+                    for(i = 0; i < num_columns; i += 1){
+                        html.append(cell(cell_data[i], 'row_height'));
+                    }
+                } else {
+                    for(i = 0; i < num_columns; i += 1){
+                        html.append(cell(cell_data[i]));
+                    }
+                }
             } else {
                 for(i = 0; i < num_columns; i += 1){
                     html.append(cell(cell_data[i]));
@@ -858,18 +868,23 @@ KT.comparison_grid.templates = (function(i18n) {
             if( row_level === 2 ){
                 if( name.length > 30 && name.length < 60 ){
                     html.addClass('row_height_2');
-                    html.append($('<span/>', { 'class' : 'tipsify', 'title' : name }).html(name));
-                } else if( name.length >= 60 && name.length < 90 ){
+                    html.append($('<span/>').html(name));
+                } else if( name.length >= 60 && name.length <= 94 ){
                     html.addClass('row_height_3');
                     html.append($('<span/>').html(name));
-                } else if( name.length > 90 ) {
+                } else if( name.length > 94 ) {
                     html.addClass('row_height_3');
                     html.append($('<span/>', { 'class' : 'three-line-ellipsis tipsify', 'title' : name }).html(name));
                 } else {
                     html.append($('<span/>').html(name));
                 }
+            } else if( row_level === 3 ){
+                if( name.length > 30 ){
+                    html.addClass('row_height_2');
+                }
+                html.append($('<span/>').html(name));
             } else {
-                if( (has_children && name.length > 26) || (parent_id && name.length > 28) ){
+                if( (has_children && name.length > 26) || (parent_id && name.length > 28) || name.length > 28 ){
                     html.append($('<span/>', { 'class' : 'one-line-ellipsis tipsify', 'title' : name }).html(name));
                 } else {
                     html.append($('<span/>').html(name));
@@ -895,9 +910,13 @@ KT.comparison_grid.templates = (function(i18n) {
                     'id'        : 'column_' + id,
                     'data-id'   : id,
                     'data-span' : span,
-                    'class'     : 'one-line-ellipsis column_header hidden'
+                    'class'     : 'column_header hidden'
                 }).html(to_display);
  
+            if( to_display.length > span * 12 ){
+                html.addClass('tipsify one-line-ellipsis').attr('title', to_display);
+            }
+
             return html;
         },
         collapse_arrow = function(options){
