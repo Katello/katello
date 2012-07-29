@@ -54,10 +54,10 @@ class DeletionChangeset < Changeset
     # update_progress! '30'
     # PulpTaskStatus::wait_for_tasks delete_templates(from_env)
     # update_progress! '50'
-    # PulpTaskStatus::wait_for_tasks delete_repos(from_env)
-    # update_progress! '70'
-    # from_env.update_cp_content
-    # update_progress! '80'
+    delete_repos from_env
+    update_progress! '70'
+    from_env.update_cp_content
+    update_progress! '80'
     delete_packages from_env
     update_progress! '90'
     delete_errata from_env
@@ -110,14 +110,12 @@ class DeletionChangeset < Changeset
 
 
   def delete_repos from_env
-    # async_tasks = []
-    # self.repos.each do |repo|
-    #   product = repo.product
-    #   next if (products.uniq! or []).include? product
-    # 
-    #   async_tasks << repo.delete_from_env(from_env)
-    # end
-    # async_tasks.flatten(1)
+    self.repos.each do |repo|
+      product = repo.product
+      next if (products.uniq! or []).include? product
+
+      product.delete_repo_by_id(repo.id)
+    end
   end
 
   def delete_packages from_env

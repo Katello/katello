@@ -50,7 +50,7 @@ module ChangesetBreadcrumbs
         cs_info[:progress] =  0
       end
     end
-    add_crumb_node!(bc, changeset_bc_id(cs), "", cs.name, ['changesets'],
+    add_crumb_node!(bc, changeset_bc_id(cs), "", changeset_title(cs), ['changesets'],
                   {:client_render => true}, cs_info)
 
     cs.involved_products.each{|product|
@@ -77,6 +77,10 @@ module ChangesetBreadcrumbs
       add_crumb_node!(bc, distributions_cs_bc_id(cs, product), "",  _("Distributions"),
                       ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
     }
+  end
+
+  def changeset_title cs
+    cs.name + " (" + cs.action_type + ")"
   end
 
   def changeset_bc_id cs
