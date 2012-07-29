@@ -343,7 +343,7 @@ var promotion_page = (function($){
                         if( id.split("_")[0] === "changeset" ){
                             changeset = changeset_breadcrumb[id];
                             if ( changeset.state === "failed") {
-                                changesetStatusActions.initProgressBar(id, changeset.progress, i18n.promotion_failed);
+                                changesetStatusActions.initProgressBar(id, changeset.progress, i18n.changeset_apply_failed);
                             }else if( !changeset.is_new && ( changeset.progress === null || changeset.progress === undefined ) ){
                                 changesetStatusActions.setLocked(id);
                             } else if( changeset.progress !== null && changeset.progress !== undefined ){
@@ -1541,7 +1541,7 @@ var changesetStatusActions = (function($){
                 status_title = status_text;
 
             if (status_text === undefined) {
-                status_text = i18n.promoting;
+                status_text = i18n.changeset_applying;
                 status_title = i18n.changeset_progress;
             }
 
@@ -1561,8 +1561,8 @@ var changesetStatusActions = (function($){
         },
         finish = function(id){
             var changeset = $('#' + id);
-            changeset.find(".changeset_status label").text(i18n.promoted);
-            changeset.attr('title', i18n.promoted);
+            changeset.find(".changeset_status label").text(i18n.changeset_applied);
+            changeset.attr('title', i18n.changeset_applied);
             /*changeset.parent().fadeOut(3000, function(){
                 changeset.parent().remove();
                 if( !$('.changeset_status').length ){
@@ -1575,8 +1575,8 @@ var changesetStatusActions = (function($){
             notices.checkNotices();
 
             var changeset = $('#' + id);
-            changeset.find(".changeset_status label").text(i18n.promotion_failed);
-            changeset.attr('title', i18n.promotion_failed);
+            changeset.find(".changeset_status label").text(i18n.changeset_apply_failed);
+            changeset.attr('title', i18n.changeset_apply_failed);
 
             changeset_breadcrumb[id].has_failed = true;
         },
