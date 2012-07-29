@@ -148,7 +148,8 @@ class ContentSearchController < ApplicationController
     offset = params[:offset] || 0
     packages = Glue::Pulp::Package.search('', offset, current_user.page_size, [@repo.pulp_id])
     rows = packages.collect do |pack|
-      {:name => pack.nvrea, :id => pack.id, :cols => {:description => {:display => pack.description}}}
+      {:name => display = package_display(pack),
+        :id => pack.id, :cols => {:description => {:display => pack.description}}}
     end
 
     if packages.total > current_user.page_size
@@ -203,7 +204,7 @@ class ContentSearchController < ApplicationController
       end
 
       if is_package
-        name = pack.nvrea
+        name = package_display(pack)
       else
         name = errata_display(pack)
       end
@@ -471,21 +472,21 @@ class ContentSearchController < ApplicationController
     env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
     to_ret = [] 
     for item in content_list:
-        if id_prefix == 'package'
-            display = item.nvrea
-        else
-            display = errata_display(item)
+      if id_prefix == 'package'
+        display = package_display(item)
+      else
+        display = errata_display(item)
+      end
+      row = {:id=>"repo_#{parent_repo.id}_#{id_prefix}_#{item.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{},
+             :name=>display}
+      spanned_repos.each do |repo|
+        if item.repoids.include? repo.pulp_id
+            row[:cols][repo.environment_id] = {:id=>repo.environment_id} if env_ids.include?(repo.environment_id)
         end
-        row = {:id=>"repo_#{parent_repo.id}_#{id_prefix}_#{item.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{},
-               :name=>display}
-        spanned_repos.each do |repo|
-          if item.repoids.include? repo.pulp_id
-              row[:cols][repo.environment_id] = {:id=>repo.environment_id} if env_ids.include?(repo.environment_id)
-          end
-        end 
-        to_ret << row
-     end
-     to_ret
+      end 
+      to_ret << row
+    end
+    to_ret
   end 
 
 end

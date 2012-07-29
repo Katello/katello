@@ -1,6 +1,5 @@
 @import "katello_base";
 
-
 $browse_box-width: 230px;
 $browse_box-height: 500px;
 $browse_box_header-height: 40px;
@@ -28,6 +27,7 @@ $widget-background-color: #F9F8F8;
 
 $comparison_grid-border-color: #D7D7D7;
 $comparison_grid_column_header-background: #FFF;
+
 
 .no_border { border: none !important; }
 
@@ -355,24 +355,35 @@ $comparison_grid_column_header-background: #FFF;
         vertical-align: bottom;
         font-weight: bold;
 
-        span { 
-          display: inline-block;
+        &[data-collapsed] span { 
           width: 90%;
-        }
+          display: inline-block;
+        };
       }
 
       .row_height_2 {
         height: 32px;
+        padding: 6px 3px;
       }
       .row_height_3 {
         height: 48px;
       }
 
-      .grid_row_level_2 {
-        padding-left: 9px;
-        padding-right: 9px;
-        width: $comparison_grid_filter-width - 18;
+      .grid_row_level_0 {
+        width: $comparison_grid_filter-width - 6;
         font-weight: normal;
+      }
+
+      .grid_row_level_2 {
+        padding-left: 20px;
+        padding-right: 9px;
+        width: $comparison_grid_filter-width - 29;
+        font-weight: normal;
+
+        &[data-collapsed] {
+          padding-left: 9px;
+          width: $comparison_grid_filter-width - 18;
+        }
       }
 
       .grid_row_level_3 {
@@ -380,6 +391,12 @@ $comparison_grid_column_header-background: #FFF;
         padding-right: 10px;
         width: $comparison_grid_filter-width - 35;
         font-weight: normal;
+
+        span { 
+          width: 100%;
+
+          span:first-child { font-weight: bold; display: block; } 
+        }
       }
 
       span { 
@@ -394,11 +411,11 @@ $comparison_grid_column_header-background: #FFF;
 
     .grid_row_level_2 {
       background: #D4EEFC;
-      font-size: 10px;
+      font-size: 11px;
     }
 
     .grid_row_level_3 {
-      font-size: 11px;
+      font-size: 10px;
     }
 
     #grid_content_window {
@@ -418,15 +435,19 @@ $comparison_grid_column_header-background: #FFF;
           height: $comparison_grid_row-height;
           border-bottom: 1px solid $comparison_grid_border-color;
           width: $comparison_grid-width - $comparison_grid_filter-width - 1;
+
+          .grid_cell_data, i { margin-top: 8px; display: inline-block; }
         }
 
         .row_height_2 {
-          height: 48px !important;
-          line-height: 48px !important;
+          height: 44px !important;
+  
+          .grid_cell_data, i { margin-top: 14px; }
         }
         .row_height_3 {
           height: 64px !important;
-          line-height: 64px !important;
+          
+          .grid_cell_data, i { margin-top: 24px; }
         }
 
         .load_row {
@@ -436,17 +457,17 @@ $comparison_grid_column_header-background: #FFF;
 
           span { margin-left: 10px; }
           a { margin-left: 5px; }
-          .down_arrow-icon-black { background-position-y: -18px; }
+          .down_arrow-icon-black { background-position-y: -18px; margin-top: 0; }
         }
 
         .grid_cell {
           display: inline-block;
           text-align: left;
-          line-height: $comparison_grid_row-height;
           border-right: 1px solid $comparison_grid_border-color;
           float: left;
-          padding: 0 5px;
           position: relative;
+          height: inherit;
+          padding: 0 5px;
 
           &[data-span="1"] { width: $comparison_grid_column_1-width; text-align: center; }
           &[data-span="2"] { width: $comparison_grid_column_2-width; }
@@ -460,7 +481,6 @@ $comparison_grid_column_header-background: #FFF;
             right: 2px;
             z-index: 5;
           }
-        
         }
 
         .grid_cell_hover {
@@ -539,3 +559,4 @@ $comparison_grid_column_header-background: #FFF;
 .down_arrow-icon-black { background-position-y: -18px; }
 .button { margin: 0; }
 .button:active { padding: 4px 8px; }
+.one-line-ellipsis { display: inline-block; }
