@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.52
+Version:        0.2.53
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -398,6 +398,23 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Sun Jul 29 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.53-1
+- CS - using newer errata icon classes (jsherril@redhat.com)
+- making 'Id' be i18n'd (jsherril@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+- converge ui update (jsherril@redhat.com)
+- spec test fix (jsherril@redhat.com)
+- CS - fixing various issues with cache not being properly saved/loaded
+  (jsherril@redhat.com)
+- CS - fix issue with drop-downs not being updated properly
+  (jsherril@redhat.com)
+- CS - Add errata details tipsy to other errata lists (jsherril@redhat.com)
+- CS - handle case when errata has no packages (jsherril@redhat.com)
+- CS - fixing a couple of issues (jsherril@redhat.com)
+- CS - fixing issue where environments were not properly remembered
+  (jsherril@redhat.com)
+- CS - adding errata details using ajax tipsy (jsherril@redhat.com)
+
 * Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.52-1
 - require recent converge-ui
 - 840609 - fencing SYSTEM GROUPS from activation keys nav
