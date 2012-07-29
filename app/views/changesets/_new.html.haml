@@ -24,7 +24,7 @@
           - if @environment.library
             #{Changeset::PROMOTION}
           - else
-            = select_tag :action_type, options_for_select(Changeset::TYPES, @changeset.action_type), :tabindex => auto_tab_index, :style => "padding-right:5px;"
+            = select_tag :action_type, options_for_select(Changeset::TYPES, Changeset::PROMOTION), :tabindex => auto_tab_index, :style => "padding-right:5px;"
       .grid_5.ra
         .button#save_changeset_button{'data-url' => changesets_path, :tabindex => auto_tab_index}
           #{_("Save Changeset")}
