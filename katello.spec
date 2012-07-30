@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.55
+Version:        0.2.56
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -398,6 +398,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.56-1
+- spec - fixing invalid perms for /var/log/katello (lzap+git@redhat.com)
+
 * Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.55-1
 - Merge pull request #389 from lzap/quick_certs_fix (miroslav@suchy.cz)
 - puppet - improving katello-debug script (lzap+git@redhat.com)
