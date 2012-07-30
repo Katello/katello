@@ -119,7 +119,9 @@ def unnest_one(rec):
     @rtype: dict, list or tupple according to type of rec
     """
     if isinstance(rec, (list, tuple)):
-        return unnest(rec, rec[0].keys()[0])
+        if len(rec) > 0 and len(rec[0].keys()) > 0:
+            return unnest(rec, rec[0].keys()[0])
+        return rec
     else:
         assert isinstance(rec, dict)
         assert len(rec) > 0
@@ -133,6 +135,7 @@ def update_dict_unless_none(d, key, value):
         d[key] = value
     return d
 
+
 # custom info -----------------------------------------------------------------
 def stringify_custom_info(list_custom_info):
     arr = []
@@ -140,6 +143,7 @@ def stringify_custom_info(list_custom_info):
         arr.append("%s: %s" % (info["keyname"], info["value"]))
 
     return "[ %s ]"  % ", ".join(arr)
+
 
 class SystemExitRequest(Exception):
     """
