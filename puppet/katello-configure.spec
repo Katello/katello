@@ -2,14 +2,14 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.34
+Version:        0.2.37
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
 Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
-Source0:        %{name}-%{version}.tar.gz
+Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       puppet >= 2.6.6
@@ -87,6 +87,18 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.37-1
+- puppet - nss generation ordering issue (lzap+git@redhat.com)
+- puppet - pulp migrate must run before apache2 ensure (lzap+git@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.36-1
+- puppet - fixing pulp migrate race condition (typo) (lzap+git@redhat.com)
+- puppet - fixing pulp migrate race condition (lzap+git@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.35-1
+- puppet - adding more logging to cert creation (lzap+git@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+
 * Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.34-1
 - puppet - better help strings for reset options
 - puppet - when installer fails print info about katello-debug

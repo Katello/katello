@@ -50,7 +50,7 @@ class pulp::config {
     command     => "pulp-migrate >${katello::params::configure_log_base}/pulp_migrate.log 2>&1 && touch /var/lib/pulp/init.flag",
     creates     => "/var/lib/pulp/init.flag",
     path        => "/bin:/usr/bin",
-    before      => Class["pulp::service"],
+    before      => [ Class["pulp::service"], Exec["reload-apache2"], Class["apache2::service"] ],
     notify      => Exec["reload-apache2"],
     require     => [
       File["${katello::params::configure_log_base}"],
@@ -63,6 +63,7 @@ class pulp::config {
     command     => "/usr/bin/openssl x509 -in '$pulp::params::ssl_certificate_file' -hash -noout | /usr/bin/xargs -I{} /bin/ln -sf '$candlepin::params::crl_file' '$pulp::params::crl_location/{}.r0'",
     subscribe   => File["/etc/candlepin/certs/candlepin-ca.crt"],
     refreshonly => true,
+    before      => [ Class["pulp::service"], Exec["reload-apache2"], Class["apache2::service"] ],
     require     => Class["candlepin::config"],
   }
 

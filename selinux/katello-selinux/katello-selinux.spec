@@ -19,21 +19,14 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        0.2.6
+Version:        0.2.7
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
 Group:          System Environment/Base
 License:        GPLv2+
 URL:            http://www.katello.org
-
-# How to create the source tarball:
-#
-# git clone git://git.fedorahosted.org/git/katello.git/
-# yum install tito
-# cd selinux/%{modulename}-selinux
-# tito build --tag katello-%{version}-%{release} --tgz
-Source0:        %{name}-%{version}.tar.gz
+Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  checkpolicy, selinux-policy-devel, hardlink
@@ -138,6 +131,11 @@ fi
 %{_sysconfdir}/katello/secure
 
 %changelog
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.7-1
+- selinux - katello configure denials (lzap+git@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+- %%defattr is not needed since rpm 4.4 (msuchy@redhat.com)
+
 * Wed Jun 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.6-1
 - 828533 - removing semanage port rule from installer
 - 828533 - changing to proper QPIDD SSL port
