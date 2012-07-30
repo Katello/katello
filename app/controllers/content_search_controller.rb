@@ -212,7 +212,7 @@ class ContentSearchController < ApplicationController
     end
 
     cols = {}
-    @repos.each{|r| cols[r.id] = {:id=>r.id, :name=>r.name}}
+    @repos.each{|r| cols[r.id] = {:id=>r.id, :content => repo_compare_name_display(r) }}
     rows += [metadata_row(packages.total, offset.to_i + rows.length, {:repos=>params[:repos]}, 'compare')] if packages.total > current_user.page_size
     render :json => {:rows=>rows, :cols=>cols}
   end
