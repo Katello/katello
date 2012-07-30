@@ -9,11 +9,11 @@ module Puppet::Parser::Functions
       # convert total memory into bytes
       total_mem = mem.to_f 
       case unit 
-        when nil:  total_mem *= (1<<0) 
-        when 'kB': total_mem *= (1<<10) 
-        when 'MB': total_mem *= (1<<20) 
-        when 'GB': total_mem *= (1<<30) 
-        when 'TB': total_mem *= (1<<40) 
+        when nil  then total_mem *= (1<<0) 
+        when 'kB' then total_mem *= (1<<10) 
+        when 'MB' then total_mem *= (1<<20) 
+        when 'GB' then total_mem *= (1<<30) 
+        when 'TB' then total_mem *= (1<<40) 
       end
 
       notice("CPU count: #{cpu_count}")
