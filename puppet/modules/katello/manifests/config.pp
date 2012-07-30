@@ -22,7 +22,7 @@ class katello::config {
       group   => $katello::params::group,
       content => "",
       replace => false,
-      mode    => 640,
+      mode    => 750,
       require => [ File["${katello::params::log_base}"] ];
   }
 
