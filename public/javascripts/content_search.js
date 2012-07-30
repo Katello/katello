@@ -83,10 +83,14 @@ KT.content_search = function(paths_in){
 
 
     var init = function(){
-        var initial_search = $.bbq.getState('search');
+        var initial_search = $.bbq.getState('search'),
+            footer;
         paths = paths_in;
+        
+        footer = '<a href="' + KT.routes.organizations_path() + '"><i class="gears_icon"></i><span>' + i18n.manage_organizations + '</span></a>';
+
         env_select = KT.path_select('column_selector', 'env', paths,
-            {select_mode:'multi', link_first: true, footer: true });
+            {select_mode:'multi', link_first: true, footer: footer });
 
         init_tipsy();
 
