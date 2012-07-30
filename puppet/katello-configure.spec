@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.34
+Version:        0.2.35
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -87,6 +87,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.35-1
+- puppet - adding more logging to cert creation (lzap+git@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+
 * Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.34-1
 - puppet - better help strings for reset options
 - puppet - when installer fails print info about katello-debug
