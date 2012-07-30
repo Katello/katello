@@ -232,7 +232,12 @@ class certs::config {
       exec { "create-nss-db":
         command => "certutil -N -d '${nss_db_dir}' -f '${certs::params::nss_db_password_file}' 2>>${katello::params::configure_log_base}/certificates.log",
         path    => "/usr/bin",
-        require => [File["${certs::params::nss_db_password_file}"], File[$nss_db_dir], File["${katello::params::configure_log_base}"]],
+        require => [
+          File["${certs::params::nss_db_password_file}"],
+          File[$nss_db_dir],
+          Exec["deploy-ssl-qpid-broker-certificate"],
+          File["${katello::params::configure_log_base}"]
+          ],
         before  => Class["qpid::service"],
         creates => ["$nss_db_dir/cert8.db", "$nss_db_dir/key3.db", "$nss_db_dir/secmod.db"],
         notify => [
