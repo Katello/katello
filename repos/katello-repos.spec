@@ -1,6 +1,6 @@
 
 Name:           katello-repos
-Version:        0.2.10
+Version:        1.0.0
 Release:        1%{?dist}
 Summary:        Definition of yum repositories for Katello
 

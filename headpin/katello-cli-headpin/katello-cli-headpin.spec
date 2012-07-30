@@ -19,7 +19,7 @@ Summary:       Client package for managing a katello-headpin installation
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.21
+Version:       1.0.0
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
