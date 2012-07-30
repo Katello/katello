@@ -33,17 +33,9 @@ class Api::ChangesetsController < Api::ApiController
 
   respond_to :json
 
-  # TODO: Figure out why we can't seem to return type
   def index
-    changesets = Changeset.select("changesets.*, environments.name AS environment_name").
+    render :json => Changeset.select("changesets.*, environments.name AS environment_name").
         joins(:environment).where(params.slice(:name, :environment_id))
-
-    transformed = []
-    changesets.each do |cs|
-      cs['action_type'] = cs.action_type
-      transformed.push(cs)
-    end
-    render :json => transformed
   end
 
   def show
