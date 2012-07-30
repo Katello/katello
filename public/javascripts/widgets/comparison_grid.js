@@ -220,7 +220,17 @@ KT.comparison_grid = function(){
             models.columns = [];
 
             utils.each(data, function(col) {
-                models.columns.push({ 'id' : col['id'], 'to_display' : col['name'], 
+                var to_display, custom; 
+
+                if( col['content'] ){
+                    to_display = col['content']['custom'] ? col['content']['custom'] : col['content']['name'],
+                    custom = col['content']['custom'] ? true : false;
+                } else {
+                    to_display = col['name'];
+                    custom = false;
+                }
+
+                models.columns.push({ 'id' : col['id'], 'to_display' : { 'content' : to_display, 'custom' : custom }, 
                                             'span' : col['span'] ? col['span'] : 1 });
             });
 
@@ -911,10 +921,12 @@ KT.comparison_grid.templates = (function(i18n) {
                     'data-id'   : id,
                     'data-span' : span,
                     'class'     : 'column_header hidden'
-                }).html(to_display);
+                }).html(to_display['content']);
  
-            if( to_display.length > span * 12 ){
-                html.addClass('tipsify one-line-ellipsis').attr('title', to_display);
+            if( !to_display['custom'] ){
+                if( to_display['content'].length > span * 12 ){
+                    html.addClass('tipsify one-line-ellipsis').attr('title', to_display['content']);
+                }
             }
 
             return html;

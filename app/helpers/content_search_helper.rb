@@ -20,4 +20,10 @@ module ContentSearchHelper
     return '<span class="one-line-ellipsis tipsify" title="' + package.send(:name)  + '">' + package.send(:name) + '</span><span>' + (package.send(:nvrea).sub(package.send(:name) + '-', '')) + '</span>';
   end
 
+  def repo_compare_name_display repo
+    to_ret = {:custom => "<span title=\"#{repo.name}\" class=\"one-line-ellipsis tipsify\">#{repo.name}</span><span class=\"one-line-ellipsis\">#{repo.environment.name}</span>" }
+
+    return to_ret
+  end
+
 end
