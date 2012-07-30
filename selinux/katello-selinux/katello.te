@@ -78,7 +78,7 @@ mta_send_mail(httpd_katello_script_t)
 
 # temporary fix for RHEL 6.2 GOLD (base policy is coming out soon)
 gen_require(`
-	type qpidd_t;
+  type qpidd_t;
 ')
 files_list_tmp(qpidd_t)
 miscfiles_read_certs(qpidd_t)   
