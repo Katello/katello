@@ -15,6 +15,9 @@ policy_module(katello, 1.0.0)
 
 require {
   type unconfined_t;
+  type httpd_t;
+  type setfiles_t;
+  type postgresql_t;
 }
 
 ########################################
@@ -82,5 +85,11 @@ miscfiles_read_certs(qpidd_t)
 
 # for extra config file domain
 filetrans_pattern(unconfined_t, katello_secetc_dir_t, katello_secetc_file_t, file)
+
+# katello-configure
+init_rw_script_tmp_files(httpd_t)
+init_rw_script_tmp_files(postgresql_t)
+init_rw_script_tmp_files(setfiles_t)
+
 # TODO katello runs unconfined temporarily - uncomment this to allow secure files reading
 #katello_files_read_secetc_files(katello_not_yet_defined_t)
