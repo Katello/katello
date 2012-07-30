@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.53
+Version:        0.2.54
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -398,6 +398,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.54-1
+- replace character by html entity (msuchy@redhat.com)
+
 * Sun Jul 29 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.53-1
 - CS - using newer errata icon classes (jsherril@redhat.com)
 - making 'Id' be i18n'd (jsherril@redhat.com)
