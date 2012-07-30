@@ -25,6 +25,27 @@
         #repo_search
           = radio_button_tag :repos, :search_radio, true
           = text_field_tag :repo_search_input, nil, :placeholder=>_('Search repositories')
+          %span.help-icon
+            %span.hidden-text.hidden
+              .la.content-tipsy
+                = _('Example Searches:')
+                %div
+                %ul
+                  %li
+                    =_('Searching for all repositories containing the word "Server"')
+                    .example
+                      "*Server*"
+                  %li
+                    =_('Searching for a specific arch:')
+                    .example
+                      arch:x86_64
+                  %li
+                    =_('Searching for a specific minor version:')
+                    .example
+                      minor:6.2
+
+
+
         %div#repo_autocomplete_list{'data-url'=>auto_complete_library_repositories_path}
           = radio_button_tag :repos, :auto_complete_radio, true
           %input.hidden_selection{:type=>:hidden}
