@@ -127,6 +127,22 @@ class Action(object):
             attr = default
         return u_obj(attr)
 
+    def get_option_dict(self, *allowed_keys):
+        """
+        Get all options from opts or from the config file as a dictionary.
+        Options from opts take precedence.
+        @type allowed_keys: variable length arguments, names of options the dictionary will contain.
+        Other options will be omitted. The function returns a dictionary with all the options
+        if no allowed key is passed.
+        @param allowed_keys: strings
+        @return: a dictionary with options (opt. destination -> opt. value)
+        """
+        if allowed_keys:
+            return dict((key, self.get_option(key)) for key in allowed_keys)
+        else:
+            return dict((key, self.get_option(key)) for key in vars(self.opts).keys())
+
+
     def has_option(self, opt):
         """
         Check if option is present

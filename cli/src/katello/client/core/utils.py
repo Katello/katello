@@ -54,6 +54,51 @@ def test_record(rec, success_msg, failure_msg):
         system_exit(os.EX_DATAERR, failure_msg)
 
 
+def unnest(rec, *path):
+    """
+    Unnests inner values in a dictionary according to key path.
+    If the rec is a tuple or a list then unnesting is applied
+    to its items.
+    Eg.
+        >>> example_dict = {'a': {'b': {'c': 'the_value'}}}
+        >>> unnest(example_dict, "a", "b")
+        {'c': 'the_value'}
+
+    @param rec: record to unnest
+    @type rec: dict, list or tuple of dicts
+    @param *path: key path in the dictionary 
+    @rtype: dict, list or tupple according to type of rec
+    """
+    if isinstance(rec, (list)):
+        return [unnest(item, *path) for item in rec]
+    elif isinstance(rec, (tuple)):
+        return (unnest(item, *path) for item in rec)
+    else:
+        assert isinstance(rec, (dict))
+        return reduce(dict.get, path, rec) 
+
+def unnest_one(rec):
+    """
+    Unnest one level of a dict. Takes first key returned by .keys()
+    and unnests the value saved in the dict for that key.
+    If the rec is a tuple or a list then unnesting is applied
+    to its items.
+    Eg.
+        >>> example_dict = {'a': {'b': {'c': 'the_value'}}}
+        >>> unnest_one(example_dict)
+        {'b': {'c': 'the_value'}}
+
+    @param rec: record to unnest
+    @type rec: dict, list or tuple of dicts
+    @rtype: dict, list or tupple according to type of rec
+    """
+    if isinstance(rec, (list, tuple)):
+        return unnest(rec, rec[0].keys()[0])
+    else:
+        assert isinstance(rec, (dict))
+        assert rec.keys()
+        return unnest(rec, rec.keys()[0])
+
 
 class SystemExitRequest(Exception):
     """
