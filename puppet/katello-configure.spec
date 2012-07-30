@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.37
+Version:        0.2.38
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -87,6 +87,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.38-1
+- Fix Ruby 1.9.3 compatibility issue in Puppet manifest (inecas@redhat.com)
+
 * Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.37-1
 - puppet - nss generation ordering issue (lzap+git@redhat.com)
 - puppet - pulp migrate must run before apache2 ensure (lzap+git@redhat.com)
