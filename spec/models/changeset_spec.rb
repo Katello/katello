@@ -16,6 +16,7 @@ describe Changeset, :katello => true do
       @changeset    = PromotionChangeset.create!(:environment => @environment, :name => "foo-changeset")
     end
 
+
     it "changeset should not be null" do
       @environment.should_not be_nil
       @environment.working_changesets.should_not be_nil
@@ -40,6 +41,14 @@ describe Changeset, :katello => true do
       cu.save!
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
       @changeset.users.should be_empty
+    end
+
+    it "changeset json should contain the types" do
+      json = JSON.load(@changeset.to_json)
+      json['action_type'].should_not be_nil
+      json['type'].should_not be_nil
+      json['deletion?'].should_not be_nil
+      json['promotion?'].should_not be_nil
     end
 
     describe "fail adding content not contained in the prior environment" do
