@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.35
+Version:        0.2.36
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -87,6 +87,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.36-1
+- puppet - fixing pulp migrate race condition (typo) (lzap+git@redhat.com)
+- puppet - fixing pulp migrate race condition (lzap+git@redhat.com)
+
 * Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.35-1
 - puppet - adding more logging to cert creation (lzap+git@redhat.com)
 - point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
