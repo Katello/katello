@@ -360,7 +360,7 @@ fi
 %{homedir}/db/schema.rb
 
 %defattr(-, katello, katello)
-%attr(640, katello, katello) %{_localstatedir}/log/%{name}
+%attr(750, katello, katello) %{_localstatedir}/log/%{name}
 %{datadir}
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
