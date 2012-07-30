@@ -62,11 +62,11 @@ class certs::config {
   }
 
   exec { "generate-ssl-keystore":
-    command   => "openssl pkcs12 -export -in /etc/candlepin/certs/candlepin-ca.crt -inkey /etc/candlepin/certs/candlepin-ca.key -out ${katello_keystore} -name tomcat -CAfile ${candlepin_pub_cert} -caname root -password \"file:${certs::params::keystore_password_file}\"",
+    command   => "openssl pkcs12 -export -in /etc/candlepin/certs/candlepin-ca.crt -inkey /etc/candlepin/certs/candlepin-ca.key -out ${katello_keystore} -name tomcat -CAfile ${candlepin_pub_cert} -caname root -password \"file:${certs::params::keystore_password_file}\" 2>>${katello::params::configure_log_base}/certificates.log",
     path      => "/usr/bin",
     creates   => $katello_keystore,
     notify    => Service["tomcat6"],
-    require   => [File[$katello_pki_dir], Exec["deploy-candlepin-certificate-to-cp"]]
+    require   => [File[$katello_pki_dir], Exec["deploy-candlepin-certificate-to-cp"], File["${katello::params::configure_log_base}"]]
   }
 
   file { $katello_keystore:
@@ -101,10 +101,10 @@ class certs::config {
 
   exec { "generate-candlepin-certificate":
     cwd => '/root',
-    command => "katello-ssl-tool --gen-ca -p \"$(cat ${certs::params::candlepin_ca_password_file})\" --set-country '${certs::params::ssl_ca_country}' --set-state '${certs::params::ssl_ca_state}' --set-city '${certs::params::ssl_ca_city}' --set-org '${certs::params::ssl_ca_org}' --set-org-unit '${certs::params::ssl_ca_org_unit}' --set-common-name `hostname` --set-email '' --ca-key '${candlepin_cert_name}.key' --ca-cert '${candlepin_cert_name}.crt' --ca-cert-rpm  '${candlepin_key_pair_name}'",
+    command => "katello-ssl-tool --gen-ca -p \"$(cat ${certs::params::candlepin_ca_password_file})\" --set-country '${certs::params::ssl_ca_country}' --set-state '${certs::params::ssl_ca_state}' --set-city '${certs::params::ssl_ca_city}' --set-org '${certs::params::ssl_ca_org}' --set-org-unit '${certs::params::ssl_ca_org_unit}' --set-common-name `hostname` --set-email '' --ca-key '${candlepin_cert_name}.key' --ca-cert '${candlepin_cert_name}.crt' --ca-cert-rpm  '${candlepin_key_pair_name}' 2>>${katello::params::configure_log_base}/certificates.log",
     path => "/usr/bin:/bin",
     creates => "${ssl_build_path}/$candlepin_cert_name.crt",
-    require => [File["${certs::params::candlepin_ca_password_file}"]],
+    require => [File["${certs::params::candlepin_ca_password_file}"], File["${katello::params::configure_log_base}"]],
     notify => Exec["generate-candlepin-consumer-certificate"] # regenerate consumer RPM as well
   }
 
@@ -116,10 +116,10 @@ class certs::config {
 
   exec { "generate-candlepin-consumer-certificate":
     cwd       => "${katello_www_pub_dir}",
-    command   => "gen-rpm.sh --name '${candlepin_consumer_name}' --version 1.0 --release 1 --packager None --vendor None --group 'Applications/System' --summary '${candlepin_consumer_summary}' --description '${candlepin_consumer_description}' --post ${ssl_build_path}/rhsm-katello-reconfigure /etc/rhsm/ca/candlepin-local.pem:666=${ssl_build_path}/$candlepin_cert_name.crt && /sbin/restorecon ./*rpm",
+    command   => "gen-rpm.sh --name '${candlepin_consumer_name}' --version 1.0 --release 1 --packager None --vendor None --group 'Applications/System' --summary '${candlepin_consumer_summary}' --description '${candlepin_consumer_description}' --post ${ssl_build_path}/rhsm-katello-reconfigure /etc/rhsm/ca/candlepin-local.pem:666=${ssl_build_path}/$candlepin_cert_name.crt 2>>${katello::params::configure_log_base}/certificates.log && /sbin/restorecon ./*rpm",
     path      => "/usr/share/katello/certs:/usr/bin:/bin",
     creates   => "${katello_www_pub_dir}/${candlepin_consumer_name}-1.0-1.noarch.rpm",
-    require   => [Exec["generate-candlepin-certificate"], File["${ssl_build_path}/rhsm-katello-reconfigure"]]
+    require   => [Exec["generate-candlepin-certificate"], File["${ssl_build_path}/rhsm-katello-reconfigure"], File["${katello::params::configure_log_base}"]]
   }
 
   exec { "deploy-candlepin-certificate":
@@ -131,10 +131,10 @@ class certs::config {
   }
 
   exec { "deploy-candlepin-certificate-to-cp":
-    command => "openssl x509 -in $candlepin_pub_cert -out /etc/candlepin/certs/candlepin-ca.crt; openssl rsa -in $candlepin_private_key -out /etc/candlepin/certs/candlepin-ca.key -passin 'file:/etc/katello/candlepin_ca_password-file'",
+    command => "openssl x509 -in $candlepin_pub_cert -out /etc/candlepin/certs/candlepin-ca.crt; openssl rsa -in $candlepin_private_key -out /etc/candlepin/certs/candlepin-ca.key -passin 'file:/etc/katello/candlepin_ca_password-file' 2>>${katello::params::configure_log_base}/certificates.log",
     path => "/bin:/usr/bin",
     creates => ["/etc/candlepin/certs/candlepin-ca.crt", "/etc/candlepin/certs/candlepin-ca.key"],
-    require => Exec["deploy-candlepin-certificate"],
+    require => [Exec["deploy-candlepin-certificate"], File["${katello::params::configure_log_base}"]],
     before => Class["apache2::service"]
   }
 
@@ -173,10 +173,10 @@ class certs::config {
 
       exec { "generate-ssl-qpid-broker-certificate":
         cwd => '/root',
-        command => "katello-ssl-tool --gen-server -p \"$(cat ${certs::params::candlepin_ca_password_file})\" --ca-cert '${candlepin_pub_cert}' --ca-key '${candlepin_private_key}' $ssl_tool_common --cert-expiration '${certs::params::ssl_cert_expiration}' --set-org 'pulp' --server-cert '${qpid_cert_name}.crt' --server-cert-req '${qpid_cert_name}.req' --set-email '' --server-key '${qpid_cert_name}.key' --server-tar 'katello-${qpid_cert_name}-key-pair' --server-rpm 'katello-${qpid_cert_name}-key-pair'",
+        command => "katello-ssl-tool --gen-server -p \"$(cat ${certs::params::candlepin_ca_password_file})\" --ca-cert '${candlepin_pub_cert}' --ca-key '${candlepin_private_key}' $ssl_tool_common --cert-expiration '${certs::params::ssl_cert_expiration}' --set-org 'pulp' --server-cert '${qpid_cert_name}.crt' --server-cert-req '${qpid_cert_name}.req' --set-email '' --server-key '${qpid_cert_name}.key' --server-tar 'katello-${qpid_cert_name}-key-pair' --server-rpm 'katello-${qpid_cert_name}-key-pair' 2>>${katello::params::configure_log_base}/certificates.log",
         path => "/usr/bin:/bin",
         creates => "${ssl_build_path}/$fqdn/$qpid_cert_name.crt",
-        require => [File["${certs::params::candlepin_ca_password_file}"], Exec["deploy-candlepin-certificate"]]
+        require => [File["${certs::params::candlepin_ca_password_file}"], Exec["deploy-candlepin-certificate"], File["${katello::params::configure_log_base}"]]
       }
 
       exec { "deploy-ssl-qpid-broker-certificate":
@@ -230,9 +230,9 @@ class certs::config {
       }
 
       exec { "create-nss-db":
-        command => "certutil -N -d '${nss_db_dir}' -f '${certs::params::nss_db_password_file}'",
+        command => "certutil -N -d '${nss_db_dir}' -f '${certs::params::nss_db_password_file}' 2>>${katello::params::configure_log_base}/certificates.log",
         path    => "/usr/bin",
-        require => [File["${certs::params::nss_db_password_file}"], File[$nss_db_dir]],
+        require => [File["${certs::params::nss_db_password_file}"], File[$nss_db_dir], File["${katello::params::configure_log_base}"]],
         before  => Class["qpid::service"],
         creates => ["$nss_db_dir/cert8.db", "$nss_db_dir/key3.db", "$nss_db_dir/secmod.db"],
         notify => [
@@ -245,33 +245,33 @@ class certs::config {
       }
 
       exec { "add-candlepin-cert-to-nss-db":
-        command => "certutil -A -d '${nss_db_dir}' -n 'ca' -t 'TCu,Cu,Tuw' -a -i '${candlepin_pub_cert}'",
+        command => "certutil -A -d '${nss_db_dir}' -n 'ca' -t 'TCu,Cu,Tuw' -a -i '${candlepin_pub_cert}' 2>>${katello::params::configure_log_base}/certificates.log",
         path    => "/usr/bin",
-        require => [Exec["create-nss-db"], Exec["deploy-candlepin-certificate-to-cp"]],
+        require => [Exec["create-nss-db"], Exec["deploy-candlepin-certificate-to-cp"], File["${katello::params::configure_log_base}"]],
         before => Class["qpid::service"],
         refreshonly => true,
       }
 
       exec { "add-broker-cert-to-nss-db":
-        command => "certutil -A -d '${nss_db_dir}' -n 'broker' -t ',,' -a -i '${ssl_build_path}/$fqdn/$qpid_cert_name.crt'",
+        command => "certutil -A -d '${nss_db_dir}' -n 'broker' -t ',,' -a -i '${ssl_build_path}/$fqdn/$qpid_cert_name.crt' 2>>${katello::params::configure_log_base}/certificates.log",
         path    => "/usr/bin",
-        require => [Exec["create-nss-db"], Exec["deploy-candlepin-certificate-to-cp"]],
+        require => [Exec["create-nss-db"], Exec["deploy-candlepin-certificate-to-cp"], File["${katello::params::configure_log_base}"]],
         before => Class["qpid::service"],
         refreshonly => true,
       }
 
       exec { "generate-pfx-for-nss-db":
-        command => "openssl pkcs12 -in ${ssl_build_path}/$fqdn/$qpid_cert_name.crt -inkey ${ssl_build_path}/$fqdn/$qpid_cert_name.key -export -out '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -password 'file:${certs::params::ssl_pk12_password_file}'",
+        command => "openssl pkcs12 -in ${ssl_build_path}/$fqdn/$qpid_cert_name.crt -inkey ${ssl_build_path}/$fqdn/$qpid_cert_name.key -export -out '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -password 'file:${certs::params::ssl_pk12_password_file}' 2>>${katello::params::configure_log_base}/certificates.log",
         path    => "/usr/bin",
-        require => [Exec["create-nss-db"], File["${certs::params::ssl_pk12_password_file}"]],
+        require => [Exec["create-nss-db"], File["${certs::params::ssl_pk12_password_file}"], File["${katello::params::configure_log_base}"]],
         before => Class["qpid::service"],
         refreshonly => true,
       }
 
       exec { "add-private-key-to-nss-db":
-        command => "pk12util -i '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -d '${nss_db_dir}' -w '${certs::params::ssl_pk12_password_file}' -k '${certs::params::nss_db_password_file}'",
+        command => "pk12util -i '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -d '${nss_db_dir}' -w '${certs::params::ssl_pk12_password_file}' -k '${certs::params::nss_db_password_file}' 2>>${katello::params::configure_log_base}/certificates.log",
         path    => "/usr/bin",
-        require => [Exec["create-nss-db"], Exec["generate-pfx-for-nss-db"]],
+        require => [Exec["create-nss-db"], Exec["generate-pfx-for-nss-db"], File["${katello::params::configure_log_base}"]],
         before => Class["qpid::service"],
         refreshonly => true,
       }
@@ -279,10 +279,10 @@ class certs::config {
       # qpid client certificates
       exec { "generate-ssl-qpid-client-certificate":
         cwd => '/root',
-        command => "katello-ssl-tool --gen-server -p \"$(cat ${certs::params::candlepin_ca_password_file})\" --ca-cert '${candlepin_pub_cert}' --ca-key '${candlepin_private_key}' $ssl_tool_common --cert-expiration '${certs::params::ssl_cert_expiration}' --set-org 'pulp' --server-cert '${qpid_client_cert_name}.crt' --server-cert-req '${qpid_client_cert_name}.req' --set-email '' --server-key '${qpid_client_cert_name}.key' --server-tar 'katello-${qpid_client_cert_name}-key-pair' --server-rpm 'katello-${qpid_client_cert_name}-key-pair'",
+        command => "katello-ssl-tool --gen-server -p \"$(cat ${certs::params::candlepin_ca_password_file})\" --ca-cert '${candlepin_pub_cert}' --ca-key '${candlepin_private_key}' $ssl_tool_common --cert-expiration '${certs::params::ssl_cert_expiration}' --set-org 'pulp' --server-cert '${qpid_client_cert_name}.crt' --server-cert-req '${qpid_client_cert_name}.req' --set-email '' --server-key '${qpid_client_cert_name}.key' --server-tar 'katello-${qpid_client_cert_name}-key-pair' --server-rpm 'katello-${qpid_client_cert_name}-key-pair' 2>>${katello::params::configure_log_base}/certificates.log",
         path => "/usr/bin:/bin",
         creates => "${ssl_build_path}/$fqdn/$qpid_client_cert_name.crt",
-        require => [Exec["deploy-candlepin-certificate"]]
+        require => [Exec["deploy-candlepin-certificate"], File["${katello::params::configure_log_base}"]]
       }
 
       exec { "deploy-ssl-qpid-client-certificate":
@@ -295,10 +295,10 @@ class certs::config {
 
       # prepare certificate for pulp server
       exec { "strip-qpid-client-certificate":
-        command => "cp ${ssl_build_path}/$fqdn/qpid-client.key /etc/pki/pulp/qpid_client_striped.crt; openssl x509 -in ${ssl_build_path}/$fqdn/qpid-client.crt >> /etc/pki/pulp/qpid_client_striped.crt",
+        command => "cp ${ssl_build_path}/$fqdn/qpid-client.key /etc/pki/pulp/qpid_client_striped.crt; openssl x509 -in ${ssl_build_path}/$fqdn/qpid-client.crt >> /etc/pki/pulp/qpid_client_striped.crt 2>>${katello::params::configure_log_base}/certificates.log",
         path => "/bin:/usr/bin",
         creates => "/etc/pki/pulp/qpid_client_striped.crt",
-        require => Exec["deploy-ssl-qpid-client-certificate"],
+        require => [Exec["deploy-ssl-qpid-client-certificate"], File["${katello::params::configure_log_base}"]],
         notify  => Exec["reload-apache2"],
         before => Class["pulp::service"]
       }
