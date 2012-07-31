@@ -503,6 +503,9 @@ puppet_logfile_filename = log_directory + '/main.log'
 puppet_logfile = IO.open(IO::sysopen(puppet_logfile_filename, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
 puts "The top-level log file is [#{puppet_logfile_filename}]"
 seen_err = false
+ENV['LANG'] = 'C'
+ENV['LC_ALL'] = 'C'
+ENV['LC_CTYPE'] = 'C'
 begin
 	IO.popen("#{puppet_cmd} 2>&1", 'w+') do |f|
 		f.puts "include katello"
