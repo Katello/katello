@@ -699,6 +699,9 @@ Src::Application.routes.draw do
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
+      # foreman proxy --------------
+    resources :architectures, :except => [:new, :edit]
+
     # development / debugging support
     if Rails.env == "development"
       get 'status/memory'
