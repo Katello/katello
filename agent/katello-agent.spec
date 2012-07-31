@@ -1,5 +1,5 @@
 Name: katello-agent
-Version: 1.0.5
+Version: 1.0.6
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -39,6 +39,10 @@ cp src/katello/agent/katelloplugin.py %{buildroot}/%{_prefix}/lib/gofer/plugins
 %doc LICENSE
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.6-1
+- update copyright years (msuchy@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+
 * Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 1.0.5-1
 - macro python_sitelib is not used anywhere, removing
 - provide more descriptive description
