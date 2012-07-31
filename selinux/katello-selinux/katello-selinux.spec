@@ -19,7 +19,7 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
@@ -131,6 +131,9 @@ fi
 %{_sysconfdir}/katello/secure
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- bump up version to 1.0 (msuchy@redhat.com)
+
 * Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.7-1
 - selinux - katello configure denials (lzap+git@redhat.com)
 - point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
