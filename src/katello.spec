@@ -327,7 +327,6 @@ fi
 %{homedir}/lib/notifications
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
-%{homedir}/lib/util
 %{homedir}/locale
 %{homedir}/public
 %{homedir}/script
@@ -358,6 +357,7 @@ fi
 %{_sysconfdir}/bash_completion.d/%{name}
 %{homedir}/log
 %{homedir}/db/schema.rb
+%{homedir}/lib/util
 
 %defattr(-, katello, katello)
 %attr(750, katello, katello) %{_localstatedir}/log/%{name}
