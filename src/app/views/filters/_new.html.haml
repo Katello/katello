@@ -7,9 +7,9 @@
 
 = content_for :content do
   #provider
-    = kt_form_for @filter, :html => {:method => :post}, :url => filters_path do |f|
+    = kt_form_for @filter, :html => {:method => :post}, :url => filters_path do |form|
 
-      = f.text_field :name, :label => _("Name"), :size => 30
-      = f.text_area :description, :label => _("Description"), :size => "40x8"
+      = form.text_field :name, :label => _("Name"), :size => 30
+      = form.text_area :description, :label => _("Description"), :size => "40x8"
 
-      = f.submit _("Save")
+      = form.submit _("Save")

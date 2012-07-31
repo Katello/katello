@@ -16,23 +16,23 @@
 
 = content_for :content do
   .grid_10
-    = kt_form_for User.new, :id => "new_user" do |f|
+    = kt_form_for User.new, :id => "new_user" do |form|
 
-      = f.text_field :username, :label => _("Username:")
+      = form.text_field :username, :label => _("Username:")
 
       - if !@ldap
-        = f.text_field :password, :label => _("Password:"), :type => :password, :id => :password_field
-        = f.text_field :password, :label => _("Confirm:"), :type => :password, :id => :confirm_field
+        = form.text_field :password, :label => _("Password:"), :type => :password, :id => :password_field
+        = form.text_field :password, :label => _("Confirm:"), :type => :password, :id => :confirm_field
         .grid_5.la.prefix_2
           #password_conflict
-        = f.text_field :email, :label => _("Email Address:"), :type => :email
+        = form.text_field :email, :label => _("Email Address:"), :type => :email
 
-      = f.field :org, :label => _("Default Organization:") do
+      = form.field :org, :label => _("Default Organization:") do
         = organization_select
 
       .promotion_paths
         = hidden_field_tag 'user[environment_id]', @environment.id unless @environment.nil?
-        = f.field :environment, :label => _("Environment:") do
+        = form.field :environment, :label => _("Environment:") do
           - if @environment.nil?
             #env_box
               -if @organization.nil?
@@ -43,4 +43,4 @@
             #env_box
               = render "environments", :accessible_envs => accessible_envs
 
-      = f.submit _("Save User"), :id => :save_user
+      = form.submit _("Save User"), :id => :save_user

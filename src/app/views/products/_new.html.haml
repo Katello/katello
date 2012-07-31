@@ -4,19 +4,19 @@
   #{_("Create Product")}
 
 = content_for :subcontent do
-  = kt_form_for [@provider, Product.new], :remote => true, :html => {:id => "new_subpanel"} do |f|
+  = kt_form_for [@provider, Product.new], :remote => true, :html => {:id => "new_subpanel"} do |form|
 
-    = f.text_field :name, :label => _("Name")
+    = form.text_field :name, :label => _("Name")
 
-    = f.text_area :description, :label => _("Description"), :size => "40x5"
+    = form.text_area :description, :label => _("Description"), :size => "40x5"
 
-    = f.field :gpg_key, :label => _("GPG Key") do
+    = form.field :gpg_key, :label => _("GPG Key") do
       - if gpg_keys.present?
-        = select_tag 'product[gpg_key]', options_from_collection_for_select(gpg_keys, "id", "name"), :include_blank => true, :tabindex => f.tabindex
+        = select_tag 'product[gpg_key]', options_from_collection_for_select(gpg_keys, "id", "name"), :include_blank => true, :tabindex => form.tabindex
       - else
         = _("None defined for this Organization.")
 
-    = f.submit _("Create"), :class => 'subpanel_create', :disable_with => _("Creating...")
+    = form.submit _("Create"), :class => 'subpanel_create', :disable_with => _("Creating...")
 
     -# Content to be implemented and used at a later date
       %fieldset.clearfix

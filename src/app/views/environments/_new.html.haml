@@ -9,12 +9,12 @@
 = content_for :subcontent do
   .clear
     &nbsp;
-  = kt_form_for KTEnvironment.new, :url => organization_environments_path(@organization.cp_key), :remote=>true, :html => {:id=>"new_subpanel"} do |f|
+  = kt_form_for KTEnvironment.new, :url => organization_environments_path(@organization.cp_key), :remote=>true, :html => {:id=>"new_subpanel"} do |form|
 
-    = f.text_field :name, :label => _("Name")
+    = form.text_field :name, :label => _("Name")
 
-    = f.text_area :description, :size => "40x5", :label => _("Description")
+    = form.text_area :description, :size => "40x5", :label => _("Description")
 
-    = f.select :prior, options_for_select(@env_labels, @selected), :label => _("Prior Environment")
+    = form.select :prior, options_for_select(@env_labels, @selected), :label => _("Prior Environment")
 
-    = f.submit _("Create"), :disable_with => _("Creating..."), :class => 'subpanel_create'
+    = form.submit _("Create"), :disable_with => _("Creating..."), :class => 'subpanel_create'

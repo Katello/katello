@@ -53,13 +53,24 @@ KT.tipsy.custom = (function(){
                $('.details_container').addClass('scroll-pane');
                KT.common.jscroll_init($('.scroll-pane'));
            }});
+    },
+    enable_forms_tooltips = function(){
+      // Form inputs help tips
+      $('form i.details-icon[data-help]').tipsy({
+        gravity: 'e', live : true, html : true, title : KT.tipsy.templates.table_template,
+        hoverable : true, delayOut : 250, opacity : 1, delayIn : 300, className : 'tooltip',
+        afterShow : function(){
+          $('.details_container').addClass('scroll-pane');
+          KT.common.jscroll_init($('.scroll-pane'));
+      }});
     };
     return {
         tooltip                  : tooltip,
         copy_tooltip             : copy_tooltip,
         disable_details_tooltip  : disable_details_tooltip,
         promotion_filter_tooltip : promotion_filter_tooltip,
-        system_packages_tooltips : system_packages_tooltip
+        system_packages_tooltips : system_packages_tooltip,
+        enable_forms_tooltips    : enable_forms_tooltips
     };
 })();
 
