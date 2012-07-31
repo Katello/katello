@@ -87,7 +87,14 @@ KT.content_search = function(paths_in){
             footer;
         paths = paths_in;
         
-        footer = '<a href="' + KT.routes.organizations_path() + '"><i class="gears_icon"></i><span>' + i18n.manage_organizations + '</span></a>';
+        if( KT.permissions.current_organization.editable ){
+            footer = $('<a/>', { "href" : KT.routes.organizations_path('#panel=organization_' + KT.permissions.current_organization['id'] + '&panelpage=edit')});
+            footer.append($('<i/>', { "class" : "gears_icon" }));
+            footer.append($('<span/>').html(i18n.manage_environments));
+            footer = footer[0].outerHTML;
+        } else {
+            footer = "";
+        }
 
         env_select = KT.path_select('column_selector', 'env', paths,
             {select_mode:'multi', link_first: true, footer: footer });
