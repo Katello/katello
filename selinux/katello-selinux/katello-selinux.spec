@@ -19,7 +19,7 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        0.2.7
+Version:        1.0.0
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
