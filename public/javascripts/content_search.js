@@ -66,8 +66,8 @@ KT.content_search = function(paths_in){
         }
     },
     search_modes = [{id:'all', name:i18n.all},
-                    {id:'shared', name:i18n.shared},
-                    {id:'unique', name:i18n.unique}
+                    {id:'shared', name:i18n.union},
+                    {id:'unique', name:i18n.difference}
                    ],
     search_pages = {errata:{url:KT.routes.errata_content_search_index_path(), modes:true},
                     repos:{url:KT.routes.repos_content_search_index_path(), modes:true, comparable:true},
@@ -374,11 +374,11 @@ KT.content_search = function(paths_in){
         }
     },
     init_tipsy = function(){
-        $('.help-icon').tipsy({html:true, gravity:'w', className:'content-tipsy',
-            title:function(){
-                return $(this).find('.hidden-text').html();
-            }
-        });
+        var find_text = function(){ return $(this).find('.hidden-text').html();};
+        $('.browse_tipsy').tipsy({html:true, gravity:'w', className:'content-tipsy',
+            title:find_text});
+        $('.view_tipsy').tipsy({html:true, gravity:'s', className:'content-tipsy',
+                    title:find_text});
         KT.tipsy.custom.url_tooltip($('.tipsify-errata'), 'w');
 
     },
