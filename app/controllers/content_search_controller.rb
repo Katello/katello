@@ -211,9 +211,22 @@ class ContentSearchController < ApplicationController
     end
 
     cols = {}
-    @repos.each{|r| cols[r.id] = {:id=>r.id, :name=>r.name}}
+    sort_repos(@repos).each{|r| cols[r.id] = {:id=>r.id, :name=>r.name}}
     rows += [metadata_row(packages.total, offset.to_i + rows.length, {:repos=>params[:repos]}, 'compare')] if packages.total > current_user.page_size
     render :json => {:rows=>rows, :cols=>cols}
+  end
+
+  #take in a set of repos and sort based on environment
+  def sort_repos repos
+    env_to_repo = {}
+    repos.each do |r|
+      env_to_repo[r.environment.id] ||= []
+      env_to_repo[r.environment.id] << r
+    end
+    envs = [current_organization.library] + current_organization.promotion_paths.flatten
+    to_ret = []
+    envs.each{|e|  to_ret += (env_to_repo[e.id] || [])}
+    to_ret
   end
 
 
