@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -398,6 +398,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.2-1
+- puppet - moving lib/util into common subpackage
+
 * Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
 - bump up version to 1.0 (msuchy@redhat.com)
 
