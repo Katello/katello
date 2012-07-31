@@ -233,6 +233,13 @@ class Changeset < ActiveRecord::Base
     return deleted
   end
 
+  def to_json(options={})
+    super(options.merge({
+          :methods => [:type, :action_type, :deletion?, :promotion?]
+          })
+       )
+  end
+
   protected 
 
   def validate_content! elements
@@ -363,5 +370,6 @@ class Changeset < ActiveRecord::Base
       :user            => self.task_status.nil? ? "" : self.task_status.user.username
     }
   end
+
 end
 

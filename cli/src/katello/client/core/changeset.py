@@ -112,7 +112,7 @@ class Info(ChangesetAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
-        self.printer.add_column('type')
+        self.printer.add_column('action_type')
         self.printer.add_column('description', multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('updated_at', formatter=format_date)
         self.printer.add_column('state')
@@ -196,11 +196,15 @@ class UpdateContent(ChangesetAction):
             return patch
 
     class PatchItemBuilder(object):
-        def __init__(self, org_name, env_name):
+        def __init__(self, org_name, env_name, type):
             self.org_name = org_name
             self.env_name = env_name
-            self.prior_env_name = get_environment(org_name, env_name)['prior']
-
+            self.type = type
+            # Use current env if we are doing a deletion otherwise use the prior
+            if self.type == 'deletion':
+                self.env_name = get_environment(org_name, env_name)['name']
+            else:
+                self.env_name = get_environment(org_name, env_name)['prior']
 
         def product_id(self, options):
             if 'product' in options:
@@ -212,11 +216,11 @@ class UpdateContent(ChangesetAction):
             return prod['id']
 
         def repo_id(self, options):
-            repo = get_repo(self.org_name, options['product'], options['name'], self.prior_env_name)
+            repo = get_repo(self.org_name, options['product'], options['name'], self.env_name)
             return repo['id']
 
         def template_id(self, options):
-            tpl = get_template(self.org_name, self.prior_env_name, options['name'])
+            tpl = get_template(self.org_name, self.env_name, options['name'])
             return tpl['id']
 
 
@@ -372,10 +376,11 @@ class UpdateContent(ChangesetAction):
         csDescription = self.get_option('description')
 
         cset = get_changeset(orgName, envName, csName)
+        csType = cset['action_type']
 
         self.update(cset["id"], csNewName, csDescription)
-        addPatch = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName), items)
-        removePatch = self.PatchBuilder.build_patch('remove', self.RemovePatchItemBuilder(orgName, envName), items)
+        addPatch = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName, csType), items)
+        removePatch = self.PatchBuilder.build_patch('remove', self.RemovePatchItemBuilder(orgName, envName, csType), items)
         self.update_content(cset["id"], addPatch, self.api.add_content)
         self.update_content(cset["id"], removePatch, self.api.remove_content)
 
