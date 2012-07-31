@@ -198,7 +198,7 @@ def _request_option_interactively(title, regex, default_value, non_interactive_v
 
 	read_password = title.include?("password")
 	while true
-		if read_password:
+		if read_password
 			while true
 				print "Enter #{title}: "
 				input = _read_password()
