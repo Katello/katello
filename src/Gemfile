@@ -1,4 +1,3 @@
-#source "http://rubygems.org"
 source 'http://repos.fedorapeople.org/repos/katello/gems/'
 
 # When adding new version requirement check out EPEL6 repository first
@@ -16,6 +15,8 @@ gem 'rails_warden'
 gem 'net-ldap'
 gem 'oauth'
 gem 'ldap_fluff'
+
+gem 'foreman_api', :git => "git://github.com/mbacovsky/foreman_api.git" 
 
 gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
