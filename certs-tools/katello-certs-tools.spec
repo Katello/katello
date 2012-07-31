@@ -2,7 +2,7 @@ Name: katello-certs-tools
 Summary: Katello SSL Key/Cert Tool
 Group: Applications/Internet
 License: GPLv2 and Python
-Version: 1.1.6
+Version: 1.1.7
 Release: 1%{?dist}
 URL:      https://fedorahosted.org/katello
 Source0:  https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
@@ -41,6 +41,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE PYTHON-LICENSES.txt
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.7-1
+- update copyright years (msuchy@redhat.com)
+- %%defattr is not needed since rpm 4.4 (msuchy@redhat.com)
+
 * Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.6-1
 - 818261 - consumer rpm was not installable on RHEL5
 
