@@ -53,8 +53,8 @@ after_start() {
       /usr/bin/wget --timeout=1 --tries=$WAIT_MAX --retry-connrefused -qO- http://localhost:$TOMCAT_PORT
       ;;
     mongod)
-      # RHBZ 824405 - wait until data port is avaiable
-      for i in {1..$WAIT_MAX}; do netstat -ln | grep -q ":$MONGO_PORT\s" && break; sleep 1; done
+      # RHBZ 824405 - wait until service is avaiable
+      for i in {1..$WAIT_MAX}; do mongo --eval "printjson(db.getCollectionNames())" 2>/dev/null 1>&2 && break; sleep 1; done
       ;;
     postgresql)
       # RHBZ 800534 for RHEL 6.x - pg sysvinit script return non-zero when PID is not created in 2 seconds
