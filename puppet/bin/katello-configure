@@ -12,7 +12,7 @@ $stdout.sync = true
 default_path = '/usr/share/katello/install/default-answer-file'
 options_format_path = '/usr/share/katello/install/options-format-file'
 result_config_path = '/etc/katello/katello-configure.conf'
-puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d'
+puppet_cmd = 'puppet apply --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d'
 log_parent_directory = '/var/log/katello'
 
 # error codes for exit_with function
