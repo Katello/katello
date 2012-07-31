@@ -30,6 +30,9 @@ katello-upgrade which handles upgrades between versions.
 %setup -q
 
 %build
+#check syntax of main configure script and libs
+ruby -c bin/katello-configure lib/puppet/parser/functions/*rb
+
 #check syntax for all puppet scripts
 %if 0%{?rhel} || 0%{?fedora} < 17
 find -name '*.pp' | xargs -n 1 -t puppet --parseonly
