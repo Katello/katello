@@ -39,6 +39,9 @@ $comparison_grid_column_header-background: #FFF;
   }
 }
 
+.view_tipsy {
+  &:hover { background: $details_icon_black; }
+}
 
 .tipsify-errata {
   &:hover {
@@ -55,7 +58,6 @@ $comparison_grid_column_header-background: #FFF;
 
 .tipsy-inner{
   .spinner {
-    //margin:10px;
     margin-top: 40px;
     margin-bottom: 40px;
     margin-left: 70px;
@@ -85,10 +87,7 @@ $comparison_grid_column_header-background: #FFF;
   background-color: $widget-background-color;
   @include background-image(linear-gradient(top, rgba(255, 255, 255, 0) 40%, $login_base-color 120%));
 
-
-  .help-icon {
-    background: $details_icon_grey;
-    @extend .errata_icon;
+  .browse_tipsy {
     float: right;
     &:hover { background: $details_icon_black; }
     padding: 0px;
@@ -96,6 +95,7 @@ $comparison_grid_column_header-background: #FFF;
     margin-top: 5px;
     margin-right: 2px;
   }
+
 
 
   header {
