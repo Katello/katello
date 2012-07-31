@@ -1,5 +1,5 @@
 Name: katello-agent
-Version: 1.0.6
+Version: 1.1.0
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
