@@ -16,13 +16,11 @@ class NotInLibraryValidator < ActiveModel::Validator
   end
 end
 
-require 'util/notices'
 require 'util/package_util'
 
 class Changeset < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
-  include Katello::Notices
 
   include IndexedModel
   index_options :extended_json => :extended_index_attrs,
@@ -109,7 +107,9 @@ class Changeset < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
-  def promote async=true
+  def promote(options = { })
+    options = { :async => true, :notify => false }.merge options
+
     self.state == Changeset::REVIEW or
         raise _("Cannot promote the changset '%s' because it is not in the review phase.") % self.name
 
@@ -135,15 +135,15 @@ class Changeset < ActiveRecord::Base
     self.state = Changeset::PROMOTING
     self.save!
 
-    if async
-      task             = self.async(:organization => self.environment.organization).promote_content
+    if options[:async]
+      task             = self.async(:organization => self.environment.organization).promote_content(options[:notify])
       self.task_status = task
       self.save!
       self.task_status
     else
       self.task_status = nil
       self.save!
-      promote_content
+      promote_content(options[:notify])
     end
   end
 
@@ -268,14 +268,17 @@ class Changeset < ActiveRecord::Base
 
   def find_package_data(product, name_or_nvre)
     package_data = Katello::PackageUtils.parse_nvrea_nvre(name_or_nvre)
-    packs        = if package_data
-                     product.find_packages_by_nvre(self.environment.prior,
-                                                   package_data[:name], package_data[:version],
-                                                   package_data[:release], package_data[:epoch])
-                   else
-                     Katello::PackageUtils::find_latest_packages(
-                         product.find_packages_by_name(self.environment.prior, name_or_nvre))
-                   end
+    
+    if package_data
+      packs = product.find_packages_by_nvre(self.environment.prior,
+                                             package_data[:name], package_data[:version],
+                                             package_data[:release], package_data[:epoch])
+    end
+
+    if packs.empty? || !package_data
+       packs = Katello::PackageUtils::find_latest_packages(
+                  product.find_packages_by_name(self.environment.prior, name_or_nvre))
+    end
 
     packs.first.with_indifferent_access
   end
@@ -288,7 +291,7 @@ class Changeset < ActiveRecord::Base
   end
 
 
-  def promote_content
+  def promote_content(notify = false)
     update_progress! '0'
     self.calc_and_save_dependencies
 
@@ -320,22 +323,21 @@ class Changeset < ActiveRecord::Base
 
     index_repo_content to_env
 
-    message = _("Successfully promoted changeset '%s'.") % self.name
-    notice message, { :synchronous_request => false, :request_type => "changesets___promote" }
+    if notify
+      message = _("Successfully promoted changeset '%s'.") % self.name
+      Notify.message message, :request_type => "changesets___promote"
+    end
 
   rescue Exception => e
-
     self.state = Changeset::FAILED
     self.save!
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
-    details    = e.message
-    error_text = _("Failed to promote changeset '%s'. Check notices for more details") % self.name
-    notice error_text, :details => details, :level => :error,
-           :synchronous_request => false, :request_type => "changesets___promote"
-
+    if notify
+      Notify.exception _("Failed to promote changeset '%s'. Check notices for more details") % self.name, e,
+                   :request_type => "changesets___promote"
+    end
     index_repo_content to_env
-
     raise e
   end
 

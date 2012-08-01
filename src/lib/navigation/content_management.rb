@@ -88,7 +88,7 @@ module Navigation
         :url => :sub_level,
         :options => {:class=>'content top_level', "data-menu"=>"content"},
         :if => lambda{current_organization},
-        :items=> AppConfig.katello? ? [ menu_subscriptions, menu_providers, menu_sync_management, menu_system_templates, menu_promotions] :
+        :items=> AppConfig.katello? ? [ menu_subscriptions, menu_providers, menu_sync_management, menu_content_search, menu_system_templates, menu_promotions] :
             [ menu_subscriptions, menu_system_templates]
       }
     end
@@ -130,6 +130,16 @@ module Navigation
        :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"sync"}
       }
     end
+
+    def menu_content_search
+      {:key => :content_search,
+       :name =>_("Content Search"),
+       :if => lambda{AppConfig.katello? && !KTEnvironment.content_readable(current_organization).empty?},
+       :options => {:class=>'content second_level', "data-menu"=>"content"},
+       :url =>content_search_index_path,
+      }
+    end
+
 
     def menu_sync_status
       {:key => :sync_status,
@@ -304,7 +314,7 @@ module Navigation
     end
 
     def activation_keys_navigation
-      [
+      menu = [
         { :key => :applied_subscriptions,
           :name =>_("Applied Subscriptions"),
           :url => lambda{applied_subscriptions_activation_key_path(@activation_key.id)},
@@ -317,12 +327,6 @@ module Navigation
           :if => lambda{@activation_key},
           :options => {:class=>"panel_link"}
         },
-        { :key => :system_groups,
-          :name =>_("System Groups"),
-          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
-          :if => lambda{@activation_key},
-          :options => {:class=>"panel_link"}
-        },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{edit_activation_key_path(@activation_key.id)},
@@ -330,6 +334,13 @@ module Navigation
           :options => {:class=>"panel_link"}
         }
       ]
+      menu <<  { :key => :system_groups,
+          :name =>_("System Groups"),
+          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
+          :if => lambda{@activation_key},
+          :options => {:class=>"panel_link"}
+        } if AppConfig.katello?
+      return menu
     end
 
     def subscriptions_navigation

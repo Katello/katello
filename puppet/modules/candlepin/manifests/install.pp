@@ -14,6 +14,7 @@ class candlepin::install {
     require => Yumrepo["candlepin"],
     ensure  => installed
   }
+
   Class["candlepin::install"] -> Exec["cpsetup"]
   Class["postgres::install"] -> Exec["cpsetup"]
 }

@@ -3,14 +3,14 @@ class katello {
   include certs
   # Headpin does not care about pulp
   case $katello::params::deployment {
-      'katello': {
-        include pulp
-      }
-      'headpin' : {
-        include apache2
-        include thumbslug
-      }
-      default : {}
+    'katello': {
+      include pulp
+    }
+    'headpin' : {
+      include apache2
+      include thumbslug
+    }
+    default : {}
   }
   include apache2
   include candlepin

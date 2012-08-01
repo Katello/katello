@@ -58,7 +58,7 @@ class Api::OrganizationsController < Api::ApiController
   end
 
   def destroy
-    async_job = current_user.destroy_organization_async(@organization)
+    async_job = OrganizationDestroyer.destroy @organization
     render :json => async_job, :status => 202
   end
 

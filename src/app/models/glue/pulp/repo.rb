@@ -145,11 +145,13 @@ module Glue::Pulp::Repo
     else
       #repo is not in the next environment yet, we have to clone it there
       key = EnvironmentProduct.find_or_create(to_env, self.product)
+      library = self.environment.library? ? self : self.library_instance
       clone = Repository.create!(:environment_product => key,
                                  :clone_from => self,
                                  :cloned_content => self.content,
                                  :cloned_filters => filters_to_clone,
-                                 :cp_label => self.cp_label)
+                                 :cp_label => self.cp_label,
+                                 :library_instance=>library)
 
       clone.index_packages
       clone.index_errata
@@ -358,9 +360,13 @@ module Glue::Pulp::Repo
     return false
   end
 
-  def sync
+  def sync(options = { })
     pulp_task = Resources::Pulp::Repository.sync(self.pulp_id)
-    task = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = self.environment.organization}
+    task      = PulpSyncStatus.using_pulp_task(pulp_task) do |t|
+      t.organization         = self.environment.organization
+      t.parameters ||= {}
+      t.parameters[:options] = options
+    end
     task.save!
     return [task]
   end
@@ -447,11 +453,11 @@ module Glue::Pulp::Repo
   end
 
   def organization_id
-    (get_groupid_param 'org').to_i
+    self.organization.id
   end
 
   def environment_id
-    (get_groupid_param 'env').to_i
+    self.environment.id
   end
 
   def product_id
@@ -493,7 +499,7 @@ module Glue::Pulp::Repo
     }.flatten]
   end
 
-  def sort_sync_status statuses 
+  def sort_sync_status statuses
     statuses.sort!{|a,b|
       if a['finish_time'].nil? && b['finish_time'].nil?
         if a['start_time'].nil?
@@ -516,7 +522,7 @@ module Glue::Pulp::Repo
           1
         end
       else
-        b['finish_time'] <=> a['finish_time'] 
+        b['finish_time'] <=> a['finish_time']
       end
     }
 

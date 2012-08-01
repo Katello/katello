@@ -1,10 +1,12 @@
 KT.tipsy = KT.tipsy || {};
 
+
 KT.tipsy.custom = (function(){
     var tooltip = function(element) {
         $(element).tipsy({
            gravity: 'e', live : true, html : true, title : KT.tipsy.templates.dynamic,
-           hoverable : true, delayOut : 250, opacity : 1, delayIn : 300, className : 'tooltip',
+           hoverable : true, closeOnScroll:true, delayOut : 250, opacity : 1, delayIn : 300,
+           className : 'tooltip',
            stickyClick : function(element, state){
                if (state === 'on'){
                    $(element).addClass('tipsy-hover').removeClass('tipsy-nohover');
@@ -15,6 +17,24 @@ KT.tipsy.custom = (function(){
            afterShow : function(){
                $('.details_container').addClass('scroll-pane');
                KT.common.jscroll_init($('.scroll-pane'));
+           }});
+    },
+    url_tooltip = function(element, direction){
+        var get_url = function(elem){return elem.data().url};
+        element.tipsy({
+           gravity: direction, live : true, html : true, title : KT.tipsy.templates.spinner,
+           url: get_url,
+           hoverable : true, delayOut : 250, opacity : 1, delayIn : 300, className : 'tooltip',
+           stickyClick : function(element, state){
+               if (state === 'on'){
+                   $(element).addClass('tipsy-hover').removeClass('tipsy-nohover');
+               } else {
+                   $(element).addClass('tipsy-nohover').removeClass('tipsy-hover');
+               }
+           },
+           afterShow : function(obj, tipsy_div){
+                $('.details_container').addClass('scroll-pane');
+                KT.common.jscroll_init($('.scroll-pane'));
            }});
     },
     copy_tooltip = function(element) {
@@ -70,7 +90,8 @@ KT.tipsy.custom = (function(){
         disable_details_tooltip  : disable_details_tooltip,
         promotion_filter_tooltip : promotion_filter_tooltip,
         system_packages_tooltips : system_packages_tooltip,
-        enable_forms_tooltips    : enable_forms_tooltips
+        enable_forms_tooltips    : enable_forms_tooltips,
+        url_tooltip              : url_tooltip
     };
 })();
 
@@ -81,6 +102,9 @@ KT.tipsy.templates = (function(){
       var html, element = $(this);
       if (element.hasClass('errata-info')) {
           html = errata(element);
+      }
+      else if (element.attr('data-url')){
+        html = url(element)
       } else if (element.hasClass('task-info')) {
           html = task(element);
       } else {
@@ -140,6 +164,9 @@ KT.tipsy.templates = (function(){
 
         return html;
     },
+    spinner = function(){
+        return '<span class="spinner" ></span>';
+    },
     task = function(element) {
         var html = '<div class="details_container">';
 
@@ -161,7 +188,7 @@ KT.tipsy.templates = (function(){
         html += '<form>';
         html += '</div>';
         return html;
-    }
+    },
     promotion_filters = function(){
         var element = $(this),
             tipsy_body ="",
@@ -225,7 +252,8 @@ KT.tipsy.templates = (function(){
         dynamic           : dynamic,
         copy_form         : copy_form,
         promotion_filters : promotion_filters,
-        table_template    : table_template
+        table_template    : table_template,
+        spinner          : spinner
     };
 
 })();

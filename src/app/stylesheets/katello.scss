@@ -1,10 +1,9 @@
-@charset "UTF-8";
-@import "compass";
+@import "compass/reset";
+@import "converge-ui/composites/shell";
+@import "converge-ui/components/helpers";
 
-@import "converge-ui/media";
-@import "converge-ui/base";
-@import "converge-ui/shell";
 @import "katello_base";
+
 
 @import "grid";
 @import "look";
@@ -17,7 +16,7 @@
 @import "widgets/slidingtree";
 @import "widgets/scrollpane";
 @import "widgets/env_select";
-
+@import "katello_sprites";
 
 pre  { text-indent: 18px; }
 
@@ -47,6 +46,7 @@ strong { font-weight: bold; }
   }
 }
 .hidden { display: none; }
+.invisible { visibility: hidden; }
 .outlined { outline: 2px solid $kselected_color; }
 .alt { background-color: lighten($lightgrey_color, 35%) !important; }
 .clickable { cursor: pointer; cursor: hand; }
@@ -172,6 +172,7 @@ input[type='submit'], button, .button {
   font-family: $screenfont; /* for some reason ff3.6 won't inherit from body */
   font-size: 10px;
   display: inline-block;
+  vertical-align: bottom;
   background: -moz-linear-gradient(top, #f9f9f9, #f0f0f0, #e5e5e5, #e9e9e9);
   background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9), color-stop(0.9, #e5e5e5), to(#e9e9e9));
   @include no-box-shadow;
@@ -179,7 +180,7 @@ input[type='submit'], button, .button {
   color: #221e1f;
   cursor: pointer;
   margin: 4px;
-  padding: 4px 12px;
+  padding: 4px 8px;
   @include border-radius(5px);
   @include _text-shadow($white_color, 0, 1px, 0);
   min-height: 14px;
@@ -198,14 +199,12 @@ input[type='submit'], button, .button {
     background: -moz-linear-gradient(top, #c2c3c0, #e4e5e4);
     background: -webkit-gradient(linear, left top, left bottom, from(#c2c3c0), to(#e4e5e4));
     @include no-box-shadow;
-    padding: 5px 12px 3px;
     text-decoration: none;
   }
   &:focus {
     text-decoration: none;
     color: #000;
     border-width: 2px;
-    padding: 3px 11px;
   }
   &.dialogbutton {
     float: right;
@@ -245,7 +244,7 @@ input[type='submit'], button, .button {
 
 table {
   border-collapse: collapse;
-  border: 1px solid $stroke_color !important;
+  border: 1px solid $stroke_color;
   margin: 10px 0 40px; width: 100%;
   font-size: 95%;
   width: 99%;
@@ -584,6 +583,17 @@ fieldset {
   position: relative;
   z-index: 1000;
   background: $spinner_img;
+}
+
+.large_white_spinner {
+  margin: 0 auto;
+  margin-top: 20%;
+  height: 32px;
+  width: 32px;
+  display: block;
+  position: relative;
+  z-index: 1000;
+  background: image-url("embed/large-white-spinner.gif") no-repeat 0 0 transparent;
 }
 
 /* editable icon for in place editing */
@@ -1273,4 +1283,14 @@ fieldset {
 #nav-container {
   background-color: #006B97;
   left: 26% !important;
+}
+header#header {
+  border-bottom: none;
+  margin-bottom: 6px;
+
+  &:after {
+    border-top: 5px solid #006B97;
+    height: 0;
+    bottom: -1px;
+  }
 }

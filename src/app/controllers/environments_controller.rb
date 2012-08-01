@@ -77,7 +77,7 @@ class EnvironmentsController < ApplicationController
               :organization_id => @organization.id}
     @environment = KTEnvironment.new env_params
     @environment.save!
-    notice _("Environment '%s' was created.") % @environment.name
+    notify.success _("Environment '%s' was created.") % @environment.name
     #this render just means return a 200 success
     render :nothing => true
   end
@@ -99,7 +99,7 @@ class EnvironmentsController < ApplicationController
       result = params[:kt_environment].values.first
     end
 
-    notice _("Environment '%s' was updated.") % @environment.name
+    notify.success _("Environment '%s' was updated.") % @environment.name
 
     render :text =>escape_html(result)
   end
@@ -107,7 +107,7 @@ class EnvironmentsController < ApplicationController
   # DELETE /environments/1
   def destroy
     @environment.destroy
-    notice _("Environment '%s' was deleted.") % @environment.name
+    notify.success _("Environment '%s' was deleted.") % @environment.name
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>edit_organization_path(@organization.cp_key)}
   end
 
@@ -129,7 +129,7 @@ class EnvironmentsController < ApplicationController
   def find_organization
     org_id = params[:organization_id] || params[:org_id]
     @organization = Organization.first(:conditions => {:cp_key => org_id})
-    notice _("Couldn't find organization '%d'") % org_id, {:level => :error} if @organization.nil?
+    notify.error _("Couldn't find organization '%d'") % org_id if @organization.nil?
   end
 
   def find_environment
@@ -137,7 +137,7 @@ class EnvironmentsController < ApplicationController
       env_id = (params[:id].blank? ? nil : params[:id]) || params[:env_id]
       @environment = KTEnvironment.find env_id
     rescue Exception => error
-      notice _("Couldn't find environment with ID=%d") % env_id, {:level => :error}
+      notify.error _("Couldn't find environment with ID=%d") % env_id
       execute_after_filters
       render :text => error, :status => :bad_request
     end

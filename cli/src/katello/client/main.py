@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #
 # Katello Shell
-# Copyright (c) 2010 Red Hat, Inc.
+# Copyright (c) 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -196,6 +196,7 @@ def setup_admin(katello_cmd):
     system_group_cmd.add_command('add_systems', system_group.AddSystems())
     system_group_cmd.add_command('remove_systems', system_group.RemoveSystems())
     system_group_cmd.add_command('create', system_group.Create())
+    system_group_cmd.add_command('copy', system_group.Copy())
     system_group_cmd.add_command('update', system_group.Update())
     system_group_cmd.add_command('delete', system_group.Delete())
     system_group_cmd.add_command('packages', system_group.Packages())

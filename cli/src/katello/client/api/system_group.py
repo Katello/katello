@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2011 Red Hat, Inc.
+# Copyright © 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -59,6 +59,18 @@ class SystemGroupAPI(KatelloAPI):
         }
 
         path = "/api/organizations/%s/system_groups/" % (org_id)
+        return self.server.POST(path, data)[1]
+
+    def copy(self, org_id, system_group_id, new_name, description, max_systems):
+        data = {
+            "system_group" : {
+                "new_name": new_name,
+                "description": description,
+                "max_systems": max_systems
+            }
+        }
+
+        path = "/api/organizations/%s/system_groups/%s/copy" % (org_id, system_group_id)
         return self.server.POST(path, data)[1]
 
     def update(self, org_id, system_group_id, name, description, max_systems):

@@ -102,7 +102,7 @@ class SyncManagementController < ApplicationController
         progress = format_sync_progress(repo.sync_status, repo)
         collected.push(progress)
       rescue Exception => e
-        notice e.to_s, {:level => :error} # debugging and skip for now
+        notify.exception e # debugging and skip for now
         next 
       end
     end
@@ -191,10 +191,11 @@ private
     repos.each do |id|
       repo = Repository.find(id)
       begin
-        resp = repo.sync().first
+        resp = repo.sync(:notify => true).first
         collected.push({:id => id, :product_id=>repo.product.id, :state => resp[:state]})
       rescue RestClient::Conflict => e
-        notice N_("There is already an active sync process for the '%s' repository. Please try again later") % repo.name, {:level => :error}
+        notify.error N_("There is already an active sync process for the '%s' repository. Please try again later") %
+                        repo.name
       end
     end
     collected
@@ -211,20 +212,5 @@ private
               :left => val.progress.items_left,
               :progress => progress
              }
-  end
-
-  def send_notification(product, status)
-    if status.error_details.size > 0 then
-      notice _("%s product was synced successfully with errors. See log for details") % product.name,
-                                  {:details => status.error_details.join("\n"),:synchronous_request => false}
-      status.error_details.each { |d| Rails.logger.error("Sync error:" +  d[:error]) }
-    else
-      notice _("%s product was synced successfully") % product.name
-    end
-  end
-
-  def report_error(product)
-    notice product.name + ' ' + _("sync did not complete successfully"), {:level => :error, :synchronous_request => false}
-    Rails.logger.error product.name + " sync did not complete successfully"
   end
 end

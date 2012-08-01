@@ -1,14 +1,11 @@
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-
 Name: katello-agent
-Version: 1.0.4
+Version: 1.1.0
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
 License: LGPLv2
-URL: https://fedorahosted.org/pulp/
-Source0: %{name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+URL:     https://fedorahosted.org/katello/
+Source0: https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 BuildArch: noarch
 BuildRequires: python2-devel
 BuildRequires: python-setuptools
@@ -16,8 +13,10 @@ BuildRequires: rpm-python
 Requires: gofer >= 0.60
 Requires: gofer-package >= 0.60
 Requires: subscription-manager
+
 %description
-The Katello agent.
+Provides plugin for gofer, which allows communicating with Katello server
+and execute scheduled actions.
 
 %prep
 %setup -q
@@ -28,22 +27,30 @@ pushd src
 popd
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_sysconfdir}/gofer/plugins
-mkdir -p %{buildroot}/%{_libdir}/gofer/plugins
+mkdir -p %{buildroot}/%{_prefix}/lib/gofer/plugins
 
 cp etc/gofer/plugins/katelloplugin.conf %{buildroot}/%{_sysconfdir}/gofer/plugins
-cp src/katello/agent/katelloplugin.py %{buildroot}/%{_libdir}/gofer/plugins
-
-%clean
-rm -rf %{buildroot}
+cp src/katello/agent/katelloplugin.py %{buildroot}/%{_prefix}/lib/gofer/plugins
 
 %files
 %config(noreplace) %{_sysconfdir}/gofer/plugins/katelloplugin.conf
-%{_libdir}/gofer/plugins/katelloplugin.*
+%{_prefix}/lib/gofer/plugins/katelloplugin.*
 %doc LICENSE
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.6-1
+- update copyright years (msuchy@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+
+* Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 1.0.5-1
+- macro python_sitelib is not used anywhere, removing
+- provide more descriptive description
+- put plugins into correct location
+- build root is not used since el6 (inclusive)
+- point URL to our wiki
+- %%defattr is not needed since rpm 4.4
+
 * Wed Jun 27 2012 Lukas Zapletal <lzap+git@redhat.com> 1.0.4-1
 - 828533 - changing to proper QPIDD SSL port
 

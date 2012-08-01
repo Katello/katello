@@ -111,11 +111,11 @@ class ActivationKeysController < ApplicationController
           end
         end
       end
-      notice _("Subscriptions successfully added to Activation Key '%s'.") % @activation_key.name
+      notify.success _("Subscriptions successfully added to Activation Key '%s'.") % @activation_key.name
       render :partial => "available_subscriptions_update.js.haml"
 
     rescue Exception => error
-      notice error.to_s, {:level => :error}
+      notify.exception error
       render :nothing => true
     end
   end
@@ -135,11 +135,11 @@ class ActivationKeysController < ApplicationController
           end
         end
       end
-      notice _("Subscriptions successfully removed from Activation Key '%s'.") % @activation_key.name
+      notify.success _("Subscriptions successfully removed from Activation Key '%s'.") % @activation_key.name
       render :partial => "applied_subscriptions_update.js.haml"
 
     rescue Exception => error
-      notice error.to_s, {:level => :error}
+      notify.exception error
       render :nothing => true
     end
   end
@@ -157,10 +157,10 @@ class ActivationKeysController < ApplicationController
       @activation_key.system_group_ids = (@activation_key.system_group_ids + @system_groups.collect{|g| g.id}).uniq
       @activation_key.save!
     end
-    notice _("Activation key '%s' was updated.") % @activation_key["name"]
+    notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
     render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}, :editable=>ActivationKey.manageable?(current_organization)} and return
   rescue Exception => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 
@@ -169,10 +169,10 @@ class ActivationKeysController < ApplicationController
     @activation_key.system_group_ids = (@activation_key.system_group_ids - system_groups).uniq
     @activation_key.save!
 
-    notice _("Activation key '%s' was updated.") % @activation_key["name"]
+    notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
     render :nothing => true
   rescue Exception => e
-    notice e, {:level => :error}
+    notify.exception e
     render :text=>e, :status=>500
   end
 
@@ -217,17 +217,18 @@ class ActivationKeysController < ApplicationController
       key.organization = current_organization
       key.user = current_user
     end
-    notice _("Activation key '%s' was created.") % @activation_key['name']
+    notify.success _("Activation key '%s' was created.") % @activation_key['name']
 
     if search_validate(ActivationKey, @activation_key.id, params[:search])
       render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
     else
-      notice _("'%s' did not meet the current search criteria and is not being shown.") % @activation_key["name"], { :level => 'message', :synchronous_request => false }
+      notify.message _("'%s' did not meet the current search criteria and is not being shown.") %
+                         @activation_key["name"]
       render :json => { :no_match => true }
     end
   rescue Exception => error
     Rails.logger.error error.to_s
-    notice error, {:level => :error}
+    notify.exception error
     render :text => error, :status => :bad_request
   end
 
@@ -245,7 +246,7 @@ class ActivationKeysController < ApplicationController
 
       @activation_key.update_attributes!(params[:activation_key])
 
-      notice _("Activation key '%s' was updated.") % @activation_key["name"]
+      notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
 
       unless params[:activation_key][:system_template_id].nil? or params[:activation_key][:system_template_id].blank?
         # template is being updated.. so return template name vs id...
@@ -254,13 +255,13 @@ class ActivationKeysController < ApplicationController
       end
 
       if not search_validate(ActivationKey, @activation_key.id, params[:search])
-        notice _("'%s' no longer matches the current search criteria.") % @activation_key["name"], { :level => :message, :synchronous_request => true }
+        notify.message _("'%s' no longer matches the current search criteria.") % @activation_key["name"]
       end
 
       render :text => escape_html(result)
 
     rescue Exception => error
-      notice error, {:level => :error}
+      notify.exception error
 
       respond_to do |format|
         format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -272,14 +273,14 @@ class ActivationKeysController < ApplicationController
     begin
       @activation_key.destroy
       if @activation_key.destroyed?
-        notice _("Activation key '#{@activation_key[:name]}' was deleted.")
+        notify.success _("Activation key '#{@activation_key[:name]}' was deleted.")
         #render and do the removal in one swoop!
         render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
       else
         raise
       end
     rescue Exception => e
-      notice e.to_s, {:level => :error}
+      notify.exception e
     end
   end
 
@@ -289,7 +290,7 @@ class ActivationKeysController < ApplicationController
     begin
       @activation_key = ActivationKey.find(params[:id])
     rescue Exception => error
-      notice error.to_s, {:level => :error}
+      notify.exception error
 
       # flash_to_headers is an after_filter executed on the application controller;
       # however, a render from within a before_filter will halt the filter chain.
@@ -359,40 +360,36 @@ class ActivationKeysController < ApplicationController
   def pools_hash pools
     pools_return = {}
     pools.each do |poolId, pool|
-      pools_return[pool.productName] ||= []
-      pools_return[pool.productName] << pool
+      pools_return[pool.product_name] ||= []
+      pools_return[pool.product_name] << pool
     end
     pools_return
   end
 
   def retrieve_all_pools
+
     all_pools = {}
 
-    # TODO: should be current_organization.pools (see pool.rb for attributes)
     cp_pools = Resources::Candlepin::Owner.pools current_organization.cp_key
-    cp_pools.each do |pool|
-      p = OpenStruct.new
-      p.poolId = pool['id']
-      p.productName = pool['productName']
-      p.startDate = format_time(Date.parse(pool['startDate']))
-      p.endDate = format_time(Date.parse(pool['endDate']))
+    if cp_pools
+      # Pool objects
+      pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
 
-      # TODO: this could be moved into the pool.rb
-      p.poolType = _('Physical')
-      if pool.has_key? :attributes
-        pool[:attributes].each do |attribute|
-          name = attribute[:name]
-          if (name == 'virt_only')
-            if (attribute[:value] == 'true')
-              p.poolType = _('Virtual')
-            end
-            break
-          end
-        end
-      end
-
-      all_pools[p.poolId] = p if !all_pools.include? p
+      subscriptions = pools.collect do |pool|
+        product = Product.where(:cp_id => pool.product_id).first
+        next if product.nil?
+        pool.provider_id = product.provider_id
+        pool
+      end.compact
+      subscriptions = [] if subscriptions.nil?
+    else
+      subscriptions = []
     end
+
+    subscriptions.each do |subscription|
+      all_pools[subscription.cp_id] = subscription if !all_pools.include? subscription
+    end
+
     all_pools
   end
 

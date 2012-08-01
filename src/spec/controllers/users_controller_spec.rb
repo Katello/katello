@@ -30,7 +30,6 @@ describe UsersController do
   describe "create a user" do
 
     before(:each) do
-      controller.stub!(:notice)
       @organization = new_test_org
       @environment = KTEnvironment.create!(:name => 'first-env', :prior => @organization.library.id, :organization => @organization)
     end
@@ -79,7 +78,6 @@ describe UsersController do
   describe "edit a user" do
     
     before(:each) do
-      controller.stub!(:notice)
       controller.stub!(:escape_html)
 
       allow 'Test', ["create", "read","delete"], "product", ["RHEL-4", "RHEL-5","Cluster","ClusterStorage","Fedora"]
