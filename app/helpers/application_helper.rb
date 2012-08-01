@@ -280,5 +280,17 @@ module ApplicationHelper
     return link.respond_to?(:html_safe) ? link.html_safe : link
   end
 
+  # If no provider_id is specified, it is assumed to be a Red Hat subscription and the link returned
+  # goes to the subscriptions page. Alternatively, if the distinction between the Red Hat provider and
+  # a custom provider is important, pass in the provider_id and the current org.
+  def subscriptions_pool_link_helper pool_name, pool_id, provider_id, org
+    if provider_id == org.redhat_provider.id
+      link_to pool_name, subscriptions_path(:anchor => "panel=subscription_#{pool_id}")
+    elsif !provider_id.nil?
+      link_to pool_name, providers_path(:anchor => "panel=provider_#{provider_id}")
+    else
+      pool_name
+    end
+  end
 
 end

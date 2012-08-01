@@ -11,6 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 require 'util/package_util'
 class ContentSearchController < ApplicationController
+
+  include ContentSearchHelper
+
   before_filter :find_repo, :only => [:repo_packages, :repo_errata]
   before_filter :find_repos, :only => [:repo_compare_packages, :repo_compare_errata]
 
@@ -158,9 +161,9 @@ class ContentSearchController < ApplicationController
     offset = params[:offset] || 0
     errata = Glue::Pulp::Errata.search('', offset, current_user.page_size, :repoids => [@repo.pulp_id])
     rows = errata.collect do |e|
-      {:name => e.id, :id => e.id, :cols => {:title => {:display => e[:title]},
+      {:name => errata_display(e), :id => e.id, :cols => {:title => {:display => e[:title]},
                                              :type => {:display => e[:type]},
-                                              :issued => {:display => e[:issued]}
+                                             :severity => {:display => e[:severity]}
                                             }
       }
     end
@@ -198,9 +201,11 @@ class ContentSearchController < ApplicationController
       (pack.repoids & repo_map.keys).each do |r|
         cols[repo_map[r].id] = {}
       end
-      name = pack.id
+
       if is_package
         name = pack.nvrea
+      else
+        name = errata_display(pack)
       end
       {:name => name, :id => pack.id, :cols => cols}
     end
@@ -415,7 +420,7 @@ class ContentSearchController < ApplicationController
       to_ret[repo.environment_id] = {:id=>repo.environment_id, :display=>results.total} if accessible_env_ids.include?(repo.environment_id)
     end
 
-    {:content_rows=>spanning_content_rows(content, content_type, content_attribute, library_repo, spanning_repos),
+    {:content_rows=>spanning_content_rows(content, content_type, library_repo, spanning_repos),
      :repo_cols=>to_ret, :total=>content.total}
   end
 
@@ -438,8 +443,8 @@ class ContentSearchController < ApplicationController
           string search_obj, {:default_field=>default_field}
         end
       end
-      fields [:id, :name, :nvrea, :repoids]
       sort { by "#{default_field}_sort", 'asc'}
+      fields [:id, :name, :nvrea, :repoids, :type]
       size user.page_size
       from offset
       if  search_obj.is_a? Array
@@ -460,15 +465,19 @@ class ContentSearchController < ApplicationController
   #
   # content_list   list of package or errata items
   # id_prefix      prefix for the rows (either 'package' or 'errata')
-  # name_attribute  what to display as the name of each item in the row.  Will be called on each object
   # parent_repo    the library repo instance (or the parent row)
   # spanned_repos  all other instances of repos across all environments
-  def spanning_content_rows(content_list, id_prefix, name_attribute, parent_repo, spanned_repos)
+  def spanning_content_rows(content_list, id_prefix, parent_repo, spanned_repos)
     env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
     to_ret = [] 
     for item in content_list:
+        if id_prefix == 'package'
+            display = item.nvrea
+        else
+            display = errata_display(item)
+        end
         row = {:id=>"repo_#{parent_repo.id}_#{id_prefix}_#{item.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{},
-               :name=>item.send(name_attribute)}
+               :name=>display}
         spanned_repos.each do |repo|
           if item.repoids.include? repo.pulp_id
               row[:cols][repo.environment_id] = {:id=>repo.environment_id} if env_ids.include?(repo.environment_id)
@@ -478,4 +487,5 @@ class ContentSearchController < ApplicationController
      end
      to_ret
   end 
+
 end

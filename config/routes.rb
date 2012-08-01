@@ -203,6 +203,7 @@ Src::Application.routes.draw do
   resources :errata, :only => [:show] do
     member do
       get :packages
+      get :short_details
     end
   end
 
