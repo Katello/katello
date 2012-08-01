@@ -62,7 +62,6 @@ module Glue::Candlepin::Pool
         @host_id = nil
         @virt_only = false
         @pool_derived = false
-        @multi_entitlement = false
         attrs['attributes'].each do |attr|
           case attr['name']
             when 'source_pool_id'
@@ -73,8 +72,6 @@ module Glue::Candlepin::Pool
               @virt_only = attr['value'] == 'true' ? true : false
             when 'pool_derived'
               @pool_derived = attr['value'] == 'true' ? true : false
-            when 'multi_entitlement'
-              @multi_entitlement = attr['value'] == 'true' ? true : false
           end
         end if attrs['attributes']
 
@@ -86,6 +83,7 @@ module Glue::Candlepin::Pool
         @description = ""
         @product_family = ""
         @variant = ""
+        @multi_entitlement = false
         attrs['productAttributes'].each do |attr|
           case attr['name']
             when 'virt_limit'
@@ -104,6 +102,8 @@ module Glue::Candlepin::Pool
               @product_family = attr['value']
             when 'variant'
               @variant = attr['value']
+            when 'multi-entitlement'
+              @multi_entitlement = (attr['value'] == 'true' || attr['value'] == 'yes') ? true : false
           end
         end if attrs['productAttributes']
 
