@@ -62,7 +62,7 @@ describe ContentSearchController do
           end
 
           it "should return some #{content_type}" do
-            setup_search(:filter => @expected_filters[mode], :fields =>[:id, :name, :nvrea, :repoids], :results => [])
+            setup_search(:filter => @expected_filters[mode], :fields =>[:id, :name, :nvrea, :repoids, :type], :results => [])
             params = {"mode"=>mode.to_s, "#{content_type}"=>{"search"=>""}, "content_type"=>"#{content_type}", "repos"=>{"search"=>""}}
             post "#{content_type}", params
             response.should be_success
@@ -71,8 +71,17 @@ describe ContentSearchController do
           end
 
           it "should return some repo_compare_#{content_type}" do
-            result1 = OpenStruct.new(:id => "1000", :nvrea => "foo", :name =>"foo", :repoids => [@repo_library.pulp_id, @repo.pulp_id] )
+            result1 = OpenStruct.new(:id => "1000", :nvrea => "foo", :name =>"foo", :repoids => [@repo_library.pulp_id, @repo.pulp_id])
             result2 = OpenStruct.new(:id => "1001", :nvrea => "more foo", :name =>"more foo", :repoids => [@repo_library.pulp_id, @repo.pulp_id])
+
+            #fake type access via hash
+            [result1, result2].each do |e|
+              e.instance_eval do
+                def [](*args)
+                  return "security" if args[0].to_sym == :type
+                end
+              end
+            end
             setup_search(:filter => @expected_filters[mode], :results => [result1, result2])
 
             params = {"mode"=>mode.to_s, "repos"=>{"0"=>{"env_id"=>@repo_library.environment.id.to_s, "repo_id"=>@repo_library.id.to_s}, "1"=>{"env_id"=>@repo.environment.id.to_s, "repo_id"=>@repo.id.to_s}}, "type"=> "compare_#{content_type}" }

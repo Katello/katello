@@ -78,7 +78,9 @@ EXCLUDES = [
 "/etc/katello/candlepin_ca_password-file",
 "/etc/katello/nss_db_password-file",
 "/etc/katello/keystore_password-file",
-"/etc/katello/ssl_ca_password-file"
+"/etc/katello/ssl_ca_password-file",
+"/etc/katello/pulp_user_password-file",
+"/etc/katello/oauth_token-file"
 ]
 
 # Collect the files
@@ -91,14 +93,14 @@ if File.exists?(target_dir)
 end
 
 FileUtils.mkdir_p(target_dir)
-puts ("created directory #{target_dir}")
+puts("created directory #{target_dir}")
 
 missing_files = Array.new
 SOURCES.each do |source|
   if File.exists?(source)
     complete_target = File.join(target_dir, File.dirname(source))
     FileUtils.mkdir_p(complete_target)
-    puts ("#{PAD}copying over #{source}")
+    puts("#{PAD}copying over #{source}")
     output= `/bin/cp -r --preserve #{source} #{complete_target}`
   else
     missing_files << source
@@ -118,7 +120,7 @@ end
 EXCLUDES.each do |exclude|
   target = File.join(target_dir, exclude)
   if File.exists?(target)
-    puts ("#{PAD}removing #{target} from archive")
+    puts("#{PAD}removing #{target} from archive")
     File.delete(target)
   end
 end

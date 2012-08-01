@@ -19,14 +19,9 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.45
+Version:       1.1.0
 Release:       1%{?dist}
-
-# Upstream uses tito rpm helper utility. To get the particular version from
-# git, do the following commands:
-#   git clone git://github.com/Katello/katello.git && cd cli
-#   tito build --tgz --offline --tag=%{name}-%{version}-1
-Source0:       %{name}-%{version}.tar.gz
+Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
 # we need to keep RHEL compatibility
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -112,6 +107,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- bump up version to 1.0 (msuchy@redhat.com)
+- update copyright years (msuchy@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+
 * Wed Jul 25 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.45-1
 - 840531 - Fixes issue with inability to individually promote packages attached
   to a system template or changeset that have more than a single dash in the

@@ -19,9 +19,9 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.20
+Version:       1.1.0
 Release:       1%{?dist}
-Source0:       %{name}-%{version}.tar.gz
+Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:      %{base_name}-cli
@@ -56,6 +56,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- bump up version to 1.0 (msuchy@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.21-1
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+- skip subscription-manager testing if you are registred against hosted
+  (msuchy@redhat.com)
+
 * Mon Jul 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.20-1
 - system groups - remove debug from system test
 - system groups - cli - add system tests for package actions

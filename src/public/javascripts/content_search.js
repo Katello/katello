@@ -48,8 +48,7 @@ KT.content_search = function(paths_in){
                        cols:{
                            title : {id:'title', name:i18n.title, span: "2"},
                            type  : {id:'type', name:i18n.type},
-                           severity : {id:'severity', name:i18n.severity},
-                           issued : {id:'issued', name:i18n.issued}
+                           severity : {id:'severity', name:i18n.severity}
                          },
                         selector:['repo_packages', 'repo_errata']
         },
@@ -188,6 +187,7 @@ KT.content_search = function(paths_in){
           data: data_out,
           success: function(data){
             $(document).trigger('show_more.comparison_grid', [data.rows]);
+            close_tipsy();
           }
         })
       });
@@ -218,20 +218,25 @@ KT.content_search = function(paths_in){
         }
     },
     main_search = function(search_params){
-        if (search_params.mode === undefined){
-            search_params.mode = search_modes[0].id;
-        }
+        var options = {};
+        close_tipsy();
 
-        search_params.environments = []
-        utils.each(get_initial_environments(), function(item){
-            search_params.environments.push(item.id);
-        });
-
-
+        options.show_compare_btn = search_pages[search_params.content_type].comparable;
         if (cache.get_state(search_params)){
             comparison_grid.import_data(cache.get_state(search_params));
+            comparison_grid.set_mode("results", options);
         }
         else {
+
+            if (search_params.mode === undefined){
+                search_params.mode = search_modes[0].id;
+            }
+
+            search_params.environments = [];
+            utils.each(get_initial_environments(), function(item){
+                search_params.environments.push(item.id);
+            });
+
             $(document).trigger('loading.comparison_grid');
             $.ajax({
                 type: 'POST',
@@ -239,11 +244,9 @@ KT.content_search = function(paths_in){
                 url: search_pages[search_params.content_type].url,
                 data: JSON.stringify(search_params),
                 success: function(data){
-                    var options = {};
-                    options.show_compare_btn = search_pages[search_params.content_type].comparable;
                     if (search_pages[search_params.content_type].modes){
                         options.right_selector = true;
-                        comparison_grid.set_right_select(search_modes, search_params.mode);
+                        comparison_grid.set_right_select(search_modes, search_params.mode || search_modes.first.id);
                     }
 
                     comparison_grid.set_columns(env_select.get_paths());
@@ -259,7 +262,7 @@ KT.content_search = function(paths_in){
     subgrid_search = function(search_params){
         var type = search_params.subgrid.type,
             subgrid = subgrids[search_params.subgrid.type];
-
+        close_tipsy();
         comparison_grid.controls.comparison.hide();
         $(document).trigger('loading.comparison_grid');
         $.ajax({
@@ -284,6 +287,9 @@ KT.content_search = function(paths_in){
                 draw_grid(data.rows);
             }
         });
+    },
+    close_tipsy = function(){
+      $(document).trigger("close.tipsy");
     },
     draw_grid = function(data){
         comparison_grid.set_rows(data, true);
@@ -321,7 +327,8 @@ KT.content_search = function(paths_in){
             if (envs_changed && search && search.mode && search.mode !== 'all'){
                 search_initiated(undefined, search);
                 envs_changed = false;
-            } 
+            }
+            cache.save_state(comparison_grid, search);
         });
         //select event
         $(document).bind(env_select.get_select_event(), function(event){
@@ -372,6 +379,8 @@ KT.content_search = function(paths_in){
                 return $(this).find('.hidden-text').html();
             }
         });
+        KT.tipsy.custom.url_tooltip($('.tipsify-errata'), 'w');
+
     },
     subgrid_selector_items = function(type) {
         var to_ret = [],
@@ -400,7 +409,7 @@ KT.content_search_cache = (function(){
         saved_data = undefined;
 
     var save_state = function(grid, search){
-        saved_search = search;
+        saved_search = $.extend(true, {}, search);
         saved_data = grid.export_data();
     },
     get_state = function(search){
