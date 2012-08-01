@@ -155,6 +155,31 @@ Requires:        %{name}-common
 %description glue-candlepin
 Katello connection classes for the Candlepin backend
 
+%package headpin
+Summary:        A subscription management only version of Katello
+BuildArch:      noarch
+Requires:       katello-common
+Requires:       katello-glue-candlepin
+Requires:       katello-selinux
+
+%description headpin
+A subscription management only version of Katello.
+
+%package headpin-all
+Summary:        A meta-package to pull in all components for katello-headpin
+Requires:       katello-headpin
+Requires:       katello-configure
+Requires:       katello-cli-headpin
+Requires:       postgresql-server
+Requires:       postgresql
+Requires:       candlepin-tomcat6
+Requires:       thumbslug
+
+%description headpin-all
+This is the Katello-headpin meta-package.  If you want to install Headpin and all
+of its dependencies on a single machine, you should install this package
+and then run katello-configure to configure everything.
+
 %prep
 %setup -q
 
@@ -195,7 +220,9 @@ install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
 install -d -m0755 %{buildroot}%{datadir}/tmp
 install -d -m0755 %{buildroot}%{datadir}/tmp/pids
+install -d -m0755 %{buildroot}%{datadir}/config
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
+
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 mkdir -p %{buildroot}/%{_mandir}/man8
 
@@ -381,6 +408,46 @@ fi
 %{homedir}/lib/resources/foreman.rb
 
 %files all
+
+%files headpin
+%{homedir}/app/controllers
+%{homedir}/app/helpers
+%{homedir}/app/mailers
+%{homedir}/app/models/
+%exclude %{homedir}/app/models/glue/*
+%{homedir}/app/stylesheets
+%{homedir}/app/views
+%{homedir}/autotest
+%{homedir}/ca
+%{homedir}/config
+%{homedir}/db/migrate/
+%{homedir}/db/products.json
+%{homedir}/db/seeds.rb
+%{homedir}/integration_spec
+%{homedir}/lib/*.rb
+%{homedir}/lib/monkeys
+%{homedir}/lib/navigation
+%{homedir}/lib/notifications
+%{homedir}/lib/resources
+%exclude %{homedir}/lib/resources/candlepin.rb
+%exclude %{homedir}/lib/resources/pulp.rb
+%exclude %{homedir}/lib/resources/foreman.rb
+%{homedir}/lib/tasks
+%{homedir}/lib/util
+%{homedir}/lib/glue/queue.rb
+%{homedir}/locale
+%{homedir}/public
+%{homedir}/script
+%{homedir}/spec
+%{homedir}/tmp
+%{homedir}/vendor
+%{homedir}/.bundle
+%{homedir}/config.ru
+%{homedir}/Gemfile
+%{homedir}/Gemfile.lock
+%{homedir}/Rakefile
+
+%files headpin-all
 
 %pre common
 # Add the "katello" user and group
