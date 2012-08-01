@@ -22,10 +22,6 @@ URL:           http://www.katello.org
 Version:       1.1.0
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
-
-# we need to keep RHEL compatibility
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 Requires:      %{base_name}-cli-common
 BuildArch:     noarch
 
@@ -64,7 +60,6 @@ sed -e 's/THE_VERSION/%{version}/g' katello-debug-certificates.pod |\
 popd
 
 %install
-rm -rf %{buildroot}
 install -d %{buildroot}%{_bindir}/
 install -d %{buildroot}%{_sysconfdir}/%{base_name}/
 install -d %{buildroot}%{python_sitelib}/%{base_name}
@@ -88,11 +83,6 @@ install -m 0644 man/%{base_name}-debug-certificates.man1 %{buildroot}%{_mandir}/
 
 # several scripts are executable
 chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
-
-
-# we need to keep RHEL compatibility
-%clean
-rm -rf %{buildroot}
 
 %files 
 %attr(755,root,root) %{_bindir}/%{base_name}

@@ -6,7 +6,6 @@ Version: 1.1.7
 Release: 1%{?dist}
 URL:      https://fedorahosted.org/katello
 Source0:  https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 Requires: openssl rpm-build
 BuildRequires: docbook-utils
@@ -24,12 +23,8 @@ Katello.
 %{__python} setup.py build
 
 %install
-rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
 chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/certs/katello_ssl_tool.py
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %{python_sitelib}/*
