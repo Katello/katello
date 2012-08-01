@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.51
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -24,14 +24,7 @@ BuildArch:      noarch
 Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
-
-# How to create the source tarball:
-#
-# git clone git://git.fedorahosted.org/git/katello.git/
-# yum install tito
-# cd src/
-# tito build --tag katello-%{version}-%{release} --tgz
-Source0:        %{name}-%{version}.tar.gz
+Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:        %{name}-common
@@ -111,7 +104,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui-devel >= 0.7
+BuildRequires:  converge-ui-devel >= 0.8.3
 
 %description common
 Common bits for all Katello instances
@@ -224,6 +217,7 @@ install -m 755 script/katello-refresh-cdn %{buildroot}%{_sysconfdir}/cron.daily/
 
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
 install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
@@ -251,9 +245,11 @@ ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
 #create symlinks for important scripts
 mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_sbindir}
 ln -sv %{homedir}/script/katello-debug %{buildroot}%{_bindir}/katello-debug
 ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
 ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
+ln -sv %{homedir}/script/service-wait %{buildroot}%{_sbindir}/service-wait
 
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
@@ -310,6 +306,7 @@ fi
 %files
 %attr(600, katello, katello)
 %{_bindir}/katello-*
+%{_sbindir}/service-wait
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -330,7 +327,6 @@ fi
 %{homedir}/lib/notifications
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
-%{homedir}/lib/util
 %{homedir}/locale
 %{homedir}/public
 %{homedir}/script
@@ -355,14 +351,16 @@ fi
 %config %{_sysconfdir}/logrotate.d/%{name}-jobs
 %config %{_sysconfdir}/%{name}/mapping.yml
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%config(noreplace) %{_sysconfdir}/sysconfig/service-wait
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
 %{_sysconfdir}/bash_completion.d/%{name}
 %{homedir}/log
 %{homedir}/db/schema.rb
+%{homedir}/lib/util
 
 %defattr(-, katello, katello)
-%{_localstatedir}/log/%{name}
+%attr(750, katello, katello) %{_localstatedir}/log/%{name}
 %{datadir}
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
@@ -400,6 +398,46 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- bump up version to 1.0 (msuchy@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.56-1
+- spec - fixing invalid perms for /var/log/katello (lzap+git@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.55-1
+- Merge pull request #389 from lzap/quick_certs_fix (miroslav@suchy.cz)
+- puppet - improving katello-debug script (lzap+git@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.54-1
+- replace character by html entity (msuchy@redhat.com)
+
+* Sun Jul 29 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.53-1
+- CS - using newer errata icon classes (jsherril@redhat.com)
+- making 'Id' be i18n'd (jsherril@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+- converge ui update (jsherril@redhat.com)
+- spec test fix (jsherril@redhat.com)
+- CS - fixing various issues with cache not being properly saved/loaded
+  (jsherril@redhat.com)
+- CS - fix issue with drop-downs not being updated properly
+  (jsherril@redhat.com)
+- CS - Add errata details tipsy to other errata lists (jsherril@redhat.com)
+- CS - handle case when errata has no packages (jsherril@redhat.com)
+- CS - fixing a couple of issues (jsherril@redhat.com)
+- CS - fixing issue where environments were not properly remembered
+  (jsherril@redhat.com)
+- CS - adding errata details using ajax tipsy (jsherril@redhat.com)
+
+* Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.52-1
+- require recent converge-ui
+- 840609 - fencing SYSTEM GROUPS from activation keys nav
+- puppet - adding mongod to the service-wait script
+- puppet - adding service-wait wrapper script
+- puppet - introducing temp answer file for dangerous options
+- puppet - not changing seeds.rb anymore with puppet
+- puppet - moving config_value function to rails context
+- puppet - removing log dir mangling
+
 * Fri Jul 27 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.51-1
 - fix typo in repo files (msuchy@redhat.com)
 - Fixes active button state increasing the size of the button awkwardly.

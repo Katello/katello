@@ -379,6 +379,7 @@ module Glue::Candlepin::Consumer
         end
 
         OpenStruct.new(:entitlementId => entitlement["id"],
+                       :poolId => entitlement["pool"]["id"],
                        :serials => serials,
                        :poolName => pool["productName"],
                        :consumed => pool["consumed"],
