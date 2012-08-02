@@ -252,7 +252,6 @@ class GrepStrategy(PrinterStrategy):
         :param column: column definition
         :rtype: int
         """
-        key = column['attr_name']
         width = len(column['name'])+1
         for column_value in [u_str(self._get_column_value(column, item)) for item in items]:
             if width <= len(column_value):
