@@ -27,7 +27,6 @@ Group:          System Environment/Base
 License:        GPLv2+
 URL:            http://www.katello.org
 Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  checkpolicy, selinux-policy-devel, hardlink
 BuildRequires:  policycoreutils >= %{POLICYCOREUTILSVER}
@@ -68,8 +67,6 @@ done
 
 
 %install
-rm -rf %{buildroot}
-
 # Install SELinux policy modules
 for selinuxvariant in %{selinux_variants}
   do
@@ -96,9 +93,6 @@ install -m 0644 katello-selinux-enable.man1 %{buildroot}%{_mandir}/man1/katello-
 
 # Install secure (extra protected) directory
 install -d %{buildroot}%{_sysconfdir}/katello/secure
-
-%clean
-rm -rf %{buildroot}
 
 %post
 if /usr/sbin/selinuxenabled ; then

@@ -22,7 +22,6 @@ URL:           http://www.katello.org
 Version:       1.1.0
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:      %{base_name}-cli
 Requires:      yajl
@@ -41,15 +40,11 @@ application life-cycle for Linux systems
 %build
 
 %install
-rm -rf $RPM_BUILD_ROOT
 install -d -m 755 $RPM_BUILD_ROOT%{homedir}/script/cli-tests
 pwd
 ls
 cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{homedir}/script/cli-tests
 
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %{homedir}/script/cli-tests
