@@ -13,10 +13,14 @@ Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       puppet >= 2.6.6
-Requires:       coreutils shadow-utils wget
+Requires:       coreutils
+Requires:       wget
 Requires:       katello-certs-tools
-Requires:       nss-tools openssl
+Requires:       nss-tool
+Requires:       openssl
 Requires:       policycoreutils-python
+Requires:       initscripts
+Requires:       rubygem(bundler)
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
 BuildRequires:  findutils puppet >= 2.6.6
 
@@ -30,6 +34,9 @@ katello-upgrade which handles upgrades between versions.
 %setup -q
 
 %build
+#check syntax of main configure script and libs
+ruby -c bin/katello-configure lib/puppet/parser/functions/*rb
+
 #check syntax for all puppet scripts
 %if 0%{?rhel} || 0%{?fedora} < 17
 find -name '*.pp' | xargs -n 1 -t puppet --parseonly
