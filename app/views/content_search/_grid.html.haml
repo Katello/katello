@@ -34,10 +34,10 @@
     #grid_content_window
       #grid_content
     #grid_loading_screen.hidden
-      .spinner
+      .large_spinner
   %footer
     %div.fl
     %ul.fl
       %li
-        %a.button#compare_repos_btn.hidden
-          = _("Compare Repos")
+        %a.button#compare_repos_btn.hidden{ :title => _("Select a set of repositories that you wish to compare the contents of by clicking the checkboxes inside the cells.") }
+          = _("Compare Repositories")

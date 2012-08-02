@@ -17,7 +17,9 @@ module ContentSearchHelper
   end
 
   def package_display package
-    return '<span class="one-line-ellipsis tipsify" title="' + package.send(:name)  + '">' + package.send(:name) + '</span><span>' + (package.send(:nvrea).sub(package.send(:name) + '-', '')) + '</span>';
+    name = package.send(:name)
+    ver_rel_arch = package.send(:nvrea).sub(package.send(:name) + '-', '')
+    return '<span class="one-line-ellipsis tipsify" title="' + name + '">' + name + '</span><span class="one-line-ellipsis">' + ver_rel_arch + '</span>';
   end
 
   def repo_compare_name_display repo
