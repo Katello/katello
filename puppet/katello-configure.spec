@@ -16,7 +16,7 @@ Requires:       puppet >= 2.6.6
 Requires:       coreutils
 Requires:       wget
 Requires:       katello-certs-tools
-Requires:       nss-tool
+Requires:       nss-tools
 Requires:       openssl
 Requires:       policycoreutils-python
 Requires:       initscripts
