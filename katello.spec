@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -460,6 +460,14 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Aug 02 2012 Tom McKay <thomasmckay@redhat.com> 1.1.2-1
+- Merge pull request #411 from thomasmckay/crosslink (thomasmckay@redhat.com)
+- Merge pull request #415 from Pajk/765989 (thomasmckay@redhat.com)
+- 765989 - Read Only account shows unused checkbox on System / Subscription
+  page (pajkycz@gmail.com)
+- crosslink - updated attribute for multi-entitlement pool
+  (thomasmckay@redhat.com)
+
 * Thu Aug 02 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
 - buildroot and %%clean section is not needed (msuchy@redhat.com)
 - 844796 - For async manifest import, there were double-render errors while the
