@@ -30,22 +30,22 @@
               %tr{:class => 'child ' + cssclass, :style => 'display:none;', 'data-in_family' => product_family_name}
                 %td
                   %span.fl.subscription_row
-                    = check_box_tag "subscription_id[#{subscription.poolId}]", false
+                    = check_box_tag "subscription_id[#{subscription.cp_id}]", false
                   &nbsp;
-                  #{subscription.productName}
-                %td #{subscription.poolType}
-                %td #{subscription.startDate}
-                %td #{subscription.endDate}
+                  = subscriptions_pool_link_helper(subscription.product_name, subscription.cp_id, subscription.provider_id, current_organization)
+                %td #{subscription.virt_only ? _("Virtual") : _("Physical")}
+                %td #{subscription.start_date}
+                %td #{subscription.end_date}
             - else
               %tr{:class => 'parent ' + cssclass}
                 %td
                   %span.fl.subscription_row
-                    = check_box_tag "subscription_id[#{subscription.poolId}]", false
+                    = check_box_tag "subscription_id[#{subscription.cp_id}]", false
                   &nbsp;
-                  #{subscription.productName}
-                %td #{subscription.poolType}
-                %td #{subscription.startDate}
-                %td #{subscription.endDate}
+                  = subscriptions_pool_link_helper(subscription.product_name, subscription.cp_id, subscription.provider_id, current_organization)
+                %td #{subscription.virt_only ? _("Virtual") : _("Physical")}
+                %td #{subscription.start_date}
+                %td #{subscription.end_date}
 
     - else
       %tr

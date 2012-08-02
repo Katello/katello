@@ -12,11 +12,6 @@
 
 module SubscriptionsHelper
 
-  def subscriptions_pool_link_helper pool_id
-    pool = Pool.find_pool(pool_id)
-    link_to pool.product_name, root_path + "subscriptions#panel=subscription_#{pool_id}"
-  end
-
   def subscriptions_product_helper product_id
     cp_product = Resources::Candlepin::Product.get(product_id).first
     product = OpenStruct.new cp_product

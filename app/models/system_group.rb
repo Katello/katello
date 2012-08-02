@@ -57,13 +57,15 @@ class SystemGroup < ActiveRecord::Base
   validates_uniqueness_of :pulp_id, :message=> N_("Pulp identifier must be unique.")
 
   UNLIMITED_SYSTEMS = -1
+  validates_numericality_of :max_systems, :only_integer => true, :greater_than_or_equal_to => -1, :message => N_("must be a positive integer value.")
   validate :validate_max_systems
-  validates_numericality_of :max_systems, :only_integer => true, :greater_than_or_equal_to => -1, :message => N_("must be an integer value.")
 
   def validate_max_systems
     if new_record? or max_systems_changed?
-      if (max_systems != UNLIMITED_SYSTEMS) and (systems.length > max_systems)
+      if (max_systems != UNLIMITED_SYSTEMS) and (systems.length > 0 and (systems.length > max_systems))
         errors.add :max_systems, _("may not be less than the number of systems associated with the system group.")
+      elsif (max_systems == 0)
+        errors.add :max_systems, _("may not be set to 0.")
       end
     end
   end

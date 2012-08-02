@@ -93,7 +93,7 @@ class Glue::Pulp::Errata
           :id           => { :type => 'string', :analyzer =>:kt_name_analyzer},
           :product_ids  => { :type => 'integer', :analyzer =>:kt_name_analyzer},
           :severity     => { :type => 'string', :analyzer =>:kt_name_analyzer},
-          :type         => { :type => 'string', :analyzer =>:kt_name_analyzer}
+          :type         => { :type => 'string', :analyzer =>:kt_name_analyzer},
         }
       }
     }
@@ -146,8 +146,8 @@ class Glue::Pulp::Errata
     end
 
     return search.perform.results
-  rescue
-    return []
+  rescue Tire::Search::SearchRequestFailed => e
+    Support.array_with_total
   end
 
   def self.index_errata errata_ids
