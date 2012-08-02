@@ -24,6 +24,7 @@ require 'helpers/product_test_data.rb'
 require 'helpers/product_helper_methods'
 require 'models/model_spec_helper'
 require "helpers/user_helper_methods"
+require "helpers/search_helper_methods"
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.

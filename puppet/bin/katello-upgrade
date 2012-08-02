@@ -19,7 +19,7 @@ ERROR_CODES = {
   :unknown => 127,
 }
 
-BACKEND_SERVICES = ['katello', 'katello-jobs', 'tomcat6', 'pulp-server', 'thumbslug']
+BACKEND_SERVICES = ['katello', 'katello-jobs', 'tomcat6', 'pulp-server', 'thumbslug', 'httpd', 'elasticsearch']
 STDOUT_NAME = "stdout"
 
 # Terminate script with error code from ERROR_CODES hash
@@ -278,12 +278,44 @@ class UpgradeProcess
   protected
 
   def ensure_services_are_off
+    stopped = true
     BACKEND_SERVICES.each do |service|
       if !is_stopped? service
-        $stderr.puts "Service '%s' can not be running while katello-upgrade is in progress" % service
-        exit_with :general_error
+        puts "Service '%s' can not be running while katello-upgrade is in progress" % service
+        stopped = false
       end
     end
+    if !stopped
+      print_line
+      if @options[:auto_stop]
+        stop_services
+      else
+        puts "This script can be run in auto-stop mode with the -a / --auto-stop option to"
+        puts "disable services automatically."
+        puts "You may always use `service katello-service stop` to stop all the services"
+        puts ""
+        exit_service_stop
+      end
+    end
+  end
+
+  def stop_services
+    service = 'katello-service'
+    puts "We will stop all katello services using #{service} stop."
+    if confirm("PROCEED?")
+      if !stop(service)
+        puts "There was an issue stopping your services. Please resolve this manually"
+        puts "and try again"
+        exit_with :general_error
+      end
+    else
+      exit_service_stop
+    end
+  end
+
+  def exit_service_stop
+    puts "Exiting. Please stop your services and try again"
+    exit_with :general_error
   end
 
   def print_line(char="=", repeats=LINE_LEN)
@@ -379,6 +411,13 @@ def is_stopped? (service)
   return !system('/sbin/service %s status 2>/dev/null >/dev/null' % service)
 end
 
+# system appears to return TRUE in some cases even when the
+# system call fails. non catastrophic errors, such as the service
+# already being off
+def stop(service)
+  return system('/sbin/service %s stop' % service)
+end
+
 # Parse and return script options
 def parse_options
   opts = {}
@@ -390,6 +429,10 @@ def parse_options
 
     option_parser.on_tail.on('-y', '--assumeyes', 'Assume yes on confirmations') do
       opts[:assume_yes] = true
+    end
+
+    option_parser.on_tail.on('-a', '--autostop', 'Automatically stop services') do
+      opts[:auto_stop] = true
     end
 
     option_parser.on_tail.on('-d', '--dry-run', 'Prints the upgrade steps without modifying anything') do
