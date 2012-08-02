@@ -1,6 +1,6 @@
 class thumbslug::params {
 
   $keystore = "/etc/pki/katello/keystore"
-  $oauth_secret = regsubst(generate('/usr/bin/openssl', 'rand', '-base64', '24'), '^(.{24}).*', '\1')
+  $oauth_secret = katello_create_read_password(katello_config_value('oauth_token_file'))
   
 }

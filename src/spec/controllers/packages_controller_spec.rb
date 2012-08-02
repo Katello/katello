@@ -23,12 +23,12 @@ describe PackagesController do
     before (:each) do
       set_default_locale
       login_user
-
+      new_test_org
     end
 
     describe "get auto_complete_package" do
       before (:each) do
-        Glue::Pulp::Package.should_receive(:name_search).once.and_return(["a", "aa"])
+        Glue::Pulp::Package.should_receive(:autocomplete_name).once.and_return(["a", "aa"])
       end
 
       it 'should succeed' do

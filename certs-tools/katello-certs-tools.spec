@@ -2,11 +2,10 @@ Name: katello-certs-tools
 Summary: Katello SSL Key/Cert Tool
 Group: Applications/Internet
 License: GPLv2 and Python
-Version: 1.1.6
+Version: 1.1.7
 Release: 1%{?dist}
 URL:      https://fedorahosted.org/katello
 Source0:  https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 Requires: openssl rpm-build
 BuildRequires: docbook-utils
@@ -24,12 +23,8 @@ Katello.
 %{__python} setup.py build
 
 %install
-rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
 chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/certs/katello_ssl_tool.py
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %{python_sitelib}/*
@@ -41,6 +36,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE PYTHON-LICENSES.txt
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.7-1
+- update copyright years (msuchy@redhat.com)
+- %%defattr is not needed since rpm 4.4 (msuchy@redhat.com)
+
 * Thu May 10 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.6-1
 - 818261 - consumer rpm was not installable on RHEL5
 

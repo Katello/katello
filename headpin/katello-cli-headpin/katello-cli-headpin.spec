@@ -19,14 +19,14 @@ Summary:       Client package for managing a katello-headpin installation
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.19
+Version:       1.1.0
 Release:       1%{?dist}
-Source0:       %{name}-%{version}.tar.gz
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
 Requires:      %{base_name}-cli-common
 BuildArch:     noarch
 
+Conflicts:     katello-cli
 
 %description
 Provides a client package for managing application life-cycle
@@ -38,16 +38,11 @@ for Linux systems
 %build
 
 %install
-rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_bindir}/
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{command_name}/
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/
 install -pm 0644 bin/%{command_name} $RPM_BUILD_ROOT%{_bindir}/%{command_name}
 install -pm 0644 etc/client.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/client.conf
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %attr(755,root,root) %{_bindir}/%{command_name}
@@ -58,6 +53,19 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- bump up version to 1.0 (msuchy@redhat.com)
+- update copyright years (msuchy@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+
+* Thu Jul 26 2012 Miroslav Suchý <msuchy@redhat.com> 0.1.21-1
+- 832462 - making katello-cli-headpin conflict with katello-cli
+  (jomara@redhat.com)
+
+* Wed Jul 25 2012 Miroslav Suchý <msuchy@redhat.com> 0.1.20-1
+- 817845 - Created a headpin manpage for the cli tool. (adprice@redhat.com)
+- 839524 - SAM cli now runs without displaying any errors (adprice@redhat.com)
+
 * Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.19-1
 - 812891 - Adding hypervisor record deletion to katello cli
 - 772850 - provider status is not relevant to headpin since repos are not
