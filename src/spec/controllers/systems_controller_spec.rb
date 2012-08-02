@@ -223,7 +223,7 @@ describe SystemsController do
 
     describe 'updating a system' do
       before (:each) do
-        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts => { :sockets => "2" }, :serviceLevel => nil)
+        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts => { "test" => "test" }, :serviceLevel => nil)
       end
 
       it "should update the system name" do
