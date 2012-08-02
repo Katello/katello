@@ -21,7 +21,7 @@ class Api::UebercertsController < Api::ApiController
   end
 
   def show
-    @organization.generate_debug_cert if params[:regenerate] == 'True'
+    @organization.generate_debug_cert if (params[:regenerate]||'').downcase == 'true'
     render :json => @organization.debug_cert
   end
 end

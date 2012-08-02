@@ -81,6 +81,7 @@ class Api::RolesController < Api::ApiController
     render :json => details
   end
 
+  private
 
   def find_role
     @role = Role.find(params[:id])
