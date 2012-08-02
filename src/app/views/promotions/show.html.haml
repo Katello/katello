@@ -3,9 +3,9 @@
 = javascript do
   :plain
     var permissions = {
-      manage_changesets: #{manage_changesets},
-      promote_changesets: #{promote_changesets},
-      read_changesets: #{read_changesets},
+      manage_changesets: #{manage_promotion_changesets or manage_deletion_changesets},
+      apply_changesets: #{apply_changesets},
+      read_changesets: #{read_promotion_changesets or read_deletion_changesets},
     };
     var content_breadcrumb = $.parseJSON('#{escape_javascript(generate_content_breadcrumb())}');
     var changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb())}');
@@ -106,8 +106,8 @@
   #container.promotions
     .right_tree.sliding_tree
       #changeset_tree
-        - if read_changesets
-          %h2 #{@next_environment.name + _(" Changesets")}
+        - if read_promotion_changesets or read_deletion_changesets
+          %h2 #{_(" Changesets")}
           .breadcrumb_filter.fl.clear.clickable
             %form#filter_form.filter.clear
               %input{ :name => "filter", :type => "input", :placeholder => _("Filter..."), :id=>"filter_input"}
@@ -139,7 +139,7 @@
               .grid_4.la.edit_type{:style => "padding-top:2px;padding-left:2px;"}
 
           #changeset_status
-          - if manage_changesets || promote_changesets
+          - if manage_promotion_changesets or manage_deletion_changesets or apply_changesets
             #sliding_tree_actionbar.clickable
               #delete_changeset.cs_action{"data-url"=>changesets_path, "data-confirm-text"=>_('Are you sure?')}
                 %span#delete_changeset_icon.sprite
@@ -173,11 +173,11 @@
     = render :partial=>"common/tupane"
   
     #content_tree.left.sliding_tree
-      - if @next_environment
-        - if manage_changesets or @environment.organization.environments_manageable?
-          %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}&next_env_id=#{@next_environment.id}"}
-            #{_('+ New Changeset')}
-            .arrow-right
+      - if manage_promotion_changesets or manage_deletion_changesets or @environment.organization.environments_manageable?
+        - next_env = @next_environment.nil? ? "" : "&next_env_id=" + @next_environment.id.to_s
+        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}"+"#{next_env}"}
+          #{_('+ New Changeset')}
+          .arrow-right
       %h2 #{@environment.name + _(" Content")}
       .breadcrumb_search.clear.clickable
         .search_button.clickable.fr{ :disabled => "disabled", :title => "#{_('Search')}" }
