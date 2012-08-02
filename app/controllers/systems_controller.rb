@@ -196,11 +196,41 @@ class SystemsController < ApplicationController
 
   end
 
+  # Note that finding the provider_id is important to allow the subscription to be linked to the url for either the
+  # Red Hat provider or the custom provider page
   def subscriptions
-    consumed_entitlements = @system.consumed_entitlements
-    avail_pools = @system.available_pools_full !current_user.subscriptions_match_system_preference
+    # Consumed subscriptions
+    consumed_entitlements = @system.consumed_entitlements.collect do |entitlement|
+      pool = ::Pool.find_pool(entitlement.poolId)
+      product = Product.where(:cp_id => pool.product_id).first
+      entitlement.provider_id = product.nil? ? nil : product.provider_id
+      entitlement
+    end
+
+    # Available subscriptions
+    if current_user.subscriptions_match_system_preference
+      cp_pools = @system.available_pools
+    else
+      cp_pools = @system.all_available_pools
+    end
+    if cp_pools
+      # Pool objects
+      pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
+
+      subscriptions = pools.collect do |pool|
+        product = Product.where(:cp_id => pool.product_id).first
+        next if product.nil?
+        pool.provider_id = product.provider_id
+        pool
+      end.compact
+      subscriptions = [] if subscriptions.nil?
+    else
+      subscriptions = []
+    end
+
+    @organization = current_organization
     render :partial=>"subscriptions", :layout => "tupane_layout",
-                                      :locals=>{:system=>@system, :avail_subs => avail_pools,
+                                      :locals=>{:system=>@system, :avail_subs => subscriptions,
                                                 :consumed_entitlements => consumed_entitlements,
                                                 :editable=>@system.editable?}
   end
@@ -528,19 +558,27 @@ class SystemsController < ApplicationController
   def system_groups
     # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
     @system_groups = SystemGroup.where(:organization_id=>current_organization).
-        where('max_systems < ?', @system.system_groups.length).order(:name) - @system.system_groups
+        joins(:system_system_groups).
+        select("system_groups.id, system_groups.name").
+        group("system_groups.id, system_groups.name, system_groups.max_systems having count(system_system_groups.system_id) < system_groups.max_systems or system_groups.max_systems = -1").
+        order(:name) - @system.system_groups
+
     render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>@system.editable?}
   end
 
   def add_system_groups
-    unless params[:group_ids].blank?
+    if params[:group_ids].nil? or params[:group_ids].blank?
+      notify.error _('One or more system groups must be provided.')
+      render :nothing=>true, :status=>500
+    else
       ids = params[:group_ids].collect{|g| g.to_i} - @system.system_group_ids #ignore dups
       @system_groups = SystemGroup.where(:id=>ids)
       @system.system_group_ids = (@system.system_group_ids + @system_groups.collect{|g| g.id}).uniq
       @system.save!
+
+      notify.success _("System '%s' was updated.") % @system["name"]
+      render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups} and return
     end
-    notify.success _("System '%s' was updated.") % @system["name"]
-    render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups} and return
   end
 
   def remove_system_groups

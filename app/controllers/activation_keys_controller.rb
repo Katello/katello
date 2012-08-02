@@ -317,40 +317,36 @@ class ActivationKeysController < ApplicationController
   def pools_hash pools
     pools_return = {}
     pools.each do |poolId, pool|
-      pools_return[pool.productName] ||= []
-      pools_return[pool.productName] << pool
+      pools_return[pool.product_name] ||= []
+      pools_return[pool.product_name] << pool
     end
     pools_return
   end
 
   def retrieve_all_pools
+
     all_pools = {}
 
-    # TODO: should be current_organization.pools (see pool.rb for attributes)
     cp_pools = Resources::Candlepin::Owner.pools current_organization.cp_key
-    cp_pools.each do |pool|
-      p = OpenStruct.new
-      p.poolId = pool['id']
-      p.productName = pool['productName']
-      p.startDate = format_time(Date.parse(pool['startDate']))
-      p.endDate = format_time(Date.parse(pool['endDate']))
+    if cp_pools
+      # Pool objects
+      pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
 
-      # TODO: this could be moved into the pool.rb
-      p.poolType = _('Physical')
-      if pool.has_key? :attributes
-        pool[:attributes].each do |attribute|
-          name = attribute[:name]
-          if (name == 'virt_only')
-            if (attribute[:value] == 'true')
-              p.poolType = _('Virtual')
-            end
-            break
-          end
-        end
-      end
-
-      all_pools[p.poolId] = p if !all_pools.include? p
+      subscriptions = pools.collect do |pool|
+        product = Product.where(:cp_id => pool.product_id).first
+        next if product.nil?
+        pool.provider_id = product.provider_id
+        pool
+      end.compact
+      subscriptions = [] if subscriptions.nil?
+    else
+      subscriptions = []
     end
+
+    subscriptions.each do |subscription|
+      all_pools[subscription.cp_id] = subscription if !all_pools.include? subscription
+    end
+
     all_pools
   end
 

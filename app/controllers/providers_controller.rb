@@ -68,9 +68,6 @@ class ProvidersController < ApplicationController
     if @provider.import_task.nil?
       to_ret = {'state' => 'finished'}
     else
-      # user didn't provide a manifest to upload
-      notify.error _("Subscription manifest must be specified on upload.")
-      render :nothing => true
       to_ret = @provider.import_task.to_json
     end
 
@@ -85,36 +82,6 @@ class ProvidersController < ApplicationController
   end
 
   def redhat_provider
-=begin
-    # We default to none imported until we can properly poll Candlepin for status of the import
-    @grouped_subscriptions = []
-    begin
-      find_subscriptions
-    rescue => error
-      display_message = parse_display_message(error.response)
-      error_text = _("Unable to retrieve subscription manifest for provider '%s'.") % @provider.name
-      error_text += "<br />" + _("Reason: %s") % display_message unless display_message.blank?
-      notify.exception error_text, error, :asynchronous => true
-      Rails.logger.error "Error fetching subscriptions from Candlepin"
-      Rails.logger.error error
-      Rails.logger.error error.backtrace.join("\n")
-      render :template =>"providers/redhat/show", :status => :bad_request and return
-    end
-
-    begin
-      @statuses = @provider.owner_imports
-    rescue => error
-      @statuses = []
-      display_message = parse_display_message(error.response)
-      error_text = _("Unable to retrieve subscription history for provider '%s'.") % @provider.name
-      error_text += "<br />" + _("Reason: %s") % display_message unless display_message.blank?
-      notify.exception error_text, error, :asynchronous => true
-      Rails.logger.error "Error fetching subscription history from Candlepin"
-      Rails.logger.error error
-      Rails.logger.error error.backtrace.join("\n")
-      render :template =>"providers/redhat/show", :status => :bad_request and return
-    end
-=end
     render :template =>"providers/redhat/show"
   end
 

@@ -139,6 +139,7 @@ $(document).ready(function () {
     // selected and then replacing the content of the pane with the response.
     $('.panel_link > a').live('click', function () {
         // if a view is a pane within a panel
+        KT.panel.copy.hide_form();
         $.ajax({
             cache: 'false',
             type: 'GET',
@@ -334,8 +335,11 @@ KT.panel = (function ($) {
         panelAjax = function (name, ajax_url, thisPanel, isSubpanel) {
             var spinner = thisPanel.find('.spinner'),
                 panelContent = thisPanel.find(".panel-content");
+
             spinner.show();
+            KT.panel.copy.hide_form();
             panelContent.hide();
+
             $.ajax({
                 cache: true,
                 url: ajax_url,
