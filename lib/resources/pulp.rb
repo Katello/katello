@@ -249,14 +249,23 @@ module Resources
           add_delete_content("add_package", :packageid, repo_id, pkg_id_list)
         end
 
-        def delete_packages repo_id, pkg_id_list
-          # we need to optimize this call
-          # need a faster way to get pulp 'package object'
-          # information.
-          packages = pkg_id_list.collect do |p|
-            Resources::Pulp::Package.find p
+        def add_repo_packages repo_package_tuples
+          associate_path = "/pulp/api/services/associate/packages/"
+          body = post(associate_path, {:package_info=>repo_package_tuples}.to_json, self.default_headers).body
+        end
+
+
+        def delete_packages repo_id, package_objects
+          package_tuples = package_objects.collect do |pack|
+              [[pack.filename,pack.checksum],[repo_id]]
           end
-          add_delete_content("delete_package", :package, repo_id, packages)
+          Repository.delete_repo_packages(package_tuples)
+        end
+
+
+        def delete_repo_packages repo_package_tuples
+          dissociate_path = "/pulp/api/services/disassociate/packages/"
+          body = post(dissociate_path, {:package_info=>repo_package_tuples}.to_json, self.default_headers).body
         end
 
 

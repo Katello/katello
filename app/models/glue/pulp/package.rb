@@ -62,9 +62,6 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     }
   end
 
-
-
-
   def self.autocomplete_name query, repoids=nil, page_size=15
     return [] if !Tire.index(self.index).exists?
 
@@ -92,7 +89,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
   end
 
   def self.autocomplete_nvrea query, repoids=nil, page_size=15
-     return [] if !Tire.index(self.index).exists?
+     return Support.array_with_total if !Tire.index(self.index).exists?
 
      query = Katello::Search::filter_input query
      query = "*" if query == ""
@@ -114,9 +111,22 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
    end
 
 
+  def self.id_search ids
+    return Support.array_with_total if !Tire.index(self.index).exists?
+    search = Tire.search self.index do
+      fields [:id, :name, :nvrea, :repoids, :type, :filename, :checksum]
+      query do
+        all
+      end
+      size ids.size
+      filter :terms, :id => ids
+    end
+    search.results
+  end
+
 
   def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"], search_mode = :all
-    return [] if !Tire.index(self.index).exists?
+    return Support.array_with_total if !Tire.index(self.index).exists?
 
     all_rows = query.blank? #if blank, get all rows
 

@@ -127,7 +127,6 @@ class DeletionChangeset < Changeset
   def delete_packages from_env
     #repo->list of pkg_ids
     pkgs_delete = { }
-    
     not_included_packages.each do |pkg|
       product = pkg.product
       product.repos(from_env).each do |repo|
@@ -137,11 +136,15 @@ class DeletionChangeset < Changeset
         end
       end
     end
-    
+    pkg_ids = []
+
     pkgs_delete.each_pair do |repo, pkgs|
-      repo.delete_packages(pkgs)
-      Glue::Pulp::Package.index_packages(pkgs)
+      pkg_ids.concat(pkgs)
+      pkgs_delete[repo] = Glue::Pulp::Package.id_search(pkgs)
     end
+
+    Repository.delete_repo_packages(pkgs_delete)
+    Glue::Pulp::Package.index_packages(pkg_ids)
   end
 
 
