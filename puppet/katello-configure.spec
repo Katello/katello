@@ -10,7 +10,6 @@ Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
 Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       puppet >= 2.6.6
 Requires:       coreutils
@@ -60,7 +59,6 @@ THE_VERSION=%version sed -i "s/THE_VERSION/$THE_VERSION/g" man/katello-passwd.po
 
 
 %install
-rm -rf %{buildroot}
 #prepare dir structure
 install -d -m 0755 %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
@@ -79,9 +77,6 @@ install -m 0644 man/katello-upgrade.man1 %{buildroot}%{_mandir}/man1/katello-upg
 install -m 0644 man/katello-passwd.man1 %{buildroot}%{_mandir}/man1/katello-passwd.1
 install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts
 cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
-
-%clean
-rm -rf %{buildroot}
 
 %files
 %{homedir}/
