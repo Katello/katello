@@ -10,8 +10,8 @@
 = content_for :content do
   .subs
     .subs_top
-      .subs_icon_wrapper
-        .subs_icon{:class => "#{@system.compliance_color}"}
+      .subs_image_wrapper
+        .subs_image{:class => "#{@system.compliance_color}"}
       .subs_text.fl
         - if @system.compliance_color == 'green'
           - until_time = @system.compliant_until
@@ -24,5 +24,5 @@
       = system_servicelevel(system)
     .clear
   #subs_data
-    = render :partial=>"subs", :locals=>{:system=>@system, :avail_subs => avail_subs, :consumed_entitlements => consumed_entitlements, :editable=>editable}
+    = render :partial=>"subs", :locals=>{:system=>@system, :avail_subs => avail_subs, :consumed_entitlements => consumed_entitlements, :editable=>editable, :subscription_filters=>subscription_filters}
   %br.clear

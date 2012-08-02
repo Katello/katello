@@ -65,6 +65,17 @@
           =label :sockets, :sockets, _("Sockets")
         .grid_8.la
           = @subscription.sockets
+      %fieldset
+        .grid_2.ra.fieldset
+          =label :multientitlement, :multientitlement, _("Multi-entitlement")
+        .grid_8.la
+          = @subscription.multi_entitlement ? _("Yes") : _("No")
+      - if @subscription.stacking_id != ''
+        %fieldset
+          .grid_2.ra.fieldset
+            =label :stacking, :stacking, _("Stacking Id")
+          .grid_8.la
+            = @subscription.stacking_id
       - if !@subscription.source_pool_id.nil?
         %fieldset
           .grid_2.ra.fieldset
