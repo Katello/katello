@@ -17,6 +17,7 @@ Requires:       coreutils shadow-utils wget
 Requires:       katello-certs-tools
 Requires:       nss-tools openssl
 Requires:       policycoreutils-python
+Requires:       rubygem(bundler)
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
 BuildRequires:  findutils puppet >= 2.6.6
 
