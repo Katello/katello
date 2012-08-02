@@ -619,7 +619,13 @@ KT.comparison_grid.controls = function(grid) {
         },
         comparison = (function(){
             var show = function(){
-                    $('#compare_repos_btn').show();
+                var elements = $('.grid_cell').find('input[type="checkbox"]:checked');
+                    
+                $('#compare_repos_btn').show();
+
+                if( elements.length === 0 ){
+                    $('#compare_repos_btn').addClass('disabled');
+                }
             },
             hide = function(){
                 $('#compare_repos_btn').hide();
@@ -746,6 +752,16 @@ KT.comparison_grid.events = function(grid) {
                 });
                 $(document).trigger({ type : 'compare.comparison_grid', selected : selected });
             });
+            $('.grid_cell').find('input[type="checkbox"]').live('click', function(){
+                if( !$(this).is(':checked') ){
+                    $('#compare_repos_btn').addClass('disabled');
+                } else {
+                    if( $('#compare_repos_btn').hasClass('disabled') ){
+                        $('#compare_repos_btn').removeClass('disabled');
+                    };
+                }
+            });
+            $('#compare_repos_btn').tipsy({ gravity: 'w' });
         },
         load_row_links = function(){
             $('.load_row_link').live('click', function(event){
@@ -948,8 +964,8 @@ KT.comparison_grid.templates = (function(i18n) {
                             'data-id'   : id
                         });
                 
-            html.append('<i class="spinner invisible" />');
-            html.append('<a class="load_row_link" href="" >' + i18n.show_more.replace('%P', load_size) + '</a>');
+            html.append('<i class="fl spinner invisible" />');
+            html.append('<a class="load_row_link fl" href="" >' + i18n.show_more.replace('%P', load_size) + '</a>');
             html.append('<i class="down_arrow-icon-black"/>');
             html.append($('<span/>').html(i18n.counts.replace('%C', current).replace('%T', total)));
 
