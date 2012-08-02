@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.2.47
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -24,15 +24,7 @@ BuildArch:      noarch
 Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
-
-# How to create the source tarball:
-#
-# git clone git://git.fedorahosted.org/git/katello.git/
-# yum install tito
-# cd src/
-# tito build --tag katello-%{version}-%{release} --tgz
-Source0:        %{name}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
 Requires:        %{name}-common
 Requires:        %{name}-glue-pulp
@@ -63,6 +55,7 @@ Requires:       rubygem(jammit)
 Requires:       rubygem(rails_warden)
 Requires:       rubygem(net-ldap)
 Requires:       rubygem(compass) >= 0.11.5
+Requires:       rubygem(compass) < 0.12
 Requires:       rubygem(compass-960-plugin) >= 0.10.4
 Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
@@ -79,7 +72,8 @@ Requires:       rubygem(thin)
 Requires:       rubygem(fssm)
 Requires:       rubygem(sass)
 Requires:       rubygem(chunky_png)
-Requires:       rubygem(tire)
+Requires:       rubygem(tire) >= 0.3.0
+Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
 
 %if 0%{?rhel} == 6
@@ -109,7 +103,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui-devel >= 0.7
+BuildRequires:  converge-ui-devel >= 0.8.3
 
 %description common
 Common bits for all Katello instances
@@ -160,6 +154,31 @@ Requires:        %{name}-common
 %description glue-candlepin
 Katello connection classes for the Candlepin backend
 
+%package headpin
+Summary:        A subscription management only version of Katello
+BuildArch:      noarch
+Requires:       katello-common
+Requires:       katello-glue-candlepin
+Requires:       katello-selinux
+
+%description headpin
+A subscription management only version of Katello.
+
+%package headpin-all
+Summary:        A meta-package to pull in all components for katello-headpin
+Requires:       katello-headpin
+Requires:       katello-configure
+Requires:       katello-cli-headpin
+Requires:       postgresql-server
+Requires:       postgresql
+Requires:       candlepin-tomcat6
+Requires:       thumbslug
+
+%description headpin-all
+This is the Katello-headpin meta-package.  If you want to install Headpin and all
+of its dependencies on a single machine, you should install this package
+and then run katello-configure to configure everything.
+
 %prep
 %setup -q
 
@@ -194,13 +213,14 @@ ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
 %install
-rm -rf %{buildroot}
 #prepare dir structure
 install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
 install -d -m0755 %{buildroot}%{datadir}/tmp
 install -d -m0755 %{buildroot}%{datadir}/tmp/pids
+install -d -m0755 %{buildroot}%{datadir}/config
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
+
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 mkdir -p %{buildroot}/%{_mandir}/man8
 
@@ -222,6 +242,7 @@ install -m 755 script/katello-refresh-cdn %{buildroot}%{_sysconfdir}/cron.daily/
 
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
 install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
@@ -249,9 +270,11 @@ ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
 #create symlinks for important scripts
 mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_sbindir}
 ln -sv %{homedir}/script/katello-debug %{buildroot}%{_bindir}/katello-debug
 ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
 ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
+ln -sv %{homedir}/script/service-wait %{buildroot}%{_sbindir}/service-wait
 
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
@@ -287,9 +310,6 @@ chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 # install man page
 install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 
-%clean
-rm -rf %{buildroot}
-
 %post common
 #Add /etc/rc*.d links for the script
 /sbin/chkconfig --add %{name}
@@ -308,6 +328,7 @@ fi
 %files
 %attr(600, katello, katello)
 %{_bindir}/katello-*
+%{_sbindir}/service-wait
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -328,7 +349,6 @@ fi
 %{homedir}/lib/notifications
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
-%{homedir}/lib/util
 %{homedir}/locale
 %{homedir}/public
 %{homedir}/script
@@ -353,14 +373,16 @@ fi
 %config %{_sysconfdir}/logrotate.d/%{name}-jobs
 %config %{_sysconfdir}/%{name}/mapping.yml
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%config(noreplace) %{_sysconfdir}/sysconfig/service-wait
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
 %{_sysconfdir}/bash_completion.d/%{name}
 %{homedir}/log
 %{homedir}/db/schema.rb
+%{homedir}/lib/util
 
 %defattr(-, katello, katello)
-%{_localstatedir}/log/%{name}
+%attr(750, katello, katello) %{_localstatedir}/log/%{name}
 %{datadir}
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
@@ -382,6 +404,46 @@ fi
 
 %files all
 
+%files headpin
+%{homedir}/app/controllers
+%{homedir}/app/helpers
+%{homedir}/app/mailers
+%{homedir}/app/models/
+%exclude %{homedir}/app/models/glue/*
+%{homedir}/app/stylesheets
+%{homedir}/app/views
+%{homedir}/autotest
+%{homedir}/ca
+%{homedir}/config
+%{homedir}/db/migrate/
+%{homedir}/db/products.json
+%{homedir}/db/seeds.rb
+%{homedir}/integration_spec
+%{homedir}/lib/*.rb
+%{homedir}/lib/monkeys
+%{homedir}/lib/navigation
+%{homedir}/lib/notifications
+%{homedir}/lib/resources
+%exclude %{homedir}/lib/resources/candlepin.rb
+%exclude %{homedir}/lib/resources/pulp.rb
+%exclude %{homedir}/lib/resources/foreman.rb
+%{homedir}/lib/tasks
+%{homedir}/lib/util
+%{homedir}/lib/glue/queue.rb
+%{homedir}/locale
+%{homedir}/public
+%{homedir}/script
+%{homedir}/spec
+%{homedir}/tmp
+%{homedir}/vendor
+%{homedir}/.bundle
+%{homedir}/config.ru
+%{homedir}/Gemfile
+%{homedir}/Gemfile.lock
+%{homedir}/Rakefile
+
+%files headpin-all
+
 %pre common
 # Add the "katello" user and group
 getent group %{name} >/dev/null || groupadd -r %{name} -g 182
@@ -398,6 +460,310 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Aug 02 2012 Tom McKay <thomasmckay@redhat.com> 1.1.2-1
+- Merge pull request #411 from thomasmckay/crosslink (thomasmckay@redhat.com)
+- Merge pull request #415 from Pajk/765989 (thomasmckay@redhat.com)
+- 765989 - Read Only account shows unused checkbox on System / Subscription
+  page (pajkycz@gmail.com)
+- crosslink - updated attribute for multi-entitlement pool
+  (thomasmckay@redhat.com)
+
+* Thu Aug 02 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
+- buildroot and %%clean section is not needed (msuchy@redhat.com)
+- 844796 - For async manifest import, there were double-render errors while the
+  progress was being checked from javascript. In addition, notices were not
+  being displayed after a very quick manifest import. (thomasmckay@redhat.com)
+- build katello-headpin and katello-headpin-all from the same src.rpm as
+  katello (msuchy@redhat.com)
+- rb19 - encoding fix turned off for 1.9 (lzap+git@redhat.com)
+- rb19 - removing exact versions from Gemfile (lzap+git@redhat.com)
+- rb19 - and one more UTF8 encoding fix (lzap+git@redhat.com)
+- puppet - better wait code for mongod (lzap+git@redhat.com)
+- Bumping package versions for 1.1. (msuchy@redhat.com)
+- puppet - moving lib/util into common subpackage (lzap+git@redhat.com)
+- crosslink - links from system and activation key subscriptions
+  (thomasmckay@redhat.com)
+
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- bump up version to 1.0 (msuchy@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.56-1
+- spec - fixing invalid perms for /var/log/katello (lzap+git@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.55-1
+- Merge pull request #389 from lzap/quick_certs_fix (miroslav@suchy.cz)
+- puppet - improving katello-debug script (lzap+git@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.54-1
+- replace character by html entity (msuchy@redhat.com)
+
+* Sun Jul 29 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.53-1
+- CS - using newer errata icon classes (jsherril@redhat.com)
+- making 'Id' be i18n'd (jsherril@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+- converge ui update (jsherril@redhat.com)
+- spec test fix (jsherril@redhat.com)
+- CS - fixing various issues with cache not being properly saved/loaded
+  (jsherril@redhat.com)
+- CS - fix issue with drop-downs not being updated properly
+  (jsherril@redhat.com)
+- CS - Add errata details tipsy to other errata lists (jsherril@redhat.com)
+- CS - handle case when errata has no packages (jsherril@redhat.com)
+- CS - fixing a couple of issues (jsherril@redhat.com)
+- CS - fixing issue where environments were not properly remembered
+  (jsherril@redhat.com)
+- CS - adding errata details using ajax tipsy (jsherril@redhat.com)
+
+* Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.52-1
+- require recent converge-ui
+- 840609 - fencing SYSTEM GROUPS from activation keys nav
+- puppet - adding mongod to the service-wait script
+- puppet - adding service-wait wrapper script
+- puppet - introducing temp answer file for dangerous options
+- puppet - not changing seeds.rb anymore with puppet
+- puppet - moving config_value function to rails context
+- puppet - removing log dir mangling
+
+* Fri Jul 27 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.51-1
+- fix typo in repo files (msuchy@redhat.com)
+- Fixes active button state increasing the size of the button awkwardly.
+  (ehelms@redhat.com)
+- Updates the submodule hash to point to 0.8.3-1 of ConvergeUI.
+  (ehelms@redhat.com)
+- Updates to make integration of converge-ui's newest changes cleaner and
+  remove repetition of CSS styling in the browser. (ehelms@redhat.com)
+- Adds override on header for thick border to the left and right of tabs.
+  (ehelms@redhat.com)
+- Fixes for updates from ConvergeUI. (ehelms@redhat.com)
+
+* Wed Jul 25 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.50-1
+- unit test fix (jsherril@redhat.com)
+- More tweaks + a spec test (jomara@redhat.com)
+- fixing issue where repos only in library would show up (jsherril@redhat.com)
+- Style changes as per pull request comments (jomara@redhat.com)
+- Adding fresh copy of katello.spec due to bad merge (jsherril@redhat.com)
+- master merge conflict (jsherril@redhat.com)
+- 840531 - Fixes issue with inability to individually promote packages attached
+  to a system template or changeset that have more than a single dash in the
+  name. (ehelms@redhat.com)
+- fixing mistaken name change (jsherril@redhat.com)
+- 841691 - Moving interface display to DETAILS page and removing it from system
+  list (jomara@redhat.com)
+- put spec on pair with Gemfile (msuchy@redhat.com)
+- CS - properly handling search error (jsherril@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- CS - changing collect{} ids on active record queries to use pluck
+  (jsherril@redhat.com)
+- Adding pluck support to active record, new feature backported from 3.1
+  (jsherril@redhat.com)
+- CS - greatly condensing bbq for environments (jsherril@redhat.com)
+- CS - fixing initially selected environment (jsherril@redhat.com)
+- CS - fixing consistency with page_size arguments (jsherril@redhat.com)
+- CS - a few suggested fixes (jsherril@redhat.com)
+- Added a way to return 'empty search results', an array with 'total' attribute
+  (paji@redhat.com)
+- CS - implementing roles based access controls (jsherril@redhat.com)
+- Fixed an issue where the rescue in Packages and Errata search was catching
+  non bad query exceptions (paji@redhat.com)
+- Added unit tests to test differnt actions in content search (paji@redhat.com)
+- 841000 - fixing product autocomplete issues (jsherril@redhat.com)
+- CS - adding shared/unique modes to the repo search (jsherril@redhat.com)
+- CS - adding all/unique/shared selector to product search
+  (jsherril@redhat.com)
+- CS - adding mode switcher to repo comparison (jsherril@redhat.com)
+
+* Tue Jul 24 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.49-1
+- rake - make rake compatible with 0.8.7
+- need a sudo in front of the cat so it can read the pass file
+
+* Mon Jul 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.48-1
+- gemfile - decreasing thin 1.2.11 requirement to 1.2.8
+- Fixed some unit test breakages caused by commit
+  f06bf0c5383dffef7ee2aea6597aaa06c4964ab9
+- Fencing more system groups code for systems page
+- system groups - fix query on systems -> system groups pane
+- master merge conflict fix
+- system groups - updates to validation of max_systems
+- system groups - API accepts max_systems and CLI unit tests
+- 839265 - system - generate proper error if user attempts to add groups w/o
+  providing any
+- system groups - close copy widget when switching objects or panes
+- Make third level navigation in panel sticky
+- master merge conflict
+- reverting to the same hash as I had originally
+- spec test fix
+- CS - Changes sliding aspect of grid to be more inuitive to a user's
+  experience such that clicking to slide right reveals more columns to the
+  right.
+- content browser - fixing migration script to properly propogate
+- system groups - removing local modifications not intended for upstream
+- system groups - unit tests and error conditions
+- content browser - fixing migration to migrate clone.library_instance_id
+  properly
+- Added server side code for Repo Compare Shared/Unique
+- Removes test data from code that prevents production asset compiling.
+- CS - Minor styling updates and a fix for packages with the same ID showing up
+  only once in the grid.
+- group copy cli and API first pass
+- CS - Fixes issue with data export for returning to results.
+- content  browser - adding search mode selector
+- CS - Styling updates for browse box.
+- content browser - fixing metadata ro wmissing
+- content browser - preparing for mode selector and other fixes
+- CS - Update to how columns are handled to produce logical pathing order
+  across browsers.
+- CS - Styling updates to environment selector widget.
+- merge conflict
+- content browser - adding show/hide support for compare button
+- Initial stab at the server side interaction of shared vs unique
+- content browser - intitial comparison wiring
+- CS - Proper hash from master merge.
+- CS - Changes for repository comparison checkboxes supplying column and row
+  id.
+- content browser - manually switching to results mode on search to fix some
+  oddities
+- content browser - making content selector show selected value
+- content browser - fixing issue with more rows showing up when not needed
+- content browser - fixing issue with more rows on repo contents
+- content browser - fixing issue where packages and errata were not including a
+  parent_row
+- content browser - fixing merge conflict and making all data returned as a
+  hash
+- CS - Fixes for empty space when last column is visible and another column is
+  removed from the visible set.
+- CS - Fixes messed up errata column headers.
+- content browser - adding more rows support for repo errata & packages
+- CS - Adds count updates on metadata row.
+- CS - Adds spinner and disabled load more link.
+- CS - Updates to load extra data above the load more row instead of underneath
+  it.
+- CS - Adjusts spinner location and look.
+- CS - Adds display of repository name when viewing repo details.
+- content browser - making package ids not analyzed in elastic search
+- content browser - some small performance improvements, adding hover on
+  products
+- content browser - adding tipsy for search help
+- adding a library_instance_id to the repository object
+- CS - Rows nested deeper than 2 levels will now be collapsed on initial draw.
+- CS - Cleanup for loading screen.
+- content browser - content selector and more rows wiring
+- jsroutes update
+- CS - RE-factor of how child rows are handled to support loading of more rows
+  in a cleaner manor.
+- CS - Adds initial support paginated loading of data via "show more" row.
+- content browser - improving user experience of selecting environments
+- initial untested pagination
+- CS - Cleanup around row collapse.
+- CS - Adds ability to enable checkboxes on individual cells.
+- content browser - making path selector not reserve checkbox space
+- CS - Adds ability to set a title in the details view, and specify a details
+  content selector.
+- content browser - fixing package/errata search issues
+- content browser - changing position of path selector
+- content browser - fixing nonenabled repos showing up
+- content browser - a few fixes
+- content browser - fixing 2 issues with grid caching
+- content browser - hooking up back button
+- CS - Adds support for allowing columns to span multiple column widths.
+- CS - Adds back to results button and associated generic event upon click.
+- content browser - fixing error when no errata exist
+- fixing path selector not maintaining selected environments
+- content browser - adding errata search
+- fixing issue with rows having odd characters in their names
+- fixing merge conflict
+- removing console.log statement
+- merge conflcit
+- CS - Updates to deep copy exported object states from the grid.
+- Added server side bindings for cs compare packages and errata calls
+- content browser - adding initial search caching support
+- CS - Exposes export/import functionality to instantiated grid objects.
+- CS - Adds seperated data layer for import/export of states.
+- fixing converge-ui hash
+- merge conflict
+- content browser - initial subgrid support initially just packages
+- routes update
+- jsroutes update
+- merge conflict
+- Added serverside code for package and repo contents
+- content browser - initial pkg pagination support
+- content browser - fixing some mistaken text labels
+- content browser - adding initial package pagination
+- content browser - adding library id to search index for respositories
+- CS - Fixes nesting collapse for multiple children.
+- content browser - having package search return packages
+- merge conflict
+- CS - Clean-up and refactoring.
+- CS - Adds basic footer to grid component.
+- CS - Makes environment selector a more generic feature of the grid.
+- CS - Adds loading screen for switching grid data.
+- CS - Updates to styling and adding hover states to sliding arrows.
+- CS - Adds generic row nesting with colllapse functionality attached to parent
+  rows.
+- CS - Adds hover support and custom display data for cells.
+- CS - Adjustments to sliding states of arrows.  Addition of new environment
+  selector icon.
+- initial package search
+- jsroutes update
+- Added some initial permissions stubs for search controller
+- Added code to render the product and repo search results in a new json
+  structure
+- content browser - adding autocomplete for packages
+- CS - Fix for hiding column.
+- CS - Updates to add first level row nesting support.
+- CS - Additional styling and addition of on hover state for scrolling.
+- Updated stylings and added icons for content search.
+- CS - Fixes up spacing for grids and cells.  Adds left and right sliding of
+  content area with column headers.
+- CS - Applying some base styling.
+- content browse - some style fixes
+- content-browser - initial selection of library environment
+- path selector - making path selector adjust horizontally based on available
+  space
+- Updates as a result of merging master and updating converge-ui.
+- Updates to git left and right arrows showing up only when more than 3
+  environments are present.
+- Adds structure and functionality for scrolling environments left and right in
+  the column headers.
+- CS - Adds the structure and building blocks for allowing environments to be
+  scrolled left to right when they overflow the header.
+- CS - Setting of margins and general spacings for grid and browse boxes.
+- Added smarts to only do the search call if necessary in content_search
+- Added bbq support for environments in the content_search page
+- content browser - adding product information for repos
+- content-browser - initial repo search
+- js routes update
+- content-browser - making browse box support search & autocomplete
+- Added a landing point for Content Search page under Content Management
+- content browser - adding bbq to main search
+- CFB - Wires up basic product search results to grid view to allow viewing of
+  products and marking with an 'x' which environments currently visible a
+  product is in.
+- CFB - Fix to set the line height in path selector and not inherit from parent
+  elements.
+- CFB - Adds some basic styling for cells and support for adding rows with new
+  column paradigm.
+- CFB - Changes the way columns are added to the grid structure and wires up
+  the environment selector to add/remove columns.
+- CFB - Adds support for adding new rows and new columns.
+- CFB - Wires up basic row/column adding within grid view.
+- content browser - product autocomplete and autocomplete list support
+- Added product search + Autocomplete for the content browser
+- content browser - changing return value of products
+- content browser - adding browse box logic, and initial search logic
+- updated js routes
+- environment selector - making return data ordered, and fixing returned name
+- fixing missing pixel
+- changing env selector to use a label instead of an anchor
+- minor path selector improvements and additional interface functions
+- environment selector - more improvements to selector
+- CFB - Adds selection and input elements for browse box as basic layout - no
+  functionality.
+- environment selector - add first environment linkage for selection
+- adding selectability to the path selector
+- CFB - Adds basic layouts for browse box and grid.
+- initial new environment selector
+- Initial content search boilerplate
+
 * Wed Jul 18 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.47-1
 - fixing build issue (msuchy@redhat.com)
 - a2x require /usr/bin/getopt (msuchy@redhat.com)
@@ -4574,3 +4940,4 @@ fi
 
 * Tue Jun 14 2011 Mike McCune <mmccune@redhat.com> 0.1.46-1
 - initial changelog
+

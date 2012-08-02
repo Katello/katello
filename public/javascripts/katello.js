@@ -21,6 +21,7 @@
 
 //Katello global object namespace that all others should be attached to
 var KT = {};
+KT.widget = {};
 
 KT.utils = _.noConflict();
 

@@ -24,6 +24,7 @@ describe SystemTemplate, :katello => true do
   before(:each) do
     disable_org_orchestration
     disable_product_orchestration
+    disable_repo_orchestration
 
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
     @environment = KTEnvironment.create!(:name => 'env_1', :prior => @organization.library.id, :organization => @organization)
