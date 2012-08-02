@@ -276,7 +276,7 @@ class certs::config {
       exec { "add-private-key-to-nss-db":
         command => "pk12util -i '${ssl_build_path}/$fqdn/$qpid_cert_name.pfx' -d '${nss_db_dir}' -w '${certs::params::ssl_pk12_password_file}' -k '${certs::params::nss_db_password_file}' 2>>${katello::params::configure_log_base}/certificates.log",
         path    => "/usr/bin",
-        require => [Exec["create-nss-db"], Exec["generate-pfx-for-nss-db"], File["${katello::params::configure_log_base}"]],
+        require => [Exec["add-broker-cert-to-nss-db"], Exec["generate-pfx-for-nss-db"], File["${katello::params::configure_log_base}"]],
         before => Class["qpid::service"],
         refreshonly => true,
       }
