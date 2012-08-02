@@ -123,7 +123,7 @@ class Api::ChangesetsContentController < Api::ApiController
     render(unless removed_objects.blank?
              { :text => (options[:success] or raise ArgumentError), :status => 200 }
            else
-             { :text => (options[:not_found] or raise ArgumentError), :status => 200 }
+             { :text => (options[:not_found] or raise ArgumentError), :status => 404 }
            end)
   end
 
