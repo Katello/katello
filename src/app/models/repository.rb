@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
 class RepoDisablementValidator < ActiveModel::Validator
   def validate(record)
     if record.redhat? && record.enabled_changed? && (!record.enabled?) && record.promoted?
@@ -211,6 +212,14 @@ class Repository < ActiveRecord::Base
     end if !errata.empty?
   end
 
+  def self.delete_repo_packages repo_pkgs
+    Resources::Pulp::Repository.delete_repo_packages(make_pkg_tuples(repo_pkgs))
+  end
+
+  def self.add_repo_packages repo_pkgs
+    Resources::Pulp::Repository.add_repo_packages(make_pkg_tuples(repo_pkgs))
+  end
+
   def update_errata_index
     # for each of the errata in the repo, unassociate the repo from the errata
     errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
@@ -285,6 +294,17 @@ class Repository < ActiveRecord::Base
     elsif (self.gpg_key_id_was != nil && self.gpg_key_id == nil)
         self.product.refresh_content(self) if self.content.gpgUrl != ''
     end
+  end
+
+
+  def self.make_pkg_tuples repo_pkgs
+    package_tuples = []
+    repo_pkgs.each do |repo, pkgs|
+      pkgs.each do |pack|
+        package_tuples << [[pack.filename,pack.checksum],[repo.pulp_id]]
+      end
+    end
+    package_tuples
   end
 
 end
