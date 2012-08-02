@@ -1,7 +1,6 @@
 class postgres::config {
 
   file {
-
     "${postgres::params::home}/data/postgresql.conf":
       content => template("postgres/postgresql.conf.erb"),
       owner   => $postgres::params::user,
@@ -18,13 +17,12 @@ class postgres::config {
   }
 
   exec { "InitDB":
-    command => $postgres::params::password ? {
-      ""      => "/usr/bin/initdb ${postgres::params::home}//data -E UTF8",
-      #horribale hack
-      default => "echo \"${postgres::params::password}\" > /tmp/ps && /usr/bin/initdb ${postgres::params::home}/data --auth='password' --pwfile=/tmp/ps -E UTF8 ; rm -rf /tmp/ps"
+    command => $postgres::params::password_file ? {
+      "NONE" => "/usr/bin/initdb ${postgres::params::home}/data -E UTF8",
+      default => "/usr/bin/initdb ${postgres::params::home}/data --auth='password' --pwfile=${postgres::params::password_file} -E UTF8"
     },
     user    => $postgres::params::user,
-    creates  => "${postgres::params::home}/data/PG_VERSION",
+    creates => "${postgres::params::home}/data/PG_VERSION",
   }
 
 }

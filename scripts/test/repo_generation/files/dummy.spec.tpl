@@ -7,7 +7,6 @@ License:  GPLv2
 Group:          Internet/Applications
 URL:            http://tstrachota.fedorapeople.org
 Source:         ###NAME###.tar.gz
-#BuildRoot:      %{_topdir}/BUILD/%{name}-%{version}-%{release}
 
 ###REQUIRES###
 
@@ -27,6 +26,3 @@ date +"Package install time: %T %m-%d-%Y" >> /tmp/###NAME###.txt
 
 %files
 /tmp/###NAME###.txt
-
-%clean
-rm -rf %{buildroot}
