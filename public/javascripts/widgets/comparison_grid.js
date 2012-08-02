@@ -100,8 +100,13 @@ KT.comparison_grid = function(){
         },
         update_metadata_row = function(id, current, total){
             var metadata_row = $('.load_row[data-id="' + id + '"]');
-
-            metadata_row.find('span').html(i18n.counts.replace('%C', current).replace('%T', total));
+            
+            if( current === total ){
+                metadata_row.remove();
+                $('#row_header_' + id).remove();
+            } else {
+                metadata_row.find('span').html(i18n.counts.replace('%C', current).replace('%T', total));
+            }
         },
         add_row_header = function(id, name, row_level, has_children, parent_id) {
             var child_list;
