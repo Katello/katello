@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -89,6 +89,21 @@ cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
 
 %changelog
+* Thu Aug 02 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
+- rb19 - fixing typo in requires (lzap+git@redhat.com)
+- buildroot and %%clean section is not needed (msuchy@redhat.com)
+- rb19 - correcting requires for fedora guidelines (lzap+git@redhat.com)
+- rb19 - adding missing require (lzap+git@redhat.com)
+- rb19 - fixing collate (lzap+git@redhat.com)
+- rb19 - adding puppet bundler check (lzap+git@redhat.com)
+- rb19 - one more UTF8 fix (lzap+git@redhat.com)
+- rb19 - setting collate (lzap+git@redhat.com)
+- rb19 - invalid char (lzap+git@redhat.com)
+- rb19 - warning msg (lzap+git@redhat.com)
+- rb19 - adding check (lzap+git@redhat.com)
+- rb19 - extra comma (lzap+git@redhat.com)
+- Bumping package versions for 1.1. (msuchy@redhat.com)
+
 * Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
 - bump up version to 1.0 (msuchy@redhat.com)
 
