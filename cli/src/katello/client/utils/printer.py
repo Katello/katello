@@ -99,7 +99,8 @@ class VerboseStrategy(PrinterStrategy):
         :type items: list of dicts
         :param items: data to be printed, list of items
         """
-        self._print_header(heading)
+        if heading is not None:
+            self._print_header(heading)
         for item in items:
             self._print_item(item, columns)
             print
@@ -164,6 +165,8 @@ class GrepStrategy(PrinterStrategy):
         """
         :type delimiter: string
         :param delimiter: delimiter for dividing the grid columns
+        :type noheading: boolean
+        :param noheading: to suppress headings in the output
         """
         self.__delim = delimiter if delimiter else ""
 
@@ -179,7 +182,8 @@ class GrepStrategy(PrinterStrategy):
         :param items: data to be printed, list of items
         """
         column_widths = self._calc_column_widths(items, columns)
-        self._print_header(heading, columns, column_widths)
+        if heading is not None:
+            self._print_header(heading, columns, column_widths)
         for item in items:
             self._print_item(item, columns, column_widths)
             print
@@ -276,7 +280,7 @@ class Printer:
     Unified interface for printing data in CLI.
     """
 
-    def __init__(self, strategy=None):
+    def __init__(self, strategy=None, noheading=False):
         """
         :type strategy: PrinterStrategy
         :param strategy: strategy that is used for formatting the output.
@@ -284,6 +288,7 @@ class Printer:
         self.__printer_strategy = strategy
         self.__columns = []
         self.__heading = ""
+        self.__nohead = noheading
 
     def set_header(self, heading):
         """
@@ -293,6 +298,15 @@ class Printer:
         :type heading: string
         """
         self.__heading = heading
+
+    def get_header(self):
+        """
+        Returns header or None when heading was disabled with an option.
+        """
+        if self.__nohead:
+            return None
+        else:
+            return self.__heading
 
     def set_strategy(self, strategy):
         """
@@ -328,7 +342,7 @@ class Printer:
         """
         if not self.__printer_strategy:
             self.set_strategy(VerboseStrategy())
-        self.__printer_strategy.print_item(self.__heading, self.__filtered_columns(), item)
+        self.__printer_strategy.print_item(self.get_header(), self.__filtered_columns(), item)
 
     def print_items(self, items):
         """
@@ -339,7 +353,7 @@ class Printer:
         """
         if not self.__printer_strategy:
             self.set_strategy(GrepStrategy())
-        self.__printer_strategy.print_items(self.__heading, self.__filtered_columns(), items)
+        self.__printer_strategy.print_items(self.get_header(), self.__filtered_columns(), items)
 
     def __attr_to_name(self, attr_name):
         """
