@@ -16,6 +16,9 @@ require 'digest/sha2'
 # This module contains functions for hashing and storing passwords with
 # SHA512 with 64 characters long random salt. It also includes several other
 # password-related utility functions.
+#
+# Please note this module is required either from Rails and from Puppet.
+#
 module Password
 
   # Generates a new salt and rehashes the password

@@ -48,20 +48,21 @@ KT.content_search = function(paths_in){
                        cols:{
                            title : {id:'title', name:i18n.title, span: "2"},
                            type  : {id:'type', name:i18n.type},
-                           severity : {id:'severity', name:i18n.severity},
-                           issued : {id:'issued', name:i18n.issued}
+                           severity : {id:'severity', name:i18n.severity}
                          },
                         selector:['repo_packages', 'repo_errata']
         },
         compare_packages:{id:'compare_packages',
                            name:i18n.packages,
                            url:KT.routes.repo_compare_packages_content_search_index_path(),
-                           selector:['compare_packages', 'compare_errata']
+                           selector:['compare_packages', 'compare_errata'],
+                           modes: true
         },
         compare_errata:{id:'compare_errata',
                        name:i18n.errata,
                        url:KT.routes.repo_compare_errata_content_search_index_path(),
-                       selector:['compare_packages', 'compare_errata']
+                       selector:['compare_packages', 'compare_errata'],
+                       modes: true
         }
     },
     search_modes = [{id:'all', name:i18n.all},
@@ -69,8 +70,8 @@ KT.content_search = function(paths_in){
                     {id:'unique', name:i18n.unique}
                    ],
     search_pages = {errata:{url:KT.routes.errata_content_search_index_path(), modes:true},
-                    repos:{url:KT.routes.repos_content_search_index_path(), comparable:true},
-                    products:{url:KT.routes.products_content_search_index_path()},
+                    repos:{url:KT.routes.repos_content_search_index_path(), modes:true, comparable:true},
+                    products:{url:KT.routes.products_content_search_index_path(), modes:true},
                     packages:{url:KT.routes.packages_content_search_index_path(), modes:true}
     },
     more_results_urls = {
@@ -114,16 +115,38 @@ KT.content_search = function(paths_in){
         }
     },
     get_initial_environments = function(){
-        var initial_envs = $.bbq.getState('environments');
-        if(!initial_envs && paths[0]){
-            initial_envs = [paths[0][0]] ;
+        var env_ids = get_initial_environment_ids(),
+            to_ret = {};
+
+        KT.utils.each(paths, function(path){
+           KT.utils.each(path, function(env){
+              if(KT.utils.include(env_ids, env.id.toString())){
+                  to_ret[env.id] = env;
+              }
+           });
+        });
+        to_ret = KT.utils.values(to_ret);
+
+        return to_ret;
+    },
+    get_initial_environment_ids = function(){
+        var env_ids = $.bbq.getState('envs');
+        if(!env_ids && paths[0]){
+            KT.utils.each(paths[0], function(item){
+               if(!env_ids && item.select){
+                   env_ids = [item.id.toString()];
+               }
+            });
         }
-        return initial_envs;
+        else if(!env_ids) {
+            return [];
+        }
+        return env_ids;
     },
     search_initiated = function(e, search_params){ //'go' button was clicked
         var old_params = $.bbq.getState('search');
         KT.content_search_cache.clear_state();
-        $.bbq.pushState({search:search_params, subgrid:{}, environments:get_initial_environments()}); //Clear the subgrid
+        $.bbq.pushState({search:search_params, subgrid:{}, envs:get_initial_environment_ids()}); //Clear the subgrid
         search_params =  $.bbq.getState("search"); //refresh params, to get trim empty entries
         //A search was forced, but if everything was equal, nothing would happen, so force it
         if(utils.isEqual(old_params, search_params)){
@@ -164,6 +187,7 @@ KT.content_search = function(paths_in){
           data: data_out,
           success: function(data){
             $(document).trigger('show_more.comparison_grid', [data.rows]);
+            close_tipsy();
           }
         })
       });
@@ -194,20 +218,25 @@ KT.content_search = function(paths_in){
         }
     },
     main_search = function(search_params){
-        if (search_params.mode === undefined){
-            search_params.mode = search_modes[0].id;
-        }
+        var options = {};
+        close_tipsy();
 
-        search_params.environments = []
-        utils.each(get_initial_environments(), function(item){
-            search_params.environments.push(item.id);
-        });
-
-
+        options.show_compare_btn = search_pages[search_params.content_type].comparable;
         if (cache.get_state(search_params)){
             comparison_grid.import_data(cache.get_state(search_params));
+            comparison_grid.set_mode("results", options);
         }
         else {
+
+            if (search_params.mode === undefined){
+                search_params.mode = search_modes[0].id;
+            }
+
+            search_params.environments = [];
+            utils.each(get_initial_environments(), function(item){
+                search_params.environments.push(item.id);
+            });
+
             $(document).trigger('loading.comparison_grid');
             $.ajax({
                 type: 'POST',
@@ -215,11 +244,9 @@ KT.content_search = function(paths_in){
                 url: search_pages[search_params.content_type].url,
                 data: JSON.stringify(search_params),
                 success: function(data){
-                    var options = {};
-                    options.show_compare_btn = search_pages[search_params.content_type].comparable;
                     if (search_pages[search_params.content_type].modes){
                         options.right_selector = true;
-                        comparison_grid.set_right_select(search_modes, search_params.mode);
+                        comparison_grid.set_right_select(search_modes, search_params.mode || search_modes.first.id);
                     }
 
                     comparison_grid.set_columns(env_select.get_paths());
@@ -235,7 +262,7 @@ KT.content_search = function(paths_in){
     subgrid_search = function(search_params){
         var type = search_params.subgrid.type,
             subgrid = subgrids[search_params.subgrid.type];
-
+        close_tipsy();
         comparison_grid.controls.comparison.hide();
         $(document).trigger('loading.comparison_grid');
         $.ajax({
@@ -245,8 +272,14 @@ KT.content_search = function(paths_in){
             cache: false,
             data: search_params.subgrid,
             success: function(data){
+                var options = {left_selector:true};
+                if(subgrid.modes){
+                    options.right_selector = true;
+                    comparison_grid.set_right_select(search_modes, search_params.subgrid.mode);
+                }
+
                 var cols = data.cols ? data.cols : subgrid.cols;
-                comparison_grid.set_mode("details", {left_selector:true});
+                comparison_grid.set_mode("details", options);
                 comparison_grid.set_columns(cols);
                 comparison_grid.show_columns(cols);
                 comparison_grid.set_title(data.name);
@@ -254,6 +287,9 @@ KT.content_search = function(paths_in){
                 draw_grid(data.rows);
             }
         });
+    },
+    close_tipsy = function(){
+      $(document).trigger("close.tipsy");
     },
     draw_grid = function(data){
         comparison_grid.set_rows(data, true);
@@ -288,16 +324,19 @@ KT.content_search = function(paths_in){
         //submit event
         $(document).bind(env_select.get_submit_event(), function(event, environments) {
             var search = $.bbq.getState('search');
-            if (envs_changed && search.mode && search.mode !== 'all'){
+            if (envs_changed && search && search.mode && search.mode !== 'all'){
                 search_initiated(undefined, search);
                 envs_changed = false;
-            } 
+            }
+            cache.save_state(comparison_grid, search);
         });
         //select event
         $(document).bind(env_select.get_select_event(), function(event){
-            var environments = env_select.get_selected();
+            var environments = env_select.get_selected(),
+                env_ids = KT.utils.keys(environments);
+
             comparison_grid.show_columns(environments);
-            $.bbq.pushState({environments:environments});
+            $.bbq.pushState({envs:env_ids});
             env_select.reposition();
             envs_changed = true;
         });
@@ -340,6 +379,8 @@ KT.content_search = function(paths_in){
                 return $(this).find('.hidden-text').html();
             }
         });
+        KT.tipsy.custom.url_tooltip($('.tipsify-errata'), 'w');
+
     },
     subgrid_selector_items = function(type) {
         var to_ret = [],
@@ -353,8 +394,9 @@ KT.content_search = function(paths_in){
     init();
     return {
         change_subgrid_type:change_subgrid_type,
-        remove_subgrid: remove_subgrid
-        //env_select: function(){return env_select}
+        remove_subgrid: remove_subgrid,
+        get_initial_environments: get_initial_environments,
+        get_initial_environment_ids:get_initial_environment_ids
     }
 };
 
@@ -367,7 +409,7 @@ KT.content_search_cache = (function(){
         saved_data = undefined;
 
     var save_state = function(grid, search){
-        saved_search = search;
+        saved_search = $.extend(true, {}, search);
         saved_data = grid.export_data();
     },
     get_state = function(search){

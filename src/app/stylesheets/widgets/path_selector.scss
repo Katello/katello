@@ -1,5 +1,4 @@
-@import "converge-ui/base";
-@import "converge-ui/colors";
+@import "katello_base";
 
 //temporarily putting this here to speed development
 //TODO Move to env_select.scss
@@ -13,7 +12,7 @@ $widget-background-color: #F9F8F8;
 
 //If the selector is not inline, we add a background color
 .hover_selector {
-  background: $white_color;
+  background: #FFF;
   border-color: $widget-border-color;
   border-width: 1px;
   border-style: solid;
@@ -73,7 +72,7 @@ $widget-background-color: #F9F8F8;
           }
 
           &:hover {
-            color: $white_color;
+            color: #FFF;
             background: $listhover_color !important;
           }
           &:after {
@@ -112,7 +111,7 @@ $widget-background-color: #F9F8F8;
 
     &:hover {
       background: $listhover_color !important;
-      color: $white_color;
+      color: #FFF;
       //@include _text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
       &:after { border-left-color: $listhover_color !important; }
     }
