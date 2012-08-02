@@ -151,11 +151,14 @@ class PromotionChangeset < Changeset
         end
       end
     end
+    pkg_ids = []
 
     pkgs_promote.each_pair do |repo, pkgs|
-      repo.add_packages(pkgs)
-      Glue::Pulp::Package.index_packages(pkgs)
+      pkg_ids.concat(pkgs)
+      pkgs_promote[repo] = Glue::Pulp::Package.id_search(pkgs)
     end
+    Repository.add_repo_packages(pkgs_promote)
+    Glue::Pulp::Package.index_packages(pkg_ids)
   end
 
 
