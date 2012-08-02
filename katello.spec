@@ -25,7 +25,6 @@ Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
 Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:        %{name}-common
 Requires:        %{name}-glue-pulp
@@ -214,7 +213,6 @@ ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
 %install
-rm -rf %{buildroot}
 #prepare dir structure
 install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
@@ -311,9 +309,6 @@ chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 
 # install man page
 install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
-
-%clean
-rm -rf %{buildroot}
 
 %post common
 #Add /etc/rc*.d links for the script
