@@ -4,7 +4,7 @@ KT.env_select_scroll = function(options) {
 
 
     var anchor_padding = 20, //amount of padding each anchor has
-        min_size = 30,
+        min_size = 40,
         min_size_selected = 75,
         px_per_sec = 400,
         freq = 20;
@@ -14,18 +14,18 @@ KT.env_select_scroll = function(options) {
             element = ".jbreadcrumb";
         }
 
-        $(element).each(function() {
+        $(element).find('ul').each(function() {
             var trail = $(this),
                 cont_width = $(this).width(),
                 combined_width = 0,
-                anchors = trail.find("a"),
+                anchors = trail.find("a, label"),
                 my_min_size_selected = min_size_selected;
-
             anchors.unbind("mouseout").unbind("mouseover").width('auto');
             
             anchors.each(function() {
                 combined_width += $(this).width() + anchor_padding;
             });
+
 
             //if nothing is selected in this path, we won't have a special node that is bigger
             //   so reset min-size_selected to normal min_size for calculations
@@ -33,14 +33,14 @@ KT.env_select_scroll = function(options) {
                 my_min_size_selected = min_size;
             }
 
+
             //if we don't actually need more room, then don't add the scrolling
             if (combined_width < cont_width) {
                 return true;
             }
 
 
-            
-            anchors.each(function() {
+            anchors.each(function(index) {
                 var anchor = $(this),
                     out_interval = undefined,
                     over_interval= undefined,
@@ -66,7 +66,6 @@ KT.env_select_scroll = function(options) {
 
                 //reset the width to contracted state
                 $(this).width(my_min_size);
-
                 
                 var total_time = (total_width - min_size)/px_per_sec,  //total time of animation
                     num_iterations = total_time*1000/freq,  //number of 'frames'
@@ -98,7 +97,7 @@ KT.env_select_scroll = function(options) {
                         var width = anchor.width();
                         if (width < total_width) {
                             clear_out();
-                            anchor.width(width+chunk_size);
+                            anchor.width((width+chunk_size));
                         }
                         else {
                             clear_over();
@@ -112,6 +111,7 @@ KT.env_select_scroll = function(options) {
                     }
 
                     clear_over();
+
 
                     out_interval = setInterval(function() {
                         var width = anchor.width();

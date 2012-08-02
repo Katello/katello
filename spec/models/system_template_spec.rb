@@ -21,6 +21,7 @@ describe SystemTemplate, :katello => true do
   before(:each) do
     disable_org_orchestration
     disable_product_orchestration
+    disable_repo_orchestration
 
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
     @environment = KTEnvironment.create!(:name => 'env_1', :prior => @organization.library.id, :organization => @organization)
@@ -357,16 +358,6 @@ describe SystemTemplate, :katello => true do
     end
 
     describe "#add_package" do
-      it "should accept nvrea name" do
-        @tpl1.packages.should_receive(:create!).with(nvrea_package_params)
-        @tpl1.add_package(nvrea)
-      end
-
-      it "should accept nvre name" do
-        @tpl1.packages.should_receive(:create!).with(nvre_package_params)
-        @tpl1.add_package(nvre)
-      end
-
       it "should accept plain name" do
         @tpl1.packages.should_receive(:create!).with(plain_name_package_params)
         @tpl1.add_package(plain_name)
@@ -375,16 +366,6 @@ describe SystemTemplate, :katello => true do
 
     describe "#remove_package" do
       before { @tpl1.packages.stub(:delete) }
-      it "should accept nvrea name" do
-        @tpl1.packages.should_receive(:find).with(:first, :conditions => nvrea_package_params)
-        @tpl1.remove_package(nvrea)
-      end
-
-      it "should accept nvre name" do
-        @tpl1.packages.should_receive(:find).with(:first, :conditions => nvre_package_params)
-        @tpl1.remove_package(nvre)
-      end
-
       it "should accept plain name" do
         @tpl1.packages.should_receive(:find).with(:first, :conditions => plain_name_package_params)
         @tpl1.remove_package(plain_name)
