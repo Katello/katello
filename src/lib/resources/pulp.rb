@@ -237,6 +237,10 @@ module Resources
           body = put(Repository.repository_path + repo_id +"/schedules/sync/", JSON.generate(:schedule => schedule), self.default_headers).body
         end
 
+        def update_publish(repo_id, publish=true)
+          body = post(Repository.repository_path + repo_id +"/update_publish/", JSON.generate(:state => publish), self.default_headers).body
+        end
+
         def delete_schedule(repo_id)
           body = self.delete(Repository.repository_path + repo_id +"/schedules/sync/", self.default_headers).body
         end
