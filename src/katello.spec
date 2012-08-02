@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -460,6 +460,22 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Aug 02 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
+- buildroot and %%clean section is not needed (msuchy@redhat.com)
+- 844796 - For async manifest import, there were double-render errors while the
+  progress was being checked from javascript. In addition, notices were not
+  being displayed after a very quick manifest import. (thomasmckay@redhat.com)
+- build katello-headpin and katello-headpin-all from the same src.rpm as
+  katello (msuchy@redhat.com)
+- rb19 - encoding fix turned off for 1.9 (lzap+git@redhat.com)
+- rb19 - removing exact versions from Gemfile (lzap+git@redhat.com)
+- rb19 - and one more UTF8 encoding fix (lzap+git@redhat.com)
+- puppet - better wait code for mongod (lzap+git@redhat.com)
+- Bumping package versions for 1.1. (msuchy@redhat.com)
+- puppet - moving lib/util into common subpackage (lzap+git@redhat.com)
+- crosslink - links from system and activation key subscriptions
+  (thomasmckay@redhat.com)
+
 * Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
 - bump up version to 1.0 (msuchy@redhat.com)
 
