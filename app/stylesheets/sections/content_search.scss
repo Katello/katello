@@ -22,11 +22,12 @@ $comparison_grid_footer-height: 45px;
 
 $environment_selector-width: 97px;
 
-$widget-border-color: #C9C9C9;
-$widget-background-color: #F9F8F8;
-
-$comparison_grid-border-color: #D7D7D7;
-$comparison_grid_column_header-background: #FFF;
+$comparison_grid-border-color:              #D7D7D7;
+$comparison_grid_column_header-background:  #FFFFFF;
+$grid_row_level_2-color:                    #D4EEFC;
+$grid_cell_hover-background-color:          #585E64;
+$grid_cell_hover_link-color:                #40D7FD;
+@mixin grid_row_level_1-color { @include background-image(linear-gradient(#91CFED, #77C4E9)); }
 
 
 .no_border { border: none !important; }
@@ -81,7 +82,7 @@ $comparison_grid_column_header-background: #FFF;
   margin-right: 12px;
   margin-top: $browse_box-margin-top;
   @include border-radius(3px);
-  @include background-image(linear-gradient(top, #F9F9F9, #E4E4E4));
+  @include widget-background-color;
 
   .help-icon {
     background: $details_icon_grey;
@@ -139,14 +140,15 @@ $comparison_grid_column_header-background: #FFF;
         border-color: $widget-border-color; 
         margin-left: 6px;
         @include box-shadow(inset 0 0 1px rgba(0, 0, 0, 0.05));
+        padding: 4px;
+
+        &:focus { padding: 4px }
       }
 
       div:nth-child(2) {
         border: 1px solid $comparison_grid-border-color;
         @include border-radius(3px 3px 0 0);
         @include background-image(linear-gradient(#F7F7F7, #F9F9F9));
-        background: #FFF;
-
       }
 
       div {
@@ -188,7 +190,7 @@ $comparison_grid_column_header-background: #FFF;
   margin-top: $comparison_grid-margin-top;
   position: relative;
   @include border-radius(3px);
-  @include background-image(linear-gradient(top, #F9F9F9, #E4E4E4));
+  @include widget-background-color;
   font-family: $screenfont;
 
   #grid_loading_screen {
@@ -233,7 +235,7 @@ $comparison_grid_column_header-background: #FFF;
       }
 
       .button { margin: 0 0 0 8px; }
-      label { font-size: 12px; margin-right: 6px; font-weight: normal; }
+      label { font-size: 12px; margin-right: 6px; font-weight: normal; float: left; margin-top: 2px; }
     }
 
     aside {
@@ -408,11 +410,11 @@ $comparison_grid_column_header-background: #FFF;
 
     .grid_row_level_1 {
       font-size: 11px;
-      @include background(linear-gradient(#91CFED, #77C4E9));
+      @include grid_row_level_1-color;
     }
 
     .grid_row_level_2 {
-      background: #D4EEFC;
+      background: $grid_row_level_2-color;
       font-size: 11px;
     }
 
@@ -454,8 +456,8 @@ $comparison_grid_column_header-background: #FFF;
 
         .load_row {
           background-color: $widget-background-color;
-          height: $comparison_grid_row-height - 10;
-          padding: 10px 0 0 10px;
+          height: $comparison_grid_row-height - 6;
+          padding: 6px 0 0 10px;
 
           span { margin-left: 10px; }
           a { margin-left: 5px; }
@@ -492,7 +494,7 @@ $comparison_grid_column_header-background: #FFF;
           text-align: center;
           color: #FFF;
           padding: 0 5px;
-          background: #585E64;
+          background: $grid_cell_hover-background-color;
           position: absolute;
           left: 0;
           top: 0;
@@ -506,7 +508,7 @@ $comparison_grid_column_header-background: #FFF;
             line-height: 32px !important;
           }
 
-          a { color: #40D7FD; }
+          a { color: $grid_cell_hover_link-color; }
 
           &[data-span="1"] { width: $comparison_grid_column_1-width; }
           &[data-span="2"] { width: $comparison_grid_column_2-width; }
@@ -543,15 +545,15 @@ $comparison_grid_column_header-background: #FFF;
 
   }
 
-  .spinner {
+  .large_spinner {
     margin: 0 auto;
-    height: 16px;
-    width: 16px;
-    display: inline-block;
+    margin-top: 20%;
+    height: 32px;
+    width: 32px;
     position: relative;
     z-index: 1000;
     background: $spinner_img;
-    float: left;
+    background-size: 100%;
   }
 
   .hidden {
@@ -559,7 +561,7 @@ $comparison_grid_column_header-background: #FFF;
   }
 }
 
-.down_arrow-icon-black { background-position-y: -18px; }
+.down_arrow-icon-black { background-position: -529px -18px; }
 .button { margin: 0; }
 .button:active { padding: 4px 8px; }
 .one-line-ellipsis { display: inline-block; }
