@@ -17,8 +17,6 @@ KT.subscription = (function() {
 
     // Data that is unchanged from previous will come in as ""
     updateStatus = function(data) {
-        console.log("XYZ: updateStatus() " + data)
-
         if (data !== "" && $('.import_progress_message')) {
             $(".import_progress_message").html(i18n.import_in_progress(data["state"]));
         }
@@ -54,6 +52,7 @@ KT.subscription = (function() {
             }, updateStatus);
         }
 
+        notices.checkNotices();
     },
     initSubscription = function initSubscription() {
         startUpdater();

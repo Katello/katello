@@ -1,0 +1,105 @@
+%article#browse_box
+  %header
+    %h2
+      = _("Browse")
+    %aside
+  %section#filters
+    %form
+      %fieldset.primary#content_selector
+        = label_tag :content, _("Content")
+        %div.no_border
+          = select_tag :content, options_for_select(content_types)
+      %fieldset.primary#products_selector
+        = label_tag :products, _("Products")
+        #product_autocomplete_list{'data-url'=>auto_complete_products_path}
+          = radio_button_tag :products, :auto_complete, true
+          %input.hidden_selection{:type=>:hidden}
+          = text_field_tag :product_auto_complete, "", :class => "auto_complete_input", :placeholder=>_('Auto-complete Product')
+          %a.button{ :id => "add_product" }
+            = _("Add")
+          %ul
+            %li.all
+              = _("All Products")
+      %fieldset.primary#repos_selector
+        = label_tag :repos, _("Repos")
+        #repo_search
+          = radio_button_tag :repos, :search_radio, true
+          = text_field_tag :repo_search_input, nil, :placeholder=>_('Search repositories')
+        %div#repo_autocomplete_list{'data-url'=>auto_complete_library_repositories_path}
+          = radio_button_tag :repos, :auto_complete_radio, true
+          %input.hidden_selection{:type=>:hidden}
+          = text_field_tag :repo_auto_complete, nil, :class => "auto_complete_input", :placeholder=>_('Auto-complete repository')
+          %input.button{:type=>:button, :value=>_("Add"), :id => "add_repo"}
+          %ul
+            %li.all
+              = _("All Repos")
+      %fieldset.primary#packages_selector
+        = label_tag :packages, _("Packages")
+        #package_search
+          = radio_button_tag :packages, :search_packages, true
+          = text_field_tag :search, nil, :placeholder=>_('Search packages'), :size=>19
+          %span.help-icon
+            %span.hidden-text.hidden
+              .la.content-tipsy
+                = _('Example Searches:')
+                %div
+                %ul
+                  %li
+                    =_('Searching for an exact package:')
+                    .example
+                      kernel-2.6.32-220.2.1.el6.x86_64
+                  %li
+                    =_('Searching starting with kernel:')
+                    .example
+                      kernel*
+                  %li
+                    =_('Searching by exact name:')
+                    .example
+                      name:kernel
+                  %li
+                    =_('Searching by name and arch:')
+                    .example
+                      name:kernel AND arch:x86_64
+                  %li
+                    = _('Search for all packages with a specific requires:')
+                    .example
+                      requires:sendmail
+        %div#package_autocomplete_list{'data-url'=>auto_complete_nvrea_library_packages_path}
+          = radio_button_tag :packages, :auto_complete_packages, true
+          %input.hidden_selection{:type=>:hidden}
+          = text_field_tag :packages_auto_complete, nil, :class => "auto_complete_input", :placeholder=>_('Auto-complete package NVREA')
+          %input.button{:type=>:button, :value=>_("Add"), :id => "add_package"}
+          %ul
+            %li.all
+              = _("All Packages")
+      %fieldset.primary#errata_selector
+        = label_tag :errata, _("Errata")
+        #errata_search
+          = radio_button_tag :errata, :search, true
+          = text_field_tag :search, '', :size=>19, :placeholder=>_('Search Errata')
+          %span.help-icon
+            %span.hidden-text.hidden
+              .la.content-tipsy
+                = _('Example Searches:')
+                %div
+                %ul
+                  %li
+                    =_('Searching for an exact errata:')
+                    .example
+                      RHSA-2010:0858
+                  %li
+                    =_('Searching by type (bugfix, security, enhancement allowed):')
+                    .example
+                      type:security
+                  %li
+                    =_('Searching by type (critical, important, moderate, low allowed):')
+                    .example
+                      severity:critical
+                  %li
+                    = _('Search for kernel in the title:')
+                    .example
+                      title:*kernel*
+
+
+
+      %input#browse_button.fr.button{:type=>'submit', :value=>_('Go')}
