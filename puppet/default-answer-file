@@ -1,4 +1,3 @@
-
 # Path of the answer file.
 answer_file =
 
@@ -46,8 +45,7 @@ candlepin_db_password = candlepin
 # Candlepin database name
 candlepin_db_name = candlepin
 
-
-# Deployment Type
+# Deployment type (one of "katello", "headpin", "cfse", "sam")
 deployment = katello
 
 # Non-interactive installer mode
@@ -86,13 +84,13 @@ ssl_ca_password_file = /etc/katello/ssl_ca_password-file
 # Candlepin CA password file path
 candlepin_ca_password_file = /etc/katello/candlepin_ca_password-file
 
-# Keystore password file path
+# Keystore password file path for Candlepin
 keystore_password_file = /etc/katello/keystore_password-file
 
-# nss db password file path
+# NSS db password file path
 nss_db_password_file = /etc/katello/nss_db_password-file
 
-# nss db path
+# NSS database path
 nss_db_dir = /etc/pki/katello/nssdb
 
 # PKCS12 password file path
@@ -110,7 +108,7 @@ ldap_port = 389
 # LDAP server type (:posix, :active_directory, :free_ipa)
 ldap_server_type = :posix
 
-# encryption method used in communication with LDAP server (<empty>, start_tls)
+# Encryption method used in communication with LDAP server (<empty>, start_tls)
 ldap_encryption = 
 
 # Base DN for users accounts
@@ -122,12 +120,41 @@ ldap_groups_basedn = ou=Groups,dc=company,dc=com
 # Use LDAP for roles membership definition (true, false)
 ldap_roles = false
 
-# allow anonymous queries (true, false) for AD or FreeIPA
+# Allow anonymous queries (true, false) for AD or FreeIPA
 ldap_anon_queries = false
 
-# service user & pass for non-anon queries (IPA, AD)
+# Service username for non-anon queries (IPA, AD)
 ldap_service_user =
+
+# Service password for non-anon queries (IPA, AD)
 ldap_service_pass =
 
-# domain for AD LDAP queries
+# Domain for AD LDAP queries
 ldap_ad_domain =
+
+# ElasticSearch ES_MIN_MEM java heap setting
+es_min_mem = 256m
+
+# ElasticSearch ES_MAX_MEM java heap setting
+es_max_mem = 256m
+
+# PostgreSQL superuser password (NONE for no password)
+psql_password_file = NONE
+
+# OAuth token file
+oauth_token_file = /etc/katello/oauth_token-file
+
+# Pulp user password file
+pulp_user_password_file = /etc/katello/pulp_user_password-file
+
+# Set to 'YES' to erase all databases.
+# WARNING: This is dangerous option! Only value of 'YES' (uppercase)
+# triggers the action. (This value is not remembered in
+# katello-configure.conf).
+reset_data = NONE
+
+# Set to 'YES' to erase RPM packages from Pulp.
+# Erases downloaded RPM packages from /var/lib/pulp/packages.
+# Only value of 'YES' (uppercase) triggers the action. (This value 
+# is not remembered in katello-configure.conf).
+reset_cache = NONE

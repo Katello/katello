@@ -248,14 +248,17 @@ class Changeset < ActiveRecord::Base
 
   def find_package_data(product, name_or_nvre)
     package_data = Katello::PackageUtils.parse_nvrea_nvre(name_or_nvre)
-    packs        = if package_data
-                     product.find_packages_by_nvre(env_to_verify_on_add_content,
-                                                   package_data[:name], package_data[:version],
-                                                   package_data[:release], package_data[:epoch])
-                   else
-                     Katello::PackageUtils::find_latest_packages(
-                         product.find_packages_by_name(env_to_verify_on_add_content, name_or_nvre))
-                   end
+
+    if package_data
+      packs = product.find_packages_by_nvre(env_to_verify_on_add_content,
+                                             package_data[:name], package_data[:version],
+                                             package_data[:release], package_data[:epoch])
+    end
+
+    if packs.empty? || !package_data
+       packs = Katello::PackageUtils::find_latest_packages(
+                  product.find_packages_by_name(env_to_verify_on_add_content, name_or_nvre))
+    end
 
     packs.first.with_indifferent_access
   end
