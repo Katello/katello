@@ -13,10 +13,13 @@ Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       puppet >= 2.6.6
-Requires:       coreutils shadow-utils wget
+Requires:       coreutils
+Requires:       wget
 Requires:       katello-certs-tools
-Requires:       nss-tools openssl
+Requires:       nss-tool
+Requires:       openssl
 Requires:       policycoreutils-python
+Requires:       initscripts
 Requires:       rubygem(bundler)
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
 BuildRequires:  findutils puppet >= 2.6.6
