@@ -39,7 +39,7 @@ class GpgKey < ActiveRecord::Base
 
   belongs_to :organization, :inverse_of => :gpg_keys
 
-  validates :name, :katello_name_format => true
+  validates :name, :katello_name_format => true, :presence => true
   validates :content, :presence => true, :content => true
   validates_presence_of :organization
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")

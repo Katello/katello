@@ -280,6 +280,11 @@ module ApplicationHelper
     return link.respond_to?(:html_safe) ? link.html_safe : link
   end
 
+  def kt_form_for(object, options = {}, &block)
+    options[:builder] = KatelloFormBuilder
+    form_for(object, options, &block)
+  end
+
   # If no provider_id is specified, it is assumed to be a Red Hat subscription and the link returned
   # goes to the subscriptions page. Alternatively, if the distinction between the Red Hat provider and
   # a custom provider is important, pass in the provider_id and the current org.
