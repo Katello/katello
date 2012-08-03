@@ -9,6 +9,7 @@ Contents:
     cli_devel_basics
     command_model
     documenting
+    cli_generator
     lib
    
 
