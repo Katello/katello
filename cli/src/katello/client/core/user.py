@@ -68,6 +68,8 @@ class Create(UserAction):
                                help=_("user's default organization name"))
         parser.add_option('--default_environment', dest='default_environment',
                                help=_("user's default environment name"))
+        parser.add_option('--default_locale', dest='default_locale',
+                               help=_("user's default locale"))
 
     def check_options(self, validator):
         validator.require(('username', 'password', 'email'))
@@ -80,13 +82,14 @@ class Create(UserAction):
         disabled = self.get_option('disabled')
         default_organization = self.get_option('default_organization')
         default_environment = self.get_option('default_environment')
+        default_locale = self.get_option('default_locale')
 
         if default_environment is not None:
             environment = get_environment(default_organization, default_environment)
         else:
             environment = None
 
-        user = self.api.create(username, password, email, disabled, environment)
+        user = self.api.create(username, password, email, disabled, environment, default_locale)
         test_record(user,
             _("Successfully created user [ %s ]") % username,
             _("Could not create user [ %s ]") % username

@@ -20,11 +20,15 @@ class UserAPI(KatelloAPI):
     """
     Connection class to access User Data
     """
-    def create(self, name, pw, email, disabled, default_environment):
+    def create(self, name, pw, email, disabled, default_environment, default_locale=None):
         userdata = {"username": name,
                     "password": pw,
                     "email": email,
                     "disabled": disabled}
+
+        if default_locale is not None:
+            userdata["default_locale"] = default_locale
+
         if default_environment is not None:
             userdata.update(default_environment_id=default_environment['id'])
 
