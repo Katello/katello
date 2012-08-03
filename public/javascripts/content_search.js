@@ -485,6 +485,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
 
        ac_obj = KT.auto_complete_box(
            {values:ac_container.data('url'),
+            require_select: true,
             input: ac_container.find('input:text'),
             add_btn: ac_container.find('.button'),
             add_text: i18n.add,
