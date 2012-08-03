@@ -141,7 +141,13 @@ module Glue::Pulp::Repo
 
     if self.is_cloned_in?(to_env)
       #repo is already cloned, so lets just re-sync it from its parent
-      return self.get_clone(to_env).sync
+      clone = self.get_clone(to_env)
+
+      # enable the repo, if it is currently disabled.  it is possible for the repo to be
+      # disabled, if the user deleted it from the middle of an environment path
+      clone.enable_repo
+
+      return clone.sync
     else
       #repo is not in the next environment yet, we have to clone it there
       key = EnvironmentProduct.find_or_create(to_env, self.product)
@@ -192,6 +198,24 @@ module Glue::Pulp::Repo
     found = repos_map[self.pulp_id]
     prepopulate(found) if found
     !found.nil?
+  end
+
+  def enable_repo
+    if !self.enabled
+      # publish and enable the repo
+      Resources::Pulp::Repository.update_publish(self.pulp_id, true)
+      self.enabled = true
+      self.save!
+    end
+  end
+
+  def disable_repo
+    if self.enabled
+      # unpublish and disable the repo
+      Resources::Pulp::Repository.update_publish(self.pulp_id, false)
+      self.enabled = false
+      self.save!
+    end
   end
 
   def destroy_repo
