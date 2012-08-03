@@ -238,7 +238,7 @@ module Glue::Candlepin::Consumer
     end
 
     def arch
-      facts["uname.machine"]
+      facts["uname.machine"] if @facts
     end
 
     def arch=(arch)
@@ -246,7 +246,7 @@ module Glue::Candlepin::Consumer
     end
 
     def sockets
-      facts["cpu.cpu_socket(s)"]
+      facts["cpu.cpu_socket(s)"] if @facts
     end
 
     def sockets=(sock)
@@ -379,6 +379,7 @@ module Glue::Candlepin::Consumer
         end
 
         OpenStruct.new(:entitlementId => entitlement["id"],
+                       :poolId => entitlement["pool"]["id"],
                        :serials => serials,
                        :poolName => pool["productName"],
                        :consumed => pool["consumed"],

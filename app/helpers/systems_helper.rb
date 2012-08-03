@@ -34,12 +34,14 @@ module SystemsHelper
 
   def architecture_select
     select(:arch, "arch_id", System.architectures.invert,
-             {:prompt => _('Select Architecture'), :id=>"arch_field", :tabindex => 2})
+             {:prompt => _('Select Architecture'), :id=>"arch_field"}, {:tabindex => 2})
   end
 
   def virtual_buttons
-    radio_button("system_type","virtualized", "physical", :checked=>true ) + _("Physical") +
-    radio_button("system_type","virtualized", "virtual" ) + _("Virtual")
+    raw [radio_button("system_type","virtualized", "physical", :checked=>true, :tabindex => 4 ),
+    content_tag(:label, _("Physical"), :for => 'system_type_virtualized_physical'),
+    radio_button("system_type","virtualized", "virtual", :tabindex => 5 ),
+    content_tag(:label, _("Virtual"), :for => 'system_type_virtualized_virtual')].join(' ')
   end
   
   def errata_type_class errata
