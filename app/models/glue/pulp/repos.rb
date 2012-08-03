@@ -162,7 +162,7 @@ module Glue::Pulp::Repos
         @repo_cache[env.id] = Repository.joins(:environment_product).where(
             "environment_products.product_id" => self.id, "environment_products.environment_id"=> env)
       end
-      if self.custom? || include_disabled
+      if include_disabled
         return @repo_cache[env.id]
       end
 
