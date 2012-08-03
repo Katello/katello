@@ -20,7 +20,13 @@ from gettext import gettext as _
 
 class OptionValidator(object):
 
+
+
     def __init__(self, option_parser, options, arguments=None):
+        """
+        opice
+
+        """
         self.opt_errors = []
         self.parser = option_parser
         self.options = options
@@ -30,9 +36,10 @@ class OptionValidator(object):
     def exists(self, opt_dest):
         """
         Check if option is present
-        @type opt_dest: str
-        @param opt_dest: option destination to check
-        @return True if the option was set, otherwise False
+
+        :type opt_dest: str
+        :param opt_dest: option destination to check
+        :return: True if the option was set, otherwise False
         """
         return (not getattr(self.options, opt_dest) is None)
 
@@ -40,9 +47,10 @@ class OptionValidator(object):
     def any_exist(self, opt_dests):
         """
         Check if any of options is present
-        @type opt_dests: iterable(str)
-        @param opt_dests: option destinations to check
-        @return True if the any of the options was set, otherwise False
+        
+        :type opt_dests: iterable(str)
+        :param opt_dests: option destinations to check
+        :return: True if the any of the options was set, otherwise False
         """
         return any( self.exists(dest) for dest in opt_dests )
 
@@ -50,9 +58,10 @@ class OptionValidator(object):
     def all_exist(self, opt_dests):
         """
         Check if all the options are present
-        @type opt_dests: iterable(str)
-        @param opt_dests: option destinations to check
-        @return True if the all the options were set, otherwise False
+        
+        :type opt_dests: iterable(str)
+        :param opt_dests: option destinations to check
+        :return: True if the all the options were set, otherwise False
         """
         return all( self.exists(dest) for dest in opt_dests )
 
@@ -61,10 +70,11 @@ class OptionValidator(object):
         """
         Check if all the options are present and add an error to a message
         stack if not.
-        @type opt_dests: iterable(str)
-        @param opt_dests: option destinations to check
-        @type message: str
-        @param message: custom error message
+        
+        :type opt_dests: iterable(str)
+        :param opt_dests: option destinations to check
+        :type message: str
+        :param message: custom error message
         """
         opt_dests = self.__ensure_iterable(opt_dests)
         for opt_dest in opt_dests:
@@ -79,8 +89,9 @@ class OptionValidator(object):
     def mutually_exclude(self, *opt_dest_tuples):
         """
         Allows only one of option tuples to be present.
-        @type opt_dest_tuples: iterable(str)
-        @param opt_dest_tuples: option destinations to check
+        
+        :type opt_dest_tuples: iterable(str)
+        :param opt_dest_tuples: option destinations to check
         """
         opt_dest_tuples = [self.__ensure_iterable(opt_dests) for opt_dests in opt_dest_tuples]
 
@@ -95,13 +106,14 @@ class OptionValidator(object):
     def reject(self, opt_dest, colliding_opts=None, message=None):
         """
         Add an option error if an option is present.
-        @type opt_dest: iterable(str)
-        @param opt_dest: option destinations to check
-        @type colliding_opts: iterable(str)
-        @param colliding_opts: option destinations that collide with the rejected
-        ones. Used in error message.
-        @type message: str
-        @param message: custom error message
+        
+        :type opt_dest: iterable(str)
+        :param opt_dest: option destinations to check
+        :type colliding_opts: iterable(str)
+        :param colliding_opts: option destinations that collide with the rejected
+                               ones. Used in error message.
+        :type message: str
+        :param message: custom error message
         """
         opt_dest = self.__ensure_iterable(opt_dest)
         colisions = self.__filter_existing(opt_dest)
@@ -127,10 +139,11 @@ class OptionValidator(object):
         """
         If one of the options is present, all are required.
         Otherwise add an error to a message stack.
-        @type opt_dests: iterable(str)
-        @param opt_dests: option destinations to check
-        @type message: str
-        @param message: custom error message
+        
+        :type opt_dests: iterable(str)
+        :param opt_dests: option destinations to check
+        :type message: str
+        :param message: custom error message
         """
         if self.any_exist(opt_dests):
             self.require(opt_dests, message)
@@ -140,10 +153,11 @@ class OptionValidator(object):
         """
         Check if one and only one of the options is present.
         Otherwise add an error to a message stack.
-        @type opt_dests: iterable(str)
-        @param opt_dests: option destinations to check
-        @type message: str
-        @param message: custom error message
+        
+        :type opt_dests: iterable(str)
+        :param opt_dests: option destinations to check
+        :type message: str
+        :param message: custom error message
         """
         if not len(self.__filter_existing(opt_dests)) == 1:
             if message:
@@ -157,10 +171,11 @@ class OptionValidator(object):
     def require_at_most_one_of(self, opt_dests, message=None):
         """
         Add an option error if there is more then one of the options present.
-        @type opt_dests: iterable(str)
-        @param opt_dests: option destinations to check
-        @type message: str
-        @param message: custom error message
+        
+        :type opt_dests: iterable(str)
+        :param opt_dests: option destinations to check
+        :type message: str
+        :param message: custom error message
         """
         if self.any_exist(opt_dests):
             self.require_one_of(opt_dests, message)
@@ -169,10 +184,11 @@ class OptionValidator(object):
     def require_at_least_one_of(self, opt_dests, message=None):
         """
         Add an option error if there is less then one of the options present.
-        @type opt_dests: iterable(str)
-        @param opt_dests: option destinations to check
-        @type message: str
-        @param message: custom error message
+        
+        :type opt_dests: iterable(str)
+        :param opt_dests: option destinations to check
+        :type message: str
+        :param message: custom error message
         """
         if self.any_exist(opt_dests):
             return
@@ -187,8 +203,9 @@ class OptionValidator(object):
     def add_option_error(self, error_msg):
         """
         Add option error to the error stack
-        @type error_msg: str
-        @param error_msg: error message
+        
+        :type error_msg: str
+        :param error_msg: error message
         """
         self.opt_errors.append(error_msg)
 

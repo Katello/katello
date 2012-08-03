@@ -48,20 +48,42 @@ _log = getLogger(__name__)
 
 
 class CommandContainer(object):
+    """
+    Container that can hold commands and actions.
+    """
 
     def __init__(self):
         self.__subcommands = {}
 
     def add_command(self, name, command):
+        """
+        Add command or action
+
+        :param name: a name undher which the command/action will be registered
+        :type name: string
+        :param command: 
+        :type command: Action|Command
+        """
         self.__subcommands[name] = command
 
     def remove_command(self, name):
+        """
+        :param name: a name undher which the command/action is registered
+        :type name: string
+        """
         del self.__subcommands[name]
 
     def get_command_names(self):
+        """
+        :rtype: list of strings
+        """
         return self.__subcommands.keys()
 
     def get_command(self, name):
+        """
+        :raises Exception: if the command was not found
+        :return: command or action registered under the given name
+        """
         if name in self.__subcommands:
             return self.__subcommands[name]
         raise Exception("Command not found")
@@ -70,11 +92,12 @@ class CommandContainer(object):
 
 class Action(object):
     """
-    Action class representing a single action for a cli command
-    @ivar name: action's name
-    @ivar parser: optparse.OptionParser instance
-    @ivar opts: options returned from parsing command line
-    @ivar args: arguments returned from parsing command line
+    Class implementing common functionality for CLI commands and actions
+    
+    :ivar parser: optparse.OptionParser instance
+    :ivar takes_options: bool flag that says whether the action has any options
+    :ivar opts: options returned from parsing command line
+    :ivar args: arguments returned from parsing command line
     """
 
     opts = None
@@ -92,8 +115,9 @@ class Action(object):
     def usage(self, command_name=None, parent_usage=None):
         """
         Usage string.
-        @rtype: str
-        @return: command's usage string
+
+        :rtype: str
+        :return: command's usage string
         """
         return "Usage: "+self._get_usage_line(command_name, parent_usage)
 
@@ -101,26 +125,35 @@ class Action(object):
     @property
     def description(self):
         """
-        Return a string for this action's description
+        Return a string with this action's description
         """
         return _('no description available')
 
     def create_parser(self, command_name=None, parent_usage=None):
+        """
+        Create an instance of option parser
+        
+        :rtype: OptionParser
+        """
         parser = OptionParser(option_class=KatelloOption)
         self.setup_parser(parser)
         parser.set_usage(self.usage(command_name, parent_usage))
         return parser
 
     def create_validator(self, parser, opts, args):
+        """
+        :rtype: OptionValidator
+        """
         return OptionValidator(parser, opts, args)
 
     def get_option(self, opt_dest, default=None):
         """
         Get an option from opts or from the config file
         Options from opts take precedence.
-        @type opt: str
-        @param opt: name of option to get
-        @return: value of the option or None if the option is no present
+        
+        :type opt: str
+        :param opt: name of option to get
+        :return: value of the option or None if the option is no present
         """
         attr = getattr(self.opts, opt_dest, None)
         if not default is None and attr is None:
@@ -130,35 +163,42 @@ class Action(object):
     def has_option(self, opt):
         """
         Check if option is present
-        @type opt: str
-        @param opt: name of option to check
-        @return True if the option was set, otherwise False
+        
+        :type opt: str
+        :param opt: name of option to check
+        :return: True if the option was set, otherwise False
         """
         return (not self.get_option(opt) is None)
 
     def setup_parser(self, parser):
         """
         Add custom options to the parser
-        @note: this method should be overridden to add per-action options
+        
+        :note: this method should be overridden to add per-action options
         """
         self.takes_options = False
 
     def run(self):
         """
         Action's functionality
-        @note: override this method to implement the actoin's functionality
-        @raise NotImplementedError: if this method is not overridden
+        
+        :note: override this method to implement the actoin's functionality
+        :raise NotImplementedError: if this method is not overridden
         """
         pass
 
     def check_options(self, validator):
         """
         Add custom option requirements
-        @note: this method should be overridden to check for required options
+        
+        :note: this method should be overridden to check for required options
         """
         return
 
     def error(self, error_msg):
+        """
+        Logs an error and prints it to stderr
+        """
         error_msg = u_str(error_msg)
         error_msg = error_msg if error_msg else _('operation failed')
 
@@ -185,7 +225,8 @@ class Action(object):
         Main execution of the action
         This method setups up the parser, parses the arguments, and calls run()
         in a try/except block, handling RestlibExceptions and general errors
-        @warning: this method should only be overridden with care
+        
+        :warning: this method should only be overridden with care
         """
         parser = self.create_parser(command_name, parent_usage)
         self.process_options(parser, args)
@@ -194,12 +235,17 @@ class Action(object):
 
 
 class Command(CommandContainer, Action):
+    """
+    Represents a CLI command. It is a simple action with the ability to contain
+    multiple subcommands and actions.
+    """
 
     def usage(self, command_name=None, parent_usage=None):
         """
         Usage string.
-        @rtype: str
-        @return: command's usage string
+        
+        :rtype: str
+        :return: command's usage string
         """
         first_line = "Usage: "+self._get_usage_line(command_name, parent_usage)
         if len(self.get_command_names()) > 0:
@@ -254,11 +300,10 @@ class Command(CommandContainer, Action):
 
 class BaseAction(Action):
     """
-    Action class representing a single action for a cli command
-    @ivar name: action's name
-    @ivar parser: optparse.OptionParser instance
-    @ivar opts: options returned from parsing command line
-    @ivar args: arguments returned from parsing command line
+    Action class representing a single CLI action. All actions should inherit from this class.
+    Inherits from Action.
+
+    :ivar Printer: printer.Printer instance
     """
 
     def __init__(self):
@@ -312,7 +357,8 @@ class BaseAction(Action):
         Main execution of the action
         This method setups up the parser, parses the arguments, and calls run()
         in a try/except block, handling RestlibExceptions and general errors
-        @warning: this method should only be overridden with care
+     
+        :warning: this method should only be overridden with care
         """
         try:
             self.setup_action(args, command_name, parent_usage)
@@ -409,6 +455,55 @@ def check_url(option, opt, value):
     return value
 
 class KatelloOption(Option):
+    """
+    Option types allow to check and preprocess values of options.
+    There are `6 option types <http://docs.python.org/library/optparse.html#optparse-standard-option-types>`_ that come with optparse by default.
+
+    Our KatelloOption adds 3 more on the top of them:
+
+    **bool**
+        Parse a string and try to convert it to bool value.WW
+
+        :allowed values:    strings "true" and "false" at any case
+        :return type:       bool
+        :arguments:         none 
+
+        .. code-block:: python
+
+            # usage:
+            parser.add_option('--enable', dest='enable', type="bool")
+
+
+    **list**
+        Parse a string and try to tear it by a delimiter into a list of substrings.[[BR]]
+        If no delimiter is found in the string the original value is returned as the only item of the list.
+
+        :allowed values:    string (can contain the delimiter)
+        :return type:       list of strings
+        :arguments:         - delimiter - string that delimits the values, default is ","
+
+        .. code-block:: python
+
+            # usage:
+            parser.add_option('--package', dest='package', type="list", delimiter=",")
+
+
+    **url**
+        Parses an url string that starts with a given scheme ("http" and "https" is accepted by default).
+        Throws an exception if the value is not a valid url.
+
+        :allowed values:    string with valid url path
+        :return type:       string
+        :arguments:         - schemes - list of strings, allowed schemes, default is ["http", "https"]
+
+        .. code-block:: python
+        
+            # usage:
+            parser.add_option('--feed', dest='feed', type="url", schemes=['https'])
+
+    """
+
+
     TYPE_CHECKER = copy(Option.TYPE_CHECKER)
     TYPES = copy(Option.TYPES)
     ATTRS = copy(Option.ATTRS)
