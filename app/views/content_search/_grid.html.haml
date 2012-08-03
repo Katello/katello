@@ -38,6 +38,7 @@
         .slide_arrow.hidden{ 'data-arrow_direction' => 'left' }
           .slide_trigger
           %span.left_arrow-icon-black.disabled
+        #more_columns_fade.hidden
         .slide_arrow.hidden{ 'data-arrow_direction' => 'right' }
           .slide_trigger
           %span.right_arrow-icon-black
@@ -50,10 +51,10 @@
     #grid_content_window
       #grid_content
     #grid_loading_screen.hidden
-      .large_white_spinner
+      .large_spinner
   %footer
     %div.fl
     %ul.fl
       %li
-        %a.button#compare_repos_btn.hidden
-          = _("Compare Repos")
+        %a.button#compare_repos_btn.hidden{ :title => _("Select a set of repositories that you wish to compare the contents of by clicking the checkboxes inside the cells.") }
+          = _("Compare Repositories")
