@@ -19,13 +19,9 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.45
+Version:       1.1.0
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
-
-# we need to keep RHEL compatibility
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 Requires:      %{base_name}-cli-common
 BuildArch:     noarch
 
@@ -64,7 +60,6 @@ sed -e 's/THE_VERSION/%{version}/g' katello-debug-certificates.pod |\
 popd
 
 %install
-rm -rf %{buildroot}
 install -d %{buildroot}%{_bindir}/
 install -d %{buildroot}%{_sysconfdir}/%{base_name}/
 install -d %{buildroot}%{python_sitelib}/%{base_name}
@@ -89,11 +84,6 @@ install -m 0644 man/%{base_name}-debug-certificates.man1 %{buildroot}%{_mandir}/
 # several scripts are executable
 chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 
-
-# we need to keep RHEL compatibility
-%clean
-rm -rf %{buildroot}
-
 %files 
 %attr(755,root,root) %{_bindir}/%{base_name}
 %attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
@@ -107,6 +97,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- bump up version to 1.0 (msuchy@redhat.com)
+- update copyright years (msuchy@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+
 * Wed Jul 25 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.45-1
 - 840531 - Fixes issue with inability to individually promote packages attached
   to a system template or changeset that have more than a single dash in the
