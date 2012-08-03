@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -465,6 +465,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Aug 03 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.3-1
+- build katello-headpin and katello-headpin-all from the same src.rpm as
+  katello
+
 * Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.2-1
 - puppet - moving lib/util into common subpackage
 
