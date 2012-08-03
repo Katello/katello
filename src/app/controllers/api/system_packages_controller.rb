@@ -10,6 +10,11 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Api::SystemPackagesController < Api::ApiController
+
+  resource_description do
+    param :system_id, :id, :desc => "system numeric identifier"
+  end
+
   respond_to :json
 
   before_filter :find_system, :only => [:create, :update, :destroy]
@@ -28,10 +33,9 @@ class Api::SystemPackagesController < Api::ApiController
   end
 
   # install packages remotely
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :POST, "/systems/:system_id/packages", "Create a system package"
-  param :groups, :undef
-  param :packages, :undef
+  api :POST, "/systems/:system_id/packages", "Install packages remotely"
+  param :groups, Array, :desc => "list of groups names"
+  param :packages, Array, :desc => "list of packages names"
   def create
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -47,9 +51,8 @@ class Api::SystemPackagesController < Api::ApiController
   end
 
   # update packages remotely
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :PUT, "/systems/:system_id/packages", "Update a system package"
-  param :packages, :undef
+  api :PUT, "/systems/:system_id/packages", "Update packages remotely"
+  param :packages, Array, :desc => "list of packages names"
   def update
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -59,10 +62,9 @@ class Api::SystemPackagesController < Api::ApiController
   end
 
   # uninstall packages remotely
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :DELETE, "/systems/:system_id/packages", "Destroy a system package"
-  param :groups, :undef
-  param :packages, :undef
+  api :DELETE, "/systems/:system_id/packages", "Uninstall packages remotely"
+  param :groups, Array, :desc => "list of groups names"
+  param :packages, Array, :desc => "list of packages names"
   def destroy
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
