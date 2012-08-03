@@ -12,6 +12,15 @@
 
 class Api::SyncPlansController < Api::ApiController
 
+  resource_description do
+    description <<-DOC
+      Synchronization plans are used to configure how often a system should
+      look for and install updates.
+    DOC
+
+    param :organization_id, :id, :desc => "oranization numeric identifier"
+  end
+
   before_filter :find_organization
   before_filter :find_plan, :only => [:update, :show, :destroy]
   before_filter :authorize
@@ -36,26 +45,27 @@ class Api::SyncPlansController < Api::ApiController
     }
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/organizations/:organization_id/sync_plans", "List sync plans"
-  param :name, :undef
+  param :name, :undef, :desc => "filter by name"
+  param :sync_date, :undef, :desc => "filter by sync date"
+  param :interval, :undef, :desc => "filter by interval"
   def index
     query_params.delete :organization_id
     render :json => @organization.sync_plans.where(query_params).to_json
   end
 
   api :GET, "/organizations/:organization_id/sync_plans/:id", "Show a sync plan"
+  param :id, :id, :desc => "sync plan numeric identifier"
   def show
     render :json => @plan.to_json
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :POST, "/organizations/:organization_id/sync_plans", "Create a sync plan"
   param :sync_plan, Hash do
-    param :description, :undef
-    param :interval, :undef
-    param :name, :undef
-    param :sync_date, :undef
+    param :description, :undef, :desc => "sync plan description"
+    param :interval, SyncPlan::TYPES, :desc => "how often synchronization should be run"
+    param :name, :undef, :desc => "sync plan name"
+    param :sync_date, :undef, :desc => "start datetime of synchronization"
   end
   def create
     sync_date = params[:sync_plan][:sync_date]
@@ -66,14 +76,15 @@ class Api::SyncPlansController < Api::ApiController
     render :json => SyncPlan.create!(params[:sync_plan].merge(:organization => @organization)).to_json
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :PUT, "/organizations/:organization_id/sync_plans/:id", "Update a sync plan"
+  param :id, :id, :desc => "sync plan numeric identifier"
   param :sync_plan, Hash do
     param :description, :undef
     param :interval, :undef
     param :name, :undef
     param :sync_date, :undef
   end
+  see "sync_plans#create"
   def update
     sync_date = params[:sync_plan][:sync_date]
     if not sync_date.nil? and not sync_date.kind_of? Time
@@ -86,8 +97,8 @@ class Api::SyncPlansController < Api::ApiController
     render :json => @plan
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :DELETE, "/organizations/:organization_id/sync_plans/:id", "Destroy a sync plan"
+  param :id, :id, :desc => "sync plan numeric identifier"
   def destroy
     @plan.destroy
     render :text => _("Deleted sync plan '#{params[:id]}'"), :status => 200
