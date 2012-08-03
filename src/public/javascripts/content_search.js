@@ -299,6 +299,9 @@ KT.content_search = function(paths_in){
          * Populate the search params with extra data needed for querying and
          *   for saving cache
          */
+        if (search_params === undefined){
+            return undefined;
+        }
         if (search_params.mode === undefined){
             search_params.mode = search_modes[0].id;
         }
