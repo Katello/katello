@@ -97,6 +97,7 @@ class KTEnvironment < ActiveRecord::Base
   before_destroy :confirm_last_env
   after_save :update_related_index
   after_destroy :delete_related_index
+  after_destroy :unset_users_with_default
 
    ERROR_CLASS_NAME = "Environment"
 
@@ -396,6 +397,14 @@ class KTEnvironment < ActiveRecord::Base
 
   def delete_related_index
     self.organization.update_index if self.organization
+  end
+
+  def unset_users_with_default
+    users = User.find_by_default_environment(self.id)
+    users.each do |u|
+      u.default_environment = nil
+      Notify.message _("Your default environment has been removed. Please choose another one"), {:user => u}
+    end
   end
 
   def constant_name
