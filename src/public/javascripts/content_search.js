@@ -83,10 +83,21 @@ KT.content_search = function(paths_in){
 
 
     var init = function(){
-        var initial_search = $.bbq.getState('search');
+        var initial_search = $.bbq.getState('search'),
+            footer;
         paths = paths_in;
+        
+        if( KT.permissions.current_organization.editable ){
+            footer = $('<a/>', { "href" : KT.routes.organizations_path('#panel=organization_' + KT.permissions.current_organization['id'] + '&panelpage=edit')});
+            footer.append($('<i/>', { "class" : "gears_icon", "data-change_on_hover" : "dark" }));
+            footer.append($('<span/>').html(i18n.manage_environments));
+            footer = footer[0].outerHTML;
+        } else {
+            footer = "";
+        }
+
         env_select = KT.path_select('column_selector', 'env', paths,
-            {select_mode:'multi', link_first: true, footer: true });
+            {select_mode:'multi', link_first: true, footer: footer });
 
         init_tipsy();
 
@@ -510,7 +521,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
         var list = ac_container.find('ul');
         list.find('.all').hide();
         if (ac_container.find('li[data-id=' + id + ']').length === 0){
-            list.prepend('<li data-name="'+ name + '" data-id="' + id + '"><i class="remove x_icon_black clickable"/>' + name + '</li>');
+            list.prepend('<li data-name="'+ name + '" data-id="' + id + '"><i class="remove x-icon-black clickable"/><span>' + name + '</span></li>');
         }
 
     },
