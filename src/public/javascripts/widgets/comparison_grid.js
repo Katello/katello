@@ -506,10 +506,12 @@ KT.comparison_grid.controls = function(grid) {
                 show = function() {
                     right_arrow.show();
                     left_arrow.show();
+                    $('#more_columns_fade').show();
                 },
                 hide = function() {
                     right_arrow.hide();
                     left_arrow.hide();
+                    $('#more_columns_fade').hide();
                 },
                 current_position = function(){
                     return $('#column_headers').position().left;
@@ -532,12 +534,20 @@ KT.comparison_grid.controls = function(grid) {
                     if( current_position() === 0 ){
                         left_arrow.find('span').addClass('disabled');
                         right_arrow.find('span').removeClass('disabled');
+
+                        if( right_arrow.is(":visible") ){
+                            $('#more_columns_fade').show();
+                        }
                     } else if( stop_position() === current_position() ) {
                         right_arrow.find('span').addClass('disabled');
                         left_arrow.find('span').removeClass('disabled');
+                        $('#more_columns_fade').hide();
                     } else {
                         right_arrow.find('span').removeClass('disabled');
                         left_arrow.find('span').removeClass('disabled');
+                        if( right_arrow.is(":visible") ){
+                            $('#more_columns_fade').show();
+                        }
                     }
                 },
                 slide = function(direction) {
