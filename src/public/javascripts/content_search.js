@@ -222,21 +222,16 @@ KT.content_search = function(paths_in){
         close_tipsy();
 
         options.show_compare_btn = search_pages[search_params.content_type].comparable;
+
+
+        search_params = populate_state(search_params);
+
         if (cache.get_state(search_params)){
             comparison_grid.import_data(cache.get_state(search_params));
             comparison_grid.set_mode("results", options);
+            select_envs(get_initial_environments());
         }
         else {
-
-            if (search_params.mode === undefined){
-                search_params.mode = search_modes[0].id;
-            }
-
-            search_params.environments = [];
-            utils.each(get_initial_environments(), function(item){
-                search_params.environments.push(item.id);
-            });
-
             $(document).trigger('loading.comparison_grid');
             $.ajax({
                 type: 'POST',
@@ -288,6 +283,20 @@ KT.content_search = function(paths_in){
             }
         });
     },
+    populate_state = function(search_params){
+        /**
+         * Populate the search params with extra data needed for querying and
+         *   for saving cache
+         */
+        if (search_params.mode === undefined){
+            search_params.mode = search_modes[0].id;
+        }
+        search_params.environments = [];
+        utils.each(get_initial_environments(), function(item){
+            search_params.environments.push(item.id);
+        });
+        return search_params;
+    },
     close_tipsy = function(){
       $(document).trigger("close.tipsy");
     },
@@ -328,7 +337,7 @@ KT.content_search = function(paths_in){
                 search_initiated(undefined, search);
                 envs_changed = false;
             }
-            cache.save_state(comparison_grid, search);
+            cache.save_state(comparison_grid, populate_state(search));
         });
         //select event
         $(document).bind(env_select.get_select_event(), function(event){
