@@ -36,13 +36,14 @@ class Api::TasksController < Api::ApiController
     }
   end
 
-  api :GET, "/organizations/:organization_id/tasks", "List tasks"
+  api :GET, "/organizations/:organization_id/tasks", "List tasks of given organization"
+  param :organization_id, :id, :desc => "organization numeric identifier"
   def index
     render :json => TaskStatus.where(:organization_id => @organization).to_json(:except => :id)
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :GET, "/tasks/:id", "Show a task"
+  api :GET, "/tasks/:id", "Show a task info"
+  param :id, :id, :desc => "task numeric id"
   def show
     render :json => @task.refresh.to_json(:except => :id)
   end
