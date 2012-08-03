@@ -3,16 +3,8 @@
 
 = content_for :content do
   .grid_10
-    = form_tag roles_path, :method => "post", :id => "new_role" do
-      %fieldset
-        .grid_2.ra
-          %label #{_("Name")}:
-        .grid_5.la
-          = text_field_tag 'role[name]', params[role[:name]], :tabindex => auto_tab_index
-      %fieldset
-        .grid_2.ra
-          %label #{_("Description")}:
-        .grid_5.la
-          = text_area_tag 'role[description]', params[role[:description]], :tabindex => auto_tab_index
-      .grid_5.la.push_2
-        = button_to _("Save"), {:action => "create", :controller => "roles"}, :method => :post, :id => :role_save, :tabindex => auto_tab_index        
+    = kt_form_for Role.new, :html => {:id => "new_role"} do |form|
+
+      = form.text_field :name, :label => _("Name")
+      = form.text_area :description, :label => _("Description"), :size => "40x5"
+      = form.submit _("Save"), :id => :role_save

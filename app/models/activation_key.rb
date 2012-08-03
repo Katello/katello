@@ -33,6 +33,7 @@ class ActivationKey < ActiveRecord::Base
   has_many :system_groups, :through => :key_system_groups
 
   has_many :system_activation_keys, :dependent => :restrict
+  has_many :systems, :through => :system_activation_keys
 
   scope :readable, lambda {|org| ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")}
 
