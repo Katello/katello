@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.37
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -10,13 +10,16 @@ Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
 Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       puppet >= 2.6.6
-Requires:       coreutils shadow-utils wget
+Requires:       coreutils
+Requires:       wget
 Requires:       katello-certs-tools
-Requires:       nss-tools openssl
+Requires:       nss-tools
+Requires:       openssl
 Requires:       policycoreutils-python
+Requires:       initscripts
+Requires:       rubygem(bundler)
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
 BuildRequires:  findutils puppet >= 2.6.6
 
@@ -30,6 +33,9 @@ katello-upgrade which handles upgrades between versions.
 %setup -q
 
 %build
+#check syntax of main configure script and libs
+ruby -c bin/katello-configure lib/puppet/parser/functions/*rb
+
 #check syntax for all puppet scripts
 %if 0%{?rhel} || 0%{?fedora} < 17
 find -name '*.pp' | xargs -n 1 -t puppet --parseonly
@@ -53,7 +59,6 @@ THE_VERSION=%version sed -i "s/THE_VERSION/$THE_VERSION/g" man/katello-passwd.po
 
 
 %install
-rm -rf %{buildroot}
 #prepare dir structure
 install -d -m 0755 %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
@@ -73,9 +78,6 @@ install -m 0644 man/katello-passwd.man1 %{buildroot}%{_mandir}/man1/katello-pass
 install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts
 cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
-%clean
-rm -rf %{buildroot}
-
 %files
 %{homedir}/
 %{_sbindir}/katello-configure
@@ -87,6 +89,30 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 02 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
+- rb19 - fixing typo in requires (lzap+git@redhat.com)
+- buildroot and %%clean section is not needed (msuchy@redhat.com)
+- rb19 - correcting requires for fedora guidelines (lzap+git@redhat.com)
+- rb19 - adding missing require (lzap+git@redhat.com)
+- rb19 - fixing collate (lzap+git@redhat.com)
+- rb19 - adding puppet bundler check (lzap+git@redhat.com)
+- rb19 - one more UTF8 fix (lzap+git@redhat.com)
+- rb19 - setting collate (lzap+git@redhat.com)
+- rb19 - invalid char (lzap+git@redhat.com)
+- rb19 - warning msg (lzap+git@redhat.com)
+- rb19 - adding check (lzap+git@redhat.com)
+- rb19 - extra comma (lzap+git@redhat.com)
+- Bumping package versions for 1.1. (msuchy@redhat.com)
+
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- bump up version to 1.0 (msuchy@redhat.com)
+
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.39-1
+- update copyright years (msuchy@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.38-1
+- Fix Ruby 1.9.3 compatibility issue in Puppet manifest (inecas@redhat.com)
+
 * Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.37-1
 - puppet - nss generation ordering issue (lzap+git@redhat.com)
 - puppet - pulp migrate must run before apache2 ensure (lzap+git@redhat.com)

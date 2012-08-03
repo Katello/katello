@@ -19,7 +19,7 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        0.2.7
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
@@ -27,7 +27,6 @@ Group:          System Environment/Base
 License:        GPLv2+
 URL:            http://www.katello.org
 Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  checkpolicy, selinux-policy-devel, hardlink
 BuildRequires:  policycoreutils >= %{POLICYCOREUTILSVER}
@@ -68,8 +67,6 @@ done
 
 
 %install
-rm -rf %{buildroot}
-
 # Install SELinux policy modules
 for selinuxvariant in %{selinux_variants}
   do
@@ -96,9 +93,6 @@ install -m 0644 katello-selinux-enable.man1 %{buildroot}%{_mandir}/man1/katello-
 
 # Install secure (extra protected) directory
 install -d %{buildroot}%{_sysconfdir}/katello/secure
-
-%clean
-rm -rf %{buildroot}
 
 %post
 if /usr/sbin/selinuxenabled ; then
@@ -131,6 +125,9 @@ fi
 %{_sysconfdir}/katello/secure
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- bump up version to 1.0 (msuchy@redhat.com)
+
 * Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.7-1
 - selinux - katello configure denials (lzap+git@redhat.com)
 - point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)

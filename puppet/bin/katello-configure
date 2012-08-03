@@ -12,7 +12,7 @@ $stdout.sync = true
 default_path = '/usr/share/katello/install/default-answer-file'
 options_format_path = '/usr/share/katello/install/options-format-file'
 result_config_path = '/etc/katello/katello-configure.conf'
-puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d'
+puppet_cmd = 'puppet apply --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d'
 log_parent_directory = '/var/log/katello'
 
 # error codes for exit_with function
@@ -198,7 +198,7 @@ def _request_option_interactively(title, regex, default_value, non_interactive_v
 
 	read_password = title.include?("password")
 	while true
-		if read_password:
+		if read_password
 			while true
 				print "Enter #{title}: "
 				input = _read_password()
@@ -503,6 +503,7 @@ puppet_logfile_filename = log_directory + '/main.log'
 puppet_logfile = IO.open(IO::sysopen(puppet_logfile_filename, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
 puts "The top-level log file is [#{puppet_logfile_filename}]"
 seen_err = false
+ENV['LC_ALL'] = 'C'
 begin
 	IO.popen("#{puppet_cmd} 2>&1", 'w+') do |f|
 		f.puts "include katello"

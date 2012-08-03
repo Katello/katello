@@ -1,11 +1,12 @@
 Name: katello-agent
-Version: 1.0.5
+Version: 1.1.0
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
 License: LGPLv2
 URL:     https://fedorahosted.org/katello/
 Source0: https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: python2-devel
 BuildRequires: python-setuptools
@@ -27,11 +28,15 @@ pushd src
 popd
 
 %install
+rm -rf $RPM_BUILD_ROOT
 mkdir -p %{buildroot}/%{_sysconfdir}/gofer/plugins
 mkdir -p %{buildroot}/%{_prefix}/lib/gofer/plugins
 
 cp etc/gofer/plugins/katelloplugin.conf %{buildroot}/%{_sysconfdir}/gofer/plugins
 cp src/katello/agent/katelloplugin.py %{buildroot}/%{_prefix}/lib/gofer/plugins
+
+%clean
+rm -rf %{buildroot}
 
 %files
 %config(noreplace) %{_sysconfdir}/gofer/plugins/katelloplugin.conf
@@ -39,6 +44,10 @@ cp src/katello/agent/katelloplugin.py %{buildroot}/%{_prefix}/lib/gofer/plugins
 %doc LICENSE
 
 %changelog
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.6-1
+- update copyright years (msuchy@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+
 * Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 1.0.5-1
 - macro python_sitelib is not used anywhere, removing
 - provide more descriptive description

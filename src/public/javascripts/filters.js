@@ -435,15 +435,7 @@ KT.filters = (function(){
     var current_filter,
     saved_filter,
     repo_cache = {};
-    
-    var success_create  = function(data){
-        list.add(data);
-        KT.panel.closePanel($('#panel'));        
-    },
-    failure_create = function(){
-        $('input[id^=filter_save]').attr("disabled", false);
 
-    },
     add_package = function(name, item_id, cleanup_cb){
         var input = $("#package_input");
 
@@ -452,7 +444,7 @@ KT.filters = (function(){
             cleanup_cb();
             return;
         }
-        
+
         disable_package_inputs();
 
         $.ajax({
@@ -624,8 +616,6 @@ KT.filters = (function(){
     };
     
     return {
-        success_create  : success_create,
-        failure_create  : failure_create,
         add_package     : add_package,
         remove_packages : remove_packages,
         get_current_filter: get_current_filter,

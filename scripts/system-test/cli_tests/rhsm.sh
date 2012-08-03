@@ -11,11 +11,20 @@ RHSM_YPROV="yum_$RAND"
 CS1_NAME="changeset_$RAND"
 RHSM_REPO="http://lzap.fedorapeople.org/fakerepos/zoo/"
 RHSM_YPROD="yum_product_$RAND"
+RHSM_ZPROD="yum_product2_$RAND"
 HOST="$(hostname)_$PLAIN_RAND"
 
 sm_present() {
   which subscription-manager &> /dev/null
   return $?
+}
+
+grab_pool_with_rhsm() {
+  sudo subscription-manager list --available --all | sed 's/Pool Id/PoolId/g' | grep PoolId | head -n1 | awk '{print $2}'
+}
+
+grab_pool_with_katello() {
+    $CMD org subscriptions --name "$RHSM_ORG" -g -d ";" | grep "$RHSM_YPROD" | awk -F ' *; *' '{print $4}'
 }
 
 # testing registration from rhsm
@@ -29,11 +38,14 @@ if sm_present; then
     test_success "activation key 2 create" activation_key create --name="$RHSM_AK2" --environment="$RHSM_ENV" --org="$RHSM_ORG"
     test_success "provider create" provider create --name="$RHSM_YPROV" --org="$RHSM_ORG" --url="$RHSM_REPO"
     test_success "product create" product create --provider="$RHSM_YPROV" --org="$RHSM_ORG" --name="$RHSM_YPROD" --url="$RHSM_REPO" --assumeyes
+    test_success "product create" product create --provider="$RHSM_YPROV" --org="$RHSM_ORG" --name="$RHSM_ZPROD" --url="$RHSM_REPO" --assumeyes
+    POOLID=$(grab_pool_with_katello)
+    test_success "add product to ak 1" activation_key update --add_subscription="$POOLID" --name="$RHSM_AK1" --environment="$RHSM_ENV" --org="$RHSM_ORG"
     test_success "changeset create" changeset create --org="$RHSM_ORG" --environment="$RHSM_ENV" --name="$CS1_NAME"
     test_success "changeset add product" changeset update  --org="$RHSM_ORG" --environment="$RHSM_ENV" --name="$CS1_NAME" --add_product="$RHSM_YPROD"
     check_delayed_jobs_running
     test_success "changeset promote" changeset promote --org="$RHSM_ORG" --environment="$RHSM_ENV" --name="$CS1_NAME"
-
+    
     test_own_cmd_success "rhsm show organizations" sudo subscription-manager orgs --username="$USER" --password="$PASSWORD"
     test_own_cmd_success "rhsm show environments" sudo subscription-manager environments --username="$USER" --password="$PASSWORD" --org="$RHSM_ORG"
     test_own_cmd_success "rhsm registration with org" sudo subscription-manager register --username="$USER" --password="$PASSWORD" \
@@ -50,7 +62,7 @@ if sm_present; then
     # we expect we have installed a product and can't auto subscribe
     test_own_cmd_exit_code 1 "rhsm auto subscribe" sudo subscription-manager subscribe --auto
     test_own_cmd_success "rhsm list all" sudo subscription-manager list --available --all
-    POOLID=$(sudo subscription-manager list --available --all | sed 's/Pool Id/PoolId/g' | grep PoolId | head -n1 | awk '{print $2}') # grab first pool
+    POOLID=$(grab_pool_with_rhsm)
     test_own_cmd_success "rhsm subscribe to pool" sudo subscription-manager subscribe --pool "$POOLID"
     test_own_cmd_success "rhsm list" sudo subscription-manager list
     test_own_cmd_success "rhsm list available" sudo subscription-manager list --available

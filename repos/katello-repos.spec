@@ -1,6 +1,6 @@
 
 Name:           katello-repos
-Version:        0.2.10
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Definition of yum repositories for Katello
 
@@ -42,6 +42,14 @@ install -m 644 katello-pulp.repo %{buildroot}%{_sysconfdir}/yum.repos.d/
 %{_sysconfdir}/yum.repos.d/*.repo
 
 %changelog
+* Fri Aug 03 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
+- use Katello gpg key (msuchy@redhat.com)
+- fedora-pulp.repo is not used any more (msuchy@redhat.com)
+- Bumping package versions for 1.1. (msuchy@redhat.com)
+
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- bump up version to 1.0 (msuchy@redhat.com)
+
 * Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.10-1
 - fix typo caused by copy'n'paste' (msuchy@redhat.com)
 
