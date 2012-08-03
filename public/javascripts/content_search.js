@@ -611,11 +611,16 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
             });
             query.content_type = content_type;
             $(document).trigger(event_name, query);
+            get_submit_btn().val(i18n.refresh_results);
+        },
+        get_submit_btn = function(){
+            return selector.parents('form').find('input[type=submit]');
         },
         change_selection = function(selected){
             var needed = mapping[selected],
                 element;
-
+            get_submit_btn().val(i18n.search);
+             
             utils.each(widgets, function(value, key){
                 element = $('#' + value.id);
                 if (utils.include(needed, key)){
