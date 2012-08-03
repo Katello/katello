@@ -46,9 +46,6 @@ describe Changeset, :katello => true do
     it "changeset json should contain the types" do
       json = JSON.load(@changeset.to_json)
       json['action_type'].should_not be_nil
-      json['type'].should_not be_nil
-      json['deletion?'].should_not be_nil
-      json['promotion?'].should_not be_nil
     end
 
     describe "fail adding content not contained in the prior environment" do
