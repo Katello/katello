@@ -28,7 +28,7 @@ $grid_row_level_2-color:                    #D4EEFC;
 $grid_cell_hover-background-color:          #585E64;
 $grid_cell_hover_link-color:                #40D7FD;
 @mixin grid_row_level_1-color { @include background-image(linear-gradient(#91CFED, #77C4E9)); }
-
+@mixin collapse_button-background-color { @include background-image(linear-gradient(#F1F1F1, #C9C9C9)); }
 
 .no_border { border: none !important; }
 
@@ -109,11 +109,11 @@ $grid_cell_hover_link-color:                #40D7FD;
     }
 
     aside { 
-      @include background-image(linear-gradient(#F1F1F1, #C9C9C9));
       width: 38px;
       border-left: 1px solid $widget-border-color;
       height: $browse_box_header-height + 1;
       float: right;
+      @include collapse_button-background-color;
     }
   }
   
