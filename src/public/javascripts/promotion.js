@@ -564,7 +564,7 @@ var promotion_page = (function($){
 
                     $('#review_changeset > span').html(i18n.cancel_review);
 
-                    if (permissions.promote_changesets) {
+                    if (permissions.apply_changesets) {
                         $('#promote_changeset').removeClass("disabled");
                     }
                     else {
