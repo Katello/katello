@@ -24,6 +24,7 @@ KT.auto_complete_box = function(params) {
         add_btn_id: undefined,
         add_btn: undefined,
         add_text: i18n.add_plus,
+        require_select: false, //disable the add button if proper autocompleted item isn't selected
         add_cb: function(item, item_id, cb){cb();}
     };
     $.extend( settings, params );
@@ -81,6 +82,7 @@ KT.auto_complete_box = function(params) {
         }
         input.removeAttr('disabled');
         input.autocomplete('enable');
+        input.val('');
     },
     manually_add = function(item, item_id) {
         add_item_base(item, item_id, false);
@@ -120,10 +122,14 @@ KT.auto_complete_box = function(params) {
             source: settings.values,
             search: function(){
                 get_selected_input().val('');
+                if(settings.require_select){
+                    add_btn.attr("disabled", "disabled");
+                }
             },
             select: function (event, ui) {
                 get_input().val(ui.item.value);
                 get_selected_input().val(ui.item.id);
+                add_btn.removeAttr("disabled");
                 return false;
             }
         });
