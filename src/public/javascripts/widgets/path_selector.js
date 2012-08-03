@@ -267,7 +267,7 @@ KT.path_select_template = {
         html += '</form>'
         
         if( footer ){
-            html += KT.path_select_template.footer();
+            html += KT.path_select_template.footer(footer);
         }
 
         html += '</div>';
@@ -286,11 +286,11 @@ KT.path_select_template = {
     },
     path : function(path){
         var html = '';
-        html += '<ul>';
+        html += '<div><ul>';
         for(var i = 0; i < path.length; i++){
             html += KT.path_select_template.path_node(path[i], path[i+1]);
         }
-        html += '</ul>';
+        html += '</ul></div>';
         return html;
     },
     path_node: function(node, next){
@@ -302,8 +302,8 @@ KT.path_select_template = {
         html += '<li data-node_id="' + node.id + '">'+ '<label><div>' + input +  node.name +  '</div></label></li>';
         return html;
     },
-    footer : function(){
-        var html = '<footer></footer>';
+    footer : function(content){
+        var html = '<footer>' + content + '</footer>';
 
         return html;
     }
