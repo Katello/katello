@@ -293,4 +293,9 @@ module ApplicationHelper
     end
   end
 
+  def kt_form_for(object, options = {}, &block)
+    options[:builder] = KatelloFormBuilder
+    form_for(object, options, &block)
+  end
+
 end

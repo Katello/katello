@@ -168,7 +168,7 @@ KT.activation_key = (function($) {
         }
     },
     toggle_usage_limit = function(checkbox) {
-        var tb = $("#usage_limit_textbox");
+        var tb = $("#activation_key_usage_limit");
         if (checkbox.is(":checked")) {
             tb.val('');
             tb.attr("disabled", true);
