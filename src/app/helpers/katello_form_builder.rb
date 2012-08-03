@@ -23,7 +23,7 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def tabindex
-    @tabindex ||= self.options[:tabindex] || 0
+    @tabindex ||= @options[:tabindex] || 0
     @tabindex += 1
   end
 
@@ -36,24 +36,21 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
     unless options[:grid].is_a?(Array) && options[:grid].size == 2
       raise ArgumentError, "#{name}[grid]: expecting array of size 2"
     end
-    options[:label_wrapper] ||= {}
-    unless options[:label_wrapper][:class].is_a?(Array)
-      options[:label_wrapper][:class] = (options[:label_wrapper][:class] || '').split
+    # check if user added some class for wrappers and add grid and align classes
+    [:label_wrapper, :input_wrapper].each_with_index do |wrapper, i|
+      options[wrapper] ||= {}
+      unless options[wrapper][:class].is_a?(Array)
+        options[wrapper][:class] = (options[wrapper][:class] || '').split
+      end
+      options[wrapper][:class] |= ["grid_#{options[:grid][i]}", (i==0 ? "ra" : "la")]
     end
-    options[:label_wrapper][:class] |= ["grid_#{options[:grid][0]}", "ra"]
-    options[:input_wrapper] ||= {}
-    options[:input_wrapper][:class] ||= ["grid_#{options[:grid][1]}", "la"]
     options[:tabindex] ||= tabindex
     options[:wrapper] ||= {}
-    options[:size] ||= ''
+    options[:size] ||= '30'
 
     content_tag :fieldset, :id => options[:wrapper][:id] do
-      label_wrapper(options) do
-        field_label(name, options)
-      end +
-      input_wrapper(options) do
-        yield if block_given?
-      end
+      @template.concat label_wrapper(options) { field_label(name, options) }
+      @template.concat input_wrapper(options) { yield if block_given? }
     end
 
   end
@@ -64,7 +61,7 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
 
   def input_wrapper(options)
     content_tag(:div, :class => options[:input_wrapper][:class]) { yield } +
-    (content_tag(:span, '', :class => 'details-icon', 'data-help' => options[:help]) if options[:help])
+    (content_tag(:i, '', :class => 'details-icon', 'data-help' => options[:help]) if options[:help])
   end
 
   def field_label(name, options)

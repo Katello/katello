@@ -6,24 +6,24 @@
 
 = content_for :content do
   .grid_8#new_organization123
-    = kt_form_for Organization.new do |f|
+    = kt_form_for Organization.new do |form|
 
-      = f.text_field :name, :label => _("Name")
+      = form.text_field :name, :label => _("Name")
 
-      = f.text_area :description, :label => _("Description"), :size => "40x5"
+      = form.text_area :description, :label => _("Description"), :size => "40x5"
 
       %fieldset
         .grid_7.la
           %label #{_("Initial Application Life Cycle Management Environment")}:
 
-      = f.field :envname, :label => _("Name") do
-        = text_field_tag 'environment[name]', nil, :tabindex => f.tabindex
+      = form.field :envname, :label => _("Name") do
+        = text_field_tag 'environment[name]', nil, :tabindex => form.tabindex
 
-      = f.field :envdescription, :label => _("Description") do
-        = text_area_tag 'environment[description]', nil, :tabindex => f.tabindex, :size => "40x5"
+      = form.field :envdescription, :label => _("Description") do
+        = text_area_tag 'environment[description]', nil, :tabindex => form.tabindex, :size => "40x5"
 
       %fieldset
         .grid_7.la
           %label= _("Note: This will be set as your initial default environment.")
 
-      = f.submit _("Save")
+      = form.submit _("Save")

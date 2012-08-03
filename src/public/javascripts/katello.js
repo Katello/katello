@@ -406,34 +406,27 @@ var client_common = {
  * Document Ready function
  */
 $(document).ready(function (){
-	//Add a handler so that if any input has focus
-	//   our keyboard shortcuts don't steal it
-	$(":input").focus(function() {
-		onInputField = true;
-	}).blur(function() {
-		onInputField = false;
-	});
+    //Add a handler so that if any input has focus
+    //   our keyboard shortcuts don't steal it
+    $(":input").focus(function() {
+        onInputField = true;
+    }).blur(function() {
+        onInputField = false;
+    });
 
-  //Add a handler for helptips
-  $(".helptip-open").live('click', KT.helptip.handle_close);
-  $(".helptip-close").live('click', KT.helptip.handle_open);
+    //Add a handler for helptips
+    $(".helptip-open").live('click', KT.helptip.handle_close);
+    $(".helptip-close").live('click', KT.helptip.handle_open);
 
-  // Add a handler for ellipsis
-  $(".one-line-ellipsis").ellipsis(true);
-  $(".tipsify").tipsy({ live : true, gravity: 's', fade: true, delayIn : 350 });
-  $(".tipsify-west").tipsy({ gravity: 'w', hoverable : 'true' });
+    // Add a handler for ellipsis
+    $(".one-line-ellipsis").ellipsis(true);
+    $(".tipsify").tipsy({ live : true, gravity: 's', fade: true, delayIn : 350 });
+    $(".tipsify-west").tipsy({ gravity: 'w', hoverable : 'true' });
 
-  // Form inputs help tips 
-  $('form span.details-icon[data-help]').tipsy({
-    gravity: 'e', live : true, html : true, title : KT.tipsy.templates.table_template,
-    hoverable : true, delayOut : 250, opacity : 1, delayIn : 300, className : 'tooltip',
-    afterShow : function(){
-      $('.details_container').addClass('scroll-pane');
-      KT.common.jscroll_init($('.scroll-pane'));
-  }});
+    KT.tipsy.custom.enable_forms_tooltips();
 
-  KT.common.orgSwitcherSetup();
-  KT.common.orgFilterSetup();
+    KT.common.orgSwitcherSetup();
+    KT.common.orgFilterSetup();
 });
 
 /**

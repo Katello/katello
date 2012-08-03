@@ -5,5 +5,5 @@
 
 = content_for :content do
   #provider
-    = kt_form_for @provider do |f|
-      = render :partial => 'form', :locals => { :form =>f }
+    = kt_form_for @provider do |form|
+      = render :partial => 'form', :locals => { :form => form }

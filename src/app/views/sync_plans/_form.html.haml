@@ -1,31 +1,14 @@
 -# parameters: form
 - raise ArgumentError, "Sync Plan form requires :form be passed in :locals" unless local_assigns[:form]
 
-%fieldset.fl.clear
-  %label.grid_2 #{_("Name")}:
-  .grid_5.la#plan_name
-    = form.text_field :name
+= form.text_field :name, :label => _("Name")
 
-%fieldset.fl.clear
-  %label.grid_2 #{_("Description")}:
-  .grid_5.la#plan_description
-    = form.text_field :description
+= form.text_field :description, :label => _("Description")
 
-%fieldset.fl.clear
-  %label.grid_2 #{_("Interval")}:
-  .grid_5.fl.la#plan_interval
-    = select_tag('sync_plan[interval]', options_for_select(SyncPlan::TYPES, @plan.interval))
+= form.select :interval, options_for_select(SyncPlan::TYPES, @plan.interval), :label => _("Interval")
 
-%fieldset.fl.clear
-  %label.grid_2 #{_("Start Date")}:
-  .grid_5.fl.la#plan_date
-    = form.text_field :plan_date, :id => 'datepicker'
+= form.text_field :plan_date, :id => 'datepicker', :label => _("Start Date")
 
-%fieldset.fl.clear
-  %label.grid_2 #{_("Time")}:
-  .grid_5.fl.la#plan_time
-    = form.text_field :plan_time, :id => 'timepicker'
+= form.text_field :plan_time, :id => 'timepicker', :label => _("Time")
 
-
-.grid_3.la.prefix_2
-  = button_to _("Save"), {:action => "create", :controller => "sync_plans"}, :method => :post, :id => :plan_save
+= form.submit _("Save"), :id => :plan_save

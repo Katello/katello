@@ -3,11 +3,11 @@
 
 = content_for :content do
   .grid_7#new_changeset123
-    = kt_form_for Changeset.new do |f|
+    = kt_form_for Changeset.new do |form|
       %input{ :type => "hidden", :name => "env_id", :value => @environment.id }
 
-      = f.text_field :name, :label => _("Name"), :grid => [2,4]
+      = form.text_field :name, :label => _("Name"), :grid => [2,4]
 
-      = f.text_area :description, :label => _("Description"), :grid => [2,4]
+      = form.text_area :description, :label => _("Description"), :grid => [2,4]
 
-      = f.submit _("Save Changeset"), :id => 'save_changeset_button', 'data-url' => changesets_path
+      = form.submit _("Save Changeset"), :id => 'save_changeset_button', 'data-url' => changesets_path
