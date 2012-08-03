@@ -42,7 +42,7 @@ class Api::UsersController < Api::ApiController
   end
 
   def param_rules
-    { :create => [:username, :password, :email, :disabled, :default_environment_id],
+    { :create => [:username, :password, :email, :disabled, :default_environment_id, :default_locale],
       :update => { :user => [:password, :email, :disabled, :default_environment_id] }
     }
   end
@@ -63,6 +63,12 @@ class Api::UsersController < Api::ApiController
                         :disabled => params[:disabled])
 
     user.default_environment = KTEnvironment.find(params[:default_environment_id]) if params[:default_environment_id]
+
+    if !params[:default_locale].blank?
+        user.default_locale = params[:default_locale]
+        user.save!
+    end
+
     render :json => user.to_json
   end
 
