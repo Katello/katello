@@ -108,6 +108,13 @@
       #changeset_tree
         - if read_promotion_changesets or read_deletion_changesets
           %h2 #{_(" Changesets")}
+          .sliding_tree_categories.clickable
+            .sliding_tree_category{:class => ("selected" unless !@next_environment)}
+              - if @next_environment
+                #{_("Promotion to %s") % @next_environment.name}
+            .sliding_tree_category{:class => ("selected" unless @next_environment)}
+              - if @environment and !@environment.library?
+                #{_("Deletion from %s") % @environment.name}
           .breadcrumb_filter.fl.clear.clickable
             %form#filter_form.filter.clear
               %input{ :name => "filter", :type => "input", :placeholder => _("Filter..."), :id=>"filter_input"}
