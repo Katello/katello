@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -89,6 +89,9 @@ cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
 
 %changelog
+* Sat Aug 04 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.2-1
+- 845224 - fix adding broker cert to nssdb (inecas@redhat.com)
+
 * Thu Aug 02 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
 - rb19 - fixing typo in requires (lzap+git@redhat.com)
 - buildroot and %%clean section is not needed (msuchy@redhat.com)
