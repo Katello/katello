@@ -333,7 +333,6 @@ fi
 %files
 %attr(600, katello, katello)
 %{_bindir}/katello-*
-%{_sbindir}/service-wait
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -370,6 +369,7 @@ fi
 
 %files common
 %doc README LICENSE doc/
+%{_sbindir}/service-wait
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
