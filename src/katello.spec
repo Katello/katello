@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.2
+Version:        1.1.3
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -460,6 +460,44 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Sat Aug 04 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.3-1
+- CS - Adds missing variablization of color. (ehelms@redhat.com)
+- CS - A number of minor updates. (ehelms@redhat.com)
+- Introduce +load_remote_data+ method to lazy_attributes (inecas@redhat.com)
+- New Role form rewritten (pajkycz@gmail.com)
+- adding test for commit 6ed001305416785dab12a94c99f11f93332a3a4a
+  (adprice@redhat.com)
+- 841984 - Creating new user displays confusing/misleading notification
+  (adprice@redhat.com)
+- CS - Adds removal of metadata row whenever all elements have been loaded.
+  (ehelms@redhat.com)
+- CS - Turn more colors into variables. Fixes issue with label appearing
+  uncentered.  Adds disabling and tooltip to compare repos button.
+  (ehelms@redhat.com)
+- Include css for activation_keys/system_groups. (pajkycz@gmail.com)
+- CS - Adds permission check for managing environments on environment selector.
+  Adds direct link to current organization if link is present.
+  (ehelms@redhat.com)
+- Check if systems/keys are readable by user. (pajkycz@gmail.com)
+- Move activation key to system events section (pajkycz@gmail.com)
+- CS - Addition of ellipsis names of column headers with regards to showing
+  both the repository name and environment name on repo compare.
+  (ehelms@redhat.com)
+- CS - Adds Manage Organizations link to the environment selector.
+  (ehelms@redhat.com)
+- CS - Moves the comparison grid JS into the widgets section.
+  (ehelms@redhat.com)
+- CS - Updates path selector footer to allow for arbitrary content.
+  (ehelms@redhat.com)
+- CS - Updates to the way package names are displayed. (ehelms@redhat.com)
+- CS - Updates for taller rows to accomodate larger repository names. Adds
+  tooltipping to ellipsied names. (ehelms@redhat.com)
+- CS - Fixes checkbox showing through env selector, remove auto complete icon
+  and button sliding under input box. (ehelms@redhat.com)
+- CS - Styling updates. (ehelms@redhat.com)
+- Fencing system groups from activation keys nav (pajkycz@gmail.com)
+- Activation key - show list of registered systems (pajkycz@gmail.com)
+
 * Thu Aug 02 2012 Tom McKay <thomasmckay@redhat.com> 1.1.2-1
 - Merge pull request #411 from thomasmckay/crosslink (thomasmckay@redhat.com)
 - Merge pull request #415 from Pajk/765989 (thomasmckay@redhat.com)
