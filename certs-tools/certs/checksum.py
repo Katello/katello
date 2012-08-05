@@ -33,7 +33,7 @@ except ImportError:
                 raise ValueError, "Incompatible checksum type"
 
 
-def getFileChecksum(hashtype, filename=None, fd=None, file=None, buffer_size=None):
+def getFileChecksum(hashtype, filename=None, fd=None, file_handler=None, buffer_size=None):
     """ Compute a file's checksum
         Used by rotateFile()
     """
@@ -45,7 +45,7 @@ def getFileChecksum(hashtype, filename=None, fd=None, file=None, buffer_size=Non
 
     if filename is None and fd is None and file is None:
         raise ValueError("no file specified")
-    if file:
+    if file_handler:
         f = file
     elif fd is not None:
         f = os.fdopen(os.dup(fd), "r")
@@ -61,8 +61,8 @@ def getFileChecksum(hashtype, filename=None, fd=None, file=None, buffer_size=Non
         m.update(buffer)
 
     # cleanup time
-    if file is not None:
-        file.seek(0, 0)
+    if file_handler is not None:
+        file_handler.seek(0, 0)
     else:
         f.close()
     return m.hexdigest()
