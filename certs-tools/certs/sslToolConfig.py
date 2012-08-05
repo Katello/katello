@@ -102,8 +102,6 @@ _defs = \
         '--server-cert-req' : 'server.csr',
         '--server-cert'     : 'server.crt',
 
-        '--jabberd-ssl-cert': 'server.pem',
-
         '--set-country'     : 'US',
         '--set-common-name' : "",       # these two will never appear
         '--set-hostname'    : HOSTNAME, # at the same time on the CLI

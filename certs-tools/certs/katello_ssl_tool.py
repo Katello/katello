@@ -505,35 +505,6 @@ def genServerCert(password, d, verbosity=0):
     except:
         pass
 
-
-def gen_jabberd_cert(d):
-    """
-    generate the jabberd ssl cert from the server cert and key
-    """
-
-    serverKeyPairDir = os.path.join(d['--dir'], getMachineName(d['--set-hostname']))
-    server_key  = os.path.join(serverKeyPairDir, d['--server-key'])
-    server_cert = os.path.join(serverKeyPairDir, d['--server-cert'])
-
-    dependencyCheck(server_key)
-    dependencyCheck(server_cert)
-
-    jabberd_ssl_cert_name = os.path.basename(d['--jabberd-ssl-cert'])
-    jabberd_ssl_cert = os.path.join(serverKeyPairDir, jabberd_ssl_cert_name )
-
-    # Create the jabberd cert - need to concatenate the cert and the key
-    # XXX there really should be some better error propagation here
-    fd = None
-    try:
-        fd = os.open(jabberd_ssl_cert, os.O_WRONLY | os.O_CREAT)
-        _copy_file_to_fd(cleanupAbsPath(server_cert), fd)
-        _copy_file_to_fd(cleanupAbsPath(server_key), fd)
-    finally:
-        if fd:
-            os.close(fd)
-    return
-
-
 def _disableRpmMacros():
     mac = cleanupAbsPath('~/.rpmmacros')
     macTmp = cleanupAbsPath('~/RENAME_ME_BACK_PLEASE-lksjdflajsd.rpmmacros')
@@ -667,13 +638,11 @@ def genProxyServerTarball_dependencies(d):
     server_key = pathJoin(serverKeySetDir, d['--server-key'])
     server_cert = pathJoin(serverKeySetDir, d['--server-cert'])
     server_cert_req = pathJoin(serverKeySetDir, d['--server-cert-req'])
-    jabberd_ssl_cert = pathJoin(serverKeySetDir, d['--jabberd-ssl-cert'])
 
     dependencyCheck(ca_cert)
     dependencyCheck(server_key)
     dependencyCheck(server_cert)
     dependencyCheck(server_cert_req)
-    dependencyCheck(jabberd_ssl_cert)
 
 
 def getTarballFilename(d, version='1.0', release='1'):
@@ -727,13 +696,11 @@ def genProxyServerTarball(d, version='1.0', release='1', verbosity=0):
     server_key = pathJoin(machinename, d['--server-key'])
     server_cert = pathJoin(machinename, d['--server-cert'])
     server_cert_req = pathJoin(machinename, d['--server-cert-req'])
-    jabberd_ssl_cert = os.path.join(machinename, d['--jabberd-ssl-cert'])
 
     ## build the server tarball
-    args = '/bin/tar -cvf %s %s %s %s %s %s' \
+    args = '/bin/tar -cvf %s %s %s %s %s' \
            % (repr(os.path.basename(tarballFilepath)), repr(ca_cert),
-              repr(server_key), repr(server_cert), repr(server_cert_req),
-              repr(jabberd_ssl_cert))
+              repr(server_key), repr(server_cert), repr(server_cert_req))
 
     serverKeySetDir = pathJoin(d['--dir'], machinename)
     tarballFilepath2 = pathJoin(serverKeySetDir, tarballFilepath)
@@ -801,19 +768,9 @@ def genServerRpm_dependencies(d):
     server_cert_req_name = os.path.basename(d['--server-cert-req'])
     server_cert_req = os.path.join(serverKeyPairDir, server_cert_req_name)
 
-    jabberd_ssl_cert_name = os.path.basename(d['--jabberd-ssl-cert'])
-    jabberd_ssl_cert = os.path.join(serverKeyPairDir, jabberd_ssl_cert_name )
-
     dependencyCheck(server_key)
     dependencyCheck(server_cert)
     dependencyCheck(server_cert_req)
-
-    # if all the other dependencies exist except the server pem,
-    # just generate it
-    try:
-        dependencyCheck(jabberd_ssl_cert)
-    except FailedFileDependencyException:
-        gen_jabberd_cert(d)
 
 def genServerRpm(d, verbosity=0):
     """ generates server's SSL key set RPM """
@@ -829,9 +786,6 @@ def genServerRpm(d, verbosity=0):
 
     server_cert_req_name = os.path.basename(d['--server-cert-req'])
     server_cert_req = os.path.join(serverKeyPairDir, server_cert_req_name)
-
-    jabberd_ssl_cert_name = os.path.basename(d['--jabberd-ssl-cert'])
-    jabberd_ssl_cert = os.path.join(serverKeyPairDir, jabberd_ssl_cert_name )
 
     server_rpm_name = os.path.basename(d['--server-rpm'])
     server_rpm = os.path.join(serverKeyPairDir, server_rpm_name)
@@ -873,27 +827,6 @@ Best practices suggests that this RPM should only be installed on the web
 server with this hostname: %s
 """ % d['--set-hostname']
 
-    # Determine which jabberd user exists:
-    jabberd_user = None
-    possible_jabberd_users = ['jabberd', 'jabber']
-    for juser_attempt in possible_jabberd_users:
-        try:
-            pwd.getpwnam(juser_attempt)
-            jabberd_user = juser_attempt
-        except:
-            # user doesn't exist, try the next
-            pass
-    if jabberd_user is None:
-        print ("WARNING: No jabber/jabberd user on system, skipping " +
-                "jabberd.pem generation.")
-
-    jabberd_cert_string = ""
-    if jabberd_user is not None:
-        jabberd_cert_string = \
-            "/etc/pki/spacewalk/jabberd/server.pem:0600,%s,%s=%s" % \
-            (jabberd_user, jabberd_user, repr(cleanupAbsPath(jabberd_ssl_cert)))
-
-
     ## build the server RPM
     args = (os.path.join(CERT_PATH, 'gen-rpm.sh') + " "
             "--name %s --version %s --release %s --packager %s --vendor %s "
@@ -901,15 +834,13 @@ server with this hostname: %s
             "/etc/pki/tls/private/%s:0600=%s "
             "/etc/pki/tls/certs/%s=%s "
             "/etc/pki/tls/certs/%s=%s "
-            "%s"
             % (repr(server_rpm_name), ver, rel, repr(d['--rpm-packager']),
                repr(d['--rpm-vendor']),
                repr(SERVER_RPM_SUMMARY), repr(description),
                repr(cleanupAbsPath(postun_scriptlet)),
                repr(server_key_name), repr(cleanupAbsPath(server_key)),
                repr(server_cert_req_name), repr(cleanupAbsPath(server_cert_req)),
-               repr(server_cert_name), repr(cleanupAbsPath(server_cert)),
-               jabberd_cert_string
+               repr(server_cert_name), repr(cleanupAbsPath(server_cert))
                ))
     serverRpmName = "%s-%s-%s" % (server_rpm, ver, rel)
 
@@ -1046,7 +977,6 @@ def _main():
             genServerKey(DEFS, options.verbose)
             genServerCertReq(DEFS, options.verbose)
             genServerCert(getCAPassword(options, confirmYN=0), DEFS, options.verbose)
-            gen_jabberd_cert(DEFS)
             if not getOption(options, 'no_rpm'):
                 genServerRpm(DEFS, options.verbose)
 
