@@ -451,7 +451,7 @@ def genServerCert(password, d, verbosity=0):
             print "Commandline:", args % 'PASSWORD'
     try:
         rotated = rotateFile(filepath=server_cert, verbosity=verbosity)
-        if verbosity>=0 and rotated:
+        if verbosity >= 0 and rotated:
             print "Rotated: %s --> %s" % (d['--server-cert'],
                                           os.path.basename(rotated))
     except ValueError:
