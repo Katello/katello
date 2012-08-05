@@ -47,7 +47,7 @@ from sslToolCli import processCommandline, CertExpTooShortException, \
         CertExpTooLongException, InvalidCountryCodeException
 
 from sslToolLib import KatelloSslToolException, \
-        gendir, chdir, getMachineName, fixSerial, TempDir, parseRPMFilename, \
+        gendir, chdir, getMachineName, fixSerial, TempDir, \
         errnoGeneralError, errnoSuccess
 
 from fileutils import rotateFile, rhn_popen, cleanupAbsPath
