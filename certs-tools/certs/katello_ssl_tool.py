@@ -794,7 +794,7 @@ def genServerRpm(d, verbosity=0):
 
     genServerRpm_dependencies(d)
 
-    if verbosity>=0:
+    if verbosity >= 0:
         sys.stderr.write("\n...working...\n")
 
     # check for new installed RPM.
