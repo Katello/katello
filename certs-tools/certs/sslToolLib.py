@@ -26,7 +26,6 @@ import shutil
 import tempfile
 from timeLib import DAY, now, secs2days, secs2years, \
                     str2secs
-from fileutils import cleanupAbsPath
 
 class KatelloSslToolException(Exception):
     """ general exception class for the tool """
