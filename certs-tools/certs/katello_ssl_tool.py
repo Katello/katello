@@ -219,7 +219,7 @@ def genPublicCaCert(password, d, verbosity=0, forceYN=0):
 
     try:
         rotated = rotateFile(filepath=ca_cert, verbosity=verbosity)
-        if verbosity>=0 and rotated:
+        if verbosity >= 0 and rotated:
             print "Rotated: %s --> %s" \
                   % (d['--ca-cert'], os.path.basename(rotated))
     except ValueError:
