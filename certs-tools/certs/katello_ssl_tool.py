@@ -583,9 +583,9 @@ def genCaRpm(d, verbosity=0):
             if comp > 0:
                 hdr = h
 
-    epo, ver, rel = None, '1.0', '0'
+    ver, rel = '1.0', '0'
     if hdr is not None:
-        epo, ver, rel = hdr['epoch'], hdr['version'], hdr['release']
+        ver, rel = hdr['version'], hdr['release']
 
     # bump the release - and let's not be too smart about it
     #                    assume the release is a number.
@@ -859,9 +859,9 @@ def genServerRpm(d, verbosity=0):
             if comp > 0:
                 hdr = h
 
-    epo, ver, rel = None, '1.0', '0'
+    ver, rel = '1.0', '0'
     if hdr is not None:
-        epo, ver, rel = hdr['epoch'], hdr['version'], hdr['release']
+        ver, rel = hdr['version'], hdr['release']
 
     # bump the release - and let's not be too smart about it
     #                    assume the release is a number.
