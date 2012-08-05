@@ -55,10 +55,10 @@ def getFileChecksum(hashtype, filename=None, fd=None, file_handler=None, buffer_
     f.seek(0, 0)
     m = hashlib.new(hashtype)
     while 1:
-        buffer = f.read(buffer_size)
-        if not buffer:
+        file_buffer = f.read(buffer_size)
+        if not file_buffer:
             break
-        m.update(buffer)
+        m.update(file_buffer)
 
     # cleanup time
     if file_handler is not None:
