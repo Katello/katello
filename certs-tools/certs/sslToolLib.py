@@ -23,8 +23,7 @@ import sys
 import string
 import shutil
 import tempfile
-from timeLib import DAY, now, secs2days, secs2years, \
-                    str2secs
+from timeLib import DAY, now, secs2days, secs2years
 
 class KatelloSslToolException(Exception):
     """ general exception class for the tool """
