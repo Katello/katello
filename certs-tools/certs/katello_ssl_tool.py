@@ -537,7 +537,7 @@ def genCaRpm(d, verbosity=0):
 
     genCaRpm_dependencies(d)
 
-    if verbosity>=0:
+    if verbosity >= 0:
         sys.stderr.write("\n...working...")
     # Work out the release number.
     hdr = getInstalledHeader(ca_cert_rpm)
