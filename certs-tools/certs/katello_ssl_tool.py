@@ -37,7 +37,6 @@ import os
 import sys
 import glob
 import pwd
-import time
 import string
 import shutil
 import getpass
