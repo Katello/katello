@@ -24,7 +24,7 @@ import sys
 import string
 import shutil
 import tempfile
-from timeLib import DAY, now, secs2days, secs2years, secs2str, \
+from timeLib import DAY, now, secs2days, secs2years, \
                     str2secs
 from fileutils import cleanupAbsPath, rhn_popen
 
