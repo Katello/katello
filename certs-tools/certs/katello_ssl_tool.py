@@ -136,7 +136,7 @@ ERROR: a CA private key already exists:
             print "Commandline:", args % "PASSWORD"
     try:
         rotated = rotateFile(filepath=ca_key, verbosity=verbosity)
-        if verbosity>=0 and rotated:
+        if verbosity >= 0 and rotated:
             print "Rotated: %s --> %s" \
                   % (d['--ca-key'], os.path.basename(rotated))
     except ValueError:
