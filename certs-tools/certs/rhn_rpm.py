@@ -113,10 +113,10 @@ class RPM_Header:
                 key_id = ret[19:27]
 
             key_id_len = len(key_id)
-            format = "%dB" % key_id_len
-            t = struct.unpack(format, key_id)
-            format = "%02x" * key_id_len
-            key_id = format % t
+            key_format = "%dB" % key_id_len
+            t = struct.unpack(key_format, key_id)
+            key_format = "%02x" * key_id_len
+            key_id = key_format % t
             self.signatures.append({
                 'signature_type'    : sig_type,
                 'key_id'            : key_id,
