@@ -79,7 +79,7 @@ class ContentSearchController < ApplicationController
     elsif !product_ids.empty? #products were autocompleted
         repos = []
         Product.readable(current_organization).where(:id=>product_ids).each do |p|
-          repos = repos + Repository.enabled.libraries_content_readable(current_organization).product(p)
+          repos = repos + Repository.enabled.libraries_content_readable(current_organization).in_product(p)
         end
     else #get all
         repos = Repository.enabled.libraries_content_readable(current_organization)
