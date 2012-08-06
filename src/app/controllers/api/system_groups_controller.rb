@@ -61,14 +61,14 @@ class Api::SystemGroupsController < Api::ApiController
 
   api :GET, "/organizations/:organization_id/system_groups/:id", "Show a system group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, Integer, :desc => "Id of the system group", :required => true
+  param :id, :identifier, :desc => "Id of the system group", :required => true
   def show
     render :json => @group
   end
 
   api :PUT, "/organizations/:organization_id/system_groups/:id", "Update a system group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, Integer, :desc => "Id of the system group", :required => true
+  param :id, :identifier, :desc => "Id of the system group", :required => true
   param :system_group, Hash, :required => true do
     param :name, String, :desc => "System group name"
     param :description, String
@@ -86,14 +86,14 @@ class Api::SystemGroupsController < Api::ApiController
 
   api :GET, "/organizations/:organization_id/system_groups/:id/systems", "List systems in the group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, Integer, :desc => "Id of the system group", :required => true
+  param :id, :identifier, :desc => "Id of the system group", :required => true
   def systems
     render :json => @group.systems.collect{|sys| {:id=>sys.uuid, :name=>sys.name}}
   end 
 
   api :POST, "/organizations/:organization_id/system_groups/:id/add_systems", "Add systems to the group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, Integer, :desc => "Id of the system group", :required => true
+  param :id, :identifier, :desc => "Id of the system group", :required => true
   param :system_group, Hash, :required => true do
     param :system_ids, Array, :desc => "Array of system ids"
   end
@@ -107,7 +107,7 @@ class Api::SystemGroupsController < Api::ApiController
 
   api :POST, "/organizations/:organization_id/system_groups/:id/remove_systems", "Remove systems from the group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, Integer, :desc => "Id of the system group", :required => true
+  param :id, :identifier, :desc => "Id of the system group", :required => true
   param :system_group, Hash, :required => true do
     param :system_ids, Array, :desc => "Array of system ids"
   end
@@ -121,7 +121,7 @@ class Api::SystemGroupsController < Api::ApiController
 
   api :GET ,"/organizations/:organization_id/system_groups/:id/history", "History of jobs performed on a system group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, Integer, :desc => "Id of the system group", :required => true
+  param :id, :identifier, :desc => "Id of the system group", :required => true
   param :job_id, :identifier, :desc => "Id of a job for filtering"
   def history
     if params[:job_id]
@@ -135,7 +135,7 @@ class Api::SystemGroupsController < Api::ApiController
 
   api :POST ,"/organizations/:organization_id/system_groups/:id/lock", "Lock the system group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, Integer, :desc => "Id of the system group", :required => true
+  param :id, :identifier, :desc => "Id of the system group", :required => true
   def lock
     @group.locked = true
     @group.save!
@@ -144,7 +144,7 @@ class Api::SystemGroupsController < Api::ApiController
 
   api :POST ,"/organizations/:organization_id/system_groups/:id/unlock", "Unlock the system group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, Integer, :desc => "Id of the system group", :required => true
+  param :id, :identifier, :desc => "Id of the system group", :required => true
   def unlock
     @group.locked = false
     @group.save!
@@ -172,7 +172,7 @@ class Api::SystemGroupsController < Api::ApiController
 
   api :DELETE, "/organizations/:organization_id/system_groups/:id", "Destroy a system group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, Integer, :desc => "Id of the system group", :required => true
+  param :id, :identifier, :desc => "Id of the system group", :required => true
   def destroy
     @group.destroy
     render :text => _("Deleted system group '#{params[:id]}'"), :status => 200
