@@ -118,6 +118,28 @@ describe User do
       @user.reload
       @user.default_environment.should == @environment
     end
+
+    it "be able to find users by default environment" do
+      disable_org_orchestration
+      @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id,
+                                           :organization => @organization)
+
+      @user.default_environment = @environment
+      User.find_by_default_environment(@environment.id).first.should == @user
+    end
+
+    it "should unset default env after environment gets deleted" do
+      disable_org_orchestration
+      @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id,
+                                           :organization => @organization)
+
+      @user.default_environment = @environment
+      @environment.destroy
+      @user.default_environment.should == nil
+      User.find_by_default_environment(@environment.id).should == []
+    end
   end
 
   context "Pulp orchestration", :katello => true do
