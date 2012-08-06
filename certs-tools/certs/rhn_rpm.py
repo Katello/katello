@@ -180,7 +180,7 @@ def get_header_struct_size(package_file):
 
     return header_size
 
-SHARED_TS=None
+SHARED_TS = None
 def get_package_header(filename=None, file=None, fd=None):
     """ Loads the package header from a file / stream / file descriptor
         Raises rpm.error if an error is found, or InvalidPacageError if package is
