@@ -20,11 +20,6 @@ import struct
 
 # Expose a bunch of useful constants from rpm
 error = rpm.error
-for sym, val in rpm.__dict__.items():
-    if sym[:3] == 'RPM':
-        # A constant, probably - import it into our namespace
-        globals()[sym] = val
-del sym, val
 
 # need this for rpm-pyhon < 4.6 (e.g. on RHEL5)
 rpm.RPMTAG_FILEDIGESTALGO = 5011
