@@ -86,7 +86,7 @@ common:
     oauth_secret: shhhh
 
 # Setup your pulp environment here
-# url: refers to the url of the candlepin
+# url: refers to the url of the pulp
 #     example https://localhost/pulp/api
 # oauth_key and oauth_secre :Specify your oauth key and secret
 #   used to authenticate between Katello and Pulp
@@ -103,8 +103,14 @@ common:
 
 
 # Setup your foreman environment here
+# url: refers to the url of the Foreman (without the final '/')
+#     example https://foreman.instance.company.com:443
+# oauth_key and oauth_secre :Specify your oauth key and secret
+#   used to authenticate between Katello and Foreman
   foreman:
     url: https://foreman.instance.company.com:443
+    oauth_key: katello
+    oauth_secret: shhh
 
   cloud_forms:
     oauth_key: cloud_forms
