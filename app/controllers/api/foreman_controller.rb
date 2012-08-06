@@ -21,7 +21,6 @@ class Api::ForemanController < Api::ApiController
 
   def self.foreman
     config = AppConfig.foreman
-    #@@foreman_api_resource.new(:username => 'admin', :password => 'changeme', :base_url => cfg.url)
     @foreman_api_resource ||= foreman_api_resource_class.new(:base_url => config.url, 
                                                              :oauth => { :consumer_key => config.oauth_key, 
                                                                          :consumer_secret => config.oauth_secret })
