@@ -79,7 +79,7 @@ class ContentSearchController < ApplicationController
     elsif !product_ids.empty? #products were autocompleted
         repos = []
         Product.readable(current_organization).where(:id=>product_ids).each do |p|
-          repos = repos + Repository.enabled.libraries_content_readable(current_organization).product(p)
+          repos = repos + Repository.enabled.libraries_content_readable(current_organization).in_product(p)
         end
     else #get all
         repos = Repository.enabled.libraries_content_readable(current_organization)
@@ -212,9 +212,22 @@ class ContentSearchController < ApplicationController
     end
 
     cols = {}
-    @repos.each{|r| cols[r.id] = {:id=>r.id, :content => repo_compare_name_display(r) }}
+    sort_repos(@repos).each{|r| cols[r.id] = {:id=>r.id, :content => repo_compare_name_display(r)}}
     rows += [metadata_row(packages.total, offset.to_i + rows.length, {:repos=>params[:repos]}, 'compare')] if packages.total > current_user.page_size
-    render :json => {:rows=>rows, :cols=>cols}
+    render :json => {:rows=>rows, :cols=>cols, :name=>_("Repository Comparison")}
+  end
+
+  #take in a set of repos and sort based on environment
+  def sort_repos repos
+    env_to_repo = {}
+    repos.each do |r|
+      env_to_repo[r.environment.id] ||= []
+      env_to_repo[r.environment.id] << r
+    end
+    envs = [current_organization.library] + current_organization.promotion_paths.flatten
+    to_ret = []
+    envs.each{|e|  to_ret += (env_to_repo[e.id] || [])}
+    to_ret
   end
 
 
@@ -412,12 +425,12 @@ class ContentSearchController < ApplicationController
     to_ret = {}
     content_attribute = content_type.to_sym == :package ? 'nvrea' : 'id'
     content_class = content_type.to_sym == :package ? Glue::Pulp::Package : Glue::Pulp::Errata
-    content = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode).results
+    content = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode)
 
     return nil if content.total == 0
 
     spanning_repos.each do |repo|
-      results = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode,repo).results
+      results = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode,repo)
       to_ret[repo.environment_id] = {:id=>repo.environment_id, :display=>results.total} if accessible_env_ids.include?(repo.environment_id)
     end
 
@@ -457,7 +470,9 @@ class ContentSearchController < ApplicationController
     end
     repoids = repos.collect{|r| r.pulp_id}
     Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
-    search.perform
+    search.perform.results
+  rescue Tire::Search::SearchRequestFailed => e
+    Support.array_with_total
   end
 
 

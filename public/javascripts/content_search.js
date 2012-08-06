@@ -66,8 +66,8 @@ KT.content_search = function(paths_in){
         }
     },
     search_modes = [{id:'all', name:i18n.all},
-                    {id:'shared', name:i18n.shared},
-                    {id:'unique', name:i18n.unique}
+                    {id:'shared', name:i18n.union},
+                    {id:'unique', name:i18n.difference}
                    ],
     search_pages = {errata:{url:KT.routes.errata_content_search_index_path(), modes:true},
                     repos:{url:KT.routes.repos_content_search_index_path(), modes:true, comparable:true},
@@ -233,21 +233,16 @@ KT.content_search = function(paths_in){
         close_tipsy();
 
         options.show_compare_btn = search_pages[search_params.content_type].comparable;
+
+
+        search_params = populate_state(search_params);
+
         if (cache.get_state(search_params)){
             comparison_grid.import_data(cache.get_state(search_params));
             comparison_grid.set_mode("results", options);
+            select_envs(get_initial_environments());
         }
         else {
-
-            if (search_params.mode === undefined){
-                search_params.mode = search_modes[0].id;
-            }
-
-            search_params.environments = [];
-            utils.each(get_initial_environments(), function(item){
-                search_params.environments.push(item.id);
-            });
-
             $(document).trigger('loading.comparison_grid');
             $.ajax({
                 type: 'POST',
@@ -299,6 +294,23 @@ KT.content_search = function(paths_in){
             }
         });
     },
+    populate_state = function(search_params){
+        /**
+         * Populate the search params with extra data needed for querying and
+         *   for saving cache
+         */
+        if (search_params === undefined){
+            return undefined;
+        }
+        if (search_params.mode === undefined){
+            search_params.mode = search_modes[0].id;
+        }
+        search_params.environments = [];
+        utils.each(get_initial_environments(), function(item){
+            search_params.environments.push(item.id);
+        });
+        return search_params;
+    },
     close_tipsy = function(){
       $(document).trigger("close.tipsy");
     },
@@ -339,7 +351,7 @@ KT.content_search = function(paths_in){
                 search_initiated(undefined, search);
                 envs_changed = false;
             }
-            cache.save_state(comparison_grid, search);
+            cache.save_state(comparison_grid, populate_state(search));
         });
         //select event
         $(document).bind(env_select.get_select_event(), function(event){
@@ -385,11 +397,11 @@ KT.content_search = function(paths_in){
         }
     },
     init_tipsy = function(){
-        $('.help-icon').tipsy({html:true, gravity:'w', className:'content-tipsy',
-            title:function(){
-                return $(this).find('.hidden-text').html();
-            }
-        });
+        var find_text = function(){ return $(this).find('.hidden-text').html();};
+        $('.browse_tipsy').tipsy({html:true, gravity:'w', className:'content-tipsy',
+            title:find_text});
+        $('.view_tipsy').tipsy({html:true, gravity:'s', className:'content-tipsy',
+                    title:find_text});
         KT.tipsy.custom.url_tooltip($('.tipsify-errata'), 'w');
 
     },
@@ -487,6 +499,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
 
        ac_obj = KT.auto_complete_box(
            {values:ac_container.data('url'),
+            require_select: true,
             input: ac_container.find('input:text'),
             add_btn: ac_container.find('.button'),
             add_text: i18n.add,
@@ -612,11 +625,16 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
             });
             query.content_type = content_type;
             $(document).trigger(event_name, query);
+            get_submit_btn().val(i18n.refresh_results);
+        },
+        get_submit_btn = function(){
+            return selector.parents('form').find('input[type=submit]');
         },
         change_selection = function(selected){
             var needed = mapping[selected],
                 element;
-
+            get_submit_btn().val(i18n.search);
+             
             utils.each(widgets, function(value, key){
                 element = $('#' + value.id);
                 if (utils.include(needed, key)){
