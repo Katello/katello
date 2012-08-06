@@ -311,10 +311,10 @@ def getInstalledHeader(rpmName):
 
 
 if __name__ == '__main__':
-    mi = MatchIterator("name")
-    mi.pattern("name", rpm.RPMMIRE_GLOB, "*ker*")
+    app_mi = MatchIterator("name")
+    app_mi.pattern("name", rpm.RPMMIRE_GLOB, "*ker*")
     while 1:
-        h = mi.next()
+        h = app_mi.next()
         if not h:
             break
         print h['name']
