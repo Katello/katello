@@ -273,7 +273,7 @@ def genServerKey(d, verbosity=0):
 
     try:
         rotated = rotateFile(filepath=server_key, verbosity=verbosity)
-        if verbosity>=0 and rotated:
+        if verbosity >= 0 and rotated:
             print "Rotated: %s --> %s" % (d['--server-key'],
                                           os.path.basename(rotated))
     except ValueError:
