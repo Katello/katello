@@ -403,7 +403,7 @@ class KTEnvironment < ActiveRecord::Base
     users = User.find_by_default_environment(self.id)
     users.each do |u|
       u.default_environment = nil
-      Notify.message _("Your default environment has been removed. Please choose another one"), {:user => u}
+      Notify.message _("Your default environment has been removed. Please choose another one."), {:user => u}
     end
   end
 
