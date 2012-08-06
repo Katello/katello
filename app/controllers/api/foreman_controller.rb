@@ -15,15 +15,20 @@ class Api::ForemanController < Api::ApiController
 
   skip_before_filter :authorize # TODO
 
-  @@foreman_api_resource = nil
+  def self.foreman_api_resource_class
+    raise NotImplemented
+  end
 
-  def foreman
-    cfg = AppConfig.foreman
-    @@foreman_api_resource.new(:username => 'admin', :password => 'changeme', :base_url => cfg.url)
+  def self.foreman
+    config = AppConfig.foreman
+    #@@foreman_api_resource.new(:username => 'admin', :password => 'changeme', :base_url => cfg.url)
+    @foreman_api_resource ||= foreman_api_resource_class.new(:base_url => config.url, 
+                                                             :oauth => { :consumer_key => config.oauth_key, 
+                                                                         :consumer_secret => config.oauth_secret })
   end 
   
   def api_call(meth, *args)
-    data, r = foreman.send(meth, *args)
-    render :text => r.body, :code => r.code, :content_type => :json
+    data, response = self.class.foreman.send(meth, *args)
+    render :text => response.body, :code => response.code, :content_type => :json
   end
 end
