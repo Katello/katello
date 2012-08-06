@@ -12,26 +12,28 @@
 
 class Api::ArchitecturesController < Api::ForemanController
 
-  @@foreman_api_resource = ForemanApi::Resources::Architecture
+  def self.foreman_api_resource_class
+    ForemanApi::Resources::Architecture
+  end
 
   def index
-    api_call('index')
+    api_call :index
   end
 
   def show
-    api_call('show', params['id'])
+    api_call :show, params['id']
   end
 
   def create
-    api_call('create', params.slice('architecture'))
+    api_call :create, params.slice('architecture') 
   end
 
   def update
-    api_call('update', params['id'], params.slice('architecture')) 
+    api_call :update, params['id'], params.slice('architecture')
   end
 
   def destroy
-    api_call('destroy', params['id'])
+    api_call :destroy, params['id']
   end
 
 end
