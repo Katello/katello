@@ -176,20 +176,20 @@ def get_header_struct_size(package_file):
     return header_size
 
 SHARED_TS = None
-def get_package_header(filename=None, file=None, fd=None):
+def get_package_header(filename=None, file_stream=None, fd=None):
     """ Loads the package header from a file / stream / file descriptor
         Raises rpm.error if an error is found, or InvalidPacageError if package is
         busted
     """
     global SHARED_TS
     # XXX Deal with exceptions better
-    if (filename is None and file is None and fd is None):
+    if (filename is None and file_stream is None and fd is None):
         raise ValueError, "No parameters passed"
 
     if filename is not None:
         f = open(filename)
-    elif file is not None:
-        f = file
+    elif file_stream is not None:
+        f = file_stream
         f.seek(0, 0)
     else: # fd is not None
         f = None
