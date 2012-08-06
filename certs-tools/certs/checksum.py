@@ -20,6 +20,7 @@ except ImportError:
     import md5
     import sha
     from Crypto.Hash import SHA256 as sha256
+    # pylint: disable=W0232
     class hashlib:
         @staticmethod
         def new(checksum):
