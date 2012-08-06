@@ -97,7 +97,6 @@ def _getWorkDir():
 
 
 def getCAPassword(options, confirmYN=1):
-    global DEFS
     while not options.password:
         pw = _pw = None
         while not pw:

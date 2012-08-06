@@ -138,7 +138,6 @@ DEFS = _defsServer
 
 
 def reInitDEFS(caYN=0):
-    global DEFS
     if caYN:
         DEFS.update(_defsCa)
     else:
@@ -150,7 +149,6 @@ def figureDEFS_dirs(options):
         once).
     """
 
-    global DEFS
     ## fix up the --dir setting
     DEFS['--dir'] = getOption(options, 'dir') or DEFS['--dir'] or '.'
     DEFS['--dir'] = cleanupNormPath(DEFS['--dir'], dotYN=1)
@@ -173,7 +171,6 @@ def figureDEFS_CA(options):
         the CA key-pair(set) variables.
     """
 
-    global DEFS
     if not getOption(options, 'ca_key'):
         # the various default names for CA keys (a hierarchy)
         for possibility in (CA_KEY_NAME, 'ca.key', 'cakey.pem'):
@@ -223,7 +220,6 @@ def figureDEFS_server(options):
         the server key-pair(set) variables.
     """
 
-    global DEFS
     DEFS['--server-key'] = os.path.basename(getOption(options, 'server_key') \
                              or DEFS['--server-key'] or 'server.key')
     DEFS['--server-cert-req'] = \
@@ -264,7 +260,6 @@ def figureDEFS_distinguishing(options):
         First from config file, then from commanline.
     """
 
-    global DEFS
     #if options:
     #    print 'XXX options.__dict__.keys()', options.__dict__.keys()
     #print 'XXX figureDEFS_distinguishing()'
