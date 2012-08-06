@@ -15,6 +15,22 @@
         %label
           = _("View")
         %select
+        %i.view_tipsy.details_icon_grey
+          %span.hidden-text.hidden
+            .la.content-tipsy
+              %ul
+                %li
+                  =_('All:')
+                  .example
+                    = _("Show all results regardless of which columns they exist in.")
+                %li
+                  =_('Union:')
+                  .example
+                    = _("Show only results that exist in all selected columns.")
+                %li
+                  =_('Difference (Intersection):')
+                  .example
+                    = _("Show only results that do not exist in all selected columns.")
     %div
       %aside
         -#"Filter goes here"
