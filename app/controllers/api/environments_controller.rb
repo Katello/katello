@@ -78,7 +78,7 @@ class Api::EnvironmentsController < Api::ApiController
   api :GET, "/organizations/:organization_id/environments", "List environments in an organization"
   api :GET, "/owners/:organization_id/environments", "List environments for RHSM"
   param :organization_id, :identifier, :desc => "organization identifier"
-  param :library, :boolean, :desc => "set true if you want to see only library environment"
+  param :library, :bool, :desc => "set true if you want to see only library environment"
   param :name, :identifier, :desc => "filter only environments with this identifier"
   def index
     query_params[:organization_id] = @organization.id
@@ -146,7 +146,7 @@ either library or an envrionment at the end of the chain
   api :GET, "/organizations/:organization_id/environments/:id/repositories", "List repositories available in the environment"
   param :id, :identifier, :desc => "environment identifier"
   param :organization_id, :identifier, :desc => "organization identifier"
-  param :include_disabled, :boolean, :desc => "set to true if you want to see also disabled repositories"
+  param :include_disabled, :bool, :desc => "set to true if you want to see also disabled repositories"
   def repositories
     render :json => @environment.products.all_readable(@organization).collect { |p| p.repos(@environment, query_params[:include_disabled]) }.flatten
   end

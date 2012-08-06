@@ -52,7 +52,7 @@ class Api::ProductsController < Api::ApiController
   param :id, :number, :desc => "product numeric identifier"
   param :product, Hash do
     param :gpg_key_name, :identifier, :desc => "identifier of the gpg key"
-    param :recursive, :boolean, "set to true to recursive update gpg key"
+    param :recursive, :bool, "set to true to recursive update gpg key"
   end
   def update
     raise HttpErrors::BadRequest, _("It is not allowed to update a Red Hat product.") if @product.redhat?
@@ -96,7 +96,7 @@ class Api::ProductsController < Api::ApiController
   param :organization_id, :identifier, :desc => "organization identifier"
   param :environment_id, :identifier, :desc => "environment identifier"
   param :id, :number, :desc => "product numeric identifier"
-  param :include_disabled, :boolean, :desc => "set to True if you want to list disabled repositories"
+  param :include_disabled, :bool, :desc => "set to True if you want to list disabled repositories"
   param :name, :identifier, :desc => "repository identifier"
   def repositories
     render :json => @product.repos(@environment, query_params[:include_disabled]).where(query_params.slice(:name))
