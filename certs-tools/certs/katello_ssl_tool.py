@@ -662,22 +662,22 @@ def getTarballFilename(d, version='1.0', release='1'):
     if filenames:
         current = filenames[-1]
 
-    next = "%s-%s-1.tar" % (server_tar_name, version)
+    next_name = "%s-%s-1.tar" % (server_tar_name, version)
     if current:
         v = string.split(versions[-1], '-')
         v[-1] = str(int(v[-1])+1)
-        next = "%s-%s.tar" % (server_tar_name, string.join(v, '-'))
+        next_name = "%s-%s.tar" % (server_tar_name, string.join(v, '-'))
         current = os.path.basename(current)
 
     # incoming release (usually coming from RPM version) is factored in
     # ...if RPM version-release is greater then that is used.
-    v = next[len(server_tar_name)+1:-4]
+    v = next_name[len(server_tar_name)+1:-4]
     v = string.split(v, '-')
     v[-1] = str(max(int(v[-1]), int(release)))
-    next = "%s-%s.tar" % (server_tar_name, string.join(v, '-'))
-    next = os.path.basename(next)
+    next_name = "%s-%s.tar" % (server_tar_name, string.join(v, '-'))
+    next_name = os.path.basename(next_name)
 
-    return current, next
+    return current, next_name
 
 
 def genProxyServerTarball(d, version='1.0', release='1', verbosity=0):
