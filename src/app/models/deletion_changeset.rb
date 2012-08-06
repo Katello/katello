@@ -143,7 +143,7 @@ class DeletionChangeset < Changeset
       pkgs_delete[repo] = Glue::Pulp::Package.id_search(pkgs)
     end
 
-    Repository.delete_repo_packages(pkgs_delete)
+    Glue::Pulp::Repo.delete_repo_packages(pkgs_delete)
     Glue::Pulp::Package.index_packages(pkg_ids)
   end
 
