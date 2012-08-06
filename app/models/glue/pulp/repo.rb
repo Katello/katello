@@ -43,6 +43,27 @@ module Glue::Pulp::Repo
     [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
+  #repo_pkgs = a map with {repo => [package objects to be removed]}
+  def self.delete_repo_packages repo_pkgs
+    Resources::Pulp::Repository.delete_repo_packages(make_pkg_tuples(repo_pkgs))
+  end
+
+  #repo_pkgs = a map with {repo => [package objects to be added]}
+  def self.add_repo_packages repo_pkgs
+    Resources::Pulp::Repository.add_repo_packages(make_pkg_tuples(repo_pkgs))
+  end
+
+  def self.make_pkg_tuples repo_pkgs
+    package_tuples = []
+    repo_pkgs.each do |repo, pkgs|
+      pkgs.each do |pack|
+        package_tuples << [[pack.filename,pack.checksum],[repo.pulp_id]]
+      end
+    end
+    package_tuples
+  end
+
+
   module InstanceMethods
     def save_repo_orchestration
       case orchestration_for
