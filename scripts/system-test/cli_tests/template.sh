@@ -18,7 +18,6 @@ test_success "template list" template list --org="$TEST_ORG" --environment="Libr
 
 test_success "template update add repo"                    template update --name="$TEMPLATE_NAME" --org="$TEST_ORG"  --from_product="$FEWUPS_PRODUCT" --add_repo="$REPO_NAME"
 test_success "template update add package"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package="cheetah"
-test_success "template update add package using nvrea"     template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package="lion-0.3-0.8.noarch.rpm"
 test_success "template update add package group"           template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group="mammal"
 test_success "template update add package group categrory" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group_category="all"
 test_success "template update add parameter"               template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_parameter="attr" --value="X"
@@ -38,7 +37,6 @@ test_success "template update remove parameter"              template update --n
 test_success "template update remove package group category" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package_group_category="all"
 test_success "template update remove package group"          template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package_group="mammal"
 test_success "template update remove package"                template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package="cheetah"
-test_success "template update remove package using nvrea"    template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package="lion-0.3-0.8.noarch.rpm"
 
 test_failure "template update add unknown package" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package="does_not_exist"
 test_failure "template update add unknown package" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group_category="does_not_exist"
