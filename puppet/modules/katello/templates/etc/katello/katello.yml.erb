@@ -25,6 +25,7 @@ common:
   ldap_roles: <%= scope.lookupvar("katello::params::ldap_roles") %>
   use_cp: true
   use_pulp: <%= scope.lookupvar("katello::params::deployment") == 'katello' %>
+  use_foreman: <%= scope.lookupvar("katello::params::deployment") == 'katello' %>
   rest_client_timeout: 120
 
   host: <%= has_variable?("fqdn") ? fqdn : hostname %>
@@ -75,7 +76,7 @@ common:
     oauth_secret: <%= scope.lookupvar("katello::params::oauth_secret") %>
 
 # Setup your pulp environment here
-# url: refers to the url of the candlepin
+# url: refers to the url of the pulp
 #     example https://localhost/pulp/api
 # oauth_key and oauth_secre :Specify your oauth key and secret
 #   used to authenticate between Katello and Pulp
@@ -120,8 +121,14 @@ common:
 <%- end -%>
 
 # Setup your foreman environment here
+# url: refers to the url of the Foreman (without the final '/')
+#     example https://foreman.instance.company.com:443
+# oauth_key and oauth_secre :Specify your oauth key and secret
+#   used to authenticate between Katello and Foreman
   foreman:
     url: <%= scope.lookupvar("katello::params::foreman_url") %>
+    oauth_key: <%= scope.lookupvar("katello::params::oauth_key") %>
+    oauth_secret: <%= scope.lookupvar("katello::params::oauth_secret") %>
 
   cloud_forms:
     oauth_key: <%= scope.lookupvar("katello::params::oauth_key") %>
