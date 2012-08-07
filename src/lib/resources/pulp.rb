@@ -244,19 +244,16 @@ module Resources
         def delete_schedule(repo_id)
           body = self.delete(Repository.repository_path + repo_id +"/schedules/sync/", self.default_headers).body
         end
-
-        def add_packages repo_id, pkg_id_list
-          add_delete_content("add_package", :packageid, repo_id, pkg_id_list)
+        #repo_package_tuples = list of package repo tuples in the format [[[package_name, checksum],[repo_id]]....]
+        def add_repo_packages repo_package_tuples
+          associate_path = "/pulp/api/services/associate/packages/"
+          body = post(associate_path, {:package_info=>repo_package_tuples}.to_json, self.default_headers).body
         end
 
-        def delete_packages repo_id, pkg_id_list
-          # we need to optimize this call
-          # need a faster way to get pulp 'package object'
-          # information.
-          packages = pkg_id_list.collect do |p|
-            Resources::Pulp::Package.find p
-          end
-          add_delete_content("delete_package", :package, repo_id, packages)
+        #repo_package_tuples = list of package repo tuples in the format [[[package_name, checksum],[repo_id]]....]
+        def delete_repo_packages repo_package_tuples
+          dissociate_path = "/pulp/api/services/disassociate/packages/"
+          body = post(dissociate_path, {:package_info=>repo_package_tuples}.to_json, self.default_headers).body
         end
 
 
