@@ -447,20 +447,12 @@ module Glue::Pulp::Repo
     retval
   end
 
-  def add_packages pkg_id_list
-    Resources::Pulp::Repository.add_packages self.pulp_id,  pkg_id_list
-  end
-
   def add_errata errata_id_list
     Resources::Pulp::Repository.add_errata self.pulp_id,  errata_id_list
   end
 
   def add_distribution distribution_id
     Resources::Pulp::Repository.add_distribution self.pulp_id,  distribution_id
-  end
-
-  def delete_packages pkg_objects
-    Resources::Pulp::Repository.delete_packages self.pulp_id,  pkg_objects
   end
 
   def delete_errata errata_id_list
