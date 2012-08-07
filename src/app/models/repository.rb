@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
 class RepoDisablementValidator < ActiveModel::Validator
   def validate(record)
     if record.redhat? && record.enabled_changed? && (!record.enabled?) && record.promoted?
@@ -286,5 +287,4 @@ class Repository < ActiveRecord::Base
         self.product.refresh_content(self) if self.content.gpgUrl != ''
     end
   end
-
 end
