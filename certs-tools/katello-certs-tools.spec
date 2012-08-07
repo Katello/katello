@@ -1,7 +1,7 @@
 Name: katello-certs-tools
 Summary: Katello SSL Key/Cert Tool
 Group: Applications/Internet
-License: GPLv2 and Python
+License: GPLv2
 Version: 1.1.7
 Release: 1%{?dist}
 URL:      https://fedorahosted.org/katello
@@ -33,7 +33,7 @@ chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/certs/katello_ssl_tool.py
 %attr(755,root,root) %{_bindir}/katello-sudo-ssl-tool
 %attr(755,root,root) %{_bindir}/katello-ssl-tool
 %doc %{_mandir}/man1/katello-*.1*
-%doc LICENSE PYTHON-LICENSES.txt
+%doc LICENSE
 
 %changelog
 * Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.7-1
