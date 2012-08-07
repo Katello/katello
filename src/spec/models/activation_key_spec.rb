@@ -22,6 +22,7 @@ describe ActivationKey do
   before(:each) do
     disable_org_orchestration
     disable_consumer_group_orchestration
+    disable_product_orchestration
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.library.id, :organization => @organization)
@@ -223,7 +224,16 @@ describe ActivationKey do
       end
       @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"}, :uuid => "uuid-uuid")
       @system.should_receive(:sockets).and_return(sockets)
-      dates.each_pair do |k,v|
+      dates.each do |k,v|
+        unless Product.find_by_cp_id(v[:productId])
+          product = @organization.redhat_provider.products.create!(:cp_id => v[:productId], :name => "Blah Server OS #{v[:productId]}") do |p|
+            p.environments = [@organization.library,
+                              @environment_1,
+                              @environment_2]
+          end
+          # overwrite the cp_id from orchestration
+          product.update_attributes!(:cp_id => v[:productId])
+        end
         pool = ::Pool.create!(:cp_id => k)
         @akey.key_pools.create!(:pool_id  => pool.id)
       end
