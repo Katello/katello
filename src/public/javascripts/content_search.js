@@ -98,7 +98,7 @@ KT.content_search = function(paths_in){
 
         env_select = KT.path_select('column_selector', 'env', paths,
             {select_mode:'multi', link_first: true, footer: footer });
-
+        env_select.reposition_left(); 
         init_tipsy();
 
         comparison_grid = KT.comparison_grid();
@@ -172,7 +172,6 @@ KT.content_search = function(paths_in){
             env_select.select(env.id)
         });
         comparison_grid.show_columns(env_obj);
-        env_select.reposition();
     },
     bind_load_more_event = function(){
       $(document).bind('load_more.comparison_grid', function(event){
@@ -360,7 +359,6 @@ KT.content_search = function(paths_in){
 
             comparison_grid.show_columns(environments);
             $.bbq.pushState({envs:env_ids});
-            env_select.reposition();
             envs_changed = true;
         });
     },

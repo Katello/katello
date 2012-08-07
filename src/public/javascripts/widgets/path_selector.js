@@ -83,7 +83,6 @@ KT.path_select = function(div_id, name, environments, options_in){
             }
             scroll_obj = KT.env_select_scroll({});
             recalc_scroll();
-            reposition_left();
         },
         reposition_left = function(){
             var selector_width, pos;
@@ -252,7 +251,7 @@ KT.path_select = function(div_id, name, environments, options_in){
         get_select_event : get_select_event,
         clear_selected: clear_selected,
         select:select,
-        reposition: reposition_left
+        reposition_left: reposition_left
     };
 };
 
