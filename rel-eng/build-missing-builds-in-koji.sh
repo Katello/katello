@@ -19,12 +19,20 @@ for tag in $TAGS; do
 done \
     | perl -lane '$X{$F[0]} .= " $F[1]"; END { for (sort keys %X) { print "$_$X{$_}" } }' \
     | while read package_dir tags ; do
-      (
-      echo Building package in path $package_dir for $tags
-      cd $package_dir && \
+      LOCAL_FEDORA_UPLOAD=$FEDORA_UPLOAD
+      pushd $package_dir >/dev/null
+      srpm_name=$(basename  $(tito build --srpm |tail -n 1 | awk '{print $2}') | sed 's/\.[^.]*\.src\.rpm$//')
+      srpm_test_name=$(basename  $(tito build --srpm --test |tail -n 1 | awk '{print $2}') | sed 's/\.[^.]*\.src\.rpm$//')
+      first_tag=$(echo $tags |awk '{print $1}')
+      package=$(rpm -q --qf '%{name}\n' --specfile *.spec 2> /dev/null | head -1)
+      if koji -c ~/.koji/katello-config list-tagged $first_tag $package | grep -P "($srpm_name|$srpm_test_name)" >/dev/null; then
+          LOCAL_FEDORA_UPLOAD=0 #echo Build already exist
+      else
+          echo Building package in path $package_dir for $tags
           ONLY_TAGS="$tags" ${TITO_PATH}tito release koji
-      )
-    if [ "0$FEDORA_UPLOAD" -eq 1 ] ; then
+      fi
+      popd >/dev/null
+    if [ "0$LOCAL_FEDORA_UPLOAD" -eq 1 ] ; then
       (
       echo Uploading tgz for path $package_dir
       cd $package_dir && LC_ALL=C ${TITO_PATH}tito build --tgz | \
@@ -33,5 +41,25 @@ done \
       )
     fi
     done
+
+echo 'Building packages from HEAD, which are not tagged ...'
+for package in $( rel-eng/git-untagged-commits.pl  |grep HEAD | perl -pe 's/([-a-z]+)-.*/$1/' ); do
+  echo "Checking package $package"
+  pushd $(awk '{print $2}' < rel-eng/packages/$package) >/dev/null
+  if git log --pretty=oneline --abbrev-commit . |head -n 1 |grep 'Automatic commit of package' ; then
+     srpm_name=$(basename  $(tito build --srpm |tail -n 1 | awk '{print $2}') | sed 's/\.[^.]*\.src\.rpm$//')
+     for tag in $TAGS; do
+       koji -c ~/.koji/katello-config list-tagged $tag $package |grep $srpm_name >/dev/null \
+            || ONLY_TAGS="$tag" ${TITO_PATH}tito release koji-head
+     done
+  else
+     srpm_test_name=$(basename  $(tito build --srpm --test |tail -n 1 | awk '{print $2}') | sed 's/\.[^.]*\.src\.rpm$//')
+     for tag in $TAGS; do
+       koji -c ~/.koji/katello-config list-tagged $tag $package |grep $srpm_test_name >/dev/null \
+            || ONLY_TAGS="$tag" ${TITO_PATH}tito release koji-head
+     done
+  fi
+  popd >/dev/null
+done
 
 popd >/dev/null
