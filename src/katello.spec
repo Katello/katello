@@ -368,9 +368,9 @@ NEWKEY=$(</dev/urandom tr -dc A-Za-z0-9 | head -c128)
 sed -i "s/^Src::Application.config.secret_token = '.*'/Src::Application.config.secret_token = '$NEWKEY'/" \
     %{homedir}/config/initializers/secret_token.rb
 
-if [ "$1" -ge "1" ] ; then
-    /sbin/service %{name} condrestart >/dev/null 2>&1 || :
-fi
+%posttrans common
+rm %{datadir}/Gemfile.lock
+/sbin/service %{name} condrestart >/dev/null 2>&1 || :
 
 %files
 %attr(600, katello, katello)
@@ -406,6 +406,7 @@ fi
 %{homedir}/config.ru
 %{homedir}/Gemfile
 %{homedir}/Gemfile.lock
+%ghost %{_sharedstatedir}/%{name}/Gemfile.lock
 %{homedir}/Rakefile
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{_mandir}/man8/katello-service.8*
