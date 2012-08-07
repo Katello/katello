@@ -48,13 +48,13 @@ class Api::RepositoriesController < Api::ApiController
     }
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :POST, "/repositories", "Create a repository"
-  param :gpg_key_name, :undef
-  param :name, :undef
-  param :organization_id, :identifier
-  param :product_id, :number
-  param :url, :undef
+  param :name, String, :required => true
+  param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"
+  param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
+  param :url, :undef, :required => true, :desc => "repository source url"
+  param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the new repository"
+  see "gpg_keys#index"
   def create
     raise HttpErrors::BadRequest, _('Invalid Url') if !kurl_valid?(params[:url])
 
@@ -67,16 +67,16 @@ class Api::RepositoriesController < Api::ApiController
     render :json => content
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/repositories/:id", "Show a repository"
+  param :id, :identifier, :required => true, :desc => "repository id"
   def show
     render :json => @repository.to_hash
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :PUT, "/repositories/:id", "Update a repository"
-  param :repository, Hash do
-    param :gpg_key_name, :undef
+  param :id, :identifier, :required => true, :desc => "repository id"
+  param :repository, Hash, :required => true do
+    param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the repository"
   end
   def update
     raise HttpErrors::BadRequest, _("It is not allowed to update a Red Hat repository.") if @repository.redhat?
@@ -84,8 +84,8 @@ class Api::RepositoriesController < Api::ApiController
     render :json => @repository.to_hash
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :DELETE, "/repositories/:id", "Destroy a repository"
+  param :id, :identifier, :required => true
   def destroy
     raise HttpErrors::BadRequest, _("Repositories can be deleted only in Library environment.") if not @repository.environment.library?
 
@@ -93,9 +93,9 @@ class Api::RepositoriesController < Api::ApiController
     render :text => _("Deleted repository '#{params[:id]}'"), :status => 200
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :POST, "/repositories/:id/enable"
-  param :enable, :bool
+  api :POST, "/repositories/:id/enable", "Enable or disable a repository"
+  param :id, :identifier, :required => true
+  param :enable, :bool, :required => true, :desc => "flag that enables/disables the repository"
   def enable
     raise HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if not @repository.redhat?
 
@@ -109,13 +109,15 @@ class Api::RepositoriesController < Api::ApiController
     end
   end
 
-  #This function is used by pulp for post sync actions
-  # it is not authenticated, but does not accept requests unless
-  # they have been sent from localhost.  Since we go through apache
-  # HTTP_X_FORWARDED_FOR header should be set with original IP
-  # Pulp blocks during the execution of this call, so *DO NOT* try to
-  # talk back to pulp within it.  Save that for the delayed job
-  # pulp doesn't send correct headers'
+  api :POST, "/repositories/:id/sync_complete", "
+  This function is used by pulp for post sync actions.
+  It is not authenticated, but does not accept requests unless
+  they have been sent from localhost.  Since we go through apache
+  HTTP_X_FORWARDED_FOR header should be set with original IP.
+  Pulp blocks during the execution of this call, so *DO NOT* try to
+  talk back to pulp within it.  Save that for the delayed job.
+  Pulp doesn't send correct headers."
+  param :id, :identifier, :required => true
   def sync_complete
     remote_ip = request.remote_ip
     forwarded = request.env["HTTP_X_FORWARDED_FOR"]
@@ -136,10 +138,9 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :POST, "/organizations/:organization_id/repositories/discovery"
-  param :type, :undef
-  param :url, :undef
+  api :POST, "/organizations/:organization_id/repositories/discovery", "Discover repository urls with metadata and find candidate repos. Supports http, https and file based urls. Async task, returns the delayed job."
+  param :type, String, :required => true, :desc => "type of content to discover (supported types : 'yum')"
+  param :url, String, :required => true, :desc => "remote url to perform discovery"
   def discovery
     pulp_task = Resources::Pulp::Repository.start_discovery(params[:url], params[:type])
     task = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = @organization}
@@ -147,9 +148,8 @@ class Api::RepositoriesController < Api::ApiController
     render :json => task
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :GET, "/repositories/:id/package_groups"
-  param :group_id, :identifier
+  api :GET, "/repositories/:id/package_groups", "List all package groups in a repository"
+  param :id, :identifier, :required => true
   def package_groups
     #translate group_id to id in search params (conflict with repo id used for routing)
     search_attrs = params.slice(:name)
@@ -158,9 +158,8 @@ class Api::RepositoriesController < Api::ApiController
     render :json => @repository.package_groups(search_attrs)
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :GET, "/repositories/:id/package_group_categories"
-  param :category_id, :identifier
+  api :GET, "/repositories/:id/package_group_categories", "List all package group categories in a repository"
+  param :id, :identifier, :required => true
   def package_group_categories
     #translate category_id to id in search params (conflict with repo id used for routing)
     search_attrs = params.slice(:name)
@@ -172,7 +171,8 @@ class Api::RepositoriesController < Api::ApiController
   # returns the content of a repo gpg key, used directly by yum
   # we don't want to authenticate, authorize etc, trying to distinquse between a yum request and normal api request
   # might not always be 100% bullet proof, and its more important that yum can fetch the key.
-  api :GET, "/repositories/:id/gpg_key_content"
+  api :GET, "/repositories/:id/gpg_key_content", "Return the content of a repo gpg key, used directly by yum"
+  param :id, :identifier, :required => true
   def gpg_key_content
     if @repository.gpg_key && @repository.gpg_key.content.present?
       render(:text => @repository.gpg_key.content, :layout => false) 

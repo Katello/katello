@@ -79,7 +79,7 @@ class Api::GpgKeysController < Api::ApiController
     render :text => _("Deleted GPG key '#{params[:id]}'"), :status => 204
   end
 
-  api :GET, "/gpg_keys/:id/content", :desc => <<-EOS
+  api :GET, "/gpg_keys/:id/content", <<-EOS
 Returns the content of a repo gpg key, used directly by yum
 We've amended REST best practices (e.g. not using the show action) as we don't want to
 authenticate, authorize etc, trying to distinquse between a yum request and normal api request
