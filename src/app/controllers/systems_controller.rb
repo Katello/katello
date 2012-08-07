@@ -78,7 +78,7 @@ class SystemsController < ApplicationController
   def param_rules
     update_check = lambda do
       if params[:system]
-        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel] }
+        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel, :environment_id] }
         check_hash_params(sys_rules, params)
       else
         check_array_params([:id], params)
@@ -286,9 +286,22 @@ class SystemsController < ApplicationController
     rescue Exception => e
       # Don't pepper user with notices if there is an error fetching release versions, but do log them
       Rails.logger.error e.to_str
-      releases = []
+      releases ||= []
     end
-    render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?, :releases=>releases, :name=>controller_display_name}
+    render :partial=>"edit", :layout=>"tupane_layout", :locals=>{
+        :system=>@system, :editable=>@system.editable?, :releases=>releases, :name=>controller_display_name,
+        :environments=>my_environments}
+  end
+
+  def my_environments
+    paths = current_organization.promotion_paths
+    library = {:id=>current_organization.library.id, :name=>current_organization.library.name, :select=>current_organization.library.contents_readable?}
+    to_ret = []
+    paths.each do |path|
+      path = path.collect{|e| {:id=>e.id, :name=>e.name, :select=>e.contents_readable?} }
+      to_ret << [library] + path if path.any?{|e| e[:select]}
+    end
+    to_ret
   end
 
   def update
