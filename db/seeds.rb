@@ -8,6 +8,7 @@ require 'util/password'
 
 AppConfig.use_cp = false if ENV['NO_CP']
 AppConfig.use_pulp = false if ENV['NO_PULP']
+AppConfig.use_foreman = false if ENV['NO_FOREMAN']
 
 def format_errors model=nil
   return '(nil found)' if model.nil?

@@ -699,8 +699,10 @@ Src::Application.routes.draw do
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
       # foreman proxy --------------
-    resources :architectures, :except => [:new, :edit]
-    resources :domains, :except => [:new, :edit]
+    if AppConfig.use_foreman
+      resources :architectures, :except => [:new, :edit]
+      resources :domains, :except => [:new, :edit]
+    end
 
     # development / debugging support
     if Rails.env == "development"
