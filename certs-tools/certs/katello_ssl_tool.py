@@ -45,7 +45,7 @@ from sslToolCli import processCommandline, CertExpTooShortException, \
         CertExpTooLongException, InvalidCountryCodeException
 
 from sslToolLib import KatelloSslToolException, \
-        gendir, chdir, getMachineName, TempDir, \
+        gendir, chdir, TempDir, \
         errnoGeneralError, errnoSuccess
 
 from fileutils import rotateFile, rhn_popen, cleanupAbsPath
@@ -254,7 +254,7 @@ def genServerKey(d, verbosity=0):
     """ private server key generation """
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
     gendir(serverKeyPairDir)
 
     server_key = os.path.join(serverKeyPairDir,
@@ -302,7 +302,7 @@ def genServerCertReq_dependencies(d):
     """ private server cert request generation """
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
     gendir(serverKeyPairDir)
 
     server_key = os.path.join(serverKeyPairDir,
@@ -314,7 +314,7 @@ def genServerCertReq(d, verbosity=0):
     """ private server cert request generation """
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
     server_key = os.path.join(serverKeyPairDir,
                               os.path.basename(d['--server-key']))
     server_cert_req = os.path.join(serverKeyPairDir,
@@ -384,7 +384,7 @@ def genServerCert_dependencies(password, d):
         sys.exit(errnoGeneralError)
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
     gendir(serverKeyPairDir)
 
     ca_key = os.path.join(d['--dir'], os.path.basename(d['--ca-key']))
@@ -404,7 +404,7 @@ def genServerCert(password, d, verbosity=0):
     """ server cert generation and signing """
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
 
     genServerCert_dependencies(password, d)
 
@@ -629,7 +629,7 @@ def genProxyServerTarball_dependencies(d):
     """
 
     serverKeySetDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
     gendir(serverKeySetDir)
 
     ca_cert = pathJoin(d['--dir'], d['--ca-cert'])
@@ -648,7 +648,7 @@ def getTarballFilename(d, version='1.0', release='1'):
         returns current, next (current can be None)
     """
 
-    serverKeySetDir = pathJoin(d['--dir'], getMachineName(d['--set-hostname']))
+    serverKeySetDir = pathJoin(d['--dir'], d['--set-hostname'])
     server_tar_name = pathJoin(serverKeySetDir, d['--server-tar'])
 
     filenames = glob.glob("%s-%s-*.tar" % (server_tar_name, version))
@@ -689,7 +689,7 @@ def genProxyServerTarball(d, version='1.0', release='1', verbosity=0):
     tarballFilepath = getTarballFilename(d, version, release)[1]
     tarballFilepath = pathJoin(d['--dir'], tarballFilepath)
 
-    machinename = getMachineName(d['--set-hostname'])
+    machinename = d['--set-hostname']
     ca_cert = os.path.basename(d['--ca-cert'])
     server_key = pathJoin(machinename, d['--server-key'])
     server_cert = pathJoin(machinename, d['--server-cert'])
@@ -754,7 +754,7 @@ def genServerRpm_dependencies(d):
     """ generates server's SSL key set RPM - dependencies check """
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
     gendir(serverKeyPairDir)
 
     server_key_name = os.path.basename(d['--server-key'])
@@ -774,7 +774,7 @@ def genServerRpm(d, verbosity=0):
     """ generates server's SSL key set RPM """
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
 
     server_key_name = os.path.basename(d['--server-key'])
     server_key = os.path.join(serverKeyPairDir, server_key_name)

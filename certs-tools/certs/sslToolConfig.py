@@ -27,14 +27,14 @@ import string
 
 ## local imports
 from fileutils import cleanupNormPath, rotateFile, rhn_popen, cleanupAbsPath
-from sslToolLib import getMachineName, daysTil18Jan2038, incSerial, fixSerial
+from sslToolLib import daysTil18Jan2038, incSerial, fixSerial
 
 
 # defaults where we can see them (NOTE: directory is figured at write time)
 CERT_PATH = '/usr/share/katello/certs'
 BUILD_DIR = cleanupNormPath('./ssl-build', dotYN=1)
 HOSTNAME = socket.gethostname()
-MACHINENAME = getMachineName(HOSTNAME)
+MACHINENAME = HOSTNAME
 
 CA_KEY_NAME = 'KATELLO-PRIVATE-SSL-KEY'
 CA_CRT_NAME = 'KATELLO-TRUSTED-SSL-CERT'
@@ -159,7 +159,7 @@ def figureDEFS_dirs(options):
                                or socket.gethostname()
 
     global MACHINENAME
-    MACHINENAME = getMachineName(DEFS['--set-hostname'])
+    MACHINENAME = DEFS['--set-hostname']
 
     ## remap to options object
     setOption(options, 'dir', DEFS['--dir'])

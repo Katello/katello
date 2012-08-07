@@ -72,16 +72,6 @@ def incSerial(serial):
     return fixSerial(serial)
 
 
-def getMachineName(hostname):
-    """ xxx.yyy.zzz.com --> xxx.yyy
-        yyy.zzz.com     --> yyy
-        zzz.com         --> zzz.com
-        xxx             --> xxx
-        *.yyy.zzz.com   --> _star_.yyy
-    """
-    hn = string.split(hostname.replace('*', '_star_'), '.')
-    return hostname
-
 #
 # NOTE: the Unix epoch overflows at: 2038-01-19 03:14:07 (2^31 seconds)
 #
