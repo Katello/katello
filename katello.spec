@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.3
+Version:        1.1.4
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -460,6 +460,52 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Aug 07 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.4-1
+- 842858 - Fixes path issue to locked icon when viewing available changesets on
+  the promotion page. (ehelms@redhat.com)
+- Content search - make positioning more custom (jsherril@redhat.com)
+- 844678 - don't use multi-entitlements on custom products (inecas@redhat.com)
+- CS - fixing vert align on view tipsy (jsherril@redhat.com)
+- CS - fixing error on repo search with selected product (jsherril@redhat.com)
+- Correcting grammar on user notification for deleted environment / User. ->
+  self. (jomara@redhat.com)
+- fixing bad merge conflict resolution (jsherril@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- CS - fixing issue where select env before search threw error
+  (jsherril@redhat.com)
+- Committed the wrong converge ui hash or something, EHELMS (jomara@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- CS - making search button change text depending on context
+  (jsherril@redhat.com)
+- 840969 - making KT environment deletes ALSO remove the "default environment"
+  relationship to any applicable users. It also notifies the users when they
+  log in (jomara@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- 821929 - Typo: You -> Your (adprice@redhat.com)
+- CS - auto complete enhancements (jsherril@redhat.com)
+- CS - fixing repo compare title (jsherril@redhat.com)
+- CS - fixing caching not working properly (jsherril@redhat.com)
+- little test fix (adprice@redhat.com)
+- fixing broken tests due to commit 3bf7ccfbe0f6a82a8d7a7d3108ab9c1358ecb657
+  (adprice@redhat.com)
+- 803757 - Systems: Users should not be able to enter anything other than
+  positive integers for sockets (adprice@redhat.com)
+- 844458 - GET of unknown user returns 500 (pajkycz@gmail.com)
+- 842003 - fixing error on search when no errata existed (jsherril@redhat.com)
+- fixing old env selector issue caused by new path selector
+  (jsherril@redhat.com)
+- CS - Sort environments on repo comparison according to promotion path
+  (jsherril@redhat.com)
+- CS - adding tipsy for view selector and changing terminology
+  (jsherril@redhat.com)
+- Merge branch 'master' of github.com:Katello/katello into content-browser
+  (jsherril@redhat.com)
+- CS - Adding repo search help (jsherril@redhat.com)
+
 * Sat Aug 04 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.3-1
 - CS - Adds missing variablization of color. (ehelms@redhat.com)
 - CS - A number of minor updates. (ehelms@redhat.com)
