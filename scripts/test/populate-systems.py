@@ -154,8 +154,8 @@ def create_subscribed_systems(org, envid, pool_ids, randomize, sem):
                 sys.stderr.write("[Error] %s \n" % (e[1]['displayMessage']))
             if randomize:
                 if opts.debug:
-                    sys.stderr.write("Trying to find a suitable subscription, will try %s more times\n" % 
-                            (1000-counter))
+                    print "Trying to find a suitable subscription, will try %s more times\n" % 
+                            (1000-counter) 
                 counter+=1
     sem.release()
 
@@ -198,8 +198,11 @@ if __name__ == '__main__':
         have to work harder to find a suitable subscription.
         ====================================================
         """
-    envid = process_environment(opts.org, opts.env)
-    pool_ids = get_pool_ids(opts.org)
+    try:
+        envid = process_environment(opts.org, opts.env)
+        pool_ids = get_pool_ids(opts.org)
+    except Exception, e:
+        sys.stderr.write("Error: An exception occurred %s" % e)
 
     manager = Manager()
     maxconnections = 4
