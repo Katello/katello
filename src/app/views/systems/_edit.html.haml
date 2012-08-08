@@ -77,7 +77,8 @@
       %fieldset
         .grid_2.ra.fieldset
           = label :arch, :arch, _("Environment")
-        .grid_5.la#environment_path_selector{'name'=> 'system[environment_id]', :class=>("editable" if editable), 'data-url'=>system_path(system.id)} #{system_environment_name system}
+        .grid_5.la#environment_path_selector{'name'=> 'system[environment_id]', :class=>("editable" if editable), 'data-url'=>system_path(system.id)}
+          %span #{system_environment_name system}
 
     .clear
     .grid_8

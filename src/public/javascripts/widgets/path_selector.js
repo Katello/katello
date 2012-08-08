@@ -64,8 +64,7 @@ KT.path_select = function(div_id, name, environments, options_in){
             }
 
             if(options.submit_button_text){
-                path_selector.find('.KT_env_select_submit_button').click(function(e){
-                    e.preventDefault();
+                path_selector.find('.KT_path_select_submit_button').click(function(e){
                     if(!options.inline) {
                         path_selector.hide();
                     }
@@ -74,8 +73,7 @@ KT.path_select = function(div_id, name, environments, options_in){
             }
 
             if(options.cancel_button_text){
-                path_selector.find('.KT_env_select_cancel_button').click(function(e){
-                    e.preventDefault();
+                path_selector.find('.KT_path_select_cancel_button').click(function(e){
                     clear_selected();
                     path_selector.hide();
                     $(document).trigger(options.cancel_event);
@@ -273,7 +271,7 @@ KT.path_select = function(div_id, name, environments, options_in){
         get_select_event : get_select_event,
         clear_selected: clear_selected,
         select:select,
-        reposition: reposition_left,
+        reposition_left: reposition_left,
         paths_id: paths_id,
         hide: function() {path_selector.hide();}
     };
@@ -285,10 +283,10 @@ KT.path_select_template = {
         var html = '<div id="' + div_id + '" class="path_selector"><form>';
         html += KT.path_select_template.paths(paths);
         if(submit_button_text){
-            html += KT.path_select_template.button("KT_env_select_submit_button", submit_button_text);
+            html += KT.path_select_template.button("KT_path_select_submit_button", submit_button_text);
         }
         if(cancel_button_text){
-            html += KT.path_select_template.button("KT_env_select_cancel_button", cancel_button_text);
+            html += KT.path_select_template.button("KT_path_select_cancel_button", cancel_button_text);
         }
         html += '</form>'
         
@@ -300,7 +298,7 @@ KT.path_select_template = {
         return html;
     },
     button : function(clazz, text){
-        return '<input type="submit" class="button ' + clazz +'" value="' + text + '">';
+        return '<input type="button" class="button ' + clazz +'" value="' + text + '">';
     },
     paths : function(paths){
         var html ='';
