@@ -36,8 +36,6 @@
 import os
 import sys
 import glob
-import pwd
-import time
 import string
 import shutil
 import getpass
@@ -47,7 +45,7 @@ from sslToolCli import processCommandline, CertExpTooShortException, \
         CertExpTooLongException, InvalidCountryCodeException
 
 from sslToolLib import KatelloSslToolException, \
-        gendir, chdir, getMachineName, fixSerial, TempDir, parseRPMFilename, \
+        gendir, chdir, TempDir, \
         errnoGeneralError, errnoSuccess
 
 from fileutils import rotateFile, rhn_popen, cleanupAbsPath
@@ -58,7 +56,7 @@ from rhn_rpm import hdrLabelCompare, sortRPMs, get_package_header, \
 from sslToolConfig import ConfigFile, figureSerial, getOption, CERT_PATH, \
         DEFS, MD, CRYPTO, \
         CA_OPENSSL_CNF_NAME, SERVER_OPENSSL_CNF_NAME, POST_UNINSTALL_SCRIPT, \
-        SERVER_RPM_SUMMARY, CA_CERT_RPM_SUMMARY, BASE_SERVER_RPM_NAME
+        SERVER_RPM_SUMMARY, CA_CERT_RPM_SUMMARY
 
 
 class GenPrivateCaKeyException(KatelloSslToolException):
@@ -99,7 +97,6 @@ def _getWorkDir():
 
 
 def getCAPassword(options, confirmYN=1):
-    global DEFS
     while not options.password:
         pw = _pw = None
         while not pw:
@@ -137,7 +134,7 @@ ERROR: a CA private key already exists:
             print "Commandline:", args % "PASSWORD"
     try:
         rotated = rotateFile(filepath=ca_key, verbosity=verbosity)
-        if verbosity>=0 and rotated:
+        if verbosity >= 0 and rotated:
             print "Rotated: %s --> %s" \
                   % (d['--ca-key'], os.path.basename(rotated))
     except ValueError:
@@ -220,7 +217,7 @@ def genPublicCaCert(password, d, verbosity=0, forceYN=0):
 
     try:
         rotated = rotateFile(filepath=ca_cert, verbosity=verbosity)
-        if verbosity>=0 and rotated:
+        if verbosity >= 0 and rotated:
             print "Rotated: %s --> %s" \
                   % (d['--ca-cert'], os.path.basename(rotated))
     except ValueError:
@@ -257,7 +254,7 @@ def genServerKey(d, verbosity=0):
     """ private server key generation """
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
     gendir(serverKeyPairDir)
 
     server_key = os.path.join(serverKeyPairDir,
@@ -274,7 +271,7 @@ def genServerKey(d, verbosity=0):
 
     try:
         rotated = rotateFile(filepath=server_key, verbosity=verbosity)
-        if verbosity>=0 and rotated:
+        if verbosity >= 0 and rotated:
             print "Rotated: %s --> %s" % (d['--server-key'],
                                           os.path.basename(rotated))
     except ValueError:
@@ -305,7 +302,7 @@ def genServerCertReq_dependencies(d):
     """ private server cert request generation """
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
     gendir(serverKeyPairDir)
 
     server_key = os.path.join(serverKeyPairDir,
@@ -317,7 +314,7 @@ def genServerCertReq(d, verbosity=0):
     """ private server cert request generation """
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
     server_key = os.path.join(serverKeyPairDir,
                               os.path.basename(d['--server-key']))
     server_cert_req = os.path.join(serverKeyPairDir,
@@ -351,7 +348,7 @@ def genServerCertReq(d, verbosity=0):
 
     try:
         rotated = rotateFile(filepath=server_cert_req, verbosity=verbosity)
-        if verbosity>=0 and rotated:
+        if verbosity >= 0 and rotated:
             print "Rotated: %s --> %s" % (d['--server-cert-req'],
                                           os.path.basename(rotated))
     except ValueError:
@@ -387,7 +384,7 @@ def genServerCert_dependencies(password, d):
         sys.exit(errnoGeneralError)
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
     gendir(serverKeyPairDir)
 
     ca_key = os.path.join(d['--dir'], os.path.basename(d['--ca-key']))
@@ -407,7 +404,7 @@ def genServerCert(password, d, verbosity=0):
     """ server cert generation and signing """
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
 
     genServerCert_dependencies(password, d)
 
@@ -452,7 +449,7 @@ def genServerCert(password, d, verbosity=0):
             print "Commandline:", args % 'PASSWORD'
     try:
         rotated = rotateFile(filepath=server_cert, verbosity=verbosity)
-        if verbosity>=0 and rotated:
+        if verbosity >= 0 and rotated:
             print "Rotated: %s --> %s" % (d['--server-cert'],
                                           os.path.basename(rotated))
     except ValueError:
@@ -506,35 +503,6 @@ def genServerCert(password, d, verbosity=0):
     except:
         pass
 
-
-def gen_jabberd_cert(d):
-    """
-    generate the jabberd ssl cert from the server cert and key
-    """
-
-    serverKeyPairDir = os.path.join(d['--dir'], getMachineName(d['--set-hostname']))
-    server_key  = os.path.join(serverKeyPairDir, d['--server-key'])
-    server_cert = os.path.join(serverKeyPairDir, d['--server-cert'])
-
-    dependencyCheck(server_key)
-    dependencyCheck(server_cert)
-
-    jabberd_ssl_cert_name = os.path.basename(d['--jabberd-ssl-cert'])
-    jabberd_ssl_cert = os.path.join(serverKeyPairDir, jabberd_ssl_cert_name )
-
-    # Create the jabberd cert - need to concatenate the cert and the key
-    # XXX there really should be some better error propagation here
-    fd = None
-    try:
-        fd = os.open(jabberd_ssl_cert, os.O_WRONLY | os.O_CREAT)
-        _copy_file_to_fd(cleanupAbsPath(server_cert), fd)
-        _copy_file_to_fd(cleanupAbsPath(server_key), fd)
-    finally:
-        if fd:
-            os.close(fd)
-    return
-
-
 def _disableRpmMacros():
     mac = cleanupAbsPath('~/.rpmmacros')
     macTmp = cleanupAbsPath('~/RENAME_ME_BACK_PLEASE-lksjdflajsd.rpmmacros')
@@ -567,7 +535,7 @@ def genCaRpm(d, verbosity=0):
 
     genCaRpm_dependencies(d)
 
-    if verbosity>=0:
+    if verbosity >= 0:
         sys.stderr.write("\n...working...")
     # Work out the release number.
     hdr = getInstalledHeader(ca_cert_rpm)
@@ -584,9 +552,9 @@ def genCaRpm(d, verbosity=0):
             if comp > 0:
                 hdr = h
 
-    epo, ver, rel = None, '1.0', '0'
+    ver, rel = '1.0', '0'
     if hdr is not None:
-        epo, ver, rel = hdr['epoch'], hdr['version'], hdr['release']
+        ver, rel = hdr['version'], hdr['release']
 
     # bump the release - and let's not be too smart about it
     #                    assume the release is a number.
@@ -661,20 +629,18 @@ def genProxyServerTarball_dependencies(d):
     """
 
     serverKeySetDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
     gendir(serverKeySetDir)
 
     ca_cert = pathJoin(d['--dir'], d['--ca-cert'])
     server_key = pathJoin(serverKeySetDir, d['--server-key'])
     server_cert = pathJoin(serverKeySetDir, d['--server-cert'])
     server_cert_req = pathJoin(serverKeySetDir, d['--server-cert-req'])
-    jabberd_ssl_cert = pathJoin(serverKeySetDir, d['--jabberd-ssl-cert'])
 
     dependencyCheck(ca_cert)
     dependencyCheck(server_key)
     dependencyCheck(server_cert)
     dependencyCheck(server_cert_req)
-    dependencyCheck(jabberd_ssl_cert)
 
 
 def getTarballFilename(d, version='1.0', release='1'):
@@ -682,7 +648,7 @@ def getTarballFilename(d, version='1.0', release='1'):
         returns current, next (current can be None)
     """
 
-    serverKeySetDir = pathJoin(d['--dir'], getMachineName(d['--set-hostname']))
+    serverKeySetDir = pathJoin(d['--dir'], d['--set-hostname'])
     server_tar_name = pathJoin(serverKeySetDir, d['--server-tar'])
 
     filenames = glob.glob("%s-%s-*.tar" % (server_tar_name, version))
@@ -695,22 +661,22 @@ def getTarballFilename(d, version='1.0', release='1'):
     if filenames:
         current = filenames[-1]
 
-    next = "%s-%s-1.tar" % (server_tar_name, version)
+    next_name = "%s-%s-1.tar" % (server_tar_name, version)
     if current:
         v = string.split(versions[-1], '-')
         v[-1] = str(int(v[-1])+1)
-        next = "%s-%s.tar" % (server_tar_name, string.join(v, '-'))
+        next_name = "%s-%s.tar" % (server_tar_name, string.join(v, '-'))
         current = os.path.basename(current)
 
     # incoming release (usually coming from RPM version) is factored in
     # ...if RPM version-release is greater then that is used.
-    v = next[len(server_tar_name)+1:-4]
+    v = next_name[len(server_tar_name)+1:-4]
     v = string.split(v, '-')
     v[-1] = str(max(int(v[-1]), int(release)))
-    next = "%s-%s.tar" % (server_tar_name, string.join(v, '-'))
-    next = os.path.basename(next)
+    next_name = "%s-%s.tar" % (server_tar_name, string.join(v, '-'))
+    next_name = os.path.basename(next_name)
 
-    return current, next
+    return current, next_name
 
 
 def genProxyServerTarball(d, version='1.0', release='1', verbosity=0):
@@ -723,18 +689,16 @@ def genProxyServerTarball(d, version='1.0', release='1', verbosity=0):
     tarballFilepath = getTarballFilename(d, version, release)[1]
     tarballFilepath = pathJoin(d['--dir'], tarballFilepath)
 
-    machinename = getMachineName(d['--set-hostname'])
+    machinename = d['--set-hostname']
     ca_cert = os.path.basename(d['--ca-cert'])
     server_key = pathJoin(machinename, d['--server-key'])
     server_cert = pathJoin(machinename, d['--server-cert'])
     server_cert_req = pathJoin(machinename, d['--server-cert-req'])
-    jabberd_ssl_cert = os.path.join(machinename, d['--jabberd-ssl-cert'])
 
     ## build the server tarball
-    args = '/bin/tar -cvf %s %s %s %s %s %s' \
+    args = '/bin/tar -cvf %s %s %s %s %s' \
            % (repr(os.path.basename(tarballFilepath)), repr(ca_cert),
-              repr(server_key), repr(server_cert), repr(server_cert_req),
-              repr(jabberd_ssl_cert))
+              repr(server_key), repr(server_cert), repr(server_cert_req))
 
     serverKeySetDir = pathJoin(d['--dir'], machinename)
     tarballFilepath2 = pathJoin(serverKeySetDir, tarballFilepath)
@@ -790,7 +754,7 @@ def genServerRpm_dependencies(d):
     """ generates server's SSL key set RPM - dependencies check """
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
     gendir(serverKeyPairDir)
 
     server_key_name = os.path.basename(d['--server-key'])
@@ -802,25 +766,15 @@ def genServerRpm_dependencies(d):
     server_cert_req_name = os.path.basename(d['--server-cert-req'])
     server_cert_req = os.path.join(serverKeyPairDir, server_cert_req_name)
 
-    jabberd_ssl_cert_name = os.path.basename(d['--jabberd-ssl-cert'])
-    jabberd_ssl_cert = os.path.join(serverKeyPairDir, jabberd_ssl_cert_name )
-
     dependencyCheck(server_key)
     dependencyCheck(server_cert)
     dependencyCheck(server_cert_req)
-
-    # if all the other dependencies exist except the server pem,
-    # just generate it
-    try:
-        dependencyCheck(jabberd_ssl_cert)
-    except FailedFileDependencyException:
-        gen_jabberd_cert(d)
 
 def genServerRpm(d, verbosity=0):
     """ generates server's SSL key set RPM """
 
     serverKeyPairDir = os.path.join(d['--dir'],
-                                    getMachineName(d['--set-hostname']))
+                                    d['--set-hostname'])
 
     server_key_name = os.path.basename(d['--server-key'])
     server_key = os.path.join(serverKeyPairDir, server_key_name)
@@ -831,9 +785,6 @@ def genServerRpm(d, verbosity=0):
     server_cert_req_name = os.path.basename(d['--server-cert-req'])
     server_cert_req = os.path.join(serverKeyPairDir, server_cert_req_name)
 
-    jabberd_ssl_cert_name = os.path.basename(d['--jabberd-ssl-cert'])
-    jabberd_ssl_cert = os.path.join(serverKeyPairDir, jabberd_ssl_cert_name )
-
     server_rpm_name = os.path.basename(d['--server-rpm'])
     server_rpm = os.path.join(serverKeyPairDir, server_rpm_name)
 
@@ -841,7 +792,7 @@ def genServerRpm(d, verbosity=0):
 
     genServerRpm_dependencies(d)
 
-    if verbosity>=0:
+    if verbosity >= 0:
         sys.stderr.write("\n...working...\n")
 
     # check for new installed RPM.
@@ -860,9 +811,9 @@ def genServerRpm(d, verbosity=0):
             if comp > 0:
                 hdr = h
 
-    epo, ver, rel = None, '1.0', '0'
+    ver, rel = '1.0', '0'
     if hdr is not None:
-        epo, ver, rel = hdr['epoch'], hdr['version'], hdr['release']
+        ver, rel = hdr['version'], hdr['release']
 
     # bump the release - and let's not be too smart about it
     #                    assume the release is a number.
@@ -874,27 +825,6 @@ Best practices suggests that this RPM should only be installed on the web
 server with this hostname: %s
 """ % d['--set-hostname']
 
-    # Determine which jabberd user exists:
-    jabberd_user = None
-    possible_jabberd_users = ['jabberd', 'jabber']
-    for juser_attempt in possible_jabberd_users:
-        try:
-            pwd.getpwnam(juser_attempt)
-            jabberd_user = juser_attempt
-        except:
-            # user doesn't exist, try the next
-            pass
-    if jabberd_user is None:
-        print ("WARNING: No jabber/jabberd user on system, skipping " +
-                "jabberd.pem generation.")
-
-    jabberd_cert_string = ""
-    if jabberd_user is not None:
-        jabberd_cert_string = \
-            "/etc/pki/spacewalk/jabberd/server.pem:0600,%s,%s=%s" % \
-            (jabberd_user, jabberd_user, repr(cleanupAbsPath(jabberd_ssl_cert)))
-
-
     ## build the server RPM
     args = (os.path.join(CERT_PATH, 'gen-rpm.sh') + " "
             "--name %s --version %s --release %s --packager %s --vendor %s "
@@ -902,15 +832,13 @@ server with this hostname: %s
             "/etc/pki/tls/private/%s:0600=%s "
             "/etc/pki/tls/certs/%s=%s "
             "/etc/pki/tls/certs/%s=%s "
-            "%s"
             % (repr(server_rpm_name), ver, rel, repr(d['--rpm-packager']),
                repr(d['--rpm-vendor']),
                repr(SERVER_RPM_SUMMARY), repr(description),
                repr(cleanupAbsPath(postun_scriptlet)),
                repr(server_key_name), repr(cleanupAbsPath(server_key)),
                repr(server_cert_req_name), repr(cleanupAbsPath(server_cert_req)),
-               repr(server_cert_name), repr(cleanupAbsPath(server_cert)),
-               jabberd_cert_string
+               repr(server_cert_name), repr(cleanupAbsPath(server_cert))
                ))
     serverRpmName = "%s-%s-%s" % (server_rpm, ver, rel)
 
@@ -1047,7 +975,6 @@ def _main():
             genServerKey(DEFS, options.verbose)
             genServerCertReq(DEFS, options.verbose)
             genServerCert(getCAPassword(options, confirmYN=0), DEFS, options.verbose)
-            gen_jabberd_cert(DEFS)
             if not getOption(options, 'no_rpm'):
                 genServerRpm(DEFS, options.verbose)
 

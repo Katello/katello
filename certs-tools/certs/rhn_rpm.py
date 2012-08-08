@@ -20,11 +20,6 @@ import struct
 
 # Expose a bunch of useful constants from rpm
 error = rpm.error
-for sym, val in rpm.__dict__.items():
-    if sym[:3] == 'RPM':
-        # A constant, probably - import it into our namespace
-        globals()[sym] = val
-del sym, val
 
 # need this for rpm-pyhon < 4.6 (e.g. on RHEL5)
 rpm.RPMTAG_FILEDIGESTALGO = 5011
@@ -79,9 +74,9 @@ class RPM_Header:
     def checksum_type(self):
         if self.hdr[rpm.RPMTAG_FILEDIGESTALGO] \
            and PGPHASHALGO.has_key(self.hdr[rpm.RPMTAG_FILEDIGESTALGO]):
-           checksum_type = PGPHASHALGO[self.hdr[rpm.RPMTAG_FILEDIGESTALGO]]
+            checksum_type = PGPHASHALGO[self.hdr[rpm.RPMTAG_FILEDIGESTALGO]]
         else:
-           checksum_type = 'md5'
+            checksum_type = 'md5'
         return checksum_type
 
     def is_signed(self):
@@ -118,10 +113,10 @@ class RPM_Header:
                 key_id = ret[19:27]
 
             key_id_len = len(key_id)
-            format = "%dB" % key_id_len
-            t = struct.unpack(format, key_id)
-            format = "%02x" * key_id_len
-            key_id = format % t
+            key_format = "%dB" % key_id_len
+            t = struct.unpack(key_format, key_id)
+            key_format = "%02x" * key_id_len
+            key_id = key_format % t
             self.signatures.append({
                 'signature_type'    : sig_type,
                 'key_id'            : key_id,
@@ -180,21 +175,21 @@ def get_header_struct_size(package_file):
 
     return header_size
 
-SHARED_TS=None
-def get_package_header(filename=None, file=None, fd=None):
+SHARED_TS = None
+def get_package_header(filename=None, file_stream=None, fd=None):
     """ Loads the package header from a file / stream / file descriptor
         Raises rpm.error if an error is found, or InvalidPacageError if package is
         busted
     """
     global SHARED_TS
     # XXX Deal with exceptions better
-    if (filename is None and file is None and fd is None):
+    if (filename is None and file_stream is None and fd is None):
         raise ValueError, "No parameters passed"
 
     if filename is not None:
         f = open(filename)
-    elif file is not None:
-        f = file
+    elif file_stream is not None:
+        f = file_stream
         f.seek(0, 0)
     else: # fd is not None
         f = None
@@ -238,6 +233,7 @@ class MatchIterator:
         m_args = (tag_name,)
         if value:
             m_args += (value,)
+        # pylint: disable=E1101
         self.mi = self.ts.dbMatch(*m_args)
 
     def pattern(self, tag_name, mode, pattern):
@@ -316,18 +312,18 @@ def getInstalledHeader(rpmName):
 
 
 if __name__ == '__main__':
-    mi = MatchIterator("name")
-    mi.pattern("name", rpm.RPMMIRE_GLOB, "*ker*")
+    app_mi = MatchIterator("name")
+    app_mi.pattern("name", rpm.RPMMIRE_GLOB, "*ker*")
     while 1:
-        h = mi.next()
+        h = app_mi.next()
         if not h:
             break
         print h['name']
     sys.exit(1)
-    hdr = get_package_header(filename="/tmp/python-1.5.2-42.72.i386.rpm")
-    print dir(hdr)
+    app_hdr1 = get_package_header(filename="/tmp/python-1.5.2-42.72.i386.rpm")
+    print dir(app_hdr1)
     # Sources
-    hdr = get_package_header(filename="/tmp/python-1.5.2-42.72.src.rpm")
-    hdr2 = headerLoad(hdr.unload())
-    print hdr2
-    print len(hdr2.keys())
+    app_hdr1 = get_package_header(filename="/tmp/python-1.5.2-42.72.src.rpm")
+    app_hdr2 = headerLoad(app_hdr1.unload())
+    print app_hdr2
+    print len(app_hdr2.keys())
