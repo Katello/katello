@@ -71,7 +71,7 @@ if sm_present; then
     test_own_cmd_success "rhsm list repos" sudo subscription-manager repos --list
     test_own_cmd_success "rhsm list service levels" sudo subscription-manager service-level --list
     test_own_cmd_success "rhsm refresh" sudo subscription-manager refresh
-    SERIAL=$(sudo subscription-manager list --consumed | sed 's/Serial Number/SerialNumber/g' | grep SerialNumber | head -n1 | awk '{print $2}') # grab first serial
+    SERIAL=$(sudo subscription-manager list --consumed | sed 's/Serial Number/SerialNumber/g' | /usr/bin/perl -ne 'print if /$RHSM_ZPROD/../^Serial/' | grep SerialNumber | head -n1 | awk '{print $2}') # grab first serial
     test_own_cmd_success "rhsm unsubscribe to serial" sudo subscription-manager unsubscribe --serial="$SERIAL"
     test_own_cmd_success "rhsm subscribe to pool" sudo subscription-manager subscribe --pool "$POOLID" # again
     test_own_cmd_success "rhsm unsubscribe all" sudo subscription-manager unsubscribe --all
