@@ -44,6 +44,8 @@ $(document).ready(function() {
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
 
+    console.log(KT.available_environments);
+
     path_select = KT.path_select('environment_path_selector', 'edit_select_system_environment', KT.available_environments,
         {select_mode:'single', submit_button_text: i18n.save, cancel_button_text: i18n.cancel, activate_on_click: true});
 
@@ -61,8 +63,7 @@ $(document).ready(function() {
         });
 
         request.done(function(msg) {
-            selector_element.get(0).firstChild.nodeValue = selected_env_ids[0]['name'];
-            console.log(selector_element.get(0).firstChild.nodeValue);
+            selector_element.find('span:first').text(selected_env_ids[0]['name']);
 
             path_select.hide();
             path_select.clear_selected();
