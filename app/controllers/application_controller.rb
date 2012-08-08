@@ -341,6 +341,25 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def environment_path_element(perms_method=nil)
+    Proc.new { |a_path| {:id=>a_path.id, :name=>a_path.name, :select=>(perms_method.nil? ? false : a_path.instance_eval(perms_method))} }
+  end
+
+  def library_path_element(perms=nil)
+    environment_path_element(perms).call(current_organization.library)
+  end
+
+  def environment_paths(library, environment_path_element_generator)
+    paths = current_organization.promotion_paths
+    to_ret = []
+    paths.each do |path|
+      path = path.collect{ |e| environment_path_element_generator.call(e) }
+      to_ret << [library] + path if path.any?{|e| e[:select]}
+    end
+    to_ret
+  end
+
+
   #verify if the specific object with the given id, matches a given search string
   def search_validate(obj_class, id, search, default=:name)
     obj_class.index.refresh

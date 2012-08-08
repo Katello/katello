@@ -288,20 +288,10 @@ class SystemsController < ApplicationController
       Rails.logger.error e.to_str
       releases ||= []
     end
+
     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{
         :system=>@system, :editable=>@system.editable?, :releases=>releases, :name=>controller_display_name,
-        :environments=>my_environments}
-  end
-
-  def my_environments
-    paths = current_organization.promotion_paths
-    library = {:id=>current_organization.library.id, :name=>current_organization.library.name, :select=>current_organization.library.contents_readable?}
-    to_ret = []
-    paths.each do |path|
-      path = path.collect{|e| {:id=>e.id, :name=>e.name, :select=>e.contents_readable?} }
-      to_ret << [library] + path if path.any?{|e| e[:select]}
-    end
-    to_ret
+        :environments=>environment_paths(library_path_element, environment_path_element("systems_readable?"))}
   end
 
   def update
