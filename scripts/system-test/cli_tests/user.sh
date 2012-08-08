@@ -30,3 +30,11 @@ test_success "user default_environment_update" user update --username="$TEST_USE
 test_own_cmd_success "user has default environment" $CMD user info --username="$TEST_USER2" | grep "$TEST_ENV_2"
 test_success "user deletion" user delete --username="$TEST_USER2"
 
+# test default locale
+
+LOCALE_TEST_USER="locale_user_$RAND"
+test_success "user create with locale" user create --username="$LOCALE_TEST_USER" \
+  --password=password --email=$LOCALE_TEST_USER@somewhere.com --default_locale="fr"
+test_success "user update with locale" user update --username="$LOCALE_TEST_USER" \
+  --default_locale="pt-BR"
+test_success "user delete with locale" user delete --username="$LOCALE_TEST_USER"

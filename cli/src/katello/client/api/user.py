@@ -39,7 +39,7 @@ class UserAPI(KatelloAPI):
         path = "/api/users/%s" % u_str(user_id)
         return self.server.DELETE(path)[1]
 
-    def update(self, user_id, pw, email, disabled, default_environment):
+    def update(self, user_id, pw, email, disabled, default_environment, default_locale=None):
         userdata = {}
         userdata = self.update_dict(userdata, "password", pw)
         userdata = self.update_dict(userdata, "email", email)
@@ -49,6 +49,9 @@ class UserAPI(KatelloAPI):
             userdata.update(default_environment_id=None)                        # pylint: disable=E1101
         elif default_environment is not False:
             userdata.update(default_environment_id=default_environment['id'])   # pylint: disable=E1101
+
+        if default_locale is not None:
+            userdata = self.update_dict(userdata, "default_locale", default_locale)
 
         path = "/api/users/%s" % u_str(user_id)
         return self.server.PUT(path, {"user": userdata})[1]

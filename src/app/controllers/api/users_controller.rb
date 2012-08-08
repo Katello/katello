@@ -43,7 +43,7 @@ class Api::UsersController < Api::ApiController
 
   def param_rules
     { :create => [:username, :password, :email, :disabled, :default_environment_id, :default_locale],
-      :update => { :user => [:password, :email, :disabled, :default_environment_id] }
+      :update => { :user => [:password, :email, :disabled, :default_environment_id, :default_locale] }
     }
   end
 
@@ -65,8 +65,10 @@ class Api::UsersController < Api::ApiController
     user.default_environment = KTEnvironment.find(params[:default_environment_id]) if params[:default_environment_id]
 
     if !params[:default_locale].blank?
-        user.default_locale = params[:default_locale]
-        user.save!
+        if AppConfig.available_locales.include? params[:default_locale]
+            user.default_locale = params[:default_locale]
+            user.save!
+        end
     end
 
     render :json => user.to_json
@@ -74,12 +76,26 @@ class Api::UsersController < Api::ApiController
 
   def update
     user_params = params[:user].reject { |k, _| k == 'default_environment_id' }
+
+    # Don't update locale if passed locale value is invalid
+    if !params[:default_locale].blank?
+        if !AppConfig.available_locales.include? params[:default_locale]
+            user_params.delete("default_locale")
+        end
+    end
+
     @user.update_attributes!(user_params)
     @user.default_environment = if params[:user][:default_environment_id]
                                   KTEnvironment.find(params[:user][:default_environment_id])
                                 else
                                   nil
                                 end
+
+    if !params[:default_locale].blank?
+        user.default_locale = params[:default_locale]
+        user.save!
+    end
+
     render :json => @user.to_json
   end
 
