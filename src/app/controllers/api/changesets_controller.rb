@@ -26,7 +26,7 @@ class Api::ChangesetsController < Api::ApiController
       :create       => manage_perm,
       :update       => manage_perm,
       :promote      => promote_perm,
-      :apply        => manage_perm,
+      :apply        => promote_perm,
       :destroy      => manage_perm,
     }
   end
