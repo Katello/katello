@@ -233,7 +233,7 @@ describe ChangesetsController, :katello => true do
           filter_coll = {}
           search_options[:filter].each{|f| filter_coll.merge!(f)}
           filter_coll[:environment_id].should == [@env3.id]
-          filter_coll[:state].should == ["promoted"]
+          filter_coll[:state].should == ["promoted", "deleted"]
           controller.stub(:render)
         }
       end
