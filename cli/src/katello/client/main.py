@@ -44,7 +44,7 @@ from katello.client.core import (
 )
 
 def setup_admin(katello_cmd):
-    # pylint: disable=R0914
+    # pylint: disable=R0914,R0915
     akey_cmd = activation_key.ActivationKey()
     akey_cmd.add_command('create', activation_key.Create())
     akey_cmd.add_command('info', activation_key.Info())
