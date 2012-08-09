@@ -91,10 +91,10 @@ class OptionParser(_OptionParser):
         if isinstance(errorMsg, list):
             self.print_usage(sys.stderr)
 
-            i=0
+            i = 0
             while (i<len(errorMsg)):
                 errorMsg[i] = str(i+1) +") "+ errorMsg[i] +"\n"
-                i+=1
+                i += 1
             msgs = ''.join(errorMsg)
 
             self.exit(2, "%s: errors:\n%s" % (self.get_prog_name(), msgs))
