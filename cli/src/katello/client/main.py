@@ -16,7 +16,6 @@
 #
 
 import sys
-import codecs
 
 from katello.client.core import (
   activation_key,
