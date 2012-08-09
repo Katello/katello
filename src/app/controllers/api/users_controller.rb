@@ -77,13 +77,6 @@ class Api::UsersController < Api::ApiController
   def update
     user_params = params[:user].reject { |k, _| k == 'default_environment_id' }
 
-    # Don't update locale if passed locale value is invalid
-    if !params[:default_locale].blank?
-        if !AppConfig.available_locales.include? params[:default_locale]
-            user_params.delete("default_locale")
-        end
-    end
-
     @user.update_attributes!(user_params)
     @user.default_environment = if params[:user][:default_environment_id]
                                   KTEnvironment.find(params[:user][:default_environment_id])

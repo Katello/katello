@@ -178,7 +178,7 @@ class Update(UserAction):
         validator.require_at_least_one_of((
             'password', 'email', 'disabled',
             'default_organization', 'default_environment',
-            'no_default_environment'))
+            'no_default_environment', 'default_locale'))
 
         validator.require_all_or_none(('default_organization', 'default_environment'))
         validator.mutually_exclude(('default_organization', 'default_environment'), 'no_default_environment')
