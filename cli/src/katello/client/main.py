@@ -148,7 +148,7 @@ def setup_admin(katello_cmd):
     package_group_cmd.add_command('info', packagegroup.Info())
     package_group_cmd.add_command('category_list', packagegroup.CategoryList())
     package_group_cmd.add_command('category_info', packagegroup.CategoryInfo())
-    katello_cmd.add_command('package_group',package_group_cmd)
+    katello_cmd.add_command('package_group', package_group_cmd)
 
     dist_cmd = distribution.Distribution()
     dist_cmd.add_command('info', distribution.Info())
