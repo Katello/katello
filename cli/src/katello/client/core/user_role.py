@@ -19,11 +19,9 @@ from gettext import gettext as _
 
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, system_exit
 
-Config()
 
 # base user action -----------------------------------------------------
 
