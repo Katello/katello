@@ -56,6 +56,9 @@ $(document).ready(function() {
         }
 
         var selector_element = $('#environment_path_selector');
+
+        selector_element.find(".KT_path_select_submit_button").attr('disabled', 'disabled');
+
         var request = $.ajax({
             url: selector_element.attr('data-url'),
             type: 'PUT',
@@ -66,12 +69,16 @@ $(document).ready(function() {
             selector_element.find('span:first').text(selected_env_ids[0]['name']);
 
             path_select.hide();
+            selector_element.find(".KT_path_select_submit_button").removeAttr('disabled');
+
             path_select.clear_selected();
             notices.checkNotices();
         });
 
         request.fail(function(jqXHR, textStatus) {
             path_select.hide();
+            selector_element.find(".KT_path_select_submit_button").removeAttr('disabled');
+
             path_select.clear_selected();
             notices.checkNotices();
         });

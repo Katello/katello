@@ -75,7 +75,9 @@ KT.path_select = function(div_id, name, environments, options_in){
             if(options.cancel_button_text){
                 path_selector.find('.KT_path_select_cancel_button').click(function(e){
                     clear_selected();
-                    path_selector.hide();
+                    if(!options.inline) {
+                        path_selector.hide();
+                    }
                     $(document).trigger(options.cancel_event);
                     return false;
                 });
