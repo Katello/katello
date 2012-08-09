@@ -584,7 +584,6 @@ Src::Application.routes.draw do
 
     end
 
-    #resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
     resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
