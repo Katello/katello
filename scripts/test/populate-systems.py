@@ -154,8 +154,7 @@ def create_subscribed_systems(org, envid, pool_ids, randomize, sem):
                 sys.stderr.write("[Error] %s \n" % (e[1]['displayMessage']))
             if randomize:
                 if opts.debug:
-                    print "Trying to find a suitable subscription, will try %s more times\n" % 
-                            (1000-counter) 
+                    print "Trying to find a suitable subscription, will try %s more times\n" % (1000-counter) 
                 counter+=1
     sem.release()
 
@@ -178,7 +177,7 @@ if __name__ == '__main__':
     p.add_option('-e', '--env', dest='env',
             help='Environment to use. Default = DEV', default='DEV')
     p.add_option('-r', '--random', action='store_true', dest='randomize',
-                 help='Will randomly select and attempt subscription.', default=False)
+                 help='Will randomly select and attempt subscription', default=False)
     p.add_option('-d', '--debug', action='store_true', dest='debug', 
                  help='Enable Debug', default=False)
 
