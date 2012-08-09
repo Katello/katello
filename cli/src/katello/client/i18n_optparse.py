@@ -69,9 +69,11 @@ class OptionParser(_OptionParser):
 
     displayed_help = False
 
-    def print_help(self):
+    def print_help(self, out_file=None):
+        if out_file is None:
+            out_file = sys.stdout
         self.displayed_help = True
-        sys.stdout.write(self.format_help())
+        out_file.write(self.format_help())
 
 
     def exit(self, status=0, msg=None):
