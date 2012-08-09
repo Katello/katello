@@ -23,6 +23,9 @@ class KatelloAPI(object):
     @ivar server: L{Server} instance
     """
 
+    def __init__(self):
+        pass
+
     @property
     def server(self):
         return server.active_server
