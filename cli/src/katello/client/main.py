@@ -15,8 +15,6 @@
 # in this software or its documentation.
 #
 
-import sys
-
 from katello.client.core import (
   activation_key,
   environment,
