@@ -29,6 +29,7 @@ common:
   warden: database
   use_cp: true
   use_pulp: true
+  use_foreman: true
   debug_rest: false
   debug_cp_proxy: false
   debug_pulp_proxy: false
@@ -108,9 +109,9 @@ common:
 # oauth_key and oauth_secre :Specify your oauth key and secret
 #   used to authenticate between Katello and Foreman
   foreman:
-    url: https://foreman.instance.company.com:443
+    url: http://localhost:3001
     oauth_key: katello
-    oauth_secret: shhh
+    oauth_secret: shhhh
 
   cloud_forms:
     oauth_key: cloud_forms

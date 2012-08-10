@@ -12,8 +12,8 @@
 
 class Api::ArchitecturesController < Api::ForemanController
 
-  def self.foreman_api_resource_class
-    ForemanApi::Resources::Architecture
+  def foreman_resource
+    Resources::Foreman::Architecture
   end
 
   def index
