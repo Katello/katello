@@ -275,7 +275,7 @@ def setup_admin(katello_cmd):
 
     architecture_cmd = architecture.Architecture()
     architecture_cmd.add_command('list', architecture.List())
-    architecture_cmd.add_command('show', architecture.Show())
+    architecture_cmd.add_command('info', architecture.Show())
     architecture_cmd.add_command('create', architecture.Create())
     architecture_cmd.add_command('update', architecture.Update())
     architecture_cmd.add_command('delete', architecture.Delete())
