@@ -700,6 +700,7 @@ Src::Application.routes.draw do
 
       # foreman proxy --------------
     resources :architectures, :except => [:new, :edit]
+    resources :domains, :except => [:new, :edit]
 
     # development / debugging support
     if Rails.env == "development"
