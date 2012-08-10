@@ -333,6 +333,7 @@ rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
 #remove development tasks
 rm %{buildroot}%{homedir}/lib/tasks/test.rake
+rm %{buildroot}%{homedir}/lib/tasks/integration_test.rake
 
 #branding
 if [ -d branding ] ; then
