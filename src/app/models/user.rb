@@ -16,6 +16,7 @@ require 'util/password'
 
 class User < ActiveRecord::Base
   include Glue::Pulp::User if AppConfig.katello?
+  include Glue::Foreman::User if AppConfig.use_foreman
   include Glue if AppConfig.use_cp
   include AsyncOrchestration
   include IndexedModel
