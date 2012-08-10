@@ -180,6 +180,12 @@ This is the Katello-headpin meta-package.  If you want to install Headpin and al
 of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
 
+%package api-docs
+Summary: Documentation files for katello API
+
+%description api-docs
+Documentation files for katello API.
+
 %prep
 %setup -q
 
@@ -351,6 +357,7 @@ fi
 %{homedir}/lib/tasks
 %{homedir}/locale
 %{homedir}/public
+%exclude %{homedir}/public/apipie-cache
 %{homedir}/script
 %{homedir}/spec
 %{homedir}/tmp
@@ -364,7 +371,7 @@ fi
 %{_mandir}/man8/katello-service.8*
 
 %files common
-%doc README LICENSE doc/
+%doc README LICENSE
 %{_sbindir}/service-wait
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
@@ -433,6 +440,7 @@ fi
 %{homedir}/lib/glue/queue.rb
 %{homedir}/locale
 %{homedir}/public
+%exclude %{homedir}/public/apipie-cache
 %{homedir}/script
 %{homedir}/spec
 %{homedir}/tmp
@@ -444,6 +452,10 @@ fi
 %{homedir}/Rakefile
 
 %files headpin-all
+
+%files api-docs
+%doc doc/apidoc*
+%{homedir}/public/apipie-cache
 
 %pre common
 # Add the "katello" user and group
