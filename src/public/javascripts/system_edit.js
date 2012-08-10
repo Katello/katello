@@ -44,8 +44,6 @@ $(document).ready(function() {
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
 
-    console.log(KT.available_environments);
-
     path_select = KT.path_select('environment_path_selector', 'edit_select_system_environment', KT.available_environments,
         {select_mode:'single', submit_button_text: i18n.save, cancel_button_text: i18n.cancel, activate_on_click: true});
 
@@ -56,7 +54,6 @@ $(document).ready(function() {
         }
 
         var selector_element = $('#environment_path_selector');
-
         selector_element.find(".KT_path_select_submit_button").attr('disabled', 'disabled');
 
         var request = $.ajax({
@@ -67,6 +64,7 @@ $(document).ready(function() {
 
         request.done(function(msg) {
             selector_element.find('span:first').text(selected_env_ids[0]['name']);
+            $(document).trigger('kt_system:updated', {'id': $("input#panel_element_id").attr('name'), 'environment' : {'name': selected_env_ids[0]['name']}});
 
             path_select.hide();
             selector_element.find(".KT_path_select_submit_button").removeAttr('disabled');

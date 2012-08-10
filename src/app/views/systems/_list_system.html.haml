@@ -1,3 +1,18 @@
+:javascript
+  $(document).bind('kt_system:updated', function(event, system_data) {
+      if(system_data['id'] == #{item.id}) {
+
+        var a_system = $("#system_#{item.id}");
+        if (KT.utils.keys(system_data).indexOf('environment') > -1) {
+          a_system.find("span#environment").text(system_data['environment']['name']);
+        } else if (KT.utils.keys(system_data).indexOf('name') > -1) {
+          a_system.find("span#name").text(system_data['name']);
+        } else if (KT.utils.keys(system_data).indexOf('distribution_name') > -1) {
+          a_system.find("span#name").text(system_data['distribution_name']);
+        }
+      }
+  });
+
 .block.tall{:id => "#{name}_#{item.send(accessor)}", "data-ajax_url" => "#{url_for(:controller=>controller.controller_name)}/#{item.send(accessor)}", "data-ajax_panelpage" => @panel_options[:initial_action]}
   = render :partial=>"systems/list_system_show", :locals=>{:item => item}
 
