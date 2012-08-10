@@ -102,3 +102,9 @@ group :development do
   gem 'newrelic_rpm'
   gem 'logical-insight'
 end
+
+group :test do
+  gem 'vcr'
+  gem 'webmock'
+  gem 'minitest'
+end
