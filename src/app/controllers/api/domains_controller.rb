@@ -10,12 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::ArchitecturesController < Api::ApiController
+class Api::DomainsController < Api::ApiController
 
   skip_before_filter :authorize
 
-  Resource = Foreman::Architecture
-  ResourceName = :architecture
+  Resource = Foreman::Domain
+  ResourceName = :domain
 
   def index
     render :json => Resource.all
@@ -46,5 +46,3 @@ class Api::ArchitecturesController < Api::ApiController
     end
   end
 end
-
-
