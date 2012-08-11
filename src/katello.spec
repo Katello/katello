@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.0.4
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -465,6 +465,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Sat Aug 11 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.5-1
+- 844678 - don't use multi-entitlements on custom products
+
 * Sat Aug 04 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.4-1
 - move service-wait to katello-common (msuchy@redhat.com)
 
