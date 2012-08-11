@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.1.2
+Version:        1.1.3
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -89,6 +89,12 @@ cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
 
 %changelog
+* Sat Aug 11 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.3-1
+- remove ssh pub keys (msuchy@redhat.com)
+- puppet - make sure we deploy previous certificate before generating new one
+  (inecas@redhat.com)
+- 820624 - make pgsql to listen only on localhost (lzap+git@redhat.com)
+
 * Sat Aug 04 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.2-1
 - 845224 - fix adding broker cert to nssdb (inecas@redhat.com)
 
