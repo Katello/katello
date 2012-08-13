@@ -358,6 +358,15 @@ class SystemTemplate < ActiveRecord::Base
   end
 
 
+def remove from_env
+    remove_template from_env
+    #TODO: remove parent templates recursively
+    self.parent.remove(from_env) if self.parent
+    []
+end
+
+
+
   def get_clones
     Organization.find(self.environment.organization_id).environments.collect do |env|
       env.system_templates.where(:name => self.name_was)
@@ -426,6 +435,11 @@ class SystemTemplate < ActiveRecord::Base
       changesets =  Changeset.joins(:system_templates).where("system_templates.id"=>self.id)
       Changeset.index_import(changesets) if !changesets.empty?
     end
+  end
+
+  def remove_template from_env
+    tpl_copy = from_env.system_templates.find_by_name(self.name)
+    tpl_copy.delete if tpl_copy
   end
 
   def promote_template from_env, to_env
