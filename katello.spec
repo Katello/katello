@@ -106,6 +106,35 @@ BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
 BuildRequires:  converge-ui-devel >= 0.8.3
 
+# we require this to be able to build api-docs
+BuildRequires:       rubygem(rails) >= 3.0.10
+BuildRequires:       rubygem(haml) >= 3.1.2
+BuildRequires:       rubygem(haml-rails)
+BuildRequires:       rubygem(json)
+BuildRequires:       rubygem(rest-client)
+BuildRequires:       rubygem(rails_warden)
+BuildRequires:       rubygem(net-ldap)
+BuildRequires:       rubygem(oauth)
+BuildRequires:       rubygem(i18n_data) >= 0.2.6
+BuildRequires:       rubygem(gettext_i18n_rails)
+BuildRequires:       rubygem(simple-navigation) >= 3.3.4
+BuildRequires:       rubygem(pg)
+BuildRequires:       rubygem(delayed_job) >= 2.1.4
+BuildRequires:       rubygem(acts_as_reportable) >= 1.1.1
+BuildRequires:       rubygem(pdf-writer) >= 1.1.8
+BuildRequires:       rubygem(ruport) >= 1.6.3
+BuildRequires:       rubygem(daemons) >= 1.1.4
+BuildRequires:       rubygem(uuidtools)
+BuildRequires:       rubygem(thin)
+BuildRequires:       rubygem(sass)
+BuildRequires:       rubygem(tire) >= 0.3.0
+BuildRequires:       rubygem(tire) < 0.4
+BuildRequires:       rubygem(ldap_fluff)
+BuildRequires:       rubygem(apipie-rails)
+BuildRequires:       rubygem(redcarpet)
+
+
+
 %description common
 Common bits for all Katello instances
 
@@ -218,6 +247,12 @@ ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po
 
 #man pages
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
+
+#api docs
+rm -f Gemfile.lock
+echo Generating API docs
+rake apipie:static RAILS_ENV=apipie
+rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie
 
 %install
 #prepare dir structure
