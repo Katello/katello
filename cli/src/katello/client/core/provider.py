@@ -1,6 +1,6 @@
 #
 # Katello Organization actions
-# Copyright (c) 2010 Red Hat, Inc.
+# Copyright (c) 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -20,7 +20,6 @@ from urlparse import urlparse
 
 from katello.client.api.provider import ProviderAPI
 from katello.client.server import ServerRequestError
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask, format_sync_errors, system_exit
 from katello.client.core.repo import format_sync_state, format_sync_time
@@ -28,7 +27,6 @@ from katello.client.core.utils import ProgressBar
 from katello.client.api.utils import get_provider
 from katello.client.utils import printer
 
-Config()
 
 
 # base provider action =========================================================

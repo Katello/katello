@@ -19,10 +19,9 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.2.20
+Version:       1.1.2
 Release:       1%{?dist}
-Source0:       %{name}-%{version}.tar.gz
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
 Requires:      %{base_name}-cli
 Requires:      yajl
@@ -41,21 +40,34 @@ application life-cycle for Linux systems
 %build
 
 %install
-rm -rf $RPM_BUILD_ROOT
 install -d -m 755 $RPM_BUILD_ROOT%{homedir}/script/cli-tests
 pwd
 ls
 cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{homedir}/script/cli-tests
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
 %{homedir}/script/cli-tests
 
 
 %changelog
+* Sat Aug 11 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.2-1
+- fix system tests for rhsm re-subscribe (inecas@redhat.com)
+- 840531 - remove nvre tests from system tests (inecas@redhat.com)
+
+* Sat Aug 04 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
+- Introduce +load_remote_data+ method to lazy_attributes (inecas@redhat.com)
+- buildroot and %%clean section is not needed (msuchy@redhat.com)
+- Bumping package versions for 1.1. (msuchy@redhat.com)
+
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- bump up version to 1.0 (msuchy@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.21-1
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+- skip subscription-manager testing if you are registred against hosted
+  (msuchy@redhat.com)
+
 * Mon Jul 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.20-1
 - system groups - remove debug from system test
 - system groups - cli - add system tests for package actions

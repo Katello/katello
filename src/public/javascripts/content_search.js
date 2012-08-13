@@ -48,8 +48,7 @@ KT.content_search = function(paths_in){
                        cols:{
                            title : {id:'title', name:i18n.title, span: "2"},
                            type  : {id:'type', name:i18n.type},
-                           severity : {id:'severity', name:i18n.severity},
-                           issued : {id:'issued', name:i18n.issued}
+                           severity : {id:'severity', name:i18n.severity}
                          },
                         selector:['repo_packages', 'repo_errata']
         },
@@ -67,8 +66,8 @@ KT.content_search = function(paths_in){
         }
     },
     search_modes = [{id:'all', name:i18n.all},
-                    {id:'shared', name:i18n.shared},
-                    {id:'unique', name:i18n.unique}
+                    {id:'shared', name:i18n.union},
+                    {id:'unique', name:i18n.difference}
                    ],
     search_pages = {errata:{url:KT.routes.errata_content_search_index_path(), modes:true},
                     repos:{url:KT.routes.repos_content_search_index_path(), modes:true, comparable:true},
@@ -84,11 +83,22 @@ KT.content_search = function(paths_in){
 
 
     var init = function(){
-        var initial_search = $.bbq.getState('search');
+        var initial_search = $.bbq.getState('search'),
+            footer;
         paths = paths_in;
-        env_select = KT.path_select('column_selector', 'env', paths,
-            {select_mode:'multi', link_first: true, footer: true });
+        
+        if( KT.permissions.current_organization.editable ){
+            footer = $('<a/>', { "href" : KT.routes.organizations_path('#panel=organization_' + KT.permissions.current_organization['id'] + '&panelpage=edit')});
+            footer.append($('<i/>', { "class" : "gears_icon", "data-change_on_hover" : "dark" }));
+            footer.append($('<span/>').html(i18n.manage_environments));
+            footer = footer[0].outerHTML;
+        } else {
+            footer = "";
+        }
 
+        env_select = KT.path_select('column_selector', 'env', paths,
+            {select_mode:'multi', link_first: true, footer: footer });
+        env_select.reposition_left(); 
         init_tipsy();
 
         comparison_grid = KT.comparison_grid();
@@ -162,7 +172,6 @@ KT.content_search = function(paths_in){
             env_select.select(env.id)
         });
         comparison_grid.show_columns(env_obj);
-        env_select.reposition();
     },
     bind_load_more_event = function(){
       $(document).bind('load_more.comparison_grid', function(event){
@@ -188,6 +197,7 @@ KT.content_search = function(paths_in){
           data: data_out,
           success: function(data){
             $(document).trigger('show_more.comparison_grid', [data.rows]);
+            close_tipsy();
           }
         })
       });
@@ -218,18 +228,18 @@ KT.content_search = function(paths_in){
         }
     },
     main_search = function(search_params){
-        if (search_params.mode === undefined){
-            search_params.mode = search_modes[0].id;
-        }
+        var options = {};
+        close_tipsy();
 
-        search_params.environments = []
-        utils.each(get_initial_environments(), function(item){
-            search_params.environments.push(item.id);
-        });
+        options.show_compare_btn = search_pages[search_params.content_type].comparable;
 
+
+        search_params = populate_state(search_params);
 
         if (cache.get_state(search_params)){
             comparison_grid.import_data(cache.get_state(search_params));
+            comparison_grid.set_mode("results", options);
+            select_envs(get_initial_environments());
         }
         else {
             $(document).trigger('loading.comparison_grid');
@@ -239,11 +249,9 @@ KT.content_search = function(paths_in){
                 url: search_pages[search_params.content_type].url,
                 data: JSON.stringify(search_params),
                 success: function(data){
-                    var options = {};
-                    options.show_compare_btn = search_pages[search_params.content_type].comparable;
                     if (search_pages[search_params.content_type].modes){
                         options.right_selector = true;
-                        comparison_grid.set_right_select(search_modes, search_params.mode);
+                        comparison_grid.set_right_select(search_modes, search_params.mode || search_modes.first.id);
                     }
 
                     comparison_grid.set_columns(env_select.get_paths());
@@ -259,7 +267,7 @@ KT.content_search = function(paths_in){
     subgrid_search = function(search_params){
         var type = search_params.subgrid.type,
             subgrid = subgrids[search_params.subgrid.type];
-
+        close_tipsy();
         comparison_grid.controls.comparison.hide();
         $(document).trigger('loading.comparison_grid');
         $.ajax({
@@ -284,6 +292,26 @@ KT.content_search = function(paths_in){
                 draw_grid(data.rows);
             }
         });
+    },
+    populate_state = function(search_params){
+        /**
+         * Populate the search params with extra data needed for querying and
+         *   for saving cache
+         */
+        if (search_params === undefined){
+            return undefined;
+        }
+        if (search_params.mode === undefined){
+            search_params.mode = search_modes[0].id;
+        }
+        search_params.environments = [];
+        utils.each(get_initial_environments(), function(item){
+            search_params.environments.push(item.id);
+        });
+        return search_params;
+    },
+    close_tipsy = function(){
+      $(document).trigger("close.tipsy");
     },
     draw_grid = function(data){
         comparison_grid.set_rows(data, true);
@@ -321,7 +349,8 @@ KT.content_search = function(paths_in){
             if (envs_changed && search && search.mode && search.mode !== 'all'){
                 search_initiated(undefined, search);
                 envs_changed = false;
-            } 
+            }
+            cache.save_state(comparison_grid, populate_state(search));
         });
         //select event
         $(document).bind(env_select.get_select_event(), function(event){
@@ -330,7 +359,6 @@ KT.content_search = function(paths_in){
 
             comparison_grid.show_columns(environments);
             $.bbq.pushState({envs:env_ids});
-            env_select.reposition();
             envs_changed = true;
         });
     },
@@ -367,11 +395,13 @@ KT.content_search = function(paths_in){
         }
     },
     init_tipsy = function(){
-        $('.help-icon').tipsy({html:true, gravity:'w', className:'content-tipsy',
-            title:function(){
-                return $(this).find('.hidden-text').html();
-            }
-        });
+        var find_text = function(){ return $(this).find('.hidden-text').html();};
+        $('.browse_tipsy').tipsy({html:true, gravity:'w', className:'content-tipsy',
+            title:find_text});
+        $('.view_tipsy').tipsy({html:true, gravity:'s', className:'content-tipsy',
+                    title:find_text});
+        KT.tipsy.custom.url_tooltip($('.tipsify-errata'), 'w');
+
     },
     subgrid_selector_items = function(type) {
         var to_ret = [],
@@ -400,7 +430,7 @@ KT.content_search_cache = (function(){
         saved_data = undefined;
 
     var save_state = function(grid, search){
-        saved_search = search;
+        saved_search = $.extend(true, {}, search);
         saved_data = grid.export_data();
     },
     get_state = function(search){
@@ -467,6 +497,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
 
        ac_obj = KT.auto_complete_box(
            {values:ac_container.data('url'),
+            require_select: true,
             input: ac_container.find('input:text'),
             add_btn: ac_container.find('.button'),
             add_text: i18n.add,
@@ -501,7 +532,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
         var list = ac_container.find('ul');
         list.find('.all').hide();
         if (ac_container.find('li[data-id=' + id + ']').length === 0){
-            list.prepend('<li data-name="'+ name + '" data-id="' + id + '"><i class="remove x_icon_black clickable"/>' + name + '</li>');
+            list.prepend('<li data-name="'+ name + '" data-id="' + id + '"><i class="remove x-icon-black clickable"/><span>' + name + '</span></li>');
         }
 
     },
@@ -592,11 +623,16 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
             });
             query.content_type = content_type;
             $(document).trigger(event_name, query);
+            get_submit_btn().val(i18n.refresh_results);
+        },
+        get_submit_btn = function(){
+            return selector.parents('form').find('input[type=submit]');
         },
         change_selection = function(selected){
             var needed = mapping[selected],
                 element;
-
+            get_submit_btn().val(i18n.search);
+             
             utils.each(widgets, function(value, key){
                 element = $('#' + value.id);
                 if (utils.include(needed, key)){

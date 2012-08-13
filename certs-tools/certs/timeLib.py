@@ -33,7 +33,7 @@
 #
 
 
-from time import strftime, strptime, mktime, gmtime, timezone, struct_time
+from time import strftime, strptime, mktime, gmtime, timezone
 from time import time
 
 MIN = 60.0
@@ -45,11 +45,11 @@ YEAR = 365 * DAY
 def now():
     return round(time())
 
-def secs2str(format, secs):
+def secs2str(str_format, secs):
     assert type(secs) in (type(1), type(1.0))
-    return strftime(format, gmtime(round(secs)))
-def str2secs(s, format):
-    return mktime(strptime(s, format)) - timezone
+    return strftime(str_format, gmtime(round(secs)))
+def str2secs(s, str_format):
+    return mktime(strptime(s, str_format)) - timezone
 
 def secs2days(secs):
     return round(secs/DAY)

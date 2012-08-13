@@ -33,7 +33,8 @@ KT.comparison_grid = function(){
             var cells = [], row_level,
                 child_list,
                 cell_columns = utils.keys(cell_data),
-                has_children = models.rows.has_children(id);
+                has_children = models.rows.has_children(id),
+                row_element;
  
             if( models.mode === "results" ){           
                 row_level = models.rows.get_nested_level(id);
@@ -54,19 +55,21 @@ KT.comparison_grid = function(){
 
             add_row_header(id, name, row_level, has_children, parent_id);
 
+            row_element = templates.row(id, models.columns.length, cells, row_level, has_children, parent_id, name);
+
             if( parent_id ){
                 child_list = $('#child_list_' + parent_id);
                 
                 if( child_list.find('.load_row').length > 0 ){
-                    child_list.find('.load_row').before(templates.row(id, models.columns.length, cells, row_level, has_children, parent_id));
+                    child_list.find('.load_row').before(row_element);
                 } else {
-                    child_list.append(templates.row(id, models.columns.length, cells, row_level, has_children, parent_id));
+                    child_list.append(row_element);
                 }
             } else {
                 if( grid_content_el.children('.load_row').length > 0 ) {
-                    grid_content_el.children('.load_row').before(templates.row(id, models.columns.length, cells, row_level, has_children));
+                    grid_content_el.children('.load_row').before(row_element);
                 } else {
-                    grid_content_el.append(templates.row(id, models.columns.length, cells, row_level, has_children));
+                    grid_content_el.append(row_element);
                 }
             }
         },
@@ -97,8 +100,13 @@ KT.comparison_grid = function(){
         },
         update_metadata_row = function(id, current, total){
             var metadata_row = $('.load_row[data-id="' + id + '"]');
-
-            metadata_row.find('span').html(i18n.counts.replace('%C', current).replace('%T', total));
+            
+            if( current === total ){
+                metadata_row.remove();
+                $('#row_header_' + id).remove();
+            } else {
+                metadata_row.find('span').html(i18n.counts.replace('%C', current).replace('%T', total));
+            }
         },
         add_row_header = function(id, name, row_level, has_children, parent_id) {
             var child_list;
@@ -164,6 +172,10 @@ KT.comparison_grid = function(){
             $('.load_row').find('.spinner').css('visibility', 'hidden');
             $('.load_row').find('a').removeClass('disabled');
 
+            $('.three-line-ellipsis').trunk8({
+                lines   : 3
+            });
+
             set_loading(false);
         },
         set_rows = function(data, initial) {
@@ -213,7 +225,17 @@ KT.comparison_grid = function(){
             models.columns = [];
 
             utils.each(data, function(col) {
-                models.columns.push({ 'id' : col['id'], 'to_display' : col['name'], 
+                var to_display, custom; 
+
+                if( col['content'] ){
+                    to_display = col['content']['custom'] ? col['content']['custom'] : col['content']['name'],
+                    custom = col['content']['custom'] ? true : false;
+                } else {
+                    to_display = col['name'];
+                    custom = false;
+                }
+
+                models.columns.push({ 'id' : col['id'], 'to_display' : { 'content' : to_display, 'custom' : custom }, 
                                             'span' : col['span'] ? col['span'] : 1 });
             });
 
@@ -350,13 +372,13 @@ KT.comparison_grid.models = function() {
 
     self.export_data = function(type) {
         if( type === "columns" ){
-            return { columns : self.columns };
+            return { columns :$.extend(true, [], self.columns) };
         } else if( type === "rows" ){
             return { rows : $.extend(true, {}, self.rows.get()) };
         } else if( type === "mode" ){
             return { mode : self.mode };
         } else {
-            return { columns : self.columns, 
+            return { columns : $.extend(true, [], self.columns),
                     rows : $.extend(true, {}, self.rows.get()), 
                     mode : self.mode };
         }
@@ -463,7 +485,7 @@ KT.comparison_grid.controls = function(grid) {
             },
             show = function() {
                 $('#column_selector').show();
-                $('.slide_arrow[data-arrow_direction="right"]').css({ right : '21px' });
+                $('.slide_arrow[data-arrow_direction="right"]').css({ right : '25px' });
             };
 
             return {
@@ -484,10 +506,12 @@ KT.comparison_grid.controls = function(grid) {
                 show = function() {
                     right_arrow.show();
                     left_arrow.show();
+                    $('#more_columns_fade').show();
                 },
                 hide = function() {
                     right_arrow.hide();
                     left_arrow.hide();
+                    $('#more_columns_fade').hide();
                 },
                 current_position = function(){
                     return $('#column_headers').position().left;
@@ -510,12 +534,20 @@ KT.comparison_grid.controls = function(grid) {
                     if( current_position() === 0 ){
                         left_arrow.find('span').addClass('disabled');
                         right_arrow.find('span').removeClass('disabled');
+
+                        if( right_arrow.is(":visible") ){
+                            $('#more_columns_fade').show();
+                        }
                     } else if( stop_position() === current_position() ) {
                         right_arrow.find('span').addClass('disabled');
                         left_arrow.find('span').removeClass('disabled');
+                        $('#more_columns_fade').hide();
                     } else {
                         right_arrow.find('span').removeClass('disabled');
                         left_arrow.find('span').removeClass('disabled');
+                        if( right_arrow.is(":visible") ){
+                            $('#more_columns_fade').show();
+                        }
                     }
                 },
                 slide = function(direction) {
@@ -585,6 +617,7 @@ KT.comparison_grid.controls = function(grid) {
 
                     selector.append(html);
                     selector.chosen();
+                    selector.trigger("liszt:updated");
                 },
                 show = function(){
                     container.show();
@@ -601,7 +634,13 @@ KT.comparison_grid.controls = function(grid) {
         },
         comparison = (function(){
             var show = function(){
-                    $('#compare_repos_btn').show();
+                var elements = $('.grid_cell').find('input[type="checkbox"]:checked');
+                    
+                $('#compare_repos_btn').show();
+
+                if( elements.length === 0 ){
+                    $('#compare_repos_btn').addClass('disabled');
+                }
             },
             hide = function(){
                 $('#compare_repos_btn').hide();
@@ -728,6 +767,16 @@ KT.comparison_grid.events = function(grid) {
                 });
                 $(document).trigger({ type : 'compare.comparison_grid', selected : selected });
             });
+            $('.grid_cell').find('input[type="checkbox"]').live('click', function(){
+                if( !$(this).is(':checked') ){
+                    $('#compare_repos_btn').addClass('disabled');
+                } else {
+                    if( $('#compare_repos_btn').hasClass('disabled') ){
+                        $('#compare_repos_btn').removeClass('disabled');
+                    };
+                }
+            });
+            $('#compare_repos_btn').tipsy({ gravity: 'w' });
         },
         load_row_links = function(){
             $('.load_row_link').live('click', function(event){
@@ -747,7 +796,7 @@ KT.comparison_grid.events = function(grid) {
 };
 
 KT.comparison_grid.templates = (function(i18n) {
-    var cell = function(data) {
+    var cell = function(data, row_height) {
             var display,                
                 hover = data['hover'] ? data['hover'] : false,
                 html = $('<div/>', { 
@@ -757,19 +806,24 @@ KT.comparison_grid.templates = (function(i18n) {
 
             if( data['in_column'] ){
                 if( data['display'] !== undefined ){
-                    display = '<div class="one-line-ellipsis">' + data['display'] + '</div>';
+                    display = '<div class="grid_cell_data one-line-ellipsis">' + data['display'] + '</div>';
                 } else {
                     display = '<i class="dot-icon-black" />';
                 }
             } else {
-                 display = "<span>--</span>";
+                 display = "<i>--</i>";
             }
 
             html.append(display);
 
             if( hover ){
                 html.attr('data-hover', true);
-                html.append($('<span/>', { 'class' : "hidden grid_cell_hover", 'html' : hover }));
+                
+                if( row_height ){
+                    html.append($('<span/>', { 'class' : "hidden grid_cell_hover " + row_height, 'html' : hover }));
+                } else {
+                    html.append($('<span/>', { 'class' : "hidden grid_cell_hover", 'html' : hover }));
+                }
             }
 
             if( data['comparable'] && data['in_column'] ){
@@ -782,7 +836,7 @@ KT.comparison_grid.templates = (function(i18n) {
 
             return html;
         },
-        row = function(id, num_columns, cell_data, row_level, has_children, parent_id) {
+        row = function(id, num_columns, cell_data, row_level, has_children, parent_id, name) {
             var i,
                 html = $('<div/>', {
                     'id'    : 'grid_row_' + id,
@@ -793,12 +847,42 @@ KT.comparison_grid.templates = (function(i18n) {
                 html.attr('data-parent_id', parent_id);
             }
 
-            if( has_children ){
-                html.attr('data-collapsed', "false");
+            if( row_level === 2 ){
+                if( name.length > 30 && name.length < 60 ){
+                    html.addClass('row_height_2');
+                    for(i = 0; i < num_columns; i += 1){
+                        html.append(cell(cell_data[i], 'row_height_2'));
+                    }
+
+                } else if( name.length >= 60 ){
+                    html.addClass('row_height_3');
+                    for(i = 0; i < num_columns; i += 1){
+                        html.append(cell(cell_data[i], 'row_height_3'));
+                    }
+                } else {
+                    for(i = 0; i < num_columns; i += 1){
+                        html.append(cell(cell_data[i]));
+                    }
+                }
+            } else if( row_level === 3 ){
+                if( name.length > 30 ){
+                    html.addClass('row_height_2');
+                    for(i = 0; i < num_columns; i += 1){
+                        html.append(cell(cell_data[i], 'row_height'));
+                    }
+                } else {
+                    for(i = 0; i < num_columns; i += 1){
+                        html.append(cell(cell_data[i]));
+                    }
+                }
+            } else {
+                for(i = 0; i < num_columns; i += 1){
+                    html.append(cell(cell_data[i]));
+                }
             }
 
-            for(i = 0; i < num_columns; i += 1){
-                html.append(cell(cell_data[i]));
+            if( has_children ){
+                html.attr('data-collapsed', "false");
             }
 
             if( has_children ){
@@ -815,14 +899,38 @@ KT.comparison_grid.templates = (function(i18n) {
             var html = $('<li/>', { 
                             'data-id'   : id,
                             'id'        : 'row_header_' + id,
-                            'class'     : 'one-line-ellipsis row_header grid_row_level_' + row_level
+                            'class'     : 'row_header grid_row_level_' + row_level
                         });
 
             if( parent_id !== undefined ){
                 html.attr('data-parent_id', parent_id);
             }
             
-            html.append('<span/>').html(name);
+            if( row_level === 2 ){
+                if( name.length > 30 && name.length < 60 ){
+                    html.addClass('row_height_2');
+                    html.append($('<span/>').html(name));
+                } else if( name.length >= 60 && name.length <= 94 ){
+                    html.addClass('row_height_3');
+                    html.append($('<span/>').html(name));
+                } else if( name.length > 94 ) {
+                    html.addClass('row_height_3');
+                    html.append($('<span/>', { 'class' : 'three-line-ellipsis tipsify', 'title' : name }).html(name));
+                } else {
+                    html.append($('<span/>').html(name));
+                }
+            } else if( row_level === 3 ){
+                if( name.length > 30 ){
+                    html.addClass('row_height_2');
+                }
+                html.append($('<span/>').html(name));
+            } else {
+                if( (has_children && name.length > 26) || (parent_id && name.length > 28) || name.length > 28 ){
+                    html.append($('<span/>', { 'class' : 'one-line-ellipsis tipsify', 'title' : name }).html(name));
+                } else {
+                    html.append($('<span/>').html(name));
+                }
+            }
 
             if( has_children ){
                 if( row_level === 2 ){
@@ -843,9 +951,15 @@ KT.comparison_grid.templates = (function(i18n) {
                     'id'        : 'column_' + id,
                     'data-id'   : id,
                     'data-span' : span,
-                    'class'     : 'one-line-ellipsis column_header hidden'
-                }).html(to_display);
+                    'class'     : 'column_header hidden'
+                }).html(to_display['content']);
  
+            if( !to_display['custom'] ){
+                if( to_display['content'].length > span * 12 ){
+                    html.addClass('tipsify one-line-ellipsis').attr('title', to_display['content']);
+                }
+            }
+
             return html;
         },
         collapse_arrow = function(options){
@@ -865,8 +979,8 @@ KT.comparison_grid.templates = (function(i18n) {
                             'data-id'   : id
                         });
                 
-            html.append('<i class="spinner invisible" />');
-            html.append('<a class="load_row_link" href="" >' + i18n.show_more.replace('%P', load_size) + '</a>');
+            html.append('<i class="fl spinner invisible" />');
+            html.append('<a class="load_row_link fl" href="" >' + i18n.show_more.replace('%P', load_size) + '</a>');
             html.append('<i class="down_arrow-icon-black"/>');
             html.append($('<span/>').html(i18n.counts.replace('%C', current).replace('%T', total)));
 

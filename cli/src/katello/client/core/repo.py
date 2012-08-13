@@ -1,6 +1,6 @@
 #
 # Katello Repos actions
-# Copyright (c) 2010 Red Hat, Inc.
+# Copyright (c) 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -21,7 +21,6 @@ from gettext import gettext as _
 from katello.client import constants
 from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
 from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_sync_errors
@@ -29,7 +28,6 @@ from katello.client.core.utils import ProgressBar
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 
-Config()
 
 ALLOWED_REPO_URL_SCHEMES = ("http", "https", "ftp", "file") 
 

@@ -163,9 +163,6 @@ def rhn_popen(cmd, progressCallback=None, bufferSize=16384, outputLog=None):
         progressCallback --> progress bar twiddler
         outputLog --> optional log file file object write method
     """
-
-    subprocess._cleanup()
-
     cmd_is_list = type(cmd) in (types.ListType, types.TupleType)
     if cmd_is_list:
         cmd = map(str, cmd)
@@ -263,7 +260,7 @@ def makedirs(path,  mode=0755, user=None, group=None):
             # Changing permissions failed; ignore the error
             sys.stderr.write("Changing owner for %s failed\n" % dirname)
 
-def createPath(path, user='apache', group='apache', chmod=0755, logging=1):
+def createPath(path, user='apache', group='apache', chmod=0755):
     """advanced makedirs
 
     Will create the path if necessary.
@@ -291,7 +288,6 @@ def setPermsPath(path, user='apache', group='root', chmod=0750):
     """chown user.group and set permissions to chmod"""
     if not os.path.exists(path):
         raise OSError, "*** ERROR: Path doesn't exist (can't set permissions): %s" % path
-        sys.exit(-1)
 
     # If non-root, don't bother to change owners
     if os.getuid() != 0:
@@ -301,12 +297,10 @@ def setPermsPath(path, user='apache', group='root', chmod=0750):
     uid = gc.getuid(user)
     if uid is None:
         raise OSError, "*** ERROR: user '%s' doesn't exist. Cannot set permissions properly." % user
-        sys.exit(-1)
 
     gid = gc.getgid(group)
     if gid is None:
         raise OSError, "*** ERROR: group '%s' doesn't exist. Cannot set permissions properly." % group
-        sys.exit(-1)
 
     uid_, gid_ = os.stat(path)[4:6]
     if uid_ != uid or gid_ != gid:
@@ -362,7 +356,7 @@ def getUidGid(user=None, group=None):
     if uid != 0:
         # Don't bother to change the owner, it will fail anyway
         # group ownership may work though
-        user=None
+        user = None
     else:
         uid = gc.getuid(user)
 

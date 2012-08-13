@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2011 Red Hat, Inc.
+# Copyright © 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -16,14 +16,12 @@ import os
 import sys
 from gettext import gettext as _
 
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
 from katello.client.core.utils import test_record
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_job, SystemGroupAsyncJob
 
-Config()
 
 
 # base system group action --------------------------------------------------------
