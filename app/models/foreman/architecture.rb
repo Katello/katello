@@ -10,12 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Foreman::Architecture < Foreman::Base
+class Foreman::Architecture < Resources::ForemanModel
 
-  attr_accessor :id, :name, :operatingsystems
-  json_fields :name, :operatingsystems
+  attributes :id, :name# , :operatingsystems
+  json_fields :name#, :operatingsystems
 
-  def self.resource
-    Resources::Foreman::Architecture
-  end
 end

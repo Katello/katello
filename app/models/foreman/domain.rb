@@ -10,12 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Foreman::Domain < Foreman::Base
+class Foreman::Domain < Resources::ForemanModel
 
-  attr_accessor :id, :name, :fullname, :dns_id
+  attributes :id, :name, :fullname, :dns_id
   json_fields :name, :fullname, :dns_id
 
-  def self.resource
-    Resources::Foreman::Domain
-  end
+  validates :name, :presence => true
 end
