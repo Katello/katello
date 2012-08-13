@@ -8,7 +8,8 @@
       read_changesets: #{read_promotion_changesets or read_deletion_changesets},
     };
     var content_breadcrumb = $.parseJSON('#{escape_javascript(generate_content_breadcrumb())}');
-    var changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb())}');
+    var promotion_changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb(@promotion_changesets))}');
+    var deletion_changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb(@deletion_changesets))}');
     var product_repo_filters = $.parseJSON('#{generate_product_repo_filters}');
     localize({
       "add": '+ #{escape_javascript(_('Add'))}',
@@ -109,10 +110,10 @@
         - if read_promotion_changesets or read_deletion_changesets
           %h2 #{_(" Changesets")}
           .sliding_tree_categories.clickable
-            .sliding_tree_category{:class => ("selected" unless !@next_environment)}
+            .sliding_tree_category{:class => ("selected" unless !@next_environment), 'data-cs_type' => 'promotion'}
               - if @next_environment
                 #{_("Promotion to %s") % @next_environment.name}
-            .sliding_tree_category{:class => ("selected" unless @next_environment)}
+            .sliding_tree_category{:class => ("selected" unless @next_environment), 'data-cs_type' => 'deletion'}
               - if @environment and !@environment.library?
                 #{_("Deletion from %s") % @environment.name}
           .breadcrumb_filter.fl.clear.clickable
