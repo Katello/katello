@@ -25,17 +25,13 @@ module BreadcrumbHelper
 end
 
 module ChangesetBreadcrumbs
-  def generate_cs_breadcrumb
+  def generate_cs_breadcrumb changesets
     bc = {}
     add_crumb_node!(bc, "changesets", "", _("Changesets"), [], {:client_render => true})
 
-    @promotion_changesets.each{|cs|
+    changesets.each{|cs|
       process_cs cs, bc
-    } if @promotion_changesets
-
-    @deletion_changesets.each{|cs|
-      process_cs cs, bc
-    } if @deletion_changesets
+    } if changesets
 
     bc.to_json
   end
