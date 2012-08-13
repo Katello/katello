@@ -12,28 +12,25 @@
 
 class Api::ArchitecturesController < Api::ApiController
 
-  skip_before_filter :authorize
-
-  Resource = Foreman::Architecture
-  ResourceName = :architecture
+  skip_before_filter :authorize # TODO
 
   def index
-    render :json => Resource.all
+    render :json => Foreman::Architecture.all
   end
 
   def show
-    render :json => Resource.find(params[:id])
+    render :json => Foreman::Architecture.find(params[:id])
   end
 
   def create
-    resource = Resource.new(params[ResourceName])
+    resource = Foreman::Architecture.new(params[:architecture])
     if resource.save
       render :json => resource
     end
   end
 
   def update
-    resource = Resource.new(params[ResourceName])
+    resource = Foreman::Architecture.new(params[:architecture])
     resource.id = params[:id]
     if resource.save
       render :json => resource
@@ -41,7 +38,7 @@ class Api::ArchitecturesController < Api::ApiController
   end
 
   def destroy
-    if Resource.delete(params[:id])
+    if Foreman::Architecture.delete(params[:id])
       render :nothing => true
     end
   end
