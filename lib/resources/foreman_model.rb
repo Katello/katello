@@ -17,7 +17,7 @@ class Resources::ForemanModel
 
     def initialize(resource)
       @resource = resource
-      super("#{resource.class} with id '#{resource.id}' is invalid: \n" +
+      super("#{resource.class} with id '#{resource.id}' is invalid:\n" +
                 resource.errors.full_messages.map { |m| "- " + m }.join("\n"))
     end
   end
@@ -58,27 +58,38 @@ class Resources::ForemanModel
     end
   end
 
-  class_attribute :_json_fields, :instance_reader => false, :instance_writer => false
-
-  def self.json_fields(*fields)
-    if fields.empty?
-      _json_fields or raise 'not yet defined'
-    else
-      self._json_fields ||= []
-      self._json_fields += fields
-    end
-  end
-
   def as_json(options = nil)
-    options ||= { :only => self.class.json_fields }
+    options ||= json_default_options
     super options
   end
 
+  protected
+
+  def json_default_options
+    raise NotImplementedError
+  end
+
+  def json_create_options
+    json_default_options
+  end
+
+  def json_update_options
+    json_default_options
+  end
+
+  public
+
+
+  attributes :id
 
   def initialize(attributes = { })
+    self.attributes = attributes
+  end
+
+  def attributes=(attributes)
     attributes = attributes.stringify_keys
     self.class.attributes.each do |name|
-      __send__(:"#{name}=", attributes.delete(name.to_s))
+      __send__(:"#{name}=", attributes.delete(name.to_s)) if attributes.has_key? name.to_s
     end
     raise ArgumentError, "unknown attributes: #{attributes.keys.join(', ')}" unless attributes.empty?
   end
@@ -97,22 +108,34 @@ class Resources::ForemanModel
     self.class.resource
   end
 
+  def persisted?
+    not id.blank?
+  end
+
   def save
     return false unless valid?
 
-    if id.blank?
-      resource.create as_json, foreman_header
+    if persisted?
+      update
     else
-      resource.update id, as_json, foreman_header
+      create
     end
 
     return true
-
   rescue RestClient::UnprocessableEntity => e
     response = JSON.parse(e.response)
     response[resource_name]['errors'].each { |key, val| errors.add key, val }
-    #raise ActiveRecord::RecordInvalid.new(self)
     return false
+  end
+
+  def create
+    data, response = resource.create as_json(json_create_options), self.class.foreman_header
+    self.id        = data['user']['id']
+    return data, response
+  end
+
+  def update
+    return resource.update(id, as_json(json_update_options), self.class.foreman_header)
   end
 
   def save!
@@ -131,21 +154,33 @@ class Resources::ForemanModel
     self.class.delete id
   end
 
-  def self.find(id)
-    new(resource.show(id, foreman_header).first[resource_name])
+  def self.find!(id)
+    new clean_attribute_hash(resource.show(id, foreman_header).first[resource_name])
   rescue RestClient::ResourceNotFound => e
     raise NotFound.new(self, id)
   end
 
-  def self.all
-    resource.index(foreman_header).first.map { |data| new(data[resource_name]) }
+  def self.find(id)
+    find!(id)
+  rescue NotFound
+    nil
   end
 
-  def self.delete(id)
+  def self.all
+    resource.index(foreman_header).first.map { |data| new clean_attribute_hash(data[resource_name]) }
+  end
+
+  def self.delete!(id)
     resource.destroy(id, foreman_header).first
     true
   rescue RestClient::ResourceNotFound => e
     raise NotFound.new(self, id)
+  end
+
+  def self.delete(id)
+    delete!(id)
+  rescue NotFound
+    false
   end
 
   private
@@ -155,5 +190,8 @@ class Resources::ForemanModel
     { :foreman_user => User.current.username }
   end
 
+  def self.clean_attribute_hash(attributes)
+    attributes.reject { |k, _| not self.attributes.map(&:to_s).include? k.to_s }
+  end
 
 end

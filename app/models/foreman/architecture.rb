@@ -12,7 +12,10 @@
 
 class Foreman::Architecture < Resources::ForemanModel
 
-  attributes :id, :name# , :operatingsystems
-  json_fields :name#, :operatingsystems
+  attributes :name
+
+  def json_default_options
+    { :only => :name }
+  end
 
 end

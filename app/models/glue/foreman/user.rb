@@ -24,6 +24,10 @@ module Glue::Foreman::User
   end
 
   module InstanceMethods
+    def foreman_user
+      ::Foreman::User.find foreman_id
+    end
+
     def save_foreman_orchestration
       case orchestration_for
         when :create
@@ -41,23 +45,22 @@ module Glue::Foreman::User
     end
 
     def create_foreman_user
-      data, _         = Resources::Foreman::User.create(
-          { :user => { :login     => username,
-                       :mail      => email, :admin => true, :auth_source_id => 1,
-                       :password  => password, :password_confirmation => password } },
-          { :foreman_user => 'admin' })
-      self.foreman_id = data['user']['id']
+      foreman_user = ::Foreman::User.new :login    => username,
+                                         :mail     => email,
+                                         :admin    => true,
+                                         :password => password
+      foreman_user.save!
+      self.foreman_id = foreman_user.id
     end
 
     def update_foreman_user
-      Resources::Foreman::User.update(
-          foreman_id,
-          { :user => { :password => password, :password_confirmation => password, :mail => email } },
-          { :foreman_user => 'admin' })
+      foreman_user            = self.foreman_user
+      foreman_user.attributes = { :mail => email, :password => password }
+      foreman_user.save!
     end
 
     def destroy_foreman_user
-      Resources::Foreman::User.destroy(foreman_id, :foreman_user => 'admin')
+      Foreman::User.delete(foreman_id)
     end
 
   end
