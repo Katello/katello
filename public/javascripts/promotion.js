@@ -1616,7 +1616,7 @@ var changesetStatusActions = (function($){
         setLocked = function(id){
             var changeset = $('#' + id);
             changeset.css('margin-left', '0');
-            changeset.prepend('<img class="fl locked_icon" src="' + KT.common.rootURL() + '/images/icons/locked.png">');
+            changeset.prepend('<img class="fl locked_icon" src="' + KT.common.rootURL() + '/images/embed/icons/locked.png">');
             set_margins();
         },
         removeLocked = function(id){
