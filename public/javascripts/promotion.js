@@ -699,13 +699,11 @@ var promotion_page = (function($){
         },
         remove_dependencies = function() {
             if (current_changeset === undefined) {
-    
                 return false;
             }
-    
             $.each(current_changeset_breadcrumb, function(key, value) {
                if (key.indexOf("deps-cs_") === 0) {
-                    delete current_changeset_breadcrumb[key];
+                   delete current_changeset_breadcrumb[key];
                }
             });
             return true;
@@ -779,7 +777,6 @@ var changeset_obj = function(data_struct) {
           });
         },
         dep_solve = function() {
-
             $.ajax({
                 type: "GET",
                 url: KT.common.rootURL() + "changesets/" + id + "/dependencies",
@@ -814,7 +811,7 @@ var changeset_obj = function(data_struct) {
         getName: function(){return name;},
         setName: function(newName){
             name = newName;
-            current_changeset_breadcrumb["changeset_" + id].name = newName;
+            promotion_page.get_current_changeset_breadcrumb()["changeset_" + id].name = newName;
         },
         getDescription: function(){return description;},
         setDescription: function(newDesc){description = newDesc;},
@@ -906,12 +903,12 @@ var changeset_obj = function(data_struct) {
             };
 
             change_state("review", success, on_error);
-            current_changeset_breadcrumb['changeset_' + id].is_new = false;
+            promotion_page.get_current_changeset_breadcrumb()['changeset_' + id].is_new = false;
             promotion_page.add_dependencies();
         },
         cancel_review: function(on_success, on_error) {
             change_state("new", on_success, on_error);
-            current_changeset_breadcrumb['changeset_' + id].is_new = true;
+            promotion_page.get_current_changeset_breadcrumb()['changeset_' + id].is_new = true;
         },
         promote: function(on_success, on_error, confirm) {
          var data = {},
@@ -946,9 +943,9 @@ var changeset_obj = function(data_struct) {
                     if (on_success) {
                         on_success();
                     }
-                    current_changeset_breadcrumb['changeset_' + id].is_new = true;
-                    current_changeset_breadcrumb['changeset_' + id].state = "new";
-                    current_changeset_breadcrumb['changeset_' + id].progress = 0;
+                    promotion_page.get_current_changeset_breadcrumb()['changeset_' + id].is_new = true;
+                    promotion_page.get_current_changeset_breadcrumb()['changeset_' + id].state = "new";
+                    promotion_page.get_current_changeset_breadcrumb()['changeset_' + id].progress = 0;
                     promotion_page.get_changeset_tree().render_content('changesets');
                     promotion_page.get_content_tree().render_content('content');
                 }
