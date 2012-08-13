@@ -57,7 +57,7 @@ module Glue::Pulp::Repo
     package_tuples = []
     repo_pkgs.each do |repo, pkgs|
       pkgs.each do |pack|
-        package_tuples << [[pack.filename,pack.checksum],[repo.pulp_id]]
+        package_tuples << [[pack.filename,pack.checksum.to_hash.values.first],[repo.pulp_id]]
       end
     end
     package_tuples
