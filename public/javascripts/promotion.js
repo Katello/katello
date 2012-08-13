@@ -19,6 +19,7 @@ var promotion_page = (function($){
         changeset_data =    {},
         interval_id,
         current_changeset,
+        current_changeset_breadcrumb,  // e.g. promotion or deletion breadcrumb
         current_product,
         changeset_tree,
         content_tree,
@@ -334,14 +335,30 @@ var promotion_page = (function($){
                 });
             });
         },
+        activate_changeset_tree = function(type) {
+            // unselect the currently selected tree
+            $('.sliding_tree_category.selected').removeClass('selected');
+
+            // update settings to switch to the requested changeset tree
+            if (type === 'promotion') {
+                $('.sliding_tree_category[data-cs_type="promotion"]').addClass('selected');
+                promotion_page.set_current_changeset_breadcrumb(promotion_changeset_breadcrumb);
+                promotion_page.get_changeset_tree().reset_tree(promotion_changeset_breadcrumb);
+
+            } else { // type === 'deletion'
+                $('.sliding_tree_category[data-cs_type="deletion"]').addClass('selected');
+                promotion_page.set_current_changeset_breadcrumb(deletion_changeset_breadcrumb);
+                promotion_page.get_changeset_tree().reset_tree(deletion_changeset_breadcrumb);
+            }
+        },
         init_changeset_list = function(){
             var changeset, id;
             sort_changeset();
             if( !current_changeset ){
-                for( id in changeset_breadcrumb ){
-                    if( changeset_breadcrumb.hasOwnProperty(id) ){
+                for( id in current_changeset_breadcrumb ){
+                    if( current_changeset_breadcrumb.hasOwnProperty(id) ){
                         if( id.split("_")[0] === "changeset" ){
-                            changeset = changeset_breadcrumb[id];
+                            changeset = current_changeset_breadcrumb[id];
                             if ( changeset.state === "failed") {
                                 changesetStatusActions.initProgressBar(id, changeset.progress, i18n.changeset_apply_failed);
                             }else if( !changeset.is_new && ( changeset.progress === null || changeset.progress === undefined ) ){
@@ -611,7 +628,7 @@ var promotion_page = (function($){
         add_template_breadcrumbs = function(changeset_id, id, name){
           var changesetBC = "changeset_" + changeset_id;
           var templateBC = 'template-cs_' + changeset_id + '_' + id;
-          changeset_breadcrumb[templateBC] = {
+          current_changeset_breadcrumb[templateBC] = {
                 cache: null,
                 client_render: true,
                 name: name,
@@ -622,35 +639,35 @@ var promotion_page = (function($){
         add_product_breadcrumbs = function(changeset_id, product_id, product_name){
             var productBC = 'product-cs_' + changeset_id + '_' + product_id;
             var changesetBC = "changeset_" + changeset_id;
-            changeset_breadcrumb[productBC] = {
+            current_changeset_breadcrumb[productBC] = {
                 cache: null,
                 client_render: true,
                 name: product_name,
                 trail: ['changesets', changesetBC],
                 url: 'url'
             };
-            changeset_breadcrumb['package-cs_' + changeset_id + '_' + product_id] = {
+            current_changeset_breadcrumb['package-cs_' + changeset_id + '_' + product_id] = {
                 cache: null,
                 client_render: true,
                 name: "Packages",
                 trail: ['changesets', changesetBC, productBC],
                 url: ''
             };
-            changeset_breadcrumb['errata-cs_' + changeset_id + '_' + product_id] = {
+            current_changeset_breadcrumb['errata-cs_' + changeset_id + '_' + product_id] = {
                 cache: null,
                 client_render: true,
                 name: "Errata",
                 trail: ['changesets', changesetBC, productBC],
                 url: ''
             };
-            changeset_breadcrumb['repo-cs_' + changeset_id + '_' + product_id] = {
+            current_changeset_breadcrumb['repo-cs_' + changeset_id + '_' + product_id] = {
                 cache: null,
                 client_render: true,
                 name: "Repositories",
                 trail: ['changesets', changesetBC, productBC],
                 url: ''
             };
-            changeset_breadcrumb['distribution-cs_' + changeset_id + '_' + product_id] = {
+            current_changeset_breadcrumb['distribution-cs_' + changeset_id + '_' + product_id] = {
                 cache: null,
                 client_render: true,
                 name: "Distributions",
@@ -665,10 +682,10 @@ var promotion_page = (function($){
            $.each(current_changeset.getProducts(), function(product_id, product) {
                var hash = "deps-cs_" + current_changeset.id + "_" + product_id;
                
-               if (changeset_breadcrumb[hash] === undefined) {
+               if (current_changeset_breadcrumb[hash] === undefined) {
                 var productBC = 'product-cs_' + current_changeset.id + '_' + product_id;
                 var changesetBC = "changeset_" + current_changeset.id;
-                changeset_breadcrumb[hash] = {
+                current_changeset_breadcrumb[hash] = {
                     cache: null,
                     client_render: true,
                     name: "Dependencies",
@@ -678,7 +695,7 @@ var promotion_page = (function($){
                }
            });
            return true; 
-            //changeset_breadcrumb
+            //current_changeset_breadcrumb
         },
         remove_dependencies = function() {
             if (current_changeset === undefined) {
@@ -686,9 +703,9 @@ var promotion_page = (function($){
                 return false;
             }
     
-            $.each(changeset_breadcrumb, function(key, value) {
+            $.each(current_changeset_breadcrumb, function(key, value) {
                if (key.indexOf("deps-cs_") === 0) {
-                    delete changeset_breadcrumb[key];
+                    delete current_changeset_breadcrumb[key];
                }
             });
             return true;
@@ -696,6 +713,9 @@ var promotion_page = (function($){
         
     return {
         subtypes:               subtypes,
+        activate_changeset_tree: activate_changeset_tree,
+        get_current_changeset_breadcrumb: function(){return current_changeset_breadcrumb;},
+        set_current_changeset_breadcrumb: function(cb){current_changeset_breadcrumb = cb;},
         get_changeset_tree:     function(){return changeset_tree;},
         set_changeset_tree:     function(ct){changeset_tree = ct;},
         get_content_tree:       function(){return content_tree;},
@@ -794,7 +814,7 @@ var changeset_obj = function(data_struct) {
         getName: function(){return name;},
         setName: function(newName){
             name = newName;
-            changeset_breadcrumb["changeset_" + id].name = newName;
+            current_changeset_breadcrumb["changeset_" + id].name = newName;
         },
         getDescription: function(){return description;},
         setDescription: function(newDesc){description = newDesc;},
@@ -886,12 +906,12 @@ var changeset_obj = function(data_struct) {
             };
 
             change_state("review", success, on_error);
-            changeset_breadcrumb['changeset_' + id].is_new = false;
+            current_changeset_breadcrumb['changeset_' + id].is_new = false;
             promotion_page.add_dependencies();
         },
         cancel_review: function(on_success, on_error) {
             change_state("new", on_success, on_error);
-            changeset_breadcrumb['changeset_' + id].is_new = true;
+            current_changeset_breadcrumb['changeset_' + id].is_new = true;
         },
         promote: function(on_success, on_error, confirm) {
          var data = {},
@@ -926,9 +946,9 @@ var changeset_obj = function(data_struct) {
                     if (on_success) {
                         on_success();
                     }
-                    changeset_breadcrumb['changeset_' + id].is_new = true;
-                    changeset_breadcrumb['changeset_' + id].state = "new";
-                    changeset_breadcrumb['changeset_' + id].progress = 0;
+                    current_changeset_breadcrumb['changeset_' + id].is_new = true;
+                    current_changeset_breadcrumb['changeset_' + id].state = "new";
+                    current_changeset_breadcrumb['changeset_' + id].progress = 0;
                     promotion_page.get_changeset_tree().render_content('changesets');
                     promotion_page.get_content_tree().render_content('content');
                 }
@@ -968,6 +988,17 @@ var changeset_obj = function(data_struct) {
 
 //doc ready
 var registerEvents = function(){
+    $('.sliding_tree_category').live('click', function() {
+        // user clicked on a changeset category (promotion/deletion)
+        var selected = $(this);
+        if (selected.hasClass('selected')) {
+            // the user clicked changeset tree that is currently active; therefore, do nothing..
+            return;
+        }
+
+        promotion_page.activate_changeset_tree(selected.data('cs_type'));
+    });
+
     $('#save_changeset_button').live('click', function(){
         var button = $(this);
         if(button.hasClass("disabled")){return false;}
@@ -978,7 +1009,8 @@ var registerEvents = function(){
           data: $('#new_changeset').serialize(),
           cache: false,
           success: function(data){
-              $.extend(changeset_breadcrumb, data.breadcrumb);
+              promotion_page.activate_changeset_tree(data.changeset.type);
+              $.extend(promotion_page.get_current_changeset_breadcrumb(), data.breadcrumb);
               promotion_page.set_changeset(changeset_obj(data.changeset));
               promotion_page.get_changeset_tree().render_content('changeset_' + data.id);
               KT.panel.closePanel($('#panel'));
@@ -1003,7 +1035,7 @@ var registerEvents = function(){
                     url: button.attr('data-url') + '/' + id,
                     cache: false,
                     success: function(data){
-                        delete changeset_breadcrumb['changeset_' + id];
+                        delete promotion_page.get_current_changeset_breadcrumb()['changeset_' + id];
                         promotion_page.set_changeset('changesets');
                         promotion_page.get_changeset_tree().render_content('changesets');
                     }
@@ -1129,55 +1161,56 @@ var changesetEdit = (function(){
         description = $('.edit_description');
         
         name_box.each(function() {
-                $(this).editable( url, {
-                    type        :  'text',
-                    width       :  270,
-                    method      :  'PUT',
-                    name        :  $(this).attr('name'),
-                    cancel      :  i18n.cancel,
-                    submit      :  i18n.save,
-                    indicator   :  i18n.saving,
-                    tooltip     :  i18n.clickToEdit,
-                    placeholder :  i18n.clickToEdit,
-                    
-                    submitdata  :  {authenticity_token: AUTH_TOKEN},
-                    onsuccess   :  function(data) {
-                          var parsed = $.parseJSON(data);
-                          changeset.setName(parsed.name);
-                          $('.edit_name_text').html(parsed.name);
-                          changeset.set_timestamp(parsed.timestamp);
-                          promotion_page.get_changeset_tree().rerender_breadcrumb();
-                    },
-                    onerror     :  function(settings, original, xhr) {
-                                     original.reset();
-                    }
-                });
+            $(this).editable('destroy');
+            $(this).editable( url, {
+                type        :  'text',
+                width       :  270,
+                method      :  'PUT',
+                name        :  $(this).attr('name'),
+                cancel      :  i18n.cancel,
+                submit      :  i18n.save,
+                indicator   :  i18n.saving,
+                tooltip     :  i18n.clickToEdit,
+                placeholder :  i18n.clickToEdit,
+                submitdata  :  {authenticity_token: AUTH_TOKEN},
+                onsuccess   :  function(data) {
+                    var parsed = $.parseJSON(data);
+                    changeset.setName(parsed.name);
+                    $('.edit_name_text').html(parsed.name);
+                    changeset.set_timestamp(parsed.timestamp);
+                    promotion_page.get_changeset_tree().rerender_breadcrumb();
+                },
+                onerror     :  function(settings, original, xhr) {
+                    original.reset();
+                }
             });
+        });
 
-           description.each(function() {
-                $(this).editable(url , {
-                    type        :  'textarea',
-                    method      :  'PUT',
-                    name        :  $(this).attr('name'),
-                    cancel      :  i18n.cancel,
-                    submit      :  i18n.save,
-                    indicator   :  i18n.saving,
-                    tooltip     :  i18n.clickToEdit,
-                    placeholder :  i18n.clickToEdit,
-                    submitdata  :  {authenticity_token: AUTH_TOKEN},
-                    rows        :  5,
-                    cols        :  30,
-                    onsuccess   :  function(data) {
-                          var parsed = $.parseJSON(data);
-                          $('.edit_description').html(parsed.description);
-                          changeset.setDescription(data.description);
-                          changeset.set_timestamp(parsed.timestamp);
-                    },
-                    onerror     :  function(settings, original, xhr) {
-                        original.reset();
-                    }
-                });
+        description.each(function() {
+            $(this).editable('destroy');
+            $(this).editable(url , {
+                type        :  'textarea',
+                method      :  'PUT',
+                name        :  $(this).attr('name'),
+                cancel      :  i18n.cancel,
+                submit      :  i18n.save,
+                indicator   :  i18n.saving,
+                tooltip     :  i18n.clickToEdit,
+                placeholder :  i18n.clickToEdit,
+                submitdata  :  {authenticity_token: AUTH_TOKEN},
+                rows        :  5,
+                cols        :  30,
+                onsuccess   :  function(data) {
+                    var parsed = $.parseJSON(data);
+                    $('.edit_description').html(parsed.description);
+                    changeset.setDescription(data.description);
+                    changeset.set_timestamp(parsed.timestamp);
+                },
+                onerror     :  function(settings, original, xhr) {
+                    original.reset();
+                }
             });
+        });
 
 
 
@@ -1200,7 +1233,7 @@ var promotionsRenderer = (function(){
             if( hash === 'changesets'){
                 var post_wait_function = function() {
                     promotion_page.set_changeset(undefined);
-                    render_cb(templateLibrary.changesetsList(changeset_breadcrumb));
+                    render_cb(templateLibrary.changesetsList(promotion_page.get_current_changeset_breadcrumb()));
                 };
                 //any pending updates, if so wait!
                 if (!promotion_page.are_updates_complete()) {
@@ -1578,7 +1611,7 @@ var changesetStatusActions = (function($){
             changeset.find(".changeset_status label").text(i18n.changeset_apply_failed);
             changeset.attr('title', i18n.changeset_apply_failed);
 
-            changeset_breadcrumb[id].has_failed = true;
+            promotion_page.get_current_changeset_breadcrumb()[id].has_failed = true;
         },
         setLocked = function(id){
             var changeset = $('#' + id);
@@ -1610,14 +1643,14 @@ var changesetStatusActions = (function($){
                 if (success === "notmodified") {
                   // received a 304 not modified...
                   var changeset_id = 'changeset_' + id;
-                  if (changeset_breadcrumb[changeset_id].has_failed === true) {
+                  if (promotion_page.get_current_changeset_breadcrumb()[changeset_id].has_failed === true) {
                       // attempting to promote this changeset previously failed..., so if the promotion progress
                       // remains 'not modified' that implies that it failed again...
                       failed(changeset_id);
                       updater.stop();
                   }
                 } else if ((data.progress === 100) || (data.state === 'promoted')){
-                    delete changeset_breadcrumb['changeset_' + id];
+                    delete promotion_page.get_current_changeset_breadcrumb()['changeset_' + id];
                     finish(data.id);
                     updater.stop();
                 } else if (data.state === 'failed') {
@@ -1671,8 +1704,9 @@ $(document).ready(function() {
 
     $(document).bind('search_complete.slidingtree', promotion_page.reset_page);
 
+    promotion_page.set_current_changeset_breadcrumb(promotion_changeset_breadcrumb);
     promotion_page.set_changeset_tree( sliding_tree("changeset_tree", { 
-                                        breadcrumb      :  changeset_breadcrumb,
+                                        breadcrumb      :  promotion_page.get_current_changeset_breadcrumb(),
                                         default_tab     :  "changesets",
                                         bbq_tag         :  "changeset",
                                         base_icon       :  'home_img',
@@ -1683,7 +1717,6 @@ $(document).ready(function() {
                                           promotion_page.init_changeset_list();
                                         }
                                     }));
-
 
     $(window).trigger('hashchange');
 
