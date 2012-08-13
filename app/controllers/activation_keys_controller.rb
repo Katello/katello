@@ -18,7 +18,7 @@ class ActivationKeysController < ApplicationController
   before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy,
                                                 :available_subscriptions, :applied_subscriptions,
                                                 :add_subscriptions, :remove_subscriptions,
-                                                :system_groups, :add_system_groups, :remove_system_groups]
+                                                :system_groups, :systems, :add_system_groups, :remove_system_groups]
   before_filter :find_environment, :only => [:edit]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
   before_filter :panel_options, :only => [:index, :items]
@@ -52,6 +52,7 @@ class ActivationKeysController < ApplicationController
       :remove_subscriptions => manage_test,
 
       :system_groups => read_test,
+      :systems => read_test,
       :add_system_groups => manage_test,
       :remove_system_groups => manage_test,
 
@@ -148,6 +149,11 @@ class ActivationKeysController < ApplicationController
     # retrieve the available groups that aren't currently assigned to the key
     @system_groups = SystemGroup.where(:organization_id=>current_organization).order(:name) - @activation_key.system_groups
     render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>ActivationKey.manageable?(current_organization)}
+  end
+
+  def systems
+    @systems = @activation_key.systems
+    render :partial=>"systems", :layout => "tupane_layout", :locals=>{:editable=>ActivationKey.manageable?(current_organization)}
   end
 
   def add_system_groups
@@ -360,40 +366,36 @@ class ActivationKeysController < ApplicationController
   def pools_hash pools
     pools_return = {}
     pools.each do |poolId, pool|
-      pools_return[pool.productName] ||= []
-      pools_return[pool.productName] << pool
+      pools_return[pool.product_name] ||= []
+      pools_return[pool.product_name] << pool
     end
     pools_return
   end
 
   def retrieve_all_pools
+
     all_pools = {}
 
-    # TODO: should be current_organization.pools (see pool.rb for attributes)
     cp_pools = Resources::Candlepin::Owner.pools current_organization.cp_key
-    cp_pools.each do |pool|
-      p = OpenStruct.new
-      p.poolId = pool['id']
-      p.productName = pool['productName']
-      p.startDate = format_time(Date.parse(pool['startDate']))
-      p.endDate = format_time(Date.parse(pool['endDate']))
+    if cp_pools
+      # Pool objects
+      pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
 
-      # TODO: this could be moved into the pool.rb
-      p.poolType = _('Physical')
-      if pool.has_key? :attributes
-        pool[:attributes].each do |attribute|
-          name = attribute[:name]
-          if (name == 'virt_only')
-            if (attribute[:value] == 'true')
-              p.poolType = _('Virtual')
-            end
-            break
-          end
-        end
-      end
-
-      all_pools[p.poolId] = p if !all_pools.include? p
+      subscriptions = pools.collect do |pool|
+        product = Product.where(:cp_id => pool.product_id).first
+        next if product.nil?
+        pool.provider_id = product.provider_id
+        pool
+      end.compact
+      subscriptions = [] if subscriptions.nil?
+    else
+      subscriptions = []
     end
+
+    subscriptions.each do |subscription|
+      all_pools[subscription.cp_id] = subscription if !all_pools.include? subscription
+    end
+
     all_pools
   end
 

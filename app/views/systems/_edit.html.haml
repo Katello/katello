@@ -96,34 +96,44 @@
         .grid_2.ra.fieldset
           = label :last_booted, :last_booted, _("Last Booted")
         .grid_5.la #{_("None")}
+      %fieldset
+        .grid_2.ra
+          = label :host_guest, :activation_key, _("Activation Key")
+        - if @system.activation_keys.blank?
+          .grid_5.la= _("None")
+        - @system.activation_keys.each do |key|
+          .grid_5.la
+            - if ActivationKey.readable? key.organization
+              = link_to key.name, activation_keys_path(:anchor => "panel=activation_key_#{key.id}")
+            - else
+              = key.name
     .clear
     .grid_8
       %h5 #{_("Host & Guest Info")}
     .grid_8#system_host_guest
+
       %fieldset
         .grid_2.ra.fieldset
           = label :host_guest, :host_type, _("System Type")
+        .grid_5.la
+          = system_type system
+
+      %fieldset
         - if system.guest == 'true'
+          .grid_2.ra.fieldset
+            = label :host_guest, :host, _("Host")
           .grid_5.la
-            = system_type system
-          %fieldset
-            .grid_2.ra.fieldset
-              = label :host_guest, :host, _("Host")
-            .grid_5.la
-              = system.host ? system.host.attributes['name'] : _("Unknown")
+            = system.host ? system.host.attributes['name'] : _("Unknown")
         -else
-          .grid_5.la
-            = system_type system
-          %fieldset
-            .grid_2.ra.fieldset
-              = label :host_guest, :guest, _("Guests")
-            - if system.guests.length < 1
-              .grid_5.la
-                = _("None")
-            - else
-              .grid_5.la
-                %ul
-                - system.guests.each do |guest|
-                  %li{:style=>'list-style: none;'}
-                    = guest.attributes['name']
+          .grid_2.ra.fieldset
+            = label :host_guest, :guest, _("Guests")
+          - if system.guests.length < 1
+            .grid_5.la
+              = _("None")
+          - else
+            .grid_5.la
+              %ul
+              - system.guests.each do |guest|
+                %li{:style=>'list-style: none;'}
+                  = guest.attributes['name']
 

@@ -1,4 +1,4 @@
-@import "converge-ui/base";
+@import "katello_base";
 
 $browse_box-width: 230px;
 $browse_box-height: 500px;
@@ -11,35 +11,70 @@ $comparison_grid_column_header-height:  35px;
 $comparison_grid_header-height: $comparison_grid_header_h2-height + $comparison_grid_column_header-height;
 $comparison_grid-height: 350px;
 $comparison_grid_filter-width: 190px - 2px;
-$comparison_grid_row-height: 30px;
 $comparison_grid_column_1-width: 100px - 10px - 1px;
 $comparison_grid_column_2-width: 200px - 10px - 1px;
 $comparison_grid_column_3-width: 300px - 10px - 1px;
 $comparison_grid_column_4-width: 400px - 10px - 1px;
 $comparison_grid_column_5-width: 500px - 10px - 1px;
-$comparison_grid_row-height: 35px;
-$comparison_grid-margin-top: $browse_box_header-height + $browse_box-margin-top;
+$comparison_grid_row-height: 32px;
+$comparison_grid-margin-top: $browse_box-margin-top;
 $comparison_grid_footer-height: 45px;
 
 $environment_selector-width: 97px;
 
-$widget-border-color: #D7D7D7;
-$widget-background-color: #F9F8F8;
-
-$comparison_grid-border-color: #D7D7D7;
-$comparison_grid_column_header-background: #FFF;
+$comparison_grid-border-color:              #D7D7D7;
+$comparison_grid_column_header-background:  #FFFFFF;
+$grid_row_level_2-color:                    #D4EEFC;
+$grid_cell_hover-background-color:          #585E64;
+$grid_cell_hover_link-color:                #40D7FD;
+@mixin grid_row_level_1-color { @include background-image(linear-gradient(#91CFED, #77C4E9)); }
+@mixin collapse_button-background-color { @include background-image(linear-gradient(#F1F1F1, #C9C9C9)); }
 
 .no_border { border: none !important; }
 
 .content-tipsy {
-  ul {
-    list-style-type: disc;
-  }
   .example {
     margin-left: 6px;
     margin-bottom: 6px;
   }
 }
+
+.view_tipsy {
+  &:hover { background: $details_icon_black; }
+  vertical-align: top;
+  margin-top: 4px;
+}
+
+.tipsify-errata {
+  &:hover {
+    color: $kselected_color;
+  }
+}
+.tipsify-errata.tipsy-hover {
+  color: $kselected_color;
+  background-color: transparent;
+}
+.tipsify-errata.tipsy-nohover {
+  background-color: transparent;
+}
+
+.tipsy-inner{
+  .spinner {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    margin-left: 70px;
+    margin-right: 70px;
+  }
+}
+
+.errata-icon {
+    @extend .errata_icon;
+    float: left;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 4px;
+}
+
 
 #browse_box {
   width: $browse_box-width;
@@ -51,9 +86,7 @@ $comparison_grid_column_header-background: #FFF;
   margin-right: 12px;
   margin-top: $browse_box-margin-top;
   @include border-radius(3px);
-  background-color: $widget-background-color;
-  @include background-image(linear-gradient(top, rgba(255, 255, 255, 0) 40%, $login_base-color 120%));
-
+  @include widget-background-color;
 
   .help-icon {
     background: $details_icon_grey;
@@ -61,11 +94,10 @@ $comparison_grid_column_header-background: #FFF;
     float: right;
     &:hover { background: $details_icon_black; }
     padding: 0px;
-    margin-left: 2px;
+    margin-left: 0;
     margin-top: 5px;
-    margin-right: 2px;
+    margin-right: 3px;
   }
-
 
   header {
     height: $browse_box_header-height;
@@ -77,20 +109,23 @@ $comparison_grid_column_header-background: #FFF;
         line-height: $browse_box_header-height;
         vertical-align: middle;
         float: left;
+        font-weight: normal;
     }
 
     aside { 
-      @include background-image(linear-gradient(#F7F7F7, #EEEEEE));
       width: 38px;
       border-left: 1px solid $widget-border-color;
-      height: $browse_box_header-height;
+      height: $browse_box_header-height + 1;
       float: right;
+      @include collapse_button-background-color;
     }
   }
   
   #filters {
     min-height: $browse_box-height - $browse_box_header-height - 5;
     border: 2px solid $widget-border-color;
+
+    label { font-weight: normal; }
 
     fieldset:first-child {
       margin: 20px 6px 20px 8px;
@@ -99,22 +134,25 @@ $comparison_grid_column_header-background: #FFF;
     }
 
     fieldset:first-child ~fieldset {
-      margin: 20px 6px 20px 8px;
+      margin: 20px 6px 12px 8px;
 
       .button { margin-left: 2px; }
-      input[type="radio"] { margin: 0 6px; }
+      input[type="radio"] { margin: 0 0 0 6px; }
       input[type="text"] { 
         border-width: 1px; 
         width: 148px; 
         border-color: $widget-border-color; 
+        margin-left: 6px;
+        @include box-shadow(inset 0 0 1px rgba(0, 0, 0, 0.05));
+        padding: 4px;
+
+        &:focus { padding: 4px }
       }
 
       div:nth-child(2) {
         border: 1px solid $comparison_grid-border-color;
         @include border-radius(3px 3px 0 0);
         @include background-image(linear-gradient(#F7F7F7, #F9F9F9));
-        background: #FFF;
-
       }
 
       div {
@@ -123,15 +161,28 @@ $comparison_grid_column_header-background: #FFF;
         padding: 8px 0 8px 0;
         background: #FFF;
 
-        .auto_complete_input { width: 116px; }
+        .auto_complete_input { width: 126px; }
         ul { 
-          padding-left: 28px; 
+          padding-left: 28px;
+          margin-top: 6px;
         
-          li { font-style: italic; }
+          li { 
+            font-style: italic; 
+            font-size: 10px;
+
+            span { vertical-align: bottom; }
+          }
         }
       }
     }
+
+    fieldset:nth-child(2) div {
+      .auto_complete_input { width: 148px !important; }
+      ul { padding-left: 6px !important; }
+    }
   }
+
+  #browse_button { margin: 0 8px 12px 0; }
 }
 
 #comparison_grid {
@@ -143,8 +194,7 @@ $comparison_grid_column_header-background: #FFF;
   margin-top: $comparison_grid-margin-top;
   position: relative;
   @include border-radius(3px);
-  background-color: $widget-background-color;
-  @include background-image(linear-gradient(top, rgba(255, 255, 255, 0) 40%, $login_base-color 120%));
+  @include widget-background-color;
   font-family: $screenfont;
 
   #grid_loading_screen {
@@ -158,7 +208,7 @@ $comparison_grid_column_header-background: #FFF;
 
   #grid_header {
     height: $comparison_grid_header-height;
-    border-bottom: 3px solid $comparison_grid-border-color;
+    border-bottom: 2px solid $widget-border-color;
     position: relative;
 
     header {
@@ -169,24 +219,27 @@ $comparison_grid_column_header-background: #FFF;
         padding: 0 0 0 17px;
         font-size: 18px;
         vertical-align: middle;
+        font-weight: normal;
 
         &[data-title="details"] { max-width: 350px; }
       }
 
       #left_select {
-        margin-left: 25px;
+        margin-left: 32px;
+        margin-top: 4px;
       
         select { width: 100px; }
       }
 
       #right_select {
         margin-right: 8px;
-
+        margin-top: 4px;
+      
         select { width: 100px; }
       }
 
       .button { margin: 0 0 0 8px; }
-      label { font-size: 14px; }
+      label { font-size: 12px; margin-right: 6px; font-weight: normal; float: left; margin-top: 2px; }
     }
 
     aside {
@@ -237,6 +290,16 @@ $comparison_grid_column_header-background: #FFF;
         background: transparent;
       }
 
+      #more_columns_fade {
+        width: 99px;
+        position: absolute;
+        right: 0;
+        z-index: 1;
+        height: 35px;
+        @include background-image(linear-gradient(right, rgba(255, 255, 255, 1) 40%, rgba(255, 255, 255, 0) 100%));
+      }
+
+
       #column_headers_window {
         position: relative;
         float: left;
@@ -260,6 +323,8 @@ $comparison_grid_column_header-background: #FFF;
         background: $comparison_grid_column_header-background;
         padding: 0 5px;
         
+        span { display: block; line-height: 17px; }
+
         &[data-span="1"] { width: $comparison_grid_column_1-width; text-align: center; }
         &[data-span="2"] { width: $comparison_grid_column_2-width; }
         &[data-span="3"] { width: $comparison_grid_column_3-width; }
@@ -271,13 +336,17 @@ $comparison_grid_column_header-background: #FFF;
         width: 20px;
         position: absolute;
         right: -1px;
-        z-index: 2;
-        padding: 0 1px;
+        z-index: 15;
+        padding: 0 0 0 5px;
         background: #FFF;
         line-height: $comparison_grid_column_header-height;
         height: $comparison_grid_column_header-height;
         border-left: 1px dotted $widget-border-color;
         border-right: 1px solid $widget-border-color;
+
+        &:hover {
+          background: $widget-background-color;
+        }
       }
     }
   }
@@ -292,26 +361,60 @@ $comparison_grid_column_header-background: #FFF;
       float: left;
       background: #FFF;
 
+      [class*="-icon-"] {
+        vertical-align: top;
+      }
+
       .row_header {
         width: $comparison_grid_filter-width - 6;
-        padding: 10px 3px;
+        padding: 8px 3px;
         border-bottom: 1px solid $comparison_grid_border-color;
-        height: $comparison_grid_row-height - 20;
+        height: $comparison_grid_row-height - 16;
         vertical-align: bottom;
+        font-weight: bold;
+
+        &[data-collapsed] span { 
+          width: 90%;
+          display: inline-block;
+        };
+      }
+
+      .row_height_2 {
+        height: 32px;
+        padding: 6px 3px;
+      }
+      .row_height_3 {
+        height: 48px;
+      }
+
+      .grid_row_level_0 {
+        width: $comparison_grid_filter-width - 6;
+        font-weight: normal;
       }
 
       .grid_row_level_2 {
-        padding-left: 9px;
+        padding-left: 20px;
         padding-right: 9px;
-        width: $comparison_grid_filter-width - 18;
-        max-height: 45px;
+        width: $comparison_grid_filter-width - 29;
+        font-weight: normal;
+
+        &[data-collapsed] {
+          padding-left: 9px;
+          width: $comparison_grid_filter-width - 18;
+        }
       }
 
       .grid_row_level_3 {
         padding-left: 25px;
-        padding-right: 25px;
-        width: $comparison_grid_filter-width - 50;
-        max-height: 45px;
+        padding-right: 10px;
+        width: $comparison_grid_filter-width - 35;
+        font-weight: normal;
+
+        span { 
+          width: 100%;
+
+          span:first-child { font-weight: bold; display: block; } 
+        }
       }
 
       span { 
@@ -321,18 +424,16 @@ $comparison_grid_column_header-background: #FFF;
 
     .grid_row_level_1 {
       font-size: 11px;
-      @include background(linear-gradient(#A6CCEC, #93C1E8));
+      @include grid_row_level_1-color;
     }
 
     .grid_row_level_2 {
-      background: #dcedfb;
-      font-size: 10px;
-      max-height: 45px;
+      background: $grid_row_level_2-color;
+      font-size: 11px;
     }
 
     .grid_row_level_3 {
-      font-size: 11px;
-      max-height: 45px;
+      font-size: 10px;
     }
 
     #grid_content_window {
@@ -352,26 +453,40 @@ $comparison_grid_column_header-background: #FFF;
           height: $comparison_grid_row-height;
           border-bottom: 1px solid $comparison_grid_border-color;
           width: $comparison_grid-width - $comparison_grid_filter-width - 1;
+
+          .grid_cell_data, i { margin-top: 8px; display: inline-block; }
+        }
+
+        .row_height_2 {
+          height: 44px !important;
+  
+          .grid_cell_data, i { margin-top: 14px; }
+        }
+        .row_height_3 {
+          height: 64px !important;
+          
+          .grid_cell_data, i { margin-top: 24px; }
         }
 
         .load_row {
           background-color: $widget-background-color;
-          height: $comparison_grid_row-height - 10;
-          padding: 10px 0 0 10px;
+          height: $comparison_grid_row-height - 6;
+          padding: 6px 0 0 10px;
 
           span { margin-left: 10px; }
           a { margin-left: 5px; }
-          .down_arrow-icon-black { background-position-y: -18px; }
+          i { margin-top: 0px; }
+          .down_arrow-icon-black { background-position-y: -18px; margin-top: 0; }
         }
 
         .grid_cell {
           display: inline-block;
           text-align: left;
-          line-height: $comparison_grid_row-height;
           border-right: 1px solid $comparison_grid_border-color;
           float: left;
-          padding: 0 5px;
           position: relative;
+          height: inherit;
+          padding: 0 5px;
 
           &[data-span="1"] { width: $comparison_grid_column_1-width; text-align: center; }
           &[data-span="2"] { width: $comparison_grid_column_2-width; }
@@ -385,7 +500,6 @@ $comparison_grid_column_header-background: #FFF;
             right: 2px;
             z-index: 5;
           }
-        
         }
 
         .grid_cell_hover {
@@ -394,10 +508,21 @@ $comparison_grid_column_header-background: #FFF;
           text-align: center;
           color: #FFF;
           padding: 0 5px;
-          background: rgba(0, 0, 0, 0.6);
+          background: $grid_cell_hover-background-color;
           position: absolute;
           left: 0;
           top: 0;
+
+          &.row_height_2 {
+            height: 48px !important;
+            line-height: 24px !important;
+          }
+          &.row_height_3 {
+            height: 64px !important;
+            line-height: 32px !important;
+          }
+
+          a { color: $grid_cell_hover_link-color; }
 
           &[data-span="1"] { width: $comparison_grid_column_1-width; }
           &[data-span="2"] { width: $comparison_grid_column_2-width; }
@@ -424,7 +549,6 @@ $comparison_grid_column_header-background: #FFF;
       width: $comparison_grid_filter-width;
       border-right: 1px solid $widget-border-color;
       height: $comparison_grid_footer-height;
-      background: $widget-border-color;
     }
 
     ul {
@@ -435,24 +559,23 @@ $comparison_grid_column_header-background: #FFF;
 
   }
 
-  .spinner {
+  .large_spinner {
     margin: 0 auto;
-    height: 16px;
-    width: 16px;
-    display: inline-block;
+    margin-top: 20%;
+    height: 32px;
+    width: 32px;
     position: relative;
     z-index: 1000;
     background: $spinner_img;
-    float: left;
+    background-size: 100%;
   }
 
   .hidden {
     display: none;
   }
-
-  .button {
-    vertical-align: bottom;
-    padding: 4px 10px;
-  }
-
 }
+
+.down_arrow-icon-black { background-position: -529px -18px; }
+.button { margin: 0; }
+.button:active { padding: 4px 8px; }
+.one-line-ellipsis { display: inline-block; }

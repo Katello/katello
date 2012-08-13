@@ -543,7 +543,7 @@ class ApplicationController < ActionController::Base
     logger.error exception.message
     execute_after_filters
     logout
-    message = _("You current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue.")
+    message = _("Your current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue.")
     notify.warning message
     redirect_to new_user_session_url and return false
   end
