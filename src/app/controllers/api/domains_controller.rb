@@ -14,26 +14,23 @@ class Api::DomainsController < Api::ApiController
 
   skip_before_filter :authorize
 
-  Resource = Foreman::Domain
-  ResourceName = :domain
-
   def index
-    render :json => Resource.all
+    render :json => Foreman::Domain.all
   end
 
   def show
-    render :json => Resource.find(params[:id])
+    render :json => Foreman::Domain.find(params[:id])
   end
 
   def create
-    resource = Resource.new(params[ResourceName])
+    resource = Foreman::Domain.new(params[:domain])
     if resource.save
       render :json => resource
     end
   end
 
   def update
-    resource = Resource.new(params[ResourceName])
+    resource = Foreman::Domain.new(params[:domain])
     resource.id = params[:id]
     if resource.save
       render :json => resource
@@ -41,7 +38,7 @@ class Api::DomainsController < Api::ApiController
   end
 
   def destroy
-    if Resource.delete(params[:id])
+    if Foreman::Domain.delete(params[:id])
       render :nothing => true
     end
   end

@@ -12,8 +12,11 @@
 
 class Foreman::Domain < Resources::ForemanModel
 
-  attributes :id, :name, :fullname, :dns_id
-  json_fields :name, :fullname, :dns_id
+  attributes :name, :fullname, :dns_id
+
+  def json_default_options
+    { :only => [:name, :fullname, :dns_id] }
+  end
 
   validates :name, :presence => true
 end
