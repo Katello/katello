@@ -107,6 +107,7 @@ $(document).ready(function() {
             width       :  270,
             name        :  $(this).attr('name'),
             onsuccess   :  function(result, status, xhr) {
+                console.log("!!!!!!!!!!!!!!!" + status + "$$$" + result + "$$$$" + xhr);
                 var id = $('#panel_element_id');
                 KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
             }
