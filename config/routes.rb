@@ -67,6 +67,7 @@ Src::Application.routes.draw do
       post :update
 
       get :system_groups
+      get :systems
       put :add_system_groups
       put :remove_system_groups
     end
@@ -202,6 +203,7 @@ Src::Application.routes.draw do
   resources :errata, :only => [:show] do
     member do
       get :packages
+      get :short_details
     end
   end
 

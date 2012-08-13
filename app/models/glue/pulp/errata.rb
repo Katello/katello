@@ -93,7 +93,7 @@ class Glue::Pulp::Errata
           :id           => { :type => 'string', :analyzer =>:kt_name_analyzer},
           :product_ids  => { :type => 'integer', :analyzer =>:kt_name_analyzer},
           :severity     => { :type => 'string', :analyzer =>:kt_name_analyzer},
-          :type         => { :type => 'string', :analyzer =>:kt_name_analyzer}
+          :type         => { :type => 'string', :analyzer =>:kt_name_analyzer},
         }
       }
     }

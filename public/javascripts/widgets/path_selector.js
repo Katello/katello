@@ -83,7 +83,6 @@ KT.path_select = function(div_id, name, environments, options_in){
             }
             scroll_obj = KT.env_select_scroll({});
             recalc_scroll();
-            reposition_left();
         },
         reposition_left = function(){
             var selector_width, pos;
@@ -252,7 +251,7 @@ KT.path_select = function(div_id, name, environments, options_in){
         get_select_event : get_select_event,
         clear_selected: clear_selected,
         select:select,
-        reposition: reposition_left
+        reposition_left: reposition_left
     };
 };
 
@@ -267,7 +266,7 @@ KT.path_select_template = {
         html += '</form>'
         
         if( footer ){
-            html += KT.path_select_template.footer();
+            html += KT.path_select_template.footer(footer);
         }
 
         html += '</div>';
@@ -286,11 +285,11 @@ KT.path_select_template = {
     },
     path : function(path){
         var html = '';
-        html += '<ul>';
+        html += '<div><ul>';
         for(var i = 0; i < path.length; i++){
             html += KT.path_select_template.path_node(path[i], path[i+1]);
         }
-        html += '</ul>';
+        html += '</ul></div>';
         return html;
     },
     path_node: function(node, next){
@@ -302,8 +301,8 @@ KT.path_select_template = {
         html += '<li data-node_id="' + node.id + '">'+ '<label><div>' + input +  node.name +  '</div></label></li>';
         return html;
     },
-    footer : function(){
-        var html = '<footer></footer>';
+    footer : function(content){
+        var html = '<footer>' + content + '</footer>';
 
         return html;
     }

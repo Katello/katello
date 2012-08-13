@@ -214,7 +214,7 @@ describe SystemsController do
         it "should show systems by env" do
           @environment2 = KTEnvironment.new(:name => 'testenv', :prior => @organization.library.id, :organization => @organization)
           @environment2.save!
-          @system2 = System.create!(:name=>"verbose2", :environment => @environment2, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+          @system2 = System.create!(:name=>"verbose2", :environment => @environment2, :cp_type=>"system", :facts => {"Test1"=>1 , "verbose_facts" => "Test facts"})
           get :environments, :env_id => @environment2.id
           response.should be_success
         end
@@ -223,7 +223,7 @@ describe SystemsController do
 
     describe 'updating a system' do
       before (:each) do
-        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""}, :serviceLevel => nil)
+        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts => { "test" => "test" }, :serviceLevel => nil)
       end
 
       it "should update the system name" do

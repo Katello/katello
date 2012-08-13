@@ -314,7 +314,7 @@ module Navigation
     end
 
     def activation_keys_navigation
-      [
+      menu = [
         { :key => :applied_subscriptions,
           :name =>_("Applied Subscriptions"),
           :url => lambda{applied_subscriptions_activation_key_path(@activation_key.id)},
@@ -327,17 +327,46 @@ module Navigation
           :if => lambda{@activation_key},
           :options => {:class=>"panel_link"}
         },
-        { :key => :system_groups,
-          :name =>_("System Groups"),
-          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
-          :if => lambda{@activation_key},
-          :options => {:class=>"panel_link"}
-        },
         { :key => :details,
           :name =>_("Details"),
           :url => lambda{edit_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class=>"panel_link"}
+        }
+      ]
+      menu << if AppConfig.katello?
+        { :key => :system_mgmt,
+          :name =>_("System Groups"),
+          :items => lambda{ak_systems_subnav},
+          :if => lambda{@activation_key},
+          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
+          :options => {:class=>'panel_link menu_parent'}
+        }
+      else
+        { :key => :systems,
+          :name =>_("Systems"),
+          :url => lambda{systems_activation_key_path(@activation_key.id)},
+          :if => lambda{@activation_key},
+          :options => {:class=>"panel_link"}
+        }
+      end
+
+      menu
+    end
+
+    def ak_systems_subnav
+      [
+        { :key => :system_groups,
+          :name =>_("System Groups"),
+          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
+          :if => lambda{@activation_key},
+          :options => {:class=>"third_level panel_link"}
+        },
+        { :key => :systems,
+          :name =>_("Systems"),
+          :url => lambda{systems_activation_key_path(@activation_key.id)},
+          :if => lambda{@activation_key},
+          :options => {:class=>"third_level panel_link"}
         }
       ]
     end
