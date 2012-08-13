@@ -64,7 +64,9 @@ $(document).ready(function() {
 
         request.done(function(msg) {
             selector_element.find('span:first').text(selected_env_ids[0]['name']);
-            $(document).trigger('kt_system:updated', {'id': $("input#panel_element_id").attr('name'), 'environment' : {'name': selected_env_ids[0]['name']}});
+
+            panel_element = $('input[data-ajax_url="' + selector_element.attr('data-url') + '"]');
+            KT.panel.list.refresh(panel_element.attr('value'), panel_element.attr('data-ajax_url'));
 
             path_select.hide();
             selector_element.find(".KT_path_select_submit_button").removeAttr('disabled');
