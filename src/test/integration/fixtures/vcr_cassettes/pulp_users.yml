@@ -1,0 +1,40 @@
+--- 
+http_interactions: 
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/users/integration_test_user/
+    body: 
+      string: ""
+    headers: 
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Accept-Language: 
+      - en
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="dpGyddBXSsKqjV7FIb9KSHk07idzMLGNqjdxAb33Kc", oauth_signature="gm9wNIniBezfiBxrle%2FwOzkWbQA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1344949786", oauth_version="1.0"
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "189"
+      Date: 
+      - Tue, 14 Aug 2012 13:09:46 GMT
+    body: 
+      string: "{\"_id\": \"2db6a1fc-b5c8-4b5c-85a1-da945ff9f4bb\", \"name\": \"integration_test_user\", \"roles\": [], \"_ns\": \"users\", \"login\": \"integration_test_user\", \"id\": \"2db6a1fc-b5c8-4b5c-85a1-da945ff9f4bb\"}"
+    http_version: 
+  recorded_at: Tue, 14 Aug 2012 13:09:46 GMT
+recorded_with: VCR 2.2.4
