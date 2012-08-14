@@ -49,7 +49,7 @@ class NumberValidator < Apipie::Validator::BaseValidator
   end
 
   def self.build(param_description, argument, options, block)
-    if argument == :number
+    if argument == :number || argument == :id
       self.new(param_description) 
     end
   end
@@ -92,7 +92,7 @@ class BooleanValidator < Apipie::Validator::BaseValidator
   end
 
   def self.build(param_description, argument, options, block)
-    if argument == :bool
+    if argument == :bool || argument == :boolean
       self.new(param_description) 
     end
   end

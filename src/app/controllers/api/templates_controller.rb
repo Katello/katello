@@ -14,6 +14,14 @@ require 'rest_client'
 
 class Api::TemplatesController < Api::ApiController
 
+  resource_description do
+    description <<-DOC
+      System templates allow to group content (products, repositories, packages)
+      and handle them in change sets as a unit. They also provide an export consumable
+      by different systems (such as Aeolus Conductor to generate system images).
+    DOC
+  end
+
   before_filter :find_environment, :only => [:create, :import, :index]
   before_filter :find_template, :only => [:show, :update, :destroy, :promote, :export, :validate]
 
@@ -44,27 +52,26 @@ class Api::TemplatesController < Api::ApiController
     }
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :GET, "/environments/:environment_id/templates", "List templates"
-  param :name, :undef
+  api :GET, "/environments/:environment_id/templates", "List system templates for given environment."
+  param :environment_id, :number, :desc => "environment numeric identifier"
+  param :name, :identifier, :desc => "system template identifier"
   def index
     tpls = @environment.system_templates.where(params.slice(:name))
     render :json => tpls.to_json
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/templates/:id", "Show a template"
+  param :id, :id, :desc => "system template numeric identifier"
   def show
     render :json => @template.to_json
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :POST, "/templates", "Create a template"
-  param :environment_id, :number
+  param :environment_id, :id, :desc => "environment numeric identifier"
   param :template, Hash do
-    param :description, :undef
-    param :name, :undef
-    param :parent_id, :number
+    param :description, :undef, :desc => "template description"
+    param :name, :identifier, :desc => "new template name"
+    param :parent_id, :id, :desc => "parent template numeric identifier"
   end
   def create
     raise HttpErrors::BadRequest, _("New templates can be created only in a Library environment") if not @environment.library?
@@ -76,11 +83,11 @@ class Api::TemplatesController < Api::ApiController
     render :json => @template.to_json
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :PUT, "/templates/:id", "Update a template"
+  param :id, :id, :desc => "template numeric identifier"
   param :template, Hash do
-    param :description, :undef
-    param :name, :undef
+    param :description, :undef, :desc => "template new description"
+    param :name, :identifier, :desc => "template new name"
   end
   def update
     raise HttpErrors::BadRequest, _("Templates can be updated only in a Library environment") if not @template.environment.library?
@@ -99,12 +106,20 @@ class Api::TemplatesController < Api::ApiController
   end
 
   api :DELETE, "/templates/:id", "Destroy a template"
+  param :id, :id, :desc => "template numeric identifier"
   def destroy
     @template.destroy
     render :text => _("Deleted system template '#{@template.name}'"), :status => 200
   end
 
-  api :POST, "/templates/import"
+  api :POST, "/templates/import", "Import a template"
+  param :environment_id, :id, :desc => "environment numeric identifier"
+  param :template_file, :undef, :desc => "content of imported template"
+  param :template, Hash do
+    param :description, :undef, :desc => "template description"
+    param :name, :identifier, :desc => "new template name"
+    param :parent_id, :id, :desc => "parent template numeric identifier"
+  end
   def import
     raise HttpErrors::BadRequest, _("New templates can be imported only into a Library environment") if not @environment.library?
 
@@ -123,8 +138,8 @@ class Api::TemplatesController < Api::ApiController
     render :text => _("Template imported"), :status => 200
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :GET, "/templates/:id/validate"
+  api :GET, "/templates/:id/validate", "Validate a template TDL"
+  param :id, :id, :desc => "template numeric identifier"
   def validate
     raise HttpErrors::BadRequest, _("Cannot validate templates for the Library environment.") if @template.environment.library?
 
@@ -134,8 +149,8 @@ class Api::TemplatesController < Api::ApiController
     end
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :GET, "/templates/:id/export"
+  api :GET, "/templates/:id/export", "Export template as TDL or JSON"
+  param :id, :id, :desc => "template numeric identifier"
   def export
     raise HttpErrors::BadRequest, _("Cannot export templates for the Library environment.") if @template.environment.library?
 
