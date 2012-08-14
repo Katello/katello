@@ -13,9 +13,11 @@
       .subs_icon_wrapper
         .subs_icon{:class => "#{@system.compliance_color}"}
       .subs_text.fl
-        - if @system.compliant?
+        - if @system.compliance_color == 'green'
           - until_time = @system.compliant_until
           = until_time ? _("Subscriptions are Current Until %s") % format_time(until_time) : _("Subscriptions are Current")
+        - elsif @system.compliance_color == 'yellow'
+          = _("Insufficient Subscriptions for System Compliance")
         - else
           = _("Subscriptions are not Current")
     .subs_servicelevel{'name' => 'system[serviceLevel]', 'class' => ("editable edit_select_system_servicelevel" if editable), 'data-url' => system_path(system.id), 'data-options' => system_servicelevel_edit(system)}
