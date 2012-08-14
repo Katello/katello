@@ -150,6 +150,7 @@ Katello connection classes for the Pulp backend
 BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
+Requires:       rubygem(foreman_api)
 
 %description glue-foreman
 Katello connection classes for the Foreman backend
@@ -311,6 +312,9 @@ fi
 %attr(600, katello, katello)
 %{_bindir}/katello-*
 %{homedir}/app/controllers
+%exclude %{homedir}/app/controllers/api/foreman_controller.rb
+%exclude %{homedir}/app/controllers/api/architectures_controller.rb
+%exclude %{homedir}/app/controllers/api/domains_controller.rb
 %{homedir}/app/helpers
 %{homedir}/app/mailers
 %{homedir}/app/models/*.rb
@@ -381,6 +385,12 @@ fi
 
 %files glue-foreman
 %{homedir}/lib/resources/foreman.rb
+%{homedir}/lib/resources/foreman_model.rb
+%{homedir}/app/models/foreman
+%{homedir}/app/models/glue/foreman
+%{homedir}/app/controllers/api/foreman_controller.rb
+%{homedir}/app/controllers/api/architectures_controller.rb
+%{homedir}/app/controllers/api/domains_controller.rb
 
 %files all
 
