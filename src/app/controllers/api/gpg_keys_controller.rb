@@ -40,34 +40,53 @@ class Api::GpgKeysController < Api::ApiController
     }
   end
 
+  api :GET, "/organizations/:organization_id/gpg_keys", "List gpg keys"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :name, :identifier, :desc => "identifier of the gpg key"
   def index
     gpg_keys = @organization.gpg_keys.where(params.slice(:name))
     render :json => gpg_keys, :only => [:id, :name]
   end
 
+  api :GET, "/gpg_keys/:id", "Show a gpg key"
+  param :id, :number, :desc => "gpg key numeric identifier"
   def show
     render :json => @gpg_key, :details => true
   end
 
+  api :POST, "/organizations/:organization_id/gpg_keys", "Create a gpg key"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :gpg_key, Hash do
+    param :name, :identifier, :desc => "identifier of the gpg key"
+    param :content, String, :desc => "public key block in DER encoding"
+  end
   def create
     gpg_key = @organization.gpg_keys.create!(params[:gpg_key].slice(:name, :content))
     render :json => gpg_key
   end
 
+  api :PUT, "/gpg_keys/:id", "Update a gpg key"
+  see "gpg_keys#create"
   def update
     @gpg_key.update_attributes!(params[:gpg_key].slice(:name, :content))
     render :json => @gpg_key
   end
 
+  api :DELETE, "/gpg_keys/:id", "Destroy a gpg key"
+  param :id, :number, :desc => "gpg key numeric identifier"
   def destroy
     @gpg_key.destroy
     render :text => _("Deleted GPG key '#{params[:id]}'"), :status => 204
   end
 
-  # returns the content of a repo gpg key, used directly by yum
-  # I've amended REST best practices(e.g. not using the show action) as we don't want to
-  # authenticate, authorize etc, trying to distinquse between a yum request and normal api request
-  # might not always be 100% bullet proof, and its more important that yum can fetch the key.
+  api :GET, "/gpg_keys/:id/content"
+  param :id, :number, :desc => "gpg key numeric identifier"
+  desc <<-EOS
+Returns the content of a repo gpg key, used directly by yum
+We've amended REST best practices (e.g. not using the show action) as we don't want to
+authenticate, authorize etc, trying to distinquse between a yum request and normal api request
+might not always be 100% bullet proof, and its more important that yum can fetch the key.
+EOS
   def content
     @gpg_key.content.present? ? render(:text => @gpg_key.content, :layout => false) : head(404)
   end
