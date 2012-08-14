@@ -21,16 +21,11 @@ module Foreman
 
     def json_create_options
       { :only    => [:login, :mail, :admin, :password],
-        :methods => [:auth_source_id, :password_confirmation] }
+        :methods => [:auth_source_id] }
     end
 
     def json_update_options
-      { :only    => [:mail, :password],
-        :methods => :password_confirmation }
-    end
-
-    def password_confirmation
-      password
+      { :only    => [:mail, :password] }
     end
 
     def auth_source_id
