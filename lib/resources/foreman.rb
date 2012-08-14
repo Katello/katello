@@ -23,6 +23,7 @@ module Resources
     OperatingSystem = ForemanApi::Resources::OperatingSystem.new options
     User            = ForemanApi::Resources::User.new options
     Domain          = ForemanApi::Resources::Domain.new options
+    ConfigTemplate  = ForemanApi::Resources::ConfigTemplate.new options
 
   end
 end

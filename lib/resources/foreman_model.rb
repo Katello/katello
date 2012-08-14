@@ -87,6 +87,7 @@ class Resources::ForemanModel
   end
 
   def attributes=(attributes)
+    return if attributes.blank?
     attributes = attributes.stringify_keys
     self.class.attributes.each do |name|
       __send__(:"#{name}=", attributes.delete(name.to_s)) if attributes.has_key? name.to_s
@@ -130,7 +131,7 @@ class Resources::ForemanModel
 
   def create
     data, response = resource.create as_json(json_create_options), self.class.foreman_header
-    self.id        = data['user']['id']
+    self.id        = data[resource_name]['id']
     return data, response
   end
 
@@ -143,7 +144,7 @@ class Resources::ForemanModel
   end
 
   def self.resource_name
-    @resource_name ||= self.name.demodulize.downcase
+    @resource_name ||= self.name.demodulize.underscore.downcase
   end
 
   def resource_name
@@ -155,7 +156,7 @@ class Resources::ForemanModel
   end
 
   def self.find!(id)
-    new clean_attribute_hash(resource.show(id, foreman_header).first[resource_name])
+    new clean_attribute_hash(resource.show(id, nil, foreman_header).first[resource_name])
   rescue RestClient::ResourceNotFound => e
     raise NotFound.new(self, id)
   end
@@ -167,11 +168,11 @@ class Resources::ForemanModel
   end
 
   def self.all
-    resource.index(foreman_header).first.map { |data| new clean_attribute_hash(data[resource_name]) }
+    resource.index(nil, foreman_header).first.map { |data| new clean_attribute_hash(data[resource_name]) }
   end
 
   def self.delete!(id)
-    resource.destroy(id, foreman_header).first
+    resource.destroy(id, nil, foreman_header).first
     true
   rescue RestClient::ResourceNotFound => e
     raise NotFound.new(self, id)
