@@ -1701,8 +1701,20 @@ $(document).ready(function() {
 
     $(document).bind('search_complete.slidingtree', promotion_page.reset_page);
 
-    promotion_page.set_current_changeset_breadcrumb(promotion_changeset_breadcrumb);
-    promotion_page.set_changeset_tree( sliding_tree("changeset_tree", { 
+    // If the page is being loaded with 'changeset' hash (e.g. "#changeset=changeset_10") and
+    // the changeset is in the list of deletion changesets, then the page will load using the
+    // deletion changeset sliding tree; otherwise, the default is to use promotion changeset
+    // sliding tree.
+    var changeset_hash = $.deparam.fragment()["changeset"];
+    if (changeset_hash && changeset_hash != "changesets" &&
+        !$.isEmptyObject(deletion_changeset_breadcrumb[changeset_hash])) {
+        promotion_page.set_current_changeset_breadcrumb(deletion_changeset_breadcrumb);
+        $('.sliding_tree_category.selected').removeClass('selected');
+        $('.sliding_tree_category[data-cs_type="deletion"]').addClass('selected');
+    } else {
+        promotion_page.set_current_changeset_breadcrumb(promotion_changeset_breadcrumb);
+    }
+    promotion_page.set_changeset_tree( sliding_tree("changeset_tree", {
                                         breadcrumb      :  promotion_page.get_current_changeset_breadcrumb(),
                                         default_tab     :  "changesets",
                                         bbq_tag         :  "changeset",
