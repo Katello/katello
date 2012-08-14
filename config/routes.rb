@@ -699,14 +699,16 @@ Src::Application.routes.draw do
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
       # foreman proxy --------------
-    resources :architectures, :except => [:new, :edit]
-    constraints(:id => /[^\/]+/) do
-      resources :domains, :except => [:new, :edit]
-    end
-    resources :config_templates, :except => [:new, :edit] do
-      collection do
-        get :revision
-        get :build_pxe_default
+    if AppConfig.use_foreman
+      resources :architectures, :except => [:new, :edit]
+      constraints(:id => /[^\/]+/) do
+        resources :domains, :except => [:new, :edit]
+      end
+      resources :config_templates, :except => [:new, :edit] do
+        collection do
+          get :revision
+          get :build_pxe_default
+        end
       end
     end
 
