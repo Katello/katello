@@ -80,7 +80,7 @@ def process_environment(org, env):
 
 def get_pool_ids(org):
     """
-    Will return a list of pool ids available to a given org.
+    Will return a l ist of pool ids available to a given org.
     :param org: string
     """
     pool_ids = []
