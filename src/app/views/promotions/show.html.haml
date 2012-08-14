@@ -32,6 +32,12 @@
       "system_templates": "#{escape_javascript(_('system templates'))}",
       "templates": '#{escape_javascript(_("System Templates"))}',
       "viewing": '#{escape_javascript(_('currently editing this changeset'))}',
+      "edit_title": '#{escape_javascript(_("Edit Changeset Details"))}',
+      "close_edit_title": '#{escape_javascript(_("Close Changeset Details"))}',
+      "apply_promotion_title": '#{escape_javascript(_("Apply Promotion Changeset"))}',
+      "apply_deletion_title": '#{escape_javascript(_("Apply Deletion Changeset"))}',
+      "review_title": '#{escape_javascript(_("Place Changeset in Review State"))}',
+      "cancel_review_title": '#{escape_javascript(_("Cancel Changeset Review"))}',
       "review": '#{escape_javascript(_("Review"))}',
       "cancel_review": '#{escape_javascript(_("Cancel Review"))}',
       "action_promote": '#{escape_javascript(_("Promote"))}',
@@ -151,22 +157,22 @@
           #changeset_status
           - if manage_promotion_changesets or manage_deletion_changesets or apply_changesets
             #sliding_tree_actionbar.clickable
-              #delete_changeset.cs_action{"data-url"=>changesets_path, "data-confirm-text"=>_('Are you sure?')}
+              #delete_changeset.cs_action{"data-url"=>changesets_path, "data-confirm-text"=>_('Are you sure?'), :title => _("Remove Changeset")}
                 %span#delete_changeset_icon.sprite
                   SPRITE
                 %span.text
                   = _("Remove")
-              #edit_changeset.cs_action
+              #edit_changeset.cs_action{:title => _("Edit Changeset Details")}
                 %span#edit_changeset_icon.sprite
                   SPRITE
                 %span.text
                   = _('Edit Details')
-              #review_changeset.cs_action
+              #review_changeset.cs_action{:title => _("Place Changeset in Review State")}
                 %span#review_changeset_icon.sprite
                   SPRITE
                 %span.text
                   = _('Review')
-              #promote_changeset.cs_action
+              #promote_changeset.cs_action{:title => _("Apply Promotion Changeset")}
                 %span#promote_changeset_icon.sprite
                 %span.text
                   = _('Promote')
