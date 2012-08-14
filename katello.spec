@@ -210,7 +210,9 @@ of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
 
 %package api-docs
-Summary: Documentation files for katello API
+Summary:         Documentation files for katello API
+BuildArch:       noarch
+Requires:        %{name}-common
 
 %description api-docs
 Documentation files for katello API.
