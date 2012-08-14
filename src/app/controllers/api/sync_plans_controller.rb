@@ -14,8 +14,7 @@ class Api::SyncPlansController < Api::ApiController
 
   resource_description do
     description <<-DOC
-      Synchronization plans are used to configure how often a system should
-      look for and install updates.
+      Synchronization plans are used to configure the scheduled synchronization of the repository with the upstream.
     DOC
 
     param :organization_id, :id, :desc => "oranization numeric identifier"

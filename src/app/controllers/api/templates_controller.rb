@@ -16,10 +16,9 @@ class Api::TemplatesController < Api::ApiController
 
   resource_description do
     description <<-DOC
-      System templates are used to configure how a system should look,
-      including which products are subscribed and what packages are installed.
-      Once a system template has been created, it can be exported and used
-      to create systems with the same settings.
+      System templates allow to group content (products, repositories, packages)
+      and handle them in change sets as a unit. They also provide an export consumable
+      by different systems (such as Aeolus Conductor to generate system images).
     DOC
   end
 

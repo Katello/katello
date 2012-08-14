@@ -18,7 +18,7 @@ class Api::TemplatesContentController < Api::ApiController
     short_description "Manipulates system template content"
     param :template_id, :id, :desc => "template numeric identifier"
     description <<-DOC
-      System templates are used to configure how a system should look, including which products are subscribed and what packages are installed.
+      Provides interface to the template content.
     DOC
   end
 
