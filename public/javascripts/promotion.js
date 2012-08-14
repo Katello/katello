@@ -11,7 +11,6 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-
 var promotion_page = (function($){
     var types =             ["errata", "product", "package", "repo", "template", "distribution"],
         subtypes =          ["errata", "package", "repo", "distribution"],
@@ -46,8 +45,13 @@ var promotion_page = (function($){
         are_updates_complete = function() { //if there are no pending (and complete) updates, return true
             return changeset_queue.length === 0 && interval_id !== undefined;
         },
-        //Finds the add/remove buttons in the left pane
-        find_button = function(id, type) {
+        //  Finds the add/remove buttons currently active on the page (for both content and changeset trees).
+        //  In order to locate the buttons for a single tree, pass in the appropriate tree id (e.g. '#content_tree',
+        //  '#changeset_tree')
+        find_button = function(id, type, tree_id) {
+            if (tree_id) {
+                return $(tree_id).find("a[class~=content_add_remove][data-id=" + KT.common.escapeId(id) + "][data-type=" + type + "]");
+            }
             return $("a[class~=content_add_remove][data-id=" + KT.common.escapeId(id) + "][data-type=" + type + "]");
         },
         conflict = function(){
@@ -284,7 +288,9 @@ var promotion_page = (function($){
             }
 
             if (adding) {
-                button.html(i18n.remove).addClass("remove_" + type).removeClass('add_'+type);
+                button.html(i18n.undo).addClass("remove_" + type).removeClass('add_'+type);
+                button.prev('.added').addClass('hidden');
+
                 if( type !== 'product'){
                     if (type === "template") {
                       if (changeset.getTemplates()[id] === undefined) {
@@ -300,6 +306,8 @@ var promotion_page = (function($){
             }
             else {
                 button.html(i18n.add).addClass("add_" + type).removeClass('remove_' + type);
+                button.prev('.added').addClass('hidden');
+
                 changeset.remove_item(type, id, product_id);
                 if( type !== 'product' ){
                     if (type === "template") {
@@ -474,9 +482,16 @@ var promotion_page = (function($){
                         $.each(subtypes, function(index, type){
                             var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
                             buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type); //reset all to 'add'
+                            buttons.prev('.added').addClass('hidden');
                             if (product) {
                                 $.each(product[type], function(index, item) {
-                                    $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + KT.common.escapeId(item.id + "") +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
+                                    var content_button = find_button(item.id + "", type, "#content_tree"),
+                                        changeset_button = find_button(item.id + "", type, "#changeset_tree");
+
+                                    content_button.html(i18n.undo).removeClass('add_' + type).addClass("remove_" + type);
+                                    content_button.prev('.added').removeClass('hidden');
+
+                                    changeset_button.html(i18n.remove);
                                 });
                             }
                             if (current_changeset.type() === "deletion") {
@@ -494,11 +509,13 @@ var promotion_page = (function($){
                   var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
 
                   buttons.html(i18n.add).removeClass('remove_product').addClass("add_product").show(); //reset all to 'add'
+                  buttons.prev('.added').addClass('hidden');
                   $.each(current_changeset.getProducts(), function(index, product) {
                     $.each(buttons, function(button_index, button){
                       if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
                          if( product.all === true){
-                            $(button).html(i18n.remove).removeClass('add_product').addClass("remove_product").removeClass("disabled");
+                            $(button).html(i18n.undo).removeClass('add_product').addClass("remove_product").removeClass("disabled");
+                            $(button).prev('.added').removeClass('hidden');
                          } else {
                             $(button).html('');
                          }
@@ -508,21 +525,25 @@ var promotion_page = (function($){
 
                  buttons = $('#list').find("a[class~=content_add_remove][data-type=template]");
                  buttons.html(i18n.add).removeClass('remove_template').addClass("add_template").show(); //reset all to 'add'
+                 buttons.prev('.added').addClass('hidden');
                   $.each(current_changeset.getTemplates(), function(index, template) {
                     $.each(buttons, function(button_index, button){
                       if( $(button).attr('id') === ('add_remove_template_' + template.id) ){ 
-                        $(button).html(i18n.remove).removeClass('add_template').addClass("remove_template").removeClass("disabled");
+                        $(button).html(i18n.undo).removeClass('add_template').addClass("remove_template").removeClass("disabled");
+                        $(button).prev('.added').removeClass('hidden');
                       }
                     });
                   });
 
                  buttons = $('#list').find("a[class~=content_add_remove][data-type=errata]");
                  buttons.html(i18n.add).removeClass('remove_errata').addClass("add_errata").show(); //reset all to 'add'
+                 buttons.prev('.added').addClass('hidden');
                   $.each(current_changeset.getErrata(), function(index, erratum) {
                     $.each(buttons, function(button_index, button){
                       if( $(button).attr('id') === ('add_remove_errata_' + erratum.id) ){
                         if( KT.utils.intersection(erratum["product_ids"], $.parseJSON($(button).data("product_id"))).length === 0 ){
-                            $(button).html(i18n.remove).removeClass('add_errata').addClass("remove_errata").removeClass("disabled");
+                            $(button).html(i18n.undo).removeClass('add_errata').addClass("remove_errata").removeClass("disabled");
+                            $(button).prev('.added').removeClass('hidden');
                         }
                       }
                     });
@@ -614,6 +635,7 @@ var promotion_page = (function($){
             $.each(all_types, function(index, type){
                 var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
                 buttons.hide().html(i18n.add);
+                buttons.prev('.added').addClass('hidden');
             });        
         },
         checkUsersInResponse = function(users) {
@@ -862,7 +884,7 @@ var changeset_obj = function(data_struct) {
             }
             if( products.hasOwnProperty(product_id) ){
                 $.each(products[product_id][type], function(index, item) {
-                    if(item.id === id){
+                    if((item.id + "") === id){
                         found = true;
                         return false;
                     }
@@ -889,7 +911,7 @@ var changeset_obj = function(data_struct) {
               delete templates[id];
             } else if (products[product_id] !== undefined) {
                 $.each(products[product_id][type], function(index,item) {
-                    if (item.id === id) {
+                    if ((item.id + "") === id) {
                         products[product_id][type].splice(index,1);
                         return false;//Exit out of the loop
                     }  
@@ -1393,7 +1415,8 @@ var templateLibrary = (function(){
             if ( showButton && permissions.manage_changesets){
                 anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"' + 'data-display_name="' + name +
                                  '" data-type="' + type + '" data-product_id="[' + product_id +  ']" data-id="' + id + '">';
-                            anchor += i18n.remove + "</a>";
+                anchor += i18n.remove + "</a>";
+
             }
             if(type === "repo" && isFiltered) {
                 filter_repo_class = '<span class="filter_warning_icon fl promotion_tipsify"' + " data-content_id=\"" +
