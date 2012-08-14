@@ -10,18 +10,21 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::ForemanController < Api::ApiController
-  respond_to :json
+class Foreman::ConfigTemplate < Resources::ForemanModel
 
-  skip_before_filter :authorize # TODO
+  attributes :name, :template, :snippet, :audit_comment, :template_kind_id
 
-  def foreman_resource
-    raise NotImplemented
+  def json_default_options
+    { :only => [:name, :template, :snippet, :audit_comment, :template_kind_id] }
   end
 
-  def api_call(meth, *args)
-    args << { :foreman_user => User.current.username } # add header
-    _, response = foreman_resource.send(meth, *args)
-    render :text => response.body, :code => response.code, :content_type => 'application/json'
+  validates :name, :presence => true
+
+  def self.revision(audit_id)
+    resource.revision({:version => audit_id}, foreman_header).first
+  end
+
+  def self.build_pxe_default
+    resource.build_pxe_default(foreman_header).first
   end
 end
