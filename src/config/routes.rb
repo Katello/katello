@@ -700,7 +700,15 @@ Src::Application.routes.draw do
 
       # foreman proxy --------------
     resources :architectures, :except => [:new, :edit]
-    resources :domains, :except => [:new, :edit]
+    constraints(:id => /[^\/]+/) do
+      resources :domains, :except => [:new, :edit]
+    end
+    resources :config_templates, :except => [:new, :edit] do
+      collection do
+        get :revision
+        get :build_pxe_default
+      end
+    end
 
     # development / debugging support
     if Rails.env == "development"
