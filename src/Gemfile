@@ -16,7 +16,7 @@ gem 'net-ldap'
 gem 'oauth'
 gem 'ldap_fluff'
 
-gem 'foreman_api', :git => "git://github.com/mbacovsky/foreman_api.git" 
+gem 'foreman_api', '>=0.0.1'
 
 gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
