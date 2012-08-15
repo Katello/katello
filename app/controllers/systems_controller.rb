@@ -78,7 +78,7 @@ class SystemsController < ApplicationController
   def param_rules
     update_check = lambda do
       if params[:system]
-        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel] }
+        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel, :environment_id] }
         check_hash_params(sys_rules, params)
       else
         check_array_params([:id], params)
@@ -286,9 +286,12 @@ class SystemsController < ApplicationController
     rescue Exception => e
       # Don't pepper user with notices if there is an error fetching release versions, but do log them
       Rails.logger.error e.to_str
-      releases = []
+      releases ||= []
     end
-    render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?, :releases=>releases, :name=>controller_display_name}
+
+    render :partial=>"edit", :layout=>"tupane_layout", :locals=>{
+        :system=>@system, :editable=>@system.editable?, :releases=>releases, :name=>controller_display_name,
+        :environments=>environment_paths(library_path_element, environment_path_element("systems_readable?"))}
   end
 
   def update

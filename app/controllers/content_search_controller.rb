@@ -36,18 +36,7 @@ class ContentSearchController < ApplicationController
   end
 
   def index
-    render :index, :locals=>{:environments=>my_environments}
-  end
-
-  def my_environments
-    paths = current_organization.promotion_paths
-    library = {:id=>current_organization.library.id, :name=>current_organization.library.name, :select=>current_organization.library.contents_readable?}
-    to_ret = []
-    paths.each do |path|
-      path = path.collect{|e| {:id=>e.id, :name=>e.name, :select=>e.contents_readable?} }
-      to_ret << [library] + path if path.any?{|e| e[:select]}
-    end
-    to_ret
+    render :index, :locals=>{:environments=>environment_paths(library_path_element("contents_readable?"), environment_path_element("contents_readable?"))}
   end
 
   def products
