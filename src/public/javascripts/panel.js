@@ -294,17 +294,17 @@ KT.panel = (function ($) {
                     handleScroll($('#panel-frame'));
 
                     thisPanel.css({
-                        "z-index": "200"
+                        "z-index": "0"
                     });
                     thisPanel.parent().css({
-                        "z-index": "20"
+                        "z-index": "0"
                     });
                     thisPanel.animate({
                         left: (panelLeft) + "px",
                         opacity: 1
                     }, 200, function () {
                         $(this).css({
-                            "z-index": "200"
+                            "z-index": "0"
                         });
                     }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
                     activeBlock.addClass('active');
@@ -318,10 +318,10 @@ KT.panel = (function ($) {
                     // Keep the thisPanel open if they click another block
                     // remove previous classes besides opened
                     thisPanel.css({
-                        "z-index": "200"
+                        "z-index": "0"
                     });
                     thisPanel.parent().css({
-                        "z-index": "20"
+                        "z-index": "0"
                     });
                     thisPanel.addClass('opened').attr('data-id', activeBlockId);
                     $("#" + previousBlockId).removeClass('active');
@@ -490,10 +490,10 @@ KT.panel = (function ($) {
                 opacity: 1
             }, 200, function () {
                 $(this).css({
-                    "z-index": "204"
+                    "z-index": "0"
                 });
                 $(this).parent().css({
-                    "z-index": "2"
+                    "z-index": "0"
                 });
                 $(this).removeClass('closed').addClass('opened');
             });
