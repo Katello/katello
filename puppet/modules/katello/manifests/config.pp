@@ -68,9 +68,9 @@ class katello::config {
 
     "/etc/httpd/conf.d/katello.conf":
       content => template("katello/etc/httpd/conf.d/katello.conf.erb"),
-      owner   => $katello::params::user,
-      group   => $katello::params::group,
-      mode    => "600",
+      owner   => "root",
+      group   => "root",
+      mode    => "644",
       notify  => Exec["reload-apache2"];
 
     "/etc/ldap_fluff.yml":
