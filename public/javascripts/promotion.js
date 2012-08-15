@@ -570,11 +570,11 @@ var promotion_page = (function($){
 
                 if (current_changeset.type() === "promotion") {
                     action_btn.find('span.text').html(i18n.action_promote);
-                    action_btn.attr('title', i18n.apply_promotion_title);
+                    action_btn.attr('original-title', i18n.apply_promotion_title);
                     $('#delete_changeset').data('confirm-text', i18n.remove_promotion_changeset_confirm);
                 } else {
                     action_btn.find('span.text').html(i18n.action_delete);
-                    action_btn.attr('title', i18n.apply_deletion_title);
+                    action_btn.attr('original-title', i18n.apply_deletion_title);
                     $('#delete_changeset').data('confirm-text', i18n.remove_deletion_changeset_confirm);
                 }
 
@@ -586,7 +586,7 @@ var promotion_page = (function($){
                     $("#cslist").removeClass("locked");
                     $('#locked_icon').remove();
                     $('#review_changeset > span').html(i18n.review);
-                    $('#review_changeset').attr('title', i18n.review_title);
+                    $('#review_changeset').attr('original-title', i18n.review_title);
                     $('#promote_changeset').addClass("disabled");
                 }
                 else if( current_changeset.state() === "promoted" || current_changeset.state() === "promoting" ){
@@ -609,7 +609,7 @@ var promotion_page = (function($){
                     $(".content_add_remove").hide();
 
                     $('#review_changeset > span').html(i18n.cancel_review);
-                    $('#review_changeset').attr('title', i18n.cancel_review_title);
+                    $('#review_changeset').attr('original-title', i18n.cancel_review_title);
 
                     if (permissions.apply_changesets) {
                         $('#promote_changeset').removeClass("disabled");
@@ -631,11 +631,11 @@ var promotion_page = (function($){
 
                 if ($('.sliding_tree_category.selected').data('cs_type') === 'promotion') {
                     action_btn.find('span.text').html(i18n.action_promote);
-                    action_btn.attr('title', i18n.apply_promotion_title);
+                    action_btn.attr('original-title', i18n.apply_promotion_title);
                     $('#delete_changeset').data('confirm-text', i18n.remove_promotion_changeset_confirm);
                 } else {
                     action_btn.find('span.text').html(i18n.action_delete);
-                    action_btn.attr('title', i18n.apply_deletion_title);
+                    action_btn.attr('original-title', i18n.apply_deletion_title);
                     $('#delete_changeset').data('confirm-text', i18n.remove_deletion_changeset_confirm);
                 }
                 $("#sliding_tree_actionbar > div").addClass("disabled");
@@ -1024,7 +1024,7 @@ var changeset_obj = function(data_struct) {
 
 //doc ready
 var registerEvents = function(){
-    $('.added').tipsy({fade : true, gravity : 's', live : true, delayIn : 500, hoverable : true, delayOut : 50 });
+    $('.tipsify').tipsy({fade : true, gravity : 's', live : true, delayIn : 500, hoverable : true, delayOut : 50 });
 
     $('.sliding_tree_category').live('click', function() {
         // user clicked on a changeset category (promotion/deletion)
@@ -1162,7 +1162,6 @@ var changesetEdit = (function(){
 
     var toggle = function(delay){
         var edit_window = $('#changeset_edit'),
-        edit_button = $('#edit_changeset'),
         name_box = $('.edit_name_text'),
         edit_button = $('#edit_changeset > span'),
         description = $('.edit_description'),
@@ -1178,7 +1177,7 @@ var changesetEdit = (function(){
 
         var after_function = undefined;
         if (opened) {
-            edit_button.attr('title', i18n.close_edit_title);
+            $('#edit_changeset').attr('original-title', i18n.close_edit_title);
             name_box.html(changeset.getName());
             edit_button.html(i18n.close_details);
             description.html(changeset.getDescription());
@@ -1187,7 +1186,7 @@ var changesetEdit = (function(){
             after_function = setup_edit;
         }
         else {
-            edit_button.attr('title', i18n.edit_title);
+            $('#edit_changeset').attr('original-title', i18n.edit_title);
             edit_button.html(i18n.edit_details);
             edit_button.parent().removeClass("highlighted");
         }

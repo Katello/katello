@@ -7,7 +7,7 @@
       - product_id = escape_javascript(erratum.product_ids.to_json)
 
     .fr
-      %span.added.hidden #{_("Added")}
+      %span.added.tipsify.hidden #{_("Added")}
       %a{:class => "fr content_add_remove remove_errata st_button hidden", "data-display_name"=> erratum.title,
          "data-id" => erratum.id, "data-type" => "errata", "data-product_id"=> "#{product_id}",
          "data-promotable" => "#{@promotable_errata.include?(erratum.id)}", :id => "add_remove_errata_#{erratum.id}"}
