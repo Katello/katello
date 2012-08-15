@@ -171,6 +171,7 @@ class TestPulpRepositoryRequiresSync < MiniTest::Unit::TestCase
 
   def test_distributions
     response = @resource.distributions(@repo_name)
+    debugger
     assert response.length > 0
   end
 
