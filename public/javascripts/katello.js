@@ -315,6 +315,12 @@ KT.common = (function() {
                     box.fadeOut('fast');
                 }
             });
+            if ($('#switcherContainer').length >0){
+              $('#orgbox a').live('click', function(){
+                 $(document).mouseup();
+                 $('#switcherContainer').html('<div class="spinner" style="margin-top:3px"></div>');
+              });
+            }
         },
         orgBoxRefresh : function (){
           var orgbox = $('#orgbox');
