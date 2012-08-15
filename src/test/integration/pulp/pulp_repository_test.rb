@@ -131,8 +131,9 @@ class TestPulpRepositoryRequiresSync < MiniTest::Unit::TestCase
 
   def setup
     super
+    destroy_repo
     create_repo
-    clone_repo
+    sync_repo
   end
 
   def teardown
@@ -165,7 +166,17 @@ class TestPulpRepositoryRequiresSync < MiniTest::Unit::TestCase
   def test_errata_with_filter
     response = @resource.errata(@repo_name, { :type => 'security' })
     assert response.length > 0
-    assert response['id'] == "RHEA-2010:0002"
+    assert response.select { |errata| errata['id'] == "RHEA-2010:0002" }.length > 0
+  end
+
+  def test_distributions
+    response = @resource.distributions(@repo_name)
+    assert response.length > 0
+  end
+
+  def test_sync_history
+    response = @resource.sync_history(@repo_name)
+    assert response.length > 0
   end
 end
 
@@ -174,7 +185,6 @@ class TestPulpRepositorySync < MiniTest::Unit::TestCase
 
   def setup
     super
-    destroy_repo(@repo_name)
     create_repo
   end
 
@@ -193,10 +203,17 @@ class TestPulpRepositorySync < MiniTest::Unit::TestCase
   def test_sync_status
     task = @resource.sync(@repo_name)
     response = @resource.sync_status(@repo_name)
-    debugger
     assert response.length > 0
     assert response.first['id'] == task['id']
   end
+
+  def test_generate_metadata
+    response = @resource.generate_metadata(@repo_name)
+    @task = response
+    assert response.length > 0
+    assert response["method_name"] == "_generate_metadata"
+  end
+
 end
 
 class TestPulpRepositoryClone < MiniTest::Unit::TestCase
