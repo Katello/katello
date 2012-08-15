@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.1
+Version:       1.1.2
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -51,6 +51,10 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+* Sat Aug 11 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.2-1
+- fix system tests for rhsm re-subscribe (inecas@redhat.com)
+- 840531 - remove nvre tests from system tests (inecas@redhat.com)
+
 * Sat Aug 04 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
 - Introduce +load_remote_data+ method to lazy_attributes (inecas@redhat.com)
 - buildroot and %%clean section is not needed (msuchy@redhat.com)
