@@ -429,9 +429,10 @@ describe Changeset, :katello => true do
         @changeset.state = Changeset::REVIEW
 
         Resources::Pulp::Package.stub(:dep_solve).and_return({ })
+        Glue::Pulp::Package.should_receive(:id_search).once.with([@pack.id]).and_return([@pack])
+        Glue::Pulp::Repo.should_receive(:add_repo_packages).once.with(@clone => [@pack])
 
-        @clone.should_receive(:add_packages).once.with([@pack.id])
-
+        #@clone.should_receive(:add_packages).once.with([@pack.id])
         @changeset.apply(:async => false)
       end
 
