@@ -13,6 +13,11 @@
 class Api::ErrataController < Api::ApiController
   respond_to :json
 
+  resource_description do
+    error :code => 401, :desc => "Unauthorized"
+    error :code => 404, :desc => "Not found"
+  end
+
   before_filter :find_environment, :only => [:index]
   before_filter :find_repository, :except => [:index]
   before_filter :find_erratum, :except => [:index]
@@ -27,6 +32,15 @@ class Api::ErrataController < Api::ApiController
     }
   end
 
+  api :GET, "/errata", "List errata"
+  api :GET, "/repositories/:repository_id/errata", "List errata"
+  description "Either :repoid or :product_id is required."
+  error :code => 400, :desc => "Repo id or environment must be provided"
+  param :environment_id, :number, :desc => "Id of environment containing the errata."
+  param :product_id, :number, :desc => "The product which contains the errata."
+  param :repoid, :number, :desc => "Id of repository containing the errata."
+  param :severity, String, :desc => "Severity of errata. Usually one of: Critical, Important, Moderate, Low. Case insensitive."
+  param :type, String, :desc => "Type of errata. Usually one of: security, bugfix, enhancement. Case insensitive."
   def index
     filter = params.slice(:repoid, :product_id, :environment_id, :type, :severity).symbolize_keys
     unless filter[:repoid] or filter[:environment_id]
@@ -35,6 +49,7 @@ class Api::ErrataController < Api::ApiController
     render :json => Glue::Pulp::Errata.filter(filter)
   end
 
+  api :GET, "/repositories/:repository_id/errata/:id", "Show an erratum"
   def show
     render :json => @erratum
   end

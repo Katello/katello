@@ -12,7 +12,7 @@ module IndexedModel
         end
 
 
-      if !Rails.env.test?
+      if Rails.env.development? || Rails.env.production?
         include Tire::Model::Search
         include Tire::Model::Callbacks
         index_name AppConfig.elastic_index + '_' +  self.base_class.name.downcase
@@ -98,7 +98,7 @@ module IndexedModel
       end
 
       def self.use_index_of(model)
-        if !Rails.env.test?
+        if Rails.env.development? || Rails.env.production?
           index_name model.index_name
           document_type model.document_type
         end
@@ -107,10 +107,9 @@ module IndexedModel
   end
 
   #mocked methods for testing
-  if Rails.env.test?
+  unless Rails.env.development? || Rails.env.production?
     def update_index
     end
-
   end
 
   def indexed_attributes
