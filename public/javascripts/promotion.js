@@ -289,7 +289,7 @@ var promotion_page = (function($){
 
             if (adding) {
                 button.html(i18n.undo).addClass("remove_" + type).removeClass('add_'+type);
-                button.prev('.added').addClass('hidden');
+                button.prev('.added').removeClass('hidden').attr('original-title', i18n.added_to_changeset(changeset.getName()));
 
                 if( type !== 'product'){
                     if (type === "template") {
@@ -306,7 +306,7 @@ var promotion_page = (function($){
             }
             else {
                 button.html(i18n.add).addClass("add_" + type).removeClass('remove_' + type);
-                button.prev('.added').addClass('hidden');
+                button.prev('.added').addClass('hidden').removeAttr('original-title');
 
                 changeset.remove_item(type, id, product_id);
                 if( type !== 'product' ){
@@ -481,14 +481,14 @@ var promotion_page = (function($){
                         $.each(subtypes, function(index, type){
                             var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
                             buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type); //reset all to 'add'
-                            buttons.prev('.added').addClass('hidden');
+                            buttons.prev('.added').addClass('hidden').removeAttr('original-title');
                             if (product) {
                                 $.each(product[type], function(index, item) {
                                     var content_button = find_button(item.id + "", type, "#content_tree"),
                                         changeset_button = find_button(item.id + "", type, "#changeset_tree");
 
                                     content_button.html(i18n.undo).removeClass('add_' + type).addClass("remove_" + type);
-                                    content_button.prev('.added').removeClass('hidden');
+                                    content_button.prev('.added').removeClass('hidden').attr('original-title', i18n.added_to_changeset(current_changeset.getName()));
 
                                     changeset_button.html(i18n.remove);
                                 });
@@ -508,13 +508,13 @@ var promotion_page = (function($){
                   var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
 
                   buttons.html(i18n.add).removeClass('remove_product').addClass("add_product").show(); //reset all to 'add'
-                  buttons.prev('.added').addClass('hidden');
+                  buttons.prev('.added').addClass('hidden').removeAttr('original-title');
                   $.each(current_changeset.getProducts(), function(index, product) {
                     $.each(buttons, function(button_index, button){
                       if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
                          if( product.all === true){
                             $(button).html(i18n.undo).removeClass('add_product').addClass("remove_product").removeClass("disabled");
-                            $(button).prev('.added').removeClass('hidden');
+                            $(button).prev('.added').removeClass('hidden').attr('original-title', i18n.added_to_changeset(current_changeset.getName()));
                          } else {
                             $(button).html('');
                          }
@@ -524,25 +524,25 @@ var promotion_page = (function($){
 
                  buttons = $('#list').find("a[class~=content_add_remove][data-type=template]");
                  buttons.html(i18n.add).removeClass('remove_template').addClass("add_template").show(); //reset all to 'add'
-                 buttons.prev('.added').addClass('hidden');
+                 buttons.prev('.added').addClass('hidden').removeAttr('original-title');
                   $.each(current_changeset.getTemplates(), function(index, template) {
                     $.each(buttons, function(button_index, button){
                       if( $(button).attr('id') === ('add_remove_template_' + template.id) ){ 
                         $(button).html(i18n.undo).removeClass('add_template').addClass("remove_template").removeClass("disabled");
-                        $(button).prev('.added').removeClass('hidden');
+                        $(button).prev('.added').removeClass('hidden').attr('original-title', i18n.added_to_changeset(current_changeset.getName()));
                       }
                     });
                   });
 
                  buttons = $('#list').find("a[class~=content_add_remove][data-type=errata]");
                  buttons.html(i18n.add).removeClass('remove_errata').addClass("add_errata").show(); //reset all to 'add'
-                 buttons.prev('.added').addClass('hidden');
+                 buttons.prev('.added').addClass('hidden').removeAttr('original-title');
                   $.each(current_changeset.getErrata(), function(index, erratum) {
                     $.each(buttons, function(button_index, button){
                       if( $(button).attr('id') === ('add_remove_errata_' + erratum.id) ){
                         if( KT.utils.intersection(erratum["product_ids"], $.parseJSON($(button).data("product_id"))).length === 0 ){
                             $(button).html(i18n.undo).removeClass('add_errata').addClass("remove_errata").removeClass("disabled");
-                            $(button).prev('.added').removeClass('hidden');
+                            $(button).prev('.added').removeClass('hidden').attr('original-title', i18n.added_to_changeset(current_changeset.getName()));
                         }
                       }
                     });
@@ -652,7 +652,7 @@ var promotion_page = (function($){
             $.each(all_types, function(index, type){
                 var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
                 buttons.hide().html(i18n.add);
-                buttons.prev('.added').addClass('hidden');
+                buttons.prev('.added').addClass('hidden').removeAttr('original-title');
             });        
         },
         checkUsersInResponse = function(users) {
@@ -1024,6 +1024,8 @@ var changeset_obj = function(data_struct) {
 
 //doc ready
 var registerEvents = function(){
+    $('.added').tipsy({fade : true, gravity : 's', live : true, delayIn : 500, hoverable : true, delayOut : 50 });
+
     $('.sliding_tree_category').live('click', function() {
         // user clicked on a changeset category (promotion/deletion)
         var selected = $(this);
