@@ -173,22 +173,22 @@
           #changeset_status
           - if manage_promotion_changesets or manage_deletion_changesets or apply_changesets
             #sliding_tree_actionbar.clickable
-              #delete_changeset.cs_action{"data-url"=>changesets_path, "data-confirm-text"=>_('Are you sure you want to remove this promotion changeset?'), :title => _("Remove Changeset")}
+              #delete_changeset.cs_action.tipsify{"data-url"=>changesets_path, "data-confirm-text"=>_('Are you sure you want to remove this promotion changeset?'), 'original-title' => _("Remove Changeset")}
                 %span#delete_changeset_icon.sprite
                   SPRITE
                 %span.text
                   = _("Remove")
-              #edit_changeset.cs_action{:title => _("Edit Changeset Details")}
+              #edit_changeset.cs_action.tipsify{'original-title' => _("Edit Changeset Details")}
                 %span#edit_changeset_icon.sprite
                   SPRITE
                 %span.text
                   = _('Edit Details')
-              #review_changeset.cs_action{:title => _("Place Changeset in Review State")}
+              #review_changeset.cs_action.tipsify{'original-title' => _("Place Changeset in Review State")}
                 %span#review_changeset_icon.sprite
                   SPRITE
                 %span.text
                   = _('Review')
-              #promote_changeset.cs_action{:title => _("Apply Promotion Changeset")}
+              #promote_changeset.cs_action.tipsify{'original-title' => _("Apply Promotion Changeset")}
                 %span#promote_changeset_icon.sprite
                 %span.text
                   = _('Promote')
