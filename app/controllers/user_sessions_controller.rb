@@ -57,6 +57,8 @@ class UserSessionsController < ApplicationController
       render :nothing => true
     else
       self.current_organization = org
+    end
+    if self.current_organization == org
       redirect_to dashboard_index_url
     end
   end
