@@ -8,13 +8,17 @@
       read_changesets: #{read_promotion_changesets or read_deletion_changesets},
     };
     var content_breadcrumb = $.parseJSON('#{escape_javascript(generate_content_breadcrumb())}');
-    var changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb())}');
+    var promotion_changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb(@promotion_changesets))}');
+    var deletion_changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb(@deletion_changesets))}');
     var product_repo_filters = $.parseJSON('#{generate_product_repo_filters}');
     localize({
       "add": '+ #{escape_javascript(_('Add'))}',
       "added": '#{escape_javascript(_('Added:'))}',
+      "content_added": '#{escape_javascript(_('Added'))}',
+      "added_to_changeset": function(x){ return "#{escape_javascript(_('Added to changeset \'%X\''))}".replace("%X", x);},
       "removed": '#{escape_javascript(_('Removed:'))}',
       "remove": '#{escape_javascript(_('Remove'))}',
+      "undo": '#{escape_javascript(_('(Undo)'))}',
       "loading": "#{escape_javascript(_('Loading Changeset'))}",
       "no_products":"#{escape_javascript(_('No products exist in this changeset.'))}",
       "no_errata": "#{escape_javascript(_('No errata exist in this changeset.'))}",
@@ -29,10 +33,18 @@
       "system_templates": "#{escape_javascript(_('system templates'))}",
       "templates": '#{escape_javascript(_("System Templates"))}',
       "viewing": '#{escape_javascript(_('currently editing this changeset'))}',
+      "edit_title": '#{escape_javascript(_("Edit Changeset Details"))}',
+      "close_edit_title": '#{escape_javascript(_("Close Changeset Details"))}',
+      "apply_promotion_title": '#{escape_javascript(_("Apply Promotion Changeset"))}',
+      "apply_deletion_title": '#{escape_javascript(_("Apply Deletion Changeset"))}',
+      "review_title": '#{escape_javascript(_("Place Changeset in Review State"))}',
+      "cancel_review_title": '#{escape_javascript(_("Cancel Changeset Review"))}',
       "review": '#{escape_javascript(_("Review"))}',
       "cancel_review": '#{escape_javascript(_("Cancel Review"))}',
       "action_promote": '#{escape_javascript(_("Promote"))}',
       "action_delete": '#{escape_javascript(_("Delete"))}',
+      "remove_promotion_changeset_confirm": '#{escape_javascript(_("Are you sure you want to remove this promotion changeset?"))}',
+      "remove_deletion_changeset_confirm": '#{escape_javascript(_("Are you sure you want to remove this deletion changeset?"))}',
       "promote": "#{escape_javascript(_('Promote to ')) + (@next_environment.nil? ? '' : @next_environment.name)}",
       "promote_confirm": '#{escape_javascript(_("promote_confirm"))}',
       "package_singular": '#{escape_javascript(_("Package"))}',
@@ -94,11 +106,24 @@
 
 = help_tip_button
 .grid_16
-  = help_tip(_('Promotions allow you to promote content from one environment to the next along ' + |
-                'a promotion path. Once you have created a promotion changeset, clicking "Add" next to  '+ |
-                'one or more products will add them to the promotion changeset. If products already '    + |
-                'exist in the next environment, you may promote other types of content. Once ' + |
-                'you have created a change set, click the "Promote" button to commit it to the next environment.'))   |
+  = help_tip(_('Changesets allow you to either promote content to or delete content from ' + |
+                'an environment.<BR/><BR/> ' + |
+                'For a promotion, you may promote content from one environment to the ' + |
+                'next along a promotion path.  Once you have created a promotion ' + |
+                'changeset, clicking "Add" next to one or more products will add them to ' + |
+                'the changeset.  If products already exist in the next environment, ' + |
+                'you may promote other types of content.  Once you have created a ' + |
+                'changeset, click the "Review" button to place the changeset in a ' + |
+                'locked state for review and when ready click the "Promote" button to ' + |
+                'apply it to the next environment.<BR/><BR/>' + |
+                'For a deletion, you may remove content from the current environment. ' + |
+                'Once you have created a deletion changeset, clicking "Add" next to ' + |
+                'content will add that content to the changeset.  Once you have created ' + |
+                'a changeset, click the "Review" button to place the changeset in a ' + |
+                'locked state for review and when ready click the "Delete" button to ' + |
+                'apply it to the current environment.  Note: deletion of content from ' + |
+                'Library is not allowed using a deletion changeset.<BR/><BR/>')) |
+
 .grid_16
   = environment_selector(:url_proc=>breadcrumb_url_proc,  :accessible_envs=>accessible_envs)
 
@@ -108,6 +133,13 @@
       #changeset_tree
         - if read_promotion_changesets or read_deletion_changesets
           %h2 #{_(" Changesets")}
+          .sliding_tree_categories.clickable
+            .sliding_tree_category{:class => ("selected" unless !@next_environment), 'data-cs_type' => 'promotion'}
+              - if @next_environment
+                #{_("Promotion to %s") % @next_environment.name}
+            .sliding_tree_category{:class => ("selected" unless @next_environment), 'data-cs_type' => 'deletion'}
+              - if @environment and !@environment.library?
+                #{_("Deletion from %s") % @environment.name}
           .breadcrumb_filter.fl.clear.clickable
             %form#filter_form.filter.clear
               %input{ :name => "filter", :type => "input", :placeholder => _("Filter..."), :id=>"filter_input"}
@@ -141,22 +173,22 @@
           #changeset_status
           - if manage_promotion_changesets or manage_deletion_changesets or apply_changesets
             #sliding_tree_actionbar.clickable
-              #delete_changeset.cs_action{"data-url"=>changesets_path, "data-confirm-text"=>_('Are you sure?')}
+              #delete_changeset.cs_action.tipsify{"data-url"=>changesets_path, "data-confirm-text"=>_('Are you sure you want to remove this promotion changeset?'), 'original-title' => _("Remove Changeset")}
                 %span#delete_changeset_icon.sprite
                   SPRITE
                 %span.text
                   = _("Remove")
-              #edit_changeset.cs_action
+              #edit_changeset.cs_action.tipsify{'original-title' => _("Edit Changeset Details")}
                 %span#edit_changeset_icon.sprite
                   SPRITE
                 %span.text
                   = _('Edit Details')
-              #review_changeset.cs_action
+              #review_changeset.cs_action.tipsify{'original-title' => _("Place Changeset in Review State")}
                 %span#review_changeset_icon.sprite
                   SPRITE
                 %span.text
                   = _('Review')
-              #promote_changeset.cs_action
+              #promote_changeset.cs_action.tipsify{'original-title' => _("Apply Promotion Changeset")}
                 %span#promote_changeset_icon.sprite
                 %span.text
                   = _('Promote')
