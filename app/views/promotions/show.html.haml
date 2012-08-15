@@ -42,6 +42,8 @@
       "cancel_review": '#{escape_javascript(_("Cancel Review"))}',
       "action_promote": '#{escape_javascript(_("Promote"))}',
       "action_delete": '#{escape_javascript(_("Delete"))}',
+      "remove_promotion_changeset_confirm": '#{escape_javascript(_("Are you sure you want to remove this promotion changeset?"))}',
+      "remove_deletion_changeset_confirm": '#{escape_javascript(_("Are you sure you want to remove this deletion changeset?"))}',
       "promote": "#{escape_javascript(_('Promote to ')) + (@next_environment.nil? ? '' : @next_environment.name)}",
       "promote_confirm": '#{escape_javascript(_("promote_confirm"))}',
       "package_singular": '#{escape_javascript(_("Package"))}',
@@ -157,7 +159,7 @@
           #changeset_status
           - if manage_promotion_changesets or manage_deletion_changesets or apply_changesets
             #sliding_tree_actionbar.clickable
-              #delete_changeset.cs_action{"data-url"=>changesets_path, "data-confirm-text"=>_('Are you sure?'), :title => _("Remove Changeset")}
+              #delete_changeset.cs_action{"data-url"=>changesets_path, "data-confirm-text"=>_('Are you sure you want to remove this promotion changeset?'), :title => _("Remove Changeset")}
                 %span#delete_changeset_icon.sprite
                   SPRITE
                 %span.text

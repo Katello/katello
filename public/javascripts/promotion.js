@@ -473,7 +473,6 @@ var promotion_page = (function($){
          */
         reset_page = function() {
             if (current_changeset && permissions.manage_changesets) {
-
                 if ( current_product ) {
                     var product = current_changeset.getProducts()[current_product];
                     if( product !== undefined && product.all !== undefined ){
@@ -572,9 +571,11 @@ var promotion_page = (function($){
                 if (current_changeset.type() === "promotion") {
                     action_btn.find('span.text').html(i18n.action_promote);
                     action_btn.attr('title', i18n.apply_promotion_title);
+                    $('#delete_changeset').data('confirm-text', i18n.remove_promotion_changeset_confirm);
                 } else {
                     action_btn.find('span.text').html(i18n.action_delete);
                     action_btn.attr('title', i18n.apply_deletion_title);
+                    $('#delete_changeset').data('confirm-text', i18n.remove_deletion_changeset_confirm);
                 }
 
                 if (current_changeset.is_new() || current_changeset.state() === "failed") {
@@ -631,9 +632,11 @@ var promotion_page = (function($){
                 if ($('.sliding_tree_category.selected').data('cs_type') === 'promotion') {
                     action_btn.find('span.text').html(i18n.action_promote);
                     action_btn.attr('title', i18n.apply_promotion_title);
+                    $('#delete_changeset').data('confirm-text', i18n.remove_promotion_changeset_confirm);
                 } else {
                     action_btn.find('span.text').html(i18n.action_delete);
                     action_btn.attr('title', i18n.apply_deletion_title);
+                    $('#delete_changeset').data('confirm-text', i18n.remove_deletion_changeset_confirm);
                 }
                 $("#sliding_tree_actionbar > div").addClass("disabled");
             }
@@ -1060,7 +1063,7 @@ var registerEvents = function(){
         }
         var id = promotion_page.get_changeset().id;
         KT.common.customConfirm({
-            message: button.attr('data-confirm-text'),
+            message: button.data('confirm-text'),
             yes_callback: function(){
                 button.addClass('disabled');
                 $.ajax({
