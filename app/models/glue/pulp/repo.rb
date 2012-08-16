@@ -28,7 +28,7 @@ module Glue::Pulp::Repo
                         Resources::Pulp::Repository.find(pulp_id)
                       end
                     }
-      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source, :package_count,
+      lazy_accessor :feed, :feed_cert, :feed_key, :feed_ca, :importers, :package_count,
                 :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type, :uri,
                 :initializer => lambda {
                   if pulp_id
@@ -118,22 +118,39 @@ module Glue::Pulp::Repo
     end
   end
 
+  #TODO Create distributor and importer objects in pulp.rb
   def create_pulp_repo
-    feed_cert_data = {:ca => self.feed_ca,
-        :cert => self.feed_cert,
-        :key => self.feed_key
-    }
     Resources::Pulp::Repository.create({
         :id => self.pulp_id,
-        :name => self.name,
-        :relative_path => self.relative_path,
-        :arch => self.arch,
-        :feed => self.feed,
-        :feed_cert_data => feed_cert_data,
-        :groupid => self.groupid,
-        :preserve_metadata => self.preserve_metadata == true,
-        :content_types => self.content_type || TYPE_YUM
-    })
+        :display_name => self.name},
+        'yum_importer',
+        self.importer_config,
+        [self.distributor_config]
+    )
+  end
+
+  def distributor_config
+    [ 'yum_distributor', #dist id
+      {
+      :relative_url => self.relative_path,
+      :https=>true,
+      :http=>false,
+      :protected=>true,
+      :generate_metadata=>false
+     },  #dist config
+     true, #auto publish
+     self.pulp_id  #unique exporter id
+    ]
+  end
+
+  def importer_config
+    {
+      :ssl_ca_cert=>self.feed_ca,
+      :ssl_client_cert=>self.feed_cert,
+      :ssl_client_key=>self.feed_key,
+
+      :feed_url=>self.feed
+    }
   end
 
   def promote from_env, to_env
@@ -179,7 +196,6 @@ module Glue::Pulp::Repo
       self.feed = clone_from.feed
       self.major = clone_from.major
       self.minor = clone_from.minor
-      self.groupid = Glue::Pulp::Repos.groupid(environment_product.product, environment_product.environment, cloned_content)
       self.enabled = clone_from.enabled
     end
   end
@@ -214,14 +230,15 @@ module Glue::Pulp::Repo
   end
 
   def other_repos_with_same_product_and_content
-    product_group_id = Glue::Pulp::Repos.product_groupid(self.product_id)
-    content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
-    Resources::Pulp::Repository.all([content_group_id, product_group_id]).map{|r| r['id']} - [self.pulp_id]
+    list = Repository.in_product(Product.find(self.product.id)).where(:content_id=>self.content_id).all
+    list.delete(self)
+    list
   end
 
   def other_repos_with_same_content
-    content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
-    Resources::Pulp::Repository.all([content_group_id]).map{|r| r['id']} - [self.pulp_id]
+    list = Repository.where(:content_id=>self.content_id).all
+    list.delete(self)
+    list
   end
 
   def destroy_repo_orchestration
@@ -460,13 +477,6 @@ module Glue::Pulp::Repo
     self.environment.id
   end
 
-  def product_id
-    get_groupid_param 'product'
-  end
-
-  def content_id
-    get_groupid_param 'content'
-  end
   def organization
     Organization.find(self.organization_id)
   end
@@ -550,16 +560,7 @@ module Glue::Pulp::Repo
     end
   end
 
-  private
 
-  def get_groupid_param name
-    idx = self.groupid.index do |s| s.start_with? name+':' end
-    if not idx.nil?
-      return self.groupid[idx].split(':')[1]
-    else
-      return nil
-    end
-  end
   end
 
 end

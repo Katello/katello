@@ -50,6 +50,10 @@ class Repository < ActiveRecord::Base
     joins(:environment_product).where(:environment_products => { :product_id => product })
   end
 
+  def self.in_environment(env)
+    joins(:environment_product).where(:environment_products => { :environment_id => environment })
+  end
+
   def product
     self.environment_product.product
   end
@@ -82,7 +86,6 @@ class Repository < ActiveRecord::Base
   end
 
   scope :enabled, where(:enabled => true)
-  scope :in_product, lambda{|p|  joins(:environment_product).where("environment_products.product_id" => p.id)}
 
   scope :readable, lambda { |env|
     prod_ids = ::Product.readable(env.organization).collect{|p| p.id}

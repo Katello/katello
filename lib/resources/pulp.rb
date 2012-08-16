@@ -78,7 +78,7 @@ module Resources
           # /pulp/api/services/status/ because that path does *not* require
           # auth and will not accurately report if Katello can talk
           # to Pulp using OAuth.
-          response = get('/pulp/api/users/', self.default_headers).body
+          response = get('/pulp/api/v2/users/', self.default_headers).body
           JSON.parse(response)
         end
       end
@@ -162,6 +162,7 @@ module Resources
       end
     end
 
+
     class Repository < PulpResource
       class << self
 
@@ -178,7 +179,7 @@ module Resources
         end
 
         def find repo_id, yell_on_404 = false
-          response = get(repository_path  + repo_id + "/", self.default_headers)
+          response = get(repository_path  + repo_id + "/?details=true", self.default_headers)
           body = response.body
           JSON.parse(body).with_indifferent_access
         rescue RestClient::ResourceNotFound => e
@@ -186,14 +187,14 @@ module Resources
           raise e
         end
 
-        def find_all repo_ids, yell_on_404 = false
-          ids = "id=#{repo_ids.join('&id=')}"
-          response = get(repository_path  + "/?#{ids}", self.default_headers)
+        def find_all repo_ids
+          filter = {"criteria" => {
+                      "filters"=> {"id"=> {"$in"=> ["fee", "fie", "foe", "foo"]}}
+                   }
+                }
+          response = post(repository_path  + "/search/", JSON.generate(filter) , self.default_headers)
           body = response.body
-          JSON.parse(body).with_indifferent_access
-        rescue RestClient::ResourceNotFound => e
-          return nil if !yell_on_404
-          raise e
+          JSON.parse(body).collect{|i| i.with_indifferent_access}
         end
 
         # Get all the Repositories known by Pulp
@@ -205,7 +206,6 @@ module Resources
           response = get(self.repository_path + search_query , self.default_headers)
           JSON.parse(response.body)
         rescue RestClient::ResourceNotFound => e
-          return nil if !yell_on_404
           raise e
         end
 
@@ -216,15 +216,19 @@ module Resources
           raise RuntimeError, "#{response.code}, failed to start repository discovery: #{response.body}"
         end
 
-        def repository_path
-          "/pulp/api/repositories/"
+        def repository_path repo_id=nil
+          "/pulp/api/v2/repositories/#{(repo_id + '/') if repo_id}"
         end
 
-        # :id, :name, :arch, :groupid, :feed
-        def create attrs
-          body = put(Repository.repository_path, JSON.generate(attrs), self.default_headers).body
+
+        # {:id, :display_name},  importer_id, {:feed_url, }
+        def create attrs, importer_id=nil, importer_attrs={}, distributors=[]
+          attrs.merge!({:importer_type_id=>importer_id, :importer_config=>importer_attrs}) if importer_id
+          attrs.merge!({:distributors=>distributors}) if !distributors.empty?
+          body = post(Repository.repository_path, JSON.generate(attrs), self.default_headers).body
           JSON.parse(body).with_indifferent_access
         end
+
 
         # :id, :name, :arch, :groupid, :feed
         def update repo_id, attrs
@@ -232,13 +236,40 @@ module Resources
           find repo_id
         end
 
+        def schedule_path repo_id, schedule_id=nil
+          Repository.repository_path(repo_id) +
+              "importers/yum_importer/sync_schedules/#{(schedule_id + '/') if schedule_id}"
+        end
+
+        def schedules(repo_id)
+          body = get(Repository.schedule_path(repo_id), self.default_headers)
+          JSON.parse(body)
+        end
+
+        def create_or_update_schedule(repo_id, schedule)
+          schedules = Repository.schedules(repo_id)
+          if schedules.empty?
+            Repository.create_schedule(repo_id, schedule)
+          else
+            #just update the 1st since we only support 1
+            Repository.update_schedule(repo_id, schedules[0]['id'], schedule)
+          end
+        end
+
+        def create_schedule(repo_id, schedule)
+          body = post(Repository.schedule_path(repo_id), JSON.generate(:schedule => schedule), self.default_headers).body
+        end
+
         # specific call to just update the sync schedule for a repo
-        def update_schedule(repo_id, schedule)
-          body = put(Repository.repository_path + repo_id +"/schedules/sync/", JSON.generate(:schedule => schedule), self.default_headers).body
+        def update_schedule(repo_id, schedule_id, schedule)
+          body = put(Repository.schedule_path(repo_id, schedule_id), JSON.generate(:schedule => schedule), self.default_headers).body
         end
 
         def delete_schedule(repo_id)
-          body = self.delete(Repository.repository_path + repo_id +"/schedules/sync/", self.default_headers).body
+          schedules = Repository.schedules(repo_id)
+          if !schedules.empty?
+            body = self.delete(Repository.schedule_path(repo_id) +"/importers/yum_importer/sync_schedules/", self.default_headers).body
+          end
         end
 
         def add_packages repo_id, pkg_id_list
@@ -251,11 +282,6 @@ module Resources
 
         def add_distribution repo_id, distribution_id
           body = post(Repository.repository_path + repo_id +"/add_distribution/", {:distributionid=>distribution_id}.to_json, self.default_headers).body
-        end
-
-        def destroy repo_id # TODO remove this unreachable method, it's overridden few lines below
-          raise ArgumentError, "repo id has to be specified" unless repo_id
-          self.delete(repository_path  + repo_id + "/", self.default_headers).code.to_i
         end
 
         def sync (repo_id, data = {})
@@ -292,7 +318,14 @@ module Resources
         end
 
         def packages repo_id
-          response = get(repository_path  + repo_id + "/packages/", self.default_headers)
+          data = { :query => {
+                    :type_ids=>['rpms'],
+                    :sort => {
+                        :unit => [ ['name', 'ascending'], ['version', 'descending'] ]
+                    }
+                   }
+                  }
+          response = post(repository_path(repo_id) + 'search/units/', JSON.generate(data), self.default_headers)
           body = response.body
           JSON.parse(body)
         end
@@ -315,8 +348,14 @@ module Resources
         end
 
         def errata(repo_id, filter = {})
-          path = "#{repository_path}#{repo_id}/errata/?#{filter.to_param}"
-          response = get(path, self.default_headers)
+          data = { :query => {
+                    :type_ids=>['errata'],
+                    :sort => {
+                        :unit => [ ['id', 'ascending'] ]
+                    }
+                   }
+                  }
+          response = post(repository_path(repo_id) + 'search/units/', JSON.generate(data), self.default_headers)
           body = response.body
           JSON.parse(body)
         end
