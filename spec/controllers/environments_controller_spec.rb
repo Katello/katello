@@ -135,22 +135,22 @@ describe EnvironmentsController do
 
         it "should create new environment" do
           KTEnvironment.should_receive(:new).with({:name => 'production',
-                :organization_id => @org.id, :prior => @org.library, :description => nil}).and_return(@new_env)
-          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.library
+                :prior => @org.library, :description => nil, :organization_id => @org.id}).and_return(@new_env)
+          post :create, :organization_id => @org.cp_key, :kt_environment => {:name => 'production', :prior => @org.library}
         end
 
         it "should save new environment" do
           @new_env.should_receive(:save!).and_return(true)
-          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.library
+          post :create, :organization_id => @org.cp_key, :kt_environment => {:name => 'production', :prior => @org.library}
         end
 
         it "assigns a newly created environment as @environment" do
-          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.library
+          post :create, :organization_id => @org.cp_key, :kt_environment => {:name => 'production', :prior => @org.library}
           assigns(:environment).should_not be_nil
         end
 
         it "redirects to the created environment" do
-          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.library
+          post :create, :organization_id => @org.cp_key, :kt_environment => {:name => 'production', :prior => @org.library}
           env = assigns(:environment)
           response.should be_success
         end
@@ -164,8 +164,8 @@ describe EnvironmentsController do
       end
         it_should_behave_like "bad request"  do
           let(:req) do
-            bad_req = {:organization_id => @organization.cp_key, :name => 'production', :prior => @organization.library}
-            bad_req[:bad_foo] = "mwahaha"
+            bad_req = {:organization_id => @organization.cp_key, :kt_environment => {:name => 'production', :prior => @organization.library}}
+            bad_req[:kt_environment][:bad_foo] = "mwahaha"
             post :create, bad_req
           end
         end

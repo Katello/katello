@@ -101,7 +101,8 @@ class ChangesetsController < ApplicationController
   end
 
   def create
-    @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
+    @changeset = Changeset.create!(:name=>params[:changeset][:name],
+                                   :description => params[:changeset][:description],
                                    :environment_id=>@environment.id)
     notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
     bc = {}

@@ -78,7 +78,7 @@ class SystemsController < ApplicationController
   def param_rules
     update_check = lambda do
       if params[:system]
-        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel] }
+        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel, :environment_id] }
         check_hash_params(sys_rules, params)
       else
         check_array_params([:id], params)
@@ -114,9 +114,8 @@ class SystemsController < ApplicationController
     @system.cp_type = "system"
     @system.environment = KTEnvironment.find(params["system"]["environment_id"])
     #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
-    saved = @system.save!
     #find the newly created system
-    if saved
+    if @system.save!
       notify.success _("System '%s' was created.") % @system['name']
 
       if search_validate(System, @system.id, params[:search])
@@ -269,14 +268,20 @@ class SystemsController < ApplicationController
   end
 
   def edit
-    releases = @system.available_releases
-  rescue => e
-    # Don't pepper user with notices if there is an error fetching release
-    # versions, but do log them
-    Rails.logger.error e.to_str
-    releases = []
-  ensure
-    render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?, :releases=>releases, :name=>controller_display_name}
+    begin
+      releases = @system.available_releases
+    rescue => e
+      # Don't pepper user with notices if there is an error fetching release
+      # versions, but do log them
+      Rails.logger.error e.to_str
+      releases ||= []
+    end
+
+    render :partial => "edit", :layout => "tupane_layout",
+           :locals => { :system       => @system, :editable => @system.editable?,
+                        :releases     => releases, :name => controller_display_name,
+                        :environments =>
+                            environment_paths(library_path_element, environment_path_element("systems_readable?")) }
   end
 
   def update

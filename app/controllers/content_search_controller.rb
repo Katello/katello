@@ -36,18 +36,7 @@ class ContentSearchController < ApplicationController
   end
 
   def index
-    render :index, :locals=>{:environments=>my_environments}
-  end
-
-  def my_environments
-    paths = current_organization.promotion_paths
-    library = {:id=>current_organization.library.id, :name=>current_organization.library.name, :select=>current_organization.library.contents_readable?}
-    to_ret = []
-    paths.each do |path|
-      path = path.collect{|e| {:id=>e.id, :name=>e.name, :select=>e.contents_readable?} }
-      to_ret << [library] + path if path.any?{|e| e[:select]}
-    end
-    to_ret
+    render :index, :locals=>{:environments=>environment_paths(library_path_element("contents_readable?"), environment_path_element("contents_readable?"))}
   end
 
   def products
@@ -79,7 +68,7 @@ class ContentSearchController < ApplicationController
     elsif !product_ids.empty? #products were autocompleted
         repos = []
         Product.readable(current_organization).where(:id=>product_ids).each do |p|
-          repos = repos + Repository.enabled.libraries_content_readable(current_organization).product(p)
+          repos = repos + Repository.enabled.libraries_content_readable(current_organization).in_product(p)
         end
     else #get all
         repos = Repository.enabled.libraries_content_readable(current_organization)
@@ -148,7 +137,8 @@ class ContentSearchController < ApplicationController
     offset = params[:offset] || 0
     packages = Glue::Pulp::Package.search('', offset, current_user.page_size, [@repo.pulp_id])
     rows = packages.collect do |pack|
-      {:name => pack.nvrea, :id => pack.id, :cols => {:description => {:display => pack.description}}}
+      {:name => display = package_display(pack),
+        :id => pack.id, :cols => {:description => {:display => pack.description}}}
     end
 
     if packages.total > current_user.page_size
@@ -203,7 +193,7 @@ class ContentSearchController < ApplicationController
       end
 
       if is_package
-        name = pack.nvrea
+        name = package_display(pack)
       else
         name = errata_display(pack)
       end
@@ -211,9 +201,22 @@ class ContentSearchController < ApplicationController
     end
 
     cols = {}
-    @repos.each{|r| cols[r.id] = {:id=>r.id, :name=>r.name}}
+    sort_repos(@repos).each{|r| cols[r.id] = {:id=>r.id, :content => repo_compare_name_display(r)}}
     rows += [metadata_row(packages.total, offset.to_i + rows.length, {:repos=>params[:repos]}, 'compare')] if packages.total > current_user.page_size
-    render :json => {:rows=>rows, :cols=>cols}
+    render :json => {:rows=>rows, :cols=>cols, :name=>_("Repository Comparison")}
+  end
+
+  #take in a set of repos and sort based on environment
+  def sort_repos repos
+    env_to_repo = {}
+    repos.each do |r|
+      env_to_repo[r.environment.id] ||= []
+      env_to_repo[r.environment.id] << r
+    end
+    envs = [current_organization.library] + current_organization.promotion_paths.flatten
+    to_ret = []
+    envs.each{|e|  to_ret += (env_to_repo[e.id] || [])}
+    to_ret
   end
 
 
@@ -411,12 +414,12 @@ class ContentSearchController < ApplicationController
     to_ret = {}
     content_attribute = content_type.to_sym == :package ? 'nvrea' : 'id'
     content_class = content_type.to_sym == :package ? Glue::Pulp::Package : Glue::Pulp::Errata
-    content = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode).results
+    content = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode)
 
     return nil if content.total == 0
 
     spanning_repos.each do |repo|
-      results = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode,repo).results
+      results = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode,repo)
       to_ret[repo.environment_id] = {:id=>repo.environment_id, :display=>results.total} if accessible_env_ids.include?(repo.environment_id)
     end
 
@@ -456,7 +459,9 @@ class ContentSearchController < ApplicationController
     end
     repoids = repos.collect{|r| r.pulp_id}
     Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
-    search.perform
+    search.perform.results
+  rescue Tire::Search::SearchRequestFailed => e
+    Support.array_with_total
   end
 
 
@@ -471,21 +476,21 @@ class ContentSearchController < ApplicationController
     env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
     to_ret = [] 
     for item in content_list:
-        if id_prefix == 'package'
-            display = item.nvrea
-        else
-            display = errata_display(item)
+      if id_prefix == 'package'
+        display = package_display(item)
+      else
+        display = errata_display(item)
+      end
+      row = {:id=>"repo_#{parent_repo.id}_#{id_prefix}_#{item.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{},
+             :name=>display}
+      spanned_repos.each do |repo|
+        if item.repoids.include? repo.pulp_id
+            row[:cols][repo.environment_id] = {:id=>repo.environment_id} if env_ids.include?(repo.environment_id)
         end
-        row = {:id=>"repo_#{parent_repo.id}_#{id_prefix}_#{item.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{},
-               :name=>display}
-        spanned_repos.each do |repo|
-          if item.repoids.include? repo.pulp_id
-              row[:cols][repo.environment_id] = {:id=>repo.environment_id} if env_ids.include?(repo.environment_id)
-          end
-        end 
-        to_ret << row
-     end
-     to_ret
+      end 
+      to_ret << row
+    end
+    to_ret
   end 
 
 end

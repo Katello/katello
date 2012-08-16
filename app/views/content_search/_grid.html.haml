@@ -15,6 +15,22 @@
         %label
           = _("View")
         %select
+        %i.view_tipsy.details_icon_grey
+          %span.hidden-text.hidden
+            .la.content-tipsy
+              %ul
+                %li
+                  =_('All:')
+                  .example
+                    = _("Show all results regardless of which columns they exist in.")
+                %li
+                  =_('Union:')
+                  .example
+                    = _("Show only results that exist in all selected columns.")
+                %li
+                  =_('Difference (Intersection):')
+                  .example
+                    = _("Show only results that do not exist in all selected columns.")
     %div
       %aside
         -#"Filter goes here"
@@ -22,11 +38,12 @@
         .slide_arrow.hidden{ 'data-arrow_direction' => 'left' }
           .slide_trigger
           %span.left_arrow-icon-black.disabled
+        #more_columns_fade.hidden
         .slide_arrow.hidden{ 'data-arrow_direction' => 'right' }
           .slide_trigger
           %span.right_arrow-icon-black
         #column_selector
-          %span.path_button.add_env-icon-black
+          %span.path_button.selector_icon-black
         #column_headers_window
           %ul#column_headers
   %section
@@ -34,10 +51,10 @@
     #grid_content_window
       #grid_content
     #grid_loading_screen.hidden
-      .large_white_spinner
+      .large_spinner
   %footer
     %div.fl
     %ul.fl
       %li
-        %a.button#compare_repos_btn.hidden
-          = _("Compare Repos")
+        %a.button#compare_repos_btn.hidden{ :title => _("Select a set of repositories that you wish to compare the contents of by clicking the checkboxes inside the cells.") }
+          = _("Compare Repositories")
