@@ -266,12 +266,16 @@ class Repository < ActiveRecord::Base
     Repository.where("library_instance_id=%s or id=%s"  % [repo.id, repo.id] )
   end
 
-  #ideally this would be an attribute like package_count
+
   def errata_count
     results = Glue::Pulp::Errata.search('', 0, 1, :repoids => [self.pulp_id])
     results.empty? ? 0 : results.total
   end
 
+  def package_count
+    results = Glue::Pulp::Package.search('', 0, 1, :repoids => [self.pulp_id])
+    results.empty? ? 0 : results.total
+  end
 
   private
 
