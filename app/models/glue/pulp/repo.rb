@@ -357,7 +357,7 @@ module Glue::Pulp::Repo
     end
 
     if schedule
-        Resources::Pulp::Repository.update_schedule(self.pulp_id, schedule)
+        Resources::Pulp::Repository.create_or_update_schedule(self.pulp_id, schedule)
     else
         Resources::Pulp::Repository.delete_schedule(self.pulp_id)
     end
