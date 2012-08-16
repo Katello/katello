@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.1.3
+Version:        1.1.4
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -89,6 +89,9 @@ cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
 
 %changelog
+* Thu Aug 16 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.4-1
+- 828369 - katello.conf owned by katello:katello
+
 * Sat Aug 11 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.3-1
 - remove ssh pub keys (msuchy@redhat.com)
 - puppet - make sure we deploy previous certificate before generating new one
