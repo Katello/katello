@@ -27,6 +27,11 @@ Config.USER_DIR = os.path.join(getpwuid(os.getuid())[5], '.headpin')
 Config.USER = os.path.expanduser(os.path.join(Config.USER_DIR, Config.FILE))
 Config.USER_OPTIONS = os.path.expanduser(os.path.join(Config.USER_DIR, 'client-options.conf'))
 
+
+from katello.client.i18n import configure_i18n
+configure_i18n()
+
+
 from katello.client.cli.admin import AdminCLI
 from katello.client.shell import KatelloShell
 from katello.client.core import (

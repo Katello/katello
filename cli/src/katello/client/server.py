@@ -17,7 +17,6 @@ import base64
 import kerberos
 from kerberos import GSSError
 import httplib
-import locale
 import os
 import urllib
 import mimetypes
@@ -252,7 +251,7 @@ class KatelloServer(Server):
     """
 
     #---------------------------------------------------------------------------
-    def __init__(self, host, port=443, protocol='https', path_prefix='/katello/api'):
+    def __init__(self, host, port=443, protocol='https', path_prefix='/katello/api', accept_lang=None):
         super(KatelloServer, self).__init__(host, port, protocol, path_prefix)
 
         default_headers = {'Accept': 'application/json',
@@ -260,9 +259,7 @@ class KatelloServer(Server):
                            'User-Agent': 'katello-cli/0.1'}
         self.headers.update(default_headers)
 
-        default_locale = locale.getdefaultlocale()[0]
-        if default_locale:
-            accept_lang = default_locale.lower().replace('_', '-')
+        if accept_lang:
             self.headers.update( { 'Accept-Language': accept_lang } )
 
         self._log = getLogger('katello')
