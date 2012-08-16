@@ -16,6 +16,7 @@ class Api::StatusController < Api::ApiController
   skip_before_filter :require_user
   skip_before_filter :authorize # ok - authenticated users are able to call this
 
+  api :GET, "/status/memory", "Counts objects in memory for debug purposes. Can take a while!"
   def memory
     User.as :admin do
       objs = Hash.new(0)

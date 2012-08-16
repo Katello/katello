@@ -1,1 +1,2 @@
-= render :partial=>"systems/list_system", :collection=>collection, :as=>:item, :locals=>{:accessor=>accessor, :columns=>columns, :name=>name}
+%div#system_list
+  = render :partial=>"systems/list_system", :collection=>collection, :as=>:item, :locals=>{:accessor=>accessor, :columns=>columns, :name=>name}
