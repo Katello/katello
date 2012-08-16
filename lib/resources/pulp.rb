@@ -199,11 +199,8 @@ module Resources
 
         # Get all the Repositories known by Pulp
         # currently filtering against only one groupid is supported in PULP
-        def all groupids=nil, search_params = {}
-
-          search_query = get_repo_search_query(groupids, search_params)
-
-          response = get(self.repository_path + search_query , self.default_headers)
+        def all
+          response = get(self.repository_path + "/?details=true" , self.default_headers)
           JSON.parse(response.body)
         rescue RestClient::ResourceNotFound => e
           raise e
