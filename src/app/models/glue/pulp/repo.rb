@@ -28,8 +28,7 @@ module Glue::Pulp::Repo
                         Resources::Pulp::Repository.find(pulp_id)
                       end
                     }
-      lazy_accessor :feed, :feed_cert, :feed_key, :feed_ca, :importers, :package_count,
-                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type, :uri,
+      lazy_accessor :feed, :feed_cert, :feed_key, :feed_ca, :importers, :distributors,
                 :initializer => lambda {
                   if pulp_id
                       pulp_repo_facts
@@ -49,6 +48,19 @@ module Glue::Pulp::Repo
         when :create
           pre_queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :clone_or_create_repo])
       end
+    end
+
+    def last_sync
+      self.importers.first['config']['last_sync'] if self.importers.first
+    end
+
+    def relative_path
+      return @relative_path if @relative_path
+      self.distributors.first['config']['relative_url'] if self.distributors.first
+    end
+
+    def relative_path=(path)
+      @relative_path = path
     end
 
     def initialize(attrs = nil)
