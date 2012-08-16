@@ -19,13 +19,9 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.0
+Version:       1.1.1
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
-
-# we need to keep RHEL compatibility
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 Requires:      %{base_name}-cli-common
 BuildArch:     noarch
 
@@ -64,7 +60,6 @@ sed -e 's/THE_VERSION/%{version}/g' katello-debug-certificates.pod |\
 popd
 
 %install
-rm -rf %{buildroot}
 install -d %{buildroot}%{_bindir}/
 install -d %{buildroot}%{_sysconfdir}/%{base_name}/
 install -d %{buildroot}%{python_sitelib}/%{base_name}
@@ -89,11 +84,6 @@ install -m 0644 man/%{base_name}-debug-certificates.man1 %{buildroot}%{_mandir}/
 # several scripts are executable
 chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 
-
-# we need to keep RHEL compatibility
-%clean
-rm -rf %{buildroot}
-
 %files 
 %attr(755,root,root) %{_bindir}/%{base_name}
 %attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
@@ -103,10 +93,21 @@ rm -rf %{buildroot}
 %{_mandir}/man1/%{base_name}-debug-certificates.1*
 
 %files common
+%{_sysconfdir}/%{base_name}
 %{python_sitelib}/%{base_name}/
 
 
 %changelog
+* Sat Aug 11 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
+- cli docs - removed version from config (tomas.str@gmail.com)
+- cli - Config inicialization moved to functions It was causing problems in
+  test when we tried to init it at include time. Unused Config inits were
+  removed. (tstrachota@redhat.com)
+- cli doc - added docs for cli generator (tstrachota@redhat.com)
+- cli doc - first version of sphinx documentation (tstrachota@redhat.com)
+- buildroot and %%clean section is not needed (msuchy@redhat.com)
+- Bumping package versions for 1.1. (msuchy@redhat.com)
+
 * Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
 - bump up version to 1.0 (msuchy@redhat.com)
 - update copyright years (msuchy@redhat.com)

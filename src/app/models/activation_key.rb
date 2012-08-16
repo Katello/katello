@@ -33,6 +33,7 @@ class ActivationKey < ActiveRecord::Base
   has_many :system_groups, :through => :key_system_groups
 
   has_many :system_activation_keys, :dependent => :restrict
+  has_many :systems, :through => :system_activation_keys
 
   scope :readable, lambda {|org| ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")}
 
@@ -139,6 +140,7 @@ class ActivationKey < ActiveRecord::Base
       raise _("Number of sockets must be higher than 0 for system %s") % system.name if allocate.nil? or allocate <= 0
       #puts products.inspect
       products.each do |productId, pools|
+        product = Product.find_by_cp_id(productId)
         # create two arrays - pool ids and remaining entitlements
         # subscription order is with most recent start or with the least pool number available
         pools_a = pools.to_a.sort { |a,b| (a[1][0] <=> b[1][0]).nonzero? || (a[0] <=> b[0]) }
@@ -146,8 +148,12 @@ class ActivationKey < ActiveRecord::Base
         pools_left = []
         pools_a.each { |p| pools_ids << p[0]; pools_left << p[1][1] }
 
-        # calculate consupmtion array (throws an error when there are not enough entitlements)
-        to_consume = calculate_consumption(allocate, pools_left)
+        if product.provider.redhat_provider?
+          # calculate consumption array (throws an error when there are not enough entitlements)
+          to_consume = calculate_consumption(allocate, pools_left)
+        else
+          to_consume = 1
+        end
         i = 0
         Rails.logger.debug "Autosubscribing pools: #{pools_ids.inspect} with amounts: #{to_consume.inspect}"
         pools_ids.each do |poolId|

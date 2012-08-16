@@ -315,6 +315,12 @@ KT.common = (function() {
                     box.fadeOut('fast');
                 }
             });
+            if ($('#switcherContainer').length >0){
+              $('#orgbox a').live('click', function(){
+                 $(document).mouseup();
+                 $('#switcherContainer').html('<div class="spinner" style="margin-top:3px"></div>');
+              });
+            }
         },
         orgBoxRefresh : function (){
           var orgbox = $('#orgbox');
@@ -376,6 +382,28 @@ KT.common = (function() {
                 i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
                 return ((i == 0) ? (bytes / Math.pow(1024, i)) : (bytes / Math.pow(1024, i)).toFixed(1)) + ' ' + sizes[i];
             }
+        },
+        icon_hover_change : function(element, shade){
+            var background_position,
+                icon = element.find('i[data-change_on_hover="' + shade + '"]'),
+                shade_position;
+
+            if( icon.length > 0 ){
+                background_position = icon.css('background-position');
+                background_position = background_position.split(" ");
+
+                shade_position = (background_position[1] === "0" || background_position[1] === "0px") ? ' -16px' : ' 0';
+                background_position = background_position[0] + shade_position;
+
+                icon.css({ 'background-position' : background_position });
+            }
+        },
+        link_hover_setup : function(shade){
+            $('a').live('mouseenter',
+                function(){ KT.common.icon_hover_change($(this), shade); }
+            ).live('mouseleave',
+                function(){ KT.common.icon_hover_change($(this), shade); }
+            );
         }
     };
 })();
@@ -407,25 +435,30 @@ var client_common = {
  * Document Ready function
  */
 $(document).ready(function (){
-	//Add a handler so that if any input has focus
-	//   our keyboard shortcuts don't steal it
-	$(":input").focus(function() {
-		onInputField = true;
-	}).blur(function() {
-		onInputField = false;
-	});
+    KT.common.link_hover_setup('dark');
 
-  //Add a handler for helptips
-  $(".helptip-open").live('click', KT.helptip.handle_close);
-  $(".helptip-close").live('click', KT.helptip.handle_open);
+    //Add a handler so that if any input has focus
+    //   our keyboard shortcuts don't steal it
+    $(":input").focus(function() {
+        onInputField = true;
+    }).blur(function() {
+        onInputField = false;
+    });
 
-  // Add a handler for ellipsis
-  $(".one-line-ellipsis").ellipsis(true);
-  $(".tipsify").tipsy({ live : true, gravity: 's', fade: true, delayIn : 350 });
-  $(".tipsify-west").tipsy({ gravity: 'w', hoverable : 'true' });
+    //Add a handler for helptips
+    $(".helptip-open").live('click', KT.helptip.handle_close);
+    $(".helptip-close").live('click', KT.helptip.handle_open);
 
-  KT.common.orgSwitcherSetup();
-  KT.common.orgFilterSetup();
+    // Add a handler for ellipsis
+    $(".one-line-ellipsis").ellipsis(true);
+    $(".tipsify").tipsy({ live : true, gravity: 's', fade: true, delayIn : 350 });
+    $(".tipsify-west").tipsy({ gravity: 'w', hoverable : 'true' });
+
+    KT.tipsy.custom.enable_forms_tooltips();
+
+    KT.common.orgSwitcherSetup();
+    KT.common.orgFilterSetup();
+
 });
 
 /**

@@ -36,6 +36,7 @@ describe UsersController do
 
     it "should create a user correctly" do
       name = "foo-user-1"
+      controller.should_receive(:search_validate).once.and_return(:true)
       post 'create', {:user => {:username=>name, :password=>"password1234", :email=>"#{name}@somewhere.com", :env_id => @environment.id}}
       response.should be_success
       User.where(:username=>name).should_not be_empty

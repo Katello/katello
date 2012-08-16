@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.0
+Version:        1.1.4
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -25,7 +25,6 @@ Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
 Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:        %{name}-common
 Requires:        %{name}-glue-pulp
@@ -76,6 +75,7 @@ Requires:       rubygem(chunky_png)
 Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
+Requires:       rubygem(apipie-rails)
 
 %if 0%{?rhel} == 6
 Requires:       redhat-logos >= 60.0.14
@@ -105,6 +105,35 @@ BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
 BuildRequires:  converge-ui-devel >= 0.8.3
+
+# we require this to be able to build api-docs
+BuildRequires:       rubygem(rails) >= 3.0.10
+BuildRequires:       rubygem(haml) >= 3.1.2
+BuildRequires:       rubygem(haml-rails)
+BuildRequires:       rubygem(json)
+BuildRequires:       rubygem(rest-client)
+BuildRequires:       rubygem(rails_warden)
+BuildRequires:       rubygem(net-ldap)
+BuildRequires:       rubygem(oauth)
+BuildRequires:       rubygem(i18n_data) >= 0.2.6
+BuildRequires:       rubygem(gettext_i18n_rails)
+BuildRequires:       rubygem(simple-navigation) >= 3.3.4
+BuildRequires:       rubygem(pg)
+BuildRequires:       rubygem(delayed_job) >= 2.1.4
+BuildRequires:       rubygem(acts_as_reportable) >= 1.1.1
+BuildRequires:       rubygem(pdf-writer) >= 1.1.8
+BuildRequires:       rubygem(ruport) >= 1.6.3
+BuildRequires:       rubygem(daemons) >= 1.1.4
+BuildRequires:       rubygem(uuidtools)
+BuildRequires:       rubygem(thin)
+BuildRequires:       rubygem(sass)
+BuildRequires:       rubygem(tire) >= 0.3.0
+BuildRequires:       rubygem(tire) < 0.4
+BuildRequires:       rubygem(ldap_fluff)
+BuildRequires:       rubygem(apipie-rails)
+BuildRequires:       rubygem(redcarpet)
+
+
 
 %description common
 Common bits for all Katello instances
@@ -180,6 +209,14 @@ This is the Katello-headpin meta-package.  If you want to install Headpin and al
 of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
 
+%package api-docs
+Summary:         Documentation files for katello API
+BuildArch:       noarch
+Requires:        %{name}-common
+
+%description api-docs
+Documentation files for katello API.
+
 %prep
 %setup -q
 
@@ -213,8 +250,13 @@ ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po
 #man pages
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
+#api docs
+rm -f Gemfile.lock
+echo Generating API docs
+rake apipie:static RAILS_ENV=apipie
+rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie
+
 %install
-rm -rf %{buildroot}
 #prepare dir structure
 install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
@@ -312,9 +354,6 @@ chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 # install man page
 install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 
-%clean
-rm -rf %{buildroot}
-
 %post common
 #Add /etc/rc*.d links for the script
 /sbin/chkconfig --add %{name}
@@ -333,7 +372,6 @@ fi
 %files
 %attr(600, katello, katello)
 %{_bindir}/katello-*
-%{_sbindir}/service-wait
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -356,6 +394,7 @@ fi
 %{homedir}/lib/tasks
 %{homedir}/locale
 %{homedir}/public
+%exclude %{homedir}/public/apipie-cache
 %{homedir}/script
 %{homedir}/spec
 %{homedir}/tmp
@@ -369,7 +408,8 @@ fi
 %{_mandir}/man8/katello-service.8*
 
 %files common
-%doc README LICENSE doc/
+%doc README LICENSE
+%{_sbindir}/service-wait
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
@@ -437,6 +477,7 @@ fi
 %{homedir}/lib/glue/queue.rb
 %{homedir}/locale
 %{homedir}/public
+%exclude %{homedir}/public/apipie-cache
 %{homedir}/script
 %{homedir}/spec
 %{homedir}/tmp
@@ -448,6 +489,10 @@ fi
 %{homedir}/Rakefile
 
 %files headpin-all
+
+%files api-docs
+%doc doc/apidoc*
+%{homedir}/public/apipie-cache
 
 %pre common
 # Add the "katello" user and group
@@ -465,6 +510,114 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Aug 07 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.4-1
+- 842858 - Fixes path issue to locked icon when viewing available changesets on
+  the promotion page. (ehelms@redhat.com)
+- Content search - make positioning more custom (jsherril@redhat.com)
+- 844678 - don't use multi-entitlements on custom products (inecas@redhat.com)
+- CS - fixing vert align on view tipsy (jsherril@redhat.com)
+- CS - fixing error on repo search with selected product (jsherril@redhat.com)
+- Correcting grammar on user notification for deleted environment / User. ->
+  self. (jomara@redhat.com)
+- fixing bad merge conflict resolution (jsherril@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- CS - fixing issue where select env before search threw error
+  (jsherril@redhat.com)
+- Committed the wrong converge ui hash or something, EHELMS (jomara@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- CS - making search button change text depending on context
+  (jsherril@redhat.com)
+- 840969 - making KT environment deletes ALSO remove the "default environment"
+  relationship to any applicable users. It also notifies the users when they
+  log in (jomara@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- 820634 - Katello String Updates (adprice@redhat.com)
+- 821929 - Typo: You -> Your (adprice@redhat.com)
+- CS - auto complete enhancements (jsherril@redhat.com)
+- CS - fixing repo compare title (jsherril@redhat.com)
+- CS - fixing caching not working properly (jsherril@redhat.com)
+- little test fix (adprice@redhat.com)
+- fixing broken tests due to commit 3bf7ccfbe0f6a82a8d7a7d3108ab9c1358ecb657
+  (adprice@redhat.com)
+- 803757 - Systems: Users should not be able to enter anything other than
+  positive integers for sockets (adprice@redhat.com)
+- 844458 - GET of unknown user returns 500 (pajkycz@gmail.com)
+- 842003 - fixing error on search when no errata existed (jsherril@redhat.com)
+- fixing old env selector issue caused by new path selector
+  (jsherril@redhat.com)
+- CS - Sort environments on repo comparison according to promotion path
+  (jsherril@redhat.com)
+- CS - adding tipsy for view selector and changing terminology
+  (jsherril@redhat.com)
+- Merge branch 'master' of github.com:Katello/katello into content-browser
+  (jsherril@redhat.com)
+- CS - Adding repo search help (jsherril@redhat.com)
+
+* Sat Aug 04 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.3-1
+- CS - Adds missing variablization of color. (ehelms@redhat.com)
+- CS - A number of minor updates. (ehelms@redhat.com)
+- Introduce +load_remote_data+ method to lazy_attributes (inecas@redhat.com)
+- New Role form rewritten (pajkycz@gmail.com)
+- adding test for commit 6ed001305416785dab12a94c99f11f93332a3a4a
+  (adprice@redhat.com)
+- 841984 - Creating new user displays confusing/misleading notification
+  (adprice@redhat.com)
+- CS - Adds removal of metadata row whenever all elements have been loaded.
+  (ehelms@redhat.com)
+- CS - Turn more colors into variables. Fixes issue with label appearing
+  uncentered.  Adds disabling and tooltip to compare repos button.
+  (ehelms@redhat.com)
+- Include css for activation_keys/system_groups. (pajkycz@gmail.com)
+- CS - Adds permission check for managing environments on environment selector.
+  Adds direct link to current organization if link is present.
+  (ehelms@redhat.com)
+- Check if systems/keys are readable by user. (pajkycz@gmail.com)
+- Move activation key to system events section (pajkycz@gmail.com)
+- CS - Addition of ellipsis names of column headers with regards to showing
+  both the repository name and environment name on repo compare.
+  (ehelms@redhat.com)
+- CS - Adds Manage Organizations link to the environment selector.
+  (ehelms@redhat.com)
+- CS - Moves the comparison grid JS into the widgets section.
+  (ehelms@redhat.com)
+- CS - Updates path selector footer to allow for arbitrary content.
+  (ehelms@redhat.com)
+- CS - Updates to the way package names are displayed. (ehelms@redhat.com)
+- CS - Updates for taller rows to accomodate larger repository names. Adds
+  tooltipping to ellipsied names. (ehelms@redhat.com)
+- CS - Fixes checkbox showing through env selector, remove auto complete icon
+  and button sliding under input box. (ehelms@redhat.com)
+- CS - Styling updates. (ehelms@redhat.com)
+- Fencing system groups from activation keys nav (pajkycz@gmail.com)
+- Activation key - show list of registered systems (pajkycz@gmail.com)
+
+* Thu Aug 02 2012 Tom McKay <thomasmckay@redhat.com> 1.1.2-1
+- Merge pull request #411 from thomasmckay/crosslink (thomasmckay@redhat.com)
+- Merge pull request #415 from Pajk/765989 (thomasmckay@redhat.com)
+- 765989 - Read Only account shows unused checkbox on System / Subscription
+  page (pajkycz@gmail.com)
+- crosslink - updated attribute for multi-entitlement pool
+  (thomasmckay@redhat.com)
+
+* Thu Aug 02 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
+- buildroot and %%clean section is not needed (msuchy@redhat.com)
+- 844796 - For async manifest import, there were double-render errors while the
+  progress was being checked from javascript. In addition, notices were not
+  being displayed after a very quick manifest import. (thomasmckay@redhat.com)
+- build katello-headpin and katello-headpin-all from the same src.rpm as
+  katello (msuchy@redhat.com)
+- rb19 - encoding fix turned off for 1.9 (lzap+git@redhat.com)
+- rb19 - removing exact versions from Gemfile (lzap+git@redhat.com)
+- rb19 - and one more UTF8 encoding fix (lzap+git@redhat.com)
+- puppet - better wait code for mongod (lzap+git@redhat.com)
+- Bumping package versions for 1.1. (msuchy@redhat.com)
+- puppet - moving lib/util into common subpackage (lzap+git@redhat.com)
+- crosslink - links from system and activation key subscriptions
+  (thomasmckay@redhat.com)
+
 * Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
 - bump up version to 1.0 (msuchy@redhat.com)
 

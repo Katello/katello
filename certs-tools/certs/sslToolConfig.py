@@ -27,14 +27,14 @@ import string
 
 ## local imports
 from fileutils import cleanupNormPath, rotateFile, rhn_popen, cleanupAbsPath
-from sslToolLib import getMachineName, daysTil18Jan2038, incSerial, fixSerial
+from sslToolLib import daysTil18Jan2038, incSerial, fixSerial
 
 
 # defaults where we can see them (NOTE: directory is figured at write time)
 CERT_PATH = '/usr/share/katello/certs'
 BUILD_DIR = cleanupNormPath('./ssl-build', dotYN=1)
 HOSTNAME = socket.gethostname()
-MACHINENAME = getMachineName(HOSTNAME)
+MACHINENAME = HOSTNAME
 
 CA_KEY_NAME = 'KATELLO-PRIVATE-SSL-KEY'
 CA_CRT_NAME = 'KATELLO-TRUSTED-SSL-CERT'
@@ -102,8 +102,6 @@ _defs = \
         '--server-cert-req' : 'server.csr',
         '--server-cert'     : 'server.crt',
 
-        '--jabberd-ssl-cert': 'server.pem',
-
         '--set-country'     : 'US',
         '--set-common-name' : "",       # these two will never appear
         '--set-hostname'    : HOSTNAME, # at the same time on the CLI
@@ -140,7 +138,6 @@ DEFS = _defsServer
 
 
 def reInitDEFS(caYN=0):
-    global DEFS
     if caYN:
         DEFS.update(_defsCa)
     else:
@@ -152,7 +149,6 @@ def figureDEFS_dirs(options):
         once).
     """
 
-    global DEFS
     ## fix up the --dir setting
     DEFS['--dir'] = getOption(options, 'dir') or DEFS['--dir'] or '.'
     DEFS['--dir'] = cleanupNormPath(DEFS['--dir'], dotYN=1)
@@ -163,7 +159,7 @@ def figureDEFS_dirs(options):
                                or socket.gethostname()
 
     global MACHINENAME
-    MACHINENAME = getMachineName(DEFS['--set-hostname'])
+    MACHINENAME = DEFS['--set-hostname']
 
     ## remap to options object
     setOption(options, 'dir', DEFS['--dir'])
@@ -175,7 +171,6 @@ def figureDEFS_CA(options):
         the CA key-pair(set) variables.
     """
 
-    global DEFS
     if not getOption(options, 'ca_key'):
         # the various default names for CA keys (a hierarchy)
         for possibility in (CA_KEY_NAME, 'ca.key', 'cakey.pem'):
@@ -225,7 +220,6 @@ def figureDEFS_server(options):
         the server key-pair(set) variables.
     """
 
-    global DEFS
     DEFS['--server-key'] = os.path.basename(getOption(options, 'server_key') \
                              or DEFS['--server-key'] or 'server.key')
     DEFS['--server-cert-req'] = \
@@ -266,7 +260,6 @@ def figureDEFS_distinguishing(options):
         First from config file, then from commanline.
     """
 
-    global DEFS
     #if options:
     #    print 'XXX options.__dict__.keys()', options.__dict__.keys()
     #print 'XXX figureDEFS_distinguishing()'
@@ -310,7 +303,8 @@ def figureDEFS_distinguishing(options):
         DEFS['--set-org-unit'] = getOption(options, 'set_org_unit')
     if getOption(options, 'set_common_name') is not None:
         DEFS['--set-common-name'] = getOption(options, 'set_common_name')
-    # NOTE: --set-hostname set in figureDEFS_dirs()
+    if getOption(options, 'set_hostname') is not None:
+        DEFS['--set-hostname'] = getOption(options, 'set_hostname')
     if getOption(options, 'set_email') is not None:
         DEFS['--set-email'] = getOption(options, 'set_email')
     DEFS['--set-cname'] = getOption(options, 'set_cname') # this is list

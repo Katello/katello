@@ -68,9 +68,9 @@ class katello::config {
 
     "/etc/httpd/conf.d/katello.conf":
       content => template("katello/etc/httpd/conf.d/katello.conf.erb"),
-      owner   => $katello::params::user,
-      group   => $katello::params::group,
-      mode    => "600",
+      owner   => "root",
+      group   => "root",
+      mode    => "644",
       notify  => Exec["reload-apache2"];
 
     "/etc/ldap_fluff.yml":
@@ -141,6 +141,21 @@ class katello::config {
     }
   }
 
+  exec {"katello_bundler_check":
+    cwd         => $katello::params::katello_dir,
+    user        => "root",
+    path        => "/sbin:/bin:/usr/bin",
+    environment => "RAILS_ENV=${katello::params::environment}",
+    command     => "bundle install --local > ${katello::params::bundler_log} 2>&1",
+    creates     => "${katello::params::bundler_log}",
+    before      => Class["katello::service"],
+    require     => $katello::params::deployment ? {
+        'katello' => [ Exec["katello_db_printenv"], File["${katello::params::log_base}"] ],
+        'headpin' => [ Exec["katello_db_printenv"], File["${katello::params::log_base}"] ],
+        default => [],
+    },
+  }
+
   exec {"katello_migrate_db":
     cwd         => $katello::params::katello_dir,
     user        => "root",
@@ -148,11 +163,7 @@ class katello::config {
     command     => "/usr/bin/env rake db:migrate --trace --verbose > ${katello::params::migrate_log} 2>&1 && touch /var/lib/katello/db_migrate_done",
     creates => "/var/lib/katello/db_migrate_done",
     before  => Class["katello::service"],
-    require => $katello::params::deployment ? {
-                'katello' => [ Exec["katello_db_printenv"], File["${katello::params::log_base}"] ],
-                'headpin' => [ Exec["katello_db_printenv"], File["${katello::params::log_base}"] ],
-                default => [],
-    },
+    require => [ Exec["katello_bundler_check"] ]
   }
 
   exec {"katello_seed_db":
