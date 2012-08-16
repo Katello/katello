@@ -11,7 +11,6 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-
 var promotion_page = (function($){
     var types =             ["errata", "product", "package", "repo", "template", "distribution"],
         subtypes =          ["errata", "package", "repo", "distribution"],
@@ -19,6 +18,7 @@ var promotion_page = (function($){
         changeset_data =    {},
         interval_id,
         current_changeset,
+        current_changeset_breadcrumb,  // e.g. promotion or deletion breadcrumb
         current_product,
         changeset_tree,
         content_tree,
@@ -45,8 +45,13 @@ var promotion_page = (function($){
         are_updates_complete = function() { //if there are no pending (and complete) updates, return true
             return changeset_queue.length === 0 && interval_id !== undefined;
         },
-        //Finds the add/remove buttons in the left pane
-        find_button = function(id, type) {
+        //  Finds the add/remove buttons currently active on the page (for both content and changeset trees).
+        //  In order to locate the buttons for a single tree, pass in the appropriate tree id (e.g. '#content_tree',
+        //  '#changeset_tree')
+        find_button = function(id, type, tree_id) {
+            if (tree_id) {
+                return $(tree_id).find("a[class~=content_add_remove][data-id=" + KT.common.escapeId(id) + "][data-type=" + type + "]");
+            }
             return $("a[class~=content_add_remove][data-id=" + KT.common.escapeId(id) + "][data-type=" + type + "]");
         },
         conflict = function(){
@@ -283,7 +288,9 @@ var promotion_page = (function($){
             }
 
             if (adding) {
-                button.html(i18n.remove).addClass("remove_" + type).removeClass('add_'+type);
+                button.html(i18n.undo).addClass("remove_" + type).removeClass('add_'+type);
+                button.prev('.added').removeClass('hidden').attr('original-title', i18n.added_to_changeset(changeset.getName()));
+
                 if( type !== 'product'){
                     if (type === "template") {
                       if (changeset.getTemplates()[id] === undefined) {
@@ -299,6 +306,8 @@ var promotion_page = (function($){
             }
             else {
                 button.html(i18n.add).addClass("add_" + type).removeClass('remove_' + type);
+                button.prev('.added').addClass('hidden').removeAttr('original-title');
+
                 changeset.remove_item(type, id, product_id);
                 if( type !== 'product' ){
                     if (type === "template") {
@@ -334,14 +343,30 @@ var promotion_page = (function($){
                 });
             });
         },
+        activate_changeset_tree = function(type) {
+            // unselect the currently selected tree
+            $('.sliding_tree_category.selected').removeClass('selected');
+
+            // update settings to switch to the requested changeset tree
+            if (type === 'promotion') {
+                $('.sliding_tree_category[data-cs_type="promotion"]').addClass('selected');
+                promotion_page.set_current_changeset_breadcrumb(promotion_changeset_breadcrumb);
+                promotion_page.get_changeset_tree().reset_tree(promotion_changeset_breadcrumb);
+
+            } else { // type === 'deletion'
+                $('.sliding_tree_category[data-cs_type="deletion"]').addClass('selected');
+                promotion_page.set_current_changeset_breadcrumb(deletion_changeset_breadcrumb);
+                promotion_page.get_changeset_tree().reset_tree(deletion_changeset_breadcrumb);
+            }
+        },
         init_changeset_list = function(){
             var changeset, id;
             sort_changeset();
             if( !current_changeset ){
-                for( id in changeset_breadcrumb ){
-                    if( changeset_breadcrumb.hasOwnProperty(id) ){
+                for( id in current_changeset_breadcrumb ){
+                    if( current_changeset_breadcrumb.hasOwnProperty(id) ){
                         if( id.split("_")[0] === "changeset" ){
-                            changeset = changeset_breadcrumb[id];
+                            changeset = current_changeset_breadcrumb[id];
                             if ( changeset.state === "failed") {
                                 changesetStatusActions.initProgressBar(id, changeset.progress, i18n.changeset_apply_failed);
                             }else if( !changeset.is_new && ( changeset.progress === null || changeset.progress === undefined ) ){
@@ -448,7 +473,6 @@ var promotion_page = (function($){
          */
         reset_page = function() {
             if (current_changeset && permissions.manage_changesets) {
-
                 if ( current_product ) {
                     var product = current_changeset.getProducts()[current_product];
                     if( product !== undefined && product.all !== undefined ){
@@ -457,9 +481,16 @@ var promotion_page = (function($){
                         $.each(subtypes, function(index, type){
                             var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
                             buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type); //reset all to 'add'
+                            buttons.prev('.added').addClass('hidden').removeAttr('original-title');
                             if (product) {
                                 $.each(product[type], function(index, item) {
-                                    $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + KT.common.escapeId(item.id + "") +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
+                                    var content_button = find_button(item.id + "", type, "#content_tree"),
+                                        changeset_button = find_button(item.id + "", type, "#changeset_tree");
+
+                                    content_button.html(i18n.undo).removeClass('add_' + type).addClass("remove_" + type);
+                                    content_button.prev('.added').removeClass('hidden').attr('original-title', i18n.added_to_changeset(current_changeset.getName()));
+
+                                    changeset_button.html(i18n.remove);
                                 });
                             }
                             if (current_changeset.type() === "deletion") {
@@ -477,11 +508,13 @@ var promotion_page = (function($){
                   var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
 
                   buttons.html(i18n.add).removeClass('remove_product').addClass("add_product").show(); //reset all to 'add'
+                  buttons.prev('.added').addClass('hidden').removeAttr('original-title');
                   $.each(current_changeset.getProducts(), function(index, product) {
                     $.each(buttons, function(button_index, button){
                       if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
                          if( product.all === true){
-                            $(button).html(i18n.remove).removeClass('add_product').addClass("remove_product").removeClass("disabled");
+                            $(button).html(i18n.undo).removeClass('add_product').addClass("remove_product").removeClass("disabled");
+                            $(button).prev('.added').removeClass('hidden').attr('original-title', i18n.added_to_changeset(current_changeset.getName()));
                          } else {
                             $(button).html('');
                          }
@@ -491,21 +524,25 @@ var promotion_page = (function($){
 
                  buttons = $('#list').find("a[class~=content_add_remove][data-type=template]");
                  buttons.html(i18n.add).removeClass('remove_template').addClass("add_template").show(); //reset all to 'add'
+                 buttons.prev('.added').addClass('hidden').removeAttr('original-title');
                   $.each(current_changeset.getTemplates(), function(index, template) {
                     $.each(buttons, function(button_index, button){
                       if( $(button).attr('id') === ('add_remove_template_' + template.id) ){ 
-                        $(button).html(i18n.remove).removeClass('add_template').addClass("remove_template").removeClass("disabled");
+                        $(button).html(i18n.undo).removeClass('add_template').addClass("remove_template").removeClass("disabled");
+                        $(button).prev('.added').removeClass('hidden').attr('original-title', i18n.added_to_changeset(current_changeset.getName()));
                       }
                     });
                   });
 
                  buttons = $('#list').find("a[class~=content_add_remove][data-type=errata]");
                  buttons.html(i18n.add).removeClass('remove_errata').addClass("add_errata").show(); //reset all to 'add'
+                 buttons.prev('.added').addClass('hidden').removeAttr('original-title');
                   $.each(current_changeset.getErrata(), function(index, erratum) {
                     $.each(buttons, function(button_index, button){
                       if( $(button).attr('id') === ('add_remove_errata_' + erratum.id) ){
                         if( KT.utils.intersection(erratum["product_ids"], $.parseJSON($(button).data("product_id"))).length === 0 ){
-                            $(button).html(i18n.remove).removeClass('add_errata').addClass("remove_errata").removeClass("disabled");
+                            $(button).html(i18n.undo).removeClass('add_errata').addClass("remove_errata").removeClass("disabled");
+                            $(button).prev('.added').removeClass('hidden').attr('original-title', i18n.added_to_changeset(current_changeset.getName()));
                         }
                       }
                     });
@@ -531,7 +568,15 @@ var promotion_page = (function($){
                     $('#review_changeset').addClass("disabled");
                 }
 
-                current_changeset.type() === "deletion" ? action_btn.find('span.text').html(i18n.action_delete) : action_btn.find('span.text').html(i18n.action_promote);
+                if (current_changeset.type() === "promotion") {
+                    action_btn.find('span.text').html(i18n.action_promote);
+                    action_btn.attr('original-title', i18n.apply_promotion_title);
+                    $('#delete_changeset').data('confirm-text', i18n.remove_promotion_changeset_confirm);
+                } else {
+                    action_btn.find('span.text').html(i18n.action_delete);
+                    action_btn.attr('original-title', i18n.apply_deletion_title);
+                    $('#delete_changeset').data('confirm-text', i18n.remove_deletion_changeset_confirm);
+                }
 
                 if (current_changeset.is_new() || current_changeset.state() === "failed") {
                     cancel_btn.hide();
@@ -541,6 +586,7 @@ var promotion_page = (function($){
                     $("#cslist").removeClass("locked");
                     $('#locked_icon').remove();
                     $('#review_changeset > span').html(i18n.review);
+                    $('#review_changeset').attr('original-title', i18n.review_title);
                     $('#promote_changeset').addClass("disabled");
                 }
                 else if( current_changeset.state() === "promoted" || current_changeset.state() === "promoting" ){
@@ -563,6 +609,7 @@ var promotion_page = (function($){
                     $(".content_add_remove").hide();
 
                     $('#review_changeset > span').html(i18n.cancel_review);
+                    $('#review_changeset').attr('original-title', i18n.cancel_review_title);
 
                     if (permissions.apply_changesets) {
                         $('#promote_changeset').removeClass("disabled");
@@ -581,8 +628,16 @@ var promotion_page = (function($){
 
                 cancel_btn.hide();
                 changesetEdit.close();
-                action_btn.find('span.text').html(i18n.action_promote);
 
+                if ($('.sliding_tree_category.selected').data('cs_type') === 'promotion') {
+                    action_btn.find('span.text').html(i18n.action_promote);
+                    action_btn.attr('original-title', i18n.apply_promotion_title);
+                    $('#delete_changeset').data('confirm-text', i18n.remove_promotion_changeset_confirm);
+                } else {
+                    action_btn.find('span.text').html(i18n.action_delete);
+                    action_btn.attr('original-title', i18n.apply_deletion_title);
+                    $('#delete_changeset').data('confirm-text', i18n.remove_deletion_changeset_confirm);
+                }
                 $("#sliding_tree_actionbar > div").addClass("disabled");
             }
 
@@ -597,6 +652,7 @@ var promotion_page = (function($){
             $.each(all_types, function(index, type){
                 var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
                 buttons.hide().html(i18n.add);
+                buttons.prev('.added').addClass('hidden').removeAttr('original-title');
             });        
         },
         checkUsersInResponse = function(users) {
@@ -611,7 +667,7 @@ var promotion_page = (function($){
         add_template_breadcrumbs = function(changeset_id, id, name){
           var changesetBC = "changeset_" + changeset_id;
           var templateBC = 'template-cs_' + changeset_id + '_' + id;
-          changeset_breadcrumb[templateBC] = {
+          current_changeset_breadcrumb[templateBC] = {
                 cache: null,
                 client_render: true,
                 name: name,
@@ -622,35 +678,35 @@ var promotion_page = (function($){
         add_product_breadcrumbs = function(changeset_id, product_id, product_name){
             var productBC = 'product-cs_' + changeset_id + '_' + product_id;
             var changesetBC = "changeset_" + changeset_id;
-            changeset_breadcrumb[productBC] = {
+            current_changeset_breadcrumb[productBC] = {
                 cache: null,
                 client_render: true,
                 name: product_name,
                 trail: ['changesets', changesetBC],
                 url: 'url'
             };
-            changeset_breadcrumb['package-cs_' + changeset_id + '_' + product_id] = {
+            current_changeset_breadcrumb['package-cs_' + changeset_id + '_' + product_id] = {
                 cache: null,
                 client_render: true,
                 name: "Packages",
                 trail: ['changesets', changesetBC, productBC],
                 url: ''
             };
-            changeset_breadcrumb['errata-cs_' + changeset_id + '_' + product_id] = {
+            current_changeset_breadcrumb['errata-cs_' + changeset_id + '_' + product_id] = {
                 cache: null,
                 client_render: true,
                 name: "Errata",
                 trail: ['changesets', changesetBC, productBC],
                 url: ''
             };
-            changeset_breadcrumb['repo-cs_' + changeset_id + '_' + product_id] = {
+            current_changeset_breadcrumb['repo-cs_' + changeset_id + '_' + product_id] = {
                 cache: null,
                 client_render: true,
                 name: "Repositories",
                 trail: ['changesets', changesetBC, productBC],
                 url: ''
             };
-            changeset_breadcrumb['distribution-cs_' + changeset_id + '_' + product_id] = {
+            current_changeset_breadcrumb['distribution-cs_' + changeset_id + '_' + product_id] = {
                 cache: null,
                 client_render: true,
                 name: "Distributions",
@@ -665,10 +721,10 @@ var promotion_page = (function($){
            $.each(current_changeset.getProducts(), function(product_id, product) {
                var hash = "deps-cs_" + current_changeset.id + "_" + product_id;
                
-               if (changeset_breadcrumb[hash] === undefined) {
+               if (current_changeset_breadcrumb[hash] === undefined) {
                 var productBC = 'product-cs_' + current_changeset.id + '_' + product_id;
                 var changesetBC = "changeset_" + current_changeset.id;
-                changeset_breadcrumb[hash] = {
+                current_changeset_breadcrumb[hash] = {
                     cache: null,
                     client_render: true,
                     name: "Dependencies",
@@ -678,17 +734,15 @@ var promotion_page = (function($){
                }
            });
            return true; 
-            //changeset_breadcrumb
+            //current_changeset_breadcrumb
         },
         remove_dependencies = function() {
             if (current_changeset === undefined) {
-    
                 return false;
             }
-    
-            $.each(changeset_breadcrumb, function(key, value) {
+            $.each(current_changeset_breadcrumb, function(key, value) {
                if (key.indexOf("deps-cs_") === 0) {
-                    delete changeset_breadcrumb[key];
+                   delete current_changeset_breadcrumb[key];
                }
             });
             return true;
@@ -696,6 +750,9 @@ var promotion_page = (function($){
         
     return {
         subtypes:               subtypes,
+        activate_changeset_tree: activate_changeset_tree,
+        get_current_changeset_breadcrumb: function(){return current_changeset_breadcrumb;},
+        set_current_changeset_breadcrumb: function(cb){current_changeset_breadcrumb = cb;},
         get_changeset_tree:     function(){return changeset_tree;},
         set_changeset_tree:     function(ct){changeset_tree = ct;},
         get_content_tree:       function(){return content_tree;},
@@ -759,7 +816,6 @@ var changeset_obj = function(data_struct) {
           });
         },
         dep_solve = function() {
-
             $.ajax({
                 type: "GET",
                 url: KT.common.rootURL() + "changesets/" + id + "/dependencies",
@@ -794,7 +850,7 @@ var changeset_obj = function(data_struct) {
         getName: function(){return name;},
         setName: function(newName){
             name = newName;
-            changeset_breadcrumb["changeset_" + id].name = newName;
+            promotion_page.get_current_changeset_breadcrumb()["changeset_" + id].name = newName;
         },
         getDescription: function(){return description;},
         setDescription: function(newDesc){description = newDesc;},
@@ -845,7 +901,7 @@ var changeset_obj = function(data_struct) {
             }
             if( products.hasOwnProperty(product_id) ){
                 $.each(products[product_id][type], function(index, item) {
-                    if(item.id === id){
+                    if((item.id + "") === id){
                         found = true;
                         return false;
                     }
@@ -872,7 +928,7 @@ var changeset_obj = function(data_struct) {
               delete templates[id];
             } else if (products[product_id] !== undefined) {
                 $.each(products[product_id][type], function(index,item) {
-                    if (item.id === id) {
+                    if ((item.id + "") === id) {
                         products[product_id][type].splice(index,1);
                         return false;//Exit out of the loop
                     }  
@@ -886,12 +942,12 @@ var changeset_obj = function(data_struct) {
             };
 
             change_state("review", success, on_error);
-            changeset_breadcrumb['changeset_' + id].is_new = false;
+            promotion_page.get_current_changeset_breadcrumb()['changeset_' + id].is_new = false;
             promotion_page.add_dependencies();
         },
         cancel_review: function(on_success, on_error) {
             change_state("new", on_success, on_error);
-            changeset_breadcrumb['changeset_' + id].is_new = true;
+            promotion_page.get_current_changeset_breadcrumb()['changeset_' + id].is_new = true;
         },
         promote: function(on_success, on_error, confirm) {
          var data = {},
@@ -926,9 +982,9 @@ var changeset_obj = function(data_struct) {
                     if (on_success) {
                         on_success();
                     }
-                    changeset_breadcrumb['changeset_' + id].is_new = true;
-                    changeset_breadcrumb['changeset_' + id].state = "new";
-                    changeset_breadcrumb['changeset_' + id].progress = 0;
+                    promotion_page.get_current_changeset_breadcrumb()['changeset_' + id].is_new = true;
+                    promotion_page.get_current_changeset_breadcrumb()['changeset_' + id].state = "new";
+                    promotion_page.get_current_changeset_breadcrumb()['changeset_' + id].progress = 0;
                     promotion_page.get_changeset_tree().render_content('changesets');
                     promotion_page.get_content_tree().render_content('content');
                 }
@@ -968,6 +1024,19 @@ var changeset_obj = function(data_struct) {
 
 //doc ready
 var registerEvents = function(){
+    $('.tipsify').tipsy({fade : true, gravity : 's', live : true, delayIn : 500, hoverable : true, delayOut : 50 });
+
+    $('.sliding_tree_category').live('click', function() {
+        // user clicked on a changeset category (promotion/deletion)
+        var selected = $(this);
+        if (selected.hasClass('selected')) {
+            // the user clicked changeset tree that is currently active; therefore, do nothing..
+            return;
+        }
+
+        promotion_page.activate_changeset_tree(selected.data('cs_type'));
+    });
+
     $('#save_changeset_button').live('click', function(){
         var button = $(this);
         if(button.hasClass("disabled")){return false;}
@@ -978,7 +1047,8 @@ var registerEvents = function(){
           data: $('#new_changeset').serialize(),
           cache: false,
           success: function(data){
-              $.extend(changeset_breadcrumb, data.breadcrumb);
+              promotion_page.activate_changeset_tree(data.changeset.type);
+              $.extend(promotion_page.get_current_changeset_breadcrumb(), data.breadcrumb);
               promotion_page.set_changeset(changeset_obj(data.changeset));
               promotion_page.get_changeset_tree().render_content('changeset_' + data.id);
               KT.panel.closePanel($('#panel'));
@@ -995,7 +1065,7 @@ var registerEvents = function(){
         }
         var id = promotion_page.get_changeset().id;
         KT.common.customConfirm({
-            message: button.attr('data-confirm-text'),
+            message: button.data('confirm-text'),
             yes_callback: function(){
                 button.addClass('disabled');
                 $.ajax({
@@ -1003,7 +1073,7 @@ var registerEvents = function(){
                     url: button.attr('data-url') + '/' + id,
                     cache: false,
                     success: function(data){
-                        delete changeset_breadcrumb['changeset_' + id];
+                        delete promotion_page.get_current_changeset_breadcrumb()['changeset_' + id];
                         promotion_page.set_changeset('changesets');
                         promotion_page.get_changeset_tree().render_content('changesets');
                     }
@@ -1107,6 +1177,7 @@ var changesetEdit = (function(){
 
         var after_function = undefined;
         if (opened) {
+            $('#edit_changeset').attr('original-title', i18n.close_edit_title);
             name_box.html(changeset.getName());
             edit_button.html(i18n.close_details);
             description.html(changeset.getDescription());
@@ -1115,6 +1186,7 @@ var changesetEdit = (function(){
             after_function = setup_edit;
         }
         else {
+            $('#edit_changeset').attr('original-title', i18n.edit_title);
             edit_button.html(i18n.edit_details);
             edit_button.parent().removeClass("highlighted");
         }
@@ -1129,55 +1201,56 @@ var changesetEdit = (function(){
         description = $('.edit_description');
         
         name_box.each(function() {
-                $(this).editable( url, {
-                    type        :  'text',
-                    width       :  270,
-                    method      :  'PUT',
-                    name        :  $(this).attr('name'),
-                    cancel      :  i18n.cancel,
-                    submit      :  i18n.save,
-                    indicator   :  i18n.saving,
-                    tooltip     :  i18n.clickToEdit,
-                    placeholder :  i18n.clickToEdit,
-                    
-                    submitdata  :  {authenticity_token: AUTH_TOKEN},
-                    onsuccess   :  function(data) {
-                          var parsed = $.parseJSON(data);
-                          changeset.setName(parsed.name);
-                          $('.edit_name_text').html(parsed.name);
-                          changeset.set_timestamp(parsed.timestamp);
-                          promotion_page.get_changeset_tree().rerender_breadcrumb();
-                    },
-                    onerror     :  function(settings, original, xhr) {
-                                     original.reset();
-                    }
-                });
+            $(this).editable('destroy');
+            $(this).editable( url, {
+                type        :  'text',
+                width       :  270,
+                method      :  'PUT',
+                name        :  $(this).attr('name'),
+                cancel      :  i18n.cancel,
+                submit      :  i18n.save,
+                indicator   :  i18n.saving,
+                tooltip     :  i18n.clickToEdit,
+                placeholder :  i18n.clickToEdit,
+                submitdata  :  {authenticity_token: AUTH_TOKEN},
+                onsuccess   :  function(data) {
+                    var parsed = $.parseJSON(data);
+                    changeset.setName(parsed.name);
+                    $('.edit_name_text').html(parsed.name);
+                    changeset.set_timestamp(parsed.timestamp);
+                    promotion_page.get_changeset_tree().rerender_breadcrumb();
+                },
+                onerror     :  function(settings, original, xhr) {
+                    original.reset();
+                }
             });
+        });
 
-           description.each(function() {
-                $(this).editable(url , {
-                    type        :  'textarea',
-                    method      :  'PUT',
-                    name        :  $(this).attr('name'),
-                    cancel      :  i18n.cancel,
-                    submit      :  i18n.save,
-                    indicator   :  i18n.saving,
-                    tooltip     :  i18n.clickToEdit,
-                    placeholder :  i18n.clickToEdit,
-                    submitdata  :  {authenticity_token: AUTH_TOKEN},
-                    rows        :  5,
-                    cols        :  30,
-                    onsuccess   :  function(data) {
-                          var parsed = $.parseJSON(data);
-                          $('.edit_description').html(parsed.description);
-                          changeset.setDescription(data.description);
-                          changeset.set_timestamp(parsed.timestamp);
-                    },
-                    onerror     :  function(settings, original, xhr) {
-                        original.reset();
-                    }
-                });
+        description.each(function() {
+            $(this).editable('destroy');
+            $(this).editable(url , {
+                type        :  'textarea',
+                method      :  'PUT',
+                name        :  $(this).attr('name'),
+                cancel      :  i18n.cancel,
+                submit      :  i18n.save,
+                indicator   :  i18n.saving,
+                tooltip     :  i18n.clickToEdit,
+                placeholder :  i18n.clickToEdit,
+                submitdata  :  {authenticity_token: AUTH_TOKEN},
+                rows        :  5,
+                cols        :  30,
+                onsuccess   :  function(data) {
+                    var parsed = $.parseJSON(data);
+                    $('.edit_description').html(parsed.description);
+                    changeset.setDescription(data.description);
+                    changeset.set_timestamp(parsed.timestamp);
+                },
+                onerror     :  function(settings, original, xhr) {
+                    original.reset();
+                }
             });
+        });
 
 
 
@@ -1200,7 +1273,7 @@ var promotionsRenderer = (function(){
             if( hash === 'changesets'){
                 var post_wait_function = function() {
                     promotion_page.set_changeset(undefined);
-                    render_cb(templateLibrary.changesetsList(changeset_breadcrumb));
+                    render_cb(templateLibrary.changesetsList(promotion_page.get_current_changeset_breadcrumb()));
                 };
                 //any pending updates, if so wait!
                 if (!promotion_page.are_updates_complete()) {
@@ -1363,7 +1436,8 @@ var templateLibrary = (function(){
             if ( showButton && permissions.manage_changesets){
                 anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"' + 'data-display_name="' + name +
                                  '" data-type="' + type + '" data-product_id="[' + product_id +  ']" data-id="' + id + '">';
-                            anchor += i18n.remove + "</a>";
+                anchor += i18n.remove + "</a>";
+
             }
             if(type === "repo" && isFiltered) {
                 filter_repo_class = '<span class="filter_warning_icon fl promotion_tipsify"' + " data-content_id=\"" +
@@ -1578,12 +1652,12 @@ var changesetStatusActions = (function($){
             changeset.find(".changeset_status label").text(i18n.changeset_apply_failed);
             changeset.attr('title', i18n.changeset_apply_failed);
 
-            changeset_breadcrumb[id].has_failed = true;
+            promotion_page.get_current_changeset_breadcrumb()[id].has_failed = true;
         },
         setLocked = function(id){
             var changeset = $('#' + id);
             changeset.css('margin-left', '0');
-            changeset.prepend('<img class="fl locked_icon" src="' + KT.common.rootURL() + '/images/icons/locked.png">');
+            changeset.prepend('<img class="fl locked_icon" src="' + KT.common.rootURL() + '/images/embed/icons/locked.png">');
             set_margins();
         },
         removeLocked = function(id){
@@ -1610,14 +1684,14 @@ var changesetStatusActions = (function($){
                 if (success === "notmodified") {
                   // received a 304 not modified...
                   var changeset_id = 'changeset_' + id;
-                  if (changeset_breadcrumb[changeset_id].has_failed === true) {
+                  if (promotion_page.get_current_changeset_breadcrumb()[changeset_id].has_failed === true) {
                       // attempting to promote this changeset previously failed..., so if the promotion progress
                       // remains 'not modified' that implies that it failed again...
                       failed(changeset_id);
                       updater.stop();
                   }
                 } else if ((data.progress === 100) || (data.state === 'promoted')){
-                    delete changeset_breadcrumb['changeset_' + id];
+                    delete promotion_page.get_current_changeset_breadcrumb()['changeset_' + id];
                     finish(data.id);
                     updater.stop();
                 } else if (data.state === 'failed') {
@@ -1671,8 +1745,21 @@ $(document).ready(function() {
 
     $(document).bind('search_complete.slidingtree', promotion_page.reset_page);
 
-    promotion_page.set_changeset_tree( sliding_tree("changeset_tree", { 
-                                        breadcrumb      :  changeset_breadcrumb,
+    // If the page is being loaded with 'changeset' hash (e.g. "#changeset=changeset_10") and
+    // the changeset is in the list of deletion changesets, then the page will load using the
+    // deletion changeset sliding tree; otherwise, the default is to use promotion changeset
+    // sliding tree.
+    var changeset_hash = $.deparam.fragment()["changeset"];
+    if (changeset_hash && changeset_hash != "changesets" &&
+        !$.isEmptyObject(deletion_changeset_breadcrumb[changeset_hash])) {
+        promotion_page.set_current_changeset_breadcrumb(deletion_changeset_breadcrumb);
+        $('.sliding_tree_category.selected').removeClass('selected');
+        $('.sliding_tree_category[data-cs_type="deletion"]').addClass('selected');
+    } else {
+        promotion_page.set_current_changeset_breadcrumb(promotion_changeset_breadcrumb);
+    }
+    promotion_page.set_changeset_tree( sliding_tree("changeset_tree", {
+                                        breadcrumb      :  promotion_page.get_current_changeset_breadcrumb(),
                                         default_tab     :  "changesets",
                                         bbq_tag         :  "changeset",
                                         base_icon       :  'home_img',
@@ -1683,7 +1770,6 @@ $(document).ready(function() {
                                           promotion_page.init_changeset_list();
                                         }
                                     }));
-
 
     $(window).trigger('hashchange');
 

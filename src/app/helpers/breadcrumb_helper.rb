@@ -25,17 +25,13 @@ module BreadcrumbHelper
 end
 
 module ChangesetBreadcrumbs
-  def generate_cs_breadcrumb
+  def generate_cs_breadcrumb changesets
     bc = {}
     add_crumb_node!(bc, "changesets", "", _("Changesets"), [], {:client_render => true})
 
-    @promotion_changesets.each{|cs|
+    changesets.each{|cs|
       process_cs cs, bc
-    } if @promotion_changesets
-
-    @deletion_changesets.each{|cs|
-      process_cs cs, bc
-    } if @deletion_changesets
+    } if changesets
 
     bc.to_json
   end
@@ -50,7 +46,7 @@ module ChangesetBreadcrumbs
         cs_info[:progress] =  0
       end
     end
-    add_crumb_node!(bc, changeset_bc_id(cs), "", changeset_title(cs), ['changesets'],
+    add_crumb_node!(bc, changeset_bc_id(cs), "", cs.name, ['changesets'],
                   {:client_render => true}, cs_info)
 
     cs.involved_products.each{|product|
@@ -77,10 +73,6 @@ module ChangesetBreadcrumbs
       add_crumb_node!(bc, distributions_cs_bc_id(cs, product), "",  _("Distributions"),
                       ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
     }
-  end
-
-  def changeset_title cs
-    cs.name + " (" + cs.action_type + ")"
   end
 
   def changeset_bc_id cs
