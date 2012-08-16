@@ -9,7 +9,10 @@ Apipie.configure do |config|
   config.doc_base_url = "/apidoc"
   config.use_cache = Rails.env.production?
   config.validate = false
-  config.markup = Apipie::Markup::Markdown.new
+
+  unless config.use_cache?
+    config.markup = Apipie::Markup::Markdown.new
+  end
 end
 
 # special type of validator: we say that it's not specified
