@@ -75,7 +75,7 @@ class DeletionChangeset < Changeset
 
     if notify
       message = _("Successfully deleted changeset '%s'.") % self.name
-      Notify.message message, :request_type => "changesets___delete"
+      Notify.success message, :request_type => "changesets___delete"
     end
 
   rescue Exception => e

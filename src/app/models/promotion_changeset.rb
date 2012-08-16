@@ -89,7 +89,7 @@ class PromotionChangeset < Changeset
 
     if notify
       message = _("Successfully promoted changeset '%s'.") % self.name
-      Notify.message message, :request_type => "changesets___promote"
+      Notify.success message, :request_type => "changesets___promote"
     end
 
   rescue Exception => e
