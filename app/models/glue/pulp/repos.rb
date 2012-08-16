@@ -27,12 +27,6 @@ module Glue::Pulp::Repos
     end
   end
 
-  def self.groupid(product, environment, content = nil)
-      groups = [self.product_groupid(product), self.env_groupid(environment), self.org_groupid(product.library.organization)]
-      groups << self.content_groupid(content) if content
-      groups
-  end
-
   def self.clone_repo_path(repo, environment, for_cp = false)
     org, env, content_path = repo.relative_path.split("/",3)
     if for_cp
@@ -70,14 +64,13 @@ module Glue::Pulp::Repos
   #   then sets the content_id in pulp for each repository that needs updating
   def refresh_content(repo)
     old_content = repo.content
-    old_content_repos = Resources::Pulp::Repository.all(Glue::Pulp::Repos.content_groupid(old_content))
-    remove_content_by_id(repo.content.id)
-    Resources::Candlepin::Content.destroy(repo.content.id)
+    old_content_repos = Repository.where(:content_id=>repo.content_id)
+    remove_content_by_id(repo.content_id)
+    Resources::Candlepin::Content.destroy(repo.content_id)
     new_content = create_content(repo)
     old_content_repos.each do |r|
-      Resources::Pulp::Repository.update(r['id'].to_s,
-                  :addgrp => Glue::Pulp::Repos.content_groupid(new_content),
-                  :rmgrp => Glue::Pulp::Repos.content_groupid(old_content))
+      r.content_id = new_content.id
+      r.save!
     end
   end
 
@@ -108,34 +101,9 @@ module Glue::Pulp::Repos
   end
 
 
-  def self.org_groupid(org)
-      "org:#{org.id}"
-  end
-
-  def self.env_groupid(environment)
-      "env:#{environment.id}"
-  end
-
-  def self.product_groupid(product)
-    if product.is_a? String
-      product_id = product
-    else
-      product_id = product.cp_id
-    end
-     "product:#{product_id}"
-  end
-
-  def self.content_groupid(content)
-    if content.is_a? String
-      content_id = content
-    else
-      content_id = content.id
-    end
-    "content:#{content_id}"
-  end
 
   def self.prepopulate! products, environment, repos=[]
-    items = Resources::Pulp::Repository.all(["env:#{environment.id}"])
+    items = Resources::Pulp::Repository.find_all(Repository.in_environment(environment).pluck(:pulp_id))
     full_repos = {}
     items.each {|item| full_repos[item["id"]] = item }
 
@@ -373,10 +341,10 @@ module Glue::Pulp::Repos
     end
 
     def add_repo(name, url, repo_type, gpg = nil)
+      #TODO use orchestration for this, what if pulp repo creation fails (need to delete content)
       check_for_repo_conflicts(name)
       key = EnvironmentProduct.find_or_create(self.organization.library, self)
-      repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
-          :groupid => Glue::Pulp::Repos.groupid(self, self.library),
+      repo = Repository.new(:environment_product => key, :pulp_id => repo_id(name),
           :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, name),
           :arch => arch,
           :name => name,
@@ -384,10 +352,11 @@ module Glue::Pulp::Repos
           :content_type => repo_type,
           :gpg_key => gpg
       )
+      repo.save! if !repo.valid? #force exception if not valid
       content = create_content(repo)
-      Resources::Pulp::Repository.update(repo.pulp_id, :addgrp => Glue::Pulp::Repos.content_groupid(content))
-      repo.update_attributes!(:cp_label => content.label)
-      repo
+      repo.cp_label = content.label
+      repo.content_id= content.id
+      repo.save!
     end
 
     def setup_sync_schedule
@@ -429,7 +398,6 @@ module Glue::Pulp::Repos
                                         :feed_cert => self.certificate,
                                         :feed_key => self.key,
                                         :content_type => pc.content.type,
-                                        :groupid => Glue::Pulp::Repos.groupid(self, self.library, pc.content),
                                         :preserve_metadata => true, #preserve repo metadata when importing from cp
                                         :enabled =>false
                                        )
