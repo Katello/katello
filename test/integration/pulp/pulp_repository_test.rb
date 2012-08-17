@@ -5,6 +5,7 @@ module TestPulpRepositoryBase
   def setup
     @resource = Resources::Pulp::Repository
     @repo_url = "http://lzap.fedorapeople.org/fakerepos/zoo5/"
+    #@repo_url = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("pulp", "fixtures/repositories/zoo5")
     @repo_name = "integration_test_repo"
     @task = {}
     VCR.insert_cassette('pulp_repository')
@@ -15,6 +16,7 @@ module TestPulpRepositoryBase
   end
 
   def create_repo
+    destroy_repo
     @resource.create(:id => @repo_name, :name=> @repo_name, :arch => 'noarch', :feed => @repo_url)
   end
 
@@ -126,6 +128,7 @@ class TestPulpRepository < MiniTest::Unit::TestCase
   end
 end
 
+
 class TestPulpRepositoryRequiresSync < MiniTest::Unit::TestCase
   include TestPulpRepositoryBase
 
@@ -171,7 +174,6 @@ class TestPulpRepositoryRequiresSync < MiniTest::Unit::TestCase
 
   def test_distributions
     response = @resource.distributions(@repo_name)
-    debugger
     assert response.length > 0
   end
 
@@ -180,6 +182,7 @@ class TestPulpRepositoryRequiresSync < MiniTest::Unit::TestCase
     assert response.length > 0
   end
 end
+
 
 class TestPulpRepositorySync < MiniTest::Unit::TestCase
   include TestPulpRepositoryBase
