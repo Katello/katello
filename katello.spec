@@ -251,10 +251,13 @@ ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
 #api docs
-rm -f Gemfile.lock
 echo Generating API docs
+rm -f Gemfile.lock
+cp Gemfile Gemfile.old
+echo 'gem "redcarpet"' >> Gemfile
 rake apipie:static RAILS_ENV=apipie
 rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie
+mv Gemfile.old Gemfile
 
 %install
 #prepare dir structure
