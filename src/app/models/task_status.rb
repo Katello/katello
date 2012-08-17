@@ -21,8 +21,8 @@ class TaskStatus < ActiveRecord::Base
   class Status
     WAITING = :waiting
     RUNNING = :running
-    ERROR = :error
-    FINISHED = :finished
+    ERROR = :failed
+    FINISHED = :success
     CANCELED = :canceled
     TIMED_OUT = :timed_out
   end

@@ -554,13 +554,14 @@ module Glue::Pulp::Repo
   protected
 
   def _get_most_recent_sync_status()
+    #debugger
     begin
       history = Resources::Pulp::Repository.sync_status(pulp_id)
 
       if history.nil? or history.empty?
         history = Resources::Pulp::Repository.sync_history(pulp_id)
       end
-    rescue
+    rescue Exception=>e
         history = Resources::Pulp::Repository.sync_history(pulp_id)
     end
 
