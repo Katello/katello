@@ -1,0 +1,3325 @@
+--- 
+recorded_with: VCR 2.2.4
+http_interactions: 
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/90415ef3-e7c9-11e1-83ff-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="npog8DQYtqKiKfYguP9PG34Occ62lVrXUX1l2OsE", oauth_signature="L%2FfWkTHoocJsYx4oAxH5J9Py%2F70%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345138882", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1472"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 17:41:22 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('30520ad1-dd3a-4041-bc79-7b6a54ad7e2c', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 544, in __installpackagegroups\\n    return pkgrps.install(grpids)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('30520ad1-dd3a-4041-bc79-7b6a54ad7e2c', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-16T13:41:09-04:00\", \"args\": [\"integration_test_consumer\", [\"mammals\"]], \"method_name\": \"__installpackagegroups\", \"finish_time\": \"2012-08-16T13:41:19-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"90415ef3-e7c9-11e1-83ff-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 17:41:22 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/b1854eb5-e7c9-11e1-9e01-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="HZiTJsDRMswq5g2wINIWU4ODxstuPs5MY7CZhIKr8A4", oauth_signature="QdL1wITDuedLoI8QecMZrUHlerg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345138935", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1484"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 17:42:15 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('f82122f6-1648-4cec-8a9a-fec5a38e555c', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 448, in __installpackages\\n    return packages.install(names, reboot)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('f82122f6-1648-4cec-8a9a-fec5a38e555c', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-16T13:42:05-04:00\", \"args\": [\"integration_test_consumer\", [\"walrus-5.21-1.noarch\"]], \"method_name\": \"__installpackages\", \"finish_time\": \"2012-08-16T13:42:15-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"b1854eb5-e7c9-11e1-9e01-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 17:42:15 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/e53144ba-e7c9-11e1-b0a3-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="m3MjuqB74O0QLTwUZGlZrudJ720FgubEUKSKrEX5ijo", oauth_signature="eZtCZMHks4I8btLMXhZGx5vo3cU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345139022", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1482"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 17:43:42 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('4e908a0b-b113-4c9a-9d09-3f6cca6e0ecc', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 480, in __uninstallpackages\\n    return packages.uninstall(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('4e908a0b-b113-4c9a-9d09-3f6cca6e0ecc', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-16T13:43:31-04:00\", \"args\": [\"integration_test_consumer\", [\"walrus-0.71-1.noarch\"]], \"method_name\": \"__uninstallpackages\", \"finish_time\": \"2012-08-16T13:43:41-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"e53144ba-e7c9-11e1-b0a3-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 17:43:42 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/repositories/integration_test_id/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="eyboNVVaWSCyKIXifdynXwCRXvsFwTtRCe1I2DP0", oauth_signature="Wi%2BSoeoilZgPZA206FkorwY2ZFI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345139451", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "1374"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 17:50:51 GMT
+    body: 
+      string: "{\"package_count\": 0, \"distributionid\": [], \"consumer_cert\": null, \"consumer_ca\": null, \"filters\": [], \"id\": \"integration_test_id\", \"preserve_metadata\": false, \"publish\": true, \"source\": {\"url\": \"file:////home/edhelms/workspace/katello/src/test/integration/pulp/helpers/../../fixtures/repositories/animals-repo\", \"type\": \"local\"}, \"groupid\": [], \"files\": \"/pulp/api/repositories/integration_test_id/files/\", \"relative_path\": \"integration_test_id\", \"sync_schedule\": null, \"arch\": \"noarch\", \"feed_cert\": null, \"name\": \"integration_test_id\", \"feed_ca\": null, \"notes\": {}, \"last_sync\": null, \"content_types\": \"yum\", \"clone_ids\": [], \"checksum_type\": \"sha256\", \"sync_options\": {}, \"_id\": \"integration_test_id\", \"packages\": \"/pulp/api/repositories/integration_test_id/packages/\", \"packagegroups\": \"/pulp/api/repositories/integration_test_id/packagegroups/\", \"packagegroupcategories\": \"/pulp/api/repositories/integration_test_id/packagegroupcategories/\", \"errata\": \"/pulp/api/repositories/integration_test_id/errata/\", \"distribution\": \"/pulp/api/repositories/integration_test_id/distribution/\", \"keys\": \"/pulp/api/repositories/integration_test_id/keys/\", \"comps\": \"/pulp/api/repositories/integration_test_id/comps/\", \"uri_ref\": \"/pulp/api/repositories/integration_test_id/\", \"uri\": \"https://localhost/pulp/repos/integration_test_id/\", \"files_count\": 49, \"next_scheduled_time\": null}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 17:50:51 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/repositories/integration_test_id/history/sync/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="Xuy3l5vBCWLSC7Eq3L3QD1BcyDdbewEVN3Ea8Lkahc", oauth_signature="JuknD988knGPQIXXR974ozwQS6Q%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142353", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "1262"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:39:14 GMT
+    body: 
+      string: "[{\"scheduled_time\": \"2012-08-16T18:38:09Z\", \"exception\": null, \"task_type\": \"RepoSyncTask\", \"job_id\": null, \"args\": [\"integration_test_id\"], \"class_name\": null, \"_ns\": \"task_history\", \"start_time\": \"2012-08-16T14:38:09-04:00\", \"traceback\": null, \"task_string\": \"Task 86dc4ac2-e7d1-11e1-b433-bc305bcab086: _sync(integration_test_id, synchronizer=<pulp.server.api.synchronizers.YumSynchronizer object at 0x7fefc4157d50>, skip={}, max_speed=None, threads=4, progress_callback=<bound method RepoSyncTask.progress_callback of <pulp.server.api.repo_sync_task.RepoSyncTask object at 0x7fefc4157e50>>)\", \"method_name\": \"_sync\", \"finish_time\": \"2012-08-16T14:38:12-04:00\", \"state\": \"finished\", \"result\": true, \"kwargs\": {\"skip\": {}, \"max_speed\": null, \"threads\": 4}, \"progress\": {\"status\": \"running\", \"num_success\": 32, \"size_total\": 78564, \"num_download\": 32, \"item_name\": \"\", \"items_left\": 0, \"items_total\": 32, \"item_type\": \"\", \"step\": \"Running Createrepo\", \"size_left\": 0, \"details\": {\"rpm\": {\"num_success\": 32, \"total_count\": 32, \"items_left\": 0, \"size_left\": 0, \"num_error\": 0, \"total_size_bytes\": 78564}}, \"error_details\": [], \"num_error\": 0}, \"_id\": \"6219621a-5e0c-4dc9-839b-572340dbea87\", \"consecutive_failures\": 0, \"id\": \"86dc4ac2-e7d1-11e1-b433-bc305bcab086\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:39:14 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/repositories/integration_test_id/history/sync/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="2E8l9qrmDpSPssCJFaq0HMOsPVPbo3MN32KsiNoOs", oauth_signature="NgTP1SjnM3TBG4aULPYbmWPtNh8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142359", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "1262"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:39:19 GMT
+    body: 
+      string: "[{\"scheduled_time\": \"2012-08-16T18:38:09Z\", \"exception\": null, \"task_type\": \"RepoSyncTask\", \"job_id\": null, \"args\": [\"integration_test_id\"], \"class_name\": null, \"_ns\": \"task_history\", \"start_time\": \"2012-08-16T14:38:09-04:00\", \"traceback\": null, \"task_string\": \"Task 86dc4ac2-e7d1-11e1-b433-bc305bcab086: _sync(integration_test_id, synchronizer=<pulp.server.api.synchronizers.YumSynchronizer object at 0x7fefc4157d50>, skip={}, max_speed=None, threads=4, progress_callback=<bound method RepoSyncTask.progress_callback of <pulp.server.api.repo_sync_task.RepoSyncTask object at 0x7fefc4157e50>>)\", \"method_name\": \"_sync\", \"finish_time\": \"2012-08-16T14:38:12-04:00\", \"state\": \"finished\", \"result\": true, \"kwargs\": {\"skip\": {}, \"max_speed\": null, \"threads\": 4}, \"progress\": {\"status\": \"running\", \"num_success\": 32, \"size_total\": 78564, \"num_download\": 32, \"item_name\": \"\", \"items_left\": 0, \"items_total\": 32, \"item_type\": \"\", \"step\": \"Running Createrepo\", \"size_left\": 0, \"details\": {\"rpm\": {\"num_success\": 32, \"total_count\": 32, \"items_left\": 0, \"size_left\": 0, \"num_error\": 0, \"total_size_bytes\": 78564}}, \"error_details\": [], \"num_error\": 0}, \"_id\": \"6219621a-5e0c-4dc9-839b-572340dbea87\", \"consecutive_failures\": 0, \"id\": \"86dc4ac2-e7d1-11e1-b433-bc305bcab086\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:39:19 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/errata/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="nlWyed4A0y0Odmy594Auf5NjR1SUA6FAT6KEmouno", oauth_signature="Cfz5jYg3yhp169S%2F6hTUsrTitTQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142496", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:41:36 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:41:36 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/errata/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="riIYjdPAFDJrWBsztE5k7xcf8kliJU5u4GSpnLhEg", oauth_signature="iIu2OeFHUndqsv%2BT938yWL6dovQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142497", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:41:37 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:41:37 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/errata/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="oTPBcKPoyTtG9cn83KrQrtFM1fU0VO3KlZL4Mdu4SP0", oauth_signature="HWj5y2iBRoOu1UiBL%2F4C1NeRqDI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142497", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:41:37 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:41:37 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/errata/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="HXkjBT1BsLqwUfENpz3fv3M6MdtRvFoVvsFMACjg3M", oauth_signature="l9uyZq%2BBLQSyklw2TwIcHESSbbs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142497", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:41:37 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:41:37 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/errata/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="KLhlvRtSSjttLhLhrnhJTCXIZ3JHLIa7MFUmmELkA", oauth_signature="wEc4xrNm%2BVn8s7GabVtq1zgwVCc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142498", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:41:38 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:41:38 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="4SZRf052khfyJfp4SNwrlC1BmpyQjoH5lKnlIx0", oauth_signature="Rt9F3pQ5C8nLYp6MQvCYoUitMno%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142518", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "85"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:41:58 GMT
+    body: 
+      string: "[{\"release\": \"1\", \"epoch\": 0, \"version\": \"0.71\", \"arch\": \"noarch\", \"name\": \"walrus\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:41:58 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="3u7Wu9YMWFkOAjRrtEHuhhI2SRtTcSuwtb0GJVaETo", oauth_signature="YuF27V4WKIbDMjJv8%2BVuspN2jeU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142519", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "85"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:41:59 GMT
+    body: 
+      string: "[{\"release\": \"1\", \"epoch\": 0, \"version\": \"0.71\", \"arch\": \"noarch\", \"name\": \"walrus\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:41:59 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="StVGTwg7qXiQAy3e3EMtMcQ3VuieLBQ1PNLpsAIBZmM", oauth_signature="oLPuk8JIs7n3rUvEkRm9qWb4%2FgM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142519", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "85"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:41:59 GMT
+    body: 
+      string: "[{\"release\": \"1\", \"epoch\": 0, \"version\": \"0.71\", \"arch\": \"noarch\", \"name\": \"walrus\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:41:59 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="UaFsw0G8IYGqGLcv3TL9fDVehbKhZIVhQfz3hOVbMI", oauth_signature="xl8riIeDeZ6%2FvPbhSgOU8xOSAwc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142525", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "85"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:42:05 GMT
+    body: 
+      string: "[{\"release\": \"1\", \"epoch\": 0, \"version\": \"0.71\", \"arch\": \"noarch\", \"name\": \"walrus\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:42:05 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="pnLz106oEqjVJSFiopVydKJeKKwRXgFqETFkZz6Ai8", oauth_signature="DznXr5FBColTVs1PiDCBAUU9zxw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142526", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "85"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:42:06 GMT
+    body: 
+      string: "[{\"release\": \"1\", \"epoch\": 0, \"version\": \"0.71\", \"arch\": \"noarch\", \"name\": \"walrus\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:42:06 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="kW3x3KIqdJsux1SDW16eQ8r5lhh2m5nmid5RTA8HxLA", oauth_signature="q1H%2BF4Aik3XYOsjfvZbmsFwkIPY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142527", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "85"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:42:07 GMT
+    body: 
+      string: "[{\"release\": \"1\", \"epoch\": 0, \"version\": \"0.71\", \"arch\": \"noarch\", \"name\": \"walrus\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:42:08 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="BhLkqd7NsJx0euLOwfObwMZrvwAeCRwVUlhzrmIo", oauth_signature="SaFEJvz961wOCYmIoUhXrtZBj28%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142529", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "85"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:42:09 GMT
+    body: 
+      string: "[{\"release\": \"1\", \"epoch\": 0, \"version\": \"0.71\", \"arch\": \"noarch\", \"name\": \"walrus\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:42:09 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="5RQs8nTWNH5To0c8v0SDMHoMyIXtKIhfqHhXJR2g", oauth_signature="JcIr3UMra7J6T9FlYmFejQQp6dU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142530", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "85"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:42:10 GMT
+    body: 
+      string: "[{\"release\": \"1\", \"epoch\": 0, \"version\": \"0.71\", \"arch\": \"noarch\", \"name\": \"walrus\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:42:11 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="qgDcMV0ToLKXYSW5yIcESeYNTjeuTV3H2HUehU4KP8", oauth_signature="eEZt1WQRGJ7rZLVwP7O9JnVTDSE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142532", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "85"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:42:12 GMT
+    body: 
+      string: "[{\"release\": \"1\", \"epoch\": 0, \"version\": \"0.71\", \"arch\": \"noarch\", \"name\": \"walrus\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:42:12 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="o7D19s1wU6fD4doBRIa0nZZd0WAyMNpXlfFTaI5dtw", oauth_signature="6IaMpD00G%2F3gpudkrvvkcdRI6gc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142610", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "85"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:43:30 GMT
+    body: 
+      string: "[{\"release\": \"1\", \"epoch\": 0, \"version\": \"0.71\", \"arch\": \"noarch\", \"name\": \"walrus\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:43:30 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="sSggFPfhPQT8TqqMXyPWQMnJLCUVNSXtthXAWOKYv4", oauth_signature="iXGtKNLLtiUr9Br4YtDdZbPVTis%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142612", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "85"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:43:32 GMT
+    body: 
+      string: "[{\"release\": \"1\", \"epoch\": 0, \"version\": \"0.71\", \"arch\": \"noarch\", \"name\": \"walrus\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:43:32 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/errata/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="IYyOTAXuB8e56zYcbBNMmo9MM9ja11iXFCMVG7PE5Y", oauth_signature="kkZq3eKP6uLYO6JOsArdQOa2GWQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142626", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:43:46 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:43:46 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/errata/RHEA-2012:0002/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="MPDNUJrJlDQdnglQ2DpHB34o0o3p2rCFlicOwy6wHY", oauth_signature="MK4zP4fljH0nDvGoHvyU1%2FDnkFU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142825", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "4"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:47:05 GMT
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:47:05 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/errata/RHEA-2012:0002/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="ietS0EfNA3Mu22oFrsg3BP0KdG7oSwt6Z8Bany3Oo", oauth_signature="lHAugDksLVA0p08RBoXC%2B0OD5ns%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142883", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "4"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:48:03 GMT
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:48:03 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/errata/RHEA-2012:0002/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="B71E0iaSP450YVJ0fk7slLAnZzz0GMtAP50FZ6YX1k", oauth_signature="fZxDcwKv3iHHaiw19Bm0TQphDdA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142904", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "4"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:48:24 GMT
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:48:24 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/repositories/integration_test_id/errata/?
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="L9Is20BDYE9Kby2nq07sB05oawWeuyhZ9GYnrdKCWw", oauth_signature="%2FJBE07RqGwLxINCQeIT2R3rFyzY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345142911", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:48:31 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:48:31 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/repositories/integration_test_id/errata/?
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="jMFeFguMKzd0HIeTMEbS7OWsHXpNNtqlOyz1m6Zg1UU", oauth_signature="fxS2TvDiR4CbNSGTpHTRKlHZtRs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345143023", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:50:23 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:50:23 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="mHipITBZJHLsKG4I230oRTmR730k0Bu8ukWepsDWU", oauth_signature="TCuZhUplq0pqkOACG4HHiqQuhbY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345143266", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "85"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:54:26 GMT
+    body: 
+      string: "[{\"release\": \"1\", \"epoch\": 0, \"version\": \"0.71\", \"arch\": \"noarch\", \"name\": \"walrus\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:54:26 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/04bd3ca6-e7d4-11e1-8899-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="18mUYEKoX3LSbA6sBXtMUxLw7sL7VYg5s0qkyT0", oauth_signature="z2e61waJIKcXItVhP0Gal86QwPA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345143371", oauth_version="1.0"
+      Content-Type: 
+      - application/x-www-form-urlencoded
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Thu, 16 Aug 2012 18:56:11 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('5825abd5-6db5-43b5-99b7-8a87f10c954f', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 576, in __uninstallpackagegroups\\n    return pkgrps.uninstall(grpids)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('5825abd5-6db5-43b5-99b7-8a87f10c954f', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-16T14:55:59-04:00\", \"args\": [\"integration_test_consumer\", [\"mammals\"]], \"method_name\": \"__uninstallpackagegroups\", \"finish_time\": \"2012-08-16T14:56:09-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"04bd3ca6-e7d4-11e1-8899-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:56:11 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/26945491-e7d4-11e1-a660-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="j6l8Xnpc7SehpPldnNzlhSrpeMu8DMyjcHwPfepLhGo", oauth_signature="Rcb%2B8X6Ujk%2Fwp9nX%2FJAA8JrmBNI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345143428", oauth_version="1.0"
+      Content-Type: 
+      - application/x-www-form-urlencoded
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1482"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:57:08 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('8cd5bb42-140e-48f7-8544-208f65e9ff68', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 480, in __uninstallpackages\\n    return packages.uninstall(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('8cd5bb42-140e-48f7-8544-208f65e9ff68', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-16T14:56:56-04:00\", \"args\": [\"integration_test_consumer\", [\"walrus-0.71-1.noarch\"]], \"method_name\": \"__uninstallpackages\", \"finish_time\": \"2012-08-16T14:57:06-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"26945491-e7d4-11e1-a660-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:57:08 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/60a0ed1c-e7d4-11e1-a2ce-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="UMGgMZhfj9i8gQJ8MTaKkXDgvZozJRpjLz8sotp6YCc", oauth_signature="6Nv%2FgQyhScg7OY%2FStm9CUmqviqk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345143524", oauth_version="1.0"
+      Content-Type: 
+      - application/x-www-form-urlencoded
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1473"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:58:44 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('4685b6d3-68bf-48d6-bd05-bafcfb353ac1', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 512, in __updatepackages\\n    return packages.update(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('4685b6d3-68bf-48d6-bd05-bafcfb353ac1', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-16T14:58:33-04:00\", \"args\": [\"integration_test_consumer\", [\"walrus-0.71-1.noarch\"]], \"method_name\": \"__updatepackages\", \"finish_time\": \"2012-08-16T14:58:43-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"60a0ed1c-e7d4-11e1-a2ce-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:58:44 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/errata/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="xoVXc6SbHewfYFmI766JMHvi2tQU3HazZyFyb6GwbM", oauth_signature="E1cVp00csmllHzBlvlsbsdpi4Ug%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345143568", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 18:59:28 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 18:59:28 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/errata/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="vby9pgkhMDTqUH9C7CcI6kISdeJg9drB2qSvDMn0cq8", oauth_signature="nIvjYmgzvrJvguTyLeTipkWi0MA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345145934", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "1031"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 19:38:54 GMT
+    body: 
+      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"repoids\": [\"ACME_Corporation-Zoo-Zoo5\", \"ACME_Corporation-Zoo-Zoo3\", \"ACME_Corporation-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo5\", \"ACME_Corporation-Dev-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo3\", \"ACME_Corporation-Test-Zoo-Zoo5\", \"ACME_Corporation-Test-Zoo-zoo4\", \"ACME_Corporation-Test-Zoo-Zoo3\", \"integration_test_repo\", \"integration_test_id\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2010:0002\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:38:54 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/installpackages/
+    body: 
+      string: "{\"packagenames\":[\"walrus-5.21-1.noarch\"]}"
+    headers: 
+      Content-Length: 
+      - "41"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="WEVvHFO5eNc8P9InhpUKPsjNTUPPFzY1vRYv4OUKvg", oauth_signature="7bseT53Ph1EW84NqxyvcHSGyo50%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345146232", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "393"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 19:43:52 GMT
+    body: 
+      string: "{\"scheduled_time\": \"2012-08-16T19:43:53Z\", \"exception\": null, \"traceback\": null, \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": null, \"args\": [\"integration_test_consumer\", [\"walrus-5.21-1.noarch\"]], \"method_name\": \"__installpackages\", \"finish_time\": null, \"state\": \"waiting\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"b56bef61-e7da-11e1-a0d6-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:43:53 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/b56bef61-e7da-11e1-a0d6-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="uVwkKe4EqMFUNtrinjCM9Irzl2Ujx9NtlyPgFDyR6o", oauth_signature="yDDNWK7MhvXXs5TqHATBRZj%2Fbe4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345146249", oauth_version="1.0"
+      Content-Type: 
+      - application/x-www-form-urlencoded
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1484"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 19:44:09 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('512f243f-da72-4f93-be7a-d0191cc45bac', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 448, in __installpackages\\n    return packages.install(names, reboot)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('512f243f-da72-4f93-be7a-d0191cc45bac', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-16T15:43:53-04:00\", \"args\": [\"integration_test_consumer\", [\"walrus-5.21-1.noarch\"]], \"method_name\": \"__installpackages\", \"finish_time\": \"2012-08-16T15:44:03-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"b56bef61-e7da-11e1-a0d6-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:44:09 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/errata/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="kSaxcip2YCWlzJFToyYu3BSi6z2mx6yUz3xDTwLdBYk", oauth_signature="wXQjZ47x0iudkzyNlsS2TadhFxg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345146429", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 19:47:09 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:47:09 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/429503ae-e7db-11e1-bdf2-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="NGydPgMgavW7oSyHuzxTpKH0VZUs7O8F4a1wonU0M", oauth_signature="nQZRNCKJ5VVSqRC9QrHbGiRdTcY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345146481", oauth_version="1.0"
+      Content-Type: 
+      - application/x-www-form-urlencoded
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Thu, 16 Aug 2012 19:48:01 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('aaea379b-0a00-470d-bc97-2b387051ac09', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 512, in __updatepackages\\n    return packages.update(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('aaea379b-0a00-470d-bc97-2b387051ac09', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-16T15:47:49-04:00\", \"args\": [\"integration_test_consumer\", [\"walrus-0.71-1.noarch\"]], \"method_name\": \"__updatepackages\", \"finish_time\": \"2012-08-16T15:47:59-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"429503ae-e7db-11e1-bdf2-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:48:01 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/applicable_errata_in_repos/?repoids=integration_test_id
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="QGB8sm6pFLzZGMQs4MpBlOs6WIG6VqcKEGgGe0PHs", oauth_signature="gw3s3HXR%2F9TxMvTiTHYTGzZFMeQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345146522", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 19:48:42 GMT
+    body: 
+      string: "{}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:48:42 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/7a63cce1-e7db-11e1-abb0-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="r3Iyxm1Cje0kHcu1PbYVpPjuARqPwGhfkBRyggpp8c", oauth_signature="MhOJOZxSyMPX%2FPrfhSXWNpiXpGk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345146574", oauth_version="1.0"
+      Content-Type: 
+      - application/x-www-form-urlencoded
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1482"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 19:49:34 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('e49531cb-eed0-441a-97ee-af6de715ae03', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 480, in __uninstallpackages\\n    return packages.uninstall(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('e49531cb-eed0-441a-97ee-af6de715ae03', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-16T15:49:23-04:00\", \"args\": [\"integration_test_consumer\", [\"walrus-0.71-1.noarch\"]], \"method_name\": \"__uninstallpackages\", \"finish_time\": \"2012-08-16T15:49:33-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"7a63cce1-e7db-11e1-abb0-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:49:34 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="kXgx9SNsR1RH8CgMfsdoYq2baZMOuQZt0QhYP9mBpWU", oauth_signature="5pg%2BcZyEbua%2BmMv6JPWgqgUsl5k%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345146826", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "88"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 19:53:46 GMT
+    body: 
+      string: "[{\"release\": \"0.7\", \"epoch\": 0, \"version\": \"0.2\", \"arch\": \"noarch\", \"name\": \"elephant\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:53:46 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/errata/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="KKNfI94HgIJ112a3sdPVjUDrH21r95F0eUykLlDfk", oauth_signature="ltBqIUHuWtZqPqfxr0rtMbSIdbw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345146884", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 19:54:44 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:54:44 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/updatepackages/
+    body: 
+      string: "{\"packagenames\":[\"elephant\"]}"
+    headers: 
+      Content-Length: 
+      - "29"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="BRnjTAmDIJDodViXMKQE5hQlyqKReLrmn7rwzLeKxAU", oauth_signature="Yr0zoEcpCF27KBi9dxCSnFyD4lU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345146938", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Thu, 16 Aug 2012 19:55:38 GMT
+    body: 
+      string: "{\"scheduled_time\": \"2012-08-16T19:55:38Z\", \"exception\": null, \"traceback\": null, \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": null, \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"method_name\": \"__updatepackages\", \"finish_time\": null, \"state\": \"waiting\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"5a1f750a-e7dc-11e1-a5f1-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:55:38 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/5a1f750a-e7dc-11e1-a5f1-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="EyaaY4PQNx8MKvKgPJK4JaJpcOadtAHmXpYKGkDU", oauth_signature="rHWrvbNDPlwnMic1wcLG9yUCrDU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345146952", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1461"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 19:55:52 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('2b61fc37-dc84-48e3-8eb1-8f8f70267955', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 512, in __updatepackages\\n    return packages.update(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('2b61fc37-dc84-48e3-8eb1-8f8f70267955', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-16T15:55:38-04:00\", \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"method_name\": \"__updatepackages\", \"finish_time\": \"2012-08-16T15:55:48-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"5a1f750a-e7dc-11e1-a5f1-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:55:52 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/applicable_errata_in_repos/?repoids=integration_test_id
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="GNZlzULvURZsWdvTR8i3Fu2wCYQKmAtlsuZa2RVYo", oauth_signature="ploI%2Ft1OSZJkRE1gnxgCCBa4kR4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345147095", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 19:58:15 GMT
+    body: 
+      string: "{}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:58:15 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/d1c09026-e7dc-11e1-b5f2-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="6ckXxgIy6qmX8av8GgomnBm4sPjhukPHFf8pY5jSWHU", oauth_signature="iFFAsBUI42PrTNhK14hkXKOwZYg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345147151", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1478"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 19:59:11 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('c75e5a8f-94c3-43da-ba00-41ad207db1fd', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 576, in __uninstallpackagegroups\\n    return pkgrps.uninstall(grpids)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('c75e5a8f-94c3-43da-ba00-41ad207db1fd', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-16T15:58:59-04:00\", \"args\": [\"integration_test_consumer\", [\"mammals\"]], \"method_name\": \"__uninstallpackagegroups\", \"finish_time\": \"2012-08-16T15:59:09-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"d1c09026-e7dc-11e1-b5f2-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 19:59:11 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/f3031182-e7dc-11e1-8feb-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="KK7oukfW8naua2c0aMQQZuWh49GdiMUUUutSTRO1oA", oauth_signature="NMkdEloGLsS1Zucb1KPFWYZmcnE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345147207", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1470"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 20:00:07 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('8ac8647d-a041-432e-8bb6-53f2ca5822f7', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 480, in __uninstallpackages\\n    return packages.uninstall(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('8ac8647d-a041-432e-8bb6-53f2ca5822f7', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-16T15:59:55-04:00\", \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"method_name\": \"__uninstallpackages\", \"finish_time\": \"2012-08-16T16:00:05-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"f3031182-e7dc-11e1-8feb-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 20:00:07 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="M0yks7IaxbyYeKcinoZCPBhEIFvAwjEzuVrLlgHIZ0", oauth_signature="sktHxDQJIMcQa4YjR1ai1gogwhM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345147513", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Thu, 16 Aug 2012 20:05:14 GMT
+    body: 
+      string: "[{\"release\": \"0.7\", \"epoch\": 0, \"version\": \"0.2\", \"arch\": \"noarch\", \"name\": \"elephant\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 20:05:14 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/errata/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="0DhnsSOQ21iofA8RYKny5YbAHOcwEqAeN3Qqr3Tvo", oauth_signature="iZnOe4Q5ETMOFjvqg2q01S39%2Fr0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345147626", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 20:07:06 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 20:07:06 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="xOUEePHmM1KDBqHL7pavP5pacezp34asHOC9FjU8", oauth_signature="0jbD5XNqgxwYebJiZabgltO79CI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345147832", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "88"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 20:10:32 GMT
+    body: 
+      string: "[{\"release\": \"0.7\", \"epoch\": 0, \"version\": \"0.2\", \"arch\": \"noarch\", \"name\": \"elephant\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 20:10:32 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/repositories/integration_test_id/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="vAtw1NL4xiDKJAtec40qudVhGCJ0hbXikMw0S3fl54", oauth_signature="raad%2FgoKTHITnN1QzSyCpG61NKA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345147866", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "1388"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 20:11:06 GMT
+    body: 
+      string: "{\"package_count\": 8, \"distributionid\": [], \"consumer_cert\": null, \"consumer_ca\": null, \"filters\": [], \"id\": \"integration_test_id\", \"preserve_metadata\": false, \"publish\": true, \"source\": {\"url\": \"file:///home/edhelms/workspace/katello/src/test/integration/pulp/helpers/../../fixtures/repositories/zoo5\", \"type\": \"local\"}, \"groupid\": [], \"files\": \"/pulp/api/repositories/integration_test_id/files/\", \"relative_path\": \"integration_test_id\", \"sync_schedule\": null, \"arch\": \"noarch\", \"feed_cert\": null, \"name\": \"integration_test_id\", \"feed_ca\": null, \"notes\": {}, \"last_sync\": \"2012-08-16T16:06:47-04:00\", \"content_types\": \"yum\", \"clone_ids\": [], \"checksum_type\": \"sha256\", \"sync_options\": {}, \"_id\": \"integration_test_id\", \"packages\": \"/pulp/api/repositories/integration_test_id/packages/\", \"packagegroups\": \"/pulp/api/repositories/integration_test_id/packagegroups/\", \"packagegroupcategories\": \"/pulp/api/repositories/integration_test_id/packagegroupcategories/\", \"errata\": \"/pulp/api/repositories/integration_test_id/errata/\", \"distribution\": \"/pulp/api/repositories/integration_test_id/distribution/\", \"keys\": \"/pulp/api/repositories/integration_test_id/keys/\", \"comps\": \"/pulp/api/repositories/integration_test_id/comps/\", \"uri_ref\": \"/pulp/api/repositories/integration_test_id/\", \"uri\": \"https://localhost/pulp/repos/integration_test_id/\", \"files_count\": 49, \"next_scheduled_time\": null}"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 20:11:06 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/repositories/integration_test_id/history/sync/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="VB773bd0rTPUezknhFIbFfbWHQ44UGIbHbqF2LbuAY", oauth_signature="3Hs22zpVp2Z13MoLZJ%2FfqdT76hs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345147879", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Thu, 16 Aug 2012 20:11:19 GMT
+    body: 
+      string: "[{\"scheduled_time\": \"2012-08-16T20:06:45Z\", \"exception\": null, \"task_type\": \"RepoSyncTask\", \"job_id\": null, \"args\": [\"integration_test_id\"], \"class_name\": null, \"_ns\": \"task_history\", \"start_time\": \"2012-08-16T16:06:45-04:00\", \"traceback\": null, \"task_string\": \"Task e778589c-e7dd-11e1-91ff-bc305bcab086: _sync(integration_test_id, synchronizer=<pulp.server.api.synchronizers.YumSynchronizer object at 0x7ff0144cdcd0>, skip={}, max_speed=None, threads=4, progress_callback=<bound method RepoSyncTask.progress_callback of <pulp.server.api.repo_sync_task.RepoSyncTask object at 0x7ff0144cd490>>)\", \"method_name\": \"_sync\", \"finish_time\": \"2012-08-16T16:06:47-04:00\", \"state\": \"finished\", \"result\": true, \"kwargs\": {\"skip\": {}, \"max_speed\": null, \"threads\": 4}, \"progress\": {\"status\": \"running\", \"num_success\": 8, \"size_total\": 17872, \"num_download\": 0, \"item_name\": \"\", \"items_left\": 2, \"items_total\": 10, \"item_type\": \"\", \"step\": \"Running Createrepo\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 0, \"total_count\": 2, \"items_left\": 2, \"size_left\": 0, \"num_error\": 0, \"total_size_bytes\": 0}, \"rpm\": {\"num_success\": 8, \"total_count\": 8, \"items_left\": 0, \"size_left\": 0, \"num_error\": 0, \"total_size_bytes\": 17872}}, \"error_details\": [], \"num_error\": 0}, \"_id\": \"accadc55-8311-4f0d-b948-074b02abb8be\", \"consecutive_failures\": 0, \"id\": \"e778589c-e7dd-11e1-91ff-bc305bcab086\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 20:11:19 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/repositories/integration_test_id/sync/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="6zjDEfTOyoS6XbkJTTwg9yWIegIMDxljSnMKj6rNI", oauth_signature="Qjbs9lGaZAYvYs%2FB%2B3x2O2ZZDXk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345147904", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Thu, 16 Aug 2012 20:11:44 GMT
+    body: 
+      string: "[{\"scheduled_time\": null, \"exception\": null, \"traceback\": null, \"job_id\": null, \"class_name\": null, \"start_time\": \"2012-08-16T16:06:45-04:00\", \"args\": [\"integration_test_id\"], \"method_name\": \"_sync\", \"finish_time\": \"2012-08-16T16:06:47-04:00\", \"state\": \"finished\", \"result\": true, \"scheduler\": \"immediate\", \"progress\": {\"status\": \"running\", \"size_total\": 17872, \"num_download\": 0, \"items_left\": 2, \"items_total\": 10, \"step\": \"Running Createrepo\", \"num_success\": 8, \"item_name\": \"\", \"item_type\": \"\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 0, \"total_count\": 2, \"items_left\": 2, \"size_left\": 0, \"num_error\": 0, \"total_size_bytes\": 0}, \"rpm\": {\"num_success\": 8, \"total_count\": 8, \"items_left\": 0, \"size_left\": 0, \"num_error\": 0, \"total_size_bytes\": 17872}}, \"error_details\": [], \"num_error\": 0}, \"id\": \"e778589c-e7dd-11e1-91ff-bc305bcab086\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 20:11:44 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/repositories/integration_test_id/errata/?
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="1ymEgrsUJkZWV2taHmGvxeSZtBq5DiltLdSn9wJcE", oauth_signature="0M64gdTgDOdwdMJcaVQ2pHRMqUk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345147920", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 20:12:00 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 20:12:01 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/repositories/integration_test_id/packages/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="Ix07CZ8DqE79C0yvTJRJkNzuZYVVKxO0cdUzwrjHt8", oauth_signature="L8bky6zwv83fburK8XLHWLrEiXo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345147926", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "8161"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 20:12:06 GMT
+    body: 
+      string: "[{\"size\": 2212, \"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"lion\", \"repo_defined\": true, \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"checksum\": {\"sha256\": \"12400dc95c23a4c160725a908716cd3fcdd7a8981585437ab64cd62efa3e4ae4\"}, \"requires\": [\"/bin/sh\"], \"epoch\": \"0\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/lion-0.3-0.8.noarch.rpm\", \"filename\": \"lion-0.3-0.8.noarch.rpm\", \"repoids\": [\"ACME_Corporation-Zoo-Zoo5\", \"ACME_Corporation-Zoo-Zoo3\", \"ACME_Corporation-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo5\", \"ACME_Corporation-Dev-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo3\", \"ACME_Corporation-Test-Zoo-Zoo5\", \"ACME_Corporation-Test-Zoo-zoo4\", \"ACME_Corporation-Test-Zoo-Zoo3\", \"integration_test_repo\", \"integration_test_id\"], \"version\": \"0.3\", \"provides\": [\"lion\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"97ea72e8-3bc8-4d08-82e3-e7ee2401d5f7\", \"arch\": \"noarch\", \"id\": \"97ea72e8-3bc8-4d08-82e3-e7ee2401d5f7\", \"description\": \"A dummy package of lion\"}, {\"size\": 2236, \"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"giraffe\", \"repo_defined\": true, \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"checksum\": {\"sha256\": \"f25d67d1d9da04f12e57ca323247b43891ac46533e355b82de6d1922009f9f14\"}, \"requires\": [\"/bin/sh\"], \"epoch\": \"0\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/giraffe-0.3-0.8.noarch.rpm\", \"filename\": \"giraffe-0.3-0.8.noarch.rpm\", \"repoids\": [\"ACME_Corporation-Zoo-Zoo5\", \"ACME_Corporation-Zoo-Zoo3\", \"ACME_Corporation-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo5\", \"ACME_Corporation-Dev-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo3\", \"ACME_Corporation-Test-Zoo-Zoo5\", \"ACME_Corporation-Test-Zoo-zoo4\", \"ACME_Corporation-Test-Zoo-Zoo3\", \"integration_test_repo\", \"integration_test_id\"], \"version\": \"0.3\", \"provides\": [\"giraffe\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"156c74fb-1387-4eb2-be14-331e905ee50f\", \"arch\": \"noarch\", \"id\": \"156c74fb-1387-4eb2-be14-331e905ee50f\", \"description\": \"A dummy package of giraffe\"}, {\"size\": 2232, \"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"monkey\", \"repo_defined\": true, \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"checksum\": {\"sha256\": \"0e8fa50d0128fbabc7ccc5632e3fa25d39b0280169f6166cb8e2c84de8501db1\"}, \"requires\": [\"/bin/sh\"], \"epoch\": \"0\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/monkey-0.3-0.8.noarch.rpm\", \"filename\": \"monkey-0.3-0.8.noarch.rpm\", \"repoids\": [\"ACME_Corporation-Zoo-Zoo5\", \"ACME_Corporation-Zoo-Zoo3\", \"ACME_Corporation-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo5\", \"ACME_Corporation-Dev-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo3\", \"ACME_Corporation-Test-Zoo-Zoo5\", \"ACME_Corporation-Test-Zoo-zoo4\", \"ACME_Corporation-Test-Zoo-Zoo3\", \"integration_test_repo\", \"integration_test_id\"], \"version\": \"0.3\", \"provides\": [\"monkey\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"324f652f-97e0-4d6b-8d08-2ce7933a9b16\", \"arch\": \"noarch\", \"id\": \"324f652f-97e0-4d6b-8d08-2ce7933a9b16\", \"description\": \"A dummy package of monkey\"}, {\"size\": 2236, \"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"walrus\", \"repo_defined\": true, \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"checksum\": {\"sha256\": \"6e8d6dc057e3e2c9819f0dc7e6c7b7f86bf2e8571bba414adec7fb621a461dfd\"}, \"requires\": [\"/bin/sh\"], \"epoch\": \"0\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/walrus-0.3-0.8.noarch.rpm\", \"filename\": \"walrus-0.3-0.8.noarch.rpm\", \"repoids\": [\"ACME_Corporation-Zoo-Zoo5\", \"ACME_Corporation-Zoo-Zoo3\", \"ACME_Corporation-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo5\", \"ACME_Corporation-Dev-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo3\", \"ACME_Corporation-Test-Zoo-Zoo5\", \"ACME_Corporation-Test-Zoo-zoo4\", \"ACME_Corporation-Test-Zoo-Zoo3\", \"integration_test_repo\", \"integration_test_id\"], \"version\": \"0.3\", \"provides\": [\"walrus\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"ee4cacac-4056-430d-8d49-3c8671ddef41\", \"arch\": \"noarch\", \"id\": \"ee4cacac-4056-430d-8d49-3c8671ddef41\", \"description\": \"A dummy package of walrus\"}, {\"size\": 2232, \"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"penguin\", \"repo_defined\": true, \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"checksum\": {\"sha256\": \"3fcb2c927de9e13bf68469032a28b139d3e5ad2e58564fc210fd6e48635be694\"}, \"requires\": [\"/bin/sh\"], \"epoch\": \"0\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/penguin-0.3-0.8.noarch.rpm\", \"filename\": \"penguin-0.3-0.8.noarch.rpm\", \"repoids\": [\"ACME_Corporation-Zoo-Zoo5\", \"ACME_Corporation-Zoo-Zoo3\", \"ACME_Corporation-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo5\", \"ACME_Corporation-Dev-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo3\", \"ACME_Corporation-Test-Zoo-Zoo5\", \"ACME_Corporation-Test-Zoo-zoo4\", \"ACME_Corporation-Test-Zoo-Zoo3\", \"integration_test_repo\", \"integration_test_id\"], \"version\": \"0.3\", \"provides\": [\"penguin\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"915b5ee2-d806-42a4-9bf4-132b94e43ec6\", \"arch\": \"noarch\", \"id\": \"915b5ee2-d806-42a4-9bf4-132b94e43ec6\", \"description\": \"A dummy package of penguin\"}, {\"size\": 2248, \"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"squirrel\", \"repo_defined\": true, \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"checksum\": {\"sha256\": \"251768bdd15f13d78487c27638aa6aecd01551e253756093cde1c0ae878a17d2\"}, \"requires\": [\"/bin/sh\"], \"epoch\": \"0\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/squirrel-0.3-0.8.noarch.rpm\", \"filename\": \"squirrel-0.3-0.8.noarch.rpm\", \"repoids\": [\"ACME_Corporation-Zoo-Zoo5\", \"ACME_Corporation-Zoo-Zoo3\", \"ACME_Corporation-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo5\", \"ACME_Corporation-Dev-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo3\", \"ACME_Corporation-Test-Zoo-Zoo5\", \"ACME_Corporation-Test-Zoo-zoo4\", \"ACME_Corporation-Test-Zoo-Zoo3\", \"integration_test_repo\", \"integration_test_id\"], \"version\": \"0.3\", \"provides\": [\"squirrel\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"d842d64f-140d-46a2-9ff8-d9805d125f8a\", \"arch\": \"noarch\", \"id\": \"d842d64f-140d-46a2-9ff8-d9805d125f8a\", \"description\": \"A dummy package of squirrel\"}, {\"size\": 2232, \"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"cheetah\", \"repo_defined\": true, \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"checksum\": {\"sha256\": \"422d0baa0cd9d7713ae796e886a23e17f578f924f74880debdbb7d65fb368dae\"}, \"requires\": [\"/bin/sh\"], \"epoch\": \"0\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/cheetah-0.3-0.8.noarch.rpm\", \"filename\": \"cheetah-0.3-0.8.noarch.rpm\", \"repoids\": [\"ACME_Corporation-Zoo-Zoo5\", \"ACME_Corporation-Zoo-Zoo3\", \"ACME_Corporation-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo5\", \"ACME_Corporation-Dev-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo3\", \"ACME_Corporation-Test-Zoo-Zoo5\", \"ACME_Corporation-Test-Zoo-zoo4\", \"ACME_Corporation-Test-Zoo-Zoo3\", \"integration_test_repo\", \"integration_test_id\"], \"version\": \"0.3\", \"provides\": [\"cheetah\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"0c30d7af-42ad-4f6a-a26a-a9ed294ce312\", \"arch\": \"noarch\", \"id\": \"0c30d7af-42ad-4f6a-a26a-a9ed294ce312\", \"description\": \"A dummy package of cheetah\"}, {\"size\": 2244, \"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"elephant\", \"repo_defined\": true, \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"checksum\": {\"sha256\": \"3e1c70cd1b421328acaf6397cb3d16145306bb95f65d1b095fc31372a0a701f3\"}, \"requires\": [\"/bin/sh\"], \"epoch\": \"0\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/elephant-0.3-0.8.noarch.rpm\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"repoids\": [\"ACME_Corporation-Zoo-Zoo5\", \"ACME_Corporation-Zoo-Zoo3\", \"ACME_Corporation-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo5\", \"ACME_Corporation-Dev-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo3\", \"ACME_Corporation-Test-Zoo-Zoo5\", \"ACME_Corporation-Test-Zoo-zoo4\", \"ACME_Corporation-Test-Zoo-Zoo3\", \"integration_test_repo\", \"integration_test_id\"], \"version\": \"0.3\", \"provides\": [\"elephant\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"4636cef0-4ab3-408a-8354-9fee4a7b228f\", \"arch\": \"noarch\", \"id\": \"4636cef0-4ab3-408a-8354-9fee4a7b228f\", \"description\": \"A dummy package of elephant\"}]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 20:12:06 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/repositories/integration_test_id/errata/?
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="LCmEwq4pM1UmPwVz3mZbFWWX1YdYOXAfsv00jgYBc", oauth_signature="8ynyxxCZSOZSTsWja9LDRYPPs%2FY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345147940", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 20:12:21 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 20:12:21 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/errata/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="htMkv7He6wSo47aEoDNbjWUgniKjh87VTJSpBEFtBkY", oauth_signature="2YPDXjtdzfzcZy7yA1DVQhjh5j8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345152346", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "2"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Thu, 16 Aug 2012 21:25:46 GMT
+    body: 
+      string: "[]"
+    http_version: 
+  recorded_at: Thu, 16 Aug 2012 21:25:46 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="crfH6BaefYGzAKUeCeokgueyv0alXZ2RwLJIX7DCuk", oauth_signature="eBh3Ptzr%2FmgE6yb%2BKSwAqsWqmdY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345207679", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "704"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 12:47:59 GMT
+    body: 
+      string: "{\"_id\": \"integration_test_consumer\", \"key_value_pairs\": {}, \"description\": \"\", \"capabilities\": {}, \"id\": \"integration_test_consumer\", \"uri_ref\": \"/pulp/api/consumers/integration_test_consumer/\", \"package_profile\": \"/pulp/api/consumers/integration_test_consumer/package_profile/\", \"repoids\": \"/pulp/api/consumers/integration_test_consumer/repoids/\", \"keyvalues\": \"/pulp/api/consumers/integration_test_consumer/keyvalues/\", \"package_updates\": \"/pulp/api/consumers/integration_test_consumer/package_updates/\", \"errata_package_updates\": \"/pulp/api/consumers/integration_test_consumer/errata_package_updates/\", \"errata\": \"/pulp/api/consumers/integration_test_consumer/errata/\", \"heartbeat\": [false, null, {}]}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:47:59 GMT
+- request: 
+    method: put
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/?owner=
+    body: 
+      string: "{\"description\":\"Test description\",\"id\":\"integration_test_consumer\"}"
+    headers: 
+      Content-Length: 
+      - "67"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="XXW9qGgX8X8AJRRmyjwYr6PnFIaIxlO7f1SIvP1rlFc", oauth_signature="liY8w18QSyyLIEfaFiOIsCvVg7E%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345207680", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "4"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 12:48:00 GMT
+    body: 
+      string: "true"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:48:00 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/applicable_errata_in_repos/?repoids=integration_test_id
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="W90MeESFXfT9MZ5FYu1CwDZDbuJvXME6O4ewzgSDFw", oauth_signature="%2Fc6glyPZxw7LGIImriWyZlvF8qM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345207764", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "482"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 12:49:25 GMT
+    body: 
+      string: "{\"RHEA-2010:0002\": {\"consumerids\": [\"integration_test_consumer\"], \"repoids\": [\"ACME_Corporation-Zoo-Zoo5\", \"ACME_Corporation-Zoo-Zoo3\", \"ACME_Corporation-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo5\", \"ACME_Corporation-Dev-Zoo-zoo4\", \"ACME_Corporation-Dev-Zoo-Zoo3\", \"ACME_Corporation-Test-Zoo-Zoo5\", \"ACME_Corporation-Test-Zoo-zoo4\", \"ACME_Corporation-Test-Zoo-Zoo3\", \"integration_test_repo\", \"integration_test_id\"], \"type\": \"security\", \"severity\": \"\", \"title\": \"One package errata\"}}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:49:25 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="ieZmVGx3buUyxrukMtKukJQnZ85ezjuShC2rH4P0N4", oauth_signature="oDV02Ak%2FzHatfyGw7WopIaf%2Fn7E%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345207843", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Fri, 17 Aug 2012 12:50:43 GMT
+    body: 
+      string: "[{\"release\": \"0.7\", \"epoch\": 0, \"version\": \"0.2\", \"arch\": \"noarch\", \"name\": \"elephant\"}]"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:50:43 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/installpackagegroups/
+    body: 
+      string: "{\"groupids\":[\"mammals\"]}"
+    headers: 
+      Content-Length: 
+      - "24"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Gu1sdYPgD0tv5DMQCyhgrhnTyL1E5HL187mJJBHMI", oauth_signature="HlDzYMnLxtgvf76M0uuinwPNQD8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345207899", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "385"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 12:51:39 GMT
+    body: 
+      string: "{\"scheduled_time\": \"2012-08-17T12:51:39Z\", \"exception\": null, \"traceback\": null, \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": null, \"args\": [\"integration_test_consumer\", [\"mammals\"]], \"method_name\": \"__installpackagegroups\", \"finish_time\": null, \"state\": \"waiting\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"49864b5e-e86a-11e1-95a2-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:51:39 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/49864b5e-e86a-11e1-95a2-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="0P4Apy9xhWvKQuAXrtYPS1IblCbkn89eTdRwEEJ9M", oauth_signature="HHjy%2BzPvKwhxpzV4QMu%2BR9E7od8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208130", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1472"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 12:55:30 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('c5d14e4e-c532-4023-9ae3-466939813c88', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 544, in __installpackagegroups\\n    return pkgrps.install(grpids)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('c5d14e4e-c532-4023-9ae3-466939813c88', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T08:51:39-04:00\", \"args\": [\"integration_test_consumer\", [\"mammals\"]], \"method_name\": \"__installpackagegroups\", \"finish_time\": \"2012-08-17T08:51:49-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"49864b5e-e86a-11e1-95a2-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:55:30 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/tasks/?id=49864b5e-e86a-11e1-95a2-bc305bcab086&state=current
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="Pqm4hPDUDRMhmiXE2kIo8EjR8sfP0Fav22tYJiLaza8", oauth_signature="kfcCnCxXz5cikbMuDF4sqOWQwsU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208130", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Fri, 17 Aug 2012 12:55:30 GMT
+    body: 
+      string: "[{\"scheduled_time\": null, \"exception\": \"('c5d14e4e-c532-4023-9ae3-466939813c88', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 544, in __installpackagegroups\\n    return pkgrps.install(grpids)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('c5d14e4e-c532-4023-9ae3-466939813c88', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T08:51:39-04:00\", \"args\": [\"integration_test_consumer\", [\"mammals\"]], \"method_name\": \"__installpackagegroups\", \"finish_time\": \"2012-08-17T08:51:49-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"snapshot_id\": \"b9d8fea8-9f34-4aa4-af0a-f93ce42d77a0\", \"progress\": null, \"id\": \"49864b5e-e86a-11e1-95a2-bc305bcab086\"}, {\"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T08:51:39-04:00\", \"args\": [\"integration_test_consumer\", [\"mammals\"]], \"task_string\": \"Task 49864b5e-e86a-11e1-95a2-bc305bcab086: ConsumerApi.__installpackagegroups(integration_test_consumer, ['mammals'], )\", \"result\": null, \"id\": \"49864b5e-e86a-11e1-95a2-bc305bcab086\", \"scheduled_time\": \"2012-08-17T12:51:39Z\", \"exception\": \"('c5d14e4e-c532-4023-9ae3-466939813c88', 0)\", \"task_type\": \"Task\", \"job_id\": null, \"finish_time\": \"2012-08-17T08:51:49-04:00\", \"_ns\": \"task_history\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 544, in __installpackagegroups\\n    return pkgrps.install(grpids)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('c5d14e4e-c532-4023-9ae3-466939813c88', 0)\\n\"], \"method_name\": \"__installpackagegroups\", \"state\": \"error\", \"kwargs\": {}, \"progress\": null, \"_id\": \"b1753146-4623-4330-ba25-abd5f4b9fee3\", \"consecutive_failures\": 1}]"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:55:30 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/installerrata/
+    body: 
+      string: "{\"errataids\":[\"RHEA-2010:0002\"]}"
+    headers: 
+      Content-Length: 
+      - "32"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="xDP5EDPVchCg259lrIa3g5r5WfF5cZNqlZW8foClU", oauth_signature="dZh5nhbp5%2Bm8jNKH0jogDf8bP9M%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208169", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "381"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 12:56:10 GMT
+    body: 
+      string: "{\"scheduled_time\": \"2012-08-17T12:56:10Z\", \"exception\": null, \"traceback\": null, \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": null, \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"method_name\": \"__installpackages\", \"finish_time\": null, \"state\": \"waiting\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"eac77887-e86a-11e1-b66e-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:56:10 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/eac77887-e86a-11e1-b66e-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="4Lu7p9w1UT0umD08NsiJUs8xOTk7mr4TcTsZ0mQ", oauth_signature="24jjRY6ziaCCnnOY7nnS5SyiAdw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208185", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1472"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 12:56:25 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('f527480f-0ea4-4830-bd63-8bee5ebfab94', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 448, in __installpackages\\n    return packages.install(names, reboot)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('f527480f-0ea4-4830-bd63-8bee5ebfab94', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T08:56:10-04:00\", \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"method_name\": \"__installpackages\", \"finish_time\": \"2012-08-17T08:56:20-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"eac77887-e86a-11e1-b66e-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:56:25 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/tasks/?id=eac77887-e86a-11e1-b66e-bc305bcab086&state=current
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="ZF9NrwxZLXrgTTn1xhxT6ARWpxacJtNwWIEDld33Ww", oauth_signature="%2B4Kr6A7uCAXpzCPltL7DW0%2FWt88%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208185", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "3328"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 12:56:25 GMT
+    body: 
+      string: "[{\"scheduled_time\": null, \"exception\": \"('f527480f-0ea4-4830-bd63-8bee5ebfab94', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 448, in __installpackages\\n    return packages.install(names, reboot)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('f527480f-0ea4-4830-bd63-8bee5ebfab94', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T08:56:10-04:00\", \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"method_name\": \"__installpackages\", \"finish_time\": \"2012-08-17T08:56:20-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"snapshot_id\": \"fa739da3-89d9-4344-97e9-10bbc0fb32c4\", \"progress\": null, \"id\": \"eac77887-e86a-11e1-b66e-bc305bcab086\"}, {\"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T08:56:10-04:00\", \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"task_string\": \"Task eac77887-e86a-11e1-b66e-bc305bcab086: ConsumerApi.__installpackages(integration_test_consumer, [u'elephant'], importkeys=False, reboot=False)\", \"result\": null, \"id\": \"eac77887-e86a-11e1-b66e-bc305bcab086\", \"scheduled_time\": \"2012-08-17T12:56:10Z\", \"exception\": \"('f527480f-0ea4-4830-bd63-8bee5ebfab94', 0)\", \"task_type\": \"Task\", \"job_id\": null, \"finish_time\": \"2012-08-17T08:56:20-04:00\", \"_ns\": \"task_history\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 448, in __installpackages\\n    return packages.install(names, reboot)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('f527480f-0ea4-4830-bd63-8bee5ebfab94', 0)\\n\"], \"method_name\": \"__installpackages\", \"state\": \"error\", \"kwargs\": {\"importkeys\": false, \"reboot\": false}, \"progress\": null, \"_id\": \"4f00e502-35b2-42be-910e-a2f0f2ce5f71\", \"consecutive_failures\": 1}]"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:56:25 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/installpackages/
+    body: 
+      string: "{\"packagenames\":[\"cheetah\"]}"
+    headers: 
+      Content-Length: 
+      - "28"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="SnqgQi9XAcesN1tsM2zQMUWLd9CPwhpUViuwmJSEjc", oauth_signature="Tk1WfvpIeXzeIQkXgDtoo9Y%2B0xw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208223", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Fri, 17 Aug 2012 12:57:03 GMT
+    body: 
+      string: "{\"scheduled_time\": \"2012-08-17T12:57:03Z\", \"exception\": null, \"traceback\": null, \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": null, \"args\": [\"integration_test_consumer\", [\"cheetah\"]], \"method_name\": \"__installpackages\", \"finish_time\": null, \"state\": \"waiting\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"0a8c53d1-e86b-11e1-86a1-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:57:03 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/0a8c53d1-e86b-11e1-86a1-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="JIXZJtnrDjNkQbnOTnNBEU0YnOdpG1iKKazIcM", oauth_signature="l%2F3kz87izbvwyUtcuWwdLgeqLdU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208237", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1471"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 12:57:17 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('a787b12c-7ed0-4d98-97e1-74a83d4419ec', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 448, in __installpackages\\n    return packages.install(names, reboot)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('a787b12c-7ed0-4d98-97e1-74a83d4419ec', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T08:57:03-04:00\", \"args\": [\"integration_test_consumer\", [\"cheetah\"]], \"method_name\": \"__installpackages\", \"finish_time\": \"2012-08-17T08:57:13-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"0a8c53d1-e86b-11e1-86a1-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:57:17 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/tasks/?id=0a8c53d1-e86b-11e1-86a1-bc305bcab086&state=current
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="AfnORS6ItleW5XAkLCMbOIXP02I4afG3FKtVOyms", oauth_signature="oLoAvXbO2eJQ6%2FdsXjOCxvjXrRY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208237", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "3258"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 12:57:17 GMT
+    body: 
+      string: "[{\"scheduled_time\": null, \"exception\": \"('a787b12c-7ed0-4d98-97e1-74a83d4419ec', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 448, in __installpackages\\n    return packages.install(names, reboot)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('a787b12c-7ed0-4d98-97e1-74a83d4419ec', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T08:57:03-04:00\", \"args\": [\"integration_test_consumer\", [\"cheetah\"]], \"method_name\": \"__installpackages\", \"finish_time\": \"2012-08-17T08:57:13-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"snapshot_id\": \"50d978ee-0e62-41ca-9b26-63408dfb85ee\", \"progress\": null, \"id\": \"0a8c53d1-e86b-11e1-86a1-bc305bcab086\"}, {\"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T08:57:03-04:00\", \"args\": [\"integration_test_consumer\", [\"cheetah\"]], \"task_string\": \"Task 0a8c53d1-e86b-11e1-86a1-bc305bcab086: ConsumerApi.__installpackages(integration_test_consumer, ['cheetah'], )\", \"result\": null, \"id\": \"0a8c53d1-e86b-11e1-86a1-bc305bcab086\", \"scheduled_time\": \"2012-08-17T12:57:03Z\", \"exception\": \"('a787b12c-7ed0-4d98-97e1-74a83d4419ec', 0)\", \"task_type\": \"Task\", \"job_id\": null, \"finish_time\": \"2012-08-17T08:57:13-04:00\", \"_ns\": \"task_history\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 448, in __installpackages\\n    return packages.install(names, reboot)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('a787b12c-7ed0-4d98-97e1-74a83d4419ec', 0)\\n\"], \"method_name\": \"__installpackages\", \"state\": \"error\", \"kwargs\": {}, \"progress\": null, \"_id\": \"1c20a1a9-22f7-4a7b-b05a-d927fee2ecf5\", \"consecutive_failures\": 1}]"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:57:17 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/unbind/
+    body: 
+      string: "\"integration_test_id\""
+    headers: 
+      Content-Length: 
+      - "21"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="IR7QGyg4ujjBOden1P6Oe0R30Y9Tvv27pT98nXi1wI", oauth_signature="tz3OlNllrMhQKgHxwRSb9hnsunw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208327", oauth_version="1.0"
+      Content-Type: 
+      - text/plain
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "4"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 12:58:47 GMT
+    body: 
+      string: "true"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:58:47 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/repoids/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="inFbwnNq5fCFipl5RIzsBYTFiGU9nyz1dQlmsSC5CA", oauth_signature="WHDPZWisF1Pq%2BXwcyxcOgyeph98%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208377", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "61"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 12:59:37 GMT
+    body: 
+      string: "{\"integration_test_id\": \"/repositories/integration_test_id/\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 12:59:37 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/uninstallpackagegroups/
+    body: 
+      string: "{\"groupids\":[\"mammals\"]}"
+    headers: 
+      Content-Length: 
+      - "24"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="ngsFfdAQhQBteLLg4DhoYBE53btFOYDIMTJjFv6ARn8", oauth_signature="715EoCtZ3OpTbJqv0kCgmhzX2No%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208428", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "387"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 13:00:28 GMT
+    body: 
+      string: "{\"scheduled_time\": \"2012-08-17T13:00:28Z\", \"exception\": null, \"traceback\": null, \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": null, \"args\": [\"integration_test_consumer\", [\"mammals\"]], \"method_name\": \"__uninstallpackagegroups\", \"finish_time\": null, \"state\": \"waiting\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"84bdb791-e86b-11e1-a76f-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:00:28 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/84bdb791-e86b-11e1-a76f-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Hv5WPPQ8YCJkCOv82jBw3XLR4qcQvdTEjdWEppbp6Hg", oauth_signature="sY5g7dApdnfWbNe71AKjoCA7F%2Bo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208441", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "1478"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 13:00:41 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('30523938-5fd4-45ab-aed4-d76975fb48e8', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 576, in __uninstallpackagegroups\\n    return pkgrps.uninstall(grpids)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('30523938-5fd4-45ab-aed4-d76975fb48e8', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T09:00:28-04:00\", \"args\": [\"integration_test_consumer\", [\"mammals\"]], \"method_name\": \"__uninstallpackagegroups\", \"finish_time\": \"2012-08-17T09:00:38-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"84bdb791-e86b-11e1-a76f-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:00:41 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/tasks/?id=84bdb791-e86b-11e1-a76f-bc305bcab086&state=current
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="VEgze2SfFHq7oOZocPkDyOUM7MVZZ8ApzoVReyNwj80", oauth_signature="awuRuJXYCLti31czdQP8TvOOyvQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208441", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "3279"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 13:00:42 GMT
+    body: 
+      string: "[{\"scheduled_time\": null, \"exception\": \"('30523938-5fd4-45ab-aed4-d76975fb48e8', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 576, in __uninstallpackagegroups\\n    return pkgrps.uninstall(grpids)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('30523938-5fd4-45ab-aed4-d76975fb48e8', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T09:00:28-04:00\", \"args\": [\"integration_test_consumer\", [\"mammals\"]], \"method_name\": \"__uninstallpackagegroups\", \"finish_time\": \"2012-08-17T09:00:38-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"snapshot_id\": \"e65cb6e7-2331-42d0-9cfe-b05b8bb4dc8c\", \"progress\": null, \"id\": \"84bdb791-e86b-11e1-a76f-bc305bcab086\"}, {\"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T09:00:28-04:00\", \"args\": [\"integration_test_consumer\", [\"mammals\"]], \"task_string\": \"Task 84bdb791-e86b-11e1-a76f-bc305bcab086: ConsumerApi.__uninstallpackagegroups(integration_test_consumer, ['mammals'], )\", \"result\": null, \"id\": \"84bdb791-e86b-11e1-a76f-bc305bcab086\", \"scheduled_time\": \"2012-08-17T13:00:28Z\", \"exception\": \"('30523938-5fd4-45ab-aed4-d76975fb48e8', 0)\", \"task_type\": \"Task\", \"job_id\": null, \"finish_time\": \"2012-08-17T09:00:38-04:00\", \"_ns\": \"task_history\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 576, in __uninstallpackagegroups\\n    return pkgrps.uninstall(grpids)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('30523938-5fd4-45ab-aed4-d76975fb48e8', 0)\\n\"], \"method_name\": \"__uninstallpackagegroups\", \"state\": \"error\", \"kwargs\": {}, \"progress\": null, \"_id\": \"b03cebdd-2510-4f01-9141-bb3ea2396385\", \"consecutive_failures\": 1}]"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:00:42 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/bind/
+    body: 
+      string: "\"integration_test_id\""
+    headers: 
+      Content-Length: 
+      - "21"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="G2zqIxpfTMiUqQT2CaEF3RuRGnLc0Eg0QyeMHqSXqjk", oauth_signature="VX%2B9i3E9JUD0Vgvy22Vlx8B4UKU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208478", oauth_version="1.0"
+      Content-Type: 
+      - text/plain
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "992"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 13:01:18 GMT
+    body: 
+      string: "{\"repo\": {\"consumer_cert\": null, \"consumer_ca\": null, \"id\": \"integration_test_id\", \"repomd_xml_path\": \"/var/lib/pulp//repos/fakerepos/zoo5/repodata/repomd.xml\", \"preserve_metadata\": false, \"_ns\": \"repos\", \"publish\": true, \"relative_path\": \"fakerepos/zoo5\", \"arch\": \"noarch\", \"group_gz_xml_path\": \"/var/lib/pulp//repos/fakerepos/zoo5/repodata/8e6674143899a8f80ac94ab54048f8d3f0660887d23abff554149a185eaa4619-06661e2a9839cf0beebcf409410ca4f93c09081f4e772fd0d03e1faf62705a11-comps.xml.gz\", \"feed_cert\": null, \"name\": \"integration_test_id\", \"feed_ca\": null, \"content_types\": \"yum\", \"group_xml_path\": \"/var/lib/pulp//repos/fakerepos/zoo5/repodata/06661e2a9839cf0beebcf409410ca4f93c09081f4e772fd0d03e1faf62705a11-06661e2a9839cf0beebcf409410ca4f93c09081f4e772fd0d03e1faf62705a11-comps.xml\", \"release\": null, \"checksum_type\": \"sha256\", \"sync_options\": {}, \"_id\": \"integration_test_id\"}, \"cacert\": null, \"host_urls\": [\"https://localhost/pulp/repos/fakerepos/zoo5\"], \"clientcert\": null, \"gpg_keys\": {}}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:01:18 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/updatepackages/
+    body: 
+      string: "{\"packagenames\":[\"elephant\"]}"
+    headers: 
+      Content-Length: 
+      - "29"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="SobYd657J4u8MeuyX5UhGFQQOjJcZfPSAEjeZpBp3Y", oauth_signature="Za8tXLD2oPbTBI%2B3wtpHKWJN3LU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208478", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "380"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 13:01:18 GMT
+    body: 
+      string: "{\"scheduled_time\": \"2012-08-17T13:01:18Z\", \"exception\": null, \"traceback\": null, \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": null, \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"method_name\": \"__updatepackages\", \"finish_time\": null, \"state\": \"waiting\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"a2a32ef5-e86b-11e1-ab5d-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:01:18 GMT
+- request: 
+    method: delete
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="8CGuVOTdnMoYIqb685XZDd8od9a19pV4i2OIWymw", oauth_signature="sotGfsqWWH%2B4fcmxsWcM2ekimHM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208613", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Fri, 17 Aug 2012 13:03:33 GMT
+    body: 
+      string: "true"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:03:33 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/a2a32ef5-e86b-11e1-ab5d-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="agIpu7P4mbcZ2m4KichvGF3y6HFzpXJSDhK50MiZUU", oauth_signature="YeR9HkDjKvSVj4SIZIkYWdXwOTc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208613", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Fri, 17 Aug 2012 13:03:33 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('9778e603-6ed5-46da-aef4-f4a9353a7a12', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 512, in __updatepackages\\n    return packages.update(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('9778e603-6ed5-46da-aef4-f4a9353a7a12', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T09:01:18-04:00\", \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"method_name\": \"__updatepackages\", \"finish_time\": \"2012-08-17T09:01:28-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"a2a32ef5-e86b-11e1-ab5d-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:03:33 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/tasks/?id=a2a32ef5-e86b-11e1-ab5d-bc305bcab086&state=current
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="n9k4MEb1b9kQnbzn1KkNC8YFE0LbJQnB1xSyMuea2s", oauth_signature="%2BsE0cUyBVw1yFgPaa4woL2sVlSQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208613", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "3238"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 13:03:34 GMT
+    body: 
+      string: "[{\"scheduled_time\": null, \"exception\": \"('9778e603-6ed5-46da-aef4-f4a9353a7a12', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 512, in __updatepackages\\n    return packages.update(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('9778e603-6ed5-46da-aef4-f4a9353a7a12', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T09:01:18-04:00\", \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"method_name\": \"__updatepackages\", \"finish_time\": \"2012-08-17T09:01:28-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"snapshot_id\": \"d5016c92-f2f5-4285-98f3-42833458306b\", \"progress\": null, \"id\": \"a2a32ef5-e86b-11e1-ab5d-bc305bcab086\"}, {\"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T09:01:18-04:00\", \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"task_string\": \"Task a2a32ef5-e86b-11e1-ab5d-bc305bcab086: ConsumerApi.__updatepackages(integration_test_consumer, ['elephant'], )\", \"result\": null, \"id\": \"a2a32ef5-e86b-11e1-ab5d-bc305bcab086\", \"scheduled_time\": \"2012-08-17T13:01:18Z\", \"exception\": \"('9778e603-6ed5-46da-aef4-f4a9353a7a12', 0)\", \"task_type\": \"Task\", \"job_id\": null, \"finish_time\": \"2012-08-17T09:01:28-04:00\", \"_ns\": \"task_history\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 512, in __updatepackages\\n    return packages.update(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('9778e603-6ed5-46da-aef4-f4a9353a7a12', 0)\\n\"], \"method_name\": \"__updatepackages\", \"state\": \"error\", \"kwargs\": {}, \"progress\": null, \"_id\": \"072c86fd-4bed-48cd-a5bd-302789c58f93\", \"consecutive_failures\": 1}]"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:03:34 GMT
+- request: 
+    method: delete
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="kyGED2WqrQsAojNSPPt6EC4A3PoZnzmImXhxu5zn0", oauth_signature="fPOZWFLHWhQD%2BgPlfh2%2ForXA2xg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208650", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 404
+      message: Not Found
+    headers: 
+      Content-Length: 
+      - "53"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 13:04:10 GMT
+    body: 
+      string: "\"Consumer [integration_test_consumer] does not exist\""
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:04:10 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/consumers/?owner=
+    body: 
+      string: "{\"description\":\"\",\"key_value_pairs\":{},\"id\":\"integration_test_consumer\"}"
+    headers: 
+      Content-Length: 
+      - "72"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="uN0NrayeYc3sqiLI93MHIOTX6F8UlgIooGptmr9V9js", oauth_signature="nPSDpHRDzjj%2Fyi5%2BolZhyKcsBfE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208650", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Location: 
+      - /pulp/api/consumers/integration_test_consumer/
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Fri, 17 Aug 2012 13:04:11 GMT
+    body: 
+      string: "{\"description\": \"\", \"certificate\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXAIBAAKBgQCwLqbvVgUGOaR9kDFgbyA2rO7BPGlIXjsW46um5+id66CSH3Pd\\nbWJ0USP7w8XxqxPd2Q57MyT2XFUs5s/d0RLoiKrqtQgV4BX6jCdX+4gqrEvL/ygr\\nN0CPQqhSGOMV5dP2FuByJN/h52XTjZ/umdMuwshHDNNHEB0r7L1wifbZXQIDAQAB\\nAoGAbga0egNeX+TftQq3y2Ga3IpjEIqJtYgjnsfQCwwJWZYtURQTZ9VIBxwlPLWm\\niKYuYf2L7aSjELfY+ZGrfvtysnuJCA6KCFEpOgbXzE0V3wg6ZzpihWnVZ3migsrJ\\nUy7zao5Nyi+0UKUyJ5b3Iwn5SZUSlnIx0XxSAgnu+lsSmAECQQDmKFv8UosQAmKD\\nJL9joVWrJylzUMstTnMW4J4gie82fTRdXI2EEdEBGeJ0T2OnZjXgfTMFkLJf3hfZ\\nB++pQ1+tAkEAw/bTbYmQpbva/LBphqy1/ftOWb3Bo0xFtaAYKk/Bp33T7ZqOxtgS\\nV14Td/8d2tSH5+vukbdy+UgYgX0IUhvWcQJAE+QpDwWTPy71lJ/4aoPnA4O+8Vhq\\nNuAw0ilXgThqlCr9+5OkJ2XiylWSXLr/wdfzkBNB9Zkr0V1AcmFdNSO9gQJAaSgq\\njL0lQcps2OxRtFM51fDlOoL5RgfH4I7oaMwjvx1mfDpUI6APN5LkH6BnBObHh0yz\\n2L34lIx7mgDeVjFaAQJBAI0I/hU+bPdAPCpFEBWtXj/CsddfSZjVl5rr+GS9Fk4f\\nJwAE1F0ZjG7TeLkArstQUckqtXlvwQrbcCTBCEcffGw=\\n-----END RSA PRIVATE KEY-----\\n-----BEGIN CERTIFICATE-----\\nMIIB1jCCAT8CAgDWMA0GCSqGSIb3DQEBBQUAMEIxITAfBgNVBAMMGHRpZ2VyLnVz\\nZXJzeXMucmVkaGF0LmNvbTELMAkGA1UEBhMCVVMxEDAOBgNVBAcMB1JhbGVpZ2gw\\nHhcNMTIwODE3MTMwNDExWhcNMjIwODE1MTMwNDExWjAkMSIwIAYDVQQDFBlpbnRl\\nZ3JhdGlvbl90ZXN0X2NvbnN1bWVyMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB\\ngQCwLqbvVgUGOaR9kDFgbyA2rO7BPGlIXjsW46um5+id66CSH3PdbWJ0USP7w8Xx\\nqxPd2Q57MyT2XFUs5s/d0RLoiKrqtQgV4BX6jCdX+4gqrEvL/ygrN0CPQqhSGOMV\\n5dP2FuByJN/h52XTjZ/umdMuwshHDNNHEB0r7L1wifbZXQIDAQABMA0GCSqGSIb3\\nDQEBBQUAA4GBABzGzgd5Tffgax7k97GZzzBDluPKjrgKhrHVcOC5tByewCf48Cof\\nATBlVdypZ5EIRTNxlBJgCtDxOObJmsQ+VgsTfHSJBXf3eIDiL3Zp7iciip5Yh/Jy\\nu5t0lFofRTHIBjkauMZvFiAeLNQv0GlEYUO5UGIyhUIb3CBG7vW6T1Sh\\n-----END CERTIFICATE-----\", \"_ns\": \"consumers\", \"package_profile\": [], \"capabilities\": {}, \"key_value_pairs\": {}, \"_id\": \"integration_test_consumer\", \"id\": \"integration_test_consumer\", \"repoids\": []}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:04:11 GMT
+- request: 
+    method: put
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/package_profile/
+    body: 
+      string: "{\"package_profile\":[{\"name\":\"elephant\",\"arch\":\"noarch\",\"release\":\"0.7\",\"epoch\":0,\"version\":\"0.2\"}],\"id\":\"integration_test_consumer\"}"
+    headers: 
+      Content-Length: 
+      - "132"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="dJNNg2NEgvc2WOPtkJdmfldctlPum7GtCjnRD3Tnk", oauth_signature="ayZ6Ua%2BOk8SsTUCf9L5NnMXM%2BuY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208651", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "4"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 13:04:11 GMT
+    body: 
+      string: "true"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:04:11 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/bind/
+    body: 
+      string: "\"integration_test_id\""
+    headers: 
+      Content-Length: 
+      - "21"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="U2nqs5nBRl5PeNdK0hOAmCOsqftZ7G3qZkh8n0mkXU", oauth_signature="GdLIrKh3%2B%2FDJkgLPueMY74rzp9c%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208651", oauth_version="1.0"
+      Content-Type: 
+      - text/plain
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "992"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 13:04:11 GMT
+    body: 
+      string: "{\"repo\": {\"consumer_cert\": null, \"consumer_ca\": null, \"id\": \"integration_test_id\", \"repomd_xml_path\": \"/var/lib/pulp//repos/fakerepos/zoo5/repodata/repomd.xml\", \"preserve_metadata\": false, \"_ns\": \"repos\", \"publish\": true, \"relative_path\": \"fakerepos/zoo5\", \"arch\": \"noarch\", \"group_gz_xml_path\": \"/var/lib/pulp//repos/fakerepos/zoo5/repodata/8e6674143899a8f80ac94ab54048f8d3f0660887d23abff554149a185eaa4619-06661e2a9839cf0beebcf409410ca4f93c09081f4e772fd0d03e1faf62705a11-comps.xml.gz\", \"feed_cert\": null, \"name\": \"integration_test_id\", \"feed_ca\": null, \"content_types\": \"yum\", \"group_xml_path\": \"/var/lib/pulp//repos/fakerepos/zoo5/repodata/06661e2a9839cf0beebcf409410ca4f93c09081f4e772fd0d03e1faf62705a11-06661e2a9839cf0beebcf409410ca4f93c09081f4e772fd0d03e1faf62705a11-comps.xml\", \"release\": null, \"checksum_type\": \"sha256\", \"sync_options\": {}, \"_id\": \"integration_test_id\"}, \"cacert\": null, \"host_urls\": [\"https://localhost/pulp/repos/fakerepos/zoo5\"], \"clientcert\": null, \"gpg_keys\": {}}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:04:11 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/uninstallpackages/
+    body: 
+      string: "{\"packagenames\":[\"elephant\"]}"
+    headers: 
+      Content-Length: 
+      - "29"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="CUIMqrfP79RIQa6DYBq97ADbr3C30Rpfvh5bIteKMJc", oauth_signature="8tFnqB3hNQWDkr%2FHqXqQK0Da7sM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208651", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Length: 
+      - "383"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 13:04:11 GMT
+    body: 
+      string: "{\"scheduled_time\": \"2012-08-17T13:04:11Z\", \"exception\": null, \"traceback\": null, \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": null, \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"method_name\": \"__uninstallpackages\", \"finish_time\": null, \"state\": \"waiting\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"09b7869c-e86c-11e1-8ee7-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:04:11 GMT
+- request: 
+    method: delete
+    uri: https://localhost/pulp/api/consumers/integration_test_consumer/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="ajx39Gz5tBEzwkhlqNhSK5DRgf6yZWajFc9qrT150I", oauth_signature="h2m%2F5C3GID8e83KPEZ%2BilPjXvLQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208730", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "4"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Date: 
+      - Fri, 17 Aug 2012 13:05:30 GMT
+    body: 
+      string: "true"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:05:30 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/tasks/09b7869c-e86c-11e1-8ee7-bc305bcab086/cancel/
+    body: 
+      string: ""
+    headers: 
+      Content-Length: 
+      - "0"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="9M2tcboh3YNqQhJfD7eJeJMffloILC4z91eKpdNls", oauth_signature="6UpqjwAtc%2Bz5v08bPRE5HwlFBHQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208730", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Fri, 17 Aug 2012 13:05:30 GMT
+    body: 
+      string: "{\"scheduled_time\": null, \"exception\": \"('69430ae8-70fb-4087-82d6-3bdb0cde50d5', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 480, in __uninstallpackages\\n    return packages.uninstall(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('69430ae8-70fb-4087-82d6-3bdb0cde50d5', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T09:04:11-04:00\", \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"method_name\": \"__uninstallpackages\", \"finish_time\": \"2012-08-17T09:04:21-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"progress\": null, \"id\": \"09b7869c-e86c-11e1-8ee7-bc305bcab086\"}"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:05:30 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/tasks/?id=09b7869c-e86c-11e1-8ee7-bc305bcab086&state=current
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="njgE9Ij2o1MNPWFKXHokkPGSqQBe0iI62fhkmAbWLM", oauth_signature="dOnfifBjmpjikkcgiftHrnMBgXU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345208730", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Fri, 17 Aug 2012 13:05:31 GMT
+    body: 
+      string: "[{\"scheduled_time\": null, \"exception\": \"('69430ae8-70fb-4087-82d6-3bdb0cde50d5', 0)\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 480, in __uninstallpackages\\n    return packages.uninstall(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('69430ae8-70fb-4087-82d6-3bdb0cde50d5', 0)\\n\"], \"job_id\": null, \"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T09:04:11-04:00\", \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"method_name\": \"__uninstallpackages\", \"finish_time\": \"2012-08-17T09:04:21-04:00\", \"state\": \"error\", \"result\": null, \"scheduler\": \"immediate\", \"snapshot_id\": \"80e989f4-377a-431a-919e-cf17c04ee665\", \"progress\": null, \"id\": \"09b7869c-e86c-11e1-8ee7-bc305bcab086\"}, {\"class_name\": \"ConsumerApi\", \"start_time\": \"2012-08-17T09:04:11-04:00\", \"args\": [\"integration_test_consumer\", [\"elephant\"]], \"task_string\": \"Task 09b7869c-e86c-11e1-8ee7-bc305bcab086: ConsumerApi.__uninstallpackages(integration_test_consumer, ['elephant'], )\", \"result\": null, \"id\": \"09b7869c-e86c-11e1-8ee7-bc305bcab086\", \"scheduled_time\": \"2012-08-17T13:04:11Z\", \"exception\": \"('69430ae8-70fb-4087-82d6-3bdb0cde50d5', 0)\", \"task_type\": \"Task\", \"job_id\": null, \"finish_time\": \"2012-08-17T09:04:21-04:00\", \"_ns\": \"task_history\", \"traceback\": [\"Traceback (most recent call last):\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/tasking/task.py\\\", line 414, in run\\n    result = self.callable(*self.args, **self.kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/consumer.py\\\", line 480, in __uninstallpackages\\n    return packages.uninstall(names)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 72, in __call__\\n    return self.stub._send(request, opts)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 133, in _send\\n    return self.__send(request, options)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/stub.py\\\", line 164, in __send\\n    any=opts.any)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 143, in send\\n    self.__getstarted(sn, reader)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/gofer/rmi/policy.py\\\", line 166, in __getstarted\\n    raise RequestTimeout(sn, 0)\\n\", \"RequestTimeout: ('69430ae8-70fb-4087-82d6-3bdb0cde50d5', 0)\\n\"], \"method_name\": \"__uninstallpackages\", \"state\": \"error\", \"kwargs\": {}, \"progress\": null, \"_id\": \"e6e0ad20-0645-4160-aacd-230664cda305\", \"consecutive_failures\": 1}]"
+    http_version: 
+  recorded_at: Fri, 17 Aug 2012 13:05:31 GMT
