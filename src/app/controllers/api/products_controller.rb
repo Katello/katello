@@ -52,7 +52,7 @@ class Api::ProductsController < Api::ApiController
   param :id, :number, :desc => "product numeric identifier"
   param :product, Hash do
     param :gpg_key_name, :identifier, :desc => "identifier of the gpg key"
-    param :recursive, :bool, "set to true to recursive update gpg key"
+    param :recursive, :bool, :desc => "set to true to recursive update gpg key"
   end
   def update
     raise HttpErrors::BadRequest, _("It is not allowed to update a Red Hat product.") if @product.redhat?
