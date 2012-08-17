@@ -93,10 +93,9 @@ class DeletionChangeset < Changeset
 
 
   def delete_templates from_env
-    async_tasks = self.system_templates.collect do |tpl|
+    self.system_templates.each do |tpl|
        tpl.remove(from_env)
     end
-    async_tasks.flatten(1)
   end
 
 
@@ -194,18 +193,6 @@ class DeletionChangeset < Changeset
     repos.uniq
   end
 
-  # def repos_to_be_promoted
-  #   repos = self.repos || []
-  #   repos += self.system_templates.map { |tpl| tpl.repos_to_be_promoted }.flatten(1)
-  #   return repos.uniq
-  # end
-  # 
-  # def products_to_be_promoted
-  #   products = self.products || []
-  #   products += self.system_templates.map { |tpl| tpl.products_to_be_promoted }.flatten(1)
-  #   return products.uniq
-  # end  
-  # 
   def generate_metadata
     async_tasks = affected_repos.collect do |repo|
       repo.generate_metadata
