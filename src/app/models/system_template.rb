@@ -346,9 +346,8 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def promote from_env, to_env
-    #TODO: promote parent templates recursively
-    self.parent.promote(from_env, to_env) unless self.parent.nil?
-
+    # TODO: add logic to promote parent templates
+    # when that feature arrives
     promote_products from_env, to_env
     promote_repos    from_env, to_env
     promote_packages from_env, to_env
@@ -360,8 +359,8 @@ class SystemTemplate < ActiveRecord::Base
 
 def remove from_env
     remove_template from_env
-    #TODO: remove parent templates recursively
-    self.parent.remove(from_env) if self.parent
+    # TODO: add logic to deal with removal of parent templates
+    # when that feature arrives
     []
 end
 
