@@ -14,23 +14,43 @@
 
 import os
 import sys
+import gettext
+import locale
+
+from katello.client.utils.encoding import encode_stream
 
 # Localization domain:
 APP = 'katello-cli'
 # Directory where translations are deployed:
 DIR = '/usr/share/locale/'
+# Encoding of the locales:
+ENCODING = 'utf-8'
+
+
+def force_encoding(encoding):
+    """
+    Force locale to use specific encoding and bind output streams to use it.
+    """
+    current_locale = locale.getlocale(locale.LC_ALL)[0] or locale.getdefaultlocale()[0]
+    locale.setlocale(locale.LC_ALL, str(current_locale)+'.'+str(encoding))
+    sys.stdout = encode_stream(sys.stdout, encoding)
+    sys.stderr = encode_stream(sys.stderr, encoding)
+
 
 def configure_i18n():
     """
     Configure internationalization for the application.
     """
-    import locale
-    import gettext
     try:
         locale.setlocale(locale.LC_ALL, '')
     except locale.Error:
         locale.setlocale(locale.LC_ALL, 'C')
+
+    if locale.getpreferredencoding().lower() != ENCODING.lower():
+        force_encoding(ENCODING)
+
     gettext.bindtextdomain(APP, DIR)
     gettext.textdomain(APP)
-    gettext.bind_textdomain_codeset(APP, 'utf-8')
+    gettext.bind_textdomain_codeset(APP, ENCODING)
+    
 
