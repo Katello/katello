@@ -50,8 +50,8 @@ class DeletionChangeset < Changeset
     update_progress! '10'
     from_env = self.environment
 
-    # PulpTaskStatus::wait_for_tasks delete_products(from_env)
-    # update_progress! '30'
+    delete_products(from_env)
+    update_progress! '30'
     delete_templates(from_env)
     update_progress! '50'
     delete_repos from_env
@@ -100,10 +100,11 @@ class DeletionChangeset < Changeset
 
 
   def delete_products from_env
-    # async_tasks = self.products.collect do |product|
-    #   product.delete_from_env from_env
-    # end
-    # async_tasks.flatten(1)
+    async_tasks = self.products.collect do |product|
+      next if (products.uniq! or []).include? product
+      product.delete_from_env(from_env)
+    end
+    async_tasks.flatten(1)
   end
 
 
