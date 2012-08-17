@@ -121,8 +121,6 @@ class Changeset < ActiveRecord::Base
   end
 
   def add_product! product
-     product.repos(env_to_verify_on_add_content).empty? and
-         raise _("Product '%s' hasn't any repositories") % product.name
 
      env_to_verify_on_add_content.products.include? product or
          raise Errors::ChangesetContentException.new("Product not found within environment you want to promote from.")
