@@ -255,8 +255,8 @@ echo Generating API docs
 rm -f Gemfile.lock
 cp Gemfile Gemfile.old
 echo 'gem "redcarpet"' >> Gemfile
-rake apipie:static RAILS_ENV=apipie
-rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie
+rake apipie:static RAILS_ENV=apipie --trace
+rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
 mv Gemfile.old Gemfile
 
 %install
