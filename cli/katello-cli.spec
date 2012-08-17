@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.1
+Version:       1.1.2
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -98,6 +98,10 @@ chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 
 
 %changelog
+* Thu Aug 16 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.2-1
+- 822926 - katello-cli-common now owns config dir
+- 822926 - fixing incorrect license in a header
+
 * Sat Aug 11 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
 - cli docs - removed version from config (tomas.str@gmail.com)
 - cli - Config inicialization moved to functions It was causing problems in
