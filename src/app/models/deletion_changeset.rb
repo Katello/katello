@@ -71,7 +71,7 @@ class DeletionChangeset < Changeset
     self.state          = Changeset::DELETED
     self.save!
 
-    # index_repo_content from_env
+    index_repo_content from_env
 
     if notify
       message = _("Successfully deleted changeset '%s'.") % self.name
