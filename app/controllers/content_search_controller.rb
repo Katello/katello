@@ -474,8 +474,8 @@ class ContentSearchController < ApplicationController
   # spanned_repos  all other instances of repos across all environments
   def spanning_content_rows(content_list, id_prefix, parent_repo, spanned_repos)
     env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
-    to_ret = [] 
-    for item in content_list:
+    to_ret = []
+    content_list.each do |item|
       if id_prefix == 'package'
         display = package_display(item)
       else

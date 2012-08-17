@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.4
+Version:        1.1.5
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -251,10 +251,13 @@ ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
 #api docs
-rm -f Gemfile.lock
 echo Generating API docs
-rake apipie:static RAILS_ENV=apipie
-rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie
+rm -f Gemfile.lock
+cp Gemfile Gemfile.old
+echo 'gem "redcarpet"' >> Gemfile
+rake apipie:static RAILS_ENV=apipie --trace
+rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
+mv Gemfile.old Gemfile
 
 %install
 #prepare dir structure
@@ -510,6 +513,28 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Aug 16 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.5-1
+- Icon fix for content search: selector_icon-black
+- Switching oauth warden strategy to use request.headers
+- Converge-UI update for spinner fadeOut.
+- 838115 - Spinner fixes and org selection updates.
+- 841228, 844414 - Fix for logging in and not having an org.
+- Revert "fixed a small typo."
+- api docs - documentation of API
+- 830713 - fix monkey patch for ruby 1.9
+- removed an extraneous logging to js console
+- modified updating of system's environment on system edit page to piggyback on
+  jeditable events.
+- support for updating of system information screen-wide on system edit
+- save button in path_selector is now being disabled after clicking
+- various changes per code review
+- Support for editing of system environment via web ui
+- Org interstitial and switcher cleanup. 843853 and 841686 were fixed.
+- fixed a small typo.
+- Fix overriding the Rails.env in jshint.rake
+- 815802 - Description on package filter does not save properly
+- move service-wait to katello-common
+
 * Tue Aug 07 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.4-1
 - 842858 - Fixes path issue to locked icon when viewing available changesets on
   the promotion page. (ehelms@redhat.com)
