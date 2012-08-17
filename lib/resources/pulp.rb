@@ -189,7 +189,7 @@ module Resources
 
         def find_all repo_ids
           filter = {"criteria" => {
-                      "filters"=> {"id"=> {"$in"=> ["fee", "fie", "foe", "foo"]}}
+                      "filters"=> {"id"=> {"$in"=> repo_ids}}
                    }
                 }
           response = post(repository_path  + "/search/", JSON.generate(filter) , self.default_headers)
@@ -282,18 +282,18 @@ module Resources
         end
 
         def sync (repo_id, data = {})
-          data[:limit] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
-          data[:threads] ||= AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
-          path = Repository.repository_path + repo_id + "/sync/"
+          data[:max_speed] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
+          data[:num_threads] ||= AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
+          path = Repository.repository_path + repo_id + "/actions/sync/"
           response = post(path, JSON.generate(data), self.default_headers)
           JSON.parse(response.body).with_indifferent_access
         end
 
         def sync_history repo_id
           begin
-            response = get(Repository.repository_path + repo_id + "/history/sync/", self.default_headers)
-            json_history = JSON.parse(response.body)
-            json_history.collect {|jh| jh.with_indifferent_access }
+            #
+            body = get(repository_path(repo_id) + '/history/sync/', self.default_headers).body
+            JSON.parse(body).collect{|i| i.with_indifferent_access}
           rescue RestClient::ResourceNotFound => error
             # Return nothing if there is a 404 which indicates there
             # is no sync status for this repo.  Not an error.
@@ -302,10 +302,12 @@ module Resources
         end
 
         def sync_status(repo_id)
-          path = Repository.repository_path + repo_id + "/sync/"
-          response = get(path, self.default_headers)
-          parsed = JSON.parse(response.body)
-          return parsed
+          response = Task.all(["pulp:repository:#{repo_id}", "pulp:action:sync"])
+          return response
+        end
+
+        def cancel_sync(repo_id, task_id)
+                           self.delete(repository_path(repo_id) + '/importers/sync_schedules/#{task_id}')
         end
 
         def destroy repo_id
@@ -316,7 +318,7 @@ module Resources
 
         def packages repo_id
           data = { :query => {
-                    :type_ids=>['rpms'],
+                    :type_ids=>['rpm'],
                     :sort => {
                         :unit => [ ['name', 'ascending'], ['version', 'descending'] ]
                     }
@@ -539,6 +541,22 @@ module Resources
           JSON.parse(body).collect{|k| k.with_indifferent_access}
         end
 
+        def find_single id
+          body = self.get(path(id), self.default_headers).body
+          JSON.parse(body).with_indifferent_access
+        end
+
+        def all tags=[]
+          if tags.empty?
+            args = ''
+          else
+            args = "/?tag=#{tags[0]}"
+            tags[1..-1].each{|t| args += "&tag=#{t}"}
+          end
+          body = self.get(path + args, self.default_headers).body
+          JSON.parse(body).collect{|k| k.with_indifferent_access}
+        end
+
         def cancel uuid
           response = self.post(path(uuid) +"cancel/" , {}, self.default_headers)
 
@@ -551,8 +569,9 @@ module Resources
         end
 
         def path uuid=nil
-          uuid.nil? ? "/pulp/api/tasks/" : "/pulp/api/tasks/#{uuid}/"
+          uuid.nil? ? "/pulp/api/v2/tasks/" : "/pulp/api/v2/tasks/#{uuid}/"
         end
+
       end
     end
 
