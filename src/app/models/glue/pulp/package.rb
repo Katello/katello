@@ -112,7 +112,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
 
 
   def self.id_search ids
-    return Support.array_with_total if !Tire.index(self.index).exists?
+    return Support.array_with_total unless Tire.index(self.index).exists?
     search = Tire.search self.index do
       fields [:id, :name, :nvrea, :repoids, :type, :filename, :checksum]
       query do
