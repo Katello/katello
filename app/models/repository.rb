@@ -51,7 +51,7 @@ class Repository < ActiveRecord::Base
   end
 
   def self.in_environment(env)
-    joins(:environment_product).where(:environment_products => { :environment_id => environment })
+    joins(:environment_product).where(:environment_products => { :environment_id => env })
   end
 
   def product

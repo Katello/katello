@@ -17,13 +17,19 @@ class PulpSyncProgress
     @total_size = @size_left = @total_count = @items_left = 0
 
     unless progress_attrs.nil?
+      #depending on whether this is a history item, or current sync structure may be different
       ht = HashUtil.new
-      @total_size  = ht.null_safe_get(progress_attrs, 0, ['size_total'])
-      @size_left   = ht.null_safe_get(progress_attrs, 0, ['size_left'])
-      @total_count = ht.null_safe_get(progress_attrs, 0, ['details','rpm','total_count'])
-      @items_left  = ht.null_safe_get(progress_attrs, 0, ['details','rpm','items_left'])
+
+      details = ht.null_safe_get(progress_attrs, nil, ['details','packages', 'sync_report'] ) ||
+          ht.null_safe_get(progress_attrs, nil, ['progress','importer', 'content'] )
+      #debugger
+      @total_size  = ht.null_safe_get(details, 0, ['size_total'])
+      @size_left   = ht.null_safe_get(details, 0, ['size_left'])
+      @total_count = ht.null_safe_get(details, 0, ['items_total'])
+      @items_left  = ht.null_safe_get(details, 0, ['items_left'])
       @error_details = ht.null_safe_get(progress_attrs, [], ['error_details'])
       @step = ht.null_safe_get(progress_attrs, 0, ['step'])
+
     end
   end
 end
@@ -32,7 +38,7 @@ class PulpSyncStatus < PulpTaskStatus
   use_index_of TaskStatus
   
   FINISHED = "finished"
-  ERROR = "error"
+  ERROR = "failed"
   RUNNING = "running"
   WAITING = "waiting"
 
@@ -55,16 +61,7 @@ class PulpSyncStatus < PulpTaskStatus
   end
 
   def update_state(pulp_status)
-    self.attributes = {
-      :uuid => pulp_status[:id],
-      :state => pulp_status[:state],
-      :start_time => pulp_status[:start_time],
-      :finish_time => pulp_status[:finish_time],
-      :progress => pulp_status[:progress],
-      :result => pulp_status[:result].nil? ? {:errors => [pulp_status[:exception], pulp_status[:traceback]]} : pulp_status[:result]
-    }
-
-    self.save! if not self.new_record?
+    PulpSyncStatus.dump_state(pulp_status, self)
     correct_state
     self
   end

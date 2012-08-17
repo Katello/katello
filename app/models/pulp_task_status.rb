@@ -52,7 +52,7 @@ class PulpTaskStatus < TaskStatus
     if pulp_status.is_a? TaskStatus
       pulp_status
     else
-      task_status = TaskStatus.find_by_uuid(pulp_status[:id])
+      task_status = TaskStatus.find_by_uuid(pulp_status[:task_id])
       task_status = self.new { |t| yield t if block_given? } if task_status.nil?
       PulpTaskStatus.dump_state(pulp_status, task_status)
     end
@@ -60,11 +60,11 @@ class PulpTaskStatus < TaskStatus
 
   def self.dump_state(pulp_status, task_status)
     task_status.attributes = {
-      :uuid => pulp_status[:id],
-      :state => pulp_status[:state],
-      :start_time => pulp_status[:start_time],
-      :finish_time => pulp_status[:finish_time],
-      :progress => pulp_status[:progress],
+      :uuid => pulp_status[:task_id],
+      :state => pulp_status[:state] || pulp_status[:result],
+      :start_time => pulp_status[:started],
+      :finish_time => pulp_status[:completed],
+      :progress => pulp_status,
       :result => pulp_status[:result].nil? ? {:errors => [pulp_status[:exception], pulp_status[:traceback]]} : pulp_status[:result]
     }
     task_status.save! if not task_status.new_record?
@@ -73,15 +73,9 @@ class PulpTaskStatus < TaskStatus
 
   def self.refresh task_status
     pulp_task = Resources::Pulp::Task.find([task_status.uuid]).first
-    task_status.attributes = {
-        :state => pulp_task[:state],
-        :finish_time => pulp_task[:finish_time],
-        :progress => pulp_task[:progress],
-        :result => pulp_task[:result].nil? ? {:errors => [pulp_task[:exception], pulp_task[:traceback]]} : pulp_task[:result]
-    }
-    task_status.save! if not task_status.new_record?
+
+    self.dump_state(task-status, pulp_task)
     task_status.after_refresh
-    task_status
   end
 
   protected
