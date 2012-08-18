@@ -20,6 +20,7 @@ except ImportError:
     import md5
     import sha
     from Crypto.Hash import SHA256 as sha256
+    # pylint: disable=W0232
     class hashlib:
         @staticmethod
         def new(checksum):
@@ -33,7 +34,7 @@ except ImportError:
                 raise ValueError, "Incompatible checksum type"
 
 
-def getFileChecksum(hashtype, filename=None, fd=None, file=None, buffer_size=None):
+def getFileChecksum(hashtype, filename=None, fd=None, file_handler=None, buffer_size=None):
     """ Compute a file's checksum
         Used by rotateFile()
     """
@@ -45,7 +46,7 @@ def getFileChecksum(hashtype, filename=None, fd=None, file=None, buffer_size=Non
 
     if filename is None and fd is None and file is None:
         raise ValueError("no file specified")
-    if file:
+    if file_handler:
         f = file
     elif fd is not None:
         f = os.fdopen(os.dup(fd), "r")
@@ -55,14 +56,14 @@ def getFileChecksum(hashtype, filename=None, fd=None, file=None, buffer_size=Non
     f.seek(0, 0)
     m = hashlib.new(hashtype)
     while 1:
-        buffer = f.read(buffer_size)
-        if not buffer:
+        file_buffer = f.read(buffer_size)
+        if not file_buffer:
             break
-        m.update(buffer)
+        m.update(file_buffer)
 
     # cleanup time
-    if file is not None:
-        file.seek(0, 0)
+    if file_handler is not None:
+        file_handler.seek(0, 0)
     else:
         f.close()
     return m.hexdigest()

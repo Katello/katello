@@ -132,7 +132,7 @@ class UsersController < ApplicationController
     end
 
     notify.success @user.username + _(" created successfully.")
-    if search_validate(User, user.id, params[:search])
+    if search_validate(User, @user.id, params[:search])
       render :partial => "common/list_item",
              :locals  => { :item => @user, :accessor => "id", :columns => ["username"], :name => controller_display_name }
     else

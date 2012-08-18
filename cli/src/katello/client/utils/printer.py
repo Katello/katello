@@ -26,24 +26,26 @@ class PrinterStrategy:
     def print_item(self, heading, columns, item):
         """
         Print one item
-        @type heading: string
-        @param heading: Title for the list of items
-        @type columns: list of dicts
-        @param columns: definition of columns
-        @type item: dict
-        @param item: data to be printed, one item
+
+        :type heading: string
+        :param heading: Title for the list of items
+        :type columns: list of dicts
+        :param columns: definition of columns
+        :type item: dict
+        :param item: data to be printed, one item
         """
         self.print_items(heading, columns, [item])
 
     def print_items(self, heading, columns, items):
         """
         Print list of items
-        @type heading: string
-        @param heading: Title for the list of items
-        @type columns: list of dicts
-        @param columns: definition of columns
-        @type items: list of dicts
-        @param items: data to be printed, list of items
+
+        :type heading: string
+        :param heading: Title for the list of items
+        :type columns: list of dicts
+        :param columns: definition of columns
+        :type items: list of dicts
+        :param items: data to be printed, list of items
         """
         pass
 
@@ -52,11 +54,12 @@ class PrinterStrategy:
         Tests whether there is any value to print in the column.
         It can be value either from the item or set explicitly
         in the column definition.
-        @type column: dict
-        @param column: column definition
-        @type item: dict
-        @param item: data to get the value from
-        @rtype: bool
+
+        :type column: dict
+        :param column: column definition
+        :type item: dict
+        :param item: data to get the value from
+        :rtype: bool
         """
         return (column['attr_name'] in item) or ('value' in column)
 
@@ -65,11 +68,12 @@ class PrinterStrategy:
         Returns string that should be displayed in the column.
         It's either a given value or attribute of the item. Formatters
         are applied if they are available.
-        @type column: dict
-        @param column: column definition
-        @type item: dict
-        @param item: data to get the value from
-        @rtype: string
+
+        :type column: dict
+        :param column: column definition
+        :type item: dict
+        :param item: data to get the value from
+        :rtype: string
         """
         value = item.get(column['attr_name'], column.get('value', None))
         value_format_func = column.get('formatter', column.get('value_formatter', None))
@@ -87,12 +91,13 @@ class VerboseStrategy(PrinterStrategy):
     def print_items(self, heading, columns, items):
         """
         Print list of items
-        @type heading: string
-        @param heading: Title for the list of items
-        @type columns: list of dicts
-        @param columns: definition of columns
-        @type items: list of dicts
-        @param items: data to be printed, list of items
+
+        :type heading: string
+        :param heading: Title for the list of items
+        :type columns: list of dicts
+        :param columns: definition of columns
+        :type items: list of dicts
+        :param items: data to be printed, list of items
         """
         self._print_header(heading)
         for item in items:
@@ -102,8 +107,9 @@ class VerboseStrategy(PrinterStrategy):
     def _print_header(self, heading):
         """
         Print a fancy header to stdout.
-        @type heading: string or list of strings
-        @param heading: headers to be displayed
+
+        :type heading: string or list of strings
+        :param heading: headers to be displayed
         """
         print_line()
         print center_text(heading)
@@ -112,10 +118,11 @@ class VerboseStrategy(PrinterStrategy):
     def _print_item(self, item, columns):
         """
         Print one record.
-        @type item: hash
-        @param item: data to print
-        @type columns: list of dicts
-        @param columns: columns definition
+
+        :type item: hash
+        :param item: data to print
+        :type columns: list of dicts
+        :param columns: columns definition
         """
         print
         for column in columns:
@@ -135,9 +142,10 @@ class VerboseStrategy(PrinterStrategy):
     def _max_label_width(self, columns):
         """
         Returns maximum width of the column labels.
-        @type columns: list of dicts
-        @param columns: columns definition
-        @rtype: int
+
+        :type columns: list of dicts
+        :param columns: columns definition
+        :rtype: int
         """
         width = 0
         for column in columns:
@@ -154,20 +162,21 @@ class GrepStrategy(PrinterStrategy):
 
     def __init__(self, delimiter=None):
         """
-        @type delimiter: string
-        @param delimiter: delimiter for dividing the grid columns
+        :type delimiter: string
+        :param delimiter: delimiter for dividing the grid columns
         """
         self.__delim = delimiter if delimiter else ""
 
     def print_items(self, heading, columns, items):
         """
         Print list of items
-        @type heading: string
-        @param heading: Title for the list of items
-        @type columns: list of dicts
-        @param columns: definition of columns
-        @type items: list of dicts
-        @param items: data to be printed, list of items
+
+        :type heading: string
+        :param heading: Title for the list of items
+        :type columns: list of dicts
+        :param columns: definition of columns
+        :type items: list of dicts
+        :param items: data to be printed, list of items
         """
         column_widths = self._calc_column_widths(items, columns)
         self._print_header(heading, columns, column_widths)
@@ -178,12 +187,13 @@ class GrepStrategy(PrinterStrategy):
     def _print_header(self, heading, columns, column_widths):
         """
         Print a fancy header with column labels to stdout.
-        @type heading: string or list of strings
-        @param heading: headers to be displayed
-        @type columns: list of dicts
-        @param columns: columns definition
-        @type column_widths: dict
-        @param column_widths: dictionary that holds maximal widths of columns {attr_name -> width}
+
+        :type heading: string or list of strings
+        :param heading: headers to be displayed
+        :type columns: list of dicts
+        :param columns: columns definition
+        :type column_widths: dict
+        :param column_widths: dictionary that holds maximal widths of columns {attr_name -> width}
         """
         print_line()
         print center_text(heading)
@@ -201,12 +211,13 @@ class GrepStrategy(PrinterStrategy):
     def _print_item(self, item, columns, column_widths):
         """
         Print item of a list on single line
-        @type item: hash
-        @param item: data to print
-        @type columns: list of dicts
-        @param columns: columns definition
-        @type column_widths:
-        @param column_widths:
+
+        :type item: hash
+        :param item: data to print
+        :type columns: list of dicts
+        :param columns: columns definition
+        :type column_widths:
+        :param column_widths:
         """
         print self.__delim,
         for column in columns:
@@ -230,11 +241,12 @@ class GrepStrategy(PrinterStrategy):
         """
         Returns maximum width for the column to ensure that all the data
         and the label fits in.
-        @type columns: list of dicts
-        @param columns: columns definition
-        @type column: dict
-        @param column: column definition
-        @rtype: int
+
+        :type columns: list of dicts
+        :param columns: columns definition
+        :type column: dict
+        :param column: column definition
+        :rtype: int
         """
         key = column['attr_name']
         width = len(column['name'])+1
@@ -246,11 +258,12 @@ class GrepStrategy(PrinterStrategy):
     def _calc_column_widths(self, items, columns):
         """
         Counts and retunrs dictionary that holds maximal widths of all columns {attr_name -> width}
-        @type items: list of dicts
-        @param items: data to be printed
-        @type columns: list of dicts
-        @param columns: columns definition
-        @rtype: dict
+
+        :type items: list of dicts
+        :param items: data to be printed
+        :type columns: list of dicts
+        :param columns: columns definition
+        :rtype: dict
         """
         widths = {}
         for column in columns:
@@ -265,8 +278,8 @@ class Printer:
 
     def __init__(self, strategy=None):
         """
-        @type strategy: PrinterStrategy
-        @param strategy: strategy that is used for formatting the output.
+        :type strategy: PrinterStrategy
+        :param strategy: strategy that is used for formatting the output.
         """
         self.__printer_strategy = strategy
         self.__columns = []
@@ -275,27 +288,31 @@ class Printer:
     def set_header(self, heading):
         """
         Sets label for a fancy header that is printed above the data.
-        @type heading: string
+
+        :param heading:
+        :type heading: string
         """
         self.__heading = heading
 
     def set_strategy(self, strategy):
         """
         Sets formatting strategy
-        @type strategy: PrinterStrategy
-        @param strategy: strategy that is used for formatting the output.
+
+        :type strategy: PrinterStrategy
+        :param strategy: strategy that is used for formatting the output.
         """
         self.__printer_strategy = strategy
 
     def add_column(self, attr_name, name = None, **kwargs):
         """
         Add column of data thet will be displayed
-        @type attr_name: string
-        @param attr_name: key to data hash
-        @type name: string
-        @param name: label for the column. It is generated automatically attr_name if it's not set.
-        @type kwargs: dict
-        @param kwargs: other parameters that are passed to the printer strategy
+        
+        :type attr_name: string
+        :param attr_name: key to data hash
+        :type name: string
+        :param name: label for the column. It is generated automatically from attr_name if it's not set.
+        :type kwargs: dict
+        :param kwargs: other parameters that are passed to the printer strategy
         """
         col = kwargs
         col['attr_name'] = attr_name
@@ -305,8 +322,9 @@ class Printer:
     def print_item(self, item):
         """
         Print one record
-        @type item: dict
-        @param item: data to be printed
+
+        :type item: dict
+        :param item: data to be printed
         """
         if not self.__printer_strategy:
             self.set_strategy(VerboseStrategy())
@@ -315,8 +333,9 @@ class Printer:
     def print_items(self, items):
         """
         Print list of records
-        @type items: list of dicts
-        @param items: data to be printed
+
+        :type items: list of dicts
+        :param items: data to be printed
         """
         if not self.__printer_strategy:
             self.set_strategy(GrepStrategy())
@@ -326,16 +345,17 @@ class Printer:
         """
         Convert attribute name to display name.
         oraganization_id -> Organization Id
-        @type attr_name: string
-        @param attr_name: attribute name
-        @rtype: string
+
+        :type attr_name: string
+        :param attr_name: attribute name
+        :rtype: string
         """
         return " ".join([part[0].upper() + part[1:] for part in attr_name.split("_")])
 
     def __filtered_columns(self):
         """
-        @return: list of columns that can be printed with current strategy
-        @rtype: list of column definition dicts
+        :return: list of columns that can be printed with current strategy
+        :rtype: list of column definition dicts
         """
         filtered = []
         for column in self.__columns:
@@ -348,11 +368,12 @@ class Printer:
 def indent_text(text, indent="\t"):
     """
     Indents given text.
-    @type text: string or list of strings
-    @param text: text to be indented
-    @type indent: string
-    @param indent: value that is added at the beggining of each line of the text
-    @rtype: string
+
+    :type text: string or list of strings
+    :param text: text to be indented
+    :type indent: string
+    :param indent: value that is added at the beggining of each line of the text
+    :rtype: string
     """
     if not text:
         text = u_str(None)
@@ -367,11 +388,12 @@ def indent_text(text, indent="\t"):
 def text_to_line(text, glue=" "):
     """
     Squeezes a block of text to one line.
-    @type text: string
-    @param text: text to be processed
-    @type glue: string
-    @param glue: string used for joining lines of the text
-    @rtype: string
+
+    :type text: string
+    :param text: text to be processed
+    :type glue: string
+    :param glue: string used for joining lines of the text
+    :rtype: string
     """
     if not text:
         text = u_str(None)
@@ -385,12 +407,13 @@ def text_to_line(text, glue=" "):
 def center_text(text, width = None):
     """
     Centers block of text in given width.
-    @type text: string
-    @param text: text to be processed
-    @type width: int
-    @param width: width of space the text should be centered to. If no width is given,
+
+    :type text: string
+    :param text: text to be processed
+    :type width: int
+    :param width: width of space the text should be centered to. If no width is given,
     full terminal size is used.
-    @rtype: string
+    :rtype: string
     """
     if not width:
         width = get_term_width()
@@ -407,8 +430,9 @@ def center_text(text, width = None):
 def print_line(width = None):
     """
     Prints line of characters '-' to stdout
-    @type width: int
-    @param width: width of the line in characters. If no width is given,
+
+    :type width: int
+    :param width: width of the line in characters. If no width is given,
     full terminal size is used.
     """
     if not width:
@@ -419,7 +443,8 @@ def print_line(width = None):
 def get_term_width():
     """
     returns terminal width (tested only with Linux)
-    @rtype: int
+
+    :rtype: int
     """
     try:
         import fcntl

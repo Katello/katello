@@ -18,10 +18,8 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.version import VersionAPI
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 
-Config()
 
 # base ping action --------------------------------------------------------
 

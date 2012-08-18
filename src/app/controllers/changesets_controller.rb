@@ -106,14 +106,16 @@ class ChangesetsController < ApplicationController
 
   def create
     begin
-      if params[:action_type].blank? or params[:action_type] == Changeset::PROMOTION
+      if params[:changeset][:action_type].blank? or 
+         params[:changeset][:action_type] == Changeset::PROMOTION
         env_id = @next_environment.id
         type = Changeset::PROMOTION
       else
         env_id = @environment.id
         type = Changeset::DELETION
       end
-      @changeset = Changeset.create_for(type, :name => params[:name], :description => params[:description],
+      @changeset = Changeset.create_for(type, :name => params[:changeset][:name], 
+                                        :description => params[:changeset][:description],
                                         :environment_id => env_id)
 
       notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
