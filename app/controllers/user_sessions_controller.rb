@@ -52,15 +52,14 @@ class UserSessionsController < ApplicationController
   def set_org
     orgs = current_user.allowed_organizations
     org = Organization.find(params[:org_id])
-    valid_org = true
     if org.nil? or !orgs.include?(org)
       notify.error _("Invalid organization")
-      valid_org = false
       render :nothing => true
+      return
     else
       self.current_organization = org
     end
-    if valid_org && self.current_organization == org
+    if self.current_organization == org
       redirect_to dashboard_index_url
     end
   end
