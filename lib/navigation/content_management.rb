@@ -334,13 +334,41 @@ module Navigation
           :options => {:class=>"panel_link"}
         }
       ]
-      menu <<  { :key => :system_groups,
+      menu << if AppConfig.katello?
+        { :key => :system_mgmt,
+          :name =>_("System Groups"),
+          :items => lambda{ak_systems_subnav},
+          :if => lambda{@activation_key},
+          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
+          :options => {:class=>'panel_link menu_parent'}
+        }
+      else
+        { :key => :systems,
+          :name =>_("Systems"),
+          :url => lambda{systems_activation_key_path(@activation_key.id)},
+          :if => lambda{@activation_key},
+          :options => {:class=>"panel_link"}
+        }
+      end
+
+      menu
+    end
+
+    def ak_systems_subnav
+      [
+        { :key => :system_groups,
           :name =>_("System Groups"),
           :url => lambda{system_groups_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
-          :options => {:class=>"panel_link"}
-        } if AppConfig.katello?
-      return menu
+          :options => {:class=>"third_level panel_link"}
+        },
+        { :key => :systems,
+          :name =>_("Systems"),
+          :url => lambda{systems_activation_key_path(@activation_key.id)},
+          :if => lambda{@activation_key},
+          :options => {:class=>"third_level panel_link"}
+        }
+      ]
     end
 
     def subscriptions_navigation

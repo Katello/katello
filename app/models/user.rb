@@ -50,6 +50,7 @@ class User < ActiveRecord::Base
 
   validates :username, :uniqueness => true, :presence => true, :username => true, :length => { :maximum => 255 }
   validates :email, :presence => true, :if => :not_ldap_mode?
+  validates :default_locale, :inclusion => {:in => AppConfig.available_locales, :allow_nil => true, :message => _("must be one of %s") % AppConfig.available_locales.join(', ')}
 
   # check if the role does not already exist for new username
   validates_each :username do |model, attr, value|
@@ -513,14 +514,14 @@ class User < ActiveRecord::Base
     end
   end
 
-  # flush existing ldap roles + load & save new ones 
+  # flush existing ldap roles + load & save new ones
   def set_ldap_roles
     # first, delete existing ldap roles
     clear_existing_ldap_roles
     # load groups from ldap
     groups = Ldap.ldap_groups(self.username)
     groups.each do |group|
-      # find corresponding 
+      # find corresponding
       group_roles = LdapGroupRole.find_all_by_ldap_group(group)
       group_roles.each do |group_role|
         if group_role
@@ -534,6 +535,15 @@ class User < ActiveRecord::Base
 
   def clear_existing_ldap_roles
     self.roles = self.roles_users.select { |r| !r.ldap }.map { |r| r.role }
+  end
+
+  # returns the set of users who have kt_environment_id's environment set as their
+  # default. the data relationship is somewhat odd...
+  def self.find_by_default_environment(kt_environment_id)
+    self.joins(:own_role).
+        joins("inner join permissions on users.own_role_id  = permissions.role_id").
+        joins("inner join permission_tags on permissions.id = permission_tags.permission_id").
+        where("tag_id = #{kt_environment_id}")
   end
 
   protected
@@ -573,10 +583,10 @@ class User < ActiveRecord::Base
     verb
   end
 
-
   def extended_index_attrs
     { :username_sort => username.downcase }
   end
+
 
   private
 

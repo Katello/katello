@@ -18,7 +18,7 @@ class ActivationKeysController < ApplicationController
   before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy,
                                                 :available_subscriptions, :applied_subscriptions,
                                                 :add_subscriptions, :remove_subscriptions,
-                                                :system_groups, :add_system_groups, :remove_system_groups]
+                                                :system_groups, :systems, :add_system_groups, :remove_system_groups]
   before_filter :find_environment, :only => [:edit]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
   before_filter :panel_options, :only => [:index, :items]
@@ -52,6 +52,7 @@ class ActivationKeysController < ApplicationController
       :remove_subscriptions => manage_test,
 
       :system_groups => read_test,
+      :systems => read_test,
       :add_system_groups => manage_test,
       :remove_system_groups => manage_test,
 
@@ -148,6 +149,11 @@ class ActivationKeysController < ApplicationController
     # retrieve the available groups that aren't currently assigned to the key
     @system_groups = SystemGroup.where(:organization_id=>current_organization).order(:name) - @activation_key.system_groups
     render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>ActivationKey.manageable?(current_organization)}
+  end
+
+  def systems
+    @systems = @activation_key.systems
+    render :partial=>"systems", :layout => "tupane_layout", :locals=>{:editable=>ActivationKey.manageable?(current_organization)}
   end
 
   def add_system_groups
