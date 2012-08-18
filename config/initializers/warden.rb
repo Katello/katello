@@ -141,7 +141,7 @@ Warden::Strategies.add(:oauth) do
   end
 
   def authenticate!
-    return fail("no 'katello-user' header") if request.env['HTTP_KATELLO_USER'].blank?
+    return fail("no 'katello-user' header") if request.headers['HTTP_KATELLO_USER'].blank?
 
     consumer_key = OAuth::RequestProxy.proxy(request).oauth_consumer_key
     signature=OAuth::Signature.build(request) do
@@ -150,7 +150,7 @@ Warden::Strategies.add(:oauth) do
 
     return fail!("Invalid oauth signature") unless signature.verify
 
-    u = User.where(:username => request.env['HTTP_KATELLO_USER']).first
+    u = User.where(:username => request.headers['HTTP_KATELLO_USER']).first
     u ? success!(u, "OAuth") : fail!("Username is not correct - could not log in")
   rescue OAuth::Signature::UnknownSignatureMethod => e
     Rails.logger.error "Unknown oauth signature method"+ e.to_s

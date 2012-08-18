@@ -33,17 +33,25 @@ class Api::ChangesetsController < Api::ApiController
 
   respond_to :json
 
+  api :GET, "/organizations/:organization_id/environments/:environment_id/changesets", "List changesets in an environment"
+  param :name, String, :desc => "An optional changeset name to filter upon"
   def index
     changesets = Changeset.select("changesets.*, environments.name AS environment_name").
         joins(:environment).where(params.slice(:name, :environment_id))
     render :json => changesets.to_json
   end
 
+  api :GET, "/changesets/:id", "Show a changeset"
   def show
     render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos, :system_templates,
                                                     :distributions])
   end
 
+  api :PUT, "/changesets/:id", "Update a changeset"
+  param :changeset, Hash do
+    param :description, String, :desc => "The description of the changeset"
+    param :name, String, :desc => "The name of the changeset"
+  end
   def update
     @changeset.attributes = params[:changeset].slice(:name, :description)
     @changeset.save!
@@ -51,10 +59,16 @@ class Api::ChangesetsController < Api::ApiController
     render :json => @changeset
   end
 
+  api :GET, "/changesets/:id/dependencies", "List the Depenencies for a changeset"
   def dependencies
     render :json => @changeset.calc_dependencies.to_json
   end
 
+  api :POST, "/organizations/:organization_id/environments/:environment_id/changesets", "Create a changeset"
+  param :changeset, Hash do
+    param :description, String, :allow_nil => true, :desc => "The description of the changeset"
+    param :name, String, :desc => "The name of the changeset"
+  end
   def create
     csType = params[:changeset][:type]
     if params[:changeset][:type] == 'PROMOTION'
@@ -72,6 +86,7 @@ class Api::ChangesetsController < Api::ApiController
   end
 
   # DEPRICATED - TODO: Note this in the new API doc format
+  api :POST, "/changesets/:id/promote", "Promote a changeset into a new envrionment."
   def promote
     @changeset.state = Changeset::REVIEW
     @changeset.save!
@@ -86,7 +101,7 @@ class Api::ChangesetsController < Api::ApiController
     render :json => async_job, :status => 202
   end
 
-
+  api :DELETE, "/changesets/:id", "Destroy a changeset"
   def destroy
     @changeset.destroy
     render :text => _("Deleted changeset '#{params[:id]}'"), :status => 200
