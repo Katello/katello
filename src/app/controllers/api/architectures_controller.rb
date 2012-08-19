@@ -14,14 +14,28 @@ class Api::ArchitecturesController < Api::ApiController
 
   skip_before_filter :authorize # TODO
 
+  resource_description do 
+    description <<-DOC
+      This controller is available only if support for Foreman is installed.
+    DOC
+  end
+
+
+  api :GET, "/architectures", "Get list of architectures available in Foreman"
   def index
     render :json => Foreman::Architecture.all
   end
 
+  api :GET, "/architectures/:id", "Show an architecture"
+  param :id, String, "architecture name"
   def show
     render :json => Foreman::Architecture.find(params[:id])
   end
 
+  api :POST, "/architecture", "Create new architecture in Foreman"
+  param :architecture, Hash, :desc => "architecture info" do 
+    param :name, String, "architecture name"
+  end
   def create
     resource = Foreman::Architecture.new(params[:architecture])
     if resource.save
@@ -29,6 +43,11 @@ class Api::ArchitecturesController < Api::ApiController
     end
   end
 
+  api :PUT, "/architectures/:id", "Update an architecture record in Foreman"
+  param :id, String, "architecture name"
+  param :architecture, Hash, :desc => "architecture info" do 
+    param :name, String, "architecture name"
+  end
   def update
     resource = Foreman::Architecture.new(params[:architecture])
     resource.id = params[:id]
@@ -37,6 +56,8 @@ class Api::ArchitecturesController < Api::ApiController
     end
   end
 
+  api :DELETE, "/architectures/:id", "Remove an architecture from Foreman"
+  param :id, String, "architecture name"
   def destroy
     if Foreman::Architecture.delete(params[:id])
       render :nothing => true
