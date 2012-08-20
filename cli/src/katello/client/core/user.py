@@ -68,6 +68,8 @@ class Create(UserAction):
                                help=_("user's default organization name"))
         parser.add_option('--default_environment', dest='default_environment',
                                help=_("user's default environment name"))
+        parser.add_option('--default_locale', dest='default_locale',
+                               help=_("user's default locale"))
 
     def check_options(self, validator):
         validator.require(('username', 'password', 'email'))
@@ -80,13 +82,14 @@ class Create(UserAction):
         disabled = self.get_option('disabled')
         default_organization = self.get_option('default_organization')
         default_environment = self.get_option('default_environment')
+        default_locale = self.get_option('default_locale')
 
         if default_environment is not None:
             environment = get_environment(default_organization, default_environment)
         else:
             environment = None
 
-        user = self.api.create(username, password, email, disabled, environment)
+        user = self.api.create(username, password, email, disabled, environment, default_locale)
         test_record(user,
             _("Successfully created user [ %s ]") % username,
             _("Could not create user [ %s ]") % username
@@ -115,8 +118,16 @@ class Info(UserAction):
         self.printer.add_column('disabled')
         self.printer.add_column('default_organization')
         self.printer.add_column('default_environment')
+        self.printer.add_column('default_locale')
 
         self.printer.set_header(_("User Information"))
+
+        # Add user locale to user dictionary
+        try:
+            user['default_locale'] = user['preferences']['user']['locale']
+        except KeyError:
+            user['default_locale'] = None
+
         self.printer.print_item(user)
         return os.EX_OK
 
@@ -158,13 +169,16 @@ class Update(UserAction):
                                help=_("user's default environment name"))
         parser.add_option('--no_default_environment', dest='no_default_environment', action="store_true",
                                help=_("user's default environment is None"))
+        parser.add_option('--default_locale', dest='default_locale',
+                               help=_("user's default locale"))
+
 
     def check_options(self, validator):
         validator.require('username')
         validator.require_at_least_one_of((
             'password', 'email', 'disabled',
             'default_organization', 'default_environment',
-            'no_default_environment'))
+            'no_default_environment', 'default_locale'))
 
         validator.require_all_or_none(('default_organization', 'default_environment'))
         validator.mutually_exclude(('default_organization', 'default_environment'), 'no_default_environment')
@@ -177,6 +191,7 @@ class Update(UserAction):
         default_organization = self.get_option('default_organization')
         default_environment = self.get_option('default_environment')
         no_default_environment = self.get_option('no_default_environment')
+        default_locale = self.get_option('default_locale')
 
         if no_default_environment is True:
             environment = None
@@ -187,7 +202,7 @@ class Update(UserAction):
 
         user = get_user(username)
 
-        user = self.api.update(user['id'], password, email, disabled, environment)
+        user = self.api.update(user['id'], password, email, disabled, environment, default_locale)
         print _("Successfully updated user [ %s ]") % username
         return os.EX_OK
 

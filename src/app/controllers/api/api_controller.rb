@@ -84,7 +84,7 @@ class Api::ApiController < ActionController::Base
     return @query_params
   end
 
-
+  private
 
   def find_organization
     raise HttpErrors::NotFound, _("organization_id required but not specified.") if params[:organization_id].nil?
@@ -99,9 +99,7 @@ class Api::ApiController < ActionController::Base
     end
   end
 
-  private
-
-   def verify_ldap
+  def verify_ldap
     u = current_user
     u.verify_ldap_roles if (AppConfig.ldap_roles && u != nil)
   end

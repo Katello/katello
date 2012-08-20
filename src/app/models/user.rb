@@ -50,6 +50,7 @@ class User < ActiveRecord::Base
 
   validates :username, :uniqueness => true, :presence => true, :username => true, :length => { :maximum => 255 }
   validates :email, :presence => true, :if => :not_ldap_mode?
+  validates :default_locale, :inclusion => {:in => AppConfig.available_locales, :allow_nil => true, :message => _("must be one of %s") % AppConfig.available_locales.join(', ')}
 
   # check if the role does not already exist for new username
   validates_each :username do |model, attr, value|
