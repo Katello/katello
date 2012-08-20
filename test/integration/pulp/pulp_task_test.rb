@@ -1,40 +1,30 @@
+# Copyright 2012 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+require 'rubygems'
+require 'minitest/autorun'
 require 'test/integration/pulp/vcr_pulp_setup'
+require 'test/integration/pulp/helpers/repository_helper'
 
 
 module TestPulpTaskBase
+  include RepositoryHelper
+
   def setup
     @resource = Resources::Pulp::Task
-    @repo_url = "http://lzap.fedorapeople.org/fakerepos/zoo5/"
-    @repo_name = "integration_test_repo"
-    @task = {}
     VCR.insert_cassette('pulp_task')
   end
 
   def teardown
     VCR.eject_cassette
-  end
-
-  def create_repo
-    Resources::Pulp::Repository.create(:id => @repo_name, :name=> @repo_name, :arch => 'noarch', :feed => @repo_url)
-  rescue Exception => e
-  end
-
-  def sync_repo
-    @task = Resources::Pulp::Repository.sync(@repo_name)
-  end
-
-  def destroy_repo(id=@repo_name, sync=false)
-    if sync
-      Resources::Pulp::Task.cancel(@task["id"])
-      while !(['finished', 'error', 'timed_out', 'canceled', 'reset'].include?(@task['state'])) do
-        @task = Resources::Pulp::Task.find([@task["id"]]).first
-        sleep 0.5 # do not overload backend engines
-      end
-    end
-
-    @resource.destroy(id)
-
-  rescue Exception => e
   end
 
 end
@@ -43,15 +33,12 @@ end
 class TestPulpTask < MiniTest::Unit::TestCase
   include TestPulpTaskBase
 
-  def setup
-    super
-    create_repo
-    sync_repo
+  def self.before_suite
+    RepositoryHelper.create_and_sync_repo
   end
 
-  def teardown
-    destroy_repo(@repo_name, true)
-    super
+  def self.after_suite
+    RepositoryHelper.destroy_repo
   end
 
   def test_path
@@ -60,24 +47,24 @@ class TestPulpTask < MiniTest::Unit::TestCase
   end
 
   def test_path_with_role_name
-    path = @resource.path(@task['id'])
-    assert_match("/api/tasks/" + @task['id'], path)
+    path = @resource.path(RepositoryHelper.task['id'])
+    assert_match("/api/tasks/" + RepositoryHelper.task['id'], path)
   end
 
   def test_find
-    response = @resource.find([@task['id']])
+    response = @resource.find([RepositoryHelper.task['id']])
     assert response.length > 0
-    assert response.first['id'] == @task['id']
+    assert response.first['id'] == RepositoryHelper.task['id']
   end
 
   def test_cancel
-    response = @resource.cancel(@task['id'])
+    response = @resource.cancel(RepositoryHelper.task['id'])
     assert response.length > 0
   end
 
   def test_destroy
-    response = @resource.destroy(@task['id'])
-    assert response == '404'
+    response = @resource.destroy(RepositoryHelper.task['id'])
+    assert response['id'] == RepositoryHelper.task['id']
   end
 
 end
