@@ -162,7 +162,7 @@ module Glue::Pulp::Repos
         @repo_cache[env.id] = Repository.joins(:environment_product).where(
             "environment_products.product_id" => self.id, "environment_products.environment_id"=> env)
       end
-      if self.custom? || include_disabled
+      if include_disabled
         return @repo_cache[env.id]
       end
 
@@ -179,6 +179,16 @@ module Glue::Pulp::Repos
         self.environments << to_env
       end
 
+      save!
+      async_tasks
+    end
+
+    def delete_from_env from_env
+      @orchestration_for = :delete
+      async_tasks = delete_repos repos(from_env), from_env
+      if from_env.products.include? self
+        self.environments.delete(from_env)
+      end
       save!
       async_tasks
     end
@@ -538,6 +548,15 @@ module Glue::Pulp::Repos
       async_tasks = []
       repos.each do |repo|
         async_tasks << repo.promote(from_env, to_env)
+      end
+      async_tasks.flatten(1)
+    end
+
+    def delete_repos repos, from_env
+      async_tasks = []
+      repos.each do |repo|
+        # async_tasks << repo.promote(from_env, to_env)
+        async_tasks << delete_repo_by_id(repo.id)
       end
       async_tasks.flatten(1)
     end
