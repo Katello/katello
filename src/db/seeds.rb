@@ -5,6 +5,13 @@
 #
 
 require 'util/password'
+require 'util/puppet'
+
+# variables which are taken from Puppet
+first_user_name = Util::Puppet.config_value("user_name") || 'admin'
+first_user_password = Util::Puppet.config_value("user_pass") || 'admin'
+first_user_email= Util::Puppet.config_value("user_email") || 'root@localhost'
+first_org_name = Util::Puppet.config_value("org_name") || 'ACME_Corporation'
 
 AppConfig.use_cp = false if ENV['NO_CP']
 AppConfig.use_pulp = false if ENV['NO_PULP']
@@ -28,9 +35,9 @@ User.current = user_admin = User.find_by_username('admin')
 unless user_admin
   user_admin = User.new(
   :roles => [ superadmin_role ],
-  :username => 'admin',
-  :password => 'admin',
-  :email => 'root@localhost')
+  :username => first_user_name,
+  :password => first_user_password,
+  :email => first_user_email)
   User.current = user_admin
   user_admin.save!
 end
@@ -47,7 +54,6 @@ unless hidden_user = User.hidden.first
 end
 raise "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? or hidden_user.errors.size > 0
 
-first_org_name = "ACME_Corporation"
 first_org_desc = first_org_name + " Organization"
 first_org_cp_key = first_org_name.gsub(' ', '_')
 # create the default org = "admin" if none exist

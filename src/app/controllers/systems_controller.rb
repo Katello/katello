@@ -78,7 +78,7 @@ class SystemsController < ApplicationController
   def param_rules
     update_check = lambda do
       if params[:system]
-        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel] }
+        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel, :environment_id] }
         check_hash_params(sys_rules, params)
       else
         check_array_params([:id], params)
@@ -116,9 +116,8 @@ class SystemsController < ApplicationController
       @system.cp_type = "system"
       @system.environment = KTEnvironment.find(params["system"]["environment_id"])
       #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
-      saved = @system.save!
       #find the newly created system
-      if saved
+      if @system.save!
         notify.success _("System '%s' was created.") % @system['name']
 
         if search_validate(System, @system.id, params[:search])
@@ -204,11 +203,41 @@ class SystemsController < ApplicationController
 
   end
 
+  # Note that finding the provider_id is important to allow the subscription to be linked to the url for either the
+  # Red Hat provider or the custom provider page
   def subscriptions
-    consumed_entitlements = @system.consumed_entitlements
-    avail_pools = @system.available_pools_full !current_user.subscriptions_match_system_preference
+    # Consumed subscriptions
+    consumed_entitlements = @system.consumed_entitlements.collect do |entitlement|
+      pool = ::Pool.find_pool(entitlement.poolId)
+      product = Product.where(:cp_id => pool.product_id).first
+      entitlement.provider_id = product.nil? ? nil : product.provider_id
+      entitlement
+    end
+
+    # Available subscriptions
+    if current_user.subscriptions_match_system_preference
+      cp_pools = @system.available_pools
+    else
+      cp_pools = @system.all_available_pools
+    end
+    if cp_pools
+      # Pool objects
+      pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
+
+      subscriptions = pools.collect do |pool|
+        product = Product.where(:cp_id => pool.product_id).first
+        next if product.nil?
+        pool.provider_id = product.provider_id
+        pool
+      end.compact
+      subscriptions = [] if subscriptions.nil?
+    else
+      subscriptions = []
+    end
+
+    @organization = current_organization
     render :partial=>"subscriptions", :layout => "tupane_layout",
-                                      :locals=>{:system=>@system, :avail_subs => avail_pools,
+                                      :locals=>{:system=>@system, :avail_subs => subscriptions,
                                                 :consumed_entitlements => consumed_entitlements,
                                                 :editable=>@system.editable?}
   end
@@ -257,9 +286,12 @@ class SystemsController < ApplicationController
     rescue Exception => e
       # Don't pepper user with notices if there is an error fetching release versions, but do log them
       Rails.logger.error e.to_str
-      releases = []
+      releases ||= []
     end
-    render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?, :releases=>releases, :name=>controller_display_name}
+
+    render :partial=>"edit", :layout=>"tupane_layout", :locals=>{
+        :system=>@system, :editable=>@system.editable?, :releases=>releases, :name=>controller_display_name,
+        :environments=>environment_paths(library_path_element, environment_path_element("systems_readable?"))}
   end
 
   def update
@@ -651,7 +683,7 @@ class SystemsController < ApplicationController
       :list_partial => 'systems/list_systems',
       :ajax_load  => true,
       :ajax_scroll => items_systems_path(),
-      :actions => System.any_deletable?(@environment, current_organization) ? 'actions' : nil,
+      :actions => AppConfig.katello? ? (System.any_deletable?(@environment, current_organization) ? 'actions' : nil) : nil,
       :initial_action => :subscriptions,
       :search_class=>System,
       :disable_create=> current_organization.environments.length == 0 ? _("At least one environment is required to create or register systems in your current organization.") : false

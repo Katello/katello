@@ -20,10 +20,9 @@
           .grid_2.ra
             %label #{_("Name")}:
           .grid_5.la#filter_name{'name' => 'filter[name]', 'data-url' => filter_path(@filter.id), :class=>("edit_name editable" if editable)} #{@filter.name}
-  
-        %fieldset.fl.clear
-          .grid_2.ra
-            %label #{_("Description")}:
-          .grid_5.la{:style => "word-wrap: break-word;", 'name' => 'filter[description]', 'data-url' => filter_path(@filter.id), :class=>("editable edit_textarea" if editable)}<> #{@filter.description}
 
--#%input#provider_id{:name => @filter.id, :type => "hidden", :value => @filter.id, "data-ajax_url"=>url_for(:action=> 'update')}
+        - unless @filter.description.blank?
+          %fieldset.fl.clear
+            .grid_2.ra
+              %label #{_("Description")}:
+            .grid_5.la{:style => "word-wrap: break-word;"}<> #{@filter.description}

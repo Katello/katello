@@ -1,6 +1,6 @@
 #
 # Katello Organization actions
-# Copyright (c) 2010 Red Hat, Inc.
+# Copyright (c) 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -19,14 +19,12 @@ from gettext import gettext as _
 
 from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.utils.printer import VerboseStrategy
 from katello.client.utils import printer
 from datetime import timedelta, datetime
 
-Config()
 
 # base organization action -----------------------------------------------------
 

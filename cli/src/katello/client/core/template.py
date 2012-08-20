@@ -1,6 +1,6 @@
 #
 # Katello Organization actions
-# Copyright (c) 2010 Red Hat, Inc.
+# Copyright (c) 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -20,14 +20,12 @@ from gettext import gettext as _
 from optparse import OptionValueError
 
 from katello.client.api.template import TemplateAPI
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, get_abs_path, run_spinner_in_bg, system_exit
 from katello.client.api.utils import get_library, get_environment, get_template, get_product, get_repo
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 
-Config()
 
 
 # base template action =========================================================
@@ -315,8 +313,8 @@ class Update(TemplateAction):
         #parser.add_option('--add_product', dest='add_products', action="append", help=_("name of the product"))
         #parser.add_option('--remove_product', dest='remove_products', action="append", help=_("name of the product"))
 
-        parser.add_option('--add_package', dest='add_packages', action="append", help=_("name or nvre of the product (epoch:name-rel.ease-ver.sio.n)"))
-        parser.add_option('--remove_package', dest='remove_packages', action="append", help=_("name or nvre of the product (epoch:name-rel.ease-ver.sio.n)"))
+        parser.add_option('--add_package', dest='add_packages', action="append", help=_("name of the package"))
+        parser.add_option('--remove_package', dest='remove_packages', action="append", help=_("name of the package"))
 
         parser.add_option('--add_parameter', dest='add_parameters', action="callback", callback=self.store_parameter_name, type="string",
                                 help=_("name of the parameter, %s must follow") % "--value")

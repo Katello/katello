@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2010 Red Hat, Inc.
+# Copyright © 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -21,9 +21,7 @@ from optparse import OptionGroup, SUPPRESS_HELP
 from katello.client.i18n_optparse import OptionParser, OptionParserExitError
 from katello.client.core.utils import parse_tokens
 from katello.client.utils.encoding import u_str
-
 from katello.client.core.base import Command
-
 from katello.client.api.version import VersionAPI
 from katello.client.config import Config
 from katello.client.logutil import getLogger, logfile
@@ -31,7 +29,7 @@ from katello.client import server
 
 from katello.client.server import BasicAuthentication, SSLAuthentication, KerberosAuthentication, NoAuthentication
 
-Config()
+
 _log = getLogger(__name__)
 
 class OptionException(Exception):
@@ -84,6 +82,8 @@ class KatelloCLI(Command):
                                 default=None, help=SUPPRESS_HELP)
         parser.add_option_group(credentials)
 
+
+        Config()
         server = OptionGroup(parser, _('Katello Server Information'))
         host = Config.parser.get('server', 'host') or 'localhost.localdomain'
         server.add_option('--host', dest='host', default=host,

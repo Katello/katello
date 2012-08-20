@@ -1,6 +1,6 @@
 #
 # Katello Repos actions
-# Copyright (c) 2010 Red Hat, Inc.
+# Copyright (c) 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -13,6 +13,14 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 #
+
+"""
+Bunch of api utilities for finding records by their names.
+Katello API uses integer ids for record identification in most
+cases. These util functions help with translating names to ids.
+All of them throw ApiDataError if any of the records is not found.
+"""
+
 
 from gettext import gettext as _
 from katello.client.api.organization import OrganizationAPI
@@ -34,7 +42,9 @@ from katello.client.api.system import SystemAPI
 class ApiDataError(Exception):
     """
     Exception to indicate an error in search for data via api.
-    The only argument is [0] the error message.
+    The only argument is the error message.
+
+    :argument: localized error message
     """
     pass
 

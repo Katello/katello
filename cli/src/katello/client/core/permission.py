@@ -1,6 +1,6 @@
 #
 # Katello Organization actions
-# Copyright (c) 2010 Red Hat, Inc.
+# Copyright (c) 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -22,11 +22,8 @@ from katello.client.api.permission import PermissionAPI
 from katello.client.api.utils import get_role, get_permission
 from katello.client.core.utils import system_exit, test_record
 from katello.client.utils.printer import GrepStrategy, VerboseStrategy
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.utils import printer
-
-Config()
 
 
 

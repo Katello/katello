@@ -2,21 +2,24 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.2.31
+Version:        1.1.4
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
 Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
-Source0:        %{name}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
 Requires:       puppet >= 2.6.6
-Requires:       coreutils shadow-utils wget
+Requires:       coreutils
+Requires:       wget
 Requires:       katello-certs-tools
-Requires:       nss-tools openssl
+Requires:       nss-tools
+Requires:       openssl
 Requires:       policycoreutils-python
+Requires:       initscripts
+Requires:       rubygem(bundler)
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
 BuildRequires:  findutils puppet >= 2.6.6
 
@@ -30,6 +33,9 @@ katello-upgrade which handles upgrades between versions.
 %setup -q
 
 %build
+#check syntax of main configure script and libs
+ruby -c bin/katello-configure lib/puppet/parser/functions/*rb
+
 #check syntax for all puppet scripts
 %if 0%{?rhel} || 0%{?fedora} < 17
 find -name '*.pp' | xargs -n 1 -t puppet --parseonly
@@ -53,7 +59,6 @@ THE_VERSION=%version sed -i "s/THE_VERSION/$THE_VERSION/g" man/katello-passwd.po
 
 
 %install
-rm -rf %{buildroot}
 #prepare dir structure
 install -d -m 0755 %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
@@ -73,9 +78,6 @@ install -m 0644 man/katello-passwd.man1 %{buildroot}%{_mandir}/man1/katello-pass
 install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts
 cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
-%clean
-rm -rf %{buildroot}
-
 %files
 %{homedir}/
 %{_sbindir}/katello-configure
@@ -87,6 +89,111 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 16 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.4-1
+- 828369 - katello.conf owned by katello:katello
+
+* Sat Aug 11 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.3-1
+- remove ssh pub keys (msuchy@redhat.com)
+- puppet - make sure we deploy previous certificate before generating new one
+  (inecas@redhat.com)
+- 820624 - make pgsql to listen only on localhost (lzap+git@redhat.com)
+
+* Sat Aug 04 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.2-1
+- 845224 - fix adding broker cert to nssdb (inecas@redhat.com)
+
+* Thu Aug 02 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
+- rb19 - fixing typo in requires (lzap+git@redhat.com)
+- buildroot and %%clean section is not needed (msuchy@redhat.com)
+- rb19 - correcting requires for fedora guidelines (lzap+git@redhat.com)
+- rb19 - adding missing require (lzap+git@redhat.com)
+- rb19 - fixing collate (lzap+git@redhat.com)
+- rb19 - adding puppet bundler check (lzap+git@redhat.com)
+- rb19 - one more UTF8 fix (lzap+git@redhat.com)
+- rb19 - setting collate (lzap+git@redhat.com)
+- rb19 - invalid char (lzap+git@redhat.com)
+- rb19 - warning msg (lzap+git@redhat.com)
+- rb19 - adding check (lzap+git@redhat.com)
+- rb19 - extra comma (lzap+git@redhat.com)
+- Bumping package versions for 1.1. (msuchy@redhat.com)
+
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
+- bump up version to 1.0 (msuchy@redhat.com)
+
+* Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.39-1
+- update copyright years (msuchy@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.38-1
+- Fix Ruby 1.9.3 compatibility issue in Puppet manifest (inecas@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.37-1
+- puppet - nss generation ordering issue (lzap+git@redhat.com)
+- puppet - pulp migrate must run before apache2 ensure (lzap+git@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.36-1
+- puppet - fixing pulp migrate race condition (typo) (lzap+git@redhat.com)
+- puppet - fixing pulp migrate race condition (lzap+git@redhat.com)
+
+* Mon Jul 30 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.35-1
+- puppet - adding more logging to cert creation (lzap+git@redhat.com)
+- point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)
+
+* Fri Jul 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.34-1
+- puppet - better help strings for reset options
+- puppet - when installer fails print info about katello-debug
+- puppet - adding mongod to the service-wait script
+- puppet - apache2/pulp reloading was not working with systemd
+- puppet - reset tasks must not return non-zero
+- puppet - adding service-wait wrapper script
+- 840595 - katello-configure --help optparse.rb error fix
+- puppet - remove color codes from puppet log file
+- puppet - upgrade scripts are marked only during first installation
+- puppet - tomcat6 had problems with restarts in headpin mode
+- puppet - reuse secret token also for headpin deployment
+- puppet - wrap long lines for optparse
+- puppet - introducing temp answer file for dangerous options
+- puppet - adding k-c options -d and -b
+- puppet - implementing reset_data and reset_cache options
+- puppet - split add-private-key-to-nss-db into two actions
+- puppet - adding logging to cpinit phase
+- puppet - create katello-configure subdir for logs
+- puppet - do not restart httpd everytime
+- puppet - use refreshonly for cert generation
+- puppet - do not rewrite pulp user pass everytime
+- puppet - remove generated string from all config headers
+- puppet - get rid of cpsetup and use dpdb directly
+- puppet - notify services when changing config files
+- puppet - do not regenerate oauth_secret every puppet run
+- puppet - use keystore_password_file for tomcat too
+- puppet - allowing users to set pgsql superuser password
+- puppet - cleaning up default answers file
+- puppet - not changing seeds.rb anymore with puppet
+- puppet - moving config_value function to rails context
+- puppet - adding warning comment to all configuration files
+- puppet - do not regenerate tomcat password everytime
+- puppet - adding elastic search parameters
+- puppet - removing log dir mangling
+- puppet - removing warning message
+- installer review - reformatting
+- installer review - adding missing log_base require
+- installer review - reformatting
+- installer review - introducing cpsetup_done file
+- installer review - reformatting
+
+* Fri Jul 27 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.33-1
+- Making auto-stop services optional (jomara@redhat.com)
+- Making the script call katello-system instead of individual system calls
+  thanks to msuchys update (jomara@redhat.com)
+- 820280 : print output from service $ stop (jomara@redhat.com)
+- 820280 : katello-upgrad should also stop httpd & elasticsearch. Using confirm
+  method for input (jomara@redhat.com)
+- 820280 - katello-upgrade should stop the services it requires to be stopped
+  (jomara@redhat.com)
+
+* Thu Jul 26 2012 Miroslav Suchý <msuchy@redhat.com> 0.2.32-1
+- Making katello db migration upgrade script start backend services
+  (jsherril@redhat.com)
+- moving katello db migration to after pulp & candlepins (jsherril@redhat.com)
+
 * Mon Jul 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.31-1
 - %%defattr is not needed since rpm 4.4
 

@@ -1,7 +1,12 @@
-@charset "UTF-8";
-@import "compass";
-@import "converge-ui/vars";
+@import "katello_base";
 
+
+#path-container {
+
+  .path_selector {
+    width: auto;
+  }
+}
 
 .jbreadcrumb {
   list-style: none;
@@ -9,6 +14,7 @@
   max-height: 34px;
   /*font: 14px;*/
   position: relative;
+  z-index: 0;
   @include no-select;
   .selected {
     background: $listhover_color !important;

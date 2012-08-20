@@ -1,6 +1,6 @@
 #
 # Katello Repos actions
-# Copyright (c) 2010 Red Hat, Inc.
+# Copyright (c) 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -21,7 +21,6 @@ from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.utils.encoding import u_str
 
-Config()
 
 # base system action --------------------------------------------------------
 
@@ -50,6 +49,7 @@ class Remember(ClientAction):
         option = self.opts.option
         value = self.opts.value
 
+        Config()
         if not Config.parser.has_section('options'):
             Config.parser.add_section('options')
 
@@ -80,6 +80,7 @@ class Forget(ClientAction):
     def run(self):
         option = self.opts.option
 
+        Config()
         Config.parser.remove_option('options', option)
         try:
             Config.save()
@@ -103,6 +104,7 @@ class SavedOptions(ClientAction):
     def run(self):
         self.printer.set_header(_("Saved Options"))
 
+        Config()
         if Config.parser.has_section('options'):
             options = Config.parser.options('options')
 

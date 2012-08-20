@@ -26,6 +26,7 @@ class Api::ApiController < ActionController::Base
 
   rescue_from RestClient::ExceptionWithResponse, :with => :exception_with_response
   rescue_from ActiveRecord::RecordInvalid, :with => :invalid_record
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
   rescue_from Errors::NotFound, :with => proc { |e| render_exception(404, e) }
 
   rescue_from HttpErrors::NotFound, :with => proc { |e| render_wrapped_exception(404, e) }
@@ -83,7 +84,7 @@ class Api::ApiController < ActionController::Base
     return @query_params
   end
 
-
+  private
 
   def find_organization
     raise HttpErrors::NotFound, _("organization_id required but not specified.") if params[:organization_id].nil?
@@ -98,9 +99,7 @@ class Api::ApiController < ActionController::Base
     end
   end
 
-  private
-
-   def verify_ldap
+  def verify_ldap
     u = current_user
     u.verify_ldap_roles if (AppConfig.ldap_roles && u != nil)
   end
@@ -150,6 +149,16 @@ class Api::ApiController < ActionController::Base
     respond_to do |format|
       format.json { render :json => {:displayMessage => exception.message, :errors => [exception.message] }, :status => 400 }
       format.all  { render :text => pp_exception(exception, :with_class => false), :status => 400 }
+    end
+  end
+
+  def record_not_found(exception)
+    logger.error exception.class
+    logger.debug exception.backtrace.join("\n")
+
+    respond_to do |format|
+      format.json { render :json => {:displayMessage => exception.message, :errors => [exception.message] }, :status => 404 }
+      format.all  { render :text => pp_exception(exception, :with_class => false), :status => 404 }
     end
   end
 

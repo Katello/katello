@@ -7,8 +7,8 @@ class apache2 {
   include apache2::service
 
   exec { "reload-apache2":
-    command     => "/etc/init.d/httpd reload",
-    onlyif      => "/usr/sbin/apachectl -t",
+    # Pulp & Apache2 & Systemd are not friends - we restart rather than reload
+    command     => "/sbin/service httpd restart",
     require     => Service["httpd"],
     refreshonly => true,
   }
