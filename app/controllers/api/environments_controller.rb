@@ -108,7 +108,6 @@ identifier of an environment that is prior the new environment in the chain, it 
 either library or an envrionment at the end of the chain
     DESC
   end
-  api :POST, "/organizations/:organization_id/environments", "Create an environment in an organization"
   def create
     environment = KTEnvironment.new(params[:environment])
     @organization.environments << environment
