@@ -25,7 +25,8 @@ module LoginHelperMethods
         @permission = Permission.create!(:role =>@user.roles.first, :all_types => true, :name => "superadmin")
       end
 
-      request.env['warden'] = mock(Warden, :user => @user, :authenticate => @user, :authenticate! => @user)
+      request.env['warden'] = mock(Warden, :user => @user, :authenticate => @user, :authenticate! => @user,
+                                   :raw_session => mock(:raw_session).as_null_object, :logout => true)
       controller.stub!(:require_org).and_return({})
       return @user
     else

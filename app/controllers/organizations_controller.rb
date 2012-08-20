@@ -75,7 +75,6 @@ class OrganizationsController < ApplicationController
   def create
     org_params    = params[:organization]
     env_params    = params[:environment]
-    cp_key        = org_params[:name].tr(' ', '_')
     @organization = Organization.new(:name => org_params[:name], :description => org_params[:description])
     @organization.save!
 
