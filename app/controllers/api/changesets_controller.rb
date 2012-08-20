@@ -107,6 +107,8 @@ class Api::ChangesetsController < Api::ApiController
     render :text => _("Deleted changeset '#{params[:id]}'"), :status => 200
   end
 
+  private
+
   def find_changeset
     @changeset = Changeset.find(params[:id])
     raise HttpErrors::NotFound, _("Couldn't find changeset '#{params[:id]}'") if @changeset.nil?

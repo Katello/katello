@@ -204,8 +204,8 @@ class Changeset < ActiveRecord::Base
     return deleted
   end
 
-  def remove_package! package_id, product
-    deleted = ChangesetPackage.destroy_all(:package_id => package_id, :changeset_id => self.id,
+  def remove_package! nvrea, product
+    deleted = ChangesetPackage.destroy_all(:nvrea => nvrea, :changeset_id => self.id,
                                            :product_id => product.id)
     save!
     return deleted
