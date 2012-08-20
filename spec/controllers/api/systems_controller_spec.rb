@@ -148,7 +148,6 @@ describe Api::SystemsController do
 
         it "uses user credentials of the hidden user" do
           User.should_receive("current=").at_least(:once)
-          User.should_receive("current=").with(@activation_key_1.user).once
           post :activate, @system_data
           response.should be_success
         end

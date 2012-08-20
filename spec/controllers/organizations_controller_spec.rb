@@ -56,7 +56,7 @@ describe OrganizationsController do
       before do
         @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION[:organization])
         @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:organization][:name])
-        Organization.stub!(:first).and_return(@organization)
+        Organization.stub!(:find_by_cp_key).and_return(@organization)
       end
       let(:action) {:update}
       let(:req) do
@@ -105,7 +105,7 @@ describe OrganizationsController do
       end
 
       it 'should generate a success notice' do
-        controller.should notify.success
+        controller.should notify(:success, :success)
         post 'create', OrgControllerTest::ORGANIZATION
         response.should be_success
       end      
@@ -120,7 +120,8 @@ describe OrganizationsController do
 
       it_should_behave_like "bad request"  do
         let(:req) do
-          bad_req = {:name => "multi word organization", :description => "spaced out organization", :envname => "first-env"}
+          bad_req           = { :organization => { :name    => "multi word organization", :description => "spaced out organization",
+                                                   :envname => "first-env" } }
           bad_req[:bad_foo] = "mwahaha"
           post :create, bad_req
         end
@@ -227,7 +228,7 @@ describe OrganizationsController do
         @organization = new_test_org
         @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION[:organization])
         @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:organization][:name])
-        Organization.stub!(:first).and_return(@organization)
+        Organization.stub!(:find_by_cp_key).and_return(@organization)
       end
       
       it "should call katello org update api" do

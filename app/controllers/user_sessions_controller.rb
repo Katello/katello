@@ -20,8 +20,8 @@ class UserSessionsController < ApplicationController
 
   def section_id
     "loginpage"
-  end  
-  
+  end
+
   def new
     if !request.env['HTTP_X_FORWARDED_USER'].blank?
       # if we received the X-Forwarded-User, the user must have logged in via SSO; therefore,
@@ -37,7 +37,7 @@ class UserSessionsController < ApplicationController
   def create
     login_user
   end
-  
+
   def destroy
     logout
     self.current_organization = nil
@@ -48,13 +48,13 @@ class UserSessionsController < ApplicationController
   def allowed_orgs
     render :partial=>"/layouts/allowed_orgs", :locals =>{:user=>current_user}
   end
-  
+
   def set_org
     orgs = current_user.allowed_organizations
     org = Organization.find(params[:org_id])
     if org.nil? or !orgs.include?(org)
       notify.error _("Invalid organization")
-      render :nothing => true
+      render :nothing => true and return false
     else
       self.current_organization = org
     end
@@ -62,7 +62,7 @@ class UserSessionsController < ApplicationController
       redirect_to dashboard_index_url
     end
   end
-  
+
   private
 
   def login_user
