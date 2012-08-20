@@ -645,7 +645,7 @@ Src::Application.routes.draw do
     resources :users do
       get :report, :on => :collection
       get :sync_ldap_roles, :on => :collection
-      resources :roles, :controller => :users do
+      resources :roles, :controller => :users, :only =>[] do
        post   :index, :on => :collection, :action => :add_role
        delete :destroy, :on => :member, :action => :remove_role
        get    :index, :on => :collection, :action => :list_roles
