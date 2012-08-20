@@ -1,6 +1,6 @@
 
 Name:           katello-repos
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        Definition of yum repositories for Katello
 
@@ -43,6 +43,10 @@ install -m 644 katello-foreman.repo %{buildroot}%{_sysconfdir}/yum.repos.d/
 %{_sysconfdir}/yum.repos.d/*.repo
 
 %changelog
+* Mon Aug 20 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.2-1
+- replace SUBDIR also in katello-foreman.repo (msuchy@redhat.com)
+- add katello-foreman.repo (msuchy@redhat.com)
+
 * Fri Aug 03 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.1-1
 - use Katello gpg key (msuchy@redhat.com)
 - fedora-pulp.repo is not used any more (msuchy@redhat.com)
