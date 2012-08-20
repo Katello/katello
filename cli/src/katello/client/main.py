@@ -44,7 +44,8 @@ from katello.client.core import (
   gpg_key,
   system_group,
   admin,
-  architecture
+  architecture,
+  config_template
 )
 
 def setup_admin(katello_cmd):
@@ -281,3 +282,12 @@ def setup_admin(katello_cmd):
     architecture_cmd.add_command('delete', architecture.Delete())
     katello_cmd.add_command('architecture', architecture_cmd)
 
+    configtemplate_cmd = config_template.ConfigTemplate()
+    configtemplate_cmd.add_command('list', config_template.List())
+    configtemplate_cmd.add_command('show', config_template.Show())
+    configtemplate_cmd.add_command('create', config_template.Create())
+    configtemplate_cmd.add_command('update', config_template.Update())
+    # configtemplate_cmd.add_command('revision', config_template.Revision())
+    configtemplate_cmd.add_command('destroy', config_template.Destroy())
+    configtemplate_cmd.add_command('build_pxe_default', config_template.Build_Pxe_Default())
+    katello_cmd.add_command('config_template', configtemplate_cmd)

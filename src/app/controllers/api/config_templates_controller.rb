@@ -15,7 +15,7 @@ class Api::ConfigTemplatesController < Api::ApiController
   skip_before_filter :authorize # TODO
 
   def index
-    render :json => Foreman::ConfigTemplate.all
+    render :json => Foreman::ConfigTemplate.all(params.slice('order', 'search'))
   end
 
   def show
@@ -30,8 +30,8 @@ class Api::ConfigTemplatesController < Api::ApiController
   end
 
   def update
-    resource = Foreman::ConfigTemplate.new(params[:config_template])
-    resource.id = params[:id]
+    resource = Foreman::ConfigTemplate.find!(params[:id])
+    resource.attributes = params[:config_template]
     if resource.save!
       render :json => resource
     end

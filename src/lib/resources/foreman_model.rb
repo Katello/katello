@@ -17,7 +17,7 @@ class Resources::ForemanModel
 
     def initialize(resource)
       @resource = resource
-      super("#{resource.class} with id '#{resource.id}' is invalid:\n" +
+      super("#{resource.class}#{resource.id && " with id '#{resource.id}'"} is invalid:\n" +
                 resource.errors.full_messages.map { |m| "- " + m }.join("\n"))
     end
   end
@@ -167,8 +167,8 @@ class Resources::ForemanModel
     nil
   end
 
-  def self.all
-    resource.index(nil, foreman_header).first.map { |data| new clean_attribute_hash(data[resource_name]) }
+  def self.all(params)
+    resource.index(params, foreman_header).first.map { |data| new clean_attribute_hash(data[resource_name]) }
   end
 
   def self.delete!(id)
