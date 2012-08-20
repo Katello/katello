@@ -1,7 +1,5 @@
-@charset "UTF-8";
-@import "compass";
-@import "converge-ui/base";
 @import "katello_base";
+
 
 /* box for "errors" on the custom 500 error page */
 .dash {
@@ -72,6 +70,7 @@
           margin-top: 3px;
           width: 15px;
           height: 15px;
+          display: inline-block;
         }
         .red_icon {background: $status_icons_red_small;}
         .yellow_icon {background: $status_icons_yellow_small;}
@@ -282,6 +281,7 @@
           width: 15px;
           height: 15px;
           margin-top: 3px;
+          display: inline-block;
         }
       .red_icon {background: $status_icons_red_small;}
       .yellow_icon {background: $status_icons_yellow_small;}
@@ -489,7 +489,7 @@
     border:1px solid $border_color;
     background: #f0f0f0;
     position: relative;
-    z-index: 10;
+    z-index: 0;
     &:hover, &.active{
         background: #dcdcdc;
     }

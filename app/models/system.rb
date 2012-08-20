@@ -67,6 +67,7 @@ class System < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => :environment_id
   validates :description, :katello_description_format => true
   validates_length_of :location, :maximum => 255
+  validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 }, :allow_blank => true, :allow_nil => true, :on => {:create, :update}
   before_create  :fill_defaults
 
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}

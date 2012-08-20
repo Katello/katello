@@ -7,17 +7,9 @@
 
 = content_for :content do
   #provider
-    = form_for @filter, :html => {:method => :post}, :url => filters_path do |form|
-      %fieldset.fl.clear
-        .grid_2.ra
-          %label #{_("Name")}:
-        .grid_4.la
-          = form.text_field :name
-      %fieldset.fl.clear
-        .grid_2.ra
-          %label #{_("Description")}:
-        .grid_4.la
-          = form.text_area :description, :rows=>8
+    = kt_form_for @filter, :html => {:method => :post}, :url => filters_path do |form|
 
-      .grid_4.la.prefix_2
-        = button_to _("Save"), {:action => "create", :controller => "filters"}, :method => :post, :id => :filter_save
+      = form.text_field :name, :label => _("Name"), :size => 30
+      = form.text_area :description, :label => _("Description"), :size => "40x8"
+
+      = form.submit _("Save")

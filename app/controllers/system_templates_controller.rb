@@ -266,11 +266,6 @@ class SystemTemplatesController < ApplicationController
     render :partial => "promotion_details", :layout => "tupane_layout", :locals=>{:template=>@template}
   end
 
-  def auto_complete_package
-    name = params[:name]
-    render :json=> Resources::Pulp::Package.autocomplete_name(name).sort.uniq[0..19]
-  end
-
   def create
     obj_params = params[:system_template]
     obj_params[:environment_id] = current_organization.library.id

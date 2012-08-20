@@ -1,22 +1,22 @@
-%div
+%div{:id => "system_#{item.id}"}
   %div{:class => 'column_2'}
     %ul
       %li
         .product
           .status_icon{:class => "#{item.send('compliance_color')}"}
         %div.one-line-ellipsis#heading_title
-          = item.send('name')
+          %span#name
+            = item.send('name')
       %li.one-line-ellipsis
         = _('Env: ')
-        = system_environment_name item
+        %span#environment
+          = system_environment_name item
   %div{:class => 'column_2'}
     %ul
       %li
         = get_checkin(item)
       %li
         = _('OS: ')
-        = item.send('distribution_name')
-      %li
-        = _('IP: ')
-        = item.send('ip')
+        %span#distribution_name
+          = item.send('distribution_name')
 .arrow-right

@@ -41,29 +41,50 @@ class Api::RolesController < Api::ApiController
      }
   end
 
+  api :GET, "/roles", "List roles"
+  api :GET, "/users/:user_id/roles", "List roles assigned to a user"
+  param :name, :undef
   def index
     render :json => (Role.readable.non_self.where query_params).to_json
   end
 
+  api :GET, "/roles/:id", "Show a role"
+  api :GET, "/users/:user_id/roles/:id", "Show a role"
   def show
     render :json => @role
   end
 
+  api :POST, "/roles", "Create a role"
+  api :POST, "/users/:user_id/roles", "Create a role"
+  param :role, Hash do
+    param :description, String, :allow_nil => true
+    param :name, String, :required => true
+  end
   def create
     render :json => Role.create!(params[:role]).to_json
   end
 
+  api :PUT, "/roles/:id", "Update a role"
+  api :PUT, "/users/:user_id/roles/:id", "Update a role"
+  param :role, Hash do
+    param :description, String, :allow_nil => true
+    param :name, String
+  end
   def update
     @role.update_attributes!(params[:role])
     @role.save!
     render :json => @role
   end
 
+  api :DELETE, "/roles/:id", "Destroy a role"
+  api :DELETE, "/users/:user_id/roles/:id", "Destroy a role"
   def destroy
     @role.destroy
     render :text => _("Deleted role '#{params[:id]}'"), :status => 200
   end
 
+  api :GET, "/roles/available_verbs", "List all available verbs that can be set to roles"
+  param :organization_id, :identifier, :desc => "With this option specified the listed tags are scoped to the organization."
   def available_verbs
     details= {}
 
@@ -81,6 +102,7 @@ class Api::RolesController < Api::ApiController
     render :json => details
   end
 
+  private
 
   def find_role
     @role = Role.find(params[:id])

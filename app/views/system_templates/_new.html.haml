@@ -5,17 +5,10 @@
   / pretty
 
 = content_for :content do
-  = form_for SystemTemplate.new, :html => {:method => :post, :id => 'new_system_template'}, :url => system_templates_path do |form|
-    %fieldset.fl.clear
-      %label.grid_2 #{_("Name")}:
-      .grid_4.la#template_name
-        = form.text_field :name
+  = kt_form_for SystemTemplate.new, :html => {:id => 'new_system_template'} do |form|
 
-    %fieldset.fl.clear
-      %label.grid_2 #{_("Description")}:
-      .grid_4.la#template_description
-        = form.text_area :description, :cols=>30, :rows=>5
+    = form.text_field :name, :label => _("Name")
 
+    = form.text_area :description, :label => _("Description"), :size => "30x5"
 
-    .grid_3.la.prefix_2
-      = button_to _("Save"), {:action => "create", :controller => "system_templates"}, :method => :post, :id => :template_save
+    = form.submit _("Save"), :id => :template_save
