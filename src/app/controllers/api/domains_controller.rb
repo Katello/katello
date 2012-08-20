@@ -15,30 +15,30 @@ class Api::DomainsController < Api::ApiController
   skip_before_filter :authorize
 
   def index
-    render :json => Foreman::Domain.all
+    render :json => Foreman::Domain.all(params.slice('order', 'search'))
   end
 
   def show
-    render :json => Foreman::Domain.find(params[:id])
+    render :json => Foreman::Domain.find!(params[:id])
   end
 
   def create
     resource = Foreman::Domain.new(params[:domain])
-    if resource.save
+    if resource.save!
       render :json => resource
     end
   end
 
   def update
-    resource = Foreman::Domain.new(params[:domain])
-    resource.id = params[:id]
-    if resource.save
+    resource = Foreman::Domain.find!(params[:id])
+    resource.attributes = params[:domain]
+    if resource.save!
       render :json => resource
     end
   end
 
   def destroy
-    if Foreman::Domain.delete(params[:id])
+    if Foreman::Domain.delete!(params[:id])
       render :nothing => true
     end
   end
