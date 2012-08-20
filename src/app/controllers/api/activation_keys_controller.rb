@@ -117,6 +117,7 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => @activation_key.to_json
   end
 
+  private
 
   def find_organization
     return unless params.has_key?(:organization_id)
