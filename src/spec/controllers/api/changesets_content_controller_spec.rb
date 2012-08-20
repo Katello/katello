@@ -110,7 +110,7 @@ describe Api::ChangesetsContentController, :katello => true do
 
     it "should remove a package" do
       Product.should_receive(:find_by_cp_id!).with(product_cp_id).and_return(@product)
-      @cs.should_receive(:remove_package!).with(package_name, @product).and_return({})
+      @cs.should_receive(:remove_package!).with(package_name, @product).and_return([true])
       req
       response.should be_success
     end
