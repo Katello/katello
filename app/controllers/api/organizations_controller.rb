@@ -37,6 +37,7 @@ class Api::OrganizationsController < Api::ApiController
   end
   def param_rules
     {
+      :create => [:name, :description],
       :update => {:organization  => [:name, :description]}
     }
   end

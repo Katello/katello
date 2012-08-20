@@ -108,6 +108,8 @@ class Api::FiltersController < Api::ApiController
     render :json => @repository.filters.to_json
   end
 
+  private
+
   def find_organization
     if not find_optional_organization
       @organization = @repository.organization
