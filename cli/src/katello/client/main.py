@@ -45,7 +45,8 @@ from katello.client.core import (
   system_group,
   admin,
   architecture,
-  config_template
+  config_template,
+  domain
 )
 
 def setup_admin(katello_cmd):
@@ -291,3 +292,11 @@ def setup_admin(katello_cmd):
     configtemplate_cmd.add_command('destroy', config_template.Destroy())
     configtemplate_cmd.add_command('build_pxe_default', config_template.Build_Pxe_Default())
     katello_cmd.add_command('config_template', configtemplate_cmd)
+
+    domain_cmd = domain.Domain()
+    domain_cmd.add_command('list', domain.List())
+    domain_cmd.add_command('show', domain.Show())
+    domain_cmd.add_command('create', domain.Create())
+    domain_cmd.add_command('update', domain.Update())
+    domain_cmd.add_command('destroy', domain.Destroy())
+    katello_cmd.add_command('domain', domain_cmd)
