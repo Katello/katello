@@ -13,7 +13,7 @@
 require 'oauth'
 require 'cgi'
 
-class RestClientException < RuntimeError
+class RestClientException < StandardError
   attr_reader :service_code, :code
   def initialize params
     super params[:message]
@@ -22,10 +22,7 @@ class RestClientException < RuntimeError
   end
 end
 
-class RemoteServerException < RuntimeError
-end
-
-class NetworkException < RuntimeError
+class NetworkException < StandardError
 end
 
 class HttpResource
