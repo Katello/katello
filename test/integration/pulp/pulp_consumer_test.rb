@@ -1,9 +1,25 @@
+# Copyright 2012 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+require 'rubygems'
+require 'minitest/autorun'
 require 'test/integration/pulp/vcr_pulp_setup'
 require 'test/integration/pulp/helpers/repository_helper'
+require 'test/integration/pulp/helpers/consumer_helper'
+require 'active_support/core_ext/time/calculations'
 
 
 module TestPulpConsumerBase
   include RepositoryHelper
+  include ConsumerHelper
 
   def setup
     @resource = Resources::Pulp::Consumer
@@ -12,29 +28,10 @@ module TestPulpConsumerBase
   end
 
   def teardown
-    if !@task.nil?
-      Resources::Pulp::Task.cancel(@task["id"])
-      while !(['finished', 'error', 'timed_out', 'canceled', 'reset'].include?(@task['state'])) do
-        @task = RepositoryHelper.task_resource.find([@task["id"]]).first
-        sleep 0.5 # do not overload backend engines
-      end
+    if @task
+      RepositoryHelper.task_resource.destroy(@task["id"])
     end
     VCR.eject_cassette
-  end
-
-  def create_consumer(package_profile=false)
-    @resource.create("", @consumer_id)
-
-    if package_profile
-      @resource.upload_package_profile(@consumer_id, [{"name" => "elephant", "version" => "0.2", "release" => "0.7", 
-                                                      "epoch" => 0, "arch" => "noarch"}])
-    end
-  rescue Exception => e
-  end
-
-  def destroy_consumer
-    @resource.destroy(@consumer_id)
-  rescue Exception => e
   end
 
   def bind_repo
@@ -48,15 +45,16 @@ class TestPulpConsumerCreate < MiniTest::Unit::TestCase
   include TestPulpConsumerBase
 
   def teardown
-    destroy_consumer
+    ConsumerHelper.destroy_consumer
     super
   end
 
   def test_create
-    response = create_consumer
+    response = ConsumerHelper.create_consumer
     assert response.kind_of? Hash
     assert response['id'] == @consumer_id
   end
+
 end
 
 
@@ -65,11 +63,11 @@ class TestPulpConsumer < MiniTest::Unit::TestCase
 
   def setup
     super
-    create_consumer
+    ConsumerHelper.create_consumer
   end
 
   def teardown
-    destroy_consumer
+    ConsumerHelper.destroy_consumer
     super
   end
 
@@ -102,7 +100,7 @@ class TestPulpConsumer < MiniTest::Unit::TestCase
   end
 
   def test_destroy
-    response = destroy_consumer
+    response = ConsumerHelper.destroy_consumer
     assert response == 200
   end
 end
@@ -111,17 +109,23 @@ end
 class TestPulpConsumerRequiresRepo < MiniTest::Unit::TestCase
   include TestPulpConsumerBase
 
+  def self.before_suite
+    RepositoryHelper.create_and_sync_repo
+  end
+
+  def self.after_suite
+    RepositoryHelper.destroy_repo
+  end
+
   def setup
     super
-    RepositoryHelper.create_and_sync_repo
-    destroy_consumer
-    create_consumer(true)
+    ConsumerHelper.destroy_consumer
+    ConsumerHelper.create_consumer(true)
     bind_repo
   end
 
   def teardown
-    RepositoryHelper.destroy_repo
-    destroy_consumer
+    ConsumerHelper.destroy_consumer
     super
   end
 
@@ -159,39 +163,38 @@ class TestPulpConsumerRequiresRepo < MiniTest::Unit::TestCase
   end
 
   def test_install_errata
-    response = @resource.install_errata(@consumer_id, ['RHEA-2010:0002'])
+    response = @resource.install_errata(@consumer_id, ['RHEA-2010:0002'], Time.now.advance(:years => 1).iso8601)
     @task = response
-    assert response["method_name"] == "_installerrata"
+    assert response["method_name"] == "__installpackages"
   end
 
   def test_install_packages
-    response = @resource.install_packages(@consumer_id, ['cheetah'])
+    response = @resource.install_packages(@consumer_id, ['cheetah'], Time.now.advance(:years => 1).iso8601)
     @task = response
     assert response["method_name"] == "__installpackages"
   end
 
   def test_uninstall_packages
-    response = @resource.uninstall_packages(@consumer_id, ['elephant'])
+    response = @resource.uninstall_packages(@consumer_id, ['elephant'], Time.now.advance(:years => 1).iso8601)
     @task = response
     assert response["method_name"] == "__uninstallpackages"
   end
 
   def test_update_packages
-    response = @resource.update_packages(@consumer_id, ['elephant'])
+    response = @resource.update_packages(@consumer_id, ['elephant'], Time.now.advance(:years => 1).iso8601)
     @task = response
     assert response["method_name"] == "__updatepackages"
   end
 
   def test_install_package_groups
-    response = @resource.install_package_groups(@consumer_id, ['mammals'])
+    response = @resource.install_package_groups(@consumer_id, ['mammals'], Time.now.advance(:years => 1).iso8601)
     @task = response
     assert response["method_name"] == "__installpackagegroups"
   end
 
   def test_uninstall_package_groups
-    response = @resource.uninstall_package_groups(@consumer_id, ['mammals'])
+    response = @resource.uninstall_package_groups(@consumer_id, ['mammals'], Time.now.advance(:years => 1).iso8601)
     @task = response
     assert response["method_name"] == "__uninstallpackagegroups"
   end
-
 end
