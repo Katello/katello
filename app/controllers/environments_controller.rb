@@ -42,7 +42,7 @@ class EnvironmentsController < ApplicationController
 
   def param_rules
     {
-      :create => [:name, :description, :organization_id, :org_id, :prior],
+      :create => {:kt_environment => [:name, :description, :prior]},
       :update => {:kt_environment  => [:name, :description, :prior]}
     }
   end
@@ -71,17 +71,15 @@ class EnvironmentsController < ApplicationController
 
   # POST /environments
   def create
-    env_params = {:name => params[:name],
-              :description => params[:description],
-              :prior => params[:prior],
+    env_params = {:name => params[:kt_environment][:name],
+              :description => params[:kt_environment][:description],
+              :prior => params[:kt_environment][:prior],
               :organization_id => @organization.id}
-    @environment =  KTEnvironment.new env_params
-
+    @environment = KTEnvironment.new env_params
     @environment.save!
     notify.success _("Environment '%s' was created.") % @environment.name
     #this render just means return a 200 success
     render :nothing => true
-
   end
 
   # PUT /environments/1

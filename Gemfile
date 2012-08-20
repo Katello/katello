@@ -2,8 +2,8 @@ source 'http://repos.fedorapeople.org/repos/katello/gems/'
 
 # When adding new version requirement check out EPEL6 repository first
 # and use this version if possible. Also check Fedora version (usually higher).
-gem 'rails', '3.0.10'
-gem 'thin', '>=1.2.8'
+gem 'rails', '>= 3.0.10'
+gem 'thin', '>= 1.2.8'
 
 gem 'tire', '>= 0.3.0', '< 0.4'
 gem 'json'
@@ -28,7 +28,7 @@ gem 'haml', '>= 3.1.2'
 gem 'haml-rails'
 gem 'compass', '>= 0.11.5', '< 0.12'
 gem 'compass-960-plugin', '>= 0.10.4'
-gem 'simple-navigation', '3.3.4'
+gem 'simple-navigation', '>= 3.3.4'
 # Stuff for i18n
 gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
@@ -39,6 +39,8 @@ gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 # reports
 gem 'ruport', '>=1.6.3'
 gem 'acts_as_reportable', '>=1.1.1'
+
+gem "apipie-rails"
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -61,6 +63,7 @@ gem 'acts_as_reportable', '>=1.1.1'
 
 group :test, :development do
   # To use debugger
+  gem 'redcarpet'
   gem 'ruby-debug'
   gem 'ZenTest', '>= 4.4.0'
   gem 'rspec-rails', '>= 2.0.0'

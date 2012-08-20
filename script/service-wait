@@ -1,0 +1,139 @@
+#!/bin/bash
+#
+# Copyright 2011 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+# Wrapper around /sbin/service command.
+#
+# Some services do not start or stop properly and return non-zero values
+# for some commands. To test it try this quick sequence:
+#
+#   service xxx start
+#   service xxx status
+#   service xxx stop
+#   service xxx status
+#
+# This simple wrapper works with any service and just pass over the request
+# to /sbin/service, but for few problematic ones it waits until service is
+# fully started or stopped.
+# 
+# To test the implementation use:
+#
+#   service-wait xxx test-wait
+#
+SERVICE=$1
+COMMAND=$2
+
+[ -f /etc/sysconfig/service-wait ] && source "/etc/sysconfig/service-wait"
+
+# maximum time to wait (in seconds)
+WAIT_MAX=${WAIT_MAX:-30}
+TOMCAT_PORT=${TOMCAT_PORT:-8080}
+TOMCAT_SERV_PORT=${TOMCAT_SERV_PORT:-8005}
+MONGO_PORT=${MONGO_PORT:-27017}
+POSTGRES_PORT=${POSTGRES_PORT:-5432}
+POSTGRES_DATA=${POSTGRES_DATA:-/var/lib/pgsql/data}
+
+before_start() {
+  test 1 -eq 1 # noop
+}
+
+after_start() {
+  case "$SERVICE" in
+    tomcat6|tomcat7)
+      # RHBZ 789288 - wait until data port is avaiable
+      /usr/bin/wget --timeout=1 --tries=$WAIT_MAX --retry-connrefused -qO- http://localhost:$TOMCAT_PORT
+      ;;
+    mongod)
+      # RHBZ 824405 - wait until service is avaiable
+      for i in {1..$WAIT_MAX}; do mongo --eval "printjson(db.getCollectionNames())" 2>/dev/null 1>&2 && break; sleep 1; done
+      ;;
+    postgresql)
+      # RHBZ 800534 for RHEL 6.x - pg sysvinit script return non-zero when PID is not created in 2 seconds
+      RETVAL=0
+      # and wait until port is really avaiable
+      for i in {1..$WAIT_MAX}; do netstat -ln | grep -q ":$POSTGRES_PORT\s" && break; sleep 1; done
+      # and create lock and pid files if they does not exist
+      [ -f "/var/lock/subsys/postgresql" ] || touch "/var/lock/subsys/postgresql"
+      [ -f "/var/run/postmaster.${POSTGRES_PORT}.pid" ] || head -n 1 "$POSTGRES_DATA/postmaster.pid" > "/var/run/postmaster.${POSTGRES_PORT}.pid"
+      ;;
+  esac
+}
+
+before_stop() {
+  case "$SERVICE" in
+    tomcat6|tomcat7)
+      # RHBZ 789288 - wait until service port is avaiable
+      for i in {1..$WAIT_MAX}; do netstat -ln | grep -q ":$TOMCAT_SERV_PORT\s" && break; sleep 1; done
+      ;;
+  esac
+}
+
+after_stop() {
+  test 1 -eq 1 # noop
+}
+
+before_status() {
+  test 1 -eq 1 # noop
+}
+
+after_status() {
+  test 1 -eq 1 # noop
+}
+
+case "$COMMAND" in
+  start)
+    before_start
+    /sbin/service "$SERVICE" "$COMMAND"
+    RETVAL=$?
+    after_start
+    ;;
+  stop)
+    before_stop
+    /sbin/service "$SERVICE" "$COMMAND"
+    RETVAL=$?
+    after_stop
+    ;;
+  status)
+    before_status
+    /sbin/service "$SERVICE" "$COMMAND"
+    RETVAL=$?
+    after_status
+    ;;
+  test-wait)
+    echo -n "Starting $SERVICE... "
+    /usr/sbin/service-wait "$SERVICE" "start" >/dev/null 2>&1
+    [ $? -eq 0 ] && echo "OK" || echo "FAIL"
+    echo -n "Querying $SERVICE... "
+    /usr/sbin/service-wait "$SERVICE" "status" >/dev/null 2>&1
+    [ $? -eq 0 ] && echo "OK" || echo "FAIL"
+    echo -n "Stopping $SERVICE... "
+    /usr/sbin/service-wait "$SERVICE" "stop" >/dev/null 2>&1
+    [ $? -eq 0 ] && echo "OK" || echo "FAIL"
+    echo -n "Querying $SERVICE... "
+    /usr/sbin/service-wait "$SERVICE" "status" >/dev/null 2>&1
+    [ ! $? -eq 0 ] && echo "OK" || echo "FAIL"
+    echo -n "Starting $SERVICE... "
+    /usr/sbin/service-wait "$SERVICE" "start" >/dev/null 2>&1
+    [ $? -eq 0 ] && echo "OK" || echo "FAIL"
+    echo -n "Querying $SERVICE... "
+    /usr/sbin/service-wait "$SERVICE" "status" >/dev/null 2>&1
+    [ $? -eq 0 ] && echo "OK" || echo "FAIL"
+    echo -n "Stopping $SERVICE... "
+    /usr/sbin/service-wait "$SERVICE" "stop" >/dev/null 2>&1
+    [ $? -eq 0 ] && echo "OK" || echo "FAIL"
+    ;;
+  *)
+    /sbin/service $1 $2
+    RETVAL=$?
+esac
+
+exit $RETVAL
