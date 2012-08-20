@@ -283,8 +283,8 @@ describe Changeset, :katello => true do
         @prod.stub(:find_packages_by_nvre).
             with(@changeset.environment.prior, @pack_name, @pack_version, @pack_release, nil).and_return([@pack])
         ChangesetPackage.should_receive(:destroy_all).
-            with(:package_id => 1, :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
-        @changeset.remove_package!(@pack, @prod)
+            with(:nvrea => @pack_nvre, :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
+        @changeset.remove_package!(@pack_nvre, @prod)
       end
 
       it "should remove erratum" do
