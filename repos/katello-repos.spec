@@ -30,7 +30,7 @@ install -d -m 0755 %{buildroot}%{_sysconfdir}/yum.repos.d
 # redefine on fedora
 %{?fedora: %define reposubdir      Fedora}
 
-for repofile in katello.repo katello-pulp.repo katello-candlepin.repo; do
+for repofile in *.repo; do
     sed -i 's/@SUBDIR@/%{reposubdir}/' $repofile
 done
  
