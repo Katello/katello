@@ -48,7 +48,9 @@ class List(ConfigTemplateAction):
 
     def run(self):
         data = self.get_option_dict('order','search')
-        configtemplates = unnest_one(self.api.list(data))
+        configtemplates = self.api.list(data)
+        if configtemplates:
+            configtemplates = unnest_one(configtemplates)
 
         self.printer.add_column('id')
         self.printer.add_column('name')
@@ -73,19 +75,30 @@ class Show(ConfigTemplateAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
-        self.printer.add_column('template')
         self.printer.add_column('snippet')
-        self.printer.add_column('audit_comment')
 
-        if 'template_kind' in configtemplate and configtemplate['template_kind'] != None:
-            configtemplate['template_kind_id'] = configtemplate['template_kind']['id']
-            configtemplate['template_kind_name'] = configtemplate['template_kind']['name']
-            self.printer.add_column('template_kind_id')
-            self.printer.add_column('template_kind_name')
+        if not configtemplate.get('snippet'):
+            configtemplate['Template Kind'] = "%s (Id: %d)" % (configtemplate['kind'], configtemplate['kind_id'])
+            self.printer.add_column('Template Kind')
 
-        # TODO: print those arrays
-        # self.printer.add_column('template_combinations') # attributes :environment_id, :hostgroup_id
-        # self.printer.add_column('operatingsystems') # attributes :id, :name
+        if configtemplate.get('template_combinations'):
+            content = []
+            for combo in configtemplate.get('template_combinations'):
+                combo = unnest_one(combo)
+                content.append("%s / %s (Id: %d)" % (combo['hostgroup_id'], combo['environment_id'], combo['id']))
+                # key = "Hostgroup / Environment id %d" % combo['id']
+            configtemplate['Hostgroup/Environment combinations'] = ', '.join(content)
+            self.printer.add_column('Hostgroup/Environment combinations')
+
+        if configtemplate.get('operatingsystems'):
+            content = []
+            for system in configtemplate.get('operatingsystems'):
+                system = unnest_one(system)
+                content.append("%s (Id: %d)" % (system['name'], system['id']))
+            configtemplate['Operating Systems'] = ', '.join(content)
+            self.printer.add_column('Operating Systems')
+
+        self.printer.add_column('template')
 
         self.printer.set_header(_("Config Template"))
         self.printer.print_item(configtemplate)
@@ -106,7 +119,6 @@ class Create(ConfigTemplateAction):
     def check_options(self, validator):
         validator.require('name')
         validator.require('template')
-        validator.require('template_kind_id')
 
     def run(self):
         data = self.get_option_dict('name','template','snippet','audit_comment',

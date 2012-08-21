@@ -47,7 +47,9 @@ class List(DomainAction):
 
     def run(self):
         data = self.get_option_dict('search', 'order')
-        domains = unnest_one(self.api.list(data))
+        domains = self.api.list(data)
+        if domains:
+            domains = unnest_one(domains)
 
         self.printer.add_column('id')
         self.printer.add_column('name')
@@ -116,7 +118,7 @@ class Update(DomainAction):
         # parser.add_option('--domain_parameters_attributes', dest='domain_parameters_attributes', help=_("Array of parameters (name, value)"))
 
     def check_options(self, validator):
-        validator.require('name')
+        validator.require('id')
 
     def run(self):
         domain_id = self.get_option('id')
@@ -143,7 +145,6 @@ class Destroy(DomainAction):
     def run(self):
         domain_id = self.get_option('id')
         status = self.api.destroy(domain_id)
-        print status
         print _('Successfuly deleted Domain [ %s ]') % domain_id
 
 
