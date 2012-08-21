@@ -134,10 +134,10 @@
         - if read_promotion_changesets or read_deletion_changesets
           %h2 #{_(" Changesets")}
           .sliding_tree_categories.clickable
-            .sliding_tree_category{:class => ("selected" unless !@next_environment), 'data-cs_type' => 'promotion'}
+            .sliding_tree_category{:class => ("selected" unless !@next_environment), 'data-cs_type' => ('promotion' if @next_environment)}
               - if @next_environment
                 #{_("Promotion to %s") % @next_environment.name}
-            .sliding_tree_category{:class => ("selected" unless @next_environment), 'data-cs_type' => 'deletion'}
+            .sliding_tree_category{:class => ("selected" unless @next_environment), 'data-cs_type' => ('deletion' if @environment and !@environment.library?)}
               - if @environment and !@environment.library?
                 #{_("Deletion from %s") % @environment.name}
           .breadcrumb_filter.fl.clear.clickable
