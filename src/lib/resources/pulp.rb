@@ -286,7 +286,8 @@ module Resources
           data[:num_threads] ||= AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
           path = Repository.repository_path + repo_id + "/actions/sync/"
           response = post(path, JSON.generate(data), self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
+          #TODO Properly use both the sync and publish tasks
+          JSON.parse(response.body).select{|i| i['tags'].include?("pulp:action:sync")}.first.with_indifferent_access
         end
 
         def sync_history repo_id

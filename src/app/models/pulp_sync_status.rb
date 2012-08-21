@@ -20,8 +20,8 @@ class PulpSyncProgress
       #depending on whether this is a history item, or current sync structure may be different
       ht = HashUtil.new
 
-      details = ht.null_safe_get(progress_attrs, nil, ['details','packages', 'sync_report'] ) ||
-          ht.null_safe_get(progress_attrs, nil, ['progress','importer', 'content'] )
+      details =  ht.null_safe_get(progress_attrs, nil, ['progress','yum_importer', 'content'] )    ||
+            ht.null_safe_get(progress_attrs, nil, ['details','packages', 'sync_report'] )
       #debugger
       @total_size  = ht.null_safe_get(details, 0, ['size_total'])
       @size_left   = ht.null_safe_get(details, 0, ['size_left'])
@@ -29,7 +29,6 @@ class PulpSyncProgress
       @items_left  = ht.null_safe_get(details, 0, ['items_left'])
       @error_details = ht.null_safe_get(progress_attrs, [], ['error_details'])
       @step = ht.null_safe_get(progress_attrs, 0, ['step'])
-
     end
   end
 end
