@@ -66,7 +66,6 @@ class Show(ConfigTemplateAction):
 
     def check_options(self, validator):
         validator.require('id')
-        pass
 
     def run(self):
         configtemplate = self.api.show(self.get_option('id'))
@@ -77,10 +76,16 @@ class Show(ConfigTemplateAction):
         self.printer.add_column('template')
         self.printer.add_column('snippet')
         self.printer.add_column('audit_comment')
-        # TODO print next 3 dict attributes
-        self.printer.add_column('template_kind') # attributes :id, :name
-        self.printer.add_column('template_combinations') # attributes :environment_id, :hostgroup_id
-        self.printer.add_column('operatingsystems') # attributes :id, :name
+
+        if 'template_kind' in configtemplate and configtemplate['template_kind'] != None:
+            configtemplate['template_kind_id'] = configtemplate['template_kind']['id']
+            configtemplate['template_kind_name'] = configtemplate['template_kind']['name']
+            self.printer.add_column('template_kind_id')
+            self.printer.add_column('template_kind_name')
+
+        # TODO: print those arrays
+        # self.printer.add_column('template_combinations') # attributes :environment_id, :hostgroup_id
+        # self.printer.add_column('operatingsystems') # attributes :id, :name
 
         self.printer.set_header(_("Config Template"))
         self.printer.print_item(configtemplate)

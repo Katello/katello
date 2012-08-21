@@ -12,10 +12,10 @@
 
 class Foreman::ConfigTemplate < Resources::ForemanModel
 
-  attributes :name, :template, :snippet, :audit_comment, :template_kind_id
+  attributes :name, :template, :snippet, :audit_comment, :template_kind
 
   def json_default_options
-    { :only => [:name, :template, :snippet, :audit_comment, :template_kind_id] }
+    { :only => [:name, :template, :snippet, :audit_comment, :template_kind] }
   end
 
   validates :name, :presence => true
