@@ -47,7 +47,7 @@ describe ChangesetsController, :katello => true do
 
   describe "viewing changesets" do
     before (:each) do
-      @changeset = Changeset.create(CSControllerTest::CHANGESET)
+      @changeset = PromotionChangeset.create(CSControllerTest::CHANGESET)
     end
 
     it "should show the changeset 2 pane list" do
@@ -82,11 +82,11 @@ describe ChangesetsController, :katello => true do
       Changeset.find(@changeset.id).name.should == "newname"
     end
 
-    it "should be able to check the progress of a changeset being promoted" do
+    it "should be able to check the status of a changeset being promoted" do
 
       @changeset.task_status = TaskStatus.create!(:organization_id =>@org.id, :uuid=>"FOO", :progress=>"0", :user=> new_user)
       @changeset.save!
-      get :promotion_progress, :id=>@changeset.id
+      get :status, :id=>@changeset.id
       response.should be_success
       response.should contain('changeset_' + @changeset.id.to_s)
     end
@@ -95,42 +95,60 @@ describe ChangesetsController, :katello => true do
 
   describe 'creating a changeset' do
 
-    describe 'with only an environment id' do
+    describe 'with only environment ids' do
       it 'should create a changeset correctly and send a notification' do
         controller.should notify.success
-        post 'create', {:changeset => {:name => "Changeset 7055"}, :env_id=>@env.id}
+        post 'create', {:changeset => {:name => "Changeset 7055"}, :next_env_id => @next_env.id}
         response.should be_success
-        Changeset.exists?(:name=>'Changeset 7055').should be_true
+        PromotionChangeset.exists?(:name => 'Changeset 7055').should be_true
       end
     end
 
     describe 'with a next environment id' do
       it 'should create a changeset correctly and send a notification' do
         controller.should notify.success
-        post 'create', {:changeset => {:name => "Changeset 7055"}, :env_id=>@env.id, :next_env_id=>@next_env.id}
+        post 'create', {:changeset => {:name => "Changeset 7055"}, :next_env_id => @next_env.id}
         response.should be_success
-        Changeset.exists?(:name=>'Changeset 7055').should be_true
+        PromotionChangeset.exists?(:name=>'Changeset 7055').should be_true
+      end
+    end
+
+    describe 'with a deletion type' do
+      it 'should create a changeset correctly and send a notification' do
+        controller.should notify.success
+        post 'create', {:changeset => {:name => "Changeset 7056", :description => "FOO", :action_type => Changeset::DELETION}, :env_id => @env.id}
+        response.should be_success
+        DeletionChangeset.exists?(:name => "Changeset 7056").should be_true
+      end
+    end
+
+    describe 'with a promotion type' do
+      it 'should create a changeset correctly and send a notification' do
+        controller.should notify.success
+        post 'create', {:changeset => {:name => "Changeset 7056", :description => "FOO", :action_type => Changeset::PROMOTION}, :env_id => @env.id, :next_env_id => @next_env.id}
+        response.should be_success
+        PromotionChangeset.exists?.should be_true
       end
     end
 
     describe 'with a description' do
       it 'should create a changeset correctly and send a notification' do
         controller.should notify.success
-        post 'create', {:changeset => {:name => "Changeset 7056", :description=> "FOO"}, :env_id=>@env.id}
+        post 'create', {:changeset => {:name => "Changeset 7056", :description => "FOO"}, :next_env_id => @next_env.id}
         response.should be_success
-        Changeset.exists?(:description=>'FOO').should be_true
+        PromotionChangeset.exists?(:description=>'FOO').should be_true
       end
     end
 
     it 'should cause an error notification if name is left blank' do
       controller.should notify.exception
-      post 'create', {:env_id => @env.id, :name => ''}
+      post 'create', {:env_id => @env.id, :next_env_id => @next_env.id, :changeset => {:name => ''}}
       response.should_not be_success
     end
 
     it 'should cause an exception if no environment id is present' do
       controller.should notify.exception
-      post 'create', {:changesets => { :name => 'Test/Changeset 4.5'}}
+      post 'create', {:changeset => { :name => 'Test/Changeset 4.5'}}
       response.should_not be_success
     end
 
@@ -138,7 +156,7 @@ describe ChangesetsController, :katello => true do
 
   describe 'deleting a changeset' do
     before (:each) do
-      @changeset = Changeset.create(CSControllerTest::CHANGESET)
+      @changeset = PromotionChangeset.create(CSControllerTest::CHANGESET)
     end
 
     it 'should successfully delete a changeset' do
@@ -158,7 +176,7 @@ describe ChangesetsController, :katello => true do
 
   describe 'updating a changeset' do
     before (:each) do
-      @changeset = Changeset.create!(CSControllerTest::CHANGESET)
+      @changeset = PromotionChangeset.create!(CSControllerTest::CHANGESET)
     end
 
     it 'should successfully update a changeset' do
@@ -178,7 +196,7 @@ describe ChangesetsController, :katello => true do
 
   describe 'getting the dependencies of a changeset' do
     before (:each) do
-      @changeset = Changeset.create!(CSControllerTest::CHANGESET)
+      @changeset = PromotionChangeset.create!(CSControllerTest::CHANGESET)
 
     end
 
@@ -191,13 +209,13 @@ describe ChangesetsController, :katello => true do
 
   end
 
- describe "rules" do
+  describe "rules" do
     before (:each) do
       @organization = new_test_org
       @env1 = @organization.library
       @env2 = KTEnvironment.create!(:name=>"FOO", :prior => @env1, :organization=>@organization)
       @env3 = KTEnvironment.create!(:name=>"FOO2", :prior => @env2, :organization=>@organization)
-      @cs = Changeset.create!(:name=>"FOO", :environment=>@env3, :state=>"promoted")
+      @cs = PromotionChangeset.create!(:name=>"FOO", :environment=>@env3, :state=>"promoted")
     end
 
     describe "GET index" do
@@ -215,7 +233,7 @@ describe ChangesetsController, :katello => true do
           filter_coll = {}
           search_options[:filter].each{|f| filter_coll.merge!(f)}
           filter_coll[:environment_id].should == [@env3.id]
-          filter_coll[:state].should == ["promoted"]
+          filter_coll[:state].should == ["promoted", "deleted"]
           controller.stub(:render)
         }
       end
@@ -237,13 +255,13 @@ describe ChangesetsController, :katello => true do
       it_should_behave_like "protected action"
     end
 
-    describe "POST promote" do
+    describe "POST apply" do
       before do
-        @cs2 = Changeset.create(:name=>"FOO2", :environment=>@env2, :state=>"review")
+        @cs2 = PromotionChangeset.create(:name=>"FOO2", :environment=>@env2, :state=>"review")
       end
-      let(:action) {:promote}
+      let(:action) {:apply}
       let(:req) do
-        post 'promote', :id=>@cs2.id
+        post 'apply', :id=>@cs2.id
       end
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:promote_changesets, :environments, @env2.id, @organization) }
@@ -256,6 +274,5 @@ describe ChangesetsController, :katello => true do
       it_should_behave_like "protected action"
     end
   end
-
 
 end
