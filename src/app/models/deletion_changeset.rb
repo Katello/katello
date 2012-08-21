@@ -98,28 +98,18 @@ class DeletionChangeset < Changeset
     end
   end
 
-
   def delete_products from_env
-    async_tasks = self.products.collect do |product|
+    self.products.each do |product|
       next if (products.uniq! or []).include? product
       product.delete_from_env(from_env)
     end
-    async_tasks.flatten(1)
   end
-
 
   def delete_repos from_env
     self.repos.each do |repo|
       product = repo.product
       next if (products.uniq! or []).include? product
-
-      # if the repo is being deleted from the last environment in the path, delete it; otherwise,
-      # mark it as 'disabled'... this will hide the repo...
-      if (from_env.successor.nil?)
-        product.delete_repo_by_id(repo.id)
-      else
-        repo.disable_repo
-      end
+      product.delete_repo(repo, from_env, true)
     end
   end
 
