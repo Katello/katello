@@ -406,7 +406,7 @@ rm %{datadir}/Gemfile.lock
 %{homedir}/config.ru
 %{homedir}/Gemfile
 %{homedir}/Gemfile.lock
-%ghost %{_sharedstatedir}/%{name}/Gemfile.lock
+%ghost %attr(0644,katello,katello) %{_sharedstatedir}/%{name}/Gemfile.lock
 %{homedir}/Rakefile
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{_mandir}/man8/katello-service.8*
