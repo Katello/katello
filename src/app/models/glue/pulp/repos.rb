@@ -185,12 +185,11 @@ module Glue::Pulp::Repos
 
     def delete_from_env from_env
       @orchestration_for = :delete
-      async_tasks = delete_repos repos(from_env), from_env
+      delete_repos(repos(from_env), from_env)
       if from_env.products.include? self
         self.environments.delete(from_env)
       end
       save!
-      async_tasks
     end
 
     def package_groups env, search_args = {}
@@ -553,14 +552,21 @@ module Glue::Pulp::Repos
     end
 
     def delete_repos repos, from_env
-      async_tasks = []
       repos.each do |repo|
-        # async_tasks << repo.promote(from_env, to_env)
-        async_tasks << delete_repo_by_id(repo.id)
+        self.delete_repo(repo, from_env, true)
       end
-      async_tasks.flatten(1)
     end
 
+    # Delete the repo; however, if delete_only_if_last_env is false
+    # and the repo is not the in the last environment of the
+    # path, simply disable/hide it.
+    def delete_repo repo, from_env, delete_only_if_last_env=false
+      if delete_only_if_last_env and !from_env.successor.nil? and repo.is_cloned_in?(from_env.successor)
+        repo.disable_repo
+      else
+        self.delete_repo_by_id(repo.id)
+      end
+    end
 
     def set_filter repo, filter_id
       repo.set_filters [filter_id]
