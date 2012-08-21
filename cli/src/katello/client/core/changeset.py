@@ -56,6 +56,7 @@ class List(ChangesetAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
+        self.printer.add_column('type')
         self.printer.add_column('updated_at', formatter=format_date)
         self.printer.add_column('state')
         self.printer.add_column('environment_id')
@@ -109,6 +110,7 @@ class Info(ChangesetAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
+        self.printer.add_column('action_type')
         self.printer.add_column('description', multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('updated_at', formatter=format_date)
         self.printer.add_column('state')
@@ -142,6 +144,12 @@ class Create(ChangesetAction):
                                help=_("changeset name (required)"))
         parser.add_option('--description', dest='description',
                                help=_("changeset description"))
+        parser.add_option('--promotion', dest='type_promotion', action="store_true", default=False,
+                               help=_("changeset type promotion: pushes changes to the next environment [DEFAULT]"))
+        parser.add_option('--deletion', dest='type_deletion', action="store_true", default=False,
+                               help=_("changeset type deletion: deletes items in changeset from current environment"))
+
+
 
     def check_options(self, validator):
         validator.require(('org', 'name', 'env'))
@@ -151,9 +159,18 @@ class Create(ChangesetAction):
         envName = self.get_option('env')
         csName = self.get_option('name')
         csDescription = self.get_option('description')
+        csType = 'PROMOTION'
+
+        # Check for duplicate type flags
+        if self.get_option('type_promotion') and self.get_option('type_deletion'):
+            raise OptionValueError(_("specify either --promotion or --deletion but not both"))
+        if self.get_option('type_promotion'):
+            csType = 'PROMOTION'
+        elif self.get_option('type_deletion'):
+            csType = 'DELETION'
 
         env = get_environment(orgName, envName)
-        cset = self.api.create(orgName, env["id"], csName, csDescription)
+        cset = self.api.create(orgName, env["id"], csName, csType, csDescription)
         test_record(cset,
             _("Successfully created changeset [ %s ] for environment [ %s ]") % (csName, env["name"]),
             _("Could not create changeset [ %s ] for environment [ %s ]") % (csName, env["name"])
@@ -177,11 +194,15 @@ class UpdateContent(ChangesetAction):
             return patch
 
     class PatchItemBuilder(object):
-        def __init__(self, org_name, env_name):
+        def __init__(self, org_name, env_name, type):
             self.org_name = org_name
             self.env_name = env_name
-            self.prior_env_name = get_environment(org_name, env_name)['prior']
-
+            self.type = type
+            # Use current env if we are doing a deletion otherwise use the prior
+            if self.type == 'deletion':
+                self.env_name = get_environment(org_name, env_name)['name']
+            else:
+                self.env_name = get_environment(org_name, env_name)['prior']
 
         def product_id(self, options):
             if 'product' in options:
@@ -193,11 +214,11 @@ class UpdateContent(ChangesetAction):
             return prod['id']
 
         def repo_id(self, options):
-            repo = get_repo(self.org_name, options['product'], options['name'], self.prior_env_name)
+            repo = get_repo(self.org_name, options['product'], options['name'], self.env_name)
             return repo['id']
 
         def template_id(self, options):
-            tpl = get_template(self.org_name, self.prior_env_name, options['name'])
+            tpl = get_template(self.org_name, self.env_name, options['name'])
             return tpl['id']
 
 
@@ -353,10 +374,11 @@ class UpdateContent(ChangesetAction):
         csDescription = self.get_option('description')
 
         cset = get_changeset(orgName, envName, csName)
+        csType = cset['action_type']
 
         self.update(cset["id"], csNewName, csDescription)
-        addPatch = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName), items)
-        removePatch = self.PatchBuilder.build_patch('remove', self.RemovePatchItemBuilder(orgName, envName), items)
+        addPatch = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName, csType), items)
+        removePatch = self.PatchBuilder.build_patch('remove', self.RemovePatchItemBuilder(orgName, envName, csType), items)
         self.update_content(cset["id"], addPatch, self.api.add_content)
         self.update_content(cset["id"], removePatch, self.api.remove_content)
 
@@ -402,8 +424,8 @@ class Delete(ChangesetAction):
 
 
 # ==============================================================================
-class Promote(ChangesetAction):
-    description = _('promotes a changeset to the next environment')
+class Apply(ChangesetAction):
+    description = _('applies a changeset based on the type (promotion, deletion)')
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
@@ -423,17 +445,35 @@ class Promote(ChangesetAction):
 
         cset = get_changeset(orgName, envName, csName)
 
-        task = self.api.promote(cset["id"])
+        task = self.api.apply(cset["id"])
         task = AsyncTask(task)
 
-        run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the changeset, please wait... "))
+        run_spinner_in_bg(wait_for_async_task, [task], message=_("Applying the changeset, please wait... "))
 
         if task.succeeded():
-            print _("Changeset [ %s ] promoted" % csName)
+            print _("Changeset [ %s ] applied" % csName)
             return os.EX_OK
         else:
             print _("Changeset [ %s ] promotion failed: %s" % (csName, format_task_errors(task.errors())))
             return os.EX_DATAERR
+
+# ==============================================================================
+class Promote(Apply):
+    description = _('promotes a changeset to the next environment - DEPRECATED')
+
+    def run(self):
+        csName = self.get_option('name')
+        orgName = self.get_option('org')
+        envName = self.get_option('env')
+
+        # Block attempts to call this on deletion changesets, otherwise continue
+        cset = get_changeset(orgName, envName, csName)
+        if cset['type'] == 'DELETION':
+            print _("This is a deletion changeset and does not support promotion")
+            return os.EX_DATAERR
+
+        super(Promote, self).run()
+
 
 
 # changeset command ============================================================

@@ -12,7 +12,7 @@
 
 class Api::ChangesetsController < Api::ApiController
 
-  before_filter :find_changeset, :only => [:show, :update, :destroy, :promote, :dependencies]
+  before_filter :find_changeset, :only => [:show, :update, :destroy, :promote, :apply, :dependencies]
   before_filter :find_environment
   before_filter :authorize
 
@@ -26,6 +26,7 @@ class Api::ChangesetsController < Api::ApiController
       :create       => manage_perm,
       :update       => manage_perm,
       :promote      => promote_perm,
+      :apply        => promote_perm,
       :destroy      => manage_perm,
     }
   end
@@ -35,8 +36,9 @@ class Api::ChangesetsController < Api::ApiController
   api :GET, "/organizations/:organization_id/environments/:environment_id/changesets", "List changesets in an environment"
   param :name, String, :desc => "An optional changeset name to filter upon"
   def index
-    render :json => Changeset.select("changesets.*, environments.name AS environment_name").
+    changesets = Changeset.select("changesets.*, environments.name AS environment_name").
         joins(:environment).where(params.slice(:name, :environment_id))
+    render :json => changesets.to_json
   end
 
   api :GET, "/changesets/:id", "Show a changeset"
@@ -68,18 +70,34 @@ class Api::ChangesetsController < Api::ApiController
     param :name, String, :desc => "The name of the changeset"
   end
   def create
-    @changeset             = Changeset.new(params[:changeset])
+    csType = params[:changeset][:type]
+    if params[:changeset][:type] == 'PROMOTION'
+      @changeset = PromotionChangeset.new(params[:changeset])
+    elsif params[:changeset][:type] == 'DELETION'
+      @changeset = DeletionChangeset.new(params[:changeset])
+    else
+      raise HttpErrors::ApiError, _("Unknown changeset type, must be PROMOTION or DELETION: #{csType}")
+    end
+
     @changeset.environment = @environment
     @changeset.save!
 
     render :json => @changeset
   end
 
-  api :POST, "/changesets/:id/promote", "Promote a changeset into a new envrionment"
+  # DEPRICATED - TODO: Note this in the new API doc format
+  api :POST, "/changesets/:id/promote", "Promote a changeset into a new envrionment."
   def promote
     @changeset.state = Changeset::REVIEW
     @changeset.save!
-    async_job = @changeset.promote :async => true
+    async_job = @changeset.apply :async => true
+    render :json => async_job, :status => 202
+  end
+
+  def apply
+    @changeset.state = Changeset::REVIEW
+    @changeset.save!
+    async_job = @changeset.apply :async => true
     render :json => async_job, :status => 202
   end
 
