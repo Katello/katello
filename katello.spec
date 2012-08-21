@@ -149,6 +149,7 @@ Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp
 Requires:       candlepin-tomcat6
+Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb mongodb-server
 Requires:       qpid-cpp-server qpid-cpp-client qpid-cpp-client-ssl qpid-cpp-server-ssl
@@ -203,6 +204,7 @@ Requires:       postgresql-server
 Requires:       postgresql
 Requires:       candlepin-tomcat6
 Requires:       thumbslug
+Requires:       thumbslug-selinux
 
 %description headpin-all
 This is the Katello-headpin meta-package.  If you want to install Headpin and all
