@@ -375,7 +375,7 @@ describe Changeset, :katello => true do
 
         Glue::Pulp::Package.stub(:index_packages).and_return(true)
         Glue::Pulp::Errata.stub(:index_errata).and_return(true)
-
+        Glue::Pulp::Repo.stub(:add_repo_packages)
       end
 
       it "should fail if the product is not in the review phase" do
