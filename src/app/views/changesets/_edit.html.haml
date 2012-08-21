@@ -11,28 +11,28 @@
     .fieldset
       .grid_3.ra
         %label #{_("Name:")}
-      .grid_6.la{:name=>"name", :class=>("editable edit_textfield" if editable),
+      .grid_5.la{:name=>"name", :class=>("editable edit_textfield" if editable),
           "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
     .fieldset
       .grid_3.ra
         %label #{_("Description:")}
-      .grid_6.la{:name=>"description", :class=>("editable edit_description" if editable),
+      .grid_5.la{:name=>"description", :class=>("editable edit_description" if editable),
           "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)}
         = @changeset.description.blank? ? _("None") : @changeset.description
     .fieldset
       .grid_3.ra
         %label #{_("Type:")}
-      .grid_6.la
+      .grid_5.la
         = @changeset.action_type
     .fieldset
       .grid_3.ra
         %label #{_("Promoted By:")}
-      .grid_6.la
+      .grid_5.la
         #{@changeset.task_status_id.nil? ? _("Unknown") : @changeset.task_status.user.username }
     .fieldset
       .grid_3.ra
         %label #{_("Promotion Date:")}
-      .grid_6.la
+      .grid_5.la
         = format_time(@changeset.promotion_date, :format=>:long)
 
 
