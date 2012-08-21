@@ -59,9 +59,9 @@ class List(DomainAction):
         self.printer.set_header(_("Domains"))
         self.printer.print_items(domains)
 
-class Show(DomainAction):
+class Info(DomainAction):
 
-    description = _('show domain')
+    description = _('show information about a domain')
 
     def setup_parser(self, parser):
         parser.add_option('--id', dest='id', help=_("domain id or name"))
@@ -132,9 +132,9 @@ class Update(DomainAction):
             system_exit(os.EX_DATAERR, _("Could not create Domain [ %s ]") % domain_id)
 
 
-class Destroy(DomainAction):
+class Delete(DomainAction):
 
-    description = _('destroy domain')
+    description = _('delete domain')
 
     def setup_parser(self, parser):
         parser.add_option('--id', dest='id', help=_("domain id or name"))

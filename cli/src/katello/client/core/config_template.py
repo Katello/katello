@@ -59,9 +59,9 @@ class List(ConfigTemplateAction):
         self.printer.set_header(_("Config Template"))
         self.printer.print_items(configtemplates)
 
-class Show(ConfigTemplateAction):
+class Info(ConfigTemplateAction):
 
-    description = _('show config template')
+    description = _('show information about a config template')
 
     def setup_parser(self, parser):
         parser.add_option('--id', dest='id', help=_("config template id or name"))
@@ -160,9 +160,9 @@ class Update(ConfigTemplateAction):
         else:
             return _("Could not update Config Template [ id = %s ]") % template_id
 
-class Destroy(ConfigTemplateAction):
+class Delete(ConfigTemplateAction):
 
-    description = _('destroy config template')
+    description = _('delete config template')
 
     def setup_parser(self, parser):
         parser.add_option('--id', dest='id', help=_("config template id or name"))
