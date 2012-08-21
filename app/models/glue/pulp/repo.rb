@@ -166,6 +166,8 @@ module Glue::Pulp::Repo
 
       # enable the repo, if it is currently disabled.  it is possible for the repo to be
       # disabled, if the user deleted it from the middle of an environment path
+      key = EnvironmentProduct.find_or_create(to_env, self.product)
+      clone.environment_product = key
       clone.enable_repo
 
       return clone.sync
@@ -224,18 +226,20 @@ module Glue::Pulp::Repo
   def enable_repo
     if !self.enabled
       # publish and enable the repo
-      Resources::Pulp::Repository.update_publish(self.pulp_id, true)
-      self.enabled = true
-      self.save!
+      repo = self.readonly? ? Repository.find(self.id) : self
+      Resources::Pulp::Repository.update_publish(repo.pulp_id, true)
+      repo.enabled = true
+      repo.save!
     end
   end
 
   def disable_repo
     if self.enabled
       # unpublish and disable the repo
-      Resources::Pulp::Repository.update_publish(self.pulp_id, false)
-      self.enabled = false
-      self.save!
+      repo = self.readonly? ? Repository.find(self.id) : self
+      Resources::Pulp::Repository.update_publish(repo.pulp_id, false)
+      repo.enabled = false
+      repo.save!
     end
   end
 
