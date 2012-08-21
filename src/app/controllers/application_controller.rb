@@ -32,13 +32,29 @@ class ApplicationController < ActionController::Base
 
   # this is always in the top
   # order of these are important.
-  rescue_from StandardError do |exception|
-    execute_rescue(exception, lambda{ |exception| render_error(exception)})
-  end
+  rescue_from Exception do |exception|
+    paranoia = Src::Application.config.exception_paranoia
 
-  # rescue_from ActiveRecord::RecordNotFound do |exception|
-  #   execute_rescue(exception, lambda{render_404})
-  # end
+    to_do = case exception
+              when StandardError
+                :handle
+              when ScriptError
+                paranoia ? :handle : :raise
+              when SignalException, SystemExit, NoMemoryError
+                :raise
+              else
+                Rails.logger.error "Uknown child of Exception instead of StandardError detected: " +
+                                       "#{exception.message} (#{exception.class})"
+                paranoia ? :handle : :raise
+            end
+
+    case to_do
+      when :handle
+        execute_rescue exception, lambda { |exception| render_error(exception) }
+      when :raise
+        raise exception
+    end
+  end
 
   rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved  do |e|
     notify.exception e
