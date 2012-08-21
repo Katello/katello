@@ -16,7 +16,7 @@ class Api::ArchitecturesController < Api::ApiController
 
   resource_description do 
     description <<-DOC
-      This controller is available only if support for Foreman is installed.
+      The Architectures API is available only if support for Foreman is installed.
     DOC
   end
 
