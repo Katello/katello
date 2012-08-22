@@ -1,0 +1,16 @@
+--- 
+pid: tmp/pids/thin.pid
+address: <%= scope.lookupvar("foreman::thin_ip") %>
+wait: 30
+timeout: 30
+port: <%= scope.lookupvar("foreman::thin_start_port") %>
+log: <%= scope.lookupvar("foreman::thin_log") %>
+max_conns: 1024
+require: []
+
+environment: production
+max_persistent_conns: 512
+# stop katello prior changing servers option
+servers: <%= scope.lookupvar("foreman::thin_process_count") %>
+daemonize: yes
+chdir: <%= scope.lookupvar("foreman::app_root") %>
