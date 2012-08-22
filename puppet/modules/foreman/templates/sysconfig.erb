@@ -1,15 +1,15 @@
 # the location where foreman is installed
-#FOREMAN_HOME=/usr/share/foreman
+FOREMAN_HOME=<%= scope.lookupvar("foreman::app_root") %>
 
 # the port which foreman web server is running at
 # note that if the foreman user is not root, it has to be a > 1024
 #FOREMAN_PORT=3000
 
 # the user which runs the web interface
-#FOREMAN_USER=foreman
+FOREMAN_USER=<%= scope.lookupvar("foreman::user") %>
 
 # the rails environment in which foreman runs
-#FOREMAN_ENV=production
+FOREMAN_ENV=<%= scope.lookupvar("foreman::environment") %>
 
 # if we're using passenger or not
 # if set to 1, init script will do a railsrestart on 'restart' and will refuse
