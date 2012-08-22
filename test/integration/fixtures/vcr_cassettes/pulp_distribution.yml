@@ -6,18 +6,18 @@ http_interactions:
     body: 
       string: "{\"arch\":\"noarch\",\"name\":\"integration_test_repo\",\"feed\":\"http://lzap.fedorapeople.org/fakerepos/zoo5/\",\"id\":\"integration_test_repo\"}"
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
       Accept: 
       - application/json
-      Accept-Language: 
-      - en
       Authorization: 
       - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="KuCyznuuhPenCkaN0npCxOlDD1EAmHXhJgvVvwd6RE", oauth_signature="4ifzGUlrwl1JxW1%2FlPQHOoEh9Ww%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345243121", oauth_version="1.0"
+      Accept-Language: 
+      - en
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
       Content-Length: 
       - "131"
   response: 
@@ -25,16 +25,16 @@ http_interactions:
       code: 500
       message: Internal Server Error
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Type: 
-      - application/json
-      Content-Length: 
-      - "828"
       Connection: 
       - close
       Date: 
       - Fri, 17 Aug 2012 22:38:41 GMT
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "828"
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "\"Traceback (most recent call last):\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/controllers/decorators.py\\\", line 48, in report_error\\n    return method(self, *args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/controllers/decorators.py\\\", line 127, in _auth_decorator\\n    value = method(self, *args, **kwargs)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/controllers/repositories.py\\\", line 333, in POST\\n    publish=repo_data.get('publish', None),)\\n  File \\\"/usr/lib/python2.7/site-packages/pulp/server/api/repo.py\\\", line 272, in create\\n    raise PulpException(msg)\\nPulpException: New relative path [fakerepos/zoo5] conflicts with existing relative path [fakerepos/zoo5]; paths may not be a parent or child directory of another relative path\\n\""
     http_version: 
@@ -45,18 +45,18 @@ http_interactions:
     body: 
       string: "{\"threads\":4}"
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
       Accept: 
       - application/json
-      Accept-Language: 
-      - en
       Authorization: 
       - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="pZaK5XyYcOWs4TcQbgcJtQM2uFZp0OS4DzI7H2Fjk", oauth_signature="gmowjNqPtRINdfw9tKuF69uk6NQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345243121", oauth_version="1.0"
+      Accept-Language: 
+      - en
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
       Content-Length: 
       - "13"
   response: 
@@ -64,16 +64,16 @@ http_interactions:
       code: 404
       message: Not Found
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Type: 
-      - application/json
-      Content-Length: 
-      - "51"
       Connection: 
       - close
       Date: 
       - Fri, 17 Aug 2012 22:38:41 GMT
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "51"
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "\"No repository with id integration_test_repo found\""
     http_version: 
@@ -84,18 +84,18 @@ http_interactions:
     body: 
       string: ""
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
       Accept: 
       - application/json
-      Accept-Language: 
-      - en
       Authorization: 
       - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="597oJQQCi2onveALF5B2b3hpF2BQfgR7A0rNkACdhk", oauth_signature="90QjvNn6Lq3Reo0ClpIFFPybwc8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345243122", oauth_version="1.0"
+      Accept-Language: 
+      - en
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
       Content-Length: 
       - "0"
   response: 
@@ -103,92 +103,92 @@ http_interactions:
       code: 404
       message: Not Found
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Type: 
-      - text/html; charset=UTF-8
-      Content-Length: 
-      - "9"
       Connection: 
       - close
       Date: 
       - Fri, 17 Aug 2012 22:38:42 GMT
+      Content-Type: 
+      - text/html; charset=UTF-8
+      Content-Length: 
+      - "9"
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: not found
     http_version: 
   recorded_at: Fri, 17 Aug 2012 22:38:42 GMT
 - request: 
     method: get
-    uri: https://localhost/pulp/api/distributions/ks-Test%20Family-TestVariant-16-x86_64/
-    body: 
-      string: ""
-    headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Accept-Language: 
-      - en
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="RAZBFhzEPl2T9ghuJCE5CSFfvRr6ScVnECufHDcN7E", oauth_signature="hW2iKXOPfNHYGVvfc2rR7zP6PP0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345243839", oauth_version="1.0"
-      Content-Type: 
-      - application/json
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Type: 
-      - application/json
-      Content-Length: 
-      - "789"
-      Connection: 
-      - close
-      Date: 
-      - Fri, 17 Aug 2012 22:50:39 GMT
-    body: 
-      string: "{\"files\": [\"/var/lib/pulp/distributions/ks-Test Family-TestVariant-16-x86_64/.treeinfo\", \"/var/lib/pulp/distributions/ks-Test Family-TestVariant-16-x86_64/empty.iso\", \"/var/lib/pulp/distributions/ks-Test Family-TestVariant-16-x86_64/test2.img\", \"/var/lib/pulp/distributions/ks-Test Family-TestVariant-16-x86_64/test1.img\"], \"description\": \"ks-Test Family-TestVariant-16-x86_64\", \"family\": \"Test Family\", \"relativepath\": \"/var/lib/pulp/distributions/ks-Test Family-TestVariant-16-x86_64\", \"variant\": \"TestVariant\", \"id\": \"ks-Test Family-TestVariant-16-x86_64\", \"version\": \"16\", \"timestamp\": \"2011-12-05T14:09:13\", \"_id\": \"ks-Test Family-TestVariant-16-x86_64\", \"arch\": \"x86_64\", \"_ns\": \"distribution\", \"repoids\": [\"integration_test_id\"], \"url\": [\"http://localhost/pulp/ks/fakerepos/zoo5/\"]}"
-    http_version: 
-  recorded_at: Fri, 17 Aug 2012 22:50:39 GMT
-- request: 
-    method: get
     uri: https://localhost/pulp/api/repositories/integration_test_id/
     body: 
       string: ""
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="wM4X6P7yO5og2S9fPaPvXk17UuWXZDJN8D4JXzFH21c", oauth_signature="NPSEqQYuv5WPXhoyUlKgX8WuClo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584604", oauth_version="1.0"
       Accept-Language: 
       - en
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="55IKtNZMmItuRjgjkZPMzWWauv15fptrLzcKIMOrfAM", oauth_signature="mdwat5E0ZgQpfy2mFEQmInYkGb0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415666", oauth_version="1.0"
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "1369"
-      Content-Type: 
-      - application/json
       Date: 
-      - Sun, 19 Aug 2012 22:34:26 GMT
+      - Tue, 21 Aug 2012 21:30:04 GMT
       Connection: 
       - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "1407"
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
-      string: "{\"package_count\": 8, \"distributionid\": [], \"consumer_cert\": null, \"consumer_ca\": null, \"filters\": [], \"id\": \"integration_test_id\", \"preserve_metadata\": false, \"publish\": true, \"source\": {\"url\": \"file:///home/edhelms/workspace/katello/src/test/integration/fixtures/repositories/zoo5\", \"type\": \"local\"}, \"groupid\": [], \"files\": \"/pulp/api/repositories/integration_test_id/files/\", \"relative_path\": \"integration_test_id\", \"sync_schedule\": null, \"arch\": \"noarch\", \"feed_cert\": null, \"name\": \"integration_test_id\", \"feed_ca\": null, \"notes\": {}, \"last_sync\": \"2012-08-19T18:34:23-04:00\", \"content_types\": \"yum\", \"clone_ids\": [], \"checksum_type\": \"sha256\", \"sync_options\": {}, \"_id\": \"integration_test_id\", \"packages\": \"/pulp/api/repositories/integration_test_id/packages/\", \"packagegroups\": \"/pulp/api/repositories/integration_test_id/packagegroups/\", \"packagegroupcategories\": \"/pulp/api/repositories/integration_test_id/packagegroupcategories/\", \"errata\": \"/pulp/api/repositories/integration_test_id/errata/\", \"distribution\": \"/pulp/api/repositories/integration_test_id/distribution/\", \"keys\": \"/pulp/api/repositories/integration_test_id/keys/\", \"comps\": \"/pulp/api/repositories/integration_test_id/comps/\", \"uri_ref\": \"/pulp/api/repositories/integration_test_id/\", \"uri\": \"https://localhost/pulp/repos/integration_test_id/\", \"files_count\": 49, \"next_scheduled_time\": null}"
+      string: "{\"package_count\": 8, \"distributionid\": [\"ks-Test Family-TestVariant-16-x86_64\"], \"consumer_cert\": null, \"consumer_ca\": null, \"filters\": [], \"id\": \"integration_test_id\", \"preserve_metadata\": false, \"publish\": true, \"source\": {\"url\": \"file:///home/edhelms/workspace/katello/src/test/integration/fixtures/repositories/zoo5\", \"type\": \"local\"}, \"groupid\": [], \"files\": \"/pulp/api/repositories/integration_test_id/files/\", \"relative_path\": \"integration_test_id\", \"sync_schedule\": null, \"arch\": \"noarch\", \"feed_cert\": null, \"name\": \"integration_test_id\", \"feed_ca\": null, \"notes\": {}, \"last_sync\": \"2012-08-21T17:29:57-04:00\", \"content_types\": \"yum\", \"clone_ids\": [], \"checksum_type\": \"sha256\", \"sync_options\": {}, \"_id\": \"integration_test_id\", \"packages\": \"/pulp/api/repositories/integration_test_id/packages/\", \"packagegroups\": \"/pulp/api/repositories/integration_test_id/packagegroups/\", \"packagegroupcategories\": \"/pulp/api/repositories/integration_test_id/packagegroupcategories/\", \"errata\": \"/pulp/api/repositories/integration_test_id/errata/\", \"distribution\": \"/pulp/api/repositories/integration_test_id/distribution/\", \"keys\": \"/pulp/api/repositories/integration_test_id/keys/\", \"comps\": \"/pulp/api/repositories/integration_test_id/comps/\", \"uri_ref\": \"/pulp/api/repositories/integration_test_id/\", \"uri\": \"https://localhost/pulp/repos/integration_test_id/\", \"files_count\": 49, \"next_scheduled_time\": null}"
     http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:34:26 GMT
+  recorded_at: Tue, 21 Aug 2012 21:30:04 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/distributions/ks-Test%20Family-TestVariant-16-x86_64/
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="4E0QAexZeBAxnnagE7e9b4IMMGm6gEJzgzCoqVO6eXY", oauth_signature="rvotZfqXQO7GdjEfKwHlyuwi3Qs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584604", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Tue, 21 Aug 2012 21:30:04 GMT
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "{\"files\": [\"/var/lib/pulp/distributions/ks-Test Family-TestVariant-16-x86_64/.treeinfo\", \"/var/lib/pulp/distributions/ks-Test Family-TestVariant-16-x86_64/test2.img\", \"/var/lib/pulp/distributions/ks-Test Family-TestVariant-16-x86_64/test1.img\"], \"description\": \"ks-Test Family-TestVariant-16-x86_64\", \"family\": \"Test Family\", \"relativepath\": \"/var/lib/pulp/distributions/ks-Test Family-TestVariant-16-x86_64\", \"variant\": \"TestVariant\", \"id\": \"ks-Test Family-TestVariant-16-x86_64\", \"version\": \"16\", \"timestamp\": \"2011-12-05T14:09:13\", \"_id\": \"ks-Test Family-TestVariant-16-x86_64\", \"arch\": \"x86_64\", \"_ns\": \"distribution\", \"repoids\": [\"integration_test_id\"], \"url\": [\"http://localhost/pulp/ks/integration_test_id/\"]}"
+    http_version: 
+  recorded_at: Tue, 21 Aug 2012 21:30:04 GMT
 recorded_with: VCR 2.2.4

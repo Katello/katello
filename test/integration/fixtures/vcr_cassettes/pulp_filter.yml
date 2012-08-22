@@ -1,233 +1,233 @@
 --- 
 http_interactions: 
 - request: 
-    method: post
-    uri: https://localhost/pulp/api/filters/integration_test_filter/add_packages/
+    method: get
+    uri: https://localhost/pulp/api/filters/integration_test_filter/
     body: 
-      string: "{\"packages\":[\"cheetah\",\"lion\"]}"
+      string: ""
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="N1kFxHcgn52rjwGmPXBRmzRii4jb3RC3NMfhrax1I", oauth_signature="4cs00RAHysbeMEibLft6aDZYJHg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584640", oauth_version="1.0"
       Accept-Language: 
       - en
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="En3j2TLRS0bKZH1O8cojt3qL78BH8arroQ0BtUB74", oauth_signature="8sw9zKEvdTjXTscizG9U%2B%2BZnqHo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415680", oauth_version="1.0"
-      Content-Length: 
-      - "31"
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "4"
-      Content-Type: 
-      - application/json
+      Transfer-Encoding: 
+      - chunked
       Date: 
-      - Sun, 19 Aug 2012 22:34:40 GMT
+      - Tue, 21 Aug 2012 21:30:40 GMT
       Connection: 
       - close
+      Content-Type: 
+      - application/json
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "{\"description\": null, \"_ns\": \"filters\", \"package_list\": [\"cheetah\"], \"_id\": \"integration_test_filter\", \"type\": \"blacklist\", \"id\": \"integration_test_filter\"}"
+    http_version: 
+  recorded_at: Tue, 21 Aug 2012 21:30:40 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/filters/integration_test_filter/add_packages/
+    body: 
+      string: "{\"packages\":[\"cheetah\",\"lion\"]}"
+    headers: 
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="bGHPjwH5cdTnxaieLW9yvwXzKpXFDgaOZQCdUK7Rbc", oauth_signature="bHcAJzikfRhJGfLn05iqQIHGdZs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584640", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Length: 
+      - "31"
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Tue, 21 Aug 2012 21:30:40 GMT
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "4"
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "true"
     http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:34:40 GMT
+  recorded_at: Tue, 21 Aug 2012 21:30:40 GMT
 - request: 
     method: post
     uri: https://localhost/pulp/api/filters/integration_test_filter/remove_packages/
     body: 
       string: "{\"packages\":[\"cheetah\",\"lion\"]}"
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="njyj7Nh5tBxlc69HEJsA5Vgo8cVr9fgiMxgIZGmT8", oauth_signature="dOKXJPQnT%2FhkJ4jl7MsU%2Fc3OmBY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584640", oauth_version="1.0"
       Accept-Language: 
       - en
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Rhpnn6YksFoWiN43WbxcJpM6OLiMEfBNTWgVHpvnjY", oauth_signature="pSDCRFsuMLhTstesUaaHcG81tgw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415680", oauth_version="1.0"
-      Content-Length: 
-      - "31"
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Length: 
+      - "31"
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "4"
-      Content-Type: 
-      - application/json
+      Transfer-Encoding: 
+      - chunked
       Date: 
-      - Sun, 19 Aug 2012 22:34:40 GMT
+      - Tue, 21 Aug 2012 21:30:40 GMT
       Connection: 
       - close
+      Content-Type: 
+      - application/json
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "true"
     http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:34:41 GMT
-- request: 
-    method: get
-    uri: https://localhost/pulp/api/filters/integration_test_filter/
-    body: 
-      string: ""
-    headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
-      Accept-Language: 
-      - en
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="PfLSo2x9kvrujkFkxsEp6gKL8GURpOHvnCjsahLH7M", oauth_signature="4TNKzAgsFjBWM95QzMBaIhmKD7Q%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415681", oauth_version="1.0"
-      Content-Type: 
-      - application/json
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "156"
-      Content-Type: 
-      - application/json
-      Date: 
-      - Sun, 19 Aug 2012 22:34:41 GMT
-      Connection: 
-      - close
-    body: 
-      string: "{\"description\": null, \"_ns\": \"filters\", \"package_list\": [\"cheetah\"], \"_id\": \"integration_test_filter\", \"type\": \"blacklist\", \"id\": \"integration_test_filter\"}"
-    http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:34:41 GMT
+  recorded_at: Tue, 21 Aug 2012 21:30:40 GMT
 - request: 
     method: delete
     uri: https://localhost/pulp/api/filters/integration_test_filter/
     body: 
       string: ""
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="dgJXN2wM9cSRc2JncPluyNIMmB5cSQAdmpaYKlyUfjg", oauth_signature="%2Fzqt4CzTPrhKwFm2ooy120CkQlI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584641", oauth_version="1.0"
       Accept-Language: 
       - en
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="Gr1TucYtY6nkjHKnc38LW3p4JYVCciNhf07GulD65Xo", oauth_signature="iBtm5QQ4d44Gv2%2FGcnvz3LwJL8g%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415681", oauth_version="1.0"
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Type: 
-      - application/json
-      Transfer-Encoding: 
-      - chunked
       Date: 
-      - Sun, 19 Aug 2012 22:34:41 GMT
+      - Tue, 21 Aug 2012 21:30:41 GMT
       Connection: 
       - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "4"
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "true"
     http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:34:41 GMT
+  recorded_at: Tue, 21 Aug 2012 21:30:41 GMT
 - request: 
     method: post
     uri: https://localhost/pulp/api/filters/
     body: 
       string: "{\"type\":\"blacklist\",\"package_list\":[\"cheetah\"],\"id\":\"integration_test_filter\"}"
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="jYacV7PiJqhsYVh5mwYZAAgmiQAjSz3TOQ1kSXeBA", oauth_signature="ilMbQpERLlYQXqIgOVuTnss1Qig%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584641", oauth_version="1.0"
       Accept-Language: 
       - en
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="GueAtdWA1OWyIkpYHwqCOI893Aaqfe0HCwlhlU73w", oauth_signature="FghJfthXMbAJnn%2Bj%2Boh4s%2BfqSwo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415681", oauth_version="1.0"
-      Content-Length: 
-      - "78"
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Length: 
+      - "78"
   response: 
     status: 
       code: 201
       message: Created
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "156"
-      Location: 
-      - integration_test_filter
-      Content-Type: 
-      - application/json
       Date: 
-      - Sun, 19 Aug 2012 22:34:41 GMT
+      - Tue, 21 Aug 2012 21:30:41 GMT
       Connection: 
       - close
+      Content-Type: 
+      - application/json
+      Location: 
+      - integration_test_filter
+      Content-Length: 
+      - "156"
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "{\"description\": null, \"_ns\": \"filters\", \"package_list\": [\"cheetah\"], \"_id\": \"integration_test_filter\", \"type\": \"blacklist\", \"id\": \"integration_test_filter\"}"
     http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:34:41 GMT
+  recorded_at: Tue, 21 Aug 2012 21:30:41 GMT
 - request: 
     method: delete
     uri: https://localhost/pulp/api/filters/integration_test_filter/
     body: 
       string: ""
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="qbFYVuzjfCggTCLTTmouyloaKkA4mqIQCx0AngqrJo", oauth_signature="F9KaD0IVBq6MVddvCJWhvSk6VKA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584641", oauth_version="1.0"
       Accept-Language: 
       - en
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="qnkbEMDeIW28x0JF8lDQoq48UV1kSfoWA2UAcnY", oauth_signature="BfqXHWLANvVeONtQEXqyOY%2FFQXg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415681", oauth_version="1.0"
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "4"
-      Content-Type: 
-      - application/json
+      Transfer-Encoding: 
+      - chunked
       Date: 
-      - Sun, 19 Aug 2012 22:34:41 GMT
+      - Tue, 21 Aug 2012 21:30:41 GMT
       Connection: 
       - close
+      Content-Type: 
+      - application/json
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "true"
     http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:34:41 GMT
+  recorded_at: Tue, 21 Aug 2012 21:30:41 GMT
 recorded_with: VCR 2.2.4

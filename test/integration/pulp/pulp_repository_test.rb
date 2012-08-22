@@ -13,6 +13,7 @@ require 'rubygems'
 require 'minitest/autorun'
 require 'test/integration/pulp/vcr_pulp_setup'
 require 'test/integration/pulp/helpers/repository_helper'
+require 'test/integration/pulp/helpers/filter_helper'
 require 'active_support/core_ext/time/calculations'
 
 
@@ -41,7 +42,6 @@ class TestPulpRepositoryCreate < MiniTest::Unit::TestCase
 
   def test_create
     response = RepositoryHelper.create_repo
-    debugger
     assert response['id'] == RepositoryHelper.repo_id
   end
 end
@@ -49,6 +49,14 @@ end
 
 class TestPulpRepository < MiniTest::Unit::TestCase
   include TestPulpRepositoryBase
+
+  def self.before_suite
+    FilterHelper.create_filter
+  end
+
+  def self.after_suite
+    FilterHelper.destroy_filter
+  end
 
   def setup
     super
@@ -102,6 +110,16 @@ class TestPulpRepository < MiniTest::Unit::TestCase
     @resource.update_schedule(RepositoryHelper.repo_id, "R1/" << Time.now.advance(:years => 1).iso8601 << "/P1D")
     response = @resource.delete_schedule(RepositoryHelper.repo_id)
     assert JSON.parse(response)["id"] == RepositoryHelper.repo_id
+  end
+
+  def test_add_filters
+    response = @resource.add_filters(RepositoryHelper.repo_id, [FilterHelper.filter_id])
+    assert response == "true"
+  end
+
+  def test_remove_filters
+    response = @resource.remove_filters(RepositoryHelper.repo_id, [FilterHelper.filter_id])
+    assert response == "true"
   end
 
   def test_destroy
@@ -159,8 +177,22 @@ class TestPulpRepositoryRequiresSync < MiniTest::Unit::TestCase
     response = @resource.sync_history(RepositoryHelper.repo_id)
     assert response.length > 0
   end
-end
 
+  def test_add_packages
+    response = @resource.add_packages(RepositoryHelper.repo_id, [])
+    assert response == "[[], 0]"
+  end
+
+  def test_add_errata 
+    response = @resource.add_errata(RepositoryHelper.repo_id, ["RHEA-2010:0002"])
+    assert response == "[]"
+  end
+
+  def test_add_distribution
+    response = @resource.add_distribution(RepositoryHelper.repo_id, "ks-Test Family-TestVariant-16-x86_64")
+    assert response == "true"
+  end
+end
 
 class TestPulpRepositorySync < MiniTest::Unit::TestCase
   include TestPulpRepositoryBase
@@ -197,6 +229,7 @@ class TestPulpRepositorySync < MiniTest::Unit::TestCase
   end
 
 end
+
 
 class TestPulpRepositoryClone < MiniTest::Unit::TestCase
   include TestPulpRepositoryBase
