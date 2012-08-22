@@ -6,35 +6,35 @@ http_interactions:
     body: 
       string: ""
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="zopCy33YqmYOydVwKWagVvaxjtX7hxvnLFI5719ZWhM", oauth_signature="go6xSrCcb3qSRG5e%2BsiLRz6wfvs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584726", oauth_version="1.0"
       Accept-Language: 
       - en
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="QIzk4BNSBJKU5kFXeXTucMY8LyYDsDxTyUuSWI34FQc", oauth_signature="nMAlRmwGcSsY3qXHfsom0AczRog%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415719", oauth_version="1.0"
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Type: 
-      - application/json
-      Transfer-Encoding: 
-      - chunked
       Date: 
-      - Sun, 19 Aug 2012 22:35:19 GMT
+      - Tue, 21 Aug 2012 21:32:06 GMT
       Connection: 
       - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "357"
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "[{\"_id\": \"12a0fbdc-900e-4f79-83ac-159cf430696a\", \"name\": null, \"roles\": [\"super-users\"], \"_ns\": \"users\", \"login\": \"admin\", \"id\": \"12a0fbdc-900e-4f79-83ac-159cf430696a\"}, {\"_id\": \"5faf5a42-4fdb-4e77-b35a-d206ee98c49a\", \"name\": \"hidden-kCz1Kt\", \"roles\": [\"super-users\"], \"_ns\": \"users\", \"login\": \"hidden-kCz1Kt\", \"id\": \"5faf5a42-4fdb-4e77-b35a-d206ee98c49a\"}]"
     http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:35:19 GMT
+  recorded_at: Tue, 21 Aug 2012 21:32:06 GMT
 recorded_with: VCR 2.2.4

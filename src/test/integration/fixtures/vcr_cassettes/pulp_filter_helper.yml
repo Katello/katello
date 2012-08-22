@@ -1,0 +1,81 @@
+--- 
+http_interactions: 
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/filters/
+    body: 
+      string: "{\"type\":\"blacklist\",\"package_list\":[\"cheetah\"],\"id\":\"integration_test_filter\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Lip4p4KsEfqvn3QBl7Q2c2SxDjzacCwxMayYVrMM7Q", oauth_signature="uU3mk%2FhgGXU2B1%2FMD7f599FJLAk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584726", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Length: 
+      - "78"
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Date: 
+      - Tue, 21 Aug 2012 21:32:06 GMT
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Location: 
+      - integration_test_filter
+      Content-Length: 
+      - "156"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "{\"description\": null, \"_ns\": \"filters\", \"package_list\": [\"cheetah\"], \"_id\": \"integration_test_filter\", \"type\": \"blacklist\", \"id\": \"integration_test_filter\"}"
+    http_version: 
+  recorded_at: Tue, 21 Aug 2012 21:32:06 GMT
+- request: 
+    method: delete
+    uri: https://localhost/pulp/api/filters/integration_test_filter/
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="Ndirhj6MWL6z3Vxfsm3h5OmgBi8cboro39rJP9gD944", oauth_signature="ErmmVSNR4coZr8op%2B96DaPsnGsg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345585121", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Tue, 21 Aug 2012 21:38:41 GMT
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "4"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "true"
+    http_version: 
+  recorded_at: Tue, 21 Aug 2012 21:38:41 GMT
+recorded_with: VCR 2.2.4
