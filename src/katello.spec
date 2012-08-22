@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.0.5
+Version:        1.0.6
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -466,6 +466,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Aug 22 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.6-1
+- 850745 - secret_token is not generated properly (CVE-2012-3503)
+  (lzap+git@redhat.com)
+
 * Sat Aug 11 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.5-1
 - 844678 - don't use multi-entitlements on custom products
 
