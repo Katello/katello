@@ -15,17 +15,17 @@ class foreman (
   $log_base           = $foreman::params::log_base,
   $configure_log_base = $foreman::params::configure_log_base,
 
-
+  $thin_ip            = $foreman::params::thin_ip,
   $thin_start_port    = $foreman::params::thin_start_port,
   $thin_log           = $foreman::params::thin_log,
   $thin_process_count = $foreman::params::thin_process_count,
   $deployment_url     = $foreman::params::deployment_url
   ) inherits foreman::params {
   if $foreman::install {
-    class { '::foreman::repos': } ->
-    class { '::foreman::install': } ->
+    class { '::foreman::repos': } ~>
+    class { '::foreman::install': } ~>
     Class['::foreman::config']
   }
-  class { '::foreman::config': } ->
+  class { '::foreman::config': } ~>
   class { '::foreman::service': }
 }
