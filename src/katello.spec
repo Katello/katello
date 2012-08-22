@@ -364,19 +364,20 @@ install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 /sbin/chkconfig --add %{name}
 /sbin/chkconfig --add %{name}-jobs
 
-%postun common
-#update config/initializers/secret_token.rb with new key
-NEWKEY=$(</dev/urandom tr -dc A-Za-z0-9 | head -c128)
-sed -i "s/^Src::Application.config.secret_token = '.*'/Src::Application.config.secret_token = '$NEWKEY'/" \
-    %{homedir}/config/initializers/secret_token.rb
+#Generate secret token if the file does not exist
+#(this must be called both for installation and upgrade)
+TOKEN=/etc/katello/secret_token
+test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN \
+    && chmod 600 $TOKEN && chown katello:katello $TOKEN)
 
 %posttrans common
-rm %{datadir}/Gemfile.lock
+rm -f %{datadir}/Gemfile.lock 2>/dev/null
 /sbin/service %{name} condrestart >/dev/null 2>&1 || :
 
 %files
 %attr(600, katello, katello)
 %{_bindir}/katello-*
+%ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
