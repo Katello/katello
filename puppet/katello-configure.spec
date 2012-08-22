@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -87,6 +87,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 22 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.2-1
+- puppet - make sure we deploy previous certificate before generating new one
+  (inecas@redhat.com)
+
 * Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
 - bump up version to 1.0 (msuchy@redhat.com)
 
