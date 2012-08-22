@@ -1,6 +1,6 @@
 --- 
 pid: tmp/pids/thin.pid
-address: 0.0.0.0
+address: <%= scope.lookupvar("foreman::thin_ip") %>
 wait: 30
 timeout: 30
 port: <%= scope.lookupvar("foreman::thin_start_port") %>

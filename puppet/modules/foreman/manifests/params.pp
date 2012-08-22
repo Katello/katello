@@ -22,6 +22,7 @@ class foreman::params {
   $db_name = "foreman"
   $db_pass = "foreman"
 
+  $thin_ip            = "0.0.0.0"
   $thin_start_port    = "5500"
   $thin_log           = "/var/log/foreman/thin-log.log"
   $thin_process_count = 2

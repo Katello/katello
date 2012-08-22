@@ -9,6 +9,7 @@ class katello {
       if $katello::params::use_foreman {
         class { 'foreman':
           install            => $katello::params::install_foreman,
+          thin_ip            => "127.0.0.1",
           thin_start_port    => $katello::params::foreman_start_port,
           thin_process_count => $katello::params::foreman_process_count,
           configure_log_base => $katello::params::configure_log_base,
