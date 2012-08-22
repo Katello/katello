@@ -152,6 +152,7 @@ Requires:       candlepin-tomcat6
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb mongodb-server
 Requires:       qpid-cpp-server qpid-cpp-client qpid-cpp-client-ssl qpid-cpp-server-ssl
+Requires:       foreman foreman-postgresql
 # </katello-configure>
 
 
