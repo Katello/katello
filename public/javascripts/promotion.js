@@ -1308,7 +1308,14 @@ var promotionsRenderer = (function(){
             }
             promotion_page.reset_page();
         },
-        getContent =  function(key, changeset_id, product_id) {
+    renderContent = function(hash, render_cb) {
+        // This function handles client-side rendering for the product list in the 'content' tree.
+        if (hash === 'products') {
+            render_cb(templateLibrary.contentProductsList(content_breadcrumb));
+            promotion_page.reset_page();
+        }
+    },
+    getContent =  function(key, changeset_id, product_id) {
              //changeset_id = hash.split("_")[1];
              //   product_id = hash.split("_")[2],
              //   key = hash.split("_")[0],
@@ -1354,12 +1361,36 @@ var promotionsRenderer = (function(){
 
     return {
         render: render,
+        renderContent: renderContent,
         renderConflict: renderConflict
     };
 })();
 
 var templateLibrary = (function(){
-    var changesetsListItem = function(id, name){
+    var contentProductsList = function(content) {
+            // Render the product list for the content tree
+            var products_list = content['products'],
+                has_products = false,
+                html = '<ul class="expand_list">';
+
+            // loop through the content to find products (i.e. details_*)
+            $.each(content, function(item){
+                if( content.hasOwnProperty(item) ){
+                    if( item.split("_")[0] === "details" ){
+                        // using the product found, retrieve the html that will be used for the product list item
+                        // this is stored in the 'products' list as a hash where key is product_id and value is html
+                        html += products_list[content[item].product_id];
+                        has_products = true;
+                    }
+                }
+            });
+            if (has_products === false) {
+                html += i18n.content_no_products;
+            }
+            html += '</ul>';
+            return html;
+        },
+        changesetsListItem = function(id, name){
             var html ='<li class="slide_link">' + '<div class="simple_link link_details" id="' + id + '">';
 
             html += '<span class="sort_attr">'+ name + '</span></div></li>';
@@ -1590,6 +1621,7 @@ var templateLibrary = (function(){
         };
         
     return {
+        contentProductsList: contentProductsList,
         changesetsList: changesetsList,
         productList: productList,
         listItems : listItems,
@@ -1690,8 +1722,18 @@ var changesetStatusActions = (function($){
                       failed(changeset_id);
                       updater.stop();
                   }
-                } else if ((data.progress === 100) || (data.state === 'promoted')){
+                } else if ((data.progress === 100) || (data.state === 'promoted') || (data.state === 'deleted')){
                     delete promotion_page.get_current_changeset_breadcrumb()['changeset_' + id];
+
+                    // if the user deleted one or more products with the changeset, remove those products
+                    // from the content tree
+                    if (data.state === 'deleted' && data.product_ids) {
+                        $.each(data.product_ids, function(index, product_id) {
+                            delete content_breadcrumb['details_' + product_id];
+                        });
+                        promotion_page.get_content_tree().rerender_content('content');
+                    }
+
                     finish(data.id);
                     updater.stop();
                 } else if (data.state === 'failed') {
@@ -1737,6 +1779,7 @@ $(document).ready(function() {
                                         default_tab     :  "content",
                                         bbq_tag         :  "content",
                                         base_icon       :  'home_img',
+                                        render_cb       :  promotionsRenderer.renderContent,
                                         tab_change_cb   :  promotion_page.set_current_product,
                                         expand_cb       :  promotion_page.reset_page //need to reset page during the extended scroll
                                     });
