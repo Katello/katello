@@ -6,187 +6,298 @@ http_interactions:
     body: 
       string: ""
     headers: 
-      Pulp-User: 
-      - admin
-      Accept-Encoding: 
-      - gzip, deflate
-      Accept-Language: 
-      - en
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="NbIRtiqWS2ceDvIcGyS3E9ulV0A1AVVb7Sqoww9Z0c", oauth_signature="t%2Bw7V91oUPVUVAwBeqqNw%2F7v%2FTA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345246062", oauth_version="1.0"
       Accept: 
       - "*/*; q=0.5, application/xml"
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="NbIRtiqWS2ceDvIcGyS3E9ulV0A1AVVb7Sqoww9Z0c", oauth_signature="t%2Bw7V91oUPVUVAwBeqqNw%2F7v%2FTA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345246062", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "707"
-      Content-Type: 
-      - application/json
-      Connection: 
-      - close
       Date: 
       - Fri, 17 Aug 2012 23:27:42 GMT
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "707"
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "{\"size\": 2232, \"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"cheetah\", \"repo_defined\": true, \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"checksum\": {\"sha256\": \"422d0baa0cd9d7713ae796e886a23e17f578f924f74880debdbb7d65fb368dae\"}, \"requires\": [\"/bin/sh\"], \"epoch\": \"0\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/cheetah-0.3-0.8.noarch.rpm\", \"filename\": \"cheetah-0.3-0.8.noarch.rpm\", \"repoids\": [\"integration_test_id\"], \"version\": \"0.3\", \"provides\": [\"cheetah\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"4f072aa1-2676-4d31-b401-94723d6ca276\", \"arch\": \"noarch\", \"id\": \"4f072aa1-2676-4d31-b401-94723d6ca276\", \"description\": \"A dummy package of cheetah\"}"
     http_version: 
   recorded_at: Fri, 17 Aug 2012 23:27:42 GMT
 - request: 
     method: get
-    uri: https://localhost/pulp/api/packages/
-    body: 
-      string: ""
-    headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
-      Accept-Language: 
-      - en
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="HD1rTgZZYZ1F4BkcqjkgXQG28cd3SsjWTmfcBd5Y", oauth_signature="ufYmoya6lfKUKPiuxDyZ0uxiuiY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415691", oauth_version="1.0"
-      Content-Type: 
-      - application/json
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "1266"
-      Content-Type: 
-      - application/json
-      Date: 
-      - Sun, 19 Aug 2012 22:34:51 GMT
-      Connection: 
-      - close
-    body: 
-      string: "[{\"description\": \"A dummy package of cheetah\", \"_id\": \"0d40fc47-1127-478c-9b67-fd1d9e51373c\", \"name\": \"cheetah\", \"id\": \"0d40fc47-1127-478c-9b67-fd1d9e51373c\"}, {\"description\": \"A dummy package of monkey\", \"_id\": \"e849718c-f9f9-4dbb-a912-e50b68cba070\", \"name\": \"monkey\", \"id\": \"e849718c-f9f9-4dbb-a912-e50b68cba070\"}, {\"description\": \"A dummy package of walrus\", \"_id\": \"3c1b4c08-8bdb-4bcc-b554-6c34dccc6ba4\", \"name\": \"walrus\", \"id\": \"3c1b4c08-8bdb-4bcc-b554-6c34dccc6ba4\"}, {\"description\": \"A dummy package of penguin\", \"_id\": \"94a319d4-f732-44f6-b58b-a6beccf8759c\", \"name\": \"penguin\", \"id\": \"94a319d4-f732-44f6-b58b-a6beccf8759c\"}, {\"description\": \"A dummy package of squirrel\", \"_id\": \"47404884-6d18-4cd8-a333-ca6eaddf518d\", \"name\": \"squirrel\", \"id\": \"47404884-6d18-4cd8-a333-ca6eaddf518d\"}, {\"description\": \"A dummy package of elephant\", \"_id\": \"7a6562a2-6d24-4c6e-9864-481f04e5452c\", \"name\": \"elephant\", \"id\": \"7a6562a2-6d24-4c6e-9864-481f04e5452c\"}, {\"description\": \"A dummy package of lion\", \"_id\": \"576d0072-3f62-4787-a767-af6ef1264030\", \"name\": \"lion\", \"id\": \"576d0072-3f62-4787-a767-af6ef1264030\"}, {\"description\": \"A dummy package of giraffe\", \"_id\": \"f5d1df5d-33bc-469f-9b41-bc796da79906\", \"name\": \"giraffe\", \"id\": \"f5d1df5d-33bc-469f-9b41-bc796da79906\"}]"
-    http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:34:51 GMT
-- request: 
-    method: post
-    uri: https://localhost/pulp/api/services/dependencies/
-    body: 
-      string: "{\"repoids\":[\"integration_test_id\"],\"pkgnames\":[\"cheetah\",\"lion\"]}"
-    headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
-      Accept-Language: 
-      - en
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="sGTFt4ncHfJUmgWlv4jeMlNiNGpw4dIftcF8tCN4hE", oauth_signature="3%2Fj6qKcDL79a2%2FiEaWKYoP059lw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415691", oauth_version="1.0"
-      Content-Length: 
-      - "65"
-      Content-Type: 
-      - application/json
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "188"
-      Content-Type: 
-      - application/json
-      Date: 
-      - Sun, 19 Aug 2012 22:34:51 GMT
-      Connection: 
-      - close
-    body: 
-      string: "{\"resolved\": {}, \"unresolved\": {\"/bin/sh\": []}, \"printable_dependency_result\": \"\\n dependency: /bin/sh \\n   Unsatisfied dependency \\n\\n dependency: /bin/sh \\n   Unsatisfied dependency \\n\"}"
-    http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:34:51 GMT
-- request: 
-    method: get
     uri: https://localhost/pulp/api/packages/0d40fc47-1127-478c-9b67-fd1d9e51373c/
     body: 
       string: ""
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
-      Accept-Language: 
-      - en
       Accept: 
       - "*/*; q=0.5, application/xml"
       Authorization: 
       - OAuth oauth_consumer_key="katello", oauth_nonce="5MGUYwd5NuAmu2bnXLNFVjcbyv47IzBZhnBkp3pAU", oauth_signature="WEh4Qh967CcH1WvCKbj01ub1yBs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415691", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "707"
-      Content-Type: 
-      - application/json
       Date: 
       - Sun, 19 Aug 2012 22:34:52 GMT
       Connection: 
       - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "707"
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "{\"size\": 2232, \"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"cheetah\", \"repo_defined\": true, \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"checksum\": {\"sha256\": \"422d0baa0cd9d7713ae796e886a23e17f578f924f74880debdbb7d65fb368dae\"}, \"requires\": [\"/bin/sh\"], \"epoch\": \"0\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/cheetah-0.3-0.8.noarch.rpm\", \"filename\": \"cheetah-0.3-0.8.noarch.rpm\", \"repoids\": [\"integration_test_id\"], \"version\": \"0.3\", \"provides\": [\"cheetah\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"0d40fc47-1127-478c-9b67-fd1d9e51373c\", \"arch\": \"noarch\", \"id\": \"0d40fc47-1127-478c-9b67-fd1d9e51373c\", \"description\": \"A dummy package of cheetah\"}"
     http_version: 
   recorded_at: Sun, 19 Aug 2012 22:34:52 GMT
 - request: 
-    method: post
-    uri: https://localhost/pulp/api/services/search/packages/
+    method: get
+    uri: https://localhost/pulp/api/packages/84d53480-81e2-47e8-96e7-6589d71c1162/
     body: 
-      string: "{\"regex\":true,\"name\":\"^cheetah\"}"
+      string: ""
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
-      Accept-Language: 
-      - en
       Accept: 
       - "*/*; q=0.5, application/xml"
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="DqIFRhtW13GXyBbfpSNIfhBniTIw9KechKZ7qVG1NQ", oauth_signature="ReaZfSQUNO4B%2FNmUA3soe9Hawbo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415692", oauth_version="1.0"
-      Content-Length: 
-      - "32"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="zJxEGadrP0dwiTI4vNkGTclBn7UB63PMCXI3qVu9RA", oauth_signature="%2B%2Biij%2FHG7kr7XTvu6s%2FN6YLvXts%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345559275", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "352"
-      Content-Type: 
-      - application/json
       Date: 
-      - Sun, 19 Aug 2012 22:34:52 GMT
+      - Tue, 21 Aug 2012 14:27:55 GMT
       Connection: 
       - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "707"
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
-      string: "[{\"repoids\": [\"integration_test_id\"], \"checksum\": {\"sha256\": \"422d0baa0cd9d7713ae796e886a23e17f578f924f74880debdbb7d65fb368dae\"}, \"filename\": \"cheetah-0.3-0.8.noarch.rpm\", \"epoch\": \"0\", \"version\": \"0.3\", \"release\": \"0.8\", \"_id\": \"0d40fc47-1127-478c-9b67-fd1d9e51373c\", \"arch\": \"noarch\", \"id\": \"0d40fc47-1127-478c-9b67-fd1d9e51373c\", \"name\": \"cheetah\"}]"
+      string: "{\"size\": 2232, \"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"cheetah\", \"repo_defined\": true, \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"checksum\": {\"sha256\": \"422d0baa0cd9d7713ae796e886a23e17f578f924f74880debdbb7d65fb368dae\"}, \"requires\": [\"/bin/sh\"], \"epoch\": \"0\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/cheetah-0.3-0.8.noarch.rpm\", \"filename\": \"cheetah-0.3-0.8.noarch.rpm\", \"repoids\": [\"integration_test_id\"], \"version\": \"0.3\", \"provides\": [\"cheetah\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"84d53480-81e2-47e8-96e7-6589d71c1162\", \"arch\": \"noarch\", \"id\": \"84d53480-81e2-47e8-96e7-6589d71c1162\", \"description\": \"A dummy package of cheetah\"}"
     http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:34:52 GMT
+  recorded_at: Tue, 21 Aug 2012 14:27:55 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/packages/b74cab21-bad9-428d-94ba-b25f927cff58/
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="zbFufxqK519N4GZizNpP8J5IAlDKonXuWWklAgisNno", oauth_signature="DRFVKl5Y0euFa2i3kSS3Kmj6zt4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345581770", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Tue, 21 Aug 2012 20:42:50 GMT
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "707"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "{\"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"cheetah\", \"repo_defined\": true, \"checksum\": {\"sha256\": \"422d0baa0cd9d7713ae796e886a23e17f578f924f74880debdbb7d65fb368dae\"}, \"description\": \"A dummy package of cheetah\", \"filename\": \"cheetah-0.3-0.8.noarch.rpm\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/cheetah-0.3-0.8.noarch.rpm\", \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"repoids\": [\"integration_test_id\"], \"epoch\": \"0\", \"version\": \"0.3\", \"arch\": \"noarch\", \"provides\": [\"cheetah\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"b74cab21-bad9-428d-94ba-b25f927cff58\", \"requires\": [\"/bin/sh\"], \"id\": \"b74cab21-bad9-428d-94ba-b25f927cff58\", \"size\": 2232}"
+    http_version: 
+  recorded_at: Tue, 21 Aug 2012 20:42:50 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/packages/097476a4-789c-4345-a627-84016e8305ac/
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="kwbHotXxy9tRwrW1NXG6kuaQN0O2LR4FISIzmveNmzY", oauth_signature="JN81uW4%2BF0GcnRaNCer62DS%2F4xo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584662", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Tue, 21 Aug 2012 21:31:02 GMT
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "{\"size\": 2232, \"license\": \"GPLv2\", \"vendor\": \"\", \"name\": \"cheetah\", \"repo_defined\": true, \"buildhost\": \"dhcp-26-118.brq.redhat.com\", \"checksum\": {\"sha256\": \"422d0baa0cd9d7713ae796e886a23e17f578f924f74880debdbb7d65fb368dae\"}, \"requires\": [\"/bin/sh\"], \"epoch\": \"0\", \"download_url\": \"https://localhost//pulp/repos/integration_test_id/cheetah-0.3-0.8.noarch.rpm\", \"filename\": \"cheetah-0.3-0.8.noarch.rpm\", \"repoids\": [\"integration_test_id\"], \"version\": \"0.3\", \"provides\": [\"cheetah\"], \"_ns\": \"packages\", \"release\": \"0.8\", \"group\": \"Internet/Applications\", \"_id\": \"097476a4-789c-4345-a627-84016e8305ac\", \"arch\": \"noarch\", \"id\": \"097476a4-789c-4345-a627-84016e8305ac\", \"description\": \"A dummy package of cheetah\"}"
+    http_version: 
+  recorded_at: Tue, 21 Aug 2012 21:31:02 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/packages/
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="e4wOYNauHNg5C2sthfqDI7qXqKwJGirzjFUzZSqVOQ", oauth_signature="WE9l5qobfaHKmCY3pvPvZpFikMg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584663", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Tue, 21 Aug 2012 21:31:03 GMT
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "1266"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "[{\"description\": \"A dummy package of monkey\", \"_id\": \"a9da78a1-d7c7-4b81-af5a-53ec0b339417\", \"name\": \"monkey\", \"id\": \"a9da78a1-d7c7-4b81-af5a-53ec0b339417\"}, {\"description\": \"A dummy package of walrus\", \"_id\": \"3c3f5a9c-cb9e-4189-9d35-cf08de3303e2\", \"name\": \"walrus\", \"id\": \"3c3f5a9c-cb9e-4189-9d35-cf08de3303e2\"}, {\"description\": \"A dummy package of penguin\", \"_id\": \"58851af3-8ae6-453c-b859-71a0fbaa960a\", \"name\": \"penguin\", \"id\": \"58851af3-8ae6-453c-b859-71a0fbaa960a\"}, {\"description\": \"A dummy package of squirrel\", \"_id\": \"b341e13e-42ba-4b9c-bd0e-5f6d8be80473\", \"name\": \"squirrel\", \"id\": \"b341e13e-42ba-4b9c-bd0e-5f6d8be80473\"}, {\"description\": \"A dummy package of cheetah\", \"_id\": \"097476a4-789c-4345-a627-84016e8305ac\", \"name\": \"cheetah\", \"id\": \"097476a4-789c-4345-a627-84016e8305ac\"}, {\"description\": \"A dummy package of elephant\", \"_id\": \"9dfec964-f681-4f9d-b2b9-743b1eeba46a\", \"name\": \"elephant\", \"id\": \"9dfec964-f681-4f9d-b2b9-743b1eeba46a\"}, {\"description\": \"A dummy package of lion\", \"_id\": \"723248aa-ecc7-4071-a98b-ef03e9f68969\", \"name\": \"lion\", \"id\": \"723248aa-ecc7-4071-a98b-ef03e9f68969\"}, {\"description\": \"A dummy package of giraffe\", \"_id\": \"34698211-7a9c-4b4f-9471-567e5bfcbdae\", \"name\": \"giraffe\", \"id\": \"34698211-7a9c-4b4f-9471-567e5bfcbdae\"}]"
+    http_version: 
+  recorded_at: Tue, 21 Aug 2012 21:31:03 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/services/dependencies/
+    body: 
+      string: "{\"pkgnames\":[\"cheetah\",\"lion\"],\"repoids\":[\"integration_test_id\"]}"
+    headers: 
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="r4My3PovpeOwAFmO6HItUkw1YkgxFE21edvm63aPwo", oauth_signature="X3TUCiiSDINp2%2Bcs2OPavQvMoic%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584663", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Length: 
+      - "65"
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Tue, 21 Aug 2012 21:31:03 GMT
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "188"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "{\"resolved\": {}, \"unresolved\": {\"/bin/sh\": []}, \"printable_dependency_result\": \"\\n dependency: /bin/sh \\n   Unsatisfied dependency \\n\\n dependency: /bin/sh \\n   Unsatisfied dependency \\n\"}"
+    http_version: 
+  recorded_at: Tue, 21 Aug 2012 21:31:03 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/services/search/packages/
+    body: 
+      string: "{\"regex\":false,\"name\":\"cheetah\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="YyHf3A4nMuKhgRGWU6uw84k4lx4fX734IIeTNvd7U", oauth_signature="qg%2F4y%2BgrcUCKenZKWeZ9Gj%2Fn7%2Fo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584663", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Length: 
+      - "32"
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Tue, 21 Aug 2012 21:31:03 GMT
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "352"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "[{\"repoids\": [\"integration_test_id\"], \"checksum\": {\"sha256\": \"422d0baa0cd9d7713ae796e886a23e17f578f924f74880debdbb7d65fb368dae\"}, \"filename\": \"cheetah-0.3-0.8.noarch.rpm\", \"epoch\": \"0\", \"version\": \"0.3\", \"release\": \"0.8\", \"_id\": \"097476a4-789c-4345-a627-84016e8305ac\", \"arch\": \"noarch\", \"id\": \"097476a4-789c-4345-a627-84016e8305ac\", \"name\": \"cheetah\"}]"
+    http_version: 
+  recorded_at: Tue, 21 Aug 2012 21:31:03 GMT
 recorded_with: VCR 2.2.4

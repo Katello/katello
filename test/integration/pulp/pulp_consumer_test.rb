@@ -119,7 +119,6 @@ class TestPulpConsumerRequiresRepo < MiniTest::Unit::TestCase
 
   def setup
     super
-    ConsumerHelper.destroy_consumer
     ConsumerHelper.create_consumer(true)
     bind_repo
   end

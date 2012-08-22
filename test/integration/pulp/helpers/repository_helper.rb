@@ -16,7 +16,6 @@ require 'test/integration/pulp/vcr_pulp_setup'
 module RepositoryHelper
 
   @repo_url = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("pulp/helpers", "fixtures/repositories/zoo5")
-  #@repo_url = "http://lzap.fedorapeople.org/fakerepos/zoo5/"
   @repo_id = "integration_test_id"
   @repo_name = @repo_id
   @repo_resource = Resources::Pulp::Repository
@@ -58,14 +57,19 @@ module RepositoryHelper
 
   def self.create_repo
     repo = nil
-    destroy_repo
+    
     VCR.use_cassette('pulp_repository_helper') do
-      debugger
+      if @repo_resource.find(@repo_id)
+        destroy_repo
+      end
+    end
+
+    VCR.use_cassette('pulp_repository_helper') do
       repo = @repo_resource.create(:id => @repo_id, :name=> @repo_name, :arch => 'noarch', :feed => @repo_url)
     end
     return repo
   rescue Exception => e
-    p "RepositoryHelper: Repository #{@repo_id} already existed"
+    p e
   end
 
   def self.sync_repo
@@ -81,17 +85,18 @@ module RepositoryHelper
     p e
   end
 
-  def self.destroy_repo(id=@repo_id, sync=true)
+  def self.destroy_repo(id=@repo_id)
     p "Destroying Repository."
     VCR.use_cassette('pulp_repository_helper') do
       if @task
         @task_resource.cancel(@task["id"])
         while !(['finished', 'error', 'timed_out', 'canceled', 'reset'].include?(@task['state'])) do
           @task = @task_resource.find([@task["id"]]).first
-          sleep 0.5 # do not overload backend engines
+          sleep 1 # do not overload backend engines
         end
+        @task_resource.destroy(@task["id"])
+        @task = nil
       end
-
       @repo_resource.destroy(id)
     end
   rescue Exception => e

@@ -2,76 +2,76 @@
 http_interactions: 
 - request: 
     method: get
-    uri: https://localhost/pulp/api/errata/RHEA-2010:0002/
-    body: 
-      string: ""
-    headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
-      Accept-Language: 
-      - en
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="fru2yPXGY2jol1Q8Wd07nVErN8wdfjprIf6O1YqXXs", oauth_signature="1ZD%2BDnJPG7Wn%2BPqs7DKIy3%2FBMko%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415677", oauth_version="1.0"
-      Content-Type: 
-      - application/json
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "745"
-      Content-Type: 
-      - application/json
-      Date: 
-      - Sun, 19 Aug 2012 22:34:37 GMT
-      Connection: 
-      - close
-    body: 
-      string: "{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"repoids\": [\"integration_test_id\", \"integration_test_id_clone\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2010:0002\"}"
-    http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:34:37 GMT
-- request: 
-    method: get
     uri: https://localhost/pulp/api/errata/?type=security
     body: 
       string: ""
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Pulp-User: 
-      - admin
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="99tIWLk2MVZ3e3kNdw75NwOH18eb5twhuvkLCVTs", oauth_signature="gvEvCvB6dKFy4aVkv5hMd0l%2BkcU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584633", oauth_version="1.0"
       Accept-Language: 
       - en
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="R49P9YAOVDlY8Ru3YGCclcDTiREqZnxsSpvjgxQOk", oauth_signature="jyvVo%2B6pMyb%2BYazl7VQHfDhjacQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345415677", oauth_version="1.0"
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Length: 
-      - "1269"
-      Content-Type: 
-      - application/json
       Date: 
-      - Sun, 19 Aug 2012 22:34:37 GMT
+      - Tue, 21 Aug 2012 21:30:33 GMT
       Connection: 
       - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "1269"
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"pkglist\": [], \"id\": \"RHEA-2010:0001\", \"severity\": \"\", \"title\": \"Empty errata\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"Empty errata\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"repoids\": [\"integration_test_id\", \"integration_test_id_clone\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2010:0001\"}, {\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"repoids\": [\"integration_test_id\", \"integration_test_id_clone\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2010:0002\"}]"
     http_version: 
-  recorded_at: Sun, 19 Aug 2012 22:34:37 GMT
+  recorded_at: Tue, 21 Aug 2012 21:30:33 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/errata/RHEA-2010:0002/
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="V0EoFEppspbBz1ylAIEkQdYDJqMa0Sf4GRcdEOQTyA", oauth_signature="j6d1JvNy8QcWPFuTacLQKWeIlko%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584633", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Tue, 21 Aug 2012 21:30:33 GMT
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "745"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"repoids\": [\"integration_test_id\", \"integration_test_id_clone\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2010:0002\"}"
+    http_version: 
+  recorded_at: Tue, 21 Aug 2012 21:30:33 GMT
 recorded_with: VCR 2.2.4
