@@ -32,6 +32,15 @@ from katello.client.server import BasicAuthentication, SSLAuthentication, Kerber
 
 _log = getLogger(__name__)
 
+def opt_parser_add_product(parser, required=None):
+    """ Add to the instance of optparse option --product"""
+    if required:
+        required = _(" (required)")
+    else:
+        required = ''
+    parser.add_option('--product', dest='product',
+                      help=_('product name e.g.: "Red Hat Enterprise Linux Server"%s' % required))
+
 class OptionException(Exception):
     """
     Exception to be used, when value of an option is not valid e.g. not found

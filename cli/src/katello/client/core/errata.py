@@ -20,6 +20,7 @@ from gettext import gettext as _
 from katello.client.api.errata import ErrataAPI
 from katello.client.api.system import SystemAPI
 from katello.client.api.system_group import SystemGroupAPI
+from katello.client.cli.base import opt_parser_add_product
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo, get_environment, get_product, get_system_group
 from katello.client.utils.encoding import u_str
@@ -50,8 +51,7 @@ class List(ErrataAction):
                       help=_("organization name eg: foo.example.com"))
         parser.add_option('--environment', dest='env',
                       help=_("environment name eg: production (default: Library)"))
-        parser.add_option('--product', dest='product',
-                      help=_('product name e.g.: "Red Hat Enterprise Linux Server"'))
+        opt_parser_add_product(parser)
 
 
         parser.add_option('--type', dest='type',
@@ -176,8 +176,7 @@ class Info(ErrataAction):
                       help=_("organization name eg: foo.example.com"))
         parser.add_option('--environment', dest='env',
                       help=_("environment name eg: production (default: Library)"))
-        parser.add_option('--product', dest='product',
-                      help=_('product name e.g.: "Red Hat Enterprise Linux Server"'))
+        opt_parser_add_product(parser)
 
     def check_options(self, validator):
         validator.require('id')

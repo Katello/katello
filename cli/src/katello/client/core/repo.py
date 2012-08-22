@@ -19,6 +19,7 @@ import urlparse
 from gettext import gettext as _
 
 from katello.client import constants
+from katello.client.cli.base import opt_parser_add_product
 from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
 from katello.client.core.base import BaseAction, Command
@@ -79,7 +80,7 @@ class SingleRepoAction(RepoAction):
         parser.add_option('--id', dest='id', help=_("repository id"))
         parser.add_option('--name', dest='name', help=_("repository name"))
         parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com"))
-        parser.add_option('--product', dest='product', help=_('product name e.g.: "Red Hat Enterprise Linux Server"'))
+        opt_parser_add_product(parser)
         if select_by_env:
             parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
 
@@ -120,26 +121,25 @@ class Create(RepoAction):
                                help=_("repository name to assign (required)"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
                                help=_("url path to the repository (required)"))
-        parser.add_option('--product', dest='prod',
-                               help=_('product name e.g.: "Red Hat Enterprise Linux Server" (required)'))
+        opt_parser_add_product(parser, required=1)
         parser.add_option('--gpgkey', dest='gpgkey',
                                help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
         parser.add_option('--nogpgkey', action='store_true',
                                help=_("Don't assign a GPG key to the repository."))
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'prod', 'url'))
+        validator.require(('name', 'org', 'product', 'url'))
 
     def run(self):
         name     = self.get_option('name')
         url      = self.get_option('url')
-        prodName = self.get_option('prod')
+        prodName = self.get_option('product')
         orgName  = self.get_option('org')
         gpgkey   = self.get_option('gpgkey')
         nogpgkey   = self.get_option('nogpgkey')
 
-        prod = get_product(orgName, prodName)
-        self.api.create(orgName, prod["id"], name, url, gpgkey, nogpgkey)
+        product = get_product(orgName, prodName)
+        self.api.create(orgName, product["id"], name, url, gpgkey, nogpgkey)
         print _("Successfully created repository [ %s ]") % name
 
         return os.EX_OK
@@ -157,25 +157,24 @@ class Discovery(RepoAction):
                                help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
                                help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
-        parser.add_option('--product', dest='prod',
-                               help=_('product name e.g.: "Red Hat Enterprise Linux Server" (required)'))
+        opt_parser_add_product(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'prod', 'url'))
+        validator.require(('name', 'org', 'product', 'url'))
 
     def run(self):
         name     = self.get_option('name')
         url      = self.get_option('url')
         assumeyes = self.get_option('assumeyes')
-        prodName = self.get_option('prod')
+        prodName = self.get_option('product')
         orgName  = self.get_option('org')
 
         repourls = self.discover_repositories(orgName, url)
         self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
         selectedurls = self.select_repositories(repourls, assumeyes)
 
-        prod = get_product(orgName, prodName)
-        self.create_repositories(orgName, prod["id"], name, selectedurls)
+        product = get_product(orgName, prodName)
+        self.create_repositories(orgName, product["id"], name, selectedurls)
 
         return os.EX_OK
 
@@ -404,8 +403,7 @@ class List(RepoAction):
             help=_("organization name eg: ACME_Corporation (required)"))
         parser.add_option('--environment', dest='env',
             help=_("environment name eg: production (default: Library)"))
-        parser.add_option('--product', dest='product',
-            help=_('product name e.g.: "Red Hat Enterprise Linux Server"'))
+        opt_parser_add_product(parser)
         parser.add_option('--include_disabled', action="store_true", dest='disabled',
             help=_("list also disabled repositories"))
 
