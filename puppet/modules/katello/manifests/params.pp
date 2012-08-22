@@ -58,10 +58,21 @@ class katello::params {
   $ssl_certificate_key_file = "/etc/candlepin/certs/candlepin-ca.key"
   $ssl_certificate_ca_file  = $ssl_certificate_file
 
+  # Foreman settings
+  $use_foreman     = true
+  $install_foreman = false
+  $foreman_start_port         = "5500"
+  $foreman_thin_process_count = katello_process_count(0.5)
+
   # apache settings
   $thin_start_port = "5000"
   $thin_log        = "$log_base/thin-log.log"
-  $process_count   = katello_process_count()
+  if $use_foreman {
+    $process_count   = katello_process_count(0.5)
+  } else {
+    $process_count   = katello_process_count(1)
+  }
+
 
   # LDAP settings
   $ldap_server = katello_config_value('ldap_server')
