@@ -79,7 +79,7 @@ class SingleRepoAction(RepoAction):
         parser.add_option('--id', dest='id', help=_("repository id"))
         parser.add_option('--name', dest='name', help=_("repository name"))
         parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com"))
-        parser.add_option('--product', dest='product', help=_("product name eg: fedora-14"))
+        parser.add_option('--product', dest='product', help=_('product name e.g.: "Red Hat Enterprise Linux Server"'))
         if select_by_env:
             parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
 
@@ -121,7 +121,7 @@ class Create(RepoAction):
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
                                help=_("url path to the repository (required)"))
         parser.add_option('--product', dest='prod',
-                               help=_("product name (required)"))
+                               help=_('product name e.g.: "Red Hat Enterprise Linux Server" (required)'))
         parser.add_option('--gpgkey', dest='gpgkey',
                                help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
         parser.add_option('--nogpgkey', action='store_true',
@@ -158,7 +158,7 @@ class Discovery(RepoAction):
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
                                help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
         parser.add_option('--product', dest='prod',
-                               help=_("product name (required)"))
+                               help=_('product name e.g.: "Red Hat Enterprise Linux Server" (required)'))
 
     def check_options(self, validator):
         validator.require(('name', 'org', 'prod', 'url'))
@@ -405,7 +405,7 @@ class List(RepoAction):
         parser.add_option('--environment', dest='env',
             help=_("environment name eg: production (default: Library)"))
         parser.add_option('--product', dest='product',
-            help=_("product name eg: fedora-14"))
+            help=_('product name e.g.: "Red Hat Enterprise Linux Server"'))
         parser.add_option('--include_disabled', action="store_true", dest='disabled',
             help=_("list also disabled repositories"))
 

@@ -51,7 +51,7 @@ class List(ErrataAction):
         parser.add_option('--environment', dest='env',
                       help=_("environment name eg: production (default: Library)"))
         parser.add_option('--product', dest='product',
-                      help=_("product name eg: fedora-14"))
+                      help=_('product name e.g.: "Red Hat Enterprise Linux Server"'))
 
 
         parser.add_option('--type', dest='type',
@@ -177,7 +177,7 @@ class Info(ErrataAction):
         parser.add_option('--environment', dest='env',
                       help=_("environment name eg: production (default: Library)"))
         parser.add_option('--product', dest='product',
-                      help=_("product name eg: fedora-14"))
+                      help=_('product name e.g.: "Red Hat Enterprise Linux Server"'))
 
     def check_options(self, validator):
         validator.require('id')
