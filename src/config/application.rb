@@ -82,7 +82,9 @@ module Src
 
     config.after_initialize do
       require 'monkeys/fix_string_interpolate'
+      require "string"
     end
+
 
     # set actions to profile (eg. %w(user_sessions#new))
     # profiles will be stored in tmp/profiles/
