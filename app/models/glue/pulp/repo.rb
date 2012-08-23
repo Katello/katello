@@ -43,6 +43,27 @@ module Glue::Pulp::Repo
     [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
+  #repo_pkgs = a map with {repo => [package objects to be removed]}
+  def self.delete_repo_packages repo_pkgs
+    Resources::Pulp::Repository.delete_repo_packages(make_pkg_tuples(repo_pkgs))
+  end
+
+  #repo_pkgs = a map with {repo => [package objects to be added]}
+  def self.add_repo_packages repo_pkgs
+    Resources::Pulp::Repository.add_repo_packages(make_pkg_tuples(repo_pkgs))
+  end
+
+  def self.make_pkg_tuples repo_pkgs
+    package_tuples = []
+    repo_pkgs.each do |repo, pkgs|
+      pkgs.each do |pack|
+        package_tuples << [[pack.filename,pack.checksum.to_hash.values.first],[repo.pulp_id]]
+      end
+    end
+    package_tuples
+  end
+
+
   module InstanceMethods
     def save_repo_orchestration
       case orchestration_for
@@ -141,7 +162,15 @@ module Glue::Pulp::Repo
 
     if self.is_cloned_in?(to_env)
       #repo is already cloned, so lets just re-sync it from its parent
-      return self.get_clone(to_env).sync
+      clone = self.get_clone(to_env)
+
+      # enable the repo, if it is currently disabled.  it is possible for the repo to be
+      # disabled, if the user deleted it from the middle of an environment path
+      key = EnvironmentProduct.find_or_create(to_env, self.product)
+      clone.environment_product = key
+      clone.enable_repo
+
+      return clone.sync
     else
       #repo is not in the next environment yet, we have to clone it there
       key = EnvironmentProduct.find_or_create(to_env, self.product)
@@ -192,6 +221,26 @@ module Glue::Pulp::Repo
     found = repos_map[self.pulp_id]
     prepopulate(found) if found
     !found.nil?
+  end
+
+  def enable_repo
+    if !self.enabled
+      # publish and enable the repo
+      repo = self.readonly? ? Repository.find(self.id) : self
+      Resources::Pulp::Repository.update_publish(repo.pulp_id, true)
+      repo.enabled = true
+      repo.save!
+    end
+  end
+
+  def disable_repo
+    if self.enabled
+      # unpublish and disable the repo
+      repo = self.readonly? ? Repository.find(self.id) : self
+      Resources::Pulp::Repository.update_publish(repo.pulp_id, false)
+      repo.enabled = false
+      repo.save!
+    end
   end
 
   def destroy_repo
@@ -402,16 +451,20 @@ module Glue::Pulp::Repo
     retval
   end
 
-  def add_packages pkg_id_list
-    Resources::Pulp::Repository.add_packages self.pulp_id,  pkg_id_list
-  end
-
   def add_errata errata_id_list
     Resources::Pulp::Repository.add_errata self.pulp_id,  errata_id_list
   end
 
   def add_distribution distribution_id
     Resources::Pulp::Repository.add_distribution self.pulp_id,  distribution_id
+  end
+
+  def delete_errata errata_id_list
+    Resources::Pulp::Repository.delete_errata self.pulp_id,  errata_id_list
+  end
+
+  def delete_distribution distribution_id
+    Resources::Pulp::Repository.delete_distribution self.pulp_id,  distribution_id
   end
 
   def cancel_sync

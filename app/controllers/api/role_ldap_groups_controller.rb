@@ -28,7 +28,7 @@ class Api::RoleLdapGroupsController < Api::ApiController
   end
 
   api :POST, "/roles/:role_id/ldap_groups", "Add group to list of LDAP groups associated with the role"
-  param :name, String, "name of the LDAP group"
+  param :name, String, :desc => "name of the LDAP group"
   def create
     @role.add_ldap_group(params[:name])
     render :text => _("Added LDAP group '%s'") % params[:name], :status => 200
