@@ -12,13 +12,32 @@
 
 class Foreman::ConfigTemplate < Resources::ForemanModel
 
-  attributes :name, :template, :snippet, :audit_comment, :template_kind
+  attributes :name, :template, :snippet, :audit_comment, :kind, :kind_id,
+    :template_kind_id, :template_combinations, :operatingsystems
 
   def json_default_options
-    { :only => [:name, :template, :snippet, :audit_comment, :template_kind] }
+    { :only => [:name, :template, :snippet, :audit_comment, :kind, :kind_id,
+                :template_combinations, :operatingsystems] }
+  end
+
+  def json_create_options
+    { :only => [:name, :template, :snippet, :audit_comment],
+      :methods => [:template_kind_id] }
+  end
+
+  def json_update_options
+    json_create_options
   end
 
   validates :name, :presence => true
+
+  def template_kind_id
+    @kind_id
+  end
+
+  def template_kind_id=(kind_id)
+    @kind_id = kind_id
+  end
 
   def self.revision(audit_id)
     resource.revision({:version => audit_id}, foreman_header).first

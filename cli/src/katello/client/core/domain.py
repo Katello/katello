@@ -47,7 +47,9 @@ class List(DomainAction):
 
     def run(self):
         data = self.get_option_dict('search', 'order')
-        domains = unnest_one(self.api.list(data))
+        domains = self.api.list(data)
+        if domains:
+            domains = unnest_one(domains)
 
         self.printer.add_column('id')
         self.printer.add_column('name')
@@ -57,9 +59,9 @@ class List(DomainAction):
         self.printer.set_header(_("Domains"))
         self.printer.print_items(domains)
 
-class Show(DomainAction):
+class Info(DomainAction):
 
-    description = _('show domain')
+    description = _('show information about a domain')
 
     def setup_parser(self, parser):
         parser.add_option('--id', dest='id', help=_("domain id or name"))
@@ -116,7 +118,7 @@ class Update(DomainAction):
         # parser.add_option('--domain_parameters_attributes', dest='domain_parameters_attributes', help=_("Array of parameters (name, value)"))
 
     def check_options(self, validator):
-        validator.require('name')
+        validator.require('id')
 
     def run(self):
         domain_id = self.get_option('id')
@@ -130,9 +132,9 @@ class Update(DomainAction):
             system_exit(os.EX_DATAERR, _("Could not create Domain [ %s ]") % domain_id)
 
 
-class Destroy(DomainAction):
+class Delete(DomainAction):
 
-    description = _('destroy domain')
+    description = _('delete domain')
 
     def setup_parser(self, parser):
         parser.add_option('--id', dest='id', help=_("domain id or name"))
@@ -143,7 +145,6 @@ class Destroy(DomainAction):
     def run(self):
         domain_id = self.get_option('id')
         status = self.api.destroy(domain_id)
-        print status
         print _('Successfuly deleted Domain [ %s ]') % domain_id
 
 
