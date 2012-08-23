@@ -337,10 +337,13 @@ class BaseAction(Action):
         parser.add_option('-d', dest='delimiter',
                         default="",
                         help=_("column delimiter in grep friendly output, works only with option -g"))
+        parser.add_option('--noheading', dest='noheading',
+                        action="store_true", default=False,
+                        help=_("Suppress any heading output. Useful if grepping the output."))
         return parser
 
     def create_printer(self, strategy):
-        return Printer(strategy)
+        return Printer(strategy, noheading=self.get_option('noheading'))
 
     def __print_strategy(self):
         Config()

@@ -1,5 +1,10 @@
 module Puppet::Parser::Functions
+  # it takes one argument: resources_portion, which means what part of
+  # available memory should be considered when calculating the
+  # processes. The main motivation for this is to reuse this function
+  # to calculate number of processes for both Katello and Foreman.
   newfunction(:katello_process_count, :type => :rvalue) do |args|
+    resources_portion = args.first || 1
     begin
       cpu_count = lookupvar('::processorcount').to_i
       consumes = 230_000_000 # for each thin process
@@ -24,7 +29,9 @@ module Puppet::Parser::Functions
       notice("Total memory: #{total_mem}")
       notice("Thin consumes: #{consumes}")
       notice("Reserve: #{reserve}")
-      max_processes = (((total_mem - reserve) / consumes)).floor
+      notice("Portion: #{resources_portion}")
+
+      max_processes = (((total_mem - reserve)*resources_portion / consumes)).floor
       notice("Maximum processes: #{max_processes}")
 
       # safeguard not to have less than 2 or more than max

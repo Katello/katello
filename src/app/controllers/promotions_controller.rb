@@ -46,15 +46,19 @@ class PromotionsController < ApplicationController
     @products = @products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
     Glue::Pulp::Repos.prepopulate! @products, @environment,[]
 
-    @changesets = @next_environment.working_changesets if (@next_environment && @next_environment.changesets_readable?)
+    @promotion_changesets = @next_environment.working_promotion_changesets if (@next_environment && @next_environment.changesets_readable?)
+    @deletion_changesets = @environment.working_deletion_changesets if (@environment && @environment.changesets_readable?)
+
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
 
     locals = {
       :accessible_envs=> access_envs,
-      :manage_changesets => @next_environment.nil? ? false : @next_environment.changesets_manageable?,
-      :promote_changesets => @next_environment.nil? ? false : @next_environment.changesets_promotable?,
-      :read_changesets => @next_environment.nil? ? false : @next_environment.changesets_readable?,
+      :manage_deletion_changesets => (@environment && @environment.changesets_manageable?)? true : false,
+      :manage_promotion_changesets => (@next_environment && @next_environment.changesets_manageable?)? true : false,
+      :apply_changesets => ((@next_environment && @next_environment.changesets_promotable?) or (@environment && @environment.changesets_manageable?))? true : false,
+      :read_deletion_changesets => (@environment && @environment.changesets_readable?)? true : false,
+      :read_promotion_changesets => (@next_environment && @next_environment.changesets_readable?)? true : false,
       :read_contents => (@environment && @environment.contents_readable?)? true: false
     }
     
@@ -66,7 +70,7 @@ class PromotionsController < ApplicationController
 
 
   def packages
-    product_id = params[:product_id]  
+    product_id = params[:product_id]
     repos = Product.find(product_id).repos(@environment)
     repo_ids = repos.collect{ |repo| repo.pulp_id }
     
@@ -109,8 +113,6 @@ class PromotionsController < ApplicationController
       @not_promotable = @packages.collect{ |pack| pack.id }
     end
 
-
-
     if offset.to_i >  0
       options = {:list_partial => 'promotions/package_items'}
     else
@@ -125,7 +127,7 @@ class PromotionsController < ApplicationController
     @next_env_repos = []
     if @next_environment
       @product.repos(@next_environment).each{|repo|
-        @next_env_repos << repo.id
+        @next_env_repos << repo.pulp_id
       }
     end
 
