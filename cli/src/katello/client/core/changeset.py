@@ -20,6 +20,7 @@ from optparse import OptionValueError
 
 from katello.client import constants
 from katello.client.api.changeset import ChangesetAPI
+from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
@@ -39,8 +40,7 @@ class List(ChangesetAction):
     description = _('list new changesets of an environment')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
 
@@ -74,7 +74,7 @@ class Info(ChangesetAction):
     description = _('detailed information about a changeset')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org', help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--environment', dest='env', help=_("environment name (required)"))
         parser.add_option('--name', dest='name', help=_("changeset name (required)"))
         parser.add_option('--dependencies', dest='deps', action='store_true',
@@ -137,8 +137,7 @@ class Create(ChangesetAction):
     description = _('create a new changeset for an environment')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
         parser.add_option('--name', dest='name',
@@ -321,8 +320,7 @@ class UpdateContent(ChangesetAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
         parser.add_option('--description', dest='description',
@@ -404,8 +402,7 @@ class Delete(ChangesetAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
 
@@ -431,8 +428,7 @@ class Apply(ChangesetAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
 

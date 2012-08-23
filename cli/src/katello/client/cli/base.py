@@ -41,6 +41,18 @@ def opt_parser_add_product(parser, required=None):
     parser.add_option('--product', dest='product',
                       help=_('product name e.g.: "Red Hat Enterprise Linux Server"%s' % required))
 
+
+def opt_parser_add_org(parser, required=None):
+    """ Add to the instance of optparse option --org"""
+    if isinstance(required, basestring):
+        pass # required already contains string
+    elif required:
+        required = _(" (required)")
+    else:
+        required = ''
+    parser.add_option('--org', dest='org',
+                      help=_('name of organization e.g.: ACME_Corporation%s' % required))
+
 class OptionException(Exception):
     """
     Exception to be used, when value of an option is not valid e.g. not found

@@ -21,7 +21,7 @@ from katello.client.api.distribution import DistributionAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo
 from katello.client.utils import printer
-from katello.client.cli.base import opt_parser_add_product
+from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org
 
 
 # base action ----------------------------------------------------------------
@@ -44,8 +44,7 @@ class List(DistributionAction):
                       help=_("repository id"))
         parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
-        parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com"))
+        opt_parser_add_org(parser)
         parser.add_option('--environment', dest='env',
                       help=_("environment name eg: production (default: Library)"))
         opt_parser_add_product(parser)

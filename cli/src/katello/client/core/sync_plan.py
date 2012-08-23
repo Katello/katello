@@ -18,6 +18,7 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.sync_plan import SyncPlanAPI
+from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, format_date, system_exit
 from katello.client.core.datetime_formatter import DateTimeFormatter, DateTimeFormatException
@@ -53,7 +54,7 @@ class List(SyncPlanAction):
     description = _('list known sync_plans')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require('org')
@@ -80,7 +81,7 @@ class Info(SyncPlanAction):
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
-        parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -109,7 +110,7 @@ class Create(SyncPlanAction):
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
-        parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option("--description", dest="description", help=_("plan description"))
         parser.add_option('--interval', dest='interval',
             help=_("interval of recurring synchronizations (choices: [%s], default: none)") % ', '.join(self.interval_choices),
@@ -144,7 +145,7 @@ class Update(SyncPlanAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
         parser.add_option('--new_name', dest='new_name', help=_("new sync plan name"))
-        parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option("--description", dest="description", help=_("plan description"))
         parser.add_option('--interval', dest='interval',
             help=_("interval of recurring synchronizations (choices: [%s], default: none)") % ', '.join(self.interval_choices),
@@ -183,7 +184,7 @@ class Delete(SyncPlanAction):
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
-        parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))

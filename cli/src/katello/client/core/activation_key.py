@@ -25,7 +25,7 @@ from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 from katello.client.utils import printer
 from katello.client.api.utils import get_environment, get_organization
-from katello.client.cli.base import OptionException
+from katello.client.cli.base import OptionException, opt_parser_add_org
 
 class ActivationKeyAction(BaseAction):
 
@@ -50,8 +50,7 @@ class List(ActivationKeyAction):
     description = _('list all activation keys')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--environment', dest='env',
                                help=_("environment name eg: dev (default: Library)"))
 
@@ -104,8 +103,7 @@ class Info(ActivationKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -143,8 +141,7 @@ class Create(ActivationKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--environment', dest='env',
                                help=_("environment name eg: dev (required)"))
         parser.add_option('--description', dest='description',
@@ -188,8 +185,7 @@ class Update(ActivationKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--environment', dest='env',
                                help=_("new environment name eg: dev"))
         parser.add_option('--new_name', dest='new_name',
@@ -258,8 +254,7 @@ class Delete(ActivationKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -287,8 +282,7 @@ class AddSystemGroup(ActivationKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--system_group', dest='system_group_name',
                               help=_("system group name (required)"))
 
@@ -331,8 +325,7 @@ class RemoveSystemGroup(ActivationKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--system_group', dest='system_group_name',
                               help=_("system group name (required)"))
 

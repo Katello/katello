@@ -19,7 +19,7 @@ import urlparse
 from gettext import gettext as _
 
 from katello.client import constants
-from katello.client.cli.base import opt_parser_add_product
+from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org
 from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
 from katello.client.core.base import BaseAction, Command
@@ -79,7 +79,7 @@ class SingleRepoAction(RepoAction):
     def set_repo_select_options(self, parser, select_by_env=True):
         parser.add_option('--id', dest='id', help=_("repository id"))
         parser.add_option('--name', dest='name', help=_("repository name"))
-        parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com"))
+        opt_parser_add_org(parser)
         opt_parser_add_product(parser)
         if select_by_env:
             parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
@@ -115,8 +115,7 @@ class Create(RepoAction):
     description = _('create a repository at a specified URL')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                                help=_("repository name to assign (required)"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
@@ -149,8 +148,7 @@ class Discovery(RepoAction):
     description = _('discovery repositories contained within a URL')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                                help=_("repository name prefix to add to all the discovered repositories (required)"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
@@ -399,8 +397,7 @@ class List(RepoAction):
     description = _('list repos within an organization')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-            help=_("organization name eg: ACME_Corporation (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--environment', dest='env',
             help=_("environment name eg: production (default: Library)"))
         opt_parser_add_product(parser)

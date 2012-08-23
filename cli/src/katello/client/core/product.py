@@ -19,6 +19,7 @@ from gettext import gettext as _
 import datetime
 
 from katello.client import constants
+from katello.client.cli.base import opt_parser_add_org
 from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
@@ -55,7 +56,7 @@ class SingleProductAction(ProductAction):
         self.check_product_select_options(validator)
 
     def set_product_select_options(self, parser, select_by_env=True):
-        parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name', help=_("product name (required)"))
         if select_by_env:
             parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
@@ -114,8 +115,7 @@ class List(ProductAction):
     description = _('list known products')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--environment', dest='env',
                        help=_('environment name eg: production (default: Library)'))
         parser.add_option('--provider', dest='prov',
@@ -299,8 +299,7 @@ class Create(ProductAction):
     description = _('create new product to a custom provider')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--provider', dest='prov',
                                help=_("provider name (required)"))
         parser.add_option('--name', dest='name',

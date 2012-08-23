@@ -20,7 +20,7 @@ from gettext import gettext as _
 from katello.client.api.errata import ErrataAPI
 from katello.client.api.system import SystemAPI
 from katello.client.api.system_group import SystemGroupAPI
-from katello.client.cli.base import opt_parser_add_product
+from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo, get_environment, get_product, get_system_group
 from katello.client.utils.encoding import u_str
@@ -47,12 +47,10 @@ class List(ErrataAction):
                       help=_("repository id"))
         parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
-        parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com"))
+        opt_parser_add_org(parser)
         parser.add_option('--environment', dest='env',
                       help=_("environment name eg: production (default: Library)"))
         opt_parser_add_product(parser)
-
 
         parser.add_option('--type', dest='type',
                       help=_("filter errata by type eg: enhancements"))
@@ -99,8 +97,7 @@ class SystemErrata(ErrataAction):
     description = _("list errata for a system")
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                                    help=_("system name (required)"))
 
@@ -130,7 +127,7 @@ class SystemGroupErrata(ErrataAction):
     description = _("list errata for a system group")
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name', help=_("system group name (required)"))
         parser.add_option('--type', dest='type', help=_("filter errata by type eg: bug, enhancement or security"))
 
@@ -172,8 +169,7 @@ class Info(ErrataAction):
                       help=_("repository id"))
         parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
-        parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com"))
+        opt_parser_add_org(parser)
         parser.add_option('--environment', dest='env',
                       help=_("environment name eg: production (default: Library)"))
         opt_parser_add_product(parser)
