@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.6
+Version:        1.1.7
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -518,6 +518,16 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Aug 23 2012 Mike McCune <mmccune@redhat.com> 1.1.7-1
+- 846251: Do not specify the attribute name for uniqueness validation
+  (bkearney@redhat.com)
+- 850745 - secret_token is not generated properly (CVE-2012-3503)
+  (lzap+git@redhat.com)
+- katello-all - installs foreman as well (inecas@redhat.com)
+- 805127 - require candlepin-selinux (msuchy@redhat.com)
+- fix build errors (msuchy@redhat.com)
+- fix build errors on F17 (msuchy@redhat.com)
+
 * Tue Aug 21 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.6-1
 - remove Gemfile.lock after all packages are installed (msuchy@redhat.com)
 - content deletion - unit test fix (mmccune@redhat.com)
