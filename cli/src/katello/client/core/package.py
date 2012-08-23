@@ -18,7 +18,7 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.package import PackageAPI
-from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org
+from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo
 from katello.client.utils import printer
@@ -47,8 +47,7 @@ class Info(PackageAction):
         parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
         opt_parser_add_org(parser)
-        parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: Library)"))
+        opt_parser_add_environment(parser, default=_("Library"))
         opt_parser_add_product(parser)
 
     def check_options(self, validator):
@@ -61,7 +60,7 @@ class Info(PackageAction):
         repoId   = self.get_option('repo_id')
         repoName = self.get_option('repo')
         orgName  = self.get_option('org')
-        envName  = self.get_option('env')
+        envName  = self.get_option('environment')
         prodName = self.get_option('product')
 
         if not repoId:
@@ -97,8 +96,7 @@ class List(PackageAction):
         parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
         opt_parser_add_org(parser)
-        parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: Library)"))
+        opt_parser_add_environment(parser, default=_("Library"))
         opt_parser_add_product(parser)
 
     def check_options(self, validator):
@@ -121,7 +119,7 @@ class List(PackageAction):
         repoId   = self.get_option('repo_id')
         repoName = self.get_option('repo')
         orgName  = self.get_option('org')
-        envName  = self.get_option('env')
+        envName  = self.get_option('environment')
         prodName = self.get_option('product')
 
         if not repoId:

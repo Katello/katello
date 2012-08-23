@@ -19,7 +19,7 @@ from gettext import gettext as _
 import datetime
 
 from katello.client import constants
-from katello.client.cli.base import opt_parser_add_org
+from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
@@ -59,7 +59,7 @@ class SingleProductAction(ProductAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name', help=_("product name (required)"))
         if select_by_env:
-            parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
+            opt_parser_add_environment(parser, default=_("Library"))
 
     def check_product_select_options(self, validator):
         validator.require(('org', 'name'))
@@ -116,8 +116,7 @@ class List(ProductAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--environment', dest='env',
-                       help=_('environment name eg: production (default: Library)'))
+        opt_parser_add_environment(parser, default=_("Library"))
         parser.add_option('--provider', dest='prov',
                        help=_("provider name, lists provider's product in the Library"))
         parser.add_option('--all', dest='all', action='store_true',
@@ -252,12 +251,12 @@ class Promote(SingleProductAction):
 
     def check_options(self, validator):
         self.check_product_select_options(validator)
-        validator.require('env')
+        validator.require('environment')
 
     def run(self):
         orgName     = self.get_option('org')
         prodName    = self.get_option('name')
-        envName     = self.get_option('env')
+        envName     = self.get_option('environment')
 
         env = get_environment(orgName, envName)
         prod = get_product(orgName, prodName)

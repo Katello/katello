@@ -20,7 +20,7 @@ from optparse import OptionValueError
 
 from katello.client import constants
 from katello.client.api.changeset import ChangesetAPI
-from katello.client.cli.base import opt_parser_add_org
+from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
@@ -41,15 +41,14 @@ class List(ChangesetAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name (required)"))
+        opt_parser_add_environment(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('org', 'env'))
 
     def run(self):
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
         verbose = self.get_option('verbose')
 
         env = get_environment(orgName, envName)
@@ -75,13 +74,13 @@ class Info(ChangesetAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--environment', dest='env', help=_("environment name (required)"))
+        opt_parser_add_environment(parser, required=1)
         parser.add_option('--name', dest='name', help=_("changeset name (required)"))
         parser.add_option('--dependencies', dest='deps', action='store_true',
                                help=_("will display dependent packages"))
 
     def check_options(self, validator):
-        validator.require(('org', 'name', 'env'))
+        validator.require(('org', 'name', 'environment'))
 
     def format_item_list(self, key, items):
         return "\n".join([i[key] for i in items])
@@ -92,7 +91,7 @@ class Info(ChangesetAction):
 
     def run(self):
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
         csName = self.get_option('name')
         displayDeps = self.has_option('deps')
 
@@ -138,8 +137,7 @@ class Create(ChangesetAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name (required)"))
+        opt_parser_add_environment(parser, required=1)
         parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
         parser.add_option('--description', dest='description',
@@ -152,11 +150,11 @@ class Create(ChangesetAction):
 
 
     def check_options(self, validator):
-        validator.require(('org', 'name', 'env'))
+        validator.require(('org', 'name', 'environment'))
 
     def run(self):
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
         csName = self.get_option('name')
         csDescription = self.get_option('description')
         csType = constants.PROMOTION
@@ -321,8 +319,7 @@ class UpdateContent(ChangesetAction):
         parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name (required)"))
+        opt_parser_add_environment(parser, required=1)
         parser.add_option('--description', dest='description',
                                help=_("changeset description"))
         parser.add_option('--new_name', dest='new_name',
@@ -359,7 +356,7 @@ class UpdateContent(ChangesetAction):
             self.items['remove_' + ct] = []
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'env'))
+        validator.require(('name', 'org', 'environment'))
 
     def run(self):
         #reset stored patch items (neccessary for shell mode)
@@ -368,7 +365,7 @@ class UpdateContent(ChangesetAction):
 
         csName = self.get_option('name')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
         csNewName = self.get_option('new_name')
         csDescription = self.get_option('description')
 
@@ -403,16 +400,15 @@ class Delete(ChangesetAction):
         parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name (required)"))
+        opt_parser_add_environment(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'env'))
+        validator.require(('name', 'org', 'environment'))
 
     def run(self):
         csName = self.get_option('name')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
 
         cset = get_changeset(orgName, envName, csName)
 
@@ -429,16 +425,15 @@ class Apply(ChangesetAction):
         parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name (required)"))
+        opt_parser_add_environment(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'env'))
+        validator.require(('name', 'org', 'environment'))
 
     def run(self):
         csName = self.get_option('name')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
 
         cset = get_changeset(orgName, envName, csName)
 
@@ -461,7 +456,7 @@ class Promote(Apply):
     def run(self):
         csName = self.get_option('name')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
 
         # Block attempts to call this on deletion changesets, otherwise continue
         cset = get_changeset(orgName, envName, csName)

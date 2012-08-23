@@ -22,7 +22,7 @@ from katello.client.api.environment import EnvironmentAPI
 from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_environment, get_system
-from katello.client.cli.base import opt_parser_add_org
+from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
 from katello.client.utils.printer import VerboseStrategy
@@ -49,8 +49,7 @@ class List(SystemAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--environment', dest='environment',
-                       help=_("environment name eg: development"))
+        opt_parser_add_environment(parser)
         parser.add_option('--pool', dest='pool_id',
                        help=_("pool id to filter systems by subscriptions"))
 
@@ -93,8 +92,7 @@ class Info(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system name (required)"))
-        parser.add_option('--environment', dest='environment',
-                       help=_("environment name"))
+        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -146,8 +144,7 @@ class InstalledPackages(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system name (required)"))
-        parser.add_option('--environment', dest='environment',
-                       help=_("environment name"))
+        opt_parser_add_environment(parser)
         parser.add_option('--install', dest='install', type="list",
                        help=_("packages to be installed remotely on the system, package names are separated with comma"))
         parser.add_option('--remove', dest='remove', type="list",
@@ -242,8 +239,7 @@ class TasksList(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system name"))
-        parser.add_option('--environment', dest='environment',
-                       help=_("environment name"))
+        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
@@ -311,8 +307,7 @@ class Releases(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system name (if not specified, list all releases in the environment)"))
-        parser.add_option('--environment', dest='environment',
-                       help=_("environment name eg: development"))
+        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
@@ -346,8 +341,7 @@ class Facts(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system name (required)"))
-        parser.add_option('--environment', dest='environment',
-                       help=_("environment name"))
+        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -382,7 +376,7 @@ class Register(SystemAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("system name (required)"))
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--environment', dest='environment', help=_("environment name eg: development"))
+        opt_parser_add_environment(parser)
         parser.add_option('--servicelevel', dest='sla', help=_("service level agreement"))
         parser.add_option('--activationkey', dest='activationkey',
             help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
@@ -440,8 +434,7 @@ class Unregister(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
-        parser.add_option('--environment', dest='environment',
-                               help=_("environment name eg: development"))
+        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -614,9 +607,7 @@ class Update(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_('system name (required)'))
-        parser.add_option('--environment', dest='environment',
-                       help=_("environment name"))
-
+        opt_parser_add_environment(parser)
         parser.add_option('--new_name', dest='new_name',
                        help=_('a new name for the system'))
         parser.add_option('--new_environment', dest='new_environment',
@@ -672,8 +663,7 @@ class Report(SystemAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--environment', dest='environment',
-                    help=_("environment name eg: development"))
+        opt_parser_add_environment(parser)
         parser.add_option('--format', dest='format',
              help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
 

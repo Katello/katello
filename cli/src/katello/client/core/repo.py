@@ -19,7 +19,7 @@ import urlparse
 from gettext import gettext as _
 
 from katello.client import constants
-from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org
+from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
 from katello.client.core.base import BaseAction, Command
@@ -82,7 +82,7 @@ class SingleRepoAction(RepoAction):
         opt_parser_add_org(parser)
         opt_parser_add_product(parser)
         if select_by_env:
-            parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
+            opt_parser_add_environment(parser, default=_("Library"))
 
     def check_repo_select_options(self, validator):
         if not validator.exists('id'):
@@ -94,7 +94,7 @@ class SingleRepoAction(RepoAction):
         orgName  = self.get_option('org')
         prodName = self.get_option('product')
         if self.select_by_env:
-            envName = self.get_option('env')
+            envName = self.get_option('environment')
         else:
             envName = None
 
@@ -398,8 +398,7 @@ class List(RepoAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--environment', dest='env',
-            help=_("environment name eg: production (default: Library)"))
+        opt_parser_add_environment(parser, default=_("Library"))
         opt_parser_add_product(parser)
         parser.add_option('--include_disabled', action="store_true", dest='disabled',
             help=_("list also disabled repositories"))
