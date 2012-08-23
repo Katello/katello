@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.1.4
+Version:        1.1.5
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -91,6 +91,10 @@ cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
 
 %changelog
+* Thu Aug 23 2012 Mike McCune <mmccune@redhat.com> 1.1.5-1
+- katello-configure - install and config Foreman with Katello
+  (inecas@redhat.com)
+- configure - workaround for puppet bug 16006 (lzap+git@redhat.com)
 * Thu Aug 16 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.4-1
 - 828369 - katello.conf owned by katello:katello
 
