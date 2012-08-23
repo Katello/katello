@@ -1,5 +1,5 @@
 %ul.expand_list
   -if collection.empty?
-    #{_("No repos available for promotion")}
+    #{_("No repositories available")}
   -else
     = render :partial=>"repo_items", :locals=>{:collection=>collection}

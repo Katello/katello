@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.5
+Version:        1.1.6
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -149,9 +149,11 @@ Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp
 Requires:       candlepin-tomcat6
+Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb mongodb-server
 Requires:       qpid-cpp-server qpid-cpp-client qpid-cpp-client-ssl qpid-cpp-server-ssl
+Requires:       foreman foreman-postgresql
 # </katello-configure>
 
 
@@ -204,6 +206,7 @@ Requires:       postgresql-server
 Requires:       postgresql
 Requires:       candlepin-tomcat6
 Requires:       thumbslug
+Requires:       thumbslug-selinux
 
 %description headpin-all
 This is the Katello-headpin meta-package.  If you want to install Headpin and all
@@ -363,19 +366,20 @@ install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 /sbin/chkconfig --add %{name}
 /sbin/chkconfig --add %{name}-jobs
 
-%postun common
-#update config/initializers/secret_token.rb with new key
-NEWKEY=$(</dev/urandom tr -dc A-Za-z0-9 | head -c128)
-sed -i "s/^Src::Application.config.secret_token = '.*'/Src::Application.config.secret_token = '$NEWKEY'/" \
-    %{homedir}/config/initializers/secret_token.rb
+#Generate secret token if the file does not exist
+#(this must be called both for installation and upgrade)
+TOKEN=/etc/katello/secret_token
+test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN \
+    && chmod 600 $TOKEN && chown katello:katello $TOKEN)
 
-if [ "$1" -ge "1" ] ; then
-    /sbin/service %{name} condrestart >/dev/null 2>&1 || :
-fi
+%posttrans common
+rm -f %{datadir}/Gemfile.lock 2>/dev/null
+/sbin/service %{name} condrestart >/dev/null 2>&1 || :
 
 %files
 %attr(600, katello, katello)
 %{_bindir}/katello-*
+%ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
 %{homedir}/app/controllers
 %exclude %{homedir}/app/controllers/api/foreman_controller.rb
 %exclude %{homedir}/app/controllers/api/architectures_controller.rb
@@ -410,6 +414,7 @@ fi
 %{homedir}/config.ru
 %{homedir}/Gemfile
 %{homedir}/Gemfile.lock
+%ghost %attr(0644,katello,katello) %{_sharedstatedir}/%{name}/Gemfile.lock
 %{homedir}/Rakefile
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{_mandir}/man8/katello-service.8*
@@ -523,6 +528,166 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Aug 21 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.6-1
+- remove Gemfile.lock after all packages are installed (msuchy@redhat.com)
+- content deletion - unit test fix (mmccune@redhat.com)
+- content-deletion - update product deletion to allow for re-promotion
+  (bbuckingham@redhat.com)
+- content-deletion - cleanup a few ui text strings (bbuckingham@redhat.com)
+- Changeset#remove_package! fix (pajkycz@gmail.com)
+- changesets content api test fix (pajkycz@gmail.com)
+- apidoc - removed duplicite api doc entry (mbacovsk@redhat.com)
+- converge-ui - accidentally downgraded during previous merge... :(
+  (bbuckingham@redhat.com)
+- Real. Fix. (Thx mmccne) for the user_sessions_controller (jrist@redhat.com)
+- Fix for user_sessions_controller.rb spec test failure. (jrist@redhat.com)
+- content deletion - putting commented code back in (mmccune@redhat.com)
+- content deletion - adding support for product deletion (mmccune@redhat.com)
+- content deletion - adding support for product deletion (mmccune@redhat.com)
+- Removed misleading/unused code in the deletion_changesets (paji@redhat.com)
+- api docs - fix loading environment in build phase (inecas@redhat.com)
+- api docs - show trace when API docs build fails (inecas@redhat.com)
+- Fix 1.9 compatibility issue in the ContentSearchController
+  (inecas@redhat.com)
+- api docs - fix wrong syntax for param description (inecas@redhat.com)
+- api docs - fix building for f17 - ruby 1.8 vs. 1.9 difference
+  (inecas@redhat.com)
+- Commented out unused parent template logic (paji@redhat.com)
+- content-deletion - fix issue w/ deletion tree not loading on last env
+  (bbuckingham@redhat.com)
+- changesets - fix notice type on successful promotion/deletion
+  (bbuckingham@redhat.com)
+- Added system template deletion feature (paji@redhat.com)
+- apidoc - docs for role_ldap_groups_controller (mbacovsk@redhat.com)
+- api docs - don't require redcarpet if cache is turned on (inecas@redhat.com)
+- content-deletion - convert action titles to tipsy for consistency
+  (bbuckingham@redhat.com)
+- content-deletion - update helptip to include both deletion and promotion
+  (bbuckingham@redhat.com)
+- content-deletion - add a tipsy to the 'Added' item in content tree
+  (bbuckingham@redhat.com)
+- content-deletion - add custom confirms for changeset deletion
+  (bbuckingham@redhat.com)
+- content-deletion - add title attribute to the changeset action bar
+  (bbuckingham@redhat.com)
+- content-deletion - update the content tree to use 'Added (Undo)' vs 'Remove'
+  (bbuckingham@redhat.com)
+- content-deletion - update the content tree to use 'Added (Undo)' vs 'Remove'
+  (bbuckingham@redhat.com)
+- changing message to "Insufficient Subscriptions are Attached to This System"
+  (adprice@redhat.com)
+- 845611 - Subscriptions are not current message is confusing for system with
+  insufficient subscriptions (adprice@redhat.com)
+- content-deletion - remove the changeset type from the sliding tree listing
+  (bbuckingham@redhat.com)
+- content-deletion - load changeset sliding tree based on changeset hash
+  (bbuckingham@redhat.com)
+- Quick fix to a bug introduced in the package deletion and promotion
+  (paji@redhat.com)
+- 843904 - Systems page: user will see System Group and Errata elements along
+  with install button and other. (adprice@redhat.com)
+- content-deletion - fix some references to accessing current chgset breadcrumb
+  (bbuckingham@redhat.com)
+- changesets - fix the locked icon image on changeset list
+  (bbuckingham@redhat.com)
+- content-deletion - initial chgs to support 2 changeset trees
+  (deletion/promotion) (bbuckingham@redhat.com)
+- Validation of locale during update handled by model. (ogmaciel@gnome.org)
+- Allow user to update his/her own localevia cli. Also, output the default
+  locale when using the info parameter. (ogmaciel@gnome.org)
+- Added --default_locale to CLI for user creation. (ogmaciel@gnome.org)
+- Fixed more spec tests (paji@redhat.com)
+- Fixed broken spec tests that occured after master merge (paji@redhat.com)
+- Removed unused methods in the pulp and reporb (paji@redhat.com)
+- Moved the add+remove repo packages method to orchestration layer
+  (paji@redhat.com)
+- content-deletion - add a promotion/deletion banner to the changeset tree
+  (bbuckingham@redhat.com)
+- Speeded up package deletion and promotion by using a differnt call in pulp
+- Revert "update converge ui" (mmccune@redhat.com)
+- update converge ui (mmccune@redhat.com)
+- content deletion - taking out unecessary fields from the JSON
+  (mmccune@redhat.com)
+- Updating the converge-ui version (paji@redhat.com)
+- content-deletion - update repo deletion to disable or remove based on env
+  (bbuckingham@redhat.com)
+- content-deletion - updates to handle last env in path
+  (bbuckingham@redhat.com)
+- Fixes for some of API issues (pajkycz@gmail.com)
+- content deletion - proper deletion support in the CLI (mmccune@redhat.com)
+- content-deletion - minor changes to changeset history
+  (bbuckingham@redhat.com)
+- content-deletion - add changeset type to changeset listing (changesets pg)
+  (bbuckingham@redhat.com)
+- content-deletion - update specs to account for the promote vs apply name
+  change (bbuckingham@redhat.com)
+- content-deletion - change cs promote status text to apply (to be generic)
+  (bbuckingham@redhat.com)
+- content-deletion - update cs create to default to promotion
+  (bbuckingham@redhat.com)
+- content-deletion - add backend support for deleting repos
+  (bbuckingham@redhat.com)
+- content-deletion - add backend support for deleting distributions
+  (bbuckingham@redhat.com)
+- content-deletion - add backend support for deleting errata
+  (bbuckingham@redhat.com)
+- Adding a missing 'deleted' state to indicate succesfu completion of delete
+  (paji@redhat.com)
+- Made the promotion UI use the 'apply' method generated by the model
+  (paji@redhat.com)
+- Added methods to generate repo metadata when packages are deleted
+  (paji@redhat.com)
+- Made the delete packages call use packages object (paji@redhat.com)
+- Made the deletion changeset more bare bones . Trying to just get package
+  delete workign at this point (paji@redhat.com)
+- content deletion - adding back in the CLI promote and apply
+  (mmccune@redhat.com)
+- content-deletion - update how changesets are listed when page loaded
+  (bbuckingham@redhat.com)
+- content-deletion - skip dependency resolution for deletion changesets
+  (bbuckingham@redhat.com)
+- content-deletion - first mods to integrate js w/ controller (apply/status)
+  (bbuckingham@redhat.com)
+- Added the deleting state (paji@redhat.com)
+- Fixed a compile glitch (paji@redhat.com)
+- content-deletion - fix promotion... accidental regression for env handling
+  (bbuckingham@redhat.com)
+- content-deletion - minor changes to allow creation of changeset in UI
+  (bbuckingham@redhat.com)
+- INitial work on remove packages (paji@redhat.com)
+- Fixed some unit tests. (paji@redhat.com)
+- fixed a typo (paji@redhat.com)
+- Adding a new changeset model for Content Deletion (paji@redhat.com)
+- content-deletion - set the ui action button to promote/delete based on cs
+  type (bbuckingham@redhat.com)
+- content-deletion - update navigation for changesets (bbuckingham@redhat.com)
+- content-deletion - only allow promotion changesets when in Library
+  (bbuckingham@redhat.com)
+- content-deletion - fix specs broken on previous commit
+  (bbuckingham@redhat.com)
+- content-deletion - associate proper env with changeset upon creation
+  (bbuckingham@redhat.com)
+- content-deletion - fix broken spec (bbuckingham@redhat.com)
+- content-deletion - changeset history - show changeset type
+  (bbuckingham@redhat.com)
+- content-deletion - show cs type on promotions cs edit details pane
+  (bbuckingham@redhat.com)
+- content-deletion - initial ui chgs for add/remove to deletion changeset
+  (bbuckingham@redhat.com)
+- promotions - bug - promoted repo can be promoted over and over
+  (bbuckingham@redhat.com)
+- promotions - fix bugs with removing packages from a changeset
+  (bbuckingham@redhat.com)
+- content-deletion - remove 'promotion' from several display text items
+  (bbuckingham@redhat.com)
+- content-deletion - update ui to support defining an action type on changeset
+  (bbuckingham@redhat.com)
+- Forgot to undo one part (paji@redhat.com)
+- Made some modifications on the initial model based on comments
+  (paji@redhat.com)
+- Added action type to  changeset to accomadate content deletion
+  (paji@redhat.com)
+
 * Thu Aug 16 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.5-1
 - Icon fix for content search: selector_icon-black
 - Switching oauth warden strategy to use request.headers

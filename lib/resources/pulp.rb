@@ -237,25 +237,40 @@ module Resources
           body = put(Repository.repository_path + repo_id +"/schedules/sync/", JSON.generate(:schedule => schedule), self.default_headers).body
         end
 
+        def update_publish(repo_id, publish=true)
+          body = post(Repository.repository_path + repo_id +"/update_publish/", JSON.generate(:state => publish), self.default_headers).body
+        end
+
         def delete_schedule(repo_id)
           body = self.delete(Repository.repository_path + repo_id +"/schedules/sync/", self.default_headers).body
         end
-
-        def add_packages repo_id, pkg_id_list
-          body = post(Repository.repository_path + repo_id +"/add_package/", {:packageid=>pkg_id_list}.to_json, self.default_headers).body
+        #repo_package_tuples = list of package repo tuples in the format [[[package_name, checksum],[repo_id]]....]
+        def add_repo_packages repo_package_tuples
+          associate_path = "/pulp/api/services/associate/packages/"
+          body = post(associate_path, {:package_info=>repo_package_tuples}.to_json, self.default_headers).body
         end
+
+        #repo_package_tuples = list of package repo tuples in the format [[[package_name, checksum],[repo_id]]....]
+        def delete_repo_packages repo_package_tuples
+          dissociate_path = "/pulp/api/services/disassociate/packages/"
+          body = post(dissociate_path, {:package_info=>repo_package_tuples}.to_json, self.default_headers).body
+        end
+
 
         def add_errata repo_id, errata_id_list
-          body = post(Repository.repository_path + repo_id +"/add_errata/", {:errataid=>errata_id_list}.to_json, self.default_headers).body
+          add_delete_content("add_errata", :errataid, repo_id, errata_id_list)
         end
 
-        def add_distribution repo_id, distribution_id
-          body = post(Repository.repository_path + repo_id +"/add_distribution/", {:distributionid=>distribution_id}.to_json, self.default_headers).body
+        def delete_errata repo_id, errata_id_list
+          add_delete_content("delete_errata", :errataid, repo_id, errata_id_list)
         end
 
-        def destroy repo_id # TODO remove this unreachable method, it's overridden few lines below
-          raise ArgumentError, "repo id has to be specified" unless repo_id
-          self.delete(repository_path  + repo_id + "/", self.default_headers).code.to_i
+        def add_distribution repo_id, distro_id_list
+          add_delete_content("add_distribution", :distributionid, repo_id, distro_id_list)
+        end
+
+        def delete_distribution repo_id, distro_id_list
+          add_delete_content("remove_distribution", :distributionid, repo_id, distro_id_list)
         end
 
         def sync (repo_id, data = {})
@@ -362,6 +377,11 @@ module Resources
 
           search_query
         end
+
+        def add_delete_content content_action, param_key, repo_id, content_id_list
+          body = post(Repository.repository_path + repo_id +"/#{content_action}/", {param_key=>content_id_list}.to_json, self.default_headers).body
+        end
+
       end
     end
 
