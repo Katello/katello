@@ -93,7 +93,7 @@ chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 %{_mandir}/man1/%{base_name}-debug-certificates.1*
 
 %files common
-%{_sysconfdir}/%{base_name}
+%dir %{_sysconfdir}/%{base_name}
 %{python_sitelib}/%{base_name}/
 
 
