@@ -19,7 +19,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.2
+Version:       1.1.3
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -98,6 +98,24 @@ chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 
 
 %changelog
+* Thu Aug 23 2012 Mike McCune <mmccune@redhat.com> 1.1.3-1
+- 850935 - katello-cli-common should own only /etc/katello and not its content
+  (msuchy@redhat.com)
+- 795520 - modifying manual page (lzap+git@redhat.com)
+- 795520 - removing unused variable (lzap+git@redhat.com)
+- 795520 - adding support of noheading cli option (lzap+git@redhat.com)
+- Merge pull request #436 from omaciel/userlocale (mmccune@gmail.com)
+- Validation of locale during update handled by model. (ogmaciel@gnome.org)
+- Allow user to update his/her own localevia cli. Also, output the default
+  locale when using the info parameter. (ogmaciel@gnome.org)
+- Added --default_locale to CLI for user creation. (ogmaciel@gnome.org)
+- Fixed some merge conflicts (paji@redhat.com)
+- content deletion - proper deletion support in the CLI (mmccune@redhat.com)
+- content deletion - adding back in the CLI promote and apply
+  (mmccune@redhat.com)
+- content deletion - removing hard coded type (mmccune@redhat.com)
+- content deletion - adding CLI actions (mmccune@redhat.com)
+
 * Thu Aug 16 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.2-1
 - 822926 - katello-cli-common now owns config dir
 - 822926 - fixing incorrect license in a header
