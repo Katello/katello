@@ -309,7 +309,8 @@ class AddSystemGroup(ActivationKeyAction):
 
         system_group = SystemGroupAPI().system_groups(org_name, { 'name' : system_group_name})
 
-        if system_group is None:
+        if system_group is None or len(system_group) == 0:
+            print >> sys.stderr, _("Could not find system group [ %s ]") % system_group_name
             return os.EX_DATAERR
         else:
             system_group = system_group[0]
@@ -352,8 +353,8 @@ class RemoveSystemGroup(ActivationKeyAction):
 
         system_group = SystemGroupAPI().system_groups(org_name, { 'name' : system_group_name})
 
-        if system_group is None:
-            return os.EX_DATAERR
+        if system_group is None or len(system_group) == 0:
+            print >> sys.stderr, _("Could not find system group [ %s ]") % system_group_name
         else:
             system_group = system_group[0]
 
