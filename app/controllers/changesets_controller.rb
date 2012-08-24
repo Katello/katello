@@ -264,7 +264,8 @@ class ChangesetsController < ApplicationController
   def status
     progress = @changeset.task_status.progress
     state = @changeset.state
-    to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i}
+    to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i,
+              'product_ids' => @changeset.product_ids}
     render :json=>to_ret
   end
 
