@@ -408,7 +408,7 @@ class List(RepoAction):
 
     def run(self):
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
         prodName = self.get_option('product')
         listDisabled = self.has_option('disabled')
 
