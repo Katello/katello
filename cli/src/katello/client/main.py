@@ -17,6 +17,20 @@
 
 import sys
 import codecs
+import locale
+import gettext
+
+# Localization domain:
+APP = 'katello'
+# Directory where translations are deployed:
+DIR = '/usr/share/locale/'
+try:
+    locale.setlocale(locale.LC_ALL, '')
+except locale.Error:
+    locale.setlocale(locale.LC_ALL, 'C')
+gettext.bindtextdomain(APP, DIR)
+gettext.textdomain(APP)
+
 
 from katello.client.core import (
   activation_key,
