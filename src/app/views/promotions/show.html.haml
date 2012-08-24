@@ -20,6 +20,7 @@
       "remove": '#{escape_javascript(_('Remove'))}',
       "undo": '#{escape_javascript(_('(Undo)'))}',
       "loading": "#{escape_javascript(_('Loading Changeset'))}",
+      "content_no_products": "#{escape_javascript(_("No products"))}",
       "no_products":"#{escape_javascript(_('No products exist in this changeset.'))}",
       "no_errata": "#{escape_javascript(_('No errata exist in this changeset.'))}",
       "no_package": "#{escape_javascript(_('No packages exist in this changeset.'))}",
@@ -134,10 +135,10 @@
         - if read_promotion_changesets or read_deletion_changesets
           %h2 #{_(" Changesets")}
           .sliding_tree_categories.clickable
-            .sliding_tree_category{:class => ("selected" unless !@next_environment), 'data-cs_type' => 'promotion'}
+            .sliding_tree_category{:class => ("selected" unless !@next_environment), 'data-cs_type' => ('promotion' if @next_environment)}
               - if @next_environment
                 #{_("Promotion to %s") % @next_environment.name}
-            .sliding_tree_category{:class => ("selected" unless @next_environment), 'data-cs_type' => 'deletion'}
+            .sliding_tree_category{:class => ("selected" unless @next_environment), 'data-cs_type' => ('deletion' if @environment and !@environment.library?)}
               - if @environment and !@environment.library?
                 #{_("Deletion from %s") % @environment.name}
           .breadcrumb_filter.fl.clear.clickable
