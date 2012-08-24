@@ -25,8 +25,10 @@ module Glue::Foreman::User
 
   module InstanceMethods
     def foreman_user
-      ::Foreman::User.find foreman_id
+      @foreman ||= ::Foreman::User.find foreman_id
     end
+
+    alias_method :foreman, :foreman_user
 
     def save_foreman_orchestration
       case orchestration_for

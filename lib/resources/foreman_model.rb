@@ -84,6 +84,7 @@ class Resources::ForemanModel
 
   def initialize(attributes = { })
     self.attributes = attributes
+    @persisted = false
   end
 
   def attributes=(attributes)
@@ -95,11 +96,13 @@ class Resources::ForemanModel
     raise ArgumentError, "unknown attributes: #{attributes.keys.join(', ')}" unless attributes.empty?
   end
 
+  singleton_class.instance_eval { attr_writer :resource }
+
   def self.resource
-    Resources::Foreman.const_get to_s.demodulize
+    @resource or Resources::Foreman.const_get to_s.demodulize
   rescue NameError => e
     if e.message =~ /Resources::Foreman::#{to_s.demodulize}/
-      raise "could not find Resources::Foreman::#{to_s.demodulize}, try to override #{to_s}.resource"
+      raise "could not find Resources::Foreman::#{to_s.demodulize}, try to set the resource with #{to_s}.set_resource"
     else
       raise e
     end
@@ -110,8 +113,13 @@ class Resources::ForemanModel
   end
 
   def persisted?
-    not id.blank?
+    @persisted
   end
+
+  def persist!
+    @persisted = true
+  end
+  private :persist!
 
   def save
     return false unless valid?
@@ -132,6 +140,7 @@ class Resources::ForemanModel
   def create
     data, response = resource.create as_json(json_create_options), self.class.foreman_header
     self.id        = data[resource_name]['id']
+    @persisted = true
     return data, response
   end
 
@@ -142,6 +151,8 @@ class Resources::ForemanModel
   def save!
     save or raise Invalid.new(self)
   end
+
+  singleton_class.instance_eval { attr_writer :resource_name }
 
   def self.resource_name
     @resource_name ||= self.name.demodulize.underscore.downcase
@@ -156,7 +167,9 @@ class Resources::ForemanModel
   end
 
   def self.find!(id)
-    new clean_attribute_hash(resource.show(id, nil, foreman_header).first[resource_name])
+    new(clean_attribute_hash(resource.show(id, nil, foreman_header).first[resource_name])).tap do |o|
+      o.send :persist!
+    end
   rescue RestClient::ResourceNotFound => e
     raise NotFound.new(self, id)
   end
@@ -167,8 +180,12 @@ class Resources::ForemanModel
     nil
   end
 
-  def self.all(params)
-    resource.index(params, foreman_header).first.map { |data| new clean_attribute_hash(data[resource_name]) }
+  def self.all(params = nil)
+    resource.index(params, foreman_header).first.map do |data|
+      new(clean_attribute_hash(data[resource_name])).tap do |o|
+        o.send :persist!
+      end
+    end
   end
 
   def self.delete!(id)
@@ -186,9 +203,15 @@ class Resources::ForemanModel
 
   private
 
+  singleton_class.instance_eval { attr_writer :current_user_getter }
+
+  def self.get_current_user
+    @current_user_getter.try(:call) || User.current
+  end
+
   def self.foreman_header
-    raise 'current user is not set' unless User.current
-    { :foreman_user => User.current.username }
+    raise 'current user is not set' unless (user = get_current_user)
+    { :foreman_user => user.username }
   end
 
   def self.clean_attribute_hash(attributes)
