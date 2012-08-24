@@ -19,6 +19,7 @@ from gettext import gettext as _
 import datetime
 
 from katello.client import constants
+from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
@@ -55,10 +56,10 @@ class SingleProductAction(ProductAction):
         self.check_product_select_options(validator)
 
     def set_product_select_options(self, parser, select_by_env=True):
-        parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name', help=_("product name (required)"))
         if select_by_env:
-            parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
+            opt_parser_add_environment(parser, default=_("Library"))
 
     def check_product_select_options(self, validator):
         validator.require(('org', 'name'))
@@ -114,10 +115,8 @@ class List(ProductAction):
     description = _('list known products')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
-        parser.add_option('--environment', dest='env',
-                       help=_('environment name eg: production (default: Library)'))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser, default=_("Library"))
         parser.add_option('--provider', dest='prov',
                        help=_("provider name, lists provider's product in the Library"))
         parser.add_option('--all', dest='all', action='store_true',
@@ -252,12 +251,12 @@ class Promote(SingleProductAction):
 
     def check_options(self, validator):
         self.check_product_select_options(validator)
-        validator.require('env')
+        validator.require('environment')
 
     def run(self):
         orgName     = self.get_option('org')
         prodName    = self.get_option('name')
-        envName     = self.get_option('env')
+        envName     = self.get_option('environment')
 
         env = get_environment(orgName, envName)
         prod = get_product(orgName, prodName)
@@ -299,8 +298,7 @@ class Create(ProductAction):
     description = _('create new product to a custom provider')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--provider', dest='prov',
                                help=_("provider name (required)"))
         parser.add_option('--name', dest='name',

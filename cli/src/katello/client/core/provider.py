@@ -19,6 +19,7 @@ from gettext import gettext as _
 from urlparse import urlparse
 
 from katello.client.api.provider import ProviderAPI
+from katello.client.cli.base import opt_parser_add_org
 from katello.client.server import ServerRequestError
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask, format_sync_errors, system_exit
@@ -42,8 +43,7 @@ class SingleProviderAction(ProviderAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("provider name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require('name')
@@ -58,8 +58,7 @@ class List(ProviderAction):
 
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require('org')
@@ -129,8 +128,7 @@ class Update(ProviderAction):
                                help=_("provider description"))
         parser.add_option("--url", dest="url", type="url",
                                help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
         if not self._create:
             parser.add_option('--new_name', dest='new_name',
