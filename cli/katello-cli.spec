@@ -27,7 +27,7 @@ BuildArch:     noarch
 
 
 %description
-Provides a client package for managing application life-cycle for 
+Provides a client package for managing application life-cycle for
 Linux systems with Katello
 
 %package common
@@ -60,31 +60,11 @@ sed -e 's/THE_VERSION/%{version}/g' katello-debug-certificates.pod |\
 popd
 
 %install
-install -d %{buildroot}%{_bindir}/
-install -d %{buildroot}%{_sysconfdir}/%{base_name}/
-install -d %{buildroot}%{python_sitelib}/%{base_name}
-install -d %{buildroot}%{python_sitelib}/%{base_name}/client
-install -d %{buildroot}%{python_sitelib}/%{base_name}/client/api
-install -d %{buildroot}%{python_sitelib}/%{base_name}/client/cli
-install -d %{buildroot}%{python_sitelib}/%{base_name}/client/core
-install -d %{buildroot}%{python_sitelib}/%{base_name}/client/utils
-install -pm 0644 bin/%{base_name} %{buildroot}%{_bindir}/%{base_name}
-install -pm 0644 bin/%{base_name}-debug-certificates %{buildroot}%{_bindir}/%{base_name}-debug-certificates
-install -pm 0644 etc/client.conf %{buildroot}%{_sysconfdir}/%{base_name}/client.conf
-install -pm 0644 src/%{base_name}/*.py %{buildroot}%{python_sitelib}/%{base_name}/
-install -pm 0644 src/%{base_name}/client/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/
-install -pm 0644 src/%{base_name}/client/api/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/api/
-install -pm 0644 src/%{base_name}/client/cli/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/cli/
-install -pm 0644 src/%{base_name}/client/core/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/core/
-install -pm 0644 src/%{base_name}/client/utils/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/utils/
-install -d -m 0755 %{buildroot}%{_mandir}/man1
-install -m 0644 man/%{base_name}.man1 %{buildroot}%{_mandir}/man1/%{base_name}.1
-install -m 0644 man/%{base_name}-debug-certificates.man1 %{buildroot}%{_mandir}/man1/%{base_name}-debug-certificates.1
+make -f Makefile install VERSION=%{version}-%{release} PREFIX=%{buildroot} MANPATH=%{_mandir} PYTHON_DIR=%{python_sitelib}
 
-# several scripts are executable
-chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
+%find_lang katello
 
-%files 
+%files -f katello.lang
 %attr(755,root,root) %{_bindir}/%{base_name}
 %attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
 %config(noreplace) %{_sysconfdir}/%{base_name}/client.conf
@@ -413,7 +393,7 @@ chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 - Fix bug on cli repo info for disabled repository (inecas@redhat.com)
 
 * Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.25-1
-- system engine build 
+- system engine build
 
 * Thu Dec 08 2011 Mike McCune <mmccune@redhat.com> 0.1.23-2
 - periodic rebuild
