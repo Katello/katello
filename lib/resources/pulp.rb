@@ -307,9 +307,6 @@ module Resources
           return response
         end
 
-        def cancel_sync(repo_id, task_id)
-                           self.delete(repository_path(repo_id) + '/importers/sync_schedules/#{task_id}')
-        end
 
         def destroy repo_id
           raise ArgumentError, "repository id has to be specified" unless repo_id
@@ -559,9 +556,8 @@ module Resources
         end
 
         def cancel uuid
-          response = self.post(path(uuid) +"cancel/" , {}, self.default_headers)
-
-          JSON.parse(response.body).with_indifferent_access
+          task = Task.find_single(uuid)
+          self.delete(task['_href'], self.default_headers) if task
         end
 
         def destroy uuid
