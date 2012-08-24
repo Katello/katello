@@ -64,7 +64,7 @@ class Info(DomainAction):
     description = _('show information about a domain')
 
     def setup_parser(self, parser):
-        parser.add_option('--id', dest='id', help=_("domain id or name"))
+        parser.add_option('--name', dest='id', help=_("domain id or name"))
 
     def check_options(self, validator):
         validator.require('id')
@@ -111,8 +111,8 @@ class Update(DomainAction):
     description = _('update domain')
 
     def setup_parser(self, parser):
-        parser.add_option('--id', dest='id', help=_("Domain id"))
-        parser.add_option('--name', dest='name', help=_("The full DNS Domain name(required)"))
+        parser.add_option('--name', dest='id', help=_("Domain id"))
+        parser.add_option('--new_name', dest='name', help=_("The full DNS Domain name(required)"))
         parser.add_option('--fullname', dest='fullname', help=_("Full name describing the domain"))
         parser.add_option('--dns_id', dest='dns_id', help=_("DNS Proxy to use within this domain"))
         # parser.add_option('--domain_parameters_attributes', dest='domain_parameters_attributes', help=_("Array of parameters (name, value)"))
@@ -137,7 +137,7 @@ class Delete(DomainAction):
     description = _('delete domain')
 
     def setup_parser(self, parser):
-        parser.add_option('--id', dest='id', help=_("domain id or name"))
+        parser.add_option('--name', dest='id', help=_("domain id or name"))
 
     def check_options(self, validator):
         validator.require('id')

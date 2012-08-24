@@ -20,7 +20,7 @@ from gettext import gettext as _
 from katello.client.api.config_template import ConfigTemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, unnest_one
+from katello.client.core.utils import system_exit, unnest_one
 
 Config()
 
@@ -64,7 +64,7 @@ class Info(ConfigTemplateAction):
     description = _('show information about a config template')
 
     def setup_parser(self, parser):
-        parser.add_option('--id', dest='id', help=_("config template id or name"))
+        parser.add_option('--name', dest='id', help=_("config template id or name"))
 
     def check_options(self, validator):
         validator.require('id')
@@ -127,17 +127,17 @@ class Create(ConfigTemplateAction):
         ctemplate = self.api.create(data)
 
         if type(ctemplate)==type(dict()) and 'config_template' in ctemplate:
-            return _("Successfully created Config Template [ %s ]") % data['name']
+            system_exit(os.EX_OK, _("Successfully created Config Template [ %s ]") % data['name'])
         else:
-            return _("Could not create Config Template [ %s ]") % data['name']
+            system_exit(os.EX_DATAERR, _("Could not create Config Template [ %s ]") % data['name'])
 
 class Update(ConfigTemplateAction):
 
     description = _('update config template')
 
     def setup_parser(self, parser):
-        parser.add_option('--id', dest='id', help=_("template id or name"))
-        parser.add_option('--name', dest='name', help=_("template new name"))
+        parser.add_option('--name', dest='id', help=_("template id or name"))
+        parser.add_option('--new_name', dest='name', help=_("template new name"))
         parser.add_option('--template', dest='template', help=_(""))
         parser.add_option('--snippet', dest='snippet', help=_(""))
         parser.add_option('--audit_comment', dest='audit_comment', help=_(""))
@@ -156,16 +156,16 @@ class Update(ConfigTemplateAction):
         ctemplate = self.api.update(template_id, data)
 
         if type(ctemplate)==type(dict()) and 'config_template' in ctemplate:
-            return _("Successfully updated Config Template [ id = %s ]") % template_id
+            system_exit(os.EX_OK, _("Successfully updated Config Template [ id = %s ]") % template_id)
         else:
-            return _("Could not update Config Template [ id = %s ]") % template_id
+            system_exit(os.EX_DATAERR, _("Could not update Config Template [ id = %s ]") % template_id)
 
 class Delete(ConfigTemplateAction):
 
     description = _('delete config template')
 
     def setup_parser(self, parser):
-        parser.add_option('--id', dest='id', help=_("config template id or name"))
+        parser.add_option('--name', dest='id', help=_("config template id or name"))
 
     def check_options(self, validator):
         validator.require('id')
