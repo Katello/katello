@@ -19,6 +19,7 @@ class Api::ActivationKeysController < Api::ApiController
   before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool, 
                                                 :add_system_groups, :remove_system_groups]
   before_filter :find_pool, :only => [:add_pool, :remove_pool]
+  before_filter :find_system_groups, :only => [:add_system_groups, :remove_system_groups]
 
   def rules
     read_test = lambda{ActivationKey.readable?(@organization)}
@@ -143,6 +144,18 @@ class Api::ActivationKeysController < Api::ApiController
 
   def find_pool
     @pool = ::Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
+  end
+
+  def find_system_groups
+    ids = params[:activation_key][:system_group_ids] if params[:activation_key]
+    @system_groups = []
+    if ids
+      for group_id in ids:
+        group = SystemGroup.find(group_id)
+        raise HttpErrors::NotFound, _("Couldn't find system group '#{group_id}'") if group.nil?
+        @system_groups << group
+      end
+    end
   end
 
   def verify_presence_of_organization_or_environment
