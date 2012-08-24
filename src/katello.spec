@@ -403,6 +403,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/public
 %exclude %{homedir}/public/apipie-cache
 %{homedir}/script
+%exclude %{homedir}/script/service-wait
 %{homedir}/spec
 %{homedir}/tmp
 %{homedir}/vendor
@@ -433,6 +434,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/log
 %{homedir}/db/schema.rb
 %{homedir}/lib/util
+%{homedir}/script/service-wait
 
 %defattr(-, katello, katello)
 %attr(750, katello, katello) %{_localstatedir}/log/%{name}
