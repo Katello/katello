@@ -40,7 +40,8 @@ class KatelloShell(Cmd):
     emptyline = lambda self: None
 
     @property
-    def history_file(self):
+    @classmethod
+    def history_file(cls):
         conf_dir = Config.USER_DIR
         try:
             if not os.path.isdir(conf_dir):
