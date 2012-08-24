@@ -16,6 +16,8 @@
 #
 #
 
+from gettext import gettext as _
+
 STATUS_DETAIL_SUCCESS = """
      Name          \t%-20s
      Result        \t%-20s
@@ -37,3 +39,13 @@ SELECTION_QUERY = """
   'c'   \t : clear selections
   'q'   \t : abort the repo creation
 """
+
+PROMOTION = 'PROMOTION'
+DELETION = 'DELETION'
+
+# Help string for optparser
+OPT_HELP_PROMOTION = _("changeset type promotion: pushes changes to the next environment [DEFAULT]")
+OPT_HELP_DELETION = _("changeset type deletion: deletes items in changeset from current environment")
+OPT_ERR_PROMOTION_OR_DELETE = _("specify either --promotion or --deletion but not both")
+
+

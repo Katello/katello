@@ -18,6 +18,7 @@ import os
 from gettext import gettext as _
 import datetime
 
+from katello.client import constants
 from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
@@ -263,10 +264,10 @@ class Promote(SingleProductAction):
 
         returnCode = os.EX_OK
 
-        cset = self.csapi.create(orgName, env["id"], self.create_cs_name())
+        cset = self.csapi.create(orgName, env["id"], self.create_cs_name(), constants.PROMOTION)
         try:
             self.csapi.add_content(cset["id"], "products", {'product_id': prod['id']})
-            task = self.csapi.promote(cset["id"])
+            task = self.csapi.apply(cset["id"])
             task = AsyncTask(task)
 
             run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
