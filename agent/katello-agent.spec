@@ -28,7 +28,7 @@ pushd src
 popd
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_sysconfdir}/gofer/plugins
 mkdir -p %{buildroot}/%{_prefix}/lib/gofer/plugins
 
