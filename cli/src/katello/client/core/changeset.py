@@ -18,6 +18,7 @@ import os
 from gettext import gettext as _
 from optparse import OptionValueError
 
+from katello.client import constants
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, format_task_errors
@@ -145,9 +146,9 @@ class Create(ChangesetAction):
         parser.add_option('--description', dest='description',
                                help=_("changeset description"))
         parser.add_option('--promotion', dest='type_promotion', action="store_true", default=False,
-                               help=_("changeset type promotion: pushes changes to the next environment [DEFAULT]"))
+                               help=constants.OPT_HELP_PROMOTION)
         parser.add_option('--deletion', dest='type_deletion', action="store_true", default=False,
-                               help=_("changeset type deletion: deletes items in changeset from current environment"))
+                               help=constants.OPT_ERR_PROMOTION_OR_DELETE)
 
 
 
@@ -159,15 +160,15 @@ class Create(ChangesetAction):
         envName = self.get_option('env')
         csName = self.get_option('name')
         csDescription = self.get_option('description')
-        csType = 'PROMOTION'
+        csType = constants.PROMOTION
 
         # Check for duplicate type flags
         if self.get_option('type_promotion') and self.get_option('type_deletion'):
-            raise OptionValueError(_("specify either --promotion or --deletion but not both"))
+            raise OptionValueError(constants.OPT_ERR_PROMOTION_OR_DELETE)
         if self.get_option('type_promotion'):
-            csType = 'PROMOTION'
+            csType = constants.PROMOTION
         elif self.get_option('type_deletion'):
-            csType = 'DELETION'
+            csType = constants.DELETION
 
         env = get_environment(orgName, envName)
         cset = self.api.create(orgName, env["id"], csName, csType, csDescription)
@@ -468,7 +469,7 @@ class Promote(Apply):
 
         # Block attempts to call this on deletion changesets, otherwise continue
         cset = get_changeset(orgName, envName, csName)
-        if cset['type'] == 'DELETION':
+        if cset['type'] == constants.DELETION:
             print _("This is a deletion changeset and does not support promotion")
             return os.EX_DATAERR
 
