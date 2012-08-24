@@ -20,8 +20,9 @@ import readline
 import re
 import sys
 from cmd import Cmd
+import ConfigParser
 
-from katello.client.config import Config
+from katello.client.config import Config, ConfigFileError
 from katello.client.core.base import Command, CommandContainer
 from katello.client.core.utils import parse_tokens
 
@@ -55,8 +56,9 @@ class KatelloShell(Cmd):
         Cmd.__init__(self)
         self.admin_cli = admin_cli
         try:
+            Config()
             self.prompt = Config.parser.get('shell', 'prompt') + ' '
-        except:
+        except (ConfigFileError, ConfigParser.Error):
             self.prompt = 'katello> '
 
         try:
@@ -67,7 +69,7 @@ class KatelloShell(Cmd):
 
             if (Config.parser.get('shell', 'nohistory').lower() != 'true'):
                 self.__init_history()
-        except Exception:
+        except ConfigParser.Error:
             pass
         self.__init_commands()
 
