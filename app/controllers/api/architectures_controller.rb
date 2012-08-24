@@ -29,7 +29,7 @@ class Api::ArchitecturesController < Api::ApiController
   api :GET, "/architectures/:id", "Show an architecture"
   param :id, String, "architecture name"
   def show
-    render :json => Foreman::Architecture.find(params[:id])
+    render :json => Foreman::Architecture.find!(params[:id])
   end
 
   api :POST, "/architecture", "Create new architecture in Foreman"
@@ -38,7 +38,7 @@ class Api::ArchitecturesController < Api::ApiController
   end
   def create
     resource = Foreman::Architecture.new(params[:architecture])
-    if resource.save
+    if resource.save!
       render :json => resource
     end
   end
@@ -51,7 +51,7 @@ class Api::ArchitecturesController < Api::ApiController
   def update
     resource = Foreman::Architecture.new(params[:architecture])
     resource.id = params[:id]
-    if resource.save
+    if resource.save!
       render :json => resource
     end
   end
@@ -59,7 +59,7 @@ class Api::ArchitecturesController < Api::ApiController
   api :DELETE, "/architectures/:id", "Remove an architecture from Foreman"
   param :id, String, "architecture name"
   def destroy
-    if Foreman::Architecture.delete(params[:id])
+    if Foreman::Architecture.delete!(params[:id])
       render :nothing => true
     end
   end
