@@ -11,14 +11,13 @@ which haml >/dev/null || gem install haml
 
 echo Checking for pylint
 which pylint >/dev/null || yum -y install pylint
+which spacewalk-pylint >/dev/null || yum -y install spacewalk-pylint
 
-#check python syntax and stop on errors only
-PYLINT_IGNORE=C0103,C0111,C0301,E1101,E1103
 # run in text
-PYTHONPATH=cli/src/ pylint katello -d $PYLINT_IGNORE
+PYTHONPATH=cli/src/ pylint katello --rcfile=/etc/spacewalk-pylint.rc
 echo Pylint text return code: $RESCODE
 # run with HTML output
-PYTHONPATH=cli/src/ pylint katello -f html -d $PYLINT_IGNORE >reports/pylint-cli.html
+PYTHONPATH=cli/src/ pylint --rcfile=/etc/spacewalk-pylint.rc katello -f html >reports/pylint-cli.html
 RESCODE=$?
 echo Pylint html return code: $RESCODE
 [ $(($RESCODE & 3)) -ne 0 ] && echo Pylint errors! && exit 1
