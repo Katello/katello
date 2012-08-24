@@ -13,6 +13,7 @@
 
 %global base_name katello
 %global katello_requires python-iniparse python-simplejson python-kerberos m2crypto PyXML
+%global locale_dir /usr/share/locale/
 
 Name:          %{base_name}-cli
 Summary:       Client package for managing application life-cycle for Linux systems
@@ -58,6 +59,8 @@ sed -e '/^THE_USAGE/{r katello-usage.txt' -e 'd}' katello.pod |\
 sed -e 's/THE_VERSION/%{version}/g' katello-debug-certificates.pod |\
 /usr/bin/pod2man --name=katello -c "Katello Reference" --section=1 --release=%{version} - katello-debug-certificates.man1
 popd
+# create locale files
+make -C po all-mo
 
 %install
 install -d %{buildroot}%{_bindir}/
@@ -81,10 +84,18 @@ install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/%{base_name}.man1 %{buildroot}%{_mandir}/man1/%{base_name}.1
 install -m 0644 man/%{base_name}-debug-certificates.man1 %{buildroot}%{_mandir}/man1/%{base_name}-debug-certificates.1
 
+# install locale files
+for lang in $(ls po/*.po); do
+    code=$(basename "$lang" ".po")
+    install -d %{buildroot}%{locale_dir}/${code}/LC_MESSAGES/
+    install -pm 0644 po/${code}.mo %{buildroot}%{locale_dir}/${code}/LC_MESSAGES/%{base_name}-cli.mo
+done
+%find_lang %{name}
+
 # several scripts are executable
 chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 
-%files 
+%files
 %attr(755,root,root) %{_bindir}/%{base_name}
 %attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
 %config(noreplace) %{_sysconfdir}/%{base_name}/client.conf
@@ -92,10 +103,13 @@ chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 %{_mandir}/man1/%{base_name}.1*
 %{_mandir}/man1/%{base_name}-debug-certificates.1*
 
-%files common
+%files common -f %{name}.lang
 %dir %{_sysconfdir}/%{base_name}
 %{python_sitelib}/%{base_name}/
 
+%clean
+# clean locale files
+make -C po clean
 
 %changelog
 * Thu Aug 23 2012 Mike McCune <mmccune@redhat.com> 1.1.3-1
@@ -824,3 +838,4 @@ chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 
 * Mon Jul 25 2011 Lukas Zapletal 0.1.1-1
 - initial version
+
