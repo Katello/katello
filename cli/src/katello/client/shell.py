@@ -52,6 +52,7 @@ class KatelloShell(Cmd):
 
 
     def __init__(self, admin_cli):
+        Cmd.__init__(self)
         self.admin_cli = admin_cli
         try:
             self.prompt = Config.parser.get('shell', 'prompt') + ' '
