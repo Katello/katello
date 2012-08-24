@@ -62,7 +62,7 @@ module Glue::Foreman::User
     end
 
     def destroy_foreman_user
-      Foreman::User.delete(foreman_id)
+      ::Foreman::User.delete(foreman_id)
     end
 
   end
