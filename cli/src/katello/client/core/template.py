@@ -20,6 +20,7 @@ from gettext import gettext as _
 from optparse import OptionValueError
 
 from katello.client.api.template import TemplateAPI
+from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, get_abs_path, run_spinner_in_bg, system_exit
 from katello.client.api.utils import get_library, get_environment, get_template, get_product, get_repo
@@ -48,16 +49,14 @@ class List(TemplateAction):
     description = _('list all templates')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required if specifying environment)"))
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (default: Library)"))
+        opt_parser_add_org(parser, required=_(" (required if specifying environment)"))
+        opt_parser_add_environment(parser, default=_("Library"))
 
     def check_options(self, validator):
         validator.require('org')
 
     def run(self):
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
         orgName = self.get_option('org')
 
         environment = get_environment(orgName, envName)
@@ -85,10 +84,8 @@ class Info(TemplateAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("template name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (default: Library)"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser, default=_("Library"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -96,7 +93,7 @@ class Info(TemplateAction):
     def run(self):
         tplName = self.get_option('name')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
 
         template = get_template(orgName, envName, tplName)
 
@@ -148,8 +145,7 @@ class Import(TemplateAction):
 
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option("--file", dest="file",
                                help=_("path to the template file (required)"))
         parser.add_option("--description", dest="description",
@@ -190,10 +186,8 @@ class Export(TemplateAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("template name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser)
         parser.add_option("--file", dest="file",
                                help=_("path to the template file (required)"))
         parser.add_option("--format", dest="format", choices=self.supported_formats,
@@ -201,12 +195,12 @@ class Export(TemplateAction):
 
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'file', 'env'))
+        validator.require(('name', 'org', 'file', 'environment'))
 
     def run(self):
         tplName = self.get_option('name')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
         format  = self.get_option('format') or "json"
         tplPath = self.get_option('file')
 
@@ -240,8 +234,7 @@ class Create(TemplateAction):
                                help=_("template name (required)"))
         parser.add_option('--parent', dest='parent',
                                help=_("name of the parent template"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option("--description", dest="description",
                                help=_("template description"))
 
@@ -305,7 +298,7 @@ class Update(TemplateAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("template name (required)"))
         parser.add_option('--parent', dest='parent', help=_("name of the parent template"))
-        parser.add_option('--org', dest='org', help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--new_name', dest='new_name', help=_("new template name"))
         parser.add_option("--description", dest="description", help=_("template description"))
 
@@ -477,10 +470,8 @@ class Delete(TemplateAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("template name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (default: Library)"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -488,7 +479,7 @@ class Delete(TemplateAction):
     def run(self):
         tplName = self.get_option('name')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
 
         template = get_template(orgName, envName, tplName)
         msg = self.api.delete(template["id"])

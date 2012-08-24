@@ -19,6 +19,7 @@ import sys
 from gettext import gettext as _
 
 from katello.client.api.gpg_key import GpgKeyAPI
+from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, get_abs_path
 from katello.client.utils import printer
@@ -61,8 +62,7 @@ class List(GpgKeyAction):
     description = _('list all GPG keys')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require('org')
@@ -91,8 +91,7 @@ class Info(GpgKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("GPG key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -127,8 +126,7 @@ class Create(GpgKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("GPG key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--file', dest='file',
                                help=_("file with public GPG key, if not\
                                  specified, standard input will be used"))
@@ -159,8 +157,7 @@ class Update(GpgKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("GPG key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--new_name', dest='new_name',
                               help=_("new template name"))
         parser.add_option('--file', dest='file',
@@ -202,8 +199,7 @@ class Delete(GpgKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("GPG key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))

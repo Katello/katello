@@ -20,6 +20,7 @@ from gettext import gettext as _
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.api.utils import get_role, get_permission
+from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.utils import system_exit, test_record
 from katello.client.utils.printer import GrepStrategy, VerboseStrategy
 from katello.client.core.base import BaseAction, Command
@@ -56,7 +57,7 @@ class Create(PermissionAction):
         parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
         parser.add_option('--name', dest='name',help=_("permission name (required)"))
         parser.add_option('--description', dest='desc', help=_("permission description"))
-        parser.add_option('--org', dest='org', help=_("organization name"))
+        opt_parser_add_org(parser)
         parser.add_option('--scope', dest='scope', help=_("scope of the permisson (required)"))
         parser.add_option('--verbs', dest='verbs', type="list", help=_("verbs for the permission"), default="")
         parser.add_option('--tags', dest='tags', type="list", help=_("tags for the permission"), default="")
@@ -166,7 +167,7 @@ class ListAvailableVerbs(PermissionAction):
     grep_mode = False
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com,\nlists organization specific verbs"))
+        opt_parser_add_org(parser)
         parser.add_option('--scope', dest='scope', help=_("filter listed results by scope"))
 
     def run(self):
