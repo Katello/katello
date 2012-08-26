@@ -127,7 +127,7 @@ class List(ProductAction):
 
     def run(self):
         org_name = self.get_option('org')
-        env_name = self.get_option('env')
+        env_name = self.get_option('environment')
         prov_name = self.get_option('prov')
         all = self.get_option('all')
 
