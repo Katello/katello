@@ -150,7 +150,7 @@ class Api::ActivationKeysController < Api::ApiController
     ids = params[:activation_key][:system_group_ids] if params[:activation_key]
     @system_groups = []
     if ids
-      for group_id in ids:
+      for group_id in ids
         group = SystemGroup.find(group_id)
         raise HttpErrors::NotFound, _("Couldn't find system group '#{group_id}'") if group.nil?
         @system_groups << group
