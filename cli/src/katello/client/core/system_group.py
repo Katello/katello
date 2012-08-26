@@ -105,7 +105,7 @@ class Copy(SystemGroupAction):
                                help=_("original system group name.  source of the copy (required)"))
         parser.add_option('--new_name', dest='new_name',
                                help=_("new system group name.  destination of the copy (required)"))
-        opt_parser_add_org(parser, required)
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--description', dest='description',
                                help=_("system group description for new group"))
         parser.add_option('--max_systems', dest='max_systems',
