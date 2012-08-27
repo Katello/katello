@@ -133,14 +133,14 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s/errata" % system_id
         return self.server.GET(path)[1]
 
-    def report_by_org(self, orgId, format):
+    def report_by_org(self, orgId, format_in):
         path = "/api/organizations/%s/systems/report" % orgId
-        to_return = self.server.GET(path, custom_headers={"Accept": format})
+        to_return = self.server.GET(path, custom_headers={"Accept": format_in})
         return (to_return[1], to_return[2])
 
-    def report_by_env(self, env_id, format):
+    def report_by_env(self, env_id, format_in):
         path = "/api/environments/%s/systems/report" % env_id
-        to_return = self.server.GET(path, custom_headers={"Accept": format})
+        to_return = self.server.GET(path, custom_headers={"Accept": format_in})
         return (to_return[1], to_return[2])
 
     def add_system_groups(self, system_id, system_group_ids):
