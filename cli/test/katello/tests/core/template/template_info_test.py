@@ -36,7 +36,7 @@ class TemplateInfoTest(CLIActionTestCase):
 
     OPTIONS = {
         'org': ORG['name'],
-        'env': ENV['name'],
+        'environment': ENV['name'],
         'name': TPL['name'],
     }
 
