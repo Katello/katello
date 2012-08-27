@@ -78,6 +78,7 @@ class KatelloError(Exception):
     User-friendly exception wrapper (used for stderr output).
     """
     def __init__(self, message, exception):
+        super(KatelloError, self).__init__(message, exception)
         self.message = message
         self.exception = exception
 
