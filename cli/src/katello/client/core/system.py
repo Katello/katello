@@ -143,18 +143,19 @@ class InstalledPackages(SystemAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
-                       help=_("system name (required)"))
+            help=_("system name (required)"))
         opt_parser_add_environment(parser)
         parser.add_option('--install', dest='install', type="list",
-                       help=_("packages to be installed remotely on the system, package names are separated with comma"))
+            help=_("packages to be installed remotely on the system, package names are separated with comma"))
         parser.add_option('--remove', dest='remove', type="list",
-                       help=_("packages to be removed remotely from the system, package names are separated with comma"))
+            help=_("packages to be removed remotely from the system, package names are separated with comma"))
         parser.add_option('--update', dest='update', type="list",
-                       help=_("packages to be updated on the system, use --all to update all packages, package names are separated with comma"))
+            help=_("packages to be updated on the system, use --all to update all packages," +
+                " package names are separated with comma"))
         parser.add_option('--install_groups', dest='install_groups', type="list",
-                       help=_("package groups to be installed remotely on the system, group names are separated with comma"))
+            help=_("package groups to be installed remotely on the system, group names are separated with comma"))
         parser.add_option('--remove_groups', dest='remove_groups', type="list",
-                       help=_("package groups to be removed remotely from the system, group names are separated with comma"))
+            help=_("package groups to be removed remotely from the system, group names are separated with comma"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -181,7 +182,8 @@ class InstalledPackages(SystemAction):
         if env_name is None:
             self.printer.set_header(_("Package Information for System [ %s ] in Org [ %s ]") % (sys_name, org_name))
         else:
-            self.printer.set_header(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") % (sys_name, env_name, org_name))
+            self.printer.set_header(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") %
+                (sys_name, env_name, org_name))
 
         system = get_system(org_name, sys_name, env_name)
         system_id = system['uuid']
@@ -260,8 +262,10 @@ class TasksList(SystemAction):
         self.printer.add_column('uuid', name=_("Task id"))
         self.printer.add_column('system_name', name=_("System"))
         self.printer.add_column('description', name=_("Action"))
-        self.printer.add_column('created_at', name=_("Started"), formatter=format_date, show_with=printer.VerboseStrategy)
-        self.printer.add_column('finish_time', name=_("Finished"), formatter=format_date, show_with=printer.VerboseStrategy)
+        self.printer.add_column('created_at', name=_("Started"),
+            formatter=format_date, show_with=printer.VerboseStrategy)
+        self.printer.add_column('finish_time', name=_("Finished"), formatter=format_date,
+            show_with=printer.VerboseStrategy)
         self.printer.add_column('state', name=_("Status"))
         self.printer.add_column('result', name=_("Result"), show_with=printer.VerboseStrategy)
 
@@ -354,7 +358,8 @@ class Facts(SystemAction):
         if env_name is None:
             self.printer.set_header(_("System Facts For System [ %s ] in Org [ %s ]") % (sys_name, org_name))
         else:
-            self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") % (sys_name, env_name, org_name))
+            self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") %
+                (sys_name, env_name, org_name))
 
         system = get_system(org_name, sys_name, env_name)
         system_id = system['uuid']
@@ -568,13 +573,14 @@ class Unsubscribe(SystemAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
-                               help=_("system name (required)"))
+            help=_("system name (required)"))
         parser.add_option('--entitlement', dest='entitlement',
-                               help=_("entitlement id to unsubscribe from (either entitlement or serial or all is required)"))
+            help=_("entitlement id to unsubscribe from (either entitlement or serial or all is required)"))
         parser.add_option('--serial', dest='serial',
-                               help=_("serial id of a certificate to unsubscribe from (either entitlement or serial or all is required)"))
+            help=_("serial id of a certificate to unsubscribe from (either entitlement or serial or all is required)"))
         parser.add_option('--all', dest='all', action="store_true", default=None,
-                               help=_("unsubscribe from all currently subscribed certificates (either entitlement or serial or all is required)"))
+            help=_("unsubscribe from all currently subscribed certificates (either entitlement or serial or all is"
+                + " required)"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
