@@ -28,7 +28,7 @@ from katello.client.config import Config
 from katello.client.logutil import getLogger, logfile
 from katello.client import server
 
-from katello.client.server import BasicAuthentication, SSLAuthentication, KerberosAuthentication, NoAuthentication
+from katello.client.server import BasicAuthentication, SSLAuthentication, NoAuthentication
 
 
 _log = getLogger(__name__)
@@ -174,7 +174,6 @@ class KatelloCLI(Command):
         elif None not in (self._certfile, self._keyfile):
             self._server.set_auth_method(SSLAuthentication(self._certfile, self._keyfile))
         else:
-            #self._server.set_auth_method(KerberosAuthentication(self.opts.host))
             self._server.set_auth_method(NoAuthentication())
 
     def error(self, exception, errorMsg = None):
