@@ -48,7 +48,8 @@ class AuthenticationStrategy(object):
 
     _log = getLogger('katello')
 
-    def _get_connection(self, host, port, protocol):
+    @classmethod
+    def _get_connection(cls, host, port, protocol):
         if protocol == "https":
             return httplib.HTTPSConnection(host, port)
         else:
