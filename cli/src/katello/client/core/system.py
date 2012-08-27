@@ -18,7 +18,6 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.system import SystemAPI
-from katello.client.api.environment import EnvironmentAPI
 from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_environment, get_system
