@@ -21,7 +21,7 @@ class Api::ApiController < ActionController::Base
   before_filter :require_user
   before_filter :add_candlepin_version_header
 
-  rescue_from Exception, :with => proc { |e| render_exception(500, e) } # catch-all
+  rescue_from StandardError, :with => proc { |e| render_exception(500, e) } # catch-all
   rescue_from HttpErrors::WrappedError, :with => proc { |e| render_wrapped_exception(500, e) }
 
   rescue_from RestClient::ExceptionWithResponse, :with => :exception_with_response

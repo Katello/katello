@@ -52,6 +52,22 @@ class Organization < ActiveRecord::Base
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
 
+  if AppConfig.use_cp
+    before_validation :create_cp_key, :on => :create
+    validate :unique_cp_key
+
+    def create_cp_key
+      self.cp_key = self.name.tr(' ', '_') if self.cp_key.blank? && self.name.present?
+    end
+
+    def unique_cp_key
+      # org is being deleted
+      if Organization.find_by_cp_key(self.cp_key).nil? && Organization.unscoped.find_by_cp_key(self.cp_key)
+        errors.add(:organization, _(" '%s' already exists and either has been scheduled for deletion or failed deletion.") % self.cp_key)
+      end
+    end
+  end
+
   def systems
     System.where(:environment_id => environments)
   end

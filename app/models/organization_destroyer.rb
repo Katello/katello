@@ -40,7 +40,7 @@ class OrganizationDestroyer
 
     Notify.success _("Successfully removed organization '%s'.") % organization.name,
                    :request_type => "organization__delete", :user => options[:user] if options[:notify]
-  rescue Exception => e
+  rescue => e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
 

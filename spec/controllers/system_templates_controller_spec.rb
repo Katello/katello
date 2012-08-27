@@ -62,7 +62,7 @@ describe SystemTemplatesController, :katello => true do
 
       describe "with invalid template id" do
         it "should generate an error notice" do
-          controller.should notify.exception
+          controller.should notify.error
           get :download, :id => -1, :environment_id => -1
           response.should_not be_success
         end
@@ -80,7 +80,7 @@ describe SystemTemplatesController, :katello => true do
 
       describe "with invalid template id" do
         it "should generate an error notice" do
-          controller.should notify.exception
+          controller.should notify.error
           get :show, :id => 9999
           response.should_not be_success
         end
@@ -107,7 +107,7 @@ describe SystemTemplatesController, :katello => true do
 
       describe "with invalid template id" do
         it "should generate an error notice" do
-          controller.should notify.exception
+          controller.should notify.error
           get :edit, :id => 9999
           response.should_not be_success
         end
@@ -209,7 +209,7 @@ describe SystemTemplatesController, :katello => true do
 
       describe "with invalid template  id" do
         it "should generate an error notice" do
-          controller.should notify.exception
+          controller.should notify.error
           put :update, :id => 9999,  :system_template=>{:description=>"bar"}
           response.should_not be_success
         end
@@ -229,7 +229,7 @@ describe SystemTemplatesController, :katello => true do
 
         end
         it "should generate an error notice" do
-          controller.should notify.exception
+          controller.should notify.error
           put :update, :id => @system_template_3.id,  :system_template=>{:description=>"bar"}
           response.should_not be_success
         end
@@ -253,7 +253,7 @@ describe SystemTemplatesController, :katello => true do
 
       describe "with invalid template id" do
         it "should generate an error notice" do
-          controller.should notify.exception
+          controller.should notify.error
           delete :destroy, :id => 9999
           response.should_not be_success
         end

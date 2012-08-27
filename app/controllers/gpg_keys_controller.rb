@@ -104,10 +104,6 @@ class GpgKeysController < ApplicationController
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @gpg_key["name"]
       render :json => { :no_match => true }
     end
-  rescue Exception => error
-    Rails.logger.error error.to_s
-    notify.exception error
-    render :text => error.to_json, :status => :bad_request
   end
 
   def update
@@ -127,42 +123,19 @@ class GpgKeysController < ApplicationController
     end
 
     render :text => escape_html(gpg_key_params.values.first)
-
-  rescue Exception => error
-    Rails.logger.error error.to_s
-    notify.exception error, :asynchronous => true
-    render :text => error, :status => :bad_request
   end
 
   def destroy
-    begin
-      @gpg_key.destroy
-      if @gpg_key.destroyed?
-        notify.success _("GPG Key '%s' was deleted.") % @gpg_key[:name]
-        render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
-      else
-        raise
-      end
-    rescue Exception => e
-      notify.exception e
+    if @gpg_key.destroy
+      notify.success _("GPG Key '%s' was deleted.") % @gpg_key[:name]
+      render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
     end
   end
 
   protected
 
   def find_gpg_key
-    begin
-      @gpg_key = GpgKey.find(params[:id])
-    rescue Exception => error
-      notify.exception error
-
-      # flash_to_headers is an after_filter executed on the application controller;
-      # however, a render from within a before_filter will halt the filter chain.
-      # as a result, we are explicitly executing it here.
-      flash_to_headers
-
-      render :text => error, :status => :bad_request
-    end
+    @gpg_key = GpgKey.find(params[:id])
   end
 
   def panel_options

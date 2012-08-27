@@ -21,7 +21,6 @@ class FiltersController < ApplicationController
   before_filter :authorize
 
   def rules
-    
     create = lambda{Filter.creatable?(current_organization)}
     index_test = lambda{Filter.any_readable?(current_organization)}
     readable = lambda{@filter.readable?}
@@ -100,9 +99,6 @@ class FiltersController < ApplicationController
     end
 
     render :text=>to_ret
-  rescue Exception=>e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def edit
@@ -126,16 +122,11 @@ class FiltersController < ApplicationController
       render :partial=>"common/list_item", :locals=>{:item=>@filter, :initial_action=>"packages", :accessor=>"id",
                                                      :columns=>['name'], :name=>controller_display_name}
     end
-
-  rescue Exception=> e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def products
     render :partial => "products", :layout => "tupane_layout", :locals => {:filter => @filter, :editable=>@filter.editable?,
                                                                        :name=>controller_display_name}
-
   end
 
   def update_products
@@ -180,12 +171,7 @@ class FiltersController < ApplicationController
 
     notify.success _("Sucessfully updated '%s' package filter.") % @filter.name
     render :text=>''
-  rescue Exception => e
-    notify.exception e
-    render :text=>'', :status=>500
   end
-
-
 
   def packages
     render :partial => "packages", :layout => "tupane_layout", :locals => {:filter => @filter, :editable=>@filter.editable?,
@@ -207,14 +193,10 @@ class FiltersController < ApplicationController
     render :text=>""
   end
 
-
   def destroy
     @filter.destroy
     notify.success _("Package Filter %s deleted.") % @filter.name
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
-  rescue Exception => e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def section_id
@@ -225,9 +207,6 @@ class FiltersController < ApplicationController
 
   def find_filter
     @filter = Filter.find(params[:id])
-  rescue => e
-    notify.exception e
-    render :text=>e, :status=>500 and return false
   end
 
   def panel_options

@@ -225,7 +225,7 @@ class Provider < ActiveRecord::Base
           end
         end
       end
-    rescue Exception => e
+    rescue => e
       raise _("Unable to retrieve release versions from Repository URL %s. Error message: %s") % [self.repository_url, e.to_str]
     end
     releases.uniq.sort
