@@ -3,85 +3,64 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # gguerrer <gguerrer@fedoraproject.org>, 2011. #zanata
+# bkearney <bkearney@fedoraproject.org>, 2012. #zanata
 # gguerrer <gguerrer@fedoraproject.org>, 2012. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-02 10:11-0400\n"
-"PO-Revision-Date: 2012-05-24 07:50-0400\n"
-"Last-Translator: gguerrer <gguerrer@fedoraproject.org>\n"
+"PO-Revision-Date: 2012-08-24 02:46-0400\n"
+"Last-Translator: bkearney <bkearney@fedoraproject.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es-ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Generator: Zanata 1.5.0\n"
+"X-Generator: Zanata 1.6.1\n"
 
-#: ../src/katello/client/server.py:420
-#, python-format
-msgid "certificate file %s does not exist or cannot be read"
-msgstr "Archivo de certificado [ %s ] no existe o no se puede leer"
-
-#: ../src/katello/client/server.py:423
-#, python-format
-msgid "key file %s does not exist or cannot be read"
-msgstr "Archivo de clave %s no existe o no se puede leer"
-
-#: ../src/katello/client/server.py:436
-msgid "Couldn't authenticate via kerberos"
-msgstr "No se pudo autenticar a través de kerberos"
-
-#: ../src/katello/client/cli/base.py:119
+#: ../src/katello/client/cli/base.py:72
 msgid "prints version information"
 msgstr "Imprime información de versión"
 
-#: ../src/katello/client/cli/base.py:120
+#: ../src/katello/client/cli/base.py:74
 msgid "Katello User Account Credentials"
 msgstr "Credenciales de cuenta de usuario de Katello"
 
-#: ../src/katello/client/cli/base.py:122
+#: ../src/katello/client/cli/base.py:76
 msgid "account username"
 msgstr "Nombre de usuario de cuenta"
 
-#: ../src/katello/client/cli/base.py:124
+#: ../src/katello/client/cli/base.py:78
 msgid "account password"
 msgstr "Contraseña de cuenta"
 
-#: ../src/katello/client/cli/base.py:131
+#: ../src/katello/client/cli/base.py:87
 msgid "Katello Server Information"
 msgstr "Información de servidor de Katello"
 
-#: ../src/katello/client/cli/base.py:134
+#: ../src/katello/client/cli/base.py:90
 #, python-format
 msgid "katello server host name (default: %s)"
 msgstr "Nombre de host de servidor de Katello (predeterminado: %s)"
 
-#: ../src/katello/client/cli/base.py:200
-msgid "Invalid command; please see --help"
-msgstr "Comando inválido; por favor ver --help"
-
-#: ../src/katello/client/cli/base.py:224
-msgid "No command given; please see --help"
-msgstr "No se especificó ningún comando; por favor ver --help"
-
-#: ../src/katello/client/api/utils.py:46
+#: ../src/katello/client/api/utils.py:57
 #, python-format
 msgid "Could not find organization [ %s ]"
 msgstr "No se pudo encontrar organización [ %s ]"
 
-#: ../src/katello/client/api/utils.py:61
+#: ../src/katello/client/api/utils.py:72
 #, python-format
 msgid "Could not find environment [ %s ] within organization [ %s ]"
-msgstr "No se pudo encontrar entorno dentro de la organización [ %s ]"
+msgstr "No se pudo encontrar entorno [ %s ] dentro de la organización [ %s ]"
 
-#: ../src/katello/client/api/utils.py:75
+#: ../src/katello/client/api/utils.py:86
 #, python-format
 msgid "Could not find product [ %s ] within organization [ %s ]"
-msgstr "No se pudo encontrar producto dentro de la organización [ %s ]"
+msgstr "No se pudo encontrar producto [%s] dentro de la organización [ %s ]"
 
-#: ../src/katello/client/api/utils.py:91
+#: ../src/katello/client/api/utils.py:102
 #, python-format
 msgid ""
 "Could not find repository [ %s ] within organization [ %s ], product [ %s ] "
@@ -90,66 +69,71 @@ msgstr ""
 "No se pudo encontrar repositorio [ %s ] dentro de la organización  [ %s ], "
 "producto  [ %s ] y entorno [ %s ]"
 
-#: ../src/katello/client/api/utils.py:101
+#: ../src/katello/client/api/utils.py:112
 #, python-format
 msgid "Could not find provider [ %s ] within organization [ %s ]"
-msgstr "No se pudo encontrar organización [ %s ]"
+msgstr "No se pudo encontrar [ %s ] organización [ %s ]"
 
-#: ../src/katello/client/api/utils.py:112
+#: ../src/katello/client/api/utils.py:123
 #, python-format
 msgid "Could not find template [ %s ] within environment [ %s ]"
 msgstr "No se pudo encontrar plantilla [ %s ] dentro del entorno  [ %s ]"
 
-#: ../src/katello/client/api/utils.py:123
+#: ../src/katello/client/api/utils.py:134
 #, python-format
 msgid "Could not find changeset [ %s ] within environment [ %s ]"
 msgstr "No se pudo encontrar Changeset [ %s ] dentro del entorno  [ %s ],"
 
-#: ../src/katello/client/api/utils.py:131
+#: ../src/katello/client/api/utils.py:142
 #, python-format
-msgid "Could not fing user [ %s ]"
-msgstr "No se pudo encontrar  [ %s ]"
+msgid "Could not find user [ %s ]"
+msgstr ""
 
-#: ../src/katello/client/api/utils.py:138
-#: ../src/katello/client/core/user_role.py:39
+#: ../src/katello/client/api/utils.py:149
+#: ../src/katello/client/core/user_role.py:37
 #, python-format
 msgid "Cannot find user role [ %s ]"
 msgstr "No se pudo encontrar rol  [ %s ]"
 
-#: ../src/katello/client/api/utils.py:145
+#: ../src/katello/client/api/utils.py:156
 #, python-format
 msgid "Cannot find sync plan [ %s ]"
 msgstr "No se pudo encontrar sincronización de plan  [ %s ]"
 
-#: ../src/katello/client/api/utils.py:155
+#: ../src/katello/client/api/utils.py:166
 #, python-format
 msgid "Cannot find permission [ %s ] for user role [ %s ]"
 msgstr "No se pudo encontrar permiso [ %s ] para rol de usuario [ %s ]"
 
-#: ../src/katello/client/api/utils.py:163
+#: ../src/katello/client/api/utils.py:174
 #, python-format
 msgid "Cannot find filter [ %s ]"
 msgstr "No se pudo encontrar filtro [ %s ]"
 
-#: ../src/katello/client/api/utils.py:171
+#: ../src/katello/client/api/utils.py:182
+#, python-format
+msgid "Could not find system group [ %s ] within organization [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/api/utils.py:190
 #, python-format
 msgid "Could not find System [ %s ] in Org [ %s ]"
 msgstr "No se pudo hallar sistema [ %s ] en Organización [ %s ]"
 
-#: ../src/katello/client/api/utils.py:173
+#: ../src/katello/client/api/utils.py:192
 #, python-format
 msgid "Found ambiguous Systems [ %s ] in Environment [ %s ] in Org [ %s ]"
 msgstr ""
 "Se hallaron sistemas ambiguos [ %s ] en entorno [ %s ] en Organización [ %s "
 "]"
 
-#: ../src/katello/client/api/utils.py:179
+#: ../src/katello/client/api/utils.py:198
 #, python-format
 msgid "Could not find System [ %s ] in Environment [ %s ] in Org [ %s ]"
 msgstr ""
 "No se pudo hallar sistema [ %s ] en entorno [ %s ] en Organización [ %s ]"
 
-#: ../src/katello/client/api/utils.py:182
+#: ../src/katello/client/api/utils.py:201
 #, python-format
 msgid ""
 "Found ambiguous Systems [ %s ] in Org [ %s ], you have to specify the "
@@ -158,365 +142,1332 @@ msgstr ""
 "Se hallaron sistemas ambiguos [ %s ] en Org [ %s ], debe especificar el "
 "entorno"
 
-#: ../src/katello/client/utils/printer.py:144
-msgid "name"
-msgstr "nombre"
-
-#: ../src/katello/client/core/organization.py:44
-msgid "list all known organizations"
-msgstr "Listar todas las organizaciones conocidas"
-
-#: ../src/katello/client/core/organization.py:53
-msgid "Organization List"
-msgstr "Lista de organizaciones"
-
-#: ../src/katello/client/core/organization.py:61
-msgid "create an organization"
-msgstr "Crear una organización"
-
-#: ../src/katello/client/core/organization.py:66
-#: ../src/katello/client/core/organization.py:93
-#: ../src/katello/client/core/organization.py:121
-#: ../src/katello/client/core/organization.py:150
-#: ../src/katello/client/core/organization.py:173
-#: ../src/katello/client/core/organization.py:205
-#: ../src/katello/client/core/product.py:59
-#: ../src/katello/client/core/product.py:120
-#: ../src/katello/client/core/product.py:295
-#: ../src/katello/client/core/system.py:51
-#: ../src/katello/client/core/system.py:93
-#: ../src/katello/client/core/system.py:149
-#: ../src/katello/client/core/system.py:247
-#: ../src/katello/client/core/system.py:317
-#: ../src/katello/client/core/system.py:353
-#: ../src/katello/client/core/system.py:694
-#: ../src/katello/client/core/environment.py:51
-#: ../src/katello/client/core/environment.py:78
-#: ../src/katello/client/core/environment.py:112
-#: ../src/katello/client/core/environment.py:151
-#: ../src/katello/client/core/environment.py:189
-#: ../src/katello/client/core/sync_plan.py:58
-#: ../src/katello/client/core/repo.py:120
-#: ../src/katello/client/core/repo.py:158
-msgid "organization name eg: foo.example.com (required)"
-msgstr "Nombrar organización. Por ejemplo, foo.example.com (requerido)"
-
-#: ../src/katello/client/core/organization.py:68
-#: ../src/katello/client/core/organization.py:152
-msgid "consumer description eg: foo's organization"
-msgstr "Descripción de usuario. Por ejemplo: organización de foo"
-
-#: ../src/katello/client/core/organization.py:79
+#. These are a bunch of strings that are marked for translation in optparse,
+#. but not actually translated anywhere. Mark them for translation here,
+#. so we get it picked up. for local translation, and then optparse will
+#. use them.
+# These are a bunch of strings that are marked for translation in optparse,
+# but not actually translated anywhere. Mark them for translation here,
+# so we get it picked up. for local translation, and then optparse will
+# use them.
+#: ../src/katello/client/i18n_optparse.py:48
 #, python-format
-msgid "Successfully created org [ %s ]"
-msgstr "Organización creada con [ %s ]"
+msgid "Usage: %s\n"
+msgstr "Uso: %s\n"
 
-#: ../src/katello/client/core/organization.py:80
+#: ../src/katello/client/i18n_optparse.py:49
+msgid "Usage"
+msgstr "Uso"
+
+#: ../src/katello/client/i18n_optparse.py:50
+msgid "%prog [options]"
+msgstr "%prog [opciones]"
+
+#: ../src/katello/client/i18n_optparse.py:51
+msgid "Options"
+msgstr "Opciones"
+
+#. stuff for option value sanity checking
+# stuff for option value sanity checking
+#: ../src/katello/client/i18n_optparse.py:54
 #, python-format
-msgid "Could not create org [ %s ]"
-msgstr "No se pudo crear organización [ %s ]"
+msgid "no such option: %s"
+msgstr "No hay tal opción: %s"
 
-#: ../src/katello/client/core/organization.py:88
-msgid "list information about an organization"
-msgstr "Listar información sobre una organización"
-
-#: ../src/katello/client/core/organization.py:106
-msgid "Available Service Levels"
-msgstr "Niveles de servicio disponibles"
-
-#: ../src/katello/client/core/organization.py:108
-msgid "Organization Information"
-msgstr "Información de organización"
-
-#: ../src/katello/client/core/organization.py:116
-msgid "delete an organization"
-msgstr "Borrar una organización"
-
-#: ../src/katello/client/core/organization.py:132
-msgid "Deleting the organization, please wait... "
-msgstr "Borrar la organización, por favor espere..."
-
-#: ../src/katello/client/core/organization.py:135
+#: ../src/katello/client/i18n_optparse.py:55
 #, python-format
-msgid "Successfully deleted org [ %s ]"
-msgstr "Organización borrada con éxito [ %s ]"
+msgid "ambiguous option: %s (%s?)"
+msgstr "Opción ambigua: %s (%s?)"
 
-#: ../src/katello/client/core/organization.py:138
+#: ../src/katello/client/i18n_optparse.py:56
 #, python-format
-msgid "Organization [ %s ] deletion failed: %s"
-msgstr "Borrado de organización [ %s ] falló: %s"
+msgid "%s option requires an argument"
+msgstr "%s opción requiere un argumento"
 
-#: ../src/katello/client/core/organization.py:145
-msgid "update an organization"
-msgstr "Actualizar una organización"
-
-#: ../src/katello/client/core/organization.py:162
+#: ../src/katello/client/i18n_optparse.py:57
 #, python-format
-msgid "Successfully updated org [ %s ]"
-msgstr "Organización actualizada con éxito[ %s ]"
+msgid "%s option requires %d arguments"
+msgstr "%s opción requiere %d argumentos"
 
-#: ../src/katello/client/core/organization.py:169
-msgid "generate and show ueber certificate"
-msgstr "Generar y mostrar el certificado Ueber\n"
-
-#: ../src/katello/client/core/organization.py:175
-msgid "regenerate the certificate"
-msgstr "Regenerar el certificado"
-
-#: ../src/katello/client/core/organization.py:188
-msgid "Organization Uebercert"
-msgstr "Organización Uebercert"
-
-#: ../src/katello/client/core/organization.py:197
-msgid "show subscriptions"
-msgstr "Mostrar suscripciones"
-
-#: ../src/katello/client/core/organization.py:228
-msgid "Organization's Subscriptions"
-msgstr "Suscripciones de organización"
-
-#: ../src/katello/client/core/organization.py:257
-msgid "organization specific actions in the katello server"
-msgstr "Acciones específicas de organización en el servidor de Katello"
-
-#: ../src/katello/client/core/product.py:60
-#: ../src/katello/client/core/product.py:299
-#: ../src/katello/client/core/repo.py:126
-#: ../src/katello/client/core/repo.py:166
-msgid "product name (required)"
-msgstr "Nombre de producto (requerido)"
-
-#: ../src/katello/client/core/product.py:62
-#: ../src/katello/client/core/product.py:122
-#: ../src/katello/client/core/distribution.py:51
-#: ../src/katello/client/core/package.py:53
-#: ../src/katello/client/core/package.py:108
-#: ../src/katello/client/core/errata.py:52
-#: ../src/katello/client/core/errata.py:144
-#: ../src/katello/client/core/repo.py:84
-#: ../src/katello/client/core/repo.py:415
-msgid "environment name eg: production (default: Library)"
-msgstr "Nombre de entorno por ejemplo: producción (predeterminado: Library)"
-
-#: ../src/katello/client/core/product.py:74
-msgid "set a synchronization plan"
-msgstr "Establecer un plan de sincronización"
-
-#: ../src/katello/client/core/product.py:79
-msgid "synchronization plan name (required)"
-msgstr "Nombre de plan de sincronización (requerido)"
-
-#: ../src/katello/client/core/product.py:101
-msgid "unset a synchronization plan"
-msgstr "Des-configurar un plan de sincronización"
-
-#: ../src/katello/client/core/product.py:116
-msgid "list known products"
-msgstr "Lista de productos conocidos"
-
-#: ../src/katello/client/core/product.py:124
-msgid "provider name, lists provider's product in the Library"
-msgstr "Nombre de provedor, lista producto de proveedor en la biblioteca"
-
-#: ../src/katello/client/core/product.py:142
-#: ../src/katello/client/core/repo.py:320
-msgid "GPG key"
-msgstr "Llave GPG"
-
-#: ../src/katello/client/core/product.py:147
+#: ../src/katello/client/i18n_optparse.py:58
 #, python-format
-msgid "Product List For Provider %s"
-msgstr "Lista de productos para proveedor %s"
+msgid "%s option does not take a value"
+msgstr "%s opción no lleva un valor"
 
-#: ../src/katello/client/core/product.py:153
+#: ../src/katello/client/i18n_optparse.py:59
+msgid "integer"
+msgstr "Entero"
+
+#: ../src/katello/client/i18n_optparse.py:60
+msgid "long integer"
+msgstr "Entero largo"
+
+#: ../src/katello/client/i18n_optparse.py:61
+msgid "floating-point"
+msgstr "Punto flotante"
+
+#: ../src/katello/client/i18n_optparse.py:62
+msgid "complex"
+msgstr "Complejo"
+
+#: ../src/katello/client/i18n_optparse.py:63
 #, python-format
-msgid "Product List For Organization %s, Environment '%s'"
-msgstr "Lista de productos para Organización %s, entorno '%s'"
+msgid "option %s: invalid %s value: %r"
+msgstr "opción %s: inválido %s valor: %r"
 
-#: ../src/katello/client/core/product.py:163
-msgid "synchronize a product"
-msgstr "Sincronizar un producto"
-
-#: ../src/katello/client/core/product.py:179
+#: ../src/katello/client/i18n_optparse.py:64
 #, python-format
-msgid "Product [ %s ] failed to sync: %s"
-msgstr "Falló la sincronización de producto [ %s ]: %s"
+msgid "option %s: invalid choice: %r (choose from %s)"
+msgstr "opción %s: selección inválida: %r (elegir de %s)"
 
-#: ../src/katello/client/core/product.py:182
+#. default options
+# default options
+#: ../src/katello/client/i18n_optparse.py:67
+msgid "show this help message and exit"
+msgstr "Mostrar este mensaje de ejemplo y salir"
+
+#: ../src/katello/client/i18n_optparse.py:68
+msgid "show program's version number and exit"
+msgstr "Mostrar número de versión de programa y salir"
+
+#: ../src/katello/client/core/user_role.py:44
+msgid "list all known user roles"
+msgstr "Listar todos los roles conocidos"
+
+#: ../src/katello/client/core/user_role.py:52
+#: ../src/katello/client/core/user.py:230
+msgid "User Role List"
+msgstr "Lista de roles de usuario"
+
+#: ../src/katello/client/core/user_role.py:60
+msgid "create user role"
+msgstr "Crear rol de usuario"
+
+#: ../src/katello/client/core/user_role.py:63
+#: ../src/katello/client/core/permission.py:56
+#: ../src/katello/client/core/permission.py:111
+#: ../src/katello/client/core/permission.py:134
+msgid "role name (required)"
+msgstr "Nombre de rol (requerido)"
+
+#: ../src/katello/client/core/user_role.py:64
+#: ../src/katello/client/core/user_role.py:163
+msgid "role description"
+msgstr "Descripción de rol"
+
+#: ../src/katello/client/core/user_role.py:75
 #, python-format
-msgid "Product [ %s ] synchronization cancelled"
-msgstr "Sincronización de producto [ %s ] cancelada"
+msgid "Successfully created user role [ %s ]"
+msgstr "Creado correctamente el rol de usuario [ %s ]"
 
-#: ../src/katello/client/core/product.py:185
+#: ../src/katello/client/core/user_role.py:76
 #, python-format
-msgid "Product [ %s ] synchronized"
-msgstr "Producto [ %s ]  sincronizado"
+msgid "Could not create user role [ %s ]"
+msgstr "No se pudo crear rol de usuario [ %s ]"
 
-#: ../src/katello/client/core/product.py:191
-#: ../src/katello/client/core/provider.py:228
-msgid "cancel currently running synchronization"
-msgstr "Cancelar sincronización actualmente en ejecución"
+#: ../src/katello/client/core/user_role.py:84
+msgid "list information about user role"
+msgstr "Lista de información sobre rol de usuario"
 
-#: ../src/katello/client/core/product.py:208
-msgid "status of product's synchronization"
-msgstr "Estatus de sincronización de producto"
+#: ../src/katello/client/core/user_role.py:87
+#: ../src/katello/client/core/user_role.py:139
+#: ../src/katello/client/core/user_role.py:161
+#: ../src/katello/client/core/user_role.py:187
+#: ../src/katello/client/core/user_role.py:210
+msgid "user role name (required)"
+msgstr "Nombre de rol de usuario (requerido)"
 
-#: ../src/katello/client/core/product.py:234
-msgid "Product Status"
-msgstr "Estatus de producto"
-
-#: ../src/katello/client/core/product.py:242
-msgid ""
-"promote a product to an environment\n"
-"(creates a temporary changeset with the product and promotes it)"
+#: ../src/katello/client/core/user_role.py:88
+msgid "print details about each of role's permissions"
 msgstr ""
-"Promover un producto a un entorno\n"
-"(crea un Changeset temporal con el producto y lo promueve) "
+"Imprimir en pantalla la información de cada uno de los permisos del rol"
 
-#: ../src/katello/client/core/product.py:265
-msgid "Promoting the product, please wait... "
-msgstr "Promoviendo el producto, por favor espere.."
-
-#: ../src/katello/client/core/product.py:268
+#: ../src/katello/client/core/user_role.py:107
 #, python-format
-msgid "Product [ %s ] promoted to environment [ %s ] "
-msgstr "Producto [ %s ] promovido al entorno [ %s ] "
+msgid ""
+"%s\n"
+"\tfor: %s\n"
+"\tverbs: %s\n"
+"\ton: %s"
+msgstr ""
+"%s\n"
+"\tfor: %s\n"
+"\tverbs: %s\n"
+"\ton: %s"
 
-#: ../src/katello/client/core/product.py:271
+#: ../src/katello/client/core/user_role.py:128
+msgid "User Role Information"
+msgstr "Información de rol de usuario"
+
+#: ../src/katello/client/core/user_role.py:136
+msgid "delete a user role"
+msgstr "Borrar rol de usuario"
+
+#: ../src/katello/client/core/user_role.py:150
 #, python-format
-msgid "Product [ %s ] promotion failed: %s"
-msgstr "Promoción del producto [ %s ] falló: %s"
+msgid "Successfully deleted user role [ %s ]"
+msgstr "Rol de usuario borrado correctamente [ %s ]"
 
-#: ../src/katello/client/core/product.py:291
-msgid "create new product to a custom provider"
-msgstr "Crear un nuevo producto para un proveedor personal"
+#: ../src/katello/client/core/user_role.py:158
+msgid "update a role"
+msgstr "Actualizar un rol"
 
-#: ../src/katello/client/core/product.py:297
+#: ../src/katello/client/core/user_role.py:162
+msgid "new user role name"
+msgstr "Nombre de rol del nuevo usuario"
+
+#: ../src/katello/client/core/user_role.py:177
+#, python-format
+msgid "Successfully updated user role [ %s ]"
+msgstr "Actualizado correctamente rol de usuario [ %s ]"
+
+#: ../src/katello/client/core/user_role.py:184
+msgid "assign LDAP group to a role"
+msgstr "Asignar grupo LDAP a un rol"
+
+#: ../src/katello/client/core/user_role.py:188
+msgid "new LDAP group name (required)"
+msgstr "Nuevo nombre de grupo LDAP (requerido)"
+
+#: ../src/katello/client/core/user_role.py:200
+#, python-format
+msgid "Successfully added LDAP group [ %s ] to the user role [ %s ]"
+msgstr ""
+"Ha sido añadido con éxito el grupo LDAP [ %s ] al rol de usuario [ %s ]"
+
+#: ../src/katello/client/core/user_role.py:207
+msgid "remove LDAP group assigned to a role"
+msgstr "Retirar el grupo LDAP asignado al rol"
+
+#: ../src/katello/client/core/user_role.py:211
+msgid "LDAP group name to be removed (required)"
+msgstr "Nombre de grupo LDAP ha sido retirado (requerido)"
+
+#: ../src/katello/client/core/user_role.py:223
+#, python-format
+msgid "Successfully removed LDAP group [ %s ] from the user role [ %s ]"
+msgstr ""
+"Ha sido retirado con éxito el grupo LDAP [ %s ] del rol de usuario [ %s ]"
+
+#: ../src/katello/client/core/user_role.py:230
+msgid "user role specific actions in the katello server"
+msgstr "Acciones específicas de rol de usuario en el servidor Katello"
+
+#: ../src/katello/client/core/client.py:37
+msgid "save an option to the client config"
+msgstr "Guardar una opción para la configuración de cliente"
+
+#: ../src/katello/client/core/client.py:41
+msgid ""
+"name of the option to be saved (e.g. org, environment, provider, etc) "
+"(required)"
+msgstr ""
+"Nombre de la opción a guardar (por ejemplo, entorno, proveedor, etc) "
+"(requerido)"
+
+#: ../src/katello/client/core/client.py:43
+msgid "value to be store under specified option (required)"
+msgstr "Valor a ser guardado bajo una opción específica (requerido)"
+
+#: ../src/katello/client/core/client.py:62
+msgid "Successfully "
+msgstr "Exitosamente"
+
+#: ../src/katello/client/core/client.py:64
+#, python-format
+msgid "Unsuccessfully remembered option [ %s ]"
+msgstr "No ha recordado la opción [ %s ]"
+
+#: ../src/katello/client/core/client.py:71
+msgid "remove an option from the client config"
+msgstr "Retirar una opción de la configuración de cliente"
+
+#: ../src/katello/client/core/client.py:75
+msgid "name of the option to be deleted (required)"
+msgstr "Nombre de la opción que va a ser borrada (requerido)"
+
+#: ../src/katello/client/core/client.py:87
+#, python-format
+msgid "Successfully forgot option [ %s ]"
+msgstr "Olvidó con éxito la opción  [ %s ]"
+
+#: ../src/katello/client/core/client.py:89
+#, python-format
+msgid "Unsuccessfully forgot option [ %s ]"
+msgstr "No olvidó la opción  [ %s ]"
+
+#: ../src/katello/client/core/client.py:96
+msgid "list options saved in the client config"
+msgstr "Listar opciones guardadas en la configuración de cliente"
+
+#: ../src/katello/client/core/client.py:105
+msgid "Saved Options"
+msgstr "Opciones guardadas"
+
+#: ../src/katello/client/core/client.py:121
+msgid "client specific actions in the katello server"
+msgstr "Acciones específicas de cliente en el servidor de Katello"
+
+#: ../src/katello/client/core/activation_key.py:50
+msgid "list all activation keys"
+msgstr "Listar todas las llaves de activación"
+
+#: ../src/katello/client/core/activation_key.py:54
+#: ../src/katello/client/core/activation_key.py:108
+#: ../src/katello/client/core/activation_key.py:147
+#: ../src/katello/client/core/activation_key.py:192
+#: ../src/katello/client/core/activation_key.py:262
+#: ../src/katello/client/core/activation_key.py:291
+#: ../src/katello/client/core/activation_key.py:334
+#: ../src/katello/client/core/gpg_key.py:65
+#: ../src/katello/client/core/gpg_key.py:95
+#: ../src/katello/client/core/gpg_key.py:131
+#: ../src/katello/client/core/gpg_key.py:163
+#: ../src/katello/client/core/gpg_key.py:206
+#: ../src/katello/client/core/system_group.py:75
+#: ../src/katello/client/core/system_group.py:110
+#: ../src/katello/client/core/system_group.py:256
+#: ../src/katello/client/core/system_group.py:294
+#: ../src/katello/client/core/system_group.py:356
+#: ../src/katello/client/core/system_group.py:387
+#: ../src/katello/client/core/changeset.py:42
+#: ../src/katello/client/core/changeset.py:76
+#: ../src/katello/client/core/changeset.py:140
+#: ../src/katello/client/core/changeset.py:324
+#: ../src/katello/client/core/changeset.py:407
+#: ../src/katello/client/core/changeset.py:434
+#: ../src/katello/client/core/system.py:721
+#: ../src/katello/client/core/system.py:764
 #: ../src/katello/client/core/provider.py:46
-#: ../src/katello/client/core/provider.py:129
-msgid "provider name (required)"
-msgstr "Nombre de proveedor (requerido)"
-
-#: ../src/katello/client/core/product.py:301
-msgid "product description"
-msgstr "Descripción de producto"
-
-#: ../src/katello/client/core/product.py:303
 #: ../src/katello/client/core/provider.py:133
-msgid ""
-"repository url eg: "
-"http://download.fedoraproject.org/pub/fedora/linux/releases/"
-msgstr ""
-"URL de repositorio. Por ejemplo, "
-"http://download.fedoraproject.org/pub/fedora/linux/releases/"
+#: ../src/katello/client/core/template.py:89
+#: ../src/katello/client/core/template.py:152
+#: ../src/katello/client/core/template.py:194
+#: ../src/katello/client/core/template.py:244
+#: ../src/katello/client/core/template.py:308
+#: ../src/katello/client/core/template.py:481
+msgid "name of organization (required)"
+msgstr "Nombre de organización (requerido)"
 
-#: ../src/katello/client/core/product.py:305
-msgid "skip repository discovery"
-msgstr "Saltar descubrimiento de repositorio"
+#: ../src/katello/client/core/activation_key.py:56
+#: ../src/katello/client/core/template.py:54
+#: ../src/katello/client/core/template.py:91
+msgid "environment name eg: dev (default: Library)"
+msgstr "Nombre de entorno por ejemplo: dev (predeterminado:library)"
 
-#: ../src/katello/client/core/product.py:307
-#: ../src/katello/client/core/repo.py:164
-msgid ""
-"assume yes; automatically create candidate repositories for discovered urls "
-"(optional)"
-msgstr ""
-"Suponga que Sí; automáticamente crea repositorios de candidatos para URL "
-"descubiertas (opcional)"
-
-#: ../src/katello/client/core/product.py:309
-msgid ""
-"assign a gpg key; this key will be used for every new repository unless "
-"gpgkey or nogpgkey is specified for the repo"
-msgstr ""
-"Asignar una llave GPG ; esta llave será utilizada para cada nuevo "
-"repositorio a menos que gpgkey o nogpgkey se especifique."
-
-#: ../src/katello/client/core/product.py:334
+#: ../src/katello/client/core/activation_key.py:69
 #, python-format
-msgid "Successfully created product [ %s ]"
-msgstr "Producto creado con éxito [ %s ] "
+msgid "No keys found in organization [ %s ]"
+msgstr "No se encontraron las llaves en organización [ %s ]"
 
-#: ../src/katello/client/core/product.py:341
-#: ../src/katello/client/core/repo.py:182
+#: ../src/katello/client/core/activation_key.py:71
 #, python-format
-msgid "Repository Urls discovered @ [%s]"
-msgstr "URL de repositorio descubiertas @ [ %s ]"
+msgid "No keys found in organization [ %s ] environment [ %s ]"
+msgstr "No se encontraron las llaves en organización [ %s ] entorno [ %s ]"
 
-#: ../src/katello/client/core/product.py:350
-msgid "update a product's attributes"
-msgstr "Actualizar atributos de un producto"
+#: ../src/katello/client/core/activation_key.py:88
+msgid "Activation Key List"
+msgstr "Lista de llaves de activación"
 
-#: ../src/katello/client/core/product.py:355
-msgid "change description of the product"
-msgstr "Cambiar descripción del producto"
+#: ../src/katello/client/core/activation_key.py:102
+msgid "show information about an activation key"
+msgstr "Mostrar información sobre llave de activación"
 
-#: ../src/katello/client/core/product.py:357
-#: ../src/katello/client/core/product.py:359
-msgid "assign a gpgkey to the product"
-msgstr "Asignar una gpgkey al producto"
+#: ../src/katello/client/core/activation_key.py:106
+#: ../src/katello/client/core/activation_key.py:145
+#: ../src/katello/client/core/activation_key.py:190
+#: ../src/katello/client/core/activation_key.py:260
+#: ../src/katello/client/core/activation_key.py:289
+#: ../src/katello/client/core/activation_key.py:332
+msgid "activation key name (required)"
+msgstr "Nombre de llave de activación (requerida)"
 
-#: ../src/katello/client/core/product.py:361
-msgid "assign the gpgpkey also to the product's repositories"
-msgstr "Asignar también la gpgkey a los repositorios del producto"
-
-#: ../src/katello/client/core/product.py:378
+#: ../src/katello/client/core/activation_key.py:121
 #, python-format
-msgid "Successfully updated product [ %s ]"
-msgstr "Producto [ %s ] actualizado correctamente"
+msgid "Could not find activation key [ %s ]"
+msgstr "No se encontró llave de activación [ %s ]"
 
-#: ../src/katello/client/core/product.py:384
-msgid "delete a product and its content"
-msgstr "Borrar un producto y su contenido"
+#: ../src/katello/client/core/activation_key.py:134
+msgid "Activation Key Info"
+msgstr "Información de llave de activación"
 
-#: ../src/katello/client/core/product.py:399
-msgid "list filters of a product"
-msgstr "Listar filtros de un producto"
+#: ../src/katello/client/core/activation_key.py:141
+msgid "create an activation key"
+msgstr "Crear una llave de activación"
 
-#: ../src/katello/client/core/product.py:410
-msgid "Product Filters"
-msgstr "Filtros del producto"
+#: ../src/katello/client/core/activation_key.py:149
+msgid "environment name eg: dev (required)"
+msgstr "Nombre de entorno. Por ejemplo, dev (requerido)"
 
-#: ../src/katello/client/core/product.py:425
-msgid "add a filter to a product"
-msgstr "Añadir un filtro a un producto"
+#: ../src/katello/client/core/activation_key.py:151
+msgid "activation key description"
+msgstr "Descripción de llave de activación"
 
-#: ../src/katello/client/core/product.py:427
-msgid "remove a filter from a product"
-msgstr "Retirar un filtro de un producto"
+#: ../src/katello/client/core/activation_key.py:153
+msgid "template name eg: servers"
+msgstr "Nombre de plantilla. Por ejemplo, servidores"
 
-#: ../src/katello/client/core/product.py:436
-#: ../src/katello/client/core/filters.py:67
-#: ../src/katello/client/core/filters.py:101
-#: ../src/katello/client/core/filters.py:122
-#: ../src/katello/client/core/filters.py:152
-#: ../src/katello/client/core/filters.py:179
-#: ../src/katello/client/core/repo.py:516
+#: ../src/katello/client/core/activation_key.py:155
+msgid "usage limit (unlimited by default)"
+msgstr ""
+
+#: ../src/katello/client/core/activation_key.py:173
+#: ../src/katello/client/core/activation_key.py:238
+#, python-format
+msgid "Could not find template [ %s ]"
+msgstr "No se pudo hallar plantilla [ %s ]"
+
+#: ../src/katello/client/core/activation_key.py:178
+#, python-format
+msgid "Successfully created activation key [ %s ]"
+msgstr "Llave de activación creada con éxito [ %s ]"
+
+#: ../src/katello/client/core/activation_key.py:179
+#, python-format
+msgid "Could not create activation key [ %s ]"
+msgstr "No se pudo crear llave [ %s ]"
+
+#: ../src/katello/client/core/activation_key.py:186
+msgid "update an activation key"
+msgstr "Actualizar una llave de activación"
+
+#: ../src/katello/client/core/activation_key.py:194
+msgid "new environment name eg: dev"
+msgstr "Nuevo nombre de entorno. Por ejemplo, dev"
+
+#: ../src/katello/client/core/activation_key.py:196
+#: ../src/katello/client/core/gpg_key.py:165
+#: ../src/katello/client/core/template.py:309
+msgid "new template name"
+msgstr "Nuevo nombre de plantilla"
+
+#: ../src/katello/client/core/activation_key.py:198
+#: ../src/katello/client/core/system_group.py:262
+msgid "new description"
+msgstr "Nueva descripción"
+
+#: ../src/katello/client/core/activation_key.py:200
+msgid "new template name eg: servers"
+msgstr "Nuevo nombre de plantilla. Por ejemplo, servidores"
+
+#: ../src/katello/client/core/activation_key.py:202
+msgid "usage limit (set -1 for no limit)"
+msgstr ""
+
+#: ../src/katello/client/core/activation_key.py:205
+msgid "add a pool to the activation key"
+msgstr "Añadir un grupo a una llave de activación"
+
+#: ../src/katello/client/core/activation_key.py:207
+msgid "remove a pool from the activation key"
+msgstr "Retirar un grupo de la llave de activación"
+
+#: ../src/katello/client/core/activation_key.py:248
+#, python-format
+msgid "Successfully updated activation key [ %s ]"
+msgstr "Llave de activación actualizada con éxito [ %s ]"
+
+#: ../src/katello/client/core/activation_key.py:256
+msgid "delete an activation key"
+msgstr "Borrar una llave de activación"
+
+#: ../src/katello/client/core/activation_key.py:279
+#, python-format
+msgid "Successfully deleted activation key [ %s ]"
+msgstr "Llave de activación borrada con éxito [ %s ]"
+
+#: ../src/katello/client/core/activation_key.py:285
+msgid "add system group to an activation key"
+msgstr ""
+
+#: ../src/katello/client/core/activation_key.py:293
+#: ../src/katello/client/core/activation_key.py:336
+#: ../src/katello/client/core/system_group.py:73
+#: ../src/katello/client/core/system_group.py:144
+#: ../src/katello/client/core/system_group.py:176
+#: ../src/katello/client/core/system_group.py:215
+#: ../src/katello/client/core/system_group.py:254
+#: ../src/katello/client/core/system_group.py:292
+#: ../src/katello/client/core/system_group.py:324
+#: ../src/katello/client/core/system_group.py:354
+#: ../src/katello/client/core/system_group.py:385
+#: ../src/katello/client/core/system_group.py:417
+#: ../src/katello/client/core/system_group.py:495
+#: ../src/katello/client/core/errata.py:134
+msgid "system group name (required)"
+msgstr ""
+
+#: ../src/katello/client/core/activation_key.py:320
+#, python-format
+msgid "Successfully added system group to activation key [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/activation_key.py:328
+#: ../src/katello/client/core/system.py:758
+msgid "remove system groups to a system"
+msgstr ""
+
+#: ../src/katello/client/core/activation_key.py:363
+#, python-format
+msgid "Successfully removed system group from activation key [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/activation_key.py:370
+msgid "activation key specific actions in the katello server"
+msgstr "Acciones específicas de llave de activación en el servidor de Katello"
+
+#: ../src/katello/client/core/datetime_formatter.py:45
+msgid "Time format is invalid. Required: HH:MM:SS[+HH:MM]"
+msgstr "Formato de tiempo es inválido. Debe ser: HH:MM:SS[+HH:MM]"
+
+#: ../src/katello/client/core/datetime_formatter.py:47
+msgid "Date format is invalid. Required: YYYY-MM-DD"
+msgstr "El formato de fecha es inválido. Debe ser: AAAA-MM-DD"
+
+#: ../src/katello/client/core/filters.py:36
+msgid "list all filters"
+msgstr "Listar todos los filtros"
+
+#: ../src/katello/client/core/filters.py:40
+#: ../src/katello/client/core/filters.py:63
+#: ../src/katello/client/core/filters.py:96
+#: ../src/katello/client/core/filters.py:116
+#: ../src/katello/client/core/filters.py:145
+#: ../src/katello/client/core/filters.py:170
+#: ../src/katello/client/core/system.py:390
+#: ../src/katello/client/core/system.py:447
+#: ../src/katello/client/core/system.py:479
+#: ../src/katello/client/core/system.py:507
+#: ../src/katello/client/core/system.py:585
+#: ../src/katello/client/core/system.py:624
+#: ../src/katello/client/core/provider.py:62
+#: ../src/katello/client/core/errata.py:103
+#: ../src/katello/client/core/errata.py:133
+#: ../src/katello/client/core/sync_plan.py:83
+#: ../src/katello/client/core/sync_plan.py:112
+#: ../src/katello/client/core/sync_plan.py:147
+#: ../src/katello/client/core/sync_plan.py:186
+msgid "organization name (required)"
+msgstr "Nombre de organización (requerida)"
+
+#: ../src/katello/client/core/filters.py:53
+msgid "Filter List"
+msgstr "Listar filtro"
+
+#: ../src/katello/client/core/filters.py:59
+msgid "create a filter"
+msgstr "Crear un filtro"
+
+#: ../src/katello/client/core/filters.py:65
+#: ../src/katello/client/core/filters.py:98
+#: ../src/katello/client/core/filters.py:118
+#: ../src/katello/client/core/filters.py:147
+#: ../src/katello/client/core/filters.py:172
+#: ../src/katello/client/core/repo.py:507
+#: ../src/katello/client/core/product.py:441
 msgid "filter name (required)"
 msgstr "Nombre de filtro (requerido)"
 
-#: ../src/katello/client/core/product.py:458
-#, python-format
-msgid "Added filter [ %s ] to product [ %s ]"
-msgstr "Se añadió filtro [ %s ] al producto [ %s ]"
+#: ../src/katello/client/core/filters.py:67
+msgid "description"
+msgstr "Descripción"
 
-#: ../src/katello/client/core/product.py:461
-#, python-format
-msgid "Removed filter [ %s ] to product [ %s ]"
-msgstr "Se retiró filtro [ %s ] al producto [ %s ] "
+#: ../src/katello/client/core/filters.py:69
+msgid "comma-separated list of package names/nvres"
+msgstr "Lista de nombres de paquetes/nvres separados por coma"
 
-#: ../src/katello/client/core/product.py:472
-msgid "product specific actions in the katello server"
-msgstr "Acciones específicas de producto en el servidor de Katello"
+#: ../src/katello/client/core/filters.py:84
+#, python-format
+msgid "Successfully created filter [ %s ]"
+msgstr "Filtro creado correctamente [ %s ]"
+
+#: ../src/katello/client/core/filters.py:85
+#, python-format
+msgid "Could not create filter [ %s ]"
+msgstr "No se pudo crear filtro [ %s ]"
+
+#: ../src/katello/client/core/filters.py:92
+msgid "delete a filter"
+msgstr "Borrar un filtro"
+
+#: ../src/katello/client/core/filters.py:108
+#, python-format
+msgid "Successfully deleted filter [ %s ]"
+msgstr "Filtro borrado correctamente  [ %s ]"
+
+#: ../src/katello/client/core/filters.py:112
+msgid "filter info"
+msgstr "Información sobre el filtro"
+
+#: ../src/katello/client/core/filters.py:133
+msgid "Filter Information"
+msgstr "Información de filtro"
+
+#: ../src/katello/client/core/filters.py:141
+msgid "Add a package to filter"
+msgstr "Añadir un paquete al filtro"
+
+#: ../src/katello/client/core/filters.py:149
+#: ../src/katello/client/core/filters.py:174
+msgid "package id (required)"
+msgstr "Id de paquete (requerido)"
+
+#: ../src/katello/client/core/filters.py:162
+#, python-format
+msgid "Successfully added package [ %s ] to filter [ %s ]"
+msgstr "Añadido correctamente paquete [ %s ] al filtro [ %s ]"
+
+#: ../src/katello/client/core/filters.py:166
+msgid "Remove a package from filter"
+msgstr "Retirar un paquete del filtro"
+
+#: ../src/katello/client/core/filters.py:190
+#, python-format
+msgid "Successfully removed package [ %s ] from filter [ %s ]"
+msgstr "Retirado correctamente el paquete [ %s ] del filtro [ %s ]"
+
+#: ../src/katello/client/core/filters.py:196
+msgid "filter specific actions in the katello server"
+msgstr "Acciones específicas de filtraje en el servidor de Katello"
+
+#: ../src/katello/client/core/distribution.py:39
+msgid "list distributions in a repository"
+msgstr "Listar distribuciones en un repositorio"
+
+#: ../src/katello/client/core/distribution.py:43
+#: ../src/katello/client/core/package.py:45
+#: ../src/katello/client/core/package.py:98
+#: ../src/katello/client/core/errata.py:46
+#: ../src/katello/client/core/errata.py:172
+#: ../src/katello/client/core/repo.py:79
+msgid "repository id"
+msgstr "ID de repositorio"
+
+#: ../src/katello/client/core/distribution.py:45
+#: ../src/katello/client/core/package.py:47
+#: ../src/katello/client/core/package.py:100
+#: ../src/katello/client/core/errata.py:48
+#: ../src/katello/client/core/errata.py:174
+#: ../src/katello/client/core/repo.py:80
+msgid "repository name"
+msgstr "Nombre de repositorio"
+
+#: ../src/katello/client/core/distribution.py:47
+#: ../src/katello/client/core/package.py:49
+#: ../src/katello/client/core/package.py:102
+#: ../src/katello/client/core/errata.py:50
+#: ../src/katello/client/core/errata.py:176
+#: ../src/katello/client/core/repo.py:81
+msgid "organization name eg: foo.example.com"
+msgstr "Nombre de organización. Por ejemplo, foo.example.com"
+
+#: ../src/katello/client/core/distribution.py:49
+#: ../src/katello/client/core/package.py:51
+#: ../src/katello/client/core/package.py:104
+#: ../src/katello/client/core/errata.py:52
+#: ../src/katello/client/core/errata.py:178
+#: ../src/katello/client/core/repo.py:84
+#: ../src/katello/client/core/repo.py:406
+#: ../src/katello/client/core/product.py:60
+#: ../src/katello/client/core/product.py:119
+msgid "environment name eg: production (default: Library)"
+msgstr "Nombre de entorno por ejemplo: producción (predeterminado: Library)"
+
+#: ../src/katello/client/core/distribution.py:51
+#: ../src/katello/client/core/package.py:53
+#: ../src/katello/client/core/package.py:106
+#: ../src/katello/client/core/errata.py:54
+#: ../src/katello/client/core/errata.py:180
+#: ../src/katello/client/core/repo.py:82
+#: ../src/katello/client/core/repo.py:408
+msgid "product name eg: fedora-14"
+msgstr "Nombre de producto. Por ejemplo, Fedora-14"
+
+#: ../src/katello/client/core/distribution.py:72
+#, python-format
+msgid "Distribution List For Repo %s"
+msgstr "Lista de distribución para repositorio %s"
+
+#: ../src/katello/client/core/distribution.py:84
+msgid "list information about a distribution"
+msgstr "Listar información sobre una distribución"
+
+#: ../src/katello/client/core/distribution.py:89
+msgid "repository id (required)"
+msgstr "ID de repositorio (requerido)"
+
+#: ../src/katello/client/core/distribution.py:91
+msgid "distribution id eg: ks-rh-noarch (required)"
+msgstr "ID de distribución. Por ejemplo, ks-rh-noarch (requerido)"
+
+#: ../src/katello/client/core/distribution.py:109
+msgid "Distribution Information"
+msgstr "Información de distribución"
+
+#: ../src/katello/client/core/distribution.py:119
+#: ../src/katello/client/core/repo.py:543
+msgid "repo specific actions in the katello server"
+msgstr "Acciones especificas de repositorios en el servidor de Katello"
+
+#: ../src/katello/client/core/gpg_key.py:41
+msgid "Enter content of the GPG key (finish input with CTRL+D):"
+msgstr "Ingresar contenido de la llave GPG (terminar entrada con CTRL+D):"
+
+#: ../src/katello/client/core/gpg_key.py:61
+msgid "list all GPG keys"
+msgstr "Listar todas las llaves GPG"
+
+#: ../src/katello/client/core/gpg_key.py:76
+#, python-format
+msgid "No GPG keys found in organization [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:82
+msgid "GPG Key List"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:89
+msgid "show information about a GPG key"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:93
+#: ../src/katello/client/core/gpg_key.py:129
+#: ../src/katello/client/core/gpg_key.py:161
+#: ../src/katello/client/core/gpg_key.py:204
+msgid "GPG key name (required)"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:104
+#: ../src/katello/client/core/gpg_key.py:188
+#: ../src/katello/client/core/gpg_key.py:216
+#, python-format
+msgid "Could not find GPG key [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:116
+msgid "Repositories"
+msgstr "Repositorios"
+
+#: ../src/katello/client/core/gpg_key.py:118
+msgid "GPG Key Info"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:125
+msgid "create a GPG key"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:133
+msgid ""
+"file with public GPG key, if not                                 specified, "
+"standard input will be used"
+msgstr ""
+"Archivo con llave GPG pública. Si no se especifica se utilizará la entrada "
+"estándar"
+
+#: ../src/katello/client/core/gpg_key.py:150
+#, python-format
+msgid "Successfully created GPG key [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:151
+#, python-format
+msgid "Could not create GPG key [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:157
+msgid "update a GPG key"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:167
+msgid "file with public GPG key"
+msgstr "Archivo con llave GPG pública"
+
+#: ../src/katello/client/core/gpg_key.py:169
+msgid "prompt for new content of the key"
+msgstr "Solicita el nuevo contenido de la llave"
+
+#: ../src/katello/client/core/gpg_key.py:193
+#, python-format
+msgid "Successfully updated GPG key [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:194
+#, python-format
+msgid "Could not updated GPG key [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:200
+msgid "delete a GPG key"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:220
+#, python-format
+msgid "Successfully deleted GPG key [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/gpg_key.py:224
+msgid "GPG key specific actions in the katello server"
+msgstr "Acciones específicas de llave GPG en el servidor de Katello"
+
+#: ../src/katello/client/core/system_group.py:30
+msgid "system group specific actions in the katello server"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:44
+msgid "list system groups within an organization"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:48
+#: ../src/katello/client/core/system_group.py:142
+#: ../src/katello/client/core/system_group.py:174
+#: ../src/katello/client/core/system_group.py:213
+#: ../src/katello/client/core/system_group.py:322
+#: ../src/katello/client/core/system_group.py:415
+#: ../src/katello/client/core/system_group.py:493
+#: ../src/katello/client/core/system.py:51
+#: ../src/katello/client/core/system.py:94
+#: ../src/katello/client/core/system.py:149
+#: ../src/katello/client/core/system.py:246
+#: ../src/katello/client/core/system.py:316
+#: ../src/katello/client/core/system.py:352
+#: ../src/katello/client/core/system.py:685
+#: ../src/katello/client/core/repo.py:118
+#: ../src/katello/client/core/repo.py:153
+#: ../src/katello/client/core/sync_plan.py:56
+#: ../src/katello/client/core/organization.py:64
+#: ../src/katello/client/core/organization.py:91
+#: ../src/katello/client/core/organization.py:119
+#: ../src/katello/client/core/organization.py:148
+#: ../src/katello/client/core/organization.py:171
+#: ../src/katello/client/core/organization.py:203
+#: ../src/katello/client/core/product.py:57
+#: ../src/katello/client/core/product.py:117
+#: ../src/katello/client/core/product.py:302
+#: ../src/katello/client/core/environment.py:47
+#: ../src/katello/client/core/environment.py:74
+#: ../src/katello/client/core/environment.py:107
+#: ../src/katello/client/core/environment.py:144
+#: ../src/katello/client/core/environment.py:181
+msgid "organization name eg: foo.example.com (required)"
+msgstr "Nombrar organización. Por ejemplo, foo.example.com (requerido)"
+
+#: ../src/katello/client/core/system_group.py:60
+#, python-format
+msgid "System Groups List For Org [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:69
+msgid "create a system group"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:77
+#: ../src/katello/client/core/system_group.py:114
+msgid "maximum number of systems in this group"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:79
+msgid "system group description"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:96
+#, python-format
+msgid "Successfully created system group [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:97
+#: ../src/katello/client/core/system_group.py:133
+#, python-format
+msgid "Could not create system group [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:102
+msgid "Copy a system group"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:106
+msgid "original system group name.  source of the copy (required)"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:108
+msgid "new system group name.  destination of the copy (required)"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:112
+msgid "system group description for new group"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:131
+#, python-format
+msgid "Successfully copied system group [ %s ] to [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:138
+msgid "display a system group within an organization"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:153
+#, python-format
+msgid "System Group Information For Org [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:170
+msgid "display the list of jobs for the specified system group."
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:185
+#, python-format
+msgid "System Group History For [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:209
+msgid "display job information including individual system tasks"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:217
+msgid "Job ID to list tasks for (required)"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:227
+#, python-format
+msgid "System Group Job tasks For [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:234
+#, python-format
+msgid "Could not find job [ %s ] for system group [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:250
+msgid "update a system group"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:258
+msgid "new system group name"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:260
+msgid "maximum number of systems in this group (enter -1 for unlimited)"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:280
+#, python-format
+msgid "Successfully updated system group [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:288
+msgid "delete a system group"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:296
+msgid "delete the systems along with the system group (optional)"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:318
+msgid "display the systems in a system group"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:340
+#, python-format
+msgid "Systems within System Group [ %s ] For Org [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:350
+msgid "add systems to a system group"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:358
+#: ../src/katello/client/core/system_group.py:389
+msgid "comma separated list of system uuids (required)"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:373
+#, python-format
+msgid "Successfully added systems to system group [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:381
+msgid "remove systems from a system group"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:404
+#, python-format
+msgid "Successfully removed systems from system group [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:411
+msgid "manipulate the installed packages for systems in a system group"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:419
+msgid ""
+"packages to be installed remotely on the systems, package names are "
+"separated with comma"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:421
+msgid ""
+"packages to be removed remotely from the systems, package names are "
+"separated with comma"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:423
+msgid ""
+"packages to be updated on the systems, use --all to update all packages, "
+"package names are separated with comma"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:425
+msgid ""
+"package groups to be installed remotely on the systems, group names are "
+"separated with comma"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:427
+msgid ""
+"package groups to be removed remotely from the systems, group names are "
+"separated with comma"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:429
+msgid ""
+"package groups to be updated remotely on the systems, group names are "
+"separated with comma"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:473
+#: ../src/katello/client/core/system_group.py:517
+#: ../src/katello/client/core/system.py:212
+#, python-format
+msgid "Performing remote action [ %s ]... "
+msgstr "Realizando acción remota [ %s ]... "
+
+#: ../src/katello/client/core/system_group.py:477
+#: ../src/katello/client/core/system_group.py:521
+#: ../src/katello/client/core/system.py:216
+msgid "Remote action finished:"
+msgstr "Acción remota completa:"
+
+#: ../src/katello/client/core/system_group.py:481
+#: ../src/katello/client/core/system_group.py:525
+#: ../src/katello/client/core/system.py:220
+msgid "Remote action failed:"
+msgstr "Acción remota falló:"
+
+#: ../src/katello/client/core/system_group.py:489
+msgid "install errata on systems in a system group"
+msgstr ""
+
+#: ../src/katello/client/core/system_group.py:497
+msgid ""
+"errata to be installed remotely on the systems, errata IDs separated with "
+"comma (required)"
+msgstr ""
+
+#: ../src/katello/client/core/user.py:40
+msgid "list all known users"
+msgstr "Listar todos los usuarios conocidos"
+
+#: ../src/katello/client/core/user.py:52
+msgid "User List"
+msgstr "Lista de usuarios"
+
+#: ../src/katello/client/core/user.py:60
+msgid "create user"
+msgstr "Crear usuario"
+
+#: ../src/katello/client/core/user.py:63
+#: ../src/katello/client/core/user.py:105
+#: ../src/katello/client/core/user.py:141
+#: ../src/katello/client/core/user.py:162
+#: ../src/katello/client/core/user.py:216
+#: ../src/katello/client/core/user.py:267
+msgid "user name (required)"
+msgstr "Nombre de usuario (requerido)"
+
+#: ../src/katello/client/core/user.py:64
+msgid "initial password (required)"
+msgstr "Contraseña inicial (requerida)"
+
+#: ../src/katello/client/core/user.py:65
+msgid "email (required)"
+msgstr "correo-e (requerido)"
+
+#: ../src/katello/client/core/user.py:66
+msgid "disabled account (default is 'false')"
+msgstr "Cuenta inactiva (predeterminada es 'falsa')"
+
+#: ../src/katello/client/core/user.py:68
+#: ../src/katello/client/core/user.py:167
+msgid "user's default organization name"
+msgstr "nombre de organización predeterminada de usuario"
+
+#: ../src/katello/client/core/user.py:70
+#: ../src/katello/client/core/user.py:169
+msgid "user's default environment name"
+msgstr "nombre de entorno predeterminado de usuario"
+
+#: ../src/katello/client/core/user.py:72
+#: ../src/katello/client/core/user.py:173
+msgid "user's default locale"
+msgstr ""
+
+#: ../src/katello/client/core/user.py:94
+#, python-format
+msgid "Successfully created user [ %s ]"
+msgstr "Usuario creado con éxito [ %s ]"
+
+#: ../src/katello/client/core/user.py:95
+#, python-format
+msgid "Could not create user [ %s ]"
+msgstr "No se pudo crear usuario [ %s ]"
+
+#: ../src/katello/client/core/user.py:102
+msgid "list information about user"
+msgstr "Listar información acerca del usuario"
+
+#: ../src/katello/client/core/user.py:123
+msgid "User Information"
+msgstr "Información de usuarios"
+
+#: ../src/katello/client/core/user.py:138
+msgid "delete user"
+msgstr "Borrar usuario"
+
+#: ../src/katello/client/core/user.py:152
+#, python-format
+msgid "Successfully deleted user [ %s ]"
+msgstr "Usuario borrado con éxito [ %s ]"
+
+#: ../src/katello/client/core/user.py:159
+msgid "update an user"
+msgstr "Actualizar un usuario"
+
+#: ../src/katello/client/core/user.py:163
+msgid "initial password"
+msgstr "Contraseña inicial"
+
+#: ../src/katello/client/core/user.py:164
+msgid "email"
+msgstr "correo-e "
+
+#: ../src/katello/client/core/user.py:165
+msgid "disabled account"
+msgstr "Cuenta  desactivada"
+
+#: ../src/katello/client/core/user.py:171
+msgid "user's default environment is None"
+msgstr "Entorno de usuario predeterminado es Ninguno"
+
+#: ../src/katello/client/core/user.py:206
+#, python-format
+msgid "Successfully updated user [ %s ]"
+msgstr "Usuario actualizado con éxito [ %s ]"
+
+#: ../src/katello/client/core/user.py:213
+msgid "list user's roles"
+msgstr "Listar roles de usuario"
+
+#: ../src/katello/client/core/user.py:239
+msgid "synchronise roles with LDAP groups"
+msgstr "Sincronizar roles con grupos LDAP"
+
+#: ../src/katello/client/core/user.py:253
+msgid "assign role to a user"
+msgstr "Asignar rol a un usuario "
+
+#: ../src/katello/client/core/user.py:255
+msgid "unassign role to a user"
+msgstr "Retirar rol a un usuario"
+
+#: ../src/katello/client/core/user.py:268
+msgid "user role (required)"
+msgstr "Rol de usuario (requerido)"
+
+#: ../src/katello/client/core/user.py:281
+#, python-format
+msgid "Role [ %s ] not found"
+msgstr "Rol [ %s ] no se encontró"
+
+#: ../src/katello/client/core/user.py:297
+msgid "user report"
+msgstr "Reporte de usuario"
+
+#: ../src/katello/client/core/user.py:300
+#: ../src/katello/client/core/system.py:689
+msgid ""
+"report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"
+msgstr ""
+"Formato de reporte (valores posibles: 'html', 'text' (default), 'csv', "
+"'pdf')"
+
+#: ../src/katello/client/core/user.py:318
+msgid "user specific actions in the katello server"
+msgstr "Acciones específicas de usuarios en el servidor Katello"
+
+#: ../src/katello/client/core/changeset.py:38
+msgid "list new changesets of an environment"
+msgstr "Listar nuevos Changesets de un entorno"
+
+#: ../src/katello/client/core/changeset.py:44
+#: ../src/katello/client/core/changeset.py:77
+#: ../src/katello/client/core/changeset.py:142
+#: ../src/katello/client/core/changeset.py:326
+#: ../src/katello/client/core/changeset.py:409
+#: ../src/katello/client/core/changeset.py:436
+#: ../src/katello/client/core/environment.py:109
+#: ../src/katello/client/core/environment.py:148
+msgid "environment name (required)"
+msgstr "Nombre de entorno (requerido)"
+
+#: ../src/katello/client/core/changeset.py:66
+msgid "Changeset List"
+msgstr "Lista de Changeset"
+
+#: ../src/katello/client/core/changeset.py:73
+msgid "detailed information about a changeset"
+msgstr "Información detallada sobre un Changeset"
+
+#: ../src/katello/client/core/changeset.py:78
+#: ../src/katello/client/core/changeset.py:144
+#: ../src/katello/client/core/changeset.py:322
+#: ../src/katello/client/core/changeset.py:405
+#: ../src/katello/client/core/changeset.py:432
+msgid "changeset name (required)"
+msgstr "Nombre de Changeset (requerido)"
+
+#: ../src/katello/client/core/changeset.py:80
+msgid "will display dependent packages"
+msgstr "Desplegará paquetes dependientes"
+
+#: ../src/katello/client/core/changeset.py:128
+msgid "Changeset Info"
+msgstr "Información de Changeset"
+
+#: ../src/katello/client/core/changeset.py:136
+msgid "create a new changeset for an environment"
+msgstr "Crear un nuevo Changeset de un entorno"
+
+#: ../src/katello/client/core/changeset.py:146
+#: ../src/katello/client/core/changeset.py:328
+msgid "changeset description"
+msgstr "Descripción de changeset"
+
+#: ../src/katello/client/core/changeset.py:148
+msgid ""
+"changeset type promotion: pushes changes to the next environment [DEFAULT]"
+msgstr ""
+
+#: ../src/katello/client/core/changeset.py:150
+msgid ""
+"changeset type deletion: deletes items in changeset from current environment"
+msgstr ""
+
+#: ../src/katello/client/core/changeset.py:166
+msgid "specify either --promotion or --deletion but not both"
+msgstr ""
+
+#: ../src/katello/client/core/changeset.py:175
+#, python-format
+msgid "Successfully created changeset [ %s ] for environment [ %s ]"
+msgstr "Changeset creado con éxito [ %s ] para entorno [ %s ]"
+
+#: ../src/katello/client/core/changeset.py:176
+#, python-format
+msgid "Could not create changeset [ %s ] for environment [ %s ]"
+msgstr "No se pudo crear Changeset [ %s ] para entorno [ %s ]"
+
+#: ../src/katello/client/core/changeset.py:300
+msgid "updates content of a changeset"
+msgstr "Actualizaciones de contenido de un Changeset"
+
+#: ../src/katello/client/core/changeset.py:313
+#: ../src/katello/client/core/template.py:302
+#, python-format
+msgid "%s must be preceded by %s"
+msgstr "%s de estar precedido por %s"
+
+#: ../src/katello/client/core/changeset.py:330
+msgid "new changeset name"
+msgstr "Nuevo nombre de changeset"
+
+#: ../src/katello/client/core/changeset.py:333
+msgid "product to add to the changeset"
+msgstr "Producto para añadir un Changeset"
+
+#: ../src/katello/client/core/changeset.py:336
+msgid "product to remove from the changeset"
+msgstr "Producto para retirar un Changeset"
+
+#: ../src/katello/client/core/changeset.py:339
+msgid "name of a template to be added to the changeset"
+msgstr "Nombre de una plantilla a ser añadido al Changeset"
+
+#: ../src/katello/client/core/changeset.py:342
+msgid "name of a template to be removed from the changeset"
+msgstr "Nombre de una plantilla a ser retirada del Changeset"
+
+#: ../src/katello/client/core/changeset.py:345
+msgid ""
+"determines product from which the packages/errata/repositories are picked"
+msgstr ""
+"Determina el producto del cual se elige paquetes/erratas/repositorios."
+
+#: ../src/katello/client/core/changeset.py:350
+msgid " to add to the changeset"
+msgstr "Para añadir al changeset"
+
+#: ../src/katello/client/core/changeset.py:353
+msgid " to remove from the changeset"
+msgstr "Para retirar del Changeset"
+
+#: ../src/katello/client/core/changeset.py:385
+#, python-format
+msgid "Successfully updated changeset [ %s ]"
+msgstr "Actualizado Changeset con éxito [ %s ]"
+
+#: ../src/katello/client/core/changeset.py:401
+msgid "deletes a changeset"
+msgstr "Borra un Changeset"
+
+#: ../src/katello/client/core/changeset.py:428
+msgid "applies a changeset based on the type (promotion, deletion)"
+msgstr ""
+
+#: ../src/katello/client/core/changeset.py:451
+msgid "Applying the changeset, please wait... "
+msgstr ""
+
+#: ../src/katello/client/core/changeset.py:454
+#, python-format
+msgid "Changeset [ %s ] applied"
+msgstr ""
+
+#: ../src/katello/client/core/changeset.py:457
+#, python-format
+msgid "Changeset [ %s ] promotion failed: %s"
+msgstr "Falló la promoción de Changeset [ %s ]: %s"
+
+#: ../src/katello/client/core/changeset.py:462
+msgid "promotes a changeset to the next environment - DEPRECATED"
+msgstr ""
+
+#: ../src/katello/client/core/changeset.py:472
+msgid "This is a deletion changeset and does not support promotion"
+msgstr ""
+
+#: ../src/katello/client/core/changeset.py:481
+msgid "changeset specific actions in the katello server"
+msgstr "Acciones específicas de Changeset en el servidor de Katello"
 
 #: ../src/katello/client/core/system.py:47
 msgid "list systems within an organization"
 msgstr "Listar sistemas dentro de una organización"
 
 #: ../src/katello/client/core/system.py:53
-#: ../src/katello/client/core/system.py:321
-#: ../src/katello/client/core/system.py:393
-#: ../src/katello/client/core/system.py:461
-#: ../src/katello/client/core/system.py:696
+#: ../src/katello/client/core/system.py:320
+#: ../src/katello/client/core/system.py:391
+#: ../src/katello/client/core/system.py:451
+#: ../src/katello/client/core/system.py:687
 msgid "environment name eg: development"
 msgstr "Nombre de entorno.  Por ejemplo, desarrollo"
 
@@ -534,33 +1485,35 @@ msgstr "Lista de sistemas para organización [ %s ]"
 msgid "Systems List For Environment [ %s ] in Org [ %s ]"
 msgstr "Lista de sistemas para entorno [ %s ] en Organización [ %s ]"
 
-#: ../src/katello/client/core/system.py:82
+#: ../src/katello/client/core/system.py:83
 #: ../src/katello/client/core/system.py:134
 msgid "Service Level"
 msgstr "Nivel de servicio"
 
-#: ../src/katello/client/core/system.py:89
+#: ../src/katello/client/core/system.py:90
 msgid "display a system within an organization"
 msgstr "Mostrar un sistema dentro de una organización"
 
-#: ../src/katello/client/core/system.py:95
+#: ../src/katello/client/core/system.py:96
 #: ../src/katello/client/core/system.py:151
-#: ../src/katello/client/core/system.py:355
-#: ../src/katello/client/core/system.py:391
-#: ../src/katello/client/core/system.py:459
-#: ../src/katello/client/core/system.py:492
-#: ../src/katello/client/core/system.py:521
-#: ../src/katello/client/core/system.py:601
-#: ../src/katello/client/core/system.py:641
+#: ../src/katello/client/core/system.py:354
+#: ../src/katello/client/core/system.py:389
+#: ../src/katello/client/core/system.py:449
+#: ../src/katello/client/core/system.py:481
+#: ../src/katello/client/core/system.py:508
+#: ../src/katello/client/core/system.py:587
+#: ../src/katello/client/core/system.py:626
+#: ../src/katello/client/core/system.py:719
+#: ../src/katello/client/core/system.py:762
 #: ../src/katello/client/core/errata.py:105
 msgid "system name (required)"
 msgstr "Nombre de sistema (requerido)"
 
-#: ../src/katello/client/core/system.py:97
+#: ../src/katello/client/core/system.py:98
 #: ../src/katello/client/core/system.py:153
-#: ../src/katello/client/core/system.py:251
-#: ../src/katello/client/core/system.py:357
-#: ../src/katello/client/core/system.py:643
+#: ../src/katello/client/core/system.py:250
+#: ../src/katello/client/core/system.py:356
+#: ../src/katello/client/core/system.py:628
 msgid "environment name"
 msgstr "Nombre de entorno"
 
@@ -624,150 +1577,116 @@ msgstr ""
 "Puede especificar máximo una acción /instalar/retirar/actualizar por llamada"
 " "
 
-#: ../src/katello/client/core/system.py:189
+#: ../src/katello/client/core/system.py:188
 #, python-format
 msgid "Package Information for System [ %s ] in Org [ %s ]"
 msgstr "Información de paquetes para sistema [ %s ] en Organización [ %s ]"
 
-#: ../src/katello/client/core/system.py:191
+#: ../src/katello/client/core/system.py:190
 #, python-format
 msgid ""
 "Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]"
-msgstr "Información de paquetes para sistema [ %s ] en entorno [ %s ] "
+msgstr ""
 
-#: ../src/katello/client/core/system.py:213
-#, python-format
-msgid "Performing remote action [ %s ]... "
-msgstr "Realizando acción remota [ %s ]... "
-
-#: ../src/katello/client/core/system.py:217
-msgid "Remote action finished:"
-msgstr "Acción remota completa:"
-
-#: ../src/katello/client/core/system.py:221
-msgid "Remote action failed:"
-msgstr "Acción remota falló:"
-
-#: ../src/katello/client/core/system.py:243
+#: ../src/katello/client/core/system.py:242
 msgid "display status of remote tasks"
 msgstr "Mostrar estatus de tareas remotas"
 
-#: ../src/katello/client/core/system.py:249
+#: ../src/katello/client/core/system.py:248
 msgid "system name"
 msgstr "Nombre de sistema"
 
-#: ../src/katello/client/core/system.py:261
+#: ../src/katello/client/core/system.py:260
 msgid "Remote tasks"
 msgstr "Tareas remotas"
 
-#: ../src/katello/client/core/system.py:269
+#: ../src/katello/client/core/system.py:268
 msgid "Task id"
 msgstr "Id de tareas"
 
-#: ../src/katello/client/core/system.py:270
-#: ../src/katello/client/core/system.py:300
+#: ../src/katello/client/core/system.py:269
+#: ../src/katello/client/core/system.py:299
 msgid "System"
 msgstr "Sistema"
 
-#: ../src/katello/client/core/system.py:271
-#: ../src/katello/client/core/system.py:301
+#: ../src/katello/client/core/system.py:270
+#: ../src/katello/client/core/system.py:300
 msgid "Action"
 msgstr "Acción"
 
-#: ../src/katello/client/core/system.py:272
-#: ../src/katello/client/core/system.py:302
+#: ../src/katello/client/core/system.py:271
+#: ../src/katello/client/core/system.py:301
 msgid "Started"
 msgstr "Comenzó"
 
-#: ../src/katello/client/core/system.py:273
-#: ../src/katello/client/core/system.py:303
+#: ../src/katello/client/core/system.py:272
+#: ../src/katello/client/core/system.py:302
 #: ../src/katello/client/core/repo.py:37
 msgid "Finished"
 msgstr "Finalizó"
 
-#: ../src/katello/client/core/system.py:274
-#: ../src/katello/client/core/system.py:304
+#: ../src/katello/client/core/system.py:273
+#: ../src/katello/client/core/system.py:303
 msgid "Status"
 msgstr "Estatus"
 
-#: ../src/katello/client/core/system.py:275
-#: ../src/katello/client/core/system.py:305
+#: ../src/katello/client/core/system.py:274
+#: ../src/katello/client/core/system.py:304
 msgid "Result"
 msgstr "Resultado:"
 
-#: ../src/katello/client/core/system.py:283
+#: ../src/katello/client/core/system.py:282
 msgid "display status of remote task"
 msgstr "Mostrar estatus de tareas remotas"
 
-#: ../src/katello/client/core/system.py:287
+#: ../src/katello/client/core/system.py:286
 msgid "UUID of the task"
 msgstr "UUID de la tarea"
 
-#: ../src/katello/client/core/system.py:295
+#: ../src/katello/client/core/system.py:294
 msgid "Remote task"
 msgstr "Tarea remota"
 
-#: ../src/katello/client/core/system.py:313
+#: ../src/katello/client/core/system.py:312
 msgid "list releases available for the system"
 msgstr "lista lanzamientos disponibles para el sistema"
 
-#: ../src/katello/client/core/system.py:319
+#: ../src/katello/client/core/system.py:318
 msgid "system name (if not specified, list all releases in the environment)"
 msgstr ""
 "nombre del sistema (si no se especifica, lista todos los lanzamientos en el "
 "entorno)"
 
-#: ../src/katello/client/core/system.py:341
+#: ../src/katello/client/core/system.py:340
 msgid "Available releases"
 msgstr "Lanzamientos disponibles"
 
-#: ../src/katello/client/core/system.py:349
+#: ../src/katello/client/core/system.py:348
 msgid "display a the hardware facts of a system"
 msgstr "Mostrar eventos de hardware de un sistema"
 
-#: ../src/katello/client/core/system.py:369
+#: ../src/katello/client/core/system.py:367
 #, python-format
 msgid "System Facts For System [ %s ] in Org [ %s ]"
 msgstr "Eventos de sistema para sistema [ %s ] en Organización [ %s ]"
 
-#: ../src/katello/client/core/system.py:371
+#: ../src/katello/client/core/system.py:369
 #, python-format
 msgid "System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]"
 msgstr ""
 "Eventos de sistema para sistema [ %s ] en entorno [ %s ] en Organización [ "
 "%s ]"
 
-#: ../src/katello/client/core/system.py:388
+#: ../src/katello/client/core/system.py:386
 msgid "register a system"
 msgstr "Registrar un sistema"
 
 #: ../src/katello/client/core/system.py:392
-#: ../src/katello/client/core/system.py:457
-#: ../src/katello/client/core/system.py:490
-#: ../src/katello/client/core/system.py:520
-#: ../src/katello/client/core/system.py:599
-#: ../src/katello/client/core/system.py:639
-#: ../src/katello/client/core/filters.py:42
-#: ../src/katello/client/core/filters.py:65
-#: ../src/katello/client/core/filters.py:99
-#: ../src/katello/client/core/filters.py:120
-#: ../src/katello/client/core/filters.py:150
-#: ../src/katello/client/core/filters.py:177
-#: ../src/katello/client/core/provider.py:64
-#: ../src/katello/client/core/sync_plan.py:85
-#: ../src/katello/client/core/sync_plan.py:115
-#: ../src/katello/client/core/sync_plan.py:153
-#: ../src/katello/client/core/sync_plan.py:194
-#: ../src/katello/client/core/errata.py:103
-msgid "organization name (required)"
-msgstr "Nombre de organización (requerida)"
-
-#: ../src/katello/client/core/system.py:394
-#: ../src/katello/client/core/system.py:654
+#: ../src/katello/client/core/system.py:641
 msgid "service level agreement"
 msgstr "acuerdo de nivel de servicios"
 
-#: ../src/katello/client/core/system.py:396
+#: ../src/katello/client/core/system.py:394
 msgid ""
 "activation key, more keys are separated with comma e.g. "
 "--activationkey=key1,key2"
@@ -775,113 +1694,108 @@ msgstr ""
 "Clave de activación, más claves están separadas por coma, por ejemplo, "
 "--activationkey=key1,key2"
 
-#: ../src/katello/client/core/system.py:397
+#: ../src/katello/client/core/system.py:395
 msgid "values of $releasever for the system"
 msgstr "valores de $releasever para el sistema"
 
-#: ../src/katello/client/core/system.py:399
+#: ../src/katello/client/core/system.py:397
 msgid "system facts"
 msgstr "eventos del sistema"
 
-#: ../src/katello/client/core/system.py:407
-#, python-format
-msgid "Option %s can not be specified with %s"
-msgstr "Opción %s no se puede especificar con %s"
-
-#: ../src/katello/client/core/system.py:429
+#: ../src/katello/client/core/system.py:419
 #, python-format
 msgid "Successfully registered system [ %s ]"
 msgstr "Sistema registrado con éxito [ %s ]"
 
-#: ../src/katello/client/core/system.py:430
+#: ../src/katello/client/core/system.py:420
 #, python-format
 msgid "Could not register system [ %s ]"
 msgstr "No se pudo registrar el sistema [ %s ]"
 
-#: ../src/katello/client/core/system.py:435
+#: ../src/katello/client/core/system.py:425
 msgid "remove a deletion record for hypervisor"
 msgstr "Retirar un registro de eliminación para hipervisor"
 
-#: ../src/katello/client/core/system.py:439
+#: ../src/katello/client/core/system.py:429
 msgid "hypervisor uuid (required"
 msgstr "UUID de hipervisor (requerido)"
 
-#: ../src/katello/client/core/system.py:447
+#: ../src/katello/client/core/system.py:437
 #, python-format
 msgid "Successfully removed deletion record for hypervisor with uuid [ %s ]"
 msgstr ""
 "Ha sido retirado registro de eliminación para hipervisor con UUID [ %s ]"
 
-#: ../src/katello/client/core/system.py:453
+#: ../src/katello/client/core/system.py:443
 msgid "unregister a system"
 msgstr "Cancelar registro de un sistema"
 
-#: ../src/katello/client/core/system.py:481
+#: ../src/katello/client/core/system.py:470
 #, python-format
 msgid "Successfully unregistered System [ %s ]"
 msgstr "Registro de sistema ha sido cancelado con éxito [ %s ]"
 
-#: ../src/katello/client/core/system.py:486
+#: ../src/katello/client/core/system.py:475
 msgid "subscribe a system to certificate"
 msgstr "Suscribir un sistema a certificado"
 
-#: ../src/katello/client/core/system.py:494
+#: ../src/katello/client/core/system.py:483
 msgid "certificate serial to unsubscribe (required)"
 msgstr "Serial de certificado para cancelar suscripción (requerido)"
 
-#: ../src/katello/client/core/system.py:496
+#: ../src/katello/client/core/system.py:485
 msgid "quantity (default: 1)"
 msgstr "Cantidad (predeterminada: 1)"
 
-#: ../src/katello/client/core/system.py:512
+#: ../src/katello/client/core/system.py:499
 #, python-format
 msgid "Successfully subscribed System [ %s ]"
 msgstr "Sistema suscrito con éxito [ %s ]"
 
-#: ../src/katello/client/core/system.py:517
+#: ../src/katello/client/core/system.py:504
 msgid "list subscriptions for a system"
 msgstr "Listar suscripciones para un sistema"
 
-#: ../src/katello/client/core/system.py:524
+#: ../src/katello/client/core/system.py:511
 msgid "show available subscriptions"
 msgstr "Mostrar suscripciones disponibles"
 
-#: ../src/katello/client/core/system.py:542
+#: ../src/katello/client/core/system.py:528
 #, python-format
 msgid "No Subscriptions found for System [ %s ] in Org [ %s ]"
 msgstr ""
 "No se encontraron suscripciones para el sistema [ %s ] en Organización [ %s "
 "]"
 
-#: ../src/katello/client/core/system.py:554
+#: ../src/katello/client/core/system.py:540
 #, python-format
 msgid "Current Subscriptions for System [ %s ]"
 msgstr "Suscripciones actuales para el sistema [ %s ]"
 
-#: ../src/katello/client/core/system.py:556
+#: ../src/katello/client/core/system.py:542
 msgid "Serial Id"
 msgstr "ID de serial"
 
-#: ../src/katello/client/core/system.py:563
-#: ../src/katello/client/core/system.py:588
+#: ../src/katello/client/core/system.py:549
+#: ../src/katello/client/core/system.py:574
 msgid "Provided products"
 msgstr "Productos suministrados"
 
-#: ../src/katello/client/core/system.py:570
+#: ../src/katello/client/core/system.py:556
 #, python-format
 msgid "No Pools found for System [ %s ] in Org [ %s ]"
 msgstr "No hay grupos para sistema [ %s ] en Organización [ %s ]"
 
-#: ../src/katello/client/core/system.py:580
+#: ../src/katello/client/core/system.py:566
 #, python-format
 msgid "Available Subscriptions for System [ %s ]"
 msgstr "Suscripciones disponibles para el sistema [ %s ] "
 
-#: ../src/katello/client/core/system.py:595
+#: ../src/katello/client/core/system.py:581
 msgid "unsubscribe a system from certificate"
 msgstr "Cancelar suscripción de sistema del certificado"
 
-#: ../src/katello/client/core/system.py:603
+#: ../src/katello/client/core/system.py:589
 msgid ""
 "entitlement id to unsubscribe from (either entitlement or serial or all is "
 "required)"
@@ -889,7 +1803,7 @@ msgstr ""
 "ID de derechos para cancelar suscripción desde (derechos, seriales o todos "
 "requeridos)"
 
-#: ../src/katello/client/core/system.py:605
+#: ../src/katello/client/core/system.py:591
 msgid ""
 "serial id of a certificate to unsubscribe from (either entitlement or serial"
 " or all is required)"
@@ -897,7 +1811,7 @@ msgstr ""
 "Id de serial de un certificado para cancelar desde (derechos, seriales o "
 "todos requeridos)"
 
-#: ../src/katello/client/core/system.py:607
+#: ../src/katello/client/core/system.py:593
 msgid ""
 "unsubscribe from all currently subscribed certificates (either entitlement "
 "or serial or all is required)"
@@ -905,236 +1819,98 @@ msgstr ""
 "Cancelar la suscripción de todos los certificados actualmente suscritos "
 "(derechos, seriales o todos requeridos)"
 
-#: ../src/katello/client/core/system.py:629
+#: ../src/katello/client/core/system.py:614
 #, python-format
 msgid "Successfully unsubscribed System [ %s ]"
 msgstr "Cancelación exitosa de suscripción de Sistema [ %s ]"
 
-#: ../src/katello/client/core/system.py:635
+#: ../src/katello/client/core/system.py:620
 msgid "update a system"
 msgstr "Actualizar un sistema"
 
-#: ../src/katello/client/core/system.py:646
+#: ../src/katello/client/core/system.py:631
 msgid "a new name for the system"
 msgstr "Un nuevo nombre para el sistema"
 
-#: ../src/katello/client/core/system.py:648
+#: ../src/katello/client/core/system.py:633
+msgid "a new environment name for the system"
+msgstr ""
+
+#: ../src/katello/client/core/system.py:635
 msgid "a description of the system"
 msgstr "Una descripción del sistema"
 
-#: ../src/katello/client/core/system.py:650
+#: ../src/katello/client/core/system.py:637
 msgid "location of the system"
 msgstr "Lugar del sistema"
 
-#: ../src/katello/client/core/system.py:652
+#: ../src/katello/client/core/system.py:639
 msgid "value of $releasever for the system"
 msgstr "valor de $releasever para el sistema"
 
-#: ../src/katello/client/core/system.py:683
+#: ../src/katello/client/core/system.py:674
 #, python-format
 msgid "Successfully updated system [ %s ]"
 msgstr "Sistema actualizado con éxito [ %s ]"
 
-#: ../src/katello/client/core/system.py:684
+#: ../src/katello/client/core/system.py:675
 #, python-format
 msgid "Could not update system [ %s ]"
 msgstr "No se pudo actualizar el sistema [ %s ]"
 
-#: ../src/katello/client/core/system.py:690
+#: ../src/katello/client/core/system.py:681
 msgid "systems report"
 msgstr "Reporte de sistemas"
 
-#: ../src/katello/client/core/system.py:698
-#: ../src/katello/client/core/user.py:294
-msgid ""
-"report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"
+#: ../src/katello/client/core/system.py:715
+msgid "add system groups to a system"
 msgstr ""
-"Formato de reporte (valores posibles: 'html', 'text' (default), 'csv', "
-"'pdf')"
 
-#: ../src/katello/client/core/system.py:724
+#: ../src/katello/client/core/system.py:723
+#: ../src/katello/client/core/system.py:766
+msgid "comma separated list of system group names (required)"
+msgstr ""
+
+#: ../src/katello/client/core/system.py:750
+#, python-format
+msgid "Successfully added system groups to system [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system.py:793
+#, python-format
+msgid "Successfully removed system groups from system [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system.py:802
 msgid "system specific actions in the katello server"
 msgstr "Acciones específica de sistemas en el servidor de Katello"
 
-#: ../src/katello/client/core/filters.py:38
-msgid "list all filters"
-msgstr "Listar todos los filtros"
-
-#: ../src/katello/client/core/filters.py:55
-msgid "Filter List"
-msgstr "Listar filtro"
-
-#: ../src/katello/client/core/filters.py:61
-msgid "create a filter"
-msgstr "Crear un filtro"
-
-#: ../src/katello/client/core/filters.py:69
-msgid "description"
-msgstr "Descripción"
-
-#: ../src/katello/client/core/filters.py:71
-msgid "comma-separated list of package names/nvres"
-msgstr "Lista de nombres de paquetes/nvres separados por coma"
-
-#: ../src/katello/client/core/filters.py:87
-#, python-format
-msgid "Successfully created filter [ %s ]"
-msgstr "Filtro creado correctamente [ %s ]"
-
-#: ../src/katello/client/core/filters.py:88
-#, python-format
-msgid "Could not create filter [ %s ]"
-msgstr "No se pudo crear filtro [ %s ]"
-
-#: ../src/katello/client/core/filters.py:95
-msgid "delete a filter"
-msgstr "Borrar un filtro"
-
-#: ../src/katello/client/core/filters.py:112
-#, python-format
-msgid "Successfully deleted filter [ %s ]"
-msgstr "Filtro borrado correctamente  [ %s ]"
-
-#: ../src/katello/client/core/filters.py:116
-msgid "filter info"
-msgstr "Información sobre el filtro"
-
-#: ../src/katello/client/core/filters.py:138
-msgid "Filter Information"
-msgstr "Información de filtro"
-
-#: ../src/katello/client/core/filters.py:146
-msgid "Add a package to filter"
-msgstr "Añadir un paquete al filtro"
-
-#: ../src/katello/client/core/filters.py:154
-#: ../src/katello/client/core/filters.py:181
-msgid "package id (required)"
-msgstr "Id de paquete (requerido)"
-
-#: ../src/katello/client/core/filters.py:169
-#, python-format
-msgid "Successfully added package [ %s ] to filter [ %s ]"
-msgstr "Añadido correctamente paquete [ %s ] al filtro [ %s ]"
-
-#: ../src/katello/client/core/filters.py:173
-msgid "Remove a package from filter"
-msgstr "Retirar un paquete del filtro"
-
-#: ../src/katello/client/core/filters.py:199
-#, python-format
-msgid "Successfully removed package [ %s ] from filter [ %s ]"
-msgstr "Retirado correctamente el paquete [ %s ] del filtro [ %s ]"
-
-#: ../src/katello/client/core/filters.py:205
-msgid "filter specific actions in the katello server"
-msgstr "Acciones específicas de filtraje en el servidor de Katello"
-
-#: ../src/katello/client/core/distribution.py:41
-msgid "list distributions in a repository"
-msgstr "Listar distribuciones en un repositorio"
-
-#: ../src/katello/client/core/distribution.py:45
-#: ../src/katello/client/core/package.py:47
-#: ../src/katello/client/core/package.py:102
-#: ../src/katello/client/core/errata.py:46
-#: ../src/katello/client/core/errata.py:138
-#: ../src/katello/client/core/repo.py:79
-msgid "repository id"
-msgstr "ID de repositorio"
-
-#: ../src/katello/client/core/distribution.py:47
-#: ../src/katello/client/core/package.py:49
-#: ../src/katello/client/core/package.py:104
-#: ../src/katello/client/core/errata.py:48
-#: ../src/katello/client/core/errata.py:140
-#: ../src/katello/client/core/repo.py:80
-msgid "repository name"
-msgstr "Nombre de repositorio"
-
-#: ../src/katello/client/core/distribution.py:49
-#: ../src/katello/client/core/package.py:51
-#: ../src/katello/client/core/package.py:106
-#: ../src/katello/client/core/errata.py:50
-#: ../src/katello/client/core/errata.py:142
-#: ../src/katello/client/core/repo.py:81
-msgid "organization name eg: foo.example.com"
-msgstr "Nombre de organización. Por ejemplo, foo.example.com"
-
-#: ../src/katello/client/core/distribution.py:53
-#: ../src/katello/client/core/package.py:55
-#: ../src/katello/client/core/package.py:110
-#: ../src/katello/client/core/errata.py:54
-#: ../src/katello/client/core/errata.py:146
-#: ../src/katello/client/core/repo.py:82
-#: ../src/katello/client/core/repo.py:417
-msgid "product name eg: fedora-14"
-msgstr "Nombre de producto. Por ejemplo, Fedora-14"
-
-#: ../src/katello/client/core/distribution.py:76
-#, python-format
-msgid "Distribution List For Repo %s"
-msgstr "Lista de distribución para repositorio %s"
-
-#: ../src/katello/client/core/distribution.py:88
-msgid "list information about a distribution"
-msgstr "Listar información sobre una distribución"
-
-#: ../src/katello/client/core/distribution.py:93
-msgid "repository id (required)"
-msgstr "ID de repositorio (requerido)"
-
-#: ../src/katello/client/core/distribution.py:95
-msgid "distribution id eg: ks-rh-noarch (required)"
-msgstr "ID de distribución. Por ejemplo, ks-rh-noarch (requerido)"
-
-#: ../src/katello/client/core/distribution.py:114
-msgid "Distribution Information"
-msgstr "Información de distribución"
-
-#: ../src/katello/client/core/distribution.py:124
-#: ../src/katello/client/core/repo.py:552
-msgid "repo specific actions in the katello server"
-msgstr "Acciones especificas de repositorios en el servidor de Katello"
-
-#: ../src/katello/client/core/ping.py:39
-msgid "get the status of the katello server"
-msgstr "Obtener el estatus del servidor de Katello"
-
-#: ../src/katello/client/core/ping.py:58
-msgid "Katello Status"
-msgstr "Estatus de Katello"
-
-#: ../src/katello/client/core/ping.py:122
-msgid "Check the status of the server"
-msgstr "Revisar el estatus del servidor"
-
-#: ../src/katello/client/core/package.py:40
+#: ../src/katello/client/core/package.py:38
 msgid "list information about a package"
 msgstr "Listar información sobre un paquete"
 
-#: ../src/katello/client/core/package.py:45
+#: ../src/katello/client/core/package.py:43
 msgid "package id, string value (required)"
 msgstr "ID de paquetes, valores de cadenas (requerido)"
 
-#: ../src/katello/client/core/package.py:91
+#: ../src/katello/client/core/package.py:87
 msgid "Package Information"
 msgstr "Información de paquetes"
 
-#: ../src/katello/client/core/package.py:98
+#: ../src/katello/client/core/package.py:94
 msgid "list packages in a repository"
 msgstr "Listar paquetes en un repositorio"
 
-#: ../src/katello/client/core/package.py:123
+#: ../src/katello/client/core/package.py:117
 #, python-format
 msgid "Package List For Repo %s"
 msgstr "Lista de paquetes para repositorio %s"
 
-#: ../src/katello/client/core/package.py:154
+#: ../src/katello/client/core/package.py:148
 msgid "search packages in a repository"
 msgstr "buscar paquetes en un repositorio"
 
-#: ../src/katello/client/core/package.py:159
+#: ../src/katello/client/core/package.py:153
 msgid ""
 "query string for searching packages, e.g. "
 "'kernel*','kernel-3.3.0-4.el6.x86_64'"
@@ -1142,1312 +1918,247 @@ msgstr ""
 "solicitar cadena para buscar paquetes, por ejemplo,  "
 "'kernel*','kernel-3.3.0-4.el6.x86_64'"
 
-#: ../src/katello/client/core/package.py:170
+#: ../src/katello/client/core/package.py:164
 #, python-format
 msgid "Package List For Repo %s and Query %s"
 msgstr "Lista de paquetes para repositorio %s y solicitud %s"
 
-#: ../src/katello/client/core/package.py:181
+#: ../src/katello/client/core/package.py:175
 msgid "package specific actions in the katello server"
 msgstr "Acciones específicas de paquetes en el servidor de Katello"
 
-#: ../src/katello/client/core/base.py:95
-#: ../src/katello/client/core/base.py:204
-msgid "no description available"
-msgstr "No hay descripción disponible"
-
-#: ../src/katello/client/core/base.py:123
-msgid "no action given: please see --help"
-msgstr "No se realiza ninguna acción: por favor ver --help"
-
-#: ../src/katello/client/core/base.py:130
-msgid "invalid action: please see --help"
-msgstr "Acción inválida: por favor ver --help"
-
-#: ../src/katello/client/core/base.py:177
-msgid "grep friendly output"
-msgstr "Salida de grep fácil"
-
-#: ../src/katello/client/core/base.py:180
-msgid "verbose, more structured output"
-msgstr "Verbosa, salida más estructurada."
-
-#: ../src/katello/client/core/base.py:183
-msgid "column delimiter in grep friendly output, works only with option -g"
+#: ../src/katello/client/core/admin.py:38
+msgid "re-generate certificate revocation lists"
 msgstr ""
-"delimitador de columna en salida fácil de  grep, funciona solamente con la "
-"opción -g"
 
-#: ../src/katello/client/core/base.py:253
-#, python-format
-msgid "Option %s is required; please see --help"
-msgstr "Se requiere opción %s; por favor --help"
-
-#: ../src/katello/client/core/base.py:265
-#, python-format
-msgid "Option %s is colliding with %s; please see --help"
-msgstr "Opción %s está colisionando con %s; por favor vea --help"
-
-#: ../src/katello/client/core/base.py:287
-#, python-format
-msgid "One of %s is required; please see --help"
-msgstr "Una de  %s se requiere; por favor ver --help"
-
-#: ../src/katello/client/core/base.py:307
-#, python-format
-msgid "At least one of %s is required; please see --help"
-msgstr "Al menos uno de  %s es requerido; por favor vea  --help"
-
-#: ../src/katello/client/core/base.py:386
-msgid "error: operation failed"
-msgstr "Error: falló operación"
-
-#: ../src/katello/client/core/base.py:403
-msgid ""
-"ERROR: The server hostname you have configured in /etc/katello/client.conf "
-"does not match the"
+#: ../src/katello/client/core/admin.py:49
+msgid "various administrative actions"
 msgstr ""
-"ERROR: El nombre de host de servidor que ha configurado en "
-"/etc/katello/client.conf , no coincide"
 
-#: ../src/katello/client/core/base.py:404
-msgid "hostname returned from the katello server you are connecting to.  "
-msgstr ""
-"Nombre de host devuelto del servidor de Katello al que se está conectando."
+#: ../src/katello/client/core/shell_command.py:28
+msgid "run the cli as a shell"
+msgstr "Ejecutar la Interfaz de línea de comandos como una shell"
 
-#: ../src/katello/client/core/base.py:406
-#, python-format
-msgid "You have: [%s] configured but got: [%s] from the server."
-msgstr "Usted tiene: [ %s ]  configurado pero obtuvo [ %s ] del servidor."
+#: ../src/katello/client/core/provider.py:44
+#: ../src/katello/client/core/provider.py:127
+#: ../src/katello/client/core/product.py:304
+msgid "provider name (required)"
+msgstr "Nombre de proveedor (requerido)"
 
-#: ../src/katello/client/core/base.py:408
-msgid "Please correct the host in the /etc/katello/client.conf file"
-msgstr "Por favor corrija el host en el archivo /etc/katello/client.conf"
-
-#: ../src/katello/client/core/base.py:420
-msgid "Invalid credentials or unable to authenticate"
-msgstr "Credenciales no válidas o no se pueden autenticar"
-
-#: ../src/katello/client/core/base.py:459
-#, python-format
-msgid "option %s: invalid boolean value: %r"
-msgstr "Opción %s: Valor booleano inválido: %r"
-
-#: ../src/katello/client/core/user.py:42
-msgid "list all known users"
-msgstr "Listar todos los usuarios conocidos"
-
-#: ../src/katello/client/core/user.py:54
-msgid "User List"
-msgstr "Lista de usuarios"
-
-#: ../src/katello/client/core/user.py:62
-msgid "create user"
-msgstr "Crear usuario"
-
-#: ../src/katello/client/core/user.py:65
-#: ../src/katello/client/core/user.py:108
-#: ../src/katello/client/core/user.py:136
-#: ../src/katello/client/core/user.py:157
-#: ../src/katello/client/core/user.py:209
-#: ../src/katello/client/core/user.py:260
-msgid "user name (required)"
-msgstr "Nombre de usuario (requerido)"
-
-#: ../src/katello/client/core/user.py:66
-msgid "initial password (required)"
-msgstr "Contraseña inicial (requerida)"
-
-#: ../src/katello/client/core/user.py:67
-msgid "email (required)"
-msgstr "correo-e (requerido)"
-
-#: ../src/katello/client/core/user.py:68
-msgid "disabled account (default is 'false')"
-msgstr "Cuenta inactiva (predeterminada es 'falsa')"
-
-#: ../src/katello/client/core/user.py:70
-#: ../src/katello/client/core/user.py:162
-msgid "user's default organization name"
-msgstr "nombre de organización predeterminada de usuario"
-
-#: ../src/katello/client/core/user.py:72
-#: ../src/katello/client/core/user.py:164
-msgid "user's default environment name"
-msgstr "nombre de entorno predeterminado de usuario"
-
-#: ../src/katello/client/core/user.py:97
-#, python-format
-msgid "Successfully created user [ %s ]"
-msgstr "Usuario creado con éxito [ %s ]"
-
-#: ../src/katello/client/core/user.py:98
-#, python-format
-msgid "Could not create user [ %s ]"
-msgstr "No se pudo crear usuario [ %s ]"
-
-#: ../src/katello/client/core/user.py:105
-msgid "list information about user"
-msgstr "Listar información acerca del usuario"
-
-#: ../src/katello/client/core/user.py:125
-msgid "User Information"
-msgstr "Información de usuarios"
-
-#: ../src/katello/client/core/user.py:133
-msgid "delete user"
-msgstr "Borrar usuario"
-
-#: ../src/katello/client/core/user.py:147
-#, python-format
-msgid "Successfully deleted user [ %s ]"
-msgstr "Usuario borrado con éxito [ %s ]"
-
-#: ../src/katello/client/core/user.py:154
-msgid "update an user"
-msgstr "Actualizar un usuario"
-
-#: ../src/katello/client/core/user.py:158
-msgid "initial password"
-msgstr "Contraseña inicial"
-
-#: ../src/katello/client/core/user.py:159
-msgid "email"
-msgstr "correo-e "
-
-#: ../src/katello/client/core/user.py:160
-msgid "disabled account"
-msgstr "Cuenta  desactivada"
-
-#: ../src/katello/client/core/user.py:166
-msgid "user's default environment is None"
-msgstr "Entorno de usuario predeterminado es Ninguno"
-
-#: ../src/katello/client/core/user.py:199
-#, python-format
-msgid "Successfully updated user [ %s ]"
-msgstr "Usuario actualizado con éxito [ %s ]"
-
-#: ../src/katello/client/core/user.py:206
-msgid "list user's roles"
-msgstr "Listar roles de usuario"
-
-#: ../src/katello/client/core/user.py:223
-#: ../src/katello/client/core/user_role.py:54
-msgid "User Role List"
-msgstr "Lista de roles de usuario"
-
-#: ../src/katello/client/core/user.py:232
-msgid "synchronise roles with LDAP groups"
-msgstr "Sincronizar roles con grupos LDAP"
-
-#: ../src/katello/client/core/user.py:246
-msgid "assign role to a user"
-msgstr "Asignar rol a un usuario "
-
-#: ../src/katello/client/core/user.py:248
-msgid "unassign role to a user"
-msgstr "Retirar rol a un usuario"
-
-#: ../src/katello/client/core/user.py:261
-msgid "user role (required)"
-msgstr "Rol de usuario (requerido)"
-
-#: ../src/katello/client/core/user.py:275
-#, python-format
-msgid "Role [ %s ] not found"
-msgstr "Rol [ %s ] no se encontró"
-
-#: ../src/katello/client/core/user.py:291
-msgid "user report"
-msgstr "Reporte de usuario"
-
-#: ../src/katello/client/core/user.py:312
-msgid "user specific actions in the katello server"
-msgstr "Acciones específicas de usuarios en el servidor Katello"
-
-#: ../src/katello/client/core/gpg_key.py:41
-msgid "Enter content of the GPG key (finish input with CTRL+D):"
-msgstr "Ingresar contenido de la llave GPG (terminar entrada con CTRL+D):"
-
-#: ../src/katello/client/core/gpg_key.py:61
-msgid "list all GPG keys"
-msgstr "Listar todas las llaves GPG"
-
-#: ../src/katello/client/core/gpg_key.py:65
-#: ../src/katello/client/core/gpg_key.py:95
-#: ../src/katello/client/core/gpg_key.py:132
-#: ../src/katello/client/core/gpg_key.py:165
-#: ../src/katello/client/core/gpg_key.py:209
-#: ../src/katello/client/core/activation_key.py:53
-#: ../src/katello/client/core/activation_key.py:100
-#: ../src/katello/client/core/activation_key.py:139
-#: ../src/katello/client/core/activation_key.py:183
-#: ../src/katello/client/core/activation_key.py:251
-#: ../src/katello/client/core/changeset.py:44
-#: ../src/katello/client/core/changeset.py:78
-#: ../src/katello/client/core/changeset.py:143
-#: ../src/katello/client/core/changeset.py:310
-#: ../src/katello/client/core/changeset.py:395
-#: ../src/katello/client/core/changeset.py:424
-#: ../src/katello/client/core/provider.py:48
-#: ../src/katello/client/core/provider.py:135
-#: ../src/katello/client/core/template.py:91
-#: ../src/katello/client/core/template.py:155
-#: ../src/katello/client/core/template.py:198
-#: ../src/katello/client/core/template.py:251
-#: ../src/katello/client/core/template.py:316
-#: ../src/katello/client/core/template.py:493
-msgid "name of organization (required)"
-msgstr "Nombre de organización (requerido)"
-
-#: ../src/katello/client/core/gpg_key.py:76
-#, python-format
-msgid "No gpg keys found in organization [ %s ]"
-msgstr "No se encontraron las llaves GPG en organización [ %s ]"
-
-#: ../src/katello/client/core/gpg_key.py:82
-msgid "Gpg Key List"
-msgstr "Lista de llaves GPG"
-
-#: ../src/katello/client/core/gpg_key.py:89
-msgid "show information about a gpg key"
-msgstr "Mostrar información sobre llave GPG"
-
-#: ../src/katello/client/core/gpg_key.py:93
-#: ../src/katello/client/core/gpg_key.py:130
-#: ../src/katello/client/core/gpg_key.py:163
-#: ../src/katello/client/core/gpg_key.py:207
-#: ../src/katello/client/core/activation_key.py:98
-#: ../src/katello/client/core/activation_key.py:137
-#: ../src/katello/client/core/activation_key.py:181
-#: ../src/katello/client/core/activation_key.py:249
-msgid "activation key name (required)"
-msgstr "Nombre de llave de activación (requerida)"
-
-#: ../src/katello/client/core/gpg_key.py:105
-#: ../src/katello/client/core/gpg_key.py:191
-#: ../src/katello/client/core/gpg_key.py:220
-#, python-format
-msgid "Could not find gpg key [ %s ]"
-msgstr "No se pudo encontrar llave GPG [ %s ]"
-
-#: ../src/katello/client/core/gpg_key.py:117
-msgid "Repositories"
-msgstr "Repositorios"
-
-#: ../src/katello/client/core/gpg_key.py:119
-msgid "Gpg Key Info"
-msgstr "Información de llave GPG"
-
-#: ../src/katello/client/core/gpg_key.py:126
-msgid "create a gpg key"
-msgstr "Crear una llave GPG"
-
-#: ../src/katello/client/core/gpg_key.py:134
-msgid ""
-"file with public GPG key, if not                                 specified, "
-"standard input will be used"
-msgstr ""
-"Archivo con llave GPG pública. Si no se especifica se utilizará la entrada "
-"estándar"
-
-#: ../src/katello/client/core/gpg_key.py:152
-#, python-format
-msgid "Successfully created gpg key [ %s ]"
-msgstr "Creada correctamente llave gpg [ %s ]"
-
-#: ../src/katello/client/core/gpg_key.py:153
-#, python-format
-msgid "Could not create gpg key [ %s ]"
-msgstr "No se pudo crear llave GPG [ %s ]"
-
-#: ../src/katello/client/core/gpg_key.py:159
-#: ../src/katello/client/core/activation_key.py:177
-msgid "update an activation key"
-msgstr "Actualizar una llave de activación"
-
-#: ../src/katello/client/core/gpg_key.py:167
-#: ../src/katello/client/core/activation_key.py:187
-#: ../src/katello/client/core/template.py:317
-msgid "new template name"
-msgstr "Nuevo nombre de plantilla"
-
-#: ../src/katello/client/core/gpg_key.py:169
-msgid "file with public GPG key"
-msgstr "Archivo con llave GPG pública"
-
-#: ../src/katello/client/core/gpg_key.py:171
-msgid "prompt for new content of the key"
-msgstr "Solicita el nuevo contenido de la llave"
-
-#: ../src/katello/client/core/gpg_key.py:196
-#, python-format
-msgid "Successfully updated gpg key [ %s ]"
-msgstr "Actualizada correctamente llave GPG  [ %s ]"
-
-#: ../src/katello/client/core/gpg_key.py:197
-#, python-format
-msgid "Could not updated gpg key [ %s ]"
-msgstr "No se pudo actualizar llave gpg [ %s ]"
-
-#: ../src/katello/client/core/gpg_key.py:203
-msgid "delete an gpg key"
-msgstr "Borrar una llave GPG"
-
-#: ../src/katello/client/core/gpg_key.py:224
-#, python-format
-msgid "Successfully deleted gpg key [ %s ]"
-msgstr "Borrada correctamente llave GPG [ %s ]"
-
-#: ../src/katello/client/core/gpg_key.py:228
-msgid "GPG key specific actions in the katello server"
-msgstr "Acciones específicas de llave GPG en el servidor de Katello"
-
-#: ../src/katello/client/core/activation_key.py:49
-msgid "list all activation keys"
-msgstr "Listar todas las llaves de activación"
-
-#: ../src/katello/client/core/activation_key.py:55
-#: ../src/katello/client/core/template.py:56
-#: ../src/katello/client/core/template.py:93
-msgid "environment name eg: dev (default: Library)"
-msgstr "Nombre de entorno por ejemplo: dev (predeterminado:library)"
-
-#: ../src/katello/client/core/activation_key.py:68
-#, python-format
-msgid "No keys found in organization [ %s ]"
-msgstr "No se encontraron las llaves en organización [ %s ]"
-
-#: ../src/katello/client/core/activation_key.py:70
-#, python-format
-msgid "No keys found in organization [ %s ] environment [ %s ]"
-msgstr "No se encontraron las llaves en organización [ %s ] entorno [ %s ]"
-
-#: ../src/katello/client/core/activation_key.py:80
-msgid "Activation Key List"
-msgstr "Lista de llaves de activación"
-
-#: ../src/katello/client/core/activation_key.py:94
-msgid "show information about an activation key"
-msgstr "Mostrar información sobre llave de activación"
-
-#: ../src/katello/client/core/activation_key.py:114
-#, python-format
-msgid "Could not find activation key [ %s ]"
-msgstr "No se encontró llave de activación [ %s ]"
-
-#: ../src/katello/client/core/activation_key.py:126
-msgid "Activation Key Info"
-msgstr "Información de llave de activación"
-
-#: ../src/katello/client/core/activation_key.py:133
-msgid "create an activation key"
-msgstr "Crear una llave de activación"
-
-#: ../src/katello/client/core/activation_key.py:141
-msgid "environment name eg: dev (required)"
-msgstr "Nombre de entorno. Por ejemplo, dev (requerido)"
-
-#: ../src/katello/client/core/activation_key.py:143
-msgid "activation key description"
-msgstr "Descripción de llave de activación"
-
-#: ../src/katello/client/core/activation_key.py:145
-msgid "template name eg: servers"
-msgstr "Nombre de plantilla. Por ejemplo, servidores"
-
-#: ../src/katello/client/core/activation_key.py:164
-#: ../src/katello/client/core/activation_key.py:227
-#, python-format
-msgid "Could not find template [ %s ]"
-msgstr "No se pudo hallar plantilla [ %s ]"
-
-#: ../src/katello/client/core/activation_key.py:169
-#, python-format
-msgid "Successfully created activation key [ %s ]"
-msgstr "Llave de activación creada con éxito [ %s ]"
-
-#: ../src/katello/client/core/activation_key.py:170
-#, python-format
-msgid "Could not create activation key [ %s ]"
-msgstr "No se pudo crear llave [ %s ]"
-
-#: ../src/katello/client/core/activation_key.py:185
-msgid "new environment name eg: dev"
-msgstr "Nuevo nombre de entorno. Por ejemplo, dev"
-
-#: ../src/katello/client/core/activation_key.py:189
-msgid "new description"
-msgstr "Nueva descripción"
-
-#: ../src/katello/client/core/activation_key.py:191
-msgid "new template name eg: servers"
-msgstr "Nuevo nombre de plantilla. Por ejemplo, servidores"
-
-#: ../src/katello/client/core/activation_key.py:194
-msgid "add a pool to the activation key"
-msgstr "Añadir un grupo a una llave de activación"
-
-#: ../src/katello/client/core/activation_key.py:196
-msgid "remove a pool from the activation key"
-msgstr "Retirar un grupo de la llave de activación"
-
-#: ../src/katello/client/core/activation_key.py:237
-#, python-format
-msgid "Successfully updated activation key [ %s ]"
-msgstr "Llave de activación actualizada con éxito [ %s ]"
-
-#: ../src/katello/client/core/activation_key.py:245
-msgid "delete an activation key"
-msgstr "Borrar una llave de activación"
-
-#: ../src/katello/client/core/activation_key.py:269
-#, python-format
-msgid "Successfully deleted activation key [ %s ]"
-msgstr "Llave de activación borrada con éxito [ %s ]"
-
-#: ../src/katello/client/core/activation_key.py:273
-msgid "activation key specific actions in the katello server"
-msgstr "Acciones específicas de llave de activación en el servidor de Katello"
-
-#: ../src/katello/client/core/packagegroup.py:20
-msgid "list available package groups"
-msgstr "Lista disponible de grupos de paquetes"
-
-#: ../src/katello/client/core/packagegroup.py:24
-#: ../src/katello/client/core/packagegroup.py:53
-#: ../src/katello/client/core/packagegroup.py:89
-#: ../src/katello/client/core/packagegroup.py:117
-msgid "repository id, string value (required)"
-msgstr "ID de repositorio, valor de cadena (requerido)"
-
-#: ../src/katello/client/core/packagegroup.py:34
-#, python-format
-msgid "No package groups found in repo [%s]"
-msgstr "No se hallaron grupos de paquetes en repositorio [%s]"
-
-#: ../src/katello/client/core/packagegroup.py:35
-#: ../src/katello/client/core/packagegroup.py:71
-msgid "Package Group Information"
-msgstr "Información de grupo de paquetes"
-
-#: ../src/katello/client/core/packagegroup.py:49
-#: ../src/katello/client/core/packagegroup.py:113
-msgid "lookup information for a package group"
-msgstr "Información de búsqueda para un grupo de paquetes"
-
-#: ../src/katello/client/core/packagegroup.py:55
-msgid "package group id, string value (required)"
-msgstr "ID de grupo de paquetes, valor de cadena (requerido)"
-
-#: ../src/katello/client/core/packagegroup.py:67
-#, python-format
-msgid "Package group [%s] not found in repo [%s]"
-msgstr "No se encontró grupo de paquetes [ %s ]  en repositorio [ %s ] "
-
-#: ../src/katello/client/core/packagegroup.py:85
-msgid "list available package groups categories"
-msgstr "Lista de categorías de grupos de paquetes disponible"
-
-#: ../src/katello/client/core/packagegroup.py:99
-#, python-format
-msgid "No package group categories found in repo [%s]"
-msgstr ""
-"No se hallaron categorías de grupos de paquetes en repositorio [ %s ] "
-
-#: ../src/katello/client/core/packagegroup.py:100
-msgid "Package Group Cateogory Information"
-msgstr "Información de categorías de grupos de paquetes"
-
-#: ../src/katello/client/core/packagegroup.py:119
-msgid "package group category id, string value (required)"
-msgstr "ID de categorías de grupos de paquetes, valor de cadena (requerido)"
-
-#: ../src/katello/client/core/packagegroup.py:131
-#, python-format
-msgid "Package group category [%s] not found in repo [%s]"
-msgstr "No se halló categoría de grupos de paquetes [ %s ]  "
-
-#: ../src/katello/client/core/packagegroup.py:133
-msgid "Package Group Category Information"
-msgstr "Información de categorías de grupos de paquetes"
-
-#: ../src/katello/client/core/packagegroup.py:143
-msgid "package group specific actions in the katello server"
-msgstr "Acciones específicas de grupos de paquetes en el servidor de Katello"
-
-#: ../src/katello/client/core/changeset.py:40
-msgid "list new changesets of an environment"
-msgstr "Listar nuevos Changesets de un entorno"
-
-#: ../src/katello/client/core/changeset.py:46
-#: ../src/katello/client/core/changeset.py:79
-#: ../src/katello/client/core/changeset.py:145
-#: ../src/katello/client/core/changeset.py:312
-#: ../src/katello/client/core/changeset.py:397
-#: ../src/katello/client/core/changeset.py:426
-#: ../src/katello/client/core/environment.py:114
-#: ../src/katello/client/core/environment.py:155
-msgid "environment name (required)"
-msgstr "Nombre de entorno (requerido)"
-
-#: ../src/katello/client/core/changeset.py:68
-msgid "Changeset List"
-msgstr "Lista de Changeset"
-
-#: ../src/katello/client/core/changeset.py:75
-msgid "detailed information about a changeset"
-msgstr "Información detallada sobre un Changeset"
-
-#: ../src/katello/client/core/changeset.py:80
-#: ../src/katello/client/core/changeset.py:147
-#: ../src/katello/client/core/changeset.py:308
-#: ../src/katello/client/core/changeset.py:393
-#: ../src/katello/client/core/changeset.py:422
-msgid "changeset name (required)"
-msgstr "Nombre de Changeset (requerido)"
-
-#: ../src/katello/client/core/changeset.py:82
-msgid "will display dependent packages"
-msgstr "Desplegará paquetes dependientes"
-
-#: ../src/katello/client/core/changeset.py:131
-msgid "Changeset Info"
-msgstr "Información de Changeset"
-
-#: ../src/katello/client/core/changeset.py:139
-msgid "create a new changeset for an environment"
-msgstr "Crear un nuevo Changeset de un entorno"
-
-#: ../src/katello/client/core/changeset.py:149
-#: ../src/katello/client/core/changeset.py:314
-msgid "changeset description"
-msgstr "Descripción de changeset"
-
-#: ../src/katello/client/core/changeset.py:165
-#, python-format
-msgid "Successfully created changeset [ %s ] for environment [ %s ]"
-msgstr "Changeset creado con éxito [ %s ] para entorno [ %s ]"
-
-#: ../src/katello/client/core/changeset.py:166
-#, python-format
-msgid "Could not create changeset [ %s ] for environment [ %s ]"
-msgstr "No se pudo crear Changeset [ %s ] para entorno [ %s ]"
-
-#: ../src/katello/client/core/changeset.py:286
-msgid "updates content of a changeset"
-msgstr "Actualizaciones de contenido de un Changeset"
-
-#: ../src/katello/client/core/changeset.py:299
-#: ../src/katello/client/core/template.py:310
-#, python-format
-msgid "%s must be preceded by %s"
-msgstr "%a de estar precedido por %s"
-
-#: ../src/katello/client/core/changeset.py:316
-msgid "new changeset name"
-msgstr "Nuevo nombre de changeset"
-
-#: ../src/katello/client/core/changeset.py:319
-msgid "product to add to the changeset"
-msgstr "Producto para añadir un Changeset"
-
-#: ../src/katello/client/core/changeset.py:322
-msgid "product to remove from the changeset"
-msgstr "Producto para retirar un Changeset"
-
-#: ../src/katello/client/core/changeset.py:325
-msgid "name of a template to be added to the changeset"
-msgstr "Nombre de una plantilla a ser añadido al Changeset"
-
-#: ../src/katello/client/core/changeset.py:328
-msgid "name of a template to be removed from the changeset"
-msgstr "Nombre de una plantilla a ser retirada del Changeset"
-
-#: ../src/katello/client/core/changeset.py:331
-msgid ""
-"determines product from which the packages/errata/repositories are picked"
-msgstr ""
-"Determina el producto del cual se elige paquetes/erratas/repositorios."
-
-#: ../src/katello/client/core/changeset.py:336
-msgid " to add to the changeset"
-msgstr "Para añadir al changeset"
-
-#: ../src/katello/client/core/changeset.py:339
-msgid " to remove from the changeset"
-msgstr "Para retirar del Changeset\n"
-
-#: ../src/katello/client/core/changeset.py:373
-#, python-format
-msgid "Successfully updated changeset [ %s ]"
-msgstr "Actualizado Changeset con éxito [ %s ]"
-
-#: ../src/katello/client/core/changeset.py:389
-msgid "deletes a changeset"
-msgstr "Borra un Changeset"
-
-#: ../src/katello/client/core/changeset.py:418
-msgid "promotes a changeset to the next environment"
-msgstr "Promueve un Changeset al nuevo entorno"
-
-#: ../src/katello/client/core/changeset.py:443
-msgid "Promoting the changeset, please wait... "
-msgstr "Promoviendo el Changeset, por favor espere"
-
-#: ../src/katello/client/core/changeset.py:446
-#, python-format
-msgid "Changeset [ %s ] promoted"
-msgstr "Changeset [ %s ] promovido"
-
-#: ../src/katello/client/core/changeset.py:449
-#, python-format
-msgid "Changeset [ %s ] promotion failed: %s"
-msgstr "Falló la promoción de Changeset [ %s ]: %s"
-
-#: ../src/katello/client/core/changeset.py:455
-msgid "changeset specific actions in the katello server"
-msgstr "Acciones específicas de Changeset en el servidor de Katello"
-
-#: ../src/katello/client/core/provider.py:59
+#: ../src/katello/client/core/provider.py:57
 msgid "list all known providers"
 msgstr "Listar todos los proveedores conocidos"
 
-#: ../src/katello/client/core/provider.py:81
+#: ../src/katello/client/core/provider.py:79
 msgid "Provider List"
 msgstr "Lista de proveedor"
 
-#: ../src/katello/client/core/provider.py:89
+#: ../src/katello/client/core/provider.py:87
 msgid "list information about a provider"
 msgstr "Información de lista sobre proveedor"
 
-#: ../src/katello/client/core/provider.py:104
+#: ../src/katello/client/core/provider.py:102
 msgid "Provider Information"
 msgstr "Información de proveedor"
 
-#: ../src/katello/client/core/provider.py:116
+#: ../src/katello/client/core/provider.py:114
 msgid "create a provider"
 msgstr "Crear un proveedor"
 
-#: ../src/katello/client/core/provider.py:118
+#: ../src/katello/client/core/provider.py:116
 msgid "update a provider"
 msgstr "Actualizar un proveedor"
 
-#: ../src/katello/client/core/provider.py:131
-#: ../src/katello/client/core/template.py:159
+#: ../src/katello/client/core/provider.py:129
+#: ../src/katello/client/core/template.py:156
 msgid "provider description"
 msgstr "Descripción de proveedor"
 
-#: ../src/katello/client/core/provider.py:139
+#: ../src/katello/client/core/provider.py:131
+#: ../src/katello/client/core/product.py:310
+msgid ""
+"repository url eg: "
+"http://download.fedoraproject.org/pub/fedora/linux/releases/"
+msgstr ""
+"URL de repositorio. Por ejemplo, "
+"http://download.fedoraproject.org/pub/fedora/linux/releases/"
+
+#: ../src/katello/client/core/provider.py:137
 msgid "provider name"
 msgstr "Nombre de proveedor (requerido)"
 
-#. pylint: disable=E1101
-#: ../src/katello/client/core/provider.py:151
-msgid "Option --url has to start with http:// or https://"
-msgstr "Opción --URL tiene que comenzar por http:// o https://"
-
-#. pylint: disable=E1101
-#: ../src/katello/client/core/provider.py:153
-msgid "Option --url is not in a valid format"
-msgstr "Opción --URL no está en un formato válido"
-
-#: ../src/katello/client/core/provider.py:159
+#: ../src/katello/client/core/provider.py:147
 #, python-format
 msgid "Successfully created provider [ %s ]"
 msgstr "Proveedor creado con éxito [ %s ]"
 
-#: ../src/katello/client/core/provider.py:160
+#: ../src/katello/client/core/provider.py:148
 #, python-format
 msgid "Could not create provider [ %s ]"
 msgstr "No se pudo crear proveedor [ %s ]"
 
-#: ../src/katello/client/core/provider.py:167
+#: ../src/katello/client/core/provider.py:155
 #, python-format
 msgid "Successfully updated provider [ %s ]"
 msgstr "Proveedor actualizado con éxito [ %s ]"
 
-#: ../src/katello/client/core/provider.py:185
+#: ../src/katello/client/core/provider.py:173
 msgid "delete a provider"
 msgstr "Borrar un proveedor"
 
-#: ../src/katello/client/core/provider.py:201
+#: ../src/katello/client/core/provider.py:189
 msgid "synchronize a provider"
 msgstr "Sincronizar un proveedor"
 
-#: ../src/katello/client/core/provider.py:216
+#: ../src/katello/client/core/provider.py:204
 #, python-format
 msgid "Provider [ %s ] failed to sync: %s"
 msgstr "Falló sincronización de proveedor [ %s ]: %s"
 
-#: ../src/katello/client/core/provider.py:219
+#: ../src/katello/client/core/provider.py:207
 #, python-format
 msgid "Provider [ %s ] synchronization cancelled"
 msgstr "Sincronización de proveedor [ %s ] cancelada"
 
-#: ../src/katello/client/core/provider.py:222
+#: ../src/katello/client/core/provider.py:210
 #, python-format
 msgid "Provider [ %s ] synchronized"
 msgstr "Proveedor [ %s ] sincronizado"
 
-#: ../src/katello/client/core/provider.py:245
+#: ../src/katello/client/core/provider.py:216
+#: ../src/katello/client/core/product.py:198
+msgid "cancel currently running synchronization"
+msgstr "Cancelar sincronización actualmente en ejecución"
+
+#: ../src/katello/client/core/provider.py:233
 msgid "status of provider's synchronization"
 msgstr "Estatus de sincronización de proveedor"
 
-#: ../src/katello/client/core/provider.py:258
+#: ../src/katello/client/core/provider.py:246
 #, python-format
 msgid "%d%% done (%d of %d packages downloaded)"
 msgstr "%d%% listo (%d de %d paquetes descargados)"
 
-#: ../src/katello/client/core/provider.py:269
+#: ../src/katello/client/core/provider.py:257
 msgid "Provider Status"
 msgstr "Estatus de proveedor"
 
-#: ../src/katello/client/core/provider.py:277
+#: ../src/katello/client/core/provider.py:265
 msgid "import a manifest file"
 msgstr "Importar un archivo de manifiesto"
 
-#: ../src/katello/client/core/provider.py:283
+#: ../src/katello/client/core/provider.py:271
 msgid "path to the manifest file (required)"
 msgstr "Ruta al archivo de manifiesto (requerida)"
 
-#: ../src/katello/client/core/provider.py:285
+#: ../src/katello/client/core/provider.py:273
 msgid "force reimporting the manifest"
 msgstr "Forzar a reimportar el manifiesto"
 
-#: ../src/katello/client/core/provider.py:302
-#: ../src/katello/client/core/template.py:177
+#: ../src/katello/client/core/provider.py:290
+#: ../src/katello/client/core/template.py:173
 #, python-format
 msgid "File %s does not exist"
 msgstr "Archivo %s no existe"
 
-#: ../src/katello/client/core/provider.py:307
+#: ../src/katello/client/core/provider.py:295
 msgid "Importing manifest, please wait... "
 msgstr "Importando manifiesto, por favor espere.."
 
-#: ../src/katello/client/core/provider.py:320
+#: ../src/katello/client/core/provider.py:308
 msgid "refresh provider's products repositories"
 msgstr "Actualizar repositorios de productos de proveedor"
 
-#: ../src/katello/client/core/provider.py:329
+#: ../src/katello/client/core/provider.py:317
 #, python-format
 msgid "Provider successfully refreshed [ %s ]"
 msgstr "Proveedor ha sido actualizado  [ %s ]"
 
-#: ../src/katello/client/core/provider.py:336
+#: ../src/katello/client/core/provider.py:324
 msgid "provider specific actions in the katello server"
 msgstr "Acciones específicas de proveedor en el servidor de Katello"
 
-#: ../src/katello/client/core/environment.py:47
-msgid "list known environments"
-msgstr "Listar entornos desconocidos"
-
-#: ../src/katello/client/core/environment.py:64
-#: ../src/katello/client/core/environment.py:95
-msgid "Org"
-msgstr "Org"
-
-#: ../src/katello/client/core/environment.py:65
-#: ../src/katello/client/core/environment.py:96
-msgid "Prior Environment"
-msgstr "Entorno anterior"
-
-#: ../src/katello/client/core/environment.py:67
-msgid "Environment List"
-msgstr "Lista de entorno"
-
-#: ../src/katello/client/core/environment.py:74
-msgid "list a specific environment"
-msgstr "Listar un entorno específico"
-
-#: ../src/katello/client/core/environment.py:80
-#: ../src/katello/client/core/environment.py:187
-msgid "environment name eg: foo.example.com (required)"
-msgstr "Nombre de entorno. Por ejemplo, foo.example.como (requerido)"
-
-#: ../src/katello/client/core/environment.py:98
-msgid "Environment Info"
-msgstr "Información de entorno"
-
-#: ../src/katello/client/core/environment.py:106
-msgid "create an environment"
-msgstr "Crear un entorno"
-
-#: ../src/katello/client/core/environment.py:110
-#: ../src/katello/client/core/environment.py:149
-msgid "environment description eg: foo's environment"
-msgstr "Descripción de entorno. Por ejemplo, entorno de foo"
-
-#: ../src/katello/client/core/environment.py:116
-msgid "name of prior environment (required)"
-msgstr "Nombre de entorno anterior (requerido)"
-
-#: ../src/katello/client/core/environment.py:136
-#, python-format
-msgid "Successfully created environment [ %s ]"
-msgstr "Entorno creado con éxito [ %s ]"
-
-#: ../src/katello/client/core/environment.py:137
-#, python-format
-msgid "Could not create environment [ %s ]"
-msgstr "No se pudo crear entorno [ %s ]"
-
-#: ../src/katello/client/core/environment.py:144
-msgid "update an environment"
-msgstr "Actualizar un entorno"
-
-#: ../src/katello/client/core/environment.py:153
-msgid "name of prior environment"
-msgstr "Nombre de entorno anterior"
-
-#: ../src/katello/client/core/environment.py:176
-#, python-format
-msgid "Successfully updated environment [ %s ]"
-msgstr "Entorno actualizado con éxito [ %s ]"
-
-#: ../src/katello/client/core/environment.py:183
-msgid "delete an environment"
-msgstr "Borrar un entorno "
-
-#: ../src/katello/client/core/environment.py:203
-#, python-format
-msgid "Successfully deleted environment [ %s ]"
-msgstr "Entorno borrado con éxito [ %s ]"
-
-#: ../src/katello/client/core/environment.py:212
-msgid "environment specific actions in the katello server"
-msgstr "Acciones específicas de entorno en el servidor de Katello"
-
-#: ../src/katello/client/core/client.py:38
-msgid "save an option to the client config"
-msgstr "Guardar una opción para la configuración de cliente"
-
-#: ../src/katello/client/core/client.py:42
-msgid ""
-"name of the option to be saved (e.g. org, environment, provider, etc) "
-"(required)"
-msgstr ""
-"Nombre de la opción a guardar (por ejemplo, entorno, proveedor, etc) "
-"(requerido)"
-
-#: ../src/katello/client/core/client.py:44
-msgid "value to be store under specified option (required)"
-msgstr "Valor a ser guardado bajo una opción específica (requerido)"
-
-#: ../src/katello/client/core/client.py:63
-msgid "Successfully "
-msgstr "Exitosamente"
-
-#: ../src/katello/client/core/client.py:65
-#, python-format
-msgid "Unsuccessfully remembered option [ %s ]"
-msgstr "No ha recordado la opción [ %s ]"
-
-#: ../src/katello/client/core/client.py:72
-msgid "remove an option from the client config"
-msgstr "Retirar una opción de la configuración de cliente"
-
-#: ../src/katello/client/core/client.py:76
-msgid "name of the option to be deleted (required)"
-msgstr "Nombre de la opción que va a ser borrada (requerido)"
-
-#: ../src/katello/client/core/client.py:87
-#, python-format
-msgid "Successfully forgot option [ %s ]"
-msgstr "Olvidó con éxito la opción  [ %s ]"
-
-#: ../src/katello/client/core/client.py:89
-#, python-format
-msgid "Unsuccessfully forgot option [ %s ]"
-msgstr "No olvidó la opción  [ %s ]"
-
-#: ../src/katello/client/core/client.py:96
-msgid "list options saved in the client config"
-msgstr "Listar opciones guardadas en la configuración de cliente"
-
-#: ../src/katello/client/core/client.py:105
-msgid "Saved Options"
-msgstr "Opciones guardadas"
-
-#: ../src/katello/client/core/client.py:120
-msgid "client specific actions in the katello server"
-msgstr "Acciones específicas de cliente en el servidor de Katello"
-
-#: ../src/katello/client/core/template.py:50
-msgid "list all templates"
-msgstr "Listar todos los formatos"
-
-#: ../src/katello/client/core/template.py:54
-msgid "name of organization (required if specifying environment)"
-msgstr "Nombre de organización (requerido si se especifica e entorno)"
-
-#: ../src/katello/client/core/template.py:69
-#, python-format
-msgid "No templates found in environment [ %s ]"
-msgstr "No se hallaron plantillas en el entorno [ %s ]"
-
-#: ../src/katello/client/core/template.py:77
-msgid "Template List"
-msgstr "Lista de plantillas"
-
-#: ../src/katello/client/core/template.py:85
-msgid "list information about a template"
-msgstr "Listar información sobre  una plantilla"
-
-#: ../src/katello/client/core/template.py:89
-#: ../src/katello/client/core/template.py:196
-#: ../src/katello/client/core/template.py:247
-#: ../src/katello/client/core/template.py:314
-#: ../src/katello/client/core/template.py:491
-msgid "template name (required)"
-msgstr "Nombre de formato (requerido)"
-
-#: ../src/katello/client/core/template.py:127
-msgid "Template Info"
-msgstr "Información de plantilla"
-
-#: ../src/katello/client/core/template.py:150
-msgid "create a template file and import data"
-msgstr "Crear un archivo de plantillas e importar datos\n"
-
-#: ../src/katello/client/core/template.py:157
-#: ../src/katello/client/core/template.py:202
-msgid "path to the template file (required)"
-msgstr "Ruta al archivo de plantillas"
-
-#: ../src/katello/client/core/template.py:180
-msgid "Importing template, please wait... "
-msgstr "Importando plantilla, por favor espere..."
-
-#: ../src/katello/client/core/template.py:191
-msgid "export the template into the file"
-msgstr "Exportar la plantilla al archivo"
-
-#: ../src/katello/client/core/template.py:200
-msgid "environment name eg: dev"
-msgstr "Nombre de entorno, por ejemplo: dev"
-
-#: ../src/katello/client/core/template.py:204
-#, python-format
-msgid "format of the export, possible values: %s, default: json"
-msgstr "Formato de exportación, valores posibles: %s, predeterminado: json"
-
-#: ../src/katello/client/core/template.py:225
-#, python-format
-msgid "Could not create file %s"
-msgstr "No se pudo crear archivo %s"
-
-#: ../src/katello/client/core/template.py:229
-msgid "Exporting template, please wait... "
-msgstr "Exportando plantilla, por favor espere..."
-
-#: ../src/katello/client/core/template.py:232
-#, python-format
-msgid "Template was exported successfully to file %s"
-msgstr "La plantilla fue exportada correctamente al archivo %s"
-
-#: ../src/katello/client/core/template.py:242
-msgid "create an empty template file"
-msgstr "Crear un archivo vacío de plantillas"
-
-#: ../src/katello/client/core/template.py:249
-#: ../src/katello/client/core/template.py:315
-msgid "name of the parent template"
-msgstr "Nombre de plantilla de principal"
-
-#: ../src/katello/client/core/template.py:253
-#: ../src/katello/client/core/template.py:318
-msgid "template description"
-msgstr "Descripción de plantilla"
-
-#: ../src/katello/client/core/template.py:276
-#, python-format
-msgid "Successfully created template [ %s ]"
-msgstr "Plantilla creada con éxito [ %s ]"
-
-#: ../src/katello/client/core/template.py:277
-#, python-format
-msgid "Could not create template [ %s ]"
-msgstr "No se pudo crear una plantilla [ %s ]"
-
-#: ../src/katello/client/core/template.py:285
-msgid "updates name and description of a template"
-msgstr "Actualiza nombre y descripción de una plantilla"
-
-#: ../src/katello/client/core/template.py:299
-#, python-format
-msgid "each %s must be preceeded by %s"
-msgstr "Cada % debe ir precedido por %s"
-
-#. bz 799149
-#. self.parser.add_option('--add_product', dest='add_products',
-#. action="append", help=_("name of the product"))
-#. self.parser.add_option('--remove_product', dest='remove_products',
-#. action="append", help=_("name of the product"))
-#: ../src/katello/client/core/template.py:324
-#: ../src/katello/client/core/template.py:325
-msgid "name or nvre of the product (epoch:name-rel.ease-ver.sio.n)"
-msgstr "Nombre o nvre del producto (epoch:name-rel.ease-ver.sio.n)"
-
-#: ../src/katello/client/core/template.py:328
-#, python-format
-msgid "name of the parameter, %s must follow"
-msgstr "Nombre del parámetro, %s debe seguir"
-
-#: ../src/katello/client/core/template.py:329
-msgid "value of the parameter"
-msgstr "Valor del parámetro"
-
-#: ../src/katello/client/core/template.py:330
-msgid "name of the parameter"
-msgstr "Nombre del parámetro"
-
-#: ../src/katello/client/core/template.py:332
-#: ../src/katello/client/core/template.py:333
-msgid "name of the package group"
-msgstr "Nombre del grupo de paquetes"
-
-#: ../src/katello/client/core/template.py:335
-#: ../src/katello/client/core/template.py:336
-msgid "name of the package group category"
-msgstr "Nombre de categoría de grupos de paquetes"
-
-#: ../src/katello/client/core/template.py:338
-#: ../src/katello/client/core/template.py:339
-msgid "distribution id"
-msgstr "ID de distribución"
-
-#: ../src/katello/client/core/template.py:342
-msgid "determines product from which the repositories are picked"
-msgstr "Determina el producto desde el cual se escogen los repositorios "
-
-#: ../src/katello/client/core/template.py:344
-msgid "repository to be added to the template"
-msgstr "Repositorio que va a ser añadido a la plantilla"
-
-#: ../src/katello/client/core/template.py:346
-msgid "repository to be removed from the template"
-msgstr "Repositorio que va a ser retirado de la plantilla"
-
-#: ../src/katello/client/core/template.py:357
-#, python-format
-msgid "missing value for parameter '%s'"
-msgstr "Falta valor para parámetro '%s'"
-
-#: ../src/katello/client/core/template.py:417
-#: ../src/katello/client/core/template.py:418
-msgid "Updating the template, please wait... "
-msgstr "Actualizando la plantilla, por favor espere..."
-
-#: ../src/katello/client/core/template.py:419
-#, python-format
-msgid "Successfully updated template [ %s ]"
-msgstr "Actualización exitosa de plantilla [ %s ]"
-
-#: ../src/katello/client/core/template.py:487
-msgid "deletes a template"
-msgstr "Borra una plantilla"
-
-#: ../src/katello/client/core/template.py:495
-msgid "environment name eg: foo.example.com (default: Library)"
-msgstr ""
-"Nombre de entorno, por ejemplo: foo.example.com (predeterminado: Library)"
-
-#: ../src/katello/client/core/template.py:516
-msgid "template specific actions in the katello server"
-msgstr "Acciones específicas de plantilla en el servidor de katello"
-
-#: ../src/katello/client/core/shell_command.py:30
-msgid "run the cli as a shell"
-msgstr "Ejecutar la Interfaz de línea de comandos como una shell"
-
-#: ../src/katello/client/core/sync_plan.py:55
-msgid "list known sync_plans"
-msgstr "Listar sync_plans conocidos"
-
-#: ../src/katello/client/core/sync_plan.py:74
-msgid "Sync Plan List"
-msgstr "lista de plan de sincronización"
-
-#: ../src/katello/client/core/sync_plan.py:81
-msgid "print info about a sync plan"
-msgstr "Imprimir información sobre un plan de sincronización"
-
-#: ../src/katello/client/core/sync_plan.py:84
-#: ../src/katello/client/core/sync_plan.py:114
-#: ../src/katello/client/core/sync_plan.py:151
-#: ../src/katello/client/core/sync_plan.py:193
-msgid "name of the sync plan (required)"
-msgstr "Nombre de plan de sincronización (requerido)"
-
-#: ../src/katello/client/core/sync_plan.py:103
-msgid "Sync Plan Info"
-msgstr "Información de plan de sincronización"
-
-#: ../src/katello/client/core/sync_plan.py:111
-msgid "create a synchronization plan"
-msgstr "Crear un plan de sincronización"
-
-#: ../src/katello/client/core/sync_plan.py:116
-#: ../src/katello/client/core/sync_plan.py:154
-msgid "plan description"
-msgstr "Descripción del plan"
-
-#: ../src/katello/client/core/sync_plan.py:118
-#: ../src/katello/client/core/sync_plan.py:156
-#, python-format
-msgid "interval of recurring synchronizations (choices: [%s], default: none)"
-msgstr ""
-"Intervalo de sincronizaciones recurrentes (opciones: [%s], default: none) "
-
-#: ../src/katello/client/core/sync_plan.py:120
-msgid "date of first synchronization (required, format: YYYY-MM-DD)"
-msgstr "Fecha de la primera sincronización (requerida, formato AAAA-MM-DD)"
-
-#: ../src/katello/client/core/sync_plan.py:121
-msgid "time of first synchronization (format: HH:MM:SS, default: 00:00:00)"
-msgstr ""
-"Hora de la primera sincronización (formato: HH:MM:SS, predeterminado: "
-"00:00:00)"
-
-#: ../src/katello/client/core/sync_plan.py:141
-#, python-format
-msgid "Successfully created synchronization plan [ %s ]"
-msgstr "Creado correctamente plan de sincronización [ %s ]"
-
-#: ../src/katello/client/core/sync_plan.py:142
-#, python-format
-msgid "Could not create synchronization plan [ %s ]"
-msgstr "No se pudo crear plan de sincronización [ %s ]"
-
-#: ../src/katello/client/core/sync_plan.py:148
-msgid "update a sync plan"
-msgstr "Actualizar plan de sincronización"
-
-#: ../src/katello/client/core/sync_plan.py:152
-msgid "new sync plan name"
-msgstr "Nuevo nombre de plan de sincronización"
-
-#: ../src/katello/client/core/sync_plan.py:158
-msgid "date of first synchronization (format: YYYY-MM-DD)"
-msgstr "Fecha de primera sincronización (formato: AAAA-MM-DD)"
-
-#: ../src/katello/client/core/sync_plan.py:159
-msgid "time of first synchronization (format: HH:MM:SS)"
-msgstr "Hora de la primera sincronización (formato: HH:MM:SS)"
-
-#: ../src/katello/client/core/sync_plan.py:165
-msgid "You have to specify both --date and --time"
-msgstr "Debe especificar tanto --date y --time"
-
-#: ../src/katello/client/core/sync_plan.py:184
-#, python-format
-msgid "Successfully updated sync plan [ %s ]"
-msgstr "Plan de sincronización actualizado correctamente [ %s ]"
-
-#: ../src/katello/client/core/sync_plan.py:190
-msgid "delete a sync plan"
-msgstr "Borrar un plan de sincronización"
-
-#: ../src/katello/client/core/sync_plan.py:207
-#, python-format
-msgid "Successfully deleted sync plan [ %s ]"
-msgstr "Borrado correctamente plan de sincronización [ %s ]"
-
-#: ../src/katello/client/core/sync_plan.py:215
-msgid "synchronization plan specific actions in the katello server"
-msgstr ""
-"Acciones específicas de plan de sincronización en el servidor de katello"
-
-#: ../src/katello/client/core/version.py:39
-msgid "get the version of the katello server"
-msgstr "Obtener la versión del servidor de katello"
-
-#: ../src/katello/client/core/version.py:54
-msgid "Check the version of the server"
-msgstr "Revisar la versión del servidor"
-
-#: ../src/katello/client/core/permission.py:56
+#: ../src/katello/client/core/ping.py:37
+msgid "get the status of the katello server"
+msgstr "Obtener el estatus del servidor de Katello"
+
+#: ../src/katello/client/core/ping.py:50
+msgid "Katello Status"
+msgstr "Estatus de Katello"
+
+#: ../src/katello/client/core/permission.py:53
 msgid "create a permission for a user role"
 msgstr "Crear un permiso para rol de usuario"
 
-#: ../src/katello/client/core/permission.py:59
-#: ../src/katello/client/core/permission.py:122
-#: ../src/katello/client/core/permission.py:146
-#: ../src/katello/client/core/user_role.py:65
-msgid "role name (required)"
-msgstr "Nombre de rol (requerido)"
-
-#: ../src/katello/client/core/permission.py:60
-#: ../src/katello/client/core/permission.py:123
+#: ../src/katello/client/core/permission.py:57
+#: ../src/katello/client/core/permission.py:112
 msgid "permission name (required)"
 msgstr "Nombre de permiso (requerido)"
 
-#: ../src/katello/client/core/permission.py:61
+#: ../src/katello/client/core/permission.py:58
 msgid "permission description"
 msgstr "Descripción de permiso"
 
-#: ../src/katello/client/core/permission.py:62
+#: ../src/katello/client/core/permission.py:59
 msgid "organization name"
 msgstr "Nombre de organización"
 
-#: ../src/katello/client/core/permission.py:63
+#: ../src/katello/client/core/permission.py:60
 msgid "scope of the permisson (required)"
 msgstr "Alcance del permiso (requerido)"
 
-#: ../src/katello/client/core/permission.py:64
+#: ../src/katello/client/core/permission.py:61
 msgid "verbs for the permission"
 msgstr "Verbos para el permiso"
 
-#: ../src/katello/client/core/permission.py:65
+#: ../src/katello/client/core/permission.py:62
 msgid "tags for the permission"
 msgstr "Etiquetas para el permiso"
 
-#: ../src/katello/client/core/permission.py:81
+#: ../src/katello/client/core/permission.py:76
 #, python-format
 msgid "Invalid scope [ %s ]"
 msgstr "Alcance inválido [ %s ]"
 
-#: ../src/katello/client/core/permission.py:88
+#: ../src/katello/client/core/permission.py:83
 #, python-format
 msgid "Could not find tag [ %s ] in scope of [ %s ]"
 msgstr "No se pudo encontrar pestaña [ %s ] en alcance de [ %s ]"
 
-#: ../src/katello/client/core/permission.py:112
+#: ../src/katello/client/core/permission.py:101
 #, python-format
 msgid "Successfully created permission [ %s ] for user role [ %s ]"
 msgstr "Creado correctamente permiso [ %s ] para rol de usuario [ %s ]"
 
-#: ../src/katello/client/core/permission.py:113
+#: ../src/katello/client/core/permission.py:102
 #, python-format
 msgid "Could not create permission [ %s ]"
 msgstr "No se pudo crear permiso [ %s ]"
 
-#: ../src/katello/client/core/permission.py:119
+#: ../src/katello/client/core/permission.py:108
 msgid "delete a permission"
 msgstr "Borrar un permiso"
 
-#: ../src/katello/client/core/permission.py:137
+#: ../src/katello/client/core/permission.py:125
 #, python-format
 msgid "Successfully deleted permission [ %s ] for role [ %s ]"
 msgstr "Borrado correctamente permiso [ %s ] para rol [ %s ]"
 
-#: ../src/katello/client/core/permission.py:143
+#: ../src/katello/client/core/permission.py:131
 msgid "list permissions for a user role"
 msgstr "Listar permisos para un rol de usuario"
 
-#: ../src/katello/client/core/permission.py:170
+#: ../src/katello/client/core/permission.py:158
 msgid "Permission List"
 msgstr "Lista de permisos"
 
-#: ../src/katello/client/core/permission.py:177
+#: ../src/katello/client/core/permission.py:165
 msgid "list available scopes, verbs and tags that can be set in a permission"
 msgstr ""
 "Lista alcances, verbos y etiquetas disponibles que pueden configurarse en un"
 " permiso"
 
-#: ../src/katello/client/core/permission.py:181
+#: ../src/katello/client/core/permission.py:169
 msgid ""
 "organization name eg: foo.example.com,\n"
 "lists organization specific verbs"
@@ -2455,26 +2166,102 @@ msgstr ""
 "Nombre de organización, por ejemplo: foo.example.com,\n"
 "lista verbos específicos de organización"
 
-#: ../src/katello/client/core/permission.py:182
+#: ../src/katello/client/core/permission.py:170
 msgid "filter listed results by scope"
 msgstr "Filtrar los resultados listados por alcance "
 
-#: ../src/katello/client/core/permission.py:200
+#: ../src/katello/client/core/permission.py:188
 #, python-format
 msgid "Available verbs and tags for permission scope %s"
 msgstr "Verbos disponibles y etiquetas para alcance de permiso %s"
 
-#: ../src/katello/client/core/permission.py:202
+#: ../src/katello/client/core/permission.py:190
 msgid "Available verbs"
 msgstr "Verbos disponibles"
 
-#: ../src/katello/client/core/permission.py:221
+#: ../src/katello/client/core/permission.py:209
 msgid "None"
 msgstr "Ninguno"
 
-#: ../src/katello/client/core/permission.py:259
+#: ../src/katello/client/core/permission.py:247
 msgid "permission pecific actions in the katello server"
 msgstr "Acciones específicas de permisos en el servidor de Katello"
+
+#: ../src/katello/client/core/base.py:129
+msgid "no description available"
+msgstr "No hay descripción disponible"
+
+#: ../src/katello/client/core/base.py:202
+msgid "operation failed"
+msgstr ""
+
+#: ../src/katello/client/core/base.py:275
+msgid "no action given: please see --help"
+msgstr "No se realiza ninguna acción: por favor ver --help"
+
+#: ../src/katello/client/core/base.py:280
+msgid "invalid action: please see --help"
+msgstr "Acción inválida: por favor ver --help"
+
+#: ../src/katello/client/core/base.py:317
+msgid "grep friendly output"
+msgstr "Salida de grep fácil"
+
+#: ../src/katello/client/core/base.py:320
+msgid "verbose, more structured output"
+msgstr "Verbosa, salida más estructurada."
+
+#: ../src/katello/client/core/base.py:323
+msgid "column delimiter in grep friendly output, works only with option -g"
+msgstr ""
+"delimitador de columna en salida fácil de  grep, funciona solamente con la "
+"opción -g"
+
+#: ../src/katello/client/core/base.py:326
+msgid "Suppress any heading output. Useful if grepping the output."
+msgstr ""
+
+#: ../src/katello/client/core/base.py:372
+msgid ""
+"ERROR: The server hostname you have configured in /etc/katello/client.conf "
+"does not match the"
+msgstr ""
+"ERROR: El nombre de host de servidor que ha configurado en "
+"/etc/katello/client.conf , no coincide"
+
+#: ../src/katello/client/core/base.py:373
+msgid "hostname returned from the katello server you are connecting to.  "
+msgstr ""
+"Nombre de host devuelto del servidor de Katello al que se está conectando."
+
+#: ../src/katello/client/core/base.py:375
+#, python-format
+msgid "You have: [%s] configured but got: [%s] from the server."
+msgstr "Usted tiene: [ %s ]  configurado pero obtuvo [ %s ] del servidor."
+
+#: ../src/katello/client/core/base.py:377
+msgid "Please correct the host in the /etc/katello/client.conf file"
+msgstr "Por favor corrija el host en el archivo /etc/katello/client.conf"
+
+#: ../src/katello/client/core/base.py:389
+msgid "Invalid credentials or unable to authenticate"
+msgstr "Credenciales no válidas o no se pueden autenticar"
+
+#: ../src/katello/client/core/base.py:435
+#, python-format
+msgid "option %s: invalid boolean value: %r"
+msgstr "Opción %s: Valor booleano inválido: %r"
+
+#: ../src/katello/client/core/base.py:456
+#, python-format
+msgid "option %s: has to start with %s"
+msgstr ""
+
+#. pylint: disable=E1101
+#: ../src/katello/client/core/base.py:458
+#, python-format
+msgid "option %s: invalid format"
+msgstr ""
 
 #: ../src/katello/client/core/errata.py:42
 msgid "list all errata for a repo"
@@ -2486,7 +2273,7 @@ msgstr "Erratas de filtro por tipo, por ejemplo: mejoras"
 
 #: ../src/katello/client/core/errata.py:60
 msgid "filter errata by severity"
-msgstr "Erratas de fitro por gravedad\n"
+msgstr "Erratas de fitro por gravedad"
 
 #: ../src/katello/client/core/errata.py:94
 msgid "Errata List"
@@ -2496,26 +2283,117 @@ msgstr "Lista de erratas"
 msgid "list errata for a system"
 msgstr "Listar erratas para un sistema"
 
-#: ../src/katello/client/core/errata.py:125
+#: ../src/katello/client/core/errata.py:124
 #, python-format
 msgid "Errata for system %s in organization %s"
 msgstr "Erratas para sistema %s en organización %s"
 
-#: ../src/katello/client/core/errata.py:132
+#: ../src/katello/client/core/errata.py:130
+msgid "list errata for a system group"
+msgstr ""
+
+#: ../src/katello/client/core/errata.py:135
+msgid "filter errata by type eg: bug, enhancement or security"
+msgstr ""
+
+#: ../src/katello/client/core/errata.py:155
+msgid "# Systems"
+msgstr ""
+
+#: ../src/katello/client/core/errata.py:158
+#, python-format
+msgid "Errata for system group %s in organization %s"
+msgstr ""
+
+#: ../src/katello/client/core/errata.py:166
 msgid "information about an errata"
 msgstr "Información acerca de una errata"
 
-#: ../src/katello/client/core/errata.py:136
+#: ../src/katello/client/core/errata.py:170
 msgid "errata id, string value (required)"
 msgstr "ID de erratas, valor de cadena (requerido)"
 
-#: ../src/katello/client/core/errata.py:185
+#: ../src/katello/client/core/errata.py:217
 msgid "Errata Information"
 msgstr "Información de erratas"
 
-#: ../src/katello/client/core/errata.py:194
+#: ../src/katello/client/core/errata.py:226
 msgid "errata specific actions in the katello server"
 msgstr "Acciones específicas de erratas en el servidor de Katello"
+
+#: ../src/katello/client/core/version.py:38
+msgid "get the version of the katello server"
+msgstr "Obtener la versión del servidor de katello"
+
+#: ../src/katello/client/core/version.py:54
+msgid "Check the version of the server"
+msgstr "Revisar la versión del servidor"
+
+#: ../src/katello/client/core/packagegroup.py:17
+msgid "list available package groups"
+msgstr "Lista disponible de grupos de paquetes"
+
+#: ../src/katello/client/core/packagegroup.py:21
+#: ../src/katello/client/core/packagegroup.py:50
+#: ../src/katello/client/core/packagegroup.py:85
+#: ../src/katello/client/core/packagegroup.py:113
+msgid "repository id, string value (required)"
+msgstr "ID de repositorio, valor de cadena (requerido)"
+
+#: ../src/katello/client/core/packagegroup.py:31
+#, python-format
+msgid "No package groups found in repo [%s]"
+msgstr "No se hallaron grupos de paquetes en repositorio [%s]"
+
+#: ../src/katello/client/core/packagegroup.py:32
+#: ../src/katello/client/core/packagegroup.py:67
+msgid "Package Group Information"
+msgstr "Información de grupo de paquetes"
+
+#: ../src/katello/client/core/packagegroup.py:46
+#: ../src/katello/client/core/packagegroup.py:109
+msgid "lookup information for a package group"
+msgstr "Información de búsqueda para un grupo de paquetes"
+
+#: ../src/katello/client/core/packagegroup.py:52
+msgid "package group id, string value (required)"
+msgstr "ID de grupo de paquetes, valor de cadena (requerido)"
+
+#: ../src/katello/client/core/packagegroup.py:63
+#, python-format
+msgid "Package group [%s] not found in repo [%s]"
+msgstr "No se encontró grupo de paquetes [ %s ]  en repositorio [ %s ] "
+
+#: ../src/katello/client/core/packagegroup.py:81
+msgid "list available package groups categories"
+msgstr "Lista de categorías de grupos de paquetes disponible"
+
+#: ../src/katello/client/core/packagegroup.py:95
+#, python-format
+msgid "No package group categories found in repo [%s]"
+msgstr ""
+"No se hallaron categorías de grupos de paquetes en repositorio [ %s ] "
+
+#: ../src/katello/client/core/packagegroup.py:96
+msgid "Package Group Cateogory Information"
+msgstr "Información de categorías de grupos de paquetes"
+
+#: ../src/katello/client/core/packagegroup.py:115
+msgid "package group category id, string value (required)"
+msgstr "ID de categorías de grupos de paquetes, valor de cadena (requerido)"
+
+#: ../src/katello/client/core/packagegroup.py:126
+#, python-format
+msgid "Package group category [%s] not found in repo [%s]"
+msgstr "No se halló categoría [ %s ] de grupos de paquetes [ %s ]  "
+
+#: ../src/katello/client/core/packagegroup.py:128
+msgid "Package Group Category Information"
+msgstr "Información de categorías de grupos de paquetes"
+
+#: ../src/katello/client/core/packagegroup.py:138
+msgid "package group specific actions in the katello server"
+msgstr "Acciones específicas de grupos de paquetes en el servidor de Katello"
 
 #: ../src/katello/client/core/repo.py:34
 msgid "Waiting"
@@ -2545,20 +2423,27 @@ msgstr "Expiración"
 msgid "Not synced"
 msgstr "No sincronizado"
 
-#: ../src/katello/client/core/repo.py:116
+#: ../src/katello/client/core/repo.py:114
 msgid "create a repository at a specified URL"
 msgstr "Crear un repositorio en una URL especificada"
 
-#: ../src/katello/client/core/repo.py:122
+#: ../src/katello/client/core/repo.py:120
 msgid "repository name to assign (required)"
 msgstr "Nombre de repositorio a asignar (requerido)"
 
-#: ../src/katello/client/core/repo.py:124
+#: ../src/katello/client/core/repo.py:122
 msgid "url path to the repository (required)"
 msgstr "Ruta de URL al repositorio (requerido)"
 
-#: ../src/katello/client/core/repo.py:128
-#: ../src/katello/client/core/repo.py:335
+#: ../src/katello/client/core/repo.py:124
+#: ../src/katello/client/core/repo.py:161
+#: ../src/katello/client/core/product.py:58
+#: ../src/katello/client/core/product.py:306
+msgid "product name (required)"
+msgstr "Nombre de producto (requerido)"
+
+#: ../src/katello/client/core/repo.py:126
+#: ../src/katello/client/core/repo.py:326
 msgid ""
 "GPG key to be assigned to the repository; by default, the product's GPG key "
 "will be used."
@@ -2566,29 +2451,29 @@ msgstr ""
 "Llave GPG a ser asignada al repositorio; de forma predeterminada, será "
 "utilizada la llave GPG del producto."
 
-#: ../src/katello/client/core/repo.py:130
-#: ../src/katello/client/core/repo.py:337
+#: ../src/katello/client/core/repo.py:128
+#: ../src/katello/client/core/repo.py:328
 msgid "Don't assign a GPG key to the repository."
 msgstr "No asigne una llave GPG al repositorio."
 
-#: ../src/katello/client/core/repo.py:148
-#: ../src/katello/client/core/repo.py:253
+#: ../src/katello/client/core/repo.py:143
+#: ../src/katello/client/core/repo.py:244
 #, python-format
 msgid "Successfully created repository [ %s ]"
 msgstr "Repositorio creado con éxito [ %s ]"
 
-#: ../src/katello/client/core/repo.py:154
+#: ../src/katello/client/core/repo.py:149
 msgid "discovery repositories contained within a URL"
 msgstr "Repositorios de descubrimiento contenidos dentro de una URL"
 
-#: ../src/katello/client/core/repo.py:160
+#: ../src/katello/client/core/repo.py:155
 msgid ""
 "repository name prefix to add to all the discovered repositories (required)"
 msgstr ""
 "Prefijo de nombre de repositorio a añadir a todos los repositorio "
 "descubiertos (requerido)"
 
-#: ../src/katello/client/core/repo.py:162
+#: ../src/katello/client/core/repo.py:157
 msgid ""
 "root url to perform discovery of repositories eg: "
 "http://porkchop.devel.redhat.com/ (required)"
@@ -2596,16 +2481,31 @@ msgstr ""
 "URL de root para realizar descubrimiento de repositorios. Por ejemplo, "
 "http://porkchop.devel.redhat.com/ (requerido)"
 
-#: ../src/katello/client/core/repo.py:192
+#: ../src/katello/client/core/repo.py:159
+#: ../src/katello/client/core/product.py:314
+msgid ""
+"assume yes; automatically create candidate repositories for discovered urls "
+"(optional)"
+msgstr ""
+"Suponga que Sí; automáticamente crea repositorios de candidatos para URL "
+"descubiertas (opcional)"
+
+#: ../src/katello/client/core/repo.py:174
+#: ../src/katello/client/core/product.py:346
+#, python-format
+msgid "Repository Urls discovered @ [%s]"
+msgstr "URL de repositorio descubiertas @ [ %s ]"
+
+#: ../src/katello/client/core/repo.py:183
 msgid "Discovering repository urls, this could take some time..."
 msgstr "Descubriendo las URL de repositorios, puede tomarse un tiempo..."
 
-#: ../src/katello/client/core/repo.py:196
+#: ../src/katello/client/core/repo.py:187
 #, python-format
 msgid "Error: %s"
 msgstr "Error: %s"
 
-#: ../src/katello/client/core/repo.py:216
+#: ../src/katello/client/core/repo.py:207
 msgid ""
 "\n"
 "Select urls for which candidate repos should be created; use `y` to confirm (h for help):"
@@ -2613,336 +2513,806 @@ msgstr ""
 "\n"
 "Seleccionar URL para el cual se debe crear el repositorio candidato; use 'y' para confirmar (h para ayuda): "
 
-#: ../src/katello/client/core/repo.py:226
+#: ../src/katello/client/core/repo.py:217
 msgid "Operation aborted upon user request."
 msgstr "Operación anulada a petición del usuario"
 
-#: ../src/katello/client/core/repo.py:275
+#: ../src/katello/client/core/repo.py:266
 msgid "status information about a repository"
 msgstr "Información de estatus sobre un repositorio"
 
-#: ../src/katello/client/core/repo.py:298
+#: ../src/katello/client/core/repo.py:289
 msgid "Repository Status"
 msgstr "Estatus de repositorio"
 
-#: ../src/katello/client/core/repo.py:305
+#: ../src/katello/client/core/repo.py:296
 msgid "information about a repository"
 msgstr "Información sobre un repositorio"
 
-#: ../src/katello/client/core/repo.py:319
+#: ../src/katello/client/core/repo.py:310
 msgid "Progress"
 msgstr "En curso"
 
-#: ../src/katello/client/core/repo.py:322
+#: ../src/katello/client/core/repo.py:311
+#: ../src/katello/client/core/product.py:140
+msgid "GPG key"
+msgstr "Llave GPG"
+
+#: ../src/katello/client/core/repo.py:313
 #, python-format
 msgid "Information About Repo %s"
 msgstr "Información sobre repositorio %s"
 
-#: ../src/katello/client/core/repo.py:329
+#: ../src/katello/client/core/repo.py:320
 msgid "updates repository attributes"
 msgstr "Atributos de actualización de repositorios"
 
-#: ../src/katello/client/core/repo.py:345
+#: ../src/katello/client/core/repo.py:336
 #, python-format
 msgid "Successfully updated repository [ %s ]"
 msgstr "Repositorio actualizado correctamente [ %s ]"
 
-#: ../src/katello/client/core/repo.py:351
+#: ../src/katello/client/core/repo.py:342
 msgid "synchronize a repository"
 msgstr "Sincronizar un repositorio"
 
-#: ../src/katello/client/core/repo.py:361
+#: ../src/katello/client/core/repo.py:352
 #, python-format
 msgid "Repo [ %s ] synced"
 msgstr "Repositorio [ %s ] sincronizado"
 
-#: ../src/katello/client/core/repo.py:364
+#: ../src/katello/client/core/repo.py:355
 #, python-format
 msgid "Repo [ %s ] synchronization cancelled"
 msgstr "Sincronización de repositorio  [ %s ] cancelada"
 
-#: ../src/katello/client/core/repo.py:367
+#: ../src/katello/client/core/repo.py:358
 #, python-format
 msgid "Repo [ %s ] failed to sync: %s"
-msgstr "Falló sincronización de repositorio: %s"
+msgstr "Falló sincronización de repositorio [ %s ] : %s"
 
-#: ../src/katello/client/core/repo.py:373
+#: ../src/katello/client/core/repo.py:364
 msgid "cancel currently running synchronization of a repository"
 msgstr ""
 "Cancelar la sincronización de un repositorio que se está ejecutando "
 "actualmente "
 
-#: ../src/katello/client/core/repo.py:388
+#: ../src/katello/client/core/repo.py:379
 msgid "enable a repository"
 msgstr "Habilitar un repositorio"
 
-#: ../src/katello/client/core/repo.py:390
+#: ../src/katello/client/core/repo.py:381
 msgid "disable a repository"
 msgstr "Inhabilitar un repositorio"
 
-#: ../src/katello/client/core/repo.py:409
+#: ../src/katello/client/core/repo.py:400
 msgid "list repos within an organization"
 msgstr "Listar repositorios dentro de una organización"
 
-#: ../src/katello/client/core/repo.py:413
+#: ../src/katello/client/core/repo.py:404
 msgid "organization name eg: ACME_Corporation (required)"
 msgstr "Nombre de organización. Por ejemplo, ACME_Corporation (requerido)"
 
-#: ../src/katello/client/core/repo.py:419
+#: ../src/katello/client/core/repo.py:410
 msgid "list also disabled repositories"
 msgstr "Listar también los repositorios inhabilitados"
 
-#: ../src/katello/client/core/repo.py:439
+#: ../src/katello/client/core/repo.py:430
 #, python-format
 msgid "Repo List For Org %s Environment %s Product %s"
 msgstr "Lista de repositorios para Organización %s entorno %s Producto %s"
 
-#: ../src/katello/client/core/repo.py:446
+#: ../src/katello/client/core/repo.py:437
 #, python-format
 msgid "Repo List for Product %s in Org %s "
 msgstr "Lista de repositorios para Producto %s en Organización %s"
 
-#: ../src/katello/client/core/repo.py:453
+#: ../src/katello/client/core/repo.py:444
 #, python-format
 msgid "Repo List For Org %s Environment %s"
 msgstr "Lista de repositorios para Organización %s entorno %s"
 
-#: ../src/katello/client/core/repo.py:463
+#: ../src/katello/client/core/repo.py:454
 msgid "delete a repository"
 msgstr "Borrar un repositorio"
 
-#: ../src/katello/client/core/repo.py:476
+#: ../src/katello/client/core/repo.py:467
 msgid "list filters of a repository"
 msgstr "Listar filtros de un repositorios"
 
-#: ../src/katello/client/core/repo.py:482
+#: ../src/katello/client/core/repo.py:473
 msgid "prints also filters assigned to repository's product."
 msgstr ""
 "Imprime en pantalla los filtros asignados al producto del repositorio."
 
-#: ../src/katello/client/core/repo.py:492
+#: ../src/katello/client/core/repo.py:483
 msgid "Repository Filters"
 msgstr "Filtros de repositorio"
 
-#: ../src/katello/client/core/repo.py:506
+#: ../src/katello/client/core/repo.py:497
 msgid "add a filter to a repository"
 msgstr "Añadir un filtro a un repositorio"
 
-#: ../src/katello/client/core/repo.py:508
+#: ../src/katello/client/core/repo.py:499
 msgid "remove a filter from a repository"
 msgstr "Retirar un filtro a un repositorio"
 
-#: ../src/katello/client/core/repo.py:538
+#: ../src/katello/client/core/repo.py:529
 #, python-format
 msgid "Added filter [ %s ] to repository [ %s ]"
 msgstr "Se añadió filtro [ %s ] al repositorio [ %s ]"
 
-#: ../src/katello/client/core/repo.py:541
+#: ../src/katello/client/core/repo.py:532
 #, python-format
 msgid "Removed filter [ %s ] to repository [ %s ]"
 msgstr "Se retiró filtro [ %s ]  al  repositorio [ %s ]"
 
-#: ../src/katello/client/core/user_role.py:46
-msgid "list all known user roles"
-msgstr "Listar todos los roles conocidos"
+#: ../src/katello/client/core/sync_plan.py:53
+msgid "list known sync_plans"
+msgstr "Listar sync_plans conocidos"
 
-#: ../src/katello/client/core/user_role.py:62
-msgid "create user role"
-msgstr "Crear rol de usuario"
-
-#: ../src/katello/client/core/user_role.py:66
-#: ../src/katello/client/core/user_role.py:165
-msgid "role description"
-msgstr "Descripción de rol"
-
-#: ../src/katello/client/core/user_role.py:77
-#, python-format
-msgid "Successfully created user role [ %s ]"
-msgstr "Creado correctamente el rol de usuario [ %s ]"
-
-#: ../src/katello/client/core/user_role.py:78
-#, python-format
-msgid "Could not create user role [ %s ]"
-msgstr "No se pudo crear rol de usuario [ %s ]"
-
-#: ../src/katello/client/core/user_role.py:86
-msgid "list information about user role"
-msgstr "Lista de información sobre rol de usuario"
-
-#: ../src/katello/client/core/user_role.py:89
-#: ../src/katello/client/core/user_role.py:141
-#: ../src/katello/client/core/user_role.py:163
-#: ../src/katello/client/core/user_role.py:190
-#: ../src/katello/client/core/user_role.py:214
-msgid "user role name (required)"
-msgstr "Nombre de rol de usuario (requerido)"
-
-#: ../src/katello/client/core/user_role.py:90
-msgid "print details about each of role's permissions"
+#: ../src/katello/client/core/sync_plan.py:69
+#: ../src/katello/client/core/sync_plan.py:97
+msgid "Start date"
 msgstr ""
-"Imprimir en pantalla la información de cada uno de los permisos del rol"
 
-#: ../src/katello/client/core/user_role.py:109
+#: ../src/katello/client/core/sync_plan.py:72
+msgid "Sync Plan List"
+msgstr "lista de plan de sincronización"
+
+#: ../src/katello/client/core/sync_plan.py:79
+msgid "print info about a sync plan"
+msgstr "Imprimir información sobre un plan de sincronización"
+
+#: ../src/katello/client/core/sync_plan.py:82
+#: ../src/katello/client/core/sync_plan.py:111
+#: ../src/katello/client/core/sync_plan.py:145
+#: ../src/katello/client/core/sync_plan.py:185
+msgid "name of the sync plan (required)"
+msgstr "Nombre de plan de sincronización (requerido)"
+
+#: ../src/katello/client/core/sync_plan.py:100
+msgid "Sync Plan Info"
+msgstr "Información de plan de sincronización"
+
+#: ../src/katello/client/core/sync_plan.py:108
+msgid "create a synchronization plan"
+msgstr "Crear un plan de sincronización"
+
+#: ../src/katello/client/core/sync_plan.py:113
+#: ../src/katello/client/core/sync_plan.py:148
+msgid "plan description"
+msgstr "Descripción del plan"
+
+#: ../src/katello/client/core/sync_plan.py:115
+#: ../src/katello/client/core/sync_plan.py:150
 #, python-format
+msgid "interval of recurring synchronizations (choices: [%s], default: none)"
+msgstr ""
+"Intervalo de sincronizaciones recurrentes (opciones: [%s], default: none) "
+
+#: ../src/katello/client/core/sync_plan.py:117
+msgid "date of first synchronization (required, format: YYYY-MM-DD)"
+msgstr "Fecha de la primera sincronización (requerida, formato AAAA-MM-DD)"
+
+#: ../src/katello/client/core/sync_plan.py:118
+msgid "time of first synchronization (format: HH:MM:SS, default: 00:00:00)"
+msgstr ""
+"Hora de la primera sincronización (formato: HH:MM:SS, predeterminado: "
+"00:00:00)"
+
+#: ../src/katello/client/core/sync_plan.py:135
+#, python-format
+msgid "Successfully created synchronization plan [ %s ]"
+msgstr "Creado correctamente plan de sincronización [ %s ]"
+
+#: ../src/katello/client/core/sync_plan.py:136
+#, python-format
+msgid "Could not create synchronization plan [ %s ]"
+msgstr "No se pudo crear plan de sincronización [ %s ]"
+
+#: ../src/katello/client/core/sync_plan.py:142
+msgid "update a sync plan"
+msgstr "Actualizar plan de sincronización"
+
+#: ../src/katello/client/core/sync_plan.py:146
+msgid "new sync plan name"
+msgstr "Nuevo nombre de plan de sincronización"
+
+#: ../src/katello/client/core/sync_plan.py:152
+msgid "date of first synchronization (format: YYYY-MM-DD)"
+msgstr "Fecha de primera sincronización (formato: AAAA-MM-DD)"
+
+#: ../src/katello/client/core/sync_plan.py:153
+msgid "time of first synchronization (format: HH:MM:SS)"
+msgstr "Hora de la primera sincronización (formato: HH:MM:SS)"
+
+#: ../src/katello/client/core/sync_plan.py:176
+#, python-format
+msgid "Successfully updated sync plan [ %s ]"
+msgstr "Plan de sincronización actualizado correctamente [ %s ]"
+
+#: ../src/katello/client/core/sync_plan.py:182
+msgid "delete a sync plan"
+msgstr "Borrar un plan de sincronización"
+
+#: ../src/katello/client/core/sync_plan.py:198
+#, python-format
+msgid "Successfully deleted sync plan [ %s ]"
+msgstr "Borrado correctamente plan de sincronización [ %s ]"
+
+#: ../src/katello/client/core/sync_plan.py:206
+msgid "synchronization plan specific actions in the katello server"
+msgstr ""
+"Acciones específicas de plan de sincronización en el servidor de katello"
+
+#: ../src/katello/client/core/organization.py:42
+msgid "list all known organizations"
+msgstr "Listar todas las organizaciones conocidas"
+
+#: ../src/katello/client/core/organization.py:51
+msgid "Organization List"
+msgstr "Lista de organizaciones"
+
+#: ../src/katello/client/core/organization.py:59
+msgid "create an organization"
+msgstr "Crear una organización"
+
+#: ../src/katello/client/core/organization.py:66
+#: ../src/katello/client/core/organization.py:150
+msgid "consumer description eg: foo's organization"
+msgstr "Descripción de usuario. Por ejemplo: organización de foo"
+
+#: ../src/katello/client/core/organization.py:77
+#, python-format
+msgid "Successfully created org [ %s ]"
+msgstr "Organización creada con [ %s ]"
+
+#: ../src/katello/client/core/organization.py:78
+#, python-format
+msgid "Could not create org [ %s ]"
+msgstr "No se pudo crear organización [ %s ]"
+
+#: ../src/katello/client/core/organization.py:86
+msgid "list information about an organization"
+msgstr "Listar información sobre una organización"
+
+#: ../src/katello/client/core/organization.py:104
+msgid "Available Service Levels"
+msgstr "Niveles de servicio disponibles"
+
+#: ../src/katello/client/core/organization.py:106
+msgid "Organization Information"
+msgstr "Información de organización"
+
+#: ../src/katello/client/core/organization.py:114
+msgid "delete an organization"
+msgstr "Borrar una organización"
+
+#: ../src/katello/client/core/organization.py:130
+msgid "Deleting the organization, please wait... "
+msgstr "Borrar la organización, por favor espere..."
+
+#: ../src/katello/client/core/organization.py:133
+#, python-format
+msgid "Successfully deleted org [ %s ]"
+msgstr "Organización borrada con éxito [ %s ]"
+
+#: ../src/katello/client/core/organization.py:136
+#, python-format
+msgid "Organization [ %s ] deletion failed: %s"
+msgstr "Borrado de organización [ %s ] falló: %s"
+
+#: ../src/katello/client/core/organization.py:143
+msgid "update an organization"
+msgstr "Actualizar una organización"
+
+#: ../src/katello/client/core/organization.py:160
+#, python-format
+msgid "Successfully updated org [ %s ]"
+msgstr "Organización actualizada con éxito[ %s ]"
+
+#: ../src/katello/client/core/organization.py:167
+msgid "generate and show ueber certificate"
+msgstr "Generar y mostrar el certificado Ueber"
+
+#: ../src/katello/client/core/organization.py:173
+msgid "regenerate the certificate"
+msgstr "Regenerar el certificado"
+
+#: ../src/katello/client/core/organization.py:186
+msgid "Organization Uebercert"
+msgstr "Organización Uebercert"
+
+#: ../src/katello/client/core/organization.py:195
+msgid "show subscriptions"
+msgstr "Mostrar suscripciones"
+
+#: ../src/katello/client/core/organization.py:226
+msgid "Organization's Subscriptions"
+msgstr "Suscripciones de organización"
+
+#: ../src/katello/client/core/organization.py:255
+msgid "organization specific actions in the katello server"
+msgstr "Acciones específicas de organización en el servidor de Katello"
+
+#: ../src/katello/client/core/product.py:71
+msgid "set a synchronization plan"
+msgstr "Establecer un plan de sincronización"
+
+#: ../src/katello/client/core/product.py:76
+msgid "synchronization plan name (required)"
+msgstr "Nombre de plan de sincronización (requerido)"
+
+#: ../src/katello/client/core/product.py:98
+msgid "unset a synchronization plan"
+msgstr "Des-configurar un plan de sincronización"
+
+#: ../src/katello/client/core/product.py:113
+msgid "list known products"
+msgstr "Lista de productos conocidos"
+
+#: ../src/katello/client/core/product.py:121
+msgid "provider name, lists provider's product in the Library"
+msgstr "Nombre de provedor, lista producto de proveedor en la biblioteca"
+
+#: ../src/katello/client/core/product.py:123
+msgid "list marketing products (hidden by default)"
+msgstr ""
+
+#: ../src/katello/client/core/product.py:145
+#, python-format
+msgid "Product List For Provider %s"
+msgstr "Lista de productos para proveedor %s"
+
+#: ../src/katello/client/core/product.py:151
+#, python-format
+msgid "Product List For Organization %s, Environment '%s'"
+msgstr "Lista de productos para Organización %s, entorno '%s'"
+
+#: ../src/katello/client/core/product.py:170
+msgid "synchronize a product"
+msgstr "Sincronizar un producto"
+
+#: ../src/katello/client/core/product.py:186
+#, python-format
+msgid "Product [ %s ] failed to sync: %s"
+msgstr "Falló la sincronización de producto [ %s ]: %s"
+
+#: ../src/katello/client/core/product.py:189
+#, python-format
+msgid "Product [ %s ] synchronization cancelled"
+msgstr "Sincronización de producto [ %s ] cancelada"
+
+#: ../src/katello/client/core/product.py:192
+#, python-format
+msgid "Product [ %s ] synchronized"
+msgstr "Producto [ %s ]  sincronizado"
+
+#: ../src/katello/client/core/product.py:215
+msgid "status of product's synchronization"
+msgstr "Estatus de sincronización de producto"
+
+#: ../src/katello/client/core/product.py:241
+msgid "Product Status"
+msgstr "Estatus de producto"
+
+#: ../src/katello/client/core/product.py:249
 msgid ""
-"%s\n"
-"\tfor: %s\n"
-"\tverbs: %s\n"
-"\ton: %s"
+"promote a product to an environment\n"
+"(creates a temporary changeset with the product and promotes it)"
 msgstr ""
-"%s\n"
-"\tfor: %s\n"
-"\tverbs: %s\n"
-"\ton: %s"
+"Promover un producto a un entorno\n"
+"(crea un Changeset temporal con el producto y lo promueve) "
 
-#: ../src/katello/client/core/user_role.py:130
-msgid "User Role Information"
-msgstr "Información de rol de usuario"
+#: ../src/katello/client/core/product.py:272
+msgid "Promoting the product, please wait... "
+msgstr "Promoviendo el producto, por favor espere.."
 
-#: ../src/katello/client/core/user_role.py:138
-msgid "delete a user role"
-msgstr "Borrar rol de usuario"
-
-#: ../src/katello/client/core/user_role.py:152
+#: ../src/katello/client/core/product.py:275
 #, python-format
-msgid "Successfully deleted user role [ %s ]"
-msgstr "Rol de usuario borrado correctamente [ %s ]"
+msgid "Product [ %s ] promoted to environment [ %s ] "
+msgstr "Producto [ %s ] promovido al entorno [ %s ] "
 
-#: ../src/katello/client/core/user_role.py:160
-msgid "update a role"
-msgstr "Actualizar un rol"
-
-#: ../src/katello/client/core/user_role.py:164
-msgid "new user role name"
-msgstr "Nombre de rol del nuevo usuario"
-
-#: ../src/katello/client/core/user_role.py:170
-msgid "Provide at least one parameter to update the user role"
-msgstr "Proporcionar al menos un parámetro para actualizar el rol de usuario"
-
-#: ../src/katello/client/core/user_role.py:180
+#: ../src/katello/client/core/product.py:278
 #, python-format
-msgid "Successfully updated user role [ %s ]"
-msgstr "Actualizado correctamente rol de usuario [ %s ]"
+msgid "Product [ %s ] promotion failed: %s"
+msgstr "Promoción del producto [ %s ] falló: %s"
 
-#: ../src/katello/client/core/user_role.py:187
-msgid "assign LDAP group to a role"
-msgstr "Asignar grupo LDAP a un rol"
+#: ../src/katello/client/core/product.py:298
+msgid "create new product to a custom provider"
+msgstr "Crear un nuevo producto para un proveedor personal"
 
-#: ../src/katello/client/core/user_role.py:191
-msgid "new LDAP group name (required)"
-msgstr "Nuevo nombre de grupo LDAP (requerido)"
+#: ../src/katello/client/core/product.py:308
+msgid "product description"
+msgstr "Descripción de producto"
 
-#: ../src/katello/client/core/user_role.py:204
-#, python-format
-msgid "Successfully added LDAP group [ %s ] to the user role [ %s ]"
+#: ../src/katello/client/core/product.py:312
+msgid "skip repository discovery"
+msgstr "Saltar descubrimiento de repositorio"
+
+#: ../src/katello/client/core/product.py:316
+msgid ""
+"assign a gpg key; this key will be used for every new repository unless "
+"gpgkey or nogpgkey is specified for the repo"
 msgstr ""
-"Ha sido añadido con éxito el grupo LDAP [ %s ] al rol de usuario [ %s ]"
+"Asignar una llave GPG ; esta llave será utilizada para cada nuevo "
+"repositorio a menos que gpgkey o nogpgkey se especifique."
 
-#: ../src/katello/client/core/user_role.py:211
-msgid "remove LDAP group assigned to a role"
-msgstr "Retirar el grupo LDAP asignado al rol"
-
-#: ../src/katello/client/core/user_role.py:215
-msgid "LDAP group name to be removed (required)"
-msgstr "Nombre de grupo LDAP ha sido retirado (requerido)"
-
-#: ../src/katello/client/core/user_role.py:228
+#: ../src/katello/client/core/product.py:339
 #, python-format
-msgid "Successfully removed LDAP group [ %s ] from the user role [ %s ]"
+msgid "Successfully created product [ %s ]"
+msgstr "Producto creado con éxito [ %s ] "
+
+#: ../src/katello/client/core/product.py:355
+msgid "update a product's attributes"
+msgstr "Actualizar atributos de un producto"
+
+#: ../src/katello/client/core/product.py:360
+msgid "change description of the product"
+msgstr "Cambiar descripción del producto"
+
+#: ../src/katello/client/core/product.py:362
+#: ../src/katello/client/core/product.py:364
+msgid "assign a gpgkey to the product"
+msgstr "Asignar una gpgkey al producto"
+
+#: ../src/katello/client/core/product.py:366
+msgid "assign the gpgpkey also to the product's repositories"
+msgstr "Asignar también la gpgkey a los repositorios del producto"
+
+#: ../src/katello/client/core/product.py:383
+#, python-format
+msgid "Successfully updated product [ %s ]"
+msgstr "Producto [ %s ] actualizado correctamente"
+
+#: ../src/katello/client/core/product.py:389
+msgid "delete a product and its content"
+msgstr "Borrar un producto y su contenido"
+
+#: ../src/katello/client/core/product.py:404
+msgid "list filters of a product"
+msgstr "Listar filtros de un producto"
+
+#: ../src/katello/client/core/product.py:415
+msgid "Product Filters"
+msgstr "Filtros del producto"
+
+#: ../src/katello/client/core/product.py:430
+msgid "add a filter to a product"
+msgstr "Añadir un filtro a un producto"
+
+#: ../src/katello/client/core/product.py:432
+msgid "remove a filter from a product"
+msgstr "Retirar un filtro de un producto"
+
+#: ../src/katello/client/core/product.py:463
+#, python-format
+msgid "Added filter [ %s ] to product [ %s ]"
+msgstr "Se añadió filtro [ %s ] al producto [ %s ]"
+
+#: ../src/katello/client/core/product.py:466
+#, python-format
+msgid "Removed filter [ %s ] to product [ %s ]"
+msgstr "Se retiró filtro [ %s ] al producto [ %s ] "
+
+#: ../src/katello/client/core/product.py:477
+msgid "product specific actions in the katello server"
+msgstr "Acciones específicas de producto en el servidor de Katello"
+
+#: ../src/katello/client/core/template.py:48
+msgid "list all templates"
+msgstr "Listar todos los formatos"
+
+#: ../src/katello/client/core/template.py:52
+msgid "name of organization (required if specifying environment)"
+msgstr "Nombre de organización (requerido si se especifica e entorno)"
+
+#: ../src/katello/client/core/template.py:67
+#, python-format
+msgid "No templates found in environment [ %s ]"
+msgstr "No se hallaron plantillas en el entorno [ %s ]"
+
+#: ../src/katello/client/core/template.py:75
+msgid "Template List"
+msgstr "Lista de plantillas"
+
+#: ../src/katello/client/core/template.py:83
+msgid "list information about a template"
+msgstr "Listar información sobre  una plantilla"
+
+#: ../src/katello/client/core/template.py:87
+#: ../src/katello/client/core/template.py:192
+#: ../src/katello/client/core/template.py:240
+#: ../src/katello/client/core/template.py:306
+#: ../src/katello/client/core/template.py:479
+msgid "template name (required)"
+msgstr "Nombre de formato (requerido)"
+
+#: ../src/katello/client/core/template.py:124
+msgid "Template Info"
+msgstr "Información de plantilla"
+
+#: ../src/katello/client/core/template.py:147
+msgid "create a template file and import data"
+msgstr "Crear un archivo de plantillas e importar datos"
+
+#: ../src/katello/client/core/template.py:154
+#: ../src/katello/client/core/template.py:198
+msgid "path to the template file (required)"
+msgstr "Ruta al archivo de plantillas"
+
+#: ../src/katello/client/core/template.py:176
+msgid "Importing template, please wait... "
+msgstr "Importando plantilla, por favor espere..."
+
+#: ../src/katello/client/core/template.py:187
+msgid "export the template into the file"
+msgstr "Exportar la plantilla al archivo"
+
+#: ../src/katello/client/core/template.py:196
+msgid "environment name eg: dev"
+msgstr "Nombre de entorno, por ejemplo: dev"
+
+#: ../src/katello/client/core/template.py:200
+#, python-format
+msgid "format of the export, possible values: %s, default: json"
+msgstr "Formato de exportación, valores posibles: %s, predeterminado: json"
+
+#: ../src/katello/client/core/template.py:218
+#, python-format
+msgid "Could not create file %s"
+msgstr "No se pudo crear archivo %s"
+
+#: ../src/katello/client/core/template.py:222
+msgid "Exporting template, please wait... "
+msgstr "Exportando plantilla, por favor espere..."
+
+#: ../src/katello/client/core/template.py:225
+#, python-format
+msgid "Template was exported successfully to file %s"
+msgstr "La plantilla fue exportada correctamente al archivo %s"
+
+#: ../src/katello/client/core/template.py:235
+msgid "create an empty template file"
+msgstr "Crear un archivo vacío de plantillas"
+
+#: ../src/katello/client/core/template.py:242
+#: ../src/katello/client/core/template.py:307
+msgid "name of the parent template"
+msgstr "Nombre de plantilla de principal"
+
+#: ../src/katello/client/core/template.py:246
+#: ../src/katello/client/core/template.py:310
+msgid "template description"
+msgstr "Descripción de plantilla"
+
+#: ../src/katello/client/core/template.py:268
+#, python-format
+msgid "Successfully created template [ %s ]"
+msgstr "Plantilla creada con éxito [ %s ]"
+
+#: ../src/katello/client/core/template.py:269
+#, python-format
+msgid "Could not create template [ %s ]"
+msgstr "No se pudo crear una plantilla [ %s ]"
+
+#: ../src/katello/client/core/template.py:277
+msgid "updates name and description of a template"
+msgstr "Actualiza nombre y descripción de una plantilla"
+
+#: ../src/katello/client/core/template.py:291
+#, python-format
+msgid "each %s must be preceeded by %s"
+msgstr "Cada %s debe ir precedido por %s"
+
+#. bz 799149
+#. parser.add_option('--add_product', dest='add_products', action="append",
+#. help=_("name of the product"))
+#. parser.add_option('--remove_product', dest='remove_products',
+#. action="append", help=_("name of the product"))
+#: ../src/katello/client/core/template.py:316
+#: ../src/katello/client/core/template.py:317
+msgid "name of the package"
 msgstr ""
-"Ha sido retirado con éxito el grupo LDAP [ %s ] del rol de usuario [ %s ]"
 
-#: ../src/katello/client/core/user_role.py:235
-msgid "user role specific actions in the katello server"
-msgstr "Acciones específicas de rol de usuario en el servidor Katello"
-
-#: ../src/katello/client/core/datetime_formatter.py:45
-msgid "Time format is invalid. Required: HH:MM:SS[+HH:MM]"
-msgstr "Formato de tiempo es inválido. Debe ser: HH:MM:SS[+HH:MM]"
-
-#: ../src/katello/client/core/datetime_formatter.py:47
-msgid "Date format is invalid. Required: YYYY-MM-DD"
-msgstr "El formato de fecha es inválido. Debe ser: AAAA-MM-DD"
-
-#. These are a bunch of strings that are marked for translation in optparse,
-#. but not actually translated anywhere. Mark them for translation here,
-#. so we get it picked up. for local translation, and then optparse will
-#. use them.
-#: ../src/katello/client/i18n_optparse.py:48
+#: ../src/katello/client/core/template.py:320
 #, python-format
-msgid "Usage: %s\n"
-msgstr "Uso: %s"
+msgid "name of the parameter, %s must follow"
+msgstr "Nombre del parámetro, %s debe seguir"
 
-#: ../src/katello/client/i18n_optparse.py:49
-msgid "Usage"
-msgstr "Uso"
+#: ../src/katello/client/core/template.py:321
+msgid "value of the parameter"
+msgstr "Valor del parámetro"
 
-#: ../src/katello/client/i18n_optparse.py:50
-msgid "%prog [options]"
-msgstr "%prog [opciones]"
+#: ../src/katello/client/core/template.py:322
+msgid "name of the parameter"
+msgstr "Nombre del parámetro"
 
-#: ../src/katello/client/i18n_optparse.py:51
-msgid "Options"
-msgstr "Opciones"
+#: ../src/katello/client/core/template.py:324
+#: ../src/katello/client/core/template.py:325
+msgid "name of the package group"
+msgstr "Nombre del grupo de paquetes"
 
-#. stuff for option value sanity checking
-#: ../src/katello/client/i18n_optparse.py:54
+#: ../src/katello/client/core/template.py:327
+#: ../src/katello/client/core/template.py:328
+msgid "name of the package group category"
+msgstr "Nombre de categoría de grupos de paquetes"
+
+#: ../src/katello/client/core/template.py:330
+#: ../src/katello/client/core/template.py:331
+msgid "distribution id"
+msgstr "ID de distribución"
+
+#: ../src/katello/client/core/template.py:334
+msgid "determines product from which the repositories are picked"
+msgstr "Determina el producto desde el cual se escogen los repositorios "
+
+#: ../src/katello/client/core/template.py:336
+msgid "repository to be added to the template"
+msgstr "Repositorio que va a ser añadido a la plantilla"
+
+#: ../src/katello/client/core/template.py:338
+msgid "repository to be removed from the template"
+msgstr "Repositorio que va a ser retirado de la plantilla"
+
+#: ../src/katello/client/core/template.py:348
 #, python-format
-msgid "no such option: %s"
-msgstr "No hay tal opción: %s"
+msgid "missing value for parameter '%s'"
+msgstr "Falta valor para parámetro '%s'"
 
-#: ../src/katello/client/i18n_optparse.py:55
+#: ../src/katello/client/core/template.py:408
+#: ../src/katello/client/core/template.py:409
+msgid "Updating the template, please wait... "
+msgstr "Actualizando la plantilla, por favor espere..."
+
+#: ../src/katello/client/core/template.py:410
 #, python-format
-msgid "ambiguous option: %s (%s?)"
-msgstr "Opción ambigua: %s (%s?)"
+msgid "Successfully updated template [ %s ]"
+msgstr "Actualización exitosa de plantilla [ %s ]"
 
-#: ../src/katello/client/i18n_optparse.py:56
+#: ../src/katello/client/core/template.py:475
+msgid "deletes a template"
+msgstr "Borra una plantilla"
+
+#: ../src/katello/client/core/template.py:483
+msgid "environment name eg: foo.example.com (default: Library)"
+msgstr ""
+"Nombre de entorno, por ejemplo: foo.example.com (predeterminado: Library)"
+
+#: ../src/katello/client/core/template.py:503
+msgid "template specific actions in the katello server"
+msgstr "Acciones específicas de plantilla en el servidor de katello"
+
+#: ../src/katello/client/core/environment.py:43
+msgid "list known environments"
+msgstr "Listar entornos desconocidos"
+
+#: ../src/katello/client/core/environment.py:60
+#: ../src/katello/client/core/environment.py:90
+msgid "Org"
+msgstr "Org"
+
+#: ../src/katello/client/core/environment.py:61
+#: ../src/katello/client/core/environment.py:91
+msgid "Prior Environment"
+msgstr "Entorno anterior"
+
+#: ../src/katello/client/core/environment.py:63
+msgid "Environment List"
+msgstr "Lista de entorno"
+
+#: ../src/katello/client/core/environment.py:70
+msgid "list a specific environment"
+msgstr "Listar un entorno específico"
+
+#: ../src/katello/client/core/environment.py:76
+#: ../src/katello/client/core/environment.py:179
+msgid "environment name eg: foo.example.com (required)"
+msgstr "Nombre de entorno. Por ejemplo, foo.example.como (requerido)"
+
+#: ../src/katello/client/core/environment.py:93
+msgid "Environment Info"
+msgstr "Información de entorno"
+
+#: ../src/katello/client/core/environment.py:101
+msgid "create an environment"
+msgstr "Crear un entorno"
+
+#: ../src/katello/client/core/environment.py:105
+#: ../src/katello/client/core/environment.py:142
+msgid "environment description eg: foo's environment"
+msgstr "Descripción de entorno. Por ejemplo, entorno de foo"
+
+#: ../src/katello/client/core/environment.py:111
+msgid "name of prior environment (required)"
+msgstr "Nombre de entorno anterior (requerido)"
+
+#: ../src/katello/client/core/environment.py:129
 #, python-format
-msgid "%s option requires an argument"
-msgstr "%s opción requiere un argumento"
+msgid "Successfully created environment [ %s ]"
+msgstr "Entorno creado con éxito [ %s ]"
 
-#: ../src/katello/client/i18n_optparse.py:57
+#: ../src/katello/client/core/environment.py:130
 #, python-format
-msgid "%s option requires %d arguments"
-msgstr "%s opción requiere %s argumentos"
+msgid "Could not create environment [ %s ]"
+msgstr "No se pudo crear entorno [ %s ]"
 
-#: ../src/katello/client/i18n_optparse.py:58
+#: ../src/katello/client/core/environment.py:137
+msgid "update an environment"
+msgstr "Actualizar un entorno"
+
+#: ../src/katello/client/core/environment.py:146
+msgid "name of prior environment"
+msgstr "Nombre de entorno anterior"
+
+#: ../src/katello/client/core/environment.py:168
 #, python-format
-msgid "%s option does not take a value"
-msgstr "%s opción no lleva un valor"
+msgid "Successfully updated environment [ %s ]"
+msgstr "Entorno actualizado con éxito [ %s ]"
 
-#: ../src/katello/client/i18n_optparse.py:59
-msgid "integer"
-msgstr "Entero"
+#: ../src/katello/client/core/environment.py:175
+msgid "delete an environment"
+msgstr "Borrar un entorno "
 
-#: ../src/katello/client/i18n_optparse.py:60
-msgid "long integer"
-msgstr "Entero largo"
-
-#: ../src/katello/client/i18n_optparse.py:61
-msgid "floating-point"
-msgstr "Punto flotante"
-
-#: ../src/katello/client/i18n_optparse.py:62
-msgid "complex"
-msgstr "Complejo"
-
-#: ../src/katello/client/i18n_optparse.py:63
+#: ../src/katello/client/core/environment.py:194
 #, python-format
-msgid "option %s: invalid %s value: %r"
-msgstr "opción %s: inválido %s valor: %r"
+msgid "Successfully deleted environment [ %s ]"
+msgstr "Entorno borrado con éxito [ %s ]"
 
-#: ../src/katello/client/i18n_optparse.py:64
+#: ../src/katello/client/core/environment.py:203
+msgid "environment specific actions in the katello server"
+msgstr "Acciones específicas de entorno en el servidor de Katello"
+
+#: ../src/katello/client/server.py:96
 #, python-format
-msgid "option %s: invalid choice: %r (choose from %s)"
-msgstr "opción %s: selección inválida: %r (elegir de %s)"
+msgid "certificate file %s does not exist or cannot be read"
+msgstr "Archivo de certificado [ %s ] no existe o no se puede leer"
 
-#. default options
-#: ../src/katello/client/i18n_optparse.py:67
-msgid "show this help message and exit"
-msgstr "Mostrar este mensaje de ejemplo y salir"
+#: ../src/katello/client/server.py:99
+#, python-format
+msgid "key file %s does not exist or cannot be read"
+msgstr "Archivo de clave %s no existe o no se puede leer"
 
-#: ../src/katello/client/i18n_optparse.py:68
-msgid "show program's version number and exit"
-msgstr "Mostrar número de versión de programa y salir"
+#: ../src/katello/client/server.py:104
+msgid "can't authenticate via certificate when not using https connection"
+msgstr ""
+
+#: ../src/katello/client/server.py:126
+msgid "Couldn't authenticate via kerberos"
+msgstr "No se pudo autenticar a través de kerberos"
+
+#: ../src/katello/client/utils/option_validator.py:86
+#, python-format
+msgid "Option %s is required; please see --help"
+msgstr "Se requiere opción %s; por favor --help"
+
+#: ../src/katello/client/utils/option_validator.py:128
+#, python-format
+msgid "Options %s are colliding with %s; please see --help"
+msgstr ""
+
+#: ../src/katello/client/utils/option_validator.py:130
+#, python-format
+msgid "Option %s is colliding with %s; please see --help"
+msgstr "Opción %s está colisionando con %s; por favor vea --help"
+
+#: ../src/katello/client/utils/option_validator.py:133
+#, python-format
+msgid "Options %s can't be used in this command; please see --help"
+msgstr ""
+
+#: ../src/katello/client/utils/option_validator.py:135
+#, python-format
+msgid "Option %s can't be used in this command; please see --help"
+msgstr ""
+
+#: ../src/katello/client/utils/option_validator.py:167
+#, python-format
+msgid "Exactly one of %s is required; please see --help"
+msgstr ""
+
+#: ../src/katello/client/utils/option_validator.py:200
+#, python-format
+msgid "At least one of %s is required; please see --help"
+msgstr "Al menos uno de  %s es requerido; por favor vea  --help"
