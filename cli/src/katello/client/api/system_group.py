@@ -135,10 +135,10 @@ class SystemGroupAPI(KatelloAPI):
         path = "/api/organizations/%s/system_groups/%s/packages" % (org_id, system_group_id)
         return self.server.DELETE(path, {"groups": packages})[1]
 
-    def errata(self, org_id, system_group_id, type=None):
+    def errata(self, org_id, system_group_id, type_in=None):
         path = "/api/organizations/%s/system_groups/%s/errata" % (org_id, system_group_id)
         params = {}
-        self.update_dict(params, "type", type)
+        self.update_dict(params, "type", type_in)
         return self.server.GET(path, params)[1]
 
     def install_errata(self, org_id, system_group_id, errata):
