@@ -467,9 +467,10 @@ def get_term_width():
         import fcntl
         import termios
         import struct
-        h, w, hp, wp = struct.unpack('HHHH',
+        # returns h, w, hp, wp, we need only w
+        w = struct.unpack('HHHH',
             fcntl.ioctl(0, termios.TIOCGWINSZ,
-            struct.pack('HHHH', 0, 0, 0, 0)))
+            struct.pack('HHHH', 0, 0, 0, 0)))[1]
         w = int(w)
         return 80 if w == 0 else w
     except:
