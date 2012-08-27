@@ -23,11 +23,14 @@
               - cycle_class = cycle("", "alt")
               %tr{:id => "#{entitlement.entitlementId}", :class => cycle_class}
                 %td{:style => "padding-top:9px;"}
-                %td{:style => "padding-top:9px;"}
+                %td{:style => "padding-top:9px;", :colspan => '6'}
                   - if editable
                     %span.fl= check_box_tag "system[#{entitlement.entitlementId}]", value="#{entitlement.entitlementId}", false
                   &nbsp;
                   = subscriptions_pool_link_helper(entitlement.poolName, entitlement.poolId, entitlement.provider_id, current_organization)
+              %tr{:id => "#{entitlement.entitlementId}-row2", :class => cycle_class}
+                %td{:style => "padding-top:9px;"}
+                %td{:style => "padding-top:9px;"}
                 %td{:style => "padding-top:9px;"} #{entitlement.sla}
                 %td{:style => "padding-top:9px;"} #{entitlement.contractNumber}
                 %td{:style => "padding-top:9px;"}
@@ -74,11 +77,14 @@
               - cycle_class = cycle("", "alt")
               %tr{:id => "#{sub.cp_id}", :class => cycle_class}
                 %td{:style => "padding-top:9px;"}
-                %td{:style => "padding-top:9px;"}
+                %td{:style => "padding-top:9px;", :colspan => '6'}
                   - if editable
                     %span.fl= check_box_tag "system[#{sub.cp_id}]", false
                   &nbsp;
                   = subscriptions_pool_link_helper(sub.product_name, sub.cp_id, sub.provider_id, current_organization)
+              %tr{:id => "#{sub.cp_id}-row2", :class => cycle_class}
+                %td{:style => "padding-top:9px;"}
+                %td{:style => "padding-top:9px;"}
                 %td{:style => "padding-top:9px;"} #{sub.support_level}
                 %td{:style => "padding-top:9px;"} #{sub.sockets}
                 - if sub.multi_entitlement
