@@ -468,7 +468,7 @@ class KatelloServer(Server):
 
 
     # request methods ---------------------------------------------------------
-
+    # pylint: disable=C0103
     def DELETE(self, path, body=None):
         return self._request('DELETE', path, body=body)
 
