@@ -228,7 +228,8 @@ class KatelloShell(Cmd):
             return None
 
 
-    def remove_last_history_item(self):
+    @classmethod
+    def remove_last_history_item(cls):
         last = readline.get_current_history_length() - 1
         if last >= 0:
             readline.remove_history_item(last)
