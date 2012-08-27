@@ -44,7 +44,7 @@ def set_active_server(server):
 
 # authentication strategies ---------------------------------------------------
 
-class AuthenticationStrategy:
+class AuthenticationStrategy(object):
 
     _log = getLogger('katello')
 
