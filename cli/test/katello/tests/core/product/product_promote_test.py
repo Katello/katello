@@ -34,13 +34,15 @@ class ProductPromoteTest(CLIActionTestCase):
     PROD = product_data.PRODUCTS[0]
     CSET = product_data.EMPTY_CHANGESET
     TMP_CHANGESET_NAME = 'tmp_changeset_name'
+    TYPE = 'PROMOTION'
 
     OPTIONS = {
         'org': ORG['name'],
         'name': PROD['name'],
-        'env': ENV['name']
+        'environment': ENV['name']
     }
 
+    
 
     def setUp(self):
         self.set_action(Promote())
@@ -51,7 +53,7 @@ class ProductPromoteTest(CLIActionTestCase):
 
         self.mock(self.action.csapi, 'create', self.CSET)
         self.mock(self.action.csapi, 'add_content')
-        self.mock(self.action.csapi, 'promote', repo_data.SYNC_RESULT_WITHOUT_ERROR)
+        self.mock(self.action.csapi, 'apply', repo_data.SYNC_RESULT_WITHOUT_ERROR)
         self.mock(self.action.csapi, 'delete')
 
         self.mock(self.action, 'create_cs_name', self.TMP_CHANGESET_NAME)
@@ -81,7 +83,7 @@ class ProductPromoteTest(CLIActionTestCase):
 
     def test_it_creates_new_changeset(self):
         self.run_action()
-        self.action.csapi.create.assert_called_once_with(self.ORG['name'], self.ENV['id'], self.TMP_CHANGESET_NAME)
+        self.action.csapi.create.assert_called_once_with(self.ORG['name'], self.ENV['id'], self.TMP_CHANGESET_NAME, self.TYPE)
 
     def test_it_updates_the_changeset(self):
         self.run_action()
@@ -90,7 +92,7 @@ class ProductPromoteTest(CLIActionTestCase):
 
     def test_it_promotes_the_changeset(self):
         self.run_action()
-        self.action.csapi.promote.assert_called_once_with(self.CSET['id'])
+        self.action.csapi.apply.assert_called_once_with(self.CSET['id'])
 
     def test_waits_for_promotion(self):
         self.run_action()
