@@ -80,7 +80,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid GPG Key id" do
       it "should generate an error notice" do
-        controller.should notify.exception
+        controller.should notify.error
         get :show, :id => 9999
       end
 
@@ -119,7 +119,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should notify.exception
+        controller.should notify.error
         get :edit, :id => 9999
       end
 
@@ -224,7 +224,7 @@ describe GpgKeysController, :katello => true do
       
       it "should generate message notice" do
         @gpg_key_params_pasted[:search] = 'name ~ Fake'
-        controller.should notify(:success, :exception)
+        controller.should notify(:success, :message)
         post :create, @gpg_key_params_pasted
       end
     end
@@ -345,7 +345,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid GPG Key ID" do
       it "should generate an error notice" do
-        controller.should notify.exception
+        controller.should notify.error
         put :update, :id => 9999, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME
       end
 
@@ -395,7 +395,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid GPG Key id" do
       it "should generate an error notice" do
-        controller.should notify.exception
+        controller.should notify.error
         delete :destroy, :id => 9999
       end
 

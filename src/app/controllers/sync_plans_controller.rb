@@ -62,45 +62,32 @@ class SyncPlansController < ApplicationController
   end
 
   def update
-    begin
-      updated_plan = SyncPlan.find(params[:id])
-      result = params[:sync_plan].values.first
+    updated_plan = SyncPlan.find(params[:id])
+    result = params[:sync_plan].values.first
 
-      updated_plan.name = params[:sync_plan][:name] unless params[:sync_plan][:name].nil?
-      updated_plan.interval = params[:sync_plan][:interval] unless params[:sync_plan][:interval].nil?
+    updated_plan.name = params[:sync_plan][:name] unless params[:sync_plan][:name].nil?
+    updated_plan.interval = params[:sync_plan][:interval] unless params[:sync_plan][:interval].nil?
 
-      unless params[:sync_plan][:description].nil?
-        result = updated_plan.description = params[:sync_plan][:description].gsub("\n",'')
-      end
-
-      if params[:sync_plan][:time]
-        updated_plan.sync_date = convert_date_time(updated_plan.plan_date, params[:sync_plan][:time].strip)
-      end
-
-      if params[:sync_plan][:date]
-        updated_plan.sync_date = convert_date_time(params[:sync_plan][:date].strip, updated_plan.plan_time)
-      end
-
-      updated_plan.save!
-      notify.success N_("Sync Plan '%s' was updated.") % updated_plan.name
-
-      if not search_validate(SyncPlan, updated_plan.id, params[:search])
-        notify.message _("'%s' no longer matches the current search criteria.") % updated_plan["name"]
-      end
-
-      respond_to do |format|
-        format.html { render :text => escape_html(result) }
-      end
-
-      rescue Exception => e
-        notify.exception e
-
-        respond_to do |format|
-          format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
-          format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
-        end
+    unless params[:sync_plan][:description].nil?
+      result = updated_plan.description = params[:sync_plan][:description].gsub("\n",'')
     end
 
+    if params[:sync_plan][:time]
+      updated_plan.sync_date = convert_date_time(updated_plan.plan_date, params[:sync_plan][:time].strip)
+    end
+
+    if params[:sync_plan][:date]
+      updated_plan.sync_date = convert_date_time(params[:sync_plan][:date].strip, updated_plan.plan_time)
+    end
+
+    updated_plan.save!
+    notify.success N_("Sync Plan '%s' was updated.") % updated_plan.name
+
+    if not search_validate(SyncPlan, updated_plan.id, params[:search])
+      notify.message _("'%s' no longer matches the current search criteria.") % updated_plan["name"]
+    end
+
+    render :text => escape_html(result)
   end
 
   #convert date, time from UI to object
@@ -110,14 +97,11 @@ class SyncPlansController < ApplicationController
   end
 
   def destroy
-    @id = @plan.id
-    begin
-      @plan.destroy
+    if @plan.destroy
       notify.success N_("Sync plan '%s' was deleted.") % @plan[:name]
-    rescue Exception => e
-      notify.exception e
     end
-    render :partial => "common/list_remove", :locals => {:id=>@id, :name=>controller_display_name}
+
+    render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
   end
 
   def show
@@ -138,42 +122,25 @@ class SyncPlansController < ApplicationController
   end
 
   def create
-    begin
-      sdate = params[:sync_plan].delete :plan_date
-      stime = params[:sync_plan].delete :plan_time
-      begin
-        params[:sync_plan][:sync_date] = convert_date_time(sdate, stime)
-      rescue
-        params[:sync_plan][:sync_date] = nil
-      end
+    sdate = params[:sync_plan].delete :plan_date
+    stime = params[:sync_plan].delete :plan_time
+    params[:sync_plan][:sync_date] = convert_date_time(sdate, stime)
 
-      @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
-      notify.success N_("Sync Plan '%s' was created.") % @plan['name']
+    @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
+    notify.success N_("Sync Plan '%s' was created.") % @plan['name']
 
-      if search_validate(SyncPlan, @plan.id, params[:search])
-        render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
-      else
-        notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @plan["name"]
-        render :json => { :no_match => true }
-      end
-
-    rescue Exception => e
-      Rails.logger.error e.to_s
-      notify.exception e
-      render :text => e, :status => :bad_request
+    if search_validate(SyncPlan, @plan.id, params[:search])
+      render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
+    else
+      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @plan["name"]
+      render :json => { :no_match => true }
     end
   end
 
   protected
-  # pre filter for grabbing plan object
+
   def get_plan
-    begin
-      @plan = SyncPlan.find(params[:id])
-    rescue Exception => error
-      notify.exception error
-      execute_after_filters
-      render :text => error, :status => :bad_request
-    end
+    @plan = SyncPlan.find(params[:id])
   end
 
   def controller_display_name

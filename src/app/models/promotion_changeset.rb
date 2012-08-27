@@ -92,7 +92,7 @@ class PromotionChangeset < Changeset
       Notify.success message, :request_type => "changesets___promote"
     end
 
-  rescue Exception => e
+  rescue => e
     self.state = Changeset::FAILED
     self.save!
     Rails.logger.error(e)

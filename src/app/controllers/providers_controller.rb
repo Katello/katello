@@ -56,7 +56,6 @@ class ProvidersController < ApplicationController
     }
   end
 
-
   def products_repos
     @products = @provider.products
     render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider,
@@ -108,90 +107,57 @@ class ProvidersController < ApplicationController
   end
 
   def create
-    begin
-      @provider = Provider.create! params[:provider].merge({:provider_type => Provider::CUSTOM,
-                                                                    :organization => current_organization})
-      notify.success _("Provider '%s' was created.") % @provider['name']
-      
-      if search_validate(Provider, @provider.id, params[:search])
-        render :partial=>"common/list_item", :locals=>{:item=>@provider, :initial_action=>:products_repos, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
-      else
-        notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @provider["name"]
-        render :json => { :no_match => true }
-      end
-    rescue Exception => error
-      Rails.logger.error error.to_s
-      notify.exception error
-      render :text => error, :status => :bad_request
+    @provider = Provider.create! params[:provider].merge({:provider_type => Provider::CUSTOM,
+                                                                  :organization => current_organization})
+    notify.success _("Provider '%s' was created.") % @provider['name']
+
+    if search_validate(Provider, @provider.id, params[:search])
+      render :partial=>"common/list_item", :locals=>{:item=>@provider, :initial_action=>:products_repos, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+    else
+      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @provider["name"]
+      render :json => { :no_match => true }
     end
   end
 
   def destroy
-    @id = @provider.id
-    begin
-      @provider.destroy
-      if @provider.destroyed?
-        notify.success _("Provider '%s' was deleted.") % @provider[:name]
-        #render and do the removal in one swoop!
-        render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
-      else
-        raise
-      end
-    rescue Exception => e
-      notify.exception e
+    if @provider.destroy
+      notify.success _("Provider '%s' was deleted.") % @provider[:name]
+      #render and do the removal in one swoop!
+      render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
     end
   end
 
   def update
+    updated_provider = Provider.find(params[:id])
+    result = params[:provider].values.first
 
-    begin
-      updated_provider = Provider.find(params[:id])
-      result = params[:provider].values.first
+    updated_provider.name = params[:provider][:name] unless params[:provider][:name].nil?
 
-      updated_provider.name = params[:provider][:name] unless params[:provider][:name].nil?
-
-      unless params[:provider][:description].nil?
-        result = updated_provider.description = params[:provider][:description].gsub("\n",'')
-      end
-
-      updated_provider.repository_url = params[:provider][:repository_url] unless params[:provider][:repository_url].nil?
-      updated_provider.provider_type = params[:provider][:provider_type] unless params[:provider][:provider_type].nil?
-
-      updated_provider.save!
-      notify.success _("Provider '%s' was updated.") % updated_provider.name
-
-      if not search_validate(Provider, updated_provider.id, params[:search])       
-        notify.message _("'%s' no longer matches the current search criteria.") % updated_provider["name"]
-      end
-
-      respond_to do |format|
-        format.html { render :text => escape_html(result) }
-      end
-
-    rescue Exception => e
-      notify.exception e
-
-      respond_to do |format|
-        format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
-        format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
-      end
+    unless params[:provider][:description].nil?
+      result = updated_provider.description = params[:provider][:description].gsub("\n",'')
     end
+
+    updated_provider.repository_url = params[:provider][:repository_url] unless params[:provider][:repository_url].nil?
+    updated_provider.provider_type = params[:provider][:provider_type] unless params[:provider][:provider_type].nil?
+
+    updated_provider.save!
+    notify.success _("Provider '%s' was updated.") % updated_provider.name
+
+    if not search_validate(Provider, updated_provider.id, params[:search])
+      notify.message _("'%s' no longer matches the current search criteria.") % updated_provider["name"]
+    end
+
+    render :text => escape_html(result)
   end
 
   protected
 
   def find_provider
-    begin
-      @provider = Provider.find(params[:id])
-    rescue Exception => error
-      notify.exception error
-      execute_after_filters
-      render :text => error, :status => :bad_request
-    end
+    @provider = Provider.find(params[:id])
   end
 
   def find_rh_provider
-      @provider = current_organization.redhat_provider
+    @provider = current_organization.redhat_provider
   end
 
 

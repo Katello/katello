@@ -93,7 +93,7 @@ describe FiltersController, :katello => true do
       end
 
       it "should not recieve a valid filter for edit a non-existant id" do
-        controller.should notify.exception
+        controller.should notify.error
         get :edit, :id=>-1
         response.should_not be_success
       end
@@ -106,7 +106,7 @@ describe FiltersController, :katello => true do
       end
 
       it "should not recieve a valid filter for edit a non-existant id" do
-        controller.should notify.exception
+        controller.should notify.error
         get :products, :id=>-1
         response.should_not be_success
       end
@@ -119,7 +119,7 @@ describe FiltersController, :katello => true do
       end
 
       it "should not recieve a valid filter for edit a non-existant id" do
-        controller.should notify.exception
+        controller.should notify.error
         get :packages, :id=>-1
         response.should_not be_success
       end
@@ -166,7 +166,7 @@ describe FiltersController, :katello => true do
       end
       
       it "should not be successful with a valid filter" do
-        controller.should notify.exception
+        controller.should notify.error
         delete :destroy, :id=>-12343
         response.should_not be_success
       end
@@ -197,7 +197,7 @@ describe FiltersController, :katello => true do
       end
 
       it "should not allow for updating of products for an invalid filter" do
-        controller.should notify.exception
+        controller.should notify.error
         post :update_products, :id=>"-1", :products=>[@product.id]
         response.should_not be_success
       end
@@ -240,7 +240,7 @@ describe FiltersController, :katello => true do
       it "should not allow for updating of repos for an invalid filter" do
         @repo.should_not_receive(:add_filters_orchestration)
         @repo.should_not_receive(:remove_filters_orchestration)
-        controller.should notify.exception
+        controller.should notify.error
         post :update_products, :id=>"-1", :repos=>{@repo.product.id => @repo.id}
         response.should_not be_success
       end

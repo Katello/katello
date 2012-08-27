@@ -32,7 +32,6 @@ class ProductsController < ApplicationController
     }
   end
 
-
   def section_id
     'contents'
   end
@@ -46,68 +45,44 @@ class ProductsController < ApplicationController
   end
 
   def create
-    begin
-      product_params = params[:product]
-      gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] and product_params[:gpg_key] != ""
-      @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
+    product_params = params[:product]
+    gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] and product_params[:gpg_key] != ""
+    @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
 
-      notify.success _("Product '%s' created.") % product_params[:name]
-      render :nothing => true
-
-    rescue Exception => error
-      Rails.logger.error error.to_s
-      notify.exception error
-      render :text => error, :status => :bad_request
-    end
+    notify.success _("Product '%s' created.") % product_params[:name]
+    render :nothing => true
   end
 
   def update
-    begin
-      result = params[:product].values.first
-      @product.name = params[:product][:name] if params[:product][:name]
-      @product.description = params[:product][:description] if params[:product][:description]
-      
-      if params[:product].has_key?(:gpg_key)
-        if params[:product][:gpg_key] != ""
-          @product.gpg_key = GpgKey.readable(current_organization).find(params[:product][:gpg_key])
-          result = @product.gpg_key.id.to_s
-        else
-          @product.gpg_key = nil
-          result = ""
-        end
-      end 
-      
-      if params[:product].has_key?(:gpg_all_repos)
-        notify.success _("All repository GPG keys for Product '%s' were updated.") % @product.name
-        @product.reset_repo_gpgs!
+    result = params[:product].values.first
+    @product.name = params[:product][:name] if params[:product][:name]
+    @product.description = params[:product][:description] if params[:product][:description]
+
+    if params[:product].has_key?(:gpg_key)
+      if params[:product][:gpg_key] != ""
+        @product.gpg_key = GpgKey.readable(current_organization).find(params[:product][:gpg_key])
+        result = @product.gpg_key.id.to_s
       else
-        notify.success _("Product '%s' was updated.") % @product.name
-      end
-      
-      @product.save!
-
-      respond_to do |format|
-        format.html { render :text => escape_html(result) }
-      end
-
-    rescue Exception => e
-      notify.exception e
-
-      respond_to do |format|
-        format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
-        format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
+        @product.gpg_key = nil
+        result = ""
       end
     end
+
+    if params[:product].has_key?(:gpg_all_repos)
+      notify.success _("All repository GPG keys for Product '%s' were updated.") % @product.name
+      @product.reset_repo_gpgs!
+    else
+      notify.success _("Product '%s' was updated.") % @product.name
+    end
+
+    @product.save!
+
+    render :text => escape_html(result)
   end
 
   def destroy
-    begin
-      @product.destroy
-      notify.success _("Product '%s' removed.") % @product[:name]
-    rescue Exception => error
-      Rails.logger.error error.to_s
-      notify.exception error
-    end
+    @product.destroy
+    notify.success _("Product '%s' removed.") % @product[:name]
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@product.provider_id)}
   end
 
@@ -125,28 +100,14 @@ class ProductsController < ApplicationController
      render :json=>Support.array_with_total
   end
 
-
-
   protected
 
   def find_provider
-    begin
-      @provider = @product.provider if @product  #don't trust the provider_id coming in if we don't need it
-      @provider ||= Provider.find(params[:provider_id])
-    rescue Exception => error
-      notify.exception error
-      execute_after_filters
-      render :text => error, :status => :bad_request
-    end
+    @provider = @product.provider if @product  #don't trust the provider_id coming in if we don't need it
+    @provider ||= Provider.find(params[:provider_id])
   end
 
   def find_product
-    begin
-      @product = Product.find(params[:id])
-    rescue Exception => error
-      notify.exception error
-      execute_after_filters
-      render :text => error, :status => :bad_request
-    end
+    @product = Product.find(params[:id])
   end
 end

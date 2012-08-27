@@ -26,6 +26,7 @@ class Filter < ActiveRecord::Base
   end
 
   validates :pulp_id, :presence => true
+  validates :name, :katello_name_format => true
   validates_presence_of :organization_id, :message => N_("Name cannot be blank.")
   validates :name, :katello_name_format => true, :presence => true
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("Name must be unique within one organization")
