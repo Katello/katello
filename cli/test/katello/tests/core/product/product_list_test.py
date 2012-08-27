@@ -36,7 +36,7 @@ class ProductListTest(CLIActionTestCase):
 
     OPTIONS_BY_ENV = {
         'org': ORG['name'],
-        'env': ENV['name']
+        'environment': ENV['name']
     }
 
     OPTIONS_BY_PROVIDER = {

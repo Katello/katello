@@ -41,7 +41,7 @@ class RepoListTest(CLIActionTestCase):
 
     OPTIONS_BY_ORG = {
         'org': ORG['name'],
-        'env': ENV['name']
+        'environment': ENV['name']
     }
 
     OPTIONS_BY_PRODUCT = {
@@ -52,7 +52,7 @@ class RepoListTest(CLIActionTestCase):
     OPTIONS_BY_PRODUCT_ENV = {
         'org': ORG['name'],
         'product': PROD['name'],
-        'env': ENV['name']
+        'environment': ENV['name']
     }
 
     def setUp(self):

@@ -60,7 +60,7 @@ class ErrataListTest(CLIActionTestCase):
 
     OPTIONS_BY_ORG_AND_PRODUCT = { 'org': ORG['name'], 'product': PRODUCT['name'] }
 
-    OPTIONS_BY_ENV = { 'org': ORG['name'], 'env': ENV['name'] }
+    OPTIONS_BY_ENV = { 'org': ORG['name'], 'environment': ENV['name'] }
 
     OPTIONS_BY_SEVERITY = {
         'org': ORG['name'],
@@ -97,7 +97,7 @@ class ErrataListTest(CLIActionTestCase):
     def test_it_searches_for_env_id_when_env_is_specified(self):
         self.mock_options(self.OPTIONS_BY_ENV)
         self.run_action()
-        self.module.get_environment.assert_called_once_with(self.OPTIONS_BY_ENV['org'], self.OPTIONS_BY_ENV['env'])
+        self.module.get_environment.assert_called_once_with(self.OPTIONS_BY_ENV['org'], self.OPTIONS_BY_ENV['environment'])
 
     def test_it_searches_for_product_id_when_product_specified(self):
         self.mock_options(self.OPTIONS_BY_ORG_AND_PRODUCT)
