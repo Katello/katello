@@ -10,8 +10,8 @@
 = content_for :content do
   .subs
     .subs_top
-      .subs_icon_wrapper
-        .subs_icon{:class => "#{@system.compliance_color}"}
+      .subs_image_wrapper
+        .subs_image{:class => "#{@system.compliance_color}"}
       .subs_text.fl
         - if @system.compliance_color == 'green'
           - until_time = @system.compliant_until
