@@ -125,7 +125,7 @@ class SystemAPI(KatelloAPI):
         path = "/api/organizations/%s/systems" % orgId
         return self.server.GET(path, query)[1]
 
-    def systems_by_env(self, org_name, environment_id, query = None):
+    def systems_by_env(self, environment_id, query = None):
         path = "/api/environments/%s/systems" % environment_id
         return self.server.GET(path, query)[1]
 

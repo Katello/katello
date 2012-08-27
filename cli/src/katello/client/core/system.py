@@ -62,7 +62,7 @@ class List(SystemAction):
             return self.api.systems_by_org(org_name, query)
         else:
             environment = get_environment(org_name, env_name)
-            return self.api.systems_by_env(org_name, environment["id"], query)
+            return self.api.systems_by_env(environment["id"], query)
 
     def run(self):
         org_name = self.get_option('org')

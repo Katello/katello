@@ -193,7 +193,7 @@ def get_system(org_name, sys_name, env_name=None):
                 (sys_name, env_name, org_name))
     else:
         environment = get_environment(org_name, env_name)
-        systems = system_api.systems_by_env(org_name, environment["id"], {'name': sys_name})
+        systems = system_api.systems_by_env(environment["id"], {'name': sys_name})
         if systems is None:
             raise ApiDataError(_("Could not find System [ %s ] in Environment [ %s ] in Org [ %s ]") %
                 (sys_name, env_name, org_name))
