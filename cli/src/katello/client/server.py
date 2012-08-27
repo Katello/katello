@@ -350,7 +350,8 @@ class KatelloServer(Server):
         return (content_type, body)
 
 
-    def _process_response(self, response):
+    @classmethod
+    def _process_response(cls, response):
         """
         Try to parse the response
         @type response: HTTPResponse
