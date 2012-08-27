@@ -171,6 +171,7 @@ class GrepStrategy(PrinterStrategy):
         :type noheading: boolean
         :param noheading: to suppress headings in the output
         """
+        super(GrepStrategy, self).__init__()
         self.__delim = delimiter if delimiter else ""
 
     def print_items(self, heading, columns, items):
