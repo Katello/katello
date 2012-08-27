@@ -155,8 +155,8 @@ class KatelloShell(Cmd):
             logging.warning('Could not read history file')
             return ''
 
-
-    def __history_try_search(self, text):
+    @classmethod
+    def __history_try_search(cls, text):
         history_range = range(readline.get_current_history_length(), 1, -1)
         for i in history_range:
             item = readline.get_history_item(i)
