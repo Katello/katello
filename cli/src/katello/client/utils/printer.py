@@ -155,7 +155,8 @@ class VerboseStrategy(PrinterStrategy):
         width = 0
         for column in columns:
             current_width = len(_(column['name']))
-            width = current_width if (current_width > width) else width
+            if (current_width > width):
+                width = current_width
         return width
 
 
