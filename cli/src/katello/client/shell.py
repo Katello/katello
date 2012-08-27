@@ -97,6 +97,7 @@ class KatelloShell(Cmd):
         setattr(self, "do_eof", self.do_exit)
 
 
+    # pylint: disable=W0613
     def do_exit(self, args):
         self.remove_last_history_item()
         sys.exit(0)
