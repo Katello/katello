@@ -644,11 +644,16 @@ class Update(SystemAction):
         system_uuid = system['uuid']
 
         updates = {}
-        if new_name: updates['name'] = new_name
-        if new_description: updates['description'] = new_description
-        if new_location: updates['location'] = new_location
-        if new_release: updates['releaseVer'] = new_release
-        if new_sla: updates['serviceLevel'] = new_sla
+        if new_name:
+            updates['name'] = new_name
+        if new_description:
+            updates['description'] = new_description
+        if new_location:
+            updates['location'] = new_location
+        if new_release:
+            updates['releaseVer'] = new_release
+        if new_sla:
+            updates['serviceLevel'] = new_sla
         if new_environment_name:
             new_environment = get_environment(org_name, new_environment_name)
             updates['environment_id'] = new_environment['id']
