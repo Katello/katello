@@ -61,9 +61,12 @@ class Create(PermissionAction):
         parser.add_option('--scope', dest='scope', help=_("scope of the permisson (required)"))
         parser.add_option('--verbs', dest='verbs', type="list", help=_("verbs for the permission"), default="")
         parser.add_option('--tags', dest='tags', type="list", help=_("tags for the permission"), default="")
+        parser.add_option('--all_tags', action="store_true", dest='all_tags', help=_("use to set all tags"), default=False)
 
     def check_options(self, validator):
         validator.require(('user_role', 'name', 'scope'))
+        if (self.get_option('all_tags')) and (len(self.get_option('tags')) > 0):
+            system_exit(os.EX_DATAERR, _("Can not specify a set of tags and use --all_tags"))
 
     def tag_name_to_id_map(self, org_name, scope):
         permissions = self.getAvailablePermissions(org_name, scope)
@@ -92,12 +95,13 @@ class Create(PermissionAction):
         scope = self.get_option('scope')
         verbs = self.get_option('verbs')
         tags = self.get_option('tags')
+        all_tags = self.get_option('all_tags')
 
         tag_ids = self.tags_to_ids(tags, org_name, scope)
 
         role = get_role(role_name)
 
-        permission = self.api.create(role['id'], name, desc, scope, verbs, tag_ids, org_name)
+        permission = self.api.create(role['id'], name, desc, scope, verbs, tag_ids, org_name, all_tags)
         test_record(permission,
             _("Successfully created permission [ %s ] for user role [ %s ]") % (name, role['name']),
             _("Could not create permission [ %s ]") % name
