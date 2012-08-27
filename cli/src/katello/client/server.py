@@ -455,7 +455,8 @@ class KatelloServer(Server):
         return content_type, body
 
 
-    def _get_content_type(self, filename):
+    @classmethod
+    def _get_content_type(cls, filename):
         """
         Guess content type from file name
         @type filename: string
