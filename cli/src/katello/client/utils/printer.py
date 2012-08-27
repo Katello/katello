@@ -49,7 +49,8 @@ class PrinterStrategy(object):
         """
         pass
 
-    def _column_has_value(self, column, item):
+    @classmethod
+    def _column_has_value(cls, column, item):
         """
         Tests whether there is any value to print in the column.
         It can be value either from the item or set explicitly
@@ -63,7 +64,8 @@ class PrinterStrategy(object):
         """
         return (column['attr_name'] in item) or ('value' in column)
 
-    def _get_column_value(self, column, item):
+    @classmethod
+    def _get_column_value(cls, column, item):
         """
         Returns string that should be displayed in the column.
         It's either a given value or attribute of the item. Formatters
@@ -105,7 +107,8 @@ class VerboseStrategy(PrinterStrategy):
             self._print_item(item, columns)
             print
 
-    def _print_header(self, heading):
+    @classmethod
+    def _print_header(cls, heading):
         """
         Print a fancy header to stdout.
 
@@ -354,7 +357,8 @@ class Printer:
             self.set_strategy(GrepStrategy())
         self.__printer_strategy.print_items(self.get_header(), self.__filtered_columns(), items)
 
-    def __attr_to_name(self, attr_name):
+    @classmethod
+    def __attr_to_name(cls, attr_name):
         """
         Convert attribute name to display name.
         oraganization_id -> Organization Id
