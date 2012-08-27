@@ -169,7 +169,6 @@ class InstalledPackages(SystemAction):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
-        verbose = self.get_option('verbose')
 
         install = self.get_option('install')
         remove = self.get_option('remove')
