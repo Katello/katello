@@ -256,17 +256,21 @@ class TaskStatus < ActiveRecord::Base
   def success_description
     ret = ""
     task_type = self.task_type.to_s
-    result = self.result
+
+    # if pulp returns an array response, that indicates that nothing
+    # was actually changed on the consumer, so set the result to {}
+    result = self.result.is_a?(Array) ? {} : self.result
+
     if task_type =~ /^package_group/
       action = task_type.include?("remove") ? :removed : :installed
       ret << packages_change_description(result, action)
     elsif self.task_type.to_s == "package_remove"
       ret << packages_change_description(result, :removed)
     else
-      if result[:installed]
+      if task_type.include?("install")
         ret << packages_change_description(result[:installed], :installed)
       end
-      if result[:updated]
+      if task_type.include?("update")
         ret << packages_change_description(result[:updated], :updated)
       end
     end
@@ -349,7 +353,7 @@ class TaskStatus < ActiveRecord::Base
 
   def packages_change_description(data, action)
     ret = ""
-    packages = (data[:resolved] + data[:deps])
+    packages = data.nil? ? [] : (data[:resolved] + data[:deps])
     if packages.empty?
       case action
       when :updated
