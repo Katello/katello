@@ -44,7 +44,8 @@ class OptionParser(_OptionParser):
     # but not actually translated anywhere. Mark them for translation here,
     # so we get it picked up. for local translation, and then optparse will
     # use them.
-    def no_op(self):
+    @classmethod
+    def no_op(cls):
         _("Usage: %s\n")
         _("Usage")
         _("%prog [options]")
