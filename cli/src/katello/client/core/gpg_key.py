@@ -138,8 +138,8 @@ class Create(GpgKeyAction):
         keyName = self.get_option('name')
         try:
             content = self.read_content(True)
-        except IOError as (c, m):
-            print m
+        except IOError, e:
+            print e[1]
             return os.EX_DATAERR
 
         key = self.api.create(orgName, keyName, content)
@@ -175,8 +175,8 @@ class Update(GpgKeyAction):
 
         try:
             content = self.read_content(self.get_option('new_content'))
-        except IOError as (c, m):
-            print m
+        except IOError, e:
+            print e[1]
             return os.EX_DATAERR
 
         key_id = self.get_key_id(orgName, keyName)
