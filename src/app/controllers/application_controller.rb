@@ -33,11 +33,42 @@ class ApplicationController < ActionController::Base
   # this is always in the top
   # order of these are important.
   rescue_from Exception do |exception|
-    execute_rescue(exception, lambda{ |exception| render_error(exception)})
+    paranoia = Src::Application.config.exception_paranoia
+
+    to_do = case exception
+              when StandardError
+                :handle
+              when ScriptError
+                paranoia ? :handle : :raise
+              when SignalException, SystemExit, NoMemoryError
+                :raise
+              else
+                Rails.logger.error "Uknown child of Exception instead of StandardError detected: " +
+                                       "#{exception.message} (#{exception.class})"
+                paranoia ? :handle : :raise
+            end
+
+    case to_do
+      when :handle
+        execute_rescue exception, lambda { |exception| render_error(exception) }
+      when :raise
+        raise exception
+    end
   end
 
-  rescue_from ActiveRecord::RecordNotFound do |exception|
-    execute_rescue(exception, lambda{render_404})
+  rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved  do |e|
+    notify.exception e
+    execute_after_filters
+    respond_to do |f|
+      f.html { render :text => e.to_s, :layout => !request.xhr?, :status => :unprocessable_entity }
+      f.json { render :json => e.record.errors, :status => :unprocessable_entity }
+    end
+  end
+
+  rescue_from ActiveRecord::RecordNotFound do |e|
+    notify.error e.message
+    execute_after_filters
+    render :nothing => true, :status => :not_found
   end
 
   rescue_from ActionController::RoutingError do |exception|
@@ -56,12 +87,8 @@ class ApplicationController < ActionController::Base
     execute_rescue(exception, lambda{render_403})
   end
 
-  rescue_from Errors::CurrentOrganizationNotFoundException do |exception|
-    org_not_found_error(exception)
-  end
-
   rescue_from Errors::BadParameters do |exception|
-      execute_rescue(exception, lambda{|exception| render_bad_parameters(exception)})
+    execute_rescue(exception, lambda{|exception| render_bad_parameters(exception)})
   end
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller
@@ -109,14 +136,14 @@ class ApplicationController < ActionController::Base
         if current_user.allowed_organizations.include?(o)
           @current_org = o
         else
-          raise _("Permission Denied. User '%s' does not have permissions to access organization '%s'.") % [User.current.username, o.name]
+          raise ActiveRecord::RecordNotFound.new _("Permission Denied. User '%s' does not have permissions to access organization '%s'.") % [User.current.username, o.name]
         end
       end
       return @current_org
-    rescue Exception => error
+    rescue ActiveRecord::RecordNotFound => error
       log_exception error
       session.delete(:current_organization_id)
-      raise Errors::CurrentOrganizationNotFoundException.new error.to_s
+      org_not_found_error(error)
     end
   end
 
@@ -288,22 +315,20 @@ class ApplicationController < ActionController::Base
   end
 
   def retain_search_history
-    begin
-      # save the request in the user's search history
-      unless params[:search].nil? or params[:search].blank?
-        path = @_request.env['REQUEST_PATH']
-        histories = current_user.search_histories.where(:path => path, :params => params[:search])
-        if histories.nil? or histories.empty?
-          # user doesn't have this search stored, so save it
-          histories = current_user.search_histories.create!(:path => path, :params => params[:search])
-        else
-          # user already has this search in their history, so just update the timestamp, so that it shows as most recent
-          histories.first.update_attribute(:updated_at, Time.now)
-        end
+    # save the request in the user's search history
+    unless params[:search].nil? or params[:search].blank?
+      path = @_request.env['REQUEST_PATH']
+      histories = current_user.search_histories.where(:path => path, :params => params[:search])
+      if histories.nil? or histories.empty?
+        # user doesn't have this search stored, so save it
+        histories = current_user.search_histories.create!(:path => path, :params => params[:search])
+      else
+        # user already has this search in their history, so just update the timestamp, so that it shows as most recent
+        histories.first.update_attribute(:updated_at, Time.now)
       end
-    rescue Exception => error
-      log_exception(error)
     end
+  rescue => error
+    log_exception(error)
   end
 
   def requested_action
@@ -516,15 +541,6 @@ class ApplicationController < ActionController::Base
                       :current_items => options[:collection].length }
                       
     retain_search_history
-  end
-
-  # for use with:   around_filter :catch_exceptions
-  def catch_exceptions
-    yield
-  rescue Exception => error
-    notify.exception error
-    #render :text => error, :status => :bad_request
-    render_error(error)
   end
 
   def execute_after_filters

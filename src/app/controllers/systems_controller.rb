@@ -105,38 +105,35 @@ class SystemsController < ApplicationController
   end
 
   def create
-    begin
-      #{"method"=>"post", "system"=>{"name"=>"asdfsdf", "sockets"=>"asdfasdf", "arch"=>"asdfasdfasdf", "virtualized"=>"asdfasd"}, "authenticity_token"=>"n7hXf3d+YZZnvxqcjhQjPaD"
-      @system = System.new
-      @system.facts = {}
-      @system.arch = params["arch"]["arch_id"]
-      @system.sockets = params["system"]["sockets"]
-      @system.guest = (params["system_type"]["virtualized"] == 'virtual')
-      @system.name= params["system"]["name"]
-      @system.cp_type = "system"
-      @system.environment = KTEnvironment.find(params["system"]["environment_id"])
-      #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
-      #find the newly created system
-      if @system.save!
-        notify.success _("System '%s' was created.") % @system['name']
+    @system = System.new
+    @system.facts = {}
+    @system.arch = params["arch"]["arch_id"]
+    @system.sockets = params["system"]["sockets"]
+    @system.guest = (params["system_type"]["virtualized"] == 'virtual')
+    @system.name= params["system"]["name"]
+    @system.cp_type = "system"
+    @system.environment = KTEnvironment.find(params["system"]["environment_id"])
+    #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
+    #find the newly created system
+    if @system.save!
+      notify.success _("System '%s' was created.") % @system['name']
 
-        if search_validate(System, @system.id, params[:search])
-          render :partial=>"systems/list_systems",
-            :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
-        else
-          notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @system["name"]
-          render :json => { :no_match => true }
-        end
+      if search_validate(System, @system.id, params[:search])
+        render :partial=>"systems/list_systems",
+          :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
+      else
+        notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @system["name"]
+        render :json => { :no_match => true }
       end
-
-    rescue Exception => error
-      display_message = if error.respond_to?('response') && error.response.include?('displayMessage')
-                           JSON.parse(error.response)['displayMessage']
-                        end
-      notify.exception *[display_message, error].compact
-      Rails.logger.error error.backtrace.join("\n")
-      render :text => error, :status => :bad_request
     end
+
+  rescue => error
+    display_message = if error.respond_to?('response') && error.response.include?('displayMessage')
+                         JSON.parse(error.response)['displayMessage']
+                      end
+    notify.exception *[display_message, error].compact
+    Rails.logger.error error.backtrace.join("\n")
+    render :text => error, :status => :bad_request
   end
 
   def index
@@ -146,22 +143,17 @@ class SystemsController < ApplicationController
   def environments
     accesible_envs = KTEnvironment.systems_readable(current_organization)
 
-    begin
-      @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name)
+    @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name)
 
-      @systems = []
-      setup_environment_selector(current_organization, accesible_envs)
-      if @environment
-        # add the environment id as a search filter.. this will be passed to the app by search as part of
-        # the auto_complete_search requests
-        @panel_options[:search_env] = @environment.id
-      end
-
-      render :index, :locals=>{:envsys => true, :accessible_envs=> accesible_envs}
-    rescue Exception => error
-      notify.exception error, :persist => false
-      render :index, :status=>:bad_request
+    @systems = []
+    setup_environment_selector(current_organization, accesible_envs)
+    if @environment
+      # add the environment id as a search filter.. this will be passed to the app by search as part of
+      # the auto_complete_search requests
+      @panel_options[:search_env] = @environment.id
     end
+
+    render :index, :locals=>{:envsys => true, :accessible_envs=> accesible_envs}
   end
 
   def items
@@ -243,23 +235,18 @@ class SystemsController < ApplicationController
   end
 
   def update_subscriptions
-    begin
-      if params.has_key? :system
-        params[:system].keys.each do |pool|
-          @system.subscribe pool, params[:spinner][pool] if params[:commit].downcase == "subscribe"
-          @system.unsubscribe pool if params[:commit].downcase == "unsubscribe"
-        end
-        consumed_entitlements = @system.consumed_entitlements
-        avail_pools = @system.available_pools_full
-        render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
-                                                    :consumed_subs => consumed_entitlements,
-                                                    :editable=>@system.editable?}
-        notify.success _("System subscriptions updated.")
-
+    if params.has_key? :system
+      params[:system].keys.each do |pool|
+        @system.subscribe pool, params[:spinner][pool] if params[:commit].downcase == "subscribe"
+        @system.unsubscribe pool if params[:commit].downcase == "unsubscribe"
       end
-    rescue Exception => error
-      notify.exception error, :persist => false
-      render :nothing => true, :status => :bad_request
+      consumed_entitlements = @system.consumed_entitlements
+      avail_pools = @system.available_pools_full
+      render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
+                                                  :consumed_subs => consumed_entitlements,
+                                                  :editable=>@system.editable?}
+      notify.success _("System subscriptions updated.")
+
     end
   end
 
@@ -283,64 +270,59 @@ class SystemsController < ApplicationController
   def edit
     begin
       releases = @system.available_releases
-    rescue Exception => e
-      # Don't pepper user with notices if there is an error fetching release versions, but do log them
+    rescue => e
+      # Don't pepper user with notices if there is an error fetching release
+      # versions, but do log them
       Rails.logger.error e.to_str
       releases ||= []
     end
 
-    render :partial=>"edit", :layout=>"tupane_layout", :locals=>{
-        :system=>@system, :editable=>@system.editable?, :releases=>releases, :name=>controller_display_name,
-        :environments=>environment_paths(library_path_element, environment_path_element("systems_readable?"))}
+    render :partial => "edit", :layout => "tupane_layout",
+           :locals => { :system       => @system, :editable => @system.editable?,
+                        :releases     => releases, :name => controller_display_name,
+                        :environments =>
+                            environment_paths(library_path_element, environment_path_element("systems_readable?")) }
   end
 
   def update
-    begin
-      # The 'autoheal' flag is not an ActiveRecord attribute so update it explicitly if present
-      # The 'serviceLevel' comes in as a string 0/1 + level (eg. 0STANDARD = auto off, STANDARD))
-      if params[:system] && params[:system][:serviceLevel]
-        val = params[:system][:serviceLevel]
-        if val == '0'
-          params[:system][:serviceLevel] = ''
-          @system.autoheal = false
-        elsif val == '1'
-          params[:system][:serviceLevel] = ''
+    # The 'autoheal' flag is not an ActiveRecord attribute so update it explicitly if present
+    # The 'serviceLevel' comes in as a string 0/1 + level (eg. 0STANDARD = auto off, STANDARD))
+    if params[:system] && params[:system][:serviceLevel]
+      val = params[:system][:serviceLevel]
+      if val == '0'
+        params[:system][:serviceLevel] = ''
+        @system.autoheal = false
+      elsif val == '1'
+        params[:system][:serviceLevel] = ''
+        @system.autoheal = true
+      else
+        if val.start_with? '1'
           @system.autoheal = true
         else
-          if val.start_with? '1'
-            @system.autoheal = true
-          else
-            @system.autoheal = false
-          end
-          params[:system][:serviceLevel] = val[1..-1]
+          @system.autoheal = false
         end
+        params[:system][:serviceLevel] = val[1..-1]
       end
+    end
 
-      @system.update_attributes!(params[:system])
-      notify.success _("System '%s' was updated.") % @system["name"]
+    @system.update_attributes!(params[:system])
+    notify.success _("System '%s' was updated.") % @system["name"]
 
-      if not search_validate(System, @system.id, params[:search])
-        notify.message _("'%s' no longer matches the current search criteria.") % @system["name"],
-                       :asynchronous => false
-      end
+    if not search_validate(System, @system.id, params[:search])
+      notify.message _("'%s' no longer matches the current search criteria.") % @system["name"],
+                     :asynchronous => false
+    end
 
-      respond_to do |format|
-        format.html {
-          # Use the systems_helper method when returning service level so the UI reflects proper text
-          if params[:system] && params[:system][:serviceLevel]
-            render :text=>system_servicelevel(@system)
-          else
-            render :text=>(params[:system] ? params[:system].first[1] : "")
-          end
-        }
-        format.js
-      end
-    rescue Exception => error
-      notify.exception error, :persist => false
-      respond_to do |format|
-        format.html { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
-        format.json { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
-      end
+    respond_to do |format|
+      format.html {
+        # Use the systems_helper method when returning service level so the UI reflects proper text
+        if params[:system] && params[:system][:serviceLevel]
+          render :text=>system_servicelevel(@system)
+        else
+          render :text=>(params[:system] ? params[:system].first[1] : "")
+        end
+      }
+      format.js
     end
   end
 
@@ -368,9 +350,6 @@ class SystemsController < ApplicationController
     end
     notify.invalid_record system
     render :text => @system.errors, :status=>:ok
-  rescue Exception => e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def bulk_destroy
@@ -379,9 +358,6 @@ class SystemsController < ApplicationController
     }
     notify.success _("%s Systems Removed Successfully") % @systems.length
     render :text=>""
-  rescue Exception => e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def bulk_add_system_group
@@ -413,7 +389,7 @@ class SystemsController < ApplicationController
           system.system_group_ids = (system.system_group_ids + @system_groups.collect{|g| g.id}).uniq
           system.save!
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -447,7 +423,7 @@ class SystemsController < ApplicationController
           system.system_group_ids = (system.system_group_ids - @system_groups.collect{|g| g.id}).uniq
           system.save!
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -472,7 +448,7 @@ class SystemsController < ApplicationController
         begin
           system.install_packages params[:packages]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -483,7 +459,7 @@ class SystemsController < ApplicationController
         begin
           system.install_package_groups params[:groups]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -503,7 +479,7 @@ class SystemsController < ApplicationController
         begin
           system.install_package_groups params[:groups]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -513,7 +489,7 @@ class SystemsController < ApplicationController
         begin
           system.update_packages params[:packages]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -540,7 +516,7 @@ class SystemsController < ApplicationController
         begin
           system.uninstall_packages params[:packages]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -550,7 +526,7 @@ class SystemsController < ApplicationController
         begin
           system.uninstall_package_groups params[:groups]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -573,7 +549,7 @@ class SystemsController < ApplicationController
         begin
           system.install_errata params[:errata]
           successful_systems.push(system.name)
-        rescue Exception => error
+        rescue => error
           failed_systems.push(system.name)
         end
       end
@@ -606,11 +582,8 @@ class SystemsController < ApplicationController
       @system.save!
 
       notify.success _("System '%s' was updated.") % @system["name"]
-      render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups.sort_by{|g| g.name}} and return
+      render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups} and return
     end
-  rescue => e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def remove_system_groups
@@ -620,9 +593,6 @@ class SystemsController < ApplicationController
 
     notify.success _("System '%s' was updated.") % @system["name"]
     render :nothing => true
-  rescue => e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   private
@@ -659,10 +629,6 @@ class SystemsController < ApplicationController
 
   def find_system
     @system = System.find(params[:id])
-  rescue => e
-    notify.exception e
-    execute_after_filters
-    render :text=>e, :status=>:bad_request
   end
 
   def find_systems

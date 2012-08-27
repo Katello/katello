@@ -155,7 +155,7 @@ Warden::Strategies.add(:oauth) do
   rescue OAuth::Signature::UnknownSignatureMethod => e
     Rails.logger.error "Unknown oauth signature method"+ e.to_s
     fail!("Unknown oauth signature method"+ e.to_s)
-  rescue Exception => e
+  rescue => e
     Rails.logger.error "exception occured while authenticating via oauth "+ e.to_s
     fail!("exception occured while authenticating via oauth "+ e.to_s)
   end
