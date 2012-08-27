@@ -143,7 +143,8 @@ class VerboseStrategy(PrinterStrategy):
                 print column['name']+":"
                 print indent_text(value, "    ")
 
-    def _max_label_width(self, columns):
+    @classmethod
+    def _max_label_width(cls, columns):
         """
         Returns maximum width of the column labels.
 
