@@ -33,10 +33,10 @@ class GpgKeyAction(BaseAction):
         self.api = GpgKeyAPI()
 
     def read_content(self, use_prompt):
-        file = self.get_option('file')
+        gpgkey_file = self.get_option('file')
 
-        if file:
-            with open(get_abs_path(file), "r") as f:
+        if gpgkey_file:
+            with open(get_abs_path(gpgkey_file), "r") as f:
                 content = f.read()
         elif use_prompt:
             print _("Enter content of the GPG key (finish input with CTRL+D):")
