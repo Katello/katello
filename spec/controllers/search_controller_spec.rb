@@ -77,7 +77,7 @@ describe SearchController do
       # stub query used to retrieve favorites to be rendered
       controller.stub_chain(:current_user, :search_favorites, :where, :order).and_return(@searchFavorites)
       # force an exception when creating the favorite
-      controller.stub_chain(:current_user, :search_favorites, :create).and_raise(Exception)
+      controller.stub_chain(:current_user, :search_favorites, :create).and_raise(StandardError)
 
       controller.should notify.exception
       post :create_favorite, {:favorite => @favoriteText}
@@ -92,6 +92,8 @@ describe SearchController do
   describe "DELETE destroy favorite" do
 
     it "successfully destroys favorite" do
+      controller.stub_chain(:current_user, :search_favorites, :destroy)
+      controller.stub_chain(:current_user, :search_favorites, :where, :order).and_return(@searchFavorites)
       post :destroy_favorite, {:id => 10}
       response.should be_success
     end
@@ -100,9 +102,9 @@ describe SearchController do
       # stub query used to retrieve favorites to be rendered
       controller.stub_chain(:current_user, :search_favorites, :where, :order).and_return(@searchFavorites)
       # force an exception when creating the favorite
-      controller.stub_chain(:current_user, :search_favorites, :destroy).and_raise(Exception)
+      controller.stub_chain(:current_user, :search_favorites, :destroy).and_raise(ActiveRecord::RecordNotFound)
 
-      controller.should notify.exception
+      controller.should notify.error
       post :destroy_favorite, {:id => 10}
     end
 

@@ -197,10 +197,11 @@ describe Api::SyncController, :katello => true do
       before(:each) do
         @organization = Organization.create!(:name => "organization", :cp_key => "123")
 
-        @syncable = mock()
+        @syncable = mock('syncable')
         @syncable.stub!(:id)
         @syncable.stub!(:cance_sync)
         @syncable.stub!(:organization).and_return(@organization)
+        @syncable.stub!(:sync)
 
         Provider.stub!(:find).and_return(@syncable)
       end
@@ -232,6 +233,7 @@ describe Api::SyncController, :katello => true do
         @syncable = mock()
         @syncable.stub!(:latest_sync_statuses).once.and_return([async_task_1, async_task_2])
         @syncable.stub!(:organization).and_return(@organization)
+        @syncable.stub!(:sync)
 
         Provider.stub!(:find).and_return(@syncable)
       end

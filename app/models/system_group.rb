@@ -76,6 +76,8 @@ class SystemGroup < ActiveRecord::Base
     self.pulp_id ||= "#{self.organization.cp_key}-#{self.name}-#{SecureRandom.hex(4)}"
   end
 
+  default_scope :order => 'name ASC'
+
   scope :readable, lambda { |org|
     items(org, READ_PERM_VERBS)
   }

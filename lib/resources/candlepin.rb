@@ -173,7 +173,7 @@ module Resources
         def guests uuid
           response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'guests'), self.default_headers).body
           JSON.parse(response).map { |e| e.with_indifferent_access }
-        rescue Exception => e
+        rescue => e
           return []
         end
 
@@ -184,7 +184,7 @@ module Resources
           else
             return nil
           end
-        rescue Exception => e
+        rescue => e
           return nil
         end
 

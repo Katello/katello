@@ -94,7 +94,7 @@ describe ActivationKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should notify.exception
+        controller.should notify.error
         get :show, :id => 9999
       end
 
@@ -137,7 +137,7 @@ describe ActivationKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should notify.exception
+        controller.should notify.error
         get :edit, :id => 9999
       end
 
@@ -291,7 +291,7 @@ describe ActivationKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should notify.exception
+        controller.should notify.error
         put :update, :id => 9999, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
       end
 
@@ -301,13 +301,13 @@ describe ActivationKeysController do
       end
 
       it "should be unsuccessful at adding a subscription" do
-        controller.should notify.exception
+        controller.should notify.error
         put :add_subscriptions, { :id => 999, :subscription_id => { "abc123" => "false"}}
         response.should_not be_success
       end
 
       it "should be unsuccessful at removing a subscription" do
-        controller.should notify.exception
+        controller.should notify.error
         put :remove_subscriptions, { :id => 999, :subscription_id => { "abc123" => "false"}}
         response.should_not be_success
       end
@@ -435,7 +435,7 @@ describe ActivationKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should notify.exception
+        controller.should notify.error
         delete :destroy, :id => 9999
       end
 

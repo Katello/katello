@@ -28,7 +28,7 @@ class SyncManagementController < ApplicationController
   before_filter :find_provider, :except => [:index, :sync, :sync_status]
   before_filter :find_providers, :only => [:sync, :sync_status]
   before_filter :authorize
-  
+
 
   def section_id
     'contents'
@@ -44,7 +44,7 @@ class SyncManagementController < ApplicationController
       return true
     }
     sync_test = lambda {current_organization && current_organization.syncable?}
-    
+
     { :index => list_test,
       :sync_status => sync_read_test,
       :product_status => sync_read_test,
@@ -57,18 +57,18 @@ class SyncManagementController < ApplicationController
   def index
     org = current_organization
     @products = org.library.products.readable(org)
-    
+
     redhat_products = @products.select{ |prod| prod.redhat? }
     custom_products = @products.select{ |prod| !prod.redhat? }
-    
+
     redhat_products.sort! { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
     custom_products.sort! { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
-    
+
     @products = redhat_products + custom_products
-    
+
     @sproducts = @products.reject{|prod| !prod.syncable?} # syncable products
 
-    
+
     @product_size = Hash.new
     @repo_status = Hash.new
 
@@ -77,7 +77,7 @@ class SyncManagementController < ApplicationController
     for p in @products
       product_size = 0
       for r in p.repos(p.organization.library)
-        status = r.sync_status 
+        status = r.sync_status
         @repo_status[r.id] = format_sync_progress(status, r)
         product_size += status.progress.total_size
       end
@@ -93,7 +93,7 @@ class SyncManagementController < ApplicationController
       format.js { render :json => ids.to_json, :status => :ok }
     end
   end
- 
+
   def sync_status
     collected = []
     params[:repoids].each do |id|
@@ -101,9 +101,9 @@ class SyncManagementController < ApplicationController
         repo = Repository.find(id)
         progress = format_sync_progress(repo.sync_status, repo)
         collected.push(progress)
-      rescue Exception => e
+      rescue ActiveRecord::RecordNotFound => e
         notify.exception e # debugging and skip for now
-        next 
+        next
       end
     end
 
@@ -112,16 +112,12 @@ class SyncManagementController < ApplicationController
     end
   end
 
-
   def destroy
     retval = Repository.find(params[:id]).cancel_sync
     render :text=>""
   end
 
-
-
-
-private
+  private
 
   def find_provider
     Repository.find(params[:repo] || params[:id]).product.provider
@@ -136,7 +132,6 @@ private
       @providers << repo.product.provider
     }
   end
-
 
   def format_sync_progress(sync_status, repo)
     progress = sync_status.progress
