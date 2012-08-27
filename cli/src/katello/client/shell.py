@@ -183,7 +183,8 @@ class KatelloShell(Cmd):
         return [a for a in completions if a.startswith(text)]
 
 
-    def __get_possible_completions(self, cmd, with_params=False):
+    @classmethod
+    def __get_possible_completions(cls, cmd, with_params=False):
         """
         Return all possible subcommands and options that can be used to complete
         strings after a command cmd.
