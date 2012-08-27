@@ -144,8 +144,8 @@ class KatelloShell(Cmd):
             return new_line
         return line
 
-
-    def __history_try_repeat_nth(self, n):
+    @classmethod
+    def __history_try_repeat_nth(cls, n):
         try:
             n = int(n)
             if n < 0:
