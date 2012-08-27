@@ -31,7 +31,8 @@ class KatelloAPI(object):
     def server(cls):
         return server.active_server
 
-    def update_dict(self, d, key, value):
+    @classmethod
+    def update_dict(cls, d, key, value):
         """
         Update value for key in fictionary only if the value is not None.
         """
