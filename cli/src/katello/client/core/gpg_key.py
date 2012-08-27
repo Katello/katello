@@ -177,7 +177,7 @@ class Update(GpgKeyAction):
 
         try:
             content = self.read_content(self.get_option('new_content'))
-        except IOError as (c,m):
+        except IOError as (c, m):
             print m
             return os.EX_DATAERR
 
