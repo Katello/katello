@@ -388,6 +388,7 @@ module Glue::Pulp::Repos
             unless Repository.where(:environment_product_id => env_prod.id, :pulp_id => repo_id(repo_name)).any?
               repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
                                         :cp_label => pc.content.label,
+                                        :content_id=>pc.content.id,
                                         :arch => arch,
                                         :major => version[:major],
                                         :minor => version[:minor],
