@@ -71,6 +71,7 @@ class NoAuthentication(AuthenticationStrategy):
 class BasicAuthentication(AuthenticationStrategy):
 
     def __init__(self, username, password):
+        super(BasicAuthentication, self).__init__()
         self.__username = username
         self.__password = password
 
@@ -88,6 +89,7 @@ class BasicAuthentication(AuthenticationStrategy):
 class SSLAuthentication(AuthenticationStrategy):
 
     def __init__(self, certfile, keyfile):
+        super(SSLAuthentication, self).__init__()
         self.__certfile = certfile
         self.__keyfile = keyfile
         self.__check_cert_and_key()
@@ -112,6 +114,7 @@ class SSLAuthentication(AuthenticationStrategy):
 class KerberosAuthentication(AuthenticationStrategy):
 
     def __init__(self, host):
+        super(KerberosAuthentication, self).__init__()
         self.__host = host
 
     def set_headers(self, headers):
