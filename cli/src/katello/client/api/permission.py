@@ -37,7 +37,7 @@ class PermissionAPI(KatelloAPI):
         path = "/api/roles/%s/permissions/" % u_str(roleId)
         return self.server.POST(path, data)[1]
 
-    def permissions(self, roleId, query={}):
+    def permissions(self, roleId, query=None):
         path = "/api/roles/%s/permissions/" % u_str(roleId)
         return self.server.GET(path, query)[1]
 

@@ -56,7 +56,7 @@ class UserAPI(KatelloAPI):
         path = "/api/users/%s" % u_str(user_id)
         return self.server.PUT(path, {"user": userdata})[1]
 
-    def users(self, query={}):
+    def users(self, query=None):
         path = "/api/users/"
         users = self.server.GET(path, query)[1]
         return users

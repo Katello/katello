@@ -40,7 +40,7 @@ class SyncPlanAPI(KatelloAPI):
         path = "/api/organizations/%s/sync_plans/%s" % (u_str(org_id), u_str(plan_id))
         return self.server.PUT(path, {"sync_plan": data})[1]
 
-    def sync_plans(self, org_id, query={}):
+    def sync_plans(self, org_id, query=None):
         path = "/api/organizations/%s/sync_plans/" % u_str(org_id)
         return self.server.GET(path, query)[1]
 

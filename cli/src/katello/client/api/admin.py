@@ -20,6 +20,6 @@ class AdminAPI(KatelloAPI):
     """
     Various administrative actions
     """
-    def crl_regen(self, query={}):
+    def crl_regen(self, query=None):
         path = "/api/crls/"
         return self.server.GET(path, query)[1]

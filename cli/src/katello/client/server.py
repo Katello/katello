@@ -289,7 +289,9 @@ class KatelloServer(Server):
 
     # protected request utilities ---------------------------------------------
 
-    def _build_url(self, path, queries={}):
+    def _build_url(self, path, queries=None):
+        if queries is None:
+            queries = {}
         # build the request url from the path and queries dict or tuple
         if not path.startswith(self.path_prefix):
             path = '/'.join((self.path_prefix, path))
@@ -306,7 +308,11 @@ class KatelloServer(Server):
         return path
 
 
-    def _request(self, method, path, queries={}, body=None, multipart=False, custom_headers={}):
+    def _request(self, method, path, queries=None, body=None, multipart=False, custom_headers=None):
+        if queries is None:
+            queries = {}
+        if custom_headers is None:
+            custom_headers = {}
         # make a request to the server and return the response
         connection = self._connect()
         url = self._build_url(path, queries)
@@ -466,14 +472,14 @@ class KatelloServer(Server):
     def DELETE(self, path, body=None):
         return self._request('DELETE', path, body=body)
 
-    def GET(self, path, queries={}, custom_headers={}):
+    def GET(self, path, queries=None, custom_headers=None):
         return self._request('GET', path, queries, custom_headers=custom_headers)
 
     def HEAD(self, path):
         return self._request('HEAD', path)
 
-    def POST(self, path, body=None, multipart=False, custom_headers={}):
+    def POST(self, path, body=None, multipart=False, custom_headers=None):
         return self._request('POST', path, body=body, multipart=multipart, custom_headers=custom_headers)
 
-    def PUT(self, path, body, multipart=False, custom_headers={}):
+    def PUT(self, path, body, multipart=False, custom_headers=None):
         return self._request('PUT', path, body=body, multipart=multipart, custom_headers=custom_headers)
