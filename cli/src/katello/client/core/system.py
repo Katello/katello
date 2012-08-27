@@ -682,15 +682,15 @@ class Report(SystemAction):
     def run(self):
         orgId = self.get_option('org')
         envName = self.get_option('environment')
-        format = self.get_option('format')
+        format_in = self.get_option('format')
 
         if envName is None:
-            report = self.api.report_by_org(orgId, convert_to_mime_type(format, 'text'))
+            report = self.api.report_by_org(orgId, convert_to_mime_type(format_in, 'text'))
         else:
             environment = get_environment(orgId, envName)
-            report = self.api.report_by_env(environment['id'], convert_to_mime_type(format, 'text'))
+            report = self.api.report_by_env(environment['id'], convert_to_mime_type(format_in, 'text'))
 
-        if format == 'pdf':
+        if format_in == 'pdf':
             save_report(report[0], attachment_file_name(report[1], 'katello_systems_report.pdf'))
         else:
             print report[0]
