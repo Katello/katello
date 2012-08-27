@@ -228,8 +228,8 @@ class OptionValidator(object):
     def __get_option_strings(self, opt_dests):
         return [ self.__get_option_string(dest) for dest in opt_dests ]
 
-
-    def __ensure_iterable(self, var):
+    @classmethod
+    def __ensure_iterable(cls, var):
         if not isinstance(var, (tuple, list)):
             return [var]
         else:
