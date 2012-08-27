@@ -121,10 +121,10 @@ class KerberosAuthentication(AuthenticationStrategy):
         ctx = kerberos.authGSSClientInit("HTTP@" + self.__host, \
             gssflags=kerberos.GSS_C_DELEG_FLAG|kerberos.GSS_C_MUTUAL_FLAG|kerberos.GSS_C_SEQUENCE_FLAG)[1]
         kerberos.authGSSClientStep(ctx, '')
-        self.__tgt = kerberos.authGSSClientResponse(ctx)
+        tgt = kerberos.authGSSClientResponse(ctx)
 
-        if self.__tgt:
-            headers['Authorization'] = 'Negotiate %s' % self.__tgt
+        if tgt:
+            headers['Authorization'] = 'Negotiate %s' % tgt
             return headers
         else:
             raise RuntimeError(_("Couldn't authenticate via kerberos"))
