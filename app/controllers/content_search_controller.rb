@@ -138,7 +138,7 @@ class ContentSearchController < ApplicationController
     packages = Glue::Pulp::Package.search('', offset, current_user.page_size, [@repo.pulp_id])
     rows = packages.collect do |pack|
       {:name => display = package_display(pack),
-        :id => pack.id, :cols => {:description => {:display => pack.description}}}
+        :id => pack.id, :cols => {:description => {:display => pack.description}}, :data_type => "package", :value => pack.nvrea}
     end
 
     if packages.total > current_user.page_size
@@ -151,10 +151,11 @@ class ContentSearchController < ApplicationController
     offset = params[:offset] || 0
     errata = Glue::Pulp::Errata.search('', offset, current_user.page_size, :repoids => [@repo.pulp_id])
     rows = errata.collect do |e|
-      {:name => errata_display(e), :id => e.id, :cols => {:title => {:display => e[:title]},
-                                             :type => {:display => e[:type]},
-                                             :severity => {:display => e[:severity]}
-                                            }
+      {:name => errata_display(e), :id => e.id, :data_type => "errata", :value => e.id,
+          :cols => {:title => {:display => e[:title]},
+                    :type => {:display => e[:type]},
+                    :severity => {:display => e[:severity]}
+          }
       }
     end
     if errata.total > current_user.page_size
@@ -244,7 +245,8 @@ class ContentSearchController < ApplicationController
         Repository.where(:pulp_id=>all_repos).each do |r|
           cols[r.environment.id] = {:hover => repo_hover_html(r)} if env_ids.include?(r.environment_id)
         end
-        {:id=>"repo_#{repo.id}", :comparable=>true, :parent_id=>"product_#{repo.product.id}", :name=>repo.name, :cols=>cols}
+        {:id=>"repo_#{repo.id}", :comparable=>true, :parent_id=>"product_#{repo.product.id}", 
+        :name=>repo.name, :cols=>cols, :data_type => "repo", :value => repo.name}
     end
   end
 
@@ -259,7 +261,7 @@ class ContentSearchController < ApplicationController
       p.environments.collect do |env|
         cols[env.id] = {:hover => product_hover_html(p, env)} if env_ids.include?(env.id)
       end
-       {:id=>"product_#{p.id}", :name=>p.name, :cols=>cols}
+       {:id=>"product_#{p.id}", :name=>p.name, :cols=>cols, :data_type => "product", :value => p.name}
     end
   end
 
@@ -370,7 +372,7 @@ class ContentSearchController < ApplicationController
       repo_span = spanned_repo_content(repo, content_type,  search_obj, 0, search_mode, environments)
       if repo_span
         rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}", 
-                 :parent_id=>"product_#{product_id}"}
+                 :parent_id=>"product_#{product_id}", :data_type => "repo", :value => repo.name}
         repo_span[:repo_cols].values.each do |span|
           product_envs[span[:id]] += span[:display]
         end
@@ -386,7 +388,7 @@ class ContentSearchController < ApplicationController
     if rows.empty?
       return nil
     else
-      return [{:name=>product.name, :id=>"product_#{product_id}", :cols=>cols}] + rows + content_rows
+      return [{:name=>product.name, :id=>"product_#{product_id}", :cols=>cols, :data_type => "product", :value => product.name }] + rows + content_rows
     end
   end
 
@@ -478,11 +480,13 @@ class ContentSearchController < ApplicationController
     content_list.each do |item|
       if id_prefix == 'package'
         display = package_display(item)
+        value = item.nvrea
       else
         display = errata_display(item)
+        value = item.id
       end
       row = {:id=>"repo_#{parent_repo.id}_#{id_prefix}_#{item.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{},
-             :name=>display}
+             :name=>display, :data_type => id_prefix, :value => value}
       spanned_repos.each do |repo|
         if item.repoids.include? repo.pulp_id
             row[:cols][repo.environment_id] = {:id=>repo.environment_id} if env_ids.include?(repo.environment_id)
