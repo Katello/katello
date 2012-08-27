@@ -16,6 +16,7 @@
 import os
 import sys
 from traceback import format_exc
+
 from gettext import gettext as _
 from optparse import OptionGroup, SUPPRESS_HELP
 from katello.client.i18n_optparse import OptionParser, OptionParserExitError
@@ -141,9 +142,21 @@ class KatelloCLI(Command):
         port = self.opts.port
         scheme = self.opts.scheme
         path = self.opts.path
-
-        self._server = server.KatelloServer(host, int(port), scheme, path)
+    
+        self._server = server.KatelloServer(host, int(port), scheme, path, self.__server_locale())
         server.set_active_server(self._server)
+
+    def __server_locale(self):
+        """
+        Take system locale and convert it to server locale
+        Eg. en_US -> en-us
+        """
+        import locale
+        loc = locale.getlocale(locale.LC_ALL)[0] or locale.getdefaultlocale()[0]
+        if loc is not None:
+            return loc.lower().replace('_', '-')
+        else:
+            return loc
 
     def setup_credentials(self):
         """
