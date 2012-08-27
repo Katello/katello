@@ -14,7 +14,6 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-from katello.client.utils.encoding import u_str
 
 class AdminAPI(KatelloAPI):
     """
