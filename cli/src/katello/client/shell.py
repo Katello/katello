@@ -151,8 +151,8 @@ class KatelloShell(Cmd):
             if n < 0:
                 n = readline.get_current_history_length()+n
             return readline.get_history_item(n)
-        except:
-            logging.warning('%sth command from history not found' % n)
+        except IOError:
+            logging.warning('Could not read history file')
             return ''
 
 
