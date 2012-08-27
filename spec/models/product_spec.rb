@@ -143,7 +143,7 @@ describe Product, :katello => true do
     specify { Product.new(:name => 'contains #', :environments => [@organization.library], :provider => @provider).should_not be_valid }
     specify { Product.new(:name => 'contains space', :environments => [@organization.library], :provider => @provider).should be_valid }
 
-    it "should throw an exception when creating a product with duplicate name in one organization" do
+    it "should be successful when creating a product with a duplicate name in one organization" do
       @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
 
       Product.new({
@@ -152,7 +152,7 @@ describe Product, :katello => true do
         :productContent => @p.productContent,
         :provider => @p.provider,
         :environments => @p.environments
-      }).should_not be_valid
+      }).should be_valid
     end
   end
 
