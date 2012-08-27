@@ -140,7 +140,7 @@ class Create(GpgKeyAction):
         keyName = self.get_option('name')
         try:
             content = self.read_content(True)
-        except IOError as (c,m):
+        except IOError as (c, m):
             print m
             return os.EX_DATAERR
 
