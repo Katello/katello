@@ -137,11 +137,8 @@ class SystemGroupAPI(KatelloAPI):
 
     def errata(self, org_id, system_group_id, type=None):
         path = "/api/organizations/%s/system_groups/%s/errata" % (org_id, system_group_id)
-
         params = {}
-        if type is not None:
-            params['type'] = type
-
+        self.update_dict(params, "type", type)
         return self.server.GET(path, params)[1]
 
     def install_errata(self, org_id, system_group_id, errata):
