@@ -460,7 +460,7 @@ class Promote(Apply):
 
         # Block attempts to call this on deletion changesets, otherwise continue
         cset = get_changeset(orgName, envName, csName)
-        if cset['type'] == constants.DELETION:
+        if 'type' in cset and cset['type'] == constants.DELETION:
             print _("This is a deletion changeset and does not support promotion")
             return os.EX_DATAERR
 
