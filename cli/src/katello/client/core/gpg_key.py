@@ -45,10 +45,7 @@ class GpgKeyAction(BaseAction):
             content = None
         return content
 
-    def get_key_id(self):
-        orgName = self.get_option('org')
-        keyName = self.get_option('name')
-
+    def get_key_id(self, orgName, keyName):
         keys = self.api.gpg_keys_by_organization(orgName, keyName)
         if len(keys) == 0:
             return
@@ -98,7 +95,8 @@ class Info(GpgKeyAction):
 
     def run(self):
         keyName = self.get_option('name')
-        key_id = self.get_key_id()
+        orgName = self.get_option('org')
+        key_id = self.get_key_id(orgName, keyName)
         if not key_id:
             print >> sys.stderr, _("Could not find GPG key [ %s ]") % keyName
             return os.EX_DATAERR
@@ -181,7 +179,7 @@ class Update(GpgKeyAction):
             print m
             return os.EX_DATAERR
 
-        key_id = self.get_key_id()
+        key_id = self.get_key_id(orgName, keyName)
         if not key_id:
             print >> sys.stderr, _("Could not find GPG key [ %s ]") % keyName
             return os.EX_DATAERR
@@ -207,8 +205,9 @@ class Delete(GpgKeyAction):
 
     def run(self):
         keyName = self.get_option('name')
+        orgName = self.get_option('org')
 
-        key_id = self.get_key_id()
+        key_id = self.get_key_id(orgName, keyName)
         if not key_id:
             print >> sys.stderr, _("Could not find GPG key [ %s ]") % keyName
             return os.EX_DATAERR
