@@ -315,7 +315,7 @@ module Resources
         end
 
         def packages repo_id
-          data = { :query => {
+          data = { :criteria => {
                     :type_ids=>['rpm'],
                     :sort => {
                         :unit => [ ['name', 'ascending'], ['version', 'descending'] ]
@@ -345,7 +345,7 @@ module Resources
         end
 
         def errata(repo_id, filter = {})
-          data = { :query => {
+          data = { :criteria => {
                     :type_ids=>['errata'],
                     :sort => {
                         :unit => [ ['id', 'ascending'] ]
