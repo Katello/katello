@@ -45,27 +45,27 @@ class OptionParser(_OptionParser):
     # so we get it picked up. for local translation, and then optparse will
     # use them.
     def no_op(self):
-      _("Usage: %s\n")
-      _("Usage")
-      _("%prog [options]")
-      _("Options")
+        _("Usage: %s\n")
+        _("Usage")
+        _("%prog [options]")
+        _("Options")
 
-      # stuff for option value sanity checking
-      _("no such option: %s")
-      _("ambiguous option: %s (%s?)")
-      _("%s option requires an argument")
-      _("%s option requires %d arguments")
-      _("%s option does not take a value")
-      _("integer")
-      _("long integer")
-      _("floating-point")
-      _("complex")
-      _("option %s: invalid %s value: %r")
-      _("option %s: invalid choice: %r (choose from %s)")
+        # stuff for option value sanity checking
+        _("no such option: %s")
+        _("ambiguous option: %s (%s?)")
+        _("%s option requires an argument")
+        _("%s option requires %d arguments")
+        _("%s option does not take a value")
+        _("integer")
+        _("long integer")
+        _("floating-point")
+        _("complex")
+        _("option %s: invalid %s value: %r")
+        _("option %s: invalid choice: %r (choose from %s)")
 
-      # default options
-      _("show this help message and exit")
-      _("show program's version number and exit")
+        # default options
+        _("show this help message and exit")
+        _("show program's version number and exit")
 
     displayed_help = False
 
