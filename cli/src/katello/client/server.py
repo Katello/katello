@@ -118,8 +118,8 @@ class KerberosAuthentication(AuthenticationStrategy):
         self.__host = host
 
     def set_headers(self, headers):
-        _, ctx = kerberos.authGSSClientInit("HTTP@" + self.__host, \
-            gssflags=kerberos.GSS_C_DELEG_FLAG|kerberos.GSS_C_MUTUAL_FLAG|kerberos.GSS_C_SEQUENCE_FLAG)
+        ctx = kerberos.authGSSClientInit("HTTP@" + self.__host, \
+            gssflags=kerberos.GSS_C_DELEG_FLAG|kerberos.GSS_C_MUTUAL_FLAG|kerberos.GSS_C_SEQUENCE_FLAG)[1]
         kerberos.authGSSClientStep(ctx, '')
         self.__tgt = kerberos.authGSSClientResponse(ctx)
 
