@@ -18,7 +18,7 @@ from katello.client.utils.encoding import u_str
 
 
 
-class PrinterStrategy:
+class PrinterStrategy(object):
     """
     Strategy of formatting the data and printing them on the output.
     """
