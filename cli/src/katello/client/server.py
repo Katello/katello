@@ -55,7 +55,8 @@ class AuthenticationStrategy(object):
         else:
             return httplib.HTTPConnection(host, port)
 
-    def set_headers(self, headers):
+    @classmethod
+    def set_headers(cls, headers):
         return headers
 
     def connect(self, host, port, protocol):
