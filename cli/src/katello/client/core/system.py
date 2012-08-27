@@ -110,7 +110,7 @@ class Info(SystemAction):
         # get system details
         system = get_system(org_name, sys_name, env_name)
 
-	system["activation_keys"] = "[ "+ ", ".join([ak["name"] for ak in system["activation_key"]]) +" ]"
+        system["activation_keys"] = "[ "+ ", ".join([ak["name"] for ak in system["activation_key"]]) +" ]"
         if 'host' in system:
             system['host'] = system['host']['name']
         if 'guests' in system:
