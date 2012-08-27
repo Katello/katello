@@ -27,7 +27,8 @@ class KatelloAPI(object):
         pass
 
     @property
-    def server(self):
+    @classmethod
+    def server(cls):
         return server.active_server
 
     def update_dict(self, d, key, value):
