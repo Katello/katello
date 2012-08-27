@@ -195,7 +195,7 @@ KT.comparison_grid = function(){
                         append_rows.push(insert);
                     }
                 } else {
-                    insert = models.rows.insert(item['id'], item['name'], item['cols'], item['parent_id'], item['comparable']);
+                    insert = models.rows.insert(item['id'], item['name'], item['cols'], item['parent_id'], item['comparable'], item['data_type'], item['value']);
 
                     if( !initial ){
                         append_rows.push(insert);
@@ -438,10 +438,11 @@ KT.comparison_grid.models.rows = function(){
 
             return level;
         },
-        insert = function(id, name, cells, parent_id, comparable){
+        insert = function(id, name, cells, parent_id, comparable, data_type, value){
             if( parent_id ){
                 rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 
-                            'parent_id' : parent_id, 'comparable' : comparable };
+                            'parent_id' : parent_id, 'comparable' : comparable, 
+                            'data_type' : data_type, 'value' : value };
 
                 parent = get_parent(id);
 
@@ -451,7 +452,7 @@ KT.comparison_grid.models.rows = function(){
                     parent['child_ids'].push(id);
                 }
             } else {
-                rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 'comparabale' : comparable };
+                rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 'comparabale' : comparable, 'data_type' : data_type, 'value' : value };
             }
             
             return rows[id];
