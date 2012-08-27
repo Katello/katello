@@ -105,7 +105,8 @@ class Info(GpgKeyAction):
 
         key = self.api.gpg_key(key_id)
         key["products"] = "[ "+ ", ".join([product["name"] for product in key["products"]]) +" ]"
-        key["repos"] = "[ "+ ", ".join([repo["product"]["name"] + " - " + repo["name"] for repo in key["repositories"]]) +" ]"
+        key["repos"] = "[ %s ]" % (
+            ", ".join(["%s - %s" % (repo["product"]["name"], repo["name"]) for repo in key["repositories"]]))
         key["content"] = "\n" + key["content"]
 
         self.printer.add_column('id')
