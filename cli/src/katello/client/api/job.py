@@ -18,6 +18,7 @@ from katello.client.api.base import KatelloAPI
 class SystemGroupJobStatusAPI(KatelloAPI):
 
     def __init__(self, org_id, system_group_id):
+        super(SystemGroupJobStatusAPI, self).__init__()
         self.__org_id = org_id
         self.__system_group_id = system_group_id
         
