@@ -60,7 +60,6 @@ $(document).ready(function() {
                 name            :  element.attr('name'),
                 data            :  element.data('options'),
                 onsuccess       :  function(result, status, xhr){
-                    console.log(xhr.responseText);
                     element.select(xhr.responseText);
                     notices.checkNotices();
                 }
