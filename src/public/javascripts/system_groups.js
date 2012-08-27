@@ -323,7 +323,6 @@ KT.system_groups = (function(){
             $.get(KT.routes.auto_complete_systems_path(), {term:string}, function(data){
                 var found = false;
                 $.each(data, function(index, element){
-                    console.log(element.label);
                     if (element.label === string){
                         found = element.id;
 
