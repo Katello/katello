@@ -429,31 +429,29 @@ class KatelloServer(Server):
         """
         fields = self._flatten_to_multipart(None, data)
 
-        BOUNDARY = '----------BOUNDARY_$'
-        CRLF = '\r\n'
-        L = []
+        boundary = '----------BOUNDARY_$'
+        lines = []
 
         for (key, value) in fields:
             if isinstance(value, (file)):
                 filename = value.name
                 content  = value.read()
 
-                L.append('--' + BOUNDARY)
-                L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (str(key), str(filename)))
-                L.append('Content-Type: %s' % self._get_content_type(filename))
-                L.append('')
-                L.append(content)
-
+                lines.append('--' + boundary)
+                lines.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (str(key), str(filename)))
+                lines.append('Content-Type: %s' % self._get_content_type(filename))
+                lines.append('')
+                lines.append(content)
             else:
-                L.append('--' + BOUNDARY)
-                L.append('Content-Disposition: form-data; name="%s"' % str(key))
-                L.append('')
-                L.append(value)
-        L.append('--' + BOUNDARY + '--')
-        L.append('')
+                lines.append('--' + boundary)
+                lines.append('Content-Disposition: form-data; name="%s"' % str(key))
+                lines.append('')
+                lines.append(value)
+        lines.append('--' + boundary + '--')
+        lines.append('')
 
-        body = CRLF.join(L)
-        content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
+        body = '\r\n'.join(lines)
+        content_type = 'multipart/form-data; boundary=%s' % boundary
         return content_type, body
 
 
