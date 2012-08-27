@@ -26,13 +26,15 @@ describe Product, :katello => true do
 
     @organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
     @provider     = @organization.redhat_provider
-    @substitutor_mock = Resources::CDN::CdnVarSubstitutor.new("https://cdn.redhat.com", {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123"})
+    @cdn_mock = Resources::CDN::CdnResource.new("https://cdn.redhat.com", {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123"})
+    @substitutor_mock = Util::CdnVarSubstitutor.new(@cdn_mock)
     @substitutor_mock.stub!(:precalculate).and_return do |paths|
       # we pretend, that all paths are substituted to themseves
       @substitutor_mock.instance_variable_set("@substitutions", Hash.new {|h,k| {{} => k} })
     end
+    @cdn_mock.stub(:substitutor => @substitutor_mock)
 
-    Resources::CDN::CdnVarSubstitutor.stub(:new => @substitutor_mock)
+    Resources::CDN::CdnResource.stub(:new => @cdn_mock)
     disable_cdn
 
     ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider, :environments => [@organization.library]})
