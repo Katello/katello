@@ -169,10 +169,10 @@ def get_permission(role_name, permission_name):
 
 def get_filter(org_name, name):
     filter_api = FilterAPI()
-    filter = filter_api.info(org_name, name)
-    if filter == None:
+    my_filter = filter_api.info(org_name, name)
+    if my_filter == None:
         raise ApiDataError(_("Cannot find filter [ %s ]") % (name))
-    return filter
+    return my_filter
 
 def get_system_group(org_name, system_group_name):
     system_group_api = SystemGroupAPI()
