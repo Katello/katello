@@ -485,6 +485,24 @@ class User < ActiveRecord::Base
     self.preferences[:user][:subscriptions_match_system] = flag
   end
 
+  def subscriptions_match_installed_preference
+    self.preferences[:user][:subscriptions_match_installed] rescue false
+  end
+
+  def subscriptions_match_installed_preference= flag
+    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    self.preferences[:user][:subscriptions_match_installed] = flag
+  end
+
+  def subscriptions_no_overlap_preference
+    self.preferences[:user][:subscriptions_no_overlap] rescue false
+  end
+
+  def subscriptions_no_overlap_preference= flag
+    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    self.preferences[:user][:subscriptions_no_overlap] = flag
+  end
+
   def as_json(options)
     super(options).merge 'default_organization' => default_environment.try(:organization).try(:name),
                          'default_environment'  => default_environment.try(:name)

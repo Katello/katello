@@ -155,8 +155,25 @@ class Api::SystemsController < Api::ApiController
   end
 
   def pools
-    listall = (params.has_key?(:listall) ? true : false)
-    render :json => { :pools => @system.available_pools_full(listall) }
+    match_system = if params.has_key? :match_system
+                     params[:match_system] =~ (/(on|true|t|yes|y|1)$/i) ? true : false
+                   else
+                     false
+                   end
+    match_installed = if params.has_key? :match_installed
+                        params[:match_installed] =~ (/(on|true|t|yes|y|1)$/i) ? true : false
+                      else
+                        false
+                      end
+    no_overlap = if params.has_key? :no_overlap
+                   params[:no_overlap] =~ (/(on|true|t|yes|y|1)$/i) ? true : false
+                 else
+                   false
+                 end
+
+    cp_pools = @system.filtered_pools(match_system, match_installed, no_overlap)
+
+    render :json => { :pools => cp_pools }
   end
 
   def releases
