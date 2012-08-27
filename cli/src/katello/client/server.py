@@ -180,7 +180,7 @@ class Server(object):
         self.auth_method = auth_method
 
     # request methods ---------------------------------------------------------
-
+    # pylint: disable=C0103
     def DELETE(self, path, body=None):
         """
         Send a DELETE request to the katello server.
