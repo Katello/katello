@@ -361,7 +361,6 @@ class Facts(SystemAction):
                 (sys_name, env_name, org_name))
 
         system = get_system(org_name, sys_name, env_name)
-        system_id = system['uuid']
 
         facts_hash = system['facts']
         facts_tuples_sorted = [(k, facts_hash[k]) for k in sorted(facts_hash.keys())]
