@@ -16,6 +16,7 @@
 from katello.client.api.base import KatelloAPI
 
 class ErrataAPI(KatelloAPI):
+    """ Connection class to access errata calls """
 
     def errata_filter(self, repo_id=None, environment_id=None, prod_id=None, type_in=None, severity=None):
         path = "/api/errata"
@@ -33,9 +34,6 @@ class ErrataAPI(KatelloAPI):
         pack = self.server.GET(path, params)[1]
         return pack
 
-    """
-    Connection class to access errata calls
-    """
     def errata_by_repo(self, repoId, type_in=None):
         path = "/api/repositories/%s/errata" % repoId
         params = {}
