@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 from urlparse import urlparse
 
 from katello.client.api.provider import ProviderAPI

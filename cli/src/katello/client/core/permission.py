@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI

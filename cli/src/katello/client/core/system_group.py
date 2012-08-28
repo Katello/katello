@@ -14,7 +14,6 @@
 # in this software or its documentation.
 import os
 import sys
-from gettext import gettext as _
 
 from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command

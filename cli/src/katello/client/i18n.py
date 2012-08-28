@@ -32,7 +32,10 @@ def force_encoding(encoding):
     Force locale to use specific encoding and bind output streams to use it.
     """
     current_locale = locale.getlocale(locale.LC_ALL)[0] or locale.getdefaultlocale()[0]
-    locale.setlocale(locale.LC_ALL, str(current_locale)+'.'+str(encoding))
+    if current_locale:
+        locale.setlocale(locale.LC_ALL, str(current_locale)+'.'+str(encoding))
+    else:
+        locale.setlocale(locale.LC_ALL, 'C')
     sys.stdout = encode_stream(sys.stdout, encoding)
     sys.stderr = encode_stream(sys.stderr, encoding)
 
@@ -49,8 +52,5 @@ def configure_i18n():
     if locale.getpreferredencoding().lower() != ENCODING.lower():
         force_encoding(ENCODING)
 
-    gettext.bindtextdomain(APP, DIR)
-    gettext.textdomain(APP)
-    gettext.bind_textdomain_codeset(APP, ENCODING)
-    
-
+    # this will set _() to ugettext() globaly
+    gettext.install(APP, DIR, True, ENCODING)

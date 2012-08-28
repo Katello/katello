@@ -13,7 +13,6 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 
-from gettext import gettext as _
 from katello.client.utils.encoding import u_str
 
 

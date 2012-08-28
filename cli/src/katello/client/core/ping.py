@@ -14,7 +14,6 @@
 # in this software or its documentation.
 #
 
-from gettext import gettext as _
 
 from katello.client.api.ping import PingAPI
 from katello.client.core.base import BaseAction, Command

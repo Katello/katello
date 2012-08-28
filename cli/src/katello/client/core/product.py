@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 import datetime
 
 from katello.client import constants

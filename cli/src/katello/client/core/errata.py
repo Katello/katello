@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.errata import ErrataAPI
 from katello.client.api.system import SystemAPI

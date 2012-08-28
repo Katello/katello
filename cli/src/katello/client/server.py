@@ -20,7 +20,6 @@ import httplib
 import os
 import urllib
 import mimetypes
-from gettext import gettext as _
 
 try:
     import json
