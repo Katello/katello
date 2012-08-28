@@ -1,26 +1,20 @@
 class pulp::install {
   include mongodb::install
 
-  $os_type = $operatingsystem ? {
-    "Fedora" => "fedora-${operatingsystemrelease}",
-    default  => "\$releasever"
+  $os = $operatingsystem ? {
+    "RedHat" => "RHEL",
+    default  => "Fedora"
   }
 
-  yumrepo {
-    "fedora-pulp":
-      enabled  => "0",
-      gpgcheck => "0",
-      descr    => "Pulp Community Releases",
-      baseurl  => "http://repos.fedorapeople.org/repos/pulp/pulp/${os_type}//\$basearch/";
-    "testing-fedora-pulp":
-      enabled  => "1",
-      gpgcheck => "0",
-      descr    => "Pulp Community Releases",
-      baseurl  => "http://repos.fedorapeople.org/repos/pulp/pulp/testing/${os_type}/\$basearch/";
+  yumrepo { "katello-pulp":
+    name     => "katello-pulp",
+    baseurl  => "http://fedorapeople.org/groups/katello/releases/yum/katello-pulp/${os}/${lsbmajdistrelease}/x86_64/",
+    enabled  => "1",
+    gpgcheck => "0"
   }
 
   package{"pulp":
     ensure => installed,
-    require => Yumrepo["fedora-pulp","testing-fedora-pulp"]
+    require => Yumrepo["katello-pulp"]
   }
 }
