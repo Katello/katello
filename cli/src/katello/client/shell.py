@@ -40,6 +40,7 @@ class KatelloShell(Cmd):
     # do nothing on an empty line
     emptyline = lambda self: None
 
+    # pylint: disable=R0201
     @property
     def history_file(self):
         conf_dir = Config.USER_DIR
