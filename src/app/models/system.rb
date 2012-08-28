@@ -111,6 +111,36 @@ class System < ActiveRecord::Base
     end
   end
 
+  def filtered_pools match_system, match_installed, no_overlap
+    pools = self.available_pools !match_system
+
+    # Only available pool's with a product on the system'
+    if match_installed
+      pools = pools.select do |pool|
+        self.installedProducts.any? do |installedProduct|
+          pool['providedProducts'].any? do |providedProduct|
+            installedProduct['productId'] == providedProduct['productId']
+          end
+        end
+      end
+    end
+
+    # None of the available pool's products overlap a consumed pool's products
+    if no_overlap
+      pools = pools.select do |pool|
+        pool['providedProducts'].all? do |providedProduct|
+          self.consumed_entitlements.all? do |consumedEntitlement|
+            consumedEntitlement.providedProducts.all? do |consumedProduct|
+              consumedProduct.cp_id != providedProduct['productId']
+            end
+          end
+        end
+      end
+    end
+
+    return pools
+  end
+
   def install_packages packages
     pulp_task = self.install_package(packages)
     task_status = save_task_status(pulp_task, :package_install, :packages, packages)
