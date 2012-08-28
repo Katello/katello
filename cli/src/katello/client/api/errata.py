@@ -16,8 +16,9 @@
 from katello.client.api.base import KatelloAPI
 
 class ErrataAPI(KatelloAPI):
+    """ Connection class to access errata calls """
 
-    def errata_filter(self, repo_id=None, environment_id=None, prod_id=None, type=None, severity=None):
+    def errata_filter(self, repo_id=None, environment_id=None, prod_id=None, type_in=None, severity=None):
         path = "/api/errata"
         params = {}
         if not repo_id == None:
@@ -26,21 +27,18 @@ class ErrataAPI(KatelloAPI):
             params['environment_id'] = environment_id
         if not prod_id == None:
             params['product_id'] = prod_id
-        if not type == None:
-            params['type'] = type
+        if not type_in == None:
+            params['type'] = type_in
         if not severity == None:
             params['severity'] = severity
         pack = self.server.GET(path, params)[1]
         return pack
 
-    """
-    Connection class to access errata calls
-    """
-    def errata_by_repo(self, repoId, type=None):
+    def errata_by_repo(self, repoId, type_in=None):
         path = "/api/repositories/%s/errata" % repoId
         params = {}
-        if not type == None:
-            params['type'] = type
+        if type_in is not None:
+            params['type'] = type_in
         pack = self.server.GET(path, params)[1]
         return pack
 

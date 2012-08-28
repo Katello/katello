@@ -20,13 +20,14 @@ class SystemAPI(KatelloAPI):
     """
     Connection class to access environment calls
     """
-    def register(self, name, org, environment_id, activation_keys, cp_type, release=None, sla=None, facts={}):
+    def register(self, name, org, environment_id, activation_keys, cp_type, release=None, sla=None, facts=None):
         if environment_id is not None:
             path = "/api/environments/%s/systems" % environment_id
         else:
             path = "/api/organizations/%s/systems" % org
         facts_with_defaults = { "distribution.name": "Unknown", "cpu.cpu_socket(s)": "1" }
-        facts_with_defaults.update(facts)
+        if facts is not None:
+            facts_with_defaults.update(facts)
         sysdata = {
             "name": name,
             "cp_type": cp_type,
@@ -96,7 +97,7 @@ class SystemAPI(KatelloAPI):
         path = "/api/environments/%s/releases" % env_id
         return self.server.GET(path)[1]
 
-    def update(self, system_id, params = {}):
+    def update(self, system_id, params = None):
         path = "/api/systems/%s" % system_id
         return self.server.PUT(path, params)[1]
 
@@ -120,11 +121,11 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s/packages" % system_id
         return self.server.DELETE(path, {"groups": packages})[1]
 
-    def systems_by_org(self, orgId, query = {}):
+    def systems_by_org(self, orgId, query = None):
         path = "/api/organizations/%s/systems" % orgId
         return self.server.GET(path, query)[1]
 
-    def systems_by_env(self, org_name, environment_id, query = {}):
+    def systems_by_env(self, environment_id, query = None):
         path = "/api/environments/%s/systems" % environment_id
         return self.server.GET(path, query)[1]
 
@@ -132,14 +133,14 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s/errata" % system_id
         return self.server.GET(path)[1]
 
-    def report_by_org(self, orgId, format):
+    def report_by_org(self, orgId, format_in):
         path = "/api/organizations/%s/systems/report" % orgId
-        to_return = self.server.GET(path, custom_headers={"Accept": format})
+        to_return = self.server.GET(path, custom_headers={"Accept": format_in})
         return (to_return[1], to_return[2])
 
-    def report_by_env(self, env_id, format):
+    def report_by_env(self, env_id, format_in):
         path = "/api/environments/%s/systems/report" % env_id
-        to_return = self.server.GET(path, custom_headers={"Accept": format})
+        to_return = self.server.GET(path, custom_headers={"Accept": format_in})
         return (to_return[1], to_return[2])
 
     def add_system_groups(self, system_id, system_group_ids):

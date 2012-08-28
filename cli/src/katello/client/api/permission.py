@@ -20,11 +20,11 @@ class PermissionAPI(KatelloAPI):
     """
     Connection class to access Permissions
     """
-    def create(self, roleId, name, description, type, verbs, tagIds, orgId = None, all_tags = False):
+    def create(self, roleId, name, description, type_in, verbs, tagIds, orgId = None, all_tags = False):
         data = {
             "name": name,
             "description": description,
-            "type": type,
+            "type": type_in,
             "verbs": verbs,
             "organization_id": orgId
         }
@@ -37,7 +37,7 @@ class PermissionAPI(KatelloAPI):
         path = "/api/roles/%s/permissions/" % u_str(roleId)
         return self.server.POST(path, data)[1]
 
-    def permissions(self, roleId, query={}):
+    def permissions(self, roleId, query=None):
         path = "/api/roles/%s/permissions/" % u_str(roleId)
         return self.server.GET(path, query)[1]
 

@@ -169,17 +169,18 @@ def get_permission(role_name, permission_name):
 
 def get_filter(org_name, name):
     filter_api = FilterAPI()
-    filter = filter_api.info(org_name, name)
-    if filter == None:
+    my_filter = filter_api.info(org_name, name)
+    if my_filter == None:
         raise ApiDataError(_("Cannot find filter [ %s ]") % (name))
-    return filter
+    return my_filter
 
 def get_system_group(org_name, system_group_name):
     system_group_api = SystemGroupAPI()
 
     system_group = system_group_api.system_group_by_name(org_name, system_group_name)
     if system_group == None:
-        raise ApiDataError(_("Could not find system group [ %s ] within organization [ %s ]") % (system_group_name, org_name))
+        raise ApiDataError(_("Could not find system group [ %s ] within organization [ %s ]") % \
+            (system_group_name, org_name))
     return system_group
 
 def get_system(org_name, sys_name, env_name=None):
@@ -193,7 +194,7 @@ def get_system(org_name, sys_name, env_name=None):
                 (sys_name, env_name, org_name))
     else:
         environment = get_environment(org_name, env_name)
-        systems = system_api.systems_by_env(org_name, environment["id"], {'name': sys_name})
+        systems = system_api.systems_by_env(environment["id"], {'name': sys_name})
         if systems is None:
             raise ApiDataError(_("Could not find System [ %s ] in Environment [ %s ] in Org [ %s ]") %
                 (sys_name, env_name, org_name))

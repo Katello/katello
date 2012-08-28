@@ -20,8 +20,9 @@ import readline
 import re
 import sys
 from cmd import Cmd
+import ConfigParser
 
-from katello.client.config import Config
+from katello.client.config import Config, ConfigFileError
 from katello.client.core.base import Command, CommandContainer
 from katello.client.core.utils import parse_tokens
 
@@ -40,7 +41,8 @@ class KatelloShell(Cmd):
     emptyline = lambda self: None
 
     @property
-    def history_file(self):
+    @classmethod
+    def history_file(cls):
         conf_dir = Config.USER_DIR
         try:
             if not os.path.isdir(conf_dir):
@@ -51,10 +53,12 @@ class KatelloShell(Cmd):
 
 
     def __init__(self, admin_cli):
+        Cmd.__init__(self)
         self.admin_cli = admin_cli
         try:
+            Config()
             self.prompt = Config.parser.get('shell', 'prompt') + ' '
-        except:
+        except (ConfigFileError, ConfigParser.Error):
             self.prompt = 'katello> '
 
         try:
@@ -65,7 +69,7 @@ class KatelloShell(Cmd):
 
             if (Config.parser.get('shell', 'nohistory').lower() != 'true'):
                 self.__init_history()
-        except Exception:
+        except ConfigParser.Error:
             pass
         self.__init_commands()
 
@@ -93,6 +97,7 @@ class KatelloShell(Cmd):
         setattr(self, "do_eof", self.do_exit)
 
 
+    # pylint: disable=W0613
     def do_exit(self, args):
         self.remove_last_history_item()
         sys.exit(0)
@@ -139,19 +144,19 @@ class KatelloShell(Cmd):
             return new_line
         return line
 
-
-    def __history_try_repeat_nth(self, n):
+    @classmethod
+    def __history_try_repeat_nth(cls, n):
         try:
             n = int(n)
             if n < 0:
                 n = readline.get_current_history_length()+n
             return readline.get_history_item(n)
-        except:
-            logging.warning('%sth command from history not found' % n)
+        except IOError:
+            logging.warning('Could not read history file')
             return ''
 
-
-    def __history_try_search(self, text):
+    @classmethod
+    def __history_try_search(cls, text):
         history_range = range(readline.get_current_history_length(), 1, -1)
         for i in history_range:
             item = readline.get_history_item(i)
@@ -178,7 +183,8 @@ class KatelloShell(Cmd):
         return [a for a in completions if a.startswith(text)]
 
 
-    def __get_possible_completions(self, cmd, with_params=False):
+    @classmethod
+    def __get_possible_completions(cls, cmd, with_params=False):
         """
         Return all possible subcommands and options that can be used to complete
         strings after a command cmd.
@@ -222,7 +228,8 @@ class KatelloShell(Cmd):
             return None
 
 
-    def remove_last_history_item(self):
+    @classmethod
+    def remove_last_history_item(cls):
         last = readline.get_current_history_length() - 1
         if last >= 0:
             readline.remove_history_item(last)

@@ -28,7 +28,7 @@ class UserRoleAPI(KatelloAPI):
         path = "/api/roles/"
         return self.server.POST(path, {"role": data})[1]
 
-    def roles(self, query={}):
+    def roles(self, query=None):
         path = "/api/roles/"
         return self.server.GET(path, query)[1]
 

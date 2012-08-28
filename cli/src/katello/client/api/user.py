@@ -56,7 +56,7 @@ class UserAPI(KatelloAPI):
         path = "/api/users/%s" % u_str(user_id)
         return self.server.PUT(path, {"user": userdata})[1]
 
-    def users(self, query={}):
+    def users(self, query=None):
         path = "/api/users/"
         users = self.server.GET(path, query)[1]
         return users
@@ -91,6 +91,6 @@ class UserAPI(KatelloAPI):
         path = "/api/users/%s/roles/" % u_str(user_id)
         return self.server.GET(path)[1]
 
-    def report(self, format):
-        to_return = self.server.GET("/api/users/report", custom_headers={"Accept": format})
+    def report(self, format_in):
+        to_return = self.server.GET("/api/users/report", custom_headers={"Accept": format_in})
         return (to_return[1], to_return[2])

@@ -44,17 +44,19 @@ def set_active_server(server):
 
 # authentication strategies ---------------------------------------------------
 
-class AuthenticationStrategy:
+class AuthenticationStrategy(object):
 
     _log = getLogger('katello')
 
-    def _get_connection(self, host, port, protocol):
+    @classmethod
+    def _get_connection(cls, host, port, protocol):
         if protocol == "https":
             return httplib.HTTPSConnection(host, port)
         else:
             return httplib.HTTPConnection(host, port)
 
-    def set_headers(self, headers):
+    @classmethod
+    def set_headers(cls, headers):
         return headers
 
     def connect(self, host, port, protocol):
@@ -69,6 +71,7 @@ class NoAuthentication(AuthenticationStrategy):
 class BasicAuthentication(AuthenticationStrategy):
 
     def __init__(self, username, password):
+        super(BasicAuthentication, self).__init__()
         self.__username = username
         self.__password = password
 
@@ -86,6 +89,7 @@ class BasicAuthentication(AuthenticationStrategy):
 class SSLAuthentication(AuthenticationStrategy):
 
     def __init__(self, certfile, keyfile):
+        super(SSLAuthentication, self).__init__()
         self.__certfile = certfile
         self.__keyfile = keyfile
         self.__check_cert_and_key()
@@ -110,16 +114,17 @@ class SSLAuthentication(AuthenticationStrategy):
 class KerberosAuthentication(AuthenticationStrategy):
 
     def __init__(self, host):
+        super(KerberosAuthentication, self).__init__()
         self.__host = host
 
     def set_headers(self, headers):
-        _, ctx = kerberos.authGSSClientInit("HTTP@" + self.__host, \
-            gssflags=kerberos.GSS_C_DELEG_FLAG|kerberos.GSS_C_MUTUAL_FLAG|kerberos.GSS_C_SEQUENCE_FLAG)
+        ctx = kerberos.authGSSClientInit("HTTP@" + self.__host, \
+            gssflags=kerberos.GSS_C_DELEG_FLAG|kerberos.GSS_C_MUTUAL_FLAG|kerberos.GSS_C_SEQUENCE_FLAG)[1]
         kerberos.authGSSClientStep(ctx, '')
-        self.__tgt = kerberos.authGSSClientResponse(ctx)
+        tgt = kerberos.authGSSClientResponse(ctx)
 
-        if self.__tgt:
-            headers['Authorization'] = 'Negotiate %s' % self.__tgt
+        if tgt:
+            headers['Authorization'] = 'Negotiate %s' % tgt
             return headers
         else:
             raise RuntimeError(_("Couldn't authenticate via kerberos"))
@@ -175,7 +180,7 @@ class Server(object):
         self.auth_method = auth_method
 
     # request methods ---------------------------------------------------------
-
+    # pylint: disable=C0103
     def DELETE(self, path, body=None):
         """
         Send a DELETE request to the katello server.
@@ -284,7 +289,9 @@ class KatelloServer(Server):
 
     # protected request utilities ---------------------------------------------
 
-    def _build_url(self, path, queries={}):
+    def _build_url(self, path, queries=None):
+        if queries is None:
+            queries = {}
         # build the request url from the path and queries dict or tuple
         if not path.startswith(self.path_prefix):
             path = '/'.join((self.path_prefix, path))
@@ -301,7 +308,11 @@ class KatelloServer(Server):
         return path
 
 
-    def _request(self, method, path, queries={}, body=None, multipart=False, custom_headers={}):
+    def _request(self, method, path, queries=None, body=None, multipart=False, custom_headers=None):
+        if queries is None:
+            queries = {}
+        if custom_headers is None:
+            custom_headers = {}
         # make a request to the server and return the response
         connection = self._connect()
         url = self._build_url(path, queries)
@@ -339,7 +350,8 @@ class KatelloServer(Server):
         return (content_type, body)
 
 
-    def _process_response(self, response):
+    @classmethod
+    def _process_response(cls, response):
         """
         Try to parse the response
         @type response: HTTPResponse
@@ -417,35 +429,34 @@ class KatelloServer(Server):
         """
         fields = self._flatten_to_multipart(None, data)
 
-        BOUNDARY = '----------BOUNDARY_$'
-        CRLF = '\r\n'
-        L = []
+        boundary = '----------BOUNDARY_$'
+        lines = []
 
         for (key, value) in fields:
             if isinstance(value, (file)):
                 filename = value.name
                 content  = value.read()
 
-                L.append('--' + BOUNDARY)
-                L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (str(key), str(filename)))
-                L.append('Content-Type: %s' % self._get_content_type(filename))
-                L.append('')
-                L.append(content)
-
+                lines.append('--' + boundary)
+                lines.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (str(key), str(filename)))
+                lines.append('Content-Type: %s' % self._get_content_type(filename))
+                lines.append('')
+                lines.append(content)
             else:
-                L.append('--' + BOUNDARY)
-                L.append('Content-Disposition: form-data; name="%s"' % str(key))
-                L.append('')
-                L.append(value)
-        L.append('--' + BOUNDARY + '--')
-        L.append('')
+                lines.append('--' + boundary)
+                lines.append('Content-Disposition: form-data; name="%s"' % str(key))
+                lines.append('')
+                lines.append(value)
+        lines.append('--' + boundary + '--')
+        lines.append('')
 
-        body = CRLF.join(L)
-        content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
+        body = '\r\n'.join(lines)
+        content_type = 'multipart/form-data; boundary=%s' % boundary
         return content_type, body
 
 
-    def _get_content_type(self, filename):
+    @classmethod
+    def _get_content_type(cls, filename):
         """
         Guess content type from file name
         @type filename: string
@@ -457,18 +468,18 @@ class KatelloServer(Server):
 
 
     # request methods ---------------------------------------------------------
-
+    # pylint: disable=C0103
     def DELETE(self, path, body=None):
         return self._request('DELETE', path, body=body)
 
-    def GET(self, path, queries={}, custom_headers={}):
+    def GET(self, path, queries=None, custom_headers=None):
         return self._request('GET', path, queries, custom_headers=custom_headers)
 
     def HEAD(self, path):
         return self._request('HEAD', path)
 
-    def POST(self, path, body=None, multipart=False, custom_headers={}):
+    def POST(self, path, body=None, multipart=False, custom_headers=None):
         return self._request('POST', path, body=body, multipart=multipart, custom_headers=custom_headers)
 
-    def PUT(self, path, body, multipart=False, custom_headers={}):
+    def PUT(self, path, body, multipart=False, custom_headers=None):
         return self._request('PUT', path, body=body, multipart=multipart, custom_headers=custom_headers)

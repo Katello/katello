@@ -125,9 +125,11 @@ class OptionValidator(object):
             elif colliding_opts:
                 colliding_flags = ', '.join(self.__get_option_strings(colliding_opts))
                 if len(colisions) > 1:
-                    self.add_option_error(_('Options %s are colliding with %s; please see --help') % (flags, colliding_flags))
+                    self.add_option_error(_('Options %s are colliding with %s; please see --help') % \
+                        (flags, colliding_flags))
                 else:
-                    self.add_option_error(_('Option %s is colliding with %s; please see --help') % (flags, colliding_flags))
+                    self.add_option_error(_('Option %s is colliding with %s; please see --help') % \
+                        (flags, colliding_flags))
             else:
                 if len(colisions) > 1:
                     self.add_option_error(_('Options %s can\'t be used in this command; please see --help') % flags)
@@ -226,8 +228,8 @@ class OptionValidator(object):
     def __get_option_strings(self, opt_dests):
         return [ self.__get_option_string(dest) for dest in opt_dests ]
 
-
-    def __ensure_iterable(self, var):
+    @classmethod
+    def __ensure_iterable(cls, var):
         if not isinstance(var, (tuple, list)):
             return [var]
         else:

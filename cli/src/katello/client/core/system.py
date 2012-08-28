@@ -18,7 +18,6 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.system import SystemAPI
-from katello.client.api.environment import EnvironmentAPI
 from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_environment, get_system
@@ -62,7 +61,7 @@ class List(SystemAction):
             return self.api.systems_by_org(org_name, query)
         else:
             environment = get_environment(org_name, env_name)
-            return self.api.systems_by_env(org_name, environment["id"], query)
+            return self.api.systems_by_env(environment["id"], query)
 
     def run(self):
         org_name = self.get_option('org')
@@ -110,7 +109,7 @@ class Info(SystemAction):
         # get system details
         system = get_system(org_name, sys_name, env_name)
 
-	system["activation_keys"] = "[ "+ ", ".join([ak["name"] for ak in system["activation_key"]]) +" ]"
+        system["activation_keys"] = "[ "+ ", ".join([ak["name"] for ak in system["activation_key"]]) +" ]"
         if 'host' in system:
             system['host'] = system['host']['name']
         if 'guests' in system:
@@ -143,18 +142,19 @@ class InstalledPackages(SystemAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
-                       help=_("system name (required)"))
+            help=_("system name (required)"))
         opt_parser_add_environment(parser)
         parser.add_option('--install', dest='install', type="list",
-                       help=_("packages to be installed remotely on the system, package names are separated with comma"))
+            help=_("packages to be installed remotely on the system, package names are separated with comma"))
         parser.add_option('--remove', dest='remove', type="list",
-                       help=_("packages to be removed remotely from the system, package names are separated with comma"))
+            help=_("packages to be removed remotely from the system, package names are separated with comma"))
         parser.add_option('--update', dest='update', type="list",
-                       help=_("packages to be updated on the system, use --all to update all packages, package names are separated with comma"))
+            help=_("packages to be updated on the system, use --all to update all packages," +
+                " package names are separated with comma"))
         parser.add_option('--install_groups', dest='install_groups', type="list",
-                       help=_("package groups to be installed remotely on the system, group names are separated with comma"))
+            help=_("package groups to be installed remotely on the system, group names are separated with comma"))
         parser.add_option('--remove_groups', dest='remove_groups', type="list",
-                       help=_("package groups to be removed remotely from the system, group names are separated with comma"))
+            help=_("package groups to be removed remotely from the system, group names are separated with comma"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -168,7 +168,6 @@ class InstalledPackages(SystemAction):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
-        verbose = self.get_option('verbose')
 
         install = self.get_option('install')
         remove = self.get_option('remove')
@@ -181,7 +180,8 @@ class InstalledPackages(SystemAction):
         if env_name is None:
             self.printer.set_header(_("Package Information for System [ %s ] in Org [ %s ]") % (sys_name, org_name))
         else:
-            self.printer.set_header(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") % (sys_name, env_name, org_name))
+            self.printer.set_header(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") %
+                (sys_name, env_name, org_name))
 
         system = get_system(org_name, sys_name, env_name)
         system_id = system['uuid']
@@ -260,8 +260,10 @@ class TasksList(SystemAction):
         self.printer.add_column('uuid', name=_("Task id"))
         self.printer.add_column('system_name', name=_("System"))
         self.printer.add_column('description', name=_("Action"))
-        self.printer.add_column('created_at', name=_("Started"), formatter=format_date, show_with=printer.VerboseStrategy)
-        self.printer.add_column('finish_time', name=_("Finished"), formatter=format_date, show_with=printer.VerboseStrategy)
+        self.printer.add_column('created_at', name=_("Started"),
+            formatter=format_date, show_with=printer.VerboseStrategy)
+        self.printer.add_column('finish_time', name=_("Finished"), formatter=format_date,
+            show_with=printer.VerboseStrategy)
         self.printer.add_column('state', name=_("Status"))
         self.printer.add_column('result', name=_("Result"), show_with=printer.VerboseStrategy)
 
@@ -354,10 +356,10 @@ class Facts(SystemAction):
         if env_name is None:
             self.printer.set_header(_("System Facts For System [ %s ] in Org [ %s ]") % (sys_name, org_name))
         else:
-            self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") % (sys_name, env_name, org_name))
+            self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") %
+                (sys_name, env_name, org_name))
 
         system = get_system(org_name, sys_name, env_name)
-        system_id = system['uuid']
 
         facts_hash = system['facts']
         facts_tuples_sorted = [(k, facts_hash[k]) for k in sorted(facts_hash.keys())]
@@ -568,13 +570,14 @@ class Unsubscribe(SystemAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
-                               help=_("system name (required)"))
+            help=_("system name (required)"))
         parser.add_option('--entitlement', dest='entitlement',
-                               help=_("entitlement id to unsubscribe from (either entitlement or serial or all is required)"))
+            help=_("entitlement id to unsubscribe from (either entitlement or serial or all is required)"))
         parser.add_option('--serial', dest='serial',
-                               help=_("serial id of a certificate to unsubscribe from (either entitlement or serial or all is required)"))
+            help=_("serial id of a certificate to unsubscribe from (either entitlement or serial or all is required)"))
         parser.add_option('--all', dest='all', action="store_true", default=None,
-                               help=_("unsubscribe from all currently subscribed certificates (either entitlement or serial or all is required)"))
+            help=_("unsubscribe from all currently subscribed certificates (either entitlement or serial or all is"
+                + " required)"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -640,11 +643,16 @@ class Update(SystemAction):
         system_uuid = system['uuid']
 
         updates = {}
-        if new_name: updates['name'] = new_name
-        if new_description: updates['description'] = new_description
-        if new_location: updates['location'] = new_location
-        if new_release: updates['releaseVer'] = new_release
-        if new_sla: updates['serviceLevel'] = new_sla
+        if new_name:
+            updates['name'] = new_name
+        if new_description:
+            updates['description'] = new_description
+        if new_location:
+            updates['location'] = new_location
+        if new_release:
+            updates['releaseVer'] = new_release
+        if new_sla:
+            updates['serviceLevel'] = new_sla
         if new_environment_name:
             new_environment = get_environment(org_name, new_environment_name)
             updates['environment_id'] = new_environment['id']
@@ -673,15 +681,15 @@ class Report(SystemAction):
     def run(self):
         orgId = self.get_option('org')
         envName = self.get_option('environment')
-        format = self.get_option('format')
+        format_in = self.get_option('format')
 
         if envName is None:
-            report = self.api.report_by_org(orgId, convert_to_mime_type(format, 'text'))
+            report = self.api.report_by_org(orgId, convert_to_mime_type(format_in, 'text'))
         else:
             environment = get_environment(orgId, envName)
-            report = self.api.report_by_env(environment['id'], convert_to_mime_type(format, 'text'))
+            report = self.api.report_by_env(environment['id'], convert_to_mime_type(format_in, 'text'))
 
-        if format == 'pdf':
+        if format_in == 'pdf':
             save_report(report[0], attachment_file_name(report[1], 'katello_systems_report.pdf'))
         else:
             print report[0]
