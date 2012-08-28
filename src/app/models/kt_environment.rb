@@ -263,7 +263,7 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   #Permissions
-  scope :changesets_readable, lambda {|org| authorized_items(org, [:promote_changesets, :manage_changesets, :read_changesets])}
+  scope :changesets_readable, lambda {|org| authorized_items(org, [:delete_changesets, :promote_changesets, :manage_changesets, :read_changesets])}
   scope :content_readable, lambda {|org| authorized_items(org, [:read_contents])}
   scope :systems_readable, lambda{|org|
     if  org.systems_readable?
@@ -307,7 +307,13 @@ class KTEnvironment < ActiveRecord::Base
                               self.organization)
   end
 
-  CHANGE_SETS_READABLE = [:manage_changesets, :read_changesets, :promote_changesets]
+  def changesets_deletable?
+    return false if !AppConfig.katello?
+    User.allowed_to?([:delete_changesets], :environments, self.id,
+                              self.organization)
+  end
+
+  CHANGE_SETS_READABLE = [:manage_changesets, :read_changesets, :promote_changesets, :delete_changesets]
   def changesets_readable?
     return false if !AppConfig.katello?
     User.allowed_to?(CHANGE_SETS_READABLE, :environments,
@@ -369,7 +375,8 @@ class KTEnvironment < ActiveRecord::Base
       :delete_systems => _("Remove Systems in Environment"),
       :read_changesets => _("Read Changesets in Environment"),
       :manage_changesets => _("Administer Changesets in Environment"),
-      :promote_changesets => _("Promote Changesets in Environment")
+      :promote_changesets => _("Promote Content to Environment"),
+      :delete_changesets => _("Delete Content from Environment")
       }.with_indifferent_access
     else
       {

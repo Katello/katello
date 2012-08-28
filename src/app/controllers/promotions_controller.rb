@@ -56,7 +56,8 @@ class PromotionsController < ApplicationController
       :accessible_envs=> access_envs,
       :manage_deletion_changesets => (@environment && @environment.changesets_manageable?)? true : false,
       :manage_promotion_changesets => (@next_environment && @next_environment.changesets_manageable?)? true : false,
-      :apply_changesets => ((@next_environment && @next_environment.changesets_promotable?) or (@environment && @environment.changesets_manageable?))? true : false,
+      :apply_promotion_changesets => (@next_environment && @next_environment.changesets_promotable?)? true : false,
+      :apply_deletion_changesets => (@environment && @environment.changesets_deletable?)? true : false,
       :read_deletion_changesets => (@environment && @environment.changesets_readable?)? true : false,
       :read_promotion_changesets => (@next_environment && @next_environment.changesets_readable?)? true : false,
       :read_contents => (@environment && @environment.contents_readable?)? true: false
