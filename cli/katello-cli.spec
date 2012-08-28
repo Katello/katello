@@ -115,6 +115,7 @@ done
 chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 
 mkdir -p %{buildroot}%{homedir}/tests/%{name}/unit-tests
+sed -i -e 's|\.\./src/katello|%{python_sitelib}/%{base_name}|g' test/katello/__init__.py
 cp -ap test/katello %{buildroot}%{homedir}/tests/%{name}/unit-tests
 
 %files
