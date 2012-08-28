@@ -21,11 +21,11 @@ class SystemGroupAPI(KatelloAPI):
     """
     Connection class to access environment calls
     """
-    def system_groups(self, org_id, query={}):
+    def system_groups(self, org_id, query=None):
         path = "/api/organizations/%s/system_groups" % org_id
         return self.server.GET(path, query)[1]
 
-    def system_group(self, org_id, system_group_id, query={}):
+    def system_group(self, org_id, system_group_id, query=None):
         path = "/api/organizations/%s/system_groups/%s" % (org_id, system_group_id)
         return self.server.GET(path, query)[1]
 
@@ -37,7 +37,7 @@ class SystemGroupAPI(KatelloAPI):
 
         return self.server.GET(path)[1]
 
-    def system_group_by_name(self, org_id, system_group_name, query={}):
+    def system_group_by_name(self, org_id, system_group_name):
         path = "/api/organizations/%s/system_groups/" % org_id
         system_group = self.server.GET(path, {"name": system_group_name})[1]
         if len(system_group) > 0:
@@ -45,7 +45,7 @@ class SystemGroupAPI(KatelloAPI):
         else:
             return None
 
-    def system_group_systems(self, org_id, system_group_id, query={}):
+    def system_group_systems(self, org_id, system_group_id, query=None):
         path = "/api/organizations/%s/system_groups/%s/systems" % (org_id, system_group_id)
         return self.server.GET(path, query)[1]
 
@@ -135,13 +135,10 @@ class SystemGroupAPI(KatelloAPI):
         path = "/api/organizations/%s/system_groups/%s/packages" % (org_id, system_group_id)
         return self.server.DELETE(path, {"groups": packages})[1]
 
-    def errata(self, org_id, system_group_id, type=None):
+    def errata(self, org_id, system_group_id, type_in=None):
         path = "/api/organizations/%s/system_groups/%s/errata" % (org_id, system_group_id)
-
         params = {}
-        if type is not None:
-            params['type'] = type
-
+        self.update_dict(params, "type", type_in)
         return self.server.GET(path, params)[1]
 
     def install_errata(self, org_id, system_group_id, errata):

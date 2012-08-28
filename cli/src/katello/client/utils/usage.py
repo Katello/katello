@@ -31,7 +31,8 @@ class UsageGenerator:
     def collector(self):
         return self.__collector
 
-    def _print_subcommands_for(self, cmd):
+    @classmethod
+    def _print_subcommands_for(cls, cmd):
         if not isinstance(cmd, CommandContainer):
             return
         for subcommand_name in iter(sorted(cmd.get_command_names())):

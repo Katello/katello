@@ -118,7 +118,6 @@ class Create(EnvironmentAction):
         description = self.get_option('description')
         orgName     = self.get_option('org')
         priorName   = self.get_option('prior')
-        env         = self.get_option('env')
 
         priorId = self.get_prior_id(orgName, priorName)
 

@@ -23,11 +23,16 @@ class KatelloAPI(object):
     @ivar server: L{Server} instance
     """
 
+    def __init__(self):
+        pass
+
     @property
-    def server(self):
+    @classmethod
+    def server(cls):
         return server.active_server
 
-    def update_dict(self, d, key, value):
+    @classmethod
+    def update_dict(cls, d, key, value):
         """
         Update value for key in fictionary only if the value is not None.
         """
