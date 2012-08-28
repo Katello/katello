@@ -14,6 +14,7 @@
 %global base_name katello
 %global katello_requires python-iniparse python-simplejson python-kerberos m2crypto PyXML
 %global locale_dir /usr/share/locale/
+%global homedir %{_datarootdir}/%{base_name}
 
 Name:          %{base_name}-cli
 Summary:       Client package for managing application life-cycle for Linux systems
@@ -45,6 +46,24 @@ BuildArch:     noarch
 
 %description common
 Common classes for katello clients
+
+
+%package unit-tests
+Summary:       Unit tests for Katello client
+Group:         Applications/System
+License:       GPLv2
+Requires:      PyXML
+Requires:      python-kerberos
+Requires:      m2crypto
+Requires:      python-nose
+Requires:      python-mock
+Requires:      %{name} = %{version}-%{release}
+BuildArch:     noarch
+
+%description unit-tests
+Unit tests for Katello client.
+For more info see:
+https://fedorahosted.org/katello/wiki/TestingHowto
 
 %prep
 %setup -q
@@ -95,6 +114,9 @@ done
 # several scripts are executable
 chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 
+mkdir -p %{buildroot}%{homedir}/tests/%{name}/unit-tests
+cp -ap test/katello %{buildroot}%{homedir}/tests/%{name}/unit-tests
+
 %files
 %attr(755,root,root) %{_bindir}/%{base_name}
 %attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
@@ -106,6 +128,9 @@ chmod 755 %{buildroot}%{python_sitelib}/%{base_name}/client/main.py
 %files common -f %{name}.lang
 %dir %{_sysconfdir}/%{base_name}
 %{python_sitelib}/%{base_name}/
+
+%files unit-tests
+%{homedir}/tests
 
 %clean
 # clean locale files
