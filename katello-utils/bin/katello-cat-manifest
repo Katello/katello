@@ -1,0 +1,19 @@
+#!/usr/bin/ruby
+# Manifest cat - prints useful information about manifest ZIP import
+#
+# yum -y install unzip rubygem-json
+#
+
+require 'pp'
+require 'rubygems'
+require 'json'
+require '/usr/share/katello/lib/util/manifest_reader.rb'
+
+if ARGV.size == 0
+  puts "Usage: #{$0} manifest.zip"
+  exit 1
+end
+
+manifest_filename=ARGV[0]
+mf = ManifestReader::Manifest.new manifest_filename
+mf.print_info
