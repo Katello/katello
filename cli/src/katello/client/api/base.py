@@ -27,8 +27,7 @@ class KatelloAPI(object):
         pass
 
     @property
-    @classmethod
-    def server(cls):
+    def server(self):
         return server.active_server
 
     @classmethod
