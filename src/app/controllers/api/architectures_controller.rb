@@ -49,8 +49,8 @@ class Api::ArchitecturesController < Api::ApiController
     param :name, String, "architecture name"
   end
   def update
-    resource = Foreman::Architecture.new(params[:architecture])
-    resource.id = params[:id]
+    resource = Foreman::Architecture.find!(params[:id])
+    resource.attributes = params[:architecture]
     if resource.save!
       render :json => resource
     end

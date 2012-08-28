@@ -20,7 +20,7 @@ from gettext import gettext as _
 from katello.client.api.architecture import ArchitectureAPI
 from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, unnest_one
+from katello.client.core.utils import test_foreman_record, unnest_one
 
 Config()
 
@@ -39,7 +39,9 @@ class List(ArchitectureAction):
     description = _('list all known architectures')
 
     def run(self):
-        archs = unnest_one(self.api.index())
+        archs = self.api.index()
+        if archs:
+            archs = unnest_one(archs)
 
         self.printer.add_column('id')
         self.printer.add_column('name')
@@ -61,7 +63,10 @@ class Create(ArchitectureAction):
 
     def run(self):
         arch = self.api.create(self.get_option_dict("name"))
-        print _("Architecture [ %s ] created.") % arch["architecture"]["name"]
+        test_foreman_record(arch, 'architecture',
+            _("Architecture [ %s ] created.") % arch["architecture"]["name"],
+            _("Could not create Architecture [ %s ].") % self.get_option_dict("name")
+        )
 
 
 class Update(ArchitectureAction):
@@ -77,8 +82,12 @@ class Update(ArchitectureAction):
         validator.require_one_of(('name',))
 
     def run(self):
-        self.api.update(self.get_option("old_name"), self.get_option_dict("name"))
-        print _("Architecture [ %s ] updated.") % self.get_option("old_name")
+        architecture = self.api.update(self.get_option("old_name"), self.get_option_dict("name"))
+
+        test_foreman_record(architecture, 'architecture',
+            _("Architecture [ %s ] updated.") % self.get_option("old_name"),
+            _("Could not update Architecture [ %s ].") % self.get_option("old_name")
+        )
 
 
 class Delete(ArchitectureAction):
