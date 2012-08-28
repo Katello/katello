@@ -32,7 +32,10 @@ def force_encoding(encoding):
     Force locale to use specific encoding and bind output streams to use it.
     """
     current_locale = locale.getlocale(locale.LC_ALL)[0] or locale.getdefaultlocale()[0]
-    locale.setlocale(locale.LC_ALL, str(current_locale)+'.'+str(encoding))
+    if current_locale:
+        locale.setlocale(locale.LC_ALL, str(current_locale)+'.'+str(encoding))
+    else:
+        locale.setlocale(locale.LC_ALL, 'C')
     sys.stdout = encode_stream(sys.stdout, encoding)
     sys.stderr = encode_stream(sys.stderr, encoding)
 
