@@ -211,11 +211,11 @@ class Provider < ActiveRecord::Base
   def available_releases
     releases = []
     begin
-      Resources::CDN::CdnVarSubstitutor.with_cache do
+      Util::CdnVarSubstitutor.with_cache do
         self.products.engineering.each do |product|
-          cdn_var_substitutor = Resources::CDN::CdnVarSubstitutor.new(product.provider[:repository_url],
+          cdn_var_substitutor = Resources::CDN::CdnResource.new(product.provider[:repository_url],
                                                            :ssl_client_cert => OpenSSL::X509::Certificate.new(product.certificate),
-                                                           :ssl_client_key => OpenSSL::PKey::RSA.new(product.key))
+                                                           :ssl_client_key => OpenSSL::PKey::RSA.new(product.key)).substitutor
           product.productContent.each do |pc|
             if url_to_releases = pc.content.contentUrl[/^.*\$releasever/]
               cdn_var_substitutor.substitute_vars(url_to_releases).each do |(substitutions, path)|
