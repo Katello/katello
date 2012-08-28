@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Resources::CDN::CdnVarSubstitutor do
+describe Resources::CDN::CdnResource do
 
   let(:provider_url) { "https://cdn.redhat.com" }
   let(:path_with_variables) { "/content/dist/rhel/server/5/$releasever/$basearch/os" }
@@ -10,7 +10,7 @@ describe Resources::CDN::CdnVarSubstitutor do
   end
 
   subject do
-    Resources::CDN::CdnVarSubstitutor.new(provider_url, connect_options)
+    Resources::CDN::CdnResource.new(provider_url, connect_options).substitutor
   end
 
   it "should substitute all variables with values in listings" do
@@ -72,9 +72,9 @@ describe Resources::CDN::CdnVarSubstitutor do
     stub_successful_cdn_requests(["6","61"],["i386", "x86_64"])
 
     @net_mock.should_receive(:start).exactly(3).times
-    Resources::CDN::CdnVarSubstitutor.with_cache do
-      Resources::CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
-      Resources::CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
+    Util::CdnVarSubstitutor.with_cache do
+      Resources::CDN::CdnResource.new(provider_url, connect_options).substitutor.substitute_vars(path_with_variables)
+      Resources::CDN::CdnResource.new(provider_url, connect_options).substitutor.substitute_vars(path_with_variables)
     end
   end
 
@@ -82,10 +82,10 @@ describe Resources::CDN::CdnVarSubstitutor do
     stub_successful_cdn_requests(["6","61"],["i386", "x86_64"])
 
     @net_mock.should_receive(:start).exactly(6).times
-    Resources::CDN::CdnVarSubstitutor.with_cache do
-      Resources::CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
+    Util::CdnVarSubstitutor.with_cache do
+      Resources::CDN::CdnResource.new(provider_url, connect_options).substitutor.substitute_vars(path_with_variables)
     end
-    Resources::CDN::CdnVarSubstitutor.new(provider_url, connect_options).substitute_vars(path_with_variables)
+    Resources::CDN::CdnResource.new(provider_url, connect_options).substitutor.substitute_vars(path_with_variables)
   end
 
 
