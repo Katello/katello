@@ -57,9 +57,15 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s/subscriptions" % system_id
         return self.server.GET(path)[1]
 
-    def available_pools(self, system_id):
+    def available_pools(self, system_id, match_system=False, match_installed=False, no_overlap=False):
+        params = {}
+        self.update_dict(params, "match_system", match_system)
+        self.update_dict(params, "match_installed", match_installed)
+        self.update_dict(params, "no_overlap", no_overlap)
+
         path = "/api/systems/%s/pools" % system_id
-        return self.server.GET(path)[1]
+
+        return self.server.GET(path, params)[1]
 
     def unsubscribe(self, system_id, entitlement):
         path = "/api/systems/%s/subscriptions/%s" % (system_id, entitlement)

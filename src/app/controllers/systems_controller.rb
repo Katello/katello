@@ -206,12 +206,10 @@ class SystemsController < ApplicationController
       entitlement
     end
 
-    # Available subscriptions
-    if current_user.subscriptions_match_system_preference
-      cp_pools = @system.available_pools
-    else
-      cp_pools = @system.all_available_pools
-    end
+    cp_pools = @system.filtered_pools(current_user.subscriptions_match_system_preference,
+                                      current_user.subscriptions_match_installed_preference,
+                                      current_user.subscriptions_no_overlap_preference)
+
     if cp_pools
       # Pool objects
       pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
@@ -227,11 +225,20 @@ class SystemsController < ApplicationController
       subscriptions = []
     end
 
+    # Set up the subscription filters based upon the user prefs
+    subscription_filters = "
+        <option value='subscriptions_match_system' %s>%s</option>
+        <option value='subscriptions_match_installed' %s>%s</option>
+        <option value='subscriptions_no_overlap' %s>%s</option>
+        " % [ current_user.subscriptions_match_system_preference ? "selected='selected'" : '', _("Match System"),
+              current_user.subscriptions_match_installed_preference ? "selected='selected'" : '', _("Match Installed Software"),
+              current_user.subscriptions_no_overlap_preference ? "selected='selected'" : '', _("No Overlap with Current")]
+
     @organization = current_organization
     render :partial=>"subscriptions", :layout => "tupane_layout",
                                       :locals=>{:system=>@system, :avail_subs => subscriptions,
                                                 :consumed_entitlements => consumed_entitlements,
-                                                :editable=>@system.editable?}
+                                                :editable=>@system.editable?, :subscription_filters=>subscription_filters}
   end
 
   def update_subscriptions

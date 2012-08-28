@@ -495,6 +495,15 @@ class Subscriptions(SystemAction):
         parser.add_option('--available', dest='available',
                 action="store_true", default=False,
                 help=_("show available subscriptions"))
+        parser.add_option('--match_system', dest='match_system',
+                action="store_true", default=False,
+                help=_("show available subscriptions matching system"))
+        parser.add_option('--match_installed', dest='match_installed',
+                action="store_true", default=False,
+                help=_("show available subscriptions matching installed software"))
+        parser.add_option('--no_overlap', dest='no_overlap',
+                action="store_true", default=False,
+                help=_("show available subscriptions not overlapping current subscriptions"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -503,6 +512,9 @@ class Subscriptions(SystemAction):
         name = self.get_option('name')
         org = self.get_option('org')
         available = self.get_option('available')
+        match_system = self.get_option('match_system')
+        match_installed = self.get_option('match_installed')
+        no_overlap = self.get_option('no_overlap')
 
         system = get_system(org, name)
 
@@ -536,7 +548,7 @@ class Subscriptions(SystemAction):
             self.printer.print_items(entitlements())
         else:
             # listing available pools
-            result = self.api.available_pools(system['uuid'])
+            result = self.api.available_pools(system['uuid'], match_system, match_installed, no_overlap)
 
             if result == None or len(result) == 0:
                 print _("No Pools found for System [ %s ] in Org [ %s ]") % (name, org)
@@ -545,18 +557,26 @@ class Subscriptions(SystemAction):
             def available_pools():
                 for pool in result['pools']:
                     pool_ext = pool.copy()
-                    provided_products = ', '.join([p['name'] for p in pool_ext['providedProducts']])
+                    provided_products = ', '.join([p['productName'] for p in pool_ext['providedProducts']])
                     pool_ext['providedProductsFormatted'] = provided_products
+
+                    if pool_ext['quantity'] == -1:
+                        pool_ext['quantity'] = _('Unlimited')
+
+                    # Make the productAttributes easier to access
+                    for productAttribute in pool['productAttributes']:
+                        pool_ext['attr_' + productAttribute['name']] = productAttribute['value']
                     yield pool_ext
 
             self.printer.set_header(_("Available Subscriptions for System [ %s ]") % name)
-            self.printer.add_column('poolId')
-            self.printer.add_column('poolName')
-            self.printer.add_column('expires')
+            self.printer.add_column('id')
+            self.printer.add_column('productName', name=_('Name'))
+            self.printer.add_column('endDate')
             self.printer.add_column('consumed')
             self.printer.add_column('quantity')
             self.printer.add_column('sockets')
-            self.printer.add_column('multiEntitlement')
+            self.printer.add_column('attr_stacking_id', name=_('Stacking Id'))
+            self.printer.add_column('attr_multi-entitlement', name=_('Multi-entitlement'))
             self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
             self.printer.print_items(available_pools())
 
