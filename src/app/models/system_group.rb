@@ -18,7 +18,7 @@ class SystemGroup < ActiveRecord::Base
   include IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{},
+                :json=>{:only=>[:id, :organization_id, :name, :description, :max_systems]},
                 :display_attrs=>[:name, :description, :system]
 
   mapping do
