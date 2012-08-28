@@ -59,6 +59,11 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
+  # don't run disabled tests
+  # to mark a test disabled:
+  # describe "i'm currently broken", :disabled => true {}
+  config.filter_run_excluding :disabled => true
+
 end
 
 

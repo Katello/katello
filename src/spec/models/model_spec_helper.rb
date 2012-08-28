@@ -81,6 +81,12 @@ rKH9OkgKEvwkf8zQjO/XSvuoac83uBEFgKXJwYLHPA3U20JrchKU7klLwzSsmrXA
 -----END RSA PRIVATE KEY-----
 EOKEY
 
+  def ok_response
+    ok_response = mock('response')
+    ok_response.stub!(:code).and_return('200')
+    ok_response
+  end
+
 
   def disable_product_orchestration
     Resources::Candlepin::Product.stub!(:get).and_return([{:productContent => []}])
@@ -115,6 +121,12 @@ EOKEY
     Resources::Candlepin::Environment.stub!(:destroy).and_return({})
     Resources::Candlepin::Environment.stub!(:find).and_return({:environmentContent => []})
     Resources::Candlepin::Environment.stub!(:add_content).and_return({})
+
+    f_api = ForemanApi::Resources::Environment.new
+    ForemanApi::Resources::Environment.stub!(:new).and_return(f_api)
+    f_api.stub!(:create).and_return({:id => "1"})
+    f_api.stub!(:update).and_return({})
+    f_api.stub!(:destroy).and_return(ok_response)
   end
 
   def disable_system_orchestration

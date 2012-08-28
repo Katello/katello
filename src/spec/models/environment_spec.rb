@@ -256,5 +256,55 @@ describe KTEnvironment do
         @environment.stub_chain(:repositories, :enabled).and_return(promoted_repos)
       end
     end
+
+    describe "Foreman orchestration", :disabled => true do
+      let(:ok_response) do
+        ok_response = mock('response')
+        ok_response.stub!(:code).and_return('200')
+        ok_response
+      end
+
+      before(:each) do
+        @foreman_environment = Object.new
+        @foreman_environment_id = 1
+        @env_name = rand(1000).to_i.to_s
+        @env = @organization.environments.build({:name => @env_name, :prior => @environment})
+      end
+
+      it "should create environment with name in Foreman" do
+        ForemanApi::Resources::Environment.should_receive(:new).and_return(@foreman_environment)
+        @foreman_environment.
+            should_receive(:create).
+            once.
+            with(hash_including(:environment => {:name => @env_name})).
+            and_return(:id => @foreman_environment_id)
+
+        @env.save!
+      end
+
+      it "should populate environment.foreman_id field" do
+        ForemanApi::Resources::Environment.stub!(:new).and_return(@foreman_environment)
+        @foreman_environment.stub!(:create).and_return(:id => @foreman_environment_id)
+
+        @env.save!
+
+        @env.foreman_id.should == @foreman_environment_id
+      end
+
+      it "should delete environment in Foreman" do
+        ForemanApi::Resources::Environment.stub!(:new).and_return(@foreman_environment)
+        @foreman_environment.stub!(:create).and_return(:id => @foreman_environment_id)
+        @env.save!
+
+        @foreman_environment.
+            should_receive(:destroy).
+            once.
+            with(@foreman_environment_id).
+            and_return(ok_response)
+
+        @env.destroy
+      end
+
+    end
   end
 end

@@ -58,6 +58,7 @@ end
 class KTEnvironment < ActiveRecord::Base
   include Authorization
   include Glue::Candlepin::Environment if AppConfig.use_cp
+  include Glue::Foreman::Environment if AppConfig.use_foreman
   include Glue if AppConfig.use_cp
   set_table_name "environments"
 
