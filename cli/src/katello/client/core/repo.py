@@ -16,7 +16,6 @@
 
 import os
 import urlparse
-from gettext import gettext as _
 
 from katello.client import constants
 from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, opt_parser_add_environment

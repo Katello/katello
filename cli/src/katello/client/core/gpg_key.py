@@ -16,7 +16,6 @@
 
 import os
 import sys
-from gettext import gettext as _
 
 from katello.client.api.gpg_key import GpgKeyAPI
 from katello.client.cli.base import opt_parser_add_org

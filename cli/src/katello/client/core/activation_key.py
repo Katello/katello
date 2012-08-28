@@ -16,7 +16,6 @@
 
 import os
 import sys
-from gettext import gettext as _
 
 from katello.client.api.activation_key import ActivationKeyAPI
 from katello.client.api.template import TemplateAPI

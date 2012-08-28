@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.cli.base import opt_parser_add_org

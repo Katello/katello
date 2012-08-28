@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.shell import KatelloShell
 from katello.client.core.base import BaseAction

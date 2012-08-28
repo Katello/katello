@@ -49,8 +49,5 @@ def configure_i18n():
     if locale.getpreferredencoding().lower() != ENCODING.lower():
         force_encoding(ENCODING)
 
-    gettext.bindtextdomain(APP, DIR)
-    gettext.textdomain(APP)
-    gettext.bind_textdomain_codeset(APP, ENCODING)
-    
-
+    # this will set _() to ugettext() globaly
+    gettext.install(APP, DIR, True, ENCODING)

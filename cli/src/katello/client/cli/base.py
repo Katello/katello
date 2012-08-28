@@ -17,7 +17,6 @@ import os
 import sys
 from traceback import format_exc
 
-from gettext import gettext as _
 from optparse import OptionGroup, SUPPRESS_HELP
 from katello.client.i18n_optparse import OptionParserExitError
 from katello.client.utils.encoding import u_str
