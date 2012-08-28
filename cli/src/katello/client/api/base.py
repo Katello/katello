@@ -26,9 +26,9 @@ class KatelloAPI(object):
     def __init__(self):
         pass
 
+    # pylint: disable=R0201
     @property
-    @classmethod
-    def server(cls):
+    def server(self):
         return server.active_server
 
     @classmethod

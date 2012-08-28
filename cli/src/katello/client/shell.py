@@ -40,9 +40,9 @@ class KatelloShell(Cmd):
     # do nothing on an empty line
     emptyline = lambda self: None
 
+    # pylint: disable=R0201
     @property
-    @classmethod
-    def history_file(cls):
+    def history_file(self):
         conf_dir = Config.USER_DIR
         try:
             if not os.path.isdir(conf_dir):
