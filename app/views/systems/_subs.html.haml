@@ -87,6 +87,7 @@
               %th #{_("End")}
           %tbody
             - if avail_subs.length > 0
+              - reset_cycle()  # Always start table with a light colored line
               - for sub in avail_subs
                 - cycle_class = cycle("", "alt")
                 %tr{:id => "#{sub.cp_id}", :class => cycle_class}
