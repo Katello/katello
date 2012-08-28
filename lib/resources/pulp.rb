@@ -163,6 +163,68 @@ module Resources
     end
 
 
+    #Importers should supply  id & config methods
+    class Importer
+      def initialize params={}
+        params.each{|k,v| self.send("#{k.to_s}=",v)}
+      end
+    end
+
+    class YumImporter < Importer
+      #https://github.com/pulp/pulp/blob/master/rpm-support/plugins/importers/yum_importer/importer.py
+      attr_accessor 'feed_url', 'ssl_verify', 'ssl_ca_cert', 'ssl_client_cert', 'ssl_client_key',
+                        'proxy_url', 'proxy_port', 'proxy_pass', 'proxy_user',
+                        'max_speed', 'verify_size', 'verify_checksum', 'num_threads',
+                        'newest', 'remove_old', 'num_old_packages', 'purge_orphaned', 'skip', 'checksum_type',
+                        'num_retries', 'retry_delay'
+
+      def id
+         'yum_importer'
+      end
+
+      def config
+          self.as_json
+      end
+    end
+
+    #distributors should supply  id & config methods
+    class Distributor
+      attr_accessor 'auto_publish', 'unique_id'
+
+      def initialize params={}
+        @auto_publish = false
+        @unique_id = SecureRandom.hex(10)
+        params.each{|k,v| self.send("#{k.to_s}=",v)}
+      end
+    end
+
+    class YumDistributor < Distributor
+      #required
+      attr_accessor "relative_url", "http", "https"
+      #optional
+      attr_accessor "protected", "auth_cert", "auth_ca",
+                    "https_ca", "gpgkey", "generate_metadata",
+                    "checksum_type", "skip", "https_publish_dir", "http_publish_dir"
+
+      def initialize relative_url, http, https, params={}
+        @relative_url=relative_url
+        @http = http
+        @https = https
+        super(params)
+      end
+
+      def id
+        'yum_distributor'
+      end
+
+      def config
+        to_ret = self.as_json
+        to_ret.delete('auto_publish')
+        to_ret.delete('unique_id')
+        to_ret
+      end
+    end
+
     class Repository < PulpResource
       class << self
 
@@ -218,16 +280,16 @@ module Resources
         end
 
 
-        # {:id, :display_name},  importer_id, {:feed_url, }
-        def create attrs, importer_id=nil, importer_attrs={}, distributors=[]
-          attrs.merge!({:importer_type_id=>importer_id, :importer_config=>importer_attrs}) if importer_id
-          attrs.merge!({:distributors=>distributors}) if !distributors.empty?
+        # {:id, :display_name},  importer=nil,distributors=[]
+        def create attrs, importer=nil, distributors=[]
+          attrs.merge!({:importer_type_id=>importer.id, :importer_config=>importer.config}) if importer
+          attrs.merge!({:distributors=>distributors.collect{|d| [d.id, d.config, d.auto_publish, d.unique_id] }}) if !distributors.empty?
           body = post(Repository.repository_path, JSON.generate(attrs), self.default_headers).body
           JSON.parse(body).with_indifferent_access
         end
 
 
-        # :id, :name, :arch, :groupid, :feed
+        # :id, :name
         def update repo_id, attrs
           body = put(Repository.repository_path + repo_id +"/", JSON.generate(attrs), self.default_headers).body
           find repo_id
@@ -249,7 +311,7 @@ module Resources
             Repository.create_schedule(repo_id, schedule)
           else
             #just update the 1st since we only support 1
-            Repository.update_schedule(repo_id, schedules[0]['id'], schedule)
+            Repository.update_schedule(repo_id, schedules[0]['_id'], schedule)
           end
         end
 
