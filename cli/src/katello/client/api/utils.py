@@ -22,7 +22,6 @@ All of them throw ApiDataError if any of the records is not found.
 """
 
 
-from gettext import gettext as _
 from katello.client.api.organization import OrganizationAPI
 from katello.client.api.environment import EnvironmentAPI
 from katello.client.api.product import ProductAPI

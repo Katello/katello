@@ -16,7 +16,6 @@
 
 import re
 import time
-from gettext import gettext as _
 
 
 class DateTimeFormatException(Exception):

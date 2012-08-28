@@ -1,5 +1,4 @@
 import os
-from gettext import gettext as _
 
 from katello.client.api.repo import RepoAPI
 from katello.client.core.base import BaseAction, Command

@@ -16,7 +16,6 @@
 
 import os
 import sys
-from gettext import gettext as _
 from optparse import OptionValueError
 
 from katello.client.api.template import TemplateAPI

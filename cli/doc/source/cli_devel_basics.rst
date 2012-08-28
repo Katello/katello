@@ -22,7 +22,6 @@ It should be named the same as the command (e.g. if the command is 'computer', t
 There are a few imports that you need to have included among other imports specific to this command::
 
     import os
-    from gettext import gettext as _
 
     from katello.client.core.base import BaseAction, Command
 

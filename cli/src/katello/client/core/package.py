@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.package import PackageAPI
 from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, opt_parser_add_environment

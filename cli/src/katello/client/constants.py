@@ -16,7 +16,6 @@
 #
 #
 
-from gettext import gettext as _
 
 STATUS_DETAIL_SUCCESS = """
      Name          \t%-20s

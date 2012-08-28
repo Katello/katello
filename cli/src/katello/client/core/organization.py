@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
