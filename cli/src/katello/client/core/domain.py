@@ -20,7 +20,7 @@ from gettext import gettext as _
 from katello.client.api.domain import DomainAPI
 from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import system_exit, unnest_one
+from katello.client.core.utils import test_foreman_record, unnest_one
 
 Config()
 
@@ -100,10 +100,10 @@ class Create(DomainAction):
         data = self.get_option_dict('name','fullname','dns_id') #'domain_parameters_attributes'
         domain = self.api.create(data)
 
-        if type(domain)==type(dict()) and 'domain' in domain:
-            system_exit(os.EX_OK, _('Successfuly created Domain [ %s ]') % data['name'])
-        else:
-            system_exit(os.EX_DATAERR, _("Could not update Domain [ %s ]") % data['name'])
+        test_foreman_record(domain, 'domain',
+            _('Successfuly created Domain [ %s ]') % data['name'],
+            _("Could not update Domain [ %s ]") % data['name']
+        )
 
 
 class Update(DomainAction):
@@ -126,10 +126,10 @@ class Update(DomainAction):
 
         domain = self.api.update(domain_id, data)
 
-        if type(domain)==type(dict()) and 'domain' in domain:
-            system_exit(os.EX_OK, _('Successfuly updated Domain [ %s ]') % domain_id)
-        else:
-            system_exit(os.EX_DATAERR, _("Could not create Domain [ %s ]") % domain_id)
+        test_foreman_record(domain, 'domain',
+            _('Successfuly updated Domain [ %s ]') % domain_id,
+            _("Could not create Domain [ %s ]") % domain_id
+        )
 
 
 class Delete(DomainAction):

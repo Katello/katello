@@ -20,7 +20,7 @@ from gettext import gettext as _
 from katello.client.api.config_template import ConfigTemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import system_exit, unnest_one
+from katello.client.core.utils import test_foreman_record, unnest_one
 
 Config()
 
@@ -126,10 +126,10 @@ class Create(ConfigTemplateAction):
 
         ctemplate = self.api.create(data)
 
-        if type(ctemplate)==type(dict()) and 'config_template' in ctemplate:
-            system_exit(os.EX_OK, _("Successfully created Config Template [ %s ]") % data['name'])
-        else:
-            system_exit(os.EX_DATAERR, _("Could not create Config Template [ %s ]") % data['name'])
+        test_foreman_record(ctemplate, 'config_template',
+            _("Successfully created Config Template [ %s ]") % data['name'],
+            _("Could not create Config Template [ %s ]") % data['name']
+        )
 
 class Update(ConfigTemplateAction):
 
@@ -155,10 +155,10 @@ class Update(ConfigTemplateAction):
 
         ctemplate = self.api.update(template_id, data)
 
-        if type(ctemplate)==type(dict()) and 'config_template' in ctemplate:
-            system_exit(os.EX_OK, _("Successfully updated Config Template [ id = %s ]") % template_id)
-        else:
-            system_exit(os.EX_DATAERR, _("Could not update Config Template [ id = %s ]") % template_id)
+        test_foreman_record(ctemplate, 'config_template',
+            _("Successfully updated Config Template [ id = %s ]") % template_id,
+            _("Could not update Config Template [ id = %s ]") % template_id
+        )
 
 class Delete(ConfigTemplateAction):
 

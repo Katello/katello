@@ -53,6 +53,23 @@ def test_record(rec, success_msg, failure_msg):
     else:
         system_exit(os.EX_DATAERR, failure_msg)
 
+def test_foreman_record(rec, key, success_msg, failure_msg):
+    """
+    Test if a foreman record is valid, and exit with a proper return code and a message.
+    @type rec: dictionary
+    @param rec: record returned from server
+    @type key: string
+    @param key: expected record key (eg config_template)
+    @type success_msg: string
+    @param success_msg: success message
+    @type failure_msg: string
+    @param failure_msg: failure message
+    """
+    if type(rec)==type(dict()) and key in rec:
+        system_exit(os.EX_OK, success_msg)
+    else:
+        system_exit(os.EX_DATAERR, failure_msg)
+
 
 def unnest(rec, *path):
     """
