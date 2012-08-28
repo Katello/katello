@@ -132,38 +132,22 @@ module Glue::Pulp::Repo
 
   #TODO Create distributor and importer objects in pulp.rb
   def create_pulp_repo
+    importer = Resources::Pulp::YumImporter.new(:ssl_ca_cert=>self.feed_ca,
+          :ssl_client_cert=>self.feed_cert,
+          :ssl_client_key=>self.feed_key,
+          :feed_url=>self.feed)
+    distributor = Resources::Pulp::YumDistributor.new(self.relative_path, true, false,
+      {:protected=>true, :generate_metadata=>false, :unique_id=>self.pulp_id})
+
     Resources::Pulp::Repository.create({
         :id => self.pulp_id,
         :display_name => self.name},
-        'yum_importer',
-        self.importer_config,
-        [self.distributor_config]
+        importer,
+        [distributor]
     )
   end
 
-  def distributor_config
-    [ 'yum_distributor', #dist id
-      {
-      :relative_url => self.relative_path,
-      :https=>true,
-      :http=>false,
-      :protected=>true,
-      :generate_metadata=>false
-     },  #dist config
-     true, #auto publish
-     self.pulp_id  #unique exporter id
-    ]
-  end
 
-  def importer_config
-    {
-      :ssl_ca_cert=>self.feed_ca,
-      :ssl_client_cert=>self.feed_cert,
-      :ssl_client_key=>self.feed_key,
-
-      :feed_url=>self.feed
-    }
-  end
 
   def promote from_env, to_env
     filters_to_clone = self.filter_pulp_ids_to_promote from_env, to_env
