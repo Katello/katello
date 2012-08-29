@@ -23,7 +23,8 @@ from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
-from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_sync_errors
+from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, \
+    wait_for_async_task, AsyncTask, format_sync_errors
 from katello.client.core.utils import ProgressBar
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
@@ -116,14 +117,14 @@ class Create(RepoAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
-                               help=_("repository name to assign (required)"))
+            help=_("repository name to assign (required)"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
-                               help=_("url path to the repository (required)"))
+            help=_("url path to the repository (required)"))
         opt_parser_add_product(parser, required=1)
         parser.add_option('--gpgkey', dest='gpgkey',
-                               help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
+            help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
         parser.add_option('--nogpgkey', action='store_true',
-                               help=_("Don't assign a GPG key to the repository."))
+            help=_("Don't assign a GPG key to the repository."))
 
     def check_options(self, validator):
         validator.require(('name', 'org', 'product', 'url'))
@@ -149,11 +150,11 @@ class Discovery(RepoAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
-                               help=_("repository name prefix to add to all the discovered repositories (required)"))
+            help=_("repository name prefix to add to all the discovered repositories (required)"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
-                               help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
+            help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
-                               help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
+            help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
         opt_parser_add_product(parser, required=1)
 
     def check_options(self, validator):
@@ -200,7 +201,8 @@ class Discovery(RepoAction):
             while proceed.strip().lower() not in  ['q', 'y']:
                 if not proceed.strip().lower() == 'h':
                     self.__print_urls(repourls, selection)
-                proceed = raw_input(_("\nSelect urls for which candidate repos should be created; use `y` to confirm (h for help):"))
+                proceed = raw_input(
+                    _("\nSelect urls for which candidate repos should be created; use `y` to confirm (h for help):"))
                 select_val = proceed.strip().lower()
                 if select_val == 'h':
                     print select_range_str
@@ -270,7 +272,8 @@ class Status(SingleRepoAction):
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
-            repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+            repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (
+                task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
 
         repo['last_errors'] = format_sync_errors(task)
 
@@ -303,7 +306,8 @@ class Info(SingleRepoAction):
         self.printer.add_column('arch', show_with=printer.VerboseStrategy)
         self.printer.add_column('url', show_with=printer.VerboseStrategy)
         self.printer.add_column('last_sync', show_with=printer.VerboseStrategy, formatter=format_sync_time)
-        self.printer.add_column('sync_state', name=_("Progress"), show_with=printer.VerboseStrategy, formatter=format_sync_state)
+        self.printer.add_column('sync_state', name=_("Progress"),
+            show_with=printer.VerboseStrategy, formatter=format_sync_state)
         self.printer.add_column('gpg_key_name', name=_("GPG key"), show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Information About Repo %s") % repo['id'])
@@ -319,9 +323,9 @@ class Update(SingleRepoAction):
     def setup_parser(self, parser):
         super(Update, self).setup_parser(parser)
         parser.add_option('--gpgkey', dest='gpgkey',
-                               help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
+            help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
         parser.add_option('--nogpgkey', action='store_true',
-                               help=_("Don't assign a GPG key to the repository."))
+            help=_("Don't assign a GPG key to the repository."))
 
     def run(self):
         repo = self.get_repo(True)
