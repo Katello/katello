@@ -304,6 +304,7 @@ class UpdateContent(ChangesetAction):
         super(UpdateContent, self).__init__()
 
 
+    # pylint: disable=W0613
     def store_from_product(self, option, opt_str, value, parser):
         self.current_product = u_str(value)
         parser.values.from_product = True
