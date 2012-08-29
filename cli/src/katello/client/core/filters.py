@@ -83,7 +83,8 @@ class Create(FilterAction):
             _("Could not create filter [ %s ]") % name
         )
 
-    def parse_packages(self, packages):
+    @classmethod
+    def parse_packages(cls, packages):
         return ([] if packages == None else [p.strip() for p in packages.split(',')])
 
 class Delete(FilterAction):
