@@ -295,7 +295,8 @@ class ImportManifest(SingleProviderAction):
         except ServerRequestError, re:
             if re.args[0] == 400 and "displayMessage" in re.args[1] and \
                 re.args[1]["displayMessage"] == "Import is older than existing data":
-                re.args[1]["displayMessage"] = "Import is older then existing data, please try with --force option to import manifest."
+                re.args[1]["displayMessage"] = "Import is older then existing data," +\
+                    " please try with --force option to import manifest."
             raise re
         f.close()
         print response
