@@ -209,7 +209,8 @@ class Spinner(threading.Thread):
         sys.stdout.write(']')
         sys.stdout.flush()
 
-    def _resetCaret(self):
+    @classmethod
+    def _resetCaret(cls):
         #move the caret one character back
         sys.stdout.write('\033[3D')
         sys.stdout.flush()
