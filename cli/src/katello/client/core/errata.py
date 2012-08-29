@@ -138,12 +138,12 @@ class SystemGroupErrata(ErrataAction):
 
         org_name = self.get_option('org')
         group_name = self.get_option('name')
-        type = self.get_option('type')
+        type_in = self.get_option('type')
 
         system_group = get_system_group(org_name, group_name)
         system_group_id = system_group['id']
 
-        errata = systemGroupApi.errata(org_name, system_group_id, type=type)
+        errata = systemGroupApi.errata(org_name, system_group_id, type_in=type_in)
 
         self.printer.add_column('id')
         self.printer.add_column('title')
