@@ -15,7 +15,6 @@
 #
 
 import os
-from urlparse import urlparse
 
 from katello.client.api.provider import ProviderAPI
 from katello.client.cli.base import opt_parser_add_org
