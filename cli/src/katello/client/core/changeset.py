@@ -194,10 +194,10 @@ class UpdateContent(ChangesetAction):
             return patch
 
     class PatchItemBuilder(object):
-        def __init__(self, org_name, env_name, type):
+        def __init__(self, org_name, env_name, type_in):
             self.org_name = org_name
             self.env_name = env_name
-            self.type = type
+            self.type = type_in
             # Use current env if we are doing a deletion otherwise use the prior
             if self.type == 'deletion':
                 self.env_name = get_environment(org_name, env_name)['name']
