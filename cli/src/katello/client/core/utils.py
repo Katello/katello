@@ -234,11 +234,13 @@ class Spinner(threading.Thread):
 
 class ProgressBar(object):
 
-    def updateProgress(self, progress_in):
+    @classmethod
+    def updateProgress(cls, progress_in):
         sys.stdout.write("\rProgress: [{0:50s}] {1:.1f}%".format('#' * int(progress_in * 50), progress_in * 100))
         sys.stdout.flush()
 
-    def done(self):
+    @classmethod
+    def done(cls):
         sys.stdout.write("\r{0:60s}\r".format(' '*70))
 
 
