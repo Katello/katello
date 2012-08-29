@@ -280,7 +280,7 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
                     retrievingNewContent = false;
                     expand_list.find('.list-spinner').remove();
                     list_module.append(data['html'], pre_state);
-                    if (data['current_items'] + offset >= data["results_count"]) {
+                    if (data['current_items'] + offset >= data["total_items"]) {
                         list_elem.removeClass("ajaxScroll");
                     }
                     list_module.update_counts(data['current_items'], 0, 0);
