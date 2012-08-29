@@ -228,14 +228,14 @@ class ActivationKey < ActiveRecord::Base
 
   private
 
+  # Fetch each of the pools from candlepin, removing any that no longer
+  # exist (eg. from loss of a Virtual Guest pool)
   def validate_pools
     obsolete_pools = []
     self.pools.each do |pool|
       begin
-        # This will hit candlepin; if it fails that means the
-        # pool is no longer accessible.
-        pool.product_name
-      rescue
+        Resources::Candlepin::Pool.find(pool.cp_id)
+      rescue RestClient::ResourceNotFound => e
         obsolete_pools << pool
       end
     end
