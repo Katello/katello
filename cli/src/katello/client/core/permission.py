@@ -225,7 +225,8 @@ class ListAvailableVerbs(PermissionAction):
         else:
             return ("%-20s (%s)" % (verb["name"], verb["display_name"]))
 
-    def formatTag(self, tag):
+    @classmethod
+    def formatTag(cls, tag):
         return tag["display_name"]
 
     def formatScope(self, scopeName, scopeData):
