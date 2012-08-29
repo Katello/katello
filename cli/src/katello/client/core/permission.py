@@ -53,8 +53,8 @@ class Create(PermissionAction):
     description = _('create a permission for a user role')
 
     def setup_parser(self, parser):
-        parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
-        parser.add_option('--name', dest='name',help=_("permission name (required)"))
+        parser.add_option('--user_role', dest='user_role', help=_("role name (required)"))
+        parser.add_option('--name', dest='name', help=_("permission name (required)"))
         parser.add_option('--description', dest='desc', help=_("permission description"))
         opt_parser_add_org(parser)
         parser.add_option('--scope', dest='scope', help=_("scope of the permisson (required)"))
@@ -113,8 +113,8 @@ class Delete(PermissionAction):
     description = _('delete a permission')
 
     def setup_parser(self, parser):
-        parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
-        parser.add_option('--name', dest='name',help=_("permission name (required)"))
+        parser.add_option('--user_role', dest='user_role', help=_("role name (required)"))
+        parser.add_option('--name', dest='name', help=_("permission name (required)"))
 
     def check_options(self, validator):
         validator.require(('user_role', 'name'))
@@ -136,7 +136,7 @@ class List(PermissionAction):
     description = _('list permissions for a user role')
 
     def setup_parser(self, parser):
-        parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
+        parser.add_option('--user_role', dest='user_role', help=_("role name (required)"))
 
     def check_options(self, validator):
         validator.require('user_role')
