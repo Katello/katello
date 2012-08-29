@@ -86,7 +86,8 @@ class SingleRepoAction(RepoAction):
         if select_by_env:
             opt_parser_add_environment(parser, default=_("Library"))
 
-    def check_repo_select_options(self, validator):
+    @classmethod
+    def check_repo_select_options(cls, validator):
         if not validator.exists('id'):
             validator.require(('name', 'org', 'product'))
 
