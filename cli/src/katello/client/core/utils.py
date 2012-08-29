@@ -201,7 +201,9 @@ class Spinner(threading.Thread):
         sys.stdout.write(' '*l)
         sys.stdout.write('\033['+ str(l) +'D')
 
-    def _putChar(self, char):
+
+    @classmethod
+    def _putChar(cls, char):
         sys.stdout.write('[')
         sys.stdout.write(char)
         sys.stdout.write(']')
