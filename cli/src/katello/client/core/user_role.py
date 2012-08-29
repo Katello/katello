@@ -84,7 +84,8 @@ class Info(UserRoleAction):
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("user role name (required)"))
-        parser.add_option('--permission_details', dest='perm_details', action='store_true', help=_("print details about each of role's permissions"))
+        parser.add_option('--permission_details', dest='perm_details', action='store_true',
+            help=_("print details about each of role's permissions"))
 
     def check_options(self, validator):
         validator.require('name')
