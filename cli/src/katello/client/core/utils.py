@@ -292,7 +292,8 @@ class AsyncTask():
         else:
             self._tasks = task
 
-    def status_api(self):
+    @classmethod
+    def status_api(cls):
         return TaskStatusAPI()
 
     def update(self):
