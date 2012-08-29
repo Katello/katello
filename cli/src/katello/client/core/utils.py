@@ -498,7 +498,7 @@ def wait_for_async_job(job):
         job.update()
     return job.get_hashes()
 
-def convert_to_mime_type(type, default=None):
+def convert_to_mime_type(type_in, default=None):
     availableMimeTypes = {
         'text': 'text/plain',
         'csv':  'text/csv',
@@ -506,7 +506,7 @@ def convert_to_mime_type(type, default=None):
         'pdf':  'application/pdf'
     }
 
-    return availableMimeTypes.get(type, availableMimeTypes.get(default))
+    return availableMimeTypes.get(type_in, availableMimeTypes.get(default))
 
 def attachment_file_name(headers, default):
     contentDisposition = filter(lambda h: h[0].lower() == 'content-disposition', headers)
