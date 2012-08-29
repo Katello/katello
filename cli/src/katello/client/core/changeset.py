@@ -43,7 +43,7 @@ class List(ChangesetAction):
         opt_parser_add_environment(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('org', 'env'))
+        validator.require(('org', 'environment'))
 
     def run(self):
         orgName = self.get_option('org')
