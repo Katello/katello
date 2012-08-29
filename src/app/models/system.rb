@@ -62,6 +62,8 @@ class System < ActiveRecord::Base
   has_many :system_system_groups, :dependent => :destroy
   has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
 
+  has_many :custom_infos, :as => :informable
+
   validates :environment, :presence => true, :non_library_environment => true
   validates :name, :presence => true, :no_trailing_space => true
   validates_uniqueness_of :name, :scope => :environment_id
