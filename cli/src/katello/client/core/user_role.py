@@ -90,7 +90,8 @@ class Info(UserRoleAction):
     def check_options(self, validator):
         validator.require('name')
 
-    def getPermissions(self, roleId):
+    @classmethod
+    def getPermissions(cls, roleId):
         permApi = PermissionAPI()
         return permApi.permissions(roleId)
 
