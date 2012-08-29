@@ -59,7 +59,7 @@ class Create(UserRoleAction):
     description = _('create user role')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='name',help=_("role name (required)"))
+        parser.add_option('--name', dest='name', help=_("role name (required)"))
         parser.add_option('--description', dest='desc', help=_("role description"))
 
     def check_options(self, validator):
