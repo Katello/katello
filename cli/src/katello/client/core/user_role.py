@@ -104,8 +104,8 @@ class Info(UserRoleAction):
         if details:
             verbs = ', '.join([v['verb'] for v in p['verbs']])
             tags  = ', '.join([t['formatted']['display_name'] for t in p['tags']])
-            type  = p['resource_type']['name']
-            return _("%s\n\tfor: %s\n\tverbs: %s\n\ton: %s") % (p['name'], type, verbs, tags)
+            type_in  = p['resource_type']['name']
+            return _("%s\n\tfor: %s\n\tverbs: %s\n\ton: %s") % (p['name'], type_in, verbs, tags)
         else:
             return p['name']
 
