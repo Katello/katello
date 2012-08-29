@@ -1,6 +1,6 @@
-# set environment variable BUNDLER_DISABLE_PATCH to 'true' to disable bundler patch
+# set environment variable BUNDLER_ENABLE_RPM_PREFERRING to 'true' to enable bundler patch
 # if enabled bundler prefers rpm-gems even if they are older version then gems in gem-repo
-unless ENV['BUNDLER_DISABLE_PATCH'] == 'true'
+if ENV['BUNDLER_ENABLE_RPM_PREFERRING'] == 'true'
   require File.join(File.dirname(__FILE__), 'lib', 'bundler_patch_rpm-gems_preferred')
 end
 
