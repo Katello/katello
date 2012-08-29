@@ -444,7 +444,8 @@ class AsyncJob():
         else:
             self._jobs = job
 
-    def status_api(self):
+    @classmethod
+    def status_api(cls):
         # In the future, this could be used for a generic JobStatusAPI; however, for now the only
         # thing using the job APIs is System Groups.
         # return JobStatusAPI()
