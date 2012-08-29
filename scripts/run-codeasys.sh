@@ -14,10 +14,10 @@ which pylint >/dev/null || yum -y install pylint
 which spacewalk-pylint >/dev/null || yum -y install spacewalk-pylint
 
 # run in text
-PYTHONPATH=cli/src/ pylint katello --rcfile=/etc/spacewalk-pylint.rc
+PYTHONPATH=cli/src/ pylint katello --rcfile=/etc/spacewalk-pylint.rc --additional-builtins=_
 echo Pylint text return code: $RESCODE
 # run with HTML output
-PYTHONPATH=cli/src/ pylint --rcfile=/etc/spacewalk-pylint.rc katello -f html >reports/pylint-cli.html
+PYTHONPATH=cli/src/ pylint --rcfile=/etc/spacewalk-pylint.rc --additional-builtins=_ katello -f html >reports/pylint-cli.html
 RESCODE=$?
 echo Pylint html return code: $RESCODE
 [ $(($RESCODE & 3)) -ne 0 ] && echo Pylint errors! && exit 1
