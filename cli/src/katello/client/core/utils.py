@@ -354,7 +354,8 @@ class AsyncTask():
     def _get_progress_sum(self, name):
         return sum([t['progress'][name] for t in self._tasks])
 
-    def _subtask_is_running(self, task):
+    @classmethod
+    def _subtask_is_running(cls, task):
         return task['state'] not in ('finished', 'error', 'timed out', 'canceled', 'not_synced')
 
     def is_multiple(self):
