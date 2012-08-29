@@ -62,7 +62,8 @@ class Create(UserAction):
         parser.add_option('--username', dest='username', help=_("user name (required)"))
         parser.add_option('--password', dest='password', help=_("initial password (required)"))
         parser.add_option('--email', dest='email', help=_("email (required)"))
-        parser.add_option("--disabled", dest="disabled", type="bool", help=_("disabled account (default is 'false')"), default=False)
+        parser.add_option("--disabled", dest="disabled", type="bool",
+            help=_("disabled account (default is 'false')"), default=False)
         parser.add_option('--default_organization', dest='default_organization',
                                help=_("user's default organization name"))
         parser.add_option('--default_environment', dest='default_environment',
@@ -296,7 +297,8 @@ class Report(UserAction):
     description = _('user report')
 
     def setup_parser(self, parser):
-        parser.add_option('--format', dest='format', help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
+        parser.add_option('--format', dest='format',
+            help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
 
     def run(self):
         format = self.get_option('format')
