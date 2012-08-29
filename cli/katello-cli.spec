@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.3
+Version:       1.1.4
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -138,6 +138,44 @@ cp -ap test/katello %{buildroot}%{homedir}/tests/%{name}/unit-tests
 make -C po clean
 
 %changelog
+* Wed Aug 29 2012 Ivan Necas <inecas@redhat.com> 1.1.4-1
+- evironment is now stored to environment variable instead env
+  (msuchy@redhat.com)
+- fix unit tests (msuchy@redhat.com)
+- add to path correct search location (msuchy@redhat.com)
+- package unit tests (msuchy@redhat.com)
+- Available subscriptions on systems page now allow filtering matching what is
+  available in subscription-manager-gui (thomasmckay@redhat.com)
+- waive pylint R0201: 43,4:KatelloShell.history_file: Method could be a
+  function (msuchy@redhat.com)
+- Revert "declare method as function" (msuchy@redhat.com)
+- waive pylint R0201: 30,4:KatelloAPI.server: Method could be a function
+  (msuchy@redhat.com)
+- Revert "R0201: 30,4:KatelloAPI.server: Method could be a function"
+  (msuchy@redhat.com)
+- 845198 - do not fail with 'C' locale (msuchy@redhat.com)
+- 845198 - set locale even in usage.py to allow building (msuchy@redhat.com)
+- 845198 - receive translation from gettext as unicode (msuchy@redhat.com)
+- fixing various unit tests from content deletion and param unification
+  (mmccune@redhat.com)
+- stylecheck fixes (msuchy@redhat.com)
+- there is no option -environment in this action (msuchy@redhat.com)
+- 848038 - installing localisation files for cli (tstrachota@redhat.com)
+- 850790 - Content promotion from CLI no longer works (lzap+git@redhat.com)
+- 798679 - Read correct argument (msuchy@redhat.com)
+- fix incorrect argument (msuchy@redhat.com)
+- 798679 - be consistent with --environment option help (msuchy@redhat.com)
+- 798679 - be consistent with --org option help (msuchy@redhat.com)
+- 798679 - remove duplicate code handling --product option (msuchy@redhat.com)
+- 798679 - be consistent with --product option help (msuchy@redhat.com)
+- 846321: Support creating permissions for all tags from the API and the cli
+  (bkearney@redhat.com)
+- 845995: Add local and server side checks for passing in bad group names and
+  ids (bkearney@redhat.com)
+- 771186 - katello ak info now shows aks (lzap+git@redhat.com)
+- 845198 - always use utf-8 as output encoding (tomas.str@gmail.com)
+- 845198 - enable setting locale via LC_ALL in cli (tomas.str@gmail.com)
+
 * Thu Aug 23 2012 Mike McCune <mmccune@redhat.com> 1.1.3-1
 - 850935 - katello-cli-common should own only /etc/katello and not its content
   (msuchy@redhat.com)
