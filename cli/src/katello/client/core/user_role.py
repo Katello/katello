@@ -197,7 +197,7 @@ class AddLdapGroup(UserRoleAction):
 
         role = self.get_role(name)
 
-        user = self.api.add_ldap_group(role['id'], group_name)
+        self.api.add_ldap_group(role['id'], group_name)
         print _("Successfully added LDAP group [ %s ] to the user role [ %s ]") % (group_name, name)
         return os.EX_OK
 
