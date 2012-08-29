@@ -301,10 +301,10 @@ class Report(UserAction):
             help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
 
     def run(self):
-        format = self.get_option('format')
-        report = self.api.report(convert_to_mime_type(format, 'text'))
+        format_in = self.get_option('format')
+        report = self.api.report(convert_to_mime_type(format_in, 'text'))
 
-        if format == 'pdf':
+        if format_in == 'pdf':
             save_report(report[0], attachment_file_name(report[1], 'katello_users_report.pdf'))
         else:
             print report[0]
