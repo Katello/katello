@@ -469,7 +469,8 @@ class AsyncJob():
     def succeeded(self):
         return not (self.failed() or self.cancelled())
 
-    def _subtask_is_running(self, job):
+    @classmethod
+    def _subtask_is_running(cls, job):
         return job['state'] not in ('finished', 'error', 'timed out', 'canceled', 'not_synced')
 
     def get_hashes(self):
