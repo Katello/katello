@@ -248,7 +248,8 @@ class Discovery(RepoAction):
     def repository_name(cls, name, parsedUrlPath):
         return "%s%s" % (name, parsedUrlPath.replace("/", "_"))
 
-    def __print_urls(self, repourls, selectedurls):
+    @classmethod
+    def __print_urls(cls, repourls, selectedurls):
         for index, url in enumerate(repourls):
             if url in selectedurls:
                 print "(+)  [%s] %-5s" % (index+1, url)
