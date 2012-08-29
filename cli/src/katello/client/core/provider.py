@@ -285,7 +285,7 @@ class ImportManifest(SingleProviderAction):
 
         try:
             f = open(get_abs_path(manifestPath))
-        except:
+        except IOError:
             system_exit(os.EX_IOERR, _("File %s does not exist" % manifestPath))
 
         prov = get_provider(orgName, provName)
