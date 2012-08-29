@@ -232,7 +232,7 @@ class Spinner(threading.Thread):
     def stop(self):
         self._stopevent.set()
 
-class ProgressBar():
+class ProgressBar(object):
 
     def updateProgress(self, progress):
         sys.stdout.write("\rProgress: [{0:50s}] {1:.1f}%".format('#' * int(progress * 50), progress * 100))
