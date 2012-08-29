@@ -183,7 +183,7 @@ class Discovery(RepoAction):
         print(_("Discovering repository urls, this could take some time..."))
         try:
             task = self.api.repo_discovery(org_name, url, 'yum')
-        except Exception,e:
+        except Exception, e:
             system_exit(os.EX_DATAERR, _("Error: %s" % e))
 
         discoveryResult = run_spinner_in_bg(wait_for_async_task, [task])
