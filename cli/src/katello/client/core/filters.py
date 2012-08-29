@@ -131,7 +131,8 @@ class Info(FilterAction):
         self.printer.print_item(filter_info)
         return os.EX_OK
 
-    def package_list_as_string(self, package_list):
+    @classmethod
+    def package_list_as_string(cls, package_list):
         return ", ".join(package_list)
 
 class AddPackage(FilterAction):
