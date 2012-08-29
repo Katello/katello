@@ -83,7 +83,8 @@ class Info(ChangesetAction):
     def check_options(self, validator):
         validator.require(('org', 'name', 'environment'))
 
-    def format_item_list(self, key, items):
+    @classmethod
+    def format_item_list(cls, key, items):
         return "\n".join([i[key] for i in items])
 
     def get_dependencies(self, cset_id):
