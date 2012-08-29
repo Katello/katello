@@ -77,7 +77,8 @@ class SingleRepoAction(RepoAction):
     def check_options(self, validator):
         self.check_repo_select_options(validator)
 
-    def set_repo_select_options(self, parser, select_by_env=True):
+    @classmethod
+    def set_repo_select_options(cls, parser, select_by_env=True):
         parser.add_option('--id', dest='id', help=_("repository id"))
         parser.add_option('--name', dest='name', help=_("repository name"))
         opt_parser_add_org(parser)
