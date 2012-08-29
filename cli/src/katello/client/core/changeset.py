@@ -302,6 +302,7 @@ class UpdateContent(ChangesetAction):
     def __init__(self):
         self.current_product = None
         super(UpdateContent, self).__init__()
+        self.items = {}
 
 
     # pylint: disable=W0613
