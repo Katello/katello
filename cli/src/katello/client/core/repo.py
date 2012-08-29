@@ -195,7 +195,7 @@ class Discovery(RepoAction):
         return repourls
 
 
-    def select_repositories(self, repourls, assumeyes, raw_input = raw_input):
+    def select_repositories(self, repourls, assumeyes, our_raw_input = raw_input):
         selection = Selection()
         if not assumeyes:
             proceed = ''
@@ -204,7 +204,7 @@ class Discovery(RepoAction):
             while proceed.strip().lower() not in  ['q', 'y']:
                 if not proceed.strip().lower() == 'h':
                     self.__print_urls(repourls, selection)
-                proceed = raw_input(
+                proceed = our_raw_input(
                     _("\nSelect urls for which candidate repos should be created; use `y` to confirm (h for help):"))
                 select_val = proceed.strip().lower()
                 if select_val == 'h':
