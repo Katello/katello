@@ -204,9 +204,7 @@ class Spinner(threading.Thread):
 
     @classmethod
     def _putChar(cls, char):
-        sys.stdout.write('[')
-        sys.stdout.write(char)
-        sys.stdout.write(']')
+        sys.stdout.write('[%s]' % char)
         sys.stdout.flush()
 
     @classmethod
