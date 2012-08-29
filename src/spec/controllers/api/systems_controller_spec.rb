@@ -528,7 +528,7 @@ describe Api::SystemsController do
 
     it "should retrieve available pools from Candlepin" do
       #@system.should_receive(:available_pools_full).once.and_return([])
-      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, true).and_return([])
+      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
       get :pools, :id => @system.uuid, :listall => true
     end
   end
