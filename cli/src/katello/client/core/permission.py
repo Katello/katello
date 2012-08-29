@@ -60,7 +60,8 @@ class Create(PermissionAction):
         parser.add_option('--scope', dest='scope', help=_("scope of the permisson (required)"))
         parser.add_option('--verbs', dest='verbs', type="list", help=_("verbs for the permission"), default="")
         parser.add_option('--tags', dest='tags', type="list", help=_("tags for the permission"), default="")
-        parser.add_option('--all_tags', action="store_true", dest='all_tags', help=_("use to set all tags"), default=False)
+        parser.add_option('--all_tags', action="store_true", dest='all_tags',
+            help=_("use to set all tags"), default=False)
 
     def check_options(self, validator):
         validator.require(('user_role', 'name', 'scope'))
