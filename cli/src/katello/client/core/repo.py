@@ -59,7 +59,8 @@ class RepoAction(BaseAction):
         super(RepoAction, self).__init__()
         self.api = RepoAPI()
 
-    def get_groupid_param(self, repo, param_name):
+    @classmethod
+    def get_groupid_param(cls, repo, param_name):
         param_name += ":"
         for gid in repo['groupid']:
             if gid.find(param_name) >= 0:
