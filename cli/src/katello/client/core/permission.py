@@ -141,10 +141,12 @@ class List(PermissionAction):
     def check_options(self, validator):
         validator.require('user_role')
 
-    def format_verbs(self, verbs):
+    @classmethod
+    def format_verbs(cls, verbs):
         return [v['verb'] for v in verbs]
 
-    def format_tags(self, tags):
+    @classmethod
+    def format_tags(cls, tags):
         return [t['formatted']['display_name'] for t in tags]
 
     def run(self):
