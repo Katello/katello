@@ -244,7 +244,8 @@ class Discovery(RepoAction):
 
             print _("Successfully created repository [ %s ]") % repoName
 
-    def repository_name(self, name, parsedUrlPath):
+    @classmethod
+    def repository_name(cls, name, parsedUrlPath):
         return "%s%s" % (name, parsedUrlPath.replace("/", "_"))
 
     def __print_urls(self, repourls, selectedurls):
