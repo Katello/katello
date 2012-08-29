@@ -17,7 +17,7 @@ class PromotionsController < ApplicationController
 
   def rules
     show_test = lambda {
-      to_ret = @environment && @environment.contents_readable?
+      to_ret = @environment && (@environment.contents_readable? || @environment.changesets_deletable?)
       to_ret ||=  @next_environment.changesets_readable? if @next_environment
       to_ret
     }
@@ -51,8 +51,7 @@ class PromotionsController < ApplicationController
 
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
-
-    locals = {
+    @locals_hash = {
       :accessible_envs=> access_envs,
       :manage_deletion_changesets => (@environment && @environment.changesets_manageable?)? true : false,
       :manage_promotion_changesets => (@next_environment && @next_environment.changesets_manageable?)? true : false,
@@ -63,7 +62,7 @@ class PromotionsController < ApplicationController
       :read_contents => (@environment && @environment.contents_readable?)? true: false
     }
     
-    render :show, :locals=>locals
+    render :show, :locals=>@locals_hash
   end
 
 
