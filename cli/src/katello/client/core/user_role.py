@@ -220,7 +220,7 @@ class RemoveLdapGroup(UserRoleAction):
 
         role = self.get_role(name)
 
-        user = self.api.remove_ldap_group(role['id'], group_name)
+        self.api.remove_ldap_group(role['id'], group_name)
         print _("Successfully removed LDAP group [ %s ] from the user role [ %s ]") % (group_name, name)
         return os.EX_OK
 
