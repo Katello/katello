@@ -53,7 +53,13 @@ def test_record(rec, success_msg, failure_msg):
     else:
         system_exit(os.EX_DATAERR, failure_msg)
 
-
+def update_dict_unless_none(d, key, value):
+    """
+    Update value for key in dictionary only if the value is not None.
+    """
+    if value != None:
+        d[key] = value
+    return d
 
 class SystemExitRequest(Exception):
     """

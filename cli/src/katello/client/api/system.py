@@ -83,10 +83,13 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s" % system_id
         return self.server.GET(path)[1]
 
-    def tasks(self, org_name, environment_id, system_name):
+    def tasks(self, org_name, environment_id, system_name = None, system_uuid = None):
         params = {}
         self.update_dict(params, "environment_id", environment_id)
-        self.update_dict(params, "system_name", system_name)
+        if system_name:
+            self.update_dict(params, "system_name", system_name)
+        if system_uuid:
+            self.update_dict(params, "system_uuid", system_uuid)
 
         path = "/api/organizations/%s/systems/tasks" % org_name
         return self.server.GET(path, params)[1]
