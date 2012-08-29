@@ -99,8 +99,8 @@ class Info(UserRoleAction):
         ldap_groups = self.api.ldap_groups(roleId)
         return [lg['ldap_group'] for lg in ldap_groups]
 
-
-    def formatPermission(self, p, details=True):
+    @classmethod
+    def formatPermission(cls, p, details=True):
         if details:
             verbs = ', '.join([v['verb'] for v in p['verbs']])
             tags  = ', '.join([t['formatted']['display_name'] for t in p['tags']])
