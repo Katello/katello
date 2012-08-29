@@ -162,8 +162,13 @@ class User < ActiveRecord::Base
 
   # an ldap user still needs a katello model
   def self.create_ldap_user!(username)
+    # Some parts of user creation require a current user, but this method
+    # will never be called in that way
+    User.current ||= User.first
     # user gets a dummy password and email
-    User.create!(:username => username)
+    u = User.create!(:username => username)
+    User.current = u
+    u
   end
 
   # Returns true if for a given verbs, resource_type org combination
