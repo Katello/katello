@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.7
+Version:        1.1.8
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -520,6 +520,39 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Aug 29 2012 Ivan Necas <inecas@redhat.com> 1.1.8-1
+- subsfilter - reset the cycle of table row colors to avoid having first row of
+  bottom table having same shading as the table header (ie. always start with
+  light color row) (thomasmckay@redhat.com)
+- subsfilter - removed second spinner when updating filtered subscriptions
+  (thomasmckay@redhat.com)
+- Available subscriptions on systems page now allow filtering matching what is
+  available in subscription-manager-gui (thomasmckay@redhat.com)
+- Content Search - Adds new data fields "data_type" and "value" to make testing
+  easier. (ehelms@redhat.com)
+- cdn-var-substitutor - isolate the logic to separate class (inecas@redhat.com)
+- 845613 - fix display of subscription status and rows (thomasmckay@redhat.com)
+- 845668 - removing console.log usage from js, which cause FF3.6 failures
+  (bbuckingham@redhat.com)
+- Moved service-wait link target to katello-common (mbacovsk@redhat.com)
+- 846321: Support creating permissions for all tags from the API and the cli
+  (bkearney@redhat.com)
+- 845995: Add local and server side checks for passing in bad group names and
+  ids (bkearney@redhat.com)
+- content-deletion - update content tree after product deletion
+  (bbuckingham@redhat.com)
+- 846251: Do not specify the attribute name for uniqueness validation
+  (bkearney@redhat.com)
+- content-deletion - update so that clicking on undefined changeset category
+  doesnothing (bbuckingham@redhat.com)
+- 844806 - katello incorrectly prevents products with the same name in an
+  organization (adprice@redhat.com)
+- 844806 - katello incorrectly prevents products with the same name in an
+  organization (adprice@redhat.com)
+- 849224 - thin now listens only on localhost (lzap+git@redhat.com)
+- katello - remove lists of rescue Exception usage (pchalupa@redhat.com)
+- katello - remove 'rescue Exception' (pchalupa@redhat.com)
+
 * Thu Aug 23 2012 Mike McCune <mmccune@redhat.com> 1.1.7-1
 - 846251: Do not specify the attribute name for uniqueness validation
   (bkearney@redhat.com)
