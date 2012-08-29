@@ -61,7 +61,8 @@ class List(ChangesetAction):
         self.printer.add_column('state')
         self.printer.add_column('environment_id')
         self.printer.add_column('environment_name')
-        if verbose: self.printer.add_column('description', multiline=True)
+        if verbose:
+            self.printer.add_column('description', multiline=True)
 
         self.printer.set_header(_("Changeset List"))
         self.printer.print_items(changesets)
