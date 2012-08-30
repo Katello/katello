@@ -229,7 +229,7 @@ module Resources
         # :id, :name, :arch, :groupid, :feed
         def update repo_id, attrs
           body = put(Repository.repository_path + repo_id +"/", JSON.generate(attrs), self.default_headers).body
-          find repo_id
+          JSON.parse(body).with_indifferent_access
         end
 
         # specific call to just update the sync schedule for a repo
