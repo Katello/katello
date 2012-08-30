@@ -122,7 +122,8 @@ class Info(TemplateAction):
         return os.EX_OK
 
 
-    def _build_nvrea(self, package):
+    @classmethod
+    def _build_nvrea(cls, package):
 
         if package['version'] != None and package['release'] != None:
             nvrea = '-'.join((package['package_name'], package['version'], package['release']))
