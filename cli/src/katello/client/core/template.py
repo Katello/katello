@@ -277,6 +277,7 @@ class Update(TemplateAction):
         self.current_parameter = None
         self.resetParameters()
         super(Update, self).__init__()
+        self.current_product = None
 
     # pylint: disable=W0613
     def store_parameter_name(self, option, opt_str, value, parser):
