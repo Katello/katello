@@ -418,8 +418,8 @@ class Update(TemplateAction):
         return os.EX_OK
 
 
-
-    def productNamesToIds(self, orgName, productNames):
+    @classmethod
+    def productNamesToIds(cls, orgName, productNames):
         ids = []
         for prodName in productNames:
             p = get_product(orgName, prodName)
@@ -429,8 +429,8 @@ class Update(TemplateAction):
                 system_exit(os.EX_DATAERR)
         return ids
 
-
-    def repoNamesToIds(self, orgName, repos):
+    @classmethod
+    def repoNamesToIds(cls, orgName, repos):
         ids = []
         for rec in repos:
             repo = get_repo(orgName, rec['product'], rec['name'])
