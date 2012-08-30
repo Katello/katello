@@ -11,38 +11,41 @@ class katello::install {
       include pulp::install
       include qpid::install
     }
+    'headpin': {
+      include thumbslug::install
+    }
     default : {}
   }
 
-  $os_type = $operatingsystem ? {
-    "Fedora" => "fedora-${operatingsystemrelease}",
-    default  => "\$releasever"
+  $os = $operatingsystem ? {
+    "RedHat" => "RHEL",
+    default  => "Fedora"
   }
 
-  yumrepo { "fedora-katello":
-    descr    => 'integrates together a series of open source systems management tools',
-    baseurl  => "http://repos.fedorapeople.org/repos/katello/katello/$os_type/\$basearch/",
+  yumrepo { "katello-nightly":
+    name     => "katello-nightly",
+    baseurl  => "http://fedorapeople.org/groups/katello/releases/yum/nightly/${os}/${lsbmajdistrelease}/x86_64/",
     enabled  => "1",
     gpgcheck => "0"
   }
 
-  yumrepo { "fedora-katello-source":
-    descr    => 'integrates together a series of open source systems management tools',
-    baseurl  => "http://repos.fedorapeople.org/repos/katello/katello/$os_type/\$basearch/SRPMS",
+  yumrepo { "katello-nightly-source":
+    name     => "katello-nightly-source",
+    baseurl  => "http://fedorapeople.org/groups/katello/releases/source/nightly/${os}/${lsbmajdistrelease}/x86_64/",
     enabled  => "0",
     gpgcheck => "0"
   }
 
-	package{["katello", "katello-cli"]:
+  package {["katello", "katello-cli"]:
     require => $katello::params::deployment ? {
-                'katello' => [Yumrepo["fedora-katello"],Class["pulp::install"],Class["candlepin::install"]],
-                'headpin' => [Yumrepo["fedora-katello"],Class["candlepin::install"],Class["thumbslug::install"]],
-                default => []
+      'katello' => [Yumrepo["katello-nightly"],Class["pulp::install"],Class["candlepin::install"]],
+      'headpin' => [Yumrepo["katello-nightly"],Class["candlepin::install"],Class["thumbslug::install"]],
+      default => []
     },
     before  => $katello::params::deployment ? {
-                'katello' =>  [Class["candlepin::config"], Class["pulp::config"] ], #avoid some funny post rpm scripts
-                'headpin' =>  [Class["candlepin::config"], Class["thumbslug::config"]], #avoid some funny post rpm scripts
-                default => []
+      'katello' =>  [Class["candlepin::config"], Class["pulp::config"] ], #avoid some funny post rpm scripts
+      'headpin' =>  [Class["candlepin::config"], Class["thumbslug::config"]], #avoid some funny post rpm scripts
+      default => []
     },
     ensure  => installed
   }
