@@ -168,7 +168,8 @@ class Import(TemplateAction):
             print _("File %s does not exist" % tplPath)
             return os.EX_IOERR
 
-        response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f), message=_("Importing template, please wait... "))
+        response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f),
+            message=_("Importing template, please wait... "))
         print response
         f.close()
         return os.EX_OK
@@ -188,9 +189,9 @@ class Export(TemplateAction):
         opt_parser_add_org(parser, required=1)
         opt_parser_add_environment(parser)
         parser.add_option("--file", dest="file",
-                               help=_("path to the template file (required)"))
+            help=_("path to the template file (required)"))
         parser.add_option("--format", dest="format", choices=self.supported_formats,
-                               help=_("format of the export, possible values: %s, default: json") % self.supported_formats)
+            help=_("format of the export, possible values: %s, default: json") % self.supported_formats)
 
 
     def check_options(self, validator):
@@ -212,7 +213,8 @@ class Export(TemplateAction):
             return os.EX_IOERR
 
         self.api.validate_tpl(template["id"], format)
-        response = run_spinner_in_bg(self.api.export_tpl, (template["id"], format), message=_("Exporting template, please wait... "))
+        response = run_spinner_in_bg(self.api.export_tpl, (template["id"], format),
+            message=_("Exporting template, please wait... "))
         f.write(response)
         f.close()
         print _("Template was exported successfully to file %s") % tplPath
@@ -308,26 +310,35 @@ class Update(TemplateAction):
         parser.add_option('--add_package', dest='add_packages', action="append", help=_("name of the package"))
         parser.add_option('--remove_package', dest='remove_packages', action="append", help=_("name of the package"))
 
-        parser.add_option('--add_parameter', dest='add_parameters', action="callback", callback=self.store_parameter_name, type="string",
-                                help=_("name of the parameter, %s must follow") % "--value")
-        parser.add_option('--value', dest='value', action="callback", callback=self.store_parameter_value, type="string", help=_("value of the parameter"))
-        parser.add_option('--remove_parameter', dest='remove_parameters', action="append", help=_("name of the parameter"))
+        parser.add_option('--add_parameter', dest='add_parameters', action="callback",
+            callback=self.store_parameter_name, type="string",
+            help=_("name of the parameter, %s must follow") % "--value")
+        parser.add_option('--value', dest='value', action="callback", callback=self.store_parameter_value,
+            type="string", help=_("value of the parameter"))
+        parser.add_option('--remove_parameter', dest='remove_parameters', action="append",
+            help=_("name of the parameter"))
 
         parser.add_option('--add_package_group', dest='add_pgs', action="append", help=_("name of the package group"))
-        parser.add_option('--remove_package_group', dest='remove_pgs', action="append", help=_("name of the package group"))
+        parser.add_option('--remove_package_group', dest='remove_pgs', action="append",
+            help=_("name of the package group"))
 
-        parser.add_option('--add_package_group_category', dest='add_pg_categories', action="append", help=_("name of the package group category"))
-        parser.add_option('--remove_package_group_category', dest='remove_pg_categories', action="append", help=_("name of the package group category"))
+        parser.add_option('--add_package_group_category', dest='add_pg_categories', action="append",
+            help=_("name of the package group category"))
+        parser.add_option('--remove_package_group_category', dest='remove_pg_categories', action="append",
+            help=_("name of the package group category"))
 
         parser.add_option('--add_distribution', dest='add_distributions', action="append", help=_("distribution id"))
-        parser.add_option('--remove_distribution', dest='remove_distributions', action="append", help=_("distribution id"))
+        parser.add_option('--remove_distribution', dest='remove_distributions', action="append",
+            help=_("distribution id"))
 
-        parser.add_option('--from_product', dest='from_product', action="callback", callback=self.store_from_product, type="string",
-                                help=_("determines product from which the repositories are picked"))
-        parser.add_option('--add_repository', dest='add_repository', action="callback", callback=self.store_item_with_product, type="string",
-                                help=_("repository to be added to the template"))
-        parser.add_option('--remove_repository', dest='remove_repository', action="callback", callback=self.store_item_with_product, type="string",
-                                help=_("repository to be removed from the template"))
+        parser.add_option('--from_product', dest='from_product', action="callback", callback=self.store_from_product,
+            type="string", help=_("determines product from which the repositories are picked"))
+        parser.add_option('--add_repository', dest='add_repository', action="callback",
+            callback=self.store_item_with_product, type="string",
+            help=_("repository to be added to the template"))
+        parser.add_option('--remove_repository', dest='remove_repository', action="callback",
+            callback=self.store_item_with_product, type="string",
+            help=_("repository to be removed from the template"))
         self.resetParameters()
 
 
@@ -397,7 +408,8 @@ class Update(TemplateAction):
         else:
             parentId = None
 
-        run_spinner_in_bg(self.updateTemplate, [template["id"], newName, desc, parentId], _("Updating the template, please wait... "))
+        run_spinner_in_bg(self.updateTemplate, [template["id"], newName, desc, parentId],
+            _("Updating the template, please wait... "))
         run_spinner_in_bg(self.updateContent,  [template["id"], content], _("Updating the template, please wait... "))
         print _("Successfully updated template [ %s ]") % template['name']
         return os.EX_OK
