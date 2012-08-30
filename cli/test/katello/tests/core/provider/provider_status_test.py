@@ -56,4 +56,4 @@ class ProviderStatusTest(CLIActionTestCase):
     def test_it_sets_progress_for_running_sync(self):
         self.mock(self.action.api, 'last_sync_status', repo_data.SYNC_RUNNING_RESULT)
         self.run_action()
-        self.assertTrue(isinstance(self.provider['progress'], str))
+        self.assertTrue(isinstance(self.provider['progress'], unicode))

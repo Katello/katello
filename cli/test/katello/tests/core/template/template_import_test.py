@@ -49,7 +49,6 @@ class TemplateImportTest(CLIActionTestCase):
 
         self.mock(self.module, 'get_library', self.LIBRARY)
         self.mock(self.module, 'run_spinner_in_bg')
-        self.mock(self.module, '_', "")
 
         self.mock(self, 'open_file')
         self.mock(self.open_file, 'close')
@@ -71,7 +70,7 @@ class TemplateImportTest(CLIActionTestCase):
 
     def test_it_calls_template_import_api(self):
         self.run_action()
-        self.module.run_spinner_in_bg.assert_called_once_with(self.action.api.import_tpl, (self.LIBRARY['id'], None, self.open_file), message="")
+        self.module.run_spinner_in_bg.assert_called_once_with(self.action.api.import_tpl, (self.LIBRARY['id'], None, self.open_file), message="Importing template, please wait... ")
 
     def test_it_closes_the_file(self):
         self.run_action()
