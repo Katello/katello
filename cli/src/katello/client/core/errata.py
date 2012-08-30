@@ -85,7 +85,8 @@ class List(ErrataAction):
                     prod_id = product["id"]
 
 
-        errata = self.api.errata_filter(repo_id=repo_id, environment_id=env_id, type=self.get_option('type'), severity=self.get_option('severity'),prod_id=prod_id)
+        errata = self.api.errata_filter(repo_id=repo_id, environment_id=env_id, type_in=self.get_option('type'),
+            severity=self.get_option('severity'), prod_id=prod_id)
 
         self.printer.set_header(_("Errata List"))
         self.printer.print_items(errata)
@@ -137,12 +138,12 @@ class SystemGroupErrata(ErrataAction):
 
         org_name = self.get_option('org')
         group_name = self.get_option('name')
-        type = self.get_option('type')
+        type_in = self.get_option('type')
 
         system_group = get_system_group(org_name, group_name)
         system_group_id = system_group['id']
 
-        errata = systemGroupApi.errata(org_name, system_group_id, type=type)
+        errata = systemGroupApi.errata(org_name, system_group_id, type_in=type_in)
 
         self.printer.add_column('id')
         self.printer.add_column('title')

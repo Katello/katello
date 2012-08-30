@@ -35,9 +35,9 @@ def fix_io_encoding():
     We use utf-8 as all our server-side data are utf-8 encoded.
     """
     if sys.stdout.encoding == None:
-         sys.stdout = encode_stream(sys.stdout)
+        sys.stdout = encode_stream(sys.stdout)
     if sys.stderr.encoding == None:
-         sys.stderr = encode_stream(sys.stderr)
+        sys.stderr = encode_stream(sys.stderr)
 
 
 def u_str(value):

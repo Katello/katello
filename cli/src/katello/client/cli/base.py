@@ -144,7 +144,8 @@ class KatelloCLI(Command):
         self._server = server.KatelloServer(host, int(port), scheme, path, self.__server_locale())
         server.set_active_server(self._server)
 
-    def __server_locale(self):
+    @classmethod
+    def __server_locale(cls):
         """
         Take system locale and convert it to server locale
         Eg. en_US -> en-us

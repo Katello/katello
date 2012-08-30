@@ -21,7 +21,8 @@ from katello.client import constants
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, \
+    AsyncTask, format_task_errors
 from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
 from katello.client.utils import printer
 from katello.client.utils.encoding import u_str
@@ -60,7 +61,8 @@ class List(ChangesetAction):
         self.printer.add_column('state')
         self.printer.add_column('environment_id')
         self.printer.add_column('environment_name')
-        if verbose: self.printer.add_column('description', multiline=True)
+        if verbose:
+            self.printer.add_column('description', multiline=True)
 
         self.printer.set_header(_("Changeset List"))
         self.printer.print_items(changesets)
@@ -81,7 +83,8 @@ class Info(ChangesetAction):
     def check_options(self, validator):
         validator.require(('org', 'name', 'environment'))
 
-    def format_item_list(self, key, items):
+    @classmethod
+    def format_item_list(cls, key, items):
         return "\n".join([i[key] for i in items])
 
     def get_dependencies(self, cset_id):
@@ -191,10 +194,10 @@ class UpdateContent(ChangesetAction):
             return patch
 
     class PatchItemBuilder(object):
-        def __init__(self, org_name, env_name, type):
+        def __init__(self, org_name, env_name, type_in):
             self.org_name = org_name
             self.env_name = env_name
-            self.type = type
+            self.type = type_in
             # Use current env if we are doing a deletion otherwise use the prior
             if self.type == 'deletion':
                 self.env_name = get_environment(org_name, env_name)['name']
@@ -299,8 +302,10 @@ class UpdateContent(ChangesetAction):
     def __init__(self):
         self.current_product = None
         super(UpdateContent, self).__init__()
+        self.items = {}
 
 
+    # pylint: disable=W0613
     def store_from_product(self, option, opt_str, value, parser):
         self.current_product = u_str(value)
         parser.values.from_product = True
@@ -373,7 +378,8 @@ class UpdateContent(ChangesetAction):
 
         self.update(cset["id"], csNewName, csDescription)
         addPatch = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName, csType), items)
-        removePatch = self.PatchBuilder.build_patch('remove', self.RemovePatchItemBuilder(orgName, envName, csType), items)
+        removePatch = self.PatchBuilder.build_patch('remove',
+            self.RemovePatchItemBuilder(orgName, envName, csType), items)
         self.update_content(cset["id"], addPatch, self.api.add_content)
         self.update_content(cset["id"], removePatch, self.api.remove_content)
 
@@ -385,6 +391,7 @@ class UpdateContent(ChangesetAction):
         self.api.update(csId, newName, description)
 
 
+    # pylint disable=R0201
     def update_content(self, csId, patch, updateMethod):
         for contentType, items in patch.iteritems():
             for i in items:
