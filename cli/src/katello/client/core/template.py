@@ -35,8 +35,8 @@ class TemplateAction(BaseAction):
         super(TemplateAction, self).__init__()
         self.api = TemplateAPI()
 
-
-    def get_parent_id(self, orgName, envName, parentName):
+    @classmethod
+    def get_parent_id(cls, orgName, envName, parentName):
         parent = get_template(orgName, envName, parentName)
         if parent != None:
             return parent["id"]
