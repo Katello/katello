@@ -85,7 +85,7 @@ class List(ErrataAction):
                     prod_id = product["id"]
 
 
-        errata = self.api.errata_filter(repo_id=repo_id, environment_id=env_id, type=self.get_option('type'),
+        errata = self.api.errata_filter(repo_id=repo_id, environment_id=env_id, type_in=self.get_option('type'),
             severity=self.get_option('severity'), prod_id=prod_id)
 
         self.printer.set_header(_("Errata List"))

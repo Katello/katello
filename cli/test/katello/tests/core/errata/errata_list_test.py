@@ -104,14 +104,14 @@ class ErrataListTest(CLIActionTestCase):
         self.run_action()
         self.module.get_environment.assert_called_once_with(self.OPTIONS_BY_ORG_AND_PRODUCT['org'], None)
         self.module.get_product.assert_called_once_with(self.OPTIONS_BY_ORG_AND_PRODUCT['org'], self.OPTIONS_BY_ORG_AND_PRODUCT['product'])
-        self.action.api.errata_filter.assert_called_once_with(repo_id=None, type=None, environment_id=self.ENV['id'], prod_id=self.PRODUCT['id'], severity=None)
+        self.action.api.errata_filter.assert_called_once_with(repo_id=None, type_in=None, environment_id=self.ENV['id'], prod_id=self.PRODUCT['id'], severity=None)
 
     def test_it_supports_filtering_by_type(self):
         self.mock_options(self.OPTIONS_BY_TYPE)
         self.run_action()
-        self.action.api.errata_filter.assert_called_once_with(repo_id=self.REPO['id'], type=self.OPTIONS_BY_TYPE['type'], environment_id=None, prod_id=None, severity=None)
+        self.action.api.errata_filter.assert_called_once_with(repo_id=self.REPO['id'], type_in=self.OPTIONS_BY_TYPE['type'], environment_id=None, prod_id=None, severity=None)
 
     def test_it_supports_filtering_by_severity(self):
         self.mock_options(self.OPTIONS_BY_SEVERITY)
         self.run_action()
-        self.action.api.errata_filter.assert_called_once_with(repo_id=self.REPO['id'], type=None, environment_id=None, prod_id=None, severity=self.OPTIONS_BY_SEVERITY['severity'])
+        self.action.api.errata_filter.assert_called_once_with(repo_id=self.REPO['id'], type_in=None, environment_id=None, prod_id=None, severity=self.OPTIONS_BY_SEVERITY['severity'])
