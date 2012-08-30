@@ -35,7 +35,6 @@ module TestPulpConsumerGroupBase
   end
 
   def create_consumer_group
-    destroy_consumer_group
     @resource.create(:id => @consumer_group_id, :description => 'Test description.', :consumerids => [])
   rescue Exception => e
     p "TestPulpConsumerGroup: ConsumerGroup #{@consumer_group_id} already existed."
@@ -62,6 +61,22 @@ class TestPulpConsumerGroupCreate < MiniTest::Unit::TestCase
     response = create_consumer_group
     assert response['id'] == @consumer_group_id
   end
+end
+
+
+class TestPulpConsumerGroupDestroy < MiniTest::Unit::TestCase
+  include TestPulpConsumerGroupBase
+
+  def setup
+    super
+    create_consumer_group
+  end
+
+  def test_destroy
+    response = @resource.destroy(@consumer_group_id)
+    assert response == 200
+  end
+
 end
 
 
@@ -92,11 +107,6 @@ class TestPulpConsumerGroup < MiniTest::Unit::TestCase
     response = @resource.find(@consumer_group_id)
     assert response.length > 0
     assert response['id'] == @consumer_group_id
-  end
-
-  def test_destroy
-    response = destroy_consumer_group
-    assert response == 200
   end
 end
 

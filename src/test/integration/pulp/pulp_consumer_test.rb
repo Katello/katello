@@ -29,6 +29,7 @@ module TestPulpConsumerBase
 
   def teardown
     if @task
+      RepositoryHelper.task_resource.cancel(@task["id"])
       RepositoryHelper.task_resource.destroy(@task["id"])
     end
     VCR.eject_cassette

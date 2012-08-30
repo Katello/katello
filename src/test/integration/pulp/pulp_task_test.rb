@@ -46,7 +46,7 @@ class TestPulpTask < MiniTest::Unit::TestCase
     assert_match("/api/tasks/", path)
   end
 
-  def test_path_with_role_name
+  def test_path_with_task_id
     path = @resource.path(RepositoryHelper.task['id'])
     assert_match("/api/tasks/" + RepositoryHelper.task['id'], path)
   end

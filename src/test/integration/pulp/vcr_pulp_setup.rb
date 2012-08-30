@@ -36,10 +36,12 @@ Rails.logger = Logger.new(STDOUT)
 require 'lib/resources/pulp'
 
 
-VCR.configure do |c|
-  c.cassette_library_dir = 'test/integration/fixtures/vcr_cassettes'
-  c.hook_into :webmock
-  c.default_cassette_options = { :record => :all } #forcing all requests to Pulp currently
+def configure_vcr(record_mode=:all)
+  VCR.configure do |c|
+    c.cassette_library_dir = 'test/integration/fixtures/vcr_cassettes'
+    c.hook_into :webmock
+    c.default_cassette_options = { :record => record_mode } #forcing all requests to Pulp currently
+  end
 end
 
 class Resources::Pulp::PulpResource

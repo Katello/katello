@@ -1,77 +1,77 @@
 --- 
+recorded_with: VCR 2.2.4
 http_interactions: 
-- request: 
-    method: get
-    uri: https://localhost/pulp/api/errata/?type=security
-    body: 
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="99tIWLk2MVZ3e3kNdw75NwOH18eb5twhuvkLCVTs", oauth_signature="gvEvCvB6dKFy4aVkv5hMd0l%2BkcU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584633", oauth_version="1.0"
-      Accept-Language: 
-      - en
-      Content-Type: 
-      - application/json
-      Pulp-User: 
-      - admin
-      Accept-Encoding: 
-      - gzip, deflate
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Tue, 21 Aug 2012 21:30:33 GMT
-      Connection: 
-      - close
-      Content-Type: 
-      - application/json
-      Content-Length: 
-      - "1269"
-      Server: 
-      - Apache/2.2.22 (Fedora)
-    body: 
-      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"pkglist\": [], \"id\": \"RHEA-2010:0001\", \"severity\": \"\", \"title\": \"Empty errata\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"Empty errata\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"repoids\": [\"integration_test_id\", \"integration_test_id_clone\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2010:0001\"}, {\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"repoids\": [\"integration_test_id\", \"integration_test_id_clone\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2010:0002\"}]"
-    http_version: 
-  recorded_at: Tue, 21 Aug 2012 21:30:33 GMT
 - request: 
     method: get
     uri: https://localhost/pulp/api/errata/RHEA-2010:0002/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="V0EoFEppspbBz1ylAIEkQdYDJqMa0Sf4GRcdEOQTyA", oauth_signature="j6d1JvNy8QcWPFuTacLQKWeIlko%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1345584633", oauth_version="1.0"
-      Accept-Language: 
-      - en
-      Content-Type: 
-      - application/json
       Pulp-User: 
       - admin
+      Accept-Language: 
+      - en
       Accept-Encoding: 
       - gzip, deflate
+      Accept: 
+      - application/json
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="11w8kshDF4LTUHuBc4hhRMeOfumMq8moMZZDfRnI", oauth_signature="4x9AQUFNyALHqyfb99Kl%2Bqu1NDI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1346290660", oauth_version="1.0"
   response: 
     status: 
       code: 200
       message: OK
     headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
       Date: 
-      - Tue, 21 Aug 2012 21:30:33 GMT
+      - Thu, 30 Aug 2012 01:37:40 GMT
       Connection: 
       - close
       Content-Type: 
       - application/json
       Content-Length: 
-      - "745"
+      - "716"
+    body: 
+      string: "{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"repoids\": [\"integration_test_id\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2010:0002\"}"
+    http_version: 
+  recorded_at: Thu, 30 Aug 2012 01:37:40 GMT
+- request: 
+    method: get
+    uri: https://localhost/pulp/api/errata/?type=security
+    body: 
+      string: ""
+    headers: 
+      Pulp-User: 
+      - admin
+      Accept-Language: 
+      - en
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="n5Ajhd9efYNQ17Y2eGQnaRLBkqVQnX3EAZDWkSAh4g", oauth_signature="5q7Deq%2BQHI8NiZfl81Z%2BFmWQHOc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1346290660", oauth_version="1.0"
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
       Server: 
       - Apache/2.2.22 (Fedora)
+      Date: 
+      - Thu, 30 Aug 2012 01:37:40 GMT
+      Connection: 
+      - close
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "5029"
     body: 
-      string: "{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"repoids\": [\"integration_test_id\", \"integration_test_id_clone\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2010:0002\"}"
+      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"pkglist\": [], \"id\": \"RHEA-2010:0001\", \"severity\": \"\", \"title\": \"Empty errata\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"Empty errata\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"repoids\": [\"integration_test_id\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2010:0001\"}, {\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"repoids\": [\"integration_test_id\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2010:0002\"}, {\"issued\": \"2012-02-29 11:01:09\", \"references\": [], \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"bear\", \"filename\": \"bear-4.1-1.noarch.rpm\", \"epoch\": null, \"version\": \"4.1\", \"release\": \"1\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"id\": \"RHEA-2012:0001\", \"severity\": \"\", \"title\": \"Bear_Erratum\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"Bear_Erratum\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"errata@redhat.com\", \"repoids\": [\"ACME_Corporation-Fake_Repos-zoo3\", \"ACME_Corporation-Test-Fake_Repos-zoo3\", \"ACME_Corporation-QA-Fake_Repos-zoo3\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2012:0001\"}, {\"issued\": \"2012-02-29 11:01:13\", \"references\": [], \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"gorilla\", \"filename\": \"gorilla-0.62-1.noarch.rpm\", \"epoch\": null, \"version\": \"0.62\", \"release\": \"1\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"id\": \"RHEA-2012:0004\", \"severity\": \"\", \"title\": \"Gorilla_Erratum\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"Gorilla_Erratum\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"errata@redhat.com\", \"repoids\": [\"ACME_Corporation-Fake_Repos-zoo3\", \"ACME_Corporation-Test-Fake_Repos-zoo3\", \"ACME_Corporation-QA-Fake_Repos-zoo3\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2012:0004\"}, {\"issued\": \"2012-02-29 11:01:10\", \"references\": [], \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"walrus\", \"filename\": \"walrus-5.21-1.noarch.rpm\", \"epoch\": null, \"version\": \"5.21\", \"release\": \"1\", \"arch\": \"noarch\"}, {\"src\": \"http://www.fedoraproject.org\", \"name\": \"penguin\", \"filename\": \"penguin-0.9.1-1.noarch.rpm\", \"epoch\": null, \"version\": \"0.9.1\", \"release\": \"1\", \"arch\": \"noarch\"}, {\"src\": \"http://www.fedoraproject.org\", \"name\": \"shark\", \"filename\": \"shark-0.1-1.noarch.rpm\", \"epoch\": null, \"version\": \"0.1\", \"release\": \"1\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"id\": \"RHEA-2012:0002\", \"severity\": \"\", \"title\": \"Sea_Erratum\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"Sea_Erratum\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"errata@redhat.com\", \"repoids\": [\"ACME_Corporation-Fake_Repos-zoo3\", \"ACME_Corporation-Test-Fake_Repos-zoo3\", \"ACME_Corporation-QA-Fake_Repos-zoo3\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2012:0002\"}, {\"issued\": \"2012-02-29 11:01:11\", \"references\": [], \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"crow\", \"filename\": \"crow-0.8-1.noarch.rpm\", \"epoch\": null, \"version\": \"0.8\", \"release\": \"1\", \"arch\": \"noarch\"}, {\"src\": \"http://www.fedoraproject.org\", \"name\": \"stork\", \"filename\": \"stork-0.12-2.noarch.rpm\", \"epoch\": null, \"version\": \"0.12\", \"release\": \"2\", \"arch\": \"noarch\"}, {\"src\": \"http://www.fedoraproject.org\", \"name\": \"duck\", \"filename\": \"duck-0.6-1.noarch.rpm\", \"epoch\": null, \"version\": \"0.6\", \"release\": \"1\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"id\": \"RHEA-2012:0003\", \"severity\": \"\", \"title\": \"Bird_Erratum\", \"_ns\": \"errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"immutable\": true, \"status\": \"stable\", \"updated\": \"\", \"description\": \"Bird_Erratum\", \"repo_defined\": true, \"pushcount\": 1, \"from_str\": \"errata@redhat.com\", \"repoids\": [\"ACME_Corporation-Fake_Repos-zoo3\", \"ACME_Corporation-Test-Fake_Repos-zoo3\", \"ACME_Corporation-QA-Fake_Repos-zoo3\"], \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"RHEA-2012:0003\"}]"
     http_version: 
-  recorded_at: Tue, 21 Aug 2012 21:30:33 GMT
-recorded_with: VCR 2.2.4
+  recorded_at: Thu, 30 Aug 2012 01:37:40 GMT
