@@ -175,7 +175,7 @@ module Glue::Candlepin::Consumer
     end
 
     def to_json
-      super(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release])
+      super(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release, :releaseVer])
     end
 
     def convert_from_cp_fields(cp_json)

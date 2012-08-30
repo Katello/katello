@@ -410,7 +410,7 @@ describe Api::SystemsController do
       @sys.stub(:guest => 'false', :guests => [])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, "1.1", nil, anything).and_return(true)
       put :update, :id => uuid, :releaseVer => "1.1"
-      response.body.should == @sys.to_json
+      response.body.should include 'releaseVer'
       response.should be_success
     end
 
