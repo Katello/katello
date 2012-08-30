@@ -165,7 +165,7 @@ class Import(TemplateAction):
 
         try:
             f = self.open_file(tplPath)
-        except:
+        except IOError:
             print _("File %s does not exist" % tplPath)
             return os.EX_IOERR
 
