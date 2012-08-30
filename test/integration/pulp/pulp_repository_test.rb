@@ -194,11 +194,14 @@ class TestPulpRepositoryRequiresSync < MiniTest::Unit::TestCase
   end
 end
 
+
 class TestPulpRepositorySync < MiniTest::Unit::TestCase
   include TestPulpRepositoryBase
-
+  
   def setup
     super
+    VCR.eject_cassette
+    VCR.insert_cassette('pulp_repository_sync')
     RepositoryHelper.create_repo
   end
 
@@ -209,21 +212,22 @@ class TestPulpRepositorySync < MiniTest::Unit::TestCase
 
   def test_sync_repo
     response = @resource.sync(RepositoryHelper.repo_id)
-    @task = response
+    RepositoryHelper.set_task(response)
     assert response.length > 0
     assert response["method_name"] == "_sync"
   end
 
   def test_sync_status
-    task = @resource.sync(RepositoryHelper.repo_id)
+    RepositoryHelper.sync_repo
     response = @resource.sync_status(RepositoryHelper.repo_id)
     assert response.length > 0
-    assert response.first['id'] == task['id']
+    assert response.first['id'] == RepositoryHelper.task['id']
+    RepositoryHelper.set_task(response)
   end
 
   def test_generate_metadata
     response = @resource.generate_metadata(RepositoryHelper.repo_id)
-    @task = response
+    RepositoryHelper.set_task(response)
     assert response.length > 0
     assert response["method_name"] == "_generate_metadata"
   end
@@ -236,7 +240,7 @@ class TestPulpRepositoryClone < MiniTest::Unit::TestCase
 
   def setup
     super
-    RepositoryHelper.create_repo
+    RepositoryHelper.create_and_sync_repo
     @clone_name = RepositoryHelper.repo_id + "_clone"
   end
 

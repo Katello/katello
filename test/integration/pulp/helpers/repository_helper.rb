@@ -59,14 +59,17 @@ module RepositoryHelper
     repo = nil
     
     VCR.use_cassette('pulp_repository_helper') do
-      if @repo_resource.find(@repo_id)
-        destroy_repo
-      end
+      repo = @repo_resource.find(@repo_id)
+    end
+
+    if !repo.nil?
+      destroy_repo
     end
 
     VCR.use_cassette('pulp_repository_helper') do
       repo = @repo_resource.create(:id => @repo_id, :name=> @repo_name, :arch => 'noarch', :feed => @repo_url)
     end
+
     return repo
   rescue Exception => e
     p e
@@ -76,9 +79,10 @@ module RepositoryHelper
     VCR.use_cassette('pulp_repository_helper') do
       @task = @repo_resource.sync(@repo_name)
 
+      @task = @task_resource.cancel(@task["id"])
       while !(['finished', 'error', 'timed_out', 'canceled', 'reset'].include?(@task['state'])) do
         @task = @task_resource.find([@task["id"]]).first
-        sleep 0.5 # do not overload backend engines
+        sleep 1 # do not overload backend engines
       end
     end
   rescue Exception => e
@@ -87,16 +91,18 @@ module RepositoryHelper
 
   def self.destroy_repo(id=@repo_id)
     p "Destroying Repository."
+
     VCR.use_cassette('pulp_repository_helper') do
       if @task
-        @task_resource.cancel(@task["id"])
         while !(['finished', 'error', 'timed_out', 'canceled', 'reset'].include?(@task['state'])) do
           @task = @task_resource.find([@task["id"]]).first
           sleep 1 # do not overload backend engines
         end
+
         @task_resource.destroy(@task["id"])
         @task = nil
       end
+
       @repo_resource.destroy(id)
     end
   rescue Exception => e

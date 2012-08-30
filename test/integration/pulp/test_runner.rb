@@ -12,6 +12,7 @@
 require 'rubygems'
 require 'minitest/unit'
 require 'minitest/autorun'
+require 'test/integration/pulp/vcr_pulp_setup'
 
 
 class PulpMiniTestRunner
@@ -47,6 +48,14 @@ class PulpMiniTestRunner
 end
 
 MiniTest::Unit.runner = PulpMiniTestRunner::Unit.new
+
+
+if ARGV.include?('--live')
+  ARGV.delete('--live')
+  configure_vcr(:all)
+else
+  configure_vcr(:new_episodes)
+end
 
 if ARGV.length > 0
   ARGV.each do|test_suite_name|
