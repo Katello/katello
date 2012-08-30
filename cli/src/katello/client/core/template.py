@@ -222,7 +222,8 @@ class Export(TemplateAction):
         print _("Template was exported successfully to file %s") % tplPath
         return os.EX_OK
 
-    def open_file(self, path):
+    @classmethod
+    def open_file(cls, path):
         return open(get_abs_path(path),"w")
 
 
