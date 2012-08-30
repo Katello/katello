@@ -175,7 +175,8 @@ class Import(TemplateAction):
         f.close()
         return os.EX_OK
 
-    def open_file(self, path):
+    @classmethod
+    def open_file(cls, path):
         return open(get_abs_path(path))
 
 # ==============================================================================
