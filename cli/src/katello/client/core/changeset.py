@@ -391,7 +391,7 @@ class UpdateContent(ChangesetAction):
         self.api.update(csId, newName, description)
 
 
-    # pylint disable=R0201
+    # pylint: disable=R0201
     def update_content(self, csId, patch, updateMethod):
         for contentType, items in patch.iteritems():
             for i in items:
