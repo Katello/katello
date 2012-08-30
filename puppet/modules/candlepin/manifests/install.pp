@@ -1,20 +1,18 @@
 class candlepin::install {
-  $os_type = $operatingsystem ? {
-    "Fedora" => "fedora",
-    default  => "epel"
+  $os = $operatingsystem ? {
+    "RedHat" => "RHEL",
+    default  => "Fedora"
   }
-  yumrepo { "candlepin":
-    descr    => 'Candlepin Repo',
-    baseurl  => "http://repos.fedorapeople.org/repos/candlepin/candlepin/$os_type-\$releasever/\$basearch",
+
+  yumrepo { "katello-candlepin":
+    name     => "katello-candlepin",
+    baseurl  => "http://fedorapeople.org/groups/katello/releases/yum/katello-candlepin/${os}/${lsbmajdistrelease}/x86_64/",
     enabled  => "1",
     gpgcheck => "0"
   }
 
-	package{"candlepin-tomcat6":
-    require => Yumrepo["candlepin"],
+	package {"candlepin-tomcat6":
+    require => Yumrepo["katello-candlepin"],
     ensure  => installed
   }
-
-  Class["candlepin::install"] -> Exec["cpsetup"]
-  Class["postgres::install"] -> Exec["cpsetup"]
 }
