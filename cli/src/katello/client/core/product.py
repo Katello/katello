@@ -26,7 +26,8 @@ from katello.client.core.repo import format_sync_state, format_sync_time, ALLOWE
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan, get_filter
-from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, \
+    AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
 from katello.client.utils import printer
 
@@ -225,7 +226,8 @@ class Status(SingleProductAction):
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
-            prod['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+            prod['progress'] = ("%d%% done (%d of %d packages downloaded)" %
+                (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
 
         #TODO: last errors?
 
@@ -245,7 +247,8 @@ class Status(SingleProductAction):
 # ------------------------------------------------------------------------------
 class Promote(SingleProductAction):
 
-    description = _('promote a product to an environment\n(creates a temporary changeset with the product and promotes it)')
+    description = _('promote a product to an environment\n' +
+        '(creates a temporary changeset with the product and promotes it)')
     select_by_env = True
 
     def check_options(self, validator):
@@ -299,19 +302,20 @@ class Create(ProductAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--provider', dest='prov',
-                               help=_("provider name (required)"))
+            help=_("provider name (required)"))
         parser.add_option('--name', dest='name',
-                               help=_("product name (required)"))
+            help=_("product name (required)"))
         parser.add_option("--description", dest="description",
-                               help=_("product description"))
+            help=_("product description"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
-                               help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
+            help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
         parser.add_option("--nodisc", action="store_true", dest="nodiscovery",
-                               help=_("skip repository discovery"))
+            help=_("skip repository discovery"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
-                               help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
+            help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
         parser.add_option("--gpgkey", dest="gpgkey",
-                               help=_("assign a gpg key; this key will be used for every new repository unless gpgkey or nogpgkey is specified for the repo"))
+            help=_("assign a gpg key; this key will be used for every new repository unless gpgkey or nogpgkey" + \
+                " is specified for the repo"))
 
 
     def check_options(self, validator):
