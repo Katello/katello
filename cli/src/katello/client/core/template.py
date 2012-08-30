@@ -355,6 +355,7 @@ class Update(TemplateAction):
                 validator.add_option_error(_("missing value for parameter '%s'") % k)
 
     def resetParameters(self):
+        # pylint: disable=W0201
         self.items = {}
         self.items['add_parameters'] = {}
         self.items['add_repository'] = []
