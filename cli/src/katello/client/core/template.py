@@ -210,7 +210,7 @@ class Export(TemplateAction):
 
         try:
             f = self.open_file(tplPath)
-        except:
+        except IOError:
             print >> sys.stderr, _("Could not create file %s") % tplPath
             return os.EX_IOERR
 
