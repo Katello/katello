@@ -203,7 +203,7 @@ class Export(TemplateAction):
         tplName = self.get_option('name')
         orgName = self.get_option('org')
         envName = self.get_option('environment')
-        format  = self.get_option('format') or "json"
+        format_in  = self.get_option('format') or "json"
         tplPath = self.get_option('file')
 
         template = get_template(orgName, envName, tplName)
@@ -214,8 +214,8 @@ class Export(TemplateAction):
             print >> sys.stderr, _("Could not create file %s") % tplPath
             return os.EX_IOERR
 
-        self.api.validate_tpl(template["id"], format)
-        response = run_spinner_in_bg(self.api.export_tpl, (template["id"], format),
+        self.api.validate_tpl(template["id"], format_in)
+        response = run_spinner_in_bg(self.api.export_tpl, (template["id"], format_in),
             message=_("Exporting template, please wait... "))
         f.write(response)
         f.close()
