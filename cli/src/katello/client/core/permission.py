@@ -53,14 +53,15 @@ class Create(PermissionAction):
     description = _('create a permission for a user role')
 
     def setup_parser(self, parser):
-        parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
-        parser.add_option('--name', dest='name',help=_("permission name (required)"))
+        parser.add_option('--user_role', dest='user_role', help=_("role name (required)"))
+        parser.add_option('--name', dest='name', help=_("permission name (required)"))
         parser.add_option('--description', dest='desc', help=_("permission description"))
         opt_parser_add_org(parser)
         parser.add_option('--scope', dest='scope', help=_("scope of the permisson (required)"))
         parser.add_option('--verbs', dest='verbs', type="list", help=_("verbs for the permission"), default="")
         parser.add_option('--tags', dest='tags', type="list", help=_("tags for the permission"), default="")
-        parser.add_option('--all_tags', action="store_true", dest='all_tags', help=_("use to set all tags"), default=False)
+        parser.add_option('--all_tags', action="store_true", dest='all_tags',
+            help=_("use to set all tags"), default=False)
 
     def check_options(self, validator):
         validator.require(('user_role', 'name', 'scope'))
@@ -112,8 +113,8 @@ class Delete(PermissionAction):
     description = _('delete a permission')
 
     def setup_parser(self, parser):
-        parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
-        parser.add_option('--name', dest='name',help=_("permission name (required)"))
+        parser.add_option('--user_role', dest='user_role', help=_("role name (required)"))
+        parser.add_option('--name', dest='name', help=_("permission name (required)"))
 
     def check_options(self, validator):
         validator.require(('user_role', 'name'))
@@ -135,15 +136,17 @@ class List(PermissionAction):
     description = _('list permissions for a user role')
 
     def setup_parser(self, parser):
-        parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
+        parser.add_option('--user_role', dest='user_role', help=_("role name (required)"))
 
     def check_options(self, validator):
         validator.require('user_role')
 
-    def format_verbs(self, verbs):
+    @classmethod
+    def format_verbs(cls, verbs):
         return [v['verb'] for v in verbs]
 
-    def format_tags(self, tags):
+    @classmethod
+    def format_tags(cls, tags):
         return [t['formatted']['display_name'] for t in tags]
 
     def run(self):
@@ -222,7 +225,8 @@ class ListAvailableVerbs(PermissionAction):
         else:
             return ("%-20s (%s)" % (verb["name"], verb["display_name"]))
 
-    def formatTag(self, tag):
+    @classmethod
+    def formatTag(cls, tag):
         return tag["display_name"]
 
     def formatScope(self, scopeName, scopeData):
