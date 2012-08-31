@@ -181,10 +181,7 @@ class Discovery(RepoAction):
 
     def discover_repositories(self, org_name, url):
         print(_("Discovering repository urls, this could take some time..."))
-        try:
-            task = self.api.repo_discovery(org_name, url, 'yum')
-        except Exception, e:
-            system_exit(os.EX_DATAERR, _("Error: %s" % e))
+        task = self.api.repo_discovery(org_name, url, 'yum')
 
         discoveryResult = run_spinner_in_bg(wait_for_async_task, [task])
         repourls = discoveryResult[0]['result'] or []
