@@ -36,8 +36,8 @@ class DateTimeFormatter(object):
     def date_valid(self, time_in):
         return re.compile("^%s$" % self.date_re).match(time_in) != None
 
-    def contains_zone(self, time):
-        return re.compile(".*%s$" % self.timezone_re).match(time) != None
+    def contains_zone(self, time_in):
+        return re.compile(".*%s$" % self.timezone_re).match(time_in) != None
 
     def build_datetime(self, date, time):
         if not self.time_valid(time):
