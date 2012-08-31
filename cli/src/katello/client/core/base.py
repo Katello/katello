@@ -138,7 +138,8 @@ class Action(object):
         parser.set_usage(self.usage(command_name, parent_usage))
         return parser
 
-    def create_validator(self, parser, opts, args):
+    @classmethod
+    def create_validator(cls, parser, opts, args):
         """
         :rtype: OptionValidator
         """
@@ -168,6 +169,7 @@ class Action(object):
         """
         return (not self.get_option(opt) is None)
 
+    # pylint: disable=W0613
     def setup_parser(self, parser):
         """
         Add custom options to the parser
