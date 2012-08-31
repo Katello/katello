@@ -20,6 +20,7 @@ from katello.client import constants
 from katello.client.api.system import SystemAPI
 from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.system_group import SystemGroupAPI
+from katello.client.api.custom_info import CustomInfoAPI
 from katello.client.api.utils import get_environment, get_system
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
@@ -103,6 +104,7 @@ class Info(SystemAction):
         validator.mutually_exclude('environment', 'uuid')
 
     def run(self):
+        import epdb; epdb.set_trace()
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
@@ -117,6 +119,10 @@ class Info(SystemAction):
 
         # get system details
         system = get_system(org_name, sys_name, env_name, sys_uuid)
+
+        custom_info_api = CustomInfoAPI()
+        custom_info = custom_info_api.get_custom_info("system", system['id'])
+        system['custom_info'] = "[ " + ", ".join(["%s: %s" % (k, "[ " + ", ".join([i for i in custom_info[k]]) + " ]") for k in custom_info.keys()]) + " ]"
 
         system["activation_keys"] = "[ "+ ", ".join([ak["name"] for ak in system["activation_key"]]) +" ]"
         if 'host' in system:
@@ -139,6 +145,7 @@ class Info(SystemAction):
         self.printer.add_column('guests', show_with=printer.VerboseStrategy)
         if "template" in system:
             self.printer.add_column('template', show_with=printer.VerboseStrategy, value=system["template"]["name"])
+        self.printer.add_column('custom_info', multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.print_item(system)
 
@@ -391,7 +398,7 @@ class Facts(SystemAction):
             self.printer.set_header(_("System Facts For System [ %s ] in Org [ %s ]") %
                 (sys_name if sys_name else sys_uuid, org_name))
         else:
-            self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") %
+            self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s ] in Org [ %s ]") %
                 (sys_name, env_name, org_name))
 
         system = get_system(org_name, sys_name, env_name, sys_uuid)
@@ -761,6 +768,7 @@ class Report(SystemAction):
         validator.require('org')
 
     def run(self):
+        #import epdb; epdb.set_trace()
         orgId = self.get_option('org')
         envName = self.get_option('environment')
         format_in = self.get_option('format')
@@ -884,6 +892,138 @@ class RemoveSystemGroups(SystemAction):
         else:
             return os.EX_DATAERR
 
+
+class AddCustomInfo(SystemAction):
+
+    description = _('add custom infomation to a system')
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("System name (required)"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser)
+        parser.add_option('--keyname', dest='keyname', help=_("name to identify the custom info (required)"))
+        parser.add_option('--value', dest='value', help=_("the custom info (required)"))
+
+    def check_options(self, validator):
+        validator.require(('org', 'name', 'keyname', 'value'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        env_name = self.get_option("environment")
+        sys_name = self.get_option('name')
+        keyname = self.get_option('keyname')
+        value = self.get_option('value')
+
+        system = get_system(org_name, sys_name, env_name)
+
+        custom_info_api = CustomInfoAPI()
+
+        response = custom_info_api.add_custom_info("system", system['id'], keyname, value)
+
+        if response[keyname][0] == value:
+            print _("Successfully added custom information [ %s : %s ] to system [ %s ]") % (keyname, value, sys_name)
+        else:
+            print _("Could not add custom information [ %s : %s ] to system [ %s ]") % (keyname, value, sys_name)
+
+class ViewCustomInfo(SystemAction):
+
+    description = _('view custom info attached to a system')
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("System name (required)"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser)
+        parser.add_option('--keyname', dest='keyname', help=_("name of the custom info"))
+
+    def check_options(self, validator):
+        validator.require(('org', 'name'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        env_name = self.get_option('environment')
+        sys_name = self.get_option('name')
+        keyname = self.get_option('keyname')
+
+        system = get_system(org_name, sys_name, env_name)
+
+        custom_info_api = CustomInfoAPI()
+
+        custom_info = custom_info_api.get_custom_info("system", system['id'], keyname)
+
+        for k in sorted(custom_info.keys()):
+            self.printer.add_column(k, k)
+
+        self.printer.set_header(_("Custom Information For System [ %s ] in Org [ %s ]") % (sys_name, org_name))
+
+        self.printer.print_item(custom_info)
+
+
+class UpdateCustomInfo(SystemAction):
+
+    description = _("update custom info for a system")
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("System name (required)"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser)
+        parser.add_option('--keyname', dest='keyname', help=_("name of the custom info"))
+        parser.add_option('--current-value', dest='current-value', help=_("old value to update"))
+        parser.add_option('--new-value', dest='new-value', help=_("replacement value"))
+
+    def check_options(self, validator):
+        validator.require(('org', 'name', 'keyname', 'current-value', 'new-value'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        env_name = self.get_option('environment')
+        sys_name = self.get_option('name')
+        keyname = self.get_option('keyname')
+        current_value = self.get_option('current-value')
+        new_value = self.get_option('new-value')
+
+        system = get_system(org_name, sys_name, env_name)
+
+        custom_info_api = CustomInfoAPI()
+
+        response = custom_info_api.update_custom_info("system", system['id'], keyname, current_value, new_value)
+
+        if response[keyname][0] == new_value:
+            print _("Successfully updated custom information [ %s : %s ] for system [ %s ]") % (keyname, new_value, sys_name),
+        else:
+            print _("Could not update custom information [ %s : %s ] for system [ %s ]") % (keyname, new_value, sys_name)
+
+
+class RemoveCustomInfo(SystemAction):
+
+    description = _("remove custom info from a system")
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("System name (required)"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser)
+        parser.add_option('--keyname', dest='keyname', help=_("name of the custom info"))
+        parser.add_option('--value', dest='value', help=_("value of the custom info"))
+
+    def check_options(self, validator):
+        validator.require(('org', 'name'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        env_name = self.get_option('environment')
+        sys_name = self.get_option('name')
+        keyname = self.get_option('keyname')
+        value = self.get_option('value')
+
+        system = get_system(org_name, sys_name, env_name)
+
+        custom_info_api = CustomInfoAPI()
+
+        response = custom_info_api.remove_custom_info("system", system['id'], keyname, value)
+
+        if response:
+            print _("Successfully removed custom information from system [ %s ]") % sys_name
+        else:
+            print _("Could not remove custom information from system [ %s ]") % sys_name
 
 
 class System(Command):

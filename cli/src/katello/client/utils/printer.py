@@ -140,8 +140,11 @@ class VerboseStrategy(PrinterStrategy):
 
             if not column.get('multiline', False):
                 col_width = self._max_label_width(columns)
-                print ("{0:<" + u_str(col_width + 1) + "} {1}").format(u_str(column['name'])+":", u_str(value))
-                # +1 to account for the : after the column name
+                label_form = "{0:<" + u_str(col_width) + "} : "
+                if type(value).__name__ != 'list':
+                    value = [value]
+                for v in value:
+                    print label_form.format(u_str(column['name'])) + u_str(v)
             else:
                 print column['name']+":"
                 print indent_text(value, "    ")
