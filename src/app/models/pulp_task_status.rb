@@ -72,9 +72,9 @@ class PulpTaskStatus < TaskStatus
   end
 
   def self.refresh task_status
-    pulp_task = Resources::Pulp::Task.find([task_status.uuid]).first
+    pulp_task = Resources::Pulp::Task.find_single(task_status.uuid)
 
-    self.dump_state(task-status, pulp_task)
+    self.dump_state(pulp_task, task_status)
     task_status.after_refresh
   end
 

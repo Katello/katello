@@ -48,7 +48,7 @@ module Glue::Pulp::Repos
       :content => {
         :name => repo.name,
         :contentUrl => Glue::Pulp::Repos.custom_content_path(self, repo.name),
-        :gpgUrl => yum_gpg_key_url(repo),
+        :gpgUrl => repo.yum_gpg_key_url,
         :type => "yum",
         :label => custom_content_label(repo),
         :vendor => Provider::CUSTOM
@@ -148,6 +148,7 @@ module Glue::Pulp::Repos
       end
 
       save!
+      debugger
       async_tasks
     end
 
@@ -431,22 +432,6 @@ module Glue::Pulp::Repos
           raise "New content was added to environment other than Library. Please use promotion instead."
         end
       end
-
-      #
-      # TODO: candlepin currently doesn't support modification of content
-      #
-      #common_content_ids = (old_content_ids & new_content_ids)
-      #changed_content = self.productContent_change[1].select do |new_pc|
-      #  common_content_ids.include?(new_pc.id) && productContent_change[0].any? do |old_pc|
-      #    old_pc.id == new_pc.id && old_pc.content.contentUrl != new_pc.content.contentUrl
-      #  end
-      #end
-      #
-      #changed_content.each do |pc|
-      #  Resources::Pulp::Repository.update(repo_id(pc.content.name), {
-      #    :feed => repo_url(pc.content.contentUrl)
-      #  })
-      #end
     end
 
     def del_repos
@@ -521,21 +506,9 @@ module Glue::Pulp::Repos
     end
 
     def check_for_repo_conflicts(repo_name)
-      is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
-              "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
+      is_dupe =  Repository.in_product(self).in_environment(self.library).where(:name=>repo_name).count > 0
       if is_dupe
         raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.name])
-      end
-    end
-
-    private
-
-    def yum_gpg_key_url(repo)
-      # if the repo has a gpg key return a url to access it
-      if (repo.gpg_key && repo.gpg_key.content.present?)
-        host = AppConfig.host
-        host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
-        gpg_key_content_api_repository_url(repo, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
       end
     end
 
