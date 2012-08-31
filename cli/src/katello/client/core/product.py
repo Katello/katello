@@ -285,7 +285,8 @@ class Promote(SingleProductAction):
 
         return returnCode
 
-    def create_cs_name(self):
+    @classmethod
+    def create_cs_name(cls):
         curTime = datetime.datetime.now()
         return "product_promotion_"+str(curTime)
 
