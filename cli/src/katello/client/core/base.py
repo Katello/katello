@@ -257,7 +257,8 @@ class Command(CommandContainer, Action):
             lines += self.__build_command_usage_lines(name, self.get_command(name))
         return '\n'.join(lines)
 
-    def __build_command_usage_lines(self, name, command):
+    @classmethod
+    def __build_command_usage_lines(cls, name, command):
         lines = []
         desc_lines = command.description.split("\n")
 
