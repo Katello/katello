@@ -30,8 +30,8 @@ class DateTimeFormatter(object):
     day_re = "(0[1-9]|[1-2][0-9]|3[0-1])"
     date_re = "%s-%s-%s" % (year_re, month_re, day_re)
 
-    def time_valid(self, time):
-        return re.compile("^%s(%s)?$" % (self.time_re, self.timezone_re)).match(time) != None
+    def time_valid(self, time_in):
+        return re.compile("^%s(%s)?$" % (self.time_re, self.timezone_re)).match(time_in) != None
 
     def date_valid(self, time):
         return re.compile("^%s$" % self.date_re).match(time) != None
