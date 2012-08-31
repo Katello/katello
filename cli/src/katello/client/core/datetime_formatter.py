@@ -50,7 +50,8 @@ class DateTimeFormatter(object):
         else:
             return date+"T"+time_in+self.local_timezone()
 
-    def local_timezone(self):
+    @classmethod
+    def local_timezone(cls):
         t = time.time()
         loc_time = time.localtime(t)
         utc_time = time.gmtime(t)
