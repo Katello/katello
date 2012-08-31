@@ -31,8 +31,8 @@ class EnvironmentAction(BaseAction):
         super(EnvironmentAction, self).__init__()
         self.api = EnvironmentAPI()
 
-
-    def get_prior_id(self, orgName, priorName):
+    @classmethod
+    def get_prior_id(cls, orgName, priorName):
         prior = get_environment(orgName, priorName)
         return prior["id"]
 
