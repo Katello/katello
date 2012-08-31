@@ -89,8 +89,7 @@ class List(ActivationKeyAction):
         return os.EX_OK
 
     def get_keys_for_organization(self, orgName):
-        organization = get_organization(orgName)
-        return self.api.activation_keys_by_organization(organization['cp_key'])
+        return self.api.activation_keys_by_organization(orgName)
 
     def get_keys_for_environment(self, orgName, envName):
         environment = get_environment(orgName, envName)
