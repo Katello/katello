@@ -96,6 +96,7 @@ Src::Application.routes.draw do
   get  "sync_schedules/index"
   post "sync_schedules/apply"
 
+  get "sync_management/manage"
   get "sync_management/index"
   post "sync_management/sync"
   get  "sync_management/sync_status"
