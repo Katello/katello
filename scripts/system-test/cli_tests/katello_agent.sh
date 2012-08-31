@@ -16,22 +16,22 @@ kt_agent_present() {
 
 # testing registration from rhsm
 if kt_agent_present; then
-   cat <<EOF | sudo tee /etc/yum.repos.d/zoo.repo > /dev/null
+   cat <<EOF | $SUDO tee /etc/yum.repos.d/zoo.repo > /dev/null
 [zoo-repo]
 name=Zoo Repo
 baseurl=http://tstrachota.fedorapeople.org/dummy_repos/zoo/
 gpgcheck=0
 EOF
 
-  test_own_cmd_success "rhsm registration with org" sudo subscription-manager register --username="$USER" --password="$PASSWORD" \
+  test_own_cmd_success "rhsm registration with org" $SUDO subscription-manager register --username="$USER" --password="$PASSWORD" \
     --org="$TEST_ORG" --environment "$TEST_ENV" --name="$HOST" --force
 
   # retrieve the system's uuid for later use
-  identity=$(sudo subscription-manager identity | grep -o -E "^Current identity is:.*")
+  identity=$($SUDO subscription-manager identity | grep -o -E "^Current identity is:.*")
   SYSTEM_UUID=${identity:21}
 
   echo "removing package "$INSTALL_PACKAGE" from the system"
-  sudo yum remove -y "$INSTALL_PACKAGE" &> /dev/null
+  $SUDO yum remove -y "$INSTALL_PACKAGE" &> /dev/null
   test_success "remote system package install" system packages --install "$INSTALL_PACKAGE" --name "$HOST" --org "$TEST_ORG"
   test_own_cmd_success "package installed" rpm -q "$INSTALL_PACKAGE" &> /dev/null
   test_success "remote system package update" system packages --update "$INSTALL_PACKAGE" --name "$HOST" --org "$TEST_ORG"
@@ -39,7 +39,7 @@ EOF
   test_own_cmd_failure "package unistalled" rpm -q "$INSTALL_PACKAGE" &> /dev/null
 
   echo "removing group "$INSTALL_GROUP" from the system"
-  sudo yum groupremove -y "$INSTALL_GROUP" &> /dev/null
+  $SUDO yum groupremove -y "$INSTALL_GROUP" &> /dev/null
   test_success "remote system package group install" system packages --install_group "$INSTALL_GROUP" --name "$HOST" --org "$TEST_ORG"
   test_own_cmd_success "package group installed"  rpm -q "$INSTALL_GROUP_PACKAGE" &> /dev/null
   test_success "remote system package group remove" system packages  --remove_group "$INSTALL_GROUP" --name "$HOST" --org "$TEST_ORG"
@@ -50,7 +50,7 @@ EOF
   test_success "add system to system group" system_group add_systems --system_uuids "$SYSTEM_UUID" --name "$SYSTEM_GROUP_NAME" --org "$TEST_ORG"
 
   echo "removing package "$INSTALL_PACKAGE" from the system"
-  sudo yum remove -y "$INSTALL_PACKAGE" &> /dev/null
+  $SUDO yum remove -y "$INSTALL_PACKAGE" &> /dev/null
   test_success "remote system group package install" system_group packages --install "$INSTALL_PACKAGE" --name "$SYSTEM_GROUP_NAME" --org "$TEST_ORG"
   test_own_cmd_success "package installed" rpm -q "$INSTALL_PACKAGE" &> /dev/null
   test_success "remote system group package update" system_group packages --update "$INSTALL_PACKAGE" --name "$SYSTEM_GROUP_NAME" --org "$TEST_ORG"
@@ -58,7 +58,7 @@ EOF
   test_own_cmd_failure "package unistalled" rpm -q "$INSTALL_PACKAGE" &> /dev/null
 
   echo "removing group "$INSTALL_GROUP" from the system"
-  sudo yum groupremove -y "$INSTALL_GROUP" &> /dev/null
+  $SUDO yum groupremove -y "$INSTALL_GROUP" &> /dev/null
   test_success "remote system group package group install" system_group packages --install_group "$INSTALL_GROUP" --name "$SYSTEM_GROUP_NAME" --org "$TEST_ORG"
   test_own_cmd_success "package group installed"  rpm -q "$INSTALL_GROUP_PACKAGE" &> /dev/null
   test_success "remote system group package group update" system_group packages --update_group "$INSTALL_GROUP" --name "$SYSTEM_GROUP_NAME" --org "$TEST_ORG"
@@ -68,7 +68,7 @@ EOF
   test_success "remove system from system group" system_group remove_systems --system_uuids "$SYSTEM_UUID" --name "$SYSTEM_GROUP_NAME" --org "$TEST_ORG"
   test_success "system group delete" system_group delete --name "$SYSTEM_GROUP_NAME" --org "$TEST_ORG"
 
-  test_own_cmd_success "rhsm unregister" sudo subscription-manager unregister
+  test_own_cmd_success "rhsm unregister" $SUDO subscription-manager unregister
 
   rm /etc/yum.repos.d/zoo.repo
 else
