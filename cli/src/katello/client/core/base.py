@@ -330,9 +330,11 @@ class BaseAction(Action):
 
     def __print_strategy(self):
         Config()
-        if (self.has_option('grep') or (Config.parser.has_option('interface', 'force_grep_friendly') and Config.parser.get('interface', 'force_grep_friendly').lower() == 'true')):
+        if (self.has_option('grep') or (Config.parser.has_option('interface', 'force_grep_friendly') \
+            and Config.parser.get('interface', 'force_grep_friendly').lower() == 'true')):
             return GrepStrategy(delimiter=self.get_option('delimiter'))
-        elif (self.has_option('verbose') or (Config.parser.has_option('interface', 'force_verbose') and Config.parser.get('interface', 'force_verbose').lower() == 'true')):
+        elif (self.has_option('verbose') or (Config.parser.has_option('interface', 'force_verbose') \
+            and Config.parser.get('interface', 'force_verbose').lower() == 'true')):
             return VerboseStrategy()
         else:
             return None
