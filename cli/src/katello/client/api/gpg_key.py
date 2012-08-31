@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.core.utils import update_dict_unless_none
 
 class GpgKeyAPI(KatelloAPI):
 
@@ -36,8 +37,8 @@ class GpgKeyAPI(KatelloAPI):
 
     def update(self, keyId, name, content):
         keyData = {}
-        keyData = self.update_dict(keyData, "name", name)
-        keyData = self.update_dict(keyData, "content", content)
+        keyData = update_dict_unless_none(keyData, "name", name)
+        keyData = update_dict_unless_none(keyData, "content", content)
 
         path = "/api/gpg_keys/%s/" % keyId
         return self.server.PUT(path, {'gpg_key': keyData})[1]
