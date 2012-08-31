@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.4
+Version:       1.1.5
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -138,6 +138,11 @@ cp -ap test/katello %{buildroot}%{homedir}/tests/%{name}/unit-tests
 make -C po clean
 
 %changelog
+* Fri Aug 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.5-1
+- code style fixes (msuchy@redhat.com)
+- 847858 - only remove act keys when resource not found error
+  (thomasmckay@redhat.com)
+
 * Wed Aug 29 2012 Ivan Necas <inecas@redhat.com> 1.1.4-1
 - evironment is now stored to environment variable instead env
   (msuchy@redhat.com)
