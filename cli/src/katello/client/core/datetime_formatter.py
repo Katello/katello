@@ -39,16 +39,16 @@ class DateTimeFormatter(object):
     def contains_zone(self, time_in):
         return re.compile(".*%s$" % self.timezone_re).match(time_in) != None
 
-    def build_datetime(self, date, time):
-        if not self.time_valid(time):
+    def build_datetime(self, date, time_in):
+        if not self.time_valid(time_in):
             raise DateTimeFormatException(_("Time format is invalid. Required: HH:MM:SS[+HH:MM]"))
         if not self.date_valid(date):
             raise DateTimeFormatException(_("Date format is invalid. Required: YYYY-MM-DD"))
 
-        if self.contains_zone(time):
-            return date+"T"+time
+        if self.contains_zone(time_in):
+            return date+"T"+time_in
         else:
-            return date+"T"+time+self.local_timezone()
+            return date+"T"+time_in+self.local_timezone()
 
     def local_timezone(self):
         t = time.time()
