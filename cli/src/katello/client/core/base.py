@@ -391,7 +391,7 @@ class BaseAction(Action):
                     msg = re.args[1]["displayMessage"]
                 else:
                     msg = ", ".join(re.args[1]["errors"])
-            except:
+            except IndexError:
                 msg = re.args[1]
             if re.args[0] == 401:
                 msg = _("Invalid credentials or unable to authenticate")
