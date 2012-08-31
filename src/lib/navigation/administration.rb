@@ -44,7 +44,7 @@ module Navigation
       {:key => :admin,
        :name => _("Administer"),
         :url => :sub_level,
-        :items=> [ menu_users, menu_roles, menu_orgs],
+        :items=> [ menu_users, menu_roles, menu_orgs, menu_sync_tasks],
         :options => {:class=>'operations header-widget fl menu_parent', "data-menu"=>"operations"},
         :if => :sub_level
       }
@@ -74,6 +74,15 @@ module Navigation
        :name => _("Manage Organizations"),
        :url => organizations_path,
        :if =>lambda {Organization.any_readable?},
+       :options => {:class=>'operations section_level', "data-menu"=>"operations"}
+      }
+    end
+
+    def menu_sync_tasks
+      {:key => :sync_tasks,
+       :name => _("Synchronization"),
+       :url => sync_management_manage_path,
+       :if => lambda {User.current.has_superadmin_role?},
        :options => {:class=>'operations section_level', "data-menu"=>"operations"}
       }
     end
