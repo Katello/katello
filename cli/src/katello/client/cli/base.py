@@ -174,6 +174,7 @@ class KatelloCLI(Command):
         else:
             self._server.set_auth_method(NoAuthentication())
 
+    # pylint: disable=W0221
     def error(self, exception, errorMsg = None):
         msg = errorMsg if errorMsg else u_str(exception)
         print >> sys.stderr, "error: %s (more in the log file %s)" % (msg, logfile())
