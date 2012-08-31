@@ -136,7 +136,7 @@ class Api::SystemsController < Api::ApiController
 
   def index
     # expected parameters
-    expected_params = params.slice('name')
+    expected_params = params.slice(:name, :uuid)
 
     systems = (@environment.nil?) ? @organization.systems : @environment.systems
     systems = systems.all_by_pool(params['pool_id']) if params['pool_id']
@@ -239,6 +239,8 @@ class Api::SystemsController < Api::ApiController
     end
     if params[:system_name]
       query = query.where(:"systems.name" => params[:system_name])
+    elsif params[:system_uuid]
+      query = query.where(:"systems.uuid" => params[:system_uuid])
     end
 
     task_ids = query.select('task_statuses.id')

@@ -182,15 +182,21 @@ def get_system_group(org_name, system_group_name):
             (system_group_name, org_name))
     return system_group
 
-def get_system(org_name, sys_name, env_name=None):
+def get_system(org_name, sys_name, env_name=None, sys_uuid=None):
     system_api = SystemAPI()
-    if env_name is None:
+    if sys_uuid:
+        systems = system_api.systems_by_org(org_name, {'uuid': sys_uuid})
+        if systems is None:
+            raise ApiDataError(_("Could not find System [ %s ] in Org [ %s ]") % (sys_name, org_name))
+        elif len(systems) != 1:
+            raise ApiDataError(_("Found ambiguous Systems [ %s ] in Org [ %s ]") % (sys_uuid, org_name))
+    elif env_name is None:
         systems = system_api.systems_by_org(org_name, {'name': sys_name})
         if systems is None:
             raise ApiDataError(_("Could not find System [ %s ] in Org [ %s ]") % (sys_name, org_name))
         elif len(systems) != 1:
-            raise ApiDataError( _("Found ambiguous Systems [ %s ] in Environment [ %s ] in Org [ %s ]") %
-                (sys_name, env_name, org_name))
+            raise ApiDataError( _("Found ambiguous Systems [ %s ] in Environment [ %s ] in Org [ %s ], "\
+                    "use --uuid to specify the system") % (sys_name, env_name, org_name))
     else:
         environment = get_environment(org_name, env_name)
         systems = system_api.systems_by_env(environment["id"], {'name': sys_name})
