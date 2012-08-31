@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.8
+Version:        1.1.9
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -520,6 +520,24 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Aug 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.9-1
+- Do not insert spaces before changesets description (pajkycz@gmail.com)
+- 847858-actkeypool - fixed spec test failure (thomasmckay@redhat.com)
+- Updating converge-ui (jomara@redhat.com)
+- 847858 - only remove act keys when resource not found error
+  (thomasmckay@redhat.com)
+- 847115 - Extend scroll bug on content tab, with > 50 subscriptions only the
+  first 50 will populate. (pajkycz@gmail.com)
+- Added some unit to test the perm fixes (paji@redhat.com)
+- 843462 - system group search indexing should not include pulp content
+  (bbuckingham@redhat.com)
+- Added permissions for content delete (paji@redhat.com)
+- 841857 - fixing LDAP logins in katello mode (jomara@redhat.com)
+- 842569 - system groups - fix for TypeError on status of errata install
+  (bbuckingham@redhat.com)
+- 811556 - Displaced 'save' button while editing the changeset description
+  under "changeset history" tab (pajkycz@gmail.com)
+
 * Wed Aug 29 2012 Ivan Necas <inecas@redhat.com> 1.1.8-1
 - subsfilter - reset the cycle of table row colors to avoid having first row of
   bottom table having same shading as the table header (ie. always start with
