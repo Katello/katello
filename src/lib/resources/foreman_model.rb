@@ -155,7 +155,7 @@ class Resources::ForemanModel
   end
 
   def update_attributes!(attrs)
-    attributes = attrs
+    self.attributes = attrs
     save!
   end
 
