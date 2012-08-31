@@ -459,8 +459,8 @@ class Packages(SystemGroupAction):
             job = self.api.update_package_groups(org_name, system_group_id, update_groups)
 
         if job:
-            id = job["id"]
-            print (_("Performing remote action [ %s ]... ") % id)
+            job_id = job["id"]
+            print (_("Performing remote action [ %s ]... ") % job_id)
             job = SystemGroupAsyncJob(org_name, system_group_id, job)
             run_spinner_in_bg(wait_for_async_job, [job])
             if job.succeeded():
