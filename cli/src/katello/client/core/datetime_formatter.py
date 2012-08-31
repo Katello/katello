@@ -21,7 +21,7 @@ import time
 class DateTimeFormatException(Exception):
     pass
 
-class DateTimeFormatter():
+class DateTimeFormatter(object):
 
     time_re = "([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"
     timezone_re = "[+-][0-9]{2}:[0-9]{2}|Z"
