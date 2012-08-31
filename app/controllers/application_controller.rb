@@ -429,7 +429,6 @@ class ApplicationController < ActionController::Base
       panel_options[:total_results] = 0
 
     end
-
     render_panel_results(@items, total_count, panel_options) if !skip_render
     return @items
   end

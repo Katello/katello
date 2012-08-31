@@ -228,18 +228,6 @@ module Resources
     class Repository < PulpResource
       class << self
 
-        def clone_repo from_repo, to_repo, feed = "parent", filters = []  #clone is a built in method, hence redundant name
-          data = { :clone_id => to_repo.pulp_id,
-                   :feed =>feed,
-                   :clone_name => to_repo.name,
-                   :groupid=>to_repo.groupid,
-                   :relative_path => to_repo.relative_path,
-                   :filters => filters }
-          path = Repository.repository_path + from_repo.pulp_id + "/clone/"
-          response = post(path, JSON.generate(data), self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
-        end
-
         def find repo_id, yell_on_404 = false
           response = get(repository_path  + repo_id + "/?details=true", self.default_headers)
           body = response.body
@@ -288,7 +276,12 @@ module Resources
           JSON.parse(body).with_indifferent_access
         end
 
-
+        def unit_copy src_repo_id, dest_repo_id
+          body = {:source_repo_id=>src_repo_id}
+          response = post(self.repository_path(dest_repo_id) + '/actions/associate/', JSON.generate(body), self.default_headers)
+          JSON.parse(response).with_indifferent_access
+        end
+        
         # :id, :name
         def update repo_id, attrs
           body = put(Repository.repository_path + repo_id +"/", JSON.generate(attrs), self.default_headers).body

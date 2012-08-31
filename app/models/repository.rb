@@ -66,6 +66,15 @@ class Repository < ActiveRecord::Base
     self.environment.organization
   end
 
+  def yum_gpg_key_url
+    # if the repo has a gpg key return a url to access it
+    if (self.gpg_key && self.gpg_key.content.present?)
+      host = AppConfig.host
+      host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
+      gpg_key_content_api_repository_url(self, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
+    end
+  end
+
   #temporary major version
   def major_version
     return nil if release.nil?
@@ -143,7 +152,7 @@ class Repository < ActiveRecord::Base
 
 
   def extended_index_attrs
-    {:environment=>self.environment.name, :environment_id=>self.environment.id,
+    {:environment=>self.environment.name, :environment_id=>self.environment.id, :clone_ids=>self.clones.pluck(:pulp_id),
      :product=>self.product.name, :product_id=> self.product.id, :name_sort=>self.name }
   end
 
@@ -237,6 +246,55 @@ class Repository < ActiveRecord::Base
     repoids = "repoids:#{pulp_id}"
     Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_errata/_query?q=#{repoids}"
     Tire.index('katello_errata').refresh
+  end
+
+  def create_clone to_env
+    raise _("Cannot clone repository from #{self.environment.name} to #{to_env.name}.  They are not sequential.") if to_env.prior != self.environment
+
+    key = EnvironmentProduct.find_or_create(to_env, self.product)
+    library = self.environment.library? ? self : self.library_instance
+    clone = Repository.new(:environment_product => key,
+                           :cp_label => self.cp_label,
+                           :library_instance=>library,
+                           :name=>self.name,
+                           :arch=>self.arch,
+                           :major=>self.major,
+                           :minor=>self.minor,
+                           :enable=>self.enabled,
+                           :content_id=>self.content_id
+                           )
+    clone.pulp_id = clone.clone_id(to_env)
+    clone.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_env)
+    clone.save!
+    self.clone_contents(clone)
+  end
+
+  def clone_contents to_repo
+    Resources::Pulp::Repository.unit_copy(self.pulp_id, to_repo.pulp_id)
+  end
+
+  def clones
+    lib_id = self.library_instance_id || self.id
+    Repository.in_environment(self.environment.successors).where(:library_instance_id=>lib_id)
+  end
+
+  #is the repo cloned in the specified environment
+  def is_cloned_in? env
+    lib_id = self.library_instance_id ? self.library_instance_id : self.id
+    self.get_clone(env) != nil
+  end
+
+  def promoted?
+    if self.environment.library?
+      Repository.where(:library_instance_id=>self.id).count > 0
+    else
+      true
+    end
+  end
+
+  def get_clone env
+    lib_id = self.library_instance_id || self.id
+    Repository.in_environment(env).where(:library_instance_id=>lib_id).first
   end
 
   def gpg_key_name=(name)
