@@ -112,10 +112,13 @@ class Create(SyncPlanAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option("--description", dest="description", help=_("plan description"))
         parser.add_option('--interval', dest='interval',
-            help=_("interval of recurring synchronizations (choices: [%s], default: none)") % ', '.join(self.interval_choices),
-            default='none', choices=self.interval_choices)
-        parser.add_option("--date", dest="date", help=_("date of first synchronization (required, format: YYYY-MM-DD)"))
-        parser.add_option("--time", dest="time", help=_("time of first synchronization (format: HH:MM:SS, default: 00:00:00)"), default="00:00:00")
+            help=_("interval of recurring synchronizations (choices: [%s], default: none)") %
+                ', '.join(self.interval_choices), default='none', choices=self.interval_choices)
+        parser.add_option("--date", dest="date",
+            help=_("date of first synchronization (required, format: YYYY-MM-DD)"))
+        parser.add_option("--time", dest="time",
+            help=_("time of first synchronization (format: HH:MM:SS, default: 00:00:00)"),
+            default="00:00:00")
 
     def check_options(self, validator):
         validator.require(('name', 'org', 'date'))
@@ -147,7 +150,8 @@ class Update(SyncPlanAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option("--description", dest="description", help=_("plan description"))
         parser.add_option('--interval', dest='interval',
-            help=_("interval of recurring synchronizations (choices: [%s], default: none)") % ', '.join(self.interval_choices),
+            help=_("interval of recurring synchronizations (choices: [%s], default: none)") %
+                ', '.join(self.interval_choices),
             default='none', choices=self.interval_choices)
         parser.add_option("--date", dest="date", help=_("date of first synchronization (format: YYYY-MM-DD)"))
         parser.add_option("--time", dest="time", help=_("time of first synchronization (format: HH:MM:SS)"))
