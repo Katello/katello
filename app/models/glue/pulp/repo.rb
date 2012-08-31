@@ -16,7 +16,6 @@ module Glue::Pulp::Repo
     base.send :include, InstanceMethods
 
     base.class_eval do
-      before_validation :setup_repo_clone
       before_save :save_repo_orchestration
       before_destroy :destroy_repo_orchestration
 
@@ -34,7 +33,6 @@ module Glue::Pulp::Repo
                       pulp_repo_facts
                   end
                 }
-      attr_accessor :clone_from, :clone_response, :cloned_filters, :cloned_content
     end
   end
 
@@ -46,7 +44,7 @@ module Glue::Pulp::Repo
     def save_repo_orchestration
       case orchestration_for
         when :create
-          pre_queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :clone_or_create_repo])
+          pre_queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :create_pulp_repo])
       end
     end
 
@@ -91,9 +89,7 @@ module Glue::Pulp::Repo
   def add_filters_orchestration(added_filter)
     return true if not self.environment.library?
 
-    self.clone_ids.each do |clone_id|
-      repo = Repository.find_by_pulp_id(clone_id)
-
+    self.clones.each do |repo|
       pre_queue.create(
         :name => "add filter '#{added_filter.pulp_id}' to repo: #{repo.id}",
         :priority => 2,
@@ -108,7 +104,7 @@ module Glue::Pulp::Repo
   def remove_filters_orchestration(removed_filter)
     return true if not self.environment.library?
 
-    self.clone_ids.each do |clone_id|
+    self.clones.each do |repo|
       repo = Repository.find_by_pulp_id(clone_id)
 
       pre_queue.create(
@@ -122,28 +118,28 @@ module Glue::Pulp::Repo
     on_save
   end
 
-  def clone_or_create_repo
-    if clone_from
-      clone_repo
-    else
-      create_pulp_repo
-    end
-  end
-
-  #TODO Create distributor and importer objects in pulp.rb
   def create_pulp_repo
-    importer = Resources::Pulp::YumImporter.new(:ssl_ca_cert=>self.feed_ca,
-          :ssl_client_cert=>self.feed_cert,
-          :ssl_client_key=>self.feed_key,
-          :feed_url=>self.feed)
-    distributor = Resources::Pulp::YumDistributor.new(self.relative_path, true, false,
-      {:protected=>true, :generate_metadata=>false, :unique_id=>self.pulp_id})
+
+    #if we are in library, no need for an distributor, but need to sync
+    if self.environment.library?
+      importer = Resources::Pulp::YumImporter.new(:ssl_ca_cert=>self.feed_ca,
+            :ssl_client_cert=>self.feed_cert,
+            :ssl_client_key=>self.feed_key,
+            :feed_url=>self.feed)
+    else
+      #if not in library, no need for sync info, but we need a distributor
+      importer = Resources::Pulp::YumImporter.new
+    end
+
+    distributors = [Resources::Pulp::YumDistributor.new(self.relative_path, true, false,
+      {:protected=>true, :generate_metadata=>false, :unique_id=>self.pulp_id,
+      :auto_publish=>!self.environment.library?})]
 
     Resources::Pulp::Repository.create({
         :id => self.pulp_id,
         :display_name => self.name},
         importer,
-        [distributor]
+        distributors
     )
   end
 
@@ -156,20 +152,11 @@ module Glue::Pulp::Repo
       #repo is already cloned, so lets just re-sync it from its parent
       return self.get_clone(to_env).sync
     else
-      #repo is not in the next environment yet, we have to clone it there
-      key = EnvironmentProduct.find_or_create(to_env, self.product)
-      library = self.environment.library? ? self : self.library_instance
-      clone = Repository.create!(:environment_product => key,
-                                 :clone_from => self,
-                                 :cloned_content => self.content,
-                                 :cloned_filters => filters_to_clone,
-                                 :cp_label => self.cp_label,
-                                 :library_instance=>library)
-
-      clone.index_packages
-      clone.index_errata
-
-      return clone.clone_response
+      clone_event = self.create_clone(to_env)
+      #TODO ensure that clone content is indexed
+      #clone.index_packages
+      #clone.index_errata
+      return clone_event
     end
   end
 
@@ -181,23 +168,6 @@ module Glue::Pulp::Repo
       filters_to_clone = []
     end
     filters_to_clone
-  end
-
-  def setup_repo_clone
-    if clone_from
-      self.pulp_id = clone_from.clone_id(environment_product.environment)
-      self.relative_path = Glue::Pulp::Repos.clone_repo_path(clone_from, environment_product.environment)
-      self.arch = clone_from.arch
-      self.name = clone_from.name
-      self.feed = clone_from.feed
-      self.major = clone_from.major
-      self.minor = clone_from.minor
-      self.enabled = clone_from.enabled
-    end
-  end
-
-  def clone_repo
-    self.clone_response = [Resources::Pulp::Repository.clone_repo(clone_from, self, "parent", cloned_filters)]
   end
 
   def populate_from repos_map
@@ -319,21 +289,6 @@ module Glue::Pulp::Repo
     Glue::Pulp::Repo.repo_id(self.product.name, self.name, env.name,env.organization.name)
   end
 
-  #is the repo cloned in the specified environment
-  def is_cloned_in? env
-    clone_id = self.clone_id(env)
-    self.clone_ids.include? clone_id
-  end
-
-  def promoted?
-    !self.clone_ids.empty?
-  end
-
-  def get_clone env
-    Repository.find_by_pulp_id(self.clone_id(env))
-  rescue
-    nil
-  end
 
   def set_sync_schedule schedule
     if self.sync_state == "waiting"
