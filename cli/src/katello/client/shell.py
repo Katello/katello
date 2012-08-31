@@ -53,6 +53,7 @@ class KatelloShell(Cmd):
 
 
     def __init__(self, admin_cli):
+        self.completion_matches = None
         Cmd.__init__(self)
         self.admin_cli = admin_cli
         try:
