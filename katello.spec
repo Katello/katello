@@ -104,7 +104,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui-devel >= 0.8.3
+BuildRequires:  converge-ui-devel >= 1.0
 
 # we require this to be able to build api-docs
 BuildRequires:       rubygem(rails) >= 3.0.10
