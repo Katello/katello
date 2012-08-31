@@ -219,19 +219,19 @@ class ListAvailableVerbs(PermissionAction):
         else:
             return lines
 
-    def formatVerb(self, verb):
+    def _formatVerb(self, verb):
         if self.grep_mode:
             return verb["name"]
         else:
             return ("%-20s (%s)" % (verb["name"], verb["display_name"]))
 
     @classmethod
-    def formatTag(cls, tag):
+    def _formatTag(cls, tag):
         return tag["display_name"]
 
-    def formatScope(self, scopeName, scopeData):
-        verbs = [self.formatVerb(v) for v in scopeData["verbs"]]
-        tags  = [self.formatTag(t) for t in scopeData["tags"]]
+    def _formatScope(self, scopeName, scopeData):
+        verbs = [self._formatVerb(v) for v in scopeData["verbs"]]
+        tags  = [self._formatTag(t) for t in scopeData["tags"]]
 
         item = {}
         item['scope'] = scopeName
@@ -244,7 +244,7 @@ class ListAvailableVerbs(PermissionAction):
         for scopeName in sorted(permissions.keys()):
             scopeData = permissions[scopeName]
             if listGlobal or not scopeData["global"]:
-                data.append(self.formatScope(scopeName, scopeData))
+                data.append(self._formatScope(scopeName, scopeData))
         return data
 
 
