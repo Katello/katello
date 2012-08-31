@@ -502,8 +502,8 @@ class Errata(SystemGroupAction):
             job = self.api.install_errata(org_name, system_group_id, install)
 
         if job:
-            id = job["id"]
-            print (_("Performing remote action [ %s ]... ") % id)
+            job_id = job["id"]
+            print (_("Performing remote action [ %s ]... ") % job_id)
             job = SystemGroupAsyncJob(org_name, system_group_id, job)
             run_spinner_in_bg(wait_for_async_job, [job])
             if job.succeeded():
