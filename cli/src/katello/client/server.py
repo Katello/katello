@@ -235,7 +235,7 @@ class Server(object):
         """
         raise NotImplementedError('base server class method called')
 
-    def PUT(self, path, body, multipart=False):
+    def PUT(self, path, body, multipart=False, custom_headers=None):
         """
         Send a PUT request to the katello server.
         @type path: str
@@ -244,6 +244,8 @@ class Server(object):
         @param body: dictionary for json encoding of resource
         @type multipart: boolean
         @param multipart: set True for multipart puts
+        @type custom_headers: dict or iterable of tuple pairs
+        @param custom_headers: custom headers
         @rtype: (int, dict or None or str)
         @return: tuple of the http response status and the response body
         @raise ServerRequestError: if the request fails
