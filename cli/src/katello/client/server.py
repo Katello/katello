@@ -147,13 +147,6 @@ class ServerRequestError(Exception):
     pass
 
 
-class Bytes(str):
-    """
-    Binary (non-json) PUT/POST request body wrapper.
-    """
-    pass
-
-
 class KatelloServer(object):
     """
     Katello server connection class.
@@ -259,7 +252,7 @@ class KatelloServer(object):
 
         if multipart:
             content_type, body = self._encode_multipart_formdata(body)
-        elif not isinstance(body, (type(None), Bytes, file)):
+        elif not isinstance(body, (type(None), file)):
             body = json.dumps(body)
 
         return (content_type, body)
