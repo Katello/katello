@@ -185,7 +185,6 @@ class Action(object):
         Action's functionality
         
         :note: override this method to implement the actoin's functionality
-        :raise NotImplementedError: if this method is not overridden
         """
         pass
 
