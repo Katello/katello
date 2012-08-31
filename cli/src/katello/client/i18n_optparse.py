@@ -36,6 +36,7 @@ class OptionParserExitError(Exception):
     pass
 
 
+# pylint: disable=R0904
 class OptionParser(_OptionParser):
 
     # These are a bunch of strings that are marked for translation in optparse,
@@ -43,7 +44,7 @@ class OptionParser(_OptionParser):
     # so we get it picked up. for local translation, and then optparse will
     # use them.
     @classmethod
-    def no_op(cls):
+    def __no_op(cls):
         _("Usage: %s\n")
         _("Usage")
         _("%prog [options]")

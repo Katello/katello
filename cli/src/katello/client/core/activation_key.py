@@ -32,7 +32,8 @@ class ActivationKeyAction(BaseAction):
         super(ActivationKeyAction, self).__init__()
         self.api = ActivationKeyAPI()
 
-    def get_template_id(self, environmentId, templateName):
+    @classmethod
+    def get_template_id(cls, environmentId, templateName):
         if templateName != None:
             template_api = TemplateAPI()
             template = template_api.template_by_name(environmentId, templateName)
@@ -59,7 +60,8 @@ class List(ActivationKeyAction):
         envName = self.get_option('environment')
         orgName = self.get_option('org')
 
-        keys = self.get_keys_for_organization(orgName) if envName == None else self.get_keys_for_environment(orgName, envName)
+        keys = self.get_keys_for_organization(orgName) \
+            if envName == None else self.get_keys_for_environment(orgName, envName)
 
         if not keys:
             if envName == None:
@@ -230,7 +232,8 @@ class Update(ActivationKeyAction):
         except OptionException:
             print >> sys.stderr, _("Could not find template [ %s ]") % (templateName)
             return os.EX_DATAERR
-        key = self.api.update(key['id'], environment['id'] if environment != None else None, newKeyName, keyDescription, templateId, usageLimit)
+        key = self.api.update(key['id'], environment['id'] if environment != None else None,
+            newKeyName, keyDescription, templateId, usageLimit)
 
         for poolid in add_poolids:
             self.api.add_pool(key['id'], poolid)

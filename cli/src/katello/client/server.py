@@ -191,7 +191,7 @@ class Server(object):
         """
         raise NotImplementedError('base server class method called')
 
-    def GET(self, path, queries=()):
+    def GET(self, path, queries=None, custom_headers=None):
         """
         Send a GET request to the katello server.
         @type path: str
@@ -199,6 +199,8 @@ class Server(object):
         @type queries: dict or iterable of tuple pairs
         @param queries: dictionary of iterable of key, value pairs to send as
                         query parameters in the request
+        @type custom_headers: dict or iterable of tuple pairs
+        @param custom_headers: custom headers
         @rtype: (int, dict or None or str)
         @return: tuple of the http response status and the response body
         @raise ServerRequestError: if the request fails
@@ -216,7 +218,7 @@ class Server(object):
         """
         raise NotImplementedError('base server class method called')
 
-    def POST(self, path, body=None, multipart=False):
+    def POST(self, path, body=None, multipart=False, custom_headers=None):
         """
         Send a POST request to the katello server.
         @type path: str
@@ -225,13 +227,15 @@ class Server(object):
         @param body: (optional) dictionary for json encoding of post parameters
         @type multipart: boolean
         @param multipart: set True for multipart posts
+        @type custom_headers: dict or iterable of tuple pairs
+        @param custom_headers: custom headers
         @rtype: (int, dict or None or str)
         @return: tuple of the http response status and the response body
         @raise ServerRequestError: if the request fails
         """
         raise NotImplementedError('base server class method called')
 
-    def PUT(self, path, body, multipart=False):
+    def PUT(self, path, body, multipart=False, custom_headers=None):
         """
         Send a PUT request to the katello server.
         @type path: str
@@ -240,6 +244,8 @@ class Server(object):
         @param body: dictionary for json encoding of resource
         @type multipart: boolean
         @param multipart: set True for multipart puts
+        @type custom_headers: dict or iterable of tuple pairs
+        @param custom_headers: custom headers
         @rtype: (int, dict or None or str)
         @return: tuple of the http response status and the response body
         @raise ServerRequestError: if the request fails
@@ -361,7 +367,7 @@ class KatelloServer(Server):
         response_body = response.read()
         try:
             response_body = json.loads(response_body, encoding='utf-8')
-        except:
+        except ValueError:
             content_type = response.getheader('content-type')
             if content_type and (content_type.startswith('text/') or content_type.startswith('application/json')):
                 response_body = u_str(response_body)
