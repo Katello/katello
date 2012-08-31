@@ -482,6 +482,9 @@ class AsyncJob():
     def get_hashes(self):
         return self._jobs
 
+    def __str__(self):
+        return object.__str__(self) + ' ' + str(self._jobs)
+
 # SystemGroup representation for a job
 class SystemGroupAsyncJob(AsyncJob):
     def __init__(self, org_id, system_group_id, job):
