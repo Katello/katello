@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.1.6
+Version:        1.1.7
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -91,6 +91,9 @@ cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
 
 %changelog
+* Fri Aug 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.7-1
+- rename puppet/ to katello-configure/ (msuchy@redhat.com)
+
 * Wed Aug 29 2012 Ivan Necas <inecas@redhat.com> 1.1.6-1
 - 849224 - thin now listens only on localhost (lzap+git@redhat.com)
 
