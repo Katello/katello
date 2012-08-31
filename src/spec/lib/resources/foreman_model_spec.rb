@@ -44,7 +44,7 @@ describe Resources::ForemanModel do
     end
 
     describe 'when persisted' do
-      before { subject.send :persist! }
+      before { subject.send :mark_as_persisted }
 
       it { should be_persisted }
       it 'should update' do
@@ -179,7 +179,7 @@ describe Resources::ForemanModel do
           before do
             subject.id   = 3
             subject.name = 'Invisible man'
-            subject.send :persist!
+            subject.send :mark_as_persisted
             resource.
                 should_receive(:update).
                 any_number_of_times.
