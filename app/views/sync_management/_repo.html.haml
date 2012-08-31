@@ -14,3 +14,5 @@
     (#{@repo_status[repo.id][:packages]})
   %td.result
     #{@repo_status[repo.id][:state]}
+  - if @show_org
+    %td

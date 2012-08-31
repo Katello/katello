@@ -25,7 +25,7 @@ class SyncManagementController < ApplicationController
                      PulpSyncStatus::Status::NOT_SYNCED => ""}
 
 
-  before_filter :find_provider, :except => [:index, :sync, :sync_status]
+  before_filter :find_provider, :except => [:index, :sync, :sync_status, :manage]
   before_filter :find_providers, :only => [:sync, :sync_status]
   before_filter :authorize
 
@@ -46,6 +46,7 @@ class SyncManagementController < ApplicationController
     sync_test = lambda {current_organization && current_organization.syncable?}
 
     { :index => list_test,
+      :manage => list_test,
       :sync_status => sync_read_test,
       :product_status => sync_read_test,
       :sync => sync_test,
@@ -53,38 +54,42 @@ class SyncManagementController < ApplicationController
     }
   end
 
-
   def index
     org = current_organization
     @products = org.library.products.readable(org)
-
-    redhat_products = @products.select{ |prod| prod.redhat? }
-    custom_products = @products.select{ |prod| !prod.redhat? }
-
-    redhat_products.sort! { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
-    custom_products.sort! { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
+    redhat_products, custom_products = @products.partition(&:redhat?)
+    redhat_products.sort_by { |p| p.name.downcase }
+    custom_products.sort_by { |p| p.name.downcase }
 
     @products = redhat_products + custom_products
-
-    @sproducts = @products.reject{|prod| !prod.syncable?} # syncable products
-
-
+    @sproducts = @products.select(&:syncable?)
     @product_size = Hash.new
     @repo_status = Hash.new
-
     @product_map = collect_repos(@products, org.library)
 
-    for p in @products
-      product_size = 0
-      for r in p.repos(p.organization.library)
-        status = r.sync_status
-        @repo_status[r.id] = format_sync_progress(status, r)
-        product_size += status.progress.total_size
-      end
-      @product_size[p.id] = number_to_human_size(product_size)
+    @products.each do |product|
+      get_product_info(product, product.organization.library)
+    end
+  end
+
+  def manage
+    @products     = Array.new
+    @sproducts    = Array.new
+    @product_map  = Array.new
+    @product_size = Hash.new
+    @repo_status  = Hash.new
+    @show_org     = true
+
+    User.current.allowed_organizations.each do |org|
+      products = org.library.products.readable(org)
+      next if products.blank?
+      @sproducts.concat products.select(&:syncable?)
+      @product_map.concat collect_repos products
+      products.each { |product| get_product_info(product) }
+      @products.concat products
     end
 
-    render :index, :locals=>{:status_obj=>@repo_status}
+    render 'index'
   end
 
   def sync
@@ -207,5 +212,15 @@ class SyncManagementController < ApplicationController
               :left => val.progress.items_left,
               :progress => progress
              }
+  end
+
+  def get_product_info(product, environment = nil)
+    product_size = 0
+    product.repos(environment).each do |repo|
+      status = repo.sync_status
+      @repo_status[repo.id] = format_sync_progress(status, repo)
+      product_size += status.progress.total_size
+    end
+    @product_size[product.id] = number_to_human_size(product_size)
   end
 end
