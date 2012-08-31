@@ -20,7 +20,7 @@ sm_present() {
 }
 
 grab_pool_with_rhsm() {
-  $SUDO subscription-manager list --available --all | sed 's/Pool Id/Id/g' | grep Id | head -n1 | awk '{print $2}'
+  $SUDO subscription-manager list --available --all | grep '^Pool Id' | head -n1 | awk '{print $3}'
 }
 
 grab_pool_with_katello() {
