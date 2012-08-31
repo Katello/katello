@@ -55,13 +55,15 @@ class SingleProductAction(ProductAction):
     def check_options(self, validator):
         self.check_product_select_options(validator)
 
-    def set_product_select_options(self, parser, select_by_env=True):
+    @classmethod
+    def set_product_select_options(cls, parser, select_by_env=True):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name', help=_("product name (required)"))
         if select_by_env:
             opt_parser_add_environment(parser, default=_("Library"))
 
-    def check_product_select_options(self, validator):
+    @classmethod
+    def check_product_select_options(cls, validator):
         validator.require(('org', 'name'))
 
 
