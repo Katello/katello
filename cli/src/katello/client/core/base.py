@@ -213,7 +213,8 @@ class Action(object):
         self.check_options(validator)
         self.__process_option_errors(parser, validator.opt_errors)
 
-    def __process_option_errors(self, parser, errors):
+    @classmethod
+    def __process_option_errors(cls, parser, errors):
         if len(errors) == 1:
             parser.error(errors[0])
         elif len(errors) > 0:
