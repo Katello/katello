@@ -93,9 +93,7 @@ class Status(PingAction):
 
     @classmethod
     def __buildOverallStatusDetail(cls, status):
-        detail = {}
-        detail['status']  = status["result"]
-        return detail
+        return {'status': status["result"]}
 
     @classmethod
     def __buildServiceStatusDetail(cls, serviceName, serviceStatus):
