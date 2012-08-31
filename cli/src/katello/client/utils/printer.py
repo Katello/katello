@@ -13,6 +13,10 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 
+import fcntl
+import termios
+import struct
+
 from katello.client.utils.encoding import u_str
 
 
@@ -466,14 +470,11 @@ def get_term_width():
     :rtype: int
     """
     try:
-        import fcntl
-        import termios
-        import struct
-        # returns h, w, hp, wp, we need only w
         w = struct.unpack('HHHH',
             fcntl.ioctl(0, termios.TIOCGWINSZ,
             struct.pack('HHHH', 0, 0, 0, 0)))[1]
         w = int(w)
-        return 80 if w == 0 else w
+    # pylint: disable=W0702
     except:
-        return 80
+        w = 80
+    return 80 if w == 0 else w
