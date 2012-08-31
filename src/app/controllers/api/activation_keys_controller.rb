@@ -15,17 +15,20 @@ class Api::ActivationKeysController < Api::ApiController
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :find_environment, :only => [:index, :create]
-  before_filter :find_organization, :only => [:index]
+  before_filter :find_optional_organization, :only => [:index]
   before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool, 
                                                 :add_system_groups, :remove_system_groups]
   before_filter :find_pool, :only => [:add_pool, :remove_pool]
   before_filter :find_system_groups, :only => [:add_system_groups, :remove_system_groups]
+  before_filter :authorize
 
   def rules
+    index_test = lambda{ActivationKey.readable?(@organziation) ||
+                        (ActivationKey.readable?(@environment.organization) unless @environment.nil?)}
     read_test = lambda{ActivationKey.readable?(@organization)}
     manage_test = lambda{ActivationKey.manageable?(@organization)}
     {
-      :index => read_test,
+      :index => index_test,
       :show => read_test,
       :create => manage_test,
       :update => manage_test,
@@ -119,14 +122,6 @@ class Api::ActivationKeysController < Api::ApiController
   end
 
   private
-
-  def find_organization
-    return unless params.has_key?(:organization_id)
-
-    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].tr(' ', '_')})
-    raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
-    @organization
-  end
 
   def find_environment
     return unless params.has_key?(:environment_id)
