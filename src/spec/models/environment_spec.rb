@@ -256,5 +256,48 @@ describe KTEnvironment do
         @environment.stub_chain(:repositories, :enabled).and_return(promoted_repos)
       end
     end
+
+    describe "Foreman orchestration" do
+      let(:env_name) { "foreman_environment" }
+
+      let(:foreman_environment) do
+        Foreman::Environment.new(:name => env_name, :id => @foreman_environment_id)
+      end
+
+      before(:each) do
+        @foreman_environment_id = 1
+        @env = @organization.environments.build({:name => env_name, :prior => @environment})
+      end
+
+      it "should create environment with name in Foreman" do
+        Foreman::Environment.should_receive(:create!).
+            once.
+            with(hash_including(:name => env_name)).
+            and_return(foreman_environment)
+
+        @env.save!
+      end
+
+      it "should populate environment.foreman_id field" do
+        Foreman::Environment.stub!(:create!).and_return(foreman_environment)
+        @env.save!
+
+        @env.foreman_id.should == @foreman_environment_id
+      end
+
+      it "should delete environment in Foreman" do
+        Foreman::Environment.stub!(:create!).and_return(foreman_environment)
+        @env.save!
+
+        Foreman::Environment.
+            should_receive(:delete).
+            once.
+            with(@foreman_environment_id).
+            and_return(ok_response)
+
+        @env.destroy
+      end
+
+    end
   end
 end

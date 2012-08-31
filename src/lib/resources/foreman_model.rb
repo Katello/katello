@@ -36,6 +36,12 @@ class Resources::ForemanModel
     end
   end
 
+  def self.create!(params)
+    new_resource =  new(params)
+    new_resource.save!
+    new_resource
+  end
+
 
   include ActiveModel::Validations
 
@@ -146,6 +152,11 @@ class Resources::ForemanModel
 
   def update
     return resource.update(id, as_json(json_update_options), self.class.foreman_header)
+  end
+
+  def update_attributes!(attrs)
+    attributes = attrs
+    save!
   end
 
   def save!

@@ -110,11 +110,20 @@ EOKEY
     disable_env_orchestration # env is orchestrated with org - we disable this as well
   end
 
+  def ok_response
+    ok_response = mock('response')
+    ok_response.stub!(:code).and_return('200')
+    ok_response
+  end
+
   def disable_env_orchestration
     Resources::Candlepin::Environment.stub!(:create).and_return({})
     Resources::Candlepin::Environment.stub!(:destroy).and_return({})
     Resources::Candlepin::Environment.stub!(:find).and_return({:environmentContent => []})
     Resources::Candlepin::Environment.stub!(:add_content).and_return({})
+
+    Foreman::Environment.stub!(:create!).and_return(Foreman::Environment.new(:id => "1"))
+    Foreman::Environment.stub!(:delete).and_return(ok_response)
   end
 
   def disable_system_orchestration
@@ -126,6 +135,12 @@ EOKEY
     Resources::Pulp::User.stub!(:destroy).and_return(200)
     Resources::Pulp::Roles.stub!(:add).and_return(true)
     Resources::Pulp::Roles.stub!(:remove).and_return(true)
+
+    foreman_user_proxy = Foreman::User.new(:id => 1)
+    Foreman::User.stub!(:create!).and_return(Foreman::User.new(:id => 1))
+    Foreman::User.stub!(:delete).and_return(ok_response)
+    Foreman::User.stub!(:find).and_return(foreman_user_proxy)
+    foreman_user_proxy.stub!(:update_attributes!).and_return(foreman_user_proxy)
   end
 
   def disable_filter_orchestration

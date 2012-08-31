@@ -24,7 +24,7 @@ describe Resources::ForemanModel do
   subject { klass }
 
   it "should have attribute :id" do
-    expect(subject.attributes).to match_array([:id])
+    subject.attributes.should =~ [:id]
   end
 
   describe 'instance' do
@@ -81,7 +81,7 @@ describe Resources::ForemanModel do
     end
 
     it "should have attributes :id, :name" do
-      expect(subject.attributes).to match_array([:id, :name])
+      subject.attributes.should =~ [:id, :name]
     end
 
     describe '.find!' do

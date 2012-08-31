@@ -47,18 +47,16 @@ module Glue::Foreman::User
     end
 
     def create_foreman_user
-      foreman_user = ::Foreman::User.new :login    => username,
+      foreman_user = ::Foreman::User.create! :login    => username,
                                          :mail     => email,
                                          :admin    => true,
                                          :password => password
-      foreman_user.save!
       self.foreman_id = foreman_user.id
     end
 
     def update_foreman_user
-      foreman_user            = self.foreman_user
-      foreman_user.attributes = { :mail => email, :password => password }
-      foreman_user.save!
+      foreman_user = self.foreman_user
+      foreman_user.update_attributes!(:mail => email, :password => password)
     end
 
     def destroy_foreman_user
