@@ -67,6 +67,7 @@ class Status(PingAction):
             return 0
 
         code = 0
+        # pylint: disable=W0612
         for serviceName, serviceStatus in self.__sortedStatuses(status, reverse=True):
             if serviceStatus['result'] != 'ok':
                 code += 1
