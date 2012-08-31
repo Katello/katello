@@ -36,7 +36,8 @@ class SyncPlanAction(BaseAction):
         super(SyncPlanAction, self).__init__()
         self.api = SyncPlanAPI()
 
-    def parse_datetime(self, date, time):
+    @classmethod
+    def parse_datetime(cls, date, time):
         date = date.strip()
         time = time.strip()
 
