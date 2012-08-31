@@ -48,7 +48,7 @@ class KatelloShell(Cmd):
             if not os.path.isdir(conf_dir):
                 os.mkdir(conf_dir, 0700)
         except OSError:
-            logging.error('Could not create directory %s' % conf_dir)
+            logging.error('Could not create directory %s', conf_dir)
         return os.path.join(conf_dir, 'history')
 
 
