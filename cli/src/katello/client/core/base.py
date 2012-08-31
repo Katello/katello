@@ -121,7 +121,7 @@ class Action(object):
         """
         return "Usage: "+self._get_usage_line(command_name, parent_usage)
 
-
+    # pylint: disable=R0201
     @property
     def description(self):
         """
