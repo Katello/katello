@@ -306,17 +306,17 @@ class UpdateContent(ChangesetAction):
 
 
     # pylint: disable=W0613
-    def store_from_product(self, option, opt_str, value, parser):
+    def _store_from_product(self, option, opt_str, value, parser):
         self.current_product = u_str(value)
         parser.values.from_product = True
 
-    def store_item_with_product(self, option, opt_str, value, parser):
+    def _store_item_with_product(self, option, opt_str, value, parser):
         if parser.values.from_product == None:
             raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product"))
 
         self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
 
-    def store_item(self, option, opt_str, value, parser):
+    def _store_item(self, option, opt_str, value, parser):
         self.items[option.dest].append({"name": u_str(value)})
 
     def setup_parser(self, parser):
@@ -329,27 +329,27 @@ class UpdateContent(ChangesetAction):
         parser.add_option('--new_name', dest='new_name',
                                help=_("new changeset name"))
         parser.add_option('--add_product', dest='add_product', type="string",
-                               action="callback", callback=self.store_item,
+                               action="callback", callback=self._store_item,
                                help=_("product to add to the changeset"))
         parser.add_option('--remove_product', dest='remove_product', type="string",
-                               action="callback", callback=self.store_item,
+                               action="callback", callback=self._store_item,
                                help=_("product to remove from the changeset"))
         parser.add_option('--add_template', dest='add_template', type="string",
-                               action="callback", callback=self.store_item,
+                               action="callback", callback=self._store_item,
                                help=_("name of a template to be added to the changeset"))
         parser.add_option('--remove_template', dest='remove_template', type="string",
-                               action="callback", callback=self.store_item,
+                               action="callback", callback=self._store_item,
                                help=_("name of a template to be removed from the changeset"))
         parser.add_option('--from_product', dest='from_product',
-                               action="callback", callback=self.store_from_product, type="string",
+                               action="callback", callback=self._store_from_product, type="string",
                                help=_("determines product from which the packages/errata/repositories are picked"))
 
         for ct in self.productDependentContent:
             parser.add_option('--add_' + ct, dest='add_' + ct,
-                                   action="callback", callback=self.store_item_with_product, type="string",
+                                   action="callback", callback=self._store_item_with_product, type="string",
                                    help=_(ct + " to add to the changeset"))
             parser.add_option('--remove_' + ct, dest='remove_' + ct,
-                                   action="callback", callback=self.store_item_with_product, type="string",
+                                   action="callback", callback=self._store_item_with_product, type="string",
                                    help=_(ct + " to remove from the changeset"))
         self.reset_items()
 
@@ -391,7 +391,7 @@ class UpdateContent(ChangesetAction):
         self.api.update(csId, newName, description)
 
 
-    # pylint disable=R0201
+    # pylint: disable=R0201
     def update_content(self, csId, patch, updateMethod):
         for contentType, items in patch.iteritems():
             for i in items:

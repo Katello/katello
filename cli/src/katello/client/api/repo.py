@@ -15,6 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 
+# pylint: disable=R0904
 class RepoAPI(KatelloAPI):
     """
     Connection class to access repositories
