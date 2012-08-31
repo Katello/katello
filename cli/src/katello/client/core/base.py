@@ -345,7 +345,8 @@ class BaseAction(Action):
         else:
             return None
 
-    def load_saved_options(self, parser):
+    @classmethod
+    def load_saved_options(cls, parser):
         Config()
         if not Config.parser.has_section('options'):
             return
