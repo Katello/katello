@@ -191,7 +191,7 @@ class Server(object):
         """
         raise NotImplementedError('base server class method called')
 
-    def GET(self, path, queries=()):
+    def GET(self, path, queries=None, custom_headers=None):
         """
         Send a GET request to the katello server.
         @type path: str
@@ -199,6 +199,8 @@ class Server(object):
         @type queries: dict or iterable of tuple pairs
         @param queries: dictionary of iterable of key, value pairs to send as
                         query parameters in the request
+        @type custom_headers: dict or iterable of tuple pairs
+        @param custom_headers: custom headers
         @rtype: (int, dict or None or str)
         @return: tuple of the http response status and the response body
         @raise ServerRequestError: if the request fails
