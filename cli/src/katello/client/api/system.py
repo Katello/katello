@@ -16,6 +16,7 @@
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
 
+# pylint: disable=R0904
 class SystemAPI(KatelloAPI):
     """
     Connection class to access environment calls
