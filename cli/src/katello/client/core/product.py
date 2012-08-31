@@ -155,9 +155,9 @@ class List(ProductAction):
 
         # hide marketing products by default
         if not all_opt:
-            def isMarketingProduct(p):
+            def isNotMarketingProduct(p):
                 return not (("marketing_product" in p) and (p["marketing_product"]))
-            prods = filter(isMarketingProduct, prods)
+            prods = filter(isNotMarketingProduct, prods)
 
         self.printer.print_items(prods)
         return os.EX_OK
