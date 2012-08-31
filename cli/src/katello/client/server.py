@@ -38,7 +38,7 @@ active_server = None
 
 def set_active_server(server):
     global active_server
-    assert isinstance(server, Server)
+    assert isinstance(server, KatelloServer)
     active_server = server
 
 # authentication strategies ---------------------------------------------------
