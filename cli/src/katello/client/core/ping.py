@@ -84,20 +84,21 @@ class Status(PingAction):
         return statusList
 
 
-    def __sortedStatuses(self, status, reverse = False):
+    @classmethod
+    def __sortedStatuses(cls, status, reverse = False):
         for serviceName in sorted(status["status"].keys(), reverse=reverse):
             serviceStatus = status["status"][serviceName]
 
             yield (serviceName, serviceStatus)
 
-
-    def __buildOverallStatusDetail(self, status):
+    @classmethod
+    def __buildOverallStatusDetail(cls, status):
         detail = {}
         detail['status']  = status["result"]
         return detail
 
-
-    def __buildServiceStatusDetail(self, serviceName, serviceStatus):
+    @classmethod
+    def __buildServiceStatusDetail(cls, serviceName, serviceStatus):
         detail = serviceStatus
         detail['service'] = serviceName
 
