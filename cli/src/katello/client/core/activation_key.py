@@ -32,7 +32,8 @@ class ActivationKeyAction(BaseAction):
         super(ActivationKeyAction, self).__init__()
         self.api = ActivationKeyAPI()
 
-    def get_template_id(self, environmentId, templateName):
+    @classmethod
+    def get_template_id(cls, environmentId, templateName):
         if templateName != None:
             template_api = TemplateAPI()
             template = template_api.template_by_name(environmentId, templateName)
