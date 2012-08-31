@@ -100,7 +100,7 @@ class KatelloShell(Cmd):
 
     # pylint: disable=W0613
     def do_exit(self, args):
-        self.remove_last_history_item()
+        self.__remove_last_history_item()
         sys.exit(0)
 
 
@@ -140,7 +140,7 @@ class KatelloShell(Cmd):
 
         # remove the '!*' line from the history
         if new_line:
-            self.replace_last_history_item(new_line)
+            self.__replace_last_history_item(new_line)
             print new_line
             return new_line
         return line
@@ -230,12 +230,12 @@ class KatelloShell(Cmd):
 
 
     @classmethod
-    def remove_last_history_item(cls):
+    def __remove_last_history_item(cls):
         last = readline.get_current_history_length() - 1
         if last >= 0:
             readline.remove_history_item(last)
 
 
-    def replace_last_history_item(self, replace_with):
-        self.remove_last_history_item()
+    def __replace_last_history_item(self, replace_with):
+        self.__remove_last_history_item()
         readline.add_history(replace_with)
