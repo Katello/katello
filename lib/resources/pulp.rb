@@ -281,7 +281,7 @@ module Resources
           response = post(self.repository_path(dest_repo_id) + '/actions/associate/', JSON.generate(body), self.default_headers)
           JSON.parse(response).with_indifferent_access
         end
-        
+
         # :id, :name
         def update repo_id, attrs
           body = put(Repository.repository_path + repo_id +"/", JSON.generate(attrs), self.default_headers).body
@@ -679,18 +679,20 @@ module Resources
     class Roles < PulpResource
       class << self
         def add role_name, username
-          added = self.post(path(role_name) + "/add/", {:username => username}.to_json, self.default_headers)
+          #/pulp/api/v2/roles/<role_id>/users/
+          added = self.post(path(role_name) + "/users/", {:login => username}.to_json, self.default_headers)
           added.body == "true"
         end
 
         def remove role_name, username
-          removed = self.post(path(role_name) + "/remove/", {:username => username}.to_json, self.default_headers)
+          #/pulp/api/v2/roles/<role_id>/users/<user_login>
+          removed = self.delete(path(role_name) + "/users/#{username}/",  self.default_headers)
           removed.body == "true"
         end
 
         def path(role_name=nil)
           roles = self.path_with_prefix("/roles/")
-          role_name.nil? ? roles : roles + "#{role_name}/"
+          roles += "#{role_name}/" if role_name
         end
       end
     end
