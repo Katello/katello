@@ -275,27 +275,27 @@ class Update(TemplateAction):
 
     def __init__(self):
         self.current_parameter = None
-        self.resetParameters()
+        self._resetParameters()
         super(Update, self).__init__()
         self.current_product = None
 
     # pylint: disable=W0613
-    def store_parameter_name(self, option, opt_str, value, parser):
+    def _store_parameter_name(self, option, opt_str, value, parser):
         self.current_parameter = u_str(value)
         self.items['add_parameters'][value] = None
 
-    def store_parameter_value(self, option, opt_str, value, parser):
+    def _store_parameter_value(self, option, opt_str, value, parser):
         if self.current_parameter == None:
             raise OptionValueError(_("each %s must be preceeded by %s") % (option, "--add_parameter") )
 
         self.items['add_parameters'][self.current_parameter] = u_str(value)
         self.current_parameter = None
 
-    def store_from_product(self, option, opt_str, value, parser):
+    def _store_from_product(self, option, opt_str, value, parser):
         self.current_product = u_str(value)
         parser.values.from_product = True
 
-    def store_item_with_product(self, option, opt_str, value, parser):
+    def _store_item_with_product(self, option, opt_str, value, parser):
         if parser.values.from_product == None:
             raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product") )
         self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
@@ -315,9 +315,9 @@ class Update(TemplateAction):
         parser.add_option('--remove_package', dest='remove_packages', action="append", help=_("name of the package"))
 
         parser.add_option('--add_parameter', dest='add_parameters', action="callback",
-            callback=self.store_parameter_name, type="string",
+            callback=self._store_parameter_name, type="string",
             help=_("name of the parameter, %s must follow") % "--value")
-        parser.add_option('--value', dest='value', action="callback", callback=self.store_parameter_value,
+        parser.add_option('--value', dest='value', action="callback", callback=self._store_parameter_value,
             type="string", help=_("value of the parameter"))
         parser.add_option('--remove_parameter', dest='remove_parameters', action="append",
             help=_("name of the parameter"))
@@ -335,15 +335,15 @@ class Update(TemplateAction):
         parser.add_option('--remove_distribution', dest='remove_distributions', action="append",
             help=_("distribution id"))
 
-        parser.add_option('--from_product', dest='from_product', action="callback", callback=self.store_from_product,
+        parser.add_option('--from_product', dest='from_product', action="callback", callback=self._store_from_product,
             type="string", help=_("determines product from which the repositories are picked"))
         parser.add_option('--add_repository', dest='add_repository', action="callback",
-            callback=self.store_item_with_product, type="string",
+            callback=self._store_item_with_product, type="string",
             help=_("repository to be added to the template"))
         parser.add_option('--remove_repository', dest='remove_repository', action="callback",
-            callback=self.store_item_with_product, type="string",
+            callback=self._store_item_with_product, type="string",
             help=_("repository to be removed from the template"))
-        self.resetParameters()
+        self._resetParameters()
 
 
     def check_options(self, validator):
@@ -354,7 +354,7 @@ class Update(TemplateAction):
             if v is None:
                 validator.add_option_error(_("missing value for parameter '%s'") % k)
 
-    def resetParameters(self):
+    def _resetParameters(self):
         # pylint: disable=W0201
         self.items = {}
         self.items['add_parameters'] = {}
@@ -364,16 +364,9 @@ class Update(TemplateAction):
     def getContent(self):
         orgName = self.get_option('org')
         items = self.items.copy()
-        self.resetParameters()
+        self._resetParameters()
 
         content = {}
-
-        # bz 799149
-        #content['+products'] = self.get_option('add_products') or []
-        #content['+products'] = self.productNamesToIds(orgName, content['+products'])
-
-        #content['-products'] = self.get_option('remove_products') or []
-        #content['-products'] = self.productNamesToIds(orgName, content['-products'])
 
         content['+packages'] = self.get_option('add_packages') or []
         content['-packages'] = self.get_option('remove_packages') or []
@@ -391,9 +384,9 @@ class Update(TemplateAction):
         content['-distros'] = self.get_option('remove_distributions') or []
 
         content['+repos'] = items['add_repository']
-        content['+repos'] = self.repoNamesToIds(orgName, content['+repos'])
+        content['+repos'] = self._repoNamesToIds(orgName, content['+repos'])
         content['-repos'] = items['remove_repository']
-        content['-repos'] = self.repoNamesToIds(orgName, content['-repos'])
+        content['-repos'] = self._repoNamesToIds(orgName, content['-repos'])
         return content
 
 
@@ -421,18 +414,7 @@ class Update(TemplateAction):
 
 
     @classmethod
-    def productNamesToIds(cls, orgName, productNames):
-        ids = []
-        for prodName in productNames:
-            p = get_product(orgName, prodName)
-            if p != None:
-                ids.append(p['id'])
-            else:
-                system_exit(os.EX_DATAERR)
-        return ids
-
-    @classmethod
-    def repoNamesToIds(cls, orgName, repos):
+    def _repoNamesToIds(cls, orgName, repos):
         ids = []
         for rec in repos:
             repo = get_repo(orgName, rec['product'], rec['name'])
