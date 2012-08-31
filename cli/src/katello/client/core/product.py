@@ -131,7 +131,7 @@ class List(ProductAction):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         prov_name = self.get_option('prov')
-        all = self.get_option('all')
+        all_opt = self.get_option('all')
 
         self.printer.add_column('id')
         self.printer.add_column('name')
@@ -154,7 +154,7 @@ class List(ProductAction):
             prods = self.api.products_by_env(env['id'])
 
         # hide marketing products by default
-        if not all:
+        if not all_opt:
             def isMarketingProduct(p):
                 try:
                     return not p["marketing_product"]
