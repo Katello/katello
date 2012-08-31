@@ -218,7 +218,7 @@ class Server(object):
         """
         raise NotImplementedError('base server class method called')
 
-    def POST(self, path, body=None, multipart=False):
+    def POST(self, path, body=None, multipart=False, custom_headers=None):
         """
         Send a POST request to the katello server.
         @type path: str
@@ -227,6 +227,8 @@ class Server(object):
         @param body: (optional) dictionary for json encoding of post parameters
         @type multipart: boolean
         @param multipart: set True for multipart posts
+        @type custom_headers: dict or iterable of tuple pairs
+        @param custom_headers: custom headers
         @rtype: (int, dict or None or str)
         @return: tuple of the http response status and the response body
         @raise ServerRequestError: if the request fails
