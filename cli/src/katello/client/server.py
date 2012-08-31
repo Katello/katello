@@ -154,7 +154,7 @@ class Bytes(str):
     pass
 
 
-class KatelloServer(Server):
+class KatelloServer(object):
     """
     Katello server connection class.
     """  
