@@ -16,13 +16,14 @@
 
 import os
 
+from katello.client import constants
 from katello.client.api.system import SystemAPI
 from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_environment, get_system
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
+from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report, update_dict_unless_none
 from katello.client.utils.printer import VerboseStrategy
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_date
 from katello.client.utils.encoding import u_str
@@ -90,23 +91,31 @@ class Info(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system name (required)"))
+        parser.add_option('--uuid', dest='uuid',
+                       help=constants.OPT_HELP_SYSTEM_UUID)
         opt_parser_add_environment(parser)
 
     def check_options(self, validator):
-        validator.require(('name', 'org'))
+        validator.require('org')
+        validator.require_at_least_one_of(('name', 'uuid'))
+        validator.mutually_exclude('name', 'uuid')
+        validator.mutually_exclude('environment', 'uuid')
 
     def run(self):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
+        sys_uuid = self.get_option('uuid')
 
-        if env_name is None:
+        if sys_uuid:
+            self.printer.set_header(_("System Information [ %s ]") % sys_uuid)
+        elif env_name is None:
             self.printer.set_header(_("System Information For Org [ %s ]") % org_name)
         else:
             self.printer.set_header(_("System Information For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
 
         # get system details
-        system = get_system(org_name, sys_name, env_name)
+        system = get_system(org_name, sys_name, env_name, sys_uuid)
 
         system["activation_keys"] = "[ "+ ", ".join([ak["name"] for ak in system["activation_key"]]) +" ]"
         if 'host' in system:
@@ -142,6 +151,8 @@ class InstalledPackages(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
             help=_("system name (required)"))
+        parser.add_option('--uuid', dest='uuid',
+                help=constants.OPT_HELP_SYSTEM_UUID)
         opt_parser_add_environment(parser)
         parser.add_option('--install', dest='install', type="list",
             help=_("packages to be installed remotely on the system, package names are separated with comma"))
@@ -156,7 +167,10 @@ class InstalledPackages(SystemAction):
             help=_("package groups to be removed remotely from the system, group names are separated with comma"))
 
     def check_options(self, validator):
-        validator.require(('name', 'org'))
+        validator.require('org')
+        validator.require_at_least_one_of(('name', 'uuid'))
+        validator.mutually_exclude('name', 'uuid')
+        validator.mutually_exclude('environment', 'uuid')
 
         remote_actions = ('install', 'remove', 'update', 'install_groups', 'remove_groups')
         validator.require_at_most_one_of(remote_actions,
@@ -167,6 +181,7 @@ class InstalledPackages(SystemAction):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
+        sys_uuid = self.get_option('uuid')
 
         install = self.get_option('install')
         remove = self.get_option('remove')
@@ -182,7 +197,7 @@ class InstalledPackages(SystemAction):
             self.printer.set_header(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") %
                 (sys_name, env_name, org_name))
 
-        system = get_system(org_name, sys_name, env_name)
+        system = get_system(org_name, sys_name, env_name, sys_uuid)
         system_id = system['uuid']
 
         if install:
@@ -238,20 +253,26 @@ class TasksList(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system name"))
+        parser.add_option('--uuid', dest='uuid',
+                       help=constants.OPT_HELP_SYSTEM_UUID)
         opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
+        validator.require_at_least_one_of(('name', 'uuid'))
+        validator.mutually_exclude('name', 'uuid')
+        validator.mutually_exclude('environment', 'uuid')
 
     def run(self):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
+        sys_uuid = self.get_option('uuid')
 
         self.printer.set_header(_("Remote tasks"))
 
         environment = get_environment(org_name, env_name)
-        tasks = self.api.tasks(org_name, environment["id"], sys_name)
+        tasks = self.api.tasks(org_name, environment["id"], sys_name, sys_uuid)
 
         for t in tasks:
             t['result'] = "\n" + t['result_description']
@@ -308,17 +329,24 @@ class Releases(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system name (if not specified, list all releases in the environment)"))
+        parser.add_option('--uuid', dest='uuid',
+                       help=constants.OPT_HELP_SYSTEM_UUID)
         opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
-        validator.require_one_of(('name', 'environment'))
+        validator.require_one_of(('name', 'uuid', 'environment'))
+        validator.mutually_exclude('name', 'uuid')
+        validator.mutually_exclude('environment', 'uuid')
 
     def run(self):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
+        sys_uuid = self.get_option('uuid')
 
+        if sys_uuid:
+            releases = self.api.releases_for_system(sys_uuid)["releases"]
         if sys_name:
             system = get_system(org_name, sys_name)
             releases = self.api.releases_for_system(system["uuid"])["releases"]
@@ -342,23 +370,29 @@ class Facts(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system name (required)"))
+        parser.add_option('--uuid', dest='uuid',
+                       help=constants.OPT_HELP_SYSTEM_UUID)
         opt_parser_add_environment(parser)
 
     def check_options(self, validator):
-        validator.require(('name', 'org'))
+        validator.require('org')
+        validator.require_at_least_one_of(('name', 'uuid'))
+        validator.mutually_exclude('name', 'uuid')
+        validator.mutually_exclude('environment', 'uuid')
 
     def run(self):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
+        sys_uuid = self.get_option('uuid')
 
         if env_name is None:
-            self.printer.set_header(_("System Facts For System [ %s ] in Org [ %s ]") % (sys_name, org_name))
+            self.printer.set_header(_("System Facts For System [ %s ] in Org [ %s ]") % (sys_name if sys_name else sys_uuid, org_name))
         else:
             self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") %
                 (sys_name, env_name, org_name))
 
-        system = get_system(org_name, sys_name, env_name)
+        system = get_system(org_name, sys_name, env_name, sys_uuid)
 
         facts_hash = system['facts']
         facts_tuples_sorted = [(k, facts_hash[k]) for k in sorted(facts_hash.keys())]
@@ -388,7 +422,6 @@ class Register(SystemAction):
     def check_options(self, validator):
         validator.require(('name', 'org'))
         validator.require_at_most_one_of(('activationkey', 'environment'))
-
 
     def run(self):
         name = self.get_option('name')
@@ -435,17 +468,24 @@ class Unregister(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
+        parser.add_option('--uuid', dest='uuid',
+                               help=constants.OPT_HELP_SYSTEM_UUID)
         opt_parser_add_environment(parser)
 
     def check_options(self, validator):
-        validator.require(('name', 'org'))
+        validator.require('org')
+        validator.require_at_least_one_of(('name', 'uuid'))
+        validator.mutually_exclude('name', 'uuid')
+        validator.mutually_exclude('environment', 'uuid')
 
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
         env_name = self.get_option('environment')
+        sys_uuid = self.get_option('uuid')
+
         try:
-            system = get_system(org, name, env_name)
+            system = get_system(org, name, env_name, sys_uuid)
 
         except ServerRequestError, e:
             if e[0] == 404:
@@ -465,21 +505,26 @@ class Subscribe(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                 help=_("system name (required)"))
+        parser.add_option('--uuid', dest='uuid',
+                help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--pool', dest='pool',
                 help=_("certificate serial to unsubscribe (required)"))
         parser.add_option('--quantity', dest='quantity',
                 help=_("quantity (default: 1)"))
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'pool'))
+        validator.require(('org', 'pool'))
+        validator.require_at_least_one_of(('name', 'uuid'))
+        validator.mutually_exclude('name', 'uuid')
 
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
         pool = self.get_option('pool')
         qty = self.get_option('quantity') or 1
+        sys_uuid = self.get_option('uuid')
 
-        system = get_system(org, name)
+        system = get_system(org, name, sys_uuid = sys_uuid)
 
         self.api.subscribe(system['uuid'], pool, qty)
         print _("Successfully subscribed System [ %s ]") % name
@@ -492,6 +537,7 @@ class Subscriptions(SystemAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name', help=_("system name (required)"))
+        parser.add_option('--uuid', dest='uuid', help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--available', dest='available',
                 action="store_true", default=False,
                 help=_("show available subscriptions"))
@@ -506,7 +552,9 @@ class Subscriptions(SystemAction):
                 help=_("show available subscriptions not overlapping current subscriptions"))
 
     def check_options(self, validator):
-        validator.require(('name', 'org'))
+        validator.require('org')
+        validator.require_at_least_one_of(('name', 'uuid'))
+        validator.mutually_exclude('name', 'uuid')
 
     def run(self):
         name = self.get_option('name')
@@ -515,13 +563,15 @@ class Subscriptions(SystemAction):
         match_system = self.get_option('match_system')
         match_installed = self.get_option('match_installed')
         no_overlap = self.get_option('no_overlap')
+        uuid = self.get_option('uuid')
 
-        system = get_system(org, name)
+        if not uuid:
+            uuid = get_system(org, name)['uuid']
 
         self.printer.set_strategy(VerboseStrategy())
         if not available:
             # listing current subscriptions
-            result = self.api.subscriptions(system['uuid'])
+            result = self.api.subscriptions(uuid)
             if result == None or len(result['entitlements']) == 0:
                 print _("No Subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
                 return os.EX_OK
@@ -548,7 +598,7 @@ class Subscriptions(SystemAction):
             self.printer.print_items(entitlements())
         else:
             # listing available pools
-            result = self.api.available_pools(system['uuid'], match_system, match_installed, no_overlap)
+            result = self.api.available_pools(uuid, match_system, match_installed, no_overlap)
 
             if result == None or len(result) == 0:
                 print _("No Pools found for System [ %s ] in Org [ %s ]") % (name, org)
@@ -590,6 +640,8 @@ class Unsubscribe(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
             help=_("system name (required)"))
+        parser.add_option('--uuid', dest='uuid',
+                help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--entitlement', dest='entitlement',
             help=_("entitlement id to unsubscribe from (either entitlement or serial or all is required)"))
         parser.add_option('--serial', dest='serial',
@@ -599,7 +651,9 @@ class Unsubscribe(SystemAction):
                 + " required)"))
 
     def check_options(self, validator):
-        validator.require(('name', 'org'))
+        validator.require('org')
+        validator.require_at_least_one_of(('name', 'uuid'))
+        validator.mutually_exclude('name', 'uuid')
         validator.require_one_of(('entitlement', 'serial', 'all'))
 
     def run(self):
@@ -608,15 +662,17 @@ class Unsubscribe(SystemAction):
         entitlement = self.get_option('entitlement')
         serial = self.get_option('serial')
         all_entitlements = self.get_option('all')
+        uuid = self.get_option('uuid')
 
-        system = get_system(org, name)
+        if not uuid:
+            uuid = get_system(org, name)['uuid']
 
         if all_entitlements: #unsubscribe from all
-            self.api.unsubscribe_all(system['uuid'])
+            self.api.unsubscribe_all(uuid)
         elif serial: # unsubscribe from cert
-            self.api.unsubscribe_by_serial(system['uuid'], serial)
+            self.api.unsubscribe_by_serial(uuid, serial)
         elif entitlement: # unsubscribe from entitlement
-            self.api.unsubscribe(system['uuid'], entitlement)
+            self.api.unsubscribe(uuid, entitlement)
         print _("Successfully unsubscribed System [ %s ]") % name
 
         return os.EX_OK
@@ -629,6 +685,8 @@ class Update(SystemAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_('system name (required)'))
+        parser.add_option('--uuid', dest='uuid',
+                       help=constants.OPT_HELP_SYSTEM_UUID)
         opt_parser_add_environment(parser)
         parser.add_option('--new_name', dest='new_name',
                        help=_('a new name for the system'))
@@ -644,7 +702,10 @@ class Update(SystemAction):
                        help=_("service level agreement"))
 
     def check_options(self, validator):
-        validator.require(('name', 'org'))
+        validator.require('org')
+        validator.require_at_least_one_of(('name', 'uuid'))
+        validator.mutually_exclude('name', 'uuid')
+        validator.mutually_exclude('environment', 'uuid')
 
     def run(self):
         org_name = self.get_option('org')
@@ -656,10 +717,10 @@ class Update(SystemAction):
         new_location = self.get_option('location')
         new_release = self.get_option('release')
         new_sla = self.get_option('sla')
+        sys_uuid = self.get_option('uuid')
 
-        system = get_system(org_name, sys_name, env_name)
+        system = get_system(org_name, sys_name, env_name, sys_uuid)
         new_environment = get_environment(org_name, new_environment_name)
-        system_uuid = system['uuid']
 
         updates = {}
         if new_name:
@@ -676,7 +737,7 @@ class Update(SystemAction):
             new_environment = get_environment(org_name, new_environment_name)
             updates['environment_id'] = new_environment['id']
             
-        response = self.api.update(system_uuid, updates)
+        response = self.api.update(system['uuid'], updates)
 
         test_record(response,
             _("Successfully updated system [ %s ]") % system['name'],
@@ -723,21 +784,32 @@ class AddSystemGroups(SystemAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
+        parser.add_option('--uuid', dest='uuid',
+                              help=constants.OPT_HELP_SYSTEM_UUID)
         opt_parser_add_org(parser, required=1)
         parser.add_option('--system_groups', dest='system_group_names',
                               help=_("comma separated list of system group names (required)"))
 
     def check_options(self, validator):
-        validator.require(('org', 'name', 'system_group_names'))
+        validator.require(('org', 'system_group_names'))
+        validator.require_at_least_one_of(('name', 'uuid'))
+        validator.mutually_exclude('name', 'uuid')
 
     def run(self):
         org_name = self.get_option('org')
-        name = self.get_option('name')
+        sys_name = self.get_option('name')
         system_group_names = self.get_option('system_group_names')
+        sys_uuid = self.get_option('uuid')
 
-        system = self.api.systems_by_org(org_name, {'name': name})
+        query = {}
+        update_dict_unless_none(query, "name", sys_name)
+        update_dict_unless_none(query, "uuid", sys_uuid)
+        system = self.api.systems_by_org(org_name, query)
 
-        if system is None:
+        if system is None or len(system) == 0:
+            return os.EX_DATAERR
+        elif len(system) > 1:
+            print constants.OPT_ERR_SYSTEM_AMBIGUOUS
             return os.EX_DATAERR
         else:
             system = system[0]
@@ -765,21 +837,32 @@ class RemoveSystemGroups(SystemAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
+        parser.add_option('--uuid', dest='uuid',
+                               help=constants.OPT_HELP_SYSTEM_UUID)
         opt_parser_add_org(parser, required=1)
         parser.add_option('--system_groups', dest='system_group_names',
                               help=_("comma separated list of system group names (required)"))
 
     def check_options(self, validator):
-        validator.require(('org', 'name', 'system_group_names'))
+        validator.require(('org', 'system_group_names'))
+        validator.require_at_least_one_of(('name', 'uuid'))
+        validator.mutually_exclude('name', 'uuid')
 
     def run(self):
         org_name = self.get_option('org')
-        name = self.get_option('name')
+        sys_name = self.get_option('name')
         system_group_names = self.get_option('system_group_names')
+        sys_uuid = self.get_option('uuid')
 
-        system = self.api.systems_by_org(org_name, {'name': name})
+        query = {}
+        update_dict_unless_none(query, "name", sys_name)
+        update_dict_unless_none(query, "uuid", sys_uuid)
+        system = self.api.systems_by_org(org_name, query)
 
-        if system is None:
+        if system is None or len(system) == 0:
+            return os.EX_DATAERR
+        elif len(system) > 1:
+            print constants.OPT_ERR_SYSTEM_AMBIGUOUS
             return os.EX_DATAERR
         else:
             system = system[0]
