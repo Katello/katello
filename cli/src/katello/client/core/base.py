@@ -44,6 +44,8 @@ _log = getLogger(__name__)
 # They contain the mapping and lists of Commands and Actions for
 # everything the CLI can do.
 
+class CommandException(Exception):
+    pass
 
 class CommandContainer(object):
     """
@@ -79,12 +81,12 @@ class CommandContainer(object):
 
     def get_command(self, name):
         """
-        :raises Exception: if the command was not found
+        :raises CommandException: if the command was not found
         :return: command or action registered under the given name
         """
         if name in self.__subcommands:
             return self.__subcommands[name]
-        raise Exception("Command not found")
+        raise CommandException("Command not found")
 
 
 
@@ -279,7 +281,7 @@ class Command(CommandContainer, Action):
         try:
             command = self.get_command(args[0])
             return command
-        except:
+        except CommandException:
             parser.error(_('invalid action: please see --help'))
             return None
 
