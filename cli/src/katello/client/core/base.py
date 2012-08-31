@@ -363,7 +363,7 @@ class BaseAction(Action):
 
         self.printer = self.create_printer(self.__print_strategy())
 
-
+    # pylint: disable=R0911
     def main(self, args, command_name=None, parent_usage=None):
         """
         Main execution of the action
@@ -435,7 +435,7 @@ class BaseAction(Action):
 # optparse type extenstions --------------------------------------------------
 
 
-
+# pylint: disable=W0613
 def check_bool(option, opt, value):
     if value.lower() in ["true","false"]:
         return (value.lower() == "true")
