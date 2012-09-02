@@ -28,8 +28,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   after_filter :flash_to_headers
-  #custom 404 (render_404) and 500 (render_error) pages
 
+  #custom 404 (render_404) and 500 (render_error) pages
   # this is always in the top
   # order of these are important.
   rescue_from Exception do |exception|
@@ -187,7 +187,7 @@ class ApplicationController < ActionController::Base
       #user logged in
 
       #redirect to originally requested page
-      if session[:original_uri] != nil
+      if session[:original_uri] != nil && !(session[:original_uri].include? "logout")
         redirect_to session[:original_uri]
         session[:original_uri] = nil
       end

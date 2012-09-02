@@ -321,6 +321,9 @@ KT.common = (function() {
                  $('#switcherContainer').html('<div class="spinner" style="margin-top:3px"></div>');
               });
             }
+            $('.favorite').live('click', function(e) {
+                KT.org_page.checkboxChanged($('#default_org'));
+            });
         },
         orgBoxRefresh : function (){
           var orgbox = $('#orgbox');
@@ -334,10 +337,10 @@ KT.common = (function() {
             });
             $('#orgfilter_input').live('change, keyup', function(){
                 if ($.trim($(this).val()).length >= 2) {
-                    $("#orgbox a:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
-                    $("#orgbox a:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
+                    $("#orgbox .row:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
+                    $("#orgbox .row:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
                 } else {
-                    $("#orgbox a").fadeIn('fast');
+                    $("#orgbox .row").fadeIn('fast');
                 }
             });
             $('#orgfilter_input').val("").change();
@@ -406,8 +409,42 @@ KT.common = (function() {
             );
         }
     };
-})();
+})(jQuery);
 
+KT.orgswitcher = (function($) {
+    var checkboxChanged = function(checkbox) {
+      var name = checkbox.attr("name");
+      var options = {};
+
+      /*      var url = checkbox.attr("data-url");*/
+      var selected_org_id = checkbox.attr("value");
+      var url = KT.routes.environments_partial_organization_path(selected_org_id);
+      $('.favorite').hide();
+      //show the spinner while waiting
+      $('#spinner_default_org').removeClass('hidden').show();
+      $.ajax({
+          type: "GET",
+          url: url,
+          data: options,
+          cache: false,
+          success: function(data, textStatus, jqXHR){
+            //hide spinner
+            $('#spinner_default_org').addClass('hidden').hide();
+            $('.favorite').show();
+          },
+          error: function(data, textStatus, jqXHR){
+            //hide the spinner and show the favorite is not selected
+            $('#spinner_default_org').addClass('hidden').hide();
+            checkbox.attr("checked", false);
+            $('.favorite').show();
+          }
+      });
+      return false;
+    };
+    return {
+        checkboxChanged: checkboxChanged
+    };
+}(jQuery));
 
 var client_common = {
     create: function(data, url, on_success, on_error) {

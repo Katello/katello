@@ -18,5 +18,27 @@
         width: 10em !important;
       }
     }
+    #panel-frame {
+      .tupane_footer {
+        background-color: $g1;
+        text-align: right;
+        @include unselectable();
+        label {
+          color: $g7;
+          padding: 8px;
+          line-height: 16px;
+        }
+        input[type="checkbox"]{
+          float: right;
+          margin-top: 2px;
+          display: none;
+        }
+        .default_org:checked + .label_default_org {
+          .favorite {
+            background-position: -624px -16px;
+          }
+        }
+      }
+    }
   }
 }

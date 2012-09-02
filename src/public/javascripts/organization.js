@@ -45,4 +45,10 @@ $(document).ready(function() {
         return false;
     });
 
+  $('#label_default_org').live('click', function(e) {
+      KT.orgswitcher.checkboxChanged($('#default_org'));
+  });
+
 });
+
+s

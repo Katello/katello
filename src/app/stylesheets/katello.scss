@@ -427,44 +427,6 @@ fieldset {
   .button{ margin-left: 10px; }
 }
 
-/* simple two column label + input pairs */
-.katello_form {
-  fieldset {
-    overflow: hidden;
-    margin: 10px 0 0;
-    text-align: right;
-    label {
-      display: inline-block;
-      font-weight: bold !important;
-      padding: 4px 10px 0 0;
-      max-width: 10em;
-    }
-    input {
-      display: inline-block;
-      width: 20em;
-    }
-    .fieldWithErrors {
-      display: inline-block;
-      border: 0; margin: 0; padding: 0;
-      input {
-        background-color: lighten($error_color, 45%);
-        color: $error_color;
-      }
-      label {
-        color: $error_color;
-      }
-    }
-  }
-  .indented {
-    margin: 10px 0 0;
-    text-align: right;
-    input[type="text"],label,a,div,p {
-      text-align: left;
-      display: inline-block;
-      width: 20em;
-    }
-  }
-}
 #toTop {
   display:none;
   text-decoration:none;
@@ -864,8 +826,9 @@ fieldset {
   z-index: -1;
   
   .tupane_footer {
-    margin: 5px 0;
+    margin: 5px 0 0 0;
     overflow: auto;
+    padding: 10px;
   }
   .tupane_header {
     overflow: auto;
