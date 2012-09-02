@@ -21,6 +21,8 @@
         .spinner
       - if current_organization && !current_organization.name.nil? && Organization.any_readable?
         %a#manage_orgs{:href=>organizations_path()}
-          #{_("Manage Organizations")}
           .gears_icon
+          %span{:class=>"fl"}
+            #{_("Manage Organizations")}
+
 / orgbox Ends Here

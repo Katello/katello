@@ -1,5 +1,13 @@
 - for org in user.allowed_organizations
   - if current_organization && org.name == current_organization.name
-    = link_to current_organization.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"selected fl clear", :title=>_("Current Organization")
+    .row.clickable.selected
+      %span.favorite.favorites_icon-grey.sprite{:title=>_("Make this your default organization."), :id=>"org[#{org.id}]"}
+        #{_("Make this your default organization.")}
+      = image_tag( "embed/icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_default_org", :style=>"margin-right:3px;")
+      = link_to current_organization.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"selected", :title=>_("Current Organization")
   - else
-    = link_to org.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"fl clear", :title=>org.name
+    .row.clickable
+      %span.favorite.favorites_icon-grey.sprite{:title=>_("Make this your default organization."), :id=>"org[#{org.id}]"}
+        #{_("Make this your default organization.")}
+      = image_tag( "embed/icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_default_org", :style=>"margin-right:3px;")
+      = link_to org.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :title=>org.name
