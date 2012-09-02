@@ -49,7 +49,7 @@ class UserSessionsController < ApplicationController
     render :partial=>"/layouts/allowed_orgs", :locals =>{:user=>current_user}
   end
 
-  def set_org(current_user = nil)
+  def set_org
     orgs = current_user.allowed_organizations
     org = Organization.find(params[:org_id])
     if org.nil? or !orgs.include?(org)
@@ -89,7 +89,7 @@ class UserSessionsController < ApplicationController
       if current_organization.nil?
         if orgs.length == 1
           params[:org_id] = orgs[0].id
-          set_org(current_user)
+          set_org
         else
           render :partial =>"/user_sessions/interstitial.js.haml", :locals=> {:num_orgs => orgs.length, :redir_path => dashboard_index_path}
         end
