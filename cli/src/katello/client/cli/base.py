@@ -15,6 +15,7 @@
 
 import os
 import sys
+from logging import root, DEBUG
 from traceback import format_exc
 
 from optparse import OptionGroup, SUPPRESS_HELP
@@ -103,6 +104,8 @@ class KatelloCLI(Command):
         """
         parser.add_option("-v", "--version", action="store_true", default=False,
                                 dest="version",  help=_('prints version information'))
+        parser.add_option("-d", "--debug", action="store_true", default=False,
+                                dest="debug",  help=_('send debug information into logs'))
 
         credentials = OptionGroup(parser, _('Katello User Account Credentials'))
         credentials.add_option('-u', '--username', dest='username',
@@ -182,10 +185,13 @@ class KatelloCLI(Command):
         _log.error(format_exc(exception))
 
     def run(self):
+        global _log
         self.setup_server()
         self.setup_credentials()
         if self.get_option('version'):
             self.args = ["version"]
+        if self.get_option('debug'):
+            root.setLevel(DEBUG)
 
     def main(self, args, command_name=None, parent_usage=None):
         try:

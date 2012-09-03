@@ -61,10 +61,14 @@ def getLogger(name):
     if not os.path.exists(logdir):
         os.mkdir(logdir)
     if handler is None:
+        try:
+            level = int(os.environ["KATELLO_CLI_LOGLEVEL"])
+        except:
+            level = logging.INFO
         path = logfile()
         handler = RotatingFileHandler(path, maxBytes=0x100000, backupCount=5)
         handler.setFormatter(Formatter(FMT))
-        root.setLevel(logging.INFO)
+        root.setLevel(level)
         root.addHandler(handler)
     log = logging.getLogger(name)
     return log
