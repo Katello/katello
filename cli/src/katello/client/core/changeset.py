@@ -56,7 +56,7 @@ class List(ChangesetAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
-        self.printer.add_column('type')
+        self.printer.add_column('action_type')
         self.printer.add_column('updated_at', formatter=format_date)
         self.printer.add_column('state')
         self.printer.add_column('environment_id')
