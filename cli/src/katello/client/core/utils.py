@@ -290,8 +290,6 @@ def run_spinner_in_bg(function, arguments=(), message=""):
 # 'uuid': '52456711-cd67-11e0-af50-f0def13c24e5'}
 class AsyncTask():
 
-    _tasks = []
-
     def __init__(self, task):
         if not isinstance(task, list):
             self._tasks = [task]
