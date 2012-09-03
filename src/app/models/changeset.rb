@@ -231,7 +231,8 @@ class Changeset < ActiveRecord::Base
     return deleted
   end
 
-  def to_json(options={})
+  def as_json(options = nil)
+    options ||= {}
     super(options.merge({
           :methods => [:action_type]
           })
