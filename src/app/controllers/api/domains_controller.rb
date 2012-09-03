@@ -10,9 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::DomainsController < Api::ApiController
-
-  skip_before_filter :authorize
+class Api::DomainsController < Api::ForemanProxiesController
+  foreman_model Foreman::Domain
 
   resource_description do
     desc <<-DOC
@@ -36,9 +35,6 @@ class Api::DomainsController < Api::ApiController
 
   api :GET, "/domains/:id/", "Show a domain."
   param :id, String, "domain name (no slashes)"
-  def show
-    render :json => Foreman::Domain.find!(params[:id])
-  end
 
   api :POST, "/domains/", "Create a domain."
   description <<-DOC
@@ -52,12 +48,6 @@ class Api::DomainsController < Api::ApiController
     param :dns_id, :number, :required => false, :desc => "DNS Proxy to use within this domain"
     param :domain_parameters_attributes, Array, :required => false, :desc => "Array of parameters (name, value)"
   end
-  def create
-    resource = Foreman::Domain.new(params[:domain])
-    if resource.save!
-      render :json => resource
-    end
-  end
 
   api :PUT, "/domains/:id/", "Update a domain."
   param :domain, Hash, :required => true do
@@ -66,19 +56,7 @@ class Api::DomainsController < Api::ApiController
     param :dns_id, :number, :required => false, :desc => "DNS Proxy to use within this domain"
     param :domain_parameters_attributes, Array, :required => false, :desc => "Array of parameters (name, value)"
   end
-  def update
-    resource = Foreman::Domain.find!(params[:id])
-    resource.attributes = params[:domain]
-    if resource.save!
-      render :json => resource
-    end
-  end
 
   api :DELETE, "/domains/:id/", "Delete a domain."
   param :id, String, "domain name (no slashes)"
-  def destroy
-    if Foreman::Domain.delete!(params[:id])
-      render :nothing => true
-    end
-  end
 end
