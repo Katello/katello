@@ -87,7 +87,7 @@ class SyncManagementController < ApplicationController
       @products.concat products
     end
 
-    render 'index'
+    @sync_plans = SyncPlan.all
   end
 
   def sync
