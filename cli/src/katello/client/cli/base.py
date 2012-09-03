@@ -185,7 +185,6 @@ class KatelloCLI(Command):
         _log.error(format_exc(exception))
 
     def run(self):
-        global _log
         self.setup_server()
         self.setup_credentials()
         if self.get_option('version'):
