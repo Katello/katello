@@ -472,15 +472,6 @@ class SystemGroupAsyncJob(AsyncJob):
     def get_status_message(self):
         return ", ".join([job["status_message"] for job in self._tasks])
 
-def wait_for_async_job(job):
-    if not isinstance(job, AsyncJob):
-        job = AsyncJob(job)
-
-    while job.is_running():
-        time.sleep(1)
-        job.update()
-    return job.get_hashes()
-
 def convert_to_mime_type(type_in, default=None):
     availableMimeTypes = {
         'text': 'text/plain',
