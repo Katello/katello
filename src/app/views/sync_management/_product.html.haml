@@ -1,5 +1,5 @@
 - pid = prod[:id]
-- cycle_class = cycle("", "alt")
+- cycle_class = cycle("", "alt", :name => 'product')
 %tr.product{:id=>product_id(pid), :class => cycle_class}
   %td= prod[:name]
   %td.max_width.start_time
