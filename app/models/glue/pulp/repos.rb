@@ -134,8 +134,8 @@ module Glue::Pulp::Repos
     "content:#{content_id}"
   end
 
-  def self.prepopulate!(products, environment = nil, repos = [])
-    items = Resources::Pulp::Repository.all(environment && ["env:#{environment.id}"])
+  def self.prepopulate!(products, environment, repos = [])
+    items = Resources::Pulp::Repository.all(["env:#{environment.id}"])
     full_repos = {}
     items.each { |item| full_repos[item["id"]] = item }
 
@@ -153,25 +153,20 @@ module Glue::Pulp::Repos
       return self.repos(library).empty?
     end
 
-    def repos(env = nil, include_disabled = false)
+    def repos(env, include_disabled = false)
       # cache repos so we can cache lazy_accessors
       @repo_cache ||= {}
-      @repo_cache[0] ||= Repository.joins(:environment_product).where(
-            "environment_products.product_id" => self.id)
 
-      if env.nil?
-        @repo_cache[0]
-      else
-        @repo_cache[env.id] ||= @repo_cache[0].where(
+      @repo_cache[env.id] ||= Repository.joins(:environment_product).where(
+          "environment_products.product_id" => self.id,
           "environment_products.environment_id" => env)
 
-        if include_disabled
-          @repo_cache[env.id]
-        else
-          # we only want the enabled repos to be visible
-          # This serves as a white list for redhat repos
-          @repo_cache[env.id].where(:enabled => true)
-        end
+      if include_disabled
+        @repo_cache[env.id]
+      else
+        # we only want the enabled repos to be visible
+        # This serves as a white list for redhat repos
+        @repo_cache[env.id].where(:enabled => true)
       end
     end
 
