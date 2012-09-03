@@ -23,7 +23,8 @@ from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_environment, get_system
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report, update_dict_unless_none
+from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report, \
+    update_dict_unless_none
 from katello.client.utils.printer import VerboseStrategy
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_date
 from katello.client.utils.encoding import u_str
@@ -387,7 +388,8 @@ class Facts(SystemAction):
         sys_uuid = self.get_option('uuid')
 
         if env_name is None:
-            self.printer.set_header(_("System Facts For System [ %s ] in Org [ %s ]") % (sys_name if sys_name else sys_uuid, org_name))
+            self.printer.set_header(_("System Facts For System [ %s ] in Org [ %s ]") %
+                (sys_name if sys_name else sys_uuid, org_name))
         else:
             self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") %
                 (sys_name, env_name, org_name))
