@@ -38,7 +38,7 @@ module SyncManagementHelper
   end
 
   module RepoMethods
-    def collect_repos(products, env = nil, include_disabled = false)
+    def collect_repos(products, env, include_disabled = false)
       Glue::Pulp::Repos.prepopulate! products, env,[]
       list = []
       products.each do |prod|

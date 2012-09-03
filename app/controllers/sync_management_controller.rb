@@ -67,9 +67,7 @@ class SyncManagementController < ApplicationController
     @repo_status = Hash.new
     @product_map = collect_repos(@products, org.library)
 
-    @products.each do |product|
-      get_product_info(product, product.organization.library)
-    end
+    @products.each { |product| get_product_info(product) }
   end
 
   def manage
@@ -84,7 +82,7 @@ class SyncManagementController < ApplicationController
       products = org.library.products.readable(org)
       next if products.blank?
       @sproducts.concat products.select(&:syncable?)
-      @product_map.concat collect_repos products
+      @product_map.concat collect_repos(products, org.library)
       products.each { |product| get_product_info(product) }
       @products.concat products
     end
@@ -214,9 +212,9 @@ class SyncManagementController < ApplicationController
              }
   end
 
-  def get_product_info(product, environment = nil)
+  def get_product_info(product)
     product_size = 0
-    product.repos(environment).each do |repo|
+    product.repos(product.organization.library).each do |repo|
       status = repo.sync_status
       @repo_status[repo.id] = format_sync_progress(status, repo)
       product_size += status.progress.total_size
