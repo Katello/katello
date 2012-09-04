@@ -26,6 +26,8 @@ class System < ActiveRecord::Base
   include AsyncOrchestration
   include IndexedModel
 
+  after_rollback :rollback_on_create, :on => :create
+
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
                 :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, :system_group]
@@ -249,6 +251,14 @@ class System < ActiveRecord::Base
      :system_group=>self.system_groups.collect{|g| g.name},
      :system_group_ids=>self.system_group_ids
     }
+  end
+
+  # A rollback occurred while attempting to create the system; therefore, perform necessary cleanup.
+  def rollback_on_create
+    # remove the system from elasticsearch
+    system_id = "id:#{self.id}"
+    Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_system/_query?q=#{system_id}"
+    Tire.index('katello_system').refresh
   end
 
   private
