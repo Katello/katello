@@ -237,30 +237,37 @@ if [ -d branding ] ; then
   cp -r branding/* .
 fi
 
-#compile SASS files
-echo Compiling SASS files...
-compass compile
+%if ! 0%{?fastbuild:1}
+    #compile SASS files
+    echo Compiling SASS files...
+    compass compile
 
-#generate Rails JS/CSS/... assets
-echo Generating Rails assets...
-LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
+    #generate Rails JS/CSS/... assets
+    echo Generating Rails assets...
+    LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
 
-
-#create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
-echo Generating gettext files...
-ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
+    #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
+    echo Generating gettext files...
+    ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
+%endif
 
 #man pages
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
 #api docs
-echo Generating API docs
-rm -f Gemfile.lock
-cp Gemfile Gemfile.old
-echo 'gem "redcarpet"' >> Gemfile
-rake apipie:static RAILS_ENV=apipie --trace
-rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
-mv Gemfile.old Gemfile
+%if 0%{?fastbuild:1}
+    # make empty directories when doing fast build
+    mkdir -p %{buildroot}%{homedir}/public/apipie-cache
+    mkdir -p doc/apidoc
+%else
+    echo Generating API docs
+    rm -f Gemfile.lock
+    cp Gemfile Gemfile.old
+    echo 'gem "redcarpet"' >> Gemfile
+    rake apipie:static RAILS_ENV=apipie --trace
+    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
+    mv Gemfile.old Gemfile
+%endif
 
 %install
 #prepare dir structure
