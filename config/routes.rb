@@ -535,7 +535,7 @@ Src::Application.routes.draw do
       resources :sync_plans
       resources :tasks, :only => [:index]
       resources :providers, :only => [:index]
-      resources :systems, :only => [:index] do
+      resources :systems, :only => [:index, :create] do
         get :report, :on => :collection
 
         collection do
