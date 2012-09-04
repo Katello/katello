@@ -1,3 +1,15 @@
+# vim: sw=4:ts=4:et
+#
+# Copyright 2012 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 %global homedir %{_datarootdir}/katello/install
 
@@ -33,20 +45,22 @@ katello-upgrade which handles upgrades between versions.
 %setup -q
 
 %build
-#check syntax of main configure script and libs
-ruby -c bin/katello-configure lib/puppet/parser/functions/*rb
+%if ! 0%{?fastbuild:1}
+    #check syntax of main configure script and libs
+    ruby -c bin/katello-configure lib/puppet/parser/functions/*rb
 
-#check syntax for all puppet scripts
-%if 0%{?rhel} || 0%{?fedora} < 17
-# Puppet 2.6 parseonly mode does not handle multiple files correctly
-find -name '*.pp' | xargs -n 1 -t puppet --parseonly
-%else
-# Puppet Bug #16006 (puppet 2.7 not working without a hostname)
-find -name '*.pp' | FACTER_hostname=builder xargs -t puppet parser validate
+    #check syntax for all puppet scripts
+    %if 0%{?rhel} || 0%{?fedora} < 17
+    # Puppet 2.6 parseonly mode does not handle multiple files correctly
+    find -name '*.pp' | xargs -n 1 -t puppet --parseonly
+    %else
+    # Puppet Bug #16006 (puppet 2.7 not working without a hostname)
+    find -name '*.pp' | FACTER_hostname=builder xargs -t puppet parser validate
+    %endif
+
+    #check for puppet erb syntax errors
+    find modules/ -name \*erb | xargs aux/check_erb
 %endif
-
-#check for puppet erb syntax errors
-find modules/ -name \*erb | xargs aux/check_erb
 
 #build katello-configure man page
 THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/; s/\s+CLI_OPTIONS/$C/; s/^CLI_OPTIONS_LONG/$X/; print; next } ($t, $l, $v, $d) = /^#\s*(.+?\n)(.+\n)?(\S+)\s*=\s*(.*?)\n+$/s; $l =~ s/^#\s*//gm; $l = $t if not $l; ($o = $v) =~ s/_/-/g; $x .= qq/=item --$o=<\U$v\E>\n\n$l\nThe default value is "$d".\n\n/; $C .= "\n        [ --$o=<\U$v\E> ]"; $X = $x if eof' default-answer-file man/katello-configure.pod \
