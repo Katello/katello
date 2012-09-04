@@ -324,10 +324,13 @@ class User < ActiveRecord::Base
   end
 
   #Remove up to 5 un-viewed notices
-  def pop_notices
-    to_ret = user_notices.where(:viewed => false).limit(5)
-    to_ret.each { |item| item.update_attributes!(:viewed => true) }
-    to_ret.collect { |notice| { :text => notice.notice.text, :level => notice.notice.level } }
+  def pop_notices(organization = nil, count = 5)
+    notices = Notice.for_user(self).for_org(organization).unread.limit(count == :all ? nil : count)
+    notices.each { |notice| notice.user_notices.each(&:read!) }
+
+    return notices.map do |notice|
+      { :text => notice.text, :level => notice.level }
+    end
   end
 
   def enable_helptip(key)
