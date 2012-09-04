@@ -72,7 +72,7 @@ class List(ActivationKeyAction):
             return os.EX_OK
 
         for k in keys:
-            if k['usage_limit'] is None:
+            if k['usage_limit'] is None or k['usage_limit'] == -1:
                 k['usage'] = str(k['usage_count'])
             else:
                 k['usage'] = str(k['usage_count']) + '/' + str(k['usage_limit'])
