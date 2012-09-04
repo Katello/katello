@@ -15,7 +15,7 @@ class Api::ActivationKeysController < Api::ApiController
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :find_environment, :only => [:index, :create]
-  before_filter :find_optional_organization, :only => [:index]
+  before_filter :find_optional_organization, :only => [:index, :update, :destroy, :add_system_groups, :remove_system_groups]
   before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool, 
                                                 :add_system_groups, :remove_system_groups]
   before_filter :find_pool, :only => [:add_pool, :remove_pool]
@@ -23,12 +23,12 @@ class Api::ActivationKeysController < Api::ApiController
   before_filter :authorize
 
   def rules
-    index_test = lambda{ActivationKey.readable?(@organziation) ||
+    read_test = lambda{ActivationKey.readable?(@organization) ||
                         (ActivationKey.readable?(@environment.organization) unless @environment.nil?)}
-    read_test = lambda{ActivationKey.readable?(@organization)}
-    manage_test = lambda{ActivationKey.manageable?(@organization)}
+    manage_test = lambda{ActivationKey.manageable?(@organization) ||
+                         (ActivationKey.manageable?(@environment.organization) unless @environment.nil?)}
     {
-      :index => index_test,
+      :index => read_test,
       :show => read_test,
       :create => manage_test,
       :update => manage_test,
