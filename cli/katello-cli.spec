@@ -70,7 +70,9 @@ https://fedorahosted.org/katello/wiki/TestingHowto
 %setup -q
 
 %build
-PYTHONPATH=src/ pylint --rcfile=/etc/spacewalk-pylint.rc --additional-builtins=_ katello
+%if ! 0%{?fastbuild:1}
+    PYTHONPATH=src/ pylint --rcfile=/etc/spacewalk-pylint.rc --additional-builtins=_ katello
+%endif
 # generate usage docs and incorporate it into the man page
 pushd man
 PYTHONPATH=../src python ../src/katello/client/utils/usage.py >katello-usage.txt
