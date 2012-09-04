@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.core.utils import update_dict_unless_none
 
 # pylint: disable=R0904
 class RepoAPI(KatelloAPI):
@@ -26,7 +27,7 @@ class RepoAPI(KatelloAPI):
                     "product_id": prod_id,
                     "name": name,
                     "url": url}
-        self.update_dict(repodata, "gpg_key_name", gpgkey)
+        update_dict_unless_none(repodata, "gpg_key_name", gpgkey)
         if nogpgkey:
             repodata["gpg_key_name"] = ""
 
@@ -35,7 +36,7 @@ class RepoAPI(KatelloAPI):
 
     def update(self, repo_id, gpgkey, nogpgkey):
         repodata = {}
-        self.update_dict(repodata, "gpg_key_name", gpgkey)
+        update_dict_unless_none(repodata, "gpg_key_name", gpgkey)
         if nogpgkey:
             repodata["gpg_key_name"] = ""
         path = "/api/repositories/%s/" % repo_id

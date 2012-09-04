@@ -15,6 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
+from katello.client.core.utils import update_dict_unless_none
 
 # pylint: disable=R0904
 class SystemGroupAPI(KatelloAPI):
@@ -75,9 +76,9 @@ class SystemGroupAPI(KatelloAPI):
 
     def update(self, org_id, system_group_id, name, description, max_systems):
         data = {}
-        data = self.update_dict(data, "name", name)
-        data = self.update_dict(data, "description", description)
-        data = self.update_dict(data, "max_systems", max_systems)
+        data = update_dict_unless_none(data, "name", name)
+        data = update_dict_unless_none(data, "description", description)
+        data = update_dict_unless_none(data, "max_systems", max_systems)
         data = { "system_group" : data }
 
         path = "/api/organizations/%s/system_groups/%s" % (org_id, system_group_id)
@@ -138,7 +139,7 @@ class SystemGroupAPI(KatelloAPI):
     def errata(self, org_id, system_group_id, type_in=None):
         path = "/api/organizations/%s/system_groups/%s/errata" % (org_id, system_group_id)
         params = {}
-        self.update_dict(params, "type", type_in)
+        update_dict_unless_none(params, "type", type_in)
         return self.server.GET(path, params)[1]
 
     def install_errata(self, org_id, system_group_id, errata):

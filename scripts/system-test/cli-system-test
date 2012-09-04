@@ -107,7 +107,7 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-PLAIN_RAND=$(date | openssl md5 | cut -c10-16)
+PLAIN_RAND=$(openssl rand -base64 9 | tr '/+' 'XX')
 if [ "$RAND_PREFIX" == "" ]; then
     RAND="${PLAIN_RAND}"
 else
