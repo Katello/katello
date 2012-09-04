@@ -150,6 +150,12 @@ class ServerRequestError(Exception):
 class KatelloServer(object):
     """
     Katello server connection class.
+
+    @ivar host: host name of the katello server
+    @ivar port: port the katello server is listening on (443)
+    @ivar protocol: protocol the katello server is using (http, https)
+    @ivar path_prefix: mount point of the katello api (/katello/api)
+    @ivar headers: dictionary of http headers to send in requests
     """  
     auth_method = NoAuthentication()
 
