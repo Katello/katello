@@ -49,6 +49,18 @@ class katello::install {
     },
     ensure  => installed
   }
+  
+  # symlink katello binary to headpin if in headpin mode
+  case $katello::params::deployment {
+    'headpin': {
+      file { "/usr/bin/headpin":
+        ensure => link,
+        target => "/usr/bin/katello",
+        require => Package["katello", "katello-cli"]
+      }
+    }
+    default : {}
+  }
 
   Class["katello::install"] -> File["${katello::params::log_base}"]
   Class["katello::install"] -> File["${katello::params::config_dir}/thin.yml"]
