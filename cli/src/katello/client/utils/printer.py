@@ -474,7 +474,6 @@ def get_term_width():
             fcntl.ioctl(0, termios.TIOCGWINSZ,
             struct.pack('HHHH', 0, 0, 0, 0)))[1]
         w = int(w)
-    # pylint: disable=W0702
-    except:
+    except:  # pylint: disable=W0702
         w = 80
     return 80 if w == 0 else w
