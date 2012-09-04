@@ -237,7 +237,10 @@ class KatelloServer(object):
         self.headers['content-length'] = str(len(body) if body else 0)
         self._set_auth_headers()
 
-        self._log.debug('sending %s request to %s' % (method, url))
+        if body:
+            self._log.debug("sending %s request to %s\n%s" % (method, url, body))
+        else:
+            self._log.debug("sending empty %s request to %s" % (method, url))
 
         connection.request(method, url, body=body, headers=dict(self.headers.items() + custom_headers.items()))
         return self._process_response(connection.getresponse())
@@ -264,8 +267,7 @@ class KatelloServer(object):
         return (content_type, body)
 
 
-    @classmethod
-    def _process_response(cls, response):
+    def _process_response(self, response):
         """
         Try to parse the response
         @type response: HTTPResponse
@@ -282,6 +284,11 @@ class KatelloServer(object):
                 response_body = u_str(response_body)
             else:
                 pass
+
+        if response_body:
+            self._log.debug("processing response %s\n%s" % (response.status, str(response_body)))
+        else:
+            self._log.debug("processing empty response %s" % (response.status))
 
         if response.status >= 300:
             # if the server has responded with a python traceback
