@@ -1,20 +1,7 @@
 class foreman::config {
 
-  file {'/etc/foreman/settings.yaml':
-    content => template('foreman/settings.yaml.erb'),
-    owner   => $foreman::user,
-    require => User[$foreman::user],
-  }
-
   file { $foreman::app_root:
     ensure  => directory,
-  }
-
-  user { $foreman::user:
-    ensure  => 'present',
-    shell   => '/sbin/nologin',
-    comment => 'Foreman',
-    home    => $foreman::app_root,
   }
 
   # cleans up the session entries in the database
@@ -25,13 +12,6 @@ class foreman::config {
     command => "(cd ${foreman::app_root} && rake db:sessions:clear)",
     minute  => '15',
     hour    => '23',
-  }
-
-  file { "${foreman::log_base}":
-    owner   => $foreman::user,
-    group   => $foreman::group,
-    mode    => 640,
-    recurse => true;
   }
 
   postgres::createuser { $foreman::db_user:
@@ -47,7 +27,24 @@ class foreman::config {
     require => [ Postgres::Createuser[$foreman::db_user], File["${foreman::log_base}"] ],
   }
 
+  user { $foreman::user:
+    ensure  => 'present',
+    shell   => '/sbin/nologin',
+    comment => 'Foreman',
+    home    => $foreman::app_root,
+  }
+
   file {
+    "${foreman::log_base}":
+      owner   => $foreman::user,
+      group   => $foreman::group,
+      mode    => 640,
+      recurse => true;
+
+    "${foreman::config_dir}/settings.yaml":
+      content => template('foreman/settings.yaml.erb'),
+      owner   => $foreman::user;
+
     "${foreman::config_dir}/thin.yml":
       content => template("foreman/thin.yml.erb"),
       owner   => "root",
@@ -78,7 +75,9 @@ class foreman::config {
     environment => "RAILS_ENV=${foreman::environment}",
     command     => "/usr/bin/env rake db:migrate --trace --verbose > ${foreman::configure_log_base}/foreman-db-migrate.log 2>&1 && touch /var/lib/katello/foreman_db_migrate_done",
     creates => "/var/lib/katello/foreman_db_migrate_done",
-    require => [ Postgres::Createdb[$foreman::db_name] ];
+    require => [ Postgres::Createdb[$foreman::db_name],
+                 File["${foreman::config_dir}/settings.yaml"],
+                 File["${foreman::config_dir}/database.yml"]];
   }
 
 }
