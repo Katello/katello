@@ -15,6 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
+from katello.client.core.utils import update_dict_unless_none
 
 # pylint: disable=R0904
 class SystemAPI(KatelloAPI):
@@ -60,9 +61,9 @@ class SystemAPI(KatelloAPI):
 
     def available_pools(self, system_id, match_system=False, match_installed=False, no_overlap=False):
         params = {}
-        self.update_dict(params, "match_system", match_system)
-        self.update_dict(params, "match_installed", match_installed)
-        self.update_dict(params, "no_overlap", no_overlap)
+        update_dict_unless_none(params, "match_system", match_system)
+        update_dict_unless_none(params, "match_installed", match_installed)
+        update_dict_unless_none(params, "no_overlap", no_overlap)
 
         path = "/api/systems/%s/pools" % system_id
 
@@ -86,11 +87,11 @@ class SystemAPI(KatelloAPI):
 
     def tasks(self, org_name, environment_id, system_name = None, system_uuid = None):
         params = {}
-        self.update_dict(params, "environment_id", environment_id)
+        update_dict_unless_none(params, "environment_id", environment_id)
         if system_name:
-            self.update_dict(params, "system_name", system_name)
+            update_dict_unless_none(params, "system_name", system_name)
         if system_uuid:
-            self.update_dict(params, "system_uuid", system_uuid)
+            update_dict_unless_none(params, "system_uuid", system_uuid)
 
         path = "/api/organizations/%s/systems/tasks" % org_name
         return self.server.GET(path, params)[1]

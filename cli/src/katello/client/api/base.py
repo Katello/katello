@@ -30,15 +30,3 @@ class KatelloAPI(object):
     @property
     def server(self):
         return server.active_server
-
-    # TODO remove this deprecated class method
-    @classmethod
-    def update_dict(cls, d, key, value):
-        """
-        Update value for key in fictionary only if the value is not None.
-
-        DEPRECATED: Use katello.client.core.utils.update_dict_unless_none
-        """
-        if value != None:
-            d[key] = value
-        return d

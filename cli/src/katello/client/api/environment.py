@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.core.utils import update_dict_unless_none
 
 class EnvironmentAPI(KatelloAPI):
     """
@@ -50,8 +51,8 @@ class EnvironmentAPI(KatelloAPI):
 
     def create(self, orgId, name, description, priorId):
         envdata = {"name": name}
-        envdata = self.update_dict(envdata, "description", description)
-        envdata = self.update_dict(envdata, "prior", priorId)
+        envdata = update_dict_unless_none(envdata, "description", description)
+        envdata = update_dict_unless_none(envdata, "prior", priorId)
 
         path = "/api/organizations/%s/environments/" % orgId
         return self.server.POST(path, {"environment": envdata})[1]
@@ -60,9 +61,9 @@ class EnvironmentAPI(KatelloAPI):
     def update(self, orgId, envId, name, description, priorId):
 
         envdata = {}
-        envdata = self.update_dict(envdata, "name", name)
-        envdata = self.update_dict(envdata, "description", description)
-        envdata = self.update_dict(envdata, "prior", priorId)
+        envdata = update_dict_unless_none(envdata, "name", name)
+        envdata = update_dict_unless_none(envdata, "description", description)
+        envdata = update_dict_unless_none(envdata, "prior", priorId)
 
         path = "/api/organizations/%s/environments/%s" % (orgId, envId)
         return self.server.PUT(path, {"environment": envdata})[1]

@@ -15,6 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
+from katello.client.core.utils import update_dict_unless_none
 
 class ChangesetAPI(KatelloAPI):
 
@@ -49,8 +50,8 @@ class ChangesetAPI(KatelloAPI):
 
     def update(self, csId, newName, description):
         data = {}
-        data = self.update_dict(data, "name", newName)
-        data = self.update_dict(data, "description", description)
+        data = update_dict_unless_none(data, "name", newName)
+        data = update_dict_unless_none(data, "description", description)
 
         path = "/api/changesets/%s" % csId
         return self.server.PUT(path, {"changeset": data})[1]

@@ -15,6 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
+from katello.client.core.utils import update_dict_unless_none
 
 class OrganizationAPI(KatelloAPI):
     """
@@ -33,7 +34,7 @@ class OrganizationAPI(KatelloAPI):
     def update(self, name, description):
 
         orgdata = {}
-        orgdata = self.update_dict(orgdata, "description", description)
+        orgdata = update_dict_unless_none(orgdata, "description", description)
 
         path = "/api/organizations/%s" % u_str(name)
         return self.server.PUT(path, {"organization": orgdata})[1]

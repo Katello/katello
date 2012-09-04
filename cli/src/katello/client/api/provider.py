@@ -15,6 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
+from katello.client.core.utils import update_dict_unless_none
 
 class ProviderAPI(KatelloAPI):
     """
@@ -29,7 +30,7 @@ class ProviderAPI(KatelloAPI):
             },
             "organization_id": orgName
         }
-        provdata["provider"] = self.update_dict(provdata["provider"], "repository_url", url)
+        provdata["provider"] = update_dict_unless_none(provdata["provider"], "repository_url", url)
 
         path = "/api/providers/"
         return self.server.POST(path, provdata)[1]
@@ -43,9 +44,9 @@ class ProviderAPI(KatelloAPI):
     def update(self, provId, name, description=None, url=None):
 
         provdata = {}
-        provdata = self.update_dict(provdata, "name", name)
-        provdata = self.update_dict(provdata, "description", description)
-        provdata = self.update_dict(provdata, "repository_url", url)
+        provdata = update_dict_unless_none(provdata, "name", name)
+        provdata = update_dict_unless_none(provdata, "description", description)
+        provdata = update_dict_unless_none(provdata, "repository_url", url)
 
         path = "/api/providers/%s" % u_str(provId)
         return self.server.PUT(path, {"provider": provdata})[1]
