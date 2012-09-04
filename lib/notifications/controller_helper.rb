@@ -13,7 +13,22 @@
 module Notifications
   module ControllerHelper
     def notify
-      @notifier ||= Notifier.new(self)
+      @notifier ||= Notifier.new(self, default_notify_options)
+    end
+
+    private
+
+    # define default options for Notifier instance
+    # @example to set current organization as notice's organization
+    #     def default_notify_options
+    #       { :organization => current_organization }
+    #     end
+    # @example not to set any organization for a notice
+    #     def default_notify_options
+    #       { :organization => nil }
+    #     end
+    def default_notify_options
+      raise NotImplementedError
     end
   end
 end
