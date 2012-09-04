@@ -63,7 +63,7 @@ def getLogger(name):
     if handler is None:
         try:
             level = int(os.environ["KATELLO_CLI_LOGLEVEL"])
-        except:
+        except (KeyError, ValueError):
             level = logging.INFO
         path = logfile()
         handler = RotatingFileHandler(path, maxBytes=0x100000, backupCount=5)
