@@ -8,6 +8,8 @@ katello - Katello command line tool
 
     Options include:
       [ -h | --help ]
+      [ -v | --version ]
+      [ -d | --debug ]
       [ -u | --username ]
       [ -p | --password ]
       [ --host ]
@@ -44,9 +46,13 @@ or use our documentation (CLI guide).
 
 Print items in the format suitable for grepping.
 
-=item -v
+=item -v, --version
 
 Print items in the verbose mode (more details).
+
+=item -d, --debug
+
+Turn on debug log level (messages can be found in the client.log file).
 
 =item -d DELIMITER
 
@@ -59,6 +65,19 @@ Skip initial header (useful with -g).
 =item --help, -h
 
 Display short summary of all options.
+
+=back
+
+=head1 ENVIRONMENT VARIABLES
+
+=over 4
+
+=item KATELLO_CLI_LOGLEVEL
+
+If --debug (-d) option is too much and you want to fine tune the logger level,
+use this variable. Default setting is 20, debug setting is 10. For more
+information about how these numbers work see
+http://docs.python.org/library/logging.html.
 
 =back
 
