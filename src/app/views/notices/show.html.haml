@@ -22,6 +22,8 @@
       %th
         = sortable "level", _("Level")
       %th
+        = _("Organization")
+      %th
         = _("Description")
     %tbody#notification_list
       - for notice in @notices
@@ -29,12 +31,14 @@
           %tr{:class => "#{notice.level}"}
             %td #{notice.created_at}
             %td #{notice.level}
+            %td #{notice.organization}
             %td
               = "#{notice.text}".html_safe
         - else
           %tr.details{:id => "#{notice.id}", :class => "#{notice.level}", 'data-url' => notices_details_path(notice.id)}
             %td #{notice.created_at}
             %td #{notice.level}
+            %td #{notice.organization}
             %td
               %div.details-icon.fr
               = "#{notice.text}".html_safe

@@ -153,8 +153,10 @@ class Repository < ActiveRecord::Base
     notify = task.parameters.try(:[], :options).try(:[], :notify)
     user = task.user
     if task.state == 'finished'
-      Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
-                     :user => user if user && notify
+      if user && notify
+        Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
+                       :user => user, :organization => self.organization
+      end
     elsif task.state == 'error'
       details = if task.progress.error_details.present?
                   task.progress.error_details
@@ -163,8 +165,10 @@ class Repository < ActiveRecord::Base
                 end
 
       Rails.logger.error("*** Sync error: " +  details.to_json)
-      Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
-                   :details => details.map(&:chomp).join("\n"), :user => user if user && notify
+      if user && notify
+        Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
+                     :details => details.map(&:chomp).join("\n"), :user => user, :organization => self.organization
+      end
     end
   end
 

@@ -326,4 +326,9 @@ class UsersController < ApplicationController
     return 'user'
   end
 
+  def default_notify_options
+    super.merge :organization => nil
+  end
+
+
 end

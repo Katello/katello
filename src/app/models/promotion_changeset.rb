@@ -89,7 +89,7 @@ class PromotionChangeset < Changeset
 
     if notify
       message = _("Successfully promoted changeset '%s'.") % self.name
-      Notify.success message, :request_type => "changesets___promote"
+      Notify.success message, :request_type => "changesets___promote", :organization => self.environment.organization
     end
 
   rescue => e
@@ -99,7 +99,7 @@ class PromotionChangeset < Changeset
     Rails.logger.error(e.backtrace.join("\n"))
     if notify
       Notify.exception _("Failed to promote changeset '%s'. Check notices for more details") % self.name, e,
-                   :request_type => "changesets___promote"
+                   :request_type => "changesets___promote", :organization => self.environment.organization
     end
     index_repo_content to_env
     raise e
