@@ -42,6 +42,12 @@ module Errors
 
   class ConflictException < StandardError; end
 
+  class SystemGroupEmptyException < StandardError
+    def message
+      _("System group is empty.")
+    end
+  end
+
   class UsageLimitExhaustedException < StandardError; end
 
   class UnsupportedActionException < StandardError
