@@ -2,9 +2,13 @@ class Api::ForemanProxiesController < Api::ApiController
   skip_before_filter :authorize # TODO
 
   def self.foreman_model(a_model_class)
-    class_eval do
-      define_method(:foreman_model) { a_model_class }
-    end
+    singleton_class.instance_variable_set("@foreman_model", a_model_class)
+  end
+
+  def foreman_model
+    retval = singleton_class.instance_variable_get("@foreman_model")
+    raise ArgumentError, "Please specify foreman model class using 'foreman_model ClassName' in class definition." if retval.nil?
+    retval
   end
 
   def index
@@ -16,7 +20,7 @@ class Api::ForemanProxiesController < Api::ApiController
   end
 
   def create
-    resource = foreman_model.new(params[:architecture])
+    resource = foreman_model.new(params[hash_parameter_name_from_model_class])
     if resource.save!
       render :json => resource
     end
@@ -24,7 +28,7 @@ class Api::ForemanProxiesController < Api::ApiController
 
   def update
     resource = foreman_model.find!(params[:id])
-    resource.attributes = params[:architecture]
+    resource.attributes = params[hash_parameter_name_from_model_class]
     if resource.save!
       render :json => resource
     end
@@ -34,5 +38,10 @@ class Api::ForemanProxiesController < Api::ApiController
     if foreman_model.delete!(params[:id])
       render :nothing => true
     end
+  end
+
+  protected
+  def hash_parameter_name_from_model_class
+    foreman_model.to_s.demodulize.downcase.to_sym
   end
 end

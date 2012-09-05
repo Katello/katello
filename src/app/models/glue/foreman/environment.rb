@@ -16,32 +16,32 @@ module Glue::Foreman::Environment
     base.send(:include, InstanceMethods)
 
     base.class_eval do
-      before_save :save_environment_orchestration
-      before_destroy :destroy_environment_orchestration
+      before_save :save_foreman_environment_orchestration
+      before_destroy :destroy_foreman_environment_orchestration
     end
   end
 
   module InstanceMethods
-    def set_environment
+    def set_foreman_environment
       new_environment = Foreman::Environment.create! :name => name
       self.foreman_id = new_environment.id
     end
 
-    def del_environment
+    def del_foreman_environment
       result = Foreman::Environment.delete(foreman_id)
       result.code.to_i
     end
   end
 
-  def save_environment_orchestration
+  def save_foreman_environment_orchestration
     case self.orchestration_for
       when :create
-        pre_queue.create(:name => "create environment in foreman: #{self.name}", :priority => 3, :action => [self, :set_environment])
+        pre_queue.create(:name => "create environment in foreman: #{self.name}", :priority => 3, :action => [self, :set_foreman_environment])
     end
   end
 
-  def destroy_environment_orchestration
-    post_queue.create(:name => "destroy environment in foreman: #{self.name}", :priority => 4, :action => [self, :del_environment])
+  def destroy_foreman_environment_orchestration
+    post_queue.create(:name => "destroy environment in foreman: #{self.name}", :priority => 4, :action => [self, :del_foreman_environment])
   end
 
 end
