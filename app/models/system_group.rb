@@ -157,32 +157,38 @@ class SystemGroup < ActiveRecord::Base
   end
 
   def install_packages packages
+    raise Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.install_package(packages)
     job = save_job(pulp_job, :package_install, :packages, packages)
   end
 
   def uninstall_packages packages
+    raise Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.uninstall_package(packages)
     job = save_job(pulp_job, :package_remove, :packages, packages)
   end
 
   def update_packages packages=nil
     # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
+    raise Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.update_package(packages)
     job = save_job(pulp_job, :package_update, :packages, packages)
   end
 
   def install_package_groups groups
+    raise Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.install_package_group(groups)
     job = save_job(pulp_job, :package_group_install, :groups, groups)
   end
 
   def uninstall_package_groups groups
+    raise Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.uninstall_package_group(groups)
     job = save_job(pulp_job, :package_group_remove, :groups, groups)
   end
 
   def install_errata errata_ids
+    raise Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.install_consumer_errata(errata_ids)
     job = save_job(pulp_job, :errata_install, :errata_ids, errata_ids)
   end
