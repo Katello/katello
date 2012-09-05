@@ -68,12 +68,11 @@
                 %td
                   = _("%s ago") % time_ago_in_words(status["created"])
               - if status['webAppPrefix']
-                - status['webAppPrefix'] += '/' if !status['webAppPrefix'].end_with?('/')
                 %tr{:class => cycle_class}
                   %td{:colspan => 2}
                     &nbsp; &nbsp; &nbsp;
                     = _('Manifest from ') % status['webAppPrefix']
-                    = link_to status['webAppPrefix'], "http://#{status['webAppPrefix']}#{status['upstreamId']}", :target => '_blank'
+                    = subscriptions_manifest_link_helper status
 
           - if @statuses.length > 3
             %tr{:class => cycle(nil, 'alt')}
