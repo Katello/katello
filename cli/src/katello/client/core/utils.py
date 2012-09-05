@@ -290,8 +290,6 @@ def run_spinner_in_bg(function, arguments=(), message=""):
 # 'uuid': '52456711-cd67-11e0-af50-f0def13c24e5'}
 class AsyncTask():
 
-    _tasks = []
-
     def __init__(self, task):
         if not isinstance(task, list):
             self._tasks = [task]
@@ -373,6 +371,9 @@ class AsyncTask():
     def get_subtasks(self):
         return [AsyncTask(t) for t in self._tasks]
 
+    def __str__(self):
+        return object.__str__(self) + ' ' + str(self._tasks)
+
 # Envelope around system task status structure. Besides the standard AsyncTask
 # it has description and result_description specified
 class SystemAsyncTask(AsyncTask):
@@ -440,15 +441,7 @@ def progress(left, total):
 #   'state', 'running',
 #   'status_message: 'Installing package...',
 #   'finish_time': ''}
-class AsyncJob():
-
-    _jobs = []
-
-    def __init__(self, job):
-        if not isinstance(job, list):
-            self._jobs = [job]
-        else:
-            self._jobs = job
+class AsyncJob(AsyncTask):
 
     @classmethod
     def status_api(cls):
@@ -458,29 +451,13 @@ class AsyncJob():
         return SystemGroupJobStatusAPI()
 
     def update(self):
-        self._jobs = [self.status_api().status(j['id']) for j in self._jobs]
-
-    def is_running(self):
-        return (len(filter(self._subtask_is_running, self._jobs)) > 0)
-
-    def finished(self):
-        return not self.is_running()
-
-    def failed(self):
-        return (len(filter(lambda j: j['state'] in ('error', 'timed out'), self._jobs)) > 0)
-
-    def cancelled(self):
-        return (len(filter(lambda j: j['state'] in ('cancelled', 'canceled'), self._jobs)) > 0)
+        self._tasks = [self.status_api().status(j['id']) for j in self._tasks]
 
     def succeeded(self):
         return not (self.failed() or self.cancelled())
 
-    @classmethod
-    def _subtask_is_running(cls, job):
-        return job['state'] not in ('finished', 'error', 'timed out', 'canceled', 'not_synced')
-
-    def get_hashes(self):
-        return self._jobs
+    def __str__(self):
+        return object.__str__(self) + ' ' + str(self._tasks)
 
 # SystemGroup representation for a job
 class SystemGroupAsyncJob(AsyncJob):
@@ -493,16 +470,7 @@ class SystemGroupAsyncJob(AsyncJob):
         return SystemGroupJobStatusAPI(self.__org_id, self.__system_group_id)
 
     def get_status_message(self):
-        return ", ".join([job["status_message"] for job in self._jobs])
-
-def wait_for_async_job(job):
-    if not isinstance(job, AsyncJob):
-        job = AsyncJob(job)
-
-    while job.is_running():
-        time.sleep(1)
-        job.update()
-    return job.get_hashes()
+        return ", ".join([job["status_message"] for job in self._tasks])
 
 def convert_to_mime_type(type_in, default=None):
     availableMimeTypes = {
